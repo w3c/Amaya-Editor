@@ -71,6 +71,7 @@ extern BinFile    TtaReadOpen (CONST STRING);
 extern HWND       GetCurrentWindow ();
 extern void       WIN_DisplayWords (void);
 extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
+extern void       CheckTtCmap ();
 
 #else  /* __STDC__ */
 extern void       WinErrorBox ();
@@ -138,6 +139,7 @@ extern BinFile    TtaReadOpen ();
 extern HWND       GetCurrentWindow ();
 extern void       WIN_DisplayWords ();
 extern void       KbdCallbackHandler ();
+extern void       CheckTtCmap ();
 #endif /* __STDC__ */
 
 #endif /* _WIN_FCT_ */

@@ -1287,6 +1287,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
   Document            document;
   Menu_Ctl           *pMenu;
   CHAR_T                bufMenuAttr[MAX_TXT_LEN];
@@ -1354,11 +1355,11 @@ PtrDocument         pDoc;
 		  TtaNewSubmenu (EventMenu[frame - 1], ref, nbItemAttr - 1, NULL, nbEvent, bufEventAttr, NULL, FALSE);
 		  /* post active attributes */
 		  for (i = 0; i < nbEvent; i++)
-#           ifdef _WINDOWS
+#ifdef _WINDOWS
 		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i, (ThotBool) (ActiveEventAttr[i] == 1), FrMainRef [frame]);
 #           else  /* !_WINDOWS */
 		    TtaSetToggleMenu (EventMenu[frame - 1], i, (ActiveEventAttr[i] == 1));
-#           endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		}
 
 	      /* post active attributes */
@@ -1398,15 +1399,16 @@ PtrDocument         pDoc;
 			      nbItemAttr, bufMenuAttr, NULL);
 	      /* marque les attributs actifs */
 	      for (i = 0; i < nbItemAttr; i++)
-#            ifdef _WINDOWS
+#ifdef _WINDOWS
              WIN_TtaSetToggleMenu (ref, i, (ThotBool)(ActiveAttr[i] == 1), FrMainRef [frame]);
-#            else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	      TtaSetMenuOn (document, view, menu);
 	    }
 	}
     }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

@@ -29,6 +29,7 @@
 SetBrowserEditor
 
 [amayabase]
++config
 HelpAmaya
 AmayaClose
 

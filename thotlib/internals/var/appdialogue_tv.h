@@ -11,7 +11,7 @@
 /* Table of internal optional Thot operations (actions)		    */
 /* Calling an action: (*ThotLocalActions[i])(ref, datatype, data);  */
 
-THOT_EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
+THOT_EXPORT Proc	       ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifndef NODISPLAY
 
@@ -20,21 +20,20 @@ THOT_EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
 #ifndef __GNUC__
 #include <commctrl.h>
 #endif
-#endif /* _WINDOWS */
 
-THOT_EXPORT ThotAppContext	app_cont;
-
-#ifdef _WINDOWS
+THOT_EXPORT CHAR_T             szTbStrings [4096];
 THOT_EXPORT WNDCLASSEX         RootShell;
-THOT_EXPORT int                currentFrame;
 THOT_EXPORT HMENU              currentMenu;
 THOT_EXPORT HINSTANCE          hInstance;
+THOT_EXPORT int                currentFrame;
 THOT_EXPORT BOOL               buttonCommand;
 #else /* _WINDOWS */
+
 THOT_EXPORT ThotWidget	       RootShell;
 #endif /* !_WINDOWS */
 
-THOT_EXPORT Proc		CurrentCallbackAPI;
+THOT_EXPORT ThotAppContext     app_cont;
+THOT_EXPORT Proc	       CurrentCallbackAPI;
 
 /* Table of actions related to the menus attached to Application and	  */
 /* Documents windows.							  */
@@ -42,12 +41,11 @@ THOT_EXPORT Proc		CurrentCallbackAPI;
 /* keyboard equivalent, windows supposed to call the action.		  */
 /* Calling an action: (*actionptr->Call_Action)(document, view);	  */
 
-THOT_EXPORT Action_Ctl	*MenuActionList;
-THOT_EXPORT int		MaxMenuAction;
+THOT_EXPORT Action_Ctl	      *MenuActionList;
+THOT_EXPORT int		       MaxMenuAction;
 
 /* return events for Application and Document windows			  */
-
-THOT_EXPORT int      ClickIsDone;
-THOT_EXPORT STRING   servername ;
+THOT_EXPORT int                ClickIsDone;
+THOT_EXPORT STRING             servername ;
 #endif /* !NODISPLAY */
 #endif /* THOT_APPDIALOGUE_VAR */

@@ -5380,7 +5380,6 @@ static sourceTransition sourceAutomaton[] =
 /* state 6: reading an attribute value between double quotes */
    {6, '\"', (Proc) EndOfAttrValue, 8},
    {6, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30... */
-   {6, '&', (Proc) PutInBuffer, 6},	/* ...except for HREF */
    {6, '*', (Proc) PutInBuffer, 6},
 /* state 7: reading an attribute value without delimiting quotes */
    {7, '>', (Proc) EndOfAttrValueAndTag, 0},
@@ -5921,9 +5920,6 @@ STRING              HTMLbuf;
 			    trans = trans->nextTransition;
 			    /* an exception: when reading the value of an HREF attribute,
 			       SGML entities (&xxx;) should not be interpreted */
-			    if (trans != NULL)
-			       if (currentState == 6 && trans->trigger == '&' && ReadingHREF)
-			          trans = trans->nextTransition;
 			    if (trans == NULL)
 			       charRead = EOS;
 			 }

@@ -3330,8 +3330,7 @@ CSSInfoPtr      css;
       if (i > 0 &&
 	  names[i] &&
 	  (classes[i] || pseudoclasses[i] || ids[i] || attrs[i]))
-	/* Thot is not able to manage this kind of selector
-	   -> abort the CSS parsing */
+	/* Thot is not able to manage this kind of selector -> abort */
 	return (selector);
 
       /* store attributes information */
@@ -3934,15 +3933,12 @@ ThotBool            withUndo;
       if (c != __CR__)
 	CSSindex++;
 
+      if (CSSindex >= MAX_CSS_LENGTH && CSScomment < MAX_CSS_LENGTH)
+	/* we're still parsing a comment: remove the text comment */
+	CSSindex = CSScomment;
+
       if  (CSSindex >= MAX_CSS_LENGTH || toParse || noRule)
 	{
-	  if (CSScomment < MAX_CSS_LENGTH)
-	    {
-	      /* we're still parsing a comment: remove the text comment */
-	      CSSindex = CSScomment;
-	      /* set the origin of the comment in the next buffer */
-	      CSScomment = 0;
-	    }
 	  CSSbuffer[CSSindex] = EOS;
 	  /* parse a not empty string */
 	  if (CSSindex > 0)

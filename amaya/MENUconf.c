@@ -3179,6 +3179,7 @@ STRING              pathname;
 
 #endif
 {
+#ifndef _GTK
 #ifndef _WINDOWS
    int              i;
 
@@ -3225,6 +3226,7 @@ STRING              pathname;
    else
      SetFocus (LanNegHwnd);
 #endif /* !_WINDOWS */
+#endif /* _GTK */
 }
 
 #ifdef _WINDOWS
@@ -3579,7 +3581,7 @@ View                view;
 STRING              pathname;
 #endif   /* __STDC__ */
 {
-
+#ifndef _GTK
 #ifndef _WINDOWS
 
    int                   i;
@@ -3649,7 +3651,7 @@ STRING              pathname;
    else
      SetFocus (ProfileHwnd);
 #endif /* !_WINDOWS */
-
+#endif /* _GTK */
 }
 
 
@@ -3877,6 +3879,7 @@ STRING              pathname;
 
 #endif
 {
+#ifndef _GTK
 #ifndef _WINDOWS
    int              i;
 
@@ -3924,6 +3927,7 @@ STRING              pathname;
    else
      SetFocus (TemplatesHwnd);
 #endif /* !_WINDOWS */
+#endif /* _GTK */
 }
 
 #ifdef _WINDOWS

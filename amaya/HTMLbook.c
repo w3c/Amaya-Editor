@@ -18,6 +18,7 @@
 #include "amaya.h"
 #include "AHTURLTools_f.h"
 #include "print.h"
+#include "css.h"
 
 #define NumFormPrint       1
 #define NumMenuOptions     2
@@ -59,6 +60,7 @@ static int              basePrint;
 #include "HTMLbook_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLhistory_f.h"
+#include "UIcss_f.h"
 
 #ifdef _WINDOWS 
 #include "wininclude.h"

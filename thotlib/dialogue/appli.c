@@ -35,6 +35,7 @@
 #include "document.h"
 #include "view.h"
 #include "appdialogue.h"
+#include "thotcolor.h"
 
 #define MAX_ARGS 20
 
@@ -52,6 +53,7 @@ static PtrDocument  OldDocMsgSelect;
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
+#include "thotcolor_tv.h"
 
 #ifdef _WINDOWS
 #define URL_TXTZONE     0
@@ -132,16 +134,16 @@ static int       latestFrame = -1;
 int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
-int         CommandToString [MAX_FRAME][MAX_BUTTON];
-CHAR_T        szTbStrings [4096];
 BOOL        autoScroll = FALSE;
-ThotBool viewClosed = FALSE;
+ThotBool    viewClosed = FALSE;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
 #include "wininclude.h"
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 BOOL InitToolTip (HWND hwndToolBar)
 #else  /* __STDC__ */
@@ -149,14 +151,14 @@ BOOL InitToolTip (hwndToolBar)
 HWND hwndToolBar;
 #endif /* __STDC__ */
 {
-   BOOL     bSuccess ;
+   BOOL     bSuccess;
    HWND     hwndTT;
-   TOOLINFO ti ;
+   TOOLINFO ti;
 
    /* Fetch handle to tooltip control */
-   hwndTT = ToolBar_GetToolTips (hwndToolBar) ;
+   hwndTT = ToolBar_GetToolTips (hwndToolBar);
    if (hwndTT == NULL) 
-      return FALSE ;
+      return FALSE;
 
    ZeroMemory (&ti, sizeof (TOOLINFO));
    ti.cbSize   = sizeof (TOOLINFO);
@@ -168,54 +170,7 @@ HWND hwndToolBar;
    if (!bSuccess)
       return FALSE;
 
-   return bSuccess ;
-}
-
-#ifdef __STDC__
-static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
-#else  /* __STDC__ */
-static void CopyToolTipText (frame, lpttt)
-int           frame;
-LPTOOLTIPTEXT lpttt;
-#endif /* __STDC__ */
-{
-   int i ;
-   int iButton = lpttt->hdr.idFrom ;
-   int cb ;
-   int cMax ;
-   STRING pString ;
-   STRING pDest = lpttt->lpszText ;
-
-   /* Map command ID to string index */
-   for (i = 0 ; CommandToString[frame][i] != -1 ; i++) {
-       if (CommandToString[frame][i] == iButton) {
-          iButton = i ;
-          break ;
-       }
-   }
-
-   /* To be safe, count number of strings in text */
-   pString = &szTbStrings [0] ;
-   cMax = 0 ;
-   while (*pString != EOS) {
-         cMax++ ;
-         cb = ustrlen (pString) ;
-         pString += (cb + 1) ;
-   }
-
-   /* Check for valid parameter */
-   if (iButton > cMax)
-      pString = _InvalidButtonNdxMSG_;
-   else {
-       /* Cycle through to requested string */
-       pString = &szTbStrings [0] ;
-       for (i = 0 ; i < iButton ; i++) {
-           cb = ustrlen (pString) ;
-           pString += (cb + 1) ;
-       }
-   }
-
-   ustrcpy (pDest, pString) ;
+   return bSuccess;
 }
 #endif /* _WINDOWS */
 
@@ -311,6 +266,32 @@ int                *info;
 
 
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void   CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
+#else  /* __STDC__ */
+static void   CopyToolTipText (frame, lpttt)
+int           frame;
+LPTOOLTIPTEXT lpttt;
+#endif /* __STDC__ */
+{
+   int        i;
+   int        iButton = lpttt->hdr.idFrom;
+   STRING     pString;
+   STRING     pDest = lpttt->lpszText;
+
+   /* Map command ID to string index */
+   for (i = 0; FrameTable[frame].ButtonId[i] != -1; i++) {
+       if (FrameTable[frame].ButtonId[i] == iButton) {
+          iButton = i;
+          break;
+       }
+   }
+   pString = FrameTable[frame].TbStrings[iButton];
+   ustrcpy (pDest, pString);
+}
+
 /*----------------------------------------------------------------------
    WIN_HandleExpose deal with the redrawing of the Client Area when  
    a WM_PAINT has been received in MS-Windows.             
@@ -484,6 +465,18 @@ Dimension           height;
 /*----------------------------------------------------------------------
    FrameResized Evenement sur une frame document.                              
   ----------------------------------------------------------------------*/
+#ifdef _GTK
+void                FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
+{
+  int frame;
+  Dimension           width, height;
+ 
+  frame = (int )data;
+  width = w->allocation.width;
+  height = w->allocation.height;
+  FrameRedraw (frame, width, height);
+}
+#else /* _GTK */
 #ifdef __STDC__
 void                FrameResized (int *w, int frame, int *info)
 #else  /* __STDC__ */
@@ -491,7 +484,6 @@ void                FrameResized (w, frame, info)
 int                *w;
 int                 frame;
 int                *info;
-
 #endif /* __STDC__ */
 {
    int                 n;
@@ -507,6 +499,7 @@ int                *info;
 
    FrameRedraw (frame, width, height);
 }
+#endif /* _GTK */
 #endif /* !_WINDOWS */
 
 #ifdef _WINDOWS
@@ -575,7 +568,7 @@ int                 value;
                       delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
                   VerticalScroll (frame, delta, TRUE);
 			   } else {
-                     delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100) ;
+                     delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
                      JumpIntoView (frame, delta);
                }
                break;
@@ -631,13 +624,13 @@ int                 value;
                   else 
                       delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
 			   } else {
-                     delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100) ;
+                     delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
                }
                break;
                break;
    }
 
-   HorizontalScroll (frame, delta, TRUE) ;
+   HorizontalScroll (frame, delta, TRUE);
    UpdateScrollbars (frame);
 }
 #endif /* _WINDOWS */
@@ -653,9 +646,9 @@ void                FrameHScrolled (w, frame, param)
 int                *w;
 int                 frame;
 int                *param;
-
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    int                 delta, l;
    int                 n, view;
    Arg                 args[MAX_ARGS];
@@ -721,7 +714,9 @@ int                *param;
 	notifyDoc.horizontalValue = delta;
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
-}				/*FrameHScrolled */
+#endif /* _GTK */
+}
+
 
 /*----------------------------------------------------------------------
    Demande de scroll vertical.                                      
@@ -737,6 +732,7 @@ int                *param;
 #endif /* __STDC__ */
 
 {
+#ifndef _GTK
    int                 delta;
    int                 n, view;
    int                 h, y;
@@ -843,7 +839,8 @@ int                *param;
 	notifyDoc.horizontalValue = 0;
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
-}/*FrameVScrolled */
+#endif /* _GTK */
+}
 #endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1085,6 +1082,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    int                 idwindow;
    ThotWidget          w;
 
@@ -1100,6 +1098,7 @@ View                view;
 	SetForegroundWindow (FrMainRef [idwindow]);
 #endif /* _WINDOWS */
      }
+#endif /*_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1199,8 +1198,34 @@ CONST STRING        name;
 
 
 #ifdef _WINDOWS
+
 /*----------------------------------------------------------------------
-  WndProc :  The main MS-Windows event handler for the Thot Library.                                                    
+  CheckTtCmap creates the Thot palette if it doesn't exist
+  ----------------------------------------------------------------------*/
+void CheckTtCmap ()
+{
+  int     i;
+
+  if (TtCmap == NULL) {
+    ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED, sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
+	  
+    ptrLogPal->palVersion    = 0x300;
+    ptrLogPal->palNumEntries = MAX_COLOR;
+	  
+    for (i = 0; i < MAX_COLOR; i++) {
+      ptrLogPal->palPalEntry[i].peRed   = (BYTE) RGB_Table[i].red;
+      ptrLogPal->palPalEntry[i].peGreen = (BYTE) RGB_Table[i].green;
+      ptrLogPal->palPalEntry[i].peBlue  = (BYTE) RGB_Table[i].blue;
+      ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+    }
+    TtCmap = CreatePalette (ptrLogPal);
+    LocalFree (ptrLogPal);
+  }
+}
+
+
+/*----------------------------------------------------------------------
+  WndProc:  The main MS-Windows event handler for the Thot Library
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam) 
@@ -1212,214 +1237,201 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-    HWND   hwndTextEdit;
-    HWND   hwndToolTip ;
-    RECT   rect;
-    int    doc, view ;
-    STRING  viewName ;
-	static HPALETTE hPal;
-	/*
-	HDC    hDC, hMemDC;
-	BITMAP bm;
-	*/
-    RECT   rWindow ;
-    int  frame = GetMainFrameNumber (hwnd);
+  HWND   hwndTextEdit;
+  HWND   hwndToolTip;
+  RECT   rect;
+  int    doc, view;
+  STRING  viewName;
+  RECT   rWindow;
+  int  frame = GetMainFrameNumber (hwnd);
 
-	if (frame != -1)
-       currentFrame = frame;
+  if (frame != -1)
+    currentFrame = frame;
 
-    GetWindowRect (hwnd, &rect);
+  GetWindowRect (hwnd, &rect);
+  switch (mMsg) {
+  case WM_CREATE:
+    /* Create toolbar  */
+    ThotTBBitmap.hInst = hInstance;
+    ThotTBBitmap.nID   = IDR_TOOLBAR;
+    
+    ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
+			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
+    
+    SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
+    
+    if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
+      WinErrorBox (NULL);
+    
+    hwndToolTip = ToolBar_GetToolTips (ToolBar);
+    
+    if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
+      InitToolTip (ToolBar);	
+    
+    /* Create status bar  */
+    StatusBar = CreateStatusWindow (dwStatusBarStyles, _EMPTYSTR_, hwnd, 2);
+    ShowWindow (StatusBar, SW_SHOWNORMAL);
+    UpdateWindow (StatusBar);
+    
+    /* Create client window */
+    hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, TEXT("ClientWndProc"), NULL,
+				 WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
+				 hwnd, (HMENU) 2, hInstance, NULL);
+    ShowWindow (hwndClient, SW_SHOWNORMAL);
+    UpdateWindow (hwndClient);
+    SetWindowText (hwnd, wTitle);
+    return 0;
 
-    switch (mMsg) {
-           case WM_CREATE:
-                /* Create toolbar  */
-                ThotTBBitmap.hInst = hInstance;
-                ThotTBBitmap.nID   = IDR_TOOLBAR;
+  case WM_PALETTECHANGED: 
+    if ((HWND) wParam != hwnd)
+      {
+	HDC hDC = GetDC (hwnd);
+	SelectPalette (hDC, TtCmap, FALSE);
+	if (RealizePalette (hDC))
+	  UpdateColors (hDC);
+	ReleaseDC (hwnd, hDC);
+      }
+    return 0;
 
-                ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
-                                        0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
+  case WM_VSCROLL:
+    WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
+    return 0;
 
-                SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
+  case WM_HSCROLL:
+    WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
+    return 0;
 
-                if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
-                   WinErrorBox (NULL);
+  case WM_ENTER:
+    hwndTextEdit = GetFocus ();
+    WIN_APP_TextCallback (hwndTextEdit, frame);
+    SetFocus (FrRef [frame]);
+    return 0;
 
-                /* ToolBar_AddString (ToolBar, 0, &szTbStrings [0]); */
-                hwndToolTip = ToolBar_GetToolTips (ToolBar);
-				 
-                if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
-                   InitToolTip (ToolBar) ;	
+  case WM_KEYDOWN:
+    SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
+    return 0;
 
-                /* Create status bar  */
-                StatusBar = CreateStatusWindow (dwStatusBarStyles, _EMPTYSTR_, hwnd, 2) ;
-                ShowWindow (StatusBar, SW_SHOWNORMAL);
-                UpdateWindow (StatusBar);
+  case WM_IME_CHAR:
+  case WM_CHAR:
+    SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
+    return 0;
 
-                /* Create client window */
-                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, TEXT("ClientWndProc"), NULL,
-                                             WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
-                                             hwnd, (HMENU) 2, hInstance, NULL) ;
-                ShowWindow (hwndClient, SW_SHOWNORMAL);
-                UpdateWindow (hwndClient);
-                SetWindowText (hwnd, wTitle);
-                return 0;
+  case WM_NOTIFY: {
+    LPNMHDR pnmh = (LPNMHDR) lParam;
+    int idCtrl = (int) wParam;
+    
+    /*Toolbar notifications */
+    if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
+      return ToolBarNotify (frame, hwnd, wParam, lParam);
+    
+    /* Fetch tooltip text */
+    if (pnmh->code == TTN_NEEDTEXT) {
+      LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam;
+      CopyToolTipText (frame, lpttt);
+    }
+    return 0;
+  }
 
-           case WM_PALETTECHANGED: 
-			   if ((HWND) wParam != hwnd) {
-                  HDC hDC = GetDC (hwnd);
-                  SelectPalette (hDC, hPal, 0);
-                  if (RealizePalette (hDC))
-                     UpdateColors (hDC);
-                  ReleaseDC (hwnd, hDC);
-               }
-               return 0;
+  case WM_COMMAND:
+    if (LOWORD (wParam) >= TBBUTTONS_BASE) {
+      buttonCommand = TRUE;
+      APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
+    } else {
+      buttonCommand = FALSE;
+      WIN_ThotCallBack (hwnd, wParam, lParam);
+    }
+    return 0;
 
-           case WM_VSCROLL:
-                WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
-                return 0;
+  case WM_CLOSE:
+  case WM_DESTROY:
+    if (!viewClosed) {
+      FrameToView (frame, &doc, &view);
+      viewName = TtaGetViewName (doc, view);
+      if (!ustrcmp (viewName, TEXT("Formatted_view")))
+	TtcCloseDocument (doc, view);
+      else
+	TtcCloseView (doc, view);
+    }
+    
+    viewClosed = FALSE;
+    PostQuitMessage (0);
+    return 0;
+    
+  case WM_SIZE: {
+    int    cx = LOWORD (lParam);
+    int    cy = HIWORD (lParam);
+    int    cyStatus;
+    int    cxVSB;
+    int    cyHSB;
+    int    cyTB;
+    int    x, y;
+    int    index = 0;
+    int    cyTxtZone;
+    DWORD  dwStyle;
 
-           case WM_HSCROLL:
-                WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
-                return 0;
+    /* Adjust toolbar size. */
+    if (IsWindowVisible (WinToolBar[frame])) {
+      dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
+      
+      if (dwStyle & CCS_NORESIZE)
+	MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
+      else
+	ToolBar_AutoSize (WinToolBar[frame]);
 
-           case WM_ENTER:
-                hwndTextEdit = GetFocus ();
-                WIN_APP_TextCallback (hwndTextEdit, frame);
-				SetFocus (FrRef [frame]);
-                return 0;
+      InvalidateRect (WinToolBar[frame], NULL, TRUE);
+      GetWindowRect (WinToolBar[frame], &rWindow);
+      ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
+      ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
+      cyTB = rWindow.bottom - rWindow.top;
+    } else 
+      cyTB = 0;
+    
+    cyTxtZone = cyTB;
 
-           case WM_KEYDOWN:
-                SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
-                return 0;
+    /* Adjust text zones */
+    for (index = 0; index < MAX_TEXTZONE; index++) {
+      if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
+	MoveWindow (FrameTable[frame].Label[index], 15, cyTxtZone + 5, 70, 20, TRUE);
+	MoveWindow (FrameTable[frame].Text_Zone[index], 85, cyTxtZone + 5, cx - 100, 20, TRUE);
+	cyTxtZone += 25;
+      }
+    }
 
-           case WM_IME_CHAR:
-           case WM_CHAR:
-                SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
-                return 0;
+    /* Adjust status bar size. */
+    if (IsWindowVisible (FrameTable[frame].WdStatus)) {
+      GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
+      cyStatus = rWindow.bottom - rWindow.top;
+      MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
+    } else
+      cyStatus = 0;
 
-           case WM_NOTIFY: {
-                LPNMHDR pnmh = (LPNMHDR) lParam ;
-                int idCtrl = (int) wParam ;
+    /* Adjust Vertical scroll bar */
+    MoveWindow (FrameTable[frame].WdScrollV, cx - 15, cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE);
+    
+    /* Adjust Hoizontal scroll bar */
+    MoveWindow (FrameTable[frame].WdScrollH, 0, cy - (cyStatus + 15), cx - 15, 15, TRUE);
+    
+    /* Adjust client window size. */
+    GetWindowRect (FrameTable[frame].WdScrollV, &rWindow);
+    cxVSB = rWindow.right - rWindow.left;
 
-                /*Toolbar notifications */
-                if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
-                   return ToolBarNotify (frame, hwnd, wParam, lParam) ;
-		 
-                /* Fetch tooltip text */
-                if (pnmh->code == TTN_NEEDTEXT) {
-                   LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam ;
-                   CopyToolTipText (frame, lpttt) ;
-                }
-                return 0;
-           }
+    GetWindowRect (FrameTable[frame].WdScrollH, &rWindow);
+    cyHSB = rWindow.bottom - rWindow.top;
 
-           case WM_COMMAND:
-                if (LOWORD (wParam) >= TBBUTTONS_BASE) {
-                   buttonCommand = TRUE;
-                   APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
-                } else {
-                     buttonCommand = FALSE;
-                     WIN_ThotCallBack (hwnd, wParam, lParam);
-				}
-                return 0;
+    x = 0;
+    y = cyTxtZone;
+    cx = cx - cxVSB;
+    cy = cy - (cyStatus + cyTxtZone + cyHSB);
+    MoveWindow (FrRef [frame], x, y, cx, cy, TRUE);
 
-		   case WM_CLOSE:
-           case WM_DESTROY:
-                if (!viewClosed) {
-                   FrameToView (frame, &doc, &view);
-                   viewName = TtaGetViewName (doc, view);
-                   if (!ustrcmp (viewName, TEXT("Formatted_view")))
-                      TtcCloseDocument (doc, view);
-                   else
-                       TtcCloseView (doc, view);
-                }
+    SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
+    SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
+    return 0;
+  }
 
-                viewClosed = FALSE;
-                PostQuitMessage (0);
-                return 0 ;
-
-           case WM_SIZE: {
-                int    cx = LOWORD (lParam) ;
-                int    cy = HIWORD (lParam) ;
-                int    cyStatus ;
-                int    cxVSB ;
-                int    cyHSB ;
-                int    cyTB ;
-                int    x, y ;
-                int    index = 0;
-                int    cyTxtZone ;
-                DWORD  dwStyle ;
-
-#               if 0
-				if (appLogo) 
-                   GetObject (appLogo, sizeof (BITMAP), &bm);
-#               endif /* 0 */
-
-                /* Adjust toolbar size. */
-                if (IsWindowVisible (WinToolBar[frame])) {
-                   dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE) ;
-
-                   if (dwStyle & CCS_NORESIZE)
-                      MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE) ;
-                   else
-                       ToolBar_AutoSize (WinToolBar[frame]) ;
-
-                   InvalidateRect (WinToolBar[frame], NULL, TRUE) ;
-                   GetWindowRect (WinToolBar[frame], &rWindow) ;
-                   ScreenToClient (hwnd, (LPPOINT) &rWindow.left) ;
-                   ScreenToClient (hwnd, (LPPOINT) &rWindow.right) ;
-                   cyTB = rWindow.bottom - rWindow.top ;
-                } else 
-                      cyTB = 0 ;
-
-                cyTxtZone = cyTB ;
-				/* cyLogo    = cyTB ; */
-
-                /* Adjust text zones */
-                for (index = 0; index < MAX_TEXTZONE; index++) {
-                    if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
-                       MoveWindow (FrameTable[frame].Label[index], 15, cyTxtZone + 5, 70, 20, TRUE);
-                       MoveWindow (FrameTable[frame].Text_Zone[index], 85, cyTxtZone + 5, cx - 100, 20, TRUE) ;
-                       cyTxtZone += 25 ;
-                    }
-                }
-
-                /* Adjust status bar size. */
-                if (IsWindowVisible (FrameTable[frame].WdStatus)) {
-                   GetWindowRect (FrameTable[frame].WdStatus, &rWindow) ;
-                   cyStatus = rWindow.bottom - rWindow.top ;
-                   MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE) ;
-                } else
-                      cyStatus = 0 ;
-
-                /* Adjust Vertical scroll bar */
-                MoveWindow (FrameTable[frame].WdScrollV, cx - 15, cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE) ;
-                
-                /* Adjust Hoizontal scroll bar */
-                MoveWindow (FrameTable[frame].WdScrollH, 0, cy - (cyStatus + 15), cx - 15, 15, TRUE) ;
-
-                /* Adjust client window size. */
-                GetWindowRect (FrameTable[frame].WdScrollV, &rWindow) ;
-                cxVSB = rWindow.right - rWindow.left ;
-
-                GetWindowRect (FrameTable[frame].WdScrollH, &rWindow) ;
-                cyHSB = rWindow.bottom - rWindow.top ;
-
-                x = 0 ;
-                y = cyTxtZone ;
-                cx = cx - cxVSB ;
-                cy = cy - (cyStatus + cyTxtZone + cyHSB) ;
-                MoveWindow (FrRef [frame], x, y, cx, cy, TRUE) ;
-
-                SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
-                SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
-
-                return 0;
-           }
-
-           default: 
-                    return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
-     }
+  default: 
+    return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+  }
 }
 
 /* -------------------------------------------------------------------
@@ -1518,12 +1530,12 @@ LPARAM lParam;
                  return 0;
 
             case WM_SIZE: {
-                 HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
-                 int  cx         = LOWORD (lParam) ;
-                 int  cy         = HIWORD (lParam) ;
+                 HWND hwndNotify = GetWindow (hwnd, GW_CHILD);
+                 int  cx         = LOWORD (lParam);
+                 int  cy         = HIWORD (lParam);
 
-                 WIN_ChangeViewSize (frame, cx, cy, 0, 0) ;
-                 return 0 ;
+                 WIN_ChangeViewSize (frame, cx, cy, 0, 0);
+                 return 0;
             }
 
             case WM_KEYDOWN:
@@ -1565,8 +1577,8 @@ LPARAM lParam;
                  return 0;
 
             case WM_LBUTTONUP:
-                 X_Pos = LOWORD (lParam) ;
-                 Y_Pos = HIWORD (lParam) ;
+                 X_Pos = LOWORD (lParam);
+                 Y_Pos = HIWORD (lParam);
                  ReleaseCapture ();
                  winCapture = (HWND) -1;
                  firstTime = TRUE;
@@ -1633,8 +1645,8 @@ LPARAM lParam;
             case WM_MOUSEMOVE:
                  /* SetActiveWindow (FrMainRef[frame]); 
                  SetFocus (hwnd); */
-                 X_Pos = LOWORD (lParam) ;
-                 Y_Pos = HIWORD (lParam) ;
+                 X_Pos = LOWORD (lParam);
+                 Y_Pos = HIWORD (lParam);
                  /* if (fBlocking) { */
                  if (wParam & MK_LBUTTON) {
                     if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) ||  
@@ -1664,7 +1676,7 @@ LPARAM lParam;
                  return 0;
 	       
           default:
-               return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+               return (DefWindowProc (hwnd, mMsg, wParam, lParam));
      }
 }
 #endif /* _WINDOWS */
@@ -2178,6 +2190,7 @@ STRING              text;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
+#ifndef _GTK
    int                 n;
    Arg                 args[MAX_ARGS];
    ThotWidget          w;
@@ -2193,8 +2206,9 @@ STRING              text;
 	n++;
 	XtSetValues (w, args, n);
      }
+#endif /* _GTK */
 #endif /* _WINDOWS */
-}				/*ChangeFrameTitle */
+}
 
 /*----------------------------------------------------------------------
    La frame d'indice frame devient la fenetre active.               
@@ -2207,6 +2221,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    ThotWidget          w;
    Document            doc;
 
@@ -2228,7 +2243,8 @@ int                 frame;
 #endif /* _WINDOWS */
 	  }
      }
-}				/*ChangeSelFrame */
+#endif /* _GTK */
+}
 
 
 /*----------------------------------------------------------------------
@@ -2284,20 +2300,18 @@ void                GetSizesFrame (frame, width, height)
 int                 frame;
 int                *width;
 int                *height;
-
 #endif /* __STDC__ */
-
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    *width = FrameTable[frame].FrWidth;
    *height = FrameTable[frame].FrHeight;
-#  else  /* _WINDOWS */
-   RECT rWindow ;
+#else  /* _WINDOWS */
+   RECT rWindow;
 
-   GetClientRect (FrRef[frame], &rWindow) ;
-   *height = rWindow.bottom - rWindow.top ;
-   *width  = rWindow.right - rWindow.left ;
-#  endif /* _WINDOWS */
+   GetClientRect (FrRef[frame], &rWindow);
+   *height = rWindow.bottom - rWindow.top;
+   *width  = rWindow.right - rWindow.left;
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2320,9 +2334,13 @@ int                 raz;
 #endif /* __STDC__ */
 {
    int              clipx, clipy, clipwidth, clipheight;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
+#ifdef _GTK 
+   GdkRectangle      rect;
+#else /* _GTK */
+#endif /* _GTK */
    XRectangle        rect;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
 	/* On calcule le rectangle de clipping su la fenetre */
@@ -2346,7 +2364,20 @@ int                 raz;
 	   *yf = clipheight;
 	clipwidth = *xf - *xd;
 	clipheight = *yf - *yd;
-#   ifndef _WINDOWS
+#ifndef _WINDOWS
+#ifdef _GTK 
+	rect.x = clipx + FrameTable[frame].FrLeftMargin;
+	rect.y = clipy + FrameTable[frame].FrTopMargin;
+	rect.width = clipwidth;
+	rect.height = clipheight;
+
+
+	gdk_gc_set_clip_rectangle (TtLineGC, &rect);
+	
+	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
+/*
+	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);*/
+#else /* _GTK */
 	rect.x = 0;
 	rect.y = 0;
 	rect.width = clipwidth;
@@ -2357,19 +2388,20 @@ int                 raz;
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-#   else  /* _WINDOWS */ 
+#endif /* _GTK */
+#else  /* _WINDOWS */ 
     if (TtDisplay == (HDC) 0)
        WIN_GetDeviceContext (frame);
     if (!(clipRgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
                              clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight)))
        WinErrorBox (NULL);
-#   endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	if (raz > 0)
-#      ifdef _WINDOWS 
+#ifdef _WINDOWS 
 	   Clear (frame, clipwidth, clipheight, clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin);
-#      else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
 }
 
@@ -2384,7 +2416,19 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
+#ifdef _GTK
+  GdkRectangle         rect;
+
+ rect.x = 0;
+ rect.y = 0;
+ rect.width = MAX_SIZE;
+ rect.height = MAX_SIZE;
+
+ gdk_gc_set_clip_rectangle (TtLineGC, &rect);
+ /*  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);*/
+ gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
+#else /* _GTK */
    XRectangle          rect;
 
    rect.x = 0;
@@ -2395,14 +2439,15 @@ int                 frame;
    XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted); 
    XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
-#  else  /* _WINDOWS */
+#endif /* _GTK */
+#else  /* _WINDOWS */
    /* >>>>>>>>>>>>  WIN_GetDeviceContext (frame); <<<<<<<<<<<<< */
    SelectClipRgn(TtDisplay, NULL); 
    if (clipRgn && !DeleteObject (clipRgn))
       WinErrorBox (NULL);
    clipRgn = (HRGN) 0;
    /* >>>>>>>>>>>>  WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2418,27 +2463,26 @@ int                 frame;
 #endif /* __STDC__ */
 
 {
+#ifndef _GTK
    int                 Xpos, Ypos;
    int                 width, height;
    int                 l, h;
    ThotWidget          hscroll, vscroll;
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    int                 n;
-#  endif /* _WINDOWS */
-
-#  ifdef _WINDOWS
-   RECT       rWindow ;
-   SCROLLINFO scrollInfo;
-#  endif /* _WINDOWS */
+#else /* _WINDOWS */
+   RECT                rWindow;
+   SCROLLINFO          scrollInfo;
+#endif /* _WINDOWS */
 
    /* Demande le volume affiche dans la fenetre */
    ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
    hscroll = FrameTable[frame].WdScrollH;
    vscroll = FrameTable[frame].WdScrollV;
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
    n = 0;
@@ -2468,27 +2512,28 @@ int                 frame;
 	n++;
 	XtSetValues (vscroll, args, n);
      }
-#  else  /* _WINDOWS */
-   GetWindowRect (FrRef[frame], &rWindow) ;
-   h = rWindow.bottom - rWindow.top ;
-   l = rWindow.right - rWindow.left ;
+#else  /* _WINDOWS */
+   GetWindowRect (FrRef[frame], &rWindow);
+   h = rWindow.bottom - rWindow.top;
+   l = rWindow.right - rWindow.left;
    scrollInfo.cbSize = sizeof (SCROLLINFO);
-   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE ;
+   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
    scrollInfo.nMin   = 0;
 
    if (width + Xpos <= l) {
       scrollInfo.nMax   = l;
-      scrollInfo.nPage  = width ;
-      scrollInfo.nPos   = Xpos ;
+      scrollInfo.nPage  = width;
+      scrollInfo.nPos   = Xpos;
       SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
    }
 
    if (height + Ypos <= h) {
       scrollInfo.nMax   = h;
-      scrollInfo.nPage  = height ;
-      scrollInfo.nPos   = Ypos ;
+      scrollInfo.nPage  = height;
+      scrollInfo.nPos   = Ypos;
       SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
    }
-#  endif /* _WINDOWS */
-}				/*UpdateScrollbars */
+#endif /* _WINDOWS */
+#endif /* _GTK */
+}
 /* End Of Module Thot */

@@ -153,7 +153,25 @@ typedef XColor    ThotColorStruct;
 #define X_USEBFUNCS
 #include <X11/Xlibint.h>
 #endif /* OWN_XLOOKUPSTRING */
-
+#ifdef _GTK
+typedef GtkWidget     *ThotWidget;
+typedef Window         ThotWindow;
+typedef ThotWidget     ThotButton;
+typedef ThotWidget     ThotMenu;
+typedef Drawable       ThotBitmap;
+typedef GC             ThotGC;
+typedef unsigned long  ThotColor;
+typedef XColor         ThotColorStruct;
+typedef int           *ptrfont;
+typedef Cursor         ThotCursor;
+typedef XPoint         ThotPoint;
+typedef XEvent         ThotEvent;
+typedef XKeyEvent      ThotKeyEvent;
+typedef XComposeStatus ThotComposeStatus;
+typedef XtAppContext   ThotAppContext;
+typedef XtTranslations ThotTranslations;
+typedef GdkPixmap     *ThotIcon;
+#else /* _GTK */
 typedef Widget         ThotWidget;
 typedef Window         ThotWindow;
 typedef ThotWidget     ThotButton;
@@ -171,6 +189,7 @@ typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext   ThotAppContext;
 typedef XtTranslations ThotTranslations;
 typedef Pixmap         ThotIcon;
+#endif /* _GTK */
 /* button states */
 #define TBSTYLE_BUTTON  0
 #define TBSTYLE_CHECK   1

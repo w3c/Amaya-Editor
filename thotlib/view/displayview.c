@@ -218,7 +218,6 @@ int		view;
 #endif /* __STDC__ */
 {
    PtrAbstractBox	pAb, pNextAb, pParentAb, pAbbRedisp, pAbbR;
-   int			h;
 
    pAbbRedisp = NULL;
    /* look for the first abstract box (pAb) corresponding to a following

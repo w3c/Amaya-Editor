@@ -18,6 +18,10 @@
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
+#ifdef _GTK
+#include <gtk/gtk.h>
+#include "amaya.xpm"
+#endif /* _GTK */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -28,7 +32,11 @@
 #include "dialog.h"
 #include "logowindow.h"
 #include "application.h"
+#ifdef _GTK
+#include "gtkdialog.h"
+#else /* _GTK */
 #include "dialog.h"
+#endif /* _GTK */
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
@@ -112,56 +120,25 @@ static SchemaMenu_Ctl *SchemasMenuList;
 
 extern TBADDBITMAP ThotTBBitmap;
 extern HWND        currentWindow;
-extern BOOL        tbStringsInitialized;
-
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static BOOL    doSwitchButton = TRUE;
+static int     FormattedViewXPos = 0;
+static int     FormattedViewYPos = 0;
 
-static int FormattedViewXPos = 0;
-static int FormattedViewYPos = 0;
-
-HWND  hwndClient ;
-HWND  ToolBar ;
+HWND  hwndClient;
+HWND  ToolBar;
 HWND  StatusBar;
 HWND  logoFrame;
-int    nCust[MAX_FRAME][30];
-static HWND hwndTB;
+int   nCust[MAX_FRAME][30];
 
-static int   strIndex ;
-
-extern int     tipIndex;
-extern int     CommandToString [MAX_FRAME][MAX_BUTTON];
-extern CHAR_T    szTbStrings [4096];
+static HWND               hwndTB;
 
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
 HMENU hmenu;
 int   menu_item;
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING GetString (int frame, int i_String)
-#else  /* __STDC__ */
-STRING GetString (frame, i_String)
-int frane;
-int i_String;
-#endif /* __STDC__ */
-{
-   int i, cb ;
-   STRING pString ;
-
-   /* Cycle through to requested string */
-   pString = &szTbStrings [0] ;
-   for (i = 0 ; i < i_String ; i++) {
-       cb = ustrlen (pString) ;
-       pString += (cb + 1) ;
-   }
-
-   return pString ;
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -175,26 +152,26 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-   LPNMHDR pnmh = (LPNMHDR) lParam ;
-   int idCtrl = (int) wParam ;
+   LPNMHDR pnmh = (LPNMHDR) lParam;
+   int idCtrl = (int) wParam;
 
    /* Allow toolbar to be customized */
    if ((pnmh->code == TBN_QUERYDELETE) || (pnmh->code == TBN_QUERYINSERT))
-      return 1 ; /* We always say "yes" */
+      return 1; /* We always say "yes" */
 
    /* Provide details of allowable toolbar buttons */
    if (pnmh->code == TBN_GETBUTTONINFO) {
-      LPTBNOTIFY ptbn = (LPTBNOTIFY) lParam ;
-      int iButton = nCust[frame][ptbn->iItem] ;
+      LPTBNOTIFY ptbn = (LPTBNOTIFY) lParam;
+      int iButton = nCust[frame][ptbn->iItem];
 
       if (iButton != -1) {
-         ustrcpy (ptbn->pszText, GetString (frame, ptbn->iItem)) ;
-         memcpy (&ptbn->tbButton, FrameTable[frame].Button[iButton], sizeof (TBBUTTON)) ;
-         return 1 ;
+         ustrcpy (ptbn->pszText, FrameTable[frame].TbStrings[ ptbn->iItem]);
+         memcpy (&ptbn->tbButton, FrameTable[frame].Button[iButton], sizeof (TBBUTTON));
+         return 1;
       }
    }
 
-   return 0 ;
+   return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -1441,7 +1418,7 @@ ThotWidget   toplevel;
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
    functionName: internal name of the function used to connect shortcuts.
-   info: text to display when the cursor stays on the button.
+   info: text to display when the cursor stays on the button (should be global).
    type: button type, only used on Windows versions.
    state: TRUE to enable the button, false to disable it.
    Returns index
@@ -1462,15 +1439,16 @@ ThotBool   state;
 {
   int                 frame, i, index;
 #ifndef _WINDOWS
+#ifndef _GTK
   int                 n;
   XmString            title_string;
   Arg                 args[MAX_ARGS];
+#endif /* _GTK */
   ThotWidget          w, row;
 #else  /* _WINDOWS */
-  TBBUTTON* w;
+  ThotButton          w;
 #endif
- 
-  
+
   UserErrorCode = 0;
   index = 0;
   /* verifie le parametre document */
@@ -1491,11 +1469,23 @@ ThotBool   state;
 	      /* verifie que deux séparateurs ne se suivent pas et que la fonction appartient au profile choisi */
 	      if ((procedure == NULL && LastProcedure != NULL)  || (procedure != NULL &&  Prof_ShowButton(functionName)))
 		{
-		  
-		  LastProcedure = procedure; 
-
+		  LastProcedure = procedure;
 		  /* Insere le nouveau bouton */
 #ifndef _WINDOWS
+#ifdef _GTK
+		  if (picture == None)
+		    gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));
+		  else
+		    {
+		      /* insere l'icone du bouton */
+		      w = gtk_pixmap_new (picture, NULL);
+		      row = gtk_toolbar_append_item (GTK_TOOLBAR (FrameTable[frame].Button[0]), NULL, NULL ,"private", 
+						       w, GTK_SIGNAL_FUNC (APP_ButtonCallback), (gpointer)frame);
+		   
+		      gtk_widget_show (row);
+		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		    }
+#else /* _GTK */
 		  row = FrameTable[frame].Button[0];
 		  n = 0;
 		  XtSetArg (args[n], XmNmarginWidth, 0);
@@ -1540,64 +1530,57 @@ ThotBool   state;
 			  FrameTable[frame].Call_Button[i] = (Proc) procedure;
 			}
 		    }
+		  /* force la mise a jour de la fenetre */
+		  XtManageChild (row);
+#endif /* _GTK */
 		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].EnabledButton[i] = state;
 		  index = i;
-		  /* force la mise a jour de la fenetre */
-		  XtManageChild (row);
+#ifndef _GTK
+		  if (info != NULL)
+		    XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
+#endif /* _GTK */
 #else  /* _WINDOWS */
 		  index = i;
-		  if (procedure) {
-		    w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
-		    if (!w)
-		      WinErrorBox (NULL);
-		    else {
-		      w->iBitmap      = picture;
-		      w->idCommand    = TBBUTTONS_BASE + i; 
+		  w = (ThotButton) TtaGetMemory (sizeof (TBBUTTON));
+		  FrameTable[frame].Button[i] = w;
+		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		  if (!w)
+		    WinErrorBox (NULL);
+		  else
+		    {
 		      w->fsState      = TBSTATE_ENABLED;
 		      w->fsStyle      = type;
-		      w->bReserved[0] = 0;
-		      w->bReserved[1] = 0;
-		      w->dwData       = 0;
-		      w->iString      = -1;
-		      CommandToString[frame][tipIndex++] = TBBUTTONS_BASE + i;
-		      CommandToString[frame][tipIndex]   = -1;
-		      nCust [frame][i] = i;
-		      FrameTable[frame].Button[i] = w;
-		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
-		      
-		      ToolBar_InsertButton (WinToolBar[frame], i, w);
-		      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
+		      if (procedure)
+			{
+			  w->iBitmap      = picture;
+			  w->idCommand    = TBBUTTONS_BASE + i; 
+			  w->bReserved[0] = 0;
+			  w->bReserved[1] = 0;
+			  w->dwData       = 0;
+			  w->iString      = -1;
+			  FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
+			  nCust [frame][i] = i;
+			  ToolBar_InsertButton (WinToolBar[frame], i, w);
+			  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
+			}
+		      else
+			{
+			  w->iBitmap   = 0;
+			  w->idCommand = 0; 
+			  w->dwData    = 0;
+			  w->iString   = 0;
+			  ToolBar_InsertButton (WinToolBar[frame], i, w);
+			}
 		    }
-		  } else {
-		    w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
-		    w->iBitmap   = 0;
-		    w->idCommand = 0; 
-		    w->fsState   = TBSTATE_ENABLED;
-		    w->fsStyle   = (BYTE)type;
-		    w->dwData    = 0;
-		    w->iString   = 0;
-		    FrameTable[frame].Button[i] = w;
-		    FrameTable[frame].Call_Button[i] = (Proc) procedure;
-		    ToolBar_InsertButton (WinToolBar[frame], i, w);
-		  }
 		  
+		  if (info != NULL)
+		    FrameTable[frame].TbStrings[i] = info;
 #endif /* _WINDOWS */
-		  if (info != NULL) {
-#ifdef _WINDOWS
-		    if (!tbStringsInitialized) {                   
-		      ustrcat (&szTbStrings [strIndex], info);
-		      strIndex += (ustrlen (info) + 1);
-		    }
-#else  /* !_WINDOWS */
-		    XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
-#endif /* _WINDOWS */
-		  }
 		}
 	    }
 	}
-    }
-  
+    }  
   TtaHandlePendingEvents ();
   return (index);
 }
@@ -2218,7 +2201,7 @@ void                (*procedure) ();
                   wLabel = CreateWindow (TEXT("STATIC"), label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
                                          0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
                   FrameTable[frame].Label[i] = wLabel;
-				  /* FrameTable[frame].showLogo = TRUE ; */
+				  /* FrameTable[frame].showLogo = TRUE; */
                   PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #                 endif /* _WINDOWS */
 	       }
@@ -2370,7 +2353,7 @@ View                view;
             if (!itemChecked) {
                hmenu = WIN_GetMenu (frame); 
                CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-               itemChecked = TRUE ;
+               itemChecked = TRUE;
             }
 
 		    ShowWindow (FrameTable[frame].Label [index], SW_HIDE);
@@ -2438,26 +2421,53 @@ int                *volume;
 int                 doc;
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    ThotMenu            menu_bar, w;
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    ThotWidget          menu_bar;
-   ThotWidget          w, row1, row2, rowv;
+   ThotWidget          w; /* menu button */
+#ifdef _GTK
+   ThotWidget          vbox1;
+   ThotWidget          vbox2;
+   ThotWidget          vbox3;
+   ThotWidget          hbox1;
+   ThotWidget          hbox2;
+   ThotWidget          menu_item;
+   ThotWidget          logo_pixmap;
+   ThotWidget          table1;
+   ThotWidget          table2;
+   ThotWidget          table3;
+   ThotWidget          table4;
+   ThotWidget          table5;
+   ThotWidget          entry1;
+   ThotWidget          entry2;
+   ThotWidget          label1;
+   ThotWidget          label2;
+   ThotWidget          statusbar;
+   ThotWidget          drawing_area;
+   ThotWidget          toolbar;
+   ThotWidget          drawing_frame;  
+   GdkPixmap          *amaya_pixmap;
+   GdkBitmap          *amaya_mask;
+#else /* _GTK */
+   ThotWidget          row1, row2, rowv;
    ThotWidget          TheFrame;
    ThotWidget          Wframe;
    ThotWidget          shell;
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
+   CHAR_T              string[700];
+   int                 n;
+#endif /* _GTK */
    Dimension           dx, dy;
-   CHAR_T                string[700];
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    ThotWidget          Main_Wd = (ThotWidget) 0;
    ThotWidget          hscrl;
    ThotWidget          vscrl;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
    STRING	       visiStr, zoomStr;
-   int                 i, n;
+   int                 i;
    int                 ref;
    int		       visiVal, zoomVal;
    int                 frame;
@@ -2515,7 +2525,8 @@ int                 doc;
 	     haut = 240;	/* hauteur en mm */
 	   haut = mmtopixel (haut, 0) + FrameTable[frame].FrTopMargin;
 	   
-#          ifdef _WINDOWS
+#ifdef _WINDOWS
+	   /*** Build thedocument window ***/
 	   if (X < 0)
 	     X = 92;
 	   else
@@ -2524,31 +2535,6 @@ int                 doc;
 	     Y = 2;
 	   else
 	     Y = mmtopixel (Y, 0);
-#          else  /* _WINDOWS */
-	   if (large < MIN_LARG)
-	     dx = (Dimension) MIN_LARG;
-	   else
-	     dx = (Dimension) large;
-	   if (haut < MIN_HAUT)
-	     dy = (Dimension) MIN_HAUT;
-	   else
-	     dy = (Dimension) haut;
-	   if (X <= 0)
-	     X = 92;
-	   else
-	     X = mmtopixel (X, 1);
-	   if (Y <= 0)
-	     Y = 2;
-	   else
-	     Y = mmtopixel (Y, 0);
-#          endif /* _WINDOWS */
-
-#          ifdef _WINDOWS
-#          if 0
-	   if (appLogo == (HBITMAP)0)
-	     appLogo = (HBITMAP) LoadImage (hInstance, bmpID, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-#          endif /* 0 */
-
 	   Main_Wd = CreateWindowEx (0L, TEXT("Amaya"),    /* window class name */
 				     NULL,	/* window caption    */
 				     WS_OVERLAPPEDWINDOW, /* window style            */
@@ -2580,11 +2566,47 @@ int                 doc;
 	     else 
 	       WinMenus[frame] = menu_bar;
 	   }
-#          endif /* _WINDOWS */
+#else /* _WINDOWS */
+#ifdef _GTK
+	   /*** Build thedocument window ***/
+	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	   gtk_window_set_title (GTK_WINDOW (Main_Wd), "Amaya");
+	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
+	   gtk_signal_connect (GTK_OBJECT (Main_Wd), "destroy",
+		      GTK_SIGNAL_FUNC (FrameKilled),(gpointer) frame);
+	  
+	   /* Création de la table contenant les differents elements de l'interface */
+	   vbox1 = gtk_vbox_new (FALSE, 0);
+	   gtk_widget_show (vbox1);
+	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
 
-	   /*** Creation la fenetre document ***/
+	   /* Creation de la table contenant la bar de menu */
+	   vbox2 = gtk_vbox_new (FALSE, 0);
+	   gtk_widget_show (vbox2);
+	   gtk_box_pack_start (GTK_BOX (vbox1), vbox2, FALSE, TRUE, 0);
+
+	   if (wind_pixmap != 0)
+	     /* Creation de la fenetre icone associee */
+	     /*XtSetArg (args[n], XmNiconPixmap, wind_pixmap)*/;
+#else /* _GTK */
+	   /*** Build thedocument window ***/
+	   if (large < MIN_LARG)
+	     dx = (Dimension) MIN_LARG;
+	   else
+	     dx = (Dimension) large;
+	   if (haut < MIN_HAUT)
+	     dy = (Dimension) MIN_HAUT;
+	   else
+	     dy = (Dimension) haut;
+	   if (X <= 0)
+	     X = 92;
+	   else
+	     X = mmtopixel (X, 1);
+	   if (Y <= 0)
+	     Y = 2;
+	   else
+	     Y = mmtopixel (Y, 0);
 	   n = 0;
-#          ifndef _WINDOWS
 	   XtSetArg (args[n], XmNdefaultFontList, DefaultFont);
 	   n++;
 	   sprintf (string, "+%d+%d", X, Y);
@@ -2621,25 +2643,26 @@ int                 doc;
 
 	   XtManageChild (Main_Wd);
 	   XtAddCallback (shell, XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
-#          endif /* _WINDOWS */
+#endif /* _GTK */
+#endif /* _WINDOWS */
 	   
-	   /* Recherche la liste des menus a construire */
+	   /* Look for the menu list to be built */
 	   SCHmenu = SchemasMenuList;
 	   ptrmenu = NULL;
 	   while (SCHmenu != NULL && ptrmenu == NULL)
 	     {
 	       if (!ustrcmp (schema, SCHmenu->SchemaName))
-		 /* c'est un document d'un type particulier */
+		 /* that document has specific menus */
 		 ptrmenu = SCHmenu->SchemaMenu;
 	       else
-		 /* schema suivant */
+		 /* next schema */
 		 SCHmenu = SCHmenu->NextSchema;
 	     }
 	   if (ptrmenu == NULL)
-	     /* c'est un document standard */
+	     /* the document uses standard menus */
 	     ptrmenu = DocumentMenuList;
 	   
-	   /**** Construction des menus ****/
+	   /**** Build menus ****/
 	   FrameTable[frame].FrMenus = ptrmenu;
 	   /* reference du menu construit */
 	   ref = frame + MAX_LocalMenu;
@@ -2650,12 +2673,11 @@ int                 doc;
 	   FrameTable[frame].MenuPaste = -1;
 	   FrameTable[frame].MenuUndo = -1;
 	   FrameTable[frame].MenuRedo = -1;
-#          ifndef _WINDOWS
+
+#ifndef _WINDOWS
+#ifndef _GTK
 	   menu_bar = 0;
-#          endif /* !_WINDOWS */ 
-	   /*** Parametres de creation des boutons menus ***/
 	   n = 0;
-#          ifndef _WINDOWS
 	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	   n++;
 	   XtSetArg (args[n], XmNforeground, FgMenu_Color);
@@ -2666,31 +2688,43 @@ int                 doc;
 	   n++;
 	   XtSetArg (args[n], XmNborderWidth, 0);
 	   n++;
-#          endif /* _WINDOWS */
-	   /* saute les menus qui ne concernent pas cette vue */
+#endif /* _GTK */
+#endif /* _WINDOWS */
+
 	   while (ptrmenu != NULL)
 	     {
-	       /* saute les menus qui ne concernent pas cette vue */
+	       /* skip menus that concern another view */
 	       if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view)
 		 if (Prof_ShowMenu (ptrmenu))
 		   {
 		     if (menu_bar == 0)
 		       {
+			 /*** The toolbar ***/
+#ifndef _WINDOWS
+#ifdef _GTK
 			 /*** La barre des menus ***/
-#                      ifndef _WINDOWS
+			 menu_bar = gtk_menu_bar_new ();
+			 gtk_widget_show (menu_bar);
+			 gtk_box_pack_start (GTK_BOX (vbox2), menu_bar, FALSE, TRUE, 0);
+#else /* _GTK */
 			 XtSetArg (argument[0], XmNbackground, BgMenu_Color);
 			 XtSetArg (argument[1], XmNspacing, 0);
 			 menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
 			 XtManageChild (menu_bar);
-#                      endif /* !_WINDOWS */
+#endif /* _GTK */
+#endif /* !_WINDOWS */
 		       }
 		   
 		     /* construit le bouton de menu */
-#                  ifdef _WINDOWS
+#ifdef _WINDOWS
 		     w = CreateMenu ();
-#                  else  /* _WINDOWS */
+#else  /* _WINDOWS */
+#ifdef _GTK
+		     w = gtk_menu_new ();
+#else /* _GTK */
 		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
-#                  endif /* !_WINDOWS */
+#endif /* _GTK */
+#endif /* !_WINDOWS */
 		     FrameTable[frame].WdMenus[i] = w;
 		     FrameTable[frame].EnabledMenus[i] = TRUE;
 		     /* Evite la construction des menus dynamiques */
@@ -2700,20 +2734,27 @@ int                 doc;
 		       FrameTable[frame].MenuSelect = ptrmenu->MenuID;
 		     else 
 		       BuildPopdown (ptrmenu, ref, w, frame, doc);
-#                  ifdef _WINDOWS
+#ifdef _WINDOWS
 		     AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
-#                  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
+#ifdef _GTK
+		     menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
+		     gtk_widget_show (menu_item);
+		     if (ptrmenu->MenuHelp == TRUE)
+		       gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
+		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
+		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
+#else /* _GTK */
 		     XtManageChild (w);
-#                  endif /* !_WINDOWS */
-		     /* Enregistre les menus dynamiques */
+		     /* Register dynamic menus */
 		     if (ptrmenu->MenuHelp)
 		       {
-			 /* Cadre a droite le menu help */
-#                      ifndef _WINDOWS
+			 /* Menu help at the right side*/
 			 XtSetArg (argument[0], XmNmenuHelpWidget, w);
 			 XtSetValues (XtParent (w), argument, 1);
-#                      endif /* _WINDOWS */
 		       }
+#endif /* _GTK */
+#endif /* _WINDOWS */
 		   }
 
 	       ptrmenu = ptrmenu->NextMenu;
@@ -2721,16 +2762,18 @@ int                 doc;
 	       i++;
 	     }
 
-	   /* Les autres entrees de menus sont inactives */
+	   /* enable othe menu entries */
 	   while (i < MAX_MENU)
 	     {
 	       FrameTable[frame].EnabledMenus[i] = FALSE;
 	       i++;
 	     }
 
+#ifndef _WINDOWS
+#ifdef _GTK
+#else /* _GTK */
 	   /*** La barre de scroll horizontale ***/
 	   n = 0;
-#          ifndef _WINDOWS
 	   XtSetArg (args[n], XmNbackground, Scroll_Color);
 	   n++;
 	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
@@ -2747,16 +2790,8 @@ int                 doc;
 	   XtAddCallback (hscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	   XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	   XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-#          else  /* _WINDOWS */
-	   hscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
-				 0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
-	   
-	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
-	   SetScrollPos (hscrl, SB_CTL, 0, FALSE);
-#          endif /* _WINDOWS */
 
 	   /*** La barre de scroll verticale ***/
-#          ifndef _WINDOWS
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, Scroll_Color);
 	   n++;
@@ -2774,16 +2809,8 @@ int                 doc;
 	   XtAddCallback (vscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	   XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	   XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-#            else  /* _WINDOWS */
-	   vscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
-				 0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
-	   
-	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
-	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
-#            endif /* _WINDOWS */
 
 	   /* Row vertical pour mettre le logo au dessous des boutons */
-#          ifndef _WINDOWS
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 0);
 	   n++;
@@ -2973,17 +3000,29 @@ int                 doc;
 	   XtAddCallback (w, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
 	   XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
 	   FrRef[frame] = XtWindowOfObject (w);
-#          endif /* !_WINDOWS */
-	   FrameTable[frame].WdScrollH = hscrl;
-	   FrameTable[frame].WdScrollV = vscrl;
-	   
-#          ifndef _WINDOWS
+#endif /* _GTK */
 	   FrameTable[frame].FrWidth  = (int) dx;
 	   FrameTable[frame].FrHeight = (int) dy;
-#          else /* _WINDOWS */
+#else  /* _WINDOWS */
+	   /*** La barre de scroll horizontale ***/
+	   hscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
+				 0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
+	   
+	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
+	   SetScrollPos (hscrl, SB_CTL, 0, FALSE);
+
+	   /*** La barre de scroll verticale ***/
+	   vscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
+				 0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
+	   
+	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
+	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
 	   FrameTable[frame].FrWidth  = (int) large;
 	   FrameTable[frame].FrHeight = (int) haut;
-#          endif /* _WINDOWS */
+#endif /* _WINDOWS */
+	   
+	   FrameTable[frame].WdScrollH = hscrl;
+	   FrameTable[frame].WdScrollV = vscrl;
 	   FrameTable[frame].WdFrame = (ThotMenu) w;
 
 	   /* get registry default values for zoom and visibility */
@@ -3017,12 +3056,12 @@ int                 doc;
        *volume = GetCharsCapacity (FrameTable[frame].FrWidth * FrameTable[frame].FrHeight);
        FrameTable[frame].FrDoc = doc;
        FrameTable[frame].FrView = view;
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
        SetMenu (Main_Wd, menu_bar);
        ShowWindow (Main_Wd, SW_SHOWNORMAL);
        UpdateWindow (Main_Wd);
        InitCommonControls ();
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
    return (frame);
 }
@@ -3094,7 +3133,7 @@ int                 frame;
 	if (ThotLocalActions[T_rsindex] != NULL)
 	   (*ThotLocalActions[T_rsindex]) (frame);
 
-#       ifndef _WINDOWS
+#ifndef _WINDOWS
         XFlushOutput (0);
         /* Detache les procedures de callback */
         XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
@@ -3102,26 +3141,28 @@ int                 frame;
         XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 
         for (i = 0; i < MAX_BUTTON; i++)
-            FrameTable[frame].Button[i] = 0;
+	  FrameTable[frame].Button[i] = 0;
 
-#       else  /* _WINDOWS */
-        for (txtZoneIndex = 0; txtZoneIndex < MAX_TEXTZONE; txtZoneIndex++) {
-            FrameTable[frame].Text_Zone[txtZoneIndex] = 0;
-        }
-        if (hAccel [frame]) {
-           DestroyAcceleratorTable (hAccel [frame]);
-		   hAccel [frame] = NULL;
-        }
+#else  /* _WINDOWS */
+        for (txtZoneIndex = 0; txtZoneIndex < MAX_TEXTZONE; txtZoneIndex++)
+	  FrameTable[frame].Text_Zone[txtZoneIndex] = 0;
+        if (hAccel [frame])
+	  {
+	    DestroyAcceleratorTable (hAccel [frame]);
+	    hAccel [frame] = NULL;
+	  }
         DestroyWindow (FrMainRef[frame]);
-		CleanFrameCatList (frame);
+	CleanFrameCatList (frame);
 
-        for (i = 0; i < MAX_BUTTON; i++) {
+        for (i = 0; i < MAX_BUTTON; i++)
+	  {
             TtaFreeMemory (FrameTable[frame].Button[i]);
             FrameTable[frame].Button[i] = 0;
-		}
+	    FrameTable[frame].ButtonId[i] = -1;
+	  }
 
         FrMainRef [0] = 0;
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	FrRef[frame] = 0;
 	FrameTable[frame].WdFrame = 0;
 	FrameTable[frame].FrDoc = 0;

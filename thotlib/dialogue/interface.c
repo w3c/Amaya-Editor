@@ -34,16 +34,15 @@
 #include "message.h"
 #include "appdialogue.h"
 #include "typecorr.h"
+#include "frame_f.h"
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 
 #define MAX_ARGS 20
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-
-#ifdef _WINDOWS
-#include "wininclude.h"
-#endif /* _WINDOWS */
-
 #include "edit_tv.h"
 #include "font_tv.h"
 #include "boxes_tv.h"
@@ -1158,6 +1157,7 @@ void                TtaFetchOrWaitEvent (ev)
 ThotEvent          *ev;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
 #ifndef _WINDOWS
    XtInputMask         status;
 #endif /* ! _WINDOWS */
@@ -1208,6 +1208,7 @@ ThotEvent             *ev;
    else if (status != 0)
      XtAppProcessEvent (app_cont, XtIMAll);
 #endif /* ! _WINDOWS */
+#endif /* _GTK */
    return (FALSE);
 }
 
@@ -1225,6 +1226,7 @@ void                TtaHandleOneEvent (ev)
 ThotEvent             *ev;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
   int                 frame;
   PtrDocument         pDoc;
   int                 vue, i;
@@ -1299,6 +1301,7 @@ ThotEvent             *ev;
 	    FrameCallback (frame, ev);
 	}
     }
+#endif /* _GTK */
 }
 #endif /* !_WINDOWS */
 
@@ -1345,20 +1348,22 @@ void                TtaHandlePendingEvents ()
    function must be called after all initializations have been made.
 
   ----------------------------------------------------------------------*/
-void                TtaMainLoop ()
+void                  TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
 #  ifdef _WINDOWS
   MSG                 msg;
   int                 frame;
 #  else /* ! _WINDOWS */
-  ThotEvent              ev;
+  ThotEvent           ev;
 #  endif /* _WINDOWS */
 
   if (NewInitMainLoop)
     NewInitMainLoop(app_cont);
 
+#ifndef _GTK
   TtaInstallMultiKey ();
+#endif /* _GTK */
 
   UserErrorCode = 0;
   /* Sends the message Init.Pre */
@@ -1371,6 +1376,7 @@ void                TtaMainLoop ()
   CallEventType (&notifyEvt, FALSE);
   
   /* Loop wainting for the events */
+#ifndef _GTK
   while (1)
     {
       if (NewMainLoop != NULL)
@@ -1378,10 +1384,10 @@ void                TtaMainLoop ()
 	  NewMainLoop ();
 	  continue;
 	}
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
       TtaFetchOneEvent (&ev);
       TtaHandleOneEvent (&ev);
-#     else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
       if (GetMessage (&msg, NULL, 0, 0)) {			
          frame = GetFrameNumber (msg.hwnd);
          if (frame != -1) {
@@ -1390,8 +1396,11 @@ void                TtaMainLoop ()
 		 } else
                TtaHandleOneWindowEvent (&msg);
 	}
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
     }
+#else /* _GTK */
+  gtk_main ();
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

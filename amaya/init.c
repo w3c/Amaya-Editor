@@ -19,6 +19,10 @@
 #include "css.h"
 #include "trans.h"
 #include "zlib.h"
+#ifdef _GTK
+#include <gtk/gtk.h>
+#include "gtkdialogue_box.h"
+#endif /* _GTK */
 
 #ifdef _WINDOWS
 #include "resource.h"
@@ -208,9 +212,6 @@ extern int       menu_item;
 extern CHAR_T    LostPicturePath [512];
 
 static ThotBool  itemChecked = FALSE;
-ThotBool         tbStringsInitialized = FALSE;
-int              tipIndex;
-int              iString;
 
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -1264,7 +1265,10 @@ STRING             title;
 #endif
 {
    CHAR_T            s[MAX_LENGTH];
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
+#ifdef _GTK
+   ThotWidget        dialog_new;
+#endif /* _GTK */
    int               i;
 
    CurrentDocument = document;
@@ -1276,6 +1280,10 @@ STRING             title;
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
+#ifdef _GTK
+   dialog_new = create_dialog_new (title);
+   gtk_widget_show (dialog_new);
+#else /* _GTK */
    TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),
 		title, 3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
@@ -1301,7 +1309,8 @@ STRING             title;
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
-#  else /* _WINDOWS */
+#endif /* _GTK */
+#else /* _WINDOWS */
 
    CurrentDocument = document;
    if (LastURLName[0] != EOS)
@@ -1310,7 +1319,7 @@ STRING             title;
      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
 
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1540,11 +1549,6 @@ ThotBool     logFile;
 
        if (!opened)
 	 {
-#ifdef _WINDOWS
-	   tipIndex = 0;
-	   iString  = 0;
-#endif /* _WINDOWS */
-
 	   /* Add a button */
 	   iStop =TtaAddButton (doc, 1, stopN, StopTransfer,"StopTransfer",
 			 TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
@@ -1637,9 +1641,6 @@ ThotBool     logFile;
 #ifdef GRAPHML
 	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
-#ifdef _WINDOWS
-	   tbStringsInitialized = TRUE;
-#endif /* _WINDOWS */
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 			   TextURL);
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
@@ -4477,7 +4478,7 @@ NotifyEvent        *event;
    HTMLErrorsFound = FALSE;
 
    /* initialize icons */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    stopR = TtaCreatePixmapLogo (stopR_xpm);
    stopN = TtaCreatePixmapLogo (stopN_xpm);
    iconSave = TtaCreatePixmapLogo (save_xpm);
@@ -4516,11 +4517,10 @@ NotifyEvent        *event;
    iconLinkNo = TtaCreatePixmapLogo (LinkNo_xpm);
    iconTable = TtaCreatePixmapLogo (Table_xpm);
    iconTableNo = TtaCreatePixmapLogo (TableNo_xpm);
-#  ifdef AMAYA_PLUGIN
+#ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
-   TtaRegisterPixmap("Plugin", iconPlugin);
-#  endif /* AMAYA_PLUGIN */
-#  ifdef AMAYA_JAVA
+#endif /* AMAYA_PLUGIN */
+#ifdef AMAYA_JAVA
    TtaRegisterPixmap("stopR", stopR);
    TtaRegisterPixmap("stopN", stopN);
    TtaRegisterPixmap("Save", iconSave);
@@ -4553,6 +4553,9 @@ NotifyEvent        *event;
    TtaRegisterPixmap("TableNo", iconTable);
    iconJava = TtaCreatePixmapLogo (Java_xpm);
    TtaRegisterPixmap("Java", iconJava);
+#  ifdef AMAYA_PLUGIN
+   TtaRegisterPixmap("Plugin", iconPlugin);
+#  endif /* AMAYA_PLUGIN */
 #  endif /* AMAYA_JAVA */
 #  endif /* !_WINDOWS */
 #ifdef MATHML
@@ -4560,7 +4563,7 @@ NotifyEvent        *event;
 # endif /* MATHML */
 #ifdef GRAPHML
    InitGraphML ();
-# endif /* GRAPHML */
+#endif /* GRAPHML */
 
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);

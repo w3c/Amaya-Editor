@@ -28,7 +28,6 @@
 #include "units_tv.h"
 #include "edit_tv.h"
 #include "thotcolor_tv.h"
-/*#define STEPHANIE */
 
 extern ThotColorStruct cblack;
 
@@ -100,34 +99,22 @@ int                 fg;
        if (TtWDepth == 1)
 	 {
 	   /* Modify the fill style of the characters */
-#ifdef STEPHANIE
-	   printf ("XSetFillStyle(TtLineGC  FillTiled :%d)\n",FillTiled);
-#endif
 	   XSetFillStyle (TtDisplay, TtLineGC, FillTiled);
 	 }
        else
 	 {
 	   /* Modify the color of the active boxes */
-#ifdef STEPHANIE
-	   printf ("XSetForeground(TtLineGC,Box_Color: %d\n",Box_Color);  
-#endif
 	   XSetForeground (TtDisplay, TtLineGC, Box_Color);
 	 }
      }
    else if (RO && ColorPixel (fg) == cblack.pixel)
      {
        /* Color of ReadOnly parts */
-#ifdef STEPHANIE
-       printf ("XSetForeground(TtLineGC,RO_Color: %d\n",RO_Color);
-#endif
        XSetForeground (TtDisplay, TtLineGC, RO_Color);
      }
    else
      {
        /* Color of the box */
-#ifdef STEPHANIE
-       printf ("XSetForeground(TtLineGC,ColorPixel: %d\n",ColorPixel);
-#endif
        XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
      }
 }
@@ -154,22 +141,13 @@ int                 fg;
     CHAR_T                dash[2];
     if (style == 0)
       {
-#ifdef STEPHANIE
-    printf ("XSetLineAttributes (TtLineGC, thick:%d, LineSolid:%d, CapButt:%d, JoinMiter:%d\n",thick, LineSolid, CapButt, JoinMiter);
-#endif
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
       }
     else
       {
 	dash[0] = (CHAR_T) (style * 4);
 	dash[1] = (CHAR_T) 4;
-#ifdef STEPHANIE
-	printf ("XSetDashes(0, dash:%s, 2\n",dash);
-#endif
 	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
-#ifdef STEPHANIE
-	printf ("XSetLineAttributes (TtLineGC, thick:%d,LineOnOffDash :%d, CapButt:%d, JoinMiter:%d\n",thick, LineOnOffDash, CapButt, JoinMiter);
-#endif
 	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
       }
    /* Load the correct color */
@@ -192,9 +170,6 @@ int                 active;
 {
   if (TtWDepth == 1 && (active || RO))
     {
-#ifdef STEPHANIE
-     printf ("XSetFillStyle(TtLineGC  FillSolid :%d)\n",FillSolid);
-#endif
       XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
     }
 }
@@ -219,9 +194,6 @@ int                 y2;
    y1 += FrameTable[frame].FrTopMargin;
    x2 += FrameTable[frame].FrLeftMargin;
    y2 += FrameTable[frame].FrTopMargin;
-#ifdef STEPHANIE
-   printf ("XDrawLine (FrRef[frame](c'est un drawable), TtLineGC, x1:%d, y1:%d, x2:%d, y2:%d\n", x1, y1, x2, y2);
-#endif
    XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
 }
 
@@ -296,15 +268,8 @@ int                 fg;
 
    LoadColor (0, RO, active, fg);
 
-#ifdef STEPHANIE
-   printf (" XSetFont (TtLineGC, ((XFontStruct *) font)->fid\n");
-#endif
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
    XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
-#ifdef STEPHANIE
-   printf (" XDrawString( w (drawable), TtLineGC, x: %d+ FrameTable[frame].FrLeftMargin :%d, y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, &car:%s, 1)\n", 
-	   x,FrameTable[frame].FrLeftMargin, y,FrameTable[frame].FrTopMargin, FontBase (font), &car);
-#endif
 
    FinishDrawing (0, RO, active);
 }
@@ -384,10 +349,6 @@ int                 shadow;
 	   }
 	
          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
-#ifdef STEPHANIE
-	 printf ("font->ascent %d,  fontheight %d \n", FontAscent(font), ((XFontStruct *) font)->descent, FontHeight (font));
- printf (" XDrawString (TtDisplay, w, TtLineGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, ptcar:%s, lg:%d)\n", x,FrameTable[frame].FrLeftMargin, y,FrameTable[frame].FrTopMargin,FontBase (font), ptcar,lg);
-#endif
          TtaFreeMemory (ptcar);
       } else {
            if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
@@ -397,9 +358,6 @@ int                 shadow;
            }
            if (lg != 0) {
 	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
-#ifdef STEPHANIE
-	      printf ("XDrawString (TtDisplay, w, TtLineGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, ptcar:%s, lg:%d)\n", x, FrameTable[frame].FrLeftMargin,y,FrameTable[frame].FrTopMargin,FontBase (font), ptcar, lg);
-#endif
 	     }
 	}
 
@@ -408,9 +366,6 @@ int                 shadow;
          /* draw the hyphen */
          XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
          y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
-#ifdef STEPHANIE
-	 printf ("XDrawString (TtDisplay, w, TtLineGC, x:%d + width:%d + FrameTable[frame].FrLeftMargin:%d,y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, \255, 1)\n",x, width,FrameTable[frame].FrLeftMargin,y,FrameTable[frame].FrTopMargin);
-#endif
 	}
       FinishDrawing (0, RO, active);
       return (width);
@@ -558,9 +513,6 @@ int                 fg;
 	nb = lgboite / width;
 	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % width);
 	y += FrameTable[frame].FrTopMargin - FontBase (font);
-#ifdef STEPHANIE
-	printf ("XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid)\n");
-#endif
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 	LoadColor (0, RO, active, fg);
 
@@ -568,9 +520,6 @@ int                 fg;
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
-#ifdef STEPHANIE
-	    printf (" XDrawString ( w, TtLineGC, xcour:%d, y:%d, ptcar:%s, 2)\n",xcour, y,ptcar);
-#endif
 	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
 	     xcour += width;
 	     nb--;
@@ -855,9 +804,6 @@ int                 fg;
 
 	/* Upper part */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
-#ifdef STEPHANIE
-	printf ("XDrawArc(FrRef[frame], TtLineGC, x + 1: %d, y + 1:%d, l - 3:%d, arc * 2:%d, 0 * 64, 180 * 64)\n",x , y ,l ,arc);
-#endif
 	FinishDrawing (0, RO, active);
      }
 }
@@ -902,10 +848,6 @@ int                 fg;
 
 	/* Lower part */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
-#ifdef STEPHANIE
-	printf ("XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1:%d, y + h - arc * 2 - 2:%d, l - 3:%d, arc * 2:%d, -0 * 64, -180 * 64)\n",
-		x,y,h,l,arc);
-#endif
 	FinishDrawing (0, RO, active);
      }
 }
@@ -962,19 +904,8 @@ int                 fg;
    pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0)
      {
-#ifdef STEPHANIE
-      printf ("XSetTile (TtDisplay, TtGreyGC, pattern) \n");
-#endif
       XSetTile (TtDisplay, TtGreyGC, pattern);     
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
-#ifdef STEPHANIE
-      printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex:%d, CoordModeOrigin:%d) \n",
-	      Convex, CoordModeOrigin);
-      for (i=0;i<3;i++){
-	printf ("point[%d] x=%d y=%d\n", i, point[i].x, point[i].y);
-      }
-      printf (" XFreePixmap (TtDisplay, pattern)\n");
-#endif
       XFreePixmap (TtDisplay, pattern);
      }
 }
@@ -1437,18 +1368,10 @@ int                 pattern;
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
    if (pat != 0) {
-#ifdef STEPHANIE
-     printf (" XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
       XSetTile (TtDisplay, TtGreyGC, pat);
     
       XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
                       x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#ifdef STEPHANIE
-      printf (" XFillRectangle (FrRef[frame], TtGreyGC,x + FrameTable[frame].FrLeftMargin:%d, y + FrameTable[frame].FrTopMargin:%d, width:%d, height:%d)\n", 
-	     x,y, width, height);
-      printf (" XFreePixmap (TtDisplay, pat)\n");
-#endif
       XFreePixmap (TtDisplay, pat);
    }
 
@@ -1457,10 +1380,6 @@ int                 pattern;
      {
 	InitDrawing (0, style, thick, RO, active, fg); 
 	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#ifdef STEPHANIE
-	printf ("XDrawRectangle ( FrRef[frame], TtLineGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y + FrameTable[frame].FrTopMargin:%d, width:%d, height:%d)\n",
-		x,FrameTable[frame].FrLeftMargin,y, FrameTable[frame].FrTopMargin, width, height);
-#endif
 	FinishDrawing (0, RO, active);
    }
 }
@@ -1518,39 +1437,16 @@ int                 pattern;
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0)
      {
-#ifdef STEPHANIE
-	printf (" XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
        XSetTile (TtDisplay, TtGreyGC, pat);
-#ifdef STEPHANIE
-       	printf (" XFillPolygon ( FrRef[frame], TtGreyGC, point, 5, Convex:%d, CoordModeOrigin:%d)\n", Convex, CoordModeOrigin);
-	for (i=0;i<5;i++){
-	  printf ("point[%d] : x=%d et y=%d\n", i,point[i].x,point[i].y);
-	}
-#endif
-	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
+       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 5, Convex, CoordModeOrigin);
-#ifdef STEPHANIE
-	printf ("XFreePixmap (TtDisplay, pat)\n");
-#endif
-	XFreePixmap (TtDisplay, pat);
+       XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#ifdef STEPHANIE
-	printf ("XDrawLines (rRef[frame], TtLineGC,point, 5, CoordModeOrigin:%d)\n"
-		, CoordModeOrigin);
-	for (i=0;i<5;i++){
-	  printf ("point[%d] : x=%d et y=%d\n", i,point[i].x,point[i].y);
-	}
-	printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC,point, 5, CoordModeOrigin:%d)\n",CoordModeOrigin);
-	for (i=0;i<5;i++){
-	  printf ("point[%d] x=%d y=%d\n",i,point[i].x, point[i].y);
-	}
-#endif
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 		    point, 5, CoordModeOrigin);
 	FinishDrawing (0, RO, active);
@@ -1626,13 +1522,6 @@ int                 arrow;
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1, CoordModeOrigin);
-#ifdef STEPHANIE
-   printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1:%d, CoordModeOrigin:%d)\n",
-	   nb, CoordModeOrigin);
-   for (i=0;i<nb-1;i++){
-     printf ("points[%d] x=%d y=%d\n", i,points[i].x, points[i].y);
-   }
-#endif
    FinishDrawing (0, RO, active);
 
    /* Forward arrow */
@@ -1706,33 +1595,14 @@ int                 pattern;
    /* Fill in the polygone */
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0) {
-#ifdef STEPHANIE
-     printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
       XSetTile (TtDisplay, TtGreyGC, pat);
-#ifdef STEPHANIE
-      printf (" XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb%d, Complex%d, CoordModeOrigin%d)\n",
-	         nb, Complex, CoordModeOrigin);
-      for (i=0;i<nb;i++){
-      printf("point[%d]: x = %d et .y = %d\n",i,points[i].x, points[i].y);
-      }
-#endif
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb, Complex, CoordModeOrigin);
-#ifdef STEPHANIE
-      printf ("XFreePixmap (TtDisplay, pat)\n");
-#endif
       XFreePixmap (TtDisplay, pat);
    }
 
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
-#ifdef STEPHANIE
-      printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb:%d, CoordModeOrigin:%d)\n",nb, CoordModeOrigin);
-      for (i=0;i<nb;i++){
-	printf ("points[%d] : x =%d et y=%d\n", i, points[i].x, points[i].y);
-      }
-#endif
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
       FinishDrawing (0, RO, active);
    }
@@ -2094,32 +1964,14 @@ C_points           *controls;
    /* Fill in the polygone */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0) {
-#ifdef STEPHANIE
-     printf (" XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
       XSetTile (TtDisplay, TtGreyGC, pat);
-#ifdef STEPHANIE
-      printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints:%d, CoordModeOrigin:%d)\n",npoints, CoordModeOrigin);
-      for (i=0; i< npoints;i++){
-	printf ("points[%d] : x =%d et y=%d\n", i, points[i].x, points[i].y);
-      }
-#endif
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
-#ifdef STEPHANIE
-      printf (" XFreePixmap (TtDisplay, pat)\n");
-#endif
       XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
-#ifdef STEPHANIE
-      for (i=0; i< npoints;i++){
-	printf ("points[%d] : x =%d et y=%d\n", i, points[i].x, points[i].y);
-      }
-      printf (" XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints:%d, CoordModeOrigin:%d)\n",npoints,CoordModeOrigin);
-#endif
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
       FinishDrawing (0, RO, active);
    }
@@ -2264,31 +2116,11 @@ int                 pattern;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-#ifdef STEPHANIE
-	printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
 	XSetTile (TtDisplay, TtGreyGC, pat);
-#ifdef STEPHANIE
-	printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,point, 13, Convex:%d, CoordModeOrigin:%d)\n",
-		Convex, CoordModeOrigin);
-	for (i=0;i<13;i++){
-	  printf ("point[%d] x=%d y=%d\n", i,point[i].x, point[i].y);
-	}
-#endif
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
-#ifdef STEPHANIE
-	printf ("XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4)\n");
-	for (i=0;i<4;i++){
-	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
-		 i,xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
-	}
-#endif
 	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
-#ifdef STEPHANIE
-	printf ("XFreePixmap (TtDisplay, pat)\n");
-#endif
 	XFreePixmap (TtDisplay, pat);
      }
 
@@ -2296,20 +2128,7 @@ int                 pattern;
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#ifdef STEPHANIE
-	printf ("XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4)\n");
-	for (i=0;i<4;i++){
-	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
-		 i,xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
-	}
-#endif
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
-#ifdef STEPHANIE
-	printf ("XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4)\n");
-	for (i=0;i<4;i++){
-	  printf("seg[%d] x1=%d y1=%d x2=%d y2=%d\n", i, seg[i].x1, seg[i].y1, seg[i].x2, seg[i].y2);
-	}	
-#endif
 	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 	FinishDrawing (0, RO, active);
      }
@@ -2356,28 +2175,14 @@ int                 pattern;
       return;
 
    if (pat != 0) {
-#ifdef STEPHANIE
-     printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
       XSetTile (TtDisplay, TtGreyGC, pat);
-#ifdef STEPHANIE
-      printf ("XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
-	      x, y, width, height);
-#endif
       XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
-#ifdef STEPHANIE
-      printf ("XFreePixmap (TtDisplay, pat)\n");
-#endif
       XFreePixmap (TtDisplay, pat);
    }
 
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
-#ifdef STEPHANIE
-      printf ("XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
-	      x, y, width, height);
-#endif
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
       FinishDrawing (0, RO, active);
    }
@@ -2584,12 +2389,6 @@ int                 fg;
 	       point[2].y = y;
 	       break;
 	 }
-#ifdef STEPHANIE
-   printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC,point, 3, CoordModeOrigin:%d)\n",CoordModeOrigin);
-   for (i=0;i<3;i++){  
-    printf ("point[%d] x=%d y=%d\n", i, point[i].x, point[i].y);
-   }
-#endif
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	       point, 3, CoordModeOrigin);
    FinishDrawing (0, RO, active);
@@ -2742,31 +2541,11 @@ int                 pattern;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-#ifdef STEPHANIE
-	printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
 	XSetTile (TtDisplay, TtGreyGC, pat);
-#ifdef STEPHANIE
-	printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,point, 13, Convex: %d, CoordModeOrigin: %d)\n",Convex, CoordModeOrigin);
-	for (i=0;i<13;i++){
-	  printf("point[%d] x =%d et y=%d\n",
-		i, point[i].x, point[i].y );
-	}
-#endif
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
-#ifdef STEPHANIE
-	printf (" XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4)\n");
-	for (i=0;i<4;i++){  
-	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
-		 i, xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
-	}
-#endif
 	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
-#ifdef STEPHANIE
-	printf ("XFreePixmap (TtDisplay, pat)\n");
-#endif
 	XFreePixmap (TtDisplay, pat);
      }
 
@@ -2775,34 +2554,11 @@ int                 pattern;
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#ifdef STEPHANIE
-	printf ("	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4)\n");
-	for (i=0;i<4;i++){  
-	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
-		 i, xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
-	}
-#endif
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
-	if (arc2 < height / 2){
-#ifdef STEPHANIE
-	  printf ("XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5)\n");
-	  for (i=0;i<5;i++){ 
-	    printf ("seg[%d] x1=%d y1=%d x2=%d y2=%d\n",
-		    i, seg[i].x1 ,seg[i].y1, seg[i].x2, seg[i].y2);
-	  } 
-#endif
+	if (arc2 < height / 2)
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
-	}
-	else{
-#ifdef STEPHANIE
-	  printf ("XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5)\n");
-	  for (i=0;i<4;i++){ 
-	    printf ("seg[%d] x1=%d y1=%d x2=%d y2=%d\n",
-		    i, seg[i].x1 ,seg[i].y1, seg[i].x2, seg[i].y2);
-	  } 
-#endif
+	else
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
-	}
 	FinishDrawing (0, RO, active);
      }
 }
@@ -2851,19 +2607,9 @@ int                 pattern;
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0)
      {
-#ifdef STEPHANIE
-       printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
 	XSetTile (TtDisplay, TtGreyGC, pat);
-#ifdef STEPHANIE
-	printf ("XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
-		 x, y, width, height);
-#endif
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
 		  x, y, width, height, 0, 360 * 64);
-#ifdef STEPHANIE
-	printf ("XFreePixmap (TtDisplay, pat)\n)");
-#endif
 	XFreePixmap (TtDisplay, pat);
      }
 
@@ -2871,10 +2617,6 @@ int                 pattern;
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#ifdef STEPHANIE
-	printf ("XDrawArc (TtDisplay, FrRef[frame], TtLineGC,x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
-		x, y, width, height);
-#endif
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
 		  x, y, width, height, 0, 360 * 64);
 
@@ -2887,10 +2629,6 @@ int                 pattern;
 	    
 	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
 		      x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
-#ifdef STEPHANIE
-	     printf ("XDrawLine (TtDisplay, FrRef[frame], TtLineGC,x:%d + shiftX:%d, y:%d + px7mm:%d, x:%d + width:%d - shiftX:%d, y:%d + px7mm:%d)\n",
-		    x ,shiftX, y , px7mm, x ,width , shiftX, y ,px7mm);
-#endif
 	  }
 	FinishDrawing (0, RO, active);
      }
@@ -2935,9 +2673,6 @@ int          frame;
 int          color;
 #endif /* __STDC__ */
 {
-#ifdef STEPHANIE
-  printf ("XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color))\n");
-#endif
    XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
 }
 
@@ -2960,9 +2695,6 @@ int                 y;
    w = FrRef[frame];
    if (w != None)
      {
-#ifdef STEPHANIE
-       printf ("	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE)\n");
-#endif
 	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
      }
 }
@@ -2983,15 +2715,8 @@ ThotGC              GClocal;
 
 #endif /* __STDC__ */
 {
-#ifdef STEPHANIE
-  printf ("XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid)\n");
-#endif
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, string[0], &x, &y);
-#ifdef STEPHANIE
-   printf ("XDrawString (TtDisplay, w, GClocal, x%d, y%d, string:%s, ustrlen (string))\n",
-	   x, y, string);
-#endif
    XDrawString (TtDisplay, w, GClocal, x, y, string, ustrlen (string));
 }
 
@@ -3017,12 +2742,7 @@ int                 y;
    w = FrRef[frame];
 
    if (w != None)
-     {
-	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#ifdef STEPHANIE
- printf ("XFillRectangle (TtDisplay, w, TtInvertGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y:%d + FrameTable[frame].FrTopMargin:%d, width:%d, height:%d)\n",x , FrameTable[frame].FrLeftMargin, y , FrameTable[frame].FrTopMargin, width, height);
-#endif
-     }
+     XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 }
 
 
@@ -3044,9 +2764,6 @@ int yf;
 #endif /* __STDC__ */
 {
    if (FrRef[frame] != None) {
-#ifdef STEPHANIE
-     printf ("XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin)\n");
-#endif
       XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
    }
 }
@@ -3085,9 +2802,6 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-#ifdef STEPHANIE
-  printf ("XFlush (TtDisplay)\n");
-#endif
    XFlush (TtDisplay);
 }
 
@@ -3124,28 +2838,11 @@ int                 pattern;
    pat = (Pixmap) CreatePattern (0, RO, active, fg, 0, pattern);
    if (pat != 0)
      {
-#ifdef STEPHANIE
-       printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
-#endif
 	XSetTile (TtDisplay, TtGreyGC, pat);
-	if (w != 0){
-#ifdef STEPHANIE
-	  printf (" XFillRectangle (TtDisplay, w, TtGreyGC, x:%d, y:%d, width:%d, height:%d)\n",
-		  x, y, width, height);
-#endif
-
+	if (w != 0)
 	  XFillRectangle (TtDisplay, w, TtGreyGC, x, y, width, height);
-	}
-	else{
-#ifdef STEPHANIE
-	  printf ("XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height)\n",
-		  x, y, width, height);
-#endif
-	   XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#ifdef STEPHANIE
-	   printf ("XFreePixmap (TtDisplay, pat)\n");
-#endif
-	}
+	else
+	  XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 	XFreePixmap (TtDisplay, pat);
      }
 }

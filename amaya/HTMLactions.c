@@ -1006,6 +1006,7 @@ Document            doc;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    Element             textElem;
    int                 length;
    Language            lang;
@@ -1024,6 +1025,7 @@ Document            doc;
 	UpdateAtom (doc, DocumentURLs[doc], text);
 	TtaFreeMemory (text);
      }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

@@ -1150,7 +1150,7 @@ ATTRIBUTES
 		END;
 	If NOT Annotation BEGIN
 		Create ' href="';
-		Create HREF_;
+		Create Translated HREF_;
 		Create DoubleQuote;
 		END;
 	END;
