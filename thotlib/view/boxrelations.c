@@ -908,7 +908,10 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	    }
 
 	  if (pAb->AbFloat != 'N')
-	    return;
+	    {
+	      pAb->AbHorizPosChange = FALSE;
+	      return;
+	    }
 	  else
 	    {
 	      refEdge = rule.PosRefEdge;
@@ -1114,7 +1117,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	{
 	  /* the referred box doesn't already exist */
 	  pRefBox = GetBox (pRefAb);
-	  if (pRefBox != NULL)
+	  if (pRefBox)
 	    pRefAb->AbBox = pRefBox;
 	  else
 	    /* memory allocation trouble */
@@ -1309,7 +1312,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	     /* Force le placement des boites filles */
 	     YMoveAllEnclosed (pBox, y, frame);
 	   else
-	       YMove (pBox, NULL, y, frame);
+	     YMove (pBox, NULL, y, frame);
 	 }
        /* la regle de position est interpretee */
        pAb->AbVertPosChange = FALSE;
@@ -2926,40 +2929,40 @@ void ClearPosRelation (PtrBox pBox, ThotBool horizRef)
   ThotBool            loop;
 
   pRefAb = pBox->BxAbstractBox;
-  /* Est-ce une relation hors-structure ? */
+  loop = TRUE;
+  /* Process differently when the box is linked with a OutOfStruct box? */
   if ((horizRef && pBox->BxXOutOfStruct) || (!horizRef && pBox->BxYOutOfStruct))
     {
       /* ClearOutOfStructRelation removes out of structure relations */
       if (!IsDead (pRefAb))
 	{
-	  /* On remonte a la racine depuis le pave pere */
+	  /* go up to the root abstract box */
 	  pCurrentAb = pRefAb;
 	  /* La relation hors-structure peut etre heritee d'une boite voisine */
-	  while (pCurrentAb->AbEnclosing != NULL)
+	  while (pCurrentAb->AbEnclosing)
 	    pCurrentAb = pCurrentAb->AbEnclosing;
-	  loop = TRUE;
 	  
-	  /* Recherche dans pBox l'ancienne relation de positionnement */
-	  while (loop && pCurrentAb != NULL)
+	  /* look for a relation with this out of structure relation */
+	  while (loop && pCurrentAb)
 	    {
-	      if (pCurrentAb->AbBox != NULL)
+	      if (pCurrentAb->AbBox)
 		loop = !RemovePosRelation (pBox, pCurrentAb->AbBox, pRefAb, TRUE, FALSE, horizRef);
 	      pCurrentAb = NextAbToCheck (pCurrentAb, pRefAb);
 	    }
 	  
-	  /* La relation hors-structure est detruite */
+	  /* this out of structure relation is removed */
 	  if (horizRef)
 	    {
 	      pBox->BxXOutOfStruct = FALSE;
-	      /* Des boites voisines ont herite de la relation hors-structure ? */
+	      /* sibling boxes inherited this out of structure relation? */
 	      pCurrentAb = pRefAb->AbEnclosing;
-	      if (pCurrentAb != NULL)
+	      if (pCurrentAb)
 		{
-		  /* regarde tous les freres */
+		  /* check the parent and siblings */
 		  pCurrentAb = pCurrentAb->AbFirstEnclosed;
-		  while (pCurrentAb != NULL)
+		  while (pCurrentAb)
 		    {
-		      if (pCurrentAb != pRefAb && pCurrentAb->AbBox != NULL)
+		      if (pCurrentAb != pRefAb && pCurrentAb->AbBox)
 			{
 			  /* Si c'est un heritage on retire l'indication
 			     hors-structure */
@@ -2984,9 +2987,9 @@ void ClearPosRelation (PtrBox pBox, ThotBool horizRef)
 		  if (pCurrentAb != NULL)
 		    {
 		      pCurrentAb = pCurrentAb->AbFirstEnclosed;
-		      while (pCurrentAb != NULL)
+		      while (pCurrentAb)
 			{
-			  if (pCurrentAb != pRefAb && pCurrentAb->AbBox != NULL)
+			  if (pCurrentAb != pRefAb && pCurrentAb->AbBox)
 			    {
 			      /* Si c'est un heritage on retire l'indication
 				 hors-structure */
@@ -3004,15 +3007,15 @@ void ClearPosRelation (PtrBox pBox, ThotBool horizRef)
 	    }
 	}
     }
-  /* Est-ce une relation avec une boite voisine ? */
-  else
+
+  if (loop)
     {
+      /* check local relations? */
       pCurrentAb = pRefAb->AbEnclosing;
-      loop = TRUE;
-      /* Recherche dans la boite pBox l'ancienne relation de positionnement */
-      while (loop && pCurrentAb != NULL)
+      /* check a relation with the parent box or a sibling box */
+      while (loop && pCurrentAb)
 	{
-	  if (pCurrentAb->AbBox != NULL)
+	  if (pCurrentAb->AbBox)
 	    loop = !RemovePosRelation (pBox, pCurrentAb->AbBox, pRefAb, TRUE, FALSE, horizRef);
 	  if (pCurrentAb == pRefAb->AbEnclosing)
 	    pCurrentAb = pCurrentAb->AbFirstEnclosed;
