@@ -28,6 +28,7 @@
   blockquote { color: #003366; font-style:italic }
   pre { font-family: monospace }
   div.disclaimer {margin-left: -8%}
+.comment { background-color: #FFc0c0}
 </style>
 </head>
 <body bgcolor="#FFFBF0" text="black" link="blue" lang="en">
@@ -41,6 +42,8 @@ border="0" width="212" height="48" alt="User Interface Domain"></a></p>
 
 <p class="splash">Work on Amaya is being managed as part of W3C's <a
 href="/UI">User Interface domain</a>.</p>
+
+<p><span class="comment">Is the following paragraph really needed?</span></p>
 <blockquote>
 
 <a href="/Consortium/Activities">Activity statements</a> provide a managerial
@@ -84,7 +87,7 @@ Document Type Definition (DTD), meaning that it handles the relationships
 between various document components: paragraphs, headings, lists and so on, as
 laid down in the relevant W3C HTML Recommendation. Amaya has been extended to
 demonstrate many features in HTML 4.0, the current recommendation for the
-language.</p>
+language and XHTML, the next generation of HTML.</p>
 
 <h2><a name="role">Amaya at W3C</a></h2>
 
@@ -93,6 +96,25 @@ Ramzi Gu&eacute;tari, Jos&eacute; Kahan, Vincent Quint, Daniel Veillard. Used
 by other groups within the consortium to demonstrate work and to act as an
 experimental platform Amaya has played an important role in the areas of:</p>
 <ul>
+<li>
+<b>HTML:</b> As an editor, Amaya is guaranteed to produce HTML 4 compliant
+code. The way it handles documents strictly follows the HTML DTD, the Document
+Type Definition.
+</li>
+<li>
+<b>XHTML:</b> Amaya can also handle documents in XHTML, i.e. using the XML
+syntax. Due to namespaces, it can seamlessly integrate and manipulate
+structured objects such as mathematical expressions and vector graphics.
+</li>
+<li>
+<b>HTTP protocol:</b> In its basic version, Amaya implements many web
+protocols and formats: it accesses remote sites by means of HTTP 1.1, as
+implemented in <a href="http://www.w3.org/pub/WWW/Library/">libwww</a>. Amaya
+takes advantage of the most advanced features of HTTP, such as content
+negotiation to retrieve, for instance, the most appropriate picture format,
+keep alive connections to save bandwidth and authentication to allow secure
+remote publishing.
+</li>
 <li>
 <p><b>Math on the Web:</b> Amaya demonstrates an implementation of <a
 href="../TR/WD-math/">MathML</a> which allows users to browse and edit web
@@ -106,23 +128,13 @@ Amaya.</p>
 equations"></p>
 <ul>
 <li>
-<p><b>HTTP protocol:</b> In its basic version, Amaya implements many web
-protocols and formats: it accesses remote sites by means of HTTP 1.1, as
-implemented in <a href="http://www.w3.org/pub/WWW/Library/">libwww</a>. Amaya
-takes advantage of the most advanced features of HTTP, such as content
-negotiation to retrieve, for instance, the most appropriate picture format,
-keep alive connections to save bandwidth and authentication to allow secured
-remote publishing.</p>
-</li>
-<li>
-<p><b>Graphics:</b> Amaya displays images in the PNG format, which is a more
+<p><b>Graphics:</b> Amaya displays images in the PNG format,  which is a more
 powerful graphics format than GIF and more suited to the needs of the Web. A
 CGM plug-in developed by Rutherford Appleton Laboratories was first
-demonstrated at EITC'97 in Brussels and in many other events. We made an
-experimental implementation of Scalable Vector Graphics (<a
-href="http://www.w3.org/Graphics/SVG/">SVG</a>) in Amaya. The graphics are
-written in XML and may be mixed freely with HTML and with MathML. CSS style
-sheets may be used to alter the look of the graphics.</p>
+demonstrated at EITC'97 in Brussels and in many other events. An experiment
+with 2D vector graphics was made in Amaya, to prepare the work on Scalable
+Vector Graphics (<a href="http://www.w3.org/Graphics/SVG/">SVG</a>). The
+graphics are written in XML and may be mixed freely with HTML and MathML.</p>
 </li>
 <li>
 <p><b>Style sheets:</b> Amaya has extensive support for the W3C style sheet
@@ -130,21 +142,19 @@ language CSS and offers a simple-to-use interface enabling users to write
 style sheets for Web documents without having to know the details of the
 syntax associated with style sheet rules and properties. You can create
 colored text, change the font, set the background color and control other
-presentational effects.</p>
-</li>
-<li>
-<p><b>HTML 4:</b> As an editor, Amaya is guaranteed to produce HTML 4
-compliant code. The way it handles documents is strictly according to the HTML
-DTD, the Document Type Definition.</p>
+presentational effects. CSS style sheets may also be used to alter the look of
+graphics or mathematical expressions.</p>
 </li>
 <li>
 <p><b>DOM:</b> Amaya is used to experiment with the Java API developed by the
 Document Object Model (<a href="/DOM/Activity">DOM</a>) activity.</p>
 </li>
 <li>
-<p><b>Amaya in other languages:</b> It is now possible to launch Amaya so that
-the user dialogs are in German or French. The intention is to cover other
-languages in the future.</p>
+<p><b>Internationalization:</b> It is now possible to launch Amaya so that the
+user dialogs are in various languages such as English, German or French. Other
+languages may be added by users. Amaya can also handle multilingual documents
+and it takes the current language into account when spell-checking or
+hyphenating.</p>
 </li>
 </ul>
 
@@ -154,8 +164,8 @@ languages in the future.</p>
 be <a href="Overview.html#L347">downloaded</a> from the W3C site. It is
 available both in <a href="User/SourceDist.html">source code</a> and in <a
 href="User/BinDist.html">ready to use</a> forms. The new version 2.0 of Amaya
-is available since the end of April. This new version of Amaya has a number of
-new features including:</p>
+is available since the end of April 1999. This new version of Amaya has a
+number of new features including:</p>
 <ul>
 <li>
 <p><em>A secured authentication protocol</em>: This protocol, called message
@@ -169,13 +179,17 @@ publish have been updated by another user. This can be seen as the first step
 toward a cooperative authoring tool.</p>
 </li>
 <li>
-<p><em>XHTML support</em>: Amaya is able to generate XHTML documents according
-to the latest draft.</p>
+<p><em>XHTML support</em>: Amaya is able to generate conformant XHTML
+documents.</p>
 </li>
 <li>
 <p><em>New CSS features</em>: With Amaya, users can download, edit and publish
-CSS files as well as HTML pages. Amaya also provides menu entries to link and
-to unlink external style sheets to/from HTML documents.</p>
+CSS style sheets as well as HTML pages. Amaya also provides an efficient
+mechanism to test and associate external style sheets with HTML documents.</p>
+</li>
+<li>
+<em>Editing features:</em> a general, multi-level, mluti-document undo/redo
+mechanism is available.
 </li>
 </ul>
 
@@ -188,12 +202,12 @@ experienced using the software.</p>
 <p>The publicly released version is written in C. There is also a version with
 Java support, not publicly available at the moment. This experimental version
 embeds a Java virtual machine and uses the HTTP classes from Jigsaw, the
-object-oriented server for HTTP 1.1 written in Java and provides a DOM Java
+object-oriented server for HTTP 1.1 written in Java, and provides a DOM Java
 API.</p>
 
-<p>Amaya CVS base is now publicly available at http://dev.w3.org. It has world
-read-only access. Depending on the response and on the quality of
-contributions, we may open a write access to other people afterwards.</p>
+<p>The Amaya CVS base is now publicly available at http://dev.w3.org. It has
+world read-only access. Depending on the response and on the quality of
+contributions, we may open a write access to other developers.</p>
 
 <h2><a name="future">What the Future Holds</a></h2>
 
@@ -203,15 +217,15 @@ contributions, we may open a write access to other people afterwards.</p>
 a fuller implementation of CSS2 properties,
 </li>
 <li>
-features to support internationalization and localization for a limited set of
-countries,
+features to support internationalization and localization for languages using
+non-latin characters,
 </li>
 <li>
 experimentations with XML documents,
 </li>
 <li>
-integration with the GTK (GIMP Toolkit) to allow easier external
-experimentations and contributions.
+integration with the GTK toolkit to allow easier experimentations and external
+contributions.
 </li>
 </ul>
 
