@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog" name="AuthentWX">
+  <object class="wxDialog" name="AuthentDlgWX">
     <title></title>
     <centered>1</centered>
     <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
@@ -46,9 +46,7 @@
             </object>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_PASSWD">
-              <style>wxTE_PASSWORD</style>
-            </object>
+            <object class="wxTextCtrl" name="wxID_PASSWD"/>
             <flag>wxEXPAND</flag>
             <border>5</border>
           </object>
