@@ -56,6 +56,7 @@ unsigned char *AsciiTranslate (char *pBuffer)
   unsigned char       number[4];
   int                 uniteid, dixid, centid;
   int                 i = 0, j = 0, k;
+  ThotBool            skipAmp = TRUE;
 
   while (pBuffer[i] != EOS)
     {
@@ -63,8 +64,11 @@ unsigned char *AsciiTranslate (char *pBuffer)
       while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
 	{
 #if !defined(_WINDOWS) && !defined(_WX)
-	  if (pBuffer[i] == '&')
-	    i++;
+	  if (skipAmp && pBuffer[i] == '&')
+	    {
+	      i++;
+	      skipAmp = FALSE;
+	    }
 	  else
 #endif /* #if !defined(_WINDOWS) && !defined(_WX) */
 	    result[j++] = pBuffer[i++];

@@ -210,7 +210,7 @@
 208 Zahl (mn)
 209 Operator (mo)
 210 Leerzeichen (mspace)
-211 Zeichen (&xxx;)
+211 Zeichen (&&xxx;)
 212 Unsichtbare Multiplikation
 213 Angewendete Funktion
 214 &Konstrukte

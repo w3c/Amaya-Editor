@@ -2250,15 +2250,15 @@
 	<message xml:lang="ru">Пространство (mspace)</message>
 </label>
 <label define="BMEntity">
-	<message xml:lang="en">Character (&amp;xxx;)</message>
-	<message xml:lang="fr">Caractère (&amp;xxx;)</message>
-	<message xml:lang="de">Zeichen (&amp;xxx;)</message>
-	<message xml:lang="it">Carattere (&amp;xxx;)</message>
-	<message xml:lang="es">Carácter (&amp;xxx;)</message>
-	<message xml:lang="pt">Carácter (&amp;xxx;)</message>
-	<message xml:lang="fi">Merkki (&amp;xxx;)</message>
-	<message xml:lang="tr">Karakter (&amp;xxx;)</message>
-	<message xml:lang="ru">Символ (&amp;xxx;)</message>
+	<message xml:lang="en">Character (&amp;&amp;xxx;)</message>
+	<message xml:lang="fr">Caractère (&amp;&amp;xxx;)</message>
+	<message xml:lang="de">Zeichen (&amp;&amp;xxx;)</message>
+	<message xml:lang="it">Carattere (&amp;&amp;xxx;)</message>
+	<message xml:lang="es">Carácter (&amp;&amp;xxx;)</message>
+	<message xml:lang="pt">Carácter (&amp;&amp;xxx;)</message>
+	<message xml:lang="fi">Merkki (&amp;&amp;xxx;)</message>
+	<message xml:lang="tr">Karakter (&amp;&amp;xxx;)</message>
+	<message xml:lang="ru">Символ (&amp;&amp;xxx;)</message>
 </label>
 <label define="BMInvisibleTimes">
 	<message xml:lang="en">InvisibleTimes</message>

@@ -210,7 +210,7 @@
 208 Numero (mn)
 209 Operatore (mo)
 210 Spazio (mspace)
-211 Carattere (&xxx;)
+211 Carattere (&&xxx;)
 212 InvisibleTimes
 213 ApplyFunction
 214 &Costruzioni
