@@ -106,95 +106,101 @@ BoxEdge             targetEdge;
 
 #endif /* __STDC__ */
 {
-   int                 i;
-   boolean             loop;
-   boolean             empty;
-   PtrPosRelations     pPreviousPosRel;
-   PtrPosRelations     pPosRel;
-   BoxRelation        *pRelation;
+  int                 i;
+  boolean             loop;
+  boolean             empty;
+  PtrPosRelations     pPreviousPosRel;
+  PtrPosRelations     pPosRel;
+  BoxRelation        *pRelation;
 
-   i = 0;
-   /* PcFirst sens de la dependance dans les positionnements entre soeurs */
-   if (op != OpHorizRef && op != OpVertRef && op != OpWidth && op != OpHeight)
-     {
-	/* On recherche une entree libre */
-	pPosRel = pOrginBox->BxPosRelations;
-	pPreviousPosRel = NULL;
-	loop = TRUE;
-	while (loop && pPosRel != NULL)
-	  {
-	     i = 0;
-	     pPreviousPosRel = pPosRel;
-	     do
-	       {
-		  i++;
-		  empty = (pPosRel->PosRTable[i - 1].ReBox == NULL);
-	       }
-	     while (i != MAX_RELAT_POS && empty);
+  i = 0;
+  /* PcFirst sens de la dependance dans les positionnements entre soeurs */
+  if (op != OpHorizRef && op != OpVertRef && op != OpWidth && op != OpHeight)
+    {
+      /* On recherche une entree libre */
+      pPosRel = pOrginBox->BxPosRelations;
+      pPreviousPosRel = NULL;
+      loop = TRUE;
+      while (loop && pPosRel != NULL)
+	{
+	  i = 0;
+	  pPreviousPosRel = pPosRel;
+	  do
+	    {
+	      empty = (pPosRel->PosRTable[i].ReBox == NULL);
+	      i++;
+	    }
+	  while (i != MAX_RELAT_POS && !empty);
+	  
+	  if (empty)
+	    {
+	      loop = FALSE;
+	      i--;
+	    }
+	  else
+	    pPosRel = pPosRel->PosRNext;
+	  /* Bloc suivant */
+	}
 
-	     if (empty)
-		loop = FALSE;
-	     else
-		pPosRel = pPosRel->PosRNext;
-	     /* Bloc suivant */
-	  }
+      /* Faut-il creer un nouveau bloc de relations ? */
+      if (loop)
+	{
+	  GetPosBlock (&pPosRel);
+	  if (pPreviousPosRel == NULL)
+	    pOrginBox->BxPosRelations = pPosRel;
+	  else
+	    pPreviousPosRel->PosRNext = pPosRel;
+	  i = 0;
+	}
+      pRelation = &pPosRel->PosRTable[i];
+      pRelation->ReRefEdge = originEdge;
+      pRelation->ReBox = pTargetBox;
+      pRelation->ReOp = op;
+    }
 
-	/* Faut-il creer un nouveau bloc de relations ? */
-	if (loop)
-	  {
-	     GetPosBlock (&pPosRel);
-	     if (pPreviousPosRel == NULL)
-		pOrginBox->BxPosRelations = pPosRel;
-	     else
-		pPreviousPosRel->PosRNext = pPosRel;
-	     i = 1;
-	  }
-	pRelation = &pPosRel->PosRTable[i - 1];
-	pRelation->ReRefEdge = originEdge;
-	pRelation->ReBox = pTargetBox;
-	pRelation->ReOp = op;
-     }
+  /* Deuxieme sens de la dependance */
+  if (op != OpHorizInc && op != OpVertInc)
+    {
+      /* On recherche une entree libre */
+      pPosRel = pTargetBox->BxPosRelations;
+      pPreviousPosRel = NULL;
+      loop = TRUE;
+      while (loop && pPosRel != NULL)
+	{
+	  i = 0;
+	  pPreviousPosRel = pPosRel;
+	  do
+	    {
+	      empty = pPosRel->PosRTable[i].ReBox == NULL;
+	      i++;
+	    }
+	  while (i != MAX_RELAT_POS && !empty);
+	  
+	  if (empty)
+	    {
+	      loop = FALSE;
+	      i--;
+	    }
+	  else
+	    /* Bloc suivant */
+	    pPosRel = pPosRel->PosRNext;
+	}
 
-   /* Deuxieme sens de la dependance */
-   if (op != OpHorizInc && op != OpVertInc)
-     {
-	/* On recherche une entree libre */
-	pPosRel = pTargetBox->BxPosRelations;
-	pPreviousPosRel = NULL;
-	loop = TRUE;
-	while (loop && pPosRel != NULL)
-	  {
-	     i = 0;
-	     pPreviousPosRel = pPosRel;
-	     do
-	       {
-		  i++;
-		  empty = pPosRel->PosRTable[i - 1].ReBox == NULL;
-	       }
-	     while (i != MAX_RELAT_POS && !empty);
-
-	     if (empty)
-		loop = FALSE;
-	     else
-		/* Bloc suivant */
-		pPosRel = pPosRel->PosRNext;
-	  }
-
-	/* Faut-il creer un nouveau bloc de relations ? */
-	if (loop)
-	  {
-	     GetPosBlock (&pPosRel);
-	     if (pPreviousPosRel == NULL)
-		pTargetBox->BxPosRelations = pPosRel;
-	     else
-		pPreviousPosRel->PosRNext = pPosRel;
-	     i = 1;
-	  }
-	pRelation = &pPosRel->PosRTable[i - 1];
-	pRelation->ReRefEdge = targetEdge;
-	pRelation->ReBox = pOrginBox;
-	pRelation->ReOp = op;
-     }
+      /* Faut-il creer un nouveau bloc de relations ? */
+      if (loop)
+	{
+	  GetPosBlock (&pPosRel);
+	  if (pPreviousPosRel == NULL)
+	    pTargetBox->BxPosRelations = pPosRel;
+	  else
+	    pPreviousPosRel->PosRNext = pPosRel;
+	  i = 0;
+	}
+      pRelation = &pPosRel->PosRTable[i];
+      pRelation->ReRefEdge = targetEdge;
+      pRelation->ReBox = pOrginBox;
+      pRelation->ReOp = op;
+    }
 }
 
 
@@ -211,63 +217,65 @@ PtrBox              pOrginBox;
 PtrBox              pTargetBox;
 boolean             sameDimension;
 boolean             horizRef;
-
 #endif /* __STDC__ */
 {
-   int                 i;
-   boolean             loop;
-   boolean             empty;
-   PtrDimRelations     pPreviousDimRel;
-   PtrDimRelations     pDimRel;
+  int                 i;
+  boolean             loop;
+  boolean             empty;
+  PtrDimRelations     pPreviousDimRel;
+  PtrDimRelations     pDimRel;
 
-   i = 0;
-   /* On determine la dimension affectee */
-   if (horizRef)
-      if (sameDimension)
-	 pDimRel = pOrginBox->BxWidthRelations;
-      else
-	 pDimRel = pOrginBox->BxHeightRelations;
-   else if (sameDimension)
-      pDimRel = pOrginBox->BxHeightRelations;
-   else
+  i = 0;
+  /* On determine la dimension affectee */
+  if (horizRef)
+    if (sameDimension)
       pDimRel = pOrginBox->BxWidthRelations;
+    else
+      pDimRel = pOrginBox->BxHeightRelations;
+  else if (sameDimension)
+    pDimRel = pOrginBox->BxHeightRelations;
+  else
+    pDimRel = pOrginBox->BxWidthRelations;
 
-   /* On recherche une entree libre */
-   pPreviousDimRel = NULL;
-   loop = TRUE;
-   while (loop && pDimRel != NULL)
-     {
-	i = 0;
-	pPreviousDimRel = pDimRel;
-	do
-	  {
-	     i++;
-	     empty = pDimRel->DimRTable[i - 1] == NULL;
-	  }
-	while (i != MAX_RELAT_DIM && !empty);
+  /* On recherche une entree libre */
+  pPreviousDimRel = NULL;
+  loop = TRUE;
+  while (loop && pDimRel != NULL)
+    {
+      i = 0;
+      pPreviousDimRel = pDimRel;
+      do
+	{
+	  empty = pDimRel->DimRTable[i] == NULL;
+	  i++;
+	}
+      while (i != MAX_RELAT_DIM && !empty);
 
-	if (empty)
-	   loop = FALSE;
+      if (empty)
+	{
+	  loop = FALSE;
+	  i--;
+	}
+      else
+	pDimRel = pDimRel->DimRNext;
+    }
+
+  /* Faut-il creer un nouveau bloc de relations ? */
+  if (loop)
+    {
+      GetDimBlock (&pDimRel);
+      if (pPreviousDimRel == NULL)
+	if (horizRef)
+	  pOrginBox->BxWidthRelations = pDimRel;
 	else
-	   pDimRel = pDimRel->DimRNext;
+	  pOrginBox->BxHeightRelations = pDimRel;
+      else
+	pPreviousDimRel->DimRNext = pDimRel;
+      i = 0;
      }
 
-   /* Faut-il creer un nouveau bloc de relations ? */
-   if (loop)
-     {
-	GetDimBlock (&pDimRel);
-	if (pPreviousDimRel == NULL)
-	   if (horizRef)
-	      pOrginBox->BxWidthRelations = pDimRel;
-	   else
-	      pOrginBox->BxHeightRelations = pDimRel;
-	else
-	   pPreviousDimRel->DimRNext = pDimRel;
-	i = 1;
-     }
-
-   pDimRel->DimRTable[i - 1] = pTargetBox;
-   pDimRel->DimRSame[i - 1] = sameDimension;
+   pDimRel->DimRTable[i] = pTargetBox;
+   pDimRel->DimRSame[i] = sameDimension;
 }
 
 
@@ -515,7 +523,6 @@ AbPosition          rule;
 PtrBox              pBox;
 int                 frame;
 boolean             horizRef;
-
 #endif /* __STDC__ */
 {
   int                 x, y, dist;
@@ -888,6 +895,8 @@ boolean             horizRef;
        else if (!horizRef && pBox->BxVertFlex)
 	 MoveBoxEdge (pBox, pCurrentBox, op, y + dist - pBox->BxYOrg, frame, FALSE);
      }
+   /* break down the temporary link of moved boxes */
+   pBox->BxMoved = NULL;
 }
 
 
@@ -1148,7 +1157,7 @@ PtrBox              pPreviousBox;
 	return pRelativeBox;
      }
    else
-      return NULL;
+      return (NULL);
 }
 
 
@@ -1791,7 +1800,9 @@ boolean             horizRef;
 	   pBox->BxContentHeight = FALSE;
      }
 
-   return defaultDim;
+   /* break down the temporary link of moved boxes */
+   pBox->BxMoved = NULL;
+   return (defaultDim);
 }
 
 
@@ -1953,6 +1964,9 @@ boolean             horizRef;
 	if (pCurrentBox != NULL)
 	   InsertPosRelation (pBox, pCurrentBox, OpVertRef, localEdge, refEdge);
      }
+
+   /* break down the temporary link of moved boxes */
+   pBox->BxMoved = NULL;
 }
 
 
