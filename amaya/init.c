@@ -728,34 +728,16 @@ Document            doc;
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, iEditor, iconBrowser, TRUE);
 #endif /* _WINDOWS */
-       TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
-       TtaChangeButton (document, 1, iI, iconINo, FALSE);
-       TtaChangeButton (document, 1, iB, iconBNo, FALSE);
-       TtaChangeButton (document, 1, iT, iconTNo, FALSE);
-       TtaChangeButton (document, 1, iImage, iconImageNo, FALSE);
-       TtaChangeButton (document, 1, iH1, iconH1No, FALSE);
-       TtaChangeButton (document, 1, iH2, iconH2No, FALSE);
-       TtaChangeButton (document, 1, iH3, iconH3No, FALSE);
-       TtaChangeButton (document, 1,iBullet, iconBulletNo, FALSE);
-       TtaChangeButton (document, 1,iNum, iconNumNo, FALSE);
-       TtaChangeButton (document, 1,iDL, iconDLNo, FALSE);
-       TtaChangeButton (document, 1, iLink, iconLinkNo, FALSE);
-       TtaChangeButton (document, 1, iTable, iconTableNo, FALSE);
-#ifdef MATHML
-       SwitchIconMath (document, 1, FALSE);
-#endif /* MATHML */
-#ifdef GRAPHML
-       SwitchIconGraph (document, 1, FALSE);
-#endif /* GRAPHML */
        /* change the document status */
        if (DocumentTypes[document] == docHTML)
 	 DocumentTypes[document] = docReadOnly;
        else if (DocumentTypes[document] == docImage)
 	 DocumentTypes[document] = docImageRO;
+       else if (DocumentTypes[document] == docCSS)
+	 DocumentTypes[document] = docCSSRO;
        SetHTMLReadOnly (document);
 
        /* update windows menus */
-       view = 1;
        TtaSetItemOff (document, 1, File, BSave);
        TtaSetItemOff (document, 1, Edit_, BUndo);
        TtaSetItemOff (document, 1, Edit_, BRedo);
@@ -764,75 +746,99 @@ Document            doc;
        TtaSetItemOff (document, 1, Edit_, BClear);
        TtaSetItemOff (document, 1, Edit_, BSpellCheck);
        TtaSetItemOff (document, 1, Edit_, BTransform);
-       TtaSetMenuOff (document, 1, Types);
-       TtaSetMenuOff (document, 1, Links);
-       TtaSetMenuOff (document, 1, Style);
-       TtaSetItemOff (document, 1, Special, TSectionNumber);
-       TtaSetItemOff (document, 1, Special, BMakeBook);
-       view = TtaGetViewFromName (document, "Structure_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
+
+       TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
+       if (DocumentTypes[document] != docCSSRO)
 	 {
-	    TtaSetItemOff (document, view, Edit_, BCut);
-	    TtaSetItemOff (document, view, Edit_, BPaste);
-	    TtaSetItemOff (document, view, Edit_, BClear);
-	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, view, Edit_, BTransform);
-	    TtaSetMenuOff (document, view, StructTypes);
-	    TtaSetMenuOff (document, view, Types);
-	 }
+	   TtaChangeButton (document, 1, iI, iconINo, FALSE);
+	   TtaChangeButton (document, 1, iB, iconBNo, FALSE);
+	   TtaChangeButton (document, 1, iT, iconTNo, FALSE);
+	   TtaChangeButton (document, 1, iImage, iconImageNo, FALSE);
+	   TtaChangeButton (document, 1, iH1, iconH1No, FALSE);
+	   TtaChangeButton (document, 1, iH2, iconH2No, FALSE);
+	   TtaChangeButton (document, 1, iH3, iconH3No, FALSE);
+	   TtaChangeButton (document, 1,iBullet, iconBulletNo, FALSE);
+	   TtaChangeButton (document, 1,iNum, iconNumNo, FALSE);
+	   TtaChangeButton (document, 1,iDL, iconDLNo, FALSE);
+	   TtaChangeButton (document, 1, iLink, iconLinkNo, FALSE);
+	   TtaChangeButton (document, 1, iTable, iconTableNo, FALSE);
 #ifdef MATHML
-       view = TtaGetViewFromName (document, "Math_Structure_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOff (document, view, Edit_, BCut);
-	    TtaSetItemOff (document, view, Edit_, BPaste);
-	    TtaSetItemOff (document, view, Edit_, BClear);
-	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, view, Edit_, BTransform);
-	    TtaSetMenuOff (document, view, Types);
-	 }
+	   SwitchIconMath (document, 1, FALSE);
 #endif /* MATHML */
 #ifdef GRAPHML
-       view = TtaGetViewFromName (document, "Graph_Structure_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOff (document, view, Edit_, BCut);
-	    TtaSetItemOff (document, view, Edit_, BPaste);
-	    TtaSetItemOff (document, view, Edit_, BClear);
-	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, view, Edit_, BTransform);
-	    TtaSetMenuOff (document, view, Types);
-	 }
+	   SwitchIconGraph (document, 1, FALSE);
 #endif /* GRAPHML */
-       view = TtaGetViewFromName (document, "Alternate_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOff (document, view, Edit_, BCut);
-	    TtaSetItemOff (document, view, Edit_, BPaste);
-	    TtaSetItemOff (document, view, Edit_, BClear);
-	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	    TtaSetMenuOff (document, view, StructTypes);
-	    TtaSetMenuOff (document, view, Types);
-	 }
-       view = TtaGetViewFromName (document, "Links_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOff (document, view, Edit_, BCut);
-	    TtaSetItemOff (document, view, Edit_, BPaste);
-	    TtaSetItemOff (document, view, Edit_, BClear);
-	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, view, Edit_, BTransform);
-	    TtaSetMenuOff (document, view, Types);
-	 }
-       view = TtaGetViewFromName (document, "Table_of_contents");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOff (document, view, Edit_, BCut);
-	    TtaSetItemOff (document, view, Edit_, BPaste);
-	    TtaSetItemOff (document, view, Edit_, BClear);
-	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, view, Edit_, BTransform);
-	    TtaSetMenuOff (document, view, Types);
+
+	   TtaSetMenuOff (document, 1, Types);
+	   TtaSetMenuOff (document, 1, Links);
+	   TtaSetMenuOff (document, 1, Style);
+	   TtaSetItemOff (document, 1, Special, TSectionNumber);
+	   TtaSetItemOff (document, 1, Special, BMakeBook);
+	   view = TtaGetViewFromName (document, "Structure_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOff (document, view, Edit_, BCut);
+	       TtaSetItemOff (document, view, Edit_, BPaste);
+	       TtaSetItemOff (document, view, Edit_, BClear);
+	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, view, Edit_, BTransform);
+	       TtaSetMenuOff (document, view, StructTypes);
+	       TtaSetMenuOff (document, view, Types);
+	     }
+#ifdef MATHML
+	   view = TtaGetViewFromName (document, "Math_Structure_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOff (document, view, Edit_, BCut);
+	       TtaSetItemOff (document, view, Edit_, BPaste);
+	       TtaSetItemOff (document, view, Edit_, BClear);
+	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, view, Edit_, BTransform);
+	       TtaSetMenuOff (document, view, Types);
+	     }
+#endif /* MATHML */
+#ifdef GRAPHML
+	   view = TtaGetViewFromName (document, "Graph_Structure_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOff (document, view, Edit_, BCut);
+	       TtaSetItemOff (document, view, Edit_, BPaste);
+	       TtaSetItemOff (document, view, Edit_, BClear);
+	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, view, Edit_, BTransform);
+	       TtaSetMenuOff (document, view, Types);
+	     }
+#endif /* GRAPHML */
+	   view = TtaGetViewFromName (document, "Alternate_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOff (document, view, Edit_, BCut);
+	       TtaSetItemOff (document, view, Edit_, BPaste);
+	       TtaSetItemOff (document, view, Edit_, BClear);
+	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	       TtaSetMenuOff (document, view, StructTypes);
+	       TtaSetMenuOff (document, view, Types);
+	     }
+	   view = TtaGetViewFromName (document, "Links_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOff (document, view, Edit_, BCut);
+	       TtaSetItemOff (document, view, Edit_, BPaste);
+	       TtaSetItemOff (document, view, Edit_, BClear);
+	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, view, Edit_, BTransform);
+	       TtaSetMenuOff (document, view, Types);
+	     }
+	   view = TtaGetViewFromName (document, "Table_of_contents");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOff (document, view, Edit_, BCut);
+	       TtaSetItemOff (document, view, Edit_, BPaste);
+	       TtaSetItemOff (document, view, Edit_, BClear);
+	       TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, view, Edit_, BTransform);
+	       TtaSetMenuOff (document, view, Types);
+	     }
 	 }
      }
    else
@@ -849,32 +855,16 @@ Document            doc;
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINDOWS */
-       TtaChangeButton (document, 1, iI, iconI, TRUE);
-       TtaChangeButton (document, 1, iB, iconB, TRUE);
-       TtaChangeButton (document, 1, iT, iconT, TRUE);
-       TtaChangeButton (document, 1, iImage, iconImage, TRUE);
-       TtaChangeButton (document, 1, iH1, iconH1, TRUE);
-       TtaChangeButton (document, 1, iH2, iconH2, TRUE);
-       TtaChangeButton (document, 1, iH3, iconH3, TRUE);
-       TtaChangeButton (document, 1,iBullet, iconBullet, TRUE);
-       TtaChangeButton (document, 1,iNum, iconNum, TRUE);
-       TtaChangeButton (document, 1,iDL, iconDL, TRUE);
-       TtaChangeButton (document, 1, iLink, iconLink, TRUE);
-       TtaChangeButton (document, 1, iTable, iconTable, TRUE);
-#ifdef MATHML
-       SwitchIconMath (document, 1, TRUE);
-#endif /* MATHML */
-#ifdef GRAPHML
-       SwitchIconGraph (document, 1, TRUE);
-#endif /* GRAPHML */
+
        /* change the document status */
        if (DocumentTypes[document] == docReadOnly)
 	 DocumentTypes[document] = docHTML;
        else if (DocumentTypes[document] == docImageRO)
 	 DocumentTypes[document] = docImage;
+       else if (DocumentTypes[document] == docCSSRO)
+	 DocumentTypes[document] = docCSS;
        TtaSetDocumentAccessMode (document, 1);
-       /* update windows menus */
-
+	   
        /* update windows menus */
        TtaSetItemOn (document, 1, Edit_, BUndo);
        TtaSetItemOn (document, 1, Edit_, BRedo);
@@ -883,75 +873,97 @@ Document            doc;
        TtaSetItemOn (document, 1, Edit_, BClear);
        TtaSetItemOn (document, 1, Edit_, BSpellCheck);
        TtaSetItemOn (document, 1, Edit_, BTransform);
-       TtaSetMenuOn (document, 1, Types);
-       TtaSetMenuOn (document, 1, Links);
-       TtaSetMenuOn (document, 1, Style);
-       TtaSetItemOn (document, 1, Special, TSectionNumber);
-       TtaSetItemOn (document, 1, Special, BMakeBook);
-       view = TtaGetViewFromName (document, "Structure_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
+       
+       if (DocumentTypes[document] != docCSS)
 	 {
-	    TtaSetItemOn (document, view, Edit_, BCut);
-	    TtaSetItemOn (document, view, Edit_, BPaste);
-	    TtaSetItemOn (document, view, Edit_, BClear);
-	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOn (document, view, Edit_, BTransform);
-	    TtaSetMenuOn (document, view, StructTypes);
-	    TtaSetMenuOn (document, view, Types);
-	 }
+	   TtaChangeButton (document, 1, iI, iconI, TRUE);
+	   TtaChangeButton (document, 1, iB, iconB, TRUE);
+	   TtaChangeButton (document, 1, iT, iconT, TRUE);
+	   TtaChangeButton (document, 1, iImage, iconImage, TRUE);
+	   TtaChangeButton (document, 1, iH1, iconH1, TRUE);
+	   TtaChangeButton (document, 1, iH2, iconH2, TRUE);
+	   TtaChangeButton (document, 1, iH3, iconH3, TRUE);
+	   TtaChangeButton (document, 1,iBullet, iconBullet, TRUE);
+	   TtaChangeButton (document, 1,iNum, iconNum, TRUE);
+	   TtaChangeButton (document, 1,iDL, iconDL, TRUE);
+	   TtaChangeButton (document, 1, iLink, iconLink, TRUE);
+	   TtaChangeButton (document, 1, iTable, iconTable, TRUE);
 #ifdef MATHML
-       view = TtaGetViewFromName (document, "Math_Structure_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOn (document, view, Edit_, BCut);
-	    TtaSetItemOn (document, view, Edit_, BPaste);
-	    TtaSetItemOn (document, view, Edit_, BClear);
-	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOn (document, view, Edit_, BTransform);
-	    TtaSetMenuOn (document, view, Types);
-	 }
+	   SwitchIconMath (document, 1, TRUE);
 #endif /* MATHML */
 #ifdef GRAPHML
-       view = TtaGetViewFromName (document, "Graph_Structure_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOn (document, view, Edit_, BCut);
-	    TtaSetItemOn (document, view, Edit_, BPaste);
-	    TtaSetItemOn (document, view, Edit_, BClear);
-	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOn (document, view, Edit_, BTransform);
-	    TtaSetMenuOn (document, view, Types);
-	 }
+	   SwitchIconGraph (document, 1, TRUE);
 #endif /* GRAPHML */
-       view = TtaGetViewFromName (document, "Alternate_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOn (document, view, Edit_, BCut);
-	    TtaSetItemOn (document, view, Edit_, BPaste);
-	    TtaSetItemOn (document, view, Edit_, BClear);
-	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	    TtaSetMenuOn (document, view, StructTypes);
-	    TtaSetMenuOn (document, view, Types);
-	 }
-       view = TtaGetViewFromName (document, "Links_view");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOn (document, view, Edit_, BCut);
-	    TtaSetItemOn (document, view, Edit_, BPaste);
-	    TtaSetItemOn (document, view, Edit_, BClear);
-	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOn (document, view, Edit_, BTransform);
-	    TtaSetMenuOn (document, view, Types);
-	 }
-       view = TtaGetViewFromName (document, "Table_of_contents");
-       if (view != 0 && TtaIsViewOpened (document, view))
-	 {
-	    TtaSetItemOn (document, view, Edit_, BCut);
-	    TtaSetItemOn (document, view, Edit_, BPaste);
-	    TtaSetItemOn (document, view, Edit_, BClear);
-	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
-	    TtaSetItemOn (document, view, Edit_, BTransform);
-	    TtaSetMenuOn (document, view, Types);
+	   TtaSetMenuOn (document, 1, Types);
+	   TtaSetMenuOn (document, 1, Links);
+	   TtaSetMenuOn (document, 1, Style);
+	   TtaSetItemOn (document, 1, Special, TSectionNumber);
+	   TtaSetItemOn (document, 1, Special, BMakeBook);
+	   view = TtaGetViewFromName (document, "Structure_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOn (document, view, Edit_, BCut);
+	       TtaSetItemOn (document, view, Edit_, BPaste);
+	       TtaSetItemOn (document, view, Edit_, BClear);
+	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOn (document, view, Edit_, BTransform);
+	       TtaSetMenuOn (document, view, StructTypes);
+	       TtaSetMenuOn (document, view, Types);
+	     }
+#ifdef MATHML
+	   view = TtaGetViewFromName (document, "Math_Structure_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOn (document, view, Edit_, BCut);
+	       TtaSetItemOn (document, view, Edit_, BPaste);
+	       TtaSetItemOn (document, view, Edit_, BClear);
+	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOn (document, view, Edit_, BTransform);
+	       TtaSetMenuOn (document, view, Types);
+	     }
+#endif /* MATHML */
+#ifdef GRAPHML
+	   view = TtaGetViewFromName (document, "Graph_Structure_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOn (document, view, Edit_, BCut);
+	       TtaSetItemOn (document, view, Edit_, BPaste);
+	       TtaSetItemOn (document, view, Edit_, BClear);
+	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOn (document, view, Edit_, BTransform);
+	       TtaSetMenuOn (document, view, Types);
+	     }
+#endif /* GRAPHML */
+	   view = TtaGetViewFromName (document, "Alternate_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOn (document, view, Edit_, BCut);
+	       TtaSetItemOn (document, view, Edit_, BPaste);
+	       TtaSetItemOn (document, view, Edit_, BClear);
+	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	       TtaSetMenuOn (document, view, StructTypes);
+	       TtaSetMenuOn (document, view, Types);
+	     }
+	   view = TtaGetViewFromName (document, "Links_view");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOn (document, view, Edit_, BCut);
+	       TtaSetItemOn (document, view, Edit_, BPaste);
+	       TtaSetItemOn (document, view, Edit_, BClear);
+	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOn (document, view, Edit_, BTransform);
+	       TtaSetMenuOn (document, view, Types);
+	     }
+	   view = TtaGetViewFromName (document, "Table_of_contents");
+	   if (view != 0 && TtaIsViewOpened (document, view))
+	     {
+	       TtaSetItemOn (document, view, Edit_, BCut);
+	       TtaSetItemOn (document, view, Edit_, BPaste);
+	       TtaSetItemOn (document, view, Edit_, BClear);
+	       TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	       TtaSetItemOn (document, view, Edit_, BTransform);
+	       TtaSetMenuOn (document, view, Types);
+	     }
 	 }
      }
 }
