@@ -486,29 +486,6 @@ RULES
 	Create '>';
 	END;
 
- Toggle_Menu: BEGIN
-	Create '<!--toggle_menu-->\12<pre>\12';
-	Create '</pre>\12' After;
-	END;
-
- Toggle_Item: BEGIN
-	Create '\12' After;
-	END;
-
- Radio_Menu: BEGIN
-	Create '<!--radio_menu-->\12<pre>\12';
-	Create '</pre>\12' After;
-	END;
-
- Radio_Item: BEGIN
-	Create '\12' After;
-	END;
-
- Text_Input_Line: BEGIN
-	Create '<!--text_input_line-->\12<p>\12';
-	Create '</p>\12' After;
-	END;
-
  Text_Area: BEGIN
 	Create '<textarea';
 	Create Attributes;

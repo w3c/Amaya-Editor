@@ -378,21 +378,23 @@ View                view;
    le Xbuffer pour transmettre la selection X.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CopyXClipboard (unsigned char **buffer)
+static int          CopyXClipboard (unsigned char **buffer, View view)
 #else  /* __STDC__ */
-int                 CopyXClipboard (buffer)
+static int          CopyXClipboard (buffer, view)
 unsigned char     **buffer;
-
+View                view;
 #endif /* __STDC__ */
 {
-   int                 i, j, max;
-   int                 k, lg, maxLength;
-   int                 firstChar, lastChar;
    PtrTextBuffer       clipboard;
-   unsigned char      *Xbuffer;
    PtrDocument         pDoc;
    PtrElement          pFirstEl, pLastEl;
    PtrElement          pEl;
+   PtrAbstractBox      pBlock, pOldBlock;
+   unsigned char      *Xbuffer;
+   int                 i, j, max;
+   int                 k, lg, maxLength;
+   int                 firstChar, lastChar;
+   int                 v;
 
    j = 0;
    /* Recupere la selection courante */
@@ -439,10 +441,16 @@ unsigned char     **buffer;
    Xbuffer = (unsigned char *) TtaGetMemory (sizeof (char) * max);
 
    *buffer = Xbuffer;
-
    /* Recopie le texte dans le Xbuffer */
    i = 0;
    lg = 0;
+
+   /* note la vue concernee */
+   if (view > 100)
+     v = 0;
+   else
+     v = view - 1;
+
    pEl = pFirstEl;
    /* Teste si le premier element est de type texte */
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)
@@ -489,6 +497,7 @@ unsigned char     **buffer;
      }
 
    /* Recopie le texte des elements suivants */
+   pOldBlock = NULL;
    while (pEl != NULL)
      {
 	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
@@ -504,11 +513,13 @@ unsigned char     **buffer;
 
 	     if (pEl != NULL)
 	       {
-		  if (i != 0)
+                  pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
+		  if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
 		     /* Ajoute un \n en fin d'element */
 		     strcpy (&Xbuffer[i++], "\n");
 
 		  /* Recopie le texte de l'element */
+		  pOldBlock = pBlock;
 		  clipboard = pEl->ElText;
 		  while (clipboard != NULL && i < max && lg < maxLength)
 		    {
@@ -541,7 +552,7 @@ View                view;
 #endif
 {
 #  ifdef _WINDOWS
-   ClipboardLength = CopyXClipboard (&Xbuffer);
+   ClipboardLength = CopyXClipboard (&Xbuffer, view);
 #  else /* _WINDOWS */
    int                 frame;
 
@@ -575,7 +586,7 @@ View                view;
      }
 
    /* Recopie la selection courante */
-   ClipboardLength = CopyXClipboard (&Xbuffer);
+   ClipboardLength = CopyXClipboard (&Xbuffer, view);
    /* Annule le cutbuffer courant */
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
 #  endif /* _WINDOWS */

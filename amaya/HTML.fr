@@ -72,13 +72,8 @@ Form_Element: form element
 Text_Area: TEXTAREA
 Option_Menu: SELECT
 Option: OPTION
-Toggle_Menu: toggle menu
-Toggle_Item: toggle item
 Checkbox_Input: INPUT
-Radio_Menu: radio menu
-Radio_Item: radio item
 Radio_Input: INPUT
-Text_Input_Line: P
 Text_Input: INPUT
 Reset_Input: INPUT
 Submit_Input: INPUT
@@ -102,8 +97,6 @@ Table_row: ROW
 Table_cell: cell
 Data_cell: TD
 Heading_cell: TH
-MAP: MAP
-AREA: AREA
 Langue: lang
 Class: class
 PseudoClass: pseudo class

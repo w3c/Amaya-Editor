@@ -26,7 +26,6 @@
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
-
 #include "dialog.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -34,10 +33,12 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "page_tv.h"
 #include "edit_tv.h"
 #include "select_tv.h"
 #include "appdialogue_tv.h"
+#include "frame_tv.h"
 
 #include "tree_f.h"
 #include "attributes_f.h"
@@ -354,7 +355,7 @@ int                 applyDomain;
 	if (pAb != NULL)
 	  {
 	     currentBodySize = PixelToPoint(PixelValue (pAb->AbSize,
-							pAb->AbSizeUnit, pAb));
+							pAb->AbSizeUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 	    
 	    /* famille de polices de caracteres */
 	    if (locChngFontFamily)
@@ -487,8 +488,8 @@ int                 applyDomain;
 		      sign = 0;
 		    else
 		      sign = -1;
-		    i = PixelToPoint(PixelValue (abs (pAb->AbIndent),
-						 pAb->AbIndentUnit, pAb));
+		    i = PixelToPoint(PixelValue (abs (pAb->AbIndent), pAb->AbIndentUnit,
+						 pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 		    if (sign == IndentSign && i == IndentValue)
 		      /* pas de changement */
 		      locChngIndent = FALSE;
@@ -512,8 +513,8 @@ int                 applyDomain;
 		else
 		  {
 		    /* convertit 'interligne en points typographiques */
-		    i = PixelToPoint(PixelValue (pAb->AbLineSpacing,
-						 pAb->AbLineSpacingUnit, pAb));
+		    i = PixelToPoint(PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
+						 pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 		    if (OldLineSp == i)
 		      locChngLineSp = FALSE;
 		  }
@@ -1184,6 +1185,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
+   PtrDocument         pSelDoc;
+   PtrDocument         pDoc;
+   PtrElement          pFirstSel, pLastSel;
+   PtrElement          pEl;
+   PtrAbstractBox      pAb;
 #  ifndef _WINDOWS 
    int                 nbItems;
    int                 max, bodyRelatSize, bodyPointSize;
@@ -1193,13 +1199,8 @@ View                view;
    int                 fontNum;
 #  endif /* !_WINDOWS */
    int                 i;
-   PtrDocument         pSelDoc;
-   PtrElement          pFirstSel, pLastSel;
    int                 firstChar, lastChar;
    boolean             selectionOK;
-   PtrAbstractBox      pAb;
-   PtrElement          pEl;
-   PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
 
@@ -1394,15 +1395,15 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   int                 i, nbItems;
    PtrDocument         pSelDoc;
+   PtrDocument         pDoc;
    PtrElement          pFirstSel, pLastSel;
+   PtrAbstractBox      pAb;
+   char                string[MAX_TXT_LEN];
+   int                 currentBodySize;
+   int                 i, nbItems;
    int                 firstChar, lastChar;
    boolean             selectionOK;
-   PtrAbstractBox      pAb;
-   int                 currentBodySize;
-   char                string[MAX_TXT_LEN];
-   PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
 
@@ -1485,8 +1486,8 @@ View                view;
 		i = LineWeight;
 	     else
 	       {
-	          currentBodySize = PixelToPoint(PixelValue (pAb->AbSize,
-							pAb->AbSizeUnit, pAb));
+	          currentBodySize = PixelToPoint(PixelValue (pAb->AbSize,pAb->AbSizeUnit,
+							     pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 		  i = (currentBodySize * LineWeight) / 10;
 		  if ((currentBodySize * i) % 10 >= 5)
 		     i++;
@@ -1539,15 +1540,15 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument         pSelDoc;
-   PtrElement          pFirstSel, pLastSel;
-   int                 firstChar, lastChar;
-   boolean             selectionOK;
-   PtrAbstractBox      pAb;
-#  ifndef _WINDOWS 
-   int                 i;
-   char                string[MAX_TXT_LEN];
-#  endif /* !_WINDOWS */
    PtrDocument         pDoc;
+   PtrElement          pFirstSel, pLastSel;
+   PtrAbstractBox      pAb;
+   int                 firstChar, lastChar;
+#  ifndef _WINDOWS 
+   char                string[MAX_TXT_LEN];
+   int                 i;
+#  endif /* !_WINDOWS */
+   boolean             selectionOK;
 
    pDoc = LoadedDocument[document - 1];
 
@@ -1617,7 +1618,7 @@ View                view;
 			TtaGetMessage (LIB, TMSG_INDENT_PTS), 0, 300, TRUE);
 	     /* initialise la valeur du renfoncement */
 	     IndentValue = PixelToPoint(PixelValue (abs (pAb->AbIndent),
-					pAb->AbIndentUnit, pAb));
+					pAb->AbIndentUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 	     TtaSetNumberForm (NumZoneRecess, IndentValue);
 
 	     /* sous-menu sens de renfoncement */
@@ -1675,10 +1676,10 @@ View                view;
 		TtaRedrawMenuEntry (NumMenuLineSpacing, i, "icones", ThotColorNone, -1);
 	     /* initialise l'interligne en points typographiques */
 	     OldLineSp = PixelToPoint(PixelValue (pAb->AbLineSpacing,
-					  pAb->AbLineSpacingUnit, pAb));
+					  pAb->AbLineSpacingUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 	     TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
 
-	     NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb));
+	     NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 	     /* saisie de l'interligne par un menu */
 	     if (OldLineSp < (NormalLineSpacing * 3) / 2)
 		i = 0;

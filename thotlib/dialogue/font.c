@@ -358,12 +358,13 @@ ptrfont             font;
  *		here it hold the comparison value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb)
+int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 #else  /* __STDC__ */
-int                 PixelValue (val, unit, pAb)
+int                 PixelValue (val, unit, pAb, zoom)
 int                 val;
 TypeUnit            unit;
 PtrAbstractBox      pAb;
+int                 zoom;
 #endif /* __STDC__ */
 {
    int              dist, i;
@@ -372,42 +373,48 @@ PtrAbstractBox      pAb;
 #  ifdef _WINDOWS 
    WIN_GetDeviceContext (-1);
 #  endif /* _WINDOWS */
-   switch (unit) {
-          case UnRelative:
-               if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-                  dist = 0;
-               else
-                   dist = (val * FontHeight (pAb->AbBox->BxFont) + 5) / 10;
-               break;
-          case UnXHeight:
-               if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
-                  dist = 0;
-               else
-                   dist = (val * CharacterHeight ('X', pAb->AbBox->BxFont)) / 10;
-               break;
-          case UnPoint:
-               dist = PointToPixel (val);
-               break;
-          case UnPixel:
-#              ifdef _WINDOWS
-			  if (TtPrinterDC) {
-                 if (PrinterDPI == 0)
-                    PrinterDPI = GetDeviceCaps (GetDC (NULL), LOGPIXELSY);;
-				 if (ScreenDPI == 0)
-					ScreenDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-                 /* dist = (val * GetDeviceCaps (TtPrinterDC, LOGPIXELSY) + GetDeviceCaps (TtDisplay, LOGPIXELSY) / 2) / GetDeviceCaps (TtDisplay, LOGPIXELSY); */
-                 dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-			  } else
-                   dist = val;
-#              else  /* _WINDOWS */
-               dist = val;
-#              endif /* _WINDOWS */
-               break;
-          case UnPercent:
-               i = val * (int) pAb;
-               dist = i / 100;
-               break;
-   }
+   switch (unit)
+     {
+     case UnRelative:
+       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	 dist = 0;
+       else
+	 dist = (val * FontHeight (pAb->AbBox->BxFont) + 5) / 10;
+       break;
+     case UnXHeight:
+       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
+	 dist = 0;
+       else
+	 dist = (val * CharacterHeight ('X', pAb->AbBox->BxFont)) / 10;
+       break;
+     case UnPoint:
+       dist = PointToPixel (val);
+       /* take zoom into account */
+       if (zoom != 0)
+	 dist += (dist * zoom / 10);
+       break;
+     case UnPixel:
+#      ifdef _WINDOWS
+       if (TtPrinterDC)
+	 {
+	   if (PrinterDPI == 0)
+	     PrinterDPI = GetDeviceCaps (GetDC (NULL), LOGPIXELSY);
+	   if (ScreenDPI == 0)
+	     ScreenDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+	   dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+	 }
+       else
+#      endif /* _WINDOWS */
+	 dist = val;
+       /* take zoom into account */
+       if (zoom != 0)
+	 dist += (dist * zoom / 10);
+       break;
+     case UnPercent:
+       i = val * (int) pAb;
+       dist = i / 100;
+       break;
+     }
 #  ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
@@ -420,12 +427,13 @@ PtrAbstractBox      pAb;
  *		here it hold the comparison value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb)
+int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 #else  /* __STDC__ */
-int                 LogicalValue (val, unit, pAb)
+int                 LogicalValue (val, unit, pAb, zoom)
 int                 val;
 TypeUnit            unit;
 PtrAbstractBox      pAb;
+int                 zoom;
 #endif /* __STDC__ */
 {
    int              dist, i;
@@ -446,17 +454,21 @@ PtrAbstractBox      pAb;
 	 dist = val * 10 / CharacterHeight ('x', pAb->AbBox->BxFont);
        break;
      case UnPoint:
+       /* take zoom into account */
+       if (zoom != 0)
+	 val -= (val * zoom / 10);
        dist = PixelToPoint (val);
        break;
      case UnPixel:
-#        ifdef _WINDOWS 
-		 if (TtPrinterDC)
-			 dist = (val * ScreenDPI + ScreenDPI / 2) / PrinterDPI;
-		 else 
-			 dist = val;
-#        else  /* _WINDOWS */ 
-       dist = val;
-#        endif /* _WINDOWS */
+       /* take zoom into account */
+       if (zoom != 0)
+	 val -= (val * zoom / 10);
+#      ifdef _WINDOWS 
+       if (TtPrinterDC)
+	 dist = (val * ScreenDPI + ScreenDPI / 2) / PrinterDPI;
+       else 
+#      endif /* _WINDOWS */
+	 dist = val;
        break;
      case UnPercent:
        if (pAb == NULL)

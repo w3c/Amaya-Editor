@@ -238,10 +238,7 @@ STRUCT
   Form_Element = CASE OF
 	Paragraph;
 	Pseudo_paragraph;
-	Toggle_Menu;
-	Radio_Menu;
 	Option_Menu;
-	Text_Input_Line;
 	Text_Area (ATTR !NAME; Rows = Integer; Columns = Integer;
 			Default_Value = Text) =
 		Text_With_Frame with Rows ?= 4, Columns ?= 20;
@@ -261,37 +258,15 @@ STRUCT
   Option (ATTR Selected = Yes_; DefaultSelected = Yes_; !Value_ = Text) =
 	TEXT;
 
-  Toggle_Menu = LIST OF (Toggle_Item)
-	- (Text_Input_Line, Toggle_Menu, Radio_Menu);
-  Toggle_Item = BEGIN
-	Basic_Set;
+  Input = CASE OF
 	Checkbox_Input (ATTR !NAME; 
 			     Checked = Yes_, No_; DefaultChecked = Yes_, No_;
 			     Value_) =
 		CONSTANT C_Empty with Checked ?= No_;
-	Basic_Set;
-	END;
-
-  Radio_Menu (ATTR !NAME) = LIST OF (Radio_Item)
-	- (Text_Input_Line, Toggle_Menu, Radio_Menu);
-  Radio_Item = BEGIN
-	Basic_Set;
 	Radio_Input (ATTR !NAME; Checked; DefaultChecked; !Value_) =
 		CONSTANT C_Empty with Checked ?= No_, NAME ?= 'radio';
-	Basic_Set;
-	END;
-
-  Text_Input_Line = BEGIN
-	Basic_Set;
 	Text_Input (ATTR !NAME; Area_Size = Integer; MaxLength = Integer; Value_) =
 		Text_With_Frame with Area_Size ?= 20;
-	Basic_Set;
-	END - (Text_Input_Line, Toggle_Menu, Radio_Menu);
-
-  Input = CASE OF
-	Checkbox_Input;
-	Radio_Input;
-	Text_Input;
 	Hidden_Input (ATTR !NAME; Value_) = CONSTANT C_Empty;
 	Password_Input (ATTR !NAME; Area_Size; MaxLength) = Text_With_Frame;
 	File_Input (ATTR !NAME) = CONSTANT C_Empty;

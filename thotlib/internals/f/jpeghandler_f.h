@@ -24,7 +24,8 @@ extern ThotBitmap JpegCreate ( char *fn,
                                unsigned long BackGroundPixel,
                                ThotBitmap *mask1,
                                int *width,
-                               int *height );
+                               int *height,
+			       int zoom );
 extern void JpegPrint ( char *fn,
                         PictureScaling pres,
                         int xif,
@@ -59,7 +60,8 @@ extern ThotBitmap JpegCreate (/* char *fn,
                                  unsigned long BackGroundPixel,
                                  ThotBitmap *mask1,
                                  int *width,
-                                 int *height */);
+                                 int *height,
+				 int zoom */);
 extern void JpegPrint (/* char *fn,
                           PictureScaling pres,
                           int xif,

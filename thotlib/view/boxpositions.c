@@ -466,7 +466,7 @@ int                *page;
   int                 height;
   boolean             result;
 
-   height = PixelValue (*page, UnPoint, pAb);
+   height = PixelValue (*page, UnPoint, pAb, 0);
 #ifdef __COLPAGE__
    /* comme dans le cas des colonnes, il y a des branches de l'image */
    /* qui ne sont pas examinees et mises a jour par SetPageIndicators, */
@@ -486,7 +486,7 @@ int                *page;
       SetPageIndicators (pAb, table, &height, &result);
    result = !pAb->AbOnPageBreak;
    /* Faut-il traduire la hauteur de page ? */
-   *page = LogicalValue (height, UnPoint, pAb);
+   *page = LogicalValue (height, UnPoint, pAb, 0);
    return result;
 }
 

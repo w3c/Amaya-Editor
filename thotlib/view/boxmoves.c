@@ -3293,9 +3293,9 @@ int                 frame;
 				     else
 				       {
 					  if (pPosAb->PosUnit == UnPercent)
-					     i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxWidth);
+					     i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxWidth, 0);
 					  else
-					     i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
+					     i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 					  i = i + pChildBox->BxXOrg + pChildBox->BxVertRef - pBox->BxXOrg;
 					  MoveVertRef (pBox, pChildBox, i - pBox->BxVertRef, frame);
 				       }
@@ -3528,9 +3528,9 @@ int                 frame;
 				     else
 				       {
 					  if (pPosAb->PosUnit == UnPercent)
-					     i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxHeight);
+					     i = PixelValue (pPosAb->PosDistance, UnPercent, (PtrAbstractBox) pAb->AbBox->BxHeight, 0);
 					  else
-					     i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
+					     i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 					  i = i + pChildBox->BxYOrg + pChildBox->BxHorizRef - pBox->BxYOrg;
 					  MoveHorizRef (pBox, pChildBox, i - pBox->BxHorizRef, frame);
 				       }

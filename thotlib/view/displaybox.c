@@ -44,7 +44,7 @@ PtrAbstractBox      pAb;
    if (pAb == NULL)
       return (0);
    else
-      return PixelValue (pAb->AbLineWeight, pAb->AbLineWeightUnit, pAb);
+      return PixelValue (pAb->AbLineWeight, pAb->AbLineWeightUnit, pAb, 0);
 }
 
 

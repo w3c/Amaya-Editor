@@ -2051,7 +2051,7 @@ int                *height;
   if (width > CharacterWidth (119, pBox->BxFont)/*'w' */ || extensibleBox)
     {
       /* Calcul de l'interligne */
-      lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb);
+      lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* Calcul de l'indentation */
       if (extensibleBox)
 	{
@@ -2059,9 +2059,9 @@ int                *height;
 	  width = 3000;
 	}
       else if (pAb->AbIndentUnit == UnPercent)
-	indentLine = PixelValue (pAb->AbIndent, UnPercent, (PtrAbstractBox) width);
+	indentLine = PixelValue (pAb->AbIndent, UnPercent, (PtrAbstractBox) width, 0);
       else
-	indentLine = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb);
+	indentLine = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
       if (pAb->AbIndent < 0)
 	indentLine = -indentLine;
       
@@ -2307,7 +2307,7 @@ int                *height;
       if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pBox->BxFirstLine != NULL)
 	{
 	  pPosAb = &pAb->AbHorizRef;
-	  x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
+	  x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	  MoveHorizRef (pBox, NULL, pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
 	}
     }
@@ -3145,7 +3145,7 @@ PtrAbstractBox      pAb;
 		    {
 		       h = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;
 		       pos = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHorizRef
-			  + PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb) - ascent;
+			  + PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification) - ascent;
 		    }
 		  else
 		    {
@@ -3234,7 +3234,7 @@ PtrAbstractBox      pAb;
 		       /* Valeurs limites du bas de la ligne courante et */
 		       /* de la position de reference ligne suivante     */
 		       pos = pLine->LiYOrg + pLine->LiHorizRef
-			  + PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb)
+			  + PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification)
 			  - pLine->LiNext->LiHorizRef;
 		       i = pLine->LiYOrg + pLine->LiHeight;
 

@@ -2198,7 +2198,10 @@ int                 editType;
    Propagation         savePropagate;
    PtrLine             pLine;
    int                 xDelta, yDelta;
-   int                 i, j, width, height;
+   int                 i, j;
+#ifdef IV
+   int                 width, height;
+#endif
    int                 spacesDelta, charsDelta;
    int                 frame;
    boolean             still, ok;

@@ -203,17 +203,6 @@ int                 frame;
 
 
 #ifdef __STDC__
-int                 CopyXClipboard (unsigned char **buffer)
-#else  /* __STDC__ */
-int                 CopyXClipboard (buffer)
-unsigned char     **buffer;
-
-#endif /* __STDC__ */
-{
-   return 0;
-}
-
-#ifdef __STDC__
 void                UpdateScrollbars (int frame)
 #else  /* __STDC__ */
 void                UpdateScrollbars (frame)

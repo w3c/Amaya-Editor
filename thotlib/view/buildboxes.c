@@ -427,10 +427,11 @@ int                *nSpaces;
    GivePictureSize evalue les dimensions de la boite du pave Picture. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         GivePictureSize (PtrAbstractBox pAb, int *width, int *height)
+static void         GivePictureSize (PtrAbstractBox pAb, int zoom, int *width, int *height)
 #else  /* __STDC__ */
-static void         GivePictureSize (pAb, width, height)
+static void         GivePictureSize (pAb, zoom, width, height)
 PtrAbstractBox      pAb;
+int                 zoom;
 int                *width;
 int                *height;
 
@@ -448,8 +449,8 @@ int                *height;
      }
    else
      {
-	*width = picture->PicWidth;
-	*height = picture->PicHeight;
+	*width = PixelValue (picture->PicWidth, UnPixel, pAb, zoom);
+	*height = PixelValue (picture->PicHeight, UnPixel, pAb, zoom);
      }
 }
 
@@ -1347,7 +1348,7 @@ int                *carIndex;
 
 		    if (picture->PicPixmap == None)
 		       LoadPicture (frame, pCurrentBox, picture);
-		    GivePictureSize (pAb, &width, &height);
+		    GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 		    break;
 		 case LtSymbol:
 		    pCurrentBox->BxBuffer = NULL;
@@ -1829,7 +1830,10 @@ int                 frame;
 	     else if (pAb->AbLeafType == LtPolyLine)
 		FreePolyline (pCurrentBox);
 	     else if (pAb->AbLeafType == LtPicture)
-	        UnmapImage((PictInfo *)pCurrentBox->BxPictInfo);
+	       {
+		 UnmapImage((PictInfo *)pCurrentBox->BxPictInfo);
+		 FreePicture ((PictInfo *)pAb->AbPictInfo);
+	       }
 	     else if (pCurrentBox->BxType == BoSplit)
 	       {
 		 /* libere les boites generees pour la mise en lignes */
@@ -2421,7 +2425,7 @@ int                 frame;
 			      GiveTextSize (pAb, &width, &height, &i);
 			      break;
 			   case LtPicture:
-			      GivePictureSize (pAb, &width, &height);
+			      GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 			      break;
 			   case LtSymbol:
 			      GiveSymbolSize (pAb, &width, &height);
@@ -2484,7 +2488,7 @@ int                 frame;
 			      GiveTextSize (pAb, &width, &height, &i);
 			      break;
 			   case LtPicture:
-			      GivePictureSize (pAb, &width, &height);
+			      GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 			      break;
 			   case LtSymbol:
 			      GiveSymbolSize (pAb, &width, &height);
@@ -2579,7 +2583,7 @@ int                 frame;
 				   SetCursorWatch (frame);
 				   LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 				   ResetCursorWatch (frame);
-				   GivePictureSize (pAb, &width, &height);
+				   GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 				}
 			      else
 				{
@@ -2756,7 +2760,7 @@ int                 frame;
 		       pLine = SearchLine (pBox);
 		       if (pLine != NULL)
 			 {
-			    i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
+			    i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			    pLine->LiYOrg += i;
 			    EncloseInLine (pBox, frame, pAb->AbEnclosing);
 			 }

@@ -34,6 +34,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "page_tv.h"
 #include "select_tv.h"
 #include "edit_tv.h"
@@ -752,14 +753,13 @@ int                 view;
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
-   	NewPosition est appele' par le Mediateur, lorsque		
-   		l'utilisateur deplace une boite a l'ecran.		
-   		pAb est le pave deplace' et deltaX et deltaY		
-   		representent l'amplitude du deplacement en pixels	
-   		frame indique la fenetre.				
-   		display indique s'il faut reafficher ou simplement		
-   		recalculer l'image.					
-  ----------------------------------------------------------------------*/
+  NewPosition est appele' par le Mediateur, lorsque l'utilisateur
+  deplace une boite a l'ecran.
+  pAb est le pave deplace' et deltaX et deltaY representent l'amplitude
+  du deplacement en pixels.
+  frame indique la fenetre.				
+  display indique s'il faut reafficher ou simplement recalculer l'image.
+----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                NewPosition (PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
 #else  /* __STDC__ */
@@ -839,10 +839,10 @@ boolean             display;
 		 GetSizesFrame (frame, &x, &y);
 	       else
 		 y = pAb->AbEnclosing->AbBox->BxHeight;
-	       deltaY = LogicalValue (deltaY, UnPercent, (PtrAbstractBox) y);
+	       deltaY = LogicalValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);
 	     }
 	   else if (pRStd->PrPosRule.PoDistUnit != UnPixel)
-	     deltaY = LogicalValue (deltaY, pRStd->PrPosRule.PoDistUnit, pAb);
+	     deltaY = LogicalValue (deltaY, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	   /* cherche si la position verticale de l'element est determinee */
 	   /* par un attribut auquel est associee l'exception NewVPos */
 	   attr = FALSE;
@@ -995,10 +995,10 @@ boolean             display;
 		 GetSizesFrame (frame, &x, &y);
 	       else
 		 x = pAb->AbEnclosing->AbBox->BxWidth;
-	       deltaX = LogicalValue (deltaX, UnPercent, (PtrAbstractBox) x);
+	       deltaX = LogicalValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
 	     }
 	   else if (pRStd->PrPosRule.PoDistUnit != UnPixel)
-	     deltaX = LogicalValue (deltaX, pRStd->PrPosRule.PoDistUnit, pAb);
+	     deltaX = LogicalValue (deltaX, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	   /* cherche si la position horizontale de l'element est determinee */
 	   /* par un attribut auquel est associee l'exception NewHPos */
 	   attr = FALSE;
@@ -1246,11 +1246,11 @@ boolean             display;
 		 /* de la boite englobante */
 		 widthRef = pAb->AbEnclosing->AbBox->BxWidth;
 	       /* calcule le isNew rapport (pourcentage) de la boite */
-	       x = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef);
+	       x = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef, 0);
 	     }
 	   else
 	     /* calcule la nouvelle largeur en unite logique */
-	     x = LogicalValue (width, pAb->AbWidth.DimUnit, pAb);
+	     x = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	   
 	   /* cherche si la largeur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewWidth */
@@ -1416,11 +1416,11 @@ boolean             display;
 		 /* de la boite englobante */
 		 heightRef = pAb->AbEnclosing->AbBox->BxHeight;
 	       /* calcule le isNew rapport (pourcentage) de la boite */
-	       y = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef);
+	       y = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef, 0);
 	     }
 	   else
 	     /* calcule la nouvelle largeur en unite logique */
-	     y = LogicalValue (height, pAb->AbHeight.DimUnit, pAb);
+	     y = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 	   
 	   /* cherche si la hauteur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewHeight */

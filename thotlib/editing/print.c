@@ -1450,8 +1450,8 @@ int                 height;
      {
 	pFrame = &ViewFrameTable[frame - 1];
 	/* On convertit suivant l'unite donnee */
-	y = PixelValue (org, UnPoint, pFrame->FrAbstractBox);
-	h = PixelValue (height, UnPoint, pFrame->FrAbstractBox);
+	y = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0);
+	h = PixelValue (height, UnPoint, pFrame->FrAbstractBox, 0);
 	pFrame->FrClipXBegin = 0;
 	pFrame->FrClipXEnd = 32000;
 	pFrame->FrClipYBegin = y;

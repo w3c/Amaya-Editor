@@ -30,7 +30,11 @@ J Satchell, Eric Marttila
 */
 /* Revision History:
 $Log$
-Revision 1.2  1998-06-08 07:12:49  cvs
+Revision 1.3  1998-06-10 15:56:08  cvs
+Improving Zoom, tooltips and clipboard
+Irene
+
+Revision 1.2  1998/06/08 07:12:49  cvs
 New version of LiteClue.
 Improvement of table formatting.
 Irene
@@ -97,6 +101,8 @@ $log
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "LiteClueP.h"
+
+extern Pixel Button_Color;
 
 #define CheckWidgetClass(routine) \
 	if (XtClass(w) != xcgLiteClueWidgetClass) \
@@ -352,9 +358,9 @@ static void create_GC(XcgLiteClueWidget cw )
 	XGCValues myXGCV;
 
 
-	valuemask = GCForeground | GCBackground | GCFillStyle ;
+	valuemask = GCForeground | GCBackground | GCFillStyle;
 	myXGCV.foreground = cw->liteClue.foreground;
-	myXGCV.background = cw->core.background_pixel;
+	myXGCV.background = /*cw->core.background_pixel*/Button_Color;
 	myXGCV.fill_style = FillSolid; 
 
 #if XtSpecificationRelease < 5	|| defined(NO_FONT_SET)

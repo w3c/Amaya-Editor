@@ -38,9 +38,9 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable XbmCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height)
+Drawable XbmCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-Drawable XbmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height)
+Drawable XbmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
 char               *fn;
 PictureScaling      pres;
 int                *xif;
@@ -51,6 +51,7 @@ unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
 int                *width;
 int                *height;
+int                 zoom;
 #endif /* __STDC__ */
 {
   Pixmap              pixmap;

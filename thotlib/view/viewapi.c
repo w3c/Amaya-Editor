@@ -734,7 +734,7 @@ int                 value;
   if (frame != 0)
     {
       GetFrameParams (frame, &valvisib, &valzoom);
-      if (valzoom < 0 || valzoom > 10)
+      if (valzoom < -10 || valzoom > 10)
 	TtaError (ERR_invalid_parameter);
       else
 	{

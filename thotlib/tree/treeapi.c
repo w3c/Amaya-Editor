@@ -3562,6 +3562,11 @@ Element             element;
 	TtaError (ERR_invalid_parameter);
 	ok = FALSE;
      }
+   else if (((PtrElement) element)->ElStructSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
    else if (searchedType.ElSSchema == NULL)
      {
 	if (searchedType.ElTypeNum > MAX_BASIC_TYPE)

@@ -18,10 +18,12 @@ extern int FontAscent ( ptrfont font );
 extern int FontHeight ( ptrfont font );
 extern int PixelValue ( int val,
                         TypeUnit unit,
-                        PtrAbstractBox pAb );
+                        PtrAbstractBox pAb,
+			int zoom );
 extern int LogicalValue ( int val,
                           TypeUnit unit,
-                          PtrAbstractBox pAb );
+                          PtrAbstractBox pAb,
+			int zoom );
 extern int FontBase ( ptrfont font );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
@@ -62,10 +64,12 @@ extern int FontAscent (/* ptrfont font */);
 extern int FontHeight (/* ptrfont font */);
 extern int PixelValue (/* int val,
                           TypeUnit unit,
-                          PtrAbstractBox pAb */);
+                          PtrAbstractBox pAb,
+			  int zoom */);
 extern int LogicalValue (/* int val,
                             TypeUnit unit,
-                            PtrAbstractBox pAb */);
+                            PtrAbstractBox pAb,
+			    int zoom */);
 extern int FontBase (/* ptrfont font */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);

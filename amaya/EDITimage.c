@@ -318,8 +318,11 @@ View                view;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS
-   int                 i;
+   LoadedImageDesc   *desc;
+   char               tempfile[MAX_LENGTH];
+   char               tempname[MAX_LENGTH];
    char                s[MAX_LENGTH];
+   int                 i;
 
    /* Dialogue form for open URL or local */
    i = 0;
@@ -358,6 +361,18 @@ View                view;
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1) ;
 
 #  endif /* _WINDOWS */
+   if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
+     {
+       /*
+	 load a local image into a remote document 
+	 copy image file into the temporary directory of the document
+	 */
+       TtaExtractName (LastURLImage, tempfile, tempname);
+       NormalizeURL (tempname, document, tempfile, tempname, NULL);
+       AddLoadedImage (tempname, tempfile, document, &desc);
+       desc->status = IMAGE_MODIFIED;
+       TtaFileCopy (LastURLImage, desc->localName);
+     }
    return (LastURLImage);
 }
 

@@ -103,9 +103,9 @@ int                *hif;
    Read the bounding box of an eps file  no picture to produce here
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          EpsCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *PicMask, int *width, int *height)
+ThotBitmap          EpsCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *PicMask, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-ThotBitmap          EpsCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, PicMask, width, height)
+ThotBitmap          EpsCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, PicMask, width, height, zoom)
 char               *fn;
 PictureScaling      pres;
 int                *xif;
@@ -116,6 +116,7 @@ unsigned long       BackGroundPixel;
 ThotBitmap         *PicMask;
 int                *width;
 int                *height;
+int                 zoom;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS

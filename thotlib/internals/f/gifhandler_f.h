@@ -57,7 +57,8 @@ extern ThotBitmap GifCreate ( char *fn,
                               unsigned long BackGroundPixel,
                               ThotBitmap * mask1,
                               int *width,
-                              int *height );
+                              int *height,
+			      int zoom);
 extern void GifPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -125,7 +126,8 @@ extern ThotBitmap GifCreate (/* char *fn,
                                 unsigned long BackGroundPixel,
                                 ThotBitmap * mask1,
                                 int *width,
-                                int *height */);
+                                int *height,
+				int zoom */);
 extern void GifPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

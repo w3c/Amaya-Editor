@@ -1952,28 +1952,29 @@ PictInfo           *imageDesc;
 		     yFrame = box->BxHeight;
 		 }
 
-#          ifdef _WINDOWS
-           pic2print = FALSE ;
-#          endif /* _WINDOWS */
-	       myDrawable = (*(PictureHandlerTable[typeImage].
-			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
-	       /* intrinsic width and height */
-#          ifdef _WINDOWS 
-           if (TtPrinterDC) {
-              imageDesc->PicWidth  = (width * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
-	          imageDesc->PicHeight = (height * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
-		   } else {
-                imageDesc->PicWidth = width;
-                imageDesc->PicHeight = height;
-		   }
-#          else  /* _WINDOWS */
-	       imageDesc->PicWidth = width;
-	       imageDesc->PicHeight = height;
-#          endif /* _WINDOWS */
 #              ifdef _WINDOWS
+	       pic2print = FALSE;
+#              endif /* _WINDOWS */
+	       myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture))
+		 (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
+	       /* intrinsic width and height */
+#              ifdef _WINDOWS 
+	       if (TtPrinterDC)
+		 {
+		   imageDesc->PicWidth  = (width * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+		   imageDesc->PicHeight = (height * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
+		 }
+	       else
+		 {
+		   imageDesc->PicWidth = width;
+		   imageDesc->PicHeight = height;
+		 }
 	       imageDesc->bgRed   = bgRed;
 	       imageDesc->bgGreen = bgGreen;
 	       imageDesc->bgBlue  = bgBlue;
+#              else  /* _WINDOWS */
+	       imageDesc->PicWidth = width;
+	       imageDesc->PicHeight = height;
 #              endif /* _WINDOWS */
 	     }
 	 }

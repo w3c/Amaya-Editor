@@ -5106,67 +5106,6 @@ RULES
 		Visibility: Enclosing =;
 	END;
 
- Toggle_Menu: BEGIN
-	LineBreak: No;
-	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	CreateBefore(PRE_S);
-	CreateWith(VerticalLine);
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
-
- Toggle_Item: BEGIN
-	Line;
-	Width: Enclosing . Width;
-	VertPos: Top = Previous . Bottom + 0.1;
-	IN Structure_view BEGIN
-		VertPos: Top = Previous . Bottom;
-		NoLine;
-		END;
-	END;
-
- Radio_Menu: BEGIN
-	LineBreak: No;
-	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	CreateBefore(PRE_S);
-	CreateWith(VerticalLine);
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
-
- Radio_Item: BEGIN
-	Line;
-	Width: Enclosing . Width;
-	VertPos: Top = Previous . Bottom + 0.1;
-	IN Structure_view BEGIN
-		VertPos: Top = Previous . Bottom;
-		NoLine;
-		END;
-	END;
-
- Text_Input_Line: BEGIN
-	Line;
-	LineBreak: No;
-	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	CreateBefore(P_S);
-	CreateWith(VerticalLine);
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		NoLine;
-		END;
-	END;
-
  Text_Area: BEGIN
 	CreateBefore(TEXTAREA_S);
 	{CreateBefore(Text_Space);}

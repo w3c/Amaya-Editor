@@ -1459,9 +1459,9 @@ ThotColorStruct     colrs[256];
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          GifCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height)
+ThotBitmap          GifCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-ThotBitmap          GifCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height)
+ThotBitmap          GifCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
 char               *fn;
 PictureScaling      pres;
 int                *xif;
@@ -1472,13 +1472,14 @@ unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
 int                *width;
 int                *height;
+int                 zoom;
 #endif /* __STDC__ */
 {
-  int                 w, h;
   Pixmap              pixmap;
-  int                 i, ratio;
   ThotColorStruct     colrs[256];
   unsigned char      *buffer, *buffer2;
+  int                 w, h;
+  int                 i, ratio;
   int                 ncolors, cpp;
 
   Gif89.transparent = -1;
@@ -1499,10 +1500,20 @@ int                *height;
   if (buffer == NULL)
      return (ThotBitmapNone);
 
-  if (*xif == 0 && *yif != 0)
-    *xif = w;
-  if (*xif != 0 && *yif == 0)
-    *yif = h;
+  if (zoom != 0 && *xif == 0 && *yif == 0)
+    {
+      /* take zoom into account */
+      *xif = PixelValue (w, UnPixel, NULL, zoom);
+      *yif = PixelValue (h, UnPixel, NULL, zoom);
+    }
+  else
+    {
+      if (*xif == 0 && *yif != 0)
+	*xif = PixelValue (w, UnPixel, NULL, zoom);
+      if (*xif != 0 && *yif == 0)
+	*yif = PixelValue (h, UnPixel, NULL, zoom);
+    }
+
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {
       /* xif and yif contain width and height of the box */	  

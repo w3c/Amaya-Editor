@@ -363,34 +363,6 @@ RULES
 	Remove;
 	END;
 
- Toggle_Menu: BEGIN
-	END;
-
- Toggle_Item: BEGIN
-	If NOT Selected
-	   Remove;
-	Create Content;
-	Remove;
-	END;
-
- Radio_Menu: BEGIN
-	END;
-
- Radio_Item: BEGIN
-       If NOT Selected
-	   Remove;
-	Create Content;
-	Remove;
-	END;
-
- Text_Input_Line: BEGIN
-	If Empty
-	   Remove;
-	END;
-
- Command_Line: BEGIN
-	END;
-
  Text_Area: BEGIN
 	Create Content;
 	Remove;

@@ -29,7 +29,8 @@ extern ThotBitmap PngCreate ( char* fn,
                               unsigned long BackGroundPixel,
                               ThotBitmap *mask1,
                               int *width,
-                              int *height );
+                              int *height,
+			      int zoom );
 extern void PngPrint ( char* fn,
                        PictureScaling pres,
                        int xif,
@@ -69,7 +70,8 @@ extern ThotBitmap PngCreate (/* char* fn,
                                 unsigned long BackGroundPixel,
                                 ThotBitmap *mask1,
                                 int *width,
-                                int *height */);
+                                int *height,
+				int zoom */);
 extern void PngPrint (/* char* fn,
                          PictureScaling pres,
                          int xif,

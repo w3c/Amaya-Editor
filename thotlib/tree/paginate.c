@@ -1427,7 +1427,7 @@ int                 schView;
 		    i = AttrValue (pA1);
 		  else
 		    i = pRe1->PrMinValue;
-		  Min = PixelValue (i, pRe1->PrMinUnit, pAb);
+		  Min = PixelValue (i, pRe1->PrMinUnit, pAb, 0);
 		  if (RealPageHeight - PosV < Min)
 		    /* la hauteur minimum n'y est pas, on deplace la */
 		    /* hauteur de page en haut du pave */
@@ -1465,7 +1465,7 @@ int                 schView;
 		  i = AttrValue (pA2);
 		else
 		  i = pRe1->PrMinValue;
-		Min = PixelValue (i, pRe1->PrMinUnit, pAb);
+		Min = PixelValue (i, pRe1->PrMinUnit, pAb, 0);
 		if (PosV + High - RealPageHeight < Min)
 		  /* la frontiere de page passe trop pres du bas du */
 		  /* pave, on la ramene en haut de la zone autorisee */

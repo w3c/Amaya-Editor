@@ -7,7 +7,8 @@
 
 /*
  *
- * Author: V. Quint (INRIA)
+ * Authors: V. Quint (INRIA)
+ *          I. Vatton (INRIA)
  *
  */
  
@@ -20,6 +21,8 @@
 #include "tree.h"
 #include "typecorr.h"
 
+#define THOT_EXPORT extern
+#include "boxes_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "edit_tv.h"
@@ -828,13 +831,13 @@ Document            document;
 			    x = pAb->AbEnclosing->AbBox->BxWidth;
 			    y = pAb->AbEnclosing->AbBox->BxHeight;
 			 }
-		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x);
-		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y);
+		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
+		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);
 		    }
 		  else if (unit != UnPixel)
 		    {
-		       deltaX = PixelValue (deltaX, unit, pAb);
-		       deltaY = PixelValue (deltaY, unit, pAb);
+		       deltaX = PixelValue (deltaX, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		       deltaY = PixelValue (deltaY, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    }
 		  NewDimension (pAb, deltaX+pAb->AbBox->BxWidth, deltaY+pAb->AbBox->BxHeight, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
@@ -910,13 +913,13 @@ TypeUnit            unit;
 			    x = pAb->AbEnclosing->AbBox->BxWidth;
 			    y = pAb->AbEnclosing->AbBox->BxHeight;
 			 }
-		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x);
-		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y);
+		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
+		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);
 		    }
 		  else if (unit != UnPixel)
 		    {
-		       deltaX = PixelValue (deltaX, unit, pAb);
-		       deltaY = PixelValue (deltaY, unit, pAb);
+		       deltaX = PixelValue (deltaX, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		       deltaY = PixelValue (deltaY, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    }
 		  NewPosition (pAb, deltaX, deltaY, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
@@ -999,13 +1002,13 @@ int                *height;
 			    x = pAb->AbEnclosing->AbBox->BxWidth;
 			    y = pAb->AbEnclosing->AbBox->BxHeight;
 			 }
-		       *width = PixelValue (*width, UnPercent, (PtrAbstractBox) x);
-		       *height = PixelValue (*height, UnPercent, (PtrAbstractBox) y);
+		       *width = PixelValue (*width, UnPercent, (PtrAbstractBox) x, 0);
+		       *height = PixelValue (*height, UnPercent, (PtrAbstractBox) y, 0);
 		    }
 		  else if (unit != UnPixel)
 		    {
-		       *width = PixelValue (*width, unit, pAb);
-		       *height = PixelValue (*height, unit, pAb);
+		       *width = PixelValue (*width, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		       *height = PixelValue (*height, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		    }
 	       }
 	  }
@@ -1097,13 +1100,13 @@ int                *yCoord;
 	      /* Convert values to pixels */
 	      if (unit == UnPercent)
 		{
-		  *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x);
-		  *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y);
+		  *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
+		  *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
 		}
 	      else if (unit != UnPixel)
 		{
-		  *xCoord = PixelValue (*xCoord, unit, pAb);
-		  *yCoord = PixelValue (*yCoord, unit, pAb);
+		  *xCoord = PixelValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		  *yCoord = PixelValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		}
 	    }
 	}

@@ -592,9 +592,9 @@ boolean             horizRef;
 	      localEdge = rule.PosEdge;
 	      /* Convert the distance value */
 	      if (rule.PosUnit == UnPercent)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) x);
+		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) x, 0);
 	      else
-		dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb);
+		dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb, ViewFrameTable[frame - 1].FrMagnification);
 	    }
 	  else
 	    {
@@ -616,7 +616,7 @@ boolean             horizRef;
 		  pCurrentBox = pAb->AbBox;
 		  if (rule.PosUnit == UnPercent)
 		    /* poucentage de la largeur de l'englobant */
-		    dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing);
+		    dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing, 0);
 		  else
 		    dist = 0;
 		  refEdge = Left;
@@ -670,13 +670,13 @@ boolean             horizRef;
 	  /* Convert the distance value */
 	  if (rule.PosUnit == UnPercent)
 	    {
-	      dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxWidth);
+	      dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxWidth, 0);
 	      /* Change the rule for further updates */
 	      pCurrentAb->AbHorizPos.PosDistance = dist;
 	      pCurrentAb->AbHorizPos.PosUnit = UnPixel;
 	    }
 	  else
-	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb);
+	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb, ViewFrameTable[frame - 1].FrMagnification);
 	}
     }
   else
@@ -704,9 +704,9 @@ boolean             horizRef;
 	      localEdge = rule.PosEdge;
 	      /* Convert the distance value */
 	      if (rule.PosUnit == UnPercent)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) y);
+		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) y, 0);
 	      else
-		dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb);
+		dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb, ViewFrameTable[frame - 1].FrMagnification);
 	    }
 	  else
 	    {
@@ -778,13 +778,13 @@ boolean             horizRef;
 	  /* Convert the distance value */
 	  if (rule.PosUnit == UnPercent)
 	    {
-	      dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxHeight);
+	      dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxHeight, 0);
 	      /* Change the rule for further updates */
 	      pCurrentAb->AbVertPos.PosDistance = dist;
 	      pCurrentAb->AbVertPos.PosUnit = UnPixel;
 	    }
 	  else
-	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb);
+	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb, ViewFrameTable[frame - 1].FrMagnification);
 	}
     }
 
@@ -1378,9 +1378,9 @@ boolean             horizRef;
 			  if (pDimAb->DimValue < 0)
 			     val += pDimAb->DimValue;
 			  else if (pDimAb->DimUnit == UnPercent)
-			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
+			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
 			  else
-			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
+			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			  ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
 		       }
 		  }
@@ -1395,9 +1395,9 @@ boolean             horizRef;
 			  if (pDimAb->DimValue < 0)
 			     val = 0;
 			  else if (pDimAb->DimUnit == UnPercent)
-			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
+			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
 			  else
-			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
+			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			  ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
 		       }
 		  }
@@ -1421,11 +1421,11 @@ boolean             horizRef;
 			     /* Convert the distance value */
 			     if (pDimAb->DimUnit == UnPercent)
 			       {
-				  delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxWidth);
+				  delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxWidth, 0);
 				  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
 			       }
 			     else
-				delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
+				delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			     ResizeWidth (pBox, pBox, NULL, delta - pBox->BxWidth, 0, frame);
 			  }
 		     /* Deuxieme cas de coherence */
@@ -1482,9 +1482,9 @@ boolean             horizRef;
 					 if (pDimAb->DimAbRef == pParentAb && inLine && pDimAb->DimSameDimension)
 					   {
 					      if (pParentAb->AbIndentUnit == UnPercent)
-						 delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val);
+						 delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
 					      else
-						 delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb);
+						 delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
 					      if (pParentAb->AbIndent > 0)
 						 val -= delta;
 					      else if (pParentAb->AbIndent < 0)
@@ -1493,9 +1493,9 @@ boolean             horizRef;
 
 					 /* Convert the distance value */
 					 if (pDimAb->DimUnit == UnPercent)
-					    val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
+					    val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
 					 else
-					    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
+					    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 					 ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
 					 /* On teste si la relation est hors structure */
 					 if (pDimAb->DimAbRef != pParentAb
@@ -1522,9 +1522,9 @@ boolean             horizRef;
 		       {
 			  /* Convert the distance value */
 			  if (pDimAb->DimUnit == UnPercent)
-			     delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxHeight);
+			     delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxHeight, 0);
 			  else
-			     delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
+			     delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			  ResizeHeight (pBox, pBox, NULL, delta - pBox->BxHeight, frame);
 		       }
 		  /* Deuxieme cas de coherence */
@@ -1595,9 +1595,9 @@ boolean             horizRef;
 					  && !pDimAb->DimSameDimension)
 					{
 					   if (pParentAb->AbIndentUnit == UnPercent)
-					      delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val);
+					      delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
 					   else
-					      delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb);
+					      delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
 					   if (pParentAb->AbIndent > 0)
 					      val -= delta;
 					   else if (pParentAb->AbIndent < 0)
@@ -1606,9 +1606,9 @@ boolean             horizRef;
 
 				      /* Convert the distance value */
 				      if (pDimAb->DimUnit == UnPercent)
-					 val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val);
+					 val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
 				      else
-					 val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
+					 val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 				      ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
 				      /* On teste si la relation est hors structure */
 				      if (pDimAb->DimAbRef != pParentAb
@@ -1710,11 +1710,11 @@ boolean             horizRef;
 			  delta = 0;
 		       else
 			  delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-			  (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxWidth);
+			  (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxWidth, 0);
 		    }
 		  else
 		     /* Convert the distance value */
-		     delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
+		     delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 
 		  val = pRefBox->BxXOrg + delta;
 		  switch (pPosAb->PosRefEdge)
@@ -1808,11 +1808,11 @@ boolean             horizRef;
 			  delta = 0;
 		       else
 			  delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-					      (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxHeight);
+					      (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxHeight, 0);
 		    }
 		  else
 		     /* Convert the distance value */
-		     delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb);
+		     delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 
 		  val = pRefBox->BxYOrg + delta;
 		  switch (pPosAb->PosRefEdge)
@@ -1911,7 +1911,7 @@ boolean             horizRef;
 	     refEdge = Left;
 	     localEdge = VertRef;
 	     if (rule.PosUnit == UnPercent)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxWidth);
+		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxWidth, 0);
 	     else
 		dist = 0;
 	  }
@@ -1920,7 +1920,7 @@ boolean             horizRef;
 	     refEdge = Bottom;
 	     localEdge = HorizRef;
 	     if (rule.PosUnit == UnPercent)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxHeight);
+		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxHeight, 0);
 	     else
 		dist = FontBase (pBox->BxFont) - pBox->BxHeight;
 	  }
@@ -1934,12 +1934,12 @@ boolean             horizRef;
 	if (rule.PosUnit == UnPercent)
 	  {
 	     if (horizRef)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxWidth);
+		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxWidth, 0);
 	     else
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxHeight);
+		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pCurrentAb->AbEnclosing->AbBox->BxHeight, 0);
 	  }
 	else
-	   dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb);
+	   dist = PixelValue (rule.PosDistance, rule.PosUnit, pCurrentAb, ViewFrameTable[frame - 1].FrMagnification);
 
 	pCurrentBox = pAb->AbBox;
 	if (pCurrentBox == NULL)

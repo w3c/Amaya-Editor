@@ -351,9 +351,7 @@ static int          CharLevelElement[] =
 #endif
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_Option_Menu,
-   HTML_EL_Toggle_Item, HTML_EL_Toggle_Menu,
-   HTML_EL_Radio_Item, HTML_EL_Radio_Menu,
-   HTML_EL_Text_Input_Line, HTML_EL_Text_Input,
+   HTML_EL_Text_Input,
    HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
    HTML_EL_BR,
    0};
