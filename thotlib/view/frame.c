@@ -626,8 +626,8 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	  WIN_GetDeviceContext (frame);
 #endif /* __WINDOWS && !_WINT_PRINT */
 #ifdef _GL      
-	      if (GL_prepare(FrameTable[frame].WdFrame))
-		{
+	  if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame))
+	    {
 #endif /* _GL */
 
 	  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
@@ -737,7 +737,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	      FrameUpdating = FALSE;
 	    }	
 #ifdef _GL
-	  GL_realize (FrameTable[frame].WdFrame);
+	  GL_realize ();
 		}
 #endif /* _GL */ 
     }
@@ -811,7 +811,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       if (xmin < xmax && ymin < ymax)
 	{ 
 #ifdef _GL
-	  if (GL_prepare(FrameTable[frame].WdFrame))
+	  if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame))
 	    {
 #endif /*_GL*/
 	      
@@ -924,7 +924,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 
 		}
 #ifdef _GL 
-		  GL_realize (FrameTable[frame].WdFrame);
+		  GL_realize ();
 		    }
 #endif /* _GL */
 	  /* Interactive creation of boxes */

@@ -140,7 +140,7 @@ static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
   TranslateChars replaces in the text space chars to their visual
   equivalents and the character 128 by '&'.
   ----------------------------------------------------------------------*/
-static void TranslateChars (unsigned char *text)
+void TranslateChars (CHAR_T *text)
 {
   int                 i;
 
@@ -233,7 +233,8 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	  
 	}
       if (fg >= 0)
-	  width = GL_UnicodeDrawString (fg, buff, x, y, hyphen, font, lg);
+	  width = GL_UnicodeDrawString (fg, (CHAR_T *) buff, 
+					x, y, hyphen, font, lg);
     }
   return (width);
 }
@@ -344,7 +345,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
-	    xcour += GL_UnicodeDrawString (fg, ptcar, xcour, y, 0, font, 2);
+	    xcour += GL_UnicodeDrawString (fg, (CHAR_T *) ptcar, xcour, y, 0, font, 2);
 	    nb--;
 	  }
      }
@@ -390,9 +391,6 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
    int                 yend, delta;
    int                 wd, asc, hd;
 
-#ifdef _GL
-   DrawChar ('\362', frame, x, yf, font, fg);
-#else /* _GL */
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
      {
@@ -428,7 +426,6 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
       DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
 		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
 		font, fg);
-#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------

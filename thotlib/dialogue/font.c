@@ -288,7 +288,11 @@ int CharacterWidth (unsigned char c, PtrFont font)
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf = (XFontStruct *) font;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
+#ifndef _GL
   int                 i, l;
+#else
+  int                 l;
+#endif /*_GL*/
 
   if (font == NULL)
     return 0;
@@ -392,9 +396,9 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
   ----------------------------------------------------------------------*/
 int CharacterHeight (unsigned char c, PtrFont font)
 {
-#ifdef _GTK
+#if defined (_GTK) && !defined (_GL)
   int              l;
-#endif /* _GTK */
+#endif /* _GTK && !_GL*/
 
   if (font == NULL)
     return (0);
@@ -428,7 +432,6 @@ int CharacterHeight (unsigned char c, PtrFont font)
 int CharacterAscent (unsigned char c, PtrFont font)
 {
 #ifdef _GL
-  int               i;
   int               ascent;
 #else /*_GL*/
 #ifndef _WINDOWS
@@ -966,6 +969,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   PtrFont             ptfont;
 
   FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
+#ifdef _PCLDEBUG
+  g_print ("\n XLFD selection : %s", textX);
+#endif /*_PCLDEBUG*/
   /* initialize the PostScript font name */
   strcpy (PsName, text);   
 
@@ -1141,6 +1147,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   mask = 1 << (frame - 1);
   /* store window frame number */
   TtFontFrames[i] = TtFontFrames[i] | mask;
+#ifdef _PCLDEBUG
+  g_print ("\nXLFD selected %s", textX);
+#endif /*_PCLDEBUG*/
   return (ptfont);
 }
 

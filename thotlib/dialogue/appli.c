@@ -629,7 +629,7 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   y = event->area.y;
   width = event->area.width;
   height = event->area.height;  
-  if ((width <= 0) || (height <= 0) && !(frame > 0 && frame <= MAX_FRAME))
+  if ((width <= 0) || (height <= 0) || !(frame > 0 && frame <= MAX_FRAME))
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 

@@ -823,7 +823,7 @@ int GL_UnicodeDrawString (int fg,
     }
   else
     str[end] = EOS;
-  /*TranslateUnicodeChars (str); */
+  TranslateChars (str);
   SetPixelTransferBias (fg);
   glRasterPos2f (x, y);
   width = UnicodeFontRender (GL_font, str, x, y, end);
@@ -1372,7 +1372,7 @@ ThotBool GL_prepare (ThotWidget *widget)
 /*----------------------------------------------------------------------
    GL_realize : can we cancel if no modifs ?
   ----------------------------------------------------------------------*/
-void GL_realize (ThotWidget *widget)
+void GL_realize ()
 {
   return;
 }

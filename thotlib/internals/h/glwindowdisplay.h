@@ -35,17 +35,22 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
 
 void GL_Point (int fg, float width, float x, float y);
 void GL_DrawLine (int x1, int y1, int x2, int y2);
+void GL_DrawLines (ThotPoint *point, int npoints);
+
 void GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height);
 void GL_DrawRectangle (int fg, int x, int y, int width, int height);
 void GL_DrawSegments (XSegment *point, int npoints);
 void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled);
 void GL_DrawPolygon (ThotPoint *points, int npoints);
+void GL_VideoInvert (int width, int height, int x, int y);
 void CountourCountReset ();
 void CountourCountAdd (int npoints);
 
 
 void InitDrawing (int style, int thick, int fg);
 
+void TranslateChars (CHAR_T *text);
+int UnicodeCharacterWidth (CHAR_T c, PtrFont font);
 int GL_UnicodeDrawString (int fg, 
 			  CHAR_T *str, 
 			  float x, float y, 
@@ -55,10 +60,6 @@ void GL_DrawUnicodeChar (CHAR_T const c,
 			 float x, float y, 
 			 void *GL_font, int fg);
 
-int GL_DrawString (char const *str, float x, float y, 
-		   void *GL_font, int fg);
-void GL_DrawChar (char const c, float x, float y, void *GL_font, int fg);
-
 int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size);
 
 
@@ -67,7 +68,7 @@ void GL_DrawAll (ThotWidget widget, int frame);
 
 
 ThotBool GL_prepare (ThotWidget *widget);
-void GL_realize (ThotWidget *widget);
+void GL_realize ();
 
 #ifdef _GTK
 gboolean GL_DrawCallback (ThotWidget widget, 

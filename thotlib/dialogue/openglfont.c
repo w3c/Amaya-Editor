@@ -30,10 +30,10 @@ static int FTLibraryInit ()
 {
   int err;
   
-  if( FTlib != 0 )
+  if (FTlib != 0 )
     return TRUE;
   err = FT_Init_FreeType( &FTlib);
-  if( err)
+  if (err)
     {
       FTlib = 0;
       return FALSE;
@@ -411,12 +411,13 @@ int gl_font_ascent (void *gl_void_font)
 
 int gl_font_char_width (void *gl_void_font, char c)
 {
-  char character_only[2];
-   
-  character_only[0] = c;
-  character_only[1] = '\0';
-
-  return (FontAdvance ((GL_font *) gl_void_font, character_only)); 
+  GL_font* font = (GL_font *) gl_void_font;
+  unsigned int glyph_index;
+ 
+  glyph_index = FT_Get_Char_Index (*(font->face), c);
+  if( !font->glyphList[glyph_index] )
+    font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index);
+  return (font->glyphList[glyph_index]->advance);
 }
 
 int gl_font_char_height (void *gl_void_font, char *c)
@@ -498,11 +499,8 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
     }
   return NULL;
 }
-  
-
-
 /*--------------------------------------------------
-  BitmapAppend : Load a font
+  BitmapAppend : Add a bitmap at end
 ---------------------------------------------------*/
 static void BitmapAppend (unsigned char *data, 
 			   unsigned char *append_data,
@@ -510,7 +508,6 @@ static void BitmapAppend (unsigned char *data,
 			   unsigned int Width)
 {  
   register int i = 0;
-
   
   while (height--)
     {      
@@ -526,19 +523,19 @@ static void BitmapAppend (unsigned char *data,
     }
 }
 /*--------------------------------------------------
-  gl_font_init : Load a font
+  gl_font_init : Add a bitmap at beginning
 ---------------------------------------------------*/
 static void BitmapPrepend (unsigned char *data, 
-			   unsigned char *append_data,
+			   unsigned char *prepend_data,
 			   unsigned int width, 
 			   register int height,
 			   unsigned int Width)
 {  
   while (height--)
     {      
-      memcpy (data, append_data, Width); 
+      memcpy (data, prepend_data, Width); 
       data += Width;
-      append_data += width;
+      prepend_data += width;
     }
 }
 

@@ -26,19 +26,10 @@ int GetFontFilename (char script, int family,
   XftResult     result;  
   char	*s;
   int ok = 0;
-  int render, core, aa;
 
   pat = XftPatternCreate ();
   if (!pat)
-    return ok;    
-  /*
-    render = True;
-  core = True;
-  aa = True;
-  (void) XftPatternGetBool (pat, XFT_RENDER, 0, &render);
-  (void) XftPatternGetBool (pat, XFT_CORE, 0, &core);
-  (void) XftPatternGetBool (pat, XFT_ANTIALIAS, 0, &core);
-  */
+    return ok;   
   if (script != 'L' && script != 'G')
     {      
       switch (script)
@@ -174,6 +165,9 @@ int GetFontFilename (char script, int family,
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
        {
 	 strcpy (filename, s);  
+#ifdef _PCLDEBUG
+	 g_print ("\tXFT selection : %s", filename);
+#endif /*_PCLDEBUG*/
 	 ok = 1;
        }
      XftPatternDestroy (match);
