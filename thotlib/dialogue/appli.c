@@ -2288,7 +2288,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       SetFocus (FrRef[frame]);
       SetCapture (hwnd);
       /* stop any current insertion of text in the old frame */
-      if (frame != ActiveFrame)
 	CloseTextInsertion ();
       ClickFrame = frame;
       ActiveFrame = frame;
