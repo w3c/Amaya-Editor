@@ -262,7 +262,7 @@ libpng libpng.a : force
 
 libz libz.a : force
 	@($(RM) $(THOTDIR)/libpng/libz/*.o)
-	@(cd libpng/libz ; $(MAKE) CC="$(CC)" CFLAGS="-O")
+	@(cd libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O")
 
 #
 # Rules to rebuild the Kaffe package
