@@ -110,11 +110,22 @@ char               *viewsToPrint;
    int                 i, j, res;
 
    /* initialize the print command */
+
    sprintf (cmd, "%s/print", BinariesDirectory);
-   strcat (cmd, " -sch ");
-   strcat (cmd, thotSch);
-   strcat (cmd, " -doc ");
-   strcat (cmd, thotDoc);
+
+   if ((thotSch != NULL) &&
+       (thotSch[0] != '\0'))
+     {
+       strcat (cmd, " -sch ");
+       strcat (cmd, thotSch);
+     };
+
+   if ((thotDoc != NULL) &&
+       (thotDoc[0] != '\0'))
+     {
+       strcat (cmd, " -doc ");
+       strcat (cmd, thotDoc);
+     };
 
    /* transmit the server name */
    if (servername && servername[0] != EOS)
