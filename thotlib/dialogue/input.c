@@ -564,8 +564,8 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   int                 status;
   int                 PicMask;
   int                 frame;
-  unsigned int        value;
   unsigned int        state, save;
+  unsigned char       value;
 
   frame = (int) data;
   if (frame > MAX_FRAME)
@@ -632,8 +632,8 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 	}
     }
 #endif /* _I18N_ */
-  value = (unsigned int) event->string[0];
-  ThotInput (frame, value, 0, PicMask, key);
+  value = (unsigned char) event->string[0];
+  ThotInput (frame, (unsigned int)value, 0, PicMask, key);
   gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
   return TRUE;
 }
