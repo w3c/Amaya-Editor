@@ -395,23 +395,14 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   attrType.AttrTypeNum = Annot_ATTR_HREF_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, docAnnot);
-#if 0
-    {
-      doc_anchor = TtaGetMemory (strlen (DocumentURLs[doc])
-				 + strlen (user)
-				 + strlen (DocumentURLs[docAnnot])
-				 + 20);
-      sprintf (doc_anchor, "%s#%s_%s_%s", DocumentURLs[doc],
-	       ANNOT_ANAME, user, DocumentURLs[docAnnot]);
-      annot->name = doc_anchor;
-    }
-#endif
+
   doc_anchor = TtaGetMemory (strlen (annot->source_url)
 			     + strlen (annot->name) 
 			     + 20);
   sprintf (doc_anchor, "%s#%s", annot->source_url, annot->name);
   TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
   TtaFreeMemory (doc_anchor);
+
   /* use the source_doc_title parameter as the value of the source
      document field */
   el = TtaGetFirstChild (el);

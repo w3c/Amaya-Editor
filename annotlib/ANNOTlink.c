@@ -198,7 +198,6 @@ void LINK_UpdateAnnotationIndexFile (char *old_source_url, char *new_source_url)
 	    }
 	  fclose (fp_old);
 	}
-      TtaFreeMemory (index_file);
     }
   
   if (move)
@@ -602,8 +601,11 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
       thread = &AnnotThread[source_doc];
 #endif /* ANNOT_ON ANNOT */
       /* the annotations on this URL */
-      annot_list = AnnotMetaData[source_doc].annotations;  
-      doc_url = DocumentURLs[source_doc];
+      annot_list = AnnotMetaData[source_doc].annotations;
+      if (DocumentTypes[source_doc] == docAnnot &&  AnnotMetaData[source_doc].annot_url)
+	doc_url = AnnotMetaData[source_doc].annot_url;
+      else
+	doc_url = DocumentURLs[source_doc];
     }
 
   indexName = LINK_GetAnnotationIndexFile (doc_url);

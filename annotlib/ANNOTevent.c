@@ -870,7 +870,8 @@ void ANNOT_Post_callback (int doc, int status,
    Document  source_doc;
    /* For saving threads */
    ThotBool isReplyTo;
-   ThotBool update_index_file;
+   ThotBool is_root;
+   ThotBool do_update;
    char *previous_body_url;
    char *previous_annot_url;
 
@@ -913,6 +914,11 @@ void ANNOT_Post_callback (int doc, int status,
 		 fprintf (stderr, "PostCallback: POST returned an annotation for a different source: %s vs %s\n",
 			  returned_annot->source_url, annot->source_url);
 
+	       /*
+	       ** Phase 1: update the local annotation metadata and
+	       ** make a copy of the updated body and annotation URLs
+	       */
+
 	       /* updated the annot_url and  inReplyTo values if they have changed*/
 	       if (returned_annot->annot_url
 		   && (!annot->annot_url || strcasecmp (annot->annot_url, returned_annot->annot_url)))
@@ -922,18 +928,6 @@ void ANNOT_Post_callback (int doc, int status,
 		   returned_annot->annot_url = NULL;
 		 }
 
-#ifdef ANNOT_ON_ANNOT
-	       if (returned_annot->inReplyTo 
-		   && (!annot->inReplyTo || strcasecmp (annot->inReplyTo, returned_annot->inReplyTo)))
-		 {
-		   TtaFreeMemory (annot->inReplyTo);
-		   annot->inReplyTo = returned_annot->inReplyTo;
-		   returned_annot->inReplyTo = NULL;
-		   /* if we have an inReplyto, we use it instead of
-		      annot_url (annot_url comes from the annotates
-		      property */
-		 }
-#endif /* ANNOT_ON_ANNOT */
 	       /* update the shortcut to annot_url that we use for the
 		  actual operations */
 	       if (annot->annot_url && strcasecmp (annot->annot_url, AnnotMetaData[doc].annot_url))
@@ -944,98 +938,165 @@ void ANNOT_Post_callback (int doc, int status,
 	       else
 		 previous_annot_url = AnnotMetaData[doc].annot_url;
 
-	       /* replace the body only if it changed */
-	       if (returned_annot->body_url
-		   && (!annot->body_url 
-		       || strcmp (annot->body_url, returned_annot->body_url)))
+	       /* update the annotation body_url */
+	       if (returned_annot->body_url 
+		   && (!annot->body_url
+		       || strcasecmp (annot->body_url, returned_annot->body_url)))
 		 {
-		   /* update the anchor in the source doc */
-		   ReplaceLinkToAnnotation (source_doc, annot->name, 
-					    returned_annot->body_url);
-
-		   /*
-		     @@ JK: In principle, nothing's pointing to the body, except for the context.
-		    */
-		   if (IsFilePath (annot->body_url))
-		     {
-		       /* local annot was just made a shared annot;
-			  update the annotation index or delete it
-			  if it's now empty */
-
-		       /* erase the reference to the local annotation reference in the local thread */
-		       if (
-#ifdef ANNOT_ON_ANNOT
-			   (isReplyTo 
-			    && AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0) ||
-#endif /* ANNOT_ON_ANNOT */
-			   (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0))
-			 {
-			   /* @@ JK: to be tested */
-			   /* update the thread item that are children of this annotation */
-#ifdef ANNOT_ON_ANNOT
-			   if (isReplyTo 
-			       && AnnotMetaData[doc].thread->annotations 
-			       && previous_annot_url != AnnotMetaData[doc].annot_url)
-			     {
-			       ThotBool updateRoot; /* tells if we posted the root of the thread */
-
-			       updateRoot = !strcasecmp (previous_annot_url, annot->rootOfThread);
-			       AnnotThread_UpdateReplyTo (AnnotMetaData[doc].thread->annotations,
-							  AnnotMetaData[doc].annot_url,
-							  previous_annot_url);
-			     }
-			   if (AnnotMetaData[doc].annotations)
-			     AnnotThread_UpdateAnnotates (AnnotMetaData[doc].annotations,
-							  AnnotMetaData[doc].annot_url,
-							  previous_annot_url);
-#endif /* ANNOT_ON_ANNOT */
-			   LINK_SaveLink (source_doc, isReplyTo);
-			 }
-		       else
-			 LINK_DeleteLink (source_doc, isReplyTo);
-		       
-#ifdef ANNOT_ON_ANNOT
-		       /* update the index entry if we posted an annotation that has other annotations
-			  glued to it */
-		       /* @@ JK: but we have not yet downloaded the annotations */
-		       update_index_file = FALSE;
-		       if (AnnotMetaData[doc].local_annot_loaded
-			   && AnnotList_localCount (AnnotMetaData[doc].annotations) > 0)
-			 update_index_file = TRUE;
-		       else
-			 {
-			   char *annotIndex;
-
-			   annotIndex = LINK_GetAnnotationIndexFile (previous_annot_url);
-			   if (annotIndex && strcasecmp (previous_annot_url, AnnotMetaData[doc].annot_url))
-			     update_index_file = TRUE;
-			   if (annotIndex)
-			     TtaFreeMemory (annotIndex);
-			 }
-		       if (update_index_file)
-			 LINK_UpdateAnnotationIndexFile (previous_annot_url,  AnnotMetaData[doc].annot_url);
-#endif /* ANNOT_ON_ANNOT */
-		     }
-		   
-		   /* update the annotation body_url */
 		   /* TtaFileUnlink (annot->body_url); */
 		   previous_body_url = annot->body_url;
 		   /* update the metadata of the annotation */
 		   annot->body_url = returned_annot->body_url;
 		   returned_annot->body_url = NULL;
-		   /* update the Document metadata to point to the new
-		      body too */
+		 }
+	       else
+		 previous_body_url = annot->body_url;
+
+#ifdef ANNOT_ON_ANNOT
+	       /* see if the inReplyTo URL has changed.  Iif we have an inReplyto, we use it instead of
+		  annot_url (annot_url comes from the annotates
+		  property */
+	       if (returned_annot->inReplyTo 
+		   && (!annot->inReplyTo || strcasecmp (annot->inReplyTo, returned_annot->inReplyTo)))
+		 {
+		   TtaFreeMemory (annot->inReplyTo);
+		   annot->inReplyTo = returned_annot->inReplyTo;
+		   returned_annot->inReplyTo = NULL;
+
+		 }
+#endif /* ANNOT_ON_ANNOT */
+
+	       /*
+	       ** Phase 2: Update the annotation metadata of other annotations that
+	       ** have a dependency with this one.
+	       */
+
+	       /* update the Document metadata to point to the new
+		  body too */
+	       
+	       /* replace the body only if it changed.  This means that a local annot was just made a 
+		  shared annot. We update the metadata stored in memory and update the
+		  annotations indexes as needed */
+	       if (previous_body_url != annot->body_url)
+		 {
+		   /* update the anchor in the source doc */
+		   ReplaceLinkToAnnotation (source_doc, annot->name, 
+					    annot->body_url);
+		   
+#ifdef ANNOT_ON_ANNOT
+		   /* update the references to the local annotation reference in the local thread (and
+		    root of thread too) */
+		   if (isReplyTo && AnnotMetaData[source_doc].thread)
+		     {
+		       AnnotThread_UpdateReplyTo (AnnotMetaData[source_doc].thread->annotations,
+						  AnnotMetaData[doc].annot_url,
+						  previous_annot_url);
+		       /* update the item in the thread list to point to the new body */
+		       ANNOT_UpdateThreadItem (doc, annot, previous_body_url);
+		     }
+#endif /* ANNOT_ON_ANNOT */
+		   
+		   /* save the local annotation index minus this annotation. If there is nothing
+		      to save, delete the index entry */
+		   do_update = FALSE;
+		   if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
+		     do_update = TRUE;
+#ifdef ANNOT_ON_ANNOT		       
+		   /* erase the reference to the local annotation reference in the local thread */
+		   else if (AnnotMetaData[source_doc].thread
+			    && AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0)
+		     do_update = TRUE;
+#endif /* ANNOT_ON_ANNOT */
+		   if (do_update)
+		     LINK_SaveLink (source_doc, isReplyTo);
+		   else
+		     LINK_DeleteLink (source_doc, isReplyTo);
+		   
+#ifdef ANNOT_ON_ANNOT		       
+		   /*
+		   ** we now update the annotations (or replies) related to this annotation 
+		   */
+
+		   /* annotations having this annotation as a source */
+		   AnnotThread_UpdateAnnotates (AnnotMetaData[doc].annotations,
+						AnnotMetaData[doc].annot_url,
+						previous_annot_url);
+		   /* This annotation may be the root of a thread, so we update all its replies */
+		   if (!isReplyTo 
+		       && AnnotThread[doc].annotations
+		       && AnnotThread[doc].annotations != AnnotThread[source_doc].annotations
+		       && !strcasecmp (previous_annot_url, AnnotThread[doc].rootOfThread))
+		     {
+		       is_root = TRUE;
+		       /* update the reply to and root of Thread references */
+		       AnnotThread_UpdateReplyTo (AnnotMetaData[doc].thread->annotations,
+						  AnnotMetaData[doc].annot_url,
+						  previous_annot_url);
+		     }
+		   else
+		     is_root = FALSE;
+
+		   /* update the index entry if we posted an annotation that has other annotations
+		      glued to it */
+		   /* @@ JK: but we have not yet downloaded the annotations */
+		   do_update = FALSE;
+		   if (AnnotMetaData[doc].local_annot_loaded
+		       && AnnotList_localCount (AnnotMetaData[doc].annotations) > 0)
+		     do_update = TRUE;
+		   else if (is_root
+			    && AnnotMetaData[doc].thread != AnnotMetaData[source_doc].thread
+			    && AnnotList_localCount (AnnotMetaData[doc].thread->annotations) > 0)
+		     do_update = TRUE;
+		   else
+		     {
+		       char *annotIndex;
+		       
+		       annotIndex = LINK_GetAnnotationIndexFile (previous_annot_url);
+		       if (annotIndex && strcasecmp (previous_annot_url, AnnotMetaData[doc].annot_url))
+			 do_update = TRUE;
+		       if (annotIndex)
+			 TtaFreeMemory (annotIndex);
+		     }
+		   if (do_update)
+		     LINK_UpdateAnnotationIndexFile (previous_annot_url, AnnotMetaData[doc].annot_url);
+
+		   /* we now update the index file or delete it if needed */
+		   do_update = FALSE;
+		   if (AnnotList_localCount (AnnotMetaData[doc].annotations) > 0)
+		     do_update = TRUE;
+		   /* erase the reference to the local annotation reference in the local thread */
+		   else if (is_root
+			    && AnnotMetaData[doc].thread != AnnotMetaData[source_doc].thread
+			    && AnnotList_localCount (AnnotMetaData[doc].thread->annotations) > 0)
+		     do_update = TRUE;
+
+		   if (do_update)
+		     LINK_SaveLink (doc, isReplyTo);
+		   else
+		     LINK_DeleteLink (doc, isReplyTo);
+
+		   
+		   if (is_root)
+		     {
+		       /* update the thread entry */
+		       TtaFreeMemory (AnnotThread[doc].rootOfThread);
+		       AnnotThread[doc].rootOfThread = TtaStrdup (AnnotMetaData[doc].annot_url);
+		     }
+
+#endif /* ANNOT_ON_ANNOT */
+
+		   /*
+		   ** Last step, update the DocumentURLs entry for this annotation
+		   */
 		   TtaFreeMemory (DocumentURLs[doc]);
 		   DocumentURLs[doc] = TtaStrdup (annot->body_url);
-#ifdef ANNOT_ON_ANNOT
-		   /* update the item in the thread list to point to the new body */
-		   ANNOT_UpdateThreadItem (doc, annot,previous_body_url);
-#endif /* ANNOT_ON_ANNOT */
-		   TtaFreeMemory (previous_body_url);
 		 }
 
 	       if (previous_annot_url != AnnotMetaData[doc].annot_url)
 		 TtaFreeMemory (previous_annot_url);
+
+	       if (previous_body_url != annot->body_url)
+		 TtaFreeMemory (previous_body_url);
 
 	       if (listP->next)
 		 fprintf (stderr, "PostCallback: POST returned more than one annotation\n");
@@ -1331,7 +1392,8 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   int              rel_doc;
   RAISESOURCEDOC_context *ctx;
 #ifdef ANNOT_ON_ANNOT
-  Document         thread_doc;
+  Document         tmp_doc;
+  char             target[MAX_LENGTH];
 #endif /* ANNOT_ON_ANNOT */
 
   /* initialize from the context */
@@ -1376,14 +1438,28 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
 #ifdef ANNOT_ON_ANNOT
   /* unless we're browsing the document corresponding to this
      thread item, we close it */
-  thread_doc = ANNOT_GetThreadDoc (doc_annot);
+  tmp_doc = ANNOT_GetThreadDoc (doc_annot);
   
-  if (thread_doc != 0 && !Annot_isSameURL (DocumentURLs[thread_doc], url)
-      && doc_annot != thread_doc)
+  if (tmp_doc != 0 && !Annot_isSameURL (DocumentURLs[tmp_doc], url)
+      && doc_annot != tmp_doc)
     {
-      ANNOT_ToggleThread (doc_annot, thread_doc, FALSE);
-	CloseDocument (thread_doc, 1);
+      ANNOT_ToggleThread (doc_annot, tmp_doc, FALSE);
+      CloseDocument (tmp_doc, 1);
     }
+
+  /* @@ JK: a patch so that we can follow the reverse link */
+  tmp_doc = Annot_IsDocumentLoaded (doc_annot, url, NULL);
+  if (tmp_doc) 
+    {
+      char *tmp_ptr;
+
+      ExtractTarget (url, target);
+      tmp_ptr = TtaGetMemory (strlen (DocumentURLs[tmp_doc]) + strlen (target) + 1);  
+      sprintf (tmp_ptr, "%s#%s", DocumentURLs[tmp_doc], target);
+      TtaFreeMemory (url);
+      url = tmp_ptr;
+    }
+
 #endif /* ANNOT_ON_ANNOT */
 
   if (!docModified)
@@ -1544,7 +1620,7 @@ void ANNOT_Delete_callback (int doc, int status,
       /* update the annotation index or delete it if it's empty */
       if (
 #ifdef ANNOT_ON_ANNOT
-	  (annot->inReplyTo
+	  (AnnotMetaData[source_doc].thread
 	   && AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0) ||
 #endif /* ANNOT_ON_ANNOT */
 	  AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)

@@ -110,6 +110,9 @@ extern char * LocalToWWW ( char *url );
 extern char * TestLocalToWWW ( char *url );
 extern char *FixFileURL ( char *url );
 extern ThotBool Annot_IsReplyTo ( Document doc_annot );
+extern Document Annot_IsDocumentLoaded ( Document annot_doc,
+                                         char *source_annot_url,
+                                         char *form_data );
 
 #else /* __STDC__ */
 
@@ -217,6 +220,9 @@ extern char * LocalToWWW (/* char *url */);
 extern char * TestLocalToWWW (/* char *url */);
 extern char *FixFileURL (/* char *url */);
 extern ThotBool Annot_IsReplyTo (/* Document doc_annot */);
+extern Document Annot_IsDocumentLoaded (/* Document annot_doc,
+                                           char *source_annot_url,
+                                           char *form_data */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

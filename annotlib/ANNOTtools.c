@@ -704,7 +704,7 @@ char *AnnotList_searchAnnotBodyURL (Document source_doc, char *annot_url)
 }
 
 /*------------------------------------------------------------
-   AnnotList_searchAnnotBodyURL
+   AnnotList_searchAnnotURL
    Returns the URL of annot that corresponds to annot_url
    or NULL if it doesn't exist
    ------------------------------------------------------------*/
@@ -814,23 +814,34 @@ int AnnotThread_UpdateReplyTo (List *thread_list,
       annot = (AnnotMeta *) item->object;
       if (annot->inReplyTo)
 	{
+	  /* replace the root of Thread */
 	  if (!strcasecmp (annot->rootOfThread, prev_url))
 	    {
 	      TtaFreeMemory (annot->rootOfThread);
 	      annot->rootOfThread = TtaStrdup (new_url);
 	      count++;
 	    }
-	  
+
+	  /* replace the reply to */
 	  if (!strcasecmp (annot->inReplyTo, prev_url))
 	    {
 	      TtaFreeMemory (annot->inReplyTo);
 	      annot->inReplyTo = TtaStrdup (new_url);
 	      count++;
 	    }
+	  /* replace the source_url */
+	  if (!strcasecmp (annot->source_url, prev_url))
+	    {
+	      TtaFreeMemory (annot->source_url);
+	      annot->source_url = TtaStrdup (new_url);
+	      count++;
+	    }
 	}
       item = item->next;
     }
   return (count);
+#else
+  return 0;
 #endif /* ANNOT_ON_ANNOT */
 }
 
@@ -845,10 +856,8 @@ int AnnotThread_UpdateAnnotates (List *annot_list,
   AnnotMeta *annot;
   List *item;
   int count;
-  ThotBool updateRoot;
 
   item = annot_list;
-  annot = (AnnotMeta *) item->object;
 
   count = 0;
   while (item)
@@ -863,6 +872,8 @@ int AnnotThread_UpdateAnnotates (List *annot_list,
       item = item->next;
     }
   return (count);
+#else
+  return 0;
 #endif /* ANNOT_ON_ANNOT */
 }
 
@@ -2478,3 +2489,28 @@ ThotBool Annot_IsReplyTo (Document doc_annot)
 #endif /* ANNOT_ON_ANNOT */
 }  
 
+/*-----------------------------------------------------------------------
+  Annot_IsDocumentLoaded
+  Returns the document ID if a document exists with this URL
+  -----------------------------------------------------------------------*/
+
+Document Annot_IsDocumentLoaded (Document annot_doc, char *source_annot_url, char *form_data)
+{
+  char *annot_url;
+  Document doc;
+  
+  annot_url = NULL;
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    {
+      if (DocumentTypes[doc] != docAnnot || doc == annot_doc)
+	continue;
+      annot_url = AnnotList_searchAnnotURL (doc, DocumentURLs[annot_doc]);
+      if (annot_url)
+	break;
+    }
+
+  if (!annot_url)
+    doc = (Document) None;
+
+  return doc;
+}
