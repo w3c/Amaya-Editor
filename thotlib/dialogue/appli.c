@@ -95,7 +95,7 @@ static PtrDocument  OldDocMsgSelect;
 #define SHOW_STRUCTURE        553
 #define SHOW_ALTERNATE        554
 #define SHOW_LINKS            555
-#define SHOW_TAB_OF_CONTENTS  556					       
+#define SHOW_TAB_OF_CONTENTS  556
 #define CLOSE_STRUCTURE       232
 #define CLOSE_ALTERNATE       272
 #define CLOSE_LINKS           312
@@ -148,7 +148,7 @@ static int FRWidth[MAX_FRAME];
 static int FRHeight[MAX_FRAME];
 
 /*----------------------------------------------------------------------
-   Win_Scroll_visible : Tells if a scrollbar is currently visible or not                                     
+   Win_Scroll_visible : Tells if a scrollbar is currently visible or not
   ----------------------------------------------------------------------*/
 static ThotBool Win_Scroll_visible (HWND scroll_hwnd)
 {
@@ -167,7 +167,7 @@ static ThotBool Win_Scroll_visible (HWND scroll_hwnd)
 }
 /*----------------------------------------------------------------------
    WIN_GetDeviceContext selects a Device Context for a given
-   thot window.                                                
+   thot window.
   ----------------------------------------------------------------------*/
 void WIN_GetDeviceContext (int frame)
 {
@@ -194,7 +194,7 @@ void WIN_GetDeviceContext (int frame)
 }
 
 /*----------------------------------------------------------------------
-   WIN_ReleaseDeviceContext :  unselect the Device Context           
+   WIN_ReleaseDeviceContext :  unselect the Device Context
   ----------------------------------------------------------------------*/
 void WIN_ReleaseDeviceContext (void)
 {
@@ -346,8 +346,8 @@ int GetFrameNumber (ThotWindow win)
 
 /*----------------------------------------------------------------------
    FrameToView retourne, sous la forme qui convient a l'API Thot, 
-   les parametres identifiant le document et la vue        
-   qui correspondent a une frame donnee.                   
+   les parametres identifiant le document et la vue 
+   qui correspondent a une frame donnee.
   ----------------------------------------------------------------------*/
 void FrameToView (int frame, int *doc, int *view)
 {
@@ -1689,7 +1689,7 @@ static void Wnd_ResizeContent (HWND hwnd, int cx, int cy, int frame)
 /*----------------------------------------------------------------------
   WndProc:  The main MS-Windows event handler for the Thot Library
   ----------------------------------------------------------------------*/
-LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam) 
+LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 {
   PtrDocument         pDoc;
   HWND                hwndTextEdit;
@@ -2092,21 +2092,21 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	      key_menu = GetKeyState (VK_MENU);
   	      key = GetKeyState (VK_CONTROL);
 	      /* is it an Alt-GR modifier? (WIN32 interprets this
-		 as having both a control + menu key pressed down) */
+		  as having both a control + menu key pressed down) */
 	      if (HIBYTE (key_menu) && HIBYTE (key))
-		done = TRUE;;
+		    done = TRUE;
 	      /* is a control key pressed? */
 	      if (HIBYTE (key))
-		isSpecial = FALSE;
+ 		    isSpecial = FALSE;
 	      else
-		{
-		  /* is a menu key pressed? */
-		  if (HIBYTE (key_menu))
-		    isSpecial = FALSE;
-		  else
-		    /* don't handle a simple 0-9 */
-		    done = TRUE;
-		}
+		  {
+		    /* is a menu key pressed? */
+		    if (HIBYTE (key_menu))
+		       isSpecial = FALSE;
+		    else
+		       /* don't handle a simple 0-9 */
+		       done = TRUE;
+		  }
 	    }
 	  else
 	    isSpecial = TRUE;
@@ -2122,7 +2122,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       break;
     case WM_SYSCHAR:
     case WM_CHAR:
-      key = (int) wParam;
+    key = (int) wParam;
       done = WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
 				  lParam, FALSE);
      

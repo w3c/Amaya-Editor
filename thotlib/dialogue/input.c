@@ -484,8 +484,10 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    if (msg == WM_KEYDOWN && wParam == VK_RETURN && 
        !(keyboard_mask & THOT_MOD_ALT))
      return FALSE;
+
    /* check if it's a special key */
    Special = isSpecial;
+#ifdef OLD_VERSION
    if (HIBYTE (GetKeyState (VK_UP)))
      Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_LEFT)))
@@ -509,16 +511,28 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    else if (HIBYTE (GetKeyState (VK_END)))
      Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_RETURN)))
-     Special = TRUE;
+       Special = TRUE;
    else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
      {
        /* Windows translates Ctrl a-z */
        if (keyboard_mask & THOT_MOD_SHIFT)
          wParam += 64;
        else
-	 wParam += 96;
+	     wParam += 96;
      }
-   
+#else /* OLD_VERSION */
+    if (HIBYTE (GetKeyState (VK_RETURN)))
+       Special = TRUE;
+	else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
+	{
+        /* Windows translates Ctrl a-z */
+        if (keyboard_mask & THOT_MOD_SHIFT)
+          wParam += 64;
+        else
+	      wParam += 96;
+	}
+#endif /* OLD_VERSION */
+
    string[0] = (char) wParam;
    if (msg == WM_SYSCHAR || msg == WM_SYSKEYDOWN)
      len = 0;
