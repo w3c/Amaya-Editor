@@ -2275,58 +2275,60 @@ void ResetHighlightedElement ()
   ----------------------------------------------------------------------*/
 void SynchronizeSourceView (NotifyElement *event)
 {
-   Element             firstSel, el, child, otherEl;
-   ElementType         elType;
-   int                 firstChar, lastChar, line, i, view;
-   AttributeType       attrType;
-   Attribute	       attr;
-   Document	       doc, otherDoc;
-   int		       val, x, y, width, height;
-   ThotBool	       otherDocIsStruct, done;
+  Element             firstSel, el, child, otherEl;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute	      attr;
+  Document	      doc, otherDoc;
+  char                message[50];
+  int                 firstChar, lastChar, line, i, view;
+  int		      val, x, y, width, height;
+  ThotBool	      otherDocIsStruct, done;
    
-   if (!event)
-       return;
-   doc = event->document;
-   done = FALSE;
-   /* get the other Thot document to be synchronized with the one where the
-      user has just clicked */
-   otherDoc = 0;
-   otherDocIsStruct = FALSE;
-   if (DocumentTypes[doc] == docHTML ||
+  if (!event)
+    return;
+  doc = event->document;
+  done = FALSE;
+  /* get the other Thot document to be synchronized with the one where the
+     user has just clicked */
+  otherDoc = 0;
+  otherDocIsStruct = FALSE;
+  if (DocumentTypes[doc] == docHTML ||
 #ifdef _SVGLIB
-       DocumentTypes[doc] == docLibrary ||
+      DocumentTypes[doc] == docLibrary ||
 #endif /* _SVGLIB */
-       DocumentTypes[doc] == docMath ||
-       DocumentTypes[doc] == docSVG  ||
-       DocumentTypes[doc] == docXml)
-      /* the user clicked on a structured document, the other doc is the
-         corresponding source document */
-      otherDoc = DocumentSource[doc];
-   else if (DocumentTypes[doc] == docSource)
-      /* the user clicked on a source document, the other doc is the
-         corresponding structured document */
-      {
+      DocumentTypes[doc] == docMath ||
+      DocumentTypes[doc] == docSVG  ||
+      DocumentTypes[doc] == docXml)
+    /* the user clicked on a structured document, the other doc is the
+       corresponding source document */
+    otherDoc = DocumentSource[doc];
+  else if (DocumentTypes[doc] == docSource)
+    /* the user clicked on a source document, the other doc is the
+       corresponding structured document */
+    {
       otherDocIsStruct = TRUE;
       for (i = 1; i < DocumentTableLength; i++)
-         if (DocumentURLs[i] != NULL)
-	    if (DocumentTypes[i] == docHTML ||
+	if (DocumentURLs[i] &&
+	    (DocumentTypes[i] == docHTML ||
 #ifdef _SVGLIB
-		DocumentTypes[i] == docLibrary ||
+	     DocumentTypes[i] == docLibrary ||
 #endif /* _SVGLIB */
-		DocumentTypes[i] == docMath ||
-		DocumentTypes[i] == docSVG ||
-		DocumentTypes[i] == docXml)
-	       if (DocumentSource[i] == doc)
-		  {
-	          otherDoc = i;
-		  i = DocumentTableLength;
-		  }
-      }
-   if (otherDoc)
-      /* looks for the element in the other document that corresponds to
-         the clicked element */
-      {
-      TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+	     DocumentTypes[i] == docMath ||
+	     DocumentTypes[i] == docSVG ||
+	     DocumentTypes[i] == docXml) &&
+	    DocumentSource[i] == doc)
+	  {
+	    otherDoc = i;
+	    i = DocumentTableLength;
+	  }
+    }
+
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+  if (otherDoc)
+    /* looks for the element in the other document that corresponds to
+       the clicked element */
+    {
       if (firstSel)
 	 {
 	 otherEl = NULL;
@@ -2447,11 +2449,22 @@ void SynchronizeSourceView (NotifyElement *event)
 	   }
 	 done = TRUE;
 	 }
-      }
-   if (!done)
-     /* If an element is currently highlighted, remove its Highlight
-	attribute */
-     ResetHighlightedElement ();
+    }
+  if (!done)
+    /* If an element is currently highlighted, remove its Highlight
+       attribute */
+    ResetHighlightedElement ();
+
+  if (firstSel &&
+      (DocumentTypes[doc] == docSource ||
+       DocumentTypes[doc] == docText ||
+       DocumentTypes[doc] == docLog))
+    {
+      /* display the line position of the selection */
+      line = TtaGetElementLineNumber (firstSel);
+      sprintf (message, "line %d char %d", line, firstChar);
+      TtaSetStatus (doc, 1, message, NULL);
+    }
 }
 
 
@@ -2540,8 +2553,10 @@ static ThotBool ShowError (Element el, Document doc)
 		 TtaSetStatus (doc, 1, "   ", NULL);
 	     }
 	 }
+      return TRUE; /* don't let Thot perform normal operation */
     }
-  return TRUE; /* don't let Thot perform normal operation */
+  else
+    return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
