@@ -3227,7 +3227,8 @@ void*     context;
    GETHTMLDocument_context *ctx;
    TTcbf              *cbf;
    void               *ctx_cbf;
-   
+   CHAR_T* content_type;
+
    /* restore GETHTMLDocument's context */  
    ctx = (GETHTMLDocument_context *) context;
 
@@ -3269,14 +3270,10 @@ void*     context;
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
-	   if (http_headers)
-	      res = LoadHTMLDocument (newdoc, pathname, form_data, method,
-				      tempfile, documentname,
-				      http_headers->content_type, history);
-	   else
-	      res = LoadHTMLDocument (newdoc, pathname, form_data, method,
-				      tempfile, documentname,
-				      NULL, history);
+	   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
+	   res = LoadHTMLDocument (newdoc, pathname, form_data, method,
+				   tempfile, documentname,
+				   content_type, history);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
