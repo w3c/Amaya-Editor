@@ -673,6 +673,7 @@ if test "$with_gl" = "yes" ; then
 		/usr/local/include/X11/Xft	\
 		/usr/include/X11/Xft1		\
 		/usr/X11R6/include/X11/Xft1	\
+		/usr/include/Xft2/X11/Xft/      \
 		/usr/local/include/X11/Xft1	\
 		/usr/include/X11/Xft2		\
 		/usr/X11R6/include/X11/Xft2	\
@@ -749,9 +750,9 @@ if test "$with_gl" = "yes" ; then
 	                    if test "$freetype_inc" = "yes" ; then
 	                    	if test "$xft_inc" = "yes" ; then
 			    		if test "$stdglu_inc" = "yes" ; then
-					   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl -lstdc++"
+					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib  -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl -lstdc++"
 					else
-					   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
+					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib  -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
 					fi				
 					GL_OPTIONS="-D_GL"
 	  				no_motif=yes
