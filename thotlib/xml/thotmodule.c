@@ -438,7 +438,8 @@ char *value;
 }
 
 /* y'avait un truc sur les exceptions des tables */
-static boolean tableActionsOn = FALSE;
+
+static Proc tabTableActions[20];
 /*----------------------------------------------------------------------
   StoreTableActions
   temporarely set table actions off 
@@ -449,32 +450,13 @@ void StoreTableActions ()
 void StoreTableActions ()
 #endif /* __STDC__ */
 {
-  if (ThotLocalActions[T_createtable] != NULL)
+  int i;
+
+  for (i = 0; i < T_deletepageab - T_createtable; i ++)
     {
-      tableActionsOn = TRUE;
-      TteConnectAction (T_createtable, (Proc) NULL);
-      TteConnectAction (T_selecttable, (Proc) NULL);
-      TteConnectAction (T_singlecell, (Proc) NULL);
-      TteConnectAction (T_attrtable, (Proc) NULL);
-      TteConnectAction (T_lastsaved, (Proc) NULL);
-      TteConnectAction (T_pastesiblingtable, (Proc) NULL);
-      TteConnectAction (T_refattr, (Proc) NULL);
-      TteConnectAction (T_createhairline, (Proc) NULL);
-      TteConnectAction (T_holotable, (Proc) NULL);
-      TteConnectAction (T_checkextens, (Proc) NULL);
-      TteConnectAction (T_ruleattr, (Proc) NULL);
-      TteConnectAction (T_abref, (Proc) NULL);
-      TteConnectAction (T_condlast, (Proc) NULL);
-      TteConnectAction (T_vertspan, (Proc) NULL);
-      TteConnectAction (T_excepttable, (Proc) NULL);
-      TteConnectAction (T_entertable, (Proc) NULL);
-      TteConnectAction (T_insertpage, (Proc) NULL);
-      TteConnectAction (T_cutpage, (Proc) NULL);
-      TteConnectAction (T_deletepage, (Proc) NULL);
-      TteConnectAction (T_deletepageab, (Proc) NULL);
+      tabTableActions[i] = ThotLocalActions[i + T_createtable];
+      TteConnectAction (i + T_createtable, (Proc) NULL);
     }
-  else
-    tableActionsOn = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -486,6 +468,10 @@ void RestoreTableActions ()
 void RestoreTableActions ()
 #endif /* __STDC__ */
 {
-  if (tableActionsOn)
-    TableauLoadResources ();
+  int i;
+
+  for (i = 0; i < T_deletepageab - T_createtable; i ++)
+    {
+      TteConnectAction (i + T_createtable, tabTableActions[i]);
+    }
 }
