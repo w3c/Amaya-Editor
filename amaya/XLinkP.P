@@ -9,7 +9,8 @@ VIEWS
    Formatted_view,
    Structure_view merge with Math_Structure_view
                              Graph_Structure_view
-                             Structure_view;
+                             Structure_view,
+   Links_view merge with Links_view;
 
 #define TAG_FONTSIZE 12 pt
 #define ATTR_Style Roman
@@ -54,6 +55,8 @@ DEFAULT
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	END;
+   IN Links_view
+	Visibility: 0;
    END;
 
 BOXES
@@ -124,56 +127,76 @@ BOXES
                 Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
                 END;
 	END;
+
   ATTR_type_none: BEGIN
         Content: Text ' xlink:type=none';
         Visibility: 0;
         IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
+                Visibility: ATTR_Visibility;
+        	HorizPos: Left = Previous . Right;
+        	VertPos: HRef = Previous . HRef;
+        	Size: TAG_FONTSIZE;
+        	Style: ATTR_Style; Weight: ATTR_Weight;
+		Foreground: ATTR_Color;
+		END;
 	END;
 
   ATTR_href: BEGIN
         Content: Text ' xlink:href=';
+        Size: TAG_FONTSIZE;
+        Style: ATTR_Style; Weight: ATTR_Weight;
+	Foreground: ATTR_Color;
         Visibility: 0;
         IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
+                Visibility: ATTR_Visibility;
+        	HorizPos: Left = Previous . Right;
+        	VertPos: HRef = Previous . HRef;
+		END;
+	IN Links_view BEGIN
+		Visibility: ATTR_Visibility;
+        	HorizPos: Left = Enclosing . Left + 18 px;
+        	VertPos: Top = Previous . Bottom + 3 px;
+		END;
         END;
+
   VALUE_href: BEGIN
         Content: (href_);
+        Size: TAG_FONTSIZE;
+        Style: ATTR_Style;
+	Weight: ATTR_Weight;
+	Foreground: ATTRVALUE_Color;
         Visibility: 0;
         IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
+                Visibility: ATTR_Visibility;
+        	HorizPos: Left = Previous . Right;
+        	VertPos: HRef = Previous . HRef;
+		END;
+	IN Links_view BEGIN
+		Visibility: ATTR_Visibility;
+        	HorizPos: Left = Previous . Right;
+        	VertPos: HRef = Previous . HRef;
+		END;
         END;
 
  Annot_gif1: BEGIN
 #ifndef PAGE
 	Content: Picture 'annot.gif';
-	HorizPos: Left = Enclosing . Left;
         HorizRef: * . Bottom;	
+	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
+   	IN Links_view
+		Visibility: ATTR_Visibility;
 #endif
 	END;
 
  Annot_gif2: BEGIN
 #ifndef PAGE
 	Content: Picture 'annot2.gif';
+        HorizRef: * . Bottom;
 	HorizPos: Left = Enclosing . Left;
-        HorizRef: * . Bottom;	
 	VertPos: Top = Enclosing . Top;
+   	IN Links_view
+		Visibility: ATTR_Visibility;
 #endif
 	END;
 
@@ -182,6 +205,12 @@ RULES
  XLink:	BEGIN
 	IN Structure_view BEGIN
 		Visibility: 0;
+		END;
+	IN Links_view
+		BEGIN
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
+		Visibility: 5;
 		END;
 	END;
 
@@ -231,7 +260,11 @@ ATTRIBUTES
 	END;
 
   AnnotIsHidden :
+	BEGIN
  	Visibility: 0;
+	IN Structure_view
+		Visibility: 0;
+	END;
 
 {****
    role = TEXT;
