@@ -19,6 +19,11 @@
 extern ThotBool     TtaIsDocumentSelected (Document document);
 
 /*----------------------------------------------------------------------
+  TtaSelectWord selects the word around the current point in an element
+  ----------------------------------------------------------------------*/
+extern void TtaSelectWord (Element element, int pos, Document doc, View view);
+
+/*----------------------------------------------------------------------
    TtaSelectElement
 
    Selects a single element. This element is highlighted in all views
