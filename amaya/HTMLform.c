@@ -43,6 +43,8 @@ static int          documentStatus;
 extern char               *GetActiveImageInfo (Document document, Element element);
 
 #ifdef _WINDOWS 
+extern HWND FrMainRef [12];
+extern int  currentFrame;
 Document  opDoc;
 Element   opOption [200];
 #endif /* _WINDOWS */
@@ -1352,7 +1354,11 @@ Element             el;
 		  if (multipleOptions)
 		     for (i = 0; i < nbitems; i++)
 			if (selected[i])
+#              ifdef _WINDOWS
+               WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [currentFrame]);
+#              else  /* !_WINDOWS */
 			   TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+#              endif /* _WINDOWS */
                   if (nbsubmenus > 0)
                      /* There ia at least 1 OPTGROUP. Create submenus
                         corresponding to OPTGROUPs */
@@ -1436,7 +1442,11 @@ Element             el;
 			    if (multipleOptions)
 			       for (i = 0; i < nbsubitems; i++)
 			          if (subSelected[nbsubmenus][i])
+#                    ifdef _WINDOWS
+                     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + nbsubmenus + 1, i, TRUE, FrMainRef [currentFrame]);
+#                    else  /* !_WINDOWS */
 				     TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
+#                    endif /* _WINDOWS */
 			    nbsubmenus++;
                             nbitems++;	/* item number in the main menu */
                             }

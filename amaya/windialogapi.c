@@ -36,7 +36,7 @@
 #       define MAX_WORD_LEN 30
 #endif /* MAX_WORD_LEN */
 
-#define APPFILENAMEFILTER    "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0All files (*.*)\0*.*\0"
+#define APPFILENAMEFILTER    "HTML Files (*.html)\0*.htm*\0All files (*.*)\0*.*\0"
 #define APPIMAGENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
 #define APPALLFILESFILTER    "All files (*.*)\0*.*\0"
 #define MAX_BUFF 4096
@@ -164,7 +164,8 @@ static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
 static LPSTR        szFilter;
 static TCHAR        szFileName[256];
-static HWND         currentFrame;
+static HWND         currentWnd;
+static HWND         parentWnd;
 static HWND         currentDlg;
 
 HWND wordButton;
@@ -367,8 +368,10 @@ HWND      frame;
 #endif /* __STDC__ */
 {  
 	baseDlg = mathRef;
-	currentFrame = frame	;
+	currentWnd = frame;
+	parentWnd  = parent;
 	DialogBox (hInstance, MAKEINTRESOURCE (MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
+    SetFocus (parent);
 }
 
 /*-----------------------------------------------------------------------
@@ -494,7 +497,7 @@ int  menu_graph;
 HWND frame;
 #endif /* __STDC__ */
 {
-    currentFrame = frame;
+    currentWnd = frame;
     graphDialog  = graph_dlg;
     formGraph    = form_graph;
     menuGraph    = menu_graph;
@@ -1007,7 +1010,7 @@ LPARAM lParam;
 {
     switch (msg) {
            case WM_COMMAND:
-                SetFocus (currentFrame);
+                SetFocus (currentWnd);
 	            switch (LOWORD (wParam)) {
 				       case ID_DONE:
 							EndDialog (hwnDlg, ID_DONE);
@@ -1073,6 +1076,7 @@ LPARAM lParam;
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)13);
                             break;
 				}
+				SetFocus (parentWnd);
 				break;
 
            default: return (FALSE) ;
@@ -1183,7 +1187,6 @@ LPARAM lParam;
                 GetTextMetrics (hDC, &tm);
                 cxChar = tm.tmAveCharWidth;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
-                ReleaseDC (hwnDlg, hDC);
 
                 radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += strlen (&WIN_buffMenu [ndx]) + 1;
@@ -1199,6 +1202,7 @@ LPARAM lParam;
 
                        default: break;
 				}
+                ReleaseDC (hwnDlg, hDC);
                 break;
 
 		   case WM_COMMAND:
@@ -1870,7 +1874,7 @@ LPARAM lParam;
 {
     switch (msg) {
            case WM_COMMAND:
-                SetFocus (currentFrame);
+                SetFocus (currentWnd);
 	            switch (LOWORD (wParam)) {
 				       case ID_DONE:
 							EndDialog (hwnDlg, ID_DONE);
