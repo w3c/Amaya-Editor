@@ -771,6 +771,7 @@ void FreeElement (PtrElement pEl)
    else if (pEl->ElLeafType == LtPath && pEl->ElFirstPathSeg)
      {
        pPa = pEl->ElFirstPathSeg;
+       pEl->ElFirstPathSeg = NULL;
        do
 	 {
 	   pPaNext = pPa->PaNext;
