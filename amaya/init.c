@@ -2279,6 +2279,7 @@ void UpdateDoctypeMenu (Document doc)
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlPlusMath);
+  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlPlusMathPlusSVG);
   TtaSetItemOff (doc, 1, File, BDoctypeMathML);
   TtaSetItemOff (doc, 1, File, BDoctypeSVG);
 
@@ -2316,7 +2317,10 @@ void UpdateDoctypeMenu (Document doc)
       if (docType == docHTML)
 	{
 	  if (useMathML || useSVG)
-	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
+	    {
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMathPlusSVG);
+	    }
 	  else if (DocumentMeta[doc]->xmlformat)
 	    {
 	      TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
@@ -2340,8 +2344,11 @@ void UpdateDoctypeMenu (Document doc)
 	TtaSetItemOn (doc, 1, File, BDoctypeSVG);
       break;
     case L_Xhtml11:
-      if (useMathML)
-	TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
+      if (useMathML || useSVG)
+	{
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMathPlusSVG);
+	}
       else
 	{
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
