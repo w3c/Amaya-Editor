@@ -507,7 +507,8 @@ void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   <-LMargin-><-LBorder-><-LPadding-><-W-><-RPadding-><-RBorder-><-LRargin->
   <---------------------------------Width--------------------------------->
   ----------------------------------------------------------------------*/
-void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
+void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
+		 ThotBool evalAuto)
 {
   PtrBox              pBox;
   PtrBox              pParent;
@@ -536,7 +537,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
       /* left padding */
       if (pAb->AbLeftPaddingUnit == UnPercent)
 	pBox->BxLPadding = PixelValue (pAb->AbLeftPadding, UnPercent, (PtrAbstractBox) dim, 0);
-      else if (pAb->AbLeftMarginUnit != UnAuto)
+      else
 	pBox->BxLPadding = PixelValue (pAb->AbLeftPadding, pAb->AbLeftPaddingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* right padding */
       if (pAb->AbRightPaddingUnit == UnPercent)
@@ -558,7 +559,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
       /* Manage auto margins */
       if (pAb->AbLeftMarginUnit == UnAuto || pAb->AbRightMarginUnit == UnAuto)
 	{
-	  if (pParent && !pAb->AbEnclosing->AbNew /* cannot manage this rule */ &&
+	  if (pParent && evalAuto &&
 	      pParent->BxType != BoBlock && pParent->BxType != BoGhost)
 	    {
 	      dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;

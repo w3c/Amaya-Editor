@@ -1525,14 +1525,15 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
   CheckMBP checks margins, borders and paddings of the current box.
   Return TRUE when any value was updated.
   ----------------------------------------------------------------------*/
-static ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame)
+static ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
+			  ThotBool evalAuto)
 {
   int lt, rb;
 
   /* update vertical margins, borders and paddings */
   lt = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
   rb = pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
-  ComputeMBP (pAb, frame, FALSE);
+  ComputeMBP (pAb, frame, FALSE, evalAuto);
   lt = - lt + pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
   rb = - rb + pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
   /* Check if the changes affect the inside or the outside width */
@@ -1554,7 +1555,7 @@ static ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame)
   /* update horizontal margins, borders and paddings */
   lt = pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
   rb = pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
-  ComputeMBP (pAb, frame, TRUE);
+  ComputeMBP (pAb, frame, TRUE, evalAuto);
   lt = - lt + pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
   rb = - rb + pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
   /* Check if the changes affect the inside or the outside width */
@@ -1661,13 +1662,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	}
       /* New values of margins, paddings and borders */
       pAb->AbMBPChange = FALSE;
-      ComputeMBP (pAb, frame, TRUE);
-      ComputeMBP (pAb, frame, FALSE);
+      ComputeMBP (pAb, frame, TRUE, FALSE);
+      ComputeMBP (pAb, frame, FALSE, FALSE);
       pCurrentBox->BxXToCompute = FALSE;
       pCurrentBox->BxYToCompute = FALSE;
       enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
       enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
-      CheckMBP (pAb, pCurrentBox, frame);
+      CheckMBP (pAb, pCurrentBox, frame, TRUE);
       if (pAb->AbLeafType != LtCompound)
 	{
 	  /* Positionnement des axes de la boite construite */
@@ -3348,7 +3349,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pAb->AbMBPChange = FALSE;
 	  savpropage = Propagate;
 	  Propagate = ToAll;	/* On passe en mode normal de propagation */
-	  if (CheckMBP (pAb, pBox, frame))
+	  if (CheckMBP (pAb, pBox, frame, TRUE))
 	    {
 	      /* do we have to register that box as filled box */
 	      if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)

@@ -14,7 +14,8 @@ extern void ComputeRadius ( PtrAbstractBox pAb,
                             ThotBool horizRef );
 extern void ComputeMBP ( PtrAbstractBox pAb,
                          int frame,
-                         ThotBool horizRef );
+                         ThotBool horizRef,
+                         ThotBool evalAuto );
 extern void ComputePosRelation ( AbPosition rule,
                                  PtrBox pBox,
                                  int frame,
@@ -51,7 +52,8 @@ extern void ComputeRadius (/* PtrAbstractBox pAb,
                               ThotBool horizRef */);
 extern void ComputeMBP (/* PtrAbstractBox pAb,
                            int frame,
-                           ThotBool horizRef */);
+                           ThotBool horizRef,
+                           ThotBool evalAuto */);
 extern void ComputePosRelation (/* AbPosition rule,
                                    PtrBox pBox,
                                    int frame,
