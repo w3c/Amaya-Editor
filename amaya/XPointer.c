@@ -42,6 +42,35 @@ typedef XPathItem * XPathList;
 #define THOT_ATTR_ID    2  
 
 /*----------------------------------------------------------------------
+  StrACat
+
+  A not very efficient function that makes a dynamic memory allocation
+  strcat
+  ----------------------------------------------------------------------*/
+static char * StrACat (char ** dest, const char * src)
+{
+  if (src && *src) 
+    {
+    if (*dest) 
+      {
+	int length = strlen (*dest);
+	if ((*dest  = (char  *) TtaRealloc (*dest, length + strlen(src) + 1)) == NULL)
+	/* @@ what to do ?? */
+          exit (0);
+	strcpy (*dest + length, src);
+      } 
+    else 
+      {
+	if ((*dest  = (char  *) TtaGetMemory (strlen(src) + 1)) == NULL)
+	  /* @@ what to do? */
+	  exit (0);
+	strcpy (*dest, src);
+      }
+    }
+  return (*dest);
+}
+
+/*----------------------------------------------------------------------
   AdjustChIndex
 
   Makes sure that the index to a text element doesn't point outside
@@ -189,12 +218,11 @@ static char * GetIdValue (Element el)
 static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
 {
   XPathItem *xpath_item, *xpath_tmp;
-  static char xpath_expr[500];
+  char buffer[500];
+  char *xpath_expr = NULL;
   char *typeName;
-  int index;
 
   xpath_item = *xpath_list;
-  index = 0;
   while (xpath_item)
     {
       if (!xpath_item->id_value)
@@ -206,22 +234,24 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
 	  if (firstCh > 0)
 	    {
 	      if (xpath_item->id_value)
-		sprintf (&xpath_expr[index], 
+		snprintf (buffer, sizeof (buffer),
 			 "/string-range(id(\"%s\"),\"\",%d,%d)",
 			 xpath_item->id_value, firstCh, len);
 	      else
-		sprintf (&xpath_expr[index], 
+		snprintf (buffer, sizeof (buffer),
 			 "/string-range(%s[%d],\"\",%d,%d)",
 			 typeName, xpath_item->index, firstCh, len);
 	    }
 	  else
 	    {
 	      if (xpath_item->id_value)
-		sprintf (&xpath_expr[index], "/string-range(id(\"%s\"),\"\"",
+		snprintf (buffer, sizeof (buffer), 
+			  "/string-range(id(\"%s\"),\"\"",
 			 xpath_item->id_value);
 	      else
-		sprintf (&xpath_expr[index], "/string-range(%s[%d],\"\"",
-			 typeName, xpath_item->index);
+		snprintf (buffer, sizeof (buffer),
+			  "/string-range(%s[%d],\"\"",
+			  typeName, xpath_item->index);
 	    }
 	  /* we remove the extra element, as we have already used it */
 	  xpath_tmp = xpath_item->next->next;
@@ -230,9 +260,11 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
       else
 	{
 	  if (xpath_item->id_value)
-	    sprintf (&xpath_expr[index], "id(\"%s\")", xpath_item->id_value);
+	    snprintf (buffer, sizeof (buffer),
+		      "id(\"%s\")", xpath_item->id_value);
 	  else
-	    sprintf (&xpath_expr[index], "/%s[%d]", typeName, 
+	    snprintf (buffer, sizeof (buffer),
+		      "/%s[%d]", typeName, 
 		     xpath_item->index);
 	  xpath_tmp = xpath_item->next;
 	}
@@ -242,7 +274,7 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
       TtaFreeMemory (xpath_item);
       xpath_item = xpath_tmp;
 
-      index = strlen (xpath_expr);
+      StrACat (&xpath_expr, buffer);
     }
 
   return (xpath_expr);
@@ -369,7 +401,7 @@ View view;
   ElementType elType;
 
   /* @@ debug */
-  char       xptr[1024];
+  char       *xptr_expr = NULL;
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   /* only do this operation on XML and HTML documents */
@@ -411,33 +443,36 @@ View view;
 
   firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen);
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
-  sprintf (xptr, "xpointer(%s", firstXpath);
-
+  
   if (lastEl)
     {
       lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1);
       fprintf (stderr, "\nlast xpointer is %s\n", lastXpath);
-      sprintf (&xptr[strlen (xptr)], "/range-to(%s)", lastXpath);
     }
   else 
     fprintf (stderr, "\n");
-  strcat (xptr, ")");
-  fprintf (stderr, "final expression is: %s\n", xptr);
   
+  /* calculate the length of the xptr buffer */
+  i = sizeof ("xpointer()/range-to()") + strlen (firstXpath) 
+	      + ((lastEl) ? strlen (lastXpath) : 0) + 1;
+  xptr_expr = TtaGetMemory (i);
+
+  if (lastEl)
+      sprintf (xptr_expr, "xpointer(%s/range-to(%s))", firstXpath, lastXpath);
+  else
+    sprintf (xptr_expr, "xpointer(%s)", firstXpath);
+
+  TtaFreeMemory (firstXpath);
+  if (lastEl)
+    TtaFreeMemory (lastXpath);
+
+  fprintf (stderr, "final expression is: %s\n", xptr_expr);
+  
+  TtaFreeMemory (xptr_expr);
+  /* @@ should return xptr_expr */
   return NULL;
 }
 #endif ANNOTATIONS
-
-
-
-
-
-
-
-
-
-
-
 
 
 
