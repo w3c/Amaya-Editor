@@ -32,7 +32,7 @@
 <p>Il y a deux manières d'éditer des attributs:</p>
 <ul>
   <li>Le menu <strong>Attributs</strong></li>
-  <li>La Vue structure </li>
+  <li>La Vue structure</li>
 </ul>
 
 <h3><a name="L1073">Editer des attributs par le biais du menu
@@ -52,9 +52,9 @@ sélectionné, choisissez dans le menu  <strong>Attributs </strong>l'attribut à
 éditer.  <strong>Amaya</strong> agit alors en fonction de  l'attribut
 choisi:</p>
 <ul>
-  <li>Si c'est un attribut bouléen ( comme <code>ismap </code> pour une 
-    image) la commande est achevée. Choisir cet attribut dans le menu supprime
-     l'attribut de l'élément sélectionné, s'il est présent, et l'ajoute s'il
+  <li>Si c'est un attribut bouléen ( comme <code>ismap </code> pour une image)
+    la commande est achevée. Choisir cet attribut dans le menu supprime
+    l'attribut de l'élément sélectionné, s'il est présent, et l'ajoute s'il
     n'y est pas.</li>
   <li>Si c'est un attribut avec une série limitée de valeurs ( comme
     <code>align</code> pour un paragraphe ou une en-tête), une boîte de
@@ -80,19 +80,18 @@ choisi:</p>
 <p>Un attribut n'est pas un élément. Il ne peut pas être copié à l'aide des
 commandes Copier/Coller. Pour copier un attribut, vous devez utiliser le menu
 Attribut.Vous devez d'abord sélectionner l'élément qui contient l'attribut que
-vous voulez copier.  Sélectionnez l'entrée de l'attribut approprié dans le
-menu Attributs. Puis sélectionnez le nouvel élément auquel vous voulez
-associer l'attribut en cours et cliquez sur le bouton
-<strong>Application.</strong></p>
+vous voulez copier. Sélectionnez l'entrée de l'attribut approprié dans le menu
+Attributs. Puis sélectionnez le nouvel élément auquel vous voulez associer
+l'attribut en cours et cliquez sur le bouton <strong>Application.</strong></p>
 
-<h3><a name="Editing">Editer des attributs dans la  Vue structure </a></h3>
+<h3><a name="Editing">Editer des attributs dans la  Vue structure</a></h3>
 
-<p>Tous les attributs sont affichés dans la Vuw structure. Les attributs dont
+<p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
 la valeur peut être choisie librement sont affichés en noir et vous pouvez
 éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand la
 valeur de l'attribut est affichée en bleu, vous pouvez seulement la changer à
-l'aide du menu  <strong>Attributs</strong>. Ceci assure  qu'une seule des
-valeurs correctes soit choisie.</p>
+l'aide du menu  <strong>Attributs</strong>. Ceci assure que seules des valeurs
+correctes soient choisies. </p>
 </div>
 
 <p align="right"><a href="StyleSheets.html"><img alt="previous" border="0"
