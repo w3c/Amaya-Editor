@@ -7,12 +7,12 @@
 #ifdef __STDC__
 
 extern List *RDF_parseFile ( char *file_name,
-                             AnnotFileType type );
+                             List **rdf_model );
 
 #else /* __STDC__ */
 
 extern List *RDF_parseFile (/* char *file_name,
-                               AnnotFileType type */);
+                               List **rdf_model */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

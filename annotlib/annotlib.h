@@ -53,6 +53,11 @@
 #define FALLBACK_ANNOTATION_NS "http://www.w3.org/1999/xx/annotation-ns#"
 #define FALLBACK_ANNOTATION_CLASSNAME TEXT( FALLBACK_ANNOTATION_NS ANNOT_LOCAL_NAME )
 
+#define ID_NS TEXT("http://www.w3.org/2000/08/palm56/addr#")
+#define EMAIL_PROPNAME TEXT( ID_NS "E-mail")
+#define NAME_PROPNAME TEXT( ID_NS "name")
+#define FIRSTNAME_PROPNAME TEXT( ID_NS "firstName")
+
 /* Structures and global variables */
 
 /* basic linked list structure */
@@ -96,6 +101,7 @@ typedef struct _AnnotMeta {
   CHAR_T *cdate; /* creation date of the annotation */
   CHAR_T *mdate; /* last modified date of the annotation */
   CHAR_T *author; /* author of the annotation */
+  RDFResourceP creator; /* creator of the annotation */
   RDFResourceP type; /* type of annotation */
   CHAR_T *content_type; /*content type of the body of the annotation,
 			  only used while posting */
@@ -142,6 +148,7 @@ typedef struct _AnnotMetaDataList {
   List *authors;
   List *types;
   List *servers;
+  List *rdf_model;
   ThotBool local_annot_loaded; /* if set to true, means we have tried to
 				  load the local annotations related to this
 				  document */
@@ -181,6 +188,9 @@ extern List *annot_schema_list;  /* a list of schemas */
 extern CHAR_T *ANNOT_NS;
 extern CHAR_T *ANNOTATION_CLASSNAME;
 extern RDFClassP ANNOTATION_CLASS;
+extern RDFPropertyP PROP_Email;
+extern RDFPropertyP PROP_name;
+extern RDFPropertyP PROP_firstName;
 
 typedef struct _RDFStatement
 {

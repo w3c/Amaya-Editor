@@ -40,13 +40,14 @@ AnnotMeta *annot;
 #endif /* __STDC__ */
 {
   char *ptr;
+  char *author = annot->author ? annot->author : "";
 
   /* memorize the anchor of the reverse link target */
-  annot->name = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (annot->author)
+  annot->name = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (author)
 			      + (annot->body_url 
 				 ? strlen (annot->body_url) : 0)
 			      + 20);
-  sprintf (annot->name, "%s_%s_%s", ANNOT_ANAME, annot->author,
+  sprintf (annot->name, "%s_%s_%s", ANNOT_ANAME, author,
 	   annot->body_url ? annot->body_url : "");
   /* and remove all the ? links so that it all becomes a link, and not a target */
   ptr = annot->name;
@@ -363,10 +364,13 @@ AnnotMeta *annot;
   else
     server[0] = WC_EOS;
 
-  tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
-  usprintf (tmp, "%s@%s", annot->author, server);
-  AnnotFilter_add (&AnnotMetaData[source_doc], BY_AUTHOR, tmp, annot);
-  TtaFreeMemory (tmp);
+  if (annot->author)
+    {
+      tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
+      usprintf (tmp, "%s@%s", annot->author, server);
+      AnnotFilter_add (&AnnotMetaData[source_doc], BY_AUTHOR, tmp, annot);
+      TtaFreeMemory (tmp);
+    }
 
   return (!(annot->is_orphan));
 }
@@ -592,6 +596,9 @@ void LINK_DelMetaFromMemory (Document doc)
   AnnotMetaData[doc].types = NULL;
   AnnotFilter_free (AnnotMetaData[doc].servers, List_delCharObj);
   AnnotMetaData[doc].servers = NULL;
+  /* we no longer need this part of the RDF model; it holds only
+     for the annotations of this document */
+  SCHEMA_FreeRDFModel (&AnnotMetaData[doc].rdf_model);
 }
 
 /*-----------------------------------------------------------------------
@@ -624,7 +631,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
     /* there are no annotations */
     return;
   
-  annot_list = RDF_parseFile (annotIndex, ANNOT_LIST);
+  annot_list = RDF_parseFile (annotIndex, &AnnotMetaData[doc].rdf_model);
 
   if (!annot_list)
     /* we didn't read any annotation */

@@ -402,7 +402,7 @@ void ANNOT_Quit ()
 #endif /* __STDC__*/
 {
   ANNOT_FreeConf ();
-  SCHEMA_FreeRDFModel ();
+  SCHEMA_FreeAnnotSchema ();
   schema_init = FALSE;
 }
 
@@ -824,7 +824,8 @@ void *context;
        /* @@ needs more work to handle error return codes */
        if (annot)
 	 {
-	   List *listP = RDF_parseFile (ctx->remoteAnnotIndex, ANNOT_LIST);
+	   List *listP = RDF_parseFile (ctx->remoteAnnotIndex,
+					&AnnotMetaData[source_doc].rdf_model);
 	   if (listP)
 	     {
 	       AnnotMeta *returned_annot = (AnnotMeta *) listP->object;

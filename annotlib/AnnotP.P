@@ -183,6 +183,24 @@ RULES
 	HorizPos: Left = Previous . Right;
 	END;
 
+ CreatorEmail:
+	BEGIN
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right + 0.2;
+	END;
+
+ CreatorGivenName:
+	BEGIN
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right + 0.2;
+	END;
+
+ CreatorFamilyName:
+	BEGIN
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right + 0.2;
+	END;
+
  SourceDoc:
 	BEGIN
 	CreateBefore (SourceDoc_Box);

@@ -45,6 +45,9 @@ static RDFPropertyP labelP = NULL;
 List *annot_schema_list = NULL;  /* a list of schemas */
 CHAR_T *ANNOT_NS = NULL;	/* the Annotation namespace name to use */
 CHAR_T *ANNOTATION_CLASSNAME = NULL;
+RDFPropertyP PROP_name = NULL;
+RDFPropertyP PROP_firstName = NULL;
+RDFPropertyP PROP_Email = NULL;
 RDFClassP ANNOTATION_CLASS;
 
 typedef struct _ReadCallbackContext
@@ -77,9 +80,16 @@ static RDFResourceP _ListSearchResource( List* list, char* name)
 }
 
 /*------------------------------------------------------------
-   _AddStatement
+   SCHEMA_AddStatement
   ------------------------------------------------------------*/
-static void _AddStatement( RDFResourceP s, RDFPropertyP p, RDFResourceP o )
+#ifdef  __STDC__
+void SCHEMA_AddStatement (RDFResourceP s, RDFPropertyP p, RDFResourceP o)
+#else  /* __STDC__ */
+void SCHEMA_AddStatement (s, p, o)
+RDFResourceP s;
+RDFPropertyP p;
+RDFResourceP o;
+#endif
 {
   RDFStatement *statement;
 
@@ -150,7 +160,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       /* ugly, ugly; libwww discards info -- is the object a Literal? */
       RDFResourceP objectP = ANNOT_FindRDFResource (listP, object, TRUE);
 
-      _AddStatement (subjectP, predicateP, objectP);
+      SCHEMA_AddStatement (subjectP, predicateP, objectP);
 
       if (!typeP)
 	  typeP = ANNOT_FindRDFResource (listP, RDF_TYPE, TRUE);
@@ -461,6 +471,18 @@ void SCHEMA_InitSchemas (doc)
 
   FreeAnnotNS();
 
+  PROP_Email = ANNOT_FindRDFResource (&annot_schema_list,
+				      EMAIL_PROPNAME,
+				      TRUE);
+
+  PROP_firstName = ANNOT_FindRDFResource (&annot_schema_list,
+					  FIRSTNAME_PROPNAME,
+					  TRUE);
+
+  PROP_name = ANNOT_FindRDFResource (&annot_schema_list,
+				     NAME_PROPNAME,
+				     TRUE);
+
   len = strlen(thotdir) + strlen(app_home) + MAX_LENGTH + 32;
 
   buffer = TtaGetMemory(len);
@@ -616,7 +638,7 @@ int SCHEMA_DumpRDFResources()
 
 
 /*------------------------------------------------------------
-   SCHEMA_FreeRDFResource()
+   SCHEMA_FreeRDFResource
   ------------------------------------------------------------
    Frees the dynamic heap resources for a singe RDF Resource
   ------------------------------------------------------------*/
@@ -637,19 +659,37 @@ static ThotBool SCHEMA_FreeRDFResource( void *item )
 
 
 /*------------------------------------------------------------
-   SCHEMA_FreeRDFModel()
+   SCHEMA_FreeAnnotSchema
   ------------------------------------------------------------
-   Frees the dynamic heap for all resources in an RDF Model
+   Frees the dynamic heap for all resources in the RDF Model
+   for the loads schema(s)
   ------------------------------------------------------------*/
 #ifdef __STDC__
-void SCHEMA_FreeRDFModel()
+void SCHEMA_FreeAnnotSchema( void )
 #else /* __STDC__ */
-void SCHEMA_FreeRDFModel()
+void SCHEMA_FreeAnnotSchema()
 #endif /* __STDC__ */
 {
   List_delAll (&annot_schema_list, SCHEMA_FreeRDFResource);
   subclassOfP = NULL;
   typeP = NULL;
   labelP = NULL;
+  PROP_Email = NULL;
   FreeAnnotNS();
+}
+
+
+/*------------------------------------------------------------
+   SCHEMA_FreeRDFModel()
+  ------------------------------------------------------------
+   Frees the dynamic heap for all resources in an RDF Model
+  ------------------------------------------------------------*/
+#ifdef __STDC__
+void SCHEMA_FreeRDFModel( List **model )
+#else /* __STDC__ */
+void SCHEMA_FreeRDFModel()
+     List **model;
+#endif /* __STDC__ */
+{
+  List_delAll (model, SCHEMA_FreeRDFResource);
 }

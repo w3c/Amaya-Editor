@@ -216,6 +216,44 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   el = TtaGetFirstChild (el);
   TtaSetTextContent (el, user, TtaGetDefaultLanguage (), docAnnot); 
 
+  if (annot->creator)
+    {
+      RDFStatementP s;
+
+      s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_firstName);
+      if (s)
+	{
+	  elType.ElTypeNum = Annot_EL_CreatorGivenName;
+	  el = TtaSearchTypedElement (elType, SearchInTree, head);
+	  el = TtaGetFirstChild (el);
+	  TtaSetTextContent (el, (CHAR_T *) s->object->name,
+			     TtaGetDefaultLanguage (),
+			     docAnnot);
+	}
+
+      s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_name);
+      if (s)
+	{
+	  elType.ElTypeNum = Annot_EL_CreatorFamilyName;
+	  el = TtaSearchTypedElement (elType, SearchInTree, head);
+	  el = TtaGetFirstChild (el);
+	  TtaSetTextContent (el, (CHAR_T *) s->object->name,
+			     TtaGetDefaultLanguage (),
+			     docAnnot);
+	}
+
+      s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_Email);
+      if (s)
+	{
+	  elType.ElTypeNum = Annot_EL_CreatorEmail;
+	  el = TtaSearchTypedElement (elType, SearchInTree, head);
+	  el = TtaGetFirstChild (el);
+	  TtaSetTextContent (el, (CHAR_T *) s->object->name,
+			     TtaGetDefaultLanguage (),
+			     docAnnot);
+	}
+    }
+
   /* Creation Date metadata */
   elType.ElTypeNum = Annot_EL_AnnotCDate;
   el = TtaSearchTypedElement (elType, SearchInTree, head);

@@ -692,9 +692,10 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 	      "<a:context>#%s</a:context>\n",
 		   annot->xptr);
 
-	  fprintf (fp,
-		   "<d:creator>%s</d:creator>\n",
-		   annot->author);
+	  if (annot->author)
+	    fprintf (fp,
+		     "<d:creator>%s</d:creator>\n",
+		     annot->author);
 	  
 	  fprintf (fp,
 		   "<a:created>%s</a:created>\n",
@@ -792,9 +793,10 @@ Document doc;
 	      "<a:context>#%s</a:context>\n",
 		   annot->xptr);
 	  
-	  fprintf (fp,
-		   "<d:creator>%s</d:creator>\n",
-		   annot->author);
+	  if (annot->author)
+	    fprintf (fp,
+		     "<d:creator>%s</d:creator>\n",
+		     annot->author);
 	  
 	  fprintf (fp,
 		   "<a:created>%s</a:created>\n",

@@ -20,6 +20,7 @@
 #include <string.h>
 #include "xmlparse.h"
 #include "annotlib.h"
+#include "AHTURLTools_f.h"
 #include "HTRDF.h"
 
 /********************** static variables ***********************/
@@ -49,6 +50,12 @@ static AnnotMeta *find_last_annot = NULL;
 /********************** global variables ***********************/
 
 List *annot_list;  /* a list of annotations */
+
+typedef struct _ParseContext
+{
+  List **annot_list;
+  List **rdf_model;
+} ParseContext, *ParseContextP;
 
 /* ------------------------------------------------------------
    ParseIdFragment
@@ -196,15 +203,21 @@ static void Finish_FindAnnot(void)
   
    As the triples arrive, their predicate is checked and its
    object is cached if it is a predicate that we care about.
+
+   If we don't recognize the predicate then we store the statement
+   in a generic "RDF model".  This model is expected to be specific
+   to a document and should be freed [only] when all of the annotation
+   data for that document are freed.
   
    Parameters:
      rdfp - the RDF parser
      triple - an RDF triple
-     context - pointer to a AnnotMeta structure
+     context - pointer to a ParseContext structure
  ------------------------------------------------------------*/
 static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 {
-  List **listP = (List**)context;
+  List **listP = ((ParseContextP) context)->annot_list;
+  List **rdf_model = ((ParseContextP) context)->rdf_model;
 
   if (rdfp && triple) 
     {
@@ -225,7 +238,14 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       if (contains(predicate, ANNOT_NS, ANNOT_ANNOTATES))
           annot->source_url = TtaStrdup ((char *) object);
       else if (contains (predicate, DC_NS, DC_CREATOR))
-          annot->author = TtaStrdup ((char *) object);
+	{
+	  /* @@ RRS: hack, hack; we should _not_ be inferring URIs.
+	     Libwww should distinguish between literal and resource. */
+	  if (IsW3Path (object) || IsFilePath (object))
+	      annot->creator = ANNOT_FindRDFResource (rdf_model, object, TRUE);
+	  else
+	    annot->author = TtaStrdup ((char *) object);
+	}
       else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
           annot->cdate = TtaStrdup ((char *) object);
       else if (contains (predicate, DC_NS, DC_DATE))
@@ -262,6 +282,27 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
           annot->body_url = TtaStrdup ((char *) object);
       else if (contains (predicate, HTTP_NS, HTTP_BODY))
           annot->body = TtaStrdup ((char *) object);
+      else
+	/* it's some other RDF statement; store it in the
+	   document-specific model.  Note that subjects and
+	   objects are stored in the document-specific model
+	   whereas predicates are stored in the persistent
+	   schema model. @@ RRS: this doesn't permit assertions
+	   about the predicates to be passed in the annot index. */
+	{
+	  RDFResourceP subjectP;
+	  RDFPropertyP predicateP;
+	  RDFResourceP objectP;
+
+	  subjectP = ANNOT_FindRDFResource (rdf_model, subject, TRUE);
+	  predicateP = ANNOT_FindRDFResource (&annot_schema_list,
+					      predicate,
+					      TRUE);
+	  /* ugly, ugly; libwww discards info -- is the object a Literal? */
+	  objectP = ANNOT_FindRDFResource (rdf_model, object, TRUE);
+
+	  SCHEMA_AddStatement (subjectP, predicateP, objectP);
+	}
     }
 }
 
@@ -274,21 +315,24 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
   
    Parameters:
      file_name - the name of the file to parse
-     type - the annotation type (see AnnotFileType)
+     rdf_model - a list of RDF resources to update
 
    Returs: a pointer to an annotation's list or NULL if an error
      occurs during the parsing.
  ------------------------------------------------------------*/
-List *RDF_parseFile (char *file_name, AnnotFileType type)
+List *RDF_parseFile (char *file_name, List **rdf_model)
 {
+  ParseContext ctx;
+
+  ctx.annot_list = &annot_list;
+  ctx.rdf_model = rdf_model;
+
   annot_list = NULL;
 
-  if (type != ANNOT_LIST)
-      return NULL;
-
-  if (HTRDF_parseFile(file_name, triple_handler, &annot_list) != YES)
+  if (HTRDF_parseFile(file_name, triple_handler, &ctx) != YES)
     {
       AnnotList_free (annot_list);
+      /* do not free rdf_model here; it may not have been empty to start */
       annot_list = NULL;
       return NULL;
     }
@@ -302,30 +346,3 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
 
   return (annot_list);
 }
-
-#ifdef _RDFDEBUG
-/* ------------------------------------------------------------
-   main 
-
-   function for unit testing 
- ------------------------------------------------------------*/
-int main (int argc, char *argv[])
-{
-  List *l;
-  int i;
-
-  if (argc < 2) 
-    {
-      fprintf(stderr, "Usage: %s file[s]\n", argv[0]); 
-      exit(1);
-    }
-
-  for (i=1; i < argc; i++) 
-    {
-      l = RDF_parseFile (argv[i], ANNOT_SINGLE);
-
-      if (!l)
-        fprintf(stderr, "ERROR: Parse Failure of %s\n", argv[i]);
-    }
-}
-#endif /* _RDFDEBUG */

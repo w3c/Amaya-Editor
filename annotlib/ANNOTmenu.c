@@ -490,9 +490,10 @@ ThotBool show;
       switch (selector) 
 	{
 	case BY_AUTHOR:
-	  annot_show = AnnotFilter_showAuthor (AnnotMetaData[doc].authors, 
-					       annot->author, 
-					       annot->annot_url);
+	  if (annot->author)
+	    annot_show = AnnotFilter_showAuthor (AnnotMetaData[doc].authors, 
+						 annot->author, 
+						 annot->annot_url);
 	  break;
 	case BY_TYPE:
 	  annot_show = AnnotFilter_show (AnnotMetaData[doc].types, 
