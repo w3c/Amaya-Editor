@@ -806,7 +806,8 @@ char                c;
      if (attrType.AttrTypeNum <= 0)
         /* not found. Is it a HTML attribute? */
 	{
-	MapHTMLAttribute (&inputBuffer[i], &attrType, XMLelementType[stackLevel-1]);
+	MapHTMLAttribute (&inputBuffer[i], &attrType,
+			  XMLelementType[stackLevel-1], currentDocument);
 	if (attrType.AttrTypeNum > 0)
 	   if (strcasecmp (&inputBuffer[i], "style") == 0)
 	      HTMLStyleAttribute = TRUE;

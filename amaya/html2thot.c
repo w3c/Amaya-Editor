@@ -1573,11 +1573,12 @@ Element             elem;
    as well as the corresponding Thot SSchema
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static AttributeMapping*          MapAttr (char *Attr, SSchema *schema)
+static AttributeMapping*          MapAttr (char *Attr, SSchema *schema, int elemEntry)
 #else
-static AttributeMapping*          MapAttr (Attr, schema)
+static AttributeMapping*          MapAttr (Attr, schema, elemEntry)
 char               *Attr;
 SSchema            *schema;
+int                 elemEntry;
 
 #endif
 {
@@ -1595,7 +1596,7 @@ SSchema            *schema;
 	       *schema = HTMLSSchema;
 	       }
 	 else if (!strcasecmp (HTMLAttributeMappingTable[i].XMLelement,
-			       HTMLGIMappingTable[lastElemEntry].htmlGI))
+			       HTMLGIMappingTable[elemEntry].htmlGI))
 	       {
 	       entry = i;
 	       *schema = HTMLSSchema;
@@ -1616,30 +1617,44 @@ SSchema            *schema;
    attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapHTMLAttribute (char *Attr, AttributeType *attrType, char* elementName)
+void          MapHTMLAttribute (char *Attr, AttributeType *attrType, char* elementName, Document doc)
 #else
-void          MapHTMLAttribute (Attr, attrType, elementName)
+void          MapHTMLAttribute (Attr, attrType, elementName, doc)
 char               *Attr;
 AttributeType      *attrType;
 char               *elementName;
- 
+Document            doc;
+
 #endif
 {
-   SSchema	       schema;
+   SSchema	       schema = NULL;
    AttributeMapping*   tableEntry;
+   int                 elemEntry;
 
-   tableEntry = MapAttr (Attr, &schema);
-   if (tableEntry == NULL)
-      {
-      attrType->AttrTypeNum = 0;
-      attrType->AttrSSchema = NULL;
-      }
+   elemEntry = MapGI(elementName, &schema, doc);
+   if (elemEntry >= 0)
+     {
+	 tableEntry = MapAttr (Attr, &schema, elemEntry);
+	 if (tableEntry != NULL)
+	   {
+	       attrType->AttrTypeNum = tableEntry->ThotAttribute;
+	       if (HTMLSSchema == NULL && doc != (Document) 0)
+		   attrType->AttrSSchema = TtaGetSSchema ("HTML", doc);
+	       else	    
+		   attrType->AttrSSchema = HTMLSSchema;
+	   }
+	 else
+	   {
+	      attrType->AttrTypeNum = 0;
+	      attrType->AttrSSchema = NULL;
+	   }
+     }
    else
-      {
-      attrType->AttrTypeNum = tableEntry->ThotAttribute;
-      attrType->AttrSSchema = schema;
-      }
-}
+     {
+        attrType->AttrTypeNum = 0;
+	attrType->AttrSSchema = NULL;
+     }
+ }
 
 /*----------------------------------------------------------------------
    MapThotAttr     search in AttributeMappingTable the entry for
@@ -1664,7 +1679,7 @@ char               *tag;
    lastElemEntry = MapGI (tag, &schema, theDocument);
    if (lastElemEntry >= 0)
      {
-	tableEntry = MapAttr (Attr, &schema);
+	tableEntry = MapAttr (Attr, &schema, lastElemEntry);
 	if (tableEntry != NULL)
 	   thotAttr = tableEntry->ThotAttribute;
      }
@@ -4143,7 +4158,7 @@ char                c;
       /* ignore attributes of unknown tags */
       tableEntry = NULL;
    else
-      tableEntry = MapAttr (inputBuffer, &schema);
+      tableEntry = MapAttr (inputBuffer, &schema, lastElemEntry);
 
    if (tableEntry == NULL)
       /* this attribute is not in the HTML mapping table */
