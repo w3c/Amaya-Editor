@@ -5376,7 +5376,6 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
      }
 }
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
@@ -5384,157 +5383,165 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
 void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 			 Pixel color, int activate)
 {
-   ThotWidget          w;
-   struct Cat_Context *catalogue;
-   struct E_List      *adbloc;
-   int                 ent;
+#ifdef _WINDOWS
+  int                 frame;
+  int                 i, j;
 
-#ifndef _WINDOWS
+  j = ref - MAX_LocalMenu;
+  i = j / MAX_ITEM;
+  frame = j - (i * MAX_ITEM);	/* reste de la division */
+  hMenu = WIN_GetMenu (frame);
+  if (activate)
+    EnableMenuItem (hMenu, ref + entry, MF_ENABLED);
+  else
+    EnableMenuItem (hMenu, ref + entry, MFS_GRAYED);
+#else /* _WINDOWS */
+  ThotWidget          w;
+  struct Cat_Context *catalogue;
+  struct E_List      *adbloc;
+  int                 ent;
 #ifndef _GTK
-   int                 n;
-   Arg                 args[MAX_ARGS];
-   XmFontList          font;
+  int                 n;
+  Arg                 args[MAX_ARGS];
+  XmFontList          font;
 #else /* _GTK */
-   /*   GtkStyle           *styletmp=(char *)0;*/
-   ThotWidget          tmpw;
+  ThotWidget          tmpw;
 #endif /* _GTK */
-#endif /* _WINDOWS */
 
-   if (ref == 0)
-     {
-	TtaError (ERR_invalid_reference);
-	return;
-     }
-
-   catalogue = CatEntry (ref);
-   if (catalogue == NULL)
+  if (ref == 0)
+    {
       TtaError (ERR_invalid_reference);
+      return;
+    }
 
-   /* Est-ce qu'il s'agit bien d'un menu ou d'un sous-menu ? */
-   else if (catalogue->Cat_Widget == 0
-	    || (catalogue->Cat_Type != CAT_MENU
-		&& catalogue->Cat_Type != CAT_POPUP
-		&& catalogue->Cat_Type != CAT_PULL
-		&& catalogue->Cat_Type != CAT_TMENU
-		&& catalogue->Cat_Type != CAT_FMENU))
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	/* Recherche l'entree dans le menu ou sous-menu */
-	adbloc = catalogue->Cat_Entries;
-	ent = entry + 2;	/* decalage de 2 pour le widget titre */
-	while (ent >= C_NUMBER)
-	  {
-	     if (adbloc->E_Next == NULL)
-	       {
-		  TtaError (ERR_invalid_parameter);
-		  return;
-	       }
-	     else
-		adbloc = adbloc->E_Next;
-	     ent -= C_NUMBER;
-	  }			/*while */
-
-	if (adbloc->E_ThotWidget[ent] == 0)
-	   TtaError (ERR_invalid_parameter);
-	else
-	  {
-	     w = adbloc->E_ThotWidget[ent];
-#ifndef _WINDOWS
+  catalogue = CatEntry (ref);
+  if (catalogue == NULL)
+    TtaError (ERR_invalid_reference);
+  
+  /* Est-ce qu'il s'agit bien d'un menu ou d'un sous-menu ? */
+  else if (catalogue->Cat_Widget == 0
+	   || (catalogue->Cat_Type != CAT_MENU
+	       && catalogue->Cat_Type != CAT_POPUP
+	       && catalogue->Cat_Type != CAT_PULL
+	       && catalogue->Cat_Type != CAT_TMENU
+	       && catalogue->Cat_Type != CAT_FMENU))
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      /* Recherche l'entree dans le menu ou sous-menu */
+      adbloc = catalogue->Cat_Entries;
+      ent = entry + 2;	/* decalage de 2 pour le widget titre */
+      while (ent >= C_NUMBER)
+	{
+	  if (adbloc->E_Next == NULL)
+	    {
+	      TtaError (ERR_invalid_parameter);
+	      return;
+	    }
+	  else
+	    adbloc = adbloc->E_Next;
+	  ent -= C_NUMBER;
+	}			/*while */
+      
+      if (adbloc->E_ThotWidget[ent] == 0)
+	TtaError (ERR_invalid_parameter);
+      else
+	{
+	  w = adbloc->E_ThotWidget[ent];
 #ifndef _GTK
-	     /* Recupere si necessaire la couleur par defaut */
-	     n = 0;
-	     /* Faut-il changer la police de caracteres ? */
-	     if (fontname != NULL)
-	       font = XmFontListCreate (XLoadQueryFont (GDp, fontname), XmSTRING_DEFAULT_CHARSET);
-	     else
-	       font = DefaultFont;
-	     XtSetArg (args[n], XmNfontList, font);
-	     n++;
-	     if ((int) color != -1)
-	       {
-		  /* La couleur imposee par l'application */
-		  XtSetArg (args[n], XmNforeground, color);
-		  n++;
+	  /* Recupere si necessaire la couleur par defaut */
+	  n = 0;
+	  /* Faut-il changer la police de caracteres ? */
+	  if (fontname != NULL)
+	    font = XmFontListCreate (XLoadQueryFont (GDp, fontname), XmSTRING_DEFAULT_CHARSET);
+	  else
+	    font = DefaultFont;
+	  XtSetArg (args[n], XmNfontList, font);
+	  n++;
+	  if ((int) color != -1)
+	    {
+	      /* La couleur imposee par l'application */
+	      XtSetArg (args[n], XmNforeground, color);
+	      n++;
 	       }
-	     else
-	       {
-		  /* La couleur par defaut */
-		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		  n++;
-	       }
+	  else
+	    {
+	      /* La couleur par defaut */
+	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
+	      n++;
+	    }
 #else /* _GTK */
-	     /* if the widget is a FORM sub menu, then it is a radiolist
-		the label font must be change, and not the radiolist font. 
-	        REM: the label could be show with gtk_object_get_data */
-             if (catalogue->Cat_Type == CAT_FMENU)
-	       tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(w), "Label"));
-	     else
-	       tmpw = w;
-	     if (fontname != NULL)
-	       {
-		 /* load the new font */
-		 tmpw->style->font = (GdkFont *)gdk_font_load (fontname);
-		 /*		 gdk_font_ref ((GdkFont *)(w->style->font));*/
-		 if(tmpw->style->font == NULL)
-		   tmpw->style->font = DefaultFont;
-	       }
-	     else
-	       /* keep the default font*/
-	       tmpw->style->font = DefaultFont;
-	     /* On interprete un changement de couleur comme un set_sensitive */
-	     if ((int) color != -1)
-	       gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
-	     else
-	       gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
+	  /* if the widget is a FORM sub menu, then it is a radiolist
+	     the label font must be change, and not the radiolist font. 
+	     REM: the label could be show with gtk_object_get_data */
+	  if (catalogue->Cat_Type == CAT_FMENU)
+	    tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(w), "Label"));
+	  else
+	    tmpw = w;
+	  if (fontname != NULL)
+	    {
+	      /* load the new font */
+	      tmpw->style->font = (GdkFont *)gdk_font_load (fontname);
+	      /*		 gdk_font_ref ((GdkFont *)(w->style->font));*/
+	      if(tmpw->style->font == NULL)
+		tmpw->style->font = DefaultFont;
+	    }
+	  else
+	    /* keep the default font*/
+	    tmpw->style->font = DefaultFont;
+	  /* On interprete un changement de couleur comme un set_sensitive */
+	  if ((int) color != -1)
+	    gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
+	  else
+	    gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
 
 #endif /* _GTK */
-	     /* Faut-il activer ou desactiver le Callback */
-	     if (activate != -1)
-	       {
-		if (catalogue->Cat_Type == CAT_POPUP
-		    || catalogue->Cat_Type == CAT_PULL
-		    || catalogue->Cat_Type == CAT_MENU)
-		  {
+	  /* Faut-il activer ou desactiver le Callback */
+	  if (activate != -1)
+	    {
+	      if (catalogue->Cat_Type == CAT_POPUP
+		  || catalogue->Cat_Type == CAT_PULL
+		  || catalogue->Cat_Type == CAT_MENU)
+		{
 #ifndef _GTK
-		    XtRemoveCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
-		    if (activate)
-		      XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
+		  XtRemoveCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
+		  if (activate)
+		    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
 #endif /* _GTK */
+		}
+	      else
+		/*CAT_FMENU et CAT_TMENU */
+#ifndef _GTK
+		if (activate)
+		  {
+		    XtSetArg (args[n], XmNsensitive, TRUE);
+		    n++;
 		  }
 		else
-		   /*CAT_FMENU et CAT_TMENU */
-#ifndef _GTK
-		  if (activate)
-		    {
-		      XtSetArg (args[n], XmNsensitive, TRUE);
-		      n++;
-		    }
-		  else
-		    {
-		      XtSetArg (args[n], XmNsensitive, FALSE);
-		      n++;
-		    }
+		  {
+		    XtSetArg (args[n], XmNsensitive, FALSE);
+		    n++;
+		  }
 #else /* _GTK */	  
-		if (activate)
-		  gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
-		else
-		  gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
+	      if (activate)
+		gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
+	      else
+		gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
 #endif /* _GTK */
-	       }
+	    }
 #ifndef _GTK
-	     XtSetValues (w, args, n);
-	     XtManageChild (w);
-	     if (fontname != NULL)
-		XmFontListFree (font);
+	  XtSetValues (w, args, n);
+	  XtManageChild (w);
+	  if (fontname != NULL)
+	    XmFontListFree (font);
 #else /* _GTK */
-	     gtk_widget_show_all (GTK_WIDGET(w));
+	  gtk_widget_show_all (GTK_WIDGET(w));
 #endif /* _GTK */
+	}
+    }
 #endif /* _WINDOWS */
-	  }
-     }
 }
-#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
    DestForm de'truit un formulaire ou une feuille de saisie:          

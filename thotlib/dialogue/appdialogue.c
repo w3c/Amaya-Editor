@@ -3656,42 +3656,27 @@ static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
   ----------------------------------------------------------------------*/
 void SwitchUndo (PtrDocument pDoc, ThotBool on)
 {
-#ifndef _WINDOWS 
-   char              fontname[100];
-   char              text[20];
-#else /* _WINDOWS */
-   HMENU             hMenu;
-#endif /* _WINDOWS */
-   int               view, frame;
-   int               ref, item;
+  int               view, frame;
+  int               ref, item;
 
-   if (pDoc == NULL)
-      return;
-   for (view = 0; view < MAX_VIEW_DOC; view++) {
-       if (pDoc->DocView[view].DvPSchemaView > 0) {
-          frame = pDoc->DocViewFrame[view];
-          if (frame != 0 && FrameTable[frame].MenuUndo != -1) {
-             ref = FrameTable[frame].MenuUndo;
-             item = FrameTable[frame].EntryUndo;
-#ifdef _WINDOWS
-             hMenu = WIN_GetMenu (frame);
-             if (on)
-                EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-             else
-                 EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#else  /* _WINDOWS */
-             if (on)
-                TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-             else if (TtWDepth > 1)
-                  TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	         else {
-                  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
-                  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-			 }  
-#endif /* _WINDOWS */
-		  }  
-	   }  
-   } 
+  if (pDoc == NULL)
+    return;
+  for (view = 0; view < MAX_VIEW_DOC; view++)
+    {
+      if (pDoc->DocView[view].DvPSchemaView > 0)
+	{
+	  frame = pDoc->DocViewFrame[view];
+	  if (frame != 0 && FrameTable[frame].MenuUndo != -1)
+	    {
+	      ref = FrameTable[frame].MenuUndo;
+	      item = FrameTable[frame].EntryUndo;
+	      if (on)
+		TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+	      else
+		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+	    }  
+	}  
+    } 
 } 
 
 /*----------------------------------------------------------------------
@@ -3700,12 +3685,6 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
   ----------------------------------------------------------------------*/
 void SwitchRedo (PtrDocument pDoc, ThotBool on)
 {
-#ifndef _WINDOWS 
-  char                fontname[100];
-  char                text[20];
-#else /* _WINDOWS */
-  HMENU               hMenu;
-#endif /* _WINDOWS */
   int                 view, frame;
   int                 ref, item;
 
@@ -3720,23 +3699,10 @@ void SwitchRedo (PtrDocument pDoc, ThotBool on)
 	    {
 	      ref = FrameTable[frame].MenuRedo;
 	      item = FrameTable[frame].EntryRedo;
-#ifdef _WINDOWS
-	      hMenu = WIN_GetMenu (frame);
-	      if (on)
-		EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-	      else
-		EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#else  /* _WINDOWS */
 	      if (on)
 		TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-	      else if (TtWDepth > 1)
-		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	      else
-		{
-		  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
-		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-		}
-#endif /* _WINDOWS */
+		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	    }
 	}
     }
@@ -3748,12 +3714,6 @@ void SwitchRedo (PtrDocument pDoc, ThotBool on)
   ----------------------------------------------------------------------*/
 void SwitchPaste (PtrDocument pDoc, ThotBool on)
 {
-#ifndef _WINDOWS 
-  char                fontname[100];
-  char                text[20];
-#else /* _WINDOWS */
-  HMENU               hMenu;
-#endif /* _WINDOWS */
   int                 frame;
   int                 ref, item;
 
@@ -3769,28 +3729,11 @@ void SwitchPaste (PtrDocument pDoc, ThotBool on)
 	      item = FrameTable[frame].EntryPaste;
 	      if (ref != -1)
 		{
-#ifdef _WINDOWS
-		  hMenu = WIN_GetMenu (frame);
-		  if (!LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
-		    /* active the paste command as soon as the document is editable */
-		    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-		  else if (!on)
-		    EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#else  /* _WINDOWS */
 		  if (on && !LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
 		    TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
 		  else if (!on)
-		    {
-		      /* active the paste command */
-		      if (TtWDepth > 1)
-			TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-		      else
-			{
-			  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
-			  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-			}
-		    }
-#endif /* _WINDOWS */
+		    /* active the paste command */
+		    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 		}
 	    }
 	}
@@ -4024,12 +3967,6 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
    int                 menu, submenu;
    int                 item;
    int                 action;
-#ifndef _WINDOWS 
-   char                fontname[100];
-   char                text[20];
-#else /* _WINDOWS */
-   HMENU               hMenu;
-#endif /* _WINDOWS */
 
    /* Check parameters */
    if (document == 0 && view == 0)
@@ -4053,18 +3990,7 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
        if (submenu != 0)
 	 ref += submenu * MAX_MENU * MAX_ITEM;
        /* enable the entry */
-#ifdef _WINDOWS
-       hMenu = GetMenu (TtaGetViewFrame (document, view));
-       EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#else  /* _WINDOWS */
-       if (TtWDepth > 1)
-	 TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-       else
-	 {
-	   FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
-	   TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-	 }
-#endif /* _WINDOWS */
+       TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
      }
 }
 
@@ -4081,9 +4007,6 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
    int                 menu, submenu;
    int                 item;
    int                 action;
-#ifdef _WINDOWS
-   HMENU               hMenu;
-#endif /* _WINDOWS */
 
    /* Si les parametres sont invalides */
    if (document == 0 && view == 0)
@@ -4120,12 +4043,7 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
 		(pDoc->DocReadOnly ||
 		 (FirstSavedElement == NULL && ClipboardThot.BuLength == 0)))
 	 return;
-#ifdef _WINDOWS
-       hMenu = GetMenu (TtaGetViewFrame (document, view));
-       EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-#else  /* _WINDOWS */
        TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-#endif /* _WINDOWS */
      }
 }
 
