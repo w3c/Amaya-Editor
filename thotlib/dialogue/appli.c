@@ -2073,16 +2073,15 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  event->type != GDK_MOTION_NOTIFY || 
 	  (event->state & GDK_CONTROL_MASK ) == 0))
     return FALSE;
-#endif /* !_GTK */
-
-/* 
-Set the drawing area Focused
-By setting the focus on the text zone
-If another action specifically need focus, 
-w'ell grab it with the action
-*/
-textzone = gtk_object_get_data (GTK_OBJECT (widget), "Text_catcher");
-gtk_widget_grab_focus (GTK_WIDGET(textzone));  
+  /* 
+     Set the drawing area Focused
+     By setting the focus on the text zone
+     If another action specifically need focus, 
+     w'ell grab it with the action
+  */
+  textzone = gtk_object_get_data (GTK_OBJECT (widget), "Text_catcher");
+  gtk_widget_grab_focus (GTK_WIDGET(textzone));  
+#endif /* !_GTK */*
 
 #ifndef _GTK
   switch (ev->type)
