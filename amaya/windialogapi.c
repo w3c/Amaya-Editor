@@ -3670,7 +3670,8 @@ void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
 		DocumentTypes[SavingDocument] != docCSS &&
 		DocumentTypes[SavingDocument] != docMath &&
 		DocumentTypes[SavingDocument] != docSVG &&
-		DocumentTypes[SavingDocument] != docImage);
+		DocumentTypes[SavingDocument] != docImage &&
+		DocumentTypes[SavingDocument] != docXml);
   strcpy (currentPathName, path_name);
   if (HTMLFormat)
     DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent,
