@@ -711,14 +711,7 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
 bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 {
   wxChar thot_keysym = event.GetKeyCode();  
-#ifdef _WINDOWS
-  /* on windows, shortcuts values are not managed like on gtk, the keysym rang is 0-26*/
-//  if (thot_keysym > '9')
-//    thot_keysym += (int)('A'-1);
-#endif /* _WINDOWS */
 
-  if ( (event.ControlDown() || event.AltDown()) && !IsSpecialKey(thot_keysym))
-    {
       int thotMask = 0;
       if (event.ControlDown())
 	thotMask |= THOT_MOD_CTRL;
@@ -726,7 +719,15 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 	thotMask |= THOT_MOD_ALT;
       if (event.ShiftDown())
 	thotMask |= THOT_MOD_SHIFT;
-      
+
+#ifdef _WINDOWS
+  /* on windows, +/= key generate '+' key code, but is should generates '=' value */
+  if (thot_keysym == '+' && !event.ShiftDown())
+    thot_keysym = '=';
+#endif /* _WINDOWS */
+
+  if ( (event.ControlDown() || event.AltDown()) && !IsSpecialKey(thot_keysym))
+    {     
       // le code suivant permet de convertire les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
       // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
@@ -746,6 +747,15 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
       ThotInput (GetActiveFrame()->GetFrameId(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
        return true;
     }
+  /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
+  else if ((event.ControlDown() || event.AltDown()) &&
+	       (thot_keysym == WXK_RIGHT ||
+		    thot_keysym == WXK_LEFT ||
+			thot_keysym == WXK_RETURN))
+  {
+    wxLogDebug( _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
+	ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+  }
   else
     return false;
 }

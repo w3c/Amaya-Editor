@@ -426,7 +426,7 @@ void AmayaApp::OnChar(wxKeyEvent& event)
   if (p_window && p_window->IsActive())
   {
     if(!p_window->CheckSpecialKey(event))
-      if (!p_window->CheckShortcutKey(event))
+//      if (!p_window->CheckShortcutKey(event))
         if (!p_window->CheckUnicodeKey(event))
           event.Skip();
   }
