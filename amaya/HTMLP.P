@@ -8427,8 +8427,6 @@ ATTRIBUTES
            END;
 #endif
 #ifdef PAGE
-	IF Anchor
-	   Underline: Underlined;
 	IN Links_view
 		if Anchor
 		   BEGIN
