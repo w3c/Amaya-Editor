@@ -1014,8 +1014,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   
 #ifdef _GTK
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
-  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
-  /***********  ThotGrab (w, HVCurs, e, 0); **********/
+  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;  ThotGrab (w, HVCurs, e, 0);
   xwindow = (GdkWindowPrivate*) w;
   XWarpPointer (GDK_DISPLAY(), 
 		None, 

@@ -1000,8 +1000,10 @@ void       ReadPosRule (BinFile file, PosRule *pPosRule)
    pPosRule->PoPosDef = ReadBoxEdge (file);
    pPosRule->PoPosRef = ReadBoxEdge (file);
    pPosRule->PoDistUnit = rdUnit (file);
+   pPosRule->PoDeltaUnit = rdUnit (file);
    TtaReadBool (file, &pPosRule->PoDistAttr);
    TtaReadSignedShort (file, &pPosRule->PoDistance);
+   TtaReadSignedShort (file, &pPosRule->PoDistDelta);
    pPosRule->PoRelation = ReadLevel (file);
    TtaReadBool (file, &pPosRule->PoNotRel);
    TtaReadBool (file, &pPosRule->PoUserSpecified);

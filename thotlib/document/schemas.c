@@ -2034,8 +2034,10 @@ static void InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrPosRule.PoPosDef = Top;
       pRule->PrPosRule.PoPosRef = Bottom;
       pRule->PrPosRule.PoDistUnit = UnRelative;
+      pRule->PrPosRule.PoDeltaUnit = UnRelative;
       pRule->PrPosRule.PoDistAttr = FALSE;
       pRule->PrPosRule.PoDistance = 0;
+      pRule->PrPosRule.PoDistDelta = 0;
       pRule->PrPosRule.PoRelation = RlPrevious;
       pRule->PrPosRule.PoNotRel = FALSE;
       pRule->PrPosRule.PoUserSpecified = FALSE;
@@ -2051,8 +2053,10 @@ static void InsertXmlPRules (PtrPSchema pPSch, int nSRules)
       pRule->PrPosRule.PoPosDef = Left;
       pRule->PrPosRule.PoPosRef = Left;
       pRule->PrPosRule.PoDistUnit = UnRelative;
+      pRule->PrPosRule.PoDeltaUnit = UnRelative;
       pRule->PrPosRule.PoDistAttr = FALSE;
       pRule->PrPosRule.PoDistance = STRUCT_INDENT;
+      pRule->PrPosRule.PoDistDelta = 0;
       pRule->PrPosRule.PoRelation = RlEnclosing;
       pRule->PrPosRule.PoNotRel = FALSE;
       pRule->PrPosRule.PoUserSpecified = FALSE;

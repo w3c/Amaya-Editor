@@ -1262,21 +1262,23 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   PtrSSchema          pSSR;
   PtrAttribute        pAttr;
   DimensionRule      *pDimRule;
-  TypeUnit            unit;
+  TypeUnit            unit, deltaUnit;
   BoxEdge             ref, def;
   RefKind             refKind;
   Level               rel;
-  int                 pictureType, val, view, box, specificity;
+  int                 pictureType, val, delta, view, box, specificity;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 red, green, blue, refIdent;
   char                ch;
-  ThotBool            absolute, sign, just, immed, notRel, distAttr, important;
-  ThotBool            dimpos;
+  ThotBool            absolute, sign, deltaSign, just, immed, notRel,
+                      distAttr, important, dimpos;
 
   pres = (PictureScaling) 0;
   pictureType = 0;
   just = FALSE;
   sign = FALSE;
+  deltaSign = FALSE;
+  delta = 0;
   immed = FALSE;
   notRel = FALSE;
   distAttr = FALSE;
@@ -1508,6 +1510,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	    notRel = ReadBoolean (pivFile);
 	    TtaReadShort (pivFile, (int *) &refKind);
 	    TtaReadShort (pivFile, &refIdent);
+	    TtaReadShort (pivFile, &delta);
+	    deltaUnit = ReadUnit (pivFile);
+	    deltaSign = ReadSign (pivFile);
 	  }
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
@@ -1639,6 +1644,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 		if (!sign)
 		  pDimRule->DrPosRule.PoDistance =
 		                             -pDimRule->DrPosRule.PoDistance;
+		pDimRule->DrPosRule.PoDistDelta = 0;
+		pDimRule->DrPosRule.PoDeltaUnit = UnRelative;
 	      }
 	    else
 	      {
@@ -1704,6 +1711,10 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	    pPosRule->PoDistUnit = unit;
 	    if (!sign)
 	      pPosRule->PoDistance = -pPosRule->PoDistance;
+	    pPosRule->PoDistDelta = delta;
+	    pPosRule->PoDeltaUnit = deltaUnit;
+	    if (!deltaSign)
+	      pPosRule->PoDistDelta = -pPosRule->PoDistDelta;
 	    break;
 	  case PtBreak1:
 	  case PtBreak2:

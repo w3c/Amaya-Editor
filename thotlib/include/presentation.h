@@ -401,6 +401,22 @@ extern void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value,
 				      TypeUnit unit, Document document);
 
 /*----------------------------------------------------------------------
+   TtaSetPositionPRuleDelta
+
+   Changes the delta value and the unit of a position presentation rule.
+   The presentation rule must be attached to an element that is part of
+   a document.
+   Parameters:
+   element: the element to which the presentation rule is attached.
+   pRule: the presentation rule to be changed. It must be a position rule.
+   delta: the value to be set.
+   unit: the unit in which the delta value is expressed.
+   document: the document to which the element belongs.
+  ----------------------------------------------------------------------*/
+extern void TtaSetPositionPRuleDelta (Element element, PRule pRule, int delta,
+				      TypeUnit unit, Document document);
+
+/*----------------------------------------------------------------------
    TtaSetPRuleView
 
    Sets the view to which a presentation rule applies. The presentation rule
@@ -618,6 +634,19 @@ extern int TtaGetPRuleType (PRule pRule);
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
   ----------------------------------------------------------------------*/
 extern int TtaGetPRuleValue (PRule pRule);
+
+/*----------------------------------------------------------------------
+   TtaGetPositionPRuleDelta
+
+   Returns the delta value of a position rule.
+
+   Parameters:
+   pRule: the presentation rule of interest.
+
+   Return:
+   delta value.
+  ----------------------------------------------------------------------*/
+extern int TtaGetPositionPRuleDelta (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaGetPRuleUnit

@@ -318,28 +318,36 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbVertRef.PosEdge = VertRef;
    pAb->AbVertRef.PosRefEdge = VertRef;
    pAb->AbVertRef.PosDistance = 0;
+   pAb->AbVertRef.PosDistDelta = 0;
    pAb->AbVertRef.PosUnit = UnRelative;
+   pAb->AbVertRef.PosDeltaUnit = UnRelative;
    pAb->AbVertRef.PosAbRef = NULL;
    pAb->AbVertRef.PosUserSpecified = FALSE;
 
    pAb->AbHorizRef.PosEdge = HorizRef;
    pAb->AbHorizRef.PosRefEdge = HorizRef;
    pAb->AbHorizRef.PosDistance = 0;
+   pAb->AbHorizRef.PosDistDelta = 0;
    pAb->AbHorizRef.PosUnit = UnRelative;
+   pAb->AbHorizRef.PosDeltaUnit = UnRelative;
    pAb->AbHorizRef.PosAbRef = NULL;
    pAb->AbHorizRef.PosUserSpecified = FALSE;
 
    pAb->AbVertPos.PosEdge = Top;
    pAb->AbVertPos.PosRefEdge = Top;
    pAb->AbVertPos.PosDistance = 0;
+   pAb->AbVertPos.PosDistDelta = 0;
    pAb->AbVertPos.PosUnit = UnRelative;
+   pAb->AbVertPos.PosDeltaUnit = UnRelative;
    pAb->AbVertPos.PosAbRef = NULL;
    pAb->AbVertPos.PosUserSpecified = FALSE;
 
    pAb->AbHorizPos.PosEdge = Left;
    pAb->AbHorizPos.PosRefEdge = Left;
    pAb->AbHorizPos.PosDistance = 0;
+   pAb->AbHorizPos.PosDistDelta = 0;
    pAb->AbHorizPos.PosUnit = UnRelative;
+   pAb->AbHorizPos.PosDeltaUnit = UnRelative;
    pAb->AbHorizPos.PosAbRef = NULL;
    pAb->AbHorizPos.PosUserSpecified = FALSE;
 

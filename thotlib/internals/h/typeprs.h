@@ -73,9 +73,11 @@ typedef struct _PosRule
 				   position is defined */
   TypeUnit	PoDistUnit;	/* PoDistance is expressed in picas, 1/10 of
 				   a character, etc. */
+  TypeUnit      PoDeltaUnit;    /* units for PoDistDelta */
   ThotBool	PoDistAttr;	/* PoDistance is a numerical attribute number
 				   or a numerical value */
   int		PoDistance;	/* distance between those two sides */
+  int           PoDistDelta;    /* increment to the distance */
   Level		PoRelation;	/* relative level of the reference element
 				   in the internal representation */
   ThotBool	PoNotRel;	/* if 'false', PoRefIdent indicates the type of

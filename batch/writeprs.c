@@ -904,8 +904,10 @@ static void         WritePosRule (PosRule posRule)
    WriteBoxEdge (posRule.PoPosDef);
    WriteBoxEdge (posRule.PoPosRef);
    WriteUnit (posRule.PoDistUnit);
+   WriteUnit (posRule.PoDeltaUnit);
    WriteBoolean (posRule.PoDistAttr);
    WriteSignedShort (posRule.PoDistance);
+   WriteSignedShort (posRule.PoDistDelta);
    WriteLevel (posRule.PoRelation);
    WriteBoolean (posRule.PoNotRel);
    WriteBoolean (posRule.PoUserSpecified);

@@ -365,9 +365,11 @@ typedef struct _AbPosition
 {
   PtrAbstractBox         PosAbRef;	/* Pointer of the reference abstract box */
   int             PosDistance;	/* Distance between the two of them */
+  int             PosDistDelta; /* Distance increment */
   BoxEdge         PosEdge;	/* Positioned abstract box mark */
   BoxEdge         PosRefEdge;	/* Reference abstract box mark */
   TypeUnit        PosUnit;	/* Unit used for distance */
+  TypeUnit        PosDeltaUnit; /* Unit used for the distance increment */
   ThotBool	  PosUserSpecified;	/* User specified distance */
 } AbPosition;
 

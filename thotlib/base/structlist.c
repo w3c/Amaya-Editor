@@ -924,6 +924,15 @@ static void wrpos (AbPosition *pPos, ThotBool racine, FILE *fileDescriptor)
 	     fprintf (fileDescriptor, "%d", abs (pPos->PosDistance));
 	     wrTypeUnit (pPos->PosUnit, fileDescriptor);
 	  }
+	if (pPos->PosDistDelta != 0)
+	  {
+	     if (pPos->PosDistDelta < 0)
+		fprintf (fileDescriptor, "-");
+	     else
+		fprintf (fileDescriptor, "+");
+	     fprintf (fileDescriptor, "%d", abs (pPos->PosDistDelta));
+	     wrTypeUnit (pPos->PosDeltaUnit, fileDescriptor);
+	  }
 	if (pPos->PosUserSpecified)
 	   fprintf (fileDescriptor, " UserSpec");
      }
@@ -2727,6 +2736,16 @@ static void WrPos (PosRule pos, ThotBool Def, FILE *fileDescriptor)
 	     else
 		wrnumber (abs (pos.PoDistance), fileDescriptor);
 	     wrdistunit (pos.PoDistUnit, fileDescriptor);
+	  }
+	if (pos.PoDistDelta != 0)
+	  {
+	     if (pos.PoDistDelta > 0)
+		fprintf (fileDescriptor, "+");
+	     else
+		fprintf (fileDescriptor, "-");
+	     wrnumber (abs (pos.PoDistDelta), fileDescriptor);
+	     wrdistunit (pos.PoDeltaUnit, fileDescriptor);
+	    
 	  }
 	if (pos.PoUserSpecified)
 	   fprintf (fileDescriptor, " UserSpecified");

@@ -694,6 +694,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  PutBoolean (pivFile, pPRule->PrPosRule.PoNotRel);
 	  PutShort (pivFile, pPRule->PrPosRule.PoRefKind);
 	  PutShort (pivFile, pPRule->PrPosRule.PoRefIdent);
+	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistDelta));
+	  PutUnit (pivFile, pPRule->PrPosRule.PoDeltaUnit);
+	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistDelta >= 0));
 	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
 	  PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
 	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistance >= 0));

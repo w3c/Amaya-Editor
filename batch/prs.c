@@ -442,8 +442,10 @@ static void         CreatePRule (PRuleType t, indLine wi)
        CurRule->PrPosRule.PoPosDef = NoEdge;
        CurRule->PrPosRule.PoPosRef = NoEdge;
        CurRule->PrPosRule.PoDistUnit = UnRelative;
+       CurRule->PrPosRule.PoDeltaUnit = UnRelative;
        CurRule->PrPosRule.PoDistAttr = False;
        CurRule->PrPosRule.PoDistance = 0;
+       CurRule->PrPosRule.PoDistDelta = 0;
        CurRule->PrPosRule.PoRelation = RlSameLevel;
        CurRule->PrPosRule.PoNotRel = False;
        CurRule->PrPosRule.PoRefKind = RkAnyBox;
@@ -1590,8 +1592,10 @@ static void         ProcessAxis (BoxEdge axis, indLine wi)
 	     CurRule->PrDimRule.DrPosRule.PoPosDef = axis;
 	     CurRule->PrDimRule.DrPosRule.PoPosRef = NoEdge;
 	     CurRule->PrDimRule.DrPosRule.PoDistUnit = UnRelative;
+	     CurRule->PrDimRule.DrPosRule.PoDeltaUnit = UnRelative;
 	     CurRule->PrDimRule.DrPosRule.PoDistAttr = False;
 	     CurRule->PrDimRule.DrPosRule.PoDistance = 0;
+	     CurRule->PrDimRule.DrPosRule.PoDistDelta = 0;
 	     CurRule->PrDimRule.DrPosRule.PoRelation = RlSameLevel;
 	     CurRule->PrDimRule.DrPosRule.PoNotRel = False;
 	     CurRule->PrDimRule.DrPosRule.PoRefKind = RkAnyBox;
@@ -1773,13 +1777,15 @@ static void         CheckDefaultRules ()
       /* pas de regle VertRef par defaut, on en cree une : */
       /* VertRef: * . Left; */
      {
-	CreateDefaultRule ();
+        CreateDefaultRule ();
 	CurRule->PrType = PtVertRef;
 	CurRule->PrPosRule.PoPosDef = VertRef;
 	CurRule->PrPosRule.PoPosRef = Left;
 	CurRule->PrPosRule.PoDistUnit = UnRelative;
+	CurRule->PrPosRule.PoDeltaUnit = UnRelative;
 	CurRule->PrPosRule.PoDistAttr = False;
 	CurRule->PrPosRule.PoDistance = 0;
+	CurRule->PrPosRule.PoDistDelta = 0;
 	CurRule->PrPosRule.PoRelation = RlSelf;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
@@ -1795,8 +1801,10 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoPosDef = HorizRef;
 	CurRule->PrPosRule.PoPosRef = HorizRef;
 	CurRule->PrPosRule.PoDistUnit = UnRelative;
+	CurRule->PrPosRule.PoDeltaUnit = UnRelative;
 	CurRule->PrPosRule.PoDistAttr = False;
 	CurRule->PrPosRule.PoDistance = 0;
+	CurRule->PrPosRule.PoDistDelta = 0;
 	CurRule->PrPosRule.PoRelation = RlEnclosed;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
@@ -1850,8 +1858,10 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoPosDef = Top;
 	CurRule->PrPosRule.PoPosRef = Bottom;
 	CurRule->PrPosRule.PoDistUnit = UnRelative;
+	CurRule->PrPosRule.PoDeltaUnit = UnRelative;
 	CurRule->PrPosRule.PoDistAttr = False;
 	CurRule->PrPosRule.PoDistance = 0;
+	CurRule->PrPosRule.PoDistDelta = 0;
 	CurRule->PrPosRule.PoRelation = RlPrevious;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
@@ -1867,8 +1877,10 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoPosDef = Left;
 	CurRule->PrPosRule.PoPosRef = Left;
 	CurRule->PrPosRule.PoDistUnit = UnRelative;
+	CurRule->PrPosRule.PoDeltaUnit = UnRelative;
 	CurRule->PrPosRule.PoDistAttr = False;
 	CurRule->PrPosRule.PoDistance = 0;
+	CurRule->PrPosRule.PoDistDelta = 0;
 	CurRule->PrPosRule.PoRelation = RlEnclosing;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
@@ -6539,7 +6551,9 @@ static void         CheckPageBoxes ()
       pR->PrPosRule.PoPosDef = Top;
       pR->PrPosRule.PoPosRef = Bottom;
       pR->PrPosRule.PoDistUnit = UnPoint;
+      pR->PrPosRule.PoDeltaUnit = UnPoint;
       pR->PrPosRule.PoDistance = 0;
+      pR->PrPosRule.PoDistDelta = 0;
       pR->PrPosRule.PoRelation = RlPrevious;
       pR->PrPosRule.PoNotRel = False;
       pR->PrPosRule.PoRefKind = RkElType;
@@ -6554,7 +6568,9 @@ static void         CheckPageBoxes ()
       pR->PrPosRule.PoPosDef = Left;
       pR->PrPosRule.PoPosRef = Left;
       pR->PrPosRule.PoDistUnit = UnPoint;
+      pR->PrPosRule.PoDistDelta = UnPoint;
       pR->PrPosRule.PoDistance = 0;
+      pR->PrPosRule.PoDistDelta = 0;
       pR->PrPosRule.PoRelation = RlRoot;
       pR->PrPosRule.PoNotRel = False;
       pR->PrPosRule.PoRefKind = RkElType;

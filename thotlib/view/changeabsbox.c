@@ -578,7 +578,9 @@ static ThotBool IsDiffPosition (AbPosition abPos, AbPosition * abPosit,
   if (pAbbox1->PosRefEdge == abPosit->PosRefEdge &&
       pAbbox1->PosRefEdge == abPosit->PosRefEdge &&
       pAbbox1->PosDistance == abPosit->PosDistance &&
+      pAbbox1->PosDistDelta == abPosit->PosDistDelta &&
       pAbbox1->PosUnit == abPosit->PosUnit &&
+      pAbbox1->PosDeltaUnit == abPosit->PosDeltaUnit &&
       pAbbox1->PosUserSpecified == abPosit->PosUserSpecified &&
       pAbbox1->PosAbRef == abPosit->PosAbRef)
     {
@@ -906,6 +908,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosEdge = VertRef;
 	pPosAb->PosRefEdge = VertRef;
 	pPosAb->PosDistance = 0;
+	pPosAb->PosDistDelta = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertRef, FnAny, TRUE, &pAttr);
@@ -920,6 +923,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosEdge = HorizRef;
 	pPosAb->PosRefEdge = HorizRef;
 	pPosAb->PosDistance = 0;
+	pPosAb->PosDistDelta = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizRef, FnAny, TRUE, &pAttr);
@@ -935,6 +939,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	     pPosAb->PosEdge = Top;
 	     pPosAb->PosRefEdge = Top;
 	     pPosAb->PosDistance = 0;
+	     pPosAb->PosDistDelta = 0;
 	     pPosAb->PosAbRef = NULL;
 	     pPosAb->PosUserSpecified = FALSE;
 	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
@@ -968,6 +973,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	     pPosAb->PosEdge = Left;
 	     pPosAb->PosRefEdge = Left;
 	     pPosAb->PosDistance = 0;
+	     pPosAb->PosDistDelta = 0;
 	     pPosAb->PosAbRef = NULL;
 	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
 	     pPosAb->PosUserSpecified = FALSE;
@@ -999,6 +1005,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosEdge = Top;
 	pPosAb->PosRefEdge = Top;
 	pPosAb->PosDistance = 0;
+	pPosAb->PosDistDelta = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertPos, FnAny, TRUE, &pAttr);
@@ -1017,6 +1024,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosEdge = Left;
 	pPosAb->PosRefEdge = Left;
 	pPosAb->PosDistance = 0;
+	pPosAb->PosDistDelta = 0;
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizPos, FnAny, TRUE, &pAttr);

@@ -2032,7 +2032,9 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
        PPos->PosEdge = NoEdge;
        PPos->PosRefEdge = NoEdge;
        PPos->PosDistance = 0;
+       PPos->PosDistDelta = 0;
        PPos->PosUnit = UnRelative;
+       PPos->PosDeltaUnit = UnRelative;
        PPos->PosAbRef = NULL;
        PPos->PosUserSpecified = FALSE;
        *appl = TRUE;
@@ -2074,7 +2076,9 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	   else
 	     /* c'est la valeur elle meme qui est dans la regle */
 	     PPos->PosDistance = pPosRule->PoDistance;
+	   PPos->PosDistDelta = pPosRule->PoDistDelta;
 	   PPos->PosUnit = pPosRule->PoDistUnit;
+	   PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
 	   PPos->PosAbRef = pAbbPos;
 	   if (FirstCreation)
 	     PPos->PosUserSpecified = pPosRule->PoUserSpecified;
@@ -2176,7 +2180,9 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	     PPos->PosEdge = pPosRule->PoPosDef;
 	     PPos->PosRefEdge = pPosRule->PoPosRef;
 	     PPos->PosDistance = pPosRule->PoDistance;
+	     PPos->PosDistDelta = pPosRule->PoDistDelta;
 	     PPos->PosUnit = pPosRule->PoDistUnit;
+	     PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
 	     PPos->PosAbRef = NULL;
 	     PPos->PosUserSpecified = pPosRule->PoUserSpecified;
 	     if (PPos->PosUserSpecified)
@@ -2205,6 +2211,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	     else
 	       /* c'est la valeur elle meme */
 	       PPos->PosDistance = pPosRule->PoDistance;
+	     PPos->PosDistDelta = pPosRule->PoDistDelta;
 	     if (FirstCreation)
 	       PPos->PosUserSpecified = pPosRule->PoUserSpecified;
 	     else
@@ -2212,6 +2219,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	     if (PPos->PosUserSpecified)
 	       PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
 	     PPos->PosUnit = pPosRule->PoDistUnit;
+	     PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
 	     PPos->PosAbRef = NULL;
 	     *appl = TRUE;
 	   }
@@ -2245,15 +2253,22 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	       if (pRSpec == pPRule)
 		 /* c'est une regle de presentation specifique */
 		 /* on prend le decalage en compte */
+		 {
 		 PPos->PosDistance = pPosRule->PoDistance;
+		 PPos->PosDistDelta = pPosRule->PoDistDelta;
+		 }
 	       else
 		 /* c'est une regle generique */
 		 /* on se positionne tout contre l'englobant */
-		 PPos->PosDistance = 0;
+		 {
+		   PPos->PosDistance = 0;
+		   PPos->PosDistDelta = 0;
+		 }
 	       /* on pourra reessayer d'appliquer la regle plus tard : */
 	       /* le precedent existera peut etre, alors */
 	       *appl = FALSE;
 	       PPos->PosUnit = pPosRule->PoDistUnit;
+	       PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
 	       if (FirstCreation)
 		 PPos->PosUserSpecified = pPosRule->PoUserSpecified;
 	       else
@@ -2269,7 +2284,9 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	       PPos->PosEdge = NoEdge;
 	       PPos->PosRefEdge = NoEdge;
 	       PPos->PosDistance = 0;
+	       PPos->PosDistDelta = 0;
 	       PPos->PosUnit = UnRelative;
+	       PPos->PosDeltaUnit = UnRelative;
 	       PPos->PosAbRef = NULL;
 	       PPos->PosUserSpecified = FALSE;
 	       *appl = FALSE;
@@ -3333,7 +3350,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  pPavP1->PosEdge = Top;
 		  pPavP1->PosRefEdge = Bottom;
 		  pPavP1->PosDistance = 0;
+		  pPavP1->PosDistDelta = 0;
 		  pPavP1->PosUnit = UnPoint;
+		  pPavP1->PosDeltaUnit = UnPoint;
 		  pPavP1->PosAbRef = pAb->AbPrevious;
 		  pPavP1->PosUserSpecified = FALSE;
 		}
@@ -3359,7 +3378,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  pPavP1->PosEdge = Top;
 		  pPavP1->PosRefEdge = Top;
 		  pPavP1->PosDistance = 0;
+		  pPavP1->PosDistDelta = 0;
 		  pPavP1->PosUnit = UnPoint;
+		  pPavP1->PosDeltaUnit = UnPoint;
 		  pPavP1->PosUserSpecified = FALSE;
 		}
 	      else

@@ -2331,11 +2331,11 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
 #ifdef _WIN_PRINT
 	size = (size * 72 + ScreenDPI / 2) / ScreenDPI;
 #else /* _WIN_PRINT */
-      /* adjust the font size to the printer definition */
-      size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
+        /* adjust the font size to the printer definition */
+        size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
-      else
-	/*size = LogicalValue (size, UnPoint, NULL, 0)*/;
+    /*else
+	size = LogicalValue (size, UnPoint, NULL, 0)*/;
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)

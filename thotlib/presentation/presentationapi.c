@@ -1880,6 +1880,47 @@ void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value,
 }
 
 /*----------------------------------------------------------------------
+   TtaSetPositionPRuleDelta
+
+   Changes the delta value and the unit of a position presentation rule.
+   The presentation rule must be attached to an element that is part of
+   a document.
+   Parameters:
+   element: the element to which the presentation rule is attached.
+   pRule: the presentation rule to be changed. It must be a position rule.
+   delta: the value to be set.
+   unit: the unit in which the delta value is expressed.
+   document: the document to which the element belongs.
+  ----------------------------------------------------------------------*/
+void TtaSetPositionPRuleDelta (Element element, PRule pRule, int delta,
+			       TypeUnit unit, Document document)
+{
+#ifndef NODISPLAY
+   ThotBool            done;
+#endif
+
+   UserErrorCode = 0;
+   if (element == NULL || pRule == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     /* verifies the parameter document */
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else  if (((PtrPRule) pRule)->PrType != PtVertPos &&
+	    ((PtrPRule) pRule)->PrType != PtHorizPos)
+     TtaError (ERR_invalid_parameter);
+   else
+     {
+       ((PtrPRule) pRule)->PrPosRule.PoDeltaUnit = unit;
+       ((PtrPRule) pRule)->PrPosRule.PoDistDelta = delta;
+#ifndef NODISPLAY
+       RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
+#endif
+     }
+}
+
+/*----------------------------------------------------------------------
    TtaSetPRuleView
 
    Sets the view to which a presentation rule applies. The presentation rule
@@ -2777,6 +2818,34 @@ int TtaGetPRuleValue (PRule pRule)
 }
 
 /*----------------------------------------------------------------------
+   TtaGetPositionPRuleDelta
+
+   Returns the delta value of a position rule.
+
+   Parameters:
+   pRule: the presentation rule of interest.
+
+   Return:
+   delta value.
+  ----------------------------------------------------------------------*/
+int TtaGetPositionPRuleDelta (PRule pRule)
+{
+  int                 value;
+
+  UserErrorCode = 0;
+  value = 0;
+  if (pRule == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    if (((PtrPRule) pRule)->PrType != PtVertPos &&
+	((PtrPRule) pRule)->PrType != PtHorizPos)
+      TtaError (ERR_invalid_parameter);
+    else
+      value = ((PtrPRule) pRule)->PrPosRule.PoDistDelta;
+  return value;
+}
+
+/*----------------------------------------------------------------------
    TtaGetPRuleUnit
 
    Returns the unit of a presentation rule.
@@ -2962,7 +3031,11 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 				                     pR2->PrPosRule.PoDistUnit)
 				if (pR1->PrPosRule.PoDistance ==
 				                     pR2->PrPosRule.PoDistance)
-				  result = 1;
+				  if (pR1->PrPosRule.PoDistDelta ==
+				                    pR2->PrPosRule.PoDistDelta)
+				    if (pR1->PrPosRule.PoDeltaUnit ==
+					            pR2->PrPosRule.PoDeltaUnit)
+				      result = 1;
 			      break;
 			    case PtHeight:
 			    case PtWidth:
