@@ -1174,11 +1174,57 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         CreateReference (PtrReference pRef, ReferenceType refType, LabelString label, boolean refExt, DocumentIdentifier docIdent, PtrDocument pDoc)
+static void         CreateReference (PtrReference RefPtr, ReferenceType TRef, LabelString lab, boolean RExt, DocumentIdentifier I, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         CreateReference (pRef, refType, label, refExt, docIdent, pDoc)
-PtrReference        pRef;
+static void         CreateReference (RefPtr, TRef, lab, RExt, I, pDoc)
+PtrReference        RefPtr;
+ReferenceType           TRef;
+LabelString         lab;
+boolean             RExt;
+DocumentIdentifier     I;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrReferredDescr    r;
+   PtrReference        pRf;
+   PtrReference        pPR1;
+
+   if (lab[0] != '\0')
+      /* cherche le descripteur d'element reference' correspondant */
+     {
+	r = GetElRefer (lab, I, pDoc);
+	pPR1 = RefPtr;
+	/* met le descripteur de reference a la fin de la chaine des */
+	/* descripteur de reference du document */
+	if (r->ReFirstReference == NULL)
+	  {
+	     r->ReFirstReference = RefPtr;
+	     pPR1->RdPrevious = NULL;
+	  }
+	else
+	  {
+	     pRf = r->ReFirstReference;
+	     while (pRf->RdNext != NULL)
+		pRf = pRf->RdNext;
+	     pRf->RdNext = RefPtr;
+	     pPR1->RdPrevious = pRf;
+	  }
+	pPR1->RdNext = NULL;	/* remplit le descripteur de reference */
+	pPR1->RdReferred = r;
+	pPR1->RdTypeRef = TRef;
+	pPR1->RdInternalRef = !RExt;
+     }
+}
+
+#ifdef __STDC__
+static void         NewCreateReference (PtrReference pRef1, ReferenceType refType, LabelString label, boolean refExt, DocumentIdentifier docIdent, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+static void         NewCreateReference (pRef1, refType, label, refExt, docIdent, pDoc)
+PtrReference        pRef1;
 ReferenceType       refType;
 LabelString         label;
 boolean             refExt;
@@ -1200,7 +1246,7 @@ PtrDocument         pDoc;
 	if (pRefD->ReFirstReference == NULL)
 	  {
 	     pRefD->ReFirstReference = pRef;
-	     pRef->RdPrevious = NULL;
+	     pRef1->RdPrevious = NULL;
 	  }
 	else
 	  {
@@ -1208,13 +1254,13 @@ PtrDocument         pDoc;
 	     while (pRef->RdNext != NULL)
 		pRef = pRef->RdNext;
 	     pRef->RdNext = pRef;
-	     pRef->RdPrevious = pRef;
+	     pRef1->RdPrevious = pRef;
 	  }
 	/* remplit le descripteur de reference */
-	pRef->RdNext = NULL;
-	pRef->RdReferred = pRefD;
-	pRef->RdTypeRef = refType;
-	pRef->RdInternalRef = !refExt;
+	pRef1->RdNext = NULL;
+	pRef1->RdReferred = pRefD;
+	pRef1->RdTypeRef = refType;
+	pRef1->RdInternalRef = !refExt;
      }
 }
 
