@@ -42,7 +42,8 @@ typedef enum {
    WINDOWS_1255,
    WINDOWS_1256,
    WINDOWS_1257,
-   WINDOWS_1258
+   WINDOWS_1258,
+   ISO_SYMBOL
 } CHARSET;
 
 #ifdef _I18N_

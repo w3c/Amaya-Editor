@@ -1125,7 +1125,8 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c,
 	    }
 	  else
 	    lfont = fontset->FontIso_7;
-	  car = TtaGetCharFromWC (c, ISO_8859_7);
+	  /* using the font symbol instead of ISO_8859_7 */
+	  car = TtaGetCharFromWC (c, ISO_SYMBOL);
 	}
     }
   /* when any font is available */

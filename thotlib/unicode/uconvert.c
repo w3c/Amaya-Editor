@@ -370,9 +370,10 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
   if (wc < 127)
     /* ASCII character */
     return (unsigned char) wc;
-  else if (wc >= 880 && wc < 1377)
+  else if (encoding == ISO_SYMBOL &&
+	   wc >= 880 && wc < 1377)
     {
-      /* not sure it works for Greek */
+      /* using the font symbol instead of ISO_8859_7 */
       wc -= 848;
       return (unsigned char) wc;
     }
@@ -472,7 +473,8 @@ wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding)
 
   if (c < 127)
     {
-      if (encoding == ISO_8859_7)
+      /* using the font symbol instead of ISO_8859_7 */
+      if (encoding == ISO_SYMBOL)
 	/* not sure it works for Greek */
 	return (wchar_t)(c + 848);
       else

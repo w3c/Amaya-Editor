@@ -827,13 +827,13 @@ static void LoadKbd (int number)
 	CreateKeyboard (number, TtaGetMessage (LIB, TMSG_LATIN_ALPHABET), pFontAc, 13,
 			KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
       break;
-    case 3:		/* Grec */
+    case 3:		/* Greek */
       pFontIg = ReadFont ('G', 'T', 0, 14, UnPoint);
       /*pFontIg = LoadFont ("-ttf-esstixone-*-*-*-*-14-*-*-*-*-*-*-*");*/
       if (!pFontIg)
 	pFontIg = FontDialogue;
       if (pFontIg != NULL)
-	KbFonts[number] = pFontIg;	/* Grec */
+	KbFonts[number] = pFontIg;	/* Greek */
       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET), pFontIg, 16,
 		      KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
       break;

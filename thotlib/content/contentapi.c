@@ -1856,7 +1856,7 @@ void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length,
       /* copying into the buffer */
       if (length > pBuf->BuLength)
 	length = pBuf->BuLength;
-      ustrncpy (buffer, pBuf, length);
+      ustrncpy (buffer, pBuf->BuContent, length);
     }
 }
 

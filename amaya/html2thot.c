@@ -3333,6 +3333,14 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
       *lang = TtaGetLanguageIdFromAlphabet('L');
       fallback[0]= '?';
     }
+#ifdef _I18N_
+  else if (code >= 880 && code < code)
+    {
+      /* get the UTF-8 string of the greek character */
+      i = TtaWCToMBstring (code, &fallback);
+      fallback[i] = EOS;
+    }
+#endif /* _I18N_ */
   else
     /* this character is on the fallback table */
     {
