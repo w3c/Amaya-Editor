@@ -286,7 +286,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 		    pHd = pHd->HdNextPSchema;
 		  pSP = pHd->HdPSchema;
 		}
-	      while (pR == NULL && pSP != NULL)
+	      while (pRule == NULL && pSP != NULL)
 		{
 		  /* premiere regle de presentation de cet attribut */
 		  pR = AttrPresRule (pA, pEl, FALSE, NULL, pSP);
@@ -316,7 +316,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 		      else
 			pR = NULL;
 		    }
-		  if (pR == NULL)
+		  if (pRule == NULL)
 		    /* on n'a pas encore trouve'. On continue de chercher dans */
 		    /* les schemas de presentation de moindre priorite' */
 		    {
