@@ -10,7 +10,7 @@
 #
 
 # default parameters
-AMAYAVERSION="8.2"
+AMAYAVERSION="8.3"
 DEST=$HOME
 PLATFORMS="LINUX-ELF GTK GL"
 
@@ -99,11 +99,12 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/config/libconfig/*.lhtml \
    ${AMAYADIR}/config/libconfig/*.svg \
    ${AMAYADIR}/dicopar/E*.dic \
+   ${AMAYADIR}/dicopar/F*.dic \
    ${AMAYADIR}/dicopar/*.ptn \
    ${AMAYADIR}/dicopar/alphabet \
    ${AMAYADIR}/dicopar/clavier \
-   ${AMAYADIR}/doc/html/*.html \
-   ${AMAYADIR}/doc/html/*/*.html \
+   ${AMAYADIR}/doc/html/*.html* \
+   ${AMAYADIR}/doc/html/*/*.html* \
    ${AMAYADIR}/doc/html/*.css \
    ${AMAYADIR}/doc/images/*.gif \
    ${AMAYADIR}/doc/images/*.png \
