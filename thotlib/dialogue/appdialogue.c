@@ -57,6 +57,7 @@
 #include "absboxes_f.h"
 #include "actions_f.h"
 #include "appdialogue_f.h"
+#include "appdialogue_wx_f.h"
 #include "applicationapi_f.h"
 #include "boxlocate_f.h"
 #include "boxparams_f.h"
@@ -602,11 +603,21 @@ void FreeMenus ()
   int                 i;
 
   /* free menu actions */
-   for (i = 0; i < FreeMenuAction; i++)
-     TtaFreeMemory (MenuActionList[i].ActionEquiv);
-   for (i = MAX_INTERNAL_CMD; i < FreeMenuAction; i++)
-     TtaFreeMemory (MenuActionList[i].ActionName);
-  TtaFreeMemory (MenuActionList);
+  if (MenuActionList)
+    {
+      for (i = 0; i < FreeMenuAction; i++)
+	{
+	  TtaFreeMemory (MenuActionList[i].ActionEquiv);
+	  MenuActionList[i].ActionEquiv = NULL;
+	}
+      for (i = MAX_INTERNAL_CMD; i < FreeMenuAction; i++)
+	{
+	  TtaFreeMemory (MenuActionList[i].ActionName);
+	  MenuActionList[i].ActionName = NULL;
+	}
+      TtaFreeMemory (MenuActionList);
+      MenuActionList = NULL;
+    }
   FreeMenuAction = 0;
 
   /* free menu contexts allocated for the main window */
@@ -4229,11 +4240,13 @@ void DestroyFrame (int frame)
 #endif /* _MOTIF */
 
 #ifdef _GTK
-	gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
+      gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
 
 #ifdef _WX
-	wxDynamicCast(w, wxWindow)->Destroy();
+	TtaDestroyFrame( frame );
+	//	TtaDetachFrame( frame );
+	//	wxDynamicCast(w, wxWindow)->Destroy();
 #endif /* _WX */
 
 #ifdef _WINGUI
@@ -4271,6 +4284,10 @@ void DestroyFrame (int frame)
       for (i = 0; i < MAX_BUTTON; i++)
 	FrameTable[frame].Button[i] = 0;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#ifdef _WX
+      TtaHandlePendingEvents();
+#endif /* _WX */
 }
 
 
