@@ -3265,13 +3265,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		      pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
 		      if (pConst->PdString[0] != EOS)
 			{
-#ifndef _WINGUI
+#ifndef _WINDOWS
 			  if (pConst->PdString[0] == DIR_SEP)
-#else  /* _WINGUI */
+#else  /* _WINDOWS */
 			    if (pConst->PdString[0] == DIR_SEP ||
 				(pConst->PdString[1] == ':' &&
 				 pConst->PdString[2] == DIR_SEP))
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 			      /* absolute file name */
 			      strncpy (fname, pConst->PdString, MAX_PATH - 1);
 			    else
