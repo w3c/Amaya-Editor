@@ -1177,6 +1177,7 @@ void CreateDate (Document doc, View view)
   TtaSetTextContent (text, (unsigned char*)" ", UTF_8, doc);
   TtaRegisterElementCreate (text, doc);
   TtaCloseUndoSequence (doc);
+  TtaSelectElement (doc, el);
 }
 
 /*----------------------------------------------------------------------

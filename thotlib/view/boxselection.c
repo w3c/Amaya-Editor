@@ -195,7 +195,7 @@ void ClearViewSelection (int frame)
 		
 		/* intermediate boxes */
 		pBox1 = pBox1->BxNexChild;
-		while (pBox1 != pBox2)
+		while (pBox1 && pBox1 != pBox2)
 		  {
 #ifndef _GL
 		    DefClip (frame, pBox1->BxXOrg, pBox1->BxYOrg,
