@@ -45,6 +45,7 @@
 
 static ThotBool RightExtended;
 static ThotBool LeftExtended;
+static ThotBool Retry = FALSE;
 
 #include "applicationapi_f.h"
 #include "appli_f.h"
@@ -277,8 +278,26 @@ ThotBool            extendSel;
 	       }
 	     else
 	       {
-		 ok = FALSE;
-		 pBox = NULL;
+		 if (!Retry)
+		   {
+		     /* initialize a selection and retry */
+		     Retry = TRUE;
+		     /* look for the first leaf box */
+		     if (pFrame->FrAbstractBox != NULL)
+		       pBox = pFrame->FrAbstractBox->AbBox;
+		     if (pBox != NULL)
+		       pBox = pBox->BxNext;
+		     LocateSelectionInView (frame, pBox->BxXOrg - pFrame->FrXOrg,
+					    pBox->BxYOrg - pFrame->FrYOrg, 2);
+		     MovingCommands (code, document, view, extendSel);
+		     Retry = FALSE;
+		     return;
+		   }
+		 else
+		   {
+		     ok = FALSE;
+		     pBox = NULL;
+		   }
 	       }
 
 	     /* could we shrink the current extended selection */

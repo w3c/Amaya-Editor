@@ -1316,37 +1316,37 @@ View                view;
 {
    ViewSelection      *pViewSel;
    int                 frame;
-   ThotBool            toDelete = FALSE;
+   ThotBool            delPrev;
 
    if (document != 0)
      {
 	frame = GetWindowNumber (document, view);
-	if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
+	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	if (delPrev)
+	  /* remove the current empty element enve if there is an insert point */
+	  delPrev = (pViewSel->VsBox != NULL && pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
+	     
+	if (!delPrev)
 	  {
-	    /* Delete the current selection */
+	    /* delete the current selection instead of the previous char */
 	    CloseInsertion ();
-	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	    if (pViewSel->VsBox != NULL)
-	      if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPicture
-		  ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
-		{
-		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL)
-		    {
-		      if (((*MenuActionList[CMD_DeleteSelection].User_Action)
-			   (MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
-                          (MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
-			(*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-		    }
-		  else if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-		}
-	      else
-		toDelete = TRUE;
+	      {
+		if (MenuActionList[CMD_DeleteSelection].User_Action != NULL)
+		  {
+		    if (((*MenuActionList[CMD_DeleteSelection].User_Action)
+			 (MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
+			(MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
+		      (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		  }
+		else if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
+		  (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+	      }
+	    TtcPreviousChar (document, view);
 	  }
-	else
-	  toDelete = TRUE;
 
-	if (toDelete)
+	if (delPrev)
 	  {
 	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	    if (pViewSel->VsBox != NULL &&
