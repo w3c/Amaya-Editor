@@ -404,23 +404,23 @@ SectionEnd
 
 SubSection "File association" SecFileAss
 
-Section ".html (HyperText Markup Language)" SecAssHTML
+Section /o ".html (HyperText Markup Language)" SecAssHTML
   WriteRegStr HKCR ".html" "" "Amaya"
 SectionEnd
 
-Section ".xml (eXtensible Markup Language)" SecAssXML
+Section /o ".xml (eXtensible Markup Language)" SecAssXML
   WriteRegStr HKCR ".xml" "" "Amaya"
 SectionEnd
 
-Section ".svg (Scalable Vector Graphics)" SecAssSVG
+Section /o ".svg (Scalable Vector Graphics)" SecAssSVG
   WriteRegStr HKCR ".svg" "" "Amaya"
 SectionEnd
 
-Section ".mml (MathML)" SecAssMML
+Section /o ".mml (MathML)" SecAssMML
   WriteRegStr HKCR ".mml" "" "Amaya"
 SectionEnd
 
-Section ".css (Cascading Style Sheets)" SecAssCSS
+Section /o ".css (Cascading Style Sheets)" SecAssCSS
   WriteRegStr HKCR ".css" "" "Amaya"
 SectionEnd
 
