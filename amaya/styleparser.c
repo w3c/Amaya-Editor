@@ -4276,6 +4276,22 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
       /* check if it's an important rule */
       cssRule = CheckImportantRule (cssRule, ctxt);
     }
+  else if (*cssRule !=  ';' && *cssRule != EOS)
+    {
+      /* possible second value */
+      ptr = cssRule;
+      cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
+					     cssRule, css, isHTML);
+      if (ptr == cssRule)
+	cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
+					       cssRule, css, isHTML);
+      if (ptr == cssRule)
+	{
+	  cssRule = SkipValue ("Invalid background-position value", cssRule);
+	  /* check if it's an important rule */
+	  cssRule = CheckImportantRule (cssRule, ctxt);
+	}
+    }
   return (cssRule);
 }
 
