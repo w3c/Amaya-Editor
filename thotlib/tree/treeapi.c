@@ -159,7 +159,7 @@ ElementType         elementType;
    Parameters:
    document: the document for which the tree is created.
    elementType: type of the root element of the tree to be created.
-   label: label of the root element to be created. PcEmpty string if the value
+   label: label of the root element to be created. Empty string if the value
    of the label is undefined.
 
    Return value:

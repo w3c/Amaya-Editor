@@ -4256,8 +4256,8 @@ char               *HTMLbuf;
 	     /* Replace HT by space, except in preformatted text. */
 	     /* Ignore spaces at the beginning and at the end of input lines */
 	     /* Ignore non printable characters except HT, LF, FF. */
-	     if ((int) charRead == 10 || (int) charRead == 13)
-		/* LF or CR = end of input line */
+	     if ((int) charRead == 10)
+		/* LF = end of input line */
 	       {
 		if (currentState != 12)
 		   /* don't change characters in comments */
@@ -4370,7 +4370,7 @@ char               *HTMLbuf;
 		       else if (trans->trigger == SPACE)
 			  /* any space is a trigger */
 			  if ((int) charRead == 9 || (int) charRead == 10 ||
-			      (int) charRead == 12 || (int) charRead == 13)
+			      (int) charRead == 12)
 			     /* a delimiter has been read */
 			     match = TRUE;
 		       if (match)

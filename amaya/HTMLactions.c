@@ -275,7 +275,7 @@ NotifyElement      *event;
 		  }
 
 		  /* get the referred document */
-		  targetDocument = GetHTMLDocument (documentURL, NULL, event->document, DC_TRUE);
+		  targetDocument = GetHTMLDocument (documentURL, NULL, event->document, event->document, DC_TRUE);
 	       }
 
 	     TtaSetSelectionMode (TRUE);
@@ -319,25 +319,22 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
-   DocumentClosed                                                  
+   FreeDocumentResource                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DocumentClosed (NotifyDialog * event)
+void                FreeDocumentResource (Document doc)
 #else  /* __STDC__ */
-void                DocumentClosed (event)
-NotifyDialog       *event;
+void                FreeDocumentResource (doc)
+Document       doc;
 
 #endif /* __STDC__ */
 {
-   Document            doc;
    int                 i;
    char                tempdocument[MAX_LENGTH];
    char                documentname[MAX_LENGTH];
 
-   if (event == NULL)
+   if (doc == 0)
       return;
-
-   doc = event->document;
    if (DocumentURLs[doc] != NULL)
      {
 	if (IsHTTPPath (DocumentURLs[doc]))
@@ -372,6 +369,22 @@ NotifyDialog       *event;
 	     TtaQuit ();
 	  }
      }
+}
+
+/*----------------------------------------------------------------------
+   DocumentClosed                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DocumentClosed (NotifyDialog * event)
+#else  /* __STDC__ */
+void                DocumentClosed (event)
+NotifyDialog       *event;
+
+#endif /* __STDC__ */
+{
+   if (event == NULL)
+      return;
+   FreeDocumentResource (event->document);
 }
 
 /*----------------------------------------------------------------------

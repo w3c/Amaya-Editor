@@ -3547,6 +3547,9 @@ int                 type;
     */
    switch (type)
 	 {
+	    case HTML_EL_HEAD:
+	       father = TtaGetMainRoot (doc);
+	       break;
 	    case HTML_EL_Styles:
 	       father = CreateWWWElement (doc, HTML_EL_HEAD);
 	       break;

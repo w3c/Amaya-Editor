@@ -1,6 +1,6 @@
 		{ I. Vatton 	 Novembre 1994-1995  }
 
-{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER }
+{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, SECTION_NUMBER }
 PRESENTATION HTML;
 
 VIEWS
@@ -58,6 +58,13 @@ COUNTERS
 #ifdef PAGE
    CptPage : Rank of Page(Formatted_view);
 #endif
+#ifdef SECTION_NUMBER
+   H2Counter : Set 0 on H1 add 1 on H2;
+   H3Counter : Set 0 on H2 add 1 on H3;
+   H4Counter : Set 0 on H3 add 1 on H4;
+   H5Counter : Set 0 on H4 add 1 on H5;
+   H6Counter : Set 0 on H5 add 1 on H6;
+#endif
 
 DEFAULT
 	BEGIN
@@ -85,6 +92,103 @@ DEFAULT
 	END;
 
 BOXES
+
+#ifdef SECTION_NUMBER
+ H2_section_number:
+	BEGIN
+	Content: (Value(H2Counter, Arabic) Text '  ');
+	Visibility: Creator =;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Anchors_view
+		Visibility: 0;
+	END;
+
+ H3_section_number:
+	BEGIN
+	Content: (Value(H2Counter, Arabic) Text '.'
+		  Value(H3Counter, Arabic) Text '  ');
+	Visibility: Creator =;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Anchors_view
+		Visibility: 0;
+	END;
+
+ H4_section_number:
+	BEGIN
+	Content: (Value(H2Counter, Arabic) Text '.'
+		  Value(H3Counter, Arabic) Text '.'
+		  Value(H4Counter, Arabic) Text '  ');
+	Visibility: Creator =;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Anchors_view
+		Visibility: 0;
+	END;
+
+ H5_section_number:
+	BEGIN
+	Content: (Value(H2Counter, Arabic) Text '.'
+		  Value(H3Counter, Arabic) Text '.'
+		  Value(H4Counter, Arabic) Text '.'
+		  Value(H5Counter, Arabic) Text '  ');
+	Visibility: Creator =;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Anchors_view
+		Visibility: 0;
+	END;
+
+ H6_section_number:
+	BEGIN
+	Content: (Value(H2Counter, Arabic) Text '.'
+		  Value(H3Counter, Arabic) Text '.'
+		  Value(H4Counter, Arabic) Text '.'
+		  Value(H5Counter, Arabic) Text '.'
+		  Value(H6Counter, Arabic) Text '  ');
+	Visibility: Creator =;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	Foreground: Creator =;
+	Background: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Anchors_view
+		Visibility: 0;
+	END;
+#endif
 
  HTML_S: BEGIN
 	Content: Text 'HTML';
@@ -3308,6 +3412,18 @@ BOXES
 	if NOT One(CptPage) CreateBefore (PageNum);
 	IF Not One(CptPage) CreateBefore (BottomSpace);
 	END;
+
+  HeadingPageNumber:
+	BEGIN
+	Visibility: 0;
+	IN Table_of_contents
+	   BEGIN
+	   Visibility: Creator =;
+	   VertPos: Bottom = Previous . Bottom;
+	   HorizPos: Right = Enclosing . Right;
+	   Content: (Value (PageNumber(Formatted_view), Arabic));
+	   END;
+	END;
 #endif
 
 RULES
@@ -3343,6 +3459,9 @@ RULES
 		Visibility: 5;
 		END;
 	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Page(ThePage);
+#endif
 		Width: Enclosing . Width - 2;
 		HorizPos: Left = Enclosing . Left + 1;
 		Visibility: 10;
@@ -3397,8 +3516,6 @@ RULES
 	Width: Enclosing . Width;
 	Hyphenate: Yes;
 #else
-	{Size: 120 %;}
-	{HorizPos: 10 %;}
 	Width: Enclosing . Width - 1 cm;
 	HorizPos: Left = Enclosing . Left + 0.5 cm;
 	Hyphenate: No;
@@ -3610,9 +3727,12 @@ RULES
 		Adjust: VMiddle;
 		END;
 	IN Table_of_contents BEGIN
-		Size: Enclosing =;
+#ifdef PAGE
+		Adjust: VMiddle;
+#endif
+		Size: Enclosing +2;
 		Visibility: 10;
-		Height: Enclosed . Height;
+		Height: 1.7 min;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left;
 		END;
@@ -3624,12 +3744,16 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
+	CreateAfter (HeadingPageNumber);
 #endif
 	Width: Enclosing . Width;
 	Size: Enclosing + 4;
 	Style: Bold;
 	CreateBefore(H2_S);
 	CreateWith(VerticalLine);
+#ifdef SECTION_NUMBER
+	CreateFirst(H2_section_number);
+#endif
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH2;
 	IN Structure_view BEGIN
 		if within Pre_Line
@@ -3647,6 +3771,10 @@ RULES
 		Style: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
 		Size: Enclosing =;
 		Style: Enclosing =;
 		Visibility: 9;
@@ -3661,6 +3789,7 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
+	CreateAfter (HeadingPageNumber);
 #endif
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH3;
 	Width: Enclosing . Width;
@@ -3668,6 +3797,9 @@ RULES
 	Style: Bold;
 	CreateBefore(H3_S);
 	CreateWith(VerticalLine);
+#ifdef SECTION_NUMBER
+	CreateFirst(H3_section_number);
+#endif
 	IN Structure_view BEGIN
 		if within Pre_Line
 		   Width: Enclosed . Width;
@@ -3684,6 +3816,10 @@ RULES
 		Style: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
 		Size: Enclosing =;
 		Style: Enclosing =;
 		Visibility: 8;
@@ -3698,6 +3834,7 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
+	CreateAfter (HeadingPageNumber);
 #endif
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH4;
 	Width: Enclosing . Width;
@@ -3705,6 +3842,9 @@ RULES
 	Style: Bold;
 	CreateBefore(H4_S);
 	CreateWith(VerticalLine);
+#ifdef SECTION_NUMBER
+	CreateFirst(H4_section_number);
+#endif
 	IN Structure_view BEGIN
 		if within Pre_Line
 		   Width: Enclosed . Width;
@@ -3721,6 +3861,10 @@ RULES
 		Size: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
 		Size: Enclosing =;
 		Style: Enclosing =;
 		Visibility: 7;
@@ -3735,12 +3879,16 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
+	CreateAfter (HeadingPageNumber);
 #endif
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH5;
 	Width: Enclosing . Width;
 	Size: Enclosing - 2;
 	CreateBefore(H5_S);
 	CreateWith(VerticalLine);
+#ifdef SECTION_NUMBER
+	CreateFirst(H5_section_number);
+#endif
 	IN Structure_view BEGIN
 		if within Pre_Line
 		   Width: Enclosed . Width;
@@ -3754,6 +3902,10 @@ RULES
 	IN Alternate_view
 		Size: Enclosing =;
 	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
 		Size: Enclosing =;
 		Visibility: 6;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
@@ -3767,12 +3919,16 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
+	CreateAfter (HeadingPageNumber);
 #endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH6;
 	Size: Enclosing - 4;
 	CreateBefore(H6_S);
 	CreateWith(VerticalLine);
+#ifdef SECTION_NUMBER
+	CreateFirst(H6_section_number);
+#endif
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -3783,6 +3939,10 @@ RULES
 	IN Alternate_view
 		Size: Enclosing =;
 	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
 		Size: Enclosing =;
 		Visibility: 5;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;

@@ -43,6 +43,7 @@ extern void ShowMapAreas ( Document document,
 extern Document GetHTMLDocument ( char *documentPath,
                                   char *form_data,
                                   Document doc,
+                                  Document baseDoc,
                                   DoubleClickEvent DC_event );
 extern boolean NormalizeFile ( char *src,
                                char *target );
@@ -94,6 +95,7 @@ extern void ShowMapAreas (/* Document document,
 extern Document GetHTMLDocument (/* char *documentPath,
                                     char *form_data,
                                     Document doc,
+                                    Document baseDoc,
                                     DoubleClickEvent DC_event */);
 extern boolean NormalizeFile (/* char *src,
                                  char *target */);

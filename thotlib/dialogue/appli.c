@@ -797,8 +797,14 @@ View                view;
 {
    int                 frame;
 
-   frame = GetWindowNumber (document, view);
-
+   if (document == 0 && view == 0)
+      return(0);
+   else
+      {
+      frame = GetWindowNumber (document, view);
+      if (frame == 0)
+	 return(0);
+      }
    /* Si les parametres sont invalides */
    if (frame > MAX_FRAME)
      {
@@ -811,7 +817,7 @@ View                view;
 
 /*----------------------------------------------------------------------
    DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
-   la fenetree^tre active.                                            
+   la fenetre active.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplaySelMessage (char *text)
@@ -866,9 +872,9 @@ char               *name;
    else
      {
 	frame = GetWindowNumber (document, view);
-
-	if (FrameTable[frame].WdStatus != 0)
-	  {
+	if (frame != 0)
+	  if (FrameTable[frame].WdStatus != 0)
+	    {
 	     if (name != NULL)
 	       {
 		  /* text est un format */
@@ -893,7 +899,7 @@ char               *name;
 	     XtManageChild (FrameTable[frame].WdStatus);
 	     XmStringFree (title_string);
 #endif /* _WINDOWS */
-	  }
+	    }
      }
 }				/*TtaSetStatus */
 

@@ -154,19 +154,18 @@ View                view;
    /* Checks parameters */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else if (view < 1 || (view > MAX_VIEW_DOC && view < 100) || view > MAX_ASSOC_DOC + 100)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
+   else if (LoadedDocument[document - 1] != NULL)
+      if (view < 1 || (view > MAX_VIEW_DOC && view < 100) || view > MAX_ASSOC_DOC + 100)
+         TtaError (ERR_invalid_parameter);
+      else
+        {
 	pDoc = LoadedDocument[document - 1];
 	GetViewInfo (document, view, &aView, &assoc);
 	if (assoc)
 	   win = pDoc->DocAssocFrame[aView - 1];
 	else
 	   win = pDoc->DocViewFrame[aView - 1];
-     }
+        }
    return win;
 }				/*GetWindowNumber */
 

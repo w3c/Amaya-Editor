@@ -105,7 +105,7 @@ View                view;
    while (base != HTMLHistoryIndex);
    if (url != NULL)
 
-      (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
+      (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -143,7 +143,7 @@ View                view;
      }
    while (base != HTMLHistoryIndex);
    if (url != NULL)
-      (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
+      (void) GetHTMLDocument (url, NULL, doc, doc, DC_FALSE);
 }
 
 /*----------------------------------------------------------------------

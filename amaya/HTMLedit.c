@@ -1382,14 +1382,19 @@ char               *title;
 #endif /* __STDC__ */
 {
 #ifdef WWW_XWINDOWS
+   char               *v;
+   int                 v_size;
+   ThotWidget	       frame;
    static Atom         property_name = 0;
    Display            *dpy = TtaGetCurrentDisplay ();
-   ThotWindow          win = XtWindow (XtParent (XtParent (XtParent (TtaGetViewFrame (doc, 1)))));
-   char               *v;
+   ThotWindow          win;
 
+   frame = TtaGetViewFrame (doc, 1);
+   if (frame == 0)
+      return;
+   win = XtWindow (XtParent (XtParent (XtParent (frame))));
    /* 13 is strlen("URL=0TITLE=00") */
-   int                 v_size = strlen (title) + strlen (url) + 13;
-
+   v_size = strlen (title) + strlen (url) + 13;
    v = (char *) TtaGetMemory (v_size);
    sprintf (v, "URL=%s%cTITLE=%s%c", url, 0, title, 0);
    if (!property_name)
@@ -1418,6 +1423,9 @@ Document            doc;
    Language            lang;
    char               *text;
 
+   if (TtaGetViewFrame (doc, 1) == 0)
+      /* this document is not displayed */
+      return;
    textElem = TtaGetFirstChild (el);
    if (textElem != NULL)
      {

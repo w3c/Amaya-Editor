@@ -248,7 +248,9 @@ Document            doc;
 						 AM_DOCUMENT_LOADED), NULL);
 
 	FilesLoading[document] = 0;
-	TtaChangeButton (document, 1, 1, stopN);
+	if (TtaGetViewFrame (document, 1) != 0)
+	   /* this document is displayed */
+	   TtaChangeButton (document, 1, 1, stopN);
      }
 }
 
@@ -264,7 +266,9 @@ Document            doc;
 #endif
 {
    FilesLoading[document] = 1;
-   TtaChangeButton (document, 1, 1, stopR);
+   if (TtaGetViewFrame (document, 1) != 0)
+      /* this document is displayed */
+      TtaChangeButton (document, 1, 1, stopR);
 }
 
 
@@ -376,7 +380,7 @@ char               *text;
 	     return;
 	  }
      }
-   document = GetHTMLDocument (LastURLName, NULL, document, DC_FALSE);
+   document = GetHTMLDocument (LastURLName, NULL, document, document, DC_FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -681,7 +685,7 @@ char               *pathname;
 }
 
 /*----------------------------------------------------------------------
-   LoadDocument starts the parsing of the new document and         
+   LoadHTMLDocument starts the parsing of the new document and         
    stores its path (or URL) into the document table.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -773,7 +777,9 @@ char               *documentname;
 	s = TtaGetMemory (i);
 	strcpy (s, pathname);
 	DocumentURLs[(int) newdoc] = s;
-	TtaSetTextZone (newdoc, 1, 1, s);
+	if (TtaGetViewFrame (newdoc, 1) != 0)
+	   /* this document is displayed */
+	   TtaSetTextZone (newdoc, 1, 1, s);
 	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname);
      }
    return (newdoc);
@@ -1019,12 +1025,13 @@ View                view;
    calls the parser if the document can be parsed.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (char *documentPath, char *form_data, Document doc, DoubleClickEvent DC_event)
+Document            GetHTMLDocument (char *documentPath, char *form_data, Document doc, Document baseDoc, DoubleClickEvent DC_event)
 #else
-Document            GetHTMLDocument (documentPath, form_data, doc, DC_event)
+Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, DC_event)
 char               *documentPath;
 char               *form_data;
 Document            doc;
+Document            baseDoc;
 DoubleClickEvent    DC_event;
 
 #endif
@@ -1045,7 +1052,7 @@ DoubleClickEvent    DC_event;
    ExtractParameters (tempdocument, parameters);
    /* Add the  base content if necessary */
    if (DC_event & DC_TRUE)
-      NormalizeURL (tempdocument, doc, pathname, documentname);
+      NormalizeURL (tempdocument, baseDoc, pathname, documentname);
    else
       NormalizeURL (tempdocument, 0, pathname, documentname);
 
@@ -1065,7 +1072,7 @@ DoubleClickEvent    DC_event;
 	if (!IsW3Path (pathname))
 	  {
 	     /* the target document doesn't exist */
-	     TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+	     TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
 	     return (0);
 	  }
 	/* we always have a fresh  newdoc for forms */
@@ -1077,12 +1084,12 @@ DoubleClickEvent    DC_event;
 	/* document not loaded yet */
 	if (DC_event & DC_TRUE && !IsW3Path (pathname) && !TtaFileExist (pathname))
 	   /* the target document doesn't exist */
-	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
 	else
 	  {
 	     tempfile[0] = EOS;
 	     toparse = 0;
-	     W3Loading = doc;	/* this document is currently used */
+	     W3Loading = baseDoc;	/* this document is currently used */
 	     /* In case of initial document, open the view before loading */
 	     if (doc == 0)
 	       {
@@ -1093,13 +1100,12 @@ DoubleClickEvent    DC_event;
 	     else
 	       {
 		  /* stop current transfer for previous document */
-		  StopTransfer (doc, 1);
+		  StopTransfer (baseDoc, 1);
 		  newdoc = doc;
 	       }
 
 	     W3Loading = newdoc;	/* this document is currently in load */
 	     ActiveTransfer (newdoc);
-	     TtaSetCursorWatch (0, 0);
 	     if (IsW3Path (pathname))
 	       {
 		  /* load the document from the Web */
@@ -1144,7 +1150,6 @@ DoubleClickEvent    DC_event;
 		  W3Loading = 0;	/* loading is complete now */
 		  ResetStop (newdoc);
 	       }
-	     TtaResetCursor (0, 0);
 	  }
      }
    return (newdoc);
@@ -1238,9 +1243,9 @@ char               *data;
 			   {
 			      /* load an URL */
 			      if (InNewWindow)
-				 GetHTMLDocument (LastURLName, NULL, 0, DC_FALSE);
+				 GetHTMLDocument (LastURLName, NULL, 0, 0, DC_FALSE);
 			      else
-				 GetHTMLDocument (LastURLName, NULL, CurrentDocument, DC_FALSE);
+				 GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, DC_FALSE);
 			   }
 			 else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 			   {
@@ -1251,9 +1256,9 @@ char               *data;
 			      if (TtaFileExist (tempfile))
 				{
 				   if (InNewWindow)
-				      GetHTMLDocument (tempfile, NULL, 0, DC_FALSE);
+				      GetHTMLDocument (tempfile, NULL, 0, 0, DC_FALSE);
 				   else
-				      GetHTMLDocument (tempfile, NULL, CurrentDocument, DC_FALSE);
+				      GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, DC_FALSE);
 				}
 			      else
 				 TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
@@ -1699,6 +1704,164 @@ NotifyEvent        *event;
       New (0, 1);
 }
 
+#ifdef PRINTBOOK
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void                MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc)
+#else
+static void                MoveDocumentBody (el, destDoc, sourceDoc)
+Element             *el;
+Document            destDoc;
+Document            sourceDoc;
+#endif
+{
+   Element		root, body, ancestor, elem, firstInserted,
+			lastInserted, srce, copy, old, parent, sibling;
+   ElementType		elType;
+
+   root = TtaGetMainRoot (sourceDoc);
+   elType = TtaGetElementType (root);
+   elType.ElTypeNum = HTML_EL_BODY;
+   body = TtaSearchTypedElement (elType, SearchForward, root);
+   if (body != NULL)
+     {
+     elem = *el;
+     do
+	{
+        ancestor = TtaGetParent (elem);
+	if (ancestor != NULL);
+	   {
+	   elType = TtaGetElementType (ancestor);
+	   if (elType.ElTypeNum == HTML_EL_BODY)
+	      ancestor = NULL;
+	   else
+	      elem = ancestor;
+	   }
+	}
+     while (ancestor != NULL);
+     parent = TtaGetParent (elem);
+     
+     lastInserted = NULL;
+     srce = TtaGetFirstChild (body);
+     while (srce != NULL)
+	{
+	copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
+	if (copy != NULL)
+	   {
+	   if (lastInserted == NULL)
+	      {
+	      TtaInsertSibling (copy, elem, TRUE, destDoc);
+	      firstInserted = copy;
+	      }
+	   else
+	      TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
+	   lastInserted = copy;
+	   }
+	old = srce;
+	TtaNextSibling (&srce);
+	TtaDeleteTree (old, sourceDoc);
+	}
+
+     elem = TtaGetParent (*el);
+     do
+	{
+	sibling = elem;
+        TtaNextSibling (&sibling);
+	if (sibling == NULL)
+	   {
+	   sibling = elem;
+	   TtaPreviousSibling (&sibling);
+	   if (sibling == NULL)
+	      elem = TtaGetParent (elem);
+	   }
+	}
+     while (sibling == NULL);
+     TtaDeleteTree (elem, destDoc);
+     *el = firstInserted;
+     }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void                GetIncludedDocuments (Element el, Document document)
+#else
+static void                GetIncludedDocuments (el, document)
+Element		    el;
+Document            document;
+#endif
+{
+   Element		link, next;
+   Attribute		RelAttr, HrefAttr;
+   AttributeType	attrType;
+   int			length;
+   char			*text;
+   Document		includedDocument;
+
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_REL;
+   link = el;
+   RelAttr = NULL;
+   while (link != NULL && RelAttr == NULL)
+      {
+      TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
+      if (link != NULL && RelAttr != NULL)
+	{
+        length = TtaGetTextAttributeLength (RelAttr);
+        text = TtaGetMemory (length + 1);
+        TtaGiveTextAttributeValue (RelAttr, text, &length);
+        if (strcasecmp (text, "chapter"))
+	  RelAttr = NULL;
+        TtaFreeMemory (text);
+	}
+      }
+   if (RelAttr != NULL && link != NULL)
+      {
+      next = link;
+      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      HrefAttr = TtaGetAttribute (link, attrType);
+      if (HrefAttr != NULL)
+	{
+	length = TtaGetTextAttributeLength (HrefAttr);
+	text = TtaGetMemory (length + 1);
+	TtaGiveTextAttributeValue (HrefAttr, text, &length);
+	includedDocument = TtaNewDocument ("HTML", "tmp");
+	includedDocument = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
+	TtaFreeMemory (text);
+	if (includedDocument != 0)
+	   MoveDocumentBody (&next, document, includedDocument);
+	FreeDocumentResource (includedDocument);
+	TtaCloseDocument (includedDocument);
+	}
+      GetIncludedDocuments (next, document);
+      }
+}
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void                MakeBook (Document document)
+#else
+static void                MakeBook (document)
+Document            document;
+ 
+#endif
+{
+   Element		root, body;
+   ElementType		elType;
+
+   root = TtaGetMainRoot (document);
+   elType = TtaGetElementType (root);
+   elType.ElTypeNum = HTML_EL_BODY;
+   body = TtaSearchTypedElement (elType, SearchForward, root);
+   if (body != NULL)
+      GetIncludedDocuments (body, document);
+   /********
+   TtaPrint (document, "Formatted_view Table_of_contents ");
+   *********/
+}
+#endif PRINTBOOK
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1733,6 +1896,10 @@ View                view;
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
+#ifdef PRINTBOOK
+   /***** to test the new printing feature ********/
+   MakeBook (document);
+#endif PRINTBOOK
 #endif
 }
 

@@ -601,7 +601,7 @@ RULES
  Table_head:
 	Remove;
 
-{ provision for COUGAR DTD
+#ifdef COUGAR
  thead:
 	BEGIN
 	Create '<THEAD';
@@ -624,7 +624,7 @@ RULES
 	Create '>\12';
 	Create '</TBODY>\12' after;
 	END;
-}
+#endif
 
  Table_body:
 	Get tfoot;
