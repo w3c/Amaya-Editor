@@ -1810,11 +1810,11 @@
 </label>
 <label define="TMSG_NOT_AVAILABLE">
 	<message xml:lang="en">Not available in this version</message>
-	<message xml:lang="en">Pas disponible dans cette version</message>
+	<message xml:lang="fr">Pas disponible dans cette version</message>
 </label>
 <label define="TMSG_ATTACHDETACH">
-	<message xml:lang="en">Enable/Disable floating panel</message>
-	<message xml:lang="fr">Activer/Desactiver la fenetre volante</message>
+	<message xml:lang="en">Enable/Disable palette</message>
+	<message xml:lang="fr">Activer/Desactiver palette</message>
 </label>
 <label define="TMSG_TOOLS">
 	<message xml:lang="en">Tools</message>
@@ -1822,7 +1822,7 @@
 </label>
 <label define="TMSG_AUTOREFRESH">
 	<message xml:lang="en">Auto refresh</message>
-	<message xml:lang="fr">Mise Ã  jour auto</message>
+	<message xml:lang="fr">Auto mise Ã jour</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
