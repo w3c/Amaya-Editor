@@ -25,7 +25,7 @@ ATTR
 
 STRUCT
 
-{ Structure Module }
+{ Document Structure }
 
    SVG
 	(ATTR requiredFeatures = text;
@@ -42,7 +42,7 @@ STRUCT
 	      font_weight = normal_, bold_, bolder, lighter, w100, w200, w300,
 			    w400, w500, w600, w700, w800, w900, inherit;
 	      direction_ = ltr_, rtl_, inherit;
-	      text_anchor = start, middle, end_, inherit;
+	      text_anchor = start, middle, end__, inherit;
 	      text_decoration = text;
 	      unicode_bidi = normal_, embed_, bidi_override, inherit;
 	      viewBox = text;
@@ -55,12 +55,6 @@ STRUCT
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
 	                               Unknown_namespace);
-
-   desc = TEXT;
-	
-   title = TEXT;
-	
-   metadata = TEXT;
 
    g
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
@@ -81,6 +75,10 @@ STRUCT
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
 
+   desc = TEXT;
+	
+   title = TEXT;
+	
    symbol_  { not in SVG Tiny }
 	(ATTR externalResourcesRequired;
 	      fill; stroke; stroke_width;
@@ -106,6 +104,7 @@ STRUCT
               height_)
         = AGGREGATE
               desc; title; metadata;
+	      LIST OF (Anim);
 	      END;
 	
 { Images }
@@ -121,6 +120,7 @@ STRUCT
               height_)
         = AGGREGATE
               desc; ? title; ? metadata;
+	      LIST OF (Anim);
               PICTURE;
               SVG_Image = SVG;
 	      END;
@@ -148,7 +148,22 @@ STRUCT
 	      title_ = text)
 	= TEXT;
 
-{ Shapes }
+{ Paths }
+
+   path
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+              transform;
+	      d = text;
+	      pathLength = text)
+        = AGGREGATE
+	      desc; title; metadata;
+	      LIST OF (Anim);
+	      GRAPHICS;
+	      END;
+	
+{ Basic Shapes }
 
    rect
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
@@ -163,6 +178,7 @@ STRUCT
 	      ry = text)
         = AGGREGATE
 	      desc; title; metadata;
+	      LIST OF (Anim);
 	      GRAPHICS;
 	      END;
 	
@@ -176,20 +192,7 @@ STRUCT
               r = text)
         = AGGREGATE
 	      desc; title; metadata;
-	      GRAPHICS;
-	      END;
-	
-   line_
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
-	      transform;
-	      x1 = text;
-	      y1 = text;
-              x2 = text;
-	      y2 = text)
-        = AGGREGATE
-	      desc; title; metadata;
+	      LIST OF (Anim);
 	      GRAPHICS;
 	      END;
 	
@@ -204,6 +207,22 @@ STRUCT
 	      ry)
         = AGGREGATE
 	      desc; title; metadata;
+	      LIST OF (Anim);
+	      GRAPHICS;
+	      END;
+	
+   line_
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      fill; stroke; stroke_width;
+	      transform;
+	      x1 = text;
+	      y1 = text;
+              x2 = text;
+	      y2 = text)
+        = AGGREGATE
+	      desc; title; metadata;
+	      LIST OF (Anim);
 	      GRAPHICS;
 	      END;
 	
@@ -215,6 +234,7 @@ STRUCT
               points = text)
         = AGGREGATE
 	      desc; title; metadata;
+	      LIST OF (Anim);
 	      GRAPHICS;
 	      END;
 	
@@ -226,18 +246,7 @@ STRUCT
               points)
         = AGGREGATE
 	      desc; title; metadata;
-	      GRAPHICS;
-	      END;
-
-   path
-	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
-              transform;
-	      d = text;
-	      pathLength = text)
-        = AGGREGATE
-	      desc; title; metadata;
+	      LIST OF (Anim);
 	      GRAPHICS;
 	      END;
 
@@ -270,30 +279,78 @@ STRUCT
 	      dy)
 	= LIST OF (SpanElement = CASE OF
 		      TEXT;
-		      tspan; 
-		      desc;
-		      title;
-		      metadata;
+		      desc; title; metadata;
+		      tspan;
+		      a;
+		      animate; set; animateColor;
 		      END);
 	
    { tref }
    { textPath }
    { altGlyph }
+   { altGlyphDef }
+   { altGlyphItem }
+   { glyphRef }
 
-{ Filters }
+{ Marker Symbols }
+
+   { marker }
+
+{ Color }
+
+   { color-profile }
+
+{ Gradients and Patterns }
+
+   { linearGradient }
+   { radialGradient }
+   { stop }
+   { pattern }
+
+{ Clipping, Masking and Compositing }
+
+   clipPath
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      transform;
+	      clipPathUnits = userSpaceOnUse, objectBoundingBox;)
+	= AGGREGATE
+	    desc; title; metadata;
+	    LIST OF
+	      (CASE OF
+	         path; text_; rect; circle; ellipse; line_; polyline; polygon;
+	         use_; animate; set; animateMotion; animateColor;
+	         animateTransform;
+	       END);
+	  END;
+
+   { mask }
+
+{ Filter Effects }
 
    { filter }
+   { feDistantLight }
+   { fePointLight }
+   { feSpotLight }
    { feBlend }
-   { feFlood }
    { feColorMatrix }
    { feComponentTransfer }
+   { feFuncR }
+   { feFuncG }
+   { feFuncB }
+   { feFuncA }
    { feComposite }
    { feConvolveMatrix }
    { feDiffuseLighting }
    { feDisplacementMap }
+   { feFlood }
    { feGaussianBlur }
    { feImage }
    { feMerge }
+   { feMergeNode }
    { feMorphology }
    { feOffset }
    { feSpecularLighting }
@@ -319,6 +376,7 @@ STRUCT
 	= LIST OF (CASE OF
 		      GraphicsElement; TextComponent;
 	              END);
+   { view }
 
 { Scripting }
 
@@ -329,21 +387,128 @@ STRUCT
 
 { Animation }
 
-   { animate }
-   { set }
-   { animateMotion }
-   { animateTransform }
-   { animateColor }
-   { mpath }
+   animate
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
+	      externalResourcesRequired;
+	      onbegin = text;  {animationEvents}
+	      onend = text;
+	      onrepeat = text;
+	      {animElementAttrs - see XLink.S}
+              xlink_href;
+              attributeName = text;  {animAttributeAttrs}
+	      attributeType = text;
+	      begin_ = text;  {animTimingAttrs}
+	      dur = text;
+	      end_ = text;
+	      min = text;
+	      max = text;
+	      restart = always, never, whenNotActive;
+	      repeatCount = text;
+	      repeatDur = text;
+	      fill_ = remove, freeze;
+              calcMode = discrete, linear, paced, spline;  {animValueAttrs}
+	      values = text;
+	      keyTimes = text;
+	      keySplines = text;
+	      from = text;
+	      to = text;
+	      by = text;
+              additive = replace, sum;  {animAdditionAttrs}
+	      accumulate = none_, sum;)
+	= AGGREGATE
+	      desc; title; metadata;
+	  END;
 
+   set
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
+	      externalResourcesRequired;
+	      onbegin; onend; onrepeat; {animationEvents}
+	      xlink_href; {animElementAttrs - see XLink.S}
+              attributeName; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+	                                                      {animTimingAttrs}
+	      to;)
+	= AGGREGATE
+	      desc; title; metadata;
+	  END;
+
+   animateMotion
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
+	      externalResourcesRequired;
+	      onbegin; onend; onrepeat; {animationEvents}
+	      xlink_href; {animElementAttrs - see XLink.S}
+              attributeName; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+	                                                      {animTimingAttrs}
+	      calcMode; values; keyTimes; keySplines; from; to; by;
+              additive; accumulate; {animAdditionAttrs}
+	      path_ = text;
+              keyPoints = text;
+              rotate = text;
+              origin = text;)
+	= AGGREGATE
+	      desc; title; metadata; ? mpath;
+	  END;
+
+   mpath
+	(ATTR
+	   xlink_href;  {xlinkRefAttrs - see XLink.S}
+	   externalResourcesRequired;)
+	= AGGREGATE
+	      desc; title; metadata;
+	  END;
+
+   animateColor
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
+	      externalResourcesRequired;
+	      onbegin; onend; onrepeat; {animationEvents}
+	      xlink_href; {animElementAttrs - see XLink.S}
+              attributeName; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+	                                                      {animTimingAttrs}
+              calcMode; values; keyTimes; keySplines; from; to; by;
+	                                                       {animValueAttrs}
+              additive; accumulate;) {animAdditionAttrs}
+	= AGGREGATE
+	      desc; title; metadata;
+	  END;
+	
+   animateTransform
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
+	      externalResourcesRequired;
+	      onbegin; onend; onrepeat; {animationEvents}
+	      xlink_href; {animElementAttrs - see XLink.S}
+              attributeName; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+	                                                      {animTimingAttrs}
+              calcMode; values; keyTimes; keySplines; from; to; by;
+	                                                       {animValueAttrs}
+              additive; accumulate;  {animAdditionAttrs}
+	      type_ = translate, scale, rotate_, skewX, skewY;)
+	= AGGREGATE
+	      desc; title; metadata;
+	  END;
+
+   Anim = CASE OF animate; set; animateMotion; animateColor; animateTransform;
+	  END;
 { Fonts }
 
    { font }
-   { font-face }
    { glyph }
    { missing-glyph }
    { hkern }
    { vkern }
+   { font-face }
+   { font-face-src }
+   { font-face-uri }
+   { font-face-format }
+   { font-face-name }
+   { definition-src }
+   { cursor }
+
+{ Metadata }
+	
+   metadata = TEXT;
 
 { Extensibility }
 
@@ -363,57 +528,6 @@ STRUCT
 	      END;
           END;
 
-{ Clipping }
-
-   clipPath
-        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired;
-	      fill; stroke; stroke_width;
-	      font_family; font_size; font_style; font_variant; font_weight;
-	      direction_; text_anchor; text_decoration; unicode_bidi;
-	      transform;
-	      clipPathUnits = userSpaceOnUse, objectBoundingBox;)
-	= BEGIN
-	  descTitleMetadata = AGGREGATE desc; title; metadata; END;
-	  clipPathContent = LIST OF (CASE OF path; text_; rect; circle;
-		              ellipse; line; polyline; polygon; use_; END);
-	  END;
-
-{ Masking }
-
-   { mask }
-
-{ Markers }
-
-   { marker }
-
-{ Gradients }
-
-   { linearGradient }
-   { radialGradient }
-   { stop }
-
-{ Patterns }
-
-   { pattern }
-
-{ Views }
-
-   { view }
-
-{ The following elements from SVG 1.0 does not appear in WD-SVG11-20011030 }
-
-   { altGlyphDef }
-   { altGlyphItem }
-   { glyphRef }
-   { color-profile }
-   { font-face-src }
-   { font-face-uri }
-   { font-face-format }
-   { font-face-name }
-   { definition-src }
-   { cursor }
-
 { The following elements are not defined in the SVG DTD }
 
    GraphicsElement
@@ -422,6 +536,7 @@ STRUCT
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
 	      use_; image; SVG; g; switch; a;
 	      script_; style__; symbol_; clipPath;
+	      animate; set; animateMotion; animateColor; animateTransform; 
 	      XLink;
 	      END;
 
@@ -430,9 +545,9 @@ STRUCT
 	      tspan;	{ must be the first option, to allow the Return key
 			  to create tspan elements }
 	      TEXT; 
-	      desc;
-	      title;
-	      metadata;
+	      desc; title; metadata;
+	      a;
+	      animate; set; animateMotion; animateColor; animateTransform; 
 	      END;
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);	
@@ -477,12 +592,10 @@ EXCEPT
    PICTURE:             NoMove, NoResize, SelectParent;
    TEXT:                NoMove, NoResize;
    Unknown_namespace:   NoCreate;
-   descTitleMetadata:	Hidden;
-   clipPathContent:	Hidden;
-   XMLcomment_line:     Hidden;
-   XMLPI_line:          Hidden;
    DOCTYPE:             NoCut;
    DOCTYPE_line:        Hidden, NoCut;
+   XMLcomment_line:     Hidden;
+   XMLPI_line:          Hidden;
    CDATA_line:          Hidden;
 
    id:                  CssId;

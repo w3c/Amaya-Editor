@@ -12,11 +12,13 @@ ATTR
 
    role = TEXT;
 
+   arcrole = TEXT;
+
    title = TEXT;
 
-   show = new, replace, embed, undefined;
+   show = new, replace, embed, other, none_;
 
-   actuate = onLoad, onRequest, undefined;
+   actuate = onLoad, onRequest, other, none_;
 
    from = TEXT;
 

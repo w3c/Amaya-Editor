@@ -51,42 +51,6 @@ RULES
 	Create '</svg>\12' After;
 	END;
 
-   desc:
-	BEGIN
-	create SOT;
-	create 'desc';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'desc>\12' after;
-	END;
-
-   title:
-	BEGIN
-	create SOT;
-	create 'title';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'title>\12' after;
-	END;
-
-   metadata:
-	BEGIN
-	create SOT;
-	create 'metadata';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'metadata>\12' after;
-	END;
-
    g:
 	BEGIN
 	if within use_
@@ -111,6 +75,30 @@ RULES
 	indent -2 after;
 	create SCT after;
 	create 'defs>\12' after;
+	END;
+
+   desc:
+	BEGIN
+	create SOT;
+	create 'desc';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'desc>\12' after;
+	END;
+
+   title:
+	BEGIN
+	create SOT;
+	create 'title';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'title>\12' after;
 	END;
 
    symbol_:
@@ -187,6 +175,25 @@ RULES
 	create 'style>\12' after;
 	END;
 
+   path:
+	BEGIN
+	create SOT;
+	create 'path';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'path>\12' after;
+		END;
+	END;
+
    rect:
 	BEGIN
 	create SOT;
@@ -225,25 +232,6 @@ RULES
 		END;
 	END;
 
-   line_:
-	BEGIN
-	create SOT;
-	create 'line';
-	indent +6;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -6;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'line>\12' after;
-		END;
-	END;
-
    ellipse:
 	BEGIN
 	create SOT;
@@ -260,6 +248,25 @@ RULES
 		indent -2 after;
 		create SCT after;
 		create 'ellipse>\12' after;
+		END;
+	END;
+
+   line_:
+	BEGIN
+	create SOT;
+	create 'line';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'line>\12' after;
 		END;
 	END;
 
@@ -301,25 +308,6 @@ RULES
 		END;
 	END;
 
-   path:
-	BEGIN
-	create SOT;
-	create 'path';
-	indent +6;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -6;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'path>\12' after;
-		END;
-	END;
-
    text_:
 	BEGIN
 	create SOT;
@@ -346,6 +334,18 @@ RULES
 	create 'tspan>\12' after;
 	END;
 
+   clipPath:
+	BEGIN
+	create SOT;
+	create 'clipPath';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'clipPath>\12' after;
+	END;
+
    a:
 	BEGIN
 	create SOT;
@@ -369,6 +369,51 @@ RULES
 	create SCT after;
 	create 'script>\12' after;
 	END;
+ 
+{@@@@@@@@
+   animate:
+	BEGIN
+	
+	END;
+
+   set:
+	BEGIN
+	
+	END;
+
+   animateMotion:
+	BEGIN
+	
+	END;
+
+   mpath:
+	BEGIN
+	
+	END;
+
+   animateColor:
+	BEGIN
+	
+	END;
+
+   animateTransform:
+	BEGIN
+	
+	END;
+
+@@@@@@@@}
+
+   metadata:
+	BEGIN
+	create SOT;
+	create 'metadata';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'metadata>\12' after;
+	END;
 
    foreignObject:
 	BEGIN
@@ -380,18 +425,6 @@ RULES
 	indent -2 after;
 	create SCT after;
 	create 'foreignObject>\12' after;
-	END;
-
-   clipPath:
-	BEGIN
-	create SOT;
-	create 'clipPath';
-	create attributes;
-	create CloseTagNL;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'clipPath>\12' after;
 	END;
 
    DOCTYPE: BEGIN
@@ -729,7 +762,7 @@ ATTRIBUTES
 	create SAN;
 	create 'text-anchor="middle"';
 	END;
-   text_anchor = end_:
+   text_anchor = end__:
 	BEGIN
 	create SAN;
 	create 'text-anchor="end"';
@@ -783,42 +816,6 @@ ATTRIBUTES
 	create 'viewBox="';
 	create viewBox;
 	create DoubleQuote;
-	END;
-
-  writing_mode = lr_tb:
-	BEGIN
-	create SAN;
-	create 'writing-mode="lr-tb"';
-	END;
-  writing_mode = rl_tb:
-	BEGIN
-	create SAN;
-	create 'writing-mode="rl-tb"';
-	END;
-  writing_mode = tb_rl:
-	BEGIN
-	create SAN;
-	create 'writing-mode="tb-rl"';
-	END;
-  writing_mode = lr:
-	BEGIN
-	create SAN;
-	create 'writing-mode="lr"';
-	END;
-  writing_mode = rl:
-	BEGIN
-	create SAN;
-	create 'writing-mode="rl"';
-	END;
-  writing_mode = tb:
-	BEGIN
-	create SAN;
-	create 'writing-mode="tb"';
-	END;
-  writing_mode = inherit:
-	BEGIN
-	create SAN;
-	create 'writing-mode="inherit"';
 	END;
 
    x:
@@ -898,6 +895,22 @@ ATTRIBUTES
 	create SAN;
 	create 'title="';
 	create title_;
+	create DoubleQuote;
+	END;
+
+   d:
+	BEGIN
+	create SAN;
+	create 'd="';
+	create d;
+	create DoubleQuote;
+	END;
+
+   pathLength:
+	BEGIN
+	create SAN;
+	create 'pathLength="';
+	create pathLength;
 	create DoubleQuote;
 	END;
 
@@ -981,20 +994,40 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   d:
+  writing_mode = lr_tb:
 	BEGIN
 	create SAN;
-	create 'd="';
-	create d;
-	create DoubleQuote;
+	create 'writing-mode="lr-tb"';
 	END;
-
-   pathLength:
+  writing_mode = rl_tb:
 	BEGIN
 	create SAN;
-	create 'pathLength="';
-	create pathLength;
-	create DoubleQuote;
+	create 'writing-mode="rl-tb"';
+	END;
+  writing_mode = tb_rl:
+	BEGIN
+	create SAN;
+	create 'writing-mode="tb-rl"';
+	END;
+  writing_mode = lr:
+	BEGIN
+	create SAN;
+	create 'writing-mode="lr"';
+	END;
+  writing_mode = rl:
+	BEGIN
+	create SAN;
+	create 'writing-mode="rl"';
+	END;
+  writing_mode = tb:
+	BEGIN
+	create SAN;
+	create 'writing-mode="tb"';
+	END;
+  writing_mode = inherit:
+	BEGIN
+	create SAN;
+	create 'writing-mode="inherit"';
 	END;
 
    dx:
@@ -1013,14 +1046,6 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   target_:
-	BEGIN
-	create SAN;
-	create 'target="';
-	create target_;
-	create DoubleQuote;
-	END;
-
    clipPathUnits = userSpaceOnUse:
 	BEGIN
 	create SAN;
@@ -1032,6 +1057,58 @@ ATTRIBUTES
 	create SAN;
 	create 'clipPathUnits="objectBoundingBox"';
 	END;
+
+   target_:
+	BEGIN
+	create SAN;
+	create 'target="';
+	create target_;
+	create DoubleQuote;
+	END;
+
+{@@@@@@@@
+  onbegin:
+  onend:
+  onrepeat:
+  attributeName:
+  attributeType:
+  begin_:
+  dur:
+  end_:
+  min:
+  max:
+  restart = always:
+  restart = never:
+  restart = whenNotActive:
+  repeatCount:
+  repeatDur:
+  fill_ = remove:
+  fill_ = freeze:
+  calcMode = discrete:
+  calcMode = linear:
+  calcMode = paced:
+  calcMode = spline:
+  values:
+  keyTimes:
+  keySplines:
+  from:
+  to:
+  by:
+  additive = replace:
+  additive = sum:
+  accumulate = none_:
+  accumulate = sum:
+  path_:
+  keyPoints:
+  rotate:
+  origin:
+  type_ = translate:
+  type_ = scale:
+  type_ = rotate_:
+  type_ = skewX:
+  type_ = skewY:
+
+@@@@@@@@}
 
    Unknown_attribute:
 	BEGIN

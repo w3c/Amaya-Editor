@@ -320,6 +320,40 @@ RULES
 		END;		
 	END;
 
+   g:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   defs:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+
    desc:
 	BEGIN
 	CreateBefore (ElementName);
@@ -353,58 +387,6 @@ RULES
 	IN Alternate_view BEGIN
 		Visibility: ALT_Visibility;
 		Line;
-		END;
-	END;
-
-   metadata:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	IN Alternate_view BEGIN
-		Visibility: ALT_Visibility;
-		Line;
-		END;
-	END;
-
-   g:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-   defs:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
@@ -502,6 +484,27 @@ RULES
 		END;
 	END;
 
+   path:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	HorizPos: Left = Enclosing . Left UserSpecified;
+	VertPos:  Top = Enclosing . Top UserSpecified;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
    rect:
 	BEGIN
 	CreateBefore (ElementName);
@@ -544,24 +547,6 @@ RULES
 		Visibility: 0;
 	END;
 
-   line_:
-	BEGIN
-	CreateBefore (ElementName);
-        HorizPos: Left = Enclosing . Left UserSpecified;
-        VertPos:  Top = Enclosing . Top UserSpecified;
-        Width: Right = Enclosing . Left;
-        Height:  Bottom = Enclosing . Top;
-       	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
    ellipse:
 	BEGIN
 	CreateBefore (ElementName);
@@ -578,6 +563,24 @@ RULES
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Font: TAG_Font;
+		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   line_:
+	BEGIN
+	CreateBefore (ElementName);
+        HorizPos: Left = Enclosing . Left UserSpecified;
+        VertPos:  Top = Enclosing . Top UserSpecified;
+        Width: Right = Enclosing . Left;
+        Height:  Bottom = Enclosing . Top;
+       	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
 		Visibility: 0;
@@ -603,27 +606,6 @@ RULES
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-   path:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	HorizPos: Left = Enclosing . Left UserSpecified;
-	VertPos:  Top = Enclosing . Top UserSpecified;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
@@ -686,6 +668,21 @@ RULES
 
    SpanElement:
 	HorizRef: Enclosed . HRef;
+
+   clipPath:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
    a:
 	BEGIN
 	CreateBefore (ElementName);
@@ -719,6 +716,57 @@ RULES
 		END;
 	END;
 
+{@@@@@@@@
+   animate:
+	BEGIN
+	
+	END;
+
+   set:
+	BEGIN
+	
+	END;
+
+   animateMotion:
+	BEGIN
+	
+	END;
+
+   mpath:
+	BEGIN
+	
+	END;
+
+   animateColor:
+	BEGIN
+	
+	END;
+
+   animateTransform:
+	BEGIN
+	
+	END;
+
+@@@@@@@@}
+
+   metadata:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: ALT_Visibility;
+		Line;
+		END;
+	END;
+
    foreignObject:
 	BEGIN
 	CreateBefore (ElementName);
@@ -743,20 +791,6 @@ RULES
 		Height: Enclosed . Height;
 		Width: Enclosing . Width;
 		VertPos: Top = Previous . Bottom;
-		END;
-	END;
-
-  clipPath:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
 		END;
 	END;
 
@@ -1196,42 +1230,6 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
-  writing_mode = lr_tb:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: ltr;
-	END;
-  writing_mode = rl_tb:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: rtl;
-	END;
-  writing_mode = tb_rl:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: rtl;
-	END;
-  writing_mode = lr:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: ltr;
-	END;
-  writing_mode = rl:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: rtl;
-	END;
-  writing_mode = tb:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: ltr;
-	END;
-  writing_mode = inherit:
-	BEGIN
-	CreateBefore(AttrNameAndValue);
-	Direction: Enclosing =;
-	END;
-
   x:
 	BEGIN
 	CreateBefore (AttrName);
@@ -1307,6 +1305,18 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  d:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  pathLength:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   rx:
 	BEGIN
 	CreateBefore (AttrName);
@@ -1375,16 +1385,40 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  d:
+  writing_mode = lr_tb:
 	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
 	END;
-
-  pathLength:
+  writing_mode = rl_tb:
 	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = tb_rl:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = lr:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = rl:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: rtl;
+	END;
+  writing_mode = tb:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: ltr;
+	END;
+  writing_mode = inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Direction: Enclosing =;
 	END;
 
   dx:
@@ -1399,14 +1433,45 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  clipPathUnits:
+	CreateBefore(AttrNameAndValue);
+
   target_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
-  clipPathUnits:
-	CreateBefore(AttrNameAndValue);
+{@@@@@@@@
+  onbegin:
+  onend:
+  onrepeat:
+  attributeName:
+  attributeType:
+  begin_:
+  dur:
+  end_:
+  min:
+  max:
+  restart:
+  repeatCount:
+  repeatDur:
+  fill_:
+  calcMode:
+  values:
+  keyTimes:
+  keySplines:
+  from:
+  to:
+  by:
+  additive:
+  path_:
+  keyPoints:
+  rotate:
+  origin:
+  type_:
+
+@@@@@@@@}
 
   Unknown_attribute:
 	BEGIN

@@ -818,7 +818,7 @@ void SetTextAnchor (Attribute attr, Element el, Document doc, ThotBool delete)
 	 ctxt->type = PositionLeft;
        else if (val == SVG_ATTR_text_anchor_VAL_middle)
 	 ctxt->type = PositionVertMiddle;
-       else if (val == SVG_ATTR_text_anchor_VAL_end_)
+       else if (val == SVG_ATTR_text_anchor_VAL_end__)
 	 ctxt->type = PositionRight;
        else
 	 ctxt->type = PositionLeft;

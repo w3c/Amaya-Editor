@@ -10,26 +10,24 @@ GRAPHICS_UNIT: \240
 PICTURE_UNIT: \240
 
 SVG: svg
+symbol_: symbol
+use_: use
+style__: style
+line_: line
+text_: text
+SpanElement: \240
+script_: script
+DOCTYPE: doctype
+XMLcomment: comment
+XMLPI: pi
+CDATA: cdata
+
+Language: xml:lang
 style_: style
 xml_space: xml:space
 xml_space_default: default
 xml_space_preserve: preserve
-yes_: yes
-no_: no
-height_: height
-width_: width
 stroke_width: stroke-width
-line_: line
-text_: text
-use_: use
-xlink_href: xlink:href
-symbol_: symbol
-target_: target
-style__: style
-title_: title
-SpanElement: \240
-
-Language: xml:lang
 font_family: font-family
 font_size: font-size
 font_style: font-style
@@ -52,11 +50,30 @@ direction_: direction
 ltr_: ltr
 rtl_: rtl
 text_anchor: text-anchor
-end_: end
+end__: end
 text_decoration: text-decoration
 unicode_bidi: unicode-bidi
 embed_: embed
 bidi_override: bidi-override
-DOCTYPE: doctype
-CDATA: cdata
+width_: width
+height_: height
+xlink_href: xlink:href
+title_: title
+target_: target
+begin_: begin
+end_: end
+fill_: fill
+none_: none
+path_: path
+type_: type
+rotate_: rotate
+
+
+
+
+
+
+
+
+
 

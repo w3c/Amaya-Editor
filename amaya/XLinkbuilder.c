@@ -22,14 +22,16 @@
 /* mapping table of attribute values */
 static AttrValueMapping XLinkAttrValueMappingTable[] =
 { 
+   {XLink_ATTR_actuate, "none", XLink_ATTR_actuate_VAL_none_},
    {XLink_ATTR_actuate, "onLoad", XLink_ATTR_actuate_VAL_onLoad},
    {XLink_ATTR_actuate, "onRequest", XLink_ATTR_actuate_VAL_onRequest},
-   {XLink_ATTR_actuate, "undefined", XLink_ATTR_actuate_VAL_undefined},
+   {XLink_ATTR_actuate, "other", XLink_ATTR_actuate_VAL_other},
 
    {XLink_ATTR_show, "embed", XLink_ATTR_show_VAL_embed},
    {XLink_ATTR_show, "new", XLink_ATTR_show_VAL_new},
+   {XLink_ATTR_show, "none", XLink_ATTR_show_VAL_none_},
+   {XLink_ATTR_show, "other", XLink_ATTR_show_VAL_other},
    {XLink_ATTR_show, "replace", XLink_ATTR_show_VAL_replace},
-   {XLink_ATTR_show, "undefined", XLink_ATTR_show_VAL_undefined},
 
    {XLink_ATTR_type, "arc", XLink_ATTR_type_VAL_arc},
    {XLink_ATTR_type, "extended", XLink_ATTR_type_VAL_extended},
