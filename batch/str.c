@@ -25,7 +25,7 @@
 #include "thotfile.h"
 #include "thotdir.h"
 
-#define MAX_SRULE_RECURS 15	/* maximum of included rule levels in a rule */
+#define MAX_SRULE_RECURS 15	/* maximum of included rule levels within a rule */
 #define MAX_EXTERNAL_TYPES 20	/* maximum of different external document types */
 typedef enum
   {
@@ -57,9 +57,9 @@ static boolean      Rules;	 /* we are parsing rules */
 static boolean      CompilExtens;/* on we are parsing extension rules */
 static boolean      ExceptExternalType;/* we met "EXTERN" before a type name */
 				 /* in section EXCEPT */
-static boolean      Minimum;	 /* minimum elements in a list */
-static boolean      Maximum;	 /* maximum elements in a list */
-static boolean      RRight[MAX_SRULE_RECURS];/* in the right side of the rule */
+static boolean      Minimum;	 /* minimum elements within a list */
+static boolean      Maximum;	 /* maximum elements within a list */
+static boolean      RRight[MAX_SRULE_RECURS];/* within the right side of the rule */
 static int          RecursLevel;	/* recursivity level */
 static int          CurRule[MAX_SRULE_RECURS];	/* rule number */
 static Name         CurName;	 /* left name of the last met rule */
@@ -142,8 +142,7 @@ BasicType           typ;
 
 
 /*----------------------------------------------------------------------
-   Initialize       prepare la generation : initialise le schema	
-   de structure en memoire.                                        
+   Initialize initializes the structure schema in memory.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Initialize ()
@@ -173,7 +172,7 @@ static void         Initialize ()
 	pAttr->AttrType = AtEnumAttr;
 	pAttr->AttrNEnumValues = 0;
      }
-   /* create the Language attribute */
+   /* create the language attribute */
    pAttr = &pSSchema->SsAttribute[0];
    strncpy (pAttr->AttrName, "Langue", MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
@@ -246,9 +245,9 @@ static void         Initialize ()
 
 
 /*----------------------------------------------------------------------
-   RuleNameExist  verifie si le nom de la derniere regle de la	
-   table des regles est deja utilise' dans une autre regle de	
-   la meme table des regles. Retourne Vrai si oui.			
+   RuleNameExist checks if the last rule name of the rules table is
+   already used within other rule of the same table.	
+   Returns TRUE is it is the case.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      RuleNameExist ()
@@ -260,13 +259,13 @@ static boolean      RuleNameExist ()
    boolean             ret;
    Name                name;
 
-   /* valeur de retour de la fonction */
+   /* initialize the function return */
    ret = False;
-   /* nom de la derniere regle */
+   /* keep the last rule name */
    strncpy (name, pSSchema->SsRule[pSSchema->SsNRules - 1].SrName, MAX_NAME_LENGTH);
    if (name[0] != '\0')
      {
-	/* numero de la regle a traiter */
+	/* index of the rule in the table */
 	r = 0;
 	do
 	   ret = strcmp (name, pSSchema->SsRule[r++].SrName) == 0;
@@ -281,11 +280,9 @@ static boolean      RuleNameExist ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Undefined (int n)
-
 #else  /* __STDC__ */
 static void         Undefined (n)
 int                 n;
-
 #endif /* __STDC__ */
 {
    int                 j;
@@ -295,10 +292,10 @@ int                 n;
    pIdent = &Identifier[n - 1];
    TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_EXTERNAL_STRUCT), pIdent->SrcIdentifier);
    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
+      /* too many rules */
       TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
-   /* trop de regles */
    else
-      /* ajoute une regle de SyntacticType a la fin du schema */
+     /* add a new rule at the end of the schema */
      {
 	pSSchema->SsNRules++;
 	pIdent->SrcIdentDefRule = pSSchema->SsNRules;
@@ -332,25 +329,20 @@ int                 n;
 
 
 /*----------------------------------------------------------------------
-   ChangeOneRule met dans une regle les vrais numeros de regles a	
-   la place des numeros d'identificateur. Les elements non definis	
-   sont considere's comme des structures externes (natures);       
-   les elements non reference's sont signale's comme des erreurs   
-   s'ils ne sont pas des elements associes.                        
+   ChangeOneRule sets the rigth number of one rule instead of its indentifier.
+   Undefined elements are considered as external structures (natures).	
+   Unreferred elements are considered as errors if they are associated elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeOneRule (SRule * pRule)
-
 #else  /* __STDC__ */
 static void         ChangeOneRule (pRule)
 SRule              *pRule;
-
 #endif /* __STDC__ */
-
 {
    int                 j;
 
-   /* traitement des inclusions */
+   /* management of inclusions */
    for (j = 0; j < pRule->SrNInclusions; j++)
      {
 	if (pRule->SrInclusion[j] > MAX_BASIC_TYPE)
@@ -364,7 +356,8 @@ SRule              *pRule;
 	   pRule->SrInclusion[j] = -pRule->SrInclusion[j];
 	pSSchema->SsRule[pRule->SrInclusion[j] - 1].SrRecursDone = False;
      }
-   /* traitement des exclusions */
+
+   /* management of exclusions */
    for (j = 0; j < pRule->SrNExclusions; j++)
      {
 	if (pRule->SrExclusion[j] > MAX_BASIC_TYPE)
@@ -377,11 +370,11 @@ SRule              *pRule;
 	else if (pRule->SrExclusion[j] < 0)
 	   pRule->SrExclusion[j] = -pRule->SrExclusion[j];
      }
-   /* traitement selon le constructeur de la regle */
+   /* management depends on the rule constructor */
    switch (pRule->SrConstruct)
 	 {
 	    case CsReference:
-	       /* on ne traite que les types definis dans le meme schema */
+	       /* we consider only types defined in the same schema */
 	       if (pRule->SrRefTypeNat[0] == '\0')
 		  if (pRule->SrReferredType > MAX_BASIC_TYPE)
 		    {
@@ -464,39 +457,35 @@ SRule              *pRule;
 
 
 /*----------------------------------------------------------------------
-   ChangeRules    met dans les regles les vrais numeros de regles  
-   a la place des numeros d'identificateur. Les elements non       
-   definis sont considere's comme des structures externes(natures);
-   les elements non reference's sont signale's comme des erreurs   
-   s'ils ne sont pas des elements associes.                        
+   ChangeRules sets the rigth number of rules instead of their indentifiers.
+   Undefined elements are considered as external structures (natures).	
+   Unreferred elements are considered as errors if they are associated elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeRules ()
-
 #else  /* __STDC__ */
 static void         ChangeRules ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i;
    TtAttribute        *pAttr;
 
-   /* utilise l'indicateur SrRecursDone, avec le sens `regle non utilisee' */
+   /* use SrRecursDone with the mean `unused rule' */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
       pSSchema->SsRule[i].SrRecursDone = True;
-   /* parcourt toutes les regles des elements construits */
+   /* go through all rules of built elements */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
       ChangeOneRule (&pSSchema->SsRule[i]);
-   /* parcourt toutes les regles d'extension */
+   /* go through all extension rules */
    for (i = 0; i < pSSchema->SsNExtensRules; i++)
       ChangeOneRule (&pSSchema->SsExtensBlock->EbExtensRule[i]);
-   /* parcourt tous les attributs definis dans le schema de structure */
+   /* go through all attributes defined in the structure schema */
    for (i = 0; i < pSSchema->SsNAttributes; i++)
      {
 	pAttr = &pSSchema->SsAttribute[i];
-	/* on ne traite que les attributs reference */
+	/* don't take care of reference attributes */
 	if (pAttr->AttrType == AtReferenceAttr)
-	   /* on ne traite que les types definis dans le meme schema */
+	   /* only take care of types defined in the same schema */
 	   if (pAttr->AttrTypeRefNature[0] == '\0')
 	      if (pAttr->AttrTypeRef > MAX_BASIC_TYPE)
 		{
@@ -512,19 +501,16 @@ static void         ChangeRules ()
 
 
 /*----------------------------------------------------------------------
-   CopyWord    copie dans n le mot traite'.                        
+   CopyWord copies into the name parameter the current word.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CopyWord (Name name, indLine wi, indLine wl)
-
 #else  /* __STDC__ */
 static void         CopyWord (name, wi, wl)
 Name                name;
 indLine             wi;
 indLine             wl;
-
 #endif /* __STDC__ */
-
 {
    if (wl > MAX_NAME_LENGTH - 1)
       CompilerError (wi, STR, FATAL, STR_WORD_TOO_LONG, inputLine, LineNum);
@@ -541,13 +527,10 @@ indLine             wl;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Push (indLine wi)
-
 #else  /* __STDC__ */
 static void         Push (wi)
 indLine             wi;
-
 #endif /* __STDC__ */
-
 {
    if (RecursLevel >= MAX_SRULE_RECURS)
       CompilerError (wi, STR, FATAL, STR_RULE_NESTING_TOO_DEEP, inputLine, LineNum);
@@ -565,14 +548,11 @@ indLine             wi;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RightIdentifier (int n, indLine wi)
-
 #else  /* __STDC__ */
 static void         RightIdentifier (n, wi)
 int                 n;
 indLine             wi;
-
 #endif /* __STDC__ */
-
 {
    SRule              *pRule;
 
@@ -620,7 +600,6 @@ indLine             wi;
 	    default:
 	       break;
 	 }
-
 }
 
 /*----------------------------------------------------------------------
@@ -628,13 +607,10 @@ indLine             wi;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewRule (indLine wi)
-
 #else  /* __STDC__ */
 static void         NewRule (wi)
 indLine             wi;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    SRule              *pRule;
@@ -643,16 +619,17 @@ indLine             wi;
       CompilerError (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, LineNum);
    else
       pSSchema->SsNRules++;
-   if (CurNum > 0)		/* il y a un symbole gauche a cette regle */
+   if (CurNum > 0)
+      /* there is a rigth part in this rule */
       if (Identifier[CurNum - 1].SrcIdentDefRule > 0)
-	 /* double definition */
+	 /* already defined */
 	 CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, LineNum);
    if (!error)
      {
 	CurRule[RecursLevel - 1] = pSSchema->SsNRules;
 	if (Rules && RecursLevel > 1)
-	   /* la regle courante est referencee par la regle englobante */
 	  {
+	     /* this current rule is used by a enclosing rule */
 	     RecursLevel--;
 	     if (CurNum > 0)
 		RightIdentifier (CurNum + MAX_BASIC_TYPE, wi);
@@ -668,7 +645,7 @@ indLine             wi;
 	strncpy (pRule->SrName, CurName, MAX_NAME_LENGTH);
 	pRule->SrNDefAttrs = 0;
 	if (pRule->SrNLocalAttrs > 0)
-	   /* il y a deja des attributs locaux pour cet element */
+	   /* this element has already local attributes */
 	   CompilerError (wi, STR, FATAL, STR_THIS_ELEM_HAS_LOCAL_ATTRS, inputLine, LineNum);
 	else
 	   pRule->SrNLocalAttrs = CurNLocAttr;
@@ -683,7 +660,7 @@ indLine             wi;
 	pRule->SrRecursive = False;
 	pRule->SrExportedElem = False;
 	pRule->SrFirstExcept = 0;
-	/* pas d'exception associee a ce type d'elem. */
+	/* no exception associated to this element type */
 	pRule->SrLastExcept = 0;
 	pRule->SrNInclusions = 0;
 	pRule->SrNExclusions = 0;
@@ -691,10 +668,10 @@ indLine             wi;
 	if (RuleNameExist ())
 	   CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, LineNum);
 	if (RootRule)
-	   /* compare ce nom avec le nom du schema */
 	  {
+	     /* compare this name with the schema name */
 	     if (strcmp (pSSchema->SsName, CurName) == 0)
-		/* c'est la racine du schema */
+		/* it is the root element of the schema */
 		pSSchema->SsRootElem = pSSchema->SsNRules;
 	     else if (!pSSchema->SsExtension)
 		CompilerError (wi, STR, FATAL, STR_FIRST_RULE_MUST_BE_THE_ROOT, inputLine, LineNum);
@@ -711,20 +688,18 @@ indLine             wi;
 
 
 /*----------------------------------------------------------------------
-   RuleNumber      retourne le numero de la regle definissant le   
-   mot courant comme un type d'element, ou 0 si le mot n'est pas   
-   un type d'element deja defini.                                  
+   RuleNumber returns the rule number that defines the current word as
+   element type.
+   If this word doesn't match with a previous defined element type,
+   the function returns 0.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          RuleNumber (indLine wl, indLine wi)
-
 #else  /* __STDC__ */
 static int          RuleNumber (wl, wi)
 indLine             wl;
 indLine             wi;
-
 #endif /* __STDC__ */
-
 {
    int                 RuleNum;
    Name                N;
@@ -742,21 +717,17 @@ indLine             wi;
 
 
 /*----------------------------------------------------------------------
-   AttributeNumber retourne le numero de l'attribut ayant pour     
-   nom le mot courant, ou 0 si le mot n'est pas un attribut        
-   deja defini.                                                    
+   AttributeNumber returns the attribute number associated with this name.
+   If this word doesn't match with a previous defined attribute,
+   the function returns 0.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          AttributeNumber (indLine wl, indLine wi)
-
 #else  /* __STDC__ */
 static int          AttributeNumber (wl, wi)
 indLine             wl;
 indLine             wi;
-
 #endif /* __STDC__ */
-
 {
    int                 AttrNum;
    Name                N;
@@ -774,27 +745,21 @@ indLine             wi;
 
 
 /*----------------------------------------------------------------------
-   ExceptionNum    traite le numero d'exception Num. Si checkType  
-   est vrai, verifie que l'exception porte sur un type d'element.  
-   Si checkAttr est vrai, verifie que l'exception porte sur un     
-   attribut.                                                       
-   SiCheckIntAttr est vrai, verifie que l'exception porte sur un   
-   attribut numerique.                                             
+   ExceptionNum manages the exception num.
+   If checkType is TRUE, the exception has to rest on the element type.
+   If checkAttr is TRUE, the exception has to rest on one attribute.
+   If checkIntAttr is TRUE, the exception has to rest on one numeric attribute.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static void         ExceptionNum (int Num, boolean checkType, boolean checkAttr, boolean CheckIntAttr, indLine wi)
-
+static void         ExceptionNum (int num, boolean checkType, boolean checkAttr, boolean CheckIntAttr, indLine wi)
 #else  /* __STDC__ */
-static void         ExceptionNum (Num, checkType, checkAttr, CheckIntAttr, wi)
-int                 Num;
+static void         ExceptionNum (num, checkType, checkAttr, CheckIntAttr, wi)
+int                 num;
 boolean             checkType;
 boolean             checkAttr;
 boolean             CheckIntAttr;
 indLine             wi;
-
 #endif /* __STDC__ */
-
 {
    SRule              *pRule;
    TtAttribute        *pAttr;
@@ -807,20 +772,21 @@ indLine             wi;
      {
 	if (CheckIntAttr && pSSchema->SsAttribute[ExceptAttr - 1].AttrType != AtNumAttr)
 	   CompilerError (wi, STR, FATAL, STR_ONLY_FOR_NUMERICAL_ATTRS, inputLine, LineNum);
-	if (Num == ExcActiveRef && pSSchema->SsAttribute[ExceptAttr - 1].AttrType != AtReferenceAttr)
+	if (num == ExcActiveRef && pSSchema->SsAttribute[ExceptAttr - 1].AttrType != AtReferenceAttr)
 	   CompilerError (wi, STR, FATAL, STR_ONLY_FOR_REFERENCE_ATTRS, inputLine, LineNum);
      }
+
    if (!error)
      {
 	if (pSSchema->SsNExceptions >= MAX_EXCEPT_SSCHEMA)
-	   /* la liste des numeros d'exception est pleine */
+	   /* the list of exceptions is full */
 	   CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXCEPTS, inputLine, LineNum);
 	else
-	   /* range le numero d'exception dans la liste des */
-	   /* numeros d'exception du schema de structure */
+	   /* add the new exception number into the list */
+	   /* of exceptions in the structure schema */
 	  {
 	     pSSchema->SsNExceptions++;
-	     pSSchema->SsException[pSSchema->SsNExceptions - 1] = Num;
+	     pSSchema->SsException[pSSchema->SsNExceptions - 1] = num;
 	     if (ExceptType != 0)
 	       {
 		  if (CurExtensRule != NULL)
@@ -848,15 +814,12 @@ indLine             wi;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
-
 #else  /* __STDC__ */
 static void         BasicEl (n, wi, pr)
 int                 n;
 indLine             wi;
 SyntRuleNum         pr;
-
 #endif /* __STDC__ */
-
 {
    SRule              *pRule;
 
@@ -887,8 +850,8 @@ SyntRuleNum         pr;
 	  }
      }
    else if (pr == RULE_ExceptType)
-      /* Un nom de type de base dans les exceptions */
      {
+        /* there is a basic element type within the exceptions set */
 	ExceptType = n;
 	if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
 	   CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
@@ -900,6 +863,7 @@ SyntRuleNum         pr;
 	     NewRule (wi);
 	     Equal = False;
 	  }
+
 	if (!error)
 	  {
 	     if (RRight[RecursLevel - 1])
@@ -917,19 +881,15 @@ SyntRuleNum         pr;
 
 
 /*----------------------------------------------------------------------
-   Stocke le texte d'une constante chaine                          
+   StoreConstText stores the constant text                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          StoreConstText (int wi, int wl)
-
 #else  /* __STDC__ */
 static int          StoreConstText (wi, wl)
 int                 wi;
 int                 wl;
-
 #endif /* __STDC__ */
-
 {
    int                 i, pos;
 
@@ -941,9 +901,9 @@ int                 wl;
 	for (i = 0; i <= wl - 2; i++)
 	   pSSchema->SsConstBuffer[TextConstPtr + i - 1] = inputLine[wi + i - 1];
 	TextConstPtr += wl;
-	/* un nul pour la fin de la constante */
+	/* mark the end of the constant */
 	pSSchema->SsConstBuffer[TextConstPtr - 2] = '\0';
-	/* un autre nul pour la fin de toutes les constantes */
+	/* mark the end of all  constants */
 	pSSchema->SsConstBuffer[TextConstPtr - 1] = '\0';
      }
    return pos;
@@ -951,18 +911,14 @@ int                 wl;
 
 
 /*----------------------------------------------------------------------
-   InitRule       initialise une regle de structure                
+   InitRule initializes a structure rule.             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         InitRule (SRule * pRule)
-
 #else  /* __STDC__ */
 static void         InitRule (pRule)
 SRule              *pRule;
-
 #endif /* __STDC__ */
-
 {
    pRule->SrName[0] = '\0';
    pRule->SrNDefAttrs = 0;
@@ -981,17 +937,13 @@ SRule              *pRule;
 
 
 /*----------------------------------------------------------------------
-   DupliqueReglePaire      Si la derniere regle traitee est une    
-   CsPairedElement, duplique cette regle CsPairedElement.                      
+   DuplicatePairRule duplicates the rule if it is a paired rule.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static void         DupliqueReglePaire ()
-
+static void         DuplicatePairRule ()
 #else  /* __STDC__ */
-static void         DupliqueReglePaire ()
-#endif				/* __STDC__ */
-
+static void         DuplicatePairRule ()
+#endif /* __STDC__ */
 {
    SRule              *newRule;
    SRule              *prevRule;
@@ -1011,20 +963,15 @@ static void         DupliqueReglePaire ()
 
 
 /*----------------------------------------------------------------------
-   GetExtensionRule      recherche une regle d'extension ayant le  
-   nom (wi, wl)                                     
+   GetExtensionRule searchs an extension rule matching the name (wi, wl).
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static SRule       *GetExtensionRule (indLine wi, indLine wl)
-
 #else  /* __STDC__ */
 static SRule       *GetExtensionRule (wi, wl)
 indLine             wi;
 indLine             wl;
-
 #endif /* __STDC__ */
-
 {
    SRule              *pRule;
    Name                n;
@@ -1053,19 +1000,15 @@ indLine             wl;
 
 
 /*----------------------------------------------------------------------
-   NewExtensionRule alloue et initialise une nouvelle regle         
-   d'extension                                     
+   NewExtensionRule creates and initializes a new extension rule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static SRule       *NewExtensionRule (indLine wi, indLine wl)
-
 #else  /* __STDC__ */
 static SRule       *NewExtensionRule (wi, wl)
 indLine             wi;
 indLine             wl;
-
 #endif /* __STDC__ */
-
 {
    SRule              *pRule;
 
@@ -1091,15 +1034,16 @@ indLine             wl;
 
 
 /*----------------------------------------------------------------------
-   ProcessToken    traite le mot commencant a la position wi dans  
-   la ligne courante, de longueur wl et de code grammatical c.     
-   Si c'est un identificateur, nb contient son rang dans la table  
-   des identificateurs. r est le numero de la regle dans laquelle  
-   apparait ce mot.                                                
+   ProcessToken manages the next word starting at position wi in the
+   current line.
+   The parameter wl gives the length of the word and c is its grammatical
+   code.
+   If the word is an identifier, nb gives the index of this identifier
+   in the identifiers table.
+   The parameter r gives the rule number where the word appears.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
-
 #else  /* __STDC__ */
 static void         ProcessToken (wi, wl, c, r, nb, pr)
 indLine             wi;
@@ -1108,9 +1052,7 @@ SyntacticCode       c;
 SyntacticCode       r;
 int                 nb;
 SyntRuleNum         pr;
-
 #endif /* __STDC__ */
-
 {
    int                 SynInteger, i, j;
    Name                N;
@@ -1120,37 +1062,37 @@ SyntRuleNum         pr;
    int                 attrNum;
 
    if (c < 1000)
-      /* symbole intermediaire de la grammaire, erreur */
+      /* it's an intermediate symbol */
       CompilerError (wi, STR, FATAL, STR_INTERMEDIATE_SYMBOL, inputLine, LineNum);
    else if (c < 1100)
-      /* mot-cle court */
+      /* short keyword */
       switch (c)
 	    {
 	       case CHR_59:
 		  /*  ;  */
 		  if (r == RULE_LocAttrList)
-		     /* fin de la definition d'un attribut local */
+		     /* end of local attribute definition */
 		    {
 		       if (CompilExtens)
-			  /* dans une regle d'extension */
+			  /* within the extension rule */
 			  pAttr = &pSSchema->SsAttribute[CurExtensRule->SrLocalAttr[CurExtensRule->SrNLocalAttrs - 1] - 1];
 		       else
-			  /* dans une regle de structure */
+			  /* within the structure rule */
 			  pAttr = &pSSchema->SsAttribute[CurLocAttr[CurNLocAttr - 1] - 1];
 		       if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
-			  /* pas de valeur definie */
+			  /* no value defined */
 			  CompilerError (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE, inputLine, LineNum);
 		    }
 		  if (!CompilAttr && !CompilLocAttr)
 		     if (r == RULE_RuleList || r == RULE_OptDefList || r == RULE_DefList)
-			/* fin de regle de structure */
 		       {
+			  /* end of structure rule */
 			  if (CurNum > 0)
-			     /* le dernier nom rencontre' n'a pas ete traite' */
 			    {
+			       /* the last previous name was not managed */
 			       RecursLevel--;
-			       /* il figure en partie droite de */
-			       /* la regle de niveau inferieur */
+			       /* the name appears within the rigth part of */
+			       /* the lower level rule */
 			       RightIdentifier (CurNum + MAX_BASIC_TYPE, wi);
 			       RecursLevel++;
 			       CurNum = 0;
@@ -1160,22 +1102,23 @@ SyntRuleNum         pr;
 			       CurAssoc = False;
 			       CurUnit = False;
 			    }
-			  RRight[RecursLevel - 1] = False;	/* partie droite de regle terminee */
+			  /* end of the rigth part of the rule */
+			  RRight[RecursLevel - 1] = False;
 
 			  CurBasicElem = 0;
-			  DupliqueReglePaire ();
+			  DuplicatePairRule ();
 		       }
 		  if (r == RULE_ExpList)
 		    {
-		       /* fin d'un element exporte' */
+		       /* end of exported element */
 		       if (UnknownContent)
+			  /* invalid contents */
 			  CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
-		       /* contenu invalide */
 		    }
 
 		  if (r == RULE_ExceptList)
-		     /* fin des exceptions d'un type ou d'un attribut */
 		    {
+		       /* end of exceptions on type or attribute */
 		       CurExtensRule = NULL;
 		       ExceptType = 0;
 		       ExceptAttr = 0;
@@ -1186,12 +1129,12 @@ SyntRuleNum         pr;
 		  if (r == RULE_Rule || r == RULE_ExtOrDef)
 		     Equal = True;
 		  else if (r == RULE_LocalAttr)
-		     /* on va definir le type d'un attribut local */
 		    {
+		       /* define the type of a local attribute */
 		       pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 		       if (pAttr->AttrType != AtEnumAttr
 			   || (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues > 0))
-			  /* attribut deja defini */
+			  /* attribute already defined */
 			  CompilerError (wi, STR, FATAL, STR_THAT_ATTR_HAS_ALREADY_VALUES, inputLine, LineNum);
 		    }
 		  break;
@@ -1200,12 +1143,12 @@ SyntRuleNum         pr;
 		  if (r == RULE_Constr)
 		    {
 		       if (pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].SrConstruct == CsList)
-			  /* definition des elements d'une liste */
+			  /* define elements of a list */
 			  Push (wi);
 		    }
 
 		  if (r == RULE_LocAttrList)
-		     /* debut des attributs locaux d'un type */
+		     /* begin of local attributes of a type */
 		    {
 		       CompilLocAttr = True;
 		       CurNLocAttr = 0;
@@ -1214,24 +1157,24 @@ SyntRuleNum         pr;
 	       case CHR_41:
 		  /*  )  */
 		  if (r == RULE_LocAttrList)
-		     /* fin des attributs locaux d'un type */
+		     /* end of local attributes of a type */
 		    {
 		       CompilLocAttr = False;
 		       if (CompilExtens)
-			  /* dans une regle d'extension */
+			  /* within extension rule */
 			  pAttr = &pSSchema->SsAttribute[CurExtensRule->SrLocalAttr[CurExtensRule->SrNLocalAttrs - 1] - 1];
 		       else
-			  /* dans une regle de structure */
+			  /* within structure rule */
 			  pAttr = &pSSchema->SsAttribute[CurLocAttr[CurNLocAttr - 1] - 1];
 		       if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
-			  /* pas de valeur definie */
+			  /* no value defined */
 			  CompilerError (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE, inputLine, LineNum);
 		       if (CurBasicElem > 0)
-			  /* fin des attributs locaux d'un element de base */
+			  /* end of local attributes of a basic element */
 			 {
 			    pRule = &pSSchema->SsRule[CurBasicElem - 1];
 			    if (pRule->SrNLocalAttrs > 0)
-			       /* il y a deja des attributs locaux pour cet element */
+			       /* there are local attributes for this element */
 			       CompilerError (wi, STR, FATAL, STR_THIS_ELEM_HAS_LOCAL_ATTRS, inputLine, LineNum);
 			    else
 			       pRule->SrNLocalAttrs = CurNLocAttr;
@@ -1249,12 +1192,10 @@ SyntRuleNum         pr;
 		       CurBasicElem = 0;
 		       if (RecursLevel > 1)
 			  if (pSSchema->SsRule[CurRule[RecursLevel - 2] - 1].SrConstruct == CsList)
-			     /* fin d'une regle LIST */
-			     /* partie droite de regle terminee */
 			    {
+			       /* end of the right part of the rule LIST */
 			       RRight[RecursLevel - 1] = False;
-
-			       /* attributs fixes termines */
+			       /* fixed attributes complete */
 			       RecursLevel--;
 			       if (CurNum > 0)
 				 {
@@ -1266,27 +1207,28 @@ SyntRuleNum         pr;
 				    CurAssoc = False;
 				    CurUnit = False;
 				 }
-			       DupliqueReglePaire ();
+			       DuplicatePairRule ();
 			    }
 		    }
 		  if (r == RULE_AttrType || r == RULE_Constr)
-		     /* fin de la definition d'une reference (attribut ou element) */
+		     /* end of a reference definition (attribute or element) */
 		    {
 		       if (FirstInPair || SecondInPair)
-			  /* le nom d'element reference' est precede' de First ou Second */
+			  /* the referred element name is preceded by First or Second */
 			 {
-			    /* cherche si le type reference' est deja defini */
+			    /* look at if the referred type is already defined */
 			    i = 0;
 			    do
 			      {
 				 ok = strcmp (ReferredTypeName, pSSchema->SsRule[i].SrName) == 0;
-				 i++;	/* passe a la regle suivante */
+				 /* next rule */
+				 i++;
 			      }
 			    while (!ok && i < pSSchema->SsNRules);
 			    if (!ok)
 			       CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 			    else if (pSSchema->SsRule[i - 1].SrConstruct != CsPairedElement)
-			       /* ce n'est pas une paire */
+			       /* it is not a paired type */
 			       CompilerError (BeginReferredTypeName, STR, FATAL, STR_FIRST_SECOND_FORBIDDEN, inputLine, LineNum);
 			    else if (SecondInPair)
 			      {
@@ -1306,10 +1248,10 @@ SyntRuleNum         pr;
 	       case CHR_44:
 		  /*  ,  */
 		  if (r == RULE_ExpList)
-		     /* fin d'un element exporte' */
+		     /* end of a exported element */
 		     if (UnknownContent)
 			CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
-		  /* contenu invalide */
+		  /* invalid contents */
 		  break;
 	       case CHR_91:
 		  /*  [  */
@@ -1328,7 +1270,7 @@ SyntRuleNum         pr;
 		  /*  ?  */
 		  if (r == RULE_FixModValue)
 		    {
-		       /* la valeur de l'attribut fixe sera en fait modifiable */
+		       /* the constant value of the attribut fixe will be modified */
 		       if (CompilExtens)
 			  pRule = CurExtensRule;
 		       else
@@ -1358,21 +1300,19 @@ SyntRuleNum         pr;
 	       case CHR_45:
 		  /*  -  */
 		  if (r == RULE_FixedValue)
-		     /* signe negatif pour la valeur d'attribut qui suit */
+		    /* negative sign for the next attribute value */
 		     Sign = -1;
 		  else if (r == RULE_DefWith)
 		     if (!RRight[RecursLevel - 1])
 			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, LineNum);
 		  break;
-		  /* signe negatif pour la valeur d'attribut qui */
-		  /* suit */
 	       case CHR_58:
 		  /*  :  */
 		  break;
 	    }
 
    else if (c < 2000)
-      /* mot-cle long */
+      /* large keyword */
       switch (c)
 	    {
 	       case KWD_STRUCTURE:
@@ -1386,11 +1326,11 @@ SyntRuleNum         pr;
 		  break;
 	       case KWD_ATTR /* ATTR */ :
 		  if (r == RULE_StructModel)
-		     /* debut des attributs globaux */
+		     /* begin of global attributes */
 		     CompilAttr = True;
 		  else if (r == RULE_LocAttrList)
-		     /* debut des attributs locaux d'un type d'element */
-		     /* a priori, le prochain attribut local n'est pas obligatoire */
+		     /* begin of local attributes of a element type */
+		     /* by default the local attribut is not mandatory */
 		     MandatoryAttr = False;
 		  break;
 	       case KWD_CONST:
@@ -1407,14 +1347,14 @@ SyntRuleNum         pr;
 		    }
 		  break;
 	       case KWD_STRUCT:
-		  /* la premiere regle sera la regle racine */
+		  /* the first rule is the root rule */
 		  RootRule = True;
 		  Rules = True;
 		  CompilParam = False;
 		  CompilAttr = False;
 		  break;
 	       case KWD_EXTENS:
-		  /* verifie qu'on est bien dans une extension de schema */
+		  /* check if we are within a schema extension */
 		  if (!pSSchema->SsExtension)
 		     CompilerError (wi, STR, FATAL, STR_NOT_AN_EXTENSION, inputLine, LineNum);
 		  else
@@ -1460,7 +1400,7 @@ SyntRuleNum         pr;
 		       CompilAssoc = False;
 		       CompilUnits = False;
 		       ChangeRules ();
-		       /* met les bons numeros de regle */
+		       /* set the right rule numbers */
 		       pSSchema->SsExport = True;
 		    }
 		  break;
@@ -1503,17 +1443,17 @@ SyntRuleNum         pr;
 		  break;
 	       case KWD_TEXT:
 		  if (r == RULE_BasicType)
-		     /* type d'un element */
+		     /* element type */
 		     BasicEl (CharString + 1, wi, pr);
 		  else
-		     /* type d'un attribut */
+		     /* attribute type */
 		     pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrType = AtTextAttr;
 		  break;
 	       case KWD_REFERENCE:
 		  if (r == RULE_Constr)
-		     /* constructeur d'un element */
+		     /* element constructor */
 		    {
-		       ReferenceAttr = False;	/* c'est un element reference */
+		       ReferenceAttr = False;	/* it's areference element */
 		       Equal = False;
 		       NewRule (wi);
 		       if (!error)
@@ -1521,25 +1461,25 @@ SyntRuleNum         pr;
 			    pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 			    pRule->SrConstruct = CsReference;
 			    pRule->SrRefTypeNat[0] = '\0';
-			    /* a priori, le type d'element */
-			    /* reference' est defini dans le meme schema */
+			    /* by default, the referred element type */
+			    /* is defined within the schema */
 			    pRule->SrRefImportedDoc = False;
 			    pRule->SrReferredType = 0;
-			    /* c'est une reference ordinaire, */
-			    /* pas l'inclusion d'un document externe */
+			    /* it's a simple reference, */
+			    /* not an external document inclusion */
 			    ExternalStructContext = ElemRef;
 			 }
 		    }
 		  else
-		     /* type d'un attribut */
+		     /* attribut type */
 		    {
-		       ReferenceAttr = True;	/* c'est un attribut reference */
+		       ReferenceAttr = True;	/* it's a reference attribute */
 		       pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 		       pAttr->AttrType = AtReferenceAttr;
 		       pAttr->AttrTypeRefNature[0] = '\0';
 		       pAttr->AttrTypeRef = 0;
-		       /* a priori, le type d'elem. */
-		       /* reference' est defini dans le meme schema */
+		       /* by default, the referred element type */
+		       /* is defined within the schema */
 		       ExternalStructContext = AttrRef;
 		    }
 		  break;
@@ -1586,7 +1526,7 @@ SyntRuleNum         pr;
 		    }
 		  break;
 	       case KWD_WITH:
-		  /* debut des attributs fixes */
+		  /* begin of fixed attributes */
 		  if (r == RULE_DefWith)
 		     if (!RRight[RecursLevel - 1])
 			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, LineNum);
@@ -1597,20 +1537,19 @@ SyntRuleNum         pr;
 		     ExceptExternalType = True;
 		  else if (r == RULE_ExtOrDef)
 		     if (NExternalTypes >= MAX_EXTERNAL_TYPES)
-			/* table des types externes saturee */
+			/* table of external types is full */
 			CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXTERNAL_DOCS, inputLine, LineNum);
 		     else
-			/* met dans la table le dernier nom de type rencontre' */
+			/* add into the table the new type */
 		       {
 			  NExternalTypes++;
 			  IncludedExternalType[NExternalTypes - 1] = False;
 			  strncpy (ExternalType[NExternalTypes - 1], PreviousIdent, MAX_NAME_LENGTH);
 			  if (strcmp (PreviousIdent, pSSchema->
 			      SsRule[pSSchema->SsRootElem - 1].SrName) == 0)
-			     /* C'est le type de document lui-meme qui est utilise' */
-			     /* comme externe */
+			     /* the document type is used as external */
 			    {
-			       /* ajoute une regle de SyntacticType a la fin du schema */
+			       /* add a SyntacticType rule at the end of the schema */
 			       pRule = &pSSchema->SsRule[pSSchema->SsNRules++];
 			       strncpy (pRule->SrName, PreviousIdent, MAX_NAME_LENGTH);
 			       pRule->SrNLocalAttrs = 0;
@@ -1631,10 +1570,10 @@ SyntRuleNum         pr;
 	       case KWD_INCLUDED:
 		  /* included */
 		  if (NExternalTypes >= MAX_EXTERNAL_TYPES)
-		     /* table des types externes saturee */
+		     /* table of external types is full */
 		     CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXTERNAL_DOCS, inputLine, LineNum);
 		  else
-		     /* met dans la table le dernier nom de type rencontre' */
+		     /* add into the table the new external type */
 		    {
 		       IncludedExternalType[NExternalTypes] = True;
 		       strncpy (ExternalType[NExternalTypes], PreviousIdent, MAX_NAME_LENGTH);
@@ -1699,7 +1638,7 @@ SyntRuleNum         pr;
 		       }
 		  break;
 	       case KWD_Nothing:
-		  /* pas de contenu pour l'element exporte' courant */
+		  /* pno contents for the current exported element */
 		  pRule = &pSSchema->SsRule[RuleExportWith - 1];
 		  pRule->SrExportContent = 0;
 		  if ((pRule->SrConstruct == CsChoice) && (pRule->SrNChoices >= 1))
@@ -1820,32 +1759,32 @@ SyntRuleNum         pr;
 		  CurExtensRule = NewExtensionRule (wi, 0);
 		  CurExtensRule->SrName[0] = '\0';
 		  break;
-		  /* end case c */
+		  /* end of case c */
 	    }
 
    else
-      /* type de base */
+      /* basic type */
       switch (c)
 	    {
 	       case 3001:
-		  /* un nom */
+		  /* a name */
 		  switch (r)
 			{
-			      /* r = numero de la regle ou apparait le nom */
+			      /* r = rule number where the name appears */
 			   case RULE_ElemName /* VarElemName */ :
 			      if (pr == RULE_StructModel)
-				 /* apres le mot-cle 'STRUCTURE' */
-				 /* conserve le nom de la structure */
+				 /* after the keyword 'STRUCTURE' */
+				 /* keep the structure name */
 				{
 				   CopyWord (pSSchema->SsName, wi, wl);
-				   /* compare ce nom avec le nom du fichier */
+				   /* compare this name with the file name */
 
 				   if (strcmp (pSSchema->SsName, srceFileName) != 0)
-				      /* noms differents */
+				      /* names differ */
 				      CompilerError (wi, STR, FATAL, STR_FILE_NAME_AND_STRUCT_NAME_DIFFERENT, inputLine, LineNum);
 				}
 			      if (pr == RULE_Rule)
-				 /* debut d'une regle du premier niveau */
+				 /* begin of the first level rule */
 				{
 				   CopyWord (CurName, wi, wl);
 				   CurNum = nb;
@@ -1863,13 +1802,13 @@ SyntRuleNum         pr;
 				      CurUnit = False;
 				}
 			      if (pr == RULE_RootOrElem)
-				 /* debut d'une regle d'extension */
+				 /* begin of extension rule */
 				 CurExtensRule = NewExtensionRule (wi, wl);
 			      if ((pr == RULE_TypeRef && !ReferenceAttr) || pr == RULE_Element)
 				{
 				   if (pr == RULE_Element)
 				      CopyWord (PreviousIdent, wi, wl);
-				   /* garde le nom du type au cas ou il serait suivi de extern */
+				   /* keep the type name in case there is an extern after */
 				   if (Equal)
 				     {
 					NewRule (wi);
@@ -1877,59 +1816,58 @@ SyntRuleNum         pr;
 				     }
 				   if (!error)
 				      if (RRight[RecursLevel - 1])
-					 /* identificateur en partie droite de regle */
+					 /* the rigth part identifier of the rule */
 					{
 					   RightIdentifier (nb + MAX_BASIC_TYPE, wi);
 					   CopyWord (ReferredTypeName, wi, wl);
-					   /* garde le nom du type */
-					   /* reference' au cas ou il est defini dans un */
-					   /* autre schema de structure. */
+					   /* keep the referred type in case */
+					   /* it's defined in another structure */
 					   BeginReferredTypeName = wi;
 					}
 				      else
-					 /* identificateur partie gauche de regle */
+					 /* the left part identifier of the rule */
 					{
 					   CopyWord (CurName, wi, wl);
 					   CurNum = nb;
 					}
 				}
 			      if (pr == RULE_TypeRef && ReferenceAttr)
-				 /* dans un attribut reference */
+				 /* within a reference attribute */
 				{
 				   pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrTypeRef =
 				      nb + MAX_BASIC_TYPE;
 				   CopyWord (ReferredTypeName, wi, wl);
-				   /* garde le nom du type reference' au cas ou il est defini */
-				   /* dans un autre schema de structure. */
+				   /* keep the referred type name in case it's */
+				   /* defined in another structure schema */
 				   BeginReferredTypeName = wi;
 				}
 			      if (pr == RULE_ExtStruct)
-				 /* nom d'une structure externe dans une reference ou */
-				 /* dans un contenu d'element exporte' */
+				 /* external structure name within reference or */
+				 /* within exported element contents */
 				{
 				   CopyWord (N, wi, wl);
-				   /* recupere le nom du schema externe */
-				   /* lit le schema de structure externe */
+				   /* keep the external schema name */
+				   /* and read the external structure schema */
 				   if (!ReadStructureSchema (N, pExternSSchema))
+				      /* cannot read the schema */
 				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
-				   /* echec lecture du schema */
 				   else
-				      /* le schema de structure a ete charge' */
-				      /* le type reference' existe-t-il dans ce schema? */
+				      /* structure schema loaded */
+				      /* search the referred element within */
 				     {
 					i = 0;
 					while (strcmp (ReferredTypeName, pExternSSchema->SsRule[i].SrName) != 0
 					&& i - 1 < pExternSSchema->SsNRules)
 					   i++;
 					if (strcmp (ReferredTypeName, pExternSSchema->SsRule[i].SrName) != 0)
+					   /* unknown type */
 					   CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
-					/* type inconnu */
 					else
-					   /* le type reference' existe, il a le numero i+1 */
+					   /* the referred type is found: number i+1 */
 					   switch (ExternalStructContext)
 						 {
 						    case AttrRef:
-						       /* dans un attribut reference */
+						       /* within reference attribute */
 						       pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 						       if (SecondInPair)
 							  pAttr->AttrTypeRef = i + 2;
@@ -1940,7 +1878,7 @@ SyntRuleNum         pr;
 						       SecondInPair = False;
 						       break;
 						    case ElemRef:
-						       /* dans une construction CsReference */
+						       /* within construction CsReference */
 						       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 						       if (SecondInPair)
 							  pRule->SrReferredType = i + 2;
@@ -1951,7 +1889,7 @@ SyntRuleNum         pr;
 						       SecondInPair = False;
 						       break;
 						    case ElContent:
-						       /* dans un contenu d'elem exporte' */
+						       /* within exported element contents */
 						       pRule = &pSSchema->SsRule[RuleExportWith - 1];
 						       pRule->SrExportContent = i + 1;
 						       strncpy (pRule->SrNatExpContent, N, MAX_NAME_LENGTH);
@@ -1970,25 +1908,25 @@ SyntRuleNum         pr;
 				     }
 				}
 			      if (pr == RULE_Export)
-				 /* un nom d'element exporte' */
-				 /* verifie que ce type est deja declare' */
+				 /* exported element name */
+				 /* check if the type is already declared */
 				{
 				   i = RuleNumber (wl, wi);
 				   if (i == 0)
-				      /* type non declare' */
+				      /* not declared */
 				      CompilerError (wi, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 				   else
 				     {
 					pRule = &pSSchema->SsRule[i - 1];
-					/* le type existe */
+					/* type exists */
 					pRule->SrExportedElem = True;
 					RuleExportWith = i;
 					pRule->SrExportContent = i;
-					/* par defaut on met tout le contenu */
+					/* by default push the whole contents */
 					pRule->SrNatExpContent[0] = '\0';
 					ExternalStructContext = ElContent;
-					/* si c'est un choix qui est exporte', toutes */
-					/* ses options sont egalement exportees */
+					/* choice exported, all options */
+					/* are also exported */
 					if (pRule->SrConstruct == CsChoice)
 					   if (pRule->SrNChoices >= 1)
 					      for (j = 0; j < pRule->SrNChoices; j++)
@@ -1997,8 +1935,8 @@ SyntRuleNum         pr;
 						   pSSchema->SsRule[pRule->SrChoice[j] - 1].SrExportContent = pRule->SrChoice[j];
 						   pSSchema->SsRule[pRule->SrChoice[j] - 1].SrNatExpContent[0] = '\0';
 						}
-					/* si c'est une marque de debut de paire qui est */
-					/* exporte'e, la marque de fin est egalement exportee */
+					/* the first mark of the paired type is exported, */
+					/* the second one is also exported */
 					if (pRule->SrConstruct == CsPairedElement)
 					   if (pRule->SrFirstOfPair)
 					     {
@@ -2009,22 +1947,20 @@ SyntRuleNum         pr;
 				     }
 				}
 			      if (pr == RULE_Content)
-				 /* le contenu d'un element exporte' */
+				 /* the content of a exported element */
 				{
 				   CopyWord (ReferredTypeName, wi, wl);
-				   /* garde le nom du type */
-				   /* exporte' au cas ou il est defini dans un */
-				   /* autre schema de structure. */
+				   /* keep the exported type name in case */
+				   /* it's defined in another structure schema */
 				   BeginReferredTypeName = wi;
 				   i = RuleNumber (wl, wi);
 				   if (i == 0)
-				      /* type inconnu */
-				      /* le contenu est peut-etre defini dans un autre */
-				      /* schema, attendons de voir si un schema externe */
-				      /* est indique' apres */
+				      /* unknown type */
+				     /* the contents can be defined in another */
+				      /* schema, wait for next external schemas */
 				      UnknownContent = True;
 				   else
-				      /* c'est un type defini dans le schema */
+				      /* it's a type defined in the schema */
 				   if (pSSchema->SsRule[i - 1].SrConstruct != CsNatureSchema)
 				     {
 					pRule = &pSSchema->SsRule[RuleExportWith - 1];
@@ -2034,26 +1970,26 @@ SyntRuleNum         pr;
 					      for (j = 0; j < pRule->SrNChoices; j++)
 						 pSSchema->SsRule[pRule->SrChoice[j] - 1].
 						    SrExportContent = i;
-					/* si c'est une marque de debut de paire qui est */
-					/* exporte'e, la marque de fin est egalement traitee */
+					/* the first mark of the paired type is exported, */
+					/* the second one is also exported */
 					if (pRule->SrConstruct == CsPairedElement)
 					   if (pRule->SrFirstOfPair)
 					      if (i == RuleExportWith)
-						 /* le contenu de la marque de fin est la marque */
-						 /* de fin elle-meme */
+						 /* the contents of the second mark */
+						 /* is the mark itself */
 						 pSSchema->SsRule[RuleExportWith].SrExportContent = i + 1;
 					      else
 						 pSSchema->SsRule[RuleExportWith].SrExportContent = i;
 				     }
 				   else
-				      /* le contenu est un objet construit selon un */
-				      /* autre schema de structure, on lit ce schema */
+				      /* the object contents depends on another */
+				      /* structure schema, read the schema */
 				   if (!ReadStructureSchema (pSSchema->SsRule[i - 1].SrName, pExternSSchema))
+				      /* cannot load the schema */
 				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
-				   /* echec lecture du schema */
 				   else
-				      /* le schema de structure a ete charge', le */
-				      /* *contenu est l'element racine de ce schema */
+				      /* structure schema loaded, the contents */
+				      /* the root element of this schema */
 				     {
 					pRule = &pSSchema->SsRule[RuleExportWith - 1];
 					pRule->SrExportContent = pExternSSchema->SsRootElem;
@@ -2071,14 +2007,14 @@ SyntRuleNum         pr;
 				     }
 				}
 			      if (pr == RULE_ExceptType)
-				 /* Un nom de type d'element dans les exceptions */
+				 /* element type name within exceptions */
 				 if (ExceptExternalType)
 				   {
 				      ExceptExternalType = False;
-				      /*cherche s'il existe deja une regle d'extension pour ce type */
+				      /* search an existing extension for this type */
 				      CurExtensRule = GetExtensionRule (wi, wl);
 				      if (CurExtensRule == NULL)
-					 /* il n'en existe pas, on cree une regle d'extension */
+					 /* not found, create an extension rule */
 					 CurExtensRule = NewExtensionRule (wi, wl);
 				      ExceptType = 1;
 				   }
@@ -2086,8 +2022,8 @@ SyntRuleNum         pr;
 				   {
 				      ExceptType = RuleNumber (wl, wi);
 				      if (ExceptType == 0)
-					 /* ce n'est pas un type declare' dans le schema */
-					 /* c'est peut etre un attribut */
+					 /* it's not declared within the schema */
+					 /* can be an attribute */
 					{
 					   ExceptAttr = AttributeNumber (wl, wi);
 					   if (ExceptAttr == 0)
@@ -2096,12 +2032,12 @@ SyntRuleNum         pr;
 					      CompilerError (wi, STR, FATAL, STR_THIS_ATTR_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 					}
 				      else
-					 /* c'est un type declare' */
+					 /* it's a declared type */
 					{
 					   if (FirstInPair || SecondInPair)
-					      /* le nom d'element est precede' du mot-cle First ou Second */
+					      /* the element name is preceded by First or Second */
 					      if (pSSchema->SsRule[ExceptType - 1].SrConstruct != CsPairedElement)
-						 /* ce n'est pas une paire */
+						 /* it's not a  paired type */
 						 CompilerError (wi, STR, FATAL, STR_FIRST_SECOND_FORBIDDEN, inputLine, LineNum);
 					      else if (SecondInPair)
 						 ExceptType++;
@@ -2148,48 +2084,49 @@ SyntRuleNum         pr;
 			   /* AttrName */ :
 			      attrNum = Identifier[nb - 1].SrcIdentDefRule;
 			      if (attrNum == 0)
-				 /* ce nom n'a pas encore ete rencontre' dans le schema */
+				 /* new name within the schema */
 				 if (strncmp (&inputLine[wi - 1], pSSchema->SsAttribute[0].AttrName, wl) == 0)
-				    /* c'est l'attribut Langue */
+				    /* it's the language attribute */
 				    attrNum = 1;
 			      if (CompilAttr || CompilLocAttr)
-				 /* une declaration d'attribut */
+				 /* attribute declaration */
 				 if (CompilAttr && attrNum > 0)
+				    /* try to redefine the attribute */
 				    CompilerError (wi, STR, FATAL, STR_ATTR_ALREADY_DECLARED, inputLine, LineNum);
-			      /* deja defini */
 				 else
 				   {
 				      if (attrNum > 0)
 					{
-					   /* l'attribut est deja defini */
+					   /* attribute already defined */
 					   if (pSSchema->SsAttribute[attrNum - 1].AttrGlobal)
-					      /* un attribut global ne peut pas etre */
-					      /* utilise' comme attribut local */
+					      /* the global attribute cannot be */
+					      /* used as local attribute */
 					      CompilerError (wi, STR, FATAL, STR_GLOBAL_ATTR, inputLine, LineNum);
 					}
 				      else
-					 /* nouvel attribut */
+					 /* new attribute */
 				      if (pSSchema->SsNAttributes >= MAX_ATTR_SSCHEMA)
 					 CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, LineNum);
-				      /* table des attributs saturee */
+				      /* table of attributes is full */
 				      else
 					{
 					   pSSchema->SsNAttributes++;
 					   Identifier[nb - 1].SrcIdentDefRule = pSSchema->SsNAttributes;
 					   pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 					   if (CompilLocAttr)
-					      /* attribut local */
+					      /* local attribute */
 					      pAttr->AttrGlobal = False;
 					   CopyWord (pAttr->AttrName, wi, wl);
 					   pAttr->AttrType = AtEnumAttr;
 					   pAttr->AttrNEnumValues = 0;
 					}
-				      if (CompilLocAttr)	/* un attribut local */
+				      if (CompilLocAttr)
+					 /* local attribute */
 					 if (CurNLocAttr >= MAX_LOCAL_ATTR)
-					    /* trop d'attributs locaux pour cet element */
+					    /* too many local attributes for this element */
 					    CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, LineNum);
 					 else if (CompilExtens)
-					    /* dans une regle d'extension */
+					    /* within extension rule */
 					   {
 					      CurExtensRule->SrNLocalAttrs++;
 					      CurExtensRule->SrLocalAttr[CurExtensRule->SrNLocalAttrs - 1] = pSSchema->SsNAttributes;
@@ -2197,7 +2134,7 @@ SyntRuleNum         pr;
 					      MandatoryAttr = False;
 					   }
 					 else
-					    /* dans une regle de structure */
+					    /* within structure rule */
 					   {
 					      CurLocAttr[CurNLocAttr] = Identifier[nb - 1].
 						 SrcIdentDefRule;
@@ -2207,14 +2144,14 @@ SyntRuleNum         pr;
 					   }
 				   }
 			      else if (CompilExcept)
-				 /* un nom d'attribut dans les exceptions */
+				 /* attribute name within exceptions set */
 				{
 				   ExceptAttr = AttributeNumber (wl, wi);
-				   /* numero de cet attribut */
+				   /* number of this attribute */
 				   if (ExceptAttr == 0)
-				      /* ce n'est pas un attribut declare' dans le */
+				      /* it's an attribute declared in the */
 				      /* schema */
-				      /* c'est peut etre un type d'element */
+				      /* it can be an element type */
 				     {
 					ExceptType = RuleNumber (wl, wi);
 					if (ExceptType == 0)
@@ -2226,7 +2163,7 @@ SyntRuleNum         pr;
 				      CompilerError (wi, STR, FATAL, STR_THIS_ATTR_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 				}
 			      else
-				 /* utilisation d'attribut dans une regle avec WITH */
+				 /* attribute used within a rule with the WITH keyword */
 			      if (attrNum == 0)
 				 CompilerError (wi, STR, FATAL, STR_ATTR_NOT_DECLARED, inputLine, LineNum);
 			      else
@@ -2242,7 +2179,7 @@ SyntRuleNum         pr;
 					pRule->SrNDefAttrs++;
 					pRule->SrDefAttr[pRule->SrNDefAttrs - 1] = attrNum;
 					pRule->SrDefAttrValue[pRule->SrNDefAttrs - 1] = 1;
-					/* par defaut la valeur initiale n'est pas modifiable */
+					/* by default, the initial value is not modifiable */
 					pRule->SrDefAttrModif[pRule->SrNDefAttrs - 1] = False;
 				     }
 				}
@@ -2250,30 +2187,29 @@ SyntRuleNum         pr;
 			   case RULE_AttrValue:
 			      /* AttrValue */
 			      if (CompilAttr || CompilLocAttr)
-				 /* definition d'une valeur d'attribut pour l'attribut */
-				 /* courant, qui est pour l'instant le dernier */
+				 /* attribute value definition for the current */
+				 /* attribute (the last one for the moment) */
 				{
 				   pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 				   if (pAttr->AttrNEnumValues >= MAX_ATTR_VAL)
+				      /* overflow of values list */
 				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_VALUES, inputLine, LineNum);
-				   /* la liste des valeurs deborde */
 				   else
-				      /* une valeur de plus pour l'attribut */
+				      /* new value for the attribute */
 				     {
 					pAttr->AttrNEnumValues++;
-					/* range la valeur dans la liste des valeurs de */
-					/* l'attribut */
+					/* add the new value into the list */
 					CopyWord (pAttr->AttrEnumValue[pAttr->AttrNEnumValues - 1], wi, wl);
-					/* cette valeur est-elle deja dans la liste ? */
+					/* check if the value already exists */
 					i = 1;
 					while (i < pAttr->AttrNEnumValues && !error)
 					   if (!strcmp (pAttr->AttrEnumValue[i - 1], pAttr->AttrEnumValue[pAttr->AttrNEnumValues - 1]))
+					      /* the same value two times */
 					      CompilerError (wi, STR, FATAL, STR_VALUE_ALREADY_DECLARED, inputLine, LineNum);
-					/* deux fois la meme valeur */
 					   else
 					      i++;
 					if (!error)
-					   /* c'est bien une nouvelle valeur, on l'accepte */
+					   /* it's a new value */
 					  {
 					     Identifier[nb - 1].SrcIdentDefRule = pAttr->AttrNEnumValues;
 					     Identifier[nb - 1].SrcIdentRefRule = pSSchema->SsNAttributes;
@@ -2281,7 +2217,7 @@ SyntRuleNum         pr;
 				     }
 				}
 			      else
-				 /* utilisation dans une regle avec With */
+				 /* used within a rule with the With keyword */
 			      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				 CompilerError (wi, STR, FATAL, STR_ATTR_VALUE_NOT_DECLARED,
 						inputLine, LineNum);
@@ -2297,8 +2233,7 @@ SyntRuleNum         pr;
 						     STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, LineNum);
 				   else
 				     {
-					/* cette valeur est-elle dans la liste des valeurs de */
-					/* l'attribut ? */
+					/* check if the value already exists */
 					i = 1;
 					ok = False;
 					CopyWord (N, wi, wl);
@@ -2316,7 +2251,7 @@ SyntRuleNum         pr;
 			      break;
 			   case RULE_ConstName /* ConstName */ :
 			      if (!Rules)
-				 /* definition de constante */
+				 /* constant definition */
 				{
 				   CopyWord (CurName, wi, wl);
 				   CurNum = nb;
@@ -2332,16 +2267,14 @@ SyntRuleNum         pr;
 					pRule->SrIndexConst = TextConstPtr;
 				     }
 				}
-			      else
-				 /* utilisation d'une constante dans une regle */
-			      if (Identifier[nb - 1].SrcIdentDefRule == 0)
-				 /* non defini, c'est une erreur */
-				 CompilerError (wi, STR, FATAL, STR_CONSTANT_NOT_DECLARED, inputLine, LineNum);
+			      else if (Identifier[nb - 1].SrcIdentDefRule == 0)
+				/* constant used within an undefined rule */
+				CompilerError (wi, STR, FATAL, STR_CONSTANT_NOT_DECLARED, inputLine, LineNum);
 			      else if (pr == RULE_Constr)
-				 /* dans une regle de structuration */
+				 /* constant used within structure rule */
 				 BasicEl (nb + MAX_BASIC_TYPE, wi, pr);
 			      else if (pr == RULE_ExceptType)
-				 /* Un nom de constante dans les exceptions */
+				 /* constant within exceptions set */
 				 ExceptType = RuleNumber (wl, wi);
 			      if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
 				 CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
@@ -2355,7 +2288,7 @@ SyntRuleNum         pr;
 		  SynInteger = AsciiToInt (wi, wl);
 		  /* le nombre lu */
 		  if (r == RULE_Integer)
-		     /* nombre d'elements min. ou max. d'une liste */
+		     /* check min. and max. numbers in a list */
 		    {
 		       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 		       if (Minimum)
@@ -2370,7 +2303,7 @@ SyntRuleNum         pr;
 			 }
 		    }
 		  if (r == RULE_NumValue)
-		     /* valeur d'un attribut fixe */
+		     /* attribute value fixed */
 		    {
 		       if (CompilExtens)
 			  pRule = CurExtensRule;
@@ -2381,27 +2314,27 @@ SyntRuleNum         pr;
 		       else
 			 {
 			    pRule->SrDefAttrValue[pRule->SrNDefAttrs - 1] = SynInteger * Sign;
-			    /* a priori la prochaine valeur d'attribut sera positive */
+			    /* default sign for the value */
 			    Sign = 1;
 			 }
 		    }
 		  if (r == RULE_ExceptNum)
-		     /* un numero d'exception associe' a un type d'element */
-		     /* ou a un attribut */
+		     /* exception number associated with element type */
+		     /* or attribute */
 		     if (SynInteger <= 100)
-			/* les valeurs inferieures a 100 sont reservees aux */
-			/* exceptions predefinies */
+			/* values less than 100 are reserved for predefined */
+			/* exceptions */
 			CompilerError (wi, STR, FATAL, STR_THIS_NUMBER_MUST_BE_GREATER_THAN_100, inputLine, LineNum);
 		     else
 			ExceptionNum (SynInteger, False, False, False, wi);
 		  break;
 	       case 3003:
-		  /* une chaine de caracteres */
+		  /* characters string */
 		  if (r == RULE_ConstValue)
-		     /* c'est le texte d'une constante */
+		     /* constant string */
 		     StoreConstText (wi, wl);
 		  else if (r == RULE_StrValue)
-		     /* valeur fixe d'un attribut texte */
+		     /* text value for textual attribute */
 		    {
 		       if (CompilExtens)
 			  pRule = CurExtensRule;
@@ -2420,32 +2353,29 @@ SyntRuleNum         pr;
 
 
 /*----------------------------------------------------------------------
-   ExternalTypes     marque comme externe dans le schema de        
-   structure tous les elements qui sont dans la table des types    
-   externes.                                                       
+   ExternalTypes sets as external all elements stored in the external
+   elements table of the structure schema.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ExternalTypes ()
-
 #else  /* __STDC__ */
 static void         ExternalTypes ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i, j;
    SRule              *pRule;
 
-   /* parcourt la table des types externes */
+   /* go through the table of external types */
    for (j = 0; j < NExternalTypes; j++)
-      /* cherche le type externe dans le schema a partir de la fin */
+      /* search the external type in the schema starting from the end */
      {
 	i = pSSchema->SsNRules - 1;
 	while (strcmp (ExternalType[j], pSSchema->SsRule[i].SrName) != 0)
 	   i--;
-	/* le type externe est defini par la regle de numero i */
+	/* the external type is defined by the i rule number */
 	pRule = &pSSchema->SsRule[i];
 	if (pRule->SrConstruct != CsNatureSchema)
-	   /* ce n'est pas une SyntacticType externe, erreur */
+	   /* it's not an external SyntacticType */
 	  {
 	     if (IncludedExternalType[j])
 		CompilerErrorString (0, STR, INFO, STR_CANNOT_BE_INCLUDED, inputLine, LineNum, pRule->SrName);
@@ -2453,18 +2383,18 @@ static void         ExternalTypes ()
 		CompilerErrorString (0, STR, INFO, STR_CANNOT_BE_EXTERN, inputLine, LineNum, pRule->SrName);
 	  }
 	else
-	   /* transforme la regle CsNatureSchema */
+	   /* modify the CsNatureSchema rule */
 	  {
 	     if (!ReadStructureSchema (pRule->SrName, pExternSSchema))
 	       {
-		  /* echec lecture du schema externe */
+		  /* cannot read the external schema */
 		  CompilerErrorString (0, STR, INFO, STR_EXTERNAL_STRUCT_NOT_FOUND, inputLine, LineNum, pRule->SrName);
-		  /* meme si le schema externe n'existe pas, on transforme la regle */
+		  /* even if the external schema doesn't exist, modify the rule */
 		  pRule->SrReferredType = MAX_BASIC_TYPE + 1;
 	       }
 	     else
 		pRule->SrReferredType = pExternSSchema->SsRootElem;
-	     /* transforme la regle en regle CsReference */
+	     /* change the rule into CsReference rule */
 	     strncpy (pRule->SrRefTypeNat, pRule->SrName, MAX_NAME_LENGTH);
 	     pRule->SrRefImportedDoc = True;
 	     pRule->SrConstruct = CsReference;
@@ -2477,7 +2407,6 @@ static void         ExternalTypes ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckRecursivity (int r, int path[], int level, boolean busy[], boolean done[])
-
 #else  /* __STDC__ */
 static void         CheckRecursivity (r, path, level, busy, done)
 int                 r;
@@ -2485,21 +2414,19 @@ int                 path[];
 int                 level;
 boolean             busy[];
 boolean             done[];
-
 #endif /* __STDC__ */
-
 {
    int                 m;
    SRule              *pRule;
 
    pRule = &pSSchema->SsRule[r - 1];
-   /* Si l'element est deja connu, inutile de l'explorer */
+   /* don't work, if the element is already known */
    if (done[r])
       return;
-   /* si l'element est `busy', c'est qu'il est recursif;
-      Il est forcement dans la pile, et de plus tous les elements
-      qui ont ete empiles apres lui sont egalement recursifs,
-      donc on les marque */
+   /* if the element is `busy', it's a recursive element;
+      it's necessarily within the stack and all following stacked
+      elements are also recursive.
+      Mark all of them. */
    if (busy[r])
      {
 	for (m = level - 1; m >= 0; m--)
@@ -2543,7 +2470,7 @@ boolean             done[];
 	       break;
 	 }
    busy[r] = False;
-   /* l'element a ete explore, on ne le fera plus */
+   /* element explored, work is done */
    done[r] = True;
 }
 
@@ -2552,11 +2479,9 @@ boolean             done[];
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChkRecurs ()
-
 #else  /* __STDC__ */
 static void         ChkRecurs ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i;
    int                 path[100];
@@ -2583,42 +2508,38 @@ static void         ChkRecurs ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ListAssocElem ()
-
 #else  /* __STDC__ */
 static void         ListAssocElem ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i;
    SRule              *pRule;
 
-   /* parcourt toute la table des regles */
+   /* go through all rules table */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
      {
 	if (pSSchema->SsRule[i].SrParamElem)
-	   /* affiche un message */
+	   /* display a message */
 	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_PARAMETER), (char *) pSSchema->SsRule[i].SrName);
 	if (pSSchema->SsRule[i].SrAssocElem)
 	   if (!pSSchema->SsRule[i].SrRecursDone)
-	      /* l'element associe est utilise dans une autre regle, erreur */
+	      /* the associated element associe is used within another rule */
 	     {
 		CompilerErrorString (0, STR, INFO, STR_THE_ASSOC_ELEM_IS_USED_IN_ANOTHER_RULE, inputLine, LineNum, pSSchema->SsRule[i].SrName);
 		error = True;
 	     }
 	   else
-	      /* element associe correct */
-	      /* On cree une nouvelle regle liste a la fin de la table des */
-	      /* regles */
+	      /* create a new list rule at the end of rules table */
 	     {
 		if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
 		   TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
-		/* saturation de la table des regles */
+		/* table of rules is full */
 		else
 		   pSSchema->SsNRules++;
 		pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
-		/* la nouvelle regle liste prend le nom de ses elements... */
+		/* the new list rule takes the name of its elements... */
 		strncpy (pRule->SrName, pSSchema->SsRule[i].SrName, MAX_NAME_LENGTH - 2);
-		/* ... suivi de 's' */
+		/* ... followed by 's' */
 		pRule->SrName[MAX_NAME_LENGTH - 2] = '\0';
 		strcat (pRule->SrName, "s");
 		pRule->SrNDefAttrs = 0;
@@ -2637,29 +2558,29 @@ static void         ListAssocElem ()
 		pRule->SrListItem = i + 1;
 		pRule->SrMinItems = 0;
 		pRule->SrMaxItems = 32000;
-		/* ecrit un message au terminal */
+		/* write a message */
 		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ASSOC_ELEMS), (char *) pRule->SrName);
 		if (RuleNameExist ())
 		   TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
 	     }
 	else
-	   /* ce n'est pas un element associe */
+	   /* it's not a associated element */
 	if (pSSchema->SsRule[i].SrRecursDone)
 	   if (i + 1 != pSSchema->SsRootElem && !pSSchema->SsRule[i].SrUnitElem)
 	     {
 		if (pSSchema->SsRule[i].SrConstruct == CsChoice)
-		   /* c'est un choix qui definit un alias */
-		   /* on met l'element dans la table des alias */
+		   /* it's a choice that defines an alias */
+		   /* insert the element in table of aliases */
 		  {
 		     NAlias++;
 		     Alias[NAlias - 1] = i + 1;
 		     TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS), (char *) pSSchema->SsRule[i].SrName);
 		  }
 		else
-		   /* les regles de Fin de CsPairedElement ne sont jamais referencees */
+		   /* the second elements of a CsPairedElement are never referenced */
 		   if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
 		       pSSchema->SsRule[i].SrFirstOfPair)
-		   /* c'est une definition inutile */
+		   /* unnecessary definition */
 		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED), (char *) pSSchema->SsRule[i].SrName);
 	     }
      }
@@ -2667,17 +2588,13 @@ static void         ListAssocElem ()
 
 
 /*----------------------------------------------------------------------
-   ListNotCreated       liste les types d'elements qui ne seront	
-   pas crees lors de l'edition d'un document ou d'un objet de	
-   ce type.                                                        
+   ListNotCreated lists elements which will not be created by the editor.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ListNotCreated ()
-
 #else  /* __STDC__ */
 static void         ListNotCreated ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 r, rr;
    int                 i;
@@ -2685,7 +2602,7 @@ static void         ListNotCreated ()
    SRule              *pRule;
    SRule              *pRule2;
 
-   /* remet a zero dans toutes les regles l'indicateur de creation */
+   /* clear all creation indicators */
    /* (on utilise SrRecursDone comme indicateur de creation) */
    for (r = 0; r < pSSchema->SsNRules; r++)
       pSSchema->SsRule[r].SrRecursDone = False;
