@@ -357,6 +357,16 @@ libwww/modules/md5/Makefile.am \
 libwww/modules/md5/Makefile.in \
 libwww/modules/md5/*.c \
 libwww/modules/md5/*.h \
+libwww/modules/expat/expat.html \
+libwww/modules/expat/gplelect.html \
+libwww/modules/expat/MPL-1_0.html \
+libwww/modules/expat/Makefile.am \
+libwww/modules/expat/xmlparse/Makefile.am \
+libwww/modules/expat/xmlparse/*.c \
+libwww/modules/expat/xmlparse/*.h \
+libwww/modules/expat/xmltok/Makefile.am \
+libwww/modules/expat/xmltok/*.c \
+libwww/modules/expat/xmltok/*.h \
 libwww/config/Makefile.am \
 libwww/config/Makefile.in \
 libwww/config/config.guess \
