@@ -18,11 +18,14 @@
 #include <GL/glu.h>
 #endif /* _GL */
 
-/*win32 special*/
+/*win32 GLU special*/
 #ifndef CALLBACK
 #define CALLBACK
 #endif
 
+
+/* not needed if using Thot includes */
+/***************************/
 #ifndef FALSE
 #define FALSE 0
 #endif
@@ -31,41 +34,54 @@
 #define TRUE 1
 #endif
 
-#define ALLOC_POINTS 100
-
+/*macro defining thotlib mechanism*/
 #define TtaGetMemory(A) malloc(A)
 #define TtaFreeMemory(A) malloc(A)
 #define TtaExpandMemory(A) calloc(A)
 
+/*Structure describing points 
+comming from the thotlib*/
 typedef struct _ThotPoint {
   float  x;
   float  y; 
 } ThotPoint;
+/***************************/
 
+/* initial number of allocated points*/
+#define ALLOC_POINTS 100
+
+/*Structure describing points 
+we need double precision here.*/
 typedef struct _ThotDblePoint {
   double         x;
   double         y; 
   double         z; 
 } ThotDblePoint;
 
+/*Structure describing points 
+resulting of tesselation
+(linked list)*/
 typedef struct _Mesh {
   double          data[3];
   struct _Mesh   *next;
 } Mesh_list;
 
+/*Structure describing a Path*/
 typedef struct _ThotPath {
-  ThotDblePoint      *npoints;
-  int            *ncontour;
-  Mesh_list      *mesh_list;
-  int            nsize;
-  int            maxpoints;
-  int            maxcont;  
-  int            cont;
-  int            height;
+  ThotDblePoint      *npoints;  /* points array*/
+  int                *ncontour; /* Countour flag array*/
+  Mesh_list          *mesh_list;/*Contains points resulting of tesselation*/
+  int                nsize;     /*current number of points*/
+  int                maxpoints; /*max size of the npoints array*/
+  int                maxcont;   /*max size of the maxcont array*/
+  int                cont;      /*current number of countour*/
+  int                height;    /*height of path (needed for inversion)*/
 } ThotPath;
 
 #ifdef _GL
-
+/*----------------------------------------------------------------------
+ myGL_Err : prints out GL errors during tesselation
+  ----------------------------------------------------------------------*/
 void CALLBACK myGL_Err (GLenum errCode, ThotPath *path) 
 {
   if(errCode != GL_NO_ERROR)
@@ -73,7 +89,9 @@ void CALLBACK myGL_Err (GLenum errCode, ThotPath *path)
       printf ("\n%s :", (char*) gluErrorString (errCode));      
     }
 }
-
+/*----------------------------------------------------------------------
+myCombine : Store New points computed by the tesselation mechanism.
+  ----------------------------------------------------------------------*/
 void CALLBACK myCombine (GLdouble coords[3], 
 			 void *vertex_data[4], 
 			 GLfloat weight[4], 
@@ -102,7 +120,9 @@ void CALLBACK myCombine (GLdouble coords[3],
   *dataOut = ptr->data;
 }
 #endif /* _GL */
-
+/*----------------------------------------------------------------------
+MeshNewPoint : Allocate a new struct describing a path
+  ----------------------------------------------------------------------*/
 void *GetNewMesh ()
 {
 #ifdef _GL
@@ -126,7 +146,9 @@ void *GetNewMesh ()
   return NULL;
 #endif /* _GL */
 }
-
+/*----------------------------------------------------------------------
+MeshNewPoint : Add a point in the allocated struct
+  ----------------------------------------------------------------------*/
 void MeshNewPoint (float x, float y, void *v_path)
 {
 #ifdef _GL
@@ -164,7 +186,10 @@ void MeshNewPoint (float x, float y, void *v_path)
   return;
 #endif /* _GL */
 }
-
+/*----------------------------------------------------------------------
+CountourCountAdd : Add a flag indicating that the next point 
+will not be connected with this one
+  ----------------------------------------------------------------------*/
 void CountourCountAdd (void *v_path)
 {
 #ifdef _GL
@@ -193,7 +218,9 @@ void CountourCountAdd (void *v_path)
 #endif /* _GL */
 }
 
-
+/*----------------------------------------------------------------------
+FreeMesh : Free Allocated resources
+  ----------------------------------------------------------------------*/
 void FreeMesh (void *v_path)
 {
 #ifdef _GL 
@@ -217,7 +244,9 @@ void FreeMesh (void *v_path)
 #endif /* _GL */
 }
 
-
+/*----------------------------------------------------------------------
+  MakeMesh : Tesselate and display path using GLU library (part of OpenGL)
+  ----------------------------------------------------------------------*/
 void MakeMesh (void *v_path)
 {
 #ifdef _GL
@@ -263,7 +292,9 @@ void MakeMesh (void *v_path)
   gluDeleteTess (tobj);
 #endif /* _GL */
 }
-
+/*----------------------------------------------------------------------
+MakeMeshLines : Display path outline 
+  ----------------------------------------------------------------------*/
 void MakeMeshLines  (void *v_path)
 {
 #ifdef _GL  
@@ -285,7 +316,9 @@ void MakeMeshLines  (void *v_path)
     }  
 #endif /*_GL*/
 }
-
+/*----------------------------------------------------------------------
+ MakefloatMesh : use this module for computing polygons of integer points
+  ----------------------------------------------------------------------*/
 void MakefloatMesh (ThotPoint *points, int npoints)
 {
 #ifdef _GL  
