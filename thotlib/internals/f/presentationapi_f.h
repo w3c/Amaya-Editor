@@ -6,6 +6,24 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool PRuleMessagePre ( PtrElement pEl,
+                                  PtrPRule pPRule,
+                                  PtrDocument pDoc,
+                                  ThotBool isNew );
+extern void PRuleMessagePost ( PtrElement pEl,
+                               PtrPRule pPRule,
+                               PtrDocument pDoc,
+                               ThotBool isNew );
+extern void NewPosition ( PtrAbstractBox pAb,
+                          int X,
+                          int Y,
+                          int frame,
+                          ThotBool display );
+extern void NewDimension ( PtrAbstractBox pAb,
+                           int width,
+                           int height,
+                           int frame,
+                           ThotBool display );
 extern PRule TtaNewPRule ( int presentationType,
                            View view,
                            Document document );
@@ -17,9 +35,6 @@ extern PRule TtaNewPRuleForNamedView ( int presentationType,
                                        Document document );
 extern PRule TtaCopyPRule ( PRule pRule );
 extern void TtaAttachPRule ( Element element,
-                             PRule pRule,
-                             Document document );
-extern void TtaRemovePRule ( Element element,
                              PRule pRule,
                              Document document );
 extern void TtaSetPRuleValue ( Element element,
@@ -52,8 +67,6 @@ extern void TtaGiveBoxPosition ( Element element,
                                  TypeUnit unit,
                                  int *xCoord,
                                  int *yCoord );
-extern void TtaNextPRule ( Element element,
-                           PRule * pRule );
 extern PRule TtaGetPRule ( Element element,
                            int presentationType );
 extern int TtaGetPRuleType ( PRule pRule );
@@ -65,6 +78,24 @@ extern int TtaSamePRules ( PRule pRule1,
 
 #else /* __STDC__ */
 
+extern ThotBool PRuleMessagePre (/* PtrElement pEl,
+                                    PtrPRule pPRule,
+                                    PtrDocument pDoc,
+                                    ThotBool isNew */);
+extern void PRuleMessagePost (/* PtrElement pEl,
+                                 PtrPRule pPRule,
+                                 PtrDocument pDoc,
+                                 ThotBool isNew */);
+extern void NewPosition (/* PtrAbstractBox pAb,
+                            int X,
+                            int Y,
+                            int frame,
+                            ThotBool display */);
+extern void NewDimension (/* PtrAbstractBox pAb,
+                             int width,
+                             int height,
+                             int frame,
+                             ThotBool display */);
 extern PRule TtaNewPRule (/* int presentationType,
                              View view,
                              Document document */);
@@ -76,9 +107,6 @@ extern PRule TtaNewPRuleForNamedView (/* int presentationType,
                                          Document document */);
 extern PRule TtaCopyPRule (/* PRule pRule */);
 extern void TtaAttachPRule (/* Element element,
-                               PRule pRule,
-                               Document document */);
-extern void TtaRemovePRule (/* Element element,
                                PRule pRule,
                                Document document */);
 extern void TtaSetPRuleValue (/* Element element,
@@ -111,8 +139,6 @@ extern void TtaGiveBoxPosition (/* Element element,
                                    TypeUnit unit,
                                    int *xCoord,
                                    int *yCoord */);
-extern void TtaNextPRule (/* Element element,
-                             PRule * pRule */);
 extern PRule TtaGetPRule (/* Element element,
                              int presentationType */);
 extern int TtaGetPRuleType (/* PRule pRule */);

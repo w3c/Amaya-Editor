@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern void InitDocColors ( char *name );
+extern void FreeDocColors ( void );
 extern unsigned long ColorPixel ( int num );
 extern void TtaFreeThotColor ( int num );
 extern int TtaGetThotColor ( unsigned short red,
@@ -26,6 +27,7 @@ extern unsigned long CreatePattern ( int disp,
 #else /* __STDC__ */
 
 extern void InitDocColors (/* char *name */);
+extern void FreeDocColors (/* void */);
 extern unsigned long ColorPixel (/* int num */);
 extern void TtaFreeThotColor (/* int num */);
 extern int TtaGetThotColor (/* unsigned short red,

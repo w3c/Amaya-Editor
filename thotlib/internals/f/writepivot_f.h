@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool SameAttributes ( PtrElement pEl1,
-                                 PtrElement pEl2 );
 extern void WriteVersionNumber ( BinFile pivFile );
 extern void EcritNat ( PtrSSchema pSS,
                        BinFile pivFile,
@@ -37,6 +35,7 @@ extern void SauveExt ( PtrReferredDescr pFirstRefD,
                        PathBuffer fileName );
 extern void UpdateExt ( PtrDocument pDoc );
 extern void UpdateRef ( PtrDocument pDoc );
+extern void TtaRemoveDocument ( Document document );
 extern void ChangeNomExt ( PtrDocument pDoc,
                            Name newName,
                            ThotBool copyDoc );
@@ -45,8 +44,6 @@ extern void ChangeNomRef ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern ThotBool SameAttributes (/* PtrElement pEl1,
-                                   PtrElement pEl2 */);
 extern void WriteVersionNumber (/* BinFile pivFile */);
 extern void EcritNat (/* PtrSSchema pSS,
                          BinFile pivFile,
@@ -76,6 +73,7 @@ extern void SauveExt (/* PtrReferredDescr pFirstRefD,
                          PathBuffer fileName */);
 extern void UpdateExt (/* PtrDocument pDoc */);
 extern void UpdateRef (/* PtrDocument pDoc */);
+extern void TtaRemoveDocument (/* Document document */);
 extern void ChangeNomExt (/* PtrDocument pDoc,
                              Name newName,
                              ThotBool copyDoc */);

@@ -28,6 +28,7 @@
 #include "tree.h"
 #include "content.h"
 #include "registry.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -115,6 +116,81 @@ static PtrSSchema   pSSSurround[MAX_MENU];	/* schema */
 static int          NElSurround;	/* number of entries in the table */
 
 
+
+/*----------------------------------------------------------------------
+   IsolateSelection
+   Si la selection passee en parametre commence ou finit sur des   
+   elements partiellement selectionnes, ces elements sont coupes   
+   en deux et leurs paves egalement.                               
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void                IsolateSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar, ThotBool createEmpty)
+#else  /* __STDC__ */
+void                IsolateSelection (pDoc, pFirstSel, pLastSel, firstChar, lastChar, createEmpty)
+PtrDocument         pDoc;
+PtrElement         *pFirstSel;
+PtrElement         *pLastSel;
+int                *firstChar;
+int                *lastChar;
+ThotBool		    createEmpty;
+#endif /* __STDC__ */
+
+{
+   PtrElement	       pEl;
+   int                 view;
+   ThotBool	       done;
+
+   if (*firstChar > 1)
+      if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
+	 /* la selection courante commence a l'interieur du premier element */
+	 /* selectionne */
+	 /* coupe le premier element selectionne' */
+	{
+	   SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
+	   /* prepare la creation des paves de la 2eme partie */
+	   for (view = 0; view < MAX_VIEW_DOC; view++)
+	      if (!AssocView (*pFirstSel))
+		{
+		   if (pDoc->DocView[view].DvPSchemaView > 0)
+		      /* la vue est ouverte */
+		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+		}
+	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
+		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
+	   /* cree les paves de la deuxieme partie */
+	   CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
+	   ApplDelayedRule (*pFirstSel, pDoc);
+	}
+   done = FALSE;
+   if (createEmpty)
+     if (*firstChar == 1 && *lastChar == 1 && *pFirstSel == *pLastSel)
+       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+	  {
+	  pEl = NewSubtree ((*pFirstSel)->ElTypeNumber, (*pFirstSel)->ElStructSchema, pDoc, (*pFirstSel)->ElAssocNum, FALSE, TRUE, FALSE, TRUE);
+	  InsertElementBefore (*pFirstSel, pEl);
+	  for (view = 0; view < MAX_VIEW_DOC; view++)
+	      if (!AssocView (*pFirstSel))
+		{
+		   if (pDoc->DocView[view].DvPSchemaView > 0)
+		      /* la vue est ouverte */
+		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+		}
+	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
+		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
+	  CreateNewAbsBoxes (pEl, pDoc, 0);
+	  ApplDelayedRule (pEl, pDoc);
+	  *pFirstSel = pEl;
+	  *pLastSel = pEl;
+	  *firstChar = 0;
+	  *lastChar = 0;
+	  done = TRUE;
+	  }
+   if (!done)
+     if (*lastChar > 0 && *pLastSel != NULL)
+       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
+	 SplitAfterSelection (*pLastSel, *lastChar, pDoc);
+}
 
 /*----------------------------------------------------------------------
    IsolatedPairedElem   verifie si l'element pEl est un element de 
@@ -1070,7 +1146,6 @@ PtrDocument         pDoc;
 
 #define MAX_ANCESTOR 10
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CutCommand  traite la commande CUT				
    Supprime du document la partie selectionnee.               
@@ -1704,7 +1779,6 @@ ThotBool            save;
 	  }
     }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    EmptyElement    retourne vrai si l'element pEl est vide.        
@@ -1816,7 +1890,6 @@ PtrDocument         pDoc;
    return ok;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DoSurround
   ----------------------------------------------------------------------*/
@@ -2054,7 +2127,6 @@ PtrSSchema          pSS;
      }
    return TRUE;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    SearchChoiceRules cherche les regles CsChoice qui derivent de la   
@@ -2278,7 +2350,6 @@ PtrElement          pEl;
 	}
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    	ChangeTypeOfElements						
   ----------------------------------------------------------------------*/
@@ -2411,7 +2482,6 @@ PtrSSchema          newSSchema;
      }
    return done;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   CanInsertBySplitting
@@ -2509,7 +2579,6 @@ PtrDocument	 pDoc;
    return ok;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CreateNewElement						
    L'utilisateur veut creer, pour le document pDoc, au voisinage   
@@ -2640,35 +2709,6 @@ ThotBool            Before;
                   if (TransformIntoFunction != NULL)
                      ok = TransformIntoFunction (elType,  (Document) IdentDocument (pSelDoc));
 		}
-#ifdef IV
-		  GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,&lastChar);
-		  pEl = firstSel;
-		  selType.ElTypeNum = firstSel->ElTypeNumber;
-		  selType.ElSSchema = (SSchema)(firstSel->ElStructSchema);
-		  /********* what's the purpose of this loop? Ask S.B. ******/
-		  while(selType.ElTypeNum !=0 && pEl != NULL)
-		    {
-		      pEl= NextInSelection (pEl, lastSel);
-		      if (pEl != NULL &&
-			  (pEl->ElTypeNumber != selType.ElTypeNum ||
-			   pEl->ElStructSchema->SsCode !=
-			           ((PtrSSchema)(selType.ElSSchema))->SsCode))
-			 selType.ElTypeNum = 0;
-		    }
-		  notifyElType.event = TteElemTransform;
-		  notifyElType.document = (Document) IdentDocument (pSelDoc);
-		  notifyElType.elementType.ElTypeNum = selType.ElTypeNum;
-		  notifyElType.elementType.ElSSchema = selType.ElSSchema;
-		  notifyElType.element = (Element) (firstSel);
-		  notifyElType.targetElementType.ElTypeNum = typeNum;
-		  notifyElType.targetElementType.ElSSchema = (SSchema) pSS;
-		  ok = !CallEventType((NotifyEvent *) & notifyElType, TRUE);
-		  /****** should call TransformIntoType from here, not from
-			  ElemToTransform.  Ask S.B. ********/
-		  /***** TransformIntoType should record the operation in
-			 the history ****/
-		}
-#endif /*IV*/
 	      /* si ca n'a pas marche' et si plusieurs elements sont
 		 selectionne's, on essaie de transformer chaque element
 		 selectionne' en un element du type demande' */
@@ -3015,7 +3055,50 @@ ThotBool            Before;
 	}
     }
 }
-#endif /* _WIN_PRINT */
+
+/* ----------------------------------------------------------------------
+   TtaCreateElement
+
+   Create an element of a given type and insert it at the current position within
+   a given document. The current position is defined by the current selection.
+   If the current position is a single position (insertion point) the new element
+   is simply inserted at that position. If one or several characters and/or
+   elements are selected, the new element is created at that position and the
+   selected characters/elements become the content of the new element, provided
+   the  structure schema allows it.
+
+   Parameters:
+   elementType: type of the element to be created.
+   document: the document for which the element is created.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaCreateElement (ElementType elementType, Document document)
+#else  /* __STDC__ */
+void                TtaCreateElement (elementType, document)
+ElementType         elementType;
+Document            document;
+
+#endif /* __STDC__ */
+{
+   UserErrorCode = 0;
+   if (elementType.ElSSchema == NULL)
+      TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+      /* Checks the parameter document */
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else if (elementType.ElTypeNum < 1 ||
+   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
+      /* Parameter document is ok */
+      TtaError (ERR_invalid_element_type);
+   else
+      CreateNewElement (elementType.ElTypeNum,
+			(PtrSSchema) (elementType.ElSSchema),
+			LoadedDocument[document - 1], FALSE);
+}
+
 
 /*----------------------------------------------------------------------
    TtaSetTransformCallback permet de connecter une fonction de l'application
@@ -3142,7 +3225,6 @@ PtrDocument         pDoc;
 	 AddEntrySurround (pSS, typeNum);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SurroundMenuInput : traite le retour du menu Surround.          
    entree est le numero de l'entree que l'utilisateur a    
@@ -3434,7 +3516,6 @@ int                 entree;
       CancelLastEditFromHistory (pDoc);
    CloseHistorySequence (pDoc);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    BuildChangeTypeMenu   cree dans le buffer menuBuffer le menu des 
@@ -3477,7 +3558,6 @@ PtrElement   pEl;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtcChangeType : traite la commande "Changer en".                
   ----------------------------------------------------------------------*/
@@ -3512,8 +3592,7 @@ View                view;
       /* on ne peut rien faire si le pere est protege' */
       if (firstSel == lastSel)
 	 /* on ne change qu'un element a la fois */
-	 if (firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrConstruct !=
-	     CsBasicElement)
+	 if (firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrConstruct != CsBasicElement)
 	    /* on ne change pas les types de base */
 	   {
 	      /* construit le menu pour le choix du nouveau type de l'element */
@@ -3533,4 +3612,3 @@ View                view;
 		}
 	   }
 }
-#endif /* _WIN_PRINT */

@@ -16,10 +16,6 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-
-#include "XMLparser_f.h"
-#include "html2thot_f.h"
-
 #include "GraphML.h"
 #include "HTML.h"
 #include "parser.h"
@@ -84,6 +80,10 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 };
 
 #define MaxMsgLength 200
+
+#include "fetchXMLname_f.h"
+#include "html2thot_f.h"
+#include "XMLparser_f.h"
 
 
 /*----------------------------------------------------------------------

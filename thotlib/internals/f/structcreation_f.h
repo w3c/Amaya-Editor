@@ -10,8 +10,6 @@ extern void NotifySubTree ( APPevent appEvent,
                             PtrDocument pDoc,
                             PtrElement pEl,
                             int origDoc );
-extern void RedisplayDocViews ( PtrDocument pDoc );
-extern void AbstractImageUpdated ( PtrDocument pDoc );
 extern void InsertOption ( PtrElement pEl,
                            PtrElement * pOption,
                            PtrDocument pDoc );
@@ -87,8 +85,6 @@ extern void NotifySubTree (/* APPevent appEvent,
                               PtrDocument pDoc,
                               PtrElement pEl,
                               int origDoc */);
-extern void RedisplayDocViews (/* PtrDocument pDoc */);
-extern void AbstractImageUpdated (/* PtrDocument pDoc */);
 extern void InsertOption (/* PtrElement pEl,
                              PtrElement * pOption,
                              PtrDocument pDoc */);

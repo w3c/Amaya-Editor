@@ -25,28 +25,8 @@
 #include "language.h"
 #include "fileaccess.h"
 #include "content.h"
-#ifndef NODISPLAY
 #include "frame.h"
-#endif
 #include "typecorr.h"
-
-#ifndef NODISPLAY
-#include "boxselection_f.h"
-#include "geom_f.h"
-#endif
-#include "attributes_f.h"
-#include "changepresent_f.h"
-#include "changeabsbox_f.h"
-#include "content_f.h"
-#include "font_f.h"
-#include "abspictures_f.h"
-#include "memory_f.h"
-#include "structselect_f.h"
-#include "thotmsg_f.h"
-#include "tree_f.h"
-#include "units_f.h"
-#include "viewapi_f.h"
-#include "writepivot_f.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -55,7 +35,21 @@
 #include "frame_tv.h"
 #endif
 
-extern int          UserErrorCode;
+#include "abspictures_f.h"
+#include "attributes_f.h"
+#include "boxselection_f.h"
+#include "changeabsbox_f.h"
+#include "changepresent_f.h"
+#include "content_f.h"
+#include "font_f.h"
+#include "geom_f.h"
+#include "memory_f.h"
+#include "structselect_f.h"
+#include "thotmsg_f.h"
+#include "tree_f.h"
+#include "units_f.h"
+#include "viewapi_f.h"
+#include "writepivot_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -726,53 +720,32 @@ Document            document;
    the second part of the text is created as the next sibling.
    position: rank of the character after which the element must be cut.
    document: the document to which the element belongs.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSplitText (Element element, int position, Document document)
-
 #else  /* __STDC__ */
 void                TtaSplitText (element, position, document)
 Element             element;
 int                 position;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrElement	secondPart, pNextEl;
 
    UserErrorCode = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (!((PtrElement) element)->ElTerminal)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else if (((PtrElement) element)->ElLeafType != LtText)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
-   else
-      /* checking the document parameter */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
+   else if (document < 1 || document > MAX_DOCUMENTS)
 	TtaError (ERR_invalid_document_parameter);
-     }
    else if (LoadedDocument[document - 1] == NULL)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-      if (position < 1 || position >
+   else if (position < 1 || position >
 	  ((PtrElement) element)->ElTextLength)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	pNextEl = ((PtrElement) element)->ElNext;
@@ -800,7 +773,6 @@ Document            document;
    TRUE if merging has been done.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 ThotBool            TtaMergeText (Element element, Document document)
 
@@ -812,61 +784,46 @@ Document            document;
 #endif /* __STDC__ */
 
 {
+   ThotBool            ok = FALSE;
+#ifndef NODISPLAY
    PtrElement          FreeElement;
    PtrElement          pEl2;
-   ThotBool            ok;
 
    UserErrorCode = 0;
-   ok = FALSE;
    if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else if (((PtrElement) element)->ElLeafType != LtText)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
-   else
-      /* verification of the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_element_type);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
+     /* parameter document is correct */
      {
-	pEl2 = ((PtrElement) element)->ElNext;
-	if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsConstant)
-	   if (pEl2 != NULL)
-	      if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
-		 if (pEl2->ElLanguage == ((PtrElement) element)->ElLanguage)
-		    if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
-		       if (SameAttributes ((PtrElement) element, pEl2))
-			  if (((PtrElement) element)->ElSource == NULL && pEl2->ElSource == NULL)
-			     if (BothHaveNoSpecRules ((PtrElement) element, pEl2))
-			       {
-#ifndef NODISPLAY
-				  /* destroy the second element of the text */
-				  DestroyAbsBoxes (pEl2, LoadedDocument[document - 1], FALSE);
-#endif
-				  MergeTextElements ((PtrElement) element, &FreeElement,
-				       LoadedDocument[document - 1], FALSE, FALSE);
-#ifndef NODISPLAY
-				  RedisplayMergedText ((PtrElement) element, document);
-#endif
-				  if (FreeElement != NULL)
-				     DeleteElement (&FreeElement, LoadedDocument[document - 1]);
-				  ok = TRUE;
-			       }
+       pEl2 = ((PtrElement) element)->ElNext;
+       if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsConstant)
+	 if (pEl2 != NULL)
+	   if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
+	     if (pEl2->ElLanguage == ((PtrElement) element)->ElLanguage)
+	       if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+		 if (SameAttributes ((PtrElement) element, pEl2))
+		   if (((PtrElement) element)->ElSource == NULL && pEl2->ElSource == NULL)
+		     if (BothHaveNoSpecRules ((PtrElement) element, pEl2))
+		       {
+			 /* destroy the second element of the text */
+			 DestroyAbsBoxes (pEl2, LoadedDocument[document - 1], FALSE);
+			 MergeTextElements ((PtrElement) element, &FreeElement,
+					    LoadedDocument[document - 1], FALSE, FALSE);
+			 RedisplayMergedText ((PtrElement) element, document);
+			 if (FreeElement != NULL)
+			   DeleteElement (&FreeElement, LoadedDocument[document - 1]);
+			 ok = TRUE;
+		       }
      }
+#endif
    return ok;
 }
 
@@ -1343,44 +1300,6 @@ Element             element;
 
 
 /*----------------------------------------------------------------------
-   TtaGetTextLength
-
-   Returns the length of a Text basic element.
-
-   Parameter:
-   element: the element of interest. This element must be a basic
-   element of type Text.
-
-   Return value:
-   textLength (number of characters) of the character string
-   contained in the element.
-
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaGetTextLength (Element element)
-#else  /* __STDC__ */
-int                 TtaGetTextLength (element)
-Element             element;
-#endif /* __STDC__ */
-{
-   int                 textLength;
-
-   UserErrorCode = 0;
-   textLength = 0;
-   if (element == NULL)
-     TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
-     TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-     TtaError (ERR_invalid_element_type);
-   else
-     textLength = ((PtrElement) element)->ElTextLength;
-   return textLength;
-}
-
-
-/*----------------------------------------------------------------------
    TtaGetPictureType
 
    Returns the type of Picture element.
@@ -1454,68 +1373,6 @@ Element             element;
 	 }
      }
    return pictType;
-}
-
-/*----------------------------------------------------------------------
-   TtaGiveTextContent
-
-   Returns the content of a Text basic element.
-
-   Parameters:
-   element: the element of interest. This element must be a basic
-   element of type Text.
-   buffer: the buffer that will contain the text.
-   length: maximum length of that buffer.
-
-   Return parameters:
-   buffer: (the buffer contains the text).
-   length: actual length of the text in the buffer.
-   language: language of the text.
-
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveTextContent (Element element, STRING buffer, int *length, Language * language)
-#else  /* __STDC__ */
-void                TtaGiveTextContent (element, buffer, length, language)
-Element             element;
-STRING              buffer;
-int                *length;
-Language           *language;
-
-#endif /* __STDC__ */
-{
-   PtrTextBuffer       pBuf;
-   STRING              ptr;
-   int                 len, l;
-
-   UserErrorCode = 0;
-   if (element == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
-	TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-	TtaError (ERR_invalid_element_type);
-   else
-     {
-	len = 0;
-	pBuf = ((PtrElement) element)->ElText;
-	ptr = buffer;
-	while (pBuf != NULL && len < (*length) - 1)
-	  {
-	     if ((*length) < len + pBuf->BuLength + 1)
-		l = (*length) - len;
-	     else
-		l = pBuf->BuLength + 1;
-	     ustrncpy (ptr, pBuf->BuContent, l);
-	     ptr = ptr + (l - 1);
-	     len = len + (l - 1);
-	     pBuf = pBuf->BuNext;
-	  }
-	*length = len;
-	*ptr = EOS;
-	*language = ((PtrElement) element)->ElLanguage;
-     }
 }
 
 /*----------------------------------------------------------------------

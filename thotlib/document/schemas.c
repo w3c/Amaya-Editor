@@ -33,8 +33,6 @@ APresentation;
 #include "appdialogue_tv.h"
 #include "modif_tv.h"
 
-extern PtrEventsSet SchemasEvents;
-
 /* table des schemas de presentation charges */
 static APresentation LoadedPSchema[MAX_PSCHEMAS];
 
@@ -44,36 +42,6 @@ static APresentation LoadedPSchema[MAX_PSCHEMAS];
 #include "readprs_f.h"
 #include "schemas_f.h"
 #include "tree_f.h"
-
-/*----------------------------------------------------------------------
-   InitApplicationSchema						
-   Initializes the application pointer in the SSchema	
-   if there is an application for this schema. If not, the	
-   pointer is set to NULL.					
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitApplicationSchema (PtrSSchema pSS)
-#else  /* __STDC__ */
-void                InitApplicationSchema (pSS)
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-{
-   CHAR_T              schemaName[MAX_NAME_LENGTH];
-   PtrEventsSet        schemaActions;
-
-   ustrcpy (schemaName, pSS->SsName);
-   pSS->SsActionList = NULL;
-   if (pSS->SsName[0] != EOS)
-     {
-	schemaActions = SchemasEvents;
-	while (schemaActions != NULL &&
-	       ustrcmp (schemaActions->EvSName, schemaName) != 0)
-	   schemaActions = schemaActions->EvSNext;
-	if (schemaActions != NULL)
-	   pSS->SsActionList = schemaActions;
-     }
-}
 
 /*----------------------------------------------------------------------
    InitNatures     initialise la table des schemas de presentation 
@@ -359,7 +327,8 @@ int                 rule;
 	     FreeSchStruc (pNatureSS);
 	     pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
 	  }
-	InitApplicationSchema (pNatureSS);
+	if (ThotLocalActions[T_initevents] != NULL)
+	  (*ThotLocalActions[T_initevents]) (pNatureSS);
      }
 }
 
@@ -545,7 +514,8 @@ ThotBool            extension;
 	  {
 	     /* traduit les noms du schema dans la langue de l'utilisateur */
 	     ConfigTranslateSSchema (*pSS);
-	     InitApplicationSchema (*pSS);
+	     if (ThotLocalActions[T_initevents] != NULL)
+	       (*ThotLocalActions[T_initevents]) (*pSS);
 	  }
      }
    else

@@ -1407,6 +1407,120 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+   AttachAttrToElem attachs the attribute to the element
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void	AttachAttrToElem (pAttr, pEl, pDoc)
+PtrAttribute pAttr;
+PtrElement pEl;
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   Language            lang;
+   PtrAttribute        pAttrAsc;
+   PtrElement          pElAttr;
+
+   /* On ne traite pas les marques de page */
+   if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+     {
+        if (pAttr->AeAttrNum == 1)
+   	/* c'est l'attribut langue */
+          {
+   	  /* change la langue de toutes les feuilles de texte du sous-arbre */
+   	  /* de l'element */
+   	  if (pAttr->AeAttrText != NULL)
+   	     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
+   	  else
+   	     /* c'est une suppression de l'attribut Langue */
+   	    {
+   	       lang = TtaGetDefaultLanguage ();		/* langue par defaut */
+   	       /* on cherche si un ascendant porte l'attribut Langue */
+   	       if (pEl->ElParent != NULL)
+   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
+   	       else
+   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
+
+   	       if (pAttrAsc != NULL)
+   		  /* un ascendant definit la langue, on prend cette langue */
+   		  if (pAttrAsc->AeAttrText != NULL)
+   		     lang = TtaGetLanguageIdFromName (pAttrAsc->AeAttrText->BuContent);
+   	    }
+   	  ChangeLanguage (pDoc, pEl, lang, FALSE);
+          }
+
+        /* met la nouvelle valeur de l'attribut dans l'element et */
+        /* applique les regles de presentation de l'attribut a l'element */
+        AttachAttrWithValue (pEl, pDoc, pAttr);
+        if (ThotLocalActions[T_attrtable] != NULL)
+   	(*ThotLocalActions[T_attrtable])
+   	   (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
+
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   AttachAttrToRange applique l'attribut pAttr a une partie de document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
+#else  /* __STDC__ */
+static void         AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc, reDisplay)
+PtrAttribute        pAttr;
+int                 lastChar;
+int                 firstChar;
+PtrElement          pLastSel;
+PtrElement          pFirstSel;
+PtrDocument         pDoc;
+ThotBool		    reDisplay;
+#endif /* __STDC__ */
+{
+   PtrElement          pEl;
+   int                 i;
+
+   /* eteint d'abord la selection */
+   TtaClearViewSelections ();
+   /* Coupe les elements du debut et de la fin de la selection s'ils */
+   /* sont partiellement selectionnes */
+   IsolateSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
+   /* start an operation sequence in editing history */
+   if (ThotLocalActions[T_openhistory] != NULL)
+	(*ThotLocalActions[T_openhistory]) (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+   /* parcourt les elements selectionnes */
+   pEl = pFirstSel;
+   while (pEl != NULL)
+     {
+	AttachAttrToElem (pAttr, pEl, pDoc);
+	/* cherche l'element a traiter ensuite */
+	pEl = NextInSelection (pEl, pLastSel);
+     }
+   /* si c'est un changement de langue qui s'applique a la racine de */
+   /* l'arbre principal du document, on change aussi la langue de */
+   /* tous les autres arbre de ce document */
+   if (pAttr->AeAttrNum == 1)	/* attribut Langue = 1 */
+      if (pFirstSel == pDoc->DocRootElement)
+	{
+	   for (i = 1; i <= MAX_PARAM_DOC; i++)
+	      if (pDoc->DocParameters[i - 1] != NULL)
+		 AttachAttrToElem (pAttr, pDoc->DocParameters[i - 1], pDoc);
+	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
+	      if (pDoc->DocAssocRoot[i - 1] != NULL)
+		 AttachAttrToElem (pAttr, pDoc->DocAssocRoot[i - 1], pDoc);
+	}
+   /* close the editing sequence */
+   if (ThotLocalActions[T_closehistory] != NULL)
+	(*ThotLocalActions[T_closehistory]) (pDoc);
+   /* parcourt a nouveau les elements selectionnes pour fusionner les */
+   /* elements voisins de meme type ayant les memes attributs, reaffiche */
+   /* toutes les vues et retablit la selection */
+   if (reDisplay)
+     SelectRange (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+}
+
+/*----------------------------------------------------------------------
    CallbackValAttrMenu
    handles the callback of the form which captures the attribute values.
    Applies to the selected elements the attributes chosen by the user.

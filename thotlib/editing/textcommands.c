@@ -597,7 +597,6 @@ View                view;
    MovingCommands (7, document, view, TRUE);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CopyXClipboard insere le contenu de la selection courante dans   
    le Xbuffer pour transmettre la selection X.             
@@ -767,7 +766,6 @@ View                view;
    Xbuffer [i] = 0;
    return i;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    TtcCopyToClipboard                                              
@@ -781,9 +779,7 @@ View                view;
 #endif
 {
 #  ifdef _WINDOWS
-#  ifndef _WIN_PRINT
    ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#  endif /* _WIN_PRINT */
 #  else /* _WINDOWS */
    int                 frame;
 

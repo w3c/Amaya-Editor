@@ -32,22 +32,20 @@
 #include "constpiv.h"
 #include "labelAllocator.h"
 
-#include "tree_f.h"
-#include "thotmsg_f.h"
-#include "structschema_f.h"
-#include "applicationapi_f.h"
-#include "writepivot_f.h"
-#include "readpivot_f.h"
-#include "fileaccess_f.h"
-#include "callback_f.h"
-#include "externalref_f.h"
-#include "labelalloc_f.h"
-
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "edit_tv.h"
 
-extern int          UserErrorCode;
+#include "applicationapi_f.h"
+#include "callback_f.h"
+#include "externalref_f.h"
+#include "fileaccess_f.h"
+#include "labelalloc_f.h"
+#include "readpivot_f.h"
+#include "structschema_f.h"
+#include "thotmsg_f.h"
+#include "tree_f.h"
+#include "writepivot_f.h"
 
 
 /*----------------------------------------------------------------------

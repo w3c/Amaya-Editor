@@ -6,6 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool LoadRemoteStyleSheet ( STRING url,
+                                       Document doc,
+                                       Element el,
+                                       CSSInfoPtr css,
+                                       STRING completeURL,
+                                       STRING localfile );
 extern void InitCSS ( void );
 extern void LinkCSS ( Document doc,
                       View view );
@@ -20,6 +26,12 @@ extern void RemoveCSS ( Document doc,
 
 #else /* __STDC__ */
 
+extern ThotBool LoadRemoteStyleSheet (/* STRING url,
+                                         Document doc,
+                                         Element el,
+                                         CSSInfoPtr css,
+                                         STRING completeURL,
+                                         STRING localfile */);
 extern void InitCSS (/* void */);
 extern void LinkCSS (/* Document doc,
                         View view */);

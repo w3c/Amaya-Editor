@@ -70,6 +70,7 @@ static ThotBool     FromKeyboard;
 #include "changepresent_f.h"
 #include "content_f.h"
 #include "docs_f.h"
+#include "displayview_f.h"
 #include "editcommands_f.h"
 #include "font_f.h"
 #include "frame_f.h"
@@ -1367,7 +1368,6 @@ void CloseTextInsertion ()
   withAppliControl = CloseTextInsertionWithControl ();
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CloseParagraphInsertion teste s'il faut reformater un paragraphe  
    suite a` une insertion.                                 
@@ -1398,9 +1398,11 @@ int                 frame;
 	   /* Reevalue le bloc de lignes */
 	   RecomputeLines (LastInsertParagraph, NULL, NULL, LastInsertThotWindow);
 	   /* Et l'affiche */
-	   SwitchSelection (LastInsertThotWindow, FALSE);
+	   if (ThotLocalActions[T_switchsel])
+	     (*ThotLocalActions[T_switchsel]) (LastInsertThotWindow, FALSE);
 	   RedrawFrameBottom (LastInsertThotWindow, 0);
-	   SwitchSelection (LastInsertThotWindow, TRUE);
+	   if (ThotLocalActions[T_switchsel])
+	     (*ThotLocalActions[T_switchsel]) (LastInsertThotWindow, TRUE);
 	   LastInsertParagraph = NULL;
 	}
       else
@@ -1429,7 +1431,6 @@ int                 frame;
 		}
 	}
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    insere dans la boite pBox.                                      
@@ -1502,7 +1503,8 @@ int                 frame;
 
   if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, TRUE))
     {
-      SwitchSelection (frame, FALSE);
+      if (ThotLocalActions[T_switchsel])
+	(*ThotLocalActions[T_switchsel]) (frame, FALSE);
       /* efface la selection precedente */
       switch (c)
 	{
@@ -1621,7 +1623,9 @@ int                 frame;
 	    yDelta = 0;
 	  BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
 	}
-      SwitchSelection (frame, FALSE);		/* Reaffiche la selection */
+      /* Reaffiche la selection */
+      if (ThotLocalActions[T_switchsel])
+	(*ThotLocalActions[T_switchsel]) (frame, FALSE);
       APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
     }
 }
@@ -2732,10 +2736,12 @@ int                 editType;
 	     if (editType != TEXT_COPY)
 	       {
 		 pFrame->FrReady = TRUE;
-		 SwitchSelection (frame, FALSE);
+		 if (ThotLocalActions[T_switchsel])
+		   (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 		 /* debloque l'affichage */
 		 still = RedrawFrameBottom (frame, 0);
-		 SwitchSelection (frame, TRUE);
+		 if (ThotLocalActions[T_switchsel])
+		   (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	       }
 
 	     if (pAb->AbElement == NULL)
@@ -2907,7 +2913,8 @@ int                 keyboard;
 			else
 			  {
 			    /* efface la selection precedente */
-			    SwitchSelection (frame, FALSE);
+			    if (ThotLocalActions[T_switchsel])
+			      (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 			    /* libere le buffer vide */
 			    if (pBuffer->BuLength == 0)
 			      if (pBuffer->BuPrevious != NULL)
@@ -3151,7 +3158,8 @@ int                 keyboard;
 		      else
 			{
 			  /* efface la selection precedente */
-			  SwitchSelection (frame, FALSE);
+			  if (ThotLocalActions[T_switchsel])
+			    (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 			  /* Initialise l'insertion d'un caractere */
 			  charsDelta = 1;
 			  pix = 0;
@@ -3342,7 +3350,8 @@ int                 keyboard;
 		      /* restaure l'indicateur d'insertion */
 		      TextInserting = saveinsert;
 		      /* Affiche la nouvelle selection */
-		      SwitchSelection (frame, TRUE);
+		      if (ThotLocalActions[T_switchsel])
+			(*ThotLocalActions[T_switchsel]) (frame, TRUE);
 		      pFrame->FrReady = TRUE;
 		    }
 		}
@@ -3456,12 +3465,14 @@ int                 nbytes;
 		  ContentEditing (TEXT_X_PASTE);
 
 		  /* Deplacement de la selection a la fin du texte insere */
-		  /* fface la selection precedente */
-		  SwitchSelection (frame, FALSE);
+		  /* Efface la selection precedente */
+		  if (ThotLocalActions[T_switchsel])
+		    (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 		  lg += previousChars;
 		  SelectString (pDoc, pAb->AbElement, lg, lg);
 		  /* Affiche la nouvelle selection */
-		  SwitchSelection (frame, TRUE);
+		  if (ThotLocalActions[T_switchsel])
+		    (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 		  /* Cree un nouvel element */
 		  if (ThotLocalActions[T_enter] != NULL)
 		     (*ThotLocalActions[T_enter]) ();
@@ -3753,6 +3764,13 @@ void                EditingLoadResources ()
 	TteConnectAction (T_insertchar, (Proc) InsertChar);
 	TteConnectAction (T_AIupdate, (Proc) AbstractImageUpdated);
 	TteConnectAction (T_redisplay, (Proc) RedisplayDocViews);
+	TteConnectAction (T_freesavedel, (Proc) FreeSavedElements);
+	TteConnectAction (T_clearhistory, (Proc) ClearHistory);
+	TteConnectAction (T_openhistory, (Proc) OpenHistorySequence);
+	TteConnectAction (T_addhistory, (Proc) AddEditOpInHistory);
+	TteConnectAction (T_attraddhistory, (Proc) AddAttrEditOpInHistory);
+	TteConnectAction (T_cancelhistory, (Proc) CancelLastEditFromHistory);
+	TteConnectAction (T_closehistory, (Proc) CloseHistorySequence);
 
 	MenuActionList[0].Call_Action = (Proc) TtcInsertChar;
 	MenuActionList[0].User_Action = (UserProc) NULL;

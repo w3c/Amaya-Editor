@@ -26,14 +26,46 @@
 #include "typemedia.h"
 #include "modif.h"
 #include "appstruct.h"
-
-#include "memory_f.h"
-#include "readstr_f.h"
+#include "appdialogue.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "appevents_tv.h"
+#include "appdialogue_tv.h"
 
+
+#include "memory_f.h"
+#include "readstr_f.h"
+
+/*----------------------------------------------------------------------
+   InitApplicationSchema						
+   Initializes the application pointer in the SSchema	
+   if there is an application for this schema. If not, the	
+   pointer is set to NULL.					
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                InitApplicationSchema (PtrSSchema pSS)
+#else  /* __STDC__ */
+void                InitApplicationSchema (pSS)
+PtrSSchema          pSS;
+
+#endif /* __STDC__ */
+{
+   CHAR_T              schemaName[MAX_NAME_LENGTH];
+   PtrEventsSet        schemaActions;
+
+   ustrcpy (schemaName, pSS->SsName);
+   pSS->SsActionList = NULL;
+   if (pSS->SsName[0] != EOS)
+     {
+	schemaActions = SchemasEvents;
+	while (schemaActions != NULL &&
+	       ustrcmp (schemaActions->EvSName, schemaName) != 0)
+	   schemaActions = schemaActions->EvSNext;
+	if (schemaActions != NULL)
+	   pSS->SsActionList = schemaActions;
+     }
+}
 
 /*----------------------------------------------------------------------
    FetchAction finds and returns an action with the name actionName 
@@ -221,6 +253,10 @@ STRING              name;
 {
    PtrEventsSet        pevset, newEvSet;
    int                 event;
+
+   if (ThotLocalActions[T_initevents] == NULL)
+     /* enable event callbacks */
+     TteConnectAction (T_initevents, (Proc) InitApplicationSchema);
 
    /* Create the new events set */
    newEvSet = (PtrEventsSet) TtaGetMemory (sizeof (EventsSet));

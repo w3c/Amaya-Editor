@@ -38,7 +38,9 @@ extern void CreateAttrIntSize ( STRING buffer,
                                 Document doc );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
-extern CHAR_T GetNextInputChar ( ThotBool *endOfFile );
+extern CHAR_T GetNextInputChar ( FILE *infile,
+                                 int *index,
+                                 ThotBool *endOfFile );
 extern ThotBool IsXHTMLDocType ( STRING fileName );
 extern void CheckAbstractTree ( STRING pathURL );
 extern void ParseIncludedHTML ( Element elem,
@@ -88,7 +90,9 @@ extern void CreateAttrIntSize (/* STRING buffer,
                                   Document doc */);
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
-extern CHAR_T GetNextInputChar (/* ThotBool *endOfFile */);
+extern CHAR_T GetNextInputChar (/* FILE *infile,
+                                   int *index,
+                                   ThotBool *endOfFile */);
 extern ThotBool IsXHTMLDocType (/* STRING fileName */);
 extern void CheckAbstractTree (/* STRING pathURL */);
 extern void ParseIncludedHTML (/* Element elem,

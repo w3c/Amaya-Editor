@@ -39,8 +39,6 @@ extern void TtaAskFirstCreation ( void );
 extern void TtaInsertFirstChild ( Element * newElement,
                                   Element parent,
                                   Document document );
-extern void TtaCreateElement ( ElementType elementType,
-                               Document document );
 extern void TtaInsertElement ( ElementType elementType,
                                Document document );
 extern void TtaRemoveTree ( Element element,
@@ -57,7 +55,6 @@ extern void TtaSetStructureChecking ( ThotBool on,
                                       Document document );
 extern int TtaGetStructureChecking ( Document document );
 extern void TtaSetCheckingMode ( ThotBool strict );
-extern Element TtaGetMainRoot ( Document document );
 extern void TtaNextAssociatedRoot ( Document document,
                                     Element * root );
 extern Element TtaGetFirstChild ( Element parent );
@@ -68,12 +65,10 @@ extern void TtaPreviousSibling ( Element * element );
 extern void TtaNextSibling ( Element * element );
 extern Element TtaGetSuccessor ( Element element );
 extern Element TtaGetPredecessor ( Element element );
-extern Element TtaGetParent ( Element element );
 extern Element TtaGetCommonAncestor ( Element element1,
                                       Element element2 );
 extern Element TtaGetTypedAncestor ( Element element,
                                      ElementType ancestorType );
-extern ElementType TtaGetElementType ( Element element );
 extern ThotBool TtaIsExtensionElement ( Element element );
 extern STRING TtaGetElementTypeName ( ElementType elementType );
 extern STRING TtaGetElementTypeOriginalName ( ElementType elementType );
@@ -84,7 +79,6 @@ extern void TtaGiveTypeFromOriginalName ( ElementType * elementType,
 extern int TtaSameTypes ( ElementType type1,
                           ElementType type2 );
 extern STRING TtaGetElementLabel ( Element element );
-extern int TtaGetElementVolume ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
 extern int TtaIsLeaf ( ElementType elementType );
 extern Construct TtaGetConstructOfType ( ElementType elementType );
@@ -114,16 +108,8 @@ extern ThotBool TtaCanInsertSibling ( ElementType elementType,
 extern ThotBool TtaCanInsertFirstChild ( ElementType elementType,
                                          Element parent,
                                          Document document );
-extern Document TtaGetDocument ( Element element );
 extern void TtaNextCopiedElement ( Element * element );
 extern Document TtaGetCopiedDocument ( void );
-extern Element TtaSearchTypedElement ( ElementType searchedType,
-                                       SearchDomain scope,
-                                       Element element );
-extern Element TtaSearchTypedElementInTree ( ElementType searchedType,
-                                             SearchDomain scope,
-                                             Element parent,
-                                             Element element );
 extern Element TtaSearchElementByLabel ( STRING searchedLabel,
                                          Element element );
 extern Element TtaSearchEmptyElement ( SearchDomain scope,
@@ -167,8 +153,6 @@ extern void TtaAskFirstCreation (/* void */);
 extern void TtaInsertFirstChild (/* Element * newElement,
                                     Element parent,
                                     Document document */);
-extern void TtaCreateElement (/* ElementType elementType,
-                                 Document document */);
 extern void TtaInsertElement (/* ElementType elementType,
                                  Document document */);
 extern void TtaRemoveTree (/* Element element,
@@ -185,7 +169,6 @@ extern void TtaSetStructureChecking (/* ThotBool on,
                                         Document document */);
 extern int TtaGetStructureChecking (/* Document document */);
 extern void TtaSetCheckingMode (/* ThotBool strict */);
-extern Element TtaGetMainRoot (/* Document document */);
 extern void TtaNextAssociatedRoot (/* Document document,
                                       Element * root */);
 extern Element TtaGetFirstChild (/* Element parent */);
@@ -196,12 +179,10 @@ extern void TtaPreviousSibling (/* Element * element */);
 extern void TtaNextSibling (/* Element * element */);
 extern Element TtaGetSuccessor (/* Element element */);
 extern Element TtaGetPredecessor (/* Element element */);
-extern Element TtaGetParent (/* Element element */);
 extern Element TtaGetCommonAncestor (/* Element element1,
                                         Element element2 */);
 extern Element TtaGetTypedAncestor (/* Element element,
                                        ElementType ancestorType */);
-extern ElementType TtaGetElementType (/* Element element */);
 extern ThotBool TtaIsExtensionElement (/* Element element */);
 extern STRING TtaGetElementTypeName (/* ElementType elementType */);
 extern STRING TtaGetElementTypeOriginalName (/* ElementType elementType */);
@@ -212,7 +193,6 @@ extern void TtaGiveTypeFromOriginalName (/* ElementType * elementType,
 extern int TtaSameTypes (/* ElementType type1,
                             ElementType type2 */);
 extern STRING TtaGetElementLabel (/* Element element */);
-extern int TtaGetElementVolume (/* Element element */);
 extern int TtaIsConstant (/* ElementType elementType */);
 extern int TtaIsLeaf (/* ElementType elementType */);
 extern Construct TtaGetConstructOfType (/* ElementType elementType */);
@@ -242,16 +222,8 @@ extern ThotBool TtaCanInsertSibling (/* ElementType elementType,
 extern ThotBool TtaCanInsertFirstChild (/* ElementType elementType,
                                            Element parent,
                                            Document document */);
-extern Document TtaGetDocument (/* Element element */);
 extern void TtaNextCopiedElement (/* Element * element */);
 extern Document TtaGetCopiedDocument (/* void */);
-extern Element TtaSearchTypedElement (/* ElementType searchedType,
-                                         SearchDomain scope,
-                                         Element element */);
-extern Element TtaSearchTypedElementInTree (/* ElementType searchedType,
-                                               SearchDomain scope,
-                                               Element parent,
-                                               Element element */);
 extern Element TtaSearchElementByLabel (/* STRING searchedLabel,
                                            Element element */);
 extern Element TtaSearchEmptyElement (/* SearchDomain scope,

@@ -6,6 +6,7 @@
  */
  
 
+THOT_EXPORT int UserErrorCode;
 
 THOT_EXPORT CHAR_T DefaultDocumentName[MAX_PATH]; /* Name of default document to be loaded*/
 

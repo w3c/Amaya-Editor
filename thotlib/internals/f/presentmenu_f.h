@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ModifyColor ( int colorNum,
+                          ThotBool Background );
 extern void TtcStandardGeometry ( Document document,
                                   View view );
 extern void TtcStandardPresentation ( Document document,
@@ -24,6 +26,8 @@ extern void TtcChangeFormat ( Document document,
 
 #else /* __STDC__ */
 
+extern void ModifyColor (/* int colorNum,
+                            ThotBool Background */);
 extern void TtcStandardGeometry (/* Document document,
                                     View view */);
 extern void TtcStandardPresentation (/* Document document,

@@ -537,12 +537,12 @@ ThotBool             IsW3Path (path)
 const STRING        path;
 #endif /* __STDC__ */
 {
-   if ((ustrncmp (path, TEXT("http:"), 5)) && (ustrncmp (path, TEXT("ftp:"), 4)) &&
-       (ustrncmp (path, TEXT("telnet:"), 7)) && (ustrncmp (path, TEXT("wais:"), 5)) &&
-       (ustrncmp (path, TEXT("news:"), 5)) && (ustrncmp (path, TEXT("gopher:"), 7)) &&
-       (ustrncmp (path, TEXT("mailto:"), 7)) && (ustrncmp (path, TEXT("archie:"), 7)))
-      return FALSE;
-   return TRUE;
+  if (ustrncmp (path, TEXT("http:"), 5) && ustrncmp (path, TEXT("ftp:"), 4) &&
+      ustrncmp (path, TEXT("telnet:"), 7) && ustrncmp (path, TEXT("wais:"), 5) &&
+      ustrncmp (path, TEXT("news:"), 5) && ustrncmp (path, TEXT("gopher:"), 7) &&
+      ustrncmp (path, TEXT("mailto:"), 7) && ustrncmp (path, TEXT("archie:"), 7))
+    return FALSE;
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -710,11 +710,7 @@ STRING     url;
       usprintf (ptr, TEXT("%s%s%d%s"), TempFileDirectory, DIR_STR, doc, DIR_STR);
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */
-#   ifdef _WINDOWS
-	umkdir (ptr);
-#   else  /* !_WINDOWS */
-	umkdir (ptr, S_IRWXU);
-#   endif /* !_WINDOWS */
+	TtaMakeDirectory (ptr);
 
       /* don't include the query string within document name */
       n = ustrrchr(documentname, TEXT('?'));

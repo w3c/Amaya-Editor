@@ -194,7 +194,22 @@ typedef struct _SchemaMenu_Ctl
 #define T_xmlparsedoc			107
 #define T_transformintotype		108
 #define T_docmodified                   109
-#define MAX_LOCAL_ACTIONS               110
+#define T_switchsel                     110
+#define T_checksel                      111
+#define T_resetsel                      112
+#define T_selstring                     113
+#define T_extendsel                     114
+#define T_showbox                       115
+#define T_freesavedel                   116
+#define T_clearhistory                  117
+#define T_openhistory                   118
+#define T_addhistory                    119
+#define T_attraddhistory                120
+#define T_cancelhistory                 121
+#define T_closehistory                  122
+
+#define T_initevents                    123
+#define MAX_LOCAL_ACTIONS               124
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

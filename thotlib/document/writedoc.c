@@ -25,6 +25,7 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 #include "thotdir.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -79,6 +80,90 @@ static ThotBool     SaveDocWithMove;
 static PtrDocument  DocumentToSave;
 extern CHAR_T         DefaultFileSuffix[5];        
 
+
+
+/*----------------------------------------------------------------------
+   TtaSaveDocument
+
+   Saves a document into a file in Thot format. The document is not closed
+   by the function and can still be accessed by the application program.
+
+   Parameters:
+   document: the document to be saved.
+   documentName: name of the file in which the document must be saved
+   (maximum length 19 characters). The directory name is not part of
+   this parameter (see TtaSetDocumentPath).
+   If the documentName is not the same as the one used when opening
+   (see TtaOpenDocument) or creating (see TtaNewDocument) the document,
+   a new file is created and the file with the old name is unchanged,
+   i. e. a new version is created. If necessary, the old file can be
+   removed by the function TtaRemoveDocument.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSaveDocument (Document document, STRING documentName)
+#else  /* __STDC__ */
+void                TtaSaveDocument (document, documentName)
+Document            document;
+STRING              documentName;
+#endif /* __STDC__ */
+{
+  PtrDocument         pDoc;
+  BinFile             pivotFile;
+  CHAR_T                path[250];
+  int                 i;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    {
+      pDoc = LoadedDocument[document - 1];
+      if (pDoc->DocReadOnly)
+	TtaError (ERR_read_only_document);
+      else
+	{
+	  /* Arrange the file name */
+	  FindCompleteName (documentName, PIV_EXT2, pDoc->DocDirectory, path, &i);
+	  pivotFile = TtaWriteOpen (path);
+	  if (pivotFile == 0)
+	    TtaError (ERR_cannot_open_pivot_file);
+	  else
+	    {
+	      /* writing the document in the file in the pivot format */
+	      SauveDoc (pivotFile, pDoc);
+	      TtaWriteClose (pivotFile);
+	      /* modifies files .EXT of new referenced documents or file which
+		 are no more referenced bu the document */
+	      UpdateExt (pDoc);
+	      /* modifies files .REF of documents that reference elements which are
+		 no more in the document and updates the .EXT file relating to the document */
+	      UpdateRef (pDoc);
+	      if (ustrcmp (documentName, pDoc->DocDName) != 0)
+		/* The document is saved under a new name */
+		{
+		  /* The application wants to create a copy of the document */
+		  /* The document copy will be in the .EXT files relating to the 
+		     referenced documents */
+		  ChangeNomExt (pDoc, documentName, TRUE);
+		  /* Puts the new name into the document descriptor */
+		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+		  ustrncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+		  pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
+#ifndef NODISPLAY
+		  /* changes the title of frames */
+		  ChangeDocumentName (pDoc, documentName);
+#endif
+		}
+	    }
+	}
+    }
+}
 
 /*----------------------------------------------------------------------
    simpleSave sauve un document sous forme pivot dans un fichier   

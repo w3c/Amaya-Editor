@@ -6,12 +6,10 @@
  */
  
 /*
- * windowdisplay.c : handling of low level drawing routines, both for
- *                   MS-Windows (incomplete).
+ * xwindowdisplay.c : handling of low level drawing routines, both for
+ *                    X-Window.
  *
- * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INROA) Unicode and Windows version
- *          D. Veillard (W3C/INRIA) - Windows 95/NT routines
+ * Author:  I. Vatton (INRIA)
  *
  */
 
@@ -21,7 +19,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
-#include "wininclude.h"
+
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -30,6 +28,7 @@
 #include "units_tv.h"
 #include "edit_tv.h"
 #include "thotcolor_tv.h"
+/*#define STEPHANIE */
 
 extern ThotColorStruct cblack;
 
@@ -49,9 +48,6 @@ typedef struct stack_point
 StackPoint;
 static StackPoint   stack[MAX_STACK];
 static int          stack_deep;
-static DWORD fontLangInfo = -1;
-
-extern BOOL autoScroll;
 
 #include "font_f.h"
 #include "units_f.h"
@@ -60,20 +56,6 @@ extern BOOL autoScroll;
 #include "inites_f.h"
 #include "buildlines_f.h"
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void ClipError (int frame) 
-#else  /* !__STDC__ */
-void ClipError (frame); 
-int  frame;
-#endif /* __STDC__ */
-{
-    HWND parent = NULL;
-    if (frame != -1)
-       parent = FrMainRef [frame];
-    MessageBox (parent, TEXT("Cannot select clipping region"), TEXT("Warning"), MB_OK);
-}
 
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
@@ -90,6 +72,9 @@ int                *pY;
 
 #endif /* __STDC__ */
 {
+   if (!font)
+      return;
+   *pY += ((XFontStruct *) font)->ascent;
 }
 
 
@@ -109,11 +94,41 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   TtLineGC.capabilities |= THOT_GC_FOREGROUND;
-   if (RO && ShowReadOnly () && fg == 1)
-      TtLineGC.foreground = RO_Color;
+   if (active)
+     {
+       if (TtWDepth == 1)
+	 {
+	   /* Modify the fill style of the characters */
+#ifdef STEPHANIE
+	   printf ("XSetFillStyle(TtLineGC  FillTiled :%d)\n",FillTiled);
+#endif
+	   XSetFillStyle (TtDisplay, TtLineGC, FillTiled);
+	 }
+       else
+	 {
+	   /* Modify the color of the active boxes */
+#ifdef STEPHANIE
+	   printf ("XSetForeground(TtLineGC,Box_Color: %d\n",Box_Color);  
+#endif
+	   XSetForeground (TtDisplay, TtLineGC, Box_Color);
+	 }
+     }
+   else if (RO && ColorPixel (fg) == cblack.pixel)
+     {
+       /* Color of ReadOnly parts */
+#ifdef STEPHANIE
+       printf ("XSetForeground(TtLineGC,RO_Color: %d\n",RO_Color);
+#endif
+       XSetForeground (TtDisplay, TtLineGC, RO_Color);
+     }
    else
-       TtLineGC.foreground = fg;
+     {
+       /* Color of the box */
+#ifdef STEPHANIE
+       printf ("XSetForeground(TtLineGC,ColorPixel: %d\n",ColorPixel);
+#endif
+       XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
+     }
 }
 
 
@@ -135,8 +150,27 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-    TtLineGC.thick = thick;
-    TtLineGC.style = style;
+    CHAR_T                dash[2];
+    if (style == 0)
+      {
+#ifdef STEPHANIE
+    printf ("XSetLineAttributes (TtLineGC, thick:%d, LineSolid:%d, CapButt:%d, JoinMiter:%d\n",thick, LineSolid, CapButt, JoinMiter);
+#endif
+      XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
+      }
+    else
+      {
+	dash[0] = (CHAR_T) (style * 4);
+	dash[1] = (CHAR_T) 4;
+#ifdef STEPHANIE
+	printf ("XSetDashes(0, dash:%s, 2\n",dash);
+#endif
+	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
+#ifdef STEPHANIE
+	printf ("XSetLineAttributes (TtLineGC, thick:%d,LineOnOffDash :%d, CapButt:%d, JoinMiter:%d\n",thick, LineOnOffDash, CapButt, JoinMiter);
+#endif
+	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
+      }
    /* Load the correct color */
     LoadColor (disp, RO, active, fg);
 }
@@ -155,6 +189,13 @@ int                 active;
 
 #endif /* __STDC__ */
 {
+  if (TtWDepth == 1 && (active || RO))
+    {
+#ifdef STEPHANIE
+     printf ("XSetFillStyle(TtLineGC  FillSolid :%d)\n",FillSolid);
+#endif
+      XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
+    }
 }
 
 
@@ -173,49 +214,14 @@ int                 y2;
 
 #endif /* __STDC__ */
 {
-   HPEN     pen;
-   HPEN     hOldPen;
-   LOGBRUSH logBrush;
-
    x1 += FrameTable[frame].FrLeftMargin;
    y1 += FrameTable[frame].FrTopMargin;
    x2 += FrameTable[frame].FrLeftMargin;
    y2 += FrameTable[frame].FrTopMargin;
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-
-   if (TtLineGC.thick <= 1) {
-	  switch (TtLineGC.style) {
-             case 0:  pen = CreatePen (PS_SOLID, TtLineGC.thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));   
-                      break;
-             case 1:  pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue)); 
-                      break;
-             default: pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
-                      break;
-	   }
-   } else {
-          logBrush.lbStyle = BS_SOLID;
-          logBrush.lbColor = RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue);
-
-          switch (TtLineGC.style) {
-                 case 0:  pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL);   
-                          break;
-                 case 1:  pen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL); 
-                          break;
-                 default: pen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL);
-                          break;
-		  }
-   } 
-
-   hOldPen = SelectObject (TtDisplay, pen);
-
-   MoveToEx (TtDisplay, x1, y1, NULL);
-   LineTo (TtDisplay, x2, y2);
-
-   SelectObject (TtDisplay, hOldPen);
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
-   if (!DeleteObject (pen))
-      WinErrorBox (WIN_Main_Wd);
-   pen = (HPEN) 0;
+#ifdef STEPHANIE
+   printf ("XDrawLine (FrRef[frame](c'est un drawable), TtLineGC, x1:%d, y1:%d, x2:%d, y2:%d\n", x1, y1, x2, y2);
+#endif
+   XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
 }
 
 
@@ -261,7 +267,6 @@ USTRING             text;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawChar draw a char at location (x, y) in frame and with font.
   RO indicates whether it's a read-only box active
@@ -283,9 +288,6 @@ int                 fg;
 #endif /* __STDC__ */
 {
    ThotWindow          w;
-   CHAR_T                str[2] = {car, 0};
-   HFONT               hOldFont;
-   int                 result;
 
    w = FrRef[frame];
    if (w == None)
@@ -293,16 +295,15 @@ int                 fg;
 
    LoadColor (0, RO, active, fg);
 
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-   WinLoadGC (TtDisplay, fg, RO);
-   SetMapperFlags (TtDisplay, 1);
-   hOldFont = WinLoadFont (TtDisplay, font);
-   result = SelectClipRgn (TtDisplay, clipRgn); 
-   if (result == ERROR)
-      ClipError (frame);
-   TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
-   SelectObject (TtDisplay, hOldFont);
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+#ifdef STEPHANIE
+   printf (" XSetFont (TtLineGC, ((XFontStruct *) font)->fid\n");
+#endif
+   XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
+   XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
+#ifdef STEPHANIE
+   printf (" XDrawString( w (drawable), TtLineGC, x: %d+ FrameTable[frame].FrLeftMargin :%d, y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, &car:%s, 1)\n", 
+	   x,FrameTable[frame].FrLeftMargin, y,FrameTable[frame].FrTopMargin, FontBase (font), &car);
+#endif
 
    FinishDrawing (0, RO, active);
 }
@@ -347,32 +348,20 @@ int                 shadow;
    STRING              ptcar;
    int                 width;
    register int        j;
-   SIZE                size;
-   RECT                rect;
-   HFONT               hOldFont;
-   int                 result;
-   GCP_RESULTS         results;
-   USHORT              auGlyphs [2000];
-   CHAR_T              szNewText [2000];
-   UINT                outOpt, infoFlag;
-   int                 anDX [2000];
 
    w = FrRef[frame];
    if (lg > 0 && w != None)
      {
       ptcar = &buff[i - 1];
       /* Dealing with BR tag for windows */
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-      SetMapperFlags (TtDisplay, 1);
-      hOldFont = WinLoadFont (TtDisplay, font);
-      GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
-      width = size.cx;
+      XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
+      /* compute the width of the string */
+      width = 0;
+      j = 0;
+      while (j < lg)
+	width += CharacterWidth (ptcar[j++], font);
 
-      result = SelectClipRgn (TtDisplay, clipRgn);  
-      if (result == ERROR)
-         ClipError (frame);
-      /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
+      LoadColor (0, RO, active, fg);
 
       if (!ShowSpace || shadow)
 	{
@@ -392,53 +381,11 @@ int                 shadow;
 	     ptcar[lg] = EOS;
 	     SpaceToChar (ptcar);	/* substitute spaces */
 	   }
-         GetClientRect (FrRef [frame], &rect);
-         outOpt = 0;
-         if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-            WinErrorBox (NULL);
-
-	 if (fontLangInfo & GCP_DIACRITIC)
-            infoFlag |= GCP_DIACRITIC;
-         
-#        if 0
-		 if (fontLangInfo & FLI_GLYPHS) /* The font contains extra glyphs not normally accessible using the codepage. */ 
-					                    /* Use GetCharacterPlacement to access the glyphs. This value is for information */
-								        /* only and is not intended to be passed to GetCharacterPlacement. */
-            MessageBox (FrMainRef[frame], TEXT("Font Language is: FLI_GLYPHS"), TEXT("Font Language"), MB_OK);
-#        endif /* 0 */
-         
-		 if (fontLangInfo & GCP_GLYPHSHAPE) {/* The font/language contains multiple glyphs per code point or per code point */
-                                             /* combination (supports shaping and/or ligation), and the font contains advanced */
-                                             /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-                                             /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-                                             /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-            infoFlag |= GCP_GLYPHSHAPE;
-		 }
-         
-		 if (fontLangInfo & GCP_USEKERNING) /* The font contains a kerning table which can be used to provide better spacing */
-                                            /* between the characters and glyphs. */
-            infoFlag |= GCP_USEKERNING;
-         
-		 if (fontLangInfo & GCP_REORDER) /* The language requires reordering for display--for example, Hebrew or Arabic. */
-            infoFlag |= GCP_CLASSIN;
-
-         infoFlag |= GCP_DISPLAYZWG;
-
-         results.lStructSize = sizeof (results);
-         results.lpOutString = &szNewText[0];
-         results.lpOrder     = NULL;
-         results.lpDx        = &anDX[0];
-         results.lpCaretPos  = NULL;
-         results.lpClass     = NULL;
-         results.lpGlyphs    = &auGlyphs[0];
-         results.nGlyphs     = 2000;
-         results.nMaxFit     = 0;
-
-         fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
-
-         ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); 
-         /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 0, &rect, (USTRING) ptcar, lg, NULL);  */
-         /* TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg); */
+	
+         XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+#ifdef STEPHANIE
+ printf (" XDrawString (TtDisplay, w, TtLineGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, ptcar:%s, lg:%d)\n", x,FrameTable[frame].FrLeftMargin, y,FrameTable[frame].FrTopMargin,FontBase (font), ptcar,lg);
+#endif
          TtaFreeMemory (ptcar);
       } else {
            if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
@@ -447,56 +394,23 @@ int                 shadow;
              lg--;
            }
            if (lg != 0) {
-              /* GetClipRgn(TtDisplay, clipRgn); */
-              outOpt = 0;
-              if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-                 WinErrorBox (NULL);
-
-              if (fontLangInfo & GCP_DIACRITIC)
-                 infoFlag |= GCP_DIACRITIC;
-         
-              if (fontLangInfo & GCP_GLYPHSHAPE) {/* The font/language contains multiple glyphs per code point or per code point */
-                                             /* combination (supports shaping and/or ligation), and the font contains advanced */
-                                             /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-                                             /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-                                             /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-                 infoFlag |= GCP_GLYPHSHAPE;
-			  } 
-         
-              if (fontLangInfo & GCP_USEKERNING) /* The font contains a kerning table which can be used to provide better spacing */
-                                            /* between the characters and glyphs. */
-                 infoFlag |= GCP_USEKERNING;
-         
-              if (fontLangInfo & GCP_REORDER) /* The language requires reordering for display--for example, Hebrew or Arabic. */
-                 infoFlag |= GCP_CLASSIN;
-
-              infoFlag |= GCP_DISPLAYZWG;
-
-              results.lStructSize = sizeof (results);
-              results.lpOutString = &szNewText[0];
-              results.lpOrder     = NULL;
-              results.lpDx        = &anDX[0];
-              results.lpCaretPos  = NULL;
-              results.lpClass     = NULL;
-              results.lpGlyphs    = &auGlyphs[0];
-              results.nGlyphs     = 2000;
-              results.nMaxFit     = 0;
-			  fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
-
-              /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); */
-              TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+#ifdef STEPHANIE
+	      printf ("XDrawString (TtDisplay, w, TtLineGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, ptcar:%s, lg:%d)\n", x, FrameTable[frame].FrLeftMargin,y,FrameTable[frame].FrTopMargin,FontBase (font), ptcar, lg);
+#endif
 	     }
 	}
 
       if (hyphen)
 	{
          /* draw the hyphen */
-         /* GetClipRgn(TtDisplay, clipRgn); */
-         TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, TEXT("\255"), 1);
+         XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
+         y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
+#ifdef STEPHANIE
+	 printf ("XDrawString (TtDisplay, w, TtLineGC, x:%d + width:%d + FrameTable[frame].FrLeftMargin:%d,y:%d + FrameTable[frame].FrTopMargin:%d + FontBase (font):%d, \255, 1)\n",x, width,FrameTable[frame].FrLeftMargin,y,FrameTable[frame].FrTopMargin);
+#endif
 	}
       FinishDrawing (0, RO, active);
-      SelectObject (TtDisplay, hOldFont);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
       return (width);
      }
    else
@@ -642,12 +556,20 @@ int                 fg;
 	nb = lgboite / width;
 	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % width);
 	y += FrameTable[frame].FrTopMargin - FontBase (font);
+#ifdef STEPHANIE
+	printf ("XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid)\n");
+#endif
+	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 	LoadColor (0, RO, active, fg);
 
 	/* draw the points */
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
+#ifdef STEPHANIE
+	    printf (" XDrawString ( w, TtLineGC, xcour:%d, y:%d, ptcar:%s, 2)\n",xcour, y,ptcar);
+#endif
+	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
 	     xcour += width;
 	     nb--;
 	  }
@@ -772,7 +694,6 @@ int                 fg;
 		y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
 		font, RO, active, fg);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   DrawMonoSymb draw a one glyph symbol.
@@ -804,7 +725,6 @@ int                 fg;
    DrawChar (symb, frame, xm, yf, font, RO, active, fg);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawSigma draw a Sigma symbol.
   active indicates if the box is active
@@ -932,6 +852,10 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
 
 	/* Upper part */
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+#ifdef STEPHANIE
+	printf ("XDrawArc(FrRef[frame], TtLineGC, x + 1: %d, y + 1:%d, l - 3:%d, arc * 2:%d, 0 * 64, 180 * 64)\n",x , y ,l ,arc);
+#endif
 	FinishDrawing (0, RO, active);
      }
 }
@@ -958,8 +882,6 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 arc, fh;
-   HPEN                pen ;
-   HPEN                hOldPen;
 
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\310', font))
@@ -977,16 +899,14 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
 	/* Lower part */
-    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-    hOldPen = SelectObject (TtPrinterDC, pen);
-    Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
-    SelectObject (TtPrinterDC, hOldPen);
-    if (!DeleteObject (pen))
-       WinErrorBox (WIN_Main_Wd);
-    pen = (HPEN) 0;
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
+#ifdef STEPHANIE
+	printf ("XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1:%d, y + h - arc * 2 - 2:%d, l - 3:%d, arc * 2:%d, -0 * 64, -180 * 64)\n",
+		x,y,h,l,arc);
+#endif
+	FinishDrawing (0, RO, active);
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   TraceFleche draw the end of an arrow.
@@ -1008,10 +928,7 @@ int                 fg;
    int                 xc, yc, xd, yd;
    float               width, height;
    Pixmap              pattern;
-   HPEN                hPen;
-   HPEN                hOldPen;
-   ThotPoint           point[4];
-   int                 result;
+   ThotPoint           point[3];
 
    width = (float)(5 + thick);
    height = 10;
@@ -1039,32 +956,27 @@ int                 fg;
    point[1].y = yc;
    point[2].x = xd;
    point[2].y = yd;
-   point[3].x = x2;
-   point[3].y = y2;
 
    pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0)
      {
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-      result = SelectClipRgn (TtDisplay, clipRgn);  
-      if (result == ERROR)
-         ClipError (frame);
-      /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
-      WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd);
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-      Polyline (TtDisplay, point, 4);
-      SelectObject (TtDisplay, hOldPen);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
-	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
-      hPen = (HPEN) 0;
+#ifdef STEPHANIE
+      printf ("XSetTile (TtDisplay, TtGreyGC, pattern) \n");
+#endif
+      XSetTile (TtDisplay, TtGreyGC, pattern);     
+      XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
+#ifdef STEPHANIE
+      printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex:%d, CoordModeOrigin:%d) \n",
+	      Convex, CoordModeOrigin);
+      for (i=0;i<3;i++){
+	printf ("point[%d] x=%d y=%d\n", i, point[i].x, point[i].y);
+      }
+      printf (" XFreePixmap (TtDisplay, pattern)\n");
+#endif
+      XFreePixmap (TtDisplay, pattern);
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawArrow draw an arrow following the indicated direction in degrees :
   0 (right arrow), 45, 90, 135, 180,
@@ -1509,12 +1421,6 @@ int                 pattern;
 
 {
    Pixmap              pat;
-   HBRUSH              hBrush;
-   HBRUSH              hOldBrush;
-   LOGBRUSH            logBrush;
-   HPEN                hPen = 0;
-   HPEN                hOldPen;
-   int                 result;
 
    if (width <= 0 || height <= 0)
       return;
@@ -1526,66 +1432,35 @@ int                 pattern;
    x += thick / 2;
    y += thick / 2;
 
-   /* @@@@@@@@@@ WIN_GetDeviceContext (frame); @@@@@@@@@@ */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
-   /* SelectClipRgn(TtDisplay, clipRgn); */
-   if (pat == 0 && thick <= 0)
-      return;
-
-   WinLoadGC (TtDisplay, fg, RO);
    if (pat != 0) {
-      hBrush = CreateSolidBrush (ColorPixel (bg));
-      hOldBrush = SelectObject (TtDisplay, hBrush);
-   } else {
-         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-		 hBrush = (HBRUSH) 0;
+#ifdef STEPHANIE
+     printf (" XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+      XSetTile (TtDisplay, TtGreyGC, pat);
+    
+      XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
+                      x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#ifdef STEPHANIE
+      printf (" XFillRectangle (FrRef[frame], TtGreyGC,x + FrameTable[frame].FrLeftMargin:%d, y + FrameTable[frame].FrTopMargin:%d, width:%d, height:%d)\n", 
+	     x,y, width, height);
+      printf (" XFreePixmap (TtDisplay, pat)\n");
+#endif
+      XFreePixmap (TtDisplay, pat);
    }
 
-   if (thick > 0) {
-      if (thick <= 1) {
-         switch (style) {
-                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-                         break;
-                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-                         break;
-                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-                         break;
-		 } 
-	  } else {
-             logBrush.lbStyle = BS_SOLID;
-             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
-
-             switch (style) {
-                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-                             break;
-                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-                             break;
-                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-                             break;
-			 } 
-	  }  
-   } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd);
+   /* Draw the border */
+   if (thick > 0)
+     {
+	InitDrawing (0, style, thick, RO, active, fg); 
+	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#ifdef STEPHANIE
+	printf ("XDrawRectangle ( FrRef[frame], TtLineGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y + FrameTable[frame].FrTopMargin:%d, width:%d, height:%d)\n",
+		x,FrameTable[frame].FrLeftMargin,y, FrameTable[frame].FrTopMargin, width, height);
+#endif
+	FinishDrawing (0, RO, active);
    }
-   hOldPen = SelectObject (TtDisplay, hPen) ;
-   result = SelectClipRgn (TtDisplay, clipRgn); 
-   if (result == ERROR)
-      ClipError (frame);
-   if (!Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height))
-      WinErrorBox (FrRef  [frame]);
-   SelectObject (TtDisplay, hOldPen);
-   if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame]);
-   hPen = (HPEN) 0;
-   if (hBrush) {
-      SelectObject (TtDisplay, hOldBrush);
-      if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
-      hBrush = (HBRUSH)0;
-   }
-   /* @@@@@@@@@@ WIN_ReleaseDeviceContext (); @@@@@@@@@@ */
 }
 
 /*----------------------------------------------------------------------
@@ -1616,6 +1491,68 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
+   ThotPoint           point[5];
+   Pixmap              pat;
+
+   if (width > thick + 1)
+     width = width - thick - 1;
+   if (height > thick + 1)
+     height = height - thick - 1;
+   x += thick / 2;
+   y += thick / 2;
+
+   point[0].x = x + (width / 2) + FrameTable[frame].FrLeftMargin;
+   point[0].y = y + FrameTable[frame].FrTopMargin;
+   point[4].x = point[0].x;
+   point[4].y = point[0].y;
+   point[1].x = x + width + FrameTable[frame].FrLeftMargin;
+   point[1].y = y + (height / 2) + FrameTable[frame].FrTopMargin;
+   point[2].x = point[0].x;
+   point[2].y = y + height + FrameTable[frame].FrTopMargin;
+   point[3].x = x + FrameTable[frame].FrLeftMargin;
+   point[3].y = point[1].y;
+
+   /* Fill in the diamond */
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
+     {
+#ifdef STEPHANIE
+	printf (" XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+       XSetTile (TtDisplay, TtGreyGC, pat);
+#ifdef STEPHANIE
+       	printf (" XFillPolygon ( FrRef[frame], TtGreyGC, point, 5, Convex:%d, CoordModeOrigin:%d)\n", Convex, CoordModeOrigin);
+	for (i=0;i<5;i++){
+	  printf ("point[%d] : x=%d et y=%d\n", i,point[i].x,point[i].y);
+	}
+#endif
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
+		      point, 5, Convex, CoordModeOrigin);
+#ifdef STEPHANIE
+	printf ("XFreePixmap (TtDisplay, pat)\n");
+#endif
+	XFreePixmap (TtDisplay, pat);
+     }
+
+   /* Draw the border */
+   if (thick > 0)
+     {
+	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef STEPHANIE
+	printf ("XDrawLines (rRef[frame], TtLineGC,point, 5, CoordModeOrigin:%d)\n"
+		, CoordModeOrigin);
+	for (i=0;i<5;i++){
+	  printf ("point[%d] : x=%d et y=%d\n", i,point[i].x,point[i].y);
+	}
+	printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC,point, 5, CoordModeOrigin:%d)\n",CoordModeOrigin);
+	for (i=0;i<5;i++){
+	  printf ("point[%d] x=%d y=%d\n",i,point[i].x, point[i].y);
+	}
+#endif
+	XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
+		    point, 5, CoordModeOrigin);
+	FinishDrawing (0, RO, active);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1686,9 +1623,14 @@ int                 arrow;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
-   for (i = 1; i < nb - 1; i++) {
-       DoDrawOneLine (frame, points [i-1].x, points[i-1].y, points[i].x, points[i].y);
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1, CoordModeOrigin);
+#ifdef STEPHANIE
+   printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1:%d, CoordModeOrigin:%d)\n",
+	   nb, CoordModeOrigin);
+   for (i=0;i<nb-1;i++){
+     printf ("points[%d] x=%d y=%d\n", i,points[i].x, points[i].y);
    }
+#endif
    FinishDrawing (0, RO, active);
 
    /* Forward arrow */
@@ -1734,9 +1676,7 @@ int                 pattern;
    int                 i, j;
    PtrTextBuffer       adbuff;
 
-   HPEN hPen;
-   HPEN hOldPen;
-   int  result;
+   Pixmap              pat;
 
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -1762,32 +1702,41 @@ int                 pattern;
    points[nb - 1].y = points[0].y;
 
    /* Fill in the polygone */
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0) {
+#ifdef STEPHANIE
+     printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+      XSetTile (TtDisplay, TtGreyGC, pat);
+#ifdef STEPHANIE
+      printf (" XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb%d, Complex%d, CoordModeOrigin%d)\n",
+	         nb, Complex, CoordModeOrigin);
+      for (i=0;i<nb;i++){
+      printf("point[%d]: x = %d et .y = %d\n",i,points[i].x, points[i].y);
+      }
+#endif
+      XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb, Complex, CoordModeOrigin);
+#ifdef STEPHANIE
+      printf ("XFreePixmap (TtDisplay, pat)\n");
+#endif
+      XFreePixmap (TtDisplay, pat);
+   }
 
    /* Draw the border */
    if (thick > 0) {
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-      result = SelectClipRgn (TtDisplay, clipRgn);  
-      if (result == ERROR)
-         ClipError (frame);
-      /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
-      WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd);
-      hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
-      Polyline (TtDisplay, points, nb);
+#ifdef STEPHANIE
+      printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb:%d, CoordModeOrigin:%d)\n",nb, CoordModeOrigin);
+      for (i=0;i<nb;i++){
+	printf ("points[%d] : x =%d et y=%d\n", i, points[i].x, points[i].y);
+      }
+#endif
+      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
       FinishDrawing (0, RO, active);
-	  SelectObject (TtDisplay, hOldPen);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
-	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
-      hPen = (HPEN) 0;
    }
    /* free the table of points */
    free (points);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
@@ -1926,7 +1875,6 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawCurb draw an open curb.
   Parameter buffer is a pointer to the list of control points.
@@ -2034,8 +1982,7 @@ C_points           *controls;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-   Polyline (TtDisplay, points, npoints) ;
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
@@ -2083,9 +2030,6 @@ C_points           *controls;
    float               x1, y1, x2, y2;
    float               cx1, cy1, cx2, cy2;
    Pixmap              pat;
-   HPEN                hPen;
-   HPEN                hOldPen;
-   int                 result;
 
    /* allocate the list of points */
    npoints = 0;
@@ -2148,29 +2092,33 @@ C_points           *controls;
    /* Fill in the polygone */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0) {
+#ifdef STEPHANIE
+     printf (" XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+      XSetTile (TtDisplay, TtGreyGC, pat);
+#ifdef STEPHANIE
+      printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints:%d, CoordModeOrigin:%d)\n",npoints, CoordModeOrigin);
+      for (i=0; i< npoints;i++){
+	printf ("points[%d] : x =%d et y=%d\n", i, points[i].x, points[i].y);
+      }
+#endif
+      XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
+#ifdef STEPHANIE
+      printf (" XFreePixmap (TtDisplay, pat)\n");
+#endif
+      XFreePixmap (TtDisplay, pat);
      }
 
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-      result = SelectClipRgn (TtDisplay, clipRgn);  
-      if (result == ERROR)
-         ClipError (frame);
-      /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
-      WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd);
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-      InitDrawing (0, style, thick, RO, active, fg);
-      Polyline (TtDisplay, points, npoints);
-      FinishDrawing (0, RO, active);
-	  SelectObject (TtDisplay, hOldPen);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
-	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
-      hPen = (HPEN) 0;
+#ifdef STEPHANIE
+      for (i=0; i< npoints;i++){
+	printf ("points[%d] : x =%d et y=%d\n", i, points[i].x, points[i].y);
+      }
+      printf (" XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints:%d, CoordModeOrigin:%d)\n",npoints,CoordModeOrigin);
+#endif
+      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
       FinishDrawing (0, RO, active);
    }
 
@@ -2208,87 +2156,161 @@ int                 pattern;
 {
    Pixmap              pat;
    int                 arc;
-   HBRUSH              hBrush = (HBRUSH)0;
-   HBRUSH              hOldBrush;
-   LOGBRUSH            logBrush;
-   HPEN                hPen = 0;
-   HPEN                hOldPen;
-   int                 result;
+   int                 xf, yf;
+   XArc                xarc[4];
+   XSegment            seg[4];
+   ThotPoint           point[13];
 
-   if (width <= 0 || height <= 0) 
-      return;
-
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-
-   if (thick == 0 && pat == 0)
-      return;
-
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-
-   arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
-
-   if (width > thick + 1)
-     width = width - thick - 1;
-   if (height > thick + 1)
-     height = height - thick - 1;
+   width -= thick;
+   height -= thick;
    x += thick / 2;
    y += thick / 2;
+   /* radius of arcs is 3mm */
+   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+   xf = x + width - 1;
+   yf = y + height - 1;
 
-   /* Fill in the rectangle */
-   WinLoadGC (TtDisplay, fg, RO);
-   if (pat != 0) {
-      hBrush = CreateSolidBrush (ColorPixel (bg));
-      hOldBrush = SelectObject (TtDisplay, hBrush);
-   } else {
-         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-		 hBrush = (HBRUSH) 0;
-   }
+   xarc[0].x = x + FrameTable[frame].FrLeftMargin;
+   xarc[0].y = y + FrameTable[frame].FrTopMargin;
+   xarc[0].width = arc * 2;
+   xarc[0].height = xarc[0].width;
+   xarc[0].angle1 = 90 * 64;
+   xarc[0].angle2 = 90 * 64;
 
-   if (thick > 0) {
-      if (thick <= 1) {
-         switch (style) {
-                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-                         break;
-                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-                         break;
-                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-                         break;
-		 } 
-	  } else {
-             logBrush.lbStyle = BS_SOLID;
-             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
+   xarc[1].x = xf - arc * 2 + FrameTable[frame].FrLeftMargin;
+   xarc[1].y = xarc[0].y;
+   xarc[1].width = xarc[0].width;
+   xarc[1].height = xarc[0].width;
+   xarc[1].angle1 = 0;
+   xarc[1].angle2 = xarc[0].angle2;
 
-             switch (style) {
-                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-                             break;
-                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-                             break;
-                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-                             break;
-			 } 
-	  }  
-   } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd);
-   }
+   xarc[2].x = xarc[0].x;
+   xarc[2].y = yf - arc * 2 + FrameTable[frame].FrTopMargin;
+   xarc[2].width = xarc[0].width;
+   xarc[2].height = xarc[0].width;
+   xarc[2].angle1 = 180 * 64;
+   xarc[2].angle2 = xarc[0].angle2;
 
-   hOldPen = SelectObject (TtDisplay, hPen) ;
-   result = SelectClipRgn (TtDisplay, clipRgn); 
-   if (result == ERROR)
-      ClipError (frame);
-   if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
-      WinErrorBox (FrRef  [frame]);
-   SelectObject (TtDisplay, hOldPen);
-   if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame]);
-   hPen = (HPEN) 0;
-   if (hBrush) {
-      SelectObject (TtDisplay, hOldBrush);
-      if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
-      hBrush = (HBRUSH)0;
-   }
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   xarc[3].x = xarc[1].x;
+   xarc[3].y = xarc[2].y;
+   xarc[3].width = xarc[0].width;
+   xarc[3].height = xarc[0].width;
+   xarc[3].angle1 = 270 * 64;
+   xarc[3].angle2 = xarc[0].angle2;
+
+   seg[0].x1 = x + arc + FrameTable[frame].FrLeftMargin;
+   seg[0].x2 = xf - arc + FrameTable[frame].FrLeftMargin;
+   seg[0].y1 = y + FrameTable[frame].FrTopMargin;
+   seg[0].y2 = seg[0].y1;
+
+   seg[1].x1 = xf + FrameTable[frame].FrLeftMargin;
+   seg[1].x2 = seg[1].x1;
+   seg[1].y1 = y + arc + FrameTable[frame].FrTopMargin;
+   seg[1].y2 = yf - arc + FrameTable[frame].FrTopMargin;
+
+   seg[2].x1 = seg[0].x1;
+   seg[2].x2 = seg[0].x2;
+   seg[2].y1 = yf + FrameTable[frame].FrTopMargin;
+   seg[2].y2 = seg[2].y1;
+
+   seg[3].x1 = x + FrameTable[frame].FrLeftMargin;
+   seg[3].x2 = seg[3].x1;
+   seg[3].y1 = seg[1].y1;
+   seg[3].y2 = seg[1].y2;
+
+   /* Fill in the figure */
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
+     {
+	/* Polygone inscrit: (seg0)       */
+	/*                   0--1         */
+	/*                10-|  |-3       */
+	/*         (seg3) |       |(seg1) */
+	/*                9--|  |-4       */
+	/*                   7--6         */
+	/*                   (seg2)       */
+	point[0].x = seg[0].x1;
+	point[0].y = seg[0].y1;
+
+	point[1].x = seg[0].x2;
+	point[1].y = point[0].y;
+	point[2].x = point[1].x;
+	point[2].y = seg[1].y1;
+
+	point[3].x = seg[1].x1;
+	point[3].y = point[2].y;
+	point[4].x = point[3].x;
+	point[4].y = seg[1].y2;
+
+	point[5].x = seg[2].x2;
+	point[5].y = point[4].y;
+	point[6].x = point[5].x;
+	point[6].y = seg[2].y2;
+
+	point[7].x = seg[2].x1;
+	point[7].y = point[6].y;
+	point[8].x = point[7].x;
+	point[8].y = seg[3].y2;
+
+	point[9].x = seg[3].x2;
+	point[9].y = point[8].y;
+	point[10].x = point[9].x;
+	point[10].y = seg[3].y1;
+
+	point[11].x = point[0].x;
+	point[11].y = point[10].y;
+	point[12].x = point[0].x;
+	point[12].y = point[0].y;
+
+#ifdef STEPHANIE
+	printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+	XSetTile (TtDisplay, TtGreyGC, pat);
+#ifdef STEPHANIE
+	printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,point, 13, Convex:%d, CoordModeOrigin:%d)\n",
+		Convex, CoordModeOrigin);
+	for (i=0;i<13;i++){
+	  printf ("point[%d] x=%d y=%d\n", i,point[i].x, point[i].y);
+	}
+#endif
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
+		      point, 13, Convex, CoordModeOrigin);
+	/* Trace quatre arcs de cercle */
+#ifdef STEPHANIE
+	printf ("XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4)\n");
+	for (i=0;i<4;i++){
+	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
+		 i,xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
+	}
+#endif
+	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
+#ifdef STEPHANIE
+	printf ("XFreePixmap (TtDisplay, pat)\n");
+#endif
+	XFreePixmap (TtDisplay, pat);
+     }
+
+   /* Draw the border */
+   if (thick > 0)
+     {
+	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef STEPHANIE
+	printf ("XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4)\n");
+	for (i=0;i<4;i++){
+	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
+		 i,xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
+	}
+#endif
+	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
+#ifdef STEPHANIE
+	printf ("XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4)\n");
+	for (i=0;i<4;i++){
+	  printf("seg[%d] x1=%d y1=%d x2=%d y2=%d\n", i, seg[i].x1, seg[i].y1, seg[i].x2, seg[i].y2);
+	}	
+#endif
+	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
+	FinishDrawing (0, RO, active);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2317,12 +2339,6 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
-   HPEN     hPen;
-   HPEN     hOldPen;
-   HBRUSH   hBrush;
-   HBRUSH   hOldBrush;
-   LOGBRUSH logBrush;
-   int    result;
    Pixmap              pat;
 
    width -= thick + 1;
@@ -2332,87 +2348,37 @@ int                 pattern;
 
    /* Fill in the rectangle */
 
-   if (pattern > 2)
-      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
-   if (pattern > 2 && pat == 0 && thick <= 0)
+   if (pat == 0 && thick <= 0)
       return;
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
 
-   WinLoadGC (TtDisplay, fg, RO);
-
-   if (pattern <= 2) {
-      switch (pattern) {
-             case 0:  SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-                      hBrush = (HBRUSH) 0;
-                      break;
-
-             case 1:  hBrush = CreateSolidBrush (ColorPixel (fg));
-                      hOldBrush = SelectObject (TtDisplay, hBrush);
-                      break;
-
-             case 2:  hBrush = CreateSolidBrush (ColorPixel (bg));
-                      hOldBrush = SelectObject (TtDisplay, hBrush);
-                      break;
-
-             default: SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-                      hBrush = (HBRUSH) 0;
-                      break;
-	  }
-   } else if (pat != 0) {
-      hBrush = CreatePatternBrush (pat); 
-      /* hBrush = CreateSolidBrush (ColorPixel (pattern)); */
-      hOldBrush = SelectObject (TtDisplay, hBrush);
-   } else {
-         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-		 hBrush = (HBRUSH) 0;
+   if (pat != 0) {
+#ifdef STEPHANIE
+     printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+      XSetTile (TtDisplay, TtGreyGC, pat);
+#ifdef STEPHANIE
+      printf ("XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
+	      x, y, width, height);
+#endif
+      XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
+#ifdef STEPHANIE
+      printf ("XFreePixmap (TtDisplay, pat)\n");
+#endif
+      XFreePixmap (TtDisplay, pat);
    }
 
+   /* Draw the border */
    if (thick > 0) {
-      if (thick <= 1) {
-         switch (style) {
-                case 0:  hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
-                         break;
-                case 1:  hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
-                         break;
-                default: hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-                         break;
-		 } 
-	  } else {
-             logBrush.lbStyle = BS_SOLID;
-             logBrush.lbColor = RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue);
-
-             switch (style) {
-                    case 0:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-                             break;
-                    case 1:  hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-                             break;
-                    default: hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-                             break;
-			 } 
-	  }  
-   } else {
-          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd);
+      InitDrawing (0, style, thick, RO, active, fg);
+#ifdef STEPHANIE
+      printf ("XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
+	      x, y, width, height);
+#endif
+      XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
+      FinishDrawing (0, RO, active);
    }
-
-   hOldPen = SelectObject (TtDisplay, hPen) ;
-   result = SelectClipRgn (TtDisplay, clipRgn); 
-   if (result == ERROR)
-      ClipError (frame);
-   if (!Ellipse (TtDisplay, x, y, x + width, y + height))
-      WinErrorBox (FrRef  [frame]);
-   SelectObject (TtDisplay, hOldPen);
-   if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame]);
-   hPen = (HPEN) 0;
-   if (hBrush) {
-      SelectObject (TtDisplay, hOldBrush);
-      if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
-      hBrush = (HBRUSH)0;
-   }
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
 }
 
 /*----------------------------------------------------------------------
@@ -2571,8 +2537,6 @@ int                 fg;
 {
    ThotPoint           point[3];
    int                 xf, yf;
-   HPEN pen;
-   HPEN hOldPen;
 
    if (thick <= 0)
       return;
@@ -2618,16 +2582,15 @@ int                 fg;
 	       point[2].y = y;
 	       break;
 	 }
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-   WinLoadGC (TtDisplay, fg, RO);
-   pen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
-   hOldPen = SelectObject (TtDisplay, pen);
-   Polyline (TtDisplay, point, 3);
-   SelectObject (TtDisplay, hOldPen);
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
-   if (!DeleteObject (pen))
-      WinErrorBox (WIN_Main_Wd);
-   pen = (HPEN) 0;
+#ifdef STEPHANIE
+   printf ("XDrawLines (TtDisplay, FrRef[frame], TtLineGC,point, 3, CoordModeOrigin:%d)\n",CoordModeOrigin);
+   for (i=0;i<3;i++){  
+    printf ("point[%d] x=%d y=%d\n", i, point[i].x, point[i].y);
+   }
+#endif
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
+	       point, 3, CoordModeOrigin);
+   FinishDrawing (0, RO, active);
 }
 
 /*----------------------------------------------------------------------
@@ -2657,6 +2620,189 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+   int                 arc, arc2, xf, yf;
+   XArc                xarc[4];
+   XSegment            seg[5];
+   Pixmap              pat;
+   ThotPoint           point[13];
+
+   width -= thick;
+   height -= thick;
+   x += FrameTable[frame].FrLeftMargin + thick / 2;
+   y += FrameTable[frame].FrTopMargin + thick / 2;
+   /* radius of arcs is 3mm */
+   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+   arc2 = 2 * arc;
+
+   xf = x + width;
+   yf = y + height;
+
+   xarc[0].x = x;
+   xarc[0].y = y;
+   xarc[0].width = arc2;
+   xarc[0].height = arc2;
+   xarc[0].angle1 = 90 * 64;
+   xarc[0].angle2 = 90 * 64;
+
+   xarc[1].x = xf - arc2;
+   xarc[1].y = y;
+   xarc[1].width = xarc[0].width;
+   xarc[1].height = xarc[0].width;
+   xarc[1].angle1 = 0;
+   xarc[1].angle2 = xarc[0].angle2;
+
+   xarc[2].x = x;
+   xarc[2].y = yf - arc2;
+   xarc[2].width = xarc[0].width;
+   xarc[2].height = xarc[0].width;
+   xarc[2].angle1 = 180 * 64;
+   xarc[2].angle2 = xarc[0].angle2;
+
+   xarc[3].x = xarc[1].x;
+   xarc[3].y = xarc[2].y;
+   xarc[3].width = xarc[0].width;
+   xarc[3].height = xarc[0].width;
+   xarc[3].angle1 = 270 * 64;
+   xarc[3].angle2 = xarc[0].angle2;
+
+   seg[0].x1 = x + arc;
+   seg[0].y1 = y;
+   seg[0].x2 = xf - arc;
+   seg[0].y2 = y;
+
+   seg[1].x1 = xf;
+   seg[1].y1 = y + arc;
+   seg[1].x2 = xf;
+   seg[1].y2 = yf - arc;
+
+   seg[2].x1 = seg[0].x1;
+   seg[2].y1 = yf;
+   seg[2].x2 = seg[0].x2;
+   seg[2].y2 = yf;
+
+   seg[3].x1 = x;
+   seg[3].y1 = seg[1].y1;
+   seg[3].x2 = x;
+   seg[3].y2 = seg[1].y2;
+
+   /* horizontal line at 6mm from top */
+   if (arc2 < height / 2)
+     {
+	/* not under half-height */
+	seg[4].x1 = x;
+	seg[4].y1 = y + arc2;
+	seg[4].x2 = xf;
+	seg[4].y2 = y + arc2;
+     }
+
+   /* Fill in the figure */
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+
+   if (pat != 0)
+     {
+	/* Polygone:         (seg0)       */
+	/*                   0--1         */
+	/*                10-|  |-3       */
+	/*         (seg3) |       |(seg1) */
+	/*                9--|  |-4       */
+	/*                   7--6         */
+	/*                   (seg2)       */
+	point[0].x = seg[0].x1;
+	point[0].y = seg[0].y1;
+
+	point[1].x = seg[0].x2;
+	point[1].y = point[0].y;
+	point[2].x = point[1].x;
+	point[2].y = seg[1].y1;
+
+	point[3].x = seg[1].x1;
+	point[3].y = point[2].y;
+	point[4].x = point[3].x;
+	point[4].y = seg[1].y2;
+
+	point[5].x = seg[2].x2;
+	point[5].y = point[4].y;
+	point[6].x = point[5].x;
+	point[6].y = seg[2].y2;
+
+	point[7].x = seg[2].x1;
+	point[7].y = point[6].y;
+	point[8].x = point[7].x;
+	point[8].y = seg[3].y2;
+
+	point[9].x = seg[3].x2;
+	point[9].y = point[8].y;
+	point[10].x = point[9].x;
+	point[10].y = seg[3].y1;
+
+	point[11].x = point[0].x;
+	point[11].y = point[10].y;
+	point[12].x = point[0].x;
+	point[12].y = point[0].y;
+
+#ifdef STEPHANIE
+	printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+	XSetTile (TtDisplay, TtGreyGC, pat);
+#ifdef STEPHANIE
+	printf ("XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,point, 13, Convex: %d, CoordModeOrigin: %d)\n",Convex, CoordModeOrigin);
+	for (i=0;i<13;i++){
+	  printf("point[%d] x =%d et y=%d\n",
+		i, point[i].x, point[i].y );
+	}
+#endif
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
+		      point, 13, Convex, CoordModeOrigin);
+	/* Trace quatre arcs de cercle */
+#ifdef STEPHANIE
+	printf (" XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4)\n");
+	for (i=0;i<4;i++){  
+	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
+		 i, xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
+	}
+#endif
+	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
+#ifdef STEPHANIE
+	printf ("XFreePixmap (TtDisplay, pat)\n");
+#endif
+	XFreePixmap (TtDisplay, pat);
+     }
+
+   /* Draw the border */
+
+   if (thick > 0)
+     {
+	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef STEPHANIE
+	printf ("	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4)\n");
+	for (i=0;i<4;i++){  
+	  printf("xarc[%d] x =%d et y=%d et width =%d et height =%d et angle1=%d et angle2=%d\n",
+		 i, xarc[i].x, xarc[i].y, xarc[i].width, xarc[i].height, xarc[i].angle1,xarc[i].angle2);
+	}
+#endif
+	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
+	if (arc2 < height / 2){
+#ifdef STEPHANIE
+	  printf ("XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5)\n");
+	  for (i=0;i<5;i++){ 
+	    printf ("seg[%d] x1=%d y1=%d x2=%d y2=%d\n",
+		    i, seg[i].x1 ,seg[i].y1, seg[i].x2, seg[i].y2);
+	  } 
+#endif
+	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
+	}
+	else{
+#ifdef STEPHANIE
+	  printf ("XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5)\n");
+	  for (i=0;i<4;i++){ 
+	    printf ("seg[%d] x1=%d y1=%d x2=%d y2=%d\n",
+		    i, seg[i].x1 ,seg[i].y1, seg[i].x2, seg[i].y2);
+	  } 
+#endif
+	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
+	}
+	FinishDrawing (0, RO, active);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2690,6 +2836,62 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
+   int                 px7mm, shiftX;
+   double              A;
+   Pixmap              pat;
+
+   width -= thick + 1;
+   height -= thick + 1;
+   x += FrameTable[frame].FrLeftMargin + thick / 2;
+   y += FrameTable[frame].FrTopMargin + thick / 2;
+
+   /* Fill in the rectangle */
+   pat = CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0)
+     {
+#ifdef STEPHANIE
+       printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+	XSetTile (TtDisplay, TtGreyGC, pat);
+#ifdef STEPHANIE
+	printf ("XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
+		 x, y, width, height);
+#endif
+	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
+		  x, y, width, height, 0, 360 * 64);
+#ifdef STEPHANIE
+	printf ("XFreePixmap (TtDisplay, pat)\n)");
+#endif
+	XFreePixmap (TtDisplay, pat);
+     }
+
+   /* Draw the border */
+   if (thick > 0)
+     {
+	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef STEPHANIE
+	printf ("XDrawArc (TtDisplay, FrRef[frame], TtLineGC,x:%d, y:%d, width:%d, height:%d, 0, 360 * 64)\n",
+		x, y, width, height);
+#endif
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
+		  x, y, width, height, 0, 360 * 64);
+
+	px7mm = (7 * DOT_PER_INCHE) / 25.4 + 0.5;
+	if (height > 2 * px7mm)
+	  {
+	     A = ((double) height - 2 * px7mm) / height;
+	     A = 1.0 - sqrt (1 - A * A);
+	     shiftX = width * A * 0.5 + 0.5;
+	    
+	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
+		      x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
+#ifdef STEPHANIE
+	     printf ("XDrawLine (TtDisplay, FrRef[frame], TtLineGC,x:%d + shiftX:%d, y:%d + px7mm:%d, x:%d + width:%d - shiftX:%d, y:%d + px7mm:%d)\n",
+		    x ,shiftX, y , px7mm, x ,width , shiftX, y ,px7mm);
+#endif
+	  }
+	FinishDrawing (0, RO, active);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2731,11 +2933,10 @@ int          frame;
 int          color;
 #endif /* __STDC__ */
 {
-   COLORREF cr;
-   /* @@@@@@@@@@ WIN_GetDeviceContext (frame) ; @@@@@@@@@@ */
-   cr = ColorPixel (color);
-   SetBkColor (TtDisplay, (COLORREF)ColorPixel (color)); 
-   /* @@@@@@@@@@ WIN_ReleaseDeviceContext (); @@@@@@@@@@ */
+#ifdef STEPHANIE
+  printf ("XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color))\n");
+#endif
+   XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
 }
 
 /*----------------------------------------------------------------------
@@ -2754,24 +2955,15 @@ int                 y;
 {
    ThotWindow          w;
 
-   HBRUSH              hBrush;
-   HBRUSH              hOldBrush;
-
    w = FrRef[frame];
    if (w != None)
      {
-	/* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
-	hOldBrush = SelectObject (TtDisplay, hBrush);
-	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-	SelectObject (TtDisplay, hOldBrush);
-    /* >>>>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
-	if (!DeleteObject (hBrush))
-       WinErrorBox (WIN_Main_Wd);
-    hBrush = (HBRUSH) 0;
+#ifdef STEPHANIE
+       printf ("	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE)\n");
+#endif
+	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
@@ -2789,19 +2981,16 @@ ThotGC              GClocal;
 
 #endif /* __STDC__ */
 {
-   HFONT hOldFont;
-   int   result;
-
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (GetFrameNumber (w)); <<<<<<<<<<<< */
-   SetMapperFlags (TtDisplay, 1);
-   hOldFont = WinLoadFont(TtDisplay, font);
-   result = SelectClipRgn (TtDisplay, clipRgn);  
-   if (result == ERROR)
-      ClipError (-1);
-   /* if (!GetClipRgn(TtDisplay, clipRgn))
-      WinErrorBox (NULL); */
-   TextOut(TtDisplay, x, y, string, ustrlen(string));
-   SelectObject (TtDisplay, hOldFont);
+#ifdef STEPHANIE
+  printf ("XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid)\n");
+#endif
+   XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
+   FontOrig (font, string[0], &x, &y);
+#ifdef STEPHANIE
+   printf ("XDrawString (TtDisplay, w, GClocal, x%d, y%d, string:%s, ustrlen (string))\n",
+	   x, y, string);
+#endif
+   XDrawString (TtDisplay, w, GClocal, x, y, string, ustrlen (string));
 }
 
 
@@ -2824,14 +3013,13 @@ int                 y;
    ThotWindow          w;
 
    w = FrRef[frame];
+
    if (w != None)
      {
-       if (TtDisplay)
-	 WIN_ReleaseDeviceContext ();
-       
-       WIN_GetDeviceContext (frame);
-       
-       PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
+	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#ifdef STEPHANIE
+ printf ("XFillRectangle (TtDisplay, w, TtInvertGC, x:%d + FrameTable[frame].FrLeftMargin:%d, y:%d + FrameTable[frame].FrTopMargin:%d, width:%d, height:%d)\n",x , FrameTable[frame].FrLeftMargin, y , FrameTable[frame].FrTopMargin, width, height);
+#endif
      }
 }
 
@@ -2854,23 +3042,13 @@ int yf;
 #endif /* __STDC__ */
 {
    if (FrRef[frame] != None) {
-	  RECT cltRect;
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
-
-	  GetClientRect (FrRef [frame], &cltRect);
-      if (autoScroll)
-	     ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
-      else 
-	  /* UpdateWindow (FrRef [frame]); */
-	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_INVALIDATE);
-	  /********
-	  ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect);
-	   ********/
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+#ifdef STEPHANIE
+     printf ("XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin)\n");
+#endif
+      XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
    }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   EndOfString check wether string end by suffix.
 
@@ -2893,7 +3071,6 @@ STRING              suffix;
    else
       return (ustrcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   XFlushOutput enforce updating of the calculated image for frame.
@@ -2906,9 +3083,12 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+#ifdef STEPHANIE
+  printf ("XFlush (TtDisplay)\n");
+#endif
+   XFlush (TtDisplay);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
   located on (x , y) and geometry width x height, using the
@@ -2936,5 +3116,34 @@ int                 pattern;
 
 #endif /* __STDC__ */
 {
+   Pixmap              pat;
+
+   /* Fill the rectangle associated to the given frame */
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, 0, pattern);
+   if (pat != 0)
+     {
+#ifdef STEPHANIE
+       printf ("XSetTile (TtDisplay, TtGreyGC, pat)\n");
+#endif
+	XSetTile (TtDisplay, TtGreyGC, pat);
+	if (w != 0){
+#ifdef STEPHANIE
+	  printf (" XFillRectangle (TtDisplay, w, TtGreyGC, x:%d, y:%d, width:%d, height:%d)\n",
+		  x, y, width, height);
+#endif
+
+	  XFillRectangle (TtDisplay, w, TtGreyGC, x, y, width, height);
+	}
+	else{
+#ifdef STEPHANIE
+	  printf ("XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height)\n",
+		  x, y, width, height);
+#endif
+	   XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#ifdef STEPHANIE
+	   printf ("XFreePixmap (TtDisplay, pat)\n");
+#endif
+	}
+	XFreePixmap (TtDisplay, pat);
+     }
 }
-#endif /* _WIN_PRINT */

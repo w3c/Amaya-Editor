@@ -26,7 +26,6 @@
 #include "appaction.h"
 #include "appstruct.h"
 #include "dialog.h"
-
 #include "thotpattern.h"
 #include "appdialogue.h"
 #include "dictionary.h"
@@ -63,23 +62,13 @@
 #include "structselect_f.h"
 #include "tree_f.h"
 
-#ifdef _I18N_
-#      ifdef _WINDOWS
-#            define VersionId L"V2.0"
-#      else  /* !_WINDOWS */
-#      endif /* !_WINDOWS */
-#else  /* !_I18N_ */
-#      define VersionId "V2.0"
-#endif /* !_I18N_ */
-
-int                 UserErrorCode;
+#define VersionId TEXT ("V2.1")
 ThotBool            PrintErrorMessages = TRUE;
 
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -109,8 +98,121 @@ void                CloseInsertion ()
    if (ThotLocalActions[T_stopinsert] != NULL)
       (*ThotLocalActions[T_stopinsert]) ();
 }
-#endif /* _WIN_PRINT */
 
+
+
+#ifndef NODISPLAY
+/*----------------------------------------------------------------------
+   GetViewInfo returns wiew number and assoc state of the          
+   corresponding to the view of the document.             
+   Parameters:                                                     
+   document: the document.                                 
+   view: the view.                                         
+   Return value:                                                   
+   corresponding view number.                              
+   corresponding assoc state.                              
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GetViewInfo (Document document, View view, int *viewnumber, ThotBool * assoc)
+#else  /* __STDC__ */
+void                GetViewInfo (document, view, viewnumber, assoc)
+Document            document;
+View                view;
+int                *viewnumber;
+ThotBool           *assoc;
+
+#endif /* __STDC__ */
+{
+
+   *assoc = FALSE;
+   *viewnumber = 0;
+
+   if (view < 100)
+      *viewnumber = (int) view;
+   else
+     {
+	*assoc = TRUE;
+	*viewnumber = (int) view - 100;
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   GetWindowNumber returns the window corresponding to the view of 
+   the document.                                           
+   Parameters:                                                     
+   document: the document.                                 
+   view: the view.                                         
+   Return value:                                                   
+   corresponding window.                                   
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 GetWindowNumber (Document document, View view)
+#else  /* __STDC__ */
+int                 GetWindowNumber (document, view)
+Document            document;
+View                view;
+#endif /* __STDC__ */
+{
+   PtrDocument         pDoc;
+   ThotBool            assoc;
+   int                 aView, win;
+
+   win = 0;
+   /* Checks parameters */
+   if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] != NULL)
+      if (view < 1 || (view > MAX_VIEW_DOC && view < 100) || view > MAX_ASSOC_DOC + 100)
+         TtaError (ERR_invalid_parameter);
+      else
+        {
+	pDoc = LoadedDocument[document - 1];
+	GetViewInfo (document, view, &aView, &assoc);
+	if (assoc)
+	   win = pDoc->DocAssocFrame[aView - 1];
+	else
+	   win = pDoc->DocViewFrame[aView - 1];
+        }
+   return win;
+}
+
+/*----------------------------------------------------------------------
+   TtaGetViewFrame retourne le widget du frame de la vue document.    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotWidget          TtaGetViewFrame (Document document, View view)
+#else  /* __STDC__ */
+ThotWidget          TtaGetViewFrame (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+  int                 frame;
+
+  if (document == 0 && view == 0)
+    return 0;
+  else
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame == 0)
+	return 0;
+    }
+  /* Si les parametres sont invalides */
+  if (frame > MAX_FRAME)
+    {
+      TtaError (ERR_invalid_parameter);
+      return 0;
+    }
+  else
+#ifndef _WINDOWS
+    return (FrameTable[frame].WdFrame);
+#else  /* _WINDOWS */
+    return (FrMainRef[frame]);
+#endif /* _WINDOWS */
+}
+#endif
 
 /*----------------------------------------------------------------------
    CoreHandler est un handler d'erreur fatale.                     
@@ -257,15 +359,11 @@ STRING              applicationName;
    InitErrorHandler ();
 
 #ifndef NODISPLAY
-   /* no external action declared at that time */
-   ActionList = NULL;
 
    ConfigInit ();
-   TtaConfigReadConfigFiles (SchemaPath);
    /* Initilizes the space character displaying mode */
    ShowSpace = 1;
    InputSpace = 0;
-   InitSelection ();
 #endif
 
    CheckAccessLoadResources ();
@@ -497,75 +595,6 @@ int                 result;
       ErrorHandler ();
    else
       exit (result);
-}
-
-
-/*----------------------------------------------------------------------
-   TtaExtractName: extracts the directory and the file name.       
-   aDirectory and aName must be arrays of characters       
-   which sizes are sufficient to contain the path and      
-   the file name.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaExtractName (STRING text, STRING aDirectory, STRING aName)
-
-#else  /* __STDC__ */
-void                TtaExtractName (text, aDirectory, aName)
-STRING              text;
-STRING              aDirectory;
-STRING              aName;
-
-#endif /* __STDC__ */
-{
-   int                 lg, i, j;
-   STRING              ptr, oldptr;
-   CHAR_T                URL_DIR_SEP;
-
-   if (text == NULL || aDirectory == NULL || aName == NULL)
-      return;			/* No input text or error in input parameters */
-
-   if (text && ustrchr (text, TEXT('/')))
-	  URL_DIR_SEP = TEXT('/');
-   else 
-	   URL_DIR_SEP = DIR_SEP;
-   
-   aDirectory[0] = EOS;
-   aName[0] = EOS;
-
-   lg = ustrlen (text);
-   if (lg)
-     {
-	/* the text is not empty */
-	ptr = oldptr = &text[0];
-	do
-	  {
-#        ifndef _WINDOWS
-	     ptr = ustrrchr (oldptr, DIR_SEP);
-#        else  /* _WINDOWS */
-	     ptr = ustrrchr (oldptr, URL_DIR_SEP);
-#        endif /* _WINDOWS */
-		 if (ptr != NULL)
-		oldptr = &ptr[1];
-	  }
-	while (ptr != NULL);
-
-	i = ((int) (oldptr) - (int) (text)) / sizeof (CHAR_T);	/* the length of the directory part */
-	if (i > 1)
-	  {
-	     ustrncpy (aDirectory, text, i);
-	     j = i - 1;
-	     /* Suppresses the / characters at the end of the path */
-	     while (aDirectory[j] == URL_DIR_SEP)
-		aDirectory[j--] = EOS;
-	  }
-	if (i != lg)
-	   ustrcpy (aName, oldptr);
-     }
-#    ifdef _WINDOWS
-     lg = ustrlen (aName);
-     if (!ustrcasecmp (&aName[lg - 4], EXE_EXT))
-        aName[lg - 4] = EOS;
-#    endif /* _WINDOWS */
 }
 
 /* end of module */

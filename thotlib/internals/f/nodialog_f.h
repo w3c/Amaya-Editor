@@ -6,8 +6,45 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int GetObjectWWW ( int docid,
+                          STRING urlName,
+                          STRING formdata,
+                          STRING outputfile,
+                          int mode,
+                          void *incremental_cbf,
+                          void* context_icbf,
+                          void *terminate_cbf,
+                          void* context_tcbf,
+                          ThotBool error_html,
+                          STRING content_type );
+extern ThotBool IsW3Path ( const STRING path );
+extern void NormalizeURL ( STRING orgName,
+                           Document doc,
+                           STRING newName,
+                           STRING docName,
+                           STRING otherPath );
+extern ThotBool LoadRemoteStyleSheet ( STRING url,
+                                       Document doc,
+                                       Element el,
+                                       void *css,
+                                       STRING completeURL,
+                                       STRING localfile );
+extern void FetchImage ( Document doc,
+                         Element el,
+                         STRING URL,
+                         int flags,
+                         Proc callback,
+                         void *extra );
 extern Pixmap TtaCreatePixmapLogo ( char** data );
+extern void TtaHandlePendingEvents ( void );
+extern void ConfigInit ( void );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
+extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
+                                         STRING nomNature,
+                                         STRING presNature );
+extern ThotBool ConfigDefaultPSchema ( STRING schema,
+                                       STRING schpres );
+extern void FreeTranslations ( void );
 extern void DrawAddAttr ( PtrAttribute * pAttr,
                           PtrElement pEl );
 extern void RedisplayCopies ( void );
@@ -21,28 +58,15 @@ extern void DrawChar ( UCHAR_T car,
                        int fg );
 extern void DrawSupprAttr ( PtrAttribute pAttr,
                             PtrElement pEl );
-extern void AttachAttrWithValue ( PtrElement pEl,
-                                  PtrDocument pDoc,
-                                  PtrAttribute pNewAttr );
 extern ThotBool IsASavedElement ( PtrElement pEl );
-extern ThotBool LinkReference ( void );
-extern void NewPosition ( PtrAbstractBox pAb,
-                          int X,
-                          int Y,
-                          int frame,
-                          ThotBool Disp );
-extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
-                                      PtrElement pEl2 );
-extern void ModPresent ( ThotBool OnlyChars );
-extern void ShowBox ( int frame,
-                      PtrBox boite,
-                      int position,
-                      int pourcent );
-extern int IdentDocument ( PtrDocument pDoc );
 extern ThotBool CallEventType ( int *notifyEvent,
                                 ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
                                      ThotBool pre );
+extern void TtaSetStatus ( Document document,
+                           View view,
+                           CONST STRING text,
+                           CONST STRING name );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void UpdateScrollbars ( int frame );
@@ -55,8 +79,6 @@ extern void InsertOption ( PtrElement pEl,
                            PtrDocument pDoc );
 extern void ShowSelection ( PtrAbstractBox PavRac,
                             ThotBool Visible );
-extern void SwitchSelection ( int frame,
-                              ThotBool Allume );
 extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement PcLast );
 extern void AddInSelection ( PtrElement pEl,
@@ -68,9 +90,6 @@ extern void SelectElement ( PtrDocument pDoc,
                             ThotBool Debut,
                             ThotBool Controle );
 extern void ComputeViewSelMarks ( ViewSelection * marque );
-extern void SetDocumentModified ( PtrDocument pDoc,
-                                  ThotBool status,
-                                  int length );
 extern void HighlightSelection ( ThotBool DebVisible,
                                  ThotBool clearOldSel );
 extern void CancelSelection ( void );
@@ -93,16 +112,48 @@ extern void Clear ( int frame,
                     int haut,
                     int x,
                     int y );
-extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                         STRING nomNature,
-                                         STRING presNature );
-extern ThotBool ConfigDefaultPSchema ( STRING schema,
-                                       STRING schpres );
 
 #else /* __STDC__ */
 
+extern int GetObjectWWW (/* int docid,
+                            STRING urlName,
+                            STRING formdata,
+                            STRING outputfile,
+                            int mode,
+                            void *incremental_cbf,
+                            void* context_icbf,
+                            void *terminate_cbf,
+                            void* context_tcbf,
+                            ThotBool error_html,
+                            STRING content_type */);
+extern ThotBool IsW3Path (/* const STRING path */);
+extern void NormalizeURL (/* STRING orgName,
+                             Document doc,
+                             STRING newName,
+                             STRING docName,
+                             STRING otherPath */);
+extern ThotBool LoadRemoteStyleSheet (/* STRING url,
+                                         Document doc,
+                                         Element el,
+                                         void *css,
+                                         STRING completeURL,
+                                         STRING localfile */);
+extern void FetchImage (/* Document doc,
+                           Element el,
+                           STRING URL,
+                           int flags,
+                           Proc callback,
+                           void *extra */);
 extern Pixmap TtaCreatePixmapLogo (/* char** data */);
+extern void TtaHandlePendingEvents (/* void */);
+extern void ConfigInit (/* void */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
+extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
+                                           STRING nomNature,
+                                           STRING presNature */);
+extern ThotBool ConfigDefaultPSchema (/* STRING schema,
+                                         STRING schpres */);
+extern void FreeTranslations (/* void */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
                             PtrElement pEl */);
 extern void RedisplayCopies (/* void */);
@@ -116,28 +167,15 @@ extern void DrawChar (/* UCHAR_T car,
                          int fg */);
 extern void DrawSupprAttr (/* PtrAttribute pAttr,
                               PtrElement pEl */);
-extern void AttachAttrWithValue (/* PtrElement pEl,
-                                    PtrDocument pDoc,
-                                    PtrAttribute pNewAttr */);
 extern ThotBool IsASavedElement (/* PtrElement pEl */);
-extern ThotBool LinkReference (/* void */);
-extern void NewPosition (/* PtrAbstractBox pAb,
-                            int X,
-                            int Y,
-                            int frame,
-                            ThotBool Disp */);
-extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
-                                        PtrElement pEl2 */);
-extern void ModPresent (/* ThotBool OnlyChars */);
-extern void ShowBox (/* int frame,
-                        PtrBox boite,
-                        int position,
-                        int pourcent */);
-extern int IdentDocument (/* PtrDocument pDoc */);
 extern ThotBool CallEventType (/* int *notifyEvent,
                                   ThotBool pre */);
 extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                        ThotBool pre */);
+extern void TtaSetStatus (/* Document document,
+                             View view,
+                             CONST STRING text,
+                             CONST STRING name */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
 extern void UpdateScrollbars (/* int frame */);
@@ -150,8 +188,6 @@ extern void InsertOption (/* PtrElement pEl,
                              PtrDocument pDoc */);
 extern void ShowSelection (/* PtrAbstractBox PavRac,
                               ThotBool Visible */);
-extern void SwitchSelection (/* int frame,
-                                ThotBool Allume */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement PcLast */);
 extern void AddInSelection (/* PtrElement pEl,
@@ -163,9 +199,6 @@ extern void SelectElement (/* PtrDocument pDoc,
                               ThotBool Debut,
                               ThotBool Controle */);
 extern void ComputeViewSelMarks (/* ViewSelection * marque */);
-extern void SetDocumentModified (/* PtrDocument pDoc,
-                                    ThotBool status,
-                                    int length */);
 extern void HighlightSelection (/* ThotBool DebVisible,
                                    ThotBool clearOldSel */);
 extern void CancelSelection (/* void */);
@@ -188,11 +221,6 @@ extern void Clear (/* int frame,
                       int haut,
                       int x,
                       int y */);
-extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                           STRING nomNature,
-                                           STRING presNature */);
-extern ThotBool ConfigDefaultPSchema (/* STRING schema,
-                                         STRING schpres */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

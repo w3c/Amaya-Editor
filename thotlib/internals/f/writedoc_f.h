@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TtaSaveDocument ( Document document,
+                              STRING documentName );
 extern ThotBool StoreDocument ( PtrDocument pDoc,
                                 Name docName,
                                 PathBuffer dirName,
@@ -22,6 +24,8 @@ extern void PivotLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern void TtaSaveDocument (/* Document document,
+                                STRING documentName */);
 extern ThotBool StoreDocument (/* PtrDocument pDoc,
                                   Name docName,
                                   PathBuffer dirName,

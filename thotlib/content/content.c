@@ -27,6 +27,13 @@
 #include "typemedia.h"
 #include "appstruct.h"
 #include "typecorr.h"
+#include "appdialogue.h"
+#include "application.h"
+
+#define THOT_EXPORT extern
+#include "select_tv.h"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
 
 #include "applicationapi_f.h"
 #include "memory_f.h"
@@ -34,9 +41,6 @@
 #include "references_f.h"
 #include "callback_f.h"
 #include "changeabsbox_f.h"
-
-#define THOT_EXPORT extern
-#include "select_tv.h"
 
 
 /*----------------------------------------------------------------------
@@ -1114,4 +1118,104 @@ int                 y;
       firstBuffer->BuPoints[0].XCoord = x;
    if (y > firstBuffer->BuPoints[0].YCoord)
       firstBuffer->BuPoints[0].YCoord = y;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGetTextLength
+
+   Returns the length of a Text basic element.
+
+   Parameter:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+
+   Return value:
+   textLength (number of characters) of the character string
+   contained in the element.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaGetTextLength (Element element)
+#else  /* __STDC__ */
+int                 TtaGetTextLength (element)
+Element             element;
+#endif /* __STDC__ */
+{
+   int                 textLength;
+
+   UserErrorCode = 0;
+   textLength = 0;
+   if (element == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) element)->ElTerminal)
+     TtaError (ERR_invalid_element_type);
+   else if (((PtrElement) element)->ElLeafType != LtText &&
+	    ((PtrElement) element)->ElLeafType != LtPicture)
+     TtaError (ERR_invalid_element_type);
+   else
+     textLength = ((PtrElement) element)->ElTextLength;
+   return textLength;
+}
+
+/*----------------------------------------------------------------------
+   TtaGiveTextContent
+
+   Returns the content of a Text basic element.
+
+   Parameters:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+   buffer: the buffer that will contain the text.
+   length: maximum length of that buffer.
+
+   Return parameters:
+   buffer: (the buffer contains the text).
+   length: actual length of the text in the buffer.
+   language: language of the text.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGiveTextContent (Element element, STRING buffer, int *length, Language * language)
+#else  /* __STDC__ */
+void                TtaGiveTextContent (element, buffer, length, language)
+Element             element;
+STRING              buffer;
+int                *length;
+Language           *language;
+
+#endif /* __STDC__ */
+{
+   PtrTextBuffer       pBuf;
+   STRING              ptr;
+   int                 len, l;
+
+   UserErrorCode = 0;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) element)->ElTerminal)
+	TtaError (ERR_invalid_element_type);
+   else if (((PtrElement) element)->ElLeafType != LtText &&
+	    ((PtrElement) element)->ElLeafType != LtPicture)
+	TtaError (ERR_invalid_element_type);
+   else
+     {
+	len = 0;
+	pBuf = ((PtrElement) element)->ElText;
+	ptr = buffer;
+	while (pBuf != NULL && len < (*length) - 1)
+	  {
+	     if ((*length) < len + pBuf->BuLength + 1)
+		l = (*length) - len;
+	     else
+		l = pBuf->BuLength + 1;
+	     ustrncpy (ptr, pBuf->BuContent, l);
+	     ptr = ptr + (l - 1);
+	     len = len + (l - 1);
+	     pBuf = pBuf->BuNext;
+	  }
+	*length = len;
+	*ptr = EOS;
+	*language = ((PtrElement) element)->ElLanguage;
+     }
 }

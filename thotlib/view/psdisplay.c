@@ -79,9 +79,6 @@ int                 X, Y;
 static int          SameBox = 0; /* 1 if the text is in the same box */
 static int          NbWhiteSp;
 
-#ifdef _WINDOWS 
-extern int PrinterDPI;
-#endif /* _WINDOWS */
 
 #include "buildlines_f.h"
 #include "font_f.h"

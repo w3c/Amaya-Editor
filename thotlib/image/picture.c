@@ -122,14 +122,6 @@ static unsigned char MirrorBytes[0x100] = {
 /* Macro to determine to round off the given value to the closest byte */
 #define WIDTHBYTES(i)   ((i+31)/32*4)
 
-#ifdef _WIN_PRINT
-#ifdef __STDC__
-void LoadPicture2Print (int, PtrBox, PictInfo*);
-#else  /* __STDC__ */
-void LoadPicture2Print ();
-#endif /* __STDC__ */
-#endif /* _WIN_PRINT */
-
 extern ThotBool peInitialized;
 
 BOOL pic2print = FALSE ;
@@ -1555,6 +1547,132 @@ int                 hlogo;
 #  endif /* _WINDOWS */
 }
 
+#ifdef _WINDOWS
+#ifdef _WIN_PRINT
+/*----------------------------------------------------------------------
+  LoadPicture2Print
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         LoadPicture2Print (int frame, PtrBox box, PictInfo * imageDesc)
+#else  /* __STDC__ */
+static void         LoadPicture2Print (frame, box, imageDesc)
+int                 frame;
+PtrBox              box;
+PictInfo           *imageDesc;
+#endif /* __STDC__ */
+{
+   int                 typeImage;
+   PathBuffer          fileName;
+   PictureScaling      pres;
+   int                 xFrame = 0;
+   int                 yFrame = 0;
+   int                 wFrame, hFrame, w, h;
+   int                 width, height;
+   Drawable            picMask = None;
+   Drawable            myDrawable = None;
+   Picture_Report      status;
+   unsigned long       Bgcolor;
+
+   if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+     /* the picture is not visible */
+     return;
+
+   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
+      return;
+
+   GetPictureFileName (imageDesc->PicFileName, fileName);
+   typeImage = imageDesc->PicType;
+   status = PictureFileOk (fileName, &typeImage);
+   w = 0;
+   h = 0;
+
+   if (status != Supported_Format) {  
+      if (TtPrinterDC == NULL) {
+         imageDesc->PicType = 3;
+         pres = RealSize;
+	 imageDesc->PicPresent = pres;
+         myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
+                        (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+	  }
+
+      imageDesc->PicType = -1;
+      wFrame = w = 40;
+      hFrame = h = 40;
+      picMask = None;
+   } else {
+        /* Supported format */
+        imageDesc->PicType = typeImage;
+        pres = imageDesc->PicPresent;
+        if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
+           pres = imageDesc->PicPresent = RealSize;
+        if (box == NULL) {
+           w = 20;
+           h = 20;
+		} else {
+             w = box->BxWidth;
+             h = box->BxHeight;
+		}
+
+        Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
+        if (PictureHandlerTable[typeImage].Produce_Picture != NULL) {
+           /* xFrame and yFrame get the box size if picture is */
+           /* rescaled and receive the position of the picture */
+           if (pres != ReScale || Printing) {
+              xFrame = 0;
+              yFrame = 0;
+		   } else {
+                if (box->BxWidth != 0)
+                   xFrame = box->BxWidth;
+                if (box->BxHeight != 0)
+                   yFrame = box->BxHeight;
+		   }
+           myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
+                          (fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+           /* intrinsic width and height */
+           imageDesc->PicWidth = width;
+           imageDesc->PicHeight = height;
+           imageDesc->bgRed   = bgRed;
+           imageDesc->bgGreen = bgGreen;
+           imageDesc->bgBlue  = bgBlue;
+		}
+       
+        if (myDrawable == None) {
+           myDrawable = PictureLogo;
+           imageDesc->PicType = -1;
+           wFrame = w = 40;
+           hFrame = h = 40;
+           picMask = None;
+		} else {
+             if (box != NULL && (w == 0 ||h == 0 )) {
+                /* one of box size is unknown, keep the image size */
+                if (w == 0)
+                   w = wFrame;
+                if (h == 0)
+                   h = hFrame;
+                /* Do you have to extend the clipping */
+                DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
+                NewDimPicture (box->BxAbstractBox);
+			 }
+		}
+   }
+
+   imageDesc->PicXArea = xFrame;
+   imageDesc->PicYArea = yFrame;
+   imageDesc->PicWArea = wFrame;
+   imageDesc->PicHArea = hFrame;
+
+   if (box->BxType != BoPicture) {
+      /* we don't use mask for background picture till we don't change clipping management */
+      FreePixmap (picMask);
+      picMask = None;
+   }
+   if (imageDesc->PicPixmap != NULL)
+      DeleteObject (imageDesc->PicPixmap);
+   imageDesc->PicPixmap = myDrawable;
+}
+#endif /* _WIN_PRINT */
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
    DrawPicture draws the picture in the frame window.                   
@@ -2027,132 +2145,6 @@ PictInfo           *imageDesc;
 #     endif /* _WINDOWS */
 
 }
-
-#ifdef _WINDOWS
-#ifdef _WIN_PRINT
-/*----------------------------------------------------------------------
-  LoadPicture2Print
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LoadPicture2Print (int frame, PtrBox box, PictInfo * imageDesc)
-#else  /* __STDC__ */
-void                LoadPicture2Print (frame, box, imageDesc)
-int                 frame;
-PtrBox              box;
-PictInfo           *imageDesc;
-#endif /* __STDC__ */
-{
-   int                 typeImage;
-   PathBuffer          fileName;
-   PictureScaling      pres;
-   int                 xFrame = 0;
-   int                 yFrame = 0;
-   int                 wFrame, hFrame, w, h;
-   int                 width, height;
-   Drawable            picMask = None;
-   Drawable            myDrawable = None;
-   Picture_Report      status;
-   unsigned long       Bgcolor;
-
-   if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
-     /* the picture is not visible */
-     return;
-
-   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
-      return;
-
-   GetPictureFileName (imageDesc->PicFileName, fileName);
-   typeImage = imageDesc->PicType;
-   status = PictureFileOk (fileName, &typeImage);
-   w = 0;
-   h = 0;
-
-   if (status != Supported_Format) {  
-      if (TtPrinterDC == NULL) {
-         imageDesc->PicType = 3;
-         pres = RealSize;
-	 imageDesc->PicPresent = pres;
-         myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
-                        (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
-	  }
-
-      imageDesc->PicType = -1;
-      wFrame = w = 40;
-      hFrame = h = 40;
-      picMask = None;
-   } else {
-        /* Supported format */
-        imageDesc->PicType = typeImage;
-        pres = imageDesc->PicPresent;
-        if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
-           pres = imageDesc->PicPresent = RealSize;
-        if (box == NULL) {
-           w = 20;
-           h = 20;
-		} else {
-             w = box->BxWidth;
-             h = box->BxHeight;
-		}
-
-        Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
-        if (PictureHandlerTable[typeImage].Produce_Picture != NULL) {
-           /* xFrame and yFrame get the box size if picture is */
-           /* rescaled and receive the position of the picture */
-           if (pres != ReScale || Printing) {
-              xFrame = 0;
-              yFrame = 0;
-		   } else {
-                if (box->BxWidth != 0)
-                   xFrame = box->BxWidth;
-                if (box->BxHeight != 0)
-                   yFrame = box->BxHeight;
-		   }
-           myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
-                          (fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
-           /* intrinsic width and height */
-           imageDesc->PicWidth = width;
-           imageDesc->PicHeight = height;
-           imageDesc->bgRed   = bgRed;
-           imageDesc->bgGreen = bgGreen;
-           imageDesc->bgBlue  = bgBlue;
-		}
-       
-        if (myDrawable == None) {
-           myDrawable = PictureLogo;
-           imageDesc->PicType = -1;
-           wFrame = w = 40;
-           hFrame = h = 40;
-           picMask = None;
-		} else {
-             if (box != NULL && (w == 0 ||h == 0 )) {
-                /* one of box size is unknown, keep the image size */
-                if (w == 0)
-                   w = wFrame;
-                if (h == 0)
-                   h = hFrame;
-                /* Do you have to extend the clipping */
-                DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
-                NewDimPicture (box->BxAbstractBox);
-			 }
-		}
-   }
-
-   imageDesc->PicXArea = xFrame;
-   imageDesc->PicYArea = yFrame;
-   imageDesc->PicWArea = wFrame;
-   imageDesc->PicHArea = hFrame;
-
-   if (box->BxType != BoPicture) {
-      /* we don't use mask for background picture till we don't change clipping management */
-      FreePixmap (picMask);
-      picMask = None;
-   }
-   if (imageDesc->PicPixmap != NULL)
-      DeleteObject (imageDesc->PicPixmap);
-   imageDesc->PicPixmap = myDrawable;
-}
-#endif /* _WIN_PRINT */
-#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------

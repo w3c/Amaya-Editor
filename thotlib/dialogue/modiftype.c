@@ -149,7 +149,7 @@ View                view;
 
 /*----------------------------------------------------------------------
    StructEditingingLoadResources
-   connects the modify structure functions.
+   connects editing structure functions.
   ----------------------------------------------------------------------*/
 void                StructEditingLoadResources ()
 {
@@ -161,6 +161,7 @@ void                StructEditingLoadResources ()
 	TteConnectAction (T_rcinsertpaste, (Proc) CreatePasteIncludeMenuCallback);
 	TteConnectAction (T_rchoice, (Proc) ChoiceMenuCallback);
 	TteConnectAction (T_raskfornew, (Proc) CallbackAskForNew);
+	EditingLoadResources ();
 	ImageMenuLoadResources ();
      }
 }

@@ -8,6 +8,14 @@
 
 extern int IdentDocument ( PtrDocument pDoc );
 extern void CloseInsertion ( void );
+extern void GetViewInfo ( Document document,
+                          View view,
+                          int *viewnumber,
+                          ThotBool * assoc );
+extern int GetWindowNumber ( Document document,
+                             View view );
+extern ThotWidget TtaGetViewFrame ( Document document,
+                                    View view );
 extern void InitErrorHandler ( void );
 extern void TtaInitialize ( STRING applicationName );
 extern void TtaQuit ( void );
@@ -16,14 +24,19 @@ extern STRING TtaGetVersion ( void );
 extern int TtaGetErrorCode ( void );
 extern STRING TtaGetStrError ( int errorCode );
 extern void ThotExit ( int result );
-extern void TtaExtractName ( STRING text,
-                             STRING aDirectory,
-                             STRING aName );
 
 #else /* __STDC__ */
 
 extern int IdentDocument (/* PtrDocument pDoc */);
 extern void CloseInsertion (/* void */);
+extern void GetViewInfo (/* Document document,
+                            View view,
+                            int *viewnumber,
+                            ThotBool * assoc */);
+extern int GetWindowNumber (/* Document document,
+                               View view */);
+extern ThotWidget TtaGetViewFrame (/* Document document,
+                                      View view */);
 extern void InitErrorHandler (/* void */);
 extern void TtaInitialize (/* STRING applicationName */);
 extern void TtaQuit (/* void */);
@@ -32,9 +45,6 @@ extern STRING TtaGetVersion (/* void */);
 extern int TtaGetErrorCode (/* void */);
 extern STRING TtaGetStrError (/* int errorCode */);
 extern void ThotExit (/* int result */);
-extern void TtaExtractName (/* STRING text,
-                               STRING aDirectory,
-                               STRING aName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

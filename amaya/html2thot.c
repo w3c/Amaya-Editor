@@ -18,17 +18,12 @@
 /* Without this option, it creates a function StartParser that parses a   */
 /* file and creates the internal representation of a Thot document.       */
 
-#ifdef STANDALONE
-/* Includes for STANDALONE version */
-#define THOT_EXPORT
-#include "amaya.h"
-#include "language.h"
-
-#else /* !STANDALONE */
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
 #include "fetchHTMLname.h"
+#include "zlib.h"
+#include "parser.h"
 
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
@@ -42,10 +37,6 @@
 #include "styleparser_f.h"
 #include "templates_f.h"
 #include "XMLparser_f.h"
-#endif /* STANDALONE */
-
-#include "zlib.h"
-#include "parser.h"
 
 typedef UCHAR_T entityName[10];
 typedef struct _CharEntityEntry
@@ -1690,18 +1681,17 @@ static Language	    LanguageStack[MaxStack]; /* element language */
 static int          StackLevel = 0;	     /* first free element on the
 						stack */
 /* information about the input file */
-
 #define INPUT_FILE_BUFFER_SIZE 2000
 static CHAR_T	    FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static char         FileBufferA[INPUT_FILE_BUFFER_SIZE+1];
-static int          CurCharInFileBuffer = 0;
-static int          LastCharInFileBuffer = 0;
-static STRING       InputText = NULL;
-static FILE*        InputFile = NULL;
-static int          curChar = 0;
-static int          numberOfLinesRead = 0;/* number of lines read in the
+static int	    LastCharInFileBuffer = 0;
+static int          CurrentBufChar;
+static CHAR_T	    PreviousBufChar = EOS;	  /* last character read */
+static STRING       InputText;
+static gzFile       stream = 0;
+static int          NumberOfLinesRead = 0;/* number of lines read in the
 					     file */
-static int          numberOfCharRead = 0; /* number of characters read in the
+static int          NumberOfCharRead = 0; /* number of characters read in the
 					     current line */
 static ThotBool     EmptyLine = TRUE;	  /* no printable character encountered
 					     yet in the current line */
@@ -1713,7 +1703,6 @@ static ThotBool     ParsingCSS = FALSE;	  /* reading the content of a STYLE
 static ThotBool     ParsingTextArea = FALSE; /* reading the content of a text area
 					     element */
 static int          WithinTable = 0;      /* <TABLE> has been read */
-static CHAR_T	    prevChar = EOS;	  /* last character read */
 static STRING       docURL = NULL;	  /* path or URL of the document */
 
 /* input buffer */
@@ -2431,8 +2420,8 @@ USTRING             msg;
 	 docURL = NULL;
 	 }
       /* print the line number and character number before the message */
-      fprintf (ErrFile, "   line %d, char %d: %s\n", numberOfLinesRead,
-	       numberOfCharRead, msg);
+      fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead,
+	       NumberOfCharRead, msg);
       }
    else
       /* print only the error message */
@@ -4127,7 +4116,7 @@ CHAR_T                c;
 	   {
 #ifndef STANDALONE
 	   /* Parse the MathML structure */
-	   XMLparse (TEXT("MathML"), theDocument, lastElement, FALSE,
+	   XMLparse (stream, &CurrentBufChar, TEXT("MathML"), theDocument, lastElement, FALSE,
 		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
 #endif /* STANDALONE */
 	   /* when returning from the XML parser, the end tag has already
@@ -4140,7 +4129,7 @@ CHAR_T                c;
 	   {
 	   /* Parse the GraphML structure */
 #ifndef STANDALONE
-	   XMLparse (TEXT("GraphML"), theDocument, lastElement, FALSE,
+	   XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), theDocument, lastElement, FALSE,
 		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
 #endif /* STANDALONE */
 	   /* when returning from the XML parser, the end tag has already
@@ -6237,67 +6226,66 @@ void                FreeHTMLParser ()
    whatever it is.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR_T     GetNextChar (ThotBool *endOfFile)
+static CHAR_T     GetNextChar (FILE *infile, STRING buffer, int *index, ThotBool *endOfFile)
 #else
-static CHAR_T     GetNextChar (endOfFile)
-ThotBool *endOfFile;
+static CHAR_T     GetNextChar (infile, buffer, index, endOfFile)
+FILE             *infile;
+STRING            buffer;
+int              *index;
+ThotBool         *endOfFile;
 #endif
 {
-   CHAR_T		charRead;
-   /* STRING       Ubuffer; */
-   int		res;
+  CHAR_T	  charRead;
+  int		  res;
 
-   charRead = EOS;
-   *endOfFile = FALSE;
-   if (InputText != NULL)
-      {
-      charRead = InputText[curChar++];
-      if (charRead == EOS)
-         *endOfFile = TRUE;
-      }
-   else if (InputFile == NULL)
-      *endOfFile = TRUE;
-   else
-      {
-      if (CurCharInFileBuffer == 0)
-         {
+  charRead = EOS;
+  *endOfFile = FALSE;
+  if (buffer != NULL)
+    {
+      charRead = buffer[(*index)++];
+      *endOfFile = (charRead == EOS);
+    }
+  else if (infile == NULL)
+    *endOfFile = TRUE;
+  else
+    {
+      if (*index == 0)
+	{
 #        ifdef _I18N_
-         res = gzread (InputFile, FileBufferA, INPUT_FILE_BUFFER_SIZE);
+	  res = gzread (infile, FileBufferA, INPUT_FILE_BUFFER_SIZE);
 #        ifdef _WINDOWS
-         if (!MultiByteToWideChar (1256, 0, FileBufferA, sizeof(FileBufferA), FileBuffer, sizeof (FileBufferA)))
+	  if (!MultiByteToWideChar (1256, 0, FileBufferA, sizeof(FileBufferA), FileBuffer, sizeof (FileBufferA)))
             WinErrorBox (NULL);
-		 /* Ubuffer = ISO2WideChar (FileBufferA); */
+	  /* Ubuffer = ISO2WideChar (FileBufferA); */
 #        else  /* _WINDOWS */
-         mbstowcs (FileBuffer, FileBufferA, sizeof (FileBufferA));
+	  mbstowcs (FileBuffer, FileBufferA, sizeof (FileBufferA));
 #        endif /* _WINDOWS */
 #        else  /* !_I18N_ */
-         res = gzread (InputFile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
 #        endif /* _I18N_ */
-         /* ustrcpy (FileBuffer, Ubuffer); */
-         if (res <= 0)
+	  /* ustrcpy (FileBuffer, Ubuffer); */
+	  if (res <= 0)
             /* error or end of file */
             {
-            *endOfFile = TRUE;
-            charRead = EOS;
-            LastCharInFileBuffer = 0;
+	      *endOfFile = TRUE;
+	      charRead = EOS;
+	      LastCharInFileBuffer = 0;
             }
-         else
+	  else
             {
-            /* FileBuffer[res] = EOS; $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
-            LastCharInFileBuffer = res - 1;
+	      /* FileBuffer[res] = EOS; $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+	      LastCharInFileBuffer = res - 1;
             }
-         }
+	}
       if (*endOfFile == FALSE)
-	 {
-	 charRead = FileBuffer[CurCharInFileBuffer++];
-	 /* charRead = WC_Buffer[CurCharInFileBuffer++]; */
-	 if (CurCharInFileBuffer > LastCharInFileBuffer)
-	    CurCharInFileBuffer = 0;
-	 }
-      }
-   if (*endOfFile == FALSE)
-      numberOfCharRead++;
-   return charRead;
+	{
+	  charRead = FileBuffer[(*index)++];
+	  /* charRead = WC_Buffer[(*index)++]; */
+	  if (*index > LastCharInFileBuffer)
+	    *index = 0;
+	}
+    }
+  return charRead;
 }
 
 /*----------------------------------------------------------------------
@@ -6305,27 +6293,33 @@ ThotBool *endOfFile;
    input file or buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T          GetNextInputChar (ThotBool *endOfFile)
+CHAR_T          GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 #else
-CHAR_T          GetNextInputChar (endOfFile)
-ThotBool *endOfFile;
+CHAR_T          GetNextInputChar (infile, index, endOfFile)
+FILE           *infile;
+int            *index;
+ThotBool       *endOfFile;
 #endif
 {
   CHAR_T		charRead;
 
   charRead = EOS;
   *endOfFile = FALSE;
-  if (prevChar != EOS)
+  if (PreviousBufChar != EOS)
     {
-      charRead = prevChar;
-      prevChar = EOS;
+      charRead = PreviousBufChar;
+      PreviousBufChar = EOS;
     }
   else
     {
-      charRead = GetNextChar (endOfFile);
+      charRead = GetNextChar (infile, InputText, index, endOfFile);
+      NumberOfCharRead++;
       /* skip null characters*/
       while (charRead == EOS && !*endOfFile)
-	charRead = GetNextChar (endOfFile);
+	{
+	charRead = GetNextChar (infile, InputText, index, endOfFile);
+	NumberOfCharRead++;
+	}
     }
   if (*endOfFile == FALSE)
     {
@@ -6333,11 +6327,11 @@ ThotBool *endOfFile;
 	/* CR has been read */
 	{
 	  /* Read next character */
-	  charRead = GetNextChar (endOfFile);
+	  charRead = GetNextChar (infile, InputText, index, endOfFile);
 	  if ((int) charRead != EOL)
 	    /* next character is not LF. Store next character and return LF */
 	    {
-	      prevChar = charRead;
+	      PreviousBufChar = charRead;
 	      charRead = EOL;
 	    }
 	}
@@ -6345,9 +6339,11 @@ ThotBool *endOfFile;
       if ((int) charRead == EOL || (int) charRead == __CR__)
 	/* new line in HTML file */
 	{
-	  numberOfLinesRead++;
-	  numberOfCharRead = 0;
+	  NumberOfLinesRead++;
+	  NumberOfCharRead = 0;
 	}
+      else
+	NumberOfCharRead++;
     }
   return charRead;
 }
@@ -6376,10 +6372,9 @@ STRING              HTMLbuf;
    if (HTMLbuf != NULL || infile != NULL)
       {
       InputText = HTMLbuf;
-      InputFile = infile;
       endOfFile = FALSE;
-      numberOfCharRead = 0;
-      numberOfLinesRead = 1;
+      NumberOfCharRead = 0;
+      NumberOfLinesRead = 1;
       }
    charRead = EOS;
    HTMLrootClosed = FALSE;
@@ -6390,7 +6385,7 @@ STRING              HTMLbuf;
 	/* read one character from the source if the last character */
 	/* read has been processed */
 	if (charRead == EOS)
-	  charRead = GetNextInputChar (&endOfFile);
+	  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
 	if (charRead != EOS)
 	  {
 	     /* Check the character read */
@@ -6623,14 +6618,13 @@ STRING	           pathURL;
   ThotBool            endOfFile;
 
   InputText = textbuf;
-  InputFile = infile;
   LgBuffer = 0;
   endOfFile = FALSE;
-  numberOfCharRead = 0;
-  numberOfLinesRead = 1;
+  NumberOfCharRead = 0;
+  NumberOfLinesRead = 1;
 
   /* initialize input buffer */
-  charRead = GetNextInputChar (&endOfFile);
+  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
   parent = TtaGetMainRoot (doc);
   elType = TtaGetElementType (parent);
   el = TtaGetLastChild (parent);
@@ -6708,7 +6702,7 @@ STRING	           pathURL;
 	}
 
       /* read next character from the source */
-      charRead = GetNextInputChar (&endOfFile);
+      charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
     }
   /* close the document */
   if (LgBuffer != 0)
@@ -7789,7 +7783,7 @@ Document            doc;
    MergeText = FALSE;
    AfterTagPRE = FALSE;
    ParsingCSS = FALSE;
-   curChar = 0;
+   CurrentBufChar = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -7848,20 +7842,19 @@ Document	doc;
    elType = TtaGetElementType (lastelem);
    schemaName = TtaGetSSchemaName(elType.ElSSchema);
    if (ustrcmp (schemaName, TEXT("HTML")) == 0)
-      /* parse an HTML subtree */
-      {
-      InitializeHTMLParser (lastelem, isclosed, doc);
-      HTMLparse (NULL, HTMLbuf);
-      }
+     /* parse an HTML subtree */
+     {
+       InitializeHTMLParser (lastelem, isclosed, doc);
+       HTMLparse (NULL, HTMLbuf);
+     }
    else
-      /* parse an XML subtree */
-      {
-      InputText = HTMLbuf;
-      curChar = 0;
-      InputFile = NULL;
+     /* parse an XML subtree */
+     {
+       InputText = HTMLbuf;
+       CurrentBufChar = 0;
 #ifndef STANDALONE
-      XMLparse (schemaName, doc, lastelem, isclosed,
-		TtaGetDefaultLanguage(), NULL);
+       XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem, isclosed,
+		 TtaGetDefaultLanguage(), NULL);
 #endif
       }
 }
@@ -7878,7 +7871,6 @@ int                 argc;
 char              **argv;
 #endif
 {
-  gzFile              stream;
   Element             el, oldel;
   Document            doc;
   FILE               *infile;
@@ -7964,7 +7956,6 @@ STRING              pathURL;
 ThotBool	    plainText;
 #endif
 {
-  gzFile              stream;
   Element             el, oldel;
   AttributeType       attrType;
   Attribute           attr;
@@ -7995,8 +7986,6 @@ ThotBool	    plainText;
   if (stream != 0)
     {
       FileBuffer[0] = EOS;
-      CurCharInFileBuffer = 0;
-      LastCharInFileBuffer = 0;
       WithinTable = 0;
       if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	{

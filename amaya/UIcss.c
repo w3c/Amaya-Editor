@@ -37,6 +37,77 @@ static Document    CSSdocument;
 #include "init_f.h"
 
 /*----------------------------------------------------------------------
+   LoadRemoteStyleSheet loads a remote style sheet into a file.
+   Return FALSE if it's a local file and TRUE otherwise.
+   When the returned value is TRUE, the parameter completeURL contains
+   the normalized url and the parameter localfile the path of the local
+   copy of the file.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool        LoadRemoteStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css, STRING completeURL, STRING localfile)
+#else
+ThotBool        LoadRemoteStyleSheet (url, doc, el, css, completeURL, localfile)
+STRING          url;
+Document        doc;
+Element         el;
+CSSInfoPtr      css;
+#endif
+{
+  CSSInfoPtr          oldcss;
+  CHAR_T              tempname[MAX_LENGTH];
+  STRING              tempdocument;
+  int                 toparse;
+  ThotBool            import = (css != NULL);
+
+      /* this document is displayed -> load the CSS */
+      localfile[0] = EOS;
+      if (import && css->url)
+	NormalizeURL (url, 0, completeURL, tempname, css->url);
+      else if (import && css->localName)
+	NormalizeURL (url, 0, completeURL, tempname, css->localName);
+      else
+        NormalizeURL (url, doc, completeURL, tempname, NULL);
+      
+      if (IsW3Path (completeURL))
+	{
+	  /* check against double inclusion */
+	  oldcss = SearchCSS (0, completeURL);
+	  if (oldcss != NULL)
+	    ustrcpy (localfile, oldcss->localName);
+	  else
+	    {
+	      /* the document is not loaded yet */
+	      /* changed this to doc */
+#ifndef AMAYA_JAVA
+	      toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
+#else
+	toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
+#endif /* ! AMAYA_JAVA */
+	      if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
+		{
+		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), completeURL);
+		  return;
+		}
+	      else
+		{
+		  /* we have to rename the temporary file */
+		  /* allocate and initialize tempdocument */
+		  tempdocument = GetLocalPath (0, completeURL);
+		  TtaFileUnlink (tempdocument);
+		  /* now we can rename the local name of a remote document */
+		  urename (localfile, tempdocument);
+		  ustrcpy (localfile, tempdocument);
+		  TtaFreeMemory (tempdocument);
+		}
+	    }
+	  return TRUE;
+	}
+      else
+	return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

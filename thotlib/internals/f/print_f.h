@@ -18,6 +18,7 @@ extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
                                       PtrElement * lastEl,
                                       int *firstChar,
                                       int *lastChar );
+extern void DestroyFrame ( int frame );
 extern void DefineClipping ( int frame,
                              int orgx,
                              int orgy,
@@ -44,7 +45,6 @@ extern void DisplayConfirmMessage ( STRING text );
 extern void DisplayMessage ( STRING text,
                              int msgType );
 extern void TtaError ( int errorCode );
-extern void CloseInsertion ( void );
 extern int main ( int argc,
                   char **argv );
 
@@ -62,6 +62,7 @@ extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
                                         PtrElement * lastEl,
                                         int *firstChar,
                                         int *lastChar */);
+extern void DestroyFrame (/* int frame */);
 extern void DefineClipping (/* int frame,
                                int orgx,
                                int orgy,
@@ -88,7 +89,6 @@ extern void DisplayConfirmMessage (/* STRING text */);
 extern void DisplayMessage (/* STRING text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
-extern void CloseInsertion (/* void */);
 extern int main (/* int argc,
                     char **argv */);
 

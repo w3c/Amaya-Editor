@@ -30,6 +30,7 @@
 #include "appstruct.h"
 #include "appdialogue.h"
 #include "typecorr.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -61,6 +62,90 @@
 #include "structschema_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
+
+/*----------------------------------------------------------------------
+   Retourne Vrai si les deux elements pointes par pEl1 et pEl2     
+   possedent les memes attributs avec les memes valeurs            
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            SameAttributes (PtrElement pEl1, PtrElement pEl2)
+#else  /* __STDC__ */
+ThotBool            SameAttributes (pEl1, pEl2)
+PtrElement          pEl1;
+PtrElement          pEl2;
+
+#endif /* __STDC__ */
+{
+   PtrAttribute        pAttr1, pAttr2;
+   int                 nAttr1, nAttr2;
+   ThotBool            same = TRUE;
+
+   /* nombre d'attributs du 1er element */
+   pAttr1 = pEl1->ElFirstAttr;
+   nAttr1 = 0;
+   /* compte les attributs du 1er element */
+   while (pAttr1 != NULL)
+     {
+	nAttr1++;
+	pAttr1 = pAttr1->AeNext;
+     }
+
+   /* nombre d'attributs du 2eme element */
+   pAttr2 = pEl2->ElFirstAttr;
+   nAttr2 = 0;
+   /* compte les attributs du 2eme element */
+   while (pAttr2 != NULL)
+     {
+	nAttr2++;
+	pAttr2 = pAttr2->AeNext;
+     }
+
+   /* compare le nombre d'attributs des deux elements */
+   if (nAttr1 != nAttr2)
+      same = FALSE;		/* nombres d'attributs differents, fin */
+   else
+      /* meme nombre d'attributs, compare les attributs et leurs valeurs */
+     {
+	pAttr1 = pEl1->ElFirstAttr;
+	/* 1er attribut du 1er element */
+	/* examine tous les attributs du 1er element */
+	while (pAttr1 != NULL && same)
+	   /* cherche si le 2eme element possede cet attribut du 1er elem */
+	  {
+	     pAttr2 = GetAttributeOfElement (pEl2, pAttr1);
+	     if (pAttr2 == NULL)
+		/* le 2eme element n'a pas cet attribut, fin */
+		same = FALSE;
+	     else
+	       {
+		  if (pAttr1->AeDefAttr != pAttr2->AeDefAttr)
+		     /* valeurs differentes de cet attribut */
+		     same = FALSE;
+		  else
+		     switch (pAttr1->AeAttrType)
+			   {
+			      case AtNumAttr:
+			      case AtEnumAttr:
+				 if (pAttr1->AeAttrValue != pAttr2->AeAttrValue)
+				    same = FALSE;
+				 break;
+			      case AtReferenceAttr:
+				 same = FALSE;
+				 break;
+			      case AtTextAttr:
+				 same = TextsEqual (pAttr2->AeAttrText, pAttr1->AeAttrText);
+				 break;
+			      default:
+				 break;
+			   }
+	       }
+	     if (same)
+		/* meme valeur,passe a l'attribut suivant du 1er element */
+		pAttr1 = pAttr1->AeNext;
+	  }
+     }
+   return same;
+}
 
 /*----------------------------------------------------------------------
    SetAttrReference fait pointer l'attribut reference pAttr sur    
@@ -357,83 +442,6 @@ PtrDocument         pDoc;
 			}
 	     }
 	}
-}
-
-/*----------------------------------------------------------------------
-   IsolateSelection
-   Si la selection passee en parametre commence ou finit sur des   
-   elements partiellement selectionnes, ces elements sont coupes   
-   en deux et leurs paves egalement.                               
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                IsolateSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar, ThotBool createEmpty)
-
-#else  /* __STDC__ */
-void                IsolateSelection (pDoc, pFirstSel, pLastSel, firstChar, lastChar, createEmpty)
-PtrDocument         pDoc;
-PtrElement         *pFirstSel;
-PtrElement         *pLastSel;
-int                *firstChar;
-int                *lastChar;
-ThotBool		    createEmpty;
-
-#endif /* __STDC__ */
-
-{
-   PtrElement	       pEl;
-   int                 view;
-   ThotBool	       done;
-
-   if (*firstChar > 1)
-      if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
-	 /* la selection courante commence a l'interieur du premier element */
-	 /* selectionne */
-	 /* coupe le premier element selectionne' */
-	{
-	   SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
-	   /* prepare la creation des paves de la 2eme partie */
-	   for (view = 0; view < MAX_VIEW_DOC; view++)
-	      if (!AssocView (*pFirstSel))
-		{
-		   if (pDoc->DocView[view].DvPSchemaView > 0)
-		      /* la vue est ouverte */
-		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-		}
-	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
-		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
-	   /* cree les paves de la deuxieme partie */
-	   CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
-	   ApplDelayedRule (*pFirstSel, pDoc);
-	}
-   done = FALSE;
-   if (createEmpty)
-     if (*firstChar == 1 && *lastChar == 1 && *pFirstSel == *pLastSel)
-       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
-	  {
-	  pEl = NewSubtree ((*pFirstSel)->ElTypeNumber, (*pFirstSel)->ElStructSchema, pDoc, (*pFirstSel)->ElAssocNum, FALSE, TRUE, FALSE, TRUE);
-	  InsertElementBefore (*pFirstSel, pEl);
-	  for (view = 0; view < MAX_VIEW_DOC; view++)
-	      if (!AssocView (*pFirstSel))
-		{
-		   if (pDoc->DocView[view].DvPSchemaView > 0)
-		      /* la vue est ouverte */
-		      pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-		}
-	      else if (pDoc->DocAssocFrame[(*pFirstSel)->ElAssocNum - 1] != 0)
-		 pDoc->DocAssocFreeVolume[(*pFirstSel)->ElAssocNum - 1] = THOT_MAXINT;
-	  CreateNewAbsBoxes (pEl, pDoc, 0);
-	  ApplDelayedRule (pEl, pDoc);
-	  *pFirstSel = pEl;
-	  *pLastSel = pEl;
-	  *firstChar = 0;
-	  *lastChar = 0;
-	  done = TRUE;
-	  }
-   if (!done)
-     if (*lastChar > 0 && *pLastSel != NULL)
-       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
-	 SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -1012,7 +1020,6 @@ PtrAttribute        pAttrNext;
   return (pAttr);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Met dans l'element pEl la valeur de l'attribut pNewAttr		
    Les regles de presentation de cette nouvelle valeur sont	
@@ -1129,7 +1136,8 @@ PtrAttribute        pNewAttr;
 	if (pAttr)
 	  {
 	    /* register the attribute in history */
-	    AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, FALSE);
+	    if (ThotLocalActions[T_attraddhistory] != NULL)
+	      (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, TRUE, FALSE);
 	    /* detache l'attribut de l'element s'il y a lieu */
 	    pAttrNext = pAttr->AeNext;
 	    /* supprime l'attribut */
@@ -1183,7 +1191,8 @@ PtrAttribute        pNewAttr;
 	    /* add a copy of the new attribute before pAttrNext */
 	    pAttr = AddAttrToElem (pEl, pNewAttr, pAttrNext);
 	    /* register the attribute in history */
-	    AddAttrEditOpInHistory (pAttr, pEl, pDoc, FALSE, TRUE);
+	    if (ThotLocalActions[T_attraddhistory] != NULL)
+	      (*ThotLocalActions[T_attraddhistory]) (pAttr, pEl, pDoc, FALSE, TRUE);
 	    /* indique que le document a ete modifie' */
 	    /* un changement d'attribut vaut dix caracteres saisis */
 	    SetDocumentModified (pDoc, TRUE, 10);
@@ -1254,377 +1263,19 @@ PtrAttribute        pNewAttr;
 	CallEventAttribute (&notifyAttr, FALSE);
      }
 }
-#endif /* WIN_PRINT */
-
-/*----------------------------------------------------------------------
-   AttachAttrToRange applique l'attribut pAttr a une partie de document
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void	AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void	AttachAttrToElem (pAttr, pEl, pDoc)
-PtrAttribute pAttr;
-PtrElement pEl;
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
-{
-   Language            lang;
-   PtrAttribute        pAttrAsc;
-   PtrElement          pElAttr;
-
-   /* On ne traite pas les marques de page */
-   if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-     {
-        if (pAttr->AeAttrNum == 1)
-   	/* c'est l'attribut langue */
-          {
-   	  /* change la langue de toutes les feuilles de texte du sous-arbre */
-   	  /* de l'element */
-   	  if (pAttr->AeAttrText != NULL)
-   	     lang = TtaGetLanguageIdFromName (pAttr->AeAttrText->BuContent);
-   	  else
-   	     /* c'est une suppression de l'attribut Langue */
-   	    {
-   	       lang = TtaGetDefaultLanguage ();		/* langue par defaut */
-   	       /* on cherche si un ascendant porte l'attribut Langue */
-   	       if (pEl->ElParent != NULL)
-   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
-   	       else
-   		 pAttrAsc = GetTypedAttrAncestor (pEl->ElParent, 1, NULL, &pElAttr);
-
-   	       if (pAttrAsc != NULL)
-   		  /* un ascendant definit la langue, on prend cette langue */
-   		  if (pAttrAsc->AeAttrText != NULL)
-   		     lang = TtaGetLanguageIdFromName (pAttrAsc->AeAttrText->BuContent);
-   	    }
-   	  ChangeLanguage (pDoc, pEl, lang, FALSE);
-          }
-
-        /* met la nouvelle valeur de l'attribut dans l'element et */
-        /* applique les regles de presentation de l'attribut a l'element */
-        AttachAttrWithValue (pEl, pDoc, pAttr);
-        if (ThotLocalActions[T_attrtable] != NULL)
-   	(*ThotLocalActions[T_attrtable])
-   	   (pEl, pAttr, pDoc);	/* cas particulier des tableaux */
-
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   AttachAttrToRange applique l'attribut pAttr a une partie de document
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
-#else  /* __STDC__ */
-void                AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc, reDisplay)
-PtrAttribute        pAttr;
-int                 lastChar;
-int                 firstChar;
-PtrElement          pLastSel;
-PtrElement          pFirstSel;
-PtrDocument         pDoc;
-ThotBool		    reDisplay;
-#endif /* __STDC__ */
-{
-   PtrElement          pEl;
-   int                 i;
-
-   /* eteint d'abord la selection */
-   TtaClearViewSelections ();
-   /* Coupe les elements du debut et de la fin de la selection s'ils */
-   /* sont partiellement selectionnes */
-   IsolateSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
-   /* start an operation sequence in editing history */
-   OpenHistorySequence (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
-   /* parcourt les elements selectionnes */
-   pEl = pFirstSel;
-   while (pEl != NULL)
-     {
-	AttachAttrToElem (pAttr, pEl, pDoc);
-	/* cherche l'element a traiter ensuite */
-	pEl = NextInSelection (pEl, pLastSel);
-     }
-   /* si c'est un changement de langue qui s'applique a la racine de */
-   /* l'arbre principal du document, on change aussi la langue de */
-   /* tous les autres arbre de ce document */
-   if (pAttr->AeAttrNum == 1)	/* attribut Langue = 1 */
-      if (pFirstSel == pDoc->DocRootElement)
-	{
-	   for (i = 1; i <= MAX_PARAM_DOC; i++)
-	      if (pDoc->DocParameters[i - 1] != NULL)
-		 AttachAttrToElem (pAttr, pDoc->DocParameters[i - 1], pDoc);
-	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
-	      if (pDoc->DocAssocRoot[i - 1] != NULL)
-		 AttachAttrToElem (pAttr, pDoc->DocAssocRoot[i - 1], pDoc);
-	}
-   /* close the editing sequence */
-   CloseHistorySequence (pDoc);
-   /* parcourt a nouveau les elements selectionnes pour fusionner les */
-   /* elements voisins de meme type ayant les memes attributs, reaffiche */
-   /* toutes les vues et retablit la selection */
-   if (reDisplay)
-     SelectRange (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
-}
-
-
-/*----------------------------------------------------------------------
-   AttachMandatoryAttrSRule verifie que l'element pEl possede les  
-   attributs requis indique's dans la regle pSRule du schema de    
-   structure pSS et, si certains attributs requis manquent, force  
-   l'utilisateur a leur donner une valeur et met ces attributs sur 
-   l'element pEl.                                                  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument pDoc, SRule * pSRule, PtrSSchema pSS)
-#else  /* __STDC__ */
-static void         AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS)
-PtrElement          pEl;
-PtrDocument         pDoc;
-SRule              *pSRule;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-{
-   PtrElement          pRefEl;
-   PtrAttribute        pAttr, pA;
-   int                 i, att;
-   PtrReference        pRef;
-   ThotBool            found;
-   ThotBool            MandatoryAttrOK;
-   NotifyAttribute     notifyAttr;
-   int                 len;
-
-   /* parcourt tous les attributs locaux definis dans la regle */
-   for (i = 0; i < pSRule->SrNLocalAttrs; i++)
-      if (pSRule->SrRequiredAttr[i])
-	 /* cet attribut local est obligatoire */
-	 if (pDoc->DocSSchema != NULL)
-	    /* le document n'a pas ete ferme' entre-temps */
-	   {
-	      att = pSRule->SrLocalAttr[i];
-	      /* cherche si l'element possede cet attribut */
-	      pAttr = pEl->ElFirstAttr;
-	      found = FALSE;
-	      while (pAttr != NULL && !found)
-		 if (pAttr->AeAttrNum == att &&
-		  (att == 1 || pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
-		    /* att = 1: Langue, quel que soit le schema de structure */
-		    found = TRUE;
-		 else
-		    pAttr = pAttr->AeNext;
-	      if (!found)
-		 /* l'element ne possede pas cet attribut requis */
-		{
-		   /* envoie l'evenement AttrCreate.Pre */
-		   notifyAttr.event = TteAttrCreate;
-		   notifyAttr.document = (Document) IdentDocument (pDoc);
-		   notifyAttr.element = (Element) pEl;
-		   notifyAttr.attribute = NULL;
-		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-		   notifyAttr.attributeType.AttrTypeNum = att;
-		   CallEventAttribute (&notifyAttr, TRUE);
-		   /* cree un nouvel attribut pour l'element */
-		   GetAttribute (&pAttr);
-		   pAttr->AeAttrSSchema = pSS;
-		   pAttr->AeAttrNum = att;
-		   pAttr->AeDefAttr = FALSE;
-		   pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
-		   switch (pAttr->AeAttrType)
-			 {
-			    case AtNumAttr:
-			    case AtEnumAttr:
-			       pAttr->AeAttrValue = 0;
-			       break;
-			    case AtReferenceAttr:
-			       /* attache un bloc reference a l'attribut */
-			       GetReference (&pRef);
-			       pAttr->AeAttrReference = pRef;
-			       pRef->RdElement = pEl;
-			       pRef->RdAttribute = pAttr;
-			       break;
-			    case AtTextAttr:
-			       pAttr->AeAttrText = NULL;
-			       break;
-			    default:
-			       break;
-			 }
-		   /* attache l'attribut a l'element */
-		   if (pEl->ElFirstAttr == NULL)
-		      /* c'est le 1er attribut de l'element */
-		      pEl->ElFirstAttr = pAttr;
-		   else
-		     {
-			pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
-			while (pA->AeNext != NULL)
-			   /* cherche le dernier attribut de l'element */
-			   pA = pA->AeNext;
-			/* chaine le nouvel attribut */
-			pA->AeNext = pAttr;
-		     }
-		   /* c'est le dernier attribut de l'element */
-		   pAttr->AeNext = NULL;
-		   /* envoie l'evenement AttrModify.Pre */
-		   notifyAttr.event = TteAttrModify;
-		   notifyAttr.document = (Document) IdentDocument (pDoc);
-		   notifyAttr.element = (Element) pEl;
-		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-		   notifyAttr.attributeType.AttrTypeNum = att;
-		   if (!CallEventAttribute (&notifyAttr, TRUE))
-		      /* l'application laisse l'editeur saisir la valeur de */
-		      /* l'attribut requis */
-		     {
-			MandatoryAttrOK = FALSE;
-			do
-			  {
-			     /* demande a l'utilisateur d'entrer une valeur */
-			     /* pour l'attribut */
-			     if (pAttr->AeAttrType == AtReferenceAttr)
-				/* demande a l'utilisateur l'element reference' */
-				MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc, &pRefEl);
-			     else
-			       {
-				  if (ThotLocalActions[T_attrreq] != NULL)
-				     (*ThotLocalActions[T_attrreq]) (pAttr, pDoc);
-				  else
-				     switch (pAttr->AeAttrType)
-					   {
-					      case AtNumAttr:
-						 /* attribut a valeur numerique */
-						 pAttr->AeAttrValue = 0;
-						 break;
-
-					      case AtTextAttr:
-						 /* attribut a valeur textuelle */
-						 CopyStringToText (TEXT(" "), pAttr->AeAttrText, &len);
-						 break;
-
-					      case AtEnumAttr:
-						 /* attribut a valeurs enumerees */
-						 pAttr->AeAttrValue = 1;
-						 break;
-
-					      default:
-						 break;
-					   }
-				  MandatoryAttrOK = TRUE;
-			       }
-			  }
-			while (!MandatoryAttrOK && pDoc->DocSSchema != NULL);
-
-			if (MandatoryAttrOK && pDoc->DocSSchema != NULL)
-			  {
-			     /* envoie l'evenement AttrModify.Post */
-			     notifyAttr.event = TteAttrModify;
-			     notifyAttr.document = (Document) IdentDocument (pDoc);
-			     notifyAttr.element = (Element) pEl;
-			     notifyAttr.attribute = (Attribute) pAttr;
-			     notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-			     notifyAttr.attributeType.AttrTypeNum = att;
-			     CallEventAttribute (&notifyAttr, FALSE);
-			  }
-		     }
-		   /* envoie l'evenement AttrCreate.Post */
-		   notifyAttr.event = TteAttrCreate;
-		   notifyAttr.document = (Document) IdentDocument (pDoc);
-		   notifyAttr.element = (Element) pEl;
-		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
-		   notifyAttr.attributeType.AttrTypeNum = att;
-		   CallEventAttribute (&notifyAttr, FALSE);
-		}
-	   }
-}
-
-
-/*----------------------------------------------------------------------
-   Verifie que tous les elements du sous-arbre de racine pEl       
-   possedent les attributs requis et, si certains attributs requis 
-   manquent, force l'utilisateur a leur donner une valeur et met   
-   ces attributs sur les elements qui les requierent.              
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                AttachMandatoryAttributes (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
-{
-   PtrElement          pChild;
-   SRule              *pSRule;
-   PtrSSchema          pSS;
-
-   if (pEl != NULL && pEl->ElStructSchema != NULL)
-     {
-	/* traite d'abord les attributs requis par la regle de structure qui */
-	/* definit l'element */
-	pSS = pEl->ElStructSchema;
-	pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
-	AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
-	/* traite toutes les regles d'extension de ce type d'element */
-	pSS = pDoc->DocSSchema;
-	if (pSS != NULL)
-	  {
-	     pSS = pSS->SsNextExtens;
-	     /* parcourt tous les schemas d'extension du document */
-	     while (pSS != NULL)
-	       {
-		  /* cherche dans ce schema d'extension la regle qui concerne */
-		  /* le type de l'element */
-		  pSRule = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber, pSS);
-		  if (pSRule != NULL)
-		     /* il y a une regle d'extension, on la traite */
-		     AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
-		  if (pDoc->DocSSchema == NULL)
-		     /* le document a ete ferme' entre-temps */
-		     pSS = NULL;
-		  else
-		     /* passe au schema d'extension suivant */
-		     pSS = pSS->SsNextExtens;
-	       }
-	  }
-	/* applique le meme traitement a tous les descendants de pEl */
-	if (pDoc->DocSSchema != NULL)
-	   /* le document n'a pas ete ferme' entre-temps */
-	   if (!pEl->ElTerminal)
-	     {
-		pChild = pEl->ElFirstChild;
-		while (pChild != NULL)
-		  {
-		     AttachMandatoryAttributes (pChild, pDoc);
-		     if (pDoc->DocSSchema == NULL)
-			/* le document n'existe plus */
-			pChild = NULL;
-		     else
-			pChild = pChild->ElNext;
-		  }
-	     }
-     }
-}
 
 /*----------------------------------------------------------------------
    Retourne un pointeur sur l'attribut associe' a l'exception      
    ExceptNum et porte' par l'element pEl.				
    	On retourne NULL si l'element n'a pas cet attribut.		
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrAttribute        GetAttrByExceptNum (PtrElement pEl, int ExceptNum)
-
 #else  /* __STDC__ */
 PtrAttribute        GetAttrByExceptNum (pEl, ExceptNum)
 PtrElement          pEl;
 int                 ExceptNum;
-
 #endif /* __STDC__ */
-
 {
    PtrSSchema          pSS;
    PtrAttribute        pAttr;
@@ -1648,4 +1299,153 @@ int                 ExceptNum;
      }
    else
       return NULL;
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetAttribute
+
+   Returns an attribute of a given type associated with a given element.
+
+   Parameters:
+   element: the element of interest.
+   attributeType: type of the desired attribute. If the attribute "Language"
+   is searched, attributeType.AttrTypeNum must be 1. If the attribute
+   "Language" is searched whatever its structure schema,
+   attributeType.AttrSSchema must be NULL. A NULL
+   attributeType.AttrSSchema is accepted only when an attribute
+   "Language" is searched.
+
+   Return value:
+   the attribute found, or NULL if the element  does not have this
+   type of attribute.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+Attribute           TtaGetAttribute (Element element, AttributeType attributeType)
+#else  /* __STDC__ */
+Attribute           TtaGetAttribute (element, attributeType)
+Element             element;
+AttributeType       attributeType;
+
+#endif /* __STDC__ */
+{
+   PtrAttribute        pAttr;
+   PtrAttribute        attribute;
+   ThotBool            found;
+   ThotBool            error;
+
+   UserErrorCode = 0;
+   attribute = NULL;
+   if (element == NULL || (attributeType.AttrSSchema == NULL && attributeType.AttrTypeNum != 1))
+      /* attributeType.AttrTypeNum = 1 : attribute Language in the whole schema */
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+	error = FALSE;
+	/* No other verification if the attibute is "language" */
+	if (attributeType.AttrTypeNum != 1)
+	   if (attributeType.AttrTypeNum < 1 ||
+	       attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+	      error = TRUE;
+	if (error)
+	   TtaError (ERR_invalid_attribute_type);
+	else
+	  {
+	     attribute = NULL;
+	     pAttr = ((PtrElement) element)->ElFirstAttr;
+	     found = FALSE;
+	     while (pAttr != NULL && !found)
+	       {
+		  if (pAttr->AeAttrNum == attributeType.AttrTypeNum)
+		     /* Same attribute number */
+		     if (attributeType.AttrSSchema == NULL)
+			/* The structure schema does not interest us */
+			found = TRUE;
+		     else if (pAttr->AeAttrSSchema->SsCode ==
+			 ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
+			/* Same schema of structure */
+			found = TRUE;
+		  if (found)
+		     attribute = pAttr;
+		  else
+		     pAttr = pAttr->AeNext;
+	       }
+	  }
+     }
+   return ((Attribute) attribute);
+}
+
+ /* ----------------------------------------------------------------------
+   TtaGetTextAttributeLength
+
+   Returns the length of a given attribute of type text.
+
+   Parameter:
+   attribute: the attribute of interest.
+
+   Return values:
+   length of the character string contained in the attribute.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 TtaGetTextAttributeLength (Attribute attribute)
+#else  /* __STDC__ */
+int                 TtaGetTextAttributeLength (attribute)
+Attribute           attribute;
+#endif /* __STDC__ */
+{
+   int                 length;
+   PtrTextBuffer       pBT;
+
+   UserErrorCode = 0;
+   length = 0;
+   if (attribute == NULL)
+     TtaError (ERR_invalid_attribute_type);
+   else if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
+     TtaError (ERR_invalid_attribute_type);
+   else
+     {
+       pBT = ((PtrAttribute) attribute)->AeAttrText;
+       while (pBT != NULL)
+	 {
+	   length += pBT->BuLength;
+	   pBT = pBT->BuNext;
+	 }
+     }
+   return length;
+}
+
+/* ----------------------------------------------------------------------
+   TtaGiveTextAttributeValue
+
+   Returns the value of a given attribute of type text.
+
+   Parameters:
+   attribute: the attribute of interest.
+   buffer: address of the buffer that will contain the value of the attribute.
+   length: size of the buffer (in bytes).
+
+   Return values:
+   buffer: character string representing the value of the attribute.
+   length: actual length of the character string.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                TtaGiveTextAttributeValue (Attribute attribute, STRING buffer, int *length)
+#else  /* __STDC__ */
+void                TtaGiveTextAttributeValue (attribute, buffer, length)
+Attribute           attribute;
+STRING              buffer;
+int                *length;
+#endif /* __STDC__ */
+
+{
+  UserErrorCode = 0;
+  *buffer = EOS;
+  if (attribute == NULL)
+    TtaError (ERR_invalid_attribute_type);
+   else if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
+    TtaError (ERR_invalid_attribute_type);
+  else
+    CopyTextToString (((PtrAttribute) attribute)->AeAttrText, buffer, length);
 }

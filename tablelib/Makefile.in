@@ -56,7 +56,6 @@ libThotTable.a : $(TABLE_OBJ)
 	$(AR) libThotTable.a $(TABLE_OBJ)
 	$(RANLIB) libThotTable.a
 
-
 CEXTRACT= ../bin/cextract
 
 $(CEXTRACT) :

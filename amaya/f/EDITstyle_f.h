@@ -9,6 +9,10 @@
 extern void RemoveElementStyle ( Element el,
                                  Document doc,
                                  ThotBool removeSpan );
+extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
+                                         STRING newpath,
+                                         STRING imgpath,
+                                         STRING styleString );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyElement * event );
 extern ThotBool DeleteStyle ( NotifyElement * event );
@@ -31,6 +35,10 @@ extern void StyleCallbackDialogue ( int ref,
 extern void RemoveElementStyle (/* Element el,
                                    Document doc,
                                    ThotBool removeSpan */);
+extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
+                                           STRING newpath,
+                                           STRING imgpath,
+                                           STRING styleString */);
 extern ThotBool UpdateStyleDelete (/* NotifyAttribute * event */);
 extern ThotBool ChangeStyle (/* NotifyElement * event */);
 extern ThotBool DeleteStyle (/* NotifyElement * event */);

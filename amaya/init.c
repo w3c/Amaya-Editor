@@ -13,7 +13,7 @@
  */
 
 /* Included headerfiles */
-#define THOT_EXPORT
+#define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
@@ -2359,7 +2359,6 @@ ThotBool	    history;
   TtaFreeMemory (tempdocument);
   return (newdoc);
 }
-
 
 /*----------------------------------------------------------------------
   Reload_callback

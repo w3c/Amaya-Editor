@@ -38,39 +38,41 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-#include "appli_f.h"
-#include "actions_f.h"
-#include "applicationapi_f.h"
-#include "tree_f.h"
-#include "attrpresent_f.h"
-#include "attributes_f.h"
-#include "search_f.h"
-#include "textcommands_f.h"
-#include "editcommands_f.h"
-#include "contentapi_f.h"
-#include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "views_f.h"
-#include "callback_f.h"
-#include "exceptions_f.h"
 #include "absboxes_f.h"
+#include "actions_f.h"
+#include "appli_f.h"
+#include "applicationapi_f.h"
+#include "attributes_f.h"
+#include "attrpresent_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
+#include "callback_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
+#include "contentapi_f.h"
+#include "content_f.h"
+#include "createabsbox_f.h"
+#include "editcommands_f.h"
+#include "exceptions_f.h"
+#include "externalref_f.h"
+#include "fileaccess_f.h"
+#include "memory_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
-#include "externalref_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
+#include "scroll_f.h"
 #include "selectmenu_f.h"
-#include "fileaccess_f.h"
-#include "structschema_f.h"
-#include "content_f.h"
+#include "search_f.h"
 #include "searchref_f.h"
+#include "structcommands_f.h"
+#include "structcreation_f.h"
 #include "structlocate_f.h"
+#include "structmodif_f.h"
+#include "structschema_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "tree_f.h"
 #include "undo_f.h"
+#include "views_f.h"
 
 /*----------------------------------------------------------------------
    AppendToFreeList append element pFree to the element list	
@@ -1249,15 +1251,21 @@ void                StructReturnKey ()
 
 /*----------------------------------------------------------------------
    StructureLoadResources
-   connecte les fonctions d'edition et de selection structurees.
+   connects specific editing and selection functions.
   ----------------------------------------------------------------------*/
 
 void                StructSelectLoadResources ()
 {
-   if (ThotLocalActions[T_cmdpaste] == NULL)
+   if (ThotLocalActions[T_selecbox] == NULL)
      {
 	/* connecte les action d'edition structuree */
 	TteConnectAction (T_selecbox, (Proc) GetClickedStructBox);
+	TteConnectAction (T_switchsel, (Proc) SwitchSelection);
+	TteConnectAction (T_checksel, (Proc) CheckSelectedElement);
+	TteConnectAction (T_resetsel, (Proc) ResetSelection);
+	TteConnectAction (T_selstring, (Proc) SelectString);
+	TteConnectAction (T_extendsel, (Proc) ExtendSelection);
+	TteConnectAction (T_showbox, (Proc) ShowBox);
 	TteConnectAction (T_pastesibling, (Proc) PasteBeforeOrAfter);
 	TteConnectAction (T_pastewithin, (Proc) PasteWithin);
 	TteConnectAction (T_cancopyorcut, (Proc) CanCopyOrCut);
@@ -1265,6 +1273,6 @@ void                StructSelectLoadResources ()
 	TteConnectAction (T_enter, (Proc) StructReturnKey);
 	MenuActionList[CMD_CreateElement].Call_Action = (Proc) StructReturnKey;
 	MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
-	StructSelectionMode = TRUE;
+	InitSelection ();
      }
 }

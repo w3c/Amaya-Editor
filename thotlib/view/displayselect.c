@@ -273,7 +273,6 @@ int                 pointselect;
     }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SetNewSelectionStatus parcourt l'arborescence pour basculer la    
    mise en evidence de la selection et forcer le nouvel    
@@ -319,7 +318,6 @@ ThotBool            status;
 	  }
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   DisplayStringSelection trace le contour d'une chaine de charcteres

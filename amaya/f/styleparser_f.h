@@ -6,15 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern STRING SkipBlanksAndComments ( STRING ptr );
 extern STRING SkipProperty ( STRING ptr );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               STRING file,
                                               void *extra );
-extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
-                                         STRING newpath,
-                                         STRING imgpath,
-                                         STRING styleString );
 extern STRING GetCSSBackgroundURL ( STRING styleString );
 extern void PToCss ( PresentationSetting settings,
                      STRING buffer,
@@ -61,15 +58,12 @@ extern CHAR_T ReadCSSRules ( Document docRef,
 
 #else /* __STDC__ */
 
+extern STRING SkipBlanksAndComments (/* STRING ptr */);
 extern STRING SkipProperty (/* STRING ptr */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
                                                 STRING file,
                                                 void *extra */);
-extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
-                                           STRING newpath,
-                                           STRING imgpath,
-                                           STRING styleString */);
 extern STRING GetCSSBackgroundURL (/* STRING styleString */);
 extern void PToCss (/* PresentationSetting settings,
                        STRING buffer,

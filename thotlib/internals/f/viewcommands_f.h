@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CloseDocument ( PtrDocument pDoc );
 extern int CreateWindowWithTitle ( PtrDocument pDoc,
                                    int view,
                                    Name viewName,
@@ -18,7 +17,6 @@ extern int CreateWindowWithTitle ( PtrDocument pDoc,
 extern void ImportDocument ( Name SSchemaName,
                              PathBuffer directory,
                              Name fileName );
-extern void CloseAllViewsDoc ( PtrDocument pDoc );
 extern void TtaChangeNaturePresentSchema ( Document document,
                                            SSchema natureSSchema,
                                            STRING newPresentation );
@@ -27,7 +25,6 @@ extern void TtcChangePresentation ( Document document,
 
 #else /* __STDC__ */
 
-extern void CloseDocument (/* PtrDocument pDoc */);
 extern int CreateWindowWithTitle (/* PtrDocument pDoc,
                                      int view,
                                      Name viewName,
@@ -39,7 +36,6 @@ extern int CreateWindowWithTitle (/* PtrDocument pDoc,
 extern void ImportDocument (/* Name SSchemaName,
                                PathBuffer directory,
                                Name fileName */);
-extern void CloseAllViewsDoc (/* PtrDocument pDoc */);
 extern void TtaChangeNaturePresentSchema (/* Document document,
                                              SSchema natureSSchema,
                                              STRING newPresentation */);

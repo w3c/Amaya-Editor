@@ -8,8 +8,6 @@
 #ifndef THOT_APPDIALOGUE_VAR
 #define THOT_APPDIALOGUE_VAR
 
-extern int UserErrorCode;
-
 /* Table of internal optional Thot operations (actions)		    */
 /* Calling an action: (*ThotLocalActions[i])(ref, datatype, data);  */
 

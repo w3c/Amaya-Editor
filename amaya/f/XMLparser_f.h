@@ -16,7 +16,9 @@ extern void GetXMLElementType ( STRING XMLname,
                                 STRING content,
                                 Document doc );
 extern void FreeXMLParser ( void );
-extern void XMLparse ( STRING DTDname,
+extern void XMLparse ( FILE *infile,
+                       int *index,
+                       STRING DTDname,
                        Document doc,
                        Element el,
                        ThotBool isclosed,
@@ -35,7 +37,9 @@ extern void GetXMLElementType (/* STRING XMLname,
                                   STRING content,
                                   Document doc */);
 extern void FreeXMLParser (/* void */);
-extern void XMLparse (/* STRING DTDname,
+extern void XMLparse (/* FILE *infile,
+                         int *index,
+                         STRING DTDname,
                          Document doc,
                          Element el,
                          ThotBool isclosed,

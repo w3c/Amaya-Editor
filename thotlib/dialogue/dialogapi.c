@@ -330,10 +330,6 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-#  ifdef _WIN_PRINT
-   WIN_curWin = NULL;
-   TtDisplay = GetDC (WIN_curWin);
-#  else  /* !_WIN_PRINT */
    if ((frame < 0) || (frame > MAX_FRAME)) {
       if (TtDisplay != 0)
          return;
@@ -359,7 +355,6 @@ int frame;
    TtDisplay = GetDC (FrRef[frame]);
    if (TtDisplay != 0)
       WIN_curWin = FrRef[frame];
-#  endif /* !_WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -381,7 +376,6 @@ void WIN_ReleaseDeviceContext ()
    TtDisplay = 0;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -954,10 +948,8 @@ int       nShow;
    main (argc, argv);
    return (TRUE);
 }
-#endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetFrameNumber :  returns the Thot window number associated to an         
    X-Window window.                                            
@@ -2240,7 +2232,6 @@ STRING              textmenu;
      }
 #  endif /* _WINDOWS */
 }
-#endif /* !_WIN_PRINT */
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -2259,7 +2250,6 @@ caddr_t             call_d;
 }
 #endif /* !_WINDOWS */
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
@@ -7682,4 +7672,3 @@ void                TtaAbortShowDialogue ()
 	  }
      }
 }
-#endif /* _WIN_PRINT */

@@ -133,6 +133,18 @@ extern PtrAttribute GetTypedAttrAncestor ( PtrElement pEl,
                                            PtrElement * pElAttr );
 extern void CheckLanguageAttr ( PtrDocument pDoc,
                                 PtrElement pEl );
+extern Element TtaGetMainRoot ( Document document );
+extern Document TtaGetDocument ( Element element );
+extern Element TtaGetParent ( Element element );
+extern ElementType TtaGetElementType ( Element element );
+extern Element TtaSearchTypedElement ( ElementType searchedType,
+                                       SearchDomain scope,
+                                       Element element );
+extern Element TtaSearchTypedElementInTree ( ElementType searchedType,
+                                             SearchDomain scope,
+                                             Element parent,
+                                             Element element );
+extern int TtaGetElementVolume ( Element element );
 
 #else /* __STDC__ */
 
@@ -263,6 +275,18 @@ extern PtrAttribute GetTypedAttrAncestor (/* PtrElement pEl,
                                              PtrElement * pElAttr */);
 extern void CheckLanguageAttr (/* PtrDocument pDoc,
                                   PtrElement pEl */);
+extern Element TtaGetMainRoot (/* Document document */);
+extern Document TtaGetDocument (/* Element element */);
+extern Element TtaGetParent (/* Element element */);
+extern ElementType TtaGetElementType (/* Element element */);
+extern Element TtaSearchTypedElement (/* ElementType searchedType,
+                                         SearchDomain scope,
+                                         Element element */);
+extern Element TtaSearchTypedElementInTree (/* ElementType searchedType,
+                                               SearchDomain scope,
+                                               Element parent,
+                                               Element element */);
+extern int TtaGetElementVolume (/* Element element */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

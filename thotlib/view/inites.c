@@ -39,6 +39,7 @@ static ThotColorStruct def_colrs[256];
 static int          allocation_index[256];
 static int          have_colors = 0;
 
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    FindOutColor finds the closest color by allocating it, or picking
@@ -400,7 +401,7 @@ int                 num;
 #ifdef __STDC__
 void             TtaFreeThotColor (int num)
 #else  /* __STDC__ */
-int              TtaGetThotColor (num)
+int              TtaFreeThotColor (num)
 int              num;
 #endif /* __STDC__ */
 {
@@ -698,13 +699,13 @@ int                 motif;
    else
 #endif
 #ifndef _WIN_PRINT
-   if (active && ShowReference ())
+   if (active)
      {
 	/* Color for active boxes */
 	FgPixel = Box_Color;
 	BgPixel = ColorPixel (bg);
      }
-   else if (RO && ShowReadOnly ())
+   else if (RO)
      {
 	/* Color for read only boxes */
 	FgPixel = RO_Color;

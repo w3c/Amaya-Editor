@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ClipError ( int frame );
 extern void FontOrig ( ptrfont font,
                        CHAR_T firstchar,
                        int *pX,
@@ -364,7 +363,6 @@ extern void PaintWithPattern ( int frame,
 
 #else /* __STDC__ */
 
-extern void ClipError (/* int frame */);
 extern void FontOrig (/* ptrfont font,
                          CHAR_T firstchar,
                          int *pX,

@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InitApplicationSchema ( PtrSSchema pSS );
 extern PtrAction FetchAction ( STRING actionName );
 extern void TteAddAction ( STRING actionName,
                            Proc doIt );
@@ -23,6 +24,7 @@ extern void TteAddActionEvent ( PtrEventsSet eventsList,
 
 #else /* __STDC__ */
 
+extern void InitApplicationSchema (/* PtrSSchema pSS */);
 extern PtrAction FetchAction (/* STRING actionName */);
 extern void TteAddAction (/* STRING actionName,
                              Proc doIt */);

@@ -153,6 +153,7 @@ extern void         TtaExtractName (STRING text, /*OUT*/ STRING aDirectory, /*OU
 
 extern void        *TtaGetMemory (unsigned int size);
 extern void         TtaFreeMemory (void *buffer);
+extern STRING       TtaAllocString ( unsigned int n );
 extern void        *TtaRealloc (void *ptr, unsigned int n);
 extern STRING       TtaStrdup (STRING str);
 
@@ -162,6 +163,7 @@ extern void         TtaInitialize ( /* STRING applicationName */ );
 extern void         TtaQuit ( /* void */ );
 extern void        *TtaGetMemory ( /* int size */ );
 extern void         TtaFreeMemory ( /* STRING buffer */ );
+extern STRING       TtaAllocString ( /* unsigned int n */ );
 extern void        *TtaRealloc ( /* void *ptr, unsigned int n */ );
 extern void         TtaSetErrorMessages ( /* int on */ );
 extern STRING       TtaGetVersion ( /* void */ );

@@ -70,7 +70,6 @@
 
 #define MAX_ITEM_MENU_REF 10
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    NextReferenceToEl retourne la prochaine reference qui designe	
    l'element pEl.                                             
@@ -145,7 +144,6 @@ ThotBool            nextExtDoc;
 					    pDocRef, pExtDoc, nextExtDoc);
    return pRef;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    FindReference cherche une reference a` l'element selectionne'.       

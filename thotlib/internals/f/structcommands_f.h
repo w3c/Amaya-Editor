@@ -6,6 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void IsolateSelection ( PtrDocument pDoc,
+                               PtrElement * pFirstSel,
+                               PtrElement * pLastSel,
+                               int *firstChar,
+                               int *lastChar,
+                               ThotBool createEmpty );
 extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                    PtrDocument pDoc,
                                    PtrElement pEl,
@@ -23,6 +29,8 @@ extern void CreateNewElement ( int typeNum,
                                PtrSSchema pSS,
                                PtrDocument pDoc,
                                ThotBool Before );
+extern void TtaCreateElement ( ElementType elementType,
+                               Document document );
 extern void TtaSetTransformCallback ( Func callbackFunc );
 extern void SurroundMenuInput ( int item );
 extern void TtcSurround ( Document document,
@@ -33,6 +41,12 @@ extern void TtcChangeType ( Document document,
 
 #else /* __STDC__ */
 
+extern void IsolateSelection (/* PtrDocument pDoc,
+                                 PtrElement * pFirstSel,
+                                 PtrElement * pLastSel,
+                                 int *firstChar,
+                                 int *lastChar,
+                                 ThotBool createEmpty */);
 extern ThotBool SendEventSubTree (/* APPevent AppEvent,
                                      PtrDocument pDoc,
                                      PtrElement pEl,
@@ -50,6 +64,8 @@ extern void CreateNewElement (/* int typeNum,
                                  PtrSSchema pSS,
                                  PtrDocument pDoc,
                                  ThotBool Before */);
+extern void TtaCreateElement (/* ElementType elementType,
+                                 Document document */);
 extern void TtaSetTransformCallback (/* Func callbackFunc */);
 extern void SurroundMenuInput (/* int item */);
 extern void TtcSurround (/* Document document,

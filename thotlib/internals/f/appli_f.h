@@ -42,8 +42,6 @@ extern void TtcPageEnd ( Document document,
 extern void InitializeOtherThings ( void );
 extern void TtaRaiseView ( Document document,
                            View view );
-extern ThotWidget TtaGetViewFrame ( Document document,
-                                    View view );
 extern void DisplaySelMessage ( STRING text,
                                 PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
@@ -122,8 +120,6 @@ extern void TtcPageEnd (/* Document document,
 extern void InitializeOtherThings (/* void */);
 extern void TtaRaiseView (/* Document document,
                              View view */);
-extern ThotWidget TtaGetViewFrame (/* Document document,
-                                      View view */);
 extern void DisplaySelMessage (/* STRING text,
                                   PtrDocument pDoc */);
 extern void TtaSetStatus (/* Document document,

@@ -23,6 +23,18 @@
 
 /* procedure bidon declarees localement et exportees */
 #ifdef __STDC__
+int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+#else  /* __STDC__ */
+int                 TtaGetThotColor (red, green, blue)
+unsigned short      red;
+unsigned short      green;
+unsigned short      blue;
+#endif /* __STDC__ */
+{
+  return 1;
+}
+
+#ifdef __STDC__
 ThotBool            CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 #else  /* __STDC__ */
 ThotBool            CallEventType (notifyEvent, pre)
@@ -44,15 +56,6 @@ ThotBool            pre;
    return FALSE;
 }
 
-
-#ifdef __STDC__
-void        ClearHistory ( PtrDocument pDoc )
-#else  /* __STDC__ */
-void        ClearHistory ()
-PtrDocument pDoc;
-#endif /* __STDC__ */
-{
-}
 
 #ifdef __STDC__
 void                FreePictInfo (PictInfo *esc)
@@ -141,37 +144,3 @@ PtrElement          pEl2;
       return FALSE;
 }
 
-
-/*----------------------------------------------------------------------
-   UnloadDocument libere le document dont le descripteur est pointe'  
-   par pDoc.                                               
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UnloadDocument (PtrDocument * pDoc)
-#else  /* __STDC__ */
-void                UnloadDocument (pDoc)
-PtrDocument        *pDoc;
-
-#endif /* __STDC__ */
-{
-   int                 d;
-
-   if (*pDoc != NULL)
-      /* cherche dans la table le descripteur de document a liberer */
-     {
-	d = 1;
-	while (LoadedDocument[d - 1] != *pDoc && d < MAX_DOCUMENTS)
-	   d++;
-	if (LoadedDocument[d - 1] == *pDoc)
-	   /* supprime la selection dans ce document */
-	  {
-	     /* liberer tout l'arbre interne */
-	     DeleteAllTrees (*pDoc);
-	     /* liberer les schemas : document, natures, presentations */
-	     FreeDocumentSchemas (*pDoc);
-	     FreeDocument (LoadedDocument[d - 1]);
-	     LoadedDocument[d - 1] = NULL;
-	     *pDoc = NULL;
-	  }
-     }
-}

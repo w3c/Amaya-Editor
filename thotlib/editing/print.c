@@ -53,6 +53,8 @@
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
+#include "thotcolor.h"
+#include "thotcolor_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "select_tv.h"
@@ -61,21 +63,14 @@
 #include "edit_tv.h"
 #include "creation_tv.h"
 #include "frame_tv.h"
-#include "thotcolor.h"
-#include "thotcolor_tv.h"
-#include "thotpalette_tv.h"
 #include "frame_tv.h"
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
-
-#ifdef _WINDOWS
 #include "units_tv.h"
-#endif /* _WINDOWS */
 
 extern RGBstruct RGB_colors[];
 
 int          PRINT;	/* Identification des messages */
-int          UserErrorCode;
 ptrfont      PoscriptFont;
 int          ColorPs;
 int          LastPageNumber, LastPageWidth, LastPageHeight;
@@ -83,12 +78,14 @@ int          LastPageNumber, LastPageWidth, LastPageHeight;
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
 static int          NumberOfPages;
-static CHAR_T         tempDir [MAX_PATH];
+static CHAR_T       tempDir [MAX_PATH];
 static ThotBool     removeDirectory;
 
 /* table des vues a imprimer */
 #define MAX_PRINTED_VIEWS MAX_VIEW_DOC+MAX_ASSOC_DOC
+#define MAX_CSS           10
 static Name         PrintViewName[MAX_PRINTED_VIEWS];
+static Name         CSSName[MAX_CSS];
 static int          TopMargin;
 static int          LeftMargin;
 static ThotBool     CleanTopOfPageElement; /* premiere page imprimee pour le
@@ -129,7 +126,7 @@ static ThotWindow    thotWindow;
 #include "registry_f.h"
 #include "structlist_f.h"
 #include "structschema_f.h"
-	#include "table2_f.h"
+#include "table2_f.h"
 #include "tree_f.h"
 
 #ifdef _WINDOWS 
@@ -137,7 +134,7 @@ static ThotWindow    thotWindow;
 #endif /* _WINDOWS */
 
 static int          manualFeed;
-static CHAR_T         pageSize [3];
+static CHAR_T       pageSize [3];
 static int          BlackAndWhite;
 static int          HorizShift;
 static int          VertShift;
@@ -161,6 +158,8 @@ HWND             ghwndAbort;
 static HWND      thotWindow    = (HWND) 0;
 static HINSTANCE hCurrentInstance ;
 
+/* ----------------------------------------------------------------------
+   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved) 
 #else  /* __STDC__ */
@@ -305,6 +304,40 @@ LPSTR  msg;
      * abort just before printing begins */
     return TRUE;
 }
+
+/*----------------------------------------------------------------------
+   WIN_GetDeviceContext :  select a Device Context for a given       
+   thot window.                                                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_GetDeviceContext (int frame)
+#else  /* !__STDC__ */
+void WIN_GetDeviceContext (frame)
+int frame;
+#endif /* __STDC__ */
+{
+   WIN_curWin = NULL;
+   TtDisplay = GetDC (WIN_curWin);
+}
+
+/*----------------------------------------------------------------------
+   WIN_ReleaseDeviceContext :  unselect the Device Context           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_ReleaseDeviceContext (void)
+#else  /* !__STDC__ */
+void WIN_ReleaseDeviceContext ()
+#endif /* __STDC__ */
+{
+   /* release the previous Device Context. */
+   /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
+   if (TtDisplay != 0)
+      if (!ReleaseDC (WIN_curWin, TtDisplay))
+         WinErrorBox (NULL);
+
+   WIN_curWin = (ThotWindow) (-1);
+   TtDisplay = 0;
+}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -444,15 +477,15 @@ FILE               *fout;
 {
   NumberOfPages++;
 # ifdef _WINDOWS 
-	if (TtPrinterDC) {
+  if (TtPrinterDC) {
     EndPage (TtPrinterDC);
-	} else {
-         fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
-         fflush (fout);
-         /* Enforce loading the font when starting a new page */
-         PoscriptFont = NULL;
-         ColorPs = -1;
-	}
+  } else {
+    fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
+    fflush (fout);
+    /* Enforce loading the font when starting a new page */
+    PoscriptFont = NULL;
+    ColorPs = -1;
+  }
 # else  /* _WINDOWS */
   fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
   fflush (fout);
@@ -514,6 +547,7 @@ STRING processName;
        fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
        fprintf (stderr, "       [-portrait | -landscape]\n");
        fprintf (stderr, "       [-display <display>]\n");
+       fprintf (stderr, "       [-css <file name>]\n");
        fprintf (stderr, "       [-name <document name>]\n");
        fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
        fprintf (stderr, "       [-bw]\t\t /* for black & white output */\n");
@@ -530,54 +564,6 @@ STRING processName;
        fprintf (stderr, "       [-removedir]\t /* remove directory after printing */\n\n\n");
        exit (1);
 }
-
-#ifdef __STDC__
-static void         ExtractName (STRING text, STRING aDirectory, STRING aName)
-
-#else  /* __STDC__ */
-static void         ExtractName (text, aDirectory, aName)
-STRING              text;
-STRING              aDirectory;
-STRING              aName;
-
-#endif /* __STDC__ */
-{
-   int                 lg, i, j;
-   STRING              ptr, oldptr;
-
-   if (text == NULL || aDirectory == NULL || aName == NULL)
-      return;			/* No input text or error in input parameters */
-
-   aDirectory[0] = EOS;
-   aName[0] = EOS;
-
-   lg = ustrlen (text);
-   if (lg)
-     {
-	/* the text is not empty */
-	ptr = oldptr = &text[0];
-	do
-	  {
-	     ptr = ustrrchr (oldptr, DIR_SEP);
-	     if (ptr != NULL)
-		oldptr = &ptr[1];
-	  }
-	while (ptr != NULL);
-
-	i = (int) (oldptr) - (int) (text);	/* the length of the directory part */
-	if (i > 1)
-	  {
-	     ustrncpy (aDirectory, text, i);
-	     j = i - 1;
-	     /* Suppresses the / characters at the end of the path */
-	     while (aDirectory[j] == DIR_SEP)
-		aDirectory[j--] = EOS;
-	  }
-	if (i != lg)
-	   ustrcpy (aName, oldptr);
-     }
-}
-
 
 /*----------------------------------------------------------------------
    NextReferenceToEl                                               
@@ -638,6 +624,23 @@ int                *lastChar;
 
 
 /*----------------------------------------------------------------------
+   Si l'entree existe :                                             
+   Ferme la fenetre, detruit le fichier et libere l'entree.      
+   Libere toutes les boites allouees a la fenetre.                   
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DestroyFrame (int frame)
+#else  /* __STDC__ */
+void                DestroyFrame (frame)
+int                 frame;
+
+#endif /* __STDC__ */
+{
+  ClearConcreteImage (frame);
+  ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
+}
+
+/*----------------------------------------------------------------------
    FirstFrame cree et initialise la premiere frame.          	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -651,9 +654,7 @@ STRING server;
 
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
-     {
 	FrRef[i] = 0;
-     }
    /* Ouverture du serveur X-ThotWindow */
       /*Connexion au serveur X impossible */
 #  ifndef _WINDOWS
@@ -702,6 +703,7 @@ int                 raz;
 {
    FrameTable[frame].FrHeight = *yf;
 }
+
 /*----------------------------------------------------------------------
    RemoveClipping annule le rectangle de clipping de la fenetre frame.  
   ----------------------------------------------------------------------*/
@@ -2466,12 +2468,6 @@ int                 errorCode;
    UserErrorCode = errorCode;
 }
 
-/*----------------------------------------------------------------------
-   Termine l'insertion de caracteres dans une boite de texte       
-  ----------------------------------------------------------------------*/
-void                CloseInsertion ()
-{
-}
 
 /*----------------------------------------------------------------------
    LoadReferedDocuments    charge tous les documents reference's   
@@ -2554,13 +2550,14 @@ char              **argv;
   STRING              server = (STRING) NULL;
   STRING              pChar;
   STRING              destination = (STRING) NULL;
-  CHAR_T                option [100];
-  CHAR_T                name [MAX_PATH];             
-  CHAR_T                cmd[800];
-  CHAR_T                tempFile [MAX_PATH];
+  CHAR_T              option [100];
+  CHAR_T              name [MAX_PATH];             
+  CHAR_T              cmd[800];
+  CHAR_T              tempFile [MAX_PATH];
   int                 i, l;
   int                 argCounter;
   int                 viewsCounter = 0;
+  int                 cssCounter = 0;
   int                 index;
   int                 length;
   int                 NCopies = 1;
@@ -2668,6 +2665,10 @@ char              **argv;
                   viewFound = TRUE;
                   argCounter++;
                   ustrcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
+           } else if (!ustrcmp (argv [argCounter], TEXT("-css"))) {
+                  /* CSS files given in the command line */
+                  argCounter++;
+                  ustrcpy (CSSName [cssCounter++], argv [argCounter++]);
            } else if (!ustrcmp (argv [argCounter], TEXT("-npps"))) {
                   argCounter++;
                   NPagesPerSheet = uctoi (argv[argCounter++]);
@@ -2737,7 +2738,7 @@ char              **argv;
              /* the argument is the filename */
              if (TtaFileExist (argv [argCounter])) {
                 /* does it exist ?? */
-                ExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
+                TtaExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
                 argCounter++;
              } else
                   /* The file does not exist */
@@ -2774,34 +2775,33 @@ char              **argv;
      }
 
    FirstFrame (server);
-
-   /* initialisation de la table des couleurs */
+   /* Initialise the color table */
    NColors = MAX_COLOR;
    RGB_Table = RGB_colors;
    Color_Table = Name_colors;
 
-   /* initialise la table des documents charge's */
+   /* initialise the list of loaded document */
    for (i = 0; i < MAX_DOCUMENTS; i++)
      LoadedDocument[i] = NULL;
 
-   /* Initialisation de la table des actions locales */
+   /* Initialise the table of default actions */
    for (i = 0; i < MAX_LOCAL_ACTIONS; i++)
      ThotLocalActions[i] = NULL;
 
-   /* initialisation des actions pour les tableaux */
+   /* Initialise the list of table editing actions */
    TableHLoadResources (); 
    Table2LoadResources (); 
 
-   /* Initialize Picture Drivers for printing */
+   /* Initialise Picture Drivers for printing */
    InitPictureHandlers (TRUE);
 
    /* initialise un contexte de document */
    CreateDocument (&TheDoc);
 
-   /* charge le document */
+   /* load the document */
    if (TheDoc != NULL)
      {
-       /* met son directory dans DocumentPath */
+       /* add its directory into the DocumentPath */
        l = ustrlen (DocumentDir);
        if (l == 0)
 	 ustrcpy (DocumentPath, tempDir);
@@ -2812,29 +2812,33 @@ char              **argv;
 	 TheDoc = NULL;
      }
    if (TheDoc != NULL)
-     /* le document a ete charge' */
-     /* charge tous les documents reference's par le document a imprimer */
+     /* the document is loaded */
+     /* load CSS files and apply CSS rules */
+     for (i = 0; i < viewsCounter; i++)
+       {
+	 usprintf (tempFile, TEXT("%s%c%s"), tempDir, PATH_SEP, CSSName[i]);
+	 LoadStyleSheet (tempFile, 1, NULL, NULL);
+       }
+
+     /* load all referred document before printing */
      LoadReferedDocuments (TheDoc);
 
    if (TheDoc != NULL)
      if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,
 			   TheDoc->DocSSchema))
-       /* il ne faut pas repaginer si le document a l'exception NoPaginate */
+       /* Don't paginate a document with the exception NoPaginate */
        Repaginate = 0;
-   /* Imprime le document */
-#  ifdef _WINDOWS
-#  endif /* _WINDOWS */
+   /* Start the printing process */
    if (TheDoc != NULL)
      if (PrintDocument (TheDoc, viewsCounter) == 0)
        {
          if (!ustrcmp (destination, TEXT("PSFILE")))
            {
 #            ifdef _WINDOWS 
-             /* sprintf (cmd, "copy %s\\%s.ps %s\n", tempDir, name, printer); */
-             usprintf (cmd, TEXT("%s\\%s.ps"), tempDir, name);
+             usprintf (cmd, TEXT("%s%c%s.ps"), tempDir, PATH_SEP, name);
              CopyFile (cmd, printer, FALSE);
 #            else  /* !_WINDOWS */
-             sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
+             sprintf (cmd, "/bin/mv %s%c%s.ps %s\n", tempDir, PATH_SEP, name, printer);
              result = system (cmd);
              if (result != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);

@@ -28,13 +28,6 @@
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 
-/* the structure used for storing the context of the 
-   FetchAndDisplayImages_callback function */
-typedef struct _FetchImage_context {
-  STRING base_url;
-  LoadedImageDesc    *desc;
-} FetchImage_context;
-
 
 /*----------------------------------------------------------------------
    AddLoadedImage adds a new image into image descriptor table.	
@@ -849,7 +842,7 @@ void               *extra;
 		  {
 		    /* remote image, but already here */
 		    if (callback)
-		      callback(doc, el, desc->localName, extra);
+		      callback (doc, el, desc->localName, extra);
 		    else
 		      DisplayImage (doc, el, desc->localName);
 		    /* get image type */

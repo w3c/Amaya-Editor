@@ -13,14 +13,16 @@
 #include "tree.h"
 #include "view.h"
 #include "typecorr.h"
+#include "appdialogue.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "select_tv.h"
-extern int          UserErrorCode;
+#include "appdialogue_tv.h"
 
 #include "applicationapi_f.h"
+#include "displayview_f.h"
 #include "structselect_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"
@@ -86,9 +88,9 @@ Element             selectedElement;
      {
        dispMode = TtaGetDisplayMode (document);
        if (dispMode == DisplayImmediately)
-	 if (selectedElement == NULL)
+	 if (selectedElement == NULL && ThotLocalActions[T_resetsel])
 	   /* Abort the selection */
-	   ResetSelection (LoadedDocument[document - 1]);
+	 (*ThotLocalActions[T_resetsel]) (LoadedDocument[document - 1]);
 	 else
 	   SelectElement (LoadedDocument[document - 1], (PtrElement) selectedElement, TRUE, FALSE);
        else
@@ -241,7 +243,7 @@ int                 lastCharacter;
 		ok = (pDoc == LoadedDocument[document - 1]);
 	  }
 	/* verifies if a selection is applied */
-	else if (DemandeSelEnregistree (document, &abort))
+	else if (IsSelectionRegistered (document, &abort))
 	   /* There is an application, the extension is accepted if there is 
 	      a request which is not for aborting */
 	   ok = !abort;

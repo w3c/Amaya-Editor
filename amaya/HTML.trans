@@ -246,7 +246,7 @@ Remove submenu: (OPTGROUP{*+})+;
 
 Bulleted list: (P|OL|MENU|DIR|PRE|FORM)+;
    	{
-        P > UL:LI;
+        P > UL:<LI style=P.style>;
         OL> UL;
         MENU> UL:LI.MENU;
         DIR> UL:LI.DIR;

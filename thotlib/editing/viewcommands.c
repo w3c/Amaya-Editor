@@ -84,50 +84,6 @@ static PtrSSchema       TableNaturesSchPresent[NbMaxMenuPresNature];
 static int              nbNatures;
 
 
-/*----------------------------------------------------------------------
-   CloseDocument ferme toutes les vue d'un document et decharge ce	
-   document. Si pDoc est NULL, demande a` l'utilisateur de 
-   designer le document a` fermer et lui demande           
-   confirmation, sinon pDoc designe le contexte du document
-   a` fermer.                                              
-   Detruit egalement le fichier .BAK du document.          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseDocument (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CloseDocument (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-{
-  NotifyDialog      notifyDoc;
-  Document          document;
-
-  if (pDoc != NULL)
-    {
-      document = (Document) IdentDocument (pDoc);
-      notifyDoc.event = TteDocClose;
-      notifyDoc.document = document;
-      notifyDoc.view = 0;
-      if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	{
-	  /* if there is a "Spell checker" menu entry, close the spell checker
-	     dialog box */
-	  if (ThotLocalActions[T_corrector] != NULL)
-	    (*ThotLocalActions[T_rscorrector]) (-1, 0, (STRING) pDoc);
-	  ClearHistory (pDoc);
-	  /* detruit toutes les vues ouvertes du document */
-	  CloseAllViewsDoc (pDoc);
-	  /* free document contents */
-	  UnloadTree (document);
-	  notifyDoc.event = TteDocClose;
-	  notifyDoc.document = document;
-	  notifyDoc.view = 0;
-	  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	  UnloadDocument (&pDoc);
-	}
-    }
-}
-
 
 /*----------------------------------------------------------------------
    CreateWindowWithTitle creates the frame for the current view view of
@@ -150,9 +106,7 @@ int                 height;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WIN_PRINT
    int                 createdFrame;
-#  endif /* _WIN_PRINT */
    CHAR_T                buf[MAX_TXT_LEN];
 
    /* met dans le buffer le nom du document... */
@@ -167,13 +121,10 @@ int                 height;
 	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
-#  ifndef _WIN_PRINT
    createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width,
 			     height, vol, IdentDocument (pDoc));
    return createdFrame;
-#  else  /* _WIN_PRINT */
    return -1;
-#  endif /* _WIN_PRINT */
 }
 
 
@@ -627,37 +578,6 @@ PtrDocument         pDoc;
 	      }
 	  }
      }
-}
-
-/*----------------------------------------------------------------------
-   CloseAllViewsDoc ferme toutes les vues ouvertes du document pDoc 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseAllViewsDoc (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CloseAllViewsDoc (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-{
-  int                 view, assoc;
-
-  if (pDoc != NULL)
-    {
-      /* detruit les vues de l'arbre principal */
-      for (view = 0; view < MAX_VIEW_DOC; view++)
-	if (pDoc->DocView[view].DvPSchemaView != 0)
-	  {
-	    DestroyFrame (pDoc->DocViewFrame[view]);
-	    CloseDocumentView (pDoc, view + 1, FALSE, FALSE);
-	  }
-      /* detruit les fenetres des elements associes */
-      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	if (pDoc->DocAssocFrame[assoc] != 0)
-	  {
-	    DestroyFrame (pDoc->DocAssocFrame[assoc]);
-	    CloseDocumentView (pDoc, assoc + 1, TRUE, FALSE);
-	  }
-    }
 }
 
 /*----------------------------------------------------------------------

@@ -35,14 +35,15 @@
 #include "thotdir.h"
 #include "fileaccess.h"
 #include "labelAllocator.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-
 #ifndef NODISPLAY
 #include "modif_tv.h"
 #endif
 #include "platform_tv.h"
+#include "edit_tv.h"
 
 #include "applicationapi_f.h"
 #include "attributes_f.h"
@@ -64,90 +65,6 @@
 #include "tree_f.h"
 #include "units_f.h"
 #include "writepivot_f.h"
-
-/*----------------------------------------------------------------------
-   Retourne Vrai si les deux elements pointes par pEl1 et pEl2     
-   possedent les memes attributs avec les memes valeurs            
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            SameAttributes (PtrElement pEl1, PtrElement pEl2)
-#else  /* __STDC__ */
-ThotBool            SameAttributes (pEl1, pEl2)
-PtrElement          pEl1;
-PtrElement          pEl2;
-
-#endif /* __STDC__ */
-{
-   PtrAttribute        pAttr1, pAttr2;
-   int                 nAttr1, nAttr2;
-   ThotBool            same = TRUE;
-
-   /* nombre d'attributs du 1er element */
-   pAttr1 = pEl1->ElFirstAttr;
-   nAttr1 = 0;
-   /* compte les attributs du 1er element */
-   while (pAttr1 != NULL)
-     {
-	nAttr1++;
-	pAttr1 = pAttr1->AeNext;
-     }
-
-   /* nombre d'attributs du 2eme element */
-   pAttr2 = pEl2->ElFirstAttr;
-   nAttr2 = 0;
-   /* compte les attributs du 2eme element */
-   while (pAttr2 != NULL)
-     {
-	nAttr2++;
-	pAttr2 = pAttr2->AeNext;
-     }
-
-   /* compare le nombre d'attributs des deux elements */
-   if (nAttr1 != nAttr2)
-      same = FALSE;		/* nombres d'attributs differents, fin */
-   else
-      /* meme nombre d'attributs, compare les attributs et leurs valeurs */
-     {
-	pAttr1 = pEl1->ElFirstAttr;
-	/* 1er attribut du 1er element */
-	/* examine tous les attributs du 1er element */
-	while (pAttr1 != NULL && same)
-	   /* cherche si le 2eme element possede cet attribut du 1er elem */
-	  {
-	     pAttr2 = GetAttributeOfElement (pEl2, pAttr1);
-	     if (pAttr2 == NULL)
-		/* le 2eme element n'a pas cet attribut, fin */
-		same = FALSE;
-	     else
-	       {
-		  if (pAttr1->AeDefAttr != pAttr2->AeDefAttr)
-		     /* valeurs differentes de cet attribut */
-		     same = FALSE;
-		  else
-		     switch (pAttr1->AeAttrType)
-			   {
-			      case AtNumAttr:
-			      case AtEnumAttr:
-				 if (pAttr1->AeAttrValue != pAttr2->AeAttrValue)
-				    same = FALSE;
-				 break;
-			      case AtReferenceAttr:
-				 same = FALSE;
-				 break;
-			      case AtTextAttr:
-				 same = TextsEqual (pAttr2->AeAttrText, pAttr1->AeAttrText);
-				 break;
-			      default:
-				 break;
-			   }
-	       }
-	     if (same)
-		/* meme valeur,passe a l'attribut suivant du 1er element */
-		pAttr1 = pAttr1->AeNext;
-	  }
-     }
-   return same;
-}
 
 /*----------------------------------------------------------------------
    Ecrit dans le fichier le numero de version pivot courant           
@@ -2122,6 +2039,78 @@ PtrDocument         pDoc;
 	     pFile = pNextFile;
 	  }
      }
+}
+
+
+/*----------------------------------------------------------------------
+   TtaRemoveDocument
+
+   Closes a document, releases all ressources allocated to that document,
+   removes all files related to the document and updates all links connecting
+   the removed document with other documents.
+
+   Parameter:
+   document: the document to be removed.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaRemoveDocument (Document document)
+#else  /* __STDC__ */
+void                TtaRemoveDocument (document)
+Document            document;
+#endif /* __STDC__ */
+{
+  PtrDocument         pDoc;
+  int                 i;
+  PathBuffer          DirectoryOrig;
+  CHAR_T                text[MAX_TXT_LEN];
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    {
+      pDoc = LoadedDocument[document - 1];
+      /* Keep all external referenced links into the document context */
+      /* dealing with the main tree of the document */
+      RegisterExternalRef (pDoc->DocRootElement, pDoc, FALSE);
+      RegisterDeletedReferredElem (pDoc->DocRootElement, pDoc);
+      /* dealing with the trees os associated elements */
+      for (i = 1; i <= MAX_ASSOC_DOC; i++)
+	if (pDoc->DocAssocRoot[i - 1] != NULL)
+	  {
+	    RegisterExternalRef (pDoc->DocAssocRoot[i - 1], pDoc, FALSE);
+	    RegisterDeletedReferredElem (pDoc->DocAssocRoot[i - 1], pDoc);
+	  }
+      /* treats the parameters */
+      for (i = 1; i <= MAX_PARAM_DOC; i++)
+	if (pDoc->DocParameters[i - 1] != NULL)
+	  {
+	    RegisterExternalRef (pDoc->DocParameters[i - 1], pDoc, FALSE);
+	    RegisterDeletedReferredElem (pDoc->DocParameters[i - 1], pDoc);
+	  }
+      /* modifies files .EXT of documents referenced by destroyed documents */
+      UpdateExt (pDoc);
+      /* modifies files .REF of documents referencing inexisting documents */
+      UpdateRef (pDoc);
+      /* destroys files .PIV, .EXT, .REF et .BAK of the document */
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      FindCompleteName (pDoc->DocDName, PIV_EXT2, DirectoryOrig, text, &i);
+      TtaFileUnlink (text);
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      FindCompleteName (pDoc->DocDName, EXT_EXT2, DirectoryOrig, text, &i);
+      TtaFileUnlink (text);
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      FindCompleteName (pDoc->DocDName, REF_EXT2, DirectoryOrig, text, &i);
+      TtaFileUnlink (text);
+      ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+      FindCompleteName (pDoc->DocDName, BAK_EXT2, DirectoryOrig, text, &i);
+      /* now close the document */
+      TtaCloseDocument (document);
+    }
 }
 
 

@@ -253,7 +253,6 @@ ThotBool		    attr;
    return status;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CallEventAttribute notifies the possible application that     
    an attribute has been created, deleted, modified, read  
@@ -423,4 +422,3 @@ ThotBool            pre;
 
    return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct, FALSE);
 }
-#endif /* _WIN_PRINT */

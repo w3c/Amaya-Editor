@@ -27,9 +27,11 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "picture.h"
+#include "appdialogue.h"
 
 #define THOT_EXPORT extern
 #include "page_tv.h"
+#include "appdialogue_tv.h"
 
 #include "absboxes_f.h"
 #include "abspictures_f.h"
@@ -1812,8 +1814,8 @@ int                 distance;
 		    pAb = pEl->ElAbstractBox[view - 1];
 		  position = 1;
 		}
-	      if (pAb != NULL)
-		ShowBox (frame, pAb->AbBox, position, 0);
+	      if (pAb != NULL && ThotLocalActions[T_showbox] != NULL)
+		(*ThotLocalActions[T_showbox]) (frame, pAb->AbBox, position, 0);
 	      
 	      /* Allume la selection */
 	      HighlightSelection (FALSE, TRUE);

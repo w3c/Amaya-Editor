@@ -15,7 +15,7 @@
 
 /* This module is used by the html2thot parser and the css parser. */
 
-#define THOT_EXPORT extern
+#define THOT_EXPORT
 #include "amaya.h"
 #include "fetchHTMLname.h"
 #include "parser.h"

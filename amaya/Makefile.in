@@ -56,13 +56,10 @@ amaya : ../thotlib/libThotEditor.a ../tablelib/libThotTable.a amaya_schemas amay
 #
 # General entry point everything should have compiled correctly
 #
-all : amaya_schemas amaya_src ../bin/amaya
+all : amaya_schemas amaya_src ../bin/amaya ../bin/print
 
 clean :
 	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* GraphML* logo.*
-
-../bin/print : 
-	@(cd ../thotlib ; $(MAKE) print)
 
 include .depends
 
@@ -89,13 +86,13 @@ force :
 ../tablelib/libThotTable.a : force
 	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable)
 
-../libjpeg.a :
+../libjpeg.a : force
 	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
-../libpng.a :
+../libpng.a : force
 	@(cd ../libpng ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
-../libz.a :
+../libz.a : force
 	@(cd ../libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
 ../tools/mkdep/mkdep : 
@@ -168,7 +165,8 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
                 -I@top_srcdir@/libpng/zlib $(AMAYA_OPTION_INCLUDES)
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
-            $(AMAYA_OPTION_LIBS) ../libpng.a ../libz.a ../libjpeg.a
+            libCSS.a $(AMAYA_OPTION_LIBS) \
+            ../libpng.a ../libz.a ../libjpeg.a
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
@@ -188,35 +186,43 @@ amaya_src :  comp_libwww HTML.h $(AMAYA_SRC)
 #									#
 #########################################################################
 
-AMAYA_OBJ = \
-	HTMLAPP.o \
-	TextFileAPP.o \
-	EDITORAPP.o \
-	init.o \
-	EDITORactions.o \
-	HTMLactions.o \
-	HTMLbook.o \
-	HTMLform.o \
-	HTMLedit.o \
-	HTMLsave.o \
-	html2thot.o \
+CSS_OBJ = \
+	css.o \
 	fetchHTMLname.o \
 	fetchXMLname.o \
-	styleparser.o \
-	EDITstyle.o \
-	HTMLimage.o \
-	EDITimage.o \
-	HTMLpresentation.o \
-	UIcss.o \
-	css.o \
-	javaamaya.o \
-	HTMLhistory.o \
+	styleparser.o
+
+libCSS : libCSS.a
+
+libCSS.a : $(CSS_OBJ)
+	$(AR) libCSS.a $(CSS_OBJ)
+	$(RANLIB) libCSS.a
+
+AMAYA_OBJ = \
 	AHTURLTools.o \
+	EDITORAPP.o \
+	EDITORactions.o \
+	EDITimage.o \
+	EDITstyle.o \
+	HTMLactions.o \
+	HTMLAPP.o \
+	HTMLbook.o \
+	HTMLedit.o \
+	HTMLform.o \
+	HTMLhistory.o \
+	HTMLimage.o \
+	HTMLpresentation.o \
+	HTMLsave.o \
+	HTMLtable.o \
+	html2thot.o \
+	init.o \
+	javaamaya.o \
+	MENUconf.o \
+	templates.o \
 	trans.o \
 	transparse.o \
-	HTMLtable.o \
-	MENUconf.o \
-	templates.o
+	TextFileAPP.o \
+	UIcss.o
 
 #
 # Structure schema compilation.
@@ -333,10 +339,14 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) EDITOR.A
 
+# amaya application
 ../bin/amaya : $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
 	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
-	$(CC) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(LIBS)
+	$(CC) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) libCSS.a $(LIBS)
 	@$(ECHO) "====>" amaya is done
+
+../bin/print :
+	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" print)
 
 # html2thot is the standalone HTML parser
 html2thotsta.o : @srcdir@/html2thot.c

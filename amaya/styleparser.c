@@ -125,10 +125,10 @@ STRING              ptr;
    SkipBlanksAndComments:                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       SkipBlanksAndComments (STRING ptr)
+STRING       SkipBlanksAndComments (STRING ptr)
 #else
-static STRING       SkipBlanksAndComments (ptr)
-STRING              ptr;
+STRING       SkipBlanksAndComments (ptr)
+STRING       ptr;
 #endif
 {
   ptr = TtaSkipBlanks (ptr);
@@ -1690,12 +1690,13 @@ PresentationValue  *val;
 	    failed = FALSE;
 	    i = NBCOLORNAME;
 	  }
-      /* Lookup the color name in Thot color name database */
+      /******** Lookup the color name in Thot color name database
       if (failed)
 	{
 	  TtaGiveRGB (colname, &redval, &greenval, &blueval);
 	  failed = FALSE;
 	}
+      **********/
     }
   
   if (failed)
@@ -2202,116 +2203,6 @@ void    *extra;
    TtaUpdateStylePresentation (el, tsch, context);
 
    TtaFreeMemory (callblock);
-}
-
-
-/*----------------------------------------------------------------------
-   UpdateCSSBackgroundImage searches strings url() or url("") within
-   the styleString and make it relative to the newpath.
-   oldpath = old document path
-   newpath = new document path
-   imgpath = new image directory
-   If the image is not moved, the imgpath has to be NULL else the new
-   image url is obtained by concatenation of imgpath and the image name.
-   Returns NULL or a new allocated styleString.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING              UpdateCSSBackgroundImage (STRING oldpath, STRING newpath, STRING imgpath, STRING styleString)
-#else
-STRING              UpdateCSSBackgroundImage (oldpath, newpath, imgpath, styleString)
-STRING              oldpath;
-STRING              newpath;
-STRING              imgpath;
-STRING              styleString;
-#endif
-{
-  STRING              b, e, ptr, oldptr, sString;
-  CHAR_T                old_url[MAX_LENGTH];
-  CHAR_T                tempname[MAX_LENGTH];
-  CHAR_T                imgname[MAX_LENGTH];
-  STRING              new_url;
-  int                 len;
-
-  ptr = NULL;
-  sString = styleString;
-  b = ustrstr (sString, TEXT("url"));
-  while (b != NULL)
-    {
-      /* we need to compare this url with the new doc path */
-      b += 3;
-      b = SkipBlanksAndComments (b);
-      if (*b == '(')
-	{
-	  b++;
-	  b = SkipBlanksAndComments (b);
-	  /*** Caution: Strings can either be written with double quotes or
-	       with single quotes. Only double quotes are handled here.
-	       Escaped quotes are not handled. See function SkipQuotedString */
-	  if (*b == '"')
-	    {
-	      /* search the url end */
-	      b++;
-	      e = b;
-	      while (*e != EOS && *e != '"')
-		e++;
-	    }
-	  else
-	    {
-	      /* search the url end */
-	      e = b;
-	      while (*e != EOS && *e != ')')
-		e++;
-	    }
-	  if (*e != EOS)
-	    {
-	      len = (int)(e - b);
-	      ustrncpy (old_url, b, len);
-	      old_url[len] = EOS;
-	      /* get the old full image name */
-	      NormalizeURL (old_url, 0, tempname, imgname, oldpath);
-	      /* build the new full image name */
-	      if (imgpath != NULL)
-		NormalizeURL (imgname, 0, tempname, imgname, imgpath);
-	      new_url = MakeRelativeURL (tempname, newpath);
-	      
-	      /* generate the new style string */
-	      if (ptr != NULL)
-		{
-		  oldptr = ptr;
-		  len = - len + ustrlen (oldptr) + ustrlen (new_url) + 1;
-		  ptr = (STRING) TtaGetMemory (len);	  
-		  len = (int)(b - oldptr);
-		  ustrncpy (ptr, oldptr, len);
-		  sString = &ptr[len];
-		  /* new name */
-		  ustrcpy (sString, new_url);
-		  /* following text */
-		  ustrcat (sString, e);
-		  TtaFreeMemory (oldptr);
-		}
-	      else
-		{
-		  len = - len + ustrlen (styleString) + ustrlen (new_url) + 1;
-		  ptr = (STRING) TtaGetMemory (len);
-		  len = (int)(b - styleString);
-		  ustrncpy (ptr, styleString, len);
-		  sString = &ptr[len];
-		  /* new name */
-		  ustrcpy (sString, new_url);
-		  /* following text */
-		  ustrcat (sString, e);
-		}
-	      TtaFreeMemory (new_url);
-	    }
-	  else
-	    sString = b;
-	}
-      else
-	sString = b;
-      /* next background-image */
-      b = ustrstr (sString, TEXT("url")); 
-    }
-  return (ptr);
 }
 
 
@@ -3815,7 +3706,7 @@ ThotBool            destroy;
    The parameter doc gives the document tree that contains CSS information.
    The parameter docRef gives the document to which CSS are to be applied.
    This function uses the current css context or creates it. It's able
-   to work on the given buffer or call GetNextInputChar to read the parsed
+   to work on the given buffer or call GetNextChar to read the parsed
    file.
    Parameter withUndo indicates whether the changes made in the document
    structure and content have to be registered in the Undo queue or not
@@ -3868,13 +3759,8 @@ ThotBool            withUndo;
 
   while (CSSindex < MAX_CSS_LENGTH && c != EOS && CSSparsing && !eof)
     {
-      if (buffer != NULL)
-	{
-	  c = buffer[index++];
-	  eof = (c == EOS);
-	}
-      else
-	c = GetNextInputChar (&eof);
+      c = buffer[index++];
+      eof = (c == EOS);
       CSSbuffer[CSSindex] = c;
       if (CSScomment == MAX_CSS_LENGTH || c == '*' || c == '/' || c == '<')
 	{
@@ -3923,13 +3809,8 @@ ThotBool            withUndo;
 		}
 	      break;
 	    case '<':
-	      if (buffer != NULL)
-		{
-		  c = buffer[index++];
-		  eof = (c == EOS);
-		}
-	      else
-		c = GetNextInputChar (&eof);
+	      c = buffer[index++];
+	      eof = (c == EOS);
 	      if (c == '!' && CSScomment == MAX_CSS_LENGTH)
 		{
 		  /* CSS within an HTML comment */

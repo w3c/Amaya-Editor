@@ -25,18 +25,17 @@
 #include "libmsg.h"
 #include "constmedia.h"
 #include "typemedia.h"
-
 #include "application.h"
 #include "language.h"
 #include "message.h"
 
+#define THOT_EXPORT extern
+#include "edit_tv.h"
  /* Identification des messages */
-int                 UserErrorCode;
 ThotBool            PrintErrorMessages;
 
 #include "viewcommands_f.h"
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaError affiche les messsges d'erreur de l'API.                
   ----------------------------------------------------------------------*/
@@ -180,4 +179,3 @@ int                 errorCode;
      }
 #endif /* THOT_DEBUG */
 }
-#endif /* _WIN_PRINT */

@@ -75,12 +75,13 @@ extern void         TtaSetMainLoop (ExternalInitMainLoop init,
    picture: the displayed pixmap. None (0) creates a space between buttons.
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
+   functionName: internal name of the function used to connect shortcuts.
    info: text to display when the cursor stays on the button.
    type: button type, only used on Windows versions.
    state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
-extern int          TtaAddButton (Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, STRING FunctionName, BYTE type, ThotBool state);
+extern int          TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING functionName, STRING info, BYTE type, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
@@ -392,7 +393,7 @@ extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
 				    ExternalLockMainLoop lock,
 				    ExternalUnlockMainLoop unlock */ );
 
-extern int          TtaAddButton ( /*Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, ThotBool state */ );
+extern int          TtaAddButton (/*Document document, View view, ThotIcon picture, void (*procedure) (), STRING functionName, STRING info, BYTE type, ThotBool state*/);
 extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
 extern void         TtaChangeButton ( /*Document document, View view, int index, ThotIcon picture, ThotBool state */ );

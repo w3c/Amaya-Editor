@@ -2981,7 +2981,8 @@ int                 frame;
 	   status = pFrame->FrReady;
 	   pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	   /* Remove la selection eventuelle */
-	   SwitchSelection (frame, FALSE);
+	   if (ThotLocalActions[T_switchsel])
+	     (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 	   /* Faut-il changer les dimensions de la boite document */
 	   if (!pBox->BxContentWidth
 	       || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
@@ -3034,7 +3035,10 @@ int                 frame;
 
 	   /* Affiche la fenetre */
 	   if (pVisibleAb != NULL)
-	     ShowBox (frame, pVisibleAb->AbBox, 0, position);
+	     {
+	       if (ThotLocalActions[T_showbox] != NULL)
+		 (*ThotLocalActions[T_showbox]) (frame, pVisibleAb->AbBox, 0, position);
+	     }
 	   else
 	     RedrawFrameBottom (frame, 0);
 	   /* Restaure la selection */

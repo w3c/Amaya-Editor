@@ -30,6 +30,7 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 #include "thotdir.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -43,7 +44,6 @@
 
 #include "appli_f.h"
 #include "applicationapi_f.h"
-#include "tree_f.h"
 #include "attributes_f.h"
 #include "search_f.h"
 #include "searchref_f.h"
@@ -56,30 +56,30 @@
 #include "viewcommands_f.h"
 #include "draw_f.h"
 
-#include "callback_f.h"
-#include "viewcommands_f.h"
-#include "platform_f.h"
 #include "absboxes_f.h"
-#include "buildboxes_f.h"
-#include "structmodif_f.h"
-#include "structcommands_f.h"
-#include "memory_f.h"
-#include "changeabsbox_f.h"
-
-#include "paginate_f.h"
-#include "writepivot_f.h"
-#include "schemas_f.h"
+#include "actions_f.h"
+#include "appdialogue_f.h"
 #include "boxselection_f.h"
-#include "structselect_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "changeabsbox_f.h"
+#include "closedoc_f.h"
+#include "docs_f.h"
 #include "fileaccess_f.h"
+#include "memory_f.h"
+#include "paginate_f.h"
+#include "platform_f.h"
+#include "presvariables_f.h"
 #include "references_f.h"
 #include "structschema_f.h"
-#include "presvariables_f.h"
-#include "appdialogue_f.h"
-#include "actions_f.h"
-#include "docs_f.h"
+#include "schemas_f.h"
+#include "structmodif_f.h"
+#include "structcommands_f.h"
+#include "structselect_f.h"
+#include "tree_f.h"
+#include "viewcommands_f.h"
+#include "writepivot_f.h"
 #include "frame_f.h"
-#include "closedoc_f.h"
 
 static AvailableView AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];
@@ -175,7 +175,6 @@ ThotBool           *assoc;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetDocAndView retourne le pointeur sur le document (pDoc) et le	
    numero de vue (viewNum) dans ce document, correspondant a	
@@ -213,7 +212,6 @@ ThotBool           *assoc;
    else
       *pDoc = pD;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    BuildSSchemaViewList						
@@ -459,97 +457,6 @@ AvailableView       viewList;
    return nViews;
 }
 
-/*----------------------------------------------------------------------
-   NumberOfOpenViews retourne le nombre de vues qui existent pour	
-   le document pDoc					
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          NumberOfOpenViews (PtrDocument pDoc)
-#else  /* __STDC__ */
-static int          NumberOfOpenViews (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-{
-   int                 view, assoc, result;
-
-   result = 0;
-   /* compte les vues de l'arbre principal */
-   for (view = 0; view < MAX_VIEW_DOC; view++)
-      if (pDoc->DocView[view].DvPSchemaView > 0)
-	 result++;
-   /* compte les vues des elements associes */
-   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-      if (pDoc->DocAssocFrame[assoc] > 0)
-	 result++;
-   return result;
-}
-
-/*----------------------------------------------------------------------
-   FreeView libere les paves et le contexte de la vue view du	
-   document pDoc.						
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreeView (PtrDocument pDoc, DocViewNumber view)
-#else  /* __STDC__ */
-void                FreeView (pDoc, view)
-PtrDocument         pDoc;
-DocViewNumber       view;
-
-#endif /* __STDC__ */
-{
-   view--;
-   if (pDoc->DocViewRootAb[view] != NULL)
-      FreeAbView (pDoc->DocViewRootAb[view], pDoc->DocViewFrame[view]);
-   pDoc->DocViewRootAb[view] = NULL;
-   pDoc->DocView[view].DvSSchema = NULL;
-   pDoc->DocView[view].DvPSchemaView = 0;
-   pDoc->DocView[view].DvSync = FALSE;
-   pDoc->DocViewFrame[view] = 0;
-   pDoc->DocViewVolume[view] = 0;
-   pDoc->DocViewFreeVolume[view] = 0;
-   pDoc->DocViewSubTree[view] = NULL;
-}
-
-/*----------------------------------------------------------------------
-   CloseDocumentView detruit la vue de numero view (si assoc est faux)
-   pour le document pDoc. S'il s'agit de la derniere vue, libere le
-   document dans le cas seulement ou closeDoc est vrai.
-   Si assoc est vrai, detruit la vue des elements associes de numero view
-   du document.	
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseDocumentView (PtrDocument pDoc, int view, ThotBool assoc, ThotBool closeDoc)
-#else  /* __STDC__ */
-void                CloseDocumentView (pDoc, view, assoc, closeDoc)
-PtrDocument         pDoc;
-int                 view;
-ThotBool            assoc;
-ThotBool            closeDoc;
-
-#endif /* __STDC__ */
-{
-  if (pDoc != NULL)
-    /* on detruit la vue */
-    {
-      if (!assoc)
-	FreeView (pDoc, view);
-      else
-	{
-	  view--;
-	  FreeAbView (pDoc->DocAssocRoot[view]->ElAbstractBox[0], pDoc->DocViewFrame[view]);
-	  pDoc->DocAssocRoot[view]->ElAbstractBox[0] = NULL;
-	  pDoc->DocAssocFrame[view] = 0;
-	}
-      
-      if (closeDoc)
-	/* verifie qu'il reste au moins une vue pour ce document */
-	if (NumberOfOpenViews (pDoc) < 1)
-	  /* il ne reste plus de vue, on libere le document */
-	  CloseDocument (pDoc);
-    }
-}
-
 
 /*----------------------------------------------------------------------
    ChangeDocumentName change le nom d'un document pDoc en newName	
@@ -602,6 +509,42 @@ STRING              newName;
 	      /* change le titre de la fenetre */
 	      ChangeFrameTitle (pDoc->DocAssocFrame[view], buffer);
 	   }
+}
+
+
+/*----------------------------------------------------------------------
+   TtaSetDocumentName
+
+   Sets or changes the name of a document. The document must be loaded.
+
+   Parameters:
+   document: the document whose name is set.
+   documentName: new document name. This is only the name, without any
+   suffix, without directory name. See function TtaSetDocumentDirectory
+   for changing the directory of a document.
+   The name must not exceed 31 characters.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetDocumentName (Document document, STRING documentName)
+#else  /* __STDC__ */
+void                TtaSetDocumentName (document, documentName)
+Document            document;
+STRING              documentName;
+#endif /* __STDC__ */
+
+{
+   UserErrorCode = 0;
+   /* verifies the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   /* parameter document is correct */
+   else if (ustrlen (documentName) >= MAX_NAME_LENGTH)
+     TtaError (ERR_buffer_too_small);
+   else
+     ChangeDocumentName (LoadedDocument[document - 1], documentName);
 }
 
 /*----------------------------------------------------------------------
@@ -1449,8 +1392,9 @@ ThotBool            assoc;
 		       (*ThotLocalActions[T_confirmclose]) (pDoc, document, view, &ok, &Save);
 		       if (Save)
 			 {
-			   if (DocOfSavedElements == pDoc)
-			     FreeSavedElements ();
+			   if (DocOfSavedElements == pDoc &&
+			       ThotLocalActions[T_freesavedel])
+			     (*ThotLocalActions[T_freesavedel]) ();
 			   ok = (*(Func)ThotLocalActions[T_writedocument]) (pDoc, 0);
 			 }
 		    }

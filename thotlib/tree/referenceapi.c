@@ -27,22 +27,18 @@
 #define THOT_EXPORT
 #include "edit_tv.h"
 
-#include "references_f.h"
-#include "tree_f.h"
-#include "search_f.h"
-
+#include "applicationapi_f.h"
 #include "fileaccess_f.h"
-#include "thotmsg_f.h"
-#include "structmodif_f.h"
 #include "memory_f.h"
 #include "readpivot_f.h"
+#include "references_f.h"
 #include "schemastr_f.h"
+#include "search_f.h"
+#include "structmodif_f.h"
 #include "structschema_f.h"
-#include "applicationapi_f.h"
+#include "thotmsg_f.h"
+#include "tree_f.h"
 #include "viewapi_f.h"
-
-
-extern int          UserErrorCode;
 
 
 /*----------------------------------------------------------------------

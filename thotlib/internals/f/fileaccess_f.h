@@ -38,6 +38,9 @@ extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
                                DocumentIdentifier Ident2 );
 extern void ClearDocIdent ( DocumentIdentifier * Ident );
 extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
+extern void TtaExtractName ( STRING text,
+                             STRING aDirectory,
+                             STRING aName );
 extern void MakeCompleteName ( STRING fname,
                                STRING fext,
                                PathBuffer directory_list,
@@ -96,6 +99,9 @@ extern ThotBool SameDocIdent (/* DocumentIdentifier Ident1,
                                  DocumentIdentifier Ident2 */);
 extern void ClearDocIdent (/* DocumentIdentifier * Ident */);
 extern ThotBool DocIdentIsNull (/* DocumentIdentifier Ident */);
+extern void TtaExtractName (/* STRING text,
+                               STRING aDirectory,
+                               STRING aName */);
 extern void MakeCompleteName (/* STRING fname,
                                  STRING fext,
                                  PathBuffer directory_list,

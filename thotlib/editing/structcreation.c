@@ -86,6 +86,7 @@ static ThotBool     createPasteMenuOK;
 #include "createabsbox_f.h"
 #include "createpages_f.h"
 #include "docs_f.h"
+#include "displayview_f.h"
 #include "draw_f.h"
 #include "editcommands_f.h"
 #include "exceptions_f.h"
@@ -158,94 +159,6 @@ int                 origDoc;
 }
 
 /*----------------------------------------------------------------------
-   RedisplayDocViews demande le reaffichage de toutes les vues du	
-   document pDoc.						
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayDocViews (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                RedisplayDocViews (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-{
-  DisplayMode       displayMode;
-  int                 i;
-
-  displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
-  if (displayMode != DisplayImmediately)
-    return;
-  /* reaffiche les vues des elements associes du document */
-  for (i = 0; i < MAX_ASSOC_DOC; i++)
-    if (pDoc->DocAssocFrame[i] > 0)
-      DisplayFrame (pDoc->DocAssocFrame[i]);
-  
-  /* reaffiche les vues de l'arbre principal du document */
-  for (i = 0; i < MAX_VIEW_DOC; i++)
-    if (pDoc->DocView[i].DvPSchemaView > 0)
-      /* vue ouverte */
-      DisplayFrame (pDoc->DocViewFrame[i]);
-}
-
-
-/*----------------------------------------------------------------------
-   AbstractImageUpdated	signale les modifications de l'image	
-   abstraite du document pDoc.				
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AbstractImageUpdated (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                AbstractImageUpdated (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-{
-  DisplayMode       displayMode;
-  PtrAbstractBox    pAb;
-  int               i, h, frame;
-  ThotBool          rootAbWillBeFree;
-
-  displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
-  if (displayMode == NoComputedDisplay || displayMode == SuspendDisplay)
-    return;
-
-  /* dans les vues des elements associes du document */
-  for (i = 0; i < MAX_ASSOC_DOC; i++)
-    if (pDoc->DocAssocModifiedAb[i] != NULL)
-      {
-	/* on ne s'occupe pas de la hauteur de page */
-	h = 0;
-	frame = pDoc->DocAssocFrame[i];
-	pAb = pDoc->DocAssocModifiedAb[i];
-	pDoc->DocAssocModifiedAb[i] = NULL;
-	ChangeConcreteImage (frame, &h, pAb);
-	/* libere les paves morts */
-	FreeDeadAbstractBoxes (pAb, frame);
-      }
-
-  /* dans les vues de l'arbre principal du document */
-  for (i = 0; i < MAX_VIEW_DOC; i++)
-    if (pDoc->DocView[i].DvPSchemaView > 0
-	&& pDoc->DocViewModifiedAb[i] != NULL)
-      {
-	/* on ne s'occupe pas de la hauteur de page */
-	h = 0;
-	frame = pDoc->DocViewFrame[i];
-	pAb = pDoc->DocViewModifiedAb[i];
-	if (pDoc->DocViewRootAb[i] == NULL)
-	  pDoc->DocViewRootAb[i] = pAb;
-	pDoc->DocViewModifiedAb[i] = NULL;
-	ChangeConcreteImage (frame, &h, pAb);
-	/* libere les paves morts */
-	rootAbWillBeFree = pDoc->DocViewRootAb[i]->AbDead;
-	if (rootAbWillBeFree)
-	  pDoc->DocViewRootAb[i] = NULL;
-	FreeDeadAbstractBoxes (pAb, frame);
-      }
-}
-
-#ifndef _WIN_PRINT
-/*----------------------------------------------------------------------
    InsertOption  met l'element pOption a la place de l'element de	
    type Choice pEl, sauf si celui-ci est un element d'agregat ou la	
    racine du schema de structure ou un element associe.		
@@ -287,7 +200,6 @@ PtrDocument         pDoc;
 	  }
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    CreationExceptions						
@@ -1535,7 +1447,6 @@ PtrSSchema          pSS;
    return pEl;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    LinkReference remplit un element ou un attribut de type reference     
    en demandant a l'utilisateur quel est l'element qui est         
@@ -1705,7 +1616,6 @@ PtrElement         *pSelEl;
    *pSelEl = pCreatedElem;
    return ret;
 }
-#endif /* WIN_PRINT */
 
 
 /*----------------------------------------------------------------------

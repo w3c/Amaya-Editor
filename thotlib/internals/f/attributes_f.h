@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool SameAttributes ( PtrElement pEl1,
+                                 PtrElement pEl2 );
 extern PtrAttribute AttachAttrByExceptNum ( int ExceptNum,
                                             PtrElement pEl,
                                             PtrElement pReferredEl,
@@ -13,12 +15,6 @@ extern PtrAttribute AttachAttrByExceptNum ( int ExceptNum,
 extern void RedisplayAttribute ( PtrAttribute pAttr,
                                  PtrElement pEl,
                                  PtrDocument pDoc );
-extern void IsolateSelection ( PtrDocument pDoc,
-                               PtrElement * pFirstSel,
-                               PtrElement * pLastSel,
-                               int *firstChar,
-                               int *lastChar,
-                               ThotBool createEmpty );
 extern void ApplyAttrPRulesToElem ( PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pAttr,
@@ -55,20 +51,19 @@ extern PtrAttribute AddAttrToElem ( PtrElement pEl,
 extern void AttachAttrWithValue ( PtrElement pEl,
                                   PtrDocument pDoc,
                                   PtrAttribute pNewAttr );
-extern void AttachAttrToRange ( PtrAttribute pAttr,
-                                int lastChar,
-                                int firstChar,
-                                PtrElement pLastSel,
-                                PtrElement pFirstSel,
-                                PtrDocument pDoc,
-                                ThotBool reDisplay );
-extern void AttachMandatoryAttributes ( PtrElement pEl,
-                                        PtrDocument pDoc );
 extern PtrAttribute GetAttrByExceptNum ( PtrElement pEl,
                                          int ExceptNum );
+extern Attribute TtaGetAttribute ( Element element,
+                                   AttributeType attributeType );
+extern int TtaGetTextAttributeLength ( Attribute attribute );
+extern void TtaGiveTextAttributeValue ( Attribute attribute,
+                                        STRING buffer,
+                                        int *length );
 
 #else /* __STDC__ */
 
+extern ThotBool SameAttributes (/* PtrElement pEl1,
+                                   PtrElement pEl2 */);
 extern PtrAttribute AttachAttrByExceptNum (/* int ExceptNum,
                                               PtrElement pEl,
                                               PtrElement pReferredEl,
@@ -76,12 +71,6 @@ extern PtrAttribute AttachAttrByExceptNum (/* int ExceptNum,
 extern void RedisplayAttribute (/* PtrAttribute pAttr,
                                    PtrElement pEl,
                                    PtrDocument pDoc */);
-extern void IsolateSelection (/* PtrDocument pDoc,
-                                 PtrElement * pFirstSel,
-                                 PtrElement * pLastSel,
-                                 int *firstChar,
-                                 int *lastChar,
-                                 ThotBool createEmpty */);
 extern void ApplyAttrPRulesToElem (/* PtrElement pEl,
                                       PtrDocument pDoc,
                                       PtrAttribute pAttr,
@@ -118,17 +107,14 @@ extern PtrAttribute AddAttrToElem (/* PtrElement pEl,
 extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pNewAttr */);
-extern void AttachAttrToRange (/* PtrAttribute pAttr,
-                                  int lastChar,
-                                  int firstChar,
-                                  PtrElement pLastSel,
-                                  PtrElement pFirstSel,
-                                  PtrDocument pDoc,
-                                  ThotBool reDisplay */);
-extern void AttachMandatoryAttributes (/* PtrElement pEl,
-                                          PtrDocument pDoc */);
 extern PtrAttribute GetAttrByExceptNum (/* PtrElement pEl,
                                            int ExceptNum */);
+extern Attribute TtaGetAttribute (/* Element element,
+                                     AttributeType attributeType */);
+extern int TtaGetTextAttributeLength (/* Attribute attribute */);
+extern void TtaGiveTextAttributeValue (/* Attribute attribute,
+                                          STRING buffer,
+                                          int *length */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -87,6 +87,7 @@ void                ConfigInit ()
 	export_items[i] = NULL;
 	export_items_menu[i] = NULL;
      }
+   TtaConfigReadConfigFiles (SchemaPath);
 }
 
 /*----------------------------------------------------------------------
@@ -449,9 +450,7 @@ void                TtaConfigReadConfigFiles (STRING aSchemaPath)
 #else                        /* __STDC__ */
 void                TtaConfigReadConfigFiles (aSchemaPath)
 STRING              aSchemaPath;
-
 #endif                       /* __STDC__ */
-
 {
    int                 nbitemdoc, nbitemnat, nbitemext;
    int                 beginning, i;
@@ -1149,7 +1148,6 @@ STRING              trans;
    return found;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ConfigTranslateSSchema                                          
   ----------------------------------------------------------------------*/
@@ -1291,7 +1289,6 @@ STRING              schpres;
      }
    return ok;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    readUntilStyle  lit le fichier file (qui doit etre ouvert)      
@@ -1854,7 +1851,6 @@ int                *height;
    *height = pixeltomm (*height, 0, FALSE);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ConfigGetPSchemaNature retourne dans presNature le nom du       
    schema de presentation a appliquer a la nature de nom   
@@ -1912,7 +1908,6 @@ STRING              presNature;
      }
    return ok;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ConfigGetPresentationOption cherche, dans le fichier .conf      

@@ -1089,9 +1089,7 @@ View                view;
      }
    searchDomain->SDocument = pDoc;
    TextOK = FALSE;
-#  ifndef _WIN_PRINT
    CreateSearchDlgWindow (TtaGetViewFrame (document, view));
-#  endif /* !_WIN_PRINT */
 #  endif /* _WINDOWS */ 
 }
 

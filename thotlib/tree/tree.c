@@ -23,26 +23,26 @@
 #include "labelAllocator.h"
 #include "appdialogue.h"
 #include "picture.h"
+#include "application.h"
 
 #define THOT_EXPORT extern
 #include "select_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-#include "memory_f.h"
-#include "schemas_f.h"
 #include "absboxes_f.h"
-#include "draw_f.h"
-#include "content_f.h"
-#include "references_f.h"
-#include "fileaccess_f.h"
-#include "structschema_f.h"
-#include "labelalloc_f.h"
-
-#include "tree_f.h"
-#include "exceptions_f.h"
 #include "abspictures_f.h"
+#include "content_f.h"
+#include "draw_f.h"
+#include "exceptions_f.h"
 #include "externalref_f.h"
+#include "fileaccess_f.h"
+#include "labelalloc_f.h"
+#include "memory_f.h"
+#include "references_f.h"
+#include "schemas_f.h"
+#include "structschema_f.h"
+#include "tree_f.h"
 
 /*----------------------------------------------------------------------
    DocumentOfElement
@@ -4223,4 +4223,336 @@ PtrElement          pEl;
 	     }
 	   pAttr->AeNext = NULL;	/* it's the last attribute */
 	}
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaGetMainRoot
+
+   Returns the root element of the main abstract tree representing a document.
+   Parameter:
+   document: the document.
+   Return value:
+   the root element of the main abstract tree.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+Element             TtaGetMainRoot (Document document)
+#else  /* __STDC__ */
+Element             TtaGetMainRoot (document)
+Document            document;
+#endif /* __STDC__ */
+{
+   PtrElement          element;
+
+   UserErrorCode = 0;
+   /* Checks the parameter document */
+   element = NULL;
+   if (document < 1 || document > MAX_DOCUMENTS)
+	TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+	TtaError (ERR_invalid_document_parameter);
+   else
+      /* Parameter document is ok */
+	element = LoadedDocument[document - 1]->DocRootElement;
+   return ((Element) element);
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetDocument
+
+   Returns the document containing a given element
+
+   Parameters:
+   element: the element for which document is asked.
+
+   Return value:
+   the document containing that element or 0 if the element does not
+   belong to any document.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+Document            TtaGetDocument (Element element)
+#else  /* __STDC__ */
+Document            TtaGetDocument (element)
+Element             element;
+#endif /* __STDC__ */
+{
+
+   PtrDocument         pDoc;
+   Document            ret;
+
+   UserErrorCode = 0;
+   ret = 0;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else
+     {
+	pDoc = DocumentOfElement ((PtrElement) element);
+	if (pDoc != NULL)
+	   ret = IdentDocument (pDoc);
+     }
+   return ret;
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetParent
+
+   Returns the parent element (i.e. first ancestor) of a given element.
+   Parameter:
+   element: the element whose the parent is asked.
+   Return value:
+   the parent element, or NULL if there is no parent (root).
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+Element             TtaGetParent (Element element)
+#else  /* __STDC__ */
+Element             TtaGetParent (element)
+Element             element;
+#endif /* __STDC__ */
+{
+   PtrElement          parent;
+
+   UserErrorCode = 0;
+   parent = NULL;
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else
+      parent = ((PtrElement) element)->ElParent;
+   return ((Element) parent);
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetElementType
+
+   Returns the type of a given element.
+   Parameter:
+   element: the element.
+   Return value:
+   type of the element.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+ElementType         TtaGetElementType (Element element)
+#else  /* __STDC__ */
+ElementType         TtaGetElementType (element)
+Element             element;
+#endif /* __STDC__ */
+{
+   ElementType         elementType;
+
+   UserErrorCode = 0;
+   elementType.ElSSchema = NULL;
+   elementType.ElTypeNum = 0;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else if (((PtrElement) element)->ElStructSchema != NULL)
+     {
+	elementType.ElSSchema = (SSchema) ((PtrElement) element)->ElStructSchema;
+	elementType.ElTypeNum = ((PtrElement) element)->ElTypeNumber;
+     }
+   return elementType;
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaSearchTypedElement
+
+   Returns the first element of a given type. Searching can be done in
+   a tree or starting from a given element towards the beginning or the
+   end of the abstract tree.
+
+   Parameters:
+   searchedType: type of element to be searched. If searchedType.ElSSchema
+   is NULL, searchedType must be a basic type ; then the next basic
+   element of that type will be returned, whatever its structure
+   schema.
+   scope: SearchForward, SearchBackward or SearchInTree.
+   element: the element that is the root of the tree
+   (if scope = SearchInTree) or the starting element
+   (if scope = SearchForward or SearchBackward).
+
+   Return value:
+   the element found, or NULL if no element has been found.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+Element             TtaSearchTypedElement (ElementType searchedType, SearchDomain scope, Element element)
+#else  /* __STDC__ */
+Element             TtaSearchTypedElement (searchedType, scope, element)
+ElementType         searchedType;
+SearchDomain        scope;
+Element             element;
+#endif /* __STDC__ */
+{
+   PtrElement          pEl;
+   PtrElement          elementFound;
+   ThotBool            ok;
+
+   UserErrorCode = 0;
+   elementFound = NULL;
+   ok = TRUE;
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
+   else if (((PtrElement) element)->ElStructSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
+   else if (searchedType.ElSSchema == NULL)
+     {
+	if (searchedType.ElTypeNum > MAX_BASIC_TYPE)
+	  {
+	     TtaError (ERR_invalid_element_type);
+	     ok = FALSE;
+	  }
+     }
+   else if (searchedType.ElTypeNum < 1 ||
+	    searchedType.ElTypeNum > ((PtrSSchema) (searchedType.ElSSchema))->SsNRules)
+     {
+	TtaError (ERR_invalid_element_type);
+	ok = FALSE;
+     }
+
+   if (ok)
+     {
+	if (scope == SearchBackward)
+	   pEl = BackSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+	else
+	   pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+
+	if (pEl != NULL)
+	   if (scope == SearchInTree)
+	     {
+		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
+		   pEl = NULL;
+	     }
+	if (pEl != NULL)
+	   elementFound = pEl;
+     }
+   return ((Element) elementFound);
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaSearchTypedElementInTree
+
+   Returns the first element of a given type. Searching can be done in
+   a tree or starting from a given element towards the beginning or the
+   end of the abstract tree. In any case the returned element must be
+   part of the parent tree.
+
+   Parameters:
+   searchedType: type of element to be searched. If searchedType.ElSSchema
+   is NULL, searchedType must be a basic type ; then the next basic
+   element of that type will be returned, whatever its structure
+   schema.
+   scope: SearchForward, SearchBackward or SearchInTree.
+   parent: the limited tree where the searching can be done.
+   element: the element that is the root of the tree
+   (if scope = SearchInTree) or the starting element
+   (if scope = SearchForward or SearchBackward).
+
+   Return value:
+   the element found, or NULL if no element has been found.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+Element             TtaSearchTypedElementInTree (ElementType searchedType, SearchDomain scope, Element parent, Element element)
+#else  /* __STDC__ */
+Element             TtaSearchTypedElementInTree (searchedType, scope, parent, element)
+ElementType         searchedType;
+SearchDomain        scope;
+Element             parent;
+Element             element;
+#endif /* __STDC__ */
+{
+   PtrElement          pEl;
+   PtrElement          elementFound;
+   ThotBool            ok;
+
+   UserErrorCode = 0;
+   elementFound = NULL;
+   ok = TRUE;
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
+   else if (((PtrElement) element)->ElStructSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
+   else if (searchedType.ElSSchema == NULL)
+     {
+	if (searchedType.ElTypeNum > MAX_BASIC_TYPE)
+	  {
+	     TtaError (ERR_invalid_element_type);
+	     ok = FALSE;
+	  }
+     }
+   else if (searchedType.ElTypeNum < 1 ||
+	    searchedType.ElTypeNum > ((PtrSSchema) (searchedType.ElSSchema))->SsNRules)
+     {
+	TtaError (ERR_invalid_element_type);
+	ok = FALSE;
+     }
+
+   if (ok)
+     {
+	if (scope == SearchBackward)
+	   pEl = BackSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+	else
+	   pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+
+	if (pEl != NULL)
+	   if (scope == SearchInTree)
+	     {
+		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
+		   pEl = NULL;
+	     }
+	if (pEl != NULL)
+	  elementFound = pEl;
+     }
+
+   if (parent != NULL)
+     {
+       /* check if parent is a parent of pEl */
+       while (pEl != NULL && pEl != (PtrElement) parent)
+	 pEl = pEl->ElParent;
+     }
+   if (pEl == NULL)
+     elementFound = NULL;
+   return ((Element) elementFound);
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetElementVolume
+
+   Returns the volume of a given element, i.e. the number of characters
+   contained in that element.
+   Parameter:
+   element: the element.
+   Return value:
+   element volume.
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 TtaGetElementVolume (Element element)
+#else  /* __STDC__ */
+int                 TtaGetElementVolume (element)
+Element             element;
+#endif /* __STDC__ */
+{
+   int                 vol = 0;
+
+   UserErrorCode = 0;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else
+	vol = ((PtrElement) element)->ElVolume;
+   return vol;
 }

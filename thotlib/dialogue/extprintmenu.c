@@ -231,7 +231,6 @@ STRING              txt;
     }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtcSetupAndPrint Complete dialogue sheet for print setup with option to print.
   ----------------------------------------------------------------------*/
@@ -381,4 +380,3 @@ View                view;
    TtaShowDialogue (NumFormPrint, FALSE);
 
 }
-#endif /* _WIN_PRINT */

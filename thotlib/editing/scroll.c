@@ -24,6 +24,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "appdialogue.h"
 
 #define VDEBORDEMENT 0
 #define vDEBORDEMENT VDEBORDEMENT / 10
@@ -32,6 +33,7 @@
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
+#include "appdialogue_tv.h"
 
 #include "absboxes_f.h"
 #include "appli_f.h"
@@ -84,8 +86,8 @@ int                 selection;
 	     if (srcbox != NULL)
 	       {
 		  /* On eteint la selection */
-		  if (selection != 0)
-		     SwitchSelection (frame, FALSE);
+		  if (selection != 0 && ThotLocalActions[T_switchsel])
+		    (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 
 		  /* A priori pas de paves ajoutes */
 		  add = FALSE;
@@ -149,8 +151,8 @@ int                 selection;
 			  /* On reprend la nouvelle */
 			  /* On reallume la selection deja visualisee */
 		       }
-		     else
-			SwitchSelection (frame, TRUE);
+		     else if (ThotLocalActions[T_switchsel])
+		       (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	       }
 	  }
      }
@@ -192,8 +194,8 @@ int                 selection;
 	     /* On termine l'insertiond* courante */
 	     srcbox = pFrame->FrAbstractBox->AbBox;
 	     /* Limites du scroll */
-	     if (selection != 0)
-		SwitchSelection (frame, FALSE);
+	     if (selection != 0 && ThotLocalActions[T_switchsel])
+	       (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 	     /* On eteint la selection */
 	     /* Au plus, la limite du document + le debordement horizontal */
 	     GetSizesFrame (frame, &lframe, &hframe);
@@ -241,8 +243,8 @@ int                 selection;
 	     UpdateScrollbars (frame);
 
 	     /* On allume la selection */
-	     if (selection != 0)
-		SwitchSelection (frame, TRUE);
+	     if (selection != 0 && ThotLocalActions[T_switchsel])
+	       (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	  }
      }
 }
@@ -674,7 +676,6 @@ raint              *height;
       *height = 1;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ShowBox force la position de la boi^te dans la fenetree^tre        
    affiche'e sur l'e'cran.                                 
@@ -751,7 +752,6 @@ int                 percent;
       UpdateScrollbars (frame);
       }
 }
-#endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
    IsScrolled regarde si la marque d'insertion (de'but de se'lection) 

@@ -69,6 +69,7 @@
 #include "memory_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
+#include "scroll_f.h"
 #include "search_f.h"
 #include "searchref_f.h"
 #include "selectmenu_f.h"
@@ -2018,21 +2019,26 @@ ThotBool            before;
 }
 
 /*----------------------------------------------------------------------
-   NoStructureLoadResources connecte les fonctions d'edition et de    
-   selection structuree.                                  
+   NoStructureLoadResources
+   connects unstructured editing and selection functions.
   ----------------------------------------------------------------------*/
 void                NoStructSelectLoadResources ()
 {
-   if (ThotLocalActions[T_cmdpaste] == NULL)
+   if (ThotLocalActions[T_selecbox] == NULL)
      {
-	/* connecte les action d'edition structuree */
 	TteConnectAction (T_selecbox, (Proc) GetClickedBox);
+	TteConnectAction (T_switchsel, (Proc) SwitchSelection);
 	TteConnectAction (T_selectsiblings, (Proc) SelectSiblings);
+	TteConnectAction (T_checksel, (Proc) CheckSelectedElement);
+	TteConnectAction (T_resetsel, (Proc) ResetSelection);
+	TteConnectAction (T_selstring, (Proc) SelectString);
+	TteConnectAction (T_extendsel, (Proc) ExtendSelection);
+	TteConnectAction (T_showbox, (Proc) ShowBox);
 	TteConnectAction (T_deletenextchar, (Proc) DeleteNextChar);
 	TteConnectAction (T_cmdpaste, (Proc) PasteCommand);
 	TteConnectAction (T_enter, (Proc) TtcCreateElement);
 	MenuActionList[CMD_CreateElement].Call_Action = (Proc) TtcCreateElement;
 	MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
-	StructSelectionMode = FALSE;
+	InitSelection ();
      }
 }

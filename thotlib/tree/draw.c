@@ -205,7 +205,6 @@ PtrAttribute       *pAttr;
    return ret;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
  DrawAddAttr   on a ajoute' l'attribut pointe' par pAttr a l'element
  pointe' par pEl. Dans le cas d'un objet Draw, verifie la coherence
@@ -324,7 +323,6 @@ PtrElement          pEl;
 	     }
 	}
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -409,7 +407,6 @@ PtrAttribute       *pAttr;
    return ret;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
  DrawSupprAttr        on a supprime' l'attribut pointe' par pAttr a
  l'element pointe' par pEl. Dans le cas d'un objet Draw, verifie la
@@ -455,4 +452,3 @@ PtrElement          pEl;
 		}
 	   }
 }
-#endif /* WIN_PRINT */

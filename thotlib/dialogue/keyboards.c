@@ -963,7 +963,6 @@ View                view;
    TtaSetCurrentKeyboard (2);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtcDisplayGreekKeyboard
    displays the greek keyboard 
@@ -986,4 +985,3 @@ View                view;
    CreateGreekKeyboardDlgWindow (NULL);
 #  endif /* _WINDOWS */
 }
-#endif /* _WIN_PRINT */

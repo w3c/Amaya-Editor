@@ -8,6 +8,8 @@
 
 extern void TtaSetCurrentKeyboard ( int keyboard );
 extern void InitSelection ( void );
+extern void CheckSelectedElement ( PtrElement pEl,
+                                   Document document );
 extern void TtaSetFocus ( void );
 extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
                                       PtrElement * firstEl,
@@ -86,6 +88,8 @@ extern void TtcChildElement ( Document document,
 
 extern void TtaSetCurrentKeyboard (/* int keyboard */);
 extern void InitSelection (/* void */);
+extern void CheckSelectedElement (/* PtrElement pEl,
+                                     Document document */);
 extern void TtaSetFocus (/* void */);
 extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
                                         PtrElement * firstEl,

@@ -8,17 +8,14 @@
 
 extern void CreateWithException ( PtrElement pEl,
                                   PtrDocument pDoc );
-extern Document TtaNewDocument ( STRING structureSchema,
-                                 STRING documentName );
 extern Document TtaOpenDocument ( STRING documentName,
                                   int accessMode );
-extern void TtaSaveDocument ( Document document,
-                              STRING documentName );
 extern ThotBool TtaExportDocument ( Document document,
                                     STRING fileName,
                                     STRING TSchemaName );
+extern void UnloadTree ( Document document );
+extern void UnloadDocument ( PtrDocument * pDoc );
 extern void TtaCloseDocument ( Document document );
-extern void TtaRemoveDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
 extern ThotBool TtaCheckPath ( PathBuffer path );
 extern ThotBool TtaIsInDocumentPath ( STRING directory );
@@ -30,22 +27,19 @@ extern SSchema TtaNewNature ( SSchema schema,
 extern SSchema TtaNewSchemaExtension ( Document document,
                                        STRING extensionName,
                                        STRING presentationName );
-extern void TtaRemoveSchemaExtension ( Document document,
-                                       SSchema extension,
-                                       int *removedElements,
-                                       int *removedAttributes );
 extern void TtaSetPSchema ( Document document,
                             STRING presentationName );
 extern void TtaSetDocumentDirectory ( Document document,
                                       STRING directory );
-extern void TtaSetDocumentName ( Document document,
-                                 STRING documentName );
 extern void TtaSetDocumentAccessMode ( Document document,
                                        int accessMode );
 extern void TtaSetDocumentBackUpInterval ( Document document,
                                            int interval );
 extern void TtaSetNotificationMode ( Document document,
                                      int notificationMode );
+extern void SetDocumentModified ( PtrDocument pDoc,
+                                  ThotBool status,
+                                  int length );
 extern void TtaSetDocumentModified ( Document document );
 extern void TtaSetDocumentUnmodified ( Document document );
 extern STRING TtaGetDocumentName ( Document document );
@@ -82,17 +76,14 @@ extern PtrDocument DocToPtr ( Document document );
 
 extern void CreateWithException (/* PtrElement pEl,
                                     PtrDocument pDoc */);
-extern Document TtaNewDocument (/* STRING structureSchema,
-                                   STRING documentName */);
 extern Document TtaOpenDocument (/* STRING documentName,
                                     int accessMode */);
-extern void TtaSaveDocument (/* Document document,
-                                STRING documentName */);
 extern ThotBool TtaExportDocument (/* Document document,
                                       STRING fileName,
                                       STRING TSchemaName */);
+extern void UnloadTree (/* Document document */);
+extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void TtaCloseDocument (/* Document document */);
-extern void TtaRemoveDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* STRING path */);
 extern ThotBool TtaCheckPath (/* PathBuffer path */);
 extern ThotBool TtaIsInDocumentPath (/* STRING directory */);
@@ -104,22 +95,19 @@ extern SSchema TtaNewNature (/* SSchema schema,
 extern SSchema TtaNewSchemaExtension (/* Document document,
                                          STRING extensionName,
                                          STRING presentationName */);
-extern void TtaRemoveSchemaExtension (/* Document document,
-                                         SSchema extension,
-                                         int *removedElements,
-                                         int *removedAttributes */);
 extern void TtaSetPSchema (/* Document document,
                               STRING presentationName */);
 extern void TtaSetDocumentDirectory (/* Document document,
                                         STRING directory */);
-extern void TtaSetDocumentName (/* Document document,
-                                   STRING documentName */);
 extern void TtaSetDocumentAccessMode (/* Document document,
                                          int accessMode */);
 extern void TtaSetDocumentBackUpInterval (/* Document document,
                                              int interval */);
 extern void TtaSetNotificationMode (/* Document document,
                                        int notificationMode */);
+extern void SetDocumentModified (/* PtrDocument pDoc,
+                                    ThotBool status,
+                                    int length */);
 extern void TtaSetDocumentModified (/* Document document */);
 extern void TtaSetDocumentUnmodified (/* Document document */);
 extern STRING TtaGetDocumentName (/* Document document */);

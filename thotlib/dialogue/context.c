@@ -433,38 +433,6 @@ STRING              name;
 }
 
 /*----------------------------------------------------------------------
- *  ShowReference returns True if there exists a color for active boxes.
- ----------------------------------------------------------------------*/
-ThotBool            ShowReference ()
-{
-#ifdef _WINDOWS
-	return (FALSE);
-#else /* _WINDOWS */
-   if (Box_Color == cwhite.pixel)
-      return (FALSE);
-   else
-      return (TRUE);
-#endif /* _WINDOWS */
-}
-
-
-/*----------------------------------------------------------------------
- *  ShowReference returns True if there exists a color for read-only parts.
- ----------------------------------------------------------------------*/
-ThotBool            ShowReadOnly ()
-{
-#ifdef _WINDOWS
-	return (FALSE);
-#else /* _WINDOWS */
-   if (RO_Color == cwhite.pixel)
-      return (FALSE);
-   else
-      return (TRUE);
-#endif /* _WINDOWS */
-}
-/*fin */
-
-/*----------------------------------------------------------------------
  *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
  *	counterpart in Microsoft environment.
  ----------------------------------------------------------------------*/
@@ -676,9 +644,7 @@ void InitDocContexts ()
    PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
    DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
    BoxCreating = FALSE;		/* no interractive creation yet */
-#ifndef _WIN_PRINT
    InitializeOtherThings ();
-#endif /* _WIN_PRINT */
 }
 
 #ifndef _WINDOWS

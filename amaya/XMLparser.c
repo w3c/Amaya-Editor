@@ -1632,19 +1632,20 @@ void                FreeXMLParser ()
    closingTag: name of the tag that should terminate the tree to be parsed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	XMLparse (STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, STRING closingTag)
+void	  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, STRING closingTag)
 #else
-void	XMLparse (DTDname, doc, el, isclosed, lang, closingTag)
-STRING   DTDname;
-Document doc;
-Element  el;
-ThotBool isclosed;
-Language lang;
-STRING closingTag;
-
+void	  XMLparse (infile, index, DTDname, doc, el, isclosed, lang, closingTag)
+FILE     *infile;
+int      *index;
+STRING    DTDname;
+Document  doc;
+Element   el;
+ThotBool  isclosed;
+Language  lang;
+STRING    closingTag;
 #endif
 {
-  UCHAR_T       charRead;
+  UCHAR_T             charRead;
   ThotBool            match;
   PtrTransition       trans;
   ThotBool	      endOfFile;
@@ -1711,7 +1712,7 @@ STRING closingTag;
       /* read one character from the source if the last character */
       /* read has been processed */
       if (charRead == EOS)
-	  charRead = GetNextInputChar (&endOfFile);
+	  charRead = GetNextInputChar (infile, index, &endOfFile);
       if (charRead != EOS && !endOfFile)
 	{
 	  /* Check the character read */

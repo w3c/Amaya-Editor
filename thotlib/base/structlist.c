@@ -29,7 +29,6 @@
 #include "edit_tv.h"
 #include "boxes_tv.h"
 
-extern int          UserErrorCode;
 #define MAXNB 200
 static int          NbChildren[MAXNB];
 static int          LeafLevel[MAXNB];

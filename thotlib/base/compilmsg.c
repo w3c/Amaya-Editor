@@ -22,8 +22,8 @@
 
 #define THOT_EXPORT extern
 #include "compil_tv.h"
+#include "edit_tv.h"
 
-int                 UserErrorCode;
 
 /*----------------------------------------------------------------------
    DisplayConfirmMessage

@@ -499,6 +499,70 @@ DocumentIdentifier  Ident;
    return ret;
 }
 
+
+/*----------------------------------------------------------------------
+   TtaExtractName: extracts the directory and the file name.       
+   aDirectory and aName must be arrays of characters       
+   which sizes are sufficient to contain the path and      
+   the file name.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaExtractName (STRING text, STRING aDirectory, STRING aName)
+
+#else  /* __STDC__ */
+void                TtaExtractName (text, aDirectory, aName)
+STRING              text;
+STRING              aDirectory;
+STRING              aName;
+
+#endif /* __STDC__ */
+{
+   int                 lg, i, j;
+   STRING              ptr, oldptr;
+   CHAR_T              URL_DIR_SEP;
+
+   if (text == NULL || aDirectory == NULL || aName == NULL)
+      return;			/* No input text or error in input parameters */
+
+   if (text && ustrchr (text, TEXT('/')))
+     URL_DIR_SEP = TEXT('/');
+   else 
+     URL_DIR_SEP = DIR_SEP;
+   
+   aDirectory[0] = EOS;
+   aName[0] = EOS;
+   lg = ustrlen (text);
+   if (lg)
+     {
+       /* the text is not empty */
+       ptr = oldptr = &text[0];
+       do
+	 {
+	   ptr = ustrrchr (oldptr, URL_DIR_SEP);
+	   if (ptr != NULL)
+	     oldptr = &ptr[1];
+	 }
+       while (ptr != NULL);
+       
+       i = ((int) (oldptr) - (int) (text)) / sizeof (CHAR_T);	/* the length of the directory part */
+       if (i > 1)
+	 {
+	   ustrncpy (aDirectory, text, i);
+	   j = i - 1;
+	   /* Suppresses the / characters at the end of the path */
+	   while (aDirectory[j] == URL_DIR_SEP)
+	     aDirectory[j--] = EOS;
+	 }
+       if (i != lg)
+	 ustrcpy (aName, oldptr);
+     }
+#    ifdef _WINDOWS
+     lg = ustrlen (aName);
+     if (!ustrcasecmp (&aName[lg - 4], EXE_EXT))
+        aName[lg - 4] = EOS;
+#    endif /* _WINDOWS */
+}
+
 /*----------------------------------------------------------------------
    MakeCompleteName compose un nom de fichier absolu en concatenant 
    un nom de directory, le nom de fichier (fname) et l'extension (fext).

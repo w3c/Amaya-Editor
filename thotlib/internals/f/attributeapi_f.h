@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void AttachMandatoryAttributes ( PtrElement pEl,
+                                        PtrDocument pDoc );
 extern Attribute TtaNewAttribute ( AttributeType attributeType );
 extern void TtaAttachAttribute ( Element element,
                                  Attribute attribute,
@@ -23,8 +25,6 @@ extern void TtaSetAttributeText ( Attribute attribute,
                                   Document document );
 extern void TtaNextAttribute ( Element element,
                                Attribute * attribute );
-extern Attribute TtaGetAttribute ( Element element,
-                                   AttributeType attributeType );
 extern void TtaGiveAttributeType ( Attribute attribute,
                                    AttributeType * attributeType,
                                    int *attrKind );
@@ -49,10 +49,6 @@ extern int TtaGetAttributeValueFromOriginalName ( STRING name,
                                                   AttributeType attributeType );
 extern int TtaGetAttributeValueFromName ( STRING name,
                                           AttributeType attributeType );
-extern int TtaGetTextAttributeLength ( Attribute attribute );
-extern void TtaGiveTextAttributeValue ( Attribute attribute,
-                                        STRING buffer,
-                                        int *length );
 extern void TtaSearchAttribute ( AttributeType searchedAttribute,
                                  SearchDomain scope,
                                  Element element,
@@ -61,6 +57,8 @@ extern void TtaSearchAttribute ( AttributeType searchedAttribute,
 
 #else /* __STDC__ */
 
+extern void AttachMandatoryAttributes (/* PtrElement pEl,
+                                          PtrDocument pDoc */);
 extern Attribute TtaNewAttribute (/* AttributeType attributeType */);
 extern void TtaAttachAttribute (/* Element element,
                                    Attribute attribute,
@@ -78,8 +76,6 @@ extern void TtaSetAttributeText (/* Attribute attribute,
                                     Document document */);
 extern void TtaNextAttribute (/* Element element,
                                  Attribute * attribute */);
-extern Attribute TtaGetAttribute (/* Element element,
-                                     AttributeType attributeType */);
 extern void TtaGiveAttributeType (/* Attribute attribute,
                                      AttributeType * attributeType,
                                      int *attrKind */);
@@ -104,10 +100,6 @@ extern int TtaGetAttributeValueFromOriginalName (/* STRING name,
                                                     AttributeType attributeType */);
 extern int TtaGetAttributeValueFromName (/* STRING name,
                                             AttributeType attributeType */);
-extern int TtaGetTextAttributeLength (/* Attribute attribute */);
-extern void TtaGiveTextAttributeValue (/* Attribute attribute,
-                                          STRING buffer,
-                                          int *length */);
 extern void TtaSearchAttribute (/* AttributeType searchedAttribute,
                                    SearchDomain scope,
                                    Element element,

@@ -91,7 +91,6 @@ void                InitSave ()
    DocOfSavedElements = NULL;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    IsASavedElement   retourne vrai si l'element pointe par pEl se  
    trouve dans le buffer de Couper-Copier-Coller.                  
@@ -127,7 +126,6 @@ PtrElement          pEl;
      }
    return ret;
 }
-#endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
    CopyLeaf                                                  
@@ -188,7 +186,6 @@ ThotBool            redisplay;
 }
 
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    RedisplayCopies 						
    	Si l'element pointe' par pEl est (ou est contenudans) un	
@@ -264,7 +261,6 @@ ThotBool            redisplay;
 	}
       while (pEl != NULL);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    IsANewElement   retourne vrai si l'element pointe' par pEl est  
@@ -1450,7 +1446,6 @@ PtrDocument        *pDoc;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SelectRange
    Select all elements between firstSel and lastSel in document pDoc
@@ -1541,4 +1536,3 @@ int                 lastChar;
       else
 	 ExtendSelection (lastSel, lastChar - 1, TRUE, FALSE, FALSE);
 }
-#endif /* _WIN_PRINT */

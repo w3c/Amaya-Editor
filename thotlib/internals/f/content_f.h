@@ -45,6 +45,11 @@ extern void ModifyPointInPolyline ( PtrTextBuffer firstBuffer,
                                     int rank,
                                     int x,
                                     int y );
+extern int TtaGetTextLength ( Element element );
+extern void TtaGiveTextContent ( Element element,
+                                 STRING buffer,
+                                 int *length,
+                                 Language * language );
 
 #else /* __STDC__ */
 
@@ -87,6 +92,11 @@ extern void ModifyPointInPolyline (/* PtrTextBuffer firstBuffer,
                                       int rank,
                                       int x,
                                       int y */);
+extern int TtaGetTextLength (/* Element element */);
+extern void TtaGiveTextContent (/* Element element,
+                                   STRING buffer,
+                                   int *length,
+                                   Language * language */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Document TtaNewDocument ( STRING structureSchema,
+                                 STRING documentName );
 extern void LoadDocument ( PtrDocument * pDoc,
                            STRING fileName );
 extern void LoadXmlDocument ( PtrDocument * pDoc,
@@ -14,20 +16,21 @@ extern void NewDocument ( PtrDocument * pDoc,
                           PtrBuffer SSchemaName,
                           Name docName,
                           PathBuffer directory );
-extern void UnloadTree ( Document document );
-extern void UnloadDocument ( PtrDocument * pDoc );
 extern void PaginateDocument ( PtrDocument pDoc );
-extern void SetDocumentModified ( PtrDocument pDoc,
-                                  ThotBool status,
-                                  int length );
 extern void UpdateIncludedElement ( PtrElement pEl,
                                     PtrDocument pDoc );
 extern void UpdateAllInclusions ( PtrDocument pDoc );
+extern void TtaRemoveSchemaExtension ( Document document,
+                                       SSchema extension,
+                                       int *removedElements,
+                                       int *removedAttributes );
 extern void BackupAll ( void );
 extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern Document TtaNewDocument (/* STRING structureSchema,
+                                   STRING documentName */);
 extern void LoadDocument (/* PtrDocument * pDoc,
                              STRING fileName */);
 extern void LoadXmlDocument (/* PtrDocument * pDoc,
@@ -36,15 +39,14 @@ extern void NewDocument (/* PtrDocument * pDoc,
                             PtrBuffer SSchemaName,
                             Name docName,
                             PathBuffer directory */);
-extern void UnloadTree (/* Document document */);
-extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void PaginateDocument (/* PtrDocument pDoc */);
-extern void SetDocumentModified (/* PtrDocument pDoc,
-                                    ThotBool status,
-                                    int length */);
 extern void UpdateIncludedElement (/* PtrElement pEl,
                                       PtrDocument pDoc */);
 extern void UpdateAllInclusions (/* PtrDocument pDoc */);
+extern void TtaRemoveSchemaExtension (/* Document document,
+                                         SSchema extension,
+                                         int *removedElements,
+                                         int *removedAttributes */);
 extern void BackupAll (/* void */);
 extern void BackupOnFatalErrorLoadResources (/* void */);
 

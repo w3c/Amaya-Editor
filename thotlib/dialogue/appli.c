@@ -115,14 +115,7 @@ extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HWND      currentDlg;
 extern int       ReturnOption;
-#ifndef _WIN_PRINT
 extern int  Window_Curs;
-#if 0
-HBITMAP     appLogo = (HBITMAP)0;
-int         cyLogo;
-int         bmpID;
-#endif /* 0 */
-#endif /* !_WIN_PRINT */
 
 static HWND      hwndHead;
 static STRING     txtZoneLabel;
@@ -342,10 +335,12 @@ LPARAM     lParam;
          TtDisplay = BeginPaint (WIN_curWin, &ps);
          GetClientRect (w, &rect);
          DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
-         SwitchSelection (frame, FALSE);
+	 if (ThotLocalActions[T_switchsel])
+	   (*ThotLocalActions[T_switchsel]) (frame, FALSE);
          /* RedrawFrameBottom (frame, 0); */
          DisplayFrame (frame);
-         SwitchSelection (frame, TRUE);
+	 if (ThotLocalActions[T_switchsel])
+	   (*ThotLocalActions[T_switchsel]) (frame, TRUE);
          EndPaint (w, &ps);
          /* WIN_ReleaseDeviceContext (); */
       }
@@ -381,14 +376,16 @@ void               *ev;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
-	/* ne pas traiter si le document est en mode NoComputedDisplay */
-	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
-	  {
-	     DefRegion (frame, x, y, x + l, y + h);
-	     SwitchSelection (frame, FALSE);
-	     RedrawFrameBottom (frame, 0);
-	     SwitchSelection (frame, TRUE);
-	  }
+       /* ne pas traiter si le document est en mode NoComputedDisplay */
+       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
+	 {
+	   DefRegion (frame, x, y, x + l, y + h);
+	   if (ThotLocalActions[T_switchsel])
+	     (*ThotLocalActions[T_switchsel]) (frame, FALSE);
+	   RedrawFrameBottom (frame, 0);
+	   if (ThotLocalActions[T_switchsel])
+	     (*ThotLocalActions[T_switchsel]) (frame, TRUE);
+	 }
      }
 }
 #endif /* !_WINDOWS */
@@ -1105,43 +1102,6 @@ View                view;
      }
 }
 
-
-/*----------------------------------------------------------------------
-   TtaGetViewFrame retourne le widget du frame de la vue document.    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotWidget          TtaGetViewFrame (Document document, View view)
-#else  /* __STDC__ */
-ThotWidget          TtaGetViewFrame (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   int                 frame;
-
-   if (document == 0 && view == 0)
-      return 0;
-   else
-      {
-      frame = GetWindowNumber (document, view);
-      if (frame == 0)
-	 return 0;
-      }
-   /* Si les parametres sont invalides */
-   if (frame > MAX_FRAME)
-     {
-	TtaError (ERR_invalid_parameter);
-	return 0;
-     }
-   else
-#     ifndef _WINDOWS
-      return (FrameTable[frame].WdFrame);
-#     else  /* _WINDOWS */
-      return (FrMainRef[frame]);
-#     endif /* _WINDOWS */
-}
-
 /*----------------------------------------------------------------------
    DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
    la fenetre active.                                            
@@ -1239,33 +1199,6 @@ CONST STRING        name;
 
 
 #ifdef _WINDOWS
-#if 0
-/*----------------------------------------------------------------------
-  DrawBoxOutline :                                                    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void DrawBoxOutline (HWND hwnd, POINT ptBeg, POINT ptEnd)
-#else  /* __STDC__ */
-static void DrawBoxOutline (hwnd, ptBeg, ptEnd)
-HWND  hwnd; 
-POINT ptBeg; 
-POINT ptEnd;
-#endif /* __STDC__ */
-{
-     HDC hdc ;
-
-     hdc = GetDC (hwnd) ;
-
-     SetROP2 (hdc, R2_NOT) ;
-     SelectObject (hdc, GetStockObject (NULL_BRUSH)) ;
-     /* SelectObject (hdc, GetStockObject (BLACK_PEN)) ; */
-     Rectangle (hdc, ptBeg.x, ptBeg.y, ptEnd.x, ptEnd.y) ;
-
-     DeleteDC (hwnd, hdc) ;
-}
-#endif /* 0 */
-
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   WndProc :  The main MS-Windows event handler for the Thot Library.                                                    
   ----------------------------------------------------------------------*/
@@ -1734,7 +1667,6 @@ LPARAM lParam;
                return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
-#endif /* !_WIN_PRINT */
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -1997,7 +1929,6 @@ void                ThotUngrab ()
 #endif /* _WINDOWS */
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaGetThotWindow recupere le numero de la fenetre.           
   ----------------------------------------------------------------------*/
@@ -2068,7 +1999,6 @@ int                 thotThotWindowid;
    SetCursor (LoadCursor (NULL, IDC_ARROW));
 #  endif /* _WINDOWS */
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -2183,9 +2113,7 @@ PtrAbstractBox     *pave;
 
    /* Changement du curseur */
 #  ifdef _WINDOWS
-#  ifndef _WIN_PRINT 
    cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
-#  endif /* _WIN_PRINT */
 #  else  /* !_WINDOWS */
    for (i = 1; i <= MAX_FRAME; i++)
      {
@@ -2236,7 +2164,6 @@ PtrAbstractBox     *pave;
      *pave = NULL;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Modifie le titre de la fenetre d'indice frame.                     
   ----------------------------------------------------------------------*/
@@ -2268,7 +2195,6 @@ STRING              text;
      }
 #endif /* _WINDOWS */
 }				/*ChangeFrameTitle */
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    La frame d'indice frame devient la fenetre active.               
@@ -2347,7 +2273,6 @@ ThotWindow w;
 }
 #endif /* _WINDOWS */
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
   ----------------------------------------------------------------------*/
@@ -2566,6 +2491,4 @@ int                 frame;
    }
 #  endif /* _WINDOWS */
 }				/*UpdateScrollbars */
-#endif /* _WIN_PRINT */
-
 /* End Of Module Thot */

@@ -312,9 +312,16 @@ char               *name;
 }
 
 /*----------------------------------------------------------------------
+ *      FreeDocColors frees the Thot predefined X-Window colors.
+ ----------------------------------------------------------------------*/
+void         FreeDocColors ()
+{
+}
+
+
+/*----------------------------------------------------------------------
    ColorPixel      returns the value of a color in Thot color table.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 unsigned long       ColorPixel (int num)
 #else  /* __STDC__ */

@@ -22,7 +22,12 @@
  */
 
 #include "thot_sys.h"
-int                 UserErrorCode;
+#include "constmedia.h"
+#include "typemedia.h"
+#include "message.h"
+
+#define THOT_EXPORT extern
+#include "edit_tv.h"
 
 
 /*----------------------------------------------------------------------

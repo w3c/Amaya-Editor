@@ -622,64 +622,20 @@ CSSInfoPtr          css;
   CHAR_T              tempfile[MAX_LENGTH];
   CHAR_T              tempname[MAX_LENGTH];
   CHAR_T              tempURL[MAX_LENGTH];
-  STRING              tempdocument;
   STRING              buffer = NULL;
   int                 len;
   int                 local = FALSE;
-  int                 toparse;
   ThotBool            import = (css != NULL);
 
   if (TtaGetViewFrame (doc, 1) != 0)
     {
-      /* this document is displayed -> load the CSS */
-      tempfile[0] = EOS;
-      if (import && css->url)
-	NormalizeURL (url, 0, tempURL, tempname, css->url);
-      else if (import && css->localName)
-	NormalizeURL (url, 0, tempURL, tempname, css->localName);
-      else
-        NormalizeURL (url, doc, tempURL, tempname, NULL);
-      
-      if (IsW3Path (tempURL))
+      if (!LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile))
 	{
-	  /* check against double inclusion */
-	  oldcss = SearchCSS (0, tempURL);
-	  if (oldcss != NULL)
-	    ustrcpy (tempfile, oldcss->localName);
-	  else
-	    {
-	      /* the document is not loaded yet */
-	      /* changed this to doc */
-#ifndef AMAYA_JAVA
-	      toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
-#else
-	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
-#endif /* ! AMAYA_JAVA */
-	      if (toparse || tempfile[0] == EOS || !TtaFileExist (tempfile))
-		{
-		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-		  return;
-		}
-	      else
-		{
-		  /* we have to rename the temporary file */
-		  /* allocate and initialize tempdocument */
-		  tempdocument = GetLocalPath (0, tempURL);
-		  TtaFileUnlink (tempdocument);
-		  /* now we can rename the local name of a remote document */
-		  urename (tempfile, tempdocument);
-		  ustrcpy (tempfile, tempdocument);
-		  TtaFreeMemory (tempdocument);
-		}
-	    }
-	}
-      else
-	{
-	  oldcss = SearchCSS (0, tempURL);
 	  local = TRUE;
 	  ustrcpy (tempfile, tempURL);
 	}
 
+      oldcss = SearchCSS (0, tempURL);
       if (oldcss == NULL || oldcss->category != CSS_EXTERNAL_STYLE)
 	{
 	  /* It could be a @import CSS */

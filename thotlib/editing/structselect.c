@@ -89,7 +89,6 @@ static int          InitSelectedCharInAttr;
    Parameter:
        keyboard: the keyboard to be displayed.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetCurrentKeyboard (int keyboard)
 
@@ -140,6 +139,106 @@ void                InitSelection ()
    FirstSelectedCharInAttr = 0;
    LastSelectedCharInAttr = 0;
    InitSelectedCharInAttr = 0;
+}
+
+
+/*----------------------------------------------------------------------
+   CheckSelectedElement verifie si l'element pEl constitue    
+   l'une des extremite's de la selection courante dans le document 
+   "document" et si oui definit une nouvelle selection, sans cet   
+   element.                                                        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         CheckSelectedElement (PtrElement pEl, Document document)
+#else  /* __STDC__ */
+void         CheckSelectedElement (pEl, document)
+PtrElement          pEl;
+Document            document;
+#endif /* __STDC__ */
+{
+   PtrDocument         pDoc;
+   PtrDocument         selDoc;
+   PtrElement          firstSelection, lastSelection, selEl, previousSelection;
+   int                 firstChar, lastChar;
+   ThotBool            ok, changeSelection;
+
+   pDoc = LoadedDocument[document - 1];
+   ok = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+   if (ok && selDoc == pDoc)
+      /* il y a une selection dans le document traite' */
+      if (SelContinue)
+	 /* la selection est continue */
+	{
+	   changeSelection = FALSE;
+	   if (pEl == firstSelection)
+	      /* l'element est en tete de la selection */
+	      if (pEl == lastSelection)
+		 /* la selection contient uniquement l'element, on l'annule */
+		 ResetSelection (pDoc);
+	      else
+		 /* il y a d'autres elements selectionne's, on fait demarrer */
+		 /* la nouvelle selection sur l'element suivant */
+		{
+		   firstSelection = NextInSelection (firstSelection, lastSelection);
+		   firstChar = 0;
+		   changeSelection = TRUE;
+		}
+	   else
+	      /* l'element n'est pas en tete de la selection */
+	   if (pEl == lastSelection)
+	      /* l'element est en queue de selection */
+	     {
+		/* on cherche l'element precedent dans la selection */
+		selEl = firstSelection;
+		previousSelection = NULL;
+		while (selEl != NULL && selEl != lastSelection)
+		  {
+		     previousSelection = selEl;
+		     selEl = NextInSelection (selEl, lastSelection);
+		  }
+		if (previousSelection != NULL)
+		   /* on fait terminer la nouvelle selection sur l'element */
+		   /* precedent */
+		  {
+		     lastSelection = previousSelection;
+		     lastChar = 0;
+		     changeSelection = TRUE;
+		  }
+	     }
+	   else
+	     {
+		if (ElemIsWithinSubtree (firstSelection, pEl) && ElemIsWithinSubtree (lastSelection, pEl))
+		   /* la selection est entierement a l'interieur de l'element */
+		   /* on annule la selection courante */
+		   ResetSelection (pDoc);
+	     }
+	   if (changeSelection)
+	     {
+		if (firstChar > 1)
+		   TtaSelectString (document, (Element) firstSelection, firstChar, 0);
+		else
+		   TtaSelectElement (document, (Element) firstSelection);
+		if (lastSelection != firstSelection)
+		   TtaExtendSelection (document, (Element) lastSelection, lastChar);
+	     }
+	}
+      else
+	 /* la selection est discontinue */
+	{
+	   selEl = firstSelection;
+	   /* parcourt tous les elements selectionne' */
+	   while (selEl != NULL)
+	      if (ElemIsWithinSubtree (pEl, selEl))
+		 /* l'element selEl est selectionne' et se trouve dans le */
+		 /* sous-arbre de l'element detruit */
+		{
+		   /* on le retire de la selection */
+		   RemoveFromSelection (selEl, pDoc);
+		   selEl = NULL;
+		}
+	      else
+		 selEl = NextInSelection (selEl, lastSelection);
+	}
 }
 
 
@@ -261,7 +360,6 @@ PtrElement          pEl;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetCurrentSelection
 
@@ -349,7 +447,6 @@ int                *lastChar;
       ret = FALSE;
    return ret;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    GetActiveView
@@ -394,7 +491,6 @@ ThotBool           *assoc;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CancelSelection
 
@@ -415,7 +511,7 @@ void                CancelSelection ()
    FixedChar = 0;
    NSelectedElements = 0;
    /* update all menus related to the current selection */
-   if (pDoc != NULL && SelectionUpdatesMenus)
+   if (SelectionUpdatesMenus && pDoc != NULL)
      {
 	PrepareSelectionMenu ();
 	if (ThotLocalActions[T_chselect] != NULL)
@@ -435,7 +531,6 @@ void                CancelSelection ()
    LastSelectedCharInAttr = 0;
    InitSelectedCharInAttr = 0;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ResetSelection
@@ -462,7 +557,6 @@ PtrDocument         pDoc;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    NextInSelection
 
@@ -552,7 +646,6 @@ PtrElement          pLastEl;
 	}
    return pEl;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ReverseSelection
@@ -560,34 +653,33 @@ PtrElement          pLastEl;
    Reverse (highlight or not) the current selection in all views of the
    selected document, except in the active view.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ReverseSelection ()
-
 #else  /* __STDC__ */
 void                ReverseSelection ()
 #endif				/* __STDC__ */
 
 {
-   int                 view;
+  int                 view;
 
-   if (SelectedDocument != NULL && FirstSelectedElement != NULL)
-      /* there is a current selection */
-      /* if the current selection is in an associated element, there is nothing
-	 to do: associated elements have only one view, which is obviously the
-	 active view */
-      if (!AssocView (FirstSelectedElement))
-	{
-	   /* process all views */
-	   for (view = 0; view < MAX_VIEW_DOC; view++)
-	      if (SelectedDocument->DocView[view].DvPSchemaView > 0)
-		 /* this view is open */
-		 if (SelectedDocument->DocView[view].DvSSchema !=
-		     SelectedDocument->DocView[SelectedView - 1].DvSSchema ||
-		     SelectedDocument->DocView[view].DvPSchemaView !=
-		     SelectedDocument->DocView[SelectedView - 1].DvPSchemaView)
-		    /* it's not the active view */
-		    SwitchSelection (SelectedDocument->DocViewFrame[view], FALSE);
+  if (SelectedDocument != NULL && FirstSelectedElement != NULL)
+    /* there is a current selection */
+    /* if the current selection is in an associated element, there is nothing
+       to do: associated elements have only one view, which is obviously the
+       active view */
+    if (!AssocView (FirstSelectedElement))
+      {
+	/* process all views */
+	for (view = 0; view < MAX_VIEW_DOC; view++)
+	  if (SelectedDocument->DocView[view].DvPSchemaView > 0)
+	    /* this view is open */
+	    if (SelectedDocument->DocView[view].DvSSchema !=
+		SelectedDocument->DocView[SelectedView - 1].DvSSchema ||
+		SelectedDocument->DocView[view].DvPSchemaView !=
+		SelectedDocument->DocView[SelectedView - 1].DvPSchemaView)
+	      /* it's not the active view */
+	      if (ThotLocalActions[T_switchsel])
+		(*ThotLocalActions[T_switchsel]) (SelectedDocument->DocViewFrame[view], FALSE);
 	}
 }
 
@@ -598,14 +690,11 @@ void                ReverseSelection ()
    Returns TRUE if, according to its type, element pEl must be hidden to
    the user.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 ThotBool            HiddenType (PtrElement pEl)
-
 #else  /* __STDC__ */
 ThotBool            HiddenType (pEl)
 PtrElement          pEl;
-
 #endif /* __STDC__ */
 
 {
@@ -635,7 +724,6 @@ PtrElement          pEl;
    return ret;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    HighlightSelection
 
@@ -808,9 +896,9 @@ ThotBool            clearOldSel;
 			       ShowSelectedBox (frame, active);
 
 			    first = FALSE;
-			    if (last)
-			       /* highlight selection */
-			       SwitchSelection (frame, TRUE);
+			    if (last && ThotLocalActions[T_switchsel])
+			      /* highlight selection */
+			      (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 			 }
 		       pAb->AbSelected = TRUE;
 		       pAb = pNextAb;
@@ -819,7 +907,6 @@ ThotBool            clearOldSel;
 	  }
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    SetActiveView
@@ -1019,7 +1106,6 @@ int                 view;
    return pAbView;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ShowSelection
 
@@ -1158,9 +1244,9 @@ ThotBool            visible;
 
 		  selBegin = FALSE;
 		  visible = FALSE;
-		  if (selEnd)
-		     /* highlight selection */
-		     SwitchSelection (frame, TRUE);
+		  if (selEnd && ThotLocalActions[T_switchsel])
+		    /* highlight selection */
+		    (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	       }
 	     pAb->AbSelected = TRUE;
 	     /* next abstract box to be highlighted */
@@ -1181,11 +1267,11 @@ ThotBool            visible;
 	     InsertViewSelMarks (frame, pAb, FirstSelectedCharInAttr,
 				 LastSelectedCharInAttr, TRUE, TRUE, TRUE);
 	     ShowSelectedBox (frame, TRUE);
-	     SwitchSelection (frame, TRUE);
+	     if (ThotLocalActions[T_switchsel])
+	       (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	  }
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    DisplaySel
@@ -1316,9 +1402,9 @@ ThotBool           *abExist;
 		   if (assoc || active || SelectedDocument->DocView[view - 1].DvSync)
 		     ShowSelectedBox (frame, active);
 		 first = FALSE;
-		 if (last)
+		 if (last && ThotLocalActions[T_switchsel])
 		   /* highlight selection */
-		   SwitchSelection (frame, TRUE);
+		   (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	       }
 	  }
 	/* this abstract box is selected */
@@ -1694,7 +1780,8 @@ ThotBool            string;
 		       InsertViewSelMarks (frame, pAbView, firstChar,
 					   lastChar, TRUE, TRUE, TRUE);
 		       ShowSelectedBox (frame, TRUE);
-		       SwitchSelection (frame, TRUE);
+		       if (ThotLocalActions[T_switchsel])
+			 (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 		    }
 	       }
 	  }
@@ -1885,7 +1972,6 @@ int                 lastChar;
    SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SelectElement
 
@@ -2064,7 +2150,6 @@ ThotBool            check;
 	  }
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ExtendSelection
@@ -2349,7 +2434,6 @@ ThotBool            highlight;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    AddInSelection
 
@@ -2420,7 +2504,6 @@ ThotBool            last;
 	  }
      }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    RemoveFromSelection

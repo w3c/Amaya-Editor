@@ -32,10 +32,13 @@
 #include "thotdir.h"
 #include "constxml.h"
 #include "typexml.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
+#include "appevents_tv.h"
+
 #include "absboxes_f.h"
 #include "appli_f.h"
 #include "appdialogue_f.h"
@@ -81,7 +84,6 @@
 #include "writepivot_f.h"
 #include "xmlmodule_f.h"
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    RedisplayExternalRefs cherche, pour tous les elements du document	
    pDoc qui sont designes par des references, toutes les   
@@ -146,6 +148,124 @@ PtrDocument         pDoc;
 	pDescElRef = pDescElRef->ReNext;
      }
 }
+
+
+/*----------------------------------------------------------------------
+   TtaNewDocument
+
+   Creates the internal representation of a new document according to a given
+   structure schema. No file is created immediately, but the backup files
+   (.BAK and .SAV) and the document file (.PIV see TtaNewDocument) will be created
+   in the first directory of the document path (see TtaSetDocumentPath).
+
+   Parameters:
+   structureSchema: name of the structure schema that defines the type of
+   document to be created.
+   documentName: name of the document to be created (maximum length 19
+   characters). The directory name is not part of this parameter
+   (see TtaSetDocumentPath).
+
+   Return value:
+   the document that has been created or 0 if the document has not
+   been created.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+Document            TtaNewDocument (STRING structureSchema, STRING documentName)
+#else  /* __STDC__ */
+Document            TtaNewDocument (structureSchema, documentName)
+STRING              structureSchema;
+STRING              documentName;
+#endif /* __STDC__ */
+{
+  PtrDocument         pDoc;
+  Document            document;
+  int                 i;
+  
+  UserErrorCode = 0;
+  document = 0;
+  pDoc = NULL;
+  if (documentName[0] == EOS)
+    /* No name provided by the user */
+    TtaError (ERR_document_name);
+  else
+    {
+      /* initializes a document context */
+      CreateDocument (&pDoc);
+      if (pDoc == NULL)
+	/* No free context document */
+	TtaError (ERR_too_many_documents);
+      else
+	{
+	  Name sschemaName;
+	  
+	  ustrncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
+	  /* charge le schema de structure */
+	  GetSchStruct (&pDoc->DocSSchema);
+	  pDoc->DocSSchema->SsExtension = FALSE;
+	  if (!ReadStructureSchema (sschemaName, pDoc->DocSSchema) ||
+	      pDoc->DocSSchema->SsExtension)
+	    /* failure while reading the structure schema or while loading
+	       a schema extension */
+	    {
+	      FreeSchStruc (pDoc->DocSSchema);
+	      pDoc->DocSSchema = NULL;
+	      UnloadDocument (&pDoc);
+	      TtaError (ERR_cannot_read_struct_schema);
+	    }
+	  else
+	    {
+	      /* The structure schema is loaded */
+	      /* The structure schema is translated into the user language */
+	      ConfigTranslateSSchema (pDoc->DocSSchema);
+#ifndef NODISPLAY
+	      InitApplicationSchema (pDoc->DocSSchema);
+#endif
+	      /* One create the internal representation of an empty document */
+	      pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
+						 pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
+	      /* suppress excluded elements */
+	      RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
+	      if (pDoc->DocRootElement == NULL)
+		{
+		  UnloadDocument (&pDoc);
+		  TtaError (ERR_empty_document);
+		}
+	      else
+		{
+		  pDoc->DocRootElement->ElAccess = AccessReadWrite;
+#ifndef NODISPLAY
+		  /* Create required attributes by the whole created tree */
+		  AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
+#endif
+		  /* dealing with exceptions */
+		  CreateWithException (pDoc->DocRootElement, pDoc);
+		  /* An attribut Language is stored in the root */
+		  CheckLanguageAttr (pDoc, pDoc->DocRootElement);
+		  /* The document is named */
+		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+		  /* one get an identifier to the document */
+		  GetDocIdent (&pDoc->DocIdent, documentName);
+		  /* keep the actual schema path in the document context */
+		  ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		  /* initializes the directory of the document */
+		  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
+		  /* if path, keep only the first directory */
+		  i = 1;
+		  while (pDoc->DocDirectory[i - 1] != EOS &&
+			 pDoc->DocDirectory[i - 1] != PATH_SEP && i < MAX_PATH)
+		    i++;
+		  pDoc->DocDirectory[i - 1] = EOS;
+		  /* Read-Write document */
+		  pDoc->DocReadOnly = FALSE;
+		  document = IdentDocument (pDoc);
+		}
+	    }
+	}
+    }
+  return document;
+}
+
 
 /*----------------------------------------------------------------------
    LoadDocument charge le document que contient le fichier nomme'  
@@ -468,69 +588,6 @@ PathBuffer          directory;
 
 
 /*----------------------------------------------------------------------
-   UnloadTree frees the document tree of pDoc				
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UnloadTree (Document document)
-#else  /* __STDC__ */
-void                UnloadTree (document)
-Document            document;
-#endif /* __STDC__ */
-{
-  PtrDocument      pDoc;
-
-  pDoc = LoadedDocument[document - 1];
-   if (pDoc != NULL)
-     {
-       /* enleve la selection de ce document */
-       ResetSelection (pDoc);
-       /* libere le contenu du buffer s'il s'agit d'une partie de ce docum. */
-       if (DocOfSavedElements == pDoc)
-	 FreeSavedElements ();
-       /* libere tous les arbres abstraits */
-       DeleteAllTrees (pDoc);
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   UnloadDocument libere le document pDoc				
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UnloadDocument (PtrDocument * pDoc)
-#else  /* __STDC__ */
-void                UnloadDocument (pDoc)
-PtrDocument        *pDoc;
-#endif /* __STDC__ */
-{
-#   ifndef _WIN_PRINT
-	int                 d;
-
-   if (*pDoc != NULL)
-      /* cherche dans la table le descripteur de document a liberer */
-     {
-	d = 0;
-	while (LoadedDocument[d] != *pDoc && d < MAX_DOCUMENTS - 1)
-	   d++;
-	if (LoadedDocument[d] == *pDoc)
-	  {
-	    /* libere les schemas */
-	    FreeDocumentSchemas (*pDoc);
-	    FreeDocument (LoadedDocument[d]);
-	    LoadedDocument[d] = NULL;
-	    /* annuler le pointeur sur le doc a imprimer */
-	    if(PrintingDoc == d+1)
-               PrintingDoc = 0;
-	    *pDoc = NULL;
-	    /* libere les contextes inutilises */
-	    FreeAll ();
-	  }
-     }
-#    endif /* _WIN_PRINT */
-}
-
-
-/*----------------------------------------------------------------------
    PaginateDocument	pagine toutes les vues du document pDoc		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -566,41 +623,7 @@ PtrDocument         pDoc;
 	  PaginateView (pDoc, docView , viewList[i].VdAssoc);
 	}
 }
-#endif /* _WIN_PRINT */
 
-/*----------------------------------------------------------------------
-   SetDocumentModified set the document flag DocModified to the status.
-   The parameter length gives the number of characters added.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void           SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
-#else  /* __STDC__ */
-void           SetDocumentModified (pDoc, status, length)
-PtrDocument    pDoc;
-ThotBool       satus;
-int            length;
-#endif /* __STDC__ */
-{
-  if (pDoc != NULL)
-    {
-      if (status)
-	{
-	  if (!pDoc->DocModified && ThotLocalActions[T_docmodified])
-	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), TRUE);
-	  pDoc->DocModified = TRUE;
-	  pDoc->DocNTypedChars += length;
-	}
-      else
-	{
-	  if (pDoc->DocModified && ThotLocalActions[T_docmodified])
-	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), FALSE);
-	  pDoc->DocModified = FALSE;
-	  pDoc->DocNTypedChars = 0;
-	}
-    }
-}
-
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  
    le document pDoc.                                       
@@ -781,367 +804,165 @@ PtrDocument         pDoc;
       HighlightSelection (FALSE, TRUE);
 }
 
-#if 0 /* A supprimer -> writedoc.c */
-/********** TODO revoir tout ce qui suit ***********/
 
 /*----------------------------------------------------------------------
-   simpleSave sauve un document sous forme pivot dans un fichier   
-   dont le nom est donne par name, et ne fait rien d'autre.
-   Rend false si l'ecriture n'a pu se faire.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     simpleSave (PtrDocument pDoc, STRING name, ThotBool withEvent)
-#else  /* __STDC__ */
-static ThotBool     simpleSave (pDoc, name, withEvent)
-PtrDocument         pDoc;
-STRING              name;
-ThotBool            withEvent;
-#endif /* __STDC__ */
-{
-   BinFile             pivotFile;
-   NotifyDialog        notifyDoc;
-   ThotBool            ok;
+static void         RemoveExtensionFromTree (PtrElement * pEl, Document document, PtrSSchema pSSExt, int *removedElements, int *removedAttributes)
 
-   if (!pDoc->DocReadOnly)
+#else  /* __STDC__ */
+static void         RemoveExtensionFromTree (pEl, document, pSSExt, removedElements, removedAttributes)
+PtrElement         *pEl;
+Document            document;
+PtrSSchema          pSSExt;
+int                *removedElements;
+int                *removedAttributes;
+#endif /* __STDC__ */
+
+{
+   PtrDocument         pDoc;
+   PtrElement          child, nextChild;
+   PtrAttribute        attribute, nextAttribute;
+
+   if (*pEl != NULL)
      {
-	pivotFile = TtaWriteOpen (name);
-	if (pivotFile == 0)
-	   return FALSE;
+	pDoc = LoadedDocument[document - 1];
+	if ((*pEl)->ElStructSchema == pSSExt)
+	   /* this element belongs to the extension schema to be removed */
+	  {
+	     RegisterExternalRef (*pEl, pDoc, FALSE);
+	     RegisterDeletedReferredElem (*pEl, pDoc);
+#ifndef NODISPLAY
+	     UndisplayElement (*pEl, document);
+#endif
+	     DeleteElement (pEl, pDoc);
+	     *pEl = NULL;
+	     (*removedElements)++;
+	  }
 	else
 	  {
-	     if (withEvent)
+	     /* looks for all attributes associated with that element */
+	     attribute = (*pEl)->ElFirstAttr;
+	     while (attribute != NULL)
 	       {
-		  /* envoie l'evenement DocSave.Pre a l'application */
-		  notifyDoc.event = TteDocSave;
-		  notifyDoc.document = (Document) IdentDocument (pDoc);
-		  notifyDoc.view = 0;
-		  ok = !CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
+		  nextAttribute = attribute->AeNext;
+		  if (attribute->AeAttrSSchema == pSSExt)
+		    {
+		       TtaRemoveAttribute ((Element) (*pEl), (Attribute) attribute, document);
+#ifndef NODISPLAY
+		       UndisplayInheritedAttributes (*pEl, attribute, document, TRUE);
+#endif
+#ifndef NODISPLAY
+		       UndisplayAttribute (*pEl, attribute, document);
+#endif
+		       (*removedAttributes)++;
+		    }
+		  attribute = nextAttribute;
 	       }
+
+	     if ((*pEl)->ElTerminal)
+		child = NULL;
 	     else
-		ok = TRUE;
-	     if (ok)
-		/* l'application laisse Thot effectuer la sauvegarde */
+		child = (*pEl)->ElFirstChild;
+	     while (child != NULL)
 	       {
-		  /* ecrit le document dans ce fichier sous la forme pivot */
-		  SauveDoc (pivotFile, pDoc);
-		  TtaWriteClose (pivotFile);
-		  if (withEvent)
-		    {
-		       /* envoie l'evenement DocSave.Post a l'application */
-		       notifyDoc.event = TteDocSave;
-		       notifyDoc.document = (Document) IdentDocument (pDoc);
-		       notifyDoc.view = 0;
-		       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		    }
+		  nextChild = child->ElNext;
+		  RemoveExtensionFromTree (&child, document, pSSExt, removedElements,
+					   removedAttributes);
+		  child = nextChild;
 	       }
-	     return TRUE;
 	  }
-     }
-   return FALSE;
-}
-
-
-/*----------------------------------------------------------------------
-   saveWithExtension sauve un document sous forme pivot en         
-   concatenant l'extension au nom stocke' dans le document.
-   Envoie un message et rend false si l'ecriture n'a pu se 
-   faire.                                                  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     saveWithExtension (PtrDocument pDoc, STRING extension)
-#else  /* __STDC__ */
-static ThotBool     saveWithExtension (pDoc, extension)
-PtrDocument         pDoc;
-STRING              extension;
-
-#endif /* __STDC__ */
-{
-   CHAR_T                buf[MAX_TXT_LEN];
-   int                 i;
-
-   if (pDoc == NULL)
-      return FALSE;
-   FindCompleteName (pDoc->DocDName, extension, pDoc->DocDirectory, buf, &i);
-   if (simpleSave (pDoc, buf, FALSE))
-     {
-	UpdateAllInclusions (pDoc);
-	return TRUE;
-     }
-   else
-     {
-	TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP), buf);
-	return FALSE;
      }
 }
 
 /*----------------------------------------------------------------------
-   StoreDocument       sauve le document pDoc dans un fichier
+   TtaRemoveSchemaExtension
+
+   Removes a structure schema extension from a given document. Removes also from
+   the document all attributes and elements defined in that structure schema
+   extension.
+
+   Parameters:
+   document: the document.
+   extension: the structure schema extension to be removed.
+
+   Return parameters:
+   removedElements: number of elements actually removed.
+   removedAttributes: number of attributes actually removed.
+
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
-ThotBool            StoreDocument (PtrDocument pDoc, Name docName, PathBuffer dirName, ThotBool copy, ThotBool move)
+void                TtaRemoveSchemaExtension (Document document, SSchema extension, int *removedElements, int *removedAttributes)
+
 #else  /* __STDC__ */
-ThotBool            StoreDocument (pDoc, docName, dirName, copy, move)
-PtrDocument         pDoc;
-Name                docName;
-PathBuffer          dirName;
-ThotBool            copy;
-ThotBool            move;
+void                TtaRemoveSchemaExtension (document, extension, removedElements, removedAttributes)
+Document            document;
+SSchema             extension;
+int                *removedElements;
+int                *removedAttributes;
 
 #endif /* __STDC__ */
+
 {
-   PathBuffer          bakName, pivName, tempName, backName, oldDir;
-   NotifyDialog        notifyDoc;
-   CHAR_T                buf[MAX_TXT_LEN];
-   int                 i;
-   ThotBool            sameFile, status, ok;
+   PtrSSchema          curExtension, previousSSchema;
+   PtrElement          root;
+   PtrDocument         pDoc;
+   ThotBool            found;
+   int                 assoc;
 
-   CloseInsertion ();
-   notifyDoc.event = TteDocSave;
-   notifyDoc.document = (Document) IdentDocument (pDoc);
-   notifyDoc.view = 0;
-   if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-      /* l'application a pris la sauvegarde en charge */
-      status = TRUE;
+   UserErrorCode = 0;
+   /* verifies the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+	TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+	TtaError (ERR_invalid_document_parameter);
    else
+      /* parameter document is correct */
      {
-	status = TRUE;
-	sameFile = TRUE;
-	if (ustrcmp (docName, pDoc->DocDName) != 0)
-	   sameFile = FALSE;
-	if (ustrcmp (dirName, pDoc->DocDirectory) != 0)
-	   sameFile = FALSE;
-
-	/* construit le nom complet de l'ancien fichier de sauvegarde */
-	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, bakName, &i);
-	ustrncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
-	/*     SECURITE:                                         */
-	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
-	/*     directement X.PIV ...                             */
-	/*     On fait ensuite des renommages                    */
-	FindCompleteName (docName, "PIV", dirName, buf, &i);
-	/* on teste d'abord le droit d'ecriture sur le .PIV */
-	ok = FileWriteAccess (buf) == 0;
-	if (ok)
+	pDoc = LoadedDocument[document - 1];
+	/* Looks for the extension to suppress */
+	previousSSchema = pDoc->DocSSchema;
+	curExtension = previousSSchema->SsNextExtens;
+	found = FALSE;
+	while (!found && curExtension != NULL)
+	   if (((PtrSSchema) extension)->SsCode == curExtension->SsCode)
+	      found = TRUE;
+	   else
+	     {
+		previousSSchema = curExtension;
+		curExtension = curExtension->SsNextExtens;
+	     }
+	if (!found)
 	  {
-	     FindCompleteName (docName, "Tmp", dirName, tempName, &i);
-	     /* on teste le droit d'ecriture sur le .Tmp */
-	     ok = FileWriteAccess (tempName) == 0;
-	     if (ok)
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_WRITING);
-		  ok = simpleSave (pDoc, tempName, FALSE);
-	       }
-	     if (ok)
-		UpdateAllInclusions (pDoc);
-	  }
-	if (!ok)
-	  {
-	     /* on indique un nom connu de l'utilisateur... */
-	     FindCompleteName (docName, "PIV", dirName, buf, &i);
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP),
-				buf);
-	     status = FALSE;
+	     TtaError (ERR_invalid_document_parameter);
 	  }
 	else
 	  {
-	     /* 1- faire mv .PIV sur .OLD sauf si c'est une copie */
-	     /* Le nom et le directory du document peuvent avoir change'. */
-	     /* le fichier .OLD reste dans l'ancien directory, avec */
-	     /* l'ancien nom */
-	     FindCompleteName (pDoc->DocDName, "PIV", oldDir, pivName, &i);
-	     if (!copy)
+	     root = pDoc->DocRootElement;
+	     if (root != NULL)
+		RemoveExtensionFromTree (&root, document, (PtrSSchema) extension,
+					 removedElements, removedAttributes);
+	     for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 	       {
-		  FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
-		  i = rename (pivName, backName);
+		  root = pDoc->DocAssocRoot[assoc];
+		  RemoveExtensionFromTree (&root, document, (PtrSSchema) extension,
+					removedElements, removedAttributes);
+		  if (root == NULL)
+		     pDoc->DocAssocRoot[assoc] = NULL;
 	       }
-	     /* 2- faire mv du .Tmp sur le .PIV */
-	     FindCompleteName (docName, "PIV", dirName, pivName, &i);
-	     i = rename (tempName, pivName);
-	     if (i >= 0)
-		/* >> tout s'est bien passe' << */
-		/* detruit l'ancienne sauvegarde */
-	       {
-		  TtaFileUnlink (bakName);
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN),
-				     pivName);
-		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
-		  /* directory d'origine. */
-		  SetDocumentModified (pDoc, FALSE, 0);
-
-		  /* modifie les fichiers .EXT des documents nouvellement */
-		  /* reference's ou qui ne sont plus reference's par */
-		  /* notre document */
-		  UpdateExt (pDoc);
-		  /* modifie les fichiers .REF des documents qui */
-		  /* referencent des elements qui ne sont plus dans notre */
-		  /* document et met a jour le fichier .EXT de notre */
-		  /* document */
-		  UpdateRef (pDoc);
-		  /* detruit le fichier .REF du document sauve' */
-		  FindCompleteName (pDoc->DocDName, "REF", oldDir, buf, &i);
-		  TtaFileUnlink (buf);
-		  if (!sameFile)
-		    {
-		       if (ustrcmp (dirName, oldDir) != 0 &&
-			   ustrcmp (docName, pDoc->DocDName) == 0)
-			  /* changement de directory sans changement de nom */
-			  if (move)
-			    {
-			       /* deplacer le fichier .EXT dans le nouveau directory */
-			       FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf, &i);
-			       FindCompleteName (pDoc->DocDName, "EXT", dirName, pivName, &i);
-			       rename (buf, pivName);
-			       /* detruire l'ancien fichier PIV */
-			       FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
-			       TtaFileUnlink (buf);
-			    }
-
-		       if (ustrcmp (docName, pDoc->DocDName) != 0)
-			 {
-			    /* il y a effectivement changement de nom */
-			    if (copy)
-			       /* l'utilisateur veut creer une copie du document. */
-			       /* on fait apparaitre le document copie dans les */
-			       /* fichiers .EXT des documents reference's */
-			       ChangeNomExt (pDoc, docName, TRUE);
-			    if (move)
-			      {
-				 /* il s'agit d'un changement de nom du document */
-				 /* change le nom du document dans les fichiers */
-				 /* .EXT de tous les documents reference's */
-				 ChangeNomExt (pDoc, docName, FALSE);
-				 /* indique le changement de nom a tous les */
-				 /* documents qui referencent ce document */
-				 ChangeNomRef (pDoc, docName);
-				 /* renomme le fichier .EXT du document qui change */
-				 /* de nom */
-				 FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf,
-						   &i);
-				 FindCompleteName (docName, "EXT", dirName,
-						   pivName, &i);
-				 rename (buf, pivName);
-				 /* detruit l'ancien fichier .PIV */
-				 FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf,
-						   &i);
-				 TtaFileUnlink (buf);
-			      }
-			 }
-		       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		       ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
-		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-		       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
-		       ChangeDocumentName (pDoc, docName);
-		    }
-	       }
-	     notifyDoc.event = TteDocSave;
-	     notifyDoc.document = (Document) IdentDocument (pDoc);
-	     notifyDoc.view = 0;
-	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	     previousSSchema->SsNextExtens = curExtension->SsNextExtens;
+	     if (curExtension->SsNextExtens != NULL)
+		curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
+#ifndef NODISPLAY
+	     FreePresentationSchema (curExtension->SsPSchema, curExtension);
+#endif
+	     FreeSchStruc (curExtension);
 	  }
      }
-   return status;
-}
-
-/*----------------------------------------------------------------------
-   interactiveSave sauve un document sous forme pivot en proposant 
-   un menu a` l'utilisateur (si 'ask'). Rend false si      
-   l'ecriture n'a pu se faire.                             
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     interactiveSave (PtrDocument pDoc, ThotBool ask)
-
-#else  /* __STDC__ */
-static ThotBool     interactiveSave (pDoc, ask)
-PtrDocument         pDoc;
-ThotBool            ask;
-
-#endif /* __STDC__ */
-
-{
-   Name                docName;
-   CHAR_T                directory[MAX_PATH];
-   ThotBool            ok;
-   ThotBool            status;
-
-   status = FALSE;
-   if (pDoc->DocReadOnly)
-      /* on ne sauve pas les documents qui sont en lecture seule */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else if (pDoc->DocSSchema == NULL)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_DOC_NOT_WRITTEN);
-   else
-     {
-	ustrncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
-	/* on prend le directory ou le document a ete lu */
-	ustrncpy (directory, pDoc->DocDirectory, MAX_PATH);
-	/* recherche le nom du fichier en proposant le nom courant */
-	ok = !ask;
-	if (ok && !pDoc->DocReadOnly)
-	   status = StoreDocument (pDoc, docName, directory, FALSE, FALSE);
-     }
-   if (status && ask)
-     SetDocumentModified (pDoc, FALSE, 0);
-   return status;
 }
 
 
-/*----------------------------------------------------------------------
-   WriteDocument sauve sous forme pivot le document pointe' par    
-   pDoc. Retourne Vrai si le document a pu etre sauve,     
-   Faux si echec.                                          
-   - mode = 0 : demander le nom de fichier a` l'utilisateur
-   - mode = 1 : fichier de sauvegarde automatique (.BAK)   
-   - mode = 2 : fichier scratch (pas de message)           
-   - mode = 3 : fichier de sauvegarde urgente (.SAV)       
-   - mode = 4 : sauve sans demander de nom.                
-   - mode = 5 : sauve sans demander de nom et sans message.                
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            WriteDocument (PtrDocument pDoc, int mode)
-
-#else  /* __STDC__ */
-ThotBool            WriteDocument (pDoc, mode)
-PtrDocument         pDoc;
-int                 mode;
-
-#endif /* __STDC__ */
-
-{
-  ThotBool            ok;
-
-  ok = FALSE;
-  if (pDoc != NULL)
-    if (mode >= 0 && mode <= 5)
-      switch (mode)
-	{
-	case 0:
-	  ok = interactiveSave (pDoc, TRUE);
-	  break;
-	case 1:
-	  ok = saveWithExtension (pDoc, "BAK");
-	  if (ok)
-	    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
-	  break;
-	case 2:
-	  ok = saveWithExtension (pDoc, "BAK");
-	  break;
-	case 3:
-	  ok = saveWithExtension (pDoc, "SAV");
-	  break;
-	case 4:
-	  ok = interactiveSave (pDoc, FALSE);
-	  break;
-	case 5:
-	  ok = saveWithExtension (pDoc, "PIV");
-	  break;
-	}
-  return ok;
-}
-
-
-#endif /* A supprimer */
 /*----------------------------------------------------------------------
   BackupAll sauvegarde les fichiers modifies en cas de CRASH majeur
   ----------------------------------------------------------------------*/
@@ -1169,4 +990,3 @@ void BackupOnFatalErrorLoadResources()
   if (ThotLocalActions[T_backuponfatal] == NULL)
     TteConnectAction (T_backuponfatal, (Proc) BackupAll);
 }
-#endif /* _WIN_PRINT */

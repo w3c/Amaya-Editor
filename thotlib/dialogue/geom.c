@@ -835,7 +835,6 @@ int                 maxPoints;
     return (nbpoints);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   PolyLineModification interract with the user to move a point part
   a polyline in a given frame.
@@ -1178,7 +1177,6 @@ ThotBool            close;
     }
 # endif /* _WINDOWS */
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   PolyLineExtension interract with the user to add points to
@@ -1468,7 +1466,6 @@ ThotBool            close;
   return (nbpoints);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   UserGeometryCreate draw a box at a specific (x,y) location in
   frame and of size width x height when interracting with
@@ -2847,4 +2844,3 @@ int                 percentH;
   XFlush (TtDisplay);
 #endif /* _WINDOWS */
 }
-#endif /* _WIN_PRINT */

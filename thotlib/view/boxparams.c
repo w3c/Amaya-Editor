@@ -31,6 +31,7 @@
 #include "boxes_tv.h"
 #include "edit_tv.h"
 #include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #include "applicationapi_f.h"
 #include "buildboxes_f.h"
@@ -187,7 +188,8 @@ int                 Zoom;
 		 InsertViewSelMarks (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
 	       /* On visualise la selection que l'on vient de poser */
 	     }
-	   SwitchSelection (frame, TRUE);
+	   if (ThotLocalActions[T_switchsel])
+	     (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 	 }
        ReadyToDisplay = TRUE;
      }

@@ -19,14 +19,10 @@ extern void GetDocAndView ( int frame,
                             ThotBool * assoc );
 extern int BuildDocumentViewList ( PtrDocument pDoc,
                                    AvailableView viewList );
-extern void FreeView ( PtrDocument pDoc,
-                       DocViewNumber view );
-extern void CloseDocumentView ( PtrDocument pDoc,
-                                int view,
-                                ThotBool assoc,
-                                ThotBool closeDoc );
 extern void ChangeDocumentName ( PtrDocument pDoc,
                                  STRING newName );
+extern void TtaSetDocumentName ( Document document,
+                                 STRING documentName );
 extern void ViewClosed ( int nFrame );
 extern void OpenDefaultViews ( PtrDocument pDoc );
 extern int CreateAbstractImage ( PtrDocument pDoc,
@@ -75,14 +71,10 @@ extern void GetDocAndView (/* int frame,
                               ThotBool * assoc */);
 extern int BuildDocumentViewList (/* PtrDocument pDoc,
                                      AvailableView viewList */);
-extern void FreeView (/* PtrDocument pDoc,
-                         DocViewNumber view */);
-extern void CloseDocumentView (/* PtrDocument pDoc,
-                                  int view,
-                                  ThotBool assoc,
-                                  ThotBool closeDoc */);
 extern void ChangeDocumentName (/* PtrDocument pDoc,
                                    STRING newName */);
+extern void TtaSetDocumentName (/* Document document,
+                                   STRING documentName */);
 extern void ViewClosed (/* int nFrame */);
 extern void OpenDefaultViews (/* PtrDocument pDoc */);
 extern int CreateAbstractImage (/* PtrDocument pDoc,

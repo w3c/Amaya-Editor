@@ -1325,9 +1325,8 @@ MSG                *msg;
 
 
 /*----------------------------------------------------------------------
-   * TtaHandlePendingEvents
- *
-   * Processes all pending events in an application.
+  TtaHandlePendingEvents
+  Processes all pending events in an application.
   ----------------------------------------------------------------------*/
 void                TtaHandlePendingEvents ()
 {

@@ -44,8 +44,8 @@ extern int TtaAddButton ( Document document,
                           View view,
                           ThotIcon picture,
                           void (*procedure) (),
+                          STRING functionName,
                           STRING info,
-			  STRING FunctionName,
                           BYTE type,
                           ThotBool state );
 extern void * TtaGetButtonCallback ( Document document,
@@ -151,7 +151,7 @@ extern void TteAddMenuItem (/* WindowType windowtype,
 extern void TteOpenMainWindow (/* STRING name,
                                   Pixmap logo,
                                   Pixmap icon */);
-extern void APP_ButtonCallback (/* ThotWidget w,
+extern void APP_ButtonCallback (/* ThotButton w,
                                    int frame,
                                    caddr_t call_d */);
 extern void InitClue (/* ThotWidget toplevel */);
@@ -159,6 +159,7 @@ extern int TtaAddButton (/* Document document,
                             View view,
                             ThotIcon picture,
                             void (*procedure) (),
+                            STRING functionName,
                             STRING info,
                             BYTE type,
                             ThotBool state */);

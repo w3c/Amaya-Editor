@@ -63,9 +63,7 @@
 #include "print_tv.h"
 
 #ifdef _WINDOWS
-#ifdef _WIN_PRINT
 #include "thotprinter_f.h"
-#endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
 static CHAR_T         Orientation[MAX_NAME_LENGTH];
@@ -687,13 +685,8 @@ STRING              viewNames;
      }
    else
      {
-#      ifdef _WINDOWS
-       ustrcpy (tmpDirName, TEXT("C:\\TEMP"));
-       lg = 7;
-#      else /* !_WINDOWS */
-       ustrcpy (tmpDirName,"/tmp");
-       lg = 4;
-#      endif /* _WINDOWS */
+       ustrcpy (tmpDirName, TtaGetEnvString (TEXT("TMPDIR")));
+       lg = ustrlen (tmpDirName);
      }
 
    usprintf (tmpDocName, TEXT("Thot%ld"), (long) pid + numOfJobs);
@@ -702,14 +695,7 @@ STRING              viewNames;
 #ifdef DEBUG
    fprintf (stderr,"printmenu : temp dir %s \n",tmpDirName);
 #endif
-#  ifdef _WINDOWS
-   umkdir (tmpDirName);
-#  else /* !_WINDOWS */
-   usprintf (cmd, "/bin/mkdir %s\n", tmpDirName);
-   system (cmd);
-   usprintf (cmd, "chmod +rwx '%s'\n", tmpDirName);
-   system (cmd);
-#  endif /* _WINDOWS */
+   TtaMakeDirectory (tmpDirName);
    numOfJobs++;
 
    ustrncpy (dirName, pDoc->DocDirectory, MAX_PATH);

@@ -85,7 +85,6 @@ PtrAbstractBox      pAb;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SwitchSelection bascule la mise en e'vidence de la se'lection dans 
    la fene^tre frame :                                     
@@ -142,7 +141,6 @@ ThotBool            toShow;
    frame = GetWindowNumber (document, view);
    SwitchSelection (frame, toShow);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ClearViewSelMarks annule la selection courante dans la fenetre.   
@@ -168,7 +166,6 @@ int                 frame;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ClearViewSelection bascule et annule la mise en evidence de la   
    selection dans la fenetre.                              
@@ -210,7 +207,6 @@ void                TtaClearViewSelections ()
       if (ViewFrameTable[frame].FrAbstractBox != NULL)
 	 ClearViewSelection (frame + 1);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    UpdateViewSelMarks met a jour les marques de selection de frame   
@@ -357,7 +353,6 @@ int                *index;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ComputeViewSelMarks calcule la marque de selection connaissant la 
    boite entiere VsBox, le buffer VsBuffer et l'index du   
@@ -494,7 +489,6 @@ ViewSelection      *selMark;
      }
    selMark->VsLine = SearchLine (selMark->VsBox);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    InsertViewSelMarks pose la selection courante sur la portion de   
@@ -714,7 +708,6 @@ ThotBool            alone;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    IsAbstractBoxDisplayed rend la valeur vrai si le pave est affiche'
    dans le frame.                                          
@@ -749,4 +742,3 @@ int                 frame;
    else
       return TRUE;
 }
-#endif /* _WIN_PRINT */

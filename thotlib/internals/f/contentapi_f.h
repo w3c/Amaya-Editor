@@ -56,12 +56,7 @@ extern void TtaChangeLimitOfPolyline ( Element element,
 extern void TtaCopyPage ( Element destination,
                           Element source );
 extern int TtaGetVolume ( Element element );
-extern int TtaGetTextLength ( Element element );
 extern PicType TtaGetPictureType ( Element element );
-extern void TtaGiveTextContent ( Element element,
-                                 STRING buffer,
-                                 int *length,
-                                 Language * language );
 extern void TtaGiveSubString ( Element element,
                                STRING buffer,
                                int position,
@@ -128,12 +123,7 @@ extern void TtaChangeLimitOfPolyline (/* Element element,
 extern void TtaCopyPage (/* Element destination,
                             Element source */);
 extern int TtaGetVolume (/* Element element */);
-extern int TtaGetTextLength (/* Element element */);
 extern PicType TtaGetPictureType (/* Element element */);
-extern void TtaGiveTextContent (/* Element element,
-                                   STRING buffer,
-                                   int *length,
-                                   Language * language */);
 extern void TtaGiveSubString (/* Element element,
                                  STRING buffer,
                                  int position,

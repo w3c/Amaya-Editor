@@ -34,12 +34,6 @@
 #include "TextFile.h"
 #include "amayamsg.h"
 
-#ifdef __STDC__
-extern STRING TtaAllocString (unsigned int);
-#else  /* !__STDC__ */
-extern STRING TtaAllocString ();
-#endif /* __STDC__ */
-
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
 
@@ -316,11 +310,13 @@ THOT_EXPORT int iTable;
 #define IMAGE_LOADED		2
 #define IMAGE_MODIFIED		3
 
+
 #ifdef __STDC__
-typedef void (*LoadedImageCallback)(Document doc, Element el, STRING file, void *extra);
+typedef void (*LoadedImageCallback)(Document doc, Element el, char *file, void *extra);
 #else
 typedef void (*LoadedImageCallback)();
 #endif
+
 typedef struct _ElemImage
   {
      Element             currentElement;/* first element using this image */
@@ -342,6 +338,14 @@ typedef struct _LoadedImageDesc
      int                 status;	/* the status of the image loading          */
   }
 LoadedImageDesc;
+
+/* the structure used for storing the context of the 
+   FetchAndDisplayImages_callback function */
+typedef struct _FetchImage_context {
+  STRING base_url;
+  LoadedImageDesc    *desc;
+} FetchImage_context;
+
 
 THOT_EXPORT LoadedImageDesc *ImageURLs;
 THOT_EXPORT LoadedImageDesc *ImageLocal;

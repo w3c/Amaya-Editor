@@ -45,22 +45,32 @@
 #include "frame_tv.h"
 #include "units_tv.h"
 #include "appdialogue_tv.h"
+#include "appevents_tv.h"
 
+#include "absboxes_f.h"
+#include "actions_f.h"
+#include "appdialogue_f.h"
+#include "appli_f.h"
 #include "applicationapi_f.h"
+#include "boxlocate_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "context_f.h"
+#include "dialogapi_f.h"
+#include "dictionary_f.h"
+#include "font_f.h"
 #include "inites_f.h"
+#include "input_f.h"
 #ifndef _WINDOWS 
 #include "LiteClue_f.h"
 #endif /* _WINDOWS */
-
-
-
 extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
-#ifndef _WIN_PRINT
 extern int          appArgc;
 extern STRING*       appArgv;
 extern int          iString;
-#endif /* !_WIN_PRINT */
 extern ThotWidget   WIN_curWin;
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
@@ -123,7 +133,10 @@ extern CHAR_T    szTbStrings [4096];
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
 HMENU hmenu;
-int   menu_item ;
+int   menu_item;
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 STRING GetString (int frame, int i_String)
 #else  /* __STDC__ */
@@ -145,6 +158,8 @@ int i_String;
    return pString ;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
 #else  /* __STDC__ */
@@ -177,6 +192,8 @@ LPARAM lParam;
    return 0 ;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK textZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* __STDC__ */
@@ -212,37 +229,12 @@ LPARAM lParam;
     return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam); 
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 HWND GetCurrentWindow () {
      return FrRef [currentFrame];
 }
 #endif /* _WINDOWS */
-
-#include "appli_f.h"
-#include "textcommands_f.h"
-#include "structcreation_f.h"
-#include "scroll_f.h"
-#include "boxlocate_f.h"
-#include "dialogapi_f.h"
-#include "views_f.h"
-#include "appdialogue_f.h"
-#include "actions_f.h"
-#include "callback_f.h"
-#include "windowdisplay_f.h"
-#include "font_f.h"
-#include "absboxes_f.h"
-#include "buildboxes_f.h"
-#include "input_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
-#include "boxparams_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
-#include "thotmsg_f.h"
-#include "dialogapi_f.h"
-#include "context_f.h"
-#include "dictionary_f.h"
-#include "viewapi_f.h"
-#include "sortmenu_f.h"
 
 /*----------------------------------------------------------------------
    TteInitMenuActions alloue la table des actions.                    
@@ -278,7 +270,6 @@ int                 number;
  
    /* Initialise le dialogue */
    servername = NULL;
-#  ifndef _WIN_PRINT
    if (appArgc > 2)
      {
 	i = 1;
@@ -296,7 +287,6 @@ int                 number;
 		i = appArgc;
 	     }
      }
-#  endif /* _WIN_PRINT */
 #  ifdef _WINDOWS
    WIN_TtaInitDialogue (servername);
 #  else  /* _WINDOWS */
@@ -1229,7 +1219,6 @@ int                 doc;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TteOpenMainWindow opens the application main window.
  
@@ -1259,6 +1248,8 @@ Pixmap              icon;
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
    TtaInitDialogueTranslations (InitTranslations (name));
+   /* no external action declared at that time */
+   ActionList = NULL;
    TteLoadApplications ();
 #  ifndef _WINDOWS
    if (TtDisplay == 0)
@@ -1339,7 +1330,6 @@ Pixmap              icon;
 	  }
      }
 }
-#endif /* _WIN_PRINT */
 /*----------------------------------------------------------------------
    ButtonAction                                                    
   ----------------------------------------------------------------------*/
@@ -1445,22 +1435,22 @@ ThotWidget   toplevel;
    picture: the displayed pixmap. None (0) creates a space between buttons.
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
+   functionName: internal name of the function used to connect shortcuts.
    info: text to display when the cursor stays on the button.
    type: button type, only used on Windows versions.
    state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
-#ifndef _WIN_PRINT
 #ifdef __STDC__
-int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING FunctionName, STRING info, BYTE type, ThotBool state)
+int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING functionName, STRING info, BYTE type, ThotBool state)
 #else  /* __STDC__ */
-int        TtaAddButton (document, view, picture, procedure, FunctionName, info, type, state)
+int        TtaAddButton (document, view, picture, procedure, functionName, info, type, state)
 Document   document;
 View       view;
 ThotIcon   picture;
 void       (*procedure) ();
+STRING     functionName;
 STRING     info;
-STRING FunctionName;
 BYTE       type;
 ThotBool   state;
 #endif /* __STDC__ */
@@ -1496,7 +1486,7 @@ ThotBool   state;
 	  if (i < MAX_BUTTON)
 	    {
 	      /* verifie que deux séparateurs ne se suivent pas et que la fonction appartient au profile choisi */
-	      if ( ((procedure == NULL) && (LastProcedure != NULL))  || ((procedure != NULL) &&  Prof_AddButton(FunctionName)) )
+	      if ((procedure == NULL && LastProcedure != NULL)  || (procedure != NULL &&  Prof_AddButton(functionName)))
 		{
 		  
 		  LastProcedure = procedure; 
@@ -1608,7 +1598,6 @@ ThotBool   state;
   TtaHandlePendingEvents ();
   return (index);
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
@@ -2419,7 +2408,6 @@ int                *infos;
 {
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Cree une frame a' la position X,Y et aux dimensions large et       
    haut (s'ils sont positifs).                                        
@@ -3035,7 +3023,6 @@ int                 doc;
      }
    return (frame);
 }
-#endif /* !_WIN_PRINT */
 
 /*----------------------------------------------------------------------
    Si l'entree existe :                                             
@@ -3139,7 +3126,7 @@ int                 frame;
 
 	ClearConcreteImage (frame);
 	ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
-     }				/*if */
+     }
 }
 
 

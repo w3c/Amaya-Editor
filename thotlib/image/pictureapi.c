@@ -70,7 +70,6 @@ char               *bits;
 #endif /* _WINDOWS */
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaCreatePixmapLogo create a pixmap from an XPM file.           
   ----------------------------------------------------------------------*/
@@ -122,4 +121,3 @@ char              **d;
    return (Pixmap) NULL;
 #  endif /* _WINDOWS */
 }
-#endif /* _WIN_PRINT */

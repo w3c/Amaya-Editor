@@ -1629,15 +1629,17 @@ ThotBool            pre;
 	     pEl->ElGraph != '\0') ||
 	    (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0'))
 	   {
-	   OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
-	   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
-	   CloseHistorySequence (pDoc);
+	   if (ThotLocalActions[T_openhistory] != NULL)
+	     (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
+	   if (ThotLocalActions[T_clearhistory] != NULL)
+	     (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
+	   if (ThotLocalActions[T_clearhistory] != NULL)
+	     (*ThotLocalActions[T_closehistory]) (pDoc);
 	   }
      }
    return result;
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ApplyDirectTranslate recherche la boite selectionnee pour un changement 
    de position. Si la plus petite boite englobant le point 
@@ -1746,7 +1748,8 @@ int                 ym;
 		       still = (pAb->AbPolyLineShape == 'p' ||
 				pAb->AbPolyLineShape == 's');
 		       /* Reaffiche la selection */
-		       SwitchSelection (frame, FALSE);
+		       if (ThotLocalActions[T_switchsel])
+			 (*ThotLocalActions[T_switchsel]) (frame, FALSE);
 		       draw = GetParentDraw (pBox);
 		       PolyLineModification (frame, &x, &y, pBox, draw,
 					   pBox->BxNChars, pointselect, still);
@@ -1769,7 +1772,8 @@ int                 ym;
 		       NewContent (pAb);
 		       APPgraphicModify (pEl, pointselect, frame, FALSE);
 		       /* Reaffiche la selection */
-		       SwitchSelection (frame, TRUE);
+		       if (ThotLocalActions[T_switchsel])
+			 (*ThotLocalActions[T_switchsel]) (frame, TRUE);
 		    }
 	       }
 	     else
@@ -1834,7 +1838,6 @@ int                 ym;
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_MODIFYING_BOX_IMP);
      }
 }
-#endif /* _WIN_PRINT */
 
 
 /*----------------------------------------------------------------------
@@ -2115,12 +2118,9 @@ int                 ym;
 		 else if (pAb->AbHeight.DimValue == 0)
 		   percentH = 100;
 	       }
-#        ifndef _WIN_PRINT
 	     UserGeometryResize (frame, x, y, &width, &height, xr, yr,
 				 xmin, xmax, ymin, ymax, xm, ym,
 				 percentW, percentH);
-#        endif /* _WIN_PRINT */
-
 	     /* On transmet la modification a l'editeur */
 	     if (percentW)
 	       NewDimension (pAb, 0, height, frame, TRUE);
@@ -2135,7 +2135,6 @@ int                 ym;
      }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    DirectCreation re'alise les differents modes de cre'ation       
    interactive des boi^tes.                                
@@ -2305,7 +2304,6 @@ int                 frame;
    /* Traitement de la creation interactive termine */
    BoxCreating = FALSE;
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    LocateClickedChar cherche le caractere affiche dans la boite pBox 

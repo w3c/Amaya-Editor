@@ -6,12 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GetViewInfo ( Document document,
-                          View view,
-                          int *viewnumber,
-                          ThotBool * assoc );
-extern int GetWindowNumber ( Document document,
-                             View view );
 extern View TtaOpenMainView ( Document document,
                               int x,
                               int y,
@@ -32,8 +26,6 @@ extern View TtaOpenSubView ( Document document,
                              Element subtree );
 extern void TtaCloseView ( Document document,
                            View view );
-extern void TtaFreeView ( Document document,
-                          View view );
 extern void TtaChangeViewTitle ( Document document,
                                  View view,
                                  STRING title );
@@ -67,29 +59,8 @@ extern View TtaGetViewFromName ( Document document,
                                  STRING viewName );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
-extern void RedisplayNewElement ( Document document,
-                                  PtrElement newElement,
-                                  PtrElement sibling,
-                                  ThotBool first,
-                                  ThotBool creation );
-extern void ChangeAbsBoxModif ( PtrElement pEl,
-                                Document document,
-                                ThotBool newAbsModif );
-extern void NewSelection ( Document document,
-                           Element element,
-                           int firstCharacter,
-                           int lastCharacter );
-extern void NewSelectionExtension ( Document document,
-                                    Element element,
-                                    int lastCharacter );
-extern ThotBool DemandeSelEnregistree ( Document document,
-                                        ThotBool * abort );
-extern void UndisplayElement ( PtrElement pEl,
-                               Document document );
 extern void DisplayHolophrasted ( PtrElement pEl,
                                   Document document );
-extern void HideElement ( PtrElement pEl,
-                          Document document );
 extern void RedisplayReference ( PtrElement element,
                                  Document document );
 extern void RedisplayLeaf ( PtrElement element,
@@ -106,37 +77,16 @@ extern void UndisplayInheritedAttributes ( PtrElement pEl,
                                            PtrAttribute pAttr,
                                            Document document,
                                            ThotBool suppression );
-extern void DisplayAttribute ( PtrElement pEl,
-                               PtrAttribute pAttr,
+extern void UndisplayElement ( PtrElement pEl,
                                Document document );
-extern void UndisplayAttribute ( PtrElement pEl,
-                                 PtrAttribute pAttr,
-                                 Document document );
-extern void RedisplayNewPRule ( Document document,
-                                PtrElement pEl,
-                                PtrPRule pRule );
-extern void RedisplayDefaultPresentation ( Document document,
-                                           PtrElement pEl,
-                                           PRuleType typeRuleP,
-                                           FunctionType funcType,
-                                           int view );
 extern void RedispNewGeometry ( Document document,
                                 PtrElement pEl );
 extern void TtaClipPolyline ( Element element,
                               Document doc,
                               View view );
-extern void TtaSetDisplayMode ( Document document,
-                                DisplayMode newDisplayMode );
-extern DisplayMode TtaGetDisplayMode ( Document document );
 
 #else /* __STDC__ */
 
-extern void GetViewInfo (/* Document document,
-                            View view,
-                            int *viewnumber,
-                            ThotBool * assoc */);
-extern int GetWindowNumber (/* Document document,
-                               View view */);
 extern View TtaOpenMainView (/* Document document,
                                 int x,
                                 int y,
@@ -157,8 +107,6 @@ extern View TtaOpenSubView (/* Document document,
                                Element subtree */);
 extern void TtaCloseView (/* Document document,
                              View view */);
-extern void TtaFreeView (/* Document document,
-                            View view */);
 extern void TtaChangeViewTitle (/* Document document,
                                    View view,
                                    STRING title */);
@@ -192,29 +140,8 @@ extern View TtaGetViewFromName (/* Document document,
                                    STRING viewName */);
 extern void TtaGiveActiveView (/* Document * document,
                                   View * view */);
-extern void RedisplayNewElement (/* Document document,
-                                    PtrElement newElement,
-                                    PtrElement sibling,
-                                    ThotBool first,
-                                    ThotBool creation */);
-extern void ChangeAbsBoxModif (/* PtrElement pEl,
-                                  Document document,
-                                  ThotBool newAbsModif */);
-extern void NewSelection (/* Document document,
-                             Element element,
-                             int firstCharacter,
-                             int lastCharacter */);
-extern void NewSelectionExtension (/* Document document,
-                                      Element element,
-                                      int lastCharacter */);
-extern ThotBool DemandeSelEnregistree (/* Document document,
-                                          ThotBool * abort */);
-extern void UndisplayElement (/* PtrElement pEl,
-                                 Document document */);
 extern void DisplayHolophrasted (/* PtrElement pEl,
                                     Document document */);
-extern void HideElement (/* PtrElement pEl,
-                            Document document */);
 extern void RedisplayReference (/* PtrElement element,
                                    Document document */);
 extern void RedisplayLeaf (/* PtrElement element,
@@ -231,28 +158,13 @@ extern void UndisplayInheritedAttributes (/* PtrElement pEl,
                                              PtrAttribute pAttr,
                                              Document document,
                                              ThotBool suppression */);
-extern void DisplayAttribute (/* PtrElement pEl,
-                                 PtrAttribute pAttr,
+extern void UndisplayElement (/* PtrElement pEl,
                                  Document document */);
-extern void UndisplayAttribute (/* PtrElement pEl,
-                                   PtrAttribute pAttr,
-                                   Document document */);
-extern void RedisplayNewPRule (/* Document document,
-                                  PtrElement pEl,
-                                  PtrPRule pRule */);
-extern void RedisplayDefaultPresentation (/* Document document,
-                                             PtrElement pEl,
-                                             PRuleType typeRuleP,
-                                             FunctionType funcType,
-                                             int view */);
 extern void RedispNewGeometry (/* Document document,
                                   PtrElement pEl */);
 extern void TtaClipPolyline (/* Element element,
                                 Document doc,
                                 View view */);
-extern void TtaSetDisplayMode (/* Document document,
-                                  DisplayMode newDisplayMode */);
-extern DisplayMode TtaGetDisplayMode (/* Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

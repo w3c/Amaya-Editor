@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitApplicationSchema ( PtrSSchema pSS );
 extern void InitNatures ( void );
 extern PtrPSchema LoadPresentationSchema ( Name schemaName,
                                            PtrSSchema pSS );
@@ -33,7 +32,6 @@ extern void BuildDocNatureTable ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern void InitApplicationSchema (/* PtrSSchema pSS */);
 extern void InitNatures (/* void */);
 extern PtrPSchema LoadPresentationSchema (/* Name schemaName,
                                              PtrSSchema pSS */);

@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int NumTypePRuleAPI ( PtrPRule pRule );
 extern int RuleSetIn ( int num,
                        RuleSet RuleS1 );
 extern void RuleSetPut ( RuleSet RuleS1,
@@ -15,63 +16,9 @@ extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
                                       PtrElement pEl2 );
 extern PtrAbstractBox AbsBoxOfEl ( PtrElement pEl,
                                    int view );
-extern void NewPosition ( PtrAbstractBox pAb,
-                          int X,
-                          int Y,
-                          int frame,
-                          ThotBool display );
-extern void NewDimension ( PtrAbstractBox pAb,
-                           int width,
-                           int height,
-                           int frame,
-                           ThotBool display );
 extern void ApplyNewRule ( PtrDocument pDoc,
                            PtrPRule pPRule,
                            PtrElement pEl );
-extern void ModifyGraphics ( PtrElement pEl,
-                             PtrDocument pDoc,
-                             int viewToApply,
-                             ThotBool modifLineStyle,
-                             CHAR_T LineStyle,
-                             ThotBool modifLineWeight,
-                             int LineWeight,
-                             TypeUnit LineWeightUnit,
-                             ThotBool modifFillPattern,
-                             int FillPattern,
-                             ThotBool modifColorBackground,
-                             int ColorBackground,
-                             ThotBool modifLineColor,
-                             int LineColor );
-extern void ModifyColor ( int colorNum,
-                          ThotBool Background );
-extern void ModifyChar ( PtrElement pEl,
-                         PtrDocument pDoc,
-                         int viewToApply,
-                         ThotBool modifFamily,
-                         CHAR_T family,
-                         ThotBool modifStyle,
-                         int charStyle,
-                         ThotBool modifWeight,
-                         int charWeight,
-                         ThotBool modifsize,
-                         int size,
-                         ThotBool modifUnderline,
-                         int underline,
-                         ThotBool modifUlWeight,
-                         int weightUnderline );
-extern void ModifyLining ( PtrElement pEl,
-                           PtrDocument pDoc,
-                           int viewToApply,
-                           ThotBool modifAdjust,
-                           int Adjust,
-                           ThotBool modifJustif,
-                           ThotBool Justif,
-                           ThotBool modifIndent,
-                           int ValIndent,
-                           ThotBool modifLineSpacing,
-                           int LineSpacing,
-                           ThotBool modifHyphen,
-                           ThotBool Hyphenate );
 extern void ApplyStandardRule ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 PRuleType ruleType,
@@ -92,9 +39,15 @@ extern void RemoveSpecPresTree ( PtrElement pElRoot,
                                  PtrDocument pDoc,
                                  RuleSet RulesS,
                                  int viewToApply );
+extern void TtaRemovePRule ( Element element,
+                             PRule pRule,
+                             Document document );
+extern void TtaNextPRule ( Element element,
+                           PRule * pRule );
 
 #else /* __STDC__ */
 
+extern int NumTypePRuleAPI (/* PtrPRule pRule */);
 extern int RuleSetIn (/* int num,
                          RuleSet RuleS1 */);
 extern void RuleSetPut (/* RuleSet RuleS1,
@@ -104,63 +57,9 @@ extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
                                         PtrElement pEl2 */);
 extern PtrAbstractBox AbsBoxOfEl (/* PtrElement pEl,
                                      int view */);
-extern void NewPosition (/* PtrAbstractBox pAb,
-                            int X,
-                            int Y,
-                            int frame,
-                            ThotBool display */);
-extern void NewDimension (/* PtrAbstractBox pAb,
-                             int width,
-                             int height,
-                             int frame,
-                             ThotBool display */);
 extern void ApplyNewRule (/* PtrDocument pDoc,
                              PtrPRule pPRule,
                              PtrElement pEl */);
-extern void ModifyGraphics (/* PtrElement pEl,
-                               PtrDocument pDoc,
-                               int viewToApply,
-                               ThotBool modifLineStyle,
-                               CHAR_T LineStyle,
-                               ThotBool modifLineWeight,
-                               int LineWeight,
-                               TypeUnit LineWeightUnit,
-                               ThotBool modifFillPattern,
-                               int FillPattern,
-                               ThotBool modifColorBackground,
-                               int ColorBackground,
-                               ThotBool modifLineColor,
-                               int LineColor */);
-extern void ModifyColor (/* int colorNum,
-                            ThotBool Background */);
-extern void ModifyChar (/* PtrElement pEl,
-                           PtrDocument pDoc,
-                           int viewToApply,
-                           ThotBool modifFamily,
-                           CHAR_T family,
-                           ThotBool modifStyle,
-                           int charStyle,
-                           ThotBool modifWeight,
-                           int charWeight,
-                           ThotBool modifsize,
-                           int size,
-                           ThotBool modifUnderline,
-                           int underline,
-                           ThotBool modifUlWeight,
-                           int weightUnderline */);
-extern void ModifyLining (/* PtrElement pEl,
-                             PtrDocument pDoc,
-                             int viewToApply,
-                             ThotBool modifAdjust,
-                             int Adjust,
-                             ThotBool modifJustif,
-                             ThotBool Justif,
-                             ThotBool modifIndent,
-                             int ValIndent,
-                             ThotBool modifLineSpacing,
-                             int LineSpacing,
-                             ThotBool modifHyphen,
-                             ThotBool Hyphenate */);
 extern void ApplyStandardRule (/* PtrElement pEl,
                                   PtrDocument pDoc,
                                   PRuleType ruleType,
@@ -181,6 +80,11 @@ extern void RemoveSpecPresTree (/* PtrElement pElRoot,
                                    PtrDocument pDoc,
                                    RuleSet RulesS,
                                    int viewToApply */);
+extern void TtaRemovePRule (/* Element element,
+                               PRule pRule,
+                               Document document */);
+extern void TtaNextPRule (/* Element element,
+                             PRule * pRule */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
