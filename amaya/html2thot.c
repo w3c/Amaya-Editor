@@ -5206,8 +5206,6 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		      if (ptr && ptr < end)
 			{
 			  *thotType = docHTML;
-			  /* by default all HTML tags are accepted */
-			  *parsingLevel = L_Transitional;
 			  ptr = strstr (&FileBuffer[i], "XHTML");
 			  if (!ptr || (ptr && ptr > end))
 			  ptr = strstr (&FileBuffer[i], "xhtml");
@@ -5228,9 +5226,17 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				    *parsingLevel = L_Strict;
 				  else
 				    {
-				      ptr = strstr (&FileBuffer[i], "1.1");
+				      ptr = strstr (&FileBuffer[i], "Transitional");
+				      if (!ptr || (ptr && ptr > end))
+					ptr = strstr (&FileBuffer[i], "transitional");
 				      if (ptr && ptr < end)
-					*parsingLevel = L_Xhtml11;
+					*parsingLevel = L_Transitional;
+				      else
+					{
+					  ptr = strstr (&FileBuffer[i], "1.1");
+					  if (ptr && ptr < end)
+					    *parsingLevel = L_Xhtml11;
+					}
 				    }
 				}
 			    }
@@ -5241,6 +5247,14 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				ptr = strstr (&FileBuffer[i], "strict");
 			      if (ptr && ptr < end)
 				*parsingLevel = L_Strict;
+			      else
+				{
+				  ptr = strstr (&FileBuffer[i], "Transitional");
+				  if (!ptr || (ptr && ptr > end))
+				    ptr = strstr (&FileBuffer[i], "transitional");
+				  if (ptr && ptr < end)
+				    *parsingLevel = L_Transitional;
+				}
 			    }
 			}
 		      else
@@ -5323,8 +5337,6 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  endOfSniffedFile = TRUE;
 			  /* We consider the document as an html one */
 			  *thotType = docHTML;
-			  /* by default all html tags are accepted */
-			  *parsingLevel = L_Transitional;
 			  end = strstr (&FileBuffer[i], ">");
 			  ptrns = strstr (&FileBuffer[i], "xmlns");
 			  if (ptrns && ptrns < end)

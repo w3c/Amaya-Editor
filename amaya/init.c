@@ -2772,8 +2772,6 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 	  /* it seems to be an HTML document */
 	  docType = docHTML;
-	  if (parsingLevel != L_Strict)
-	    parsingLevel = L_Transitional;
 	  unknown = FALSE;
 	}
       /* Assign a content type to that local document */
@@ -3250,7 +3248,8 @@ static Document LoadDocument (Document doc, char *pathname,
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
-      if (docType == docSVG ||
+      if (docType == docHTML ||
+	  docType == docSVG ||
 #ifdef XML_GENERIC
 	  docType == docXml ||
 #endif /* XML_GENERIC */    
@@ -4404,8 +4403,8 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 
 /*----------------------------------------------------------------------
   ChangeDoctype
-  Mofity the doctype declaration for a HTML document saved as
-  an XML one and vice-versa.
+  Mofity the doctype declaration for a HTML document saved as XML
+  and vice-versa.
   isXml indicates is the new doctype corresponds to an XML document
   ----------------------------------------------------------------------*/
 static void    ChangeDoctype (ThotBool isXml)
@@ -4416,7 +4415,7 @@ static void    ChangeDoctype (ThotBool isXml)
   Element      root, doctype, doctypeLine, prevLine, text;
 
   doc = SavingDocument;
-  /* Search the DOCTYPE element if it exists */
+  /* Search the DOCTYPE element */
   root = TtaGetMainRoot (doc);
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
