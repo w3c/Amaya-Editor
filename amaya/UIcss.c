@@ -1014,6 +1014,7 @@ static void InitCSSDialog (Document doc, char *s)
 	    {
 	      if (pInfo &&
 		  pInfo->PiCategory != CSS_EMBED &&
+		  pInfo->PiCategory != CSS_USER_STYLE &&
 		  /* the document style cannot be open */
 		  ((CSScase == 1 && pInfo->PiCategory != CSS_DOCUMENT_STYLE) ||
 		   /* it's impossible to disable an imported style sheet */
@@ -1082,6 +1083,55 @@ static void InitCSSDialog (Document doc, char *s)
 			      else
 				strcat (CSSpath, css->localName);
 			    }
+			  select = i;
+			}
+		      i++;
+		    }
+		}
+	      pInfo = pInfo->PiNext;
+	    }
+	  css = css->NextCSS;
+	}
+      /* add the CSS_USER_SYLE entry */
+      css = CSSList;
+      while (css)
+	{
+	  pInfo = css->infos[doc];
+	  while (pInfo)
+	    {
+	      if (pInfo &&
+		  pInfo->PiCategory == CSS_USER_STYLE &&
+		   /* it's impossible to disable an imported style sheet */
+		  (CSScase == 1 ||
+		   (CSScase == 2 && pInfo->PiEnabled) ||
+		   /* it's impossible to enable an imported style sheet */
+		   (CSScase == 3 && !pInfo->PiEnabled)))
+		{
+		  /* filter enabled and disabled entries */
+		  /* build the CSS list:
+		     use the dialogue encoding for buf and UTF-8 for CSS path  */
+		  if (css->url == NULL && css->localName)
+		    ptr = css->localName;
+		  else
+		    ptr = css->url;
+		  if (ptr)
+		    {
+		      len = strlen (ptr) + 1; /* + EOS */
+		      if (size < len + String_length)
+			break;
+		      /* display the category */
+		      strcpy (&buf[index], DisplayCategory[pInfo->PiCategory]);
+		      index += String_length;
+		      strcpy (&buf[index], ptr);
+		      index += len;
+		      size -= len;
+		      if (select == -1 && CSScase < 4)
+			{
+			  strcpy (CSSpath, DisplayCategory[pInfo->PiCategory]);
+			  if (css->url)
+			    strcat (CSSpath, css->url);
+			  else
+			    strcat (CSSpath, css->localName);
 			  select = i;
 			}
 		      i++;

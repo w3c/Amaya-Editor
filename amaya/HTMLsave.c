@@ -2365,7 +2365,6 @@ void SaveDocument (Document doc, View view)
   char                localFile[MAX_LENGTH];
   char               *ptr;
   int                 i;
-  int                 line = 0, index = 0;
   ThotBool            ok, newLineNumbers;
 
   if (DocumentTypes[doc] == docAnnot) 
@@ -2427,9 +2426,7 @@ void SaveDocument (Document doc, View view)
   if (TextFormat)
     {
       dispMode = TtaGetDisplayMode (doc);
-      TtaSetDisplayMode (doc, NoComputedDisplay);
-      /* save the current selection */
-      GetCurrentLine (doc, &line, &index);
+      TtaSetDisplayMode (doc, DeferredDisplay);
     }
   else if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
