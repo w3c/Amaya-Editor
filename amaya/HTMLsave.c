@@ -417,13 +417,13 @@ STRING              pathname;
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
    /* second line */
    TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, TRUE);
+		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, FALSE);
    TtaSetTextForm (BaseDialog + NameSave, pathname);
    TtaNewLabel (BaseDialog + Label1, BaseDialog + SaveForm, "");
    TtaNewLabel (BaseDialog + Label2, BaseDialog + SaveForm, "");
    /* third line */
    TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, TRUE);
+		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, FALSE);
    TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
    TtaNewLabel (BaseDialog + Label3, BaseDialog + SaveForm, "");
    TtaNewLabel (BaseDialog + Label4, BaseDialog + SaveForm, "");
@@ -476,7 +476,7 @@ STRING              pathname;
 		     BaseDialog + DirSave, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
    TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, TRUE);
+		   TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, FALSE);
    TtaSetTextForm (BaseDialog + NameSave, pathname);
    TtaExtractName (pathname, tempdir, ObjectName);
    TtaSetDialoguePosition ();
@@ -1587,8 +1587,7 @@ View                view;
 
   /* attempt to save through network if possible */
   ustrcpy (tempname, DocumentURLs[doc]);
-  /* if the URL starts with file:, supress the protocol part */
-  ConvertFileURL (tempname);
+
   /* suppress compress suffixes from tempname */
   i = ustrlen (tempname) - 1;
   if (i > 2 && !ustrcmp (&tempname[i-2], TEXT(".gz")))
