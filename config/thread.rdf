@@ -12,7 +12,7 @@
 <rdfs:Class rdf:about="http://www.w3.org/2001/03/thread#Reply">
   <rdfs:label xml:lang="en">Reply</rdfs:label>
   <rdfs:comment>A resource is a reply if one of its types is Reply.</rdfs:comment>
-  <rdfs:isDefinedBy resource="http://www.w3.org/2001/03/thread#"/>
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2001/03/thread#"/>
 </rdfs:Class>
 
 <rdf:Property rdf:about="http://www.w3.org/2001/03/thread#inReplyTo">
