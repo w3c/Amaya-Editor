@@ -10,7 +10,7 @@
  * Initialization functions and button functions of Amaya application.
  *
  * Author: I. Vatton
- *         R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *         R. Guetari (W3C/INRIA) - Windows version
  */
 
 /* Included headerfiles */
@@ -94,7 +94,6 @@ extern int      currentFrame;
 extern char     wTitle [MAX_LENGTH];
 int             Window_Curs;
 char            DocToOpen[MAX_LENGTH];
-/* extern bmpID;  */
 #endif /* _WINDOWS */
 
 #include "helpmenu.h"
@@ -767,7 +766,6 @@ static void  UpdateBrowserMenus (Document document)
 #else  /* _WINDOWS */
   TtaChangeButton (document, 1, iEditor, iconBrowser, TRUE);
 #endif /* _WINDOWS */
-
   TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
 
   TtaSetItemOff (document, 1, File, BSave);
@@ -812,10 +810,6 @@ static void  UpdateBrowserMenus (Document document)
       TtaSetMenuOff (document, 1, Links);
       TtaSetMenuOff (document, 1, Style);
       TtaSetItemOff (document, 1, Special, BMakeBook);
-
-#ifdef ANNOTATIONS
-      TtaSetMenuOff (document, 1, Annotations_);
-#endif /* ANNOTATIONS */
 
       view = TtaGetViewFromName (document, "Structure_view");
       if (view != 0 && TtaIsViewOpen (document, view))
@@ -875,7 +869,6 @@ static void  UpdateEditorMenus (Document document)
 #else  /* _WINDOWS */
   TtaChangeButton (document, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINDOWS */
-
   TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
 
   TtaSetItemOn (document, 1, Edit_, BUndo);
@@ -924,10 +917,6 @@ static void  UpdateEditorMenus (Document document)
       TtaSetItemOn (document, 1, Views, BShowToC);
       TtaSetItemOn (document, 1, Views, BShowSource);
 
-#ifdef ANNOTATIONS
-      TtaSetMenuOn (document, 1, Annotations_);
-#endif /* ANNOTATIONS */
-      
       view = TtaGetViewFromName (document, "Structure_view");
       if (view != 0 && TtaIsViewOpen (document, view))
 	{
@@ -1037,11 +1026,11 @@ void    SetBrowserEditor (Document document)
      {
        /* =============> The document is in Read-Write mode now */
        /* change the document status */
-       if (TtaIsDocumentModified (document))
-	 DocStatusUpdate (document, TRUE);
-       /* change the document status */
        ReadOnlyDocument[document] = FALSE;
        TtaSetDocumentAccessMode (document, 1);
+       /* change the document status */
+       if (TtaIsDocumentModified (document))
+	 DocStatusUpdate (document, TRUE);
        /* update windows menus */
        UpdateEditorMenus (document);
      }
@@ -1951,9 +1940,6 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	     TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 	     TtaSetItemOff (doc, 1, Special, TSectionNumber);
-#ifdef ANNOTATIONS
-             TtaSetMenuOff (doc, 1, Annotations_);
-#endif /* ANNOTATIONS */
 #ifdef _WINDOWS 
 	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor,
 				  TB_INDETERMINATE, TRUE);
@@ -1991,6 +1977,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 #endif /* XML_GEN */
 	      DocumentTypes[doc] == docMath)
        {
+	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 	 if (reinitialized)
 	   /* the document is in ReadWrite mode */
 	   UpdateEditorMenus (doc);
