@@ -84,40 +84,37 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 		    unsigned short *blue)
 {
   char              colname[100];
-  char             *ptr;
-  int                 i, len;
-  int                 r, g, b;
-  ThotBool            failed;
+  char             *ptr, *sptr;
+  int               i, len;
+  int               r, g, b;
+  ThotBool          failed;
 
   ptr = value;
   failed = TRUE;
   *red = -1;
   *green = 0;
   *blue = 0;
-  if (*ptr == '#' ||
-      (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2])))
+  if (*ptr == '#')
     {
-      if (*ptr == '#')
-	ptr++;
-      /* we expect an hexa encoding like F00 or FF0000 */
-      if (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2]))
+      /* we expect an hexa encoding like F0F or FF00FF */
+      if (isxdigit (ptr[1]) && isxdigit (ptr[2]) && isxdigit (ptr[3]))
 	{
-	  if (!isxdigit (ptr[3]))
+	  if (!isxdigit (ptr[4]))
 	    {
-	      /* encoded as on 3 digits #F0F  */
-	      *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[0]);
-	      *green = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
-	      *blue = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
-	      ptr = &ptr[3];
+	      /* encoded on 3 digits #F0F  */
+	      *red = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
+	      *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
+	      *blue = TtaHexaVal (ptr[3]) * 16 + TtaHexaVal (ptr[3]);
+	      ptr = &ptr[4];
 	      failed = FALSE;
 	    }
-	  else if (isxdigit (ptr[4]) && isxdigit (ptr[5]))
+	  else if (isxdigit (ptr[5]) && isxdigit (ptr[6]))
 	    {
-	      /* encoded as on 3 digits #FF00FF */
-	      *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[1]);
-	      *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[3]);
-	      *blue = TtaHexaVal (ptr[4]) * 16 + TtaHexaVal (ptr[5]);
-	      ptr = &ptr[6];
+	      /* encoded on 6 digits #FF00FF */
+	      *red = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[2]);
+	      *green = TtaHexaVal (ptr[3]) * 16 + TtaHexaVal (ptr[4]);
+	      *blue = TtaHexaVal (ptr[5]) * 16 + TtaHexaVal (ptr[6]);
+	      ptr = &ptr[7];
 	      failed = FALSE;
 	    }
 	}
@@ -174,8 +171,9 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
     }
   else if (isalpha (*ptr))
     {
-      /* we expect a color name like "red", store it in colname */
+      /* we expect a color name like "red". Store it in colname */
       len = (sizeof (colname) / sizeof (char)) - 1;
+      sptr = ptr;
       for (i = 0; i < len && isalnum (*ptr); i++)
 	{
 	  colname[i] = *ptr;
@@ -183,7 +181,7 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 	}
       colname[i] = EOS;
       
-      /* Lookup the color name in our own color name database */
+      /* Look for the color name in our own color name database */
       for (i = 0; i < (int)NBCOLORNAME && failed; i++)
 	if (!strcasecmp (ColornameTable[i].name, colname))
 	  {
@@ -194,6 +192,34 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 	  }
       if (failed)
 	failed = ThotGiveRGB (colname, red, green, blue);
+      if (failed)
+	/* it may be a sequence of 3 or 6 hex. digits with a missing
+           leading '#' */
+	{
+	  ptr = sptr;
+	  if (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2]))
+	  /* we expect an hexa encoding like F0F or FF00FF */
+	    {
+	      if (!isxdigit (ptr[3]))
+		{
+		  /* encoded on 3 digits #F0F  */
+		  *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[0]);
+		  *green = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
+		  *blue = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
+		  ptr = &ptr[3];
+		  failed = FALSE;
+		}
+	      else if (isxdigit (ptr[4]) && isxdigit (ptr[5]))
+		{
+		  /* encoded on 6 digits #FF00FF */
+		  *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[1]);
+		  *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[3]);
+		  *blue = TtaHexaVal (ptr[4]) * 16 + TtaHexaVal (ptr[5]);
+		  ptr = &ptr[6];
+		  failed = FALSE;
+		}
+	    }
+	}
     }
   if (failed)
     return (value);
