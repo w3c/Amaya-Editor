@@ -994,7 +994,13 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 	AttrForm = NULL;
 	EndDialog (hwnDlg, IDCANCEL);
 	break;
-      }
+ 
+       case IDCANCEL:
+	AttrForm = NULL;
+    EndDialog (hwnDlg, IDCANCEL);
+    break;	  
+	
+	  }
       break;
       
     default:
