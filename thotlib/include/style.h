@@ -36,6 +36,13 @@ typedef enum
   Txtword
 } AttrMatch;
 
+typedef enum
+{
+  RelAncestor,
+  RelImmediat,
+  RelPrevious
+} ElemRel;
+
 /* two different contexts for generic and specific presentation */
 typedef struct struct_GenericContext
   {
@@ -59,9 +66,7 @@ typedef struct struct_GenericContext
     char         *attrText[MAX_ANCESTORS];  /* attr. or box name       */
     AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match  */
     char          sel[MAX_ANCESTORS * 50];  /* include selected values */
-    char          rel[MAX_ANCESTORS];       /* 0 = ancestor
-					       1 = immediat ancestor
-					       2 = precedent           */
+    ElemRel       rel[MAX_ANCESTORS];       /* element relation        */
   }
 GenericContextBlock, *GenericContext;
 

@@ -4341,7 +4341,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *attrs[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
   AttrMatch          attrmatch[MAX_ANCESTORS];
-  ThotBool           rel[MAX_ANCESTORS];
+  ElemRel            rel[MAX_ANCESTORS];
   int                i, j, k, max;
   int                att, maxAttr, kind;
   int                specificity, xmlType;
@@ -4361,7 +4361,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       attrs[i] = NULL;
       attrvals[i] = NULL;
       attrmatch[i] = Txtmatch;
-      rel[i] = 0;
+      rel[i] = RelAncestor;
       ctxt->name[i] = 0;
       ctxt->names_nb[i] = 0;
       ctxt->attrType[i] = 0;
@@ -4687,14 +4687,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      /* handle immediat parent as a simple parent */
 	      selector++;
 	      selector = SkipBlanksAndComments (selector);
-	      rel[0] = 1;
+	      rel[0] = RelImmediat;
 	    }
 	  else if (*selector == '+')
 	    {
 	      /* handle immediat parent as a simple parent */
 	      selector++;
 	      selector = SkipBlanksAndComments (selector);
-	      rel[0] = 2;
+	      rel[0] = RelPrevious;
 	    }
 	  /* shifts the list to make room for the new name */
 	  max++; /* a new level in ancestor tables */
@@ -4831,7 +4831,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		  ctxt->type = elType.ElTypeNum;
 		  ctxt->name[0] = elType.ElTypeNum;
 		  ctxt->names_nb[0] = 0;
-		  ctxt->rel[0] = 0;
+		  ctxt->rel[0] = RelAncestor;
 		  ctxt->schema = elType.ElSSchema;
 		}
 	    }
@@ -4841,13 +4841,17 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		 stored */
 	      j = 1;
 	      while (j < k &&
-		     (ctxt->name[j] != elType.ElTypeNum || ctxt->rel[j] != 0))
+		     (ctxt->name[j] != elType.ElTypeNum ||
+		      ctxt->rel[j] != RelAncestor))
 		j++;
 	      if (j == k)
 		{
 		  ctxt->name[j] = elType.ElTypeNum;
 		  if (j != 0)
-		    ctxt->names_nb[j] = 1;
+		    {
+		      ctxt->names_nb[j] = 1;
+		      ctxt->rel[j] = rel[i];
+		    }
 		}
 	      else
 		/* increment the number of ancestor levels */
@@ -4869,7 +4873,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		     stored */
 		  j = 1;
 		  while (j < k &&
-			 (ctxt->name[j] != elType.ElTypeNum || ctxt->rel[j] != 0))
+			 (ctxt->name[j] != elType.ElTypeNum ||
+			  ctxt->rel[j] != RelAncestor))
 		    j++;
 		  if (j == k)
 		    {
@@ -4880,7 +4885,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 			  ctxt->rel[j] = rel[i];
 			}
 		      else
-			ctxt->rel[j] = 0;
+			ctxt->rel[j] = RelAncestor;
 		    }
 		  else
 		    /* increment the number of ancestor levels */

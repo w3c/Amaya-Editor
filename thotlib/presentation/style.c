@@ -1234,7 +1234,8 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	  i = 0;
 	  while (i < MAX_ANCESTORS)
 	    {
-	      if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0)
+	      if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0 &&
+		  ctxt->rel[i] != RelPrevious)
 		/* it's an ancestor like a selector "li a" */
 		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      if (ctxt->attrType[i]  && i != att)
