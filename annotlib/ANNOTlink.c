@@ -159,9 +159,9 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
 
   if ((fp = fopen (annot_main_index_file, "a")))
     {
-      ufprintf (fp, "%s %s\n", 
-		(www_source_url) ? www_source_url : source_url,
-		(www_index_file) ? www_index_file : index_file);
+      fprintf (fp, "%s %s\n", 
+	       (www_source_url) ? www_source_url : source_url,
+	       (www_index_file) ? www_index_file : index_file);
       fclose (fp);
     }
   if (www_source_url)
