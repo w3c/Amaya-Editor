@@ -1591,17 +1591,17 @@ Element             el;
       i++;
    if (CharLevelElement[i] == elType.ElTypeNum)
       {
-      ret = TRUE;
-      /* a Math element is a block element if it has an attribute mode=display */
-      if (elType.ElTypeNum == HTML_EL_Math)
-	{
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_mode;
-	attr = TtaGetAttribute (el, attrType);
-	if (attr)
-	   if (TtaGetAttributeValue (attr) == HTML_ATTR_mode_VAL_display)
-	      ret = FALSE;
-	}
+	ret = TRUE;
+	/* a Math element is a block element if it has an attribute mode=display */
+	if (elType.ElTypeNum == HTML_EL_Math)
+	  {
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    attrType.AttrTypeNum = HTML_ATTR_mode;
+	    attr = TtaGetAttribute (el, attrType);
+	    if (attr)
+	      if (TtaGetAttributeValue (attr) == HTML_ATTR_mode_VAL_display)
+		ret = FALSE;
+	  }
       }
    return ret;
 }
@@ -1610,9 +1610,9 @@ Element             el;
    IsBlockElement  return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     IsBlockElement (Element el)
+ThotBool     IsBlockElement (Element el)
 #else
-static ThotBool     IsBlockElement (el)
+ThotBool     IsBlockElement (el)
 Element             el;
 
 #endif
@@ -1821,9 +1821,9 @@ UCHAR_T             c;
    checked when the document is complete.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void BlockInCharLevelElem (Element el)
+void BlockInCharLevelElem (Element el)
 #else
-static void BlockInCharLevelElem (el)
+void BlockInCharLevelElem (el)
 Element             el;
 
 #endif
@@ -6602,19 +6602,22 @@ Document            doc;
    the missing elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CheckAbstractTree (CHAR_T* pathURL)
+void                CheckAbstractTree (CHAR_T* pathURL, Document doc)
 #else
-void                CheckAbstractTree (pathURL)
+void                CheckAbstractTree (pathURL, doc)
 CHAR_T*             pathURL;
+Document            doc;
 
 #endif
 {
    ElementType	elType, newElType, headElType;
+   Element	elRoot;
    Element	el, elHead, elBody, elFrameset, elNoframes, nextEl, newEl,
 		prevEl, lastChild, firstTerm, lastTerm, termList, child,
 		parent, firstEntry, lastEntry, glossary, list, elText,
 		previous;
    ThotBool	ok, moved;
+   SSchema      docSSchema;
 
    /* the root element only accepts elements HEAD, BODY, FRAMESET and Comment*/
    /* as children */
@@ -6622,7 +6625,10 @@ CHAR_T*             pathURL;
    elBody = NULL;
    elFrameset = NULL;
    elNoframes = NULL;
-   el = TtaGetFirstChild (rootElement);
+
+   docSSchema = TtaGetDocumentSSchema (doc);
+   elRoot = TtaGetMainRoot (doc);
+   el = TtaGetFirstChild (elRoot);
    if (el != NULL)
      {
 	elType = TtaGetElementType (el);
@@ -6645,13 +6651,13 @@ CHAR_T*             pathURL;
 	else
 	  {
 	     elType.ElTypeNum = HTML_EL_HEAD;
-	     elHead = TtaSearchTypedElement (elType, SearchForward, rootElement);
+	     elHead = TtaSearchTypedElement (elType, SearchForward, elRoot);
 	     if (elHead != NULL)
 		/* an element HEAD has been found */
 	       {
 		  /* move the HEAD element before the current element */
-		  TtaRemoveTree (elHead, theDocument);
-		  TtaInsertSibling (elHead, el, TRUE, theDocument);
+		  TtaRemoveTree (elHead, doc);
+		  TtaInsertSibling (elHead, el, TRUE, doc);
 	       }
 	  }
 	/* skip Comments and Invalid_elements */
@@ -6669,24 +6675,24 @@ CHAR_T*             pathURL;
 		elBody = el;
 	  }
 	/* check all children of the root element */
-	CheckHeadElements (rootElement, &elHead, &elBody, theDocument);
+	CheckHeadElements (elRoot, &elHead, &elBody, doc);
 	if (elBody != NULL)
-	  CheckHeadElements (elBody, &elHead, &elBody, theDocument);
+	  CheckHeadElements (elBody, &elHead, &elBody, doc);
 
 	if (elHead == NULL)
 	   /* there is no HEAD element. Create one */
 	  {
-	     newElType.ElSSchema = DocumentSSchema;
+	     newElType.ElSSchema = docSSchema;
 	     newElType.ElTypeNum = HTML_EL_HEAD;
-		 elHead = TtaNewTree (theDocument, newElType, "");
-	     TtaInsertFirstChild (&elHead, rootElement, theDocument);
+		 elHead = TtaNewTree (doc, newElType, "");
+	     TtaInsertFirstChild (&elHead, elRoot, doc);
 	  }
 
 	if (elHead != NULL)
 	  {
 	     headElType = TtaGetElementType (elHead);
 	     /* create a Document_URL element as the first child of HEAD */
-	     newElType.ElSSchema = DocumentSSchema;
+	     newElType.ElSSchema = docSSchema;
 	     newElType.ElTypeNum = HTML_EL_Document_URL;
 	     el = TtaGetFirstChild (elHead);
 	     if (el != NULL)
@@ -6701,15 +6707,15 @@ CHAR_T*             pathURL;
 	     if (el == NULL)
 		/* there is no Document_URL element */
 	       {
-		  el = TtaNewElement (theDocument, newElType);
-		  TtaInsertFirstChild (&el, elHead, theDocument);
-		  TtaSetAccessRight (el, ReadOnly, theDocument);
+		  el = TtaNewElement (doc, newElType);
+		  TtaInsertFirstChild (&el, elHead, doc);
+		  TtaSetAccessRight (el, ReadOnly, doc);
 		  newElType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		  elText = TtaNewElement (theDocument, newElType);
-		  TtaInsertFirstChild (&elText, el, theDocument);
+		  elText = TtaNewElement (doc, newElType);
+		  TtaInsertFirstChild (&elText, el, doc);
 	       }
 	     if (pathURL != NULL && elText != NULL)
-		TtaSetTextContent (elText, pathURL, currentLanguage, theDocument);
+		TtaSetTextContent (elText, pathURL, currentLanguage, doc);
 	     /* check all chidren of the HEAD Element, except the first one */
 	     /* which is Document_URL */
 	     TtaNextSibling (&el);
@@ -6723,24 +6729,24 @@ CHAR_T*             pathURL;
 		  if (TtaGetRankInAggregate (elType, headElType) <= 0)
 		    /* this element is not a valid component of aggregate
 		       HEAD. It may be an SGML inclusion, let's check */
-		    if (!TtaCanInsertFirstChild (elType, elHead, theDocument))
+		    if (!TtaCanInsertFirstChild (elType, elHead, doc))
 		      /* this element cannot be a child of HEAD, move it to
 			 the BODY */
 		      {
 		        /* create the BODY element if it does not exist */
 		        if (elBody == NULL)
 		          {
-			    newElType.ElSSchema = DocumentSSchema;
+			    newElType.ElSSchema = docSSchema;
 			    newElType.ElTypeNum = HTML_EL_BODY;
-			    elBody = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (elBody, elHead, FALSE, theDocument);
+			    elBody = TtaNewElement (doc, newElType);
+			    TtaInsertSibling (elBody, elHead, FALSE, doc);
 		          }
 		        /* move the current element into the BODY element */
-		        TtaRemoveTree (el, theDocument);
+		        TtaRemoveTree (el, doc);
 		        if (lastChild == NULL)
-			  TtaInsertFirstChild (&el, elBody, theDocument);
+			  TtaInsertFirstChild (&el, elBody, doc);
 		        else
-			  TtaInsertSibling (el, lastChild, FALSE, theDocument);
+			  TtaInsertSibling (el, lastChild, FALSE, doc);
 		        lastChild = el;
 		      }
 		  el = nextEl;
@@ -6748,7 +6754,7 @@ CHAR_T*             pathURL;
 	  }
 	/* check the children of the root */
 	lastChild = NULL;
-	el = TtaGetFirstChild (rootElement);
+	el = TtaGetFirstChild (elRoot);
 	previous = elHead;
 	moved = FALSE;
 	while (el != NULL)
@@ -6781,20 +6787,20 @@ CHAR_T*             pathURL;
 		  /* create the BODY element if it does not exist */
 		  if (elBody == NULL)
 		    {
-		       newElType.ElSSchema = DocumentSSchema;
+		       newElType.ElSSchema = docSSchema;
 		       newElType.ElTypeNum = HTML_EL_BODY;
-		       elBody = TtaNewElement (theDocument, newElType);
+		       elBody = TtaNewElement (doc, newElType);
 		       if (previous == NULL)
-			  TtaInsertFirstChild (&elBody, rootElement, theDocument);
+			  TtaInsertFirstChild (&elBody, elRoot, doc);
 		       else
-			  TtaInsertSibling (elBody, previous, FALSE, theDocument);
+			  TtaInsertSibling (elBody, previous, FALSE, doc);
 		    }
 		  /* move the current element into the BODY element */
-		  TtaRemoveTree (el, theDocument);
+		  TtaRemoveTree (el, doc);
 		  if (lastChild == NULL)
-		     TtaInsertFirstChild (&el, elBody, theDocument);
+		     TtaInsertFirstChild (&el, elBody, doc);
 		  else
-		     TtaInsertSibling (el, lastChild, FALSE, theDocument);
+		     TtaInsertSibling (el, lastChild, FALSE, doc);
 		  lastChild = el;
 		  moved = TRUE;
 	       }
@@ -6812,17 +6818,17 @@ CHAR_T*             pathURL;
 		previous = el;
 		TtaNextSibling (&el);
 		}
-	     TtaRemoveTree (elNoframes, theDocument);
+	     TtaRemoveTree (elNoframes, doc);
 	     if (previous == NULL)
-		TtaInsertFirstChild (&elNoframes, elFrameset, theDocument);
+		TtaInsertFirstChild (&elNoframes, elFrameset, doc);
 	     else
-		TtaInsertSibling (elNoframes, previous, FALSE, theDocument);
+		TtaInsertSibling (elNoframes, previous, FALSE, doc);
 	     }
 
 	/* handle character-level elements which contain block-level elements*/
-	CheckBlocksInCharElem (theDocument);
+	CheckBlocksInCharElem (doc);
 	/* create an element Term_List for each sequence of elements Term */
-	el = TtaGetFirstChild (rootElement);
+	el = TtaGetFirstChild (elRoot);
 	if (el != NULL)
 	  {
 	     elType = TtaGetElementType (el);
@@ -6855,15 +6861,15 @@ CHAR_T*             pathURL;
 		       if (elType.ElTypeNum != HTML_EL_Term_List)
 			 {
 			    /* create a Term_List element before the first Term element */
-			    newElType.ElSSchema = DocumentSSchema;
+			    newElType.ElSSchema = docSSchema;
 			    newElType.ElTypeNum = HTML_EL_Term_List;
-			    termList = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (termList, firstTerm, TRUE, theDocument);
+			    termList = TtaNewElement (doc, newElType);
+			    TtaInsertSibling (termList, firstTerm, TRUE, doc);
 			    /* move the Term elements as children of the new Term_List */
 			    nextEl = firstTerm;
 			    TtaNextSibling (&nextEl);
-			    TtaRemoveTree (firstTerm, theDocument);
-			    TtaInsertFirstChild (&firstTerm, termList, theDocument);
+			    TtaRemoveTree (firstTerm, doc);
+			    TtaInsertFirstChild (&firstTerm, termList, doc);
 			    if (lastTerm != firstTerm)
 			      {
 				 prevEl = firstTerm;
@@ -6871,8 +6877,8 @@ CHAR_T*             pathURL;
 				   {
 				      child = nextEl;
 				      TtaNextSibling (&nextEl);
-				      TtaRemoveTree (child, theDocument);
-				      TtaInsertSibling (child, prevEl, FALSE, theDocument);
+				      TtaRemoveTree (child, doc);
+				      TtaInsertSibling (child, prevEl, FALSE, doc);
 				      prevEl = child;
 				   }
 				 while (nextEl != NULL && child != lastTerm);
@@ -6884,12 +6890,12 @@ CHAR_T*             pathURL;
 			 {
 			    /* Create a Definition_Item element surrounding the */
 			    /* Term_List element */
-			    newElType.ElSSchema = DocumentSSchema;
+			    newElType.ElSSchema = docSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_Item;
-			    newEl = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (newEl, termList, TRUE, theDocument);
-			    TtaRemoveTree (termList, theDocument);
-			    TtaInsertFirstChild (&termList, newEl, theDocument);
+			    newEl = TtaNewElement (doc, newElType);
+			    TtaInsertSibling (newEl, termList, TRUE, doc);
+			    TtaRemoveTree (termList, doc);
+			    TtaInsertFirstChild (&termList, newEl, doc);
 			 }
 		       if (el != NULL)
 			 {
@@ -6898,23 +6904,23 @@ CHAR_T*             pathURL;
 			       /* the element following the new Term_List element is */
 			       /* a Definition. Move it as a sibling of the Term_List */
 			      {
-				 TtaRemoveTree (el, theDocument);
-				 TtaInsertSibling (el, termList, FALSE, theDocument);
+				 TtaRemoveTree (el, doc);
+				 TtaInsertSibling (el, termList, FALSE, doc);
 			      }
 			    else
 			      {
 				 /* the element following the Term_List element is not */
 				 /* a Definition. Create a Definition element surrounding */
 				 /* that element */
-				 newElType.ElSSchema = DocumentSSchema;
+				 newElType.ElSSchema = docSSchema;
 				 newElType.ElTypeNum = HTML_EL_Definition;
-				 newEl = TtaNewElement (theDocument, newElType);
-				 TtaInsertSibling (newEl, termList, FALSE, theDocument);
+				 newEl = TtaNewElement (doc, newElType);
+				 TtaInsertSibling (newEl, termList, FALSE, doc);
 				 nextEl = el;
 				 TtaNextSibling (&nextEl);
 				 elType = TtaGetElementType (el);
-				 TtaRemoveTree (el, theDocument);
-				 TtaInsertFirstChild (&el, newEl, theDocument);
+				 TtaRemoveTree (el, doc);
+				 TtaInsertFirstChild (&el, newEl, doc);
 				 while (nextEl != NULL &&
 					(elType.ElTypeNum == HTML_EL_Invalid_element ||
 				      elType.ElTypeNum == HTML_EL_Comment_))
@@ -6923,8 +6929,8 @@ CHAR_T*             pathURL;
 				      el = nextEl;
 				      TtaNextSibling (&nextEl);
 				      elType = TtaGetElementType (el);
-				      TtaRemoveTree (el, theDocument);
-				      TtaInsertSibling (el, previous, FALSE, theDocument);
+				      TtaRemoveTree (el, doc);
+				      TtaInsertSibling (el, previous, FALSE, doc);
 				   }
 			      }
 			 }
@@ -6934,7 +6940,7 @@ CHAR_T*             pathURL;
 	       }
 	  }
 	/* search all Definition elements without a Definition_Item parent */
-	el = TtaGetFirstChild (rootElement);
+	el = TtaGetFirstChild (elRoot);
 	if (el != NULL)
 	  {
 	     elType = TtaGetElementType (el);
@@ -6952,19 +6958,19 @@ CHAR_T*             pathURL;
 			  /* this Definition is not within a Definition_Item */
 			 {
 			    /* create a Definition_Item */
-			    newElType.ElSSchema = DocumentSSchema;
+			    newElType.ElSSchema = docSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_Item;
-			    newEl = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (newEl, el, TRUE, theDocument);
-			    TtaRemoveTree (el, theDocument);
-			    TtaInsertFirstChild (&el, newEl, theDocument);
+			    newEl = TtaNewElement (doc, newElType);
+			    TtaInsertSibling (newEl, el, TRUE, doc);
+			    TtaRemoveTree (el, doc);
+			    TtaInsertFirstChild (&el, newEl, doc);
 			 }
 		    }
 	       }
 	  }
 	/* create a surrounding element Definition_List for each sequence */
 	/* of elements Definition_Item which are not in a Definition_List */
-	el = TtaGetFirstChild (rootElement);
+	el = TtaGetFirstChild (elRoot);
 	if (el != NULL)
 	  {
 	     elType = TtaGetElementType (el);
@@ -6997,18 +7003,18 @@ CHAR_T*             pathURL;
 				   elType.ElTypeNum == HTML_EL_Comment_);
 			    /* create a Definition_List element before the */
 			    /* first Definition_Item element */
-			    newElType.ElSSchema = DocumentSSchema;
+			    newElType.ElSSchema = docSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_List;
-			    glossary = TtaNewElement (theDocument, newElType);
+			    glossary = TtaNewElement (doc, newElType);
 			    TtaInsertSibling (glossary, firstEntry, TRUE,
-					      theDocument);
+					      doc);
 			    /* move the Definition_Item elements as children */
 			    /* of the new Definition_List element */
 			    nextEl = firstEntry;
 			    TtaNextSibling (&nextEl);
-			    TtaRemoveTree (firstEntry, theDocument);
+			    TtaRemoveTree (firstEntry, doc);
 			    TtaInsertFirstChild (&firstEntry, glossary,
-						 theDocument);
+						 doc);
 			    if (lastEntry != firstEntry)
 			      {
 				 prevEl = firstEntry;
@@ -7016,9 +7022,9 @@ CHAR_T*             pathURL;
 				   {
 				      child = nextEl;
 				      TtaNextSibling (&nextEl);
-				      TtaRemoveTree (child, theDocument);
+				      TtaRemoveTree (child, doc);
 				      TtaInsertSibling (child, prevEl, FALSE,
-							theDocument);
+							doc);
 				      prevEl = child;
 				   }
 				 while (nextEl != NULL && child != lastEntry);
@@ -7033,7 +7039,7 @@ CHAR_T*             pathURL;
 	/* create a surrounding element Unnumbered_List for each sequence */
 	/* of elements List_Item which are not in a Unnumbered_List, a */
 	/* Numbered_List, a Menu, or a Directory */
-	el = TtaGetFirstChild (rootElement);
+	el = TtaGetFirstChild (elRoot);
 	if (el != NULL)
 	  {
 	     elType = TtaGetElementType (el);
@@ -7069,18 +7075,16 @@ CHAR_T*             pathURL;
 				 elType.ElTypeNum == HTML_EL_Comment_);
 			    /* create a HTML_EL_Unnumbered_List element before
 			       the first List_Item element */
-			    newElType.ElSSchema = DocumentSSchema;
+			    newElType.ElSSchema = docSSchema;
 			    newElType.ElTypeNum = HTML_EL_Unnumbered_List;
-			    list = TtaNewElement (theDocument, newElType);
-			    TtaInsertSibling (list, firstEntry, TRUE,
-					      theDocument);
+			    list = TtaNewElement (doc, newElType);
+			    TtaInsertSibling (list, firstEntry, TRUE, doc);
 			    /* move the List_Item elements as children of */
 			    /* the new HTML_EL_Unnumbered_List element */
 			    nextEl = firstEntry;
 			    TtaNextSibling (&nextEl);
-			    TtaRemoveTree (firstEntry, theDocument);
-			    TtaInsertFirstChild (&firstEntry, list,
-						 theDocument);
+			    TtaRemoveTree (firstEntry, doc);
+			    TtaInsertFirstChild (&firstEntry, list, doc);
 			    if (lastEntry != firstEntry)
 			      {
 				 prevEl = firstEntry;
@@ -7088,9 +7092,8 @@ CHAR_T*             pathURL;
 				   {
 				      child = nextEl;
 				      TtaNextSibling (&nextEl);
-				      TtaRemoveTree (child, theDocument);
-				      TtaInsertSibling (child, prevEl, FALSE,
-							theDocument);
+				      TtaRemoveTree (child, doc);
+				      TtaInsertSibling (child, prevEl, FALSE, doc);
 				      prevEl = child;
 				   }
 				 while (nextEl != NULL && child != lastEntry);
@@ -7104,7 +7107,7 @@ CHAR_T*             pathURL;
 	     while (el);
 	  }
 	/* merge sibling Text elements with same attributes */
-	el = rootElement;
+	el = elRoot;
 	elType = TtaGetElementType (el);
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	/* search all TEXT elements in the document */
@@ -7116,13 +7119,13 @@ CHAR_T*             pathURL;
 		/* a Text element has been found. Try to merge it with its */
 		/* following siblings */
 		do
-		   ok = TtaMergeText (el, theDocument);
+		   ok = TtaMergeText (el, doc);
 		while (ok);
 	  }
 
 	/* checks all MAP elements. If they are within a Block element, */
 	/* move them up in the structure */
-	el = rootElement;
+	el = elRoot;
 	elType = TtaGetElementType (el);
 	elType.ElTypeNum = HTML_EL_MAP;
 	/* search all MAP elements in the document */
@@ -7137,8 +7140,8 @@ CHAR_T*             pathURL;
 		if (IsBlockElement (parent))
 		  /* its parent is a block element */
 		  {
-		  TtaRemoveTree (el, theDocument);
-		  TtaInsertSibling (el, parent, TRUE, theDocument);
+		  TtaRemoveTree (el, doc);
+		  TtaInsertSibling (el, parent, TRUE, doc);
 		  }
 		}
 	  }
@@ -7147,10 +7150,10 @@ CHAR_T*             pathURL;
         if (elBody != NULL)
 	  if (TtaGetFirstChild (elBody) == NULL)
 	     {
-	     newElType.ElSSchema = DocumentSSchema;
+	     newElType.ElSSchema = docSSchema;
 	     newElType.ElTypeNum = HTML_EL_Element;
-	     newEl = TtaNewElement (theDocument, newElType);
-	     TtaInsertFirstChild (&newEl, elBody, theDocument);
+	     newEl = TtaNewElement (doc, newElType);
+	     TtaInsertFirstChild (&newEl, elBody, doc);
 	     }
 
 	/* add other checks here */
@@ -7628,7 +7631,7 @@ ThotBool            plainText;
 		el = TtaGetParent (el);
 	      }
 	    /* check the Thot abstract tree */
-	    CheckAbstractTree (pathURL);
+	    CheckAbstractTree (pathURL, theDocument);
 	  }
 	gzclose (stream);
 #ifdef STANDALONE

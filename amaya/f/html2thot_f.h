@@ -18,6 +18,8 @@ extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
                              CHAR_T* msg );
 extern ThotBool IsCharacterLevelElement ( Element el );
+extern ThotBool IsBlockElement ( Element el );
+extern void BlockInCharLevelElem ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
                                     ThotBool parsing );
@@ -46,7 +48,8 @@ extern CHAR_T GetNextInputChar ( FILE *infile,
                                  ThotBool *endOfFile );
 extern ThotBool IsXHTMLDocType ( STRING fileName );
 extern ThotBool ContentIsXML ( CHAR_T* fileName );
-extern void CheckAbstractTree ( CHAR_T* pathURL );
+extern void CheckAbstractTree ( CHAR_T* pathURL,
+                                Document doc );
 extern void ParseIncludedHTML ( Element elem,
                                 STRING closingTag );
 extern void ParseSubTree ( CHAR_T* HTMLbuf,
@@ -74,6 +77,8 @@ extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
                                CHAR_T* msg */);
 extern ThotBool IsCharacterLevelElement (/* Element el */);
+extern ThotBool IsBlockElement (/* Element el */);
+extern void BlockInCharLevelElem (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
                                       ThotBool parsing */);
@@ -102,7 +107,8 @@ extern CHAR_T GetNextInputChar (/* FILE *infile,
                                    ThotBool *endOfFile */);
 extern ThotBool IsXHTMLDocType (/* STRING fileName */);
 extern ThotBool ContentIsXML (/* CHAR_T* fileName */);
-extern void CheckAbstractTree (/* CHAR_T* pathURL */);
+extern void CheckAbstractTree (/* CHAR_T* pathURL,
+                                  Document doc */);
 extern void ParseIncludedHTML (/* Element elem,
                                   STRING closingTag */);
 extern void ParseSubTree (/* CHAR_T* HTMLbuf,
