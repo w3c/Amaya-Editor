@@ -188,7 +188,13 @@ typedef XKeyEvent      ThotKeyEvent;
 typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext   ThotAppContext;
 typedef XtTranslations ThotTranslations;
-typedef GdkPixmap     *ThotIcon;
+
+typedef struct {
+    GdkBitmap          *mask;
+    GdkPixmap          *pixmap;
+} _Thot_icon;
+
+typedef _Thot_icon    *ThotIcon;
 typedef GdkPixmap     *ThotPixmap;
 #else /* _GTK */
 typedef Widget         ThotWidget;
