@@ -39,8 +39,15 @@
 #endif /* _WINDOWS */
 #include "application.h"
 
+
 #define	MAXCOLORMAPSIZE		256
-#define scale 65536 / MAXCOLORMAPSIZE;
+
+#ifndef _WINDOWS
+#define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
+#else/*_WINDOWS*/
+#define COLORMAPSCALE 1;
+#endif /*_WINDOWS*/
+
 #define CM_RED		0
 #define CM_GREEN	1
 #define CM_BLUE		2
@@ -262,11 +269,6 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	       colrs[i].red   = localColorMap[0][i];
 	       colrs[i].green = localColorMap[1][i];
 	       colrs[i].blue  = localColorMap[2][i];
-	       /*
-	       colrs[i].red   = GifScreen.ColorMap[0][i];
-	       colrs[i].green = GifScreen.ColorMap[1][i];
-	       colrs[i].blue  = GifScreen.ColorMap[2][i];
-	       */
 	     }
 
 	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
@@ -335,19 +337,15 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	 return (NULL);
        for (i = 0; i < (int) GifScreen.BitPixel; i++)
 	 {
+	   colrs[i].red   = GifScreen.ColorMap[0][i] * COLORMAPSCALE;
+	   colrs[i].green = GifScreen.ColorMap[1][i] * COLORMAPSCALE;
+	   colrs[i].blue  = GifScreen.ColorMap[2][i] * COLORMAPSCALE;
 #ifndef _WINDOWS
-	   colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
-	   colrs[i].green = GifScreen.ColorMap[1][i] * scale;
-	   colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
 	   colrs[i].pixel = i;
 #ifndef _GTK
 	   colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* _GTK */
-#else  /* _WINDOWS */
-	   colrs[i].red   = GifScreen.ColorMap[0][i];
-	   colrs[i].green = GifScreen.ColorMap[1][i];
-	   colrs[i].blue  = GifScreen.ColorMap[2][i];
-#endif /* _WINDOWS */
+#endif  /* _WINDOWS */
 	 }
 
        for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
@@ -400,18 +398,14 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
              return (NULL);
 	   for (i = 0; i < bitPixel; i++)
 	     {
+	       colrs[i].red   = localColorMap[0][i] * COLORMAPSCALE;
+	       colrs[i].green = localColorMap[1][i] * COLORMAPSCALE;
+	       colrs[i].blue  = localColorMap[2][i] * COLORMAPSCALE;
 #ifndef _WINDOWS
-	       colrs[i].red   = localColorMap[0][i] * scale;
-	       colrs[i].green = localColorMap[1][i] * scale;
-	       colrs[i].blue  = localColorMap[2][i] * scale;
 	       colrs[i].pixel = i;
 #ifndef _GTK
 	       colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* _GTK */
-#else  /* _WINDOWS */
-	       colrs[i].red   = GifScreen.ColorMap[0][i];
-	       colrs[i].green = GifScreen.ColorMap[1][i];
-	       colrs[i].blue  = GifScreen.ColorMap[2][i];
 #endif /* _WINDOWS */
 	     }
 
