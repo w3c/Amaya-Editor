@@ -13,7 +13,7 @@
  *          I. Vatton
  *          P. Cheyrou-Lagreze
  */
- 
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"

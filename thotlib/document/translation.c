@@ -1083,57 +1083,80 @@ static unsigned char PresRuleValue (PtrPRule pPRule)
   ----------------------------------------------------------------------*/
 static ThotBool     EmptyElement (PtrElement pEl)
 {
-   PtrElement          pChild;
-   ThotBool            empty;
+  PtrElement          pChild;
+  ThotBool            empty, specialGraphic;
 
-   empty = TRUE;
-   if (pEl->ElTerminal)
-     /* l'element est une feuille. On traite selon le type de feuille */
-     switch (pEl->ElLeafType)
-       {
-       case LtText:
-       case LtPicture:
-	 empty = (pEl->ElTextLength == 0);
-	 break;
-       case LtGraphics:
-       case LtSymbol:
-	 empty = (pEl->ElGraph == EOS);
-	 break;
-       case LtPageColBreak:
-	 /* un saut de page est consideree comme vide */
-	 empty = TRUE;
-	 break;
-       case LtReference:
-	 if (pEl->ElReference != NULL)
-	   if (pEl->ElReference->RdReferred != NULL)
-	     empty = FALSE;
-	 break;
-       case LtPairedElem:
-	 /* un element de paire n'est jamais considere' comme vide */
-	 empty = FALSE;
-	 break;
-       case LtPolyLine:
-	 empty = (pEl->ElNPoints == 0);
-	 break;
-       case LtPath:
-	 empty = (pEl->ElFirstPathSeg == NULL);
-       default:
-	 empty = FALSE;
-	 break;
-       }
-   else
-     /* ce n'est pas une feuille, on traite recursivement tous les fils */
-     {
-     pChild = pEl->ElFirstChild;
-     while (pChild != NULL && empty)
-       if (!EmptyElement (pChild))
-	 empty = FALSE;
-       else
-	 pChild = pChild->ElNext;
-     }
-   return empty;
+  empty = TRUE;
+  if (pEl->ElTerminal)
+    /* l'element est une feuille. On traite selon le type de feuille */
+    switch (pEl->ElLeafType)
+      {
+      case LtText:
+      case LtPicture:
+	empty = (pEl->ElTextLength == 0);
+	break;
+      case LtGraphics:
+      case LtSymbol:
+	empty = (pEl->ElGraph == EOS);
+	break;
+      case LtPageColBreak:
+	/* un saut de page est consideree comme vide */
+	empty = TRUE;
+	break;
+      case LtReference:
+	if (pEl->ElReference != NULL)
+	  if (pEl->ElReference->RdReferred != NULL)
+	    empty = FALSE;
+	break;
+      case LtPairedElem:
+	/* un element de paire n'est jamais considere' comme vide */
+	empty = FALSE;
+	break;
+      case LtPolyLine:
+	empty = (pEl->ElNPoints == 0);
+	break;
+      case LtPath:
+	empty = (pEl->ElFirstPathSeg == NULL);
+      default:
+	empty = FALSE;
+	break;
+      }
+  else
+    /* ce n'est pas une feuille, on traite recursivement tous les fils */
+    {
+      specialGraphic = TypeHasException (ExcEmptyGraphic, pEl->ElTypeNumber,
+					 pEl->ElStructSchema);
+      pChild = pEl->ElFirstChild;
+      while (pChild && empty)
+	{
+	  if (specialGraphic)
+	    /* this is a SVG element such as rect, circle, ellipse, etc. that
+	       has to be considered empty even if it contains a Graphic Leaf
+	       element */
+	    {
+	      if (!pChild->ElTerminal ||
+		  (pChild->ElLeafType != LtGraphics &&
+		   pChild->ElLeafType != LtPolyLine) ||
+		  pEl->ElStructSchema != pChild->ElStructSchema)
+		{
+		  /* this is not a Thot graphics basic element */
+		  if (!pChild->ElSource)
+		    /* this is not a transcluded element */
+		    empty = FALSE;
+		  else
+		    if (pChild->ElSource->RdTypeRef != RefInclusion)
+		      /* this is not a transcluded element */
+		      empty = FALSE;
+		}
+	    }
+	  else if (!EmptyElement (pChild))
+	    empty = FALSE;
+	  if (empty)
+	    pChild = pChild->ElNext;
+	}
+    }
+  return empty;
 }
-
 
 /*----------------------------------------------------------------------
    ConditionIsTrue   evalue la condition du bloc de regles pointe' par

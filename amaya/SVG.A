@@ -19,7 +19,6 @@ ELEMENTS
    SVG:
 	BEGIN
 	ElemNew.Post ->         SVGCreated;
-	ElemExport.Pre ->       SetEmptyShapeAttribute;
 	ElemDelete.Pre ->       SVGWillBeDeleted;
 	END;
    polyline:

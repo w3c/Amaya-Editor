@@ -126,10 +126,10 @@ RULES
 	create 'use';
 	indent +5;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -5;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -147,10 +147,10 @@ RULES
 	create 'image';
 	indent +7;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -7;	
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -200,10 +200,10 @@ RULES
 	create 'path';
 	indent +6;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -6;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -221,10 +221,10 @@ RULES
 	create 'rect';
 	indent +6;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -6;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -242,10 +242,10 @@ RULES
 	create 'circle';
 	indent +8;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -8;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -263,10 +263,10 @@ RULES
 	create 'ellipse';
 	indent +6;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -6;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -284,10 +284,10 @@ RULES
 	create 'line';
 	indent +6;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -6;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -305,10 +305,10 @@ RULES
 	create 'polyline';
 	indent +10;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -10;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -326,10 +326,10 @@ RULES
 	create 'polygon';
 	indent +9;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -9;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;
@@ -377,10 +377,10 @@ RULES
 	create 'tref';
 	indent +6;
 	create attributes;
-	if IntEmptyShape
+	if empty
 		create CloseEmptyTagNL;
 	indent -6;
-	if not IntEmptyShape
+	if not empty
 		BEGIN
 		create CloseTagNL;
 		indent +2;

@@ -72,6 +72,7 @@
 #define ExcIsDraw 314
 #define ExcMoveResize 315
 #define ExcNoShowBox 316
+#define ExcEmptyGraphic 317
 
 /* Table exceptions */
 #define ExcIsTable 320

@@ -19,7 +19,6 @@ ATTR
    Highlight = Yes_;        { to show the SVG element corresponding to the
 			      current selection in the source view }
    Namespace = text;        { for children of element foreignObject }
-   IntEmptyShape = yes_, no_;
 
 CONST
 
@@ -798,19 +797,20 @@ EXCEPT
    defs:                NoMove, NoResize, NoShowBox, NoCreate;
    linearGradient:      NoMove, NoResize, NoShowBox, NoCreate;
    stop:	        NoMove, NoResize, NoShowBox, NoCreate;
-   rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   circle:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   ellipse:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   line_:               MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   polygon:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   path:	        MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   circle:              MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   ellipse:             MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   line_:               MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   polygon:             MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   path:	        MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
    text_:               MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
 	                NoCreate;
    tspan:	        NoShowBox; 
    use_:	        NoMove, NoResize, HighlightChildren, NoShowBox,
-	                NoCreate, IsGroup;
-   image:	        MoveResize, HighlightChildren, NoShowBox;
+	                NoCreate, IsGroup, EmptyGraphic;
+   tref:	        EmptyGraphic;
+   image:	        MoveResize, HighlightChildren, NoShowBox, EmptyGraphic;
    symbol_:	        NoMove, NoResize,  HighlightChildren,NoShowBox,
                         NoCreate;
    a:	                NoMove, NoResize, HighlightChildren, NoShowBox,
@@ -838,7 +838,6 @@ EXCEPT
    Highlight:	        Invisible; 
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;
-   IntEmptyShape:       Invisible;
    RealLang:	        Invisible;
    Charset:	        Invisible;
    Timeline_cross:      MoveResize, NoResize, HighlightChildren, NoShowBox, NoCut;
