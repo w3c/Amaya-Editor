@@ -1,6 +1,8 @@
 /*
  * Implementation for the conversion funtions between internal
  * types and external ones.
+ *
+ * Daniel Veillard 1997
  */
 
 #include "JavaTypes.h"
@@ -251,7 +253,6 @@ void *JavaLongPtr2CIntPtr(jlong *in)
     }
     return (res);
 }
-#endif /* DIRECT_JAVA_VM_ACCESS */
 
 /*
  * Another problem when creating Java internal (Unicode) strings:
@@ -287,10 +288,11 @@ static void is_lsbf_architecture(void) {
     fprintf(stderr,"is_lsbf_architecture() : memory storage error !\n");
     exit(1);
 }
+#endif /* DIRECT_JAVA_VM_ACCESS */
 
 void initJavaTypes() {
-    is_lsbf_architecture();
 #ifdef DIRECT_JAVA_VM_ACCESS
+    is_lsbf_architecture();
     do_ptr_need_shift();
     check_jlong_storage();
 #endif /* DIRECT_JAVA_VM_ACCESS */
@@ -461,6 +463,71 @@ void CLanguagePtr2JavaLanguage(Language *in, struct Hthotlib_Language** out)
 }
 
 /*
+ * C pointer <=> Java long
+ */
+
+void CPixmap2Javalong(Pixmap in, jlong *out)
+{
+    *out = CPtr2JavaLong((void *) in);
+}
+void Javalong2CPixmap(jlong in, Pixmap *out)
+{
+    *out = (Pixmap) JavaLong2CPtr(in);
+}
+
+void CElement2Javalong(Element in, jlong *out)
+{
+    *out = CPtr2JavaLong(in);
+}
+void Javalong2CElement(jlong in, Element *out)
+{
+    *out = JavaLong2CPtr(in);
+}
+
+void CSSchema2Javalong(SSchema in, jlong *out)
+{
+    *out = CPtr2JavaLong(in);
+}
+void Javalong2CSSchema(jlong in, SSchema *out)
+{
+    *out = JavaLong2CPtr(in);
+}
+
+void CAttribute2Javalong(Attribute in, jlong *out)
+{
+    *out = CPtr2JavaLong(in);
+}
+void Javalong2CAttribute(jlong in, Attribute *out)
+{
+    *out = JavaLong2CPtr(in);
+}
+
+void CPRule2Javalong(PRule in, jlong *out)
+{
+    *out = CPtr2JavaLong(in);
+}
+void Javalong2CPRule(jlong in, PRule *out)
+{
+    *out = JavaLong2CPtr(in);
+}
+
+void CThotWidget2Javalong(ThotWidget in, jlong *out)
+{
+    *out = CPtr2JavaLong(in);
+}
+void Javalong2CThotWidget(jlong in, ThotWidget *out)
+{
+    *out = JavaLong2CPtr(in);
+}
+
+/****************************************************************
+ *								*
+ *		String exchanges stubs				*
+ *								*
+ ****************************************************************/
+
+#ifdef DIRECT_JAVA_VM_ACCESS
+/*
  * This is the trickiest stub:
  *   On entry we get a StringBuffer and pass it as a char *
  */
@@ -519,61 +586,44 @@ void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
     free(tmp);
 }
 
+#else /* ! DIRECT_JAVA_VM_ACCESS */
+
 /*
- * C pointer <=> Java long
+ * This is the trickiest stub:
+ *   On entry we get a StringBuffer and pass it as a char *
  */
-
-void CPixmap2Javalong(Pixmap in, jlong *out)
+void JavaStringBuffer2CcharPtr(struct Hjava_lang_StringBuffer* in, char **out)
 {
-    *out = CPtr2JavaLong((void *) in);
-}
-void Javalong2CPixmap(jlong in, Pixmap *out)
-{
-    *out = (Pixmap) JavaLong2CPtr(in);
-}
-
-void CElement2Javalong(Element in, jlong *out)
-{
-    *out = CPtr2JavaLong(in);
-}
-void Javalong2CElement(jlong in, Element *out)
-{
-    *out = JavaLong2CPtr(in);
-}
-
-void CSSchema2Javalong(SSchema in, jlong *out)
-{
-    *out = CPtr2JavaLong(in);
-}
-void Javalong2CSSchema(jlong in, SSchema *out)
-{
-    *out = JavaLong2CPtr(in);
+    char *buffer;
+    int capacity;
+    struct Hjava_lang_String *string;
+    
+    capacity = do_execute_java_method(0, (Hjava_lang_Object*) (in),
+		        "capacity", "()I", 0, 0);
+    if (capacity < MAX_PATH) capacity = MAX_PATH;
+    *out = buffer = (char *) malloc(capacity);
+    if (buffer == NULL) return;
+    buffer[0] = '\0';
+    string = (struct Hjava_lang_String *)
+             do_execute_java_method(0, (Hjava_lang_Object*) (in),
+			"toString", "()Ljava/lang/String;", 0, 0);
+    if (string == NULL) return;
+    javaString2CString(string, buffer, capacity);
 }
 
-void CAttribute2Javalong(Attribute in, jlong *out)
+void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
 {
-    *out = CPtr2JavaLong(in);
-}
-void Javalong2CAttribute(jlong in, Attribute *out)
-{
-    *out = JavaLong2CPtr(in);
+    int len = strlen(in);
+    struct Hjava_lang_String *string;
+
+    do_execute_java_method(0, (Hjava_lang_Object*) (*out),
+                         "ensureCapacity", "(I)V", 0, 0, (jint) len);
+    string = makeJavaString(in, len);
+    if (string == NULL) return;
+    do_execute_java_method(0, (Hjava_lang_Object*) (*out),
+	 "insert", "(ILjava/lang/String;)Ljava/lang/StringBuffer;", 0, 0,
+			 0, string);
+    free(in);
 }
 
-void CPRule2Javalong(PRule in, jlong *out)
-{
-    *out = CPtr2JavaLong(in);
-}
-void Javalong2CPRule(jlong in, PRule *out)
-{
-    *out = JavaLong2CPtr(in);
-}
-
-void CThotWidget2Javalong(ThotWidget in, jlong *out)
-{
-    *out = CPtr2JavaLong(in);
-}
-void Javalong2CThotWidget(jlong in, ThotWidget *out)
-{
-    *out = JavaLong2CPtr(in);
-}
-
+#endif /* DIRECT_JAVA_VM_ACCESS */

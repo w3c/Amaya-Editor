@@ -191,10 +191,10 @@
 
 #define Set_Language_Char_lang(value, obj) \
 		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"set_document", "(I)V", 0, 0, (jint) value)
+		"set_lang", "(I)V", 0, 0, (jint) value)
 #define Get_Language_Char_lang(obj) \
 		(char) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_document", "()I", 0, 0)
+		"get_lang", "()I", 0, 0)
 
 #define Set_HTTPRequest_Ptr_callback_f(value, obj) \
 		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \

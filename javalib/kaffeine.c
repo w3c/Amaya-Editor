@@ -1,8 +1,7 @@
 /*
  * Interface for the Kaffe Java interpreter.
  *
- * Author: D. Veillard
- *
+ * Daniel Veillard 1997
  */
 
 #include <stdio.h>

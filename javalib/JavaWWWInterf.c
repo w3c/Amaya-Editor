@@ -1,5 +1,7 @@
 /*
  * JavaWWWInterf.c : rewrite of a Java based WWW access interface for Amaya.
+ *
+ * Daniel Veillard 1997
  */
 
 #include "thot_sys.h"

@@ -1,6 +1,8 @@
 /*
  * JavaDialog.c : Link to the Standard Thot Library interface
  *                for lauching new classes and managing threads.
+ *
+ * Daniel Veillard 1997
  */
 
 #include "thot_gui.h"

@@ -1,7 +1,7 @@
 /*
- * Kaffe stubs generated for class thotlib_Extra.
- * This class encapsulate call to the Thot lib api which could not
- * be built automatically by javastub program.
+ * Debug traps on C side.
+ *
+ * Daniel Veillard 1997
  */
 
 #include <native.h>

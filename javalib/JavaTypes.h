@@ -1,6 +1,8 @@
 /*
  * Header describing the signatures for the conversion
  * funtions between internal types and external ones.
+ *
+ * Daniel Veillard 1997
  */
 
 #ifndef _Included_Java_Type_H_
