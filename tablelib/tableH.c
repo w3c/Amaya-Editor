@@ -26,8 +26,20 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 
-static PtrTabUpdate FirstColUpdate;
-static ThotBool ComputeColInWork = FALSE;
+
+typedef struct _LockRelations *PtrLockRelations;
+typedef struct _LockRelations
+{
+  PtrLockRelations LockRNext;	/* Next block */
+  PtrAbstractBox  LockRTable[MAX_RELAT_DIM];
+  int             LockRFrame[MAX_RELAT_DIM];
+} LockRelations;
+
+static PtrLockRelations  DifferedChecks = NULL;
+static PtrTabUpdate      FirstColUpdate;
+static ThotBool          ComputeColInWork = FALSE;
+static ThotBool          Lock = FALSE;
+
 #include "attributes_f.h"
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
@@ -45,6 +57,67 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
 #else
 static void UpdateColumnWidth (/*cell, col, frame*/);
 #endif
+
+
+/*----------------------------------------------------------------------
+   DifferFormatting  registers differed table formatting.        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void              DifferFormatting (PtrAbstractBox table, int frame)
+#else  /* __STDC__ */
+void              DifferFormatting (table, frame)
+PtrAbstractBox    table;
+int               frame;
+#endif /* __STDC__ */
+{
+  int                 i;
+  PtrLockRelations    pLockRel;
+  PtrLockRelations    pPreviousLockRel;
+  ThotBool            toCreate;
+
+  if (table == NULL)
+    return;
+
+  /* Look for an empty entry */
+  pPreviousLockRel = NULL;
+  pLockRel = DifferedChecks;
+  toCreate = TRUE;
+  i = 0;
+  while (toCreate && pLockRel != NULL)
+    {
+      i = 0;
+      pPreviousLockRel = pLockRel;
+      while (i < MAX_RELAT_DIM && pLockRel->LockRTable[i] != NULL)
+	{
+	  if (pLockRel->LockRTable[i] == table)
+	    /* The table is already registered */
+	    return;
+	  else
+	    i++;
+	}
+      
+      if (i == MAX_RELAT_DIM)
+	/* next block */
+	pLockRel = pLockRel->LockRNext;
+      else
+	toCreate = FALSE;
+    }
+
+  if (toCreate)
+    {
+      /* Create a new block */
+      i = 0;
+      pLockRel = TtaGetMemory (sizeof (LockRelations));
+      memset (pLockRel, 0, sizeof (LockRelations));
+      if (pPreviousLockRel == NULL)
+	DifferedChecks = pLockRel;
+      else
+	pPreviousLockRel->LockRNext = pLockRel;
+    }
+
+  pLockRel->LockRTable[i] = table;
+  pLockRel->LockRFrame[i] = frame;
+}
 
 /*----------------------------------------------------------------------
   NextSiblingAbsBox returns the next sibling or the next sibling of a parent.
@@ -643,6 +716,8 @@ ThotBool         force;
   mbp = pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
   pCell = GetParentCell (pBox);
   checkEnclosing = FALSE;
+
+  /* get the inside table width */
   constraint = GiveAttrWidth (table, &width, &percent);
   if (!constraint)
     {
@@ -688,7 +763,7 @@ printf("<<<<<<<<<<<<<<<%d\n", pBox->BxWidth);
   for (cRef = 0; cRef < cNumber; cRef++)
     {
       pBox = colBox[cRef]->AbBox;
-      /* add padding and border space */
+      /* take the spacing into account */
       if (pOldBox == NULL)
 	{
 	  if (pBox->BxXOrg - table->AbBox->BxXOrg > 0)
@@ -744,7 +819,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
 #endif
     }
 
-  /* add space after the last column */
+  /* add the spacing after the last column */
   if (pOldBox != NULL)
     {
       /* locate the enclosing box of columns */
@@ -806,15 +881,16 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
       checkEnclosing = TRUE;
     }
 
+  /* set min and max outside widths */
   if (constraint)
     {
-      table->AbBox->BxMinWidth = width;
-      table->AbBox->BxMaxWidth = width;
+      table->AbBox->BxMinWidth = width + mbp;
+      table->AbBox->BxMaxWidth = width + mbp;
     }
   else
     {
-      table->AbBox->BxMinWidth = realMin + sumPercent;
-      table->AbBox->BxMaxWidth = realMax + sumPercent;
+      table->AbBox->BxMinWidth = realMin + sumPercent + mbp;
+      table->AbBox->BxMaxWidth = realMax + sumPercent + mbp;
     }
 
   /* remind that the table height has to be recomputed */
@@ -839,7 +915,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
 	  else
 	    delta = pBox->BxMaxWidth;
 	  /* update the new inside width */
-	  delta = delta - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
+	  delta = delta - pBox->BxWidth;
 	  ResizeWidth (pBox, pBox, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
@@ -863,7 +939,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 	  else
 	    delta = pBox->BxMinWidth;
 	  /* update the new inside width */
-	  delta = delta - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
+	  delta = delta - pBox->BxWidth;
 	  ResizeWidth (pBox, pBox, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
@@ -965,7 +1041,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 		i = pBox->BxMinWidth + delta + px;
 	    }
 	  /* update the new inside width */
-	  i = i - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
+	  i = i - pBox->BxWidth;
 	  ResizeWidth (pBox, pBox, NULL, i, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
@@ -1155,7 +1231,7 @@ int             frame;
   PtrTabRelations     pTabRel;
   PtrAbstractBox     *colBox, rowSpanCell[MAX_COLROW];
   PtrAbstractBox      pAb, row, cell;
-  PtrBox              pBox;
+  PtrBox              pBox, box;
   int                *colMinWidth, *colMaxWidth;
   int                *colWidth, *colPercent, *colVSpan;
   int                 colSpan_MinWidth[MAX_COLROW], colSpan_Percent[MAX_COLROW];
@@ -1164,7 +1240,7 @@ int             frame;
   int                 rowSpans[MAX_COLROW];
   int                 cNumber, spanNumber, rspanNumber;
   int                 span, delta, j;
-  int                 width, i, cRef;
+  int                 width, i, cRef, mbp;
   int                 min, max, percent, realMin, realMax;
   int                 attrVSpan, attrHSpan;
   int                 attrHeight, cellWidth;
@@ -1333,6 +1409,9 @@ int             frame;
 			}
 
 		      cell = pAb;
+		      box = cell->AbBox;
+		      /* take into account the left margin, border and padding */
+		      mbp = box->BxLMargin + box->BxLBorder + box->BxLPadding;
 		      if (span == 1 && col != 0 && col != colBox[cRef])
 			{
 			  /* the column width is already known */
@@ -1366,9 +1445,9 @@ int             frame;
 			    }
 
 			  /* process elements in this cell */
-			  min = 8;
-			  max = 8;
-			  width = cell->AbBox->BxWidth;
+			  min = 1;
+			  max = 1;
+			  width = box->BxWidth;
 			  while (pAb != NULL)
 			    {
 			      if (skip)
@@ -1385,7 +1464,7 @@ int             frame;
 				  if (pAb->AbBox->BxHorizEdge == Left ||
 				      pAb->AbBox->BxHorizEdge == VertRef)
 				    {
-				      delta = pAb->AbBox->BxXOrg - cell->AbBox->BxXOrg;
+				      delta = pAb->AbBox->BxXOrg - box->BxXOrg - mbp;
 				      if (delta < 0)
 					delta = 0;
 				    }
@@ -1420,7 +1499,10 @@ int             frame;
 				    }
 				}
 			    }
-
+			  /* take into account the right margin, border, padding */
+			  mbp += box->BxRMargin + box->BxRBorder + box->BxRPadding;
+			  min += mbp;
+			  max += mbp;
 			  /* update the min and max of the column */
 			  if (span > 1 && spanNumber < MAX_COLROW)
 			    {
@@ -1761,47 +1843,56 @@ int              frame;
       if (table != NULL && !table->AbNew && !table->AbDead &&
 	  table->AbBox != NULL && table->AbBox->BxCycles == 0)
 	{
-	  pEl = cell->AbElement;
-	  pSS = pEl->ElStructSchema;
-	  col = NULL;
-	  /* check if there is a colspan attribute */
-	  attrNum = GetAttrWithException (ExcColSpan, pSS);
-	  if (attrNum != 0)
+	  if (Lock)
 	    {
-	      /* search this attribute attached to the cell element */
-	      pAttr = pEl->ElFirstAttr;
-	      found = FALSE;
-	      while (!found && pAttr != NULL)
-		if (pAttr->AeAttrNum == attrNum &&
-		    pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-		  {
-		    found = TRUE;
-		    if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
-		      span = pAttr->AeAttrValue;
-		  }
-		else
-		  pAttr = pAttr->AeNext;
+	      DifferFormatting (table, frame);
+	      table = NULL;
 	    }
-	  if (span == 1)
+	  else
 	    {
-	      /* search the refered column */
-	      attrNum = GetAttrWithException (ExcColRef, pSS);
+	      pEl = cell->AbElement;
+	      pSS = pEl->ElStructSchema;
+	      col = NULL;
+	      /* check if there is a colspan attribute */
+	      attrNum = GetAttrWithException (ExcColSpan, pSS);
 	      if (attrNum != 0)
 		{
 		  /* search this attribute attached to the cell element */
 		  pAttr = pEl->ElFirstAttr;
 		  found = FALSE;
 		  while (!found && pAttr != NULL)
-		    if (pAttr->AeAttrType == AtReferenceAttr &&
-			pAttr->AeAttrReference != NULL &&
-			pAttr->AeAttrReference->RdReferred != NULL)
+		    if (pAttr->AeAttrNum == attrNum &&
+			pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
 		      {
-			pRefEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
-			col = pRefEl->ElAbstractBox[cell->AbDocView - 1];
 			found = TRUE;
+			if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
+			  span = pAttr->AeAttrValue;
 		      }
 		    else
 		      pAttr = pAttr->AeNext;
+		}
+
+	      if (span == 1)
+		{
+		  /* search the refered column */
+		  attrNum = GetAttrWithException (ExcColRef, pSS);
+		  if (attrNum != 0)
+		    {
+		      /* search this attribute attached to the cell element */
+		      pAttr = pEl->ElFirstAttr;
+		      found = FALSE;
+		      while (!found && pAttr != NULL)
+			if (pAttr->AeAttrType == AtReferenceAttr &&
+			    pAttr->AeAttrReference != NULL &&
+			    pAttr->AeAttrReference->RdReferred != NULL)
+			  {
+			    pRefEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+			    col = pRefEl->ElAbstractBox[cell->AbDocView - 1];
+			    found = TRUE;
+			  }
+			else
+			  pAttr = pAttr->AeNext;
+		    }
 		}
 	    }
 	}
@@ -1839,7 +1930,12 @@ int              frame;
 {
   PtrAbstractBox      pAb;
 
-  if (table == NULL)
+  if (Lock)
+    {
+      DifferFormatting (table, frame);
+      pAb = NULL;
+    }
+  else if (table == NULL)
     {
       /* look for the table */
       if (col != NULL && col->AbBox != NULL)
@@ -1952,6 +2048,67 @@ oolean          *result;
     }
 }
 
+/*----------------------------------------------------------------------
+  TtaLockTableFormatting suspends all tables formatting
+  ----------------------------------------------------------------------*/
+void    TtaLockTableFormatting ()
+{
+  Lock = TRUE;
+}
+
+
+/*----------------------------------------------------------------------
+  TtaUnlockTableFormatting reformats all locked tables
+  ----------------------------------------------------------------------*/
+void    TtaUnlockTableFormatting ()
+{
+   int                 i;
+   PtrLockRelations     pLockRel;
+
+  Lock = FALSE;
+   /* Reformat all table in suspend */
+   pLockRel = DifferedChecks;
+   while (pLockRel != NULL)
+     {
+	/* Manage all locked tables */
+	i = 0;
+	while (i < MAX_RELAT_DIM)
+	  {
+	     if (pLockRel->LockRTable[i] == NULL)
+		i = MAX_RELAT_DIM;
+	     else if (pLockRel->LockRTable[i]->AbElement != NULL)
+	       ComputeColWidth (NULL, pLockRel->LockRTable[i], pLockRel->LockRFrame[i]);
+	     /* next entry */
+	     i++;
+	  }
+
+	/* next block */
+	pLockRel = pLockRel->LockRNext;
+     }
+
+   /* Free allocated blocks */
+   while (DifferedChecks != NULL)
+     {
+	pLockRel = DifferedChecks;
+	DifferedChecks = DifferedChecks->LockRNext;
+	TtaFreeMemory (pLockRel);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  TtaGetTableFormattingLock gives the status of the table formatting lock.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void      TtaGetTableFormattingLock (ThotBool *lock)
+#else  /* __STDC__ */
+void      TtaGetTableFormattingLock (lock)
+ThotBool *lock;
+#endif /* __STDC__ */
+{
+  *lock = Lock;
+}
+
 
 /*----------------------------------------------------------------------
    TableHLoadResources : connect resources for managing HTML tables
@@ -1961,9 +2118,11 @@ void                TableHLoadResources ()
 
    if (ThotLocalActions[T_checktable] == NULL)
      {
-	/* initialisations */
         FirstColUpdate = NULL;
-	/* connexion des ressources */
+	/* connecting resources */
+	TteConnectAction (T_lock, (Proc) TtaLockTableFormatting);
+	TteConnectAction (T_unlock, (Proc) TtaUnlockTableFormatting);
+	TteConnectAction (T_islock, (Proc) TtaGetTableFormattingLock);
 	TteConnectAction (T_checktable, (Proc) UpdateTable);
 	TteConnectAction (T_checkcolumn, (Proc) UpdateColumnWidth);
 	TteConnectAction (T_resizetable, (Proc) UpdateTableWidth);

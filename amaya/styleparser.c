@@ -2359,7 +2359,6 @@ ThotBool            isHTML;
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
-  margin.typed_data.value = - margin.typed_data.value;
   if (margin.typed_data.unit != STYLE_UNIT_INVALID)
     TtaSetStylePresentation (PRMarginBottom, element, tsch, context, margin);
   return (cssRule);

@@ -1502,9 +1502,10 @@ STRING              valtext;
 {
   PtrDocument         SelDoc;
   PtrElement          firstSel, lastSel;
-  int                 firstChar, lastChar;
   PtrAttribute        pAttrNew;
+  int                 firstChar, lastChar;
   int                 lg, act;
+  ThotBool            lock = TRUE;
 
   act = 1; /* apply by default */
   switch (ref)
@@ -1546,6 +1547,14 @@ STRING              valtext;
 	  GetAttribute (&pAttrNew);
 	  if (SchCurrentAttr != NULL)
 	    {
+	      /* lock tables formatting */
+	      if (ThotLocalActions[T_islock])
+		{
+		  (*ThotLocalActions[T_islock]) (&lock);
+		  if (!lock)
+		    /* table formatting is not loked, lock it now */
+		    (*ThotLocalActions[T_lock]) ();
+		}
 	      pAttrNew->AeAttrSSchema = SchCurrentAttr;
 	      pAttrNew->AeAttrNum = NumCurrentAttr;
 	      pAttrNew->AeDefAttr = FALSE;
@@ -1603,6 +1612,9 @@ STRING              valtext;
 		default:
 		  break;
 		}
+	      if (!lock)
+		/* unlock table formatting */
+		(*ThotLocalActions[T_unlock]) ();
 	      UpdateAttrMenu (SelDoc);
 	    }
 	  DeleteAttribute (NULL, pAttrNew);

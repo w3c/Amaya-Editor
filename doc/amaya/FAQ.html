@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>Amaya FAQ</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
 <body style="color: #000000;background-color: #FFFBF0" lang="en"
@@ -29,6 +30,7 @@ src="../Icons/amaya.gif" alt="Amaya"></a></p>
   <li><a href="#Amaya">Is Amaya compliant with MathML?</a></li>
   <li><a href="#edit">Can I edit tags directly?</a></li>
   <li><a href="#Displayed">Fonts are too small. What can I do?</a></li>
+  <li><a href="#XFonts">Can I  get fonts for Amaya on linux?</a></li>
   <li><a href="#want">How can I change the default window size?</a></li>
   <li><a href="#parsing">Can I see parsing errors detected by Amaya?</a></li>
   <li><a href="#What">What is the reason for a very liberal structure
@@ -180,7 +182,36 @@ not other elements (images, etc.).</p>
 <hr>
 
 
-<h2><a name="want">II.4. How can I change the default window size</a></h2>
+<h2><a name="XFonts">II.4. Can I  get fonts for Amaya on linux?</a></h2>
+
+<p>There are interesting X fonts for  linux at: <a
+href="http://www.gimp.org/urw-fonts.tar.gz">http://www.gimp.org/urw-fonts.tar.gz</a>.</p>
+
+<p>To install them:</p>
+<ul>
+  <li>Untar the file into /usr/X11R6/lib/X11/fonts</li>
+  <li>Change the file /etc/X11/XF86Config :
+      Section "Files"
+          RgbPath    "/usr/X11R6/lib/X11/rgb"
+          FontPath   "/usr/X11R6/lib/X11/fonts/misc:unscaled"
+          FontPath   "/usr/X11R6/lib/X11/fonts/75dpi:unscaled"
+          FontPath   "/usr/X11R6/lib/X11/fonts/100dpi:unscaled"
+          FontPath   "/usr/X11R6/lib/X11/fonts/URW"
+          FontPath   "/usr/X11R6/lib/X11/fonts/Type1"
+          FontPath   "/usr/X11R6/lib/X11/fonts/Speedo"
+          FontPath   "/usr/X11R6/lib/X11/fonts/misc"
+          FontPath   "/usr/X11R6/lib/X11/fonts/75dpi"
+          FontPath   "/usr/X11R6/lib/X11/fonts/100dpi"
+      EndSection</li>
+  <li>Restart your X server and you will have a better display with Amaya.
+  </li>
+</ul>
+
+<p></p>
+<hr>
+
+
+<h2><a name="want">II.5. How can I change the default window size</a></h2>
 
 <p>Resize your window to the value you'd like, then use the
 Special/Preference/Geometry menu to save the current geometry of the displayed
@@ -191,7 +222,7 @@ updated.</p>
 <hr>
 
 
-<h2><a name="parsing">II.5. Can I see parsing errors detected by
+<h2><a name="parsing">II.6. Can I see parsing errors detected by
 Amaya?</a></h2>
 
 <p>Amaya cannot be used to check documents validity. It accepts valid and
@@ -206,7 +237,7 @@ log file</em>.</p>
 <hr>
 
 
-<h2><a name="What">II.6. What is the reason</a> for a very liberal structure
+<h2><a name="What">II.7. What is the reason</a> for a very liberal structure
 enforcement?</h2>
 
 <p>Amaya has to cope with existing Web pages, and very few of them validate
@@ -241,7 +272,7 @@ remain when the document is saved.</p>
 <hr>
 
 
-<h2><a name="II.7.">II.7. How can I update the document title?</a></h2>
+<h2><a name="II.7.">II.8. How can I update the document title?</a></h2>
 
 <p>The user can change the document title by editing the field "Title" at the
 top of the document window, but he/she has to confirm the change by hitting
@@ -328,19 +359,19 @@ and later) of <a href="http://www.lesstif.org/">Lesstif</a>.</p>
 src="http://validator.w3.org/images/vh40.gif" alt="Valid HTML 4.0!"
 height="31" width="88"></a></p>
 <address>
-  <a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+  <a href="mailto:irene.vatton@w3.org">Irène Vatton</a><br>
   $Date$ 
 </address>
 <address>
   <p class="policyfooter"><small><a
   href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
-  &nbsp;&copy;&nbsp; 1997 <a href="http://www.w3.org/">W3C</a> (<a
+   ©  1997 <a href="http://www.w3.org/">W3C</a> (<a
   href="http://www.lcs.mit.edu/">MIT</a>, <a
   href="http://www.inria.fr/">INRIA</a>, <a
   href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal    
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal      
   Disclaimer">liability,</a> <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C    
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C      
   Trademarks">trademark</a>, <a
   href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
   use </a>and <a

@@ -2043,7 +2043,7 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
-   RecordEnclosing  enregistre les englobements diffe're's.        
+   RecordEnclosing  registers differed packings.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RecordEnclosing (PtrBox pBox, ThotBool horizRef)
@@ -2059,7 +2059,7 @@ ThotBool            horizRef;
   PtrDimRelations     pPreviousDimRel;
   ThotBool            toCreate;
 
-  /* On recherche une entree libre */
+  /* Look for an empty entry */
   pPreviousDimRel = NULL;
   pDimRel = DifferedPackBlocks;
   toCreate = TRUE;
@@ -2071,22 +2071,22 @@ ThotBool            horizRef;
       while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
 	{
 	  if (pDimRel->DimRSame[i] == horizRef && pDimRel->DimRTable[i] == pBox)
-	    /* La boite est deja enregistree */
+	    /* The box is already registered */
 	    return;
 	  else
 	    i++;
 	}
       
       if (i == MAX_RELAT_DIM)
-	/* Bloc suivant */
+	/* next block */
 	pDimRel = pDimRel->DimRNext;
       else
 	toCreate = FALSE;
     }
 
-  /* Faut-il creer un nouveau bloc de relations ? */
   if (toCreate)
     {
+      /* Create a new block */
       i = 0;
       GetDimBlock (&pDimRel);
       if (pPreviousDimRel == NULL)
@@ -2096,7 +2096,7 @@ ThotBool            horizRef;
     }
 
   pDimRel->DimRTable[i] = pBox;
-  /* englobement horizontal */
+  /* packing the width */
   pDimRel->DimRSame[i] = horizRef;
 }
 
@@ -2813,6 +2813,7 @@ int                 frame;
 	  }
 	if (pAb->AbMBPChange)
 	  {
+	    pAb->AbMBPChange = FALSE;
 	    savpropage = Propagate;
 	    Propagate = ToAll;	/* On passe en mode normal de propagation */
 	    /* update vertical margins, borders and paddings */
@@ -2824,13 +2825,12 @@ int                 frame;
 	    /* Check if the changes affect the inside or the outside width */
 	    if (i != 0 || j != 0)
 	      if (pAb->AbHeight.DimIsPosition ||
-		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing ||
-		  pAb->AbHeight.DimAbRef == 0)
-		/* the inside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
-	      else
+		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
 		/* the outside height is constrained */
 		ResizeHeight (pBox, pBox, NULL, - i - j, 0, 0, frame);
+	      else
+		/* the inside height is constrained */
+		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
 
 	    /* update horizontal margins, borders and paddings */
 	    i = pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
@@ -2842,13 +2842,12 @@ int                 frame;
 	    if (i != 0 || j != 0)
 	      {
 		if (pAb->AbWidth.DimIsPosition ||
-		    pAb->AbWidth.DimAbRef == pAb->AbEnclosing ||
-		    pAb->AbWidth.DimAbRef == 0)
-		  /* the inside width is constrained */
-		  ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
-		else
+		    pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
 		  /* the outside width is constrained */
 		  ResizeWidth (pBox, pBox, NULL, - i - j, 0, 0, 0, frame);
+		else
+		  /* the inside width is constrained */
+		  ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
 		
 		/* Check table consistency */
 		if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
@@ -2866,7 +2865,6 @@ int                 frame;
 		  }
 	      }
 	    Propagate = savpropage;	/* Restaure la regle de propagation */
-	    pAb->AbMBPChange = FALSE;
 	    result = TRUE;
 	  }
 	/* CHANGEMENT DE POSITION HORIZONTALE */
@@ -2996,8 +2994,7 @@ int                 frame;
    int                 i;
    PtrDimRelations     pDimRel;
 
-   /* Il faut reevaluer la dimension des boites dont le contenu est */
-   /* englobe et depend de relations hors-structure.                */
+   /* Apply all differed WidthPack and HeightPack  */
    PackBoxRoot = NULL;
    pDimRel = DifferedPackBlocks;
    while (pDimRel != NULL)
@@ -3009,20 +3006,20 @@ int                 frame;
 	     if (pDimRel->DimRTable[i] == NULL)
 		i = MAX_RELAT_DIM;
 	     else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
-		;		/* le pave n'existe plus */
+		;		/* /* doesn't exist anymore */
 	     else if (pDimRel->DimRSame[i])
 		WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
 	     else
 		HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
-	     /* Entree suivante */
+	     /* next entry */
 	     i++;
 	  }
 
-	/* On passe au bloc suivant */
+	/* next block */
 	pDimRel = pDimRel->DimRNext;
      }
 
-   /* On libere les blocs */
+   /* Free allocated blocks */
    while (DifferedPackBlocks != NULL)
      {
 	pDimRel = DifferedPackBlocks;

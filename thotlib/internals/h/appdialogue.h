@@ -209,7 +209,10 @@ typedef struct _SchemaMenu_Ctl
 #define T_closehistory                  122
 
 #define T_initevents                    123
-#define MAX_LOCAL_ACTIONS               124
+#define T_lock                          124
+#define T_unlock                        125
+#define T_islock                        126
+#define MAX_LOCAL_ACTIONS               127
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

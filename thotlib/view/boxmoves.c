@@ -1768,7 +1768,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-  PtrBox              pNextBox;
+  PtrBox              box;
   PtrLine             pLine;
   PtrAbstractBox      pAb;
   PtrAbstractBox      pCurrentAb;
@@ -1776,7 +1776,7 @@ int                 frame;
   PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
   ViewSelection      *pViewSel;
-  int                 i, j, k, diff;
+  int                 i, j, k, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   ThotBool            notEmpty;
   ThotBool            toMove;
@@ -1786,422 +1786,438 @@ int                 frame;
   if (!pBox)
     return;
   /* check if the inside width, margins, borders, and paddings change */
-  diff = pBox->BxW + pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder - pBox->BxWidth;
+  pCurrentAb = pBox->BxAbstractBox;
+  if (!pCurrentAb)
+    return;
+
+  if (pCurrentAb->AbMBPChange)
+    /* margins borders and are not interpreted yet */
+    diff = 0;
+  else
+    diff = pBox->BxW + pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder - pBox->BxWidth;
   if (delta || diff)
     {
       /* Do we have to clean up the history of moved boxes */
       if (pSourceBox == NULL && pFromBox == NULL)
 	pBox->BxMoved = NULL;
       
-      if (pBox->BxAbstractBox != NULL)
-	if (!pBox->BxAbstractBox->AbDead)
-	  {
-	    /* Area zone before moving */
-	    i = pBox->BxXOrg;
-	    j = i + pBox->BxWidth;
-	    pCurrentAb = pBox->BxAbstractBox;
-	    /* It's not a stretchable box: clean up the history */
-	    if (!pBox->BxHorizFlex)
-	      pBox->BxMoved = NULL;
+      if (!pCurrentAb->AbDead)
+	{
+	  /* Area zone before moving */
+	  i = pBox->BxXOrg;
+	  j = i + pBox->BxWidth;
+	  /* It's not a stretchable box: clean up the history */
+	  if (!pBox->BxHorizFlex)
+	    pBox->BxMoved = NULL;
+	  
+	  /* Force the reevaluation of polyline control points */
+	  if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
+	    {
+	      /* free control points */
+	      free ((STRING) pBox->BxPictInfo);
+	      pBox->BxPictInfo = NULL;
+	    }
 	    
-	    /* Force the reevaluation of polyline control points */
-	    if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
-	      {
-		/* free control points */
-		free ((STRING) pBox->BxPictInfo);
-		pBox->BxPictInfo = NULL;
-	      }
-	    
-	    /* Check the validity of dependency rules */
-	    toMove = TRUE;
-	    if (pCurrentAb->AbEnclosing != NULL && pCurrentAb->AbEnclosing->AbBox != NULL)
-		toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
-			  pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock);
-	    
-	    /* check positionning constraints */
-	    if (!toMove || pBox->BxHorizEdge == Left || pBox->BxHorizEdge == VertRef)
-	      {
-		/*====> The left is fixed */
-		/* Move the middle and the right */
-		orgTrans = 0;
-		middleTrans = (pBox->BxWidth + delta + diff) / 2 - pBox->BxWidth / 2;
-		endTrans = delta + diff;
-	      }
-	    else if (pBox->BxHorizEdge == VertMiddle)
-	      {
-		/*====> The middle is fixed */
-		/* Move the left and the right */
-		orgTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
-		/* adjust */
-		endTrans = delta + diff + orgTrans;
-		middleTrans = 0;
-	      }
-	    else
-	      {
-		/*====> The right is fixed */
-		/* Move the left and the middle */
-		orgTrans = -delta - diff;
-		middleTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
-		endTrans = 0;
-	      }
-
-	    /* inside width */
-	    pBox->BxW += delta;
-	    /* outside width */
-	    pBox->BxWidth = pBox->BxWidth + delta + diff;
-	    pBox->BxXOrg += orgTrans;
-	    
-	    /* register the window area to be redisplayed */
-	    if (ReadyToDisplay
-		&& pBox->BxType != BoSplit
-		/* don't take care of a box which is not */
-		/* at its right place in the concrete image  */
-		&& !pBox->BxXToCompute
-		&& !pBox->BxYToCompute
-		&& (orgTrans != 0
-		    || pCurrentAb->AbFirstEnclosed == NULL
-		    /* redisplay filled boxes */
-		    || pCurrentAb->AbFillBox
-		    || pCurrentAb->AbPictBackground != NULL))
-	      {
-		if (pCurrentAb->AbLeafType == LtText)
-		  {
-		    k = 0;
-		    if (orgTrans == 0)
-		      i = j;
-		    else if (orgTrans < 0)
-		      i += orgTrans;
-
-		    if (endTrans == 0)
-		      j = i;
-		    else if (endTrans > 0)
-		      j += endTrans;
-		  }
-		else
-		  {
-		    /* add an extra margin for graphics */
-		    if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-		      k = EXTRA_GRAPH;
-		    else
-		      k = 0;
-		    if (orgTrans < 0)
-		      i += orgTrans;
-		    if (endTrans > 0)
-		      j += endTrans;
-		  }
-
-		DefClip (frame, i - k, pBox->BxYOrg - k, j + k, pBox->BxYOrg + pBox->BxHeight + k);
-	      }
-	    
-	     /* Moving sibling boxes and the parent? */
-	    pPosRel = pBox->BxPosRelations;
-	    while (pPosRel != NULL)
-	      {
-		i = 0;
-		notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
-		while (i < MAX_RELAT_POS && notEmpty)
-		  {
-		    pRelation = &pPosRel->PosRTable[i];
-		    if (pRelation->ReBox->BxAbstractBox != NULL)
-		      /* Ignore the back relation of a stretchable box */
-		      if (!pBox->BxHorizFlex
-			  || pRelation->ReOp != OpHorizDep
-			  || pCurrentAb == pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
-			switch (pRelation->ReRefEdge)
-			  {
-			  case Left:
-			    if (pRelation->ReOp == OpHorizRef)
-			      {
-				if (pRelation->ReBox != pBox)
-				  MoveVertRef (pRelation->ReBox, pSourceBox, orgTrans, frame);
-			      }
-			     else if (toMove)
-			       {
-				 if (pRelation->ReOp == OpHorizInc)
-				   {
-				     if (!pBox->BxHorizFlex)
-				       XMove (pBox, NULL, -orgTrans, frame);
-				   }
-				 else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
-					  || pRelation->ReOp == OpWidth)
-				   MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, orgTrans, frame, TRUE);
-				 else if (pRelation->ReBox != pSourceBox)
-				   XMove (pRelation->ReBox, pBox, orgTrans, frame);
-			       }
-			    break;
-			  case VertMiddle:
-			    if (pRelation->ReOp == OpHorizRef)
-			      {
-				if (pRelation->ReBox == pBox)
-				  {
-				    MoveVertRef (pBox, NULL, delta / 2, frame);
-				    pBox->BxMoved = pFromBox;	/* restaure le chainage */
-				  }
-				else
-				  MoveVertRef (pRelation->ReBox, pSourceBox, middleTrans, frame);
-			      }
-			     else if (toMove)
-			       {
-				 if (pRelation->ReOp == OpHorizInc)
-				   {
-				     if (!pBox->BxHorizFlex)
-				       XMove (pBox, NULL, -middleTrans, frame);
-				   }
-				 else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
-					  || pRelation->ReOp == OpWidth)
-				   MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, middleTrans, frame, TRUE);
-				 else if (pRelation->ReBox != pSourceBox)
-				   XMove (pRelation->ReBox, pBox, middleTrans, frame);
-			       }
-			    break;
-			  case Right:
-			    if (pRelation->ReOp == OpHorizRef)
-			      {
-				if (pRelation->ReBox == pBox)
-				  {
-				    MoveVertRef (pBox, NULL, delta, frame);
-				    pBox->BxMoved = pFromBox;	/* restaure le chainage */
-				  }
-				else
-				  MoveVertRef (pRelation->ReBox, pSourceBox, endTrans, frame);
-			      }
-			     else if (toMove)
-			       {
-				 if (pRelation->ReOp == OpHorizInc)
-				   {
-				     if (!pBox->BxHorizFlex)
-				       XMove (pBox, NULL, -endTrans, frame);
-				   }
-				 else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
-					  || pRelation->ReOp == OpWidth)
-				   MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, TRUE);
-				 else if (pRelation->ReBox != pSourceBox)
-				   XMove (pRelation->ReBox, pBox, endTrans, frame);
-			       }
-			    break;
-			  default:
-			    break;
-			  }
-		    
-		    i++;
-		    if (i < MAX_RELAT_POS)
-		      notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
-		  }
-		/* next relations block */
-		pPosRel = pPosRel->PosRNext;
-	      }
-
-	    /* Keep in mind if the box positionning is absolute or not */
-	    absoluteMove = IsXPosComplete (pBox);
-	    /* internal boxes take into account margins borders and paddings */
-	    if (l != 0 || r != 0)
-	      {
-		orgTrans = l;
-		middleTrans = (l - r)/2;
-		endTrans = - r;
-	      }
-	    /* Moving included boxes or reevalution of the block of lines? */
-	    if (absoluteMove ||
-		pCurrentAb->AbWidth.DimAbRef != NULL ||
-		pCurrentAb->AbWidth.DimValue != 0)
-	      /* the box is already built */
-	      /* or it's within a stretchable box */
-	      /* or it's within a unnested box */
-	      /* or it doesn't inherit the size from its contents */
-	      if (pBox->BxType == BoBlock)
-		RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame);
+	  /* Check the validity of dependency rules */
+	  toMove = TRUE;
+	  if (pCurrentAb->AbEnclosing != NULL && pCurrentAb->AbEnclosing->AbBox != NULL)
+	    toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
+		      pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock);
+	  
+	  /* check positionning constraints */
+	  if (!toMove || pBox->BxHorizEdge == Left || pBox->BxHorizEdge == VertRef)
+	    {
+	      /*====> The left is fixed */
+	      /* Move the middle and the right */
+	      orgTrans = 0;
+	      middleTrans = (pBox->BxWidth + delta + diff) / 2 - pBox->BxWidth / 2;
+	      endTrans = delta + diff;
+	    }
+	  else if (pBox->BxHorizEdge == VertMiddle)
+	    {
+	      /*====> The middle is fixed */
+	      /* Move the left and the right */
+	      orgTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
+	      /* adjust */
+	      endTrans = delta + diff + orgTrans;
+	      middleTrans = 0;
+	    }
+	  else
+	    {
+	      /*====> The right is fixed */
+	      /* Move the left and the middle */
+	      orgTrans = -delta - diff;
+	      middleTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
+	      endTrans = 0;
+	    }
+	  
+	  /* inside width */
+	  pBox->BxW += delta;
+	  /* outside width */
+	  pBox->BxWidth = pBox->BxWidth + delta + diff;
+	  pBox->BxXOrg += orgTrans;
+	  
+	  /* register the window area to be redisplayed */
+	  if (ReadyToDisplay
+	      && pBox->BxType != BoSplit
+	      /* don't take care of a box which is not */
+	      /* at its right place in the concrete image  */
+	      && !pBox->BxXToCompute
+	      && !pBox->BxYToCompute
+	      && (orgTrans != 0
+		  || pCurrentAb->AbFirstEnclosed == NULL
+		  /* redisplay filled boxes */
+		  || pCurrentAb->AbFillBox
+		  || pCurrentAb->AbPictBackground != NULL))
+	    {
+	      if (pCurrentAb->AbLeafType == LtText)
+		{
+		  k = 0;
+		  if (orgTrans == 0)
+		    i = j;
+		  else if (orgTrans < 0)
+		    i += orgTrans;
+		  
+		  if (endTrans == 0)
+		    j = i;
+		  else if (endTrans > 0)
+		    j += endTrans;
+		}
 	      else
 		{
-		  pAb = pCurrentAb->AbFirstEnclosed;
-		  while (pAb != NULL)
-		    {
-		      if (!pAb->AbDead && pAb->AbBox != NULL)
-			{
-			  pNextBox = pAb->AbBox;
-			  /* regarde si la boite est liee a son englobante */
-			  pPosRel = pNextBox->BxPosRelations;
-			  while (pPosRel != NULL)
-			    {
-			      i = 0;
-			      notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
-			      while (i < MAX_RELAT_POS && notEmpty)
-				{
-				  pRelation = &pPosRel->PosRTable[i];
-				  if (pRelation->ReOp == OpHorizInc
-				      && pRelation->ReRefEdge != VertRef)
-				    switch (pAb->AbHorizPos.PosRefEdge)
-				      {
-				      case VertMiddle:
-					if (absoluteMove)
-					  j = middleTrans;
-					else
-					  /* il faut reevaluer le centrage */
-					  j = (pBox->BxWidth - pNextBox->BxWidth) / 2 - pNextBox->BxXOrg;
-					if (pNextBox->BxHorizFlex)
-					  MoveBoxEdge (pNextBox, pBox, pRelation->ReOp, j, frame, TRUE);
-					else
-					  XMove (pNextBox, pBox, j, frame);
-					break;
-				      case Right:
-					if (absoluteMove)
-					  j = endTrans;
-					else
-					  /* il faut reevaluer le cadrage */
-					  j = pBox->BxWidth - pNextBox->BxWidth - pNextBox->BxXOrg;
-					if (pNextBox->BxHorizFlex)
-					  MoveBoxEdge (pNextBox, pBox, pRelation->ReOp, j, frame, TRUE);
-					else
-					  XMove (pNextBox, pBox, j, frame);
-					break;
-				      default:
-					if (absoluteMove)
-					  j = orgTrans;
-					else
-					  /* il faut reevaluer le cadrage */
-					  j = 0;
-					if (pNextBox->BxHorizFlex)
-					  MoveBoxEdge (pNextBox, pBox, pRelation->ReOp, j, frame, TRUE);
-					else
-					  XMove (pNextBox, pBox, j, frame);
-					break;
-				      }
-				  
-				  i++;
-				  if (i < MAX_RELAT_POS)
-				    notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
-				}
-			      /* next relationblock */
-			      pPosRel = pPosRel->PosRNext;
-			    }
-			}
-		      /* next child */
-		      pAb = pAb->AbNext;
-		    }
+		  /* add an extra margin for graphics */
+		  if (pCurrentAb->AbLeafType == LtGraphics)
+		    k = EXTRA_GRAPH;
+		  else
+		    k = 0;
+		  if (orgTrans < 0)
+		    i += orgTrans;
+		  if (endTrans > 0)
+		    j += endTrans;
 		}
-	    
-	    /* check dimension constraints */
-	    pDimRel = pBox->BxWidthRelations;
-	    while (pDimRel != NULL)
-	      {
-		i = 0;
-		pNextBox = pDimRel->DimRTable[i];
-		while (i < MAX_RELAT_DIM && pNextBox != NULL)
-		  {
-		    pAb = pNextBox->BxAbstractBox;
-		    if (pAb)
-		      /* Is it the same dimension? */
-		      if (pDimRel->DimRSame[i])
+	      
+	      DefClip (frame, i - k, pBox->BxYOrg - k, j + k, pBox->BxYOrg + pBox->BxHeight + k);
+	    }
+	  
+	  /* Moving sibling boxes and the parent? */
+	  pPosRel = pBox->BxPosRelations;
+	  while (pPosRel != NULL)
+	    {
+	      i = 0;
+	      notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+	      while (i < MAX_RELAT_POS && notEmpty)
+		{
+		  pRelation = &pPosRel->PosRTable[i];
+		  if (pRelation->ReBox->BxAbstractBox != NULL)
+		    /* Ignore the back relation of a stretchable box */
+		    if (!pBox->BxHorizFlex
+			|| pRelation->ReOp != OpHorizDep
+			|| pCurrentAb == pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
+		      switch (pRelation->ReRefEdge)
 			{
-			  /* Changing the width */
-			  if (pAb->AbWidth.DimUnit == UnPercent)
-			    orgTrans = pBox->BxW * pAb->AbWidth.DimValue / 100 - pNextBox->BxW;
-			  else
-			    orgTrans = delta;
-			  /* avoid cycles on the same box */
-			  if (pNextBox != pBox)
-			    ChangeWidth (pNextBox, pSourceBox, pBox, orgTrans, spaceDelta, frame);
-			}
-		      else
-			{
-			  /* Changing the height */
-			  if (pAb->AbEnclosing == pCurrentAb
-			      && (pCurrentAb->AbInLine || pCurrentAb->AbBox->BxType == BoGhost))
+			case Left:
+			  if (pRelation->ReOp == OpHorizRef)
 			    {
-			      /* inheritage of the line height */
-			      pLine = SearchLine (pNextBox);
-			      if (pLine == NULL)
-				/* no line available */
-				orgTrans = 0;
-			      else
-				orgTrans = pLine->LiHeight - pNextBox->BxHeight;
+			      if (pRelation->ReBox != pBox)
+				MoveVertRef (pRelation->ReBox, pSourceBox, orgTrans, frame);
 			    }
-			  else if (pAb->AbHeight.DimUnit == UnPercent)
-			    orgTrans = pBox->BxW * pAb->AbHeight.DimValue / 100 - pNextBox->BxH;
-			  else
-			    orgTrans = delta;
-			  ChangeHeight (pNextBox, pSourceBox, NULL, orgTrans, frame);
+			  else if (toMove)
+			    {
+			      if (pRelation->ReOp == OpHorizInc)
+				{
+				  if (!pBox->BxHorizFlex)
+				    XMove (pBox, NULL, -orgTrans, frame);
+				}
+			      else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
+				       || pRelation->ReOp == OpWidth)
+				MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, orgTrans, frame, TRUE);
+			      else if (pRelation->ReBox != pSourceBox)
+				XMove (pRelation->ReBox, pBox, orgTrans, frame);
+			    }
+			  break;
+			case VertMiddle:
+			  if (pRelation->ReOp == OpHorizRef)
+			    {
+			      if (pRelation->ReBox == pBox)
+				{
+				  MoveVertRef (pBox, NULL, delta / 2, frame);
+				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				}
+			      else
+				MoveVertRef (pRelation->ReBox, pSourceBox, middleTrans, frame);
+			    }
+			  else if (toMove)
+			    {
+			      if (pRelation->ReOp == OpHorizInc)
+				{
+				  if (!pBox->BxHorizFlex)
+				    XMove (pBox, NULL, -middleTrans, frame);
+				}
+			      else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
+				       || pRelation->ReOp == OpWidth)
+				MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, middleTrans, frame, TRUE);
+			      else if (pRelation->ReBox != pSourceBox)
+				XMove (pRelation->ReBox, pBox, middleTrans, frame);
+			    }
+			  break;
+			case Right:
+			  if (pRelation->ReOp == OpHorizRef)
+			    {
+			      if (pRelation->ReBox == pBox)
+				{
+				  MoveVertRef (pBox, NULL, delta, frame);
+				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				}
+			      else
+				MoveVertRef (pRelation->ReBox, pSourceBox, endTrans, frame);
+			    }
+			  else if (toMove)
+			    {
+			      if (pRelation->ReOp == OpHorizInc)
+				{
+				  if (!pBox->BxHorizFlex)
+				    XMove (pBox, NULL, -endTrans, frame);
+				}
+			      else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
+				       || pRelation->ReOp == OpWidth)
+				MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, TRUE);
+			      else if (pRelation->ReBox != pSourceBox)
+				XMove (pRelation->ReBox, pBox, endTrans, frame);
+			    }
+			  break;
+			default:
+			  break;
 			}
 		    
-		    i++;
-		    if (i < MAX_RELAT_DIM)
-		      pNextBox = pDimRel->DimRTable[i];
-		  }
-		/* next relation block */
-		pDimRel = pDimRel->DimRNext;
-	      }
-	    
-	    /* Check enclosing constraints */
-	    pAb = pCurrentAb->AbEnclosing;
-	    if (!toMove)
+		  i++;
+		  if (i < MAX_RELAT_POS)
+		    notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+		}
+	      /* next relations block */
+	      pPosRel = pPosRel->PosRNext;
+	    }
+	  
+	  /* Keep in mind if the box positionning is absolute or not */
+	  absoluteMove = IsXPosComplete (pBox);
+	  /* internal boxes take into account margins borders and paddings */
+	  if (l != 0 || r != 0)
+	    {
+	      orgTrans = l;
+	      middleTrans = (l - r)/2;
+	      endTrans = - r;
+	    }
+	  /* Moving included boxes or reevalution of the block of lines? */
+	  if (absoluteMove ||
+	      pCurrentAb->AbWidth.DimAbRef != NULL ||
+	      pCurrentAb->AbWidth.DimValue != 0)
+	    /* the box is already built */
+	    /* or it's within a stretchable box */
+	    /* or it's within a unnested box */
+	    /* or it doesn't inherit the size from its contents */
+	    if (pBox->BxType == BoBlock)
+	      RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame);
+	    else
 	      {
-		/* look for the enclosing block of lines  */
-		while (!pAb->AbInLine || pAb->AbBox->BxType == BoGhost)
-		  pAb = pAb->AbEnclosing;
-	      }
-	    
-	    if (pAb == NULL)
-	      {
-		/* It's the root of the concrete image */
-		if (Propagate == ToAll && pBox->BxXOrg < 0)
-		  XMoveAllEnclosed (pBox, -pBox->BxXOrg, frame);
-	      }
-	    else if (pCurrentAb->AbHorizEnclosing)
-	      {
-		/* keep in mind if the relation concerns parent boxes */
-		externalRef = !IsParentBox (pAb->AbBox, pSourceBox);
-		
-		/*
-		 * if pSourceBox is a child and the inclusion is not performed
-		 * by another sibling box, we need to propagate the change
-		 */
-		if ((Propagate == ToAll || externalRef)
-		    && !IsSiblingBox (pBox, pFromBox)
-		    && !IsSiblingBox (pBox, pSourceBox))
-		  {		    
-		    /* Within a block of line */
-		    if (pAb->AbInLine)
-		      {
-			pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-			if (pBox == pViewSel->VsBox)
-			  pLine = pViewSel->VsLine;
-			else
-			  pLine = SearchLine (pBox);
-			UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
-		      }
-		    /* if the inclusion is not checked at the end */
-		    else if (pAb->AbBox != PackBoxRoot &&
-			     !IsParentBox (pAb->AbBox, PackBoxRoot))
-		      /* Differ the checking of the inclusion */
-		      /* when the update has an external origin  */
-		      if (Propagate != ToAll)
-			RecordEnclosing (pAb->AbBox, TRUE);
-		      /* Don't check the inclusion more than 2 times */
-		      else if (pAb->AbBox->BxCycles <= 1)
-			{
-			  if (pAb->AbBox->BxType == BoCell &&
-			      ThotLocalActions[T_checkcolumn])
-			    (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
-			  else
-			    WidthPack (pAb, pSourceBox, frame);
-			}
-		  }
-		else if (!pCurrentAb->AbNew
-			 && Propagate == ToSiblings
-			 && pCurrentAb->AbLeafType == LtCompound
-			 && pCurrentAb->AbInLine && !pBox->BxYToCompute)
+		pAb = pCurrentAb->AbFirstEnclosed;
+		while (pAb != NULL)
 		  {
-		    /* La largeur de la boite mise en lignes est donnee par une */
-		    /* boite suivante, il faut verifier l'englobement vertical */
-		    if (pAb->AbBox->BxType != BoTable)
-		      HeightPack (pAb, pSourceBox, frame);
-		    Propagate = ToSiblings;
+		    if (!pAb->AbDead && pAb->AbBox != NULL)
+		      {
+			box = pAb->AbBox;
+			/* regarde si la boite est liee a son englobante */
+			pPosRel = box->BxPosRelations;
+			while (pPosRel != NULL)
+			  {
+			    i = 0;
+			    notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+			    while (i < MAX_RELAT_POS && notEmpty)
+			      {
+				pRelation = &pPosRel->PosRTable[i];
+				if (pRelation->ReOp == OpHorizInc
+				    && pRelation->ReRefEdge != VertRef)
+				  switch (pAb->AbHorizPos.PosRefEdge)
+				    {
+				    case VertMiddle:
+				      if (absoluteMove)
+					j = middleTrans;
+				      else
+					/* il faut reevaluer le centrage */
+					j = (pBox->BxWidth - box->BxWidth) / 2 - box->BxXOrg;
+				      if (box->BxHorizFlex)
+					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, TRUE);
+				      else
+					XMove (box, pBox, j, frame);
+				      break;
+				    case Right:
+				      if (absoluteMove)
+					j = endTrans;
+				      else
+					/* il faut reevaluer le cadrage */
+					j = pBox->BxWidth - box->BxWidth - box->BxXOrg;
+				      if (box->BxHorizFlex)
+					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, TRUE);
+				      else
+					XMove (box, pBox, j, frame);
+				      break;
+				    default:
+				      if (absoluteMove)
+					j = orgTrans;
+				      else
+					/* il faut reevaluer le cadrage */
+					j = 0;
+				      if (box->BxHorizFlex)
+					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, TRUE);
+				      else
+					XMove (box, pBox, j, frame);
+				      break;
+				    }
+				
+				i++;
+				if (i < MAX_RELAT_POS)
+				  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+			      }
+			    /* next relationblock */
+			    pPosRel = pPosRel->PosRNext;
+			  }
+		      }
+		    /* next child */
+		    pAb = pAb->AbNext;
 		  }
 	      }
+	  
+	  /* check dimension constraints */
+	  pDimRel = pBox->BxWidthRelations;
+	  while (pDimRel != NULL)
+	    {
+	      i = 0;
+	      while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
+		{
+		  box = pDimRel->DimRTable[i];
+		  pAb = box->BxAbstractBox;
+		  if (pAb)
+		    /* Is it the same dimension? */
+		    if (pDimRel->DimRSame[i])
+		      {
+			/* Changing the width */
+			if (pAb->AbEnclosing == pCurrentAb)
+			  {
+			    /* refer the inside width */
+			    val = pBox->BxW;
+			    if (pAb->AbWidth.DimUnit == UnPercent)
+			      val = val * pAb->AbWidth.DimValue / 100;
+			  }
+			else
+			  {
+			    /* refer the outside width */
+			    val = pBox->BxWidth;
+			    if (pAb->AbWidth.DimUnit == UnPercent)
+			      val = val * pAb->AbWidth.DimValue / 100;
+			  }
+			val = val - box->BxWidth;
+			/* avoid cycles on the same box */
+			if (box != pBox)
+			  ChangeWidth (box, pSourceBox, pBox, val, 0, frame);
+		      }
+		    else
+		      {
+			/* Changing the height */
+			if (pAb->AbEnclosing == pCurrentAb)
+			  {
+			    val = pBox->BxW;
+			    if (pAb->AbHeight.DimUnit == UnPercent)
+			      val = val * pAb->AbHeight.DimValue / 100;
+			  }
+			else
+			  {
+			    /* refer the outside width */
+			    val = pBox->BxWidth;
+			    if (pAb->AbHeight.DimUnit == UnPercent)
+			      val = val * pAb->AbHeight.DimValue / 100;
+			  }
+			val = val - box->BxHeight;
+			ChangeHeight (box, pSourceBox, NULL, val, frame);
+		      }
+		    
+		  i++;
+		  if (i < MAX_RELAT_DIM)
+		    box = pDimRel->DimRTable[i];
+		}
+	      /* next relation block */
+	      pDimRel = pDimRel->DimRNext;
+	    }
+	  
+	  /* Check enclosing constraints */
+	  pAb = pCurrentAb->AbEnclosing;
+	  if (!toMove)
+	    {
+	      /* look for the enclosing block of lines  */
+	      while (!pAb->AbInLine || pAb->AbBox->BxType == BoGhost)
+		pAb = pAb->AbEnclosing;
+	    }
+	  
+	  if (pAb == NULL)
+	    {
+	      /* It's the root of the concrete image */
+	      if (Propagate == ToAll && pBox->BxXOrg < 0)
+		XMoveAllEnclosed (pBox, -pBox->BxXOrg, frame);
+	    }
+	  else if (pCurrentAb->AbHorizEnclosing)
+	    {
+	      /* keep in mind if the relation concerns parent boxes */
+	      externalRef = !IsParentBox (pAb->AbBox, pSourceBox);
+	      
+	      /*
+	       * if pSourceBox is a child and the inclusion is not performed
+	       * by another sibling box, we need to propagate the change
+	       */
+	      if ((Propagate == ToAll || externalRef)
+		  && !IsSiblingBox (pBox, pFromBox)
+		  && !IsSiblingBox (pBox, pSourceBox))
+		{		    
+		  /* Within a block of line */
+		  if (pAb->AbInLine)
+		    {
+		      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+		      if (pBox == pViewSel->VsBox)
+			pLine = pViewSel->VsLine;
+		      else
+			pLine = SearchLine (pBox);
+		      UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
+		    }
+		  /* if the inclusion is not checked at the end */
+		  else if (pAb->AbBox != PackBoxRoot &&
+			   !IsParentBox (pAb->AbBox, PackBoxRoot))
+		    /* Differ the checking of the inclusion */
+		    /* when the update has an external origin  */
+		    if (Propagate != ToAll)
+		      RecordEnclosing (pAb->AbBox, TRUE);
+		  /* Don't check the inclusion more than 2 times */
+		    else if (pAb->AbBox->BxCycles <= 1)
+		      {
+			if (pAb->AbBox->BxType == BoCell &&
+			    ThotLocalActions[T_checkcolumn])
+			  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+			else
+			  WidthPack (pAb, pSourceBox, frame);
+		      }
+		}
+	      else if (!pCurrentAb->AbNew
+		       && Propagate == ToSiblings
+		       && pCurrentAb->AbLeafType == LtCompound
+		       && pCurrentAb->AbInLine && !pBox->BxYToCompute)
+		{
+		  /* La largeur de la boite mise en lignes est donnee par une */
+		  /* boite suivante, il faut verifier l'englobement vertical */
+		  if (pAb->AbBox->BxType != BoTable)
+		    HeightPack (pAb, pSourceBox, frame);
+		  Propagate = ToSiblings;
+		}
+	    }
 
-	    if (pBox->BxType == BoTable && pBox->BxCycles == 0 &&
-		ThotLocalActions[T_resizetable])
-	      (*ThotLocalActions[T_resizetable]) (pCurrentAb, frame);
-	  }
+	  if (pBox->BxType == BoTable && pBox->BxCycles == 0 &&
+	      ThotLocalActions[T_resizetable])
+	    (*ThotLocalActions[T_resizetable]) (pCurrentAb, frame);
+	}
     }
 }
 
@@ -2229,7 +2245,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-  PtrBox              pNextBox;
+  PtrBox              box;
   PtrLine             pLine;
   PtrAbstractBox      pAb/*, pCell*/;
   PtrAbstractBox      pCurrentAb;
@@ -2238,7 +2254,7 @@ int                 frame;
   BoxRelation        *pRelation;
   ptrfont             font;
   float               value;
-  int                 i, j, k, diff;
+  int                 i, j, k, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   ThotBool            notEmpty;
   ThotBool            toMove;
@@ -2248,421 +2264,448 @@ int                 frame;
   if (!pBox)
     return;
   /* check if the inside width, margins, borders, and paddings change */
-  diff = pBox->BxH + pBox->BxTMargin + pBox->BxBMargin + pBox->BxTPadding + pBox->BxBPadding + pBox->BxTBorder + pBox->BxBBorder - pBox->BxHeight;
+  pCurrentAb = pBox->BxAbstractBox;
+  if (!pCurrentAb)
+    return;
+
+  if (pCurrentAb->AbMBPChange)
+    /* margins borders and are not interpreted yet */
+    diff = 0;
+  else
+    diff = pBox->BxH + pBox->BxTMargin + pBox->BxBMargin + pBox->BxTPadding + pBox->BxBPadding + pBox->BxTBorder + pBox->BxBBorder - pBox->BxHeight;
   if (delta || diff)
     {
       /* Do we have to clean up the history of moved boxes */
       if (pSourceBox == NULL && pFromBox == NULL)
 	pBox->BxMoved = NULL;
       
-      if (pBox->BxAbstractBox != NULL)
-	if (!pBox->BxAbstractBox->AbDead)
-	  {
-	    /* Area zone before moving */
-	    i = pBox->BxYOrg;
-	    j = i + pBox->BxHeight;
-	    pCurrentAb = pBox->BxAbstractBox;
-	    /* It's not a stretchable box: clean up the history */
-	    if (!pBox->BxVertFlex)
-	      pBox->BxMoved = NULL;
-	    
-	    /* Force the reevaluation of polyline control points */
-	    if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
-	      {
-		/* free control points */
-		free ((STRING) pBox->BxPictInfo);
-		pBox->BxPictInfo = NULL;
-	      }
-	    
-	    /* Check the validity of dependency rules */
-	    toMove = TRUE;
-	    if (pCurrentAb->AbEnclosing != NULL)
-	      if (pCurrentAb->AbEnclosing->AbBox != NULL)
-		toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
-	    
-	    /* Check the validity of dependency rules */
-	    if (!toMove || pBox->BxVertEdge == Top || pBox->BxVertEdge == HorizRef)
-	      {
-		/*====> The top is fixed */
-		/* Move the middle and the bottom */
-		orgTrans = 0;
-		middleTrans = (pBox->BxHeight + delta + diff) / 2 - pBox->BxHeight / 2;
-		endTrans = delta + diff;
-	      }
-	    else if (pBox->BxVertEdge == HorizMiddle)
-	      {
-		/*====> The middle is fixed */
-		/* Move the top and the bottom */
-		orgTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
-		/* adjust */
-		endTrans = delta + diff + orgTrans;
-		middleTrans = 0;
-	      }
-	    /*=> Point fixe sur le cote inferieur */
-	    else
-	      {
-		/*====> The bottom is fixed */
-		/* Move the top and the middle */
-		orgTrans = -delta - diff;
-		middleTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
-		endTrans = 0;
-	      }
-
-	    /* inside height */
-	    pBox->BxH += delta;
-	    /* outside height */
-	    pBox->BxHeight = pBox->BxHeight + delta + diff;
-	    pBox->BxYOrg += orgTrans;
-	    
-	    /* register the window area to be redisplayed */
-	    if (ReadyToDisplay
-		&& pBox->BxType != BoSplit
-		/* don't take care of a box which is not */
-		/* at its right place in the concrete image  */
-		&& !pBox->BxXToCompute
-		&& !pBox->BxYToCompute
-		&& (orgTrans != 0
-		    || pCurrentAb->AbFirstEnclosed == NULL
-		    /* redisplay filled boxes */
-		    || pCurrentAb->AbFillBox
-		    || pCurrentAb->AbPictBackground != NULL))
-	      {
-		if (pCurrentAb->AbLeafType == LtText)
-		  {
+      if (!pCurrentAb->AbDead)
+	{
+	  /* Area zone before moving */
+	  i = pBox->BxYOrg;
+	  j = i + pBox->BxHeight;
+	  /* It's not a stretchable box: clean up the history */
+	  if (!pBox->BxVertFlex)
+	    pBox->BxMoved = NULL;
+	  
+	  /* Force the reevaluation of polyline control points */
+	  if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
+	    {
+	      /* free control points */
+	      free ((STRING) pBox->BxPictInfo);
+	      pBox->BxPictInfo = NULL;
+	    }
+	  
+	  /* Check the validity of dependency rules */
+	  toMove = TRUE;
+	  if (pCurrentAb->AbEnclosing != NULL)
+	    if (pCurrentAb->AbEnclosing->AbBox != NULL)
+	      toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
+	  
+	  /* Check the validity of dependency rules */
+	  if (!toMove || pBox->BxVertEdge == Top || pBox->BxVertEdge == HorizRef)
+	    {
+	      /*====> The top is fixed */
+	      /* Move the middle and the bottom */
+	      orgTrans = 0;
+	      middleTrans = (pBox->BxHeight + delta + diff) / 2 - pBox->BxHeight / 2;
+	      endTrans = delta + diff;
+	    }
+	  else if (pBox->BxVertEdge == HorizMiddle)
+	    {
+	      /*====> The middle is fixed */
+	      /* Move the top and the bottom */
+	      orgTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
+	      /* adjust */
+	      endTrans = delta + diff + orgTrans;
+	      middleTrans = 0;
+	    }
+	  /*=> Point fixe sur le cote inferieur */
+	  else
+	    {
+	      /*====> The bottom is fixed */
+	      /* Move the top and the middle */
+	      orgTrans = -delta - diff;
+	      middleTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
+	      endTrans = 0;
+	    }
+	  
+	  /* inside height */
+	  pBox->BxH += delta;
+	  /* outside height */
+	  pBox->BxHeight = pBox->BxHeight + delta + diff;
+	  pBox->BxYOrg += orgTrans;
+	  
+	  /* register the window area to be redisplayed */
+	  if (ReadyToDisplay
+	      && pBox->BxType != BoSplit
+	      /* don't take care of a box which is not */
+	      /* at its right place in the concrete image  */
+	      && !pBox->BxXToCompute
+	      && !pBox->BxYToCompute
+	      && (orgTrans != 0
+		  || pCurrentAb->AbFirstEnclosed == NULL
+		  /* redisplay filled boxes */
+		  || pCurrentAb->AbFillBox
+		  || pCurrentAb->AbPictBackground != NULL))
+	    {
+	      if (pCurrentAb->AbLeafType == LtText)
+		{
+		  k = 0;
+		  if (orgTrans == 0)
+		    i = j;
+		  else if (orgTrans < 0)
+		    i += orgTrans;
+		  if (endTrans == 0)
+		    j = i;
+		  else if (endTrans > 0)
+		    j += endTrans;
+		}
+	      else
+		{
+		  /* add an extra margin for graphics */
+		  if (pCurrentAb->AbLeafType == LtGraphics)
+		    k = EXTRA_GRAPH;
+		  else
 		    k = 0;
-		    if (orgTrans == 0)
-		      i = j;
-		    else if (orgTrans < 0)
-		      i += orgTrans;
-		    if (endTrans == 0)
-		      j = i;
-		    else if (endTrans > 0)
-		      j += endTrans;
-		  }
-		else
-		  {
-		    /* add an extra margin for graphics */
-		    if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-		      k = EXTRA_GRAPH;
-		    else
-		      k = 0;
-		    if (orgTrans < 0)
-		      i += orgTrans;
-		    if (endTrans > 0)
-		      j += endTrans;
-		  }
-		DefClip (frame, pBox->BxXOrg - k, i - k, pBox->BxXOrg + pBox->BxWidth + k, j + k);
-	      }
-	    
-	    /* Moving sibling boxes and the parent? */
-	    pPosRel = pBox->BxPosRelations;
-	    while (pPosRel != NULL)
-	      {
-		i = 0;
-		notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
-		while (i < MAX_RELAT_POS && notEmpty)
-		  {
-		    pRelation = &pPosRel->PosRTable[i];
-		    if (pRelation->ReBox->BxAbstractBox != NULL)
-		      /* Ignore the back relation of a stretchable box */
-		      if (!pBox->BxVertFlex
-			  || pRelation->ReOp != OpVertDep
-			  || pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
-			switch (pRelation->ReRefEdge)
-			  {
-			  case Top:
-			    if (pRelation->ReOp == OpVertRef)
-			      {
-				if (pRelation->ReBox != pBox)
-				  MoveHorizRef (pRelation->ReBox, pSourceBox, orgTrans, frame);
-			      }
-			    else if (toMove)
-			      {
-				if (pRelation->ReOp == OpVertInc)
-				  {
-				    if (!pBox->BxVertFlex)
-				      YMove (pBox, NULL, -orgTrans, frame);
-				  }
-				else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
-					 || pRelation->ReOp == OpHeight)
-				  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, orgTrans, frame, FALSE);
-				else if (pRelation->ReBox != pSourceBox)
-				  YMove (pRelation->ReBox, pBox, orgTrans, frame);
-			      }
-			    break;
-			  case HorizMiddle:
-			    if (pRelation->ReOp == OpVertRef)
-			      {
-				if (pRelation->ReBox == pBox)
-				  {
-				    MoveHorizRef (pBox, NULL, delta / 2, frame);
-				    pBox->BxMoved = pFromBox;	/* restaure le chainage */
-				  }
-				else
-				  MoveHorizRef (pRelation->ReBox, pSourceBox, middleTrans, frame);
-			      }
-			    else if (toMove)
-			      {
-				if (pRelation->ReOp == OpVertInc)
-				  {
-				    if (!pBox->BxVertFlex)
-				      YMove (pBox, NULL, -middleTrans, frame);
-				  }
-				else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
-					 || pRelation->ReOp == OpHeight)
-				  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, middleTrans, frame, FALSE);
-				else if (pRelation->ReBox != pSourceBox)
-				  YMove (pRelation->ReBox, pBox, middleTrans, frame);
-			      }
-			    break;
-			  case Bottom:
-			    if (pRelation->ReOp == OpVertRef)
-			      {
-				if (pRelation->ReBox == pBox)
-				  {
-				    if (pCurrentAb->AbLeafType == LtText
-					&& pCurrentAb->AbHorizRef.PosAbRef == NULL)
-				      j = FontBase (pBox->BxFont) - pBox->BxHorizRef;
-				    else
-				      j = delta;
-				    MoveHorizRef (pBox, NULL, j, frame);
-				    pBox->BxMoved = pFromBox;	/* restaure le chainage */
-				  }
-				else
-				  MoveHorizRef (pRelation->ReBox, pSourceBox, endTrans, frame);
-			      }
-			    else if (toMove)
-			      {
-				if (pRelation->ReOp == OpVertInc)
-				  {
-				    if (!pBox->BxVertFlex)
-				      YMove (pBox, NULL, -endTrans, frame);
-				  }
-				else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
-					 || pRelation->ReOp == OpHeight)
-				  MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, FALSE);
-				else if (pRelation->ReBox != pSourceBox)
-				  YMove (pRelation->ReBox, pBox, endTrans, frame);
-			      }
-			    break;
-			  default:
-			    break;
-			  }
-		    i++;
-		    if (i < MAX_RELAT_POS)
-		      notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
-		  }
-		/* next relations block */
-		pPosRel = pPosRel->PosRNext;
-	      }
+		  if (orgTrans < 0)
+		    i += orgTrans;
+		  if (endTrans > 0)
+		    j += endTrans;
+		}
+	      DefClip (frame, pBox->BxXOrg - k, i - k, pBox->BxXOrg + pBox->BxWidth + k, j + k);
+	    }
+	  
+	  /* Moving sibling boxes and the parent? */
+	  pPosRel = pBox->BxPosRelations;
+	  while (pPosRel != NULL)
+	    {
+	      i = 0;
+	      notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+	      while (i < MAX_RELAT_POS && notEmpty)
+		{
+		  pRelation = &pPosRel->PosRTable[i];
+		  if (pRelation->ReBox->BxAbstractBox != NULL)
+		    /* Ignore the back relation of a stretchable box */
+		    if (!pBox->BxVertFlex
+			|| pRelation->ReOp != OpVertDep
+			|| pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+		      switch (pRelation->ReRefEdge)
+			{
+			case Top:
+			  if (pRelation->ReOp == OpVertRef)
+			    {
+			      if (pRelation->ReBox != pBox)
+				MoveHorizRef (pRelation->ReBox, pSourceBox, orgTrans, frame);
+			    }
+			  else if (toMove)
+			    {
+			      if (pRelation->ReOp == OpVertInc)
+				{
+				  if (!pBox->BxVertFlex)
+				    YMove (pBox, NULL, -orgTrans, frame);
+				}
+			      else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
+				       || pRelation->ReOp == OpHeight)
+				MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, orgTrans, frame, FALSE);
+			      else if (pRelation->ReBox != pSourceBox)
+				YMove (pRelation->ReBox, pBox, orgTrans, frame);
+			    }
+			  break;
+			case HorizMiddle:
+			  if (pRelation->ReOp == OpVertRef)
+			    {
+			      if (pRelation->ReBox == pBox)
+				{
+				  MoveHorizRef (pBox, NULL, delta / 2, frame);
+				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				}
+			      else
+				MoveHorizRef (pRelation->ReBox, pSourceBox, middleTrans, frame);
+			    }
+			  else if (toMove)
+			    {
+			      if (pRelation->ReOp == OpVertInc)
+				{
+				  if (!pBox->BxVertFlex)
+				    YMove (pBox, NULL, -middleTrans, frame);
+				}
+			      else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
+				       || pRelation->ReOp == OpHeight)
+				MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, middleTrans, frame, FALSE);
+			      else if (pRelation->ReBox != pSourceBox)
+				YMove (pRelation->ReBox, pBox, middleTrans, frame);
+			    }
+			  break;
+			case Bottom:
+			  if (pRelation->ReOp == OpVertRef)
+			    {
+			      if (pRelation->ReBox == pBox)
+				{
+				  if (pCurrentAb->AbLeafType == LtText
+				      && pCurrentAb->AbHorizRef.PosAbRef == NULL)
+				    j = FontBase (pBox->BxFont) - pBox->BxHorizRef;
+				  else
+				    j = delta;
+				  MoveHorizRef (pBox, NULL, j, frame);
+				  pBox->BxMoved = pFromBox;	/* restaure le chainage */
+				}
+			      else
+				MoveHorizRef (pRelation->ReBox, pSourceBox, endTrans, frame);
+			    }
+			  else if (toMove)
+			    {
+			      if (pRelation->ReOp == OpVertInc)
+				{
+				  if (!pBox->BxVertFlex)
+				    YMove (pBox, NULL, -endTrans, frame);
+				}
+			      else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
+				       || pRelation->ReOp == OpHeight)
+				MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, endTrans, frame, FALSE);
+			      else if (pRelation->ReBox != pSourceBox)
+				YMove (pRelation->ReBox, pBox, endTrans, frame);
+			    }
+			  break;
+			default:
+			  break;
+			}
+		  i++;
+		  if (i < MAX_RELAT_POS)
+		    notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		}
+	      /* next relations block */
+	      pPosRel = pPosRel->PosRNext;
+	    }
 	     
-	    /* Keep in mind if the box positionning is absolute or not */
-	    absoluteMove = IsYPosComplete (pBox);
-	    /* internal boxes take into account margins borders and paddings */
-	    if (t != 0 || b != 0)
-	      {
-		orgTrans = t;
-		middleTrans = (t - b)/2;
-		endTrans = -b;
-	      }
-	    /* Moving included boxes? */
-	    if (absoluteMove && pBox->BxType == BoBlock)
-	      {
-		/* Il faut traiter les blocs de lignes elastiques */
-		/* qui ne sont pas en cours de placement          */
-		if (orgTrans != 0)
-		  {
-		    /* decale aussi les boites mises en ligne */
-		    pAb = pCurrentAb->AbFirstEnclosed;
-		    while (pAb != NULL)
-		      {
-			if (!pAb->AbDead)
-			  YMoveAllEnclosed (pAb->AbBox, orgTrans, frame);
-			pAb = pAb->AbNext;
-		      }
-		  }
-	      }
-	    else if (absoluteMove
-		     || pCurrentAb->AbHeight.DimAbRef != NULL
-		     || pCurrentAb->AbHeight.DimValue != 0)
-	      {
-		/* the box is already built */
-		/* or it's within a stretchable box */
-		/* or it's within a unnested box */
-		/* or it doesn't inherit the size from its contents */
-		pAb = pCurrentAb->AbFirstEnclosed;
-		while (pAb != NULL)
-		  {
-		    if (!pAb->AbDead && pAb->AbBox != NULL)
-		      {
-			pNextBox = pAb->AbBox;
-			/* regarde si la boite est liee a son englobante */
-			pPosRel = pNextBox->BxPosRelations;
-			while (pPosRel != NULL)
-			  {
-			    i = 0;
-			    notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
-			    while (i < MAX_RELAT_POS && notEmpty)
-			      {
-				pRelation = &pPosRel->PosRTable[i];
-				if (pRelation->ReOp == OpVertInc
-				    && pRelation->ReRefEdge != HorizRef)
-				  {
-				    switch (pAb->AbVertPos.PosRefEdge)
-				      {
-				      case HorizMiddle:
-					if (absoluteMove)
-					  j = middleTrans;
-					else
-					  /* il faut reevaluer le centrage */
-					  j = (pBox->BxHeight - pNextBox->BxHeight) / 2 - pNextBox->BxYOrg;
-					if (pNextBox->BxVertFlex)
-					  MoveBoxEdge (pNextBox, pBox, pRelation->ReOp, j, frame, FALSE);
-					else
-					  YMove (pNextBox, pBox, j, frame);
-					break;
-				      case Bottom:
-					if (absoluteMove)
-					  j = endTrans;
-					else
-					  /* il faut reevaluer le cadrage */
-					  j = pBox->BxHeight - pNextBox->BxHeight - pNextBox->BxYOrg;
-					if (pNextBox->BxVertFlex)
-					  MoveBoxEdge (pNextBox, pBox, pRelation->ReOp, j, frame, FALSE);
-					else
-					  YMove (pNextBox, pBox, j, frame);
-					break;
-				      default:
-					if (absoluteMove)
-					  j = orgTrans;
-					else
-					  /* il faut reevaluer le cadrage */
-					  j = 0;
-					if (pNextBox->BxVertFlex)
-					  MoveBoxEdge (pNextBox, pBox, pRelation->ReOp, j, frame, FALSE);
-					else
-					  YMove (pNextBox, pBox, j, frame);
-					break;
-				      }
-				  }
-				i++;
-				if (i < MAX_RELAT_POS)
-				  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
-			      }
-			    /* next relation block */
-			    pPosRel = pPosRel->PosRNext;
-			  }
-		      }
-		    /* next child */
-		    pAb = pAb->AbNext;
-		  }
-	       }
-	     
-	    /* check dimension constraints */
-	    pDimRel = pBox->BxHeightRelations;
-	    while (pDimRel != NULL)
-	      {
-		i = 0;
-		pNextBox = pDimRel->DimRTable[i];
-		while (i < MAX_RELAT_DIM && pNextBox != NULL)
-		  {
-		    pAb = pNextBox->BxAbstractBox;
-		    
-		    /* Is it the same dimension? */
-		    if (pDimRel->DimRSame[i])
-		      {
-			/* Changing the height */
-			if (pAb->AbEnclosing == pCurrentAb &&
-			    (pCurrentAb->AbInLine || pCurrentAb->AbBox->BxType == BoGhost))
-			  {
-			    /* inheritage of the line height */
-			    pLine = SearchLine (pNextBox);
-			    if (pLine == NULL)
-			      /* no line available */
-			      orgTrans = 0;
-			    else
-			      orgTrans = pLine->LiHeight - pNextBox->BxHeight;
-			  }
-			else if (pAb->AbHeight.DimUnit == UnPercent)
-			  orgTrans = pBox->BxH * pAb->AbHeight.DimValue / 100 - pNextBox->BxH;
-			else
-			  orgTrans = delta;
-			/* avoid cycles on the same box */
-			if (pNextBox != pBox)
-			  ChangeHeight (pNextBox, pSourceBox, pBox, orgTrans, frame);
-		      }
-		    else
-		      {
-			/* Changing the width */
-			if (pAb->AbWidth.DimUnit == UnPercent)
-			  orgTrans = pBox->BxH * pAb->AbWidth.DimValue / 100 - pNextBox->BxW;
-			else
-			  orgTrans = delta;
-			ChangeWidth (pNextBox, pSourceBox, NULL, orgTrans, 0, frame);
-		      }
-		    i++;
-		    if (i < MAX_RELAT_DIM)
-		      pNextBox = pDimRel->DimRTable[i];
-		  }
-		/* next relation block */
-		pDimRel = pDimRel->DimRNext;
-	      }
-	     
-	    /* Check enclosing constraints */
-	    pAb = pCurrentAb->AbEnclosing;
-	    if (!toMove)
-	      {
-		/* look for the enclosing block of lines  */
-		while (!pAb->AbInLine || pAb->AbBox->BxType == BoGhost)
-		  pAb = pAb->AbEnclosing;
-	      }
-	     
-	    if (pAb == NULL)
-	      {
-		/* It's the root of the concrete image */
-		if (Propagate == ToAll && pBox->BxYOrg < 0)
-		  YMoveAllEnclosed (pBox, -pBox->BxYOrg, frame);
-	      }
-	    else if (pCurrentAb->AbVertEnclosing)
-	      {
-		/* keep in mind if the relation concerns parent boxes */
-		externalRef = !IsParentBox (pAb->AbBox, pSourceBox);
-		
-		/*
-		 * if pSourceBox is a child and the inclusion is not performed
-		 * by another sibling box, we need to propagate the change
-		 */
-		if ((Propagate == ToAll || externalRef)
-		    && !IsSiblingBox (pBox, pFromBox)
-		    && !IsSiblingBox (pBox, pSourceBox))
-		  {
-		    if (pAb->AbInLine)
-		      /* Within a block of line */
-		      EncloseInLine (pBox, frame, pAb);
-		    /* if the inclusion is not checked at the end */
-		    else if (pAb->AbBox != PackBoxRoot &&
-			     !IsParentBox (pAb->AbBox, PackBoxRoot))
-		      /* Differ the checking of the inclusion */
-		      /* when the update has an external origin  */
-		      if (Propagate != ToAll && pAb->AbBox->BxType != BoCell)
-			RecordEnclosing (pAb->AbBox, FALSE);
-		      /* Don't check the inclusion more than 2 times */
-		      else if (pAb->AbBox->BxPacking <= 1)
-			HeightPack (pAb, pSourceBox, frame);
-		   }
-	       }
-	   }
-     }
-   
+	  /* Keep in mind if the box positionning is absolute or not */
+	  absoluteMove = IsYPosComplete (pBox);
+	  /* internal boxes take into account margins borders and paddings */
+	  if (t != 0 || b != 0)
+	    {
+	      orgTrans = t;
+	      middleTrans = (t - b)/2;
+	      endTrans = -b;
+	    }
+	  /* Moving included boxes? */
+	  if (absoluteMove && pBox->BxType == BoBlock)
+	    {
+	      /* Il faut traiter les blocs de lignes elastiques */
+	      /* qui ne sont pas en cours de placement          */
+	      if (orgTrans != 0)
+		{
+		  /* decale aussi les boites mises en ligne */
+		  pAb = pCurrentAb->AbFirstEnclosed;
+		  while (pAb != NULL)
+		    {
+		      if (!pAb->AbDead)
+			YMoveAllEnclosed (pAb->AbBox, orgTrans, frame);
+		      pAb = pAb->AbNext;
+		    }
+		}
+	    }
+	  else if (absoluteMove
+		   || pCurrentAb->AbHeight.DimAbRef != NULL
+		   || pCurrentAb->AbHeight.DimValue != 0)
+	    {
+	      /* the box is already built */
+	      /* or it's within a stretchable box */
+	      /* or it's within a unnested box */
+	      /* or it doesn't inherit the size from its contents */
+	      pAb = pCurrentAb->AbFirstEnclosed;
+	      while (pAb != NULL)
+		{
+		  if (!pAb->AbDead && pAb->AbBox != NULL)
+		    {
+		      box = pAb->AbBox;
+		      /* regarde si la boite est liee a son englobante */
+		      pPosRel = box->BxPosRelations;
+		      while (pPosRel != NULL)
+			{
+			  i = 0;
+			  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+			  while (i < MAX_RELAT_POS && notEmpty)
+			    {
+			      pRelation = &pPosRel->PosRTable[i];
+			      if (pRelation->ReOp == OpVertInc
+				  && pRelation->ReRefEdge != HorizRef)
+				{
+				  switch (pAb->AbVertPos.PosRefEdge)
+				    {
+				    case HorizMiddle:
+				      if (absoluteMove)
+					j = middleTrans;
+				      else
+					/* il faut reevaluer le centrage */
+					j = (pBox->BxHeight - box->BxHeight) / 2 - box->BxYOrg;
+				      if (box->BxVertFlex)
+					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, FALSE);
+				      else
+					YMove (box, pBox, j, frame);
+				      break;
+				    case Bottom:
+				      if (absoluteMove)
+					j = endTrans;
+				      else
+					/* il faut reevaluer le cadrage */
+					j = pBox->BxHeight - box->BxHeight - box->BxYOrg;
+				      if (box->BxVertFlex)
+					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, FALSE);
+				      else
+					YMove (box, pBox, j, frame);
+				      break;
+				    default:
+				      if (absoluteMove)
+					j = orgTrans;
+				      else
+					/* il faut reevaluer le cadrage */
+					j = 0;
+				      if (box->BxVertFlex)
+					MoveBoxEdge (box, pBox, pRelation->ReOp, j, frame, FALSE);
+				      else
+					YMove (box, pBox, j, frame);
+				      break;
+				    }
+				}
+			      i++;
+			      if (i < MAX_RELAT_POS)
+				notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+			    }
+			  /* next relation block */
+			  pPosRel = pPosRel->PosRNext;
+			}
+		    }
+		  /* next child */
+		  pAb = pAb->AbNext;
+		}
+	    }
+	  
+	  /* check dimension constraints */
+	  pDimRel = pBox->BxHeightRelations;
+	  while (pDimRel != NULL)
+	    {
+	      i = 0;
+	      while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
+		{
+		  box = pDimRel->DimRTable[i];
+		  pAb = box->BxAbstractBox;		    
+		  /* Is it the same dimension? */
+		  if (pDimRel->DimRSame[i])
+		    {
+		      /* Changing the height */
+		      if (pAb->AbEnclosing == pCurrentAb)
+			{
+			  if (pCurrentAb->AbInLine || pBox->BxType == BoGhost)
+			    {
+			      /* inherit from the line height */
+			      pLine = SearchLine (box);
+			      if (pLine == NULL)
+				/* no line available */
+				val = box->BxHeight;
+			      else
+				val = pLine->LiHeight;
+			    }
+			  else
+			    /* refer the inside height */
+			    val = pBox->BxH;
+			  if (pAb->AbHeight.DimUnit == UnPercent)
+			    val = val * pAb->AbHeight.DimValue / 100;
+			}
+		      else
+			{
+			  /* refer the outside height */
+			  val = pBox->BxHeight;
+			  if (pAb->AbHeight.DimUnit == UnPercent)
+			    val = val * pAb->AbHeight.DimValue / 100;
+			}
+		      val = val - box->BxHeight;
+		      /* avoid cycles on the same box */
+		      if (box != pBox)
+			ChangeHeight (box, pSourceBox, pBox, val, frame);
+		    }
+		  else
+		    {
+		      /* Changing the width */
+		      if (pAb->AbEnclosing == pCurrentAb || pAb == pCurrentAb)
+			{
+			  /* refer the inside height */
+			  val = pBox->BxH;
+			  if (pAb->AbWidth.DimUnit == UnPercent)
+			    val = val * pAb->AbWidth.DimValue / 100;
+			}
+		      else
+			{
+			  /* refer the outside height */
+			  val = pBox->BxHeight;
+			  if (pAb->AbWidth.DimUnit == UnPercent)
+			    val = val * pAb->AbWidth.DimValue / 100;
+			}
+		      val = val - box->BxWidth;
+		      ChangeWidth (box, pSourceBox, NULL, val, 0, frame);
+		    }
+		  i++;
+		  if (i < MAX_RELAT_DIM)
+		    box = pDimRel->DimRTable[i];
+		}
+	      /* next relation block */
+	      pDimRel = pDimRel->DimRNext;
+	    }
+	  
+	  /* Check enclosing constraints */
+	  pAb = pCurrentAb->AbEnclosing;
+	  if (!toMove)
+	    {
+	      /* look for the enclosing block of lines  */
+	      while (!pAb->AbInLine || pAb->AbBox->BxType == BoGhost)
+		pAb = pAb->AbEnclosing;
+	    }
+	  
+	  if (pAb == NULL)
+	    {
+	      /* It's the root of the concrete image */
+	      if (Propagate == ToAll && pBox->BxYOrg < 0)
+		YMoveAllEnclosed (pBox, -pBox->BxYOrg, frame);
+	    }
+	  else if (pCurrentAb->AbVertEnclosing)
+	    {
+	      /* keep in mind if the relation concerns parent boxes */
+	      externalRef = !IsParentBox (pAb->AbBox, pSourceBox);
+	      
+	      /*
+	       * if pSourceBox is a child and the inclusion is not performed
+	       * by another sibling box, we need to propagate the change
+	       */
+	      if ((Propagate == ToAll || externalRef)
+		  && !IsSiblingBox (pBox, pFromBox)
+		  && !IsSiblingBox (pBox, pSourceBox))
+		{
+		  if (pAb->AbInLine)
+		    /* Within a block of line */
+		    EncloseInLine (pBox, frame, pAb);
+		  /* if the inclusion is not checked at the end */
+		  else if (pAb->AbBox != PackBoxRoot &&
+			   !IsParentBox (pAb->AbBox, PackBoxRoot))
+		    /* Differ the checking of the inclusion */
+		    /* when the update has an external origin  */
+		    if (Propagate != ToAll && pAb->AbBox->BxType != BoCell)
+		      RecordEnclosing (pAb->AbBox, FALSE);
+		  /* Don't check the inclusion more than 2 times */
+		    else if (pAb->AbBox->BxPacking <= 1)
+		      HeightPack (pAb, pSourceBox, frame);
+		}
+	    }
+	}
+    }
+  
   /* Manage the specific width of symbols */
   if (pBox != NULL)
     {
-      if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
+      if (pCurrentAb->AbLeafType == LtSymbol)
 	{
 	  i = 0;
 	  font = pBox->BxFont;
 	  value = 1 + ((float) (pBox->BxH * 0.6) / (float) FontHeight (font));
-	  switch (pBox->BxAbstractBox->AbShape)
+	  switch (pCurrentAb->AbShape)
 	    {
 	    case 'd':	/* double integral */
 	      i = CharacterWidth (231, font) + CharacterWidth (231, font) / 2;
@@ -2703,7 +2746,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   PtrBox              pNextBox;
+   PtrBox              box;
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
    PtrPosRelations     pPosRel;
@@ -2723,12 +2766,12 @@ int                 frame;
 		/* check if the box is in the history of moved boxes */
 		if (pFromBox != NULL)
 		  {
-		     pNextBox = pFromBox->BxMoved;
-		     while (pNextBox != NULL)
-			if (pNextBox == pBox)
+		     box = pFromBox->BxMoved;
+		     while (box != NULL)
+			if (box == pBox)
 			   return;
 			else
-			   pNextBox = pNextBox->BxMoved;
+			   box = box->BxMoved;
 		  }
 		/* add the box in the history */
 		pBox->BxMoved = pFromBox;
@@ -2776,15 +2819,15 @@ int                 frame;
 		     /* we could clean up the history -> restore it */
 		     pBox->BxMoved = pFromBox;
 		     /* avoid cycles on the same boxes */
-		     pNextBox = pFromBox;
-		     while (pNextBox != NULL)
-			if (pNextBox->BxMoved == pFromBox)
+		     box = pFromBox;
+		     while (box != NULL)
+			if (box->BxMoved == pFromBox)
 			  {
-			     pNextBox->BxMoved = NULL;
-			     pNextBox = NULL;
+			     box->BxMoved = NULL;
+			     box = NULL;
 			  }
 			else
-			   pNextBox = pNextBox->BxMoved;
+			   box = box->BxMoved;
 		  }
 		else
 		   pBox->BxXOrg += delta;
@@ -2815,10 +2858,10 @@ int                 frame;
 				  {
 				    pAb = pCurrentAb->AbEnclosing;
 				    if (pAb != NULL)
-				      pNextBox = pAb->AbBox;
+				      box = pAb->AbBox;
 				    else
-				      pNextBox = NULL;
-				    if (pRelation->ReBox != pNextBox || Propagate == ToAll)
+				      box = NULL;
+				    if (pRelation->ReBox != box || Propagate == ToAll)
 				      MoveVertRef (pRelation->ReBox, pBox, delta, frame);
 				  }
 			      }
@@ -2905,7 +2948,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   PtrBox              pNextBox;
+   PtrBox              box;
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
    PtrPosRelations     pPosRel;
@@ -2925,12 +2968,12 @@ int                 frame;
 		/* check if the box is in the history of moved boxes */
 		if (pFromBox != NULL)
 		  {
-		     pNextBox = pFromBox->BxMoved;
-		     while (pNextBox != NULL)
-			if (pNextBox == pBox)
+		     box = pFromBox->BxMoved;
+		     while (box != NULL)
+			if (box == pBox)
 			   return;
 			else
-			   pNextBox = pNextBox->BxMoved;
+			   box = box->BxMoved;
 		  }
 		/* met a jour la pile des boites traitees */
 		pBox->BxMoved = pFromBox;
@@ -2978,15 +3021,15 @@ int                 frame;
 		     /* we could clean up the history -> restore it */
 		     pBox->BxMoved = pFromBox;
 		     /* avoid cycles on the same boxes */
-		     pNextBox = pFromBox;
-		     while (pNextBox != NULL)
-			if (pNextBox->BxMoved == pFromBox)
+		     box = pFromBox;
+		     while (box != NULL)
+			if (box->BxMoved == pFromBox)
 			  {
-			     pNextBox->BxMoved = NULL;
-			     pNextBox = NULL;
+			     box->BxMoved = NULL;
+			     box = NULL;
 			  }
 			else
-			   pNextBox = pNextBox->BxMoved;
+			   box = box->BxMoved;
 		  }
 		else
 		   pBox->BxYOrg += delta;
@@ -3017,10 +3060,10 @@ int                 frame;
 				  {
 				    pAb = pCurrentAb->AbEnclosing;
 				    if (pAb != NULL)
-				      pNextBox = pAb->AbBox;
+				      box = pAb->AbBox;
 				    else
-				      pNextBox = NULL;
-				    if (pRelation->ReBox != pNextBox || Propagate == ToAll)
+				      box = NULL;
+				    if (pRelation->ReBox != box || Propagate == ToAll)
 				      MoveHorizRef (pRelation->ReBox, pBox, delta, frame);
 				  }
 			      }

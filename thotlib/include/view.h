@@ -435,6 +435,20 @@ extern void         TtaSetDisplayMode (Document document, DisplayMode newDisplay
 extern DisplayMode  TtaGetDisplayMode (Document document);
 
 /*----------------------------------------------------------------------
+  TtaLockTableFormatting suspends all tables formatting
+  ----------------------------------------------------------------------*/
+extern void         TtaLockTableFormatting ();
+
+/*----------------------------------------------------------------------
+  TtaUnlockTableFormatting reformats all locked tables
+  ----------------------------------------------------------------------*/
+extern void         TtaUnlockTableFormatting ();
+/*----------------------------------------------------------------------
+  TtaGetTableFormattingLock gives the status of the table formatting lock.
+  ----------------------------------------------------------------------*/
+extern void         TtaGetTableFormattingLock (ThotBool *lock);
+
+/*----------------------------------------------------------------------
    TtaListView
 
    Produces in a file a human-readable form of an abstract view.
@@ -502,6 +516,9 @@ extern void         TtaGiveActiveView ( /* Document *document, View *view */ );
 extern void         TtaClipPolyline ( /* Element element, Document doc, View view */ );
 extern void         TtaSetDisplayMode ( /* Document document, DisplayMode newDisplayMode */ );
 extern DisplayMode  TtaGetDisplayMode ( /* Document document */ );
+extern void         TtaLockTableFormatting ();
+extern void         TtaUnlockTableFormatting ();
+extern void         TtaGetTableFormattingLock (/*ThotBool *lock*/);
 extern void         TtaListView ( /*Document document, View view, FILE *fileDescriptor */ );
 extern void         TtaListBoxes ( /*Document document, View view, FILE *fileDescriptor */ );
 extern int          TtaGetThotColor ( /*unsigned short red, unsigned short green, unsigned short blue */ );
