@@ -652,6 +652,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	  /* It's a break element */
 	  found = TRUE;
 	  *breakWidth = BoxCharacterWidth (BREAK_LINE, font);
+	  *boxLength = j;
 	  i++;
 	  if (i >= pBuffer->BuLength)
 	    {
@@ -668,7 +669,6 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	  
 	  *pNewBuff = pBuffer;
 	  *newIndex = i;
-	  *boxLength = j;
 	}
       else
 	{
