@@ -742,15 +742,18 @@ BOXES
 	PaddingLeft: 1 px;
 	PaddingBottom: 1 px;
 	PaddingRight: 1 px;
-	BorderTopWidth: 1 px;
-	BorderLeftWidth: 1 px;
-	BorderBottomWidth: 1 px;
-	BorderRightWidth: 1 px;
+	BorderTopWidth: 2 px;
+	BorderLeftWidth: 2 px;
+	BorderBottomWidth: 2 px;
+	BorderRightWidth: 2 px;
 	BorderTopColor: White;
 	BorderLeftColor: White;
 	BorderBottomColor: Black;
 	BorderRightColor: Black;
 	Visibility: Creator =;
+#ifndef BLACK_WHITE
+	Background : Grey;
+#endif
 	IN Structure_view
 		Visibility: 0;
 	IN Links_view
@@ -1071,18 +1074,6 @@ BOXES
 	PaddingLeft: 3 px;
 	PaddingBottom: 1 px;
 	PaddingRight: 3 px;
-	BorderTopWidth: 1 px;
-	BorderLeftWidth: 1 px;
-	BorderBottomWidth: 1 px;
-	BorderRightWidth: 1 px;
-	BorderTopColor: White;
-	BorderLeftColor: White;
-	BorderBottomColor: Black;
-	BorderRightColor: Black;
-	BorderTopStyle: Solid;
-	BorderLeftStyle: Solid;
-	BorderBottomStyle: Solid;
-	BorderRightStyle: Solid;
 	Background: Creator =;
 	Foreground: Creator =;
 	FillPattern: backgroundcolor;
@@ -3740,19 +3731,43 @@ RULES
 	CreateBefore(ElementName);
 	CreateBefore(ATTR_File);
 	CreateAfter(BrowseLabel);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	BorderTopWidth: 2 px;
+	BorderLeftWidth: 2 px;
+	BorderBottomWidth: 2 px;
+	BorderRightWidth: 2 px;
+	BorderTopColor: Black;
+	BorderLeftColor: Black;
+	BorderBottomColor: LightGrey2;
+	BorderRightColor: LightGrey2;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
+	Background: White;
+	FillPattern: backgroundcolor;
+	ShowBox;
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
 	Depth: Enclosing - 2;
 	LineBreak: No;
 	Adjust: Left;
-#ifndef BLACK_WHITE
-	Background : LightRed4;
-#endif
 	IN Structure_view BEGIN
 		Width: 0;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		Depth: 0;
 		END;
 	END;
@@ -3807,15 +3822,49 @@ RULES
 	CreateBefore(ATTR_Reset);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	PaddingTop: 1 px;
+	PaddingLeft: 3 px;
+	PaddingBottom: 1 px;
+	PaddingRight: 3 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: LightGrey2;
+	BorderLeftColor: LightGrey2;
+	BorderBottomColor: Black;
+	BorderRightColor: Black;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	Depth: Enclosing - 2;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
+	FillPattern: backgroundcolor;
+	ShowBox;
 	LineBreak: No;
 	HorizPos: Left = Enclosing . Left + 0.2;	
 	VertPos: Top = Enclosing . Top + 0.4;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		PaddingBottom: 0;
+		PaddingRight: 0;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
 	        VertPos: Top = Previous . Bottom;
 		Visibility: Enclosing =;
 		Width: 0;
@@ -3829,15 +3878,49 @@ RULES
 	CreateBefore(ATTR_Submit);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	PaddingTop: 1 px;
+	PaddingLeft: 3 px;
+	PaddingBottom: 1 px;
+	PaddingRight: 3 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: LightGrey2;
+	BorderLeftColor: LightGrey2;
+	BorderBottomColor: Black;
+	BorderRightColor: Black;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	Depth: Enclosing - 2;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
+	FillPattern: backgroundcolor;
+	ShowBox;
 	LineBreak: No;
 	HorizPos: Left = Enclosing . Left + 0.2;	
 	VertPos: Top = Enclosing . Top + 0.4;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		PaddingBottom: 0;
+		PaddingRight: 0;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
 	        VertPos: Top = Previous . Bottom;
 		Visibility: Enclosing =;
 		Width: 0;
@@ -3851,10 +3934,32 @@ RULES
 	CreateBefore(ATTR_Button);
 	CreateFirst(Value_Box);
 	CreateFirst(Value_Box_Alt);
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	PaddingTop: 1 px;
+	PaddingLeft: 3 px;
+	PaddingBottom: 1 px;
+	PaddingRight: 3 px;
+	BorderTopWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderTopColor: LightGrey2;
+	BorderLeftColor: LightGrey2;
+	BorderBottomColor: Black;
+	BorderRightColor: Black;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
 	Depth: Enclosing - 2;
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
+	FillPattern: backgroundcolor;
+	ShowBox;
 	LineBreak: No;
 	HorizPos: Left = Enclosing . Left + 0.2;	
 	VertPos: Top = Enclosing . Top + 0.4;
@@ -5161,10 +5266,15 @@ RULES
 ATTRIBUTES
  NoImages(PICTURE_UNIT*):
 	BEGIN
+	Visibility: 1;
 	if ALT and not within Object and not within Embed_
             CreateBefore(SHOW_ALT);
 	if Not ALT and not within Object and not within Embed_
 	    CreateBefore(SHOW_IMG);
+	IN Alternate_view
+		Visibility: Enclosing =;
+	IN Links_view
+		Visibility: Enclosing =;
 	END;
  NoImages(map):
 	BEGIN

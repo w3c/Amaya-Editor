@@ -240,7 +240,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"label", "", 'A', HTML_ATTR_label, L_BasicValue},
    {"lang", "", 'A', HTML_ATTR_Language, L_BasicValue},
    {"language", "script", 'A', HTML_ATTR_script_language, L_BasicValue},
-   {"link", "body", 'A', HTML_ATTR_LinkColor, L_BasicValue},
+   {"link", "body", 'A', HTML_ATTR_LinkColor, L_TransitionalValue},
    {"longdesc", "", 'A', HTML_ATTR_longdesc, L_BasicValue},
 
    {"marginheight", "", 'A', HTML_ATTR_marginheight, L_TransitionalValue},
@@ -318,7 +318,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
 
    {"tabindex", "", 'A', HTML_ATTR_tabindex, L_BasicValue},
    {"target", "", 'A', HTML_ATTR_target_, L_BasicValue},
-   {"text", "", 'A', HTML_ATTR_TextColor, L_BasicValue},
+   {"text", "", 'A', HTML_ATTR_TextColor, L_TransitionalValue},
    {"title", "", 'A', HTML_ATTR_Title, L_BasicValue},
    {"type", "button", 'A', HTML_ATTR_Button_type, L_StrictValue},
    {"type", "embed", 'A', HTML_ATTR_Embed_type, L_TransitionalValue},

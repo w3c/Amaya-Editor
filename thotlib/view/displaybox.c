@@ -1265,6 +1265,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       if (lgspace == 0)
 	lgspace = whitespace;
       
+      /* Do we need to draw a background */
+      if (pAb->AbPresentationBox && pAb->AbFillBox)
+	DrawRectangle (frame, 0, 0,
+		       x - pBox->BxLPadding, y - pBox->BxTPadding,
+		       width + pBox->BxLPadding + pBox->BxRPadding,
+		       pBox->BxH + pBox->BxTPadding + pBox->BxBPadding,
+		       0, bg, 2);
+
       /* locate the first character */
       LocateFirstChar (pBox, rtl, &adbuff, &indbuff);
       left = 0; /* start position of the selection */
