@@ -3456,7 +3456,7 @@ static void BuildProfileSelector (void)
   int                  i;
   int                  nbprofiles = 0;
   int                  indx, length;
-  char *               entry;
+  char                *entry;
   char                 BufMenu[MAX_LENGTH];
 
   /* Get the propositions of the selector */ 
@@ -3556,7 +3556,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    {
 	      strcpy (Profile, data);
-	      RefreshProfileMenu();
+	      /*RefreshProfileMenu();*/
 	    }
 	  else
 	    Profile[0] = EOS;
@@ -3567,7 +3567,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    { 
 	      /* did the profile file change ? */
-	      if (strcmp (data, Profiles_File) !=0 ) 
+	      if (strcmp (data, Profiles_File) != 0) 
 		{
 		   /* Yes, the profile file changed  : rescan the
 		      profile definition file and display the new
@@ -3578,7 +3578,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 #if 0
 		  TtaRebuildProTable (Profiles_File);
 		  BuildProfileSelector ();
-		  RefreshProfileMenu();
+		  /*RefreshProfileMenu();*/
 #endif
 		}
 	    }

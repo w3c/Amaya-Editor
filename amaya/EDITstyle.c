@@ -474,11 +474,14 @@ void                StyleChanged (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 void UpdateStylePost (NotifyAttribute * event)
 {
-   Element             el, firstChild, lastChild, oldParent, newParent;
-   ElementType	       elType;
    Document            doc;
+   Element             el, oldParent, newParent;
+#ifdef IV /* 10-dec-2001 */
+   Element             firstChild, lastChild;
+   ElementType	       elType;
    Attribute           at;
    AttributeType       atType;
+#endif /* IV */
    char               *style = NULL;
    int                 len;
 
@@ -490,6 +493,7 @@ void UpdateStylePost (NotifyAttribute * event)
       return;
    if (len == 0)
      {
+#ifdef IV /* 10-dec-2001 */
 	/* empty Style attribute. Delete it */
 	elType = TtaGetElementType (el);
         /* if it's a MathML element, delete the style attribute defined in the
@@ -530,6 +534,7 @@ void UpdateStylePost (NotifyAttribute * event)
 	     DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
 	     TtaSetDocumentModified (doc);
 	  }
+#endif /* IV */
      }
    else
      {

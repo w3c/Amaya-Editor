@@ -1,21 +1,27 @@
-## The ProfileDefs file contain units of modules definition separated
+## The ProfileDefs file contains units of modules definition separated
 ## by comments lines beginning with one or several hashes '#' (like ####VIEWS).
 ## These comments are there to help you searching your module (or function).
 
 ## The structure is recursive (modules contains functions and modules which can
 ## contain other functions and modules which ...)
 
-## This file can contain 4 different types of elements :
-##   ** Profile definitions : 
-##      Beginning of module definition is set by a name between brackets (like [views] or [zoom])
-##   ** Module definitions : 
-##      Beginning of module definition is set by a name between brackets (like [views] or [zoom])
-##      All the modules or functions between this module start and the next module start        
-##      belong to the module.            
-##   ** Module insertions :
+## This file can contain 5 different types of elements :
+##   ** Profile definitions: 
+##      Beginning of module definition is set by a name between <...>
+##      (like <editor>)
+##   ** Document profile definitions: 
+##      Beginning of module definition is set by a name between {...}
+##      (like {XHTML 1.0 Transitional})
+##   ** Module definitions: 
+##      Beginning of module definition is set by a name between [...]
+##      (like [views] or [zoom])
+##      All the modules or functions between this module start and the next
+##      module start belong to the module.            
+##   ** Module insertions:
 ##      A module name (like views of the previous example) is preceded by
-##      the plus '+' symbol to mean that this module is inserted in the current module definition.
-##   ** Function insertions : 
+##      the plus '+' symbol to mean that this module is inserted in the current
+##      module definition.
+##   ** Function insertions: 
 ##      Function are inserted in module without any symbol before the
 ##      name of the function or with the symbol '&'.
 
@@ -25,7 +31,7 @@
 ## DO NOT INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE
 
 ################# AMAYA EDITOR
-<XHTML 1.0 Transitional (editor)>
+<Editor>
 +amayabase
 +annot
 +base-module
@@ -54,88 +60,8 @@
 +templates
 +views
 
-################# XHTML-STRICT
-<XHTML 1.0 Strict (editor)>
-+amayabase
-+annot
-+base-module
-+bdi-text-module
-+browsing
-+clientside-module
-+config
-+css-style
-+edit
-+forms
-+link-module
-+edit-module
-+meta-module
-+presentation-module
-+makebook
-+makeid
-+maths
-+object-module
-+print
-+script-module
-+source-view
-+spell
-+svg
-+tables
-+templates
-+views
-
-################# AMAYA XHTML-BASIC
-<XHTML Basic (editor)>
-+amayabase
-+basic-form-module
-+basic-table-module
-+browsing
-+basic-css-style
-+config
-+edit
-+hypertext-module
-+list-module
-+makebook
-+makeid
-+object-module
-+print
-+source-view
-+spell
-+struct-module
-+text-module
-+views
-
-################# XHTML1.1
-<XHTML 1.1 (editor)>
-&CreateRuby
-+amayabase
-+annot
-+base-module
-+bdi-text-module
-+browsing
-+clientside-module
-+config
-+css-style
-+edit
-+forms
-+link-module
-+edit-module
-+meta-module
-+presentation-module
-+makebook
-+makeid
-+maths
-+object-module
-+print
-+script-module
-+source-view
-+spell
-+svg
-+tables
-+templates
-+views
-
 ################# AMAYA MINI-EDITOR
-<XHTML 1.0 Transitional (mini-editor)>
+<Mini-editor>
 +amayabase
 +css-style
 +edit
@@ -143,7 +69,7 @@
 +source-view
 
 ################# AMAYA BROWSER
-<XHTML 1.0 Transitional (browser)>
+<Browser>
 +amayabase
 +browsing
 +config
@@ -154,11 +80,89 @@
 ShowMapAreas
 
 ################# AMAYA MINI-BROWSER
-<XHTML 1.0 Transitional (mini-browser)>
+<Mini-browser>
 +amayabase
 +browsing
 +print
 +source-view
+
+################# XHTML-TRANSITIONAL
+{XHTML Transitional}
++amayabase
++base-module
++bdi-text-module
++clientside-module
++css-style
++forms
++hypertext-module
++image-module
++link-module
++list-module
++edit-module
++iframe-module
++meta-module
++presentation-module
++maths
++object-module
++script-module
++struct-module
++svg
++tables
++text-module
+
+################# XHTML-STRICT
+{XHTML 1.0 Strict}
++amayabase
++base-module
++bdi-text-module
++clientside-module
++css-style
++forms
++hypertext-module
++image-module
++link-module
++list-module
++meta-module
++presentation-module
++maths
++object-module
++script-module
++struct-module
++svg
++tables
++text-module
+
+################# XHTML-BASIC
+{XHTML Basic}
++amayabase
++basic-form-module
++basic-table-module
++basic-css-style
++hypertext-module
++list-module
++object-module
++struct-module
++text-module
+
+################# XHTML1.1
+{XHTML 1.1}
+&CreateRuby
++amayabase
++base-module
++bdi-text-module
++clientside-module
++css-style
++forms
++hypertext-module
++link-module
++list-module
++meta-module
++presentation-module
++maths
++object-module
++script-module
++svg
++tables
 
 ################# AMAYA FUNCTIONS
 [amayabase]

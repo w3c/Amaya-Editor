@@ -1274,58 +1274,59 @@ void          HighlightVisibleAncestor (PtrElement pEl)
 void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
 			 int lastChar, ThotBool string)
 {
-   PtrElement          pEl;
-   PtrAbstractBox      pAbView;
-   int                 frame, view;
+  PtrElement          pEl;
+  PtrAbstractBox      pAbView;
+  int                 frame, view;
 
-   if (pAb == NULL || pDoc == NULL)
-      return;
-   pEl = pAb->AbElement;
-   if (pEl->ElIsCopy)
-      /* the string to be selected is in a copy element */
-      /* Select the whole element. SelectElement will select the first */
-      /* ancestor that is not a copy */
-      SelectElement (pDoc, pEl, TRUE, TRUE);
-   else
-     {
-	DocSelectedAttr = pDoc;
-	AbsBoxSelectedAttr = pAb;
-	FirstSelectedCharInAttr = firstChar;
-	LastSelectedCharInAttr = lastChar;
-	SelPosition = !string;
-	/* highlight the new selection in all views */
-	for (view = 0; view < MAX_VIEW_DOC; view++)
-	  {
-	     /* frame: window where the view is displayed */
-	     if (pDoc->DocView[view].DvPSchemaView > 0)
-		frame = pDoc->DocViewFrame[view];
-	     else
-		frame = 0;	/* vue non creee */
-	     /* if the view exists, highlight selection in that view */
-	     if (frame > 0)
-	       {
-		  /* search in the view the presentation abstract box that */
-		  /* contains an attribute value */
-		  pAbView = GetAbsBoxSelectedAttr (view+1);
-		  /* switch the former selection off in that view */
-		  ClearViewSelection (frame);
-		  if (pAbView != NULL)
-		    {
-		      /* highlight the new selection */
-		       InsertViewSelMarks (frame, pAbView, firstChar,
-					   lastChar, TRUE, TRUE, TRUE);
-		       ShowSelectedBox (frame, TRUE);
-		       DisplayFrame (frame); 
-		    }
-	       }
-	  }
-	PrepareSelectionMenu ();
-	BuildSelectionMessage ();
-	if (ThotLocalActions[T_chselect] != NULL)
-	   (*ThotLocalActions[T_chselect]) (pDoc);
-	if (ThotLocalActions[T_chattr] != NULL)
-	   (*ThotLocalActions[T_chattr]) (pDoc);
-     }
+  if (pAb == NULL || pDoc == NULL)
+    return;
+  pEl = pAb->AbElement;
+  if (pEl->ElIsCopy)
+    /* the string to be selected is in a copy element */
+    /* Select the whole element. SelectElement will select the first */
+    /* ancestor that is not a copy */
+    SelectElement (pDoc, pEl, TRUE, TRUE);
+  else
+    {
+      DocSelectedAttr = pDoc;
+      AbsBoxSelectedAttr = pAb;
+      FirstSelectedCharInAttr = firstChar;
+      LastSelectedCharInAttr = lastChar;
+      SelPosition = !string;
+      /* highlight the new selection in all views */
+      for (view = 0; view < MAX_VIEW_DOC; view++)
+	{
+	  /* frame: window where the view is displayed */
+	  if (pDoc->DocView[view].DvPSchemaView > 0)
+	    frame = pDoc->DocViewFrame[view];
+	  else
+	    frame = 0;	/* vue non creee */
+	  /* if the view exists, highlight selection in that view */
+	  if (frame > 0)
+	    {
+	      /* search in the view the presentation abstract box that */
+	      /* contains an attribute value */
+	      pAbView = GetAbsBoxSelectedAttr (view + 1);
+	      /* switch the former selection off in that view */
+	      ClearViewSelection (frame);
+	      if (pAbView)
+		{
+		  /* highlight the new selection */
+		  pAb->AbSelected = TRUE;
+		  InsertViewSelMarks (frame, pAbView, firstChar,
+				      lastChar, TRUE, TRUE, TRUE);
+		  ShowSelectedBox (frame, TRUE);
+		  DisplayFrame (frame); 
+		}
+	    }
+	}
+      PrepareSelectionMenu ();
+      BuildSelectionMessage ();
+      if (ThotLocalActions[T_chselect] != NULL)
+	(*ThotLocalActions[T_chselect]) (pDoc);
+      if (ThotLocalActions[T_chattr] != NULL)
+	(*ThotLocalActions[T_chattr]) (pDoc);
+    }
 }
 
 /*----------------------------------------------------------------------

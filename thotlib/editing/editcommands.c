@@ -422,9 +422,17 @@ static ThotBool CloseTextInsertionWithControl ()
 		     }
 	     pFrame = &ViewFrameTable[frame - 1];
 	     pViewSel = &pFrame->FrSelectionBegin;
+	     pViewSelEnd = &pFrame->FrSelectionEnd;
+	     if (pSelBox->BxAbstractBox->AbPresentationBox &&
+		 pSelBox->BxAbstractBox->AbCreatorAttr != NULL)
+	       {
+		 /* update the selection within the attribute */
+		 FirstSelectedCharInAttr = pSelBox->BxIndChar + pViewSelEnd->VsIndBox;
+		 LastSelectedCharInAttr = pSelBox->BxIndChar + pViewSel->VsIndBox;
+		 SelPosition = (FirstSelectedCharInAttr < LastSelectedCharInAttr);
+	       }
 	     NewContent (pSelBox->BxAbstractBox);
 	     /* update the new selection */
-	     pViewSelEnd = &pFrame->FrSelectionEnd;
 	     if (pViewSel->VsBox != NULL)
 	       {
 		 i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;

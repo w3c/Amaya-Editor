@@ -7314,7 +7314,7 @@ void TtaSetSelector (int ref, int entry, char *text)
 		  XmListSelectPos (w, entry + 1, TRUE);
 	       }
 #else /* _GTK */
-	     gtk_list_select_item (GTK_LIST(select), entry+1);
+	     gtk_list_select_item (GTK_LIST(select), entry);
 #endif /* _GTK */
 	  }
 	else if (catalogue->Cat_SelectList)
@@ -7735,6 +7735,7 @@ void TtaNewPwdForm (int ref, int ref_parent, char *title, int width,
 {
 #ifdef _GTK
   struct Cat_Context *catalogue;
+
   TtaNewTextForm (ref, ref_parent, title, width, height, react);
   catalogue = CatEntry (ref);
   gtk_entry_set_visibility (GTK_ENTRY(catalogue->Cat_Entries), FALSE);

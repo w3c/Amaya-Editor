@@ -25,11 +25,21 @@
 #include "registry.h"
 #include "profiles.h"
 
+#define PROFILE_START              '<'
+#define PROFILE_END                '>'
+#define DOCTYPE_START              '{'
+#define DOCTYPE_END                '}'
+#define MODULE_START               '['
+#define MODULE_END                 ']'
+#define MODULE_REF                 '+'
+#define EDITING_REF                '&'
+
+
 #define MAX_ENTRIES 10
 typedef struct _Profile_Ctl *PtrProCtl;
 typedef struct _ProElement
 {
-  char*                ProName;      /* Name of the entry */
+  char                *ProName;      /* Name of the entry */
   PtrProCtl            ProSubModule; /* Pointer to a sub-module context */
   ThotBool             ProIsModule;    /* TRUE if it is a sub-module */
   ThotBool             ProEdit;      /* TRUE if it's a editing function */
@@ -48,13 +58,16 @@ typedef struct _Profile_Ctl
 /* Profiles table contains the name of all the available profiles */
 static PtrProCtl            ProfileTable = NULL;
 static int                  NbProfiles = 0;
+/* Profiles table contains the name of all the available profiles */
+static PtrProCtl            DoctypeTable = NULL;
+static int                  NbDoctypes = 0;
 /* Modules table contains the name of all the available modules */
 static PtrProCtl            ModuleTable = NULL;
 static int                  NbModules = 0;
 /* Functions table contains current list of available functions */
 static PtrProCtl            FunctionTable = NULL;
 static int                  NbFunctions = 0;
-static char**               SortedFunctionTable = NULL;
+static char               **SortedFunctionTable = NULL;
 
 /* The first context of the current module or profile in progress */
 static PtrProCtl            CurrentModule;
@@ -79,7 +92,7 @@ static ThotBool             EnableEdit = TRUE;
   SkipAllBlanks:  Remove all the spaces, tabulations and return
   returns (CR) and "end of line" characters.
 ----------------------------------------------------------------------*/
-static void   SkipAllBlanks (char *Astring)
+static void SkipAllBlanks (char *Astring)
 {
   int         c = 0;
   int         nbsp = 0;
@@ -125,7 +138,7 @@ static void   SkipAllBlanks (char *Astring)
   The parameter ctxt points to the first ctxt of the table.
   Return the first context of the new module.
 ----------------------------------------------------------------------*/
-static PtrProCtl  AddInTable (char *name, ThotBool isModule, ThotBool edit,
+static PtrProCtl AddInTable (char *name, ThotBool isModule, ThotBool edit,
 			      PtrProCtl subModule, int number,
 			      PtrProCtl ctxt)
 {
@@ -178,7 +191,7 @@ static PtrProCtl  AddInTable (char *name, ThotBool isModule, ThotBool edit,
   AddModule inserts a new module in the module table.
   Return the first context of the new module.
 ----------------------------------------------------------------------*/
-static PtrProCtl    AddModule (char *name)
+static PtrProCtl AddModule (char *name)
 {
   PtrProCtl     new = NULL;
 
@@ -198,7 +211,7 @@ static PtrProCtl    AddModule (char *name)
   AddProfile inserts a new profile in the profile table.
   Return the first context of the new profile.
 ----------------------------------------------------------------------*/
-static PtrProCtl    AddProfile (char *name)
+static PtrProCtl AddProfile (char *name)
 {
   PtrProCtl     new = NULL;
 
@@ -216,13 +229,32 @@ static PtrProCtl    AddProfile (char *name)
   return new;
 }
 
+/*----------------------------------------------------------------------
+  AddDoctype inserts a new doctype profile in the table.
+  Return the first context of the new profile.
+----------------------------------------------------------------------*/
+static PtrProCtl AddDoctype (char *name)
+{
+  PtrProCtl     new = NULL;
+
+  /* Register the new profile */
+  if (NbDoctypes == 0)
+    {
+      DoctypeTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+      memset (DoctypeTable, 0, sizeof (Profile_Ctl));
+    }
+  new = AddInTable (name, TRUE, FALSE, NULL, NbDoctypes, DoctypeTable);
+  NbDoctypes++;
+  return new;
+}
+
 
 /*----------------------------------------------------------------------
   DeleteTable frees all contexts allocated for the table.
   The parameter ctxt points to the first context of the table.
   The parameter recursive is TRUE if the referred context must be freed.
 ----------------------------------------------------------------------*/
-static void    DeleteTable (PtrProCtl ctxt, ThotBool recursive)
+static void DeleteTable (PtrProCtl ctxt, ThotBool recursive)
 {
   PtrProCtl           next;
   int                 i;
@@ -249,7 +281,7 @@ static void    DeleteTable (PtrProCtl ctxt, ThotBool recursive)
   SearchModule searchs a module in the module table and return the
   pointer to current entry.
   ----------------------------------------------------------------------*/
-static ProElement  *SearchModule (char *name)
+static ProElement *SearchModule (char *name)
 {
   PtrProCtl        current;
   int              i = 0;
@@ -282,7 +314,7 @@ static ProElement  *SearchModule (char *name)
   ProcessDefinition : Recursive function that helps
   building the profile table
   ----------------------------------------------------------------------*/
-static void    ProcessDefinition (char *element)
+static void ProcessDefinition (char *element)
 {
   ProElement      *pEntry;
   PtrProCtl        ctxt;
@@ -300,6 +332,20 @@ static void    ProcessDefinition (char *element)
       element[i] = EOS;
       /* The new profile in progress */
       CurrentModule = AddProfile (&element[1]);
+      CurrentEntries = 0;
+    }
+  else if (*element == DOCTYPE_START)
+    {
+      /*
+       * It's a document profile definition -> insert it in the doctype table
+       * Remove the start tag and the end tag
+       */
+      i = 1;
+      while (element[i] != DOCTYPE_END)
+	i++;
+      element[i] = EOS;
+      /* The new profile in progress */
+      CurrentModule = AddDoctype (&element[1]);
       CurrentEntries = 0;
     }
   else if (*element == MODULE_START)
@@ -364,7 +410,7 @@ static void    ProcessDefinition (char *element)
    AddFunctions keep in the function table the list of functions
    declared in the list of contexts.
   ----------------------------------------------------------------------*/
-static void AddFunctions (PtrProCtl ctxt)
+static void AddFunctions (PtrProCtl ctxt, PtrProCtl functionTable)
 {
   int           i;
 
@@ -375,10 +421,12 @@ static void AddFunctions (PtrProCtl ctxt)
 	{
 	  if (ctxt->ProEntries[i].ProIsModule)
 	    /* add functions of the sub-module */
-	    AddFunctions (ctxt->ProEntries[i].ProSubModule);
+	    AddFunctions (ctxt->ProEntries[i].ProSubModule, functionTable);
 	  else
 	    {
-	      AddInTable (ctxt->ProEntries[i].ProName, FALSE, ctxt->ProEntries[i].ProEdit, NULL, NbFunctions, FunctionTable);
+	      AddInTable (ctxt->ProEntries[i].ProName, FALSE,
+			  ctxt->ProEntries[i].ProEdit, NULL,
+			  NbFunctions, functionTable);
 	      NbFunctions++;
 	    }
 	  /* next entry */
@@ -394,16 +442,15 @@ static void AddFunctions (PtrProCtl ctxt)
   SortFunctionTable generates the function table in ascending
   order.
   ----------------------------------------------------------------------*/
-static void SortFunctionTable ()
+static char **SortFunctionTable (PtrProCtl ctxt)
 {
-  PtrProCtl     ctxt;
+  char        **sortedTable;
   char         *ptr;
   int           i, j, index;
 
   /* copy the list of contexts in a large table */
-  SortedFunctionTable = (char**) TtaGetMemory (NbFunctions * sizeof (char*));
+  sortedTable = (char **) TtaGetMemory (NbFunctions * sizeof (char *));
   index = 0;
-  ctxt = FunctionTable;
   EnableEdit = FALSE;
   while (ctxt && index < NbFunctions)
     {
@@ -413,7 +460,7 @@ static void SortFunctionTable ()
 	  if (!EnableEdit && ctxt->ProEntries[i].ProEdit)
 	    /* there is almost one editing function */
 	    EnableEdit = TRUE;
-	  SortedFunctionTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
+	  sortedTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
 	  index++;
 	  /* next entry */
 	  i++;
@@ -427,27 +474,21 @@ static void SortFunctionTable ()
     {
       index = i;
       for (j = i+1; j < NbFunctions; j++)
-        if (strcmp (SortedFunctionTable[j], SortedFunctionTable[index]) <= 0)
+        if (strcmp (sortedTable[j], sortedTable[index]) <= 0)
 	  index = j;
-      ptr = SortedFunctionTable[index];
-      SortedFunctionTable[index] = SortedFunctionTable[i];
-      SortedFunctionTable[i] = ptr;
+      ptr = sortedTable[index];
+      sortedTable[index] = sortedTable[i];
+      sortedTable[i] = ptr;
     }
-
-  /* delete the function table */
-  if (FunctionTable)
-    {
-      DeleteTable (FunctionTable, FALSE);
-      FunctionTable = NULL;
-    }
+  return sortedTable;
 }
 
 
 /*----------------------------------------------------------------------
-  Prof_BelongTable searchs a function in the function table and return TRUE
-  if the function exists.
+  Prof_BelongTable searchs a function in the function table and returns
+  TRUE if the function exists.
   ----------------------------------------------------------------------*/
-ThotBool    Prof_BelongTable (char *name)
+ThotBool Prof_BelongTable (char *name)
 {
   int              left, right, middle, i;
   ThotBool         found = FALSE;
@@ -466,6 +507,41 @@ ThotBool    Prof_BelongTable (char *name)
       i = strcmp (SortedFunctionTable[middle], name);
       if (i == 0)
 	found = TRUE;
+      else if (i < 0)
+	left = middle + 1;
+      else
+	right = middle - 1;
+    }
+  return found;
+}
+
+
+/*----------------------------------------------------------------------
+  Prof_BelongDoctype searchs a function in the function table and returns
+  TRUE if the function is accepted in that document profile.
+  ----------------------------------------------------------------------*/
+ThotBool Prof_BelongDoctype (char *name, int docProfile)
+{
+  int              left, right, middle, i;
+  ThotBool         found = FALSE;
+
+  if (NbFunctions == 0)
+    /* All functions are allowed */
+    return TRUE;
+
+  /* Dichotomic search */
+  left = middle = 0;
+  right = NbFunctions - 1;
+ 
+  while (left <= right && !found)
+    {
+      middle = (right + left) / 2;
+      i = strcmp (SortedFunctionTable[middle], name);
+      if (i == 0)
+	{
+	  /* check the profile value */
+	  found = TRUE;
+	}
       else if (i < 0)
 	left = middle + 1;
       else
@@ -531,9 +607,15 @@ void Prof_InitTable (char *prof_file)
 	{
 	  FunctionTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
 	  memset (FunctionTable, 0, sizeof (Profile_Ctl));
-	  AddFunctions (UserProfContext);
+	  AddFunctions (UserProfContext, FunctionTable);
 	  /* generate a sorted list of available functions */
-	  SortFunctionTable ();
+	  SortedFunctionTable = SortFunctionTable (FunctionTable);
+	  /* delete the function table */
+	  if (FunctionTable)
+	    {
+	      DeleteTable (FunctionTable, FALSE);
+	      FunctionTable = NULL;
+	    }
 	}
     }
   /* TODO: remove that clean up as soon as we are able to update Amaya UI */
@@ -567,7 +649,7 @@ void Prof_FreeTable ()
 /*----------------------------------------------------------------------
   TtaRebuildProTable: Rebuild the Profiles Table
   ----------------------------------------------------------------------*/
-void     TtaRebuildProTable (char *prof_file)
+void TtaRebuildProTable (char *prof_file)
 {
   /* delete the profiles table */
   Prof_FreeTable ();
@@ -578,7 +660,7 @@ void     TtaRebuildProTable (char *prof_file)
 /*----------------------------------------------------------------------
   TtaCanEdit returns TRUE if there is almost one editing function active.
   ----------------------------------------------------------------------*/
-ThotBool    TtaCanEdit ()
+ThotBool TtaCanEdit ()
 {
   return (EnableEdit);
 }
@@ -587,7 +669,7 @@ ThotBool    TtaCanEdit ()
    TtaGetProfileFileName:  Get the text for the profile file name.
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
-void     TtaGetProfileFileName (char *name, int length)
+void TtaGetProfileFileName (char *name, int length)
 {
   char   *ptr;
   char    buffer[MAX_LENGTH];
@@ -606,7 +688,7 @@ void     TtaGetProfileFileName (char *name, int length)
    TtaGetDefProfileFileName:  Get the text for the default profile file name.
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
-void     TtaGetDefProfileFileName (char *name, int length)
+void TtaGetDefProfileFileName (char *name, int length)
 {
   char *ptr;
   char  buffer[200];
@@ -627,7 +709,7 @@ void     TtaGetDefProfileFileName (char *name, int length)
    listEntries is a provided list of length pointers.
    Returns the number of items
   ----------------------------------------------------------------------*/
-int      TtaGetProfilesItems (char** listEntries, int length)
+int TtaGetProfilesItems (char **listEntries, int length)
 {
   PtrProCtl     ctxt;
   int           nbelem = 0;
@@ -663,7 +745,7 @@ ThotBool Prof_ShowSeparator (Menu_Ctl *ptrmenu, int item, char LastItemType)
   Prof_ShowButton : Add a button if the function associated to that button
   belongs to the user profile
   ----------------------------------------------------------------------*/
-ThotBool    Prof_ShowButton (char *FunctionName)
+ThotBool Prof_ShowButton (char *FunctionName)
 {
   return (Prof_BelongTable (FunctionName));
 }
@@ -673,7 +755,7 @@ ThotBool    Prof_ShowButton (char *FunctionName)
     Prof_ShowSubMenu : Check if a submenu has to be displayed.
     A submenu musn't be displayed if it contains no entry
   ----------------------------------------------------------------------*/
-ThotBool   Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
+ThotBool Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
 {
   int      item    = 0;
   
@@ -692,7 +774,7 @@ ThotBool   Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
     Prof_ShowMenu : Check if a menu has to be displayed. A menu mustn't be
     displayed if it contains no entry.
  -----------------------------------------------------------------------*/
-ThotBool   Prof_ShowMenu (Menu_Ctl *ptrmenu)
+ThotBool Prof_ShowMenu (Menu_Ctl *ptrmenu)
 {
   int      item    = 0;
 

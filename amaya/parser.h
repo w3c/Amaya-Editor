@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -8,26 +8,12 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "profiles.h"
 #define MATH_TYPE    1
 #define SVG_TYPE     2
 #define XLINK_TYPE   3
 #define XHTML_TYPE   4
 #define XML_TYPE     5
-
-/* Masks for the XHTML profiles */
-#define L_Other            0x00
-#define L_Basic            0x02
-#define L_Strict           0x06
-#define L_Xhtml11          0x1E
-#define L_Transitional     0x2E
-
-/* Value for the XHTML profiles */
-#define L_BasicValue        0x02
-#define L_StrictValue       0x0C
-#define L_Xhmli11Value      0x0C
-#define L_RubyValue         0x10
-#define L_TransitionalValue 0x20
-#define L_OtherValue        0xFF
 
 #define MaxTypeNameLength 30
 #define DummyAttribute    500

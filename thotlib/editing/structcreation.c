@@ -960,11 +960,14 @@ void NewContent (PtrAbstractBox pAb)
 	      while (pAb && pAb->AbElement == pEl)
 		{
 		  if (pAb->AbPresentationBox)
+		    {
 		    /* pAb is a presentation abstract box for the element */
 		    /* to which the attribute is attached */
-		    if (pAb->AbCanBeModified && pAb->AbCreatorAttr == pAttr)
+		    if (pAb->AbCanBeModified && pAb->AbCreatorAttr == pAttr &&
+			!pAb->AbDead)
 		      SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
 					 LastSelectedCharInAttr, !SelPosition);
+		    }
 		  else
 		    /* pAb is the main abstract box for the element to which */
 		    /* the attribute is attached. Process its children */

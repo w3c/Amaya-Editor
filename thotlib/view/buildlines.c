@@ -266,7 +266,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 /*----------------------------------------------------------------------
    FloatToInt fait un arrondi float -> int.                        
   ----------------------------------------------------------------------*/
-int                 FloatToInt (float e)
+int FloatToInt (float e)
 {
   int                 value;
 
@@ -1723,7 +1723,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    de la justification. Met a jour les marques de selection
    que la boite soit justifiee ou non.                     
   ----------------------------------------------------------------------*/
-static void         RemoveAdjustement (PtrBox pBox, int spaceWidth)
+static void RemoveAdjustement (PtrBox pBox, int spaceWidth)
 {
    int                 x;
    int                 l;
@@ -1915,7 +1915,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
   building) or relativelly to the root box.
   Returns the box height.
   ----------------------------------------------------------------------*/
-void                ComputeLines (PtrBox pBox, int frame, int *height)
+void ComputeLines (PtrBox pBox, int frame, int *height)
 {
   PtrLine             pPreviousLine;
   PtrLine             pLine;
@@ -2985,7 +2985,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
   current line of pAb.
   Update the block of lines if necessary.
   ----------------------------------------------------------------------*/
-void      EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
+void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 {
   PtrBox              ibox1;
   PtrBox              pPieceBox;
