@@ -502,8 +502,11 @@ static ThotBool FunctionInProfile (char *name, PtrProCtl ctxt)
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
 	{
 	  if (ctxt->ProEntries[i].ProIsModule)
-	    /* add functions of the sub-module */
-	    return FunctionInProfile (name, ctxt->ProEntries[i].ProSubModule);
+	    {
+	      if (FunctionInProfile (name, ctxt->ProEntries[i].ProSubModule))
+		/* stop if the function is founs this sub-module */
+		return TRUE;
+	    }
 	  else if (!strcmp (name, ctxt->ProEntries[i].ProName))
 	    {
 	      /* the function is declared in that document profile */
@@ -558,7 +561,7 @@ ThotBool Prof_BelongDoctype (char *name, int docProfile)
 {
   int              left, right, middle, i;
 
-  if (NbFunctions == 0)
+  if (NbFunctions == 0 || docProfile == 0)
     /* All functions are allowed */
     return TRUE;
 
@@ -575,7 +578,7 @@ ThotBool Prof_BelongDoctype (char *name, int docProfile)
 	  /* check the profile value */
 	  if (FunctionMask[middle] == 0)
 	    return TRUE;
-	  else if (FunctionMask[middle] | docProfile)
+	  else if (FunctionMask[middle] & docProfile)
 	    return TRUE;
 	  else
 	    return FALSE;
@@ -617,7 +620,7 @@ void Prof_InitTable (char *prof_file)
 	  if (ptr && *ptr)
 	    strcpy (UserProfile, ptr);	
 	  else
-	    UserProfile[0] = EOS;
+	    strcpy (UserProfile, "Editor");
 
 	  /* Fill a profile and module tables */
 	  while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))

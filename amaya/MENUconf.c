@@ -1538,7 +1538,9 @@ static void GetGeneralConf (void)
   if (Zoom == 0)
     {
       TtaGetEnvInt ("ZOOM", &oldzoom);
-      if (oldzoom != 0)
+      if (oldzoom == 0)
+	Zoom = 100;
+      else
 	/* old model */
 	Zoom = 100 + (oldzoom * 10);
     }

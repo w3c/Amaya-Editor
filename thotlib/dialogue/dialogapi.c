@@ -3352,7 +3352,7 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 	      {
 		i = number;
 		TtaError (ERR_invalid_parameter);
-		return;
+		break;
 	      }
 	    else
 	      {
@@ -6256,7 +6256,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		     XtSetArg (argform[0], XmNdefaultButton, w);
 		  XtSetValues (form, argform, 1);
 #else /* _GTK */
-		  if (index == 0)
+		  if (index == 0 && number > 0)
 		    gtk_widget_grab_default (GTK_WIDGET(w));
 
 #endif /* _GTK */

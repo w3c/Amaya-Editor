@@ -2553,7 +2553,7 @@ static Document LoadDocument (Document doc, char *pathname,
   char               *content_type;
   char               *http_content_type;
   int                 i, j;
-  int                 parsingLevel;
+  int                 parsingLevel, docprofile;
   ThotBool            unknown;
   ThotBool            plainText;
   ThotBool            xmlDec, withDoctype, isXML;
@@ -2847,7 +2847,10 @@ static Document LoadDocument (Document doc, char *pathname,
 	newdoc = doc;
 
       /* store the document profile */
+      docprofile = TtaGetDocumentProfile (newdoc);
       TtaSetDocumentProfile (newdoc, parsingLevel);
+      if (docprofile != parsingLevel)
+	TtaUpdateMenus (newdoc, 1);
 
       /* update the menus according to the profile of the new document */
 

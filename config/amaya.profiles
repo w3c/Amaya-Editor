@@ -88,7 +88,6 @@ ShowMapAreas
 
 ################# XHTML-TRANSITIONAL
 {XHTML Transitional}
-+amayabase
 +base-module
 +bdi-text-module
 +clientside-module
@@ -112,7 +111,6 @@ ShowMapAreas
 
 ################# XHTML-STRICT
 {XHTML 1.0 Strict}
-+amayabase
 +base-module
 +bdi-text-module
 +clientside-module
@@ -134,11 +132,11 @@ ShowMapAreas
 
 ################# XHTML-BASIC
 {XHTML Basic}
-+amayabase
 +basic-form-module
 +basic-table-module
 +basic-css-style
 +hypertext-module
++image-module
 +list-module
 +object-module
 +struct-module
@@ -147,13 +145,13 @@ ShowMapAreas
 ################# XHTML1.1
 {XHTML 1.1}
 &CreateRuby
-+amayabase
 +base-module
 +bdi-text-module
 +clientside-module
 +css-style
 +forms
 +hypertext-module
++image-module
 +link-module
 +list-module
 +meta-module
