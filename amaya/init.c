@@ -3208,7 +3208,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   char            documentname[MAX_LENGTH];
   char            s[MAX_LENGTH], charsetname[MAX_LENGTH];
   int             i, parsingLevel;
-  ThotBool        plaintext;
+  ThotBool        plaintext, docModified;
   ThotBool        xmlDec, withDoctype, isXML, isKnown;
 
   if (DocumentURLs[doc] == NULL ||
@@ -3247,7 +3247,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   RemoveDocCSSs (doc);  
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
-
+  docModified = TtaIsDocumentModified (doc);
   if (asHTML)
     DocumentMeta[doc]->xmlformat = FALSE;
   if (charset != UNDEFINED_CHARSET &&
@@ -3283,6 +3283,11 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
+  /* Update the source of the document */
+  TtaSetDocumentModified (doc);
+  Synchronize (doc, view);
+  if (!docModified)
+    TtaSetDocumentUnmodified (doc);
   /* check parsing errors */
   CheckParsingErrors (doc);
   TtaFreeMemory (localFile);

@@ -5410,15 +5410,15 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 	   j = i;
 	   while ((bufferRead[i] != '>') && i < res)
 	     {
-	       if (bufferRead[i] == EOL || bufferRead[i] == CR)
-		 ExtraLineRead -= 1;
+	       /*if (bufferRead[i] == EOL)
+		 ExtraLineRead -= 1;*/
 	       i++;
 	     }
 	   if (i < res)
 	     {
 	       i++;
-	       if (bufferRead[i] == EOL || bufferRead[i] == CR)
-		 ExtraLineRead -= 1;
+	       /*if (bufferRead[i] == EOL || bufferRead[i] == CR)
+		 ExtraLineRead -= 1;*/
 	       res = res - (i-j);
 	     }
 	   /* The declaration is skipped */
