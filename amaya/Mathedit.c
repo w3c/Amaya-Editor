@@ -492,7 +492,7 @@ int                 construct;
 	   /* selection is in an HTML element */
 	   {
            newType.ElTypeNum = HTML_EL_Math;
-           newType.ElSSchema = docSchema;
+           newType.ElSSchema = elType.ElSSchema;
            TtaCreateElement (newType, doc);
 	   }
 #ifdef GRAPHML
@@ -508,10 +508,7 @@ int                 construct;
 	return;
 	}
 
-      surround = (last != sibling || 
-		  (c1 <= i && i > 0) || 
-		  (c1 == 0 && i == 0 && (TtaGetElementVolume (sibling) != 0))
-		 );
+      surround = TtaIsSelectionEmpty ();
       
       TtaSetDisplayMode (doc, DeferredDisplay);
 
@@ -1367,11 +1364,7 @@ void CreateCharStringElement (typeNum, doc)
 
    /* check whether the selection is empty (just a caret) or contains some
       characters/elements */
-   nonEmptySel = ((lastSel != firstSel) || 
-		  (firstChar <= i && i > 0) || 
-		  (firstChar == 0 && i == 0 &&
-		   (TtaGetElementVolume (firstSel) != 0))
-		  );
+   nonEmptySel = !TtaIsSelectionEmpty ();
 
    if (!nonEmptySel)
      /* just a caret: create the requested element at that position */

@@ -540,7 +540,6 @@ View                view;
      }
 }
 
-
 /*----------------------------------------------------------------------
   CreateScript
   ----------------------------------------------------------------------*/
@@ -594,6 +593,112 @@ View                view;
      }
 }
 
+/*----------------------------------------------------------------------
+  HTMLelementAllowed
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool     HTMLelementAllowed (Document document)
+#else  /* __STDC__ */
+static ThotBool     HTMLelementAllowed (document)
+Document            document;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+   Element             el, ancestor, sibling;
+   int                 firstChar, lastChar;
+
+   if (!TtaGetDocumentAccessMode (document))
+      /* the document is in ReadOnly mode */
+      return FALSE;
+
+   TtaGiveFirstSelectedElement (document, &el, &firstChar, &lastChar);
+   if (el == NULL)
+      /* no selection */
+      return FALSE;
+         
+   elType = TtaGetElementType (el);
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+     /* within an HTML element */
+      return TRUE;
+   else
+     /* not within an HTML element */
+     {
+     /* if the selection is at the beginning or at the end of an equation
+        or a drawing, TtaCreateElement will create the new HTML element right
+        before or after the MathML or Graphics object. */
+     if (!TtaIsSelectionEmpty())
+        return FALSE;
+
+     if (firstChar <= 1)
+        /* selection starts at the beginning of an element */
+        {
+	sibling = el;
+	ancestor = el;
+        TtaPreviousSibling (&sibling);
+	while (sibling == NULL && ancestor != NULL)
+	  {
+	    ancestor = TtaGetParent (ancestor);
+	    if (ancestor)
+	      {
+		elType = TtaGetElementType (ancestor);
+		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+		  /* this is an HTML element */
+		  return TRUE;
+		sibling = ancestor;
+		TtaPreviousSibling (&sibling);
+	      }
+	  }
+        }
+     
+     if (lastChar == 0 || lastChar >=  TtaGetElementVolume (el))
+        /* selection is at the end of an element */
+        {
+	sibling = el;
+	ancestor = el;
+        TtaNextSibling (&sibling);
+	while (sibling == NULL && ancestor != NULL)
+	  {
+	    ancestor = TtaGetParent (ancestor);
+	    if (ancestor)
+	      {
+		elType = TtaGetElementType (ancestor);
+		if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+		  /* this is an HTML element */
+		  return TRUE;
+		sibling = ancestor;
+		TtaNextSibling (&sibling);
+	      }
+	  }
+        }
+     
+     return FALSE;
+     }
+}
+
+/*----------------------------------------------------------------------
+  CreateHTMLelement
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CreateHTMLelement (int typeNum, Document document)
+#else  /* __STDC__ */
+static void         CreateHTMLelement (typeNum, document)
+int                 typeNum
+Document            document;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   if (HTMLelementAllowed (document))
+     {
+     TtaSetDisplayMode (document, SuspendDisplay);
+     elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+     elType.ElTypeNum = typeNum;
+     TtaCreateElement (elType, document);
+     TtaSetDisplayMode (document, DisplayImmediately);
+     }
+}
 
 /*----------------------------------------------------------------------
   CreateParagraph
@@ -607,18 +712,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_Paragraph;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Paragraph, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateHeading1
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateHeading1 (Document document, View view)
@@ -629,18 +727,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_H1;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_H1, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateHeading2
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateHeading2 (Document document, View view)
@@ -651,18 +742,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_H2;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_H2, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateHeading3
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateHeading3 (Document document, View view)
@@ -673,18 +757,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_H3;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_H3, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateHeading4
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateHeading4 (Document document, View view)
@@ -695,18 +772,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_H4;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_H4, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateHeading5
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateHeading5 (Document document, View view)
@@ -717,18 +787,12 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_H5;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_H5, document);
 }
 
 
 /*----------------------------------------------------------------------
+  CreateHeading6
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateHeading6 (Document document, View view)
@@ -739,18 +803,12 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_H6;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_H6, document);
 }
 
 
 /*----------------------------------------------------------------------
+  CreateList
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateList (Document document, View view)
@@ -761,17 +819,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_Unnumbered_List;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Unnumbered_List, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateNumberedList
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateNumberedList (Document document, View view)
@@ -782,17 +834,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   if (elType.ElSSchema != NULL)
-     {
-       elType.ElTypeNum = HTML_EL_Numbered_List;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Numbered_List, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateDefinitionList
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateDefinitionList (Document document, View view)
@@ -803,17 +849,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Definition_List;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Definition_List, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateDefinitionTerm
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateDefinitionTerm (Document document, View view)
@@ -824,17 +864,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Term;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Term, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateDefinitionDef
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateDefinitionDef (Document document, View view)
@@ -845,17 +879,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Definition;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Definition, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateHorizontalRule
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateHorizontalRule (Document document, View view)
@@ -866,18 +894,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Horizontal_Rule;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Horizontal_Rule, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateBlockQuote
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateBlockQuote (Document document, View view)
@@ -888,18 +909,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Block_Quote;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Block_Quote, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreatePreformatted
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreatePreformatted (Document document, View view)
@@ -910,18 +924,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Preformatted;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Preformatted, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateAddress
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateAddress (Document document, View view)
@@ -932,18 +939,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Address;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Address, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateTable
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTable (Document document, View view)
@@ -959,18 +959,16 @@ View                view;
    AttributeType       attrType;
    Attribute           attr;
    int                 firstChar, i;
-   ThotBool            displayTableForm;
 
-   if (!TtaGetDocumentAccessMode (document))
-      /* the document is in ReadOnly mode */
+   if (!HTMLelementAllowed (document))
       return;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
+   if (elType.ElSSchema)
      {
        /* check the selection */
-       displayTableForm = TtaIsSelectionEmpty ();
-       if (displayTableForm)
+       if (TtaIsSelectionEmpty ())
+	 /* selection empty.  Display the Table dialogue box */
 	 {
 	   NumberRows = 2;
 	   NumberCols = 2;
@@ -1059,6 +1057,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  CreateCaption
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateCaption (Document document, View view)
@@ -1101,6 +1100,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  CreateColgroup
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateColgroup (Document document, View view)
@@ -1179,6 +1179,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  CreateCol
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateCol (Document document, View view)
@@ -1259,8 +1260,8 @@ View                view;
      }
 }
 
-
 /*----------------------------------------------------------------------
+  CreateTHead
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTHead (Document document, View view)
@@ -1271,18 +1272,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_thead;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_thead, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateTBody
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTBody (Document document, View view)
@@ -1293,18 +1287,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_tbody;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_tbody, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateTFoot
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTFoot (Document document, View view)
@@ -1315,18 +1302,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_tfoot;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_tfoot, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateRow
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateRow (Document document, View view)
@@ -1337,20 +1317,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   TtaSetDisplayMode (document, SuspendDisplay);
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Table_row;
-       TtaCreateElement (elType, document);
-     }
-   TtaSetDisplayMode (document, DisplayImmediately);
+   CreateHTMLelement (HTML_EL_Table_row, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateDataCell
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateDataCell (Document document, View view)
@@ -1361,18 +1332,8 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   TtaSetDisplayMode (document, SuspendDisplay);
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Data_cell;
-       TtaCreateElement (elType, document);
-     }
-   TtaSetDisplayMode (document, DisplayImmediately);
+   CreateHTMLelement (HTML_EL_Data_cell, document);
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1385,16 +1346,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   TtaSetDisplayMode (document, SuspendDisplay);
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Heading_cell;
-       TtaCreateElement (elType, document);
-     }
-   TtaSetDisplayMode (document, DisplayImmediately);
+   CreateHTMLelement (HTML_EL_Heading_cell, document);
 }
 
 /*----------------------------------------------------------------------
@@ -1530,7 +1482,6 @@ View                view;
    return (el);
 }
 
-
 /*----------------------------------------------------------------------
   InsertForm creates a form element if there is no parent element
   which is a form.
@@ -1620,8 +1571,8 @@ ThotBool           *withinP;
    return (el);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateForm
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateForm (Document doc, View view)
@@ -1722,7 +1673,6 @@ int                 elInput;
      }
 }
 
-
 /*----------------------------------------------------------------------
   CreateFieldset
   ----------------------------------------------------------------------*/
@@ -1735,18 +1685,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_FIELDSET;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_FIELDSET, document);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateToggle
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateToggle (Document doc, View view)
@@ -1760,8 +1703,8 @@ View                view;
   CreateInputElement (doc, view, HTML_EL_Checkbox_Input);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateRadio
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateRadio (Document doc, View view)
@@ -1775,8 +1718,8 @@ View                view;
   CreateInputElement (doc, view, HTML_EL_Radio_Input);
 }
 
-
 /*----------------------------------------------------------------------
+  UpdateAttrSelected
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateAttrSelected (NotifyAttribute * event)
@@ -1789,8 +1732,8 @@ NotifyAttribute    *event;
    OnlyOneOptionSelected (event->element, event->document, FALSE);
 }
 
-
 /*----------------------------------------------------------------------
+  AttrSelectedDeleted
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrSelectedDeleted (NotifyAttribute * event)
@@ -1806,8 +1749,8 @@ NotifyAttribute    *event;
    OnlyOneOptionSelected (menu, event->document, FALSE);
 }
 
-
 /*----------------------------------------------------------------------
+  DeleteAttrSelected
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            DeleteAttrSelected (NotifyAttribute * event)
@@ -1820,8 +1763,8 @@ NotifyAttribute    *event;
    return TRUE;			/* refuse to delete this attribute */
 }
 
-
 /*----------------------------------------------------------------------
+  CreateOption
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateOption (Document doc, View view)
@@ -1854,7 +1797,6 @@ View                view;
      }
 }
 
-
 /*----------------------------------------------------------------------
   CreateOptGroup
   ----------------------------------------------------------------------*/
@@ -1867,16 +1809,8 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_OptGroup;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_OptGroup, document);
 }
-
 
 /*----------------------------------------------------------------------
   CreateTextInput
@@ -1893,7 +1827,6 @@ View                view;
   CreateInputElement (doc, view, HTML_EL_Text_Input);
 }
 
-
 /*----------------------------------------------------------------------
   CreatePasswordInput
   ----------------------------------------------------------------------*/
@@ -1909,8 +1842,8 @@ View                view;
   CreateInputElement (doc, view, HTML_EL_Password_Input);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateTextArea
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateTextArea (Document doc, View view)
@@ -1926,6 +1859,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  CreateImageInput
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateImageInput (Document doc, View view)
@@ -2029,7 +1963,6 @@ View                view;
   CreateInputElement (doc, view, HTML_EL_File_Input);
 }
 
-
 /*----------------------------------------------------------------------
   CreateHiddenInput
   ----------------------------------------------------------------------*/
@@ -2057,13 +1990,8 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  ElementType	elType;
-
-  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  elType.ElTypeNum = HTML_EL_LABEL;
-  TtaCreateElement (elType, doc);
+  CreateHTMLelement (HTML_EL_LABEL, doc);
 }
-
 
 /*----------------------------------------------------------------------
   CreatePushButton
@@ -2080,9 +2008,8 @@ View                view;
   CreateInputElement (doc, view, HTML_EL_BUTTON);
 }
 
-
-
 /*----------------------------------------------------------------------
+  CreateSubmit
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateSubmit (Document doc, View view)
@@ -2096,8 +2023,8 @@ View                view;
   CreateInputElement (doc, view, HTML_EL_Submit_Input);
 }
 
-
 /*----------------------------------------------------------------------
+  CreateReset
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateReset (Document doc, View view)
@@ -2108,10 +2035,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  CreateInputElement (doc, view, HTML_EL_Reset_Input);
+   CreateInputElement (doc, view, HTML_EL_Reset_Input);
 }
 
 /*----------------------------------------------------------------------
+  CreateDivision
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateDivision (Document document, View view)
@@ -2122,17 +2050,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Division;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Division, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateNOSCRIPT
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateNOSCRIPT (Document document, View view)
@@ -2143,17 +2065,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_NOSCRIPT;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_NOSCRIPT, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateObject
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateObject (Document document, View view)
@@ -2172,9 +2088,10 @@ View                view;
    int                 length;
    int                 firstchar, lastchar;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+   if (HTMLelementAllowed (document))
      {
+       TtaSetDisplayMode (document, SuspendDisplay);
+       elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
        elType.ElTypeNum = HTML_EL_Object;
        TtaCreateElement (elType, document);
 
@@ -2200,10 +2117,12 @@ View                view;
 	       TtaFreeMemory (name1);
 	     }
 	 }
+       TtaSetDisplayMode (document, DisplayImmediately);
      }
 }
 
 /*----------------------------------------------------------------------
+  CreateParameter
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateParameter (Document document, View view)
@@ -2214,17 +2133,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
-     {
-       elType.ElTypeNum = HTML_EL_Parameter;
-       TtaInsertElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_Parameter, document);
 }
 
 /*----------------------------------------------------------------------
+  CreateIFrame
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateIFrame (Document document, View view)
@@ -2235,16 +2148,8 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-     {
-       elType.ElTypeNum = HTML_EL_IFRAME;
-       TtaCreateElement (elType, document);
-     }
+   CreateHTMLelement (HTML_EL_IFRAME, document);
 }
-
 
 /*----------------------------------------------------------------------
    CreateOrChangeLink
@@ -2289,7 +2194,6 @@ View                view;
 	 }
      }
 }
-
 
 /*----------------------------------------------------------------------
    DeleteAnchor
@@ -2406,7 +2310,6 @@ View                view;
    if (firstSelectedElement != lastSelectedElement)
       TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
 }
-
 
 /*----------------------------------------------------------------------
   CleanCache
@@ -2588,8 +2491,6 @@ View view;
    TemplatesConfMenu (doc, view);
 #endif /* AMAYA_JAVA */
 }
-
-
 
 /*----------------------------------------------------------------------
   SaveOptions

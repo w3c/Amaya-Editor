@@ -1059,6 +1059,7 @@ NotifyAttribute    *event;
 
 
 /*----------------------------------------------------------------------
+  CreateImage
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateImage (Document document, View view)
@@ -1071,7 +1072,7 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
    elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
    TtaCreateElement (elType, document);
 }
