@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.7-pre, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -321,6 +321,19 @@ navigation.</p>
   <dt><strong>Type d'écran courant</strong></dt>
     <dd>L'application des feuilles de style (CSS) dépendent du type d'écran
       choisi dans ce formulaire.</dd>
+  <dt></dt>
+  <dt>Négociation de langues</dt>
+    <dd><p>Si un document existe en différentes langues et que votre serveur
+      est configuré pour faire une négociation de langue, vous pouvez
+      utiliser ce menu pour entrer vos préférences de langue (La première a
+      la plus grande priorité). Essayez de naviguer ce <a
+      href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">communiqué</a>,
+      qui existe en versions Française, Anglaise et Japonaise. En changeant
+      la négociation de la langue en code ISO pour les langues ci dessus
+      (<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous
+      pouvez demander de façon transparente n'importe laquelle de ces
+      versions.</p>
+    </dd>
 </dl>
 
 <h3><a name="Publishing">Pré</a>férences de publication</h3>
@@ -497,18 +510,6 @@ liens, and Table des Matières.) ou pour restaurer les valeurs par défaut.
 Notez que les valeurs qui sont sauvées appartiennent aux vues du document
 d'où vous appelez le menu. Ces changements seront effectifs quand vous
 ouvrirez des nouvelles fenêtres document.</p>
-
-<h3><a name="lang">Les préférences de négociation de langues</a></h3>
-
-<p>Si un document existe en différentes langues et que votre serveur est
-configuré pour faire une négociation de langue, vous pouvez utiliser ce menu
-pour entrer vos préférences de langue (La première a la plus grande
-priorité). Essayez de naviguer ce <a
-href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">communiqué</a>,
-qui existe en versions Française, Anglaise et Japonaise. En changeant la
-négociation de la langue en code ISO pour les langues ci dessus
-(<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous
-pouvez demander de façon transparente n'importe laquelle de ces versions.</p>
 </div>
 
 <p><a href="Annotations.html.fr"><img alt="previous" src="../images/left.gif"
