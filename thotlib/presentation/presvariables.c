@@ -27,6 +27,7 @@
 #include "structschema_f.h"
 #include "content_f.h"
 #include "presvariables_f.h"
+#include "schemas_f.h"
 
 /*----------------------------------------------------------------------
    MakeAliasTypeCount
@@ -921,6 +922,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    PtrElement          pEl;
    Counter            *pCo1;
    char                number[20];
+   char               *uri;
    PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
    /* sauve temporairement le contenu de ce pave de presentation */
@@ -1109,9 +1111,25 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	  case VarElemName:
 	    /* Name de l'element */
 	    pEl = pAb->AbElement;
-	    CopyStringToBuffer (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
-			      SrName, pAb->AbText, &l);
+	    CopyStringToBuffer (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
+	    
+	    /* Show the namespace declaration for the root element and */
+	    /* when an element is not in the same namespace than its parent */
+	    if ((pEl->ElStructSchema->SsRootElem == pEl->ElTypeNumber) ||
+		(pEl->ElStructSchema != pEl->ElParent->ElStructSchema))
+	      {
+		uri = GiveCurrentNsUri (pDoc, pEl);
+		if (uri != NULL)
+		  {
+		    CopyStringToBuffer (" xmlns=\"", pAb->AbText, &l);
+		    pAb->AbVolume += l;
+		    CopyStringToBuffer (uri, pAb->AbText, &l);
+		    pAb->AbVolume += l;
+		    CopyStringToBuffer ("\"", pAb->AbText, &l);
+		    pAb->AbVolume += l;
+		  }
+	      }
 	    break;
 
 	  case VarAttrName:

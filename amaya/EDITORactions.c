@@ -500,7 +500,7 @@ void RemoveDoctype (Document document, View view)
   else if (strcmp (s, "MathML") == 0)
     elType.ElTypeNum = MathML_EL_DOCTYPE;
   else
-    elType.ElTypeNum = XML_EL_DOCTYPE;
+    elType.ElTypeNum = XML_EL_doctype;
   doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
 
   /* remove the existing doctype */

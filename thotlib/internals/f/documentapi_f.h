@@ -83,6 +83,7 @@ extern void TtaSetNamespaceDeclaration ( Document document,
                                          Element element,
                                          char *NsPrefix,
                                          char *NsUri );
+extern void TtaFreeNamespaceDeclaration ( Document document );
 
 #else /* __STDC__ */
 
@@ -163,6 +164,7 @@ extern void TtaSetNamespaceDeclaration (/* Document document,
                                            Element element,
                                            char *NsPrefix,
                                            char *NsUri */);
+extern void TtaFreeNamespaceDeclaration (/* Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1063,7 +1063,7 @@ void SetNamespacesAndDTD (Document doc)
        else if (strcmp (s, "MathML") == 0)
 	 elType.ElTypeNum = MathML_EL_DOCTYPE;
        else 
-	 elType.ElTypeNum = XML_EL_DOCTYPE;
+	 elType.ElTypeNum = XML_EL_doctype;
        doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
        if (doctype != NULL)
 	 {
@@ -1244,7 +1244,7 @@ void SetNamespacesAndDTD (Document doc)
    RestartParser
   ----------------------------------------------------------------------*/
 void RestartParser (Document doc, char *localFile,
-			   char *tempdir, char *documentname)
+		    char *tempdir, char *documentname)
 {
   CHARSET       charset;
   char          charsetname[MAX_LENGTH];
@@ -1253,11 +1253,14 @@ void RestartParser (Document doc, char *localFile,
   ThotBool      xmlDec, withDoctype, isXML, xmlns;
   DocumentType  thotType;
 
-  /* clean up previous Parsing errors file */
+  /* Clean up previous Parsing errors file */
   CleanUpParsingErrors ();
 
-  /* remove the Parsing errors file */
+  /* Remove the Parsing errors file */
   RemoveParsingErrors (doc);
+
+  /* Remove the previous namespaces declaration */
+  TtaFreeNamespaceDeclaration (doc);
 
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] != NULL)

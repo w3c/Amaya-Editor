@@ -811,6 +811,18 @@ extern void TtaSetDocumentProfile (Document document, int profile);
 void TtaSetNamespaceDeclaration (Document document, Element element,
 				 char *Ns_Prefix, char *Ns_Uri);
 
+/*----------------------------------------------------------------------
+  TtaFreeNamespaceDeclarations
+  Free all the namespaces declarations of a document
+ ----------------------------------------------------------------------*/
+void TtaFreeNamespaceDeclaration (Document document);
+
+/*----------------------------------------------------------------------
+  TtaSetUriSSchema
+  Set the schema namespace declaration uri
+ ----------------------------------------------------------------------*/
+void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri);
+
 #endif /* __CEXTRACT__ */
 
 #endif

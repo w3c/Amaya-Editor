@@ -924,7 +924,7 @@ void FreeAbstractBox (PtrAbstractBox pAb)
   FreeNamespaceDeclarations
   Free all namespace declarations
   ----------------------------------------------------------------------*/
-static void FreeNamespaceDeclarations (PtrDocument pDoc)
+void FreeNamespaceDeclarations (PtrDocument pDoc)
 {
   PtrNsUriDescr    uriDecl, nextUriDecl;
   PtrNsPrefixDescr prefixDecl, nextPrefixDecl;
@@ -941,15 +941,22 @@ static void FreeNamespaceDeclarations (PtrDocument pDoc)
 	{
 	  nextPrefixDecl = prefixDecl->NsNextPrefixDecl;
 	  if (prefixDecl->NsPrefixName != NULL)
-	    TtaFreeMemory (prefixDecl->NsPrefixName);
+	    {
+	      TtaFreeMemory (prefixDecl->NsPrefixName);
+	      prefixDecl->NsPrefixName = NULL;
+	    }
 	  TtaFreeMemory (prefixDecl);
 	  prefixDecl = nextPrefixDecl;
 	}
       if (uriDecl->NsUriName != NULL)
-	TtaFreeMemory (uriDecl->NsUriName);
+	{
+	  TtaFreeMemory (uriDecl->NsUriName);
+	  uriDecl->NsUriName = NULL;
+	}
       TtaFreeMemory (uriDecl);
       uriDecl = nextUriDecl;
     } 
+  pDoc->DocNsUriDecl = NULL;
 }
 
 /*----------------------------------------------------------------------

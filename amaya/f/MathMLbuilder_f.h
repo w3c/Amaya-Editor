@@ -47,6 +47,7 @@ extern void MathMLElementComplete ( Element el,
                                     Document doc,
                                     int *error );
 extern void UnknownMathMLNameSpace ( ParserData *context,
+                                     Element *unknownEl,
                                      char* content );
 extern void SetFontfamily ( Document doc,
                             Element el,
@@ -114,6 +115,7 @@ extern void MathMLElementComplete (/* Element el,
                                       Document doc,
                                       int *error */);
 extern void UnknownMathMLNameSpace (/* ParserData *context,
+                                       Element *unknownEl,
                                        char* content */);
 extern void SetFontfamily (/* Document doc,
                               Element el,

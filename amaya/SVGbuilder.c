@@ -922,26 +922,28 @@ void SVGElementComplete (Element el, Document doc, int *error)
 
 /*----------------------------------------------------------------------
    UnknownSVGNameSpace
-   Create an element that belongs to a non-supported namespace
+   The element doesn't belong to a supported namespace
   ----------------------------------------------------------------------*/
-void               UnknownSVGNameSpace (ParserData *context, char* content)
+void               UnknownSVGNameSpace (ParserData *context,
+					Element *unknownEl,
+					char* content)
 {
    ElementType     elType;
-   Element         elInv, elText;
+   Element         elText;
 
    /* Create a new Invalid_element */
    elType.ElSSchema = GetXMLSSchema (SVG_TYPE, context->doc);
    elType.ElTypeNum = SVG_EL_Unknown_namespace;
-   elInv = TtaNewElement (context->doc, elType);
-   if (elInv != NULL)
+   *unknownEl = TtaNewElement (context->doc, elType);
+   if (*unknownEl != NULL)
      {
-       XmlSetElemLineNumber (elInv);
-       InsertXmlElement (&elInv);
+       XmlSetElemLineNumber (*unknownEl);
+       InsertXmlElement (unknownEl);
        context->lastElementClosed = TRUE;
        elType.ElTypeNum = SVG_EL_TEXT_UNIT;
        elText = TtaNewElement (context->doc, elType);
        XmlSetElemLineNumber (elText);
-       TtaInsertFirstChild (&elText, elInv, context->doc);
+       TtaInsertFirstChild (&elText, *unknownEl, context->doc);
        TtaSetTextContent (elText, content, context->language, context->doc);
        TtaSetAccessRight (elText, ReadOnly, context->doc);
      }

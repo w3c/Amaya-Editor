@@ -28,13 +28,13 @@ STRUCT
 		TEXT; 
 	      END;
            
-   XMLcomment = LIST OF (XMLcomment_line = TEXT);
+   xmlcomment = LIST OF (xmlcomment_line = TEXT);
 
-   XMLPI = LIST OF (XMLPI_line = TEXT);
+   xmlpi = LIST OF (xmlpi_line = TEXT);
 	
-   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
+   doctype = LIST OF (doctype_line = TEXT);
 	
-   CDATA = LIST OF (CDATA_line = TEXT);
+   cdata = LIST OF (cdata_line = TEXT);
 
 EXCEPT
 
@@ -44,10 +44,10 @@ EXCEPT
    Highlight:	        Invisible;
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
-   XMLcomment_line:     Hidden;
-   XMLPI_line:          Hidden;
-   DOCTYPE_line:        Hidden, NoCut;
-   DOCTYPE:             NoCut;
-   CDATA_line:          Hidden;
+   xmlcomment_line:     Hidden;
+   xmlpi_line:          Hidden;
+   doctype_line:        Hidden, NoCut;
+   doctype:             NoCut;
+   cdata_line:          Hidden;
 
 END

@@ -35,7 +35,7 @@ RULES
 	Create '</>\12' After;
 	END;
 
-   XMLcomment:
+   xmlcomment:
 	BEGIN
 	NoLineBreak;
         Create '<!--';
@@ -43,10 +43,10 @@ RULES
         Create '-->\12' after;
         END;
 
-   XMLcomment_line:
+   xmlcomment_line:
 	if not last create '\12' after;
 
-   XMLPI:
+   xmlpi:
 	BEGIN
 	NoLineBreak;
         Create '<?';
@@ -54,7 +54,7 @@ RULES
         Create '?>\12' after;
         END;
 
-   XMLPI_line:
+   xmlpi_line:
 	if not last create '\12' after;
 
    TEXT_UNIT:

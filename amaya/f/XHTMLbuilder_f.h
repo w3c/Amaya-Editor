@@ -15,6 +15,7 @@ extern void XhtmlElementComplete ( Element el,
 extern Element PutInContent ( char *ChrString,
                               ParserData *context );
 extern void UnknownXhtmlNameSpace ( ParserData *context,
+                                    Element *unknownEl,
                                     char* content );
 extern void CreateHTMLAttribute ( Element el,
                                   AttributeType attrType,
@@ -64,6 +65,7 @@ extern void XhtmlElementComplete (/* Element el,
 extern Element PutInContent (/* char *ChrString,
                                 ParserData *context */);
 extern void UnknownXhtmlNameSpace (/* ParserData *context,
+                                      Element *unknownEl,
                                       char* content */);
 extern void CreateHTMLAttribute (/* Element el,
                                     AttributeType attrType,

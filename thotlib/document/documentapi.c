@@ -1543,3 +1543,25 @@ void TtaSetNamespaceDeclaration (Document document, Element element,
       UpdateNamespaceDeclaration (pDoc, (PtrElement) element, NsPrefix, NsUri);
     }
 }
+
+/*----------------------------------------------------------------------
+  TtaFreeNamespaceDeclarations
+  Free all the namespaces declarations of a document
+ ----------------------------------------------------------------------*/
+void TtaFreeNamespaceDeclaration (Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      FreeNamespaceDeclarations (pDoc);
+    }
+}

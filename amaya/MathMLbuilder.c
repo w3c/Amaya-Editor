@@ -2344,26 +2344,28 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
 
 /*----------------------------------------------------------------------
    UnknownMathMLNameSpace
-   Create an element that belongs to a non-supported namespace
+   The element doesn't belong to a supported namespace
   ----------------------------------------------------------------------*/
-void               UnknownMathMLNameSpace (ParserData *context, char* content)
+void               UnknownMathMLNameSpace (ParserData *context,
+					   Element *unknownEl,
+					   char* content)
 {
    ElementType     elType;
-   Element         elInv, elText;
+   Element         elText;
 
    /* Create a new Invalid_element */
    elType.ElSSchema = GetXMLSSchema (MATH_TYPE, context->doc);
    elType.ElTypeNum = MathML_EL_Unknown_namespace;
-   elInv = TtaNewElement (context->doc, elType);
-   if (elInv != NULL)
+   *unknownEl = TtaNewElement (context->doc, elType);
+   if (*unknownEl != NULL)
      {
-       XmlSetElemLineNumber (elInv);
-       InsertXmlElement (&elInv);
+       XmlSetElemLineNumber (*unknownEl);
+       InsertXmlElement (unknownEl);
        context->lastElementClosed = TRUE;
        elType.ElTypeNum = MathML_EL_TEXT_UNIT;
        elText = TtaNewElement (context->doc, elType);
        XmlSetElemLineNumber (elText);
-       TtaInsertFirstChild (&elText, elInv, context->doc);
+       TtaInsertFirstChild (&elText, *unknownEl, context->doc);
        TtaSetTextContent (elText, content, context->language, context->doc);
        TtaSetAccessRight (elText, ReadOnly, context->doc);
    }

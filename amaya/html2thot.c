@@ -2466,7 +2466,7 @@ static void     EndOfStartGI (char c)
 {
   char        schemaName[20];
   char        theGI[MaxMsgLength];
-  int		 i;
+  int	      i;
 
   if (HTMLcontext.parsingTextArea)
     /* We are parsing the contents of a TEXTAREA element. If a start

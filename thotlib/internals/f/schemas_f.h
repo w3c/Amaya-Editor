@@ -89,6 +89,8 @@ extern void TtaGetXmlElementType ( char *XMLName,
 extern void TtaGetXmlAttributeType ( char* XMLName,
                                      AttributeType *attrType,
                                      Document doc );
+extern void TtaSetUriSSchema ( SSchema sSchema,
+                               char *sSchemaUri );
 extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                           char *sSchemaName,
                                           Document document );
@@ -96,6 +98,8 @@ extern void UpdateNamespaceDeclaration ( PtrDocument pDoc,
                                          PtrElement element,
                                          char *NsPrefix,
                                          char *NsUri );
+extern char * GiveCurrentNsUri ( PtrDocument pDoc,
+                                 PtrElement pEl );
 extern void ExportXmlDocument ( PtrDocument pDoc,
                                 PtrElement pNode,
                                 int indent,
@@ -187,6 +191,8 @@ extern void TtaGetXmlElementType (/* char *XMLName,
 extern void TtaGetXmlAttributeType (/* char* XMLName,
                                        AttributeType *attrType,
                                        Document doc */);
+extern void TtaSetUriSSchema (/* SSchema sSchema,
+                                 char *sSchemaUri */);
 extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
                                             char *sSchemaName,
                                             Document document */);
@@ -194,6 +200,8 @@ extern void UpdateNamespaceDeclaration (/* PtrDocument pDoc,
                                            PtrElement element,
                                            char *NsPrefix,
                                            char *NsUri */);
+extern char * GiveCurrentNsUri (/* PtrDocument pDoc,
+                                   PtrElement pEl */);
 extern void ExportXmlDocument (/* PtrDocument pDoc,
                                   PtrElement pNode,
                                   int indent,

@@ -39,6 +39,7 @@ extern void SVGElementComplete ( Element el,
                                  Document doc,
                                  int *error );
 extern void UnknownSVGNameSpace ( ParserData *context,
+                                  Element *unknownEl,
                                   char* content );
 extern void UpdatePositionOfPoly ( Element el,
                                    Document doc,
@@ -102,6 +103,7 @@ extern void SVGElementComplete (/* Element el,
                                    Document doc,
                                    int *error */);
 extern void UnknownSVGNameSpace (/* ParserData *context,
+                                    Element *unknownEl,
                                     char* content */);
 extern void UpdatePositionOfPoly (/* Element el,
                                      Document doc,

@@ -64,10 +64,10 @@ static AStructure LoadedSSchema[MAX_SSCHEMAS];
 #include "memory_f.h"
 #include "readstr_f.h"
 #include "schemas_f.h"
+#include "tree_f.h"
 
 #ifndef NODISPLAY
 #include "readprs_f.h"
-#include "tree_f.h"
 #endif /* NODISPLAY */
 
 /*----------------------------------------------------------------------
@@ -2372,10 +2372,30 @@ void TtaGetXmlAttributeType (char* XMLName, AttributeType *attrType,
 }
 
 /*----------------------------------------------------------------------
+  TtaSetUriSSchema
+  Set the schema namespace declaration uri
+  ----------------------------------------------------------------------*/
+void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri)
+{
+  PtrSSchema          pSS;
+
+  pSS = (PtrSSchema) sSchema;
+  if (pSS == NULL)
+    return;
+
+  /* Set the schema uri */
+  if (sSchemaUri != NULL && pSS->SsUriName == NULL)
+    {
+      pSS->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
+      strcpy (pSS->SsUriName, sSchemaUri);
+    }
+
+}
+
+/*----------------------------------------------------------------------
   TtaChangeGenericSchemaNames
   ----------------------------------------------------------------------*/
-void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
-				  Document document)
+void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, Document document)
 
 {
   PtrDocument         pDoc;
@@ -2403,8 +2423,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 
   if (pSS != NULL)
     {
-      /* Modify the structure schema name */
-      /* ***
+      /* Modify the name of the structure schema */
       if (sSchemaUri != NULL && pSS->SsUriName == NULL)
 	{
 	  pSS->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
@@ -2418,18 +2437,17 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	}
       else
 	{
-	  strncpy (pSS->SsName, sSchemaName, MAX_NAME_LENGTH);
+	  strcpy (pSS->SsName, sSchemaName);
 	  strcpy (pSS->SsDefaultPSchema, sSchemaName);
 	  strcat (pSS->SsDefaultPSchema, "P");
 	  for (i = 0; i < pSS->SsNRules; i++)
 	    if (strcmp (pSS->SsRule->SrElem[i]->SrName, "XML") == 0)
 	      {
-		strncpy (pSS->SsRule->SrElem[i]->SrName, sSchemaName, MAX_NAME_LENGTH);
+		strcpy (pSS->SsRule->SrElem[i]->SrName, sSchemaName);
+		strcpy (pSS->SsRule->SrElem[i]->SrOrigName, sSchemaName);
 		i = pSS->SsNRules;
 	      }
 	}
-	*** */
-
 
       /* Update the LoadedSSchema table */
       for (i = 0; i < MAX_SSCHEMAS &&
@@ -2437,13 +2455,10 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */
-	  /* **
-	     if (sSchemaName != NULL)
-	    strncpy (LoadedSSchema[i].StructSchemaName, sSchemaName,
-		     MAX_NAME_LENGTH);
+	  if (sSchemaName != NULL)
+	    strcpy (LoadedSSchema[i].StructSchemaName, sSchemaName);
 	  else
 	    LoadedSSchema[i].StructSchemaName[0] = EOS;
-	  *** */
 	}
 
       /* Update the LoadedPSchema table */
@@ -2453,13 +2468,10 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
       if (i < MAX_SSCHEMAS)
 	{
 	  /* The generic schema is found in the table, modify its name */
-	  /* ***
 	  if (sSchemaName != NULL)
-	    strncpy (LoadedPSchema[i].PresSchemaName, sSchemaName,
-		     MAX_NAME_LENGTH);
+	    strcpy (LoadedPSchema[i].PresSchemaName, sSchemaName);
 	  else
 	    LoadedPSchema[i].PresSchemaName[0] = EOS;
-	    *** */
 	}
 #endif
     }
@@ -2518,7 +2530,7 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
     }
   else
       newUriDecl->NsUriName = NULL;
-
+  newUriDecl->NsUriSSchema = element->ElStructSchema;
 
   if (pDoc->DocNsUriDecl == NULL)
     pDoc->DocNsUriDecl = newUriDecl;
@@ -2540,7 +2552,7 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
 
 /*----------------------------------------------------------------------
   UpdateNamespaceDeclaration
-  Add a namespace declaration for the document
+  Add a namespace declaration to the document
  ----------------------------------------------------------------------*/
 void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 				 char *NsPrefix, char *NsUri)
@@ -2591,6 +2603,145 @@ void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 }
 
 /*----------------------------------------------------------------------
+  GiveCurrentNsUri
+  Give the current namespace declarations for the element pEl
+  ----------------------------------------------------------------------*/
+char * GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
+
+{
+  PtrNsUriDescr    uriDecl;
+  ThotBool         found;
+  int              i;
+  char            *ns_uri = NULL;
+
+
+  if (pDoc == NULL || pEl == NULL)
+    return (ns_uri);
+
+  if (pEl->ElStructSchema->SsUriName == NULL)
+    /* No URI refefence fot this schema */
+    return (ns_uri);
+
+  if (pDoc->DocNsUriDecl == NULL)
+    /* There is no namespace declaration for this document */
+    return (ns_uri);
+
+  i = 0;
+  found = FALSE;
+  /* Give the current namespace declarations for this element */
+  uriDecl = pDoc->DocNsUriDecl;
+  while (uriDecl != NULL && !found)
+    {
+      if ((uriDecl->NsUriName != NULL) &&
+	  (strcmp (uriDecl->NsUriName, pEl->ElStructSchema->SsUriName) == 0))
+	{
+	  /* The URI corresponding to the element schema has been found */
+	  /* Search the first associated prefix */
+	  found = TRUE;
+	  ns_uri = uriDecl->NsUriName;
+	}
+      else
+	uriDecl = uriDecl->NsNextUriDecl;
+    }
+  return (ns_uri);
+}
+
+/*----------------------------------------------------------------------
+   ExportNsPrefix
+   Search if the element schema is associated with a namespace prefix
+  ----------------------------------------------------------------------*/
+static char* ExportNsPrefix (PtrDocument pDoc, PtrElement pNode)
+
+{
+  PtrNsUriDescr    uriDecl;
+  PtrNsPrefixDescr prefixDecl;
+  ThotBool         found;
+  int              i;
+  char            *ns_prefix = NULL;
+
+  if (pDoc->DocNsUriDecl == NULL)
+    /* There is no namespace declaration for this document */
+    return (ns_prefix);
+
+  if (pNode->ElStructSchema->SsUriName == NULL)
+    /* No URI refefence fot this schema */
+    return (ns_prefix);
+
+  i = 0;
+  /* Search all the namespace declarations declared for this element */
+  uriDecl = pDoc->DocNsUriDecl;
+  found = FALSE;
+  while (uriDecl != NULL && !found)
+    {
+      if (uriDecl->NsUriName != NULL &&
+	  (strcmp (uriDecl->NsUriName, pNode->ElStructSchema->SsUriName) == 0))
+	{
+	  /* The element schema uri has been found */
+	  /* Search the first associated prefix */
+	  found = TRUE;
+	  prefixDecl = uriDecl->NsPtrPrefix;
+	  while (prefixDecl != NULL)
+	    {
+	      if ((pNode == prefixDecl->NsPrefixElem) ||
+		  (ElemIsAnAncestor (prefixDecl->NsPrefixElem, pNode)))
+		{
+		  ns_prefix = prefixDecl->NsPrefixName;
+		  prefixDecl = NULL;
+		}
+	      else
+		prefixDecl = prefixDecl->NsNextPrefixDecl;
+	    }
+	}
+      uriDecl = uriDecl->NsNextUriDecl;
+    }
+  return (ns_prefix);
+}
+
+/*----------------------------------------------------------------------
+   ExportNsDeclaration
+   Export in the fileDescriptor file the namespace attributes
+   of the Element pNode.
+   length: max length to export.                         
+  ----------------------------------------------------------------------*/
+static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode, 
+			    int length, FILE *fileDescriptor)
+{
+  PtrNsUriDescr    uriDecl;
+  PtrNsPrefixDescr prefixDecl;
+  int              i;
+
+  if (pDoc->DocNsUriDecl == NULL)
+    /* There is no namespace declaration for this document */
+    return;
+
+  i = 0;
+  /* Search all the namespace declarations declared for this element */
+  uriDecl = pDoc->DocNsUriDecl;
+  while (uriDecl != NULL)
+    {
+      prefixDecl = uriDecl->NsPtrPrefix;
+      while (prefixDecl != NULL)
+	{
+	  if (prefixDecl->NsPrefixElem == pNode)
+	    {
+	      if (i > 0)
+		  fprintf (fileDescriptor, "\n");
+	      /* A Namespace declaration has been found for this element */
+	      fprintf (fileDescriptor, " xmlns");
+	      if (prefixDecl->NsPrefixName != NULL)
+		fprintf (fileDescriptor, ":%s", prefixDecl->NsPrefixName);
+	      fprintf (fileDescriptor, "=\"%s\"", uriDecl->NsUriName);
+	      i++;
+	    }
+	    prefixDecl = prefixDecl->NsNextPrefixDecl;
+	}
+      uriDecl = uriDecl->NsNextUriDecl;
+    }
+
+  return;
+}
+
+/*----------------------------------------------------------------------
    ExportText
    Export in the fileDescriptor file the content of the text 
    list buffer, pBT is the first one.
@@ -2616,7 +2767,10 @@ static void ExportText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
 	       putc (__CR__, fileDescriptor);
 	       l = 0;
 	     }
-	   putc (b->BuContent[i], fileDescriptor);
+	   if (b->BuContent[i] == START_ENTITY)
+	     putc ('&', fileDescriptor);
+	   else
+	     putc (b->BuContent[i], fileDescriptor);
 	   i++;
 	   l++;
 	 }
@@ -2624,52 +2778,6 @@ static void ExportText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
        b = b->BuNext;
      }
    return;
-}
-
-/*----------------------------------------------------------------------
-   ExportNsDeclaration
-   Export in the fileDescriptor file the namespace attributes
-   of the Element pNode.
-   length: max length to export.                         
-  ----------------------------------------------------------------------*/
-static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode, 
-				 int length, FILE *fileDescriptor)
-{
-  PtrNsUriDescr    uriDecl;
-  PtrNsPrefixDescr prefixDecl;
-  ThotBool         found;
-  int              i;
-
-  found = FALSE;
-  if (pDoc->DocNsUriDecl == NULL)
-    /* There is no namespace declaration for this document */
-    return;
-
-  i = 0;
-  /* Search all namespace declaration for the element */
-  uriDecl = pDoc->DocNsUriDecl;
-  while (uriDecl != NULL)
-    {
-      prefixDecl = uriDecl->NsPtrPrefix;
-      while (prefixDecl != NULL)
-	{
-	  if (prefixDecl->NsPrefixElem == pNode)
-	    {
-	      if (i > 0)
-		  fprintf (fileDescriptor, "\n");
-	      /* One Ns declaration has been found for this element */
-	      fprintf (fileDescriptor, " xmlns");
-	      if (prefixDecl->NsPrefixName != NULL)
-		fprintf (fileDescriptor, ":%s", prefixDecl->NsPrefixName);
-	      fprintf (fileDescriptor, "=\"%s\"", uriDecl->NsUriName);
-	      i++;
-	    }
-	    prefixDecl = prefixDecl->NsNextPrefixDecl;
-	}
-      uriDecl = uriDecl->NsNextUriDecl;
-    }
-
-  return;
 }
 
 /*----------------------------------------------------------------------
@@ -2690,6 +2798,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
   char                text[100];
   char                startName[MAX_NAME_LENGTH+1];
   char                endName[MAX_NAME_LENGTH+3];
+  char               *ns_prefix;
   int                 i;
   ThotBool            specialTag;
 
@@ -2712,34 +2821,34 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
 	      specialTag = FALSE;
 	      /* Export the element name */
 	      pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
-	      if (strcmp (pRe1->SrOrigName, "XMLcomment") == 0)
+	      if (strcmp (pRe1->SrName, "xmlcomment") == 0)
 		{
 		  strcpy (startName, "\n<!--");
 		  strcpy (endName, "-->");
 		  specialTag = TRUE;
 		}
-	      else if (strcmp (pRe1->SrOrigName, "XMLPI") == 0)
+	      else if (strcmp (pRe1->SrName, "xmlpi") == 0)
 		{
 		  strcpy (startName, "\n<?");
 		  strcpy (endName, "?>");
 		  specialTag = TRUE;
 		}
-	      else if (strcmp (pRe1->SrOrigName, "DOCTYPE") == 0)
+	      else if (strcmp (pRe1->SrName, "doctype") == 0)
 		{
 		  strcpy (startName, "\n<!DOCTYPE ");
 		  strcpy (endName, ">");
 		  specialTag = TRUE;
 		}
-	      else if (strcmp (pRe1->SrOrigName, "CDATA") == 0)
+	      else if (strcmp (pRe1->SrName, "cdata") == 0)
 		{
 		  strcpy (startName, "\n<![CDATA[");
 		  strcpy (endName, "]]>");
 		  specialTag = TRUE;
 		}
-	      else if ((strcmp (pRe1->SrOrigName, "XMLcomment_line") == 0) ||
-		       (strcmp (pRe1->SrOrigName, "XMLPI_line") == 0) ||
-		       (strcmp (pRe1->SrOrigName, "CDATA_line") == 0) ||
-		       (strcmp (pRe1->SrOrigName, "DOCTYPE_line") == 0))
+	      else if ((strcmp (pRe1->SrName, "xmlcomment_line") == 0) ||
+		       (strcmp (pRe1->SrName, "xmlpi_line") == 0) ||
+		       (strcmp (pRe1->SrName, "cdata_line") == 0) ||
+		       (strcmp (pRe1->SrName, "doctype_line") == 0))
 		{
 		  startName[0] = EOS;
 		  f = pNode->ElNext;
@@ -2747,19 +2856,29 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
 		    strcpy (endName, "\n");
 		  else
 		    endName[0] = EOS;
+		  specialTag = TRUE;
 		}
 	      else
 		{
 		  strcpy (startName, "\n<");
-		  strcat (startName, pRe1->SrOrigName);
 		  strcpy (endName, "</");
-		  strcat (endName, pRe1->SrOrigName);
+		  ns_prefix = ExportNsPrefix (pDoc, pNode);
+		  if (ns_prefix != NULL)
+		    {
+		      strcat (startName, ns_prefix);
+		      strcat (startName, ":");
+		      strcat (endName, ns_prefix);
+		      strcat (endName, ":");
+		    }
+		  strcat (startName, pRe1->SrName);
+		  strcat (endName, pRe1->SrName);
 		  strcat (endName, ">");
 		}
 	      fprintf (fileDescriptor, "%s", startName);
 	      
-	      /* Export the namespace declarations */
-	      ExportNsDeclaration (pDoc, pNode, 72-indent, fileDescriptor);
+	      /* Export the namespace declaration */
+	      if (!specialTag)
+		ExportNsDeclaration (pDoc, pNode, 72-indent, fileDescriptor);
 
 	      /* Export the attributes */
 	      pAttr = pNode->ElFirstAttr;
@@ -2768,7 +2887,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
 	      while (pAttr != NULL)
 		{
 		  pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-		  fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
+		  fprintf (fileDescriptor, "%s=", pAttr1->AttrName);
 		  switch (pAttr1->AttrType)
 		    {
 		    case AtNumAttr:
@@ -2779,8 +2898,6 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
 			{
 			  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
 			  fprintf (fileDescriptor, "\"%s\"", text);
-			  if (pAttr->AeAttrText->BuNext)
-			    fprintf (fileDescriptor, "...");
 			}
 		      break;
 		    case AtEnumAttr:
@@ -2790,8 +2907,8 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
 		    default:
 		      break;
 		    }
-		  if (pAttr->AeNext != NULL)
-		    fprintf (fileDescriptor, ", ");
+                  if (pAttr->AeNext != NULL)
+                    fprintf (fileDescriptor, " ");
 		  pAttr = pAttr->AeNext;
 		}
 	      if ((startName[0] != EOS) && !specialTag)
