@@ -45,10 +45,12 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   m_ConfirmButton = confirmbutton;
   m_CancelButton  = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
 
+#if 0
   wxLogDebug( _T("InitConfirmDlgWX::InitConfirmDlgWX - title=")+m_Title+
 	      _T("\textrabutton=")+m_ExtraButton+
 	      _T("\tconfirmbutton=")+m_ConfirmButton+
 	      _T("\tlabel=")+m_Label );
+#endif /* 0*/
 
   // update dialog labels with given ones
   SetTitle( m_Title );
