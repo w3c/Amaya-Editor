@@ -1777,6 +1777,8 @@ void TtcSwitchButtonBar (Document document, View view)
 #ifndef _WINDOWS
    row = FrameTable[frame].Button[0];
 #ifndef _GTK
+   XtRemoveCallback (FrameTable[frame].WdFrame, XmNresizeCallback,
+		     (XtCallbackProc) FrameResized, (XtPointer) frame);
    XtSetArg (args[0], XmNheight, &dy);
    if (row != 0)
      {
@@ -1798,6 +1800,8 @@ void TtcSwitchButtonBar (Document document, View view)
 	XtManageChild (XtParent (row));
 	XtManageChild (XtParent (XtParent (row)));
      }
+   XtAddCallback (FrameTable[frame].WdFrame, XmNresizeCallback,
+		     (XtCallbackProc) FrameResized, (XtPointer) frame);
 #else /* _GTK */
    if (row != 0)
      {

@@ -157,7 +157,7 @@ static unsigned char *ReadGifImage (FILE *fd, int *w, int *h,
 
   if (LWZReadByte (fd, FALSE, c) >= 0)
     {
-      /*fprintf (stderr, "gifhandler: too much input data, ignoring extra...\n");*/
+      fprintf (stderr, "gifhandler: too much input data, ignoring extra...\n");
       /* return the number of lines read */
       *h = lines;
     }
