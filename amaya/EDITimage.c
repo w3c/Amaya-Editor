@@ -898,6 +898,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
       if (!IsHTTPPath (pathimage))
 	{
 	  /* load a local image into a local document */
+	  DisplayImage (doc, pict, NULL, pathimage, NULL);
 	  base = GetBaseURL (doc);
 	  value = MakeRelativeURL (pathimage, base);
 	  TtaSetAttributeText (attr, value, el, doc);
@@ -905,7 +906,6 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 	  TtaFreeMemory (value);
 	  /* set the element content */
 	  TtaSetTextContent (pict, pathimage, SPACE, doc);
-	  DisplayImage (doc, pict, NULL, pathimage, NULL);
 	}
       else
 	{
