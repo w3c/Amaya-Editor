@@ -2686,9 +2686,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifndef _WINDOWS 
    ColorConfMenu (doc, view);
-#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2705,10 +2703,8 @@ View view;
 #endif /* __STDC__ */
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-#else
-#ifndef _WINDOWS 
+#else 
    GeometryConfMenu (doc, view);
-#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 

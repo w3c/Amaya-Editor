@@ -40,7 +40,9 @@
 #include "MENUconf.h"
 #include "print.h"
 #include "init_f.h"
-
+#ifndef AMAYA_JAVA
+#include "query_f.h"
+#endif
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
@@ -2119,16 +2121,40 @@ static void SetColorConf ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
-				     LPARAM lParam)
+				      LPARAM lParam)
 #else  /* !__STDC__ */
 LRESULT CALLBACK WIN_GeometryDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
+HWND   hwndDlg; 
 UINT   msg; 
 WPARAM wParam; 
 LPARAM lParam;
 #endif /* __STDC__ */
-{ 
-  return FALSE;
+{
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      WIN_RefreshCacheMenu (hwnDlg);
+      break;
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	  /* action buttons */
+	case ID_APPLY:
+	  SetGeometryConf ();
+	  break;
+	case ID_DONE:
+	  GeometryActive = FALSE;
+	  GeometryDoc = 0;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  RestoreDefaultGeometryConf ();
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
 }
 #endif /* _WINDOWS */
 
@@ -2199,41 +2225,61 @@ View                view;
 STRING              pathname;
 #endif
 {
-   CHAR_T             s[MAX_LENGTH];
-   int              i;
-
-   if (GeometryDoc)
-     {
-     /* menu already active, so we'll destroy it in order to
-      have a menu that points to the current document */
-       TtaDestroyDialogue (GeometryBase + GeometryMenu);
-     }
-   GeometryDoc = document;
-
-   /* Create the dialogue form */
-   i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_RESTORE_GEOMETRY));
-
-   TtaNewSheet (GeometryBase + GeometryMenu, 
-		TtaGetViewFrame (document, view),
-	        TtaGetMessage (AMAYA, AM_GEOMETRY_MENU),
-		2, s, TRUE, 2, 'L', D_DONE);
-   /* formatted view */
-   TtaNewLabel (GeometryBase + mGeometryLabel1,
-		GeometryBase + GeometryMenu,
-		TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE)
-		);
-   TtaNewLabel (GeometryBase + mGeometryLabel2,
-		GeometryBase + GeometryMenu,
-		" "
-		);
 #ifndef _WINDOWS
-   /* display the menu */
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
-#else
+  int i;
+
+  if (GeometryDoc)
+    {
+      /* menu already active, so we'll destroy it in order to
+	 have a menu that points to the current document */
+      TtaDestroyDialogue (GeometryBase + GeometryMenu);
+    }
+  GeometryDoc = document;
+  /* Create the dialogue form */
+  i = 0;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY));
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_RESTORE_GEOMETRY));
+  
+  TtaNewSheet (GeometryBase + GeometryMenu, 
+	       TtaGetViewFrame (document, view),
+	       TtaGetMessage (AMAYA, AM_GEOMETRY_MENU),
+	       2, s, TRUE, 2, 'L', D_DONE);
+  /* formatted view */
+  TtaNewLabel (GeometryBase + mGeometryLabel1,
+	       GeometryBase + GeometryMenu,
+	       TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE)
+	       );
+  TtaNewLabel (GeometryBase + mGeometryLabel2,
+	       GeometryBase + GeometryMenu,
+	       " "
+	       );
+  /* display the menu */
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
+#else /* !_WINDOWS */
+  if (GeometryDoc)
+    {
+      /* destroy the window */
+    }
+  GeometryDoc = document;
+  switch (app_lang)
+    {
+#if 0
+    case FR_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (FR_GEOMETRYMENU), NULL,
+		 (DLGPROC) WIN_GeometryDlgProc);
+      break;
+    case DE_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (DE_GEOMETRYMENU), NULL,
+		 (DLGPROC) WIN_GeometryDlgProc);
+      break;
+#endif
+    default:
+      DialogBox (hInstance, MAKEINTRESOURCE (EN_GEOMETRYMENU), NULL,
+		 (DLGPROC) WIN_GeometryDlgProc);
+      break;
+    }
 #endif /* !_WINDOWS */
 }
 
@@ -2327,7 +2373,7 @@ static void SetEnvGeom (view_name)
 STRING view_name
 #endif /* _STDC_ */
 {
-  int frame, view;
+  int view;
   int x, y, w, h;
 
   GetEnvGeom (view_name, &x, &y, &w, &h);
@@ -2335,12 +2381,8 @@ STRING view_name
   view = TtaGetViewFromName (GeometryDoc, view_name);
   if (view != 0 && TtaIsViewOpened (GeometryDoc, view))
     {
-      frame =  GetWindowNumber (GeometryDoc, view);
       /* get current geometry */
-#ifndef _WINDOWS
-      TtaGetViewWH (frame, &w, &h);
-#endif /* !_WINDOWS */
-      /*      SetEnvGeom ("Formatted_view", w, h); */
+      TtaGetViewWH (GeometryDoc, view, &w, &h);
     }
    
   sprintf (s, "%d %d %d %d", 
