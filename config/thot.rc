@@ -1,0 +1,8 @@
+[thot_lib]
+THOTSYSSCH=$(THOTDIR)\amaya
+DICOPAR=$(THOTDIR)\dicopar
+
+[amaya.exe]
+THOTSYSSCH=$(THOTDIR)\amaya
+LANG=en_US
+HOME_PAGE=
