@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
-  <meta name="GENERATOR" content="amaya V4.4" />
+  <meta name="GENERATOR" content="amaya 5.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,14 +13,13 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></td>
-      <td><p><a href="Configure.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" 
-        src="../images/up.gif" /></a> <a href="Access.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></td>
+      <td><p><a href="Configure.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Access.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -88,7 +87,8 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     <p class="menuItems"><span style="color: #E55500">New, NewTemplate,
     NewCss, OpenDoc, OpenDocInNewWindow, Reload, GotoPreviousHTML,
     GotoNextHTML, GoToHome, SaveDocument, SaveDocumentAs, Synchronize,
-    SetupAndPrint, PrintAs CloseDocument, AmayaClose</span></p>
+    ParseAsHTML, DocumentInfo, SetupAndPrint, PrintAs CloseDocument,
+    AmayaClose</span></p>
   </li>
   <li>Dans le menu Édition : 
     <p class="menuItems"><span style="color: #E55500">TtcUndo, TtcRedo,
@@ -190,10 +190,9 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 <p></p>
 </div>
 
-<p><a href="Configure.html.fr"><img alt="previous"
-src="../images/left.gif" /></a><a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Access.html.fr"><img
-alt="next" src="../images/right.gif" /></a></p>
+<p><a href="Configure.html.fr"><img alt="previous" src="../images/left.gif"
+/></a><a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a>
+<a href="Access.html.fr"><img alt="next" src="../images/right.gif" /></a></p>
 <hr />
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br />
