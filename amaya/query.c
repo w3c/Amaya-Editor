@@ -276,10 +276,10 @@ HTStream           *target;
 
    if (status == HT_LOADED || status == HT_OK)
      {
-	if (PROT_TRACE)
-	   HTTrace ("Posting Data Target is SAVED\n");
-	(*target->isa->flush) (target);
-	return HT_LOADED;
+       if (PROT_TRACE)
+	 HTTrace ("Posting Data Target is SAVED\n");
+       (*target->isa->flush) (target);
+       return (HT_LOADED);
      }
    if (status == HT_WOULD_BLOCK)
      {
@@ -589,9 +589,15 @@ int                 status;
 #endif
 {
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
+   boolean             error_flag;
 
    if (!me)
       return HT_OK;		/* not an Amaya request */
+
+   if (status == HT_LOADED || status == HT_CREATED || status == HT_NO_DATA)
+     error_flag = FALSE;
+   else
+     error_flag = TRUE;
 
    /* output any errors from the server */
 
@@ -613,17 +619,17 @@ int                 status;
 	/* we are writing to a file */
 	if (me->reqStatus != HT_ABORT)
 	  {			/* if the request was not aborted and */
-	     if (status != HT_LOADED)
-	       {		/* there were some errors */
-		  if (me->error_html == YES)
-		    {		/* and we want to print errors */
-		       if (me->error_stream_size == 0)	/* and the stream is empty */
+	    if (error_flag)
+	      {		/* there were some errors */
+		if (me->error_html == YES)
+		  {		/* and we want to print errors */
+		    if (me->error_stream_size == 0)	/* and the stream is empty */
 			  AHTError_MemPrint (request);	/* copy errors from the error stack 
 							   ** into a data structure */
 		       if (me->error_stream)
 			 {	/* if the stream is non-empty */
 			    fprintf (me->output, me->error_stream);	/* output the errors */
-			    status = HT_LOADED;		/* show it in the HTML window */
+			    error_flag = FALSE;		/* show it in the HTML window */
 			 }
 		       else
 			  me->reqStatus = HT_ERR;	/* we did not get an error msg, 
@@ -634,14 +640,14 @@ int                 status;
 		  else
 		     me->reqStatus = HT_ERR;	/* we don't want to print the error */
 	       }		/* if error_stack */
-	  }			/* if it isn't an abort */
+	  }			/* if != HT_ABORT */
 	fclose (me->output);
      }
    else
      {
 	/* We must be doing a PUT. Verify if there was an error */
-	if (status != HT_LOADED)
-	   me->reqStatus = HT_ERR;
+	if (error_flag)
+	  me->reqStatus = HT_ERR;
      }				/* if me-output */
 
    /* setup the request status and invoke the cbf */
@@ -649,7 +655,7 @@ int                 status;
    /* work to be done: verify if we can put join all the terminate cbf in
       only one call after the following lines */
 
-   if (status == HT_LOADED && me->reqStatus != HT_ERR
+   if (!error_flag  && me->reqStatus != HT_ERR
        && me->reqStatus != HT_ABORT)
      {
 	me->reqStatus = HT_END;	/* no errors */
@@ -681,7 +687,7 @@ int                 status;
 	     me->outputfile[0] = EOS;
 	  }
      }
-   else if (status != HT_LOADED &&
+   else if (error_flag && 
 	    (me->reqStatus == HT_BUSY || me->reqStatus == HT_WAITING))
      {
 	/* there was an error */
