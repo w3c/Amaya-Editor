@@ -174,11 +174,7 @@ wxString AmayaURLBar::GetValue()
 void AmayaURLBar::OnURLSelected( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaURLBar::OnURLSelected") );
-
-  // because of a bug on wxGTK with OnSelected event, the url activation is only avalaible for windows
-#ifdef _WINDOWS
   GotoSelectedURL();
-#endif /* _WINDOWS */
 }
 
 /*
