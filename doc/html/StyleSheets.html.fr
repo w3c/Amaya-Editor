@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Les feuilles de style</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.4, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -46,14 +46,9 @@ boîte de dialogue qui permet l'association d'un attribut de
 <code>style</code> aux éléments courants sélectionnés
 :<strong></strong><strong></strong></p>
 <ul>
-  <li><h3><span style="font-size: 12pt"><span
-    style="font-weight: normal">L'option</span> Style de caractères <span
-    style="font-weight: normal">permet de choisir la police de caractère, le
-    style du caractère, la taille du corps et le style
-    souligné.</span></span></h3>
-  </li>
-</ul>
-<ul>
+  <li>L'option <strong>Style de caractères</strong> permet de choisir la
+    police de caractère, le style du caractère, la taille du corps et le
+    style souligné.</li>
   <li><strong><span style="font-weight: normal">L'option</span>
     Couleurs</strong> permet de choisir les couleurs du premier plan et de
     l'arrière plan dans la palette. Cliquez sur une cellule de la palette
