@@ -3048,10 +3048,15 @@ void ParseAsHTML (Document document, View view)
    tempdocument = GetLocalPath (document, DocumentURLs[document]);
    TtaExtractName (tempdocument, tempdir, documentname);
 
-   /* clean up previous PARSING.ERR file */
+   /* Initialize the LogFile variables */
    CleanUpParsingErrors ();
+
    /* remove the PARSING.ERR file */
    RemoveParsingErrors (document);
+   
+   /* Remove the previous namespaces declaration */
+   TtaFreeNamespaceDeclarations (document);
+
    for (i = 1; i < DocumentTableLength; i++)
      if (DocumentURLs[i] != NULL && DocumentSource[i] == document)
        {
