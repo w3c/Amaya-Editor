@@ -155,10 +155,7 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, pSearchedString);
       SetDlgItemText (hwnDlg, IDC_REPLACEDIT, pReplaceString);	
-      iMode     = 0;
-      
-      CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
-      if (SearchAfter)
+     if (SearchAfter)
 	{
 	  CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 	  iLocation = 2;
@@ -168,6 +165,22 @@ LPARAM lParam;
 	  CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
 	  iLocation = 3;
 	}
+ 	  if (AutoReplace)
+	{
+	  iMode = 2;
+	  CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_AUTOMATIC);
+	}
+	  else if (WithReplace)
+	{
+	  iMode = 1;
+	  CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
+	}
+      else
+	{
+	  iMode = 0;
+	  CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
+	}
+
       /* initialize the ignore case button */
       CheckDlgButton (hwnDlg, IDC_UPPERLOWER, (UpperLower)
 		      ? BST_CHECKED : BST_UNCHECKED);
@@ -1269,7 +1282,7 @@ View                view;
      TtaSetMenuForm (NumMenuOrSearchText, 3);
 #else  /* _WINDOWS */
    searchEnd = FALSE;
-   CreateSearchDlgWindow (TtaGetViewFrame (document, view), ok);
+   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
 }
 
