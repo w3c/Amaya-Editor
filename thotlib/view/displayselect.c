@@ -60,12 +60,12 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
       halfThick = thick / 2;
 
       /* selection points */
-      leftX = pBox->BxXOrg - pFrame->FrXOrg - halfThick;
-      topY = pBox->BxYOrg - pFrame->FrYOrg - halfThick;
-      bottomY = topY + pBox->BxHeight - halfThick;
-      rightX = leftX + pBox->BxWidth - halfThick;
-      middleX = leftX + (pBox->BxWidth - thick) / 2;
-      middleY = topY + (pBox->BxHeight - thick) / 2;
+      leftX = pBox->BxXOrg - pFrame->FrXOrg;
+      topY = pBox->BxYOrg - pFrame->FrYOrg;
+      bottomY = topY + pBox->BxHeight - thick;
+      rightX = leftX + pBox->BxWidth - thick;
+      middleX = leftX + (pBox->BxWidth / 2) - halfThick;
+      middleY = topY + (pBox->BxHeight / 2) - halfThick;
       if (pAb->AbLeafType == LtPicture)
 	{
 	  /* 8 control points */
