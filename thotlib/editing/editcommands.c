@@ -3852,7 +3852,6 @@ View                view;
    CHAR_T* lpData = 0;
    CHAR_T* ptrData;
    CHAR_T* pBuff;
-   int    ndx;
    int    frame;
 
    /* @@@@@ */
