@@ -105,7 +105,10 @@ AmayaWindow::AmayaWindow (  int            window_id
       m_pCurrentPanel,
       p_NotebookPanel,
       (int)(m_SlashRatio*((float)GetSize().GetWidth())) );  
-  
+
+  // for the moment unsplit the panel : it's not ready to used it
+  m_pSplitterWindow->Unsplit( m_pCurrentPanel );
+
   // Creation of frame sizer to contains differents frame areas
   wxBoxSizer * p_SizerFrame = new wxBoxSizer ( wxHORIZONTAL );
   p_SizerFrame->Add( m_pSplitterWindow, 1, wxEXPAND );
