@@ -607,6 +607,10 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
   ThotBool found = FALSE;
   char *ptr = NULL;
 
+  /* due to an earlier code bug, some bad data exists.  Protect from it */
+  if (!url)
+    return NULL;
+
   while (item)
     {
       annot = (AnnotMeta *) item->object;
