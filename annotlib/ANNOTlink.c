@@ -220,6 +220,12 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
       annot->is_orphan = TRUE;
     }
   
+#ifdef ANNOT_ON_ANNOT
+  /* don't add the Xlink element for replies */
+  if (annot->isReplyTo)
+    return (!(annot->is_orphan));
+#endif /* ANNOT_ON_ANNOT */
+
   /* create the anotation element */
   XLinkSchema = GetXLinkSSchema (source_doc);
   elType.ElSSchema = XLinkSchema;

@@ -599,7 +599,7 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
 }
 
 /*-----------------------------------------------------------------------
-  ANNOT_SelectThread
+  ANNOT_ToggleThread
   Selects an item in the thread view.
   -----------------------------------------------------------------------*/
 void ANNOT_ToggleThread (Document thread_doc, Document annot_doc, 
@@ -650,6 +650,56 @@ void ANNOT_ToggleThread (Document thread_doc, Document annot_doc,
       attrType.AttrTypeNum = Annot_ATTR_HREF_;
       TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
     }
+#endif
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_GetThreadDoc
+  Returns the doc number where a thread item may be opened. Returns
+  0 if no doc is available.
+  -----------------------------------------------------------------------*/
+Document ANNOT_GetThreadDoc (Document thread_doc)
+{
+#ifdef ANNOT_ON_ANNOT
+  Document       doc_annot;
+  ElementType    elType;
+  Element        root, el;
+  Attribute      attr;
+  AttributeType  attrType;
+  char          *url;
+  int            i;
+
+  doc_annot = 0;
+  /* we find the the Thread element and make it our root */
+  root = TtaGetRootElement (thread_doc);
+  elType = TtaGetElementType (root);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Annot_ATTR_Selected_;
+  TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+  if (el)
+    {
+      attrType.AttrTypeNum = Annot_ATTR_HREF_;
+      attr = TtaGetAttribute (el, attrType);
+      i = TtaGetTextAttributeLength (attr) + 1;
+      url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      for (i = 1 ; i <DocumentTableLength; i++)
+	{
+	  /* find the document */
+	  /* @@ grr! */
+	  if (!DocumentURLs[i])
+	    continue;
+	  else if (!strcasecmp (url, DocumentURLs[i])
+		   || !strcasecmp (url+sizeof ("file:/"), DocumentURLs[i])
+		   || !strcasecmp (url+sizeof ("file://"), DocumentURLs[i]))
+	    {
+	      doc_annot = i;
+	      break;
+	    }
+	}
+      TtaFreeMemory (url);
+    }
+  return doc_annot;
 #endif
 }
 

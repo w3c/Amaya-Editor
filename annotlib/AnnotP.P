@@ -136,7 +136,7 @@ BOXES
 	END;
 
  Thread_box: BEGIN
-	Content: (Text 'Thread ');
+	Content: (Text 'Replies ');
 	Font: Creator =;
 	Style: Creator =;
 	Weight: Creator =;

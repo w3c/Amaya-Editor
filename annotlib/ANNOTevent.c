@@ -388,9 +388,25 @@ static void ANNOT_FreeAnnotResource (Document source_doc, Element annotEl,
 void ANNOT_FreeDocumentResource (Document doc)
 {
   int i;
+#ifdef ANNOT_ON_ANNOT
+  Document doc_select, doc_thread;
+#endif /* ANNOT_ON_ANNOT */
 
   /* reset the last_selected_annotation for this document */
   last_selected_annotation[doc] = NULL;
+
+#ifdef ANNOT_ON_ANNOT
+  /* reset the thread entry */
+  doc_thread =  AnnotThread_searchThreadDoc (DocumentURLs[doc]);
+  if (doc_thread > 0 && doc_thread != doc)
+    {
+      doc_select = ANNOT_GetThreadDoc (doc_thread);
+      if (doc_select != 0)
+	{
+	  ANNOT_ToggleThread (doc_thread, doc_select, FALSE);
+	}
+    }
+#endif /* ANNOT_ON_ANNOT */
 
   /* close all the open annotation windows, asking the user if he 
    wants to save them */
@@ -754,6 +770,21 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   /* turn on/off entries in the menu bar */
   UpdateContextSensitiveMenus (doc);
 
+  /* show the thread in the source document */
+#ifdef ANNOT_ON_ANNOT
+  if (isReplyTo)
+    {
+      Document doc_thread;
+
+      annot->isReplyTo = TRUE;
+      /* we should add here the current document where the thread is viewed */
+      /* JK: hope this works... even if we haven't saved the body */
+      doc_thread =  AnnotThread_searchThreadDoc (DocumentURLs[doc_annot]);
+      if (doc_thread > 0)
+	ANNOT_AddThreadItem (doc_thread, annot);
+    }
+#endif /* ANNOT_ON_ANNOT */
+
   /* add the annotation icon to the source document */
   TtaUnselect (doc);
   LINK_AddLinkToSource (doc, annot);
@@ -765,18 +796,6 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
       XPointer_select (ctx);
       XPointer_free (ctx);
     }
-
-#ifdef ANNOT_ON_ANNOT
-  if (isReplyTo)
-    {
-      Document doc_thread;
-      /* we should add here the current document where the thread is viewed */
-      /* JK: hope this works... even if we haven't saved the body */
-      doc_thread =  AnnotThread_searchThreadDoc (DocumentURLs[doc_annot]);
-      if (doc_thread > 0)
-	ANNOT_AddThreadItem (doc_thread, annot);
-    }
-#endif /* ANNOT_ON_ANNOT */
 
 #if 0
   /* ready for primetime, but do we want to do it or highlight
@@ -1158,11 +1177,19 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != Annot_EL_SourceDoc)
     {
+      Document thread_doc;
+
       elType.ElTypeNum = Annot_EL_Thread_item;
       el = TtaSearchTypedElement (elType, SearchBackward, el);
       if (!el)
 	return FALSE;  /* let Thot do its usual operations */
       has_thread = TRUE;
+      thread_doc = ANNOT_GetThreadDoc (doc_annot);
+      if (thread_doc != 0 && thread_doc != doc_annot)
+	{
+	  ANNOT_ToggleThread (doc_annot, thread_doc, FALSE);
+	  TtaCloseDocument (thread_doc);
+	}
     }
 #endif /* ANNOT_ON_ANNOT */
 
