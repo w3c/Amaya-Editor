@@ -436,11 +436,13 @@ void ANNOT_FreeDocumentResource (Document doc)
       int source_doc;
       AnnotMeta *annot;
       Element annotEl;
+      char *body_url = FixFileURL (DocumentURLs[doc]);
       
       source_doc = DocumentMeta[doc]->source_doc;
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				     DocumentURLs[doc],
-				     AM_BODY_FILE);
+				     body_url,
+				     AM_BODY_URL);
+      TtaFreeMemory (body_url);
       if (annot)
 	{
 	  annotEl = SearchAnnotation (source_doc, annot->name);

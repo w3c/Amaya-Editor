@@ -625,12 +625,14 @@ AnnotMeta *AnnotList_searchAnnot (List *list, char *url, AnnotMetaDataSearch sea
 	  ptr = annot->body_url;
 	  break;
 
+#if 0 /* This case is no longer necessary given FixFileURL() */
 	case AM_BODY_FILE:
 	  if (annot->body_url && IsFilePath (annot->body_url))
 	    ptr = annot->body_url + sizeof ("file://") - 1;
 	  else
 	    ptr = annot->body_url;
 	  break;
+#endif
 
 	case AM_ANAME:
 	  ptr = annot->name;
