@@ -142,6 +142,8 @@ char                 *iconID;
 static  OPENFILENAME  OpenFileName;
 static  int           cyValue = 10;
 static HWND           currentParent;
+static HMENU          hmenu;
+
 #else  /* _WINDOWS */
 #ifndef _GTK
 static XmFontList     formFONT;
