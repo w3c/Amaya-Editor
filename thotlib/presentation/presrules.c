@@ -1864,7 +1864,8 @@ boolean            *appl;
 		     /* regarde si le premier fils de l'englobant est un saut de page */
 		     pAbbParent = pAbb1->AbEnclosing;
 		     if (pAbbParent->AbFirstEnclosed != pAbb1
-		       && pAbbParent->AbFirstEnclosed->AbElement->ElTerminal
+			 && !pAbbParent->AbFirstEnclosed->AbDead
+		         && pAbbParent->AbFirstEnclosed->AbElement->ElTerminal
 			 && pAbbParent->AbFirstEnclosed->AbElement->ElLeafType == LtPageColBreak)
 		       {
 			  /* positionne par rapport au saut de page */
