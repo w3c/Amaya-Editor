@@ -509,7 +509,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 }
 
 /*----------------------------------------------------------------------
-   WIN_ChangeTaille : function called when a view is resized under    
+   WIN_ChangeViewSize: function called when a view is resized under    
    MS-Windows.                                                   
   ----------------------------------------------------------------------*/
 void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
@@ -832,7 +832,7 @@ void FrameResized (int *w, int frame, int *info)
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
-  Demande de scroll vertical.                                      
+  WIN_ChangeVScroll generates a vertical scroll.          
   ----------------------------------------------------------------------*/
 void WIN_ChangeVScroll (int frame, int reason, int value)
 {
@@ -906,7 +906,7 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 }
 
 /*----------------------------------------------------------------------
-  Demande de scroll vertical.                                      
+  WIN_ChangeHScroll generates a horizontal scroll.          
   ----------------------------------------------------------------------*/
 void WIN_ChangeHScroll (int frame, int reason, int value)
 {
@@ -1941,7 +1941,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   UINT         i, nNumFiles;
   RECT         rect;
   RECT         cRect;
-  ThotBool     isSpecial;
+  ThotBool     isSpecial, done;
   /* Used to limit selection extension
      on mouse move  */
   static int       oldXPos;
@@ -2111,9 +2111,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  else
 	    isSpecial = TRUE;
 	  key = (int) wParam;
-	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
-	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
-				 lParam, isSpecial);
+	  done = WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
+				      lParam, isSpecial);
 	  if (wParam != VK_MENU)
 	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 	}
@@ -2121,19 +2120,13 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_SYSCHAR:
     case WM_CHAR:
       key = (int) wParam;
-      if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
-	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
+      done = WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
+				  lParam, FALSE);
      
-	if (GetKeyState (VK_MENU) && wParam == VK_SPACE) 
-	{
-return 0;
-
-	}
-		else
-	{
-		if (wParam != VK_MENU)
-			return (DefWindowProc (hwnd, mMsg, wParam, lParam));
-	}
+      if (GetKeyState (VK_MENU) && wParam == VK_SPACE) 
+	  return 0;
+      else if (wParam != VK_MENU)
+	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
       break;
 
 #ifdef IME_INPUT
