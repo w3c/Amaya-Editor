@@ -795,7 +795,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"ALIGN", "TH", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "THEAD", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "TR", 'A', HTML_ATTR_Cell_align},
-   {"ALINK", "", 'A', HTML_ATTR_ActiveLinkColor},
+   {"ALINK", "BODY", 'A', HTML_ATTR_ActiveLinkColor},
    {"ALT", "", 'A', HTML_ATTR_ALT},
    {"ARCHIVE", "", 'A', HTML_ATTR_archive},
    {"AXIS", "", 'A', HTML_ATTR_axis},
@@ -859,7 +859,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"LABEL", "", 'A', HTML_ATTR_label},
    {"LANG", "", 'A', HTML_ATTR_Langue},
    {"LANGUAGE", "SCRIPT", 'A', HTML_ATTR_script_language},
-   {"LINK", "", 'A', HTML_ATTR_LinkColor},
+   {"LINK", "BODY", 'A', HTML_ATTR_LinkColor},
    {"LONGDESC", "", 'A', HTML_ATTR_longdesc},
 
    {"MARGINHEIGHT", "", 'A', HTML_ATTR_marginheight},
@@ -963,7 +963,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"VALUE", "", 'A', HTML_ATTR_Value_},
    {"VALUETYPE", "PARAM", 'A', HTML_ATTR_valuetype},
    {"VERSION", "", 'A', 0},
-   {"VLINK", "", 'A', HTML_ATTR_VisitedLinkColor},
+   {"VLINK", "BODY", 'A', HTML_ATTR_VisitedLinkColor},
    {"VSPACE", "", 'A', HTML_ATTR_vspace},
 
    {"WIDTH", "APPLET", 'A', HTML_ATTR_Width__},
@@ -1595,7 +1595,7 @@ SSchema            *schema;
 	       *schema = HTMLSSchema;
 	       }
 	 else if (!strcasecmp (HTMLAttributeMappingTable[i].XMLelement,
-			          HTMLGIMappingTable[lastElemEntry].htmlGI))
+			       HTMLGIMappingTable[lastElemEntry].htmlGI))
 	       {
 	       entry = i;
 	       *schema = HTMLSSchema;

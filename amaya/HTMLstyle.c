@@ -3652,7 +3652,7 @@ char               *color;
 {
    char             css_command[100];
 
-   sprintf (css_command, "background: %s", color);
+   sprintf (css_command, "background-color: %s", color);
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
