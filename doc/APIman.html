@@ -357,13 +357,11 @@ must be called before any other function of the tool kit.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>applicationName</EM>: name of the application that requires services
+<P><EM>applicationName</EM>: name of the application that requires services
 from the tool kit. This name is used for accessing the ressources defined in
-the Registry.
-</DL>
+the Registry.</P>
 
 <H4><A NAME="sectc512">5.1.2</A> TtaQuit</H4>
 
@@ -388,11 +386,9 @@ file, on Windows platforms the native Registry is used.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>applicationName</EM>: name of the application.
-</DL>
+<P><EM>applicationName</EM>: name of the application.</P>
 
 <H4><A NAME="sectc514">5.1.4</A> TtaSaveAppRegistry</H4>
 
@@ -421,11 +417,9 @@ entry, the function returns NULL.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>name</EM>: name of the entry.
-</DL>
+<P><EM>name</EM>: name of the entry.</P>
 
 <H2><A NAME="secta6">6</A> <A NAME="L576">Application</A></H2>
 
@@ -445,24 +439,18 @@ module that calls them.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>size</EM>: size in bytes (like using malloc) of the desired allocated
-buffer.
-</DL>
+<P><EM>size</EM>: size in bytes (like using malloc) of the desired allocated
+buffer.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the address of the allocated buffer.
-</DL>
+<P>the address of the allocated buffer.</P>
 
-<DL>
-<DT>See also:</DT>
+<H5>See also:</H5>
 
-<DD>TtaFreeMemory.
-</DL>
+<P>TtaFreeMemory.</P>
 
 <H4><A NAME="sectc612">6.1.2</A> TtaFreeMemory</H4>
 
@@ -474,17 +462,13 @@ buffer.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>buffer</EM>: the address of the buffer.
-</DL>
+<P><EM>buffer</EM>: the address of the buffer.</P>
 
-<DL>
-<DT>See also:</DT>
+<H5>See also:</H5>
 
-<DD>TtaGetMemory.
-</DL>
+<P>TtaGetMemory.</P>
 
 <H3><A NAME="sectb62">6.2</A> Modificators</H3>
 
@@ -499,11 +483,9 @@ not.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>on</EM>: 1 if error messages must be printed, 0 if not.
-</DL>
+<P><EM>on</EM>: 1 if error messages must be printed, 0 if not.</P>
 
 <H4><A NAME="sectc622">6.2.2</A> TtaSetEnvString</H4>
 
@@ -515,15 +497,13 @@ not.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>name</EM>: name of the entry.
+<P><EM>name</EM>: name of the entry.</P>
+
 <P><EM>value</EM>: value associated to the entry.</P>
 
 <P><EM>overwrite</EM>: should we overwrite an existing entry ?</P>
-
-</DL>
 
 <H3><A NAME="sectb63">6.3</A> Accessors</H3>
 
@@ -538,11 +518,9 @@ kit.</P>
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>identifier of the current version.
-</DL>
+<P>identifier of the current version.</P>
 
 <H4><A NAME="sectc632">6.3.2</A> TtaGetErrorCode</H4>
 
@@ -555,11 +533,9 @@ See file <EM>application.h</EM> for the possible values.</P>
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>last error code, 0 if the last call was successful.
-</DL>
+<P>last error code, 0 if the last call was successful.</P>
 
 <H4><A NAME="sectc633">6.3.3</A> TtaGetStrError</H4>
 
@@ -571,23 +547,17 @@ See file <EM>application.h</EM> for the possible values.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>errorCode</EM>: an error code.
-</DL>
+<P><EM>errorCode</EM>: an error code.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>pointer to the message text of the error.
-</DL>
+<P>pointer to the message text of the error.</P>
 
-<DL>
-<DT>See also:</DT>
+<H5>See also:</H5>
 
-<DD>TtaGetErrorCode
-</DL>
+<P>TtaGetErrorCode</P>
 
 <H2><A NAME="secta7">7</A> <A NAME="L8356">Interface</A></H2>
 
@@ -628,20 +598,16 @@ dialogue item reference, the data type, and the data value:</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>callbakProcedure</EM>: the application callback procedure.
+<P><EM>callbakProcedure</EM>: the application callback procedure.</P>
+
 <P><EM>numberOfRef</EM>: the nmber of reference reserved.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the "base" value for the <TT>numberOfRef</TT> specific dialogue elements
-to be created.
-</DL>
+<P>the "base" value for the <TT>numberOfRef</TT> specific dialogue elements to
+be created.</P>
 
 <H4><A NAME="sectc712">7.1.2</A> TtaHandlePendingEvents</H4>
 
@@ -667,11 +633,9 @@ managment of specific Thot and Motif events.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>event</EM>: the X event to be managed.
-</DL>
+<P><EM>event</EM>: the X event to be managed.</P>
 
 <H4><A NAME="sectc714">7.1.4</A> TtaCreatePixmapLogo</H4>
 
@@ -685,17 +649,13 @@ application window (see function TtaOpenMainWindow).</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>data</EM>: data of the XPM file.
-</DL>
+<P><EM>data</EM>: data of the XPM file.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>The created pixmap for the logo.
-</DL>
+<P>The created pixmap for the logo.</P>
 
 <H4><A NAME="sectc715">7.1.5</A> TtaCreateBitmapLogo</H4>
 
@@ -709,21 +669,17 @@ function TtaOpenMainWindow).</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>width</EM>: the width value of the bitmap.
+<P><EM>width</EM>: the width value of the bitmap.</P>
+
 <P><EM>height</EM>: the height value of the bitmap.</P>
 
 <P><EM>bits</EM>: the bit array.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>The created pixmap for the logo.
-</DL>
+<P>The created pixmap for the logo.</P>
 
 <H4><A NAME="sectc716">7.1.6</A> TtaAddButton</H4>
 
@@ -754,10 +710,10 @@ procedure is ignored.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the concerned document.
+<P><EM>document</EM>: the concerned document.</P>
+
 <P><EM>view</EM>: the concerned view.</P>
 
 <P><EM>icon</EM>: the pixmap of the new button or NULL.</P>
@@ -765,13 +721,9 @@ procedure is ignored.</P>
 <P><EM>procedure</EM>: procedure to be executed when the button is selected by
 the user or NULL.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>The button index.
-</DL>
+<P>The button index.</P>
 
 <H4><A NAME="sectc717">7.1.7</A> TtaAddTextZone</H4>
 
@@ -802,10 +754,10 @@ editable, void (*procedure) ())</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the concerned document.
+<P><EM>document</EM>: the concerned document.</P>
+
 <P><EM>view</EM>: the concerned view.</P>
 
 <P><EM>label</EM>: the label of the text-zone.</P>
@@ -815,13 +767,9 @@ editable, void (*procedure) ())</P>
 <P><EM>procedure</EM>: procedure to be executed when the text is modified by
 the user.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>The text-zone index.
-</DL>
+<P>The text-zone index.</P>
 
 <H3><A NAME="sectb72">7.2</A> Accessors</H3>
 
@@ -857,13 +805,11 @@ null.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters</DT>
+<H5>Parameters</H5>
 
-<DD><EM>document</EM>: the document selected by the user or 0.
+<P><EM>document</EM>: the document selected by the user or 0.</P>
+
 <P><EM>element</EM>: the element selected by the user or 0.</P>
-
-</DL>
 
 <H3><A NAME="sectb73">7.3</A> Modificators</H3>
 
@@ -879,17 +825,15 @@ icon)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the concerned document.
+<P><EM>document</EM>: the concerned document.</P>
+
 <P><EM>view</EM>: the concerned view.</P>
 
 <P><EM>buttonIndex</EM>: the button index, numbered from 1 to n.</P>
 
 <P><EM>icon</EM>: the pixmap of the new button or NULL.</P>
-
-</DL>
 
 <H4><A NAME="sectc732">7.3.2</A> TtaSetTextZone</H4>
 
@@ -903,17 +847,15 @@ must specify a valid view of a valid document and a valid text-zone index.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the concerned document.
+<P><EM>document</EM>: the concerned document.</P>
+
 <P><EM>view</EM>: the concerned view.</P>
 
 <P><EM>textIndex</EM>: the button index, numbered from 1 to n.</P>
 
 <P><EM>text</EM>: the text to be displayed into the text-zone.</P>
-
-</DL>
 
 <H4><A NAME="sectc733">7.3.3</A> TtaSetMenuOff</H4>
 
@@ -927,15 +869,13 @@ menu.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document concerned or 0.
+<P><EM>document</EM>: the document concerned or 0.</P>
+
 <P><EM>view</EM>: the view concerned or 0.</P>
 
 <P><EM>menuID</EM>: the menu identification in the EDITOR.h file.</P>
-
-</DL>
 
 <H4><A NAME="sectc734">7.3.4</A> TtaSetMenuOn</H4>
 
@@ -949,15 +889,13 @@ menu.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document concerned or 0.
+<P><EM>document</EM>: the document concerned or 0.</P>
+
 <P><EM>view</EM>: the view concerned or 0.</P>
 
 <P><EM>menuID</EM>: the menu identification in the EDITOR.h file.</P>
-
-</DL>
 
 <H4><A NAME="sectc735">7.3.5</A> TtaSetActionOff</H4>
 
@@ -972,18 +910,16 @@ itemID)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document concerned or 0.
+<P><EM>document</EM>: the document concerned or 0.</P>
+
 <P><EM>view</EM>: the view concerned or 0.</P>
 
 <P><EM>menuID</EM>: the main menu (even if the item is located into a submenu)
 identification in the EDITOR.h file.</P>
 
 <P><EM>itemID</EM>: the item identification in the EDITOR.h file.</P>
-
-</DL>
 
 <H4><A NAME="sectc736">7.3.6</A> TtaSetActionOn</H4>
 
@@ -998,18 +934,16 @@ itemID)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document concerned or 0.
+<P><EM>document</EM>: the document concerned or 0.</P>
+
 <P><EM>view</EM>: the view concerned or 0.</P>
 
 <P><EM>menuID</EM>: the main menu (even if the item is located into a submenu)
 identification in the EDITOR.h file.</P>
 
 <P><EM>itemID</EM>: the item identification in the EDITOR.h file.</P>
-
-</DL>
 
 <H4><A NAME="sectc737">7.3.7</A> TtaSetToggleItem</H4>
 
@@ -1024,10 +958,10 @@ boolean on)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document concerned or 0.
+<P><EM>document</EM>: the document concerned or 0.</P>
+
 <P><EM>view</EM>: the view concerned or 0.</P>
 
 <P><EM>menuID</EM>: the main menu (even if the item is located into a submenu)
@@ -1036,8 +970,6 @@ identification in the EDITOR.h file.</P>
 <P><EM>itemID</EM>: the item identification in the EDITOR.h file.</P>
 
 <P><EM>on</EM>: the value True or False to be set.</P>
-
-</DL>
 
 <H4><A NAME="sectc738">7.3.8</A> TtaSetCursorWatch</H4>
 
@@ -1051,13 +983,11 @@ documents.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document concerned or 0.
+<P><EM>document</EM>: the document concerned or 0.</P>
+
 <P><EM>view</EM>: the view concerned or 0.</P>
-
-</DL>
 
 <H4><A NAME="sectc739">7.3.9</A> TtaResetCursor</H4>
 
@@ -1071,23 +1001,20 @@ documents.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>dument</EM>: the documen or 0.
+<P><EM>dument</EM>: the documen or 0.</P>
+
 <P><EM>view</EM>: the view or 0.</P>
-
-</DL>
 
 <H2><A NAME="secta8">8</A> <A NAME="L822">Documents and schemas</A></H2>
 
 <P>The functions described in this section require that file
 <EM>document.h</EM> be included in the module that calls them.</P>
 
-<DL>
-<DT>Document identification</DT>
+<H5>Document identification</H5>
 
-<DD>An application program using the Thot editing tool kit can handle several
+<P>An application program using the Thot editing tool kit can handle several
 documents at the same time. These documents can be defined by the same
 structure schema or by different structure schemas as well. Before any other
 operation can be performed, a document must be either created
@@ -1095,20 +1022,19 @@ operation can be performed, a document must be either created
 exists in a file. These two functions return a value of type Document that is
 then used for identifying the document to which subsequent operations apply.
 The only exception is the function TtaGiveSchemasOfDocument which accesses a
-document by its name.
+document by its name.</P>
+
 <P>The name of a document is a character string (maximum length is 19
 characters, not including the extension) that is used for naming the file
 containing the document and that appears in the user dialogue (Thot Editor
 only).</P>
 
-</DL>
+<H5>Document files</H5>
 
-<DL>
-<DT>Document files</DT>
-
-<DD>Documents are stored in Unix files. Actually, a single document is
+<P>Documents are stored in Unix files. Actually, a single document is
 represented by several files. All these files have the same name as the
-document, with different extensions:
+document, with different extensions:</P>
+
 <UL>
 <LI>The .PIV file contains the last version of the document (logical
 structure, contents, logical attributes and specific presentation rules). A
@@ -1132,29 +1058,24 @@ they must be in the same directory as the .PIV file. They are read by the
 function TtaOpenDocument.
 </UL>
 
-</DL>
+<H5>Directories</H5>
 
-<DL>
-<DT>Directories</DT>
-
-<DD>A list of directories, called the <EM>document path</EM>, is used for
+<P>A list of directories, called the <EM>document path</EM>, is used for
 searching the files needed when opening a document (.PIV, .REF and .EXT
 files). This path is initially set by the environment variable THOTDOC and it
 can be changed at any time by the function TtaSetDocumentPath. When a document
 is created (TtaNewDocument), all corresponding files are created in the first
-directory of the document path.
+directory of the document path.</P>
+
 <P>Another list of directories is used when searching the schemas needed by a
 document that is created (TtaNewDocument) or opened (TtaOpenDocument). The
 <EM>schema path</EM> is initially set by the environment variable THOTSCH and
 it can be changed at any time by the function TtaSetSchemaPath. This path is
 also used by the function TtaNewNature.</P>
 
-</DL>
+<H5>Access mode</H5>
 
-<DL>
-<DT>Access mode</DT>
-
-<DD>When using Thot Editor, the application program may ask the tool kit to
+<P>When using Thot Editor, the application program may ask the tool kit to
 prevent the user from modifying the document: an access mode (allowed values
 are read/write and read only) is associated with the whole document. The
 functions of the editing tool kit are not affected by the access mode; an
@@ -1162,17 +1083,15 @@ application program can modify a document even if it is in read only mode. The
 access mode only applies to the operations performed by the user, who cannot
 modify a document that is in read only mode. When creating or opening a
 document, the access mode is set to read/write, but it can be changed at any
-time by the function TtaSetDocumentAccessMode.
+time by the function TtaSetDocumentAccessMode.</P>
+
 <P>An application program can more precisely control the operations that the
 user is allowed to perform, by associating an access mode with each element in
 a document. This is explained in section <A HREF="#secta9">9</A>.</P>
 
-</DL>
+<H5>Natures</H5>
 
-<DL>
-<DT>Natures</DT>
-
-<DD>Many structured documents contain objects of different <EM>natures</EM>,
+<P>Many structured documents contain objects of different <EM>natures</EM>,
 such as tables, equations, drawings, bibliographic items, etc. which are
 themselves logically structured. For avoiding to define the structure of these
 objects in the structure schemas of all document types, these objects are
@@ -1180,19 +1099,17 @@ defined in separate structure schemas, one for each nature of objects, and
 they can be dynamically linked to document structure schemas. This can be
 repeated recursively: if an object of a given nature includes objects of other
 natures, its structure schema must include the structure schemas of the
-included natures.
+included natures.</P>
+
 <P>When the first object of a given nature is created in a document or in an
 object of another nature, the structure schema that defines the new nature
 must be linked to the structure schema that defines the document or object in
 which it is included. This is achieved by calling the function
 TtaNewNature.</P>
 
-</DL>
+<H5>Schema extensions</H5>
 
-<DL>
-<DT>Schema extensions</DT>
-
-<DD>Documents produced by Thot may be processed by other applications, which
+<P>Documents produced by Thot may be processed by other applications, which
 are either independent from the editor or included in it. Examples of such
 applications are the comparison of two versions of a document (independent
 from the editor) or the electronic index (included in the editor). Many of
@@ -1205,8 +1122,7 @@ document for allowing an application to create in the document its own
 attributes and elements, which are not defined in the document structure
 schema. When several applications have to work on the same document, several
 schema extensions can be associated to the main structure schema of that
-document.
-</DL>
+document.</P>
 
 <H3><A NAME="sectb81">8.1</A> Constructors</H3>
 
@@ -1223,23 +1139,19 @@ the first directory of the document path (see TtaSetDocumentPath).</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>structureSchema</EM>: name of the structure schema that defines the
-type of document to be created.
+<P><EM>structureSchema</EM>: name of the structure schema that defines the
+type of document to be created.</P>
+
 <P><EM>documentName</EM>: name of the document to be created (maximum length
 19 characters). The directory name is not part of this parameter (see
 TtaSetDocumentPath).</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the document that has been created or 0 if the document has not been
-created.
-</DL>
+<P>the document that has been created or 0 if the document has not been
+created.</P>
 
 <H4><A NAME="sectc812">8.1.2</A> TtaOpenDocument</H4>
 
@@ -1257,21 +1169,17 @@ char *documentName;
 int accessMode;
 </PRE>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>documentName</EM>: name of the file containing the document to be
-open. (maximum length 19 characters). The directory name is not part of this
-parameter (see TtaSetDocumentPath).
+<P><EM>documentName</EM>: name of the file containing the document to be open.
+(maximum length 19 characters). The directory name is not part of this
+parameter (see TtaSetDocumentPath).</P>
+
 <P><EM>accessMode</EM>: 0 = read only, 1 = read-write.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the opened document, or 0 if the document cannot be open.
-</DL>
+<P>the opened document, or 0 if the document cannot be open.</P>
 
 <H4><A NAME="sectc813">8.1.3</A> TtaSaveDocument</H4>
 
@@ -1285,10 +1193,10 @@ program.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document to be saved.
+<P><EM>document</EM>: the document to be saved.</P>
+
 <P><EM>documentName</EM>: name of the file in which the document must be
 saved. (maximum length 19 characters). The directory name is not part of this
 parameter (see TtaSetDocumentPath). If the documentName is not the same as the
@@ -1296,8 +1204,6 @@ one used when opening (see TtaOpenDocument) or creating (see TtaNewDocument)
 the document, a new file is created and the file with the old name is
 unchanged, i. e. a new version is created. If necessary, the old file can be
 removed by the function TtaRemoveDocument.</P>
-
-</DL>
 
 <H4><A NAME="sectc814">8.1.4</A> TtaExportDocument</H4>
 
@@ -1312,18 +1218,16 @@ and it can still be accessed by the application program.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document to be exported.
+<P><EM>document</EM>: the document to be exported.</P>
+
 <P><EM>fileName</EM>: name of the file in which the document must be saved,
 including the directory name.</P>
 
 <P><EM>TSchemaName</EM>: name of the translation schema to be used. The
 directory name must not be specified in parameter TSchemaName. See function
 TtaSetSchemaPath.</P>
-
-</DL>
 
 <H4><A NAME="sectc815">8.1.5</A> TtaCloseDocument</H4>
 
@@ -1336,11 +1240,9 @@ allocated to the document. This function does not save the document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document to be closed.
-</DL>
+<P><EM>document</EM>: the document to be closed.</P>
 
 <H4><A NAME="sectc816">8.1.6</A> TtaRemoveDocument</H4>
 
@@ -1354,11 +1256,9 @@ removed document with other documents.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document to be removed.
-</DL>
+<P><EM>document</EM>: the document to be removed.</P>
 
 <H4><A NAME="sectc817">8.1.7</A> TtaSetDocumentPath</H4>
 
@@ -1373,12 +1273,10 @@ list is used when a new document is created (see TtaNewDocument).</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>path</EM>: the directory list, where directory names are separated by
-the character ':'.
-</DL>
+<P><EM>path</EM>: the directory list, where directory names are separated by
+the character ':'.</P>
 
 <H4><A NAME="sectc818">8.1.8</A> TtaAppendDocumentPath</H4>
 
@@ -1393,11 +1291,9 @@ directories yet, the function has no effect.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>aDirectory</EM>: the new directory name.
-</DL>
+<P><EM>aDirectory</EM>: the new directory name.</P>
 
 <H4><A NAME="sectc819">8.1.9</A> TtaSetSchemaPath</H4>
 
@@ -1410,12 +1306,10 @@ It is used for searching schemas.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>path</EM>: the directory list, where directory names are separated by
-the character ':'.
-</DL>
+<P><EM>path</EM>: the directory list, where directory names are separated by
+the character ':'.</P>
 
 <H3><A NAME="sectb82">8.2</A> Modificators</H3>
 
@@ -1432,10 +1326,10 @@ function simply returns the structure schema of that nature.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>schema</EM>: the structure schema to which the nature is added.
+<P><EM>schema</EM>: the structure schema to which the nature is added.</P>
+
 <P><EM>natureName</EM>: name of the nature to be added in the structure
 schema.</P>
 
@@ -1444,14 +1338,10 @@ with the extension schema. If presentationName is an empty string, the default
 presentation schema is associated. If the nature already exists,
 presentationName is ignored.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the structure schema of the new nature; NULL if the structure schema has
-not been loaded.
-</DL>
+<P>the structure schema of the new nature; NULL if the structure schema has
+not been loaded.</P>
 
 <H4><A NAME="sectc822">8.2.2</A> TtaNewSchemaExtension</H4>
 
@@ -1465,23 +1355,20 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document whose structure schema must be extended.
+<P><EM>document</EM>: the document whose structure schema must be
+extended.</P>
+
 <P><EM>extensionName</EM>: name of the extension schema.</P>
 
 <P><EM>presentationName</EM>: name of the presentation schema to be associated
 with the extension schema. If presentationName is an empty string, the default
 presentation schema is associated.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the extension schema, NULL if the extension schema has not been loaded.
-</DL>
+<P>the extension schema, NULL if the extension schema has not been loaded.</P>
 
 <H4><A NAME="sectc823">8.2.3</A> TtaRemoveSchemaExtension</H4>
 
@@ -1496,21 +1383,17 @@ extension.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>extension</EM>: the structure schema extension to be removed.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>removedElements</EM>: number of elements actually removed.</P>
 
-<DD><EM>removedElements</EM>: number of elements actually removed.
 <P><EM>removedAttributes</EM>: number of attributes actually removed.</P>
-
-</DL>
 
 <H4><A NAME="sectc824">8.2.4</A> TtaSetPSchema</H4>
 
@@ -1523,14 +1406,12 @@ must be open, but no view must be open for that document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>presentationName</EM>: Name of the presentation schema to be associated
 with the document.</P>
-
-</DL>
 
 <H4><A NAME="sectc825">8.2.5</A> TtaSetDocumentDirectory</H4>
 
@@ -1543,13 +1424,11 @@ TtaSaveDocument.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document whose directory is set.
+<P><EM>document</EM>: the document whose directory is set.</P>
+
 <P><EM>directory</EM>: new document directory.</P>
-
-</DL>
 
 <H4><A NAME="sectc826">8.2.6</A> TtaSetDocumentName</H4>
 
@@ -1561,16 +1440,14 @@ TtaSaveDocument.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document whose name is set.
+<P><EM>document</EM>: the document whose name is set.</P>
+
 <P><EM>documentName</EM>: new document name. This is only the name, without
 any suffix, without directory name. See function TtaSetDocumentDirectory for
 changing the directory of a document.
 The name must not exceed 31 characters.</P>
-
-</DL>
 
 <H4><A NAME="sectc827">8.2.7</A> TtaSetDocumentAccessMode</H4>
 
@@ -1582,13 +1459,11 @@ The name must not exceed 31 characters.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document whose access mode is changed.
+<P><EM>document</EM>: the document whose access mode is changed.</P>
+
 <P><EM>accessMode</EM>: 0 = read only, 1 = read-write.</P>
-
-</DL>
 
 <H4><A NAME="sectc828">8.2.8</A> TtaSetDocumentBackUpInterval</H4>
 
@@ -1600,15 +1475,13 @@ The name must not exceed 31 characters.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document whose backup interval is changed.
+<P><EM>document</EM>: the document whose backup interval is changed.</P>
+
 <P><EM>interval</EM>: 0 : the backup mechanism must be disabled
 positive integer : number of characters typed which triggers automatic save of
 the document into a .BAK file.</P>
-
-</DL>
 
 <H4><A NAME="sectc829">8.2.9</A> TtaSetNotificationMode</H4>
 
@@ -1620,15 +1493,13 @@ the document into a .BAK file.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document whose notification mode is changed.
+<P><EM>document</EM>: the document whose notification mode is changed.</P>
+
 <P><EM>notificationMode</EM>: 0 = only roots of created, copied and deleted
 subtrees must be notified, 1 = all elements of created, copied and deleted
 subtrees must be notified.</P>
-
-</DL>
 
 <H4><A NAME="sectc8210">8.2.10</A> TtaSetDocumentModified</H4>
 
@@ -1642,11 +1513,9 @@ it.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document.
-</DL>
+<P><EM>document</EM>: the document.</P>
 
 <H4><A NAME="sectc8211">8.2.11</A> TtaSetDocumentUnmodified</H4>
 
@@ -1660,13 +1529,9 @@ user will not be asked to save the document when closing it.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter :</DT>
+<H5>Parameter :</H5>
 
-<DD>
 <P><EM>document</EM> : the document.</P>
-
-</DL>
 
 <H3><A NAME="sectb83">8.3</A> Accessors</H3>
 
@@ -1681,16 +1546,12 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter :</DT>
+<H5>Parameter :</H5>
 
-<DD>
 <P><EM>document</EM> : the document for which the extension structure schema
 is asked.</P>
 
 <P><EM>ExtensionName</EM> : the extension name.</P>
-
-</DL>
 
 <H4><A NAME="sectc832">8.3.2</A> TtaGetDocumentName</H4>
 
@@ -1702,19 +1563,13 @@ is asked.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD>
 <P><EM>document</EM>: the document whose name is asked.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>name of that document.
-</DL>
+<P>name of that document.</P>
 
 <H4><A NAME="sectc833">8.3.3</A> TtaGetDocumentFromName</H4>
 
@@ -1726,19 +1581,13 @@ is asked.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD>
 <P><EM>documentName</EM>: the document name.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the document having that name.
-</DL>
+<P>the document having that name.</P>
 
 <H4><A NAME="sectc834">8.3.4</A> TtaGetDocumentSSchema</H4>
 
@@ -1750,17 +1599,14 @@ is asked.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document for which the structure schema is asked.
-</DL>
+<P><EM>document</EM>: the document for which the structure schema is
+asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the structure schema of that document.
-</DL>
+<P>the structure schema of that document.</P>
 
 <H4><A NAME="sectc835">8.3.5</A> TtaGetSSchemaName</H4>
 
@@ -1772,17 +1618,13 @@ is asked.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>schema</EM>: the structure schema of interest.
-</DL>
+<P><EM>schema</EM>: the structure schema of interest.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>name of that structure schema.
-</DL>
+<P>name of that structure schema.</P>
 
 <H4><A NAME="sectc836">8.3.6</A> TtaGetPSchemaName</H4>
 
@@ -1795,17 +1637,13 @@ given structure schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>schema</EM>: the structure schema of interest.
-</DL>
+<P><EM>schema</EM>: the structure schema of interest.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>name of the associated presentation schema.
-</DL>
+<P>name of the associated presentation schema.</P>
 
 <H4><A NAME="sectc837">8.3.7</A> TtaGetDocumentDirectory</H4>
 
@@ -1818,23 +1656,17 @@ bufferLength)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD>
 <P><EM>document</EM>: the document whose directory is asked.</P>
 
 <P><EM>buffer</EM>: a buffer provided by the caller.</P>
 
 <P><EM>bufferLength</EM>: the length of that buffer.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>buffer</EM>: the document directory.
-</DL>
+<P><EM>buffer</EM>: the document directory.</P>
 
 <H4><A NAME="sectc838">8.3.8</A> TtaGetSSchema</H4>
 
@@ -1847,20 +1679,16 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>name</EM>: the name of the structure schema of interest.
+<P><EM>name</EM>: the name of the structure schema of interest.</P>
+
 <P><EM>document</EM>: the document that uses this structure schema.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the structure schema having this name, or NULL if this structure schema is
-not loaded or not used by the document.
-</DL>
+<P>the structure schema having this name, or NULL if this structure schema is
+not loaded or not used by the document.</P>
 
 <H4><A NAME="sectc839">8.3.9</A> TtaSameSSchemas</H4>
 
@@ -1872,19 +1700,15 @@ not loaded or not used by the document.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>schema1</EM>: first structure schema.
+<P><EM>schema1</EM>: first structure schema.</P>
+
 <P><EM>schema2</EM>: second structure schema.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>0 if both schemas are different, 1 if they are identical.
-</DL>
+<P>0 if both schemas are different, 1 if they are identical.</P>
 
 <H4><A NAME="sectc8310">8.3.10</A> TtaGiveSchemasOfDocument</H4>
 
@@ -1899,24 +1723,20 @@ the schemas are not loaded by this function.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>documentName</EM>: Name of the document to be checked (maximum length
-19 characters).
+<P><EM>documentName</EM>: Name of the document to be checked (maximum length
+19 characters).</P>
+
 <P><EM>structureName</EM>: buffer.</P>
 
 <P><EM>presentationName</EM>: buffer.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
+<P><EM>structureName</EM>: Name of the document structure schema.</P>
 
-<DD><EM>structureName</EM>: Name of the document structure schema.
 <P><EM>presentationName</EM>: Name of the document presentation schema.</P>
-
-</DL>
 
 <H4><A NAME="sectc8311">8.3.11</A> TtaNextSchemaExtension</H4>
 
@@ -1928,22 +1748,18 @@ the schemas are not loaded by this function.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document of interest.
+<P><EM>document</EM>: the document of interest.</P>
+
 <P><EM>extension</EM>: a schema extension of that document. NULL for accessing
 the first schema extension.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>extension</EM>: the schema extension that follows or the first schema
+<P><EM>extension</EM>: the schema extension that follows or the first schema
 extension of the document if parameter extension is NULL. NULL if there is no
-more schema extension.
-</DL>
+more schema extension.</P>
 
 <H4><A NAME="sectc8312">8.3.12</A> TtaNextNature</H4>
 
@@ -1955,22 +1771,18 @@ more schema extension.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document of interest.
+<P><EM>document</EM>: the document of interest.</P>
+
 <P><EM>nature</EM>: the structure schema of a nature for that document. NULL
 for accessing the first nature.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>nature</EM>: the structure schema of the next nature, or the structure
+<P><EM>nature</EM>: the structure schema of the next nature, or the structure
 schema of the first nature of the document if parameter nature was NULL when
-calling. NULL if there is no more nature for the document.
-</DL>
+calling. NULL if there is no more nature for the document.</P>
 
 <H4><A NAME="sectc8313">8.3.13</A> TtaIsDocumentModified</H4>
 
@@ -1984,18 +1796,14 @@ explicitly notified by TtaSetDocumentModified.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document.
-</DL>
+<P><EM>document</EM>: the document.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>1 if the document has been modified by the user since it has been saved,
-loaded or created, 0 if it has not been modified.
-</DL>
+<P>1 if the document has been modified by the user since it has been saved,
+loaded or created, 0 if it has not been modified.</P>
 
 <H4><A NAME="sectc8314">8.3.14</A> TtaGetDocumentBackUpInterval</H4>
 
@@ -2007,19 +1815,15 @@ loaded or created, 0 if it has not been modified.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document whose backup interval is asked.
-</DL>
+<P><EM>document</EM>: the document whose backup interval is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>0 : the backup mechanism is disabled
+<P>0 : the backup mechanism is disabled
 positive integer : number of typed characters which trigger an autamatic save
-of the document into a .BAK file.
-</DL>
+of the document into a .BAK file.</P>
 
 <H4><A NAME="sectc8315">8.3.15</A> TtaGetDocumentAccessMode</H4>
 
@@ -2031,17 +1835,13 @@ of the document into a .BAK file.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document whose access mode is asked.
-</DL>
+<P><EM>document</EM>: the document whose access mode is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>0 if access mode is read only, 1 if access mode is read-write.
-</DL>
+<P>0 if access mode is read only, 1 if access mode is read-write.</P>
 
 <H4><A NAME="sectc8316">8.3.16</A> TtaGetNotificationMode</H4>
 
@@ -2053,19 +1853,15 @@ of the document into a .BAK file.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document whose notification mode is asked.
-</DL>
+<P><EM>document</EM>: the document whose notification mode is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>0 = if only roots of created and deleted subtrees must be notified,
+<P>0 = if only roots of created and deleted subtrees must be notified,</P>
+
 <P>1 = all elements of created and deleted subtrees must be notified.</P>
-
-</DL>
 
 <H4><A NAME="sectc8317">8.3.17</A> TtaGetDocumentPath</H4>
 
@@ -2078,20 +1874,16 @@ of the document into a .BAK file.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>buffer</EM>: a buffer provided by the caller.
+<P><EM>buffer</EM>: a buffer provided by the caller.</P>
+
 <P><EM>bufferLength</EM>: the length of that buffer.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>buffer</EM>: the list of directories. Directory names are separated by
-the character ':'.
-</DL>
+<P><EM>buffer</EM>: the list of directories. Directory names are separated by
+the character ':'.</P>
 
 <H4><A NAME="sectc8318">8.3.18</A> TtaGetSchemaPath</H4>
 
@@ -2103,20 +1895,16 @@ the character ':'.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>buffer</EM>: a buffer provided by the caller.
+<P><EM>buffer</EM>: a buffer provided by the caller.</P>
+
 <P><EM>bufferLength</EM>: the length of that buffer.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>buffer</EM>: the list of directories. Directory names are separated by
-the character ':'.
-</DL>
+<P><EM>buffer</EM>: the list of directories. Directory names are separated by
+the character ':'.</P>
 
 <H4><A NAME="sectc8319">8.3.19</A> TtaGetDocumentOfSavedElements</H4>
 
@@ -2129,18 +1917,14 @@ issued.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD>no parameter
-</DL>
+<P>no parameter</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the document for which the last Copy or Cut command has been issued. 0 if
-the clipboard is empty.
-</DL>
+<P>the document for which the last Copy or Cut command has been issued. 0 if
+the clipboard is empty.</P>
 
 <H2><A NAME="secta9">9</A> <A NAME="L2176">Tree structures</A></H2>
 
@@ -2150,26 +1934,25 @@ structures that represent the logical organization of a document.</P>
 <P>The functions described in this section require that file <EM>tree.h</EM>
 be included in the module that calls them.</P>
 
-<DL>
-<DT>Main tree and associated trees</DT>
+<H5>Main tree and associated trees</H5>
 
-<DD>A document is in fact represented by a <EM>forest</EM>, as several trees
+<P>A document is in fact represented by a <EM>forest</EM>, as several trees
 may be necessary for representing its abstract structure. The <EM>main
 tree</EM> represents the main stream of information in a document. In addition
 to that tree, there may exist some <EM>associated trees</EM>, which represent
 other streams of information, such as notes, illustrations, comments, etc.
-These associated trees are specified in the structure schema of the document.
-</DL>
+These associated trees are specified in the structure schema of the
+document.</P>
 
-<DL>
-<DT>Structure of abstract trees</DT>
+<H5>Structure of abstract trees</H5>
 
-<DD>Several functions in this group allow to build or modify the structure of
+<P>Several functions in this group allow to build or modify the structure of
 an abstract tree. As stated above, the structure of these trees is constrained
 by structure schemas. Therefore the programmer must be careful when handling
 abstract trees. All functions that change a tree structure check that the
 result will be consistent with the structure schema and they raise an error in
-case of inconsistency.
+case of inconsistency.</P>
+
 <P>Checking can be made in two modes, a strict mode and a relaxed mode. In
 strict mode, all mandatory elements must always be present. In relaxed mode,
 even elements that are not stated optional in their structure schema can be
@@ -2184,12 +1967,9 @@ that purpose, the function TtaListAbstractTree (see section <A
 HREF="#sectc951">9.5.1</A>) can produce a human-readable form of an abstract
 tree.</P>
 
-</DL>
+<H5>Element types</H5>
 
-<DL>
-<DT>Element types</DT>
-
-<DD>When creating or searching elements in an abstract tree, the type of the
+<P>When creating or searching elements in an abstract tree, the type of the
 concerned elements must be given. As presented in section <A
 HREF="#secta4">4</A>, an element type contains a type number, but this number
 does not appear explicitly in a structure schema: it is generated by the
@@ -2197,33 +1977,28 @@ schema compiler. For obtaining all type numbers of a structure schema, use the
 command:
 <EM>       printsch -h SchemaName
 </EM>which lists on the standard output a file that can be included into a C
-program. This file also contains all attribute numbers of the schema
-</DL>
+program. This file also contains all attribute numbers of the schema</P>
 
-<DL>
-<DT>Order of operations</DT>
+<H5>Order of operations</H5>
 
-<DD>As a general rule, as soon as an element or a tree has been created (by
+<P>As a general rule, as soon as an element or a tree has been created (by
 functions TtaNewElement, TtaNewTree, or TtaCopyTree), it must be included into
 the main tree or an associated tree of a document (by functions
 TtaInsertSibling, TtaInsertFirstChild, or TtaAttachNewTree), prior any other
-function can be performed.
-</DL>
+function can be performed.</P>
 
-<DL>
-<DT>Labels</DT>
+<H5>Labels</H5>
 
-<DD>Each element in a document has a unique identifier called a
-<EM>label</EM>. Labels are automatically assigned to elements by all functions
-that create new elements (TtaNewElement, TtaNewTree, or TtaCopyTree). Labels
-can be accessed by functions TtaSearchElementByLabel and TtaGetElementLabel.
-</DL>
+<P>Each element in a document has a unique identifier called a <EM>label</EM>.
+Labels are automatically assigned to elements by all functions that create new
+elements (TtaNewElement, TtaNewTree, or TtaCopyTree). Labels can be accessed
+by functions TtaSearchElementByLabel and TtaGetElementLabel.</P>
 
-<DL>
-<DT>Access rights</DT>
+<H5>Access rights</H5>
 
-<DD>An access right can be associated with each element. Three access rights
-are defined:
+<P>An access right can be associated with each element. Three access rights
+are defined:</P>
+
 <DL>
 <DT>Read/write</DT>
 
@@ -2241,8 +2016,6 @@ interactively with the commands provided by the Thot editor. They do not apply
 to the application program that manipulate the document through the editing
 tool kit.</P>
 
-</DL>
-
 <H3><A NAME="sectb91">9.1</A> Constructors</H3>
 
 <H4><A NAME="sectc911">9.1.1</A> TtaNewElement</H4>
@@ -2255,19 +2028,15 @@ tool kit.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the element is created.
+<P><EM>document</EM>: the document for which the element is created.</P>
+
 <P><EM>elementType</EM>: type of the element to be created.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the created element.
-</DL>
+<P>the created element.</P>
 
 <H4><A NAME="sectc912">9.1.2</A> TtaNewTree</H4>
 
@@ -2281,23 +2050,19 @@ the structure schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the tree is created.
+<P><EM>document</EM>: the document for which the tree is created.</P>
+
 <P><EM>elementType</EM>: type of the root element of the tree to be
 created.</P>
 
 <P><EM>label</EM>: label of the root element to be created. Empty string if
 the value of the label is undefined.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the root element of the created tree.
-</DL>
+<P>the root element of the created tree.</P>
 
 <H4><A NAME="sectc913">9.1.3</A> TtaCopyTree</H4>
 
@@ -2310,10 +2075,10 @@ Document destinationDocument, Element parent)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>sourceElement</EM>: element to be copied.
+<P><EM>sourceElement</EM>: element to be copied.</P>
+
 <P><EM>sourceDocument</EM>: the document containing the element to be
 copied.</P>
 
@@ -2323,13 +2088,9 @@ created.</P>
 <P><EM>parent</EM>: element that will become the parent of the created
 tree.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the root element of the created tree.
-</DL>
+<P>the root element of the created tree.</P>
 
 <H4><A NAME="sectc914">9.1.4</A> TtaCreateDescent</H4>
 
@@ -2344,23 +2105,19 @@ elementType)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the tree is created.
+<P><EM>document</EM>: the document for which the tree is created.</P>
+
 <P><EM>element</EM>: the element for which a descent will be created.</P>
 
 <P><EM>elementType</EM>: type of the element to be created as the last
 descendant.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the last descendant created or NULL if the element cannot be created. This
-element is empty.
-</DL>
+<P>the last descendant created or NULL if the element cannot be created. This
+element is empty.</P>
 
 <H4><A NAME="sectc915">9.1.5</A> TtaCreateDescentWithContent</H4>
 
@@ -2376,23 +2133,19 @@ ElementType elementType)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the tree is created.
+<P><EM>document</EM>: the document for which the tree is created.</P>
+
 <P><EM>element</EM>: the element for which a descent will be created.</P>
 
 <P><EM>elementType</EM>: type of the element to be created as the last
 descendant.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the last descendant created or NULL if the element cannot be created. If
-not NULL, the minimum content of that element has been created.
-</DL>
+<P>the last descendant created or NULL if the element cannot be created. If
+not NULL, the minimum content of that element has been created.</P>
 
 <H4><A NAME="sectc916">9.1.6</A> TtaDeleteTree</H4>
 
@@ -2406,13 +2159,11 @@ be used later.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element (or root of the tree) to be deleted.
+<P><EM>element</EM>: the element (or root of the tree) to be deleted.</P>
+
 <P><EM>document</EM>: the document containing the element to be deleted.</P>
-
-</DL>
 
 <H4><A NAME="sectc917">9.1.7</A> TtaAttachNewTree</H4>
 
@@ -2424,14 +2175,12 @@ be used later.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>tree</EM>: root of the tree to be attached. This tree must be a valid
-main tree or associated tree according to the document structure schema.
+<P><EM>tree</EM>: root of the tree to be attached. This tree must be a valid
+main tree or associated tree according to the document structure schema.</P>
+
 <P><EM>document</EM>: the document to which the tree is to be attached.</P>
-
-</DL>
 
 <H3><A NAME="sectb92">9.2</A> Modificators</H3>
 
@@ -2449,10 +2198,10 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>newElement</EM>: the element (or root of the tree) to be inserted.
+<P><EM>newElement</EM>: the element (or root of the tree) to be inserted.</P>
+
 <P><EM>sibling</EM>: an element belonging to a tree. This element must not be
 the root of a tree.</P>
 
@@ -2460,8 +2209,6 @@ the root of a tree.</P>
 sibling, if False, inserts newElement as next sibling of sibling.</P>
 
 <P><EM>document</EM>: the document to which both elements belong.</P>
-
-</DL>
 
 <H4><A NAME="sectc922">9.2.2</A> TtaInsertFirstChild</H4>
 
@@ -2478,23 +2225,19 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>newElement</EM>: the element (or root of the tree) to be inserted.
+<P><EM>newElement</EM>: the element (or root of the tree) to be inserted.</P>
+
 <P><EM>parent</EM>: an element belonging to a tree.</P>
 
 <P><EM>document</EM>: the document to which both elements belong.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
+<P>If newElement is an option that replaces the choice, newElement takes</P>
 
-<DD>If newElement is an option that replaces the choice, newElement takes
 <P>the value of parent.</P>
-
-</DL>
 
 <H4><A NAME="sectc923">9.2.3</A> TtaCreateElement</H4>
 
@@ -2512,13 +2255,11 @@ provided the  structure schema allows it.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>elementType</EM>: type of the element to be created.
+<P><EM>elementType</EM>: type of the element to be created.</P>
+
 <P><EM>document</EM>: the document for which the element is created.</P>
-
-</DL>
 
 <H4><A NAME="sectc924">9.2.4</A> TtaInsertElement</H4>
 
@@ -2536,13 +2277,11 @@ changed.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>elementType</EM>: type of the element to be created.
+<P><EM>elementType</EM>: type of the element to be created.</P>
+
 <P><EM>document</EM>: the document for which the element is created.</P>
-
-</DL>
 
 <H4><A NAME="sectc925">9.2.5</A> TtaRemoveTree</H4>
 
@@ -2554,13 +2293,11 @@ changed.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element (or root of the tree) to be removed.
+<P><EM>element</EM>: the element (or root of the tree) to be removed.</P>
+
 <P><EM>document</EM>: the document containing the element to be removed.</P>
-
-</DL>
 
 <H4><A NAME="sectc926">9.2.6</A> TtaSetAccessRight</H4>
 
@@ -2575,16 +2312,14 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element.
+<P><EM>element</EM>: the element.</P>
+
 <P><EM>right</EM>: access right for that element (ReadOnly, ReadWrite, Hidden,
 Inherited).</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
-
-</DL>
 
 <H4><A NAME="sectc927">9.2.7</A> TtaHolophrastElement</H4>
 
@@ -2597,16 +2332,14 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element.
+<P><EM>element</EM>: the element.</P>
+
 <P><EM>holophrast</EM>: True: the element gets holophrasted if it is not,
 False: if the element is holphrasted, it gets expanded.</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
-
-</DL>
 
 <H4><A NAME="sectc928">9.2.8</A> <A NAME="L2778">TtaSetCheckingMode</A></H4>
 
@@ -2618,12 +2351,10 @@ False: if the element is holphrasted, it gets expanded.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>strict</EM>: if True, the presence of all mandatory elements is
-checked.
-</DL>
+<P><EM>strict</EM>: if True, the presence of all mandatory elements is
+checked.</P>
 
 <H3><A NAME="sectb93">9.3</A> Accessors</H3>
 
@@ -2638,17 +2369,13 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document.
-</DL>
+<P><EM>document</EM>: the document.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the root element of the main abstract tree.
-</DL>
+<P>the root element of the main abstract tree.</P>
 
 <H4><A NAME="sectc932">9.3.2</A> TtaNextAssociatedRoot</H4>
 
@@ -2661,23 +2388,19 @@ which a given element belongs.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>root</EM>: the element for which the next associated tree is searched.
 That element does not need to be the root of a tree. If root is NULL or if
 root is an element in the main tree, the root of the first associated tree is
 returned.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>root</EM>: the root element of the next associated tree. NULL if there
-is no next associated tree for the document.
-</DL>
+<P><EM>root</EM>: the root element of the next associated tree. NULL if there
+is no next associated tree for the document.</P>
 
 <H4><A NAME="sectc933">9.3.3</A> TtaGetFirstChild</H4>
 
@@ -2689,17 +2412,14 @@ is no next associated tree for the document.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>parent</EM>: the element for which the first child element is asked.
-</DL>
+<P><EM>parent</EM>: the element for which the first child element is
+asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the first child element of parent; NULL if parent has no child.
-</DL>
+<P>the first child element of parent; NULL if parent has no child.</P>
 
 <H4><A NAME="sectc934">9.3.4</A> TtaGetLastChild</H4>
 
@@ -2711,17 +2431,13 @@ is no next associated tree for the document.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>parent</EM>: the element for which the last child element is asked.
-</DL>
+<P><EM>parent</EM>: the element for which the last child element is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the last child element of parent; NULL if parent has no child.
-</DL>
+<P>the last child element of parent; NULL if parent has no child.</P>
 
 <H4><A NAME="sectc935">9.3.5</A> TtaPreviousSibling</H4>
 
@@ -2733,18 +2449,14 @@ is no next associated tree for the document.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element whose previous sibling is asked.
-</DL>
+<P><EM>element</EM>: the element whose previous sibling is asked.</P>
 
-<DL>
-<DT>Return parameter:</DT>
+<H5>Return parameter:</H5>
 
-<DD><EM>element</EM>: the previous sibling element, or NULL if there is no
-previous sibling.
-</DL>
+<P><EM>element</EM>: the previous sibling element, or NULL if there is no
+previous sibling.</P>
 
 <H4><A NAME="sectc936">9.3.6</A> TtaNextSibling</H4>
 
@@ -2756,18 +2468,14 @@ previous sibling.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element whose next sibling is asked.
-</DL>
+<P><EM>element</EM>: the element whose next sibling is asked.</P>
 
-<DL>
-<DT>Return parameter:</DT>
+<H5>Return parameter:</H5>
 
-<DD><EM>element</EM>: the next sibling element, or NULL if there is no next
-sibling.
-</DL>
+<P><EM>element</EM>: the next sibling element, or NULL if there is no next
+sibling.</P>
 
 <H4><A NAME="sectc937">9.3.7</A> TtaGetSuccessor</H4>
 
@@ -2780,17 +2488,13 @@ the first upper level where there is a following element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element whose successor is asked.
-</DL>
+<P><EM>element</EM>: the element whose successor is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the successor, or NULL if there is no successor.
-</DL>
+<P>the successor, or NULL if there is no successor.</P>
 
 <H4><A NAME="sectc938">9.3.8</A> TtaGetPredecessor</H4>
 
@@ -2803,17 +2507,13 @@ the first upper level where there is a preceding element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element whose predecessor is asked.
-</DL>
+<P><EM>element</EM>: the element whose predecessor is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the predecessor, or NULL if there is no predecessor.
-</DL>
+<P>the predecessor, or NULL if there is no predecessor.</P>
 
 <H4><A NAME="sectc939">9.3.9</A> TtaGetParent</H4>
 
@@ -2825,17 +2525,13 @@ the first upper level where there is a preceding element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element whose the parent is asked.
-</DL>
+<P><EM>element</EM>: the element whose the parent is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the parent element, or NULL if there is no parent (root).
-</DL>
+<P>the parent element, or NULL if there is no parent (root).</P>
 
 <H4><A NAME="sectc9310">9.3.10</A> TtaGetCommonAncestor</H4>
 
@@ -2847,19 +2543,15 @@ the first upper level where there is a preceding element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element1</EM>: the first element whose ancestor is asked.
+<P><EM>element1</EM>: the first element whose ancestor is asked.</P>
+
 <P><EM>element2</EM>: the second element whose ancestor is asked.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the common ancestor, or NULL if there is no common ancestor.
-</DL>
+<P>the common ancestor, or NULL if there is no common ancestor.</P>
 
 <H4><A NAME="sectc9311">9.3.11</A> TtaGetTypedAncestor</H4>
 
@@ -2871,19 +2563,15 @@ the first upper level where there is a preceding element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element whose ancestor is asked.
+<P><EM>element</EM>: the element whose ancestor is asked.</P>
+
 <P><EM>ancestorType</EM>: type of the asked ancestor.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the ancestor, or NULL if there is no ancestor of that type.
-</DL>
+<P>the ancestor, or NULL if there is no ancestor of that type.</P>
 
 <H4><A NAME="sectc9312">9.3.12</A> TtaGetElementType</H4>
 
@@ -2895,17 +2583,13 @@ the first upper level where there is a preceding element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element.
-</DL>
+<P><EM>element</EM>: the element.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>type of the element.
-</DL>
+<P>type of the element.</P>
 
 <H4><A NAME="sectc9313">9.3.13</A> TtaGetElementTypeName</H4>
 
@@ -2917,17 +2601,13 @@ the first upper level where there is a preceding element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>elementType</EM>: element type.
-</DL>
+<P><EM>elementType</EM>: element type.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>name of that type.
-</DL>
+<P>name of that type.</P>
 
 <H4><A NAME="sectc9314">9.3.14</A> TtaGiveTypeFromName</H4>
 
@@ -2943,20 +2623,16 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>elementType.ElSSchema</EM>: the structure schema of interest.
+<P><EM>elementType.ElSSchema</EM>: the structure schema of interest.</P>
+
 <P><EM>name</EM>: the name of the type of interest.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>elementType</EM>: the type having this name, or elementType.ElTypeNum
-= 0 if the type is not found.
-</DL>
+<P><EM>elementType</EM>: the type having this name, or elementType.ElTypeNum =
+0 if the type is not found.</P>
 
 <H4><A NAME="sectc9315">9.3.15</A> TtaSameTypes</H4>
 
@@ -2968,19 +2644,15 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>type1</EM>: first element type.
+<P><EM>type1</EM>: first element type.</P>
+
 <P><EM>type2</EM>: second element type.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>0 if both types are different, 1 if they are identical.
-</DL>
+<P>0 if both types are different, 1 if they are identical.</P>
 
 <H4><A NAME="sectc9316">9.3.16</A> TtaGetElementLabel</H4>
 
@@ -2992,17 +2664,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element.
-</DL>
+<P><EM>element</EM>: the element.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>label of the element.
-</DL>
+<P>label of the element.</P>
 
 <H4><A NAME="sectc9317">9.3.17</A> TtaIsConstant</H4>
 
@@ -3014,17 +2682,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>elementType</EM>: type to be tested.
-</DL>
+<P><EM>elementType</EM>: type to be tested.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>1 = the type is a constant, 0 = the type is not a constant.
-</DL>
+<P>1 = the type is a constant, 0 = the type is not a constant.</P>
 
 <H4><A NAME="sectc9318">9.3.18</A> TtaIsLeaf</H4>
 
@@ -3036,17 +2700,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>elementType</EM>: type to be tested.
-</DL>
+<P><EM>elementType</EM>: type to be tested.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>1 if the type is a leaf, 0 if the type is not a leaf.
-</DL>
+<P>1 if the type is a leaf, 0 if the type is not a leaf.</P>
 
 <H4><A NAME="sectc9319">9.3.19</A> TtaGetConstructOfType</H4>
 
@@ -3058,17 +2718,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>elementType</EM>: the element type of interest.
-</DL>
+<P><EM>elementType</EM>: the element type of interest.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the construct that defines the structure of that element type.
-</DL>
+<P>the construct that defines the structure of that element type.</P>
 
 <H4><A NAME="sectc9320">9.3.20</A> TtaGetConstruct</H4>
 
@@ -3080,17 +2736,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element of interest.
-</DL>
+<P><EM>element</EM>: the element of interest.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the construct that defines the structure of that element.
-</DL>
+<P>the construct that defines the structure of that element.</P>
 
 <H4><A NAME="sectc9321">9.3.21</A> TtaGetAccessRight</H4>
 
@@ -3102,17 +2754,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element.
-</DL>
+<P><EM>element</EM>: the element.</P>
 
-<DL>
-<DT>Return Value:</DT>
+<H5>Return Value:</H5>
 
-<DD>access right for that element (ReadOnly, ReadWrite, Hidden, Inherited).
-</DL>
+<P>access right for that element (ReadOnly, ReadWrite, Hidden, Inherited).</P>
 
 <H4><A NAME="sectc9322">9.3.22</A> TtaIsHolophrasted</H4>
 
@@ -3124,17 +2772,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element to be tested.
-</DL>
+<P><EM>element</EM>: the element to be tested.</P>
 
-<DL>
-<DT>Return Value:</DT>
+<H5>Return Value:</H5>
 
-<DD>1 if the element is holphrasted, 0 if not.
-</DL>
+<P>1 if the element is holphrasted, 0 if not.</P>
 
 <H4><A NAME="sectc9323">9.3.23</A> TtaIsReadOnly</H4>
 
@@ -3147,17 +2791,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element to be tested.
-</DL>
+<P><EM>element</EM>: the element to be tested.</P>
 
-<DL>
-<DT>Return Value:</DT>
+<H5>Return Value:</H5>
 
-<DD>1 if the element is protected, 0 if not.
-</DL>
+<P>1 if the element is protected, 0 if not.</P>
 
 <H4><A NAME="sectc9324">9.3.24</A> TtaIsHidden</H4>
 
@@ -3169,17 +2809,13 @@ schema.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element to be tested.
-</DL>
+<P><EM>element</EM>: the element to be tested.</P>
 
-<DL>
-<DT>Return Value:</DT>
+<H5>Return Value:</H5>
 
-<DD>1 if the element is hidden, 0 if not.
-</DL>
+<P>1 if the element is hidden, 0 if not.</P>
 
 <H4><A NAME="sectc9325">9.3.25</A> TtaIsInAnInclusion</H4>
 
@@ -3192,17 +2828,13 @@ element is a "live" copy of another element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element to be tested.
-</DL>
+<P><EM>element</EM>: the element to be tested.</P>
 
-<DL>
-<DT>Return Value:</DT>
+<H5>Return Value:</H5>
 
-<DD>1 if the element is included, 0 if not.
-</DL>
+<P>1 if the element is included, 0 if not.</P>
 
 <H4><A NAME="sectc9326">9.3.26</A> TtaIsAncestor</H4>
 
@@ -3214,19 +2846,15 @@ element is a "live" copy of another element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: an element.
+<P><EM>element</EM>: an element.</P>
+
 <P><EM>ancestor</EM>: the supposed ancestor of element.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>1 if ancestor in an ancestor of element, 0 if not.
-</DL>
+<P>1 if ancestor in an ancestor of element, 0 if not.</P>
 
 <H4><A NAME="sectc9327">9.3.27</A> TtaIsBefore</H4>
 
@@ -3239,19 +2867,15 @@ the tree.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element1</EM>: the first element.
+<P><EM>element1</EM>: the first element.</P>
+
 <P><EM>element2</EM>: the second element.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>1 if the first element precedes the second element, 0 if not.
-</DL>
+<P>1 if the first element precedes the second element, 0 if not.</P>
 
 <H4><A NAME="sectc9328">9.3.28</A> TtaIsFirstPairedElement</H4>
 
@@ -3264,17 +2888,13 @@ pair.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the paired element.
-</DL>
+<P><EM>element</EM>: the paired element.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>1 if it is the first element of the pair, 0 if it is the second.
-</DL>
+<P>1 if it is the first element of the pair, 0 if it is the second.</P>
 
 <H4><A NAME="sectc9329">9.3.29</A> TtaCanInsertSibling</H4>
 
@@ -3288,10 +2908,10 @@ boolean before, Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>elementType</EM>: the element type to be checked.
+<P><EM>elementType</EM>: the element type to be checked.</P>
+
 <P><EM>sibling</EM>: an existing element which is part of an abstract
 tree.</P>
 
@@ -3301,14 +2921,10 @@ If False, checks if insertion is allowed after element "sibling".</P>
 
 <P><EM>document</EM>: the document to which element "sibling" belongs.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>True if that element type can be inserted, False if the structure schema
-does not allow that insertion.
-</DL>
+<P>True if that element type can be inserted, False if the structure schema
+does not allow that insertion.</P>
 
 <H4><A NAME="sectc9330">9.3.30</A> <A
 NAME="L32256">TtaCanInsertFirstChild</A></H4>
@@ -3323,22 +2939,18 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>elementType</EM>: the element type to be checked.
+<P><EM>elementType</EM>: the element type to be checked.</P>
+
 <P><EM>parent</EM>: an existing element which is part of an abstract tree.</P>
 
 <P><EM>document</EM>: the document to which element "parent" belongs.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>True if that element type can be inserted, False if the structure schema
-does not allow that insertion.
-</DL>
+<P>True if that element type can be inserted, False if the structure schema
+does not allow that insertion.</P>
 
 <H4><A NAME="sectc9331">9.3.31</A> TtaGetDocument</H4>
 
@@ -3350,18 +2962,14 @@ does not allow that insertion.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element for which document is asked.
-</DL>
+<P><EM>element</EM>: the element for which document is asked.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the document containing that element or 0 if the element does not belong
-to any document.
-</DL>
+<P>the document containing that element or 0 if the element does not belong to
+any document.</P>
 
 <H4><A NAME="sectc9332">9.3.32</A> TtaNextCopiedElement</H4>
 
@@ -3375,19 +2983,15 @@ ThotEditor library).</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: NULL if the first element of the clipboard is asked; an
-element of the clipboard if the next one is asked.
-</DL>
+<P><EM>element</EM>: NULL if the first element of the clipboard is asked; an
+element of the clipboard if the next one is asked.</P>
 
-<DL>
-<DT>Return parameter:</DT>
+<H5>Return parameter:</H5>
 
-<DD><EM>element</EM>: the asked element if it exists, or NULL if there is no
-next element in the clipboard or if the clipboard is empty.
-</DL>
+<P><EM>element</EM>: the asked element if it exists, or NULL if there is no
+next element in the clipboard or if the clipboard is empty.</P>
 
 <H4><A NAME="sectc9333">9.3.33</A> TtaGetCopiedDocument</H4>
 
@@ -3401,18 +3005,14 @@ library).</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD>No parameter.
-</DL>
+<P>No parameter.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the document from which the current content of the clipboard has been
-copied or cut; 0 if the clipboard is empty.
-</DL>
+<P>the document from which the current content of the clipboard has been
+copied or cut; 0 if the clipboard is empty.</P>
 
 <H3><A NAME="sectb94">9.4</A> Locators</H3>
 
@@ -3429,26 +3029,22 @@ Element element)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>searchedType</EM>: type of element to be searched. If
+<P><EM>searchedType</EM>: type of element to be searched. If
 searchedType.ElSSchema is NULL, searchedType must be a basic type ; then the
 next basic element of that type will be returned, whatever its structure
-schema.
+schema.</P>
+
 <P><EM>scope</EM>: SearchForward, SearchBackward or SearchInTree.</P>
 
 <P><EM>element</EM>: the element that is the root of the tree (if scope =
 SearchInTree) or the starting element (if scope = SearchForward or
 SearchBackward).</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the element found, or NULL if no element has been found.
-</DL>
+<P>the element found, or NULL if no element has been found.</P>
 
 <H4><A NAME="sectc942">9.4.2</A> TtaSearchElementByLabel</H4>
 
@@ -3461,20 +3057,16 @@ tree.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>searchedLabel</EM>: label of element to be searched.
+<P><EM>searchedLabel</EM>: label of element to be searched.</P>
+
 <P><EM>element</EM>: the element that is the root of the tree in which the
 search is done.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the element found, or NULL if no element has been found.
-</DL>
+<P>the element found, or NULL if no element has been found.</P>
 
 <H4><A NAME="sectc943">9.4.3</A> TtaSearchEmptyElement</H4>
 
@@ -3489,21 +3081,17 @@ abstract tree.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>scope</EM>: SearchForward, SearchBackward or SearchInTree.
+<P><EM>scope</EM>: SearchForward, SearchBackward or SearchInTree.</P>
+
 <P><EM>element</EM>: the element that is the root of the tree (if scope =
 SearchInTree) or the starting element (if scope = SearchForward or
 SearchBackward).</P>
 
-</DL>
+<H5>Return values:</H5>
 
-<DL>
-<DT>Return values:</DT>
-
-<DD>the element found, or NULL if not found.
-</DL>
+<P>the element found, or NULL if not found.</P>
 
 <H4><A NAME="sectc944">9.4.4</A> TtaSearchOtherPairedElement</H4>
 
@@ -3515,17 +3103,13 @@ SearchBackward).</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element whose paired element is searched.
-</DL>
+<P><EM>element</EM>: the element whose paired element is searched.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the paired element.
-</DL>
+<P>the paired element.</P>
 
 <H4><A NAME="sectc945">9.4.5</A> TtaSearchNoPageBreak</H4>
 
@@ -3537,20 +3121,16 @@ SearchBackward).</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element.
+<P><EM>element</EM>: the element.</P>
+
 <P><EM>forward</EM>: True for skipping the next page breaks, False for
 skipping the previous ones.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the first sibling element, or NULL if there are only page breaks.
-</DL>
+<P>the first sibling element, or NULL if there are only page breaks.</P>
 
 <H3><A NAME="sectb95">9.5</A> Help</H3>
 
@@ -3564,14 +3144,12 @@ skipping the previous ones.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>root</EM>: the root element of the tree to be listed.
+<P><EM>root</EM>: the root element of the tree to be listed.</P>
+
 <P><EM>fileDescriptor</EM>: file descriptor of the file that will contain the
 list. This file must be open when calling the function.</P>
-
-</DL>
 
 <H2><A NAME="secta10">10</A> <A NAME="L4085">Contents</A></H2>
 
@@ -3593,18 +3171,16 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the Text element to be modified.
+<P><EM>element</EM>: the Text element to be modified.</P>
+
 <P><EM>content</EM>: new content for that element.</P>
 
 <P><EM>language</EM>: language of that Text element (see section <A
 HREF="#secta13">13</A>).</P>
 
 <P><EM>document</EM>: the document containing that element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1012">10.1.2</A> TtaAppendTextContent</H4>
 
@@ -3617,15 +3193,13 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the Text element to be modified.
+<P><EM>element</EM>: the Text element to be modified.</P>
+
 <P><EM>content</EM>: the character string to be appended.</P>
 
 <P><EM>document</EM>: the document containing that element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1013">10.1.3</A> TtaInsertTextContent</H4>
 
@@ -3638,18 +3212,16 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the Text element to be modified.
+<P><EM>element</EM>: the Text element to be modified.</P>
+
 <P><EM>position</EM>: rank of the character after which the new string must be
 inserted. 0 for inserting before the first character.</P>
 
 <P><EM>content</EM>: the character string to be inserted.</P>
 
 <P><EM>document</EM>: the document containing the text element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1014">10.1.4</A> TtaDeleteTextContent</H4>
 
@@ -3662,17 +3234,15 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the Text element to be modified.
+<P><EM>element</EM>: the Text element to be modified.</P>
+
 <P><EM>position</EM>: rank of the first character to be deleted.</P>
 
 <P><EM>length</EM>: length of the character string to be deleted.</P>
 
 <P><EM>document</EM>: the document containing the text element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1015">10.1.5</A> TtaSplitText</H4>
 
@@ -3684,17 +3254,15 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the text element to be divided. A new text element
-containing the second part of the text is created as the next sibling.
+<P><EM>element</EM>: the text element to be divided. A new text element
+containing the second part of the text is created as the next sibling.</P>
+
 <P><EM>position</EM>: rank of the character after which the element must be
 cut.</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
-
-</DL>
 
 <H4><A NAME="sectc1016">10.1.6</A> TtaMergeText</H4>
 
@@ -3712,21 +3280,17 @@ Element element;
 Document document;
 </PRE>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the first text element. Merging occurs only if
+<P><EM>element</EM>: the first text element. Merging occurs only if</P>
+
 <P>the next sibling is a text element with the same attributes.</P>
 
 <P><EM>document</EM>: the document to which the text element belongs.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>True if successful..
-</DL>
+<P>True if successful..</P>
 
 <H4><A NAME="sectc1017">10.1.7</A> TtaSetGraphicsShape</H4>
 
@@ -3739,16 +3303,14 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to be changed. This element must be a basic
-element of type Graphics or Symbol.
+<P><EM>element</EM>: the element to be changed. This element must be a basic
+element of type Graphics or Symbol.</P>
+
 <P><EM>shape</EM>: new shape for that element.</P>
 
 <P><EM>document</EM>: the document containing that element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1018">10.1.8</A> TtaAddPointInPolyline</H4>
 
@@ -3761,11 +3323,11 @@ int y, Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to be changed. This element must be a basic
-element of type Polyline.
+<P><EM>element</EM>: the element to be changed. This element must be a basic
+element of type Polyline.</P>
+
 <P><EM>rank</EM>: rank of the new point to be inserted. If rank is greater
 than the actual number of points, the new point is appended. rank must be
 strictly positive.</P>
@@ -3778,8 +3340,6 @@ corner of the box. x and y must be positive or null.</P>
 
 <P><EM>document</EM>: the document containing the polyline element.</P>
 
-</DL>
-
 <H4><A NAME="sectc1019">10.1.9</A> TtaDeletePointInPolyline</H4>
 
 <P>Deletes a point in a Polyline basic element.</P>
@@ -3791,18 +3351,16 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to be changed. This element must be a basic
-element of type Polyline.
+<P><EM>element</EM>: the element to be changed. This element must be a basic
+element of type Polyline.</P>
+
 <P><EM>rank</EM>: rank of the point to be deleted. If rank is greater than the
 actual number of points, the last point is deleted. rank must be strictly
 positive.</P>
 
 <P><EM>document</EM>: the document containing the polyline element.</P>
-
-</DL>
 
 <H4><A NAME="sectc10110">10.1.10</A> TtaModifyPointInPolyline</H4>
 
@@ -3815,11 +3373,11 @@ x, int y, Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to be changed. This element must be a basic
-element of type Polyline.
+<P><EM>element</EM>: the element to be changed. This element must be a basic
+element of type Polyline.</P>
+
 <P><EM>rank</EM>: rank of the point to be modified. If rank is greater than
 the actual number of points, the last point is changed. rank must be strictly
 positive.</P>
@@ -3831,8 +3389,6 @@ values.</P>
 corner of the enclosing rectangle. x and y must be positive or null.</P>
 
 <P><EM>document</EM>: the document containing the polyline element.</P>
-
-</DL>
 
 <H4><A NAME="sectc10111">10.1.11</A> TtaChangeLimitOfPolyline</H4>
 
@@ -3846,11 +3402,11 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to be changed. This element must be a basic
-element of type Polyline.
+<P><EM>element</EM>: the element to be changed. This element must be a basic
+element of type Polyline.</P>
+
 <P><EM>unit</EM>: the absolute unit (UnPixel or UnPoint) used for the
 values.</P>
 
@@ -3859,8 +3415,6 @@ upper left corner of the box. x and y must be positive or null and the box
 must contain all points of the polyline.</P>
 
 <P><EM>document</EM>: the document containing the polyline element.</P>
-
-</DL>
 
 <H4><A NAME="sectc10112">10.1.12</A> TtaCopyPage</H4>
 
@@ -3873,13 +3427,11 @@ elements must be in an abstract tree.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>destination</EM>: identifier of the page element to be modified.
+<P><EM>destination</EM>: identifier of the page element to be modified.</P>
+
 <P><EM>source</EM>: identifier of the source page element.</P>
-
-</DL>
 
 <H3><A NAME="sectb102">10.2</A> Accessors</H3>
 
@@ -3893,19 +3445,15 @@ elements must be in an abstract tree.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element of interest. This element must be a basic
-element of type Text.
-</DL>
+<P><EM>element</EM>: the element of interest. This element must be a basic
+element of type Text.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>length (number of characters) of the character string contained in the
-element. The null character terminating a C string is not counted.
-</DL>
+<P>length (number of characters) of the character string contained in the
+element. The null character terminating a C string is not counted.</P>
 
 <H4><A NAME="sectc1022">10.2.2</A> TtaGiveTextContent</H4>
 
@@ -3918,29 +3466,25 @@ Language *language)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest. This element must be a basic
-element of type Text.
+<P><EM>element</EM>: the element of interest. This element must be a basic
+element of type Text.</P>
+
 <P><EM>buffer</EM>: the buffer that will contain the text.</P>
 
 <P><EM>length</EM>: maximum length of that buffer.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>buffer</EM>: (the buffer contains the text, including the terminating
+null character).</P>
 
-<DD><EM>buffer</EM>: (the buffer contains the text, including the terminating
-null character).
 <P><EM>length</EM>: actual length of the text in the buffer, excluding the
 null character terminating the string.</P>
 
 <P><EM>language</EM>: language of the text (see section <A
 HREF="#secta13">13</A>).</P>
-
-</DL>
 
 <H4><A NAME="sectc1023">10.2.3</A> TtaGiveSubString</H4>
 
@@ -3953,11 +3497,11 @@ length)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest. This element must be a basic
-element of type Text.
+<P><EM>element</EM>: the element of interest. This element must be a basic
+element of type Text.</P>
+
 <P><EM>buffer</EM>: the buffer that will contain the substring. This buffer
 must be at least of size length.</P>
 
@@ -3967,13 +3511,9 @@ must be strictly positive.</P>
 <P><EM>length</EM>: the length of the substring. Must be strictly
 positive.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>buffer</EM>: (the buffer contains the substring).
-</DL>
+<P><EM>buffer</EM>: (the buffer contains the substring).</P>
 
 <H4><A NAME="sectc1024">10.2.4</A> TtaGetGraphicsShape</H4>
 
@@ -3985,19 +3525,15 @@ positive.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element of interest. This element must be a basic
-element of type Graphics or Symbol.
-</DL>
+<P><EM>element</EM>: the element of interest. This element must be a basic
+element of type Graphics or Symbol.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>a single character representing the shape of the graphics element or
-symbol contained in the element.
-</DL>
+<P>a single character representing the shape of the graphics element or symbol
+contained in the element.</P>
 
 <H4><A NAME="sectc1025">10.2.5</A> TtaGetPolylineLength</H4>
 
@@ -4009,12 +3545,10 @@ symbol contained in the element.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the Polyline element. This element must be a basic
-element of type Polyline.
-</DL>
+<P><EM>element</EM>: the Polyline element. This element must be a basic
+element of type Polyline.</P>
 
 <H4><A NAME="sectc1026">10.2.6</A> TtaGivePolylinePoint</H4>
 
@@ -4027,11 +3561,11 @@ int *y)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the Polyline element. This element must be a basic
-element of type Polyline.
+<P><EM>element</EM>: the Polyline element. This element must be a basic
+element of type Polyline.</P>
+
 <P><EM>rank</EM>: rank of the point in the PolyLine. If rank is greater than
 the actual number of points, an error is raised. rank must be strictly
 positive.</P>
@@ -4039,14 +3573,10 @@ positive.</P>
 <P><EM>unit</EM>: the absolute unit (UnPixel or UnPoint) used for the
 values.</P>
 
-</DL>
+<H5>Return values:</H5>
 
-<DL>
-<DT>Return values:</DT>
-
-<DD>x, y: coordinates of the point, in units, relatively to the upper left
-corner of the enclosing rectangle.
-</DL>
+<P>x, y: coordinates of the point, in units, relatively to the upper left
+corner of the enclosing rectangle.</P>
 
 <H4><A NAME="sectc1027">10.2.7</A> TtaGetPageNumber</H4>
 
@@ -4058,17 +3588,13 @@ corner of the enclosing rectangle.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>pageElement</EM>: the page element.
-</DL>
+<P><EM>pageElement</EM>: the page element.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>page number of that page element.
-</DL>
+<P>page number of that page element.</P>
 
 <H4><A NAME="sectc1028">10.2.8</A> TtaGetPageView</H4>
 
@@ -4080,17 +3606,13 @@ corner of the enclosing rectangle.
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>pageElement</EM>: the page element.
-</DL>
+<P><EM>pageElement</EM>: the page element.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>view of that page.
-</DL>
+<P>view of that page.</P>
 
 <H2><A NAME="secta11">11</A> <A NAME="L4874">Logical attributes</A></H2>
 
@@ -4124,17 +3646,13 @@ that attribute.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>attributeType</EM>: type of the attribute to be created.
-</DL>
+<P><EM>attributeType</EM>: type of the attribute to be created.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the attribute that has been created.
-</DL>
+<P>the attribute that has been created.</P>
 
 <H4><A NAME="sectc1112">11.1.2</A> TtaAttachAttribute</H4>
 
@@ -4147,15 +3665,14 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to which the attribute has to be attached.
+<P><EM>element</EM>: the element to which the attribute has to be
+attached.</P>
+
 <P><EM>attribute</EM>: the attribute to be attached.</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
-
-</DL>
 
 <H4><A NAME="sectc1113">11.1.3</A> TtaRemoveAttribute</H4>
 
@@ -4168,15 +3685,13 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element with which the attribute is associated.
+<P><EM>element</EM>: the element with which the attribute is associated.</P>
+
 <P><EM>attribute</EM>: the attribute to be removed.</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
-
-</DL>
 
 <H3><A NAME="sectb112">11.2</A> Modificators</H3>
 
@@ -4191,10 +3706,10 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>attribute</EM>: the attribute to be modified.
+<P><EM>attribute</EM>: the attribute to be modified.</P>
+
 <P><EM>value</EM>: new value of the attribute.</P>
 
 <P><EM>element</EM>: the element with which the attribute is associated, NULL
@@ -4202,8 +3717,6 @@ if the attribute is not yet associated with an element.</P>
 
 <P><EM>document</EM>: the document to which the element belongs. Must be 0 if
 element is NULL.</P>
-
-</DL>
 
 <H4><A NAME="sectc1122">11.2.2</A> TtaSetAttributeText</H4>
 
@@ -4216,10 +3729,10 @@ element, Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>attribute</EM>: the attribute to be modified.
+<P><EM>attribute</EM>: the attribute to be modified.</P>
+
 <P><EM>buffer</EM>: character string representing the new value of the
 attribute.</P>
 
@@ -4228,8 +3741,6 @@ if the attribute is not yet associated with an element.</P>
 
 <P><EM>document</EM>: the document to which the element belongs. Must be 0 if
 element is NULL.</P>
-
-</DL>
 
 <H3><A NAME="sectb113">11.3</A> Accessors</H3>
 
@@ -4245,21 +3756,17 @@ element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>attribute</EM>: an attribute of that element, or NULL if the first
 attribute is asked.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>attribute</EM>: the next attribute, or NULL if attribute is the last
-attribute of the element.
-</DL>
+<P><EM>attribute</EM>: the next attribute, or NULL if attribute is the last
+attribute of the element.</P>
 
 <H4><A NAME="sectc1132">11.3.2</A> TtaGetAttribute</H4>
 
@@ -4272,24 +3779,20 @@ attributeType)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>attributeType</EM>: type of the desired attribute.. If the attribute
 "Language" is searched, attributeType.AttrTypeNum must be 1. If the attribute
 "Language" is searched whatever its structure schema,
 attributeType.AttrSSchema must be NULL. A NULL attributeType.AttrSSchema is
 accepted only when an attribute "Language" is searched.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the attribute found, or NULL if the element does not have this type of
-attribute.
-</DL>
+<P>the attribute found, or NULL if the element does not have this type of
+attribute.</P>
 
 <H4><A NAME="sectc1133">11.3.3</A> TtaGiveAttributeType</H4>
 
@@ -4302,20 +3805,16 @@ attributeType, int *attrKind)</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>attribute</EM>: the attribute of interest.
-</DL>
+<P><EM>attribute</EM>: the attribute of interest.</P>
 
-<DL>
-<DT>Return parameters:</DT>
+<H5>Return parameters:</H5>
 
-<DD><EM>attributeType</EM>: type of the attribute.
+<P><EM>attributeType</EM>: type of the attribute.</P>
+
 <P><EM>attrKind</EM>: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 =
 Text, 3 = Reference</P>
-
-</DL>
 
 <H4><A NAME="sectc1134">11.3.4</A> TtaGiveAttributeTypeFromName</H4>
 
@@ -4328,22 +3827,18 @@ AttributeType  attributeType, int *attrKind)</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>name</EM>: name of the attribute.
+<P><EM>name</EM>: name of the attribute.</P>
+
 <P><EM>element</EM>: the element with which the attribute is associated.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>attributeType</EM>: type of the attribute.</P>
 
-<DD><EM>attributeType</EM>: type of the attribute.
 <P><EM>attrKind</EM>: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 =
 Text, 3 = Reference</P>
-
-</DL>
 
 <H4><A NAME="sectc1135">11.3.5</A> TtaGetAttributeName</H4>
 
@@ -4355,17 +3850,13 @@ Text, 3 = Reference</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>attributeType</EM>: type of the attribute.
-</DL>
+<P><EM>attributeType</EM>: type of the attribute.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>name of that type.
-</DL>
+<P>name of that type.</P>
 
 <H4><A NAME="sectc1136">11.3.6</A> TtaSameAttributeTypes</H4>
 
@@ -4377,19 +3868,15 @@ Text, 3 = Reference</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>type1</EM>: first attribute type.
+<P><EM>type1</EM>: first attribute type.</P>
+
 <P><EM>type2</EM>: second attribute type.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>0 if both types are different, 1 if they are identical.
-</DL>
+<P>0 if both types are different, 1 if they are identical.</P>
 
 <H4><A NAME="sectc1137">11.3.7</A> TtaGetAttributeValue</H4>
 
@@ -4401,17 +3888,13 @@ Text, 3 = Reference</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>attribute</EM>: the attribute of interest.
-</DL>
+<P><EM>attribute</EM>: the attribute of interest.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>Value of that attribute.
-</DL>
+<P>Value of that attribute.</P>
 
 <H4><A NAME="sectc1138">11.3.8</A> TtaGetTextAttributeLength</H4>
 
@@ -4423,17 +3906,13 @@ Text, 3 = Reference</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>attribute</EM>: the attribute of interest.
-</DL>
+<P><EM>attribute</EM>: the attribute of interest.</P>
 
-<DL>
-<DT>Return values:</DT>
+<H5>Return values:</H5>
 
-<DD>length of the character string contained in the attribute.
-</DL>
+<P>length of the character string contained in the attribute.</P>
 
 <H4><A NAME="sectc1139">11.3.9</A> TtaGiveTextAttributeValue</H4>
 
@@ -4446,24 +3925,21 @@ Text, 3 = Reference</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>attribute</EM>: the attribute of interest.
+<P><EM>attribute</EM>: the attribute of interest.</P>
+
 <P><EM>buffer</EM>: address of the buffer that will contain the value of the
 attribute.</P>
 
 <P><EM>length</EM>: size of the buffer (in bytes).</P>
 
-</DL>
+<H5>Return values:</H5>
 
-<DL>
-<DT>Return values:</DT>
+<P><EM>buffer</EM>: character string representing the value of the
+attribute.</P>
 
-<DD><EM>buffer</EM>: character string representing the value of the attribute.
 <P><EM>length</EM>: actual length of the character string.</P>
-
-</DL>
 
 <H3><A NAME="sectb114">11.4</A> Locators</H3>
 
@@ -4480,27 +3956,23 @@ scope, Element element, Element *elementFound, Attribute *attributeFound)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>searchedAttribute</EM>: attribute to be searched. If
+<P><EM>searchedAttribute</EM>: attribute to be searched. If
 searchedAttribute.AttrSSchema is NULL, the next element that has an attribute
-is seached, whatever the attribute.
+is seached, whatever the attribute.</P>
+
 <P><EM>scope</EM>: SearchForward, SearchBackward or SearchInTree.</P>
 
 <P><EM>element</EM>: the element that is the root of the tree (if scope =
 SearchInTree) or the starting element (if scope = SearchForward or
 SearchBackward).</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>elementFound</EM>: the element found, or NULL if not found.</P>
 
-<DD><EM>elementFound</EM>: the element found, or NULL if not found.
 <P><EM>attributeFound</EM>: the searched attribute, or NULL if not found.</P>
-
-</DL>
 
 <H2><A NAME="secta12">12</A> <A NAME="L5513">References and links</A></H2>
 
@@ -4521,17 +3993,15 @@ Document targetDocument)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the reference element to be set.
+<P><EM>element</EM>: the reference element to be set.</P>
+
 <P><EM>document</EM>: the document containing the reference element.</P>
 
 <P><EM>target</EM>: the target element (NULL for resetting the reference).</P>
 
 <P><EM>targetDocument</EM>: the document containing the target element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1212">12.1.2</A> TtaNewInclusion</H4>
 
@@ -4544,22 +4014,18 @@ targetDocument)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the inclusion is created.
+<P><EM>document</EM>: the document for which the inclusion is created.</P>
+
 <P><EM>target</EM>: the element to be included.</P>
 
 <P><EM>targetDocument</EM>: the document containing the element to be
 included.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the created inclusion.
-</DL>
+<P>the created inclusion.</P>
 
 <H4><A NAME="sectc1213">12.1.3</A> TtaCopyReference</H4>
 
@@ -4572,13 +4038,11 @@ elements must be in an abstract tree.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the reference element to be set.
+<P><EM>element</EM>: the reference element to be set.</P>
+
 <P><EM>source</EM>: the element to be copied.</P>
-
-</DL>
 
 <H4><A NAME="sectc1214">12.1.4</A> TtaSetAttributeReference</H4>
 
@@ -4591,10 +4055,10 @@ Document document, Element target, Document targetDocument)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>attribute</EM>: the attribute to be changed.
+<P><EM>attribute</EM>: the attribute to be changed.</P>
+
 <P><EM>element</EM>: the element with which the attribute is associated.</P>
 
 <P><EM>document</EM>: the document containing the attribute.</P>
@@ -4602,8 +4066,6 @@ Document document, Element target, Document targetDocument)</P>
 <P><EM>target</EM>: the target element (NULL for resetting the reference).</P>
 
 <P><EM>targetDocument</EM>: the document containing the target element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1215">12.1.5</A> TtaCopyAttributeReference</H4>
 
@@ -4618,15 +4080,13 @@ Attribute source)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>attribute</EM>: the reference attribute to be set.
+<P><EM>attribute</EM>: the reference attribute to be set.</P>
+
 <P><EM>element</EM>: the element to which attribute is attached.</P>
 
 <P><EM>source</EM>: the source attribute.</P>
-
-</DL>
 
 <H3><A NAME="sectb122">12.2</A> Accessors</H3>
 
@@ -4641,17 +4101,15 @@ Attribute source)</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the reference element.
-</DL>
+<P><EM>element</EM>: the reference element.</P>
 
-<DL>
-<DT>Return parameters:</DT>
+<H5>Return parameters:</H5>
 
-<DD><EM>target</EM>: the referred element, or NULL if that element is not
-accessible (empty reference or referred document not open).
+<P><EM>target</EM>: the referred element, or NULL if that element is not
+accessible (empty reference or referred document not open).</P>
+
 <P><EM>targetDocumentName</EM>: name of the document containing the referred
 element; empty string if the referred element is in the same document as the
 reference element.</P>
@@ -4659,8 +4117,6 @@ reference element.</P>
 <P><EM>targetDocument</EM>: the document containing the referred element; 0 if
 the document containing the referred element is not loaded or if the referred
 element is in the same document as the reference element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1222">12.2.2</A> TtaIsElementTypeReference</H4>
 
@@ -4672,17 +4128,13 @@ element is in the same document as the reference element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>elementType</EM>: type to be tested.
-</DL>
+<P><EM>elementType</EM>: type to be tested.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>1 = the type is a reference, 0 = the type is not a reference.
-</DL>
+<P>1 = the type is a reference, 0 = the type is not a reference.</P>
 
 <H4><A NAME="sectc1223">12.2.3</A> TtaSameReferences</H4>
 
@@ -4694,19 +4146,15 @@ element is in the same document as the reference element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element1</EM>: first reference element.
+<P><EM>element1</EM>: first reference element.</P>
+
 <P><EM>element2</EM>: second reference element.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>0 if both references are different, 1 if they are identical.
-</DL>
+<P>0 if both references are different, 1 if they are identical.</P>
 
 <H4><A NAME="sectc1224">12.2.4</A> TtaGiveReferenceAttributeValue</H4>
 
@@ -4719,17 +4167,16 @@ char *targetDocumentName, Document *targetDocument)</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>attribute</EM>: the attribute of interest.
-</DL>
+<P><EM>attribute</EM>: the attribute of interest.</P>
 
-<DL>
-<DT>Return parameters:</DT>
+<H5>Return parameters:</H5>
 
-<DD><EM>target</EM>: the element referred by the attribute, or NULL if that
-element is not accessible (empty reference or referred document not loaded)
+<P><EM>target</EM>: the element referred by the attribute, or NULL if that
+element is not accessible (empty reference or referred document not
+loaded)</P>
+
 <P><EM>targetDocumentName</EM>: name of the document containing the referred
 element; empty string if the referred element is in the same document as the
 attribute.</P>
@@ -4737,8 +4184,6 @@ attribute.</P>
 <P><EM>targetDocument</EM>: the document containing the referred element; 0 if
 the document containing the referred element is not loaded or if the referred
 element is in the same document as the attribute.</P>
-
-</DL>
 
 <H4><A NAME="sectc1225">12.2.5</A> TtaIsElementReferred</H4>
 
@@ -4750,17 +4195,14 @@ element is in the same document as the attribute.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>element</EM>: the element.
-</DL>
+<P><EM>element</EM>: the element.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>1 if the element is referred by another element or an attribute, 0 if not.
-</DL>
+<P>1 if the element is referred by another element or an attribute, 0 if
+not.</P>
 
 <H4><A NAME="sectc1226">12.2.6</A> TtaSameReferenceAttributes</H4>
 
@@ -4773,19 +4215,15 @@ attribute2)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>attribute1</EM>: first reference attribute.
+<P><EM>attribute1</EM>: first reference attribute.</P>
+
 <P><EM>attribute2</EM>: second reference attribute.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>0 if both references are different, 1 if they are identical.
-</DL>
+<P>0 if both references are different, 1 if they are identical.</P>
 
 <H3><A NAME="sectb123">12.3</A> Locators</H3>
 
@@ -4802,10 +4240,10 @@ Element *referenceElement, Attribute *referenceAttribute, Document
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>target</EM>: the target element.
+<P><EM>target</EM>: the target element.</P>
+
 <P><EM>targetDocument</EM>: the document to which the target element
 belongs.</P>
 
@@ -4820,13 +4258,11 @@ function was an element.</P>
 <P><EM>referenceDocument</EM>: document to which the previous reference found
 belongs; Zero if the first reference is searched.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>referenceAttribute</EM>: the reference attribute found. NULL if the
+reference found is an element or if no reference is found.</P>
 
-<DD><EM>referenceAttribute</EM>: the reference attribute found. NULL if the
-reference found is an element or if no reference is found.
 <P><EM>referenceElement</EM>: the element found. If referenceAttribute is
 NULL, this element is a reference element, else it is the element with which
 the reference attribute found is associated. If both referenceAttribute and
@@ -4834,8 +4270,6 @@ referenceElement are NULL, then no reference has been found.</P>
 
 <P><EM>referenceDocument</EM>: the document to which the reference found
 belongs. Zero if no reference has been found.</P>
-
-</DL>
 
 <H4><A NAME="sectc1232">12.3.2</A> TtaNextUnloadedReferringDocument</H4>
 
@@ -4849,24 +4283,20 @@ targetDocument, char *referringDocumentName)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>target</EM>: the target element.
+<P><EM>target</EM>: the target element.</P>
+
 <P><EM>targetDocument</EM>: the document to which the target element
 belongs.</P>
 
 <P><EM>referringDocumentName</EM>: name of the previous document found. Empty
 string if the first referring document is searched.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>referringDocumentName</EM>: name of the document found. Empty string
-if no referring document has been found.
-</DL>
+<P><EM>referringDocumentName</EM>: name of the document found. Empty string if
+no referring document has been found.</P>
 
 <H4><A NAME="sectc1233">12.3.3</A> TtaSearchReferenceElement</H4>
 
@@ -4880,21 +4310,17 @@ tree.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>scope</EM>: SearchForward, SearchBackward or SearchInTree.
+<P><EM>scope</EM>: SearchForward, SearchBackward or SearchInTree.</P>
+
 <P><EM>element</EM>: the element that is the root of the subtree (if scope =
 SearchInTree) or the starting element (if scope = SearchForward or
 SearchBackward).</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the element found, or NULL if not found.
-</DL>
+<P>the element found, or NULL if not found.</P>
 
 <H2><A NAME="secta13">13</A> <A NAME="L6125">Languages</A></H2>
 
@@ -4955,10 +4381,10 @@ effect.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>languageName</EM>: name of the language.
+<P><EM>languageName</EM>: name of the language.</P>
+
 <P><EM>languageAlphabet</EM>: alphabet to be used for writing that
 language:</P>
 
@@ -4968,13 +4394,9 @@ language:</P>
 
 <P><EM>secondDictionary</EM>: name of the secondary dictionary or NULL.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>identifier of the new language or 0 if the language cannot be added.
-</DL>
+<P>identifier of the new language or 0 if the language cannot be added.</P>
 
 <H4><A NAME="sectc1312">13.1.2</A> TtaLoadLanguageDictionaries</H4>
 
@@ -4988,21 +4410,17 @@ loaded.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>languageId</EM>: name of the concerned language.
-</DL>
+<P><EM>languageId</EM>: name of the concerned language.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>-1 if the mandatory dictionary can not be loaded.
+<P>-1 if the mandatory dictionary can not be loaded.</P>
+
 <P>0 if no dictionary has been loaded.</P>
 
 <P>1 if the mandatory dictionary is loaded.</P>
-
-</DL>
 
 <H4><A NAME="sectc1313">13.1.3</A> TtaUnLoadLanguageDictionaries</H4>
 
@@ -5014,11 +4432,9 @@ loaded.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>languageId</EM>: identifier of the language.
-</DL>
+<P><EM>languageId</EM>: identifier of the language.</P>
 
 <H4><A NAME="sectc1314">13.1.4</A> TtaLoadTypoDictionaries</H4>
 
@@ -5032,21 +4448,17 @@ language has been loaded.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>languageId</EM>: identifier of the concerned typographic language.
-</DL>
+<P><EM>languageId</EM>: identifier of the concerned typographic language.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>-1 if the mandatory dictionary can not be loaded.
+<P>-1 if the mandatory dictionary can not be loaded.</P>
+
 <P>0 if no dictionary has been loaded.</P>
 
 <P>1 if the mandatory dictionary is loaded.</P>
-
-</DL>
 
 <H4><A NAME="sectc1315">13.1.5</A> TtaUnLoadTypoDictionaries</H4>
 
@@ -5058,11 +4470,9 @@ language has been loaded.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>languageId</EM>: identifier of the concerned typographic language.
-</DL>
+<P><EM>languageId</EM>: identifier of the concerned typographic language.</P>
 
 <H3><A NAME="sectb132">13.2</A> Accessors</H3>
 
@@ -5078,19 +4488,15 @@ that matches this language name..</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>languageName</EM>: name of the language or of the typographic
-language.
-</DL>
+<P><EM>languageName</EM>: name of the language or of the typographic
+language.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>identifier of that language or of the typographic language or 0 if the
-language is unknown.
-</DL>
+<P>identifier of that language or of the typographic language or 0 if the
+language is unknown.</P>
 
 <H4><A NAME="sectc1322">13.2.2</A> TtaGetDefaultLanguage</H4>
 
@@ -5102,11 +4508,9 @@ language is unknown.
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>identifier of the default language.
-</DL>
+<P>identifier of the default language.</P>
 
 <H4><A NAME="sectc1323">13.2.3</A> TtaGetLanguageIdFromAlphabet</H4>
 
@@ -5119,18 +4523,14 @@ alphabet.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>languageAlphabet</EM>: the alphabet of interest (`L' = latin, `G' =
-greek).
-</DL>
+<P><EM>languageAlphabet</EM>: the alphabet of interest (`L' = latin, `G' =
+greek).</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>identifier of that language or 0 if the language is unknown.
-</DL>
+<P>identifier of that language or 0 if the language is unknown.</P>
 
 <H4><A NAME="sectc1324">13.2.4</A> TtaGetAlphabet</H4>
 
@@ -5142,17 +4542,13 @@ greek).
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>languageId</EM>: name of the language.
-</DL>
+<P><EM>languageId</EM>: name of the language.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>a character that identifies the alphabet (`L' = latin, `G' = greek).
-</DL>
+<P>a character that identifies the alphabet (`L' = latin, `G' = greek).</P>
 
 <H4><A NAME="sectc1325">13.2.5</A> TtaGetLanguageName</H4>
 
@@ -5164,17 +4560,13 @@ greek).
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>languageId</EM>: identifier of the language.
-</DL>
+<P><EM>languageId</EM>: identifier of the language.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the name of the language.
-</DL>
+<P>the name of the language.</P>
 
 <H4><A NAME="sectc1326">13.2.6</A> TtaGetPrincipalDictionary</H4>
 
@@ -5186,12 +4578,10 @@ greek).
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the pointer to that dictionary or NULL if there is no dictionary for this
-language.
-</DL>
+<P>the pointer to that dictionary or NULL if there is no dictionary for this
+language.</P>
 
 <H4><A NAME="sectc1327">13.2.7</A> TtaGetSecondaryDictionary</H4>
 
@@ -5203,12 +4593,10 @@ language.
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the pointer to that dictionary or NULL if there is no dictionary for this
-language.
-</DL>
+<P>the pointer to that dictionary or NULL if there is no dictionary for this
+language.</P>
 
 <H4><A NAME="sectc1328">13.2.8</A> TtaGetPrincipalTypoDictionary</H4>
 
@@ -5221,12 +4609,10 @@ language.</P>
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the pointer to that dictionary or NULL if there is no dictionary for this
-typographic language.
-</DL>
+<P>the pointer to that dictionary or NULL if there is no dictionary for this
+typographic language.</P>
 
 <H4><A NAME="sectc1329">13.2.9</A> TtaGetSecondaryTypoDictionary</H4>
 
@@ -5239,12 +4625,10 @@ language.</P>
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the pointer to that dictionary or NULL if there is no dictionary for this
-typographic language.
-</DL>
+<P>the pointer to that dictionary or NULL if there is no dictionary for this
+typographic language.</P>
 
 <H4><A NAME="sectc13210">13.2.10</A> TtaGetNumberOfLanguages</H4>
 
@@ -5256,11 +4640,9 @@ typographic language.
 
 <HR>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>the current number of languages.
-</DL>
+<P>the current number of languages.</P>
 
 <H2><A NAME="secta14">14</A> <A NAME="L6504">Specific presentation</A></H2>
 
@@ -5286,24 +4668,20 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>presentationType</EM>: type of the presentation rule to be created.
+<P><EM>presentationType</EM>: type of the presentation rule to be created.
 Available values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness,
 PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
-PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate.</P>
+
 <P><EM>view</EM>: the view (this view must be open).</P>
 
 <P><EM>document</EM>: the document.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>new presentation rule.
-</DL>
+<P>new presentation rule.</P>
 
 <H4><A NAME="sectc1412">14.1.2</A> TtaNewPRuleForNamedView</H4>
 
@@ -5317,25 +4695,21 @@ Document document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>presentationType</EM>: type of the presentation rule to be created.
+<P><EM>presentationType</EM>: type of the presentation rule to be created.
 Available values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness,
 PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
-PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate.</P>
+
 <P><EM>viewName</EM>: the name of the view (this view does not need to be
 open).</P>
 
 <P><EM>document</EM>: the document.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>new presentation rule.
-</DL>
+<P>new presentation rule.</P>
 
 <H4><A NAME="sectc1413">14.1.3</A> TtaCopyPRule</H4>
 
@@ -5348,17 +4722,13 @@ existing presentation rule.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>pRule</EM>: presentation rule to be copied.
-</DL>
+<P><EM>pRule</EM>: presentation rule to be copied.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>new presentation rule.
-</DL>
+<P>new presentation rule.</P>
 
 <H4><A NAME="sectc1414">14.1.4</A> TtaAttachPRule</H4>
 
@@ -5377,16 +4747,14 @@ PRule pRule;
 Document document;
 </PRE>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to which the presentation rule has to be
-attached.
+<P><EM>element</EM>: the element to which the presentation rule has to be
+attached.</P>
+
 <P><EM>pRule</EM>: the presentation rule to be attached.</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
-
-</DL>
 
 <H4><A NAME="sectc1415">14.1.5</A> TtaRemovePRule</H4>
 
@@ -5398,16 +4766,14 @@ attached.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element with which the presentation rule is
-associated.
+<P><EM>element</EM>: the element with which the presentation rule is
+associated.</P>
+
 <P><EM>pRule</EM>: the presentation rule to be removed.</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
-
-</DL>
 
 <H3><A NAME="sectb142">14.2</A> Modificators</H3>
 
@@ -5423,22 +4789,21 @@ document)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element to which the presentation rule is attached.
+<P><EM>element</EM>: the element to which the presentation rule is
+attached.</P>
+
 <P><EM>pRule</EM>: the presentation rule to be changed.</P>
 
 <P><EM>value</EM>: the value to be set.</P>
 
 <P><EM>document</EM>: the document to which the element belongs.</P>
 
-</DL>
+<H5>Valid values according to rule type:</H5>
 
-<DL>
-<DT>Valid values according to rule type:</DT>
+<P><EM>RSize</EM>: an integer between 6 and 72 (body size in points).</P>
 
-<DD><EM>RSize</EM>: an integer between 6 and 72 (body size in points).
 <P><EM>RStyle</EM>: StyleRoman, StyleBold, StyleItalics, StyleOblique,
 StyleBoldItalics, StyleBoldOblique.</P>
 
@@ -5474,8 +4839,6 @@ thot.color.</P>
 <P><EM>RForeground</EM>: rank of the foreground color in the file
 thot.color.</P>
 
-</DL>
-
 <H4><A NAME="sectc1422">14.2.2</A> TtaChangeBoxSize</H4>
 
 <P>Changes the height and width of the box corresponding to an element in a
@@ -5488,10 +4851,10 @@ deltaX, int deltaY, TypeUnit unit)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>document</EM>: the document to which the element belongs.</P>
 
 <P><EM>view</EM>: the view.</P>
@@ -5502,8 +4865,6 @@ deltaX, int deltaY, TypeUnit unit)</P>
 zero).</P>
 
 <P><EM>unit</EM>: the unit used for the values.</P>
-
-</DL>
 
 <H4><A NAME="sectc1423">14.2.3</A> TtaChangeBoxPosition</H4>
 
@@ -5516,10 +4877,10 @@ int deltaX, int deltaY, TypeUnit unit)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>document</EM>: the document to which the element belongs.</P>
 
 <P><EM>view</EM>: the view.</P>
@@ -5530,8 +4891,6 @@ zero).</P>
 <P><EM>deltaY</EM>: vertical shift in units (positive, negative or zero).</P>
 
 <P><EM>unit</EM>: the unit used for the values.</P>
-
-</DL>
 
 <H3><A NAME="sectb143">14.3</A> Accessors</H3>
 
@@ -5547,25 +4906,21 @@ unit, int *width, int *height)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>document</EM>: the document to which the element belongs.</P>
 
 <P><EM>view</EM>: the view.</P>
 
 <P><EM>unit</EM>: the unit used for the values.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>width</EM>: box width in units.</P>
 
-<DD><EM>width</EM>: box width in units.
 <P><EM>height</EM>: box height in units.</P>
-
-</DL>
 
 <H4><A NAME="sectc1432">14.3.2</A> TtaGiveBoxPosition</H4>
 
@@ -5581,27 +4936,23 @@ TypeUnit unit, int *xCoord, int *yCoord)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>document</EM>: the document to which the element belongs.</P>
 
 <P><EM>view</EM>: the view.</P>
 
 <P><EM>unit</EM>: the unit used for the values.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
-
-<DD><EM>xCoord</EM>: distance from the left edge of the parent box to the left
-edge of the box, in units.
-<P><EM>yCoord</EM>: distance from the top edge of the parent box to the top
+<P><EM>xCoord</EM>: distance from the left edge of the parent box to the left
 edge of the box, in units.</P>
 
-</DL>
+<P><EM>yCoord</EM>: distance from the top edge of the parent box to the top
+edge of the box, in units.</P>
 
 <H4><A NAME="sectc1433">14.3.3</A> TtaNextPRule</H4>
 
@@ -5615,21 +4966,17 @@ element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>pRule</EM>: a presentation rule of that element, or NULL if the first
 rule is asked.</P>
 
-</DL>
+<H5>Return parameter:</H5>
 
-<DL>
-<DT>Return parameter:</DT>
-
-<DD><EM>pRule</EM>: the next presentation rule, or NULL if pRule is the last
-rule of the element.
-</DL>
+<P><EM>pRule</EM>: the next presentation rule, or NULL if pRule is the last
+rule of the element.</P>
 
 <H4><A NAME="sectc1434">14.3.4</A> TtaGetPRule</H4>
 
@@ -5642,23 +4989,19 @@ element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>element</EM>: the element of interest.
+<P><EM>element</EM>: the element of interest.</P>
+
 <P><EM>presentationType</EM>: type of the desired presentation rule. Available
 values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
 PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
 PRFillPattern, PRBackground, PRForeground, PRHyphenate.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the presentation rule found, or NULL if the element does not have this
-type of presentation rule.
-</DL>
+<P>the presentation rule found, or NULL if the element does not have this type
+of presentation rule.</P>
 
 <H4><A NAME="sectc1435">14.3.5</A> TtaGetPRuleType</H4>
 
@@ -5670,20 +5013,16 @@ type of presentation rule.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>pRule</EM>: the presentation rule of interest.
-</DL>
+<P><EM>pRule</EM>: the presentation rule of interest.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>type of that presentation rule. Available values are PRSize, PRStyle,
+<P>type of that presentation rule. Available values are PRSize, PRStyle,
 PRFont, PRUnderline, PRThickness, PRIndent, PRLineSpacing, PRDepth, PRAdjust,
 PRJustify, PRLineStyle, PRLineWeight, PRFillPattern, PRBackground,
-PRForeground, PRHyphenate.
-</DL>
+PRForeground, PRHyphenate.</P>
 
 <H4><A NAME="sectc1436">14.3.6</A> TtaGetPRuleValue</H4>
 
@@ -5695,16 +5034,14 @@ PRForeground, PRHyphenate.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>pRule</EM>: the presentation rule of interest.
-</DL>
+<P><EM>pRule</EM>: the presentation rule of interest.</P>
 
-<DL>
-<DT>Return values according to rule type:</DT>
+<H5>Return values according to rule type:</H5>
 
-<DD><EM>RSize</EM>: an integer between 6 and 72 (body size in points).
+<P><EM>RSize</EM>: an integer between 6 and 72 (body size in points).</P>
+
 <P><EM>RStyle</EM>: StyleRoman, StyleBold, StyleItalics, StyleOblique,
 StyleBoldItalics, StyleBoldOblique.</P>
 
@@ -5740,8 +5077,6 @@ thot.color.</P>
 <P><EM>RForeground</EM>: rank of the foreground color in the file
 thot.color.</P>
 
-</DL>
-
 <H4><A NAME="sectc1437">14.3.7</A> TtaSamePRules</H4>
 
 <P>Compares two presentation rules associated with the same element or with
@@ -5753,19 +5088,15 @@ different elements.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>pRule1</EM>: first presentation rule to be compared.
+<P><EM>pRule1</EM>: first presentation rule to be compared.</P>
+
 <P><EM>pRule2</EM>: second presentation rule to be compared.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>0 if both rules are different, 1 if they are identical.
-</DL>
+<P>0 if both rules are different, 1 if they are identical.</P>
 
 <H2><A NAME="secta15">15</A> <A NAME="L7272">Views</A></H2>
 
@@ -5786,23 +5117,19 @@ TtaSetPSchema).</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which a window must be open.
+<P><EM>document</EM>: the document for which a window must be open.</P>
+
 <P><EM>x, y</EM>: coordinate (in millimeters) of the upper left corner of the
 window that will display the view.</P>
 
 <P><EM>w, h</EM>: width and height (in millimeters) of the upper left corner
 of the window that will display the view.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the view opened or 0 if the view cannot be opened.
-</DL>
+<P>the view opened or 0 if the view cannot be opened.</P>
 
 <H4><A NAME="sectc1512">15.1.2</A> TtaOpenView</H4>
 
@@ -5816,10 +5143,10 @@ int h)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>viewName</EM>: name of the view to be opened.</P>
 
 <P><EM>x, y</EM>: coordinate (in millimeters) of the upper left corner of the
@@ -5828,13 +5155,9 @@ window that will display the view.</P>
 <P><EM>w, h</EM>: width and height (in millimeters) of the upper left corner
 of the window that will display the view.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the view opened or 0 if the view cannot be opened.
-</DL>
+<P>the view opened or 0 if the view cannot be opened.</P>
 
 <H4><A NAME="sectc1513">15.1.3</A> TtaOpenSubView</H4>
 
@@ -5848,10 +5171,10 @@ int h, Element subtree)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>viewName</EM>: name of the view to be opened.</P>
 
 <P>x, y: coordinate (in millimeters) of the upper left corner of the</P>
@@ -5864,13 +5187,9 @@ int h, Element subtree)</P>
 
 <P><EM>subtree</EM>: root element of the subtree to be shown in the view.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the view opened or 0 if the view cannot be opened.
-</DL>
+<P>the view opened or 0 if the view cannot be opened.</P>
 
 <H4><A NAME="sectc1514">15.1.4</A> TtaChangeViewTitle</H4>
 
@@ -5882,15 +5201,13 @@ int h, Element subtree)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>view</EM>: the view .</P>
 
 <P>title: the new title.</P>
-
-</DL>
 
 <H4><A NAME="sectc1515">15.1.5</A> TtaCloseView</H4>
 
@@ -5902,13 +5219,11 @@ int h, Element subtree)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which a view must be closed.
+<P><EM>document</EM>: the document for which a view must be closed.</P>
+
 <P><EM>view</EM>: the view to be closed.</P>
-
-</DL>
 
 <H3><A NAME="sectb152">15.2</A> Modificators</H3>
 
@@ -5923,15 +5238,13 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document. Cannot be 0.
+<P><EM>document</EM>: the document. Cannot be 0.</P>
+
 <P><EM>view</EM>: the view.</P>
 
 <P><EM>value</EM>: new value of the sensibility.</P>
-
-</DL>
 
 <H4><A NAME="sectc1522">15.2.2</A> TtaSetZoom</H4>
 
@@ -5944,15 +5257,13 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document. Cannot be 0.
+<P><EM>document</EM>: the document. Cannot be 0.</P>
+
 <P><EM>view</EM>: the view.</P>
 
 <P><EM>value</EM>: new value of the zoom.</P>
-
-</DL>
 
 <H4><A NAME="sectc1523">15.2.3</A> TtaShowElement</H4>
 
@@ -5965,11 +5276,11 @@ position)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document to which the element to be shown belongs.
-Cannot be 0.
+<P><EM>document</EM>: the document to which the element to be shown belongs.
+Cannot be 0.</P>
+
 <P><EM>view</EM>: the view where the element must be shown.</P>
 
 <P><EM>element</EM>: the element to be shown.</P>
@@ -5978,8 +5289,6 @@ Cannot be 0.
 Supposing that the y axis is oriented from the top of the window (coordinate
 0) to the bottom (coordinate 100, whatever the actual height of the window),
 position is the desired y coordinate of the top of the element.</P>
-
-</DL>
 
 <H4><A NAME="sectc1524">15.2.4</A> TtaRaiseView</H4>
 
@@ -5991,14 +5300,12 @@ position is the desired y coordinate of the top of the element.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document to which the element to be shown belongs.
-Cannot be 0.
+<P><EM>document</EM>: the document to which the element to be shown belongs.
+Cannot be 0.</P>
+
 <P><EM>view</EM>: the view where the element must be shown.</P>
-
-</DL>
 
 <H4><A NAME="sectc1525">15.2.5</A> TtaSetDisplayMode</H4>
 
@@ -6023,13 +5330,11 @@ created, it is initially in the immediate mode.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>NewDisplayMode</EM>: new display mode for that document.</P>
-
-</DL>
 
 <H3><A NAME="sectb153">15.3</A> Accessors</H3>
 
@@ -6044,19 +5349,15 @@ document.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document. Cannot be 0.
+<P><EM>document</EM>: the document. Cannot be 0.</P>
+
 <P><EM>view</EM>: the view.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>current value of the sensibility.
-</DL>
+<P>current value of the sensibility.</P>
 
 <H4><A NAME="sectc1532">15.3.2</A> TtaGetZoom</H4>
 
@@ -6075,19 +5376,15 @@ Document document;
 View view;
 </PRE>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document. Cannot be 0.
+<P><EM>document</EM>: the document. Cannot be 0.</P>
+
 <P><EM>view</EM>: the view.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>current value of the zoom.
-</DL>
+<P>current value of the zoom.</P>
 
 <H4><A NAME="sectc1533">15.3.3</A> TtaGetDisplayMode</H4>
 
@@ -6099,17 +5396,13 @@ View view;
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document.
-</DL>
+<P><EM>document</EM>: the document.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>current display mode for that document.
-</DL>
+<P>current display mode for that document.</P>
 
 <H4><A NAME="sectc1534">15.3.4</A> TtaIsPSchemaValid</H4>
 
@@ -6123,20 +5416,16 @@ function.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>structureName</EM>: Name of the document class.
+<P><EM>structureName</EM>: Name of the document class.</P>
+
 <P><EM>presentationName</EM>: Name of the presentation schema to be
 checked.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>1 if the presentation schema can be applied, 0 if it can not.
-</DL>
+<P>1 if the presentation schema can be applied, 0 if it can not.</P>
 
 <H4><A NAME="sectc1535">15.3.5</A> TtaGiveViewsToOpen</H4>
 
@@ -6148,23 +5437,19 @@ checked.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>buffer</EM>: a buffer that will contain the result.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>buffer</EM>: list of view names. Each name is a character string with a
+final '\0'. Names of views that are already open have a '*' at the end.</P>
 
-<DD><EM>buffer</EM>: list of view names. Each name is a character string with
-a final '\0'. Names of views that are already open have a '*' at the end.
 <P><EM>nbViews</EM>: number of names in the list, 0 if not any view can be
 open.</P>
-
-</DL>
 
 <H4><A NAME="sectc1536">15.3.6</A> TtaGetViewName</H4>
 
@@ -6176,19 +5461,15 @@ open.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document to which the view belongs.
+<P><EM>document</EM>: the document to which the view belongs.</P>
+
 <P><EM>view</EM>: the view.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>Name of the view. The buffer must be provided by the caller.
-</DL>
+<P>Name of the view. The buffer must be provided by the caller.</P>
 
 <H4><A NAME="sectc1537">15.3.7</A> TtaGetViewFromName</H4>
 
@@ -6200,19 +5481,15 @@ open.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document to which the view belongs.
+<P><EM>document</EM>: the document to which the view belongs.</P>
+
 <P><EM>viewName</EM>: the name of the view.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>the view. 0 if no view of that name is currently open for the document.
-</DL>
+<P>the view. 0 if no view of that name is currently open for the document.</P>
 
 <H4><A NAME="sectc1538">15.3.8</A> TtaGiveActiveView</H4>
 
@@ -6225,19 +5502,15 @@ active view is the one that receives the characters typed by the user.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD>No parameter.
-</DL>
+<P>No parameter.</P>
 
-<DL>
-<DT>Return values:</DT>
+<H5>Return values:</H5>
 
-<DD><EM>document</EM>: the active document.
+<P><EM>document</EM>: the active document.</P>
+
 <P><EM>view</EM>: the active view.</P>
-
-</DL>
 
 <H4><A NAME="sectc1539">15.3.9</A> TtaIsViewOpened</H4>
 
@@ -6249,19 +5522,15 @@ active view is the one that receives the characters typed by the user.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document.
+<P><EM>document</EM>: the document.</P>
+
 <P><EM>view</EM>: the view.</P>
 
-</DL>
+<H5>Return values:</H5>
 
-<DL>
-<DT>Return values:</DT>
-
-<DD> True if the view is already opened.
-</DL>
+<P> True if the view is already opened.</P>
 
 <H3><A NAME="sectb154">15.4</A> Help</H3>
 
@@ -6276,16 +5545,14 @@ document view.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document to be listed.
+<P><EM>document</EM>: the document to be listed.</P>
+
 <P><EM>view</EM>: the view to be listed.</P>
 
 <P><EM>fileDescriptor</EM>: file descriptor of the file that will contain the
 list. This file must be open when calling the function.</P>
-
-</DL>
 
 <H2><A NAME="secta16">16</A> <A NAME="L7975">Selection</A></H2>
 
@@ -6315,14 +5582,12 @@ is eventually open for displaying it.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document containing the element to be selected.
+<P><EM>document</EM>: the document containing the element to be selected.</P>
+
 <P><EM>selectedElement</EM>: the element to be selected. NULL for cancelling
 the selection in the document.</P>
-
-</DL>
 
 <H4><A NAME="sectc1612">16.1.2</A> TtaSelectString</H4>
 
@@ -6336,10 +5601,10 @@ firstCharacter, int lastCharacter)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document containing the string to be selected.
+<P><EM>document</EM>: the document containing the string to be selected.</P>
+
 <P><EM>textElement</EM>: the Text element containing the string to be
 selected.</P>
 
@@ -6348,8 +5613,6 @@ character to be selected.</P>
 
 <P><EM>lastCharacter</EM>: position within the texte element of the last
 character to be selected.</P>
-
-</DL>
 
 <H4><A NAME="sectc1613">16.1.3</A> TtaExtendSelection</H4>
 
@@ -6362,16 +5625,15 @@ lastCharacter)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the selection must be extended.
+<P><EM>document</EM>: the document for which the selection must be
+extended.</P>
+
 <P><EM>element</EM>: the element to which the selection must be extended.</P>
 
 <P><EM>lastCharacter</EM>: position within this element of the last character
 to be selected. 0 if the whole element must be selected.</P>
-
-</DL>
 
 <H4><A NAME="sectc1614">16.1.4</A> TtaSelectInterval</H4>
 
@@ -6385,17 +5647,13 @@ pair.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD>No parameter
-</DL>
+<P>No parameter</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>No return value
-</DL>
+<P>No return value</P>
 
 <H4><A NAME="sectc1615">16.1.5</A> TtaUnselect</H4>
 
@@ -6407,17 +5665,14 @@ pair.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the selection must be turned off
-</DL>
+<P><EM>document</EM>: the document for which the selection must be turned
+off</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>No return value
-</DL>
+<P>No return value</P>
 
 <H4><A NAME="sectc1616">16.1.6</A> TtaSetSelectionMode</H4>
 
@@ -6432,17 +5687,13 @@ mode is withMenu = True.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>withMenu</EM>: the new selection mode.
-</DL>
+<P><EM>withMenu</EM>: the new selection mode.</P>
 
-<DL>
-<DT>Return value:</DT>
+<H5>Return value:</H5>
 
-<DD>No return value
-</DL>
+<P>No return value</P>
 
 <H3><A NAME="sectb162">16.2</A> Accessors</H3>
 
@@ -6456,17 +5707,13 @@ mode is withMenu = True.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document.
-</DL>
+<P><EM>document</EM>: the document.</P>
 
-<DL>
-<DT>Return values:</DT>
+<H5>Return values:</H5>
 
-<DD>True if the current selection concerns this document.
-</DL>
+<P>True if the current selection concerns this document.</P>
 
 <H4><A NAME="sectc1622">16.2.2</A> TtaGiveFirstSelectedElement</H4>
 
@@ -6481,17 +5728,15 @@ also the rank of the first and last characters in the selection.</P>
 
 <HR>
 
-<DL>
-<DT>Parameter:</DT>
+<H5>Parameter:</H5>
 
-<DD><EM>document</EM>: the document for which the selection is asked.
-</DL>
+<P><EM>document</EM>: the document for which the selection is asked.</P>
 
-<DL>
-<DT>Return values:</DT>
+<H5>Return values:</H5>
 
-<DD><EM>selectedElement</EM>: the first selected element, NULL if no element
-is selected in the document.
+<P><EM>selectedElement</EM>: the first selected element, NULL if no element is
+selected in the document.</P>
+
 <P><EM>firstCharacter</EM>: rank of the first character in the selection, or 0
 if the whole element is in the selection.</P>
 
@@ -6499,8 +5744,6 @@ if the whole element is in the selection.</P>
 if the</P>
 
 <P>whole element is in the selection.</P>
-
-</DL>
 
 <H4><A NAME="sectc1623">16.2.3</A> TtaGiveNextSelectedElement</H4>
 
@@ -6516,19 +5759,17 @@ selection.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>document</EM>: the document for which the selection is asked.
+<P><EM>document</EM>: the document for which the selection is asked.</P>
+
 <P><EM>selectedElement</EM>: the current element.</P>
 
-</DL>
+<H5>Return parameters:</H5>
 
-<DL>
-<DT>Return parameters:</DT>
+<P><EM>selectedElement</EM>: the next selected element, NULL if this was the
+last selected element in the document.</P>
 
-<DD><EM>selectedElement</EM>: the next selected element, NULL if this was the
-last selected element in the document.
 <P><EM>firstCharacter</EM>: rank of the first character in the selection, or 0
 if the whole element is in the selection.</P>
 
@@ -6536,8 +5777,6 @@ if the whole element is in the selection.</P>
 if the</P>
 
 <P>whole element is in the selection.</P>
-
-</DL>
 
 <H2><A NAME="secta17">17</A> <A NAME="L8857">Messages</A></H2>
 
@@ -6562,11 +5801,6 @@ when its text file is not reachable because it cannot work without.</P>
 applicationMSG.h file is used to address correct message in source code and
 the en-applicationTXT gives the English version of messages text:</P>
 
-<TABLE BORDER=0>
-  <TR>
-
-<TD>
-
 <P>#define APP_start              0</P>
 
 <P>#define APP_abort             1</P>
@@ -6579,8 +5813,6 @@ the en-applicationTXT gives the English version of messages text:</P>
 
 <P>applicationMSG.h</P>
 
-<TD>
-
 <P>0   Application</P>
 
 <P>1   Application aborted</P>
@@ -6592,9 +5824,6 @@ the en-applicationTXT gives the English version of messages text:</P>
 <P> </P>
 
 <P>en-applicationTXT</P>
-
-  </TR>
-</TABLE>
 
 <P> </P>
 
@@ -6631,20 +5860,16 @@ set in the user registry <TT>thot.ini</TT>.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>msgFile</EM>: the generic name of the message file.
+<P><EM>msgFile</EM>: the generic name of the message file.</P>
+
 <P>msgNumber: the number of messages.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>The messages table identifier or -1 if the table is not allocated and
-loaded.
-</DL>
+<P>The messages table identifier or -1 if the table is not allocated and
+loaded.</P>
 
 <H3><A NAME="sectb172">17.2</A> Accessors</H3>
 
@@ -6658,20 +5883,16 @@ loaded.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>msgTableID</EM>: identifier of the messages table.
+<P><EM>msgTableID</EM>: identifier of the messages table.</P>
+
 <P><EM>msgIndex</EM>: index of the message.</P>
 
-</DL>
+<H5>Return value:</H5>
 
-<DL>
-<DT>Return value:</DT>
-
-<DD>Text of the message (an empty text if the table or the message is not
-found).
-</DL>
+<P>Text of the message (an empty text if the table or the message is not
+found).</P>
 
 <H4><A NAME="sectc1722">17.2.2</A> TtaDisplaySimpleMessage</H4>
 
@@ -6697,18 +5918,14 @@ waits for until the end user confirms the message has been read.
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD>
 <P><EM>msgType</EM>: the message type (INFO,  OVERHEAD, FATAL, CONFIRM).</P>
 
 <P><EM>msgTableID</EM>: identifier of the messages table (LIB for the standard
 Thot messages).</P>
 
 <P><EM>msgIndex</EM>: index of the message.</P>
-
-</DL>
 
 <H4><A NAME="sectc1723">17.2.3</A> TtaDisplayMessage</H4>
 
@@ -6726,10 +5943,8 @@ parameters depend on format commands included in the message text.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD>
 <P><EM>msgType</EM>: the message type (INFO,  OVERHEAD, FATAL, CONFIRM).</P>
 
 <P><EM>msgTableID</EM>: identifier of the messages table (LIB for the standard
@@ -6738,8 +5953,6 @@ Thot messages).</P>
 <P><EM>msgIndex</EM>: index of the message.</P>
 
 <P><EM>...</EM>: variable parameters.</P>
-
-</DL>
 
 <H2><A NAME="secta18">18</A> <A NAME="L9217">Dialogue</A></H2>
 
@@ -6776,10 +5989,10 @@ dirRef, char *suffix, char *fileTitle, int fileRef)</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>aDirectory</EM>: the current designated directory.
+<P><EM>aDirectory</EM>: the current designated directory.</P>
+
 <P><EM>formRef</EM>: the form identification.</P>
 
 <P><EM>dirTitle</EM>: the title of the directory selector.</P>
@@ -6795,8 +6008,6 @@ selector is not desired.</P>
 <P><EM>fileRef</EM>: the file selector identification or -1 if this selector
 is not desired.</P>
 
-</DL>
-
 <H4><A NAME="sectc1812">18.1.2</A> TtaIsSuffixFileIn</H4>
 
 <P>Returns True if the specified directory contains files with the specified
@@ -6808,20 +6019,147 @@ suffix.</P>
 
 <HR>
 
-<DL>
-<DT>Parameters:</DT>
+<H5>Parameters:</H5>
 
-<DD><EM>aDirectory</EM>: the current designated directory.
+<P><EM>aDirectory</EM>: the current designated directory.</P>
+
 <P><EM>suffix</EM>: the suffix used for filtering files (for example
 ".PIV")</P>
 
+<H5>Return value:</H5>
+
+<P>True or False.</P>
+
+<H2><A NAME="secta19">19</A> Printing</H2>
+
+<P>The procedures described in this section are for printing Thot documents.
+Their use require that file <EM>print.h</EM> be included in the modules that
+call them. They are available only in the Thot Editor library.</P>
+
+<P>These procedures let the application launch the printing process, also
+specify print parameters, and define an export function for pre-processing
+documents to be printed.</P>
+
+<H3><A NAME="sectb191">19.1</A> Constructors</H3>
+
+<H4><A NAME="sectc1911">19.1.1</A> TtaPrint</H4>
+
+<P>This procedure prints some views of a document with current print
+parameters. The names of the views to be printed have to be consistant with
+those given in the presentation schema used for printing. The application may
+change the presentation schema of the document if it does not match the paper
+size specified in the parameters (The paper size relative to a presentation
+schema are given in the <I>.conf </I>file).</P>
+
+<HR>
+
+<P>void TtaPrint(Document document, char *viewName)</P>
+
+<HR>
+
+<H5>Paramters :</H5>
+
+<P><EM>document </EM>: the document to be printed.</P>
+
+<P><EM>viewNames </EM>: the names of the views to be printed, seprated by a
+blank character.</P>
+
+<H3><A NAME="sectb192">19.2</A> Modificators</H3>
+
+<P> </P>
+
+<H4><A NAME="sectc1921">19.2.1</A> TtaSetPrintExportProc</H4>
+
+<P>This procedure let an application have its own export function before
+printing a document. If an application wants to pre-process a document before
+printing it, it can be done by specifing an export procedure used instead the
+standard one. </P>
+
+<P>The export function have to create the pivot file with the given filename
+and path and save the document to be printed into it. It returns TRUE if the
+export was succesful. The export function have the following prototype :</P>
+
+<P>boolean exportFunc (Document document, char * docName, char* dirName)</P>
+
+<HR>
+
+<P>void TtaSetPrintExportFunc (Func exportFunc)</P>
+
+<HR>
+
+<H5>Param&egrave;tres :</H5>
+
+<P><EM>exportProc</EM>: the export procedure or NULL to restore the standard
+export.</P>
+
+<H4><A NAME="sectc1922">19.2.2</A> TtaSetPrintParameter</H4>
+
+<P>Thit procedure changes a print paramenter. Modifiable parameters belongs to
+PrintParameter type. The different parameters are listed below, with the range
+of their values.</P>
+
+<P> </P>
+
+<DL><I>
+<DT>PrintParameter</DT>
+
+<DD>Range</I>
+<DT>PP_FirstPage</DT>
+
+<DD>0 to 999
+<DT>PP_LastPage</DT>
+
+<DD>0 to 999
+<DT>PP_Scale</DT>
+
+<DD>10 to 300
+<DT>PP_NumberCopies</DT>
+
+<DD>1 to 100
+<DT>PP_ManualFeed</DT>
+
+<DD>PP_ON or PP_OFF
+<DT>PP_PagesPerSheet</DT>
+
+<DD>1, 2 or 4
+<DT>PP_PaperSize</DT>
+
+<DD>PP_A4 or PP_US
+<DT>PP_Destination</DT>
+
+<DD>PP_PRINTER or PP_PS
 </DL>
 
-<DL>
-<DT>Return value:</DT>
+<P> </P>
 
-<DD>True or False.
-</DL>
+<HR>
+
+<P>void TtaSetPrintParameter (PrintParameter parameter, int value) </P>
+
+<HR>
+
+<H5>Param&egrave;tres :</H5>
+
+<P><EM>parameter </EM>: A print parameter.</P>
+
+<P><I>value</I> : The new value of the parameter.</P>
+
+<H4><A NAME="sectc1923">19.2.3</A> TtaSetPrintCommand</H4>
+
+<P>This procedure modifies the system printing command called by the editor
+(the default value is given by the parameter THOTPRINT in <I>.thotrc</I>
+file). It may be used for changing the printer name or a printer-side printing
+option.</P>
+
+<HR>
+
+<P>void TtaSetPrintCommand (char *command)</P>
+
+<HR>
+
+<H5>Param&egrave;tres :</H5>
+
+<P><EM>command </EM>: The printing command.</P>
 
 </BODY>
 </HTML>
