@@ -2393,7 +2393,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       break;
     case EnterNotify:
     case LeaveNotify:
-      T1 = T2 = T3 = 0;
       break;
 #endif
 	default:
