@@ -2235,12 +2235,16 @@ BinFile               infile;
 				   {
 				      if (ppTrans)
 					{
+#ifdef AMAYA_DEBUG
 					   fprintf (stderr, "skipping transformation %s\n", ppTrans->NameTrans);
+#endif
 					   FreeTrans (ppTrans);
 					   ppTrans = NULL;
 					}
 				      else
+#ifdef AMAYA_DEBUG
 					 fprintf (stderr, "skipping transformation\n");
+#endif
 				      if (ppChoice != NULL)
 					 FreeChoice (ppChoice);
 				      ppChoice = NULL;

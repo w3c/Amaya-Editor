@@ -213,7 +213,7 @@ int                 depth;
    ElementType         elemType;
    char               *tag;
    strNode            *new, *child;
-#ifdef DEBUG
+#ifdef AMAYA_DEBUG
    int i;
 #endif
 
@@ -244,7 +244,7 @@ int                 depth;
 	     new->Previous = child;
 	  }
 	depth++;
-#ifdef DEBUG
+#ifdef AMAYA_DEBUG
 	for (i=0;i<depth;i++)
 	  printf("  ");
 	printf("%s\n",new->Tag);
@@ -966,7 +966,7 @@ Document            doc;
      }
    if (strcmp (bufHTML, ""))
      {
-#ifdef DEBUG
+#ifdef AMAYA_DEBUG
        printf("%s\n\n",bufHTML);
 #endif
 	TtaSetStructureChecking (0, doc);
@@ -2195,13 +2195,6 @@ char               *prevTag;
   boolean             result, sonsMatch;
   char               *curTag;
 
-#ifdef DEBUGWW
-  
-  if (strcmp (prevTag,"") == 0)
-    printf ("Check if %s is a valid as successor for %s under %s\n", sm->MatchSymb->SymbolName, prevTag, GITagNameByType(elemTypeRoot));
-  else
-    printf ("Check if %s is valid  under %s\n", sm->MatchSymb->SymbolName, GITagNameByType(elemTypeRoot));
-#endif
 
 
   curTag = TtaGetMemory (NAME_LENGTH);
@@ -2302,7 +2295,7 @@ char               *data;
 		 TtaSetDisplayMode (TransDoc, DisplayImmediately);
 	       TtaSelectElement (TransDoc, NULL);
 	       /* passe en mode de display differe */
-#ifndef DEBUG
+#ifndef AMAYA_DEBUG
 	       TtaSetDisplayMode (TransDoc, DeferredDisplay);
 #endif		
 	       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
