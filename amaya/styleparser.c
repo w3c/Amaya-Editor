@@ -3901,7 +3901,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
   ThotBool            HTMLcomment;
   ThotBool            toParse, eof;
   ThotBool            ignoreMedia, media;
-  ThotBool            noRule;
+  ThotBool            noRule, ignoreImport;
 
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
@@ -3909,6 +3909,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
   toParse = FALSE;
   noRule = FALSE;
   media =  FALSE;
+  ignoreImport = FALSE;
   ignoreMedia = FALSE;
   import = MAX_CSS_LENGTH;
   eof = FALSE;
@@ -4059,7 +4060,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 	    {
               /* apply CSS rule if it's not just a saving of text */
               if (!noRule && !ignoreMedia)
-		ParseStyleDeclaration (NULL, CSSbuffer, docRef, css, FALSE);
+		{
+		  /* future import rules must be ignored */
+		  ignoreImport = TRUE;
+		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, css, FALSE);
+		}
               else if (import != MAX_CSS_LENGTH &&
 		       !strncasecmp (&CSSbuffer[import+1], "import", 6))
 		{
@@ -4078,33 +4083,25 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;
 			  *cssRule = EOS;
-			  LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
+			  if (!ignoreImport)
+			    LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
 			}
 		    }
 		  else if (*cssRule == '"')
 		    {
-		      /* a simple quoted string */
+		      /*
+			Do we have to accept single quotes?
+			Double quotes are acceted here.
+			Escaped quotes are not handled. See function SkipQuotedString
+		      */
 		      cssRule++;
 		      cssRule = TtaSkipBlanks (cssRule);
 		      base = cssRule;
 		      while (*cssRule != EOS && *cssRule != '"')
 			cssRule++;
 		      *cssRule = EOS;
-		      LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
-		    }
-		  /*
-		    Caution: Strings can either be written with double quotes or
-		    with single quotes. Only double quotes are handled here.
-		    Escaped quotes are not handled. See function SkipQuotedString
-		  */
-		  else if (*cssRule == '"')
-		    {
-		      cssRule++;
-		      base = cssRule;
-		      while (*cssRule != EOS && *cssRule != '"')
-			cssRule++;
-		      *cssRule = EOS;
-		      LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
+		      if (!ignoreImport)
+			LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
 		    }
 		  import = MAX_CSS_LENGTH;
 		}

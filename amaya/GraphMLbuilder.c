@@ -163,7 +163,8 @@ void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Docu
    does not exist yet.
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
-static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, ThotBool changeShape)
+static Element CreateGraphicalLeaf (char shape, Element el, Document doc,
+				    ThotBool changeShape)
 {
   ElementType	   elType;
   Element	   leaf, child;
@@ -188,7 +189,7 @@ static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, T
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = GraphML_ATTR_stroke;
+  attrType.AttrTypeNum = GraphML_ATTR_stroke_width;
   if (leaf == NULL)
     /* create the graphical element */
     {
@@ -200,7 +201,7 @@ static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, T
 	TtaInsertSibling (leaf, child, FALSE, doc);
       TtaSetGraphicsShape (leaf, shape, doc);
     }
-  /* set the attribute stroke */
+  /* set the attribute stroke-width */
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
     {
