@@ -4068,72 +4068,43 @@ NotifyEvent        *event;
    InitGraphML ();
 # endif /* GRAPHML */
 
-/* init transformation callback */
-
+   /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);
-
    TargetName = NULL;
-   /* initialize temporary directory for loaded files */
 
-   /* Build the User preferences file name */
-   UserCSS = TtaGetEnvString ("HOME");
-   if (UserCSS)
-     /* Name = $HOME/.amaya.css */
-     sprintf (TempFileDirectory, "%s%c.%s.css", UserCSS, DIR_SEP, HTAppName);
-   else
+   /*
+    * Initialize the Amaya temporary directory:
+    * $HOME/.amaya on Unix platforms
+    * $HOME\amaya on Windows platforms where $HOME is usually C:\\TEMP
+    */
+   i = 0;
+   s = TtaGetEnvString ("APP_HOME");
+   if (!TtaCheckDirectory (s))
      {
-       /* Name = $THOTDIR/amaya/amaya.css */
-       UserCSS = TtaGetEnvString ("THOTDIR");
-       sprintf (TempFileDirectory, "%s%camaya%c%s.css", UserCSS, DIR_SEP, DIR_SEP, HTAppName);
-     }
-#ifdef _WINDOWS 
-   s = NULL;
-#else  /* !_WINDOWS */
-   s = UserCSS;
+#ifdef _WINDOWS
+       i = _mkdir (s);
+#else /* _WINDOWS */
+       i = mkdir (s, S_IRWXU);
 #endif /* _WINDOWS */
-   if (TtaFileExist (TempFileDirectory))
-     UserCSS = TtaStrdup (TempFileDirectory);
+     }
+   if (i != 0 && errno != EEXIST)
+     exit (1);
+   /* add the temporary directory in document path */
+   ustrcpy (TempFileDirectory, s);
+   TtaAppendDocumentPath (TempFileDirectory);
+
+   /*
+    * Build the User preferences file name:
+    * $HOME/.amaya/amaya.css on Unix platforms
+    * $HOME\amaya\amaya.css on Windows platforms
+    */
+   tempname = TtaGetMemory (MAX_LENGTH);
+   sprintf (tempname, "%s%c%s.css", s, DIR_SEP, HTAppName);
+   if (TtaFileExist (tempname))
+     UserCSS = TtaStrdup (tempname);
    else
      /* no User preferences */
      UserCSS = NULL;
-
-   if (s)
-      ustrcpy (TempFileDirectory, s);
-   else
-#ifdef _WINDOWS
-     if (!TtaFileExist ("C:\\TEMP"))
-        _mkdir ("C:\\TEMP");
-   ustrcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
-#else  /* !_WINDOWS */
-   ustrcpy (TempFileDirectory, "/tmp");
-   ustrcat (TempFileDirectory, "/.amaya");
-#endif /* _WINDOWS */
-
-#ifdef _WINDOWS
-   i = _mkdir (TempFileDirectory);
-#else  /* !_WINDOWS */
-   i = mkdir (TempFileDirectory, S_IRWXU);
-#endif /* _WINDOWS */
-   if (i != 0 && errno != EEXIST)
-     {
-#ifndef _WINDOWS
-       ustrcpy (TempFileDirectory, "/tmp/.amaya");
-       i = mkdir (TempFileDirectory, S_IRWXU);
-       if (i != 0 && errno != EEXIST)
-#endif /* !_WINDOWS */
-	 { 
-	   fprintf (stderr, "cannot create %s\n", TempFileDirectory);
-	   exit (1);
-	 }
-     }
-   /* add the temporary directory in document path */
-   TtaAppendDocumentPath (TempFileDirectory);
-
-   /* allocate working buffers */
-   LastURLName = TtaGetMemory (MAX_LENGTH);
-   LastURLName[0] = EOS;
-   DirectoryName = TtaGetMemory (MAX_LENGTH);
-   tempname = TtaGetMemory (MAX_LENGTH);
 
    /* Create and intialize resources needed for each document */
    /* Style sheets are strored in directory .amaya/0 */
@@ -4146,7 +4117,7 @@ NotifyEvent        *event;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and image files */
-       sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
+       sprintf (tempname, "%s%c%d", s, DIR_SEP, i);
        if (!TtaCheckDirectory (tempname))
 #ifdef _WINDOWS
           _mkdir (tempname);
@@ -4154,6 +4125,11 @@ NotifyEvent        *event;
           mkdir (tempname, S_IRWXU);
 #endif /* !_WINDOWS */
      }
+
+   /* allocate working buffers */
+   LastURLName = TtaGetMemory (MAX_LENGTH);
+   LastURLName[0] = EOS;
+   DirectoryName = TtaGetMemory (MAX_LENGTH);
 
    /* set path on current directory */
    getcwd (DirectoryName, MAX_LENGTH);

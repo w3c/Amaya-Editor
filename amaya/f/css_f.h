@@ -18,7 +18,8 @@ extern CSSInfoPtr SearchCSS ( Document doc,
                               STRING url );
 extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( STRING url,
-                               Document doc );
+                               Document doc,
+                               boolean removed );
 extern void LoadStyleSheet ( STRING url,
                              Document doc,
                              Element el,
@@ -39,7 +40,8 @@ extern CSSInfoPtr SearchCSS (/* Document doc,
                                 STRING url */);
 extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* STRING url,
-                                 Document doc */);
+                                 Document doc,
+                                 boolean removed */);
 extern void LoadStyleSheet (/* STRING url,
                                Document doc,
                                Element el,

@@ -3,19 +3,19 @@
 <html>
 <head>
 <title>Editing Tables</title>
-<meta name="GENERATOR" content="amaya V1.4a">
+<meta name="GENERATOR" content="amaya V1.5b">
 </head>
 <body lang="en">
 
 <table border="0" width="100%">
 <tbody>
 <tr>
-<td><p>
-<img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
+<td>
+<p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
 alt="Amaya" src="../Icons/amaya.gif"></p>
 </td>
-<td><p align="right">
-<a href="Changing.html"><img alt="previous" border="0"
+<td>
+<p align="right"><a href="Changing.html"><img alt="previous" border="0"
 src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
 src="../Icons/up.gif"></a> <a href="Math.html"><img alt="next" border="0"
 src="../Icons/right.gif"></a></p>
@@ -27,16 +27,16 @@ src="../Icons/right.gif"></a></p>
 <div id="Editing">
 
 <h2>Editing tables</h2>
-<p>
-There is no separate table editor in <strong>Amaya</strong>. A table is simply
-a structure described by the HTML DTD and it is edited as such. The same
-commands apply to tables as to other HTML structures, with a few additional
-ones.</p>
+
+<p>There is no separate table editor in <strong>Amaya</strong>. A table is
+simply a structure described by the HTML DTD and it is edited as such. The
+same commands apply to tables as to other HTML structures, with a few
+additional ones.</p>
 
 <h3>Creating a new table</h3>
 </div>
-<p>
-When activating the table button <img src="../Icons/table.gif" alt="Table
+
+<p>When activating the table button <img src="../Icons/table.gif" alt="Table
 button"> or selecting the <strong>Table</strong> entry from the
 <strong>Types</strong> menu, Amaya displays a dialog box which allows you to
 specify the intial number of rows and columns for the new table, as well as
@@ -72,20 +72,20 @@ like the following table (3 columns and 2 rows in that case):</p>
 </tr>
 </tbody>
 </table>
-<p>
-The space above the table is reserved for the caption. The caret is
+
+<p>The space above the table is reserved for the caption. The caret is
 automatically put in this caption, so that you can enter its contents
 immediately.  You can also delete it if you don' need a caption.</p>
-<p>
-The new table contains empty cells. You can click on any of them and insert
+
+<p>The new table contains empty cells. You can click on any of them and insert
 text, images, and so on. You can also move the caret from cell to cell with
 the arrow keys.</p>
 
 <h3>Adding a new column</h3>
 
 <div id="Editing1">
-<p>
-New columns can be created very efficiently with the <a
+
+<p>New columns can be created very efficiently with the <a
 href="Creating.html#L906">Return key</a>.  Move the insertion point to the end
 or the beginning of a cell (for example at the end of Cell 1.1 in the table
 below).  By hitting the Return key twice (the first hit creates a paragraph in
@@ -127,32 +127,48 @@ Cell 2.1
 </table>
 
 <h3>Adding a new row, a new tbody</h3>
-<p>
-To create a new row, press Return three times when the insertion point is at
-the end of the last cell in a row (in Cell 1.3, for instance).  You can also
-select the row by <a href="Selecting.html#L894">hitting the ESC</a> key and
-pressing Return only once.</p>
-<p>
-To create a new <code>tbody</code>, press Return four times (or three times if
-the cell is empty) and one time more to create a new paragraph after the
+
+<p>To create a new row, press Return three times when the insertion point is
+at the end of the last cell in a row (in Cell 1.3, for instance).  You can
+also select the row by <a href="Selecting.html#L894">hitting the ESC</a> key
+and pressing Return only once.</p>
+
+<p>To create a new <code>tbody</code>, press Return four times (or three times
+if the cell is empty) and one time more to create a new paragraph after the
 table.</p>
 </div>
 
 <h3>Removing a column</h3>
 
 <div id="Editing11">
-<p>
-There is no specific command to create a new column. When you create a new
+
+<p>There is no specific command to create a new column. When you create a new
 cell, Amaya generates the corresponding new column. When you delete a cell in
 a column that becomes empty, Amaya deletes the column automatically. But there
 is a specific command (Delete table column) to delete a column, even if it's
 not empty. This command is located at the end of submenu
 <strong>Table</strong> of menu <strong>Types</strong>.</p>
-<p>
-Note that the table model implemented in <strong>Amaya</strong> is the <a
-href="../../TR/REC-html40">HTML&nbsp;4.0</a> model. This includes features
-such as multiple bodies (<code>tbody</code>), header (<code>thead</code>) and
-footer (<code>tfoot</code>).</p>
+</div>
+
+<h3>Adding something after a table</h3>
+
+<p>Many element types can be included within table cells. For that reason,
+Amaya could misunderstand what one wants to do when he selects an element type
+(he clicks a button H1, H2, etc. or he selects an entry in the menu Type)
+while a table component is selected. When one wants to create an element after
+the table, he has to select the whole table (check the current selection in
+the bottom line of the window) and hits the Return key. Amaya will generate a
+paragraph after the table. This new paragraph can be transformed if
+needed.</p>
+
+<div id="Editing111">
+
+<p><em>Note that the table model implemented in
+</em><strong><em>Amaya</em></strong><em> is the </em><a
+href="../../TR/REC-html40"><em>HTML&nbsp;4.0</em></a><em> model. This includes
+features such as multiple bodies (</em><code><em>tbody</em></code><em>),
+header (</em><code><em>thead</em></code><em>) and footer
+(</em><code><em>tfoot</em></code><em>).</em></p>
 <hr>
 
 </div>

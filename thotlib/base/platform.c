@@ -64,15 +64,15 @@ CONST char         *filename;
       status = 0;
    else
      {
-	if (fstat (filedes, &statinfo) != -1)
-	  {
-	     if (statinfo.st_mode & S_IFDIR)
-		/* on ne veut pas de directory */
-		status = 0;
-	     else
-		status = 1;
-	  }
-	close (filedes);
+       /* on ne veut pas de directory */
+       if (fstat (filedes, &statinfo) != -1)
+	 {
+	   if (statinfo.st_mode & S_IFDIR)
+	     status = 0;
+	   else
+	     status = 1;
+	 }
+       close (filedes);
      }
 #endif /* _WINDOWS && !__GNUC__ */
    return status;

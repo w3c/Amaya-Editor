@@ -100,31 +100,13 @@ boolean             ToCreate;
     {
       TtaExtractName (extenddic, path, dictname);
       if (dictname[0] == EOS)
-	ustrcpy (dictname, ".thot");
+	ustrcpy (dictname, "dictionary");
     }
   else
-    {
-      ustrcpy (dictname, ".thot");
-      path[0] = EOS;
-    }
+    path[0] = EOS;
 
-# ifdef _WINDOWS
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
-    {
-      ptr = TtaGetEnvString ("HOME");
-      if (ptr != NULL)
-	ustrcpy (path, ptr);
-      else
-	{
-	  ustrcpy (path, "C:\\TEMP");
-	  if (!TtaCheckDirectory (path))
-	    _mkdir (path);
-	}
-    }
-# else  /* !_WINDOWS */
-  if (path[0] == EOS ||  !TtaCheckDirectory (path))
-    ustrcpy (path, TtaGetEnvString ("HOME"));
-# endif /* !_WINDOWS */
+    ustrcpy (path, TtaGetEnvString ("APP_HOME"));
   LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
 		   path, FALSE, ToCreate);
   return (*pDictionary != EOS);
@@ -736,7 +718,7 @@ PtrDict             docDict;
    CHAR                tempbuffer[THOT_MAX_CHAR];
    CHAR                word[MAX_WORD_LEN];
 
-   FindCompleteName (docDict->DictName, "DCT", docDict->DictDirectory, tempbuffer, &i);
+   FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
 	f = fopen (tempbuffer, "w");

@@ -815,14 +815,8 @@ boolean             lang;
       ustrcpy (suffix, "conf");
 
    /* Search in HOME directory */
-#  ifdef _WINDOWS
-   ptr = NULL;
-#  else  /* _WINDOWS */
-   ptr = TtaGetEnvString ("HOME");
-#  endif /* _WINDOWS */
-
-   if (ptr != NULL)
-     ustrcpy (DirBuffer, ptr);
+   ptr = TtaGetEnvString ("APP_HOME");
+   ustrcpy (DirBuffer, ptr);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    if (!TtaFileExist (filename))
      {

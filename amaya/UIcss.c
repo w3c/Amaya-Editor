@@ -58,52 +58,52 @@ STRING              data;
     {
     case CSSForm:
       TtaDestroyDialogue (ref);
-      if (val == 1)
+      if (val == 1 && CSSpath != NULL)
 	{
 	  switch (CSScase)
 	    {
 	    case 1:
-	      if (CSSpath != NULL)
-		/* display the CSS file */
-		GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+	      /* display the CSS file */
+	      GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
 	      break;
 	    case 2:
-	      /* disable the CSS file */
+	      /* disable the CSS file, but not remove */
+	      RemoveStyleSheet (CSSpath, CSSdocument, FALSE);
       	      break;
 	    case 3:
+	      /* disable the CSS file in case it was applied yet */
+	      RemoveStyleSheet (CSSpath, CSSdocument, FALSE);
 	      /* enable the CSS file */
+	      LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL);
       	      break;
 	    case 4:
 	      /* remove the link to this file */
-	      if (CSSpath != NULL)
+	      css = CSSList;
+	      found = FALSE;
+	      while (css != NULL && !found)
 		{
-		  css = CSSList;
-		  found = FALSE;
-		  while (css != NULL && !found)
+		  if (css->category != CSS_DOCUMENT_STYLE &&
+		      css->documents[CSSdocument] &&
+		      ((css->url && !ustrcmp (CSSpath, css->url)) ||
+		       (css->localName && !ustrcmp (CSSpath, css->localName))))
 		    {
-		      if (css->category != CSS_DOCUMENT_STYLE &&
-			  css->documents[CSSdocument] &&
-			  ((css->url && !ustrcmp (CSSpath, css->url)) ||
-			   (css->localName && !ustrcmp (CSSpath, css->localName))))
+		      /* we found out the CSS */
+		      found = TRUE;
+		      if (css->category == CSS_EXTERNAL_STYLE)
 			{
-			  /* we found out the CSS */
-			  found = TRUE;
-			  if (css->category == CSS_EXTERNAL_STYLE)
+			  /* look for the element LINK */
+			  pInfo = css->infos;
+			  while (pInfo != NULL && pInfo->PiDoc != CSSdocument)
+			    /* next info context */
+			    pInfo = pInfo->PiNext;
+			  if (pInfo != NULL && pInfo->PiLink != NULL)
 			    {
-			      /* look for the element LINK */
-			      pInfo = css->infos;
-			      while (pInfo != NULL && pInfo->PiDoc != CSSdocument)
-				/* next info context */
-				pInfo = pInfo->PiNext;
-			      if (pInfo != NULL && pInfo->PiLink != NULL)
-				{
-				  RemoveLink (pInfo->PiLink, CSSdocument);
-				  TtaDeleteTree (pInfo->PiLink, CSSdocument);
-				}
+			      RemoveLink (pInfo->PiLink, CSSdocument);
+			      TtaDeleteTree (pInfo->PiLink, CSSdocument);
 			    }
 			}
-		      css = css->NextCSS;
 		    }
+		  css = css->NextCSS;
 		}
 	      break;
 	    default:
@@ -244,7 +244,7 @@ View                view;
 #endif
 {
   /* add a new link to a CSS file */
-  CreateLinkInHead (CSSdocument, 1);
+  CreateLinkInHead (doc, 1);
 }
 
 /*----------------------------------------------------------------------

@@ -2118,11 +2118,16 @@ Document            doc;
   PtrPRule            pRule;
   PtrSSchema	      pSS;
   AttributePres      *attrs;
+  DisplayMode         dispMode;
   int                 nbrules, i, j;
   unsigned int        elType, attrType, max;
 
   if (doc == 0)
     return;
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
   if (el != NULL)
     {
       do
@@ -2198,6 +2203,7 @@ Document            doc;
 	    }
 	}
     }
+  TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------

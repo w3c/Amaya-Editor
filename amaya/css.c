@@ -167,16 +167,18 @@ STRING               url;
 
 
 /*----------------------------------------------------------------------
-   CSSRemoved a link to this CSS was removed.
+   UnlinkCSS the CSS is no longer applied to this document and iff the
+   parameter removed is TRUE, the link is cut.
    If this CSS is no longer used the context and attached information
    are freed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     CSSRemoved (CSSInfoPtr css, Document doc)
+static void     UnlinkCSS (CSSInfoPtr css, Document doc, boolean removed)
 #else
-static void     CSSRemoved (css, doc)
+static void     UnlinkCSS (css, doc, removed)
 CSSInfoPtr      css;
 Document        doc;
+boolean         removed;
 #endif
 {
   CSSInfoPtr          prev;
@@ -207,16 +209,27 @@ Document        doc;
 	}
       if (pInfo != NULL)
 	{
-	  /* update the the list of  P descriptors in the css */
-	  if (prevInfo == NULL)
-	    css->infos = pInfo->PiNext;
-	  else
-	    prevInfo->PiNext = pInfo->PiNext;
-	  TtaCleanStylePresentation (NULL, pInfo->PiPSchema, pInfo->PiDoc);
-	  /* remove presentation schemas */
-	  TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
-	  /* remove P descriptors in the css structure */
-	  TtaFreeMemory (pInfo);
+	  if (removed)
+	    {
+	      /* unlink the document context from the list */
+	      if (prevInfo == NULL)
+		css->infos = pInfo->PiNext;
+	      else
+		prevInfo->PiNext = pInfo->PiNext;
+	      used = FALSE;
+	    }
+	  /* disapply the CSS */
+	  if (pInfo->PiPSchema)
+	    {
+	      TtaUnlinkPSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
+	      TtaCleanStylePresentation (NULL, pInfo->PiPSchema, pInfo->PiDoc);
+	      /* remove presentation schemas */
+	      TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
+	      pInfo->PiPSchema = NULL;
+	    }
+	  /* free the document context */
+	  if (removed)
+	    TtaFreeMemory (pInfo);
 	}
 
       if (!used)
@@ -261,12 +274,12 @@ Document            doc;
 	{
 	  /* the document displays the CSS file itself */
 	  css->doc = 0;
-	  CSSRemoved (css, doc);
+	  UnlinkCSS (css, doc, TRUE);
 	}
       else if (css->documents[doc])
 	{
 	  css->documents[doc] = FALSE;
-	  CSSRemoved (css, doc);
+	  UnlinkCSS (css, doc, TRUE);
 	}
       /* look at the next CSS context */
       css = next;
@@ -279,11 +292,12 @@ Document            doc;
    or the document Style element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RemoveStyleSheet (STRING url, Document doc)
+void            RemoveStyleSheet (STRING url, Document doc, boolean removed)
 #else
-void                RemoveStyleSheet (url, doc)
-STRING              url;
-Document            doc;
+void            RemoveStyleSheet (url, doc, removed)
+STRING          url;
+Document        doc;
+boolean         removed;
 #endif
 {
   CSSInfoPtr          css;
@@ -304,8 +318,9 @@ Document            doc;
 
   if (css != NULL)
     {
-      css->documents[doc] = FALSE;
-      CSSRemoved (css, doc);
+      if (removed)
+	css->documents[doc] = FALSE;
+      UnlinkCSS (css, doc, removed);
     }
 }
 
@@ -350,11 +365,8 @@ CSSInfoPtr          css;
 	  oldcss = SearchCSS (0, tempURL);
 	  if (oldcss != NULL)
 	    {
-	      if (!oldcss->documents[doc])
-		{
-		  oldcss->documents[doc] = TRUE;
-		  ustrcpy (tempfile, oldcss->localName);
-		}
+	      ustrcpy (tempfile, oldcss->localName);
+	      oldcss->documents[doc] = TRUE;
 	    }
 	  else
 	    {
@@ -389,51 +401,6 @@ CSSInfoPtr          css;
 	  local = TRUE;
 	  ustrcpy (tempfile, tempURL);
 	}
-      if (tempfile[0] == EOS)
-	return;
-
-      /* load the resulting file in memory */
-      res = fopen (tempfile, "r");
-      if (res == NULL)
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  if (!local)
-	    TtaFileUnlink (tempfile);
-	  return;
-	}
-#     ifdef _WINDOWS
-      if (fstat (_fileno (res), &buf))
-#     else  /* !_WINDOWS */
-      if (fstat (fileno (res), &buf))
-#     endif /* _WINDOWS */
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  fclose (res);
-	  if (!local)
-	    TtaFileUnlink (tempfile);
-	  return;
-	}
-      buffer = (STRING) TtaGetMemory (buf.st_size + 1000);
-      if (buffer == NULL)
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  fclose (res);
-	  if (!local)
-	    TtaFileUnlink (tempfile);
-	  return;
-	}
-      len = fread (buffer, buf.st_size, 1, res);
-      if (len != 1)
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	  fclose (res);
-	  if (!local)
-	    TtaFileUnlink (tempfile);
-	  TtaFreeMemory (buffer);
-	  return;
-	}
-      buffer[buf.st_size] = 0;
-      fclose (res);
 
       if (oldcss == NULL)
 	{
@@ -442,15 +409,8 @@ CSSInfoPtr          css;
 	  oldcss = css;
 	}
 
-      if (css != NULL)
-	/* apply CSS rules in current Presentation structure (import) */
-	ReadCSSRules (0, doc, css, buffer, FALSE);
-      else if (!oldcss->documents[doc])
-	{
-	  /* apply CSS rules */
-	  oldcss->documents[doc] = TRUE;
-	  ReadCSSRules (oldcss->doc, doc, oldcss, buffer, FALSE);
-	}
+      if (tempfile[0] == EOS)
+	return;
       /* store the element which links the CSS */
       pInfo = oldcss->infos;
       while (pInfo != NULL && pInfo->PiDoc != doc)
@@ -464,11 +424,62 @@ CSSInfoPtr          css;
 	  pInfo->PiDoc = doc;
 	  pInfo->PiSSchema = NULL;
 	  pInfo->PiPSchema = NULL;
+	  pInfo->PiLink = el;
 	  oldcss->infos = pInfo;
 	}
-      pInfo->PiLink = el;
 
-      TtaFreeMemory (buffer);
+
+      /* apply CSS rules in current Presentation structure (import) */
+      if ( pInfo->PiPSchema == NULL)
+	{
+	  /* load the resulting file in memory */
+	  res = fopen (tempfile, "r");
+	  if (res == NULL)
+	    {
+	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	      if (!local)
+		TtaFileUnlink (tempfile);
+	      return;
+	    }
+
+#ifdef _WINDOWS
+	  if (fstat (_fileno (res), &buf))
+#else  /* !_WINDOWS */
+	    if (fstat (fileno (res), &buf))
+#endif /* _WINDOWS */
+	      {
+		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+		fclose (res);
+		if (!local)
+		  TtaFileUnlink (tempfile);
+		return;
+	      }
+
+	  buffer = (STRING) TtaGetMemory (buf.st_size + 1000);
+	  if (buffer == NULL)
+	    {
+	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	      fclose (res);
+	      if (!local)
+		TtaFileUnlink (tempfile);
+	      return;
+	    }
+	  len = fread (buffer, buf.st_size, 1, res);
+	  if (len != 1)
+	    {
+	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	      fclose (res);
+	      if (!local)
+		TtaFileUnlink (tempfile);
+	      TtaFreeMemory (buffer);
+	      return;
+	    }
+	  buffer[buf.st_size] = 0;
+	  fclose (res);
+
+	  ReadCSSRules (0, doc, oldcss, buffer, FALSE);
+	  TtaFreeMemory (buffer);
+	}
     }
 }
 

@@ -1013,12 +1013,7 @@ STRING              appliname;
    FILE               *file;
    ThotTranslations      table;
 
-#  ifdef _WINDOWS 
-   text = NULL;
-#  else  /* _WINDOWS */
-   text = TtaGetEnvString ("HOME");
-#  endif /* _WINDOWS */
-
+   text = TtaGetEnvString ("APP_HOME");
    ustrcpy (name, appliname);
 #  ifdef _WINDOWS
    ustrcat (name, ".kb");
@@ -1026,16 +1021,11 @@ STRING              appliname;
    ustrcat (name, ".keyboard");
 #  endif /* _WINDOWS */
 
-   if (text != NULL)
-     {
-	ustrcpy (home, text);
-	ustrcat (home, DIR_STR);
-	ustrcat (home, name);
-	if (!SearchFile (home, 0, line))
-	   SearchFile (name, 2, line);
-     }
-   else
-      SearchFile (name, 2, line);
+   ustrcpy (home, text);
+   ustrcat (home, DIR_STR);
+   ustrcat (home, name);
+   if (!SearchFile (home, 0, line))
+     SearchFile (name, 2, line);
 
    file = fopen (line, "r");
    if (!file)

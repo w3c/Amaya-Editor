@@ -7,6 +7,9 @@
 #ifdef __STDC__
 
 extern PSchema TtaNewPSchema ( void );
+extern void TtaUnlinkPSchema ( PSchema schema,
+                               Document document,
+                               SSchema nature );
 extern void TtaRemovePSchema ( PSchema schema,
                                Document document,
                                SSchema nature );
@@ -24,6 +27,9 @@ extern void TtaNextPSchema ( PSchema * schema,
 #else /* __STDC__ */
 
 extern PSchema TtaNewPSchema (/* void */);
+extern void TtaUnlinkPSchema (/* PSchema schema,
+                                 Document document,
+                                 SSchema nature */);
 extern void TtaRemovePSchema (/* PSchema schema,
                                  Document document,
                                  SSchema nature */);

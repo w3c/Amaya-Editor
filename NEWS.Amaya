@@ -5,7 +5,7 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
 1.5a
 =============================================================
 
-Extensions 1.5a:
+Extensions 2.0:
 ---------------
 
 * First implementation of a multi-document, multi-level Undo/Redo command.
@@ -19,11 +19,17 @@ Extensions 1.5a:
   now interpreted.
 
 * Amaya is now able to load, edit, print and save CSS files and plain text
-  files. Menu Style (entry "Style Sheets") allows you to open any CSS file
-  used in a document.  Any CSS file that is open on your screen can be
-  linked to a document by a simple click (the corresponding LINK element
-  is created automatically). As soon as the CSS file is linked it is applied
-  to the document.
+  files.
+
+* The entry "Style Sheets" in the menu Style allows one to
+  - link a CSS file using the standard Amaya paragdim: Click to select the
+    target or display a form allowing us to type the URI. The corresponding
+    LINK element is automatically created and CSS properties are applied
+    to the document.
+  - open a CSS file used in a document.
+  - disable CSS properties of the CSS file.
+  - enable or re-apply CSS properties of the CSS file.
+  - remove a CSS link.
 
 * After a "Make Book" the document is automatically switched to the Read-Only
   mode. This will avoid the user to edit it or save it by error.
@@ -65,9 +71,19 @@ Extensions 1.5a:
 * Support of disconnected browsing mode thru the libwww cache
 
 * Using the configuration menus, it's now possible to choose the default
-  name for saving URLs that end in "/"
+  name for saving URLs that end in "/".
 
-Fixed bugs 1.5a:
+* All user Amaya preferences and personal files are collected into a
+  home directory. By default this directory is $HOME/.amaya on Unix
+  platforms and C:\TEMP\amaya on Windows platforms. These files are:
+  - a personal amaya.css
+  - a personal amaya.keyboard (amaya.kb on Windows)
+  - a personal dictionary
+  - thot.rc personal preferences. This file is generated and updated thru
+    the Special/Preferences menu.
+  - and other temporary files and directories used by Amaya.
+
+Fixed bugs 2.0:
 ---------------
 
 * Scripts can now be created within the document Body and are no longer

@@ -2802,8 +2802,12 @@ boolean            remove;
 			  found = TRUE;
 			  if (remove && ruleType == PtFunction &&
 			      pAb->AbLeafType == LtCompound)
-			    /* remove a PtFunction rule */
-			    RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
+			    {
+			      /* remove a PtFunction rule */
+			      RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
+			      if (pRP != NULL && pRP != pCurrentRule)
+				ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+			    }
 			  else if (pRP != NULL)
 			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 			}

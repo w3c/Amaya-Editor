@@ -56,7 +56,7 @@ SSchema             nature;
    else
       /* parameter doc is OK */
      {
-       if (nature == NULL || 
+       if (nature == NULL ||
 	   nature == (SSchema)(LoadedDocument[doc - 1]->DocSSchema))
 	 pSS = LoadedDocument[doc - 1]->DocSSchema;
        else
@@ -96,6 +96,55 @@ PSchema             TtaNewPSchema ()
 
 
 /*----------------------------------------------------------------------
+   TtaUnlinkPSchema
+
+   Unlinks a presentation schema from a document or a nature in a 
+   document.
+
+   Parameters:
+   schema: the presentation schema to be unlinked.
+   document: the document to which that presentation schema is related.
+   nature: the structure schema of a nature of the document, NULL if schema
+           is relative to the main structure schema of the document.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void                TtaUnlinkPSchema (PSchema schema, Document document, SSchema nature)
+#else  /* __STDC__ */
+void                TtaUnlinkPSchema (schema, document, nature)
+PSchema             schema;
+Document            document;
+SSchema             nature;
+#endif /* __STDC__ */
+
+{
+   PtrHandlePSchema    pHd;
+   PtrPSchema          pSchP;
+   PtrSSchema	       pSchS;
+
+   if (!LoadedDocument[document - 1])
+     return;
+   pHd = HandleOfPSchema (schema, document, nature);
+   if (pHd != NULL)
+     {
+       if (nature == NULL)
+	 pSchS = LoadedDocument[document - 1]->DocSSchema;
+       else
+	 pSchS = (PtrSSchema) nature;
+       /* update links between schema contexts */
+       if (pHd->HdPrevPSchema == NULL)
+	   pSchS->SsFirstPSchemaExtens = pHd->HdNextPSchema;
+	else
+	   pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
+
+	if (pHd->HdNextPSchema != NULL)
+	   pHd->HdNextPSchema->HdPrevPSchema = pHd->HdPrevPSchema;
+	FreeHandleSchPres (pHd);
+     }
+}
+
+
+/*----------------------------------------------------------------------
    TtaRemovePSchema
 
    Removes a presentation schema from a document or a nature in a 
@@ -124,25 +173,29 @@ SSchema             nature;
 
    if (!LoadedDocument[document - 1])
      return;
+   if (nature == NULL)
+     pSchS = LoadedDocument[document - 1]->DocSSchema;
+   else
+     pSchS = (PtrSSchema) nature;
+   pSchP = (PtrPSchema) schema;
    pHd = HandleOfPSchema (schema, document, nature);
    if (pHd != NULL)
      {
-       if (nature == NULL)
-	 pSchS = LoadedDocument[document - 1]->DocSSchema;
-       else
-	 pSchS = (PtrSSchema) nature;
        if (pHd->HdPrevPSchema == NULL)
 	   pSchS->SsFirstPSchemaExtens = pHd->HdNextPSchema;
 	else
 	   pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
 	if (pHd->HdNextPSchema != NULL)
 	   pHd->HdNextPSchema->HdPrevPSchema = pHd->HdPrevPSchema;
-	pSchP = pHd->HdPSchema;
-	pSchP->PsStructCode--;	/* number of documents using this schema */
-	if (pSchP->PsStructCode == 0)
-	   /* this presentation schema is no longer used */
-	   FreePresentationSchema (pSchP, pSchS);
 	FreeHandleSchPres (pHd);
+     }
+   /* in any case free the Pschema */
+   if (pSchP->PsStructCode > 0)
+     {
+       pSchP->PsStructCode--;	/* number of documents using this schema */
+       if (pSchP->PsStructCode == 0)
+	 /* this presentation schema is no longer used */
+	 FreePresentationSchema (pSchP, pSchS);
      }
 }
 

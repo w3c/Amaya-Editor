@@ -841,6 +841,7 @@ Document doc;
 {
   CHAR		      tmpfilename[25];
   CHAR		      charRead;
+  STRING              s;
   FILE		     *inputFile = NULL;
   int                 len;
   boolean	      result = FALSE;
@@ -873,17 +874,18 @@ Document doc;
 	  inputFile = TtaReadOpen (tmpfilename);
       if (inputFile != NULL)
 	{
-	  charRead = getc (inputFile);  
-	  while (charRead != EOF && szHTML < BUFFER_LEN - 1)
-	    {
-	      bufHTML[szHTML++] = charRead;
-	      charRead = getc (inputFile);
-	    }
-	  TtaReadClose (inputFile);  
-	  if (charRead == EOF)
-	    result = TRUE;
-	  /*}*/
-	}
+	  bufHTML[szHTML++] = charRead;
+	  charRead = getc (inputFile);
+          while (charRead != EOF && szHTML < BUFFER_LEN - 1)
+            {
+              bufHTML[szHTML++] = charRead;
+              charRead = getc (inputFile);
+            }
+ 	}
+      TtaReadClose (inputFile);  
+      if (charRead == EOF)
+	result = TRUE;
+  /*}*/
   bufHTML[szHTML] = EOS;
   return result;
 }

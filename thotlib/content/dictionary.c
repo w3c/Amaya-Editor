@@ -654,7 +654,7 @@ boolean             toCreate;
 
      }
    else
-      /* The dictionary was already loaded by anther document */
+      /* The dictionary was already loaded by another document */
       /* just update the dictionary context */
       pdict->DictDoc = document;
 

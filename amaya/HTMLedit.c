@@ -116,7 +116,7 @@ Document            doc;
        if (IsCSSName (buffer))
 	 {
 	   NormalizeURL (buffer, doc, pathname, documentname, NULL);
-	   RemoveStyleSheet (pathname, doc);
+	   RemoveStyleSheet (pathname, doc, TRUE);
 	 }
      }
 }
@@ -1096,6 +1096,40 @@ NotifyElement      *event;
   anchor = NULL;
   if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
       anchor = el;
+  else if (elType.ElTypeNum == HTML_EL_STYLE_)
+    {
+      /* look at the link type */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_Link_type;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  if (length > 0)
+	    value = TtaGetMemory (MAX_LENGTH);
+	  if (value != NULL)
+	    {
+	      /* is it a text/css */
+	      TtaGiveTextAttributeValue (attr, value, &length);
+	      if (ustrcasecmp (value, "text/css"))
+		{
+		  /* get the link destination */
+		  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr != NULL)
+		    {
+		      length = TtaGetTextAttributeLength (attr);
+		      if (length > 0)
+			{
+			  TtaGiveTextAttributeValue (attr, value, &length);
+			  LoadStyleSheet (value, doc, el, NULL);
+			}
+		    }
+		}
+	      TtaFreeMemory (value);
+	    }
+	}
+    }
   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
     {  
       parent = TtaGetParent (event->element);
@@ -1128,7 +1162,7 @@ NotifyElement      *event;
 	      if (attr != NULL)
 		{
 		  /* get a buffer for the SRC */
-		  length = TtaGetTextAttributeLength (attr) + 1;
+		  length = TtaGetTextAttributeLength (attr);
 		  if (length > 0)
 		    {
 		      value = TtaGetMemory (MAX_LENGTH);
@@ -1138,8 +1172,8 @@ NotifyElement      *event;
 			    TtaGiveTextAttributeValue (attr, value, &length);
 			    /* update value and SRCattribute */
 			    ComputeSRCattribute (el, doc, originDocument, attr, value);
-			    TtaFreeMemory (value);
 			  }
+			TtaFreeMemory (value);
 		      }
 		  }
 	      }

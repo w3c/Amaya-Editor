@@ -39,6 +39,19 @@ typedef int        *PSchema;
    the new presentation schema.
   ----------------------------------------------------------------------*/
 extern PSchema      TtaNewPSchema ();
+/*----------------------------------------------------------------------
+   TtaUnlinkPSchema
+
+   Unlinks a presentation schema from a document or a nature in a 
+   document.
+
+   Parameters:
+   schema: the presentation schema to be unlinked.
+   document: the document to which that presentation schema is related.
+   nature: the structure schema of a nature of the document, NULL if schema
+           is relative to the main structure schema of the document.
+  ----------------------------------------------------------------------*/
+extern void         TtaUnlinkPSchema (PSchema schema, Document document, SSchema nature);
 
 /*----------------------------------------------------------------------
    TtaRemovePSchema
@@ -107,6 +120,7 @@ extern void         TtaNextPSchema ( /*INOUT*/ PSchema * schema, Document docume
 #else  /* __STDC__ */
 
 extern PSchema      TtaNewPSchema ();
+extern void         TtaUnlinkPSchema (/* PSchema schema, Document document, SSchema nature */);
 extern void         TtaRemovePSchema ( /* PSchema schema, Document document */ );
 extern void         TtaAddPSchema ( /* PSchema schema, PSchema oldSchema, boolean before, Document document */ );
 extern PSchema      TtaGetFirstPSchema ( /* Document document */ );

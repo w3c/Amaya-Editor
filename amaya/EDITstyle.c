@@ -126,7 +126,7 @@ NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-  RemoveStyleSheet (NULL, event->document);
+  RemoveStyleSheet (NULL, event->document, TRUE);
   return FALSE;  /* let Thot perform normal operation */
 }
 
