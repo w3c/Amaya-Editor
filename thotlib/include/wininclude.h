@@ -39,7 +39,7 @@ extern void       TtaError (int);
 extern void       CreateMatrixDlgWindow (int, int, int, int, int, int);
 extern HDC        PASCAL GetPrinterDC (void);
 extern void       WinInitPrinterColors (void);
-extern void       CreateCSSDlgWindow (int, int, int, STRING, int, STRING);
+extern void       CreateCSSDlgWindow (HWND, int, int, int, STRING, int, STRING, STRING);
 extern void       CreateLinkDlgWindow (HWND, STRING, int, int, int);
 extern void       CreateHelpDlgWindow (HWND, STRING, STRING, STRING);
 extern void       CreateMathDlgWindow (HWND, int, HWND);

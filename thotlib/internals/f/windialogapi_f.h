@@ -16,7 +16,7 @@
 #ifdef __STDC__
 extern HDC  PASCAL GetPrinterDC (void);
 extern void WinInitPrinterColors (void);
-extern void CreateCSSDlgWindow (int, int, int, char*, int, char*);
+extern void CreateCSSDlgWindow (HWND, int, int, int, char*, int, char*, char*);
 extern void CreateLinkDlgWindow (HWND, char*, int, int, int);
 extern void CreateHelpDlgWindow (HWND, char*, char*, char*);
 extern void CreateMathDlgWindow (HWND, int, HWND);
