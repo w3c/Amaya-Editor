@@ -646,7 +646,7 @@ STRING title	;
                                     DS_MODALFRAME | WS_POPUP | 
                                     WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                     ClickX, ClickY,
-                                    275, 180,
+                                    285, 110,
                                     parent, NULL, hInstance, NULL);
 
    ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
@@ -684,43 +684,52 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
       /* Create static window for the title */
       hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
-			       10, 10, 160, 25, hwnd, (HMENU) 1,
-			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
-    
-      hwnRange = CreateWindow (TEXT("STATIC"), formRange, 
-			       WS_CHILD | WS_VISIBLE | SS_LEFT,
-			       10, 40, 160, 25, hwnd, (HMENU) 2, 
+			       10, 10, 160, 240, hwnd, (HMENU) 1,
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
     
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow (TEXT("EDIT"), NULL, 
-			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
-			      10, 80, 250, 30, hwnd, (HMENU) ID_EDITVALUE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT | ES_AUTOHSCROLL,
+			      10, 30, 120, 20, hwnd, (HMENU) ID_EDITVALUE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
+      if (lpfnTextZoneWndProc == (WNDPROC) 0)
+         lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
+	  else
+           SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) textZoneProc);
     
       /* Create Apply button */
       applyButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_APPLY), 
-				  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				  10, 120, 60, 25, hwnd, 
+				  WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
+				  10, 55, 65, 25, hwnd, 
 				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Delete Button */
       deleteButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DEL_ATTR), 
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				   75, 120, 120, 25, hwnd, 
+				   80, 55, 120, 25, hwnd, 
 				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Done Button */
       doneButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				 200, 120, 60, 25, hwnd, 
+				 205, 55, 65, 25, hwnd, 
 				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      SetFocus (hwnEdit);
       break;
       
     case WM_DESTROY :
       PostQuitMessage (0);
       break;
-    
+
+	case WM_ENTER:
+	  val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
+	  if (ok)
+	    {
+	      ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
+	      ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+	    }
+	  break;
+
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{

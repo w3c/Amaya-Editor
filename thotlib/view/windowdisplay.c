@@ -119,40 +119,20 @@ int                 style;
    int      t;
 
    t = PixelToPoint (thick);
-   if (t <= 1)
-     {
-       switch (style)
+   logBrush.lbStyle = BS_SOLID;
+   logBrush.lbColor = RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue);
+   switch (style)
 	 {
 	 case 3:
-	   pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));
+	   pen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, t, &logBrush, 0, NULL);
 	   break;
 	 case 4:
-	   pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue)); 
+	   pen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, t, &logBrush, 0, NULL); 
 	   break;
 	 default:
-	   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue));   
+	   pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, t, &logBrush, 0, NULL);   
 	   break;
 	 }
-     }
-   else
-     {
-       logBrush.lbStyle = BS_SOLID;
-       logBrush.lbColor = RGB (RGB_colors[color].red, RGB_colors[color].green, RGB_colors[color].blue);
-       
-       switch (style)
-	 {
-	 case 3:
-	   pen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-	   break;
-	 case 4:
-	   pen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-	   break;
-	 default:
-	   pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-	   break;
-	 }
-     } 
-
    hOldPen = SelectObject (TtPrinterDC, pen);
    MoveToEx (TtPrinterDC, x1, y1, NULL);
    LineTo (TtPrinterDC, x2, y2);
@@ -369,23 +349,6 @@ int                 y2;
   LOGBRUSH logBrush;
 
   WIN_GetDeviceContext (frame);
-  if (TtLineGC.thick <= 1)
-    {
-      switch (TtLineGC.style)
-	{
-	case 3:
-	  pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
-	  break;
-	case 4:
-	  pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue)); 
-	  break;
-	default:
-	  pen = CreatePen (PS_SOLID, TtLineGC.thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));   
-	  break;
-	}
-    }
-  else
-    {
       logBrush.lbStyle = BS_SOLID;
       logBrush.lbColor = RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue);
       
@@ -401,8 +364,6 @@ int                 y2;
 	  pen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, TtLineGC.thick, &logBrush, 0, NULL);   
 	  break;
 	}
-    }
-
   hOldPen = SelectObject (TtDisplay, pen);
   MoveToEx (TtDisplay, x1, y1, NULL);
   LineTo (TtDisplay, x2, y2);
@@ -3493,39 +3454,27 @@ int                 active;
 int                 fg;
 #endif /* __STDC__ */
 {
-   register int        Y;
+   int        Y;
 
-#ifdef _WIN_PRINT 
-   if (y < 0)
-     return;
    y += FrameTable[frame].FrTopMargin;
    if (thick <= 0)
      return;
-
-   if (TtPrinterDC) {
-      if (align == 1)
-         Y = y + (h - thick) / 2;
-      else if (align == 2)
-           Y = y + h - thick - 1;
-      else
-          Y = y;
-       
-      if (thick > 0)
-         DoPrintOneLine (fg, x, Y, x + l - 1, Y, thick, style);
-   }
-#else /* _WIN_PRINT */
-   y += FrameTable[frame].FrTopMargin;
    if (align == 1)
       Y = y + (h - thick) / 2;
    else if (align == 2)
-      Y = y + h - thick - 1;
+      Y = y + h - thick / 2;
    else
-      Y = y;
-   if (thick > 0)
-     {
-	InitDrawing (0, style, thick, RO, active, fg);
-	DoDrawOneLine (frame, x, Y, x + l - 1, Y);
-     }
+      Y = y + thick / 2;
+   x = x + thick / 2;
+   l = l - thick;
+#ifdef _WIN_PRINT 
+   if (y < 0)
+     return;
+   if (TtPrinterDC)
+      DoPrintOneLine (fg, x, Y, x + l, Y, thick, style);
+#else /* _WIN_PRINT */
+   InitDrawing (0, style, thick, RO, active, fg);
+   DoDrawOneLine (frame, x, Y, x + l, Y);
 #endif /* _WIN_PRINT */
 }
 
@@ -3558,38 +3507,25 @@ int                 fg;
 {
    int        X;
 
-#ifdef _WIN_PRINT
-   if (y < 0)
-      return;
    y += FrameTable[frame].FrTopMargin;
    if (thick <= 0)
       return;
-
-   if (TtPrinterDC) {
-      if (align == 1)
-         X = x + (l - thick) / 2;
-      else if (align == 2)
-           X = x + l - thick - 1;
-      else
-          X = x;
-
-      if (thick > 0)
-         DoPrintOneLine (fg, X, y, X, y + h - 1, thick, style);
-   }
-#else  /* _WIN_PRINT */
    if (align == 1)
       X = x + (l - thick) / 2;
    else if (align == 2)
-      X = x + l - thick - 1;
+      X = x + l - thick / 2;
    else
-      X = x;
-
-   y += FrameTable[frame].FrTopMargin;
-   if (thick > 0)
-     {
-	InitDrawing (0, style, thick, RO, active, fg);
-	DoDrawOneLine (frame, X, y, X, y + h - 1);
-     }
+      X = x + thick / 2;
+   y = y + thick / 2;
+   h = h - thick;
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   if (TtPrinterDC)
+     DoPrintOneLine (fg, X, y, X, y + h, thick, style);
+#else  /* _WIN_PRINT */
+   InitDrawing (0, style, thick, RO, active, fg);
+   DoDrawOneLine (frame, X, y, X, y + h);
 #endif /* _WIN_PRINT */
 }
 
