@@ -208,7 +208,6 @@ MAKEFILE_IN= \
 @top_srcdir@/pluginlib/Makefile.in \
 @top_srcdir@/pluginlib/Makefile.plugin \
 @top_srcdir@/thotlib/Makefile.in \
-@top_srcdir@/thotlib/dialogue/Makefile.in \
 @top_srcdir@/thotlib/include/Makefile.in \
 @top_srcdir@/tools/Makefile.in \
 @top_srcdir@/tools/dns_daemon/Makefile.in \
