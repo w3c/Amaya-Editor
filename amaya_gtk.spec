@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.7.1
+%define version 8.7.2
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -24,7 +24,7 @@ BuildRoot:    /var/tmp/%{name}-buildroot
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
-Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-9.0.tgz
+Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-9.1.tgz
 # Patch: amaya-src-%{version}.diff
 %description
 
@@ -35,8 +35,8 @@ need to know the HTML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@w3.org, Jose.Kahan@w3.org,
-    Vincent.Quint@w3.org, Laurent.Carcone@w3.org
+    Irene.Vatton@inria.fr, Stephane.Gully@inria.fr,
+    Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
 * Tue Oct 15 2004 Irene Vatton (Irene.Vatton@w3.org>
@@ -76,9 +76,9 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-gtk --enable-redland --enable-bookmarks --prefix=/usr/share --exec=/usr/share
+../configure --with-gtk --enable-bookmarks --prefix=/usr/share --exec=/usr/share
 #cp Options.orig Options
-make all
+make 
 %install
 if [ -e /usr/bin/amaya ] ; then
   rm -f /usr/bin/amaya
@@ -88,9 +88,10 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 #cd ..
 %files
 %doc README.amaya
-/usr/share/Amaya/
+/usr/share/Amaya-%{version}/
 %post 
-/bin/ln -s /usr/share/Amaya/gtk/bin/amaya /usr/bin/amaya
+/bin/ln -s /usr/share/Amaya-%{version}/gtk/bin/amaya /usr/bin/amaya_gtk
+/bin/ln -s /usr/bin/amaya_gtk /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
 

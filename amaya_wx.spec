@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 9.0
+%define version 9.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -35,8 +35,8 @@ need to know the HTML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@w3.org, Jose.Kahan@w3.org,
-    Vincent.Quint@w3.org, Laurent.Carcone@w3.org
+    Irene.Vatton@inria.fr, Stephane.Gully@inria.fr,
+    Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
 * Tue Oct 15 2004 Irene Vatton (Irene.Vatton@w3.org>
@@ -91,9 +91,9 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 #cd ..
 %files
 %doc README.amaya
-/usr/share/Amaya/
+/usr/share/Amaya-%{version}.0/
 %post
-/bin/ln -s /usr/share/Amaya/wx/bin/amaya /usr/bin/amaya_wx
+/bin/ln -s /usr/share/Amaya-%{version}.0/wx/bin/amaya /usr/bin/amaya_wx
 /bin/ln -s /usr/bin/amaya_wx /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
