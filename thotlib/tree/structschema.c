@@ -2217,40 +2217,36 @@ SRule *ExtensionRule (PtrSSchema pSS, int typeNum, PtrSSchema pExtSS)
   int                 r;
 
    RegleExt = NULL;
-   if (pExtSS != NULL && pSS != NULL)
-      if (pExtSS->SsExtension && !pSS->SsExtension)
-	{
-	  typeName = TtaGetMemory (strlen (pSS->SsRule->SrElem[typeNum - 1]->SrName) + 1);
-	   /*on cherche d'abord une regle d'extension ayant le nom du type */
-	   strcpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName);
-	   r = 0;
-	   while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
-	      if (strcmp (typeName, pExtSS->SsExtensBlock->EbExtensRule[r].SrName) == 0)
-		 RegleExt = &(pExtSS->SsExtensBlock->EbExtensRule[r]);
-	      else
-		 r++;
-	   if (RegleExt == NULL)
-	      /* on n'a pas trouve' de regle de meme nom */
+   if (pExtSS && pSS && pExtSS->SsExtension && !pSS->SsExtension)
+     {
+       typeName = pSS->SsRule->SrElem[typeNum - 1]->SrName;
+       /*on cherche d'abord une regle d'extension ayant le nom du type */
+       r = 0;
+       while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
+	 if (strcmp (typeName, pExtSS->SsExtensBlock->EbExtensRule[r].SrName) == 0)
+	   RegleExt = &(pExtSS->SsExtensBlock->EbExtensRule[r]);
+	 else
+	   r++;
+       if (RegleExt == NULL)
+	 /* on n'a pas trouve' de regle de meme nom */
+	 {
+	   Rule = pSS->SsRule->SrElem[typeNum - 1];
+	   if (typeNum == pSS->SsRootElem)
+	     /* il s'agit d'une racine de document. */
+	     /* On cherche une regle d'extension qui */
+	     /* s'applique aux racines (regle avec SrName vide). */
 	     {
-		Rule = pSS->SsRule->SrElem[typeNum - 1];
-		if (typeNum == pSS->SsRootElem)
-		   /* il s'agit d'une racine de document. */
-		   /* On cherche une regle d'extension qui */
-		   /* s'applique aux racines (regle avec SrName vide). */
-		  {
-		     r = 0;
-		     while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
-		       {
-			if (pExtSS->SsExtensBlock->EbExtensRule[r].SrName[0] == EOS)
-			   RegleExt = &(pExtSS->SsExtensBlock->EbExtensRule[r]);
-			else
-			   r++;
-		       }
-		  }
+	       r = 0;
+	       while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
+		 {
+		   if (pExtSS->SsExtensBlock->EbExtensRule[r].SrName[0] == EOS)
+		     RegleExt = &(pExtSS->SsExtensBlock->EbExtensRule[r]);
+		   else
+		     r++;
+		 }
 	     }
-	   if (typeName != NULL);
-	   TtaFreeMemory (typeName);
-	}
+	 }
+     }
    return RegleExt;
 }
 

@@ -1146,8 +1146,7 @@ int          CreateNature (char *SSchName, char *PSchName,
 	 {
 	 pRule = pSS->SsRule->SrElem[ret - 1];
 	 strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
-	 pRule->SrName = TtaGetMemory ((strlen (SSchName)) + 1);
-	 strcpy (pRule->SrName, SSchName);
+	 pRule->SrName = TtaStrdup (SSchName);
 	 pRule->SrNDefAttrs = 0;
 	 pRule->SrConstruct = CsNatureSchema;
 	 pRule->SrSSchemaNat = NULL;
@@ -2505,11 +2504,8 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
       /* It's a generic xml schema */
       pSS->SsIsXml = TRUE;
       /* Modify the name of the structure schema */
-      if (sSchemaUri != NULL && pSS->SsUriName == NULL)
-	{
-	  pSS->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
-	  strcpy (pSS->SsUriName, sSchemaUri);
-	}
+      if (sSchemaUri && pSS->SsUriName == NULL)
+	  pSS->SsUriName = TtaStrdup (sSchemaUri);
       if (sSchemaName == NULL)
 	{
 	  pSS->SsName[0] = EOS;
@@ -2527,13 +2523,9 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
 		strcmp (pSS->SsRule->SrElem[i]->SrName, "XML") == 0)
 	      {
 		TtaFreeMemory (pSS->SsRule->SrElem[i]->SrName);
-		pSS->SsRule->SrElem[i]->SrName = NULL;
-		pSS->SsRule->SrElem[i]->SrName = TtaGetMemory (strlen (sSchemaName) + 1);
-		strcpy (pSS->SsRule->SrElem[i]->SrName, sSchemaName);
+		pSS->SsRule->SrElem[i]->SrName = TtaStrdup (sSchemaName);
 		TtaFreeMemory (pSS->SsRule->SrElem[i]->SrOrigName);
-		pSS->SsRule->SrElem[i]->SrOrigName = NULL;
-		pSS->SsRule->SrElem[i]->SrOrigName = TtaGetMemory (strlen (sSchemaName) + 1);
-		strcpy (pSS->SsRule->SrElem[i]->SrOrigName, sSchemaName);
+		pSS->SsRule->SrElem[i]->SrOrigName = TtaStrdup (sSchemaName);
 		i = pSS->SsNRules;
 	      }
 	}
@@ -2600,21 +2592,12 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
   if (found)
     {
       strncpy (pRule->SrOrigNat, sSchemaName, MAX_NAME_LENGTH);
-      if (pRule->SrName != NULL)
-	{
-	  TtaFreeMemory (pRule->SrName);
-	  pRule->SrName = NULL;
-	}
-      pRule->SrName = TtaGetMemory (strlen (sSchemaName) + 1);
-      strcpy (pRule->SrName, sSchemaName);
-      if (pRule->SrOrigName != NULL)
-	{
-	  TtaFreeMemory (pRule->SrOrigName);
-	  pRule->SrOrigName = NULL;
-	}
-      pRule->SrOrigName = TtaGetMemory (strlen (sSchemaName) + 1);
-      strcpy (pRule->SrOrigName, sSchemaName);
-
+      if (pRule->SrName)
+	TtaFreeMemory (pRule->SrName);
+      pRule->SrName = TtaStrdup (sSchemaName);
+      if (pRule->SrOrigName)
+	TtaFreeMemory (pRule->SrOrigName);
+      pRule->SrOrigName = TtaStrdup (sSchemaName);
     } 
 }
 
