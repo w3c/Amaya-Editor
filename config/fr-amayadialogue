@@ -137,7 +137,7 @@
 135 Créer/changer lien...
 136 Créer cible
 137 Détruire ancre
-138 **Memorize XPointer
+138 Sauver la séléction comme XPointer
 139 Montrer boutons
 140 Montrer adresse
 141 Montrer les zones actives
@@ -200,8 +200,8 @@
 198 Modèles de page
 199 Annoter la séléction
 200 Annoter le document
-201 **Reassign annotation (current selection)
-202 **Reassign annotation (memorized XPointer)
+201 **Reassign annotation (selection)
+202 **Reassign annotation (XPointer)
 203 Enregister une annotation
 204 Détruire l'annotation
 205 Charger les annotations

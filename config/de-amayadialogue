@@ -137,7 +137,7 @@
 135 Markierung als Verknüfung definieren...
 136 Markierung als Verknüpfungsziel definieren
 137 Verknüpfungsziel löschen
-138 **Memorize XPointer
+138 **Store selection as XPointer
 139 Symbolleiste
 140 Dokumentadresse
 141 Aktive Grafikbereiche markieren
@@ -200,8 +200,8 @@
 198 Seitenvorlagen...
 199 Auswahl kommentieren
 200 Dokument kommentieren
-201 **Reassign annotation (current selection)
-202 **Reassign annotation (memorized XPointer)
+201 **Reassign annotation (selection)
+202 **Reassign annotation (XPointer)
 203 Anmerkung veröffentlichen
 204 Kommentierung entfernen
 205 Anmerkungen laden

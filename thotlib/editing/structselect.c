@@ -2237,7 +2237,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 			  ThotBool doubleClick, ThotBool drag)
 {
   PtrDocument         pDoc;
-  PtrElement          pEl, pEl1;
+  PtrElement          pEl, pParent;
   PtrAttribute        pAttr;
   NotifyElement       notifyEl;
   Document            doc;
@@ -2246,7 +2246,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   ThotBool            graphSel, result;
 
   numassoc = 0;
-  pEl1 = NULL;
+  pEl = NULL;
   /* search the document and the view corresponding to the window */
   GetDocAndView (frame, &pDoc, &view, &assoc);
   doc = IdentDocument (pDoc);
@@ -2316,24 +2316,24 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   /* inclusion */
   if (doubleClick && pAb != NULL && pAb->AbElement != NULL)
     {
-      pEl1 = pAb->AbElement;
-      if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsReference)
+      pEl = pAb->AbElement;
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsReference)
 	{
 	  /* search for an inclusion among the ancestors */
-	  pEl = pEl1;
-	  while (pEl->ElParent != NULL && pEl->ElSource == NULL)
-	    pEl = pEl->ElParent;
-	  if (pEl->ElSource != NULL)
+	  pParent = pEl;
+	  while (pParent->ElParent != NULL && pParent->ElSource == NULL)
+	    pParent = pParent->ElParent;
+	  if (pParent->ElSource != NULL)
 	    /* it's an inclusion */
-	    pEl1 = pEl;
+	    pEl = pParent;
 	}
-      if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference ||
-	  pEl1->ElSource != NULL)
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference ||
+	  pEl->ElSource != NULL)
 	/* this element is a reference or an inclusion */
 	{
 	  doubleClickRef = TRUE;
-	  FirstSelectedElement = pEl1;
-	  LastSelectedElement = pEl1;
+	  FirstSelectedElement = pEl;
+	  LastSelectedElement = pEl;
 	  SelectedPointInPolyline = 0;
 	  SelectedPictureEdge = 0;
 	}
@@ -2342,10 +2342,10 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	  /* it's neither an inclusion nor a reference element */
 	  /* search a reference attribute with exception ActiveRef */
 	  /* among the ancestors */
-	  pEl = pEl1;
+	  pParent = pEl;
 	  do
 	    {
-	      pAttr = pEl->ElFirstAttr;
+	      pAttr = pParent->ElFirstAttr;
 	      /* scan all attributes of current element */
 	      while (pAttr != NULL && !doubleClickRef)
 		{
@@ -2354,8 +2354,8 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		  /* a reference attribute has been found */
 		  {
 		    doubleClickRef = TRUE;
-		    FirstSelectedElement = pEl;
-		    LastSelectedElement = pEl;
+		    FirstSelectedElement = pParent;
+		    LastSelectedElement = pParent;
 		    SelectedPointInPolyline = 0;
 		    SelectedPictureEdge = 0;
 		  }
@@ -2365,9 +2365,9 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		}
 	      if (!doubleClickRef)
 		/* higher level ancestor */
-		pEl = pEl->ElParent;
+		pParent = pParent->ElParent;
 	    }
-	  while (pEl != NULL && !doubleClickRef);
+	  while (pParent != NULL && !doubleClickRef);
 	}
     }
 

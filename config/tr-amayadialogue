@@ -137,7 +137,7 @@
 135 Baðlantý yarat...
 136 Hedef yarat
 137 <A> tanýmý sil
-138 **Memorize XPointer
+138 **Store selection as XPointer
 139 Tuþlarý göster
 140 Adres göster
 141 Yakýnlaþtýr
@@ -200,8 +200,8 @@
 198 **Templates...
 199 **Annotate selection
 200 **Annotate document
-201 **Reassign annotation (current selection)
-202 **Reassign annotation (memorized XPointer)
+201 **Reassign annotation (selection)
+202 **Reassign annotation (XPointer)
 203 **Post annotation
 204 **Delete annotation
 205 **Load annotations
