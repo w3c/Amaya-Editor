@@ -1049,7 +1049,7 @@ Document            doc;
 	if (css != NULL)
 	   return;
 
-	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
+	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
 	if (toparse)
 	  {
 	     fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
@@ -1184,7 +1184,7 @@ int                 merge;
 	if (css != NULL)
 	   return;
 
-	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
+	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
 	if (toparse)
 	  {
 	     fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);

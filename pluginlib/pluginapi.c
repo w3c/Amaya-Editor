@@ -616,7 +616,7 @@ const char *target;
 				 (void*) Ap_GetURLNotifyProgressCallback,
 				 (void*) instance, 
 				 (void*) Ap_GetURLNotifyProgressCallback,
-				 (void*) instance, FALSE);
+				 (void*) instance, FALSE, NULL);
 	}
     }
 # ifdef PLUGIN_DEBUG
@@ -727,12 +727,12 @@ NPBool      file;
 	      printf ("error occured while reading file: %s\n", fileToPost);
 	      return (NPERR_GENERIC_ERROR);
 	    }
-	  GetObjectWWW (1, tempurl, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0);
+	  GetObjectWWW (1, tempurl, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0, NULL);
 	}
     }
   else
     /* Posting data from memory */
-    GetObjectWWW (1, tempurl, tempbuf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0);
+    GetObjectWWW (1, tempurl, tempbuf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0, NULL);
   
    return (NPERR_NO_ERROR);
 }

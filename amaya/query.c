@@ -742,6 +742,35 @@ int                 status;
    else if (me->reqStatus != HT_ABORT)
      me->reqStatus = HT_END;
 
+   /* copy the content_type */
+  
+   {
+    char *content_type = request->anchor->content_type->name;
+ 
+   if (content_type && content_type [0] && me->content_type)  
+     {
+        /* libwww gives www/unknown when it gets an error. As this is 
+           an HTML test, we force the type to text/html */
+	if (!strcmp (content_type, "www/unknown"))
+          {
+           strcpy (me->content_type, "text/html");
+          }
+        else 
+          { 
+	   strncpy (me->content_type, content_type, 
+	            NAME_LENGTH -1);
+           me->content_type [NAME_LENGTH-1] = '\0';
+           
+           /* Content-Type can be specified by a server's admin. To be on
+              the safe side, we normalize its case */
+           ConvertToLowerCase (me->content_type);
+          } 
+#ifdef DEBUG_LIBWWW
+        fprintf (stderr, "content type is: %s\n", me->content_type);
+#endif /* DEBUG_LIBWWW */
+     }
+   }
+ 
   /* don't remove or Xt will hang up during the PUT */
 
    if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
@@ -1354,11 +1383,14 @@ void                QueryClose ()
    Callback and context for a terminate handler
    -error_html if TRUE, then display any server error message as an
    HTML document.
-
+   - content_type a string
+ 
    Outputs:
    - urlName The URL that was retrieved
    - outputfile The name of the temporary file which holds the
    retrieved data. (Only in case of success)
+   - if content_type wasn't NULL, it will contain a copy of the parameter
+     sent in the HTTP answer
    Returns:
    HT_ERROR
    HT_OK
@@ -1367,10 +1399,10 @@ void                QueryClose ()
 #ifdef __STDC__
 int GetObjectWWW (int docid, char* urlName, char* postString, char* outputfile, int mode,
 		  TIcbf* incremental_cbf, void* context_icbf, TTcbf* terminate_cbf, 
-		  void* context_tcbf, boolean error_html)
+		  void* context_tcbf, boolean error_html, char *content_type)
 #else
 int GetObjectWWW (docid, urlName, postString, outputfile, mode, incremental_cbf, context_icbf, 
-		  terminate_cbf, context_tcbf, error_html)
+		  terminate_cbf, context_tcbf, error_html, content_type)
 int           docid;
 char         *urlName;
 char         *postString;
@@ -1381,6 +1413,7 @@ void         *context_icbf;
 TTcbf        *terminate_cbf;
 void         *context_tcbf;
 boolean       error_html;
+char 	     *content_type;
 #endif
 {
    AHTReqContext      *me;
@@ -1468,6 +1501,7 @@ boolean       error_html;
    me->context_icbf = context_icbf;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
+   me->content_type = content_type;
 
    /* for the async. request modes, we need to have our
       own copy of outputfile and urlname

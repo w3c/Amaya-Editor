@@ -377,7 +377,7 @@ void               *extra;
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        AMAYA_ASYNC, NULL, NULL,
 				(void *) libWWWImageLoaded,
-				(void *) desc, NO);
+				(void *) desc, NO, NULL);
 #endif /* !AMAYA_JAVA && !AMAYA_ILU */
 	      if (i != -1) 
 		desc->status = IMAGE_LOADED;

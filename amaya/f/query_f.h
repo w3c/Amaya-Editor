@@ -21,7 +21,8 @@ extern int GetObjectWWW ( int docid,
                           void* context_icbf,
                           TTcbf* terminate_cbf,
                           void* context_tcbf,
-                          boolean error_html );
+                          boolean error_html,
+                          char* content_type);
 extern int PutObjectWWW ( int docid,
                           char *fileName,
                           char *urlName,
@@ -58,7 +59,8 @@ extern int GetObjectWWW (/* int docid,
                             void* context_icbf,
                             TTcbf* terminate_cbf,
                             void* context_tcbf,
-                            boolean error_html */);
+                            boolean error_html,
+                            char* content_type */);
 extern int PutObjectWWW (/* int docid,
                             char *fileName,
                             char *urlName,

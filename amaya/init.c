@@ -1186,11 +1186,14 @@ View                view;
    char               *tempfile;
    char               *pathname;
    char               *documentname;
+   char                content_type[NAME_LENGTH];
    int                 toparse;
 
    if (DocumentURLs[(int) document] == NULL)
       /* the document has not been loaded yet */
       return;
+
+   content_type[0] = '\0';
 
    /* abort all current exchanges concerning this document */
    StopTransfer (document, 1);
@@ -1228,10 +1231,11 @@ View                view;
 			       NULL, NULL, NULL, NULL, YES);
 #else /* AMAYA_JAVA */
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC,
-			       NULL, NULL, NULL, NULL, YES);
+			       NULL, NULL, NULL, NULL, YES, content_type);
 #endif /* AMAYA_JAVA */
 	TtaHandlePendingEvents ();
      }
+
    if (toparse != -1)
      {
         TtaSetCursorWatch (0, 0);
@@ -1532,6 +1536,7 @@ boolean		    history;
    char               *target;
    char               *pathname;
    char               *documentname;
+   char                content_type [NAME_LENGTH];
    char               *s;
    int                 toparse;
    int                 i;
@@ -1545,6 +1550,8 @@ boolean		    history;
        TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
        return (0);
      }
+ 
+   content_type[0] = '\0';
    ok = TRUE;
    tempdocument = TtaGetMemory (MAX_LENGTH);
    target = TtaGetMemory (MAX_LENGTH);
@@ -1652,7 +1659,7 @@ boolean		    history;
 		   if (CE_event == CE_FORM_POST)
 		     toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
 					     AMAYA_FORM_POST | AMAYA_SYNC,
-					     NULL, NULL, NULL, NULL, YES);
+					     NULL, NULL, NULL, NULL, YES, content_type);
 		   else
 		     {
 		       if (!strcmp (documentname, "noname.html"))
@@ -1661,13 +1668,13 @@ boolean		    history;
 			   if (slash && pathname[slash - 1] != '/')
 			     strcat (pathname, "/");
 			   
-			   toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+			   toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES, content_type);
 			   
 			   /* keep the real name */
 			   NormalizeURL (pathname, 0, tempdocument, documentname);
 			 }
 		       else 
-			 toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+			 toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES, content_type);
 		     }
 		 }
 	       else

@@ -5,7 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
+extern void  ConvertToLowerCase (char *string);
 extern void ExplodeURL ( char *url,
                          char **proto,
                          char **host,
@@ -38,7 +38,7 @@ extern char *MakeRelativeURL ( char *aName,
                                char *relatedName );
 
 #else /* __STDC__ */
-
+extern void ConvertToLowerCase (/* char *string */);
 extern void ExplodeURL (/* char *url,
                            char **proto,
                            char **host,

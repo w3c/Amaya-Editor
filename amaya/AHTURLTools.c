@@ -35,9 +35,9 @@ typedef struct _HTURI {
   Converts a string to lowercase.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ConvertToLowerCase (char *string)
+void         ConvertToLowerCase (char *string)
 #else  /* __STDC__ */
-static void         ConvertToLowerCase (string)
+void         ConvertToLowerCase (string)
 char                *string;
 
 #endif /* __STDC__ */

@@ -112,6 +112,11 @@ typedef struct _AHTReqContext
      /* a file has been received                  */
      void               *context_tcbf;	/* Context for the above cbf                 */
 
+     /*                 the following element points to the content type of 
+                        a requested node */
+
+     char               *content_type;
+
      /* The following elements are used for the PUT and POST */
 
      HTParentAnchor     *dest;	/* Destination for PUT etc.              */
