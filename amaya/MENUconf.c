@@ -43,10 +43,6 @@
 #include "print.h"
 #include "fileaccess.h"
 #include "profiles.h"
-#ifdef ANNOTATIONS
-#include "annotlib.h"
-#include "ANNOTevent_f.h"
-#endif /* ANNOTATIONS */
 
 #ifdef _WINDOWS
 #include "resource.h"
@@ -182,6 +178,7 @@ static ThotBool LoadCss;
 static ThotBool DoubleClick;
 static ThotBool EnableFTP;
 static char     ScreenType[MAX_LENGTH];
+static char     NewScreen[MAX_LENGTH];
 static char    *ScreensTxt[]={
   "handheld", "print", "projection", "screen", "tty", "tv"
 };
@@ -279,6 +276,7 @@ static AM_WIN_MenuText WIN_ProfileMenuText[] =
 static int      ProfileBase;
 static int      CurrentProfile = -1;
 static char     Profile[MAX_LENGTH];
+static char     NewProfile[MAX_LENGTH];
 static char     Profiles_File[MAX_LENGTH];
 #define MAX_PRO 50
 static char    *MenuText[MAX_PRO];
@@ -319,11 +317,14 @@ static char     AnnotServers[MAX_LENGTH];
 static ThotBool AnnotLAutoLoad;
 static ThotBool AnnotRAutoLoad;
 static ThotBool AnnotRAutoLoadRst;
+
+#include "annotlib.h"
+#include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 
-#include "query_f.h"
+#include "HTMLsave_f.h"
 #include "init_f.h"
-
+#include "query_f.h"
 
 
 /*
@@ -2695,17 +2696,14 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
 LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				    LPARAM lParam)
 { 
-  int       itemIndex = 0;
+  int       itemIndex = 0, doc;
 
   switch (msg)
     {
     case WM_INITDIALOG:
       BrowseHwnd = hwnDlg;
-      ScreensList = CreateWindow ("listbox", NULL, 
-				  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				  10, 105, 200, 60, hwnDlg, (HMENU) 1, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, 
-					 GWL_HINSTANCE), NULL);
+	  ScreensList = GetDlgItem (hwnDlg, IDC_SCREENLIST);
+ 	  WIN_SetDialogfont (ScreensList);
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_BrowseMenuText);
       /* write the current values in the dialog entries */
@@ -2734,15 +2732,25 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_ENABLEFTP:
 	  EnableFTP = !EnableFTP;
 	  break;
-	case IDC_SCREEN:
-	  if (HIWORD (wParam) == LBN_SELCHANGE)
-	  itemIndex = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
-	  itemIndex = SendMessage (ScreensList, LB_GETTEXT, itemIndex,
-				   (LPARAM) ScreenType);
+	case IDC_SCREENLIST:
+	  CurrentScreen = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
+	  CurrentScreen = SendMessage (ScreensList, LB_GETTEXT, CurrentScreen,
+				   (LPARAM) NewScreen);
 	  break;
 
 	  /* action buttons */
 	case ID_APPLY:
+	  if (strcmp (ScreenType, NewScreen))
+	  {
+		  strcpy (ScreenType, NewScreen);
+	  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
+	    {
+	      if (DocumentTypes[doc] == docHTML ||
+		  DocumentTypes[doc] == docSVG ||
+		  DocumentTypes[doc] == docMath)
+		Synchronize (doc, 1);
+	    }
+	  }
 	  SetBrowseConf ();	  
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -2794,12 +2802,13 @@ static void BuildScreenSelector (void)
 	}
     }
   
-  /* Fill in the profile form  */
+  /* Fill in the screen list form  */
   TtaNewSizedSelector (BrowseBase + mScreenSelector, BrowseBase + BrowseMenu,
 		       TtaGetMessage (AMAYA, AM_SCREEN_TYPE), nbscreens,
 		       ((i < 2) ? "" : BufMenu), 3, 2, NULL, FALSE, FALSE);
   /* preselect the screen matching the user preference */
   TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
+  strcpy (NewScreen, ScreenType);
 }
 
 /*----------------------------------------------------------------------
@@ -2839,6 +2848,17 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+	  if (strcmp (NewScreen, ScreenType))
+	  {
+		  strcpy (ScreenType, NewScreen);
+	  for (doc = 1; doc < MAX_DOCUMENTS; doc++)
+	    {
+	      if (DocumentTypes[doc] == docHTML ||
+		  DocumentTypes[doc] == docSVG ||
+		  DocumentTypes[doc] == docMath)
+		Synchronize (doc, 1);
+	    }
+	  }
 	      SetBrowseConf ();
 	      TtaDestroyDialogue (ref);
 	      break;
@@ -2869,18 +2889,8 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	    }
 	  break;
 	case mScreenSelector:
-	  /* Get the desired profile from the item number */
-	  if (data)
-	    strcpy (ScreenType, data);
-	  else
-	    ScreenType[0] = EOS;
-	  for (doc = 0; doc < MAX_DOCUMENTS; doc++)
-	    {
-	      if (DocumentTypes[doc] == docHTML ||
-		  DocumentTypes[doc] == docSVG ||
-		  DocumentTypes[doc] == docMath)
-		Synchronize (doc, 1);
-	    }
+	  /* Get the desired screen type from the item number */
+      strcpy (NewScreen, data);
 	  break;
 
 	default:
@@ -3783,6 +3793,8 @@ static void BuildProfileList (void)
       SendMessage (ProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
       i++;
     }
+  strcpy (NewProfile, Profile);
+  SendMessage (ProfilesList, LB_SETCURSEL, (WPARAM)CurrentProfile, (LPARAM)0);
 }
 
 /*----------------------------------------------------------------------
@@ -3793,6 +3805,7 @@ void WIN_RefreshProfileMenu (HWND hwnDlg)
 {		
   SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
   SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
+  BuildProfileList();
 }
 
 /*----------------------------------------------------------------------
@@ -3809,11 +3822,8 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       ProfileHwnd = hwnDlg;
-      ProfilesList = CreateWindow ("listbox", NULL, 
-				      WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				      10, 90, 300, 90, hwnDlg, (HMENU) 1, 
-				      (HINSTANCE) GetWindowLong (hwnDlg, 
-						  GWL_HINSTANCE), NULL);
+	  ProfilesList = GetDlgItem (hwnDlg, IDC_PROFILELIST);
+	  WIN_SetDialogfont (ProfilesList);
       WIN_SetMenuText (hwnDlg, WIN_ProfileMenuText);
       SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
       SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
@@ -3846,6 +3856,7 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 
 	  /* action buttons */
 	case ID_APPLY:
+      strcpy (Profile, NewProfile);
 	  SetProfileConf ();
 	  TtaRebuildProTable (Profiles_File);
 	  /* reset the status flag */
@@ -3874,9 +3885,9 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	case LBN_SELCHANGE:
 	  itemIndex = SendMessage (ProfilesList, LB_GETCURSEL, 0, 0);
-	  itemIndex = SendMessage (ProfilesList, LB_GETTEXT, itemIndex,
-				   (LPARAM) Profile);
-	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
+	  CurrentProfile = SendMessage (ProfilesList, LB_GETTEXT, itemIndex,
+				   (LPARAM) NewProfile);
+	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, NewProfile);
 	  break;
 	}
       break;
@@ -3918,6 +3929,7 @@ static void BuildProfileSelector (void)
 	}
     }
   
+  strcpy (NewProfile, Profile);
   /* Fill in the profile form  */
   TtaNewSelector (ProfileBase + mProfileSelector, ProfileBase + ProfileMenu,
 		  NULL, nbprofiles,
@@ -3966,6 +3978,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+          strcpy (Profile, NewProfile);
 	      SetProfileConf ();
 	      TtaRebuildProTable (Profiles_File);
 	      TtaDestroyDialogue (ref);
@@ -3983,10 +3996,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	  break;
 	case mProfileSelector:
 	  /* Get the desired profile from the item number */
-	  if (data)
-	    strcpy (Profile, data);
-	  else
-	    Profile[0] = EOS;
+	  strcpy (NewProfile, data);
 	  break;
 	case mProfiles_File:
 	  if (data)

@@ -1811,10 +1811,10 @@ void Synchronize (Document doc, View view)
        DocumentTypes[doc] == docXml)
      /* it's the structured form of the document */
      {
+	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
        if (saveBefore)
 	 {
 	   /* save the current state of the document into the temporary file */
-	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
 	   SetNamespacesAndDTD (doc);
 	   if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
 	     {
@@ -1831,12 +1831,19 @@ void Synchronize (Document doc, View view)
 	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
 	   else
 	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
-	 }
        RedisplaySourceFile (doc);
        otherDoc = DocumentSource[doc];
        /* the other document is now different from the original file. It can
 	  be saved */
        TtaSetItemOn (otherDoc, 1, File, BSave);
+
+       ANNOT_Reload (otherDoc, 1);
+	 }
+    else
+	{
+	   TtaExtractName (tempdoc, tempdir, docname);
+       RestartParser (doc, tempdoc, tempdir, docname);
+	}
      }
    else if (DocumentTypes[doc] == docSource)
      /* it's a source document */
@@ -1849,7 +1856,6 @@ void Synchronize (Document doc, View view)
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
-	 }
        RestartParser (xmlDoc, tempdoc, tempdir, docname);
        /* the other document is now different from the original file. It can
 	  be saved */
@@ -1858,6 +1864,7 @@ void Synchronize (Document doc, View view)
        TtaSetDocumentUnmodified (doc);
        /* but it could be saved too */
        TtaSetItemOn (doc, 1, File, BSave);
+	 }
      }
    else
      {
@@ -1871,24 +1878,24 @@ void Synchronize (Document doc, View view)
 	 }
      }
 
-   if (DocumentTypes[otherDoc] != docSource)
-     ANNOT_Reload (otherDoc, 1);
-
    /* restore original display mode */
    TtaSetDisplayMode (doc, dispMode);
 
    /* disable the Synchronize command for both documents */
-   if (DocumentTypes[doc] != docCSS)
-     {
+   if (otherDoc)
+   {
+	   if (DocumentTypes[doc] != docCSS)
+	   {
        TtaSetItemOff (otherDoc, 1, File, BSynchro);
        TtaSetDocumentUnupdated (otherDoc);
-     }
-   TtaSetItemOff (doc, 1, File, BSynchro);
-   TtaSetDocumentUnupdated (doc);
+	   }
+     TtaSetItemOff (doc, 1, File, BSynchro);
+     TtaSetDocumentUnupdated (doc);
 
-   /* Synchronize selections */
-   event.document = doc;
-   SynchronizeSourceView (&event);
+     /* Synchronize selections */
+     event.document = doc;
+     SynchronizeSourceView (&event);
+   }
    TtaFreeMemory (tempdoc);
 }
 
