@@ -1127,7 +1127,15 @@ static Element Insert_text(Document timelinedoc, Element root, char* couleur, ch
       primitive to generate Timeline Element image via thot api
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static Element Insert_image(Document timelinedoc, Element root, char* text, int x, int y, int w, int h, int Insert_enfant, int type_num) 
+static Element Insert_image(Document timelinedoc,
+			    Element root,
+			    char* text,
+			    int x,
+			    int y,
+			    int w,
+			    int h,
+			    int Insert_enfant,
+			    int type_num) 
 {
 	Element el = NULL;
 	AttributeType        attrType;
@@ -1143,47 +1151,30 @@ static Element Insert_image(Document timelinedoc, Element root, char* text, int 
 
 	/* Position */
 	attrType.AttrTypeNum = Timeline_ATTR_x;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, timelinedoc);
-    sprintf (buffer, "%dpx", x);
-	TtaSetAttributeText (attr, buffer, el, timelinedoc);
-	TimelineParseCoordAttribute (attr, el, timelinedoc);
-
-	attrType.AttrTypeNum = Timeline_ATTR_y;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, timelinedoc);
-    sprintf (buffer, "%dpx", y);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, timelinedoc);
+	sprintf (buffer, "%dpx", x);
 	TtaSetAttributeText (attr, buffer, el, timelinedoc);
 	TimelineParseCoordAttribute (attr, el, timelinedoc);
 	
-
-	/* width and height */
-	attrType.AttrTypeNum = Timeline_ATTR_width_;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, timelinedoc);
-    sprintf (buffer, "%dpx", w);
+	attrType.AttrTypeNum = Timeline_ATTR_y;
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, timelinedoc);
+	sprintf (buffer, "%dpx", y);
 	TtaSetAttributeText (attr, buffer, el, timelinedoc);
-	TimelineParseWidthHeightAttribute(attr, el, timelinedoc, FALSE);
-
-	attrType.AttrTypeNum = Timeline_ATTR_height_;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, timelinedoc);
-    sprintf (buffer, "%dpx", h);
-	TtaSetAttributeText (attr, buffer, el, timelinedoc);
-	TimelineParseWidthHeightAttribute (attr, el, timelinedoc, FALSE);
-
+	TimelineParseCoordAttribute (attr, el, timelinedoc);
 
 	/* src */
 	attrType.AttrTypeNum = Timeline_ATTR_xlink_href;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, timelinedoc);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, timelinedoc);
   	TtaSetAttributeText (attr, text, el, timelinedoc);
 
 	/* insert */
 	if (Insert_enfant)
-		TtaInsertFirstChild (&el,root,timelinedoc);
+	  TtaInsertFirstChild (&el, root, timelinedoc);
 	else
-		TtaInsertSibling (el,root,FALSE,timelinedoc);
+	  TtaInsertSibling (el, root, FALSE, timelinedoc);
 	
 	/* Thot api structure compatibility */
 	childType.ElSSchema = elType.ElSSchema;
@@ -1204,7 +1195,9 @@ static Element Insert_image(Document timelinedoc, Element root, char* text, int 
       primitive to insert a cross in edited document
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static void Display_cross(Document basedoc, int x, int y) 
+static void Display_cross(Document basedoc,
+			  Element animated_element,
+			  int x, int y) 
 {
 	Element el = NULL, root, svg;
 	AttributeType        attrType;
@@ -1212,7 +1205,9 @@ static void Display_cross(Document basedoc, int x, int y)
 	Element child, lastc;
 	ElementType   elType, childType;
 	char buffer[512];
-	ThotBool basedoc_state = TtaIsDocumentModified (basedoc);
+	ThotBool basedoc_state;
+
+	basedoc_state = TtaIsDocumentModified (basedoc);
 	
 	root = TtaGetMainRoot (basedoc);
 	elType = TtaGetElementType (root);
@@ -1238,6 +1233,7 @@ static void Display_cross(Document basedoc, int x, int y)
 	
 
 	/* width and height */
+	
 	attrType.AttrTypeNum = SVG_ATTR_width_;
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, basedoc);
@@ -1251,12 +1247,11 @@ static void Display_cross(Document basedoc, int x, int y)
 	sprintf (buffer, "%dpx", ct_h_image_cross);
 	TtaSetAttributeText (attr, buffer, el, basedoc);
 	ParseWidthHeightAttribute (attr, el, basedoc, FALSE);
-
+	
 	/* insert */
 	elType.ElTypeNum = SVG_EL_SVG;
 	svg = TtaSearchTypedElement (elType, SearchInTree, root);
-	lastc = TtaGetLastChild (svg);
-	TtaInsertSibling (el, lastc, FALSE, basedoc);
+	TtaInsertSibling (el, animated_element, FALSE, basedoc);
 	
 	/* Thot api structure compatibility */
 	childType.ElSSchema = elType.ElSSchema;
@@ -1269,10 +1264,11 @@ static void Display_cross(Document basedoc, int x, int y)
 	strcat (buffer, ct_image_cross);
 	TtaSetTextContent (child, buffer, SPACE, basedoc);
 
+	
 	dt[basedoc].cross = el;
 
 	if (!basedoc_state)
-		TtaSetDocumentUnmodified (basedoc);
+	  TtaSetDocumentUnmodified (basedoc);	
 }
 #endif /* _SVGANIM */
 
@@ -4170,7 +4166,10 @@ static void Define_motion_anim (NotifyElement *event)
 	dt[basedoc].previous_x = Get_center_x_of_SVG_el (pm->animated_elem);
 	dt[basedoc].previous_y = Get_center_y_of_SVG_el (pm->animated_elem);
 	
-	Display_cross (basedoc, dt[basedoc].previous_x - ct_w_image_cross/2 , dt[basedoc].previous_y - ct_h_image_cross/2);
+	Display_cross (basedoc,
+		       pm->animated_elem,
+		       dt[basedoc].previous_x - ct_w_image_cross/2 ,
+		       dt[basedoc].previous_y - ct_h_image_cross/2);
 
 	dt[basedoc].current_edited_mapping = pm;
 
@@ -4379,3 +4378,5 @@ ThotBool TimelineElClicked (NotifyElement *event)
 #endif /* _SVGANIM */
 	return res;
 }
+
+	/* insert */
