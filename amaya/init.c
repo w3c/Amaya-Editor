@@ -1079,7 +1079,7 @@ boolean		    history;
    char               *tempdocument;
    char               *tempdir;
    char               *s;
-   int                 i;
+   int                 i, j;
    boolean	       PlainText;
    boolean	       HTMLfile;
 
@@ -1112,6 +1112,11 @@ boolean		    history;
       if (content_type[i] == '/')
 	 {
 	 content_type[i] = EOS;
+	 j = i+1;
+	 while (content_type[j] != ';' && content_type[j] != EOS)
+	    j++;
+         if (content_type[j] == ';')
+	    content_type[j] = EOS;
 	 if (strcasecmp (content_type, "text") == 0)
 	    {
 	    if (strncasecmp (&content_type[i+1], "html", 4) == 0)
