@@ -4,7 +4,7 @@
 2 No hay fichero de alfabeto
 3 La nueva vista no pede sustituir la previa
 4 Esquemas incompatibles. Recompile %s
-5 Error Fatal: Las fuentes Thot no encontradas
+5 Error Fatal: Las fuentes no encontradas
 6 Memory agotada
 7 Error Fatal Error: No puedo conectar a X
 8 La vista está modificada entes de la creación
@@ -18,7 +18,7 @@
 16 4 pagina/hoja
 17 %s
 18 No hay suficiente memoria
-19 *** Thot: Error Irrecuperable ***
+19 *** Amaya: Error Irrecuperable ***
 20 documentos modificados, si hay, serán guardados
 21 Incorrecto. Fichero TRA: %s
 22 %s no es un hermano válido para %s (%s)

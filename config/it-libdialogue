@@ -4,7 +4,7 @@
 2 Il file dell'alfabeto è inesistente
 3 La nuova vista non può rimpiazzare la vecchia
 4 Schemi incompatibili. Ricompila %s
-5 Errore fatale: fonti di Thot non trovate
+5 Errore fatale: fonti non trovate
 6 Memoria esaurita
 7 Errore fatale: impossibile connettersi a X
 8 Vista modificata prima della creazione
@@ -18,7 +18,7 @@
 16 4 pagine per foglio
 17 %s
 18 Memoria insufficiente
-19 *** Thot: Errore non recuperabile ***
+19 *** Amaya: Errore non recuperabile ***
 20 i documenti modificati, se ve ne sono, saranno salvati
 21 File .TRA incorretto: %s
 22 %s non è un fratello valido per %s (%s)

@@ -4,7 +4,7 @@
 2 No alphabet file
 3 New view cannot replace the old one
 4 Incompatible schemas. Recompile %s
-5 Fatal Error: Thot fonts not found
+5 Fatal Error: fonts not found
 6 Memory exhausted
 7 Fatal Error: Unable to connect to X
 8 View is modified before creation
@@ -18,7 +18,7 @@
 16 4 pages/sheet
 17 %s
 18 Not enough memory
-19 *** Thot: Irrecoverable error ***
+19 *** Amaya: Irrecoverable error ***
 20 modified documents, if any, will be saved
 21 Incorrect .TRA file: %s
 22 %s is not a valid sibling for %s (%s)

@@ -56,13 +56,13 @@
 	<message xml:lang="pt">Esquemas incompatíveis. Recompile %s</message>
 </label>
 <label define="TMSG_MISSING_FONT">
-	<message xml:lang="en">Fatal Error: Thot fonts not found</message>
-	<message xml:lang="fr">Erreur fatale : fontes Thot inaccessibles</message>
-	<message xml:lang="de">Gravierender Fehler: Thot-Schriften nicht gefunden</message>
-	<message xml:lang="it">Errore fatale: fonti di Thot non trovate</message>
-	<message xml:lang="tr">Ölümcül hata: Thot yazýtipleri bulunamadý</message>
-	<message xml:lang="es">Error Fatal: Las fuentes Thot no encontradas</message>
-	<message xml:lang="pt">Erro fatal: Tipos (fonts) Thot não encontrados</message>
+	<message xml:lang="en">Fatal Error: fonts not found</message>
+	<message xml:lang="fr">Erreur fatale : fontes inaccessibles</message>
+	<message xml:lang="de">Gravierender Fehler: Schriften nicht gefunden</message>
+	<message xml:lang="it">Errore fatale: fonti non trovate</message>
+	<message xml:lang="tr">Ölümcül hata: yazýtipleri bulunamadý</message>
+	<message xml:lang="es">Error Fatal: Las fuentes no encontradas</message>
+	<message xml:lang="pt">Erro fatal: Tipos (fonts) não encontrados</message>
 </label>
 <label define="TMSG_NO_MEMORY">
 	<message xml:lang="en">Memory exhausted</message>
@@ -182,13 +182,13 @@
 	<message xml:lang="pt">Não há memória suficiente</message>
 </label>
 <label define="TMSG_DEBUG_ERROR">
-	<message xml:lang="en">*** Thot: Irrecoverable error ***</message>
-	<message xml:lang="fr">*** Thot: erreur irrécupérable ***\n</message>
-	<message xml:lang="de">*** Thot: Nicht behebbarer Fehler ***</message>
-	<message xml:lang="it">*** Thot: Errore non recuperabile ***</message>
-	<message xml:lang="tr">*** Thot: Dönüþü olmayan HATA ***</message>
-	<message xml:lang="es">*** Thot: Error Irrecuperable ***</message>
-	<message xml:lang="pt">*** Thot: Erro irrecuperável ***</message>
+	<message xml:lang="en">*** Amaya: Irrecoverable error ***</message>
+	<message xml:lang="fr">*** Amaya: erreur irrécupérable ***\n</message>
+	<message xml:lang="de">*** Amaya: Nicht behebbarer Fehler ***</message>
+	<message xml:lang="it">*** Amaya: Errore non recuperabile ***</message>
+	<message xml:lang="tr">*** Amaya: Dönüþü olmayan HATA ***</message>
+	<message xml:lang="es">*** Amaya: Error Irrecuperable ***</message>
+	<message xml:lang="pt">*** Amaya: Erro irrecuperável ***</message>
 </label>
 <label define="TMSG_DEBUG_SAV_FILES">
 	<message xml:lang="en">modified documents, if any, will be saved</message>

@@ -4,7 +4,7 @@
 2 Absence de fichier alphabet
 3 La nouvelle vue ne peut remplacer l\'ancienne.
 4 Schémas incompatibles. Recompiler %s
-5 Erreur fatale : fontes Thot inaccessibles
+5 Erreur fatale : fontes inaccessibles
 6 Manque de mémoire
 7 Erreur fatale : connexion au serveur X impossible
 8 La vue est modifiée avant création.
@@ -18,7 +18,7 @@
 16 4 pages/feuille
 17 %s
 18 Pas assez de mémoire
-19 *** Thot: erreur irrécupérable ***\n
+19 *** Amaya: erreur irrécupérable ***\n
 20 les documents modifiés vont être sauvés \n
 21 Fichier .TRA incorrect : %s
 22 %s est un frère invalide pour %s (%s)

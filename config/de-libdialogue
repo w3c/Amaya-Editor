@@ -4,7 +4,7 @@
 2 Keine Alphabetdatei
 3 Neues Ansichtsfenster kann das bisherige nicht ersetzen
 4 Inkompatible Schemen. Compiliere %s neu
-5 Gravierender Fehler: Thot-Schriften nicht gefunden
+5 Gravierender Fehler: Schriften nicht gefunden
 6 Arbeitsspeicher erschöpft
 7 Gravierender Fehler: kein Zugriff zum X-Server
 8 Ansichtsfenster muß vor möglicher Änderung erzeugt werden
@@ -18,7 +18,7 @@
 16 4 Seiten/Blatt
 17 %s
 18 Nicht genügend Arbeitsspeicher
-19 *** Thot: Nicht behebbarer Fehler ***
+19 *** Amaya: Nicht behebbarer Fehler ***
 20 Geänderte Dokumente werden evtl. in \n
 21 Fehlerhafte .TRA - Datei: %s
 22 %s entspricht nicht %s (%s)

@@ -4,7 +4,7 @@
 2 Alfabe dosyasý yok
 3 Yeni görünüm eskisinin yerini alamaz
 4 Uyumsuz þemalar. %s yeniden derlenmeli
-5 Ölümcül hata: Thot yazýtipleri bulunamadý
+5 Ölümcül hata: yazýtipleri bulunamadý
 6 Bellek tükendi
 7 Ölümcül Hata: X sistemine baðlanýlamýyor
 8 Görünüm dosya yaratmadan önce deðiþtirildi
@@ -18,7 +18,7 @@
 16 4 sayfa/kaðýt
 17 %s
 18 Bellek yetersiz
-19 *** Thot: Dönüþü olmayan HATA ***
+19 *** Amaya: Dönüþü olmayan HATA ***
 20 deðiþtirilen belgeler varsa kaydedilecek
 21 Geçersiz.TRA dosyasý: %s
 22 %s is not a valid sibling for %s (%s)
