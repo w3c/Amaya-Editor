@@ -28,7 +28,7 @@
 #include "thotlib_APIInterface_stubs.h"
 #include "thotlib_APIRegistry_stubs.h"
 #include "thotlib_APIDialog_stubs.h"
-/* #include "thotlib_APIExtra_stubs.h" */
+#include "thotlib_APIExtra_stubs.h"
 #include "amaya_APIAmayaMsg_stubs.h"
 #include "amaya_APIJavaAmaya_stubs.h"
 
@@ -630,7 +630,7 @@ retry:
     ip_addr_result[1] = (unsigned char) ip[1];
     ip_addr_result[2] = (unsigned char) ip[2];
     ip_addr_result[3] = (unsigned char) ip[3];
-    ip_addr_list[0] = ip_addr_result;
+    ip_addr_list[0] = &ip_addr_result[0];
     ip_addr_list[1] = NULL;
     gethostbyname_result.h_addr_list = &ip_addr_list[0];
     return(&gethostbyname_result);

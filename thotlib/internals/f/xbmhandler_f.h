@@ -6,14 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Drawable XbmCreate ( char *fn,
+extern Drawable XbmCreate ( char* fn,
                             PictureScaling pres,
-                            int *xif,
-                            int *yif,
-                            int *wif,
-                            int *hif,
+                            int* xif,
+                            int* yif,
+                            int* wif,
+                            int* hif,
                             unsigned long BackGroundPixel,
-                            Drawable * mask1 );
+                            Drawable* mask1 );
 extern void XbmPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -30,14 +30,14 @@ extern boolean IsXbmFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern Drawable XbmCreate (/* char *fn,
+extern Drawable XbmCreate (/* char* fn,
                               PictureScaling pres,
-                              int *xif,
-                              int *yif,
-                              int *wif,
-                              int *hif,
+                              int* xif,
+                              int* yif,
+                              int* wif,
+                              int* hif,
                               unsigned long BackGroundPixel,
-                              Drawable * mask1 */);
+                              Drawable* mask1 */);
 extern void XbmPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

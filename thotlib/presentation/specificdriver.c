@@ -41,6 +41,8 @@
 
 #include "presentationapi_f.h"
 #include "changepresent_f.h"
+#include "memory_f.h"
+#include "presentdriver_f.h"
 
 /*
  * GetSpecificContext : user level function needed to allocate and
@@ -206,8 +208,8 @@ int                 extra;
 	/* shortcut : rules are sorted by type and view number */
 	if ((cur->PrType > type) ||
 	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
-	    ((cur->PrType == type) && (type == PRFunction) &&
-	     (cur->PrPresFunction > extra)))
+	    (((cur->PrType == type) && (type == PRFunction) &&
+	     (cur->PrPresFunction > extra))))
 	  {
 	     cur = NULL;
 	     break;

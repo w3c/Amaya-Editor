@@ -10,8 +10,6 @@ extern GenericContext GetGenericContext ( Document doc );
 extern void FreeGenericContext ( GenericContext ctxt );
 extern int PresConstSearch ( PSchema tcsh,
                              char *value );
-extern int PresConstInsert ( PSchema tcsh,
-                             char *value );
 extern int GenericCleanPresentation ( PresentationTarget t,
                                       PresentationContext c,
                                       PresentationValue v );
@@ -155,8 +153,6 @@ extern int GenericSetHeight ( PresentationTarget t,
 extern GenericContext GetGenericContext (/* Document doc */);
 extern void FreeGenericContext (/* GenericContext ctxt */);
 extern int PresConstSearch (/* PSchema tcsh,
-                               char *value */);
-extern int PresConstInsert (/* PSchema tcsh,
                                char *value */);
 extern int GenericCleanPresentation (/* PresentationTarget t,
                                         PresentationContext c,

@@ -24,6 +24,8 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 
+#include "HTMLbook_f.h"
+
 static char         tempSavedObject[MAX_LENGTH];
 
 /*
@@ -137,89 +139,6 @@ DBG(fprintf(stderr, "SetAbsoluteURLs\n");)
 		        */
 		       NormalizeURL (old_url, document, new_url, name);
 DBG(                   fprintf(stderr, "Changed SRC from %s to %s\n", old_url, new_url);)
-		       TtaSetAttributeText (at, new_url, el, document);
-		       break;
-		    }
-	       }
-	     TtaSearchAttribute (atType, SearchForward, el, &el, &at);
-	  }
-
-	/*
-	 * get next index in the table corresponding
-	 * to a different attribute.
-	 */
-	for (i = index + 1;
-	     (i < NB_URL_PAIR) && (URL_elem_tab[i].attr_type == attr);
-	     i++) ;
-	index = i;
-     }
-}
-
-/*----------------------------------------------------------------------
-   SetRelativeURLs
-   change URLs to relative ones within an HTML document.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetRelativeURLs (Document document, View view)
-#else
-void                SetRelativeURLs (document, view)
-Document            document;
-View                view;
-
-#endif
-{
-   int                 index, i;	/* in URL_elem_tab */
-   int                 attr;	/* value of attr_type */
-   Element             el;
-   ElementType         elType;
-   Attribute           at;
-   AttributeType       atType;
-   char                old_url[MAX_LENGTH + 1];
-   char                new_url[MAX_LENGTH + 50];
-   char               *rel_url;
-   char                name[MAX_LENGTH];
-   int                 len;
-
-   for (index = 0; index < NB_URL_PAIR;)
-     {
-	/* fetch a new attr */
-	attr = URL_elem_tab[index].attr_type;
-
-	/*
-	 * search all elements having this attribute
-	 */
-	el = TtaGetMainRoot (SavingDocument);
-	atType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
-	atType.AttrTypeNum = attr;
-	TtaSearchAttribute (atType, SearchForward, el, &el, &at);
-	while (el != NULL)
-	  {
-
-	     /*
-	      * search for all consecutives pair of (attr,elem)
-	      * if the current elem match.
-	      */
-	     elType = TtaGetElementType (el);
-	     for (i = index;
-		  (i < NB_URL_PAIR) && (URL_elem_tab[i].attr_type == attr);
-		  i++)
-	       {
-
-		  if (elType.ElTypeNum == URL_elem_tab[i].elem_type)
-		    {
-
-		       /*
-		        * get the URL contained in the attribute.
-		        */
-		       len = MAX_LENGTH;
-		       TtaGiveTextAttributeValue (at, old_url, &len);
-		       old_url[MAX_LENGTH] = EOS;
-
-		       /*
-		        * save the new SRC attr
-		        */
-		       NormalizeURL (old_url, document, new_url, name);
-		       /* rel_url = AHTMakeRelativeName (new_url, base_url) */
 		       TtaSetAttributeText (at, new_url, el, document);
 		       break;
 		    }

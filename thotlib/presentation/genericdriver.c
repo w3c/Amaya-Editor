@@ -1192,8 +1192,8 @@ int                 extra;
 	/* shortcut : rules are sorted by type and view number */
 	if ((cur->PrType > pres) ||
 	    ((cur->PrType == pres) && (cur->PrViewNum > 1)) ||
-	    ((cur->PrType == pres) && (pres == PtFunction)) &&
-	     (cur->PrPresFunction > extra))
+	    (((cur->PrType == pres) && (pres == PtFunction)) &&
+	     (cur->PrPresFunction > extra)))
 	  {
 	     cur = NULL;
 	     break;
@@ -1245,47 +1245,6 @@ char               *value;
     }
 
     return(-1);
-}
-
-/*
- * PresConstInsert : add a constant to the constant array and returns
- *        the index.
- */
-
-#ifdef __STDC__
-int PresConstInsert (PSchema tcsh, char *value)
-#else  /* __STDC__ */
-int PresConstInsert (doc, value)
-PSchema             tcsh;
-char               *value;
-
-#endif /* !__STDC__ */
-{
-    PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;
-    int i;
-
-    if ((pSchemaPrs == NULL) || (value == NULL)) return(-1);
-
-    /*
-     * First lookup the existing constants, searching for
-     * a corresponding entry.
-     */
-    for (i = 0;i < pSchemaPrs->PsNConstants;i++) {
-	if (pSchemaPrs->PsConstant[i].PdType != CharString) continue;
-        if (!strncmp(value, pSchemaPrs->PsConstant[i].PdString,
-	    MAX_PRES_CONST_LEN)) return(i + 1);
-    }
-
-    /*
-     * if not found, try to add it at the end.
-     */
-    if (pSchemaPrs->PsNConstants >= MAX_PRES_CONST) return(-1);
-    i = pSchemaPrs->PsNConstants;
-    pSchemaPrs->PsConstant[i].PdType = CharString;
-    pSchemaPrs->PsConstant[i].PdAlphabet = 'L';
-    strncpy(&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
-    pSchemaPrs->PsNConstants++;
-    return(i + 1);
 }
 
 /*----------------------------------------------------------------------

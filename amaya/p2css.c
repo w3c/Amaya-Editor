@@ -31,33 +31,6 @@ static char        *last_message = NULL;
 #define MSG(msg) last_message = msg
 #endif
 
-/*----------------------------------------------------------------------
-   *									*
-   * Unit definition : must be keep in sync with HTML3UnitNames from	*
-   * HTMLstyle.c and the presentation driver units available.		*
-   *									*
-  ----------------------------------------------------------------------*/
-
-struct unit_def
-  {
-     char               *sign;
-     int                 unit;
-  };
-static struct unit_def HTML3UnitNames[] =
-{
-   {"pt", DRIVERP_UNIT_PT},
-   {"pc", DRIVERP_UNIT_PC},
-   {"in", DRIVERP_UNIT_IN},
-   {"cm", DRIVERP_UNIT_CM},
-   {"mm", DRIVERP_UNIT_MM},
-   {"em", DRIVERP_UNIT_EM},
-   {"px", DRIVERP_UNIT_PX},
-   {"ex", DRIVERP_UNIT_XHEIGHT},
-   {"%", DRIVERP_UNIT_PERCENT},
-};
-
-#define NB_UNITS (sizeof(HTML3UnitNames) / sizeof(struct unit_def))
-
 /************************************************************************
  *									*
  * RPI handling : RPI are structures containing a generic CSS rule,	*
