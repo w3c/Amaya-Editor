@@ -1996,7 +1996,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
           if ((pres == ReScale &&
 	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
 #ifdef _GL
-	       glIsTexture (imageDesc->TextureBind))	    
+	       !glIsTexture (imageDesc->TextureBind))	    
 #else /*_GL*/
                imageDesc->PicPixmap == None)
 #endif /*_GL*/
