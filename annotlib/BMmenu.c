@@ -503,7 +503,12 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    char *label;
    int longest_label;
 
-   longest_label = 17;
+   /* compute the longest label */
+   longest_label = strlen (TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY));
+   i = strlen (TtaGetMessage (AMAYA, AM_BM_MODIFIED));
+   if (i > longest_label)
+     longest_label = i;
+   longest_label++;
 
    if (BookmarkBase == 0)
      BookmarkBase = TtaSetCallback (BookmarkMenuCallbackDialog, MAX_BOOKMARKMENU_DLG);
@@ -526,15 +531,15 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
    i = strlen (&s[i]) + 1;
-   strcpy (&s[i], "New Topic");
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_NEW_TOPIC));
 
    TtaNewSheet (BookmarkBase + BookmarkMenu, 
 		TtaGetViewFrame (doc, view),
-		"Bookmark Properties",
+		TtaGetMessage (AMAYA, AM_BM_BPROPERTIES),
 		3, s, TRUE, 2, 'L', D_DONE);
 
    /* topic hiearchy */
-   label = "Topic hierarchy:";
+   label = TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY);
    TtaNewPaddedLabel (BookmarkBase + mBMTopicTreeL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
    tree = TtaNewTreeForm (BookmarkBase + mBMTopicTree,
@@ -545,7 +550,7 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
      BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
 
    /* Title */
-   label = "Title:";
+   label = TtaGetMessage (AMAYA, AM_BM_TITLE);
    TtaNewPaddedLabel (BookmarkBase + mBMTitleL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMTitle,
@@ -556,7 +561,7 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 		   TRUE);
 
    /* Recalls */
-   label = "Recalls";
+   label = TtaGetMessage (AMAYA, AM_BM_RECALLS);
    TtaNewPaddedLabel (BookmarkBase + mBMBookmarksL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMBookmarks,
@@ -566,7 +571,7 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 		   1,
 		   TRUE);
    /* Author */
-   label = "Author:";
+   label = TtaGetMessage (AMAYA, AM_BM_AUTHOR);
    TtaNewPaddedLabel (BookmarkBase + mBMAuthorL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMAuthor,
@@ -577,35 +582,21 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 		   TRUE);
 
    /* Created */
-   label = "Created:";
+   label = TtaGetMessage (AMAYA, AM_BM_CREATED);
    TtaNewPaddedLabel (BookmarkBase + mBMCreatedL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
    TtaNewLabel (BookmarkBase + mBMCreated,  BookmarkBase + BookmarkMenu, 
 		aBookmark->created);
-   /*
-   TtaNewTextForm (BookmarkBase + mBMCreated,
-		   BookmarkBase + BookmarkMenu,
-		   NULL,
-		   30,
-		   1,
-		   TRUE);
-   */
+
    /* Modified */
-   label = "Modified:";
+   label = TtaGetMessage (AMAYA, AM_BM_MODIFIED);
    TtaNewPaddedLabel (BookmarkBase + mBMModifiedL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
    TtaNewLabel (BookmarkBase + mBMModified,  BookmarkBase + BookmarkMenu, 
 		aBookmark->modified);
-   /*
-   TtaNewTextForm (BookmarkBase + mBMModified,
-		   BookmarkBase + BookmarkMenu,
-		   NULL,
-		   30,
-		   1,
-		   TRUE);
-   */
+
    /* Description */
-   label = "Description:";
+   label = TtaGetMessage (AMAYA, AM_BM_DESCRIPTION);
    TtaNewPaddedLabel (BookmarkBase + mBMDescriptionL,  BookmarkBase + BookmarkMenu, 
 		      label, longest_label);
    TtaNewTextForm (BookmarkBase + mBMDescription,
@@ -783,8 +774,15 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 #ifndef _WINDOWS
    int i;
    char *label;
-   int longest_label = 17;
+   int longest_label;
    ThotWidget tree;
+
+   /* compute the longest label */
+   longest_label = strlen (TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY));
+   i = strlen (TtaGetMessage (AMAYA, AM_BM_MODIFIED));
+   if (i > longest_label)
+     longest_label = i;
+   longest_label++;
 
    if (TopicBase == 0)
      TopicBase = TtaSetCallback (TopicMenuCallbackDialog, MAX_TOPICMENU_DLG);
@@ -812,11 +810,11 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 
    TtaNewSheet (TopicBase + TopicMenu, 
 		TtaGetViewFrame (doc, view),
-		"Topic Properties",
+		TtaGetMessage (AMAYA, AM_BM_TPROPERTIES),
 		1, s, TRUE, 2, 'L', D_DONE);
 
    /* topic hierarchy */
-   label = "Topic hierarchy:";
+   label = TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY);
    TtaNewPaddedLabel (TopicBase + mTMTopicTreeL,  TopicBase + TopicMenu,
 		      label, longest_label);
    tree = TtaNewTreeForm (TopicBase + mTMTopicTree,
@@ -840,7 +838,7 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 #endif
 
    /* topic title */
-   label = "Topic Title:";
+   label = TtaGetMessage (AMAYA, AM_BM_TITLE);
    TtaNewPaddedLabel (TopicBase + mTMTitleL,  TopicBase + TopicMenu,
 		      label, longest_label);
    TtaNewTextForm (TopicBase + mTMTitle,
@@ -851,7 +849,7 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 		   TRUE);
 
    /* author */
-   label = "Author:";
+   label = TtaGetMessage (AMAYA, AM_BM_AUTHOR);
    TtaNewPaddedLabel (TopicBase + mTMAuthorL,  TopicBase + TopicMenu,
 		      label, longest_label);
    TtaNewTextForm (TopicBase + mTMAuthor,
@@ -862,47 +860,21 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 		   TRUE);
 
    /* created */
-   label = "Created:";
+   label = TtaGetMessage (AMAYA, AM_BM_CREATED);
    TtaNewPaddedLabel (TopicBase + mTMCreatedL,  TopicBase + TopicMenu,
 		      label, longest_label);
    TtaNewLabel (TopicBase + mTMCreated, TopicBase + TopicMenu,
 		aTopic->created);
-   /*
-   TtaNewLabel (TopicBase + mTML1, TopicBase + TopicMenu,
-		"");
-   TtaNewLabel (TopicBase + mTML2, TopicBase + TopicMenu,
-		"");
-   */
-   /*
-   TtaNewTextForm (TopicBase + mTMCreated,
-		   TopicBase + TopicMenu,
-		   NULL,
-		   30,
-		   1,
-		   TRUE);
-   */
+
    /* last modified */
-   label = "Last Modified:";
+   label = TtaGetMessage (AMAYA, AM_BM_MODIFIED);
    TtaNewPaddedLabel (TopicBase + mTMModifiedL,  TopicBase + TopicMenu,
 		      label, longest_label);
    TtaNewLabel (TopicBase + mTMModified, TopicBase + TopicMenu,
 		aTopic->modified);
-   /*
-   TtaNewLabel (TopicBase + mTML3, TopicBase + TopicMenu,
-		"");
-   TtaNewLabel (TopicBase + mTML4, TopicBase + TopicMenu,
-		"");
-   */
-   /*
-   TtaNewTextForm (TopicBase + mTMModified,
-		   TopicBase + TopicMenu,
-		   NULL,
-		   30,
-		   1,
-		   TRUE);
-   */
+
    /* description */
-   label = "Description:";
+   label =    TtaGetMessage (AMAYA, AM_BM_DESCRIPTION);
    TtaNewPaddedLabel (TopicBase + mTMDescriptionL,  TopicBase + TopicMenu,
 		      label, longest_label);
    TtaNewTextForm (TopicBase + mTMDescription,
