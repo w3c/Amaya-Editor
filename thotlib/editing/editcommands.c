@@ -2508,7 +2508,6 @@ void ContentEditing (int editType)
 		  LoadSymbol (editType, pLine, defaultHeight,
 			      defaultWidth, pBox, pAb, frame);
 		  CloseHistorySequence (pDoc);
-		  /*NewContent (pAb);*/
 		}
 	      else if ((pAb->AbLeafType == LtGraphics ||
 			pAb->AbLeafType == LtPolyLine) &&
