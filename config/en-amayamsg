@@ -1,17 +1,17 @@
 # encoding= latin1
 0 Files
 1 Open
-2 New XHTML 1.1 document...
-3 New XHTML 1.0 Transitional document...
-4 New XHTML 1.0 Strict document...
-5 New XHTML 1.0 Basic document...
-6 New MathML document...
-7 New SVG document...
-8 New CSS style sheet...
+2 New XHTML 1.1 document
+3 New XHTML 1.0 Transitional document
+4 New XHTML 1.0 Strict document
+5 New XHTML 1.0 Basic document
+6 New MathML document
+7 New SVG document
+8 New CSS style sheet
 9 From template
-10 Open document...
-11 Open in new tab...
-12 Open in new window...
+10 Open document
+11 Open in new tab
+12 Open in new window
 13 Clear
 14 Click
 15 Document saved: %s
@@ -30,7 +30,7 @@
 28 Invalid target
 29 Insert the URI or browse
 30 Title
-31 Change Title...
+31 Change Title
 32 Document modified - Do you want to save it?
 33 Redirection fetching of %s
 34 Too many redirections detected

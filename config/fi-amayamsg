@@ -1,17 +1,17 @@
 # encoding= latin1
 0 Tiedostot
 1 Avaa
-2 Uusi XHTML 1.1 dokumentti...
-3 Uusi XHTML 1.0 Transitional document...
-4 Uusi XHTML 1.0 Strict document...
-5 Uusi XHTML 1.0 Basic dokumentti...
-6 Uusi MathML dokumentti...
-7 Uusi SVG dokumentti...
-8 Uusi CSS tyylitiedosto...
+2 Uusi XHTML 1.1 dokumentti
+3 Uusi XHTML 1.0 Transitional document
+4 Uusi XHTML 1.0 Strict document
+5 Uusi XHTML 1.0 Basic dokumentti
+6 Uusi MathML dokumentti
+7 Uusi SVG dokumentti
+8 Uusi CSS tyylitiedosto
 9 Valmiista mallista
-10 Avaa dokumentti...
-11 **Open in new tab...
-12 Avaa uudessa ikkunass...
+10 Avaa dokumentti
+11 **Open in new tab
+12 Avaa uudessa ikkunass
 13 Tyhjennä
 14 **Click
 15 Tallennetaan: %s
@@ -30,7 +30,7 @@
 28 Kelpaamaton kohde
 29 Syötä URL tai selaa
 30 Otsikko
-31 Muuta otsake...
+31 Muuta otsake
 32 **Document modified - Do you want to save it?
 33 Noudetaan välitetysti %s
 34 Havaittu liian monta välitystä

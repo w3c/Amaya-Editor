@@ -1,17 +1,17 @@
 # encoding= latin1
 0 File
 1 Apri
-2 Nuovo documento XHTML 1.1...
-3 Nuovo documento XHTML 1.0 Transitional...
-4 Nuovo documento XHTML 1.0 Strict...
-5 Nuovo documento XHTML 1.0 Basic...
-6 Nuovo documento MathML...
-7 Nuovo documento SVG...
-8 Nuovo stile CSS...
+2 Nuovo documento XHTML 1.1
+3 Nuovo documento XHTML 1.0 Transitional
+4 Nuovo documento XHTML 1.0 Strict
+5 Nuovo documento XHTML 1.0 Basic
+6 Nuovo documento MathML
+7 Nuovo documento SVG
+8 Nuovo stile CSS
 9 Modello
-10 Apri documento...
-11 **Open in new tab...
-12 Apri in una nuova finestra...
+10 Apri documento
+11 Apri tab
+12 Apri in una nuova finestra
 13 Cancella
 14 Click
 15 Documento salvato: %s
@@ -30,7 +30,7 @@
 28 Obiettivo non valido
 29 Indirizzo
 30 Titolo
-31 Cambia Titolo...
+31 Cambia Titolo
 32 Documento modificato - salvare?
 33 Redirezione durante il caricamento di %s
 34 Ho rilevato troppe redirezioni
@@ -240,7 +240,7 @@
 238 Abilita FTP
 239 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
 240 XML non valido - Mostro gli errori di parsificazione?
-241 **Try the 'File/Force a Character Coding' entry
+241 Prova la voce 'File/Forza codifica caratteri'
 242 Caratteri non validi
 243 Profilo di documento:
 244 I tag/attributi sono ignorati - vedi Viste/Mostra le errore

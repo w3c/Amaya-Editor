@@ -1,17 +1,17 @@
 # encoding= latin1
 0 Fichiers
 1 Ouvrir
-2 Nouveau document XHTML 1.1...
-3 Nouveau document XHTML 1.0 Transitional...
-4 Nouveau document XHTML 1.0 Strict...
-5 Nouveau document XHTML 1.0 Basic ...
-6 Nouveau document MathML...
-7 Nouveau document SVG...
-8 Nouvelle feuille de style...
+2 Nouveau document XHTML 1.1
+3 Nouveau document XHTML 1.0 Transitional
+4 Nouveau document XHTML 1.0 Strict
+5 Nouveau document XHTML 1.0 Basic 
+6 Nouveau document MathML
+7 Nouveau document SVG
+8 Nouvelle feuille de style
 9 Modèle
-10 Ouvrir...
-11 Ouvrir dans un nouvel onglet...
-12 Ouvrir dans nouvelle fenêtre...
+10 Ouvrir
+11 Ouvrir dans un nouvel onglet
+12 Ouvrir dans nouvelle fenêtre
 13 RAZ
 14 Clic
 15 Document sauvé : %s
@@ -30,7 +30,7 @@
 28 Destination invalide
 29 Inserer l'URI ou butiner
 30 Titre
-31 Changer le titre...
+31 Changer le titre
 32 Document modifié - Voulez-vous le sauver ?
 33 Recherche de %s
 34 Dépassement de la limite de redirections

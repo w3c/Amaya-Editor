@@ -1,17 +1,17 @@
 # encoding= latin1
 0 Arquivos
 1 Abrir
-2 Novo documento XHTML 1.1...
-3 Novo documento XHTML 1.0 Transitional...
-4 Novo documento XHTML 1.0 Strict...
-5 Novo documento XHTML 1.0 Basic...
-6 Novo documento MathML...
-7 Novo documento SVG...
-8 Nova folha de estilo CSS...
+2 Novo documento XHTML 1.1
+3 Novo documento XHTML 1.0 Transitional
+4 Novo documento XHTML 1.0 Strict
+5 Novo documento XHTML 1.0 Basic
+6 Novo documento MathML
+7 Novo documento SVG
+8 Nova folha de estilo CSS
 9 Do gabarito
-10 >Abrir documento...
-11 **Open in new tab...
-12 >Abrir em nova janela...
+10 >Abrir documento
+11 **Open in new tab
+12 >Abrir em nova janela
 13 Apagar
 14 Clique
 15 Documento salvo: %s
@@ -30,7 +30,7 @@
 28 Destino inválido
 29 Inserir a URI ou procurar
 30 Título
-31 Mudar título...
+31 Mudar título
 32 **Document modified - Do you want to save it?
 33 Redirecionando busca de %s
 34 Demasiados redirecionamentos detetados

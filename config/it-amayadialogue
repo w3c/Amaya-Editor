@@ -25,7 +25,7 @@
 23 Nuovo stile CSS...
 24 Modello
 25 Apri documento...
-26 **Open in new &tab...
+26 Apri &tab...
 27 Apri in una nuova finestra...
 28 Ricarica documento
 29 Precedente
@@ -70,7 +70,7 @@
 68 Informazioni sul documento
 69 Imposta e stampa...
 70 Stampa
-71 **Close &tab
+71 &Chiudi tab
 72 Chiudi
 73 Esci
 74 Chiudi vista
@@ -177,7 +177,7 @@
 175 ruby
 176 Numerazione delle sezioni
 177 Crea libro
-178 **Insert time stamp
+178 Inserisci timestamp
 179 Tipo di informazione
 180 Enfasi (em)
 181 Forte (strong)
@@ -224,7 +224,7 @@
 222 Sopra (mover)
 223 Parentesi (mrow)
 224 Multiscript (mmultiscripts)
-225 **&Matrices
+225 &Matrici
 226 Matrice (mtable)
 227 Unisci la cella a quella di destra
 228 Unisci la cella a quella sotto
@@ -286,8 +286,8 @@
 284 Visualizza favorites
 285 Nuovo bookmark
 286 Nuova rubrica
-287 **New Separator
-288 **Move Item
+287 Nuovo separatore
+288 Sposta elemento
 289 Lock resource...
 290 Unlock resource...
 291 Informazioni per il lock...

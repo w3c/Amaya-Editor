@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Jul  7 18:03:54 CEST 2004" version="75">
+<base last_update="Thu Jul  8 12:26:29 CEST 2004" version="79">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -272,6 +272,9 @@
 <label define="BOpenInNewTab">
 	<message xml:lang="en">Open in new &amp;tab...</message>
 	<message xml:lang="fr">Ouvrir dans un nouvel on&amp;glet...</message>
+	<message xml:lang="es">Abrir &amp;pestaña...</message>
+	<message xml:lang="it">Apri &amp;tab...</message>
+	<message xml:lang="de">Öffnen (neues &amp;Registerkarte)...</message>
 </label>
 <label define="BOpenInNewWindow">
 	<message xml:lang="en">Open in new &amp;window...</message>
@@ -691,7 +694,7 @@
 	<message xml:lang="fr">&amp;Paramétrer et imprimer...</message>
 	<message xml:lang="de">Druckoptionen...</message>
 	<message xml:lang="it">Imposta e stampa...</message>
-	<message xml:lang="es">&amp;Configurar e imprimir...</message>
+	<message xml:lang="es">Configurar e imprimir...</message>
 	<message xml:lang="pt">Configurar e imprimir...</message>
 	<message xml:lang="fi">Tulostusasetukset...</message>
 	<message xml:lang="tr">Kur ve yazdır</message>
@@ -710,6 +713,8 @@
 	<message xml:lang="en">Close &amp;tab</message>
 	<message xml:lang="fr">Fermer l'on&amp;glet</message>
 	<message xml:lang="de">Registerkarte schließen</message>
+	<message xml:lang="es">&amp;Cerrar pestaña</message>
+	<message xml:lang="it">&amp;Chiudi tab</message>
 </label>
 <label define="BCloseWindow">
 	<message xml:lang="en">&amp;Close window</message>
@@ -1724,6 +1729,7 @@
 	<message xml:lang="fr">Insérer date e mise a jour</message>
 	<message xml:lang="es">Insertar marca de tiempo</message>
 	<message xml:lang="de">Zeitstempel einfügen</message>
+	<message xml:lang="it">Inserisci timestamp</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>
@@ -2182,7 +2188,12 @@
 <label define="MathMatrix">
 	<message xml:lang="en">&amp;Matrices</message>
 	<message xml:lang="fr">&amp;Matrices</message>
+	<message xml:lang="de">&amp;Matrices</message>
+	<message xml:lang="it">&amp;Matrici</message>
+	<message xml:lang="tr">&amp;Matris</message>
 	<message xml:lang="es">&amp;Matrices</message>
+	<message xml:lang="pt">&amp;Matrices</message>
+	<message xml:lang="fi">&amp;Matriisi</message>
 </label>
 <label define="BMatrix">
 	<message xml:lang="en">New matrix (mtable)</message>
@@ -2742,11 +2753,13 @@
 	<message xml:lang="en">New Separator</message>
 	<message xml:lang="es">Nuevo separador</message>
 	<message xml:lang="de">Neues Trennelement</message>
+	<message xml:lang="it">Nuovo separatore</message>
 </label>
 <label define="BMoveItem">
 	<message xml:lang="en">Move Item</message>
 	<message xml:lang="es">Mover elemento</message>
 	<message xml:lang="de">Item verschieben</message>
+	<message xml:lang="it">Sposta elemento</message>
 </label>
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>
