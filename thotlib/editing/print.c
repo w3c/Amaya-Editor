@@ -300,7 +300,7 @@ PtrAbstractBox      pPage;
   PtrAbstractBox    pAb;
   PtrBox            pBox;
   ViewFrame        *pFrame;
-  int               h, y, framexmin, framexmax;
+  int               h;
 
 
   /* Look for the break line position */
@@ -1943,8 +1943,7 @@ int                viewsCounter;
 #  ifdef _WINDOWS
   static DOCINFO docInfo = {sizeof (DOCINFO), "Amaya", NULL};
   int    i;
-  POINT  ptPage;
-  int    cxPage, cyPage, xRes, yRes, xSize, ySize, xPSize, yPSize, dx, dy;
+  int    xRes, yRes, xSize, ySize;
   RECT   Rect;
 #  endif /* _WINDOWS */
 
@@ -2188,8 +2187,7 @@ int                 clipOrg;
   boolean             stop, emptyImage;
   PtrAbstractBox      pAb, pSpaceAb;
   int                 pageHeight, nextPageBreak, nChars;
-  int                 shift, h;
-  AbDimension        *pDim;
+  int                 h;
   AbPosition         *pPos;
   FILE               *PSfile;
 
@@ -2401,7 +2399,9 @@ int                 msgType;
 
 #endif /* __STDC__ */
 {
+# ifndef _WINDOWS
   char              cmd[800];
+# endif /* _WINDOWS */
 
   if (msgType == FATAL)
     {
@@ -2526,7 +2526,7 @@ char              **argv;
   char               *destination = (char*) NULL;
   char                cmd[800];
   char		          tempFile [MAX_PATH];
-  int                 i, l, result;
+  int                 i, l;
   int                 argCounter;
   int                 viewsCounter = 0;
   int                 index;
@@ -2535,6 +2535,9 @@ char              **argv;
   boolean             realNameFound = FALSE;
   boolean             viewFound = FALSE;
   boolean             done;
+# ifndef _WINDOWS
+  int                 result;
+#endif /* _WINDOWS */
 
 # ifdef _WINDOWS 
   TtPrinterDC      = PrinterDC;

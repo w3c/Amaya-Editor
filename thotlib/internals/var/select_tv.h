@@ -54,10 +54,3 @@ THOT_EXPORT PtrElement SelMenuPreviousEl;
 THOT_EXPORT PtrElement SelMenuNextEl;
 THOT_EXPORT PtrElement SelMenuChildEl;
 
-#ifdef __COLPAGE__
-THOT_EXPORT PtrElement  SelMenuPageColParent;
-THOT_EXPORT PtrElement  SelMenuPageColPrev;
-THOT_EXPORT PtrElement  SelMenuPageColNext;
-THOT_EXPORT PtrElement  SelMenuPageColChild;
-#endif /* __COLPAGE__ */
-

@@ -1229,23 +1229,6 @@ boolean             save;
 			     /* un seul element est selectionne' */
 			     if (firstSel->ElTerminal)
 				if (firstSel->ElLeafType == LtPageColBreak)
-#ifdef __COLPAGE__
-				   /* si c'est une page debut, que le pere est
-				      la racine, et que firstSel est cree par
-				      la racine (premier fils), on ne la
-				      detruit pas */
-				   if (firstSel->ElPageType == PgBegin
-				     && firstSel->ElParent->ElParent == NULL
-				       && (firstSel->ElPrevious == NULL ||
-					   firstSel->ElPrevious->ElTypeNumber
-					   == PageBreak + 1))
-				     {
-					TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MANDATORY_COMPONENT),
-							   firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
-					firstSel = NULL;
-				     }
-				   else
-#endif /* __COLPAGE__ */
 				      pageSelected = TRUE;
 			  if (firstSel == NULL)
 			     pParent = NULL;

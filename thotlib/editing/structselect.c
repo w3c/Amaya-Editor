@@ -661,11 +661,6 @@ boolean             showBegin;
 
 {
    PtrAbstractBox      pAb, pNextAb;
-
-#ifdef __COLPAGE__
-   PtrAbstractBox      pSavedAb;
-
-#endif /* __COLPAGE__ */
    PtrElement          pEl, pNextEl;
    int                 view, lastView, frame, firstChar, lastChar;
    boolean             first, last, partialSel, active, unique, stop, assoc;
@@ -756,32 +751,12 @@ boolean             showBegin;
 		  while (pAb != NULL)
 		     /* search first the abstract box to be handled next */
 		    {
-#ifdef __COLPAGE__
-		       /* handles all duplicated boxes of the element */
-		       if (!pAb->AbPresentationBox)
-			  /* only the main abstract box can be duplicated */
-			  pSavedAb = pAb;
-		       pNextAb = pAb->AbNext;
-		       if (pNextAb != NULL)
-			  /* there is a following abstract box */
-			 {
-			    if (pNextAb->AbElement != pEl)
-			       /* the next abstract box does not belong to
-				  that element */
-			       pNextAb = pSavedAb->AbNextRepeated;
-			 }
-		       else
-		          /* if pNextAb is NULL, the abstract box may be a
-			     duplicate */
-			  pNextAb = pSavedAb->AbNextRepeated;
-#else  /* __COLPAGE__ */
 		       pNextAb = pAb->AbNext;
 		       if (pNextAb != NULL)
 			  if (pNextAb->AbElement != pEl)
 			     /* next abstract box does not belong to the
 				element */
 			     pNextAb = NULL;
-#endif /* __COLPAGE__ */
 		       if (pNextAb != NULL)
 			 {
 			    partialSel = FALSE;
@@ -1075,11 +1050,6 @@ boolean             visible;
 {
    PtrElement          pEl, pNextEl;
    PtrAbstractBox      pAb, pNextAb;
-
-#ifdef __COLPAGE__
-   PtrAbstractBox      pSavedAb;
-
-#endif /* __COLPAGE__ */
    int                 view, frame, firstChar, lastChar;
    boolean             selBegin, selEnd, active, unique, assoc, stop;
 
@@ -1152,25 +1122,10 @@ boolean             visible;
 		lastChar = 0;
 	     /* is that the last visible abstract box of the selection? */
 	     pNextAb = pAb->AbNext;
-#ifdef __COLPAGE__
-	     if (!pAb->AbPresentationBox)
-		/* for scanning all repeated boxes */
-		pSavedAb = pAb;
-	     pNextAb = pAb->AbNext;
-	     if (pNextAb != NULL)
-	       {
-		  if (pNextAb->AbElement != pEl)
-		     pNextAb = pSavedAb->AbNextRepeated;
-		  /* scan also repeated boxes */
-	       }
-	     else
-		pNextAb = pSavedAb->AbNextRepeated;
-#else  /* __COLPAGE__ */
 	     if (pNextAb != NULL)
 		if (pNextAb->AbElement != pEl)
 	           /* the next abstract box does not belong to the element */
 		   pNextAb = NULL;
-#endif /* __COLPAGE__ */
 	     if (pNextAb == NULL)
 		/* search the next element in the selection having an */
 	        /* abstract box in the subtree */
@@ -1261,11 +1216,6 @@ boolean            *abExist;
 
 {
    PtrAbstractBox      pAb, pNextAb;
-
-#ifdef __COLPAGE__
-   PtrAbstractBox      pSavedAb;
-
-#endif /* __COLPAGE__ */
    int                 firstChar, lastChar;
    boolean             first, last, partialSel, unique, active;
 
@@ -1327,24 +1277,10 @@ boolean            *abExist;
 	   pNextAb = NULL;
 	else
 	   pNextAb = pAb->AbNext;
-#ifdef __COLPAGE__
-	if (!pAb->AbPresentationBox)
-	   pSavedAb = pAb;
-	if (pNextAb != NULL)
-	  {
-	     if (pNextAb->AbElement != pEl)
-		/* the next abstract box does not belong to the element */
-		pNextAb = pSavedAb->AbNextRepeated;
-	  }
-	/* if pNextAb = NULL, the abstract box may have a repeated box */
-	else
-	   pNextAb = pSavedAb->AbNextRepeated;
-#else  /* __COLPAGE__ */
 	if (pNextAb != NULL)
 	   if (pNextAb->AbElement != pEl)
 	      /* the next abstract box does not belong to the element */
 	      pNextAb = NULL;
-#endif /* __COLPAGE__ */
 	last = pNextAb == NULL;
 	/* indicate that this abstract box is selected to the display module */
 	if (first || last)
@@ -2393,11 +2329,6 @@ boolean             highlight;
 
 {
    PtrAbstractBox      pAb;
-
-#ifdef __COLPAGE__
-   PtrAbstractBox      pNextAb, pSavedAb;
-
-#endif /* __COLPAGE__ */
    int                 lastView, view, frame;
 
    if (AssocView (pEl))
@@ -2422,25 +2353,11 @@ boolean             highlight;
 	     pAb->AbSelected = highlight;
 	     SetNewSelectionStatus (frame, pAb, highlight);
 	     /* get the next abstract box for the element */
-#ifdef __COLPAGE__
-	     if (!pAb->AbPresentationBox)
-		pSavedAb = pAb;
-	     pNextAb = pAb->AbNext;
-	     if (pNextAb != NULL)
-		if (pNextAb->AbElement != pEl)
-		   /* next abstract box does not belong to the element */
-		   pAb = pSavedAb->AbNextRepeated;
-		else
-		   pAb = pNextAb;
-	     else
-		pAb = pSavedAb->AbNextRepeated;
-#else  /* __COLPAGE__ */
 	     pAb = pAb->AbNext;
 	     if (pAb != NULL)
 		if (pAb->AbElement != pEl)
 		   /* next abstract box does not belong to the element */
 		   pAb = NULL;
-#endif /* __COLPAGE__ */
 	  }
      }
 }
@@ -3086,60 +3003,6 @@ boolean             drag;
      }
 }
 
-#ifdef __COLPAGE__
-/*----------------------------------------------------------------------
-   ColPageType
-
-   Return a string representing the type of the pPage page break element.
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-char               *TypePageCol (PtrElement pPage)
-
-#else  /* __STDC__ */
-char               *TypePageCol (pPage)
-PtrElement          pPage;
-
-#endif /* __STDC__ */
-
-{
-
-   char               *typepage;
-
-   if (pPage->ElTypeNumber == PageBreak + 1)
-      switch (pPage->ElPageType)
-	    {
-	       case PgBegin:
-		  typepage = "BeginPage";
-		  break;
-	       case PgComputed:
-		  typepage = "ComputedPage";
-		  break;
-	       case PgUser:
-		  typepage = "UserPage";
-		  break;
-	       case ColBegin:
-		  typepage = "BeginColumn";
-		  break;
-	       case ColComputed:
-		  typepage = "ComputedColumn";
-		  break;
-	       case ColUser:
-		  typepage = "UserColumn";
-		  break;
-	       case ColGroup:
-		  typepage = "ColumnGroup";
-		  break;
-	       default:
-		  typepage = "PageBreak";
-		  break;
-	    }
-   else
-      typepage = "";
-   return typepage;
-}
-#endif /* __COLPAGE__ */
-
 /*----------------------------------------------------------------------
    PrepareSelectionMenu
 
@@ -3320,12 +3183,6 @@ void                BuildSelectionMessage ()
 	pEl = FirstSelectedElement;
      }
    /* put the type name of the first selected element */
-#ifdef __COLPAGE__
-   /* if it's a page break, display the break type */
-   if (pEl->ElTypeNumber == PageBreak + 1)
-      strncpy (msgBuf, TypePageCol (pEl), MAX_NAME_LENGTH);
-   else
-#endif /* __COLPAGE__ */
       strncpy (msgBuf, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 	       MAX_NAME_LENGTH);
    /* add the types of the ancestors */
@@ -3492,24 +3349,6 @@ int                 val;
 	    case 4 /* child */ :
 	       pEl = SelMenuChildEl;
 	       break;
-#ifdef __COLPAGE__
-	    case 6:
-	       /* enclosing page or column box */
-	       pEl = SelMenuPageColParent;
-	       break;
-	    case 7:
-	       /* previous page or column box */
-	       pEl = SelMenuPageColPrev;
-	       break;
-	    case 8:
-	       /* next page or column box */
-	       pEl = SelMenuPageColNext;
-	       break;
-	    case 9:
-	       /* child page or column box */
-	       pEl = SelMenuPageColChild;
-	       break;
-#endif /* __COLPAGE__ */
 	    default:
 	       break;
 	 }

@@ -575,11 +575,6 @@ PtrDocument         pDoc;
    int                 i, X, Y, width, height;
    boolean             complete;
 
-#ifdef __COLPAGE__
-   PtrPSchema          pSchPage;
-
-#endif /* __COLPAGE__ */
-
    /* demande la creation d'une fenetre pour la 1ere vue du document */
    ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[0],
 			  &X, &Y, &width, &height);
@@ -605,16 +600,6 @@ PtrDocument         pDoc;
 		(*ThotLocalActions[T_chattr]) (pDoc);
 	     if (pDoc->DocRootElement != NULL)
 	       {
-#ifdef __COLPAGE__
-		  /* test si pagine */
-		  if (GetPageBoxType (pDoc->DocRootElement->ElFirstChild, 1,
-				 &pSchPage) != 0)
-		     /* document pagine */
-		    {
-		       pDoc->DocViewNPages[0] = 0;
-		       pDoc->DocViewFreeVolume[0] = THOT_MAXINT;
-		    }
-#endif /* __COLPAGE__ */
 		  pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement, pDoc, 1, TRUE, TRUE, &complete);
 		  /* on ne s'occupe pas de la hauteur de page */
 		  i = 0;
