@@ -3558,7 +3558,9 @@ View                view;
 	    if (pViewSel->VsBox != NULL &&
 		pViewSel->VsBox->BxAbstractBox != NULL &&
 		(!pViewSel->VsBox->BxAbstractBox->AbReadOnly ||
-		 pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 0))
+		 pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 0 ||
+		 (pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 1 &&
+		  pViewSel->VsBox->BxAbstractBox->AbVolume == 1)))
 	      InsertChar (frame, 127, -1);
 	  }
 	else
