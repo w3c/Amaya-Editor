@@ -2169,16 +2169,15 @@ CHAR_T         *attrName;
        /* Is it a xml:space attribute */
        if (ustrncmp (bufName, TEXT("xml:space"), 9) == 0)
 	 XMLSpaceAttribute = TRUE;
+
+       /* the attribute xml:lang is replaced by the attribute "lang" */
+       if (ustrncmp (bufName, TEXT("xml:lang"), 8) == 0)
+	 ustrcpy (bufName, TEXT("lang"));
+
+       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	 XhtmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
        else
-	 {
-	   /* the attribute xml:lang is replaced by the attribute "lang" */
-	   if (ustrncmp (bufName, TEXT("xml:lang"), 8) == 0)
-	     ustrcpy (bufName, TEXT("lang"));
-	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-	     XhtmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
-	   else
-	     XmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
-	 }
+	 XmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
      }
    
    TtaFreeMemory (buffer);
