@@ -7253,6 +7253,13 @@ void HelpAmaya (Document document, View view)
    list = fopen (localname, "w");
    TtaListStyleSchemas (document, list);
    fclose (list);
+   /* list now CSS rules */
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "style_element.debug");
+   list = fopen (localname, "w");
+   TtaListStyleOfCurrentElement (document, list);
+   fclose (list);
 #endif /* AMAYA_DEBUG */
 
 #ifndef _WINDOWS

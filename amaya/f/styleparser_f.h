@@ -19,10 +19,6 @@ extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               void *extra,
                                               ThotBool isnew );
 extern char *GetCSSBackgroundURL ( char *cssRule );
-extern void PToCss ( PresentationSetting settings,
-                     char *buffer,
-                     int len,
-                     Element el );
 extern void ParseHTMLSpecificStyle ( Element el,
                                      char *cssRule,
                                      Document doc,
@@ -84,10 +80,6 @@ extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 void *extra,
                                                 ThotBool isnew */);
 extern char *GetCSSBackgroundURL (/* char *cssRule */);
-extern void PToCss (/* PresentationSetting settings,
-                       char *buffer,
-                       int len,
-                       Element el */);
 extern void ParseHTMLSpecificStyle (/* Element el,
                                        char *cssRule,
                                        Document doc,

@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void DisplayPRule ( PtrPRule RP,
+                           FILE *fileDescriptor,
+                           PtrElement pEl,
+                           PtrSSchema pSchS );
 extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
@@ -139,6 +143,10 @@ extern ThotBool OpenParsingErrors ( Document document );
 
 #else /* __STDC__ */
 
+extern void DisplayPRule (/* PtrPRule RP,
+                             FILE *fileDescriptor,
+                             PtrElement pEl,
+                             PtrSSchema pSchS */);
 extern void ShowBox (/* int frame,
                         PtrBox pBox,
                         int position,

@@ -18,6 +18,14 @@
 #include "memory_f.h"
 
 /*----------------------------------------------------------------------
+  DisplayPRule displays the presentation rule pointed by RP.
+  ----------------------------------------------------------------------*/
+void DisplayPRule (PtrPRule RP, FILE *fileDescriptor,
+		   PtrElement pEl, PtrSSchema pSchS)
+{
+}
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void ShowBox (int frame, PtrBox pBox, int position, int percent)
 {

@@ -1693,6 +1693,8 @@ void FreePresentRule (PtrPRule pRP, PtrSSchema pSS)
        FreePresentRuleCond (pCond);
        pCond = nextCond;
      }
+   pRP->PrCSSLine = 0;
+   pRP->PrCSSURL = NULL;
    TtaFreeMemory (pRP);
    NbUsed_PresRule--;
 }

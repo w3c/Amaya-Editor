@@ -23,6 +23,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "fileaccess.h"
+#include "style.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -3257,16 +3258,49 @@ static void wrjustif (PtrPRule pR, FILE *fileDescriptor)
 
 
 /*----------------------------------------------------------------------
-   wrsuiteregles ecrit au terminal la suite de regles chainees dont 
-   RP pointe sur la regle de tete.                         
+  DisplayPRule displays the presentation rule in the CSS format.
   ----------------------------------------------------------------------*/
-static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
+void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
+		   PtrElement pEl, PtrSSchema pSchS)
+{
+  PresentationSettingBlock setting;
+  char                     buffer[200];
+
+  if (rule == NULL)
+    return;
+  if (rule->PrSpecificity != 100 && rule->PrCSSLine == 0)
+    return;
+
+  PRuleToPresentationSetting (rule, &setting, pSchS);
+  buffer[0] = EOS;
+  TtaPToCss (&setting, buffer, 199, (Element) pEl);
+  if (buffer[0] == EOS)
+    return;
+  
+  fprintf (fileDescriptor, "%s", buffer);
+  fprintf (fileDescriptor, "\t");
+  if (rule->PrImportant)
+    fprintf (fileDescriptor, "!important");
+  if (rule->PrSpecificity == 100)
+    fprintf (fileDescriptor, " Style Attribute\n");
+  else if (rule->PrCSSURL)
+    fprintf (fileDescriptor, " File %s, line=%d\n", rule->PrCSSURL, rule->PrCSSLine);
+  else if (rule->PrCSSLine == 0)
+    fprintf (fileDescriptor, " Default\n");
+  else
+    fprintf (fileDescriptor, " Style Element, line=%d\n", rule->PrCSSLine);
+}
+
+/*----------------------------------------------------------------------
+   wrprules displays the list of presentation rules pointed by RP.
+  ----------------------------------------------------------------------*/
+static void wrprules (PtrPRule RP, FILE *fileDescriptor)
 {
    PtrCondition        pCond;
 
-   while (RP != NULL)
-      /* ecrit une regle de presentation */
+   while (RP)
      {
+       /* display a presentation rule */
 	fprintf (fileDescriptor, "   ");
 	if (RP->PrViewNum > 1)
 	  {
@@ -3293,276 +3327,330 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 	       }
 	  }
 	switch (RP->PrType)
-	      {
-		 case PtVisibility:
-		    fprintf (fileDescriptor, "Visibility: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-		 case PtFunction:
-		    wrFonctPres (RP, fileDescriptor);
-		    break;
-		 case PtVertOverflow:
-		    fprintf (fileDescriptor, "VertOverflow: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-		 case PtHorizOverflow:
-		    fprintf (fileDescriptor, "HorizOverflow: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-		 case PtVertRef:
-		    fprintf (fileDescriptor, "VertRef: ");
-		    WrPos (RP->PrPosRule, False, fileDescriptor);
-		    break;
-		 case PtHorizRef:
-		    fprintf (fileDescriptor, "HorizRef: ");
-		    WrPos (RP->PrPosRule, False, fileDescriptor);
-		    break;
-		 case PtHeight:
-		    fprintf (fileDescriptor, "Height: ");
-		    wrdimens (RP->PrDimRule, True, fileDescriptor);
-		    break;
-		 case PtWidth:
-		    fprintf (fileDescriptor, "Width: ");
-		    wrdimens (RP->PrDimRule, False, fileDescriptor);
-		    break;
-		 case PtVertPos:
-		    fprintf (fileDescriptor, "VertPos: ");
-		    WrPos (RP->PrPosRule, True, fileDescriptor);
-		    break;
-		 case PtHorizPos:
-		    fprintf (fileDescriptor, "HorizPos: ");
-		    WrPos (RP->PrPosRule, True, fileDescriptor);
-		    break;
-                 case PtMarginTop:
-                    fprintf (fileDescriptor, "MarginTop: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtMarginRight:
-                    fprintf (fileDescriptor, "MarginRight: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtMarginBottom:
-                    fprintf (fileDescriptor, "MarginBottom: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtMarginLeft:
-                    fprintf (fileDescriptor, "MarginLeft: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtPaddingTop:
-                    fprintf (fileDescriptor, "PaddingTop: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtPaddingRight:
-                    fprintf (fileDescriptor, "PaddingRight: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtPaddingBottom:
-                    fprintf (fileDescriptor, "PaddingBottom: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtPaddingLeft:
-                    fprintf (fileDescriptor, "PaddingLeft: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtBorderTopWidth:
-                    fprintf (fileDescriptor, "BorderTopWidth: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtBorderRightWidth:
-                    fprintf (fileDescriptor, "BorderRightWidth: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtBorderBottomWidth:
-                    fprintf (fileDescriptor, "BorderBottomWidth: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtBorderLeftWidth:
-                    fprintf (fileDescriptor, "BorderLeftWidth: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-                 case PtBorderTopColor:
-                    fprintf (fileDescriptor, "BorderTopColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       fprintf (fileDescriptor, "transparent");
-		    else
-		       wrnbherit (RP, fileDescriptor);
-                    break;
-                 case PtBorderRightColor:
-                    fprintf (fileDescriptor, "BorderRightColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       fprintf (fileDescriptor, "transparent");
-		    else
-		       wrnbherit (RP, fileDescriptor);
-                    break;
-                 case PtBorderBottomColor:
-                    fprintf (fileDescriptor, "BorderBottomColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       fprintf (fileDescriptor, "transparent");
-		    else
-		       wrnbherit (RP, fileDescriptor);
-                    break;
-                 case PtBorderLeftColor:
-                    fprintf (fileDescriptor, "BorderLeftColor: ");
-	            if (RP->PrPresMode == PresImmediate &&
-			!RP->PrAttrValue && RP->PrIntValue == -2)
-		       fprintf (fileDescriptor, "transparent");
-		    else
-		       wrnbherit (RP, fileDescriptor);
-                    break;
-                 case PtBorderTopStyle:
-                    fprintf (fileDescriptor, "BorderTopStyle: ");
-		    wrfontstyle (RP, fileDescriptor);
-                    break;
-                 case PtBorderRightStyle:
-                    fprintf (fileDescriptor, "BorderRightStyle: ");
-		    wrfontstyle (RP, fileDescriptor);
-                    break;
-                 case PtBorderBottomStyle:
-                    fprintf (fileDescriptor, "BorderBottomStyle: ");
-		    wrfontstyle (RP, fileDescriptor);
-                    break;
-                 case PtBorderLeftStyle:
-                    fprintf (fileDescriptor, "BorderLeftStyle: ");
-		    wrfontstyle (RP, fileDescriptor);
-                    break;
-		 case PtSize:
-		    fprintf (fileDescriptor, "Size: ");
-		    wrsize (RP, fileDescriptor);
-		    break;
-		 case PtStyle:
-		    fprintf (fileDescriptor, "Style: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-		 case PtWeight:
-		    fprintf (fileDescriptor, "Weight: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-         	 case PtFont:
- 		    fprintf (fileDescriptor, "Font: ");
-     		    wrfontstyle (RP, fileDescriptor);
-     		    break;
-		 case PtUnderline:
-		    fprintf (fileDescriptor, "Underline: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-		 case PtThickness:
-		    fprintf (fileDescriptor, "Thickness: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-		 case PtIndent:
-		    fprintf (fileDescriptor, "Indent: ");
-		    wrminind (RP, fileDescriptor);
-		    break;
-		 case PtLineSpacing:
-		    fprintf (fileDescriptor, "LineSpacing: ");
-		    wrminind (RP, fileDescriptor);
-		    break;
-		 case PtDepth:
-		    fprintf (fileDescriptor, "Depth: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-		 case PtAdjust:
-		    fprintf (fileDescriptor, "Adjust: ");
-		    wrajust (RP, fileDescriptor);
-		    break;
-		 case PtDirection:
-		    fprintf (fileDescriptor, "Direction: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-		 case PtUnicodeBidi:
-		    fprintf (fileDescriptor, "UnicodeBidi: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-		 case PtLineStyle:
-		    fprintf (fileDescriptor, "LineStyle: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-		 case PtLineWeight:
-		    fprintf (fileDescriptor, "LineWeight: ");
-		    wrminind (RP, fileDescriptor);
-		    break;
-		 case PtFillPattern:
-		    fprintf (fileDescriptor, "FillPattern: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-	         case PtOpacity:
-		    fprintf (fileDescriptor, "Opacity: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-	         case PtStrokeOpacity:
-		    fprintf (fileDescriptor, "StrokeOpacity: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-	         case PtFillOpacity:
-		    fprintf (fileDescriptor, "FillOpacity: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-		 case PtBackground:
-		    fprintf (fileDescriptor, "Background: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-		 case PtForeground:
-		    fprintf (fileDescriptor, "Foreground: ");
-		    wrnbherit (RP, fileDescriptor);
-		    break;
-		 case PtHyphenate:
-		    fprintf (fileDescriptor, "Hyphenate: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-	         case PtPageBreak:
-		    fprintf (fileDescriptor, "PageBreak: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-	         case PtLineBreak:
-		    fprintf (fileDescriptor, "LineBreak: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-	         case PtGather:
-		    fprintf (fileDescriptor, "Gather: ");
-		    wrjustif (RP, fileDescriptor);
-		    break;
-	         case PtXRadius:
-                    fprintf (fileDescriptor, "XRadius: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-	         case PtYRadius:
-                    fprintf (fileDescriptor, "YRadius: ");
-                    wrminind (RP, fileDescriptor);
-                    break;
-	         case PtDisplay:
-		    fprintf (fileDescriptor, "Display: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-	         case PtFloat:
-		    fprintf (fileDescriptor, "Float: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-	         case PtClear:
-		    fprintf (fileDescriptor, "Clear: ");
-		    wrfontstyle (RP, fileDescriptor);
-		    break;
-		 case PtBreak1:
-		    fprintf (fileDescriptor, "NoBreak1: ");
-		    wrminind (RP, fileDescriptor);
-		    break;
-		 case PtBreak2:
-		    fprintf (fileDescriptor, "NoBreak2: ");
-		    wrminind (RP, fileDescriptor);
-		    break;
-		 case PtPictInfo:
-		    break;
-	      }
-	fprintf (fileDescriptor, "   {-- ");
+	  {
+	  case PtVisibility:
+	    fprintf (fileDescriptor, "Visibility: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtFunction:
+	    wrFonctPres (RP, fileDescriptor);
+	    break;
+	  case PtVertOverflow:
+	    fprintf (fileDescriptor, "VertOverflow: ");
+	    wrjustif (RP, fileDescriptor);
+	    break;
+	  case PtHorizOverflow:
+	    fprintf (fileDescriptor, "HorizOverflow: ");
+	    wrjustif (RP, fileDescriptor);
+	    break;
+	  case PtVertRef:
+	    fprintf (fileDescriptor, "VertRef: ");
+	    WrPos (RP->PrPosRule, False, fileDescriptor);
+	    break;
+	  case PtHorizRef:
+	    fprintf (fileDescriptor, "HorizRef: ");
+	    WrPos (RP->PrPosRule, False, fileDescriptor);
+	    break;
+	  case PtHeight:
+	    fprintf (fileDescriptor, "Height: ");
+	    wrdimens (RP->PrDimRule, True, fileDescriptor);
+	    break;
+	  case PtWidth:
+	    fprintf (fileDescriptor, "Width: ");
+	    wrdimens (RP->PrDimRule, False, fileDescriptor);
+	    break;
+	  case PtVertPos:
+	    fprintf (fileDescriptor, "VertPos: ");
+	    WrPos (RP->PrPosRule, True, fileDescriptor);
+	    break;
+	  case PtHorizPos:
+	    fprintf (fileDescriptor, "HorizPos: ");
+	    WrPos (RP->PrPosRule, True, fileDescriptor);
+	    break;
+	  case PtMarginTop:
+	    fprintf (fileDescriptor, "MarginTop: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtMarginRight:
+	    fprintf (fileDescriptor, "MarginRight: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtMarginBottom:
+	    fprintf (fileDescriptor, "MarginBottom: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtMarginLeft:
+	    fprintf (fileDescriptor, "MarginLeft: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtPaddingTop:
+	    fprintf (fileDescriptor, "PaddingTop: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtPaddingRight:
+	    fprintf (fileDescriptor, "PaddingRight: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtPaddingBottom:
+	    fprintf (fileDescriptor, "PaddingBottom: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtPaddingLeft:
+	    fprintf (fileDescriptor, "PaddingLeft: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtBorderTopWidth:
+	    fprintf (fileDescriptor, "BorderTopWidth: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtBorderRightWidth:
+	    fprintf (fileDescriptor, "BorderRightWidth: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtBorderBottomWidth:
+	    fprintf (fileDescriptor, "BorderBottomWidth: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtBorderLeftWidth:
+	    fprintf (fileDescriptor, "BorderLeftWidth: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtBorderTopColor:
+	    fprintf (fileDescriptor, "BorderTopColor: ");
+	    if (RP->PrPresMode == PresImmediate &&
+		!RP->PrAttrValue && RP->PrIntValue == -2)
+	      fprintf (fileDescriptor, "transparent");
+	    else
+	      wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtBorderRightColor:
+	    fprintf (fileDescriptor, "BorderRightColor: ");
+	    if (RP->PrPresMode == PresImmediate &&
+		!RP->PrAttrValue && RP->PrIntValue == -2)
+	      fprintf (fileDescriptor, "transparent");
+	    else
+	      wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtBorderBottomColor:
+	    fprintf (fileDescriptor, "BorderBottomColor: ");
+	    if (RP->PrPresMode == PresImmediate &&
+		!RP->PrAttrValue && RP->PrIntValue == -2)
+	      fprintf (fileDescriptor, "transparent");
+	    else
+	      wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtBorderLeftColor:
+	    fprintf (fileDescriptor, "BorderLeftColor: ");
+	    if (RP->PrPresMode == PresImmediate &&
+		!RP->PrAttrValue && RP->PrIntValue == -2)
+	      fprintf (fileDescriptor, "transparent");
+	    else
+	      wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtBorderTopStyle:
+	    fprintf (fileDescriptor, "BorderTopStyle: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtBorderRightStyle:
+	    fprintf (fileDescriptor, "BorderRightStyle: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtBorderBottomStyle:
+	    fprintf (fileDescriptor, "BorderBottomStyle: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtBorderLeftStyle:
+	    fprintf (fileDescriptor, "BorderLeftStyle: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtSize:
+	    fprintf (fileDescriptor, "Size: ");
+	    wrsize (RP, fileDescriptor);
+	    break;
+	  case PtStyle:
+	    fprintf (fileDescriptor, "Style: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtWeight:
+	    fprintf (fileDescriptor, "Weight: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtFont:
+	    fprintf (fileDescriptor, "Font: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtUnderline:
+	    fprintf (fileDescriptor, "Underline: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtThickness:
+	    fprintf (fileDescriptor, "Thickness: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtIndent:
+	    fprintf (fileDescriptor, "Indent: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtLineSpacing:
+	    fprintf (fileDescriptor, "LineSpacing: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtDepth:
+	    fprintf (fileDescriptor, "Depth: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtAdjust:
+	    fprintf (fileDescriptor, "Adjust: ");
+	    wrajust (RP, fileDescriptor);
+	    break;
+	  case PtDirection:
+	    fprintf (fileDescriptor, "Direction: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtUnicodeBidi:
+	    fprintf (fileDescriptor, "UnicodeBidi: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtLineStyle:
+	    fprintf (fileDescriptor, "LineStyle: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtLineWeight:
+	    fprintf (fileDescriptor, "LineWeight: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtFillPattern:
+	    fprintf (fileDescriptor, "FillPattern: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtOpacity:
+	    fprintf (fileDescriptor, "Opacity: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtStrokeOpacity:
+	    fprintf (fileDescriptor, "StrokeOpacity: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtFillOpacity:
+	    fprintf (fileDescriptor, "FillOpacity: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtBackground:
+	    fprintf (fileDescriptor, "Background: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtForeground:
+	    fprintf (fileDescriptor, "Foreground: ");
+	    wrnbherit (RP, fileDescriptor);
+	    break;
+	  case PtHyphenate:
+	    fprintf (fileDescriptor, "Hyphenate: ");
+	    wrjustif (RP, fileDescriptor);
+	    break;
+	  case PtPageBreak:
+	    fprintf (fileDescriptor, "PageBreak: ");
+	    wrjustif (RP, fileDescriptor);
+	    break;
+	  case PtLineBreak:
+	    fprintf (fileDescriptor, "LineBreak: ");
+	    wrjustif (RP, fileDescriptor);
+	    break;
+	  case PtGather:
+	    fprintf (fileDescriptor, "Gather: ");
+	    wrjustif (RP, fileDescriptor);
+	    break;
+	  case PtXRadius:
+	    fprintf (fileDescriptor, "XRadius: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtYRadius:
+	    fprintf (fileDescriptor, "YRadius: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtDisplay:
+	    fprintf (fileDescriptor, "Display: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtFloat:
+	    fprintf (fileDescriptor, "Float: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtClear:
+	    fprintf (fileDescriptor, "Clear: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtBreak1:
+	    fprintf (fileDescriptor, "NoBreak1: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtBreak2:
+	    fprintf (fileDescriptor, "NoBreak2: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtPictInfo:
+	    break;
+	  }
 	if (RP->PrImportant)
 	  fprintf (fileDescriptor, "!important");
-	fprintf (fileDescriptor, " specificity = %d", RP->PrSpecificity);
+	fprintf (fileDescriptor, " specificity=%d,", RP->PrSpecificity);
+	fprintf (fileDescriptor, " line=%d", RP->PrCSSLine);
 	fprintf (fileDescriptor, " --}\n"); /* next rule */
 	RP = RP->PrNextPRule;
      }
+}
+
+/*----------------------------------------------------------------------
+   TtaListStyleOfCurrentElement
+
+   Produces in a file a human-readable form of style rules applied to 
+   the first selected element.
+   Parameters:
+   document: the document.
+   el: the element.
+   fileDescriptor: file descriptor of the file that will contain the list.
+   This file must be open when calling the function.
+  ----------------------------------------------------------------------*/
+void TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
+{
+  PtrDocument         pDoc;
+  PtrPSchema          pSchP;
+  PtrSSchema          pSchS;
+  PtrElement          pEl;
+  PtrPRule            pRDef, pRSpec;
+  PtrPRule            queuePR[MAX_QUEUE_LEN];
+  PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
+  PtrPSchema          queuePS[MAX_QUEUE_LEN];
+  PtrAttribute        queuePA[MAX_QUEUE_LEN];
+  PtrAbstractBox      pAb, pNew;
+  int                 lqueue = 0, f, l;
+  int                 index, viewSch;
+
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parametre document correct */
+    {
+      pDoc = LoadedDocument[document - 1];
+      TtaGiveFirstSelectedElement (document, &pEl, &f, &l);
+      if (pEl && pEl->ElTerminal)
+	pEl = pEl->ElParent;
+      if (pEl == NULL)
+	return;
+      SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
+      viewSch = AppliedView (pEl, NULL, pDoc, 1);
+      if (pSchP == NULL)
+	return;
+      pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
+      /* premiere regle de presentation par defaut */
+      pRDef = pSchP->PsFirstDefaultPRule;
+      pAb = pEl->ElAbstractBox[0];
+      pNew = pAb;
+      ApplyPresRules (pEl, pDoc, 1, viewSch, pSchS, pSchP,
+		      &pRSpec, &pRDef, &pAb, FALSE, &lqueue,
+		      queuePR, queuePP, queuePS, queuePA, pNew, fileDescriptor);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3575,7 +3663,7 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
   ----------------------------------------------------------------------*/
-void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
+void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 {
   PtrDocument         pDoc;
   PtrDocSchemasDescr  pPfS;
@@ -3687,7 +3775,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			 wrnomregle (el + 1, fileDescriptor);
 			 fprintf (fileDescriptor, ":\n");
 			 fprintf (fileDescriptor, "   BEGIN\n");
-			 wrsuiteregles (pSc1->PsElemPRule->ElemPres[el], fileDescriptor);
+			 wrprules (pSc1->PsElemPRule->ElemPres[el], fileDescriptor);
 			 fprintf (fileDescriptor, "   END;\n");
 			 fprintf (fileDescriptor, "\n");
 		       }
@@ -3759,7 +3847,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       {
 					 if (pCa1->CaFirstPRule->PrNextPRule)
 					   fprintf (fileDescriptor, "   BEGIN\n");
-					 wrsuiteregles (pCa1->CaFirstPRule, fileDescriptor);
+					 wrprules (pCa1->CaFirstPRule, fileDescriptor);
 					 if (pCa1->CaFirstPRule->PrNextPRule)
 					   fprintf (fileDescriptor, "   END;\n");
 				       }
@@ -3792,7 +3880,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				     fprintf (fileDescriptor, ":\n");
 				     if (pRP1->ApTextFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   BEGIN\n");
-				     wrsuiteregles (pRP1->ApTextFirstPRule, fileDescriptor);
+				     wrprules (pRP1->ApTextFirstPRule, fileDescriptor);
 				     if (pRP1->ApTextFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   END;\n");
 				     fprintf (fileDescriptor, "\n");
@@ -3813,7 +3901,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				     fprintf (fileDescriptor, ":\n");
 				     if (pRP1->ApRefFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   BEGIN\n");
-				     wrsuiteregles (pRP1->ApRefFirstPRule, fileDescriptor);
+				     wrprules (pRP1->ApRefFirstPRule, fileDescriptor);
 				     if (pRP1->ApRefFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   END;\n");
 				     fprintf (fileDescriptor, "\n");
@@ -3840,7 +3928,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       fprintf (fileDescriptor, ":\n");
 				       if (pRP1->ApEnumFirstPRule[val]->PrNextPRule)
 					 fprintf (fileDescriptor, "   BEGIN\n");
-				       wrsuiteregles (pRP1->ApEnumFirstPRule[val], fileDescriptor);
+				       wrprules (pRP1->ApEnumFirstPRule[val], fileDescriptor);
 				       if (pRP1->ApEnumFirstPRule[val]->PrNextPRule)
 					 fprintf (fileDescriptor, "   END;\n");
 				       fprintf (fileDescriptor, "\n");

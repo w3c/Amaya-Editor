@@ -417,8 +417,11 @@ typedef struct _PresRule
   PRuleType     PrType;		/* rule type */	
   PtrPRule	PrNextPRule;	/* next rule for the same object */
   PtrCondition  PrCond;		/* application conditions for the rule */
-  int		PrViewNum;	/* number of the view to which the rule
-				   applies */	
+  PtrSSchema    PrSpecifAttrSSchema; /* pointer on the structure schema
+                                        defining the attribute PrSpecifAttr */
+  char         *PrCSSURL;       /* points to the current CSS URL */
+  int           PrCSSLine;      /* the line number of the CSS rule */
+  int		PrViewNum;	/* the view number to which the rule applies */	
   int		PrSpecifAttr;	/* only for specific presentation rules
 				   attached to the abstract tree elements:
 				   number of the attribute to which the
@@ -431,8 +434,6 @@ typedef struct _PresRule
                                    !important */
   ThotBool      PrDuplicate;    /* duplicate of a conditional rule for an
 				   inherited attribute */
-  PtrSSchema    PrSpecifAttrSSchema; /* pointer on the structure schema
-                                        defining the attribute PrSpecifAttr */
   PresMode	PrPresMode;	/* computing mode of the value */
   union
   {

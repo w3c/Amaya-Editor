@@ -12,6 +12,8 @@ extern void SetPositionConstraint ( BoxEdge localEdge,
 extern void ComputeRadius ( PtrAbstractBox pAb,
                             int frame,
                             ThotBool horizRef );
+extern int GetGhostSize ( PtrBox pBox,
+                          ThotBool horizontal );
 extern void CleanAutoMargins ( PtrAbstractBox pAb );
 extern void ComputeMBP ( PtrAbstractBox pAb,
                          int frame,
@@ -51,6 +53,8 @@ extern void SetPositionConstraint (/* BoxEdge localEdge,
 extern void ComputeRadius (/* PtrAbstractBox pAb,
                               int frame,
                               ThotBool horizRef */);
+extern int GetGhostSize (/* PtrBox pBox,
+                            ThotBool horizontal */);
 extern void CleanAutoMargins (/* PtrAbstractBox pAb */);
 extern void ComputeMBP (/* PtrAbstractBox pAb,
                            int frame,

@@ -23,6 +23,12 @@ extern void ListBoxes ( int frame,
 extern void TtaListBoxes ( Document document,
                            View view,
                            FILE *fileDescriptor );
+extern void DisplayPRule ( PtrPRule rule,
+                           FILE *fileDescriptor,
+                           PtrElement pEl,
+                           PtrSSchema pSchS );
+extern void TtaListStyleOfCurrentElement ( Document document,
+                                           FILE *fileDescriptor );
 extern void TtaListStyleSchemas ( Document document,
                                   FILE *fileDescriptor );
 
@@ -45,6 +51,12 @@ extern void ListBoxes (/* int frame,
 extern void TtaListBoxes (/* Document document,
                              View view,
                              FILE *fileDescriptor */);
+extern void DisplayPRule (/* PtrPRule rule,
+                             FILE *fileDescriptor,
+                             PtrElement pEl,
+                             PtrSSchema pSchS */);
+extern void TtaListStyleOfCurrentElement (/* Document document,
+                                             FILE *fileDescriptor */);
 extern void TtaListStyleSchemas (/* Document document,
                                     FILE *fileDescriptor */);
 

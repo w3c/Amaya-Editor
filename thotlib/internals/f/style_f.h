@@ -23,6 +23,9 @@ extern int TtaGetStylePresentation ( unsigned int type,
                                      PSchema tsch,
                                      PresentationContext c,
                                      PresentationValue *v );
+extern void PRuleToPresentationSetting ( PtrPRule rule,
+                                         PresentationSetting setting,
+                                         PtrPSchema pPS );
 extern GenericContext TtaGetGenericStyleContext ( Document doc );
 extern PresentationContext TtaGetSpecificStyleContext ( Document doc );
 extern void TtaCleanElementPresentation ( Element el,
@@ -31,6 +34,10 @@ extern void TtaApplyAllSpecificSettings ( Element el,
                                           Document doc,
                                           SettingsApplyHandler handler,
                                           void *param );
+extern void TtaPToCss ( PresentationSetting settings,
+                        char *buffer,
+                        int len,
+                        Element el );
 
 #else /* __STDC__ */
 
@@ -51,6 +58,9 @@ extern int TtaGetStylePresentation (/* unsigned int type,
                                        PSchema tsch,
                                        PresentationContext c,
                                        PresentationValue *v */);
+extern void PRuleToPresentationSetting (/* PtrPRule rule,
+                                           PresentationSetting setting,
+                                           PtrPSchema pPS */);
 extern GenericContext TtaGetGenericStyleContext (/* Document doc */);
 extern PresentationContext TtaGetSpecificStyleContext (/* Document doc */);
 extern void TtaCleanElementPresentation (/* Element el,
@@ -59,6 +69,10 @@ extern void TtaApplyAllSpecificSettings (/* Element el,
                                             Document doc,
                                             SettingsApplyHandler handler,
                                             void *param */);
+extern void TtaPToCss (/* PresentationSetting settings,
+                          char *buffer,
+                          int len,
+                          Element el */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

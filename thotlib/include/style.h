@@ -21,6 +21,14 @@
 #define __STYLE_H__
 #define MAX_ANCESTORS 5
 
+struct unit_def
+{
+   char               *sign;
+   unsigned int        unit;
+};
+
+extern struct unit_def CSSUnitNames[];
+
 typedef enum
 {
   Txtmatch,
@@ -36,6 +44,8 @@ typedef struct struct_GenericContext
     unsigned int  type;           /* type of element */
     int           cssSpecificity; /* specificity according to selector */
     int           uses;           /* number of current uses */
+    int           cssLine;        /* the line number of the CSS rule */
+    char         *cssURL;         /* points to the current CSS URL */
     ThotBool      important;      /* important rule */
     ThotBool      destroy;        /* destructive mode ? */
     /*
@@ -60,6 +70,8 @@ typedef struct struct_SpecificContext
     int           cssSpecificity; /* For specific rules: > 0 when the rule
 				     translates a CSS style rule */
     int           uses;           /* number of current uses */
+    int           cssLine;        /* the line number of the CSS rule */
+    char         *cssURL;         /* points to the current CSS URL */
     ThotBool      important;      /* important rule */
     ThotBool      destroy;        /* destructive mode ? */
     /*
@@ -160,4 +172,17 @@ extern char *TtaGetStyledAttributeValues (PSchema tsch, int attrType);
   ----------------------------------------------------------------------*/
 extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
 
+
+/*----------------------------------------------------------------------
+ TtaPToCss:  translate a PresentationSetting to the
+     equivalent CSS string, and add it to the buffer given as the
+     argument. It is used when extracting the CSS string from actual
+     presentation.
+     el is the element for which the style rule is generated
+ 
+  All the possible values returned by the presentation drivers are
+  described in thotlib/include/presentation.h
+ -----------------------------------------------------------------------*/
+extern void TtaPToCss (PresentationSetting settings, char *buffer, int len,
+		       Element el);
 #endif /* __STYLE_H__ */

@@ -1071,8 +1071,10 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 	}
       tmpBuff[buf.st_size] = 0;
       fclose (res);
-
-      ReadCSSRules (doc, refcss, tmpBuff, tempURL, 0, FALSE, link);
+      if (css)
+	ReadCSSRules (doc, refcss, tmpBuff, css->url, 0, FALSE, link);
+      else
+	ReadCSSRules (doc, refcss, tmpBuff, NULL, 0, FALSE, link);
       TtaFreeMemory (tmpBuff);
     }
 }

@@ -324,7 +324,7 @@ extern ThotBool TtaIsCSSPRule (PRule pRule);
    pRule: the presentation rule to be removed.
    document: the document to which the element belongs.
   ----------------------------------------------------------------------*/
-extern void         TtaRemovePRule (Element element, PRule pRule, Document document);
+extern void TtaRemovePRule (Element element, PRule pRule, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetPRuleValue

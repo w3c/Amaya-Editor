@@ -2744,11 +2744,10 @@ void WaitingRule (PtrPRule pR, PtrAbstractBox pAbb, PtrPSchema pSP,
 /*----------------------------------------------------------------------
    GetAtt recupere une regle de presentation qui etait en attente. 
   ----------------------------------------------------------------------*/
-static void GetAtt (PtrPRule * pR, PtrAbstractBox * pAbb, PtrPSchema * pSP,
-		    PtrAttribute * pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
+static void GetAtt (PtrPRule *pR, PtrAbstractBox *pAbb, PtrPSchema *pSP,
+		    PtrAttribute *pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
 		    PtrPSchema queuePS[MAX_QUEUE_LEN],
 		    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-
 		    PtrPRule queuePR[MAX_QUEUE_LEN], int *lqueue, int *pqueue)
 {
    *pR = NULL;
@@ -2763,25 +2762,22 @@ static void GetAtt (PtrPRule * pR, PtrAbstractBox * pAbb, PtrPSchema * pSP,
 }
 
 /*----------------------------------------------------------------------
-   ApplCrRule verifie que la regle pRuleCr appartenant au   
-   schema de presentation pSchPres (correspondant au       
-   schema de structure pSS), est une regle de creation et, 
-   si oui, tente de l'appliquer a` l'element pEl. La       
-   fonction retourne Vrai s'il s'agit bien d'une regle de  
-   creation. pA est l'attribut auquel correspond la regle, 
-   s'il s'agit d'une regle de presentation d'attribut (NULL
-   sinon).                                                 
+   ApplCrRule checks if the rule pRuleCr of the the presentation schema
+   pSchPres (associated to the structure schema pSS), is a creation rule.
+   If TRUE tries to apply if fileDescriptor is NULL or displays the rule
+   and returns TRUE else returns FALSE.
+   The parameter pA gives the attribute which generates the rule or NULL.
   ----------------------------------------------------------------------*/
 static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 			    PtrPSchema pSchPres, PtrAttribute pA,
-			    PtrAbstractBox * pAbbReturn, DocViewNumber viewNb,
+			    PtrAbstractBox *pAbbReturn, DocViewNumber viewNb,
 			    PtrDocument pDoc, PtrElement pEl,
 			    ThotBool forward, int *lqueue,
 			    PtrPRule queuePR[MAX_QUEUE_LEN],
 			    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
 			    PtrPSchema queuePS[MAX_QUEUE_LEN],
 			    PtrAttribute queuePA[MAX_QUEUE_LEN],
-			    PtrAbstractBox pNewAbbox)
+			    PtrAbstractBox pNewAbbox, FILE *fileDescriptor)
 {
    ThotBool            result, toCreate;
    PtrAbstractBox      pAbb;
@@ -2798,8 +2794,10 @@ static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 	        pRuleCr->PrPresFunction == FnCreateWith ||
 	        pRuleCr->PrPresFunction == FnCreateAfter ||
 	        pRuleCr->PrPresFunction == FnCreateEnclosing;
-       toCreate = FALSE;	/* a priori il n' y a pas de pave a creer */
-       if (pNewAbbox != NULL)
+       toCreate = FALSE;	/* by default no creation */
+       if (fileDescriptor && result)
+	 DisplayPRule (pRuleCr, fileDescriptor, pEl, pSchPres);
+       else if (pNewAbbox && result)
 	 switch (pRuleCr->PrPresFunction)
 	   {
 	   case FnCreateFirst:
@@ -3405,17 +3403,18 @@ ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
 
 /*----------------------------------------------------------------------
   ApplyPresRules applies all presentation rules to a new abstract box
+  if fileDescriptor is NULL or displays the origin of presentation rules.
   ----------------------------------------------------------------------*/
-static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
-			    DocViewNumber viewNb,
-			    int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
-			    PtrPRule * pRSpec, PtrPRule * pRDef,
-			    PtrAbstractBox * pAbbReturn, ThotBool forward,
-			    int *lqueue, PtrPRule queuePR[MAX_QUEUE_LEN],
-			    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-			    PtrPSchema queuePS[MAX_QUEUE_LEN],
-			    PtrAttribute queuePA[MAX_QUEUE_LEN],
-			    PtrAbstractBox pNewAbbox)
+void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
+		     DocViewNumber viewNb,
+		     int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
+		     PtrPRule *pRSpec, PtrPRule *pRDef,
+		     PtrAbstractBox *pAbbReturn, ThotBool forward,
+		     int *lqueue, PtrPRule queuePR[MAX_QUEUE_LEN],
+		     PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+		     PtrPSchema queuePS[MAX_QUEUE_LEN],
+		     PtrAttribute queuePA[MAX_QUEUE_LEN],
+		     PtrAbstractBox pNewAbbox, FILE *fileDescriptor)
 {
   /* for each type of presentation property, selectedRule[i] records the
      latest selected rule while applying the cascade and schemaOfSelectedRule
@@ -3451,8 +3450,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       if (pRule)
 	/* if its a rule that creates a presentation box, apply it */
 	if (!ApplCrRule (pRule, pSchS, pSchP, NULL, pAbbReturn, viewNb,
-			 pDoc, pEl, forward, lqueue, queuePR, queuePP,
-			 queuePS, queuePA, pNewAbbox))
+			      pDoc, pEl, forward, lqueue, queuePR, queuePP,
+			      queuePS, queuePA, pNewAbbox, fileDescriptor))
 	  /* it's not a creation rule */
 	  /* get the rules for the same property in all other views */
 	  for (view = 1; view <= MAX_VIEW; view++)
@@ -3479,6 +3478,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      schemaOfSelectedRule[pRuleView->PrType] = pSchP;      
 		      attrOfSelectedRule[pRuleView->PrType] = NULL;
 		    }
+		  else if (fileDescriptor)
+		    DisplayPRule (pRuleView, fileDescriptor, pEl, pSchP);
 		  else if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL))
 		    /* it's a presentation function, apply the rule now */
 		    WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
@@ -3530,8 +3531,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  attrOfSelectedRule[pRule->PrType] = NULL;
 			}
 		    }
-		  else
-		    if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,NULL))
+		  else if (fileDescriptor)
+		    DisplayPRule (pRule, fileDescriptor, pEl, pSchP);
+		  else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,NULL))
 		      WaitingRule (pRule, pNewAbbox, pSchPres, NULL, queuePA,
 				   queuePS, queuePP, queuePR, lqueue);
 		}
@@ -3586,6 +3588,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  attrOfSelectedRule[pRule->PrType] = NULL;
 			}
 		    }
+		  else if (fileDescriptor)
+		    DisplayPRule (pRule, fileDescriptor, pEl, pSchP);
 		  else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL))
 		    WaitingRule (pRule, pNewAbbox, pSchPres,
 				 NULL, queuePA, queuePS, queuePP,
@@ -3657,7 +3661,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				    !ApplCrRule (pR, pSSattr, pSchPres, pAttr,
 						 pAbbReturn, viewNb, pDoc, pEl,
 						 forward, lqueue, queuePR, queuePP,
-						 queuePS, queuePA, pNewAbbox))
+						 queuePS, queuePA, pNewAbbox, fileDescriptor))
 				  /* not a creation rule, get the right rule*/
 				  ruleToApply = GetNextAttrPresRule (&pR,
 							 pAttr->AeAttrSSchema, pAttr,
@@ -3684,6 +3688,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 					    attrOfSelectedRule[ruleToApply->PrType] = pAttr;
 					  }
 				      }
+				    else if (fileDescriptor)
+				      DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchP);
 				    else if (!ApplyRule (ruleToApply, pSchPres,
 							 pNewAbbox, pDoc, pAttr))
 				      /* not the main view, apply the rule now */
@@ -3746,7 +3752,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			      !ApplCrRule (pR, pSSattr, pSchPattr, pAttr,
 				   pAbbReturn, viewNb, pDoc, pEl, forward,
                                    lqueue, queuePR, queuePP, queuePS, queuePA,
-                                   pNewAbbox))
+                                   pNewAbbox, fileDescriptor))
 			    /* not a creation rule, get the right rule */
 			    ruleToApply = GetNextAttrPresRule (&pR,
 					          pAttr->AeAttrSSchema, pAttr,
@@ -3772,6 +3778,8 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				      attrOfSelectedRule[ruleToApply->PrType] = pAttr;
 				    }
 				}
+			      else if (fileDescriptor)
+				DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchP);
 			      else if (!ApplyRule (ruleToApply, pSchPattr,
 						   pNewAbbox, pDoc, pAttr))
 				/* not the main view, apply the rule now */
@@ -3813,7 +3821,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	  {
 	    if (viewSch != 1 || pRule->PrType == PtFunction)
 	      {
-		if (!ApplyRule (pRule, pSchP, pNewAbbox, pDoc, NULL))
+		if (fileDescriptor)
+		  DisplayPRule (pRule, fileDescriptor, pEl, pSchP);
+		else if (!ApplyRule (pRule, pSchP, pNewAbbox, pDoc, NULL))
 		  /* not the main view, apply the rule now */
 		  WaitingRule (pRule, pNewAbbox, pSchP, NULL,
 			       queuePA, queuePS, queuePP, queuePR, lqueue);
@@ -3850,11 +3860,15 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   /* apply all selected rules */
   for (i = 0; i < PtPictInfo; i++)
     if (selectedRule[i])
-      if (!ApplyRule (selectedRule[i], schemaOfSelectedRule[i], pNewAbbox,
-		      pDoc, attrOfSelectedRule[i]))
-	WaitingRule (selectedRule[i], pNewAbbox, schemaOfSelectedRule[i],
-		     attrOfSelectedRule[i], queuePA, queuePS, queuePP,
-		     queuePR, lqueue);
+      {
+	if (fileDescriptor)
+	  DisplayPRule (selectedRule[i], fileDescriptor, pEl, pSchP);
+	else if (!ApplyRule (selectedRule[i], schemaOfSelectedRule[i], pNewAbbox,
+			     pDoc, attrOfSelectedRule[i]))
+	  WaitingRule (selectedRule[i], pNewAbbox, schemaOfSelectedRule[i],
+		       attrOfSelectedRule[i], queuePA, queuePS, queuePP,
+		       queuePR, lqueue);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -4382,7 +4396,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		/* on applique toutes les regles de presentation pertinentes */
 		ApplyPresRules (pEl, pDoc, viewNb, viewSch, pSchS, pSchP,
 				&pRSpec, &pRDef, &pAbReturn, forward, &lqueue,
-				queuePR, queuePP, queuePS, queuePA, pNewAbbox);
+				queuePR, queuePP, queuePS, queuePA, pNewAbbox, NULL);
 		
 		/* traitement particulier aux sauts de page (il faut prendre */
 		/* le bon schema de presentation) */

@@ -1093,8 +1093,8 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
    le schema de presentation par defaut defini dans le schema de	
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
-int          CreateNature (char *SSchName, char *PSchName,
-			   PtrSSchema pSS, PtrDocument pDoc)
+int CreateNature (char *SSchName, char *PSchName,
+		  PtrSSchema pSS, PtrDocument pDoc)
 {
 #ifndef NODISPLAY
    PtrPSchema  pPS;

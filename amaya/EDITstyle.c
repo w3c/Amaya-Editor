@@ -898,11 +898,11 @@ static void SpecificSettingsToCSS (Element el, Document doc,
       else
 	ptr = MakeRelativeURL (settings->value.pointer, DocumentURLs[doc]);
       settings->value.pointer = ptr;
-      PToCss (settings, string, sizeof(string), el);
+      TtaPToCss (settings, string, sizeof(string), el);
       TtaFreeMemory (ptr);
     }
   else
-    PToCss (settings, string, sizeof(string), el);
+    TtaPToCss (settings, string, sizeof(string), el);
 
   if (string[0] != EOS && *css_rules != EOS)
     strcat (css_rules, "; ");

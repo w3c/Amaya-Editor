@@ -9,10 +9,6 @@
 extern PtrBox GetNextBox ( PtrAbstractBox pAb );
 extern int FloatToInt ( float e );
 extern void ClearFloats ( PtrBox pBox );
-extern void InitFloats ( PtrBox pBlock,
-                         PtrLine pLine,
-                         PtrBox *floatL,
-                         PtrBox *floatR );
 extern int SetFloat ( PtrBox box,
                       PtrBox pBlock,
                       PtrLine pLine,
@@ -59,10 +55,6 @@ extern void EncloseInLine ( PtrBox pBox,
 extern PtrBox GetNextBox (/* PtrAbstractBox pAb */);
 extern int FloatToInt (/* float e */);
 extern void ClearFloats (/* PtrBox pBox */);
-extern void InitFloats (/* PtrBox pBlock,
-                           PtrLine pLine,
-                           PtrBox *floatL,
-                           PtrBox *floatR */);
 extern int SetFloat (/* PtrBox box,
                         PtrBox pBlock,
                         PtrLine pLine,
