@@ -171,7 +171,6 @@ int                 newtype;
 {
    ElementType         elType, siblingType;
    Element             prev, next, child, added, parent;
-   int		       length;
 
    elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = newtype;
@@ -310,9 +309,8 @@ boolean             remove;
 
 #endif /* __STDC__ */
 {
-   Element             child, next, prev;
+   Element             child, next;
    ElementType         elType;
-   int		       length;
 
    child = TtaGetFirstChild (elem);
    if (child == NULL)
@@ -567,7 +565,7 @@ Document            doc;
    Document            targetDocument;
    SSchema             HTMLSSchema;
    CHAR                documentURL[MAX_LENGTH];
-   STRING              url, form_data, info, sourceDocUrl;
+   STRING              url, info, sourceDocUrl;
    int                 length;
    boolean		isHTML;
    FollowTheLink_context *ctx;
@@ -1466,8 +1464,8 @@ int                 elemtype;
 #endif /* __STDC__ */
 {
    Element             selectedEl, elem, firstSelectedElem, lastSelectedElem,
-                       child, next, elFont, prev, lastEl;
-   ElementType         elType, selType, elType1;
+                       child, next, elFont, lastEl;
+   ElementType         elType, selType;
    DisplayMode         dispMode;
    int                 length, firstSelectedChar, lastSelectedChar, i;
    boolean             remove, done, toset;

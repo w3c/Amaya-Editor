@@ -204,8 +204,6 @@ NotifyAttribute    *event;
  
 #endif
 {
-   Element	firstChild, lastChild;
-
    /* if the attribute is on a text string, create a SPAN element that encloses
       this text string and move the attribute to that SPAN element */
    AttrToSpan (event->element, event->attribute, event->document);

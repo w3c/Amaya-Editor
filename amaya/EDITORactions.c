@@ -1013,7 +1013,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType, childType;
+   ElementType         elType;
    Element             el, child;
    int                 i, j;
 
@@ -1091,7 +1091,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType, childType;
+   ElementType         elType;
    Element             el, child;
    int                 i, j;
 
