@@ -34,13 +34,16 @@ all : libAnnotSchemas libAnnot
 clean :
 	$(RM) libAnnot.a
 	$(RM) *.o
-	$(RM) $(ANNOTLIB)/AnnotP.PRS
-	$(RM) $(ANNOTLIB)/Annot.STR
-	$(RM) $(ANNOTLIB)/Annot.SCH
-	$(RM) $(ANNOTLIB)/AnnotT.TRA
+	$(RM) $(ANNOTLIB)/*.PRS
+	$(RM) $(ANNOTLIB)/*.STR
+	$(RM) $(ANNOTLIB)/*.SCH
+	$(RM) $(ANNOTLIB)/*.TRA
 	$(RM) $(ANNOTLIB)/AnnotAPP.c
+	$(RM) $(ANNOTLIB)/TopicsAPP.c
 	$(RM) $(ANNOTLIB)/Annot.h
+	$(RM) $(ANNOTLIB)/Topics.h
 	$(RM) $(ANNOTLIB)/Annotactions.proto
+	$(RM) $(ANNOTLIB)/Topics.proto
 
 install :
 
