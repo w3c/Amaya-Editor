@@ -383,7 +383,8 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 185, 150, 100, 20, hwnd, 
 				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
-      
+
+      SetFocus (hwnEdit);
       break;
       
     case WM_DESTROY :

@@ -2227,6 +2227,8 @@ LPARAM lParam;
 	static CHAR_T textToSearch [255];
 	static CHAR_T newText [255];
 	static BOOL upper_lower = FALSE ;
+    static HWND WndSearchEdit;
+
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, _EMPTYSTR_);
@@ -2237,8 +2239,9 @@ LPARAM lParam;
 
 				CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
 				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
-
+                SetFocus (GetDlgItem (hwnDlg, IDC_SEARCHEDIT));
 				break;
+
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
@@ -2459,13 +2462,15 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    HWND EditURLWnd;
-    int iStart, iEnd;
+	int         ndx;
+	static HWND EditURLWnd;
 
     switch (msg) {
 	       case WM_INITDIALOG:
                 SetWindowText (hwnDlg, wndTitle);
 			    SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
+                EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
+                SetFocus (EditURLWnd) ;
 				urlToOpen [0] = 0;
 				break;
 
@@ -2519,6 +2524,13 @@ LPARAM lParam;
                             urlToOpen [0] = 0;
 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
+
+                       case IDC_GETURL:
+                            ndx = GetWindowTextLength (EditURLWnd);
+                            /* PostMessage (EditURLWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx); */
+                            PostMessage (EditURLWnd, EM_SETSEL, 0, MAKELONG (0, ndx));
+                            break;
+
 				}
 				break;
 				default: return FALSE;
