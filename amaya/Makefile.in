@@ -503,8 +503,8 @@ install : all ../bin/print
 	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/dicopar ; \
 	  done ; done)
-	$(CP) -r $(THOTDIR)/doc/Icons $(prefix)/Amaya/doc
-	$(CP) -r $(THOTDIR)/doc/amaya $(prefix)/Amaya/doc
+	$(CP) -r $(THOTDIR)/doc/images $(prefix)/Amaya/doc
+	$(CP) -r $(THOTDIR)/doc/html $(prefix)/Amaya/doc
 	(for i in $(FONTSFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/fonts ; \
