@@ -11,7 +11,7 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(X_FLAGS)
 XMLIB   = -lXm
-LIBS	=  $(LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
+LIBS	=  $(AMAYA_LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
 	  $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) $(AMAYA_ANNOT_LIBS) \
 	  $(AMAYA_ILU_LIBS) \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
@@ -46,7 +46,6 @@ math_schema: $(amaya_math_schema)
 graph_schema: $(amaya_graph_schema)
 comp_plugin: $(amaya_comp_plugin)
 comp_annot: $(amaya_comp_annot)
-comp_libwww : $(amaya_comp_libwww)
 
 #
 # specific entry point check the dependancies
@@ -135,7 +134,6 @@ force :
 #									#
 #########################################################################
 
-
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) $(AMAYA_JAVA_OPTIONS) \
 	 $(AMAYA_PLUGIN_OPTIONS) $(AMAYA_LIBWWW_OPTIONS) \
 	 $(AMAYA_MATH_OPTIONS) $(AMAYA_GRAPH_OPTIONS) $(AMAYA_ANNOT_OPTIONS) \
@@ -154,7 +152,7 @@ AMAYA_SRC= $(AMAYA_JAVA_SRC) $(AMAYA_PLUGIN_SRC) \
          $(AMAYA_ANNOT_SRC) $(AMAYA_ILU_SRC)
 
 AMAYA_OPTION_LIBS= $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
-         $(AMAYA_LIBWWW_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
+         $(AMAYA_LIBWWW_OPTION_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
          $(AMAYA_ANNOT_LIBS) $(AMAYA_ILU_LIBS)
 
 AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_JAVA_EXTRA_LIBS) $(AMAYA_PLUGIN_EXTRA_LIBS) \
@@ -178,7 +176,7 @@ HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
 amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT graph_schema math_schema
 
-amaya_src :  comp_libwww HTML.h $(AMAYA_SRC)
+amaya_src :  HTML.h $(AMAYA_SRC)
 
 #
 # Rule to build objects

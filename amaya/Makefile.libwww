@@ -1,9 +1,9 @@
 #
 # Makefile.libwww
 # Autoconf Fragment when using libWWW
-# Daniel Veillard, 1997
-#
-# Jose Kahan, 1999 : dependency extensions, use of a lite libwww
+# Authors: 
+#    Daniel Veillard, 1997 
+#    Jose Kahan, 1999 : dependency extensions, use of a lite libwww
 
 AMAYA_LIBWWW_OPTIONS=
 
@@ -15,21 +15,13 @@ AMAYA_LIBWWW_OBJ= \
 	AHTMemConv.o \
 	AHTInit.o
 
-AMAYA_LIBWWW_LIBS= 	../libwwwapp.a \
-			../libwwwhttp.a \
-			../libwwwhtml.a \
-			../libwwwmime.a \
-			../libwwwcache.a \
-			../libwwwstream.a \
-			../libwwwfile.a \
-			../libwwwdir.a \
-			../libwwwtrans.a \
-			../libwwwcore.a \
-			../libwwwutils.a \
-			../libwwwzip.a \
-			../libmd5.a 
+AMAYA_LIBWWW_OPTION_LIBS = \
+		../$(LIBWWW)/Library/src/.libs/*.a \
+		../$(LIBWWW)/modules/md5/.libs/*.a \
 
-LIBWWW_LIBS= -L..	-lwwwapp \
+AMAYA_LIBWWW_LIBS= \
+		-L../$(LIBWWW)/Library/src/.libs \
+			-lwwwapp \
 			-lwwwhttp \
 			-lwwwhtml \
 			-lwwwmime \
@@ -41,6 +33,7 @@ LIBWWW_LIBS= -L..	-lwwwapp \
 			-lwwwcore \
 			-lwwwutils \
 			-lwwwzip \
+		-L../$(LIBWWW)/modules/md5/.libs \
 			-lmd5
 
 AMAYA_LIBWWW_EXTRA_LIBS=
@@ -49,10 +42,12 @@ AMAYA_LIBWWW_INCLUDES= -I../libwww \
 		-I$(THOTDIR)/../libwww/Library/src \
 		-I$(THOTDIR)../libwww/modules/md5
 
-amaya_comp_libwww :  $(AMAYA_LIBWWW_LIBS)
+# this dependency calls the ../Makefile rule that compiles libwww
+AMAYA_LIBWWW_SRC= amaya_comp_libwww
 
-$(AMAYA_LIBWWW_LIBS) :
-	@(cd .. ; $(MAKE) libwww)
+amaya_comp_libwww : force
+		@(cd .. ; $(MAKE) libwww)
+
 
 
 
