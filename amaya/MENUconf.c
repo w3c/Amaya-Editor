@@ -54,8 +54,7 @@ static int ProxyStatus;
 
 /* Cache menu options */
 #ifdef _WINDOWS
-static boolean CacheActive = FALSE;
-static HWND CacheHwnd;
+static HWND CacheHwnd = NULL;
 #endif _WINDOWS
 static int CacheBase;
 static boolean EnableCache;
@@ -68,8 +67,7 @@ static int MaxCacheFile;
 
 /* Proxy menu options */
 #ifdef _WINDOWS
-static boolean ProxyActive = FALSE;
-static HWND ProxyHwnd;
+static HWND ProxyHwnd = NULL;
 #endif _WINDOWS
 static int ProxyBase;
 static CHAR_T HttpProxy [MAX_LENGTH+1];
@@ -77,10 +75,9 @@ static CHAR_T NoProxy [MAX_LENGTH+1];
 
 /* General menu options */
 #ifdef _WINDOWS
-static boolean GeneralActive = FALSE;
 static CHAR_T AppHome [MAX_LENGTH+1];
 static CHAR_T TmpDir [MAX_LENGTH+1];
-static HWND GeneralHwnd;
+static HWND GeneralHwnd = NULL;
 #endif _WINDOWS
 static int GeneralBase;
 static int ToolTipDelay;
@@ -95,8 +92,7 @@ static int FontMenuSize;
 
 /* Publish menu options */
 #ifdef _WINDOWS
-static boolean PublishActive = FALSE;
-static HWND PublishHwnd;
+static HWND PublishHwnd =  NULL;
 #endif _WINDOWS
 static int PublishBase;
 static boolean LostUpdateCheck;
@@ -105,19 +101,22 @@ static CHAR_T HomePage [MAX_LENGTH+1];
 
 /* Color menu options */
 #ifdef _WINDOWS
-static boolean ColorActive = FALSE;
+static HWND ColorHwnd = NULL;
 #endif _WINDOWS
 static int ColorBase;
 static CHAR_T FgColor [MAX_LENGTH+1];
 static CHAR_T BgColor [MAX_LENGTH+1];
+#ifndef _WINDOWS
 static CHAR_T MenuFgColor [MAX_LENGTH+1];
 static CHAR_T MenuBgColor [MAX_LENGTH+1];
+#endif /* !_WINDOWS */
 
 /* Geometry menu options */
-static boolean GeometryActive = FALSE;
 static int GeometryBase;
 static Document GeometryDoc = 0;
-
+#ifdef _WINDOWS
+HWND   GeometryHwnd = NULL;
+#endif /* _WINDOWS */
 /* common local variables */
 CHAR_T s[MAX_LENGTH+1]; /* general purpose buffer */
 
@@ -278,6 +277,9 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
   TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
   TtaSetDefEnvString ("ENABLE_DOUBLECLICK", "yes", FALSE);
+  /* @@@ */
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  /* @@@ */
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
   /* A4 size */
@@ -367,6 +369,7 @@ int entry;
 #endif /* __STDC__ */
 {
   boolean old = *value;
+
   TtaGetDefEnvBoolean (name, value);
   if (*value != old)
     /* change the toggle button state */
@@ -390,6 +393,7 @@ STRING value;
 #endif /* __STDC__ */
 {
   CHAR_T *ptr;
+
   ptr = TtaGetDefEnvString (name);
   if (ptr) {
     ustrncpy (value, ptr, MAX_LENGTH);
@@ -422,9 +426,17 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
+	  CacheHwnd = hwnDlg;
       WIN_RefreshCacheMenu (hwnDlg);
       break;
       
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      CacheHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
 	{
@@ -466,7 +478,7 @@ LPARAM lParam;
 	  libwww_CleanCache ();
 	  break;
 	case ID_DONE:
-	  CacheActive = FALSE;
+	  CacheHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
@@ -702,8 +714,6 @@ static void RefreshCacheMenu ()
 static void RefreshCacheMenu ()
 #endif /* __STDC__ */
 {
-  /* verify what happens when the option is NULL */
-
   /* set the menu entries to the current values */
   TtaSetToggleMenu (CacheBase + mCacheOptions, 0, EnableCache);
   TtaSetToggleMenu (CacheBase + mCacheOptions, 1, CacheProtectedDocs);
@@ -784,10 +794,9 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (CacheBase + CacheMenu, TRUE);
 #else /* !_WINDOWS */
-  if (!CacheActive)
+  if (!CacheHwnd)
     /* only activate the menu if it isn't active already */
     {
-      CacheActive = TRUE;
 	  	   switch (app_lang)
 	   { 
 	   case FR_LANG:
@@ -803,6 +812,8 @@ View                view;
 		  (DLGPROC) WIN_CacheDlgProc);
 		}
   }
+  else
+     SetFocus (CacheHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -829,9 +840,17 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
+	  ProxyHwnd = hwnDlg;
       WIN_RefreshProxyMenu (hwnDlg);
       break;
       
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      ProxyHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
 	{
@@ -861,7 +880,7 @@ LPARAM lParam;
 	case ID_DONE:
 	  /* reset the status flag */
 	  ProxyStatus = 0;
-	  ProxyActive = FALSE;
+	  ProxyHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
@@ -1085,10 +1104,9 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (ProxyBase + ProxyMenu, TRUE);
 #else
-  if (!ProxyActive)
+  if (!ProxyHwnd)
     /* only activate the menu if it isn't active already */
     {
-      ProxyActive = TRUE;
 	  switch (app_lang)
 	   { 
 	   case FR_LANG:
@@ -1105,6 +1123,8 @@ View                view;
 		   break;
 	   }
     }
+  else
+     SetFocus (ProxyHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -1131,10 +1151,17 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-      WIN_RefreshGeneralMenu (hwnDlg);
 	  GeneralHwnd = hwnDlg;
+      WIN_RefreshGeneralMenu (hwnDlg);
       break;
-      
+   
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      GeneralHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+   
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
 	{
@@ -1157,7 +1184,7 @@ LPARAM lParam;
 			      sizeof (DialogueLang) - 1);
 	      break;
 	    case IDC_ZOOM:
-	      Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, FALSE);
+	      Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, TRUE);
 	      break;	
 	    }
 	}
@@ -1178,7 +1205,6 @@ LPARAM lParam;
 	  SetGeneralConf ();	  
 	  break;
 	case ID_DONE:
-	  GeneralActive = FALSE;
 	  GeneralHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -1342,6 +1368,9 @@ static void SetGeneralConf ()
   TtaSetMultikey (Multikey);
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
   TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
+  /* @@@ */
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  /* @@@ */
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
@@ -1447,7 +1476,6 @@ STRING              pathname;
 #endif
 {
 #ifndef _WINDOWS 
-   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Create the dialogue form */
@@ -1526,10 +1554,9 @@ STRING              pathname;
    TtaSetDialoguePosition ();
    TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
 #else /* !_WINDOWS */
-   if (!GeneralActive)
+   if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */
      {
-       GeneralActive = TRUE;
 	   switch (app_lang)
 	   { 
 	   case FR_LANG:
@@ -1547,7 +1574,7 @@ STRING              pathname;
 	   }
      }
    else
-	 SetFocus (GeneralHwnd);
+     SetFocus (GeneralHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -1574,9 +1601,17 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
+	  PublishHwnd = hwnDlg;
       WIN_RefreshPublishMenu (hwnDlg);
       break;
-      
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      PublishHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break; 
+
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
 	{
@@ -1604,7 +1639,7 @@ LPARAM lParam;
 	  break;
 	case ID_DONE:
 	  /* reset the status flag */
-	  PublishActive = FALSE;
+	  PublishHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
@@ -1794,7 +1829,6 @@ STRING              pathname;
 #endif
 {
 #ifndef _WINDOWS
-   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Create the dialogue form */
@@ -1833,10 +1867,9 @@ STRING              pathname;
    TtaSetDialoguePosition ();
    TtaShowDialogue (PublishBase + PublishMenu, TRUE);
 #else
-  if (!PublishActive)
+  if (!PublishHwnd)
     /* only activate the menu if it isn't active already */
     {
-      PublishActive = TRUE;
 	  switch (app_lang)
 	   { 
 	   case FR_LANG:
@@ -1853,6 +1886,8 @@ STRING              pathname;
 		   break;
 	   }
     }
+  else
+     SetFocus (PublishHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -1875,8 +1910,60 @@ UINT   msg;
 WPARAM wParam; 
 LPARAM lParam;
 #endif /* __STDC__ */
-{ 
-  return FALSE;
+{
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      ColorHwnd = hwnDlg;
+      WIN_RefreshColorMenu (hwnDlg);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      ColorHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+          switch (LOWORD (wParam))
+	    {
+	    case IDC_FGCOLOR:
+	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor,
+			      sizeof (FgColor) - 1);
+	      break;
+	    case IDC_BGCOLOR:
+	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor,
+			      sizeof (BgColor) - 1);
+	      break;
+	    }
+	}
+
+      switch (LOWORD (wParam))
+	{
+	  
+	  /* action buttons */
+	case ID_APPLY:
+	  SetColorConf ();	  
+	  /* reset the status flag */
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  ColorHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  GetDefaultColorConf ();
+	  WIN_RefreshColorMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
 }
 #endif /* _WINDOWS */
 
@@ -1972,7 +2059,6 @@ STRING              pathname;
 #endif
 {
 #ifndef _WINDOWS
-   CHAR_T             s[MAX_LENGTH];
    int              i;
 
    /* Create the dialogue form */
@@ -2021,6 +2107,26 @@ STRING              pathname;
    TtaSetDialoguePosition ();
    TtaShowDialogue (ColorBase + ColorMenu, TRUE);
 #else 
+   if (!ColorHwnd)
+    /* only activate the menu if it isn't active already */
+    {
+	  switch (app_lang)
+	   {
+	   case FR_LANG:
+           DialogBox (hInstance, MAKEINTRESOURCE (FR_COLORMENU), NULL, 
+		  (DLGPROC) WIN_ColorDlgProc);
+	       break;
+	   case DE_LANG:
+		   DialogBox (hInstance, MAKEINTRESOURCE (DE_COLORMENU), NULL, 
+		  (DLGPROC) WIN_ColorDlgProc);
+	       break;
+	   default:
+		   DialogBox (hInstance, MAKEINTRESOURCE (EN_COLORMENU), NULL, 
+		  (DLGPROC) WIN_ColorDlgProc);
+		}
+  }
+  else
+     SetFocus (ColorHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -2036,6 +2142,8 @@ void WIN_RefreshColorMenu (hwnDlg)
 HWND hwnDlg;
 #endif /* __STDC__ */
 {
+  SetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor);
+  SetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor);
 }
 #endif /* WINDOWS */
 
@@ -2069,10 +2177,10 @@ static void GetColorConf ()
 {
   GetEnvString ("ForegroundColor", FgColor);
   GetEnvString ("BackgroundColor", BgColor);
+#ifndef _WINDOWS
   GetEnvString ("MenuFgColor", MenuFgColor);
   GetEnvString ("MenuBgColor", MenuBgColor);
-
-  TtaSaveAppRegistry ();
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2087,8 +2195,10 @@ static void GetDefaultColorConf ()
 {
   GetDefEnvString ("ForegroundColor", FgColor);
   GetDefEnvString ("BackgroundColor", BgColor);
+#ifndef _WINDOWS
   GetDefEnvString ("MenuFgColor", MenuFgColor);
   GetDefEnvString ("MenuBgColor", MenuBgColor);
+#endif /* !_WINDOWS */
 }
 
 
@@ -2104,12 +2214,14 @@ static void SetColorConf ()
 {
   TtaSetEnvString ("ForegroundColor", FgColor, TRUE);
   TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
+#ifndef _WINDOWS
   TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
   TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
+#endif /* !_WINDOWS */
+
+  TtaSaveAppRegistry ();
   /* change the current settings */
   TtaUpdateEditorColors ();
-  
-  TtaSaveAppRegistry ();
 }
 
 
@@ -2136,8 +2248,17 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-      WIN_RefreshCacheMenu (hwnDlg);
+      GeometryHwnd = hwnDlg;
       break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      GeometryDoc = 0;
+	  GeometryHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
@@ -2146,8 +2267,8 @@ LPARAM lParam;
 	  SetGeometryConf ();
 	  break;
 	case ID_DONE:
-	  GeometryActive = FALSE;
 	  GeometryDoc = 0;
+	  GeometryHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
@@ -2260,14 +2381,13 @@ STRING              pathname;
   TtaSetDialoguePosition ();
   TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
 #else /* !_WINDOWS */
-  if (GeometryDoc)
-    {
-      /* destroy the window */
-    }
+  if (GeometryHwnd)
+	 /* menu already active. We'll destroy it in order to have
+	  a menu that points to the current document */
+	 EndDialog (GeometryHwnd, ID_DONE);
   GeometryDoc = document;
   switch (app_lang)
     {
-#if 0
     case FR_LANG:
       DialogBox (hInstance, MAKEINTRESOURCE (FR_GEOMETRYMENU), NULL,
 		 (DLGPROC) WIN_GeometryDlgProc);
@@ -2276,7 +2396,6 @@ STRING              pathname;
       DialogBox (hInstance, MAKEINTRESOURCE (DE_GEOMETRYMENU), NULL,
 		 (DLGPROC) WIN_GeometryDlgProc);
       break;
-#endif
     default:
       DialogBox (hInstance, MAKEINTRESOURCE (EN_GEOMETRYMENU), NULL,
 		 (DLGPROC) WIN_GeometryDlgProc);
@@ -2351,7 +2470,7 @@ STRING view_name
 #ifdef __STDC__
 static void RestoreDefaultGeometryConf (void)
 #else
-static void RestolreDefaultGeometryConf ()
+static void RestoreDefaultGeometryConf ()
 #endif /* __STDC__ */
 {
   RestoreDefEnvGeom ("Formatted_view");

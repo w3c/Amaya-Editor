@@ -1716,7 +1716,7 @@ int           *height;
   HWND hWnd;
   RECT rect;
 
-  frame =  GetWindowNumber (GeometryDoc, view);
+  frame = GetWindowNumber (doc, view);
   hWnd = FrMainRef[frame];
   /* ask Windows what's the geometry of the frame */
   if (!GetWindowRect (hWnd, &rect))

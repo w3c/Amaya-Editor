@@ -326,6 +326,9 @@ void TtaUpdateEditorColors ()
   found = FindColor (0, app_name, "MenuFgColor", "Black", &FgMenu_Color);
   /* scrolls color */
   Scroll_Color = BgMenu_Color;
+#ifdef _WINDOWS
+   WinInitColors ();
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
