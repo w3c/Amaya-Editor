@@ -1293,7 +1293,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			}
 		      else if (car != EOS)
 			lg = CharacterWidth (car, nextfont);
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+			x += lg;
+#else /* _WINDOWS */
 		      if (Printing)
 			org -= lg;
 		      else
