@@ -2827,7 +2827,8 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 
 /*----------------------------------------------------------------------
   Moving
-  This function returns the new position (x, y) of the reference point of the box.
+  This function returns the new position (x, y) of the reference point
+  of the box.
   ----------------------------------------------------------------------*/
 static void Moving (int frame, int *x, int *y, int width, int height,
 		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
@@ -2836,13 +2837,11 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 #if defined(_MOTIF) || defined(_WINGUI)
    ThotEvent           event;
 #endif /* #if defined(_MOTIF) || defined(_WINGUI) */
-
 #ifdef _GTK
    ThotEvent           *event_tmp;
    ThotEvent           *event;
    GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
-
    ThotWindow          w;
    PtrAbstractBox      pAb;
    int                 ret, dx, dy, newx, newy;

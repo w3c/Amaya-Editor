@@ -182,16 +182,15 @@ static void NotifyHExtension (PtrElement pCell, Document doc)
   PasteAnElement  Paste element decribed by pSavedEl within (if within
   is TRUE), before (if before is TRUE) or after (if before is FALSE)
   element pEl in document pDoc.
-  The parameter cellChild should point to the pasted enclosing cell when
-  children of the cell are pasted instead of the cell itself. This parameter
-  could also point to the enclosing row.
+  The parameter pasteOrig points to original element to be pasted when
+  children are pasted instead of the saved element.
   When the parameter addedCell points to the new generated cell, this cell
   is pasted instead of the element pointed by pSavedEl.
   ----------------------------------------------------------------------*/
 static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				  ThotBool within, ThotBool before,
 				  ThotBool *cancelled, PtrDocument pDoc,
-				  PtrElement *cellChild, PtrElement addedCell)
+				  PtrElement *pasteOrig, PtrElement addedCell)
 {
    PtrElement          pElem, pChild, pPasted, pOrig, pParent, pSibling,
                        pAncest, pE, pElAttr, newElement;
@@ -208,6 +207,11 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    *cancelled = FALSE;
    if (addedCell)
      pOrig = addedCell;
+   else if (*pasteOrig)
+     {
+       pOrig = *pasteOrig;
+       before = FALSE;
+     }
    else
      pOrig = pSavedEl->PeElement;
 
@@ -217,7 +221,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
        TypeHasException (ExcIsCell, pOrig->ElTypeNumber,
 			 pOrig->ElStructSchema))
      {
-       if (pOrig && pOrig->ElFirstChild)
+       if (*pasteOrig == NULL && pOrig && pOrig->ElFirstChild)
 	 {
 	   /* paste children of the cell instead of the cell itself */
 	   pOrig = pOrig->ElFirstChild;
@@ -225,25 +229,30 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	       !strcmp (pOrig->ElStructSchema->SsName, "MathML"))
 	     /* go down one mor step */
 	     pOrig = pOrig->ElFirstChild;
-	   *cellChild = pOrig;
+	   /* this is the original of the new pasted element */
+	   *pasteOrig = pOrig;
 	 }
      }
-   else if (!TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+   else if (*pasteOrig == NULL &&
+	    !TypeHasException (ExcIsRow, pEl->ElTypeNumber,
 			       pEl->ElStructSchema) &&
 	    TypeHasException (ExcIsRow, pOrig->ElTypeNumber,
 			      pOrig->ElStructSchema))
      {
-       /* paste children of the cell instead of the cell itself */
+       /* paste included cells instead of the row itself */
        pChild = pOrig->ElFirstChild;
-       while (pChild && pChild->ElNext)
-	 pChild = pChild->ElNext;
        while (pChild && pEl)
 	 {
-	   /* don't check enclosed cells */
-	   pElem = PasteAnElement (pEl, NULL, within, FALSE,
-				   cancelled, pDoc, cellChild, pChild);
+	   /* paste the contents of the cell instead of the cell itself */
+	   pElem = PasteAnElement (pEl, NULL, within, before,
+				   cancelled, pDoc, pasteOrig, pChild);
 	   pEl = pElem;
-	   pChild = pChild->ElPrevious;
+	   /* force to paste after now */
+	   before = FALSE;
+	   if (*pasteOrig && (*pasteOrig)->ElNext)
+	     *pasteOrig = (*pasteOrig)->ElNext;
+	   else
+	     pChild = pChild->ElNext;
 	 }
        return pElem;
      }
@@ -638,7 +647,7 @@ void PasteCommand ()
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
-                      pNextEl, pFree, pSplitText, pSel, cellChild;
+                      pNextEl, pFree, pSplitText, pSel, pasteOrig;
   PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable,
                       pRealCol, pCe, addedCell, pCell, extendedCell[500];
   PtrPasteElem        pPasteD;
@@ -705,6 +714,8 @@ void PasteCommand ()
 		  before = beginning;
 		  withinTable = TRUE;
 		}
+	      else
+		before = FALSE;
 	    }
 
 	  if (WholeColumnSaved && pCell)
@@ -822,9 +833,10 @@ void PasteCommand ()
 	    while (pPasteD->PeNext)
 	      pPasteD = pPasteD->PeNext;
 	  ok = FALSE;
-	  cellChild = NULL;
+	  pasteOrig = NULL;
 	  addedCell = NULL; /* no cell generated */
 	  nRowsTempCol = 0;
+	  savebefore = before;
 	  do
 	    {
 	      if (WholeColumnSaved && withinTable)
@@ -840,7 +852,6 @@ void PasteCommand ()
 		      while (pEl == NULL && pNextCol)
 			{
 			  /* paste before the cell in the next column */
-			  savebefore = before;
 			  before = TRUE;
 			  nRowsTempCol = 1;
 			  pRealCol = pColHead;
@@ -935,7 +946,7 @@ void PasteCommand ()
 		}
 	      if (pEl)
 		pPasted = PasteAnElement (pEl, pPasteD, within, before,
-				      &cancelled, pDoc, &cellChild, addedCell);
+				      &cancelled, pDoc, &pasteOrig, addedCell);
 	      else
 		pPasted = NULL;
 	      if (pPasted == NULL && !WholeColumnSaved && !cancelled &&
@@ -945,7 +956,7 @@ void PasteCommand ()
 		   We will try to paste the same element before the element
 		   that is supposed to follow the pasted elements */
 		pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
-				      &cancelled, pDoc, &cellChild, addedCell);
+				      &cancelled, pDoc, &pasteOrig, addedCell);
 	      if (pPasted)
 		/* a copy of element pPasteD has been sucessfully pasted */
 		{
@@ -955,7 +966,6 @@ void PasteCommand ()
 		    /* next element will be pasted after the previous one*/
 		    {
 		      within = FALSE;
-		      savebefore = before;
 		      nRowsTempCol = 1;
 		      before = FALSE;
 		      pRealCol = pColHead;
@@ -985,29 +995,32 @@ void PasteCommand ()
 	      /* get the next element to be pasted */
 	      if (!within && before && !WholeColumnSaved)
 		{
-		  if (cellChild)
+		  if (pasteOrig && pasteOrig->ElNext)
+		    pasteOrig = pasteOrig->ElNext;
+		  else
 		    {
-		      cellChild = cellChild->ElPrevious;
-		      if (cellChild == NULL)
+		      pasteOrig = NULL;
+		      if (addedCell)
+			/* remove this generated cell */
+			DeleteElement (&addedCell, pDoc);
+		      else
 			pPasteD = pPasteD->PePrevious;
 		    }
-		  else
-		    pPasteD = pPasteD->PePrevious;
 		}
 	      else
 		{
-		  if (cellChild)
+		  before = FALSE;
+		  if (pasteOrig && pasteOrig->ElNext)
+		    pasteOrig = pasteOrig->ElNext;
+		  else
 		    {
-		      cellChild = cellChild->ElNext;
-		      if (cellChild == NULL)
+		      pasteOrig = NULL;
+		      if (addedCell)
+			/* remove this generated cell */
+			DeleteElement (&addedCell, pDoc);
+		      else
 			pPasteD = pPasteD->PeNext;
 		    }
-		  else if (addedCell)
-		    /* remove this generated cell */
-		    DeleteElement (&addedCell, pDoc);
-		  else
-		    if (pPasteD)
-		      pPasteD = pPasteD->PeNext;
 		}
 
 	      pRow = pNextRow;
@@ -1149,7 +1162,7 @@ void PasteCommand ()
 	if (NCreatedElements > 0)
 	  {
 	    pSel = NULL;
-	    if (before)
+	    if (savebefore)
 	      {
 		for (i = 0; i < NCreatedElements && !pSel; i++)
 		  if (CreatedElement[i] != NULL)

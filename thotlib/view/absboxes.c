@@ -111,7 +111,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 	     pAbb = pAbbNext;
 	}
 
-      if (pAb->AbBox != NULL)
+      if (pAb->AbBox && frame > 0)
 	/* remove the box before freeing the abstract box */
 	ComputeUpdates (pAb, frame);
 

@@ -2122,6 +2122,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
   GetDocAndView (frame, &pDoc, &view);
   if (pDoc == NULL)
     return;
+
   open = !pDoc->DocEditSequence;
   /* by default no selected point */
   pointselect = 0;
@@ -2556,10 +2557,9 @@ void ApplyDirectResize (int frame, int xm, int ym)
 }
 
 /*----------------------------------------------------------------------
-   DirectCreation re'alise les differents modes de cre'ation       
-   interactive des boi^tes.                                
+   DirectCreation does the direct creation of graphics
   ----------------------------------------------------------------------*/
-void                DirectCreation (PtrBox pBox, int frame)
+void DirectCreation (PtrBox pBox, int frame)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -2572,7 +2572,7 @@ void                DirectCreation (PtrBox pBox, int frame)
   ThotBool            modPosition, modDimension;
   ThotBool            histOpen;
 
-  /* Il ne faut realiser qu'une seule creation interactive a la fois */
+  /* Only one interaction at the same time */
   if (BoxCreating)
     return;
   else
@@ -2722,7 +2722,7 @@ void                DirectCreation (PtrBox pBox, int frame)
 	CloseHistorySequence (pDoc);	  
     }
 
-  /* Traitement de la creation interactive termine */
+  /* interaction finished */
   BoxCreating = FALSE;
 }
 
