@@ -1667,7 +1667,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  /* memorize the click position */
 	}
       else
-	LocateSelectionInView (frame, ClickX, ClickY, 5);
+	LocateSelectionInView (frame, ClickX, ClickY, 6);
       return 0;
 
     case WM_RBUTTONDOWN:
