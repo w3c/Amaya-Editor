@@ -2612,15 +2612,15 @@ int                 frame;
    boolean             nonnul;
    boolean             deplace;
    boolean             depabsolu;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    BoxRelation           *pRe1;
    boolean             aplacer;
 
    if (pBox != NULL && delta != 0)
      {
-	pPa1 = pBox->BxAbstractBox;
-	if (pPa1 != NULL)
-	   if (!pPa1->AbDead)
+	pAbbox1 = pBox->BxAbstractBox;
+	if (pAbbox1 != NULL)
+	   if (!pAbbox1->AbDead)
 	     {
 		/* On verifie que la boite n'a pas ete deja deplacee */
 		if (prec != NULL)
@@ -2656,7 +2656,7 @@ int                 frame;
 			     DefClip (frame, i - k, pBox->BxYOrg - k, j + k, pBox->BxYOrg + pBox->BxHeight + k);
 		       }
 		     /* Est-ce un pave non englobe ? */
-		     else if (!pPa1->AbVertEnclosing)
+		     else if (!pAbbox1->AbVertEnclosing)
 			if (delta > 0)
 			   DefClip (frame, pBox->BxXOrg - delta, pBox->BxYOrg,
 				    pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
@@ -2692,9 +2692,9 @@ int                 frame;
 
 		/* Regarde si les regles de dependance sont valides */
 		deplace = TRUE;
-		if (pPa1->AbEnclosing != NULL)
-		   if (pPa1->AbEnclosing->AbBox != NULL)
-		      deplace = (pPa1->AbEnclosing->AbBox->BxType != BoGhost);
+		if (pAbbox1->AbEnclosing != NULL)
+		   if (pAbbox1->AbEnclosing->AbBox != NULL)
+		      deplace = (pAbbox1->AbEnclosing->AbBox->BxType != BoGhost);
 
 		/* Decale les boites dependantes qui restent a deplacer */
 		adpos = pBox->BxPosRelations;
@@ -2717,7 +2717,7 @@ int                 frame;
 				       /* Sauf l'axe de reference de la boite elle-meme */
 				       if (pRe1->ReBox != pBox)
 					 {
-					    pAb = pPa1->AbEnclosing;
+					    pAb = pAbbox1->AbEnclosing;
 					    if (pAb != NULL)
 					       box1 = pAb->AbBox;
 					    else
@@ -2728,7 +2728,7 @@ int                 frame;
 				    }
 				  /* Ignore la relation inverse de la boite elastique */
 				  else if (pBox->BxHorizFlex
-					   && pPa1 != pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
+					   && pAbbox1 != pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
 				     ;
 
 				  /* On ne decale pas les boites qui ont des relations  */
@@ -2746,8 +2746,8 @@ int                 frame;
 					       /* Relation conforme a la structure sur l'origine de boite */
 					       if (pRe1->ReBox->BxHorizFlex
 					       /* si la boite n'est pas une boite fille */
-						   && pPa1 != pRe1->ReBox->BxAbstractBox->AbEnclosing
-						   && pPa1 == pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
+						   && pAbbox1 != pRe1->ReBox->BxAbstractBox->AbEnclosing
+						   && pAbbox1 == pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
 						  ChngBElast (pRe1->ReBox, pBox, pRe1->ReOp, delta, frame, TRUE);
 					    /* Relation conforme a la structure sur la largeur de boite */
 					       else
@@ -2757,7 +2757,7 @@ int                 frame;
 				  else if (pRe1->ReOp == OpHorizDep && !pRe1->ReBox->BxHorizFlex)
 				     DepOrgX (pRe1->ReBox, pBox, delta, frame);
 				  else if (((pRe1->ReOp == OpHorizDep
-					     && pPa1 == pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef))
+					     && pAbbox1 == pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef))
 					   || pRe1->ReOp == OpWidth)
 				     ChngBElast (pRe1->ReBox, pBox, pRe1->ReOp, delta, frame, TRUE);
 			       }
@@ -2772,7 +2772,7 @@ int                 frame;
 		     }
 
 		/* Si le calcul de la largeur de la boite englobante est a refaire */
-		pAb = pPa1->AbEnclosing;
+		pAb = pAbbox1->AbEnclosing;
 		if (deplace && pBox->BxXOutOfStruct && pAb != NULL)
 		   /* On ne peut traiter l'englobement d'une boite si cette boite */
 		   /* est en cours de placement ou si ce traitement est differe   */
@@ -2783,7 +2783,7 @@ int                 frame;
 		   /* et si l'englobement n'est pas fait par une boite soeur */
 		       && !Soeur (pBox, prec)
 		   /* et si la boite deplacee est effectivement englobee */
-		       && pPa1->AbHorizEnclosing)
+		       && pAbbox1->AbHorizEnclosing)
 		      Englobx (pAb, prec, frame);
 	     }
      }
@@ -2811,15 +2811,15 @@ int                 frame;
    boolean             nonnul;
    boolean             deplace;
    boolean             depabsolu;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    BoxRelation           *pRe1;
    boolean             aplacer;
 
    if (pBox != NULL && delta != 0)
      {
-	pPa1 = pBox->BxAbstractBox;
-	if (pPa1 != NULL)
-	   if (!pPa1->AbDead)
+	pAbbox1 = pBox->BxAbstractBox;
+	if (pAbbox1 != NULL)
+	   if (!pAbbox1->AbDead)
 	     {
 		/* On verifie que la boite n'a pas ete deja deplacee */
 		if (prec != NULL)
@@ -2855,7 +2855,7 @@ int                 frame;
 			     DefClip (frame, pBox->BxXOrg - k, i - k, pBox->BxXOrg + pBox->BxWidth + k, j + k);
 		       }
 		     /* Est-ce un pave non englobe ? */
-		     else if (!pPa1->AbHorizEnclosing)
+		     else if (!pAbbox1->AbHorizEnclosing)
 			if (delta > 0)
 			   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg - delta,
 				    pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
@@ -2891,9 +2891,9 @@ int                 frame;
 
 		/* Regarde si les regles de dependance sont valides */
 		deplace = TRUE;
-		if (pPa1->AbEnclosing != NULL)
-		   if (pPa1->AbEnclosing->AbBox != NULL)
-		      deplace = (pPa1->AbEnclosing->AbBox->BxType != BoGhost);
+		if (pAbbox1->AbEnclosing != NULL)
+		   if (pAbbox1->AbEnclosing->AbBox != NULL)
+		      deplace = (pAbbox1->AbEnclosing->AbBox->BxType != BoGhost);
 
 
 		/* On decale les boites dependantes qui restent a deplacer */
@@ -2918,7 +2918,7 @@ int                 frame;
 				       /* Sauf l'axe de reference de la boite elle-meme */
 				       if (pRe1->ReBox != pBox)
 					 {
-					    pAb = pPa1->AbEnclosing;
+					    pAb = pAbbox1->AbEnclosing;
 					    if (pAb != NULL)
 					       box1 = pAb->AbBox;
 					    else
@@ -2929,7 +2929,7 @@ int                 frame;
 				    }
 				  /* Ignore la relation inverse de la boite elastique */
 				  else if (pBox->BxVertFlex
-					   && pPa1 != pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+					   && pAbbox1 != pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
 				     ;
 				  /* On ne decale pas les boites qui ont des relations  */
 				  /* hors-structure avec la boite deplacee et on ne met */
@@ -2946,8 +2946,8 @@ int                 frame;
 					    if (pRe1->ReOp == OpVertDep && !pRe1->ReBox->BxYOutOfStruct)
 					       if (pRe1->ReBox->BxVertFlex
 					       /* si la boite n'est pas une boite fille */
-						   && pPa1 != pRe1->ReBox->BxAbstractBox->AbEnclosing
-						   && pPa1 == pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+						   && pAbbox1 != pRe1->ReBox->BxAbstractBox->AbEnclosing
+						   && pAbbox1 == pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
 						  ChngBElast (pRe1->ReBox, pBox, pRe1->ReOp, delta, frame, FALSE);
 					       else
 						  DepOrgY (pRe1->ReBox, pBox, delta, frame);
@@ -2956,7 +2956,7 @@ int                 frame;
 				  else if (pRe1->ReOp == OpVertDep && !pRe1->ReBox->BxVertFlex)
 				     DepOrgY (pRe1->ReBox, pBox, delta, frame);
 				  else if ((pRe1->ReOp == OpVertDep
-					    && pPa1 == pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+					    && pAbbox1 == pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
 					   || pRe1->ReOp == OpHeight)
 				     ChngBElast (pRe1->ReBox, pBox, pRe1->ReOp, delta, frame, FALSE);
 			       }
@@ -2971,7 +2971,7 @@ int                 frame;
 		     }
 
 		/* Si le calcul de la hauteur de la boite englobante est a refaire */
-		pAb = pPa1->AbEnclosing;
+		pAb = pAbbox1->AbEnclosing;
 		if (deplace && pBox->BxYOutOfStruct && pAb != NULL)
 		   /* On ne peut traiter l'englobement d'une boite si cette boite */
 		   /* est en cours de placement ou si ce traitement est differe   */
@@ -2982,7 +2982,7 @@ int                 frame;
 		   /* et si l'englobement n'est pas fait par une boite soeur */
 		       && !Soeur (pBox, prec)
 		   /* et si la boite deplacee est effectivement englobee */
-		       && pPa1->AbVertEnclosing)
+		       && pAbbox1->AbVertEnclosing)
 		      Engloby (pAb, prec, frame);
 	     }
      }

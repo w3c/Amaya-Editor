@@ -836,16 +836,16 @@ PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pP;
+   PtrAbstractBox             pAbb;
 
-   pP = pAb;
-   pP->AbOnPageBreak = FALSE;
-   pP->AbAfterPageBreak = FALSE;
-   pP = pP->AbFirstEnclosed;
-   while (pP != NULL)
+   pAbb = pAb;
+   pAbb->AbOnPageBreak = FALSE;
+   pAbb->AbAfterPageBreak = FALSE;
+   pAbb = pAbb->AbFirstEnclosed;
+   while (pAbb != NULL)
      {
-	RazPage (pP);
-	pP = pP->AbNext;
+	RazPage (pAbb);
+	pAbb = pAbb->AbNext;
      }
 }
 #endif /* __COLPAGE__ */

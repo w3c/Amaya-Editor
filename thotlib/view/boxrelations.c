@@ -2188,36 +2188,36 @@ PtrBox            abox;
 #endif /* __STDC__ */
 {
    PtrBox            debox;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
 
-   pPa1 = abox->BxAbstractBox;
+   pAbbox1 = abox->BxAbstractBox;
 
    /* On detruit la relation de position horizontale hors-structure */
    if (abox->BxXOutOfStruct)
      {
-	if (pPa1->AbHorizPos.PosAbRef == NULL)
+	if (pAbbox1->AbHorizPos.PosAbRef == NULL)
 	   debox = NULL;
 	else
-	   debox = pPa1->AbHorizPos.PosAbRef->AbBox;
+	   debox = pAbbox1->AbHorizPos.PosAbRef->AbBox;
 	if (debox != NULL)
 	   DelPos (debox, abox, NULL, TRUE, FALSE, TRUE);
 
 	/* Annule les relations hors-structure */
-	PropageXHorsStruct (pPa1, FALSE, pPa1->AbHorizEnclosing);
+	PropageXHorsStruct (pAbbox1, FALSE, pAbbox1->AbHorizEnclosing);
      }
 
    /* On detruit la relation de position verticale hors-structure */
    if (abox->BxYOutOfStruct)
      {
-	if (pPa1->AbVertPos.PosAbRef == NULL)
+	if (pAbbox1->AbVertPos.PosAbRef == NULL)
 	   debox = NULL;
 	else
-	   debox = pPa1->AbVertPos.PosAbRef->AbBox;
+	   debox = pAbbox1->AbVertPos.PosAbRef->AbBox;
 	if (debox != NULL)
 	   DelPos (debox, abox, NULL, TRUE, FALSE, FALSE);
 
 	/* Annule les relations hors-structure */
-	PropageYHorsStruct (pPa1, FALSE, pPa1->AbVertEnclosing);
+	PropageYHorsStruct (pAbbox1, FALSE, pAbbox1->AbVertEnclosing);
      }
 
    /* On detruit la relation de largeur hors-structure */
@@ -2225,13 +2225,13 @@ PtrBox            abox;
       /* Est-ce une dimension elastique ? */
       if (abox->BxHorizFlex)
 	{
-	   debox = pPa1->AbWidth.DimPosition.PosAbRef->AbBox;
+	   debox = pAbbox1->AbWidth.DimPosition.PosAbRef->AbBox;
 	   if (debox != NULL)
 	      DelPos (debox, abox, NULL, FALSE, FALSE, TRUE);
 	}
       else
 	{
-	   debox = pPa1->AbWidth.DimAbRef->AbBox;
+	   debox = pAbbox1->AbWidth.DimAbRef->AbBox;
 	   if (debox != NULL)
 	      DelDim (debox, abox, TRUE);
 	}
@@ -2242,15 +2242,15 @@ PtrBox            abox;
       /* Est-ce une dimension elastique ? */
       if (abox->BxVertFlex)
 	{
-	   if (pPa1->AbHeight.DimPosition.PosAbRef != NULL)
-	      debox = pPa1->AbHeight.DimPosition.PosAbRef->AbBox;
+	   if (pAbbox1->AbHeight.DimPosition.PosAbRef != NULL)
+	      debox = pAbbox1->AbHeight.DimPosition.PosAbRef->AbBox;
 	   if (debox != NULL)
 	      DelPos (debox, abox, NULL, FALSE, FALSE, FALSE);
 	}
       else
 	{
-	   if (pPa1->AbHeight.DimAbRef != NULL)
-	      debox = pPa1->AbHeight.DimAbRef->AbBox;
+	   if (pAbbox1->AbHeight.DimAbRef != NULL)
+	      debox = pAbbox1->AbHeight.DimAbRef->AbBox;
 	   if (debox != NULL)
 	      DelDim (debox, abox, FALSE);
 	}

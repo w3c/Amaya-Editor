@@ -1753,7 +1753,7 @@ int                *haut;
    PtrBox            box1;
    int                 x, itl, idl;
    int                 org;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    PtrBox            pBo2;
    PtrLine            pLi2;
    AbPosition        *pPavP1;
@@ -1763,7 +1763,7 @@ int                *haut;
 
    /* Remplissage de la boite bloc de ligne */
    x = 0;
-   pPa1 = pBox->BxAbstractBox;
+   pAbbox1 = pBox->BxAbstractBox;
 
    /* evalue si le positionnement en X et en Y doit etre absolu */
    XYEnAbsolu (pBox, &absoluEnX, &absoluEnY);
@@ -1774,20 +1774,20 @@ int                *haut;
 	complet = TRUE;
 	box1 = NULL;
 	/* Calcul de l'interligne */
-	itl = PixelValue (pPa1->AbLineSpacing, pPa1->AbLineSpacingUnit, pPa1);
+	itl = PixelValue (pAbbox1->AbLineSpacing, pAbbox1->AbLineSpacingUnit, pAbbox1);
 	/* Calcul de l'indentation */
-	if (pPa1->AbIndentUnit == UnPercent)
-	   idl = PixelValue (pPa1->AbIndent, UnPercent, pBox->BxWidth);
+	if (pAbbox1->AbIndentUnit == UnPercent)
+	   idl = PixelValue (pAbbox1->AbIndent, UnPercent, pBox->BxWidth);
 	else
-	   idl = PixelValue (pPa1->AbIndent, pPa1->AbIndentUnit, pPa1);
-	if (pPa1->AbIndent < 0)
+	   idl = PixelValue (pAbbox1->AbIndent, pAbbox1->AbIndentUnit, pAbbox1);
+	if (pAbbox1->AbIndent < 0)
 	   idl = -idl;
 
 	/* Construction complete du bloc de ligne */
 	if (pBox->BxFirstLine == NULL)
 	  {
 	     /* On recherche la premiere boite mise en ligne */
-	     pavefils = pPa1->AbFirstEnclosed;
+	     pavefils = pAbbox1->AbFirstEnclosed;
 	     encore = pavefils != NULL;
 	     while (encore)
 		/* Est-ce que le pave est mort ? */
@@ -1904,15 +1904,15 @@ int                *haut;
 	       {
 		  /* Indentation des lignes */
 #ifdef __COLPAGE__
-		  if (adligne1 != NULL || pPa1->AbTruncatedHead)
+		  if (adligne1 != NULL || pAbbox1->AbTruncatedHead)
 #else  /* __COLPAGE__ */
 		  if (adligne1 != NULL)
 #endif /* __COLPAGE__ */
 		    {
-		       if (pPa1->AbIndent < 0)
+		       if (pAbbox1->AbIndent < 0)
 			  adligne2->LiXOrg = idl;
 		    }
-		  else if (pPa1->AbIndent > 0)
+		  else if (pAbbox1->AbIndent > 0)
 		     adligne2->LiXOrg = idl;
 		  if (adligne2->LiXOrg >= pBox->BxWidth)
 		     adligne2->LiXOrg = 0;
@@ -1922,7 +1922,7 @@ int                *haut;
 
 		  /* Remplissage de la ligne au maximum */
 #ifdef __COLPAGE__
-		  RemplirLigne (adligne2, FntrTable[frame - 1].FrAbstractBox, pPa1->AbTruncatedTail, &complet, &ajustif);
+		  RemplirLigne (adligne2, FntrTable[frame - 1].FrAbstractBox, pAbbox1->AbTruncatedTail, &complet, &ajustif);
 #else  /* __COLPAGE__ */
 		  RemplirLigne (adligne2, FntrTable[frame - 1].FrAbstractBox, &complet, &ajustif);
 #endif /* __COLPAGE__ */
@@ -1940,17 +1940,17 @@ int                *haut;
 		  interlignage = TRUE;
 		  /* Teste le cadrage des lignes */
 #ifdef __COLPAGE__
-		  if (ajustif && (complet || pPa1->AbTruncatedTail) && pPa1->AbJustify)
+		  if (ajustif && (complet || pAbbox1->AbTruncatedTail) && pAbbox1->AbJustify)
 #else  /* __COLPAGE__ */
-		  if (ajustif && complet && pPa1->AbJustify)
+		  if (ajustif && complet && pAbbox1->AbJustify)
 #endif /* __COLPAGE__ */
 		     Ajuster (pBox, adligne2, frame, absoluEnX, absoluEnY);
 		  else
 		    {
 		       x = adligne2->LiXOrg;
-		       if (pPa1->AbAdjust == AlignCenter)
+		       if (pAbbox1->AbAdjust == AlignCenter)
 			  x += (adligne2->LiXMax - adligne2->LiRealLength) / 2;
-		       else if (pPa1->AbAdjust == AlignRight)
+		       else if (pAbbox1->AbAdjust == AlignRight)
 			  x = x + adligne2->LiXMax - adligne2->LiRealLength;
 		       /* Decale toutes les boites de la ligne */
 		       Aligner (pBox, adligne2, x, frame, absoluEnX, absoluEnY);
@@ -1996,7 +1996,7 @@ int                *haut;
 	       {
 		  pBox->BxLastLine = adligne2;
 		  /* Note la largeur de la fin de bloc si le remplissage est demande */
-		  if (pPa1->AbAdjust == AlignLeftDots)
+		  if (pAbbox1->AbAdjust == AlignLeftDots)
 		    {
 		       pLi2 = adligne2;
 		       if (pLi2->LiLastPiece != NULL)
@@ -2015,10 +2015,10 @@ int                *haut;
 
 	/* On met a jour la base du bloc de lignes   */
 	/* s'il depend de la premiere boite englobee */
-	if (pPa1->AbHorizRef.PosAbRef == pPa1->AbFirstEnclosed && pBox->BxFirstLine != NULL)
+	if (pAbbox1->AbHorizRef.PosAbRef == pAbbox1->AbFirstEnclosed && pBox->BxFirstLine != NULL)
 	  {
-	     pPavP1 = &pPa1->AbHorizRef;
-	     x = PixelValue (pPavP1->PosDistance, pPavP1->PosUnit, pPa1);
+	     pPavP1 = &pAbbox1->AbHorizRef;
+	     x = PixelValue (pPavP1->PosDistance, pPavP1->PosUnit, pAbbox1);
 	     DepBase (pBox, NULL, pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
 	  }
      }
@@ -2331,26 +2331,26 @@ boolean            *chgFS;
    int                 nombre;
    int                 reste;
    int                 diff;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    ViewFrame            *pFrame;
    ViewSelection            *pMa1;
 
    if (pBox != NULL)
      {
-	pPa1 = pBox->BxAbstractBox;
-	if (pPa1->AbLeafType == LtText)
+	pAbbox1 = pBox->BxAbstractBox;
+	if (pAbbox1->AbLeafType == LtText)
 	  {
 	     x = CarWidth (BLANC, pBox->BxFont);
 	     /* On met a jour les marques de selection */
 	     pFrame = &FntrTable[frame - 1];
 	     if (pFrame->FrSelectionBegin.VsBox == pBox)
 	       {
-		  pFrame->FrSelectionBegin.VsBox = pPa1->AbBox;	/* Box entiere */
+		  pFrame->FrSelectionBegin.VsBox = pAbbox1->AbBox;	/* Box entiere */
 		  *chgDS = TRUE;
 	       }
 	     if (pFrame->FrSelectionEnd.VsBox == pBox)
 	       {
-		  pFrame->FrSelectionEnd.VsBox = pPa1->AbBox;	/* Box entiere */
+		  pFrame->FrSelectionEnd.VsBox = pAbbox1->AbBox;	/* Box entiere */
 		  *chgFS = TRUE;
 	       }
 
@@ -2426,13 +2426,13 @@ boolean            *chgFS;
 			    pMa1 = &pFrame->FrSelectionBegin;
 			    if (pMa1->VsBox == ibox1)
 			      {
-				 pMa1->VsBox = pPa1->AbBox;	/* Box entiere */
+				 pMa1->VsBox = pAbbox1->AbBox;	/* Box entiere */
 				 *chgDS = TRUE;
 			      }
 			    pMa1 = &pFrame->FrSelectionEnd;
 			    if (pMa1->VsBox == ibox1)
 			      {
-				 pMa1->VsBox = pPa1->AbBox;	/* Box entiere */
+				 pMa1->VsBox = pAbbox1->AbBox;	/* Box entiere */
 				 *chgFS = TRUE;
 			      }
 			 }

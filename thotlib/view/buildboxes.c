@@ -1252,7 +1252,7 @@ boolean             BCOUP;
    PtrLine            ligne;
    Propagation      savpropage;
    PtrBox            pBo2;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    AbPosition        *pPavP1;
    AbDimension       *pPavD1;
 
@@ -1268,18 +1268,18 @@ boolean             BCOUP;
 	pBo2->BxWidth += dx;
 	pBo2->BxHeight += dy;
 	/* Faut-il mettre a jour la base ? */
-	pPa1 = pBo2->BxAbstractBox;
-	pPavP1 = &pPa1->AbHorizRef;
+	pAbbox1 = pBo2->BxAbstractBox;
+	pPavP1 = &pAbbox1->AbHorizRef;
 	if (pPavP1->PosAbRef == NULL)
 	  {
 	     j = FontBase (pBo2->BxFont) - pBo2->BxHorizRef;
-	     DepBase (pPa1->AbBox, NULL, j, frame);
+	     DepBase (pAbbox1->AbBox, NULL, j, frame);
 	  }
 	else if (pPavP1->PosAbRef == pBo2->BxAbstractBox)
 	   if (pPavP1->PosRefEdge == HorizMiddle)
-	      DepBase (pPa1->AbBox, NULL, dy / 2, frame);
+	      DepBase (pAbbox1->AbBox, NULL, dy / 2, frame);
 	   else if (pPavP1->PosRefEdge == Bottom)
-	      DepBase (pPa1->AbBox, NULL, dy, frame);
+	      DepBase (pAbbox1->AbBox, NULL, dy, frame);
 
 	/* Mise a jour des positions des boites suivantes */
 	box1 = pBox->BxNexChild;
@@ -1291,9 +1291,9 @@ boolean             BCOUP;
      }
 
    /* Traitement sur la boite passee en parametre */
-   pPa1 = pBox->BxAbstractBox;
+   pAbbox1 = pBox->BxAbstractBox;
    /* Mise a jour de la boite elle-meme */
-   if (pPa1->AbLeafType == LtText)
+   if (pAbbox1->AbLeafType == LtText)
      {
 	pBox->BxNSpaces += dbl;
 	pBox->BxNChars += dcar;
@@ -1311,7 +1311,7 @@ boolean             BCOUP;
 	   else
 	      pBox->BxWidth += just;
 	   /* Puis refaire la mise en lignes */
-	   ReevalBloc (pPa1->AbEnclosing, ligne, pBox, frame);
+	   ReevalBloc (pAbbox1->AbEnclosing, ligne, pBox, frame);
 	}
    /* Box coupee */
       else if (pBox->BxType == BoSplit)
@@ -1327,7 +1327,7 @@ boolean             BCOUP;
 	   if (Propage == ToAll)
 	     {
 		ligne = DesLigne (pBox->BxNexChild);
-		ReevalBloc (pPa1->AbEnclosing, ligne, pBox, frame);
+		ReevalBloc (pAbbox1->AbEnclosing, ligne, pBox, frame);
 	     }
 	}
    /* Box entiere ou de coupure */
@@ -2478,7 +2478,7 @@ int                 frame;
 {
    boolean             condition;
    ViewFrame            *pFrame;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    PtrBox            pBo1;
    boolean             savepret;
    int                 large, haut;
@@ -2486,41 +2486,41 @@ int                 frame;
    pFrame = &FntrTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
-	pPa1 = pFrame->FrAbstractBox;
-	if (pPa1->AbBox != NULL)
+	pAbbox1 = pFrame->FrAbstractBox;
+	if (pAbbox1->AbBox != NULL)
 	  {
-	     pBo1 = pPa1->AbBox;
+	     pBo1 = pAbbox1->AbBox;
 	     savepret = pFrame->FrReady;
 	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	     /* Faut-il changer les dimensions de la boite document */
 	     if (!pBo1->BxContentWidth
-		 || (!pPa1->AbWidth.DimIsPosition && pPa1->AbWidth.DimMinimum))
+		 || (!pAbbox1->AbWidth.DimIsPosition && pAbbox1->AbWidth.DimMinimum))
 	       {
 		  /* la dimension de la boite depend de la fenetre */
-		  condition = Dimensionner (pPa1, frame, TRUE);
+		  condition = Dimensionner (pAbbox1, frame, TRUE);
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
-		       EvalComp (pPa1, frame, &large, &haut);
+		       EvalComp (pAbbox1, frame, &large, &haut);
 		       ChangeLgContenu (pBo1, pBo1, large, 0, frame);
 		    }
 	       }
 	     if (!pBo1->BxContentHeight
-		 || (!pPa1->AbHeight.DimIsPosition && pPa1->AbHeight.DimMinimum))
+		 || (!pAbbox1->AbHeight.DimIsPosition && pAbbox1->AbHeight.DimMinimum))
 	       {
 		  /* la dimension de la boite depend de la fenetre */
-		  condition = Dimensionner (pPa1, frame, FALSE);
+		  condition = Dimensionner (pAbbox1, frame, FALSE);
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
-		       EvalComp (pPa1, frame, &large, &haut);
+		       EvalComp (pAbbox1, frame, &large, &haut);
 		       ChangeHtContenu (pBo1, pBo1, haut, frame);
 		    }
 	       }
 
 	     /* Faut-il deplacer la boite document dans la fenetre? */
-	     Positionner (pPa1->AbHorizPos, pBo1, frame, TRUE);
-	     Positionner (pPa1->AbVertPos, pBo1, frame, FALSE);
+	     Positionner (pAbbox1->AbHorizPos, pBo1, frame, TRUE);
+	     Positionner (pAbbox1->AbVertPos, pBo1, frame, FALSE);
 
 	     /* On elimine le scroll horizontal */
 	     DimFenetre (frame, &large, &haut);
@@ -2531,7 +2531,7 @@ int                 frame;
 		  DefClip (frame, 0, 0, large, haut);
 	       }
 	     /* Si la vue n'est pas coupee en tete on elimine le scroll vertical */
-	     if (!pPa1->AbTruncatedHead && pFrame->FrYOrg != 0)
+	     if (!pAbbox1->AbTruncatedHead && pFrame->FrYOrg != 0)
 	       {
 		  pFrame->FrYOrg = 0;
 		  /* Force le reaffichage */
@@ -2547,7 +2547,7 @@ int                 frame;
 	     /* Affichage de toute la fenetre */
 	     AfFinFenetre (frame, 0);
 	     /* Restaure la selection */
-/**MIN*/ VisuSelect (pPa1, FALSE);
+/**MIN*/ VisuSelect (pAbbox1, FALSE);
 	     /*else
 	        SetSelect(frame, TRUE); */
 
@@ -2615,16 +2615,16 @@ int                 frame;
    boolean             mortcree;
    boolean             resultat;
    boolean             change;
-   PtrAbstractBox             pPa1;
-   PtrAbstractBox             pPa2;
+   PtrAbstractBox             pAbbox1;
+   PtrAbstractBox             pAbbox2;
    PtrBox            pBo1;
    Propagation      savpropage;
 
-   pPa1 = pAb;
+   pAbbox1 = pAb;
    change = FALSE;
-   if (pPa1->AbDead && (pPa1->AbNew || pPa1->AbBox == NULL))
+   if (pAbbox1->AbDead && (pAbbox1->AbNew || pAbbox1->AbBox == NULL))
       resultat = FALSE;
-   else if (pPa1->AbDead || pPa1->AbNew)
+   else if (pAbbox1->AbDead || pAbbox1->AbNew)
      {
 	resultat = EvalChange (pAb, frame);
 	savpropage = Propage;
@@ -2640,7 +2640,7 @@ int                 frame;
 	Englobement = pAb->AbBox;
 
 	/* Traitement des creations */
-	pavefils = pPa1->AbFirstEnclosed;
+	pavefils = pAbbox1->AbFirstEnclosed;
 	premcree = NULL;
 	mortcree = FALSE;
 	while (pavefils != NULL)
@@ -2664,7 +2664,7 @@ int                 frame;
 	  }
 
 	/* Traitement des autres modifications */
-	pavefils = pPa1->AbFirstEnclosed;
+	pavefils = pAbbox1->AbFirstEnclosed;
 	pavprem = NULL;
 	while (pavefils != NULL)
 	  {
@@ -2688,18 +2688,18 @@ int                 frame;
 	/* Les liens entre boites filles ont peut-etre ete modifies */
 	if (mortcree)
 	  {
-	     pavefils = pPa1->AbFirstEnclosed;
+	     pavefils = pAbbox1->AbFirstEnclosed;
 	     while (pavefils != NULL)
 	       {
-		  pPa2 = pavefils;
-		  if (pPa2->AbBox != NULL)
+		  pAbbox2 = pavefils;
+		  if (pAbbox2->AbBox != NULL)
 		    {
-		       pBo1 = pPa2->AbBox;
+		       pBo1 = pAbbox2->AbBox;
 		       pBo1->BxHorizInc = NULL;
 		       pBo1->BxVertInc = NULL;
 		    }
 
-		  pavefils = pPa2->AbNext;
+		  pavefils = pAbbox2->AbNext;
 	       }
 	  }
 
@@ -2710,7 +2710,7 @@ int                 frame;
 	resultat = EvalChange (pAb, frame);
 	if (mortcree || resultat)
 	  {
-	     pBo1 = pPa1->AbBox;
+	     pBo1 = pAbbox1->AbBox;
 	     resultat = TRUE;
 	     /* Mise a jour d'un bloc de lignes */
 	     if (pBo1->BxType == BoBlock && pavprem != NULL)
@@ -2752,15 +2752,15 @@ int                 frame;
 			  premligne = NULL;
 		    }
 
-		  ReevalBloc (pAb, premligne, pPa1->AbBox, frame);
+		  ReevalBloc (pAb, premligne, pAbbox1->AbBox, frame);
 	       }
 	     /* Mise a jour d'une boite composee */
-	     else if (!pPa1->AbInLine
+	     else if (!pAbbox1->AbInLine
 		      && pAb->AbBox->BxType != BoGhost
 		      && pAb->AbLeafType == LtCompound)
 	       {
-		  Englobx (pAb, pPa1->AbBox, frame);
-		  Engloby (pAb, pPa1->AbBox, frame);
+		  Englobx (pAb, pAbbox1->AbBox, frame);
+		  Engloby (pAb, pAbbox1->AbBox, frame);
 	       }
 	  }
      }
@@ -2884,9 +2884,9 @@ PtrAbstractBox             Pv;
    PtrLine            adligne;
    PtrBox            box;
    ViewFrame            *pFrame;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    PtrBox            pBo1;
-   PtrAbstractBox             pPa2;
+   PtrAbstractBox             pAbbox2;
    PtrBox            pBo2;
    boolean             result;
    int                 savevisu = 0;
@@ -2907,22 +2907,22 @@ PtrAbstractBox             Pv;
    else
      {
 	pFrame = &FntrTable[frame - 1];
-	pPa1 = Pv;
+	pAbbox1 = Pv;
 	/* La vue n'est pas cree a la racine */
-	if (pFrame->FrAbstractBox == NULL && (pPa1->AbEnclosing != NULL
-		 || pPa1->AbPrevious != NULL || pPa1->AbNext != NULL))
+	if (pFrame->FrAbstractBox == NULL && (pAbbox1->AbEnclosing != NULL
+		 || pAbbox1->AbPrevious != NULL || pAbbox1->AbNext != NULL))
 	   TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
 	/* On detruit toute la vue */
-	else if (pPa1->AbEnclosing == NULL && pPa1->AbDead)
+	else if (pAbbox1->AbEnclosing == NULL && pAbbox1->AbDead)
 	  {
-	     if (pPa1 == pFrame->FrAbstractBox)
+	     if (pAbbox1 == pFrame->FrAbstractBox)
 		RazVue (frame);
 	     else
 		TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
 	  }
 	/* La vue est deja cree */
-	else if (pFrame->FrAbstractBox != NULL && pPa1->AbEnclosing == NULL
-		 && pPa1->AbNew)
+	else if (pFrame->FrAbstractBox != NULL && pAbbox1->AbEnclosing == NULL
+		 && pAbbox1->AbNew)
 	   TtaDisplaySimpleMessage (INFO, LIB, LIB_NEW_VIEW_CANNOT_REPLACE_THE_OLD_ONE);
 	/* Dans les autres cas */
 	else
@@ -2957,7 +2957,7 @@ PtrAbstractBox             Pv;
 	       }
 	     Propage = ToChildren;	/* Limite la propagation */
 	     /* On note le premier pave a examiner pour l'englobante */
-	     pavepere = pPa1->AbEnclosing;
+	     pavepere = pAbbox1->AbEnclosing;
 
 	     /* On prepare la mise a jour d'un bloc de lignes */
 	     if ((pavepere != NULL) && (pavepere->AbBox != NULL))
@@ -3044,17 +3044,17 @@ PtrAbstractBox             Pv;
 		  else
 		    {
 		       /* Les liens entre boites filles ont peut-etre ete modifies */
-		       pavefils = pPa1->AbFirstEnclosed;
+		       pavefils = pAbbox1->AbFirstEnclosed;
 		       while (pavefils != NULL)
 			 {
-			    pPa2 = pavefils;
-			    if (pPa2->AbBox != NULL)
+			    pAbbox2 = pavefils;
+			    if (pAbbox2->AbBox != NULL)
 			      {
-				 pBo2 = pPa2->AbBox;
+				 pBo2 = pAbbox2->AbBox;
 				 pBo2->BxHorizInc = NULL;
 				 pBo2->BxVertInc = NULL;
 			      }
-			    pavefils = pPa2->AbNext;
+			    pavefils = pAbbox2->AbNext;
 			 }
 
 		       Englobx (pavepere, NULL, frame);

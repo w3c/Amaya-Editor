@@ -150,13 +150,13 @@ int                 frame;
    ptrfont             font;
    PtrBox            mbox;
    int                 op, RO;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    ViewFrame            *pFrame;
    boolean             avecfond;
 
    /* On recherche la boite qui contraint l'englobement */
-   pPa1 = pBox->BxAbstractBox->AbEnclosing;
-   mbox = pPa1->AbBox;
+   pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
+   mbox = pAbbox1->AbBox;
 
    /* Si le pave englobant est eclate on saute au pave englobant entier */
    if (mbox->BxType == BoGhost)
@@ -286,7 +286,7 @@ char                modele;
 {
    PtrBox            mbox;
    int                 op, RO;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    ViewFrame            *pFrame;
    int                 xd, yd;
 
@@ -295,8 +295,8 @@ char                modele;
       mbox = pBox;
    else
      {
-	pPa1 = pBox->BxAbstractBox->AbEnclosing;
-	mbox = pPa1->AbBox;
+	pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
+	mbox = pAbbox1->AbBox;
 	/* Si le pave englobant est eclate on saute au pave englobant entier */
 	if (mbox->BxType == BoGhost)
 	   while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
@@ -797,7 +797,7 @@ int                 frame;
    int                 op, i;
    int                 fg;
    int                 bg;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    ViewFrame            *pFrame;
    PtrTextBuffer      pBu1;
    boolean             debutbloc;
@@ -809,8 +809,8 @@ int                 frame;
       mbox = pBox;
    else
      {
-	pPa1 = pBox->BxAbstractBox->AbEnclosing;
-	mbox = pPa1->AbBox;
+	pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
+	mbox = pAbbox1->AbBox;
 	/* Si le pave englobant est eclate on saute au pave englobant entier */
 	if (mbox->BxType == BoGhost)
 	   while (mbox->BxType == BoGhost && mbox->BxAbstractBox->AbEnclosing != NULL)
@@ -1008,7 +1008,7 @@ int                 frame;
    PtrBox            mbox;
    int                 RO;
    int                 op;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    ViewFrame            *pFrame;
    PtrTextBuffer      pBu1;
    boolean             debutbloc;
@@ -1022,8 +1022,8 @@ int                 frame;
       mbox = pBox;
    else
      {
-	pPa1 = pBox->BxAbstractBox->AbEnclosing;
-	mbox = pPa1->AbBox;
+	pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
+	mbox = pAbbox1->AbBox;
 
 	/* Si le pave englobant est eclate on saute au pave englobant entier */
 	if (mbox->BxType == BoGhost)

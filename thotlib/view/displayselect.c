@@ -43,7 +43,7 @@ PtrBox            pBox;
    int                 yh, h;
    PtrBox            boxmere;
    ViewFrame            *pFrame;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
 
    pFrame = &FntrTable[frame - 1];
    if (pBox->BxAbstractBox != NULL)
@@ -59,11 +59,11 @@ PtrBox            pBox;
 	     boxmere = pBox->BxAbstractBox->AbEnclosing->AbBox;
 	     while (boxmere->BxType == BoGhost)
 	       {
-		  pPa1 = boxmere->BxAbstractBox;
-		  if (pPa1->AbEnclosing == NULL)
+		  pAbbox1 = boxmere->BxAbstractBox;
+		  if (pAbbox1->AbEnclosing == NULL)
 		     boxmere = pBox;
 		  else
-		     boxmere = pPa1->AbEnclosing->AbBox;
+		     boxmere = pAbbox1->AbEnclosing->AbBox;
 	       }
 	  }
 	/* clipping par rapport a la boite englobante */
@@ -116,27 +116,27 @@ int                 pointselect;
    PtrTextBuffer      adbuff;
    PtrBox            box1;
    ViewFrame            *pFrame;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
 
 
    if (pBox != NULL)
      {
 	pFrame = &FntrTable[frame - 1];
-	pPa1 = pBox->BxAbstractBox;
+	pAbbox1 = pBox->BxAbstractBox;
 
 	if (pBox->BxType == BoGhost
-	    || (pPa1 != NULL
-		&& TypeHasException (ExcHighlightChildren, pPa1->AbElement->ElTypeNumber, pPa1->AbElement->ElSructSchema)))
+	    || (pAbbox1 != NULL
+		&& TypeHasException (ExcHighlightChildren, pAbbox1->AbElement->ElTypeNumber, pAbbox1->AbElement->ElSructSchema)))
 	  {
 	     /* -> La boite est eclatee (boite fantome) */
 	     /* On visualise toutes les boites filles */
-	     box1 = pPa1->AbFirstEnclosed->AbBox;
+	     box1 = pAbbox1->AbFirstEnclosed->AbBox;
 	     while (box1 != NULL)
 	       {
 		  VisuBoite (frame, box1, 0);
-		  pPa1 = box1->BxAbstractBox;
-		  if (pPa1->AbNext != NULL)
-		     box1 = pPa1->AbNext->AbBox;
+		  pAbbox1 = box1->BxAbstractBox;
+		  if (pAbbox1->AbNext != NULL)
+		     box1 = pAbbox1->AbNext->AbBox;
 		  else
 		     box1 = NULL;
 	       }
@@ -151,10 +151,10 @@ int                 pointselect;
 	     xmin = xgauche + pBox->BxWidth / 2;
 	     yhmoyen = yhaut + pBox->BxHeight / 2;
 
-	     if (pPa1 == NULL)
+	     if (pAbbox1 == NULL)
 		/* C'est une boite sans pave */
 		Invideo (frame, xdroit - xgauche, ybas - yhaut, xgauche, yhaut);
-	     else if (pPa1->AbLeafType == LtPlyLine && pBox->BxNChars > 1)
+	     else if (pAbbox1->AbLeafType == LtPlyLine && pBox->BxNChars > 1)
 	       {
 		  /* C'est une boite polyline */
 		  /* On marque le(s) point(s) caracteristique(s) de la polyline */
@@ -182,7 +182,7 @@ int                 pointselect;
 		       j++;
 		    }
 	       }
-	     else if (pPa1->AbLeafType == LtPicture)
+	     else if (pAbbox1->AbLeafType == LtPicture)
 	       {
 		  /* 4 points caracteristiques */
 		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xgauche - 2, yhaut - 2);
@@ -194,10 +194,10 @@ int                 pointselect;
 		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xmin - 2, ybas - 3);
 		  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH, xdroit - 3, ybas - 3);
 	       }
-	     else if (pPa1->AbLeafType == LtGraphics && pPa1->AbVolume != 0)
+	     else if (pAbbox1->AbLeafType == LtGraphics && pAbbox1->AbVolume != 0)
 		/* C'est une boite graphique */
 		/* On marque en noir les points caracteristiques de la boite */
-		switch (pPa1->AbRealShape)
+		switch (pAbbox1->AbRealShape)
 		      {
 			 case ' ':
 			 case 'R':

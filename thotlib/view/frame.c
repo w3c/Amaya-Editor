@@ -494,32 +494,32 @@ int                 frame;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    int                 i;
 
    /* Recherche si un pave pere a l'indicateur PavGraphCreation */
-   pPa1 = pBox->BxAbstractBox->AbEnclosing;
+   pAbbox1 = pBox->BxAbstractBox->AbEnclosing;
    i = 0;
    while (i == 0)
-      if (pPa1 == NULL)
+      if (pAbbox1 == NULL)
 	 i = 1;
-      else if (pPa1->AbBox->BxHorizFlex
-	       || pPa1->AbBox->BxVertFlex)
+      else if (pAbbox1->AbBox->BxHorizFlex
+	       || pAbbox1->AbBox->BxVertFlex)
 	{
 	   i = 1;
-	   pPa1 = NULL;
+	   pAbbox1 = NULL;
 	}
-      else if ((pPa1->AbHorizPos.PosUserSpecified)
-	       || (pPa1->AbVertPos.PosUserSpecified)
-	       || (pPa1->AbWidth.DimUserSpecified)
-	       || (pPa1->AbHeight.DimUserSpecified))
+      else if ((pAbbox1->AbHorizPos.PosUserSpecified)
+	       || (pAbbox1->AbVertPos.PosUserSpecified)
+	       || (pAbbox1->AbWidth.DimUserSpecified)
+	       || (pAbbox1->AbHeight.DimUserSpecified))
 	 i = 1;
       else
-	 pPa1 = pPa1->AbEnclosing;
+	 pAbbox1 = pAbbox1->AbEnclosing;
 
    /* Il existe un pave englobant avec l'indicateur -> meme traitement */
-   if (pPa1 != NULL)
-      AjouteACreer (acreer, pPa1->AbBox, frame);
+   if (pAbbox1 != NULL)
+      AjouteACreer (acreer, pAbbox1->AbBox, frame);
 
    /* Enregistrement de la boite a creer s'il n'y en a pas une  */
    /* englobante enregistree et si la boite a creer est visible */
@@ -564,7 +564,7 @@ int                 delta;
    PtrBox            prembox;
    ViewFrame            *pFrame;
    PtrBox            pBo1;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
    PtrBox            pBo2;
    PtrBox            ACreer;
    int                 i;
@@ -648,32 +648,32 @@ int                 delta;
 			 {
 			    /* La boite n'est plus nouvelle */
 			    pBox->BxNew = 0;
-			    pPa1 = pBox->BxAbstractBox;
+			    pAbbox1 = pBox->BxAbstractBox;
 			    i = 0;
 			    while (i == 0)
-			       if (pPa1 == NULL)
+			       if (pAbbox1 == NULL)
 				  i = 1;
-			       else if (pPa1->AbWidth.DimIsPosition
-					|| pPa1->AbHeight.DimIsPosition)
+			       else if (pAbbox1->AbWidth.DimIsPosition
+					|| pAbbox1->AbHeight.DimIsPosition)
 				 {
 				    i = 1;
-				    pPa1 = NULL;
+				    pAbbox1 = NULL;
 				 }
-			       else if ((pPa1->AbHorizPos.PosUserSpecified)
-					|| (pPa1->AbVertPos.PosUserSpecified)
-					|| (pPa1->AbWidth.DimUserSpecified)
-					|| (pPa1->AbHeight.DimUserSpecified))
+			       else if ((pAbbox1->AbHorizPos.PosUserSpecified)
+					|| (pAbbox1->AbVertPos.PosUserSpecified)
+					|| (pAbbox1->AbWidth.DimUserSpecified)
+					|| (pAbbox1->AbHeight.DimUserSpecified))
 				  i = 1;
 			       else
-				  pPa1 = pPa1->AbEnclosing;
+				  pAbbox1 = pAbbox1->AbEnclosing;
 			 }
 		       else
-			  pPa1 = NULL;
+			  pAbbox1 = NULL;
 
 /*** Saute la boite a creer interactivement ***/
-		       if (pPa1 != NULL)
+		       if (pAbbox1 != NULL)
 			  /* Enregistre la boite a creer */
-			  AjouteACreer (&ACreer, pPa1->AbBox, frame);
+			  AjouteACreer (&ACreer, pAbbox1->AbBox, frame);
 		       else if (y >= frameymin
 				&& pBox->BxYOrg <= frameymax
 				&& x >= framexmin
@@ -701,21 +701,21 @@ int                 delta;
 	  {
 	     ModeCreation (ACreer, frame);
 	     /* Faut-il aussi traiter les boites filles ? */
-	     pPa1 = ACreer->BxAbstractBox;
-	     if (pPa1 != NULL)
-		pPa1 = pPa1->AbFirstEnclosed;
-	     while (pPa1 != NULL)
+	     pAbbox1 = ACreer->BxAbstractBox;
+	     if (pAbbox1 != NULL)
+		pAbbox1 = pAbbox1->AbFirstEnclosed;
+	     while (pAbbox1 != NULL)
 	       {
-		  if ((pPa1->AbHorizPos.PosUserSpecified)
-		      || (pPa1->AbVertPos.PosUserSpecified)
-		      || (pPa1->AbWidth.DimUserSpecified)
-		      || (pPa1->AbHeight.DimUserSpecified))
+		  if ((pAbbox1->AbHorizPos.PosUserSpecified)
+		      || (pAbbox1->AbVertPos.PosUserSpecified)
+		      || (pAbbox1->AbWidth.DimUserSpecified)
+		      || (pAbbox1->AbHeight.DimUserSpecified))
 		    {
-		       ACreer = pPa1->AbBox;
+		       ACreer = pAbbox1->AbBox;
 		       ModeCreation (ACreer, frame);
 		    }
 		  else
-		     pPa1 = pPa1->AbNext;
+		     pAbbox1 = pAbbox1->AbNext;
 	       }
 	     return (FALSE);
 	  }

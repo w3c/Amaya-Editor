@@ -59,18 +59,18 @@ PtrAbstractBox             pAb;
 #endif /* __STDC__ */
 {
    PtrAbstractBox             pavefils;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox             pAbbox1;
 
-   pPa1 = pAb;
-   if (pPa1->AbSelected)
+   pAbbox1 = pAb;
+   if (pAbbox1->AbSelected)
      {
 	/* Le pave est selectionne */
-	pPa1->AbSelected = FALSE;
+	pAbbox1->AbSelected = FALSE;
      }
    else
      {
 	/* Sinon on parcours le sous-arbre */
-	pavefils = pPa1->AbFirstEnclosed;
+	pavefils = pAbbox1->AbFirstEnclosed;
 	while (pavefils != NULL)
 	  {
 	     RazPavSelect (pavefils);
