@@ -11,6 +11,7 @@ VIEWS
    Links_view merge with Links_view;
 
 #define TAG_FONTSIZE 12 pt
+#define ATTR_Font Helvetica
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
 #define ATTR_Visibility 6
@@ -58,85 +59,17 @@ DEFAULT
 
 BOXES
 
-  ATTR_type_simple: BEGIN
-        Content: Text ' xlink:type=simple';
+   AttrNameAndValue: BEGIN
+        Content: (Text ' ' AttributeName Text '=' AttributeValue);
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
                 VertPos: HRef = Previous . HRef;
                 Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
                 Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
                 END;
-	END;
-  ATTR_type_extended: BEGIN
-        Content: Text ' xlink:type=extended';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-	END;
-  ATTR_type_locator: BEGIN
-        Content: Text ' xlink:type=locator';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-	END;
-  ATTR_type_arc: BEGIN
-        Content: Text ' xlink:type=arc';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-	END;
-  ATTR_type_resource: BEGIN
-        Content: Text ' xlink:type=resource';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-	END;
-  ATTR_type_title: BEGIN
-        Content: Text ' xlink:type=title';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-	END;
-
-  ATTR_type_none: BEGIN
-        Content: Text ' xlink:type=none';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                Visibility: ATTR_Visibility;
-        	HorizPos: Left = Previous . Right;
-        	VertPos: HRef = Previous . HRef;
-        	Size: TAG_FONTSIZE;
-        	Style: ATTR_Style; Weight: ATTR_Weight;
-		Foreground: ATTR_Color;
-		END;
-	END;
+        END;
 
   ATTR_href: BEGIN
         Content: Text ' xlink:href=';
@@ -225,36 +158,10 @@ ATTRIBUTES
 		Visibility: 5;
 	END;
 
+  type:
+	CreateBefore(AttrNameAndValue);
   type = simple:
-	BEGIN
-	CreateBefore(ATTR_type_simple);
 	Foreground: Blue;
-	END;
-  type = extended:
-	BEGIN
-	CreateBefore(ATTR_type_extended);
-	END;
-  type = locator:
-	BEGIN
-	CreateBefore(ATTR_type_locator);
-	END;
-  type = arc:
-	BEGIN
-	CreateBefore(ATTR_type_arc);
-	END;
-  type = resource:
-	BEGIN
-	CreateBefore(ATTR_type_resource);
-	END;
-  type = title_:
-	BEGIN
-	CreateBefore(ATTR_type_title);
-	END;
-  type = none_:
-	BEGIN
-	CreateBefore(ATTR_type_none);
-	END;
-
   href_ :
 	BEGIN
         CreateBefore(ATTR_href);

@@ -61,8 +61,10 @@ DEFAULT
 
 BOXES
 
-   XML_S: BEGIN
-	Content: Text 'svg';
+{ presentation boxes }
+
+   ElementName: BEGIN
+	Content: (ElemName);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -72,7 +74,18 @@ BOXES
 		END;
 	END;
 
-{ Boxes for diplaying attributes and their value }
+   VerticalLine: BEGIN
+	Content: Graphics 'W';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: Top = Creator . Top;
+		HorizPos: Left = Enclosing . Left;
+		Height: Creator . Height;
+		Width: 1.1;
+		LineWeight: 1 px;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
 
   ATTR_id: BEGIN
         Content: Text ' id=';
@@ -143,7 +156,7 @@ BOXES
                 END;
         END;
 
- ATTR_xml_space_default: BEGIN
+  ATTR_xml_space_default: BEGIN
 	Content: Text ' xml:space=default';
 	Visibility: 0;
 	IN Structure_view BEGIN
@@ -155,7 +168,7 @@ BOXES
 		END;
 	END;
 
- ATTR_xml_space_preserve: BEGIN
+  ATTR_xml_space_preserve: BEGIN
 	Content: Text ' xml:space=preserve';
 	Visibility: 0;
 	IN Structure_view BEGIN
@@ -168,7 +181,7 @@ BOXES
 	END;
 {
 
-   ATTR_xlink_href: BEGIN
+  ATTR_xlink_href: BEGIN
 	Content: Text '  xlink:href=';
 	Visibility: 0;
 	IN Structure_view BEGIN
@@ -179,7 +192,7 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
-   VALUE_xlink_href: BEGIN
+  VALUE_xlink_href: BEGIN
 	Content: (xlink_href);
 	Visibility: 0;
 	IN Structure_view BEGIN
@@ -191,21 +204,6 @@ BOXES
 		END;
 	END;
 }
-
-{ presentation boxes }
-
-   VerticalLine: BEGIN
-	Content: Graphics 'W';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		VertPos: Top = Creator . Top;
-		HorizPos: Left = Enclosing . Left;
-		Height: Creator . Height;
-		Width: 1.1;
-		LineWeight: 1 px;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
 
    Comment_Start:
 	BEGIN
@@ -259,7 +257,7 @@ RULES
 
    XML:
 	BEGIN
-	CreateBefore(XML_S);
+	CreateBefore(ElementName);
         CreateWith(VerticalLine);
 	HorizRef: *.Bottom;
         if within XML BEGIN
