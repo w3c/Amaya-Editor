@@ -224,9 +224,10 @@ static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
    /* Sets a new label to the element */
    ConvertIntToLabel (NewLabel (pDoc), pElem->ElLabel);
    if (pElem->ElReferredDescr != NULL)
-      /* This element is referenced. CopyTree did not copy its referenced element descriptor
-         which is shared by the source element.
-         Deals with source element references which are into the sub-tree which root is pRoot */
+      /* This element is referenced. CopyTree did not copy its referenced
+	 element descriptor which is shared by the source element.
+         Deals with source element references which are into the sub-tree
+	 whose root is pRoot */
      {
 	pDescRef = pElem->ElReferredDescr;
 	/* references element descriptor */
@@ -288,11 +289,11 @@ static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
 /* ----------------------------------------------------------------------
    TtaCopyTree
 
-   Creates a copy of a tree.
+   Creates a deep copy of a tree.
 
    Parameters:
-   sourceElement: element to be copied.
-   sourceDocument: the document containing the element to be copied.
+   sourceElement: root of the tree to be copied.
+   sourceDocument: the document containing the tree to be copied.
    destinationDocument: the document for which the copy must be created.
    parent: element that will become the parent of the created tree.
 
@@ -363,7 +364,91 @@ Element TtaCopyTree (Element sourceElement, Document sourceDocument,
 			  LoadedDocument[sourceDocument - 1], pSS,
 			  LoadedDocument[destinationDocument - 1],
 			  (PtrElement) parent,
-			  TRUE, TRUE, FALSE);
+			  TRUE, TRUE, FALSE, TRUE);
+      TransRef (element, element, LoadedDocument[destinationDocument - 1]);
+    }
+  return ((Element) element);
+}
+
+/* ----------------------------------------------------------------------
+   TtaCopyElement
+
+   Creates a copy of an element (does not copy the descendants).
+
+   Parameters:
+   sourceElement: element to be copied.
+   sourceDocument: the document containing the element to be copied.
+   destinationDocument: the document for which the copy must be created.
+   parent: element that will become the parent of the created element.
+
+   Return value:
+   An element whic is a copy of the sourceElement.
+
+   ---------------------------------------------------------------------- */
+Element TtaCopyElement (Element sourceElement, Document sourceDocument,
+		        Document destinationDocument, Element parent)
+{
+  PtrElement          element;
+  PtrElement          ancestor;
+  PtrSSchema          pSS, nextExtension;
+
+  UserErrorCode = 0;
+  element = NULL;
+  /* check parameters */
+  if (sourceDocument < 1 || sourceDocument > MAX_DOCUMENTS ||
+      destinationDocument < 1 || destinationDocument > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[sourceDocument - 1] == NULL ||
+	   LoadedDocument[destinationDocument - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (sourceElement == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      /* Looks for the structure schema to use for the copy */
+      if (sourceDocument == destinationDocument)
+	pSS = ((PtrElement) sourceElement)->ElStructSchema;
+      else
+	{
+	  pSS = NULL;
+	  ancestor = (PtrElement) parent;
+	  while (pSS == NULL && ancestor != NULL)
+	    if (!strcmp (ancestor->ElStructSchema->SsName,
+			 ((PtrElement) sourceElement)->ElStructSchema->SsName))
+	      pSS = ancestor->ElStructSchema;
+	    else
+	      ancestor = ancestor->ElParent;
+	  if (pSS == NULL)
+	    {
+	      if (((PtrElement) sourceElement)->ElStructSchema->SsExtension)
+		{
+		  nextExtension = LoadedDocument[destinationDocument - 1]->DocSSchema->SsNextExtens;
+		  while (nextExtension != NULL)
+		    {
+		      if (!strcmp (nextExtension->SsName,
+				   ((PtrElement) sourceElement)->ElStructSchema->SsName))
+			break;
+		      nextExtension = nextExtension->SsNextExtens;
+		    }
+		  if (nextExtension == NULL)
+		    TtaError (ERR_invalid_parameter);
+		  pSS = nextExtension;
+		}
+	      else if (!strcmp (LoadedDocument[destinationDocument - 1]->DocSSchema->SsName,
+				((PtrElement) sourceElement)->ElStructSchema->SsName))
+		pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
+	      else if (((PtrElement) sourceElement)->ElTerminal)
+		pSS = ((PtrElement) parent)->ElStructSchema;
+	      else
+		pSS = ((PtrElement) sourceElement)->ElStructSchema;
+	    }
+	}
+      /* Copying */
+      element = CopyTree (((PtrElement) sourceElement),
+			  LoadedDocument[sourceDocument - 1], pSS,
+			  LoadedDocument[destinationDocument - 1],
+			  (PtrElement) parent,
+			  TRUE, TRUE, FALSE, FALSE);
       TransRef (element, element, LoadedDocument[destinationDocument - 1]);
     }
   return ((Element) element);

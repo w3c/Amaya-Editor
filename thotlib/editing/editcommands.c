@@ -2531,12 +2531,6 @@ static void ContentEditing (int editType)
 	  
 	  if (editType != TEXT_SUP)
 	    NewContent (pAb);
-	  if (textPasted)
-	    /* send event TteElemTextModify.Post */
-	    APPtextModify (pAb->AbElement, frame, FALSE);
-	  else if (graphEdit)
-	    APPgraphicModify (pAb->AbElement,pAb->AbPolyLineShape, frame,
-			      FALSE, open);
 	  /* signale la nouvelle selection courante */
 	  if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
 	       editType == TEXT_X_PASTE || editType == TEXT_DEL ||
@@ -2553,6 +2547,12 @@ static void ContentEditing (int editType)
 				 pViewSelEnd->VsBox->BxAbstractBox, j,
 				 TRUE, FALSE, FALSE, FALSE);
 	    }
+	  if (textPasted)
+	    /* send event TteElemTextModify.Post */
+	    APPtextModify (pAb->AbElement, frame, FALSE);
+	  else if (graphEdit)
+	    APPgraphicModify (pAb->AbElement,pAb->AbPolyLineShape, frame,
+			      FALSE, open);
 	}
     }
 }

@@ -433,7 +433,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	   /* de structure des elements englobants du document d'arrivee. */
 	   pPasted = CopyTree (pOrig, DocOfSavedElements,
 			       pParent->ElStructSchema, pDoc, pParent, TRUE,
-			       TRUE, FALSE);
+			       TRUE, FALSE, TRUE);
 	   if (pPasted != NULL)
 	     {
 	       /* insere la copie dans l'arbre */

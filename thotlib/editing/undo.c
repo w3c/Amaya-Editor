@@ -363,7 +363,7 @@ void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
      {
        /* do the copy */
        pCopy = CopyTree (pEl, pDoc, pEl->ElStructSchema, pDoc, pEl->ElParent,
-			 FALSE, FALSE, TRUE);
+			 FALSE, FALSE, TRUE, TRUE);
        /* store the copy in the editing operation descriptor */
        editOp->EoSavedElement = pCopy;
        /* if older editing operations in the history refer to elements that

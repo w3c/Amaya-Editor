@@ -33,6 +33,13 @@ extern ThotBool TtaPrepareUndo (Document document);
 extern void TtaOpenUndoSequence (Document document, Element firstSel,
 				 Element lastSel, int firstSelChar, int lastSelChar);
 
+/*----------------------------------------------------------------------
+   TtaExtendUndoSequence
+
+   Reopen the latest sequence of editing operations in the history.
+  ----------------------------------------------------------------------*/
+extern void TtaExtendUndoSequence (Document document);
+
 /* ----------------------------------------------------------------------
    TtaCloseUndoSequence
 

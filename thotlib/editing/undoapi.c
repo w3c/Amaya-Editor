@@ -91,6 +91,21 @@ void TtaOpenUndoSequence (Document document, Element firstSel,
     }
 }
 
+/*----------------------------------------------------------------------
+   TtaExtendUndoSequence
+
+   Reopen the latest sequence of editing operations in the history.
+  ----------------------------------------------------------------------*/
+void TtaExtendUndoSequence (Document document)
+{
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    LoadedDocument [document - 1]->DocEditSequence = TRUE;
+}
+
 /* ----------------------------------------------------------------------
    TtaCloseUndoSequence
 

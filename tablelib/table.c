@@ -1276,7 +1276,7 @@ PtrDocument         pDoc;
 		     /* on cree une copie de la cellule a coller */
 		     pNCell = CopyTree (*pSvCell, DocOfSavedElements,
 					pCol->ElStructSchema, pDoc, pElParent,
-					TRUE, TRUE, FALSE);
+					TRUE, TRUE, FALSE, TRUE);
 		     nbPastedCells++;
 		     *pSvCell = (*pSvCell)->ElNext;
 		  }

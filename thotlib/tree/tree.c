@@ -2974,11 +2974,13 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
    the source which can be applied to the copy. 
    If shareRef is TRUE, the referenced elements of the copy share their
    referenced element descriptor with the source.
+   If deepCopy the whole subtree is copied, otherwise only the pSource
+   element is copied.
   ----------------------------------------------------------------------*/
 PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		     PtrSSchema pSSchema, PtrDocument pDocCopy,
 		     PtrElement pParent, ThotBool checkAttr, ThotBool shareRef,
-		     ThotBool keepAccess)
+		     ThotBool keepAccess, ThotBool deepCopy)
 {
   PtrElement          pEl, pS2, pC1, pC2;
   PtrReference        rf;
@@ -3028,8 +3030,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		  else
 		    {
 		      /* verifies if the "future" ancestor of the copy has an
-			 element belonging to the scheme where the source element
-			 is defined */
+			 element belonging to the scheme where the source
+			 element is defined */
 		      if (pParent == NULL)
 			pAsc = pDocCopy->DocDocElement;
 		      else
@@ -3041,8 +3043,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 			    if (!strcmp (pSource->ElStructSchema->SsName,
 					 pAsc->ElStructSchema->SsName))
 			      {
-				/* the copy will inherit the structure scheme of
-				   its document */
+				/* the copy will inherit the structure scheme
+				   of its document */
 				pSSchema = pAsc->ElStructSchema;
 				sameSSchema = TRUE;
 			      }
@@ -3066,7 +3068,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 			      }
 			    if (!sameSSchema)
 			      {
-				/* climbs one level to the next ancestor element */
+				/* climbs one level to the next ancestor
+				   element */
 				if ((pAsc->ElParent == NULL) &&
 				    (pAsc->ElStructSchema->SsExtension))
 				  pAsc = pDocCopy->DocDocElement;
@@ -3076,8 +3079,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 			  }
 			while (pAsc != NULL && !sameSSchema);
 		      if (!sameSSchema)
-			/* No ancestor has this structure scheme, so the unit is
-			   invalid */
+			/* No ancestor has this structure scheme, so the unit
+			   is invalid */
 			copyType = 0;
 		    }
 		}
@@ -3085,7 +3088,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		/* the source is another document or another nature, we must
 		   load the schemes for the copy */
 		{
-		  /* loads the structure and presentation schemes for the copy */
+		  /* loads the structure and presentation schemes for the
+		     copy */
 		  /* no preference for the presentation scheme */
 		  nR = CreateNature (pSource->ElStructSchema->SsName, NULL,
 				     pSSchema, pDocCopy);
@@ -3093,7 +3097,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		    /* could not load the schema */
 		    copyType = 0;
 		  else
-		    /* schema is loaded, changes the structure scheme of the copy */
+		    /* schema is loaded, changes the structure scheme of
+		       the copy */
 		    {
 		      pSRule = pSSchema->SsRule->SrElem[nR - 1];
 		      pSSchema = pSRule->SrSSchemaNat;
@@ -3214,14 +3219,15 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		}
 	      /* creates the copies of the elements of the children (if they
 		 exist) */
-	      if (!pSource->ElTerminal && pSource->ElFirstChild)
+	      if (deepCopy && !pSource->ElTerminal && pSource->ElFirstChild)
 		{
 		  pS2 = pSource->ElFirstChild;
 		  pC1 = NULL;
 		  do
 		    {
 		      pC2 = CopyTree (pS2, pDocSource, pSSchema, pDocCopy,
-				      pEl, checkAttr, shareRef, keepAccess);
+				      pEl, checkAttr, shareRef, keepAccess,
+				      deepCopy);
 		      if (pC2)
 			{
 			  if (pC1 == NULL)
@@ -3402,7 +3408,7 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 				  pSource->ElStructSchema->SsName)))
 		 {
 		   pC1 = CopyTree (pSource, pDocSource, pEl->ElStructSchema,
-				   pDoc, pEl, TRUE, TRUE, FALSE);
+				   pDoc, pEl, TRUE, TRUE, FALSE, TRUE);
 		   if (pC1 != NULL)
 		     {
 		       pC1->ElReferredDescr = NULL;
@@ -3418,7 +3424,7 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 		   do
 		     {
 		       pC2 = CopyTree (pS2, pDocSource, pEl->ElStructSchema,
-				       pDoc, pEl, TRUE, TRUE, FALSE);
+				       pDoc, pEl, TRUE, TRUE, FALSE, TRUE);
 		       if (pC2 != NULL)
 			 {
 			   if (pC1 == NULL)

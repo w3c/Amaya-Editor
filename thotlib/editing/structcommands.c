@@ -852,10 +852,10 @@ void CopyCommand ()
 		       cet element */
 		    pCopy = NULL;
 		  else
-		    /* pas d'objection de l'application */
-		    /* cree une copie de l'element */
+		    /* The application agrees */
+		    /* create a deep copy of the element */
 		    pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
-				      pSelDoc, NULL, FALSE, TRUE, FALSE);
+				      pSelDoc, NULL, FALSE, TRUE, FALSE, TRUE);
 		  if (pCopy != NULL)
 		    /* met la copie de l'element courant dans la 
 		       chaine des elements sauvegardes */

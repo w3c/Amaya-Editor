@@ -135,11 +135,11 @@ extern Element TtaNewTranscludedElement (Document document, Element orig);
 /* ----------------------------------------------------------------------
    TtaCopyTree
 
-   Creates a copy of a tree.
+   Creates a deep copy of a tree.
 
    Parameters:
-   sourceElement: element to be copied.
-   sourceDocument: the document containing the element to be copied.
+   sourceElement: root of the tree to be copied.
+   sourceDocument: the document containing the tree to be copied.
    destinationDocument: the document for which the copy must be created.
    parent: element that will become the parent of the created tree.
 
@@ -149,6 +149,24 @@ extern Element TtaNewTranscludedElement (Document document, Element orig);
    ---------------------------------------------------------------------- */
 extern Element TtaCopyTree (Element sourceElement, Document sourceDocument,
 			    Document destinationDocument, Element parent);
+
+/* ----------------------------------------------------------------------
+   TtaCopyElement
+
+   Creates a copy of an element (does not copy the descendants).
+
+   Parameters:
+   sourceElement: element to be copied.
+   sourceDocument: the document containing the element to be copied.
+   destinationDocument: the document for which the copy must be created.
+   parent: element that will become the parent of the created element.
+
+   Return value:
+   An element whic is a copy of the sourceElement.
+
+   ---------------------------------------------------------------------- */
+extern Element TtaCopyElement (Element sourceElement, Document sourceDocument,
+		               Document destinationDocument, Element parent);
 
 /* ----------------------------------------------------------------------
    TtaCreateDescent
