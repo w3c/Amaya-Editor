@@ -100,6 +100,7 @@ Thotbool            selected;
 
       /* show the selection on the whole image */
       if (selected)
+	{
 	if (pFrame->FrSelectOnePosition &&
 	    pBox == pFrame->FrSelectionBegin.VsBox)
 	  /* show the selection on the beginning or the end of the image */
@@ -109,6 +110,7 @@ Thotbool            selected;
 				  pFrame->FrSelectionBegin.VsBox);
 	else
 	  DisplayPointSelection (frame, pBox, 0);
+	}
     }
 }
 
@@ -576,10 +578,12 @@ ThotBool            selected;
 
 	/* show the selection on the whole image */
 	if (selected)
+	  {
 	  if (pFrame->FrSelectOnePosition)
 	    DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
 	  else
 	    DisplayPointSelection (frame, pBox, 0);
+	  }
      }
 }
 
@@ -791,10 +795,12 @@ ThotBool            selected;
       
       /* show the selection on the whole image */
       if (selected)
+	{
 	if (pFrame->FrSelectOnePosition)
 	  DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
 	else if (pBox->BxNChars > 1)
 	  DisplayPointSelection (frame, pBox, 0);
+	}
     }
 }
 

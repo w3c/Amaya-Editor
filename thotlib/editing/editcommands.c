@@ -1961,6 +1961,7 @@ int                 frame;
    int                 xDelta, charsDelta;
    int                 spacesDelta;
 
+   charsDelta = 0;
    if (pAb != NULL)
      {
 	if (pAb->AbLeafType == LtText)
@@ -1971,7 +1972,6 @@ int                 frame;
 	       {
 		  xDelta = 0;
 		  spacesDelta = 0;
-		  charsDelta = 0;
 	       }
 	     else
 	       {
@@ -3500,7 +3500,9 @@ CHAR_T                c;
 		(*ThotLocalActions[T_lock]) ();
 	    }
       
-	  if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	  if (!StructSelectionMode &&
+	      !ViewFrameTable[frame - 1].FrSelectOnePosition &&
+	      !pViewSel->VsBox->BxAbstractBox->AbReadOnly)
 	    {
 	      /* Delete the current selection */
 	      CloseTextInsertion ();
