@@ -1,7 +1,7 @@
 #
 # Makefile.svg
 # Autoconf Fragment when using SVG
-# Irene Vatton 1998-2002
+# Irene Vatton 1998-2003
 #
 
 AMAYA_SVG_OPTIONS=-D_SVG

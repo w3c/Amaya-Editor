@@ -61,7 +61,7 @@
 #include "libmanag.h" 
 #include "libmanag_f.h"
 
-#ifdef _SVGLIB
+#ifdef _SVG
 /* Variable to handle Use Library Interface (context of png selection)*/
 Document	LibraryDocDocument = 0;
 static Element	LibraryDocElement = NULL;
@@ -123,9 +123,9 @@ static char         szBuffer [MAX_BUFF];
 static int          nbTitle;
 static char         listTitle [MAX_BUFF];
 #endif /* _WINDOWS */
-#endif /* _SVGLIB */
+#endif /* _SVG */
 
-#ifdef _SVGLIB
+#ifdef _SVG
 /*----------------------------------------------------------------------
   AddLibraryDataIntoStructure
   Add a new structure url title into a dynamic liste :
@@ -183,7 +183,7 @@ static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *titl
 	HeaderListUriTitle->customLibrary = FALSE;
     }
 }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 
 #ifdef _WINDOWS
 /*-----------------------------------------------------------------------
@@ -192,7 +192,7 @@ static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *titl
 LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg,
 					   WPARAM wParam, LPARAM lParam)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
     switch (msg)
       {
       case WM_INITDIALOG:
@@ -225,7 +225,7 @@ LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg,
       default:
 	return FALSE;
       }
-#endif /* _SVGLIB */
+#endif /* _SVG */
     return TRUE;
 }
 
@@ -235,7 +235,7 @@ LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg,
 LRESULT CALLBACK AddNewModelIntoLibraryDlgProc (ThotWindow hwnDlg, UINT msg,
 						WPARAM wParam, LPARAM lParam)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
 int    iListIndex = 0;
 int    iCurrItem = -1;
 int    length = 0;
@@ -309,7 +309,7 @@ HWND   hwndLibraryListCtrl; /* handle the library title list */
    default:
      return FALSE;
    }
-#endif /* _SVGLIB */
+#endif /* _SVG */
  return TRUE;
 }
 
@@ -319,7 +319,7 @@ HWND   hwndLibraryListCtrl; /* handle the library title list */
 LRESULT CALLBACK NewLibraryDlgProc (ThotWindow hwnDlg, UINT msg,
 				    WPARAM wParam, LPARAM lParam)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
    AddNewModelHwnd = hwnDlg;
    switch (msg)
       {
@@ -383,7 +383,7 @@ LRESULT CALLBACK NewLibraryDlgProc (ThotWindow hwnDlg, UINT msg,
       default:
 	return FALSE;
       }
-#endif /* _SVGLIB */
+#endif /* _SVG */
    return TRUE;
 }
 
@@ -392,10 +392,10 @@ LRESULT CALLBACK NewLibraryDlgProc (ThotWindow hwnDlg, UINT msg,
  ------------------------------------------------------------------------*/
 void CreatePasteLibraryModelDlgWindow (ThotWindow parent)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   DialogBox (hInstance, MAKEINTRESOURCE (PASTELIBRARYDIALOG), parent,
 	     (DLGPROC) PasteLibraryModelDlgProc);
-#endif _SVGLIB
+#endif _SVG
 }
 
 /*-----------------------------------------------------------------------
@@ -403,13 +403,13 @@ void CreatePasteLibraryModelDlgWindow (ThotWindow parent)
  ------------------------------------------------------------------------*/
 void CreateAddNewModelIntoLibraryDlgWindow (ThotWindow parent, int nbr_Title, char *list_Title)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   nbTitle = nbr_Title;
   memcpy (listTitle, list_Title, MAX_LENGTH);
 
   DialogBox (hInstance, MAKEINTRESOURCE (ADDNEWMODELINTOLIBRARYDIALOG), parent,
 	     (DLGPROC) AddNewModelIntoLibraryDlgProc);
-#endif _SVGLIB
+#endif _SVG
 }
 
 /*-----------------------------------------------------------------------
@@ -417,7 +417,7 @@ void CreateAddNewModelIntoLibraryDlgWindow (ThotWindow parent, int nbr_Title, ch
  ------------------------------------------------------------------------*/
 void CreateNewLibraryDlgWindow (ThotWindow parent, int doc_type)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   UrlToOpen[0] = EOS;
 
   if (doc_type == docLibrary)
@@ -427,7 +427,7 @@ void CreateNewLibraryDlgWindow (ThotWindow parent, int doc_type)
 
 	DialogBox (hInstance, MAKEINTRESOURCE (CREATELIBRARYDIALOG), parent,
 	     (DLGPROC) NewLibraryDlgProc);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 #endif /* _WINDOWS */
@@ -439,7 +439,7 @@ void CreateNewLibraryDlgWindow (ThotWindow parent, int doc_type)
 ThotBool IsCurrentSelectionSVG ()
 {
   ThotBool     IsSVG = FALSE;
-#ifdef _SVGLIB
+#ifdef _SVG
   Document     selDoc;
   Element      firstSelEl, lastSelEl, currentEl;
   ElementType  elTypeSel;
@@ -490,7 +490,7 @@ ThotBool IsCurrentSelectionSVG ()
     }
   else
     IsSVG = FALSE;
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return IsSVG;
 }
 
@@ -503,7 +503,7 @@ ThotBool IsCurrentSelectionSVG ()
 ThotBool IsCurrentSelectionContainsUseElement()
 {
   ThotBool      containUseEl = FALSE;
-#ifdef _SVGLIB
+#ifdef _SVG
   Document      selDoc;
   Element       firstSelEl, lastSelEl, currentEl, elFound;
   ElementType   elTypeSearch;
@@ -532,7 +532,7 @@ ThotBool IsCurrentSelectionContainsUseElement()
       else
 	TtaGiveNextSelectedElement (selDoc, &currentEl, &i, &i);
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return containUseEl;
 }
 
@@ -543,7 +543,7 @@ ThotBool IsCurrentSelectionContainsUseElement()
   ----------------------------------------------------------------------*/
 void AddNewModelIntoLibraryForm (Document doc, View view)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   int            nbr;
 #ifndef _WINDOWS
   char           buffer[MAX_LENGTH];
@@ -587,7 +587,7 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
       InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
 		TtaGetMessage (AMAYA, AM_SVGLIB_NO_SVG_SELECTION));
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -597,7 +597,7 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CallbackLibrary (int ref, int typedata, char *data)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   int                 val;
   Document            svgDoc, res, libDoc;
   char               *id, *buffer;
@@ -868,7 +868,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
       TtaRemovePRule (LibraryDocElement, PRuleSearch, LibraryDocDocument);
       LibraryDocElement = NULL;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -877,7 +877,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void CreateNewLibraryDialog (Document doc, View view)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
 #ifndef _WINDOWS
   char           buffer[MAX_LENGTH];
   char          *app_home;
@@ -919,7 +919,7 @@ void CreateNewLibraryDialog (Document doc, View view)
 #else /* _WINDOWS */
   CreateNewLibraryDlgWindow (TtaGetViewFrame (doc, view), docLibrary);
 #endif /* _WINDOWS */
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -927,7 +927,7 @@ void CreateNewLibraryDialog (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowLibraryBrowser ()
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   Document       doc;
 #ifndef _WINDOWS
   char           buffer[MAX_LENGTH];
@@ -972,7 +972,7 @@ void ShowLibraryBrowser ()
 #else /* _WINDOWS */
   doc = TtaGetSelectedDocument ();
 #endif /* _WINDOWS */
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -984,7 +984,7 @@ void ShowLibraryBrowser ()
 int SVGLibraryListItemNumber (char *buffer)
 {
   int          cpt = 0;
-#ifdef _SVGLIB
+#ifdef _SVG
   char        *ptr, *ptr1;
 
   ptr = buffer;
@@ -999,7 +999,7 @@ int SVGLibraryListItemNumber (char *buffer)
 	  ptr = ptr1 + 1;
 	}
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return cpt;
 }
 
@@ -1012,7 +1012,7 @@ int SVGLibraryListItemNumber (char *buffer)
 char *IsSVGCatalogueExist (char *data)
 {
   char              *catalogueUri = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle      *curList = HeaderListUriTitle;
 
   while (curList &&
@@ -1023,7 +1023,7 @@ char *IsSVGCatalogueExist (char *data)
     catalogueUri = curList->URI;
   else
     catalogueUri = NULL;
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return catalogueUri;
 }
 
@@ -1035,12 +1035,12 @@ char *IsSVGCatalogueExist (char *data)
   ----------------------------------------------------------------------*/
 void AddGraphicalObjectIntoCatalogue (Document doc, View view)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   AddNewModelIntoLibraryForm (doc, view);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
-#ifdef _SVGLIB
+#ifdef _SVG
 /*-------------------------------------------------------------------
   InitSVGBufferForCombobox
   Initializes a string by reading data in a Library Manager Structure List
@@ -1076,7 +1076,7 @@ static void InitSVGBufferForComboBox ()
        SVGlib_list[lg] = EOS;
     }
 }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
   CreateNewLibraryFile
@@ -1092,7 +1092,7 @@ static void InitSVGBufferForComboBox ()
 Document CreateNewLibraryFile (char *libUrl, char *libtitle)
 {
   Document             newLibraryDoc = 0;
-#ifdef _SVGLIB
+#ifdef _SVG
   Element              docEl, root, title, text, el, head, child, meta, body;
   Element              doctype, style;
   ElementType          elType;
@@ -1277,7 +1277,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   /* Activate show areas */
   if (MapAreas[newLibraryDoc])
     ChangeAttrOnRoot (newLibraryDoc, HTML_ATTR_ShowAreas);
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return newLibraryDoc;
 }
 
@@ -1290,7 +1290,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
 char *GetLibraryFileTitle (char *url)
 {
   char               *reTitle = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   Document             res, libraryDoc;
   ElementType         elTypeSearch;
   Element             el, child;
@@ -1344,7 +1344,7 @@ char *GetLibraryFileTitle (char *url)
       else
 	reTitle = NULL;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return reTitle;
 }
 
@@ -1356,7 +1356,7 @@ char *GetLibraryFileTitle (char *url)
 char *CreateUniqueLibraryTitle (char *title)
 {
   char *Title = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   int   i = 1;
   Title = (char *) TtaGetMemory (MAX_LENGTH); /*strlen (title) + 3*/
   strcpy (Title, title);
@@ -1366,7 +1366,7 @@ char *CreateUniqueLibraryTitle (char *title)
       sprintf (Title, "%s%d", title, i);
       i++;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return Title;
 }
 
@@ -1379,7 +1379,7 @@ char *CreateUniqueLibraryTitle (char *title)
 ThotBool IsLibraryTitleExist (char *title)
 {
   ThotBool          tExist = FALSE;
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle     *listCur = HeaderListUriTitle;
   while (listCur)
     {
@@ -1387,7 +1387,7 @@ ThotBool IsLibraryTitleExist (char *title)
 	tExist = TRUE;
       listCur = listCur->next;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return tExist;
 }
 
@@ -1399,7 +1399,7 @@ ThotBool IsLibraryTitleExist (char *title)
 ThotBool SearchURIinCurrentSVGLibraryList (char *URI)
 {
   ThotBool found = FALSE;
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle     *curList;
 
   if (HeaderListUriTitle)
@@ -1413,7 +1413,7 @@ ThotBool SearchURIinCurrentSVGLibraryList (char *URI)
       if (curList)
 	found = TRUE;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return found;
 }
 
@@ -1425,7 +1425,7 @@ ThotBool SearchURIinCurrentSVGLibraryList (char *URI)
   -------------------------------------------------------------------*/
 void SVGLIB_FreeDocumentResource ()
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle      *curList, *prevList;
   int                i = 1;
   /* is it the last loaded document ? */
@@ -1456,7 +1456,7 @@ void SVGLIB_FreeDocumentResource ()
 	}
       HeaderListUriTitle = NULL;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -1469,7 +1469,7 @@ void SVGLIB_FreeDocumentResource ()
 char *GetLibraryPathFromTitle (char *title)
 {
   char             *path = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle     *listCur;
 
   if (HeaderListUriTitle)
@@ -1481,7 +1481,7 @@ char *GetLibraryPathFromTitle (char *title)
       if (listCur)
 	path = listCur->URI;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return path;
 }
 
@@ -1492,7 +1492,7 @@ char *GetLibraryPathFromTitle (char *title)
   -------------------------------------------------------------------*/
 void SelectLibraryFromPath (char *path)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   char             *title=NULL;
   ListUriTitle     *curList;
   int               lg = 0;
@@ -1529,7 +1529,7 @@ void SelectLibraryFromPath (char *path)
 	  SVGlib_list[lg] = EOS;
 	}
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*------------------------------------------------------------------
@@ -1541,7 +1541,7 @@ void SelectLibraryFromPath (char *path)
   ------------------------------------------------------------------*/
 void InitSVGLibraryManagerStructure ()
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   char          *url_home, *url_thot, *app_home, *thot_dir;
   char          *urlstring, *title;
   unsigned char  c;
@@ -1640,7 +1640,7 @@ void InitSVGLibraryManagerStructure ()
       TtaFreeMemory (urlstring);
       InitSVGBufferForComboBox ();
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -1650,7 +1650,7 @@ void InitSVGLibraryManagerStructure ()
   ----------------------------------------------------------------------*/
 ThotBool IsLibraryName (const char *path)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
    char        temppath[MAX_LENGTH];
    char        suffix[MAX_LENGTH];
 
@@ -1673,7 +1673,7 @@ ThotBool IsLibraryName (const char *path)
      }
    else
      return (FALSE);
-#endif /* _SVGLIB */
+#endif /* _SVG */
    return FALSE;
 }
 
@@ -1682,7 +1682,7 @@ ThotBool IsLibraryName (const char *path)
   ----------------------------------------------------------------------*/
 void OpenCatalogue (Document doc, View view)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   char     *lib_path, *app_home, *buffer;
 
   if (HeaderListUriTitle)
@@ -1718,7 +1718,7 @@ void OpenCatalogue (Document doc, View view)
 		   FALSE, NULL, NULL, TtaGetDefaultCharset());
       TtaFreeMemory (lib_path);
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -1727,13 +1727,13 @@ void OpenCatalogue (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowLibrary (Document doc, View view)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   /* open catalogue */
   OpenCatalogue (doc, view);
   /* Création des widgets de la fenêtre pour obtenir l'ergonomie souhaitée */
   /* A effectuer si necessaire en modifiant les Widgets de la FrameTable */
   TtaHandlePendingEvents ();  
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -1745,7 +1745,7 @@ void ShowLibrary (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SaveSVGURL (Document doc, Element El)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   ElementType       elTypeSearch;
   Element           currentEl, prevEl;
 /*  Language          lang;*/
@@ -1776,7 +1776,7 @@ void SaveSVGURL (Document doc, Element El)
       length = MAX_LENGTH;
       TtaGiveTextAttributeValue (attrSearch, LibURL, &length);
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -1789,7 +1789,7 @@ void SaveSVGURL (Document doc, Element El)
   ----------------------------------------------------------------------*/
 void ChangeSVGLibraryLinePresentation (Document doc, Element El)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   ElementType       elTypeSearch, elTypeCur;
   Element           prev;
   PRule             PRuleSearch;
@@ -1823,7 +1823,7 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
   strcpy (color, "#FFD8C1");
   HTMLSetBackgroundColor (doc, prev, color);
   TtaFreeMemory (color);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -1832,14 +1832,14 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
   ----------------------------------------------------------------------*/
 void InitLibrary (void)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
 #ifndef _WINDOWS
   iconLibsvg = TtaCreatePixmapLogo (libsvg_xpm);
   iconLibsvgNo = TtaCreatePixmapLogo (libsvgNo_xpm);
 #endif /* _WINDOWS */
 
   BaseLibrary = TtaSetCallback (CallbackLibrary, LIBRARY_MAX_REF);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -1851,7 +1851,7 @@ void InitLibrary (void)
 char *GetURIId (char *href)
 {
   char    *result = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   char    *ptr1;
   int      length;
 
@@ -1872,7 +1872,7 @@ char *GetURIId (char *href)
       else
 	result = NULL;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return result;
 }
 
@@ -1884,7 +1884,7 @@ char *GetURIId (char *href)
 Element SearchSVGElement (Document doc, char *identificateur)
 {
   Element        elFound = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   Element        root;
   ElementType    elTypeSearch;
   Attribute      attrFound;
@@ -1923,7 +1923,7 @@ Element SearchSVGElement (Document doc, char *identificateur)
 
 /*  elFound = TtaGetFirstChild (elFound);
   elTypeSearch = TtaGetElementType (elFound);*/
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return elFound;
 }
 
@@ -1936,7 +1936,7 @@ Element SearchSVGElement (Document doc, char *identificateur)
 Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Method)
 {
   Element        copiedElement = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   Document       destDoc;
   SSchema        docSchema, SvgSchema;
   Element        selEl, child, SvgRootEl, parent, sibling;
@@ -2186,7 +2186,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
   SetGraphicDepths (destDoc, SvgRootEl);
   TtaCloseUndoSequence (destDoc);
   TtaSetDocumentModified (destDoc);
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return copiedElement;
 }
 
@@ -2196,7 +2196,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
   ----------------------------------------------------------------------*/
 void CopyOrReference (Document doc, View view)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   int            i;
 #ifndef _WINDOWS
   char           buffer[MAX_LENGTH];
@@ -2231,7 +2231,7 @@ void CopyOrReference (Document doc, View view)
   else
      SetFocus (SVGLibHwnd);
 #endif /* _WINDOWS */
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -2241,7 +2241,7 @@ void CopyOrReference (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreatePNGofSVGFile (Document svgDoc, char *pngurl)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   unsigned char *screenshot = NULL;
 
   if (svgDoc != 0)
@@ -2252,7 +2252,7 @@ void CreatePNGofSVGFile (Document svgDoc, char *pngurl)
       if (screenshot)
 	TtaFreeMemory (screenshot);
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -2264,7 +2264,7 @@ void CreatePNGofSVGFile (Document svgDoc, char *pngurl)
 void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
 				int *x, int *y, int *width, int *height)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   Element      parent;
   ElementType  elType;
   /* Compare temporary value with static int */
@@ -2293,7 +2293,7 @@ void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
     {
       *height = height_tmp;
     }
-#endif /*_SVGLIB*/
+#endif /*_SVG*/
 }
 
 /*----------------------------------------------------------------------
@@ -2307,7 +2307,7 @@ void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
 Document CreateNewSVGFileofSVGSelected (char *url)
 {
   Document             newSVGDoc = 0;
-#ifdef _SVGLIB
+#ifdef _SVG
   Document             selDoc;
   Element              firstSelEl, lastSelEl, currentEl, siblingEl, copiedEl;
   Element              elFound, root, newEl, comment, leaf, doctype;
@@ -2429,7 +2429,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
 				 height_box - y_box, FALSE, TRUE);
 
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return newSVGDoc;
 }
 
@@ -2443,7 +2443,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
 void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
 			                                    char *newurl)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   Element               elFound, child, nextSibling, deletedEl;
   ElementType           elType;
   Attribute             attrFound;
@@ -2540,7 +2540,7 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
 	}
     }
   /* change the attribute text content */
-#endif /* -SVGLIB */
+#endif /* -SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -2551,7 +2551,7 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
   ----------------------------------------------------------------------*/
 void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   Attribute             newAttr, attrExist, attrFound = NULL;
   AttributeType         attrType;
   int                   length, val, oldVal, attrKind = 0;
@@ -2653,7 +2653,7 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
       TtaNextAttribute (useEl, &attrFound);
     }
 
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -2664,7 +2664,7 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
   ----------------------------------------------------------------------*/
 void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   Element         imgEl, rootEl, rowEl, cellEl, anchorEl, table, newcellEl;
   Element         insertedEl=0, textEl, testEl;
   ElementType     elType;
@@ -2852,7 +2852,7 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
   TtaSetStructureChecking (oldStructureChecking, libDoc);
   TtaCloseUndoSequence (libDoc);
   TtaSetDocumentModified (libDoc);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -2867,7 +2867,7 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
   ----------------------------------------------------------------------*/
 void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   char      *newURL, *suffix, *libraryURL, *tmp, *filename, *dirname;
   ThotBool   repExist, ok = FALSE;
   Document   svgDoc, tmpDoc;
@@ -2953,7 +2953,7 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
   TtaFreeMemory (suffix);
   if (libraryURL)
     TtaFreeMemory (libraryURL);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -2964,10 +2964,10 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
 ThotBool CreateLibraryDirectory (char *libDirectory)
 {
   ThotBool    RepCreated = FALSE;
-#ifdef _SVGLIB
+#ifdef _SVG
   ExtractLibraryPrefixFilename (libDirectory);
   RepCreated = CheckMakeDirectory (libDirectory, TRUE);
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return RepCreated;
 }
 
@@ -2980,7 +2980,7 @@ ThotBool CreateLibraryDirectory (char *libDirectory)
 char *MakeUniqueSuffixFilename (char * libraryURL, char *suffix)
 {
   char     *pathname = NULL;
-#ifdef _SVGLIB
+#ifdef _SVG
   char     *dirname, *filename;
   int       i = 1;
 
@@ -3000,7 +3000,7 @@ char *MakeUniqueSuffixFilename (char * libraryURL, char *suffix)
     }
   TtaFreeMemory (dirname);
   TtaFreeMemory (filename);
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return pathname;
 }
 
@@ -3012,7 +3012,7 @@ char *MakeUniqueSuffixFilename (char * libraryURL, char *suffix)
   ----------------------------------------------------------------------*/
 void ExtractLibraryPrefixFilename (char *filename)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   char   *ptr, *oldptr;
 
   if (filename)
@@ -3022,7 +3022,7 @@ void ExtractLibraryPrefixFilename (char *filename)
       if (ptr)
 	*ptr = EOS;
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -3035,7 +3035,7 @@ void ExtractLibraryPrefixFilename (char *filename)
 ThotBool WriteInterSessionLibraryFileManager ()
 {
   ThotBool       succeed = FALSE;
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle  *curList = HeaderListUriTitle;
   FILE          *file;
   char          *url_home, *urlstring, *app_home;
@@ -3066,7 +3066,7 @@ ThotBool WriteInterSessionLibraryFileManager ()
   TtaWriteClose (file);
   TtaFreeMemory (url_home);
   TtaFreeMemory (urlstring);
-#endif /* _SVGLIB */
+#endif /* _SVG */
   return succeed;
 }
 
@@ -3080,7 +3080,7 @@ ThotBool WriteInterSessionLibraryFileManager ()
   ----------------------------------------------------------------------*/
 void SearchGraphicalObjectByTitle (char *GraphicalObjectTitle)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle      *curList = HeaderListUriTitle;
   Document           libDoc, res;
   Element            goTitle, root, rowEl;
@@ -3131,7 +3131,7 @@ void SearchGraphicalObjectByTitle (char *GraphicalObjectTitle)
       /* open it */
 
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -3142,7 +3142,7 @@ void SearchGraphicalObjectByTitle (char *GraphicalObjectTitle)
   ----------------------------------------------------------------------*/
 void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   ElementType    elType;
 
   elType = TtaGetElementType (deletedEl);
@@ -3158,7 +3158,7 @@ void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
       /* find it */
     }
   TtaCloseUndoSequence(deletedDoc);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -3167,12 +3167,12 @@ void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
   ----------------------------------------------------------------------*/
 void AddLibraryButton (Document doc, View view)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   LibSVGButton = TtaAddButton (doc, 1, (ThotIcon)iconLibsvg, ShowLibrary,
 			      "ShowLibrary",
 			      TtaGetMessage (AMAYA, AM_BUTTON_SVG_LIBRARY),
 			      TBSTYLE_BUTTON, TRUE);
-#endif /* _SVGLIB */ 
+#endif /* _SVG */ 
 }
 
 
@@ -3181,12 +3181,12 @@ void AddLibraryButton (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SwitchIconLibrary (Document doc, View view, ThotBool state)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   if (state)
     TtaChangeButton (doc, view, LibSVGButton, (ThotIcon)iconLibsvg, state);
   else
     TtaChangeButton (doc, view, LibSVGButton, (ThotIcon)iconLibsvgNo, state);
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }
 
 
@@ -3197,7 +3197,7 @@ void SwitchIconLibrary (Document doc, View view, ThotBool state)
   ----------------------------------------------------------------------*/
 void OpenLibraryCallback (Document doc, View view, char *text)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   ListUriTitle      *curList = HeaderListUriTitle;
   char              *url = NULL;
   ThotBool           change;
@@ -3241,5 +3241,5 @@ void OpenLibraryCallback (Document doc, View view, char *text)
 	  TtaFreeMemory (url);
 	}
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 }

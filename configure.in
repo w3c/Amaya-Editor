@@ -277,7 +277,7 @@ if test "${with_gl}" != "yes" ; then
 fi
 
 AC_SUBST(GTK_LIBRARIES)
-GTK_OPTIONS="-D_GTK -D_SVGANIM -D_SVGLIB"
+GTK_OPTIONS="-D_GTK"
   no_motif=yes
   no_graphic=yes
 else
@@ -522,7 +522,7 @@ AC_SUBST(LIBZ)
 AC_SUBST(MAKEJPEG)
 AC_SUBST(MAKEPNG)
 
-AMAYA_VER="8.1c"
+AMAYA_VER="8.2"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment

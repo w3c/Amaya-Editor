@@ -40,14 +40,10 @@
 static Pixmap   iconAnim;
 static Pixmap   iconAnimNo;
 static int      AnimButton;
-
 #ifndef _WINDOWS
-
 #include "xpm/animplay.xpm"
 #include "xpm/animstop.xpm"
-
 #else /* _WINDOWS */
-
 #include "wininclude.h"
 #define iconAnim 29
 #define iconAnimNo 29
@@ -102,7 +98,7 @@ void AddAnimPlayButton (Document doc, View view)
   ----------------------------------------------------------------------*/
 static int get_int_attribute_from_el (Element el, int Attribut_Type)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   AttributeType attrType;
   Attribute attr = NULL;
   ElementType elType = TtaGetElementType (el);
@@ -115,14 +111,14 @@ static int get_int_attribute_from_el (Element el, int Attribut_Type)
   
   return result;
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 /*----------------------------------------------------------------------
   get_int_attribute_from_el: Get a int value from an xml attribute
   ----------------------------------------------------------------------*/
 static Attribute get_attribute_from_el (Element el, int Attribut_Type)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   AttributeType attrType;
   Attribute attr = NULL;
   ElementType elType = TtaGetElementType (el);
@@ -133,7 +129,7 @@ static Attribute get_attribute_from_el (Element el, int Attribut_Type)
   
   return attr;
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 /*----------------------------------------------------------------------
   get_intptr_attribute_from_el: Get a int value from an xml attribute,
@@ -141,7 +137,7 @@ static Attribute get_attribute_from_el (Element el, int Attribut_Type)
   ----------------------------------------------------------------------*/
 static int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   AttributeType attrType;
   Attribute attr = NULL;
   ElementType elType = TtaGetElementType (el);
@@ -155,7 +151,7 @@ static int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
   
   return result;
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -164,7 +160,7 @@ static int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
   ----------------------------------------------------------------------*/
 char *get_char_attribute_from_el (Element el, int Attribut_Type)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   int length;
   char *text = NULL, *ptr;
   AttributeType attrType;
@@ -188,7 +184,7 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
       /*TtaFreeMemory (text);*/
     }
   return text;
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -197,7 +193,7 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
   ----------------------------------------------------------------------*/
 void register_animated_element (Element animated, Document doc)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   void *anim_info;
   ElementType elType;
   double start, duration;
@@ -324,5 +320,5 @@ void register_animated_element (Element animated, Document doc)
       return;
     }
   TtaAppendAnim (animated, anim_info);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }

@@ -35,12 +35,8 @@ static int          OldHeight;
 #include "EDITORactions_f.h"
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
-#ifdef _SVG
 #include "SVGbuilder_f.h"
-#ifdef _SVGANIM
 #include "anim_f.h"
-#endif /* _SVGANIM */
-#endif
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
@@ -848,7 +844,7 @@ Attribute GetNameAttr (Document doc, Element selectedElement)
 		 attr = TtaGetAttribute (selectedElement, attrType);
 		 }
 	       }
-#endif
+#endif /* _SVG */
 	  }
      }
    return (attr);
@@ -906,7 +902,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 	 attrType.AttrTypeNum = SVG_ATTR_id;
        }
      else
-#endif
+#endif /* _SVG */
        attrType.AttrTypeNum = HTML_ATTR_ID;
      }
    attr = TtaGetAttribute (el, attrType);
@@ -1519,7 +1515,7 @@ void MakeUniqueName (Element el, Document doc)
     /* it's an element from the SVG namespace, look for the
        id attribute from the same namespace */
     attrType.AttrTypeNum = SVG_ATTR_id;
-#endif
+#endif /* _SVG */
   else
     attrType.AttrTypeNum = 0;
   
@@ -2803,9 +2799,9 @@ void UpdateAttrID (NotifyAttribute * event)
          element */
          AttrToSpan (event->element, event->attribute, event->document);
       }
-#ifdef _SVGANIM
+#ifdef _SVG
    Update_element_id_on_timeline (event); 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 

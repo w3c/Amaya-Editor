@@ -34,7 +34,7 @@
 
 #include "SVGedit_f.h"
 
-#ifdef _SVGANIM
+#ifdef _SVG
 #include "Timeline.h"
 
 #ifndef _WINDOWS
@@ -270,7 +270,7 @@ static int previous_slider_position;
 
 void Set_slider_position_from_doc(Document doc, double curtime);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -278,12 +278,12 @@ void Set_slider_position_from_doc(Document doc, double curtime);
   Build_path_to_image_dir
   Returns path to directory where images of the interface are stored
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Build_path_to_image_dir(char* buffer) 
 {
   sprintf (buffer, "%s%camaya%c", TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -291,32 +291,32 @@ static void Build_path_to_image_dir(char* buffer)
   Build_path_to_help_dir
   Returns path to directory where images of the interface are stored
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Build_path_to_help_dir(char* buffer) 
 {
   sprintf (buffer, "%s%cdoc%chtml%c", TtaGetEnvString ("THOTDIR"), DIR_SEP,
 	   DIR_SEP, DIR_SEP);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
 /*----------------------------------------------------------------------
   Init_tmapping_animations_struct
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Init_tmapping_animations_struct(tmapping_animations m) 
 {
   m.animation_tag = NULL;
   m.period = NULL;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Init_tmapping_animated_struct
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Init_tmapping_animated_struct(tmapping_animated m) 
 {
   m.animated_elem = NULL;
@@ -325,14 +325,14 @@ static void Init_tmapping_animated_struct(tmapping_animated m)
   m.col_group = NULL;
   m.nb_periods = 0;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Init_timeline_struct
   initializes a TTimeline structure
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Init_timeline_struct(int k) 
 {
   int i,j;
@@ -383,7 +383,7 @@ static void Init_timeline_struct(int k)
   dt[k].x = 0;
   dt[k].y = 0;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -391,12 +391,12 @@ static void Init_timeline_struct(int k)
   Time_to_xposition
   Convert a clock value to x position (pixels)
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Time_to_xposition(double t) 
 {
   return ct_left_bar + 1 + (int)(t * time_sep);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -406,10 +406,10 @@ static int Time_to_xposition(double t)
   ----------------------------------------------------------------------*/
 void Get_timeline_of_doc(Document basedoc, Document* timelinedoc, View* timelineview)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   *timelinedoc = dt[basedoc].timelinedoc;
   *timelineview = dt[basedoc].timelineView;
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -419,10 +419,10 @@ void Get_timeline_of_doc(Document basedoc, Document* timelinedoc, View* timeline
   ----------------------------------------------------------------------*/
 void Free_timeline_of_doc(Document doc)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   Init_timeline_struct(doc);
   FreeDocumentResource (dt[doc].timelinedoc);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -433,7 +433,7 @@ void Free_timeline_of_doc(Document doc)
   ----------------------------------------------------------------------*/
 void InitSVGAnim ()
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   int k;
 
 #  ifndef _WINDOWS
@@ -448,7 +448,7 @@ void InitSVGAnim ()
   for (k=0; k<DocumentTableLength; k++)
     Init_timeline_struct(k);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -460,7 +460,7 @@ void InitSVGAnim ()
   Get_basedoc_of
   Returns the base document of a timeline document
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Document Get_basedoc_of(Document timelinedoc) 
 {
   Document k = 0;
@@ -469,13 +469,13 @@ static Document Get_basedoc_of(Document timelinedoc)
     k++;
   return k;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Get_mapping_from_title_group
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static pmapping_animated Get_mapping_from_title_group (Document basedoc, Element tg) 
 {
   pmapping_animated res = NULL;
@@ -492,14 +492,14 @@ static pmapping_animated Get_mapping_from_title_group (Document basedoc, Element
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
 /*----------------------------------------------------------------------
   Get_mapping_from_exp_group
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static pmapping_animated Get_mapping_from_exp_group (Document basedoc, Element eg) 
 {
   pmapping_animated res = NULL;
@@ -516,14 +516,14 @@ static pmapping_animated Get_mapping_from_exp_group (Document basedoc, Element e
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
 /*----------------------------------------------------------------------
   Get_mapping_from_animated_elem
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static pmapping_animated Get_mapping_from_animated_elem (Document basedoc, Element ae) 
 {
   pmapping_animated res = NULL;
@@ -541,7 +541,7 @@ static pmapping_animated Get_mapping_from_animated_elem (Document basedoc, Eleme
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -549,7 +549,7 @@ static pmapping_animated Get_mapping_from_animated_elem (Document basedoc, Eleme
   Get_title_group_of_animated_element
   use mapping between elements to return title group
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Get_title_group_of_animated_element (Document basedoc, Element an) 
 {
   Element res = NULL;
@@ -565,14 +565,14 @@ static Element Get_title_group_of_animated_element (Document basedoc, Element an
       k++;
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Get_animated_element_of_col_group
   use mapping between elements to return animated element
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Get_animated_element_of_col_group (Document basedoc, Element cp)
 {
   Element res = NULL;
@@ -588,14 +588,14 @@ static Element Get_animated_element_of_col_group (Document basedoc, Element cp)
       k++;
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Is_animated
   returns 1 iff el has one or more animation
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Is_animated (Document basedoc, Element el) 
 {
   int res = 0;
@@ -610,14 +610,14 @@ static int Is_animated (Document basedoc, Element el)
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Set_expanded_group_of
   maps newly created expanded group
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Set_expanded_group_of (Document basedoc, Element element_anime, Element new_fresh_group) 
 {
   int k = 0, trouve = 0;
@@ -631,13 +631,13 @@ static void Set_expanded_group_of (Document basedoc, Element element_anime, Elem
     else 
       k++;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
   Set_collapsed_group_of
   maps newly created collapsed group
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Set_collapsed_group_of (Document basedoc, Element element_anime, Element new_fresh_group) 
 {
   int k = 0, trouve=0;
@@ -651,13 +651,13 @@ static void Set_collapsed_group_of (Document basedoc, Element element_anime, Ele
     else 
       k++;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Get_animation_tag_from_period
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Get_animation_tag_from_period (Document basedoc, Element exp_group, Element pr) 
 {
   Element res = NULL;
@@ -681,7 +681,7 @@ static Element Get_animation_tag_from_period (Document basedoc, Element exp_grou
       k++;
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -690,7 +690,7 @@ static Element Get_animation_tag_from_period (Document basedoc, Element exp_grou
   Get_period_from_animation_tag
   returns timeline interface period of associated animation tag
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Get_period_from_animation_tag (pmapping_animated pm, Element animtag) 
 {
   Element res = NULL;
@@ -705,7 +705,7 @@ static Element Get_period_from_animation_tag (pmapping_animated pm, Element anim
     else j++;
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -717,7 +717,7 @@ static Element Get_period_from_animation_tag (pmapping_animated pm, Element anim
   the value of attribute attr, which is equivalent to a CSS property (fill,
   stroke).
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void TimelineParseColorAttribute (int attrType, Attribute attr, Element el,
 					 Document doc, ThotBool delete)
 {
@@ -759,7 +759,7 @@ static void TimelineParseColorAttribute (int attrType, Attribute attr, Element e
   if (text)
     TtaFreeMemory (text);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -771,7 +771,7 @@ static void TimelineParseColorAttribute (int attrType, Attribute attr, Element e
   Create or update a specific presentation rule for element el that reflects
   the value of the x, y, x1, x2, y1, y2 attribute attr.
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void TimelineParseCoordAttribute (Attribute attr, Element el, Document doc)
 {
   int                  length, attrKind, ruleType;
@@ -821,7 +821,7 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
       TtaFreeMemory (text);
     }
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -831,7 +831,7 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
   Create or update a specific presentation rule for element el that reflects
   the value of attribute attr, which is width_, height_.
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, Document doc, 
 						   ThotBool delete)
 {
@@ -927,7 +927,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, D
   TtaFreeMemory (ctxt);
   return ret;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -935,7 +935,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, D
   Insert_rectangle 
   primitive to generate Timeline Element rect via thot api
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Insert_rectangle(Document timelinedoc, Element root, char* fill_color,char* stroke_color, int x, int y, int w, int h, int Insert_enfant, int typeNum) 
 {
   Element el = NULL;
@@ -1010,14 +1010,14 @@ static Element Insert_rectangle(Document timelinedoc, Element root, char* fill_c
 
   return el;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Insert_tline 
   primitive to generate Timeline Element line via thot api
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Insert_tline(Document timelinedoc, Element root, char* couleur, int x1, int y1, int x2, int y2, int Insert_enfant) 
 {
   Element el = NULL;
@@ -1085,7 +1085,7 @@ static Element Insert_tline(Document timelinedoc, Element root, char* couleur, i
 
   return el;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1094,7 +1094,7 @@ static Element Insert_tline(Document timelinedoc, Element root, char* couleur, i
   Insert_text 
   primitive to generate Timeline Element text via thot api
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Insert_text(Document timelinedoc, Element root, char* couleur, char* text, char* font_family, int font_size, int x, int y, int Insert_enfant, int type_num) 
 {
   Element el = NULL;
@@ -1171,7 +1171,7 @@ static Element Insert_text(Document timelinedoc, Element root, char* couleur, ch
 
   return el;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1181,7 +1181,7 @@ static Element Insert_text(Document timelinedoc, Element root, char* couleur, ch
   Insert_image 
   primitive to generate Timeline Element image via thot api
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Insert_image(Document timelinedoc,
 			    Element root,
 			    char* text,
@@ -1241,7 +1241,7 @@ static Element Insert_image(Document timelinedoc,
 
   return el;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1249,7 +1249,7 @@ static Element Insert_image(Document timelinedoc,
   Display_cross
   primitive to insert a cross in edited document
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Display_cross(Document basedoc,
 			  Element animated_element,
 			  int x, int y) 
@@ -1325,7 +1325,7 @@ static void Display_cross(Document basedoc,
   if (!basedoc_state)
     TtaSetDocumentUnmodified (basedoc);	
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1333,12 +1333,12 @@ static void Display_cross(Document basedoc,
 /*----------------------------------------------------------------------
   Delete_cross
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Delete_cross (Document basedoc) 
 {
   TtaDeleteTree (dt[basedoc].cross, basedoc);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1347,7 +1347,7 @@ static void Delete_cross (Document basedoc)
   primitive to generate Timeline Element group via thot api
   type_num : Timeline_EL_abstract_group or Timeline_EL_gt
   ----------------------------------------------------------------------*/								
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Insert_group(Document timelinedoc, Element root, int Insert_enfant, int type_num) 
 {
   Element el = NULL;
@@ -1367,7 +1367,7 @@ static Element Insert_group(Document timelinedoc, Element root, int Insert_enfan
 	
   return el;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1376,7 +1376,7 @@ static Element Insert_group(Document timelinedoc, Element root, int Insert_enfan
   Get_id_of
   returns the id of a basedoc Element 
   ----------------------------------------------------------------------*/	
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_id_of (Element el, char* buffer)
 {
   int length = 0;
@@ -1400,7 +1400,7 @@ static int Get_id_of (Element el, char* buffer)
     }
   return (length);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
  
 
 
@@ -1410,7 +1410,7 @@ static int Get_id_of (Element el, char* buffer)
   Get_height_of_SVG_el
   return the height of a SVG Element 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_height_of_SVG_el (Element el)
 {
   int r = 0;
@@ -1444,13 +1444,13 @@ static int Get_height_of_SVG_el (Element el)
 
   return r;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
   Get_width_of_SVG_el
   return the width of a SVG Element 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_width_of_SVG_el (Element el)
 {
   int r = 0;
@@ -1482,7 +1482,7 @@ static int Get_width_of_SVG_el (Element el)
 
   return r;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1491,7 +1491,7 @@ static int Get_width_of_SVG_el (Element el)
   returns vertical position of the center of an SVG Element,
   To do: this is incomplete and should handle SVG transformations
   ----------------------------------------------------------------------*/	
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_center_y_of_SVG_el (Element el)
 {
   int                  length, res = 0, r = 0;
@@ -1546,7 +1546,7 @@ static int Get_center_y_of_SVG_el (Element el)
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
@@ -1554,7 +1554,7 @@ static int Get_center_y_of_SVG_el (Element el)
   returns horizontal position of the center of an SVG Element,
   To do: this is incomplete and should handle SVG transformations
   ----------------------------------------------------------------------*/	
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_center_x_of_SVG_el (Element el)
 {
   int                  length, res = 0, r = 0;
@@ -1609,7 +1609,7 @@ static int Get_center_x_of_SVG_el (Element el)
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1618,7 +1618,7 @@ static int Get_center_x_of_SVG_el (Element el)
   Get_y_of
   returns vertical position of a Timeline Element 
   ----------------------------------------------------------------------*/	
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_y_of (Element el)
 {
   int res = 0;
@@ -1681,14 +1681,14 @@ static int Get_y_of (Element el)
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Get_height_of
   return the height of a Timeline Element 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_height_of (Element el)
 {
   int r = 0;
@@ -1722,7 +1722,7 @@ static int Get_height_of (Element el)
 
   return r;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1731,7 +1731,7 @@ static int Get_height_of (Element el)
   Inc_height
   Increments the height of timeline element el by inc_h
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Inc_height(Document timelinedoc, Element el, int inc_h)
 {
   AttributeType attrType;
@@ -1761,7 +1761,7 @@ static void Inc_height(Document timelinedoc, Element el, int inc_h)
   TtaSetAttributeText (attr, buffer, el, timelinedoc);
   TimelineParseWidthHeightAttribute (attr, el, timelinedoc, FALSE);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1770,7 +1770,7 @@ static void Inc_height(Document timelinedoc, Element el, int inc_h)
   Get_width_of
   return the width of a Timeline Element 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_width_of (Element el)
 {
   int r = 0;
@@ -1804,7 +1804,7 @@ static int Get_width_of (Element el)
 
   return r;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1813,7 +1813,7 @@ static int Get_width_of (Element el)
   Set_y_translation
   write the attribute transform="translate(0,y)" 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Set_y_translation (Document timelinedoc, Element found, int hg) 
 { 
   AttributeType        attrType;
@@ -1859,7 +1859,7 @@ static void Set_y_translation (Document timelinedoc, Element found, int hg)
   TtaSetAttributeText (attr, buffer, found, timelinedoc);
   ParseTransformAttribute(attr, found, timelinedoc, FALSE);	
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1868,7 +1868,7 @@ static void Set_y_translation (Document timelinedoc, Element found, int hg)
   Set_y
   write the attribute y=""
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Set_y (Document timelinedoc, Element found, int ny) 
 { 
   AttributeType        attrType;
@@ -1885,14 +1885,14 @@ static void Set_y (Document timelinedoc, Element found, int ny)
   TtaSetAttributeText (attr, buffer, found, timelinedoc);
   TimelineParseCoordAttribute (attr, found, timelinedoc);	
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Set_src
   write the attribute src=""
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Set_src (Document timelinedoc, Element found, char* buffer) 
 { 
   AttributeType        attrType;
@@ -1911,7 +1911,7 @@ static void Set_src (Document timelinedoc, Element found, char* buffer)
   child = TtaGetFirstChild (found);
   TtaSetTextContent (child, buffer, SPACE, timelinedoc);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1919,7 +1919,7 @@ static void Set_src (Document timelinedoc, Element found, char* buffer)
   Set_x
   write the attribute x=""
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Set_x (Document timelinedoc, Element found, int nx) 
 { 
   AttributeType        attrType;
@@ -1936,7 +1936,7 @@ static void Set_x (Document timelinedoc, Element found, int nx)
   TtaSetAttributeText (attr, buffer, found, timelinedoc);
   TimelineParseCoordAttribute (attr, found, timelinedoc);	
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -1944,7 +1944,7 @@ static void Set_x (Document timelinedoc, Element found, int nx)
   Set_width
   write the attribute width=""
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Set_width (Document timelinedoc, Element found, int nw) 
 { 
   AttributeType        attrType;
@@ -1961,7 +1961,7 @@ static void Set_width (Document timelinedoc, Element found, int nw)
   TtaSetAttributeText (attr, buffer, found, timelinedoc);
   TimelineParseWidthHeightAttribute (attr, found, timelinedoc, FALSE);	
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
@@ -1970,7 +1970,7 @@ static void Set_width (Document timelinedoc, Element found, int nw)
   hg is the vertical translation amount and can be either
   negative or positive
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Translate_following_elements(Document basedoc, Document timelinedoc, int vpos, int hg) 
 {
   Element t_group, e_group, c_group;
@@ -2003,7 +2003,7 @@ static void Translate_following_elements(Document basedoc, Document timelinedoc,
 	}
     }
 }
-#endif /* _SVGANIM */ 
+#endif /* _SVG */ 
 
 
 
@@ -2014,7 +2014,7 @@ static void Translate_following_elements(Document basedoc, Document timelinedoc,
   @@@ TEMP : for now : only values in seconds are supported
  
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static double TimelineParseTimeAttribute (Attribute attr)
 {
   double r = 0;
@@ -2045,7 +2045,7 @@ static double TimelineParseTimeAttribute (Attribute attr)
 
   return r;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2056,7 +2056,7 @@ static double TimelineParseTimeAttribute (Attribute attr)
   return name of animated object in buffer
   return !=0 if name present
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Get_nom_element_anime(Element el, char* buffer)
 {
   Attribute attr = NULL;
@@ -2077,7 +2077,7 @@ static int Get_nom_element_anime(Element el, char* buffer)
 
   return ((attr) && (length));
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
@@ -2087,7 +2087,7 @@ static int Get_nom_element_anime(Element el, char* buffer)
   ----------------------------------------------------------------------*/
 void Read_time_info(Element el, double* start, double* duration) 
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   AttributeType attrType;
   Attribute attr = NULL;
   ElementType elType = TtaGetElementType (el);
@@ -2104,14 +2104,14 @@ void Read_time_info(Element el, double* start, double* duration)
   attr = TtaGetAttribute (el,attrType);
   if (attr)
     *duration = TimelineParseTimeAttribute(attr);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
 /*----------------------------------------------------------------------
   Inc_time_start
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Inc_time_start(Document basedoc, Element edited_anim, double inc_time)
 {
   AttributeType attrType;
@@ -2142,7 +2142,7 @@ static void Inc_time_start(Document basedoc, Element edited_anim, double inc_tim
   TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
 
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2150,7 +2150,7 @@ static void Inc_time_start(Document basedoc, Element edited_anim, double inc_tim
   Write_time_info
   outputs the start moment and duration of an animation element
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Write_time_info(Document basedoc, Element edited_anim, double start, double duration) 
 {
   AttributeType attrType;
@@ -2193,7 +2193,7 @@ static void Write_time_info(Document basedoc, Element edited_anim, double start,
   TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
 
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2204,7 +2204,7 @@ static void Write_time_info(Document basedoc, Element edited_anim, double start,
   search in tree for the first animation tag
   element is the root of the tree
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Search_first_anim_in_tree(Document basedoc, Element element) {
   Element res = NULL;
   ElementType searchedType1, searchedType2,
@@ -2232,14 +2232,14 @@ static Element Search_first_anim_in_tree(Document basedoc, Element element) {
     }
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
   Search_next_anim_in_tree
   search in tree for the next animation tag 
   element is the previous animation tag
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Search_next_anim_in_tree(Document basedoc, Element element) {
   Element res = NULL;
   ElementType searchedType1, searchedType2,
@@ -2268,7 +2268,7 @@ static Element Search_next_anim_in_tree(Document basedoc, Element element) {
 
   return res;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2277,7 +2277,7 @@ static Element Search_next_anim_in_tree(Document basedoc, Element element) {
   computes global anim period of document basedoc
   returned values are expressed in ms. 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Compute_global_anim_period_of_doc (Document basedoc,
 					       double* tmin, double* tmax)
 {
@@ -2310,7 +2310,7 @@ static void Compute_global_anim_period_of_doc (Document basedoc,
     }
 
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2319,7 +2319,7 @@ static void Compute_global_anim_period_of_doc (Document basedoc,
   Create_title_group
   generate the title group of an animated element on Timeline UI  
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Create_title_group(Document basedoc, Document timelinedoc,
 			       int ty, Element parent, int collapsed) {
   Element temp_el;
@@ -2343,7 +2343,7 @@ static void Create_title_group(Document basedoc, Document timelinedoc,
     strcpy (buffer, TtaGetMessage (AMAYA, AM_SVGANIM_NO_ID));
   temp_el = Insert_text (timelinedoc, temp_el, "black", buffer, ct_elem_font_family, ct_elem_font_size, 18, vertical_pos+6, 0, Timeline_EL_text_id); 
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2356,7 +2356,7 @@ static void Create_title_group(Document basedoc, Document timelinedoc,
   first anim is its first animation child
   returns the first animation node which has not the same parent
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Create_expanded_group(Document basedoc, Document timelinedoc, int ty, Element parent, Element first_anim, pmapping_animated mapping, int* hauteur)
 {
   Element found = first_anim;
@@ -2433,14 +2433,14 @@ static Element Create_expanded_group(Document basedoc, Document timelinedoc, int
 
   return found;
 }
-#endif /* _SVGANIM */		
+#endif /* _SVG */		
 
 
 
 /*----------------------------------------------------------------------
   Remove_image_collapse_from_title_group
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Remove_image_collapse_from_title_group (Document basedoc, Element animated_el)
 {
   Element im;
@@ -2453,7 +2453,7 @@ static void Remove_image_collapse_from_title_group (Document basedoc, Element an
   TtaNextSibling (&im);
   TtaDeleteTree (im, timelinedoc); 
 }
-#endif /* _SVGANIM */	
+#endif /* _SVG */	
 
 
 
@@ -2463,7 +2463,7 @@ static void Remove_image_collapse_from_title_group (Document basedoc, Element an
   Image_collapse_for_title_group ()
   Check for presence of image collapse
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static ThotBool Image_collapse_for_title_group (Document basedoc, Element animated_el)
 {
   Element tg, found;
@@ -2476,7 +2476,7 @@ static ThotBool Image_collapse_for_title_group (Document basedoc, Element animat
   found = TtaSearchTypedElement (elType, SearchInTree, tg);
   return (found != NULL);
 }
-#endif /* _SVGANIM */	
+#endif /* _SVG */	
 
 
 
@@ -2488,7 +2488,7 @@ static ThotBool Image_collapse_for_title_group (Document basedoc, Element animat
 /*----------------------------------------------------------------------
   Add_image_collapse_on_title_group
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Add_image_collapse_on_title_group (Document basedoc, Element animated_el, int collapsed)
 {
   char buffer[512];
@@ -2510,7 +2510,7 @@ static void Add_image_collapse_on_title_group (Document basedoc, Element animate
 		ct_w_image_collapse, ct_h_image_collapse, 0, Timeline_EL_image_collapse);
 
 }
-#endif /* _SVGANIM */	
+#endif /* _SVG */	
 
 
 
@@ -2523,7 +2523,7 @@ static void Add_image_collapse_on_title_group (Document basedoc, Element animate
   first anim is its first animation child
   returns the first animation node which has not the same parent
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Create_collapsed_group(Document basedoc, Document timelinedoc, int ty, Element parent, pmapping_animated mapping, Element first_anim) {
   Element found = first_anim;
   Element temp_el;
@@ -2573,7 +2573,7 @@ static Element Create_collapsed_group(Document basedoc, Document timelinedoc, in
 
   return found;
 }
-#endif /* _SVGANIM */		
+#endif /* _SVG */		
 
 
 
@@ -2584,7 +2584,7 @@ static Element Create_collapsed_group(Document basedoc, Document timelinedoc, in
   Draw_graduation
   Draw "1s, 2s, 3s..." on line
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static Element Draw_graduation (Document timelinedoc, Element position, double ti, double tf)
 {
   Element temp_el = position;
@@ -2610,7 +2610,7 @@ static Element Draw_graduation (Document timelinedoc, Element position, double t
       }
   return temp_el;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2621,7 +2621,7 @@ static Element Draw_graduation (Document timelinedoc, Element position, double t
   Build_timeline
   Constructs the Timeline document of an opened document
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Build_timeline (Document basedoc, char* timelineName)
 {
   Element       el, found, root, temp_el, parent, baseroot;
@@ -2790,7 +2790,7 @@ static void Build_timeline (Document basedoc, char* timelineName)
       Init_timeline_struct (basedoc);
     }
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2798,7 +2798,7 @@ static void Build_timeline (Document basedoc, char* timelineName)
 /*----------------------------------------------------------------------
   Enlarge_group_items
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Enlarge_group_items (Document timelinedoc, Element group, int inc_w) 
 {
   Element found;
@@ -2837,7 +2837,7 @@ static void Enlarge_group_items (Document timelinedoc, Element group, int inc_w)
       found = TtaSearchTypedElement(st, SearchForward, found); 
     }
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2845,7 +2845,7 @@ static void Enlarge_group_items (Document timelinedoc, Element group, int inc_w)
 /*----------------------------------------------------------------------
   Enlarge_line
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Enlarge_line (Document timelinedoc, Element line, int inc_w) 
 {
   Attribute attr;
@@ -2871,13 +2871,13 @@ static void Enlarge_line (Document timelinedoc, Element line, int inc_w)
   TtaSetAttributeText (attr, buffer, line, timelinedoc);
   TimelineParseCoordAttribute (attr, line, timelinedoc);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
   Enlarge_timeline
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Enlarge_timeline (Document basedoc, Document timelinedoc, int x) 
 {
   int delta_t, k = 0, inc_w, inc_lines;
@@ -2916,7 +2916,7 @@ static void Enlarge_timeline (Document basedoc, Document timelinedoc, int x)
   current_timeline_end += delta_t;
 
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -2927,12 +2927,12 @@ static void Enlarge_timeline (Document basedoc, Document timelinedoc, int x)
   ----------------------------------------------------------------------*/
 void SwitchIconAnim (Document doc, View view, ThotBool state)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   if (state)
     TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnim, state);
   else
     TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnimNo, state);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -2944,7 +2944,7 @@ void SwitchIconAnim (Document doc, View view, ThotBool state)
   ----------------------------------------------------------------------*/
 void ShowTimeLineWindow (Document document, View view)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   View v;
   Document t;
   /*      	- already created -> show it
@@ -2958,7 +2958,7 @@ void ShowTimeLineWindow (Document document, View view)
       Get_timeline_of_doc (document, &t, &v);
       TtaDisableScrollbars (t, v);
     }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -2969,12 +2969,12 @@ void ShowTimeLineWindow (Document document, View view)
   ----------------------------------------------------------------------*/
 void AddAnimButton (Document doc, View view)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   AnimButton = TtaAddButton (doc, 1, (ThotIcon)iconAnim, 
 			     ShowTimeLineWindow, "ShowTimeLineWindow",
 			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
 			     TBSTYLE_BUTTON, TRUE);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -2986,7 +2986,7 @@ void AddAnimButton (Document doc, View view)
   ----------------------------------------------------------------------*/
 void ShowSourceOfTimeline (Document document, View view)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   /* this function is temporary, only for debugging purposes*/
      CHARSET          charset;
      char            *tempdocument;
@@ -3102,13 +3102,13 @@ void ShowSourceOfTimeline (Document document, View view)
      }
      TtaFreeMemory (tempdocument);
      }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 /*----------------------------------------------------------------------
   Image_collapse_on_click
   A Callback : handles a click on + or - to expand/collapse groups 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Image_collapse_on_click(NotifyElement *event)
 {
   int length, hg, vpos, hep;
@@ -3188,7 +3188,7 @@ static void Image_collapse_on_click(NotifyElement *event)
 
   TtaSetDisplayMode (event->document, dp);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -3198,7 +3198,7 @@ static void Image_collapse_on_click(NotifyElement *event)
   ----------------------------------------------------------------------*/
 void Set_slider_position (Document basedoc, Document timelinedoc, double f) 
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   char buffer[512];
   AttributeType attrType;
   Attribute attr;
@@ -3217,7 +3217,7 @@ void Set_slider_position (Document basedoc, Document timelinedoc, double f)
     Enlarge_timeline (basedoc, timelinedoc, x);
 
 	
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -3226,7 +3226,7 @@ void Set_slider_position (Document basedoc, Document timelinedoc, double f)
   ----------------------------------------------------------------------*/
 void Set_slider_position_from_doc (Document basedoc,  double f)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   char buffer[512];
   Document timelinedoc;
   View timelineview;
@@ -3252,7 +3252,7 @@ void Set_slider_position_from_doc (Document basedoc,  double f)
       TtaSetTextContent (child, buffer, lang, timelinedoc);
     }
   Set_slider_position (basedoc, timelinedoc, f);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -3262,7 +3262,7 @@ void Set_slider_position_from_doc (Document basedoc,  double f)
   ----------------------------------------------------------------------*/
 void TimelineTextPostModify (NotifyOnTarget *event)
 {	
-#ifdef _SVGANIM
+#ifdef _SVG
   DisplayMode dp = TtaGetDisplayMode (event->document);
   Language lang = TtaGetDefaultLanguage ();
   Document basedoc;
@@ -3338,7 +3338,7 @@ void TimelineTextPostModify (NotifyOnTarget *event)
   TtaSetDisplayMode (event->document, dp);
   TtaSetDocumentUnmodified (event->document);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -3348,7 +3348,7 @@ void TimelineTextPostModify (NotifyOnTarget *event)
   Show_selected_element 
   draw selection in WYSIWYG view
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Show_selected_element (NotifyElement *event) 
 {
   pmapping_animated mapping;
@@ -3357,7 +3357,7 @@ static void Show_selected_element (NotifyElement *event)
   mapping = Get_mapping_from_title_group (basedoc, title_group);
   TtaSelectElement (basedoc, mapping->animated_elem);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -3366,7 +3366,7 @@ static void Show_selected_element (NotifyElement *event)
   Show_selected_anim
   draw selection in WYSIWYG view
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Show_selected_anim (NotifyElement *event) 
 {
   Attribute attr;
@@ -3410,7 +3410,7 @@ static void Show_selected_anim (NotifyElement *event)
 	}
     }
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -3418,7 +3418,7 @@ static void Show_selected_anim (NotifyElement *event)
 /*----------------------------------------------------------------------
   Enable_color_anim_creation
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Enable_color_anim_creation (Document basedoc) 
 {
   char buffer[512];
@@ -3430,14 +3430,14 @@ static void Enable_color_anim_creation (Document basedoc)
 
   dt[basedoc].color_animation_creation_enabled = TRUE;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
 /*----------------------------------------------------------------------
   Enable_motion_anim_creation
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Enable_motion_anim_creation (Document basedoc) 
 {
   char buffer[512];
@@ -3449,14 +3449,14 @@ static void Enable_motion_anim_creation (Document basedoc)
 
   dt[basedoc].motion_animation_creation_enabled = TRUE;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
 /*----------------------------------------------------------------------
   Disable_color_anim_creation
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Disable_color_anim_creation (Document basedoc) 
 {
   char buffer[512];
@@ -3467,7 +3467,7 @@ static void Disable_color_anim_creation (Document basedoc)
   Set_src (timelinedoc, dt[basedoc].image_color, buffer);
   dt[basedoc].color_animation_creation_enabled = FALSE;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -3475,7 +3475,7 @@ static void Disable_color_anim_creation (Document basedoc)
 /*----------------------------------------------------------------------
   Disable_motion_anim_creation
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Disable_motion_anim_creation (Document basedoc) 
 {
   char buffer[512];
@@ -3486,7 +3486,7 @@ static void Disable_motion_anim_creation (Document basedoc)
   Set_src (timelinedoc, dt[basedoc].image_motion, buffer);
   dt[basedoc].motion_animation_creation_enabled = FALSE;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 	
 
@@ -3498,7 +3498,7 @@ static void Disable_motion_anim_creation (Document basedoc)
 ThotBool TimelineElSelection (NotifyElement *event)
 {
   ThotBool res = FALSE;
-#ifdef _SVGANIM
+#ifdef _SVG
   Element parent;
   ElementType elType;
   Document basedoc = Get_basedoc_of(event->document);
@@ -3547,7 +3547,7 @@ ThotBool TimelineElSelection (NotifyElement *event)
 
   TtaSetDocumentUnmodified (event->document);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
   return res;
 }
 
@@ -3562,7 +3562,7 @@ ThotBool TimelineElSelection (NotifyElement *event)
   Apply_hpos_mini
   Forbids element's position to be < xmin 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Apply_hpos_mini (Document basedoc, Element el, int xmin) 
 {
   int x = 0;
@@ -3591,14 +3591,14 @@ static int Apply_hpos_mini (Document basedoc, Element el, int xmin)
     }
   return x;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
 /*----------------------------------------------------------------------
   Apply_new_width
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static int Apply_new_width (Document doc, Element el) 
 {
   int nw = 0;
@@ -3625,7 +3625,7 @@ static int Apply_new_width (Document doc, Element el)
     }
   return nw;
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -3636,7 +3636,7 @@ static int Apply_new_width (Document doc, Element el)
 /*----------------------------------------------------------------------
   Generate_animate_color
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Generate_animate_color (Document basedoc, int from_c, int to_c,
 				    double start, double duration,
 				    pmapping_animated pm, Element period) 
@@ -3731,7 +3731,7 @@ static void Generate_animate_color (Document basedoc, int from_c, int to_c,
 
   TtaSetDocumentModified (basedoc);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -3739,7 +3739,7 @@ static void Generate_animate_color (Document basedoc, int from_c, int to_c,
 /*----------------------------------------------------------------------
   Generate_animate_motion
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Generate_animate_motion (Document basedoc, int previous_x, int previous_y,
 				     int x, int y, double start, double duration,
 				     pmapping_animated pm, Element period) 
@@ -3807,7 +3807,7 @@ static void Generate_animate_motion (Document basedoc, int previous_x, int previ
 
   TtaSetDocumentModified (basedoc);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -3819,7 +3819,7 @@ static void Generate_animate_motion (Document basedoc, int previous_x, int previ
   ----------------------------------------------------------------------*/
 void Timeline_finished_moving_slider(NotifyPresentation *event)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   char buffer[512];
   Document basedoc = Get_basedoc_of (event->document);
   Element tm = dt[basedoc].timing_text, egroup = NULL, brect, insertel;
@@ -3931,7 +3931,7 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
     }
 	
   TtaSetDocumentUnmodified (event->document);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -3942,7 +3942,7 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
   ----------------------------------------------------------------------*/
 void Timeline_exp_period_modified (NotifyPresentation *event)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   Document basedoc = Get_basedoc_of (event->document);
   Element edited_anim, exp_group, el;
   double start, duration;
@@ -3972,7 +3972,7 @@ void Timeline_exp_period_modified (NotifyPresentation *event)
 
   TtaSetDocumentUnmodified (event->document);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -3984,9 +3984,9 @@ void Timeline_exp_period_modified (NotifyPresentation *event)
 ThotBool Timeline_col_period_pre_modify (NotifyPresentation *event)
 {
   ThotBool res = FALSE;
-#ifdef _SVGANIM
+#ifdef _SVG
   tmp_previous_x = event->value;
-#endif /* _SVGANIM */
+#endif /* _SVG */
   return res;
 }
 
@@ -4002,7 +4002,7 @@ ThotBool Timeline_col_period_pre_modify (NotifyPresentation *event)
 ThotBool Timeline_slider_pre_modify (NotifyPresentation *event)
 {
   ThotBool res = FALSE;
-#ifdef _SVGANIM
+#ifdef _SVG
   PRule         presRuleX;
   presRuleX = TtaGetPRule (event->element, PRHorizPos);
   if (presRuleX)
@@ -4010,7 +4010,7 @@ ThotBool Timeline_slider_pre_modify (NotifyPresentation *event)
   else 
     previous_slider_position = 0;
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
   return res;
 }
 
@@ -4022,7 +4022,7 @@ ThotBool Timeline_slider_pre_modify (NotifyPresentation *event)
   ----------------------------------------------------------------------*/
 void Timeline_col_period_modified (NotifyPresentation *event)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
 
   Document basedoc = Get_basedoc_of (event->document);
   Element col_group, animated_elem, edited_anim, el;
@@ -4062,7 +4062,7 @@ void Timeline_col_period_modified (NotifyPresentation *event)
 
   TtaSetDocumentUnmodified (event->document);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -4072,7 +4072,7 @@ void Timeline_col_period_modified (NotifyPresentation *event)
   ----------------------------------------------------------------------*/
 void TimelineWindowClose (NotifyDialog * event) 
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   int k = 0;
 
   while ((k<DocumentTableLength) && dt[k].timelinedoc!=event->document) 
@@ -4082,7 +4082,7 @@ void TimelineWindowClose (NotifyDialog * event)
   if (k!=DocumentTableLength) 
     Init_timeline_struct(k);
   FreeDocumentResource (event->document);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -4091,7 +4091,7 @@ void TimelineWindowClose (NotifyDialog * event)
   ----------------------------------------------------------------------*/
 void Update_period_position_and_size (Document basedoc, Element animtag) 
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   double start, duration;
   Element pr, animated_el, first_found, new_fresh_group;
   pmapping_animated pm;
@@ -4134,7 +4134,7 @@ void Update_period_position_and_size (Document basedoc, Element animtag)
   if (x>ct_left_bar+current_timeline_width)
     Enlarge_timeline (basedoc, dt[basedoc].timelinedoc, x);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -4142,7 +4142,7 @@ void Update_period_position_and_size (Document basedoc, Element animtag)
   Update_element_id_on_timeline
   ----------------------------------------------------------------------*/
 void Update_element_id_on_timeline (NotifyAttribute* event) {
-#ifdef _SVGANIM
+#ifdef _SVG
   Element animated_el, text_id;
   pmapping_animated pm;
   Document basedoc = event->document, timelinedoc;
@@ -4185,14 +4185,14 @@ void Update_element_id_on_timeline (NotifyAttribute* event) {
 	}
     }
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
 /*----------------------------------------------------------------------
   Prepare_and_add_a_period
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Prepare_and_add_a_period (Document basedoc, Document timelinedoc, pmapping_animated pm)
 {
   Element exp_rect, im,first_found, new_fresh_group;
@@ -4251,7 +4251,7 @@ static void Prepare_and_add_a_period (Document basedoc, Document timelinedoc, pm
 				    ct_left_bar-ct_w_image_arrow-3, nh - (6+ct_static_bar_height)-4,
 				    ct_w_image_arrow, ct_h_image_arrow, 0, Timeline_EL_image_toolbar);
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 
@@ -4261,7 +4261,7 @@ static void Prepare_and_add_a_period (Document basedoc, Document timelinedoc, pm
   ----------------------------------------------------------------------*/
 void Key_position_defined (Document basedoc, Element cross) 
 {
-#ifdef _SVGANIM
+#ifdef _SVG
 
   PRule         presRule;
   presRule = TtaGetPRule (cross, PRHorizPos);
@@ -4274,7 +4274,7 @@ void Key_position_defined (Document basedoc, Element cross)
   dt[basedoc].definition_of_motion_period = TRUE;
   TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_MOTION_HINT2), NULL);
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -4282,7 +4282,7 @@ void Key_position_defined (Document basedoc, Element cross)
 /*----------------------------------------------------------------------
   Define_motion_anim
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Define_motion_anim (NotifyElement *event)
 {
   Element el;
@@ -4359,12 +4359,12 @@ static void Define_motion_anim (NotifyElement *event)
   TtaSetDisplayMode (event->document, dp);
 
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
   Show_timeline_help 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Show_timeline_help (NotifyElement *event)
 {
 #define x_help 100
@@ -4399,14 +4399,14 @@ static void Show_timeline_help (NotifyElement *event)
       dt[basedoc].helpview = 0;
     }
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
   Selection_changed_in_basedoc 
   ----------------------------------------------------------------------*/
 void Selection_changed_in_basedoc (NotifyElement * event)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
   ElementType elType;
   Element el = TtaGetParent (event->element);
 
@@ -4426,7 +4426,7 @@ void Selection_changed_in_basedoc (NotifyElement * event)
     Disable_color_anim_creation (event->document);
 
 
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -4434,7 +4434,7 @@ void Selection_changed_in_basedoc (NotifyElement * event)
 /*----------------------------------------------------------------------
   Define_color_anim 
   ----------------------------------------------------------------------*/
-#ifdef _SVGANIM
+#ifdef _SVG
 static void Define_color_anim (NotifyElement *event)
 {
   Element el;
@@ -4504,7 +4504,7 @@ static void Define_color_anim (NotifyElement *event)
   TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_COLOR_HINT2), NULL);
 
 }
-#endif /* _SVGANIM */
+#endif /* _SVG */
 
 
 /*----------------------------------------------------------------------
@@ -4514,7 +4514,7 @@ static void Define_color_anim (NotifyElement *event)
 ThotBool TimelineElClicked (NotifyElement *event)
 {
   ThotBool res = FALSE;
-#ifdef _SVGANIM
+#ifdef _SVG
   Element parent;
   ElementType elType;
   Document basedoc = Get_basedoc_of (event->document);
@@ -4548,8 +4548,6 @@ ThotBool TimelineElClicked (NotifyElement *event)
 
 
   TtaSetDocumentUnmodified (event->document);
-#endif /* _SVGANIM */
+#endif /* _SVG */
   return res;
 }
-
-/* insert */

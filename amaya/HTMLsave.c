@@ -23,7 +23,7 @@
 #include "MathML.h"
 #ifdef _SVG
 #include "SVG.h"
-#endif
+#endif /* _SVG */
 #include "XML.h"
 
 #ifdef ANNOTATIONS
@@ -1730,12 +1730,8 @@ Document GetDocFromSource (Document sourceDoc)
         if (DocumentTypes[i] == docHTML ||
 	    DocumentTypes[i] == docAnnot ||
 	    DocumentTypes[i] == docSVG ||
-#ifdef XML_GENERIC      
 	    DocumentTypes[i] == docXml ||
-#endif /* XML_GENERIC */
-#ifdef _SVGLIB
 	    DocumentTypes[i] == docLibrary ||
-#endif /* _SVGLIB */
 	    DocumentTypes[i] == docMath)
            if (DocumentSource[i] == sourceDoc)
 	      xmlDoc = i;

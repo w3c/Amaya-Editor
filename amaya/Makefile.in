@@ -129,10 +129,10 @@ amaya_comp_redland: @MAKEREDLAND@ force
 #include the fragment "amaya/Makefile.math" for math if configured in
 @math_frag@
 
-#include the fragment "amaya/Makefile.annot" for annotations if configured in
+#include the fragment "annotlib//Makefile.annot" for annotations if configured in
 @annot_frag@
 
-#include the fragment "amaya/Makefile.dav" for webdav if configured in
+#include the fragment "davlib/Makefile.dav" for webdav if configured in
 @dav_frag@
 
 

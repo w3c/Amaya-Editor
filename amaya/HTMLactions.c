@@ -22,9 +22,10 @@
 #include "MathML.h"
 #ifdef _SVG
 #include "SVG.h"
-#endif
+#endif /* _SVG */
 #include "XML.h"
 
+#include "anim_f.h"
 #include "css_f.h"
 #include "init_f.h"
 #include "AHTURLTools_f.h"
@@ -35,6 +36,7 @@
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"
+#include "libmanag_f.h"
 #include "selection.h"
 #include "styleparser_f.h"
 #include "trans_f.h"
@@ -47,15 +49,8 @@
 
 #ifdef DAV
 #include "davlib_f.h"
-#endif
+#endif /* DAV */
 
-#ifdef _SVGANIM
-#include "anim_f.h"
-#endif /* _SVGANIM */
-
-#ifdef _SVGLIB
-#include "libmanag_f.h"
-#endif /* _SVGLIB */
 
 
 /* info about the last element highlighted when synchronizing with the
@@ -476,7 +471,7 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
 	  }
      }
-#endif
+#endif /* _SVG */
 #ifdef ANNOTATIONS
    if (!elFound)
      {
@@ -1474,7 +1469,7 @@ ThotBool SimpleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool SimpleLClick (NotifyElement *event)
 {
-#ifdef _SVGLIB
+#ifdef _SVG
   ElementType       elType;
   ThotBool usedouble;
 
@@ -1501,7 +1496,7 @@ ThotBool SimpleLClick (NotifyElement *event)
 	    }
 	}
     }
-#endif /* _SVGLIB */
+#endif /* _SVG */
   /* don't let Thot perform normal operation if there is an activation */
   return FALSE;
 }
@@ -1706,37 +1701,35 @@ void FreeDocumentResource (Document doc)
   ----------------------------------------------------------------------*/
 void DocumentClosed (NotifyDialog * event)
 {
-#ifdef _SVGANIM 
-	Document tm_doc;
-	View tm_view;
-#endif  /*_SVGANIM*/
+#ifdef _SVG
+  Document tm_doc;
+  View tm_view;
+#endif  /* _SVG */
 
-   if (event == NULL)
-      return;
+  if (event == NULL)
+    return;
 #ifdef DAV
-      /* NEED : deal with last document when exiting the application.
-       * 
-       * Now, when exiting the application, if the document is locked
-       * by the user (the lock information must be in the local base),
-       * this function will ask whether the user wants to unlock it.
-       * If user agrees, an UNLOCK request will be sent. But, under
-       * Windows machines, this request will be killed when the application
-       * exit, and no unlock will be done.
-       */ 
-   DAVFreeLock (event->document);
-#endif
+  /* NEED : deal with last document when exiting the application.
+   * 
+   * Now, when exiting the application, if the document is locked
+   * by the user (the lock information must be in the local base),
+   * this function will ask whether the user wants to unlock it.
+   * If user agrees, an UNLOCK request will be sent. But, under
+   * Windows machines, this request will be killed when the application
+   * exit, and no unlock will be done.
+   */ 
+  DAVFreeLock (event->document);
+#endif /* DAV */
   
-
-#ifdef _SVGANIM 
-   Get_timeline_of_doc(event->document, &tm_doc, &tm_view);
-   if (tm_doc) {
-	   TtaCloseView (tm_doc, tm_view);
-	   Free_timeline_of_doc (event->document);	   
-   }
-#endif /*_SVGANIM*/
-
-   FreeDocumentResource (event->document);
-   CleanUpParsingErrors ();  
+#ifdef _SVG 
+  Get_timeline_of_doc(event->document, &tm_doc, &tm_view);
+  if (tm_doc) {
+    TtaCloseView (tm_doc, tm_view);
+    Free_timeline_of_doc (event->document);	   
+  }
+#endif /* _SVG */
+  FreeDocumentResource (event->document);
+  CleanUpParsingErrors ();  
 }
 
 /*----------------------------------------------------------------------
@@ -2313,9 +2306,7 @@ void SynchronizeSourceView (NotifyElement *event)
   otherDoc = 0;
   otherDocIsStruct = FALSE;
   if (DocumentTypes[doc] == docHTML ||
-#ifdef _SVGLIB
       DocumentTypes[doc] == docLibrary ||
-#endif /* _SVGLIB */
       DocumentTypes[doc] == docMath ||
       DocumentTypes[doc] == docSVG  ||
       DocumentTypes[doc] == docXml)
@@ -2330,9 +2321,7 @@ void SynchronizeSourceView (NotifyElement *event)
       for (i = 1; i < DocumentTableLength; i++)
 	if (DocumentURLs[i] &&
 	    (DocumentTypes[i] == docHTML ||
-#ifdef _SVGLIB
 	     DocumentTypes[i] == docLibrary ||
-#endif /* _SVGLIB */
 	     DocumentTypes[i] == docMath ||
 	     DocumentTypes[i] == docSVG ||
 	     DocumentTypes[i] == docXml) &&
@@ -2421,7 +2410,7 @@ void SynchronizeSourceView (NotifyElement *event)
 		     attrType.AttrTypeNum = XML_ATTR_Highlight;
 		     val = XML_ATTR_Highlight_VAL_Yes_;
 		   }
-#ifdef _SVGLIB
+#ifdef _SVG
 		 else if (DocumentTypes[otherDoc] == docLibrary)
 		   {
 		     attrType.AttrSSchema = TtaGetSSchema ("HTML",
@@ -2429,7 +2418,7 @@ void SynchronizeSourceView (NotifyElement *event)
 		     attrType.AttrTypeNum = HTML_ATTR_Highlight;
 		     val = HTML_ATTR_Highlight_VAL_Yes_;
 		   }
-#endif /* _SVGLIB */
+#endif /* _SVG */
 		 else
 		   {
 		     attrType.AttrSSchema = NULL;

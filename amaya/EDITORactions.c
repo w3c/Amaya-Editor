@@ -53,10 +53,8 @@
 
 #ifdef DAV
 #include "davlib_f.h"
-#endif
-#ifdef _SVGLIB
+#endif /* DAV */
 #include "libmanag_f.h"
-#endif /* _SVGLIB */
 
 /*  Does a modified doctype refer to an XML DTD ? */
 static ThotBool	     XmlDoctype = FALSE;

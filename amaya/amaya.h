@@ -505,9 +505,9 @@ THOT_EXPORT Document                 BackupDocument; /* the current backup */
 THOT_EXPORT char                    *URL_list;
 THOT_EXPORT int                      URL_list_len;
 THOT_EXPORT ThotBool                 URL_list_keep;
-#ifdef _SVGLIB
+#ifdef _SVG
 THOT_EXPORT char                    *SVGlib_list;
-#endif /* _SVGLIB */
+#endif /* _SVG */
 
 /* button indexes */
 THOT_EXPORT int iStop;

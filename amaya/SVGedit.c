@@ -40,12 +40,8 @@
 #include "text.xpm"
 #include "group.xpm"
 #endif /* _WINDOWS */
-#ifdef _SVGLIB
 #include "libmanag_f.h"
-#endif /* _SVGLIB */
-#ifdef _SVGANIM
 #include "anim_f.h"
-#endif /* _SVGANIM */
 
 #include "SVGedit_f.h"
 
@@ -177,11 +173,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
       event->elementType.ElTypeNum = elemType;
     }
   SynchronizeSourceView (event);
-
-#ifdef _SVGANIM
-	Selection_changed_in_basedoc (event);
-#endif /* _SVGANIM */
-
+  Selection_changed_in_basedoc (event);
 }
 
 /*----------------------------------------------------------------------
@@ -2292,9 +2284,9 @@ ThotBool DeleteAttrXlinkHref (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void AttrAnimTimeChanged (NotifyAttribute *event)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
 	Update_period_position_and_size (event->document, event->element);
-#endif /* _SVGANIM */
+#endif /* _SVG */
 }
 
 
@@ -2304,255 +2296,7 @@ void AttrAnimTimeChanged (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void Timeline_cross_prule_modified (NotifyPresentation *event)
 {
-#ifdef _SVGANIM
+#ifdef _SVG
 	Key_position_defined (event->document, event->element);
-#endif /* _SVGANIM */
-}
-
-
-
-
-
-
-
-
-
-#if 0
-/*** This is an experiment to test how SVG could be animated ***/
-/*** Works for document ~quint/Talks/AC-Nov00/all.htm only   ***/
-/*** See also file SVG.A                                 ***/
-
-static int oldValue = 0;
-
-/*----------------------------------------------------------------------
-   TextWillChangeInGroup
-   The user is about to change a character string within a g element
-   Store the number of that g element.
- -----------------------------------------------------------------------*/
-ThotBool TextWillChangeInGroup (NotifyOnTarget *event)
-{
-  Element     leaf;
-  int         len;
-  char       *text;
-  Language    lang;
-
-  leaf = event->target;
-  len = TtaGetTextLength (leaf) + 1;
-  text = TtaGetMemory (len);
-  TtaGiveTextContent (leaf, text, &len, &lang);
-  sscanf (text, "%d", &oldValue);
-  TtaFreeMemory (text);
-  return FALSE; /* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
-   TextChangedInGroup
-   A character string has been modified within a g element
-   If the g element has an attribute class="animatable", exchange that g
-   element with the one that has the same number.
-  ----------------------------------------------------------------------*/
-void TextChangedInGroup (NotifyOnTarget *event)
-{
-  Element       group1, group2, leaf1, leaf2, parent, child;
-  ElementType   elType;
-  Attribute     attr;
-  AttributeType attrType;
-  Document      doc;
-  PRule         presRuleX1, presRuleX2, presRuleY1, presRuleY2;
-  char          buffer[8];
-  char         *text;
-  Language      lang;
-  int           x, y, xx, yy, x1, y1, x2, y2, i, len, num;
-  ThotBool      found, neighbour;
-
-  /* group1: the g element whose number is changed by the user */
-  group1 = event->element;
-  doc = event->document;
-  /* if the g element does not have attribute class="animatable" don't do
-     anything */
-  elType = TtaGetElementType (group1);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = SVG_ATTR_class;
-  attr = TtaGetAttribute (group1, attrType);
-  if (!attr)
-    /* there is no class attribute */
-     return;
-  len = TtaGetTextAttributeLength (attr)+1;
-  text = TtaGetMemory (len);
-  TtaGiveTextAttributeValue (attr, text, &len);
-  found = (strcmp(text, "animatable") == 0);
-  TtaFreeMemory (text);
-  if (!found)
-     /* class is not "animatable" */
-     return;
-
-  /* get the content of the text element that has been changed */
-  leaf1 = event->target;
-  len = TtaGetTextLength (leaf1) + 1;
-  text = TtaGetMemory (len);
-  TtaGiveTextContent (leaf1, text, &len, &lang);
-  /* convert that content into a number */
-  sscanf (text, "%d", &num);
-  TtaFreeMemory (text);
-  /* only cubes 4 to 9 can be moved */
-  if (num < 4 || num > 9 || oldValue < 4 || oldValue > 9)
-    {
-      /* this cube can't be moved. Restore its original number */
-      sprintf (buffer, "%d", oldValue);
-      TtaSetTextContent (leaf1, buffer, lang, doc);
-      return;
-    }
-  /* look for the other cube containing the same number */
-  parent = TtaGetParent (group1);
-  group2 = TtaGetFirstChild (parent);
-  found = False;
-  /* check all sibling elements */
-  while (group2 && !found)
-    {
-    /* skip the cube that has been changed by the user */
-    if (group2 != group1)
-      {
-	elType = TtaGetElementType (group2);
-	if (elType.ElTypeNum == SVG_EL_g)
-	  /* this is a g element */
-	  {
-	    /* get its last child */
-	    child = TtaGetLastChild (group2);
-	    if (child)
-	      {
-		elType = TtaGetElementType (child);
-		if (elType.ElTypeNum == SVG_EL_text_)
-		  /* the last child is a SVG text element */
-		  {
-		    /* get its content */
-		    leaf2 = TtaGetFirstChild (child);
-		    if (leaf2)
-		      {
-			elType = TtaGetElementType (leaf2);
-			if (elType.ElTypeNum == SVG_EL_TEXT_UNIT)
-			  {
-			    len = TtaGetTextLength (leaf2) + 1;
-			    text = TtaGetMemory (len);
-			    TtaGiveTextContent (leaf2, text, &len, &lang);
-			    /* convert the content into a number */
-			    sscanf (text, "%d", &i);
-			    TtaFreeMemory (text);
-			    if (i == num)
-			      /* that's the same number */
-			      found = TRUE;
-			  }
-		      }
-		  }
-	      }
-	  }
-      }
-    if (!found)
-      TtaNextSibling (&group2);
-    }
-
-  if (!found)
-    /* there is no other cube with that number. Restore the original number
-       and return */
-    {
-      sprintf (buffer, "%d", oldValue);
-      TtaSetTextContent (leaf1, buffer, lang, doc);
-      return;
-    }
-
-  /* check if the 2 cubes to be exchanged are neighbours */
-  if (num - oldValue == 1 || oldValue - num == 1)
-    neighbour = TRUE;
-  else
-    neighbour = FALSE;
-
-  /* the other cube take the previous number of the modified cube */
-  sprintf (buffer, "%d", oldValue);
-  TtaSetTextContent (leaf2, buffer, lang, doc);
-
-  /* get the original coordinates of both cubes */
-  presRuleX1 = TtaGetPRule (group1, PRHorizPos);
-  if (presRuleX1)
-     x1 = TtaGetPRuleValue (presRuleX1);
-  else
-     x1 = 0;
-  presRuleX2 = TtaGetPRule (group2, PRHorizPos);
-  if (presRuleX2)
-     x2 = TtaGetPRuleValue (presRuleX2);
-  else
-     x2 = 0;
-  presRuleY1 = TtaGetPRule (group1, PRVertPos);
-  if (presRuleY1)
-     y1 = TtaGetPRuleValue (presRuleY1);
-  else
-     y1 = 0;
-  presRuleY2 = TtaGetPRule (group2, PRVertPos);
-  if (presRuleY2)
-     y2 = TtaGetPRuleValue (presRuleY2);
-  else
-     y2 = 0;
-
-  /* if both cubes are not neighbour, move them down to y=100 */
-  if (!neighbour)
-    {
-      y = y1;  yy = y2;
-      do
-	{
-	  if (y < 100)
-	    {
-	      y++;
-	      TtaSetPRuleValue (group1, presRuleY1, y, doc);
-	    }
-	  if (yy < 100)
-	    {
-	      yy++;
-	      TtaSetPRuleValue (group2, presRuleY2, yy, doc);
-	    }      
-	}
-      while (y < 100 && yy < 100);
-    }
-
-  /* move both cubes horizontally: exchange their positions */
-  x = x1;  xx = x2;
-  do
-    {
-      if (x != x2)
-	{
-	  if (x < x2)
-	    x++;
-	  else
-	    x--;
-	  TtaSetPRuleValue (group1, presRuleX1, x, doc);
-	}
-      if (xx != x1)
-	{
-	  if (xx < x1)
-	    xx++;
-	  else
-	    xx--;
-	  TtaSetPRuleValue (group2, presRuleX2, xx, doc);
-	}
-    }
-  while (x != x2 && xx != x1);
-
-  /* move both cubes up */
-  if (!neighbour)
-    {
-      do
-	{
-	  if (y > y2)
-	    {
-	      y--;
-	      TtaSetPRuleValue (group1, presRuleY1, y, doc);
-	    }
-	  if (yy > y1)
-	    {
-	      yy--;
-	      TtaSetPRuleValue (group2, presRuleY2, yy, doc);
-	    }      
-	}
-      while (y != y2  && yy != y1);
-    }
-  /* that's it! */
-}
-
 #endif /* _SVG */
+}
