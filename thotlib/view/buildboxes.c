@@ -1172,6 +1172,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   PtrBox              pChildBox, pBox;
   PtrBox              pCurrentBox;
   int                 val, x, y;
+  int                 t, l, r, b;
   ThotBool            still, hMin, vMin;
 
   pBox = NULL;
@@ -1220,8 +1221,14 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	  ComputeLines (pCurrentBox, frame, height);
 	  if (pCurrentBox->BxContentWidth ||
 	      (hMin && pCurrentBox->BxMaxWidth > pCurrentBox->BxW))
+	    {
 	    /* it's an extensible line */
 	    pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
+	    GetExtraMargins (pCurrentBox, NULL, &t, &b, &l, &r);
+	    l += pCurrentBox->BxLMargin + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
+	    r += pCurrentBox->BxRMargin + pCurrentBox->BxRBorder + pCurrentBox->BxRPadding;
+	    pCurrentBox->BxWidth = pCurrentBox->BxW + l + r;
+	    }
 	}
       *width = pCurrentBox->BxW;
     }

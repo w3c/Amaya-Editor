@@ -2000,6 +2000,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   int                 i, j, k, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   int                 extraL, extraR;
+  int                 addL = 0, addR = 0;
   ThotBool            notEmpty;
   ThotBool            toMove;
   ThotBool            absoluteMove;
@@ -2013,6 +2014,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     return;
 
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
+  
   if (!pCurrentAb->AbMBPChange && delta)
     {
       extraL += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
@@ -2020,8 +2022,13 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       diff = pBox->BxW + extraL + extraR - pBox->BxWidth;
     }
   else
-    /* margins borders and are not interpreted yet */
-    diff = l + extraL + r + extraR;
+    {
+      /* margins borders and are not interpreted yet */
+      diff = l + extraL + r + extraR;
+      /* left and right adds transmitted to enclosing boxes */
+      addL = l;
+      addR = r;
+    }
 
   if (delta || diff ||
       pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
@@ -2256,7 +2263,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsXPosComplete (pBox);
 	  /* internal boxes take into account margins borders and paddings */
-	  if (/*!absoluteMove &&*/ (l || r))
+	  if (/*!absoluteMove && */(l || r))
 	    {
 	      orgTrans += l;
 	      middleTrans += (l - r)/2;
@@ -2389,7 +2396,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			      val = delta;
 			      if (pAb->AbEnclosing != pCurrentAb)
 				/* refer the outside width */
-				val = val + diff + l + r;
+				val = val + diff + addL + addR;
 			    }
 			  /* avoid cycles on the same box */
 			  if (box != pBox)
@@ -2413,7 +2420,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			      val = delta;
 			      if (pAb->AbEnclosing != pCurrentAb)
 				/* refer the outside width */
-				val = val + diff + l + r;
+				val = val + diff + addL + addR;
 			    }
 			  ChangeHeight (box, pSourceBox, NULL, val, frame);
 			}
@@ -2464,10 +2471,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			pLine = pViewSel->VsLine;
 		      else
 			pLine = SearchLine (pBox, frame);
-		      if (pCurrentAb->AbMBPChange || l || r)
-			UpdateLineBlock (pAb, pLine, pBox, diff, 0, frame);
-		      else
+		      if (!pCurrentAb->AbMBPChange && delta)
 			UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
+		      else
+			UpdateLineBlock (pAb, pLine, pBox, diff, 0, frame);
 		    }
 		  /* if the inclusion is not checked at the end */
 		  else if (!IsParentBox (pAb->AbBox, PackBoxRoot) &&
@@ -2542,6 +2549,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   int                 i, j, k, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   int                 extraT, extraB;
+  int                 addT = 0, addB = 0;
   ThotBool            notEmpty;
   ThotBool            toMove;
   ThotBool            absoluteMove;
@@ -2562,8 +2570,13 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       diff = pBox->BxH + extraT + extraB - pBox->BxHeight;
     }
   else
-    /* margins borders and are not interpreted yet */
-    diff = t + extraT + b + extraB;
+    {
+      /* margins borders and are not interpreted yet */
+      diff = t + extraT + b + extraB;
+      /* top and bottom adds transmitted to enclosing boxes */
+      addT = t;
+      addB = b;
+    }
 
   if (delta || diff)
     {
@@ -2786,7 +2799,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsYPosComplete (pBox);
 	  /* internal boxes take into account margins borders and paddings */
-	  if (!absoluteMove && (t || b))
+	  if (/*!absoluteMove && */(t || b))
 	    {
 	      orgTrans = t;
 	      middleTrans = (t - b)/2;
@@ -2935,7 +2948,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			  val = delta;
 			  if (pAb->AbEnclosing != pCurrentAb)
 			    /* refer the outside width */
-			    val = val + t + b;
+			    val = val + addT + addB;
 			}
 		      /* avoid cycles on the same box */
 		      if (box != pBox)
@@ -2960,7 +2973,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			  val = delta;
 			  if (pAb->AbEnclosing != pCurrentAb)
 			    /* refer the outside width */
-			    val = val + t + b;
+			    val = val + addT + addB;
 			}
 		      ChangeWidth (box, pSourceBox, NULL, val, 0, frame);
 		    }
@@ -3622,7 +3635,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   int                 val, width;
   int                 left;
   int                 x, i, j, k;
-  ThotBool            notEmpty;
+  ThotBool            movingChild;
   ThotBool            toMove;
   ThotBool            absoluteMove;
 
@@ -3661,16 +3674,16 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       
       /* Initially the inside left and the inside right are the equal */
       width = x;
-      /* left registers the current left limit */
+      /* left gives the current left limit of mobile boxes */
       left = x + pBox->BxW;
-      notEmpty = FALSE;
+      movingChild = FALSE;
       /* nothing is moved */
       toMove = FALSE;
       
       /*
-       * The left edge of the extra left enclosed box must be stuck
+       * The left edge of the lefter enclosed box must be stuck
        * to the inside left edge and the inside width is delimited
-       * by the right edge of the extra right enclosed box.
+       * by the right edge of the righter enclosed box.
        */
       pChildAb = pAb->AbFirstEnclosed;
       while (pChildAb != NULL)
@@ -3691,7 +3704,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 		    if (pRelativeAb->AbHorizPos.PosAbRef == NULL)
 		      {
 			/* mobile box */
-			notEmpty = TRUE;
+			movingChild = TRUE;
 			if (pChildBox->BxXOrg < left)
 			  /* minimum value */
 			  left = pChildBox->BxXOrg;
@@ -3732,7 +3745,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	}
       
       val = x - left; /* Shift of the extra left edge */
-      if (notEmpty)
+      if (movingChild)
 	width += val; /* Next position of the extra right edge */
       if (width == x && pAb->AbVolume == 0)
 	width = 2;
@@ -3744,7 +3757,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
        * Now we move misplaced included boxes
        */
       pChildAb = pAb->AbFirstEnclosed;
-      if (notEmpty && val != 0)
+      if (movingChild && val != 0)
 	while (pChildAb != NULL)
 	  {
 	    pChildBox = pChildAb->AbBox;
@@ -3880,7 +3893,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   AbPosition         *pPosAb;
   int                 val, height;
   int                 y, i, j, k, top;
-  ThotBool            notEmpty;
+  ThotBool            movingChild;
   ThotBool            toMove;
   ThotBool            absoluteMove;
 
@@ -3913,16 +3926,16 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       
       /* Initially the inside top and the inside bottom are the equal */
       height = y;
-      /* top registers the current top limit */
+      /* top gives the current top limit of mobile boxes */
       top = y + pBox->BxH;
-      notEmpty = FALSE;
+      movingChild = FALSE;
       /* nothing is moved */
       toMove = FALSE;
       
       /*
-       * The top edge of the extra upper enclosed box must be stuck
+       * The top edge of the upper enclosed box must be stuck
        * to the inside top edge and the inside height is delimited
-       * by the bottom edge of the extra lower enclosed box.
+       * by the bottom edge of the lower enclosed box.
        */
       pChildAb = pAb->AbFirstEnclosed;
       while (pChildAb != NULL)
@@ -3944,7 +3957,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 		    if (pRelativeAb->AbVertPos.PosAbRef == NULL)
 		      {
 			/* mobile box */
-			notEmpty = TRUE;
+			movingChild = TRUE;
 			/* minimum value */
 			if (pChildBox->BxYOrg < top)
 			  top = pChildBox->BxYOrg;
@@ -3985,7 +3998,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	}
       
       val = y - top; /* Shift of the extra top edge */
-      if (notEmpty)
+      if (movingChild)
 	height += val; /* Nex position of the extra bottom edge */
       if (height == y && pAb->AbVolume == 0)
 	height = BoxFontHeight (pAb->AbBox->BxFont);
@@ -3997,7 +4010,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
        * Now we move misplaced included boxes
        */
       pChildAb = pAb->AbFirstEnclosed;
-      if (notEmpty && val != 0)
+      if (movingChild && val != 0)
 	while (pChildAb != NULL)
 	  {
 	    pChildBox = pChildAb->AbBox;

@@ -3890,7 +3890,9 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		h = pBox->BxYOrg;
 		pBox->BxW = pBox->BxMaxWidth;
 		GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-		pBox->BxWidth = pBox->BxW + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding + l + r;
+		l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+		r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+		pBox->BxWidth = pBox->BxW + l + r;
 	      }
 	    width = 0;
 	  }
