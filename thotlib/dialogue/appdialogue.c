@@ -2409,7 +2409,9 @@ int TtaAddTextZone (Document doc, View view, char *label,
 void TtaSetTextZone (Document doc, View view, char *listUrl)
 {
   int            frame;
+#ifndef _WX /* WX doesn't use Text_Zone variable */
   ThotWidget     w;
+#endif //#ifndef _WX // TODO	      
 #ifdef _GTK
   GList         *combo1_items = NULL;
   ThotWidget     combo;

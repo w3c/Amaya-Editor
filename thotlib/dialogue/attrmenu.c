@@ -140,9 +140,11 @@ static void InitFormLanguage (Document doc, View view,
    char                languageCode[MAX_TXT_LEN];
    char                label[200];
    int                 defItem, nbItem;
+#ifdef _GTK
+   int                 i;
+#endif /* _GTK */
 #if defined(_GTK) || defined(_WX)
    char                bufMenu[MAX_TXT_LEN];
-   int                 i;
 #endif /* _GTK || _WX */
 
    /* Initialize the language selector */
@@ -1082,13 +1084,16 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   ----------------------------------------------------------------------*/
 void UpdateAttrMenu (PtrDocument pDoc)
 {
-  Document            document;
-  Menu_Ctl           *pMenu;
   char                bufMenuAttr[MAX_TXT_LEN];
   char                bufEventAttr[MAX_TXT_LEN];
+#ifndef _WX
+  Document            document;
+  Menu_Ctl           *pMenu;
   int                 view, menu, menuID;
-  int                 frame, ref, nbEvent;
-  int                 nbItemAttr, i, max;
+  int                 frame, ref;
+  int                 i, max;
+#endif /* _WX */
+  int                 nbItemAttr, nbEvent;
 #ifdef _WINGUI
   int                 nbOldItems;
 #endif /* _WINGUI */
