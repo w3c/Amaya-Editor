@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>
+Making Book</title>
+<meta name="GENERATOR" content="amaya V1.0a Beta">
+</head>
+<body>
+<h2><a name="L1065">Assembling large document collections</a></h2>
+
+<p>
+Amaya allows you to handle document collections. Such a collection may, for
+instance, represent a technical documentation constituted by several web
+pages. One of these pages contains the title of the whole documentation (an
+<code>H1</code> element), an introduction (some other elements), and a list
+(<code>OL</code> or <code>UL</code>) whose items contain links to each
+chapter. Chapters are separate documents which can also have the same type of
+structure.</p>
+<p>
+Such an organization is useful for browsing, but it has a number of drawbacks
+when the whole documentation has to be printed. <strong>Amaya</strong>
+addresses this problem with the "make book" function. You just have to use
+typed links for linking chapters: associate a <code>rel=chapter</code> or
+<code>rel=subdocument</code> attribute with the anchor that refers to a
+chapter (select the <code>A</code> element and use the <strong><a
+href="/tahiti/vatton/opera/doc/amaya/Manual.html#L1073">Attributes</a></strong>
+menu). Then, when activating the "make book" function, all blocks
+(<code>LI</code> elements in the above example) containing a typed link to a
+chapter will be replaced by the corresponding actual web pages, and you will
+get a unique document containing the whole collection. This large document can
+then be <a
+href="/tahiti/vatton/opera/doc/amaya/Manual.html#L1064">numbered</a> and <a
+href="/tahiti/vatton/opera/doc/amaya/Manual.html#L1062">printed</a> with a
+complete table of contents and a list of all links.</p>
+<p>
+To activate this tool, choose the <strong>Make Book</strong> item from the
+<strong>Special</strong> menu.</p>
+<hr>
+</body>
+</html>

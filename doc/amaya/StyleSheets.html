@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>
+Style Sheets</title>
+<meta name="GENERATOR" content="amaya V1.0a Beta">
+</head>
+<body>
+<h2><a name="L1023">Style Sheets</a></h2>
+
+<p>
+The <strong>Style</strong> menu allows you to change the appearance of your
+documents by two different means:</p>
+<ul>
+<li>
+using Cascading Style Sheets (CSS), 
+<li>
+using HTML elements and attributes. 
+</ul>
+<p>
+The first entries of the <strong>Style</strong> menu are dedicated to CSS, the
+last two entries to <a
+href="/tahiti/vatton/opera/doc/amaya/Manual.html#L1371">HTML elements</a>.</p>
+<h3>Cascading Style Sheets</h3>
+
+<h4>Creating and updating Style attributes</h4>
+
+<p>
+Each of the first four entries of the <strong>Style</strong> menu call a
+dialog box that allows you to associate a <code>style</code> attribute with
+the currently selected elements:</p>
+<ul>
+<li>
+<strong>Character Style</strong> allows you to choose the font family, the
+character style, the body size and the underline style. 
+<li>
+<strong>Colors</strong> allows you to choose the foreground and background
+colors from a palette. Click on a palette cell with the left button to set the
+foregroud color, click with the middle button to set the backgroud color. 
+<li>
+<strong>Format</strong> allows you to set  alignment, indentation,
+justification and linespacing. 
+<li>
+<strong>Background Image</strong> allows you to choose a background image and
+its repeat mode. 
+</ul>
+<p>
+In all these dialog boxes, <strong>Default</strong> buttons allow you to
+remove the corresponding style information from the selected elements.</p>
+<p>
+All modifications made with these dialog boxes can be viewed immediately in
+both the WYSIWYG view and the Structure view.</p>
+<h4>Changing width and height of elements</h4>
+
+<p>
+The width and height of any element in a document can be changed
+interactively, in the same way as <a
+href="/tahiti/vatton/opera/doc/amaya/Manual.html#L1171">image map areas</a>.
+By pressing the Control key on the keybord and the middle button of the mouse,
+you can resize the box associated with the element under the cursor. When you
+release the mouse button, the element size is changed and a <code>style</code>
+attribute is associated with the element.</p>
+<p>
+When the resized element is an image, this image is zoomed to fill its new
+box.</p>
+<h4>Creating, updating and using classes</h4>
+
+<p>
+When a <code>style</code> attribute has been associated with an element, you
+can use that element as a model for creating or modifying a style rule. Select
+this element (you must select only one element and this element must have a
+<code>style</code> attribute) and choose <strong>Create Rule</strong> from the
+<strong>Style</strong> menu. A dialog box pops up that displays a list of CSS
+selectors. This list comprises all classes that are defined for the current
+document as well as, the element types to which some style is associated..
+Choose a selector in this list or enter a new class name or type name  and
+press the <strong>Confirm</strong> button. The style of the selected element
+is then associated with the chosen selector and the <code>style</code>
+attribute is removed from the selected element. Its content is moved to the
+<code>STYLE</code> element, in the document <code>HEAD</code>, and all
+elements matching the selector are displayed with the new style.</p>
+<p>
+When you have created new classes with the <strong>Create Rule</strong>
+command, you can associate these classes with some elements in the document
+document. Choose <strong>Apply Class</strong> from the <strong>Style</strong>
+menu. A dialog box pops up which displays all existing classes. Choose one of
+these classes. The selected elements are then displayed with the style
+associated with the chosen class.</p>
+<p>
+To associate a class with an element, you can also use the <a
+href="/tahiti/vatton/opera/doc/amaya/Manual.html#L1073"><strong>Attributes</strong>
+menu</a>. This menu allows you to delete a class attribute from an element or
+to change it: the class attribute is handled like any other attribute.</p>
+<h4>Editing style sheets</h4>
+
+<p>
+Commands <strong>Create Rule</strong> and <strong>Apply Class</strong> provide
+the basic functionality for manipulating style information. More complex
+manipulations can be made with the CSS dialog box. You can get that dialog box
+by clicking the CSS button or by selecting <strong>Style sheets</strong> from
+the <strong>Style</strong> menu.</p>
+<p>
+The CSS dialog box allows you not only to edit the content of a style sheet,
+but also to create new sheets and to update existing ones by copying rules
+from one sheet to another.</p>
+<ul>
+<li>
+The two CSS file  selectors allow to select the style sheets from which rules
+can be manipulated. In each selector, the currently selected sheet is
+highlighted. 
+<p>
+Entry <em>Document style</em> represents the set of rules gathered in the
+STYLE element, in the document HEAD.</p>
+<p>
+Entry <em>User's preference</em> represents the user style sheet (file
+<code>.amaya.css</code> in the user's home directory)</p>
+<li>
+The two rule selectors show the rules from the selected style sheets. In fact,
+they only display the selector part of these rules. Only one rule can be
+selected for both selector, which is the current rule, displayed in the text
+area below. 
+<li>
+The text area at the bottom shows the complete current rule (the one selected
+from the rule selectors), allowing the user to see and edit the CSS syntax. 
+<li>
+Between the two rule selectors there is a column of 5 buttons. 
+<ul>
+<li>
+pushing the <img border="0" src="/tahiti/vatton/opera/doc/amaya/lcopy.gif">
+ button <em>merges</em> the current rule (as shown in the text area) to the
+second style sheet. Changes are immediately reflected in the WYSIWYG View. 
+<li>
+pushing the <img border="0" src="/tahiti/vatton/opera/doc/amaya/lmerge.gif">
+ button <em>copies</em> the current rule to the second style sheet.The
+difference with the previous button is that all rules using the same selector
+initially present in the file are first removed. 
+<li>
+pushing the <img border="0" src="/tahiti/vatton/opera/doc/amaya/destroy.gif">
+ button deletes the current rule from its style sheet. 
+<li>
+the buttons <img border="0" src="/tahiti/vatton/opera/doc/amaya/rcopy.gif">
+ and <img src="/tahiti/vatton/opera/doc/amaya/rmerge.gif">
+ have the same effect as the first two buttons but they act on the first style
+sheet.. 
+</ul>
+<li>
+The five buttons at the bottom are used for handling style sheets. 
+<ul>
+<li>
+<strong>Save</strong> initiates the operation of saving all modified style
+sheets. 
+<li>
+<strong>Save as</strong> saves one of the style sheets to a local file. 
+<li>
+<strong>Reload</strong> is a coarse grained Undo. It reloads all the modified
+style sheets referenced by the document. 
+<li>
+<strong>New</strong> adds an external style sheet to the list of the external
+style sheets referenced by the document. It is also possible to browse the
+content of a file without attaching it to the document. Amaya keeps an history
+of the style sheets encountered. This history is saved from session to
+session, and allows you to grab quickly one of the style sheets lastly
+referenced, to browse its rules or to attach it to the current document. 
+<li>
+<strong>Remove</strong> supresses a reference to an external style sheet. 
+<li>
+<strong>Cancel</strong> closes the CSS dialog box. 
+</ul>
+</ul>
+<h3><a name="L1371">Style through HTML elements</a></h3>
+
+<p>
+HTML provides some character-level elements that allow you to associate style
+with character strings. Two entires from the <strong>Style</strong> menu allow
+you to handle these HTML elements.</p>
+<h4>Creating HTML style elements</h4>
+
+<p>
+Entry <strong>Information type</strong> from the <strong>Style</strong> menu
+presents a submenu offering a choice of HTML elements that define abstract
+styles. Select first a character string and then choose an item in this menu.
+The selected character string receives the corresponding style. Three of these
+styles are also available through buttons: <em>emphasis</em> (button<em>
+i</em>), <strong>strong</strong> (button <strong>B</strong>) and
+<code>code</code> (button <code>TT</code>).</p>
+<p>
+Entry <strong>Character elements</strong> from the <strong>Style</strong> menu
+offers another menu for changing the style of text. Most entries of this menu
+could be replaced by CSS and should not be used. They are here only for the
+sake of completeness of the HTML 3.2 implementation.</p>
+<h4>Removing style</h4>
+
+<p>
+To remove style from a character string, select the string first and re-apply
+the command that was used for associating the style you want to remove. All
+commands in the submenus <strong>Information Type</strong> and
+<strong>Character Element</strong> toggle themselves if re-applied.</p>
+<hr>
+</body>
+</html>
