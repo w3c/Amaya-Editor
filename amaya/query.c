@@ -208,12 +208,12 @@ int                 docid;
    if ((me = (AHTReqContext *) TtaGetMemory (sizeof (AHTReqContext))) == NULL)
       outofmem (__FILE__, "Context_new");
 
-   /* clean the associated file structure) */
-   HTRequest_setOutputStream (me->request, NULL);
-
    /* Bind the Context object together with the Request Object */
    me->request = HTRequest_new ();
-   
+  
+   /* clean the associated file structure) */
+   HTRequest_setOutputStream (me->request, NULL);
+ 
    /* Initialize the other members of the structure */
    me->reqStatus = HT_NEW; /* initial status of a request */
    me->output = NULL;
