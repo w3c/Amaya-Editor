@@ -1567,57 +1567,26 @@ void        DrawSegments (int frame, int thick, int style, int x, int y, PtrText
 }
 
 /*----------------------------------------------------------------------
-  DrawPolygon draw a polygone.
-  Parameter buffer is a pointer to the list of control points.
-  nb indicates the number of points.
-  The first point is a fake one containing the geometry.
+  DoDrawPolygon
+  Draw a polygon whose points are stored in buffer points
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void          DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
+static void  DoDrawPolygon (int frame, int thick, int style,
+			    ThotPoint *points, int npoints, int fg, int bg,
+			    int pattern)
 {
-  ThotPoint          *points;
-  PtrTextBuffer       adbuff;
-  HPEN                hPen;
-  HPEN                hOldPen;
-  LOGBRUSH            logBrush;
-  HBRUSH              hBrush;
-  HBRUSH              hOldBrush;
-  Pixmap              pat = NULL;
-  int         i, j;
-
-   /* Allocate a table of points */
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength)
-	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
-	  }
-	points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
-	points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
-	j++;
-     }
-   /* Close the polygone */
-   points[nb - 1].x = points[0].x;
-   points[nb - 1].y = points[0].y;
+   HPEN                hPen;
+   HPEN                hOldPen;
+   LOGBRUSH            logBrush;
+   HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
+   Pixmap              pat = NULL;
 
    if (fg < 0)
      thick = 0;
 
-   /* how to stroke the polygone */
+   /* how to stroke the polygon */
    if (thick == 0)
      hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
    else
@@ -1635,7 +1604,7 @@ void          DrawPolygon (int frame, int thick, int style, int x, int y, PtrTex
 	   break;
 	 }
      }
-   /* how to fill the polygone */
+   /* how to fill the polygon */
    pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0)
      logBrush.lbStyle = BS_NULL;
@@ -1648,7 +1617,7 @@ void          DrawPolygon (int frame, int thick, int style, int x, int y, PtrTex
    hBrush = CreateBrushIndirect (&logBrush);
 
 #ifdef _WIN_PRINT
-   /* fill the polygone */
+   /* fill the polygon */
    hOldPen = SelectObject (TtPrinterDC, hPen);
    if (hBrush)
      {
@@ -1665,7 +1634,7 @@ void          DrawPolygon (int frame, int thick, int style, int x, int y, PtrTex
    WIN_GetDeviceContext (frame);
    SelectClipRgn (TtDisplay, clipRgn);
 
-   /* fill the polygone */
+   /* fill the polygon */
    hOldPen = SelectObject (TtDisplay, hPen);
    if (hBrush)
      {
@@ -1687,10 +1656,52 @@ void          DrawPolygon (int frame, int thick, int style, int x, int y, PtrTex
    if (pat != 0)
      if (!DeleteObject ((HGDIOBJ) pat))
        WinErrorBox (NULL, TEXT("Pattern"));
+}
+
+/*----------------------------------------------------------------------
+  DrawPolygon draw a polygon.
+  Parameter buffer is a pointer to the list of control points.
+  nb indicates the number of points.
+  The first point is a fake one containing the geometry.
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
+void          DrawPolygon (int frame, int thick, int style, int x, int y,
+			   PtrTextBuffer buffer, int nb, int fg, int bg,
+			   int pattern)
+{
+  ThotPoint          *points;
+  int                 i, j;
+  PtrTextBuffer       adbuff;
+
+   /* Allocate a table of points */
+   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
+   adbuff = buffer;
+   y += FrameTable[frame].FrTopMargin;
+   j = 1;
+   for (i = 1; i < nb; i++)
+     {
+	if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
+	  {
+	    /* Next buffer */
+	    adbuff = adbuff->BuNext;
+	    j = 0;
+	  }
+	points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
+					  UnPixel, NULL,
+					  ViewFrameTable[frame - 1].FrMagnification);
+	points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
+					  UnPixel, NULL,
+					  ViewFrameTable[frame - 1].FrMagnification);
+	j++;
+     }
+   /* Close the polygone */
+   points[nb - 1].x = points[0].x;
+   points[nb - 1].y = points[0].y;
+   DoDrawPolygon (frame, thick, style, points, nb, fg, bg, pattern);
    /* free the table of points */
    free (points);
 }
-
 
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
@@ -2120,22 +2131,135 @@ void          DrawSpline (int frame, int thick, int style, int x, int y, PtrText
 }
 
 /*----------------------------------------------------------------------
+  DrawCurrent
+  Draws the polyline or polygon corresponding to the list og points
+  contained in buffer points.
+  Parameter path is a pointer to the list of path segments
+  fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+static void  DrawCurrent (int frame, int thick, int style, int fg, int bg,
+			  int pattern)
+{
+  if (npoints > 1)
+    {
+      if (npoints == 2)
+	/* only two points, that's a single segment */
+	{
+	  InitDrawing (style, thick, fg);
+	  DoDrawOneLine (frame, points[0].x, points[0].y,
+			 points[1].x, points[1].y);
+	}
+      else
+	/* draw a polyline or a ploygon */
+	DoDrawPolygon (frame, thick, style, points, npoints, fg, bg, pattern);
+      npoints = 0;
+    }
+}
+
+/*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void                DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int fg, int bg, int pattern)
+void            DrawPath (int frame, int thick, int style, int x, int y,
+			  PtrPathSeg path, int fg, int bg, int pattern)
 {
-  /****** to be written *******/
-  return;
+  PtrPathSeg          pPa;
+  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+
+  if (thick > 0 || fg >= 0)
+    {
+      y += FrameTable[frame].FrTopMargin;
+      /* alloue la liste des points */
+      MAX_points = ALLOC_POINTS;
+      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+      npoints = 0;
+      pPa = path;
+      while (pPa)
+	{
+	  if (pPa->PaNewSubpath)
+	    /* this path segment starts a new subpath */
+	    /* if some points are already stored, display the line
+	       they represent */
+	    if (npoints > 1)
+	      DrawCurrent (frame, thick, style, fg, bg, pattern);
+
+	  switch (pPa->PaShape)
+	    {
+	    case PtLine:
+	      x1 = x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y1 = y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	      PolyNewPoint ((int) x1, (int) y1);
+	      PolyNewPoint ((int) x2, (int) y2);
+	      break;
+
+	    case PtCubicBezier:
+	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cx2 = (float) (x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cy2 = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+	      PolyNewPoint ((int) x2, (int) y2);
+	      break;
+
+	    case PtQuadraticBezier:
+	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
+	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2);
+	      PolyNewPoint ((int) x2, (int) y2);
+	      break;
+
+	    case PtEllipticalArc:
+	      /**** to do ****/
+	      break;
+	    }
+	  pPa = pPa->PaNext;
+	}
+      /* if some points are left in the buffer, display the line they
+	 represent */
+      if (npoints > 1)
+	DrawCurrent (frame, thick, style, fg, bg, pattern);
+      /* free the table of points */
+      free (points);
+    }
 }
 
 /*----------------------------------------------------------------------
-  DrawOval draw a rectangle with smoothed corners.
+  DrawOval draw a rectangle with rounded corners.
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void          DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int rx, int ry, int fg, int bg, int pattern)
+void            DrawOval (int frame, int thick, int style, int x, int y,
+			  int width, int height, int rx, int ry,
+			  int fg, int bg, int pattern)
 {
   Pixmap        pat = (Pixmap) 0;
   HPEN          hPen;

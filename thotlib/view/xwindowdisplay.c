@@ -1298,20 +1298,61 @@ void      DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBu
 }
 
 /*----------------------------------------------------------------------
-  DrawPolygon draw a polygone.
+  DoDrawPolygon
+  Draw a polygon whose points are stored in buffer points
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
+static void  DoDrawPolygon (int frame, int thick, int style,
+			    ThotPoint *points, int npoints, int fg, int bg,
+			    int pattern)
+{
+   Pixmap              pat;
+
+   /* Fill in the polygon */
+   pat = CreatePattern (0, fg, bg, pattern);
+   if (pat != 0) 
+     {
+#ifdef _GTK
+       gdk_gc_set_tile (TtGreyGC, pat);
+       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, npoints); 
+       gdk_pixmap_unref (pat);
+#else /* _GTK */
+       XSetTile (TtDisplay, TtGreyGC, pat);
+       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints,
+		     Complex, CoordModeOrigin);
+       XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
+     }
+
+   /* Draw the border */
+   if (thick > 0 && fg >= 0)
+     {
+       InitDrawing (style, thick, fg);
+#ifdef _GTK
+       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, npoints); 
+#else /* _GTK */
+       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
+		   CoordModeOrigin);
+#endif /* _GTK */
+     }
+}
+
+/*----------------------------------------------------------------------
+  DrawPolygon draw a polygon.
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
   The first point is a fake one containing the geometry.
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void     DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
+void     DrawPolygon (int frame, int thick, int style, int x, int y,
+		      PtrTextBuffer buffer, int nb, int fg, int bg,
+		      int pattern)
 {
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
-
-   Pixmap              pat;
 
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -1320,8 +1361,7 @@ void     DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuff
    j = 1;
    for (i = 1; i < nb; i++)
      {
-	if (j >= adbuff->BuLength &&
-	    adbuff->BuNext != NULL)
+	if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
 	  {
 	    /* Next buffer */
 	    adbuff = adbuff->BuNext;
@@ -1335,35 +1375,10 @@ void     DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuff
 					  ViewFrameTable[frame - 1].FrMagnification);
 	j++;
      }
-   /* Close the polygone */
+   /* Close the polygon */
    points[nb - 1].x = points[0].x;
    points[nb - 1].y = points[0].y;
-
-   /* Fill in the polygone */
-   pat = CreatePattern (0, fg, bg, pattern);
-   if (pat != 0) 
-     {
-#ifdef _GTK
-     gdk_gc_set_tile (TtGreyGC, pat);
-     gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, nb); 
-     gdk_pixmap_unref (pat);
-#else /* _GTK */
-      XSetTile (TtDisplay, TtGreyGC, pat);
-      XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb, Complex, CoordModeOrigin);
-      XFreePixmap (TtDisplay, pat);
-#endif /* _GTK */
-     }
-
-   /* Draw the border */
-   if (thick > 0 && fg >= 0)
-     {
-      InitDrawing (style, thick, fg);
-#ifdef _GTK
-      gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, nb); 
-#else /* _GTK */
-      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
-#endif /* _GTK */
-     }
+   DoDrawPolygon (frame, thick, style, points, nb, fg, bg, pattern);
    /* free the table of points */
    free (points);
 }
@@ -1749,22 +1764,59 @@ void                DrawSpline (int frame, int thick, int style, int x, int y, P
 }
 
 /*----------------------------------------------------------------------
+  DrawCurrent
+  Draws the polyline or polygon corresponding to the list og points
+  contained in buffer points.
+  Parameter path is a pointer to the list of path segments
+  fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+static void  DrawCurrent (int frame, int thick, int style, int fg, int bg,
+			  int pattern)
+{
+  if (npoints > 1)
+    {
+      if (npoints == 2)
+	/* only two points, that's a single segment */
+	{
+	  InitDrawing (style, thick, fg);
+	  DoDrawOneLine (frame, points[0].x, points[0].y,
+			 points[1].x, points[1].y);
+	}
+      else
+	/* draw a polyline or a ploygon */
+	DoDrawPolygon (frame, thick, style, points, npoints, fg, bg, pattern);
+      npoints = 0;
+    }
+}
+
+/*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void                DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int fg, int bg, int pattern)
+void                DrawPath (int frame, int thick, int style, int x, int y,
+			      PtrPathSeg path, int fg, int bg, int pattern)
 {
   PtrPathSeg          pPa;
   float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
 
-  if (thick > 0 && fg >= 0)
+  if (thick > 0 || fg >= 0)
     {
-      InitDrawing (style, thick, fg);
       y += FrameTable[frame].FrTopMargin;
+      /* alloue la liste des points */
+      MAX_points = ALLOC_POINTS;
+      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+      npoints = 0;
       pPa = path;
       while (pPa)
 	{
+	  if (pPa->PaNewSubpath)
+	    /* this path segment starts a new subpath */
+	    /* if some points are already stored, display the line
+	       they represent */
+	    if (npoints > 1)
+	      DrawCurrent (frame, thick, style, fg, bg, pattern);
+
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
@@ -1776,14 +1828,11 @@ void                DrawPath (int frame, int thick, int style, int x, int y, Ptr
 				   ViewFrameTable[frame - 1].FrMagnification);
 	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
-	      DoDrawOneLine (frame, x1, y1, x2, y2);
+	      PolyNewPoint ((int) x1, (int) y1);
+	      PolyNewPoint ((int) x2, (int) y2);
 	      break;
 
 	    case PtCubicBezier:
-	      /* alloue la liste des points */
-	      npoints = 0;
-	      MAX_points = ALLOC_POINTS;
-	      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
@@ -1802,21 +1851,9 @@ void                DrawPath (int frame, int thick, int style, int x, int y, Ptr
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
 	      PolyNewPoint ((int) x2, (int) y2);
-#ifdef _GTK
-	      gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
-#else /* _GTK */
-	      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
-			  CoordModeOrigin);
-#endif /* _GTK */
-	      /* free the table of points */
-	      free (points);
 	      break;
 
 	    case PtQuadraticBezier:
-	      /* alloue la liste des points */
-	      npoints = 0;
-	      MAX_points = ALLOC_POINTS;
-	      points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
 	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
@@ -1831,14 +1868,6 @@ void                DrawPath (int frame, int thick, int style, int x, int y, Ptr
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2);
 	      PolyNewPoint ((int) x2, (int) y2);
-#ifdef _GTK
-	      gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
-#else /* _GTK */
-	      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
-			  CoordModeOrigin);
-#endif /* _GTK */
-	      /* free the table of points */
-	      free (points);
 	      break;
 
 	    case PtEllipticalArc:
@@ -1847,6 +1876,12 @@ void                DrawPath (int frame, int thick, int style, int x, int y, Ptr
 	    }
 	  pPa = pPa->PaNext;
 	}
+      /* if some points are left in the buffer, display the line they
+	 represent */
+      if (npoints > 1)
+	DrawCurrent (frame, thick, style, fg, bg, pattern);
+      /* free the table of points */
+      free (points);
     }
 }
 

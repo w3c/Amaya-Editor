@@ -1283,20 +1283,14 @@ Document            document;
    ystart: absolute X coordinate for the start point of the path segment
    xend:   absolute Y coordinate for the end point of the path segment
    yend:   absolute Y coordinate for the end point of the path segment
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
-PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend)
-#else  /* __STDC__ */
-PathSegment   TtaNewPathSegLine (xstart, ystart, xend, yend)
-int xstart;
-int ystart;
-int xend;
-int yend;
-#endif /* __STDC__ */
+PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend,
+				 ThotBool newSubpath)
 
 {
    PtrPathSeg       pPa;
@@ -1304,6 +1298,7 @@ int yend;
    UserErrorCode = 0;
    GetPathSeg (&pPa);
    pPa->PaShape = PtLine;
+   pPa->PaNewSubpath = newSubpath;
    pPa->XStart = xstart;
    pPa->YStart = ystart;
    pPa->XEnd = xend;
@@ -1325,33 +1320,22 @@ int yend;
    yctrl1: absolute Y coordinate for the first control point
    xctrl2: absolute X coordinate for the second control point
    yctrl2: absolute Y coordinate for the second control point
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
-				int xctrl1, int yctrl1, int xctrl2, int yctrl2)
-#else  /* __STDC__ */
-PathSegment   TtaNewPathSegCubic (xstart, ystart, xend, yend,
-				  xctrl1, yctrl1, xctrl2, yctrl2)
-int xstart;
-int ystart;
-int xend;
-int yend;
-int xctrl1;
-int yctrl1;
-int xctrl2;
-int yctrl2;
-#endif /* __STDC__ */
-
+				int xctrl1, int yctrl1, int xctrl2, int yctrl2,
+				  ThotBool newSubpath)
 {
    PtrPathSeg       pPa;
 
    UserErrorCode = 0;
    GetPathSeg (&pPa);
    pPa->PaShape = PtCubicBezier;
+   pPa->PaNewSubpath = newSubpath;
    pPa->XStart = xstart;
    pPa->YStart = ystart;
    pPa->XEnd = xend;
@@ -1375,30 +1359,21 @@ int yctrl2;
    yend:   absolute Y coordinate for the end point of the path segment
    xctrl:  absolute X coordinate for the control point
    yctrl:  absolute Y coordinate for the control point
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend,
-				    int xctrl, int yctrl)
-#else  /* __STDC__ */
-PathSegment   TtaNewPathSegQuadratic (xstart, ystart, xend, yend, xctrl, yctrl)
-int xstart;
-int ystart;
-int xend;
-int yend;
-int xctrl;
-int yctrl;
-#endif /* __STDC__ */
-
+				    int xctrl, int yctrl, ThotBool newSubpath)
 {
    PtrPathSeg       pPa;
 
    UserErrorCode = 0;
    GetPathSeg (&pPa);
    pPa->PaShape = PtQuadraticBezier;
+   pPa->PaNewSubpath = newSubpath;
    pPa->XStart = xstart;
    pPa->YStart = ystart;
    pPa->XEnd = xend;
@@ -1426,36 +1401,23 @@ int yctrl;
             the x-axis
    largearc:value for the large-arc-flag parameter
    sweep:   value for the sweep-flag parameter
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
 PathSegment   TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
 		                int xradius, int yradius, int angle,
-				ThotBool largearc, ThotBool sweep)
-#else  /* __STDC__ */
-PathSegment   TtaNewPathSegArc (xstart, ystart, xend, yend, xradius, yradius,
-				angle, largearc, sweep)
-int xstart;
-int ystart;
-int xend;
-int yend;
-int xradius;
-int yradius;
-int angle;
-ThotBool largearc;
-ThotBool sweep;
-#endif /* __STDC__ */
-
+				ThotBool largearc, ThotBool sweep,
+				ThotBool newSubpath)
 {
    PtrPathSeg       pPa;
 
    UserErrorCode = 0;
    GetPathSeg (&pPa);
    pPa->PaShape = PtEllipticalArc;
+   pPa->PaNewSubpath = newSubpath;
    pPa->XStart = xstart;
    pPa->YStart = ystart;
    pPa->XEnd = xend;
@@ -1479,17 +1441,7 @@ ThotBool sweep;
    document: the document containing the element.
 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                TtaAppendPathSeg (Element element, PathSegment segment, Document document)
-
-#else  /* __STDC__ */
-void                TtaAppendPathSeg (element, segment, document)
-Element             element;
-PathSegment         segment;
-Document            document;
-
-#endif /* __STDC__ */
 {
    PtrPathSeg       pPa, pPrevPa;
    PtrElement       pElAsc;

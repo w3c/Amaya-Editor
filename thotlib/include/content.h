@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -222,12 +222,13 @@ extern void         TtaChangeLimitOfPolyline (Element element, TypeUnit unit, in
    ystart: absolute X coordinate for the start point of the path segment
    xend:   absolute Y coordinate for the end point of the path segment
    yend:   absolute Y coordinate for the end point of the path segment
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-extern PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend);
+extern PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend, ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaNewPathSegCubic
@@ -243,12 +244,13 @@ extern PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int ye
    yctrl1: absolute Y coordinate for the first control point
    xctrl2: absolute X coordinate for the second control point
    yctrl2: absolute Y coordinate for the second control point
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-extern PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend, int xctrl1, int yctrl1, int xctrl2, int yctrl2);
+extern PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend, int xctrl1, int yctrl1, int xctrl2, int yctrl2, ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaNewPathSegQuadratic
@@ -262,12 +264,13 @@ extern PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int y
    yend:   absolute Y coordinate for the end point of the path segment
    xctrl:  absolute X coordinate for the control point
    yctrl:  absolute Y coordinate for the control point
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-extern PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend, int xctrl, int yctrl);
+extern PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend, int xctrl, int yctrl, ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaNewPathSegArc
@@ -285,12 +288,13 @@ extern PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, i
             the x-axis
    largearc:value for the large-arc-flag parameter
    sweep:   value for the sweep-flag parameter
+   newSubpath: this segment starts a new subpath
 
    Return value:
    the created path segment.
 
    ---------------------------------------------------------------------- */
-extern PathSegment   TtaNewPathSegArc (int xstart, int ystart, int xend, int yend, int xradius, int yradius, int angle, ThotBool largearc, ThotBool sweep);
+extern PathSegment   TtaNewPathSegArc (int xstart, int ystart, int xend, int yend, int xradius, int yradius, int angle, ThotBool largearc, ThotBool sweep, ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaAppendPathSeg
@@ -490,10 +494,10 @@ extern void         TtaAddPointInPolyline ( /* Element element, int rank, TypeUn
 extern void         TtaDeletePointInPolyline ( /* Element element, int rank, Document document */ );
 extern void         TtaModifyPointInPolyline ( /* Element element, int rank, TypeUnit unit, int x, int y, Document document */ );
 extern void         TtaChangeLimitOfPolyline ( /* Element element, TypeUnit unit, int x, int y, Document document */ );
-extern PathSegment  TtaNewPathSegLine ( /* int xstart, int ystart, int xend, int yend */ );
-extern PathSegment  TtaNewPathSegCubic ( /* int xstart, int ystart, int xend, int yend,	int xctrl1, int yctrl1, int xctrl2, int yctrl2 */ );
-extern PathSegment  TtaNewPathSegQuadratic ( /* int xstart, int ystart, int xend, int yend, int xctrl, int yctrl */ );
-extern PathSegment  TtaNewPathSegArc ( /* int xstart, int ystart, int xend, int yend, int xradius, int yradius, int angle, ThotBool largearc, ThotBool sweep */ );
+extern PathSegment  TtaNewPathSegLine ( /* int xstart, int ystart, int xend, int yend, ThotBool newSubpath */ );
+extern PathSegment  TtaNewPathSegCubic ( /* int xstart, int ystart, int xend, int yend,	int xctrl1, int yctrl1, int xctrl2, int yctrl2, ThotBool newSubpath */ );
+extern PathSegment  TtaNewPathSegQuadratic ( /* int xstart, int ystart, int xend, int yend, int xctrl, int yctrl, ThotBool newSubpath */ );
+extern PathSegment  TtaNewPathSegArc ( /* int xstart, int ystart, int xend, int yend, int xradius, int yradius, int angle, ThotBool largearc, ThotBool sweep, ThotBool newSubpath */ );
 extern void         TtaAppendPathSeg ( /* Element element, PathSegment segment, Document document */ );
 extern void         TtaCopyPage ( /* Element destination, Element source */ );
 extern PicType      TtaGetPictureType (/* Element element */);

@@ -1027,7 +1027,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
                 largeArcFlag, sweepFlag;
    Element      leaf;
    PathSegment  seg;
-   ThotBool     relative;
+   ThotBool     relative, newSubpath;
    STRING       text, ptr;
    CHAR_T       command, prevCommand;
 
@@ -1050,6 +1050,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
       prevCommand = WC_EOS;
       xcur = 0;
       ycur = 0;
+      newSubpath = FALSE;
       while (command != EOS)
          {
          relative = TRUE;
@@ -1074,6 +1075,7 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       }
 	     xinit = xcur;
              yinit = ycur;
+	     newSubpath = TRUE;
 	     break;
 
 	   case 'Z':
@@ -1081,8 +1083,9 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	   case 'z':
 	     /* close path */
 	     /* draw a line from (xcur, ycur) to (xinit, yinit) */
-	     seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit);
+	     seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit, newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
 	     xcur = xinit;
 	     ycur = yinit;
 	     break;
@@ -1100,8 +1103,9 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       y += ycur;
 	       }
 	     /* draw a line from (xcur, ycur) to (x, y) */
-	     seg = TtaNewPathSegLine (xcur, ycur, x, y);
+	     seg = TtaNewPathSegLine (xcur, ycur, x, y, newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
 	     xcur = x;
 	     ycur = y;
 	     break;
@@ -1115,8 +1119,9 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     if (relative)
 	       x += xcur;
 	     /* draw a line from (xcur, ycur) to (x, ycur) */
-	     seg = TtaNewPathSegLine (xcur, ycur, x, ycur);
+	     seg = TtaNewPathSegLine (xcur, ycur, x, ycur, newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
 	     xcur = x;
 	     break;
 
@@ -1129,8 +1134,9 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     if (relative)
 	       y += ycur;
 	     /* draw a line from (xcur, ycur) to (xcur, y) */
-	     seg = TtaNewPathSegLine (xcur, ycur, xcur, y);
+	     seg = TtaNewPathSegLine (xcur, ycur, xcur, y, newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
 	     ycur = y;
 	     break;
 
@@ -1157,8 +1163,10 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point at the beginning of the curve
 		and (x2, y2) as the control point at the end of the curve */
-	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2);
+	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
+				       newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
              x2prev = x2;
@@ -1196,8 +1204,10 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point at the beginning of the curve
 		and (x2, y2) as the control point at the end of the curve */
-	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2);
+	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
+				       newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
              x2prev = x2;
@@ -1222,8 +1232,9 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       }
 	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point */
-	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1);
+	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1, newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
              x1prev = x1;
@@ -1256,8 +1267,9 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       }
 	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point */
-	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1);
+	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1, newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
              x1prev = x1;
@@ -1283,8 +1295,10 @@ void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       }
 	     /* draw an elliptical arc from (xcur, ycur) to (x, y) */
 	     seg = TtaNewPathSegArc (xcur, ycur, x, y, rx, ry, xAxisRotation,
-				     largeArcFlag == 1, sweepFlag == 1);
+				     largeArcFlag == 1, sweepFlag == 1,
+				     newSubpath);
 	     TtaAppendPathSeg (leaf, seg, doc);
+	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
 	     break;

@@ -59,7 +59,8 @@ extern void TtaChangeLimitOfPolyline ( Element element,
 extern PathSegment TtaNewPathSegLine ( int xstart,
                                        int ystart,
                                        int xend,
-                                       int yend );
+                                       int yend,
+                                       ThotBool newSubpath );
 extern PathSegment TtaNewPathSegCubic ( int xstart,
                                         int ystart,
                                         int xend,
@@ -67,13 +68,15 @@ extern PathSegment TtaNewPathSegCubic ( int xstart,
                                         int xctrl1,
                                         int yctrl1,
                                         int xctrl2,
-                                        int yctrl2 );
+                                        int yctrl2,
+                                        ThotBool newSubpath );
 extern PathSegment TtaNewPathSegQuadratic ( int xstart,
                                             int ystart,
                                             int xend,
                                             int yend,
                                             int xctrl,
-                                            int yctrl );
+                                            int yctrl,
+                                            ThotBool newSubpath );
 extern PathSegment TtaNewPathSegArc ( int xstart,
                                       int ystart,
                                       int xend,
@@ -82,7 +85,8 @@ extern PathSegment TtaNewPathSegArc ( int xstart,
                                       int yradius,
                                       int angle,
                                       ThotBool largearc,
-                                      ThotBool sweep );
+                                      ThotBool sweep,
+                                      ThotBool newSubpath );
 extern void TtaAppendPathSeg ( Element element,
                                PathSegment segment,
                                Document document );
@@ -159,7 +163,8 @@ extern void TtaChangeLimitOfPolyline (/* Element element,
 extern PathSegment TtaNewPathSegLine (/* int xstart,
                                          int ystart,
                                          int xend,
-                                         int yend */);
+                                         int yend,
+                                         ThotBool newSubpath */);
 extern PathSegment TtaNewPathSegCubic (/* int xstart,
                                           int ystart,
                                           int xend,
@@ -167,13 +172,15 @@ extern PathSegment TtaNewPathSegCubic (/* int xstart,
                                           int xctrl1,
                                           int yctrl1,
                                           int xctrl2,
-                                          int yctrl2 */);
+                                          int yctrl2,
+                                          ThotBool newSubpath */);
 extern PathSegment TtaNewPathSegQuadratic (/* int xstart,
                                               int ystart,
                                               int xend,
                                               int yend,
                                               int xctrl,
-                                              int yctrl */);
+                                              int yctrl,
+                                              ThotBool newSubpath */);
 extern PathSegment TtaNewPathSegArc (/* int xstart,
                                         int ystart,
                                         int xend,
@@ -182,7 +189,8 @@ extern PathSegment TtaNewPathSegArc (/* int xstart,
                                         int yradius,
                                         int angle,
                                         ThotBool largearc,
-                                        ThotBool sweep */);
+                                        ThotBool sweep,
+                                        ThotBool newSubpath */);
 extern void TtaAppendPathSeg (/* Element element,
                                  PathSegment segment,
                                  Document document */);

@@ -250,6 +250,7 @@ typedef struct _PathSeg
 	PtrPathSeg      PaNext;	      /* Next segment in the same path */
         PtrPathSeg      PaPrevious;   /* Previous segment in the same path */
         PathSegType     PaShape;      /* Shape of that segment */
+        ThotBool        PaNewSubpath; /* This segment starts a new subpath */
         /* all coordinates are expressed in millipoint from the box origin */
         int	        XStart;	      /* coordinates of start point */
 	int	        YStart;
