@@ -266,7 +266,8 @@ void ChangeDocumentName (PtrDocument pDoc, char *newName)
 	 /* met dans le buffer le nom de la vue */
 	{
 	   pView = &pDoc->DocView[view];
-	   ChangeFrameTitle (pDoc->DocViewFrame[view], buffer);
+	   ChangeFrameTitle (pDoc->DocViewFrame[view], buffer,
+			     TtaGetDefaultCharset ());
 	}
 }
 
@@ -274,14 +275,12 @@ void ChangeDocumentName (PtrDocument pDoc, char *newName)
    TtaSetDocumentName
 
    Sets or changes the name of a document. The document must be loaded.
-
    Parameters:
    document: the document whose name is set.
    documentName: new document name. This is only the name, without any
    suffix, without directory name. See function TtaSetDocumentDirectory
    for changing the directory of a document.
    The name must not exceed 31 characters.
-
   ----------------------------------------------------------------------*/
 void TtaSetDocumentName (Document document, char *documentName)
 {

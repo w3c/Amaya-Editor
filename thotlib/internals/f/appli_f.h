@@ -46,9 +46,6 @@ extern void TtcPageTop ( Document document,
 extern void TtcPageEnd ( Document document,
                          View view );
 extern void InitializeOtherThings ( void );
-extern void TtaChangeWindowTitle ( Document document,
-                                   View view,
-                                   char *title );
 extern void TtaRaiseView ( Document document,
                            View view );
 extern void DisplaySelMessage ( char *text,
@@ -74,7 +71,8 @@ extern void TtaResetCursor ( Document document,
 extern void GiveClickedAbsBox ( int *frame,
                                 PtrAbstractBox *pAb );
 extern void ChangeFrameTitle ( int frame,
-                               char *text );
+                               char *text,
+                               CHARSET encoding );
 extern void ChangeSelFrame ( int frame );
 extern int GetWindowFrame ( ThotWindow w );
 extern void GetSizesFrame ( int frame,
@@ -133,9 +131,6 @@ extern void TtcPageTop (/* Document document,
 extern void TtcPageEnd (/* Document document,
                            View view */);
 extern void InitializeOtherThings (/* void */);
-extern void TtaChangeWindowTitle (/* Document document,
-                                     View view,
-                                     char *title */);
 extern void TtaRaiseView (/* Document document,
                              View view */);
 extern void DisplaySelMessage (/* char *text,
@@ -161,7 +156,8 @@ extern void TtaResetCursor (/* Document document,
 extern void GiveClickedAbsBox (/* int *frame,
                                   PtrAbstractBox *pAb */);
 extern void ChangeFrameTitle (/* int frame,
-                                 char *text */);
+                                 char *text,
+                                 CHARSET encoding */);
 extern void ChangeSelFrame (/* int frame */);
 extern int GetWindowFrame (/* ThotWindow w */);
 extern void GetSizesFrame (/* int frame,

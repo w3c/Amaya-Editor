@@ -74,7 +74,8 @@ extern void SwitchPaste ( PtrDocument pDoc,
                           ThotBool on );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
-                               char *texte );
+                               char *texte,
+                               CHARSET encoding );
 extern void SetCursorWatch ( int thotWindowid );
 extern void ResetCursorWatch ( int thotWindowid );
 extern void InsertOption ( PtrElement pEl,
@@ -205,7 +206,8 @@ extern void SwitchPaste (/* PtrDocument pDoc,
                             ThotBool on */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
-                                 char *texte */);
+                                 char *texte,
+                                 CHARSET encoding */);
 extern void SetCursorWatch (/* int thotWindowid */);
 extern void ResetCursorWatch (/* int thotWindowid */);
 extern void InsertOption (/* PtrElement pEl,

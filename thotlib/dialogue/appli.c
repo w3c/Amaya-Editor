@@ -1446,32 +1446,6 @@ void InitializeOtherThings ()
 }
 
 /*----------------------------------------------------------------------
-   TtaChangeWindowTitle
-   if view == 0, changes the title of all windows of document
-   otherwise change the window title of the specified view.
-  ----------------------------------------------------------------------*/
-void TtaChangeWindowTitle (Document document, View view, char *title)
-{
-  int          idwindow, v;
-  PtrDocument  pDoc;
-  
-  if (view > 0)
-    {
-      idwindow = GetWindowNumber (document, view);
-      if (idwindow > 0) 
-	ChangeFrameTitle (idwindow, title);
-    }
-  else
-    {
-      pDoc = LoadedDocument[document - 1];
-      /* traite les vues du document */
-      for (v = 0; v < MAX_VIEW_DOC; v++)
-	if (pDoc->DocView[v].DvPSchemaView > 0)
-	  ChangeFrameTitle (pDoc->DocViewFrame[v], title);
-    }
-}
-
-/*----------------------------------------------------------------------
    Map and raise the corresponding window.                          
   ----------------------------------------------------------------------*/
 void TtaRaiseView (Document document, View view)
@@ -3175,7 +3149,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 /*----------------------------------------------------------------------
   Change the window title of the frame            
   ----------------------------------------------------------------------*/
-void ChangeFrameTitle (int frame, char *text)
+void ChangeFrameTitle (int frame, char *text, CHARSET encoding)
 {
   unsigned char      *title;
 #ifndef _WINDOWS
@@ -3185,9 +3159,19 @@ void ChangeFrameTitle (int frame, char *text)
   int                 n;
   Arg                 args[MAX_ARGS];
 #endif /* _GTK  && _WINDOWS*/
-
 #ifdef _I18N_
-  title = TtaConvertMbsToByte (text, ISO_8859_1);
+  CHAR_T             *ptr;
+
+  if (encoding == TtaGetDefaultCharset ())
+    title = text;
+  else if (encoding == UTF_8)
+    title = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
+  else
+    {
+      ptr = TtaConvertByteToWC (text, encoding);
+      title = TtaConvertWCToByte (ptr, TtaGetDefaultCharset ());
+      TtaFreeMemory (ptr);
+    }
 #else /* _I18N_ */
   title = text;
 #endif /* _I18N_ */
@@ -3213,9 +3197,8 @@ void ChangeFrameTitle (int frame, char *text)
 #endif /* _GTK */
     }
 #endif /* _WINDOWS */
-#ifdef _I18N_
-  TtaFreeMemory (title);
-#endif /* _I18N_ */
+  if (title != text)
+    TtaFreeMemory (title);
 }
 
 /*----------------------------------------------------------------------

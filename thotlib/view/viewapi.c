@@ -277,27 +277,39 @@ void TtaCloseView (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   TtaChangeViewTitle
+   TtaChangeWindowTitle
 
    Changes the title of a view.
+   if view == 0, changes the title of all windows of document
+   otherwise change the window title of the specified view.
    Parameters:
    document: the document.
    view: the view.
    title: the new title.
+   encoding: the title encoding;
   ----------------------------------------------------------------------*/
-void TtaChangeViewTitle (Document document, View view, char *title)
+void TtaChangeWindowTitle (Document document, View view, char *title,
+			   CHARSET encoding)
 {
-   UserErrorCode = 0;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else if (view < 1 || view > MAX_VIEW_DOC)
-      TtaError (ERR_invalid_parameter);
-   else
-      ChangeFrameTitle (LoadedDocument[document - 1]->DocViewFrame[view - 1],
-			title);
+  int          idwindow, v;
+  PtrDocument  pDoc;
+  
+  if (document < 1 || document > MAX_DOCUMENTS)
+    return;
+  if (view > 0)
+    {
+      idwindow = GetWindowNumber (document, view);
+      if (idwindow > 0) 
+	ChangeFrameTitle (idwindow, title, encoding);
+    }
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      /* traite les vues du document */
+      for (v = 0; v < MAX_VIEW_DOC; v++)
+	if (pDoc->DocView[v].DvPSchemaView > 0)
+	  ChangeFrameTitle (pDoc->DocViewFrame[v], title, encoding);
+    }
 }
 
 

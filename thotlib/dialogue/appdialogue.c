@@ -3325,14 +3325,18 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	      it's difficulte to manipulate it */
 	   toolbar = gtk_hbox_new (FALSE, 0);
 	   gtk_widget_show (toolbar);
-	   /* Put the logo */
-	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
-						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
-						      logo_xpm);
-	   logo_pixmap = gtk_pixmap_new (amaya_pixmap, amaya_mask);
-	   gtk_widget_show (logo_pixmap);
-	   gdk_pixmap_unref (amaya_pixmap);
-	   gdk_bitmap_unref (amaya_mask);
+	   if (withButton)
+	     {
+	       /* Put the logo */
+	       amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
+							    &amaya_mask,
+							    &DefaultWindow->style->bg[GTK_STATE_NORMAL],
+							    logo_xpm);
+	       logo_pixmap = gtk_pixmap_new (amaya_pixmap, amaya_mask);
+	       gtk_widget_show (logo_pixmap);
+	       gdk_pixmap_unref (amaya_pixmap);
+	       gdk_bitmap_unref (amaya_mask);
+	     }
 #ifdef _GL
 	   /* Is opengl working ? */
 	   if(gdk_gl_query() == FALSE) 
@@ -3597,9 +3601,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   
 	   /* The hbox which includes the logo and Comboboxzone (URL) */
 	   hbox1 = gtk_hbox_new (FALSE, 5);
-	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 5);
-	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
-
+	   if (withButton)
+	     {
+	       gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 5);
+	       gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
+	     }
 	   /*box that will be used to put in combobox */
 	   hbox2 = gtk_hbox_new (FALSE, 0);
 	   gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 0);
@@ -3962,7 +3968,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   BackgroundColor[frame] = DefaultBColor;
 	 }
        else
-	 ChangeFrameTitle (frame, name);
+	 ChangeFrameTitle (frame, name, TtaGetDefaultCharset ());
 
        /* Window volume in characters */
        *volume = GetCharsCapacity (FrameTable[frame].FrWidth * FrameTable[frame].FrHeight);

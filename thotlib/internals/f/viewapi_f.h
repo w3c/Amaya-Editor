@@ -28,9 +28,10 @@ extern View TtaOpenSubView ( Document document,
                              Element subtree );
 extern void TtaCloseView ( Document document,
                            View view );
-extern void TtaChangeViewTitle ( Document document,
-                                 View view,
-                                 char *title );
+extern void TtaChangeWindowTitle ( Document document,
+                                   View view,
+                                   char *title,
+                                   CHARSET encoding );
 extern void TtaSetSensibility ( Document document,
                                 View view,
                                 int value );
@@ -108,9 +109,10 @@ extern View TtaOpenSubView (/* Document document,
                                Element subtree */);
 extern void TtaCloseView (/* Document document,
                              View view */);
-extern void TtaChangeViewTitle (/* Document document,
-                                   View view,
-                                   char *title */);
+extern void TtaChangeWindowTitle (/* Document document,
+                                     View view,
+                                     char *title,
+                                     CHARSET encoding */);
 extern void TtaSetSensibility (/* Document document,
                                   View view,
                                   int value */);

@@ -66,7 +66,8 @@ extern void TtaGetViewXYWH (Document doc, int view, int *x, int *y, int *w, int 
    name: the name of the view in P schema.  
    x, y, width, height: the frame's geometry
   ----------------------------------------------------------------------*/
-extern void TtaGetViewGeometry (Document document, char *name, int *x, int *y, int *width, int *height);
+extern void TtaGetViewGeometry (Document document, char *name, int *x,
+				int *y, int *width, int *height);
 
 /*----------------------------------------------------------------------
    TtaGetViewGeometryMM returns the position (x, y) and sizes        
@@ -75,7 +76,8 @@ extern void TtaGetViewGeometry (Document document, char *name, int *x, int *y, i
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-extern void TtaGetViewGeometryMM (Document document, char*name, int *x, int *y, int *width, int *height);
+extern void TtaGetViewGeometryMM (Document document, char*name, int *x,
+				  int *y, int *width, int *height);
 /*----------------------------------------------------------------------
    TtaOpenView
 
@@ -91,7 +93,8 @@ extern void TtaGetViewGeometryMM (Document document, char*name, int *x, int *y, 
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-extern View TtaOpenView (Document document, char *viewName, int x, int y, int w, int h);
+extern View TtaOpenView (Document document, char *viewName, int x, int y,
+			 int w, int h);
 
 /*----------------------------------------------------------------------
    TtaOpenSubView
@@ -109,20 +112,23 @@ extern View TtaOpenView (Document document, char *viewName, int x, int y, int w,
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-extern View TtaOpenSubView (Document document, char *viewName, int x, int y, int w, int h, Element subtree);
+extern View TtaOpenSubView (Document document, char *viewName, int x, int y,
+			    int w, int h, Element subtree);
 
 /*----------------------------------------------------------------------
-   TtaChangeViewTitle
+   TtaChangeWindowTitle
 
    Changes the title of a view.
-
+   if view == 0, changes the title of all windows of document
+   otherwise change the window title of the specified view.
    Parameters:
    document: the document.
    view: the view.
    title: the new title.
-
+   encoding: the encoding of the string.
   ----------------------------------------------------------------------*/
-extern void TtaChangeViewTitle (Document document, View view, char *title);
+extern void TtaChangeWindowTitle (Document document, View view, char *title,
+				  CHARSET encoding);
 
 /*----------------------------------------------------------------------
    TtaCloseView
@@ -401,15 +407,12 @@ extern void TtaListBoxes (Document document, View view, FILE *fileDescriptor);
   TtaGetThotColor returns the Thot Color.
   red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
-extern int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue);
+extern int TtaGetThotColor (unsigned short red, unsigned short green,
+			    unsigned short blue);
 
 /*----------------------------------------------------------------------
    TtaClearViewSelections unselects and clears all current displayed
    selections.                                  
   ----------------------------------------------------------------------*/
 extern void TtaClearViewSelections ( void );
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-extern void TtaChangeWindowTitle (Document doc, View view, char *title);
 #endif

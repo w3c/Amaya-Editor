@@ -1504,7 +1504,7 @@ void UpdateTitle (Element el, Document doc)
    Element             textElem, next;
    ElementType         elType;
    Language            lang;
-   char               *text;
+   char               *text, *src;
    int                 length, i, l;
 
    if (TtaGetViewFrame (doc, 1) == 0)
@@ -1540,9 +1540,18 @@ void UpdateTitle (Element el, Document doc)
 	   TtaNextSibling (&next);
 	 }
 	UpdateAtom (doc, DocumentURLs[doc], text);
-        TtaChangeWindowTitle (doc, 0, text);
-    	if (DocumentSource[doc])
-    	   TtaChangeWindowTitle (DocumentSource[doc], 0, text);
+	if (DocumentTypes[doc] != docSource)
+	  TtaChangeWindowTitle (doc, 0, text, UTF_8);
+    	if (DocumentTypes[doc] == docSource || DocumentSource[doc])
+	  {
+	    src = TtaGetMemory (length + 8);
+	    sprintf (src, "Source: %s", text);
+	    if (DocumentTypes[doc] == docSource)
+	      TtaChangeWindowTitle (doc, 1, src, UTF_8);
+	    else
+	      TtaChangeWindowTitle (DocumentSource[doc], 1, src, UTF_8);
+	    TtaFreeMemory (src);
+	  }
 	TtaFreeMemory (text);
      }
 

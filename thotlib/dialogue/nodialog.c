@@ -228,7 +228,7 @@ void UpdateScrollbars (int frame)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void ChangeFrameTitle (int frame, char *texte)
+void ChangeFrameTitle (int frame, char *texte, CHARSET encoding)
 {
 }
 

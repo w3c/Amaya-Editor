@@ -7,86 +7,85 @@ extern gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey *event, gpointer d
 extern gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data);
 extern gboolean CallTextEnterGTK (ThotWidget w,  GdkEventButton *bu, gpointer data);
 
-extern void FrameToView ( int frame,
+extern void FrameToView (int frame,
                           int *doc,
-                          int *view );
-extern void FrameToRedisplay ( ThotWindow w,
+                          int *view);
+extern void FrameToRedisplay (ThotWindow w,
                                int frame,
-                               void *ev );
-extern void FrameRedraw ( int frame,
+                               void *ev);
+extern void FrameRedraw (int frame,
                           Dimension width,
-                          Dimension height );
+                          Dimension height);
 
 extern gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data);
 
-extern void FrameHScrolledGTK ( GtkAdjustment *w,
-                             int frame );
-extern void FrameVScrolledGTK ( GtkAdjustment *w,
-                             int frame );
-extern void TtcLineUp ( Document document,
-                        View view );
-extern void TtcLineDown ( Document document,
-                          View view );
-extern void TtcPageUp ( Document document,
-                        View view );
-extern void TtcPageDown ( Document document,
-                          View view );
-extern void TtcPageTop ( Document document,
-                         View view );
-extern void TtcPageEnd ( Document document,
-                         View view );
-extern void InitializeOtherThings ( void );
-extern void TtaRaiseView ( Document document,
-                           View view );
-extern void DisplaySelMessage ( char *text,
-                                PtrDocument pDoc );
-extern void TtaSetStatus ( Document document,
+extern void FrameHScrolledGTK (GtkAdjustment *w,
+                             int frame);
+extern void FrameVScrolledGTK (GtkAdjustment *w,
+                             int frame);
+extern void TtcLineUp (Document document,
+                        View view);
+extern void TtcLineDown (Document document,
+                          View view);
+extern void TtcPageUp (Document document,
+                        View view);
+extern void TtcPageDown (Document document,
+                          View view);
+extern void TtcPageTop (Document document,
+                         View view);
+extern void TtcPageEnd (Document document,
+                         View view);
+extern void InitializeOtherThings (void);
+extern void TtaRaiseView (Document document,
+                           View view);
+extern void DisplaySelMessage (char *text,
+                                PtrDocument pDoc);
+extern void TtaSetStatus (Document document,
                            View view,
                            char *text,
-                           char *name );
-/*extern void FrameCallback ( int frame,
-  void *evnt );*/
+                           char *name);
+/*extern void FrameCallback (int frame,
+  void *evnt);*/
 extern gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data);
-extern void ThotGrab ( ThotWindow win,
+extern void ThotGrab (ThotWindow win,
                        ThotCursor cursor,
                        long events,
-                       int disp );
-extern void ThotUngrab ( void );
-extern ThotWindow TtaGetThotWindow ( int frame );
-extern void SetCursorWatch ( int thotThotWindowid );
-extern void ResetCursorWatch ( int thotThotWindowid );
-extern void TtaSetCursorWatch ( Document document,
-                                View view );
-extern void TtaResetCursor ( Document document,
-                             View view );
-extern void GiveClickedAbsBox ( int *frame,
-                                PtrAbstractBox *pave );
-extern void ChangeFrameTitle ( int frame,
-                               char *text );
-extern void ChangeSelFrame ( int frame );
-extern int GetWindowFrame ( ThotWindow w );
-extern void GetSizesFrame ( int frame,
+                       int disp);
+extern void ThotUngrab (void);
+extern ThotWindow TtaGetThotWindow (int frame);
+extern void SetCursorWatch (int thotThotWindowid);
+extern void ResetCursorWatch (int thotThotWindowid);
+extern void TtaSetCursorWatch (Document document,
+                                View view);
+extern void TtaResetCursor (Document document,
+                             View view);
+extern void GiveClickedAbsBox (int *frame,
+                                PtrAbstractBox *pave);
+extern void ChangeFrameTitle (int frame, char *text, CHARSET encoding);
+extern void ChangeSelFrame (int frame);
+extern int GetWindowFrame (ThotWindow w);
+extern void GetSizesFrame (int frame,
                             int *width,
-                            int *height );
-extern void DefineClipping ( int frame,
+                            int *height);
+extern void DefineClipping (int frame,
                              int orgx,
                              int orgy,
                              int *xd,
                              int *yd,
                              int *xf,
                              int *yf,
-                             int raz );
-extern void RemoveClipping ( int frame );
-extern void UpdateScrollbars ( int frame );
+                             int raz);
+extern void RemoveClipping (int frame);
+extern void UpdateScrollbars (int frame);
 
 
-extern void ThotInput ( int frame,
+extern void ThotInput (int frame,
                         unsigned char *string,
                         unsigned int nb,
                         int PicMask,
-                        int key );
-extern void FreeTranslations ( void );
-extern ThotTranslations InitTranslations ( char *appliname );
+                        int key);
+extern void FreeTranslations (void);
+extern ThotTranslations InitTranslations (char *appliname);
 
 extern gboolean APP_TextCallbackGTK (GtkWidget *w, int frame);
 

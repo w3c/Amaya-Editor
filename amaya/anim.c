@@ -2630,7 +2630,7 @@ static void Build_timeline (Document basedoc, char* timelineName)
   root = NULL;
 
   /* create the document */
-  dt[basedoc].timelinedoc = TtaInitDocument ("Timeline", timelineName, 0);
+  dt[basedoc].timelinedoc = TtaInitDocument ("Timeline", "Timeline", 0);
   TtaSetPSchema (dt[basedoc].timelinedoc, "TimelineP");
 
   /* get customizable default position & size*/
@@ -2769,33 +2769,11 @@ static void Build_timeline (Document basedoc, char* timelineName)
   dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc,
 					      x_timeline, y_timeline,
 					      w_timeline, h_timeline,
-					      FALSE, TRUE);
+					      FALSE, FALSE);
 
   if (dt[basedoc].timelineView)
-    {
-      TtaChangeViewTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView, timelineName);
-#ifdef IV
-      TtcSwitchButtonBar (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no button bar */
-      TtcSwitchCommands (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no command open */
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, New1);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtmlBasic);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtmlStrict);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtml11);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtmlTransitional);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BMathml);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BSvg);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BTemplate);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BCss);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BOpenDoc);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BOpenInNewWindow);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BReload);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, Edit_, BSpellCheck);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, Edit_, BTransform);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, Views, TShowButtonbar);
-      TtaSetItemOff (dt[basedoc].timelinedoc, 1, Views, TShowTextZone);
-      TtaSetMenuOff (dt[basedoc].timelinedoc, 1, Special);
-#endif /* IV */
-    }
+    TtaChangeWindowTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView,
+			  timelineName, TtaGetDefaultCharset ());
   else
     {
       TtaCloseDocument (dt[basedoc].timelinedoc);
