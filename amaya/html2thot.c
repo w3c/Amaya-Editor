@@ -4555,7 +4555,7 @@ STRING              prefix;
 #define MAX_ENTITY_LENGTH 80
    CHAR_T	 buffer[MAX_ENTITY_LENGTH];
 
-   if (lang == currentLanguage)
+   if (lang == currentLanguage) 
       PutInBuffer ((char)c);
    else
       {
@@ -4654,7 +4654,7 @@ CHAR_T                c;
       if (CharEntityTable[EntityTableEntry].charCode > 255)
 	 PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode, TEXT(""));
       else
-	 PutInBuffer ((char)(CharEntityTable[EntityTableEntry].charCode));
+	 PutInBuffer (CharEntityTable[EntityTableEntry].charCode); 
    else
       /* entity not in the table. Print an error message */
      {
@@ -5886,14 +5886,14 @@ STRING	           pathURL;
 {
   Element             parent, el, prev;
   ElementType         elType;
-  CHAR_T              charRead;
+  UCHAR_T             charRead;
   ThotBool            endOfFile;
 
   InputText = textbuf;
   LgBuffer = 0;
   endOfFile = FALSE;
   NumberOfCharRead = 0;
-  NumberOfLinesRead = 1;
+  NumberOfLinesRead = 1; 
 
   /* initialize input buffer */
   charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
