@@ -147,10 +147,6 @@ typedef struct _Window_Ctl {
   
   ThotControl 	Button[MAX_BUTTON];               /* List of toolbar button Widgets */
   Proc          Call_Button[MAX_BUTTON];          /* List of toolbar button Callbacks  */
-
-  Proc          Call_Panel_XHTML[MAX_BUTTON];     /* callbacks for XHTML panel */
-  const char *  Tooltip_Panel_XHTML[MAX_BUTTON];  /* tooltips for XHTML panel */
-
 } Window_Ctl;
 
 #endif /* #if defined(_WX) */
@@ -158,4 +154,4 @@ typedef struct _Window_Ctl {
 
 #endif /* !NODISPLAY */
 
-#endif
+#endif /* _FRAME_H */

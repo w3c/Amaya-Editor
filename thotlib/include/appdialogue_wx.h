@@ -39,7 +39,6 @@ extern int TtaAddToolBarButton( int window_id,
 				void (*procedure) (),
 				ThotBool status );
 extern void TtaSetupPanel( int type,
-			   int window_id,
 			   int button_id,
 			   const char * tooltip,
 			   void (*procedure) () );

@@ -19,6 +19,7 @@
 #include "paneltypes_wx.h"
 #include "message_wx.h"
 #include "registry_wx.h"
+#include "panel.h"
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
@@ -28,6 +29,11 @@
 #include "profiles_f.h"
 #include "displayview_f.h"
 
+/* implement panel array */
+#define THOT_EXPORT
+#include "panel_tv.h"
+
+#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "boxparams_f.h"
@@ -1163,7 +1169,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
 	    return;
 
 	  /* refresh the subpanel with button stats */
-	  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel, (void*)p_checked_array );
+	  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), (void*)p_checked_array );
 	}
     }
 #endif /* _WX */
@@ -1225,25 +1231,15 @@ void TtaSwitchPanelButton( Document doc, View view,
   returns:
   ----------------------------------------------------------------------*/
 void TtaSetupPanel( int panel_type,
-		    int window_id,
 		    int button_id,
 		    const char * tooltip,
 		    void (*procedure) () )
 {
 #ifdef _WX
-  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
-  wxASSERT( p_window );
-  if ( !p_window || p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
-    return;
-
-  // register the callback
-  switch (panel_type)
-    {
-    case WXAMAYA_PANEL_XHTML:
-      WindowTable[window_id].Tooltip_Panel_XHTML[button_id] = tooltip;
-      WindowTable[window_id].Call_Panel_XHTML[button_id]    = procedure;
-      break;
-    }
+  wxASSERT( button_id >= 0 && button_id < MAX_BUTTON );
+  // register the callback & tooltips
+  PanelTable[WXAMAYA_PANEL_XHTML].Tooltip_Panel[button_id] = tooltip;
+  PanelTable[WXAMAYA_PANEL_XHTML].Call_Panel[button_id]    = procedure;
 #endif /* _WX */
 }
 
@@ -1291,21 +1287,12 @@ void APP_Callback_PanelButtonActivate (int type, int frame_id, int button_id)
   if ( button_id < MAX_BUTTON &&
        button_id >= 0 )
     {
-      // get the parent window
-      int window_id = FrameTable[frame_id].FrWindowId;
-      if ( window_id < 0 )
-	return; /* there is no parents */
-
       CloseTextInsertion ();
       FrameToView (frame_id, &document, &view);
       TtaSetButtonActivatedStatus (TRUE);
-      switch (type)
-	{
-	case WXAMAYA_PANEL_XHTML:
-	  if (WindowTable[window_id].Call_Panel_XHTML[button_id])
-	    (*(Proc2)WindowTable[window_id].Call_Panel_XHTML[button_id]) ((void *)document, (void *)view);
-	  break;
-	}
+      Proc2 p_callback = (Proc2)PanelTable[WXAMAYA_PANEL_XHTML].Call_Panel[button_id];
+      if (p_callback)
+	(*(Proc2)p_callback) ((void *)document, (void *)view);
       TtaSetButtonActivatedStatus (FALSE);
     }
 #endif /* _WX */

@@ -54,6 +54,7 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   :  wxPanel( wxDynamicCast( p_parent_window, wxWindow ),
 	      id, pos, size, style )
      ,m_pPanel_xhtml(NULL)
+     ,m_pPanel_attribute(NULL)
      ,m_pParentNWindow(p_parent_nwindow)
 {
   wxLogDebug( _T("AmayaPanel::AmayaPanel") );

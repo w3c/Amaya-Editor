@@ -77,7 +77,6 @@ extern void TtaSwitchPanelButton ( Document doc,
                                    int button_id,
                                    ThotBool value );
 extern void TtaSetupPanel ( int panel_type,
-                            int window_id,
                             int button_id,
                             const char * tooltip,
                             void (*procedure) () );
@@ -161,7 +160,6 @@ extern void TtaSwitchPanelButton ( Document doc,
                                      int button_id,
                                      ThotBool value );
 extern void TtaSetupPanel ( int panel_type,
-                              int window_id,
                               int button_id,
                               const char * tooltip,
                               void (*procedure) () );

@@ -6,6 +6,8 @@
 #include "AmayaFloatingPanel.h"
 #include "AmayaSubPanel.h"
 #include "AmayaSubPanelManager.h"
+#include "AmayaXHTMLPanel.h"
+#include "AmayaAttributePanel.h"
 
 /*
  *--------------------------------------------------------------------------------------
@@ -14,24 +16,34 @@
  * Description:  construct a floating panel (bookmarks, elements, attributes ...)
  *--------------------------------------------------------------------------------------
  */
-AmayaFloatingPanel::AmayaFloatingPanel( AmayaSubPanel * p_subpanel
+AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
+					,AmayaSubPanel * p_subpanel
 					,wxWindowID     id
 					,const wxPoint& pos
 					,const wxSize&  size
 					,long style
 					)
-  : wxFrame( p_subpanel, id, _T("AmayaFloatingPanel"), pos, size, style )
-    ,m_pPanel(p_subpanel)
+  : wxFrame( p_parent, id, _T("AmayaFloatingPanel"), pos, size, style )
+    ,m_pParentSubPanel(p_subpanel)
 {
-  wxString xrc_id = m_pPanel->GetPanelType();
-  wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - id=")+xrc_id );
+  m_pPanel = NULL;
+  switch (m_pParentSubPanel->GetPanelType())
+    {
+    case WXAMAYA_PANEL_XHTML:
+      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_XHTML"));
+      m_pPanel = new AmayaXHTMLPanel( this );
+      break;
+    case WXAMAYA_PANEL_ATTRIBUTE:
+      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_ATTRIBUTE"));
+      m_pPanel = new AmayaAttributePanel( this );
+      break;
+    }
 
   // load resource, and take only the interesting part
-  wxPanel * p_panel_copy = wxXmlResource::Get()->LoadPanel(this, xrc_id);
-  m_pPanelContentDetach = (wxPanel *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_PANEL_CONTENT_DETACH")), p_panel_copy);
+  //  wxPanel * p_panel_copy = wxXmlResource::Get()->LoadPanel(this, xrc_id);
+  m_pPanelContentDetach = (wxPanel *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_PANEL_CONTENT_DETACH")), m_pPanel);
   //  m_pPanelContentParent = m_pPanelContent->GetParent();
-  m_pPanelContentDetach->Reparent(this);
-  p_panel_copy->Destroy();
+  //  m_pPanelContentDetach->Reparent(this);
   
   // set the frame title
   wxStaticText * p_title_widget = (wxStaticText *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_LABEL_TITLE")), m_pPanel);
@@ -40,7 +52,7 @@ AmayaFloatingPanel::AmayaFloatingPanel( AmayaSubPanel * p_subpanel
   // insert the subpanel into the frame
   m_pTopSizer = new wxBoxSizer( wxVERTICAL );
   SetSizer(m_pTopSizer);
-  m_pTopSizer->Add( m_pPanelContentDetach, 1, wxALL | wxEXPAND , 0 );
+  m_pTopSizer->Add( m_pPanel /*m_pPanelContentDetach*/, 1, wxALL | wxEXPAND , 0 );
   m_pTopSizer->Fit(this);
   
   Layout();
@@ -69,11 +81,9 @@ void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
 {
   wxLogDebug(_T("AmayaFloatingPanel - OnClose") );
 
-  AmayaSubPanelManager::GetInstance()->DoUnfloat( m_pPanel );
-  Hide();
+  AmayaSubPanelManager::GetInstance()->DoUnfloat( m_pParentSubPanel );
 
-  // do not skip this event, we want to keep this floating window in order to update it
-  //  event.Skip();
+  event.Skip();
 }
 
 /*
@@ -89,6 +99,7 @@ void AmayaFloatingPanel::Raise()
   wxWindow::Raise();
 }
 
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFloatingPanel
@@ -100,6 +111,7 @@ wxPanel * AmayaFloatingPanel::GetPanelContentDetach()
 {
   return m_pPanelContentDetach;
 }
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared

@@ -37,6 +37,7 @@
 #define MAX_WINDOW 40		/* Maximum number of displayed windows */
 #define MAX_WINDOW_PAGE 2	/* Maximum number of window pages (a page is a tab) */
 #define MAX_FRAME 40		/* Maximum number of displayed views */
+#define MAX_PANEL 40		/* Maximum number of displayed panels */
 #define MAX_SIZE 65535		/* Maximum size of system structures */
 #define MAX_UNDERLINE 4		/* Max. number of styles of underlining in use*/ 
 #define MAX_UNDER_THICK 2	/* Maximum thickness of underlining */

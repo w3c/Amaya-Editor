@@ -34,6 +34,7 @@
 #include "AmayaNormalWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaFloatingPanel.h"
+#include "AmayaSubPanelManager.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
 
@@ -53,7 +54,15 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
 {
   wxLogDebug( _T("AmayaAttributePanel::AmayaAttributePanel") );
 
-  AssignDataPanelReferences();
+  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  m_pVPanelParent       = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
+  m_pVPanelSizer  = m_pVPanelParent->GetSizer();
+  m_pAttrList     = XRCCTRL(*m_pPanelContentDetach, "wxID_CLIST_ATTR", wxCheckListBox);      
+  m_pAutoRefresh  = XRCCTRL(*m_pPanelContentDetach, "wxID_CHECK_AUTOREF", wxCheckBox);
+  m_pPanel_Lang   = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_LANG", wxPanel);
+  m_pPanel_Text   = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_TEXT", wxPanel);
+  m_pPanel_Enum   = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_ENUM", wxPanel);
+  m_pPanel_Num    = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_NUM", wxPanel);
 
   m_pVPanelSizer->Show( m_pPanel_Lang, false );
   m_pVPanelSizer->Show( m_pPanel_Text, false );
@@ -69,6 +78,9 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
   m_pPanel_Enum->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_VALUE_OF_ATTR)));
   m_pPanel_Text->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_VALUE_OF_ATTR)));
   m_pPanel_Lang->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_VALUE_OF_ATTR)));
+
+  // register myself to the manager, so I will be avertised that another panel is floating ...
+  m_pManager->RegisterSubPanel( this );
 }
 
 /*
@@ -84,33 +96,19 @@ AmayaAttributePanel::~AmayaAttributePanel()
   wxLogDebug( _T("AmayaAttributePanel::~AmayaAttributePanel") );
 }
 
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaAttributePanel
- *      Method:  AssignDataPanelReferences
- * Description:  assign right references depending on floating state
+ *      Method:  GetPanelType
+ * Description:  
  *--------------------------------------------------------------------------------------
  */
-void AmayaAttributePanel::AssignDataPanelReferences()
+int AmayaAttributePanel::GetPanelType()
 {
-  if (IsFloating())
-    {
-      m_pPanelContentDetach = XRCCTRL(*m_pFloatingPanel, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-      m_pVPanelParent       = XRCCTRL(*m_pFloatingPanel, "wxID_PANEL_ATTRVALUE", wxPanel);
-    }
-  else
-    {
-      m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-      m_pVPanelParent       = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
-    }
-  m_pVPanelSizer  = m_pVPanelParent->GetSizer();
-  m_pAttrList     = XRCCTRL(*m_pPanelContentDetach, "wxID_CLIST_ATTR", wxCheckListBox);      
-  m_pAutoRefresh  = XRCCTRL(*m_pPanelContentDetach, "wxID_CHECK_AUTOREF", wxCheckBox);
-  m_pPanel_Lang   = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_LANG", wxPanel);
-  m_pPanel_Text   = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_TEXT", wxPanel);
-  m_pPanel_Enum   = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_ENUM", wxPanel);
-  m_pPanel_Num    = XRCCTRL(*m_pPanelContentDetach, "wxID_ATTRIBUTE_NUM", wxPanel);
+  return WXAMAYA_PANEL_ATTRIBUTE;
 }
+
 
 /*----------------------------------------------------------------------
   IsFreezed check if the attribute list should be updated or not
@@ -136,7 +134,7 @@ void AmayaAttributePanel::SendDataToPanel( void * param1, void * param2, void * 
   int nb_attr_evt               = (int)param5;
   const int * p_active_attr_evt = (const int *)param6;
 
-  wxLogDebug(_T("AmayaAttributePanel - UpdateAttributeList") );
+  wxLogDebug(_T("AmayaAttributePanel::SendDataToPanel") );
 
   m_NbAttr     = nb_attr;
   m_NbAttr_evt = nb_attr_evt;
@@ -518,6 +516,7 @@ void AmayaAttributePanel::ForceAttributeUpdate()
  */
 void AmayaAttributePanel::DoUpdate()
 {
+  wxLogDebug( _T("AmayaAttributePanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
   ForceAttributeUpdate();  
 }

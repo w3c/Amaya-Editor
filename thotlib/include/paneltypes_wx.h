@@ -6,7 +6,10 @@
 /* use to differenciate panel types */
 typedef enum
   {
-    WXAMAYA_PANEL_XHTML
+    WXAMAYA_PANEL_UNKNOWN,
+    WXAMAYA_PANEL_XHTML,
+    WXAMAYA_PANEL_ATTRIBUTE,
+    WXAMAYA_PANEL_TYPE_NB
   } wxAMAYA_PANEL_TYPE;
 
 typedef enum

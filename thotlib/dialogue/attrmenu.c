@@ -35,11 +35,11 @@
 #endif /* _WINGUI */
 
 #ifdef _WX
-  #include "AmayaWindow.h"
-  #include "AmayaPanel.h"
-  #include "AmayaAttributePanel.h"
-  #include "AmayaSubPanelManager.h"
-  #include "appdialogue_wx.h"
+#include "AmayaWindow.h"
+#include "AmayaPanel.h"
+#include "AmayaAttributePanel.h"
+#include "AmayaSubPanelManager.h"
+#include "appdialogue_wx.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
@@ -1120,7 +1120,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 
 #ifdef _WX
   /* update the attribute dialog */
-  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_dlg,
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE,
 							(void*)bufMenuAttr, (void*)nbItemAttr, (void*)ActiveAttr,
 							(void*)bufEventAttr, (void*)nbEvent, (void*)ActiveEventAttr );
 #endif /* _WX */

@@ -27,7 +27,7 @@ class AmayaSubPanelManager
 
   bool RegisterSubPanel( AmayaSubPanel * p_panel );
   bool UnregisterSubPanel( AmayaSubPanel * p_panel );
-  void SendDataToPanel( AmayaSubPanel * p_panel,
+  void SendDataToPanel( int panel_type,
 			void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
 			void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
   void UnExpand( AmayaSubPanel * p_panel );

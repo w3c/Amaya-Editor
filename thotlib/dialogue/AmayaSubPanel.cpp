@@ -58,15 +58,14 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
      ,m_State( (wxAMAYA_SPANEL_EXPANDED & ~wxAMAYA_SPANEL_FLOATING) )
      ,m_DoUnfloat_Lock(false)
      ,m_pParentNWindow(p_parent_nwindow)
-     ,m_PanelType(panel_xrcid)
 {
-  wxLogDebug( _T("AmayaSubPanel::AmayaSubPanel: ")+m_PanelType);
+  wxLogDebug( _T("AmayaSubPanel::AmayaSubPanel: ")+panel_xrcid);
 
   // keep a reference on my manager
   m_pManager = AmayaSubPanelManager::GetInstance();
 
   // load resource
-  m_pPanel = wxXmlResource::Get()->LoadPanel(this, m_PanelType);
+  m_pPanel = wxXmlResource::Get()->LoadPanel(this, panel_xrcid);
   m_pTopSizer = new wxBoxSizer( wxVERTICAL );
   SetSizer(m_pTopSizer);
   m_pTopSizer->Add( m_pPanel, 1, wxALL | wxEXPAND , 0 );
@@ -84,13 +83,12 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   m_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "expand_off.gif" ) );
 
   // create a presistant floating panel, it will be shown or hidden depanding on user choice
-  m_pFloatingPanel = new AmayaFloatingPanel( this, -1 );
-  m_pFloatingPanel->Hide(); // not floating by default
+  m_pFloatingPanel = NULL;
+  //  m_pFloatingPanel = new AmayaFloatingPanel( this, -1 );
+  //  m_pFloatingPanel->Hide(); // not floating by default
 
   // setup labels
   XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTACHDETACH)));
-  // register myself to the manager, so I will be avertised that another panel is floating ...
-  m_pManager->RegisterSubPanel( this );
 }
 
 /*
@@ -105,9 +103,10 @@ AmayaSubPanel::~AmayaSubPanel()
 {
   // unregister myself to the manager, so nothing should be asked to me in future
   m_pManager->UnregisterSubPanel( this );
-  
+
   // destroy manualy the floating panel because it seems that it stay alive
-  m_pFloatingPanel->Destroy();
+  if ( m_pFloatingPanel )
+    m_pFloatingPanel->Destroy();
   m_pFloatingPanel = NULL;
 }
 
@@ -159,10 +158,13 @@ void AmayaSubPanel::DoFloat()
   wxLogDebug( _T("AmayaSubPanel::DoFloat") );
 
   // setup panel style
-  wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  /*  wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
   p_panel_detach->SetWindowStyle( p_panel_detach->GetWindowStyle() & ~wxSIMPLE_BORDER );
+  */
 
   // open the floating panel
+  if (!m_pFloatingPanel)
+    m_pFloatingPanel = new AmayaFloatingPanel( m_pParentNWindow, this );
   m_pFloatingPanel->SetPosition(wxGetMousePosition());
   m_pFloatingPanel->Raise();
   //  m_pPanel_xhtml     = new AmayaXHTMLPanel( this, p_parent_nwindow );
@@ -185,11 +187,14 @@ void AmayaSubPanel::DoUnfloat()
   wxLogDebug( _T("AmayaSubPanel::DoUnfloat") );
 
   // close the floating window
-  m_pFloatingPanel->Hide();
+  if (m_pFloatingPanel)
+    m_pFloatingPanel->Destroy();
+  m_pFloatingPanel = NULL;
 
   // setup panel style
-  wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+  /*  wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
   p_panel_detach->SetWindowStyle( p_panel_detach->GetWindowStyle() | wxSIMPLE_BORDER );
+  */
 
   GetParent()->Layout();
   Refresh();
@@ -348,9 +353,9 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
  * Description:  
  *--------------------------------------------------------------------------------------
  */
-wxString AmayaSubPanel::GetPanelType()
+int AmayaSubPanel::GetPanelType()
 {
-  return m_PanelType;
+  return WXAMAYA_PANEL_UNKNOWN;
 }
 
 /*
@@ -411,17 +416,6 @@ void AmayaSubPanel::Raise()
 
 /*
  *--------------------------------------------------------------------------------------
- *       Class:  AmayaAttributePanel
- *      Method:  AssignDataPanelReferences
- * Description:  assign right references depending on floating state
- *--------------------------------------------------------------------------------------
- */
-void AmayaSubPanel::AssignDataPanelReferences()
-{
-}
-
-/*
- *--------------------------------------------------------------------------------------
  *       Class:  AmayaSubPanel
  *      Method:  GetPanelContent
  * Description:  returns the panel content detachable, this content depends on owner panel type
@@ -441,6 +435,7 @@ wxPanel * AmayaSubPanel::GetPanelContentDetach()
  */
 void AmayaSubPanel::SendDataToPanel( void * param1, void * param2, void * param3, void * param4, void * param5, void * param6 )
 {
+  wxLogDebug( _T("AmayaSubPanel::SendDataToPanel") );
 }
 
 /*----------------------------------------------------------------------

@@ -21,14 +21,16 @@
 #include "paneltypes_wx.h"
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
+#include "panel.h"
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
+#include "panel_tv.h"
 
 #include "AmayaXHTMLPanel.h"
 #include "AmayaNormalWindow.h"
-#include "AmayaFrame.h"
 #include "AmayaFloatingPanel.h"
+#include "AmayaSubPanelManager.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaXHTMLPanel, AmayaSubPanel)
 
@@ -45,8 +47,15 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
 {
   wxLogDebug( _T("AmayaXHTMLPanel::AmayaXHTMLPanel") );
 
+  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+
+  RefreshToolTips();
+  
   m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
   m_OnColour  = wxColour(250, 200, 200);
+
+  // register myself to the manager, so I will be avertised that another panel is floating ...
+  m_pManager->RegisterSubPanel( this );
 }
 
 /*
@@ -65,14 +74,25 @@ AmayaXHTMLPanel::~AmayaXHTMLPanel()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
+ *      Method:  GetPanelType
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaXHTMLPanel::GetPanelType()
+{
+  return WXAMAYA_PANEL_XHTML;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaXHTMLPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
  *--------------------------------------------------------------------------------------
  */
 void AmayaXHTMLPanel::RefreshToolTips()
 {  
-  wxASSERT(m_pParentNWindow);
-  const char ** p_tooltip_array = WindowTable[m_pParentNWindow->GetWindowId()].Tooltip_Panel_XHTML;
+  const char ** p_tooltip_array = PanelTable[WXAMAYA_PANEL_XHTML].Tooltip_Panel;
   XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_STRONG]));
   XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_EMPH])); 
   XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_CODE]));
@@ -128,7 +148,7 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
   
   if (amaya_id != -1)
     APP_Callback_PanelButtonActivate ( WXAMAYA_PANEL_XHTML,
-				       m_pParentNWindow->GetActiveFrame()->GetFrameId(),
+				       TtaGiveActiveFrame(),
 				       amaya_id );
 }
 
@@ -142,6 +162,8 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
 void AmayaXHTMLPanel::SendDataToPanel( void * param1, void * param2, void * param3, void * param4, void * param5, void * param6 )
 {
   bool * p_checked_array = (bool *)param1;
+
+  wxLogDebug(_T("AmayaXHTMLPanel::SendDataToPanel") );
 
   if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
     XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
@@ -162,26 +184,6 @@ void AmayaXHTMLPanel::SendDataToPanel( void * param1, void * param2, void * para
   Layout();
 }
 
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaXHTMLPanel
- *      Method:  AssignDataPanelReferences
- * Description:  assign right references depending on floating state
- *--------------------------------------------------------------------------------------
- */
-void AmayaXHTMLPanel::AssignDataPanelReferences()
-{
-  if (IsFloating())
-    {
-      m_pPanelContentDetach = XRCCTRL(*m_pFloatingPanel, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-    }
-  else
-    {
-      m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-    }
-}
-
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
@@ -191,6 +193,7 @@ void AmayaXHTMLPanel::AssignDataPanelReferences()
  */
 void AmayaXHTMLPanel::DoUpdate()
 {
+  wxLogDebug( _T("AmayaXHTMLPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
   
   // force to refresh the strong, emphasis... button states

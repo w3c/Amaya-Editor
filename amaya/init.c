@@ -2692,18 +2692,18 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   /* Init panels */
 
 	   /* XHTML */
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_EMPH, TtaGetMessage(AMAYA,AM_BUTTON_ITALICS), (Proc)SetOnOffEmphasis );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_STRONG, TtaGetMessage(AMAYA,AM_BUTTON_BOLD), (Proc)SetOnOffStrong );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_CODE, TtaGetMessage(AMAYA,AM_BUTTON_CODE), (Proc)SetOnOffCode );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_H1, TtaGetMessage(AMAYA,AM_BUTTON_H1), (Proc)CreateHeading1 );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_H2, TtaGetMessage(AMAYA,AM_BUTTON_H2), (Proc)CreateHeading2 );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_H3, TtaGetMessage(AMAYA,AM_BUTTON_H3), (Proc)CreateHeading3 );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_BULLET, TtaGetMessage(AMAYA,AM_BUTTON_UL), (Proc)CreateList );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_NL, TtaGetMessage(AMAYA,AM_BUTTON_OL), (Proc)CreateNumberedList );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_DL, TtaGetMessage(AMAYA,AM_BUTTON_DL), (Proc)CreateDefinitionList );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_IMG, TtaGetMessage(AMAYA,AM_BUTTON_IMG), (Proc)CreateImage );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, window_id, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, TtaGetMessage(AMAYA,AM_BUTTON_ITALICS), (Proc)SetOnOffEmphasis );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG, TtaGetMessage(AMAYA,AM_BUTTON_BOLD), (Proc)SetOnOffStrong );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE, TtaGetMessage(AMAYA,AM_BUTTON_CODE), (Proc)SetOnOffCode );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H1, TtaGetMessage(AMAYA,AM_BUTTON_H1), (Proc)CreateHeading1 );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H2, TtaGetMessage(AMAYA,AM_BUTTON_H2), (Proc)CreateHeading2 );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H3, TtaGetMessage(AMAYA,AM_BUTTON_H3), (Proc)CreateHeading3 );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_BULLET, TtaGetMessage(AMAYA,AM_BUTTON_UL), (Proc)CreateList );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_NL, TtaGetMessage(AMAYA,AM_BUTTON_OL), (Proc)CreateNumberedList );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_DL, TtaGetMessage(AMAYA,AM_BUTTON_DL), (Proc)CreateDefinitionList );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_IMG, TtaGetMessage(AMAYA,AM_BUTTON_IMG), (Proc)CreateImage );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
+	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
 	   TtaRefreshPanelTooltips( window_id );
 #endif /* _WX */
 
@@ -6959,6 +6959,24 @@ void InitAmaya (NotifyEvent * event)
    /* we're not linking an external CSS */
    LinkAsCSS = FALSE;
    LinkAsXmlCSS = FALSE;
+
+#ifdef _WX
+   /* Init panels */
+   /* XHTML */
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, TtaGetMessage(AMAYA,AM_BUTTON_ITALICS), (Proc)SetOnOffEmphasis );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG, TtaGetMessage(AMAYA,AM_BUTTON_BOLD), (Proc)SetOnOffStrong );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE, TtaGetMessage(AMAYA,AM_BUTTON_CODE), (Proc)SetOnOffCode );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H1, TtaGetMessage(AMAYA,AM_BUTTON_H1), (Proc)CreateHeading1 );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H2, TtaGetMessage(AMAYA,AM_BUTTON_H2), (Proc)CreateHeading2 );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H3, TtaGetMessage(AMAYA,AM_BUTTON_H3), (Proc)CreateHeading3 );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_BULLET, TtaGetMessage(AMAYA,AM_BUTTON_UL), (Proc)CreateList );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_NL, TtaGetMessage(AMAYA,AM_BUTTON_OL), (Proc)CreateNumberedList );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_DL, TtaGetMessage(AMAYA,AM_BUTTON_DL), (Proc)CreateDefinitionList );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_IMG, TtaGetMessage(AMAYA,AM_BUTTON_IMG), (Proc)CreateImage );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
+   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
+#endif /* _WX */
+
 
    /* initialize icons */
 #ifdef _WX

@@ -24,6 +24,8 @@ public:
 		       ,AmayaNormalWindow * p_parent_nwindow = NULL );
   virtual ~AmayaAttributePanel();
 
+  virtual int GetPanelType();
+
   void ForceAttributeUpdate();
 
   /*  void UpdateAttributeList( const char * p_attr_list, int nb_attr, const int * p_active_attr,
@@ -44,7 +46,6 @@ public:
  protected:
   virtual void SendDataToPanel( void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
 				void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
-  virtual void AssignDataPanelReferences();
   virtual void DoUpdate();
 
  public:

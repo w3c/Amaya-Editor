@@ -18,7 +18,8 @@ class AmayaSubPanel;
 class AmayaFloatingPanel : public wxFrame
 {
 public:
-  AmayaFloatingPanel( AmayaSubPanel * p_subpanel    = NULL
+  AmayaFloatingPanel( wxWindow * p_parent = NULL
+		      ,AmayaSubPanel * p_subpanel = NULL
 		      ,wxWindowID     id             = -1
 		      ,const wxPoint& pos            = wxDefaultPosition
 		      ,const wxSize&  size           = wxDefaultSize
@@ -28,11 +29,7 @@ public:
 		      wxCAPTION |
 		      wxCLOSE_BOX | 
 		      wxSTAY_ON_TOP |
-#if 0
-		      // this flag is usefull on GTK but the wxFrame must be a child of a top window.
-		      // for the moment, the wxFrame is not a child of the top window but a AmayaSubPanel (wxPanel) child.
 		      wxFRAME_FLOAT_ON_PARENT |
-#endif /* 0 */ 
 		      wxFRAME_NO_TASKBAR |
 #ifdef _WINDOWS
 		      // on GTK this flag should do nothing but there is a strange bug when it is activated.
@@ -44,7 +41,7 @@ public:
   virtual ~AmayaFloatingPanel();
 
   void Raise();
-  wxPanel * GetPanelContentDetach();
+  //  wxPanel * GetPanelContentDetach();
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -52,6 +49,7 @@ public:
 
   wxBoxSizer * m_pTopSizer;
 
+  AmayaSubPanel * m_pParentSubPanel;
   AmayaSubPanel * m_pPanel;
   wxPanel *       m_pPanelContentDetach;
 

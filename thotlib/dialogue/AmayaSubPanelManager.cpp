@@ -1,5 +1,6 @@
 #ifdef _WX
 
+#include "paneltypes_wx.h"
 #include "AmayaSubPanelManager.h"
 
 // the only requirement for the rest is to be AFTER the full declaration of
@@ -51,9 +52,34 @@ bool AmayaSubPanelManager::RegisterSubPanel( AmayaSubPanel * p_panel )
   if (!m_RegistredPanel.Find(p_panel))
     {
       m_RegistredPanel.Append(p_panel);
+      
+      // the panel must be updated
+      p_panel->ShouldBeUpdated();
+      p_panel->DoUpdate();
+
+      // the panel states must be synchronized depending on other panel stats
+      AmayaSubPanel * floating_panel = NULL;
+      for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node && !floating_panel; node = node->GetNext() )
+	{
+	  AmayaSubPanel * current = node->GetData();
+	  if ( current->GetPanelType() == p_panel->GetPanelType() )
+	    if ( current->GetState() & AmayaSubPanel::wxAMAYA_SPANEL_FLOATING )
+	      // oupss there is already a floating panel of same type
+	      floating_panel = current;
+	}
+      if (floating_panel)
+	  p_panel->ChangeState( p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_FLOATING);
+      
       ret = true;
     }
+
   DebugSubPanelList();
+
+  if (ret)
+    wxLogDebug( _T("AmayaSubPanelManager::RegisterSubPanel : OK") );
+  else
+    wxLogDebug( _T("AmayaSubPanelManager::RegisterSubPanel : !OK") );   
+
   return ret;
 }
 
@@ -66,14 +92,24 @@ bool AmayaSubPanelManager::RegisterSubPanel( AmayaSubPanel * p_panel )
  */
 bool AmayaSubPanelManager::UnregisterSubPanel( AmayaSubPanel * p_panel )
 {
-  wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel") );
-
   // take care to not delete an existing node
   bool ret = false;
   SubPanelList::Node* p_node = m_RegistredPanel.Find(p_panel);
   if (p_node)
-    ret = m_RegistredPanel.DeleteNode(p_node);
+    {
+      // force to the unfloting state
+      DoUnfloat( p_panel );
+      
+      ret = m_RegistredPanel.DeleteNode(p_node);
+    }
+
   DebugSubPanelList();
+  
+  if (ret)
+    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel : OK") );
+  else
+    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel : !OK") );   
+
   return ret;
 }
 
@@ -239,7 +275,7 @@ void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
     }
 
   // force the panel to refresh its floating panel
-  p_panel->AssignDataPanelReferences();
+  //  p_panel->AssignDataPanelReferences();
 
   // the panel should be updated because floating state change
   p_panel->ShouldBeUpdated();
@@ -267,7 +303,7 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
   // besure that the panel has right unfloating state before switching references
   p_panel->ChangeState( p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING );
   // force the panel to refresh its side-panel
-  p_panel->AssignDataPanelReferences();
+  //  p_panel->AssignDataPanelReferences();
   // the panel should be updated because floating state change
   p_panel->ShouldBeUpdated();
 
@@ -296,22 +332,16 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
  * Description:  distribute new values to the given panel and all its brothers
  *--------------------------------------------------------------------------------------
  */
-void AmayaSubPanelManager::SendDataToPanel( AmayaSubPanel * p_panel,
+void AmayaSubPanelManager::SendDataToPanel( int panel_type,
 					    void * param1, void * param2, void * param3,
 					    void * param4, void * param5, void * param6 )
 {
-  if (!p_panel)
-    return;
-
-  // send data to each registred panel which have same type as p_panel
+  // send data to each registred panel which have same type
   for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node ; node = node->GetNext() )
     {
       AmayaSubPanel * current = node->GetData();
-      if ( current->GetPanelType() == p_panel->GetPanelType() )
-	{
-	  wxLogDebug( _T("AmayaSubPanelManager::SendDataToPanel [p_panel=%x]"), current );
-	  current->SendDataToPanel( param1, param2, param3, param4, param5, param6 );
-	}
+      if ( current->GetPanelType() == panel_type )
+	current->SendDataToPanel( param1, param2, param3, param4, param5, param6 );
     }
 }
 

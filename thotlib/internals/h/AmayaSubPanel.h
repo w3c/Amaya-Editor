@@ -5,11 +5,12 @@
 
 #include "wx/wx.h"
 #include "wx/panel.h"
+#include "paneltypes_wx.h"
 
 class AmayaFloatingPanel;
 class AmayaNormalWindow;
 class AmayaSubPanelManager;
- 
+
 /*
  *  Description:  - AmayaSubPanel contains a sub-panel (xhtml, ...)
  *       Author:  Stephane GULLY
@@ -42,10 +43,10 @@ class AmayaSubPanel : public wxPanel
 	      );
   virtual ~AmayaSubPanel();
 
-  wxString GetPanelType();
-  bool     IsExpanded();
-  bool     IsFloating();
-  bool     IsVisible();
+  virtual int GetPanelType();
+  bool        IsExpanded();
+  bool        IsFloating();
+  bool        IsVisible();
 
   void ShouldBeUpdated( bool should_update = true );
   
@@ -59,6 +60,7 @@ class AmayaSubPanel : public wxPanel
  protected:
   virtual void SendDataToPanel( void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
 				void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
+  virtual void DoUpdate();
 
   void UnExpand();
   void Expand();
@@ -74,9 +76,6 @@ class AmayaSubPanel : public wxPanel
   DECLARE_EVENT_TABLE()
   void OnExpand( wxCommandEvent& event );
   void OnDetach( wxCommandEvent& event );
-
-  virtual void DoUpdate();
-  virtual void AssignDataPanelReferences();
 
  protected:
   AmayaNormalWindow * m_pParentNWindow;
