@@ -421,7 +421,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td>173</td>
       <td>- (moins)</td>
       <td>-</td>
-      <td>&173;</td>
+      <td>&#173;</td>
     </tr>
     <tr>
       <td class="name">iacute</td>
