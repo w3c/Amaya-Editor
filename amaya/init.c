@@ -1558,7 +1558,9 @@ NotifyEvent        *event;
    iconDL = TtaCreatePixmapLogo (DL_xpm);
    iconLink = TtaCreatePixmapLogo (Link_xpm);
    iconTable = TtaCreatePixmapLogo (Table_xpm);
+#ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
+#endif
 
    TargetName = NULL;
    /* initialize temporary directory for loaded files */
