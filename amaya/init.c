@@ -811,10 +811,10 @@ Document            doc;
        TtaChangeButton (document, 1, 5, iconEditor);
 #endif /* _WINDOWS */
        /* change the document status */
-       if (DocumentTypes[document] == docHTML)
-	 DocumentTypes[document] = docReadOnly;
-       else if (DocumentTypes[document] == docImage)
-	 DocumentTypes[document] = docImageRO;
+       if (DocumentTypes[document] == docReadOnly)
+	 DocumentTypes[document] = docHTML;
+       else if (DocumentTypes[document] == docImageRO)
+	 DocumentTypes[document] = docImage;
        TtaSetDocumentAccessMode (document, 1);
        /* update windows menus */
 
@@ -1157,7 +1157,7 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
    TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
-   TtaSetTextForm (BaseDialog + NameText, NameText);
+   TtaSetTextForm (BaseDialog + NameText, Answer_name);
    TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
@@ -1165,7 +1165,7 @@ View                view;
    if (Answer_password[0] == EOS)
      {
        /* no password, retry */
-       TtaSetTextForm (BaseDialog + NameText, NameText);
+       TtaSetTextForm (BaseDialog + NameText, Answer_name);
        TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
        TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
        TtaWaitShowDialogue ();

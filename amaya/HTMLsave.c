@@ -570,39 +570,47 @@ char             *documentName;
 
 #endif
 {
-   char                tempname[MAX_LENGTH];
-   char                docname[100];
-   boolean             ok;
+  DisplayMode         dispMode;
+  char                tempname[MAX_LENGTH];
+  char                docname[100];
+  boolean             ok;
 
 DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);)
 
-   strcpy (tempname, directoryName);
-   strcat (tempname, DIR_STR);
-   strcat (tempname, documentName);
-   if (SaveAsText) 
-     {
+  strcpy (tempname, directoryName);
+  strcat (tempname, DIR_STR);
+  strcat (tempname, documentName);
+  /* suspend the redisplay due to the temporary update of attributes
+     STYLE and META-CONTENT */
+  dispMode = TtaGetDisplayMode (SavingDocument);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (SavingDocument, DeferredDisplay);
+  if (SaveAsText) 
+    {
       SetInternalLinks (SavingDocument);
       ok = TtaExportDocument (SavingDocument, tempname, "HTMLTT");
-     }
-   else
-     {
-       SetNamespacesAndDTD (SavingDocument);
-       if (SaveAsXML)
-	 ok = TtaExportDocument (SavingDocument, tempname, "HTMLTX");
-       else
-         ok = TtaExportDocument (SavingDocument, tempname, "HTMLT");
-       if (ok)
-	 {
-	   TtaSetDocumentDirectory (SavingDocument, directoryName);
-	   strcpy (docname, documentName);
-	   ExtractSuffix (docname, tempname);
-	   /* Change the document name in all views */
-	   TtaSetDocumentName (SavingDocument, docname);
-	   TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-	   TtaSetDocumentUnmodified (SavingDocument);
-	 }
-     }
-   return (ok);
+    }
+  else
+    {
+      SetNamespacesAndDTD (SavingDocument);
+      if (SaveAsXML)
+	ok = TtaExportDocument (SavingDocument, tempname, "HTMLTX");
+      else
+	ok = TtaExportDocument (SavingDocument, tempname, "HTMLT");
+      if (ok)
+	{
+	  TtaSetDocumentDirectory (SavingDocument, directoryName);
+	  strcpy (docname, documentName);
+	  ExtractSuffix (docname, tempname);
+	  /* Change the document name in all views */
+	  TtaSetDocumentName (SavingDocument, docname);
+	  TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+	  TtaSetDocumentUnmodified (SavingDocument);
+	}
+    }
+  /* retore the redisplay */
+  TtaSetDisplayMode (SavingDocument, dispMode);
+  return (ok);
 }
 
 /*----------------------------------------------------------------------
@@ -768,6 +776,7 @@ boolean             with_images;
 #endif
 {
   LoadedImageDesc *pImage;
+  DisplayMode      dispMode;
   char            *tempname;
   char            *msg;
   int              remainder = 10000;
@@ -785,8 +794,15 @@ boolean             with_images;
     return (FALSE);
 
   /* First step : build the output and ask for confirmation */
-  SetNamespacesAndDTD (SavingDocument);
+  SetNamespacesAndDTD (document);
+  /* suspend the redisplay due to the temporary update of attributes
+     STYLE and META-CONTENT */
+  dispMode = TtaGetDisplayMode (document);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (document, DeferredDisplay);
   TtaExportDocument (document, tempname, "HTMLT");
+  /* retore the redisplay */
+  TtaSetDisplayMode (document, dispMode);
   res = 0;
   if (confirm && with_images)
     {

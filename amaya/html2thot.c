@@ -3170,8 +3170,9 @@ Element             el;
 	 }
 
 #ifndef STANDALONE
+       /* detect whether we're parsing a whole table or just a cell */
        if (WithinTable == 0)
-	 NewCell (el, theDocument);
+	 NewCell (el, theDocument, FALSE);
 #endif /* STANDALONE */
        break;
 

@@ -915,13 +915,15 @@ Document            doc;
 
 /*----------------------------------------------------------------------
   NewCell  a new cell has been created in a HTML table.
+  If genrateColumn is TRUE, the new cell adds a new column.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewCell (Element cell, Document doc)
+void                NewCell (Element cell, Document doc, boolean genrateColumn)
 #else
-void                NewCell (cell, doc)
+void                NewCell (cell, doc, genrateColumn)
 Element             cell;
 Document            doc;
+boolean             genrateColumn;
 #endif
 {
   Element             newcell, row;
@@ -973,7 +975,9 @@ Document            doc;
 	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
 	}
+      /* get the enclosing row element */
       row = TtaGetTypedAncestor (cell, elType);
+      /* locate the previous or the next column head */
       colhead = NULL;
       TtaPreviousSibling (&cell);
       if (cell == NULL)
@@ -1010,7 +1014,15 @@ Document            doc;
 	}
       if (colhead != NULL)
 	{
-	  colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath);
+	  if (genrateColumn)
+	    /* generate the new column */
+	    colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath);
+	  else if (before)
+	    /* select the previous column */
+	    TtaPreviousSibling (&colhead);
+	  else
+	    /* select the next column */
+	    TtaNextSibling (&colhead);
 	  /* relate the new cell to the new colhead */
 	  RelateCellWithColumnHead (newcell, colhead, doc, inMath);
 	}
@@ -1053,7 +1065,7 @@ NotifyElement      *event;
      }
    else
      /* a new cell in an existing row */
-     NewCell (cell, doc);
+     NewCell (cell, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1085,7 +1097,7 @@ NotifyElement      *event;
    else
      {
        /* a single cell has been pasted */
-       NewCell (cell, doc);
+       NewCell (cell, doc, TRUE);
        CurrentPastedRow = NULL;
      }
 }

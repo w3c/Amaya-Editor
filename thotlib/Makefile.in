@@ -257,7 +257,7 @@ DIALOGUE_OBJ = \
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CC) $(CFLAGS) $(INCLUDES) -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \
-	   -DCOMPILED_IN_THOTDIR2=\"@datadir@/thot\" \
+	   -DCOMPILED_IN_THOTDIR2=\"@prefix@/thot\" \
 	   -DMACHINE=\"$(MACHINE)\" -c @srcdir@/base/registry.c -o $@
 
 libThotKernel : directories libThotKernel.a

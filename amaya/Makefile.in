@@ -40,7 +40,6 @@ AMAYA	= @top_srcdir@/amaya
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
-datadir = @prefix@
 bindir = @bindir@
 math_schema: $(amaya_math_schema)
 graph_schema: $(amaya_graph_schema)
@@ -294,40 +293,41 @@ html2piv: ../bin/html2piv
 	@$(ECHO) "====>" html2piv is done
 
 install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL)
-	@(if test ! -d $(datadir) ; then $(MKDIR) $(datadir) ; fi)
-	@(if test ! -d $(datadir)/thot ; then $(MKDIR) $(datadir)/thot ; fi)
-	@(if test ! -d $(datadir)/thot/amaya ; then $(MKDIR) $(datadir)/thot/amaya ; fi)
-	@(if test ! -d $(datadir)/thot/config ; then $(MKDIR) $(datadir)/thot/config ; fi)
-	@(if test ! -d $(datadir)/thot/fonts ; then $(MKDIR) $(datadir)/thot/fonts ; fi)
-	@(if test ! -d $(datadir)/thot/dicopar ; then $(MKDIR) $(datadir)/thot/dicopar ; fi)
-	@(if test ! -d $(datadir)/thot/doc ; then $(MKDIR) $(datadir)/thot/doc ; fi)
-	@(if test ! -d $(datadir)/thot/applis ; then $(MKDIR) $(datadir)/thot/applis ; fi)
-	@(if test ! -d $(datadir)/thot/applis/bin ; then $(MKDIR) $(datadir)/thot/applis/bin ; fi)
-	$(INSTALL_BIN) ../bin/amaya $(datadir)/thot/applis/bin
-	$(INSTALL_BIN) ../bin/print $(datadir)/thot/applis/bin
+	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
+	@(if test ! -d $(prefix)/thot ; then $(MKDIR) $(prefix)/thot ; fi)
+	@(if test ! -d $(prefix)/thot/amaya ; then $(MKDIR) $(prefix)/thot/amaya ; fi)
+	@(if test ! -d $(prefix)/thot/config ; then $(MKDIR) $(prefix)/thot/config ; fi)
+	@(if test ! -d $(prefix)/thot/fonts ; then $(MKDIR) $(prefix)/thot/fonts ; fi)
+	@(if test ! -d $(prefix)/thot/dicopar ; then $(MKDIR) $(prefix)/thot/dicopar ; fi)
+	@(if test ! -d $(prefix)/thot/doc ; then $(MKDIR) $(prefix)/thot/doc ; fi)
+	@(if test ! -d $(prefix)/thot/applis ; then $(MKDIR) $(prefix)/thot/applis ; fi)
+	@(if test ! -d $(prefix)/thot/applis/bin ; then $(MKDIR) $(prefix)/thot/applis/bin ; fi)
+	$(INSTALL_BIN) ../bin/amaya $(prefix)/thot/applis/bin
+	$(INSTALL_BIN) ../bin/print $(prefix)/thot/applis/bin
 	$(RM) $(bindir)/amaya
-	$(LN_S) $(datadir)/thot/applis/bin/amaya $(bindir)/amaya
+	$(LN_S) $(prefix)/thot/applis/bin/amaya $(bindir)/amaya
 	(for i in $(AMAYAFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/thot/amaya ; \
+	    $(INSTALL_DATA) $$file $(prefix)/thot/amaya ; \
 	  done ; done)
 	(for i in $(CONFIGFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/thot/config 2>/dev/null || true ; \
+	    $(INSTALL_DATA) $$file $(prefix)/thot/config 2>/dev/null || true ; \
 	  done ; done)
 	(for i in $(DICOFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/thot/dicopar ; \
+	    $(INSTALL_DATA) $$file $(prefix)/thot/dicopar ; \
 	  done ; done)
-	$(CP) -r $(THOTDIR)/doc/Icons $(datadir)/thot/doc
-	$(CP) -r $(THOTDIR)/doc/amaya $(datadir)/thot/doc
+	$(CP) -r $(THOTDIR)/doc/Icons $(prefix)/thot/doc
+	$(CP) -r $(THOTDIR)/doc/amaya $(prefix)/thot/doc
 	(for i in $(FONTSFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/thot/fonts ; \
+	    $(INSTALL_DATA) $$file $(prefix)/thot/fonts ; \
 	  done ; done)
 
 uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL)
-	$(RM) -rf $(datadir)/thot
+	$(RM) -rf $(prefix)/thot
+	$(RM) $(bindir)/amaya
 
 CEXTRACT= ../bin/cextract
 

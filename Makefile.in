@@ -22,7 +22,6 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
 bindir = @bindir@
-datadir = @prefix@
 
 srcdir	= $(THOTDIR)
 
@@ -89,13 +88,13 @@ install : rebuild
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
 	  cd .. ; fi ;done )
+	$(RM) -rf $(prefix)/share/thot
 
 uninstall : 
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" uninstall ; \
 	  cd .. ; fi ;done )
-	$(RM) -rf $(datadir)/thot
 
 update :
 	@(cd $(THOTDIR) ; cvs update)

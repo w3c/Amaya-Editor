@@ -104,6 +104,7 @@ MENUS
 	Types.Lists button:BDefinition -> CreateDefinitionDef;
 
 	Types.Math button:BDisplayMath -> CreateMath;
+	Types.Math Separator;
         Types.Math button:BNthRoot -> CreateMROOT;
         Types.Math button:BSquareRoot -> CreateMSQRT;
         Types.Math button:BFraction -> CreateMFRAC;

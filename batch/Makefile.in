@@ -17,7 +17,6 @@ INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ $(X_FLAGS)
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
-datadir = @prefix@
 
 COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/tra ../bin/app
 
@@ -68,7 +67,7 @@ GRM_OBJ= \
 	grammar.o 
 
 grm : ../thotlib/libThotKernel.a ../bin ../bin/grm
-	
+	 
 
 ../bin/grm : $(GRM_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(GRM_OBJ) $(LIBS)
@@ -84,7 +83,7 @@ STR_OBJ = \
 	str.o
 
 str : STRUCT.GRM ../thotlib/libThotKernel.a ../bin ../bin/str
-	
+	 
 
 ../bin/str : $(STR_OBJ) $(GRMS) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(STR_OBJ) $(LIBS)
@@ -100,7 +99,7 @@ PRS_OBJ = \
 	prs.o
 
 prs : PRESEN.GRM ../thotlib/libThotKernel.a ../bin ../bin/prs
-	
+	 
 
 ../bin/prs : $(PRS_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(PRS_OBJ) $(LIBS)
@@ -116,7 +115,7 @@ TYP_OBJ = \
 	typ.o
 
 typ : TYP.GRM ../thotlib/libThotKernel.a ../bin ../bin/typ
-	
+	 
 
 ../bin/typ : $(TYP_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(TYP_OBJ) $(LIBS)
@@ -132,7 +131,7 @@ TRA_OBJ = \
 	tra.o
 
 tra : TRANS.GRM ../thotlib/libThotKernel.a ../bin ../bin/tra
-	
+	 
 
 ../bin/tra : $(TRA_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(TRA_OBJ) $(LIBS)
@@ -149,7 +148,7 @@ APP_OBJ = \
 	app.o
 
 app : APP.GRM ../thotlib/libThotKernel.a ../bin ../bin/app
-	
+	 
 
 ../bin/app : $(APP_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(APP_OBJ) $(LIBS)
@@ -162,7 +161,7 @@ RESCAN_OBJ = \
 	rescandialogue.o
 
 rescandialogue : ../bin ../bin/rescandialogue
-	
+	 
 
 ../bin/rescandialogue : $(RESCAN_OBJ)
 	$(CC) -o $@ $(RESCAN_OBJ)
@@ -175,7 +174,7 @@ PRINTSTR_OBJ = \
 	printstr.o
 
 printstr : ../thotlib/libThotKernel.a ../bin ../bin/printstr
-	
+	 
 
 ../bin/printstr : $(PRINTSTR_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(PRINTSTR_OBJ) $(LIBS)
@@ -189,7 +188,7 @@ PRINTPRS_OBJ = \
 	printprs.o
 
 printprs : ../thotlib/libThotKernel.a ../bin ../bin/printprs
-	
+
 
 ../bin/printprs : $(PRINTPRS_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(PRINTPRS_OBJ) $(LIBS)
@@ -203,8 +202,7 @@ PRINTTYP_OBJ = \
 	printtyp.o
 
 printtyp : ../thotlib/libThotKernel.a ../bin ../bin/printtyp
-	
-
+	 
 
 ../bin/printtyp : $(PRINTTYP_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(PRINTTYP_OBJ) $(LIBS)
@@ -217,9 +215,6 @@ clean :
 install :
 
 uninstall :
-	(for i in $(COMPILERS) ; do \
-	  $(RM) $(datadir)/thot/applis/bin/$$i ; done)
-	$(RM) -rf $(datadir)/thot/batch
 
 include .depends
 
