@@ -92,6 +92,7 @@ static MathEntity        MathEntityTable[] =
    {TEXT("Ogr"), 79, 'G'},
    {TEXT("Omega"), 87, 'G'},
    {TEXT("Or"), 218, 'G'},
+   {TEXT("OverBar"), 95, 'L'},
    {TEXT("PI"), 213, 'G'},
    {TEXT("PartialD"), 182, 'G'},
    {TEXT("Phi"), 70, 'G'},
@@ -121,6 +122,7 @@ static MathEntity        MathEntityTable[] =
    {TEXT("ThinSpace"), 129, 'L'},
    {TEXT("Tilde"), 126, 'L'},
    {TEXT("TripleDot"), 188, 'G'},
+   {TEXT("UnderBar"), 45, 'L'},
    {TEXT("Union"), 200, 'G'},
    {TEXT("UpArrow"), 173, 'G'},
    {TEXT("Upsi"), 85, 'G'},
@@ -282,7 +284,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("alignmentscope"), TEXT(""), 'A', MathML_ATTR_alignmentscope},
    {TEXT("alt"), TEXT(""), 'A', MathML_ATTR_alt},
    {TEXT("background"), TEXT(""), 'A', MathML_ATTR_background_},
-   {TEXT("beveled"), TEXT(""), 'A', MathML_ATTR_beveled},
+   {TEXT("bevelled"), TEXT(""), 'A', MathML_ATTR_bevelled},
    {TEXT("class"), TEXT(""), 'A', MathML_ATTR_class},
    {TEXT("close"), TEXT(""), 'A', MathML_ATTR_close},
    {TEXT("columnalign"), TEXT(""), 'A', MathML_ATTR_columnalign},
@@ -358,8 +360,8 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_accentunder, TEXT("true"), MathML_ATTR_accentunder_VAL_true},
  {MathML_ATTR_accentunder, TEXT("false"), MathML_ATTR_accentunder_VAL_false},
 
- {MathML_ATTR_beveled, TEXT("true"), MathML_ATTR_beveled_VAL_true},
- {MathML_ATTR_beveled, TEXT("false"), MathML_ATTR_beveled_VAL_false},
+ {MathML_ATTR_bevelled, TEXT("true"), MathML_ATTR_bevelled_VAL_true},
+ {MathML_ATTR_bevelled, TEXT("false"), MathML_ATTR_bevelled_VAL_false},
 
  {MathML_ATTR_denomalign, TEXT("center"), MathML_ATTR_denomalign_VAL_center_},
  {MathML_ATTR_denomalign, TEXT("left"), MathML_ATTR_denomalign_VAL_left_},
@@ -687,7 +689,7 @@ Element el;
       elType.ElTypeNum == MathML_EL_MSPACE ||
       elType.ElTypeNum == MathML_EL_MROW ||
       elType.ElTypeNum == MathML_EL_MFRAC ||
-      elType.ElTypeNum == MathML_EL_BeveledMFRAC ||
+      elType.ElTypeNum == MathML_EL_BevelledMFRAC ||
       elType.ElTypeNum == MathML_EL_MSQRT ||
       elType.ElTypeNum == MathML_EL_MROOT ||
       elType.ElTypeNum == MathML_EL_MSTYLE ||
@@ -1591,7 +1593,10 @@ void SetFontstyleAttr (el, doc)
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr, IntAttr;
+  Element       textEl;
   int		len;
+  STRING        value;
+  ThotBool      italic;
 
   if (el != NULL)
      {
@@ -1607,7 +1612,7 @@ void SetFontstyleAttr (el, doc)
 	   internal attribute that is not needed */
 	{
 	if (IntAttr != NULL)
-	TtaRemoveAttribute (el, IntAttr, doc);
+	  TtaRemoveAttribute (el, IntAttr, doc);
 	}
      else
 	/* there is no fontstyle attribute. Create an internal attribute
@@ -1628,10 +1633,48 @@ void SetFontstyleAttr (el, doc)
 	   }
         else
 	   /* MI contains a single character. Remove attribute IntFontstyle
-	      if it exists */
+	      if it exists, except if it's ImaginaryI, ExponentialE or
+	      DifferentialD. */
 	   {
-	   if (IntAttr != NULL)
-	      TtaRemoveAttribute (el, IntAttr, doc);
+	   italic = TRUE;
+	   textEl = TtaGetFirstChild (el);
+	   if (textEl != NULL)
+	     {
+	     /* is there an attribute EntityName on that character? */
+	     attrType.AttrTypeNum = MathML_ATTR_EntityName;
+	     attr = TtaGetAttribute (textEl, attrType);
+	     if (attr)
+	       {
+	       len = TtaGetTextAttributeLength (attr);
+	       if (len > 0)
+		  {
+		  value = TtaAllocString (len+1);
+		  TtaGiveTextAttributeValue (attr, value, &len);
+		  if (ustrcmp (value, TEXT("&ImaginaryI;")) == 0 ||
+		      ustrcmp (value, TEXT("&ExponentialE;")) == 0 ||
+		      ustrcmp (value, TEXT("&DifferentialD;")) == 0)
+		    italic = FALSE;
+		  TtaFreeMemory (value);
+		  }
+	       }
+	     if (italic)
+	       {
+		 if (IntAttr != NULL)
+		   TtaRemoveAttribute (el, IntAttr, doc);
+	       }
+	     else
+	       {
+		 /* put an attribute IntFontstyle = IntNormal */
+		 if (IntAttr == NULL)
+		   {
+		     attrType.AttrTypeNum = MathML_ATTR_IntFontstyle;
+		     IntAttr = TtaNewAttribute (attrType);
+		     TtaAttachAttribute (el, IntAttr, doc);
+		   }
+		 TtaSetAttributeValue (IntAttr, MathML_ATTR_IntFontstyle_VAL_IntNormal,
+				       el, doc);
+	       }
+	     }
 	   }
         }
      }
@@ -2164,7 +2207,7 @@ Document	doc;
 	    }
 	  break;
        case MathML_EL_MFRAC:
-       case MathML_EL_BeveledMFRAC:
+       case MathML_EL_BevelledMFRAC:
 	  /* end of a fraction. Create a Numerator and a Denominator */
 	  CheckMathSubExpressions (el, MathML_EL_Numerator,
 				   MathML_EL_Denominator, 0, doc);
@@ -2349,15 +2392,15 @@ Document	doc;
    int               val, length;
  
    TtaGiveAttributeType (attr, &attrType, &attrKind);
-   if (attrType.AttrTypeNum == MathML_ATTR_beveled)
+   if (attrType.AttrTypeNum == MathML_ATTR_bevelled)
      {
        val = TtaGetAttributeValue (attr);
-       if (val == MathML_ATTR_beveled_VAL_true)
-	 /* beveled = true.  Transform MFRAC into BeveledMFRAC */
+       if (val == MathML_ATTR_bevelled_VAL_true)
+	 /* bevelled = true.  Transform MFRAC into BevelledMFRAC */
 	 {
 	 elType = TtaGetElementType (el);
 	 if (elType.ElTypeNum == MathML_EL_MFRAC)
-	    ChangeTypeOfElement (el, doc, MathML_EL_BeveledMFRAC);
+	    ChangeTypeOfElement (el, doc, MathML_EL_BevelledMFRAC);
 	 }
      }
    else if (attrType.AttrTypeNum == MathML_ATTR_color ||

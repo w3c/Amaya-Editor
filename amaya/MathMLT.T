@@ -113,7 +113,7 @@ RULES
 	create SCT after;
 	create 'mfrac>\12' after;
 	end;
-   BeveledMFRAC:
+   BevelledMFRAC:
 	begin
 	create SOT;
 	create 'mfrac';
@@ -842,15 +842,15 @@ ATTRIBUTES
 	create 'denomalign="right"';
 	end;
 
-   beveled = true:
+   bevelled = true:
 	begin
 	create SAN;
-	create ' beveled="true"';
+	create ' bevelled="true"';
 	end;
-   beveled = false:
+   bevelled = false:
 	begin
 	create SAN;
-	create ' beveled="false"';
+	create ' bevelled="false"';
 	end;
 
    notation = longdiv:

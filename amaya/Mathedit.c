@@ -3423,7 +3423,7 @@ void MathElementDeleted(event)
 
       case MathML_EL_Numerator:		/* a Numerator has been deleted */
       case MathML_EL_Denominator:	/* a Denominator has been deleted */
-	/* remove the enclosing MFRAC or BeveledMFRAC */
+	/* remove the enclosing MFRAC or BevelledMFRAC */
 	newTypeNum = -1;
 	break;
 
@@ -3787,15 +3787,15 @@ void AttrStretchyChanged (event)
 }
 
 /*----------------------------------------------------------------------
- AttrBeveledChanged
- Attribute beveled in a mfrac element has been modified or deleted
+ AttrBevelledChanged
+ Attribute bevelled in a mfrac element has been modified or deleted
  by the user.
- Change the type of the element (MFRAC/BeveledMFRAC) accordingly.
+ Change the type of the element (MFRAC/BevelledMFRAC) accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void AttrBeveledChanged (NotifyAttribute *event)
+void AttrBevelledChanged (NotifyAttribute *event)
 #else /* __STDC__*/
-void AttrBeveledChanged (event)
+void AttrBevelledChanged (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
@@ -3806,10 +3806,10 @@ void AttrBeveledChanged (event)
     {
     elType = TtaGetElementType (event->element);
     if (elType.ElTypeNum != MathML_EL_MFRAC &&
-	elType.ElTypeNum != MathML_EL_BeveledMFRAC)
+	elType.ElTypeNum != MathML_EL_BevelledMFRAC)
         return;
     if (event->attribute == NULL)
-	/* Attribute beveled has been deleted */
+	/* Attribute bevelled has been deleted */
       {
 	/* type should be MFRAC if it's present */
 	if (elType.ElTypeNum != MathML_EL_MFRAC)
@@ -3817,23 +3817,23 @@ void AttrBeveledChanged (event)
 				MathML_EL_MFRAC);
       }
     else
-      /* attribute beveled has been created or modified */
+      /* attribute bevelled has been created or modified */
       {
 	/* get its new value */
         val = TtaGetAttributeValue (event->attribute);
-        if (val == MathML_ATTR_beveled_VAL_false)
+        if (val == MathML_ATTR_bevelled_VAL_false)
 	  {
 	    /* element type should be MFRAC */
 	    if (elType.ElTypeNum != MathML_EL_MFRAC)
 	      ChangeTypeOfElement (event->element, event->document,
 				   MathML_EL_MFRAC);
 	  }
-	else if (val == MathML_ATTR_beveled_VAL_true)
+	else if (val == MathML_ATTR_bevelled_VAL_true)
 	  {
-	    /* element type should be BeveledMFRAC */
-	    if (elType.ElTypeNum != MathML_EL_BeveledMFRAC)
+	    /* element type should be BevelledMFRAC */
+	    if (elType.ElTypeNum != MathML_EL_BevelledMFRAC)
 	      ChangeTypeOfElement (event->element, event->document,
-				   MathML_EL_BeveledMFRAC);
+				   MathML_EL_BevelledMFRAC);
 	  }
       }
     }

@@ -8,6 +8,7 @@ PRESENTATION MathML;
 VIEWS
    Formatted_view, Math_Structure_view;
 
+#define SCRIPTSIZEMULTIPLIER 70 %
 #define OPERATOR_SPACE 0.27
 #define ROOT_OFFSET 0.6
 #define STRUCT_INDENT 1.5
@@ -1237,8 +1238,8 @@ BOXES
                 END;
         END;
 
- ATTR_beveled_true: BEGIN
-        Content: Text ' beveled=true';
+ ATTR_bevelled_true: BEGIN
+        Content: Text ' bevelled=true';
         Visibility: 0;
         IN Math_Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -1248,8 +1249,8 @@ BOXES
                 Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
                 END;
         END;
- ATTR_beveled_false: BEGIN
-        Content: Text ' beveled=false';
+ ATTR_bevelled_false: BEGIN
+        Content: Text ' bevelled=false';
         Visibility: 0;
         IN Math_Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -2176,7 +2177,7 @@ BOXES
 		Visibility: 0;
 	END;
 
- BeveledBar:	{ fraction bar, beveled style }
+ BevelledBar:	{ fraction bar, bevelled style }
 	BEGIN
 	LineWeight: 1 pt;
 	Height: Enclosing . Height - 0.4;
@@ -2491,6 +2492,10 @@ RULES
 	CreateFirst (Bar);
 	HorizRef: Enclosed Bar . Bottom + 0.1;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        if within MFRAC
+		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        if within BevelledMFRAC
+		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -2500,13 +2505,17 @@ RULES
 		END;
 	END;
 
-   BeveledMFRAC:
+   BevelledMFRAC:
 	BEGIN
 	CreateBefore(MFRAC_S);
 	CreateWith(VerticalLine);
-	CreateFirst (BeveledBar);
+	CreateFirst (BevelledBar);
 	HorizRef: Enclosed Numerator . HRef + 0.2;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+        if within MFRAC
+		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+        if within BevelledMFRAC
+		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -2518,7 +2527,7 @@ RULES
 
    Numerator:
 	BEGIN
-        if Immediately within BeveledMFRAC
+        if Immediately within BevelledMFRAC
 	   BEGIN
 	   HorizRef: Enclosed . HRef;
 	   VertPos: nil;
@@ -2538,10 +2547,10 @@ RULES
 
    Denominator:
         BEGIN
-        if immediately within BeveledMFRAC
+        if immediately within BevelledMFRAC
 	   BEGIN
 	   HorizRef: Enclosed . HRef;
-	   HorizPos: Left = BeveledBar . Right - 0.1;
+	   HorizPos: Left = BevelledBar . Right - 0.1;
 	   VertPos: HRef = Numerator . HRef + 0.4;
 	   END;
         if immediately within MFRAC
@@ -2668,7 +2677,7 @@ RULES
 
    Superscript:
 	BEGIN
-	Size: Enclosing * 70 %;
+	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Bottom = Base . Top + 0.9;
@@ -2681,7 +2690,7 @@ RULES
 
    Subscript:
 	BEGIN
-	Size: Enclosing * 70 %;
+	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Top = Base . Bottom - 0.8;
@@ -2749,7 +2758,7 @@ RULES
 
    Underscript:
 	BEGIN
-	Size: Enclosing * 70 %;
+	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = UnderOverBase . Bottom;
@@ -2762,7 +2771,7 @@ RULES
 
    Overscript:
 	BEGIN
-	Size: Enclosing * 70 %;
+	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Bottom = UnderOverBase . Top;
@@ -2800,7 +2809,7 @@ RULES
 
    PostscriptPairs:
 	BEGIN
-	Size: Enclosing * 70 %;
+	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: Left = MultiscriptBase . Right;
 	Height: MultiscriptBase . Height + 1;
@@ -2815,7 +2824,7 @@ RULES
    PrescriptPairs:
 	BEGIN
 	CreateBefore(MPRESCRIPTS_S);
-	Size: Enclosing * 70 %;
+	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: Right = MultiscriptBase . Left;
 	Height: MultiscriptBase . Height + 1;
@@ -3469,13 +3478,13 @@ ATTRIBUTES
 	END;
 
   numalign (Numerator) = left\240:
-	if not immediately within BeveledMFRAC
+	if not immediately within BevelledMFRAC
 	   HorizPos: Left = Enclosing . Left;
   numalign (Numerator) = center\240:
-	if not immediately within BeveledMFRAC
+	if not immediately within BevelledMFRAC
 	   HorizPos: VMiddle = Bar . VMiddle;
   numalign (Numerator) = right\240:
-	if not immediately within BeveledMFRAC
+	if not immediately within BevelledMFRAC
 	   HorizPos: Right = Enclosing . Right;
   numalign = left\240:
 	CreateBefore(ATTR_numalign_left);
@@ -3485,13 +3494,13 @@ ATTRIBUTES
 	CreateBefore(ATTR_numalign_right);
 
   denomalign (Denominator) = left\240:
-	if not immediately within BeveledMFRAC
+	if not immediately within BevelledMFRAC
 	   HorizPos: Left = Enclosing . Left;
   denomalign (Denominator) = center\240:
-	if not immediately within BeveledMFRAC
+	if not immediately within BevelledMFRAC
 	   HorizPos: VMiddle = Bar . VMiddle;
   denomalign (Denominator) = right\240:
-	if not immediately within BeveledMFRAC
+	if not immediately within BevelledMFRAC
 	   HorizPos: Right = Enclosing . Right;
   denomalign = left\240:
 	CreateBefore(ATTR_denomalign_left);
@@ -3500,10 +3509,10 @@ ATTRIBUTES
   denomalign = right\240:
 	CreateBefore(ATTR_denomalign_right);
 
-  beveled = true:
-	CreateBefore(ATTR_beveled_true);
-  beveled = false:
-	CreateBefore(ATTR_beveled_false);
+  bevelled = true:
+	CreateBefore(ATTR_bevelled_true);
+  bevelled = false:
+	CreateBefore(ATTR_bevelled_false);
 
   notation = longdiv:
 	BEGIN

@@ -101,14 +101,14 @@ STRUCT
 	  (ATTR linethickness = TEXT;
 		numalign = left\240, center\240, right\240;
 		denomalign = left\240, center\240, right\240;
-		beveled = true, false)
+		bevelled = true, false)
 	  = BEGIN
 	    Numerator = Construct;
 	    Denominator = Construct;
 	    END	;
 
-      BeveledMFRAC
-	  (ATTR linethickness; numalign; denomalign; beveled)
+      BevelledMFRAC
+	  (ATTR linethickness; numalign; denomalign; bevelled)
 	  = BEGIN
 	    Numerator;
 	    Denominator;
