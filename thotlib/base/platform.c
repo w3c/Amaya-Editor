@@ -12,6 +12,10 @@
  *          R. Guetari (W3C/INRIA) Windows version
  *
  */
+#ifdef _WX
+  #include "wx/utils.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -37,11 +41,12 @@ int TtaDirExists (CONST char *dirpath)
     status = 0;
 #else /* _WINGUI */
   struct stat buf;
-#ifdef _WINDOWS
-  status = stat (dirpath, &buf) == 0 && ((buf.st_mode)&S_IFMT) == S_IFDIR;
-#else /* #ifdef _WINDOWS */
+#ifdef _WX
+  if (wxDirExists(wxString(dirpath, *wxConvCurrent)))
+	status = 1;
+#else /* #ifdef _WX */
   status = stat (dirpath, &buf) == 0 && S_ISDIR (buf.st_mode);
-#endif /* #ifdef _WINDOWS */
+#endif /* #ifdef _WX */
 #endif /* _WINGUI */
   return status;
 }

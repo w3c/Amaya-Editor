@@ -83,7 +83,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 wxmsw25ud_html.lib wxbase25ud_xml.lib wxmsw25ud_gl.lib wxmsw25ud_xrc.lib wxmsw25ud_adv.lib wxmsw25ud_core.lib wxbase25ud.lib freetype.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"LIBCD.lib" /libpath:"..\..\wxWidgets\lib\vc_dll" /libpath:"..\freetype-2.1.0\objs"
+# ADD LINK32 wxmsw25ud_html.lib wxbase25ud_xml.lib wxmsw25ud_gl.lib wxmsw25ud_xrc.lib wxmsw25ud_adv.lib wxmsw25ud_core.lib wxbase25ud.lib freetype.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"LIBCD.lib" /nodefaultlib:"LIBCMTD.lib" /libpath:"..\..\wxWidgets\lib\vc_dll" /libpath:"..\freetype-2.1.0\objs"
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
@@ -106,6 +106,10 @@ SOURCE=..\amaya\wxdialog\AmayaDialog.cpp
 # Begin Source File
 
 SOURCE=..\amaya\wxdialog\CSSDlgWX.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\DocInfoDlgWX.cpp
 # End Source File
 # Begin Source File
 

@@ -41,7 +41,8 @@
   extern char      LostPicturePath [512];
 #endif /* _GTK */
 #ifdef _WINDOWS
-	#include <commctrl.h>
+  #include <commctrl.h>
+  extern char      LostPicturePath [512];
 #endif /* _WINDOWS */
 #ifdef _WINGUI
   #include "resource.h"
@@ -210,7 +211,6 @@ static ThotIcon       iconLogo;
 #define iconTableNo   19
 
 extern int       menu_item;
-extern char      LostPicturePath [512];
 
 #include "wininclude.h"
 #endif /* _WINGUI */
@@ -7147,9 +7147,9 @@ void InitAmaya (NotifyEvent * event)
 #ifdef BOOKMARKS
    BM_Init ();
 #endif /* BOOKMARKS */
-#ifdef _WINGUI
+#ifdef _WINDOWS
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif", TtaGetEnvString ("THOTDIR"));
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 #ifdef _GTK
    sprintf (LostPicturePath, "%s/amaya/lost.gif", TtaGetEnvString ("THOTDIR"));   
 #endif /* _GTK */
