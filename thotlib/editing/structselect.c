@@ -1037,6 +1037,7 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
   unique = FirstSelectedElement == LastSelectedElement;
   active = view == SelectedView;
   selBegin =  TRUE;
+  depth = 0;
   while (pAb != NULL)
     {
       /* search the next selected element */
