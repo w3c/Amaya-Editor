@@ -43,6 +43,7 @@
 #include "print.h"
 #include "fileaccess.h"
 #include "profiles.h"
+#include "ANNOTevent_f.h"
 
 #ifdef _WINDOWS
 #include "resource.h"
@@ -390,12 +391,14 @@ void InitAmayaDefEnv ()
 #ifdef ANNOTATIONS
   TtaSetDefEnvString ("ANNOT_USER", TEXT(""), FALSE);
   TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT(""), FALSE);
-  TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost http://quake.w3.org/CGI/annotate"), FALSE);
+  TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost"), FALSE);
   TtaSetDefEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
+  /* search for the default annotation schema */
   do
     {
       if (ptr)
 	{
+	  /* is it in the config directory? */
 	  usprintf (s, TEXT("file://%s%cconfig%c%s-annotschema"), ptr, DIR_SEP, DIR_SEP, DialogueLang);
 	  if (TtaFileExist (s+7))
 	    {
@@ -410,7 +413,7 @@ void InitAmayaDefEnv ()
 	      break;
 	    }
 	}
-
+      /* give it the default URL */
       TtaSetDefEnvString ("ANNOT_SCHEMA", TEXT("http://www.w3.org/1999/xx/annotation-ns#"), FALSE);
     } while (0);
 
