@@ -3849,7 +3849,7 @@ ThotBool BM_containsBookmarks (int ref)
 
   predicate = librdf_new_node_from_uri_string (world, (unsigned char *) RDF_TYPE);
   object =  librdf_new_node_from_uri_string (world,
-					     (unsigned char *) BMNS_BOOKMARK);
+					     (unsigned char *) BMNS_TOPIC);
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
