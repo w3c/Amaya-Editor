@@ -138,6 +138,7 @@ void SetFrameParams (int frame, int Visibilite, int Zoom)
 	   pFrame->FrAbstractBox = NULL;
 	   /* Recreation de la vue */
 	   pAb->AbDead = FALSE;
+	   pAb->AbNew = TRUE;
 	   h = 0;
 	   (void) ChangeConcreteImage (frame, &h, pAb);
 	   /* On restaure la position de la fenetre dans le document */
