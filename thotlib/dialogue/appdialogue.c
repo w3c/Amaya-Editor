@@ -2326,6 +2326,71 @@ gboolean text_wrapper_hide (GtkWidget *widget, GdkEventExpose *event, gpointer d
 {
     gtk_widget_hide(widget);
 }
+
+/* Signal handler called when the selections owner 
+(another application) returns the data */
+void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointer data )
+{   
+    if (Xbuffer != NULL)
+	free(Xbuffer);
+    Xbuffer = NULL;
+    if(sel_data->length<0)
+	return;
+    if(sel_data->type!=GDK_SELECTION_TYPE_STRING)
+	return;
+    Xbuffer = TtaGetMemory ((sel_data->length+1) * sizeof(unsigned char));
+    strcpy(Xbuffer,sel_data->data);
+    return;
+} 
+
+/* Signal handler invoked when user focus on drawing area */
+void get_targets( GtkWidget *widget,  gpointer data )
+{
+  static GdkAtom targets_atom = GDK_NONE;
+	  
+  if (targets_atom == GDK_NONE)
+    targets_atom = gdk_atom_intern ("STRING", FALSE);
+  if (FrameTable[ActiveFrame].WdFrame){
+      gtk_selection_convert (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame), 
+	  GDK_SELECTION_PRIMARY, 
+	  targets_atom,  
+	  GDK_CURRENT_TIME);
+      /* but now we own the selection, so goodbye to the other app */
+      gtk_selection_owner_set (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame),
+	  GDK_SELECTION_PRIMARY,
+	  GDK_CURRENT_TIME);
+  }
+}
+
+/* Called when another application claims the selection */
+gint selection_clear( GtkWidget         *widget,
+    GdkEventSelection *event,
+    gpointer data )
+{
+    if (Xbuffer != NULL)
+       free(Xbuffer);
+   Xbuffer = NULL;
+  return TRUE;
+}
+ 
+/* Supplies the Xbuffer as the selection. */
+void selection_handle( GtkWidget        *widget,
+    GtkSelectionData *selection_data,
+    guint             info,
+    guint             time_stamp,
+    gpointer          data )
+{
+  /* When we return a single string, 
+     it should not be null terminated.
+     That will be done for us */
+     if (Xbuffer != NULL)
+	gtk_selection_data_set (selection_data, 
+	    GDK_SELECTION_TYPE_STRING,
+	    8, 
+	    Xbuffer, 
+	    strlen(Xbuffer));
+}
+
 #endif
 
 /*----------------------------------------------------------------------
@@ -2743,11 +2808,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* If hidden input catcher textbox is displayed..
 	      This calllback connection will hide it */
+	   
 	   gtk_signal_connect(
 	       GTK_OBJECT(wrap_text), 
 	       "expose_event", 
 	       GTK_SIGNAL_FUNC(text_wrapper_hide), 
 	       (gpointer*)frame);
+	   
 
 	   /* A storage for a pointer on the text catcher 
 	      (so we can acess it in the future)  */
@@ -2774,17 +2841,51 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	                          /*| GDK_FOCUS_CHANGE_MASK*/
 				  );
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "button_press_event",
-			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
-			     (gpointer)frame);
+	       "button_press_event",
+	       GTK_SIGNAL_FUNC(FrameCallbackGTK),
+	       (gpointer)frame);
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "button_release_event",
-			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
-			     (gpointer)frame);
+	       "button_release_event",
+	       GTK_SIGNAL_FUNC(FrameCallbackGTK),
+	       (gpointer)frame);
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "motion_notify_event",
-			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
-			     (gpointer)frame);
+	       "motion_notify_event",
+	       GTK_SIGNAL_FUNC(FrameCallbackGTK),
+	       (gpointer)frame);
+
+	   /* On focus, we get the system (Xwindow) clipboard content*/
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
+	       "grab-focus",
+	       GTK_SIGNAL_FUNC(get_targets),
+	       NULL);
+	   ConnectSignalGTK (GTK_OBJECT(wrap_text),
+	       "grab-focus",
+	       GTK_SIGNAL_FUNC(get_targets),
+	       NULL);
+	   /*Then when the app that own the selection responds we store it*/
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area), 
+	       "selection_received", 
+	       GTK_SIGNAL_FUNC (selection_received), 
+	       NULL);   
+
+	   /*When another app steal the clipboard handling*/
+	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
+	       "selection_clear_event",
+	       GTK_SIGNAL_FUNC (selection_clear), 
+	       NULL);   
+
+	   /* register as a selection handler */
+	   gtk_selection_add_target (GTK_WIDGET(drawing_area),
+	       GDK_SELECTION_PRIMARY,
+	       GDK_SELECTION_TYPE_STRING,
+	       1);
+
+	   /* Callback called by other app to get the amaya selection*/
+	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
+	       "selection_get", 
+	       GTK_SIGNAL_FUNC (selection_handle), 
+	       NULL); 
+
 
 	   /* the key press event is intercepted by the main frame, 
 	      not by the drawing area.

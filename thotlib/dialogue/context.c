@@ -49,8 +49,6 @@ extern int              errno;
 #include "registry_f.h"
 #include "textcommands_f.h"
 
-
-
 #ifndef _WINDOWS
 #ifndef _GTK
 /*----------------------------------------------------------------------
@@ -500,12 +498,13 @@ void InitDocContexts ()
 }
 
 #ifndef _WINDOWS
+
+#ifndef _GTK
 /*----------------------------------------------------------------------
  *      SelectionEvents handle the X-Windows selection events.
  ----------------------------------------------------------------------*/
 void SelectionEvents (void *ev)
 {
-#ifndef _GTK
    XSelectionRequestEvent *request;
    XSelectionEvent     notify;
    ThotWindow          w, wind;
@@ -660,7 +659,7 @@ void SelectionEvents (void *ev)
 	 }
        break;
      }
-#endif /* _GTK */
 }
+#endif /* _GTK */
 #endif /* _WINDOWS */
 

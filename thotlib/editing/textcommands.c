@@ -1095,7 +1095,11 @@ void TtcCopyToClipboard (Document doc, View view)
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
 #endif /* _WINDOWS */
 #else /* _GTK */
-   /* TODO: copy the selection into the XWindows Buffer (fonctionnality into the gtk 2.0) */
+   /* Must get the selection */
+   if (Xbuffer != NULL)
+       free(Xbuffer);
+   Xbuffer = NULL;
+   CopyXClipboard (&Xbuffer, view);
    TtcCopySelection (doc, view);
 #endif /* !_GTK */
 }

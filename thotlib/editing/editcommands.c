@@ -3558,7 +3558,6 @@ void TtcInclude (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPasteFromClipboard (Document document, View view)
 {
-#ifndef _GTK
    DisplayMode         dispMode;
    int                 frame;
 #ifndef _WINDOWS
@@ -3584,7 +3583,10 @@ void TtcPasteFromClipboard (Document document, View view)
 
    frame = GetWindowNumber (document, view);
 #ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _GTK
+if (Xbuffer)
+    PasteXClipboard (Xbuffer, strlen(Xbuffer)); 
+#else
    w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
    wind = FrRef[frame];
    if (w == None)
@@ -3597,20 +3599,14 @@ void TtcPasteFromClipboard (Document document, View view)
    else
       XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0,
 			 wind, CurrentTime);
-#else /* _GTK */
-   if (Xbuffer)
-     PasteXClipboard (Xbuffer, strlen(Xbuffer));
-#endif /* !_GTK */
+#endif /* _GTK*/
 #endif /* _WINDOWS */
-
    if (!lock)
      /* unlock table formatting */
      (*ThotLocalActions[T_unlock]) ();
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (document, dispMode);
-#else /* _GTK */
-   TtcPaste (document, view);
-#endif /* !_GTK */
+  //TtcPaste (document, view);
 }
 
 
@@ -3765,7 +3761,7 @@ void TtcPaste (Document doc, View view)
 	    ContentEditing (TEXT_PASTE);
 	  CloseClipboard ();
 #else /* _WINDOWS */
-	  ContentEditing (TEXT_PASTE);
+  ContentEditing (TEXT_PASTE);
 #endif /* _WINDOWS */
 	  if (!lock)
 	    /* unlock table formatting */

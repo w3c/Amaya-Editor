@@ -2207,7 +2207,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    {
 	      /*	      printf("boutton + GDK_CONTROL\n");*/
 	      /* moving a box */     
-	      /*	      ApplyDirectTranslate (frame, event->x, event->y);*/
+	      	      ApplyDirectTranslate (frame, event->x, event->y);
 	      T1 = T2 = T3 = 0;
 	    }
 	  else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
