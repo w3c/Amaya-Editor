@@ -30,9 +30,9 @@ int GetFontFilename (char script, int family,
   pat = XftPatternCreate ();
   if (!pat)
     return ok;   
-  XftPatternAddBool (pat, XFT_RENDER, True);
-  XftPatternAddBool (pat, XFT_CORE, True);
-  XftPatternAddBool (pat, XFT_ANTIALIAS, True); 
+  /* XftPatternAddBool (pat, XFT_RENDER, True); */
+/*   XftPatternAddBool (pat, XFT_CORE, True); */
+/*   XftPatternAddBool (pat, XFT_ANTIALIAS, True);  */
   if (script != 'L' && script != 'G')
     {      
       switch (script)
