@@ -27,6 +27,8 @@ extern void ProfileConfMenu ( Document document,
                               View view );
 extern void TemplatesConfMenu ( Document document,
                                 View view );
+extern void AnnotConfMenu ( Document document,
+                            View view );
 extern void InitConfMenu ( void );
 
 #else /* __STDC__ */
@@ -52,6 +54,8 @@ extern void ProfileConfMenu (/* Document document,
                                 View view */);
 extern void TemplatesConfMenu (/* Document document,
                                   View view */);
+extern void AnnotConfMenu (/* Document document,
+                              View view */);
 extern void InitConfMenu (/* void */);
 
 #endif /* __STDC__ */

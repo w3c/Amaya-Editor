@@ -47,7 +47,7 @@
 
 #ifdef _ANNOTATIONS
 #include "ANNOTevent_f.h"
-#endif /* _ANNOTATIONS */
+#endif /* ANNOTATIONS */
 
 #ifdef _WINDOWS
 #include "resource.h"
@@ -3730,10 +3730,11 @@ void         TemplatesConfMenu (Document document, View view)
 #endif /* _GTK */
 }
 
-#ifdef ANNOTATIONS
 /*********************
 ** Annotations configuration menu
 ***********************/
+
+#ifdef ANNOTATIONS
 /*----------------------------------------------------------------------
   GetAnnotConf
   Makes a copy of the current registry annotation values
@@ -3804,7 +3805,7 @@ static void GetDefaultAnnotConf ()
   WIN_RefreshAnnotMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-void WIN_RefreshAnnotMenu (HWND hwnDlg)
+static void WIN_RefreshAnnotMenu (HWND hwnDlg)
 {
   SetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser);
   SetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer);
@@ -3992,6 +3993,7 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
     }
 }
 #endif /* !_WINDOWS */
+#endif /* ANNOTATIONS */
 
 /*----------------------------------------------------------------------
   AnnotConfMenu
@@ -3999,7 +4001,7 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void         AnnotConfMenu (Document document, View view)
 {
-
+#ifdef ANNOTATIONS
 #ifndef _WINDOWS
    int              i;
 
@@ -4060,8 +4062,8 @@ void         AnnotConfMenu (Document document, View view)
   else
      SetFocus (AnnotHwnd);
 #endif /* !_WINDOWS */
-}
 #endif /* ANNOTATIONS */
+}
 
 /*----------------------------------------------------------------------
    InitConfMenu: initialisation, called during Amaya initialisation
