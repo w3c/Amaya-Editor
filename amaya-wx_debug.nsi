@@ -484,6 +484,7 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-debug"
   DeleteRegKey HKLM "Software\AmayaWX-debug"
   DeleteRegKey HKCR "Amaya"
+  DeleteRegKey HKCU "Software\AmayaWX-debug"
 
 SectionEnd
 

@@ -483,6 +483,7 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX"
   DeleteRegKey HKLM "Software\AmayaWX"
   DeleteRegKey HKCR "Amaya"
+  DeleteRegKey HKCU "Software\AmayaWX"
 
 SectionEnd
 
