@@ -65,11 +65,11 @@ extern void MakeStaticCopy ( Element copiedEl,
 extern void CopyUseElementAttribute ( Element useEl,
                                       Element destElement,
                                       Document doc );
+extern void AddingModelIntoLibraryFile ( Document libDoc,
+                                         char *newURL );
 extern void AddSVGModelIntoLibrary ( Document libraryDoc,
                                      ThotBool newLib,
                                      char *title );
-extern void addingModelIntoLibraryFile ( Document libDoc,
-                                         char *newURL );
 extern ThotBool CreateLibraryDirectory ( char *libDirectory );
 extern char *MakeUniqueSuffixFilename ( char * libraryURL,
                                         char *suffix );
@@ -148,11 +148,11 @@ extern void MakeStaticCopy (/* Element copiedEl,
 extern void CopyUseElementAttribute (/* Element useEl,
                                         Element destElement,
                                         Document doc */);
+extern void AddingModelIntoLibraryFile (/* Document libDoc,
+                                           char *newURL */);
 extern void AddSVGModelIntoLibrary (/* Document libraryDoc,
                                        ThotBool newLib,
                                        char *title */);
-extern void addingModelIntoLibraryFile (/* Document libDoc,
-                                           char *newURL */);
 extern ThotBool CreateLibraryDirectory (/* char *libDirectory */);
 extern char *MakeUniqueSuffixFilename (/* char * libraryURL,
                                           char *suffix */);

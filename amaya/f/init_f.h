@@ -86,7 +86,7 @@ extern Document InitDocAndView ( Document doc,
                                  ThotBool readOnly,
                                  int profile,
                                  ClickEvent method );
-extern void ParseAsHTML ( Document document,
+extern void ParseAsHTML ( Document doc,
                           View view );
 extern void Reload_callback ( int doc,
                               int status,
@@ -112,7 +112,7 @@ extern void ShowLinks ( Document document,
                         View view );
 extern void ShowToC ( Document document,
                       View view );
-extern ThotBool ViewToClose ( NotifyDialog * event );
+extern ThotBool ViewToClose ( NotifyDialog *event );
 extern void GetAmayaDoc_callback ( int newdoc,
                                    int status,
                                    char *urlName,
@@ -299,7 +299,7 @@ extern Document InitDocAndView (/* Document doc,
                                    ThotBool readOnly,
                                    int profile,
                                    ClickEvent method */);
-extern void ParseAsHTML (/* Document document,
+extern void ParseAsHTML (/* Document doc,
                             View view */);
 extern void Reload_callback (/* int doc,
                                 int status,
@@ -325,7 +325,7 @@ extern void ShowLinks (/* Document document,
                           View view */);
 extern void ShowToC (/* Document document,
                         View view */);
-extern ThotBool ViewToClose (/* NotifyDialog * event */);
+extern ThotBool ViewToClose (/* NotifyDialog *event */);
 extern void GetAmayaDoc_callback (/* int newdoc,
                                      int status,
                                      char *urlName,
