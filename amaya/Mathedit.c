@@ -31,14 +31,22 @@
 #endif /* _SVG */
 #include "document.h"
 
+#ifdef _WX
+  #include "paneltypes_wx.h"
+  #include "AmayaParams.h"
+  #include "appdialogue_wx.h"
+  
+  extern XmlEntity *pMathEntityTable;
+#endif /* _WX */
+
 #ifdef _WINGUI
 #define iconMath   21 
 #define iconMathNo 21 
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+
+#if defined(_GTK)
 static ThotIcon   iconMath;
 static ThotIcon   iconMathNo;
-
 #include "Math.xpm"
 #include "MathNo.xpm"
 #include "Bmath.xpm"
@@ -55,7 +63,7 @@ static ThotIcon   iconMathNo;
 #include "mscript.xpm"
 #include "matrix.xpm"
 #include "greek.xpm"
-#endif /* defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) */
 
 static int      MathButton;
 static ThotIcon mIcons[14];
@@ -1771,10 +1779,12 @@ static void CreateMathMenu (Document doc, View view)
   ----------------------------------------------------------------------*/
 void                AddMathButton (Document doc, View view)
 {
+#ifndef _WX
   MathButton = TtaAddButton (doc, 1, iconMath, (Proc)CreateMathMenu,
 			     "CreateMathMenu",
 			     TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 			     TBSTYLE_BUTTON, TRUE);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1782,10 +1792,12 @@ void                AddMathButton (Document doc, View view)
   ----------------------------------------------------------------------*/
 void              SwitchIconMath (Document doc, View view, ThotBool state)
 {
+#ifndef _WX
   if (state)
     TtaChangeButton (doc, view, MathButton, iconMath, state);
   else
     TtaChangeButton (doc, view, MathButton, iconMathNo, state);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2681,6 +2693,7 @@ static ThotBool MathMoveBackward ()
 void FreeMathML ()
 {
 #if defined(_WX)
+  /*
   if (iconMath)
     delete iconMath;
   if (iconMathNo)
@@ -2694,6 +2707,7 @@ void FreeMathML ()
   iconMath =   (ThotIcon)NULL;
   iconMathNo = (ThotIcon)NULL;
   memset( mIcons, 0, 14 * sizeof(ThotIcon) );
+  */
 #endif /* defined(_WX) */
 }
 
@@ -2702,7 +2716,7 @@ void FreeMathML ()
   ----------------------------------------------------------------------*/
 void InitMathML ()
 {
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    iconMathNo = TtaCreatePixmapLogo (MathNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
@@ -2719,7 +2733,14 @@ void InitMathML ()
    mIcons[11] = TtaCreatePixmapLogo (mscript_xpm);
    mIcons[12] = TtaCreatePixmapLogo (matrix_xpm);
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
+
+#ifdef _WX
+   /* send math entities to MathML panel */
+   AmayaParams p;
+   p.param1 = (void*)pMathEntityTable;
+   TtaSendDataToPanel( WXAMAYA_PANEL_MATHML, p );
+#endif /* _WX */
 
   MathsDialogue = TtaSetCallback ((Proc)CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();

@@ -154,40 +154,40 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaMathMLPanel::OnButton") );
 
-#if 0  
+  //  TtaExecuteMenuAction ("CreateMath", doc, view);
+  //  TtaExecuteMenuAction ("CreateMENCLOSE", doc, view);
+
+  Document doc;
+  View view;
+  TtaGetActiveView( &doc, &view );
+
   int id       = event.GetId();
   int amaya_id = -1;
 
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_STRONG")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_STRONG;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_EMPH")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_EMPH;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_CODE")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_CODE;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H1")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H1;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H2")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H2;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H3")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H3;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_BULLET")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_BULLET;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_NL")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_NL;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_DL")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_DL;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_IMG")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_IMG;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_LINK")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_LINK;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_TABLE")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_TABLE;
-  
-  if (amaya_id != -1)
-    APP_Callback_PanelButtonActivate ( WXAMAYA_PANEL_XHTML,
-				       TtaGiveActiveFrame(),
-				       amaya_id );
-#endif /* 0 */
+  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FENCE")) )
+    TtaExecuteMenuAction ("CreateMROW", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SQRT")) )
+    TtaExecuteMenuAction ("CreateMSQRT", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_ROOT")) )
+    TtaExecuteMenuAction ("CreateMROOT", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FRAC")) )
+    TtaExecuteMenuAction ("CreateMFRAC", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MATRIX")) )
+    TtaExecuteMenuAction ("CreateMTABLE", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_UNDER")) )
+    TtaExecuteMenuAction ("CreateMUNDER", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVER")) )
+    TtaExecuteMenuAction ("CreateMOVER", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_OVERUNDER")) )
+    TtaExecuteMenuAction ("CreateMUNDEROVER", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_MSCRIPT")) )
+    TtaExecuteMenuAction ("CreateMMULTISCRIPTS", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUB")) )
+    TtaExecuteMenuAction ("CreateMSUB", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUP")) )
+    TtaExecuteMenuAction ("CreateMSUP", doc, view);
+  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_SUBSUP")) )
+    TtaExecuteMenuAction ("CreateMSUBSUP", doc, view);
 }
 
 /*
@@ -263,20 +263,18 @@ bool AmayaMathMLPanel::IsActive()
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaMathMLPanel, AmayaSubPanel)
-  /*
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_STRONG"), AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_EMPH"),   AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_CODE"),   AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_H1"),     AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_H2"),     AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_H3"),     AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_BULLET"), AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_NL"),     AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_DL"),     AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_IMG"),    AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_LINK"),   AmayaMathMLPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_TABLE"),  AmayaMathMLPanel::OnButton ) 
-  */
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_FENCE"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_SQRT"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_ROOT"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_FRAC"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_MATRIX"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_UNDER"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_OVER"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_OVERUNDER"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_MSCRIPT"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUB"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUP"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUBSUP"), AmayaMathMLPanel::OnButton ) 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
