@@ -504,7 +504,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       root = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (root)
 	{
-	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = SVG_ATTR_version;
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (root, attr, doc);
@@ -538,9 +537,22 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   else
     {
       /*-------------  Other documents ------------*/
-      /* attach the default attribute PrintURL to the root element */
       elType.ElTypeNum = TextFile_EL_TextFile;
       root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+
+      if (docType == docCSS)
+	{
+	  /* add the attribute Source */
+	  attrType.AttrTypeNum = TextFile_ATTR_Source;
+	  attr = TtaGetAttribute (root, attrType);
+	  if (attr == 0)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (root, attr, doc);
+	    }
+	}
+
+      /* attach the default attribute PrintURL to the root element */
       attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (root, attr, doc);
@@ -558,12 +570,10 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       TtaSetTextContent (el, (unsigned char*)url, language, doc);
 
       body = TtaGetLastChild (root);
-      /* create a new line */
-      elType.ElTypeNum = TextFile_EL_Line_;
-      el = TtaNewTree (doc, elType, "");
-      /* first line */
-      TtaInsertFirstChild (&el, body, doc);
-
+      /* get the line */
+      el = TtaGetLastChild (body);
+      /* and the empty text within this line */
+      el = TtaGetLastChild (el);
       /* set the initial selection */
       TtaSelectElement (doc, el);
       SelectionDoc = doc;

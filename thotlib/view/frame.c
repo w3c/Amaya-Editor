@@ -229,7 +229,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 #ifdef CLIP_TRACE
 printf ("ClipBoxRegion x1=%d y1=%d x2=%d y2=%d\n", x1, y1, x2, y2);
 #endif /* CLIP_TRACE */
-      DefClip (frame, x1 - k, y1 - k, x2 + k, y2 + k);
+      if (x1 - k != x2 + k && y1 - k != y2 + k) 
+	DefClip (frame, x1 - k, y1 - k, x2 + k, y2 + k);
     }
 }
 

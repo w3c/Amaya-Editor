@@ -1224,12 +1224,12 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	    {
 	    /* it's an extensible line */
 	    pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
-	    /* make sure this update is taken into account */
-	    DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
 	    GetExtraMargins (pCurrentBox, NULL, &t, &b, &l, &r);
 	    l += pCurrentBox->BxLMargin + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
 	    r += pCurrentBox->BxRMargin + pCurrentBox->BxRBorder + pCurrentBox->BxRPadding;
 	    pCurrentBox->BxWidth = pCurrentBox->BxW + l + r;
+	    /* make sure this update is taken into account */
+	    DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
 	    }
 	}
       *width = pCurrentBox->BxW;
