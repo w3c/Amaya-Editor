@@ -259,7 +259,7 @@ Document          doc;
 
 
 /*----------------------------------------------------------------------
-   GetXMLElementName
+   IsXMLElementInline
    Generic function which searchs in the mapping table if a given
    Thot type is an inline character or not
   ----------------------------------------------------------------------*/

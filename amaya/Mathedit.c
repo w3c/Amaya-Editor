@@ -622,6 +622,7 @@ int                 construct;
                      parent, new, next;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
+  STRING             name;
   int                c1, c2, i, j, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, registered;
@@ -637,17 +638,16 @@ int                 construct;
       /* Get the type of the first selected element */
       elType = TtaGetElementType (sibling);
       docSchema = TtaGetDocumentSSchema (doc);
-
+      name = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef GRAPHML
-      if (construct == 1 &&
-	  ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+      if (construct == 1 && ustrcmp (name, TEXT("GraphML")))
 	/* Math button and selection is not in a SVG element */
 #else
       if (construct == 1)
 #endif
 	/* Math button */
 	{
-	if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+	if (ustrcmp (name, TEXT("MathML")))
 	   /* selection is not in a MathML element */
 	   {
 	   /* get the MathML schema for this document or associate it to the

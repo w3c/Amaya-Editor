@@ -981,12 +981,13 @@ int                 construct;
    ElementType      elType, selType, newType, childType;
    AttributeType    attrType;
    Attribute        attr;
-   SSchema	    docSchema, GraphMLSSchema;
+   SSchema	    docSchema, graphSchema;
    DisplayMode      dispMode;
    char		    shape;
+   STRING           name;
    int		    c1, c2, i, j, w, h, minX, minY, maxX, maxY;
-   ThotBool	    found;
    int	            oldStructureChecking;
+   ThotBool	    found;
 
    doc = TtaGetSelectedDocument ();
    if (doc == 0)
@@ -1000,18 +1001,20 @@ int                 construct;
 
    /* Are we in a drawing? */
    docSchema = TtaGetDocumentSSchema (doc);
-   GraphMLSSchema = GetGraphMLSSchema (doc);
+   graphSchema = GetGraphMLSSchema (doc);
    elType.ElTypeNum = GraphML_EL_GraphML;
-   elType.ElSSchema = GraphMLSSchema;
-   attrType.AttrSSchema = GraphMLSSchema;
+   elType.ElSSchema = graphSchema;
+   attrType.AttrSSchema = graphSchema;
    graphRoot = TtaGetTypedAncestor (first, elType);
    if (graphRoot == NULL)
       /* the current selection is not in a GraphML element, create one */
       {
       selType = TtaGetElementType (first);
-      if (ustrcmp (TtaGetSSchemaName (selType.ElSSchema), TEXT("HTML")))
+      name = TtaGetSSchemaName (selType.ElSSchema);
+      if (ustrcmp (name, TEXT("HTML")))
 	 /* selection is not in an HTML element. */
          return;
+      graphSchema = TtaNewNature (doc, docSchema, TEXT("GraphML"), TEXT("GraphMLP"));
       TtaCreateElement (elType, doc);
       TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
       }
@@ -1026,7 +1029,7 @@ int                 construct;
 	 if (parent)
 	    {
 	    elType = TtaGetElementType (parent);
-	    if (elType.ElSSchema == GraphMLSSchema &&
+	    if (elType.ElSSchema == graphSchema &&
 		(elType.ElTypeNum == GraphML_EL_g ||
 		 elType.ElTypeNum == GraphML_EL_GraphML))
 		found = TRUE;
@@ -1044,7 +1047,7 @@ int                 construct;
 
    TtaOpenUndoSequence (doc, first, last, c1, c2);
 
-   newType.ElSSchema = GraphMLSSchema;
+   newType.ElSSchema = graphSchema;
    newType.ElTypeNum = 0;
    shape = EOS;
 
@@ -1124,7 +1127,7 @@ int                 construct;
        if (shape != EOS)
          /* create a graphic leaf according to the element's type */
 	 {
-	   childType.ElSSchema = GraphMLSSchema;
+	   childType.ElSSchema = graphSchema;
 	   childType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
 	   child = TtaNewElement (doc, childType);
 	   TtaInsertFirstChild (&child, newEl, doc);
@@ -1144,7 +1147,7 @@ int                 construct;
        else if (newType.ElTypeNum == GraphML_EL_text_)
 	 /* create a TEXT leaf */
 	 {
-	   childType.ElSSchema = GraphMLSSchema;
+	   childType.ElSSchema = graphSchema;
 	   childType.ElTypeNum = GraphML_EL_TEXT_UNIT;
 	   child = TtaNewElement (doc, childType);
 	   TtaInsertFirstChild (&child, newEl, doc);

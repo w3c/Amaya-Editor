@@ -250,7 +250,7 @@ STRUCT
 
 EXCEPT
 
-   GraphML:             IsDraw, NoCreate;
+   GraphML:             IsDraw;
    g:                   NoMove, NoResize, NoCreate;
    Spline:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
    ClosedSpline:        MoveResize, HighlightChildren, NoShowBox, NoCreate;
