@@ -12,14 +12,19 @@ Extensions 2.3:
   - As many search tools generate invalid forms, they are now suported in
     Amaya.
 
+*MathML:
+  - When saving entities Amaya keeps the names that were read when downloading
+    the document.
+
 * User Interface:
+  - The content of the TITLE element is displayed as the window title,
+    instead of the filename.
   - In the file amaya.profiles the function TtcCloseDocument must be replaced
     by CloseDocument.
-  - Shortcuts Control Up, Control Down, Control Left, Control Right allow one
-    to scroll smoothly the window in the four directions when the scroll is
-    possible.
   - Amaya provides now an horizontal scroll bar when the document includes
     images or tables larger then the current window size.
+  - Shortcuts Control Up, Control Down, Control Left, Control Right allow one
+    to scroll smoothly the window in the four directions.
 
 * libwww:
   - It's now possible to say that the proxy should ONLY be used with a given
@@ -47,7 +52,7 @@ Fixed bugs 2.3:
   - the Windows kill command ([X]) closed the document window before proposing
     to save the unsaved document. So the cancel was ineffective.
   - some Amaya crashes are fixed now.
-  - the historic associated to the forward and back buttons sometimes
+  - the history associated to the forward and back buttons sometimes
     was corrupted.
   - added more explicit messages related to the failure of PUT operation.
   - the authentication dialogue now displays the authentication and
