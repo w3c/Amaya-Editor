@@ -1324,9 +1324,8 @@ LPARAM lParam;
 
       case IDC_CLEAR:
 	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 3);
-	tmpDocName[0] = WC_EOS;
-	SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
-	EndDialog (hwnDlg, IDC_CLEAR);
+	tmpDocName[0] = 0;
+	SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
 	break;
       
       case IDCANCEL:
