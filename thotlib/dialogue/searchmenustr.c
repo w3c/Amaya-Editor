@@ -596,8 +596,6 @@ static PtrElement ChTypeAttr (PtrElement elCour, PtrSearchContext context,
 {
    PtrElement          pEl;
    PtrElement          pAsc;
-   PtrElement          ElSuiv;
-   int                 i;
    ThotBool            trouve;
    PtrAttribute        pAttrTrouve;
 
@@ -650,16 +648,6 @@ static PtrElement ChTypeAttr (PtrElement elCour, PtrSearchContext context,
    if (pEl != NULL && trouve)
       /* on a trouve' */
       SelectElementWithEvent (context->SDocument, pEl, TRUE, FALSE);
-   if (!trouve)
-      if (context->SWholeDocument)
-	 /* il faut rechercher dans tout le document */
-	 /* cherche l'arbre a traiter apres celui ou` on n'a pas trouve' */
-	 if (NextTree (&ElSuiv, &i, context))
-	    /* il y a un autre arbre a traiter, on continue avec le */
-	    /* debut de ce nouvel arbre */
-	    pEl = ChTypeAttr (ElSuiv, context, NomType,
-			      AvecAttribut, NumAttrCherche, SchAttrCherche,
-			      AttrTrouve);
    return pEl;
 }
 
@@ -691,7 +679,7 @@ void CallbackStructSearchMenu (int ref, int val, char *txt,
 }
 
 /*----------------------------------------------------------------------
-   BuildGoToPageMenu traite la commande Aller page numero              
+   BuildSearchOptions
   ----------------------------------------------------------------------*/
 void BuildSearchOptions (ThotBool *erreur,
 			 PtrSearchContext DomaineCherche)
@@ -765,7 +753,6 @@ void                StructSearch (PtrElement elCour,
 {
    ThotBool            stop;
    PtrElement          pEl;
-   int                 i;
 
    pAttrTrouve = NULL;
    if (NomAttrAChercher[0] != EOS &&
@@ -778,14 +765,6 @@ void                StructSearch (PtrElement elCour,
 				 NumAttrCherche, SchAttrCherche);
 	   *trouve = (pAttrTrouve != NULL);
 	   stop = TRUE;
-	   if (!*trouve)
-	      if (DomaineCherche->SWholeDocument)
-		 /* il faut rechercher dans tout le document */
-		 /* cherche l'arbre a traiter apres celui ou` on */
-		 /* n'a pas trouve' */
-		 if (NextTree (&elCour, &i, DomaineCherche))
-		    /* relance la recherche dans le nouvel arbre */
-		    stop = FALSE;
 	}
       while (!stop);
    else if (NomTypeAChercher[0] != EOS)
@@ -800,14 +779,6 @@ void                StructSearch (PtrElement elCour,
 			     &pAttrTrouve);
 	   *trouve = (pEl != NULL);
 	   stop = TRUE;
-	   if (!*trouve)
-	      if (DomaineCherche->SWholeDocument)
-		 /* il faut rechercher dans tout le document */
-		 /* cherche l'arbre a traiter apres celui ou` on */
-		 /* n'a pas trouve' */
-		 if (NextTree (&elCour, &i, DomaineCherche))
-		    /* relance la recherche dans le nouvel arbre */
-		    stop = FALSE;
 	}
       while (!stop);
 }

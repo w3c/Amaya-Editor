@@ -138,10 +138,10 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
 #endif
 	      /* One create the internal representation of an empty document */
 	      pDoc->DocDocElement = NewSubtree (pDoc->DocSSchema->SsDocument,
-						pDoc->DocSSchema, pDoc, 0,
+						pDoc->DocSSchema, pDoc,
 						FALSE, TRUE, TRUE, TRUE);
 	      pEl = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema,
-				pDoc, 0, TRUE, TRUE, TRUE, TRUE);
+				pDoc, TRUE, TRUE, TRUE, TRUE);
 	      /* suppress excluded elements */
 	      if (pEl)
 		RemoveExcludedElem (&pEl, pDoc);
@@ -290,9 +290,9 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 		  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 		     {
 		     /* cree la representation interne d'un document vide */
-		     (*pDoc)->DocDocElement = NewSubtree ((*pDoc)->DocSSchema->SsDocument, (*pDoc)->DocSSchema, *pDoc, 0, FALSE, TRUE, TRUE, TRUE);
+		     (*pDoc)->DocDocElement = NewSubtree ((*pDoc)->DocSSchema->SsDocument, (*pDoc)->DocSSchema, *pDoc, FALSE, TRUE, TRUE, TRUE);
 		     pEl = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
-			(*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE, TRUE, TRUE);
+			(*pDoc)->DocSSchema, *pDoc, TRUE, TRUE, TRUE, TRUE);
 		     /* suppress excluded elements  */
 		     RemoveExcludedElem (&pEl, *pDoc);
 		     if (pEl)
@@ -386,24 +386,18 @@ void                PaginateDocument (PtrDocument pDoc)
 
    nViews = BuildDocumentViewList (pDoc, viewList);
    for (i = 0; i < nViews; i++)
-      if (viewList[i].VdOpen && viewList[i].VdPaginated && !viewList[i].VdNature)
+      if (viewList[i].VdOpen && viewList[i].VdPaginated &&
+	  !viewList[i].VdNature)
 	/* c'est une vue a paginer */
 	{
-	  if (viewList[i].VdAssoc)
-	    /* c'est une vue d'elements associes, */
-	    /* utilise le numero d'element assoc. */
-	    docView = viewList[i].VdView;
-	  else
-	    {
-	      /* cherche le numero de vue dans le document */
-	      found = FALSE;
-	      for (docView = 0; docView < MAX_VIEW_DOC && !found; docView++)
-		if (pDoc->DocView[docView].DvPSchemaView == viewList[i].VdView
-		    && pDoc->DocView[docView].DvSSchema == viewList[i].VdSSchema)
-		  found = TRUE;
-	    }
+	  /* cherche le numero de vue dans le document */
+	  found = FALSE;
+	  for (docView = 0; docView < MAX_VIEW_DOC && !found; docView++)
+	    if (pDoc->DocView[docView].DvPSchemaView == viewList[i].VdView &&
+		pDoc->DocView[docView].DvSSchema == viewList[i].VdSSchema)
+	      found = TRUE;
 	  /* pagine la vue */
-	  PaginateView (pDoc, docView , viewList[i].VdAssoc);
+	  PaginateView (pDoc, docView);
 	}
 }
 
@@ -633,65 +627,56 @@ static void RemoveExtensionFromTree (PtrElement * pEl, Document document,
 void TtaRemoveSchemaExtension (Document document, SSchema extension,
 			       int *removedElements, int *removedAttributes)
 {
-   PtrSSchema          curExtension, previousSSchema;
-   PtrElement          root;
-   PtrDocument         pDoc;
-   ThotBool            found;
-   int                 assoc;
+  PtrSSchema          curExtension, previousSSchema;
+  PtrElement          root;
+  PtrDocument         pDoc;
+  ThotBool            found;
 #ifndef NODISPLAY
-   PtrPSchema          pPS;
+  PtrPSchema          pPS;
 #endif
 
-   UserErrorCode = 0;
-   /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-	TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-	TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is correct */
-     {
-	pDoc = LoadedDocument[document - 1];
-	/* Looks for the extension to suppress */
-	previousSSchema = pDoc->DocSSchema;
-	curExtension = previousSSchema->SsNextExtens;
-	found = FALSE;
-	while (!found && curExtension != NULL)
-	   if (!strcmp (((PtrSSchema) extension)->SsName, curExtension->SsName))
-	      found = TRUE;
-	   else
-	     {
-		previousSSchema = curExtension;
-		curExtension = curExtension->SsNextExtens;
-	     }
-	if (!found)
-	  {
-	     TtaError (ERR_invalid_document_parameter);
-	  }
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    {
+      pDoc = LoadedDocument[document - 1];
+      /* Looks for the extension to suppress */
+      previousSSchema = pDoc->DocSSchema;
+      curExtension = previousSSchema->SsNextExtens;
+      found = FALSE;
+      while (!found && curExtension != NULL)
+	if (!strcmp (((PtrSSchema) extension)->SsName, curExtension->SsName))
+	  found = TRUE;
 	else
 	  {
-	     root = pDoc->DocDocElement;
-	     if (root != NULL)
-		RemoveExtensionFromTree (&root, document, (PtrSSchema) extension,
-					 removedElements, removedAttributes);
-	     for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	       {
-		  root = pDoc->DocAssocRoot[assoc];
-		  RemoveExtensionFromTree (&root, document, (PtrSSchema) extension,
-					removedElements, removedAttributes);
-		  if (root == NULL)
-		     pDoc->DocAssocRoot[assoc] = NULL;
-	       }
-	     previousSSchema->SsNextExtens = curExtension->SsNextExtens;
-	     if (curExtension->SsNextExtens != NULL)
-		curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
-#ifndef NODISPLAY
-	     pPS = PresentationSchema (curExtension, pDoc);
-	     FreePresentationSchema (pPS, curExtension, pDoc);
-#endif
-	     ReleaseStructureSchema (curExtension, pDoc);
+	    previousSSchema = curExtension;
+	    curExtension = curExtension->SsNextExtens;
 	  }
-     }
+      if (!found)
+	{
+	  TtaError (ERR_invalid_document_parameter);
+	}
+      else
+	{
+	  root = pDoc->DocDocElement;
+	  if (root != NULL)
+	    RemoveExtensionFromTree (&root, document, (PtrSSchema) extension,
+				     removedElements, removedAttributes);
+	  previousSSchema->SsNextExtens = curExtension->SsNextExtens;
+	  if (curExtension->SsNextExtens != NULL)
+	    curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
+#ifndef NODISPLAY
+	  pPS = PresentationSchema (curExtension, pDoc);
+	  FreePresentationSchema (pPS, curExtension, pDoc);
+#endif
+	  ReleaseStructureSchema (curExtension, pDoc);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

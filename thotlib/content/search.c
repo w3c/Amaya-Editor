@@ -775,11 +775,8 @@ void ScrollPageToTop (PtrElement pPage, int view, PtrDocument pDoc)
 	      pAb = pAb->AbNext;
 	  if (pAbGraph != NULL)
 	    {
-	      /* cherche la fenetre correspondant a la vue */
-	      if (pPage->ElAssocNum == 0)
-		frame = pDoc->DocViewFrame[view - 1];
-	      else
-		frame = pDoc->DocAssocFrame[pPage->ElAssocNum - 1];
+	      /* fenetre correspondant a la vue */
+	      frame = pDoc->DocViewFrame[view - 1];
 	      ShowBox (frame, pAbGraph->AbBox, 0, 0);
 	    }
 	}

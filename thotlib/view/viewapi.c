@@ -114,9 +114,9 @@ View TtaOpenMainView (Document document, int x, int y, int w, int h)
 	      /* Add a pagebreak probably missed at the end of the document */
 	      if (pPS->PsPaginatedView[0])
 		AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
-	      nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1,
+	      nView = CreateAbstractImage (pDoc, 1, pDoc->DocSSchema, 1,
 					   TRUE, NULL);
-	      OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
+	      OpenCreatedView (pDoc, nView, x, y, w, h);
 	      view = nView;
 	    }
      }
@@ -149,7 +149,6 @@ static View OpenView (Document document, char *viewName, int x, int y,
   PtrDocument         pDoc;
   PtrPSchema          pPS;
   AvailableView       allViews;
-  ThotBool            assoc;
   ThotBool            found;
   View                view;
   ThotBool            viewHasBeenOpen;
@@ -172,7 +171,6 @@ static View OpenView (Document document, char *viewName, int x, int y,
     else
       {
 	pDoc = LoadedDocument[document - 1];
-	assoc = FALSE;
 	nView = 0;
 	/* Enumerate the list of all pssible views for this document */
 	nbViews = BuildDocumentViewList (pDoc, allViews);
@@ -189,43 +187,21 @@ static View OpenView (Document document, char *viewName, int x, int y,
 	    viewHasBeenOpen = TRUE;
 	    
 	    /* Open the view */
-	    if (allViews[v].VdAssoc)
-	      {
-		/* Add a page break probably missed at the end */
-		if (allViews[v].VdView > 0)
-		  if (pPS->PsPaginatedView[0])
-		    AddLastPageBreak (pDoc->DocAssocRoot[allViews[v].VdView-1],
-				      1, pDoc, FALSE);
-		nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
-					     allViews[v].VdSSchema, 1, TRUE,
-					     (PtrElement) subtree);
-		if (pDoc->DocAssocRoot[nView - 1] == NULL)
-		  /*** Associated tree creation has been refused. ***/
-		  viewHasBeenOpen = FALSE;
-		assoc = TRUE;
-	      }
-	    else
-	      {
-		/* Add a page break probably missed at the end */
-		if (pPS->PsPaginatedView[allViews[v].VdView])
-		  AddLastPageBreak (pDoc->DocDocElement, allViews[v].VdView,
-				    pDoc, FALSE);
-		nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
-					     allViews[v].VdSSchema, 1, FALSE,
-					     (PtrElement) subtree);
-		assoc = FALSE;
-	      }
+	    /* Add a page break probably missed at the end */
+	    if (pPS->PsPaginatedView[allViews[v].VdView])
+	      AddLastPageBreak (pDoc->DocDocElement, allViews[v].VdView,
+				pDoc, FALSE);
+	    nView = CreateAbstractImage (pDoc, allViews[v].VdView,
+					 allViews[v].VdSSchema, 1, FALSE,
+					 (PtrElement) subtree);
 	    if (nView == 0)
 	      TtaError (ERR_cannot_open_view);
 	    else
 	      {
 		if (viewHasBeenOpen)
 		  {
-		    OpenCreatedView (pDoc, nView, assoc, x, y, w, h);
-		    if (assoc)
-		      view = nView + 100;
-		    else
-		      view = nView;
+		    OpenCreatedView (pDoc, nView, x, y, w, h);
+		    view = nView;
 		  }
 	      }
 	  }
@@ -287,31 +263,14 @@ View TtaOpenSubView (Document document, STRING viewName, int x, int y,
 void TtaCloseView (Document document, View view)
 {
    PtrDocument         pDoc;
-   int                 numAssoc;
 
    /* Checks the parameter document */
    if (document >= 1 && document <= MAX_DOCUMENTS &&
        LoadedDocument[document - 1])
      {
 	pDoc = LoadedDocument[document - 1];
-	if (view < 100)
-	  {
-	   /* View of the main tree */
-		DestroyFrame (pDoc->DocViewFrame[view - 1]);
-		CloseDocumentView (pDoc, view, FALSE, FALSE);
-	  }
-	else
-	   /* View of associated elements */
-	  {
-	     numAssoc = view - 100;
-	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  DestroyFrame (pDoc->DocAssocFrame[numAssoc - 1]);
-		  CloseDocumentView (pDoc, numAssoc, TRUE, FALSE);
-	       }
-	  }
+	DestroyFrame (pDoc->DocViewFrame[view - 1]);
+	CloseDocumentView (pDoc, view, FALSE);
      }
 }
 
@@ -326,35 +285,17 @@ void TtaCloseView (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtaChangeViewTitle (Document document, View view, STRING title)
 {
-   PtrDocument         pDoc;
-   int                 numAssoc;
-
    UserErrorCode = 0;
    /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
+   else if (view < 1 || view > MAX_VIEW_DOC)
+      TtaError (ERR_invalid_parameter);
    else
-      /* parameter document is ok */
-     {
-	pDoc = LoadedDocument[document - 1];
-	if (view < 100)
-	   /* View of the main tree */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else
-	      ChangeFrameTitle (pDoc->DocViewFrame[view - 1], title);
-	else
-	   /* View of associated elements */
-	  {
-	     numAssoc = view - 100;
-	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-		TtaError (ERR_invalid_parameter);
-	     else
-		ChangeFrameTitle (pDoc->DocAssocFrame[numAssoc - 1], title);
-	  }
-     }
+      ChangeFrameTitle (LoadedDocument[document - 1]->DocViewFrame[view - 1],
+			title);
 }
 
 
@@ -670,10 +611,8 @@ void TtaGiveViewsToOpen (Document document, STRING buffer, int *nbViews)
 STRING              TtaGetViewName (Document document, View view)
 {
   PtrDocument         pDoc;
-  PtrElement          pEl;
   PtrPSchema          pPS;
   DocViewDescr        dView;
-  int                 numAssoc;
 
   UserErrorCode = 0;
   nameBuffer[0] = EOS;
@@ -682,36 +621,17 @@ STRING              TtaGetViewName (Document document, View view)
     TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
+  else if (view < 1 || view > MAX_VIEW_DOC)
+    TtaError (ERR_invalid_parameter);
   else
-    /* parameter document is ok */
     {
       pDoc = LoadedDocument[document - 1];
-      if (view < 100)
-	/* View of the main tree */
-	if (view < 1 || view > MAX_VIEW_DOC)
-	  TtaError (ERR_invalid_parameter);
-	else
-	  {
-	    dView = pDoc->DocView[view - 1];
-	    if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
-	      {
-	      pPS = PresentationSchema (dView.DvSSchema, pDoc);
-	      ustrncpy (nameBuffer, pPS->PsView[dView.DvPSchemaView - 1],
-			MAX_NAME_LENGTH);
-	      }
-	  }
-      else
-	/* View of associated elements */
+      dView = pDoc->DocView[view - 1];
+      if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
 	{
-	  numAssoc = view - 100;
-	  if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-	    TtaError (ERR_invalid_parameter);
-	  else
-	    {
-	      pEl = pDoc->DocAssocRoot[numAssoc - 1];
-	      if (pEl != NULL)
-		ustrncpy (nameBuffer, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
-	    }
+	  pPS = PresentationSchema (dView.DvSSchema, pDoc);
+	  ustrncpy (nameBuffer, pPS->PsView[dView.DvPSchemaView - 1],
+		    MAX_NAME_LENGTH);
 	}
     }
   return nameBuffer;
@@ -730,10 +650,7 @@ STRING              TtaGetViewName (Document document, View view)
   ----------------------------------------------------------------------*/
 ThotBool            TtaIsViewOpen (Document document, View view)
 {
-   PtrDocument         pDoc;
-   PtrElement          pEl;
    DocViewDescr        dView;
-   int                 numAssoc;
    ThotBool            opened;
 
    UserErrorCode = 0;
@@ -743,34 +660,14 @@ ThotBool            TtaIsViewOpen (Document document, View view)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
+   else if (view < 1 || view > MAX_VIEW_DOC)
+      TtaError (ERR_invalid_parameter);
    else
-      /* parameter document is ok */
-     {
-	pDoc = LoadedDocument[document - 1];
-	if (view < 100)
-	   /* View of the main tree */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else
-	     {
-		dView = pDoc->DocView[view - 1];
-		if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
-		   opened = TRUE;
-	     }
-	else
-	   /* View of associated elements */
-	  {
-	     numAssoc = view - 100;
-	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  pEl = pDoc->DocAssocRoot[numAssoc - 1];
-		  if (pEl != NULL)
-		     opened = TRUE;
-	       }
-	  }
-     }
+      {
+	dView = LoadedDocument[document - 1]->DocView[view - 1];
+	if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
+	  opened = TRUE;
+      }
    return opened;
 }
 
@@ -788,7 +685,6 @@ View TtaGetViewFromName (Document document, char* viewName)
 {
    View                view;
    PtrDocument         pDoc;
-   PtrElement          pEl;
    PtrPSchema          pPS;
    DocViewDescr        dView;
    int                 aView;
@@ -817,16 +713,6 @@ View TtaGetViewFromName (Document document, char* viewName)
 	      view = aView;
 	   }
 	 }
-      if (view == 0)
-	 /* If not found, searching in the views of associated elements */
-	 for (aView = 1; aView <= MAX_ASSOC_DOC && view == 0; aView++)
-	    {
-	    pEl = pDoc->DocAssocRoot[aView - 1];
-	    if (pEl != NULL)
-	       if (pDoc->DocAssocFrame[aView - 1] != 0)
-		  if (ustrcmp (ViewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-		     view = aView + 100;
-	    }
       }
    return view;
 }
@@ -847,21 +733,17 @@ void TtaGiveActiveView (Document * document, View * view)
 {
    PtrDocument         pDoc;
    int                 aView;
-   ThotBool            assoc;
 
    UserErrorCode = 0;
    *document = 0;
    *view = 0;
    if (ActiveFrame != 0)
      {
-	GetDocAndView (ActiveFrame, &pDoc, &aView, &assoc);
+	GetDocAndView (ActiveFrame, &pDoc, &aView);
 	if (pDoc != NULL)
 	  {
 	     *document = IdentDocument (pDoc);
-	     if (assoc)
-		*view = aView + 100;
-	     else
-		*view = aView;
+	     *view = aView;
 	  }
      }
 }
@@ -1236,7 +1118,6 @@ void UndisplayElement (PtrElement pEl, Document document)
    ThotBool            stop;
    PtrDocument         pDoc;
    int                 savePageHeight;
-   int                 assoc;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
@@ -1259,14 +1140,8 @@ void UndisplayElement (PtrElement pEl, Document document)
 	   DestroyAbsBoxes (pEl, pDoc, TRUE);
 	   RemoveElement (pEl);
 	   if (pEl != pDoc->DocDocElement)
-	     {
-	       for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-		 if (pDoc->DocAssocRoot[assoc] == pEl)
-		   break;	/* C'est une racine associee */
-	       if (assoc == MAX_ASSOC_DOC)
-		 /* Ce n'est pas une racine ! */
-		 return;
-	     }
+	     /* Ce n'est pas la racine du document ! */
+	     return;
 	 }
        else
 	 {

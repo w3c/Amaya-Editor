@@ -1413,8 +1413,9 @@ static void ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP,
 				for (view = 1; view <= MAX_VIEW_DOC; view++)
 				   /* cree le pave de presentation dans la vue */
 				  {
-				     pAb = CrAbsBoxesPres (pEl, pDoc, pRule, pEl->ElStructSchema,
-					   pAttr, view, pSchP, FALSE, TRUE);
+				     pAb = CrAbsBoxesPres (pEl, pDoc, pRule,
+							   pEl->ElStructSchema,
+					             pAttr, view, pSchP, TRUE);
 				     if (pAb != NULL)
 					/* un pave de presentation a ete cree */
 					/* change les regles des autres paves qui peuvent */
@@ -2694,7 +2695,7 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
 					    else
 					       pAbbNext = NULL;
 					    pAbb = CrAbsBoxesPres (pEl, pDoc, pRCre, pSS, pAttr,
-						    nv, pSchP, FALSE, TRUE);
+						    nv, pSchP, TRUE);
 					    if (pAbbNext != NULL)
 					       pEl->ElAbstractBox[nv - 1] = pAbbNext;
 					    if (pAbb != NULL)
@@ -3564,8 +3565,9 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		    /* il faut creer un pave de presentation */
 		    {
 		      pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-		      pAb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
-					     pSchP, FALSE, TRUE);
+		      pAb = CrAbsBoxesPres (pEl, pDoc, pR,
+					    pAttr->AeAttrSSchema, pAttr, view,
+					    pSchP, TRUE);
 		      pAbNext = pAb;
 		    }
 

@@ -228,68 +228,6 @@ void RestoreAfterSearch ()
 }
 
 /*----------------------------------------------------------------------
-   NextTree Pour le contexte de recherche context, cherche le  
-   prochain arbre a traiter, lorsqu'on est dans une recherche qui  
-   porte sur tout le document.                                     
-   Met a jour le contexte de recherche pour pouvoir relancer la    
-   recherche dans le nouvel arbre a traiter.                       
-   Retourne TRUE si un arbre suivant a ete trouve' et, dans ce cas,
-   elCourant et carCourant representent la position ou il faut     
-   relancer la recherche.                                          
-  ----------------------------------------------------------------------*/
-ThotBool NextTree (PtrElement *pEl, int *charIndx, PtrSearchContext context)
-{
-  int                 i;
-  ThotBool            ret;
-
-  *pEl = NULL;
-  *charIndx = 0;
-  ret = FALSE;
-  if (context  &&
-      context->SWholeDocument && context->STree >= 0)
-    {
-      i = context->STree;
-      context->STree = -1;
-      if (context->SStartToEnd)
-	/* search forward */
-	{
-	  i++;
-	  while (i < MAX_ASSOC_DOC && context->STree < 0)
-	    if (context->SDocument->DocAssocRoot[i - 1] != NULL)
-	      context->STree = i;
-	    else
-	      i++;
-	}
-      else
-	/* search backward */
-	{
-	  i--;
-	  while (i > 0 && context->STree < 0)
-	    {
-	      if (context->SDocument->DocAssocRoot[i - 1] != NULL)
-		context->STree = i;
-	      else
-		i--;
-	    }
-	  if (i == 0 && context->SDocument->DocDocElement != NULL)
-	    context->STree = 0;
-	}
-      if (context->STree == 0)
-	*pEl = context->SDocument->DocDocElement;
-      else if (context->STree > 0)
-	*pEl = context->SDocument->DocAssocRoot[i - 1];
-      if (*pEl != NULL && !context->SStartToEnd)
-	{
-	  *pEl = LastLeaf (*pEl);
-	  *charIndx = (*pEl)->ElVolume;
-	}
-      ret = (context->STree >= 0);
-    }
-  return ret;
-
-}
-
-/*----------------------------------------------------------------------
   SearchNextWord look for the next word in the search domain from the
   current end position.
   Returns the selected word, its beginning and end postion.
@@ -358,13 +296,6 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 	  if (endEl != NULL && ElemIsBefore (endEl, pEl))
 	    /* the element found is after the end of the domain */
 	    pEl = NULL;
-	}
-      else if (context != NULL && context->SWholeDocument)
-	{
-	  /* get the next tree to process */
-	  if (NextTree (&pEl, &iChar, context) &&
-	      pEl->ElTypeNumber != CharString + 1)
-	    pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	}
 
       if (pEl != NULL)
@@ -503,16 +434,6 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 	    /* on fait comme si on n'avait pas trouve' */
 	    pEl = NULL;
 	}
-      else if (context != NULL)
-	/* Si on recherche dans tout le document on change d'arbre */
-	if (context->SWholeDocument)
-	  {
-	    /* cherche l'arbre a traiter avant celui ou` on n'a pas trouve' */
-	    if (NextTree (&pEl, &iChar, context) &&
-	      /* Il se peut que l'element rendu soit de type texte */
-		pEl->ElTypeNumber != CharString + 1)
-	      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
-	  }
 
       /* On saute les elements vides */
       if (pEl != NULL)

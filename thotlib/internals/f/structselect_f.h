@@ -17,8 +17,7 @@ extern ThotBool GetCurrentSelection ( PtrDocument *pDoc,
                                       int *firstChar,
                                       int *lastChar );
 extern void GetActiveView ( PtrDocument *pDoc,
-                            int *view,
-                            ThotBool *assoc );
+                            int *view );
 extern void CancelSelection ( void );
 extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement NextInSelection ( PtrElement pEl,
@@ -27,8 +26,7 @@ extern ThotBool HiddenType ( PtrElement pEl );
 extern void HighlightSelection ( ThotBool showBegin,
                                  ThotBool clearOldSel );
 extern void DeactivateView ( PtrDocument pDoc,
-                             int view,
-                             ThotBool assoc );
+                             int view );
 extern void ShowSelection ( PtrAbstractBox pRootAb,
                             ThotBool showBegin );
 extern void HighlightVisibleAncestor ( PtrElement pEl );
@@ -96,8 +94,7 @@ extern ThotBool GetCurrentSelection (/* PtrDocument *pDoc,
                                         int *firstChar,
                                         int *lastChar */);
 extern void GetActiveView (/* PtrDocument *pDoc,
-                              int *view,
-                              ThotBool *assoc */);
+                              int *view */);
 extern void CancelSelection (/* void */);
 extern void ResetSelection (/* PtrDocument pDoc */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
@@ -106,8 +103,7 @@ extern ThotBool HiddenType (/* PtrElement pEl */);
 extern void HighlightSelection (/* ThotBool showBegin,
                                    ThotBool clearOldSel */);
 extern void DeactivateView (/* PtrDocument pDoc,
-                               int view,
-                               ThotBool assoc */);
+                               int view */);
 extern void ShowSelection (/* PtrAbstractBox pRootAb,
                               ThotBool showBegin */);
 extern void HighlightVisibleAncestor (/* PtrElement pEl */);

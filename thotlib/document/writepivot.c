@@ -1190,8 +1190,6 @@ void WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
    int                 i;
 
    pDoc->DocNLanguages = 0;
-   for (i = 0; i < MAX_ASSOC_DOC; i++)
-      UpdateLanguageTable (pDoc, pDoc->DocAssocRoot[i]);
    UpdateLanguageTable (pDoc, pDoc->DocDocElement);
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {

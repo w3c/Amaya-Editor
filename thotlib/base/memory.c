@@ -624,7 +624,6 @@ void                GetElement (PtrElement * pEl)
        memset (pNewEl, 0, sizeof (ElementDescr));
        pNewEl->ElStructSchema = NULL;
        pNewEl->ElTypeNumber = 0;
-       pNewEl->ElAssocNum = 0;
        pNewEl->ElFirstAttr = NULL;
        pNewEl->ElVolume = 0;
        pNewEl->ElCopyDescr = NULL;
@@ -1005,12 +1004,6 @@ void                FreeDocument (PtrDocument pDoc)
 
    pDoc->DocSSchema = NULL;
    pDoc->DocDocElement = NULL;
-   for (i = 0; i < MAX_ASSOC_DOC; i++)
-     {
-       pDoc->DocAssocRoot[i] = NULL;
-       pDoc->DocAssocSubTree[i] = NULL;
-       pDoc->DocAssocModifiedAb[i] = NULL;
-     }
    for (i = 0; i < MAX_VIEW_DOC; i++)
      {
        pDoc->DocView[i].DvSSchema = NULL;

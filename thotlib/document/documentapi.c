@@ -251,7 +251,7 @@ void                UnloadDocument (PtrDocument * pDoc)
 void                TtaCloseDocument (Document document)
 {
 #ifndef NODISPLAY
-  int              nv, numassoc;
+  int              nv;
 #endif
   PtrDocument      pDoc;
 
@@ -269,19 +269,12 @@ void                TtaCloseDocument (Document document)
 	(*ThotLocalActions[T_clearhistory]) (pDoc);
 #ifndef NODISPLAY
       /* Closing all opened views relating to the document */
-      /* First, one close the views of the main tree */
+      /* close the views */
       for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
 	if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	  {
 	    DestroyFrame (pDoc->DocViewFrame[nv - 1]);
-	    CloseDocumentView (pDoc, nv, FALSE, FALSE);
-	  }
-      /* Then one close frames of associated elements */
-      for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
-	if (pDoc->DocAssocFrame[numassoc - 1] != 0)
-	  {
-	    DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
-	    CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
+	    CloseDocumentView (pDoc, nv, FALSE);
 	  }
       UnloadTree (document);
 #else /* NODISPLAY */
@@ -542,7 +535,6 @@ void       TtaSetPSchema (Document document, CHAR_T* presentationName)
    PtrDocument         pDoc;
 #ifndef NODISPLAY
    int                 view;
-   int                 Assoc;
    ThotBool            ok;
 #endif
 
@@ -566,10 +558,6 @@ void       TtaSetPSchema (Document document, CHAR_T* presentationName)
       for (view = 1; view <= MAX_VIEW_DOC && ok; view++)
 	 if (pDoc->DocView[view - 1].DvPSchemaView != 0)
 	    ok = FALSE;
-      if (ok)
-	 for (Assoc = 1; Assoc <= MAX_ASSOC_DOC && ok; Assoc++)
-	    if (pDoc->DocAssocFrame[Assoc - 1] != 0)
-	       ok = FALSE;
       if (!ok)
 	 TtaError (ERR_there_are_open_views);
       else

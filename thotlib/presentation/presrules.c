@@ -2352,7 +2352,7 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 	  {
 	     /* on cree une marque de page */
 	     pElPage = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
-				   pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				   TRUE, TRUE, TRUE, TRUE);
 	     if (pElPage != NULL)
 		/* on a cree une marque de page */
 

@@ -53,7 +53,7 @@
 PtrDocument         DocumentOfElement (PtrElement pEl)
 {
    PtrElement          pE;
-   int                 i, j;
+   int                 i;
    PtrDocument         pDoc;
 
    if (pEl == NULL)
@@ -64,21 +64,14 @@ PtrDocument         DocumentOfElement (PtrElement pEl)
    while (pE->ElParent != NULL)
       pE = pE->ElParent;
 
-   /* searches among the roots of existing documents as well as among
-      the associated elements and parameters of those documents */
+   /* searches among the roots of existing documents */
    for (i = 0; i < MAX_DOCUMENTS; i++)
      {
 	pDoc = LoadedDocument[i];
 	if (pDoc != NULL)
-	  {
-	     if (pDoc->DocDocElement == pE)
-		/* it's the root of the principal tree */
-		return pDoc;
-	     /* searches among the associate elements */
-	     for (j = 0; j < MAX_ASSOC_DOC; j++)
-		if (pDoc->DocAssocRoot[j] == pE)
-		   return pDoc;
-	  }
+	  if (pDoc->DocDocElement == pE)
+	    /* it's the root of the principal tree */
+	    return pDoc;
      }
    return NULL;
 }
@@ -2000,7 +1993,7 @@ void                InsertFirstChild (PtrElement pOld, PtrElement pNew)
    InsertElemInChoice
    Replaces the element if type CHOICE pointed by pEl with  the new
    element pNew, except if pEl is a composite element or the root of
-   the structure scheme or an associate element.
+   the structure scheme.
    In this case, the new element is inserted as pEl's first child.
   ----------------------------------------------------------------------*/
 void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
@@ -2280,16 +2273,14 @@ ThotBool          IsConstantConstructor (PtrElement pEl)
    of subtree to create.
    pSS: pointer to the structure scheme of the subtree to create.
    pDoc: pointer to the document descriptor to which the subtree will belong.
-   assocNum: number of the list of associated elements to which belongs the
-   subtree to be created. Zero if there's no associated element.
    withAttr : if TRUE, the function creates the elements of the subtree with
    and gives their attributes the default value (creation case), otherwise,
    the function does not create them (case of a pivot read).
    withLabel tells if one must give the element a new label.
   ----------------------------------------------------------------------*/
 PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
-		       int assocNum, ThotBool Desc, ThotBool Root,
-		       ThotBool withAttr, ThotBool withLabel)
+		       ThotBool Desc, ThotBool Root, ThotBool withAttr,
+		       ThotBool withLabel)
 {  
   PtrElement          pEl, t1, t2;
   int                 i;
@@ -2338,7 +2329,6 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	{
 	  pEl->ElStructSchema = pSS;
 	  pEl->ElTypeNumber = typeNum;
-	  pEl->ElAssocNum = 0;
 	  if (withLabel)
 	    /* compute the value of the label */
 	    ConvertIntToLabel (NewLabel (pDoc), pEl->ElLabel);
@@ -2412,7 +2402,6 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		  pEl->ElPageNumber = 0;
 		  pEl->ElViewPSchema = 0;
 		  pEl->ElPageModified = FALSE;
-		  pEl->ElAssocHeader = TRUE;
 		  pEl->ElVolume = 10;
 		  break;
 		case Refer:
@@ -2486,8 +2475,8 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	    pSRule2->SrConstruct == CsReference ||
 	    pSRule2->SrConstruct == CsNatureSchema)
 	  create = TRUE;
-	t1 = NewSubtree (pSRule->SrIdentRule, pSS, pDoc, assocNum, Desc,
-			 create, withAttr, withLabel);
+	t1 = NewSubtree (pSRule->SrIdentRule, pSS, pDoc, Desc, create,
+			 withAttr, withLabel);
 	if (pEl == NULL)
 	  pEl = t1;
 	else
@@ -2500,8 +2489,8 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
       case CsChoice:
 	break;
       case CsList:
-	t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-			 TRUE, withAttr, withLabel);
+	t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, Desc, TRUE, withAttr,
+			 withLabel);
 	if (pEl == NULL)
 	  pEl = t1;
 	else
@@ -2509,8 +2498,8 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	if (t1 != NULL)
 	  for (i = 2; i <= pSRule->SrMinItems; i++)
 	    {
-	      t2 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-			       TRUE, withAttr, withLabel);
+	      t2 = NewSubtree (pSRule->SrListItem, pSS, pDoc, Desc, TRUE,
+			       withAttr, withLabel);
 	      if (t2 != NULL)
 		{
 		  InsertElemAfterLastSibling (t1, t2);
@@ -2525,8 +2514,8 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	  if (!pSRule->SrOptComponent[i - 1])
 	    /* don't create the optional components */
 	    {
-	      t2 = NewSubtree (pSRule->SrComponent[i - 1], pSS, pDoc,
-			       assocNum, Desc, TRUE, withAttr, withLabel);
+	      t2 = NewSubtree (pSRule->SrComponent[i - 1], pSS, pDoc, Desc,
+			       TRUE, withAttr, withLabel);
 	      if (t2 != NULL)
 		{
 		  if (t1 != NULL)
@@ -2547,7 +2536,6 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
     pSRule->SrRecursDone = FALSE;	/* for next time.... */
   return pEl;
 }
-
 
 /*----------------------------------------------------------------------
    RemoveExcludedElem
@@ -2963,8 +2951,6 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
    "the copy") or NULL in case of failure.
    - pDocSource: pointer to the document descriptor to which belongs
    the source tree.
-   - assocNum: number of the list of associated elements to which the
-   target must bleong. assocNum=0 if it's not an associated element.
    - pSSchema: pointer to the structure scheme that the  target's elements
    should depend on.
    - pDocCopy: pointer to the document's descriptor to which the copy
@@ -2977,7 +2963,7 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
    referenced element descriptor with the source.
   ----------------------------------------------------------------------*/
 PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
-		     int assocNum, PtrSSchema pSSchema, PtrDocument pDocCopy,
+		     PtrSSchema pSSchema, PtrDocument pDocCopy,
 		     PtrElement pParent, ThotBool checkAttr, ThotBool shareRef)
 {
   PtrElement          pEl, pS2, pC1, pC2;
@@ -3108,7 +3094,6 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	    /* fills the copy */
 	    pEl->ElStructSchema = pSSchema;
 	    pEl->ElTypeNumber = copyType;
-	    pEl->ElAssocNum = 0;
 	    /* copies the attributes */
 	    CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
 	    /* copies the specific presentation rules */
@@ -3210,8 +3195,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		  pC1 = NULL;
 		  do
 		     {
-		     pC2 = CopyTree (pS2, pDocSource, assocNum, pSSchema,
-				     pDocCopy, pEl, checkAttr, shareRef);
+		     pC2 = CopyTree (pS2, pDocSource, pSSchema, pDocCopy,
+				     pEl, checkAttr, shareRef);
 		     if (pC2 != NULL)
 		        {
 			if (pC1 == NULL)
@@ -3229,43 +3214,6 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
       }
    return pEl;
 }
-
-/*----------------------------------------------------------------------
-  FirstAssociatedElement
-  Returns the first associated element of type typeNum, defined by the
-  structure scheme pSS, belonging to document pDoc. Returns NULL if no
-  such element exists.
-  ----------------------------------------------------------------------*/
-PtrElement FirstAssociatedElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
-{
-   int                 a;
-   PtrElement          pEl, pEl2;
-   ThotBool            stop;
-
-   pEl = NULL;
-   stop = FALSE;
-   a = 0;
-   do
-     {
-	if (pDoc->DocAssocRoot[a] != NULL)
-	   if (pDoc->DocAssocRoot[a]->ElFirstChild != NULL)
-	     {
-		pEl2 = pDoc->DocAssocRoot[a]->ElFirstChild;
-		FwdSkipPageBreakAndExtension (&pEl2);
-		if (pEl2 != NULL)
-		   if (pEl2->ElTypeNumber == typeNum &&
-		       !ustrcmp (pEl2->ElStructSchema->SsName, pSS->SsName))
-		     {
-			pEl = pEl2;
-			stop = TRUE;
-		     }
-	     }
-	a++;
-     }
-   while (!stop && a < MAX_ASSOC_DOC);
-   return pEl;
-}
-
 
 /*----------------------------------------------------------------------
    ChangeLabels
@@ -3428,8 +3376,8 @@ void                CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 			 ustrcmp (pEl->ElStructSchema->SsName,
 				  pSource->ElStructSchema->SsName)))
 		 {
-		   pC1 = CopyTree (pSource, pDocSource, pEl->ElAssocNum, pEl
-				   ->ElStructSchema, pDoc, pEl, TRUE, TRUE);
+		   pC1 = CopyTree (pSource, pDocSource, pEl->ElStructSchema,
+				   pDoc, pEl, TRUE, TRUE);
 		   if (pC1 != NULL)
 		     {
 		       pC1->ElReferredDescr = NULL;
@@ -3444,9 +3392,8 @@ void                CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 		   pC1 = NULL;
 		   do
 		     {
-		       pC2 = CopyTree (pS2, pDocSource, pEl->ElAssocNum,
-				       pEl->ElStructSchema, pDoc, pEl, TRUE,
-				       TRUE);
+		       pC2 = CopyTree (pS2, pDocSource, pEl->ElStructSchema,
+				       pDoc, pEl, TRUE, TRUE);
 		       if (pC2 != NULL)
 			 {
 			   if (pC1 == NULL)

@@ -122,8 +122,8 @@ static ThotBool     ListWithText (PtrElement pEl, PtrDocument pDoc)
 	   /* essaie de creer une descendance de cette liste qui mene a une */
 	   /* feuille de texte */
 	   pDesc = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema,
-				     pDoc, &pTextEl, pEl->ElAssocNum,
-				     CharString + 1, pEl->ElStructSchema);
+				     pDoc, &pTextEl, CharString + 1,
+				     pEl->ElStructSchema);
 	   if (pDesc != NULL)
 	      /* on a pu creer la descendance */
 	     {
@@ -301,8 +301,7 @@ static ThotBool     ReadImportFile (FILE * file, PtrDocument pDoc)
 		     /* jusqu'a une feuille de texte */
 		     pDesc = CreateDescendant (pListEl->ElTypeNumber,
 			        pListEl->ElStructSchema, pDoc, &pTextEl,
-				pListEl->ElAssocNum, CharString + 1,
-				pListEl->ElStructSchema);
+				CharString + 1, pListEl->ElStructSchema);
 		     if (pDesc == NULL || pTextEl == NULL)
 		        /* la creation a echoue'. On arrete tout */
 		        {
@@ -402,13 +401,13 @@ void                ImportDocument (Name SSchemaName, PathBuffer directory,
 		   {
 		     /* cree la representation interne d'un document minimum */
 		     pEl = NewSubtree (pDoc->DocSSchema->SsRootElem,
-				       pDoc->DocSSchema, pDoc, 0, TRUE, TRUE,
+				       pDoc->DocSSchema, pDoc, TRUE, TRUE,
 				       TRUE, TRUE);
 		     if (pEl)
 		       {
 			 pDoc->DocDocElement = NewSubtree (pDoc->DocSSchema->SsDocument,
 						        pDoc->DocSSchema, pDoc,
-							0, FALSE, TRUE, TRUE,
+							FALSE, TRUE, TRUE,
 							TRUE);
 			 InsertFirstChild (pDoc->DocDocElement, pEl);
 			 /* supprime les elements exclus */
@@ -580,7 +579,7 @@ static void ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName,
    PtrSSchema          naturePSchema[MAX_PRES_NATURE];
    PathBuffer          schemaPath;
    Name                nomPres;
-   int                 NnaturePSchemas, nat, assoc;
+   int                 NnaturePSchemas, nat;
    NotifyNaturePresent notifyDoc;
 
    /* sauve le path courant des schemas */
@@ -596,9 +595,6 @@ static void ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName,
       /* detruit tous les sauts de page engendre's par le debut d'un
 	 element qui a la regle de presentation Page */
       RemovePagesBeginTree (pDoc->DocDocElement, pDoc);
-      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	if (pDoc->DocAssocRoot[assoc] != NULL)
-	  RemovePagesBeginTree (pDoc->DocAssocRoot[assoc], pDoc);
       /* etablit la liste des natures utilisees dans le document */
       SearchNatures (pDoc, naturePSchema, &NnaturePSchemas);
       /* change de schema de presentation pour chaque nature
@@ -697,7 +693,7 @@ static ThotBool     RedisplayNatureView (PtrDocument pDoc, PtrAbstractBox pAb,
 static void         RedisplayNature (PtrDocument pDoc, PtrSSchema pNatSSchema)
 {
   PtrAbstractBox      pRootAb;
-  int                 view, assoc, frame, volume;
+  int                 view, frame, volume;
 
   if (pDoc != NULL && pNatSSchema != NULL)
     {
@@ -719,23 +715,6 @@ static void         RedisplayNature (PtrDocument pDoc, PtrSSchema pNatSSchema)
 	      }
 	    pDoc->DocViewFreeVolume[view] = volume;
 	  }
-      /* traite les vues des elements associes */
-      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	{
-	  frame = pDoc->DocAssocFrame[assoc];
-	  if (frame != 0)
-	    {
-	      pRootAb = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
-	      volume = pDoc->DocAssocFreeVolume[assoc];
-	      pDoc->DocAssocFreeVolume[assoc] = THOT_MAXINT;
-	      if (RedisplayNatureView (pDoc, pRootAb, pNatSSchema, 1, frame))
-		{
-		  DisplayFrame (frame);
-		  ShowSelection (pRootAb, TRUE);
-		}
-	      pDoc->DocAssocFreeVolume[assoc] = volume;
-	    }
-	}
     }
 }
 

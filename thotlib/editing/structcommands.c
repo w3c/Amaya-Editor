@@ -154,7 +154,9 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
     if (*firstChar == 1 && *lastChar == 1 && *pFirstSel == *pLastSel)
       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
 	{
-	  pEl = NewSubtree ((*pFirstSel)->ElTypeNumber, (*pFirstSel)->ElStructSchema, pDoc, (*pFirstSel)->ElAssocNum, FALSE, TRUE, FALSE, TRUE);
+	  pEl = NewSubtree ((*pFirstSel)->ElTypeNumber,
+			    (*pFirstSel)->ElStructSchema, pDoc,
+			    FALSE, TRUE, FALSE, TRUE);
 	  InsertElementBefore (*pFirstSel, pEl);
 	  for (view = 0; view < MAX_VIEW_DOC; view++)
 	    {
@@ -855,7 +857,7 @@ void                CopyCommand ()
 			  else
 			     /* pas d'objection de l'application */
 			     /* cree une copie de l'element */
-			     pCopy = CopyTree (pEl, pSelDoc, 0, pEl->ElStructSchema,
+			     pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
 					       pSelDoc, NULL, FALSE, TRUE);
 			  if (pCopy != NULL)
 			     /* met la copie de l'element courant dans la 
@@ -1824,8 +1826,8 @@ static ThotBool CanSurround (int typeNum, PtrSSchema pSS, PtrElement firstEl,
       /* descendants */
      {
 	/* on cree un element du type du candidat englobant */
-	pElSurround = NewSubtree (typeNum, pSS, pDoc, firstEl->ElAssocNum,
-				  FALSE, TRUE, FALSE, FALSE);
+	pElSurround = NewSubtree (typeNum, pSS, pDoc, FALSE, TRUE, FALSE,
+				  FALSE);
 	/* on insere temporairement cet element dans l'arbre, comme frere */
 	/* precedent du premier element a englober */
 	InsertElementBefore (firstEl, pElSurround);
@@ -1936,8 +1938,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
    else
      {
 	/* on cree un element du type choisi par l'utilisateur */
-	pElSurround = NewSubtree (typeNum, pSS, pDoc, firstEl->ElAssocNum,
-				  FALSE, TRUE, TRUE, TRUE);
+	pElSurround = NewSubtree (typeNum, pSS, pDoc, FALSE, TRUE, TRUE, TRUE);
 	pRoot = pElSurround;
 	unit = FALSE;
 	if (ustrcmp (pElSurround->ElStructSchema->SsName,
@@ -1954,8 +1955,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 		/* on cree un element racine du schema */
 		pRoot = NewSubtree (pElSurround->ElStructSchema->SsRootElem,
 				    pElSurround->ElStructSchema, pDoc,
-				    firstEl->ElAssocNum, FALSE, TRUE, TRUE,
-				    TRUE);
+				    FALSE, TRUE, TRUE, TRUE);
 		/* l'element qui va englober les elements selectionne's */
 		/* devient le fils de ce nouvel element */
 		InsertFirstChild (pRoot, pElSurround);
@@ -2836,7 +2836,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		    if (ancestorRule > 0)
 		      {
 			pNew = NewSubtree (ancestorRule, pSS, pSelDoc,
-					   pEl->ElAssocNum, FALSE, TRUE, TRUE, TRUE);
+					   FALSE, TRUE, TRUE, TRUE);
 			elType.ElTypeNum = typeNum;
 			elType.ElSSchema = (SSchema) pSS;
 			TtaCreateDescent (IdentDocument (pSelDoc),
@@ -2862,7 +2862,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pSelDoc);
 		      }
 		  if (pNew == NULL)
-		    pNew = NewSubtree (typeNum, pSS, pSelDoc, pEl->ElAssocNum,
+		    pNew = NewSubtree (typeNum, pSS, pSelDoc,
 				       TRUE, TRUE, TRUE, TRUE);
 		  
 		  /* Insertion du nouvel element */

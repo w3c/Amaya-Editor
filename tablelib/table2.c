@@ -588,9 +588,9 @@ ThotBool            *cutDone;
 		  if (pElToCopy != NULL)
 		     /* il y a bien un element a repeter avant le saut de page */
 		    {
-		       pEl = NewSubtree (pElToCopy->ElTypeNumber, pElToCopy->ElStructSchema,
-				    pDoc, pElToCopy->ElAssocNum, FALSE, TRUE,
-					 TRUE, TRUE);
+		       pEl = NewSubtree (pElToCopy->ElTypeNumber,
+					 pElToCopy->ElStructSchema, pDoc,
+					 FALSE, TRUE, TRUE, TRUE);
 		       GetReference (&pEl->ElSource);
 		       if (pEl->ElSource == NULL)
 			  DeleteElement (&pEl, pDoc);
@@ -623,9 +623,9 @@ ThotBool            *cutDone;
 		  if (pElToCopy != NULL)
 		     /* il y a bien un element a repeter apres le saut de page */
 		    {
-		       pEl = NewSubtree (pElToCopy->ElTypeNumber, pElToCopy->ElStructSchema,
-				    pDoc, pElToCopy->ElAssocNum, FALSE, TRUE,
-					 TRUE, TRUE);
+		       pEl = NewSubtree (pElToCopy->ElTypeNumber,
+					 pElToCopy->ElStructSchema, pDoc,
+					 FALSE, TRUE, TRUE, TRUE);
 		       /* associe un bloc reference a l'element cree' */
 		       GetReference (&pEl->ElSource);
 		       if (pEl->ElSource == NULL)

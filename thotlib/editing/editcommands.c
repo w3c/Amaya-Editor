@@ -144,9 +144,9 @@ static void RegisterInHistory (PtrElement pEl, int frame,
 {
    PtrDocument         pDoc;
    int                 view;
-   ThotBool            assoc, opened;
+   ThotBool            opened;
 
-   GetDocAndView (frame, &pDoc, &view, &assoc);
+   GetDocAndView (frame, &pDoc, &view);
    opened = pDoc->DocEditSequence;
    if (!opened)
      OpenHistorySequence (pDoc, pEl, pEl, firstCharIndex, lastCharIndex);
@@ -166,10 +166,9 @@ static ThotBool     APPtextModify (PtrElement pEl, int frame, ThotBool pre)
    NotifyOnTarget      notifyEl;
    PtrDocument         pDoc;
    int                 view;
-   ThotBool            assoc;
    ThotBool            ok;
 
-   GetDocAndView (frame, &pDoc, &view, &assoc);
+   GetDocAndView (frame, &pDoc, &view);
    result = FALSE;
    pParentEl = pEl;
    while (pParentEl != NULL)
@@ -196,10 +195,9 @@ static ThotBool APPattrModify (PtrAttribute pAttr, PtrElement pEl,
    ThotBool            result;
    PtrDocument         pDoc;
    int                 view;
-   ThotBool            assoc;
    NotifyAttribute     notifyAttr;
 
-   GetDocAndView (frame, &pDoc, &view, &assoc);
+   GetDocAndView (frame, &pDoc, &view);
    notifyAttr.event = TteAttrModify;
    notifyAttr.document = (Document) IdentDocument (pDoc);
    notifyAttr.element = (Element) pEl;

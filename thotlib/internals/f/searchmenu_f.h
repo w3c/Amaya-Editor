@@ -16,8 +16,7 @@ extern void CallbackTextReplace ( int ref,
                                   char *txt );
 extern void BuildGoToPageMenu ( PtrDocument pDoc,
                                 int docView,
-                                int schView,
-                                ThotBool assoc );
+                                int schView );
 extern void CallbackGoToPageMenu ( int ref,
                                    int val );
 extern void SearchLoadResources ( void );
@@ -34,8 +33,7 @@ extern void CallbackTextReplace (/* int ref,
                                     char *txt */);
 extern void BuildGoToPageMenu (/* PtrDocument pDoc,
                                   int docView,
-                                  int schView,
-                                  ThotBool assoc */);
+                                  int schView */);
 extern void CallbackGoToPageMenu (/* int ref,
                                      int val */);
 extern void SearchLoadResources (/* void */);

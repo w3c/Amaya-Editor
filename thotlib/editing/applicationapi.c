@@ -107,34 +107,7 @@ void CloseInsertion ()
       (*ThotLocalActions[T_stopinsert]) ();
 }
 
-
-
 #ifndef NODISPLAY
-/*----------------------------------------------------------------------
-   GetViewInfo returns wiew number and assoc state of the          
-   corresponding to the view of the document.             
-   Parameters:                                                     
-   document: the document.                                 
-   view: the view.                                         
-   Return value:                                                   
-   corresponding view number.                              
-   corresponding assoc state.                              
-  ----------------------------------------------------------------------*/
-void GetViewInfo (Document document, View view, int *viewnumber, ThotBool *assoc)
-{
-
-   *assoc = FALSE;
-   *viewnumber = 0;
-
-   if (view < 100)
-      *viewnumber = (int) view;
-   else
-     {
-	*assoc = TRUE;
-	*viewnumber = (int) view - 100;
-     }
-}
-
 
 /*----------------------------------------------------------------------
    GetWindowNumber returns the window corresponding to the view of 
@@ -147,28 +120,18 @@ void GetViewInfo (Document document, View view, int *viewnumber, ThotBool *assoc
   ----------------------------------------------------------------------*/
 int GetWindowNumber (Document document, View view)
 {
-   PtrDocument         pDoc;
-   ThotBool            assoc;
-   int                 aView, win;
+   int                 win;
 
    win = 0;
-   /* Checks parameters */
+   /* Check parameters */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] != NULL)
      {
-      if (view < 1 || (view > MAX_VIEW_DOC && view < 100) ||
-	  view > MAX_ASSOC_DOC + 100)
+       if (view < 1 || view > MAX_VIEW_DOC)
          TtaError (ERR_invalid_parameter);
       else
-        {
-	pDoc = LoadedDocument[document - 1];
-	GetViewInfo (document, view, &aView, &assoc);
-	if (assoc)
-	   win = pDoc->DocAssocFrame[aView - 1];
-	else
-	   win = pDoc->DocViewFrame[aView - 1];
-        }
+	win = LoadedDocument[document - 1]->DocViewFrame[view - 1];
      }
    return win;
 }
@@ -494,9 +457,6 @@ char *TtaGetStrError (int errorCode)
 	       break;
 	    case ERR_read_only_document:
 	       strError = "read only document";
-	       break;
-	    case ERR_invalid_associated_root:
-	       strError = "invalid associated root";
 	       break;
 	    case ERR_invalid_parameter:
 	       strError = "invalid parameter";

@@ -109,7 +109,6 @@ PtrDocument        *pDoc;
    PtrReferredDescr    pRefD1;
    PtrAttribute        pAttrRef;
    PtrDocument         pDocRef;
-   int                 assoc;
    ThotBool            found;
    ThotBool            modif;
 
@@ -173,11 +172,6 @@ PtrDocument        *pDoc;
 			  /* on cherche d'abord dans l'arbre principal du document */
 			  if ((*pDoc)->DocDocElement != NULL)
 			     pE = SearchElemLabel ((*pDoc)->DocDocElement, pRefD1->ReReferredLabel);
-			  /* on cherche danbs les arbres associes */
-			  for (assoc = 0; pE == NULL && assoc < MAX_ASSOC_DOC; assoc++)
-			     if ((*pDoc)->DocAssocRoot[assoc] != NULL)
-				pE = SearchElemLabel ((*pDoc)->DocAssocRoot[assoc],
-						   pRefD1->ReReferredLabel);
 			  if (pE != NULL)
 			     /* on a trouve' l'element reference'. On recree le lien */
 			    {

@@ -229,8 +229,7 @@ typedef enum
 {
   	RpSibling,
 	RpDescend,
-	RpReferred,
-	RpAssoc
+	RpReferred
 } TRelatPosition;
 
 /* type of an Indent rule */

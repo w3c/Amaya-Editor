@@ -11,8 +11,7 @@ extern PtrElement AddLastPageBreak ( PtrElement pRootEl,
                                      PtrDocument pDoc,
                                      ThotBool withAPP );
 extern void PaginateView ( PtrDocument pDoc,
-                           int view,
-                           ThotBool Assoc );
+                           int view );
 
 #else /* __STDC__ */
 
@@ -21,8 +20,7 @@ extern PtrElement AddLastPageBreak (/* PtrElement pRootEl,
                                        PtrDocument pDoc,
                                        ThotBool withAPP */);
 extern void PaginateView (/* PtrDocument pDoc,
-                             int view,
-                             ThotBool Assoc */);
+                             int view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

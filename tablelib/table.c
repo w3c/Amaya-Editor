@@ -564,7 +564,7 @@ PtrDocument         pDoc;
 		pCell = pElRow->ElFirstChild->ElNext->ElFirstChild;
 		/* on cree une nouvelle cellule */
 		pNCell = NewSubtree (TypeCell, pEl->ElStructSchema, pDoc,
-				pElRow->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				     TRUE, TRUE, TRUE, TRUE);
 		/* on insere cette nouvelle cellule dans l'arbre */
 		if (pCell == NULL)
 		   /* la ligne n'avait pas encore de cellules */
@@ -695,8 +695,7 @@ PtrDocument         pDoc;
 		     /* on cree une nouvelle cellule */
 		     pCell = NewSubtree (pCellPrec->ElTypeNumber,
 					 pEl->ElStructSchema, pDoc,
-					 pCellPrec->ElAssocNum, TRUE, TRUE,
-					 TRUE, TRUE);
+					 TRUE, TRUE, TRUE, TRUE);
 		     /* on insere cette nouvelle cellule dans l'arbre */
 		     InsertElementAfter (pCellPrec, pCell);
 		  }
@@ -777,8 +776,8 @@ PtrDocument         pDoc;
 		  do
 		    {
 		       /* transforme la Column en Simple_Column */
-		       pElNew = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum, TRUE, TRUE,
-					   TRUE, TRUE);
+		       pElNew = NewSubtree (NType, pSS, pDoc, TRUE, TRUE,
+					    TRUE, TRUE);
 		       InsertOption (pE, &pElNew, pDoc);
 		       /* met les attributs a la Simple_Column */
 		       SetAttrSimpleCol (pE, pDoc);
@@ -806,8 +805,8 @@ PtrDocument         pDoc;
 			    do
 			      {
 				 /* transforme la Line en Ligne_simple */
-				 pElNew = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum,
-						     TRUE, TRUE, TRUE, TRUE);
+				 pElNew = NewSubtree (NType, pSS, pDoc,
+						      TRUE, TRUE, TRUE, TRUE);
 				 InsertOption (pE, &pElNew, pDoc);
 				 /* traite les attributs requis */
 				 AttachMandatoryAttributes (pE, pDoc);
@@ -930,7 +929,7 @@ PtrDocument         pDoc;
 		  if (TypeHasException (EXC_ID_Column, pE->ElTypeNumber, pE->ElStructSchema))
 		    {
 		       /* transforme la Column en Simple_Column */
-		       pC = NewSubtree (NType, pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
+		       pC = NewSubtree (NType, pEl->ElStructSchema, pDoc,
 					TRUE, TRUE, TRUE, TRUE);
 		       InsertOption (pE, &pC, pDoc);
 		       /* traite les attributs requis */
@@ -966,7 +965,7 @@ PtrDocument         pDoc;
 	     do
 	       {
 		  /* transforme la Line en Ligne_simple */
-		  pC = NewSubtree (NType, pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
+		  pC = NewSubtree (NType, pEl->ElStructSchema, pDoc,
 				   TRUE, TRUE, TRUE, TRUE);
 		  InsertOption (pE, &pC, pDoc);
 		  /* traite les attributs requis */
@@ -1275,7 +1274,7 @@ PtrDocument         pDoc;
 		if (nbPastedCells < NbCell)
 		  {
 		     /* on cree une copie de la cellule a coller */
-		     pNCell = CopyTree (*pSvCell, DocOfSavedElements, pCol->ElAssocNum,
+		     pNCell = CopyTree (*pSvCell, DocOfSavedElements,
 			     pCol->ElStructSchema, pDoc, pElParent, TRUE, TRUE);
 		     nbPastedCells++;
 		     *pSvCell = (*pSvCell)->ElNext;
@@ -1285,8 +1284,7 @@ PtrDocument         pDoc;
 		     /* on a deja colle' le nombre de cellules voulu, on cree une
 		        cellule vide pour completer la Column */
 		     pNCell = NewSubtree (cellType, pElParent->ElStructSchema, pDoc,
-					pElParent->ElAssocNum, TRUE, TRUE, TRUE,
-					  TRUE);
+					  TRUE, TRUE, TRUE, TRUE);
 		     /* on met les attributs a la nouvelle cellule */
 		     SetAttrColToCell (pNCell, pCol, pDoc);
 		  }
@@ -1356,7 +1354,7 @@ PtrDocument         pDoc;
 	     /* cree une cellule */
 	     pEl = *pCellPrec;
 	     *pCell = NewSubtree (pEl->ElTypeNumber, pEl->ElStructSchema, pDoc,
-				  pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				  TRUE, TRUE, TRUE, TRUE);
 	     /* insere cette cellule a la suite de la cellule precedente */
 	     InsertElementAfter (*pCellPrec, *pCell);
 	  }

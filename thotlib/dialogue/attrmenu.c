@@ -1264,37 +1264,6 @@ void UpdateAttrMenu (PtrDocument pDoc)
 	    }
 	}
     }
-
-  /* Traite toutes les vues des arbres associes */
-  for (view = 1; view <= MAX_ASSOC_DOC; view++)
-    {
-      frame = pDoc->DocAssocFrame[view - 1];
-      if (frame != 0 && FrameTable[frame].MenuAttr != -1)
-	{
-	  menuID = FrameTable[frame].MenuAttr;
-	  menu = FindMenu (frame, menuID, &pMenu) - 1;
-	  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-	  if (pDoc != SelectedDocument || nbItemAttr == 0)
-	    {
-	      /* le menu Attributs contient au moins un attribut */
-	      TtaSetMenuOff (document, view, menu);
-	      TtaDestroyDialogue (ref);
-	    }
-	  else
-	    {
-	      TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
-			      nbItemAttr, bufMenuAttr, NULL);
-	      /* marque les attributs actifs */
-	      for (i = 0; i < nbItemAttr; i++)
-#ifdef _WINDOWS
-		WIN_TtaSetToggleMenu (ref, i, (ThotBool)(ActiveAttr[i] == 1), FrMainRef[frame]);
-#else  /* !_WINDOWS */
-	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
-#endif /* _WINDOWS */
-	      TtaSetMenuOn (document, view, menu);
-	    }
-	}
-    }
 #endif /* _GTK */
 }
 
@@ -1535,7 +1504,7 @@ void                CallbackAttrMenu (int refmenu, int att, int frame)
   TtAttribute        *pAttr;
   PtrAttribute        pAttrNew, currAttr;
   PtrDocument         SelDoc;
-  PtrElement          firstSel, lastSel, AssocCreated;
+  PtrElement          firstSel, lastSel;
   PtrReference        Ref;
   Document            doc;
   View                view;
@@ -1572,22 +1541,16 @@ void                CallbackAttrMenu (int refmenu, int att, int frame)
 	pAttrNew->AeAttrType = pAttr->AttrType;
 	if (pAttr->AttrType == AtReferenceAttr)
 	  {
-	    AssocCreated = NULL;
 	    /* attache un bloc reference a l'attribut */
 	    GetReference (&Ref);
 	    pAttrNew->AeAttrReference = Ref;
 	    pAttrNew->AeAttrReference->RdElement = NULL;
 	    pAttrNew->AeAttrReference->RdAttribute = pAttrNew;
 	    /* demande a l'utilisateur l'element reference' */
-	    if (LinkReference (firstSel, pAttrNew, SelDoc, &AssocCreated))
+	    if (LinkReference (firstSel, pAttrNew, SelDoc))
 	      if (ThotLocalActions[T_checkextens] != NULL)
 		(*ThotLocalActions[T_checkextens])
 		  (pAttrNew, firstSel, lastSel, FALSE);
-	    if (AssocCreated != NULL)
-	      {
-		CreateAllAbsBoxesOfEl (AssocCreated, SelDoc);
-		AbstractImageUpdated (SelDoc);
-	      }
 	    /* applique l'attribut a la partie selectionnee */
 	    AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
 			       firstSel, SelDoc, TRUE);

@@ -98,7 +98,7 @@ void SetAccessMode (PtrDocument pDoc, int accessMode)
 {
   DisplayMode       displayMode;
   PtrAbstractBox    pAb;
-  int               view, assoc;
+  int               view;
   int               h;
 
   /* update all document views */
@@ -113,15 +113,6 @@ void SetAccessMode (PtrDocument pDoc, int accessMode)
 	    h = 0;
 	    ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
 	  }
-      /* update all associated views */
-      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	if (pDoc->DocAssocFrame[assoc] > 0)
-	  {
-	    pAb = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
-	    SetAbsBoxAccessMode (pAb, accessMode);
-	    h = 0;
-	    ChangeConcreteImage (pDoc->DocAssocFrame[view], &h, pAb);
-      }
       /* Redisplay views */
       if (ThotLocalActions[T_redisplay] != NULL)
 	(*ThotLocalActions[T_redisplay]) (pDoc);
@@ -611,10 +602,7 @@ int AppliedView (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
    DocViewDescr       *pView;
 
    viewSch = 0;
-   if (pEl->ElAssocNum != 0)
-      /* c'est un element associe', on applique les regles de la vue 1. */
-      viewSch = 1;
-   else if (pDoc->DocView[viewNb - 1].DvPSchemaView != 0)
+   if (pDoc->DocView[viewNb - 1].DvPSchemaView != 0)
       {
       if (pAttr != NULL)
 	 pSS = pAttr->AeAttrSSchema;
@@ -1224,16 +1212,14 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
   de presentation pRCre dans le document pDoc, pour l'element pEl.
   Cette regle vient du schema de presentation associe au schema de structure
   pSS.
-  Retourne le pave cree'. InAssocBox indique si le createur est une boite de
-  haut ou de bas de page affichant des elements associes.
   completeCreator indique si toutes les regles de presentation ont deja ete
   appliquees au pave createur.
+  Retourne le pave cree'.
   ----------------------------------------------------------------------*/
 PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 			       PtrPRule pRCre, PtrSSchema pSS,
 			       PtrAttribute pAttr, DocViewNumber viewNb,
-			       PtrPSchema pSchP, ThotBool InAssocBox,
-			       ThotBool completeCreator)
+			       PtrPSchema pSchP, ThotBool completeCreator)
 {
   PtrPRule            pRD, pRS;
   PtrPRule            pR, pR1, pRV;
@@ -1350,31 +1336,15 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
       }
 
   if (ok)
-    {
     /* s'il s'agit d'une vue affichant seulement un sous-arbre, on */
     /* ne cree pas les paves de presentation des elements ascendants */
     /* du sous-arbre en question. */
-    if (pEl->ElAssocNum > 0)
-      {
-	/* element associe' */
-	if (pDoc->DocAssocSubTree[pEl->ElAssocNum - 1] != NULL)
-	  /* on n'affiche qu'un sous-arbre de ces elements associes */
-	  if (ElemIsAnAncestor (pEl, pDoc->DocAssocSubTree[pEl->ElAssocNum - 1]))
-	    /* l'element createur englobe le sous-arbre affichable */
-	    /* on ne cree pas le pave' de presentation */
-	    ok = FALSE;
-      }
-    else
-      {
-	/* vue de l'arbre principal */
-	if (pDoc->DocViewSubTree[viewIndex] != NULL)
-	  /* on n'affiche qu'un sous-arbre dans cette vue */
-	  if (ElemIsAnAncestor (pEl, pDoc->DocViewSubTree[viewIndex]))
-	    /* l'element createur englobe le sous-arbre affichable */
-	    /* on ne cree pas le pave' de presentation */
-	    ok = FALSE;
-      }
-    }
+    if (pDoc->DocViewSubTree[viewIndex] != NULL)
+      /* on n'affiche qu'un sous-arbre dans cette vue */
+      if (ElemIsAnAncestor (pEl, pDoc->DocViewSubTree[viewIndex]))
+	/* l'element createur englobe le sous-arbre affichable */
+	/* on ne cree pas le pave' de presentation */
+	ok = FALSE;
 
    if (ok)
      {
@@ -1771,7 +1741,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 				 pAbbCreated->AbPresentationBox = FALSE;
 				 /* cree le pave de presentation */
 				 pAbb1 = CrAbsBoxesPres (pEl, pDoc, pRV, pSS, NULL,
-							 viewNb, pSchP, FALSE, TRUE);
+							 viewNb, pSchP, TRUE);
 				 /* restaure le pointeur de pave de l'elem */
 				 pEl->ElAbstractBox[viewIndex] = pAbbNext;
 			       }
@@ -1821,7 +1791,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     pAbbCreated->AbPresentationBox = FALSE;
 		     /* cree le pave de presentation */
 		     pAbb1 = CrAbsBoxesPres (pEl, pDoc, pR, pSS, NULL, viewNb,
-					     pSchP, TRUE, TRUE);
+					     pSchP, TRUE);
 		     /* restaure le pointeur de pave de l'element */
 		     pEl->ElAbstractBox[viewIndex] = pAbbNext;
 		   }
@@ -1852,19 +1822,10 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	       /* met a jour le volume libre restant dans la vue */
 	       UpdateFreeVol (pAbbCreated, pDoc);
 	       if (pEl->ElTypeNumber == PageBreak + 1)
-		 {
 		 /* c'est une boite de haut ou bas de page. Sa creation */
-		 /* affecte peut-etre les autres boites de haut ou bas de page */
-		 /* deja creees. */
-		 if (InAssocBox && !pAbbCreated->AbEnclosing->AbPresentationBox)
-		   {
-		     pAbbCreated->AbEnclosing->AbPresentationBox = TRUE;
-		     ApplyRefAbsBoxNew (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
-		     pAbbCreated->AbEnclosing->AbPresentationBox = FALSE;
-		   }
-		 else
-		   ApplyRefAbsBoxNew (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
-		 }
+		 /* affecte peut-etre les autres boites de haut ou bas de */
+		 /* page deja creees. */
+		 ApplyRefAbsBoxNew (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
 
 	       /* si c'est une boite contenant une image, choisit le mode */
 	       /* de presentation de l'image en accord avec les regle de */
@@ -2122,7 +2083,7 @@ static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
 		       pRule->PrPresFunction == FnCreateLast)))
 	     {
 		pAbb = CrAbsBoxesPres (pAb->AbElement, pDoc, pRule,
-			      pSS, pAttr, pAb->AbDocView, pSP, FALSE, TRUE);
+			      pSS, pAttr, pAb->AbDocView, pSP, TRUE);
 		if (pAbb != NULL)
 		   /* TODO : valeur de pAbb si plusieurs paves crees avec Rep ?? */
 		  {
@@ -2601,8 +2562,8 @@ static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 	if (toCreate)
 	   /* on cree le pave de presentation */
 	  {
-	     pAbb = CrAbsBoxesPres (pEl, pDoc, pRuleCr, pSS, pA, viewNb, pSchPres, FALSE,
-				    FALSE);
+	     pAbb = CrAbsBoxesPres (pEl, pDoc, pRuleCr, pSS, pA, viewNb,
+				    pSchPres, FALSE);
 	     if (pAbb != NULL)
 		/* le pave de presentation a ete cree */
 		if (pRuleCr->PrPresFunction == FnCreateBefore ||
@@ -3024,11 +2985,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
      }
 
    /* force la visibilite du pave racine si elle n'a pas ete evaluee, */
-   /* mais seulement pour l'arbre principal ou la vue 1 des elements */
-   /* associes. */
    if (!ok && pEl->ElParent == NULL)
-      if (pEl->ElAssocNum == 0 || viewSch == 1)
-	 *vis = 10;
+     *vis = 10;
 
    /* on ne cree une marque de page que si elle concerne la vue et */
    /* s'il existe des regles de presentation de la page */
@@ -3061,37 +3019,21 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
    /* si la vue n'affiche qu'un sous-arbre, l'element n'est visible */
    /* que s'il est dans le sous-arbre en question ou sur le chemin */
    /* entre la racine et le sous-arbre. */
-   if (pEl->ElAssocNum > 0)
-     {				/* element associe' */
-	if (pDoc->DocAssocSubTree[pEl->ElAssocNum - 1] != NULL)
-	  {
-	     /* on n'affiche qu'un sous-arbre de ces elements associes */
-	     if (!ElemIsAnAncestor (pDoc->DocAssocSubTree[pEl->ElAssocNum - 1], pEl) &&
-		 pDoc->DocAssocSubTree[pEl->ElAssocNum - 1] != pEl)
-		/* l'elem. traite' n'est pas dans le sous-arbre affichable */
-		if (!ElemIsAnAncestor (pEl, pDoc->DocAssocSubTree[pEl->ElAssocNum - 1]))
-		   /* il n'englobe pas le sous-arbre affichable */
-		   *vis = 0;	/* on ne cree pas son pave' */
-	  }
-     }
-   else
-     {				/* vue de l'arbre principal */
-	if (pDoc->DocViewSubTree[viewNb - 1] != NULL)
-	  {			/* on n'affiche qu'un sous-arbre dans cette vue */
-	     if (!ElemIsAnAncestor (pDoc->DocViewSubTree[viewNb - 1], pEl) &&
-		 pDoc->DocViewSubTree[viewNb - 1] != pEl)
-		/* l'elem. traite' n'est pas dans le sous-arbre affichable */
-		if (!ElemIsAnAncestor (pEl, pDoc->DocViewSubTree[viewNb - 1]))
-		   /* il n'englobe pas le sous-arbre affichable */
-		   *vis = 0;	/* on ne cree pas son pave' */
-	  }
+   if (pDoc->DocViewSubTree[viewNb - 1] != NULL)
+     /* on n'affiche qu'un sous-arbre dans cette vue */
+     {
+       if (!ElemIsAnAncestor (pDoc->DocViewSubTree[viewNb - 1], pEl) &&
+	   pDoc->DocViewSubTree[viewNb - 1] != pEl)
+	 /* l'elem. traite' n'est pas dans le sous-arbre affichable */
+	 if (!ElemIsAnAncestor (pEl, pDoc->DocViewSubTree[viewNb - 1]))
+	   /* il n'englobe pas le sous-arbre affichable */
+	   *vis = 0;	/* on ne cree pas son pave' */
      }
 
    /* si l'element est une copie, qu'il porte une exception
-      ExcPageBreakRepetition ou ExcPageBreakRepBefore
-      qu'il est associe a un saut de page et que ce saut 
-      de page n'appartient pas a la vue concernee, alors
-      on ne cree pas son pave. */
+      ExcPageBreakRepetition ou ExcPageBreakRepBefore, qu'il est associe a
+      un saut de page et que ce saut de page n'appartient pas a la vue
+      concernee, alors on ne cree pas son pave. */
    if (pEl->ElSource)
      {
 	pElAssociatedPage = NULL;
@@ -3693,8 +3635,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 	    
 	    /* si l'element est visible dans cette vue ou si c'est la racine, */
 	    /* on cree son pave, si ce n'est deja fait */
-	    if (vis >= 1 ||
-		(pEl->ElParent == NULL && (pEl->ElAssocNum == 0 || viewSch == 1)))
+	    if (vis >= 1 || pEl->ElParent == NULL)
 	      {
 	      if (ApplyRules)
 		/* on applique seulement les regles de presentation a un */
@@ -4234,11 +4175,11 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 				 pAbbPres = CrAbsBoxesPres (pEl, pDoc, pRule,
 							    pAttr->AeAttrSSchema, pAttr, viewNb,
 							    PresentationSchema (pAttr->AeAttrSSchema, pDoc),
-							    FALSE, TRUE);
+							    TRUE);
 			       else
 				 pAbbPres = CrAbsBoxesPres (pEl, pDoc, pRule,
 							    pEl->ElStructSchema, NULL, viewNb,
-							    pSPres, FALSE, TRUE);
+							    pSPres, TRUE);
 			     }
 			   switch (pRule->PrPresFunction)
 			     {

@@ -90,12 +90,11 @@ void                TtaSelectView (Document document, View view)
 {
   PtrDocument       pDoc;
   int               oldView;
-  ThotBool          assoc;
 
-   UserErrorCode = 0;
-   GetActiveView (&pDoc, &oldView, &assoc);
-   if (LoadedDocument[document - 1] == pDoc && !assoc && oldView != view)
-     SelectedView = view;
+  UserErrorCode = 0;
+  GetActiveView (&pDoc, &oldView);
+  if (LoadedDocument[document - 1] == pDoc && oldView != view)
+    SelectedView = view;
 }
 
 /*----------------------------------------------------------------------
@@ -105,14 +104,13 @@ Document   TtaGetSelectedDocument ()
 {
   PtrDocument       pDoc;
   int               oldView;
-  ThotBool          assoc;
 
-   UserErrorCode = 0;
-   GetActiveView (&pDoc, &oldView, &assoc);
-   if (pDoc == NULL)
-     return (0);
-   else
-     return (IdentDocument (pDoc));
+  UserErrorCode = 0;
+  GetActiveView (&pDoc, &oldView);
+  if (pDoc == NULL)
+    return (0);
+  else
+    return (IdentDocument (pDoc));
 }
 
 /*----------------------------------------------------------------------

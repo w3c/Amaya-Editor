@@ -59,7 +59,6 @@ static void         AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 					      PtrSSchema pSS)
 {
 #ifndef NODISPLAY
-  PtrElement          pRefEl;
   int                 len;
 #endif /* NODISPLAY */
   PtrAttribute        pAttr, pA;
@@ -158,8 +157,7 @@ static void         AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 		      /* pour l'attribut */
 		      if (pAttr->AeAttrType == AtReferenceAttr)
 			/* demande a l'utilisateur l'element reference' */
-			MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc,
-							 &pRefEl);
+			MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc);
 		      else
 			{
 			  if (ThotLocalActions[T_attrreq] != NULL)

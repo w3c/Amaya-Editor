@@ -96,7 +96,6 @@ extern ThotBool IsConstantConstructor ( PtrElement pEl );
 extern PtrElement NewSubtree ( int typeNum,
                                PtrSSchema pSS,
                                PtrDocument pDoc,
-                               int assocNum,
                                ThotBool Desc,
                                ThotBool Root,
                                ThotBool withAttr,
@@ -112,15 +111,11 @@ extern void DeleteElement ( PtrElement * pEl,
                             PtrDocument pDoc );
 extern PtrElement CopyTree ( PtrElement pSource,
                              PtrDocument pDocSource,
-                             int assocNum,
                              PtrSSchema pSSchema,
                              PtrDocument pDocCopy,
                              PtrElement pParent,
                              ThotBool checkAttr,
                              ThotBool shareRef );
-extern PtrElement FirstAssociatedElement ( PtrDocument pDoc,
-                                           int typeNum,
-                                           PtrSSchema pSS );
 extern void CopyIncludedElem ( PtrElement pEl,
                                PtrDocument pDoc );
 extern PtrElement ReplicateElement ( PtrElement pEl,
@@ -240,7 +235,6 @@ extern ThotBool IsConstantConstructor (/* PtrElement pEl */);
 extern PtrElement NewSubtree (/* int typeNum,
                                  PtrSSchema pSS,
                                  PtrDocument pDoc,
-                                 int assocNum,
                                  ThotBool Desc,
                                  ThotBool Root,
                                  ThotBool withAttr,
@@ -256,15 +250,11 @@ extern void DeleteElement (/* PtrElement * pEl,
                               PtrDocument pDoc */);
 extern PtrElement CopyTree (/* PtrElement pSource,
                                PtrDocument pDocSource,
-                               int assocNum,
                                PtrSSchema pSSchema,
                                PtrDocument pDocCopy,
                                PtrElement pParent,
                                ThotBool checkAttr,
                                ThotBool shareRef */);
-extern PtrElement FirstAssociatedElement (/* PtrDocument pDoc,
-                                             int typeNum,
-                                             PtrSSchema pSS */);
 extern void CopyIncludedElem (/* PtrElement pEl,
                                  PtrDocument pDoc */);
 extern PtrElement ReplicateElement (/* PtrElement pEl,

@@ -773,7 +773,6 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 			  cree avec sa descendance */
 		       pNewEl = NewSubtree (pSRule->SrComponent[comp],
 					    pEl->ElStructSchema, pDoc,
-					    pEl->ElAssocNum,
 					    TRUE, TRUE, TRUE, TRUE);
 		     if (pNewEl != NULL)
 		       /* on met l'element cee' dans l'arbre */
@@ -895,8 +894,7 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 			l'element */
 		     pComponent = NewSubtree (pSRule->SrListItem,
 					      pEl->ElStructSchema, pDoc,
-					      pEl->ElAssocNum, TRUE, TRUE,
-					      TRUE, TRUE);
+					      TRUE, TRUE, TRUE, TRUE);
 		   if (pComponent != NULL)
 		     /* on insere le nouvel element dans l'arbre */
 		     {

@@ -452,7 +452,6 @@ Element*            elementRead;
 {
    int                 TypeCont;
    PtrSSchema          pSchStrCont;
-   int                 NumAssoc;
    PtrSSchema          pSS;
    int                 TypeLu;
    PtrSSchema          SchStrLu;
@@ -469,23 +468,14 @@ Element*            elementRead;
 	TypeCont = 0;
 	pSchStrCont = NULL;
         if (pSchema != NULL)
-          {
-             NumAssoc = 0;
-             pSS = (PtrSSchema) pSchema;
-          }
+	  pSS = (PtrSSchema) pSchema;
 	else if (element == NULL)
-	  {
-	     NumAssoc = 0;
-	     pSS = LoadedDocument[document - 1]->DocSSchema;
-	  }
+	  pSS = LoadedDocument[document - 1]->DocSSchema;
 	else
-	  {
-	     NumAssoc = ((PtrElement) element)->ElAssocNum;
-	     pSS = ((PtrElement) element)->ElStructSchema;
-	  }
+	  pSS = ((PtrElement) element)->ElStructSchema;
 	*elementRead = (Element) ReadTreePiv (pivotFile, pSS,
 				    LoadedDocument[document - 1], 
-                                    byte, NumAssoc, TRUE, &TypeCont,
+                                    byte, TRUE, &TypeCont,
 				    &pSchStrCont, &TypeLu, &SchStrLu, TRUE,
                                     (PtrElement) element, TRUE);
 	if (*elementRead != NULL)
@@ -829,7 +819,7 @@ char*               label;
      {
 	element = (Element) NewSubtree (elemType.ElTypeNum,
 					(PtrSSchema) (elemType.ElSSchema),
-					LoadedDocument[document - 1], 0, FALSE,
+					LoadedDocument[document - 1], FALSE,
 					TRUE, TRUE, (ThotBool)(*label == EOS));
 	if (*label != EOS)
 	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);

@@ -229,7 +229,6 @@ void FrameToView (int frame, int *doc, int *view)
 {
    int                 i;
    PtrDocument         pDoc;
-   ThotBool            assoc;
 
    *doc = FrameTable[frame].FrDoc;
    *view = 0;
@@ -241,11 +240,8 @@ void FrameToView (int frame, int *doc, int *view)
 	*view = 0;
 	if (pDoc != NULL)
 	  {
-	     GetViewFromFrame (frame, pDoc, &i, &assoc);
-	     if (assoc)
-		*view = i + 100;
-	     else
-		*view = i;
+	     GetViewFromFrame (frame, pDoc, &i);
+	     *view = i;
 	  }
      }
 }
@@ -1150,15 +1146,10 @@ void TtaChangeWindowTitle (Document document, View view, char *title)
   else
     {
       pDoc = LoadedDocument[document - 1];
-      /* traite les vues de l'arbre principal */
+      /* traite les vues du document */
       for (v = 0; v < MAX_VIEW_DOC; v++)
 	if (pDoc->DocView[v].DvPSchemaView > 0)
 	  ChangeFrameTitle (pDoc->DocViewFrame[v], title);
-      /* traite les vues des elements associes */
-      for (v = 0; v < MAX_ASSOC_DOC; v++)
-	if (pDoc->DocAssocRoot[v] != NULL)
-	  if (pDoc->DocAssocFrame[v] != 0)
-	    ChangeFrameTitle (pDoc->DocAssocFrame[v], title);
     }
 }
 
@@ -1198,16 +1189,13 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
    int                 doc;
    int                 view;
 
-   if (ActiveFrame != 0 && (strcmp (OldMsgSelect, text) ||pDoc != OldDocMsgSelect))
+   if (ActiveFrame != 0 &&
+       (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
      {
 	/* recupere le document concerne */
 	doc = FrameTable[ActiveFrame].FrDoc;
 	for (view = 1; view <= MAX_VIEW_DOC; view++)
-	  {
-	     TtaSetStatus ((Document) doc, view, text, NULL);
-	     if (view < MAX_ASSOC_DOC)
-               TtaSetStatus ((Document) doc, view + 100, text, NULL);
-	  }
+	  TtaSetStatus ((Document) doc, view, text, NULL);
 	/* sel old message */
 	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
 	OldDocMsgSelect = pDoc;
@@ -1345,7 +1333,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   int                 index = 0;
   int                 cyTxtZone;
   DWORD               dwStyle;
-  ThotBool            assoc;
 
   frame = GetMainFrameNumber (hwnd);
   if (frame != -1)
@@ -1462,9 +1449,9 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   case WM_DESTROY:
     if (frame >= 0 && frame <= MAX_FRAME)
       {
-	GetDocAndView (frame, &pDoc, &view, &assoc);
+	GetDocAndView (frame, &pDoc, &view);
 	if (pDoc && view)
-	  CloseView (pDoc, view, assoc);
+	  CloseView (pDoc, view);
 	if (FrameTable[frame].FrDoc == 0)
 	  FrMainRef[frame] = 0;
  

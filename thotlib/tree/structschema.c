@@ -583,77 +583,62 @@ ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
 
    ret = FALSE;
    if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
-      if (!pSS->SsRule[typeNum - 1].SrFirstOfPair)
-	 /* c'est un element de fin de paire, on fait comme si */
-	 /* c'etait l'element de debut de paire */
-	 typeNum--;
+     if (!pSS->SsRule[typeNum - 1].SrFirstOfPair)
+       /* c'est un element de fin de paire, on fait comme si */
+       /* c'etait l'element de debut de paire */
+       typeNum--;
 
    pAsc = pEl;
    /* examine les elements ascendants */
    while (pAsc != NULL && (!ret))
      {
-	/* regle de structure de l'ascendant courant */
-	pSSrule = pAsc->ElStructSchema;
-	pRule = &pSSrule->SsRule[pAsc->ElTypeNumber - 1];
-	pSSExt = NULL;
-	do
-	  {
-	     if (pRule != NULL)
-	       {
-		  /* parcourt la liste de ses extensions */
-		  for (i = 0; i < pRule->SrNInclusions && (!ret); i++)
-		     if (EquivalentSRules (pRule->SrInclusion[i], pSSrule,
-					   typeNum, pSS, pAsc))
-			/* l'element est compatible avec l'extension */
-			if (!ExcludedType (pEl, pRule->SrInclusion[i],
-					   pSSrule))
-			   /* cette extension n'est pas une exclusion */
-			   ret = TRUE;
-	       }
-	     /* passe a l'extension de schema suivante */
-	     if (pSSExt == NULL)
-		pSSExt = pSSrule->SsNextExtens;
+       /* regle de structure de l'ascendant courant */
+       pSSrule = pAsc->ElStructSchema;
+       pRule = &pSSrule->SsRule[pAsc->ElTypeNumber - 1];
+       pSSExt = NULL;
+       do
+	 {
+	   if (pRule != NULL)
+	     {
+	       /* parcourt la liste de ses extensions */
+	       for (i = 0; i < pRule->SrNInclusions && (!ret); i++)
+		 if (EquivalentSRules (pRule->SrInclusion[i], pSSrule,
+				       typeNum, pSS, pAsc))
+		   /* l'element est compatible avec l'extension */
+		   if (!ExcludedType (pEl, pRule->SrInclusion[i],
+				      pSSrule))
+		     /* cette extension n'est pas une exclusion */
+		     ret = TRUE;
+	     }
+	   /* passe a l'extension de schema suivante */
+	   if (pSSExt == NULL)
+	     pSSExt = pSSrule->SsNextExtens;
 	     else
-		pSSExt = pSSExt->SsNextExtens;
-	     if (pSSExt != NULL)
-		/* il y a encore un schema d'extension */
-	       {
-		  pSSrule = pSSExt;
-		  /* cherche dans ce schema la regle d'extension pour l'ascendant */
-		  pRule = ExtensionRule (pAsc->ElStructSchema, pAsc->ElTypeNumber, pSSExt);
-	       }
-	  }
-	while (pSSExt != NULL && (!ret));
-	/* passe a l'element ascendant */
-	pAsc = pAsc->ElParent;
+	       pSSExt = pSSExt->SsNextExtens;
+	   if (pSSExt != NULL)
+	     /* il y a encore un schema d'extension */
+	     {
+	       pSSrule = pSSExt;
+	       /* cherche dans ce schema la regle d'extension pour l'ascendant */
+	       pRule = ExtensionRule (pAsc->ElStructSchema, pAsc->ElTypeNumber,
+				      pSSExt);
+	     }
+	 }
+       while (pSSExt != NULL && (!ret));
+       /* passe a l'element ascendant */
+       pAsc = pAsc->ElParent;
      }
-
-   if (! ret)
-     {
-        pAsc = pEl;
-        while (pAsc->ElParent != NULL)
-           pAsc = pAsc->ElParent;
-
-        if ((pAsc->ElStructSchema->SsExtension) &&
-            (pDoc->DocDocElement != NULL))
-           /* L'element fait partie d'un arbre associe dont la */
-           /* racine est une extension. */
-           /* ==> On reporte l'evaluation sur la racine de l'arbre */
-           /* principal ! */
-           ret = AllowedIncludedElem (pDoc, pDoc->DocDocElement, typeNum, pSS);
-     }
-
    return ret;
 }
 
 /*----------------------------------------------------------------------
-   	ListOrAggregateRule   Cherche si l'element pEl qui fait partie d'un	
-   	arbre abstrait peut etre obtenu a partir de la regle typeNum du	
-   	schema de structure pSS, en passant par une regle CsList ou	
-   	CsAggregate. Si oui, retourne dans pSS le pointeur sur le schema de	
-   	structure contenant la regle CsList ou CsAggregate et dans typeNum	
-   	le numero de cette regle.					
-   	Si non retourne 0 dans typeNum et NULL dans pSS.		
+  ListOrAggregateRule
+  Cherche si l'element pEl qui fait partie d'un	arbre abstrait peut etre
+  obtenu a partir de la regle typeNum du schema de structure pSS, en passant
+  par une regle CsList ou CsAggregate. Si oui, retourne dans pSS le pointeur
+  sur le schema de structure contenant la regle CsList ou CsAggregate et
+  dans typeNum le numero de cette regle.
+  Si non retourne 0 dans typeNum et NULL dans pSS.		
   ----------------------------------------------------------------------*/
 void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
 					 int *typeNum, PtrSSchema * pSS)
@@ -1270,27 +1255,17 @@ ThotBool            CanCutElement (PtrElement pEl, PtrDocument pDoc,
      }
    if (ret)
      {
-      /* est-ce la racine d'un sous-arbre d'affichage */
-      if (pEl->ElAssocNum > 0)
-	 /* element associe */
-	{
-	   viewRoot = pDoc->DocAssocSubTree[pEl->ElAssocNum - 1];
-	   ret = viewRoot == NULL || (pEl != viewRoot && !ElemIsAnAncestor (pEl, viewRoot));
-	}
-      else
-	 /* element de l'arbre principal */
-	{
-	   /* parcourt toutes les vues ouvertes jusqu'a en trouver une */
-	   /* dont l'element est la racine */
-	   for (view = 0; view < MAX_VIEW_DOC && ret; view++)
-	      if (pDoc->DocView[view].DvPSchemaView != 0)
-		 /* vue ouverte */
-		{
-		   viewRoot = pDoc->DocViewSubTree[view];
-		   ret = (viewRoot == NULL ||
+       /* est-ce la racine d'un sous-arbre d'affichage */
+       /* parcourt toutes les vues ouvertes jusqu'a en trouver une */
+       /* dont l'element est la racine */
+       for (view = 0; view < MAX_VIEW_DOC && ret; view++)
+	 if (pDoc->DocView[view].DvPSchemaView != 0)
+	   /* vue ouverte */
+	   {
+	     viewRoot = pDoc->DocViewSubTree[view];
+	     ret = (viewRoot == NULL ||
 		    (pEl != viewRoot && !ElemIsAnAncestor (pEl, viewRoot)));
-		}
-	}
+	   }
      }
    return ret;
 }
@@ -1902,14 +1877,12 @@ void                InsertChildFirst (PtrElement pEl, PtrElement pChild,
    	Retourne le pointeur le premier element de la descendance creee,
    	ou NULL s'il n'est pas possible de creer une telle descendance.	
    	pDoc: Pointeur sur le descripteur du document concerne.		
-   	assocNum: Numero de liste d'elements associes.			
    	pLeaf: si succes, pointeur sur l'element de plus bas niveau	
    	cree: c'est un element de type descTypeNum.			
   ----------------------------------------------------------------------*/
 PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 				      PtrDocument pDoc, PtrElement * pLeaf,
-				      int assocNum, int descTypeNum,
-				      PtrSSchema pDescSS)
+				      int descTypeNum, PtrSSchema pDescSS)
 {
    PtrElement          pEl, pDesc, pEl1, pEl2;
    int                 i, j;
@@ -1921,7 +1894,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
    if (SameSRules (typeNum, pSS, descTypeNum, pDescSS))
       /* c'est un element du type voulu, on le cree */
      {
-	pEl = NewSubtree (descTypeNum, pDescSS, pDoc, assocNum, FALSE, TRUE, TRUE, TRUE);
+	pEl = NewSubtree (descTypeNum, pDescSS, pDoc, FALSE, TRUE, TRUE, TRUE);
 	*pLeaf = pEl;
      }
    else
@@ -1956,14 +1929,14 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 		       if (pRule1->SrSSchemaNat != NULL)
 			 {
 			    pEl = CreateDescendant (pRule1->SrSSchemaNat->SsRootElem,
-				pRule1->SrSSchemaNat, pDoc, pLeaf, assocNum,
+				             pRule1->SrSSchemaNat, pDoc, pLeaf,
 						    descTypeNum, pDescSS);
 			    if (pEl != NULL)
 			       if (pEl->ElTypeNumber != pRule1->SrSSchemaNat->SsRootElem)
 				  /* cree un element du type de la regle racine */
 				 {
 				    pEl1 = NewSubtree (pRule1->SrSSchemaNat->SsRootElem,
-				       pRule1->SrSSchemaNat, pDoc, assocNum,
+				                   pRule1->SrSSchemaNat, pDoc,
 						   FALSE, TRUE, TRUE, TRUE);
 				    InsertChildFirst (pEl1, pEl, pLeaf, pDoc);
 				    pEl = pEl1;
@@ -1976,7 +1949,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 		       else
 			 {
 			    pEl = CreateDescendant (pRule1->SrIdentRule, pSS, pDoc, pLeaf,
-					    assocNum, descTypeNum, pDescSS);
+						    descTypeNum, pDescSS);
 			    if (pEl != NULL)
 			       /* on a effectivement cree une descendance */
 			       if (pEl->ElTypeNumber != pRule1->SrIdentRule)
@@ -1989,7 +1962,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 				       /* exclusions, on le cree */
 				      {
 					 pEl1 = NewSubtree (pRule1->SrIdentRule, pSS, pDoc,
-					 assocNum, FALSE, TRUE, TRUE, TRUE);
+					              FALSE, TRUE, TRUE, TRUE);
 					 InsertChildFirst (pEl1, pEl, pLeaf, pDoc);
 					 pEl = pEl1;
 				      }
@@ -1998,7 +1971,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 
 		       break;
 		    case CsList:
-		       pEl = CreateDescendant (pRule1->SrListItem, pSS, pDoc, pLeaf, assocNum,
+		       pEl = CreateDescendant (pRule1->SrListItem, pSS, pDoc, pLeaf,
 					       descTypeNum, pDescSS);
 		       if (pEl != NULL)
 			 {
@@ -2014,13 +1987,13 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 			    else
 			      {
 				 pEl1 = NewSubtree (pRule1->SrListItem, pSS, pDoc,
-					 assocNum, FALSE, TRUE, TRUE, TRUE);
+						    FALSE, TRUE, TRUE, TRUE);
 				 InsertChildFirst (pEl1, pEl, pLeaf, pDoc);
 				 pEl = pEl1;
 			      }
 			    for (i = 2; i <= pRule1->SrMinItems; i++)
 			      {
-				 pEl2 = NewSubtree (pRule1->SrListItem, pSS, pDoc, assocNum,
+				 pEl2 = NewSubtree (pRule1->SrListItem, pSS, pDoc,
 						    TRUE, TRUE, TRUE, TRUE);
 				 if (pEl2 != NULL)
 				   {
@@ -2038,8 +2011,8 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 			       /* on cherche a creer un element d'un type de base */
 			       /* Cree une feuille du type voulu */
 			      {
-				 pEl = NewSubtree (descTypeNum, pSS, pDoc, assocNum, TRUE, TRUE,
-						   TRUE, TRUE);
+				 pEl = NewSubtree (descTypeNum, pSS, pDoc,
+						   TRUE, TRUE, TRUE, TRUE);
 				 *pLeaf = pEl;
 			      }
 			 }
@@ -2051,7 +2024,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 			    do
 			      {
 				 if (pSS->SsRule[i++].SrConstruct == CsNatureSchema)
-				    pEl = CreateDescendant (i, pSS, pDoc, pLeaf, assocNum,
+				    pEl = CreateDescendant (i, pSS, pDoc, pLeaf,
 						      descTypeNum, pDescSS);
 			      }
 			    while (pEl == NULL && i < pSS->SsNRules);
@@ -2063,7 +2036,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 			    pDesc = NULL;
 			    do
 			       pDesc = CreateDescendant (pRule1->SrChoice[i++], pSS, pDoc,
-				     pLeaf, assocNum, descTypeNum, pDescSS);
+				     pLeaf, descTypeNum, pDescSS);
 			    while (pDesc == NULL && i < pRule1->SrNChoices);
 			    if (pDesc != NULL)
 			      {
@@ -2076,8 +2049,9 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 				  pEl = pDesc;
 			       else
 				 {
-				    pEl = NewSubtree (pRule1->SrChoice[i - 1], pSS, pDoc,
-					 assocNum, FALSE, TRUE, TRUE, TRUE);
+				    pEl = NewSubtree (pRule1->SrChoice[i - 1],
+						      pSS, pDoc, FALSE, TRUE,
+						      TRUE, TRUE);
 				    if (pEl != NULL)
 				       InsertChildFirst (pEl, pDesc, pLeaf, pDoc);
 				 }
@@ -2094,7 +2068,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 			    /* c'est un element du type voulu, on le cree */
 			    {
 			      pDesc = NewSubtree (descTypeNum, pDescSS, pDoc,
-					    assocNum, FALSE, TRUE, TRUE, TRUE);
+					          FALSE, TRUE, TRUE, TRUE);
 			      *pLeaf = pDesc;
 			    }
 		       if (pDesc == NULL)
@@ -2103,14 +2077,14 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 		           for (i = 0; pDesc == NULL && i < pRule1->SrNComponents; i++)
 			    if (!pRule1->SrOptComponent[i])
 			       pDesc = CreateDescendant (pRule1->SrComponent[i], pSS, pDoc,
-				     pLeaf, assocNum, descTypeNum, pDescSS);
+				     pLeaf, descTypeNum, pDescSS);
 		       if (pDesc == NULL)
 			  /* on n'a rien pu creer en ne prenant que les composants */
 			  /* obligatoires, on essaie maintenant les composants optionnels */
 			  for (i = 0; pDesc == NULL && i < pRule1->SrNComponents; i++)
 			     if (pRule1->SrOptComponent[i])
 			        pDesc = CreateDescendant (pRule1->SrComponent[i], pSS, pDoc,
-				     pLeaf, assocNum, descTypeNum, pDescSS);
+				     pLeaf, descTypeNum, pDescSS);
 		       if (pDesc != NULL)
 			  /* on a pu creer une descendance */
 			 {
@@ -2124,7 +2098,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 			    else
 			      {
 				 pEl1 = NewSubtree (pRule1->SrComponent[i], pSS, pDoc,
-					 assocNum, FALSE, TRUE, TRUE, TRUE);
+					 FALSE, TRUE, TRUE, TRUE);
 				 if (pEl1 != NULL)
 				    InsertChildFirst (pEl1, pDesc, pLeaf, pDoc);
 			      }
@@ -2140,7 +2114,7 @@ PtrElement          CreateDescendant (int typeNum, PtrSSchema pSS,
 			       else if (!pRule1->SrOptComponent[j])
 				 {
 				    pEl2 = NewSubtree (pRule1->SrComponent[j], pSS, pDoc,
-					  assocNum, TRUE, TRUE, TRUE, TRUE);
+					  TRUE, TRUE, TRUE, TRUE);
 				    if (pEl2 != NULL)
 				      {
 					 if (pEl == NULL)

@@ -337,9 +337,6 @@ void                WriteRelativePosition (TRelatPosition pos)
 	    case RpReferred:
 	       TtaWriteByte (outfile, C_TR_REFERRED_EL);
 	       break;
-	    case RpAssoc:
-	       TtaWriteByte (outfile, C_TR_ASSOC);
-	       break;
 	 }
 }
 

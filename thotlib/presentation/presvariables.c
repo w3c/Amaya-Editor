@@ -323,8 +323,6 @@ ThotBool            Maximum;
 		 /* view a laquelle appartient la marque de page cherchee */
 		 if (pCo1->CnItem[0].CiViewNum > 0)
 		   view = pCo1->CnItem[0].CiViewNum;
-		 if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
-		   view = pElNum->ElViewPSchema;
 		 /* cherche la marque de page qui precede l'element */
 		 stop = FALSE;
 		 do
@@ -598,8 +596,6 @@ int                 view;
 	     if (pCo1->CnItem[0].CiViewNum > 0)
 		/* vue a laquelle appartient la marque de page cherchee */
 		view = pCo1->CnItem[0].CiViewNum;
-	     if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
-		view = pElNum->ElViewPSchema;
 	     /* cherche la marque de page qui precede l'element */
 	     stop = FALSE;
 	     do

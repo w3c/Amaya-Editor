@@ -124,21 +124,6 @@ void                AbstractImageUpdated (PtrDocument pDoc)
   if (displayMode == NoComputedDisplay)
     return;
 
-  /* dans les vues des elements associes du document */
-  for (i = 0; i < MAX_ASSOC_DOC; i++)
-    if (pDoc->DocAssocModifiedAb[i] != NULL)
-      {
-	/* on ne s'occupe pas de la hauteur de page */
-	h = 0;
-	frame = pDoc->DocAssocFrame[i];
-	pAb = pDoc->DocAssocModifiedAb[i];
-	pDoc->DocAssocModifiedAb[i] = NULL;
-	ChangeConcreteImage (frame, &h, pAb);
-	/* libere les paves morts */
-	FreeDeadAbstractBoxes (pAb, frame);
-      }
-
-  /* dans les vues de l'arbre principal du document */
   for (i = 0; i < MAX_VIEW_DOC; i++)
     if (pDoc->DocView[i].DvPSchemaView > 0
 	&& pDoc->DocViewModifiedAb[i] != NULL)
@@ -397,16 +382,11 @@ void                TCloseDocument (PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 int                 NumberOfOpenViews (PtrDocument pDoc)
 {
-   int                 view, assoc, result;
+   int                 view, result;
 
    result = 0;
-   /* compte les vues de l'arbre principal */
    for (view = 0; view < MAX_VIEW_DOC; view++)
       if (pDoc->DocView[view].DvPSchemaView > 0)
-	 result++;
-   /* compte les vues des elements associes */
-   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-      if (pDoc->DocAssocFrame[assoc] > 0)
 	 result++;
    return result;
 }
@@ -444,29 +424,16 @@ void                FreeView (PtrDocument pDoc, DocViewNumber view)
 }
 
 /*----------------------------------------------------------------------
-   CloseDocumentView detruit la vue de numero view (si assoc est faux)
+   CloseDocumentView detruit la vue de numero view
    pour le document pDoc. S'il s'agit de la derniere vue, libere le
    document dans le cas seulement ou closeDoc est vrai.
-   Si assoc est vrai, detruit la vue des elements associes de numero view
-   du document.	
   ----------------------------------------------------------------------*/
-void  CloseDocumentView (PtrDocument pDoc, int view,
-			 ThotBool assoc, ThotBool closeDoc)
+void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
 {
   if (pDoc != NULL)
     /* on detruit la vue */
     {
-      if (!assoc)
-	FreeView (pDoc, view);
-      else
-	{
-	  view--;
-	  FreeAbView (pDoc->DocAssocRoot[view]->ElAbstractBox[0],
-		      pDoc->DocViewFrame[view]);
-	  pDoc->DocAssocRoot[view]->ElAbstractBox[0] = NULL;
-	  pDoc->DocAssocFrame[view] = 0;
-	}
-      
+      FreeView (pDoc, view);
       if (closeDoc)
 	/* verifie qu'il reste au moins une vue pour ce document */
 	if (NumberOfOpenViews (pDoc) < 1)
@@ -482,7 +449,7 @@ void  CloseDocumentView (PtrDocument pDoc, int view,
   ----------------------------------------------------------------------*/
 void                CloseAllViewsDoc (PtrDocument pDoc)
 {
-  int                 view, assoc;
+  int                 view;
 
   if (pDoc != NULL)
     {
@@ -491,25 +458,17 @@ void                CloseAllViewsDoc (PtrDocument pDoc)
 	if (pDoc->DocView[view].DvPSchemaView != 0)
 	  {
 	    DestroyFrame (pDoc->DocViewFrame[view]);
-	    CloseDocumentView (pDoc, view + 1, FALSE, FALSE);
-	  }
-      /* detruit les fenetres des elements associes */
-      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	if (pDoc->DocAssocFrame[assoc] != 0)
-	  {
-	    DestroyFrame (pDoc->DocAssocFrame[assoc]);
-	    CloseDocumentView (pDoc, assoc + 1, TRUE, FALSE);
+	    CloseDocumentView (pDoc, view + 1, FALSE);
 	  }
     }
 }
 
 /*----------------------------------------------------------------------
    CleanImageView cleans the abstract image of View corresponding to pDoc. 
-   View = view number or assoc. elem. number if assoc. view.      
+   View = view number
    complete = TRUE if the window is completely cleaned.           
   ----------------------------------------------------------------------*/
-static void CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
-			    ThotBool complete)
+static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
 {
    PtrAbstractBox      pAb;
    int                 h;
@@ -518,17 +477,8 @@ static void CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
 
    frame = 1;			/* initialization (for the compiler !) */
    pAbbRoot = NULL;		/* initialization (for the compiler !) */
-   if (Assoc)
-     {
-	/* Associated element view */
-	pAbbRoot = pDoc->DocAssocRoot[View - 1]->ElAbstractBox[0];
-	frame = pDoc->DocAssocFrame[View - 1];
-     }
-   else
-     {
-	pAbbRoot = pDoc->DocViewRootAb[View - 1];
-	frame = pDoc->DocViewFrame[View - 1];
-     }
+   pAbbRoot = pDoc->DocViewRootAb[View - 1];
+   frame = pDoc->DocViewFrame[View - 1];
 
    /* All abstract boxes included into the root abs. box are marked dead */
    if (pAbbRoot == NULL)
@@ -538,7 +488,7 @@ static void CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
      {
 	SetDeadAbsBox (pAbbRoot);
 	ChangeConcreteImage (frame, &h, pAbbRoot);
-	CloseDocumentView (pDoc, View, Assoc, TRUE);
+	CloseDocumentView (pDoc, View, TRUE);
 	FrameTable[frame].FrDoc = 0;
 	/* selection is no more displayed */
 	ViewFrameTable[frame - 1].FrSelectShown = FALSE;
@@ -567,7 +517,6 @@ static void CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
      }
 }
 
-
 /*----------------------------------------------------------------------
    DestroyImage detruit l'image abstraite de toutes les vues          
    ouvertes dudocument pDoc                                     
@@ -575,60 +524,35 @@ static void CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
 static void         DestroyImage (PtrDocument pDoc)
 {
   int                 view, frame;
-  int                 assoc;
 
   for (view = 0; view < MAX_VIEW_DOC; view++)
     {
       if (pDoc->DocView[view].DvPSchemaView > 0)
 	{
-	  CleanImageView (view + 1, FALSE, pDoc, FALSE);
+	  CleanImageView (view + 1, pDoc, FALSE);
 	  /* selection is no more displayed */
 	  frame = pDoc->DocViewFrame[view];
 	  ViewFrameTable[frame - 1].FrSelectShown = FALSE;
 	}
     }
-  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-    {
-      frame = pDoc->DocAssocFrame[assoc];
-      if (frame > 0)
-	{
-	  CleanImageView (assoc + 1, TRUE, pDoc, FALSE);
-	  /* selection is no more displayed */
-	  ViewFrameTable[frame - 1].FrSelectShown = FALSE;
-	}
-    }
 }
 
-
 /*----------------------------------------------------------------------
-   RebuildViewImage recree l'image abstraite de la vue Vue du
-   document pDoc procedure partiellement reprise de               
-   Aff_Select_Pages du module page.c                              
-   Vue = numero d'elt assoc si vue associee sinon                 
-   Vue = numero de vue si vue d'arbre principal                   
+   RebuildImage recree l'image abstraite de toutes les vues            
+   ouvertes du document pDoc                                      
   ----------------------------------------------------------------------*/
-static void RebuildViewImage (int view, ThotBool Assoc, PtrDocument pDoc)
+static void         RebuildImage (PtrDocument pDoc)
 {
-   PtrElement          pElRoot;
-   PtrAbstractBox      pAbbRoot;
-   ViewFrame          *pFrame;
-   int                 frame, h, w;
-   ThotBool            complete;
+  int                 view;
+  PtrElement          pElRoot;
+  PtrAbstractBox      pAbbRoot;
+  ViewFrame          *pFrame;
+  int                 frame, h, w;
+  ThotBool            complete;
 
-   if (Assoc)
-     {
-       pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
-       pElRoot = pDoc->DocAssocRoot[view - 1];
-       pAbbRoot = pElRoot->ElAbstractBox[0];
-       frame = pDoc->DocAssocFrame[view - 1];
-       AbsBoxesCreate (pElRoot, pDoc, 1, TRUE, TRUE, &complete);
-       if (pAbbRoot == NULL)
-         pAbbRoot = pElRoot->ElAbstractBox[0];
-       h = 0;
-       ChangeConcreteImage (frame, &h, pAbbRoot);
-     }
-   else 
-     {
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+       {
        pElRoot = pDoc->DocDocElement;
        pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
        pAbbRoot = pDoc->DocViewRootAb[view - 1];
@@ -638,30 +562,11 @@ static void RebuildViewImage (int view, ThotBool Assoc, PtrDocument pDoc)
 	 pAbbRoot = pDoc->DocViewRootAb[view - 1] = pElRoot->ElAbstractBox[view - 1];
        h = 0;
        ChangeConcreteImage (frame, &h, pAbbRoot);
-     } 
-   /* force to redraw all the frame */
-   pFrame = &ViewFrameTable[frame - 1];
-   GetSizesFrame (frame, &w, &h);
-   DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, w, h);
-}
-
-
-/*----------------------------------------------------------------------
-   RebuildImage recree l'image abstraite de toutes les vues            
-   ouvertes du document pDoc                                      
-  ----------------------------------------------------------------------*/
-static void         RebuildImage (PtrDocument pDoc)
-{
-   int                 view;
-   int                 assoc;
-
-   for (view = 1; view <= MAX_VIEW_DOC; view++)
-      if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	 RebuildViewImage (view, FALSE, pDoc);
-   for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
-      if (pDoc->DocAssocFrame[assoc - 1] > 0)
-	 RebuildViewImage (assoc, TRUE, pDoc);
-
+       /* force to redraw all the frame */
+       pFrame = &ViewFrameTable[frame - 1];
+       GetSizesFrame (frame, &w, &h);
+       DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, w, h);
+       }
 }
 
 
@@ -1028,7 +933,6 @@ void  NewSelectionExtension (Document doc, Element element, int lastCharacter)
 void                TtaFreeView (Document document, View view)
 {
    PtrDocument         pDoc;
-   int                 numAssoc;
 
    UserErrorCode = 0;
    /* Checks the parameter document */
@@ -1040,21 +944,10 @@ void                TtaFreeView (Document document, View view)
       /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
-	if (view < 100)
-	   /* View of the main tree */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else
-	      CleanImageView (view, FALSE, pDoc, TRUE);
+	if (view < 1 || view > MAX_VIEW_DOC)
+	  TtaError (ERR_invalid_parameter);
 	else
-	   /* View of associated elements */
-	  {
-	     numAssoc = view - 100;
-	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-		TtaError (ERR_invalid_parameter);
-	     else
-		CleanImageView (numAssoc, TRUE, pDoc, TRUE);
-	  }
+	  CleanImageView (view, pDoc, TRUE);
      }
 }
 

@@ -114,7 +114,7 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
    Document            doc;
-   int                 view, distance, numAssoc, i, NSiblings, originDoc,
+   int                 view, distance, i, NSiblings, originDoc,
                        siblingType;
    ThotBool            typeOK, creation, list, stop, optional, last, table;
 
@@ -128,7 +128,6 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
       if (pEl->ElParent != NULL)
 	 /* on ne peut pas inserer a cote d'une racine */
 	{
-	   numAssoc = pEl->ElAssocNum;
 	   /* cherche le dernier element sauvegarde' si on colle devant */
 	   if (before && pSavedEl != NULL)
 	     {
@@ -277,10 +276,10 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 				    notifyEl.position = NSiblings;
 				    pDescRoot = NULL;
 				    if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-				       pDescRoot = CreateDescendant (typeNum, pSS,
-					      pDoc, &pDesc, pEl->ElAssocNum,
+				       pDescRoot = CreateDescendant (typeNum,
+					             pSS, pDoc, &pDesc,
 						     pSavedEl->ElTypeNumber,
-						  pSavedEl->ElStructSchema);
+						     pSavedEl->ElStructSchema);
 				    if (pDescRoot != NULL)
 				       /* on a pu creer la descendance voulue */
 				      {
@@ -291,9 +290,8 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 						|| pDescRoot->ElStructSchema != pSS)
 					      {
 						 pParent = NewSubtree (typeNum,
-								  pSS, pDoc,
-						     pEl->ElAssocNum, FALSE,
-							  TRUE, TRUE, TRUE);
+							     pSS, pDoc, FALSE,
+							     TRUE, TRUE, TRUE);
 						 InsertFirstChild (pParent, pDescRoot);
 						 pDescRoot = pParent;
 					      }
@@ -359,7 +357,6 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 			       notifyVal.value = NSiblings;
 			       if (!CallEventType ((NotifyEvent *) (&notifyVal), TRUE))
 				  pCopy = CopyTree (pSavedEl, DocOfSavedElements,
-						    pEl->ElAssocNum,
 					      pParent->ElStructSchema, pDoc,
 						    pParent, TRUE, TRUE);
 			    }
@@ -720,7 +717,7 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
 		  if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
 		     pDescRoot = CreateDescendant (pEl->ElTypeNumber,
 					  pEl->ElStructSchema, pDoc, &pDesc,
-				    pEl->ElAssocNum, pSavedEl->ElTypeNumber,
+						   pSavedEl->ElTypeNumber,
 						   pSavedEl->ElStructSchema);
 		  if (pDescRoot != NULL)
 		    {
@@ -784,8 +781,8 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
 	notifyVal.target = (Element) pSavedEl;
 	notifyVal.value = 0;
 	if (!CallEventType ((NotifyEvent *) (&notifyVal), TRUE))
-	   pCopy = CopyTree (pSavedEl, DocOfSavedElements, pEl->ElAssocNum,
-			     pSS, pDoc, pParent, TRUE, TRUE);
+	  pCopy = CopyTree (pSavedEl, DocOfSavedElements, pSS, pDoc, pParent,
+			    TRUE, TRUE);
 	if (pCopy == NULL || (creation && pDescRoot == NULL))
 	  {
 	     if (pDescRoot != NULL)
@@ -1098,7 +1095,7 @@ void StructReturnKey ()
 		     de la selection */
 		  pNewEl = NewSubtree (lastSel->ElTypeNumber,
 				       lastSel->ElStructSchema, pDoc,
-				       lastSel->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+				       TRUE, TRUE, TRUE, TRUE);
 		  pEl = lastSel;
 		  /* cree des ascendants de meme type */
 		  while (pEl->ElParent != pListEl)

@@ -2059,10 +2059,9 @@ ThotBool          APPgraphicModify (PtrElement pEl, int value, int frame, ThotBo
   NotifyOnValue       notifyEl;
   PtrDocument         pDoc;
   int                 view;
-  ThotBool            assoc;
   ThotBool            ok = FALSE;
 
-  GetDocAndView (frame, &pDoc, &view, &assoc);
+  GetDocAndView (frame, &pDoc, &view);
   result = FALSE;
   pAsc = pEl;
   while (pAsc != NULL)

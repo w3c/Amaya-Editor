@@ -40,7 +40,7 @@
 
 typedef enum
 {
-   InsertWithin, InsertBefore, InsertAfter, ReferredElem, Separator
+   InsertWithin, InsertBefore, InsertAfter, Separator
 }
 MenuItemAction;
 
@@ -149,7 +149,7 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
 /*----------------------------------------------------------------------
    InsertOption  met l'element pOption a la place de l'element de	
    type Choice pEl, sauf si celui-ci est un element d'agregat ou la	
-   racine du schema de structure ou un element associe.		
+   racine du schema de structure.		
    Dans ce cas, le nouvel element est chaine' comme premier fils de   
    l'element pEl.							
   ----------------------------------------------------------------------*/
@@ -567,7 +567,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		      notifyEl.position = nSiblings;
 		      if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 			{
-			  pE = NewSubtree (lType, pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
+			  pE = NewSubtree (lType, pEl->ElStructSchema, pDoc,
 					   TRUE, TRUE, TRUE, TRUE);
 			  CancelSelection ();
 			  /* si la selection commence a l'interieur d'une feuille */
@@ -620,7 +620,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 				  }
 				else
 				  {
-				    pE = NewSubtree (ruleNum, pSS, pDoc, pEl->ElAssocNum, FALSE,
+				    pE = NewSubtree (ruleNum, pSS, pDoc, FALSE,
 						     TRUE, TRUE, TRUE);
 				    InsertChildFirst (pE, pLeaf, &pLeaf, pDoc);
 				    /* accroche les elements crees a l'arbre abstrait */
@@ -657,8 +657,9 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		    if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		      pE = NULL;
 		    else
-		      pE = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema, pDoc, &pLeaf, pEl->
-					     ElAssocNum, lType, pEl->ElStructSchema);
+		      pE = CreateDescendant (pEl->ElTypeNumber,
+					     pEl->ElStructSchema, pDoc, &pLeaf,
+					     lType, pEl->ElStructSchema);
 		    if (pE != NULL)
 		      {
 			CancelSelection ();
@@ -1033,365 +1034,29 @@ void                NewContent (PtrAbstractBox pAb)
      }
 }
 
-
-/* mettre ici une definition vide de LinkReference ***** */
-
-
-/*----------------------------------------------------------------------
-   CheckFirstReference						
-   	Check if a reference is the first one to refer to the same	
-   	element in the main tree.					
-  ----------------------------------------------------------------------*/
-static void CheckFirstReference (PtrElement pEl, PtrAttribute pAttr,
-				 ThotBool *stop, PtrReference *pRef)
-{
-   PtrAttribute        pAttrEl;
-   ThotBool            first;
-   ThotBool            found;
-
-   *pRef = NULL;
-   if (pEl == NULL)
-     *stop = TRUE;
-   else
-     {
-       if (pAttr == NULL)
-	 /* pEl est un element de type Reference */
-	 *pRef = pEl->ElReference;
-       else
-	 /* cherche l'attribut reference de l'element pEl qui soit de meme */
-	 /* type que pAttr */
-	 {
-	   pAttrEl = pEl->ElFirstAttr;
-	   found = FALSE;
-	   if (pAttrEl != NULL)
-	     do
-	       if (pAttrEl->AeAttrNum == pAttr->AeAttrNum &&
-		   !strcmp (pAttrEl->AeAttrSSchema->SsName,
-			     pAttr->AeAttrSSchema->SsName))
-		 found = TRUE;
-	       else
-		 pAttrEl = pAttrEl->AeNext;
-	     while (!found && pAttrEl != NULL);
-	   if (pAttrEl == NULL)
-	     *pRef = NULL;
-	   else
-	     *pRef = pAttrEl->AeAttrReference;
-	 }
-       if (*pRef != NULL)
-	 /* on a trouve' un descripteur de reference */
-	 /* on ne tient pas compte des references nulles */
-	 if ((*pRef)->RdReferred != NULL)
-	   /* on ignore les references qui sortent du document */
-	   if (!(*pRef)->RdReferred->ReExternalRef)
-	     {
-	       first = TRUE;
-	       while ((*pRef)->RdPrevious != NULL && first)
-		 {
-		   *pRef = (*pRef)->RdPrevious;
-		   if ((*pRef)->RdElement != NULL)
-		     if ((*pRef)->RdElement->ElAssocNum == 0)
-		       /* il y a une reference precedente qui n'est */
-		       /* pas dans un element associe' */
-		       first = FALSE;
-		 }
-	       if (first)
-		 *stop = TRUE;
-		}
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   CreateRefferedAssocElem	Cree un element associe reference' par	
-   	l'element pEl ou l'attribut pAttr (par celui des deux qui n'est	
-   	pas nul).							
-   	Retourne l'element cree', ou NULL si echec.			
-   	Ces elements associes sont crees dans le meme ordre que la	
-   	premiere reference qui les pointe.				
-  ----------------------------------------------------------------------*/
-static PtrElement CreateReferredAssocElem (PtrDocument pDoc, PtrElement pEl,
-					   PtrAttribute pAttr, int TypeEl,
-					   PtrSSchema StructEl)
-{
-   PtrElement          pF, pNewEl;
-   int                 referredType;
-   ThotBool            before, stop;
-   PtrSSchema          pSS;
-   PtrReference        pRef;
-
-   pNewEl = NULL;
-   /* cherche en arriere une reference a ce type d'element associe' */
-   /* On ne prend en compte qu'une reference qui pointe effectivement sur 
-      un element et qui est la premiere reference a l'element. */
-   pF = pEl;
-   before = FALSE;
-   stop = FALSE;
-   do
-     {
-	if (pAttr == NULL)
-	   pF = BackSearchTypedElem (pF, pEl->ElTypeNumber, pEl->ElStructSchema);
-	else
-	   pF = BackSearchAttribute (pF, pAttr->AeAttrNum, 0, "", pAttr->AeAttrSSchema);
-	CheckFirstReference (pF, pAttr, &stop, &pRef);
-     }
-   while (!stop);
-   if (pF == NULL)
-      /* on n'a pas trouve, on cherche en avant */
-     {
-	pF = pEl;
-	before = TRUE;
-	stop = FALSE;
-	do
-	  {
-	     if (pAttr == NULL)
-		pF = FwdSearchTypedElem (pF, pEl->ElTypeNumber, pEl->ElStructSchema);
-	     else
-		pF = FwdSearchAttribute (pF, pAttr->AeAttrNum, 0, "", pAttr->AeAttrSSchema);
-	     CheckFirstReference (pF, pAttr, &stop, &pRef);
-	  }
-	while (!stop);
-     }
-   /* demande le type d'element reference' prevu par le schema de structure */
-   if (pAttr == NULL)
-      ReferredType (pEl, NULL, &pSS, &referredType, pDoc);
-   else
-      ReferredType (NULL, pAttr, &pSS, &referredType, pDoc);
-   if (pF != NULL)
-      /* cree un voisin pour l'element dont on a trouve la */
-      /* reference, (c'est une reference interne) */
-     {
-
-	pNewEl = CreateSibling (pDoc, pRef->RdReferred->ReReferredElem, before, FALSE,
-				TypeEl, StructEl, FALSE);
-	/* on ne veut pas la feuille, mais la racine */
-	pNewEl = pRef->RdReferred->ReReferredElem;
-	if (before)
-	   pNewEl = pNewEl->ElPrevious;
-	else
-	   pNewEl = pNewEl->ElNext;
-     }
-   else
-      /* on n'a pas trouve de reference a un element associe' de ce type */
-     {
-	pNewEl = NULL;
-	pF = FirstAssociatedElement (pDoc, referredType, pSS);
-	/* y-a-t-il des elements associes ? */
-	if (pF != NULL)
-	   /* oui: on cree devant le 1er */
-	  {
-	     pNewEl = CreateSibling (pDoc, pF, TRUE, FALSE, TypeEl, StructEl, FALSE);
-	     /* on retourne un pointeur sur l'element associe' cree', et */
-	     /* non sur sa premiere feuille */
-	     if (pNewEl != NULL)
-		pNewEl = GetTypedAncestor (pNewEl, TypeEl, StructEl);
-	  }
-	else
-	   /* Ne devrait pas se produire, LinkReference a du faire le boulot */
-	   pNewEl = CreateFirstAssocElement (pDoc, referredType, pSS);
-     }
-   if (pNewEl != NULL)
-      /* on a cree un element associe. On fait pointer la reference sur
-         cet element */
-     {
-	if (pAttr == NULL)
-	   SetReference (pEl, NULL, pNewEl, pDoc, pDoc, TRUE, TRUE);
-	else
-	   SetReference (NULL, pAttr, pNewEl, pDoc, pDoc, TRUE, FALSE);
-	/* annule d'abord la selection */
-	TtaClearViewSelections ();
-	/* supprime les anciens paves de la reference */
-	DestroyAbsBoxes (pEl, pDoc, FALSE);
-	AbstractImageUpdated (pDoc);
-	/* cree les paves de la valeur de la reference */
-	CreateAllAbsBoxesOfEl (pEl, pDoc);
-	/* garde le pointeur sur le sous arbre cree */
-	NCreatedElements++;
-	CreatedElement[NCreatedElements - 1] = pEl;
-     }
-   return pNewEl;
-}
-
-
-/*----------------------------------------------------------------------
-   	CreateFirstAssocElement	Cree le premier element associe du type	
-   	(pSS, typeNum) pour le document pDoc et retourne un pointeur	
-   	sur l'element cree.						
-  ----------------------------------------------------------------------*/
-PtrElement CreateFirstAssocElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
-{
-   PtrElement          pEl, pChild;
-   PtrSSchema          pSSassoc;
-   int                 nAssoc, r, freeEntry;
-   ThotBool            stop;
-   NotifyElement       notifyEl;
-
-   pEl = NULL;
-   r = 0;
-   pSSassoc = NULL;
-   freeEntry = 0;
-   /* Parcourt la table des arbres d'elements associes du document */
-   /* pour voir s'il existe deja un arbre vide (racine seule) pour */
-   /* ce type d'element associe' */
-   nAssoc = 0;
-   stop = FALSE;
-   while (!stop && nAssoc < MAX_ASSOC_DOC)
-     {
-	if (pDoc->DocAssocRoot[nAssoc] == NULL)
-	  {
-	     if (freeEntry == 0)
-		/* premiere entree libre dans la table des arbres associes */
-		freeEntry = nAssoc + 1;
-	  }
-	else
-	  {
-	     pSSassoc = pDoc->DocAssocRoot[nAssoc]->ElStructSchema;
-	     if (!strcmp (pSSassoc->SsName, pSS->SsName))
-	       {
-		  r = pDoc->DocAssocRoot[nAssoc]->ElTypeNumber;
-		  if (pDoc->DocAssocRoot[nAssoc]->ElFirstChild == NULL)
-		     /* cet arbre d'elements associes ne comporte que sa racine */
-		    {
-		       if (pSSassoc->SsRule[r - 1].SrConstruct == CsList)
-			  if (pSSassoc->SsRule[r - 1].SrListItem == typeNum)
-			     /* c'est l'arbre des elements associes cherche' */
-			     stop = TRUE;
-		    }
-		  else
-		    {
-		       pChild = pDoc->DocAssocRoot[nAssoc]->ElFirstChild;
-		       FwdSkipPageBreak (&pChild);
-		       if (pChild == NULL)
-			  stop = TRUE;
-		    }
-	       }
-	  }
-	if (!stop)
-	   nAssoc++;
-     }
-   if (stop)
-      /* on a trouve' un arbre reduit a sa racine, on lui cree un */
-      /* premier element */
-     {
-	notifyEl.event = TteElemNew;
-	notifyEl.document = (Document) IdentDocument (pDoc);
-	notifyEl.element = (Element) (pDoc->DocAssocRoot[nAssoc]);
-	notifyEl.elementType.ElTypeNum = pSSassoc->SsRule[r - 1].SrListItem;
-	notifyEl.elementType.ElSSchema = (SSchema) pSSassoc;
-	notifyEl.position = 0;
-	pEl = NULL;
-	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-	   pEl = NewSubtree (pSSassoc->SsRule[r - 1].SrListItem, pSSassoc,
-			     pDoc, nAssoc + 1, TRUE, TRUE, TRUE, TRUE);
-	if (pEl != NULL)
-	  {
-	     InsertFirstChild (pDoc->DocAssocRoot[nAssoc], pEl);
-	     NotifySubTree (TteElemNew, pDoc, pEl, 0);
-	  }
-     }
-   else
-      /* il n'y a pas d'arbre pour ces elements associes */
-     {
-	if (freeEntry > 0)
-	   /* on a trouve' une entree libre, on cree un arbre    */
-	   /* pour ces elements associes.                        */
-	  {
-	     nAssoc = freeEntry - 1;
-	     /* cherche dans le schema de structure la */
-	     /* regle LISTE qui regroupe les elements associes de  */
-	     /* ce type                                            */
-	     pSS = pSS;
-	     /* r: derniere regle qui pourrait etre une liste */
-	     /* d'elements associes */
-	     if (pSS->SsFirstDynNature == 0)
-		r = pSS->SsNRules;
-	     else
-		r = pSS->SsFirstDynNature - 1;
-	     /* boucle sur les regles de liste d'elements associes */
-	     stop = FALSE;
-	     do
-	       {
-		  if (pSS->SsRule[r - 1].SrConstruct == CsList)
-		     if (pSS->SsRule[r - 1].SrListItem == typeNum)
-			/* c'est la regle liste cherchee */
-			stop = TRUE;
-		  if (!stop)
-		     r--;	/* regle precedente */
-	       }
-	     while (!stop && r > 0);
-
-	     if (r <= 0)
-		pEl = NULL;
-	     else
-	       {
-		  /* cree l'arbre des elements associes */
-		  notifyEl.event = TteElemNew;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
-		  notifyEl.element = NULL;
-		  notifyEl.elementType.ElTypeNum = r;
-		  notifyEl.elementType.ElSSchema = (SSchema) pSS;
-		  notifyEl.position = 0;
-		  pEl = NULL;
-		  if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		    {
-		       pDoc->DocAssocRoot[nAssoc] = NewSubtree (r, pSS, pDoc, nAssoc + 1,
-						    TRUE, TRUE, TRUE, TRUE);
-		       pDoc->DocAssocRoot[nAssoc]->ElAccess = AccessReadWrite;
-		       CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[nAssoc]);
-		       NotifySubTree (TteElemNew, pDoc, pDoc->DocAssocRoot[nAssoc], 0);
-		       pEl = pDoc->DocAssocRoot[nAssoc]->ElFirstChild;
-                       while ((pEl != NULL) &&
-                              (pEl->ElStructSchema != pSS))
-                          pEl = pEl->ElNext;
-		    }
-	       }
-	  }
-	if (pEl != NULL)
-	  {
-	     /* traite les attributs requis des elements crees */
-	     AttachMandatoryAttributes (pEl, pDoc);
-	     if (pDoc->DocSSchema == NULL)
-		/* le document a ete ferme' entre temps */
-		pEl = NULL;
-	     else
-	       {
-		  NCreatedElements++;
-		  CreatedElement[NCreatedElements - 1] = pEl;
-		  /* traitement des exceptions */
-		  CreationExceptions (pEl, pDoc);
-	       }
-	  }
-     }
-   return pEl;
-}
-
 /*----------------------------------------------------------------------
    LinkReference remplit un element ou un attribut de type reference     
-   en demandant a l'utilisateur quel est l'element qui est         
-   reference'.							
-   	pEl: pointeur sur l'element de type reference a	remplir		
-   (si pAttr est NULL) ou sur un element qui portera l'attribut	
-   pAttr (si pAttr n'est pas NULL).				
-   pAttr: pointeur sur l'attribut de type reference a remplir	
-   (si pas NULL).							
-   	pDoc: pointeur sur le document auquel appartient cet element	
-   ou cet attribut.						
+   en demandant a l'utilisateur quel est l'element qui est reference'.
+   pEl: pointeur sur l'element de type reference a remplir (si pAttr est NULL)
+        ou pointeur sur un element qui portera l'attribut pAttr (si pAttr
+	n'est pas NULL).				
+   pAttr: pointeur sur l'attribut de type reference a remplir (si pas NULL).
+   pDoc: pointeur sur le document auquel appartient cet element	ou cet
+         attribut.						
   ----------------------------------------------------------------------*/
-ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
-		       PtrElement *pSelEl)
+ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
 {
-  PtrElement          pModifiedElem, pCreatedElem;
+  PtrElement          pModifiedElem;
   PtrDocument         pSelDoc;
   PtrSSchema          pSS;
   PtrReference        pRef;
   PtrAbstractBox      pAb;
-  int                 assocNum, referredTypeNum, frame;
+  int                 view, referredTypeNum, frame;
   Name                typeName;
-  ThotBool            again, assoc, new, ret;
+  ThotBool            again, new, ret;
 
   ret = FALSE;
-  assoc = FALSE;
   pModifiedElem = NULL;
-  pCreatedElem = NULL;
   pRef = NULL;
 
   /* cherche le type d'element reference' */
@@ -1447,10 +1112,8 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
 		  /* cherche le document (pointeur pSelDoc) auquel */
 		  /* appartient la fenetre ou l'utilisateur a designe' */
 		  /* un pave. */
-		  GetDocAndView (frame, &pSelDoc, &assocNum, &assoc);
-		  /* pSelEl: pointeur sur l'element designe' */
-		  *pSelEl = pAb->AbElement;
-		  ret = SetReference (pEl, pAttr, *pSelEl, pDoc,
+		  GetDocAndView (frame, &pSelDoc, &view);
+		  ret = SetReference (pEl, pAttr, pAb->AbElement, pDoc,
 				      pSelDoc, TRUE, TRUE);
 		  if (ret)
 		    {
@@ -1469,13 +1132,6 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
 	    }
 	}
     }
-  else if (new && again)
-    {
-      /* Cree un nouvel element associe reference' */
-      pCreatedElem = CreateReferredAssocElem (pDoc, pEl, pAttr,
-					      referredTypeNum, pSS);
-      ret = TRUE;
-    }
   if (pModifiedElem != NULL)
     {
       /* c'est trop tot pour creer les paves : la reference n'est */
@@ -1484,7 +1140,6 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
       NCreatedElements++;
       CreatedElement[NCreatedElements - 1] = pModifiedElem;
     }
-  *pSelEl = pCreatedElem;
   return ret;
 }
 
@@ -1799,7 +1454,6 @@ void ChoiceMenuCallback (int item, char *natureName)
      }
 }
 
-
 /*----------------------------------------------------------------------
    CreeChoix       si l'element pEl est de type choix, demande a	
    l'utilisateur le type d'element qu'il veut creer et cree la	
@@ -1808,12 +1462,9 @@ void ChoiceMenuCallback (int item, char *natureName)
    Retourne dans pLeaf un pointeur sur le premier element cree'.	
    La fonction rend faux si rien n'a ete cree, vrai si au moins un    
    element a ete cree.                                                
-   Retourne dans assocCreated l'element reference eventuellement cree 
-   par LinkReference de maniere a pouvoir le faire reafficher par	
-   CreateSibling								
   ----------------------------------------------------------------------*/
 static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
-			   PtrElement *assocCreated, ThotBool desc)
+			   ThotBool desc)
 {
    PtrElement          pNewEl, pChild, pRet;
    int                 choiceTypeNum;
@@ -1826,7 +1477,6 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
    ThotBool            menu;
 
    ret = FALSE;
-   *assocCreated = NULL;
    pRet = NULL;
    nItems = 0;
    stop = FALSE;
@@ -1882,8 +1532,8 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
 		  notifyEl.position = 0;
 		  pNewEl = NULL;
 		  if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		     pNewEl = NewSubtree (ChosenTypeNum, ChosenTypeSSchema, pDoc, (*pEl)->ElAssocNum, desc,
-					  TRUE, TRUE, TRUE);
+		     pNewEl = NewSubtree (ChosenTypeNum, ChosenTypeSSchema,
+					  pDoc, desc, TRUE, TRUE, TRUE);
 		  if (pNewEl != NULL)
 		    {
 		       InsertOption (*pEl, &pNewEl, pDoc);
@@ -1908,7 +1558,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
 		   if ((*pLeaf)->ElLeafType == LtReference)
 		      /* on a cree une reference, on demande l'element */
 		      /* reference' */
-		      ret = LinkReference (*pLeaf, NULL, pDoc, assocCreated);
+		      ret = LinkReference (*pLeaf, NULL, pDoc);
 	     ret = TRUE;
 	     /* enchaine les menus de creation de choix */
 	     /* Si l'element cree' de plus bas niveau est encore un choix */
@@ -1954,7 +1604,6 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    CreateSibling  Cree un element devant (ou derriere, selon before)	
    l'element pointe par pEl dans le document pointe par pDoc.         
@@ -1971,8 +1620,8 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 			  ThotBool createAbsBox, int typeNum, PtrSSchema pSS,
 			  ThotBool inclusion)
 {
-   PtrElement          pLeaf, pNew, pElem, pNextEl, pSibling, pRet, pFake,
-                       assocCreated, notifiedElem;
+   PtrElement          pLeaf, pNew, pElem, pNextEl, pSibling, pRet,
+                       notifiedElem;
    int                 counterNum, nSiblings;
    PtrPSchema          pPSchema;
    ThotBool            ok, page;
@@ -1981,8 +1630,6 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
    NotifyElement       notifyEl;
 
    pRet = NULL;
-   pFake = NULL;
-   assocCreated = NULL;
    notifiedElem = NULL;
    page = FALSE;
    if (typeNum == PageBreak + 1)
@@ -2021,7 +1668,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 	     notifyEl.position = nSiblings;
 	     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	       {
-		  pNew = NewSubtree (typeNum, pSS, pDoc, pEl->ElAssocNum, (ThotBool)(!inclusion),
+		  pNew = NewSubtree (typeNum, pSS, pDoc, (ThotBool)(!inclusion),
 				     TRUE, TRUE, TRUE);
 		  if (inclusion)
 		     /* dans le cas d'une inclusion, si l'element a inclure */
@@ -2032,7 +1679,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 		       if (pSRule->SrConstruct == CsIdentity)
 			  if (pSS->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsNatureSchema)
 			    {
-			       pElem = NewSubtree (pSRule->SrIdentRule, pSS, pDoc, pEl->ElAssocNum,
+			       pElem = NewSubtree (pSRule->SrIdentRule, pSS, pDoc,
 						   FALSE, TRUE, TRUE, TRUE);
 			       InsertFirstChild (pNew, pElem);
 			    }
@@ -2057,9 +1704,9 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 		       pLeaf->ElSource->RdElement = pLeaf;
 		       pLeaf->ElSource->RdTypeRef = RefInclusion;
 		       /* demande a l'utilisateur l'element a inclure */
-		       if (!LinkReference (pLeaf, NULL, pDoc, &pFake))
-			  /* si l'utilisateur n'a pas designe' un element correct, */
-			  /* on annule */
+		       if (!LinkReference (pLeaf, NULL, pDoc))
+			  /* si l'utilisateur n'a pas designe' un element
+			     correct, on annule */
 			 {
 			    DeleteElement (&pNew, pDoc);
 			    pRet = NULL;
@@ -2096,7 +1743,8 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 		       switch (pLeaf->ElStructSchema->SsRule[pLeaf->ElTypeNumber - 1].SrConstruct)
 			     {
 				case CsChoice:
-				   ok = CreeChoix (pDoc, &pLeaf, &pRet, &assocCreated, (ThotBool)(!inclusion));
+				   ok = CreeChoix (pDoc, &pLeaf, &pRet,
+						   (ThotBool)(!inclusion));
 				   if (!ok)
 				      /* l'utilisateur a abandonne' la creation de cet element */
 				     {
@@ -2110,7 +1758,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 				      notifiedElem = pLeaf;
 				   break;
 				case CsReference:
-				   LinkReference (pLeaf, NULL, pDoc, &assocCreated);
+				   LinkReference (pLeaf, NULL, pDoc);
 				   break;
 				default:
 				   break;
@@ -2131,19 +1779,6 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 			  ApplyTransmitRules (pLeaf, pDoc);
 			  RepApplyTransmitRules (pLeaf, pLeaf, pDoc);
 			}
-		    }
-		  /* Affichage retarde de l'element associe eventuellement */
-		  /* cree par ReferredElement soit dans CreeChoix (cas d'un choix), */
-		  /* soit directement un peu plus haut (cas d'une reference) */
-		  if (assocCreated != NULL)
-		    {
-		       /* Traite les exclusions dans l'element cree */
-		       RemoveExcludedElem (&assocCreated, pDoc);
-		       if (assocCreated != NULL)
-			 {
-			    CreateAllAbsBoxesOfEl (assocCreated, pDoc);
-			    AbstractImageUpdated (pDoc);
-			 }
 		    }
 		  if (pNew != NULL)
 		    {
@@ -2209,9 +1844,9 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
    return pRet;
 }
 
-
 /*----------------------------------------------------------------------
-   CreateWithinElement      Cree un contenu vide pour l'element pEL		
+   CreateWithinElement
+   Cree un contenu vide pour l'element pEL
    dans le document pointe par pDoc. Les paves des elements crees	
    sont crees pour toutes les vues si createAbsBox est Vrai.          
    Si inclusion est vrai, c'est un element inclus qui est cree'.      
@@ -2221,482 +1856,472 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 				ThotBool createAbsBox, ThotBool inclusion)
 {
-   PtrElement          p, p1, pLeaf, pPrevEl, pNextEl, pSibling, pL, pFake,
-                       assocCreated;
-   int                 i, j, minNum, nSiblings;
-   ThotBool            found, cree;
-   SRule              *pSRule;
-   NotifyElement       notifyEl;
+  PtrElement          p, p1, pLeaf, pPrevEl, pNextEl, pSibling, pL;
+  int                 i, j, minNum, nSiblings;
+  ThotBool            found, cree;
+  SRule              *pSRule;
+  NotifyElement       notifyEl;
 
-   pFake = NULL;
-   assocCreated = NULL;
-   pLeaf = NULL;
-   p = NULL;
-   cree = FALSE;
-   pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
-   switch (pSRule->SrConstruct)
-	 {
-	    case CsChoice:
-	       /* c'est une regle de choix */
-	       if (pEl->ElFirstChild == NULL)
-		 {
-		    if (inclusion)
-		      {
-			 /* associe un bloc reference a l'element cree' */
-			 GetReference (&pEl->ElSource);
-			 if (pEl->ElSource != NULL)
-			   {
-			      pEl->ElSource->RdElement = pEl;
-			      pEl->ElSource->RdTypeRef = RefInclusion;
-			      /* demande a l'utilisateur l'element a inclure */
-			      if (LinkReference (pEl, NULL, pDoc, &pFake))
-				{
-				   /* supprime les anciens paves */
-				   TtaClearViewSelections ();
-				   /* annule d'abord la selection */
-				   DestroyAbsBoxes (pEl, pDoc, FALSE);
-				   AbstractImageUpdated (pDoc);
-				   /* supprime la copie de l'ancien element inclus */
-				   if (!pEl->ElTerminal)
-				     {
-					pSibling = pEl->ElFirstChild;
-					while (pSibling != NULL)
-					  {
-					     pL = pSibling->ElNext;
-					     DeleteElement (&pSibling, pDoc);
-					     pSibling = pL;
-					  }
-				     }
-				   /* effectue la copie de l'arbre abstrait */
-				   /* de l'element inclus */
-				   if (inclusion)
-				      CopyIncludedElem (pEl, pDoc);
-				   pLeaf = FirstLeaf (pEl);
-				   CreateAllAbsBoxesOfEl (pEl, pDoc);
-				   AbstractImageUpdated (pDoc);
-				   RedisplayDocViews (pDoc);
-				}
-			   }
-		      }
-		    else
-		      {
-			 cree = CreeChoix (pDoc, &pEl, &pLeaf, &p, TRUE);
-			 pLeaf = FirstLeaf (pEl);
-		      }
-		    if (p != NULL)
-		       /* on a cree un element associe' reference' */
-		      {
-			 CreateAllAbsBoxesOfEl (p, pDoc);
-			 AbstractImageUpdated (pDoc);
-		      }
-		    if (!cree)
-		      {
-			 pLeaf = NULL;
-			 /*Ret = NULL; */
-		      }
-		    else
-		       /* traitement des exceptions */
-		      {
-			 /* traite les exclusions des elements crees */
-			 RemoveExcludedElem (&pEl, pDoc);
-			 if (pEl != NULL)
-			   {
-			      /* traite les attributs requis des elements crees */
-			      AttachMandatoryAttributes (pEl, pDoc);
-			      if (pDoc->DocSSchema == NULL)
-				 /* le document a ete ferme' entre temps */
-				 pLeaf = NULL;
-			      else
-				{
-				   CreationExceptions (pEl, pDoc);
-				   /* garde le pointeur sur le sous arbre cree */
-				   NCreatedElements++;
-				   CreatedElement[NCreatedElements - 1] = pEl;
-				   if (createAbsBox)
-				      /* cree les paves du nouvel element */
-				      CreateAllAbsBoxesOfEl (pEl, pDoc);
-				}
-			   }
-		      }
-		 }
-	       break;
-
-	    case CsAggregate:
-	    case CsUnorderedAggregate:
-	       /* C'est un agregat, creer les elements absents */
-	       if (!inclusion)
-		 {
-		    pPrevEl = NULL;
-		    /* premier element existant de l'agregat */
-		    p = pEl->ElFirstChild;
-		    for (i = 0; i < pSRule->SrNComponents; i++)
-		       /* on ne cree pas les composants qui ont l'exception NoCreate */
-		       if (!TypeHasException (ExcNoCreate, pSRule->SrComponent[i],
-					      pEl->ElStructSchema))
-			  /* on ne cree pas les composants exclus */
-			  if (!ExcludedType (pEl, pSRule->SrComponent[i], pEl->ElStructSchema))
+  pLeaf = NULL;
+  p = NULL;
+  cree = FALSE;
+  pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+  switch (pSRule->SrConstruct)
+    {
+    case CsChoice:
+      /* c'est une regle de choix */
+      if (pEl->ElFirstChild == NULL)
+	{
+	  if (inclusion)
+	    {
+	      /* associe un bloc reference a l'element cree' */
+	      GetReference (&pEl->ElSource);
+	      if (pEl->ElSource != NULL)
+		{
+		  pEl->ElSource->RdElement = pEl;
+		  pEl->ElSource->RdTypeRef = RefInclusion;
+		  /* demande a l'utilisateur l'element a inclure */
+		  if (LinkReference (pEl, NULL, pDoc))
+		    {
+		      /* supprime les anciens paves */
+		      TtaClearViewSelections ();
+		      /* annule d'abord la selection */
+		      DestroyAbsBoxes (pEl, pDoc, FALSE);
+		      AbstractImageUpdated (pDoc);
+		      /* supprime la copie de l'ancien element inclus */
+		      if (!pEl->ElTerminal)
+			{
+			  pSibling = pEl->ElFirstChild;
+			  while (pSibling != NULL)
 			    {
-			       /* saute les marques de page */
-			       FwdSkipPageBreak (&p);
-			       /* cherche si ce composant existe deja */
-			       found = FALSE;
-			       if (p != NULL)
-				  /* il y a au moins un element dans l'agregat */
-				 {
-				    if (pSRule->SrConstruct == CsAggregate)
-				      {
-					 /* c'est un agregat ordonne' */
-					 if (EquivalentSRules (pSRule->SrComponent[i], pEl->ElStructSchema, p->ElTypeNumber, p->ElStructSchema, pEl))
-					    /* le composant cherche' est a sa place */
-					   {
-					      found = TRUE;
-					      pPrevEl = p;
-					      p = p->ElNext;
-					   }
-				      }
-				    if (pSRule->SrConstruct == CsUnorderedAggregate)
-				       /* agregat sans ordre, cherche parmi tous les */
-				       /* elements fils de l'agregat */
-				      {
-					 p = pEl->ElFirstChild;
-					 while (p != NULL && !found)
-					    if (EquivalentSRules (pSRule->SrComponent[i], pEl->ElStructSchema, p->ElTypeNumber, p->ElStructSchema, pEl))
-					       /* c'est le composant cherche' */
-					      {
-						 found = TRUE;
-						 pPrevEl = p;
-						 p = p->ElNext;
-					      }
-					    else
-					       /* on passe au fils suivant */
-					       p = p->ElNext;
-					 if (!found)
-					    p = pEl->ElFirstChild;
-				      }
-				    if (!found)
-				      {
-					 if (pPrevEl == NULL && p->ElPrevious != NULL)
-					   {
-					      if (p->ElPrevious->ElTerminal)
-						 if (p->ElPrevious->ElLeafType == LtPageColBreak)
-						    if (p->ElPrevious->ElPageType == PgBegin)
-						       pPrevEl = p->ElPrevious;
-					      /* on inserera apres les sauts de pages du debut */
-					   }
-				      }
-				 }
-			       else if (pPrevEl == NULL && pEl->ElParent == NULL)
-				  /* on est sur l'element racine et il est vide */
-				 {
-				    p = pEl->ElFirstChild;
-				    SkipPageBreakBegin (&p);
-				    pPrevEl = p;
-				    /* on inserera apres les sauts de pages du debut */
-				 }
-			       if (!found)
-				  /* le composant cherche' n'existe pas */
-				 {
-				    notifyEl.event = TteElemNew;
-				    notifyEl.document = (Document) IdentDocument (pDoc);
-				    notifyEl.element = (Element) pEl;
-				    notifyEl.elementType.ElTypeNum = pSRule->SrComponent[i];
-				    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-				    nSiblings = 0;
-				    if (pPrevEl != NULL)
-				      {
-					 pSibling = pPrevEl;
-					 nSiblings++;
-					 while (pSibling->ElPrevious != NULL)
-					   {
-					      nSiblings++;
-					      pSibling = pSibling->ElPrevious;
-					   }
-				      }
-				    notifyEl.position = nSiblings;
-				    p1 = NULL;
-				    if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-				       /* on en cree un avec sa descendance */
-				       p1 = NewSubtree (pSRule->SrComponent[i],
-							pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
-						    TRUE, TRUE, TRUE, TRUE);
-				    if (p1 != NULL)
-				       /* chaine dans l'arbre l'element cree */
-				      {
-					 if (pLeaf == NULL)
-					    pLeaf = FirstLeaf (p1);
-					 if (pPrevEl == NULL)
-					   {
-					      InsertFirstChild (pEl, p1);
-					      pNextEl = p1->ElNext;
-					      /* saute les marques de page qui suivent */
-					      FwdSkipPageBreak (&pNextEl);
-					      if (pNextEl != NULL)
-						 /* l'element suivant le nouvel element */
-						 /* n'est plus premier */
-						 ChangeFirstLast (pNextEl, pDoc, TRUE,
-								  TRUE);
-					   }
-					 else
-					   {
-					      InsertElementAfter (pPrevEl, p1);
-					      pNextEl = p1->ElNext;
-					      /* saute les marques de page qui suivent */
-					      FwdSkipPageBreak (&pNextEl);
-					      if (pNextEl == NULL)
-						 /* l'element precedent le nouvel */
-						 /* element n'est plus dernier */
-						 ChangeFirstLast (pPrevEl, pDoc, FALSE, TRUE);
-					   }
-					 /* traite les exclusions des elements crees */
-					 RemoveExcludedElem (&p1, pDoc);
-					 if (p1 != NULL)
-					   {
-					      /* traite les attributs requis des elements crees */
-					      AttachMandatoryAttributes (p1, pDoc);
-					      if (pDoc->DocSSchema == NULL)
-						 /* le document a ete ferme' entre temps */
-						 pLeaf = NULL;
-					      else
-						{
-						   pPrevEl = p1;
-						   /* traitement des exceptions */
-						   CreationExceptions (p1, pDoc);
-						   NotifySubTree (TteElemNew, pDoc, p1, 0);
-						   if (createAbsBox)
-						      /* cree les paves du nouvel element */
-						      CreateAllAbsBoxesOfEl (p1, pDoc);
-						   /* garde le pointeur sur le sous arbre cree */
-						   NCreatedElements++;
-						   CreatedElement[NCreatedElements - 1] = p1;
-						}
-					   }
-				      }
-				 }
+			      pL = pSibling->ElNext;
+			      DeleteElement (&pSibling, pDoc);
+			      pSibling = pL;
 			    }
-		 }
-	       break;
+			}
+		      /* effectue la copie de l'arbre abstrait */
+		      /* de l'element inclus */
+		      if (inclusion)
+			CopyIncludedElem (pEl, pDoc);
+		      pLeaf = FirstLeaf (pEl);
+		      CreateAllAbsBoxesOfEl (pEl, pDoc);
+		      AbstractImageUpdated (pDoc);
+		      RedisplayDocViews (pDoc);
+		    }
+		}
+	    }
+	  else
+	    {
+	      cree = CreeChoix (pDoc, &pEl, &pLeaf, TRUE);
+	      pLeaf = FirstLeaf (pEl);
+	    }
+	  if (!cree)
+	    {
+	      pLeaf = NULL;
+	      /*Ret = NULL; */
+	    }
+	  else
+	    /* traitement des exceptions */
+	    {
+	      /* traite les exclusions des elements crees */
+	      RemoveExcludedElem (&pEl, pDoc);
+	      if (pEl != NULL)
+		{
+		  /* traite les attributs requis des elements crees */
+		  AttachMandatoryAttributes (pEl, pDoc);
+		  if (pDoc->DocSSchema == NULL)
+		    /* le document a ete ferme' entre temps */
+		    pLeaf = NULL;
+		  else
+		    {
+		      CreationExceptions (pEl, pDoc);
+		      /* garde le pointeur sur le sous arbre cree */
+		      NCreatedElements++;
+		      CreatedElement[NCreatedElements - 1] = pEl;
+		      if (createAbsBox)
+			/* cree les paves du nouvel element */
+			CreateAllAbsBoxesOfEl (pEl, pDoc);
+		    }
+		}
+	    }
+	}
+      break;
 
-	    case CsList:
-	       /* C'est une liste, on cree le nombre minimum d'elem. */
-	       if (!inclusion)
-		  if (!TypeHasException (ExcNoCreate, pSRule->SrListItem, pEl->ElStructSchema))
-		     if (!ExcludedType (pEl, pSRule->SrListItem, pEl->ElStructSchema))
-			/* compte les elements existants : j */
-		       {
+    case CsAggregate:
+    case CsUnorderedAggregate:
+      /* C'est un agregat, creer les elements absents */
+      if (!inclusion)
+	{
+	  pPrevEl = NULL;
+	  /* premier element existant de l'agregat */
+	  p = pEl->ElFirstChild;
+	  for (i = 0; i < pSRule->SrNComponents; i++)
+	    /* on ne cree pas les composants qui ont l'exception NoCreate */
+	    if (!TypeHasException (ExcNoCreate, pSRule->SrComponent[i],
+				   pEl->ElStructSchema))
+	      /* on ne cree pas les composants exclus */
+	      if (!ExcludedType (pEl, pSRule->SrComponent[i],
+				 pEl->ElStructSchema))
+		{
+		  /* saute les marques de page */
+		  FwdSkipPageBreak (&p);
+		  /* cherche si ce composant existe deja */
+		  found = FALSE;
+		  if (p != NULL)
+		    /* il y a au moins un element dans l'agregat */
+		    {
+		      if (pSRule->SrConstruct == CsAggregate)
+			{
+			  /* c'est un agregat ordonne' */
+			  if (EquivalentSRules (pSRule->SrComponent[i],
+						pEl->ElStructSchema,
+						p->ElTypeNumber,
+						p->ElStructSchema, pEl))
+			    /* le composant cherche' est a sa place */
+			    {
+			      found = TRUE;
+			      pPrevEl = p;
+			      p = p->ElNext;
+			    }
+			}
+		      if (pSRule->SrConstruct == CsUnorderedAggregate)
+			/* agregat sans ordre, cherche parmi tous les */
+			/* elements fils de l'agregat */
+			{
 			  p = pEl->ElFirstChild;
-			  j = 0;
-			  p1 = NULL;
-			  while (p != NULL)
+			  while (p != NULL && !found)
+			    if (EquivalentSRules (pSRule->SrComponent[i],
+						  pEl->ElStructSchema,
+						  p->ElTypeNumber,
+						  p->ElStructSchema, pEl))
+			      /* c'est le composant cherche' */
+			      {
+				found = TRUE;
+				pPrevEl = p;
+				p = p->ElNext;
+			      }
+			    else
+			      /* on passe au fils suivant */
+			      p = p->ElNext;
+			  if (!found)
+			    p = pEl->ElFirstChild;
+			}
+		      if (!found)
+			{
+			  if (pPrevEl == NULL && p->ElPrevious != NULL)
 			    {
-			       /* ignore les marques page */
-			       if (p->ElTerminal && p->ElLeafType == LtPageColBreak)
-				  /* si c'est une page de debut d'element, on creera les */
-				  /* nouveaux elements de liste apres cette marque de page */
-				 {
-				    if (p->ElPageType == PgBegin)
-				       p1 = p;
-				 }
-			       else
-				 {
-				    /* ignore les elements qui ne sont pas du type (ou */
-				    /* equivalent) prevu par la regle liste. Les */
-				    /* inclusions peuvent produire de tels elements */
-				    if (EquivalentSRules (pSRule->SrListItem, pEl->ElStructSchema,
-				    p->ElTypeNumber, p->ElStructSchema, pEl))
-				       j++;
-				    p1 = p;
-				 }
-			       p = p->ElNext;
+			      if (p->ElPrevious->ElTerminal)
+				if (p->ElPrevious->ElLeafType == LtPageColBreak)
+				  if (p->ElPrevious->ElPageType == PgBegin)
+				    pPrevEl = p->ElPrevious;
+			      /* on inserera apres les sauts de pages du debut */
 			    }
-			  if (pSRule->SrMinItems == 0)
-			     minNum = 1;
-			  else
-			     minNum = pSRule->SrMinItems;
-			  if (j < minNum)
-			     /* il en manque, on cree ce qui manque */
-			     /* p1 pointe sur le dernier element existant de la liste */
-			     for (i = j; i < minNum; i++)
-			       {
-				  notifyEl.event = TteElemNew;
-				  notifyEl.document = (Document) IdentDocument (pDoc);
-				  notifyEl.element = (Element) pEl;
-				  notifyEl.elementType.ElTypeNum = pSRule->SrListItem;
-				  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-				  nSiblings = 0;
-				  if (p1 != NULL)
-				    {
-				       pSibling = p1;
-				       nSiblings++;
-				       while (pSibling->ElPrevious != NULL)
-					 {
-					    nSiblings++;
-					    pSibling = pSibling->ElPrevious;
-					 }
-				    }
-				  notifyEl.position = nSiblings;
-				  p = NULL;
-				  if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-				     p = NewSubtree (pSRule->SrListItem, pEl->ElStructSchema, pDoc,
-						     pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-				  if (p != NULL)
-				    {
-				       if (pLeaf == NULL)
-					  pLeaf = FirstLeaf (p);
-				       if (p1 == NULL)
-					 {
-					    InsertFirstChild (pEl, p);
-					    pNextEl = p->ElNext;
-					    /* saute les marques de page qui suivent */
-					    FwdSkipPageBreak (&pNextEl);
-					    if (pNextEl != NULL)
-					       /* l'element suivant le nouvel element n'est */
-					       /* plus premier */
-					       ChangeFirstLast (pNextEl, pDoc, TRUE, TRUE);
-					 }
-				       else
-					 {
-					    InsertElementAfter (p1, p);
-					    pNextEl = p->ElNext;
-					    /* saute les marques de page qui suivent */
-					    FwdSkipPageBreak (&pNextEl);
-					    if (pNextEl == NULL)
-					       /* l'element precedent le nouvel element n'est */
-					       /* plus dernier */
-					       ChangeFirstLast (p1, pDoc, FALSE, TRUE);
-					 }
-				       /* traite les exclusions des elements crees */
-				       RemoveExcludedElem (&p, pDoc);
-				       if (p != NULL)
-					 {
-					    p1 = p;
-					    /* traite les attributs requis des elements crees */
-					    AttachMandatoryAttributes (p, pDoc);
-					    if (pDoc->DocSSchema == NULL)
-					       /* le document a ete ferme' entre temps */
-					       pLeaf = NULL;
-					    else
-					      {
-						 /* traitement des exceptions */
-						 CreationExceptions (p, pDoc);
-						 NotifySubTree (TteElemNew, pDoc, p, 0);
-						 if (createAbsBox)
-						    /* cree les paves du nouvel element */
-						    CreateAllAbsBoxesOfEl (p, pDoc);
-						 /* garde le pointeur sur le sous arbre cree */
-						 NCreatedElements++;
-						 CreatedElement[NCreatedElements - 1] = p;
-					      }
-					 }
-				    }
-			       }
-		       }
-	       break;
-
-	    case CsReference:
-	       if (!inclusion)
-		  /* demande a l'utilisateur l'element reference' */
-		 {
-		    LinkReference (pEl, NULL, pDoc, &assocCreated);
-		    if (assocCreated != NULL)
-		      {
-			 /* Traite les exclusions dans l'element cree */
-			 RemoveExcludedElem (&assocCreated, pDoc);
-			 if (assocCreated != NULL)
-			   {
-			      CreateAllAbsBoxesOfEl (assocCreated, pDoc);
-			      AbstractImageUpdated (pDoc);
-			   }
-		      }
-
-		    /* supprime les anciens paves de la reference */
-		    pLeaf = FirstLeaf (pEl);
-		    /* annule d'abord la selection */
-		    TtaClearViewSelections ();
-		    DestroyAbsBoxes (pEl, pDoc, FALSE);
-		    AbstractImageUpdated (pDoc);
-		    if (createAbsBox)
-		       /* cree les paves de la valeur de la reference */
-		       CreateAllAbsBoxesOfEl (pEl, pDoc);
-		    /* garde le pointeur sur le sous arbre cree */
-		    NCreatedElements++;
-		    CreatedElement[NCreatedElements - 1] = pEl;
-		 }
-	       break;
-
-	    case CsNatureSchema:
-	       /* ce cas ne doit pas se presenter */
-	       break;
-
-	    case CsIdentity:
-	       if (!inclusion)
-		 {
-		    p = NULL;	/* on ne fait rien s'il y a deja un contenu */
-		    if (pEl->ElFirstChild == NULL)
-		       /* on ne fait rien si l'element a l'exception NoCreate */
-		       if (!TypeHasException (ExcNoCreate, pSRule->SrIdentRule,
-					      pEl->ElStructSchema))
-			  if (!ExcludedType (pEl, pSRule->SrIdentRule, pEl->ElStructSchema))
+			}
+		    }
+		  else if (pPrevEl == NULL && pEl->ElParent == NULL)
+		    /* on est sur l'element racine et il est vide */
+		    {
+		      p = pEl->ElFirstChild;
+		      SkipPageBreakBegin (&p);
+		      pPrevEl = p;
+		      /* on inserera apres les sauts de pages du debut */
+		    }
+		  if (!found)
+		    /* le composant cherche' n'existe pas */
+		    {
+		      notifyEl.event = TteElemNew;
+		      notifyEl.document = (Document) IdentDocument (pDoc);
+		      notifyEl.element = (Element) pEl;
+		      notifyEl.elementType.ElTypeNum = pSRule->SrComponent[i];
+		      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		      nSiblings = 0;
+		      if (pPrevEl != NULL)
+			{
+			  pSibling = pPrevEl;
+			  nSiblings++;
+			  while (pSibling->ElPrevious != NULL)
 			    {
-			       cree =
-				  pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsBasicElement ||
-				  pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsConstant ||
-				  pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsReference ||
-				  pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsChoice;
-			       notifyEl.event = TteElemNew;
-			       notifyEl.document = (Document) IdentDocument (pDoc);
-			       notifyEl.element = (Element) pEl;
-			       notifyEl.elementType.ElTypeNum = pSRule->SrIdentRule;
-			       notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-			       notifyEl.position = 0;
-			       p = NULL;
-			       if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-				  p = NewSubtree (pSRule->SrIdentRule, pEl->ElStructSchema, pDoc,
-				   pEl->ElAssocNum, TRUE, cree, TRUE, TRUE);
+			      nSiblings++;
+			      pSibling = pSibling->ElPrevious;
 			    }
-		    if (p != NULL)
-		      {
-			 pLeaf = FirstLeaf (p);
-			 InsertFirstChild (pEl, p);
-			 /* traite les eclusions des elements crees */
-			 RemoveExcludedElem (&p, pDoc);
-			 if (p != NULL)
-			   {
-			      pNextEl = p->ElNext;
+			}
+		      notifyEl.position = nSiblings;
+		      p1 = NULL;
+		      if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+			/* on en cree un avec sa descendance */
+			p1 = NewSubtree (pSRule->SrComponent[i],
+					 pEl->ElStructSchema, pDoc,
+					 TRUE, TRUE, TRUE, TRUE);
+		      if (p1 != NULL)
+			/* chaine dans l'arbre l'element cree */
+			{
+			  if (pLeaf == NULL)
+			    pLeaf = FirstLeaf (p1);
+			  if (pPrevEl == NULL)
+			    {
+			      InsertFirstChild (pEl, p1);
+			      pNextEl = p1->ElNext;
 			      /* saute les marques de page qui suivent */
 			      FwdSkipPageBreak (&pNextEl);
 			      if (pNextEl != NULL)
-				 /* l'element suivant le nouvel element n'est */
-				 /* plus premier */
-				 ChangeFirstLast (pNextEl, pDoc, TRUE, TRUE);
+				/* l'element suivant le nouvel element */
+				/* n'est plus premier */
+				ChangeFirstLast (pNextEl, pDoc, TRUE, TRUE);
+			    }
+			  else
+			    {
+			      InsertElementAfter (pPrevEl, p1);
+			      pNextEl = p1->ElNext;
+			      /* saute les marques de page qui suivent */
+			      FwdSkipPageBreak (&pNextEl);
+			      if (pNextEl == NULL)
+				/* l'element precedent le nouvel */
+				/* element n'est plus dernier */
+				ChangeFirstLast (pPrevEl, pDoc, FALSE, TRUE);
+			    }
+			  /* traite les exclusions des elements crees */
+			  RemoveExcludedElem (&p1, pDoc);
+			  if (p1 != NULL)
+			    {
 			      /* traite les attributs requis des elements crees */
-			      AttachMandatoryAttributes (p, pDoc);
+			      AttachMandatoryAttributes (p1, pDoc);
 			      if (pDoc->DocSSchema == NULL)
-				 /* le document a ete ferme' entre temps */
-				 pLeaf = NULL;
+				/* le document a ete ferme' entre temps */
+				pLeaf = NULL;
 			      else
 				{
-				   /* traitement des exceptions */
-				   CreationExceptions (p, pDoc);
-				   NotifySubTree (TteElemNew, pDoc, p, 0);
-				   if (createAbsBox)
-				      /* cree les paves du nouvel element et de sa descendance */
-				      CreateAllAbsBoxesOfEl (pEl, pDoc);
-				   /* garde le pointeur sur le sous arbre cree */
-				   NCreatedElements++;
-				   CreatedElement[NCreatedElements - 1] = p;
+				  pPrevEl = p1;
+				  /* traitement des exceptions */
+				  CreationExceptions (p1, pDoc);
+				  NotifySubTree (TteElemNew, pDoc, p1, 0);
+				  if (createAbsBox)
+				    /* cree les paves du nouvel element */
+				    CreateAllAbsBoxesOfEl (p1, pDoc);
+				  /* garde le pointeur sur le sous arbre cree */
+				  NCreatedElements++;
+				  CreatedElement[NCreatedElements - 1] = p1;
 				}
-			   }
+			    }
+			}
+		    }
+		}
+	}
+      break;
+
+    case CsList:
+      /* C'est une liste, on cree le nombre minimum d'elem. */
+      if (!inclusion)
+	if (!TypeHasException (ExcNoCreate, pSRule->SrListItem,
+			       pEl->ElStructSchema))
+	  if (!ExcludedType (pEl, pSRule->SrListItem, pEl->ElStructSchema))
+	    /* compte les elements existants : j */
+	    {
+	      p = pEl->ElFirstChild;
+	      j = 0;
+	      p1 = NULL;
+	      while (p != NULL)
+		{
+		  /* ignore les marques page */
+		  if (p->ElTerminal && p->ElLeafType == LtPageColBreak)
+		    /* si c'est une page de debut d'element, on creera les */
+		    /* nouveaux elements de liste apres cette marque de page */
+		    {
+		      if (p->ElPageType == PgBegin)
+			p1 = p;
+		    }
+		  else
+		    {
+		      /* ignore les elements qui ne sont pas du type (ou */
+		      /* equivalent) prevu par la regle liste. Les */
+		      /* inclusions peuvent produire de tels elements */
+		      if (EquivalentSRules (pSRule->SrListItem,
+					    pEl->ElStructSchema,
+					    p->ElTypeNumber,
+					    p->ElStructSchema, pEl))
+			j++;
+		      p1 = p;
+		    }
+		  p = p->ElNext;
+		}
+	      if (pSRule->SrMinItems == 0)
+		minNum = 1;
+	      else
+		minNum = pSRule->SrMinItems;
+	      if (j < minNum)
+		/* il en manque, on cree ce qui manque */
+		/* p1 pointe sur le dernier element existant de la liste */
+		for (i = j; i < minNum; i++)
+		  {
+		    notifyEl.event = TteElemNew;
+		    notifyEl.document = (Document) IdentDocument (pDoc);
+		    notifyEl.element = (Element) pEl;
+		    notifyEl.elementType.ElTypeNum = pSRule->SrListItem;
+		    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		    nSiblings = 0;
+		    if (p1 != NULL)
+		      {
+			pSibling = p1;
+			nSiblings++;
+			while (pSibling->ElPrevious != NULL)
+			  {
+			    nSiblings++;
+			    pSibling = pSibling->ElPrevious;
+			  }
 		      }
-		 }
-	       break;
+		    notifyEl.position = nSiblings;
+		    p = NULL;
+		    if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		      p = NewSubtree (pSRule->SrListItem, pEl->ElStructSchema,
+				      pDoc, TRUE, TRUE, TRUE, TRUE);
+		    if (p != NULL)
+		      {
+			if (pLeaf == NULL)
+			  pLeaf = FirstLeaf (p);
+			if (p1 == NULL)
+			  {
+			    InsertFirstChild (pEl, p);
+			    pNextEl = p->ElNext;
+			    /* saute les marques de page qui suivent */
+			    FwdSkipPageBreak (&pNextEl);
+			    if (pNextEl != NULL)
+			      /* l'element suivant le nouvel element n'est */
+			      /* plus premier */
+			      ChangeFirstLast (pNextEl, pDoc, TRUE, TRUE);
+			  }
+			else
+			  {
+			    InsertElementAfter (p1, p);
+			    pNextEl = p->ElNext;
+			    /* saute les marques de page qui suivent */
+			    FwdSkipPageBreak (&pNextEl);
+			    if (pNextEl == NULL)
+			      /* l'element precedent le nouvel element n'est */
+			      /* plus dernier */
+			      ChangeFirstLast (p1, pDoc, FALSE, TRUE);
+			  }
+			/* traite les exclusions des elements crees */
+			RemoveExcludedElem (&p, pDoc);
+			if (p != NULL)
+			  {
+			    p1 = p;
+			    /* traite les attributs requis des elements crees*/
+			    AttachMandatoryAttributes (p, pDoc);
+			    if (pDoc->DocSSchema == NULL)
+			      /* le document a ete ferme' entre temps */
+			      pLeaf = NULL;
+			    else
+			      {
+				/* traitement des exceptions */
+				CreationExceptions (p, pDoc);
+				NotifySubTree (TteElemNew, pDoc, p, 0);
+				if (createAbsBox)
+				  /* cree les paves du nouvel element */
+				  CreateAllAbsBoxesOfEl (p, pDoc);
+				/* garde le pointeur sur le sous arbre cree */
+				NCreatedElements++;
+				CreatedElement[NCreatedElements - 1] = p;
+			      }
+			  }
+		      }
+		  }
+	    }
+      break;
 
-	    case CsBasicElement:
-	       break;
+    case CsReference:
+      if (!inclusion)
+	/* demande a l'utilisateur l'element reference' */
+	{
+	  LinkReference (pEl, NULL, pDoc);
+	  /* supprime les anciens paves de la reference */
+	  pLeaf = FirstLeaf (pEl);
+	  /* annule d'abord la selection */
+	  TtaClearViewSelections ();
+	  DestroyAbsBoxes (pEl, pDoc, FALSE);
+	  AbstractImageUpdated (pDoc);
+	  if (createAbsBox)
+	    /* cree les paves de la valeur de la reference */
+	    CreateAllAbsBoxesOfEl (pEl, pDoc);
+	  /* garde le pointeur sur le sous arbre cree */
+	  NCreatedElements++;
+	  CreatedElement[NCreatedElements - 1] = pEl;
+	}
+      break;
 
-	    default:
-	       break;
-	 }
-   return pLeaf;
+    case CsNatureSchema:
+      /* ce cas ne doit pas se presenter */
+      break;
+
+    case CsIdentity:
+      if (!inclusion)
+	{
+	  p = NULL;	/* on ne fait rien s'il y a deja un contenu */
+	  if (pEl->ElFirstChild == NULL)
+	    /* on ne fait rien si l'element a l'exception NoCreate */
+	    if (!TypeHasException (ExcNoCreate, pSRule->SrIdentRule,
+				   pEl->ElStructSchema))
+	      if (!ExcludedType (pEl, pSRule->SrIdentRule, pEl->ElStructSchema))
+		{
+		  cree =
+		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsBasicElement ||
+		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsConstant ||
+		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsReference ||
+		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsChoice;
+		  notifyEl.event = TteElemNew;
+		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.element = (Element) pEl;
+		  notifyEl.elementType.ElTypeNum = pSRule->SrIdentRule;
+		  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		  notifyEl.position = 0;
+		  p = NULL;
+		  if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		    p = NewSubtree (pSRule->SrIdentRule,
+				    pEl->ElStructSchema, pDoc,
+				    TRUE, cree, TRUE, TRUE);
+		}
+	  if (p != NULL)
+	    {
+	      pLeaf = FirstLeaf (p);
+	      InsertFirstChild (pEl, p);
+	      /* traite les eclusions des elements crees */
+	      RemoveExcludedElem (&p, pDoc);
+	      if (p != NULL)
+		{
+		  pNextEl = p->ElNext;
+		  /* saute les marques de page qui suivent */
+		  FwdSkipPageBreak (&pNextEl);
+		  if (pNextEl != NULL)
+		    /* l'element suivant le nouvel element n'est */
+		    /* plus premier */
+		    ChangeFirstLast (pNextEl, pDoc, TRUE, TRUE);
+		  /* traite les attributs requis des elements crees */
+		  AttachMandatoryAttributes (p, pDoc);
+		  if (pDoc->DocSSchema == NULL)
+		    /* le document a ete ferme' entre temps */
+		    pLeaf = NULL;
+		  else
+		    {
+		      /* traitement des exceptions */
+		      CreationExceptions (p, pDoc);
+		      NotifySubTree (TteElemNew, pDoc, p, 0);
+		      if (createAbsBox)
+			/* cree les paves du nouvel element et de sa descendance */
+			CreateAllAbsBoxesOfEl (pEl, pDoc);
+		      /* garde le pointeur sur le sous arbre cree */
+		      NCreatedElements++;
+		      CreatedElement[NCreatedElements - 1] = p;
+		    }
+		}
+	    }
+	}
+      break;
+
+    case CsBasicElement:
+      break;
+
+    default:
+      break;
+    }
+  return pLeaf;
 }
 
 /*----------------------------------------------------------------------
@@ -3286,10 +2911,10 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
    PtrElement          firstSel, lastSel, pEl, pSibling, pAncest;
    PtrDocument         pDoc;
    int                 firstChar, lastChar, menuRef, nItems, prevMenuInd,
-                       menuInd, i, distance, typeNum, refTypeNum;
+                       menuInd, i, distance, typeNum;
    Name                menuTitle;
    char                menuBuf[MAX_TXT_LEN];
-   ThotBool            isList, emptyRef, optional, ok;
+   ThotBool            isList, optional, ok;
    SRule              *pSRule, *pParentSRule;
    PtrSSchema          pSS, pAncestSS, pSSExt;
    Name                typeName1, typeName2, N;
@@ -3336,34 +2961,6 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 		/* il faudra mettre un separateur apres cette entree s'il */
 		/* y a d'autres entrees apres */
 		separatorAfter = TRUE;
-	     }
-
-	/* si la selection courante est une reference vide a un element */
-	/* associe', ajoute une entree pour creer un element associe' de */
-	/* ce type. Seulement pour la commande INSERT */
-	if (create && firstSel == lastSel && firstSel->ElTerminal &&
-	    firstSel->ElLeafType == LtReference)
-	   /* la selection courante est une reference */
-	   if (firstSel->ElReference != NULL)
-	     {
-		emptyRef = FALSE;
-		if (firstSel->ElReference->RdReferred == NULL)
-		   emptyRef = TRUE;
-		else if (!firstSel->ElReference->RdReferred->ReExternalRef)
-		   if (IsASavedElement (firstSel->ElReference->RdReferred->ReReferredElem))
-		      /* l'element designe' par la reference est dans le */
-		      /* buffer: il a ete coupe et la reference est */
-		      /* consideree comme vide */
-		      emptyRef = TRUE;
-		if (emptyRef)
-		   /* cette reference est vide */
-		   if (!ElementIsReadOnly (firstSel))
-		      /* cet element n'est pas protege' */
-		     {
-			/* type de l'element reference' prevu par le schema */
-			/* de structure */
-			refTypeNum = firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrReferredType;
-		     }
 	     }
 
 	/* la prochaine entree (s'il y en a une) devra etre precedee d'un */
@@ -3960,8 +3557,7 @@ static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
 	SplitAfterSelection (pElem, rank, pDoc);
      }
    /* cree la marque de fin et l'insere apres pElem */
-   pSecondEl = NewSubtree (typeNum, pSS, pDoc, pEl->ElAssocNum,
-			   TRUE, TRUE, TRUE, TRUE);
+   pSecondEl = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE, TRUE);
    if (pSecondEl != NULL)
       /* creation reussie */
      {
@@ -4200,12 +3796,6 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 				      createPasteMenuOK = FALSE;
 				   }
 			      }
-			    break;
-			 case ReferredElem:
-			    /* creer un element associe' reference' */
-			    newsel = CreateReferredAssocElem (pDoc, ElemAction[chosen],
-					       NULL, ElemTypeAction[chosen],
-						     SSchemaAction[chosen]);
 			    break;
 			 default:
 			    newsel = NULL;

@@ -124,7 +124,6 @@
 #define C_TR_SIBLING L'F'
 #define C_TR_DESCEND L'D'
 #define C_TR_REFERRED_EL L'd'
-#define C_TR_ASSOC L'A'
 
 /* type of an output indentation rule */
 #define C_TR_ABSOLUTE L'A'
@@ -227,7 +226,6 @@
 #define C_TR_SIBLING 'F'
 #define C_TR_DESCEND 'D'
 #define C_TR_REFERRED_EL 'd'
-#define C_TR_ASSOC 'A'
 
 /* type of an output indentation rule */
 #define C_TR_ABSOLUTE 'A'

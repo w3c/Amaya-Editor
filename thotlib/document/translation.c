@@ -3059,24 +3059,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		pDocGet = pExtDoc;
 	    }
 	  break;
-	case RpAssoc:
-	  /* on prend les elements associes du type indique' */
-	  i = 0;
-	  pElGet = NULL;
-	  do
-	    {
-	      if (pDoc->DocAssocRoot[i] != NULL)
-		{
-		  if (pDoc->DocAssocRoot[i]->ElTypeNumber == pTRule->TrElemType)
-		    pElGet = pDoc->DocAssocRoot[i];
-		  else if (pDoc->DocAssocRoot[i]->ElFirstChild != NULL)
-		    if (pDoc->DocAssocRoot[i]->ElFirstChild->ElTypeNumber == pTRule->TrElemType)
-		      pElGet = pDoc->DocAssocRoot[i];
-		}
-	      i++;
-	    }
-	  while (pElGet == NULL && i < MAX_ASSOC_DOC);
-	  break;
 	default:
 	  break;
 	}
@@ -3505,20 +3487,12 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	      fileName[i] = EOS;
 	    }
 	  InitOutputFiles (outputFile, pDoc);
-	  /* remet a zero les indicateurs "deja traduit" de tous les elements */
+	  /* remet a zero les indicateurs "deja traduit" de tous les elements*/
 	  /* du document */
 	  ResetTranslTags (pDoc->DocDocElement);
-	  for (i = 0; i < MAX_ASSOC_DOC; i++)
-	    if (pDoc->DocAssocRoot[i] != NULL)
-	      ResetTranslTags (pDoc->DocAssocRoot[i]);
 	  /* traduit l'arbre principal du document */
 	  TranslateTree (pDoc->DocDocElement, pDoc, TRUE, TRUE, FALSE,
 			 recordLineNb);
-	  /* traduit les arbres associe's */
-	  for (i = 0; i < MAX_ASSOC_DOC; i++)
-	    if (pDoc->DocAssocRoot[i] != NULL)
-	      TranslateTree (pDoc->DocAssocRoot[i], pDoc, TRUE, TRUE, FALSE,
-			     recordLineNb);
 	  /* vide ce qui traine dans les buffers de sortie */
 	  /* et ferme ces fichiers */
 	  FlushOutputFiles (pDoc);

@@ -582,8 +582,6 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
        /* ecrit le volume de l'element */
        fprintf (fileDescriptor, " Vol=%d", pNode->ElVolume);
        fprintf (fileDescriptor, " Lin=%d", pNode->ElLineNb);
-       if (pNode->ElAssocNum != 0)
-	 fprintf (fileDescriptor, " Assoc=%d", pNode->ElAssocNum);
        if (pNode->ElIsCopy)
 	 fprintf (fileDescriptor, " Copy");
        switch (pNode->ElAccess)
@@ -824,9 +822,7 @@ void TtaListAbstractTree (Element root, FILE *fileDescriptor)
   ----------------------------------------------------------------------*/
 void TtaListView (Document document, View view, FILE *fileDescriptor)
 {
-   PtrAbstractBox      PavRacine;
-   PtrDocument         pDoc;
-   int                 numAssoc;
+   PtrAbstractBox      pRootAb;
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -834,37 +830,15 @@ void TtaListView (Document document, View view, FILE *fileDescriptor)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
+   else	if (view < 1 || view > MAX_VIEW_DOC)
+      TtaError (ERR_invalid_parameter);
    else
-      /* parametre document correct */
      {
-	pDoc = LoadedDocument[document - 1];
-	if (view < 100)
-	   /* vue de l'arbre principal */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else
-	     {
-		PavRacine = pDoc->DocViewRootAb[view - 1];
-		NumberAbsBoxes (PavRacine);
-		ListAbsBoxes (PavRacine, 0, fileDescriptor);
-	     }
-	else
-	   /* vue d'elements associes */
-	  {
-	     numAssoc = view - 100;
-	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  PavRacine = pDoc->DocAssocRoot[numAssoc - 1]->ElAbstractBox[0];
-		  NumberAbsBoxes (PavRacine);
-		  ListAbsBoxes (PavRacine, 0, fileDescriptor);
-	       }
-	  }
+       pRootAb = LoadedDocument[document - 1]->DocViewRootAb[view - 1];
+       NumberAbsBoxes (pRootAb);
+       ListAbsBoxes (pRootAb, 0, fileDescriptor);
      }
 }
-
-
 
 /*----------------------------------------------------------------------
    NumberOneAbsBox numerote recursivement des paves a partir de pAb.   
@@ -2055,37 +2029,18 @@ void ListBoxes (int frame, FILE *fileDescriptor)
   ----------------------------------------------------------------------*/
 void TtaListBoxes (Document document, View view, FILE *fileDescriptor)
 {
-   PtrDocument         pDoc;
-   int                 numAssoc;
-
    UserErrorCode = 0;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
+   else	 if (view < 1 || view > MAX_VIEW_DOC)
+      TtaError (ERR_invalid_parameter);
    else
-      /* parametre document correct */
-     {
-	pDoc = LoadedDocument[document - 1];
-	if (view < 100)
-	   /* vue de l'arbre principal */
-	   if (view < 1 || view > MAX_VIEW_DOC)
-	      TtaError (ERR_invalid_parameter);
-	   else
-	     ListBoxes (pDoc->DocViewFrame[view - 1], fileDescriptor);
-	else
-	   /* vue d'elements associes */
-	  {
-	     numAssoc = view - 100;
-	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       ListBoxes (pDoc->DocAssocFrame[numAssoc - 1], fileDescriptor);
-	  }
-     }
+      ListBoxes (LoadedDocument[document - 1]->DocViewFrame[view - 1],
+		 fileDescriptor);
 }
-
 
 /*----------------------------------------------------------------------
    wrlevel ecrit au terminal le niveau relatif n.                 

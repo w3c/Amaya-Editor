@@ -236,7 +236,7 @@ Document            targetDocument;
      {
 	inclusion = NewSubtree (((PtrElement) target)->ElTypeNumber,
 				((PtrElement) target)->ElStructSchema,
-				LoadedDocument[document - 1], 0, FALSE,
+				LoadedDocument[document - 1], FALSE,
 				TRUE, TRUE, TRUE);
 	GetReference (&inclusion->ElSource);
 	inclusion->ElSource->RdElement = inclusion;

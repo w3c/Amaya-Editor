@@ -1254,7 +1254,6 @@ void TtaHandleOneEvent (ThotEvent *ev)
   char               *s;
   int                 frame;
   int                 view, i;
-  ThotBool            assoc;
 
   /* Keep client messages */
   if (ev->type == ClientMessage)
@@ -1299,8 +1298,8 @@ void TtaHandleOneEvent (ThotEvent *ev)
 		    }
 		  if (frame <= MAX_FRAME)
 		    {
-		      GetDocAndView (frame, &pDoc, &view, &assoc);
-		      CloseView (pDoc, view, assoc);
+		      GetDocAndView (frame, &pDoc, &view);
+		      CloseView (pDoc, view);
 		    }
 		  for (frame = 0; frame <= MAX_FRAME; frame++)
 		    if (FrRef[frame] != 0)
@@ -1472,7 +1471,6 @@ void TtaClickElement (Document * document, Element * element)
    PtrAbstractBox      absBox;
    PtrDocument         pDoc;
    int                 view;
-   ThotBool            Assoc;
 
    UserErrorCode = 0;
    if (element == NULL || document == NULL)
@@ -1488,7 +1486,7 @@ void TtaClickElement (Document * document, Element * element)
 	else
 	  {
 	     *element = (Element) absBox->AbElement;
-	     GetDocAndView (frame, &pDoc, &view, &Assoc);
+	     GetDocAndView (frame, &pDoc, &view);
 	     *document = (Document) IdentDocument (pDoc);
 	  }
      }

@@ -995,28 +995,14 @@ PRule TtaNewPRule (int presentationType, View view, Document document)
      TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
      TtaError (ERR_invalid_document_parameter);
+   else if (view < 1 || view > MAX_VIEW_DOC)
+     TtaError (ERR_invalid_parameter);
+   else if (LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView == 0)
+     /* this view is not open */
+     TtaError (ERR_invalid_parameter);
    else
-     /* parameter document is correct */
      {
-       v = 0;
-       if (view < 100)
-	 /* View of the main tree */
-	 if (view < 1 || view > MAX_VIEW_DOC)
-	   TtaError (ERR_invalid_parameter);
-	 else if (LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView == 0)
-	   /* this view is not open */
-	   TtaError (ERR_invalid_parameter);
-	 else
-	   v = LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView;
-       else
-	 /* View of associated elements */
-	 if (view - 100 < 1 || view - 100 > MAX_ASSOC_DOC)
-	   TtaError (ERR_invalid_parameter);
-	 else if (LoadedDocument[document - 1]->DocAssocFrame[view - 101] == 0)
-	   /* this view is not open */
-	   TtaError (ERR_invalid_parameter);
-	 else
-	   v = 1;
+       v = LoadedDocument[document - 1]->DocView[view - 1].DvPSchemaView;
        if (v > 0)
 	 {
 	   GetPresentRule (&pPres);
@@ -1143,7 +1129,6 @@ PRule TtaNewPRuleForNamedView (int presentationType, STRING viewName,
    PtrPRule            pPres;
    PtrDocument         pDoc;
    PtrPSchema          pPS;
-   PtrElement          pEl;
    int                 vue;
    int                 v;
 
@@ -1166,15 +1151,6 @@ PRule TtaNewPRuleForNamedView (int presentationType, STRING viewName,
 	 for (v = 1; v <= MAX_VIEW && vue == 0; v++)
 	   if (ustrcmp (pPS->PsView[v - 1], viewName) == 0)
 	     vue = v;
-       /* If not found one search into associated elements */
-       if (vue == 0)
-	 for (v = 1; v <= MAX_ASSOC_DOC && vue == 0; v++)
-	   {
-	     pEl = pDoc->DocAssocRoot[v - 1];
-	     if (pEl != NULL &&
-		 strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-		 vue = 1;
-	   }
        if (vue == 0)
 	 TtaError (ERR_invalid_parameter);
        else
@@ -1800,7 +1776,7 @@ void TtaChangeBoxSize (Element element, Document document, View view,
 		       int deltaX, int deltaY, TypeUnit unit)
 {
    PtrAbstractBox      pAb;
-   int                 v, frame;
+   int                 frame;
    int                 x, y;
 
    UserErrorCode = 0;
@@ -1817,13 +1793,7 @@ void TtaChangeBoxSize (Element element, Document document, View view,
 	frame = GetWindowNumber (document, view);
 	if (frame != 0)
 	  {
-	     if (view < 100)
-		/* View of the main tree */
-		v = view;
-	     else
-		/* View of associated elements */
-		v = 1;
-	     pAb = AbsBoxOfEl ((PtrElement) element, v);
+	     pAb = AbsBoxOfEl ((PtrElement) element, view);
 	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
@@ -1872,7 +1842,7 @@ void TtaChangeBoxPosition (Element element, Document document, View view,
 #ifndef NODISPLAY
 
    PtrAbstractBox      pAb;
-   int                 v, frame;
+   int                 frame;
    int                 x, y;
 
    UserErrorCode = 0;
@@ -1889,13 +1859,7 @@ void TtaChangeBoxPosition (Element element, Document document, View view,
 	frame = GetWindowNumber (document, view);
 	if (frame != 0)
 	  {
-	     if (view < 100)
-		/* View of the main tree */
-		v = view;
-	     else
-		/* View of associated elements */
-		v = 1;
-	     pAb = AbsBoxOfEl ((PtrElement) element, v);
+	     pAb = AbsBoxOfEl ((PtrElement) element, view);
 	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
@@ -1939,7 +1903,7 @@ void TtaChangeBoxPosition (Element element, Document document, View view,
 int TtaGetDepth (Element element, Document document, View view)
 {
    PtrAbstractBox      pAb;
-   int                 v, frame;
+   int                 frame;
    int                 val;
 
    UserErrorCode = 0;
@@ -1957,13 +1921,7 @@ int TtaGetDepth (Element element, Document document, View view)
        frame = GetWindowNumber (document, view);
        if (frame != 0)
 	 {
-	   if (view < 100)
-	     /* View of the main tree */
-	     v = view;
-	   else
-	     /* View of associated elements */
-	     v = 1;
-	   pAb = AbsBoxOfEl ((PtrElement) element, v);
+	   pAb = AbsBoxOfEl ((PtrElement) element, view);
 	   if (pAb == NULL)
 	     TtaError (ERR_element_has_no_box);
 	   else
@@ -1991,7 +1949,7 @@ void TtaGiveBoxSize (Element element, Document document, View view,
 		     TypeUnit unit, int *width, int *height)
 {
    PtrAbstractBox      pAb;
-   int                 v, frame;
+   int                 frame;
    int                 x, y;
 
    UserErrorCode = 0;
@@ -2010,13 +1968,7 @@ void TtaGiveBoxSize (Element element, Document document, View view,
 	frame = GetWindowNumber (document, view);
 	if (frame != 0)
 	  {
-	     if (view < 100)
-		/* View of the main tree */
-		v = view;
-	     else
-		/* View of associated elements */
-		v = 1;
-	     pAb = AbsBoxOfEl ((PtrElement) element, v);
+	     pAb = AbsBoxOfEl ((PtrElement) element, view);
 	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
@@ -2070,7 +2022,7 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
 {
   PtrAbstractBox      pAb;
   PtrBox              pBox;
-  int                 v, frame;
+  int                 frame;
   int                 x, y;
 
   UserErrorCode = 0;
@@ -2089,13 +2041,7 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
       frame = GetWindowNumber (document, view);
       if (frame != 0)
 	{
-	  if (view < 100)
-	    /* View of the main tree */
-	    v = view;
-	  else
-	    /* View of associated elements */
-	    v = 1;
-	  pAb = AbsBoxOfEl ((PtrElement) element, v);
+	  pAb = AbsBoxOfEl ((PtrElement) element, view);
 	  if (pAb == NULL)
 	    TtaError (ERR_element_has_no_box);
 	  else
@@ -2157,7 +2103,7 @@ void TtaGiveBoxAbsPosition (Element element, Document document, View view,
   PtrAbstractBox      pAb;
   PtrBox              pBox;
   ViewFrame	      *pFrame;
-  int                 v, frame;
+  int                 frame;
   int                 x, y;
 
   UserErrorCode = 0;
@@ -2176,13 +2122,7 @@ void TtaGiveBoxAbsPosition (Element element, Document document, View view,
       frame = GetWindowNumber (document, view);
       if (frame != 0)
 	{
-	  if (view < 100)
-	    /* View of the main tree */
-	    v = view;
-	  else
-	    /* View of associated elements */
-	    v = 1;
-	  pAb = AbsBoxOfEl ((PtrElement) element, v);
+	  pAb = AbsBoxOfEl ((PtrElement) element, view);
 	  if (pAb == NULL)
 	    {
 	      *xCoord = 32000;

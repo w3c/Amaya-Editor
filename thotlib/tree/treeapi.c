@@ -90,41 +90,35 @@ void             ChangeElementType (Element element, int typeNum)
    ---------------------------------------------------------------------- */
 Element TtaNewElement (Document document, ElementType elementType)
 {
-   PtrElement          element;
+  PtrElement          element;
 
-   UserErrorCode = 0;
-   element = NULL;
-   if (elementType.ElSSchema == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
+  UserErrorCode = 0;
+  element = NULL;
+  if (elementType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* Checks the parameter document */
+    if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+    else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+    else
       /* Parameter document is ok */
       if (elementType.ElTypeNum < 1 ||
-   elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
-     {
+	  elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
 	TtaError (ERR_invalid_element_type);
-     }
-   else
-     {
-	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
-		  LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
-	if (element != NULL)
-	   if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+      else
+	{
+	  element = NewSubtree (elementType.ElTypeNum,
+				(PtrSSchema) (elementType.ElSSchema),
+				LoadedDocument[document - 1], FALSE, TRUE,
+				TRUE, TRUE);
+	  if (element != NULL)
+	    if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	      if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
-	         element->ElPairIdent = 0;
-     }
-   return ((Element) element);
+		element->ElPairIdent = 0;
+	}
+  return ((Element) element);
 }
 
 /* ----------------------------------------------------------------------
@@ -173,7 +167,7 @@ Element             TtaNewTree (Document document, ElementType elementType, char
    else
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
-			  LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
+			  LoadedDocument[document - 1], TRUE, TRUE, TRUE,
 			      (ThotBool)(*label == EOS));
 	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
@@ -223,7 +217,7 @@ Element             TtaNewTranscludedElement (Document document, Element orig)
      {
 	element = NewSubtree (((PtrElement)orig)->ElTypeNumber,
 			      ((PtrElement)orig)->ElStructSchema,
-		  LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
+		  LoadedDocument[document - 1], FALSE, TRUE, TRUE, TRUE);
 	if (element != NULL)
 	  {
 	    GetReference (&pRef);
@@ -409,7 +403,7 @@ Element            TtaCopyTree (Element sourceElement, Document sourceDocument,
 	 }
        /* Copying */
        element = CopyTree (((PtrElement) sourceElement),
-			   LoadedDocument[sourceDocument - 1], 0, pSS,
+			   LoadedDocument[sourceDocument - 1], pSS,
 			   LoadedDocument[destinationDocument - 1],
 			   (PtrElement) parent,
 			   TRUE, TRUE);
@@ -476,7 +470,7 @@ static Element    CreateDescent (Document document, Element element,
 	/* No sons for a copy */
 	if (!pEl->ElIsCopy)
 	  firstCreated = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema,
-					   LoadedDocument[document - 1], &lastCreated, pEl->ElAssocNum,
+					   LoadedDocument[document - 1], &lastCreated,
 					   elementType.ElTypeNum,
 					   (PtrSSchema) (elementType.ElSSchema));
       if (firstCreated != NULL)
@@ -584,7 +578,7 @@ static Element    CreateDescent (Document document, Element element,
 		if (!lastCreated->ElTerminal)
 		  if (lastCreated->ElStructSchema->SsRule[lastCreated->ElTypeNumber - 1].SrConstruct != CsChoice)
 		    {
-		      pSon = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElStructSchema, LoadedDocument[document - 1], lastCreated->ElAssocNum, TRUE, FALSE, TRUE, TRUE);
+		      pSon = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElStructSchema, LoadedDocument[document - 1], TRUE, FALSE, TRUE, TRUE);
 		      if (pSon != NULL)
 			InsertFirstChild (lastCreated, pSon);
 		    }
@@ -796,7 +790,6 @@ void                TtaAttachNewTree (Element tree, Document document)
 	     {
 	       TtaError (ERR_element_does_not_match_DTD);
 	     }
-	   /* change the associated element number of the whole tree */
 	   if (ok)
 	     {
 	       pRoot->ElAccess = AccessReadWrite;
@@ -1416,53 +1409,10 @@ void                TtaSetCheckingMode (ThotBool strict)
    ---------------------------------------------------------------------- */
 void                TtaNextAssociatedRoot (Document document, Element * root)
 {
-   int                 assoc;
-   PtrDocument         pDoc;
    PtrElement          nextRoot;
-   PtrElement          pEl;
-   ThotBool            found;
 
    UserErrorCode = 0;
    nextRoot = NULL;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-	TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-	TtaError (ERR_invalid_document_parameter);
-   else
-      /* Parameter document is ok */
-     {
-	if (*root == NULL)
-	     nextRoot = LoadedDocument[document - 1]->DocAssocRoot[0];
-	else
-	  {
-	     pDoc = LoadedDocument[document - 1];
-	     pEl = (PtrElement) (*root);
-	     /* Go to the root of the tree */
-	     while (pEl->ElParent != NULL)
-		pEl = pEl->ElParent;
-	     if (pEl == pDoc->DocDocElement ||
-		 (pEl && pEl->ElParent == pDoc->DocDocElement))
-		/* It's the main tree, the associated tree is returned */
-		nextRoot = pDoc->DocAssocRoot[0];
-	     else
-	       {
-		  /* Looking for associated elements which root is pEl */
-		  found = FALSE;
-		  for (assoc = 0; assoc < MAX_ASSOC_DOC && !found; assoc++)
-		     if (pDoc->DocAssocRoot[assoc] == pEl)
-		       {
-			  if (assoc < MAX_ASSOC_DOC - 1)
-			     nextRoot = pDoc->DocAssocRoot[assoc + 1];
-			  else
-			     nextRoot = NULL;
-			  found = TRUE;
-		       }
-		  if (!found)
-		     TtaError (ERR_invalid_associated_root);
-	       }
-	  }
-     }
    *root = (Element) nextRoot;
 }
 

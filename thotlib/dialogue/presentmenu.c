@@ -1030,10 +1030,7 @@ static void         ApplyPresentMod (int applyDomain)
 	
 	/* evalue les difference entre le pave traite' et les demandes
 	   de l'utilisateur */
-	if (pFirstSel->ElAssocNum > 0)
-	  pAb = AbsBoxOfEl (pFirstSel, 1);
-	else
-	  pAb = AbsBoxOfEl (pFirstSel, SelectedView);
+	pAb = AbsBoxOfEl (pFirstSel, SelectedView);
 	if (pAb != NULL)
 	  {
 	     currentFontSize = PixelToPoint(PixelValue (pAb->AbSize,

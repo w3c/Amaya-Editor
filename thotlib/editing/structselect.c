@@ -355,21 +355,20 @@ ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
    Returns the active view:
    pDoc: the document to which the active view belongs,
          NULL if there is no selection.
-   view: number of this view in the document (if assoc is FALSE)
-         number of the corresponding associated element (if assoc is TRUE)
+   view: number of this view in the document
   ----------------------------------------------------------------------*/
-void GetActiveView (PtrDocument *pDoc, int *view, ThotBool *assoc)
+void GetActiveView (PtrDocument *pDoc, int *view)
 {
   PtrDocument         pSelDoc;
   PtrElement          firstSel, lastSel;
   int                 firstChar, lastChar;
 
-  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+			    &lastChar))
     *pDoc = NULL;
   else
     {
       *pDoc = pSelDoc;
-      *assoc = FALSE;
       *view = SelectedView;
     }
 }
@@ -641,31 +640,15 @@ static void         SetActiveView (int exceptView)
    DeactivateView
    A view has been closed for document pDoc. Change active view if the
    closed view was the active one.
-   view is the number of the view, or, if assoc is TRUE, the number of the
-   associated tree whose view has been closed.
+   view is the number of the closed view
   ----------------------------------------------------------------------*/
-void    DeactivateView (PtrDocument pDoc, int view, ThotBool assoc)
+void    DeactivateView (PtrDocument pDoc, int view)
 {
 
   if (pDoc == SelectedDocument)
     /* the current selection is in that document */
     {
-      if (assoc)
-	/* it's a view for an associated tree */
-	{
-	  if (FirstSelectedElement->ElAssocNum == view)
-	    /* the current selection is in that associated tree */
-	    {
-	      /* there is no other view to show the current selection, as */
-	      /* each associated tree has only one view */
-	      SelectedDocument = NULL;
-	      CancelSelection ();
-	      SelectedView = 0;
-	      OldSelectedView = 0;
-	      OldDocSelectedView = pDoc;
-	    }
-	}
-      else if (view == SelectedView)
+      if (view == SelectedView)
 	/* it's the active view */
 	{
 	  /* search another active view */
@@ -1190,7 +1173,7 @@ static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 			{
 			  /* create that view */
 			  createdView = CreateAbstractImage (SelectedDocument,
-							     viewTable[i].VdView, 0,
+							     viewTable[i].VdView,
 							     viewTable[i].VdSSchema, 1,
 							     FALSE, NULL);
 			  /* now, try to select the elment */
@@ -1219,7 +1202,7 @@ static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 				{
 				  /* open the new view */
 				  OpenCreatedView (SelectedDocument,
-						   createdView, FALSE,
+						   createdView,
 						   X, Y, width, height);
 				  /* tell the application that */
 				  /* the view has been opened */
@@ -1253,12 +1236,11 @@ void          HighlightVisibleAncestor (PtrElement pEl)
 {
   PtrElement          pAncest;
   int                 view, lastView, frame;
-  ThotBool            assoc, found, abExist;
+  ThotBool            found, abExist;
 
   view = 0;
   if (pEl != NULL)
     {
-      assoc = FALSE;
       lastView = MAX_VIEW_DOC;
       found = FALSE;
       pAncest = pEl->ElParent;
@@ -2155,14 +2137,13 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   PtrAttribute        pAttr;
   NotifyElement       notifyEl;
   Document            doc;
-  int                 view, numassoc;
-  ThotBool            assoc, error, fixed, begin, stop, doubleClickRef;
+  int                 view;
+  ThotBool            error, fixed, begin, stop, doubleClickRef;
   ThotBool            graphSel, result;
 
-  numassoc = 0;
   pEl = NULL;
   /* search the document and the view corresponding to the window */
-  GetDocAndView (frame, &pDoc, &view, &assoc);
+  GetDocAndView (frame, &pDoc, &view);
   doc = IdentDocument (pDoc);
   /* by default Thot applies its editing changes */
   result = FALSE;
@@ -2295,11 +2276,6 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
     /* select all the contents */
     rank = 0;
   
-  if (assoc)
-    {
-      numassoc = view;
-      view = 1;
-    }
   if (!update)
     FrameWithNoUpdate = frame;
 
@@ -2335,27 +2311,11 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	}
       else
 	{
-	  if (pDoc != SelectedDocument ||
-	      (assoc && numassoc != FirstSelectedElement->ElAssocNum))
-	    /* extension to a different tree is not allowed */
+	  if (pDoc != SelectedDocument)
+	    /* extension to a different document is not allowed */
 	    error = TRUE;
 	  else
 	    {
-	      /* same document, but is it the same tree? */
-	      if (FirstSelectedElement != NULL)
-		/* search an enclosing abstract box that belongs to the */
-		/* same associated tree as the first selected element */
-		{
-		  stop = FALSE;
-		  do
-		    if (pAb == NULL)
-		      stop = TRUE;
-		    else if (FirstSelectedElement->ElAssocNum == pAb->AbElement->ElAssocNum)
-		      stop = TRUE;
-		    else
-		      pAb = pAb->AbEnclosing;
-		  while (!stop);
-		}
 	      if (pAb == NULL)
 		error = TRUE;
 	      else

@@ -21,7 +21,6 @@ extern void FreeView ( PtrDocument pDoc,
                        DocViewNumber view );
 extern void CloseDocumentView ( PtrDocument pDoc,
                                 int view,
-                                ThotBool assoc,
                                 ThotBool closeDoc );
 extern void CloseAllViewsDoc ( PtrDocument pDoc );
 extern void ChangeAbsBoxModif ( PtrElement pEl,
@@ -76,7 +75,6 @@ extern void FreeView (/* PtrDocument pDoc,
                          DocViewNumber view */);
 extern void CloseDocumentView (/* PtrDocument pDoc,
                                   int view,
-                                  ThotBool assoc,
                                   ThotBool closeDoc */);
 extern void CloseAllViewsDoc (/* PtrDocument pDoc */);
 extern void ChangeAbsBoxModif (/* PtrElement pEl,

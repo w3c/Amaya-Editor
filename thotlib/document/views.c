@@ -85,81 +85,53 @@ static int          ViewMenuItem[MAX_VIEW_OPEN];
    PaginatedView rend vrai si la vue Vue du document pDoc est une	
    		vue paginee						
   ----------------------------------------------------------------------*/
-ThotBool            PaginatedView (PtrDocument pDoc, int view, ThotBool assoc)
+ThotBool            PaginatedView (PtrDocument pDoc, int view)
 {
-   ThotBool            paginate;
-   PtrPSchema          pPS;
+  ThotBool            paginate;
+  PtrPSchema          pPS;
 
-   if (assoc)
-     paginate = FALSE;
-   else
-     {
-	if (pDoc->DocView[view - 1].DvSSchema != pDoc->DocSSchema)
-	   /* ce n'est pas une vue definie par le schema du document, on ne */
-	   /* la pagine pas */
-	   paginate = FALSE;
-	else
-	  {
-	    pPS = PresentationSchema (pDoc->DocView[view - 1].DvSSchema, pDoc);
-	    paginate = pPS->PsPaginatedView[pDoc->DocView[view - 1].DvPSchemaView - 1];
-	  }
-     }
-   return paginate;
+  if (pDoc->DocView[view - 1].DvSSchema != pDoc->DocSSchema)
+    /* ce n'est pas une vue definie par le schema du document, on ne */
+    /* la pagine pas */
+    paginate = FALSE;
+  else
+    {
+      pPS = PresentationSchema (pDoc->DocView[view - 1].DvSSchema, pDoc);
+      paginate = pPS->PsPaginatedView[pDoc->DocView[view - 1].DvPSchemaView - 1];
+    }
+  return paginate;
 }
-
 
 /*----------------------------------------------------------------------
    GetViewFromFrame retourne le pointeur sur le numero de vue (viewNum)      
    dans le document pDoc, correspondant a`                 	
-   la fenetre de numero nframe. Si c'est une frame         	
-   d'elements associes, rend assoc vrai et viewNum = numero	
-   d'element associe, sinon rend assoc faux.               	
+   la fenetre de numero nframe.
   ----------------------------------------------------------------------*/
-void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, ThotBool * assoc)
+void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum)
 {
-   int                 view;
+  int                 view;
 
-   *viewNum = 0;
-   view = 0;
-   *assoc = FALSE;
-   /* cherche d'abord dans les vues de l'arbre principal */
-   do
-     {
-	if (pDoc->DocView[view].DvPSchemaView > 0 &&
-	    pDoc->DocViewFrame[view] == nframe)
-	   *viewNum = view + 1;
-	else
-	   view++;
-     }
-   while (view < MAX_VIEW_DOC && *viewNum == 0);
-
-   if (view >= MAX_VIEW_DOC)
-      /* cherche dans les arbres des elements associes */
-     {
-	view = 0;
-	do
-	  {
-	     if (pDoc->DocAssocFrame[view] == nframe)
-	       {
-		  *viewNum = view + 1;
-		  *assoc = TRUE;
-	       }
-	     else
-		view++;
-	  }
-	while (view < MAX_ASSOC_DOC && *viewNum == 0);
-     }
+  *viewNum = 0;
+  view = 0;
+  /* cherche d'abord dans les vues de l'arbre principal */
+  do
+    {
+      if (pDoc->DocView[view].DvPSchemaView > 0 &&
+	  pDoc->DocViewFrame[view] == nframe)
+	*viewNum = view + 1;
+      else
+	view++;
+    }
+  while (view < MAX_VIEW_DOC && *viewNum == 0);
 }
 
 /*----------------------------------------------------------------------
    GetDocAndView retourne le pointeur sur le document (pDoc) et le
    numero de vue (viewNum) dans ce document, correspondant a
-   la fenetre de numero nframe. Si c'est une fenetre
-   d'elements associes, rend assoc vrai et viewNum = numero
-   d'element associe, sinon rend assoc faux.
+   la fenetre de numero nframe.
    Rend pDoc = NULL si la selection a echoue.
   ----------------------------------------------------------------------*/
-void GetDocAndView (int frame, PtrDocument *pDoc, int *viewNum, ThotBool *assoc)
+void GetDocAndView (int frame, PtrDocument *pDoc, int *viewNum)
 {
    PtrDocument         pD;
 
@@ -171,7 +143,7 @@ void GetDocAndView (int frame, PtrDocument *pDoc, int *viewNum, ThotBool *assoc)
 	pD = LoadedDocument[FrameTable[frame].FrDoc - 1];
 	if (pD != NULL)
 	   /* il y a un document pour cette entree de la table des documents */
-	   GetViewFromFrame (frame, pD, viewNum, assoc);
+	   GetViewFromFrame (frame, pD, viewNum);
      }
      *pDoc = pD;
 }
@@ -219,11 +191,9 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
 		  {
 		  /* on met la vue dans la liste */
 		  viewList[*nViews].VdView = view + 1;
-		  viewList[*nViews].VdAssocNum = 0;
 		  strncpy (viewList[*nViews].VdViewName,
 			    pPSchema->PsView[view], MAX_NAME_LENGTH);
 		  viewList[*nViews].VdSSchema = pSS;
-		  viewList[*nViews].VdAssoc = FALSE;
 		  viewList[*nViews].VdExist = FALSE;
 		  viewList[*nViews].VdNature = nature;
 		  viewList[*nViews].VdPaginated = pPSchema->PsPaginatedView[view];
@@ -292,7 +262,7 @@ void ChangeDocumentName (PtrDocument pDoc, char *newName)
      }
    strcat (buffer, "  ");
    len = strlen (buffer);
-   /* traite les vues de l'arbre principal */
+   /* traite toutes les vues du document */
    for (view = 0; view < MAX_VIEW_DOC; view++)
       if (pDoc->DocView[view].DvPSchemaView > 0)
 	 /* met dans le buffer le nom de la vue */
@@ -300,20 +270,7 @@ void ChangeDocumentName (PtrDocument pDoc, char *newName)
 	   pView = &pDoc->DocView[view];
 	   ChangeFrameTitle (pDoc->DocViewFrame[view], buffer);
 	}
-   /* traite les vues des elements associes */
-   for (view = 0; view < MAX_ASSOC_DOC; view++)
-     if (pDoc->DocAssocRoot[view] != NULL)
-       if (pDoc->DocAssocFrame[view] != 0)
-	  /* met dans le buffer le nom des elements associes */
-	  {
-	  strncpy (&buffer[len], pDoc->DocAssocRoot[view]->ElStructSchema->
-		    SsRule[pDoc->DocAssocRoot[view]->ElTypeNumber - 1].SrName,
-		    MAX_NAME_LENGTH);
-	  /* change le titre de la fenetre */
-	  ChangeFrameTitle (pDoc->DocAssocFrame[view], buffer);
-	  }
 }
-
 
 /*----------------------------------------------------------------------
    TtaSetDocumentName
@@ -353,26 +310,22 @@ void                ViewClosed (int nFrame)
    PtrDocument         pDoc;
    NotifyDialog        notifyDoc;
    int                 view;
-   ThotBool            assoc;
 
    /* cherche le document auquel appartient la fenetre detruite */
-   GetDocAndView (nFrame, &pDoc, &view, &assoc);
+   GetDocAndView (nFrame, &pDoc, &view);
    if (pDoc != NULL)
      {
 	notifyDoc.event = TteViewClose;
 	notifyDoc.document = (Document) IdentDocument (pDoc);
-	if (assoc)
-	   notifyDoc.view = view + 100;
-	else
-	   notifyDoc.view = view;
+	notifyDoc.view = view;
 	CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
 	/* desactive la vue si elle est active */
-	DeactivateView (pDoc, view, assoc);
+	DeactivateView (pDoc, view);
 	/* detruit la fenetre */
 	DestroyFrame (nFrame);
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	/* detruit le contexte de la vue */
-	CloseDocumentView (pDoc, view, assoc, TRUE);
+	CloseDocumentView (pDoc, view, TRUE);
      }
 }
 
@@ -418,10 +371,8 @@ void OpenDefaultViews (PtrDocument pDoc)
   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
      schView = pDoc->DocView[view - 1].DvPSchemaView;
-     pDoc->DocViewFrame[0] = MakeFrame (pSS->SsName, schView,
-					pDoc->DocDName,
-					X, Y,
-					width, height,
+     pDoc->DocViewFrame[0] = MakeFrame (pSS->SsName, schView, pDoc->DocDName,
+					X, Y, width, height,
 					&pDoc->DocViewVolume[0],
 					IdentDocument (pDoc));
      }
@@ -469,262 +420,132 @@ void OpenDefaultViews (PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
    CreateAbstractImage
-   cree l'image abstraite pour une vue du document pDoc. Si v est nul, il
-   s'agit d'une vue d'elements associes de type r,         
-   appartenant au schema de structure pSS; sinon c'est la  
-   vue de numero v definie dans le schema de presentation  
+   cree l'image abstraite pour une vue du document pDoc.
+   C'est la vue de numero v definie dans le schema de presentation  
    associe' au schema de structure pointe' par pSS.        
    Si viewRoot est NULL, la vue presentera un arbre        
    entier, sinon elle n'affichera que le sous-arbre de     
    racine viewRoot.                                        
-   Retourne 0 si echec ou le numero de vue pour le document ou le  
-   numero d'element associe' de la vue creee.              
+   Retourne 0 si echec ou le numero de vue pour le document
   ----------------------------------------------------------------------*/
-int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS,
+int CreateAbstractImage (PtrDocument pDoc, int v, PtrSSchema pSS,
                          int chosenView, ThotBool begin, PtrElement viewRoot)
 {
    PtrDocument         pSelDoc;
    PtrElement          firstSel, lastSel;
    PtrAbstractBox      pAb;
-   NotifyElement       notifyEl;
-   int                 view, freeView, assoc, volume, firstChar, lastChar,
+   int                 view, freeView, volume, firstChar, lastChar,
                        ret;
    ThotBool            stop, sel, selInMainTree, bool;
-   ThotBool            truncHead, assocPresent;
+   ThotBool            truncHead;
 
-   ret = 0;
    freeView = 0;
-   assoc = 0;
-   assocPresent = FALSE;
    firstSel = NULL;
-
-   if (v == 0)
-      /* c'est une vue pour des elements associes */
-      {
-      if (r == 0)
-	 assocPresent = TRUE;
-      else
-	 {
-	 /* cherche si les elements existent deja */
-	 assocPresent = FALSE;
-	 assoc = 0;
-	 do
-	    {
-	    if (pDoc->DocAssocRoot[assoc] != NULL &&
-		!strcmp (pDoc->DocAssocRoot[assoc]->ElStructSchema->SsName,
-			  pSS->SsName))
-		 assocPresent = pDoc->DocAssocRoot[assoc]->ElTypeNumber == r;
-	    assoc++;
-	    }
-	 while (!assocPresent && assoc < MAX_ASSOC_DOC);
-	 }
-      }
-   else
-      {
-      /* c'est une vue de l'arbre principal */
-      /* cherche la premiere vue libre dans le descripteur du document */
-      freeView = 0;
-      view = 0;
-      while (freeView == 0 && view < MAX_VIEW_DOC)
-	 if (pDoc->DocView[view].DvPSchemaView == 0)
-	    freeView = view + 1;
-	 else
-	    view++;
-      }
+   /* cherche la premiere vue libre dans le descripteur du document */
+   freeView = 0;
+   view = 0;
+   while (freeView == 0 && view < MAX_VIEW_DOC)
+     if (pDoc->DocView[view].DvPSchemaView == 0)
+       freeView = view + 1;
+     else
+       view++;
    /* volume de l'image abstraite a creer */
    volume = 1000;
-   if (v == 0)
-      /* on cree une vue d'elements associes */
-      {
-      if (!assocPresent)
-	 /* il n'existe pas d'elements associes de ce type */
-	 {
-	 assoc = 1;
-	 /* cherche une entree libre dans la table des */
-	 /* arbres d'elements associes du document */
-	 stop = FALSE;
-	 do
-	    if (assoc > MAX_ASSOC_DOC)
-	       stop = TRUE;
-	    else if (pDoc->DocAssocRoot[assoc - 1] == NULL)
-	       stop = TRUE;
-	    else
-	       assoc++;
-	 while (!stop);
-	 if (pDoc->DocAssocRoot[assoc - 1] == NULL)
-	    /* on a trouve' une entree libre, on cree un */
-	    /* arbre pour ces elements associes */
-	    {
-	    notifyEl.event = TteElemNew;
-	    notifyEl.document = (Document) IdentDocument (pDoc);
-	    notifyEl.element = NULL;
-	    notifyEl.elementType.ElTypeNum = r;
-	    notifyEl.elementType.ElSSchema = (SSchema) pSS;
-	    notifyEl.position = 0;
-	    if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-	       {
-	       pDoc->DocAssocRoot[assoc - 1] = NewSubtree (r, pSS, pDoc, assoc,
-						       TRUE, TRUE, TRUE, TRUE);
-	       /* supprime les elements exclus */
-	       RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
-	       if (pDoc->DocAssocRoot[assoc - 1] != NULL)
-		  {
-		  pDoc->DocAssocRoot[assoc - 1]->ElAccess = AccessReadWrite;
-		  CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[assoc - 1]);
-		  /* traitement des exceptions */
-		  if (ThotLocalActions[T_createtable] != NULL)
-		     (*ThotLocalActions[T_createtable]) (pDoc->DocAssocRoot[assoc - 1], pDoc);
-		  /* creation d'une table */
-		  /* traitement des attributs requis */
-		  AttachMandatoryAttributes (pDoc->DocAssocRoot[assoc - 1],
-					     pDoc);
-		  if (pSS != NULL)
-		     /* Ajoute un saut de page a la fin si necessaire */
-		     AddLastPageBreak (pDoc->DocAssocRoot[assoc - 1], 1, pDoc,
-				       TRUE);
-		  /* envoie l'evenement ElemNew.Post */
-		  NotifySubTree (TteElemNew, pDoc, pDoc->DocAssocRoot[assoc-1],
-				 0);
-		  }
-	       }
-	    }
-	 }
-      if ((pDoc->DocAssocRoot[assoc - 1] != NULL) &&
-	  (assoc <= MAX_ASSOC_DOC) && pSS != NULL)
-	 /* on construit l'image abstraite des elements associes */
-	 {
-	 pDoc->DocAssocFrame[assoc - 1] = 0;
-	 pDoc->DocAssocSubTree[assoc - 1] = viewRoot;
-	 pDoc->DocAssocVolume[assoc - 1] = volume;
-	 pDoc->DocAssocFreeVolume[assoc - 1] = pDoc->DocAssocVolume[assoc - 1];
-	 if (!begin)
-	    {
-	    /* prend la selection courante */
-	    sel = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel,
-				       &firstChar, &lastChar);
-	    if (!sel)
-	       /* pas de selection, on construit l'image du debut */
-	       begin = TRUE;
-	    else if (pSelDoc != pDoc || firstSel->ElAssocNum != assoc)
-	       /* la selection courante n'est pas dans les */
-	       /* elements associes dont on cree l'image */
-	       /* on cree l'image abstraite du debut */
-	       begin = TRUE;
-	    }
-	 if (begin)
-	    pAb = AbsBoxesCreate (pDoc->DocAssocRoot[assoc - 1], pDoc, 1,
-				  TRUE, TRUE, &bool);
-	 else
-	    /* on cree l'image abstraite autour du premier */
-	    /* element selectionne' */
-	    CheckAbsBox (firstSel, 1, pDoc, FALSE, FALSE);
-	 }
-      ret = assoc;
-      }
+   pDoc->DocViewSubTree[freeView - 1] = viewRoot;
+   pDoc->DocView[freeView - 1].DvSSchema = pSS;
+   pDoc->DocView[freeView - 1].DvPSchemaView = v;
+   pDoc->DocView[freeView - 1].DvSync = TRUE;
+   pDoc->DocView[freeView - 1].DvFirstGuestView = NULL;
+   /* create the guest view list for that view */
+   CreateGuestViewList (pDoc, freeView);
+
+   pDoc->DocViewVolume[freeView - 1] = volume;
+   pDoc->DocViewFreeVolume[freeView -1] = pDoc->DocViewVolume[freeView-1];
+   ret = freeView;
+
+   if (begin)
+     /* on cree la nouvelle image depuis le debut du document */
+     pDoc->DocViewRootAb[freeView-1] = AbsBoxesCreate (pDoc->DocDocElement,
+						       pDoc, freeView, TRUE,
+						       TRUE, &bool);
    else
-      {
-      /* on cree une vue de l'arbre principal du document */
-      pDoc->DocViewSubTree[freeView - 1] = viewRoot;
-      pDoc->DocView[freeView - 1].DvSSchema = pSS;
-      pDoc->DocView[freeView - 1].DvPSchemaView = v;
-      pDoc->DocView[freeView - 1].DvSync = TRUE;
-      pDoc->DocView[freeView - 1].DvFirstGuestView = NULL;
-      /* create the guest view list for that view */
-      CreateGuestViewList (pDoc, freeView);
-
-      pDoc->DocViewVolume[freeView - 1] = volume;
-      pDoc->DocViewFreeVolume[freeView -1] = pDoc->DocViewVolume[freeView-1];
-      ret = freeView;
-
-      if (begin)
-	 /* la fenetre designee par l'utilisateur contient des */
-	 /* elements associes on cree la nouvelle image depuis */
-	 /* le debut du document */
-	
-	pDoc->DocViewRootAb[freeView-1] = AbsBoxesCreate (pDoc->DocDocElement,
-					    pDoc, freeView, TRUE, TRUE, &bool);
-      else
+     {
+       /* cree l'image de la meme partie du document que */
+       /* celle affichee dans la fenetre designee par l'utilisateur. */
+       /* prend la selection courante */
+       sel = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+				  &lastChar);
+       selInMainTree = FALSE;
+       if (firstSel)
+	 if (pSelDoc == pDoc)
+	   selInMainTree = TRUE;
+       if (selInMainTree)
+	 /* la selection courante est dans l'une des vues */
+	 /* de l'arbre principal du document concerne', */
+	 /* on cree l'image abstraite de la vue avec */
+	 /* l'element selectionne' au milieu */
+	 CheckAbsBox (firstSel, freeView, pDoc, FALSE, FALSE);
+       else
 	 {
-	 /* cree l'image de la meme partie du document que */
-	 /* celle affichee dans la fenetre designee par l'utilisateur. */
-	 /* prend la selection courante */
-	 sel = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
-				    &lastChar);
-	 selInMainTree = FALSE;
-	 if (firstSel)
-	   if (pSelDoc == pDoc && firstSel->ElAssocNum == 0)
-	      selInMainTree = TRUE;
-	 if (selInMainTree)
-	    /* la selection courante est dans l'une des vues */
-	    /* de l'arbre principal du document concerne', */
-	    /* on cree l'image abstraite de la vue avec */
-	    /* l'element selectionne' au milieu */
-	    CheckAbsBox (firstSel, freeView, pDoc, FALSE, FALSE);
-	 else
-	    {
-	    pAb = pDoc->DocDocElement->ElAbstractBox[chosenView - 1];
-	    if (pAb == NULL)
-	       truncHead = FALSE;
-	    else if (pAb->AbLeafType != LtCompound)
-	       truncHead = FALSE;
-	    else if (pAb->AbInLine)
-	       truncHead = FALSE;
-	    else
-	       truncHead = pAb->AbTruncatedHead;
-	    if (!truncHead)
-	       /* la vue designee commence au debut du */
-	       /* document, on cree la nouvelle image depuis */
-	       /* le debut du document */
-	       pDoc->DocViewRootAb[freeView - 1] = AbsBoxesCreate (pDoc->DocDocElement,
-					 pDoc, freeView, TRUE, TRUE, &bool);
-	    else
-	       {
+	   pAb = pDoc->DocDocElement->ElAbstractBox[chosenView - 1];
+	   if (pAb == NULL)
+	     truncHead = FALSE;
+	   else if (pAb->AbLeafType != LtCompound)
+	     truncHead = FALSE;
+	   else if (pAb->AbInLine)
+	     truncHead = FALSE;
+	   else
+	     truncHead = pAb->AbTruncatedHead;
+	   if (!truncHead)
+	     /* la vue designee commence au debut du */
+	     /* document, on cree la nouvelle image depuis */
+	     /* le debut du document */
+	     pDoc->DocViewRootAb[freeView - 1] = AbsBoxesCreate (pDoc->DocDocElement,
+					   pDoc, freeView, TRUE, TRUE, &bool);
+	   else
+	     {
 	       /* cherche dans la vue designee le premier pave dont le debut
 		  n'est pas coupe' */
 	       stop = FALSE;
 	       do
 		 if (pAb == NULL)
-		    stop = TRUE;
+		   stop = TRUE;
 		 else
-		    {
-		    if (pAb->AbLeafType != LtCompound)
+		   {
+		     if (pAb->AbLeafType != LtCompound)
 		       truncHead = FALSE;
-		    else if (pAb->AbInLine)
+		     else if (pAb->AbInLine)
 		       truncHead = FALSE;
-		    else
+		     else
 		       truncHead = pAb->AbTruncatedHead;
-		    if (!truncHead)
+		     if (!truncHead)
 		       stop = TRUE;
-		    else
+		     else
 		       pAb = pAb->AbFirstEnclosed;
-		    }
+		   }
 	       while (!stop);
 	       
 	       /* cree la nouvelle vue a partir de cet element */
 	       if (pAb == NULL)
-		  CheckAbsBox (pDoc->DocDocElement, freeView, pDoc, TRUE,
-			       FALSE);
+		 CheckAbsBox (pDoc->DocDocElement, freeView, pDoc, TRUE,
+			      FALSE);
 	       else
-		  CheckAbsBox (pAb->AbElement, freeView, pDoc, TRUE, FALSE);
-	       }
-	    }
+		 CheckAbsBox (pAb->AbElement, freeView, pDoc, TRUE, FALSE);
+	     }
 	 }
-      }
+     }
    return ret;
 }
-
 
 /*----------------------------------------------------------------------
    OpenCreatedView ouvre une vue dont on a deja cree' l'image        
    pDoc: document concerne'.                               
-   view: si assoc est faux, numero de la vue,              
-   si assoc est vrai, numero des elements associes    
-   dont on ouvre la vue.                              
+   view: numero de la vue a ouvrir           
    X, Y, width, height: position et dimensions de la	
    		     fenetre en mm.					
   ----------------------------------------------------------------------*/
-void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
-                      int Y, int width, int height)
+void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
+		      int width, int height)
 {
   PtrSSchema          pSS;
   int                 volume = 0;
@@ -736,10 +557,7 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
   if (view > 0)
     {
       /* prepare le nom de la vue */
-      if (assoc)
-	  schView = 1;
-      else
-	  schView = pDoc->DocView[view - 1].DvPSchemaView;
+      schView = pDoc->DocView[view - 1].DvPSchemaView;
       /* creation d'une fenetre pour la vue */
       pSS = pDoc->DocSSchema;
       frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
@@ -748,8 +566,7 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
   if (frame == 0)
     {
       /* on n'a pas pu creer la fenetre, echec */
-      if (!assoc)
-	pDoc->DocView[view - 1].DvPSchemaView = 0;
+      pDoc->DocView[view - 1].DvPSchemaView = 0;
     }
   else
     {
@@ -789,7 +606,6 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
 	(*ThotLocalActions[T_chattr]) (pDoc);
     }
 }
-
 
 /*----------------------------------------------------------------------
    GetViewByName cherche la vue de nom viewName.                   
@@ -851,8 +667,8 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, in
 	     notifyDoc.view = 0;
 	     if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	        {
-		ret = CreateAbstractImage (pDoc, view, 0, pSS, 1, FALSE, NULL);
-		OpenCreatedView (pDoc, ret, FALSE, X, Y, width, height);
+		ret = CreateAbstractImage (pDoc, view, pSS, 1, FALSE, NULL);
+		OpenCreatedView (pDoc, ret, X, Y, width, height);
 		notifyDoc.event = TteViewOpen;
 		notifyDoc.document = (Document) IdentDocument (pDoc);
 		notifyDoc.view = ret;
@@ -892,28 +708,10 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
 	 ConfigGetViewGeometry (pDoc, AllViews[theView - 1].VdViewName,
 				&X, &Y, &width, &height);
 	 /* cree effectivement la vue */
-	 if (AllViews[theView - 1].VdAssoc)
-	    {
-	    view = CreateAbstractImage (pDoc, 0,
-					AllViews[theView - 1].VdAssocNum,
-					AllViews[theView - 1].VdSSchema,
-					selectedView, TRUE, subTree);
-	    if (pDoc->DocAssocRoot[view - 1] == NULL)
-	       /*** Associated tree creation has been refused. ***/
-	       viewHasBeenOpen = FALSE;
-	    else
-	       {
-	       OpenCreatedView (pDoc, view, TRUE, X, Y, width, height);
-	       view += 100;
-	       }
-	    }
-	 else
-	    {
-	    view = CreateAbstractImage (pDoc, AllViews[theView - 1].VdView, 0,
-					AllViews[theView - 1].VdSSchema,
-					selectedView, FALSE, subTree);
-	    OpenCreatedView (pDoc, view, FALSE, X, Y, width, height);
-	    }
+	 view = CreateAbstractImage (pDoc, AllViews[theView - 1].VdView,
+				     AllViews[theView - 1].VdSSchema,
+				     selectedView, FALSE, subTree);
+	 OpenCreatedView (pDoc, view, X, Y, width, height);
 	 if (viewHasBeenOpen)
 	    {
 	    notifyDoc.event = TteViewOpen;
@@ -925,7 +723,6 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
       }
 }
 
-
 /*----------------------------------------------------------------------
    BuildViewList construit le menu des vues qu'il est possible	
    d'ouvrir pour le document pDoc.                                 
@@ -934,67 +731,56 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
   ----------------------------------------------------------------------*/
 void BuildViewList (PtrDocument pDoc, char *buffer, int *nItems)
 {
-   int                 i, j, longueur, nViews;
-   DocViewNumber       view, freeView;
+  int                 i, j, length, nViews;
+  DocViewNumber       view, freeView;
 
-   if (pDoc != NULL)
-     {
-	/* cherche la premiere vue libre dans le descripteur du document */
-	view = 1;
-	freeView = 0;
-	while (freeView == 0 && view <= MAX_VIEW_DOC)
-	   if (pDoc->DocView[view - 1].DvPSchemaView == 0)
-	      freeView = view;
-	   else
-	      view++;
-	/* Si (freeView == 0) il n'y a plus de place pour une vue de */
-	/* l'arbre principal */
-
-	/* cree le catalogue des vues qu'il est possible de creer */
-	/* i: index courant dans le buffer du menu */
-	i = 0;
-	/* nItems: nombre d'entrees dans le menu */
-	*nItems = 0;
-	nViews = BuildDocumentViewList (pDoc, AllViews);
-	for (j = 0; j < nViews; j++)
-	  {
-	     /* Si une vue Assoc n'est pas ouverte ou s'il reste des vues */
-	     /* principales libres... */
-	     /* Si le document est en lecture seule, on ne propose */
-	     /* pas d'ouvrir une vue pour des elements associes qui */
-	     /* n'existent pas (ce qui reviendrait a les creer) */
-	     if ((AllViews[j].VdAssoc && !AllViews[j].VdOpen &&
-		  (!pDoc->DocReadOnly || AllViews[j].VdExist))
-		 || (!AllViews[j].VdAssoc && (freeView > 0)))
-	       {
-		  /* L'entree nItems du menu est l'entree j dans AllViews. */
-		  ViewMenuItem[(*nItems)++] = j + 1;
-		  longueur = strlen (AllViews[j].VdViewName) + 1;
-		  if (longueur + i < MAX_TXT_LEN)
-		    {
-		       strcpy (buffer + i, AllViews[j].VdViewName);
-		       i += longueur;
-		    }
-		  if (AllViews[j].VdOpen)
-		    {
-		       /* Marque par une etoile a la fin du nom que la vue est
-			  deja ouverte */
-		       buffer[i - 1] = '*';
-		       buffer[i] = EOS;
-		       i++;
-		    }
-	       }
-	  }
-     }
+  if (pDoc != NULL)
+    {
+      /* cherche la premiere vue libre dans le descripteur du document */
+      view = 1;
+      freeView = 0;
+      while (freeView == 0 && view <= MAX_VIEW_DOC)
+	if (pDoc->DocView[view - 1].DvPSchemaView == 0)
+	  freeView = view;
+	else
+	  view++;
+      /* nItems: nombre d'entrees dans le menu */
+      *nItems = 0;
+      /* Si (freeView == 0) il n'y a plus de place pour une vue */
+      if (freeView > 0)
+	{
+	  /* cree le catalogue des vues qu'il est possible de creer */
+	  /* i: index courant dans le buffer du menu */
+	  i = 0;
+	  nViews = BuildDocumentViewList (pDoc, AllViews);
+	  for (j = 0; j < nViews; j++)
+	    {
+	      /* L'entree nItems du menu est l'entree j dans AllViews. */
+	      ViewMenuItem[(*nItems)++] = j + 1;
+	      length = strlen (AllViews[j].VdViewName) + 1;
+	      if (length + i < MAX_TXT_LEN)
+		{
+		  strcpy (buffer + i, AllViews[j].VdViewName);
+		  i += length;
+		}
+	      if (AllViews[j].VdOpen)
+		{
+		  /* Marque par une etoile a la fin du nom que la vue est
+		     deja ouverte */
+		  buffer[i - 1] = '*';
+		  buffer[i] = EOS;
+		  i++;
+		}
+	    }
+	}
+    }
 }
-
 
 /*----------------------------------------------------------------------
    CloseView ferme la vue de numero viewNb du document pDoc, ou le
    document complet s'il s'agit de la derniere vue de ce document. 
-   Si assoc est vrai, viewNb un numero d'elements associe's          
   ----------------------------------------------------------------------*/
-void CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
+void CloseView (PtrDocument pDoc, int viewNb)
 {
    NotifyDialog        notifyDoc;
    ThotBool            ok, Save;
@@ -1004,10 +790,7 @@ void CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
    if (pDoc != NULL)
       {
       document = (Document) IdentDocument (pDoc);
-      if (assoc)
-	 view = viewNb + 100;
-      else
-	 view = viewNb;
+      view = viewNb;
         
       notifyDoc.event = TteViewClose;
       notifyDoc.document = document;
@@ -1042,22 +825,20 @@ void CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
 	 if (ok)
 	    {
 	    /* desactive la vue si elle est active */
-	    DeactivateView (pDoc, viewNb, assoc);
+	    DeactivateView (pDoc, viewNb);
 	    /* fait detruire la fenetre par le mediateur */
-	    if (assoc)
-	       DestroyFrame (pDoc->DocAssocFrame[viewNb - 1]);
-	    else
-	       DestroyFrame (pDoc->DocViewFrame[viewNb - 1]);
+	    DestroyFrame (pDoc->DocViewFrame[viewNb - 1]);
 	    notifyDoc.event = TteViewClose;
 	    notifyDoc.document = (Document) IdentDocument (pDoc);
 	    notifyDoc.view = view;
 	    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	    /* detruit le contexte de la vue */
-	    CloseDocumentView (pDoc, viewNb, assoc, TRUE);
+	    CloseDocumentView (pDoc, viewNb, TRUE);
 	    }
 	 }
       }
 }
+
 /*----------------------------------------------------------------------
    TtcCloseView
    closes a document view.
@@ -1065,13 +846,8 @@ void CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
 void TtcCloseView (Document document, View viewIn)
 {
    PtrDocument         pDoc;
-   int                 view;
-   ThotBool            assoc;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc != NULL)
-     {
-        GetViewInfo (document, viewIn, &view, &assoc);
-        CloseView (pDoc, view, assoc);
-     }
+     CloseView (pDoc, viewIn);
 }

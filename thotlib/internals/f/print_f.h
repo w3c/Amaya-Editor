@@ -34,8 +34,7 @@ extern void GetSizesFrame ( int frame,
 extern ThotWindow TtaGetThotWindow ( int frame );
 extern void GetDocAndView ( int frame,
                             PtrDocument *pDoc,
-                            int *view,
-                            ThotBool *assoc );
+                            int *view );
 extern void PrintOnePage ( PtrDocument pDoc,
                            PtrAbstractBox pPageAb,
                            PtrAbstractBox pNextPageAb,
@@ -78,8 +77,7 @@ extern void GetSizesFrame (/* int frame,
 extern ThotWindow TtaGetThotWindow (/* int frame */);
 extern void GetDocAndView (/* int frame,
                               PtrDocument *pDoc,
-                              int *view,
-                              ThotBool *assoc */);
+                              int *view */);
 extern void PrintOnePage (/* PtrDocument pDoc,
                              PtrAbstractBox pPageAb,
                              PtrAbstractBox pNextPageAb,

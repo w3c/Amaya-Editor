@@ -4,7 +4,6 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
 
 /*
  * Type declarations for the formatter
@@ -152,9 +151,9 @@ typedef struct _TabUpdate
 
 typedef struct _Box
 {
-  PtrAbstractBox  BxAbstractBox;/* Pointer on the associated abstract box */
-  PtrBox          BxPrevious;	        /* Previous displayable box */
-  PtrBox          BxNext;	        /* Next displayable box */
+  PtrAbstractBox  BxAbstractBox;/* Pointer to the associated abstract box */
+  PtrBox          BxPrevious;	/* Previous displayable box */
+  PtrBox          BxNext;	/* Next displayable box */
   int	          BxNChars;	/* Total number of characters in the box */
   int             BxIndChar;	/* 0 or position of the split box */
   int             BxXOrg;	/* X origin from the root */
@@ -550,11 +549,9 @@ typedef struct _ViewFrame
 typedef struct _VueDeDoc
 {
   int             VdView;
-  int             VdAssocNum;
   Name            VdViewName;
   PtrSSchema      VdSSchema;
   ThotBool        VdOpen;
-  ThotBool        VdAssoc;
   ThotBool	  VdExist;
   ThotBool        VdNature;
   ThotBool        VdPaginated;

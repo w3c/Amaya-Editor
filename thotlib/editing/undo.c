@@ -421,8 +421,8 @@ ThotBool removeWhenUndoing;
         operation descriptor */
      {
        /* do the copy */
-       pCopy = CopyTree (pEl, pDoc, pEl->ElAssocNum, pEl->ElStructSchema,
-		         pDoc, pEl->ElParent, FALSE, FALSE);
+       pCopy = CopyTree (pEl, pDoc, pEl->ElStructSchema, pDoc, pEl->ElParent,
+			 FALSE, FALSE);
        /* store the copy in the editing operation descriptor */
        editOp->EoSavedElement = pCopy;
        /* if older editing operations in the history refer to elements that

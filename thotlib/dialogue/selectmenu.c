@@ -137,30 +137,6 @@ void                UpdateSelectMenu (PtrDocument pDoc)
 	       }
 	  }
      }
-
-   /* Traite toutes les vues des arbres associes */
-   for (vue = 1; vue <= MAX_ASSOC_DOC; vue++)
-     {
-	frame = pDoc->DocAssocFrame[vue - 1];
-	if (frame != 0 && FrameTable[frame].MenuSelect != -1)
-	  {
-	     menuID = FrameTable[frame].MenuSelect;
-	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
-	     ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-	     if (NbItemSel == 0)
-	       {
-		  /* le menu Selection contient au moins un item */
-		  TtaSetMenuOff (document, vue, menu);
-		  TtaDestroyDialogue (ref);
-	       }
-	     else
-	       {
-		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
-				  NbItemSel, BufMenuSel, NULL);
-		  TtaSetMenuOn (document, vue, menu);
-	       }
-	  }
-     }
 }
 
 

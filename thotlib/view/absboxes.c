@@ -954,32 +954,19 @@ void                IncreaseVolume (ThotBool head, int dVol, int frame)
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
   int                 view, h;
-  ThotBool            assoc;
 
   if (dVol <= 0)
     return;
-
-  GetDocAndView (frame, &pDoc, &view, &assoc);
+  GetDocAndView (frame, &pDoc, &view);
   /* met a jour la nouvelle capacite de la vue, indique dans le contexte */
   /* du document le volume des paves a creer et cherche le pave racine de */
   /* la vue */
   if (pDoc != NULL)
     {
-      if (assoc)
-	{
-	  /* element associe */
-	  pAb = pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0];
-	  pDoc->DocAssocVolume[view - 1] = pAb->AbVolume + dVol;
-	  pDoc->DocAssocFreeVolume[view - 1] = dVol;
-	}
-      else
-	{
-	  /* element de l'arbre principal */
-	  pAb = pDoc->DocViewRootAb[view - 1];
-	  pDoc->DocViewVolume[view - 1] = pAb->AbVolume + dVol;
-	  pDoc->DocViewFreeVolume[view - 1] = dVol;
-	}
-
+      /* element de l'arbre principal */
+      pAb = pDoc->DocViewRootAb[view - 1];
+      pDoc->DocViewVolume[view - 1] = pAb->AbVolume + dVol;
+      pDoc->DocViewFreeVolume[view - 1] = dVol;
       if (IsBreakable (pAb, pDoc))
 	{
 	  /* cree les paves de la partie qui va apparaitre */
@@ -987,17 +974,7 @@ void                IncreaseVolume (ThotBool head, int dVol, int frame)
 	  
 	  /* signale au Mediateur les paves crees et detruits */
 	  h = PageHeight;
-	  if (assoc)
-	    {
-	      if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
-		{
-		  pAb = pDoc->DocAssocModifiedAb[view - 1];
-		  pDoc->DocAssocModifiedAb[view - 1] = NULL;
-		  (void) ChangeConcreteImage (frame, &h, pAb);
-		  FreeDeadAbstractBoxes (pAb, pDoc->DocAssocFrame[view - 1]);
-		}
-	    }
-	  else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
+	  if (pDoc->DocViewModifiedAb[view - 1] != NULL)
 	    {
 	      pAb = pDoc->DocViewModifiedAb[view - 1];
 	      pDoc->DocViewModifiedAb[view - 1] = NULL;
@@ -1022,45 +999,21 @@ void                DecreaseVolume (ThotBool head, int dVol, int frame)
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
   int                 view, h;
-  ThotBool            assoc;
 
   if (dVol <= 0)
     return;
-
-  GetDocAndView (frame, &pDoc, &view, &assoc);
+  GetDocAndView (frame, &pDoc, &view);
   /* met a jour la nouvelle capacite de la vue et cherche le pave racine */
   /* de la vue */
   if (pDoc != NULL)
     {
-      if (assoc)
-	{
-	  /* element associe */
-	  /* attention, vue contient le numero d'element associe */
-	  pAb = pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0];
-	  pDoc->DocAssocVolume[view - 1] = pAb->AbVolume - dVol;
-	}
-      else
-	{
-	  /* element de l'arbre principal */
-	  pAb = pDoc->DocViewRootAb[view - 1];
-	  pDoc->DocViewVolume[view - 1] = pAb->AbVolume - dVol;
-	}
-
+      pAb = pDoc->DocViewRootAb[view - 1];
+      pDoc->DocViewVolume[view - 1] = pAb->AbVolume - dVol;
       /* supprime les paves */
       SupprAbsBoxes (pAb, pDoc, head, &dVol);
       /* signale au Mediateur les paves modifies */
       h = PageHeight;
-      if (assoc)
-	{
-	  if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
-	    {
-	      pAb = pDoc->DocAssocModifiedAb[view - 1];
-	      pDoc->DocAssocModifiedAb[view - 1] = NULL;
-	      (void) ChangeConcreteImage (frame, &h, pAb);
-	      FreeDeadAbstractBoxes (pAb, pDoc->DocAssocFrame[view - 1]);
-	    }
-	}
-      else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
+      if (pDoc->DocViewModifiedAb[view - 1] != NULL)
 	{
 	  pAb = pDoc->DocViewModifiedAb[view - 1];
 	  pDoc->DocViewModifiedAb[view - 1] = NULL;
@@ -1085,7 +1038,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
   ThotBool            openedView, creation, stop;
   PtrElement          pElAscent, pEl1;
   PtrElement          pAsc[MaxAsc];
-  int                 NumAsc, i, volsupp, frame, nAssoc, h;
+  int                 NumAsc, i, volsupp, frame, h;
   PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr,
                       pAbbFirstEmptyCr, pAbbReDisp, pAbbRoot, pPrevious;
   PtrPSchema          pPS;
@@ -1097,7 +1050,6 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
     pAsc[i] = NULL;
   if (pEl != NULL && pEl->ElAbstractBox[view - 1] == NULL)
     {
-      nAssoc = pEl->ElAssocNum;
       /* verifie si la vue a ete creee */
       openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
 
@@ -1175,22 +1127,9 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		  /* initialise le pointeur sur la racine de la vue si */
 		  /* c'est une creation de vue */
 		  {
-		    if (nAssoc > 0)
-		      /* vue d'elements associes */
-		      /* le premier pave que l'on vient de creer est */
-		      /* la racine de l'image */
-		      {
-			pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0] = pAbbFirstEmptyCr;
-			pAbbRoot = pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0];
-			frame = pDoc->DocAssocFrame[nAssoc - 1];
-		      }
-		    else
-		      /* vue de l'arbre principal */
-		      {
-			pDoc->DocViewRootAb[view - 1] = pAbbFirstEmptyCr;
-			pAbbRoot = pDoc->DocViewRootAb[view - 1];
-			frame = pDoc->DocViewFrame[view - 1];
-		      }
+		    pDoc->DocViewRootAb[view - 1] = pAbbFirstEmptyCr;
+		    pAbbRoot = pDoc->DocViewRootAb[view - 1];
+		    frame = pDoc->DocViewFrame[view - 1];
 		  }
 		else
 		  /* ce n'est pas une creation de vue */
@@ -1236,52 +1175,19 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 			/* passe a l'englobant */
 		      }
 		    /* fait effacer tout le contenu de la vue par le Mediateur */
-		    h = 0;
-		    /* on ne s'occupe pas de la hauteur de page */
-		    if (nAssoc > 0)
-		      /* vue d'elements associes */
+		    h = 0;    /* on ne s'occupe pas de la hauteur de page */
+		    pAbbRoot = pDoc->DocViewRootAb[view - 1];
+		    frame = pDoc->DocViewFrame[view - 1];
+		    if (frame != 0)
 		      {
-			pAbbRoot = pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0];
-			frame = pDoc->DocAssocFrame[nAssoc - 1];
-			if (frame != 0)
-			  {
-			    pAbbRoot->AbDead = TRUE;
-			    /* marque mort le pave racine */
-			    /* le signale au Mediateur */
-			    ChangeConcreteImage (frame, &h, pAbbRoot);
-			    pAbbRoot->AbDead = FALSE;
-			    /* resucite le pave racine */
-			    FreeDeadAbstractBoxes (pAbbRoot, frame);
-			    /* libere tous les pave detruits */
-			    pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
-			  }
-		      }
-		    else
-		      /* meme traitement pour une vue de l'arbre principal */
-		      {
-			pAbbRoot = pDoc->DocViewRootAb[view - 1];
-			frame = pDoc->DocViewFrame[view - 1];
-			if (frame != 0)
-			  {
-			    pDoc->DocViewModifiedAb[view - 1] = NULL;
-			    pAbbRoot->AbDead = TRUE;
-			    ChangeConcreteImage (frame, &h, pAbbRoot);
-			    pAbbRoot->AbDead = FALSE;
-			    FreeDeadAbstractBoxes (pAbbRoot, frame);
-			  }
+			pDoc->DocViewModifiedAb[view - 1] = NULL;
+			pAbbRoot->AbDead = TRUE;
+			ChangeConcreteImage (frame, &h, pAbbRoot);
+			pAbbRoot->AbDead = FALSE;
+			FreeDeadAbstractBoxes (pAbbRoot, frame);
 		      }
 		  }
-		if (nAssoc > 0)
-		  /* vue d'elements associes */
-		  if (begin)
-		    /* on creera tout le volume de la vue d'un coup */
-		    pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1];
-		  else
-		    /* on creera la moitie du volume max. derriere les */
-		    /* nouveaux paves, et une autre moitie devant */
-		    pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1] / 2;
-		/* vue de l'arbre principal */
-		else if (begin)
+		if (begin)
 		  pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
 		else
 		  pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
@@ -1328,10 +1234,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		  /* cree d'autres paves devant, jusqu'a remplir le volume de */
 		  /* la fenetre */
 		  {
-		    if (nAssoc > 0)
-		      pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1] / 2;
-		    else
-		      pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
+		    pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
 		    /* marque comme anciens tous les paves de presentation qui */
 		    /* viennent d'etre crees par AddAbsBoxes devant les paves */
 		    /* conserves. Ces paves de presentation seront ainsi traites */
@@ -1395,10 +1298,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		  {
 		    h = 0;
 		    /* il n'y a plus rien a reafficher dans cette vue */
-		    if (nAssoc > 0)
-		      pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
-		    else
-		      pDoc->DocViewModifiedAb[view - 1] = NULL;
+		    pDoc->DocViewModifiedAb[view - 1] = NULL;
 		    ChangeConcreteImage (frame, &h, pAbbRoot);
 		    if (display)
 		      DisplayFrame (frame);
@@ -1440,10 +1340,6 @@ void  VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst,
       *volBefore = 0;
       if (pAbbRoot->AbTruncatedHead)
 	{
-	  /* si le premier pave' correspond a un element associe' affiche' */
-	  /* dans un haut ou bas de page, on prend le pave' saut de page */
-	  while (pAbbFirst->AbElement->ElAssocNum != pAbbRoot->AbElement->ElAssocNum)
-	    pAbbFirst = pAbbFirst->AbEnclosing;
 	  pEl = pAbbFirst->AbElement;
 	  /* pour l'element et tous ses ascendants, on accumule le */
 	  /* volume de tous leurs freres precedents */
@@ -1465,10 +1361,6 @@ void  VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst,
       *volAfter = 0;
       if (pAbbRoot->AbTruncatedTail)
 	{
-	  /* si le dernier pave' correspond a un element associe' affiche' */
-	  /* dans un haut ou bas de page, on prend le pave' saut de page */
-	  while (pAbbLast->AbElement->ElAssocNum != pAbbRoot->AbElement->ElAssocNum)
-	    pAbbLast = pAbbLast->AbEnclosing;
 	  pEl = pAbbLast->AbElement;
 	  /* pour l'element et tous ses ascendants, on accumule le */
 	  /* volume de tous leurs freres suivants */
@@ -1501,7 +1393,6 @@ void                JumpIntoView (int frame, int distance)
 {
   PtrDocument         pDoc;
   int                 view;
-  ThotBool            isAssoc;
   PtrElement          pEl;
   int                 volBefore, volPresent;
   ThotBool            after;
@@ -1514,17 +1405,11 @@ void                JumpIntoView (int frame, int distance)
     /* la distance demandee est valide */
     {
       /* cherche le document et la vue correspondant a la fenetre */
-      GetDocAndView (frame, &pDoc, &view, &isAssoc);
+      GetDocAndView (frame, &pDoc, &view);
       if (pDoc != NULL)
 	{
-	  /* cherche la racine de l'arbre affiche' dans cette frame */
-	  if (isAssoc)
-	    {
-	      pEl = pDoc->DocAssocRoot[view - 1];
-	      view = 1;
-	    }
-	  else
-	    pEl = pDoc->DocDocElement;
+	  /* prend la racine de l'arbre affiche' dans cette frame */
+	  pEl = pDoc->DocDocElement;
 	  if (pEl != NULL)
 	    {
 	      pAbbRoot = pEl->ElAbstractBox[view - 1];

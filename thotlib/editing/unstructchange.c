@@ -302,8 +302,8 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 		   else
 		     {
 		       pAncest = NewSubtree (pSavedEl->PeAscendTypeNum[asc],
-					     pSS, pDoc, pEl->ElAssocNum, FALSE,
-					     TRUE, TRUE, TRUE);
+					     pSS, pDoc, FALSE, TRUE, TRUE,
+					     TRUE);
 		       if (pAncest != NULL)
 			 {
 			   /* on insere ce nouvel element dans l'arbre
@@ -365,8 +365,8 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				 /* l'application accepte, on cree l'element */
 				 {
 				   pE = NewSubtree (pSavedEl->PeAscendTypeNum[asc],
-						    pSS, pDoc, pEl->ElAssocNum,
-						    FALSE, TRUE, TRUE, TRUE);
+						    pSS, pDoc, FALSE, TRUE,
+						    TRUE, TRUE);
 				   /* on insere ce nouvel element dans l'arbre abstrait */
 				   InsertFirstChild (pParent, pE);
 				   /* on envoie un evenement ElemNew.Post a l'appli */
@@ -417,7 +417,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	      reference' */
 	   /* Ne copie les attributs que s'ils sont definis dans les schemas */
 	   /* de structure des elements englobants du document d'arrivee. */
-	   pPasted = CopyTree (pOrig, DocOfSavedElements, pElem->ElAssocNum,
+	   pPasted = CopyTree (pOrig, DocOfSavedElements,
 			       pParent->ElStructSchema, pDoc, pParent, TRUE,
 			       TRUE);
 	   if (pPasted != NULL)
@@ -519,7 +519,7 @@ void PasteCommand ()
   PtrPasteElem        pPasteD;
   DisplayMode         dispMode;
   Document            doc;
-  int                 firstChar, lastChar, numAssoc, view, i;
+  int                 firstChar, lastChar, view, i;
   ThotBool            ok, before, within, lock;
   
   before = FALSE;
@@ -532,7 +532,6 @@ void PasteCommand ()
       {
 	/* calcule le volume que pourront prendre les paves des elements
 	   colles */
-	numAssoc = firstSel->ElAssocNum;
 	for (view = 0; view < MAX_VIEW_DOC; view++)
 	  {
 	    if (pDoc->DocView[view].DvPSchemaView > 0)
@@ -788,7 +787,6 @@ void PasteCommand ()
       }
     }
 }
-
 
 /*----------------------------------------------------------------------
    SelectSiblings
@@ -1485,16 +1483,15 @@ void     TtcCreateElement (Document doc, View view)
 	      if (!replicate)
 		{
 		  pE = pElReplicate;
-		  pNew = NewSubtree (typeNum, pSS, pDoc,
-				     pE->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+		  pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE,
+				     TRUE);
 		}
 	      else
 		{
 		  /* Reconstruction d'une structure parallele */
 		  pNew = NewSubtree (lastSel->ElTypeNumber,
 				     lastSel->ElStructSchema, pDoc,
-				     lastSel->ElAssocNum, TRUE, TRUE, TRUE,
-				     TRUE);
+				     TRUE, TRUE, TRUE, TRUE);
 		  pE = lastSel;
 		  while (pE->ElParent != pListEl)
 		    {

@@ -59,10 +59,10 @@ PtrPRule GetPageRule (PtrElement pEl, PtrDocument pDoc, int view,
       else if (pRule->PrType > PtFunction)
 	 stop = TRUE;
       else if (pRule->PrType == PtFunction &&
-	 /**TODO*//* valeur de view si vue d'element associes ?? */
 	       pRule->PrViewNum == view &&
 	       pRule->PrPresFunction == FnPage)
-	{			/* c'est une regle Page */
+	/* c'est une regle Page */
+	{
 	   pRPage = pRule;
 	   stop = TRUE;
 	}
@@ -114,7 +114,6 @@ PtrPRule GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
    Marque Page pointe par pElPage.                         
    view indique le numero de la vue dans le schema de       
    presentation pour laquelle on construit des pages.      
-   (c'est toujours 1 pour les vues d'elements associes).   
    Procedure utilisee pour la pagination et l'impression   
    les parametres b et pSchP sont utilises pour le print   
   ----------------------------------------------------------------------*/

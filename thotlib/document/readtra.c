@@ -364,9 +364,6 @@ static TRelatPosition ReadTRelatPosition (BinFile file)
 	       case C_TR_REFERRED_EL:
 		  position = RpReferred;
 		  break;
-	       case C_TR_ASSOC:
-		  position = RpAssoc;
-		  break;
 	       default:
 		  TSchemaError (10);
 		  position = RpSibling;

@@ -128,11 +128,6 @@ typedef struct _ReferenceDescriptor
 					   element are in the same document if
 					   True, in different documents if
 					   false */
-    PtrElement		RdPageBreak;	/* the page break element corresponding
-				to the page where the element is included,
-				NULL if the referenced element is not included
-				yet (only when including an associated element
-				at the top or the bottom of a page) */
 } ReferenceDescriptor;
 
 typedef struct _HandlePSchema *PtrHandlePSchema;
@@ -368,8 +363,6 @@ typedef struct _ElementDescr
 					   descriptors of the abstract boxes
 					   that copy the element by a Copy
 					   presentation rule */
-    int			ElAssocNum; 	/* number of the associated tree owning
-					   the element, 0 if main tree */
     ThotBool        	ElIsCopy;	/* the element is a copy that cannot
 					   be modified  (parameter or copy by
 					   inclusion) */
@@ -418,8 +411,6 @@ typedef struct _ElementDescr
 		} s1;
 		struct			/* ElLeafType = LtPageColBreak */
 		{
-		    ThotBool      _ElAssocHeader_; /* the header associated
-						     elements must be created*/
 		    ThotBool      _ElPageModified_;/* the page was modified */
 		    PageType      _ElPageType_;    /* origin of the page */
 		    int           _ElPageNumber_;  /* page number */
@@ -469,7 +460,6 @@ typedef struct _ElementDescr
 #define ElLanguage u.s1.u.s0._ElLanguage_
 #define ElWideChar u.s1.u.s1._ElWideChar_
 #define ElGraph u.s1.u.s1._ElGraph_
-#define ElAssocHeader u.s1.u.s2._ElAssocHeader_
 #define ElPageModified u.s1.u.s2._ElPageModified_
 #define ElPageType u.s1.u.s2._ElPageType_
 #define ElPageNumber u.s1.u.s2._ElPageNumber_
@@ -495,7 +485,6 @@ typedef struct _ElementDescr
    The pointers ElPrevious and ElNext are used to link a structured element to
    the preceding and following element in the list or the aggregate it is part
    of, if its parent's constructor is CsList or CsAggregate.
-   These pointers are also used to link associated elements of the same type.
    They are left unused if the parent's constructor is CsIdentity or
    CsConstant. 
    Yet another use is to link the different REFERENCE elements pointing on the
@@ -609,46 +598,25 @@ typedef struct _DocumentDescr
   PtrDocSchemasDescr DocFirstSchDescr; /* first descriptor of all schemas
 				     associated with  this document */
   PtrElement      DocDocElement;  /* pointer to the document element */
-  PtrElement      DocAssocRoot[MAX_ASSOC_DOC];	/* pointers on the roots of
-						   each associated tree */
-  PtrElement	  DocAssocSubTree[MAX_ASSOC_DOC]; /* root of the subtree
-					   to be displayed in the associated
-					   elements view, NULL if the whole
-					   tree is displayed */
-  int             DocAssocFrame[MAX_ASSOC_DOC];  /* number of the windows
-						    of the associated trees */
-  int             DocAssocVolume[MAX_ASSOC_DOC]; /* total volume of the
-					   windows of the associated trees */
-  int             DocAssocFreeVolume[MAX_ASSOC_DOC]; /* free space remaining
-					   in the windows of the the
-					   associated trees */
-  int             DocAssocNPages[MAX_ASSOC_DOC];   /* number of pages in each
-						      associated tree */
-  PtrAbstractBox  DocAssocModifiedAb[MAX_ASSOC_DOC]; /* pointers on the
-					   abstract box to be redisplayed for
-					   the associated trees */
-  PtrReferredDescr DocReferredEl;	/* pointer on the fake descriptor,
-					   beginning of the string of
-					   descriptors of elements referenced
-					   in the document */
-  DocViewDescr    DocView[MAX_VIEW_DOC]; /* correspondence between the
-					   document views and those defined in
-					   the presentation schemas used in
-					   the document */
-  PtrAbstractBox  DocViewRootAb[MAX_VIEW_DOC]; /* pointer on the root
-					   abstract box of each view of the
-					   main tree, in the same order as
-					   in DocView */
+  PtrReferredDescr DocReferredEl; /* pointer on the fake descriptor, beginning
+				     of the string of descriptors of elements
+				     referenced in the document */
+  DocViewDescr    DocView[MAX_VIEW_DOC]; /* correspondence between the document
+				     views and those defined in the present.
+				     schemas used in the document */
+  PtrAbstractBox  DocViewRootAb[MAX_VIEW_DOC]; /* pointer on the root abstract
+				     box of each view of the main tree, in the
+				     same order as in DocView */
   PtrElement	  DocViewSubTree[MAX_VIEW_DOC];	/* root of the subtree of the
-					   main tree to display in the view,
-					   null by default */
+				     main tree to display in the view, null
+				     by default */
   int		  DocViewFrame[MAX_VIEW_DOC];	/* ident. of the window
-					   corresponding to the view */
+				     corresponding to the view */
   int		  DocViewVolume[MAX_VIEW_DOC];   /* volume of the view */
   int             DocViewFreeVolume[MAX_VIEW_DOC]; /* free volume in the view*/
   int             DocViewNPages[MAX_VIEW_DOC];  /* number of pages */
   PtrAbstractBox  DocViewModifiedAb[MAX_VIEW_DOC]; /* pointer on the abstract
-					    box to redisplay for the view */
+				     box to redisplay for the view */
   ADocumentName	  DocDName;	  /* document name for the user */
   DocumentIdentifier DocIdent;	  /* unique document id for the storage
 				     system */

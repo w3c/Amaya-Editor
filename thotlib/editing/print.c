@@ -72,7 +72,7 @@ static char       tempDir [MAX_PATH];
 static ThotBool     removeDirectory;
 
 /* table des vues a imprimer */
-#define MAX_PRINTED_VIEWS MAX_VIEW_DOC+MAX_ASSOC_DOC
+#define MAX_PRINTED_VIEWS MAX_VIEW_DOC
 #define MAX_CSS           10
 static Name         PrintViewName[MAX_PRINTED_VIEWS];
 static Name         CSSName[MAX_CSS];
@@ -81,7 +81,6 @@ static int          LeftMargin;
 static ThotBool     CleanTopOfPageElement; /* premiere page imprimee pour le
 					     pagination-impression */
 static DocViewNumber CurrentView;	/* numero de la vue traitee */
-static int           CurAssocNum;	/* No d'element associe de la vue traitee */
 static int           CurrentFrame;	/* No frame contenant la vue traitee */
 static char         *printer;
 static ThotWindow    thotWindow;
@@ -601,24 +600,13 @@ ThotWindow TtaGetThotWindow (int frame)
 /*----------------------------------------------------------------------
    GetDocAndView    Retourne le pointeur sur le document (pDoc) et le    
    numero de vue (view) dans ce document, correspondant a    
-   frame de numero frame. Si c'est une frame d'elements   
-   associes, rend assoc=vrai et view=numero d'el. associe    
-   sinon rend assoc faux.                                  
+   frame de numero frame.
    Procedure differente de GetDocAndView de docvues.c          
   ----------------------------------------------------------------------*/
-void GetDocAndView (int frame, PtrDocument *pDoc, int *view, ThotBool *assoc)
+void GetDocAndView (int frame, PtrDocument *pDoc, int *view)
 {
   *pDoc = TheDoc;
-  if (CurAssocNum > 0)
-    {
-      *view = CurAssocNum;
-      *assoc = TRUE;
-    }
-  else
-    {
-      *view = CurrentView;
-      *assoc = FALSE;
-    }
+  *view = CurrentView;
 }
 
 
@@ -1494,10 +1482,7 @@ static void SetMargins (PtrElement pPageEl, PtrDocument pDoc,
    else if (pPageEl->ElPageType == PgBegin && pPageEl->ElParent != NULL)
       /* Nouveau type de page, on determine la hauteur des pages */
      {
-	if (CurAssocNum > 0)
-	   schView = 1;
-	else
-	   schView = TheDoc->DocView[CurrentView - 1].DvPSchemaView;
+       schView = TheDoc->DocView[CurrentView - 1].DvPSchemaView;
 	if (Repaginate)
 	  {
 	    /* on recupere la boite page sans mettre a jour la hauteur */
@@ -1609,37 +1594,20 @@ static void PrintView (PtrDocument pDoc)
    pHeaderAb = NULL;
    /* cree le debut de l'image du document (le volume libre a ete
       initialise' apres la creation de la fenetre) */
-   if (CurAssocNum > 0)
-     /* on traite une vue d'elements associes */
+   pEl = pDoc->DocDocElement;
+   pViewD = &pDoc->DocView[CurrentView - 1];
+   pPS = PresentationSchema (pViewD->DvSSchema, pDoc);
+   strncpy (viewName, pPS->PsView[pViewD->DvPSchemaView-1],
+	    MAX_NAME_LENGTH);
+   pDoc->DocViewRootAb[CurrentView - 1] = AbsBoxesCreate (pEl, pDoc,
+					      CurrentView, TRUE, TRUE, &full);
+   rootAbsBox = pEl->ElAbstractBox[CurrentView - 1];
+   /* les numeros de pages a imprimer ne sont significatifs que pour la
+      vue principale de l'arbre principal */
+   if (pViewD->DvPSchemaView != 1)
      {
-       pEl = pDoc->DocAssocRoot[CurAssocNum - 1];
-       strncpy (viewName,
-		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-		 MAX_NAME_LENGTH);
-       rootAbsBox = pDoc->DocAssocRoot[CurAssocNum - 1]->ElAbstractBox[0];
-       /* les numeros de pages a imprimer ne sont significatifs que pour la 
-	  vue principale de l'arbre principal */
        FirstPrinted = -9999;
        LastPrinted = 9999;
-       pAb = AbsBoxesCreate (pEl, pDoc, 1, TRUE, TRUE, &full);
-     }
-   else
-     {
-       pEl = pDoc->DocDocElement;
-       pViewD = &pDoc->DocView[CurrentView - 1];
-       pPS = PresentationSchema (pViewD->DvSSchema, pDoc);
-       strncpy (viewName, pPS->PsView[pViewD->DvPSchemaView-1],
-		 MAX_NAME_LENGTH);
-       pDoc->DocViewRootAb[CurrentView - 1] = AbsBoxesCreate (pEl, pDoc,
-			 CurrentView, TRUE, TRUE, &full);
-       rootAbsBox = pEl->ElAbstractBox[CurrentView - 1];
-       /* les numeros de pages a imprimer ne sont significatifs que pour la
-	  vue principale de l'arbre principal */
-       if (pViewD->DvPSchemaView != 1)
-	 {
-	   FirstPrinted = -9999;
-	   LastPrinted = 9999;
-	 }
      }
 
    /* demande le calcul de l'image */
@@ -1723,16 +1691,8 @@ static void PrintView (PtrDocument pDoc)
 		   /* indique le volume qui peut etre cree */
 		   do
 		     {
-		       if (CurAssocNum > 0)
-			 {
-			   pDoc->DocAssocFreeVolume[CurAssocNum - 1] = volume;
-			   prevVol = rootAbsBox->AbVolume;
-			 }
-		       else
-			 {
-			   pDoc->DocViewFreeVolume[CurrentView - 1] = volume;
-			   prevVol = rootAbsBox->AbVolume;
-			 }
+		       pDoc->DocViewFreeVolume[CurrentView - 1] = volume;
+		       prevVol = rootAbsBox->AbVolume;
 		       /* demande la creation de paves supplementaires */
 		       AddAbsBoxes (rootAbsBox, pDoc, FALSE);
 		       if (rootAbsBox->AbVolume <= prevVol)
@@ -1771,8 +1731,8 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   PtrSSchema          pSS;
   PtrPSchema          pPSchema;
   DocViewNumber       docView;
-  int                 schView, rule, v, assocNum, firstFrame;
-  ThotBool            present, found, withPages;
+  int                 schView, v, firstFrame;
+  ThotBool            found, withPages;
 #ifdef _WINDOWS
   /* static DOCINFO docInfo = {sizeof (DOCINFO), "Amaya", NULL}; */
   int    i;
@@ -1785,7 +1745,6 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   PageHeight = 0;
   PageFooterHeight = 0;
   CurrentView = 0;
-  CurAssocNum = 0;
   CurrentFrame = 0;
   firstFrame = 0;
   withPages = FALSE;
@@ -1820,7 +1779,6 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   for (v = 0; v < viewsCounter; v++)
     {
       CurrentView = 0;
-      CurAssocNum = 0;
       withPages = FALSE;
       /* cherche si la vue est une vue de l'arbre principal */
       found = FALSE;
@@ -1858,71 +1816,13 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 		CurrentView = docView + 1;
 	      }
 	}
-      else
-	/* ce n'est pas une vue de l'arbre principal */
-	/* cherche si c'est une vue d'elements associes */
-	{
-	  pSS = pDoc->DocSSchema;
-	  /* des elements associes sont utilises pour definir les vues associees */
-	  /* cherche dans le schema du document et ses extensions */
-	  do
-	    {
-	      if (pSS->SsFirstDynNature == 0)
-		/* rule: derniere regle qui pourrait etre une liste */
-		/* d'elem. assoc. */
-		rule = pSS->SsNRules;
-	      else
-		rule = pSS->SsFirstDynNature - 1;
-	      /* boucle sur les regles a la recherche de ce nom */
-	      do
-		if (strcmp (pSS->SsRule[rule - 1].SrName, PrintViewName[v]) == 0)
-		  found = TRUE;
-		else
-		  rule--;
-	      while (rule > 0 && !found);
-	      if (!found)
-		pSS = pSS->SsNextExtens;
-	    }
-	  while (pSS != NULL && !found);
-
-	  if (found)
-	    /* c'est une vue d'elements associes */
-	    /* cherche si les elements associes existent */
-	    {
-	      present = FALSE;
-	      assocNum = 0;
-	      do
-		{
-		  if (pDoc->DocAssocRoot[assocNum] != NULL)
-		    if (pDoc->DocAssocRoot[assocNum]->ElTypeNumber == rule &&
-			pDoc->DocAssocRoot[assocNum]->ElStructSchema == pSS)
-		      present = TRUE;
-		  assocNum++;
-		}
-	      while (!present && assocNum < MAX_ASSOC_DOC);
-
-	      if (present)
-		{
-		  CurAssocNum = assocNum;
-		  /* les elements associes n'ont qu'une vue, la vue 1 */
-		  CurrentView = 1;
-		  /* on memorise le fait que c'est une vue avec ou
-		     sans pages */
-		  pPSchema = PresentationSchema (pSS, pDoc);
-		  withPages = pPSchema->PsPaginatedView[CurAssocNum - 1];
-		}
-	    }
-	}
 
       /* on ne traite pas, pour l'instant, les vues des natures */
-      if (CurrentView > 0 || CurAssocNum > 0)
+      if (CurrentView > 0)
 	/* il y a une vue a imprimer */
 	/* demande la creation d'une frame pour la vue a traiter */
 	{
-	  if (CurAssocNum > 0)
-            CurrentFrame = OpenPSFile (pDoc, &pDoc->DocAssocVolume[CurAssocNum - 1]);
-	  else
-	    CurrentFrame = OpenPSFile (pDoc, &pDoc->DocViewVolume[CurrentView - 1]);
+	  CurrentFrame = OpenPSFile (pDoc, &pDoc->DocViewVolume[CurrentView - 1]);
 	  if (CurrentFrame != 0)
 	    {
 	      /* creation frame reussie */
@@ -1930,17 +1830,9 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 	      if (firstFrame == 0)
 		firstFrame = CurrentFrame;
 	      /* initialise la fenetre, et notamment le volume de l'image abstraite a creer et le nombre de pages creees a 0 */
-	      if (CurAssocNum > 0)
-		{
-		  pDoc->DocAssocFrame[CurAssocNum - 1] = CurrentFrame;
-		  pDoc->DocAssocFreeVolume[CurAssocNum - 1] = 1000;
-		}
-	      else
-		{
-		  pDoc->DocViewFrame[CurrentView - 1] = CurrentFrame;
-		  /* DocVueCreee[CurrentView]:= true; */
-		  pDoc->DocViewFreeVolume[CurrentView - 1] = 1000;
-		}
+	      pDoc->DocViewFrame[CurrentView - 1] = CurrentFrame;
+	      /* DocVueCreee[CurrentView]:= true; */
+	      pDoc->DocViewFreeVolume[CurrentView - 1] = 1000;
 
 	      /* page dimensions and margings are unknown, set default values
 		 TopMargin = 57;
@@ -1956,10 +1848,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 		  /* on pagine le document et on imprime au fur et */
 		  /* mesure les pages creees : PaginateView appelle la */
 		  /* procedure PrintOnePage definie ci-dessous */
-		  if (CurAssocNum > 0)
-		    PaginateView (pDoc, CurAssocNum, TRUE);
-		  else
-		    PaginateView (pDoc, CurrentView, FALSE);
+		  PaginateView (pDoc, CurrentView);
 		}
 	      else
 		/* imprime la vue */
@@ -2014,8 +1903,6 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 /*----------------------------------------------------------------------
   PrintOnePage    imprime l'image de la page de pave pPageAb a    
   pNextPageAb du document pDoc                       
-  Si assoc est vrai, c'est la vue d'elements associes de numero view qui
-  doit etre traitee.
   L'image a ete calculee avant l'appel (par Page) et il n'y a rien dans
   l'image avant pPageAb sauf dans si pPageAb se trouve dans un element
   BoTable.

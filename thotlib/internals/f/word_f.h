@@ -15,9 +15,6 @@ extern ThotBool InitSearchDomain ( int domain,
 extern void UpdateDuringSearch ( PtrElement pEl,
                                  int len );
 extern void RestoreAfterSearch ( void );
-extern ThotBool NextTree ( PtrElement *pEl,
-                           int *charIndx,
-                           PtrSearchContext context );
 extern ThotBool SearchNextWord ( PtrElement *curEl,
                                  int *beginning,
                                  int *end,
@@ -40,9 +37,6 @@ extern ThotBool InitSearchDomain (/* int domain,
 extern void UpdateDuringSearch (/* PtrElement pEl,
                                    int len */);
 extern void RestoreAfterSearch (/* void */);
-extern ThotBool NextTree (/* PtrElement *pEl,
-                             int *charIndx,
-                             PtrSearchContext context */);
 extern ThotBool SearchNextWord (/* PtrElement *curEl,
                                    int *beginning,
                                    int *end,

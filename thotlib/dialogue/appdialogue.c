@@ -196,15 +196,15 @@ void TteInitMenus (char *name, int number)
    char                text[100];
    char                alphabet;
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    Display            *Dp;
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
    /* Initialisation du  contexte serveur */
    FrRef[0] = 0;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    FrMainRef [0] = 0;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    InitDocContexts ();
 
    /* Init the profile table */
@@ -225,9 +225,9 @@ void TteInitMenus (char *name, int number)
 		i = appArgc;
 	     }
      }
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    WIN_TtaInitDialogue (servername);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    TtaInitDialogue (servername, &app_cont, &Dp);
    if (!RootShell)
      {
@@ -237,7 +237,7 @@ void TteInitMenus (char *name, int number)
 	exit (1);
      }
    TtDisplay = Dp;
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
    /* Definition de la procedure de retour des dialogues */
    TtaDefineDialogueCallback (ThotCallback);
@@ -245,17 +245,17 @@ void TteInitMenus (char *name, int number)
    Dict_Init ();
    ThotInitDisplay (name, 0, 0);
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    /* initialize the LiteClue Widget */
    InitClue(RootShell);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
    FontIdentifier (alphabet, 'H', 0, MenuSize, UnPoint, text, namef1);
    FontIdentifier (alphabet, 'H', 1, MenuSize, UnPoint, text, namef2);
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaChangeDialogueFonts (namef1, namef2);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
    /* reserve les menus de Thot */
    TtaGetReferencesBase (MAX_ThotMenu);
@@ -1800,16 +1800,16 @@ int   TtaAddTextZone (Document document, View view, char *label,
 {
   int                 frame, i;
   ThotWidget          w, row;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
   int                 n;
   ThotWidget          rowh;
   ThotWidget         *brother;
   XmString            title_string;
   Arg                 args[MAX_ARGS];
-#  else /* _WINDOWS */
+#else /* _WINDOWS */
   RECT                rect;
   ThotWidget          wLabel;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   UserErrorCode = 0;
   i = 0;
@@ -2371,14 +2371,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #define MIN_HEIGHT 100
 #define MIN_WIDTH 200
    w = 0;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    hwndClient = 0;
    ToolBar    = 0;
    logoFrame  = 0;
    StatusBar  = 0;
 
    strcpy (wTitle, name);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    menu_bar = NULL;
    frame = 0;
@@ -3436,14 +3436,14 @@ static void   FindItemMenu (int frame, int menuID, int itemID, int *menu,
   ----------------------------------------------------------------------*/
 void         SwitchUndo (PtrDocument pDoc, ThotBool on)
 {
-#  ifndef _GTK
-#  ifndef _WINDOWS 
+#ifndef _GTK
+#ifndef _WINDOWS 
    char              fontname[100];
    char              text[20];
-#  else /* _WINDOWS */
+#else /* _WINDOWS */
    HMENU             hMenu;
-#  endif /* _WINDOWS */
-   int               view, assoc, frame;
+#endif /* _WINDOWS */
+   int               view, frame;
    int               ref, item;
 
    if (pDoc == NULL)
@@ -3454,13 +3454,13 @@ void         SwitchUndo (PtrDocument pDoc, ThotBool on)
           if (frame != 0 && FrameTable[frame].MenuUndo != -1) {
              ref = FrameTable[frame].MenuUndo;
              item = FrameTable[frame].EntryUndo;
-#            ifdef _WINDOWS
+#ifdef _WINDOWS
              hMenu = WIN_GetMenu (frame);
              if (on)
                 EnableMenuItem (hMenu, ref + item, MF_ENABLED);
              else
                  EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#            else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
              if (on)
                 TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
              else if (TtWDepth > 1)
@@ -3469,34 +3469,11 @@ void         SwitchUndo (PtrDocument pDoc, ThotBool on)
                   FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
                   TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 			 }  
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		  }  
 	   }  
    } 
-   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++) {
-       frame = pDoc->DocAssocFrame[assoc];
-       if (frame != 0 && FrameTable[frame].MenuUndo != -1) {
-          ref = FrameTable[frame].MenuUndo;
-          item = FrameTable[frame].EntryUndo;
-#         ifdef _WINDOWS
-          hMenu = WIN_GetMenu (frame);
-          if (on)
-             EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-          else
-              EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#         else  /* !_WINDOWS */
-          if (on)
-             TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-          else if (TtWDepth > 1)
-               TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-          else {
-               FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
-               TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-		  }
-#         endif /* _WINDOWS */
-	   } 
-   } 
-#  endif /* _GTK */
+#endif /* _GTK */
 } 
 
 /*----------------------------------------------------------------------
@@ -3512,7 +3489,7 @@ void         SwitchRedo (PtrDocument pDoc, ThotBool on)
 #else /* _WINDOWS */
   HMENU               hMenu;
 #endif /* _WINDOWS */
-  int                 view, assoc, frame;
+  int                 view, frame;
   int                 ref, item;
 
   if (pDoc == NULL)
@@ -3544,32 +3521,6 @@ void         SwitchRedo (PtrDocument pDoc, ThotBool on)
 		}
 #endif /* _WINDOWS */
 	    }
-	}
-    }
-  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-    {
-      frame = pDoc->DocAssocFrame[assoc];
-      if (frame != 0 && FrameTable[frame].MenuRedo != -1)
-	{
-	  ref = FrameTable[frame].MenuRedo;
-	  item = FrameTable[frame].EntryRedo;
-#ifdef _WINDOWS
-	  hMenu = WIN_GetMenu (frame);
-	  if (on)
-	    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-	  else
-	    EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
-#else  /* !_WINDOWS */
-	  if (on)
-	    TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-	  else if (TtWDepth > 1)
-	    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	  else
-	    {
-	      FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
-	      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-	    }
-#endif /* _WINDOWS */
 	}
     }
 #endif /* _GTK */
@@ -3645,9 +3596,9 @@ void      TtaSetMenuOff (Document document, View view, int menuID)
    int                 frame;
    int                 ref;
    Menu_Ctl*           ptrmenu;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    int                 n; 
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
 #ifndef _WINDOWS
    XmFontList          font;
@@ -3747,22 +3698,22 @@ void       TtaSetMenuOn (Document document, View view, int menuID)
    menu = FindMenu (frame, menuID, &ptrmenu);
    if (menu != -1) {
        menu--;
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
        if (!FrameTable[frame].EnabledMenus[menu]) {
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
           /* Get the button widget */
           w = FrameTable[frame].WdMenus[menu];
           if (w != 0) {
              FrameTable[frame].EnabledMenus[menu] = TRUE;
              ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
              /* Enaable */
-#            ifdef _WINDOWS
+#ifdef _WINDOWS
              WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
-#            else /* !_WINDOWS */
+#else /* !_WINDOWS */
              TtaSetPulldownOn (ref, w);
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
              /* Set the button active */
              if (TtWDepth > 1) {
                 /* Change the color */
@@ -3775,10 +3726,10 @@ void       TtaSetMenuOn (Document document, View view, int menuID)
                     XtSetValues (w, args, 1);
                     XtManageChild (w);
 			 }
-#            endif
-#         ifndef _WINDOWS
+#endif
+#ifndef _WINDOWS
 		  }  
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	   } 
    }  
 #endif /* _GTK */
@@ -3897,9 +3848,9 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
    int                 menu, submenu;
    int                 item;
    int                 action;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    HMENU               hMenu;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* Si les parametres sont invalides */
    if (document == 0 && view == 0)

@@ -807,16 +807,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		    {
 		      TextOK = FALSE;
 		      stop = TRUE;
-		      if (SearchingD->SWholeDocument)
-			/* il faut rechercher dans tout le document */
-			/* cherche l'arbre a traiter apres celui ou` on */
-			/* n'a pas trouve' */
-			if (NextTree (&pFirstSel, &firstChar, SearchingD))
-			  {
-			    stop = FALSE;
-			    pLastSel = pFirstSel;
-			    lastChar = 0;
-			  }
 		    }
 		  StartSearch = FALSE;
 		}
@@ -891,8 +881,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
   BuildGoToPageMenu
   handles the Goto Page number command.
   ----------------------------------------------------------------------*/
-void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView,
-			ThotBool assoc)
+void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView)
 {
    char                  buffTitle[200];
 
@@ -902,28 +891,14 @@ void BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView,
    /* garde le pointeur sur le document concerne' par la commande */
    SearchedPageDoc = pDoc;
    /* garde le  numero de vue (dans le document) de la vue concernee */
-   if (assoc)
-      ViewSearchedPageDoc = 1;
-   else
-      ViewSearchedPageDoc = docView;
+   ViewSearchedPageDoc = docView;
    /* garde la racine de l'arbre ou on va chercher une page, ainsi que */
    /* le numero (dans le schema de presentation) de la vue concernee */
-   if (assoc)
-      /* c'est une vue d'elements associes */
-     {
-	/* les elements associes n'ont qu'une vue, la vue 1 */
-	SearchedPageSchView = 1;
-	SearchedPageRoot = pDoc->DocAssocRoot[docView - 1];
-     }
-   else
-      /* c'est une vue de l'arbre principal */
-     {
-	/* cherche le numero de vue dans le schema de presentation */
-	/* applique' au document */
-	SearchedPageSchView = AppliedView (pDoc->DocDocElement, NULL, pDoc,
-					   docView);
-	SearchedPageRoot = pDoc->DocDocElement;
-     }
+   /* cherche le numero de vue dans le schema de presentation */
+   /* applique' au document */
+   SearchedPageSchView = AppliedView (pDoc->DocDocElement, NULL, pDoc,
+				      docView);
+   SearchedPageRoot = pDoc->DocDocElement;
    /* compose le titre "Recherche dans le document..." */
    strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    strcat (buffTitle, pDoc->DocDName);

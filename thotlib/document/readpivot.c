@@ -290,14 +290,14 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
 
 
 /*----------------------------------------------------------------------
-   DeleteAllTrees supprime les arbres abstraits d'un document et de tous 
-   ses elements associes et parametres. Les schemas de     
-   structure et de presentation utilises par le document   
+   DeleteAllTrees
+   Supprime l'arbre abstrait d'un document.
+   Les schemas de structure et de presentation utilises par le document   
    ne sont pas liberes...                                  
   ----------------------------------------------------------------------*/
 void                DeleteAllTrees (PtrDocument pDoc)
 {
-   int                  i, view;
+   int              view;
 
    if (pDoc != NULL)
      {
@@ -306,14 +306,6 @@ void                DeleteAllTrees (PtrDocument pDoc)
 	/* document views are now empty */
 	for (view = 0; view < MAX_VIEW_DOC; view++)
 	   pDoc->DocViewRootAb[view] = NULL;
-	/* libere les elements associes */
-	for (i = 1; i <= MAX_ASSOC_DOC; i++)
-	  if (pDoc->DocAssocRoot[i - 1] != NULL)
-	    {
-	      DeleteElement (&pDoc->DocAssocRoot[i - 1], pDoc);
-	      /* document views are now empty */
-	      pDoc->DocAssocRoot[view] = NULL;
-	    }
 	/* libere le 1er descripteur de reference (bidon) */
 	FreeReferredDescr (pDoc->DocReferredEl);
 	pDoc->DocReferredEl = NULL;
@@ -1915,9 +1907,6 @@ void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
    cours de lecture.                                       
    - tag:  tag precedent le numero de type ou le nom 	
    de nature. Au retour: 1er octet suivant l'element.      
-   - assocNum:  numero de la liste d'elements associes a`  
-   laquelle appartient le texte a` internaliser. Zero si   
-   c'est l'arbre principal.                                
    - createAll:indique qu'il faut creer tous les elements  
    qui descendent de l'element courant et qui sont dans le 
    fichier. Si createAll est faux, on ne cree que les      
@@ -1933,7 +1922,7 @@ void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
    l'element lu ni sa descendance. Prioritaire sur createAll
   ----------------------------------------------------------------------*/
 PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc
-			, char *tag, int assocNum, ThotBool createAll,
+			, char *tag, ThotBool createAll,
 			int *contentType, PtrSSchema *pContSS, int *typeRead,
 			PtrSSchema *pSSRead, ThotBool createPage,
 			PtrElement pParent, ThotBool createDesc)
@@ -2088,8 +2077,8 @@ static  LabelString         label;
 	    /* cree un element du type lu */
 	    {
 	      /* il ne faut pas que le label max. du document augmente */
-	      pEl = NewSubtree (elType, pSSchema, pDoc, assocNum, FALSE, TRUE,
-				FALSE, FALSE);
+	      pEl = NewSubtree (elType, pSSchema, pDoc, FALSE, TRUE, FALSE,
+				FALSE);
 	      if (pEl != NULL)
 		pEl->ElLabel[0] = EOS;
 	    }
@@ -2725,7 +2714,7 @@ static  LabelString         label;
 			  else
 			    pfutParent = pParent;
 			  p = ReadTreePiv (pivFile, pSSchema, pDoc, tag,
-					   assocNum, createAll, contentType,
+					   createAll, contentType,
 					   pContSS, &rule, &pSS, createPage,
 					   pfutParent, createDesc);
 			  pElRead = p;
@@ -2760,8 +2749,8 @@ static  LabelString         label;
 					      /* max. du document augmente */
 					      pElInt = NewSubtree (pEl2->ElStructSchema->SsRootElem,
 						       pEl2->ElStructSchema,
-						       pDoc, assocNum, FALSE,
-						       TRUE, FALSE, FALSE);
+						       pDoc, FALSE, TRUE,
+						       FALSE, FALSE);
 					      
 					      pElInt->ElLabel[0] = EOS;
 					      InsertFirstChild (pElInt, p);
@@ -3290,7 +3279,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
    PtrPSchema          pPSchema;
    PtrReferredDescr    pRefD, pNextRefD;
    NotifyDialog        notifyDoc;
-   int                 i, assoc, rule, typeRead;
+   int                 i, rule, typeRead;
    char                tag;
    ThotBool            structureOK, createPages, ok;
 
@@ -3350,9 +3339,6 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
        pDoc->DocLabels = NULL;
        /* lit le fichier .PIV */
        
-       for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	 pDoc->DocAssocRoot[assoc] = NULL;
-
        /* lit le corps du document */
        if (!error &&
 	   tag != (char) C_PIV_DOC_END)
@@ -3369,7 +3355,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		 {
 		   rule = 0;
 		   pNat = NULL;
-		   p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
+		   p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag,
 				  (ThotBool)(!pDoc->DocExportStructure),
                                   &rule, &pNat, &typeRead, &pSS, createPages,
                                   NULL, TRUE);
@@ -3380,10 +3366,10 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		     /* rien n'a ete cree */
 		     {
 		       d = NewSubtree (pDoc->DocSSchema->SsDocument,
-				       pDoc->DocSSchema, pDoc, 0,
+				       pDoc->DocSSchema, pDoc,
 				       FALSE, TRUE, TRUE, TRUE);
 		       p = NewSubtree (pDoc->DocSSchema->SsRootElem,
-				       pDoc->DocSSchema, pDoc, 0,
+				       pDoc->DocSSchema, pDoc,
 				       FALSE, TRUE, TRUE, TRUE);
 		       InsertFirstChild (d, p);
 		     }
@@ -3394,7 +3380,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		     /* ce n'est pas la racine attendue */
 		     {
 		       d = NewSubtree (pDoc->DocSSchema->SsDocument,
-				       pDoc->DocSSchema, pDoc, 0,
+				       pDoc->DocSSchema, pDoc,
 				       FALSE, TRUE, TRUE, TRUE);
 		       if (p->ElTypeNumber == pDoc->DocSSchema->SsRootElem &&
 			   p->ElStructSchema == pDoc->DocSSchema)
@@ -3403,7 +3389,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 			 {
 			  s = p;
 		          p = NewSubtree (pDoc->DocSSchema->SsRootElem,
-				          pDoc->DocSSchema, pDoc, 0,
+				          pDoc->DocSSchema, pDoc,
 				          FALSE, TRUE, TRUE, TRUE);
 		          InsertFirstChild (d, p);
 			  InsertFirstChild (p, s);
@@ -3441,21 +3427,14 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	 /* recherche toutes les references d'inclusion du document et */
 	 /* copie les elements inclus */
 	 {
-	   /* on affecte des labels aux elements de l'arbre principal */
+	   /* on affecte des labels aux elements */
 	   if (pDoc->DocDocElement != NULL)
 	     SetLabel (pDoc->DocDocElement, pDoc);
-	   /* on affecte des labels aux elements des arbres associes */
-	   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	     if (pDoc->DocAssocRoot[assoc] != NULL)
-	       SetLabel (pDoc->DocAssocRoot[assoc], pDoc);
 	   
 	   /* Update the inclusions values */
 	   UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions);
 	   
 	   pDoc->DocDocElement->ElAccess = AccessReadWrite;
-	   for (i = 0; i < MAX_ASSOC_DOC; i++)
-	     if (pDoc->DocAssocRoot[i] != NULL)
-		 pDoc->DocAssocRoot[i]->ElAccess = AccessReadWrite;
 	   if (withEvent && pDoc->DocSSchema != NULL && !error)
 	     {
 	       notifyDoc.event = TteDocOpen;

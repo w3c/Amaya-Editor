@@ -40,13 +40,9 @@ extern void RedisplayNewContent ( PtrElement pEl,
                                   int skipView,
                                   PtrAbstractBox pAbEl );
 extern void NewContent ( PtrAbstractBox pAb );
-extern PtrElement CreateFirstAssocElement ( PtrDocument pDoc,
-                                            int typeNum,
-                                            PtrSSchema pSS );
 extern ThotBool LinkReference ( PtrElement pEl,
                                 PtrAttribute pAttr,
-                                PtrDocument pDoc,
-                                PtrElement *pSelEl );
+                                PtrDocument pDoc );
 extern int MenuChoixElem ( PtrSSchema pSS,
                            int rule,
                            PtrElement pEl,
@@ -115,13 +111,9 @@ extern void RedisplayNewContent (/* PtrElement pEl,
                                     int skipView,
                                     PtrAbstractBox pAbEl */);
 extern void NewContent (/* PtrAbstractBox pAb */);
-extern PtrElement CreateFirstAssocElement (/* PtrDocument pDoc,
-                                              int typeNum,
-                                              PtrSSchema pSS */);
 extern ThotBool LinkReference (/* PtrElement pEl,
                                   PtrAttribute pAttr,
-                                  PtrDocument pDoc,
-                                  PtrElement *pSelEl */);
+                                  PtrDocument pDoc */);
 extern int MenuChoixElem (/* PtrSSchema pSS,
                              int rule,
                              PtrElement pEl,

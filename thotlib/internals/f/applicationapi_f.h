@@ -8,10 +8,6 @@
 
 extern int IdentDocument ( PtrDocument pDoc );
 extern void CloseInsertion ( void );
-extern void GetViewInfo ( Document document,
-                          View view,
-                          int *viewnumber,
-                          ThotBool *assoc );
 extern int GetWindowNumber ( Document document,
                              View view );
 extern ThotBool TtaIsPrinting ( void );
@@ -31,10 +27,6 @@ extern void ThotExit ( int result );
 
 extern int IdentDocument (/* PtrDocument pDoc */);
 extern void CloseInsertion (/* void */);
-extern void GetViewInfo (/* Document document,
-                            View view,
-                            int *viewnumber,
-                            ThotBool *assoc */);
 extern int GetWindowNumber (/* Document document,
                                View view */);
 extern ThotBool TtaIsPrinting (/* void */);
