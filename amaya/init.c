@@ -3342,8 +3342,8 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 		   /* if it's an annotation, add the existing metadata */
 		   if (DocumentTypes[newdoc] == docAnnot)
 		     ANNOT_LoadAnnotation (baseDoc, newdoc);
-		 }
 #endif /* ANNOTATIONS */
+		 }
 	     }
 	 }
        else
