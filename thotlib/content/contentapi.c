@@ -161,8 +161,8 @@ Document            document;
 	       {
 		  if (pBuf == NULL)
 		     GetTextBuffer (&pBuf);
-		  if (length >= MAX_CHAR)
-		     l = MAX_CHAR - 1;
+		  if (length >= THOT_MAX_CHAR)
+		     l = THOT_MAX_CHAR - 1;
 		  else
 		     l = length;
 		  if (l > 0)
@@ -331,7 +331,7 @@ Document            document;
 	pBuf->BuContent[lengthBefore] = '\0';
 	pBuf->BuLength = lengthBefore;
 	/* If there is enough space in the buffer, one add a string at its end */
-	if (stringLength < MAX_CHAR - lengthBefore)
+	if (stringLength < THOT_MAX_CHAR - lengthBefore)
 	  {
 	     strncpy (pBuf->BuContent + lengthBefore, content, stringLength);
 	     pBuf->BuLength += stringLength;
@@ -347,8 +347,8 @@ Document            document;
 	       {
 		  if (pBuf == NULL)
 		     pBuf = NewTextBuffer (pPreviousBuff);
-		  if (stringLength >= MAX_CHAR)
-		     l = MAX_CHAR - 1;
+		  if (stringLength >= THOT_MAX_CHAR)
+		     l = THOT_MAX_CHAR - 1;
 		  else
 		     l = stringLength;
 		  strncpy (pBuf->BuContent, ptr, l);

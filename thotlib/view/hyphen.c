@@ -149,14 +149,14 @@ char               *word;
    de'but du mot.                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, char word[MAX_CHAR], int *width)
+static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, char word[THOT_MAX_CHAR], int *width)
 
 #else  /* __STDC__ */
 static int          NextWord (font, buffer, rank, word, width)
 ptrfont             font;
 PtrTextBuffer      *buffer;
 int                *rank;
-char                word[MAX_CHAR];
+char                word[THOT_MAX_CHAR];
 int                *width;
 #endif /* __STDC__ */
 {
@@ -180,7 +180,7 @@ int                *width;
 
    while (still)
      {
-	if (j == MAX_CHAR - 1)
+	if (j == THOT_MAX_CHAR - 1)
 	   /* Le mot est trop long */
 	   still = FALSE;
 	else if (i >= adbuff->BuLength)
@@ -310,7 +310,7 @@ boolean            *hyphen;
    int                 largeur, charWidth;
    int                 longretour, lgreste;
    int                 wordLength;
-   char                mot[MAX_CHAR];
+   char                mot[THOT_MAX_CHAR];
 
    /* Si la coupure de mots est active */
    longretour = 0;

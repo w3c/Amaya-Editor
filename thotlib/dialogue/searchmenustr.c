@@ -70,8 +70,8 @@ static int          LgTableNaturesDoc;
 
 /* table des natures prises en compte dans le recherche de type */
 static boolean      TableNaturesCherchees[LgTable];
-static char         NomTypeAChercher[MAX_CHAR];		/* le nom du type a chercher */
-static char         NomAttrAChercher[MAX_CHAR];		/* le nom de l'attribut a chercher */
+static char         NomTypeAChercher[THOT_MAX_CHAR];		/* le nom du type a chercher */
+static char         NomAttrAChercher[THOT_MAX_CHAR];		/* le nom de l'attribut a chercher */
 
 					  /* defini l'attribut recherche' */
 int                 ValAttrCherche;	/* valeur de l'attribut recherche' */

@@ -613,7 +613,7 @@ char               *extension;
    extLength = strlen (extension);
    /* on mesure fileName */
    nameLength = strlen (fileName);
-   if (nameLength >= MAX_CHAR)
+   if (nameLength >= THOT_MAX_CHAR)
       ok = FALSE;
    else if (extLength > 0 && nameLength > extLength)
      {

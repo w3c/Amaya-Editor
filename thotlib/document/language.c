@@ -907,7 +907,7 @@ Language            langageId;
    int                 i, lg;
    unsigned char       patternGot[MAX_LET_PATTERN];
    char                weightGot[MAX_LET_PATTERN + 1];
-   char                patternFileName[MAX_CHAR];
+   char                patternFileName[THOT_MAX_CHAR];
    static char        *dictPath;	/* Environment variable DICOPAR */
    char               *ptPattern;
    FILE               *in;
@@ -1012,18 +1012,18 @@ unsigned char       substring[MAX_LET_PATTERN];
    * hypen points.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         FoundHyphenPoints (Language langageId, char wordToCut[MAX_CHAR])
+static void         FoundHyphenPoints (Language langageId, char wordToCut[THOT_MAX_CHAR])
 #else  /* __STDC__ */
 static void         FoundHyphenPoints (langageId, wordToCut)
 Language            langageId;
-char                wordToCut[MAX_CHAR];
+char                wordToCut[THOT_MAX_CHAR];
 
 #endif /* __STDC__ */
 {
    int                 lang;
-   unsigned char       wordToTreat[MAX_CHAR];	/* "." + wordToCut + "." */
-   unsigned char       subword[MAX_CHAR];
-   int                 tab_weight[MAX_CHAR];
+   unsigned char       wordToTreat[THOT_MAX_CHAR];	/* "." + wordToCut + "." */
+   unsigned char       subword[THOT_MAX_CHAR];
+   int                 tab_weight[THOT_MAX_CHAR];
    char               *weight_subword;
    int                 wordLength;
    int                 size_subword;
@@ -1032,12 +1032,12 @@ char                wordToCut[MAX_CHAR];
 
    lang = (int) langageId;
    wordLength = strlen (wordToCut) + 2;
-   if (wordLength > MAX_CHAR)
+   if (wordLength > THOT_MAX_CHAR)
      {
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_WORD_TOO_LONG), wordToCut);
 	return;
      }
-   for (i = 0; i < MAX_CHAR; i++)
+   for (i = 0; i < THOT_MAX_CHAR; i++)
       tab_weight[i] = 0;
    strcpy (wordToTreat, ".");
    strcat (wordToTreat, wordToCut);
@@ -1076,10 +1076,10 @@ char                wordToCut[MAX_CHAR];
    or NULL 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                *TtaGetPatternHyphenList (char word[MAX_CHAR], Language languageId)
+int                *TtaGetPatternHyphenList (char word[THOT_MAX_CHAR], Language languageId)
 #else  /* __STDC__ */
 int                *TtaGetPatternHyphenList (word, languageId)
-char                word[MAX_CHAR];
+char                word[THOT_MAX_CHAR];
 Language            languageId;
 
 #endif /* __STDC__ */

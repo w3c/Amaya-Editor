@@ -22,7 +22,7 @@
 #define MAX_NATURES 7		/* max. number of simultaneous natures */
 #define MAX_PSCHEMAS 10		/* max. number of loaded presentation schemas*/
 #define MAX_DOCUMENTS 10	/* max. number of simultaneous documents */
-#define MAX_CHAR 100		/* max. number of character in a text buffer */
+#define THOT_MAX_CHAR 100		/* max. number of character in a text buffer */
 #define DEF_SAVE_INTVL 500	/* number of typed characters triggering 
 				   automatic saving */
 #define MAX_VIEW_DOC 6		/* max. number of views for a document */

@@ -235,7 +235,7 @@ boolean             withAppEvent;
 	     /* essaie de vider ce dernier buffer dans le precedent */
 	     if (pBuf1->BuPrevious != NULL)
 		/* il y a un buffer precedent */
-		if (pBuf1->BuPrevious->BuLength + pBuf1->BuLength < MAX_CHAR)
+		if (pBuf1->BuPrevious->BuLength + pBuf1->BuLength < THOT_MAX_CHAR)
 		   /* ca peut tenir */
 		  {
 		     i = 0;
@@ -394,7 +394,7 @@ boolean             removeAbsBox;
 				    pBuf1 = pBuf1->BuNext;
 				 /* premier buffer du deuxieme element */
 				 pBuf2 = pEl2->ElText;
-				 if (pBuf1->BuLength + pBuf2->BuLength < MAX_CHAR)
+				 if (pBuf1->BuLength + pBuf2->BuLength < THOT_MAX_CHAR)
 
 				    /* copie le contenu du premier buffer du 2eme element */
 				    /* a la fin du dernier buffer du 1er element */
@@ -736,7 +736,7 @@ int                *len;
 	     if (pTBSrce->BuLength > 0)
 		/* ce buffer source n'est pas vide, on le copie */
 	       {
-		  if (MAX_CHAR - 1 - pTBDest->BuLength <= pTBSrce->BuLength)
+		  if (THOT_MAX_CHAR - 1 - pTBDest->BuLength <= pTBSrce->BuLength)
 		     /* pas assez de place dans le buffer destination */
 		     /* pour copier tout le texte du buffer source, on */
 		     /* prend un nouveau buffer destination */
@@ -790,11 +790,11 @@ int                *LgCopiee;
 	/* boucle tant qu'il reste du texte a copier */
 	while (lenRest > 0)
 	  {
-	     if (MAX_CHAR - 1 - pTBDest->BuLength <= lenRest)
+	     if (THOT_MAX_CHAR - 1 - pTBDest->BuLength <= lenRest)
 		/* le texte restant ne tient pas dans le buffer destination */
-		if (pTBDest->BuLength < MAX_CHAR - 2)
+		if (pTBDest->BuLength < THOT_MAX_CHAR - 2)
 		   /* il reste un peu de place, on copiera ce qu'on peut */
-		   len = MAX_CHAR - 1 - pTBDest->BuLength;
+		   len = THOT_MAX_CHAR - 1 - pTBDest->BuLength;
 		else
 		   /* on prend un nouveau buffer destination */
 		  {

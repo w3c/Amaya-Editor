@@ -27,7 +27,7 @@ extern int ParametrizeChecker ( void );
 extern void WordReplace ( char orgWord[MAX_WORD_LEN],
                           char newWord[MAX_WORD_LEN] );
 extern boolean CheckChangeSelection ( void );
-extern void NextSpellingError ( char word[MAX_CHAR],
+extern void NextSpellingError ( char word[THOT_MAX_CHAR],
                                 PtrDict docDict );
 
 #else /* __STDC__ */
@@ -53,7 +53,7 @@ extern int ParametrizeChecker (/* void */);
 extern void WordReplace (/* char orgWord[MAX_WORD_LEN],
                             char newWord[MAX_WORD_LEN] */);
 extern boolean CheckChangeSelection (/* void */);
-extern void NextSpellingError (/* char word[MAX_CHAR],
+extern void NextSpellingError (/* char word[THOT_MAX_CHAR],
                                   PtrDict docDict */);
 
 #endif /* __STDC__ */

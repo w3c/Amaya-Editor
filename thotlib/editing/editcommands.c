@@ -402,7 +402,7 @@ int                *nChars;
 	  }
 	else
 	   sourceLength = pBuffer->BuLength - sourceInd + 1;
-	targetlength = MAX_CHAR - targetInd;
+	targetlength = THOT_MAX_CHAR - targetInd;
 
 	if (sourceLength <= targetlength)
 	  {
@@ -419,7 +419,7 @@ int                *nChars;
 	     /* end of target buffer */
 	     CopyString (pBuffer->BuContent, target, targetlength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
 	     (*pTargetBuffer)->BuLength = FULL_BUFFER;
-	     (*pTargetBuffer)->BuContent[MAX_CHAR - 1] = '\0';
+	     (*pTargetBuffer)->BuContent[THOT_MAX_CHAR - 1] = '\0';
 	     *pTargetBuffer = GetNewBuffer (*pTargetBuffer, frame);
 	     targetInd = 1;
 	  }
@@ -1703,13 +1703,13 @@ int                 frame;
 		  /* ==>Il y a des caracteres a deplacer */
 		  else
 		    {
-		       length = MAX_CHAR - targetInd;
+		       length = THOT_MAX_CHAR - targetInd;
 		       /* deplace en deux fois? */
 		       if (i > length)
 			 {
 			    strncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], length);
 			    pTargetBuffer->BuLength = FULL_BUFFER;
-			    pTargetBuffer->BuContent[MAX_CHAR - 1] = '\0';
+			    pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = '\0';
 			    targetInd = 1;
 			    sourceInd += length;
 			    i -= length;
@@ -1979,7 +1979,7 @@ PtrTextBuffer       clipboard;
 	       /* termine l'insertion */
 	       pAb->AbVolume += charsDelta;
 	       /* Deplacement la selection sur la chaine inseree */
-	       if (ind == MAX_CHAR)
+	       if (ind == THOT_MAX_CHAR)
 		 {
 		    /* buffer debut d'insertion */
 		    pViewSel->VsBuffer = pBuffer->BuNext;

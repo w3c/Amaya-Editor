@@ -257,7 +257,7 @@ char               *dictDirectory;
 #endif /* __STDC__ */
 {
   int                 ret, i;
-  char                tempbuffer[MAX_CHAR];
+  char                tempbuffer[THOT_MAX_CHAR];
 
   FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
@@ -424,7 +424,7 @@ boolean             treated;
 boolean             toTreat;
 #endif /* __STDC__ */
 {
-  char                tempbuffer[MAX_CHAR];
+  char                tempbuffer[THOT_MAX_CHAR];
   boolean             new = FALSE;
   boolean             ret;
   FILE               *dictFile;

@@ -779,7 +779,7 @@ boolean             oldformat;
 		do
 		  {
 		     /* lit le texte du commentaire */
-		     if (n == MAX_CHAR - 1)
+		     if (n == THOT_MAX_CHAR - 1)
 			/* le buffer courant est plein, on change de buffer */
 		       {
 			  pBuf->BuLength = n;
@@ -1533,7 +1533,7 @@ PtrAttribute       *pAttr;
 			     stop = TRUE;
 			  else
 			     /* ce n'est pas la fin du texte de l'attribut */
-			  if (pBT->BuLength >= MAX_CHAR - 1)
+			  if (pBT->BuLength >= THOT_MAX_CHAR - 1)
 			     /* le buffer courant est plein */
 			    {
 			       pBT->BuContent[pBT->BuLength] = '\0';	/* fin du buffer */
@@ -2563,7 +2563,7 @@ boolean             createDesc;
 			      do
 				if (ch != '\0')
 				  {
-				    if (n == MAX_CHAR - 1)
+				    if (n == THOT_MAX_CHAR - 1)
 				      {
 					pEl->ElTextLength += n;
 					pBuf->BuLength = n;
@@ -2635,8 +2635,8 @@ boolean             createDesc;
 			      do
 				if (ch != '\0')
 				  {
-				    /* TODO : nom d'image > MAX_CHAR */
-				    if (n == MAX_CHAR - 1)
+				    /* TODO : nom d'image > THOT_MAX_CHAR */
+				    if (n == THOT_MAX_CHAR - 1)
 				      {
 					PivotError (pivFile);
 					DisplayPivotMessage ("x");

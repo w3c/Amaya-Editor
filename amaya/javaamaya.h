@@ -53,8 +53,6 @@ extern void SectionNumbering ( Document document,
                                View view );
 extern void MakeBook ( Document document,
                        View view );
-extern void RealTimeHTML ( Document document,
-                           View view );
 extern void HelpAmaya ( Document document,
                         View view );
 extern void AmayaClose ( Document document,
@@ -108,8 +106,6 @@ extern void SectionNumbering (/* Document document,
                                  View view */);
 extern void MakeBook (/* Document document,
                          View view */);
-extern void RealTimeHTML (/* Document document,
-                             View view */);
 extern void HelpAmaya (/* Document document,
                           View view */);
 extern void AmayaClose (/* Document document,

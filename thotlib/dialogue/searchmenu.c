@@ -76,10 +76,10 @@ static int          ViewSearchedPageDoc;  /* document view for which we are sear
 static int          SearchedPageSchView;  /* presentation scheme view for which we are searching a page */
 static int          SearchedPageNumber;	  /* number of the searched page */
 
-static char         pPrecedentString[MAX_CHAR];	/* the precedent searched string */
-static char         pSearchedString[MAX_CHAR];	/* the searched string */
+static char         pPrecedentString[THOT_MAX_CHAR];	/* the precedent searched string */
+static char         pSearchedString[THOT_MAX_CHAR];	/* the searched string */
 static int          SearchedStringLen;	        /* length of the searched string */
-static char         pReplaceString[MAX_CHAR];	/* the replace string */
+static char         pReplaceString[THOT_MAX_CHAR];	/* the replace string */
 static int          ReplaceStringLen;	/* length of the replace string */
 
 static PtrReference CurrRef;	/* pointer to the current reference */

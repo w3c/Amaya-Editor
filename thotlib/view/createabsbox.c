@@ -476,8 +476,8 @@ PtrAbstractBox      pAb;
 	       pAb->AbLeafType = LtText;
 	       if (pAb->AbText == NULL)
 		  GetConstantBuffer (pAb);
-	       strncpy (pAb->AbText->BuContent, pConst->PdString, MAX_CHAR - 1);
-	       pAb->AbText->BuContent[MAX_CHAR - 1] = '\0';
+	       strncpy (pAb->AbText->BuContent, pConst->PdString, THOT_MAX_CHAR - 1);
+	       pAb->AbText->BuContent[THOT_MAX_CHAR - 1] = '\0';
 	       pAb->AbText->BuLength = strlen (pAb->AbText->BuContent);
 	       pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
 	       pAb->AbVolume = pAb->AbText->BuLength;

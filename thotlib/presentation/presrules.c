@@ -3028,7 +3028,7 @@ PtrTextBuffer      *pBuffPrec;
 		  pBuffP->BuPrevious = *pBuffPrec;
 		  (*pBuffPrec)->BuNext = pBuffP;
 	       }
-	     strncpy (pBuffP->BuContent, pBuffE->BuContent, MAX_CHAR);
+	     strncpy (pBuffP->BuContent, pBuffE->BuContent, THOT_MAX_CHAR);
 	     /* copie le contenu */
 	     pBuffP->BuLength = pBuffE->BuLength;
 	     /* copie la longueur */

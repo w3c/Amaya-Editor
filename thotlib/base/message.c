@@ -360,8 +360,8 @@ char               *code;
 
 #endif /* __STDC__ */
 {
-   char                pBuffer[MAX_CHAR];
+   char                pBuffer[THOT_MAX_CHAR];
 
-   strncpy (pBuffer, code, MAX_CHAR);
+   strncpy (pBuffer, code, THOT_MAX_CHAR);
    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_PIV), pBuffer);
 }

@@ -1174,8 +1174,8 @@ int                 assocNum;
 		  i++;
 		  pEl->ElText->BuContent[i - 1] = pR->SrName[i - 2];
 	       }
-	     while (pEl->ElText->BuContent[i - 1] != '\0' && i != MAX_CHAR);
-	     if (i < MAX_CHAR)
+	     while (pEl->ElText->BuContent[i - 1] != '\0' && i != THOT_MAX_CHAR);
+	     if (i < THOT_MAX_CHAR)
 	       {
 		  pEl->ElText->BuContent[i - 1] = '$';
 		  i++;
@@ -3033,7 +3033,7 @@ boolean             withLabel;
 			      pBu1->BuContent[i] = pSS->SsConstBuffer[i + pSRule->SrIndexConst - 1];
 			      i++;
 			   }
-			 while (pBu1->BuContent[i - 1] != '\0' && i < MAX_CHAR);
+			 while (pBu1->BuContent[i - 1] != '\0' && i < THOT_MAX_CHAR);
 			 pBu1->BuContent[i - 1] = '\0';
 			 pEl->ElTextLength = i - 1;
 			 pEl->ElVolume = pEl->ElTextLength;
