@@ -1284,7 +1284,7 @@ void *context;
       else
 	LINK_DeleteLink (source_doc);
     }
-   
+
   if (output_file)
     {
       if (*output_file != EOS)
@@ -1427,12 +1427,18 @@ void ANNOT_Delete (document, view)
     }
 
   TtaFreeMemory (annot_url);
-  annot_url = NULL;
+  /* @@ JK: this is a dumb convertion. Why local annotations don't
+     have an annotation URL field? Why am I not using the libwww's
+     URL to local converters, rather than using my own hack with file://? */
+  if (annot_is_remote)
+    annot_url = annot->annot_url;
+  else
+    annot_url = (annot->body_url) + sizeof (TEXT("file://"));
 
   ctx = (DELETE_context *) TtaGetMemory (sizeof (DELETE_context));
   ctx->source_doc = source_doc;
   ctx->annot_doc = annot_doc;
-  ctx->annot_url = annot->annot_url;
+  ctx->annot_url = annot_url;
   ctx->annotEl = annotEl;
   ctx->annot = annot;
   ctx->annot_is_remote = annot_is_remote;
