@@ -2480,10 +2480,13 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 			  int width, int height, int w, int h, int frame)
 {
   PtrBox      box;
+  int         oldw, oldh;
   ThotBool    constrained_Width, constrained_Height, change;
   
   imageDesc->PicWidth = width;
   imageDesc->PicHeight = height;
+  oldw = imageDesc->PicWArea;
+  oldh = imageDesc->PicHArea;
   if (w == 0)
     imageDesc->PicWArea = width;
   else
@@ -2532,7 +2535,8 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 			    0, 0, frame);
 	    }
 	}
-      if (change)
+
+      if (change || w != oldw || h != oldh)
 	{
 	  w = w + box->BxWidth - box->BxW;
 	  h = h + box->BxHeight - box->BxH;
@@ -2855,18 +2859,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			 (void *)&width,
 			 (void *)&height,
 			 (void *)zoom);
-#ifdef _GL
 	  if (w == 0 && h == 0 && zoom)
 	    {
 	      /* GL version doesn't take into account the zoom
 		 when returning image dimensions */
 	      w = PixelValue (width, UnPixel, NULL, zoom);
-	      imageDesc->PicWArea = w;
 	      h = PixelValue (height, UnPixel, NULL, zoom);
-	      imageDesc->PicHArea = h;
 	    }
-#endif /*_GL*/
-
 	  redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
 	}
     }
