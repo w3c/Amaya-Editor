@@ -66,7 +66,7 @@ extern void         TteAddMenu (WindowType windowtype, char *schemaName, int vie
 extern void         TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber);
 extern void         TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID, int subMenuID, int itemID, char *actionName, char itemType);
 
-extern void         InsertAction (char *actionName, Proc doIt);
+extern void         TteAddAction (char *actionName, Proc doIt);
 extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, char *actionName);
 extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
 extern void         TtcStandardPresentation (Document document, View view);
@@ -147,7 +147,7 @@ extern void         TteAddMenu ( /*WindowType windowtype, char *schemaName, int 
 extern void         TteAddSubMenu ( /*WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber */ );
 extern void         TteAddMenuItem ( /*WindowType windowtype, char *schemaName, int menuID, int subMenuID, int itemID, char *actionName, char itemType */ );
 
-extern void         InsertAction ( /*char *actionName, Proc doIt */ );
+extern void         TteAddAction ( /*char *actionName, Proc doIt */ );
 extern void         InitEventActions ( /*PtrEventsSet eventsList, int typeId, ECFevent event, boolean pre, char *actionName */ );
 extern PtrEventsSet TteNewEventsSet ( /*int structureId, char *name */ );
 
