@@ -15,6 +15,7 @@
 #include <windows.h>
 #include "resource.h"
 #include "constmedia.h"
+#include "corrmsg.h"
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -74,6 +75,7 @@ extern CHAR_T       WIN_buffMenu [MAX_TXT_LEN];
 extern CHAR_T       ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern HWND         hWndParent;
 extern int          ClickX, ClickY;
+extern int          CORR;
 extern ThotBool     TtIsPrinterTrueColor;
 extern ThotBool     bUserAbort;
 extern ThotBool     WithToC;
@@ -920,17 +922,7 @@ int   chkrSpecial;
 	ustrcpy (currentLabel, label);
 	ustrcpy (currentRejectedchars, rejectedChars);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
-				break;
-	}
+    DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -1011,17 +1003,7 @@ HWND  parent;
     Old_lineSp          = old_lineSp;
     Line_spacingNum     = line_spacingNum;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
-				break;
-	}
+    DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -1052,18 +1034,7 @@ STRING server;
         string_par1 = realm;
         string_par2 = server;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
-				break;
-	}
-
+        DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3279,7 +3250,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	HWND wndLabel;
 	ThotBool ok;	  
 	int  val;
 
@@ -3289,17 +3259,30 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-                hwndLanguage = CreateWindow (TEXT("STATIC"), NULL, WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                             13, 10, 150, 16, hwnDlg, (HMENU) 2,  
-                                             (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
+				wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
+				SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), currentLabel);
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NBPROPOSALS), TtaGetMessage (CORR, Number_Propositions));
 
-			    wndLabel = CreateWindow (TEXT("STATIC"), currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                     13, 29, 150, 16, hwnDlg, (HMENU) 99, 
-										 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				SetWindowText (GetDlgItem (hwnDlg, ID_SKIPNEXT), TtaGetMessage (CORR, Pass_Without));
+				SetWindowText (GetDlgItem (hwnDlg, ID_SKIPDIC), TtaGetMessage (CORR, Pass_With));
+				SetWindowText (GetDlgItem (hwnDlg, ID_REPLACENEXT), TtaGetMessage (CORR, Replace_Without));
+				SetWindowText (GetDlgItem (hwnDlg, ID_REPLACEDIC), TtaGetMessage(CORR, Replace_With));
 
-			    wordButton = CreateWindow ((LPCTSTR)"BUTTON", (LPCTSTR)NULL, WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
-                                            13, 48, 150, 20, (HWND)hwnDlg, (HMENU)IDC_WORDBUTTON, 
-											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE1), TtaGetMessage (CORR, Capitals));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE2), TtaGetMessage (CORR, Arabics));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE3), TtaGetMessage (CORR, Romans));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE4), TtaGetMessage (CORR, Specials));
+
+				SetWindowText (GetDlgItem (hwnDlg, IDC_CHECKGROUP), TtaGetMessage (CORR, What));
+
+				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNOREGROUP), TtaGetMessage (CORR, Ignore));
+
+				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
 
 				hwnListWords = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         13, 72, 150, 70, hwnDlg, (HMENU) 1, 
@@ -3550,6 +3533,25 @@ LPARAM lParam;
 
   switch (msg) {
   case WM_INITDIALOG:
+       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_FORMAT));
+	   SetWindowText (GetDlgItem (hwnDlg, IDCALIGNGROUP), TtaGetMessage (LIB, TMSG_ALIGN));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTALIGN), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTGROUP), TtaGetMessage (LIB, TMSG_INDENT));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTDEFAULT), TtaGetMessage (LIB, TMSG_UNCHANGED));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_INDENTPT), TtaGetMessage (LIB, TMSG_INDENT_PTS));
+
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFGROUP), TtaGetMessage (LIB, TMSG_JUSTIFY));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFYES), TtaGetMessage (LIB, TMSG_LIB_YES));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFNO), TtaGetMessage (LIB, TMSG_LIB_NO));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_JUSTIFDEFAULT), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_LINESPACEGROUP), TtaGetMessage (LIB, TMSG_LINE_SPACING));
+	   SetWindowText (GetDlgItem (hwnDlg, IDC_LINESPACINGPT), TtaGetMessage (LIB, TMSG_LINE_SPACING_PTS));
+       SetWindowText (GetDlgItem (hwnDlg, IDC_SPACINGDEFAULT), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+	   SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+	   SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
     if (Align_num  == 0)
       CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_LEFT);
     else if (Align_num  == 1)

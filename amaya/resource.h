@@ -791,6 +791,9 @@
 #define IDC_CHARSTYLEGROUP              1501
 #define IDC_BOLDGROUP                   1502
 #define IDC_BODYSIZEGROUP               1503
+#define IDC_LABEL                       1505
+#define IDC_CURWORD                     1506
+#define IDC_LANG                        1507
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -823,20 +826,26 @@
 #define ID_BUTTON40049                  40049
 #define ID_BUTTON40050                  40050
 #define ID_BUTTON40051                  40051
+#define IDC_INDENTGROUP                 65530
+#define IDCALIGNGROUP                   65531
+#define IDC_JUSTIFGROUP                 65532
+#define IDC_LINESPACEGROUP              65533
 #define IDC_URL                         -1
 #define IDC_TLANNEG                     65535
 #define IDC_TTEMPLATESURL               65535
 #define IDC_URL_TEXT                    -1
 #define IDC_WHEREGROUP                  65535
 #define IDC_OUTPUTGROUP                 65535
-
+#define IDC_CHECKGROUP                  65500
+#define IDC_IGNOREGROUP                 65501
+  
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        537
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1504
+#define _APS_NEXT_CONTROL_VALUE         1508
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
