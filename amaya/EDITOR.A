@@ -175,11 +175,11 @@ MENUS
 	Types.Table button:BCellHShrink -> CellHorizShrink;
 	Types.Table button:BCellVShrink -> CellVertShrink;
 	Types.Table button:BSelectRow -> SelectRow;
-	Types.Table button:BCreateRowB -> CreateRowBefore icon:insert_table_row.png;
-	Types.Table button:BCreateRowA -> CreateRowAfter icon:insert_table_row.png;
+	Types.Table button:BCreateRowB -> CreateRowBefore icon:insert_table_row_before.png;
+	Types.Table button:BCreateRowA -> CreateRowAfter icon:insert_table_row_after.png;
 	Types.Table button:BSelectColumn -> SelectColumn;
-	Types.Table button:BCreateColumnB -> CreateColumnBefore icon:insert_table_col.png;
-	Types.Table button:BCreateColumnA -> CreateColumnAfter icon:insert_table_col.png;
+	Types.Table button:BCreateColumnB -> CreateColumnBefore icon:insert_table_col_before.png;
+	Types.Table button:BCreateColumnA -> CreateColumnAfter icon:insert_table_col_after.png;
 	Types.Table button:BPasteBefore -> PasteBefore icon:insert.png;
 	Types.Table button:BPasteAfter -> PasteAfter icon:append.png;
 	
