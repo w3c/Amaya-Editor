@@ -1061,7 +1061,7 @@ Document            doc;
       else
 	{
 	  local = TRUE;
-	  strcpy (tempfile, URL);
+	  strcpy (tempfile, tempURL);
 	}
       if (tempfile[0] == EOS)
 	{
