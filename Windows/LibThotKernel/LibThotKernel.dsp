@@ -81,11 +81,11 @@ SOURCE=..\..\thotlib\base\actions.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\editing\applicationapi.c
+SOURCE=..\..\Thotlib\Editing\applicationapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\tree\attributeapi.c
+SOURCE=..\..\Thotlib\Tree\attributeapi.c
 # End Source File
 # Begin Source File
 
@@ -145,10 +145,6 @@ SOURCE=..\..\thotlib\dialogue\nodisplay.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\xml\parsexml.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\document\pivot.c
 # End Source File
 # Begin Source File
@@ -189,22 +185,6 @@ SOURCE=..\..\thotlib\base\registry.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\tree\res.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\tree\resgen.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\tree\resmatch.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\savexml.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\document\schemastr.c
 # End Source File
 # Begin Source File
@@ -218,14 +198,6 @@ SOURCE=..\..\thotlib\base\structlist.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\tree\structschema.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\thotmodule.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\translatexml.c
 # End Source File
 # Begin Source File
 
@@ -249,6 +221,10 @@ SOURCE=..\..\thotlib\unicode\uconvert.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Thotlib\Unicode\Uio.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\base\units.c
 # End Source File
 # Begin Source File
@@ -258,14 +234,6 @@ SOURCE=..\..\thotlib\unicode\ustring.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\document\writepivot.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\writexml.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\xmlmodule.c
 # End Source File
 # End Target
 # End Project

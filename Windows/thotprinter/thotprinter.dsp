@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_AMAYA_RELEASE_" /YX /FD /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /I "..\..\thotlib\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_AMAYA_RELEASE_" /YX /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o NUL /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o NUL /win32
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
@@ -90,6 +90,18 @@ LINK32=link.exe
 # Name "thotprinter - Win32 Debug"
 # Begin Source File
 
+SOURCE=..\..\Amaya\css.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Amaya\fetchHTMLname.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Amaya\fetchXMLname.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\nodialog.c
 # End Source File
 # Begin Source File
@@ -107,6 +119,10 @@ SOURCE=..\printlib.lib
 # Begin Source File
 
 SOURCE=..\..\thotlib\view\psdisplay.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Amaya\styleparser.c
 # End Source File
 # End Target
 # End Project

@@ -237,6 +237,10 @@ SOURCE=..\..\thotlib\view\displayselect.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Thotlib\View\displayview.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\document\docs.c
 # End Source File
 # Begin Source File
@@ -413,6 +417,10 @@ SOURCE=..\..\thotlib\dialogue\printmenu.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Thotlib\Dialogue\Profiles.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\presentation\pschemaapi.c
 # End Source File
 # Begin Source File
@@ -574,6 +582,10 @@ SOURCE=..\..\thotlib\unicode\uaccess.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\unicode\uconvert.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Thotlib\Unicode\Uio.c
 # End Source File
 # Begin Source File
 

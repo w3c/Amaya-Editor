@@ -92,6 +92,10 @@ SOURCE=..\..\thotlib\base\alloca.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Thotlib\Editing\applicationapi.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\tree\attributes.c
 # End Source File
 # Begin Source File
@@ -100,15 +104,7 @@ SOURCE=..\..\thotlib\presentation\attrpresent.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\boxlocate.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\view\boxmoves.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\boxparams.c
 # End Source File
 # Begin Source File
 
@@ -120,23 +116,11 @@ SOURCE=..\..\thotlib\view\boxrelations.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\view\boxselection.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\view\buildboxes.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\view\buildlines.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\callback.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\callbackinit.c
 # End Source File
 # Begin Source File
 
@@ -152,15 +136,7 @@ SOURCE=..\..\thotlib\tree\checkaccess.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\base\config.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\content\content.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\context.c
 # End Source File
 # Begin Source File
 
@@ -172,14 +148,6 @@ SOURCE=..\..\thotlib\view\createpages.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\creationmenu.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\dialogapi.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\content\dictionary.c
 # End Source File
 # Begin Source File
@@ -188,7 +156,11 @@ SOURCE=..\..\thotlib\view\displaybox.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\tree\draw.c
+SOURCE=..\..\Thotlib\View\displayview.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Thotlib\Document\documentapi.c
 # End Source File
 # Begin Source File
 
@@ -260,14 +232,6 @@ SOURCE=..\..\thotlib\base\message.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\modiftype.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\openview.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\tree\pagecommands.c
 # End Source File
 # Begin Source File
@@ -276,15 +240,7 @@ SOURCE=..\..\thotlib\image\picture.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\image\pictureapi.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\image\picturebase.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\document\pivot.c
 # End Source File
 # Begin Source File
 
@@ -328,27 +284,11 @@ SOURCE=..\..\thotlib\document\readtra.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\tree\referenceapi.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\tree\references.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\registry.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\tree\res.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\tree\resgen.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\tree\resmatch.c
 # End Source File
 # Begin Source File
 
@@ -360,31 +300,11 @@ SOURCE=..\..\thotlib\document\schtrad.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\editing\structchange.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\base\structlist.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\structlocate.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\editing\structmodif.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\tree\structschema.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\xml\thotmodule.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\base\thotmsg.c
+SOURCE=..\..\Thotlib\presentation\Style.c
 # End Source File
 # Begin Source File
 
@@ -404,15 +324,11 @@ SOURCE=..\..\thotlib\unicode\uconvert.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Thotlib\Unicode\Uio.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\base\units.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\editing\unstructchange.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\unstructlocate.c
 # End Source File
 # Begin Source File
 
@@ -421,22 +337,6 @@ SOURCE=..\..\thotlib\unicode\ustring.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\view\windowdisplay.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\content\word.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\document\writedoc.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\document\writepivot.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\xml\writexml.c
 # End Source File
 # Begin Source File
 
