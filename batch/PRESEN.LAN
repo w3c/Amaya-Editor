@@ -239,7 +239,8 @@ BoxType =	  BoxName / [ '*' ] [ FirstSec ] TypeName /
 VertAxis =	  'Left' / 'VMiddle' / 'VRef' / 'Right' . 
 HorizAxis =	  'Top' / 'HMiddle' /'HRef' / 'Bottom' .
 
-Dimension =	  Reference '.' HeightWidth [ Ratio ] [ 'Min' ] / 
+Dimension =	  'Auto' /
+	          Reference '.' HeightWidth [ Ratio ] [ 'Min' ] / 
 		  AbsDist [ 'UserSpecified' ] [ 'Min' ] /
 		  PosH / PosV .
 HeightWidth =	  'Height' / 'Width' .

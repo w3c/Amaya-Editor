@@ -245,7 +245,8 @@ number
   103	VertAxis =	  'Left' / 'VMiddle' / 'VRef' / 'Right' . 
   101	HorizAxis =	  'Top' / 'HMiddle' /'HRef' / 'Bottom' .
 	
-   58	Dimension =	  Reference '.' HeightWidth [ Ratio ] [ 'Min' ] / 
+   58	Dimension =	  'Auto' /
+		          Reference '.' HeightWidth [ Ratio ] [ 'Min' ] / 
 			  AbsDist [ 'UserSpecified' ] [ 'Min' ] /
 			  PosH / PosV .
   110	HeightWidth =	  'Height' / 'Width' .
@@ -537,7 +538,7 @@ code  key-word      numbers of rules using the key-word
 1225  BorderRightStyle    55
 1226  BorderBottomStyle   55
 1227  BorderLeftStyle     55
-1228  Auto                90
+1228  Auto                90  58
 1229  Thin                92  68
 1230  Medium              92
 1231  Thick               92  68

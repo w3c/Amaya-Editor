@@ -43,7 +43,7 @@ DEFAULT
    BEGIN
    HorizRef: Enclosed . HRef;
    VertRef: * . Left;
-   Width: Enclosing . Width;
+   Width: auto;
    Height: Enclosed . Height;
    VertPos: Top = Previous . Bottom;
    HorizPos: Left = Enclosing . Left;
@@ -302,6 +302,7 @@ RULES
    Document:
 	BEGIN
 	Page(ThePage);
+	Width: Enclosing . Width;
 	Depth: 0;
 	Adjust: Left;
 	Indent: 0;
@@ -317,7 +318,6 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: 10;
 		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left;
 		PaddingLeft: 0.4;
@@ -329,6 +329,7 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	Width: Enclosing . Width;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		Width: Enclosing . Width - STRUCT_INDENT;

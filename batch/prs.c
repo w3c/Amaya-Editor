@@ -3433,9 +3433,19 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	CreatePRule (PtBorderLeftStyle, wi);
 	break;
       case KWD_Auto:
-	CurRule->PrMinUnit = UnAuto;
-	CurRule->PrMinAttr = FALSE;
-	CurRule->PrMinValue = 0;
+	if (gCode == RULE_MarginWidth)
+	  {
+	    CurRule->PrMinUnit = UnAuto;
+	    CurRule->PrMinAttr = FALSE;
+	    CurRule->PrMinValue = 0;
+	  }
+	else if (gCode == RULE_Dimension)
+	  {
+	    CurRule->PrDimRule.DrUnit = UnAuto;
+	    CurRule->PrDimRule.DrRelation = RlEnclosed;
+	    CurRule->PrDimRule.DrRefKind = RkElType;
+	    CurRule->PrDimRule.DrAbsolute = FALSE;
+	  }
 	break;
       case KWD_Thin:
 	/* underline or border */
