@@ -16,6 +16,7 @@
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
+#include "frame.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
