@@ -4,7 +4,8 @@ CFG=libjpeg - Win32 Debug
 !MESSAGE No configuration specified. Defaulting to libjpeg - Win32 Debug.
 !ENDIF 
 
-!IF "$(CFG)" != "libjpeg - Win32 Release" && "$(CFG)" != "libjpeg - Win32 Debug"
+!IF "$(CFG)" != "libjpeg - Win32 Release" && "$(CFG)" !=\
+ "libjpeg - Win32 Debug"
 !MESSAGE Invalid configuration "$(CFG)" specified.
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
@@ -26,7 +27,6 @@ NULL=nul
 !ENDIF 
 
 CPP=cl.exe
-RSC=rc.exe
 
 !IF  "$(CFG)" == "libjpeg - Win32 Release"
 
@@ -36,8 +36,15 @@ INTDIR=.\Release
 OutDir=.\..\ 
 # End Custom Macros
 
+!IF "$(RECURSE)" == "0" 
+
 ALL : "$(OUTDIR)\libjpeg.lib"
 
+!ELSE 
+
+ALL : "$(OUTDIR)\libjpeg.lib"
+
+!ENDIF 
 
 CLEAN :
 	-@erase "$(INTDIR)\jcapimin.obj"
@@ -86,7 +93,7 @@ CLEAN :
 	-@erase "$(INTDIR)\jquant1.obj"
 	-@erase "$(INTDIR)\jquant2.obj"
 	-@erase "$(INTDIR)\jutils.obj"
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc50.idb"
 	-@erase "$(OUTDIR)\libjpeg.lib"
 
 "$(OUTDIR)" :
@@ -95,7 +102,12 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libjpeg" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+RSC=rc.exe
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libjpeg" /D "WIN32" /D "NDEBUG" /D\
+ "_WINDOWS" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD\
+ /c 
+CPP_OBJS=.\Release/
+CPP_SBRS=.
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -163,8 +175,15 @@ INTDIR=.\Debug
 OutDir=.\..\ 
 # End Custom Macros
 
+!IF "$(RECURSE)" == "0" 
+
 ALL : "$(OUTDIR)\libjpeg.lib"
 
+!ELSE 
+
+ALL : "$(OUTDIR)\libjpeg.lib"
+
+!ENDIF 
 
 CLEAN :
 	-@erase "$(INTDIR)\jcapimin.obj"
@@ -213,7 +232,7 @@ CLEAN :
 	-@erase "$(INTDIR)\jquant1.obj"
 	-@erase "$(INTDIR)\jquant2.obj"
 	-@erase "$(INTDIR)\jutils.obj"
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc50.idb"
 	-@erase "$(OUTDIR)\libjpeg.lib"
 
 "$(OUTDIR)" :
@@ -222,7 +241,12 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libjpeg" /I "..\..\thotlib\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+RSC=rc.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libjpeg" /I\
+ "..\..\thotlib\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS"\
+ /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_OBJS=.\Debug/
+CPP_SBRS=.
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -284,320 +308,777 @@ LIB32_OBJS= \
 
 !ENDIF 
 
-.c{$(INTDIR)}.obj::
+.c{$(CPP_OBJS)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(INTDIR)}.obj::
+.cpp{$(CPP_OBJS)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(INTDIR)}.obj::
+.cxx{$(CPP_OBJS)}.obj::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.c{$(INTDIR)}.sbr::
+.c{$(CPP_SBRS)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cpp{$(INTDIR)}.sbr::
+.cpp{$(CPP_SBRS)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
-.cxx{$(INTDIR)}.sbr::
+.cxx{$(CPP_SBRS)}.sbr::
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
 
 
-!IF "$(NO_EXTERNAL_DEPS)" != "1"
-!IF EXISTS("libjpeg.dep")
-!INCLUDE "libjpeg.dep"
-!ELSE 
-!MESSAGE Warning: cannot find "libjpeg.dep"
-!ENDIF 
-!ENDIF 
-
-
-!IF "$(CFG)" == "libjpeg - Win32 Release" || "$(CFG)" == "libjpeg - Win32 Debug"
+!IF "$(CFG)" == "libjpeg - Win32 Release" || "$(CFG)" ==\
+ "libjpeg - Win32 Debug"
 SOURCE=..\..\libjpeg\jcapimin.c
+DEP_CPP_JCAPI=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcapimin.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcapimin.obj" : $(SOURCE) $(DEP_CPP_JCAPI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcapistd.c
+DEP_CPP_JCAPIS=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcapistd.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcapistd.obj" : $(SOURCE) $(DEP_CPP_JCAPIS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jccoefct.c
+DEP_CPP_JCCOE=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jccoefct.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jccoefct.obj" : $(SOURCE) $(DEP_CPP_JCCOE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jccolor.c
+DEP_CPP_JCCOL=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jccolor.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jccolor.obj" : $(SOURCE) $(DEP_CPP_JCCOL) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcdctmgr.c
+DEP_CPP_JCDCT=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcdctmgr.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcdctmgr.obj" : $(SOURCE) $(DEP_CPP_JCDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jchuff.c
+DEP_CPP_JCHUF=\
+	"..\..\libjpeg\jchuff.h"\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jchuff.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jchuff.obj" : $(SOURCE) $(DEP_CPP_JCHUF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcinit.c
+DEP_CPP_JCINI=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcinit.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcinit.obj" : $(SOURCE) $(DEP_CPP_JCINI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcmainct.c
+DEP_CPP_JCMAI=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcmainct.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcmainct.obj" : $(SOURCE) $(DEP_CPP_JCMAI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcmarker.c
+DEP_CPP_JCMAR=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcmarker.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcmarker.obj" : $(SOURCE) $(DEP_CPP_JCMAR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcmaster.c
+DEP_CPP_JCMAS=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcmaster.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcmaster.obj" : $(SOURCE) $(DEP_CPP_JCMAS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcomapi.c
+DEP_CPP_JCOMA=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcomapi.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcomapi.obj" : $(SOURCE) $(DEP_CPP_JCOMA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcparam.c
+DEP_CPP_JCPAR=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcparam.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcparam.obj" : $(SOURCE) $(DEP_CPP_JCPAR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcphuff.c
+DEP_CPP_JCPHU=\
+	"..\..\libjpeg\jchuff.h"\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcphuff.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcphuff.obj" : $(SOURCE) $(DEP_CPP_JCPHU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcprepct.c
+DEP_CPP_JCPRE=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcprepct.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcprepct.obj" : $(SOURCE) $(DEP_CPP_JCPRE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jcsample.c
+DEP_CPP_JCSAM=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jcsample.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jcsample.obj" : $(SOURCE) $(DEP_CPP_JCSAM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jctrans.c
+DEP_CPP_JCTRA=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jctrans.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jctrans.obj" : $(SOURCE) $(DEP_CPP_JCTRA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdapimin.c
+DEP_CPP_JDAPI=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdapimin.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdapimin.obj" : $(SOURCE) $(DEP_CPP_JDAPI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdapistd.c
+DEP_CPP_JDAPIS=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdapistd.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdapistd.obj" : $(SOURCE) $(DEP_CPP_JDAPIS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdatadst.c
+DEP_CPP_JDATA=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdatadst.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdatadst.obj" : $(SOURCE) $(DEP_CPP_JDATA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdatasrc.c
+DEP_CPP_JDATAS=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdatasrc.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdatasrc.obj" : $(SOURCE) $(DEP_CPP_JDATAS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdcoefct.c
+DEP_CPP_JDCOE=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdcoefct.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdcoefct.obj" : $(SOURCE) $(DEP_CPP_JDCOE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdcolor.c
+DEP_CPP_JDCOL=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdcolor.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdcolor.obj" : $(SOURCE) $(DEP_CPP_JDCOL) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jddctmgr.c
+DEP_CPP_JDDCT=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jddctmgr.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jddctmgr.obj" : $(SOURCE) $(DEP_CPP_JDDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdhuff.c
 
-"$(INTDIR)\jdhuff.obj" : $(SOURCE) "$(INTDIR)"
+!IF  "$(CFG)" == "libjpeg - Win32 Release"
+
+DEP_CPP_JDHUF=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdhuff.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jdhuff.obj" : $(SOURCE) $(DEP_CPP_JDHUF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\libjpeg\jdinput.c
+!ELSEIF  "$(CFG)" == "libjpeg - Win32 Debug"
 
-"$(INTDIR)\jdinput.obj" : $(SOURCE) "$(INTDIR)"
+DEP_CPP_JDHUF=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdhuff.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jdhuff.obj" : $(SOURCE) $(DEP_CPP_JDHUF) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\libjpeg\jdinput.c
+DEP_CPP_JDINP=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jdinput.obj" : $(SOURCE) $(DEP_CPP_JDINP) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdmainct.c
+DEP_CPP_JDMAI=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdmainct.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdmainct.obj" : $(SOURCE) $(DEP_CPP_JDMAI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdmarker.c
+DEP_CPP_JDMAR=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdmarker.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdmarker.obj" : $(SOURCE) $(DEP_CPP_JDMAR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdmaster.c
+DEP_CPP_JDMAS=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdmaster.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdmaster.obj" : $(SOURCE) $(DEP_CPP_JDMAS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdmerge.c
+DEP_CPP_JDMER=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdmerge.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdmerge.obj" : $(SOURCE) $(DEP_CPP_JDMER) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdphuff.c
 
-"$(INTDIR)\jdphuff.obj" : $(SOURCE) "$(INTDIR)"
+!IF  "$(CFG)" == "libjpeg - Win32 Release"
+
+DEP_CPP_JDPHU=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdhuff.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jdphuff.obj" : $(SOURCE) $(DEP_CPP_JDPHU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\libjpeg\jdpostct.c
+!ELSEIF  "$(CFG)" == "libjpeg - Win32 Debug"
 
-"$(INTDIR)\jdpostct.obj" : $(SOURCE) "$(INTDIR)"
+DEP_CPP_JDPHU=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdhuff.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jdphuff.obj" : $(SOURCE) $(DEP_CPP_JDPHU) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\libjpeg\jdpostct.c
+DEP_CPP_JDPOS=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jdpostct.obj" : $(SOURCE) $(DEP_CPP_JDPOS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdsample.c
+DEP_CPP_JDSAM=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdsample.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdsample.obj" : $(SOURCE) $(DEP_CPP_JDSAM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jdtrans.c
+DEP_CPP_JDTRA=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jdtrans.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jdtrans.obj" : $(SOURCE) $(DEP_CPP_JDTRA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jerror.c
+DEP_CPP_JERRO=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	"..\..\libjpeg\jversion.h"\
+	
 
-"$(INTDIR)\jerror.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jerror.obj" : $(SOURCE) $(DEP_CPP_JERRO) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jfdctflt.c
+DEP_CPP_JFDCT=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jfdctflt.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jfdctflt.obj" : $(SOURCE) $(DEP_CPP_JFDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jfdctfst.c
+DEP_CPP_JFDCTF=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jfdctfst.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jfdctfst.obj" : $(SOURCE) $(DEP_CPP_JFDCTF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jfdctint.c
+DEP_CPP_JFDCTI=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jfdctint.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jfdctint.obj" : $(SOURCE) $(DEP_CPP_JFDCTI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jidctflt.c
+DEP_CPP_JIDCT=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jidctflt.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jidctflt.obj" : $(SOURCE) $(DEP_CPP_JIDCT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jidctfst.c
+DEP_CPP_JIDCTF=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jidctfst.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jidctfst.obj" : $(SOURCE) $(DEP_CPP_JIDCTF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jidctint.c
+DEP_CPP_JIDCTI=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jidctint.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jidctint.obj" : $(SOURCE) $(DEP_CPP_JIDCTI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jidctred.c
+DEP_CPP_JIDCTR=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jdct.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jidctred.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jidctred.obj" : $(SOURCE) $(DEP_CPP_JIDCTR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jmemmgr.c
 
-"$(INTDIR)\jmemmgr.obj" : $(SOURCE) "$(INTDIR)"
+!IF  "$(CFG)" == "libjpeg - Win32 Release"
+
+DEP_CPP_JMEMM=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmemsys.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jmemmgr.obj" : $(SOURCE) $(DEP_CPP_JMEMM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
+!ELSEIF  "$(CFG)" == "libjpeg - Win32 Debug"
+
+DEP_CPP_JMEMM=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmemsys.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jmemmgr.obj" : $(SOURCE) $(DEP_CPP_JMEMM) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
 
 SOURCE=..\..\libjpeg\jmemnobs.c
 
-"$(INTDIR)\jmemnobs.obj" : $(SOURCE) "$(INTDIR)"
+!IF  "$(CFG)" == "libjpeg - Win32 Release"
+
+DEP_CPP_JMEMN=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmemsys.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jmemnobs.obj" : $(SOURCE) $(DEP_CPP_JMEMN) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\libjpeg\jquant1.c
+!ELSEIF  "$(CFG)" == "libjpeg - Win32 Debug"
 
-"$(INTDIR)\jquant1.obj" : $(SOURCE) "$(INTDIR)"
+DEP_CPP_JMEMN=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmemsys.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jmemnobs.obj" : $(SOURCE) $(DEP_CPP_JMEMN) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\libjpeg\jquant1.c
+DEP_CPP_JQUAN=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jquant1.obj" : $(SOURCE) $(DEP_CPP_JQUAN) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jquant2.c
+DEP_CPP_JQUANT=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jquant2.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jquant2.obj" : $(SOURCE) $(DEP_CPP_JQUANT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 SOURCE=..\..\libjpeg\jutils.c
+DEP_CPP_JUTIL=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
 
-"$(INTDIR)\jutils.obj" : $(SOURCE) "$(INTDIR)"
+"$(INTDIR)\jutils.obj" : $(SOURCE) $(DEP_CPP_JUTIL) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

@@ -44,12 +44,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name libThotEditor
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name libwww
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -98,9 +92,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name zlib
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -113,9 +104,6 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name zlib
-    End Project Dependency
 }}}
 
 ###############################################################################

@@ -161,8 +161,8 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MTd /W3 /GX /Od /I "..\amaya" /I "..\..\amaya" /I\
- "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I\
+CPP_PROJ=/nologo /MTd /W3 /GX /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f"\
+ /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /D "_DEBUG" /D\
  "_AMAYA_RELEASE_" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /D\
@@ -238,13 +238,13 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "libThotTable - Win32 Release" : 
-   cd "..\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Release" 
    cd "..\thotprinter"
 
 "libThotTable - Win32 ReleaseCLEAN" : 
-   cd "..\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Release" RECURSE=1 
    cd "..\thotprinter"
@@ -252,13 +252,13 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "libThotTable - Win32 Debug" : 
-   cd "..\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug"\
  
    cd "..\thotprinter"
 
 "libThotTable - Win32 DebugCLEAN" : 
-   cd "..\libThotTable"
+   cd "\Amaya\Windows\libThotTable"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Debug" RECURSE=1 
    cd "..\thotprinter"
@@ -268,12 +268,12 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "printlib - Win32 Release" : 
-   cd "..\printlib"
+   cd "\Amaya\Windows\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Release" 
    cd "..\thotprinter"
 
 "printlib - Win32 ReleaseCLEAN" : 
-   cd "..\printlib"
+   cd "\Amaya\Windows\printlib"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\printlib.mak CFG="printlib - Win32 Release"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -281,12 +281,12 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "printlib - Win32 Debug" : 
-   cd "..\printlib"
+   cd "\Amaya\Windows\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Debug" 
    cd "..\thotprinter"
 
 "printlib - Win32 DebugCLEAN" : 
-   cd "..\printlib"
+   cd "\Amaya\Windows\printlib"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\printlib.mak CFG="printlib - Win32 Debug"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -296,12 +296,12 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "libjpeg - Win32 Release" : 
-   cd "..\libjpeg"
+   cd "\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
    cd "..\thotprinter"
 
 "libjpeg - Win32 ReleaseCLEAN" : 
-   cd "..\libjpeg"
+   cd "\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -309,12 +309,12 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "libjpeg - Win32 Debug" : 
-   cd "..\libjpeg"
+   cd "\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
    cd "..\thotprinter"
 
 "libjpeg - Win32 DebugCLEAN" : 
-   cd "..\libjpeg"
+   cd "\Amaya\Windows\libjpeg"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -324,12 +324,12 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "libpng - Win32 Release" : 
-   cd "..\libpng"
+   cd "\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" 
    cd "..\thotprinter"
 
 "libpng - Win32 ReleaseCLEAN" : 
-   cd "..\libpng"
+   cd "\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libpng.mak CFG="libpng - Win32 Release"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -337,12 +337,12 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "libpng - Win32 Debug" : 
-   cd "..\libpng"
+   cd "\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" 
    cd "..\thotprinter"
 
 "libpng - Win32 DebugCLEAN" : 
-   cd "..\libpng"
+   cd "\Amaya\Windows\libpng"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libpng.mak CFG="libpng - Win32 Debug"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -387,9 +387,10 @@ DEP_CPP_CSS_C=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
@@ -426,7 +427,6 @@ DEP_CPP_CSS_C=\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\Library\src\HTRDF.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
@@ -456,16 +456,15 @@ DEP_CPP_CSS_C=\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\Library\src\HTXML.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\htzip.h"\
 	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwapp.h"\
 	"..\..\..\libwww\library\src\wwwcache.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -474,7 +473,6 @@ DEP_CPP_CSS_C=\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\Library\src\WWWXML.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	"..\..\amaya\ahtinit.h"\
 	"..\..\amaya\amaya.h"\
@@ -487,6 +485,7 @@ DEP_CPP_CSS_C=\
 	"..\..\amaya\f\styleparser_f.h"\
 	"..\..\amaya\f\uicss_f.h"\
 	"..\..\amaya\libwww.h"\
+	"..\..\amaya\parser.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -520,12 +519,6 @@ DEP_CPP_CSS_C=\
 	"..\amaya\editor.h"\
 	"..\amaya\html.h"\
 	"..\amaya\textfile.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_CSS_C=\
-	"..\..\..\libwww\library\src\HTVMSUtils.h"\
-	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\css.obj" : $(SOURCE) $(DEP_CPP_CSS_C) "$(INTDIR)"
@@ -568,6 +561,8 @@ DEP_CPP_CSS_C=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -643,6 +638,7 @@ DEP_CPP_CSS_C=\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -663,6 +659,7 @@ DEP_CPP_CSS_C=\
 	"..\..\amaya\f\styleparser_f.h"\
 	"..\..\amaya\f\uicss_f.h"\
 	"..\..\amaya\libwww.h"\
+	"..\..\amaya\parser.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -742,9 +739,10 @@ DEP_CPP_FETCH=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
@@ -781,7 +779,6 @@ DEP_CPP_FETCH=\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\Library\src\HTRDF.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
@@ -811,16 +808,15 @@ DEP_CPP_FETCH=\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\Library\src\HTXML.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\htzip.h"\
 	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwapp.h"\
 	"..\..\..\libwww\library\src\wwwcache.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -829,7 +825,6 @@ DEP_CPP_FETCH=\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\Library\src\WWWXML.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	"..\..\amaya\ahtinit.h"\
 	"..\..\amaya\amaya.h"\
@@ -871,12 +866,6 @@ DEP_CPP_FETCH=\
 	"..\amaya\editor.h"\
 	"..\amaya\html.h"\
 	"..\amaya\textfile.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_FETCH=\
-	"..\..\..\libwww\library\src\HTVMSUtils.h"\
-	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\fetchHTMLname.obj" : $(SOURCE) $(DEP_CPP_FETCH) "$(INTDIR)"
@@ -919,6 +908,8 @@ DEP_CPP_FETCH=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -994,6 +985,7 @@ DEP_CPP_FETCH=\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -1089,9 +1081,10 @@ DEP_CPP_FETCHX=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
@@ -1128,7 +1121,6 @@ DEP_CPP_FETCHX=\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\Library\src\HTRDF.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
@@ -1158,16 +1150,15 @@ DEP_CPP_FETCHX=\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\Library\src\HTXML.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\htzip.h"\
 	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwapp.h"\
 	"..\..\..\libwww\library\src\wwwcache.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -1176,14 +1167,17 @@ DEP_CPP_FETCHX=\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\Library\src\WWWXML.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	"..\..\amaya\ahtinit.h"\
 	"..\..\amaya\amaya.h"\
 	"..\..\amaya\amayamsg.h"\
 	"..\..\amaya\f\fetchxmlname_f.h"\
+	"..\..\amaya\graphmlnames.h"\
+	"..\..\amaya\htmlnames.h"\
 	"..\..\amaya\libwww.h"\
+	"..\..\amaya\mathmlnames.h"\
 	"..\..\amaya\parser.h"\
+	"..\..\amaya\xlinknames.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -1214,16 +1208,10 @@ DEP_CPP_FETCHX=\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\amaya\editor.h"\
-	"..\amaya\graphml.h"\
 	"..\amaya\html.h"\
 	"..\amaya\mathml.h"\
 	"..\amaya\textfile.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_FETCHX=\
-	"..\..\..\libwww\library\src\HTVMSUtils.h"\
-	"..\..\thotlib\include\HTVMSUtils.h"\
+	"..\amaya\xlink.h"\
 	
 
 "$(INTDIR)\fetchXMLname.obj" : $(SOURCE) $(DEP_CPP_FETCHX) "$(INTDIR)"
@@ -1266,6 +1254,8 @@ DEP_CPP_FETCHX=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -1341,6 +1331,7 @@ DEP_CPP_FETCHX=\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -1354,8 +1345,12 @@ DEP_CPP_FETCHX=\
 	"..\..\amaya\amaya.h"\
 	"..\..\amaya\amayamsg.h"\
 	"..\..\amaya\f\fetchxmlname_f.h"\
+	"..\..\amaya\graphmlnames.h"\
+	"..\..\amaya\htmlnames.h"\
 	"..\..\amaya\libwww.h"\
+	"..\..\amaya\mathmlnames.h"\
 	"..\..\amaya\parser.h"\
+	"..\..\amaya\xlinknames.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -1389,6 +1384,7 @@ DEP_CPP_FETCHX=\
 	"..\amaya\html.h"\
 	"..\amaya\mathml.h"\
 	"..\amaya\textfile.h"\
+	"..\amaya\xlink.h"\
 	
 
 "$(INTDIR)\fetchXMLname.obj" : $(SOURCE) $(DEP_CPP_FETCHX) "$(INTDIR)"
@@ -1439,11 +1435,6 @@ DEP_CPP_NODIA=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_NODIA=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\nodialog.obj" : $(SOURCE) $(DEP_CPP_NODIA) "$(INTDIR)"
@@ -1569,11 +1560,6 @@ DEP_CPP_PAGIN=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PAGIN=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\paginate.obj" : $(SOURCE) $(DEP_CPP_PAGIN) "$(INTDIR)"
@@ -1713,6 +1699,7 @@ DEP_CPP_PRINT=\
 	"..\..\thotlib\internals\f\psdisplay_f.h"\
 	"..\..\thotlib\internals\f\readpivot_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structlist_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\thotprinter_f.h"\
@@ -1748,11 +1735,6 @@ DEP_CPP_PRINT=\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PRINT=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\print.obj" : $(SOURCE) $(DEP_CPP_PRINT) "$(INTDIR)"
@@ -1813,6 +1795,7 @@ DEP_CPP_PRINT=\
 	"..\..\thotlib\internals\f\psdisplay_f.h"\
 	"..\..\thotlib\internals\f\readpivot_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structlist_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\thotprinter_f.h"\
@@ -1858,71 +1841,9 @@ DEP_CPP_PRINT=\
 
 SOURCE=..\..\thotlib\view\psdisplay.c
 
-!IF  "$(CFG)" == "thotprinter - Win32 Release"
-
-DEP_CPP_PSDIS=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\buildlines_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\initpses_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\font_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PSDIS=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\psdisplay.obj" : $(SOURCE) $(DEP_CPP_PSDIS) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
-
-
 "$(INTDIR)\psdisplay.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ENDIF 
 
 SOURCE=..\..\Amaya\styleparser.c
 
@@ -1962,9 +1883,10 @@ DEP_CPP_STYLE=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
-	"..\..\..\libwww\Library\src\HTHash.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
 	"..\..\..\libwww\library\src\hthinit.h"\
 	"..\..\..\libwww\library\src\hthist.h"\
@@ -2001,7 +1923,6 @@ DEP_CPP_STYLE=\
 	"..\..\..\libwww\library\src\htplain.h"\
 	"..\..\..\libwww\library\src\htprot.h"\
 	"..\..\..\libwww\library\src\htproxy.h"\
-	"..\..\..\libwww\Library\src\HTRDF.h"\
 	"..\..\..\libwww\library\src\htreader.h"\
 	"..\..\..\libwww\library\src\htreq.h"\
 	"..\..\..\libwww\library\src\htreqman.h"\
@@ -2031,16 +1952,15 @@ DEP_CPP_STYLE=\
 	"..\..\..\libwww\library\src\htuu.h"\
 	"..\..\..\libwww\library\src\htwriter.h"\
 	"..\..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\..\libwww\Library\src\HTXML.h"\
 	"..\..\..\libwww\library\src\htxparse.h"\
 	"..\..\..\libwww\library\src\htzip.h"\
 	"..\..\..\libwww\library\src\sgml.h"\
-	"..\..\..\libwww\library\src\windows\config.h"\
 	"..\..\..\libwww\library\src\wwwapp.h"\
 	"..\..\..\libwww\library\src\wwwcache.h"\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -2049,7 +1969,6 @@ DEP_CPP_STYLE=\
 	"..\..\..\libwww\library\src\wwwsys.h"\
 	"..\..\..\libwww\library\src\wwwtrans.h"\
 	"..\..\..\libwww\library\src\wwwutil.h"\
-	"..\..\..\libwww\Library\src\WWWXML.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	"..\..\amaya\ahtinit.h"\
 	"..\..\amaya\amaya.h"\
@@ -2064,7 +1983,6 @@ DEP_CPP_STYLE=\
 	"..\..\amaya\f\styleparser_f.h"\
 	"..\..\amaya\f\uicss_f.h"\
 	"..\..\amaya\fetchhtmlname.h"\
-	"..\..\amaya\htmlstylecolor.h"\
 	"..\..\amaya\libwww.h"\
 	"..\..\amaya\parser.h"\
 	"..\..\thotlib\include\appaction.h"\
@@ -2099,14 +2017,9 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\amaya\editor.h"\
+	"..\amaya\graphml.h"\
 	"..\amaya\html.h"\
 	"..\amaya\textfile.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_STYLE=\
-	"..\..\..\libwww\library\src\HTVMSUtils.h"\
-	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\styleparser.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -2149,6 +2062,8 @@ DEP_CPP_STYLE=\
 	"..\..\..\libwww\library\src\htfilter.h"\
 	"..\..\..\libwww\library\src\htformat.h"\
 	"..\..\..\libwww\library\src\htfsave.h"\
+	"..\..\..\libwww\library\src\htftp.h"\
+	"..\..\..\libwww\library\src\htftpdir.h"\
 	"..\..\..\libwww\library\src\htfwrite.h"\
 	"..\..\..\libwww\library\src\htguess.h"\
 	"..\..\..\libwww\library\src\htheader.h"\
@@ -2224,6 +2139,7 @@ DEP_CPP_STYLE=\
 	"..\..\..\libwww\library\src\wwwcore.h"\
 	"..\..\..\libwww\library\src\wwwdir.h"\
 	"..\..\..\libwww\library\src\wwwfile.h"\
+	"..\..\..\libwww\library\src\wwwftp.h"\
 	"..\..\..\libwww\library\src\wwwhtml.h"\
 	"..\..\..\libwww\library\src\wwwhttp.h"\
 	"..\..\..\libwww\library\src\wwwlib.h"\
@@ -2246,7 +2162,6 @@ DEP_CPP_STYLE=\
 	"..\..\amaya\f\styleparser_f.h"\
 	"..\..\amaya\f\uicss_f.h"\
 	"..\..\amaya\fetchhtmlname.h"\
-	"..\..\amaya\htmlstylecolor.h"\
 	"..\..\amaya\libwww.h"\
 	"..\..\amaya\parser.h"\
 	"..\..\thotlib\include\appaction.h"\
@@ -2281,6 +2196,7 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\amaya\editor.h"\
+	"..\amaya\graphml.h"\
 	"..\amaya\html.h"\
 	"..\amaya\textfile.h"\
 	
