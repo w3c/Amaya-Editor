@@ -1080,7 +1080,7 @@ void GraphElemPasted (NotifyElement *event)
 
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
-  MakeUniqueName (event->element, event->document);
+  MakeUniqueName (event->element, event->document, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -2377,7 +2377,7 @@ void UsePasted (NotifyElement * event)
     }
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
-  MakeUniqueName (event->element, event->document);
+  MakeUniqueName (event->element, event->document, TRUE);
 }
 
 /*----------------------------------------------------------------------

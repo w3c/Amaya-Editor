@@ -1108,7 +1108,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
    TtaSetDocumentModified (doc);
    /* Check the attribute value to make sure that it's unique within */
    /* the document */
-   MakeUniqueName (el, doc);
+   MakeUniqueName (el, doc, TRUE);
    /* set this new end-anchor as the new target */
    SetTargetContent (doc, attr);
    if (withUndo && new_)
@@ -1636,10 +1636,11 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
    MakeUniqueName
    Check attribute NAME or ID in order to make sure that its value is unique
    in the document.
-   If the NAME or ID is already used, add a number at the end of the value.
-   Return TRUE if the initial value was changed.
+   If doIt and the NAME or ID is already used, the function adds a number
+   at the end of the value.
+   Return TRUE if the initial value was changed or needs to be changed.
   ----------------------------------------------------------------------*/
-ThotBool MakeUniqueName (Element el, Document doc)
+ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 {
   ElementType	    elType;
   AttributeType     attrType;
@@ -1714,7 +1715,7 @@ ThotBool MakeUniqueName (Element el, Document doc)
 		  result = TRUE;
 		}
 	      
-	      if (change)
+	      if (change && doIt)
 		{
 		  /* copy the element Label into the NAME attribute */
 		  TtaSetAttributeText (attr, value, el, doc);
@@ -1747,7 +1748,7 @@ ThotBool MakeUniqueName (Element el, Document doc)
 		    }
 		}
 	    }
-	  if (checkID)
+	  if (checkID && doIt)
 	    {
 	      /* Change or insert an ID attribute accordingly */
 	      attrType.AttrTypeNum = HTML_ATTR_ID;
@@ -1767,7 +1768,7 @@ ThotBool MakeUniqueName (Element el, Document doc)
 	      if (!change)
 		TtaRegisterAttributeCreate (attr, el, doc);
 	    }
-	  else if (checkNAME)
+	  else if (checkNAME && doIt)
 	    {
 	      /* Change or insert a NAME attribute accordingly */
 	      attrType.AttrTypeNum = HTML_ATTR_NAME;
@@ -2456,7 +2457,7 @@ void ElementPasted (NotifyElement * event)
      is no need to check IDs as the included document will never be changed
      nor saved */
   if (event->elementType.ElTypeNum > 0)
-     MakeUniqueName (el, doc);
+     MakeUniqueName (el, doc, TRUE);
 
   elType = TtaGetElementType (el);
   anchor = NULL;
@@ -3054,7 +3055,7 @@ void CreateTarget (Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateAttrNAME (NotifyAttribute * event)
 {
-  MakeUniqueName (event->element, event->document);
+  MakeUniqueName (event->element, event->document, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -3076,7 +3077,7 @@ void UpdateAttrID (NotifyAttribute * event)
 			&lastChild);
   else
     {
-      MakeUniqueName (event->element, event->document);
+      MakeUniqueName (event->element, event->document, TRUE);
       if (event->event == TteAttrCreate)
 	/* if the ID attribute is on a text string, create a SPAN element that
 	   encloses this text string and move the ID attribute to that SPAN

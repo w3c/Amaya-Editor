@@ -2030,7 +2030,7 @@ void CellPasted (NotifyElement * event)
   HandleColAndRowAlignAttributes (row, doc);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
-  MakeUniqueName (cell, doc);
+  MakeUniqueName (cell, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -3065,7 +3065,7 @@ void RowPasted (NotifyElement * event)
   HandleColAndRowAlignAttributes (row, doc);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
-  MakeUniqueName (row, doc);
+  MakeUniqueName (row, doc, TRUE);
 }
 
 /*----------------------------------------------------------------------

@@ -1540,6 +1540,25 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 			GetTextBuffer (&(pAttrNew->AeAttrText));
 		      else
 			ClearText (pAttrNew->AeAttrText);
+		      /* special treatments for id, name and accesskey attributes */
+		      tmp = SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrName;
+		      if (!strcmp (tmp, "id") ||
+			  (!strcmp (tmp, "name") &&
+			   !strcmp (SchCurrentAttr->SsName, "HTML")))
+			{
+			  if (TextAttrValue[0] == '.' ||
+			      TextAttrValue[0] == '_' ||
+			      TextAttrValue[0] == '-' ||
+			      TextAttrValue[0] == ' ' ||
+			      (TextAttrValue[0] >= 48 && /*  '0'  */
+			       TextAttrValue[0] <= 57))/*  '9'  */
+			    TextAttrValue[0] = 'L';
+			}
+		      else if (!strcmp (tmp, "accesskey") &&
+			       !strcmp (SchCurrentAttr->SsName, "HTML"))
+			/* only one character is allowed */
+			TextAttrValue[1] = EOS;
+
 		      tmp = (char *)TtaConvertByteToMbs ((unsigned char *)TextAttrValue, TtaGetDefaultCharset ());
 		      CopyMBs2Buffer ((unsigned char *)tmp, pAttrNew->AeAttrText, 0, strlen (tmp));
 		      TtaFreeMemory (tmp);

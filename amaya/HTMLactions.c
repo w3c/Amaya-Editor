@@ -524,13 +524,15 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 
 /*----------------------------------------------------------------------
   CheckUniqueName
-  If attribute value is duplicated generate a parsing error message.
+  If attribute value is duplicated, generates a parsing error message.
+  If it's not a valid ID value, generates a parsing error message.
   ----------------------------------------------------------------------*/
-void CheckUniqueName (Element el, Document doc, Attribute attr, AttributeType attrType)
+void CheckUniqueName (Element el, Document doc, Attribute attr,
+		      AttributeType attrType)
 {
 #define MaxMsgLength 200
   ElementType    elType;
-  int            lineNum;
+  int            lineNum, length;
   char          *name;
   char           msgBuffer[MaxMsgLength];
 
@@ -538,7 +540,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr, AttributeType at
   if (attr)
     {
       name = GetXMLAttributeName (attrType, elType, doc);
-      if (MakeUniqueName (el, doc))
+      if (MakeUniqueName (el, doc, FALSE))
 	{
 	  sprintf (msgBuffer, "Duplicate attribute value %s", name);
 	  lineNum = TtaGetElementLineNumber(el);
@@ -546,6 +548,26 @@ void CheckUniqueName (Element el, Document doc, Attribute attr, AttributeType at
 	    XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
 	  else
 	    HTMLParseError (doc, msgBuffer, lineNum);
+	}
+      else if (!strcmp (name, "id"))
+	{
+	  length = TtaGetTextAttributeLength (attr) + 1;
+	  name = (char *)TtaGetMemory (length);
+	  TtaGiveTextAttributeValue (attr, name, &length);
+	  if (name[0] == '.' ||
+	       name[0] == '_' ||
+	       name[0] == '-' ||
+	       name[0] == ' ' ||
+	       (name[0] >= 48 && /*  '0'  */
+		name[0] <= 57))/*  '9'  */
+	    {
+	      sprintf (msgBuffer, "Invalid ID value %s", name);
+	      lineNum = TtaGetElementLineNumber(el);
+	      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+		XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
+	      else
+		HTMLParseError (doc, msgBuffer, lineNum);
+	    }
 	}
     }
 }

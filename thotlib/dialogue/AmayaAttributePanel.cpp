@@ -578,9 +578,9 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
     {
     case wxATTR_TYPE_TEXT:
       {
+	char buffer[MAX_LENGTH];
 	wxTextCtrl * p_text_ctrl = XRCCTRL(*m_pPanel_Text, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
 	wxString value = p_text_ctrl->GetValue();
-	char buffer[MAX_LENGTH];
 	strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
 	CallbackValAttrMenu (NumMenuAttrText, -1, buffer);
 	/* create/modify attribute */
