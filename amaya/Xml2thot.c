@@ -354,8 +354,8 @@ static void            InitXmlParserContexts ()
    ctxt->XMLtype = MATH_TYPE;
    ctxt->MapAttribute = (Proc) MapMathMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapMathMLEntity2;
-   ctxt->EntityCreated = (Proc) MathMLEntityCreated2;
+   ctxt->MapEntity = (Proc) MapMathMLEntityWithExpat;
+   ctxt->EntityCreated = (Proc) MathMLEntityCreatedWithExpat;
    ctxt->InsertElem = (Proc) XmlInsertElement;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
@@ -386,8 +386,8 @@ static void            InitXmlParserContexts ()
    ctxt->XMLtype = GRAPH_TYPE;
    ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
    ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapGraphMLEntity2;
-   ctxt->EntityCreated = (Proc) GraphMLEntityCreated2;
+   ctxt->MapEntity = (Proc) MapGraphMLEntityWithExpat;
+   ctxt->EntityCreated = (Proc) GraphMLEntityCreatedWithExpat;
    ctxt->InsertElem = (Proc) XmlInsertElement;
    ctxt->ElementComplete = (Proc) GraphMLElementComplete;
    ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
@@ -1097,6 +1097,8 @@ Element el;
    int           length, nbspaces;
    ElementType   elType;
    Element       lastLeaf;
+   AttributeType attrType;
+   Attribute     attr = NULL;
    CHAR_T        lastChar[2];
 
    /* Search the last leaf in the element's tree */
@@ -1111,8 +1113,21 @@ Element el;
 	   if (length > 0)
 	     {
 	       nbspaces = 0;
-	       if (RemoveTrailingSpace)
+	       /* Search for an Entity attribute  */
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+		 attrType.AttrTypeNum = HTML_ATTR_EntityName;
+	       else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("MathML")) == 0)
+		 attrType.AttrTypeNum = MathML_ATTR_EntityName;
+	       else
+		 attrType.AttrTypeNum = 0;
+	       attr = TtaGetAttribute (lastLeaf, attrType);
+	       if (attr == NULL)
 		 {
+		   /* Don't suppress trailing spaces for an entity element*/
+		   if (RemoveTrailingSpace)
+		     /* Don't suppress trailing spaces for an entity element*/
+		     {
 		   do
 		     {
 		       TtaGiveSubString (lastLeaf, lastChar, length, 1);
@@ -1123,14 +1138,15 @@ Element el;
 			 }
 		     }
 		   while (lastChar[0] == WC_SPACE && length > 0);
-		 }
-	       else
-		 {
-		   TtaGiveSubString (lastLeaf, lastChar, length, 1);
-		   if (lastChar[0] == WC_CR || lastChar[0] == WC_EOL)
+		     }
+		   else
 		     {
-		       length--;
-		       nbspaces++;
+		       TtaGiveSubString (lastLeaf, lastChar, length, 1);
+		       if (lastChar[0] == WC_CR || lastChar[0] == WC_EOL)
+			 {
+			   length--;
+			   nbspaces++;
+			 }
 		     }
 		 }
 

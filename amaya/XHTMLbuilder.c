@@ -549,9 +549,7 @@ Document doc;
    Search that entity in the entity table and return the corresponding value.
   ---------------------------------------------------------------------------*/
 #ifdef __STDC__
-void	XhtmlMapEntity (STRING  entityName,
-			int    *entityValue,
-			STRING  alphabet)
+void	XhtmlMapEntity (STRING  entityName, int *entityValue, STRING  alphabet)
 #else
 void	XhtmlMapEntity (entityName, entityValue, alphabet)
 STRING  entityName;
@@ -626,8 +624,10 @@ ParserData    *context;
    attrType.AttrTypeNum = HTML_ATTR_EntityName;
    attr = TtaNewAttribute (attrType);
    TtaAttachAttribute (elText, attr, context->doc);
-   ustrcpy (buffer, prefix);
+   buffer[0] = '&';
+   ustrcpy (&buffer[1], prefix);
    ustrcat (buffer, entityName);
+   ustrcat (buffer, TEXT(";"));
    TtaSetAttributeText (attr, buffer, elText, context->doc);
    context->mergeText = FALSE;
 }

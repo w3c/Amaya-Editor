@@ -16,17 +16,17 @@ extern void MapMathMLAttributeValue ( STRING AttrVal,
 extern void MapMathMLEntity ( STRING entityName,
                               STRING entityValue,
                               STRING alphabet );
-extern void MapMathMLEntity2 ( STRING entityName,
-                               int* entityValue,
-                               STRING alphabet );
 extern void MathMLEntityCreated ( USTRING entityValue,
                                   Language lang,
                                   STRING entityName,
                                   Document doc );
-extern void MathMLEntityCreated2 ( int entityValue,
-                                   Language lang,
-                                   STRING entityName,
-                                   ParserData *XmlContext );
+extern void MapMathMLEntityWithExpat ( STRING entityName,
+                                       int* entityValue,
+                                       STRING alphabet );
+extern void MathMLEntityCreatedWithExpat ( int entityValue,
+                                           Language lang,
+                                           STRING entityName,
+                                           ParserData *XmlContext );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
 extern void SetSingleIntHorizStretchAttr ( Element el,
                                            Document doc,
@@ -90,17 +90,17 @@ extern void MapMathMLAttributeValue (/* STRING AttrVal,
 extern void MapMathMLEntity (/* STRING entityName,
                                 STRING entityValue,
                                 STRING alphabet */);
-extern void MapMathMLEntity2 (/* STRING entityName,
-                                 int* entityValue,
-                                 STRING alphabet */);
 extern void MathMLEntityCreated (/* USTRING entityValue,
                                     Language lang,
                                     STRING entityName,
                                     Document doc */);
-extern void MathMLEntityCreated2 (/* int entityValue,
-                                     Language lang,
-                                     STRING entityName,
-                                     ParserData *XmlContext */);
+extern void MapMathMLEntityWithExpat (/* STRING entityName,
+                                         int* entityValue,
+                                         STRING alphabet */);
+extern void MathMLEntityCreatedWithExpat (/* int entityValue,
+                                             Language lang,
+                                             STRING entityName,
+                                             ParserData *XmlContext */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);
 extern void SetSingleIntHorizStretchAttr (/* Element el,
                                              Document doc,

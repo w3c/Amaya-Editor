@@ -385,7 +385,9 @@ Document            doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        MapMathMLAttributeValue (STRING AttrVal, AttributeType attrType, int *value)
+void        MapMathMLAttributeValue (STRING AttrVal,
+				     AttributeType attrType,
+				     int *value)
 #else
 void        MapMathMLAttributeValue (AttrVal, attrType, value)
 STRING              AttrVal;
@@ -414,7 +416,9 @@ int		   *value;
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	MapMathMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
+void	MapMathMLEntity (STRING entityName,
+			 STRING entityValue,
+			 STRING alphabet)
 #else
 void	MapMathMLEntity (entityName, entityValue, alphabet)
 STRING  entityName;
@@ -444,46 +448,16 @@ STRING  alphabet;
     }
 }
 
-/*---------------------------------------------------------------------------
-   MapMathMLEntity
-   Search that entity in the entity table and return the corresponding value.
-  ---------------------------------------------------------------------------*/
-#ifdef __STDC__
-void	MapMathMLEntity2 (STRING entityName, int* entityValue, STRING alphabet)
-#else
-void	MapMathMLEntity2 (entityName, entityValue, alphabet)
-STRING  entityName;
-int    *entityValue;
-STRING  alphabet;
-#endif
-{
-  int       i;
-  ThotBool  found;
-
-  found = FALSE;
-  for (i = 0; MathEntityTable[i].charCode >= 0 && !found; i++)
-    found = !ustrcmp (MathEntityTable[i].charName, entityName);
-
-  if (found)
-    /* entity found */
-    {
-      i--;
-      *entityValue = MathEntityTable[i].charCode;
-      *alphabet = MathEntityTable[i].charAlphabet;
-    }
-  else
-    *alphabet = EOS;
-}
-
 /*----------------------------------------------------------------------
    MathMLEntityCreated
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        MathMLEntityCreated (USTRING entityValue, Language lang, STRING entityName, Document doc)
+void    MathMLEntityCreated (USTRING entityValue, Language lang,
+			     STRING entityName, Document doc)
 #else
-void        MathMLEntityCreated (entityValue, lang, entityName, doc)
+void    MathMLEntityCreated (entityValue, lang, entityName, doc)
 USTRING     entityValue;
 Language    lang;
 STRING      entityName;
@@ -540,16 +514,49 @@ Document    doc;
    TtaSetAttributeText (attr, buffer, elText, doc);
 }
 
+/*---------------------------------------------------------------------------
+   MapMathMLEntityWithExpat
+   Search that entity in the entity table and return the corresponding value.
+  ---------------------------------------------------------------------------*/
+#ifdef __STDC__
+void	MapMathMLEntityWithExpat (STRING entityName,
+				  int* entityValue,
+				  STRING alphabet)
+#else
+void	MapMathMLEntityWithExpat (entityName, entityValue, alphabet)
+STRING  entityName;
+int    *entityValue;
+STRING  alphabet;
+#endif
+{
+  int       i;
+  ThotBool  found;
+
+  found = FALSE;
+  for (i = 0; MathEntityTable[i].charCode >= 0 && !found; i++)
+    found = !ustrcmp (MathEntityTable[i].charName, entityName);
+
+  if (found)
+    /* entity found */
+    {
+      i--;
+      *entityValue = MathEntityTable[i].charCode;
+      *alphabet = MathEntityTable[i].charAlphabet;
+    }
+  else
+    *alphabet = EOS;
+}
+
 /*----------------------------------------------------------------------
-   MathMLEntityCreated
+   MathMLEntityCreatedWithExpat
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        MathMLEntityCreated2 (int entityValue, Language lang,
-				  STRING  entityName, ParserData *XmlContext)
+void  MathMLEntityCreatedWithExpat (int entityValue, Language lang,
+				    STRING  entityName, ParserData *XmlContext)
 #else
-void        MathMLEntityCreated2 (entityValue, lang, entityName, XmlContext)
+void  MathMLEntityCreatedWithExpat (entityValue, lang, entityName, XmlContext)
 int         entityValue;
 Language    lang;
 STRING      entityName;

@@ -18,17 +18,17 @@ extern void MapGraphMLAttributeValue ( CHAR_T* AttrVal,
 extern void MapGraphMLEntity ( STRING entityName,
                                STRING entityValue,
                                STRING alphabet );
-extern void MapGraphMLEntity2 ( STRING entityName,
-                                int* entityValue,
-                                STRING alphabet );
+extern void MapGraphMLEntityWithExpat ( STRING entityName,
+                                        int* entityValue,
+                                        STRING alphabet );
 extern void GraphMLEntityCreated ( USTRING entityValue,
                                    Language lang,
                                    STRING entityName,
                                    Document doc );
-extern void GraphMLEntityCreated2 ( int entityValue,
-                                    Language lang,
-                                    STRING entityName,
-                                    ParserData *XmlContext );
+extern void GraphMLEntityCreatedWithExpat ( int entityValue,
+                                            Language lang,
+                                            STRING entityName,
+                                            ParserData *XmlContext );
 extern Element CreateGraphicLeaf ( Element el,
                                    Document doc,
                                    ThotBool *closed,
@@ -81,17 +81,17 @@ extern void MapGraphMLAttributeValue (/* CHAR_T* AttrVal,
 extern void MapGraphMLEntity (/* STRING entityName,
                                  STRING entityValue,
                                  STRING alphabet */);
-extern void MapGraphMLEntity2 (/* STRING entityName,
-                                  int* entityValue,
-                                  STRING alphabet */);
+extern void MapGraphMLEntityWithExpat (/* STRING entityName,
+                                          int* entityValue,
+                                          STRING alphabet */);
 extern void GraphMLEntityCreated (/* USTRING entityValue,
                                      Language lang,
                                      STRING entityName,
                                      Document doc */);
-extern void GraphMLEntityCreated2 (/* int entityValue,
-                                      Language lang,
-                                      STRING entityName,
-                                      ParserData *XmlContext */);
+extern void GraphMLEntityCreatedWithExpat (/* int entityValue,
+                                              Language lang,
+                                              STRING entityName,
+                                              ParserData *XmlContext */);
 extern Element CreateGraphicLeaf (/* Element el,
                                      Document doc,
                                      ThotBool *closed,

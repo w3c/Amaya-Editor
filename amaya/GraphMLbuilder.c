@@ -73,7 +73,8 @@ STRING elementName;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType, CHAR_T* elementName, Document doc)
+void      MapGraphMLAttribute (CHAR_T *attrName, AttributeType *attrType,
+			       CHAR_T* elementName, Document doc)
 #else
 void      MapGraphMLAttribute (Attr, attrType, elementName, doc)
 CHAR_T        *attrName;
@@ -135,13 +136,15 @@ STRING  alphabet;
 }
 
 /*----------------------------------------------------------------------
-   MapGraphMLEntity
+   MapGraphMLEntityWithExpat
    Search that entity in the entity table and return the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void   MapGraphMLEntity2 (STRING entityName, int* entityValue, STRING alphabet)
+void   MapGraphMLEntityWithExpat (STRING entityName,
+				  int* entityValue,
+				  STRING alphabet)
 #else
-void   MapGraphMLEntity2 (entityName, entityValue, alphabet)
+void   MapGraphMLEntityWithExpat (entityName, entityValue, alphabet)
 STRING  entityName;
 int    *entityValue;
 STRING  alphabet;
@@ -155,9 +158,10 @@ STRING  alphabet;
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        GraphMLEntityCreated (USTRING entityValue, Language lang, STRING entityName, Document doc)
+void    GraphMLEntityCreated (USTRING entityValue, Language lang,
+			      STRING entityName, Document doc)
 #else
-void        GraphMLEntityCreated (entityValue, lang, entityName, doc)
+void    GraphMLEntityCreated (entityValue, lang, entityName, doc)
 USTRING     entityValue;
 Language    lang;
 STRING      entityName;
@@ -167,14 +171,14 @@ Document    doc;
 }
 
 /*----------------------------------------------------------------------
-   GraphMLEntityCreated
+   GraphMLEntityCreatedWithExpat
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        GraphMLEntityCreated2 (int entityValue, Language lang,
-				   STRING entityName, ParserData *XmlContext)
+void  GraphMLEntityCreatedWithExpat (int entityValue, Language lang,
+				     STRING entityName, ParserData *XmlContext)
 #else
-void        GraphMLEntityCreated2 (entityValue, lang, entityName, XmlContext)
+void  GraphMLEntityCreatedWithExpat (entityValue, lang, entityName, XmlContext)
 int         entityValue;
 Language    lang;
 STRING      entityName;
