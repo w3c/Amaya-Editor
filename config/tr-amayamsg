@@ -214,7 +214,7 @@
 212 **Some tags/attributes are ignored - see Views/Show parsing errors
 213 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
 214 **This document has no encoding declaration
-215 **There is no encoding. Do you accept to set it as ISO_8859_1 ?
+215 **There is no encoding, set it to ISO_8859_1 ?
 216 **Not available
 217 **Browse
 218 **File Browser
