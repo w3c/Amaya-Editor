@@ -3805,11 +3805,15 @@ static char* ExportElemNsPrefix (PtrDocument pDoc, PtrElement pNode)
 	  prefixDecl = uriDecl->NsPtrPrefix;
 	  while (prefixDecl != NULL)
 	    {
-	      if ((pNode == prefixDecl->NsPrefixElem) ||
-		  (ElemIsAnAncestor (prefixDecl->NsPrefixElem, pNode)))
+	      if (pNode == prefixDecl->NsPrefixElem)
 		{
 		  ns_prefix = prefixDecl->NsPrefixName;
 		  prefixDecl = NULL;
+		}
+	      else if (ElemIsAnAncestor (prefixDecl->NsPrefixElem, pNode))
+		{
+		  ns_prefix = prefixDecl->NsPrefixName;
+		  prefixDecl = prefixDecl->NsNextPrefixDecl;
 		}
 	      else
 		prefixDecl = prefixDecl->NsNextPrefixDecl;
