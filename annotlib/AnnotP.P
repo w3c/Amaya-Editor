@@ -174,11 +174,10 @@ BOXES
 
  Selected_gif: BEGIN
 #ifndef PAGE
-	Visibility: 10;
+	Visibility: 5;
 	Content: Picture 'selected.gif';
-{        HorizRef: * . Bottom;}
-{	HorizPos: Left = Enclosing . Left; }
-{	VertPos: Top = Enclosing . Top;}
+        VertPos: Bottom = Creator . HRef + 0.2;
+        HorizPos: Right = Creator . Left;
 #endif
 	END;
 RULES
@@ -318,7 +317,7 @@ RULES
 
  Thread_item:
         BEGIN
-	CreateBefore (Thread_point_box);
+        CreateBefore (Thread_point_box);
         VertPos: Top = Previous AnyElem . Bottom + 0.2;
 	HorizPos: Left = Enclosing . left + THREAD_ITEM_INDENT;
 	Width: Enclosing . width - THREAD_ITEM_INDENT;
@@ -375,10 +374,11 @@ ATTRIBUTES
 	BEGIN
  	CreateBefore(ValueType);
         END;
- Selected(Thread_item):
+
+ Selected_(Thread_item):
 	 BEGIN
-	 CreateBefore (Selected_gif);
-	 Foreground: Red;
+	 CreateFirst (Selected_gif);
+ 	 Foreground: Red;
 	 END;
 END
 

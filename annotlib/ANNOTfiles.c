@@ -624,7 +624,7 @@ void ANNOT_ToggleThread (Document thread_doc, Document annot_doc,
       i = TtaGetTextAttributeLength (attr) + 1;
       url = TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
-      attrType.AttrTypeNum = Annot_ATTR_Selected;
+      attrType.AttrTypeNum = Annot_ATTR_Selected_;
       attr = TtaGetAttribute (el, attrType);
       /* grr... again a local compare problem! */
       if (!strcasecmp (url, DocumentURLs[annot_doc])

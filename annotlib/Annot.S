@@ -35,8 +35,8 @@ STRUCT
   Thread  = LIST OF (Thread_item); 
 
   { a thread item contains a description and may contain other thread items }
-  Thread_item (ATTR  Selected = Yes_;   {user is viewing this thread item }
-	             HREF_;) =          { link to the annotation }  
+  Thread_item (ATTR  Selected_ = Yes_;   {user is viewing this thread item }
+	             HREF_;) =           { link to the annotation }  
                 BEGIN
 	        TI_desc;
 	        ? TI_content = LIST OF (Thread_item);
