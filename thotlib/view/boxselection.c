@@ -252,7 +252,7 @@ void ClearViewSelection (int frame)
 		    DefClip (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxYOrg + pBox1->BxHeight);
 #else /* _GL */
-		    DefRegion (frame, x1, pBox1->BxYOrg, x2,
+		    DefRegion (frame, x1, pBox1->BxClipY, x2,
 			     pBox1->BxClipY + pBox1->BxClipH);
 #endif /* _GL */
 
@@ -314,7 +314,7 @@ void ClearViewSelection (int frame)
 		    DefClip (frame, x1, pBox2->BxYOrg, x2,
 			     pBox2->BxYOrg + pBox2->BxHeight);
 #else /* _GL */
-		    DefRegion (frame, x1, pBox2->BxYOrg, x2,
+		    DefRegion (frame, x1, pBox2->BxClipY, x2,
 			     pBox2->BxClipY + pBox2->BxClipH);
 #endif /* _GL */
 

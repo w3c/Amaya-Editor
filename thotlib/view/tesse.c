@@ -44,6 +44,18 @@
 #define TtaFreeMemory(A) free(A)
 #define TtaExpandMemory(A,B) realloc(A,B)
 
+
+/* initial number of allocated points*/
+#define ALLOC_POINTS 100
+
+#include "ustring.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "thot_gui.h"
+#include "typeint.h"
+
+#ifdef _NOWAY
 /*Structure describing points 
 comming from the thotlib*/
 typedef struct _ThotPoint {
@@ -51,9 +63,6 @@ typedef struct _ThotPoint {
   float  y; 
 } ThotPoint;
 /***************************/
-
-/* initial number of allocated points*/
-#define ALLOC_POINTS 100
 
 /*Structure describing points 
 we need double precision here.*/
@@ -82,6 +91,7 @@ typedef struct _ThotPath {
   int                cont;      /*current number of countour*/
   int                height;    /*height of path (needed for inversion)*/
 } ThotPath;
+#endif /* _NOWAY */
 
 #ifdef _GL
 /*----------------------------------------------------------------------

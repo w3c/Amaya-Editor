@@ -2227,6 +2227,7 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
+
   FontDialogue =  ReadFont (script, 2, 0, index, UnRelative);
   if (FontDialogue == NULL)
     {

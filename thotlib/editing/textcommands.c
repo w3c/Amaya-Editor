@@ -358,6 +358,7 @@ static void MovingCommands (int code, Document doc, View view,
       GetSizesFrame (frame, &w, &h);
       if (!RightExtended && !LeftExtended)
 	{
+#ifndef _GL
 	  if (pBoxBegin != NULL &&
 	      (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
 	       pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
@@ -373,6 +374,23 @@ static void MovingCommands (int code, Document doc, View view,
 	      /* the element is not displayed within the window */
 	      pBoxEnd = NULL;
 	    }
+#else /* _GL*/
+	  if (pBoxBegin != NULL &&
+	      (pBoxBegin->BxClipY + pBoxBegin->BxClipH <= 0 ||
+	       pBoxBegin->BxClipY >= h))
+	    {
+	      /* the element is not displayed within the window */
+	      top = pBoxBegin->BxClipY + pBoxBegin->BxClipH <= 0;
+	      pBoxBegin = NULL;
+	    }
+	  if (pBoxEnd != NULL &&
+	      (pBoxEnd->BxClipY + pBoxEnd->BxClipH <= 0 ||
+	       pBoxEnd->BxClipY >= h))
+	    {
+	      /* the element is not displayed within the window */
+	      pBoxEnd = NULL;
+	    }
+#endif /* _GL */
 	}
       if (pBoxBegin == NULL && pBoxEnd != NULL)
 	pBoxBegin = pBoxEnd;
@@ -553,7 +571,11 @@ static void MovingCommands (int code, Document doc, View view,
 		}
 	    }
 	  /* Get the last X position */
+#ifndef _GL
 	  ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+#else /* _GL */
+	  ClickX = pBoxBegin->BxClipX + pViewSel->VsXPos;
+#endif /* _GL */
 	  break;
 	  
 	case 2:	/* Forward one character (->) */
@@ -627,13 +649,23 @@ static void MovingCommands (int code, Document doc, View view,
 			ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
 					 FALSE, TRUE, FALSE, FALSE);
 		      /* show the end of the selection */
+#ifndef _GL
 		      if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
+#else /* _GL */
+			if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos > w)
+#endif /* _GL */
 			{
 			  if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
 			    TtcScrollRight (doc, view);
 			}
+#ifndef _GL
 		      else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)
 			HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
+#else /* _GL */
+			else if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4 < 0)
+			  HorizontalScroll (frame, pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4, 0);
+
+#endif /* _GL */
 		    }
 		  else if (pBox->BxNext)
 		    {
@@ -675,7 +707,11 @@ static void MovingCommands (int code, Document doc, View view,
 		}
 	    }
 	  /* Get the last X position */
+#ifndef _GL
 	  ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+#else /* _GL */
+	  ClickX = pBoxBegin->BxClipX + pViewSel->VsXPos;
+#endif /* _GL */
 	  break;
 
 	case 3:	/* End of line (^E) */
@@ -683,7 +719,11 @@ static void MovingCommands (int code, Document doc, View view,
 	    MoveInLine (frame, TRUE, extendSel);
 	  if (pViewSel->VsBox)
 	    /* Get the last X position */
+#ifndef _GL
 	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+#else /* _GL */
+	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsXPos;
+#endif /* _GL */
 	  break;
 	   
 	case 4:	/* Beginning of line (^A) */
@@ -691,7 +731,11 @@ static void MovingCommands (int code, Document doc, View view,
 	    MoveInLine (frame, FALSE, extendSel);
 	  if (pViewSel->VsBox)
 	    /* Get the last X position */
+#ifndef _GL
 	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+#else /* _GL */
+	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsXPos;
+#endif /* _GL */
 	  break;
 	   
 	case 7:	/* Next line (^N) */
@@ -707,10 +751,17 @@ static void MovingCommands (int code, Document doc, View view,
 	      done = FALSE;
 	      pBox = pBoxEnd;
 	      if (SelPosition || RightExtended)
+#ifndef _GL
 		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
 	      else
 		x = pViewSelEnd->VsXPos + pBox->BxXOrg;
 	      y = pBox->BxYOrg + pBox->BxHeight;
+#else /* _GL */
+	        x = pViewSel->VsXPos + pBoxBegin->BxClipX + pFrame->FrXOrg;
+	      else
+		x = pViewSelEnd->VsXPos + pBox->BxClipX + pFrame->FrXOrg;
+	      y = pBox->BxClipY + pBox->BxClipH + pFrame->FrYOrg;
+#endif /* _GL */
 	      yDelta = 10;
 	      /* store the end position of the selection as the new reference */
 	      if (extendSel && LeftExtended)
@@ -728,8 +779,13 @@ static void MovingCommands (int code, Document doc, View view,
 		  else
 		    {
 		      /* just decrease the current extension */
+#ifndef _GL
 		      y = pBoxBegin->BxYOrg;
 		      x = ClickX + pFrame->FrXOrg;
+#else /* _GL */
+		      y = pBoxBegin->BxClipY + pFrame->FrYOrg;
+		      x = ClickX + pFrame->FrXOrg;;
+#endif /* _GL */
 		      pBox = pBoxBegin;
 		    }
 		}
@@ -762,11 +818,20 @@ static void MovingCommands (int code, Document doc, View view,
 	  else if (pBox)
 	    {
 	      done = FALSE;
+#ifndef _GL
 	      y = pBoxBegin->BxYOrg;
 	      if (SelPosition || RightExtended)
 		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
 	      else
 		x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
+
+#else /* _GL */
+	      y = pBoxBegin->BxClipY;
+	      if (SelPosition || RightExtended)
+		x = pViewSel->VsXPos + pBoxBegin->BxClipX + pFrame->FrYOrg;
+	      else
+		x = pViewSelEnd->VsXPos + pBoxEnd->BxClipX + pFrame->FrYOrg;
+#endif /* _GL */
 	      yDelta = -10;
 	      if (extendSel && RightExtended)
 		{

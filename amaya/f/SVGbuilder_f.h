@@ -90,10 +90,12 @@ extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
                                       ThotBool delete );
-extern void ParsePathDataAttribute ( Attribute attr,
-                                     Element el,
-                                     Document doc );
-extern int ParseintAttribute ( Attribute attr );
+extern void *ParsePathDataAttribute ( Attribute attr,
+                                      Element el,
+                                      Document doc,
+                                      ThotBool IsDrawn );
+extern int ParseIntAttribute ( Attribute attr );
+extern float ParseFloatAttribute ( Attribute attr );
 extern void SVGAttributeComplete ( Attribute attr,
                                    Element el,
                                    Document doc );
@@ -184,10 +186,12 @@ extern void ParseTransformAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
                                         ThotBool delete */);
-extern void ParsePathDataAttribute (/* Attribute attr,
-                                       Element el,
-                                       Document doc */);
-extern int ParseintAttribute (/* Attribute attr */);
+extern void *ParsePathDataAttribute (/* Attribute attr,
+                                        Element el,
+                                        Document doc,
+                                        ThotBool IsDrawn */);
+extern int ParseIntAttribute (/* Attribute attr */);
+extern float ParseFloatAttribute (/* Attribute attr */);
 extern void SVGAttributeComplete (/* Attribute attr,
                                      Element el,
                                      Document doc */);

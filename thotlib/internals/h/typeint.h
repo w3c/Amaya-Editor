@@ -306,6 +306,49 @@ typedef struct _PathSeg
 #define Sweep u.s1._Sweep_
 
 
+#ifdef _GL
+/*Structure describing points 
+we need double precision here.*/
+typedef struct _ThotDblePoint {
+  double         x;
+  double         y; 
+  double         z;
+} ThotDblePoint;
+
+/*Structure describing points 
+resulting of tesselation
+(linked list)*/
+typedef struct _Mesh {
+  double          data[3];
+  struct _Mesh   *next;
+} Mesh_list;
+
+/*Structure describing a Path*/
+typedef struct _ThotPath {
+  ThotDblePoint      *npoints;  /* points array*/
+  int                *ncontour; /* Countour flag array*/
+  Mesh_list          *mesh_list;/*Contains points resulting of tesselation*/
+  int                nsize;     /*current number of points*/
+  int                maxpoints; /*max size of the npoints array*/
+  int                maxcont;   /*max size of the maxcont array*/
+  int                cont;      /*current number of countour*/
+  int                height;    /*height of path (needed for inversion)*/
+} ThotPath;
+
+
+/*Animation Path defining successive position*/
+typedef struct _AnimPath
+{
+  PtrPathSeg      FirstPathSeg; /*linked list of segment defining the path*/
+  float           length;       /* total length */  
+  ThotPath        *Path;        /*The Path*/
+  float           *Proportion;  /*per segment % of total length*/
+ } AnimPath;
+
+
+#endif /*_GL */
+
+
 /* Typedef of SVG gradient part*/
 typedef struct _RgbaDef 
 {

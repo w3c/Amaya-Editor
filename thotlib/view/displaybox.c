@@ -2238,15 +2238,27 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
     {     
       m = TtaGetMemory (16 * sizeof (double));      
       glGetDoublev (GL_MODELVIEW_MATRIX, m);
-      glLoadIdentity ();      
+      glLoadIdentity (); 
+
+      GL_SetFillOpacity (1000);     
+      GL_SetOpacity (1000);
+      GL_SetStrokeOpacity (1000);
+    
       GL_TextureMap (pAb->AbBox->Pre_computed_Pic, 
 		     x, y, width, height);
+
       GL_SetFillOpacity (pAb->AbOpacity);
       GL_SetOpacity (pAb->AbOpacity);
-      GL_TextureMap (pAb->AbBox->Post_computed_Pic, 
+      GL_SetStrokeOpacity (pAb->AbOpacity);
+
+     
+      GL_TextureMap (pAb->AbBox->Post_computed_Pic,
 		     x, y, width, height);
+
       GL_SetFillOpacity (1000);
       GL_SetOpacity (1000);
+      GL_SetStrokeOpacity (1000);
+
       glLoadMatrixd (m);      
       TtaFreeMemory (m);      
     }
@@ -2312,12 +2324,14 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
 	pAb->AbBox->Pre_computed_Pic = Group_shot (x, y,
 						   width,
 						   height,
-						   frame);
+						   frame, 
+						   FALSE);
       else
 	pAb->AbBox->Post_computed_Pic = Group_shot (x, y,
-						   width,
-						   height,
-						   frame);
+						    width,
+						    height,
+						    frame,
+						    TRUE);
     }
 }
 
@@ -2329,9 +2343,9 @@ static ThotBool DisplayGradient (PtrAbstractBox pAb,
 				 int frame, 
 				 ThotBool selected)
 {
-  GradDef *gradient;
-  int x, y, width, height;
-  unsigned char *pattern;
+  GradDef            *gradient;
+  int                x, y, width, height;
+  unsigned char      *pattern;
   
   gradient = pAb->AbElement->ElParent->ElGradient;
   if (gradient->next == NULL)
@@ -2346,8 +2360,12 @@ static ThotBool DisplayGradient (PtrAbstractBox pAb,
   if (box->Pre_computed_Pic == NULL)
   {
     /*create the gradient pattern and put it on a texture*/
-    pattern = fill_linear_gradient_image (gradient->next, width, height);
-    box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);    
+    pattern = fill_linear_gradient_image (gradient->next, 
+					  width, 
+					  height);
+    box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, 
+						   width, 
+						   height);    
   }
     
   /* GL_GetCurrentClipping (&clipx, &clipy, &clipw, &cliph); */

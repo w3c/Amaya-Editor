@@ -641,7 +641,7 @@ EXCEPT
 	                NoCreate;
    tspan:	        NoShowBox; 
    use_:	        NoMove, NoResize, HighlightChildren, NoShowBox,
-	                NoCreate;
+	                NoCreate, IsGroup;
    image:	        MoveResize, HighlightChildren, NoShowBox;
    symbol_:	        NoMove, NoResize,  HighlightChildren,NoShowBox,
                         NoCreate;

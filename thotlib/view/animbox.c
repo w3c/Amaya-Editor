@@ -157,7 +157,11 @@ static void ApplyOpacityToAllBoxes (PtrAbstractBox pAb, int result)
     {      
       pAb->AbBox->VisibleModification = TRUE;
       pAb->AbOpacity = result;
-      ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, result);
+
+      /* test if it's a group*/
+      if (! TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+		       pAb->AbElement->ElStructSchema))
+	ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
 }
@@ -173,15 +177,6 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
       pBox = pAb->AbBox;
       pBox->VisibleModification = TRUE;
       pBox->BxXOrg = result;
-      if (pBox->BxType == BoSplit || 
-	  pBox->BxType == BoMulScript)
-	{
-	  while (pBox->BxNexChild)
-	    {
-	      pBox = pBox->BxNexChild;			
-	      pBox->BxXOrg = result;
-	    }
-	}
       ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -198,19 +193,8 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
       pBox = pAb->AbBox;
       if (pAb->AbLeafType == LtText)
 	result -= BoxFontBase (pBox->BxFont);
-
       pBox->VisibleModification = TRUE;
-
       pBox->BxYOrg = result;
-      if (pBox->BxType == BoSplit || 
-	  pBox->BxType == BoMulScript)
-	{
-	  while (pBox->BxNexChild)
-	    {
-	      pBox = pBox->BxNexChild;			
-	      pBox->BxYOrg = result;
-	    }
-	}
       ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
@@ -313,12 +297,16 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    
-	    result = interpolate_double_value (atof ((char *) animated->from), 
-					       atof ((char *) animated->to),
-					       current_time,
-					       animated->duration);
-	    ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, (int) (result*1000));
+	    result = 1000 * interpolate_double_value (atof ((char *) animated->from), 
+						      atof ((char *) animated->to),
+						      current_time,
+						      animated->duration);
+	    pAb->AbBox->VisibleModification = TRUE;
+	    pAb->AbOpacity = result;
+	    /*If it's an opaque group manage the opacity*/
+	    if (!TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+				  pAb->AbElement->ElStructSchema))
+	      ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, (int) (result));
 	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }      
     }
@@ -328,18 +316,13 @@ static void animate_box_animate (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    
+	  {	    
 	    UpdateClipping (pAb->AbFirstEnclosed);
-
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, (float) result);
-	   
-	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
 	  }
       
     }
@@ -350,17 +333,12 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    
-	    	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
+	    UpdateClipping (pAb->AbFirstEnclosed);
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, (float) result);
-	   
-	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
 	  }
       
     }
@@ -371,19 +349,13 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    
 	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, (float) result);
-	   
-	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
 	  }
-      
     }
 else if (strcasecmp (animated->AttrName, "height") == 0)
     {
@@ -392,15 +364,12 @@ else if (strcasecmp (animated->AttrName, "height") == 0)
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    
 	    UpdateClipping (pAb->AbFirstEnclosed);	    
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, (float) result);	   
-	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
 	  }
       
     }
@@ -411,15 +380,11 @@ else if (strcasecmp (animated->AttrName, "height") == 0)
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    
 	    UpdateClipping (pAb->AbFirstEnclosed);	    
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
-	    /* ApplyFontSizeToAllBoxes (pAb->AbFirstEnclosed, (int) result); */	   
-	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
 	  }
       
     }
@@ -504,7 +469,6 @@ static void animate_box_transformation (PtrElement El,
 	{
 	  Trans = TtaNewTransformTranslate (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
-	  /* TtaAppendTransform ((Element) El, Trans, doc); */	  
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
@@ -514,14 +478,6 @@ static void animate_box_transformation (PtrElement El,
 
 	    Trans->XScale = tx;
 	    Trans->YScale = ty;
-	    /* Trans->Angle = (float) ty; */
-
-	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
-				Animated_Frame, 
-				0, 4096, 
-				0, 4096);
-
-	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }
       
       break;
@@ -562,7 +518,6 @@ static void animate_box_transformation (PtrElement El,
 	{
 	  Trans = TtaNewTransformScale (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
-	  /* TtaAppendTransform ((Element) El, Trans, doc);	   */
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
@@ -571,11 +526,6 @@ static void animate_box_transformation (PtrElement El,
 	    UpdateClipping (pAb->AbFirstEnclosed);
 	    Trans->XScale = tx;
 	    Trans->YScale = ty;
-	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
-				Animated_Frame, 
-				0, FrameTable[Animated_Frame].FrWidth, 
-				0, FrameTable[Animated_Frame].FrHeight);
-	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }
       
       break;
@@ -630,7 +580,6 @@ static void animate_box_transformation (PtrElement El,
 	{
 	  Trans = TtaNewTransformRotate (rott, tx, ty);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
-	  /* TtaAppendTransform ((Element) El, Trans, doc);	  */ 
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
@@ -640,11 +589,6 @@ static void animate_box_transformation (PtrElement El,
 	    Trans->Angle = rott;
 	    Trans->XRotate = tx;
 	    Trans->YRotate = ty;
-	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
-				Animated_Frame, 
-				0, FrameTable[Animated_Frame].FrWidth, 
-				0, FrameTable[Animated_Frame].FrHeight);
-	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }
       
       break;
@@ -662,7 +606,6 @@ static void animate_box_transformation (PtrElement El,
 	{
 	  Trans = TtaNewTransformSkewX (result);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
-	  /* TtaAppendTransform ((Element) El, Trans, doc);	   */
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
@@ -670,11 +613,6 @@ static void animate_box_transformation (PtrElement El,
 	  {
 	    UpdateClipping (pAb->AbFirstEnclosed);	    
 	    Trans->Factor = result;
-	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
-				Animated_Frame, 
-				0, FrameTable[Animated_Frame].FrWidth, 
-				0, FrameTable[Animated_Frame].FrHeight);
-	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }      
       break;
      
@@ -691,19 +629,13 @@ static void animate_box_transformation (PtrElement El,
 	{
 	  Trans = TtaNewTransformSkewY (result);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
-	  /* TtaAppendTransform ((Element) El, Trans, doc);	   */
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    	    UpdateClipping (pAb->AbFirstEnclosed);
-	    Trans->Factor = result;
-	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
-				Animated_Frame, 
-				0, FrameTable[Animated_Frame].FrWidth, 
-				0, FrameTable[Animated_Frame].FrHeight);
 	    UpdateClipping (pAb->AbFirstEnclosed);
+	    Trans->Factor = result;
 	  }
       
       break;
@@ -735,30 +667,39 @@ static void animate_box_motion (PtrElement El,
   ----------------------------------------------------------------------*/
 static ThotBool is_animated_now (Animated_Element *animated, AnimTime *current_time)
 {
-  if (*current_time > animated->start) 
+  if (*current_time >= animated->start)
     {
-      *current_time = *current_time - animated->start;
-      if (*current_time < animated->duration)
-	return TRUE;
-      else if (animated->repeatCount > 1)
+      if (*current_time <= (animated->start + animated->duration)) 
 	{
-	  if (animated->repeatCount > ((int)(*current_time/animated->duration)))
-	    *current_time = fmod (*current_time, animated->duration);
-	    return TRUE;
+	  *current_time = *current_time - animated->start;
+	  return TRUE;
 	}
       else
 	{
-	  switch (animated->Fill)
+	  if (animated->repeatCount > 1)
 	    {
-	    case Freeze:
-	      *current_time = animated->duration;
+	      if (animated->repeatCount > ((int)(*current_time/animated->duration)))
+		*current_time = fmod (*current_time, animated->duration);
 	      return TRUE;
-	    case Otherfill:
-	      *current_time = animated->start;
-	      return TRUE;
-	    default:
-	      *current_time = animated->start;
-	      return TRUE;
+	    }
+	  else
+	    {
+	      switch (animated->Fill)
+		{
+		case Freeze:
+		  *current_time = (AnimTime) animated->duration;
+		  break;
+		case Otherfill:
+		  *current_time = (AnimTime) 0;
+		  break;
+		default:
+		  *current_time = (AnimTime) 0;
+		  break;
+		}
+	      if (animated->action_time != *current_time)
+		return TRUE;
+	      else
+		return FALSE;
 	    }
 	}
     }
@@ -767,11 +708,13 @@ static ThotBool is_animated_now (Animated_Element *animated, AnimTime *current_t
 /*----------------------------------------------------------------------
   animate_box : animate a a box using all animation that apply on him
   ----------------------------------------------------------------------*/
-static void animate_box (PtrElement El, AnimTime current_time)
+static ThotBool animate_box (PtrElement El, AnimTime current_time)
 {
   Animated_Element *animated = NULL;
   AnimTime          rel_time;
+  ThotBool          isnotfinished;
 
+  isnotfinished = FALSE;
   if (El)
     if (El->ElAnimation)
       {      
@@ -785,7 +728,7 @@ static void animate_box (PtrElement El, AnimTime current_time)
 		  {
 		  case Color:
 		    if (animated->from && animated->to)
-		      animate_box_color (El, animated, rel_time);
+			animate_box_color (El, animated, rel_time);
 		    break;
 		  
 		  case Transformation:
@@ -812,11 +755,14 @@ static void animate_box (PtrElement El, AnimTime current_time)
 		  default:
 		    break;      
 		  }
+		isnotfinished = TRUE;
+		/*Store last animation render success*/
+		animated->action_time = rel_time;
 	      }
 	    animated = animated->next;	      
 	  }
       }
-    
+  return isnotfinished;    
 }
 #endif /* _GL */
 /*----------------------------------------------------------------------
@@ -908,11 +854,12 @@ void FreeAnimatedBox (Animated_Cell *current)
   Animate_boxes : Animate All animated boxe 
 and define region that need redisplay
   ----------------------------------------------------------------------*/
-void Animate_boxes (int frame, 
+ThotBool Animate_boxes (int frame, 
 		    AnimTime current_time)
 {
 #ifdef _GL 
   Animated_Cell *current = FrameTable[frame].Animated_Boxes;
+  ThotBool isfinished;
 
   /* Time update
      RefreshAnimBoxes ()
@@ -920,15 +867,18 @@ void Animate_boxes (int frame,
      DefFrame ()
      RedrawFrameBottom ()   */ 
   Animated_Frame = frame;
-  
   SetBaseClipping ();
-  
+  isfinished = TRUE;
   while (current)
     {
-      animate_box (current->El, current_time);
+      if (animate_box (current->El, current_time))
+	isfinished = FALSE;
       current = current->Next;
     }
+  if (isfinished)
+    return TRUE;
   DefRegion (frame, Clipx, Clipy, ClipxMax, ClipyMax);
   FrameTable[frame].DblBuffNeedSwap = TRUE;
+  return FALSE;
 #endif /* _GL */
 }

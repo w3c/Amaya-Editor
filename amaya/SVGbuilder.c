@@ -1065,17 +1065,10 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	 elType.ElTypeNum == SVG_EL_animateColor ||       
 	 elType.ElTypeNum == SVG_EL_animateMotion ||
 	 elType.ElTypeNum == SVG_EL_animateTransform)
-       register_animated_element (el);
-
- /*     if (elType.ElTypeNum == SVG_EL_linearGradient) */
-/*        	 TtaSetLinearGradient (el); */
+       register_animated_element (el, doc);
 
      switch (elType.ElTypeNum)
        {	 
-/*        case SVG_EL_stop: */
-/* 	 TtaSetStopGradient (el); */
-/* 	 break; */
-	 
        case SVG_EL_foreignObject:
        case SVG_EL_SVG:
        case SVG_EL_symbol_:
@@ -2629,7 +2622,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
    ParsePathDataAttribute
    Parse the value of a path data attribute
   ----------------------------------------------------------------------*/
-void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
+void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool IsDrawn)
 {
    int          length, x, y, x1, y1, x2, y2, xcur, ycur, xinit, yinit,
                 x2prev, y2prev, x1prev, y1prev, rx, ry, xAxisRotation,
@@ -2639,14 +2632,24 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
    ThotBool     relative, newSubpath;
    char         *text, *ptr;
    char         command, prevCommand;
-
+   void         *anim_seg;
+   
    /* create (or get) the Graphics leaf */
-   leaf = CreateGraphicalLeaf (EOS, el, doc);
-   if (leaf == NULL)
-      return;
-
-   /* if the leaf element is a graphic element, turn it into a path */
-   TtaAppendPathSeg (leaf, NULL, doc);
+   if (IsDrawn)
+     {
+       leaf = CreateGraphicalLeaf (EOS, el, doc);
+       if (leaf == NULL)
+	 return NULL;
+       /* if the leaf element is a graphic element, turn it into a path */
+       TtaAppendPathSeg (leaf, NULL, doc);
+     }
+   else
+     {
+       leaf = el;
+       anim_seg = TtaNewAnimPath (doc);
+     }
+   
+   
    /* get a buffer for reading the attribute value */
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaGetMemory (length);
@@ -2702,7 +2705,11 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     /* close path */
 	     /* draw a line from (xcur, ycur) to (xinit, yinit) */
 	     seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit, newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
+
 	     newSubpath = FALSE;
 	     xcur = xinit;
 	     ycur = yinit;
@@ -2722,7 +2729,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       }
 	     /* draw a line from (xcur, ycur) to (x, y) */
 	     seg = TtaNewPathSegLine (xcur, ycur, x, y, newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
 	     xcur = x;
 	     ycur = y;
@@ -2738,7 +2748,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       x += xcur;
 	     /* draw a line from (xcur, ycur) to (x, ycur) */
 	     seg = TtaNewPathSegLine (xcur, ycur, x, ycur, newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
 	     xcur = x;
 	     break;
@@ -2753,7 +2766,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	       y += ycur;
 	     /* draw a line from (xcur, ycur) to (xcur, y) */
 	     seg = TtaNewPathSegLine (xcur, ycur, xcur, y, newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
 	     ycur = y;
 	     break;
@@ -2783,7 +2799,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 		and (x2, y2) as the control point at the end of the curve */
 	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
 				       newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
@@ -2824,7 +2843,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 		and (x2, y2) as the control point at the end of the curve */
 	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
 				       newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
@@ -2851,7 +2873,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point */
 	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1, newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
@@ -2886,7 +2911,10 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point */
 	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1, newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
@@ -2915,7 +2943,11 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     seg = TtaNewPathSegArc (xcur, ycur, x, y, rx, ry, xAxisRotation,
 				     largeArcFlag == 1, sweepFlag == 1,
 				     newSubpath);
-	     TtaAppendPathSeg (leaf, seg, doc);
+	     
+	     if (IsDrawn)
+	       TtaAppendPathSeg (leaf, seg, doc);
+	     else
+	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
 	     newSubpath = FALSE;
              xcur = x;
              ycur = y;
@@ -2957,9 +2989,16 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
          }
       TtaFreeMemory (text);
       }
+   if (IsDrawn)
+     return anim_seg;
+   else 
+     return NULL;  
 }
-
-int ParseintAttribute (Attribute attr)
+/*----------------------------------------------------------------------
+   ParseIntAttrbute : 
+   Parse the value of a integer data attribute
+  ----------------------------------------------------------------------*/
+int ParseIntAttribute (Attribute attr)
 {
   int                  length;
   char                *text, *ptr;
@@ -2979,7 +3018,30 @@ int ParseintAttribute (Attribute attr)
     }
   return 0;
 }
+/*----------------------------------------------------------------------
+   ParseFloatAttrbute : 
+   Parse the value of a float data attribute
+  ----------------------------------------------------------------------*/
+float ParseFloatAttribute (Attribute attr)
+{
+  int                  length;
+  char                *text, *ptr;
+  PresentationValue    pval;
 
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = TtaGetMemory (length);
+  if (text != NULL)
+    {
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value (a number followed by a unit) */
+      ptr = text;
+      ptr = TtaSkipBlanks (ptr);
+      ptr = ParseClampedUnit (ptr, &pval);
+      TtaFreeMemory (text);
+      return (float) pval.typed_data.value/1000;
+    }
+  return 0;
+}
 
 /*----------------------------------------------------------------------
    SVGAttributeComplete
@@ -2995,7 +3057,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
    ThotBool		closed;
    unsigned short       red, green, blue;
    char                 *color;
-   int                  offset;
+   float                offset;
    
    TtaGiveAttributeType (attr, &attrType, &attrKind);
    switch (attrType.AttrTypeNum)
@@ -3041,28 +3103,28 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
      case SVG_ATTR_x1:
         elType = TtaGetElementType (el);
 	if (elType.ElTypeNum == SVG_EL_linearGradient)
-	  TtaSetLinearx1Gradient (ParseintAttribute (attr), el);
+	  TtaSetLinearx1Gradient (ParseIntAttribute (attr), el);
 	else
 	  ParseCoordAttribute (attr, el, doc);
 	break;
      case SVG_ATTR_y1:
        elType = TtaGetElementType (el);
        if (elType.ElTypeNum == SVG_EL_linearGradient)
-	 TtaSetLineary1Gradient (ParseintAttribute (attr), el);
+	 TtaSetLineary1Gradient (ParseIntAttribute (attr), el);
        else
 	 ParseCoordAttribute (attr, el, doc);
        break;
      case SVG_ATTR_x2:
        elType = TtaGetElementType (el);
        if (elType.ElTypeNum == SVG_EL_linearGradient)
-	 TtaSetLinearx2Gradient (ParseintAttribute (attr), el);
+	 TtaSetLinearx2Gradient (ParseIntAttribute (attr), el);
        else
 	 ParseCoordAttribute (attr, el, doc);
        break;
      case SVG_ATTR_y2:
        elType = TtaGetElementType (el);
        if (elType.ElTypeNum == SVG_EL_linearGradient)
-	 TtaSetLineary2Gradient (ParseintAttribute (attr), el);
+	 TtaSetLineary2Gradient (ParseIntAttribute (attr), el);
        else
 	 ParseCoordAttribute (attr, el, doc);
        break;
@@ -3084,7 +3146,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
         SetTextAnchor (attr, el, doc, FALSE);
         break;
      case SVG_ATTR_d:
-	ParsePathDataAttribute (attr, el, doc);
+	ParsePathDataAttribute (attr, el, doc, TRUE);
         break;
      case SVG_ATTR_Language:
         if (el == TtaGetRootElement (doc))
@@ -3104,7 +3166,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	  }
         break;
      case SVG_ATTR_offset:
-       offset = ParseintAttribute (attr);
+       offset = ParseFloatAttribute (attr);
        TtaSetStopOffsetColorGradient (offset, el);
        break;
      case SVG_ATTR_stop_color:

@@ -3209,7 +3209,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].BeginTime = 0;
 	   FrameTable[frame].Anim_play = FALSE;
 	   FrameTable[frame].Animated_Boxes = NULL;
-	   FrameTable[frame].Timer = 0;	   
 #endif /* _GL */
 
 #if !defined(_GTK) && !defined(_WINDOWS)

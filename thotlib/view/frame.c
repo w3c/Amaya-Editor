@@ -384,14 +384,16 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
  OpacityAndTransformNext : Test before going on to a next Box
   ----------------------------------------------------------------------*/
 static void OpacityAndTransformNext (PtrAbstractBox pAb, int plane, int frame,
-				     int xmin, int xmax, int ymin, int ymax)
+				     int xmin, int xmax, int ymin, int ymax,
+				     ThotBool activate_opacity)
 {
 #ifdef _GL
   if (pAb->AbElement && pAb->AbDepth == plane)
     {
       if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 			    pAb->AbElement->ElStructSchema) && 
-	  pAb->AbOpacity != 1000)
+	  pAb->AbOpacity != 1000 &&
+	  activate_opacity)
 	{	 
 	  if (((xmax - xmin) > 0) && ((ymax - ymin) > 0))
 	    if (pAb->AbBox->Pre_computed_Pic)
@@ -550,7 +552,7 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 	    {	 
 	      if (FormattedFrame)
 		{
-		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		}
@@ -565,7 +567,7 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);		  	
+		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);		  	
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		    }
@@ -573,7 +575,7 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 		}
 	      if (FormattedFrame)
 		{	
-		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		}
@@ -582,7 +584,7 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		    }
@@ -748,7 +750,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 	    {	 
 	      if (FormattedFrame)
 		{
-		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		}
@@ -763,7 +765,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);		  	
+		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);		  	
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		    }
@@ -771,7 +773,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 		}
 	      if (FormattedFrame)
 		{	
-		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		}
@@ -780,7 +782,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0);
+		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		    }
@@ -947,7 +949,9 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
 /*   box->BxClipW = w; */
 /*   box->BxClipH = h; */
 }
-
+/*----------------------------------------------------------------------------------
+  ComputeBoundingBoxes : Compute clipping coordinate for each box.
+  --------------------------------------------------------------------------------*/
 static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				  PtrAbstractBox pInitAb)
 {
@@ -1393,7 +1397,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	  else if (pAb->AbNext)
 	    /* get the next sibling */
 	    {
-	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);	      
+	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);	      
 	      pAb = pAb->AbNext;
 	    }
 	  else
@@ -1402,14 +1406,14 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	      while (pAb->AbEnclosing && 
 		     pAb->AbEnclosing->AbNext == NULL)
 		{
-		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);
+		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
 		  pAb = pAb->AbEnclosing;
 		}
-	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);
+	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
 	      pAb = pAb->AbEnclosing;
 	      if (pAb)
 		{
-		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);
+		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
 		  pAb = pAb->AbNext;
 		}
 	    }
@@ -1724,7 +1728,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	    {	 
 	      if (FormattedFrame)
 		{
-		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);
+		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, TRUE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		}
@@ -1739,7 +1743,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);		  	
+		      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, TRUE);		  	
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		    }
@@ -1747,7 +1751,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		}
 	      if (FormattedFrame)
 		{	
-		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);
+		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, TRUE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		}
@@ -1756,7 +1760,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		{
 		  if (FormattedFrame)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax);
+		      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, TRUE);
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		    }

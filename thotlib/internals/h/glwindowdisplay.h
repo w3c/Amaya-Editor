@@ -137,7 +137,7 @@ void GL_TextureMap (void *Image,
 		    int xFrame, int yFrame, 
 		    int w, int h);
 void *Group_shot (int x, int y, 
-		  int width, int height, int frame);
+		  int width, int height, int frame, ThotBool is_rgb);
 void GL_SetPicForeground ();
 void ResetMainWindowBackgroundColor (int frame);
 void FreeGlTexture (void *Image);

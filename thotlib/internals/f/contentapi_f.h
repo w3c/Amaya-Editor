@@ -125,7 +125,7 @@ extern void AddStopColor ( Element el,
                            unsigned short blue );
 extern void AddOffset ( Element el,
                         PtrElement Father,
-                        int offset );
+                        float offset );
 extern void TtaSetLinearx1Gradient ( int value,
                                      Element el );
 extern void TtaSetLineary1Gradient ( int value,
@@ -138,7 +138,7 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                       unsigned short green,
                                       unsigned short blue,
                                       Element el );
-extern void TtaSetStopOffsetColorGradient ( int offset,
+extern void TtaSetStopOffsetColorGradient ( float offset,
                                             Element el );
 extern void *TtaCopyTransform ( void *void_pPa );
 extern void TtaAppendTransform ( Element element,
@@ -157,11 +157,18 @@ extern void TtaSetElCoordinateSystem ( Element element );
 extern void TtaAppendAnim ( Element element,
                             void *anim );
 extern void *TtaCopyAnim ( void *void_src );
+extern void *TtaNewAnimPath ( Document doc );
+extern void TtaAppendPathSegToAnim ( void *anim,
+                                     PathSegment segment,
+                                     Document doc );
 extern void TtaSetAnimTypetoMotion ( void *anim );
 extern void TtaSetAnimTypetoTransform ( void *anim );
 extern void TtaSetAnimTypetoAnimate ( void *anim );
 extern void TtaSetAnimTypetoColor ( void *anim );
 extern void TtaSetAnimTypetoSet ( void *anim );
+extern void ComputePathLength ( void *info );
+extern void TtaAddAnimPath ( void *info,
+                             void *anim );
 extern void TtaAddAnimFrom ( void *info,
                              void *anim );
 extern void TtaAddAnimFreeze ( void *anim );
@@ -323,7 +330,7 @@ extern void AddStopColor (/* Element el,
                              unsigned short blue */);
 extern void AddOffset (/* Element el,
                           PtrElement Father,
-                          int offset */);
+                          float offset */);
 extern void TtaSetLinearx1Gradient (/* int value,
                                        Element el */);
 extern void TtaSetLineary1Gradient (/* int value,
@@ -336,7 +343,7 @@ extern void TtaSetStopColorGradient (/* unsigned short red,
                                         unsigned short green,
                                         unsigned short blue,
                                         Element el */);
-extern void TtaSetStopOffsetColorGradient (/* int offset,
+extern void TtaSetStopOffsetColorGradient (/* float offset,
                                               Element el */);
 extern void *TtaCopyTransform (/* void *void_pPa */);
 extern void TtaAppendTransform (/* Element element,
@@ -355,11 +362,18 @@ extern void TtaSetElCoordinateSystem (/* Element element */);
 extern void TtaAppendAnim (/* Element element,
                               void *anim */);
 extern void *TtaCopyAnim (/* void *void_src */);
+extern void *TtaNewAnimPath (/* Document doc */);
+extern void TtaAppendPathSegToAnim (/* void *anim,
+                                       PathSegment segment,
+                                       Document doc */);
 extern void TtaSetAnimTypetoMotion (/* void *anim */);
 extern void TtaSetAnimTypetoTransform (/* void *anim */);
 extern void TtaSetAnimTypetoAnimate (/* void *anim */);
 extern void TtaSetAnimTypetoColor (/* void *anim */);
 extern void TtaSetAnimTypetoSet (/* void *anim */);
+extern void ComputePathLength (/* void *info */);
+extern void TtaAddAnimPath (/* void *info,
+                               void *anim */);
 extern void TtaAddAnimFrom (/* void *info,
                                void *anim */);
 extern void TtaAddAnimFreeze (/* void *anim */);

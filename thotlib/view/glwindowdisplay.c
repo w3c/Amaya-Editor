@@ -49,6 +49,7 @@
 #include "animbox_f.h"
 #include "picture_f.h"
 #include "tesse_f.h"
+#include "applicationapi_f.h"
 
 
 #ifdef _GTK
@@ -136,8 +137,22 @@ static HGLRC GL_Context[50];
 #define SLICES_SIZE 361
 
 
+/*--------- STATICS ------*/
+
+/*Current Thickness*/
+static int      S_thick;
+
+/* background color*/
+static int      GL_Background[50];
+
+/*if no 3d card available*/
 static ThotBool Software_Mode = TRUE;
+
+/*if just computing bounding box*/
 static ThotBool NotFeedBackMode = TRUE;
+
+/*One Timer to rule them all */
+static int Timer = 0; 
 
 
 ThotBool GL_Err() 
@@ -160,13 +175,6 @@ ThotBool GL_Err()
 }
 
 
-/*--------- STATICS ------*/
-
-/*Current Thickness*/
-static int S_thick;
-
-/* background color*/
-static int GL_Background[50];
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
@@ -1803,180 +1811,194 @@ void GL_ActivateDrawing(int frame)
 }
 
 #define FPS 25 /*Frame Per Second*/
-#define FPS_INTERVAL 0.030 /* FPS_INTERVAL*/
-#define FRAME_TIME 25 /* milliseconds */
-
+#define INTERVAL 0.030 /*1/FPS*/ /* 1/25 */
+#define FRAME_TIME 30 /*(INTERVAL*1000) */
+/* milliseconds */
 
 /*----------------------------------------------------------------------
-  TtaPlay : Activate Animation
+   ViewToFrame : returns the frame number that doc and view represents
+  ----------------------------------------------------------------------*/
+int ViewToFrame (int doc, int view)
+{
+  int                 frame;
+
+  for (frame = 1; frame <= MAX_FRAME; frame++)
+    {
+      if (doc == FrameTable[frame].FrDoc &&
+	  view == FrameTable[frame].FrView )
+	return frame;
+    }
+  return -1;
+}
+
+/*----------------------------------------------------------------------
+  TtaChangePlay : Activate Animation
+  ----------------------------------------------------------------------*/
+static void TtaChangePlay (int frame)
+{
+  ThotBool remove;
+
+  if (frame && frame <= MAX_FRAME)
+    if (FrameTable[frame].Animated_Boxes)
+      {
+	FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
+	if (FrameTable[frame].Anim_play)
+	  {
+	    if (Timer == 0)
+#ifdef _GTK
+	      Timer = gtk_timeout_add (FRAME_TIME,
+				       (gpointer) GL_DrawAll, 
+				       (gpointer)   NULL); 
+	   	      
+#else /*_GTK*/
+#ifdef _WINDOWS
+	    {
+	      SetTimer(FrMainRef[frame],                
+		       frame,               
+		       FRAME_TIME,                     
+		       (TIMERPROC) MyTimerProc); 
+	      Timer = frame;
+	    }    
+#endif /*_WINDOWS*/
+#endif /*_GTK*/
+	    FrameTable[frame].BeginTime = 0;
+	    FrameTable[frame].LastTime = 0;
+	  }
+	else
+	  if (Timer)
+	    {
+	      remove = FALSE;
+	      for (frame = 0; frame >= MAX_FRAME; frame++)
+		if (FrameTable[frame].Anim_play)
+		  remove = TRUE;
+	      if (remove)
+		{
+#ifdef _GTK
+		  gtk_timeout_remove (Timer); 
+	
+#else /*_GTK*/
+#ifdef _WINDOWS
+		  KillTimer(FrMainRef[Timer], Timer);
+
+#endif /*_WINDOWS*/
+#endif /*_GTK*/
+		  Timer = 0; 
+		}
+	    }
+      }  
+}
+/*----------------------------------------------------------------------
+  TtaPlay : Activate/Deactivate Animation (restart)
   ----------------------------------------------------------------------*/
 void TtaPlay (Document doc, View view)
 {
- int frame;
- 
- for (frame = 0; frame <= MAX_FRAME; frame++)
-   if (FrameTable[frame].Animated_Boxes)
-     {
-       FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
-#ifdef _GTK
-       if (FrameTable[frame].Anim_play)
-	 {
-	   /* if (FrameTable[frame].Timer == 0) */
-	   FrameTable[frame].Timer = gtk_timeout_add (FRAME_TIME,
-						      (gpointer) GL_DrawAll, 
-						      (gpointer)   NULL); 	      
-	   FrameTable[frame].BeginTime = 0;
-	   FrameTable[frame].LastTime = 0;
-	 }
-       else
-	 if (FrameTable[frame].Timer)
-	   {
-	     gtk_timeout_remove (FrameTable[frame].Timer);
-	     FrameTable[frame].Timer = 0;
-	   }	
-#else /*_GTK*/
-#ifdef _WINDOWS
-       if (FrameTable[frame].Anim_play)
-	 {
-	   SetTimer(FrMainRef[frame],                
-		    frame,               
-		    FRAME_TIME,                     
-		    (TIMERPROC) MyTimerProc); 
-
-	   FrameTable[frame].Timer = frame; 	      
-	   FrameTable[frame].BeginTime = 0;
-	   FrameTable[frame].LastTime = 0;
-	 }
-       else
-	 if (FrameTable[frame].Timer)
-	   {
-	     KillTimer(FrMainRef[frame], frame); 
-	     FrameTable[frame].Timer = 0;
-	   }
-#endif /*_WINDOWS*/
-#endif /*_GTK*/
-     }  
-}
-
-/*----------------------------------------------------------------------
-  TtaNoPlay : Deactivate Animation
-  ----------------------------------------------------------------------*/
-void TtaNoPlay (int Frame_par)
-{
- int frame;
-
- 
- for (frame = 0; frame <= MAX_FRAME; frame++)
-   if (FrameTable[frame].Animated_Boxes)
-     {
-       FrameTable[frame].Anim_play = 0;
-#ifdef _GTK
-       if (FrameTable[frame].Timer)
-	 {
-	   gtk_timeout_remove (FrameTable[frame].Timer);
-	   FrameTable[frame].Timer = 0;	      
-	   FrameTable[frame].BeginTime = 0;
-	   FrameTable[frame].LastTime = 0;
-	 }	
-#else /*_GTK*/
-#ifdef _WINDOWS
-       if (FrameTable[frame].Timer)
-	 {
-	   KillTimer(FrMainRef[frame], frame); 
-	   FrameTable[frame].Timer = 0;	      
-	   FrameTable[frame].BeginTime = 0;
-	   FrameTable[frame].LastTime = 0;
-	 }
-#endif /*_WINDOWS*/
-#endif /*_GTK*/
-     }  
-}
-#ifdef NOtENOUGHTIMEPRECIsION
-/*if get tick count gets is more than 50 ms precise...*/
-			  {
-			    LARGE_INTEGER ticksPerSecond;
- 				LARGE_INTEGER tick;   // A point in time
- 				LARGE_INTEGER time;   // For converting tick into real time
-
-  // get the high resolution counter's accuracy
-  QueryPerformanceFrequency(&ticksPerSecond);
-  // what time is it?
-  QueryPerformanceCounter(&tick);
-  // convert the tick number into the number of seconds
-  // since the system was started...
-  time.QuadPart = tick.QuadPart/ticksPerSecond.QuadPart;
-
-  //get the number of hours
-  int hours = time.QuadPart/3600;
-
-  //get the number of minutes
-  time.QuadPart = time.QuadPart - (hours * 3600);
-
-  int minutes = time.QuadPart/60;
-
-  //get the number of seconds
-  int seconds = time.QuadPart - (minutes * 60);
-		  }
-#endif /*NOtENOUGHTIMEPRECIsION*/
-
-
-/*----------------------------------------------------------------------
-  GL_DrawAll : Really Draws opengl !!
-  ----------------------------------------------------------------------*/
-ThotBool GL_DrawAll ()
-{  
   int frame;
-#ifdef _GL
+
+  frame = GetWindowNumber (doc, view);
+  TtaChangePlay (frame);
+  FrameTable[frame].BeginTime = 0;
+  FrameTable[frame].LastTime = 0;
+}
+
+/*----------------------------------------------------------------------
+  TtaNoPlay : Make sure we deactivate/reset all Animation of this frame
+  And reset Time (Stop)
+  ----------------------------------------------------------------------*/
+void TtaNoPlay (int frame)
+{
+  if (frame && frame <= MAX_FRAME)
+    if (FrameTable[frame].Anim_play)
+      {
+	TtaChangePlay (frame);
+	FrameTable[frame].BeginTime = 0;
+	FrameTable[frame].LastTime = 0;
+      }
+}
+
+/*----------------------------------------------------------------------
+  TtaPause : Make sure we pause all Animation of this frame
+  ----------------------------------------------------------------------*/
+void TtaPause (int frame)
+{
+
+  if (frame && frame <= MAX_FRAME)
+    if (FrameTable[frame].Anim_play)
+      TtaChangePlay (frame);
+}
+/*----------------------------------------------------------------------
+ SetCurrentTime : Position current time
+  ----------------------------------------------------------------------*/
+void SetAmayaCurrentTime (AnimTime current_time, int frame)
+{
+  FrameTable[frame].LastTime = current_time;
+}
+/*----------------------------------------------------------------------
+  GetCurrentTime : Get Current Time
+  ----------------------------------------------------------------------*/
+static AnimTime ComputeAmayaCurrentTime (int frame)
+{
 #ifdef _GTK
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
   struct timeb	after;
 #endif /*_GTK*/
   AnimTime current_time; 
-#endif /* _GL */
+
+  if (FrameTable[frame].Anim_play) 
+    {   
+#ifdef _GTK
+      /* while (gtk_events_pending ()) */
+      /*   gtk_main_iteration (); */
+      ftime (&after);
+      current_time = after.time + (((double)after.millitm)/1000);      
+#else /* _GTK */
+#ifdef _WINDOWS
+      current_time = ((double) GetTickCount ()) / 1000; 
+#endif /*_WINDOWS*/	
+#endif /*_GTK*/
+      if (FrameTable[frame].BeginTime == 0)
+	{
+	  FrameTable[frame].BeginTime = current_time;
+	  FrameTable[frame].LastTime = 0.0;
+	}
+      current_time -= FrameTable[frame].BeginTime; 
+    }
+  else
+    current_time = FrameTable[frame].LastTime; 
+  return current_time;
+}
+/*----------------------------------------------------------------------
+  GL_DrawAll : Really Draws opengl !!
+  ----------------------------------------------------------------------*/
+ThotBool GL_DrawAll ()
+{  
+  int frame;
+  AnimTime current_time; 
   static ThotBool frame_animating = FALSE;  
   
   if (!FrameUpdating )
     {
+#ifdef _GTK
+      gl_synchronize ();
+      while (gtk_events_pending ())
+	gtk_main_iteration ();	
+#endif /* _GTK */
       FrameUpdating = TRUE;     
       if (!frame_animating)
 	{	
 	  frame_animating = TRUE; 
-#ifdef _GTK
-	  gl_synchronize ();
-#endif /* _GTK */
 	  for (frame = 0 ; frame < MAX_FRAME; frame++)
 	    {
 	      if (FrRef[frame] != 0)
 		{
 #ifdef _GL
-		  if (FrameTable[frame].Anim_play &&
-		      FrameTable[frame].Animated_Boxes)
-		    {		      
-#ifdef _GTK
-		      while (gtk_events_pending ())
-			gtk_main_iteration ();
-		      ftime (&after);
-		      current_time = after.time + (((double)after.millitm)/1000);
-		      if (FrameTable[frame].BeginTime == 0)
-			FrameTable[frame].BeginTime = current_time;
-		      current_time -= FrameTable[frame].BeginTime;   
-#else /* _GTK */
-#ifdef _WINDOWS
-			  current_time = ((double) GetTickCount ()) / 1000; 
-		      /*current_time = after.time + (((double)after.millitm)/1000);*/
-		      
-		      if (FrameTable[frame].BeginTime == 0)
-			      FrameTable[frame].BeginTime = current_time;
-		      current_time -= FrameTable[frame].BeginTime;   
-
-#endif /*_WINDOWS*/
-#endif /*_GTK*/
-		    if ((FrameTable[frame].LastTime - current_time) < FPS_INTERVAL)
-			{		  		   
-			  Animate_boxes (frame, current_time);
-			  FrameTable[frame].LastTime = current_time;
-			}	
+		  if (FrameTable[frame].Animated_Boxes &&
+		      FrameTable[frame].Anim_play)
+		    {	
+		      current_time = ComputeAmayaCurrentTime (frame);  
+		      if (Animate_boxes (frame, current_time))
+			TtaPause (frame);
+		      FrameTable[frame].LastTime = current_time;
 		    }
 #endif /* _GL */		    
 		  if (FrameTable[frame].DblBuffNeedSwap)
@@ -2586,6 +2608,36 @@ int  savetga (const char *filename,
   fclose(screenFile);
   return 0;
 }
+#ifdef NOtENOUGHTIMEPRECIsION
+static wintime()
+{
+  /*if get tick count gets is more than 50 ms precise...*/
+  {
+    LARGE_INTEGER ticksPerSecond;
+     				LARGE_INTEGER tick;   // A point in time
+     				LARGE_INTEGER time;   // For converting tick into real time
+
+      // get the high resolution counter's accuracy
+      QueryPerformanceFrequency(&ticksPerSecond);
+      // what time is it?
+      QueryPerformanceCounter(&tick);
+      // convert the tick number into the number of seconds
+      // since the system was started...
+      time.QuadPart = tick.QuadPart/ticksPerSecond.QuadPart;
+
+      //get the number of hours
+      int hours = time.QuadPart/3600;
+
+      //get the number of minutes
+      time.QuadPart = time.QuadPart - (hours * 3600);
+
+      int minutes = time.QuadPart/60;
+
+      //get the number of seconds
+      int seconds = time.QuadPart - (minutes * 60);
+  }
+}
+#endif /*NOtENOUGHTIMEPRECIsION*/
 #endif /*_PCLDEBUG*/
 
 #endif /* _GL */

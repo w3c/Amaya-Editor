@@ -263,7 +263,7 @@ static int LookupInPicCache (PictInfo *Image, int frame)
 	  Image->TexCoordH = Cache->TexCoordH;
 	  Image->TextureBind = Cache->texbind;  
 #ifdef _PCLDEBUG
-      g_print ("\n Lookup succeed Image %s ", Image->PicFileName);      
+	  g_print ("\n Lookup succeed Image %s ", Image->PicFileName);      
 #endif /*_PCLDEBUG*/  
 	  return 1;
 	}      
@@ -372,6 +372,22 @@ static void GL_MakeTextureSize(PictInfo *Image,
     }
 }
 #endif /* POWER2TEXSUBIMAGE */
+
+
+/* static void MakeOpaque (unsigned char *pxl,  */
+/* 			unsigned int width, unsigned int height) */
+/* { */
+/*   int nbpixel; */
+
+/*   nbpixel = width * height * 4; */
+/*   pxl += 3; */
+/*   while (nbpixel) */
+/*     { */
+/*       *pxl = 0; */
+/*       nbpixel -= 4; */
+/*       pxl += 4; */
+/*     }   */
+/* } */
 
 /*----------------------------------------------------------------------
  GL_TextureBind : Put Texture in video card's Memory at
@@ -1955,7 +1971,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   PictInfo *imageDesc = NULL;
 
   imageDesc = malloc (sizeof (PictInfo));  
-  imageDesc->PicFileName = "testinggrad";
+  imageDesc->PicFileName = NULL;  /*"testinggrad";*/
   imageDesc->RGBA = TRUE;
   imageDesc->PicWidth = width;
   imageDesc->PicHeight = height;
@@ -2408,7 +2424,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     GL_prepare (ActiveFrame); 
 }
 
-void *Group_shot (int x, int y, int width, int height, int frame)
+void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rgba)
 {
   PictInfo *imageDesc = NULL;
 
@@ -2423,7 +2439,8 @@ void *Group_shot (int x, int y, int width, int height, int frame)
       imageDesc->PicYArea = 0;
       imageDesc->PicWArea = width;
       imageDesc->PicHArea = height; 
-      imageDesc->PicPixmap = TtaGetMemory (sizeof (unsigned char) * width * height * 4);
+      imageDesc->PicPixmap = TtaGetMemory (sizeof (unsigned char) * 
+					   width * height * 4);
       imageDesc->TextureBind = 0; 
 
       glFlush ();
@@ -2435,14 +2452,16 @@ void *Group_shot (int x, int y, int width, int height, int frame)
 		    GL_UNSIGNED_BYTE, 
 		    imageDesc->PicPixmap);
 
-/* SavePng ("/home/cheyroul/test.png", */
-/* 	   imageDesc->PicPixmap, */
-/* 	   (unsigned int) width, */
-/* 	   (unsigned int) height); */
+      /* if (!is_rgba) */
+      /* 	MakeOpaque (imageDesc->PicPixmap, width, height); */
+
+
+      /* SavePng ("/home/cheyroul/test.png",  */
+/*        	   imageDesc->PicPixmap,  */
+/*      	   (unsigned int) width,  */
+/*       	   (unsigned int) height); */
 
       GL_TextureBind (imageDesc);
-
-
       return imageDesc;
     }
   else

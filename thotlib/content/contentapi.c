@@ -1869,7 +1869,7 @@ void AddStopColor (Element el, PtrElement Father,
 #endif /* _GL */
 }
 
-void AddOffset (Element el, PtrElement Father, int offset)
+void AddOffset (Element el, PtrElement Father, float offset)
 {
 #ifdef _GL
   RgbaDef *Stop;
@@ -1943,12 +1943,13 @@ void TtaSetStopColorGradient (unsigned short red, unsigned short green,
 }
 
 /*----------------------------------------------------------------------
-  TtaSetStopOffsetColorGradient
-  ----------------------------------------------------------------------*/
-void TtaSetStopOffsetColorGradient (int offset, Element el)
+   TtaSetStopOffsetColorGradient
+   ----------------------------------------------------------------------*/
+void TtaSetStopOffsetColorGradient (float offset, Element el)
 {
 #ifdef _GL
-  AddOffset (el, (PtrElement)(TtaGetParent(TtaGetParent (el))), offset);  
+  AddOffset (el, (PtrElement)(TtaGetParent(TtaGetParent (el))),
+	     offset);  
 #endif /* _GL */
 }
 
@@ -2319,6 +2320,28 @@ void *TtaCopyAnim (void *void_src)
 }
 
 /*----------------------------------------------------------------------
+  TtaNewAnimPath
+  create a new path segment defining the animation position
+
+   Parameters:
+   anim_seg: the animation path to be modified.
+   doc: the path segment to be appended.
+  ----------------------------------------------------------------------*/
+void *TtaNewAnimPath (Document doc)
+{
+#ifdef _GL
+  AnimPath *anim_seg;
+  
+  anim_seg = TtaGetMemory (sizeof (AnimPath));
+  anim_seg->length = 0;
+  anim_seg->FirstPathSeg = NULL;
+  return ((void *) anim_seg);
+#else /* _GL */
+  return NULL;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
   TtaAppendPathSeg
 
   Appends a path segment at the end of an animation
@@ -2327,38 +2350,30 @@ void *TtaCopyAnim (void *void_src)
    animation: the animation to be modified.
    segment: the path segment to be appended.
   ----------------------------------------------------------------------*/
-/* void TtaAppendPathSegToAnim (void *anim, PathSegment segment) */
-/* { */
-/*    PtrPathSeg       pPa, pPrevPa; */
-/*    PtrElement       pElAsc; */
-/*    Animated_Element *anim_info; */
+void TtaAppendPathSegToAnim (void *anim, PathSegment segment, Document doc)
+{
+#ifdef _GL
+   PtrPathSeg       pPa, pPrevPa;
 
-/*    if (anim) */
-/*      { */
-/*        pPa = ((PtrElement) element)->ElFirstPathSeg; */
-/*        pPrevPa = NULL; */
-/*        while (pPa) */
-/* 	 { */
-/* 	   pPrevPa = pPa; */
-/* 	   pPa = pPa->PaNext; */
-/* 	 } */
-/*        if (pPrevPa == NULL) */
-/* 	 ((PtrElement) element)->ElFirstPathSeg = (PtrPathSeg) segment; */
-/*        else */
-/* 	 { */
-/* 	   pPrevPa->PaNext = (PtrPathSeg) segment; */
-/* 	   ((PtrPathSeg) segment)->PaPrevious = pPrevPa; */
-/* 	 } */
-/*        /\* Updates the volumes of ancestors *\/ */
-/*        pElAsc = (PtrElement) element; */
-/*        while (pElAsc != NULL) */
-/* 	 { */
-/* 	   pElAsc->ElVolume++; */
-/* 	   pElAsc = pElAsc->ElParent; */
-/* 	 } */
-/*      } */
-/* } */
-
+   if (anim)
+     {
+       pPa = ((AnimPath *) anim)->FirstPathSeg;
+       pPrevPa = NULL;
+       while (pPa)
+	 {
+	   pPrevPa = pPa;
+	   pPa = pPa->PaNext;
+	 }
+       if (pPrevPa == NULL)
+	 ((AnimPath *) anim)->FirstPathSeg = (PtrPathSeg) segment;
+       else
+	 {
+	   pPrevPa->PaNext = (PtrPathSeg) segment;
+	   ((PtrPathSeg) segment)->PaPrevious = pPrevPa;
+	 }
+     }
+#endif /* _GL */
+}
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoMotion
   ----------------------------------------------------------------------*/
@@ -2399,6 +2414,25 @@ void TtaSetAnimTypetoSet (void *anim)
   ((Animated_Element *) anim)->AnimType = Set;
 }
 
+void ComputePathLength (void *info)
+{
+#ifdef _GL
+  AnimPath *path;
+
+  path = (AnimPath *) info;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+   TtaAddAnimPath
+  ----------------------------------------------------------------------*/
+void TtaAddAnimPath (void *info, void *anim)
+{    
+#ifdef _GL
+  ComputePathLength (info);
+#endif /* _GL */
+  ((Animated_Element *) anim)->from = info;
+}
 /*----------------------------------------------------------------------
    TtaAddAnimFrom
   ----------------------------------------------------------------------*/

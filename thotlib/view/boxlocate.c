@@ -375,12 +375,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    pBox->BxLPadding;
 		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 		    pBox->BxTPadding;
+		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		      y >= yOrg && y <= yOrg + pBox->BxH)
 #else /* _GL */
 		  xOrg =  pBox->BxClipX;
 		  yOrg =  pBox->BxClipY;
+		  if (x >= xOrg && x <= xOrg + pBox->BxClipW &&
+		      y >= yOrg && y <= yOrg + pBox->BxClipH)
 #endif /* _GL */
-		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {		      
 		      /* send event TteElemClick.Pre to the application */
 		      el = pAb->AbElement;

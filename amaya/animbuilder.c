@@ -117,7 +117,24 @@ static int get_int_attribute_from_el (Element el, int Attribut_Type)
 
 #endif /* _SVGANIM */
 }
+/*----------------------------------------------------------------------
+  get_int_attribute_from_el: Get a int value from an xml attribute
+  ----------------------------------------------------------------------*/
+static Attribute get_attribute_from_el (Element el, int Attribut_Type)
+{
+#ifdef _SVGANIM
+  AttributeType attrType;
+  Attribute attr = NULL;
+  ElementType elType = TtaGetElementType (el);
+  
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Attribut_Type;  
+  attr = TtaGetAttribute (el, attrType);
+  
+  return attr;
 
+#endif /* _SVGANIM */
+}
 /*----------------------------------------------------------------------
   get_intptr_attribute_from_el: Get a int value from an xml attribute,
   but stored as an allocated ptr
@@ -178,13 +195,13 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
 /*----------------------------------------------------------------------
   register_animated_element: store animation linked list in an element 
   ----------------------------------------------------------------------*/
-void register_animated_element (Element animated)
+void register_animated_element (Element animated, Document doc)
 {
 #ifdef _SVGANIM
   void *anim_info;
   ElementType elType;
   double start, duration;
-  int repeatcount;  
+  int *repeatcount;  
 
   anim_info = TtaNewAnimation ();
   Read_time_info (animated, &start, &duration);
@@ -203,17 +220,26 @@ void register_animated_element (Element animated)
       TtaAddAnimRemove (anim_info);
       break;
     } 
-  repeatcount = get_int_attribute_from_el (animated, SVG_ATTR_repeatCount);
-  if (repeatcount > 1)
-    TtaAddAnimRepeatCount (repeatcount, anim_info);
+
+  repeatcount = get_intptr_attribute_from_el (animated, SVG_ATTR_repeatCount);
+  if (repeatcount)
+    {    
+      TtaAddAnimRepeatCount (*repeatcount, anim_info);
+      TtaFreeMemory (repeatcount);
+    }
+  
   /*repeat, repeatcount*/
   switch (elType.ElTypeNum)
     {
       
-    case SVG_EL_animateMotion :
-      TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_path_), 
-		    anim_info); 
-      TtaSetAnimTypetoMotion (anim_info);
+    case SVG_EL_animateMotion :      
+	TtaAddAnimPath ((void *) ParsePathDataAttribute (get_attribute_from_el (animated, 
+										SVG_ATTR_path_), 
+							 animated, 
+							 doc, 
+							 FALSE),
+			anim_info);
+	TtaSetAnimTypetoMotion (anim_info);
       break;      
 
     case SVG_EL_animateColor : 

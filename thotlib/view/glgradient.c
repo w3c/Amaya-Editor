@@ -50,13 +50,13 @@
 #include "appli_f.h"
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
-#include "displayselect_f.h"
+#include "displayselect_f.h" 
 #include "boxlocate_f.h"
 #include "buildlines_f.h"
 #include "context_f.h"
 #include "font_f.h"
 #include "inites_f.h"
-#include "memory_f.h"
+#include "memory_f.h" 
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 #include "frame_f.h"
@@ -82,67 +82,51 @@ unsigned char *fill_linear_gradient_image (RgbaDef *First,
   pixel = malloc (int_grad_width);
   memset (pixel, 0, int_grad_width);
   current_gradient = First;
-  x = 0;
   p0 = pixel;
-
-
-  curr_r = current_gradient->r;
-  curr_g = current_gradient->g;
-  curr_b = current_gradient->b;
-  curr_a = current_gradient->a;
-
   while (current_gradient->next)
     {
-      /* (current_gradient->len - 1) ? */
-      grad_width = current_gradient->next->length * width;
+      grad_width = (current_gradient->next->length - current_gradient->length) * width;
       int_grad_width = (int) grad_width;
       if (current_gradient->next->r - current_gradient->r)
 	delta_r = (current_gradient->next->r - current_gradient->r) / grad_width;
       else
 	delta_r = 0;
-
       if (current_gradient->next->g - current_gradient->g)
 	delta_g = (current_gradient->next->g - current_gradient->g) / grad_width;
       else
-	delta_g = 0;
-      
+	delta_g = 0;      
       if (current_gradient->next->b - current_gradient->b)
 	delta_b = (current_gradient->next->b - current_gradient->b) / grad_width;
       else
-	delta_b = 0;
-      
+	delta_b = 0;      
       if (current_gradient->next->a - current_gradient->a)
 	delta_a = (current_gradient->next->a - current_gradient->a) / grad_width;
       else 
-	delta_a = 0;
-      
-      
-      while (x < int_grad_width) 
-	{
-	  *p0++ = curr_r;
-	  *p0++ = curr_g;
-	  *p0++ = curr_b;
-	  *p0++ = curr_a;
-
-	  curr_r += delta_r;
-	  curr_g += delta_g;
-	  curr_b += delta_b;
-	  curr_a += delta_a;
-
-	  x++;
-	}
-      /* Create a unique gradient line 
-       that will be copied height times*/
+	delta_a = 0;      
       x = 0;
-      current_gradient = current_gradient->next;
       curr_r = current_gradient->r;
       curr_g = current_gradient->g;
       curr_b = current_gradient->b;
       curr_a = current_gradient->a;
+      while (x < int_grad_width) 
+	{
+	  *p0++ = (unsigned char) curr_r;
+	  *p0++ = (unsigned char) curr_g;
+	  *p0++ = (unsigned char) curr_b;
+	  *p0++ = (unsigned char) curr_a;
+	  curr_r += delta_r;
+	  curr_g += delta_g;
+	  curr_b += delta_b;
+	  curr_a += delta_a;
+	  x++;
+	}
+      /* Create a unique gradient line 
+       that will be copied height times*/
+      current_gradient = current_gradient->next;
     }
   /* Fill all row's image */
   p0 = pixel;
-  width = width *4;  
+  width = width * 4;  
   for (y = 1; y < height; y++)
     {
       p0 += width;

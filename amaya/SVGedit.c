@@ -453,7 +453,7 @@ void EvaluateSwitch (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void AttrPathDataChanged (NotifyAttribute *event)
 {
-   ParsePathDataAttribute (event->attribute, event->element, event->document);
+   ParsePathDataAttribute (event->attribute, event->element, event->document, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1978,7 +1978,7 @@ void CreateGraphicElement (int entry)
 	      TtaAttachAttribute (newEl, attr, doc);
 	      TtaSetAttributeText (attr, path, newEl, doc);
 	      TtaFreeMemory (path);
-	      ParsePathDataAttribute (attr, newEl, doc);
+	      ParsePathDataAttribute (attr, newEl, doc, TRUE);
 	      if (newGraph)
 		TtaRegisterElementCreate (SvgRoot, doc);
 	      else

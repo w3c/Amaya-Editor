@@ -386,6 +386,9 @@ void *TtaCopyTransform (void *pPa);
   ----------------------------------------------------------------------*/
 extern void *TtaNewAnimInfo ();
 
+extern void *TtaNewAnimation ();
+extern void TtaAddAnimPath (void *info, void *anim);
+
 extern void *TtaCopyTransform ( void *pPa );
 extern void TtaAppendAnim (Element element, void *anim);
 
@@ -401,6 +404,10 @@ extern void TtaAddAnimFrom (void *info, void *anim);
 extern void TtaAddAnimAttrName (void *info, void *anim);
 
 extern void TtaSetAnimTypetoSet (void *anim);
+
+extern void TtaAppendPathSegToAnim (void *anim, PathSegment segment, Document doc);
+extern void *TtaNewAnimPath (Document doc);
+
 
 extern void TtaSetAnimTypetoColor (void *anim);
 extern void TtaSetAnimTypetoAnimate (void *anim);
@@ -423,7 +430,7 @@ void TtaSetLinearx2Gradient (int value, Element el);
 void TtaSetLineary2Gradient (int value, Element el);
 void TtaSetStopColorGradient (unsigned short red, unsigned short green,
 			      unsigned short blue, Element el);
-void TtaSetStopOffsetColorGradient (int offset, Element el);
+void TtaSetStopOffsetColorGradient (float offset, Element el);
      
 /*----------------------------------------------------------------------
    TtaCopyPage

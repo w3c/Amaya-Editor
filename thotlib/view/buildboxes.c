@@ -2867,9 +2867,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else
 #ifndef _GL
 		if (pCurrentBox->BxLMargin < 0)
-		  DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
+		  DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin,
 			   pCurrentBox->BxYOrg,
-			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pBox->BxLMargin,
+			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
 		else
 		  DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,

@@ -64,7 +64,6 @@ typedef struct _Frame_Ctl {
   double     BeginTime;
   double     LastTime;
   ThotBool   Anim_play;  
-  int        Timer;  
 #endif /*_GL*/
 
 } Frame_Ctl;

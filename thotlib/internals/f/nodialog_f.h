@@ -17,6 +17,7 @@ extern void ExtendSelection ( PtrElement pEl,
                               ThotBool drag );
 extern void ConfigFree ( void );
 extern void TtaFreeAllCatalogs ( void );
+extern void InitDialogueFont ( void );
 extern void TteFreeAllEventsList ( void );
 extern int GetObjectWWW ( int docid,
                           char *urlName,
@@ -149,6 +150,7 @@ extern void ExtendSelection (/* PtrElement pEl,
                                 ThotBool drag */);
 extern void ConfigFree (/* void */);
 extern void TtaFreeAllCatalogs (/* void */);
+extern void InitDialogueFont (/* void */);
 extern void TteFreeAllEventsList (/* void */);
 extern int GetObjectWWW (/* int docid,
                             char *urlName,
