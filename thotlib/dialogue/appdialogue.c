@@ -125,8 +125,6 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #define WM_ENTER (WM_USER)
 
 extern TBADDBITMAP ThotTBBitmap;
-extern HWND        currentWindow;
-
 WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 
 static BOOL    doSwitchButton = TRUE;
@@ -4529,7 +4527,6 @@ STRING              data;
 	{
 	  if (frame != currentFrame)
 	    frame = currentFrame;
-	  currentWindow = FrRef [frame];
 	}
 #endif /* _WINDOWS */
       item = i / MAX_MENU;

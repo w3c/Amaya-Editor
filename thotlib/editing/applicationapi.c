@@ -224,10 +224,10 @@ View                view;
       return 0;
     }
   else
-#ifndef _WINDOWS
-    return (FrameTable[frame].WdFrame);
-#else  /* _WINDOWS */
+#ifdef _WINDOWS
     return (FrMainRef[frame]);
+#else  /* _WINDOWS */
+    return (FrameTable[frame].WdFrame);
 #endif /* _WINDOWS */
 }
 #endif
@@ -316,15 +316,14 @@ void                TtaInitialize (CHAR_T* applicationName)
 #else  /* __STDC__ */
 void                TtaInitialize (applicationName)
 CHAR_T*             applicationName;
-
 #endif /* __STDC__ */
 {
    int                 i;
 
    UserErrorCode = 0;
    ustrcpy (DefaultDocumentName, TEXT(""));
-   InitEditorMemory ();		/* Initializes the memory managment of the editor */
-   InitNatures ();		/* Initializes the table of Natures */
+   InitEditorMemory ();	      /* Initializes the memory managment of the editor */
+   InitNatures ();	      /* Initializes the table of Natures */
 
    FullStructureChecking = FALSE;
 
@@ -350,9 +349,8 @@ CHAR_T*             applicationName;
 #ifndef NODISPLAY
 #ifdef _WINDOWS
    TtPrinterDC = NULL;
-   WIN_GetDeviceContext (-1);
    DOT_PER_INCHE = GetDeviceCaps(TtDisplay, LOGPIXELSY);
-   WIN_ReleaseDeviceContext ();
+   WIN_Main_Wd = NULL;
 #else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;
 #endif /* _WINDOWS */
@@ -360,36 +358,31 @@ CHAR_T*             applicationName;
    numOfJobs = 0;
    /* Initializes patterns */
    NbPatterns = sizeof (Name_patterns) / sizeof (STRING);
-
    Patterns = Name_patterns;
 #endif /* NODISPLAY */
    /* load the message table of the Thot Library */
    i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
    switch (i)
-	 {
-	    case 0:
-	       break;
-	    case -1:
-	       fprintf (stderr, "cannot find messages table\n");
-	       exit (1);
-	    default:
-	       fprintf (stderr, "Previous messages table loaded\n");
-	       exit (1);
-	 }
+     {
+     case 0:
+       break;
+     case -1:
+       fprintf (stderr, "cannot find messages table\n");
+       exit (1);
+     default:
+       fprintf (stderr, "Previous messages table loaded\n");
+       exit (1);
+     }
 
    /* init the system error signal handler */
    InitErrorHandler ();
-
 #ifndef NODISPLAY
-
    ConfigInit ();
    /* Initilizes the space character displaying mode */
    ShowSpace = 1;
    InputSpace = 0;
 #endif
-
    CheckAccessLoadResources ();
-
 }
 
 /*----------------------------------------------------------------------

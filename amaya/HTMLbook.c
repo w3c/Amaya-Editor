@@ -517,7 +517,7 @@ Document            doc;
     }
   
   /* get the path dir where css files have to be stored */
-  if ((DocumentTypes[doc] == docHTML) || (DocumentTypes[doc] == docSVG) &&
+  if ((DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docSVG) &&
       !IgnoreCSS)
     {
       TtaGetPrintNames (&files, &dir);

@@ -106,7 +106,6 @@ extern HWND      hwndClient;
 extern HWND      ToolBar;
 extern HWND      logoFrame;
 extern HWND      StatusBar;
-extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HWND      currentDlg;
 extern int       ReturnOption;
@@ -299,22 +298,23 @@ WPARAM     wParam;
 LPARAM     lParam;
 #endif /* __STDC__ */
 {
-   PAINTSTRUCT         ps;
-   RECT                rect;
+  PAINTSTRUCT         ps;
+  RECT                rect;
 
-   if (frame > 0 && frame <= MAX_FRAME) {
+  if (frame > 0 && frame <= MAX_FRAME)
+    {
       /* Do not redraw if the document is in NoComputedDisplay mode. */
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay) {
-         WIN_curWin = w;
-         BeginPaint (w, &ps);
-         GetClientRect (w, &rect);
-         DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
-         EndPaint (w, &ps);
-         WIN_GetDeviceContext (frame);
-         DisplayFrame (frame);
-         WIN_ReleaseDeviceContext ();
-      }
-   }
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+	{
+	  BeginPaint (w, &ps);
+	  GetClientRect (w, &rect);
+	  DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
+	  EndPaint (w, &ps);
+	  WIN_GetDeviceContext (frame);
+	  DisplayFrame (frame);
+	  WIN_ReleaseDeviceContext ();
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1630,7 +1630,6 @@ LPARAM lParam;
 	     mMsg == WM_SYSKEYDOWN || mMsg == WM_KEYDOWN))
 	  {
 	    ClickIsDone = 0;
-	    currentWindow = hwnd;
 	    ClickFrame = frame;
 	    ClickX = LOWORD (lParam);
 	    ClickY = HIWORD (lParam);

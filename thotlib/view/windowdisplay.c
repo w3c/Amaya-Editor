@@ -69,19 +69,6 @@ int                 X, Y;
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ClipError (int frame) 
-#else  /* !__STDC__ */
-static void ClipError (frame); 
-int  frame;
-#endif /* __STDC__ */
-{
-  if (frame > 0)
-    MessageBox (FrMainRef [frame], TEXT("Cannot select clipping region"), TEXT("Warning"), MB_OK);
-}
-
-/*----------------------------------------------------------------------
    SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -201,15 +188,14 @@ int           fg;
   SelectObject (TtPrinterDC, hOldPen);
 #else /* _WIN_PRINT */
   WIN_GetDeviceContext (frame);
-  if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-    ClipError (frame);
-  hOldPen = SelectObject (TtDisplay, hPen) ;
+  SelectClipRgn (TtDisplay, clipRgn);
+  hOldPen = SelectObject (TtDisplay, hPen);
   Polyline (TtDisplay, point, 4);
   SelectObject (TtDisplay, hOldPen);
   WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-  if (!DeleteObject (hPen))
-    WinErrorBox (WIN_Main_Wd, TEXT("DrawArrowHead"));
+
+  DeleteObject (hPen);
 }
 
 /*----------------------------------------------------------------------
@@ -258,14 +244,14 @@ int          fg;
 #else /* _WIN_PRINT */
   WIN_GetDeviceContext (frame);
   hOldPen = SelectObject (TtDisplay, hPen);
+  SelectClipRgn (TtDisplay, clipRgn);
   MoveToEx (TtDisplay, x1, y1, NULL);
   LineTo (TtDisplay, x2, y2);
 
   SelectObject (TtDisplay, hOldPen);
   WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-  if (!DeleteObject (hPen))
-    WinErrorBox (WIN_Main_Wd, TEXT("DrawOneLine"));
+  DeleteObject (hPen);
 }
 
 
@@ -310,8 +296,7 @@ int         fg;
    SetBkMode (TtDisplay, TRANSPARENT);
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont (TtDisplay, font);
-   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-      ClipError (frame);
+   SelectClipRgn (TtDisplay, clipRgn);
    TextOut (TtDisplay, x, y, (USTRING) str, 1);
    SelectObject (TtDisplay, hOldFont);
    DeleteObject (currentActiveFont);
@@ -469,12 +454,9 @@ int                 shadow;
       if (fg < 0)
 	/* color is transparent. Don't do anything */
         return (width);
-
-      if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-         ClipError (frame);
-
-	  SetTextColor (TtDisplay, ColorPixel (fg));
-	   SetBkMode (TtDisplay, TRANSPARENT);
+      SelectClipRgn (TtDisplay, clipRgn);
+      SetTextColor (TtDisplay, ColorPixel (fg));
+      SetBkMode (TtDisplay, TRANSPARENT);
       if (!ShowSpace || shadow)
 	{
 	 /* draw the spaces */
@@ -562,7 +544,6 @@ int                 shadow;
 	   }
 	 if (lg != 0)
 	   {
-	    /* GetClipRgn(TtDisplay, clipRgn); */
 	    outOpt = 0;
 
 #if 0 /* ifdef _I18N_ */
@@ -623,7 +604,6 @@ int                 shadow;
       if (hyphen)
 	{
          /* draw the hyphen */
-         /* GetClipRgn(TtDisplay, clipRgn); */
          TextOut (TtDisplay, x + width, y + FrameTable[frame].FrTopMargin,
 		  TEXT("\255"), 1);
 	} 
@@ -1057,8 +1037,6 @@ int         fg;
 #endif /* __STDC__ */
 {
   int         arc, fh;
-  HPEN        pen;
-  HPEN        hOldPen;
 
   if (fg < 0)
     return;
@@ -1118,8 +1096,6 @@ int         fg;
 #endif /* __STDC__ */
 {
   int         arc, fh;
-  HPEN        pen;
-  HPEN        hOldPen;
 
   if (fg < 0)
     return;
@@ -1754,7 +1730,7 @@ int         pattern;
    Pixmap      pat = (Pixmap) 0;
    HBRUSH      hBrush;
    HBRUSH      hOldBrush;
-   HPEN        hPen = 0;
+   HPEN        hPen;
    HPEN        hOldPen;
 
    if (width <= 0 || height <= 0)
@@ -1802,20 +1778,17 @@ int         pattern;
    /* fill in the rectangle */
    hOldPen = SelectObject (TtPrinterDC, hPen);
    if (hBrush)
-	 {
-	   hOldBrush = SelectObject (TtPrinterDC, hBrush);
-	   Rectangle (TtPrinterDC, x, y, x + width, y + height);
-	   SelectObject (TtPrinterDC, hOldBrush);
-	   if (!DeleteObject (hBrush))
-	     WinErrorBox (WIN_Main_Wd, TEXT("DrawRectangle (1)"));
-	 }
+     {
+       hOldBrush = SelectObject (TtPrinterDC, hBrush);
+       Rectangle (TtPrinterDC, x, y, x + width, y + height);
+       SelectObject (TtPrinterDC, hOldBrush);
+     }
 
     SelectObject (TtPrinterDC, hOldPen);
 #else  /* _WIN_PRINT */
 
    WIN_GetDeviceContext (frame);
-   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-      ClipError (frame);
+   SelectClipRgn (TtDisplay, clipRgn);
 
    /* fill the polygone */
    hOldPen = SelectObject (TtDisplay, hPen) ;
@@ -1824,16 +1797,15 @@ int         pattern;
        hOldBrush = SelectObject (TtDisplay, hBrush);
        Rectangle (TtDisplay, x, y, x + width, y + height);
        SelectObject (TtDisplay, hOldBrush);
-       if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd, TEXT("DrawRectangle (2)"));
      }
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 
-   if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame], TEXT("DrawRectangle (3)"));
-   if (pat != 0)
+   if (hBrush)
+     DeleteObject (hBrush);
+   DeleteObject (hPen);
+   if (pat != NULL)
       if (!DeleteObject ((HGDIOBJ)pat))
          WinErrorBox (NULL, TEXT("DrawRectangle (4)"));
 }
@@ -1985,7 +1957,7 @@ int           pattern;
   LOGBRUSH            logBrush;
   HBRUSH              hBrush;
   HBRUSH              hOldBrush;
-  Pixmap              pat = (Pixmap) 0;
+  Pixmap              pat = NULL;
   int         i, j;
 
    /* Allocate a table of points */
@@ -2057,8 +2029,6 @@ int           pattern;
        hOldBrush = SelectObject (TtPrinterDC, hBrush);
        Polygon (TtPrinterDC, points, nb);
        SelectObject (TtPrinterDC, hOldBrush);
-       if (!DeleteObject (hBrush))
-         WinErrorBox (NULL, TEXT("Polygon"));
      }
 
    /* draw the border */
@@ -2067,8 +2037,7 @@ int           pattern;
    SelectObject (TtPrinterDC, hOldPen);
 #else  /* _WIN_PRINT */
    WIN_GetDeviceContext (frame);
-   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-     ClipError (frame);
+   SelectClipRgn (TtDisplay, clipRgn);
 
    /* fill the polygone */
    hOldPen = SelectObject (TtDisplay, hPen);
@@ -2077,8 +2046,6 @@ int           pattern;
        hOldBrush = SelectObject (TtDisplay, hBrush);
        Polygon (TtDisplay, points, nb);
        SelectObject (TtDisplay, hOldBrush);
-       if (!DeleteObject (hBrush))
-         WinErrorBox (NULL, TEXT("Ploygon"));
      }
 
    /* draw the border */
@@ -2088,9 +2055,9 @@ int           pattern;
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 
-   if (!DeleteObject (hPen))
-     WinErrorBox (WIN_Main_Wd, TEXT("Polyline"));
-
+   if (hBrush)
+     DeleteObject (hBrush);
+   DeleteObject (hPen);
    if (pat != 0)
      if (!DeleteObject ((HGDIOBJ) pat))
        WinErrorBox (NULL, TEXT("Pattern"));
@@ -2377,8 +2344,7 @@ C_points     *controls;
    SelectObject (TtPrinterDC, hOldPen);
 #else  /* _WIN_PRINT */
    WIN_GetDeviceContext (frame);
-   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-     ClipError (frame);
+   SelectClipRgn (TtDisplay, clipRgn);
 
    /* fill the polygone */
    hOldPen = SelectObject (TtDisplay, hPen);
@@ -2389,9 +2355,7 @@ C_points     *controls;
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 
-   if (!DeleteObject (hPen))
-     WinErrorBox (WIN_Main_Wd, TEXT("Polyline"));
-
+   DeleteObject (hPen);
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
     DrawArrowHead (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, fg);
@@ -2553,8 +2517,6 @@ C_points     *controls;
        hOldBrush = SelectObject (TtPrinterDC, hBrush);
        Polygon (TtPrinterDC, points, nb);
        SelectObject (TtPrinterDC, hOldBrush);
-       if (!DeleteObject (hBrush))
-         WinErrorBox (NULL, TEXT("Polygon"));
      }
 
    /* draw the border */
@@ -2563,8 +2525,7 @@ C_points     *controls;
    SelectObject (TtPrinterDC, hOldPen);
 #else  /* _WIN_PRINT */
    WIN_GetDeviceContext (frame);
-   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-     ClipError (frame);
+   SelectClipRgn (TtDisplay, clipRgn);
 
    /* fill the polygone */
    hOldPen = SelectObject (TtDisplay, hPen);
@@ -2573,8 +2534,6 @@ C_points     *controls;
        hOldBrush = SelectObject (TtDisplay, hBrush);
        Polygon (TtDisplay, points, nb);
        SelectObject (TtDisplay, hOldBrush);
-       if (!DeleteObject (hBrush))
-         WinErrorBox (NULL, TEXT("Ploygon"));
      }
 
    /* draw the border */
@@ -2584,9 +2543,9 @@ C_points     *controls;
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 
-   if (!DeleteObject (hPen))
-     WinErrorBox (WIN_Main_Wd, TEXT("Polyline"));
-
+   if (hBrush)
+     DeleteObject (hBrush);
+   DeleteObject (hPen);
    if (pat != 0)
      if (!DeleteObject ((HGDIOBJ) pat))
        WinErrorBox (NULL, TEXT("Pattern"));
@@ -2694,27 +2653,21 @@ int           pattern;
    hOldBrush = SelectObject (TtPrinterDC, hBrush);
    RoundRect (TtPrinterDC, x, y, x + width, y + height, rx * 2, ry * 2);
    SelectObject (TtPrinterDC, hOldBrush);
-   if (!DeleteObject (hBrush))
-     WinErrorBox (NULL, TEXT("Oval"));
    SelectObject (TtPrinterDC, hOldPen);
 #else  /* _WIN_PRINT */
    WIN_GetDeviceContext (frame);
-   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-     ClipError (frame);
+   SelectClipRgn (TtDisplay, clipRgn);
    /* fill the polygone */
    hOldPen = SelectObject (TtDisplay, hPen);
    hOldBrush = SelectObject (TtDisplay, hBrush);
    RoundRect (TtDisplay, x, y, x + width, y + height, rx * 2, ry * 2);
    SelectObject (TtDisplay, hOldBrush);
-   if (!DeleteObject (hBrush))
-     WinErrorBox (NULL, TEXT("DrawOval (1)"));
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 
-   if (!DeleteObject (hPen))
-     WinErrorBox (WIN_Main_Wd, TEXT("DrawOval (1)"));
-
+   DeleteObject (hBrush);
+   DeleteObject (hPen);
    if (pat != 0)
      if (!DeleteObject ((HGDIOBJ) pat))
        WinErrorBox (NULL, TEXT("Pattern"));
@@ -2799,27 +2752,21 @@ int           pattern;
    hOldBrush = SelectObject (TtPrinterDC, hBrush);
    Ellipse (TtPrinterDC, x, y, x + width, y + height);
    SelectObject (TtPrinterDC, hOldBrush);
-   if (!DeleteObject (hBrush))
-     WinErrorBox (NULL, TEXT("Ellipse (1)"));
    SelectObject (TtPrinterDC, hOldPen);
 #else  /* _WIN_PRINT */
    WIN_GetDeviceContext (frame);
-   if (SelectClipRgn (TtDisplay, clipRgn) == ERROR)
-     ClipError (frame);
+   SelectClipRgn (TtDisplay, clipRgn);
    /* fill the polygone */
    hOldPen = SelectObject (TtDisplay, hPen);
    hOldBrush = SelectObject (TtDisplay, hBrush);
    Ellipse (TtDisplay, x, y, x + width, y + height);
    SelectObject (TtDisplay, hOldBrush);
-   if (!DeleteObject (hBrush))
-     WinErrorBox (NULL, TEXT("Ellipse (1)"));
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 
-   if (!DeleteObject (hPen))
-     WinErrorBox (WIN_Main_Wd, TEXT("Ellipse (1)"));
-
+   DeleteObject (hBrush);
+   DeleteObject (hPen);
    if (pat != 0)
      if (!DeleteObject ((HGDIOBJ) pat))
        WinErrorBox (NULL, TEXT("Pattern"));
@@ -3141,8 +3088,8 @@ int         fg;
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-   if (!DeleteObject (hPen))
-      WinErrorBox (WIN_Main_Wd, TEXT("DrawCorner (1)"));
+
+   DeleteObject (hPen);
 }
 
 /*----------------------------------------------------------------------
@@ -3253,7 +3200,6 @@ int         y;
 #endif /* __STDC__ */
 {
    ThotWindow          w;
-
    HBRUSH              hBrush;
    HBRUSH              hOldBrush;
 
@@ -3265,10 +3211,8 @@ int         y;
 	hOldBrush = SelectObject (TtDisplay, hBrush);
 	PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	SelectObject (TtDisplay, hOldBrush);
-    WIN_ReleaseDeviceContext ();
-	if (!DeleteObject (hBrush))
-       WinErrorBox (WIN_Main_Wd, TEXT("Clear"));
-    hBrush = (HBRUSH) 0;
+        WIN_ReleaseDeviceContext ();
+	DeleteObject (hBrush));
      }
 }
 

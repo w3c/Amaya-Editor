@@ -229,8 +229,7 @@ static BYTE     fVirt;
 static CHAR_T     key;
 
 UINT subMenuID [MAX_FRAME];
-
-ThotWindow WIN_curWin = (ThotWindow)(-1);
+static ThotWindow WIN_curWin = NULL;
 
 #ifdef __STDC__
 extern int main (int, CHAR_T**);
@@ -319,32 +318,32 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-   if (frame < 0 || frame > MAX_FRAME)
-     {
-       if (TtDisplay != 0)
-         return;
-       TtDisplay = GetDC (WIN_curWin = NULL);
-       return;
-     }
+  if (frame < 0 || frame > MAX_FRAME)
+    {
+      if (TtDisplay != NULL)
+	return;
+      TtDisplay = GetDC (WIN_curWin);
+      return;
+    }
 
-   if (FrRef[frame] == 0)
-     return;
-   /* if the correct Device Context is already selected, returns. */
-   if (WIN_curWin == FrRef[frame] && TtDisplay != 0)
-     return;
+  if (FrRef[frame] == 0)
+    return;
+  /* if the correct Device Context is already selected, returns. */
+  if (WIN_curWin == FrRef[frame] && TtDisplay != NULL)
+    return;
 
-   /* release the previous Device Context. */
-   if (TtDisplay)
-     ReleaseDC (WIN_curWin, TtDisplay);
-   TtDisplay = 0;
-
-   /* load the new Context. */
-   TtDisplay = GetDC (FrRef[frame]);
-   if (TtDisplay != 0)
-     {
-       WIN_curWin = FrRef[frame];
-       SetICMMode (TtDisplay, ICM_ON);
-     }
+  /* release the previous Device Context. */
+  if (TtDisplay)
+    ReleaseDC (WIN_curWin, TtDisplay);
+  TtDisplay = NULL;
+  
+  /* load the new Context. */
+  TtDisplay = GetDC (FrRef[frame]);
+  if (TtDisplay != NULL)
+    {
+      WIN_curWin = FrRef[frame];
+      SetICMMode (TtDisplay, ICM_ON);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -357,15 +356,15 @@ void WIN_ReleaseDeviceContext ()
 #endif /* __STDC__ */
 {
   /* release the previous Device Context. */
-  if (TtDisplay != 0)
+  if (TtDisplay != NULL)
     {     
       SetICMMode (TtDisplay, ICM_OFF);
       if (!ReleaseDC (WIN_curWin, TtDisplay))
 	WinErrorBox (NULL, TEXT("WIN_ReleaseDeviceContext"));
     }
 
-  WIN_curWin = (ThotWindow) (-1);
-  TtDisplay = 0;
+  WIN_curWin = NULL;
+  TtDisplay = NULL;
 }
 
 /*----------------------------------------------------------------------

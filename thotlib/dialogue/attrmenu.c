@@ -102,7 +102,6 @@ static ThotBool     WIN_AtNumAttr  = FALSE;
 static ThotBool     WIN_AtTextAttr = FALSE;
 static ThotBool     WIN_AtEnumAttr = FALSE;
 static ThotBool     isForm         = FALSE;
-static PtrAttribute WIN_currAttr;
 static int          WIN_nbItem;
 static int          formValue;
 static int          nbDlgItems;
@@ -790,7 +789,6 @@ int                 view;
    CHAR_T              title[MAX_NAME_LENGTH + 2];
 #ifdef _WINDOWS
    WIN_pAttr1 = pAttr1;
-   WIN_currAttr	= currAttr;
 #endif /* _WINDOWS */
 
    doc = (Document) IdentDocument (pDoc);
