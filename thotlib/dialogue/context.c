@@ -34,6 +34,7 @@
 ThotColorStruct  cblack;
 static ThotColorStruct  cwhite;
 static ThotColor        Select_Color;
+extern int              errno;
 
 #include "appli_f.h"
 #include "checkermenu_f.h"
@@ -44,7 +45,6 @@ static ThotColor        Select_Color;
 #include "picture_f.h"
 #include "registry_f.h"
 #include "textcommands_f.h"
-#include "ustring_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -98,9 +98,9 @@ void WinInitColors (void)
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
-static int          XWindowError (Display * dpy, XErrorEvent * err)
+static int          XWindowError (Display *dpy, XErrorEvent *err)
 {
-   CHAR_T                msg[200];
+   char                msg[200];
 
    XGetErrorText (dpy, err->error_code, msg, 200);
    return (0);
@@ -111,16 +111,14 @@ static int          XWindowError (Display * dpy, XErrorEvent * err)
  ----------------------------------------------------------------------*/
 static int          XWindowFatalError (Display * dpy)
 {
-   extern int          errno;
-
-   if (errno != EPIPE)
-      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
-   else
-      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
-    CloseTextInsertion ();
-   if (ThotLocalActions[T_backuponfatal] != NULL)
-     (*ThotLocalActions[T_backuponfatal]) ();
-   return (0);
+  if (errno != EPIPE)
+    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+  else
+    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+  CloseTextInsertion ();
+  if (ThotLocalActions[T_backuponfatal] != NULL)
+    (*ThotLocalActions[T_backuponfatal]) ();
+  return (0);
 }
 #endif /* _WINDOWS */
 
@@ -130,10 +128,10 @@ static int          XWindowFatalError (Display * dpy)
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
 static ThotBool FindColor (int disp, CHAR_T *name, char *colorplace,
-			   CHAR_T *defaultcolor, ThotColor *colorpixel)
+			   char *defaultcolor, ThotColor *colorpixel)
 {
    int                 col;
-   CHAR_T*             value;
+   char               *value;
    unsigned short      red;
    unsigned short      green;
    unsigned short      blue;
@@ -321,8 +319,8 @@ static void         InitColors (CHAR_T* name)
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
- *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
- *	counterpart in Microsoft environment.
+  InitGraphicContexts initialize the X-Windows graphic contexts and their
+  Windows counterpart in Microsoft environment.
  ----------------------------------------------------------------------*/
 static void InitGraphicContexts (void)
 {
@@ -539,163 +537,163 @@ void InitDocContexts ()
 /*----------------------------------------------------------------------
  *      SelectionEvents handle the X-Windows selection events.
  ----------------------------------------------------------------------*/
-void                SelectionEvents (void *ev)
+void SelectionEvents (void *ev)
 {
 #ifndef _GTK
    XSelectionRequestEvent *request;
    XSelectionEvent     notify;
    ThotWindow          w, wind;
    Atom                type;
-   int                 format, r, frame;
-   unsigned long       nbitems, bytes_after;
-   USTRING             buffer;
    XSelectionEvent    *event = (XSelectionEvent *) ev;
+   unsigned long       nbitems, bytes_after;
+   unsigned char      *buffer;
+   unsigned char      *partbuffer;
+   int                 format, r, frame;
 
    switch (event->type)
+     {
+     case SelectionClear:
+       /* lost selection, need to free the buffer */
+       w = ((XSelectionClearEvent *) event)->window;
+       wind = 0;
+       frame = 0;
+       while (wind == 0 && frame <= MAX_FRAME)
 	 {
-	    case SelectionClear:
-	       /* lost selection, need to free the buffer */
-	       w = ((XSelectionClearEvent *) event)->window;
-	       wind = 0;
-	       frame = 0;
-	       while (wind == 0 && frame <= MAX_FRAME)
-		 {
-		    if (w == FrRef[frame])
-		       wind = w;
-		    frame++;
-		 }
-	       if (w == wind && event->display == TtDisplay)
-		 {
-		    if (Xbuffer != NULL)
-		      {
-			 /* free the buffer */
-			 free (Xbuffer);
-			 Xbuffer = NULL;
-			 ClipboardLength = 0;
-		      }
-		 }
-	       break;
-
-	    case SelectionNotify:
-	       /* receive the XBuffer, paste it in the document */
-	       /* verify that one frame is concerned by the action */
-	       w = event->requestor;
-	       wind = 0;
-	       frame = 0;
-	       while (wind == 0 && frame <= MAX_FRAME)
-		 {
-		    if (w == FrRef[frame])
-		       wind = w;
-		    frame++;
-		 }
-	       if (w == wind && event->display == TtDisplay)
-		 {
-		    if (event->property == None)
-		      {
-			 /* No current selection, look for the cut buffer */
-			 buffer = (USTRING) XFetchBytes (TtDisplay, &r);
-			 if (buffer != NULL)
-			   {
-			      /* returns the cut buffer */
-			      if (ThotLocalActions[T_pasteclipboard] != NULL)
-				 (*ThotLocalActions[T_pasteclipboard]) (buffer, r);
-			   }
-		      }
-		    else
-		      {
-			USTRING partbuffer;
-			/* receive the data */
-			r = XGetWindowProperty (event->display, 
-						event->requestor,
-						event->property, 
-						(long) 0, 
-						(long) 256, 
-						FALSE,
-						AnyPropertyType, 
-						&type, 
-						&format, 
-						&nbitems,
-						&bytes_after, 
-						&partbuffer);
-			if (r == Success && type != None && format == 8)
-			  {
-			    if (bytes_after > 0)
-			      {
-				buffer = TtaAllocString (nbitems + bytes_after);
-				ustrcpy (buffer, partbuffer);
-				r = XGetWindowProperty (event->display, 
-							event->requestor,
-							event->property, 
-							(long) 256, 
-							(long) bytes_after, 
-							FALSE,
-							AnyPropertyType, 
-							&type, 
-							&format, 
-							&nbitems,
-							&bytes_after, 
-							&partbuffer);
-				ustrcpy (&buffer[256 * 4], partbuffer);
-				nbitems = (256 * 4) + nbitems;
-			      }
-			    else
-			      buffer = partbuffer;
-			    /* paste the content of the selection */
-			    if (ThotLocalActions[T_pasteclipboard] != NULL)
-			      (*ThotLocalActions[T_pasteclipboard]) (buffer, (int) nbitems);
-			    if (buffer != partbuffer)
-			      TtaFreeMemory (buffer);
-			  }
-		      }
-		 }
-	       break;
-
-	    case SelectionRequest:
-	       /* Asking for selection : copy the cut buffer content in the Xbuffer */
-	       w = ((XSelectionRequestEvent *) event)->owner;
-	       wind = 0;
-	       frame = 0;
-	       while (wind == 0 && frame <= MAX_FRAME)
-		 {
-		    if (w == FrRef[frame])
-		       wind = w;
-		    frame++;
-		 }
-	       if (w == wind && event->display == TtDisplay)
-		 {
-		    request = (XSelectionRequestEvent *) event;
-		    /* Build the Notify event */
-		    notify.type = SelectionNotify;
-		    notify.display = request->display;
-		    notify.requestor = request->requestor;
-		    notify.selection = request->selection;
-		    notify.target = request->target;
-		    notify.time = request->time;
-
-		    if (Xbuffer == NULL)
-		      {
-			 /* selection is empty, so empty the cut buffer */
-			 XStoreBuffer (request->display, NULL, 0, 0);
-			 notify.property = None;
-			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
-		      }
-		    else if (request->property == None)
-		      {
-			 /* there is no such property */
-			 XStoreBuffer (request->display, Xbuffer, ClipboardLength, 0);
-		      }
-		    else
-		      {
-			 /* store the value in the given property */
-			 XChangeProperty (request->display, request->requestor, request->property,
-					  XA_STRING, 8, PropModeReplace, Xbuffer, ClipboardLength);
-			 /* signal the completion of the action */
-			 notify.property = request->property;
-			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
-		      }
-		 }
-	       break;
+	   if (w == FrRef[frame])
+	     wind = w;
+	   frame++;
 	 }
+       if (w == wind && event->display == TtDisplay)
+	 {
+	   if (Xbuffer != NULL)
+	     {
+	       /* free the buffer */
+	       free (Xbuffer);
+	       Xbuffer = NULL;
+	       ClipboardLength = 0;
+	     }
+	 }
+       break;
+
+     case SelectionNotify:
+       /* receive the XBuffer, paste it in the document */
+       /* verify that one frame is concerned by the action */
+       w = event->requestor;
+       wind = 0;
+       frame = 0;
+       while (wind == 0 && frame <= MAX_FRAME)
+	 {
+	   if (w == FrRef[frame])
+	     wind = w;
+	   frame++;
+	 }
+       if (w == wind && event->display == TtDisplay)
+	 {
+	   if (event->property == None)
+	     {
+	       /* No current selection, look for the cut buffer */
+	       buffer = (unsigned char *) XFetchBytes (TtDisplay, &r);
+	       if (buffer != NULL)
+		 {
+		   /* returns the cut buffer */
+		   if (ThotLocalActions[T_pasteclipboard] != NULL)
+		     (*ThotLocalActions[T_pasteclipboard]) (buffer, r);
+		 }
+	     }
+	   else
+	     {
+	       /* receive the data */
+	       r = XGetWindowProperty (event->display, 
+				       event->requestor,
+				       event->property, 
+				       (long) 0, 
+				       (long) 256, 
+				       FALSE,
+				       AnyPropertyType, 
+				       &type, 
+				       &format, 
+				       &nbitems,
+				       &bytes_after, 
+				       &partbuffer);
+	       if (r == Success && type != None && format == 8)
+		 {
+		   if (bytes_after > 0)
+		     {
+		       buffer = TtaAllocString (nbitems + bytes_after);
+		       strcpy (buffer, partbuffer);
+		       r = XGetWindowProperty (event->display, 
+					       event->requestor,
+					       event->property, 
+					       (long) 256, 
+					       (long) bytes_after, 
+					       FALSE,
+					       AnyPropertyType, 
+					       &type, 
+					       &format, 
+					       &nbitems,
+					       &bytes_after, 
+					       &partbuffer);
+		       strcpy (&buffer[256 * 4], partbuffer);
+		       nbitems = (256 * 4) + nbitems;
+		     }
+		   else
+		     buffer = partbuffer;
+		   /* paste the content of the selection */
+		   if (ThotLocalActions[T_pasteclipboard] != NULL)
+		     (*ThotLocalActions[T_pasteclipboard]) (buffer, (int) nbitems);
+		   if (buffer != partbuffer)
+		     TtaFreeMemory (buffer);
+		 }
+	     }
+	 }
+       break;
+
+     case SelectionRequest:
+       /* Asking for selection : copy the cut buffer content in the Xbuffer */
+       w = ((XSelectionRequestEvent *) event)->owner;
+       wind = 0;
+       frame = 0;
+       while (wind == 0 && frame <= MAX_FRAME)
+	 {
+	   if (w == FrRef[frame])
+	     wind = w;
+	   frame++;
+	 }
+       if (w == wind && event->display == TtDisplay)
+	 {
+	   request = (XSelectionRequestEvent *) event;
+	   /* Build the Notify event */
+	   notify.type = SelectionNotify;
+	   notify.display = request->display;
+	   notify.requestor = request->requestor;
+	   notify.selection = request->selection;
+	   notify.target = request->target;
+	   notify.time = request->time;
+	   
+	   if (Xbuffer == NULL)
+	     {
+	       /* selection is empty, so empty the cut buffer */
+	       XStoreBuffer (request->display, NULL, 0, 0);
+	       notify.property = None;
+	       XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
+	     }
+	   else if (request->property == None)
+	     {
+	       /* there is no such property */
+	       XStoreBuffer (request->display, Xbuffer, ClipboardLength, 0);
+	     }
+	   else
+	     {
+	       /* store the value in the given property */
+	       XChangeProperty (request->display, request->requestor, request->property,
+				XA_STRING, 8, PropModeReplace, Xbuffer, ClipboardLength);
+	       /* signal the completion of the action */
+	       notify.property = request->property;
+	       XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
+	     }
+	 }
+       break;
+     }
 #endif /* _GTK */
 }
 #endif /* _WINDOWS */
