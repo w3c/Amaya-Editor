@@ -889,10 +889,10 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	  ptfont->family    = family;
 	  ptfont->highlight = highlight;
 	  ptfont->size      = size;
-	  currentActiveFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
+	  ActiveFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
 	  if (TtPrinterDC != 0)
 	    {
-	      hOldFont = SelectObject (TtPrinterDC, currentActiveFont);
+	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
 	      if (GetTextMetrics (TtPrinterDC, &textMetric))
 		{
 		  ptfont->FiAscent = textMetric.tmAscent;
@@ -913,7 +913,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	    }
 	  else
 	    { 
-	      hOldFont = SelectObject (TtDisplay, currentActiveFont);
+	      hOldFont = SelectObject (TtDisplay, ActiveFont);
 	      if (GetTextMetrics (TtDisplay, &textMetric))
 		{
 		  ptfont->FiAscent = textMetric.tmAscent;
@@ -931,9 +931,9 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 		  ptfont->FiHeights[c] = wsize.cy;
 		}
 	      /* SelectObject (TtDisplay, hOldFont); */
-	      if (!DeleteObject (SelectObject (TtDisplay, currentActiveFont)))
+	      if (!DeleteObject (SelectObject (TtDisplay, ActiveFont)))
 		WinErrorBox (NULL, TEXT("LoadNearestFont (1)"));
-	      currentActiveFont = 0;
+	      ActiveFont = 0;
 	    }
 #else  /* _WINDOWS */
 	  ptfont = LoadFont (textX);
@@ -1247,7 +1247,7 @@ void                ThotFreeFont (int frame)
 		  if (j == MAX_FONT)
 #ifdef _WINDOWS
 		    {
-		      DeleteObject (SelectObject (TtDisplay, currentActiveFont));
+		      DeleteObject (SelectObject (TtDisplay, ActiveFont));
 		      TtaFreeMemory (TtFonts[i]);
 		    }
 #else  /* _WINDOWS */
