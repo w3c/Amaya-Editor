@@ -30,14 +30,19 @@
 #include <gdk/gdkx.h>
 #endif /*_GTK*/
 
+#undef MAX_TXT_LEN
+#define MAX_TXT_LEN 8144 
+#define MAX_FONT_FACE 6
+#define MAX_FONT_STYLE 7
+
 /* Each Family can 
    have different 
    font style*/
 typedef struct FontFamilyConfig
 {
-  ThotBool is_xlfd[6];
-  ThotBool is_xlfd_checked[6];
-  char     *highlight[6];
+  ThotBool is_xlfd[MAX_FONT_STYLE];
+  ThotBool is_xlfd_checked[MAX_FONT_STYLE];
+  char     *highlight[MAX_FONT_STYLE];
   /*
   char *bold;
   char *italic;
@@ -51,7 +56,7 @@ typedef struct FontFamilyConfig
 */
 typedef struct FontScript
 {
-  FontFamilyConfig *family[6];
+  FontFamilyConfig *family[MAX_FONT_FACE];
   /*
   FontFamily *serif;
   FontFamily *sansserif;
@@ -61,10 +66,6 @@ typedef struct FontScript
   */
 } FontScript;
 
-#undef MAX_TXT_LEN
-#define MAX_TXT_LEN 8144 
-#define MAX_FONT_FACE 6
-#define MAX_FONT_STYLE 6
 static FontScript **Fonttab = NULL;
 
 
@@ -469,17 +470,19 @@ char *FontLoadFromConfig (char script,
     {
       switch (font_style)
 	{
+	 case 1:
+	  font_style = 2;
+	  break;
+	 case 0:
+	  font_style = 1;
+	  break;
 	 case 2:
-     case 3:
 	  font_style = 3;
 	  break;
-     case 1:
-     case 4:
      case 5:
 	  font_style = 2;
 	  break;
 	default:
-	   font_style = 1;
 	  break;
 	}
     }

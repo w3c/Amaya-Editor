@@ -273,6 +273,7 @@ static void Win_Get_Highlight (int highlight, int *fdwItalic,
      case 1:
      case 4:
      case 5:
+       *fdwItalic = TRUE;
        *fnWeight = FW_BOLD;
        break;
      default:
