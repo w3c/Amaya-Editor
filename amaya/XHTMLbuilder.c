@@ -21,6 +21,7 @@
 #include "fetchHTMLname.h"
 
 #include "css_f.h"
+#include "EDITstyle_f.h"
 #include "fetchXMLname_f.h"
 #include "fetchHTMLname_f.h"
 #include "html2thot_f.h"
@@ -1425,12 +1426,12 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	    {
 	      if (strlen (attrValue) > MaxMsgLength - 30)
 		attrValue[MaxMsgLength - 30] = EOS;
-	      HTMLSetBackgroundImage (context->doc,
-				      context->lastElement, STYLE_REPEAT, attrValue);
+	      HTMLSetBackgroundImage (context->doc, context->lastElement,
+				      STYLE_REPEAT, attrValue, FALSE);
 	    }
 	  else if (!strcmp (lastMappedAttr->XMLattribute, "bgcolor"))
-	    HTMLSetBackgroundColor (context->doc,
-				    context->lastElement, attrValue);
+	    HTMLSetBackgroundColor (context->doc, context->lastElement,
+				    attrValue);
 	  else if (!strcmp (lastMappedAttr->XMLattribute, "text") ||
 		   !strcmp (lastMappedAttr->XMLattribute, "color"))
 	    HTMLSetForegroundColor (context->doc,

@@ -21,6 +21,11 @@ extern void GetHTMLStyleString ( Element el,
                                  Document doc,
                                  char *buf,
                                  int *len );
+extern void HTMLSetBackgroundImage ( Document doc,
+                                     Element el,
+                                     int repeat,
+                                     char *image,
+                                     ThotBool generate );
 extern void CreateClass ( Document doc,
                           View view );
 extern void ApplyClass ( Document doc,
@@ -46,6 +51,11 @@ extern void GetHTMLStyleString (/* Element el,
                                    Document doc,
                                    char *buf,
                                    int *len */);
+extern void HTMLSetBackgroundImage (/* Document doc,
+                                       Element el,
+                                       int repeat,
+                                       char *image,
+                                       ThotBool generate */);
 extern void CreateClass (/* Document doc,
                             View view */);
 extern void ApplyClass (/* Document doc,

@@ -4791,28 +4791,6 @@ void    HTMLSetBackgroundColor (Document doc, Element el, char *color)
 }
 
 /*----------------------------------------------------------------------
-   HTMLSetBackgroundImage:
-   repeat = repeat value
-   image = url of background image
-  ----------------------------------------------------------------------*/
-void HTMLSetBackgroundImage (Document doc, Element el, int repeat, char *image)
-{
-   char           css_command[400];
-
-   /******* check buffer overflow ********/
-   sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
-   if (repeat == STYLE_REPEAT)
-     strcat (css_command, "repeat");
-   else if (repeat == STYLE_HREPEAT)
-     strcat (css_command, "repeat-x");
-   else if (repeat == STYLE_VREPEAT)
-     strcat (css_command, "repeat-y");
-   else
-     strcat (css_command, "no-repeat");
-   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
-}
-
-/*----------------------------------------------------------------------
    HTMLSetForegroundColor:                                        
   ----------------------------------------------------------------------*/
 void HTMLSetForegroundColor (Document doc, Element el, char *color)

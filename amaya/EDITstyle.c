@@ -875,6 +875,69 @@ void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
 }
 
 /*----------------------------------------------------------------------
+   HTMLSetBackgroundImage:
+   repeat = repeat value
+   image = url of background image
+   generate is TRUE when the style attribute must b generated.
+  ----------------------------------------------------------------------*/
+void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
+			     char *image, ThotBool generate)
+{
+  Attribute           attr;
+  AttributeType       attrType;
+  ElementType         elType;
+  char               *schName, *ptr;
+  char                txt[400];
+  int                 len;
+
+  /******* check buffer overflow ********/
+  sprintf (txt, "background-image: url(%s); background-repeat: ", image);
+  if (repeat == STYLE_REPEAT)
+    strcat (txt, "repeat");
+  else if (repeat == STYLE_HREPEAT)
+    strcat (txt, "repeat-x");
+  else if (repeat == STYLE_VREPEAT)
+    strcat (txt, "repeat-y");
+  else
+    strcat (txt, "no-repeat");
+  ParseHTMLSpecificStyle (el, txt, doc, 0, FALSE);
+  if (el && generate)
+    {
+      elType = TtaGetElementType (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      schName = TtaGetSSchemaName (elType.ElSSchema);
+      if (strcmp (schName, "MathML") == 0)
+	attrType.AttrTypeNum = MathML_ATTR_style_;
+      else if (!strcmp (schName, "HTML"))
+	/* it's a HTML document */
+	attrType.AttrTypeNum = HTML_ATTR_Style_;
+#ifdef _SVG
+      else if (!strcmp (schName, "SVG"))
+	/* it's a SVG document */
+	attrType.AttrTypeNum = SVG_ATTR_style_;
+#endif _SVG
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	{
+	  /* concatenate the old value and the new text */
+	  len = TtaGetTextAttributeLength (attr) + 1;
+	  ptr = TtaGetMemory (len + strlen (txt));
+	  TtaGiveTextAttributeValue (attr, ptr, &len);
+	  strcat (ptr, txt);
+	  TtaSetAttributeText (attr, ptr, el, doc);
+	  TtaFreeMemory (ptr);
+	}
+      else
+	{
+	  /* set the new text */
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	  TtaSetAttributeText (attr, txt, el, doc);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    UpdateClass
    Change or create a class attribute to reflect the Style attribute
    of the selected element.
@@ -916,7 +979,8 @@ static void UpdateClass (Document doc)
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_Notation;
     }
-  if (!strcmp (schName, "SVG"))
+#ifdef _SVG
+  else if (!strcmp (schName, "SVG"))
     /* it's a SVG document */
     {
       elType.ElTypeNum = SVG_EL_SVG;
@@ -925,6 +989,7 @@ static void UpdateClass (Document doc)
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = SVG_ATTR_type;
     }
+#endif /* _SVG */
   el = head;
   found = FALSE;
   while (!found && el)
@@ -982,15 +1047,14 @@ static void UpdateClass (Document doc)
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
     }
-  else
 #ifdef _SVG
-  if (strcmp (schName, "SVG") == 0)
+  else if (strcmp (schName, "SVG") == 0)
     {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = SVG_ATTR_style_;
     }
+#endif /* _SVG */
   else
-#endif
     {
       attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;

@@ -32,10 +32,6 @@ extern int IsImplicitClassName ( char *class,
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
                                      char *color );
-extern void HTMLSetBackgroundImage ( Document doc,
-                                     Element el,
-                                     int repeat,
-                                     char *image );
 extern void HTMLSetForegroundColor ( Document doc,
                                      Element el,
                                      char *color );
@@ -95,10 +91,6 @@ extern int IsImplicitClassName (/* char *class,
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element el,
                                        char *color */);
-extern void HTMLSetBackgroundImage (/* Document doc,
-                                       Element el,
-                                       int repeat,
-                                       char *image */);
 extern void HTMLSetForegroundColor (/* Document doc,
                                        Element el,
                                        char *color */);

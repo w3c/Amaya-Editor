@@ -84,7 +84,8 @@ ThotBool DeleteMap (NotifyElement * event)
 void CallbackImage (int ref, int typedata, char *data)
 {
   Document           document;
-  Element            el, elStyle, parent;
+  SSchema            HTMLschema;
+  Element            el, parent;
   Element            first, last;
   ElementType	     elType, parentType;
   LoadedImageDesc   *desc;
@@ -92,7 +93,7 @@ void CallbackImage (int ref, int typedata, char *data)
   char             tempname[MAX_LENGTH];
   int                i, c1, cN;
   int                val;
-  ThotBool           change;
+  ThotBool           change, isHTML;
 
   val = (int) data;
   switch (ref - BaseImage)
@@ -144,38 +145,25 @@ void CallbackImage (int ref, int typedata, char *data)
 	  TtaGiveFirstSelectedElement (document, &first, &c1, &i);
 	  TtaGiveLastSelectedElement (document, &last, &i, &cN);
 	  TtaOpenUndoSequence (document, first, last, c1, cN);
-	
+	  HTMLschema = TtaGetSSchema ("HTML", document);
 	  el = NULL;
-	  if (first == NULL)
+	  if (first)
 	    {
-	      /* no current selection */
-	      /* set the pRule on the root element */
-	      el = TtaGetMainRoot (document);
-	      elType.ElSSchema = TtaGetDocumentSSchema (document);
-	      elType.ElTypeNum = HTML_EL_BODY;
-	      /* set the style on body element */
-	      elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-	      last = el;
-	    }
-	  else
-	    {
-	      elStyle = el = first;
+	      el = first;
 	      elType = TtaGetElementType (el);
-	      if (elType.ElTypeNum == HTML_EL_HTML)
+	      if (HTMLschema)
+		isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
+	      else
+		isHTML = FALSE;
+	      if (isHTML && elType.ElTypeNum == HTML_EL_HTML)
 		{
 		  elType.ElTypeNum = HTML_EL_BODY;
-		  elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-		  last = el;
+		  el = TtaSearchTypedElement (elType, SearchInTree, el);
 		}
-	      else if (elType.ElTypeNum == HTML_EL_BODY)
+	      /* style is not allowed in Head section */
+	      last = el;
+	      if (isHTML)
 		{
-		  /* move the pRule to the root element */
-		  el =  TtaGetMainRoot (document);
-		  last = el;
-		}
-	      else
-		{
-		  /* style is not allowed in Head section */
 		  if (elType.ElTypeNum == HTML_EL_HEAD)
 		    parent = el;
 		  else
@@ -184,9 +172,7 @@ void CallbackImage (int ref, int typedata, char *data)
 		      parentType.ElTypeNum = HTML_EL_HEAD;
 		      parent = TtaGetTypedAncestor (el, parentType);
 		    } 
-		  if (parent != NULL)
-		    el = NULL;
-		  else
+		  if (parent == NULL)
 		    { 
 		      /* style is not allowed in MAP */
 		      if (elType.ElTypeNum == HTML_EL_MAP)
@@ -195,26 +181,24 @@ void CallbackImage (int ref, int typedata, char *data)
 			{
 			  parentType.ElTypeNum = HTML_EL_MAP;
 			  parent = TtaGetTypedAncestor (el, parentType);
-			} 
-		      if (parent != NULL)
-			el = NULL;
+			}
+		    }
+		  if (parent == NULL)
+		    {
+		      elType = TtaGetElementType (last);
+		      if (elType.ElTypeNum == HTML_EL_MAP)
+			parent = el;
 		      else
 			{
-			  elType = TtaGetElementType (last);
-			  if (elType.ElTypeNum == HTML_EL_MAP)
-			    parent = el;
-			  else
-			    {
-			      parentType.ElTypeNum = HTML_EL_MAP;
-			      parent = TtaGetTypedAncestor (el, parentType);
-			    }
-			  if (parent != NULL)
-			    el = NULL;
-			}  
-		    } 
-		} 
-	    } 
-	  if (!el)
+			  parentType.ElTypeNum = HTML_EL_MAP;
+			  parent = TtaGetTypedAncestor (el, parentType);
+			}
+		    }  
+		  if (parent)
+		    el = NULL;
+		}
+	    }
+	  if (el == NULL)
 	    TtaSetStatus (document, 1,
 			  TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED), NULL);
 	  else
@@ -250,17 +234,15 @@ void CallbackImage (int ref, int typedata, char *data)
 		      elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 		    {
 		      el = TtaGetParent (el);
-		      elStyle = el;
 		      if (TtaIsAncestor (last, el))
 			last = el;
 		      elType = TtaGetElementType (el);
 		    } 
 		  /* if the PRule is on a Pseudo-Paragraph, move it to the
 		     enclosing element */
-		  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		  if (isHTML && elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 		    {
 		      el = TtaGetParent (el);
-		      elStyle = el;
 		      if (TtaIsAncestor (last, el))
 			last = el;
 		    } 
@@ -268,17 +250,13 @@ void CallbackImage (int ref, int typedata, char *data)
 		    HTMLResetBackgroundImage (document, el);
 		  else if (IsHTTPPath (DocumentURLs[document]) &&
 			   !IsHTTPPath (LastURLImage))
-		    HTMLSetBackgroundImage (document, el, i, tempname);
+		    HTMLSetBackgroundImage (document, el, i, tempname, TRUE);
 		  else
-		    HTMLSetBackgroundImage (document, el, i, LastURLImage);
-		  SetStyleAttribute (document, elStyle);
+		    HTMLSetBackgroundImage (document, el, i, LastURLImage, TRUE);
 		  if (last == NULL || el == last)
 		    el = NULL;
 		  else
-		    {
-		      TtaGiveNextSelectedElement (document, &el, &c1,&cN);
-		      elStyle = el;
-		    }
+		    TtaGiveNextSelectedElement (document, &el, &c1,&cN);
 		} while (el);
 	    } 
 	  TtaCloseUndoSequence (document);

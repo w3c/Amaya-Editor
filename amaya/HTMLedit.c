@@ -31,6 +31,7 @@ static int          OldHeight;
 #include "AHTURLTools_f.h"
 #include "css_f.h"
 #include "EDITimage_f.h"
+#include "EDITstyle_f.h"
 #include "EDITORactions_f.h"
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
@@ -2641,7 +2642,7 @@ void AttrColorCreated (NotifyAttribute * event)
       HTMLSetBackgroundColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
       HTMLSetBackgroundImage (event->document, event->element, STYLE_REPEAT,
-			      value);
+			      value, FALSE);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
       HTMLSetForegroundColor (event->document, event->element, value);
