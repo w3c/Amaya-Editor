@@ -311,6 +311,7 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
       break;
     }
 
+  GetParent()->GetParent()->Layout();
   m_pVPanelSizer->Layout();
   GetParent()->Layout();
   Layout();
