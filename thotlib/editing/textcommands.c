@@ -313,6 +313,10 @@ int                 code;
 	       {
 		  ok = TRUE;
 		  pBox = pViewSel->VsBox;
+		  while (pBox != NULL && pBox->BxType == BoGhost &&
+			 pBox->BxAbstractBox != NULL &&
+			 pBox->BxAbstractBox->AbFirstEnclosed != NULL)
+		    pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
 		  switch (code)
 			{
 			   case 1:	/* En arriere d'un car (^B) */
