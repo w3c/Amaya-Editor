@@ -300,6 +300,7 @@ build_rc (fname)
   opt_quickrc(OPT_COMPACT, "merge-output", rc_fp);
   opt_quickrc(OPT_BOTHUSE, "dual-output", rc_fp);
   opt_quickrc(OPT_STDCUSE, "ansi-code", rc_fp);
+  opt_quickrc(OPT_ONEARG, "one-per-line", rc_fp);
   opt_quickrc(OPT_SHOWANYWAY, "show-anyway", rc_fp);
   opt_triplerc(OPT_SORTMODE, "!sort", "sort-by-files", "sort-all", rc_fp);
   opt_numericrc(OPT_WRAPPOINT, "wrap-parameters", rc_fp);
@@ -953,6 +954,15 @@ singlechar_cmds(cmd_str, set_val)
 	set_option(OPT_COMPACT, setmode_value, set_val);
       } else {
 	fprintf(stderr, "The -Z flag must precede any file arguments\n");
+	show_usage();
+      }
+      break;
+    case 'O':
+      /* One arg per line */
+      if (files_parsed == 0) {
+	set_option(OPT_ONEARG, setmode_value, 1);
+      } else {
+	fprintf(stderr, "The -O flag must precede any file arguments\n");
 	show_usage();
       }
       break;
@@ -1775,6 +1785,7 @@ out_proto(omode, f_ptr, mode, do_comments)
   int did_leader = FALSE;
   int outch_cnt = 0, leader_cnt;
   int wrap_point = get_option(OPT_WRAPPOINT);
+  int one_arg_per_line = get_option(OPT_ONEARG);
 
   /* stupidity? */
   if (f_ptr == NULL) return;
@@ -1921,6 +1932,30 @@ out_proto(omode, f_ptr, mode, do_comments)
 	}
       }
 
+    } else if (one_arg_per_line) {
+
+      if (mode != MODE_COMMENT)
+	 out_char(omode, ' ');
+
+      /* break at each variable */
+      for (ch_out = f_ptr->plist;
+	   *ch_out != '\0';
+	   ch_out++) {
+
+	/* send out list; breaking for ','s */
+	out_char(omode, *ch_out);
+	if (*ch_out == ',') {
+	  out_char(omode, '\n');
+	  for (outch_cnt = 0;
+	       outch_cnt < leader_cnt - 1;
+	       outch_cnt++) {
+	    out_char(omode, ' ');
+	  }
+          if (mode == MODE_COMMENT)
+	     out_char(omode, ' ');
+	}
+      }
+      out_char(omode, ' ');
     } else if ((wrap_point > 0) &&
 	       (f_ptr->plist != NULL) &&
 	       (f_ptr->plist[0] != '\0') &&

@@ -1,11 +1,11 @@
-XCOMM               Edited by chrisg - basic Imakefile        
-XCOMM
+XCOMM               Edited by chrisg - basic Imakefile        
+XCOMM
 XCOMM
 XCOMM                       Target:  cextract
 XCOMM 
 
 USRLIBDIR =
-CDEBUGFLAGS = +O3
+CDEBUGFLAGS = -O3
 
 XCOMM CLOBBER 
 STD_INCLUDES =

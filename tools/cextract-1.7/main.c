@@ -352,7 +352,7 @@ show_usage()
 {
 #ifndef VMS
   fprintf(stderr,
-	  "Usage: %s [-Q#] [+AaBbPpNnVvxZ -Hstr -Yprg -o ofile] [[-opts] file ... ]\n",
+	  "Usage: %s [-Q#] [+AaBbOPpNnVvxZ -Hstr -Yprg -o ofile] [[-opts] file ... ]\n",
 	  prog_name);
   fprintf(stderr, "\t+A        alphabetically sort all functions [incompatable with +C]\n");
   fprintf(stderr, "\t+a        alphabetically sort functions within each file [default off]\n");
@@ -368,6 +368,7 @@ show_usage()
   fprintf(stderr, "\t-Idir     add directory to search list for include files\n");
   fprintf(stderr, "\t-o file   send output to a file instead of standard output\n");
   fprintf(stderr, "\t           [take first non-flag as filename for output]\n");
+  fprintf(stderr, "\t-O        set only one arg per line\n");
   fprintf(stderr, "\t+m        allow multi-line comments when parsing comments\n");
   fprintf(stderr, "\t-N        do documentation output in troff ms format\n");
   fprintf(stderr, "\t-n        do documentation output in normal text\n");
@@ -486,6 +487,7 @@ cext_init()
   set_option(OPT_SHOWANYWAY, 2, TRUE);
   set_option(OPT_PREPEND, 2, FALSE);
   set_option(OPT_TABWIDTH, 2, 8);
+  set_option(OPT_ONEARG, 2, FALSE);
 }
 
 /* return FALSE if character is not a normal part of a filename */
