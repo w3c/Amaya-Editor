@@ -3944,6 +3944,8 @@ RULES
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
+		if not within Object
+		   Visibility: 1;
 		if within Object
 		   Visibility: 0;
 		VertPos: Top = Previous . Bottom;
