@@ -136,7 +136,8 @@ ThotBool            TtaIsBlank (ptr)
 STRING ptr;
 #endif
 {
-  if (*ptr == _SPACE_ || *ptr == BSPACE || *ptr == EOL || *ptr == __CR__)
+  if (*ptr == _SPACE_ || *ptr == BSPACE || *ptr == EOL ||
+      *ptr == TAB || *ptr == __CR__)
     return (TRUE);
   else
     return (FALSE);
