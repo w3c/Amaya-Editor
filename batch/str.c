@@ -1476,10 +1476,25 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	   }
 	 break;
        case KWD_ANY:
-	 if (ReferenceAttr)
-	   pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->AttrTypeRef = 0;
-	 else
-	   pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->SrReferredType = 0;
+	 if (r == RULE_TypeRef)
+	   /* type of reference */
+	   {
+	     if (ReferenceAttr)
+	       pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->AttrTypeRef = 0;
+	     else
+	       pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->SrReferredType = 0;
+	   }
+	 else if (r == RULE_Constr)
+	   /* constructor Any */
+	   {
+	     Equal = False;
+	     NewRule (wi);
+	     if (!error)
+	       {
+		 pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1]-1];
+		 pRule->SrConstruct = CsAny;
+	       }
+	   }
 	 break;
        case KWD_First:
 	 FirstInPair = True;

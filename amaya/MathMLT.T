@@ -595,6 +595,42 @@ RULES
 	create 'maction>\12' after;
 	end;
 
+   SEMANTICS:
+	begin
+	create SOT;
+	create 'semantics';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'semantics>\12' after;
+	end;
+
+   ANNOTATION:
+	begin
+	create SOT;
+	create 'annotation';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'annotation>\12' after;
+	end;
+
+   ANNOTATION_XML:
+	begin
+	create SOT;
+	create 'annotation-xml';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'annotation-xml>\12' after;
+	end;
+
    TEXT_UNIT:
 	begin
 	end;
@@ -1491,6 +1527,22 @@ ATTRIBUTES
 	create SAN;
 	create 'index="';
 	create index;
+	create '"';
+	end;
+
+   definitionURL:
+	begin
+	create SAN;
+	create 'definitionURL="';
+	create definitionURL;
+	create '"';
+	end;
+
+   encoding:
+	begin
+	create SAN;
+	create 'encoding="';
+	create encoding;
 	create '"';
 	end;
 

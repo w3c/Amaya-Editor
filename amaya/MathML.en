@@ -53,6 +53,9 @@ MLABELEDTR: mlabeledtr
 LabelCell: mtd
 MGLYPH: mglyph
 MACTION: maction
+SEMANTICS: semantics
+ANNOTATION: annotation
+ANNOTATION_XML: annotation-xml
 MTD: mtd
 CellWrapper: \0
 MALIGNGROUP: maligngroup

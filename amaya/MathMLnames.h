@@ -4,6 +4,8 @@
 static ElemMapping    MathMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order and in lower case */
+   {"annotation", SPACE, MathML_EL_ANNOTATION, L_MathMLValue, TRUE},
+   {"annotation-xml", SPACE, MathML_EL_ANNOTATION_XML, L_MathMLValue, TRUE},
    {"c", SPACE, MathML_EL_TEXT_UNIT, L_MathMLValue, TRUE},
    {"cdata", SPACE, MathML_EL_CDATA, L_OtherValue, FALSE},
    {"cdata_line", SPACE, MathML_EL_CDATA_line, L_OtherValue, FALSE},
@@ -43,6 +45,7 @@ static ElemMapping    MathMLElemMappingTable[] =
    {"munder", SPACE, MathML_EL_MUNDER, L_MathMLValue, FALSE},
    {"munderover", SPACE, MathML_EL_MUNDEROVER, L_MathMLValue, FALSE},
    {"none", SPACE, MathML_EL_Construct, L_MathMLValue, FALSE},
+   {"semantics", SPACE, MathML_EL_SEMANTICS, L_MathMLValue, FALSE},
    {"xmlcomment", SPACE, MathML_EL_XMLcomment, L_OtherValue, FALSE},
    {"xmlcomment_line", SPACE, MathML_EL_XMLcomment_line, L_OtherValue, FALSE},
    {"xmlpi", SPACE, MathML_EL_XMLPI, L_OtherValue, FALSE},
@@ -75,11 +78,13 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"columnspan", "", 'A', MathML_ATTR_columnspan, L_MathMLValue},
    {"columnwidth", "", 'A', MathML_ATTR_columnwidth, L_MathMLValue},
    {"color", "", 'A', MathML_ATTR_color, L_MathMLValue},
+   {"definitionURL", "", 'A', MathML_ATTR_definitionURL, L_MathMLValue},
    {"denomalign", "", 'A', MathML_ATTR_denomalign, L_MathMLValue},
    {"depth", "", 'A', MathML_ATTR_depth_, L_MathMLValue},
    {"display", "", 'A', MathML_ATTR_display, L_MathMLValue},
    {"displaystyle", "", 'A', MathML_ATTR_displaystyle, L_MathMLValue},
    {"edge", "", 'A', MathML_ATTR_edge, L_MathMLValue},
+   {"encoding", "", 'A', MathML_ATTR_encoding, L_MathMLValue},
    {"equalcolumns", "", 'A', MathML_ATTR_equalcolumns, L_MathMLValue},
    {"equalrows", "", 'A', MathML_ATTR_equalrows, L_MathMLValue},
    {"fence", "", 'A', MathML_ATTR_fence, L_MathMLValue},

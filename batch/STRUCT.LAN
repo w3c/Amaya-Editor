@@ -69,7 +69,7 @@ Constr =	 'LIST' [ '[' min '.' '.' max ']' ] 'OF' '(' DefWith ')' /
 		 'CASE' 'OF' DefList 'END' /
 		 'REFERENCE' '(' TypeRef ')' /
 		 'CONSTANT' ConstName /
-		 'PAIR' .
+		 'PAIR' / 'ANY' .
 
 OptDefList =	 OptDefWith ';' < OptDefWith ';' > .
 

@@ -360,6 +360,11 @@ STRUCT
 	        selection)
 	  = LIST OF (Construct);
 
+      SEMANTICS  { this element is part of the content markup }
+	  (ATTR definitionURL = TEXT;
+	        encoding = TEXT)
+	  = LIST OF (SemanticsContent); 
+	
       XLink;     { for annotations }
 
 		 { Construct1 is used as a placeholder after a msubsup,
@@ -375,6 +380,12 @@ STRUCT
 	        END;
 
       END;	 { End of Construct definition }
+
+   SemanticsContent = CASE OF
+		Construct;
+		ANNOTATION (ATTR encoding) = TEXT;
+		ANNOTATION_XML (ATTR encoding) = Any;
+		END;
 
    TableRow = CASE OF
 		MTR;

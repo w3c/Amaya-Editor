@@ -75,7 +75,7 @@ number
 			 'CASE' 'OF' DefList 'END' /
 			 'REFERENCE' '(' TypeRef ')' /
 			 'CONSTANT' ConstName /
-			 'PAIR' .
+			 'PAIR' / 'ANY' .
 	
    37	OptDefList =	 OptDefWith ';' < OptDefWith ';' > .
 	
@@ -191,7 +191,7 @@ code  key-word      numbers of rules using the key-word
 1112  INTEGER              12
 1113  TEXT                 12  21
 1114  REFERENCE            12  32
-1115  ANY                  13
+1115  ANY                  13  32
 1116  First                15
 1117  Second               15
 1118  GRAPHICS             21
