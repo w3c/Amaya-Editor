@@ -1098,7 +1098,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      bchar = adbuff->BuContent[indbuff - 1];
 	      car = GetFontAndIndexFromSpec (bchar, font, &nextfont);
 	      if (bchar == SPACE || bchar == THIN_SPACE ||
-		  bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB)
+		  bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB ||
+		  bchar == EOL)
 		{
 		  /* display previous chars handled */
 		  if (nbcar > 0)
