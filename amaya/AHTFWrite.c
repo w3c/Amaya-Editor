@@ -49,9 +49,6 @@ static int AHTFWriter_put_string ( HTStream * me,
 static int AHTFWriter_write ( HTStream * me,
                                       const char *s,
                                       int l );
-static int AHTFWriter_HT_FREE ( HTStream * me );
-static int AHTFWriter_abort ( HTStream * me,
-                                      HTList * e );
 #else 
 static int AHTFWriter_flush (/* HTStream * me */);
 static int AHTFWriter_put_character (/* HTStream * me,
@@ -61,9 +58,6 @@ static int AHTFWriter_put_string (/* HTStream * me,
 static int AHTFWriter_write (/* HTStream * me,
                                         const char *s,
                                         int l */);
-static int AHTFWriter_HT_FREE (/* HTStream * me */);
-static int AHTFWriter_abort (/* HTStream * me,
-                                       HTList * e */);
 #endif
 
 /*----------------------------------------------------------------------
@@ -164,9 +158,9 @@ HTStream           *me
   AHTFWriter_put_HT_FREE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int         AHTFWriter_HT_FREE (HTStream * me)
+int         AHTFWriter_HT_FREE (HTStream * me)
 #else  /* __STDC__ */
-static int         AHTFWriter_HT_FREE (me)
+int         AHTFWriter_HT_FREE (me)
 HTStream           *me;
 
 #endif /* __STDC__ */
@@ -186,10 +180,6 @@ HTStream           *me;
 	HT_FREE (me->end_command);
 	HT_FREE (me->filename);
 	HT_FREE (me);
-
-	/* JK debugging */
-	me = (HTStream *) NULL;
-
      }
    return HT_OK;
 }
@@ -198,9 +188,9 @@ HTStream           *me;
   AHTFWriter_abort
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int         AHTFWriter_abort (HTStream * me, HTList *e)
+int         AHTFWriter_abort (HTStream * me, HTList *e)
 #else  /* __STDC__ */
-static int         AHTFWriter_abort (me, e)
+int         AHTFWriter_abort (me, e)
 HTStream           *me;
 HTList             *e;
 
@@ -217,9 +207,6 @@ HTList             *e;
 	HT_FREE (me->end_command);
 	HT_FREE (me->filename);
 	HT_FREE (me);
-
-	/* JK debugging */
-	me = (HTStream *) NULL;
      }
    return HT_ERROR;
 }
