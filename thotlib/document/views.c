@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -86,15 +86,7 @@ static int          ViewMenuItem[MAX_VIEW_OPEN];
    PaginatedView rend vrai si la vue Vue du document pDoc est une	
    		vue paginee						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            PaginatedView (PtrDocument pDoc, int view, ThotBool assoc)
-#else  /* __STDC__ */
-ThotBool            PaginatedView (pDoc, view, assoc)
-PtrDocument         pDoc;
-int                 view;
-ThotBool            assoc;
-#endif /* __STDC__ */
-
 {
    ThotBool            paginate;
    PtrElement          pEl;
@@ -129,16 +121,7 @@ ThotBool            assoc;
    d'elements associes, rend assoc vrai et viewNum = numero	
    d'element associe, sinon rend assoc faux.               	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, ThotBool * assoc)
-#else  /* __STDC__ */
-void                GetViewFromFrame (nframe, pDoc, viewNum, assoc)
-int                 nframe;
-PtrDocument         pDoc;
-int                *viewNum;
-ThotBool           *assoc;
-
-#endif /* __STDC__ */
+void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, ThotBool * assoc)
 {
    int                 view;
 
@@ -182,16 +165,7 @@ ThotBool           *assoc;
    d'element associe, sinon rend assoc faux.			
    Rend pDoc = NULL si la selection a echoue.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetDocAndView (int frame, PtrDocument * pDoc, int *viewNum, ThotBool * assoc)
-#else  /* __STDC__ */
-void                GetDocAndView (frame, pDoc, viewNum, assoc)
-int                 nframe;
-PtrDocument        *pDoc;
-int                *viewNum;
-ThotBool           *assoc;
-
-#endif /* __STDC__ */
+void GetDocAndView (int frame, PtrDocument *pDoc, int *viewNum, ThotBool *assoc)
 {
    PtrDocument         pD;
 
@@ -205,27 +179,15 @@ ThotBool           *assoc;
 	   /* il y a un document pour cette entree de la table des documents */
 	   GetViewFromFrame (frame, pD, viewNum, assoc);
      }
-   if (*viewNum == 0)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_MISSING_VIEW);
-   else
-      *pDoc = pD;
+     *pDoc = pD;
 }
 
 /*----------------------------------------------------------------------
    BuildSSchemaViewList						
    Construit la liste des vues possibles d'un document.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS, AvailableView viewList, int *nViews, ThotBool nature)
-#else  /* __STDC__ */
-static void         BuildSSchemaViewList (pDoc, pSS, viewList, nViews, nature)
-PtrDocument         pDoc;
-PtrSSchema          pSS;
-AvailableView       viewList;
-int                *nViews;
-ThotBool            nature;
-
-#endif /* __STDC__ */
+static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
+                                  AvailableView viewList, int *nViews, ThotBool nature)
 {
    PtrPSchema          pPSchema;
    DocViewDescr       *pView;
@@ -257,13 +219,13 @@ ThotBool            nature;
 	       present = FALSE;
 	       for (i = 0; i < *nViews && !present; i++)
 		 present = (viewList[i].VdView == view + 1 &&
-			    !ustrcmp (viewList[i].VdSSchema->SsName, pSS->SsName));
+			    !strcmp (viewList[i].VdSSchema->SsName, pSS->SsName));
 	       if (!present && *nViews < MAX_VIEW_OPEN)
 		  {
 		  /* on met la vue dans la liste */
 		  viewList[*nViews].VdView = view + 1;
 		  viewList[*nViews].VdAssocNum = 0;
-		  ustrncpy (viewList[*nViews].VdViewName,
+		  strncpy (viewList[*nViews].VdViewName,
 			    pPSchema->PsView[view], MAX_NAME_LENGTH);
 		  viewList[*nViews].VdSSchema = pSS;
 		  viewList[*nViews].VdAssoc = FALSE;
@@ -293,19 +255,8 @@ ThotBool            nature;
    BuildNatureList	cree la liste des natures du schema		
    	de structure pSS.						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         BuildNatureList (PtrSSchema pSS, int *nViews, AvailableView viewList, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         BuildNatureList (pSS, nViews, viewList, pDoc)
-PtrSSchema          pSS;
-int                *nViews;
-AvailableView       viewList;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+static void BuildNatureList (PtrSSchema pSS, int *nViews,
+                             AvailableView viewList, PtrDocument pDoc)
 {
    SRule              *pSRule;
    int                 rule;
@@ -337,17 +288,7 @@ PtrDocument         pDoc;
    	le document pDoc: vues de l'arbre principal, vues des elements	
    	assoocies et vues des natures.                                  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
-
-#else  /* __STDC__ */
-int                 BuildDocumentViewList (pDoc, viewList)
-PtrDocument         pDoc;
-AvailableView       viewList;
-
-#endif /* __STDC__ */
-
+int BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
 {
    PtrSSchema          pSS;
    SRule              *pSRule;
@@ -436,7 +377,7 @@ AvailableView       viewList;
 		   else
                       viewList[nViews].VdView = 0;
 		   viewList[nViews].VdAssocNum = rule + 1;
-		   ustrncpy (viewList[nViews].VdViewName, pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
+		   strncpy (viewList[nViews].VdViewName, pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
 		   viewList[nViews].VdSSchema = pSS;
 		   viewList[nViews].VdOpen = present;
 		   viewList[nViews].VdAssoc = TRUE;
@@ -460,34 +401,27 @@ AvailableView       viewList;
 /*----------------------------------------------------------------------
    ChangeDocumentName change le nom d'un document pDoc en newName	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeDocumentName (PtrDocument pDoc, STRING newName)
-#else  /* __STDC__ */
-void                ChangeDocumentName (pDoc, newName)
-PtrDocument         pDoc;
-STRING              newName;
-
-#endif /* __STDC__ */
+void ChangeDocumentName (PtrDocument pDoc, char *newName)
 {
    DocViewDescr       *pView;
    int                 len, view;
-   CHAR_T                buffer[MAX_TXT_LEN];
+   char                buffer[MAX_TXT_LEN];
 
    len = 0;
-   ustrcpy (buffer, newName);
-   ustrncpy (pDoc->DocDName, newName, MAX_NAME_LENGTH);
+   strcpy (buffer, newName);
+   strncpy (pDoc->DocDName, newName, MAX_NAME_LENGTH);
    pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-   ustrncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
+   strncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
    pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-   len = ustrlen (newName);
-   if (ustrcmp (newName + len - 4, ".PIV") == 0)
+   len = strlen (newName);
+   if (strcmp (newName + len - 4, ".PIV") == 0)
      {
 	buffer[len - 4] = EOS;
 	pDoc->DocDName[len - 4] = EOS;
 	pDoc->DocIdent[len - 4] = EOS;
      }
-   ustrcat (buffer, "  ");
-   len = ustrlen (buffer);
+   strcat (buffer, "  ");
+   len = strlen (buffer);
    /* traite les vues de l'arbre principal */
    for (view = 0; view < MAX_VIEW_DOC; view++)
       if (pDoc->DocView[view].DvPSchemaView > 0)
@@ -502,7 +436,7 @@ STRING              newName;
        if (pDoc->DocAssocFrame[view] != 0)
 	  /* met dans le buffer le nom des elements associes */
 	  {
-	  ustrncpy (&buffer[len], pDoc->DocAssocRoot[view]->ElStructSchema->
+	  strncpy (&buffer[len], pDoc->DocAssocRoot[view]->ElStructSchema->
 		    SsRule[pDoc->DocAssocRoot[view]->ElTypeNumber - 1].SrName,
 		    MAX_NAME_LENGTH);
 	  /* change le titre de la fenetre */
@@ -524,14 +458,7 @@ STRING              newName;
    The name must not exceed 31 characters.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetDocumentName (Document document, STRING documentName)
-#else  /* __STDC__ */
-void                TtaSetDocumentName (document, documentName)
-Document            document;
-STRING              documentName;
-#endif /* __STDC__ */
-
+void TtaSetDocumentName (Document document, char *documentName)
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -540,7 +467,7 @@ STRING              documentName;
    else if (LoadedDocument[document - 1] == NULL)
      TtaError (ERR_invalid_document_parameter);
    /* parameter document is correct */
-   else if (ustrlen (documentName) >= MAX_NAME_LENGTH)
+   else if (strlen (documentName) >= MAX_NAME_LENGTH)
      TtaError (ERR_buffer_too_small);
    else
      ChangeDocumentName (LoadedDocument[document - 1], documentName);
@@ -551,16 +478,7 @@ STRING              documentName;
    la fenetre de numero nframe. Appele lorsque l'utilisateur	
    	      ferme une fenetre.					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                ViewClosed (int nFrame)
-
-#else  /* __STDC__ */
-void                ViewClosed (nFrame)
-int                 nFrame;
-
-#endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
    NotifyDialog        notifyDoc;
@@ -592,12 +510,7 @@ int                 nFrame;
    OpenDefaultViews ouvre, pour le document pDoc, toutes les vues	
    qui doivent etre ouvertes a l'ouverture du document.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                OpenDefaultViews (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                OpenDefaultViews (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+void OpenDefaultViews (PtrDocument pDoc)
 {
   Document          document;
   PtrPSchema        pPSchema;
@@ -693,7 +606,8 @@ PtrDocument         pDoc;
    Retourne 0 si echec ou le numero de vue pour le document ou le  
    numero d'element associe' de la vue creee.              
   ----------------------------------------------------------------------*/
-int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, ThotBool begin, PtrElement viewRoot)
+int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS,
+                         int chosenView, ThotBool begin, PtrElement viewRoot)
 {
    PtrDocument         pSelDoc;
    PtrElement          firstSel, lastSel;
@@ -723,7 +637,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int cho
 	 do
 	    {
 	    if (pDoc->DocAssocRoot[assoc] != NULL &&
-		!ustrcmp (pDoc->DocAssocRoot[assoc]->ElStructSchema->SsName,
+		!strcmp (pDoc->DocAssocRoot[assoc]->ElStructSchema->SsName,
 			  pSS->SsName))
 		 assocPresent = pDoc->DocAssocRoot[assoc]->ElTypeNumber == r;
 	    assoc++;
@@ -935,7 +849,8 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int cho
    X, Y, width, height: position et dimensions de la	
    		     fenetre en mm.					
   ----------------------------------------------------------------------*/
-void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X, int Y, int width, int height)
+void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
+                      int Y, int width, int height)
 {
   PtrElement          pEl;
   int                 volume = 0;
@@ -952,12 +867,12 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X, int Y, 
 	{
 	  schView = 1;
 	  pEl = pDoc->DocAssocRoot[view - 1];
-	  ustrncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+	  strncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	}
       else
 	{
 	  schView = pDoc->DocView[view - 1].DvPSchemaView;
-	  ustrncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->
+	  strncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->
 		    PsView[schView - 1], MAX_NAME_LENGTH);
 	} 
       /* creation d'une fenetre pour la vue */
@@ -1027,17 +942,8 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X, int Y, 
 /*----------------------------------------------------------------------
    GetViewByName cherche la vue de nom viewName.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     GetViewByName (PtrDocument pDoc, Name viewName, int *view, ThotBool * assoc, PtrSSchema * pSS)
-#else  /* __STDC__ */
-static ThotBool     GetViewByName (pDoc, viewName, view, assoc, pSS)
-PtrDocument         pDoc;
-Name                viewName;
-int                *view;
-ThotBool           *assoc;
-PtrSSchema         *pSS;
-
-#endif /* __STDC__ */
+static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
+                               ThotBool *assoc, PtrSSchema *pSS)
 {
    PtrPSchema          pPSch;
    PtrSSchema          pSSch;
@@ -1056,7 +962,7 @@ PtrSSchema         *pSS;
 	 if (pDoc->DocView[viewDoc].DvPSchemaView == viewSch)
 	    open = TRUE;
       if (!open)
-	 if (ustrcmp (pPSch->PsView[viewSch - 1], viewName) == 0)
+	 if (strcmp (pPSch->PsView[viewSch - 1], viewName) == 0)
 	    {
 	    *view = viewSch;
 	    *assoc = FALSE;
@@ -1105,7 +1011,7 @@ PtrSSchema         *pSS;
 		   if (!present)
 		      {
 		      pSRule = &pSSch->SsRule[rule];
-		      if (ustrcmp (pSRule->SrName, viewName) == 0)
+		      if (strcmp (pSRule->SrName, viewName) == 0)
 			 {
 			 *view = rule + 1;
 			 *assoc = TRUE;
@@ -1127,18 +1033,7 @@ PtrSSchema         *pSS;
 /*----------------------------------------------------------------------
    OpenViewByName ouvre la vue de nom viewName			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, int height)
-#else  /* __STDC__ */
-int                 OpenViewByName (pDoc, viewName, X, Y, width, height)
-PtrDocument         pDoc;
-Name                viewName;
-int                 X;
-int                 Y;
-int                 width;
-int                 height;
-
-#endif /* __STDC__ */
+int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, int height)
 {
    PtrSSchema          pSS;
    NotifyDialog        notifyDoc;
@@ -1186,19 +1081,8 @@ int                 height;
    OpenViewByMenu ouvre effectivement une vue apres les retours	
    des menus d'ouverture de Vues                           
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree, DocViewNumber selectedView)
-
-#else  /* __STDC__ */
-void                OpenViewByMenu (pDoc, menuItem, subTree, selectedView)
-PtrDocument         pDoc;
-int                 menuItem;
-PtrElement          subTree;
-DocViewNumber       selectedView;
-
-#endif /* __STDC__ */
-
+void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
+                     DocViewNumber selectedView)
 {
    NotifyDialog        notifyDoc;
    int                 X, Y, width, height, theView, view;
@@ -1260,18 +1144,7 @@ DocViewNumber       selectedView;
    buffer: buffer pour le texte du menu.                           
    Au retour nItems indique le nombre d'items dans le menu.        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                BuildViewList (PtrDocument pDoc, STRING buffer, int *nItems)
-
-#else  /* __STDC__ */
-void                BuildViewList (pDoc, buffer, nItems)
-PtrDocument         pDoc;
-STRING              buffer;
-int                *nItems;
-
-#endif /* __STDC__ */
-
+void BuildViewList (PtrDocument pDoc, char *buffer, int *nItems)
 {
    int                 i, j, longueur, nViews;
    DocViewNumber       view, freeView;
@@ -1308,10 +1181,10 @@ int                *nItems;
 	       {
 		  /* L'entree nItems du menu est l'entree j dans AllViews. */
 		  ViewMenuItem[(*nItems)++] = j + 1;
-		  longueur = ustrlen (AllViews[j].VdViewName) + 1;
+		  longueur = strlen (AllViews[j].VdViewName) + 1;
 		  if (longueur + i < MAX_TXT_LEN)
 		    {
-		       ustrcpy (buffer + i, AllViews[j].VdViewName);
+		       strcpy (buffer + i, AllViews[j].VdViewName);
 		       i += longueur;
 		    }
 		  if (AllViews[j].VdOpen)
@@ -1333,18 +1206,7 @@ int                *nItems;
    document complet s'il s'agit de la derniere vue de ce document. 
    Si assoc est vrai, viewNb un numero d'elements associe's          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
-
-#else  /* __STDC__ */
-void                CloseView (pDoc, viewNb, assoc)
-PtrDocument         pDoc;
-int                 viewNb;
-ThotBool            assoc;
-
-#endif /* __STDC__ */
-
+void CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
 {
    NotifyDialog        notifyDoc;
    ThotBool            ok, Save;
