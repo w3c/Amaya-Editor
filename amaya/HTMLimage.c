@@ -596,7 +596,15 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	  UpdateImageMap (el, doc, -1, -1);
 	}
     }
-  else
+  else if ((elType.ElTypeNum == SVG_EL_use_) &&
+	   (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")  == 0))
+    {
+      /* parse the SVG file and include the parsed sub-tree at the
+	 position of the use element */
+      ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
+		       TtaGetDefaultLanguage(), "SVG");
+    }
+  else  
     {
       /* create a background image for the element */
       /* set the value */
@@ -1097,6 +1105,14 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 	       elType = TtaGetElementType (el);
 	       elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
 	       pic = TtaSearchTypedElement (elType, SearchInTree, el);
+	       if (!pic)
+		 {
+		   /* May be it's a reference of a use element */
+		   elType = TtaGetElementType (el);
+		   if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
+		       (elType.ElTypeNum == SVG_EL_use_))
+		   pic = el;
+		 }
 	       if (pic)
 		 {
 		   /* get the attribute value */
@@ -1106,7 +1122,9 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 		       /* allocate some memory */
 		       imageURI = TtaGetMemory (length + 7);
 		       TtaGiveTextAttributeValue (attr, imageURI, &length);
-		       FetchImage (doc, pic, imageURI, flags, NULL, NULL);
+		       if (!((elType.ElTypeNum == SVG_EL_use_) && (imageURI[0] == '#')))
+			 /* don't handle internal links for a use element */
+			 FetchImage (doc, pic, imageURI, flags, NULL, NULL);
 		       TtaFreeMemory (imageURI);
 		     }
 		 }
