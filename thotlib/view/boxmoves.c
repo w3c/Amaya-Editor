@@ -2258,7 +2258,7 @@ int                 frame;
 {
   PtrBox              pNextBox;
   PtrLine             pLine;
-  PtrAbstractBox      pAb, pCell;
+  PtrAbstractBox      pAb/*, pCell*/;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   PtrDimRelations     pDimRel;

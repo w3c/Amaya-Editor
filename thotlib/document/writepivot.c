@@ -62,6 +62,7 @@
 #include "schemas_f.h"
 #include "structschema_f.h"
 #include "structmodif_f.h"
+#include "thotmsg_f.h"
 #include "tree_f.h"
 #include "units_f.h"
 #include "writepivot_f.h"

@@ -34,9 +34,10 @@ static int           ViewToOpenNumber;
 static PtrElement    ViewToOpenSubTree;
 static DocViewNumber ReferenceView;
 
-#include "views_f.h"
 #include "appdialogue_f.h"
+#include "documentapi_f.h"
 #include "viewapi_f.h"
+#include "views_f.h"
 
 #ifdef _WINDOWS
 extern ThotBool viewClosed ;

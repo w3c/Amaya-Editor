@@ -40,8 +40,9 @@
 
 static int          Fenzoomview;
 
-#include "appdialogue_f.h"
 #include "actions_f.h"
+#include "appdialogue_f.h"
+#include "applicationapi_f.h"
 #include "boxparams_f.h"
 #include "viewapi_f.h"
 

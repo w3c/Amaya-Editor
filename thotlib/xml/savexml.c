@@ -28,12 +28,14 @@
 #include "message.h"
 #include "appdialogue.h"
 
-#include "fileaccess_f.h"
 #include "applicationapi_f.h"
 #include "callback_f.h"
-#include "views_f.h"
-#include "writexml_f.h"
+#include "documentapi_f.h"
+#include "fileaccess_f.h"
 #include "parsexml_f.h"
+#include "views_f.h"
+#include "writedoc_f.h"
+#include "writexml_f.h"
 
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
@@ -43,7 +45,7 @@ static PathBuffer   SaveFileName;
 static ThotBool     SaveDocWithCopy;
 static ThotBool     SaveDocWithMove;
 static PtrDocument  DocumentToSave;
-extern CHAR_T         DefaultFileSuffix[5];
+extern CHAR_T       DefaultFileSuffix[5];
 
 /*----------------------------------------------------------------------
   XmlSetWriteDirectory sets the directory, filename, if the next write 

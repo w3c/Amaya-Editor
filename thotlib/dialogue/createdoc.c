@@ -47,16 +47,18 @@ static CHAR_T         NameDocToCreate[100];
 static CHAR_T         ClassDocToCreate[100];
 static CHAR_T         DirectoryDocToCreate[MAX_PATH];
 
-#include "structschema_f.h"
-#include "browser_f.h"
-#include "platform_f.h"
-#include "appdialogue_f.h"
 #include "actions_f.h"
-#include "views_f.h"
-#include "config_f.h"
-#include "opendoc_f.h"
-#include "docs_f.h"
+#include "appdialogue_f.h"
 #include "applicationapi_f.h"
+#include "browser_f.h"
+#include "config_f.h"
+#include "docs_f.h"
+#include "docs_f.h"
+#include "fileaccess_f.h"
+#include "platform_f.h"
+#include "opendoc_f.h"
+#include "structschema_f.h"
+#include "views_f.h"
 
 /*----------------------------------------------------------------------
    CallbackConfirmMenu

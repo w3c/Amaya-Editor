@@ -50,6 +50,8 @@
 #include "content_f.h"
 #include "createabsbox_f.h"
 #include "docs_f.h"
+#include "displayview_f.h"
+#include "documentapi_f.h"
 #include "draw_f.h"
 #include "exceptions_f.h"
 #include "frame_f.h"
@@ -60,6 +62,7 @@
 #include "structmodif_f.h"
 #include "structselect_f.h"
 #include "structschema_f.h"
+#include "thotmsg_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
 

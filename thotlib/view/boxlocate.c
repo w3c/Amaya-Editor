@@ -52,6 +52,7 @@
 #include "font_f.h"
 #include "frame_f.h"
 #include "geom_f.h"
+#include "presentationapi_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"

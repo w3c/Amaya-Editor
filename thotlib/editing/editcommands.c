@@ -69,6 +69,7 @@ static ThotBool     FromKeyboard;
 #include "callback_f.h"
 #include "changepresent_f.h"
 #include "content_f.h"
+#include "documentapi_f.h"
 #include "docs_f.h"
 #include "displayview_f.h"
 #include "editcommands_f.h"

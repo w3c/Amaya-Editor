@@ -63,7 +63,6 @@
 #include "edit_tv.h"
 #include "creation_tv.h"
 #include "frame_tv.h"
-#include "frame_tv.h"
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
 #include "units_tv.h"
@@ -98,6 +97,7 @@ static ThotWindow    thotWindow;
 
 #include "absboxes_f.h"
 #include "actions_f.h"
+#include "applicationapi_f.h"
 #include "attrpresent_f.h"
 #include "boxmoves_f.h"
 #include "boxpositions_f.h"
@@ -148,7 +148,7 @@ static int          LastPrinted;
 
 #ifdef _WINDOWS
 #define PRINTPROGRESSDLG 389
-
+ThotWindow       WIN_curWin = (ThotWindow)(-1);
 BOOL             bError;
 BOOL             gbAbort;
 HWND             hDlgPrint     = NULL;
@@ -316,8 +316,8 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-   WIN_curWin = NULL;
-   TtDisplay = GetDC (WIN_curWin);
+  WIN_curWin = NULL;
+  TtDisplay = GetDC (WIN_curWin);
 }
 
 /*----------------------------------------------------------------------
@@ -329,14 +329,14 @@ void WIN_ReleaseDeviceContext (void)
 void WIN_ReleaseDeviceContext ()
 #endif /* __STDC__ */
 {
-   /* release the previous Device Context. */
-   /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
-   if (TtDisplay != 0)
-      if (!ReleaseDC (WIN_curWin, TtDisplay))
-         WinErrorBox (NULL);
-
-   WIN_curWin = (ThotWindow) (-1);
-   TtDisplay = 0;
+  /* release the previous Device Context. */
+  /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
+  if (TtDisplay != 0)
+    if (!ReleaseDC (WIN_curWin, TtDisplay))
+      WinErrorBox (NULL);
+  
+  WIN_curWin = (ThotWindow) (-1);
+  TtDisplay = 0;
 }
 #endif /* _WINDOWS */
 

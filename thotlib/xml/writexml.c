@@ -43,14 +43,12 @@
 #include "constxml.h"
 #include "typexml.h"
 
-#include "translatexml_f.h"
+#include "attributes_f.h"
 #include "callback_f.h"
+#include "changepresent_f.h"
+#include "memory_f.h"
+#include "translatexml_f.h"
 
-#ifdef __STDC__
-extern STRING TtaAllocString (unsigned int);
-#else  /* !__STDC__ */
-extern STRING TtaAllocString ();
-#endif /* __STDC__ */
 static PrefixType *Prefixs = NULL;  /* List of namespace prefixs */
                                     /* See typexml.h for structure */
 static int        NbPrefix;         /* counter used for unique prefix name */

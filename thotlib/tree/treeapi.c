@@ -31,20 +31,22 @@
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
+#include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "attributeapi_f.h"
+#include "displayview_f.h"
+#include "documentapi_f.h"
+#include "externalref_f.h"
+#include "labelalloc_f.h"
+#include "references_f.h"
+#include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
-#include "references_f.h"
-#include "externalref_f.h"
 #include "structschema_f.h"
 #include "translation_f.h"
 #include "thotmsg_f.h"
+#include "tree_f.h"
 #include "viewapi_f.h"
-#include "documentapi_f.h"
-#include "applicationapi_f.h"
-#include "labelalloc_f.h"
 
 static Name         nameBuffer;
 

@@ -67,12 +67,13 @@
 #ifndef _WINDOWS 
 #include "LiteClue_f.h"
 #endif /* _WINDOWS */
+#include "profiles_f.h"
+
 extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 extern int          appArgc;
 extern STRING*       appArgv;
 extern int          iString;
-extern ThotWidget   WIN_curWin;
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
 

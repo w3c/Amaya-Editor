@@ -42,6 +42,7 @@
 #include "attributes_f.h"
 #include "config_f.h"
 #include "createabsbox_f.h"
+#include "displayview_f.h"
 #include "docs_f.h"
 #include "documentapi_f.h"
 #include "draw_f.h"

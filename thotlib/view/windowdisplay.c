@@ -110,7 +110,7 @@ int                 fg;
 #endif /* __STDC__ */
 {
    TtLineGC.capabilities |= THOT_GC_FOREGROUND;
-   if (RO && ShowReadOnly () && fg == 1)
+   if (RO && fg == 1)
       TtLineGC.foreground = RO_Color;
    else
        TtLineGC.foreground = fg;

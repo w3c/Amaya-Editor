@@ -28,15 +28,19 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
-#include "attributes_f.h"
+#include "applicationapi_f.h"
 #include "attributeapi_f.h"
+#include "attributes_f.h"
+#include "content_f.h"
+#include "displayview_f.h"
+#include "documentapi_f.h"
 #include "draw_f.h"
 #include "memory_f.h"
 #include "references_f.h"
+#include "structcreation_f.h"
 #include "structschema_f.h"
-#include "content_f.h"
 #include "thotmsg_f.h"
+#include "tree_f.h"
 #include "viewapi_f.h"
 
 static Name         bufferName;
@@ -60,14 +64,16 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
+#ifndef NODISPLAY
    PtrElement          pRefEl;
+   int                 len;
+#endif /* NODISPLAY */
    PtrAttribute        pAttr, pA;
-   int                 i, att;
    PtrReference        pRef;
    ThotBool            found;
    ThotBool            MandatoryAttrOK;
    NotifyAttribute     notifyAttr;
-   int                 len;
+   int                 i, att;
 
    /* parcourt tous les attributs locaux definis dans la regle */
    for (i = 0; i < pSRule->SrNLocalAttrs; i++)

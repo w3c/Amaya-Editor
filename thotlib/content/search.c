@@ -38,6 +38,7 @@
 #include "callback_f.h"
 #include "changeabsbox_f.h"
 #include "createabsbox_f.h"
+#include "documentapi_f.h"
 #include "exceptions_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"

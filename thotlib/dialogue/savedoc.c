@@ -34,6 +34,7 @@
 #include "document.h"
 #include "fileaccess.h"
 #include "thotdir.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
@@ -41,20 +42,22 @@
 #include "platform_tv.h"
 #include "boxes_tv.h"
 #include "frame_tv.h"
-#include "opendoc_f.h"
-#include "createdoc_f.h"
-#include "font_f.h"
-#include "docs_f.h"
-#include "writedoc_f.h"
-#include "applicationapi_f.h"
-#include "callback_f.h"
-#include "fileaccess_f.h"
-#include "translation_f.h"
-#include "browser_f.h"
-#include "config_f.h"
-#include "platform_f.h"
-#include "viewapi_f.h"
+
 #include "actions_f.h"
+#include "applicationapi_f.h"
+#include "browser_f.h"
+#include "callback_f.h"
+#include "config_f.h"
+#include "createdoc_f.h"
+#include "documentapi_f.h"
+#include "docs_f.h"
+#include "fileaccess_f.h"
+#include "font_f.h"
+#include "opendoc_f.h"
+#include "platform_f.h"
+#include "translation_f.h"
+#include "viewapi_f.h"
+#include "writedoc_f.h"
 
 extern int          CurrentDialog;
 CHAR_T                DefaultFileSuffix[5];        

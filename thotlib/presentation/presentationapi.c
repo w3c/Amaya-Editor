@@ -28,14 +28,21 @@
 #include "edit_tv.h"
 
 #include "appli_f.h"
+#include "applicationapi_f.h"
 #include "boxpositions_f.h"
+#include "boxselection_f.h"
+#include "callback_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "compilmsg_f.h"
+#include "createabsbox_f.h"
+#include "displayview_f.h"
+#include "documentapi_f.h"
 #include "font_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
 #include "tree_f.h"
+#include "undo_f.h"
 #include "viewapi_f.h"
 
 

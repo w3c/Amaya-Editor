@@ -46,18 +46,15 @@ static ThotBool     SaveBeforeClosing;
 extern ThotBool viewClosed;
 #endif /* _WINDOWS */
 
-#include "views_f.h"
-#include "appdialogue_f.h"
 #include "actions_f.h"
+#include "appdialogue_f.h"
 #include "docs_f.h"
+#include "documentapi_f.h"
 #include "viewcommands_f.h"
+#include "views_f.h"
 
 #ifdef _WINDOWS
-#ifdef __STDC__
-extern void CreateCloseDocDlgWindow (HWND, STRING, STRING, BOOL*, BOOL*);
-#else /* __STDC__ */
-extern void CreateCloseDocDlgWindow ();
-#endif /* __STDC__ */
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------

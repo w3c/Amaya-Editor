@@ -77,14 +77,15 @@ static int          LastBg;
 static int          LastFg;
 static ThotGC       GCkey;
 
-#include "config_f.h"
 #include "appdialogue_f.h"
 #include "actions_f.h"
-#include "windowdisplay_f.h"
-#include "font_f.h"
 #include "changepresent_f.h"
-#include "structselect_f.h"
+#include "config_f.h"
+#include "font_f.h"
 #include "inites_f.h"
+#include "presentmenu_f.h"
+#include "structselect_f.h"
+#include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"

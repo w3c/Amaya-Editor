@@ -199,13 +199,14 @@ libCSS.a : $(CSS_OBJ)
 	$(RANLIB) libCSS.a
 
 AMAYA_OBJ = \
-	AHTURLTools.o \
 	EDITORAPP.o \
+	HTMLAPP.o \
+	TextFileAPP.o \
+	AHTURLTools.o \
 	EDITORactions.o \
 	EDITimage.o \
 	EDITstyle.o \
 	HTMLactions.o \
-	HTMLAPP.o \
 	HTMLbook.o \
 	HTMLedit.o \
 	HTMLform.o \
@@ -221,7 +222,6 @@ AMAYA_OBJ = \
 	templates.o \
 	trans.o \
 	transparse.o \
-	TextFileAPP.o \
 	UIcss.o
 
 #
