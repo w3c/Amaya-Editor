@@ -383,6 +383,11 @@ int		arrowHead;
        *closed = TRUE;
        break;
 
+     case GraphML_EL_path:
+       leaf = CreateGraphicalLeaf (EOS, el, doc, FALSE);
+       *closed = FALSE;
+       break;
+
      default:
        break;
      }
@@ -1190,9 +1195,16 @@ Document	doc;
    int          length, x, y, x1, y1, x2, y2, xcur, ycur, xinit, yinit,
                 x2prev, y2prev, x1prev, y1prev, rx, ry, xAxisRotation,
                 largeArcFlag, sweepFlag;
+   Element      leaf;
+   PathSegment  seg;
    ThotBool     relative;
    STRING       text, ptr;
    CHAR_T       command, prevCommand;
+
+   /* create (or get) the Graphics leaf */
+   leaf = CreateGraphicalLeaf (EOS, el, doc, FALSE);
+   if (leaf == NULL)
+      return;
 
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaAllocString (length);
@@ -1237,7 +1249,8 @@ Document	doc;
 	   case 'z':
 	     /* close path */
 	     /* draw a line from (xcur, ycur) to (xinit, yinit) */
-	     /******/
+	     seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit);
+	     TtaAppendPathSeg (leaf, seg, doc);
 	     break;
 
 	   case 'L':
@@ -1253,7 +1266,8 @@ Document	doc;
 	       y += ycur;
 	       }
 	     /* draw a line from (xcur, ycur) to (x, y) */
-	     /******/
+	     seg = TtaNewPathSegLine (xcur, ycur, x, y);
+	     TtaAppendPathSeg (leaf, seg, doc);
 	     xcur = x;
 	     ycur = y;
 	     break;
@@ -1267,7 +1281,8 @@ Document	doc;
 	     if (relative)
 	       x += xcur;
 	     /* draw a line from (xcur, ycur) to (x, ycur) */
-	     /******/
+	     seg = TtaNewPathSegLine (xcur, ycur, x, ycur);
+	     TtaAppendPathSeg (leaf, seg, doc);
 	     xcur = x;
 	     break;
 
@@ -1280,7 +1295,8 @@ Document	doc;
 	     if (relative)
 	       y += ycur;
 	     /* draw a line from (xcur, ycur) to (xcur, y) */
-	     /******/
+	     seg = TtaNewPathSegLine (xcur, ycur, xcur, y);
+	     TtaAppendPathSeg (leaf, seg, doc);
 	     ycur = y;
 	     break;
 
@@ -1306,8 +1322,9 @@ Document	doc;
 	       }
 	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point at the beginning of the curve
-		and (x2,y2) as the control point at the end of the curve */
-	     /******/
+		and (x2, y2) as the control point at the end of the curve */
+	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2);
+	     TtaAppendPathSeg (leaf, seg, doc);
              xcur = x;
              ycur = y;
              x2prev = x2;
@@ -1334,8 +1351,8 @@ Document	doc;
 	     if (prevCommand == TEXT('C') || prevCommand == TEXT('c') || 
 		 prevCommand == TEXT('S') || prevCommand == TEXT('s'))
 	       {
-		 x1 = xcur + (xcur - x2prev);
-		 y1 = ycur + (ycur - y2prev);
+		 x1 = 2*xcur - x2prev;
+		 y1 = 2*ycur - y2prev;
 	       }
 	     else
 	       {
@@ -1344,8 +1361,9 @@ Document	doc;
 	       }
 	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point at the beginning of the curve
-		and (x2,y2) as the control point at the end of the curve */
-	     /******/
+		and (x2, y2) as the control point at the end of the curve */
+	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2);
+	     TtaAppendPathSeg (leaf, seg, doc);
              xcur = x;
              ycur = y;
              x2prev = x2;
@@ -1355,7 +1373,7 @@ Document	doc;
 	   case 'Q':
 	     relative = FALSE;
 	   case 'q':
-	     /* quadric Bezier curveto */
+	     /* quadratic Bezier curveto */
              ptr = TtaSkipWCBlanks (ptr);
              ptr = GetNumber (ptr, &x1);
              ptr = GetNumber (ptr, &y1);
@@ -1368,9 +1386,10 @@ Document	doc;
 	       x += xcur;
 	       y += ycur;
 	       }
-	     /* draw a quadric Bezier curve from (xcur, ycur) to (x, y) using
+	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point */
-	     /******/
+	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1);
+	     TtaAppendPathSeg (leaf, seg, doc);
              xcur = x;
              ycur = y;
              x1prev = x1;
@@ -1380,7 +1399,7 @@ Document	doc;
 	   case 'T':
 	     relative = FALSE;
 	   case 't':
-	     /* smooth quadric Bezier curveto */
+	     /* smooth quadratic Bezier curveto */
              ptr = TtaSkipWCBlanks (ptr);
 	     ptr = GetNumber (ptr, &x);
              ptr = GetNumber (ptr, &y);
@@ -1401,9 +1420,10 @@ Document	doc;
 		 x1 = xcur;
 		 y1 = ycur;
 	       }
-	     /* draw a quadric Bezier curve from (xcur, ycur) to (x, y) using
+	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
                 (x1, y1) as the control point */
-	     /******/
+	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1);
+	     TtaAppendPathSeg (leaf, seg, doc);
              xcur = x;
              ycur = y;
              x1prev = x1;
@@ -1428,7 +1448,9 @@ Document	doc;
 	       y += ycur;
 	       }
 	     /* draw an elliptical arc from (xcur, ycur) to (x, y) */
-	     /*******/
+	     seg = TtaNewPathSegArc (xcur, ycur, x, y, rx, ry, xAxisRotation,
+				     largeArcFlag == 1, sweepFlag == 1);
+	     TtaAppendPathSeg (leaf, seg, doc);
              xcur = x;
              ycur = y;
 	     break;

@@ -877,7 +877,7 @@ ThotBool            subTree;
 {
   PtrElement          pChild, pEl1;
   PtrTextBuffer       pBuf;
-  PtrPathElement      pPa;
+  PtrPathSeg          pPa;
   PtrAttribute        pAttr;
   PtrPRule            pPRule;
   PtrSSchema          pSS;
@@ -1120,7 +1120,7 @@ ThotBool            subTree;
 		  TtaWriteByte (pivFile, ' ');
 		  /* ecrit une marque indiquant que c'est un Path */
 		  TtaWriteByte (pivFile, (CHAR_T) C_PIV_PATH);
-		  pPa = pEl1->ElFirstPathElem;
+		  pPa = pEl1->ElFirstPathSeg;
 		  while (pPa)
 		    {
 		      switch (pPa->PaShape)
@@ -1131,10 +1131,10 @@ ThotBool            subTree;
 			case PtCubicBezier:
 		           TtaWriteByte (pivFile, 'C');
 			   break;
-			case PtQuadricBezier:
+			case PtQuadraticBezier:
 		           TtaWriteByte (pivFile, 'Q');
 			   break;
-			case PtElliptical:
+			case PtEllipticalArc:
 		           TtaWriteByte (pivFile, 'A');
 			   break;
 			}
@@ -1152,11 +1152,11 @@ ThotBool            subTree;
 			   PutInteger (pivFile, pPa->XCtrlEnd);
 			   PutInteger (pivFile, pPa->YCtrlEnd);
 			   break;
-			case PtQuadricBezier:
+			case PtQuadraticBezier:
 			   PutInteger (pivFile, pPa->XCtrlStart);
 			   PutInteger (pivFile, pPa->YCtrlStart);
 			   break;
-			case PtElliptical:
+			case PtEllipticalArc:
 			   PutInteger (pivFile, pPa->XRadius);
 			   PutInteger (pivFile, pPa->YRadius);
 			   PutShort (pivFile, pPa->XAxisRotation);

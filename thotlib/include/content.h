@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _CONTENT_H_
 #define _CONTENT_H_
 
@@ -24,6 +15,8 @@ typedef enum _PicType
     xbm_type, eps_type, xpm_type, gif_type, jpeg_type, png_type, unknown_type
   }
 PicType;
+
+typedef int     *PathSegment;
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
@@ -220,6 +213,99 @@ extern void         TtaModifyPointInPolyline (Element element, int rank, TypeUni
 extern void         TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y, Document document);
 
 /*----------------------------------------------------------------------
+   TtaNewPathSegLine
+
+   Creates a new path segment of type line.
+
+   Parameters:
+   xstart: absolute X coordinate for the start point of the path segment
+   ystart: absolute X coordinate for the start point of the path segment
+   xend:   absolute Y coordinate for the end point of the path segment
+   yend:   absolute Y coordinate for the end point of the path segment
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+extern PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend);
+
+/*----------------------------------------------------------------------
+   TtaNewPathSegCubic
+
+   Creates a new path segment of type cubic Bezier curve.
+
+   Parameters:
+   xstart: absolute X coordinate for the start point of the path segment
+   ystart: absolute X coordinate for the start point of the path segment
+   xend:   absolute Y coordinate for the end point of the path segment
+   yend:   absolute Y coordinate for the end point of the path segment
+   xctrl1: absolute X coordinate for the first control point
+   yctrl1: absolute Y coordinate for the first control point
+   xctrl2: absolute X coordinate for the second control point
+   yctrl2: absolute Y coordinate for the second control point
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+extern PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend, int xctrl1, int yctrl1, int xctrl2, int yctrl2);
+
+/*----------------------------------------------------------------------
+   TtaNewPathSegQuadratic
+
+   Creates a new path segment of type quadratic Bezier curve.
+
+   Parameters:
+   xstart: absolute X coordinate for the start point of the path segment
+   ystart: absolute X coordinate for the start point of the path segment
+   xend:   absolute Y coordinate for the end point of the path segment
+   yend:   absolute Y coordinate for the end point of the path segment
+   xctrl:  absolute X coordinate for the control point
+   yctrl:  absolute Y coordinate for the control point
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+extern PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend, int xctrl, int yctrl);
+
+/*----------------------------------------------------------------------
+   TtaNewPathSegArc
+
+   Creates a new path segment of type elliptical arc.
+
+   Parameters:
+   xstart:  absolute X coordinate for the start point of the path segment
+   ystart:  absolute X coordinate for the start point of the path segment
+   xend:    absolute Y coordinate for the end point of the path segment
+   yend:    absolute Y coordinate for the end point of the path segment
+   xradius: x-axis radius for the ellipse
+   yradius: y-axis radius for the ellipse
+   angle:   rotation angle in degrees for the ellipse's x-axis relative to
+            the x-axis
+   largearc:value for the large-arc-flag parameter
+   sweep:   value for the sweep-flag parameter
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+extern PathSegment   TtaNewPathSegArc (int xstart, int ystart, int xend, int yend, int xradius, int yradius, int angle, ThotBool largearc, ThotBool sweep);
+
+/*----------------------------------------------------------------------
+   TtaAppendPathSeg
+
+   Appends a path segment at the end of a Graphics basic element
+
+   Parameters:
+   element: the Graphics element to be modified.
+   segment: the path segment to be appended.
+   document: the document containing the element.
+
+  ----------------------------------------------------------------------*/
+extern void          TtaAppendPathSeg (Element element, PathSegment segment, Document document);
+
+/*----------------------------------------------------------------------
    TtaCopyPage
 
    Copies the page element source into the page element destination.
@@ -404,6 +490,11 @@ extern void         TtaAddPointInPolyline ( /* Element element, int rank, TypeUn
 extern void         TtaDeletePointInPolyline ( /* Element element, int rank, Document document */ );
 extern void         TtaModifyPointInPolyline ( /* Element element, int rank, TypeUnit unit, int x, int y, Document document */ );
 extern void         TtaChangeLimitOfPolyline ( /* Element element, TypeUnit unit, int x, int y, Document document */ );
+extern PathSegment  TtaNewPathSegLine ( /* int xstart, int ystart, int xend, int yend */ );
+extern PathSegment  TtaNewPathSegCubic ( /* int xstart, int ystart, int xend, int yend,	int xctrl1, int yctrl1, int xctrl2, int yctrl2 */ );
+extern PathSegment  TtaNewPathSegQuadratic ( /* int xstart, int ystart, int xend, int yend, int xctrl, int yctrl */ );
+extern PathSegment  TtaNewPathSegArc ( /* int xstart, int ystart, int xend, int yend, int xradius, int yradius, int angle, ThotBool largearc, ThotBool sweep */ );
+extern void         TtaAppendPathSeg ( /* Element element, PathSegment segment, Document document */ );
 extern void         TtaCopyPage ( /* Element destination, Element source */ );
 extern PicType      TtaGetPictureType (/* Element element */);
 extern int          TtaGetVolume (/* Element element */);
@@ -420,3 +511,10 @@ extern int          TtaGetPageView ( /* Element pageElement */ );
 #endif /* __CEXTRACT__ */
 
 #endif
+
+
+
+
+
+
+

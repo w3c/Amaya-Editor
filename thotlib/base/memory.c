@@ -33,9 +33,9 @@ int                 NbFree_TextBuff;
 int                 NbUsed_TextBuff;
 PtrTextBuffer       PtFree_TextBuff;
 
-int                 NbFree_PathElem;
-int                 NbUsed_PathElem;
-PtrPathElement      PtFree_PathElem;
+int                 NbFree_PathSeg;
+int                 NbUsed_PathSeg;
+PtrPathSeg          PtFree_PathSeg;
 
 int                 NbFree_Element;
 int                 NbUsed_Element;
@@ -241,13 +241,13 @@ void                FreeAll ()
     }
   NbFree_TextBuff = 0;
 
-  while (PtFree_PathElem != NULL)
+  while (PtFree_PathSeg != NULL)
     {
-      ptr = (void *)PtFree_PathElem;
-      PtFree_PathElem = PtFree_PathElem->PaNext;
+      ptr = (void *)PtFree_PathSeg;
+      PtFree_PathSeg = PtFree_PathSeg->PaNext;
       TtaFreeMemory (ptr);
     }
-  NbFree_PathElem = 0;
+  NbFree_PathSeg = 0;
 
   while (PtFree_Element != NULL)
     {
@@ -608,9 +608,9 @@ void                InitEditorMemory ()
    NbUsed_TextBuff = 0;
    PtFree_TextBuff = NULL;
 
-   NbFree_PathElem = 0;
-   NbUsed_PathElem = 0;
-   PtFree_PathElem = NULL;
+   NbFree_PathSeg = 0;
+   NbUsed_PathSeg = 0;
+   PtFree_PathSeg = NULL;
 
    NbFree_Element = 0;
    NbUsed_Element = 0;
@@ -758,49 +758,49 @@ PtrTextBuffer       pBT;
 }
 
 /*----------------------------------------------------------------------
-   GetPathElement
+   GetPathSeg
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetPathElement (PtrPathElement * pPE)
+void                GetPathSeg (PtrPathSeg * pPE)
 #else  /* __STDC__ */
-void                GetPathElement (pPE)
-PtrPathElement      *pPE;
+void                GetPathSeg (pPE)
+PtrPathSeg         *pPE;
 
 #endif /* __STDC__ */
 {
-   PtrPathElement       pPEl;
+   PtrPathSeg       pPa;
 
-   if (PtFree_PathElem == NULL)
+   if (PtFree_PathSeg == NULL)
      {
      /* pas de buffer dans la chaine des libres, acquiert un nouveau buffer */
-     pPEl = (PtrPathElement) TtaGetMemory (sizeof (PathElement));
+     pPa = (PtrPathSeg) TtaGetMemory (sizeof (PathSeg));
      }
    else
      {
 	/* recupere un buffer en tete de la chaine des libres */
-	pPEl = PtFree_PathElem;
-	PtFree_PathElem = pPEl->PaNext;
-	NbFree_PathElem--;
+	pPa = PtFree_PathSeg;
+	PtFree_PathSeg = pPa->PaNext;
+	NbFree_PathSeg--;
      }
    /* initialise le buffer */
-   *pPE = pPEl;
-   if (pPEl)
+   *pPE = pPa;
+   if (pPa)
      {
-       memset (pPEl, 0, sizeof (PathElement));
-       pPEl->PaNext = NULL;
-       pPEl->PaPrevious = NULL;
-       NbUsed_PathElem++;
+       memset (pPa, 0, sizeof (PathSeg));
+       pPa->PaNext = NULL;
+       pPa->PaPrevious = NULL;
+       NbUsed_PathSeg++;
      }
 }
 
 /*----------------------------------------------------------------------
-   FreePathElement
+   FreePathSeg
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FreePathElement (PtrPathElement pPE)
+void                FreePathSeg (PtrPathSeg pPE)
 #else  /* __STDC__ */
-void                FreePathElement (pPE)
-PtrPathElement      pPE;
+void                FreePathSeg (pPE)
+PtrPathSeg          pPE;
 
 #endif /* __STDC__ */
 {
@@ -811,11 +811,11 @@ PtrPathElement      pPE;
 #ifdef DEBUG_MEMORY
         TtaFreeMemory (pPE);
 #else
-	pPE->PaNext = PtFree_PathElem;
-	PtFree_PathElem = pPE;
-	NbFree_PathElem++;
+	pPE->PaNext = PtFree_PathSeg;
+	PtFree_PathSeg = pPE;
+	NbFree_PathSeg++;
 #endif
-	NbUsed_PathElem--;
+	NbUsed_PathSeg--;
      }
 }
 
@@ -884,23 +884,23 @@ PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
-   PtrPathElement   pPEl, pPElNext;
+   PtrPathSeg       pPa, pPaNext;
 
    if (pEl->ElLeafType == LtText && pEl->ElText)
      {
        FreeTextBuffer (pEl->ElText);
        pEl->ElText = NULL;
      }
-   else if (pEl->ElLeafType == LtPath && pEl->ElFirstPathElem)
+   else if (pEl->ElLeafType == LtPath && pEl->ElFirstPathSeg)
      {
-       pPEl = pEl->ElFirstPathElem;
+       pPa = pEl->ElFirstPathSeg;
        do
 	 {
-	   pPElNext = pPEl->PaNext;
-	   FreePathElement (pPEl);
-	   pPEl = pPElNext;
+	   pPaNext = pPa->PaNext;
+	   FreePathSeg (pPa);
+	   pPa = pPaNext;
 	 }
-       while (pPEl);
+       while (pPa);
      }
    pEl->ElStructSchema = NULL;
 #ifdef DEBUG_MEMORY

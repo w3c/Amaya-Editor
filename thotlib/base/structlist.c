@@ -324,20 +324,20 @@ FILE               *fileDescriptor;
 
 /*----------------------------------------------------------------------
    WrPath ecrit dans le fichier fileDescriptor le contenu de la chaine des
-   elements de path commencant au bufferdescripteur pointe' par pPE.  
+   segments de path commencant au segment pointe' par pPE.  
    length: longueur maximum a` ecrire.                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WrPath (PtrPathElement pPE, int length, FILE * fileDescriptor)
+static void         WrPath (PtrPathSeg pPE, int length, FILE * fileDescriptor)
 #else  /* __STDC__ */
 static void         WrPath (pPE, length, fileDescriptor)
-PtrPathElement      pPE;
+PtrPathSeg          pPE;
 int                 length;
 FILE               *fileDescriptor;
 
 #endif /* __STDC__ */
 {
-   PtrPathElement      b;
+   PtrPathSeg          b;
    int                 l;
 
    l = 0;
@@ -361,14 +361,14 @@ FILE               *fileDescriptor;
 		      b->XCtrlStart, b->YCtrlStart,
 		      b->XCtrlEnd, b->YCtrlEnd);
 	     break;
-	  case PtQuadricBezier:
+	  case PtQuadraticBezier:
 	     putc ('Q', fileDescriptor);
 	     fprintf (fileDescriptor, "%d,%d %d,%d %d,%d",
 		      b->XStart, b->YStart,
 		      b->XEnd, b->YEnd,
 		      b->XCtrlStart, b->YCtrlStart);
 	     break;
-	  case PtElliptical:
+	  case PtEllipticalArc:
 	     putc ('A', fileDescriptor);
 	     fprintf (fileDescriptor, "%d,%d %d,%d %d,%d %d ",
 		      b->XStart, b->YStart,
@@ -754,9 +754,10 @@ ThotBool            premierfils;
 	     fprintf (fileDescriptor, "\n");
 	     break;
 	   case LtPath:
+	     fprintf (fileDescriptor, " path:\n");
 	     for (i = 1; i <= Indent; i++)
 	       fprintf (fileDescriptor, " ");
-	     WrPath (pNode->ElFirstPathElem, 72 - Indent, fileDescriptor);
+	     WrPath (pNode->ElFirstPathSeg, 72 - Indent, fileDescriptor);
 	     fprintf (fileDescriptor, "\n");
 	     break;
 	   case LtSymbol:
@@ -1533,10 +1534,7 @@ FILE               *fileDescriptor;
 	      fprintf (fileDescriptor, "\'");
 	      break;
 	   case LtPolyLine:
-	      fprintf (fileDescriptor, "type=%c", pAb->AbPolyLineShape);
-	      fprintf (fileDescriptor, "\n");
-	      for (i = 1; i <= Indent + 6; i++)
-		 fprintf (fileDescriptor, " ");
+	      fprintf (fileDescriptor, "type=%c ", pAb->AbPolyLineShape);
 	      for (i = 0; i < pAb->AbVolume && i < 8; i++)
 		 fprintf (fileDescriptor, "%d,%d ",
 			  pAb->AbPolyLineBuffer->BuPoints[i].XCoord,
@@ -1545,15 +1543,12 @@ FILE               *fileDescriptor;
 		 fprintf (fileDescriptor, "...");
 	      break;
 	   case LtPath:
-	      fprintf (fileDescriptor, "\n");
-	      for (i = 1; i <= Indent + 6; i++)
-		 fprintf (fileDescriptor, " ");
-	      WrPath (pAb->AbFirstPathElem, 60, fileDescriptor);
+	      WrPath (pAb->AbFirstPathSeg, 72-Indent, fileDescriptor);
 	      break;
            case LtSymbol:
 	   case LtGraphics:
-	      fprintf (fileDescriptor, " alphabet=%c", pAb->AbGraphAlphabet);
-	      fprintf (fileDescriptor, "\'%c\'", pAb->AbShape);
+	      fprintf (fileDescriptor, "alphabet=%c \'%c\'",
+		       pAb->AbGraphAlphabet, pAb->AbShape);
 	      if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
 		{
 		  fprintf (fileDescriptor, " rx:%d", pAb->AbRx);
@@ -2016,7 +2011,7 @@ FILE               *fileDescriptor;
 			 fprintf (fileDescriptor, "PATH\n");
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (fileDescriptor, " ");
-			 WrPath (pAb->AbFirstPathElem, 60, fileDescriptor);
+			 WrPath (pAb->AbFirstPathSeg, 60, fileDescriptor);
 			 break;
 		      default:
 			 break;

@@ -1012,7 +1012,7 @@ PtrElement          pEl;
 	 empty = (pEl->ElNPoints == 0);
 	 break;
        case LtPath:
-	 empty = (pEl->ElFirstPathElem == NULL);
+	 empty = (pEl->ElFirstPathSeg == NULL);
        default:
 	 empty = FALSE;
 	 break;

@@ -233,23 +233,23 @@ typedef struct _TextBuffer
 #define BuContent u.s0._BuContent_
 #define BuPoints u.s1._BuPoints_
 
-/* type of a path element */
+/* type of a SVG path segment */
 typedef enum
 {
 	PtLine,
         PtCubicBezier,
-        PtQuadricBezier,
-        PtElliptical
-} PathElemType;
+        PtQuadraticBezier,
+        PtEllipticalArc
+} PathSegType;
 
-typedef struct _PathElement *PtrPathElement;
+typedef struct _PathSeg *PtrPathSeg;
 
-/* Description of a graphics path element */
-typedef struct _PathElement
+/* Description of a SVG path segment */
+typedef struct _PathSeg
 {
-	PtrPathElement  PaNext;	      /* Next element in the same path */
-        PtrPathElement  PaPrevious;   /* Previous element in the same path */
-        PathElemType    PaShape;      /* Shape of that element */
+	PtrPathSeg      PaNext;	      /* Next segment in the same path */
+        PtrPathSeg      PaPrevious;   /* Previous segment in the same path */
+        PathSegType     PaShape;      /* Shape of that segment */
         /* all coordinates are expressed in millipoint from the box origin */
         int	        XStart;	      /* coordinates of start point */
 	int	        YStart;
@@ -258,15 +258,15 @@ typedef struct _PathElement
     union
     {
 	struct
-	{   /* PaShape = PtCubicBezier or PtQuadricBezier */
-	    /* a quadric Bezier curve uses only the first control point */
+	{   /* PaShape = PtCubicBezier or PtQuadraticBezier */
+	    /* a quadratic Bezier curve uses only the first control point */
 	    int         _XCtrlStart_; /* coordinates of control point at the */
 	    int         _YCtrlStart_; /* beginning of the curve */
 	    int         _XCtrlEnd_;   /* coordinates of control point at the */
 	    int         _YCtrlEnd_;   /* end of the curve */
 	} s0;
 	struct
-	{   /* PaShape = PtElliptical */
+	{   /* PaShape = PtEllipticalArc */
 	    int         _XRadius_;
 	    int         _YRadius_;
 	    int         _XAxisRotation_;
@@ -275,7 +275,7 @@ typedef struct _PathElement
 	                              /* direction */
 	} s1;
     } u;
-} PathElement;
+} PathSeg;
 
 #define XCtrlStart u.s0._XCtrlStart_
 #define YCtrlStart u.s0._YCtrlStart_
@@ -416,8 +416,8 @@ typedef struct _ElementDescr
 		} s5;
 	        struct                  /* ElLeafType = LtPath */
                 {
-                    PtrPathElement _ElFirstPathElem_;/* first element of the
-							path elements list */
+                    PtrPathSeg    _ElFirstPathSeg_;  /* first segment of the
+							path segments list */
                 } s6;
 		struct			/* TypeImage = LtPicture */
 		{
@@ -449,7 +449,7 @@ typedef struct _ElementDescr
 #define ElPolyLineBuffer u.s1.u.s5._ElPolyLineBuffer_
 #define ElNPoints u.s1.u.s5._ElNPoints_
 #define ElPolyLineType u.s1.u.s5._ElPolyLineType_
-#define ElFirstPathElem u.s1.u.s6._ElFirstPathElem_
+#define ElFirstPathSeg u.s1.u.s6._ElFirstPathSeg_
 #define ElPictureName u.s1.u.s7._ElPictureName_
 #define ElNameLength u.s1.u.s7._ElNameLength_
 #define ElPictInfo u.s1.u.s7._ElPictInfo_

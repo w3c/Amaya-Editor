@@ -1182,7 +1182,7 @@ int                 delta;
 	       break;
 	     case LtPath:
 	       pAbbox1->AbLeafType = LtPath;
-	       pAbbox1->AbFirstPathElem = element->ElFirstPathElem;
+	       pAbbox1->AbFirstPathSeg = element->ElFirstPathSeg;
 	       pAbbox1->AbVolume = element->ElVolume;
 	       break;
 	     case LtSymbol:

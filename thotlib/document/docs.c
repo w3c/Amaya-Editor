@@ -612,7 +612,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pChild, pNext;
    PtrTextBuffer       pBuf, pNextBuf;
-   PtrPathElement      pPa, pNextPa;
+   PtrPathSeg          pPa, pNextPa;
    int                 view;
    ThotBool            ToCreate[MAX_VIEW_DOC];
 
@@ -657,14 +657,14 @@ PtrDocument         pDoc;
 	 pEl->ElPolyLineType = EOS;
 	 break;
        case LtPath:
-	 pPa = pEl->ElFirstPathElem;
+	 pPa = pEl->ElFirstPathSeg;
 	 while (pPa)
 	   {
 	     pNextPa = pPa->PaNext;
-	     FreePathElement (pPa);
+	     FreePathSeg (pPa);
 	     pPa = pNextPa;
 	   }
-	 pEl->ElFirstPathElem = NULL;
+	 pEl->ElFirstPathSeg = NULL;
 	 pEl->ElVolume = 0;
 	 break;
        case LtSymbol:

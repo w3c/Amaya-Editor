@@ -953,7 +953,7 @@ PtrAbstractBox      pAbEl;
 		     break;
 		   case LtPath:
 		     pAb->AbLeafType = LtPath;
-		     pAb->AbFirstPathElem = pEl->ElFirstPathElem;
+		     pAb->AbFirstPathSeg = pEl->ElFirstPathSeg;
 		     pAb->AbVolume = pEl->ElVolume;
 		     break;
 		   case LtSymbol:

@@ -1756,7 +1756,7 @@ PtrDocument         pDoc;
 	  break;
 	case LtPath:
 	  /* prend le contenu de l'element correspondant */
-	  pAb->AbFirstPathElem = pEl->ElFirstPathElem;
+	  pAb->AbFirstPathSeg = pEl->ElFirstPathSeg;
 	  pAb->AbVolume = pEl->ElVolume;
 	  break;
 	case LtReference:

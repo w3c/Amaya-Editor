@@ -2222,7 +2222,7 @@ ThotBool            createDesc;
 {
   PtrAttribute        pAttr;
   PtrTextBuffer       pBuf;
-  PtrPathElement      pPa, pPaPrev;
+  PtrPathSeg          pPa, pPaPrev;
   PtrElement          pPrevEl, p, pEl, pEl2, pElInt, pElRead, pfutParent;
   PtrPRule            pPRule;
   PtrSSchema          pSS;
@@ -2809,7 +2809,7 @@ static  LabelString         label;
 				   en un path */
 				{
 				  pEl->ElLeafType = LtPath;
-				  pEl->ElFirstPathElem = NULL;
+				  pEl->ElFirstPathSeg = NULL;
 				  pPaPrev = NULL;
 				  n = 0;
 				}
@@ -2828,11 +2828,11 @@ static  LabelString         label;
 				  TtaReadInteger (pivFile, &n4);
 				  if (create)
 				    {
-				    GetPathElement (&pPa);
+				    GetPathSeg (&pPa);
 				    if (pPaPrev)
 				      pPaPrev->PaNext = pPa;
 				    else
-				      pEl->ElFirstPathElem = pPa;
+				      pEl->ElFirstPathSeg = pPa;
 				    pPa->PaPrevious = pPaPrev;
 				    pPa->PaNext = NULL;
 				    pPaPrev = pPa;
@@ -2867,7 +2867,7 @@ static  LabelString         label;
 				      TtaReadInteger (pivFile, &n2);
 				      if (create)
 					{
-					pPa->PaShape = PtQuadricBezier;
+					pPa->PaShape = PtQuadraticBezier;
 					pPa->XCtrlStart = n1;
 					pPa->YCtrlStart = n2;
 					}
@@ -2880,7 +2880,7 @@ static  LabelString         label;
 				      b2 = ReadBoolean (pivFile);
 				      if (create)
 					{
-					pPa->PaShape = PtElliptical;
+					pPa->PaShape = PtEllipticalArc;
 					pPa->XRadius = n1;
 					pPa->YRadius = n2;
 					pPa->XAxisRotation = n3;

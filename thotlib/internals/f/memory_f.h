@@ -19,8 +19,8 @@ extern void *TtaRealloc ( void *ptr,
 extern void InitEditorMemory ( void );
 extern void GetTextBuffer ( PtrTextBuffer * pBT );
 extern void FreeTextBuffer ( PtrTextBuffer pBT );
-extern void GetPathElement ( PtrPathElement * pPE );
-extern void FreePathElement ( PtrPathElement pPE );
+extern void GetPathSeg ( PtrPathSeg * pPE );
+extern void FreePathSeg ( PtrPathSeg pPE );
 extern void GetElement ( PtrElement * pEl );
 extern void FreeElement ( PtrElement pEl );
 extern void GetAttribute ( PtrAttribute * pAttr );
@@ -97,8 +97,8 @@ extern void *TtaRealloc (/* void *ptr,
 extern void InitEditorMemory (/* void */);
 extern void GetTextBuffer (/* PtrTextBuffer * pBT */);
 extern void FreeTextBuffer (/* PtrTextBuffer pBT */);
-extern void GetPathElement (/* PtrPathElement * pPE */);
-extern void FreePathElement (/* PtrPathElement pPE */);
+extern void GetPathSeg (/* PtrPathSeg * pPE */);
+extern void FreePathSeg (/* PtrPathSeg pPE */);
 extern void GetElement (/* PtrElement * pEl */);
 extern void FreeElement (/* PtrElement pEl */);
 extern void GetAttribute (/* PtrAttribute * pAttr */);

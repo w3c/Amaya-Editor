@@ -498,7 +498,7 @@ typedef struct _AbstractBox
     } s4;
     struct /* AbLeafType = LtPath  */
     {
-      PtrPathElement _AbFirstPathElem_; /* First path element */
+      PtrPathSeg    _AbFirstPathSeg_;   /* First path segment */
     } s5;
   } u;
 } AbstractBox;
@@ -520,7 +520,7 @@ typedef struct _AbstractBox
 #define AbPictInfo u.s3._AbPictInfo_
 #define AbPolyLineBuffer u.s4._AbPolyLineBuffer_
 #define AbPolyLineShape u.s4._AbPolyLineShape_
-#define AbFirstPathElem u.s5._AbFirstPathElem_
+#define AbFirstPathSeg u.s5._AbFirstPathSeg_
 
 typedef struct _ViewFrame
 {

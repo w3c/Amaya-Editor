@@ -709,7 +709,7 @@ int                 Kind;
 				 ret = TRUE;
 			      break;
 			   case LtPath:
-			      if (pEl->ElFirstPathElem == NULL)
+			      if (pEl->ElFirstPathSeg == NULL)
 				 ret = TRUE;
 			      break;
 			   case LtSymbol:
@@ -2510,7 +2510,7 @@ ThotBool            del;
 	      (*pNew)->ElNPoints = 0;
 	      break;
 	    case LtPath:
-	      pEl->ElFirstPathElem = (*pNew)->ElFirstPathElem;
+	      pEl->ElFirstPathSeg = (*pNew)->ElFirstPathSeg;
 	      pEl->ElVolume = (*pNew)->ElVolume;
 	      /* adds the volume of the element to that of its ancestors */
 	      if (pEl->ElVolume != 0)
@@ -2522,7 +2522,7 @@ ThotBool            del;
 		      pE = pE->ElParent;
 		    }
 		}
-	      (*pNew)->ElFirstPathElem = NULL;
+	      (*pNew)->ElFirstPathSeg = NULL;
 	      (*pNew)->ElVolume = 0;
 	      break;
 	    case LtSymbol:
@@ -3266,7 +3266,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pChild, pNextChild;
    PtrTextBuffer       pBuf, pNextBuf;
-   PtrPathElement      pPa, pNextPa;
+   PtrPathSeg          pPa, pNextPa;
    int                 c, n;
    PtrAttribute        pAttr, pNextAttr;
    PtrPRule            pRule, pNextRule;
@@ -3326,14 +3326,14 @@ PtrDocument         pDoc;
 	   if (pEl1->ElLeafType == LtPolyLine)
 	     /* frees all the path elements associated to the element */
 	     {
-	       pPa = pEl1->ElFirstPathElem;
+	       pPa = pEl1->ElFirstPathSeg;
 	       while (pPa)
 		 {
 		   pNextPa = pPa->PaNext;
-		   FreePathElement (pPa);
+		   FreePathSeg (pPa);
 		   pPa = pNextPa;
 		 }
-	       pEl1->ElFirstPathElem = NULL;
+	       pEl1->ElFirstPathSeg = NULL;
 	     }
 	   if (pEl1->ElLeafType == LtReference)
 	     /* frees and unlinks the reference */
@@ -3471,19 +3471,19 @@ PtrDocument         pDoc;
    and return a pointer to the first element of the copy.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPathElement  CopyPath (PtrPathElement firstPathEl)
+static PtrPathSeg  CopyPath (PtrPathSeg firstPathEl)
 #else  /* __STDC__ */
-static PtrPathElement  CopyPath (firstPathEl)
-PtrPathElement firstPathEl;
+static PtrPathSeg  CopyPath (firstPathEl)
+PtrPathSeg firstPathEl;
 #endif /* __STDC__ */
 {
-   PtrPathElement    pSourcePa, pPrevPa, pPa, first;
+   PtrPathSeg    pSourcePa, pPrevPa, pPa, first;
 
    pSourcePa = firstPathEl;
    first = NULL;
    while (pSourcePa)
      {
-       GetPathElement (&pPa);
+       GetPathSeg (&pPa);
        *pPa = *pSourcePa;
        if (!first)
 	 {
@@ -3735,7 +3735,7 @@ ThotBool            shareRef;
 		     break;
 		  case LtPath:
 		     /* copies the path elements */
-		     pEl->ElFirstPathElem = CopyPath(pSource->ElFirstPathElem);
+		     pEl->ElFirstPathSeg = CopyPath(pSource->ElFirstPathSeg);
 		     pEl->ElVolume = pSource->ElVolume;
 		     break;
 		  case LtSymbol:
@@ -3893,7 +3893,7 @@ PtrDocument         pDoc;
 {
    PtrReference        pRef;
    PtrElement          pSource, pS2, pC1, pC2, pE;
-   PtrPathElement      pPa, pNextPa;
+   PtrPathSeg          pPa, pNextPa;
    DocumentIdentifier  docIdent;
    PtrDocument         pDocSource;
    ThotBool            done;
@@ -3914,7 +3914,7 @@ PtrDocument         pDoc;
 	 done = pEl->ElGraph != EOS;
 	 break;
        case LtPath:
-	 done = pEl->ElFirstPathElem != NULL;
+	 done = pEl->ElFirstPathSeg != NULL;
        case LtPageColBreak:
        case LtReference:
 	 break;
@@ -3985,15 +3985,15 @@ PtrDocument         pDoc;
 		       }
 		     break;
 		   case LtPath:
-		     pPa = pEl->ElFirstPathElem;
+		     pPa = pEl->ElFirstPathSeg;
 		     while (pPa)
 		       {
 			 pNextPa = pPa->PaNext;
-			 FreePathElement (pPa);
+			 FreePathSeg (pPa);
 			 pPa = pNextPa;
 		       }
 		     pEl->ElLeafType = LtPath;
-		     pEl->ElFirstPathElem = CopyPath(pSource->ElFirstPathElem);
+		     pEl->ElFirstPathSeg = CopyPath(pSource->ElFirstPathSeg);
 		     pEl->ElVolume = pSource->ElVolume;
 		     break;
 		   case LtSymbol:

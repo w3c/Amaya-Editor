@@ -367,51 +367,6 @@ int                 schView;
 #ifndef PAGINEETIMPRIME
 
 /*----------------------------------------------------------------------
-   	DisplayPageMsg 	Affiche un message avec le nom de la vue 	
-   			et le numero de page de l'element pEl		
-   			firstPage indique si c'est la premiere page de 	
-   			la vue						
-   			procedure utilisee dans la pagination sous	
-   			l'editeur (version vide pour l'appel depuis	
-   			la commande d'impression)			
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DisplayPageMsg (PtrDocument pDoc, PtrElement pRootEl, PtrElement pEl, int schView, ThotBool Assoc, ThotBool * firstPage)
-#else  /* __STDC__ */
-static void         DisplayPageMsg (pDoc, pRootEl, pEl, schView, Assoc, firstPage)
-PtrDocument         pDoc;
-PtrElement          pRootEl;
-PtrElement          pEl;
-int                 schView;
-ThotBool            Assoc;
-ThotBool           *firstPage;
-
-#endif /* __STDC__ */
-{
-   CHAR_T* name;
-
-   /* affiche un message avec le numero de page */
-   /* affiche d'abord le nom de la vue */
-   if (Assoc)
-      name = pRootEl->ElStructSchema->SsRule[pRootEl->ElTypeNumber - 1].SrName;
-   else
-      name = pDoc->DocSSchema->SsPSchema->PsView[schView - 1];
-
-   if (*firstPage)
-     {
-	/* Affiche un message normal pour la 1ere fois */
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_PAGE), name, pEl->ElPageNumber);
-	*firstPage = FALSE;
-     }
-   else
-      /* Sinon ecrase le message precedent */
-      TtaDisplayMessage (OVERHEAD, TtaGetMessage (LIB, TMSG_PAGE), name, pEl->ElPageNumber);
-}
-#endif /* PAGINEETIMPRIME */
-
-#ifndef PAGINEETIMPRIME
-
-/*----------------------------------------------------------------------
    DisplaySelectPages Apres la pagination sous l'editeur, il faut	
    			recreer l'image et retablir la selection.	
    			Procedure utilisee dans la pagination sous	

@@ -103,7 +103,7 @@ int                 frame;
 {
   PtrAbstractBox      pAbb, pAbbNext;
   PtrTextBuffer       pBT, pNextBT;
-  PtrPathElement      pPa, pNextPa;
+  PtrPathSeg          pPa, pNextPa;
   PtrDelayedPRule     pDelPR, pNextDelPR;
   ThotBool            libAb;
 
@@ -180,14 +180,14 @@ int                 frame;
 	      pAb->AbText = NULL;
 	    break;
 	  case LtPath:
-	    pPa = pAb->AbFirstPathElem;
+	    pPa = pAb->AbFirstPathSeg;
 	    while (pPa)
 	      {
 		pNextPa = pPa->PaNext;
-		FreePathElement (pPa);
+		FreePathSeg (pPa);
 		pPa = pNextPa;
 	      }
-	    pAb->AbFirstPathElem = NULL;
+	    pAb->AbFirstPathSeg = NULL;
 	    break;
 	  case LtPicture:
 	    if (pAb->AbPresentationBox)

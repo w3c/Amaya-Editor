@@ -498,7 +498,7 @@ PtrDocument         pDoc;
 {
   PtrElement          pAsc, pChild, pC1;
   PtrTextBuffer       pTxtBuf, pNextTxtBuf;
-  PtrPathElement      pPa, pNextPa;
+  PtrPathSeg          pPa, pNextPa;
   
   if (pEl != NULL)
     {
@@ -571,10 +571,10 @@ PtrDocument         pDoc;
 		pEl->ElPolyLineType = EOS;
 		break;
 	      case LtPath:
-		if (pEl->ElFirstPathElem)
+		if (pEl->ElFirstPathSeg)
 		  {
-		    pPa = pEl->ElFirstPathElem;
-		    pEl->ElFirstPathElem = NULL;
+		    pPa = pEl->ElFirstPathSeg;
+		    pEl->ElFirstPathSeg = NULL;
 		    /* met a jour le volume des elements ascendants */
 		    pAsc = pEl->ElParent;
 		    while (pAsc != NULL)
@@ -583,11 +583,11 @@ PtrDocument         pDoc;
 			pAsc = pAsc->ElParent;
 		      }
 		    pEl->ElVolume = 0;
-		    /* libere les elements de path */
+		    /* libere les segments de path */
 		    while (pPa != NULL)
 		      {
 			pNextPa = pPa->PaNext;
-			FreePathElement (pPa);
+			FreePathSeg (pPa);
 			pPa = pNextPa;
 		      }
 		  }

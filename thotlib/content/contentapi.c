@@ -1273,6 +1273,284 @@ Document            document;
      }
 }
 
+/*----------------------------------------------------------------------
+   TtaNewPathSegLine
+
+   Creates a new path segment of type line.
+
+   Parameters:
+   xstart: absolute X coordinate for the start point of the path segment
+   ystart: absolute X coordinate for the start point of the path segment
+   xend:   absolute Y coordinate for the end point of the path segment
+   yend:   absolute Y coordinate for the end point of the path segment
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend)
+#else  /* __STDC__ */
+PathSegment   TtaNewPathSegLine (xstart, ystart, xend, yend)
+int xstart;
+int ystart;
+int xend;
+int yend;
+#endif /* __STDC__ */
+
+{
+   PtrPathSeg       pPa;
+
+   UserErrorCode = 0;
+   GetPathSeg (&pPa);
+   pPa->PaShape = PtLine;
+   pPa->XStart = xstart;
+   pPa->YStart = ystart;
+   pPa->XEnd = xend;
+   pPa->YEnd = yend;
+   return ((PathSegment) pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewPathSegCubic
+
+   Creates a new path segment of type cubic Bezier curve.
+
+   Parameters:
+   xstart: absolute X coordinate for the start point of the path segment
+   ystart: absolute X coordinate for the start point of the path segment
+   xend:   absolute Y coordinate for the end point of the path segment
+   yend:   absolute Y coordinate for the end point of the path segment
+   xctrl1: absolute X coordinate for the first control point
+   yctrl1: absolute Y coordinate for the first control point
+   xctrl2: absolute X coordinate for the second control point
+   yctrl2: absolute Y coordinate for the second control point
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
+				int xctrl1, int yctrl1, int xctrl2, int yctrl2)
+#else  /* __STDC__ */
+PathSegment   TtaNewPathSegCubic (xstart, ystart, xend, yend,
+				  xctrl1, yctrl1, xctrl2, yctrl2)
+int xstart;
+int ystart;
+int xend;
+int yend;
+int xctrl1;
+int yctrl1;
+int xctrl2;
+int yctrl2;
+#endif /* __STDC__ */
+
+{
+   PtrPathSeg       pPa;
+
+   UserErrorCode = 0;
+   GetPathSeg (&pPa);
+   pPa->PaShape = PtCubicBezier;
+   pPa->XStart = xstart;
+   pPa->YStart = ystart;
+   pPa->XEnd = xend;
+   pPa->YEnd = yend;
+   pPa->XCtrlStart = xctrl1;
+   pPa->YCtrlStart = yctrl1;
+   pPa->XCtrlEnd = xctrl2;
+   pPa->YCtrlEnd = yctrl2;
+   return ((PathSegment) pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewPathSegQuadratic
+
+   Creates a new path segment of type quadratic Bezier curve.
+
+   Parameters:
+   xstart: absolute X coordinate for the start point of the path segment
+   ystart: absolute X coordinate for the start point of the path segment
+   xend:   absolute Y coordinate for the end point of the path segment
+   yend:   absolute Y coordinate for the end point of the path segment
+   xctrl:  absolute X coordinate for the control point
+   yctrl:  absolute Y coordinate for the control point
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend,
+				    int xctrl, int yctrl)
+#else  /* __STDC__ */
+PathSegment   TtaNewPathSegQuadratic (xstart, ystart, xend, yend, xctrl, yctrl)
+int xstart;
+int ystart;
+int xend;
+int yend;
+int xctrl;
+int yctrl;
+#endif /* __STDC__ */
+
+{
+   PtrPathSeg       pPa;
+
+   UserErrorCode = 0;
+   GetPathSeg (&pPa);
+   pPa->PaShape = PtQuadraticBezier;
+   pPa->XStart = xstart;
+   pPa->YStart = ystart;
+   pPa->XEnd = xend;
+   pPa->YEnd = yend;
+   pPa->XCtrlStart = xctrl;
+   pPa->YCtrlStart = yctrl;
+   pPa->XCtrlEnd = xctrl;
+   pPa->YCtrlEnd = yctrl;
+   return ((PathSegment) pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewPathSegArc
+
+   Creates a new path segment of type elliptical arc.
+
+   Parameters:
+   xstart:  absolute X coordinate for the start point of the path segment
+   ystart:  absolute X coordinate for the start point of the path segment
+   xend:    absolute Y coordinate for the end point of the path segment
+   yend:    absolute Y coordinate for the end point of the path segment
+   xradius: x-axis radius for the ellipse
+   yradius: y-axis radius for the ellipse
+   angle:   rotation angle in degrees for the ellipse's x-axis relative to
+            the x-axis
+   largearc:value for the large-arc-flag parameter
+   sweep:   value for the sweep-flag parameter
+
+   Return value:
+   the created path segment.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+PathSegment   TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
+		                int xradius, int yradius, int angle,
+				ThotBool largearc, ThotBool sweep)
+#else  /* __STDC__ */
+PathSegment   TtaNewPathSegArc (xstart, ystart, xend, yend, xradius, yradius,
+				angle, largearc, sweep)
+int xstart;
+int ystart;
+int xend;
+int yend;
+int xradius;
+int yradius;
+int angle;
+ThotBool largearc;
+ThotBool sweep;
+#endif /* __STDC__ */
+
+{
+   PtrPathSeg       pPa;
+
+   UserErrorCode = 0;
+   GetPathSeg (&pPa);
+   pPa->PaShape = PtEllipticalArc;
+   pPa->XStart = xstart;
+   pPa->YStart = ystart;
+   pPa->XEnd = xend;
+   pPa->YEnd = yend;
+   pPa->XRadius = xradius;
+   pPa->YRadius = yradius;
+   pPa->XAxisRotation = angle;
+   pPa->LargeArc = largearc;
+   pPa->Sweep = sweep;
+   return ((PathSegment) pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaAppendPathSeg
+
+   Appends a path segment at the end of a Graphics basic element
+
+   Parameters:
+   element: the Graphics element to be modified.
+   segment: the path segment to be appended.
+   document: the document containing the element.
+
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void                TtaAppendPathSeg (Element element, PathSegment segment, Document document)
+
+#else  /* __STDC__ */
+void                TtaAppendPathSeg (element, segment, document)
+Element             element;
+PathSegment         segment;
+Document            document;
+
+#endif /* __STDC__ */
+{
+   PtrPathSeg       pPa, pPrevPa;
+   PtrElement       pElAsc;
+
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) element)->ElTerminal)
+      TtaError (ERR_invalid_element_type);
+   else if (((PtrElement) element)->ElLeafType != LtPath &&
+	    ((PtrElement) element)->ElLeafType != LtGraphics)
+      TtaError (ERR_invalid_element_type);
+   else
+      /* verifies the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       if (((PtrElement) element)->ElLeafType == LtGraphics)
+	 if (((PtrElement) element)->ElGraph == EOS)
+	   {
+	   ((PtrElement) element)->ElLeafType = LtPath;
+	   ((PtrElement) element)->ElFirstPathSeg = NULL;
+	   }
+         else
+	   {
+	   TtaError (ERR_invalid_element_type);
+	   element = NULL;
+	   }
+       if (element)
+	 {
+	   pPa = ((PtrElement) element)->ElFirstPathSeg;
+	   pPrevPa = NULL;
+	   while (pPa)
+	     {
+	       pPrevPa = pPa;
+	       pPa = pPa->PaNext;
+	     }
+	   if (pPrevPa == NULL)
+	     ((PtrElement) element)->ElFirstPathSeg = (PtrPathSeg) segment;
+	   else
+	     {
+	       pPrevPa->PaNext = (PtrPathSeg) segment;
+	       ((PtrPathSeg) segment)->PaPrevious = pPrevPa;
+	     }
+	   /* Updates the volumes of ancestors */
+	   pElAsc = (PtrElement) element;
+	   while (pElAsc != NULL)
+	     {
+	       pElAsc->ElVolume++;
+	       pElAsc = pElAsc->ElParent;
+	     }
+#ifndef NODISPLAY
+	   RedisplayLeaf ((PtrElement) element, document, 1);
+#endif
+	 }
+     }
+}
 
 /*----------------------------------------------------------------------
    TtaCopyPage
