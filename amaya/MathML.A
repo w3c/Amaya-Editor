@@ -183,6 +183,13 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrStretchyChanged;	
 	END;
 
+   largeop:
+	BEGIN
+	AttrCreate.Post -> AttrLargeopChanged;
+	AttrModify.Post -> AttrLargeopChanged;
+	AttrDelete.Post -> AttrLargeopChanged;
+	END;
+
    movablelimits:
 	BEGIN
 	AttrCreate.Post -> AttrMovablelimitsChanged;

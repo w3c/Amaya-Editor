@@ -36,8 +36,8 @@ extern void SetFontstyleAttr ( Element el,
 extern void SetIntAddSpaceAttr ( Element el,
                                  Document doc );
 extern ThotBool ChildOfMRowOrInferred ( Element el );
-extern void CheckFence ( Element el,
-                         Document doc );
+extern void CheckFenceLargeOp ( Element el,
+                                Document doc );
 extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
                                      ThotBool record );
@@ -147,8 +147,8 @@ extern void SetFontstyleAttr (/* Element el,
 extern void SetIntAddSpaceAttr (/* Element el,
                                    Document doc */);
 extern ThotBool ChildOfMRowOrInferred (/* Element el */);
-extern void CheckFence (/* Element el,
-                           Document doc */);
+extern void CheckFenceLargeOp (/* Element el,
+                                  Document doc */);
 extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
                                        ThotBool record */);

@@ -35,6 +35,56 @@ extern XmlEntity *pMathEntityTable;
 #include "fetchXMLname_f.h"
 
 /*----------------------------------------------------------------------
+   IsLargeOp
+   Return TRUE if character is listed as a largeop in the MathML 2.0
+   Operator dictionary (appendix F.5)
+  ----------------------------------------------------------------------*/
+static ThotBool IsLargeOp (CHAR_T character)
+{
+  /****** to be completed *****/
+#ifdef _I18N_
+  if (character == 8721 || character == 8719) /* large Sigma or Pi */
+#else
+  if ((script == 'G') &&
+      (character == 229 || character == 213))  /* large Sigma or Pi */
+#endif
+    /* it's a large character */
+    return TRUE;
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
+   IsStretchy
+   Return TRUE if character is listed as a stretchy operator in the MathML 2.0
+   Operator dictionary (appendix F.5)
+  ----------------------------------------------------------------------*/
+static ThotBool IsStretchy (CHAR_T character)
+{
+  /****** to be completed *****/
+  if ((
+#ifndef _I18N_
+       (script == 'L') &&
+#endif
+        (character == '(' || character == ')' ||
+	 character == '[' || character == ']' ||
+	 character == '{' || character == '}' ||
+	 character == '|'))  ||
+      (
+       /* test left and right angle brackets */
+#ifdef _I18N_
+       (character == 9001 || character == 9002)
+#else
+       (script == 'G') &&
+       (character == 225 || character == 241)
+#endif
+     ))
+    return TRUE;
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
    MapMathMLAttribute
    Search in the Attribute Mapping Table the entry for the
    attribute of name Attr and returns the corresponding Thot attribute type.
@@ -43,7 +93,8 @@ void MapMathMLAttribute (char *attrName, AttributeType *attrType,
 			 char *elementName, ThotBool *level, Document doc)
 {
   attrType->AttrSSchema = GetMathMLSSchema (doc);
-  MapXMLAttribute (MATH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
+  MapXMLAttribute (MATH_TYPE, attrName, elementName, level, doc,
+		   &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------
@@ -1945,7 +1996,7 @@ ThotBool      ChildOfMRowOrInferred (Element el)
 }
 
 /*----------------------------------------------------------------------
-   CheckFence
+   CheckFenceLargeOp
    If el is a MO element,
     - if it's a large operator (&Sum; for instance), put a presentation
       rule to enlarge the character.
@@ -1953,12 +2004,12 @@ ThotBool      ChildOfMRowOrInferred (Element el)
       a single fence character, transform the MO into a MF and the fence
       character into a Thot stretchable symbol.
   ----------------------------------------------------------------------*/
-void      CheckFence (Element el, Document doc)
+void      CheckFenceLargeOp (Element el, Document doc)
 {
    ElementType	       elType, contType;
-   Element	       content;
+   Element	       content, ancestor;
    AttributeType       attrType;
-   Attribute	       attr, attrStretchy;
+   Attribute	       attrLargeop, attr, attrStretchy;
    Language	       lang;
    PresentationValue   pval;
    PresentationContext ctxt;
@@ -1966,6 +2017,7 @@ void      CheckFence (Element el, Document doc)
    char	               script;
    unsigned char       c;
    int                 len, val, oldStructureChecking;
+   ThotBool            largeop;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO ||
@@ -1986,43 +2038,63 @@ void      CheckFence (Element el, Document doc)
 	   {
 	   TtaGiveBufferContent (content, text, len+1, &lang);
 	   script = TtaGetScript (lang);
-#ifdef _I18N_
-	   if (text[0] == 8721 || text[0] == 8719) /* large Sigma or Pi */
-#else
-	   if ((script == 'G') &&
-	       (text[0] == 229 || text[0] == 213))  /* large Sigma or Pi */
-#endif
-	     /* it's a large operator */
+	   largeop = FALSE;
+	   /* is there an attribute largeop on this mo element? */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = MathML_ATTR_largeop;
+	   attrLargeop = TtaGetAttribute (el, attrType);
+	   if (attrLargeop)
+	     /* there is an attribute largeop. Just take its value */
+	     largeop = (TtaGetAttributeValue (attrLargeop) == MathML_ATTR_largeop_VAL_true);
+	   else
+	     /* no attribute largeop */
 	     {
-	     ctxt = TtaGetSpecificStyleContext (doc);
+	       /* first look for an IntDisplaystyle attribute on an ancestor */
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
+	       ancestor = el;
+	       do
+		 {
+		   attr = TtaGetAttribute (ancestor, attrType);
+		   if (!attr)
+		     ancestor = TtaGetParent(ancestor);
+		 }
+	       while (!attr && ancestor);
+	       if (attr)
+		 /* there is an ancestor with an attribute IntDisplaystyle */
+		 {
+		   val = TtaGetAttributeValue (attr);
+		   if (val == MathML_ATTR_IntDisplaystyle_VAL_true)
+		     /* an ancestor has an attribute IntDisplaystyle = true */
+		     /* Look at the symbol */
+		     largeop = IsLargeOp (text[0]);
+		 }
+	     }
+	   ctxt = TtaGetSpecificStyleContext (doc);
+	   if (largeop)
+	     /* it's a large operator. Make it larger */
+	     {
 	     ctxt->destroy = FALSE;
 	     /* the specific presentation to be created is not a CSS rule */
 	     ctxt->cssSpecificity = 0;
 	     pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	     pval.typed_data.real = FALSE;
 	     pval.typed_data.value = 180;
-	     TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
 	     }
-	   else if (ChildOfMRowOrInferred (el))
+	   else
+	     /* it's not a large operator, remove the Size presentation rule
+		if it's present */
+	     {
+	     ctxt->destroy = TRUE;
+             pval.typed_data.value = 0;
+	     }
+	   TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
+
+	   if (!largeop && ChildOfMRowOrInferred (el))
 	     /* the MO element is a child of a MROW element */
+	     /* Is it a stretchable symbol? */
 	      {
-	      if ((
-#ifndef _I18N_
-                   (script == 'L') &&
-#endif
-		   (text[0] == '(' || text[0] == ')' ||
-		    text[0] == '[' || text[0] == ']' ||
-		    text[0] == '{' || text[0] == '}' ||
-		    text[0] == '|'))  ||
-		  (
-		   /* test left and right angle brackets */
-#ifdef _I18N_
-		   (text[0] == 9001 || text[0] == 9002)
-#else
-                   (script == 'G') &&
-		   (text[0] == 225 || text[0] == 241)
-#endif
-		 ))
+	      if (IsStretchy (text[0]))
 		/* it's a stretchable parenthesis or equivalent */
 		{
 		/* remove the content of the MO element */
@@ -2148,7 +2220,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
            TtaSetTextContent (leaf, sepValue, lang, doc);
 	   SetIntAddSpaceAttr (separator, doc);
 	   SetIntVertStretchAttr (separator, doc, 0, NULL);
-	   CheckFence (separator, doc);
+	   CheckFenceLargeOp (separator, doc);
 
 	   /* is there a following non-space character in separators? */
 	   i = sep + 1;
@@ -2215,7 +2287,7 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
   TtaSetTextContent (leaf, text, TtaGetLanguageIdFromScript('L'), doc);
   SetIntAddSpaceAttr (fence, doc);
   SetIntVertStretchAttr (fence, doc, 0, NULL);
-  CheckFence (fence, doc);
+  CheckFenceLargeOp (fence, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3844,7 +3916,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 	  /* if the MO element is a child of a MROW (or equivalent) and if it
 	     contains a fence character, transform this MO into MF and
 	     transform the fence character into a Thot SYMBOL */
-	  CheckFence (el, doc);
+	  CheckFenceLargeOp (el, doc);
 	  break;
        case MathML_EL_MSPACE:
 	  break;

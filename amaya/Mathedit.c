@@ -3272,8 +3272,9 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	if (mathType[i-1] == (char)MathML_EL_MO)
 	  /* the new element is an operator */
 	  {
-	  /* the new element may be a vertically stretchable symbol */
-	  CheckFence (newEl, doc);
+	  /* the new element may be a vertically stretchable symbol or a
+	     large operator */
+	  CheckFenceLargeOp (newEl, doc);
 	  /* if the new element contains a single SYMBOL, placeholders may
 	     be needed before and/or after that operator */
 	  placeholderEl = InsertPlaceholder (newEl, TRUE, doc, TRUE);
@@ -3872,6 +3873,10 @@ void MathElementPasted (NotifyElement *event)
        elType.ElTypeNum == MathML_EL_MUNDEROVER)
      /* move the limits if it's appropriate */
      SetIntMovelimitsAttr (event->element, event->document);
+
+   if (elType.ElTypeNum == MathML_EL_MO)
+     /* it's a mo element. It may be a largeop */
+     CheckFenceLargeOp (event->element, event->document);
 
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
@@ -4627,6 +4632,21 @@ void AttrStretchyChanged (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+ AttrLargeopChanged
+ Attribute largeop in a mo or mstyle element has been modified or deleted
+ by the user.
+ -----------------------------------------------------------------------*/
+void AttrLargeopChanged (NotifyAttribute *event)
+{
+  ElementType   elType;
+
+  /* process only element mo. Should also process element mstyle */
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == MathML_EL_MO)
+    CheckFenceLargeOp (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
  AttrMovablelimitsChanged
  Attribute movablelimits in a MO element has been modified or deleted
  by the user.
@@ -4855,7 +4875,7 @@ void FencedSeparatorModified (NotifyOnTarget *event)
      return;
   SetIntAddSpaceAttr (event->element, event->document);
   SetIntVertStretchAttr (event->element, event->document, 0, NULL);
-  /**** CheckFence (event->element, event->document); ******/
+  /**** CheckFenceLargeOp (event->element, event->document); ******/
  
   i = 0;
   child = TtaGetFirstChild (fencedExpEl);
