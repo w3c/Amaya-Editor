@@ -45,6 +45,9 @@ static int      GraphButton;
 static Pixmap   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
+#define oldHrefMaxLen 400
+static  CHAR_T  oldXlinkHrefValue[oldHrefMaxLen];
+
 #define BUFFER_LENGTH 100
 
 #ifdef _WINDOWS
@@ -53,6 +56,7 @@ static ThotBool InCreation = FALSE;
 #define iconGraphNo 22
 #endif /* _WINDOWS */
 
+#include "EDITimage_f.h"
 #include "fetchXMLname_f.h"
 #include "GraphMLbuilder_f.h"
 #include "html2thot_f.h"
@@ -501,7 +505,6 @@ ThotBool    horiz;
 	}
     }
 }
-
 
 /*----------------------------------------------------------------------
   UpdateAttrText creates or updates the text attribute attr of the
@@ -2007,6 +2010,76 @@ NotifyElement      *event;
     }
   TtaSetAttributeText (attr, TEXT("1em"), event->element, event->document);
   ParseCoordAttribute (attr, event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+   AttrXlinkHrefWillBeChanged: attribute xlink:href will be modified.
+   Keep its initial value in case an invalid value be entered.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            AttrXlinkHrefWillBeChanged (NotifyAttribute * event)
+#else
+ThotBool            AttrXlinkHrefWillBeChanged (event)
+NotifyAttribute    *event;
+#endif
+{
+   Element             el;
+   int                 len;
+
+   el = event->element;
+   len = TtaGetTextAttributeLength (event->attribute);
+   if (len >= oldHrefMaxLen)
+      len = oldHrefMaxLen - 1;
+   TtaGiveTextAttributeValue (event->attribute, oldXlinkHrefValue, &len);
+   oldXlinkHrefValue[len] = WC_EOS;
+   return FALSE;  /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ AttrXlinkHrefChanged
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             AttrXlinkHrefChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void             AttrXlinkHrefChanged (event)
+NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   ElementType   elType;
+   STRING        text;
+   int           length;
+
+   length = TtaGetTextAttributeLength (event->attribute);
+   if (length <= 0)
+     /* attribute empty. Invalid. restore previous value */
+     {
+     TtaSetAttributeText (event->attribute, oldXlinkHrefValue, event->element,
+			  event->document);
+     return;
+     }
+   text = TtaAllocString (length + 1);
+   TtaGiveTextAttributeValue (event->attribute, text, &length);
+   elType = TtaGetElementType (event->element);
+   if (elType.ElTypeNum == GraphML_EL_image)
+     ComputeSRCattribute (event->element, event->document, 0, event->attribute,
+			  text);
+   else if (elType.ElTypeNum == GraphML_EL_use_)
+     CopyUseContent (event->element, event->document, text);
+   TtaFreeMemory (text);
+}
+
+/*----------------------------------------------------------------------
+ DeleteAttrXlinkHref
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool         DeleteAttrXlinkHref (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool         DeleteAttrXlinkHref (event)
+NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  /* prevents Thot from deleting the xlink:href attribute */
+  return TRUE;
 }
 
 #if 0

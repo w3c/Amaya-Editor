@@ -22,6 +22,7 @@ stroke_width: stroke-width
 line_: line
 text_: text
 use_: use
+xlink_href: xlink:href
 symbol_: symbol
 target_: target
 style__: style

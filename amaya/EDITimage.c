@@ -18,9 +18,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#ifdef GRAPHML
 #include "GraphML.h"
-#endif /* GRAPHML */
 
 static Document     BgDocument;
 static int          RepeatValue;
@@ -721,7 +719,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    LoadedImageDesc   *desc;
    char               tempfile[MAX_LENGTH];
    char               s[MAX_LENGTH];
@@ -735,7 +733,8 @@ View                view;
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
-   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view), TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view),
+		TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_BUTTON_IMG), 50, 1, FALSE);
@@ -786,10 +785,11 @@ View                view;
      }
    else
      return (LastURLImage);
-#  else /* _WINDOWS */
-   CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1, -1, 1) ;
+#else /* _WINDOWS */
+   CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1,
+			   -1, 1) ;
    return (LastURLImage);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -872,10 +872,12 @@ void ChangeBackgroundImage (document, view)
 
 
 /*----------------------------------------------------------------------
-   ComputeSRCattribute computes the SRC attribute of the image.
-   text is the image name (relative or not) and sourceDocument is the
-   source document where the image comes from.
-   el is the target picture element and doc the target document.
+   ComputeSRCattribute generates the value of the src attribute of element
+   el if it's a HTML img, or the xlink:href attribute if it's a SVG image.
+   doc the document to which el belongs.
+   sourceDocument is the document where the image comes from.
+   attr is the src or xlink:href attribute that has to be updated.
+   text is the image name (relative or not).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ComputeSRCattribute (Element el, Document doc, Document sourceDocument, Attribute attr, STRING text)
@@ -889,11 +891,31 @@ STRING              text;
 
 #endif /* __STDC__ */
 {
+  Element            pict;
+  ElementType        elType;
   STRING             value, base;
   CHAR_T             pathimage[MAX_LENGTH];
   CHAR_T             localname[MAX_LENGTH];
   CHAR_T             imagename[MAX_LENGTH];
   LoadedImageDesc   *desc;
+
+  elType = TtaGetElementType (el);
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+    /* it's not a SVG element, it's then a HTML img element, which is
+       itself a Thot picture element */
+    pict = el;
+  else
+    /* it's a SVG image. The Thot picture element is one of its children */
+    {
+      elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+      pict = TtaSearchTypedElement (elType, SearchInTree, el);
+      if (!pict)
+	/* no Thot picture element. Create one */
+	{
+	  pict = TtaNewTree (doc, elType, "");
+	  TtaInsertFirstChild (&el, pict, doc);
+	}
+    }
 
   /* get the absolute URL of the image */
   NormalizeURL (text, doc, pathimage, imagename, NULL);
@@ -914,8 +936,8 @@ STRING              text;
 	  TtaSetAttributeText (attr, imagename, el, doc);
 
 	  /* set contents of the picture element */
-	  TtaSetTextContent (el, desc->localName, SPACE, doc);
-	  DisplayImage (doc, el, desc->localName);
+	  TtaSetTextContent (pict, desc->localName, SPACE, doc);
+	  DisplayImage (doc, pict, desc->localName);
 	}
       else
 	{
@@ -927,7 +949,7 @@ STRING              text;
 	  TtaFreeMemory (value);
 	  /* set stop button */
 	  ActiveTransfer (doc);
-	  FetchImage (doc, el, NULL, 0, NULL, NULL);
+	  FetchImage (doc, pict, NULL, 0, NULL, NULL);
 	  ResetStop (doc);
 	}
     }
@@ -944,7 +966,7 @@ STRING              text;
 	  TtaFreeMemory (base);
 	  TtaFreeMemory (value);
 	  /* set the element content */
-	  TtaSetTextContent (el, pathimage, SPACE, doc);
+	  TtaSetTextContent (pict, pathimage, SPACE, doc);
 	}
       else
 	{
@@ -952,7 +974,7 @@ STRING              text;
 	  /* set stop button */
 	  ActiveTransfer (doc);
 	  TtaSetAttributeText (attr, pathimage, el, doc);
-	  FetchImage (doc, el, NULL, 0, NULL, NULL);
+	  FetchImage (doc, pict, NULL, 0, NULL, NULL);
 	  ResetStop (doc);
 	}
     }
@@ -978,13 +1000,19 @@ NotifyElement      *event;
   CHAR_T*            pathimage;
   CHAR_T*            imagename;
 
-   /* Select an image name */
    el = event->element;
    doc = event->document;
+
+   /* if it's not an HTML picture (it could be an SVG image for instance),
+      ignore */
+   if (ustrcmp(TtaGetSSchemaName (event->elementType.ElSSchema), TEXT("HTML")))
+     return;
+
+   /* Select an image name */
    text = GetImageURL (doc, 1);
    if (text == NULL || text[0] == WC_EOS)
      {
-	/* delete the empty SRC element */
+	/* delete the empty PICTURE element */
 	TtaDeleteTree (el, doc);
 	return;
      }
@@ -1024,6 +1052,80 @@ NotifyElement      *event;
    else
      {
        TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
+       ImgAlt[0] = WC_EOS;
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   SvgImageCreated
+   The user is creating an SVG image. Ask for the mandatory attributes
+   and associate them with the new image.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SvgImageCreated (NotifyElement * event)
+#else  /* __STDC__ */
+void                SvgImageCreated (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+  AttributeType      attrType;
+  Attribute          attr;
+  ElementType        elType;
+  Element            el, desc, leaf;
+  Document           doc;
+  CHAR_T*            text;
+  CHAR_T*            pathimage;
+  CHAR_T*            imagename;
+
+   el = event->element;
+   doc = event->document;
+   /* display the Image form and get the user feedback */
+   text = GetImageURL (doc, 1);
+   if (text == NULL || text[0] == WC_EOS)
+     {
+	/* delete the empty image element */
+	TtaDeleteTree (el, doc);
+	return;
+     }
+   /* search the xlink:href attribute */
+   elType = TtaGetElementType (el);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+   attr = TtaGetAttribute (el, attrType);
+   if (attr == 0)
+     {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+     }
+   ComputeSRCattribute (el, doc, 0, attr, text);
+   /* set the desc child */
+   elType.ElTypeNum = GraphML_EL_desc;
+   desc = TtaSearchTypedElement (elType, SearchInTree, el);
+   if (!desc)
+     {
+	desc = TtaNewTree (doc, elType, "");
+	TtaInsertFirstChild (&el, desc, doc);
+     }
+   leaf = TtaGetFirstChild (desc);
+   if (ImgAlt[0] == WC_EOS)
+     /* The user has not provided any alternate name. Copy the image name in
+	the desc element */
+     {
+       imagename = TtaAllocString (MAX_LENGTH);
+       pathimage = TtaAllocString (MAX_LENGTH);
+       ustrcpy (imagename, TEXT(" "));
+       TtaExtractName (text, pathimage, &imagename[1]);
+       ustrcat (imagename, TEXT(" "));
+       /* set the element content */
+       TtaSetTextContent (leaf, imagename, SPACE, doc);
+       TtaFreeMemory (pathimage);
+       TtaFreeMemory (imagename);
+     }
+   else
+     {
+       TtaSetTextContent (leaf, ImgAlt, SPACE, doc);
        ImgAlt[0] = WC_EOS;
      }
 }
@@ -1112,8 +1214,8 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  Element            sibling, child, graphRoot;
-  ElementType        elType, selType;
+  Element            sibling;
+  ElementType        elType;
   STRING             name;
   int                c1, i;
 
@@ -1123,50 +1225,16 @@ View                view;
       /* Get the type of the first selected element */
       elType = TtaGetElementType (sibling);
       name = TtaGetSSchemaName (elType.ElSSchema);
-      graphRoot = NULL;
-#ifdef GRAPHML
       if (!ustrcmp (name, TEXT("GraphML")))
-	{
-	  elType.ElTypeNum = GraphML_EL_GraphML;
-	  /* look for the enclosing SVG */
-	  do
-	    {
-	      child = sibling;
-	      sibling = TtaGetParent (child);
-	      if (sibling)
-		selType = TtaGetElementType (sibling);
-	    }
-	  while (sibling && selType.ElTypeNum != elType.ElTypeNum &&
-		 selType.ElSSchema == elType.ElSSchema);
-	  if (sibling)
-	    {
-	      graphRoot = sibling;
-	      sibling = child;
-	    }
-	}
-      if (graphRoot)
-	{
-	  /* selection is within a SVG element */
-	  elType.ElTypeNum = GraphML_EL_image;
-	  /*TtaAskFirstCreation ();*/
-	  child = TtaNewElement (doc, elType);
-	  TtaInsertSibling (child, sibling, FALSE, doc);
-	  sibling = child;
-	  elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
-	  /*TtaAskFirstCreation ();*/
-	  child = TtaNewElement (doc, elType);	  
-	  TtaInsertFirstChild (&child, sibling, doc);
-	}
+	elType.ElTypeNum = GraphML_EL_image;
       else
-#endif /* GRAPHML */
 	{
 	  elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	  elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	  TtaCreateElement (elType, doc);
 	}
+      TtaCreateElement (elType, doc);
     }
 }
-
 
 /*----------------------------------------------------------------------
    AddLocalImage adds a new local image into image descriptor table   

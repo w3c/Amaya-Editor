@@ -41,6 +41,9 @@ extern Element CreateGraphicLeaf ( Element el,
                                    int arrowHead );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
+extern void CopyUseContent ( Element el,
+                             Document doc,
+                             STRING href );
 extern void GraphMLElementComplete ( Element el,
                                      Document doc,
                                      int *error );
@@ -105,6 +108,9 @@ extern Element CreateGraphicLeaf (/* Element el,
                                      int arrowHead */);
 extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
+extern void CopyUseContent (/* Element el,
+                               Document doc,
+                               STRING href */);
 extern void GraphMLElementComplete (/* Element el,
                                        Document doc,
                                        int *error */);

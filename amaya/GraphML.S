@@ -210,7 +210,7 @@ STRUCT
               width_;
               height_)
         = AGGREGATE
-              desc; title; metadata;
+              desc; ? title; ? metadata;
               PICTURE;
 	      END;
 
@@ -345,7 +345,7 @@ EXCEPT
 	                NoCreate;
    tspan:	        NoShowBox; 
    use_:	        NoMove, NoResize, NoShowBox, NoCreate;
-   image:	        MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   image:	        MoveResize, HighlightChildren, NoShowBox;
    symbol_:	        NoMove, NoResize, NoShowBox, NoCreate;
    a:	                NoMove, NoResize, NoShowBox, NoCreate;
    script:	        NoMove, NoResize, NoShowBox, NoCreate;

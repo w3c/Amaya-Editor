@@ -43,6 +43,7 @@ DEFAULT
    Visibility: Enclosing =;
    FillPattern: Enclosing =;
    Depth: Enclosing =;
+   Font: Enclosing =;
    IN Structure_view
 	BEGIN
 	VertPos: Top = Previous . Bottom;

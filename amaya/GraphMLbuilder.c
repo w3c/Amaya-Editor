@@ -495,6 +495,96 @@ Element          el;
 }
 
 /*----------------------------------------------------------------------
+   CopyUseContent
+   Copy the subtree pointed by the href URI as a subtree of element el,
+   which is od type use.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  CopyUseContent (Element el, Document doc, STRING href)
+#else
+void  CopyUseContent (el, doc, href)
+Element el;
+Document doc;
+Attribute attr;
+STRING href;
+#endif
+{
+  Element              source, curEl, copy, child, elFound;
+  ElementType          elType;
+  Attribute            attr;
+  AttributeType        attrType;
+  SearchDomain         direction;
+  int                  i, length, oldStructureChecking;
+  STRING               id;
+
+  /* look for an element with an id attribute with the same value as the
+     href attribute */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = GraphML_ATTR_id;
+  /* search backwards first */
+  direction = SearchBackward;
+  source = NULL;
+  if (href[0] == '#') /* handles only internal links */
+    for (i = 1; i <= 2 && source == NULL; i++)
+      {
+	curEl = el;
+	do
+	  {
+	    TtaSearchAttribute (attrType, direction, curEl, &elFound, &attr);
+	    if (attr)
+	      /* an id attribute has been found */
+	      {
+		/* get its value */
+		length = TtaGetTextAttributeLength (attr);
+		id = TtaAllocString (length + 1);
+		TtaGiveTextAttributeValue (attr, id, &length);
+		/* compare with the xlink:href attribute of the use element */
+		if (!ustrcasecmp (&href[1], id))
+		  /* same  values. we found it */
+		  source = elFound;
+		TtaFreeMemory (id);
+	      }
+	    curEl = elFound;
+	  }
+	while (elFound && !source);
+	/* search forward if not found */
+	direction = SearchForward;
+      }
+  if (source)
+    /* the element to be copied in the use element has been found */
+    {
+      /* remove the old copy if there is one */
+      child = TtaGetFirstChild (el);
+      while (child)
+	  if (TtaIsTranscludedElement (child))
+	    /* that's the old copy. remove it */
+	    {
+	      TtaRemoveTree (child, doc);
+	      child = NULL;
+	    }
+	  else
+	    TtaNextSibling (&child);
+
+      /* make a copy of the source element */
+      copy = TtaNewTranscludedElement (doc, source);
+      /* remove the id attribute from the copy */
+      attr = TtaGetAttribute (copy, attrType);
+      /* insert it as the last child of the use element */
+      if (attr)
+	TtaRemoveAttribute (copy, attr, doc);
+      child = TtaGetLastChild (el);
+      oldStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (0, doc);
+      if (child)
+	TtaInsertSibling (copy, child, FALSE, doc);
+      else
+	TtaInsertFirstChild (&copy, el, doc);
+      TtaSetStructureChecking (oldStructureChecking, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
    GraphMLElementComplete
    Check the Thot structure of the GraphML element el.
   ----------------------------------------------------------------------*/
@@ -508,14 +598,13 @@ int             *error
 #endif
 {
    ElementType		elType, parentType, newType;
-   Element		child, parent, new, leaf, source, curEl, elFound, copy;
+   Element		child, parent, new, leaf;
    AttributeType        attrType;
    Attribute            attr;
    int                  length, i;
    PRule		fillPatternRule, newPRule;
    SSchema	        GraphMLSSchema;
-   STRING               text, href, id;
-   SearchDomain         direction;
+   STRING               text, href;
    ThotBool		closedShape, parseCSS;
 
    *error = 0;
@@ -582,56 +671,8 @@ int             *error
 	     length = TtaGetTextAttributeLength (attr);
 	     href = TtaAllocString (length + 1);
 	     TtaGiveTextAttributeValue (attr, href, &length);
-	     /* look for an element with an id attribute with the same value */
-	     attrType.AttrTypeNum = GraphML_ATTR_id;
-             /* search backwards first */
-             direction = SearchBackward;
-	     source = NULL;
-	     if (href[0] == '#') /* handles only internal links */
-	       for (i = 1; i <= 2 && source == NULL; i++)
-	         {
-		 curEl = el;
-		 do
-		   {
-		     TtaSearchAttribute (attrType, direction, curEl,
-					 &elFound, &attr);
-		     if (attr)
-		       /* an id attribute has been found */
-		       {
-			 /* get its value */
-			 length = TtaGetTextAttributeLength (attr);
-			 id = TtaAllocString (length + 1);
-			 TtaGiveTextAttributeValue (attr, id, &length);
-			 /* compare with the xlink:href attribute of the use
-			    element */
-			 if (!ustrcasecmp (&href[1], id))
-			   /* same  values. we found it */
-			   source = elFound;
-			 TtaFreeMemory (id);
-		       }
-		     curEl = elFound;
-		   }
-		 while (elFound && !source);
-		 /* search forward if not found */
-	         direction = SearchForward;
-	         }
+	     CopyUseContent (el, doc, href);
 	     TtaFreeMemory (href);
-	     if (source)
-	       /* the element to be copied in the use element has been found */
-	       {
-		 /* make a copy of it */
-		 copy = TtaNewTranscludedElement (doc, source);
-		 /* remove the id attribute from the copy */
-		 attr = TtaGetAttribute (copy, attrType);
-		 /* insert it as the last child of the use element */
-		 if (attr)
-		   TtaRemoveAttribute (copy, attr, doc);
-		 child = TtaGetLastChild (el);
-		 if (child)
-		   TtaInsertSibling (copy, child, FALSE, doc);
-		 else
-		   TtaInsertFirstChild (&copy, el, doc);
-	       }
 	   }
 	 break;
 

@@ -44,6 +44,8 @@ ELEMENTS
 	ElemNew.Post ->         TspanCreated;
 	ElemPaste.Post ->       TspanCreated;
 	END;
+   image:
+	ElemNew.Post ->         SvgImageCreated;
    style__:
 	BEGIN
 	ElemTextModify.Pre ->   ChangeStyle;
@@ -58,11 +60,6 @@ ELEMENTS
 
    GRAPHICS_UNIT:
 	ElemDelete.Post ->      GraphLeafDeleted;
-   PICTURE_UNIT:
-	BEGIN
-	ElemNew.Post ->         UpdateSRCattribute;
-	ElemTextModify.Post ->  UpdateSRCattribute;
-	END;
 
 ATTRIBUTES
 
@@ -171,4 +168,10 @@ ATTRIBUTES
 	AttrModify.Post -> AttrCoordChanged;
    dy:
 	AttrModify.Post -> AttrCoordChanged;
+   xlink_href:
+	BEGIN
+        AttrModify.Pre ->  AttrXlinkHrefWillBeChanged;
+	AttrModify.Post -> AttrXlinkHrefChanged;
+	AttrDelete.Pre ->  DeleteAttrXlinkHref;
+	END;
 END
