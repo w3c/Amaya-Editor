@@ -1612,12 +1612,12 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
 				PresentationContext ctxt, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
-  char     *ptr;
   int   skippedNL;
 
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
+	  skippedNL = NewLineSkipped;
       /* perhaps a list-style-image */
       if (!strncasecmp (cssRule, "url", 3))
 	cssRule = ParseCSSListStyleImage (element, tsch, ctxt, cssRule, css,

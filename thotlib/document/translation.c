@@ -1886,12 +1886,12 @@ static ThotBool ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 
 
 /*----------------------------------------------------------------------
-   CounterVal     retourne la valeur du compteur de numero countNum	
+   Counter_Val     retourne la valeur du compteur de numero countNum	
    (defini dans le schema de traduction  pointe' par pTSch qui     
    s'applique au schema de structure pointe' par pSS) pour         
    l'element pointe' par pElNum.                                   
   ----------------------------------------------------------------------*/
-static int CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS,
+static int Counter_Val (int countNum, PtrTSchema pTSch, PtrSSchema pSS,
 		       PtrElement pElNum)
 {
    PtrElement          pEl;
@@ -2625,12 +2625,12 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	     else
 	       /* valeur du compteur pour l'element */
 	       /* designe' par la reference */
-	       i = CounterVal (varItem->TvItem, pTSch, pSS, pRefEl);
+	       i = Counter_Val (varItem->TvItem, pTSch, pSS, pRefEl);
 	   }
 	 else
 	   /* ce n'est pas une reference */
 	   /* valeur du compteur pour l'element meme */
-	   i = CounterVal (varItem->TvItem, pTSch, pSS, pEl);
+	   i = Counter_Val (varItem->TvItem, pTSch, pSS, pEl);
 	 /* produit quelques 0 si c'est demande' */
 	 if (varItem->TvCounterStyle == CntArabic && varItem->TvLength > 0)
 	   {
