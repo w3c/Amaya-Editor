@@ -1400,9 +1400,8 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      row = gtk_button_new ();
 		      /* set the relief to none */
 		      gtk_button_set_relief (GTK_BUTTON (row), GTK_RELIEF_NONE);
-		      w = gtk_pixmap_new (picture, NULL);
-
 		      /* insert the icon */
+		      w = gtk_pixmap_new (picture, NULL);
 		      gtk_container_add (GTK_CONTAINER (row), w);
 		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
 		      tooltipstmp = gtk_tooltips_new ();

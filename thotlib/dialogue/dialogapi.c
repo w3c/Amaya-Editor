@@ -3640,7 +3640,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     menu = XmCreateRowColumn (w, "Dialogue", args, n);
 #else /* _GTK */
 	     menu = gtk_vbox_new (FALSE, 2);
-	     gtk_widget_show (menu);
+	     gtk_widget_show_all (menu);
 	     gtk_container_add (GTK_CONTAINER(w), menu);	     
 #endif /* !_GTK */
 	     catalogue->Cat_Ref = ref;
@@ -3687,15 +3687,15 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     /* add a label */
 	     w = gtk_label_new (title);
 	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-	     gtk_widget_show (w);
+	     gtk_widget_show_all (w);
 	     w->style->font=DefaultFont;
-	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
+	     /*	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);*/
 	     gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
 	     adbloc->E_ThotWidget[0] = w;
 	     
 	     /* add a separator */
 	     w = gtk_hseparator_new ();
-	     gtk_widget_show (w);
+	     gtk_widget_show_all (w);
 	     gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
 	     adbloc->E_ThotWidget[1] = w;
 #endif /* !_GTK */
@@ -3739,7 +3739,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	  row = gtk_hbox_new (FALSE, 0);
 	else
 	  row = gtk_vbox_new (FALSE, 0);
-	gtk_widget_show (row);
+	gtk_widget_show_all (row);
 	gtk_container_add (GTK_CONTAINER(menu), row);
 #endif /* !_GTK */
 	i = 0;
@@ -3764,10 +3764,10 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallRadio, catalogue);
 #else /* _GTK */
 	     tmpw = gtk_pixmap_new (icons[i], NULL);
-	     gtk_widget_show (tmpw);
 	     w = gtk_button_new ();
-	     gtk_widget_show (w);
 	     gtk_container_add (GTK_CONTAINER (w), tmpw);
+	     gtk_widget_show_all (w);
+	     gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 4);
 	     /* Connecte the clicked acton to the button */
 	     ConnectSignalGTK (w,
 			       "clicked",
@@ -4649,6 +4649,8 @@ void TtaSetMenuForm (int ref, int val)
 		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
 #else /* _GTK */
 		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), TRUE);
+		       /*gtk_button_set_relief (GTK_BUTTON (adbloc->E_ThotWidget[i]),
+			 GTK_RELIEF_HALF);*/
 #endif /* !_GTK */
 		    }
 		  else
@@ -4660,6 +4662,8 @@ void TtaSetMenuForm (int ref, int val)
 		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
 #else /* _GTK */
 		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), FALSE);
+		       /*gtk_button_set_relief (GTK_BUTTON (adbloc->E_ThotWidget[i]),
+			 GTK_RELIEF_NONE);*/
 #endif /* !_GTK */
 		    }
 		  i++;
