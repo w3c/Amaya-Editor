@@ -235,7 +235,7 @@
 <label define="BLatinReading">
 	<message xml:lang="en">Reopen ISO-latin-1</message>
 	<message xml:lang="fr">Reouvrir en ISO-latin-1</message>
-	<message xml:lang="de">ISO-latin-1 new laden</message>
+	<message xml:lang="de">Dokument mit ISO-latin-1 neu parsen</message>
 	<message xml:lang="it">Riapri in ISO-latin-1</message>
 	<message xml:lang="es">Recargar como ISO-latin-1</message>
 </label>
