@@ -1492,6 +1492,7 @@ void AnnotThread_sortThreadList (List **thread_list)
 #endif /* ANNOT_ON_ANNOT */
 }
 
+#ifdef BOOKMARKS
 /*------------------------------------------------------------
    BM_recursiveSort
    recursively sorts the bookmark containers
@@ -1572,6 +1573,7 @@ static void BM_recursiveSort (Container *root)
       tmp_entry = tmp_entry->next;
     }
 }
+#endif /* BOOKMARKS */
 
 /*------------------------------------------------------------
    BM_bookmarksSort
