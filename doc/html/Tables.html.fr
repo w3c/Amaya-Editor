@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Editer des tables</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -32,17 +31,17 @@
 <p>Il n'existe pas d'éditeur de tables indépendant dans
 <strong>Amaya</strong>. Une table est une simple structure décrite par le DTD
 HTML et elle est éditée comme telle. Les commandes pour les tables sont les
-mêmes que pour les autres structures HTML, avec quelques suppléments.</p>
+mêmes que pour les autres structures HTML, avec quelques suppXhtml.</p>
 
 <h3><a name="Creating">Créer une nouvelle table</a></h3>
 
 <p>Quand on active le bouton table <img src="../images/table.gif"
 alt="Table button" /> ou quand on sélectionne l'entrée <strong>Table</strong>
-depuis le menu <strong>Éléments</strong>, Amaya visualise une boîte de
-dialogue qui vous permet de spécifier le nombre initial de lignes et de
-colonnes pour la nouvelle table, ainsi que sa bordure. Si vous avez fait ça
-par erreur, cliquez simplement sur le bouton <strong>Annuler</strong>. Pour
-créer une nouvelle table à la position courante, cliquez sur le bouton
+depuis le menu <strong>Xhtml</strong>, Amaya visualise une boîte de dialogue
+qui vous permet de spécifier le nombre initial de lignes et de colonnes pour
+la nouvelle table, ainsi que sa bordure. Si vous avez fait ça par erreur,
+cliquez simplement sur le bouton <strong>Annuler</strong>. Pour créer une
+nouvelle table à la position courante, cliquez sur le bouton
 <strong>Confirmer</strong>. Amaya génèrera ainsi quelque chose comme la table
 suivante (3 colonnes et 2 lignes dans ce cas) :</p>
 
@@ -122,19 +121,19 @@ correspondante. Quand vous supprimez une cellule dans une colonne elle
 devient vide et Amaya détruit la colonne automatiquement.Mais il existe une
 commande spécifique (Détruire colonne de table) pour détruire une colonne,
 même si elle n'est pas vide. Cette commande se trouve à la fin du sous-menu
-<strong>Table</strong> du menu <strong>Éléments</strong>.</p>
+<strong>Table</strong> du menu <strong>Xhtml</strong>.</p>
 
 <h3><a name="Adding2">Ajouter quelque chose après une table</a></h3>
 
 <p>De nombreux types d'éléments peuvent être inclus à l'intérieur des
 cellules de la table. Pour cette raison, Amaya pourrait mal comprendre vos
 intentions quand vous sélectionnez un type d'élément (par exemple cliquant
-H1, H2, etc. ou sélectionnant une entrée dans le menu Éléments) pendant qu'un
-composant de la table est sélectionné. Quand vous voulez créer un élément
-après la table, vous devez sélectionner la table entière (contrôler la
-sélection courante dans la ligne du bas de la fenêtre) et taper sur la touche
-Enter. Amaya génèrera un paragraphe après la table. Ce nouveau paragraphe
-peut être modifié si besoin est.</p>
+H1, H2, etc. ou sélectionnant une entrée dans le menu <strong>Xhtml</strong>)
+pendant qu'un composant de la table est sélectionné. Quand vous voulez créer
+un élément après la table, vous devez sélectionner la table entière
+(contrôler la sélection courante dans la ligne du bas de la fenêtre) et taper
+sur la touche Enter. Amaya génèrera un paragraphe après la table. Ce nouveau
+paragraphe peut être modifié si besoin est.</p>
 
 <p><em>Notez que le modèle de table implémenté dans</em>
 <strong><em>Amaya</em></strong> <em>est le modèle d'</em><a

@@ -1330,7 +1330,7 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
       if (css->documents[doc])
 	{
 	  pInfo = css->infos;
-	  if (pInfo->PiDoc == doc)
+	  if (pInfo && pInfo->PiDoc == doc)
 	    {
 	      pIS = pInfo->PiSchemas;
 	      while (pIS && pIS->PiSSchema)

@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Edition des graphiques</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -54,7 +53,7 @@ sont :</p>
   </li>
   <li>Un rectangle, <code>rect</code> en SVG sans attributs <code>rx</code>
     ou <code>ry</code>, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
-    height="0.6cm">
+         height="0.6cm">
       <rect x="6px" width="22px" height="18px"
             style="fill: #FFCB69; stroke: #0071FF" stroke="1"/>
     </svg>
@@ -79,13 +78,14 @@ sont :</p>
   </li>
   <li>Une polyligne, <code>polyline</code> en SVG,<svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <polyline points="4,16 23,0 37,16 55,6" stroke="1"
-                style="stroke: #0000B2; fill: #FFBC95"/>
+      <polyline points="0,16 19,0 33,16 51,6" transform="translate(4,0)"
+                stroke="1" style="stroke: #0000B2; fill: #FFBC95"/>
     </svg>
   </li>
   <li>Un polygone, <code>polygon</code> en SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
-      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11" stroke="1"
+      <polygon points="0,16 13,0 26,12 43,4 44,16 15,16 12,11"
+               transform="translate(2,0)" stroke="1"
                style="fill: #C8FF95; stroke: #000000"/>
     </svg>
   </li>
@@ -150,7 +150,7 @@ l'utilisateur:</p>
 </ul>
 
 <p>Vous pouvez insérer une image dans un graphique. Choisissez l'entrée
-<strong>Image</strong> du menu <strong>Éléments</strong> ou cliquez sur le
+<strong>Image</strong> du menu <strong>Xhtml</strong> ou cliquez sur le
 bouton <img alt="Image " src="../images/Image.gif" longdesc="longdesc.htm" />
 de la barre de boutons, puis procédez <a
 href="ImageMaps.html.fr#Adding">comme dans une page HTML</a>.</p>

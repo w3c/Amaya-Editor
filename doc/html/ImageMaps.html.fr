@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Images et Zones actives</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -32,7 +31,7 @@
 <h3><a name="Adding">Ajouter une image</a></h3>
 
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
-le menu <strong>Éléments</strong> ou cliquez sur le bouton <img alt="Image "
+le menu <strong>Xhtml</strong> ou cliquez sur le bouton <img alt="Image "
 src="../images/Image.gif" longdesc="longdesc.htm" /> (ou encore utilisez le
 raccourci clavier control-t, control-i pour Unix). Ceci fait apparaître une
 boîte de dialogue qui vous permet de rentrer le nom du fichier et le <a
@@ -103,7 +102,7 @@ document, et définissez les zones comme des liens.</p>
 existante de cette image. Ensuite, choisissez une des options
 <strong>Rectangle</strong>, <strong>Cercle</strong>,
 <strong>Polygone</strong> depuis le sous-menu <strong>Zone active</strong> du
-menu <strong>Éléments</strong>, suivant la forme de la nouvelle zone que vous
+menu <strong>Xhtml</strong>, suivant la forme de la nouvelle zone que vous
 souhaitez créer. L'option <strong>Montrer les zones actives</strong> du menu
 <strong>Vues</strong> tracera le contour de chaque zone active existante sur
 une image.</p>

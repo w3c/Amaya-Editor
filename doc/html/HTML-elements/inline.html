@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Inline elements</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -44,9 +43,9 @@ described separately.</p>
 <h2><a name="Inline21"></a><a name="Definition">Definitions</a></h2>
 
 <p>The <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>DFN</code></a>element
-is used to mark an <dfn>inline definition</dfn> (a word which is given as a
-defining instance)</p>
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>dfn</code></a>
+element is used to mark an <dfn>inline definition</dfn> (a word which is
+given as a defining instance)</p>
 
 <p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
 presentation of inline definitions.</p>
@@ -57,7 +56,7 @@ presentation of inline definitions.</p>
 
 <p>Quotations which are inline can be marked using the information type
 "quotation" - the HTML element <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>Q</code></a>.
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>q</code></a>.
 This element is selected from the character elements submenu of the Style
 menu, or in linux with the keyboard shortcut Alt-t, Alt-q. It is possible to
 give a URI source for the quotation, using the <code>cite</code>
@@ -76,17 +75,17 @@ language being represented.</p>
 <code>statement:do-something</code>, with separate markup for
 <var>variables</var>, as well as <kbd>user input</kbd> and <samp>program
 output</samp> - the elements <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-CODE"><code>CODE</code></a>,
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-CODE"><code>code</code></a>,
 <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR"><code>VAR</code></a>,
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR"><code>var</code></a>,
 <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD"><code>KBD</code></a>
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD"><code>kbd</code></a>
 and <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP"><code>SAMP</code></a>.
-These elements are found in the information types submenu of the Style menu,
-and there are keyboard shortcuts in Unix for all of them - Alt-t followed by
-Alt-c for code, Alt-v for variables, Alt-k for user input and Alt-s for
-sample output.</p>
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP"><code>samp</code></a>.
+These elements are found in the information types submenu of the
+<strong>Xhtml</strong> menu, and there are keyboard shortcuts in Unix for all
+of them - Alt-t followed by Alt-c for code, Alt-v for variables, Alt-k for
+user input and Alt-s for sample output.</p>
 
 <p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
 presentation of these elements.</p>
@@ -96,19 +95,19 @@ presentation of these elements.</p>
 <h2><a name="Inline">Acronyms and abbreviations</a></h2>
 
 <p>Acronyms and abbreviations should be marked as such, using the <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>ABBR</code></a>
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>abbr</code></a>
 and <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>ACRONYM</code></a>
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>acronym</code></a>
 elements available in the information types submenu of the Style menu. For
 unix there is also the shortcut Alt-t, Alt-a for acronym. This allows
 recognition for different types of systems. The <code>title</code> attribute
 can also be used to specify the expansion of the acronym. Select the text to
 be marked, for example <acronym
-title="World Wide Web Consortium">W3C</acronym>, select the Style menu, the
-information types submenu, and the option acronym. Then select the entire
-element (<kbd>Escape key</kbd> on Unix, <kbd>F2 key</kbd> on windows), open
-the Attributes menu, select title, enter <kbd>World Wide Web
-Consortium</kbd>, and apply it.</p>
+title="World Wide Web Consortium">W3C</acronym>, select the
+<strong>Xhtml</strong> menu, the information types submenu, and the option
+acronym. Then select the entire element (<kbd>Escape key</kbd> on Unix,
+<kbd>F2 key</kbd> on windows), open the Attributes menu, select title, enter
+<kbd>World Wide Web Consortium</kbd>, and apply it.</p>
 
 <p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
 presentation of acronyms or abbreviations.</p>
@@ -118,11 +117,11 @@ presentation of acronyms or abbreviations.</p>
 <h2><a name="Inline2">Insertions and deletions</a></h2>
 
 <p>The <a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
-name="DEL"><code>DEL</code></a> and <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>
-elements are available in the information types submenu of the Style menu to
-mark text <del>which ought</del>to be deleted or which has <ins>already</ins>
-been inserted.</p>
+name="DEL"><code>del</code></a> and <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>ins</code></a>
+elements are available in the information types submenu of the
+<strong>Xhtml</strong> menu to mark text <del>which ought</del>to be deleted
+or which has <ins>already</ins> been inserted.</p>
 
 <p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
 presentation of insertions and deletions.</p>
@@ -134,10 +133,10 @@ presentation of insertions and deletions.</p>
 <p>HTML has elements to define two levels of emphasis:</p>
 <ol>
   <li><em>Ordinary emphasis</em>, using the <a
-    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">EM</a>
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">em</a>
     element and</li>
   <li><strong>Strong emphasis</strong>, using the <code><a
-    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">STRONG</a></code>
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">strong</a></code>
     element.</li>
 </ol>
 

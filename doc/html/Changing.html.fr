@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -32,15 +31,15 @@
 <h3><a name="L653">Changer le type de l'élément</a></h3>
 
 <p>Pour changer le type d'un élément existant, sélectionnez-le et choisissez
-le nouveau type soit dans le menu <strong>Eléments</strong> soit en cliquant
-sur un bouton. Vous pouvez ainsi par exemple changer une liste numérotée en
-une liste d'articles, ou un paragraphe en une en-tête ou une liste. Pour
-supprimer un type sélectionné dans le menu <strong>Style</strong> (<a
-href="HTML-elements/inline.html.fr">types en ligne</a> - cela peut être une
-phrase dans un paragraphe ou une liste), utilisez l'option appropriée comme
-bascule dans les sous-menus du menu <strong>Style.</strong> Beaucoup d'autres
-types peuvent être supprimés, comme une transformation de l'élément lorsqu'il
-a été sélectionné ( voir plus loin).</p>
+le nouveau type soit dans les menus <strong>Xhtml</strong> ou
+<strong>Xml</strong>, soit en cliquant sur un bouton. Vous pouvez ainsi par
+exemple changer une liste numérotée en une liste d'articles, ou un paragraphe
+en une en-tête ou une liste. Pour supprimer un type sélectionné dans les
+sous-menus (<a href="HTML-elements/inline.html.fr">types en ligne</a> - cela
+peut être une phrase dans un paragraphe ou une liste), utilisez l'option
+appropriée comme bascule dans les sous-menus du menu <strong>Xhtml.</strong>
+Beaucoup d'autres types peuvent être supprimés, comme une transformation de
+l'élément lorsqu'il a été sélectionné ( voir plus loin).</p>
 
 <p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
 où à l'intérieur et appuyez sur <a href="Selecting.html.fr#Selecting1">la

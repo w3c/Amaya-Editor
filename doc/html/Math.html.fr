@@ -50,12 +50,12 @@ constructions mathématiques.</p>
 href="Selecting.html.fr#Selecting">déplacer le point d'insertion</a> à
 l'endroit où vous voulez insérer l'expression, puis de cliquer sur le bouton
 <strong>Math</strong> (le bouton à droite de la barre des boutons) ou de
-sélectionner l'entrée <strong>Math</strong> du menu
-<strong>Eléments</strong>. Le bouton <strong>Math</strong> affiche une
-palette qui reste à l'écran jusqu´à ce que vous cliquiez sur son bouton
-"terminer". L'entrée <strong>Math</strong> du menu <strong>Eléments</strong>
-affiche un menu. Choisissez l'outil qui vous est le plus commode. Les deux
-vous permettent de choisir la construction mathématique à insérer.</p>
+sélectionner l'entrée <strong>Math</strong> du menu <strong>Xml</strong>. Le
+bouton <strong>Math</strong> affiche une palette qui reste à l'écran jusqu´à
+ce que vous cliquiez sur son bouton "terminer". L'entrée
+<strong>Math</strong> du menu <strong>Xml</strong> affiche un menu.
+Choisissez l'outil qui vous est le plus commode. Les deux vous permettent de
+choisir la construction mathématique à insérer.</p>
 
 <p>Dans la palette Math (ou le menu), le premier item vous permet de créer
 une nouvelle formule lorsque le point d'insertion est dans un élément HTML ou
@@ -135,7 +135,7 @@ disponibles sont :</p>
         <msubsup>
           <mo>&Integral;</mo>
           <mn>0</mn>
-          <mo>infin;</mo>
+          <mo>&infin;</mo>
         </msubsup>
         <mi></mi>
       </mrow>
@@ -157,7 +157,7 @@ disponibles sont :</p>
   <li>Dessous et dessus (<code>munderover)</code>: <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
-        <mo>Sum;</mo>
+        <mo>&Sum;</mo>
         <mrow>
           <mi>i</mi>
           <mo>=</mo>
@@ -250,7 +250,7 @@ touches de direction du clavier (flèches) pour faire passer le point
 d'insertion d'une construction à une autre. En particulier, les deux flèches
 horizontales permettent de se déplacer selon la structure de l'expression
 mathématique. Par exemple, en fin de numérateur d'une fraction, la touche
-rarr; fait passer au début du dénominateur.</p>
+&rarr; fait passer au début du dénominateur.</p>
 
 <h3><a id="Entering1">Entrer des caractères</a></h3>
 

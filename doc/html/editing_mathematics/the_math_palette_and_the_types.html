@@ -1,14 +1,14 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>The Math Palette and the Types/Math Menu</title>
+  <title>The Math Palette and the Xml/Math Menu</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 5.2">
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body lang="en">
 
 <table border="0" summary="toc">
   <tbody>
@@ -27,17 +27,17 @@
 </table>
 
 <div id="page_body">
-<h1>The Math Palette and the Types &gt; Math Menu</h1>
+<h1>The Math Palette and the Xml &gt; Math Menu</h1>
 
 <p>To create a mathematical expression in a document, move the mouse cursor
 to the position where you want to insert an expression, and then click the
 <strong>Math</strong> button, or choose <strong>Math</strong> from the
-<strong>Types</strong> menu.</p>
+<strong>Xml</strong> menu.</p>
 
 <h2>Accessing Commands</h2>
 
 <p>Mathematical expressions can be inserted into a document using either the
-<strong>Math</strong> submenu of the <strong>Types</strong> menu, or by
+<strong>Math</strong> submenu of the <strong>Xml</strong> menu, or by
 choosing an expression from the <strong>Math</strong> palette.</p>
 
 <p>Click the <strong>Math</strong> button <img alt="Math Button"
@@ -46,7 +46,7 @@ src="../../images/Math.gif"> on the button bar to display the
 <strong>Done</strong> button.</p>
 
 <p>You can also display the Math menu by clicking the <strong>Math</strong>
-item on the <strong>Types</strong> menu.</p>
+item on the <strong>Xml</strong> menu.</p>
 
 <h2>Math Menu and Palette Commands</h2>
 
@@ -70,8 +70,8 @@ create new constructs within a formula. If the insertion point is not in a
 formula, Amaya first creates a Math element to accept the new construct. The
 available constructs are:</p>
 <ul>
-  <li>Root with index, <code>mroot</code> in MathML: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Root with index, <code>mroot</code> in MathML: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
           <mi>x</mi>
@@ -80,10 +80,9 @@ available constructs are:</p>
         </mrow>
         <mn>3</mn>
       </mroot>
-    </math>
-  </li>
-  <li>Square root, <code>msqrt</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Square root, <code>msqrt</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msqrt>
         <mrow>
           <mi>x</mi>
@@ -91,17 +90,15 @@ available constructs are:</p>
           <mn>1</mn>
         </mrow>
       </msqrt>
-    </math>
-  </li>
-  <li>Enclose, <code>menclose</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Enclose, <code>menclose</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
-    </math>
-  </li>
-  <li>Fraction, <code>mfrac</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Fraction, <code>mfrac</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
         <mrow>
@@ -110,10 +107,9 @@ available constructs are:</p>
           <mn>1</mn>
         </mrow>
       </mfrac>
-    </math>
-  </li>
-  <li>Expression with subscript and superscript, <code>msubsup</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Expression with subscript and superscript, <code>msubsup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
         <mi>x</mi>
         <mrow>
@@ -123,9 +119,7 @@ available constructs are:</p>
         </mrow>
         <mi>n</mi>
       </msubsup>
-    </math>
-     or 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math> or <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
           <mo>&Integral;</mo>
@@ -134,26 +128,23 @@ available constructs are:</p>
         </msubsup>
         <mi></mi>
       </mrow>
-    </math>
-  </li>
-  <li>Expression with a subscript, <code>msub</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Expression with a subscript, <code>msub</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
         <mi>i</mi>
       </msub>
-    </math>
-  </li>
-  <li>Expression with a superscript, <code>msup</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Expression with a superscript, <code>msup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
         <mi>n</mi>
       </msup>
-    </math>
-  </li>
-  <li>Expression with under- and overscript, <code>munderover</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Expression with under- and overscript, <code>munderover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
         <mo>&Sum;</mo>
         <mrow>
@@ -163,18 +154,16 @@ available constructs are:</p>
         </mrow>
         <mi>n</mi>
       </munderover>
-    </math>
-  </li>
-  <li>Expression with underscript, <code>munder</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Expression with underscript, <code>munder</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
         <mo>&OverBar;</mo>
       </munder>
-    </math>
-  </li>
-  <li>Expression with overscript, <code>mover</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Expression with overscript, <code>mover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mi>x</mi>
         <mover>
@@ -183,10 +172,9 @@ available constructs are:</p>
         </mover>
         <mi>y</mi>
       </mrow>
-    </math>
-  </li>
-  <li>Expression within parentheses, <code>mrow</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Expression within parentheses, <code>mrow</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mo fence="true">(</mo>
         <mrow>
@@ -196,11 +184,10 @@ available constructs are:</p>
         </mrow>
         <mo fence="true">)</mo>
       </mrow>
-    </math>
-  </li>
+    </math></li>
   <li>Expression with prescripts and tensor
-    indices,<code>mmultiscripts</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    indices,<code>mmultiscripts</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
         <mi>X</mi>
         <mi>i</mi>
@@ -209,10 +196,9 @@ available constructs are:</p>
         <mi>k</mi>
         <mi>l</mi>
       </mmultiscripts>
-    </math>
-  </li>
-  <li>Matrix or table, <code>mtable</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math></li>
+  <li>Matrix or table, <code>mtable</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mtable>
         <mtr>
           <mtd>
@@ -231,13 +217,14 @@ available constructs are:</p>
           </mtd>
         </mtr>
       </mtable>
-    </math>
-  </li>
+    </math></li>
 </ul>
 
-<p>The last item of the <strong>Math</strong> palette
- ( <math xmlns="http://www.w3.org/1998/Math/MathML">  <mi>&alpha;&beta;&gamma;</mi></math> )
- displays another palette from which you can insert mathematical symbols and greek characters.</p>
+<p>The last item of the <strong>Math</strong> palette ( <math
+xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&alpha;&beta;&gamma;</mi>
+</math> ) displays another palette from which you can insert mathematical
+symbols and greek characters.</p>
 
 <h2>See Also:</h2>
 <ul>
@@ -246,6 +233,5 @@ available constructs are:</p>
     Expression</a></li>
 </ul>
 </div>
-
 </body>
 </html>

@@ -46,8 +46,8 @@ boîte de dialogue qui permet l'association d'un attribut de
 :<strong></strong><strong></strong></p>
 <ul>
   <li><h3><span style="font-size: 12pt"><span
-    style="font-weight: normal">L'option</span> Style de caractères<span
-    style="font-weight: normal"> permet de choisir la police de caractère, le
+    style="font-weight: normal">L'option</span> Style de caractères <span
+    style="font-weight: normal">permet de choisir la police de caractère, le
     style du caractère, la taille du corps et le style
     souligné.</span></span></h3>
   </li>
@@ -198,7 +198,7 @@ d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
 <h4>Créer des éléments de style HTML</h4>
 
 <p>La commande<strong>Types information</strong> du menu
-<strong>Style</strong> présente un sous-menu offrant un choix d'éléments HTML
+<strong>Xhtml</strong> présente un sous-menu offrant un choix d'éléments HTML
 qui définissent des styles abstraits. Sélectionnez tout d'abord une chaîne de
 caractères dans votre page et ensuite choisissez une commande dans ce menu.
 La chaîne de caractères sélectionnée reçoit le style correspondant. Trois de
@@ -209,7 +209,7 @@ ces styles sont également disponibles par l'intermédiaire des boutons :
 />).</p>
 
 <p>La commande<strong>Éléments caractères</strong> du menu
-<strong>Style</strong> offre un autre menu changeant le style du texte. Les
+<strong>Xhtml</strong> offre un autre menu changeant le style du texte. Les
 premières entrées de ce menu peuvent être remplacées par CSS et ne devraient
 pas être utilisées. Elles sont là uniquement pour se conformer à
 l'implémentation de HTML 3.2.</p>

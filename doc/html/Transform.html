@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
   <title>Using the HTML.trans File</title>
   <style type="text/css">
   </style>
@@ -143,10 +143,10 @@ occurrence of the tag in the pattern.</p>
 <h2>Transformation process</h2>
 
 <p>When the user chooses the <strong>Transform</strong> command from the
-<strong>Types</strong> menu, Amaya parses the <code>HTML.trans</code> file.
-Then the selected elements are matched with the pattern of each
-transformation. The names of the matched transformations are proposed to the
-user in a pop-up menu.</p>
+<strong>Edit</strong> menu, Amaya parses the <code>HTML.trans</code> (or the
+<code>MathML.trans</code>, etc.) file. Then the selected elements are matched
+with the pattern of each transformation. The names of the matched
+transformations are proposed to the user in a pop-up menu.</p>
 
 <p>If several transformations with the same name match the selected elements,
 the higher-level matching transformation is proposed to the user. If several
@@ -173,9 +173,9 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
 <ul>
   <li>The first example merges several consecutive unnumbered lists (UL) into
     an unique list. 
-    <pre>Merge Lists: (UL{LI+})+;
+    <pre>Merge Lists: (ul{li+})+;
     { 
-    LI &gt; UL:LI; 
+    li &gt; ul:li; 
     }</pre>
     <p>The pattern matches a sequence of unnumbered lists (UL), that contain
     a sequence of items (LI).</p>
@@ -186,18 +186,18 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
     first created, then the rule can be applied.</p>
   </li>
   <li>The second example transforms a definition list into a table. 
-    <pre>Table: DL{(DT|DD)+}; 
+    <pre>Table: dl{(dt|dd)+}; 
    { 
-   DT &gt; &lt;TABLE border=1&gt;.TBODY:TR.TD; 
-   DD &gt; &lt;TABLE border=1&gt;.TBODY.TR:TD; 
+   dt &gt; &lt;table border=1&gt;.tbody:tr.td; 
+   dd &gt; &lt;table border=1&gt;.tbody.tr:td; 
    }</pre>
-    <p>The pattern matches any Definition List element (DL).</p>
+    <p>The pattern matches any Definition List element (dl).</p>
     <p>The rules explain how the table is incrementally built when the
     structure of the selected definition list is traversed :</p>
     <ul>
-      <li>Each DT involves the creation of a new row (TR) in the table
+      <li>Each dt involves the creation of a new row (tr) in the table
       body.</li>
-      <li>Each DD involves the creation of a new cell (TD) in the last
+      <li>Each dd involves the creation of a new cell (td) in the last
         existing row of the table. 
         <p></p>
       </li>
@@ -206,11 +206,11 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
   <li>The third example removes a table element, keeping its content
     unchanged but extracted from the table. 
     <pre>Remove Table:
-TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|
-                             TH{(?cell_content:*)+}
+table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
+                             th{(?cell_content:*)+}
                            )})+})+};
      { 
-     CAPTION&gt;H3; 
+     caption&gt;h3; 
      cell_content&gt;:*;
      }</pre>
     <p>The pattern matches any table and identifies the content of each cell
@@ -223,9 +223,5 @@ TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|
 </ul>
 </div>
 <hr />
-<address>
-  <a href="mailto:Stephane.Bonhomme@inrialpes.fr">Stéphane Bonhomme</a> <br />
-  $Date$
-</address>
 </body>
 </html>
