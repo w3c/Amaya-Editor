@@ -63,6 +63,7 @@ KEY;
 
 #ifdef _GTK
 #include "gtk-functions.h"
+#include "absboxes_f.h" 
 #else /* _GTK */
 #include "appli_f.h"
 #include "input_f.h"
@@ -555,7 +556,6 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    KeySym              KS;
    GtkWidget          *drawing_area;
    GtkEntry           *textzone;
-   char               *Multikey;  
 
    frame = (int) data;
    if (frame > MAX_FRAME)
