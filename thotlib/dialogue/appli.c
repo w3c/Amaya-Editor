@@ -282,7 +282,7 @@ gboolean KillFrameGTK (GtkWidget *widget,
   for ((int)frame = 0; (int)frame <= MAX_FRAME; (int)frame++)
     if (FrRef[(int)frame] != 0)
       /* there is still an active frame */
-      return FALSE;
+      return TRUE;
   TtaQuit();
   return FALSE;
 }
