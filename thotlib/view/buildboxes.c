@@ -3086,6 +3086,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   pParent = pAb->AbEnclosing;
   inLine = FALSE;
   inLineFloat = FALSE;
+  isCell = FALSE;
   if (pParent && pParent->AbBox)
     {
       if (pParent->AbBox->BxType == BoBlock)
