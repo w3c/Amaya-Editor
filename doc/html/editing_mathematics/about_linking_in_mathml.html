@@ -2,26 +2,26 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>About Linking in MathML</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 5.2" />
-  <link href="../style.css" rel="stylesheet" type="text/css" />
+  <meta name="generator" content="amaya 5.3, see http://www.w3.org/Amaya/">
+  <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body lang="en">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya.gif" /></td>
-      <td><p><a href="viewing_structure_in_mathml.html" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../Math.html" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="math_issues.html" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
+        src="../../images/amaya.gif"></td>
+      <td><p><a href="viewing_structure_in_mathml.html" accesskey="p"><img
+        alt="previous" src="../../images/left.gif"></a> <a
+        href="../Math.html" accesskey="t"><img alt="top"
+        src="../../images/up.gif"></a> <a href="math_issues.html"
+        accesskey="n"><img alt="next" src="../../images/right.gif"></a></p>
       </td>
     </tr>
   </tbody>
@@ -36,7 +36,29 @@ simple unidirectional hyperlinks are available, but you can associate a link
 with any part of a formula. For example, the fraction in the formula below is
 a link to the W3C home page:</p>
 
-<p><code><a href="http://www.w3c.org">y=1x2+1</a></code></p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+  <mrow>
+    <mi>y</mi>
+    <mo>=</mo>
+    <mi></mi>
+    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink"
+    xlink:href="http://www.w3.org/">
+      <mn>1</mn>
+      <msqrt>
+        <mrow>
+          <msup>
+            <mi>x</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </msqrt>
+    </mfrac>
+  </mrow>
+</math>
+</p>
 
 <p>Double-clicking any character within the fraction loads the W3C home
 page.</p>
