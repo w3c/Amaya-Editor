@@ -365,14 +365,12 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 			/* the application asks Thot to do nothing */
 			return;
 		    }
+#ifndef _WINDOWS
 		  if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
 		    (*(Proc2)MenuActionList[CMD_PasteFromClipboard].Call_Action) (
 			(void*)doc,
 		       	(void*)view);
-		  else if (x >= xOrg && x <= xOrg + width &&
-		      y >= yOrg && y <= yOrg + height)
-		    /* send event TteElemMClick.Post to the application */
-		    NotifyClick (TteElemMClick, FALSE, el, doc);
+#endif /* _WINDOWS */
 		  break;
 		case 6:
 		  /* check if the curseur is within the box */

@@ -215,6 +215,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaXHTMLPanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaXMLPanel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\animbox.c
 # End Source File
 # Begin Source File

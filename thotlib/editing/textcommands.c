@@ -1518,8 +1518,10 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	    SelectStringInAttr (pDoc, pAb, first, last, TRUE);
 	  else
 	    SelectString (pDoc, pAb->AbElement, first, last);
+#ifndef _WINDOWS
 	  if (inClipboard)
 	    ClipboardLength = CopyXClipboard (&Xbuffer, pAb->AbDocView);
+#endif /* _WINDOWS */
 	}
     }
 }
