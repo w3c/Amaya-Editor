@@ -10,6 +10,7 @@ extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
                                 ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
                                      ThotBool pre );
+extern void ClearHistory ( PtrDocument pDoc );
 extern void FreePictInfo ( PictInfo *esc );
 extern void AddInSelection ( PtrElement pEl,
                              ThotBool dernier );
@@ -37,6 +38,7 @@ extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
                                   ThotBool pre */);
 extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                        ThotBool pre */);
+extern void ClearHistory (/* PtrDocument pDoc */);
 extern void FreePictInfo (/* PictInfo *esc */);
 extern void AddInSelection (/* PtrElement pEl,
                                ThotBool dernier */);

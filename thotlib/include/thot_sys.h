@@ -21,10 +21,6 @@
 #ifndef THOT_SYS_H
 #define THOT_SYS_H
 
-#include "ustring.h"
-#include "uconvert.h"
-#include "uio.h"
-#include "unicodeconsts.h"
 
 #if defined(_I18N_) || defined (__JIS__)
 #     define ___TEXT___(str) L##str
@@ -51,6 +47,7 @@
 #endif  /* TEXT */
 
 #define _EMPTYSTR_ TEXT("")
+#include "unicodeconsts.h"
 
 #include <setjmp.h>
 #include <signal.h>

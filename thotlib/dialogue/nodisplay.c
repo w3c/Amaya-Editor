@@ -44,6 +44,16 @@ ThotBool            pre;
    return FALSE;
 }
 
+
+#ifdef __STDC__
+void        ClearHistory ( PtrDocument pDoc )
+#else  /* __STDC__ */
+void        ClearHistory ()
+PtrDocument pDoc;
+#endif /* __STDC__ */
+{
+}
+
 #ifdef __STDC__
 void                FreePictInfo (PictInfo *esc)
 #else  /* __STDC__ */
