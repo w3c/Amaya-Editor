@@ -2405,7 +2405,7 @@ int                 frame;
 	     else if (pAb->AbEnclosing->AbInLine
 		      || pAb->AbEnclosing->AbBox->BxType == BoGhost)
 	       {
-		  if (!pAb->AbHorizEnclosing)
+		  if (!pAb->AbHorizEnclosing && pBox->BxNChars > 0)
 		    {
 		       pPosAb = &pAb->AbVertPos;
 		       pLine = SearchLine (pBox);
