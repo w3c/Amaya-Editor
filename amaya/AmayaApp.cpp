@@ -1,7 +1,6 @@
 #ifdef _WX
 
 #include "wx/wx.h"
-#include "wx/memory.h"
 #ifndef _GLPRINT
   #include "wx/xrc/xmlres.h"          // XRC XML resouces
 #endif /* _GLPRINT */
