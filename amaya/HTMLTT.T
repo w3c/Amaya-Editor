@@ -226,7 +226,7 @@ RULES
  Keyboard:
 	BEGIN
 	END;
- Variable:
+ Variable_:
 	BEGIN
 	END;
  Cite:

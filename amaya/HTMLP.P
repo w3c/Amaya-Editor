@@ -2869,7 +2869,7 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		END;
 	END;
- Variable:
+ Variable_:
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);

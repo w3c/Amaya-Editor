@@ -176,6 +176,7 @@ static void         Initialize ()
    pTSchema->TsNVariables = 0;	/* nombre de variables de traduction */
    pTSchema->TsNBuffers = 0;	/* nombre de buffers */
    pTSchema->TsPictureBuffer = 0;	/* pas de buffer pour les images */
+   pTSchema->TsNVarBuffers = 0; /* nombre de buffer de type variable */
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       pTSchema->TsPresTRule[i].RtExist = False;
    pTSchema->TsNTranslScripts = 0;	/* pas de traduction de texte */
@@ -1337,6 +1338,12 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     else	/* c'est le buffer courant qui est le buffer image */
 	       pTSchema->TsPictureBuffer = pTSchema->TsNBuffers;
 	     break;
+
+	   case KWD_Variable:  /* Variable */
+	     pTSchema->TsVarBuffer[pTSchema->TsNVarBuffers].VbNum =
+	                                                 pTSchema->TsNBuffers;
+	     pTSchema->TsNVarBuffers++;
+	     break;
 	     
 	   case KWD_Value:	/* Value */
 	     if (r == RULE_Token)
@@ -2171,7 +2178,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	   case 3001 /* un nom */ :
 	     switch (r)
 	       {
-	       /* r= numero regle */
+	       /* r = rule number  */
 	       case RULE_TypeIdent:	/* TypeIdent */
 		 if (pr == RULE_TransSchema)
 		   /* nom de la structure generique a laquelle se rapporte */
@@ -2535,6 +2542,9 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		       pTSchema->TsNBuffers++;
 		       Identifier[nb - 1].SrcIdentDefRule =
 			 pTSchema->TsNBuffers;
+		       /* save the name of that buffer in case it is
+			  followed by "(Variable)" */
+		       CopyWord (pTSchema->TsVarBuffer[pTSchema->TsNVarBuffers].VbIdent, wi, wl);
 		     }
 		 else
 		   /* utilisation d'un buffer */

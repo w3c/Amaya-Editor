@@ -355,7 +355,7 @@ RULES
 	Create '>';
 	Create '</kbd>' After;
 	END;
- Variable:
+ Variable_:
 	BEGIN
 	Create '<var';
 	Create Attributes;

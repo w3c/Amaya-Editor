@@ -4276,6 +4276,8 @@ void MathEntityModified (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void MathDisplayAttrCreated (NotifyAttribute *event)
 {
+  ParseHTMLSpecificStyle (event->element, "display:block", event->document,
+                          0, TRUE);
   MathMLSetDisplayAttr (event->element, event->attribute, event->document,
 			FALSE);
 }

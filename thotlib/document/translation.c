@@ -100,6 +100,28 @@ void TtaSetEntityFunction (Proc procedure)
 }
 
 /*----------------------------------------------------------------------
+  SetVariableBuffer
+  Copy string value into variable buffer named bufferName in translation
+  schema pTSch.
+  ----------------------------------------------------------------------*/
+static void SetVariableBuffer (PtrTSchema pTSch, char* bufferName, char* value)
+{
+  int     i, bufNum;
+
+  bufNum = 0;
+  for (i = 0; i < pTSch->TsNVarBuffers && bufNum == 0; i++)
+    {
+      if (!strcmp (pTSch->TsVarBuffer[i].VbIdent, bufferName))
+	bufNum = pTSch->TsVarBuffer[i].VbNum;
+    }
+  if (bufNum > 0)
+    {
+      strncpy (pTSch->TsBuffer[bufNum - 1], value, MAX_TRANSL_BUFFER_LEN - 1);
+      pTSch->TsBuffer[bufNum - 1][MAX_TRANSL_BUFFER_LEN-1] = EOS;
+    }
+}
+
+/*----------------------------------------------------------------------
    GetSecondaryFile
    Return the secondary output file named fName.
    If open is True, the file is opened if it not open yet.

@@ -12,7 +12,7 @@ number
 		   < >  : optional and repeatable part
 		   /    : choice
 	
-		  V. Quint	January 1988	}
+		  V. Quint	October 2002	}
 	
     1	TransSchema  =  'Translation' TypeIdent ';'
 	              [ 'LineLength' MaxLineLength ';' ]
@@ -53,59 +53,60 @@ number
     2	TypeIdent =      NAME .
 	
     6	SeqOfBuffer =    BufferDcl < BufferDcl > .
-   26	BufferDcl =      BufferIdent [ '(' 'Picture' ')' ] ';' .
+   26	BufferDcl =      BufferIdent [ '(' BufferType ')' ] ';' .
    27	BufferIdent =    NAME .
+   28	BufferType =     'Picture' / 'Variable' .
 	
     9	SeqOfVariable =  VariableDcl < VariableDcl > .
-   28	VariableDcl =    VariableIdent ':' Function < Function > ';' .
-   29	VariableIdent =  NAME .
-   30	Function =       'Value' '(' CounterIdent [ ':' Length ] [ ',' CounterStyle ] ')' /
+   29	VariableDcl =    VariableIdent ':' Function < Function > ';' .
+   30	VariableIdent =  NAME .
+   31	Function =       'Value' '(' CounterIdent [ ':' Length ] [ ',' CounterStyle ] ')' /
 			 'FileDir' / 'FileName' / 'Extension' /
 			 'DocumentName' / 'DocumentDir' /
 			 ConstIdent / CharString / BufferIdent / AttrIdent .
-   31	Length =	 NUMBER .
-   32	CounterStyle =   'ARABIC' / 'UROMAN' / 'LROMAN' / 'UPPERCASE' / 'LOWERCASE' .
+   32	Length =	 NUMBER .
+   33	CounterStyle =   'ARABIC' / 'UROMAN' / 'LROMAN' / 'UPPERCASE' / 'LOWERCASE' .
 	
-   33	CharString =     STRING .
+   34	CharString =     STRING .
 	
    11	SeqOfAttr =      TransAttr < TransAttr > .
-   34	TransAttr =      AttrIdent [ '(' TypeIdent ')' ] [ AttrRelat ] ':'
+   35	TransAttr =      AttrIdent [ '(' TypeIdent ')' ] [ AttrRelat ] ':'
 	                 SeqOfRules .
    22	AttrIdent =      NAME .
-   35	AttrRelat =	 '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
+   36	AttrRelat =	 '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
 			 'IN' '[' ['-'] MinInterval '.' '.' ['-'] MaxInterval ']' .
-   37	AttrValue =	 [ '-' ] ValEqual / TextEqual / AttrValIdent .
-   38	MinVal =	 NUMBER .
-   39	MaxVal =	 NUMBER .
-   40	MinInterval =	 NUMBER .
-   41	MaxInterval =	 NUMBER .
-   42	ValEqual =	 NUMBER .
-   43	TextEqual =	 STRING .
-   44	AttrValIdent =   NAME .
+   38	AttrValue =	 [ '-' ] ValEqual / TextEqual / AttrValIdent .
+   39	MinVal =	 NUMBER .
+   40	MaxVal =	 NUMBER .
+   41	MinInterval =	 NUMBER .
+   42	MaxInterval =	 NUMBER .
+   43	ValEqual =	 NUMBER .
+   44	TextEqual =	 STRING .
+   45	AttrValIdent =   NAME .
 	
    10	TheRules =       TransType < TransType > .
-   45	TransType =      [ FirstSec ] TypeIdent ':' SeqOfRules .
-   46	FirstSec =	 'First' / 'Second' .
+   46	TransType =      [ FirstSec ] TypeIdent ':' SeqOfRules .
+   47	FirstSec =	 'First' / 'Second' .
 	
-   36	SeqOfRules =     'Begin' < CondRules > 'End' ';' / CondRules .
-   47	CondRules =       Rule1 / Rule2 .
+   37	SeqOfRules =     'Begin' < CondRules > 'End' ';' / CondRules .
+   48	CondRules =       Rule1 / Rule2 .
 	
-   49	Rule2 =          'If' SeqOfCond SeqOfRules1 .
-   50	SeqOfCond =      Condition < 'And' Condition > .
+   50	Rule2 =          'If' SeqOfCond SeqOfRules1 .
+   51	SeqOfCond =      Condition < 'And' Condition > .
 	
-   52	Condition =      [ 'Not' ] [ 'Target' ] Cond .
-   53	Cond =		 CondOnSelf / CondAscend .
-   54	CondOnSelf =     'FirstRef' / 'LastRef' / 'ExternalRef' /
+   53	Condition =      [ 'Not' ] [ 'Target' ] Cond .
+   54	Cond =		 CondOnSelf / CondAscend .
+   55	CondOnSelf =     'FirstRef' / 'LastRef' / 'ExternalRef' /
 			 'Script' '=' Script /
 			 'FirstAttr' / 'LastAttr' /
 			 'ComputedPage' / 'StartPage' / 'UserPage' / 'ReminderPage' /
 			 'Empty' .
 	
-   55	CondAscend =     [ Ascend ] CondOnAscend .
-   57	Ascend =         '*' / 'Parent' / 'Ancestor' LevelOrType .
-   59	LevelOrType =    CondRelLevel / TypeIdent [ '(' TypeIdent ')' ] .
-   60	CondRelLevel =   NUMBER .
-   58	CondOnAscend =   'First' / 'Last' /
+   56	CondAscend =     [ Ascend ] CondOnAscend .
+   58	Ascend =         '*' / 'Parent' / 'Ancestor' LevelOrType .
+   60	LevelOrType =    CondRelLevel / TypeIdent [ '(' TypeIdent ')' ] .
+   61	CondRelLevel =   NUMBER .
+   59	CondOnAscend =   'First' / 'Last' /
 	                 'Refered' / 'Referred' /
 		         [ 'Immediately' ] 'Within' [ ParentLevel ] TypeIdent
 	                                                      [ '(' TypeIdent ')' ] /
@@ -116,15 +117,15 @@ number
 			  TypeIdent /
 	                 'Presentation' / PresRule .
 	
-   61	ParentLevel =	 [ GreaterLess ] RelLevel .
-   63	GreaterLess =	 '>' / '<' .
-   64	RelLevel =	 NUMBER .
-   65	TrSchema =       NAME .
+   62	ParentLevel =	 [ GreaterLess ] RelLevel .
+   64	GreaterLess =	 '>' / '<' .
+   65	RelLevel =	 NUMBER .
+   66	TrSchema =       NAME .
 	
-   51	SeqOfRules1 =    'Begin' < Rule1 > 'End' ';' / Rule1 .
+   52	SeqOfRules1 =    'Begin' < Rule1 > 'End' ';' / Rule1 .
 	
-   48	Rule1 =		 RuleA / RuleB .
-   66	RuleA =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
+   49	Rule1 =		 RuleA / RuleB .
+   67	RuleA =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
 	                 'Get' [ RelPosition ] TypeIdent [ '(' TypeIdent ')' ]
 	                       [ Position ] ';' /
 			 'Copy' [ RelPosition ] TypeIdent [ '(' TypeIdent ')' ]
@@ -137,17 +138,17 @@ number
 	                 'Include' File [ Position ] ';' /
 			 'NoTranslation' ';' /
 	                 'NoLineBreak' ';' .
-   67	RuleB =		 'ChangeMainFile' VariableIdent [ Position ] ';' /
+   68	RuleB =		 'ChangeMainFile' VariableIdent [ Position ] ';' /
 			 'Set' CounterIdent InitValue [ Position ] ';' /
 			 'Add' CounterIdent IncrValue [ Position ] ';' /
 	                 'Indent' [ 'IN' VariableIdent ] Indent [ Position ] ';' /
 			 'RemoveFile' VariableIdent [ Position ] ';' .
 	
-   72	Indent =         'Suspend' / 'Resume' / [ IndentSign ] IndentVal .
-   73	IndentSign =     '+' / '-' .
-   74	IndentVal =	 NUMBER .
+   73	Indent =         'Suspend' / 'Resume' / [ IndentSign ] IndentVal .
+   74	IndentSign =     '+' / '-' .
+   75	IndentVal =	 NUMBER .
 	
-   68	Token =		 ConstIdent / VariableIdent /
+   69	Token =		 ConstIdent / VariableIdent /
 			 'Refered' VarOrType [ '(' TypeIdent ')' ] /
 			 'Referred' VarOrType [ '(' TypeIdent ')' ] /
 	                 CharString /
@@ -157,25 +158,25 @@ number
 			 'FileDir' / 'FileName' / 'Extension' /
 			 'DocumentName' / 'DocumentDir' /
 	                 'Attributes' / 'Presentation' / 'RefId' / 'PairId' .
-   75	VarOrType =	 'DocumentName' / 'DocumentDir' / 'RefId' /
+   76	VarOrType =	 'DocumentName' / 'DocumentDir' / 'RefId' /
 			 VariableIdent / TypeIdent .
-   69	Position =       'After' / 'Before' .
-   70	RelPosition =    'Included' / 'Refered' / 'Referred' .
+   70	Position =       'After' / 'Before' .
+   71	RelPosition =    'Included' / 'Refered' / 'Referred' .
 	
-   71	File =           FileName / BufferIdent .
+   72	File =           FileName / BufferIdent .
 	
    13	TSeqOfTransl =   [ Script ] SeqOfTransl .
-   56	Script =       NAME .
+   57	Script =       NAME .
    14	SeqOfTransl =    'Begin' < Translation > 'End' ';' /
 	                 Translation .
-   77	Translation =    Source [ '-' '>' Target ] ';' .
-   78	Source =         STRING .
-   79	Target =         STRING .
-   76	FileName =       STRING .
+   78	Translation =    Source [ '-' '>' Target ] ';' .
+   79	Source =         STRING .
+   80	Target =         STRING .
+   77	FileName =       STRING .
 	
    12	SeqOfPres =      TransPres < TransPres > .
-   80	TransPres =      PresRule ':' SeqOfRules .
-   62	PresRule =       'Size' [ PresRelat ] /
+   81	TransPres =      PresRule ':' SeqOfRules .
+   63	PresRule =       'Size' [ PresRelat ] /
 	                 'Indent' [ PresRelat ] /
 	                 'LineSpacing' [ PresRelat ] /
 	                 'Adjust' [ '=' AdjustVal ] /
@@ -190,31 +191,31 @@ number
 			 'FillPattern' [ '=' Pattern ] /
 			 'Background' [ '=' Color ] /
 			 'Foreground' [ '=' Color ] .
-   81	PresRelat =      '=' PresValue /
+   82	PresRelat =      '=' PresValue /
 	                 '>' [ '-' ] MinimumPres /
 	                 '<' [ '-' ] MaximumPres /
 	                 'IN' '[' [ '-' ] MinIntervalPres '.' '.'
 	                          [ '-' ] MaxIntervalPres ']' .
-   82	AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' / 'Justify' .
-   83	BooleanVal =     'Yes' / 'No' .
-   84	StyleVal =       'Roman' / 'Italics' / 'Oblique' .
-   85	WeightVal =      'Normal' / 'Bold' .
-   86	FontVal =        'Times' / 'Helvetica' / 'Courier' .
-   87	UnderLineVal =   'NoUnderline' / 'Underlined' / 'Overlined' / 'CrossedOut' /
+   83	AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' / 'Justify' .
+   84	BooleanVal =     'Yes' / 'No' .
+   85	StyleVal =       'Roman' / 'Italics' / 'Oblique' .
+   86	WeightVal =      'Normal' / 'Bold' .
+   87	FontVal =        'Times' / 'Helvetica' / 'Courier' .
+   88	UnderLineVal =   'NoUnderline' / 'Underlined' / 'Overlined' / 'CrossedOut' /
 			 { the following values are obsolete }
 	                 'No' / 'UnderLine' / 'OverLine' / 'StrikeOut' .
-   88	UnderLStyleVal = 'Thick' / 'Thin' .
+   89	UnderLStyleVal = 'Thick' / 'Thin' .
 	
-   89	LineStyleVal =   'Solid' / 'Dashed' / 'Dotted' .
-   90	Pattern =        NAME .
-   91	Color =          NAME .
+   90	LineStyleVal =   'Solid' / 'Dashed' / 'Dotted' .
+   91	Pattern =        NAME .
+   92	Color =          NAME .
 	
-   93	MinimumPres =    NUMBER .
-   94	MaximumPres =    NUMBER .
-   95	MinIntervalPres= NUMBER .
-   96	MaxIntervalPres= NUMBER .
-   92	PresValue =      [ '-' ] PresVal .
-   97	PresVal =        NUMBER .
+   94	MinimumPres =    NUMBER .
+   95	MaximumPres =    NUMBER .
+   96	MinIntervalPres= NUMBER .
+   97	MaxIntervalPres= NUMBER .
+   93	PresValue =      [ '-' ] PresVal .
+   98	PresVal =        NUMBER .
 	
 	END
 	
@@ -224,21 +225,21 @@ number
 
 code  character  numbers of rules using the key-word
 
-1001      ;       1   1   1   1  15  18  26  28  36  51  66  66  66  66  66  66
-                 66  66  66  66  66  67  67  67  67  67  14  77
-1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  81
-1003      :      18  28  30  34  45  80
-1004      -      21  35  35  35  35  37  73  77  81  81  81  81  92
-1005      (      26  30  34  59  58  58  66  66  68  68  68
-1006      )      26  30  34  59  58  58  66  66  68  68  68
-1007      ,      30
-1008      >      35  63  77  81
-1009      <      35  63  81
-1010      [      35  81
-1011      .      35  35  81  81
-1012      ]      35  81
-1013      *      57
-1014      +      73
+1001      ;       1   1   1   1  15  18  26  29  37  52  67  67  67  67  67  67
+                 67  67  67  67  67  68  68  68  68  68  14  78
+1002      =      15  36  55  63  63  63  63  63  63  63  63  63  63  63  82
+1003      :      18  29  31  35  46  81
+1004      -      21  36  36  36  36  38  74  78  82  82  82  82  93
+1005      (      26  31  35  60  59  59  67  67  69  69  69
+1006      )      26  31  35  60  59  59  67  67  69  69  69
+1007      ,      31
+1008      >      36  64  78  82
+1009      <      36  64  82
+1010      [      36  82
+1011      .      36  36  82  82
+1012      ]      36  82
+1013      *      58
+1014      +      74
 
 
 
@@ -255,122 +256,123 @@ code  key-word      numbers of rules using the key-word
 1107  Const            1
 1108  Var              1
 1109  Rules            1
-1110  Attributes       1  58  68
-1111  Presentation     1  58  68
+1110  Attributes       1  59  69
+1111  Presentation     1  59  69
 1112  TextTranslate    1
 1113  SymbTranslate    1
 1114  GraphTranslate   1
-1115  End              1  36  51  14
+1115  End              1  37  52  14
 1116  Rank            20
 1117  of              20  20
 1118  Init            20  20
 1119  Rlevel          20
-1120  Set             20  67
+1120  Set             20  68
 1121  On              20  20
-1122  Add             20  67
-1123  Picture         26
-1124  Value           30  68
-1125  FileDir         30  68
-1126  FileName        30  68
-1127  Extension       30  68
-1128  DocumentName    30  68  75
-1129  DocumentDir     30  68  75
-1130  ARABIC          32
-1131  UROMAN          32
-1132  LROMAN          32
-1133  UPPERCASE       32
-1134  LOWERCASE       32
-1135  IN              35  66  67  81
-1136  First           46  58
-1137  Second          46
-1138  Begin           36  51  14
-1139  If              49
-1140  And             50
-1141  Not             52
-1142  Target          52
-1143  FirstRef        54
-1144  LastRef         54
-1145  ExternalRef     54
-1146  Script          54
-1147  FirstAttr       54
-1148  LastAttr        54
-1149  ComputedPage    54
-1150  StartPage       54
-1151  UserPage        54
-1152  ReminderPage    54
-1153  Empty           54
-1154  Parent          57
-1155  Ancestor        57
-1156  Last            58
-1157  Refered         58  68  70
-1158  Referred        58  68  70
-1159  Immediately     58
-1160  Within          58
-1161  FirstWithin     58
-1162  Create          66
-1163  Get             66
-1164  Copy            66
-1165  Use             66
-1166  For             66
-1167  Remove          66
-1168  Ignore          66
-1169  Write           66
-1170  Read            66
-1171  Include         66
-1172  NoTranslation   66
-1173  NoLineBreak     66
-1174  ChangeMainFile  67
-1175  Indent          67  62
-1176  RemoveFile      67
-1177  Suspend         72
-1178  Resume          72
-1179  Translated      68
-1180  Content         68
-1181  RefId           68  75
-1182  PairId          68
-1183  After           69
-1184  Before          69
-1185  Included        70
-1186  Size            62
-1187  LineSpacing     62
-1188  Adjust          62
-1189  Hyphenate       62
-1190  Style           62
-1191  Weight          62
-1192  Font            62
-1193  UnderLine       62  87
-1194  Thickness       62
-1195  LineStyle       62
-1196  LineWeight      62
-1197  FillPattern     62
-1198  Background      62
-1199  Foreground      62
-1200  Left            82
-1201  Right           82
-1202  VMiddle         82
-1203  LeftWithDots    82
-1204  Justify         82
-1205  Yes             83
-1206  No              83  87
-1207  Roman           84
-1208  Italics         84
-1209  Oblique         84
-1210  Normal          85
-1211  Bold            85
-1212  Times           86
-1213  Helvetica       86
-1214  Courier         86
-1215  NoUnderline     87
-1216  Underlined      87
-1217  Overlined       87
-1218  CrossedOut      87
-1219  OverLine        87
-1220  StrikeOut       87
-1221  Thick           88
-1222  Thin            88
-1223  Solid           89
-1224  Dashed          89
-1225  Dotted          89
+1122  Add             20  68
+1123  Picture         28
+1124  Variable        28
+1125  Value           31  69
+1126  FileDir         31  69
+1127  FileName        31  69
+1128  Extension       31  69
+1129  DocumentName    31  69  76
+1130  DocumentDir     31  69  76
+1131  ARABIC          33
+1132  UROMAN          33
+1133  LROMAN          33
+1134  UPPERCASE       33
+1135  LOWERCASE       33
+1136  IN              36  67  68  82
+1137  First           47  59
+1138  Second          47
+1139  Begin           37  52  14
+1140  If              50
+1141  And             51
+1142  Not             53
+1143  Target          53
+1144  FirstRef        55
+1145  LastRef         55
+1146  ExternalRef     55
+1147  Script          55
+1148  FirstAttr       55
+1149  LastAttr        55
+1150  ComputedPage    55
+1151  StartPage       55
+1152  UserPage        55
+1153  ReminderPage    55
+1154  Empty           55
+1155  Parent          58
+1156  Ancestor        58
+1157  Last            59
+1158  Refered         59  69  71
+1159  Referred        59  69  71
+1160  Immediately     59
+1161  Within          59
+1162  FirstWithin     59
+1163  Create          67
+1164  Get             67
+1165  Copy            67
+1166  Use             67
+1167  For             67
+1168  Remove          67
+1169  Ignore          67
+1170  Write           67
+1171  Read            67
+1172  Include         67
+1173  NoTranslation   67
+1174  NoLineBreak     67
+1175  ChangeMainFile  68
+1176  Indent          68  63
+1177  RemoveFile      68
+1178  Suspend         73
+1179  Resume          73
+1180  Translated      69
+1181  Content         69
+1182  RefId           69  76
+1183  PairId          69
+1184  After           70
+1185  Before          70
+1186  Included        71
+1187  Size            63
+1188  LineSpacing     63
+1189  Adjust          63
+1190  Hyphenate       63
+1191  Style           63
+1192  Weight          63
+1193  Font            63
+1194  UnderLine       63  88
+1195  Thickness       63
+1196  LineStyle       63
+1197  LineWeight      63
+1198  FillPattern     63
+1199  Background      63
+1200  Foreground      63
+1201  Left            83
+1202  Right           83
+1203  VMiddle         83
+1204  LeftWithDots    83
+1205  Justify         83
+1206  Yes             84
+1207  No              84  88
+1208  Roman           85
+1209  Italics         85
+1210  Oblique         85
+1211  Normal          86
+1212  Bold            86
+1213  Times           87
+1214  Helvetica       87
+1215  Courier         87
+1216  NoUnderline     88
+1217  Underlined      88
+1218  Overlined       88
+1219  CrossedOut      88
+1220  OverLine        88
+1221  StrikeOut       88
+1222  Thick           89
+1223  Thin            89
+1224  Solid           90
+1225  Dashed          90
+1226  Dotted          90
 
 
 
@@ -384,8 +386,8 @@ their right part.
  code  symbol        rule numbers
 
     1  TransSchema        
-    2  TypeIdent             1  20  20  20  20  34  45  59  59  58  58  58  58
-                              58  66  66  66  66  66  68  68  75
+    2  TypeIdent             1  20  20  20  20  35  46  60  60  59  59  59  59
+                              59  67  67  67  67  67  69  69  76
     3  MaxLineLength         1
     4  LineEndString         1
     5  LineEndInsertString   1
@@ -399,98 +401,99 @@ their right part.
    13  TSeqOfTransl          1
    14  SeqOfTransl           1   1  13
    15  ConstDcl              8   8
-   16  ConstIdent           15  30  68
+   16  ConstIdent           15  31  69
    17  ConstValue           15
    18  CounterDcl            7   7
-   19  CounterIdent         18  30  67  67
+   19  CounterIdent         18  31  68  68
    20  CountFunction        18
    21  RelAncestorLevel     20
-   22  AttrIdent            20  20  30  34  58  68  68
-   23  InitValue            20  67
-   24  IncrValue            20  67
+   22  AttrIdent            20  20  31  35  59  69  69
+   23  InitValue            20  68
+   24  IncrValue            20  68
    25  AncestorLevel        21
    26  BufferDcl             6   6
-   27  BufferIdent          26  30  66  68  71
-   28  VariableDcl           9   9
-   29  VariableIdent        28  66  67  67  67  68  75
-   30  Function             28  28  68  68
-   31  Length               30
-   32  CounterStyle         30
-   33  CharString           30  68
-   34  TransAttr            11  11
-   35  AttrRelat            34  58
-   36  SeqOfRules           34  45  80
-   37  AttrValue            35
-   38  MinVal               35
-   39  MaxVal               35
-   40  MinInterval          35
-   41  MaxInterval          35
-   42  ValEqual             37
-   43  TextEqual            37
-   44  AttrValIdent         37
-   45  TransType            10  10
-   46  FirstSec             45
-   47  CondRules            36  36
-   48  Rule1                47  51  51
-   49  Rule2                47
-   50  SeqOfCond            49
-   51  SeqOfRules1          49
-   52  Condition            50  50
-   53  Cond                 52
-   54  CondOnSelf           53
-   55  CondAscend           53
-   56  Script               54  13
-   57  Ascend               55
-   58  CondOnAscend         55
-   59  LevelOrType          57
-   60  CondRelLevel         59
-   61  ParentLevel          58  58
-   62  PresRule             58  80
-   63  GreaterLess          61
-   64  RelLevel             61
-   65  TrSchema             66
-   66  RuleA                48
-   67  RuleB                48
-   68  Token                66  66
-   69  Position             66  66  66  66  66  66  67  67  67  67  67
-   70  RelPosition          66  66
-   71  File                 66
-   72  Indent               67
-   73  IndentSign           72
-   74  IndentVal            72
-   75  VarOrType            68  68
-   76  FileName             71
-   77  Translation          14  14
-   78  Source               77
-   79  Target               77
-   80  TransPres            12  12
-   81  PresRelat            62  62  62  62
-   82  AdjustVal            62
-   83  BooleanVal           62
-   84  StyleVal             62
-   85  WeightVal            62
-   86  FontVal              62
-   87  UnderLineVal         62
-   88  UnderLStyleVal       62
-   89  LineStyleVal         62
-   90  Pattern              62
-   91  Color                62  62
-   92  PresValue            81
-   93  MinimumPres          81
-   94  MaximumPres          81
-   95  MinIntervalPres      81
-   96  MaxIntervalPres      81
-   97  PresVal              92
+   27  BufferIdent          26  31  67  69  72
+   28  BufferType           26
+   29  VariableDcl           9   9
+   30  VariableIdent        29  67  68  68  68  69  76
+   31  Function             29  29  69  69
+   32  Length               31
+   33  CounterStyle         31
+   34  CharString           31  69
+   35  TransAttr            11  11
+   36  AttrRelat            35  59
+   37  SeqOfRules           35  46  81
+   38  AttrValue            36
+   39  MinVal               36
+   40  MaxVal               36
+   41  MinInterval          36
+   42  MaxInterval          36
+   43  ValEqual             38
+   44  TextEqual            38
+   45  AttrValIdent         38
+   46  TransType            10  10
+   47  FirstSec             46
+   48  CondRules            37  37
+   49  Rule1                48  52  52
+   50  Rule2                48
+   51  SeqOfCond            50
+   52  SeqOfRules1          50
+   53  Condition            51  51
+   54  Cond                 53
+   55  CondOnSelf           54
+   56  CondAscend           54
+   57  Script               55  13
+   58  Ascend               56
+   59  CondOnAscend         56
+   60  LevelOrType          58
+   61  CondRelLevel         60
+   62  ParentLevel          59  59
+   63  PresRule             59  81
+   64  GreaterLess          62
+   65  RelLevel             62
+   66  TrSchema             67
+   67  RuleA                49
+   68  RuleB                49
+   69  Token                67  67
+   70  Position             67  67  67  67  67  67  68  68  68  68  68
+   71  RelPosition          67  67
+   72  File                 67
+   73  Indent               68
+   74  IndentSign           73
+   75  IndentVal            73
+   76  VarOrType            69  69
+   77  FileName             72
+   78  Translation          14  14
+   79  Source               78
+   80  Target               78
+   81  TransPres            12  12
+   82  PresRelat            63  63  63  63
+   83  AdjustVal            63
+   84  BooleanVal           63
+   85  StyleVal             63
+   86  WeightVal            63
+   87  FontVal              63
+   88  UnderLineVal         63
+   89  UnderLStyleVal       63
+   90  LineStyleVal         63
+   91  Pattern              63
+   92  Color                63  63
+   93  PresValue            82
+   94  MinimumPres          82
+   95  MaximumPres          82
+   96  MinIntervalPres      82
+   97  MaxIntervalPres      82
+   98  PresVal              93
 
 
 
 *** REFERENCES TO BASIC TYPES ***
 
 Numbers of the rules using NAME
-  16  19   2  27  29  22  44  65  56  90  91
+  16  19   2  27  30  22  45  66  57  91  92
 
 Numbers of the rules using NUMBER
-   3  25  23  24  31  38  39  40  41  42  60  64  74  93  94  95  96  97
+   3  25  23  24  32  39  40  41  42  43  61  65  75  94  95  96  97  98
 
 Numbers of the rules using STRING
-   4   5  17  33  43  78  79  76
+   4   5  17  34  44  79  80  77

@@ -1062,6 +1062,17 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 		     }
 	     }
 	TtaReadShort (file, &pTSch->TsPictureBuffer);
+	TtaReadShort (file, &pTSch->TsNVarBuffers);
+	for (i = 0; i < MAX_TRANSL_BUFFER; i++)
+	  {
+	    pTSch->TsVarBuffer[i].VbIdent[0] = EOS;
+	    pTSch->TsVarBuffer[i].VbNum = 0;
+	  }
+	for (i = 0; i < pTSch->TsNVarBuffers; i++)
+	  {
+	    TtaReadName (file, pTSch->TsVarBuffer[i].VbIdent);
+	    TtaReadShort (file, &pTSch->TsVarBuffer[i].VbNum);
+	  }
 	for (i = 0; i < MAX_TRANSL_BUFFER; i++)
 	   pTSch->TsBuffer[i][0] = EOS;
 	if (pSS->SsFirstDynNature == 0)

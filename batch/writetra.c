@@ -776,6 +776,12 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
 	  }
      }
    WriteShort (pTSch->TsPictureBuffer);
+   WriteShort (pTSch->TsNVarBuffers);
+   for (i = 0; i < pTSch->TsNVarBuffers; i++)
+     {
+       WriteName (pTSch->TsVarBuffer[i].VbIdent);
+       WriteShort (pTSch->TsVarBuffer[i].VbNum);
+     }
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBlockPtr (pTSch->TsElemTRule->TsElemTransl[i]);
    for (i = 0; i < pSS->SsNRules; i++)

@@ -333,7 +333,7 @@ STRUCT
 	Code = Basic_Set;		{ CODE }
 	Sample = Basic_Set;		{ SAMP }
 	Keyboard = Basic_Set;		{ KBD }
-	Variable = Basic_Set;		{ VAR }
+	Variable_ = Basic_Set;		{ VAR }
 	Cite = Basic_Set;		{ CITE }
 	ABBR = Basic_Set;		{ ABBR }
         ACRONYM = Basic_Set;		{ ACRONYM }

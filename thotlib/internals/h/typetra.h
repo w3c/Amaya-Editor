@@ -510,7 +510,7 @@ typedef struct _ScriptTransl
   char    AlScript;
   int     AlBegin; 	/* index of the first characters translation
 			   rule in the table TsCharTransl */
-  int	AlEnd;	        /* index of the last characters translation
+  int	  AlEnd;	/* index of the last characters translation
 			   rule in the same table */
 } ScriptTransl;
 
@@ -519,6 +519,13 @@ typedef struct _ElemTransTable
 {
   PtrTRuleBlock TsElemTransl[1];
 } ElemTransTable;
+
+/* descriptor of a buffer of type variable */
+typedef struct _TranslVarBuffer
+{
+  Name    VbIdent;      /* name of the buffer */
+  int     VbNum;        /* rank of the buffer in table TsBuffer */
+} TranslVarBuffer;
 
 /* pointer on a translation schema */
 typedef struct _TranslSchema *PtrTSchema;
@@ -544,6 +551,9 @@ typedef struct _TranslSchema
   TCounter       TsCounter[MAX_TRANSL_COUNTER];	/* the counters */
   TranslVariable TsVariable[MAX_TRANSL_VARIABLE];/* the variables */
   int 	         TsPictureBuffer;	        /* number of the image buffer*/
+  int            TsNVarBuffers; /* number of buffers of type variable */
+  TranslVarBuffer TsVarBuffer[MAX_TRANSL_BUFFER]; /* decriptors of buffers of
+						     type variable */
   TranslBuffer   TsBuffer[MAX_TRANSL_BUFFER];  	/* the buffers */
   ElemTransTable *TsElemTRule; /* pointers on the beginning of
 				  the string of translation rules associated

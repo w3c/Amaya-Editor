@@ -6,7 +6,7 @@
 	   < >  : optional and repeatable part
 	   /    : choice
 
-	  V. Quint	January 1988	}
+	  V. Quint	October 2002	}
 
 TransSchema  =  'Translation' TypeIdent ';'
               [ 'LineLength' MaxLineLength ';' ]
@@ -47,8 +47,9 @@ IncrValue =      NUMBER .
 TypeIdent =      NAME .
 
 SeqOfBuffer =    BufferDcl < BufferDcl > .
-BufferDcl =      BufferIdent [ '(' 'Picture' ')' ] ';' .
+BufferDcl =      BufferIdent [ '(' BufferType ')' ] ';' .
 BufferIdent =    NAME .
+BufferType =     'Picture' / 'Variable' .
 
 SeqOfVariable =  VariableDcl < VariableDcl > .
 VariableDcl =    VariableIdent ':' Function < Function > ';' .

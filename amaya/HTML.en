@@ -70,7 +70,7 @@ Def: dfn
 Code: code
 Sample: samp
 Keyboard: kbd
-Variable: var
+Variable_: var
 Cite: cite
 ABBR: abbr
 ACRONYM: acronym
