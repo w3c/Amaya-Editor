@@ -145,8 +145,6 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
       <li><a
         href="HTML-elements/infoTypes.html.de#page_body">Informationstypen</a></li>
       <li><a
-      href="HTML-elements/HTML.html.de#page_body">HTML-Elemente</a></li>
-      <li><a
       href="HTML-elements/headings.html.de#page_body">Überschriften</a></li>
       <li><a href="HTML-elements/lists.html.de#page_body">Listen</a></li>
       <li><a href="HTML-elements/address.html.de#page_body">Informationen
@@ -207,6 +205,7 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         spaces)</a></li>
     </ul>
   </li>
+  <li><a href="HTML.html.de#page_body">HTML-Elemente</a></li>
   <li><a href="Changing.html.de#page_body">Dokumente umstrukturieren</a> 
     <ul>
       <li><a

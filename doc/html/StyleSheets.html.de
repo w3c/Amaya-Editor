@@ -13,18 +13,18 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><a href="XML.html.de" accesskey="p"><img alt="vorherige Seite"
+      <td><a href="Xml.html.de" accesskey="p"><img alt="vorherige Seite"
         src="../images/left.gif" /></a> <a href="Manual.html.de"
         accesskey="t"><img alt="erste Seite" src="../images/up.gif" /></a> <a
         href="Searching.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../images/right.gif" /></a>
-      </td>
+        src="../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -34,9 +34,10 @@
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
-  <li><a href="style_sheets/working_with_styles.html.de#page_body" rel="subdocument">Mit
-    Formaten und Formatvorlagen arbeiten</a></li>
-  <li><a href="style_sheets/creating_and_updating_a_style_attribute.html.de#page_body"
+  <li><a href="style_sheets/working_with_styles.html.de#page_body"
+    rel="subdocument">Mit Formaten und Formatvorlagen arbeiten</a></li>
+  <li><a
+    href="style_sheets/creating_and_updating_a_style_attribute.html.de#page_body"
     rel="subdocument">Ein Formatattribut erzeugen und aktualisieren</a></li>
   <li><a
     href="style_sheets/creating_generic_style_for_an_element_or_a_class.html.de#page_body"
@@ -48,12 +49,13 @@
     Formatvorlagen</a></li>
   <li><a href="style_sheets/handling_external_css.html.de#page_body"
     rel="subdocument">Externe Formatvorlagen handhaben</a></li>
-  <li><a href="style_sheets/about_applying_style_using_html_elements.html.de#page_body"
+  <li><a
+    href="style_sheets/about_applying_style_using_html_elements.html.de#page_body"
     rel="subdocument">Ein Format erzeugen</a></li>
   <li><a href="style_sheets/creating_html_style_elements.html.de#page_body"
     rel="subdocument">Formatelemente erzeugen</a></li>
-  <li><a href="style_sheets/removing_style.html.de#page_body" rel="subdocument">Formate
-    entfernen</a></li>
+  <li><a href="style_sheets/removing_style.html.de#page_body"
+    rel="subdocument">Formate entfernen</a></li>
 </ul>
 </div>
 </body>
