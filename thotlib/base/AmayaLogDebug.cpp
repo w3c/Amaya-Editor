@@ -1,8 +1,8 @@
 #ifdef _WX
 
-#ifdef __WXDEBUG__
-
 #include "wx/wx.h"
+
+#ifdef __WXDEBUG__
 
 #include "thot_gui.h"
 #include "thot_sys.h"
