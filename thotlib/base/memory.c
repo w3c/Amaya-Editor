@@ -191,8 +191,10 @@ void               *ptr;
 #endif /* __STDC__ */
 
 {
-   if (ptr)
+   if (ptr)	{
       free (ptr);
+	  ptr = (void*) NULL;
+   }
 }
 
 
