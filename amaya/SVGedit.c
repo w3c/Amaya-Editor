@@ -760,12 +760,14 @@ void AttrPointsModified (NotifyAttribute *event)
 {
   ParsePointsAttribute (event->attribute, event->element, event->document);
 }
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
   CheckSVGRoot checks that the svg root element includes element el.
  -----------------------------------------------------------------------*/
 void CheckSVGRoot (Document doc, Element el)
 {
+#ifdef _SVG
   Element          SvgRoot, child;
   ElementType      elType;
   AttributeType    attrType;
@@ -964,8 +966,10 @@ void CheckSVGRoot (Document doc, Element el)
       else
 	SvgRoot = NULL;
     }
+#endif /* _SVG */
 }
 
+#ifdef _SVG
 /*----------------------------------------------------------------------
  GraphElemPasted
  An element has been pasted.

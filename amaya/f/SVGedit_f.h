@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void CheckSVGRoot ( Document doc,
+                           Element el );
 extern void InitSVG ( void );
 extern void AddGraphicsButton ( Document doc,
                                 View view );
@@ -23,6 +25,8 @@ extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
+extern void CheckSVGRoot (/* Document doc,
+                             Element el */);
 extern void InitSVG (/* void */);
 extern void AddGraphicsButton (/* Document doc,
                                   View view */);
