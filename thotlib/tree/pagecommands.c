@@ -25,47 +25,47 @@
 
 /* ---------------------------------------------------------------------- */
 /* |    GetPageRule cherche la regle page associee aux elements du        | */
-/* |            type de l'element pointe' par pEl dans la vue Vue       | */
+/* |            type de l'element pointe' par pEl dans la vue view       | */
 /* |            du schema de presentation ou elle est definie           | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-PtrPRule        GetPageRule (PtrElement pEl, int Vue, PtrPSchema * pSchP)
+PtrPRule        GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
 
 #else  /* __STDC__ */
-PtrPRule        GetPageRule (pEl, Vue, pSchP)
+PtrPRule        GetPageRule (pEl, view, pSchP)
 PtrElement          pEl;
-int                 Vue;
+int                 view;
 PtrPSchema         *pSchP;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRegle, pRPage;
+   PtrPRule        pRule, pRPage;
    PtrSSchema        pSchS;
-   int                 Entree;
+   int                 entry;
    boolean             stop;
 
    pRPage = NULL;
-   SearchPresSchema (pEl, pSchP, &Entree, &pSchS);
-   pRegle = (*pSchP)->PsElemPRule[Entree - 1];
+   SearchPresSchema (pEl, pSchP, &entry, &pSchS);
+   pRule = (*pSchP)->PsElemPRule[entry - 1];
    /* 1ere regle de pres. du type */
    stop = FALSE;
    do
-      if (pRegle == NULL)
+      if (pRule == NULL)
 	 stop = TRUE;
-      else if (pRegle->PrType > PtFunction)
+      else if (pRule->PrType > PtFunction)
 	 stop = TRUE;
-      else if (pRegle->PrType == PtFunction &&
-	 /**TODO*//* valeur de Vue si vue d'element associes ?? */
-	       pRegle->PrViewNum == Vue &&
-	       pRegle->PrPresFunction == FnPage)
+      else if (pRule->PrType == PtFunction &&
+	 /**TODO*//* valeur de view si vue d'element associes ?? */
+	       pRule->PrViewNum == view &&
+	       pRule->PrPresFunction == FnPage)
 	{			/* c'est une regle Page */
-	   pRPage = pRegle;
+	   pRPage = pRule;
 	   stop = TRUE;
 	}
       else
-	 pRegle = pRegle->PrNextPRule;
+	 pRule = pRule->PrNextPRule;
    while (!(stop));
    return pRPage;
 }
@@ -89,12 +89,12 @@ PtrPSchema          pSchP;
 #endif /* __STDC__ */
 
 {
-   boolean             stop, existe;
+   boolean             stop, exist;
    PtrPRule        pR;
 
    pR = pSchP->PsPresentBox[b - 1].PbFirstPRule;
    stop = FALSE;
-   existe = FALSE;
+   exist = FALSE;
    do
      {
 	if (pR == NULL)
@@ -104,13 +104,13 @@ PtrPSchema          pSchP;
 	else if (pR->PrType == TypeR)
 	  {
 	     stop = TRUE;
-	     existe = TRUE;
+	     exist = TRUE;
 	  }
 	if (!stop)
 	   pR = pR->PrNextPRule;
      }
    while (!(stop));
-   if (existe)
+   if (exist)
       return pR;
    else
       return NULL;
@@ -137,7 +137,7 @@ PtrPSchema         *pSchP;
 
 {
    PtrPRule        pR;
-   PtrElement          pSuiv;
+   PtrElement          pNext;
 
    pR = NULL;
 
@@ -149,17 +149,17 @@ PtrPSchema         *pSchP;
 	/* qui portent la regle page */
 	if (pElPage->ElNext != NULL)
 	  {
-	     pSuiv = pElPage->ElNext;
+	     pNext = pElPage->ElNext;
 	     /* on saute les eventuelles marques de colonnes */
 	     /* ou de page (pour d'autres vues par exemple ?) */
-	     while (pSuiv != NULL
-		    && pSuiv->ElTypeNumber == PageBreak + 1)
-		pSuiv = pSuiv->ElNext;
+	     while (pNext != NULL
+		    && pNext->ElTypeNumber == PageBreak + 1)
+		pNext = pNext->ElNext;
 	     /* on cherche uniquement sur pPsuiv car normalement l'element */
 	     /* marque page debut a ete place juste devant l'element qui */
 	     /* portait la regle page correspondante */
-	     if (pSuiv != NULL)
-		pR = GetPageRule (pSuiv, pElPage->ElViewPSchema, pSchP);
+	     if (pNext != NULL)
+		pR = GetPageRule (pNext, pElPage->ElViewPSchema, pSchP);
 	  }
 	if (pR == NULL && pElPage->ElParent != NULL)
 	   /* si pSuiv ne portait pas de regle, */
@@ -179,19 +179,19 @@ PtrPSchema         *pSchP;
  /* |   PageHeaderFooter met a jour les variables PageHeight et PageFooterHeight | */
 /* |            selon le type de page auquel appartient l'element       | */
 /* |            Marque Page pointe par pElPage.                         | */
-/* |            Vue indique le numero de la vue dans le schema de       | */
+/* |            view indique le numero de la vue dans le schema de       | */
 /* |            presentation pour laquelle on construit des pages.      | */
 /* |            (c'est toujours 1 pour les vues d'elements associes).   | */
 /* |            Procedure utilisee pour la pagination et l'impression   | */
 /* |            les parametres b et pSchP sont utilises pour le print   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PageHeaderFooter (PtrElement pElPage, int Vue, int *b, PtrPSchema * pSchP)
+void                PageHeaderFooter (PtrElement pElPage, int view, int *b, PtrPSchema * pSchP)
 
 #else  /* __STDC__ */
-void                PageHeaderFooter (pElPage, Vue, b, pSchP)
+void                PageHeaderFooter (pElPage, view, b, pSchP)
 PtrElement          pElPage;
-int                 Vue;
+int                 view;
 int                *b;
 PtrPSchema         *pSchP;
 
@@ -209,7 +209,7 @@ PtrPSchema         *pSchP;
 	pR = NULL;
 	if (pElPage->ElParent != NULL)
 	   /* l'element englobant porte-t-il une regle page ? */
-	   pR = GetPageRule (pElPage->ElParent, Vue, &pSP);
+	   pR = GetPageRule (pElPage->ElParent, view, &pSP);
 	if (pR != NULL)		/* on a trouve la regle page */
 	  {
 	     *b = pR->PrPresBox[0];	/* parametre retour */
@@ -268,13 +268,13 @@ PtrAbstractBox             pAb;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                KillAbsBoxAboveLimit (PtrAbstractBox pP, int limite, int VueNb, PtrDocument pDoc, PtrAbstractBox * RedispAbsBox)
+void                KillAbsBoxAboveLimit (PtrAbstractBox pP, int limit, int viewNb, PtrDocument pDoc, PtrAbstractBox * RedispAbsBox)
 
 #else  /* __STDC__ */
-void                KillAbsBoxAboveLimit (pP, limite, VueNb, pDoc, RedispAbsBox)
+void                KillAbsBoxAboveLimit (pP, limit, viewNb, pDoc, RedispAbsBox)
 PtrAbstractBox             pP;
-int                 limite;
-int                 VueNb;
+int                 limit;
+int                 viewNb;
 PtrDocument         pDoc;
 PtrAbstractBox            *RedispAbsBox;
 
@@ -293,10 +293,10 @@ PtrAbstractBox            *RedispAbsBox;
 	      /* demande au Mediateur la position et la hauteur du pave */
 	     {
 		HautCoupure (pP, TRUE, &haut, &y, &NCar);
-		if (y < limite)
+		if (y < limit)
 		   /* le haut du pave est au-dessus de la limite */
 		   /* on ne tue pas les paves qui contiennent une marque de page */
-		   if (y + haut <= limite && !pP->AbOnPageBreak)
+		   if (y + haut <= limit && !pP->AbOnPageBreak)
 		      if (pP->AbPresentationBox)
 			 /* Tue les paves de presentation */
 			{
@@ -304,10 +304,10 @@ PtrAbstractBox            *RedispAbsBox;
 			   ApplyRefAbsBoxSupp (pP, RedispAbsBox, pDoc);
 			}
 		      else
-			 DestroyAbsBoxesView (pP->AbElement, pDoc, FALSE, VueNb);
+			 DestroyAbsBoxesView (pP->AbElement, pDoc, FALSE, viewNb);
 		   else
 		      /* le pave est traverse par la limite */
-		      KillAbsBoxAboveLimit (pP, limite, VueNb, pDoc, RedispAbsBox);
+		      KillAbsBoxAboveLimit (pP, limit, viewNb, pDoc, RedispAbsBox);
 	     }
 	pP = pP->AbNext;
      }
@@ -329,19 +329,19 @@ PtrAbstractBox            *RedispAbsBox;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int VueNb)
+boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb)
 
 #else  /* __STDC__ */
-boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, VueNb)
+boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb)
 PtrAbstractBox             pPage;
 int                 frame;
 PtrDocument         pDoc;
-int                 VueNb;
+int                 viewNb;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, PavR, PavRac;
+   PtrAbstractBox             pAb, RAbsBox, rootAbsBox;
    boolean             ret, det;
 
    ret = TRUE;			/* initialisation de ret, est-ce bon ? */
@@ -357,10 +357,10 @@ int                 VueNb;
 	   || pPage->AbElement->ElPageType == PgComputed
 	   || pPage->AbElement->ElPageType == PgUser))
      {
-	pAb = pPage->AbElement->ElAbstractBox[VueNb - 1];
+	pAb = pPage->AbElement->ElAbstractBox[viewNb - 1];
 	/* premier pave de la page */
-	PavRac = pAb->AbEnclosing;	/* racine */
-	if (PavRac == NULL || PavRac->AbEnclosing != NULL)
+	rootAbsBox = pAb->AbEnclosing;	/* racine */
+	if (rootAbsBox == NULL || rootAbsBox->AbEnclosing != NULL)
 	   /* erreur image abstraite */
 	   AffPaveDebug (pPage);
 	/* on detruit les paves precedents */
@@ -380,11 +380,11 @@ int                 VueNb;
 	/* si pas de destruction, on appelle ChangeConcreteImage pour positionner ret */
 	/* et refait evaluer la coupure de page */
 	RealPageHeight = BreakPageHeight;
-	ChangeRHPage (PavRac, pDoc, VueNb);
-	ret = ChangeConcreteImage (frame, &RealPageHeight, PavRac);
+	ChangeRHPage (rootAbsBox, pDoc, viewNb);
+	ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
 	if (det)
 	   /* libere tous les paves morts de la vue */
-	   FreeDeadAbstractBoxes (PavRac);
+	   FreeDeadAbstractBoxes (rootAbsBox);
 	/* cherche le rappel suivant de ce saut de page */
 	/* supprime */
      }				/* fin cas ou pPage est bien une marque de page */
@@ -402,29 +402,29 @@ int                 VueNb;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int VueNb)
+boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb)
 
 #else  /* __STDC__ */
-boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, VueNb)
+boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb)
 PtrAbstractBox             pPage;
 int                 frame;
 PtrDocument         pDoc;
-int                 VueNb;
+int                 viewNb;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pAb, RedispAbsBox, PavRac, pSuiv;
+   PtrAbstractBox             pAb, RedispAbsBox, rootAbsBox, pNext;
    boolean             stop, ret;
-   int                 h, yhaut, NbCar, yfilet;
+   int                 h, yTop, NbCar, yThread;
    PtrAbstractBox             pPa1;
 
    /* cherche d'abord le pave racine de la vue */
-   PavRac = pPage;
-   while (PavRac->AbEnclosing != NULL)
-      PavRac = PavRac->AbEnclosing;
+   rootAbsBox = pPage;
+   while (rootAbsBox->AbEnclosing != NULL)
+      rootAbsBox = rootAbsBox->AbEnclosing;
    /* marque tous les paves comme faisant partie de la page */
-   TagAbsBoxInPage (PavRac);
+   TagAbsBoxInPage (rootAbsBox);
    /* detruit, dans le pave Marque Page, les boites de bas de page qui */
    /* precedent le filet marquant le saut de page. */
    pAb = pPage->AbFirstEnclosed;
@@ -439,7 +439,7 @@ int                 VueNb;
 	{
 	   stop = TRUE;
 	   /* demande au Mediateur la position verticale du filet */
-	   HautCoupure (pAb, TRUE, &h, &yfilet, &NbCar);
+	   HautCoupure (pAb, TRUE, &h, &yThread, &NbCar);
 	}
       else
 	{
@@ -464,7 +464,7 @@ int                 VueNb;
 		     ApplyRefAbsBoxSupp (pAb, &RedispAbsBox, pDoc);
 		  }
 		else
-		   DestroyAbsBoxesView (pPa1->AbElement, pDoc, FALSE, VueNb);
+		   DestroyAbsBoxesView (pPa1->AbElement, pDoc, FALSE, viewNb);
 	  }
 	pAb = pAb->AbEnclosing;
 	/* marque les paves englobant la marque de page */
@@ -475,37 +475,37 @@ int                 VueNb;
    pAb = pPage;
    while (pAb != NULL)
      {
-	pSuiv = pAb->AbNext;
-	while (pSuiv != NULL)
+	pNext = pAb->AbNext;
+	while (pNext != NULL)
 	  {
-	     if (!pSuiv->AbDead)
+	     if (!pNext->AbDead)
 	       {
 		  /* demande au Mediateur la position et la hauteur du pave */
-		  HautCoupure (pSuiv, TRUE, &h, &yhaut, &NbCar);
-		  if (yhaut < yfilet)
+		  HautCoupure (pNext, TRUE, &h, &yTop, &NbCar);
+		  if (yTop < yThread)
 		     /* le haut du pave est au-dessus du saut de page */
-		     if (yhaut + h <= yfilet && !pSuiv->AbOnPageBreak)
-			if (pSuiv->AbPresentationBox)
+		     if (yTop + h <= yThread && !pNext->AbOnPageBreak)
+			if (pNext->AbPresentationBox)
 			   /* Tue les paves de presentation */
 			  {
-			     SetDeadAbsBox (pSuiv);
-			     ApplyRefAbsBoxSupp (pSuiv, &RedispAbsBox, pDoc);
+			     SetDeadAbsBox (pNext);
+			     ApplyRefAbsBoxSupp (pNext, &RedispAbsBox, pDoc);
 			  }
 			else
-			   DestroyAbsBoxesView (pSuiv->AbElement, pDoc, FALSE, VueNb);
+			   DestroyAbsBoxesView (pNext->AbElement, pDoc, FALSE, viewNb);
 		     else
 			/* le pave est traverse par le saut de page */
-			KillAbsBoxAboveLimit (pSuiv, yfilet, VueNb, pDoc, &RedispAbsBox);
+			KillAbsBoxAboveLimit (pNext, yThread, viewNb, pDoc, &RedispAbsBox);
 	       }
-	     pSuiv = pSuiv->AbNext;
+	     pNext = pNext->AbNext;
 	  }
 	pAb = pAb->AbEnclosing;
      }
    /* signale les paves morts au Mediateur */
    RealPageHeight = PageHeight;
-   ret = ChangeConcreteImage (frame, &RealPageHeight, PavRac);
+   ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
    /* libere tous les paves morts de la vue */
-   FreeDeadAbstractBoxes (PavRac);
+   FreeDeadAbstractBoxes (rootAbsBox);
    return ret;
 }
 #endif /* __COLPAGE__ */
