@@ -1224,7 +1224,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
  /* on nettoie d'abord l'image abstraite des paves morts */
  h = -1; /* changement de signification de la valeur de h */
  bool = ModifVue(frame, &h, pRacine);
- LibAbbDead(pRacine);
+ FreeDeadAbstractBoxes(pRacine);
  /* appel de CreePaves */
  /* TODO : a mettre en coherence ->CrPaveNouv pour appel ApplRegleRet */
  pPa1 = CreePaves(pElPage, pDoc, VueNb, TRUE, TRUE, &complet);
@@ -2029,7 +2029,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		Hauteurffective = HauteurPage;
 		(void) ModifVue(frame, &Hauteurffective, PavReaff);
 		/* libere tous les paves morts de la vue */ 
-		LibAbbDead(pAb);
+		FreeDeadAbstractBoxes(pAb);
 		/* detruit la marque de page a liberer dans l'arbre abstrait */
 		SupprMarquePage(pPage, pDoc, &pElLib);
 		/* signale au Mediateur les paves morts par suite de */
@@ -2332,7 +2332,7 @@ static void DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch)
 #endif /* __COLPAGE__ */
   (void) ModifVue(frame, &h, PavRacine);
   /* libere tous les paves morts de la vue */
-  LibAbbDead(PavRacine);
+  FreeDeadAbstractBoxes(PavRacine);
   /* indique qu'il faudra reappliquer les regles de presentation du */
   /* pave racine, par exemple pour recreer les boites de presentation */
   /* creees par lui et qui viennent d'etre detruites. */
@@ -2935,7 +2935,7 @@ HauteurTotalePage = 0;
                 tropcourt = ModifVue(frame, &h, PavRacine);
                 /* on libere les paves */
 		       pP = PavAssocADetruire->AbEnclosing;
-                LibAbbDead (PavAssocADetruire->AbEnclosing);
+                FreeDeadAbstractBoxes (PavAssocADetruire->AbEnclosing);
                 /* on recherche le pave englobant haut ou bas de page */
 		       while (pP->AbElement != pCorps->AbElement)
 			 pP = pP->AbEnclosing;

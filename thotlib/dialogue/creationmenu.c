@@ -174,7 +174,7 @@ boolean             ChoixElemNature;
      }
    TtaShowDialogue (menu, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */
-   /* mediateur ait appele' RetMenuChoixElem */
+   /* mediateur ait appele' ChoiceMenuCallback */
    TtaWaitShowDialogue ();
 }
 

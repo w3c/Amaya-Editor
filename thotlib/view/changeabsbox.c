@@ -1238,7 +1238,7 @@ PtrPSchema         *pSchP;
 /* ---------------------------------------------------------------------- */
 /* |    TuePave marque Mort le pave pointe par pAb et met a jour       | */
 /* |            le volume des paves englobants. Le pave mort sera       | */
-/* |            detruit par la procedure MajImAbs, apres traitement     | */
+/* |            detruit par la procedure AbstractImageUpdated, apres traitement     | */
 /* |            par le Mediateur.                                       | */
 /* ---------------------------------------------------------------------- */
 
@@ -2538,7 +2538,7 @@ int                 VueNb;
 				 DestrAbbNext (pAbb1, pDoc);
 				 h = 0;
 				 bool = ModifVue (frame, &h, pAbbRoot);
-				 LibAbbDead (pAbbRoot);
+				 FreeDeadAbstractBoxes (pAbbRoot);
 			      }
 			    if (assoc)
 			      {
@@ -4213,7 +4213,7 @@ boolean             reaff;
 #endif /* __COLPAGE__ */
 			DisplayFrame (frame);
 		     /* libere le pave tue' */
-		     LibAbbDead (pAb);
+		     FreeDeadAbstractBoxes (pAb);
 		     pAb = NULL;
 		     /* cherche le pave de presentation suivant de ce type */
 		  }

@@ -1479,7 +1479,7 @@ int                 ym;
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + large + EXTRA_GRAPH, pBox->BxYOrg + haut + EXTRA_GRAPH);
 		       AfFinFenetre (frame, 0);
 		       SetSelect (frame, FALSE);	/* Reaffiche la selection */
-		       NouvContenu (pAb);
+		       NewContent (pAb);
 		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, FALSE);
 		    }
 	       }

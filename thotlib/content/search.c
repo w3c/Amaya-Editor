@@ -220,8 +220,8 @@ boolean             select;
    RazSelect ();
    if (visible)
      {
-	MajImAbs (pDoc);
-	ReaffDoc (pDoc);
+	AbstractImageUpdated (pDoc);
+	RedisplayDocViews (pDoc);
      }
 
    /* si l'element TEXTE modifie' appartient soit a un element copie' */

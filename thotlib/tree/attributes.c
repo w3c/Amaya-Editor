@@ -386,7 +386,7 @@ int                *lastChar;
 	 /* selectionne */
 	 /* coupe le premier element selectionne' */
 	{
-	   CoupeAvantSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
+	   SplitBeforeSelection (pFirstSel, firstChar, pLastSel, lastChar, pDoc);
 
 	   /* prepare la creation des paves de la 2eme partie */
 	   for (view = 0; view < MAX_VIEW_DOC; view++)
@@ -405,7 +405,7 @@ int                *lastChar;
 	}
    if (*lastChar > 0)
       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
-	 CoupeApresSelection (*pLastSel, *lastChar, pDoc);
+	 SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1420,7 +1420,7 @@ PtrSSchema        pSS;
 			     /* pour l'attribut */
 			     if (pAttr->AeAttrType == AtReferenceAttr)
 				  /* demande a l'utilisateur l'element reference' */
-				  MandatoryAttrOK = RemplRefer (pEl, pAttr, pDoc, &pRefEl);
+				  MandatoryAttrOK = LinkReference (pEl, pAttr, pDoc, &pRefEl);
 			     else
 			       {
 				  if (ThotLocalActions[T_attrreq] != NULL)

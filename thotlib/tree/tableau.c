@@ -220,9 +220,9 @@ PtrDocument         pDoc;
    && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElSructSchema))
      {
 	DetrPaves (pEl, pDoc, FALSE);
-	MajImAbs (pDoc);
+	AbstractImageUpdated (pDoc);
 	CreeTousPaves (pEl, pDoc);
-	MajImAbs (pDoc);
+	AbstractImageUpdated (pDoc);
      }
 
    else if (AttrHasException (EXC_ID_Align_HorizDistrib, pAttr->AeAttrNum, pEl->ElSructSchema))
@@ -853,7 +853,7 @@ PtrDocument         pDoc;
 		       /* transforme la Colonne en Colonne_simple */
 		       pNouv = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum, TRUE, TRUE,
 					   TRUE, TRUE);
-		       ChaineChoix (pE, &pNouv, pDoc);
+		       InsertOption (pE, &pNouv, pDoc);
 		       /* met les attributs a la Colonne_simple */
 		       Tableau_MetAttrColonneSimple (pE, pDoc);
 		       /* met les attributs au Titre de la colonne */
@@ -882,7 +882,7 @@ PtrDocument         pDoc;
 				 /* transforme la Line en Ligne_simple */
 				 pNouv = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum,
 					      TRUE, TRUE, TRUE, TRUE);
-				 ChaineChoix (pE, &pNouv, pDoc);
+				 InsertOption (pE, &pNouv, pDoc);
 				 /* traite les attributs requis */
 				 AttachMandatoryAttributes (pE, pDoc);
 				 Tableau_CreeLigneSimple (pE, pDoc);
@@ -987,7 +987,7 @@ PtrDocument         pDoc;
 	Tableau_MetAttrTitreColonne (pEl->ElFirstChild, pDoc);
 	/* cree les paves de l'element */
 	CreeTousPaves (pEl, pDoc);
-	MajImAbs (pDoc);
+	AbstractImageUpdated (pDoc);
 	/* descend a la premiere Colonne */
 	pE = pEl->ElFirstChild->ElNext->ElFirstChild;
 	if (!TypeHasException (EXC_ID_Colonne, pE->ElTypeNumber, pE->ElSructSchema) &&
@@ -1006,7 +1006,7 @@ PtrDocument         pDoc;
 		       /* transforme la Colonne en Colonne_simple */
 		       pC = NewSubtree (NType, pEl->ElSructSchema, pDoc, pEl->ElAssocNum,
 					TRUE, TRUE, TRUE, TRUE);
-		       ChaineChoix (pE, &pC, pDoc);
+		       InsertOption (pE, &pC, pDoc);
 		       /* traite les attributs requis */
 		       AttachMandatoryAttributes (pE, pDoc);
 		       Tableau_CreeColSimple (pE, pDoc);
@@ -1042,7 +1042,7 @@ PtrDocument         pDoc;
 		  /* transforme la Line en Ligne_simple */
 		  pC = NewSubtree (NType, pEl->ElSructSchema, pDoc, pEl->ElAssocNum,
 				   TRUE, TRUE, TRUE, TRUE);
-		  ChaineChoix (pE, &pC, pDoc);
+		  InsertOption (pE, &pC, pDoc);
 		  /* traite les attributs requis */
 		  AttachMandatoryAttributes (pE, pDoc);
 		  Tableau_CreeLigneSimple (pE, pDoc);

@@ -1048,8 +1048,8 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	  if (updateframe[vue -1] > 0)
 	    /* eteint la selection dans la vue traitee */
 	    SetSelect(updateframe[vue -1], FALSE);
-        MajImAbs(pDoc);	/* met a jour l'image abstraite */
-        ReaffDoc(pDoc);	/* fait reafficher ce qui doit l'etre */
+        AbstractImageUpdated(pDoc);	/* met a jour l'image abstraite */
+        RedisplayDocViews(pDoc);	/* fait reafficher ce qui doit l'etre */
         for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	  if (updateframe[vue -1] > 0)
 	    /* rallume la selection dans la vue traitee */
@@ -1443,8 +1443,8 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	    if (updateframe[vue -1] > 0)
 	      /* eteint la selection dans la vue traitee */
 	      SetSelect(updateframe[vue -1], FALSE);
-	  MajImAbs(pDoc);     /* mise a jour de l'image abstraite */
-	  ReaffDoc(pDoc);  /* reafficher ce qu'il faut */
+	  AbstractImageUpdated(pDoc);     /* mise a jour de l'image abstraite */
+	  RedisplayDocViews(pDoc);  /* reafficher ce qu'il faut */
 	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	    if (updateframe[vue -1] > 0)
 	      /* rallume la selection dans la vue traitee */

@@ -989,7 +989,7 @@ boolean             EnAvant;
 								  pDoc, &PavR, &PavReaff, &volsupp, pAb, FALSE);
 						   KillPresSibling (pAb->AbNext, FALSE,
 								  pDoc, &PavR, &PavReaff, &volsupp, pAb, FALSE);
-						   LibAbbDead (pAb->AbEnclosing);
+						   FreeDeadAbstractBoxes (pAb->AbEnclosing);
 						}
 					   }
 				      }
@@ -2501,7 +2501,7 @@ boolean            *arret;
 			  else
 			     frame = pDoc->DocViewFrame[VueNb - 1];
 			  bool = ModifVue (frame, &h, pAbbRoot);
-			  LibAbbDead (pAbbRoot);
+			  FreeDeadAbstractBoxes (pAbbRoot);
 			  /* on met les regles de creation en attente */
 			  /* pour provoquer la recreation des paves de pres */
 			  /* on cherche les regles a retarder */

@@ -10,42 +10,42 @@ extern void NotifySubTree ( APPevent AppEvent,
                             PtrDocument pDoc,
                             PtrElement pEl,
                             int docOrig );
-extern void ReaffDoc ( PtrDocument pDoc );
-extern void MajImAbs ( PtrDocument pDoc );
-extern void ChaineChoix ( PtrElement pEl,
+extern void RedisplayDocViews ( PtrDocument pDoc );
+extern void AbstractImageUpdated ( PtrDocument pDoc );
+extern void InsertOption ( PtrElement pEl,
                           PtrElement * p,
                           PtrDocument pDoc );
-extern void Traite_exceptions_creation ( PtrElement pEl,
+extern void CreationExceptions ( PtrElement pEl,
                                          PtrDocument pDoc );
-extern void NomTypeUtilisateur ( PtrSSchema pSS,
+extern void GetExternalTypeName ( PtrSSchema pSS,
                                  int NumType,
                                  Name Retour );
-extern void PavesTexteCoupe ( PtrElement pEl,
+extern void BuildAbsBoxSpliText ( PtrElement pEl,
                               PtrElement pSuite,
                               PtrElement pSuivant,
                               PtrDocument pDoc );
-extern void CoupeAvantSelection ( PtrElement * premsel,
+extern void SplitBeforeSelection ( PtrElement * premsel,
                                   int *premcar,
                                   PtrElement * dersel,
                                   int *dercar,
                                   PtrDocument pDoc );
-extern void CoupeApresSelection ( PtrElement dersel,
+extern void SplitAfterSelection ( PtrElement dersel,
                                   int dercar,
                                   PtrDocument pDoc );
-extern PtrAbstractBox CreeFeuille ( PtrAbstractBox DansPav,
+extern PtrAbstractBox CreateALeaf ( PtrAbstractBox DansPav,
                                     int *frame,
                                     LeafType Nat,
                                     boolean Before );
-extern void ReaffNouvContenu ( PtrElement pEl1,
+extern void RedisplayNewContent ( PtrElement pEl1,
                                PtrDocument pDoc,
                                int dvol,
                                int VueAJour,
                                PtrAbstractBox pAb );
-extern void NouvContenu ( PtrAbstractBox pAb );
-extern PtrElement CreeAssocElem ( PtrDocument doc,
+extern void NewContent ( PtrAbstractBox pAb );
+extern PtrElement CreateFirstAssocElement ( PtrDocument doc,
                                   int RefType,
                                   PtrSSchema pSSref );
-extern boolean RemplRefer ( PtrElement pElRef,
+extern boolean LinkReference ( PtrElement pElRef,
                             PtrAttribute pAttrRef,
                             PtrDocument pDoc,
                             PtrElement * pSelEl );
@@ -55,29 +55,29 @@ extern int MenuChoixElem ( PtrSSchema pS,
                            char *BufMenu,
                            Name TitreMenu,
                            PtrDocument pDoc );
-extern void RetMenuChoixElem ( int Entree,
+extern void ChoiceMenuCallback ( int Entree,
                                char *pNom );
-extern PtrElement CreeVoisin ( PtrDocument pDoc,
+extern PtrElement CreateSibling ( PtrDocument pDoc,
                                PtrElement pEl,
                                boolean Dev,
                                boolean CreePaves,
                                int TypeEl,
                                PtrSSchema pSS,
                                boolean Inclusion );
-extern PtrElement CreeDedans ( PtrDocument pDoc,
+extern PtrElement CreateWithinElement ( PtrDocument pDoc,
                                PtrElement pEl,
                                boolean CreePaves,
                                boolean Inclusion );
-extern PtrElement CreeColleDansTexte ( boolean cree,
+extern PtrElement CreateOrPasteInText ( boolean cree,
                                        boolean colle,
                                        boolean Page,
                                        PtrElement * pLib );
-extern void CreeMenuPage ( void );
-extern void CreeColle ( boolean cree,
+extern void CreateInsertPageMenu ( void );
+extern void CreatePasteIncludeCmd ( boolean cree,
                         boolean colle,
                         char bouton,
                         boolean * okCreeColle );
-extern void RetMenuCreeColle ( boolean cree,
+extern void CreatePasteIncludeMenuCallback ( boolean cree,
                                boolean colle,
                                int Val );
 
@@ -87,42 +87,42 @@ extern void NotifySubTree (/* APPevent AppEvent,
                               PtrDocument pDoc,
                               PtrElement pEl,
                               int docOrig */);
-extern void ReaffDoc (/* PtrDocument pDoc */);
-extern void MajImAbs (/* PtrDocument pDoc */);
-extern void ChaineChoix (/* PtrElement pEl,
+extern void RedisplayDocViews (/* PtrDocument pDoc */);
+extern void AbstractImageUpdated (/* PtrDocument pDoc */);
+extern void InsertOption (/* PtrElement pEl,
                             PtrElement * p,
                             PtrDocument pDoc */);
-extern void Traite_exceptions_creation (/* PtrElement pEl,
+extern void CreationExceptions (/* PtrElement pEl,
                                            PtrDocument pDoc */);
-extern void NomTypeUtilisateur (/* PtrSSchema pSS,
+extern void GetExternalTypeName (/* PtrSSchema pSS,
                                    int NumType,
                                    Name Retour */);
-extern void PavesTexteCoupe (/* PtrElement pEl,
+extern void BuildAbsBoxSpliText (/* PtrElement pEl,
                                 PtrElement pSuite,
                                 PtrElement pSuivant,
                                 PtrDocument pDoc */);
-extern void CoupeAvantSelection (/* PtrElement * premsel,
+extern void SplitBeforeSelection (/* PtrElement * premsel,
                                     int *premcar,
                                     PtrElement * dersel,
                                     int *dercar,
                                     PtrDocument pDoc */);
-extern void CoupeApresSelection (/* PtrElement dersel,
+extern void SplitAfterSelection (/* PtrElement dersel,
                                     int dercar,
                                     PtrDocument pDoc */);
-extern PtrAbstractBox CreeFeuille (/* PtrAbstractBox DansPav,
+extern PtrAbstractBox CreateALeaf (/* PtrAbstractBox DansPav,
                                       int *frame,
                                       LeafType Nat,
                                       boolean Before */);
-extern void ReaffNouvContenu (/* PtrElement pEl1,
+extern void RedisplayNewContent (/* PtrElement pEl1,
                                  PtrDocument pDoc,
                                  int dvol,
                                  int VueAJour,
                                  PtrAbstractBox pAb */);
-extern void NouvContenu (/* PtrAbstractBox pAb */);
-extern PtrElement CreeAssocElem (/* PtrDocument doc,
+extern void NewContent (/* PtrAbstractBox pAb */);
+extern PtrElement CreateFirstAssocElement (/* PtrDocument doc,
                                     int RefType,
                                     PtrSSchema pSSref */);
-extern boolean RemplRefer (/* PtrElement pElRef,
+extern boolean LinkReference (/* PtrElement pElRef,
                               PtrAttribute pAttrRef,
                               PtrDocument pDoc,
                               PtrElement * pSelEl */);
@@ -132,29 +132,29 @@ extern int MenuChoixElem (/* PtrSSchema pS,
                              char *BufMenu,
                              Name TitreMenu,
                              PtrDocument pDoc */);
-extern void RetMenuChoixElem (/* int Entree,
+extern void ChoiceMenuCallback (/* int Entree,
                                  char *pNom */);
-extern PtrElement CreeVoisin (/* PtrDocument pDoc,
+extern PtrElement CreateSibling (/* PtrDocument pDoc,
                                  PtrElement pEl,
                                  boolean Dev,
                                  boolean CreePaves,
                                  int TypeEl,
                                  PtrSSchema pSS,
                                  boolean Inclusion */);
-extern PtrElement CreeDedans (/* PtrDocument pDoc,
+extern PtrElement CreateWithinElement (/* PtrDocument pDoc,
                                  PtrElement pEl,
                                  boolean CreePaves,
                                  boolean Inclusion */);
-extern PtrElement CreeColleDansTexte (/* boolean cree,
+extern PtrElement CreateOrPasteInText (/* boolean cree,
                                          boolean colle,
                                          boolean Page,
                                          PtrElement * pLib */);
-extern void CreeMenuPage (/* void */);
-extern void CreeColle (/* boolean cree,
+extern void CreateInsertPageMenu (/* void */);
+extern void CreatePasteIncludeCmd (/* boolean cree,
                           boolean colle,
                           char bouton,
                           boolean * okCreeColle */);
-extern void RetMenuCreeColle (/* boolean cree,
+extern void CreatePasteIncludeMenuCallback (/* boolean cree,
                                  boolean colle,
                                  int Val */);
 

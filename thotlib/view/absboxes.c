@@ -409,15 +409,15 @@ PtrElement          pEl;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibAbbDead libere tous les paves marques Mort dans le           | */
+/* |    FreeDeadAbstractBoxes libere tous les paves marques Mort dans le           | */
 /* |            sous-arbre de racine pAb.                              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                LibAbbDead (PtrAbstractBox pAb)
+void                FreeDeadAbstractBoxes (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                LibAbbDead (pAb)
+void                FreeDeadAbstractBoxes (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -436,7 +436,7 @@ PtrAbstractBox             pAb;
 	   while (pAbb != NULL)
 	     {
 		pAbbNext = pAbb->AbNext;
-		LibAbbDead (pAbb);
+		FreeDeadAbstractBoxes (pAbb);
 		pAbb = pAbbNext;
 	     }
 	}
@@ -1948,7 +1948,7 @@ int                 frame;
 		  if (pDoc->DocAssocModifiedAb[vue - 1] != NULL)
 		    {
 		       (void) ModifVue (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
-		       LibAbbDead (pDoc->DocAssocModifiedAb[vue - 1]);
+		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[vue - 1]);
 		       pDoc->DocAssocModifiedAb[vue - 1] = NULL;
 		    }
 	       }
@@ -1966,7 +1966,7 @@ int                 frame;
 		  /* pages ont pu etre creees TODO incoherent ??? */
 #endif /* __COLPAGE__ */
 		  (void) ModifVue (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
-		  LibAbbDead (pDoc->DocViewModifiedAb[vue - 1]);
+		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[vue - 1]);
 		  pDoc->DocViewModifiedAb[vue - 1] = NULL;
 	       }
 	  }
@@ -2049,8 +2049,8 @@ int                 frame;
 	     /* appel de modifVue depuis la racine car de nouvelles */
 	     /* pages ont pu etre detruites */
 	     (void) ModifVue (frame, &h, pAb);
-	     /* meme chose pour LibAbbDead */
-	     LibAbbDead (pAb);
+	     /* meme chose pour FreeDeadAbstractBoxes */
+	     FreeDeadAbstractBoxes (pAb);
 	     /* DocAssocModifiedAb et DocViewModifiedAb non utilises */
 	     if (assoc)
 		pDoc->DocAssocModifiedAb[vue - 1] = NULL;
@@ -2065,14 +2065,14 @@ int                 frame;
 		  if (pDoc->DocAssocModifiedAb[vue - 1] != NULL)
 		    {
 		       (void) ModifVue (frame, &h, pDoc->DocAssocModifiedAb[vue - 1]);
-		       LibAbbDead (pDoc->DocAssocModifiedAb[vue - 1]);
+		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[vue - 1]);
 		       pDoc->DocAssocModifiedAb[vue - 1] = NULL;
 		    }
 	       }
 	     else if (pDoc->DocViewModifiedAb[vue - 1] != NULL)
 	       {
 		  (void) ModifVue (frame, &h, pDoc->DocViewModifiedAb[vue - 1]);
-		  LibAbbDead (pDoc->DocViewModifiedAb[vue - 1]);
+		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[vue - 1]);
 		  pDoc->DocViewModifiedAb[vue - 1] = NULL;
 	       }
 #endif /* __COLPAGE__ */
@@ -2309,7 +2309,7 @@ int                 frame;
 			  pAbbRoot->AbNew = TRUE;
 			  pAbbRoot->AbTruncatedHead = TRUE;
 			  pAbbRoot->AbTruncatedTail = TRUE;
-			  LibAbbDead (pAbbRoot);
+			  FreeDeadAbstractBoxes (pAbbRoot);
 		       }
 		     else
 		       {
@@ -2651,7 +2651,7 @@ int                 frame;
 				       ModifVue (frame, &h, pAbbRoot);
 				       pAbbRoot->AbDead = FALSE;
 				       /* resucite le pave racine */
-				       LibAbbDead (pAbbRoot);
+				       FreeDeadAbstractBoxes (pAbbRoot);
 				       /* libere tous les pave detruits */
 				       pDo1->DocAssocModifiedAb[nAssoc - 1] = NULL;
 				    }
@@ -2666,7 +2666,7 @@ int                 frame;
 				       pAbbRoot->AbDead = TRUE;
 				       ModifVue (frame, &h, pAbbRoot);
 				       pAbbRoot->AbDead = FALSE;
-				       LibAbbDead (pAbbRoot);
+				       FreeDeadAbstractBoxes (pAbbRoot);
 				       pDo1->DocViewModifiedAb[Vue - 1] = NULL;
 				    }
 			       }

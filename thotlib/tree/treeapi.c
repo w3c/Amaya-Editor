@@ -503,7 +503,7 @@ boolean             withContent;
 		  else
 		     ident = FALSE;
 #ifndef NODISPLAY
-		  ChaineChoix (pEl, &firstCreated, TabDocuments[document - 1]);
+		  InsertOption (pEl, &firstCreated, TabDocuments[document - 1]);
 #else
 		  InsertElemInChoice (pEl, &firstCreated, FALSE);
 #endif
@@ -1101,7 +1101,7 @@ Document            document;
 	  {
 	     ((PtrElement) (*newElement))->ElAssocNum = ((PtrElement) parent)->ElAssocNum;
 #ifndef NODISPLAY
-	     ChaineChoix ((PtrElement) parent, (PtrElement *) newElement,
+	     InsertOption ((PtrElement) parent, (PtrElement *) newElement,
 			  TabDocuments[document - 1]);
 #else
 	     InsertElemInChoice ((PtrElement) parent, (PtrElement *) newElement, FALSE);

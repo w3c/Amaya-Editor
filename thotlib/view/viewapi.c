@@ -528,7 +528,7 @@ boolean             complete;
 #endif /* __COLPAGE__ */
 	ModifVue (frame, &h, pAbbRoot);
 	/* libere tous les paves morts de la vue */
-	LibAbbDead (pAbbRoot);
+	FreeDeadAbstractBoxes (pAbbRoot);
 
 	/* indique qu'il faudra reappliquer les regles de presentation du */
 	/* pave racine, par exemple pour recreer les boites de presentation */
@@ -1559,7 +1559,7 @@ boolean             creation;
 	}
    /* applique les regles retardees concernant les paves cree's */
    ApplReglesRetard (newElement, pDoc);
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
    if (creation)
      {
@@ -1685,7 +1685,7 @@ boolean             newPavModif;
    if (reaffiche)
       /* on fait reafficher pour visualiser le changement de couleur */
      {
-	MajImAbs (TabDocuments[document - 1]);
+	AbstractImageUpdated (TabDocuments[document - 1]);
 	RedisplayCommand (document);
      }
    /* meme traitement pour les fils qui heritent les droits d'acces */
@@ -2021,7 +2021,7 @@ Document            document;
         (*ThotLocalActions[T_TableauCreeFiletLigne])(pPrevious, pEl, pDoc);
      }
    /* reevalue l'image de toutes les vues */
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
    if (pEl != NULL)
      {
@@ -2068,7 +2068,7 @@ Document            document;
    /* Detruit les paves de l'element */
    DetrPaves (pEl, pDoc, TRUE);
    /* reevalue l'image de toutes les vues */
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    /* on ne cree les paves que s'ils tombent dans la partie de l'image */
    /* du document deja construite */
    if (!VueAssoc (pEl))
@@ -2098,7 +2098,7 @@ Document            document;
 	   /* cree effectivement les paves du nouvel element dans la vue */
 	   CrPaveNouv (pEl, pDoc, 0);
 	}
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    /* pas d'operation de reaffichage secondaires */
    RedisplayCommand (document);
 }
@@ -2148,7 +2148,7 @@ Document            document;
       /* ce n'est pas une racine, on detruit les paves de l'element */
       DetrPaves (pEl, pDoc, TRUE);
    /* reevalue l'image de toutes les vues */
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    /* pas d'operation de reaffichage secondaires */
    RedisplayCommand (document);
 }
@@ -2180,11 +2180,11 @@ Document            document;
       return;
    /* supprime les anciens paves de la reference */
    DetrPaves (element, pDoc, FALSE);
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    ApplyTransmitRules (element, pDoc);
    RepApplyTransmitRules (element, element, pDoc);
    CreeTousPaves (element, pDoc);
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
    /* reaffiche les paves qui copient l'element */
    ReaffPaveCopie (element, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
@@ -2384,7 +2384,7 @@ Document            document;
 		   Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	  }
      }
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
 }
 
@@ -2609,7 +2609,7 @@ Document            document;
       UpdateCountersByAttr (pEl, pAttr, TabDocuments[document - 1]);
    /* on applique les regles retardee */
    ApplReglesRetard (pEl, TabDocuments[document - 1]);
-   MajImAbs (TabDocuments[document - 1]);
+   AbstractImageUpdated (TabDocuments[document - 1]);
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
@@ -2671,7 +2671,7 @@ Document            document;
 	/* du sous-arbre avec ce type d'attribut */
 	ApplyAttrPRules (pEl, TabDocuments[document - 1], pAttrAsc);
      }
-   MajImAbs (TabDocuments[document - 1]);
+   AbstractImageUpdated (TabDocuments[document - 1]);
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
@@ -2704,7 +2704,7 @@ PtrPRule        pRegle;
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
    ApplNouvRegle (TabDocuments[document - 1], pRegle, pEl);
-   MajImAbs (TabDocuments[document - 1]);
+   AbstractImageUpdated (TabDocuments[document - 1]);
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
@@ -2737,7 +2737,7 @@ int                 vue;
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
    AppliqueRegleStandard (pEl, TabDocuments[document - 1], typeRegleP, vue);
-   MajImAbs (TabDocuments[document - 1]);
+   AbstractImageUpdated (TabDocuments[document - 1]);
    RedisplayCommand (document);
    /* le retrait de la regle de presentation doit etre pris en compte */
    /* dans les copies-inclusions de l'element */
@@ -2767,7 +2767,7 @@ PtrElement          pEl;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   MajImAbs (TabDocuments[document - 1]);
+   AbstractImageUpdated (TabDocuments[document - 1]);
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
@@ -2791,7 +2791,7 @@ Document            document;
 	/* eteint la selection */
 	EteintOuAllumeSelection (TabDocuments[document - 1], FALSE);
 	/* reaffiche ce qui a deja ete prepare' */
-	ReaffDoc (TabDocuments[document - 1]);
+	RedisplayDocViews (TabDocuments[document - 1]);
 	/* rallume la selection */
 	EteintOuAllumeSelection (TabDocuments[document - 1], TRUE);
      }
@@ -2872,7 +2872,7 @@ DisplayMode         newDisplayMode;
 		  if (documentDisplayMode[document - 1] == DeferredDisplay
 		      || (!documentNewSelection[document - 1].SDSelActive ||
 		      documentNewSelection[document - 1].SDElemSel == NULL))
-		     ReaffDoc (TabDocuments[document - 1]);
+		     RedisplayDocViews (TabDocuments[document - 1]);
 
 		  if (!documentNewSelection[document - 1].SDSelActive)
 		     /* la selection n'a pas change', on la rallume */

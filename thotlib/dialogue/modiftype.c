@@ -134,9 +134,9 @@ void                StructEditingLoadResources ()
      {
 	/* Connecte les actions liees au traitement du split */
 	TteConnectAction (T_chsplit, (Proc) MajItemSplit);
-	TteConnectAction (T_creecolle, (Proc) CreeColle);
-	TteConnectAction (T_rcreecolle, (Proc) RetMenuCreeColle);
-	TteConnectAction (T_rchoice, (Proc) RetMenuChoixElem);
+	TteConnectAction (T_creecolle, (Proc) CreatePasteIncludeCmd);
+	TteConnectAction (T_rcreecolle, (Proc) CreatePasteIncludeMenuCallback);
+	TteConnectAction (T_rchoice, (Proc) ChoiceMenuCallback);
 	TteConnectAction (T_raskfornew, (Proc) RetMenuAskForNew);
 	ImageMenuLoadResources ();
      }

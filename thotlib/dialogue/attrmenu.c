@@ -796,14 +796,14 @@ int                 frame;
 		pAttrNouv->AeAttrReference->RdElement = NULL;
 		pAttrNouv->AeAttrReference->RdAttribute = pAttrNouv;
 		/* demande a l'utilisateur l'element reference' */
-		if (RemplRefer (PremSel, pAttrNouv, SelDoc, &AssocCreated))
+		if (LinkReference (PremSel, pAttrNouv, SelDoc, &AssocCreated))
 		  if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
 		    (*ThotLocalActions[T_TableauVerifExtension])
 		      (pAttrNouv, PremSel, DerSel, FALSE);
 		if (AssocCreated != NULL)
 		  {
 		     CreeTousPaves (AssocCreated, SelDoc);
-		     MajImAbs (SelDoc);
+		     AbstractImageUpdated (SelDoc);
 		  }
 		/* applique l'attribut a la partie selectionnee */
 		AttachAttrToRange (pAttrNouv, dercar, premcar, DerSel, PremSel,

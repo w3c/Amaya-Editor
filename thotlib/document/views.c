@@ -790,8 +790,8 @@ int                 accessMode;
 	   pDoc->DocAssocModifiedAb[a - 1] = pDoc->DocAssocRoot[a - 1]->ElAbstractBox[0];
 	}
    /* reaffiche toutes les vues */
-   MajImAbs (pDoc);
-   ReaffDoc (pDoc);
+   AbstractImageUpdated (pDoc);
+   RedisplayDocViews (pDoc);
 }
 
 
@@ -823,7 +823,7 @@ PtrDocument         pDoc;
       ACreer[0] = pEl->ElAbstractBox[0] != NULL;
    /* detruit les paves de l'element */
    DetrPaves (pEl, pDoc, FALSE);
-   MajImAbs (pDoc);
+   AbstractImageUpdated (pDoc);
    /* supprime l'ancienne copie dans l'arbre abstrait */
    pEl1 = pEl;
    if (pEl1->ElTerminal)
@@ -894,8 +894,8 @@ PtrDocument         pDoc;
      }
    ApplReglesRetard (pEl, pDoc);
    /* reaffiche l'element dans toutes les vues ou il existe */
-   MajImAbs (pDoc);
-   ReaffDoc (pDoc);
+   AbstractImageUpdated (pDoc);
+   RedisplayDocViews (pDoc);
    /* Reaffiche les numeros suivants qui changent */
    MajNumeros (NextElement (pEl), pEl, pDoc, TRUE);
 }

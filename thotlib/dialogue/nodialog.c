@@ -134,7 +134,7 @@ Name                 name;
 {
 }
 
-boolean             RemplRefer ()
+boolean             LinkReference ()
 {
    return FALSE;
 }
@@ -399,10 +399,10 @@ int                 thotWindowid;
 }
 
 #ifdef __STDC__
-void                ChaineChoix (PtrElement pEl, PtrElement * p, PtrDocument pDoc)
+void                InsertOption (PtrElement pEl, PtrElement * p, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                ChaineChoix (pEl, p, pDoc)
+void                InsertOption (pEl, p, pDoc)
 PtrElement          pEl;
 PtrElement         *p;
 PtrDocument         pDoc;
