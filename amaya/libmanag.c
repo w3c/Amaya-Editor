@@ -1595,7 +1595,12 @@ void InitSVGLibraryManagerStructure ()
 	    {
 	      len = 0;
 	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
-		urlstring[len++] = (char)c;
+		{
+		  if (c == EOL)
+		    urlstring[len] = EOS;
+		  else
+		    urlstring[len++] = (char)c;
+		}
 	      urlstring[len] = EOS;
 	      cont = (c == EOL);
 	      if (urlstring[0] != EOS)
@@ -1628,7 +1633,12 @@ void InitSVGLibraryManagerStructure ()
 	    {
 	      len = 0;
 	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
-		urlstring[len++] = (char)c;
+		{
+		  if (c == EOL)
+		    urlstring[len] = EOS;
+		  else
+		    urlstring[len++] = (char)c;
+		}
 	      urlstring[len] = EOS;
 	      cont = (c == EOL);
 	      if (urlstring[0] != EOS)

@@ -7488,6 +7488,8 @@ void InitStringForCombobox ()
 		{
 		  if (c == '"')
 		    urlstring[len] = EOS;
+		  else if (c == EOL)
+		    urlstring[len] = EOS;
 		  else
 		    urlstring[len++] = (char)c;
 		}
