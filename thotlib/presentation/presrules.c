@@ -99,14 +99,14 @@ PtrAbstractBox     *pAbb;
 
 
 /*----------------------------------------------------------------------
-   	AscentAbsBox	  rend le premier element pElAsc ascendant de pE	
-   			  et qui possede un pave dans la vue view		
-   			  retourne ce pave dans pAbb ou NULL sinon 	
+   	AncestorAbsBox	  rend le premier element pElAsc ascendant de pE
+   			  et qui possede un pave dans la vue view
+   			  retourne ce pave dans pAbb ou NULL sinon
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AscentAbsBox (PtrElement pE, DocViewNumber view, PtrAbstractBox * pAbb, PtrElement * pElAsc)
+static void         AncestorAbsBox (PtrElement pE, DocViewNumber view, PtrAbstractBox * pAbb, PtrElement * pElAsc)
 #else  /* __STDC__ */
-static void         AscentAbsBox (pE, view, pAbb, pElAsc)
+static void         AncestorAbsBox (pE, view, pAbb, pElAsc)
 PtrElement          pE;
 DocViewNumber       view;
 PtrAbstractBox     *pAbb;
@@ -116,6 +116,7 @@ PtrElement         *pElAsc;
 {
 
    *pElAsc = pE;
+   *pAbb = NULL;
    if ((*pElAsc)->ElParent == NULL)
       *pAbb = NULL;
    else
@@ -158,15 +159,15 @@ DocViewNumber       view;
       switch (pPRule->PrInheritMode)
 	    {
 	       case InheritParent:
-		  AscentAbsBox (pEl, view, &pAbb, &pElInherit);
+		  AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
 		  break;
 	       case InheritGrandFather:
-		  AscentAbsBox (pEl, view, &pAbb, &pElInherit);
+		  AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
 		  if (pAbb != NULL)
 		    {
 		       pElInherit = pAbb->AbElement;
 		       pAbb = NULL;
-		       AscentAbsBox (pElInherit, view, &pAbb, &pElInherit);
+		       AncestorAbsBox (pElInherit, view, &pAbb, &pElInherit);
 		    }
 		  break;
 	       case InheritPrevious:
@@ -180,7 +181,7 @@ DocViewNumber       view;
 			     pAbb = NULL;
 		    }
 		  if (pAbb == NULL)
-		     AscentAbsBox (pEl, view, &pAbb, &pElInherit);
+		     AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
 		  break;
 	       case InheritChild:
 		  while (!pElInherit->ElTerminal && pElInherit->ElFirstChild != NULL && pAbb == NULL)
@@ -687,18 +688,13 @@ PtrAttribute        pAttr;
 			   {
 			      if (pPRule->PrType == PtSize)
 				{
-				   AscentAbsBox (pEl, view, &pAbb, &pElInherit);
+				   AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
 				   if (pAbb == NULL)
 				      *ok = FALSE;
 				   else
 				     {
-					val = pAbb->AbSize + i;
+					val = (pAbb->AbSize * val) / 100;
 					*unit = pAbb->AbSizeUnit;
-					if (*unit == UnRelative)
-					   if (val > MAX_LOG_SIZE)
-					      val = MAX_LOG_SIZE;
-					   else if (val < 0)
-					      val = 0;
 				     }
 				}
 			      else

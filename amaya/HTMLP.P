@@ -4781,7 +4781,7 @@ RULES
 	Width: 2 cm;
 	Adjust: Enclosing =;
 	CreateBefore(TD_S);
-	if not rowspan
+	if not RowExt
 	   CreateAfter (CellFooter);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -5561,13 +5561,15 @@ dans des paragraphes s affichent a cote de leur cadre...
  Border (Data_cell) > 0:
 	BEGIN
 	CreateBefore(CellTopBorder);
-	CreateAfter(CellRightBorder);
+	if not RowExt
+	   CreateAfter(CellRightBorder);
 	END;
 
  Border (Heading_cell) > 0:
 	BEGIN
 	CreateBefore(CellTopBorder);
-	CreateAfter(CellRightBorder);
+	if not RowExt
+	   CreateAfter(CellRightBorder);
 	END;
 
  Border (Table_cell_ghost) > 0:
