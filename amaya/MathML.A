@@ -1,0 +1,8 @@
+APPLICATION MathML;
+
+ELEMENTS
+
+   MI:
+	ElemTextModify.Post -> MImodified;
+
+END
