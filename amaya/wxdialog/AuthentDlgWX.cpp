@@ -13,8 +13,6 @@
 #include "message_wx.h"
 
 static int      MyRef;
-static char     Buffer[100];
-
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -107,11 +105,13 @@ void AuthentDlgWX::OnCancelButton( wxCommandEvent& event )
 void AuthentDlgWX::OnName ( wxCommandEvent& event )
 {
   wxString wx_name = XRCCTRL(*this, "wxID_AU", wxTextCtrl)->GetValue( );
-  // set the printer name
-  // allocate a temporary buffer to copy the 'const char *' printer name buffer 
+
+  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
+  char buffer[512];
   wxASSERT( wx_name.Len() < 512 );
-  strcpy( Buffer, wx_name.ToAscii() );
-  ThotCallback (BaseDialog + NameText,  STRING_DATA, (char *)Buffer );
+  strcpy( buffer, (const char*)wx_name.mb_str(wxConvUTF8) );
+
+  ThotCallback (BaseDialog + NameText,  STRING_DATA, (char *)buffer );
 }
 
 /*---------------------------------------------------------------
@@ -120,10 +120,13 @@ void AuthentDlgWX::OnName ( wxCommandEvent& event )
 void AuthentDlgWX::OnPassword ( wxCommandEvent& event )
 {
   wxString wx_passwd = XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->GetValue( );
-  // allocate a temporary buffer to copy the 'const char *' printer name buffer 
+
+  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
+  char buffer[512];
   wxASSERT( wx_passwd.Len() < 512 );
-  strcpy( Buffer, wx_passwd.ToAscii() );
-  ThotCallback (BaseDialog + PasswordText,  STRING_DATA, (char *)Buffer );
+  strcpy( buffer, (const char*)wx_passwd.mb_str(wxConvUTF8) );
+
+  ThotCallback (BaseDialog + PasswordText,  STRING_DATA, (char *)buffer );
 }
 
 #endif /* _WX */

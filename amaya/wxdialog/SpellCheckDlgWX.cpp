@@ -306,10 +306,10 @@ void SpellCheckDlgWX::OnSpecialChar ( wxCommandEvent& event )
   wxString special_char = XRCCTRL(*this, "wxID_IGNORE_CHAR", wxTextCtrl)->GetValue( );
   wxLogDebug( _T("SpellCheckDlgWX::OnSpecialChar - special_char =")+ special_char);
 
-  // allocate a temporary buffer to copy the 'const char *' special_char buffer 
-  char buffer[100];
-  wxASSERT( special_char.Len() < 100 );
-  strcpy( buffer, special_char.ToAscii() );
+  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
+  char buffer[512];
+  wxASSERT( special_char.Len() < 512 );
+  strcpy( buffer, (const char*)special_char.mb_str(wxConvUTF8) );  
   ThotCallback (m_base + ChkrSpecial,  STRING_DATA, (char *)buffer );
 }
 

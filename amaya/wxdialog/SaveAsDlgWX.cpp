@@ -313,13 +313,10 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnCharsetCbx( wxCommandEvent& event )
 {
-  char buf_charset[50];
-
   wxString wx_charset_sel = XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->GetValue ();
-  // allocate a temporary buffer to copy the 'const char *' url buffer 
-  wxASSERT( wx_charset_sel.Len() < 50 );
-  strcpy( buf_charset, wx_charset_sel.ToAscii() );
-  strcpy (UserCharset, buf_charset);
+
+  wxASSERT( wx_charset_sel.Len() < MAX_LENGTH );
+  strcpy( UserCharset, (const char*)wx_charset_sel.mb_str(wxConvUTF8) );
 }
 
 /*----------------------------------------------------------------------
@@ -327,14 +324,10 @@ void SaveAsDlgWX::OnCharsetCbx( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 {
-  char buf_mimetype[50];
-
   wxString wx_mimetype = XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->GetValue ();
-  // allocate a temporary buffer to copy the 'const char *' url buffer 
-  wxASSERT( wx_mimetype.Len() < 50 );
-  strcpy( buf_mimetype, wx_mimetype.ToAscii() );
-  strcpy (UserMimeType, buf_mimetype);
 
+  wxASSERT( wx_mimetype.Len() < MAX_LENGTH );
+  strcpy( UserMimeType, (const char*)wx_mimetype.mb_str(wxConvUTF8) );
 }
 
 /*----------------------------------------------------------------------
@@ -367,13 +360,13 @@ void SaveAsDlgWX::OnUrlsChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
 {
-  char buffer[100];
-
   wxString doc_location = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
-  // set the printer name
-  // allocate a temporary buffer to copy the 'const char *' printer name buffer 
-  wxASSERT( doc_location.Len() < 100 );
-  strcpy( buffer, doc_location.ToAscii() );
+
+  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
+  char buffer[512];
+  wxASSERT( doc_location.Len() < 512 );
+  strcpy( buffer, (const char*)doc_location.mb_str(wxConvUTF8) );
+
   ThotCallback (BaseDialog + NameSave,  STRING_DATA, (char *)buffer );
 }
 
@@ -382,13 +375,13 @@ void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnImgLocation ( wxCommandEvent& event )
 {
-  char buffer[100];
-
   wxString img_location = XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue( );
-  // set the printer name
-  // allocate a temporary buffer to copy the 'const char *' printer name buffer 
-  wxASSERT( img_location.Len() < 100 );
-  strcpy( buffer, img_location.ToAscii() );
+
+  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
+  char buffer[512];
+  wxASSERT( img_location.Len() < 512 );
+  strcpy( buffer, (const char*)img_location.mb_str(wxConvUTF8) );
+
   ThotCallback (BaseDialog + ImgDirSave,  STRING_DATA, (char *)buffer );
 }
 

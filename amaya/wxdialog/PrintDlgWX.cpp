@@ -251,11 +251,12 @@ void PrintDlgWX::OnTypePrinter ( wxCommandEvent& event )
   else
     m_PS = printer_name;
   
-  // set the printer name
-  // allocate a temporary buffer to copy the 'const char *' printer name buffer 
-  char buffer[100];
-  wxASSERT( printer_name.Len() < 100 );
-  strcpy( buffer, printer_name.ToAscii() );
+
+  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
+  char buffer[512];
+  wxASSERT( printer_name.Len() < 512 );
+  strcpy( buffer, (const char*)printer_name.mb_str(wxConvUTF8) );
+
   ThotCallback (BasePrint + PPrinterName,  STRING_DATA, (char *)buffer );
 }
 
