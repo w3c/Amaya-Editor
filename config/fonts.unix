@@ -1,90 +1,97 @@
-###
-##
-#
-
-##
-
-
-#
-
-
-
-
 
 
 1;#Latin1 (West European)
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+1;1=-mozilla-arial-medium-r-normal-*-*-*-75-75-p-*-iso8859-1;2=-mozilla-arial-bold-r-normal-*-*-*-75-75-p-*-iso8859-1;3=-mozilla-arial-medium-i-normal-*-*-*-75-75-p-*-iso8859-1;
+2;1=-mozilla-times-medium-r-normal-*-*-*-75-75-p-*-iso8859-1;2=-mozilla-times-bold-r-normal-*-*-*-75-75-p-*-iso8859-1;3=-mozilla-times-medium-i-normal-*-*-*-75-75-p-*-iso8859-1;
+3;1=-mozilla-courier-medium-r-normal-*-*-*-75-75-p-*-iso8859-1;2=-mozilla-courier-bold-r-normal-*-*-*-75-75-p-*-iso8859-1;3=-mozilla-courier-medium-i-normal-*-*-*-75-75-p-*-iso8859-1;
 
 
 
 2;#Latin2 (East European)
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-2;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-2;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-2;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-2;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-2;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-2;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-2;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-2;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-2;
 
 
 
 3;#Latin3 (South European)
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-3;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-3;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-3;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-3;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-3;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-3;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-3;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-3;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-3;
+
 
 
 
 4;#Latin4 (North European)
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-4;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-4;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-4;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-4;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-4;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-4;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-4;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-4;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-4;
 
 
 
 5;#Cyrillic
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-5;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-5;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-5;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-5;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-5;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-5;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-5;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-5;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-5;
+
 
 
 
 6;#Arabic
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-6;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-6;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-6;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-6;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-6;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-6;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-6;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-6;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-6;
 
 
 
 7;#Greek
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-7;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-7;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-7;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-7;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-7;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-7;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-7;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-7;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-7;
+
 
 
 
 8;#Hebrew
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-8;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-8;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-8;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-8;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-8;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-8;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-8;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-8;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-8;
+
 
 
 
 9;#Latin5 (Turkish)
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-9;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-9;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-9;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-9;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-9;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-9;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-9;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-9;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-9;
 
 
 
 10;#Latin6 (Nordic)
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
-2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
-3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+1;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-10;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-10;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-10;
+2;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-10;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-10;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-10;
+3;1=-*-*-medium-*-*-*-12-*-75-75-*-*-iso8859-10;2=-*-*-bold-*-*-*-12-*-75-75-*-*-iso8859-10;3=-*-*-medium-i-*-*-12-*-75-75-*-*-iso8859-10;
 
 
 
 20;#Symbols (...)
-1;1=/usr/X11R6/lib/X11/fonts/TrueType/symbol.ttf
+1;1=-adobe-symbol-medium-r-*-*-*-*-*-*-*-*-*-fontspecific;
+
+
+
+21;#esstix (...)
+1;1=-altsys-esstixone-medium-r-normal-*-*-*-75-75-p-*-ascii-0;
+2;1=-altsys-esstixsix-medium-r-normal-*-*-*-75-75-p-*-ascii-0;2=-altsys-esstixseven-medium-r-normal-*-*-*-75-75-p-*-ascii-0;
+3;1=-altsys-esstixten-medium-r-normal-*-*-*-75-75-p-*-ascii-0;2=-altsys-esstixeleven-medium-r-normal-*-*-*-75-75-p-*-ascii-0;3=-altsys-esstixtwelve-medium-r-normal-*-*-*-75-75-p-*-ascii-0;
 
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=/usr/local/share/fonts/dfminu_3.ttf.ttc;2=/usr/local/share/fonts/msgothic.ttc;3=/usr/local/share/fonts/msincho.ttc
-2;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msgothic.ttc;3=/usr/local/share/fonts/msincho.ttc
-3;1=/usr/local/share/fonts/msincho.ttc;2=/usr/local/share/fonts/msgothic.ttc;3=/usr/local/share/fonts/msincho.ttc
+1;1=-*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*
+2;1=-*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*
+3;1=-*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;2=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*;3=*-mincho-*-*-*-*-*-*-*-*-*-*-*-*
+
+
 
 
 

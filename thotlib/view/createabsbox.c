@@ -365,7 +365,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbFillPattern = 0;
    pAb->AbBackground = DefaultBColor;	/* blanc */
    pAb->AbForeground = DefaultFColor;	/* noir */
-
+   pAb->AbOpacity = 1000;/* Full opaque*/
    pAb->AbTopBColor = -1;
    pAb->AbRightBColor = -1;
    pAb->AbBottomBColor = -1;
@@ -387,6 +387,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbRightBorder = 0;
    pAb->AbBottomBorder = 0;
    pAb->AbLeftBorder = 0;
+
 
    pAb->AbFont = 1;
    pAb->AbLineStyle = 'S';
@@ -2109,8 +2110,10 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			    {
 			      /* check if a word matches */
 			      k += j + 2;
-			      ok = (j == 0 || attrValue[j - 1] == SPACE) &&
-				(attrValue[k] == EOS || attrValue[k] == SPACE);
+			      ok = (j == 0 ||
+				    attrValue[j - 1] == SPACE) &&
+				(attrValue[k] == EOS ||
+				 attrValue[k] == SPACE);
 			    }
 			  else if (pAPRule->ApMatch == CoMatch)
 			    /* the whole attribute value must be equal */

@@ -6,23 +6,19 @@ int   gl_font_char_width  (void *gl_void_font, wchar_t c);
 int   gl_font_char_height (void *gl_void_font, wchar_t *c);
 int   gl_font_char_ascent (void *gl_void_font, wchar_t *c);
 
+void GL_Font_Change_Height (void *font, int size);
 
-int   UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y,  int size, int TotalHeight);
-int   UnicodeFontRenderCharSize (void *gl_font, wchar_t c, float x, float y, int size,
-		       int TotalHeight);
-void  StixFontRenderCharSize (void *font, wchar_t symb, 
-			      int x, int y, 
-			      int size, int l, int h,  
-			      int TotalHeight);
+int   UnicodeFontRender (void *gl_font, wchar_t *string, 
+			 float x, float y, int size);
 int   gl_font_ascent      (void *gl_void_font);
 int   gl_font_height      (void *gl_void_font);
-void *gl_font_init        (const char *font_filename, char alphabet, int size);
+void *gl_font_init        (const char *font_filename, 
+			   char alphabet, int size);
 void  gl_font_delete      (void *gl_font);
 int   GetFontFilename     (char script, int family, 
 			   int highlight, int size, 
 			   int UseLucidaFamily, int UseAdobeFamily,
 			   char *filename);
-void  FreeMathFonts();
 void  FTLibraryFree ();
 
-#endif
+#endif/*_OPENGLFONT_H_*/

@@ -206,6 +206,10 @@ typedef struct _Box
   int             BxBPadding;	        /* Bottom Padding */
   int             BxRPadding;	        /* Right Padding */
 
+#ifdef _GL
+  int             DisplayList;
+#endif /*_GL*/
+  
   int             BxHorizRef;	        /* Current base */
   int             BxVertRef;	        /* Current vertical reference */
   int             BxEndOfBloc;	        /* Fill length:
@@ -424,7 +428,7 @@ typedef struct _AbstractBox
   int             AbFillPattern;/* Fill pattern */	
   int             AbBackground; /* Background color */
   int             AbForeground; /* Drawing color */
-
+  int             AbOpacity;    /* opacity of all the element*/
   int             AbTopBColor;     /* Border Top color */
   int             AbRightBColor;   /* Border Right color */
   int             AbBottomBColor;  /* Border Bottom color */
@@ -446,7 +450,6 @@ typedef struct _AbstractBox
   int             AbRightBorder;   /* Right Border */
   int             AbBottomBorder;  /* Bottom Border */
   int             AbLeftBorder;    /* Left Border */
-
   char            AbDirection;        /* Writing direction */
   char            AbUnicodeBidi;      /* Unicode Bidi */
   char            AbLineStyle;        /* Line style */

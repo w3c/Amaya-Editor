@@ -78,7 +78,7 @@ static int          SelectedPictureEdge;/* if the current selection is a
 
 #ifdef _GTK
 #include "gtk-functions.h"
-#endif _GTK
+#endif /*_GTK*/
 
 /*----------------------------------------------------------------------
    TtaSetCurrentKeyboard

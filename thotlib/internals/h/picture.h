@@ -69,6 +69,8 @@ typedef struct
   unsigned int         TextureBind;/* integer name of video card memory pointer*/
   unsigned char        *PicPixmap;
   ThotBool             RGBA;
+  float                TexCoordW;
+  float                TexCoordH;  
 #endif /* _GL */
   ThotBool       mapped;         /* Used for ExtraHandlers */
   ThotBool       created;        /* Used for ExtraHandlers */
@@ -94,6 +96,10 @@ typedef struct
   void     (*FreePicture)();
 } PictureHandler;
 
+#ifdef _GL
+  void FreeAllPicCache ();  
+  void FreeAllPicCacheFromFrame (int frame);  
+#endif /*_GL*/
 #endif /* _PICTURE_h */
 
 

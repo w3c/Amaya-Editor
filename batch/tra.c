@@ -337,6 +337,7 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 	       || TypeRPres == PtLineSpacing
 	       || TypeRPres == PtLineWeight
 	       || TypeRPres == PtFillPattern
+	       || TypeRPres == PtOpacity
 	       || TypeRPres == PtBackground
 	       || TypeRPres == PtForeground)
 	     /* Presentation a valeur numerique */
@@ -364,6 +365,7 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 	   || TypeRPres == PtLineSpacing
 	   || TypeRPres == PtLineWeight
 	   || TypeRPres == PtFillPattern
+	   || TypeRPres == PtOpacity
 	   || TypeRPres == PtBackground
 	   || TypeRPres == PtForeground)
 	 /* Presentation a valeur numerique */
@@ -387,7 +389,7 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
        if (TypeRPres == PtSize || TypeRPres == PtIndent ||
 	   TypeRPres == PtLineSpacing || TypeRPres == PtLineWeight ||
 	   TypeRPres == PtFillPattern || TypeRPres == PtBackground ||
-	   TypeRPres == PtForeground)
+	   TypeRPres == PtOpacity || TypeRPres == PtForeground)
 	 /* Presentation a valeur numerique */
 	 {
 	   CurBlock->TbCondition[i].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
@@ -620,6 +622,7 @@ static void NewRuleBlock ()
 	     || CurPres == PtLineWeight + 1
 	     || CurPres == PtFillPattern + 1
 	     || CurPres == PtBackground + 1
+	     || CurPres == PtOpacity + 1
 	     || CurPres == PtForeground + 1)
 	   pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaTRuleBlock = pBlock;
 	 else

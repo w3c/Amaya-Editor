@@ -1730,7 +1730,7 @@ static void         AHTConverterInit (HTList *c)
    */
    HTConversion_add (c, "www/cache", "*/*", HTCacheWriter, 1.0, 0.0, 0.0);
    HTConversion_add(c,"www/cache-append", "*/*", HTCacheAppend, 1.0, 0.0, 0.0);
-#endif AMAYA_WWW_CACHE
+#endif /*AMAYA_WWW_CACHE*/
 
    /*
    ** This dumps all other formats to local disk without any further

@@ -31,8 +31,9 @@
 #include "frame_f.h"
 #include "memory_f.h"
 #include "windowdisplay_f.h"
-
-
+#ifdef _STIX
+#include "stix.h"
+#endif /*_STIX*/
 /*----------------------------------------------------------------------
   IsXYPosComplete returns TRUE indicators when the box position is
   relative to the root box instead of the parent box.
@@ -252,7 +253,7 @@ static void MirrorPolyline (PtrAbstractBox pAb, ThotBool horizRef,
   if (pBox->BxPictInfo != NULL && !inAbtractBox)
     {
       /* le calcul des points de controle doit etre reexecute */
-      free ((STRING) pBox->BxPictInfo);
+      TtaFreeMemory ((STRING) pBox->BxPictInfo);
       pBox->BxPictInfo = NULL;
     }
 }
@@ -676,10 +677,10 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   if (pBox != NULL)
     {
 #ifdef TAB_DEBUG
-if (pBox->BxType == BoTable)
-printf ("ChangeWidth (table=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
-else if (pBox->BxType == BoColumn)
-printf ("ChangeWidth (column=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+      if (pBox->BxType == BoTable)
+	printf ("ChangeWidth (table=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
+      else if (pBox->BxType == BoColumn)
+	printf ("ChangeWidth (column=%s, value=%d)\n", pBox->BxAbstractBox->AbElement->ElLabel, delta);
 #endif
       minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
 		     && pBox->BxAbstractBox->AbWidth.DimMinimum);
@@ -1729,7 +1730,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      pBox->BxPictInfo != NULL)
 	    {
 	      /* free control points */
-	      free ((STRING) pBox->BxPictInfo);
+	      TtaFreeMemory ((STRING) pBox->BxPictInfo);
 	      pBox->BxPictInfo = NULL;
 	    }
 	    
@@ -2182,7 +2183,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   ThotBool            toMove;
   ThotBool            absoluteMove;
   ThotBool            externalRef;
-
+  
+  
   if (!pBox)
     return;
   /* check if the inside width, margins, borders, and paddings change */
@@ -2215,7 +2217,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      pBox->BxPictInfo != NULL)
 	    {
 	      /* free control points */
-	      free ((STRING) pBox->BxPictInfo);
+	      TtaFreeMemory ((STRING) pBox->BxPictInfo);
 	      pBox->BxPictInfo = NULL;
 	    }
 	  
@@ -2645,6 +2647,38 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	{
 	  i = 0;
 	  font = pBox->BxFont;
+#ifdef _STIX
+	  i = GetMathFontWidth (pBox->BxFont,
+				pCurrentAb->AbShape,
+				pBox->BxFont->FontSize,
+				pBox->BxH);
+	  switch (pCurrentAb->AbShape)
+	    {
+	    case 'd':	/* double integral */
+	      if (i == 0)
+		i = BoxCharacterWidth (231, font)
+		    + BoxCharacterWidth (231, font) / 2;
+	      break;		
+	    case 'i':	/* integral */
+	    case 'c':	/* circle integral */
+	      if (i == 0)
+		i = BoxCharacterWidth (231, font);
+	      break;
+	    case '(':
+	    case ')':
+	    case '{':
+	    case '}':
+	    case '[':
+	    case ']':
+	      if (i == 0)
+		i = BoxCharacterWidth (230, font);
+		ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 
+			     0, 0, 0, frame);	      
+		break;
+	    default:
+	      break;
+	    }	    
+#else /*_STIX*/
 	  switch (pCurrentAb->AbShape)
 	    {
 	    case 'd':	/* double integral */
@@ -2666,9 +2700,11 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    default:
 	      break;
 	    }
+#endif /*_STIX*/
 	}
     }
 }
+
 
 
 /*----------------------------------------------------------------------

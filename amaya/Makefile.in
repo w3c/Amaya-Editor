@@ -473,7 +473,7 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 # amaya application
 ../bin/amaya : $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
 	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
-	$(CC) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) libCSS.a $(LIBS)
+	$(LD) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) libCSS.a $(LIBS)
 	@$(ECHO) "====>" amaya is done
 
 ../bin/print :

@@ -115,15 +115,19 @@ static char *SkipWord (char *ptr)
 char *SkipBlanksAndComments (char *ptr)
 {
   /* skip spaces */
-  while (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
-	 *ptr == TAB || *ptr == __CR__)
+  while (*ptr == SPACE ||
+	 *ptr == BSPACE ||
+	 *ptr == EOL ||
+	 *ptr == TAB ||
+	 *ptr == __CR__)
     {
       if (*ptr == EOL)
 	/* increment the number of newline skipped */
 	NewLineSkipped++;
       ptr++;
     }
-  while (ptr[0] == '/' && ptr[1] == '*')
+  while (ptr[0] == '/' &&
+	 ptr[1] == '*')
     {
       /* look for the end of the comment */
       ptr = &ptr[2];
@@ -369,6 +373,44 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
 	}
     }
   return (cssRule);
+}
+/*----------------------------------------------------------------------
+   ParseClampedUnit:                                                  
+   parse a CSS Unit substring and returns the corresponding      
+   value and its unit.
+   [0,1]
+   or
+   [0,100] in %
+  ----------------------------------------------------------------------*/
+char *ParseClampedUnit (char *text,
+			PresentationValue *pval)
+{
+  float                opacity;
+  int                  intopacity;
+
+  if (*(text + strlen (text) -1) == '%')
+	{
+	  intopacity = atoi (text);
+	  if (intopacity < 0 ||
+	      intopacity > 100)
+	    intopacity = 1000;
+	  else
+	    intopacity = intopacity * 10;
+	}
+      else
+	{
+	  opacity = atof (text);
+	  if (opacity < 0.0
+	      || opacity > 1.0)
+	    intopacity = 1000;
+	  else 
+	    intopacity = (int) (opacity * 1000);
+	}
+      pval->typed_data.unit = STYLE_UNIT_REL;
+      pval->typed_data.value = intopacity;
+      pval->typed_data.real = 0;
+      pval->data = intopacity;
+  return (SkipWord (text));
 }
 
 /*----------------------------------------------------------------------
@@ -2514,7 +2556,8 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
   ThotBool              moved;
 
   /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
+  moved = (isHTML &&
+	   (element != NULL || ctxt->attrType[0] == 0) &&
 	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
   if (moved)
     {
@@ -2630,7 +2673,8 @@ static char *ParseSVGFill (Element element, PSchema tsch,
   else
     {
       cssRule = ParseCSSColor (cssRule, &best);
-      if (best.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
+      if (best.typed_data.unit != STYLE_UNIT_INVALID &&
+	  DoApply)
 	{
 	  if (tsch)
 	    cssRule = CheckImportantRule (cssRule, context);
@@ -2644,7 +2688,28 @@ static char *ParseSVGFill (Element element, PSchema tsch,
     }
   return (cssRule);
 }
+/*----------------------------------------------------------------------
+  ParseSVGOpacity: parse a SVG fill property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGOpacity (Element element, PSchema tsch,
+			      PresentationContext context, char *cssRule,
+			      CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     best;
 
+  best.typed_data.unit = STYLE_UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  cssRule = ParseClampedUnit (cssRule, &best);
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      /* install the new presentation. */
+      TtaSetStylePresentation (PROpacity, element,
+			       tsch, context, best);
+    }
+  return (cssRule);
+}
 /*----------------------------------------------------------------------
   ParseCSSBackgroundImageCallback: Callback called asynchronously by
   FetchImage when a background image has been fetched.
@@ -3356,8 +3421,10 @@ static CSSProperty CSSProperties[] =
    /* SVG extensions */
    {"stroke-width", ParseSVGStrokeWidth},
    {"stroke", ParseSVGStroke},
-   {"fill", ParseSVGFill}
+   {"fill", ParseSVGFill},
+   {"opacity", ParseSVGOpacity}
 };
+
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 
 /*----------------------------------------------------------------------
@@ -3432,7 +3499,8 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 	  CSSParseError ("Invalid character", "}");
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
-      if (*cssRule == ',' || *cssRule == ';')
+      if (*cssRule == ',' ||
+	  *cssRule == ';')
 	{
 	  cssRule++;
 	  cssRule = SkipBlanksAndComments (cssRule);
@@ -3979,7 +4047,9 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
    context->cssSpecificity = specificity;
    context->destroy = destroy;
    /* Call the parser */
-   ParseCSSRule (el, NULL, (PresentationContext) context, cssRule, NULL, isHTML);
+   ParseCSSRule (el, NULL,
+		 (PresentationContext) context,
+		 cssRule, NULL, isHTML);
    /* free the context */
    TtaFreeMemory(context);
 }

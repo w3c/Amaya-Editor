@@ -1125,6 +1125,12 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  opacity:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   stroke:
 	BEGIN
 	CreateBefore (AttrName);

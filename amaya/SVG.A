@@ -159,6 +159,12 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrCSSequivModified;
 	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;	
+   opacity:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
    fill:
         BEGIN
 	AttrModify.Post -> AttrCSSequivModified;

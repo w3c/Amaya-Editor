@@ -19,5 +19,7 @@ typedef struct _Link_Table
 
 /* Prototypes des fonctions */
 /* voir libmanag_f.h */
+int GetWindowNumber (Document document, View view);
+unsigned char *GetScreenshot (int frame, char *pngurl);
 
 #endif /* __LIBMANAG_H_ */

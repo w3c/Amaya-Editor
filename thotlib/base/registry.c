@@ -1495,7 +1495,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #else /* _WINDOWS */
    ptr = getenv ("HOME");
    sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
-#endif _WINDOWS
+#endif /*_WINDOWS*/
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home,
 		     REGISTRY_SYSTEM, FALSE);

@@ -1449,7 +1449,7 @@ ThotBool AnnotThread_link2ThreadDoc (Document doc)
 	  result = TRUE;
 	}
     }
-#endif ANNOT_ON_ANNOT
+#endif /*ANNOT_ON_ANNOT*/
   return result;
 }
 

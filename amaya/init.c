@@ -3693,7 +3693,7 @@ static Document LoadDocument (Document doc, char *pathname,
 #endif /* XML_GENERIC */
 #ifdef _SVGLIB
 	  docType == docLibrary ||
-#endif _SVGLIB
+#endif /*_SVGLIB*/
 	  docType == docMath)
 	plainText = FALSE;
       else
@@ -5165,7 +5165,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifdef _SVGLIB
 		  else if (IsLibraryName (tempfile))
 		    NewDocType = docLibrary;
-#endif _SVGLIB
+#endif /*_SVGLIB*/
 		  else
 		    NewDocType = docHTML;
 		  InitializeNewDoc (tempfile, NewDocType, CurrentDocument, NewDocProfile);
@@ -7329,8 +7329,8 @@ void AmayaClose (Document document, View view)
 void AddURLInCombobox (char *url, ThotBool keep)
 {
   char     *urlstring, *app_home, *ptr;
-  FILE     *file;
   int       i, j, len, nb, end;
+  FILE     *file=NULL;
 
   if (url == NULL || url[0] == EOS)
     return;

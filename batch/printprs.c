@@ -1295,6 +1295,10 @@ static void         wrsuiteregles (PtrPRule RP)
 		    printf ("FillPattern: ");
 		    wrnbherit (RP);
 		    break;
+		 case PtOpacity;
+		    printf ("opacity: ");
+		    wrnbherit (RP);
+		    break;
 		 case PtBackground:
 		    printf ("Background: ");
 		    wrnbherit (RP);

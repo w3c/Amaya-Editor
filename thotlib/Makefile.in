@@ -121,6 +121,7 @@ DISPLAY_OBJ = \
 	view/glwindowdisplay.o \
 	view/gldisplay.o \
 	dialogue/openglfont.o \
+	image/encdec.o \
 	dialogue/fontserver.o \
 	dialogue/fontconfig.o \
 	dialogue/font.o \

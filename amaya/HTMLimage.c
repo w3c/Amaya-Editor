@@ -876,13 +876,27 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 
       /* LC 3/7/01 */
       /* Don't treat the  xlink:href attributes 
-	 that begins with the string  'data' */
-
-      if (imageName &&
-	  (strncmp (imageName, "data:", 5) != 0) &&
-	  (strncmp (imageName, "DATA:", 5) != 0))
+	 that begins with the string  'data:' */
+#ifdef _BASE64     
+      update = FALSE;
+      if (imageName) 
 	{
-	  update = TRUE;
+	  if (strncasecmp (imageName, "data:", 5) == 0)
+	    {
+	      if (MakeImageFromBase64  (imageName))	
+		update = TRUE;
+	    }
+	  else
+	    update = TRUE;
+	}      
+      if (update)
+	{
+#else /*_BASE64*/
+      if (imageName &&
+	  strncasecmp (imageName, "data:", 5) != 0)
+	{	  
+	  update = TRUE;    
+#endif /*_BASE64*/
 	  /* add BASE to image name, if necessary */
 	  NormalizeURL (imageName, doc, pathname, imageName, NULL);
 	  /* if it's not a remote URL, make any necessary file: conversions */

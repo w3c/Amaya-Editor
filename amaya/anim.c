@@ -63,9 +63,6 @@ static int      AnimButton;
 */
 
 
-
-
-
 /* this one should be exported from the thotlib */
 extern char  *ColorName (int num);
 
@@ -1202,7 +1199,7 @@ static void Display_cross(Document basedoc,
 	Element el = NULL, root, svg;
 	AttributeType        attrType;
 	Attribute            attr;
-	Element child, lastc;
+	Element child;
 	ElementType   elType, childType;
 	char buffer[512];
 	ThotBool basedoc_state;
@@ -2670,7 +2667,8 @@ static void Build_timeline(Document basedoc, char* timelineName)
 	
 	dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc, x_timeline, y_timeline, w_timeline, h_timeline);
 
-	if (dt[basedoc].timelineView) {
+	if (dt[basedoc].timelineView)
+	  {
 		TtaChangeViewTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView, timelineName);
 		TtcSwitchButtonBar (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no button bar */
 		TtcSwitchCommands (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no command open */
@@ -2692,10 +2690,12 @@ static void Build_timeline(Document basedoc, char* timelineName)
 		TtaSetItemOff (dt[basedoc].timelinedoc, 1, Views, TShowTextZone);
 		TtaSetMenuOff (dt[basedoc].timelinedoc, 1, Special);
 	/*	TtaSetMenuOff (timelinedoc, 1, Help_); */
-	} else {
-			   TtaCloseDocument (dt[basedoc].timelinedoc);
-			   Init_timeline_struct (basedoc);
-		   }
+	}
+	else
+	  {
+	    TtaCloseDocument (dt[basedoc].timelinedoc);
+	    Init_timeline_struct (basedoc);
+	  }
 
 
 }
@@ -3684,92 +3684,100 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
 	/* move the slider and enlarge timeline if necessary */
 	x = Apply_hpos_mini (basedoc, event->element, ct_left_bar-6);
 	if (x>ct_left_bar+current_timeline_width)
-		Enlarge_timeline (basedoc, event->document, x);
-
+	  Enlarge_timeline (basedoc, event->document, x);
+	
 	end = (x+6-(ct_left_bar+1))/time_sep;
-
+	
 	/* update timing_text */
-	if (tm) {
-		Element child = TtaGetFirstChild (tm);
-		Language lang = TtaGetDefaultLanguage();
-		double d;
-
-		d = (x+6-ct_left_bar)/time_sep;
-		sprintf (buffer, "%.2fs", (float) d);
-		TtaSetTextContent (child, buffer, lang, event->document);
-	}
-
+	if (tm)
+	  {
+	    Element child = TtaGetFirstChild (tm);
+	    Language lang = TtaGetDefaultLanguage();
+	    double d;
+	    
+	    d = (x+6-ct_left_bar)/time_sep;
+	    sprintf (buffer, "%.2fs", (float) d);
+	    TtaSetTextContent (child, buffer, lang, event->document);
+	  }
+	
 	/* editing modes */
 	
 	if ((dt[basedoc].definition_of_motion_period) || 
-		(dt[basedoc].definition_of_color_period)) {
-		egroup = dt[basedoc].current_edited_mapping->exp_group;
-		brect = TtaGetFirstChild (egroup);
-		insertel = TtaGetLastChild (egroup);
-
-		/* define animation period: */	
-		vpos = Get_height_of (brect) - ct_static_bar_height - 6 + ct_offset_y_period;
-				
-		if (dt[basedoc].definition_of_motion_period) {
-			new_period = Insert_rectangle (event->document, insertel, ct_animatemotion_color,
-					  "none", previous_slider_position+6, vpos, x - previous_slider_position, 
-					  ct_period_height, 0, Timeline_EL_exp_period);
-
+	    (dt[basedoc].definition_of_color_period))
+	  {
+	    egroup = dt[basedoc].current_edited_mapping->exp_group;
+	    brect = TtaGetFirstChild (egroup);
+	    insertel = TtaGetLastChild (egroup);
+	    
+	    /* define animation period: */	
+	    vpos = Get_height_of (brect) - ct_static_bar_height - 6 + ct_offset_y_period;
+	    
+	    if (dt[basedoc].definition_of_motion_period)
+	      {
+		new_period = Insert_rectangle (event->document, insertel, ct_animatemotion_color,
+					       "none", previous_slider_position+6, vpos, x - previous_slider_position, 
+					       ct_period_height, 0, Timeline_EL_exp_period);
 		
-	
-			/* generate animation in basedoc */
-			Generate_animate_motion (basedoc, dt[basedoc].previous_x,
-											dt[basedoc].previous_y, dt[basedoc].x,
-				dt[basedoc].y,
-				dt[basedoc].anim_start, 
-				end-dt[basedoc].anim_start, dt[basedoc].current_edited_mapping,new_period);
-
-			dt[basedoc].definition_of_motion_period = FALSE;
-			TtaSetStatus (event->document, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_ANIM_DEFINED), NULL);
-			dt[basedoc].can_delete_status_text = TRUE;
-
-			dt[basedoc].current_edited_mapping = NULL;
-
-			/* Remove the cross */
-			if (dt[basedoc].cross)
-				Delete_cross (basedoc);
-
-				
-		} else if (dt[basedoc].definition_of_color_period) {
-			new_period = Insert_rectangle (event->document, insertel, ct_animatecolor_color,
-							"none", previous_slider_position+6, vpos, x - previous_slider_position, 
-							ct_period_height, 0, Timeline_EL_exp_period);
-			
-			TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_COLOR_HINT3), NULL);
-			
-			/* force a redisplay before letting the user choose ending color */
-			dp = TtaGetDisplayMode (event->document);
-			TtaSetDisplayMode (event->document, NoComputedDisplay);
-			TtaSetDisplayMode (event->document, DisplayImmediately);
-			TtaSetDisplayMode (event->document, dp);
-
-			TtcGetPaletteColors (&fgcolor, &bgcolor, TRUE);
-
-			/* force a redisplay after letting the user choose ending color */
-			dp = TtaGetDisplayMode (event->document);
-			TtaSetDisplayMode (event->document, NoComputedDisplay);
-			TtaSetDisplayMode (event->document, DisplayImmediately);
-			TtaSetDisplayMode (event->document, dp);
-
-
-			/* generate animation in basedoc */
-			Generate_animate_color (basedoc, dt[basedoc].bgcolor_start, bgcolor, dt[basedoc].anim_start, 
-				end-dt[basedoc].anim_start, dt[basedoc].current_edited_mapping,new_period);
-
-			dt[basedoc].definition_of_color_period = FALSE;			
-			dt[basedoc].current_edited_mapping = NULL;
-				
-			TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_ANIM_DEFINED), NULL);
-			dt[basedoc].can_delete_status_text = TRUE;
-	
+		
+		
+		/* generate animation in basedoc */
+		Generate_animate_motion (basedoc, dt[basedoc].previous_x,
+					 dt[basedoc].previous_y, dt[basedoc].x,
+					 dt[basedoc].y,
+					 dt[basedoc].anim_start, 
+					 end-dt[basedoc].anim_start, dt[basedoc].current_edited_mapping,new_period);
+		
+		dt[basedoc].definition_of_motion_period = FALSE;
+		TtaSetStatus (event->document, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_ANIM_DEFINED), NULL);
+		dt[basedoc].can_delete_status_text = TRUE;
+		
+		dt[basedoc].current_edited_mapping = NULL;
+		
+		/* Remove the cross */
+		if (dt[basedoc].cross)
+		  Delete_cross (basedoc);
+		
+		
+	      }
+	    else
+	      if (dt[basedoc].definition_of_color_period)
+		{
+		  new_period = Insert_rectangle (event->document, insertel, ct_animatecolor_color,
+						 "none", previous_slider_position+6, vpos, x - previous_slider_position, 
+						 ct_period_height, 0, Timeline_EL_exp_period);
+		  
+		  TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_COLOR_HINT3), NULL);
+		  
+		  /* force a redisplay before letting the user choose ending color */
+		  dp = TtaGetDisplayMode (event->document);
+		  TtaSetDisplayMode (event->document, NoComputedDisplay);
+		  TtaSetDisplayMode (event->document, DisplayImmediately);
+		  TtaSetDisplayMode (event->document, dp);
+		  
+		  
+		    TtcGetPaletteColors (&fgcolor,
+					 &bgcolor,
+					 TRUE);
+		  
+		  /* force a redisplay after letting the user choose ending color */
+		  dp = TtaGetDisplayMode (event->document);
+		  TtaSetDisplayMode (event->document, NoComputedDisplay);
+		  TtaSetDisplayMode (event->document, DisplayImmediately);
+		  TtaSetDisplayMode (event->document, dp);
+		  
+		  
+		  /* generate animation in basedoc */
+		  Generate_animate_color (basedoc, dt[basedoc].bgcolor_start, bgcolor, dt[basedoc].anim_start, 
+					  end-dt[basedoc].anim_start, dt[basedoc].current_edited_mapping,new_period);
+		  
+		  dt[basedoc].definition_of_color_period = FALSE;			
+		  dt[basedoc].current_edited_mapping = NULL;
+		  
+		  TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_ANIM_DEFINED), NULL);
+		  dt[basedoc].can_delete_status_text = TRUE;
 		}
-	}
-
+	  }
+	
 	TtaSetDocumentUnmodified (event->document);
 #endif /* _SVGANIM */
 }

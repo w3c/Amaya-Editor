@@ -70,6 +70,8 @@
 
 #ifdef _GL
 
+#include "glwindowdisplay.h"
+
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
@@ -83,21 +85,218 @@
  if too sloooooow we'll revert*/
 #undef MESA
 
+typedef struct _PicCache {
+  short unsigned int width;
+  short unsigned int height;
+  float TexCoordW;
+  float TexCoordH;
+  char *filename;
+  int texbind;
+  int frame;  
+  struct _PicCache *next;  
+} Pic_Cache;
+
+/*
+  static linked list containing all
+  pictures in video card memory
+*/
+static Pic_Cache *PicCache = NULL;
+static Pic_Cache *LastPicCache = NULL;
+
+/*--------------------------------------------------
+ Free_Pic_Chache : really free a unique structure Cache  
+ ---------------------------------------------------*/
+static void Free_Pic_Chache (Pic_Cache *Cache)
+{
+  if (glIsTexture (Cache->texbind))
+    glDeleteTextures (1, 
+		      &(Cache->texbind));
+  
+#ifdef _PCLDEBUG
+  g_print ("\n Free Image %s from cache", 
+	   Cache->filename);      
+#endif /*_PCLDEBUG*/ 
+  TtaFreeMemory (Cache->filename);
+  TtaFreeMemory (Cache);
+}
+
+/*--------------------------------------------------
+ Lookup for Free upon an unique index a unique Cache 
+ ---------------------------------------------------*/
+static void FreeAPicCache (int texbind, int frame)
+{
+
+  Pic_Cache *Cache = PicCache;
+  Pic_Cache *Before;
+  
+  Before = Cache;  
+  while (Cache)
+    {
+      if (Cache->texbind == texbind &&
+	  Cache->frame == frame)
+	break;
+      Cache = Cache->next;      
+      Before = Cache;
+    }
+  if (Cache)
+    {
+      if (Before == PicCache)
+	PicCache = Before->next;
+      else
+	Before->next = Cache->next;
+      Free_Pic_Chache (Cache);
+      Cache = NULL;
+    }
+}
+/*--------------------------------------------------
+  FreePicsCacheFromFrame : index Cache freeing  
+ upon a frame destroy event
+ ---------------------------------------------------*/
+void FreeAllPicCacheFromFrame (int frame)
+{
+  Pic_Cache *Cache = PicCache;
+  Pic_Cache *Before;
+  
+  Before = Cache;  
+  while (Cache)
+    {
+      if (Cache->frame == frame)
+	{
+	  if (Before == PicCache)
+	    PicCache = Before->next;
+	  else
+	    Before->next = Cache->next;  
+	  Free_Pic_Chache (Cache);
+	  Cache = NULL;
+	}
+      Cache = Cache->next;      
+      Before = Cache;
+    }
+}
+
+/*--------------------------------------------------
+ Free index Cache freeing recursive function 
+ ---------------------------------------------------*/
+static void FreePicCache (Pic_Cache *Cache)
+{
+  if (Cache->next)
+    FreePicCache (Cache->next);
+  Free_Pic_Chache (Cache);
+}
+/*--------------------------------------------------
+ AddInPicCache : Add a new Pic
+ ---------------------------------------------------*/
+static void AddInPicCache (PictInfo *Image, int frame)
+{
+  Pic_Cache *Cache = LastPicCache;
+  
+  if (Cache)
+    {
+      Cache->next = TtaGetMemory (sizeof (Pic_Cache));
+      Cache = Cache->next;  
+    }
+  else 
+    {
+      PicCache = TtaGetMemory (sizeof (Pic_Cache));
+      LastPicCache = PicCache;      
+      Cache = LastPicCache;      
+    }    
+  Cache->frame = frame;
+  Cache->texbind = Image->TextureBind;
+  Cache->filename = TtaGetMemory (strlen(Image->PicFileName) + 1);
+  Cache->height = (short unsigned int) Image->PicHeight;
+  Cache->width = (short unsigned int) Image->PicWidth;
+  Cache->TexCoordW = Image->TexCoordW;  
+  Cache->TexCoordH = Image->TexCoordH;
+  strcpy (Cache->filename, Image->PicFileName);
+  Cache->next = NULL;
+  LastPicCache = Cache;  
+}
+
+/*----------------------------------------------------------------------
+ LookupInPicCache : Look in cache, if find an image with the same filename
+ in the same frame (Tex Id are frame dependant)
+  ----------------------------------------------------------------------*/
+static int LookupInPicCache (PictInfo *Image, int frame)
+{
+  Pic_Cache *Cache = PicCache;
+  char *filename = Image->PicFileName;
+  
+  while (Cache)
+    {
+      if (strcasecmp (Cache->filename, filename) == 0 &&
+	  frame == Cache->frame)
+	{
+	  Image->PicWidth = (int) Cache->width;
+	  Image->PicHeight = (int) Cache->height;
+	  Image->TexCoordW = Cache->TexCoordW;
+	  Image->TexCoordH = Cache->TexCoordH;
+	  Image->TextureBind = Cache->texbind;  
+#ifdef _PCLDEBUG
+      g_print ("\n Lookup succeed Image %s ", Image->PicFileName);      
+#endif /*_PCLDEBUG*/  
+	  return 1;
+	}      
+      Cache = Cache->next; 
+    }
+  return 0;  
+}
+/*----------------------------------------------------------------------
+ CacheLookupHeightAndWidth :
+Get Height and Width based on cache info on this 
+ Image (frame and Texture id)
+  ----------------------------------------------------------------------*/
+static void CacheLookupHeightAndWidth (PictInfo *Image,
+				       int *width,
+				       int *height,
+				       int frame)
+{
+  Pic_Cache *Cache = PicCache;
+  int TextureBind = Image->TextureBind;
+  
+  while (Cache)
+    {
+      if (TextureBind == Cache->texbind &&
+	  frame == Cache->frame)
+	{
+	  *width = (int) Cache->width;
+	  *height = (int) Cache->height;
+	  Image->TexCoordW = Cache->TexCoordW;
+	  Image->TexCoordH = Cache->TexCoordH;
+	  return;	  
+	}     
+      Cache = Cache->next; 
+    }
+  *width = 0;
+  *height = 0;
+  return;  
+}
+/*--------------------------------------------------
+ Free All pics in video card memory and empty cache list
+ ---------------------------------------------------*/
+void FreeAllPicCache ()
+{
+  FreePicCache (PicCache);  
+}
 /*----------------------------------------------------------------------
  Free video card memory from this texture.
   ----------------------------------------------------------------------*/
 void FreeGlTexture (PictInfo *Image)
 {
   if (Image->TextureBind)
-    {
+    {      
+      FreeAPicCache (Image->TextureBind,
+		     ActiveFrame);      
       if (glIsTexture (Image->TextureBind))
-	glDeleteTextures (1, &(Image->TextureBind));
+	glDeleteTextures (1, 
+			  &(Image->TextureBind));
+#ifdef _PCLDEBUG
+      g_print ("\n Image %s Freed", Image->PicFileName);      
+#endif /*_PCLDEBUG*/
       Image->TextureBind = 0;
       Image->RGBA = False;
     }
 }
-
-#ifndef MESA
 
 /*----------------------------------------------------------------------
   p2 :  Lowest power of two bigger than the argument.
@@ -142,127 +341,78 @@ return 1 << (int) ceilf(logf((float) p) / M_LN2);
 /*----------------------------------------------------------------------
   GL_MakeTextureSize : Texture sizes must be power of two
   ----------------------------------------------------------------------*/
-static void GL_MakeTextureSize(PictInfo *Image, int GL_w, int GL_h)
+static void GL_MakeTextureSize(PictInfo *Image, 
+			       int GL_w, int GL_h)
 {
   unsigned char      *data, *ptr1, *ptr2;
   int                 xdiff, x, y, nbpixel;
 
 
   if (Image->PicPixmap != None)
+    {
+      nbpixel = GL_w * GL_h * ((Image->RGBA)?4:3);
+      /* In this algo, just remember that a 
+	 RGB pixel value is a list of 3 value in source data
+	 and 4 for destination RGBA texture */
+      data = TtaGetMemory (sizeof (unsigned char) * nbpixel);
+      /* Black transparent filling */
+      memset (data, 0, sizeof (unsigned char) * nbpixel);
+      ptr1 = Image->PicPixmap;
+      ptr2 = data;
+      nbpixel = ((Image->RGBA)?4:3);
+      xdiff = (GL_w - Image->PicWidth) * nbpixel;
+      x = nbpixel * Image->PicWidth;
+      for (y = 0; y < Image->PicHeight; y++)
 	{
-	nbpixel = (Image->RGBA)?4:3;
-	/* In this algo, just remember that a 
-		RGB pixel value is a list of 3 value in source data
-		and 4 for destination RGBA texture */
-	data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * nbpixel);
-	/* Black transparent filling */
-	memset (data, 0, sizeof (unsigned char) * GL_w * GL_h * nbpixel);
-	ptr1 = Image->PicPixmap;
-	ptr2 = data;
-	xdiff = (GL_w - Image->PicWidth) * nbpixel;
-	x = nbpixel * Image->PicWidth;
-	for (y = 0; y < Image->PicHeight; y++)
-	    {
-		/* copy R,G,B,A */
-		memcpy (ptr2, ptr1, x); 
-		/* jump over the black transparent zone*/
-		ptr1 += x;
-		ptr2 += x + xdiff;
-		}	
-	TtaFreeMemory (Image->PicPixmap);
-	Image->PicPixmap = data;
-  }
+	  /* copy R,G,B,A */
+	  memcpy (ptr2, ptr1, x); 
+	  /* jump over the black transparent zone*/
+	  ptr1 += x;
+	  ptr2 += x + xdiff;
+	}	
+      TtaFreeMemory (Image->PicPixmap);
+      Image->PicPixmap = data;
+    }
 }
-
-#endif /*!MESA*/
-
-/* In case of old opengl version where
- Texture Objects were an extension */
-/* #if defined(GL_VERSION_1_1) */
-/* #define TEXTURE_OBJECT 1 */
-/* #elif defined(GL_EXT_texture_object) */
-/* #define TEXTURE_OBJECT 1 */
-/* #define glBindTexture(A,B)     glBindTextureEXT(A,B) */
-/* #define glGenTextures(A,B)     glGenTexturesEXT(A,B) */
-/* #define glDeleteTextures(A,B)  glDeleteTexturesEXT(A,B) */
-/* #endif */
 
 
 /*----------------------------------------------------------------------
- GL_TextureMap : map texture on a Quad (sort of a rectangle)
- Drawpixel Method for software implementation, as it's much faster for those
- Texture Method for hardware implementation as it's faster and better.
+ GL_TextureBind : Put Texture in video card's Memory at
+ a power of 2 size for height and width 
   ----------------------------------------------------------------------*/
-static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h)
+static void GL_TextureBind (PictInfo *Image)
 {  
-#ifdef MESA
-  int       p2_w, p2_h, GL_h;
-  
-  if (Image->PicPixmap)
-      { 
-	/* The other Way  with texture... 
-	   but without texture power...(mippmapping)
-	   Faster on software implementation
-	   (Actually slower on hardware accelerated system) */
-	GL_h = FrameTable[ActiveFrame].FrHeight;
-	if (xFrame > 0 && yFrame+h < GL_h)
-	  glRasterPos2i (xFrame,  yFrame + h );
-	else
-	  {
-	    /* Raster Pos must be inside viewport 
-	       if not, it's not displayed at all*/
-	    p2_w = p2_h =0;
-	    if (xFrame < 0)
-	      {
-		p2_w = xFrame;
-		xFrame = 0;
-	      }
-	    if (yFrame+h > GL_h && yFrame < GL_h)
-	      { 
-		p2_h = - (yFrame + h - GL_h); 
-		yFrame = GL_h - h; 
-	      } 
-	    glRasterPos2i (xFrame,  yFrame + h); 
-	    glBitmap (0, 0, 0, 0,
-		     p2_w,
-		     p2_h,
-		     NULL);
-	  }
-	glDrawPixels( w, h, 
-		      ((Image->RGBA)?GL_RGBA:GL_RGB), 
-		      GL_UNSIGNED_BYTE, 
-		      Image->PicPixmap); 
-      }
-#else /*!MESA*/
+
   int       p2_w, p2_h;
   GLfloat   GL_w, GL_h;   
   GLint		Mode;
   
-  /* Another way is to split texture in 256x256 
-     pieces and render them on different quads
-     Declared to be the faster  */
-  p2_w = p2 (Image->PicWidth);
-  p2_h = p2 (Image->PicHeight);
-  glEnable (GL_TEXTURE_2D); 
   /* Put texture in 3d card memory */
   if (!glIsTexture (Image->TextureBind) &&
       Image->PicPixmap)
     {      
-      glGenTextures (1, &(Image->TextureBind));
-      glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
-      /*TEXTURE ZOOM : GL_NEAREST is fastest and GL_LINEAR is second fastest*/
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      /* How texture is mapped... initially GL_REPEAT
-	 GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE are another option.. Bench !!*/	    
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
-      /* does current Color modify texture no = GL_REPLACE, 
-	 else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
-      glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+      /* Another way is to split texture in 256x256 
+	 pieces and render them on different quads
+	 Declared to be the faster  */
+      
+      
+      p2_w = p2 (Image->PicWidth);
+      p2_h = p2 (Image->PicHeight);
+      
+      /* We have resized the picture to match a power of 2
+	 We don't want to see all the picture, just the w and h 
+	 portion*/
+      
+      GL_w = (GLfloat) Image->PicWidth/p2_w;
+      GL_h = (GLfloat) Image->PicHeight/p2_h; 
+      
       /* We give te texture to opengl Pipeline system */	    
-      Mode = (Image->RGBA)?GL_RGBA:GL_RGB;		
-      GL_MakeTextureSize(Image, p2_w, p2_h);	
+      Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
+      GL_MakeTextureSize(Image, p2_w, p2_h);
+      glGenTextures (1, 
+		     &(Image->TextureBind));
+      glBindTexture (GL_TEXTURE_2D, 
+		     Image->TextureBind);       	
       glTexImage2D (GL_TEXTURE_2D, 
 		    0, 
 		    Mode, 
@@ -273,17 +423,46 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h
 		    GL_UNSIGNED_BYTE, 
 		    (GLvoid *) Image->PicPixmap);
       TtaFreeMemory (Image->PicPixmap);
+
       Image->PicPixmap = None;
-    }
-  else
-    {
-      glBindTexture(GL_TEXTURE_2D, Image->TextureBind);
-    }
-  /* We have resized the picture to match a power of 2
-     We don't want to see all the picture, just the w and h 
-     portion*/
-  GL_w = (GLfloat) Image->PicWidth/p2_w;
-  GL_h = (GLfloat) Image->PicHeight/p2_h;   	
+      Image->TexCoordW = GL_w;
+      Image->TexCoordH = GL_h;
+    }  
+}
+/*----------------------------------------------------------------------
+ GL_TextureMap : map texture on a Quad (sort of a rectangle)
+ Drawpixel Method for software implementation, as it's much faster for those
+ Texture Method for hardware implementation as it's faster and better.
+  ----------------------------------------------------------------------*/
+static void GL_TextureMap (PictInfo *Image, 
+			   int xFrame, int yFrame, 
+			   int w, int h)
+{  
+  
+   
+  glBindTexture (GL_TEXTURE_2D, 
+		 Image->TextureBind);
+ 	
+  glEnable (GL_TEXTURE_2D);
+
+  glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MIN_FILTER,
+		   GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MAG_FILTER,
+		       GL_NEAREST);	    
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_S,
+		       GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_T,
+		       GL_CLAMP); 
+  /* does current Color modify texture no = GL_REPLACE, 
+     else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+  glTexEnvi( GL_TEXTURE_ENV, 
+	     GL_TEXTURE_ENV_MODE, 
+	     GL_REPLACE);
+
   /* Not sure of the vertex order 
      (not the faster one, I think) */
   glBegin (GL_QUADS);
@@ -293,18 +472,18 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h
   glTexCoord2i (0,    0); 
   glVertex2i (xFrame,     yFrame + h);
   /* upper right*/
-  glTexCoord2f (GL_w, 0.0); 
+  glTexCoord2f (Image->TexCoordW, 0.0); 
   glVertex2i (xFrame + w, yFrame + h);
   /* lower right */
-  glTexCoord2f (GL_w, GL_h); 
+  glTexCoord2f (Image->TexCoordW, Image->TexCoordH); 
   glVertex2i (xFrame + w, yFrame); 
   /* upper left */
-  glTexCoord2f (0.0,  GL_h); 
+  glTexCoord2f (0.0,  Image->TexCoordH); 
   glVertex2i (xFrame,     yFrame);      
   glEnd ();	
   /* State disabling */
   glDisable (GL_TEXTURE_2D); 
-#endif /*MESA*/
+
 }
 #endif /* _GL */
 
@@ -578,10 +757,13 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
   by the drawable.
   if picXOrg or picYOrg are postive, the copy operation is shifted
   ----------------------------------------------------------------------*/
-static void LayoutPicture (Pixmap pixmap, Drawable drawable, 
-						   int picXOrg, int picYOrg, int w, int h, 
-						   int xFrame, int yFrame, int frame, 
-						   PictInfo *imageDesc, PtrBox box)
+static void LayoutPicture (Pixmap pixmap, 
+			   Drawable drawable, 
+			   int picXOrg, int picYOrg, 
+			   int w, int h, 
+			   int xFrame, int yFrame, 
+			   int frame, 
+			   PictInfo *imageDesc, PtrBox box)
 {
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
@@ -599,7 +781,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable,
       picYOrg = 0;
     }
   pFrame = &ViewFrameTable[frame - 1];
-  if (pixmap != None)
+  if (glIsTexture (imageDesc->TextureBind))
     {
       /* the default presentation depends on the box type */
       picPresent = imageDesc->PicPresent;
@@ -619,7 +801,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable,
 	  break;
 	case RealSize:
 	  GL_TextureMap (imageDesc, xFrame, yFrame,
-			 imageDesc->PicWidth, imageDesc->PicHeight);
+			 imageDesc->PicWidth, 
+			 imageDesc->PicHeight);
 	  break;
 	case FillFrame:
 	case XRepeat:
@@ -687,7 +870,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable,
 		    jh = imageDesc->PicHArea;
 		  else
 		    jh = h - j;
-		  GL_TextureMap (imageDesc, xFrame, yFrame, iw ,jh);
+		  GL_TextureMap (imageDesc, 
+				 xFrame, yFrame, 
+				 iw ,jh);
 		  /*BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY);*/
 		  i += imageDesc->PicWArea;
 		} 
@@ -1571,7 +1756,8 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
   DrawPicture draws the picture in the frame window.
   Parameters x, y, w, h give the displayed area of the box.
   ----------------------------------------------------------------------*/
-void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
+void DrawPicture (PtrBox box, PictInfo *imageDesc, 
+		  int frame, int x,
 		  int y, int w, int h)
 {
   PathBuffer          fileName;
@@ -1639,20 +1825,33 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
 	DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
 	{
+#ifdef _GL
+	  if ((!glIsTexture (imageDesc->TextureBind)) ||
+	      (pres == ReScale &&
+	      (imageDesc->PicWArea != w || 
+	       imageDesc->PicHArea != h)))	    
+#else /*_GL*/
 	  if (imageDesc->PicPixmap == None ||
 	      (pres == ReScale &&
-	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)))
+	      (imageDesc->PicWArea != w || 
+	       imageDesc->PicHArea != h)))
+#endif /*_GL*/
 	    {
 	      /* need to load or to rescale the picture */
 	      LoadPicture (frame, box, imageDesc);
 	      picWArea = imageDesc->PicWArea;
 	      picHArea = imageDesc->PicHArea;
-	      SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
+	      SetPictureClipping (&picWArea, &picHArea, 
+				  w, h, imageDesc);
 	    }
-	  if (pres == RealSize && box->BxAbstractBox->AbLeafType == LtPicture)
+	  
+	  
+	  if (pres == RealSize && 
+	      box->BxAbstractBox->AbLeafType == LtPicture)
 	    /* Center real sized images wihin their picture boxes */
-	    Picture_Center (picWArea, picHArea, w, h, pres, &xTranslate, &yTranslate,
-		&picXOrg, &picYOrg);
+	    Picture_Center (picWArea, picHArea, w, h, 
+			    pres, &xTranslate, &yTranslate,
+			    &picXOrg, &picYOrg);
 	  
 	  if (typeImage >= InlineHandlers)
 	    {
@@ -1873,41 +2072,108 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 width, height;
   int                 left, right, top, bottom;
 
-  /*
-  PictInfo *picture_cached;
-  */
-
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
   top = box->BxTMargin + box->BxTBorder + box->BxTPadding;
   bottom = box->BxBMargin + box->BxBBorder + box->BxBPadding;
   pAb = box->BxAbstractBox;
+
   if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
     /* the picture is not visible */
     return;
-  if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
-    return;
-  /* If we're replacing an image*/
-  if (glIsTexture (imageDesc->TextureBind))
-    {
-      glDeleteTextures (1, &(imageDesc->TextureBind));
-      imageDesc->TextureBind = 0;
-    }
-  
-  GetPictureFileName (imageDesc->PicFileName, fileName);
 
-  /*
-  if (PictureAlreadyLoaded (imageDesc, w, h))
-      return;    
-  */
+  if (imageDesc->PicFileName == NULL || 
+      imageDesc->PicFileName[0] == EOS)
+    return;
+ GetPictureFileName (imageDesc->PicFileName, fileName);
+ /* For the Sync Image*/
+ if (frame != ActiveFrame)
+     GL_MakeCurrent (frame); 
+ typeImage = LookupInPicCache (imageDesc, frame); 
+ if (typeImage)
+    {  
+      typeImage = imageDesc->PicType;
+      pres = imageDesc->PicPresent;
+      if (pres == DefaultPres)
+	{
+	  if (box->BxType == BoPicture)
+	    /* an image is rescaled */
+	    pres = ReScale;
+	  else
+	    /* a background image is repeated */
+	    pres = FillFrame;
+	}
+      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && 
+	  pres == ReScale)
+	pres = imageDesc->PicPresent = RealSize;
+      /* picture dimension */
+      if (pAb->AbLeafType == LtCompound)
+	{
+	  /* a background image, draw over the whole box */
+	  w = box->BxWidth;
+	  h = box->BxHeight;
+	}
+      else
+	{
+	  /* draw within the inside box */
+	  w = box->BxW;
+	  h = box->BxH;
+	}
+      /* xBox and yBox get the box size if picture is */
+      /* rescaled and receives the position of the picture */
+      if (pres != ReScale || Printing)
+	{
+	  xBox = 0;
+	  yBox = 0;
+	}
+      else
+	{
+	  if (box->BxW != 0)
+	    xBox = w;
+	  if(box->BxH != 0)
+	    yBox = h;
+	}
+
+      if (pres != ReScale || Printing)
+	{
+	  imageDesc->PicXArea = xBox;
+	  imageDesc->PicYArea = yBox;
+	  imageDesc->PicWArea = wBox;
+	  imageDesc->PicHArea = hBox;
+	}
+      else
+	{
+	  imageDesc->PicXArea = xBox;
+	  imageDesc->PicYArea = yBox;
+	  imageDesc->PicWArea = w;
+	  imageDesc->PicHArea = h;
+	}
+      /* Gif and Png handles transparency 
+	 so picture format is RGBA, 
+	 all others are RGB*/
+      if (typeImage != GIF_FORMAT 
+	  && typeImage != PNG_FORMAT)
+	imageDesc->RGBA = FALSE;
+      else
+	imageDesc->RGBA = TRUE;
+      /*
+	We succesfully get 
+	image from the cache so..
+      */
+      return;      
+    }
+
+
 
   typeImage = imageDesc->PicType;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
   h = 0;
   Bgcolor = ColorPixel (pAb->AbBackground);
+
   /* clean up the current image descriptor */
   /*CleanPictInfo (imageDesc);*/
+
   if (status == Supported_Format)
     {
       /* Supported format */
@@ -1922,7 +2188,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    /* a background image is repeated */
 	    pres = FillFrame;
 	}
-      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
+      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && 
+	  pres == ReScale)
 	pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
@@ -1946,14 +2213,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicPresent = RealSize;
 	      imageDesc->PicWArea = wBox = w;
 	      imageDesc->PicHArea = hBox = h;
-#ifdef _GL
+
 	      imageDesc->PicPixmap = (unsigned char *) 
 		(*(PictureHandlerTable[typeImage].Produce_Picture)) 
 		(frame, imageDesc, fileName);
-#else /*_GL*/
-	      imageDesc->PicPixmap = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
-		(frame, imageDesc, fileName);
-#endif /*_GL*/	      
+      
 	      xBox = imageDesc->PicXArea;
 	      yBox = imageDesc->PicYArea;
 	    }
@@ -1973,18 +2237,17 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-#ifdef _GL
-	      imageDesc->PicPixmap = (unsigned char *) 
-		(*(PictureHandlerTable[typeImage].Produce_Picture))
-		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
-		 Bgcolor, &width, &height,
-		 ViewFrameTable[frame - 1].FrMagnification);
-#else /*_GL*/
-	      imageDesc->PicPixmap = (*(PictureHandlerTable[typeImage].Produce_Picture))
-		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
-		 Bgcolor, &width, &height,
-		 ViewFrameTable[frame - 1].FrMagnification);
-#endif /*_GL*/
+	      if (imageDesc->TextureBind == 0)
+		imageDesc->PicPixmap = (unsigned char *) 
+		  (*(PictureHandlerTable[typeImage].Produce_Picture))
+		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
+		   Bgcolor, &width, &height,
+		   ViewFrameTable[frame - 1].FrMagnification);
+	      else
+		CacheLookupHeightAndWidth (imageDesc,
+					   &width,
+					   &height,
+					   frame); 
 	    }
 	  /* intrinsic width and height */
 	  imageDesc->PicWidth  = width;
@@ -1998,8 +2261,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       && !glIsTexture (imageDesc->TextureBind))
     {
       if (PictureLogo == None)
-			/* create a special logo for lost pictures */
-			CreateGifLogo ();
+	/* create a special logo for lost pictures */
+	CreateGifLogo ();
       imageDesc->PicFileName = TtaStrdup (LostPicturePath);
       imageDesc->PicType = 3;
       imageDesc->PicPresent = pres;
@@ -2075,7 +2338,15 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       && typeImage != PNG_FORMAT)
     imageDesc->RGBA = FALSE;
   else
-    imageDesc->RGBA = TRUE;	
+    imageDesc->RGBA = TRUE;
+
+  GL_TextureBind (imageDesc);
+  /*frame or ActiveFrame*/
+  AddInPicCache (imageDesc, frame); 
+
+  /* For the Sync Image*/
+  if (frame != ActiveFrame)
+    GL_MakeCurrent (ActiveFrame); 
 }
 
 #else /* _GL */    
@@ -2262,16 +2533,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifndef MESA
 	      /* opengl texture have size that is a power of 2*/
 	      drw = GL_MakeTexture (im->rgb_data, 
-							    im->shape_color.r, 
-							    im->shape_color.g,
-							    im->shape_color.b,
-							    w ,h);
+				    im->shape_color.r, 
+				    im->shape_color.g,
+				    im->shape_color.b,
+				    w, h);
 #else /* MESA*/
 	      drw = GL_MakeTransparentRGB (im->rgb_data, 
-									  im->shape_color.r, 
-									  im->shape_color.g,
-									  im->shape_color.b,
-									  w ,h);
+					   im->shape_color.r, 
+					   im->shape_color.g,
+					   im->shape_color.b,
+					   w, h);
 #endif/*  MESA */
 #endif /* _GL */
 #else /* _GTK2 */

@@ -57,7 +57,7 @@
 #include "UIcss_f.h"
 
 
-/* fichiers d'entêtes utilent */
+/* Useful headers */
 #include "libmanag.h" 
 #include "libmanag_f.h"
 
@@ -143,7 +143,7 @@ static char         listTitle [MAX_BUFF];
 #endif /* _WINDOWS */
 #endif /* _SVGLIB */
 
-
+#ifdef _SVGLIB
 /*----------------------------------------------------------------------
   AddLibraryDataIntoStructure
   Add a new structure url title into a dynamic liste :
@@ -156,7 +156,7 @@ static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *titl
 {
 /* Utiliser un tableau plutôt qu'une liste chainée */
 /* ensuite modifier test sur les lignes du tableau avec un indice (Cf. FrameTable)*/
-#ifdef _SVGLIB/*!!!!!!modifier le nom des variables */
+/*!!!!!!modifier le nom des variables */
   ListUriTitle     *listCur, *listNext, *listNew; /* *curCel, *nextCel, *newCel*/
   char             *path, *Title;
   int               index = 1;
@@ -200,8 +200,8 @@ static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *titl
       else
 	HeaderListUriTitle->customLibrary = FALSE;
     }
-#endif /* _SVGLIB */
 }
+#endif /* _SVGLIB */
 
 #ifdef _WINDOWS
 /*-----------------------------------------------------------------------
@@ -1472,6 +1472,7 @@ char *GetLibraryPathFromTitle (char *title)
   return path;
 }
 
+#ifdef _SVGLIB
 /*-------------------------------------------------------------------
   InitSVGBufferForCombobox
   Initializes a string by reading data in a Library Manager Structure List
@@ -1480,7 +1481,6 @@ char *GetLibraryPathFromTitle (char *title)
   -------------------------------------------------------------------*/
 static void InitSVGBufferForComboBox ()
 {
-#ifdef _SVGLIB
   ListUriTitle     *curList;
   int               lg = 0;
 
@@ -1507,8 +1507,8 @@ static void InitSVGBufferForComboBox ()
 	}
        SVGlib_list[lg] = EOS;
     }
-#endif /* _SVGLIB */
 }
+#endif /* _SVGLIB */
 
 /*-------------------------------------------------------------------
   SelectLibraryFromPath
@@ -2292,7 +2292,7 @@ void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
     {
       *height = height_tmp;
     }
-#endif _SVGLIB
+#endif /*_SVGLIB*/
 }
 
 /*----------------------------------------------------------------------

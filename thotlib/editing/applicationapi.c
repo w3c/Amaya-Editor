@@ -380,6 +380,9 @@ void TtaQuit ()
   TteFreeAllEventsList ();
   TtaFreeAllCatalogs ();
   ConfigFree ();
+#ifdef _GL
+  FreeAllPicCache ();  
+#endif /*_GL*/
 #endif /* NODISPLAY */
   FreeAll ();
   TtaFreeAppRegistry ();

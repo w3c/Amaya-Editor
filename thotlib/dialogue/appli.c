@@ -27,6 +27,7 @@
 #include "view.h"
 #include "appdialogue.h"
 #include "thotcolor.h"
+#include "picture.h"
 
 #ifdef _GTK
 #include <gdk/gdkx.h>
@@ -370,7 +371,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 #else /*_GL*/
      BeginPaint (w, &ps);
      GL_MakeCurrent (frame);	
-     GL_ActivateDrawing ();
+     GL_ActivateDrawing (frame);
      DefRegion (frame, ps.rcPaint.left, 
 		ps.rcPaint.top, ps.rcPaint.right,
 		ps.rcPaint.bottom);
@@ -405,7 +406,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    GL_MakeCurrent (frame);	
    GLResize (width, height, 0 ,0);
    /*Clear (frame, width, height, 0, 0);*/
-   GL_ActivateDrawing ();
+   GL_ActivateDrawing (frame);
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);    
    GL_DrawAll (NULL, frame);
@@ -586,6 +587,7 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
   int      frame;
  
   frame = (int) data;
+  FreeAllPicCacheFromFrame (frame);
   return TRUE ;
 }
 
@@ -593,13 +595,12 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
  GL_Init :
  Opengl pipeline state initialization
  ----------------------------------------------------------------------*/
-gboolean  GL_Init (ThotWidget widget, GdkEventExpose *event, 
+gboolean  GL_Init (ThotWidget widget, 
+		   GdkEventExpose *event, 
 		   gpointer data)
 {
-  int frame;
   static ThotBool dialogfont_enabled = FALSE;
 
-  frame = (int) data;
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     {       
 
@@ -609,8 +610,6 @@ gboolean  GL_Init (ThotWidget widget, GdkEventExpose *event,
 	    InitDialogueFonts ("");
 	    dialogfont_enabled = TRUE;
 	  } 
-      GL_ActivateDrawing ();
-      GL_DrawAll (widget, frame);
       return TRUE;
     }
   else
@@ -621,7 +620,9 @@ gboolean  GL_Init (ThotWidget widget, GdkEventExpose *event,
   When a part of the canvas is hidden by a window or menu 
   It permit to Redraw frames 
   ----------------------------------------------------------------------*/
-gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
+gboolean ExposeCallbackGTK (ThotWidget widget, 
+			    GdkEventExpose *event, 
+			    gpointer data)
 {
   int                 frame;
   int                 x;
@@ -629,21 +630,22 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   int                 width;
   int                 height;
 
-  /* 
-    if (event->count > 0)
+  
+  if (event->count > 0)
       return TRUE;
-  */
   frame = (int) data;
   x = event->area.x;
   y = event->area.y;
   width = event->area.width;
   height = event->area.height;  
-  if ((width <= 0) || (height <= 0) || !(frame > 0 && frame <= MAX_FRAME))
+  if ((width <= 0) || 
+      (height <= 0) || 
+      !(frame > 0 && frame <= MAX_FRAME))
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    {      
+    { 
       glMatroxBUG (frame, x, y, width, height);
       gtk_gl_area_swapbuffers (GTK_GL_AREA (widget));
     }
@@ -664,27 +666,31 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   height = event->height;
   x = event->x;
   y = event->y;
-  if ((width <= 0) || (height <= 0) || !(frame > 0 && frame <= MAX_FRAME))
+  if ((width <= 0) || 
+      (height <= 0) || 
+      !(frame > 0 && frame <= MAX_FRAME))
     return TRUE;
-  if (FrameTable[frame].FrWidth == width
-      && FrameTable[frame].FrHeight == height)
+  if (FrameTable[frame].FrWidth == width && 
+      FrameTable[frame].FrHeight == height)
      return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
   if (widget)
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
       {
+	FrameTable[frame].FrWidth = width;
+	FrameTable[frame].FrHeight = height;
 	GLResize (width, height, 0, 0);
-	Clear (frame, width, height, 0, 0);
-	GL_ActivateDrawing ();
+	GL_ActivateDrawing (frame);
 	DefRegion (frame, 
 		   0, 0,
 		   width, height);
 	FrameRedraw (frame, width, height);
-	GL_DrawAll (widget, frame);
+	
 	while (gtk_events_pending ()) 
 	  gtk_main_iteration ();
-	/*UpdateScrollbars (frame);*/
+	
+	
       }
   return TRUE;
 }
@@ -706,7 +712,6 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   FrameRedraw (frame, width, height);
   while (gtk_events_pending ()) 
      gtk_main_iteration ();
-  /*UpdateScrollbars (frame);*/
   return TRUE;
 }
 
@@ -733,8 +738,7 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   if (nframe > 0 && nframe <= MAX_FRAME)
     { 
       DefRegion (nframe, x, y, l+x, y+h );
-      RedrawFrameBottom(nframe, 0, NULL);
-      /*    FrameRedraw (nframe, l, h);*/
+      RedrawFrameBottom (nframe, 0, NULL);
     }
   return FALSE;
 }
@@ -829,7 +833,7 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	   JumpIntoView (frame, delta);
 	 }
 #ifdef _GL
-	GL_ActivateDrawing ();
+	GL_ActivateDrawing (frame);
 	GL_DrawAll (NULL, frame);
 	GL_Swap (frame);
 #endif /*_GL*/
@@ -2622,18 +2626,32 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  break;	
 	case 4:
 	  /* wheel mice up */
-	  FrameToView (frame, &document, &view); 
-	  TtcLineUp(document, view); 
-	  TtcLineUp(document, view); 
-	  TtcLineUp(document, view); 
+	  FrameToView (frame, &document, &view);
+	  if ((event->state & GDK_CONTROL_MASK) != 0)
+	    {
+	      ZoomIn (document, view);	      
+	    }
+	  else
+	    { 
+	      TtcLineUp(document, view); 
+	      TtcLineUp(document, view); 
+	      TtcLineUp(document, view); 
+	    }	  
 	  break;
 	case 5:
-           /* wheel mice down */
-	   FrameToView (frame, &document, &view); 
-	   TtcLineDown (document, view); 
-	   TtcLineDown (document, view); 
-	   TtcLineDown (document, view); 
-	   break;
+	  /* wheel mice down */
+	  FrameToView (frame, &document, &view); 
+	  if ((event->state & GDK_CONTROL_MASK) != 0)
+	    {
+	      ZoomOut (document, view);	      
+	    }
+	  else
+	    {
+	      TtcLineDown (document, view); 
+	      TtcLineDown (document, view); 
+	      TtcLineDown (document, view); 
+	    }
+	  break;
 	default:
 	  break;
 	}
@@ -3122,7 +3140,7 @@ void ChangeSelFrame (int frame)
 #ifndef _WINDOWS
 #ifndef _GTK
 	     if (w != 0)
-		XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+	       XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
 
 #endif /* _GTK */
@@ -3267,14 +3285,13 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	if (raz > 0)
 	  Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
-	/*glEnable (GL_SCISSOR_TEST);*/
-	glScissor ( clipx,
+	glScissor (clipx,
 		    FrameTable[frame].FrHeight
 		    + FrameTable[frame].FrTopMargin
 		    - (clipy + clipheight),
 		    clipwidth,
 		    clipheight);
-	if (raz > 0 && frame == ActiveFrame)
+	if (raz > 0)
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
 #endif /*_GL*/
      }
@@ -3319,11 +3336,9 @@ void RemoveClipping (int frame)
    clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
 #else /* _GL */
-   /*glDisable (GL_SCISSOR_TEST);*/
-    glScissor (0, 
-    	       0, 
-    	       FrameTable[frame].FrWidth, 
-   	           FrameTable[frame].FrHeight); 
+   glScissor (0, 0, 
+	      FrameTable[frame].FrWidth, 
+	      FrameTable[frame].FrHeight); 
 #endif /*_GL*/
 }
 
@@ -3411,10 +3426,7 @@ void UpdateScrollbars (int frame)
     }
   else
     gtk_widget_show (GTK_WIDGET (vscroll));
-#ifdef _GL 
-  /*For multiview synchonization*/  
-  GL_DrawAll (NULL, frame);  
-#endif /*_GL*/
+
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
   l = FrameTable[frame].FrWidth;

@@ -1794,7 +1794,7 @@ static void       StartOfXmlStartElement (char *name)
 	  /* generic xml document */
 	  currentParserCtxt = GenericXmlParserCtxt;
 	}
-#else XML_GENERIC
+#else /*XML_GENERIC*/
       currentParserCtxt = savParserCtxt;
       UnknownNS = TRUE;
 #endif /* XML_GENERIC */
@@ -2077,7 +2077,7 @@ static void       EndOfXmlElement (char *name)
 	  /* generic xml document */
 	  currentParserCtxt = GenericXmlParserCtxt;
 	}
-#else XML_GENERIC
+#else /*XML_GENERIC*/
       currentParserCtxt = savParserCtxt;
       UnknownNS = TRUE;
 #endif /* XML_GENERIC */

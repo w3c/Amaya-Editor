@@ -48,9 +48,10 @@ STRUCT
 	      viewBox = text;
 	      version = text;
 	      x = text;
-              y = text;
+              y = text; 
 	      width_ = text;
 	      height_ = text;
+	      opacity = text; 
 	      RealLang = Yes_;
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
@@ -60,6 +61,7 @@ STRUCT
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
+	      opacity; 
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform = text)
@@ -93,7 +95,7 @@ STRUCT
         (ATTR xlink_href = text;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
-	      fill; stroke; stroke_width;
+	      opacity; fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
@@ -117,7 +119,8 @@ STRUCT
 	      x; 
 	      y;
               width_;
-              height_)
+              height_;
+	      opacity)		
         = AGGREGATE
               desc; ? title; ? metadata;
 	      LIST OF (Anim);
@@ -153,7 +156,7 @@ STRUCT
    path
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      opacity; fill; stroke; stroke_width;
               transform;
 	      d = text;
 	      pathLength = text)
@@ -174,6 +177,7 @@ STRUCT
               y;
               width_;
               height_;
+	      opacity;
 	      rx = text;
 	      ry = text)
         = AGGREGATE
@@ -189,7 +193,8 @@ STRUCT
 	      transform;
 	      cx = text;
 	      cy = text;
-              r = text)
+              r = text;
+	      opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -204,7 +209,8 @@ STRUCT
 	      cx;
 	      cy;
 	      rx;
-	      ry)
+	      ry;
+	      opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -219,7 +225,8 @@ STRUCT
 	      x1 = text;
 	      y1 = text;
               x2 = text;
-	      y2 = text)
+	      y2 = text;
+	      opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -231,7 +238,8 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      transform;
-              points = text)
+              points = text;
+	      opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -243,7 +251,8 @@ STRUCT
 	      externalResourcesRequired; 
 	      fill; stroke; stroke_width;
 	      transform;
-              points)
+              points;
+	      opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -263,7 +272,8 @@ STRUCT
 	      x;
 	      y;
 	      dx = text;
-	      dy = text)
+	      dy = text;
+	      opacity)
         = LIST OF (CASE OF
 		   TEXT; desc; title; metadata;
 	           tspan; tref; a;
@@ -281,7 +291,8 @@ STRUCT
 	      x;
               y;
 	      dx;
-	      dy)
+	      dy;
+	      opacity)
 	= LIST OF (SpanElement = CASE OF
 		      TEXT;
 		      desc; title; metadata;
@@ -301,7 +312,8 @@ STRUCT
 	      x;
               y;
 	      dx;
-	      dy)
+	      dy;
+	      opacity)
 	= LIST OF (CASE OF
 		   desc; title; metadata;
 	           animate; set_; animateColor;
@@ -537,7 +549,7 @@ STRUCT
    foreignObject  { not in SVG Tiny }
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      opacity; fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
@@ -556,6 +568,7 @@ STRUCT
   Timeline_cross
 	(ATTR x; 
 	      y;
+	opacity; 
           width_;
           height_)
         = PICTURE;

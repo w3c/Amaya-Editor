@@ -1357,6 +1357,7 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	   break;
 	 case PtVisibility:
 	 case PtFillPattern:
+	 case PtOpacity:
 	 case PtBackground:
 	 case PtForeground:
 	   if (value < 0)
@@ -2402,6 +2403,7 @@ int TtaGetPRuleValue (PRule pRule)
       case PtVisibility:
       case PtDepth:
       case PtFillPattern:
+      case PtOpacity:
       case PtBackground:
       case PtForeground:
       case PtBorderTopColor:
@@ -2774,6 +2776,7 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 			    case PtVisibility:
 			    case PtDepth:
 			    case PtFillPattern:
+			    case PtOpacity:
 			    case PtBackground:
 			    case PtForeground:
 			    case PtBorderTopColor:

@@ -438,7 +438,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
      return;
    
    
-   GL_DrawStixChar (font, 88, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
+   DrawStixChar (font, 88, x, y, l, h, fg, frame);
    return;
    
    fh = FontHeight (font);
@@ -458,7 +458,8 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
 
 	/* Upper part */
-	GL_DrawArc(x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64, FALSE);
+	GL_DrawArc(x + 1, y + 1, l - 3, 
+		   arc * 2, 0 * 64, 180 * 64, FALSE);
      }
 }
 
@@ -473,7 +474,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    if (fg < 0)
      return;
 
-   GL_DrawStixChar (font, 87, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
+   DrawStixChar (font, 87, x, y,  l, h, fg, frame);
    return;
 
    fh = FontHeight (font);
@@ -1174,7 +1175,7 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
    adbuff = buffer;
    y += FrameTable[frame].FrTopMargin;
    j = 1;
-   for (i = 1; i < nb; i++)
+    for (i = 1; i < nb; i++)
      {
 	if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
 	  {
@@ -1710,12 +1711,12 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-    GL_SetForeground (bg);
+	GL_SetForeground (bg);
 	GL_DrawPolygon (point, 13);
 	for (i=0;i<4;i++){
 	  GL_DrawArc (xarc[i].x, xarc[i].y, 
 		      xarc[i].width, xarc[i].height, 
-		      xarc[i].angle1,xarc[i].angle2,
+		      xarc[i].angle1, xarc[i].angle2,
 		      TRUE); 
 	}
      }
@@ -1727,7 +1728,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	for (i=0;i<4;i++){
 	  GL_DrawArc (xarc[i].x, xarc[i].y, 
 		      xarc[i].width, xarc[i].height, 
-		      xarc[i].angle1,xarc[i].angle2,
+		      xarc[i].angle1, xarc[i].angle2,
 		      FALSE);
 	} 
 	GL_DrawSegments (seg, 4);

@@ -648,7 +648,8 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
       WIN_GetDeviceContext (frame);
 #endif /* __WINDOWS && !_WINT_PRINT */
 #ifdef _GL      
-      if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame))
+      if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame, 
+		     frame))
 	{
 #endif /* _GL */
 	  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
@@ -833,7 +834,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       if (xmin < xmax && ymin < ymax)
 	{ 
 #ifdef _GL
-	  if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame))
+	  if (GL_prepare((ThotWidget *) FrameTable[frame].WdFrame, frame))
 	    {
 #endif /*_GL*/
 	      
@@ -894,9 +895,10 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			}
 		      y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
 		      if (pFrame->FrAbstractBox->AbTruncatedTail &&
-			  (y >= 0/* || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
-				    pFrame->FrAbstractBox->AbHeight.DimMinimum &&
-				    !pRootBox->BxContentHeight)*/))
+			  (y >= 0
+/* || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
+   pFrame->FrAbstractBox->AbHeight.DimMinimum &&
+   !pRootBox->BxContentHeight)*/))
 			{
 			  /* it lacks some abstract image at the bottom of the frame */
 			  if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
@@ -937,7 +939,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			  /* Volume computed is sufficient */
 			  /* Is a cleanup of the bottom of frame needed ? */
 			  if (y > 0)
-			    Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+			    Clear (frame, l, y, 0, 
+				   pRootBox->BxYOrg + pRootBox->BxHeight);
 			  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 			}
 		    }

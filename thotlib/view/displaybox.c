@@ -36,6 +36,7 @@
 #include "xwindowdisplay_f.h"
 
 #ifdef _GL
+#include <GL/gl.h>
 #include "glwindowdisplay.h"
 #endif /*_GL*/
 
@@ -158,6 +159,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   int                 width, height;
   ThotBool            StixExist;
 
+ 
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
   withbackground = (pBox->BxFill && pBox->BxDisplay);
@@ -166,14 +168,18 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
     {
       font = NULL;
 
-#if defined (_STIX) || defined (_GL)
+#ifdef _STIX
 
 #ifdef _WINDOWS
 	if (WinFontExist ("esstix6_.ttf"))
 #endif /*_WINDOWS*/
-      GetMathFontFromChar (pBox->BxAbstractBox->AbShape, 
-			   (void **) &font,
-			   pBox->BxFont->FontSize);
+	  if (pBox->BxH > 0) 
+	    {
+	      GetMathFontFromChar (pBox->BxAbstractBox->AbShape,
+				   pBox->BxFont,
+				   (void **) &font,
+				   SizetoLogical(pBox->BxH-5));
+	    }
       if (font == NULL)
 	{
 	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
@@ -187,6 +193,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
       StixExist = FALSE;
 
 #endif /*_STIX*/
+
       if (font != NULL)
 	{
 	  /* Position in the frame */
@@ -204,8 +211,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	    height = 0;
 	  
 	  if (withbackground)
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, 0, bg, 2);
-	  /* display the background selection */
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, 0, bg, 2);	  /* display the background selection */
 	  if (selected &&
 	      !pFrame->FrSelectOnePosition &&
 	      pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
@@ -238,7 +244,10 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 		DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
 	      break;
 	    case 'S':
-	      DrawSigma (frame, xd, yd, width, height, font, fg);
+	      if (StixExist)
+		DrawStixSigma (frame, xd, yd, width, height, font, fg);
+	      else
+		DrawSigma (frame, xd, yd, width, height, font, fg);
 	      break;
 	    case 'P':
 	      DrawPi (frame, xd, yd, width, height, font, fg);
@@ -1065,6 +1074,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            withbackground;
   ThotBool            hyphen, rtl;
 
+
   indmax = 0;
   buffleft = 0;
   adbuff = NULL;
@@ -1787,7 +1797,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   int                x, y;
   int                xd, yd, width, height;
   ThotBool           selected;
-
+#ifdef _GLLIST
+  ThotBool           AbstractBoxModified;
+#endif /* _GLLIST */
+  
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
 
@@ -1839,13 +1852,55 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     } 
 
 
+    
+#ifdef _GL
   
+#ifdef _GLLIST
+  AbstractBoxModified =
+    
+      pAb->AbNew ||
+      pAb->AbDead ||
+      pAb->AbWidthChange ||
+      pAb->AbHeightChange ||
+      pAb->AbHorizPosChange ||
+      pAb->AbVertPosChange ||
+      pAb->AbHorizRefChange ||
+      pAb->AbVertRefChange ||
+      pAb->AbSizeChange ||
+      pAb->AbAspectChange ||
+      pAb->AbMBPChange ||
+      pAb->AbChange;
+    
+  /*does box need to be recomputed 
+    in a new display list*/
+  if (!AbstractBoxModified &&
+      !selected)
+    {
+      if (glIsList (box->DisplayList))
+	{
+	  glCallList (box->DisplayList);
+	  return; 
+	}
+    }
+  if (glIsList (box->DisplayList))
+    {
+      glDeleteLists (box->DisplayList, 1);
+    }
+  box->DisplayList = glGenLists (1);
+  glNewList(box->DisplayList,
+	    GL_COMPILE_AND_EXECUTE);
+#endif /*_GLLIST*/
+  GL_SetOpacity (pAb->AbOpacity);
+#endif /*_GL*/
+      
   if (pAb->AbVolume == 0 ||
-      (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
+      (pAb->AbLeafType == LtPolyLine
+       && box->BxNChars == 1))
     {
       /* Empty */
       selected = (box == pFrame->FrSelectionBegin.VsBox &&
 		  box == pFrame->FrSelectionEnd.VsBox);
+      
       if (pAb->AbLeafType == LtSymbol)
 	DisplayEmptyBox (box, frame, selected);
       else if (pAb->AbLeafType != LtPolyLine &&
@@ -1883,11 +1938,21 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     /* Path */
     DisplayPath (box, frame, selected);
 
+
+#ifdef _GL
+      GL_SetOpacity (1000);
+#ifdef _GLLIST
+      glEndList ();   
+#endif /*_GLLIST*/      
+#endif /*_GL*/
+      
+
   /* then display borders */
   if (yd + height >= ymin
       && yd <= ymax
       && xd + width >= xmin
       && xd <= xmax)
-    DisplayBorders (box, frame, xd - x, yd - y, width, height);
-
+    DisplayBorders (box, frame,
+		    xd - x, yd - y,
+		    width, height);
 }

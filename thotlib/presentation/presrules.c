@@ -771,6 +771,9 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		  case PtFillPattern:
 		    val = pAbb->AbFillPattern;
 		    break;
+		  case PtOpacity:
+		    val = pAbb->AbOpacity;	    
+		    break;
 		  case PtBackground:
 		    val = pAbb->AbBackground;
 		    break;
@@ -1020,7 +1023,24 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		      val--;
                   }
 	      }
-
+	    if (pPRule->PrType == PtOpacity)
+	      {
+		if (pPRule->PrAttrValue)
+		  /* c'est la valeur d'un attribut */
+		  {
+		    pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue, pAttr);
+		    if (pPRule->PrIntValue < 0)
+		      /* il faut inverser cette valeur */
+		      val = -AttrValue (pAttr);
+		    else
+		      val = AttrValue (pAttr);
+		    
+		  }
+		else
+		  /* c'est la valeur elle meme qui est dans la regle */
+		  val = pPRule->PrIntValue;
+		
+	      }
 	    if (pPRule->PrType == PtSize && *unit == UnRelative)
 	      {
                 if (val > MAX_LOG_SIZE)
@@ -3743,10 +3763,23 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 					    pAb->AbDocView, &appl, &unit,
 					    pAttr, pAb);
 	  if (!appl && pAb->AbElement->ElParent == NULL)
-	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    /* Pas de regle pour la racine,
+	       on met la valeur par defaut */
 	    {
 	      pAb->AbFillPattern = 0;
 	      appl = TRUE;
+	    }
+	  break;
+	case PtOpacity:	      
+	  pAb->AbOpacity = IntegerRule (pPRule, pAb->AbElement,
+					pAb->AbDocView, &appl, &unit,
+					pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine,
+	       on met la valeur par defaut */
+	    {
+	     pAb->AbOpacity = 1000;
+	      appl = TRUE;	      
 	    }
 	  break;
 	case PtBackground:
@@ -3754,7 +3787,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 					   pAb->AbDocView, &appl, &unit,
 					   pAttr, pAb);
 	  if (!appl && pAb->AbElement->ElParent == NULL)
-	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    /* Pas de regle pour la racine,
+	       on met la valeur par defaut */
 	    {
 	      pAb->AbBackground = DefaultBColor;
 	      appl = TRUE;

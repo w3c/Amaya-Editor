@@ -432,3 +432,10 @@ Makefile: $(MAKEFILE_IN) config.status
 config.status: configure
 	./config.status --recheck
 
+tags:	dummy
+	rm -f ../TAGS
+	find ../ -name "*.[hc]" -print | xargs etags --declarations -a -o ../TAGS
+
+dummy:
+
+

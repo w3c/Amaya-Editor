@@ -78,7 +78,8 @@ typedef int        *PRule;
 #define PRPageBefore 64
 #define PRPageAfter 65
 #define PRPageInside 66
-#define LAST_PRES_RULE_TYPE 66
+#define PROpacity 67
+#define LAST_PRES_RULE_TYPE 67
 
 /* values for rules PRBorder*Style */
 #define BorderStyleNone 1

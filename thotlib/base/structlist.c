@@ -249,6 +249,9 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtFillPattern:
       fprintf (fileDescriptor, "FillPattern");
       break;
+    case PtOpacity:
+      fprintf (fileDescriptor, "PtOpacity");
+      break;
     case PtBackground:
       fprintf (fileDescriptor, "Background");
       break;
@@ -3249,6 +3252,10 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		    break;
 		 case PtFillPattern:
 		    fprintf (fileDescriptor, "FillPattern: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+	         case PtOpacity:
+		    fprintf (fileDescriptor, "Opacity: ");
 		    wrnbherit (RP, fileDescriptor);
 		    break;
 		 case PtBackground:

@@ -94,8 +94,11 @@ void    SVGEntityCreated (unsigned char *entityValue, Language lang,
    stroke, stroke-width, font-family, font-size, font-style, font-variant,
    font-weight).
   ----------------------------------------------------------------------*/
-void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
-			       Document doc, ThotBool delete)
+void   ParseCSSequivAttribute (int attrType,
+			       Attribute attr,
+			       Element el,
+			       Document doc,
+			       ThotBool delete)
 {
 #define buflen 200
   char               css_command[buflen+20];
@@ -205,6 +208,9 @@ void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
       break;
     case SVG_ATTR_text_decoration:
       sprintf (css_command, "text-decoration: %s", text);
+      break;
+    case SVG_ATTR_opacity:
+      sprintf (css_command, "opacity: %s", text);
       break;
     default:
       break;
@@ -2573,6 +2579,7 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
       }
 }
 
+
 /*----------------------------------------------------------------------
    SVGAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
@@ -2590,6 +2597,9 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 
    switch (attrType.AttrTypeNum)
      {
+     case SVG_ATTR_opacity:
+         ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);
+	 break;
      case SVG_ATTR_height_:
      case SVG_ATTR_width_:
      case SVG_ATTR_r:

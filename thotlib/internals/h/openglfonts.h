@@ -23,42 +23,58 @@
 
 typedef struct _GL_glyph
 {
-  FT_BBox bbox;
+  FT_BBox   bbox;
   FT_Vector pos;
   FT_Vector dimension;  
-  float advance;
-  void *data;
+  int       advance;
+  void      *data;
 } GL_glyph;
+
+typedef struct _Cache_index {
+  unsigned int  index;
+  unsigned int  character;
+  struct _Cache_index *next;
+} Char_Cache_index;
 
 typedef struct _GL_font
 {
   FT_Face   *face;
   int       kerning;
   GL_glyph  **glyphList;
-  int		Cache_index;
+  int       Cache_index;
+  unsigned int size;
+  int       height;
+  int       ascent;
+  Char_Cache_index *Cache;  
 } GL_font;
 
 
+
 typedef struct F_VECTOR {
-        float x;
-		float y;
+  float x;
+  float y;
 } FLOAT_VECTOR;
 
-
 typedef struct F_Slot {
-        char     *name;
-		GL_font  *font;
-		int      size;
-		int      ref;
+  char     *name;
+  GL_font  *font;
+  int      size;
+  int      ref;
 } Font_Slot;
 
 
 static GL_font       *FontOpen (const char* fontname);
 static void          FontClose (GL_font *font);
-static int           FontAscender (GL_font *font);
 static int           FontDescender (GL_font *font);
-static int           FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res );
-static int           FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet);
+
+static int           FontFaceSize (GL_font *font,
+			   const unsigned int size,
+			   const unsigned int res,
+			   ThotBool Cached);
+
+static int           FontCharMap (GL_font *font,
+				  FT_Encoding encoding,
+				  char alphabet);
 static void          FontBBox (GL_font *font,
 			       wchar_t* string,
 			       int length,
@@ -67,9 +83,7 @@ static void          FontBBox (GL_font *font,
 			       float  *ury, float *urz);
 static void          FreeGlyphList (GL_font *font);
 
-/*
-  static float         FontAdvance (GL_font *font, const char* string);
-*/
+
 
 /* Font handling internals */
 static int           FTLibraryInit ();
@@ -79,7 +93,8 @@ void                 FTLibraryFree ();
 static float          FaceKernAdvance (FT_Face face, 
 				       unsigned int index1, 
 				       unsigned int index2);
-static GL_glyph      *MakeBitmapGlyph (GL_font *font, unsigned int g);
+static GL_glyph      *MakeBitmapGlyph (GL_font *font,
+				       unsigned int g);
 
 #ifndef PADDING
 #define PADDING 1

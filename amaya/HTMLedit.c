@@ -284,6 +284,9 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    int                 length, piNum;
    ThotBool            new, oldStructureChecking, isHTML;
 
+   attr = 0;
+   new = FALSE;  
+   
    if (AttrHREFundoable)
      TtaOpenUndoSequence (doc, element, element, 0, 0);
 

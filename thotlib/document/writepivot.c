@@ -447,7 +447,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtAdjust ||
 	rType == PtDirection || rType == PtUnicodeBidi ||
 	rType == PtLineStyle || rType == PtLineWeight ||
-	rType == PtFillPattern ||
+	rType == PtFillPattern || rType == PtOpacity ||
 	rType == PtBackground || rType == PtForeground ||
 	rType == PtHyphenate ||
 	rType == PtBreak1 || rType == PtBreak2 ||
@@ -613,6 +613,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  break;
 	case PtFillPattern:
 	  TtaWriteByte (pivFile, C_PR_FILLPATTERN);
+	  break;
+	case PtOpacity:
+	  TtaWriteByte (pivFile, C_PR_OPACITY);
 	  break;
 	case PtBackground:
 	  TtaWriteByte (pivFile, C_PR_BACKGROUND);

@@ -15,10 +15,6 @@
 
 #ifdef _GL
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #ifdef _GTK
 /* Font Server */
 #include <gdk/gdkx.h>
@@ -26,10 +22,17 @@
 #else /* _GTK */
 #include <windows.h>
 #endif  /* _GTK */
- 
+
+#include "thot_sys.h"
+#include "application.h"
+
 
 #ifdef _FONTCONFIG
-int GetFontFilename (char script, int family, int highlight, 
+#include "fontconfig.h"
+#endif /*_FONTCONFIG*/
+
+#ifdef _FONTCONFIG
+int GetFontFilenameFromConfig (char script, int family, int highlight, 
 		     int size, int UseLucidaFamily, int UseAdobeFamily,
 		     char *filename)
 {
@@ -42,11 +45,18 @@ int GetFontFilename (char script, int family, int highlight,
   if (response == NULL)
     response = (char *) FontLoadFromConfig ('1', 1, 1);
   
+  if (response == NULL ||
+      !TtaFileExist (response))
+    {
+      /*Bad Configuration
+       get back to normal loading*/
+      return 0;
+    }
   strcpy (filename, response);
-  return (1);
+  return 1;
 }
 
-#else
+#endif /*_FONTCONFIG*/
 
 /* XFT_FAMILY XFT_FOUNDRY XFT_STYLE XFT_ENCODING "iso8859-1" 
    XFT_SLANT  XFT_WEIGHT XFT_SIZE  XFT_DPI */
@@ -59,10 +69,20 @@ int GetFontFilename (char script, int family, int highlight, int size,
 #ifdef _GTK
   XftPattern	*match, *pat;
   XftResult     result;
-  char          encoding[3], xftencoding[24];
   char	        *s;
   int           ok = 0;
 
+#ifdef _FONTCONFIG
+  if (GetFontFilenameFromConfig (script,
+				 family,
+				 highlight, 
+				 size,
+				 UseLucidaFamily,
+				 UseAdobeFamily,
+				 filename))
+    return 1;
+#endif /*_FONTCONFIG*/
+  
   pat = XftPatternCreate ();
 
   if (!pat)
@@ -154,14 +174,18 @@ int GetFontFilename (char script, int family, int highlight, int size,
     {
 
       XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
+      XftPatternAddString (pat, XFT_FOUNDRY, "urw");
+      
       /*XftPatternAddString (pat, XFT_FOUNDRY, "microsoft"); */
       /*XftPatternAddString (pat, XFT_FOUNDRY, "monotype");*/
            
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
-      XftPatternAddString (pat, XFT_FAMILY, "Symbol");   
-      /* XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");  */
+      XftPatternAddString (pat, XFT_FAMILY, "Symbol");
+      
+      XftPatternAddString (pat, XFT_FAMILY, "standard symbols l");
+      XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");
    
-      XftPatternAddString (pat, XFT_ENCODING, "fontspecific");
+      XftPatternAddString (pat, XFT_ENCODING, "adobe-fontspecific");
     }
   else if (script == 'E')
     {
@@ -374,17 +398,28 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	 if (script == 'E')
 	   if (strstr (filename, "esstix") == NULL)
 	       ok = 0;
-#ifdef _PCLDEBUGFONT
+#ifdef _FONTCONFIG
 	 g_print ("\n %s \t[script : %c (%i) family : %i] \t=> %i", 
 		  filename, script, script, family, ok);
-#endif /*_PCLDEBUG*/
+#endif /*_FONTCONFIG*/
        }
      XftPatternDestroy (match);
     }
   XftPatternDestroy (pat); 
   return ok;
 #else /* _GTK */
- 
+  
+#ifdef _FONTCONFIG
+  if (GetFontFilenameFromConfig (script,
+				 family,
+				 highlight, 
+				 size,
+				 UseLucidaFamily,
+				 UseAdobeFamily,
+				 filename))
+    return 1;
+#endif /*_FONTCONFIG*/
+  
   GetWindowsDirectory (filename , 1024);  
   strcat (filename, "\\fonts\\"); 
   if (script == 'G' || family == 0)
@@ -457,6 +492,5 @@ int GetFontFilename (char script, int family, int highlight, int size,
   return 1;
 #endif /* _GTK */
 }
-#endif /* _FONTCONFIG */
 #endif /* _GL */
 

@@ -65,14 +65,14 @@
 #endif
 
 /* ((A)*(M_PI/180.0)) */
-#define DEG_TO_RAD(A)   ((float)A)/57.29577957795135
-#define RAD_TO_DEG(A)   ((float)A)*57.29577957795135
+#define DEG_TO_RAD(A)   ((double)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((double)A)*57.29577957795135
 
 /*If we should use a static table instead for
   performance bottleneck...*/
-#define DCOS(A) ((float)cos (A))
-#define DSIN(A) ((float)sin (A))
-#define DACOS(A) ((float)acos (A))
+#define DCOS(A) ((double)cos (A))
+#define DSIN(A) ((double)sin (A))
+#define DACOS(A) ((double)acos (A))
 #define A_DEGREE 0.017453293
 
 /* Precision of a degree/1 
@@ -97,7 +97,7 @@
 
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
-#ifdef _PCLDEBUG
+#ifdef _PCLDEBUGTIME
 /* Unix timer */
 #include <unistd.h>
 #include <sys/timeb.h>
@@ -158,8 +158,6 @@ ThotBool GL_Drawing = FALSE;
 
 /*Current Thickness*/
 static int S_thick;
-/* if a refresh is needed, it is TRUE*/
-static ThotBool GL_Modif = FALSE;
 
 /* background color*/
 static int GL_Background[50];
@@ -171,7 +169,8 @@ static int GL_Background[50];
 void ClearAll (int frame)
 {
   if (GL_MakeCurrent(frame))
-    glClear (GL_COLOR_BUFFER_BIT);
+    return;
+  glClear (GL_COLOR_BUFFER_BIT);
 }
 
 /*----------------------------------------------------------------------
@@ -188,9 +187,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
       TtaGiveThotRGB (color, &red, &green, &blue);
       glClearColor (red, green, blue, 255);
       GL_Background[frame] = color;
-      ClearAll (frame);   
-    }
-  
+    }  
    return;
 }
 
@@ -201,13 +198,16 @@ void Clear (int frame,
 	    int width, int height,
 	    int x, int y)
 {
+  if (GL_MakeCurrent(frame))
+    return;
+  FrameTable[frame].DblBuffNeedSwap = TRUE; 
   y = y + FrameTable[frame].FrTopMargin;
   GL_SetForeground (GL_Background[frame]); 
   glBegin (GL_QUADS);
-  glVertex2f (x, y); 
-  glVertex2f (x, y + height);
-  glVertex2f (x +  width, y + height);
-  glVertex2f (x + width, y);
+  glVertex2i (x, y); 
+  glVertex2i (x, y + height);
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x + width, y);
   glEnd ();
 }
 #endif /*_WIN_PRINT*/
@@ -465,9 +465,9 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
   wglMakeCurrent (NULL, NULL);
   /* delete the rendering context */
   if (GL_Context[frame])
-	wglDeleteContext (GL_Context[frame]);
+    wglDeleteContext (GL_Context[frame]);
   if (GL_Windows[frame])
-	ReleaseDC (hwndClient, GL_Windows[frame]);
+    ReleaseDC (hwndClient, GL_Windows[frame]);
   GL_Windows[frame] = 0;
   GL_Context[frame] = 0;
 }
@@ -477,7 +477,7 @@ static int Opacity = 1000;
 
 void GL_SetOpacity (int opacity)
 {
-    Opacity = (opacity/1000) * 255;
+  Opacity = (int) ((opacity * 255)/1000);
 }
 
 
@@ -490,6 +490,7 @@ void GL_SetForeground (int fg)
 
     TtaGiveThotRGB (fg, &red, &green, &blue);
     glColor4ub (red, green, blue, Opacity);
+    
 }
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
@@ -784,10 +785,13 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
  GL_DrawArc : receive angle at 64* their values...
  but
   ----------------------------------------------------------------------*/
-void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled)
+void GL_DrawArc (int x, int y, 
+		 int w, int h, 
+		 int angle1, int angle2, 
+		 ThotBool filled)
 {  
-  float angle, anglefinal, fastx, fasty;
-
+  double angle, anglefinal, fastx, fasty;
+  
   /*The formula is simple :
        y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
        x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
@@ -800,11 +804,11 @@ void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool fi
   angle2 = angle2 / 64;
   w =  w / 2;
   h =  h / 2;
-  fastx = x + w;
-  fasty = y + h;
+  fastx = (double) (x + w);
+  fasty = (double) (y + h);
   
-  angle =  DEG_TO_RAD (angle2);
-  anglefinal = DEG_TO_RAD (angle1);
+  angle =  (double) DEG_TO_RAD (angle2);
+  anglefinal = (double) DEG_TO_RAD (angle1);
   /* A good optimization is that
    cos(A)*cos(B)=(cos(A+B)+cos(A-B))/2 
    based on trigo decomposition
@@ -817,27 +821,27 @@ void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool fi
   perhaps precalculated tables...*/  
   if (!filled && 0)
     {
-      angle =  DEG_TO_RAD (angle2);
+      angle =  (double) DEG_TO_RAD (angle2);
       glBegin (GL_POINTS);
       /* another one is to extend the use of Vertex array...
 	 but not only for here... for all computations*/
       while (angle1 <= angle2)
 	{
-	  glVertex2f ( fastx + w * DCOS(angle),
-		       fasty - h * DSIN(angle));
-	  angle -= A_DEGREE;
+	  glVertex2d ( fastx + ((double)w) * DCOS(angle),
+		       fasty - ((double)h) * DSIN(angle));
+	  angle -= (double)A_DEGREE;
 	  angle2--;
 	}
-      glVertex2f ( fastx + w * DCOS (angle),
-		   fasty - h * DSIN (angle));
+      glVertex2d ( fastx + ((double)w) * DCOS (angle),
+		   fasty - ((double)h) * DSIN (angle));
       glEnd();
     }
-  angle = DEG_TO_RAD (angle2);
+  angle = (double) DEG_TO_RAD (angle2);
   if (filled)
     {
       glBegin (GL_TRIANGLE_FAN);
       /* The center */
-      glVertex2f (fastx, fasty);
+      glVertex2d (fastx, fasty);
     }
   else
     {
@@ -846,13 +850,13 @@ void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool fi
     }
   while (angle1 <= angle2)
     {
-      glVertex2f ( fastx + w * DCOS(angle),
-		   fasty - h * DSIN(angle));
-      angle -= A_DEGREE;
+      glVertex2d (fastx + ((double)w) * DCOS(angle),
+		  fasty - ((double)h) * DSIN(angle));
+      angle -= (double)A_DEGREE;
       angle2--;
     }
-  glVertex2f ( fastx + w * DCOS (angle),
-	       fasty - h * DSIN (angle));
+  glVertex2d ( fastx + ((double)w) * DCOS (angle),
+	       fasty - ((double)h) * DSIN (angle));
   glEnd();
   if (!filled)
     glEnable (GL_BLEND);
@@ -929,6 +933,9 @@ void GL_Point (int fg, float width, float x, float y)
   glVertex2f (x, y);
   glEnd ();
 }
+
+
+#ifdef _PIXELFONT
 /*----------------------
   ResetPixelTransferBias
 ------------------------*/
@@ -966,6 +973,9 @@ static void SetPixelTransferBias (int fg)
   glPixelTransferf (GL_GREEN_BIAS, BIT8DIVIDE(green));
   glPixelTransferf (GL_BLUE_BIAS,  BIT8DIVIDE(blue));
 }
+#endif /*_PIXELFONT*/
+
+
 /*----------------------------------------------------------------------
   TranslateChars replaces in the text space chars to their visual
   equivalents and the character 128 by '&'.
@@ -1010,47 +1020,27 @@ void TranslateChars (CHAR_T *text)
 
 
 /*----------------------------------------------------------------------
-  GL_DrawStixChar : draw a character in a texture or a bitmap 
-  ----------------------------------------------------------------------*/
-void GL_DrawStixChar (void *GL_font, CHAR_T const c, 
-		      int x, int y, 
-		      int fg, int size, 
-		      int l, int h, int frame)
-{
-  if (fg < 0 || GL_font == NULL)
-    return;
-  SetPixelTransferBias (fg);
-  StixFontRenderCharSize (GL_font, c, x, y, 
-			  size, l, h, FrameTable[frame].FrHeight);
-  ResetPixelTransferBias();
-}
-/*----------------------------------------------------------------------
   GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
   ----------------------------------------------------------------------*/
 void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, 
 			 void *GL_font, int fg)
 {
+  CHAR_T symbols[2];
+  
+  symbols[0] = c;
+  symbols[1] = '\0';
+  
   if (fg < 0 || GL_font == NULL)
     return;
-  SetPixelTransferBias (fg);
-  UnicodeFontRenderCharSize (GL_font, c, x, y, -1,
-	  FrameTable[ActiveFrame].FrHeight);
-  ResetPixelTransferBias();
+  GL_SetForeground (fg); 
+  
+  UnicodeFontRender (GL_font,
+		     symbols, 
+		     x,
+		     y, 
+		     1);
 }
-/*----------------------------------------------------------------------
-  GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
-  with a specific size
-  ----------------------------------------------------------------------*/
-void GL_DrawUnicodeCharSized (CHAR_T const c, float x, float y, 
-			      void *GL_font, int fg, int size)
-{
-  if (fg < 0 || GL_font == NULL)
-    return;
-  SetPixelTransferBias (fg);
-  UnicodeFontRenderCharSize (GL_font, c, x, y, 
-	  size, FrameTable[ActiveFrame].FrHeight);
-  ResetPixelTransferBias();
-}
+
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   WDrawString draw a char string of lg chars beginning in buff.
@@ -1072,24 +1062,23 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 
   if (lg < 0)
     return 0;
-
+  
   y += FrameTable[frame].FrTopMargin;
   if (shadow)
+    {
+      /* replace each character by a star */
+      j = 0;
+      while (j < lg)
 	{
-	  /* replace each character by a star */
-	  j = 0;
-	  while (j < lg)
-	    {
-	      buff[j++] = '*';
-	    }
+	  buff[j++] = '*';
 	}
+    }
   return (GL_UnicodeDrawString (fg, 
 				buff, 
 				(float) x,
 				(float) y, 
 				hyphen,
 				(void *)font, 
-
 				lg));
 }
 #endif /*_WIN_PRINT*/
@@ -1109,16 +1098,17 @@ int GL_UnicodeDrawString (int fg,
     return 0;
   str[end] = EOS;
   TranslateChars (str);
-  SetPixelTransferBias (fg);
+  
+  GL_SetForeground (fg); 
+ 	
   width = UnicodeFontRender (GL_font, str, 
-							x, y, end, 
-			     FrameTable[ActiveFrame].FrHeight);
+			     x, y, end);
    if (hyphen)
-	    /* draw the hyphen */
-     UnicodeFontRenderCharSize (GL_font, '\255', x + width, y, 
-				-1, FrameTable[ActiveFrame].FrHeight);
-  ResetPixelTransferBias();
-  return width;
+     /* draw the hyphen */
+     GL_DrawUnicodeChar ('\255', 
+			 x + width, y, 
+			 GL_font, fg);
+   return width;
 }
 
 
@@ -1131,9 +1121,8 @@ int CharacterWidth (int c, PtrFont font)
 {
   int                 l;
   
-  if (font == NULL)
-    return 0;
-  else if (c == INVISIBLE_CHAR)
+  
+  if (c == INVISIBLE_CHAR)
     return 1;
 
   if (c == START_ENTITY)
@@ -1147,47 +1136,32 @@ int CharacterWidth (int c, PtrFont font)
     l = 1;
   else
     {
-	/* Thin space and Half em in gtk and win => w(32)/4 and w(32)/2
-		in Motif w(32)
-	  */
+      if (font == NULL)
+	return 1;
+	/* Thin space and Half em in gtk and win =>
+	   w(32)/4 and w(32)/2 in Motif w(32)
+	*/
       if (c == THIN_SPACE)
-		l = gl_font_char_width ((void *) font, 32) / 4;
+	l = gl_font_char_width ((void *) font, 32) / 4;
       else if (c == FOUR_PER_EM)
-		l = gl_font_char_width ((void *) font, 32) / 2;
+	l = gl_font_char_width ((void *) font, 32) / 2;
       else
-		l = gl_font_char_width ((void *) font, (CHAR_T) c);
+	l = gl_font_char_width ((void *) font, (CHAR_T) c);
 
-		/* the Max*/
-	  if (l == 0)
-		  l = gl_font_char_width ((void *) font, 'M');
-
-#ifndef _GL
-#ifndef _WINDOWS
-      if (c == 244)
-	{
-	  /* a patch due to errors in standard symbol fonts */
-	  i = 0;
-	  while (i < MAX_FONT && font != TtFonts[i])
-	    i++;
-	  if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
-	    l = 1;
-	  else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
-	    l = 2;
-	  else if (TtPatchedFont[i] == 24)
-	    l = 4;
-	}
-#endif /*_WINDOWS*/
-#endif /*_GL*/
+      /* the Max*/
+      if (l == 0)
+	l = gl_font_char_width ((void *) font, 32);
     }
   return l;
 }
 
 void GL_Swap (int frame)
 {
+  if (frame < MAX_FRAME)
 #ifdef _WINDOWS
-	SwapBuffers (GL_Windows[frame]);
+    SwapBuffers (GL_Windows[frame]);
 #else
-	gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
+  gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 #endif /*_WINDOWS*/
 }
 /*----------------------------------------------------------------------
@@ -1198,26 +1172,34 @@ void GL_Swap (int frame)
   ----------------------------------------------------------------------*/
 int GL_MakeCurrent (int frame)
 {
+  if (frame < MAX_FRAME)
+    if (FrRef[frame])
 #ifdef _WINDOWS
- if (!wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-    return 1;		
-#else
-  if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-    return 1;
+      if (!wglMakeCurrent (GL_Windows[frame], 
+			   GL_Context[frame]))
+	return 1;		
+#else /*_WINDOWS*/
+      if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+	return 1;
 #endif /*_WINDOWS*/
+      /*ActiveFrame = frame;      */
   return 0;
 }
 /*----------------------------------------------------------------------
    GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
-ThotBool GL_prepare (ThotWidget *widget)
+ThotBool GL_prepare (ThotWidget *widget, int frame)
 {  
 
-  GL_Modif = TRUE;
-  if (GL_Drawing == TRUE)
-    return TRUE;
-  else 
-    return FALSE;
+  if (frame < MAX_FRAME)
+    {
+      FrameTable[frame].DblBuffNeedSwap = TRUE;
+      if (GL_MakeCurrent (frame))
+	return FALSE;
+      else
+	return TRUE;
+    }
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1230,9 +1212,10 @@ void GL_realize ()
 /*----------------------------------------------------------------------
    GL_ActivateDrawing : Force Recalculation of the frame and redisplay
   ----------------------------------------------------------------------*/
-void GL_ActivateDrawing()
+void GL_ActivateDrawing(int frame)
 {
-  GL_Modif = TRUE;
+  if (frame < MAX_FRAME)
+    FrameTable[frame].DblBuffNeedSwap = TRUE;
 }
 /*----------------------------------------------------------------------
  GL_DrawAll : Only function that Really Draw opengl !!
@@ -1240,7 +1223,7 @@ void GL_ActivateDrawing()
 void GL_DrawAll (ThotWidget widget, int frame)
 {  
 #ifdef _GTK
-#ifdef _PCLDEBUG
+#ifdef _PCLDEBUGTIME
 
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
@@ -1251,44 +1234,55 @@ void GL_DrawAll (ThotWidget widget, int frame)
   
   /* if (GL_ANIM)
      RefreshAnimation (frame); */
-  
-  if (GL_Modif && !GL_Drawing && !FrameUpdating)	
-    { 
-      if (!(frame > 0 && frame <= MAX_FRAME)) 
-	frame = ActiveFrame;
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
-	  == NoComputedDisplay)
-	return;
-#ifdef _PCLDEBUG
-      ftime(&before);
-#endif /*_PCLDEBUG*/
-      if (widget == NULL)
-	 widget = FrameTable[frame].WdFrame;
-      if (widget)
-	if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-	  { 	  
-	    ActiveFrame = frame;
-	    GL_Drawing = TRUE;  	   
-	    RedrawFrameBottom (frame, 0, NULL);
-	    glFinish ();
-	    gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-	    if (GL_Err())
-	      g_print ("Bad drawing\n"); 
-	    GL_Drawing = FALSE;
-	  }       
-      GL_Modif = FALSE;
-#ifdef _PCLDEBUG
-      ftime(&after);	
-      
-      dsec = after.time - before.time;	
-      dms = after.millitm - before.millitm;
-      if (dms > 0 )
+
+  if (!GL_Drawing && !FrameUpdating )
+    {
+      for (frame = 1 ; frame < MAX_FRAME; frame++)
 	{
-	  g_print (" %d fps \t", (int) 1000/dms);
-	  g_print ("=>\t %is %ims / frame\n", dsec, dms);
-	}
+	  if (FrRef[frame] != 0)
+	    {
+	      
+	    if (FrameTable[frame].DblBuffNeedSwap)
+	      {
+
+	
+		if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
+		    != NoComputedDisplay)
+		  {
+		    widget = FrameTable[frame].WdFrame;
+		    if (widget)
+		      if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+			{
+#ifdef _PCLDEBUGTIME
+			  ftime(&before);
+
+#endif /*_PCLDEBUG*/ 
+			  GL_Drawing = TRUE;  	   
+			  
+			  glFinish ();
+			  gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+			  if (GL_Err())
+			    g_print ("Bad drawing\n"); 
+			  GL_Drawing = FALSE;
+#ifdef _PCLDEBUGTIME
+			  ftime(&after);	
+			  
+			  dsec = after.time - before.time;	
+			  dms = after.millitm - before.millitm;
+			  if (dms > 0 )
+			    {
+			      g_print ("%d fps \t", (int) 1000/dms);
+			      g_print ("=>\t %is %ims / frame\n", dsec, dms);
+			    } 
+			  
 #endif /*_PCLDEBUG*/
-    }
+			  FrameTable[frame].DblBuffNeedSwap = FALSE;
+			}
+		  }
+	      }
+	    }
+	}
+    }    
 #else /*_GTK*/
  if (GL_Modif && !GL_Drawing && !FrameUpdating)	
    { 
@@ -1298,21 +1292,22 @@ void GL_DrawAll (ThotWidget widget, int frame)
         for (frame = 0; frame <= MAX_FRAME; frame++)
 	      if (GL_Windows[frame] != 0)
 			break;
+	 
 	 if (GL_Windows[frame] != 0)
-		if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-		 { 	  
-		 GL_Drawing = TRUE; 
-		 RedrawFrameBottom (frame, 0, NULL);
-		 glFinish ();	 
-		 /*
-		  saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
-		   */
-		 SwapBuffers (GL_Windows[frame]);
-		 if (GL_Err())
-		  WinErrorBox (NULL, "Bad drawing\n");
-		 GL_Drawing = FALSE;
-		   }        
-		GL_Modif = FALSE;
+	   if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+	     { 
+	       GL_Drawing = TRUE; 
+	       RedrawFrameBottom (frame, 0, NULL);
+	       glFinish ();	 
+	       /*
+		 saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+	       */
+	       SwapBuffers (GL_Windows[frame]);
+	       if (GL_Err())
+		 WinErrorBox (NULL, "Bad drawing\n");
+	       GL_Drawing = FALSE;
+	     }        
+	 GL_Modif = FALSE;	 
    }
 #endif /*_GTK*/ 
 }
@@ -1363,35 +1358,43 @@ void SetGlPipelineState ()
       glDisable (GL_AUTO_NORMAL);
       glDisable (GL_NORMALIZE);
       glDisable (GL_COLOR_MATERIAL);
-      /* No z axis (SVG is 2d) until X3D */
+      /* No z axis (SVG is 2d)  */
       glDisable (GL_DEPTH_TEST);
       glDepthMask (FALSE);
       /* No stencil buffer (one day perhaps, for background)*/
       glDisable (GL_STENCIL_TEST);
-      /* At the beginning, there was no clipping*/
+      /* At the beginning, 
+	 there was no clipping*/
       glEnable (GL_SCISSOR_TEST);
-	  glScissor (0, 0, 0, 0); 
+
       /* Modulated Transparency*/
       glDisable (GL_ALPHA_TEST); 	 
       /* Polygon are alway filled (until now)
 	 Because Thot draws outlined polygons with lines
 	 so...  if blending svg => GL_FRONT_AND_BACK*/
       glPolygonMode (GL_FRONT, GL_FILL);
-      /*Hardware opengl may support better rendering*/
+      /*Hardware opengl may 
+	support better rendering*/
+      /*
       glEnable (GL_DITHER);
+      */
       /*  Antialiasing 
 	  Those Options give better 
 	  quality image upon performance loss
 	  Must be a user Option  */
       glEnable (GL_LINE_SMOOTH); 
       glEnable (GL_POINT_SMOOTH); 
-      glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
-      glHint (GL_LINE_SMOOTH_HINT, GL_NICEST); 
+      glHint (GL_POINT_SMOOTH_HINT, 
+	      GL_NICEST);
+      glHint (GL_LINE_SMOOTH_HINT, 
+	      GL_NICEST); 
       /* For transparency and beautiful antialiasing*/
       glEnable (GL_BLEND); 
-      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+      glBlendFunc (GL_SRC_ALPHA, 
+		   GL_ONE_MINUS_SRC_ALPHA); 
       /* Fastest Texture Mapping*/
-      glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );    
+      glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
+	      GL_FASTEST );    
       /* Bitmap font Text writing (even in texture font)*/
       glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
       /* Needs to clear buffer after allocating it before drawing*/
@@ -1400,6 +1403,7 @@ void SetGlPipelineState ()
       /*glShadeModel (GL_SMOOTH);*/
       /* no gradients for now => */
       glShadeModel (GL_FLAT);
+
 
 
       /* Not recommended for hardware cards... 
@@ -1418,7 +1422,6 @@ void SetGlPipelineState ()
       /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
 
       GL_SetOpacity (1000);
-      
       if (GL_Err())
 #ifdef _GTK
 	g_print ("Bad INIT\n"); 
@@ -1427,6 +1430,7 @@ void SetGlPipelineState ()
 #endif  /*_GTK*/
 }
 
+
 /*---------------------------------------
 BackBufferRegionSwapping
        We copy region content of the back buffer 
@@ -1434,7 +1438,8 @@ BackBufferRegionSwapping
 	    => opengl region buffer swapping 
 --------------------------------------------*/
 void GL_BackBufferRegionSwapping (int x, int y,
-				  int width, int height, int Totalheight)
+				  int width, int height, 
+				  int Totalheight)
 {  
 #ifndef _WINDOWS
   /* copy form bottom to top
@@ -1457,11 +1462,14 @@ void GL_BackBufferRegionSwapping (int x, int y,
   SwapBuffers (GL_Windows[ActiveFrame]);
 #endif /*_WINDOWS*/
 }
+
+
+
 /*---------------------------------------
-  GL_window_copy_area :
-  Hard : We redraw the zone instead of copying it. 
+  GL_window_copy_area : 
   Soft : We copy region content of the back buffer 
-         on the exposed region (=> opengl region buffer swapping )
+         on the exposed region 
+	 (=> opengl region buffer swapping )
 --------------------------------------------*/
 void GL_window_copy_area (int frame, 
 			  int xf, 
@@ -1471,23 +1479,11 @@ void GL_window_copy_area (int frame,
 			  int width, 
 			  int height)
 {
-  if (0 || !Software_Mode || yf == y_source)
-    DefRegion (frame, 
-	       x_source, y_source+FrameTable[frame].FrTopMargin, 
-	       width+x_source, y_source+height+FrameTable[frame].FrTopMargin);
-  else
-    {
+
       if (GL_MakeCurrent (frame) || 
 	  FrRef[frame] == None)
-      	return;
-      
-      /*
-      if ((yf + height + FrameTable[frame].FrTopMargin) 
-	  > (FrameTable[frame].FrHeight)) 
- 	height += 
-	  (yf + height + FrameTable[frame].FrTopMargin) 
-	  - FrameTable[frame].FrHeight;
-      */
+      	return;  
+
 
       /* Horizontal Scroll problems...*/
       if (xf < 0)
@@ -1505,6 +1501,13 @@ void GL_window_copy_area (int frame,
  	width -= (x_source + width) 
 	  - FrameTable[frame].FrWidth;
 
+      if (width >= FrameTable[frame].FrWidth)
+	  width = FrameTable[frame].FrWidth;
+
+      /*if (xf >= FrameTable[frame].FrWidth)
+	xf = FrameTable[frame].FrWidth - 1;*/
+
+
       /* Vertical Scroll problems...*/
      if (yf < 0)
 	{
@@ -1520,24 +1523,57 @@ void GL_window_copy_area (int frame,
 	  FrameTable[frame].FrHeight) 
  	height -= (y_source + height) 
 	  - FrameTable[frame].FrHeight;
+ 
+      
+      if (height > FrameTable[frame].FrHeight)
+	height = FrameTable[frame].FrHeight;
 
-      if (width > 0 &&  height  > 0)
-	{
+      /*if ((yf + height) >= FrameTable[frame].FrHeight)
+	height = FrameTable[frame].FrHeight - yf - 1;*/
+
+      if (width > 0 && height  > 0)
+	{	  
+	  y_source = (FrameTable[frame].FrHeight) -
+	    (y_source + height + 
+	    FrameTable[frame].FrTopMargin);
+	  
+	  /*  If not in software mode,
+	    glcopypixels is 1000x slower than a redraw	*/
+	  if (glMatroxBUG (frame, xf, yf, width, height))
+	    return;
+
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();
 	  glDisable (GL_BLEND);
-	  glRasterPos2i (xf, yf + height);
-	  glCopyPixels (x_source,   
-			(FrameTable[frame].FrHeight)   
-			- (y_source + height + FrameTable[frame].FrTopMargin),
-			width, height, GL_COLOR); 
-	  glEnable (GL_BLEND);
-	  /*copy from back to front */
-	  glFinish ();
-	}
-    }
-}
+	  glDisable (GL_DITHER);
+	  glRasterPos2i (xf, yf+height);	  
+	  /*IF Rasterpos is outside canvas...
+	   we must use a decaling 'feinte'*/
+	  if ((yf+height) == FrameTable[frame].FrHeight)
+	    {
+	      glRasterPos2i (xf, yf+height-1);
 
+	      glBitmap(0,
+		       0,
+		       0,
+		       0,
+		       0,
+		       -1,
+		       NULL);
+	    }
+	  glCopyPixels (x_source,   
+			y_source,
+			width,
+			height,
+			GL_COLOR); 
+	  glEnable (GL_BLEND);
+	  glEnable (GL_DITHER);	  
+	  glFinish ();
+
+	  FrameTable[frame].DblBuffNeedSwap = TRUE;
+	  
+	}
+}
 
 
 /*-----------------------------------
@@ -1547,30 +1583,45 @@ void GL_window_copy_area (int frame,
 ------------------------------------*/
 void GLResize (int width, int height, int x, int y)
 {	
+#ifdef _GTK
+  /*
+    gdk_gl_wait_gdk();
+    gdk_gl_wait_gl();
+  */
+#endif /*_GTK*/
+
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 
   /* Invert the opengl coordinate system
      to get the same as Thot	  
      (opengl Y origin  is the left up corner
-     and the left bottom is negative !!)	*/
+     and the left bottom is negative !!)
+	*/
   glOrtho (0, width, height, 0, -1, 1); 
+
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
-  glScissor (0, 0, width, height); 
+  glScissor (0, 0, 
+	     width, height); 
+
 }
 /*-----------------------------------
   glMatroxBUG : expose without a drawing 
   make black swapbuffer...
 ------------------------------------*/
-void glMatroxBUG (int frame, int x, int y, int width, int height)
+int glMatroxBUG (int frame, int x, int y, 
+			int width, int height)
 {
   if (!Software_Mode)
     {
-      DefRegion (frame, x, y, width+x, y+height);
+      DefRegion (frame, x, y, 
+		 width+x, y+height);
       RedrawFrameBottom (frame, 0, NULL);
+      return 1;      
     }
+  return 0;  
 }
 
 
@@ -1589,7 +1640,9 @@ void saveBuffer (int width, int height)
   width = 100;
   height = 200;
   Data = TtaGetMemory (sizeof (unsigned char) * width * height * 4);
-  glReadPixels (0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, Data);
+  glReadPixels (0, 0, width, height, 
+		GL_RGBA, 
+		GL_UNSIGNED_BYTE, Data);
   SavePng ("screenshot.png", 
 	   Data,
 	   (unsigned int) width,

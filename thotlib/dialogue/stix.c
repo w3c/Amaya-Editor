@@ -36,210 +36,27 @@
 #endif /*_WINDOWS*/
 #include "font_f.h"
 
-static void *GreekfontSmall =  NULL; 
-static void *GreekfontMid =  NULL; 
-static void *GreekfontHigh =  NULL; 
+#include "stix.h"
 
-static void *MathBigsymbSmall = NULL;
-static void *MathBigsymbMid = NULL;
-static void *MathBigsymbHigh = NULL;
-	
-static void *MathBigEncloSmall = NULL; 
-static void *MathBigEncloMid = NULL; 
-static void *MathBigEncloHigh = NULL; 
 
-void *LoadStixFont (int family, int size);
 
 #define LOW_HEIGHT 2
 #define MID_HEIGHT 3
 #define HIGH_HEIGHT 5
 
-#define GREEK 1
-#define BIGSYMBOLS 2
-#define BIGENCLOSING 3
+
+#ifdef _GL
+#define LOW_CHAR 25
+#define MID_CHAR 45
+#define HIGH_CHAR 45
+#else /*_GL*/
 
 #define LOW_CHAR 25
 #define MID_CHAR 45
 #define HIGH_CHAR 45
-
-void GetMathFontFromChar (char typesymb, void **font, int height)
-{
-  static ThotBool IsStixOk = TRUE;
-  int ChoosenFont = 0;
-
-  if (IsStixOk)
-    {
-      switch (typesymb)
-	{
-	  /*integral*/
-	case 'i':
-	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	case 'c':
-	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	case 'd':
-	  ChoosenFont = BIGSYMBOLS;
-	break;
-	  /*intersection union*/
-	case 'I':
-	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	case 'U':
-	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	  /*braces*/
-	case 'o':
-	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	case 'u':
-	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	case '(':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	case ')':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	case '{':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	case '}':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	case '[':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	case ']':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	case '<':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	case '>':
-	  ChoosenFont = BIGENCLOSING;
-	  break;
-	default:
-	  return;
-	break;
-      }
-    switch (ChoosenFont)
-      {
-      case GREEK:
-	if (height < LOW_HEIGHT)
-	  {
-	    if (GreekfontSmall == NULL)
-	      {
-		GreekfontSmall = LoadStixFont (10, height);
-	      }
-	  *font = GreekfontSmall;
-	    }
-	else if (height < MID_HEIGHT)
-	  {
-	    if (GreekfontMid == NULL)
-	      {
-	      GreekfontMid = LoadStixFont (10, height);
-	      }
-	    *font = GreekfontMid;
-	  }	
-	else 
-	  {
-	    if (GreekfontHigh == NULL)
-	      {
-	      GreekfontHigh = LoadStixFont (10, height);
-	      }
-	    *font = GreekfontHigh;
-	  }
-	break;
-	
-      case BIGSYMBOLS:
-	if (height < LOW_HEIGHT)
-	  {
-	  if (MathBigsymbSmall == NULL)
-	    {
-	    MathBigsymbSmall = LoadStixFont (6, height);
-	    }
-	  *font = MathBigsymbSmall;
-	    }
-	else if (height < MID_HEIGHT)
-	  {
-	    if (MathBigsymbMid == NULL)
-	      {
-	      MathBigsymbMid = LoadStixFont (6, height);
-	      }
-	    *font = MathBigsymbMid;
-	  }	
-	else
-	  {
-	    if (MathBigsymbHigh == NULL)
-	      {
-	      MathBigsymbHigh = LoadStixFont (6, height);
-	      }
-	    *font = MathBigsymbHigh;
-	  }
-	break;
-
-      case BIGENCLOSING:
-	if (height < LOW_HEIGHT)
-	  {
-	  if (MathBigEncloSmall == NULL)
-	    {
-	    MathBigEncloSmall = LoadStixFont (7, height);
-	    }
-	  *font = MathBigEncloSmall;
-	    }
-	else if (height < MID_HEIGHT)
-	  {
-	    if (MathBigEncloMid == NULL)
-	      {
-	      MathBigEncloMid = LoadStixFont (7, height);
-	  }
-	    *font = MathBigEncloMid;
-	  }	
-	else
-	  {
-	    if (MathBigEncloHigh == NULL)
-	      {
-	      MathBigEncloHigh = LoadStixFont (7, height);
-	      }
-	    *font = MathBigEncloHigh;
-	  }
-	break;
-      default: 
-	return;
-      }
-    if (*font == NULL)
-      IsStixOk = FALSE;
-    else
-      IsStixOk = TRUE;
-    }
-}
-
-void FreeMathFonts()
-{	
-}
-
-/*----------------------------------------------------------------------
-  DrawStixChar draw a one glyph symbol.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawStixChar (PtrFont font, CHAR_T symb, 
-		   int x, int y, 
-		   int l, int h, 
-		   int fg, int frame)
-{
-#ifndef _GL
-   x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
-   y = y + ((h - CharacterHeight ((char)symb, font)) / 2) 
-     + CharacterAscent ((char) symb, font);
-
-   DrawChar ((char) symb, frame, x, y, font, fg);
-#else /*_GL*/
-
-   GL_DrawStixChar (font, symb, x, y, fg, h-5, l, h, frame);
 #endif /*_GL*/
 
-}
+
 /*----------------------------------------------------------------------
   DrawStixSigma
   ----------------------------------------------------------------------*/
@@ -258,17 +75,17 @@ void DrawStixSigma (int frame, int x, int y,
    if (h < LOW_CHAR)
      /* display a single glyph */
      {
-	   DrawStixChar (font, 83, x, y, l, h, fg, frame);
+       DrawStixChar (font, 83, x, y, l, h, fg, frame);
      }
    else if (h < MID_CHAR)
 	/* display a single glyph */
      {
-	   DrawStixChar (font, 45, x, y, l, h, fg, frame);
+       DrawStixChar (font, 45, x, y, l, h, fg, frame);
      }
    else
     /* display a single glyph */
      {
-	   DrawStixChar (font, 62, x, y, l, h, fg, frame);
+       DrawStixChar (font, 62, x, y, l, h, fg, frame);
      }
 }
 /*----------------------------------------------------------------------
@@ -278,23 +95,27 @@ void DrawStixSigma (int frame, int x, int y,
   - double if type = 2.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
-		   int type, PtrFont font, int fg)
+void DrawStixIntegral (int frame, int thick,
+		       int x, int y,
+		       int l, int h,
+		       int type, PtrFont font, int fg)
 {
   /* Integrals using esstix6 charmap
      52 - => 3x text 3 line eq
      33 - => 2x text 2 line eq
      69 - => 1x+2 text or 18 for oneline eq */
+
+  font =  LoadStixFont (6, SizetoLogical(h-15));
   if (h < LOW_CHAR)
      /* display a single glyph */
 
      {
-	   DrawStixChar (font, 69, x, y, l, h, fg, frame);
+       DrawStixChar (font, 69, x, y, l, h, fg, frame);
      }
    else if (h < MID_CHAR)
 	/* display a single glyph */
      {
-	   DrawStixChar (font, 33, x, y, l, h, fg, frame);
+       DrawStixChar (font, 33, x, y, l, h, fg, frame);
      }
    else 
     /* display a single glyph */
@@ -313,6 +134,23 @@ void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
       */
 
 }
+/* ----------------------------------------------------------------------
+  StixIntegralWidth
+  ----------------------------------------------------------------------*/
+static int StixIntegralWidth (int h, PtrFont font)
+{
+
+  int i;
+  
+  if (h < LOW_HEIGHT)
+    i = CharacterWidth (69, font);
+  else if (h < MID_HEIGHT)
+    i = CharacterWidth (33, font);
+  else 
+    i = CharacterWidth (52, font);
+  return i;
+}
+
 /*----------------------------------------------------------------------
   DrawStixBracket draw an opening or closing bracket (depending on direction)
   parameter fg indicates the drawing color
@@ -350,14 +188,32 @@ void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
       return;
     }
 }
+/* ----------------------------------------------------------------------
+  StixParenthesisWidth
+  ----------------------------------------------------------------------*/
+static int StixBracketWidth (int h, PtrFont font)
+{
+
+  int i;
+  
+  if (h < LOW_HEIGHT)
+    i = CharacterWidth (63, font);
+  else if (h < MID_HEIGHT)
+    i = CharacterWidth (36, font);
+  else 
+    i = CharacterWidth (50, font);
+  return i;
+}
 
 /*----------------------------------------------------------------------
   DrawStixPointyBracket draw an opening or closing pointy bracket (depending
   on direction)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixPointyBracket (int frame, int thick, int x, int y, int l, int h,
-			int direction, PtrFont font, int fg)
+void DrawStixPointyBracket (int frame, int thick,
+			    int x, int y,
+			    int l, int h,
+			    int direction, PtrFont font, int fg)
 {
   if (fg < 0)
     return;
@@ -401,12 +257,12 @@ void DrawStixPointyBracket (int frame, int thick, int x, int y, int l, int h,
 void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
 		      int direction, PtrFont font, int fg)
 {
-  /*
-  Esstix 7 : 
-  61 normal
-  33 2 line
-  48 3 line
+  /*  Esstix 7 : 
+    61 normal
+    33 2 line
+    48 3 line
   */
+  
   if (h < LOW_CHAR)
     {
       if (direction == 0)
@@ -431,6 +287,22 @@ void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  DrawStixChar (font, 49, x, y, l, h, fg, frame);
       return;
   }
+}
+/* ----------------------------------------------------------------------
+  StixParenthesisWidth
+  ----------------------------------------------------------------------*/
+static int StixParenthesisWidth (int h, PtrFont font)
+{
+
+  int i;
+  
+  if (h < LOW_HEIGHT)
+    i = CharacterWidth (61, font);
+  else if (h < MID_HEIGHT)
+    i = CharacterWidth (33, font);
+  else 
+    i = CharacterWidth (48, font);
+  return i;
 }
 
 /*----------------------------------------------------------------------
@@ -472,2105 +344,211 @@ void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
   } 
 }
 
-#ifdef _GREEKGESTION
 
-typedef struct _Stixmap {
-	char *entity;
-	int  unicode;
-	int  fontidx;
-	int  smallcharidx;
-	int  midcharidx;
-	int  largecharidx;
-} Stixmap;
-
-/* mapping table of MathML entities  */
-Stixmap  MathFontMapping[] =
+/* ----------------------------------------------------------------------
+  StixBraceWidth
+  ----------------------------------------------------------------------*/
+static int StixBraceWidth (int h, PtrFont font)
 {
-   /* This table MUST be in alphabetical order */
-	{"AElig", 198, -1, 0, 0, 0},
-	{"Aacute", 193, -1, 0, 0, 0},
-	{"Abreve", 258, -1, 0, 0, 0},
-	{"Acirc", 194, -1, 0, 0, 0},
-	{"Acy", 1040, -1, 0, 0, 0},
-	{"Afr", 120068, -1, 0, 0, 0},
-	{"Agrave", 192, -1, 0, 0, 0},
-	{"Amacr", 256, -1, 0, 0, 0},
-	{"And", 10835, -1, 0, 0, 0},
-	{"Aogon", 260, -1, 0, 0, 0},
-	{"Aopf", 120120, -1, 0, 0, 0},
-	{"ApplyFunction", 8289, -1, 0, 0, 0},
-	{"Aring", 197, -1, 0, 0, 0},
-	{"Ascr", 119964, -1, 0, 0, 0},
-	{"Assign", 8788, -1, 0, 0, 0},
-	{"Atilde", 195, -1, 0, 0, 0},
-	{"Auml", 196, -1, 0, 0, 0},
-	{"Backslash", 8726, -1, 0, 0, 0},
-	{"Barv", 10983, -1, 0, 0, 0},
-	{"Barwed", 8966, -1, 0, 0, 0},
-	{"Bcy", 1041, -1, 0, 0, 0},
-	{"Because", 8757, -1, 0, 0, 0},
-	{"Bernoullis", 8492, -1, 0, 0, 0},
-	{"Bfr", 120069, -1, 0, 0, 0},
-	{"Bopf", 120121, -1, 0, 0, 0},
-	{"Breve", 728, -1, 0, 0, 0},
-	{"Bscr", 8492, -1, 0, 0, 0},
-	{"Bumpeq", 8782, -1, 0, 0, 0},
-	{"CHcy", 1063, -1, 0, 0, 0},
-	{"Cacute", 262, -1, 0, 0, 0},
-	{"Cap", 8914, -1, 0, 0, 0},
-	{"CapitalDifferentialD", 8517, -1, 0, 0, 0},
-	{"Cayleys", 8493, -1, 0, 0, 0},
-	{"Ccaron", 268, -1, 0, 0, 0},
-	{"Ccedil", 199, -1, 0, 0, 0},
-	{"Ccirc", 264, -1, 0, 0, 0},
-	{"Cconint", 8752, -1, 0, 0, 0},
-	{"Cdot", 266, -1, 0, 0, 0},
-	{"Cedilla", 184, -1, 0, 0, 0},
-	{"CenterDot", 183, -1, 0, 0, 0},
-	{"Cfr", 8493, -1, 0, 0, 0},
-	{"CircleDot", 8857, -1, 0, 0, 0},
-	{"CircleMinus", 8854, -1, 0, 0, 0},
-	{"CirclePlus", 8853, -1, 0, 0, 0},
-	{"CircleTimes", 8855, -1, 0, 0, 0},
-	{"ClockwiseContourIntegral", 8754, -1, 0, 0, 0},
-	{"CloseCurlyDoubleQuote", 8221, -1, 0, 0, 0},
-	{"CloseCurlyQuote", 8217, -1, 0, 0, 0},
-	{"Colon", 8759, -1, 0, 0, 0},
-	{"Colone", 10868, -1, 0, 0, 0},
-	{"Congruent", 8801, -1, 0, 0, 0},
-	{"Conint", 8751, -1, 0, 0, 0},
-	{"ContourIntegral", 8750, -1, 0, 0, 0},
-	{"Copf", 8450, -1, 0, 0, 0},
-	{"Coproduct", 8720, -1, 0, 0, 0},
-	{"CounterClockwiseContourIntegral", 8755, -1, 0, 0, 0},
-	{"Cross", 10799, -1, 0, 0, 0},
-	{"Cscr", 119966, -1, 0, 0, 0},
-	{"Cup", 8915, -1, 0, 0, 0},
-	{"CupCap", 8781, -1, 0, 0, 0},
-	{"DD", 8517, -1, 0, 0, 0},
-	{"DDotrahd", 10513, -1, 0, 0, 0},
-	{"DJcy", 1026, -1, 0, 0, 0},
-	{"DScy", 1029, -1, 0, 0, 0},
-	{"DZcy", 1039, -1, 0, 0, 0},
-	{"Dagger", 8225, -1, 0, 0, 0},
-	{"Darr", 8609, -1, 0, 0, 0},
-	{"Dashv", 10980, -1, 0, 0, 0},
-	{"Dcaron", 270, -1, 0, 0, 0},
-	{"Dcy", 1044, -1, 0, 0, 0},
-	{"Del", 8711, -1, 0, 0, 0},
-	{"Delta", 916, -1, 0, 0, 0},
-	{"Dfr", 120071, -1, 0, 0, 0},
-	{"DiacriticalAcute", 180, -1, 0, 0, 0},
-	{"DiacriticalDot", 729, -1, 0, 0, 0},
-	{"DiacriticalDoubleAcute", 733, -1, 0, 0, 0},
-	{"DiacriticalGrave", 96, -1, 0, 0, 0},
-	{"DiacriticalTilde", 732, -1, 0, 0, 0},
-	{"Diamond", 8900, -1, 0, 0, 0},
-	{"DifferentialD", 8518, -1, 0, 0, 0},
-	{"Dopf", 120123, -1, 0, 0, 0},
-	{"Dot", 168, -1, 0, 0, 0},
-	{"DotDot", 8412, -1, 0, 0, 0},
-	{"DotEqual", 8784, -1, 0, 0, 0},
-	{"DoubleContourIntegral", 8751, -1, 0, 0, 0},
-	{"DoubleDot", 168, -1, 0, 0, 0},
-	{"DoubleDownArrow", 8659, -1, 0, 0, 0},
-	{"DoubleLeftArrow", 8656, -1, 0, 0, 0},
-	{"DoubleLeftRightArrow", 8660, -1, 0, 0, 0},
-	{"DoubleLeftTee", 10980, -1, 0, 0, 0},
-	{"DoubleLongLeftArrow", 62841, -1, 0, 0, 0},
-	{"DoubleLongLeftRightArrow", 62843, -1, 0, 0, 0},
-	{"DoubleLongRightArrow", 62842, -1, 0, 0, 0},
-	{"DoubleRightArrow", 8658, -1, 0, 0, 0},
-	{"DoubleRightTee", 8872, -1, 0, 0, 0},
-	{"DoubleUpArrow", 8657, -1, 0, 0, 0},
-	{"DoubleUpDownArrow", 8661, -1, 0, 0, 0},
-	{"DoubleVerticalBar", 8741, -1, 0, 0, 0},
-	{"DownArrow", 8595, -1, 0, 0, 0},
-	{"DownArrowBar", 10515, -1, 0, 0, 0},
-	{"DownArrowUpArrow", 8693, -1, 0, 0, 0},
-	{"DownBreve", 785, -1, 0, 0, 0},
-	{"DownLeftRightVector", 10576, -1, 0, 0, 0},
-	{"DownLeftTeeVector", 10590, -1, 0, 0, 0},
-	{"DownLeftVector", 8637, -1, 0, 0, 0},
-	{"DownLeftVectorBar", 10582, -1, 0, 0, 0},
-	{"DownRightTeeVector", 10591, -1, 0, 0, 0},
-	{"DownRightVector", 8641, -1, 0, 0, 0},
-	{"DownRightVectorBar", 10583, -1, 0, 0, 0},
-	{"DownTee", 8868, -1, 0, 0, 0},
-	{"DownTeeArrow", 8615, -1, 0, 0, 0},
-	{"Downarrow", 8659, -1, 0, 0, 0},
-	{"Dscr", 119967, -1, 0, 0, 0},
-	{"Dstrok", 272, -1, 0, 0, 0},
-	{"ENG", 330, -1, 0, 0, 0},
-	{"ETH", 208, -1, 0, 0, 0},
-	{"Eacute", 201, -1, 0, 0, 0},
-	{"Ecaron", 282, -1, 0, 0, 0},
-	{"Ecirc", 202, -1, 0, 0, 0},
-	{"Ecy", 1069, -1, 0, 0, 0},
-	{"Edot", 278, -1, 0, 0, 0},
-	{"Efr", 120072, -1, 0, 0, 0},
-	{"Egrave", 200, -1, 0, 0, 0},
-	{"Element", 8712, -1, 0, 0, 0},
-	{"Emacr", 274, -1, 0, 0, 0},
-	{"EmptySmallSquare", 9725, -1, 0, 0, 0},
-	{"EmptyVerySmallSquare", 62876, -1, 0, 0, 0},
-	{"Eogon", 280, -1, 0, 0, 0},
-	{"Eopf", 120124, -1, 0, 0, 0},
-	{"Equal", 10869, -1, 0, 0, 0},
-	{"EqualTilde", 8770, -1, 0, 0, 0},
-	{"Equilibrium", 8652, -1, 0, 0, 0},
-	{"Escr", 8496, -1, 0, 0, 0},
-	{"Esim", 10867, -1, 0, 0, 0},
-	{"Euml", 203, -1, 0, 0, 0},
-	{"Exists", 8707, -1, 0, 0, 0},
-	{"ExponentialE", 8519, -1, 0, 0, 0},
-	{"Fcy", 1060, -1, 0, 0, 0},
-	{"Ffr", 120073, -1, 0, 0, 0},
-	{"FilledSmallSquare", 9726, -1, 0, 0, 0},
-	{"FilledVerySmallSquare", 62875, -1, 0, 0, 0},
-	{"Fopf", 120125, -1, 0, 0, 0},
-	{"ForAll", 8704, -1, 0, 0, 0},
-	{"Fouriertrf", 8497, -1, 0, 0, 0},
-	{"Fscr", 8497, -1, 0, 0, 0},
-	{"GJcy", 1027, -1, 0, 0, 0},
-	{"Gamma", 915, -1, 0, 0, 0},
-	{"Gammad", 988, -1, 0, 0, 0},
-	{"Gbreve", 286, -1, 0, 0, 0},
-	{"Gcedil", 290, -1, 0, 0, 0},
-	{"Gcirc", 284, -1, 0, 0, 0},
-	{"Gcy", 1043, -1, 0, 0, 0},
-	{"Gdot", 288, -1, 0, 0, 0},
-	{"Gfr", 120074, -1, 0, 0, 0},
-	{"Gg", 8921, -1, 0, 0, 0},
-	{"Gopf", 120126, -1, 0, 0, 0},
-	{"GreaterEqual", 8805, -1, 0, 0, 0},
-	{"GreaterEqualLess", 8923, -1, 0, 0, 0},
-	{"GreaterFullEqual", 8807, -1, 0, 0, 0},
-	{"GreaterGreater", 10914, -1, 0, 0, 0},
-	{"GreaterLess", 8823, -1, 0, 0, 0},
-	{"GreaterSlantEqual", 10878, -1, 0, 0, 0},
-	{"GreaterTilde", 8819, -1, 0, 0, 0},
-	{"Gscr", 119970, -1, 0, 0, 0},
-	{"Gt", 8811, -1, 0, 0, 0},
-	{"HARDcy", 1066, -1, 0, 0, 0},
-	{"Hacek", 711, -1, 0, 0, 0},
-	{"Hat", 770, -1, 0, 0, 0},
-	{"Hcirc", 292, -1, 0, 0, 0},
-	{"Hfr", 8460, -1, 0, 0, 0},
-	{"HilbertSpace", 8459, -1, 0, 0, 0},
-	{"Hopf", 8461, -1, 0, 0, 0},
-	{"HorizontalLine", 9472, -1, 0, 0, 0},
-	{"Hscr", 8459, -1, 0, 0, 0},
-	{"Hstrok", 294, -1, 0, 0, 0},
-	{"HumpDownHump", 8782, -1, 0, 0, 0},
-	{"HumpEqual", 8783, -1, 0, 0, 0},
-	{"IEcy", 1045, -1, 0, 0, 0},
-	{"IJlig", 306, -1, 0, 0, 0},
-	{"IOcy", 1025, -1, 0, 0, 0},
-	{"Iacute", 205, -1, 0, 0, 0},
-	{"Icirc", 206, -1, 0, 0, 0},
-	{"Icy", 1048, -1, 0, 0, 0},
-	{"Idot", 304, -1, 0, 0, 0},
-	{"Ifr", 8465, -1, 0, 0, 0},
-	{"Igrave", 204, -1, 0, 0, 0},
-	{"Im", 8465, -1, 0, 0, 0},
-	{"Imacr", 298, -1, 0, 0, 0},
-	{"ImaginaryI", 8520, -1, 0, 0, 0},
-	{"Implies", 8658, -1, 0, 0, 0},
-	{"Int", 8748, 6, 69, 33, 52}, /*****/
-	{"Integral", 8747, 6, 69, 33, 52},
-	{"Intersection", 8898, -1, 0, 0, 0},
-	{"InvisibleComma", 8203, -1, 0, 0, 0},
-	{"InvisibleTimes", 8290, -1, 0, 0, 0},
-	{"Iogon", 302, -1, 0, 0, 0},
-	{"Iopf", 120128, -1, 0, 0, 0},
-	{"Iscr", 8464, -1, 0, 0, 0},
-	{"Itilde", 296, -1, 0, 0, 0},
-	{"Iukcy", 1030, -1, 0, 0, 0},
-	{"Iuml", 207, -1, 0, 0, 0},
-	{"Jcirc", 308, -1, 0, 0, 0},
-	{"Jcy", 1049, -1, 0, 0, 0},
-	{"Jfr", 120077, -1, 0, 0, 0},
-	{"Jopf", 120129, -1, 0, 0, 0},
-	{"Jscr", 119973, -1, 0, 0, 0},
-	{"Jsercy", 1032, -1, 0, 0, 0},
-	{"Jukcy", 1028, -1, 0, 0, 0},
-	{"KHcy", 1061, -1, 0, 0, 0},
-	{"KJcy", 1036, -1, 0, 0, 0},
-	{"Kcedil", 310, -1, 0, 0, 0},
-	{"Kcy", 1050, -1, 0, 0, 0},
-	{"Kfr", 120078, -1, 0, 0, 0},
-	{"Kopf", 120130, -1, 0, 0, 0},
-	{"Kscr", 119974, -1, 0, 0, 0},
-	{"LJcy", 1033, -1, 0, 0, 0},
-	{"Lacute", 313, -1, 0, 0, 0},
-	{"Lambda", 923, -1, 0, 0, 0},
-	{"Lang", 12298, -1, 0, 0, 0},
-	{"Laplacetrf", 8466, -1, 0, 0, 0},
-	{"Larr", 8606, -1, 0, 0, 0},
-	{"Lcaron", 317, -1, 0, 0, 0},
-	{"Lcedil", 315, -1, 0, 0, 0},
-	{"Lcy", 1051, -1, 0, 0, 0},
-	{"LeftAngleBracket", 9001, -1, 0, 0, 0},
-	{"LeftArrow", 8592, -1, 0, 0, 0},
-	{"LeftArrowBar", 8676, -1, 0, 0, 0},
-	{"LeftArrowRightArrow", 8646, -1, 0, 0, 0},
-	{"LeftCeiling", 8968, -1, 0, 0, 0},
-	{"LeftDoubleBracket", 12314, -1, 0, 0, 0},
-	{"LeftDownTeeVector", 10593, -1, 0, 0, 0},
-	{"LeftDownVector", 8643, -1, 0, 0, 0},
-	{"LeftDownVectorBar", 10585, -1, 0, 0, 0},
-	{"LeftFloor", 8970, -1, 0, 0, 0},
-	{"LeftRightArrow", 8596, -1, 0, 0, 0},
-	{"LeftRightVector", 10574, -1, 0, 0, 0},
-	{"LeftTee", 8867, -1, 0, 0, 0},
-	{"LeftTeeArrow", 8612, -1, 0, 0, 0},
-	{"LeftTeeVector", 10586, -1, 0, 0, 0},
-	{"LeftTriangle", 8882, -1, 0, 0, 0},
-	{"LeftTriangleBar", 10703, -1, 0, 0, 0},
-	{"LeftTriangleEqual", 8884, -1, 0, 0, 0},
-	{"LeftUpDownVector", 10577, -1, 0, 0, 0},
-	{"LeftUpTeeVector", 10592, -1, 0, 0, 0},
-	{"LeftUpVector", 8639, -1, 0, 0, 0},
-	{"LeftUpVectorBar", 10584, -1, 0, 0, 0},
-	{"LeftVector", 8636, -1, 0, 0, 0},
-	{"LeftVectorBar", 10578, -1, 0, 0, 0},
-	{"Leftarrow", 8656, -1, 0, 0, 0},
-	{"Leftrightarrow", 8660, -1, 0, 0, 0},
-	{"LessEqualGreater", 8922, -1, 0, 0, 0},
-	{"LessFullEqual", 8806, -1, 0, 0, 0},
-	{"LessGreater", 8822, -1, 0, 0, 0},
-	{"LessLess", 10913, -1, 0, 0, 0},
-	{"LessSlantEqual", 10877, -1, 0, 0, 0},
-	{"LessTilde", 8818, -1, 0, 0, 0},
-	{"Lfr", 120079, -1, 0, 0, 0},
-	{"Ll", 8920, -1, 0, 0, 0},
-	{"Lleftarrow", 8666, -1, 0, 0, 0},
-	{"Lmidot", 319, -1, 0, 0, 0},
-	{"LongLeftArrow", 62838, -1, 0, 0, 0},
-	{"LongLeftRightArrow", 62840, -1, 0, 0, 0},
-	{"LongRightArrow", 62839, -1, 0, 0, 0},
-	{"Longleftarrow", 62841, -1, 0, 0, 0},
-	{"Longleftrightarrow", 62843, -1, 0, 0, 0},
-	{"Longrightarrow", 62842, -1, 0, 0, 0},
-	{"Lopf", 120131, -1, 0, 0, 0},
-	{"LowerLeftArrow", 8601, -1, 0, 0, 0},
-	{"LowerRightArrow", 8600, -1, 0, 0, 0},
-	{"Lscr", 8466, -1, 0, 0, 0},
-	{"Lsh", 8624, -1, 0, 0, 0},
-	{"Lstrok", 321, -1, 0, 0, 0},
-	{"Lt", 8810, -1, 0, 0, 0},
-	{"Map", 10501, -1, 0, 0, 0},
-	{"Mcy", 1052, -1, 0, 0, 0},
-	{"MediumSpace", 8287, -1, 0, 0, 0},
-	{"Mellintrf", 8499, -1, 0, 0, 0},
-	{"Mfr", 120080, -1, 0, 0, 0},
-	{"MinusPlus", 8723, -1, 0, 0, 0},
-	{"Mopf", 120132, -1, 0, 0, 0},
-	{"Mscr", 8499, -1, 0, 0, 0},
-	{"NJcy", 1034, -1, 0, 0, 0},
-	{"Nacute", 323, -1, 0, 0, 0},
-	{"Ncaron", 327, -1, 0, 0, 0},
-	{"Ncedil", 325, -1, 0, 0, 0},
-	{"Ncy", 1053, -1, 0, 0, 0},
-	{"NegativeMediumSpace", 8287, -1, 0, 0, 0},
-	{"NegativeThickSpace", 8197, -1, 0, 0, 0},
-	{"NegativeThinSpace", 8201, -1, 0, 0, 0},
-	{"NegativeVeryThinSpace", 8202, -1, 0, 0, 0},
-	{"NestedGreaterGreater", 8811, -1, 0, 0, 0},
-	{"NestedLessLess", 8810, -1, 0, 0, 0},
-	{"NewLine", 10, -1, 0, 0, 0},
-	{"Nfr", 120081, -1, 0, 0, 0},
-	{"NoBreak", 65279, -1, 0, 0, 0},
-	{"NonBreakingSpace", 160, -1, 0, 0, 0},
-	{"Nopf", 8469, -1, 0, 0, 0},
-	{"Not", 10988, -1, 0, 0, 0},
-	{"NotCongruent", 8802, -1, 0, 0, 0},
-	{"NotCupCap", 8813, -1, 0, 0, 0},
-	{"NotDoubleVerticalBar", 8742, -1, 0, 0, 0},
-	{"NotElement", 8713, -1, 0, 0, 0},
-	{"NotEqual", 8800, -1, 0, 0, 0},
-	{"NotEqualTilde", 8770, -1, 0, 0, 0},
-	{"NotExists", 8708, -1, 0, 0, 0},
-	{"NotGreater", 8815, -1, 0, 0, 0},
-	{"NotGreaterEqual", 8817, -1, 0, 0, 0},
-	{"NotGreaterFullEqual", 8816, -1, 0, 0, 0},
-	{"NotGreaterGreater", 8811, -1, 0, 0, 0},
-	{"NotGreaterLess", 8825, -1, 0, 0, 0},
-	{"NotGreaterSlantEqual", 8817, -1, 0, 0, 0},
-	{"NotGreaterTilde", 8821, -1, 0, 0, 0},
-	{"NotHumpDownHump", 8782, -1, 0, 0, 0},
-	{"NotHumpEqual", 8783, -1, 0, 0, 0},
-	{"NotLeftTriangle", 8938, -1, 0, 0, 0},
-	{"NotLeftTriangleBar", 10703, -1, 0, 0, 0},
-	{"NotLeftTriangleEqual", 8940, -1, 0, 0, 0},
-	{"NotLess", 8814, -1, 0, 0, 0},
-	{"NotLessEqual", 8816, -1, 0, 0, 0},
-	{"NotLessGreater", 8824, -1, 0, 0, 0},
-	{"NotLessLess", 8810, -1, 0, 0, 0},
-	{"NotLessSlantEqual", 8816, -1, 0, 0, 0},
-	{"NotLessTilde", 8820, -1, 0, 0, 0},
-	{"NotNestedGreaterGreater", 9378, -1, 0, 0, 0},
-	{"NotNestedLessLess", 9377, -1, 0, 0, 0},
-	{"NotPrecedes", 8832, -1, 0, 0, 0},
-	{"NotPrecedesEqual", 10927, -1, 0, 0, 0},
-	{"NotPrecedesSlantEqual", 8928, -1, 0, 0, 0},
-	{"NotReverseElement", 8716, -1, 0, 0, 0},
-	{"NotRightTriangle", 8939, -1, 0, 0, 0},
-	{"NotRightTriangleBar", 10704, -1, 0, 0, 0},
-	{"NotRightTriangleEqual", 8941, -1, 0, 0, 0},
-	{"NotSquareSubset", 8847, -1, 0, 0, 0},
-	{"NotSquareSubsetEqual", 8930, -1, 0, 0, 0},
-	{"NotSquareSuperset", 8848, -1, 0, 0, 0},
-	{"NotSquareSupersetEqual", 8931, -1, 0, 0, 0},
-	{"NotSubset", 8836, -1, 0, 0, 0},
-	{"NotSubsetEqual", 8840, -1, 0, 0, 0},
-	{"NotSucceeds", 8833, -1, 0, 0, 0},
-	{"NotSucceedsEqual", 10928, -1, 0, 0, 0},
-	{"NotSucceedsSlantEqual", 8929, -1, 0, 0, 0},
-	{"NotSucceedsTilde", 8831, -1, 0, 0, 0},
-	{"NotSuperset", 8837, -1, 0, 0, 0},
-	{"NotSupersetEqual", 8841, -1, 0, 0, 0},
-	{"NotTilde", 8769, -1, 0, 0, 0},
-	{"NotTildeEqual", 8772, -1, 0, 0, 0},
-	{"NotTildeFullEqual", 8775, -1, 0, 0, 0},
-	{"NotTildeTilde", 8777, -1, 0, 0, 0},
-	{"NotVerticalBar", 8740, -1, 0, 0, 0},
-	{"Nscr", 119977, -1, 0, 0, 0},
-	{"Ntilde", 209, -1, 0, 0, 0},
-	{"OElig", 338, -1, 0, 0, 0},
-	{"Oacute", 211, -1, 0, 0, 0},
-	{"Ocirc", 212, -1, 0, 0, 0},
-	{"Ocy", 1054, -1, 0, 0, 0},
-	{"Odblac", 336, -1, 0, 0, 0},
-	{"Ofr", 120082, -1, 0, 0, 0},
-	{"Ograve", 210, -1, 0, 0, 0},
-	{"Omacr", 332, -1, 0, 0, 0},
-	{"Omega", 937, -1, 0, 0, 0},
-	{"Oopf", 120134, -1, 0, 0, 0},
-	{"OpenCurlyDoubleQuote", 8220, -1, 0, 0, 0},
-	{"OpenCurlyQuote", 8216, -1, 0, 0, 0},
-	{"Or", 10836, -1, 0, 0, 0},
-	{"Oscr", 119978, -1, 0, 0, 0},
-	{"Oslash", 216, -1, 0, 0, 0},
-	{"Otilde", 213, -1, 0, 0, 0},
-	{"Otimes", 10807, -1, 0, 0, 0},
-	{"Ouml", 214, -1, 0, 0, 0},
-	{"OverBar", 175, -1, 0, 0, 0},
-	{"OverBrace", 65079, -1, 0, 0, 0},
-	{"OverBracket", 9140, -1, 0, 0, 0},
-	{"OverParenthesis", 65077, -1, 0, 0, 0},
-	{"PartialD", 8706, -1, 0, 0, 0},
-	{"Pcy", 1055, -1, 0, 0, 0},
-	{"Pfr", 120083, -1, 0, 0, 0},
-	{"Phi", 934, -1, 0, 0, 0},
-	{"Pi", 928, -1, 0, 0, 0},
-	{"PlusMinus", 177, -1, 0, 0, 0},
-	{"Poincareplane", 8460, -1, 0, 0, 0},
-	{"Popf", 8473, -1, 0, 0, 0},
-	{"Pr", 10939, -1, 0, 0, 0},
-	{"Precedes", 8826, -1, 0, 0, 0},
-	{"PrecedesEqual", 10927, -1, 0, 0, 0},
-	{"PrecedesSlantEqual", 8828, -1, 0, 0, 0},
-	{"PrecedesTilde", 8830, -1, 0, 0, 0},
-	{"Prime", 8243, -1, 0, 0, 0},
-	{"Product", 8719, -1, 0, 0, 0},
-	{"Proportion", 8759, -1, 0, 0, 0},
-	{"Proportional", 8733, -1, 0, 0, 0},
-	{"Pscr", 119979, -1, 0, 0, 0},
-	{"Psi", 936, -1, 0, 0, 0},
-	{"Qfr", 120084, -1, 0, 0, 0},
-	{"Qopf", 8474, -1, 0, 0, 0},
-	{"Qscr", 119980, -1, 0, 0, 0},
-	{"RBarr", 10512, -1, 0, 0, 0},
-	{"Racute", 340, -1, 0, 0, 0},
-	{"Rang", 12299, -1, 0, 0, 0},
-	{"Rarr", 8608, -1, 0, 0, 0},
-	{"Rarrtl", 10518, -1, 0, 0, 0},
-	{"Rcaron", 344, -1, 0, 0, 0},
-	{"Rcedil", 342, -1, 0, 0, 0},
-	{"Rcy", 1056, -1, 0, 0, 0},
-	{"Re", 8476, -1, 0, 0, 0},
-	{"ReverseElement", 8715, -1, 0, 0, 0},
-	{"ReverseEquilibrium", 8651, -1, 0, 0, 0},
-	{"ReverseUpEquilibrium", 10607, -1, 0, 0, 0},
-	{"Rfr", 8476, -1, 0, 0, 0},
-	{"RightAngleBracket", 9002, -1, 0, 0, 0},
-	{"RightArrow", 8594, -1, 0, 0, 0},
-	{"RightArrowBar", 8677, -1, 0, 0, 0},
-	{"RightArrowLeftArrow", 8644, -1, 0, 0, 0},
-	{"RightCeiling", 8969, -1, 0, 0, 0},
-	{"RightDoubleBracket", 12315, -1, 0, 0, 0},
-	{"RightDownTeeVector", 10589, -1, 0, 0, 0},
-	{"RightDownVector", 8642, -1, 0, 0, 0},
-	{"RightDownVectorBar", 10581, -1, 0, 0, 0},
-	{"RightFloor", 8971, -1, 0, 0, 0},
-	{"RightTee", 8866, -1, 0, 0, 0},
-	{"RightTeeArrow", 8614, -1, 0, 0, 0},
-	{"RightTeeVector", 10587, -1, 0, 0, 0},
-	{"RightTriangle", 8883, -1, 0, 0, 0},
-	{"RightTriangleBar", 10704, -1, 0, 0, 0},
-	{"RightTriangleEqual", 8885, -1, 0, 0, 0},
-	{"RightUpDownVector", 10575, -1, 0, 0, 0},
-	{"RightUpTeeVector", 10588, -1, 0, 0, 0},
-	{"RightUpVector", 8638, -1, 0, 0, 0},
-	{"RightUpVectorBar", 10580, -1, 0, 0, 0},
-	{"RightVector", 8640, -1, 0, 0, 0},
-	{"RightVectorBar", 10579, -1, 0, 0, 0},
-	{"Rightarrow", 8658, -1, 0, 0, 0},
-	{"Ropf", 8477, -1, 0, 0, 0},
-	{"RoundImplies", 10608, -1, 0, 0, 0},
-	{"Rrightarrow", 8667, -1, 0, 0, 0},
-	{"Rscr", 8475, -1, 0, 0, 0},
-	{"Rsh", 8625, -1, 0, 0, 0},
-	{"RuleDelayed", 10740, -1, 0, 0, 0},
-	{"SHCHcy", 1065, -1, 0, 0, 0},
-	{"SHcy", 1064, -1, 0, 0, 0},
-	{"SOFTcy", 1068, -1, 0, 0, 0},
-	{"Sacute", 346, -1, 0, 0, 0},
-	{"Sc", 10940, -1, 0, 0, 0},
-	{"Scaron", 352, -1, 0, 0, 0},
-	{"Scedil", 350, -1, 0, 0, 0},
-	{"Scirc", 348, -1, 0, 0, 0},
-	{"Scy", 1057, -1, 0, 0, 0},
-	{"Sfr", 120086, -1, 0, 0, 0},
-	{"ShortDownArrow", 8964, -1, 0, 0, 0},
-	{"ShortLeftArrow", 8592, -1, 0, 0, 0},
-	{"ShortRightArrow", 8594, -1, 0, 0, 0},
-	{"ShortUpArrow", 8963, -1, 0, 0, 0},
-	{"Sigma", 931, -1, 0, 0, 0},
-	{"SmallCircle", 8728, -1, 0, 0, 0},
-	{"Sopf", 120138, -1, 0, 0, 0},
-	{"Sqrt", 8730, -1, 0, 0, 0},
-	{"Square", 9633, -1, 0, 0, 0},
-	{"SquareIntersection", 8851, -1, 0, 0, 0},
-	{"SquareSubset", 8847, -1, 0, 0, 0},
-	{"SquareSubsetEqual", 8849, -1, 0, 0, 0},
-	{"SquareSuperset", 8848, -1, 0, 0, 0},
-	{"SquareSupersetEqual", 8850, -1, 0, 0, 0},
-	{"SquareUnion", 8852, -1, 0, 0, 0},
-	{"Sscr", 119982, -1, 0, 0, 0},
-	{"Star", 8902, -1, 0, 0, 0},
-	{"Sub", 8912, -1, 0, 0, 0},
-	{"Subset", 8912, -1, 0, 0, 0},
-	{"SubsetEqual", 8838, -1, 0, 0, 0},
-	{"Succeeds", 8827, -1, 0, 0, 0},
-	{"SucceedsEqual", 8829, -1, 0, 0, 0},
-	{"SucceedsSlantEqual", 8829, -1, 0, 0, 0},
-	{"SucceedsTilde", 8831, -1, 0, 0, 0},
-	{"SuchThat", 8715, -1, 0, 0, 0},
-	{"Sum", 8721, -1, 0, 0, 0},
-	{"Sup", 8913, -1, 0, 0, 0},
-	{"Superset", 8835, -1, 0, 0, 0},
-	{"SupersetEqual", 8839, -1, 0, 0, 0},
-	{"Supset", 8913, -1, 0, 0, 0},
-	{"THORN", 222, -1, 0, 0, 0},
-	{"TSHcy", 1035, -1, 0, 0, 0},
-	{"TScy", 1062, -1, 0, 0, 0},
-	{"Tab", 9, -1, 0, 0, 0},
-	{"Tcaron", 356, -1, 0, 0, 0},
-	{"Tcedil", 354, -1, 0, 0, 0},
-	{"Tcy", 1058, -1, 0, 0, 0},
-	{"Tfr", 120087, -1, 0, 0, 0},
-	{"Therefore", 8756, -1, 0, 0, 0},
-	{"Theta", 920, -1, 0, 0, 0},
-	/* {"ThickSpace", 8201, -1, 0, 0, 0}, */
-	{"ThickSpace", 8194, -1, 0, 0, 0},
-	{"ThinSpace", 8201, -1, 0, 0, 0},
-	{"Tilde", 8764, -1, 0, 0, 0},
-	{"TildeEqual", 8771, -1, 0, 0, 0},
-	{"TildeFullEqual", 8773, -1, 0, 0, 0},
-	{"TildeTilde", 8776, -1, 0, 0, 0},
-	{"Topf", 120139, -1, 0, 0, 0},
-	{"TripleDot", 8411, -1, 0, 0, 0},
-	{"Tscr", 119983, -1, 0, 0, 0},
-	{"Tstrok", 358, -1, 0, 0, 0},
-	{"Uacute", 218, -1, 0, 0, 0},
-	{"Uarr", 8607, -1, 0, 0, 0},
-	{"Uarrocir", 10569, -1, 0, 0, 0},
-	{"Ubrcy", 1038, -1, 0, 0, 0},
-	{"Ubreve", 364, -1, 0, 0, 0},
-	{"Ucirc", 219, -1, 0, 0, 0},
-	{"Ucy", 1059, -1, 0, 0, 0},
-	{"Udblac", 368, -1, 0, 0, 0},
-	{"Ufr", 120088, -1, 0, 0, 0},
-	{"Ugrave", 217, -1, 0, 0, 0},
-	{"Umacr", 362, -1, 0, 0, 0},
-	{"UnderBar", 818, -1, 0, 0, 0},
-	{"UnderBrace", 65080, -1, 0, 0, 0},
-	{"UnderBracket", 9141, -1, 0, 0, 0},
-	{"UnderParenthesis", 65078, -1, 0, 0, 0},
-	{"Union", 8899, -1, 0, 0, 0},
-	{"UnionPlus", 8846, -1, 0, 0, 0},
-	{"Uogon", 370, -1, 0, 0, 0},
-	{"Uopf", 120140, -1, 0, 0, 0},
-	{"UpArrow", 8593, -1, 0, 0, 0},
-	{"UpArrowBar", 10514, -1, 0, 0, 0},
-	{"UpArrowDownArrow", 8645, -1, 0, 0, 0},
-	{"UpDownArrow", 8597, -1, 0, 0, 0},
-	{"UpEquilibrium", 10606, -1, 0, 0, 0},
-	{"UpTee", 8869, -1, 0, 0, 0},
-	{"UpTeeArrow", 8613, -1, 0, 0, 0},
-	{"Uparrow", 8657, -1, 0, 0, 0},
-	{"Updownarrow", 8661, -1, 0, 0, 0},
-	{"UpperLeftArrow", 8598, -1, 0, 0, 0},
-	{"UpperRightArrow", 8599, -1, 0, 0, 0},
-	{"Upsi", 978, -1, 0, 0, 0},
-	{"Upsilon", 978, -1, 0, 0, 0},
-	{"Uring", 366, -1, 0, 0, 0},
-	{"Uscr", 119984, -1, 0, 0, 0},
-	{"Utilde", 360, -1, 0, 0, 0},
-	{"Uuml", 220, -1, 0, 0, 0},
-	{"VDash", 8875, -1, 0, 0, 0},
-	{"Vbar", 10987, -1, 0, 0, 0},
-	{"Vcy", 1042, -1, 0, 0, 0},
-	{"Vdash", 8873, -1, 0, 0, 0},
-	{"Vdashl", 10982, -1, 0, 0, 0},
-	{"Vee", 8897, -1, 0, 0, 0},
-	{"Verbar", 8214, -1, 0, 0, 0},
-	{"Vert", 8214, -1, 0, 0, 0},
-	{"VerticalBar", 8739, -1, 0, 0, 0},
-	{"VerticalLine", 124, -1, 0, 0, 0},
-	{"VerticalSeparator", 10072, -1, 0, 0, 0},
-	{"VerticalTilde", 8768, -1, 0, 0, 0},
-	{"VeryThinSpace", 8202, -1, 0, 0, 0},
-	{"Vfr", 120089, -1, 0, 0, 0},
-	{"Vopf", 120141, -1, 0, 0, 0},
-	{"Vscr", 119985, -1, 0, 0, 0},
-	{"Vvdash", 8874, -1, 0, 0, 0},
-	{"Wcirc", 372, -1, 0, 0, 0},
-	{"Wedge", 8896, -1, 0, 0, 0},
-	{"Wfr", 120090, -1, 0, 0, 0},
-	{"Wopf", 120142, -1, 0, 0, 0},
-	{"Wscr", 119986, -1, 0, 0, 0},
-	{"Xfr", 120091, -1, 0, 0, 0},
-	{"Xi", 926, -1, 0, 0, 0},
-	{"Xopf", 120143, -1, 0, 0, 0},
-	{"Xscr", 119987, -1, 0, 0, 0},
-	{"YAcy", 1071, -1, 0, 0, 0},
-	{"YIcy", 1031, -1, 0, 0, 0},
-	{"YUcy", 1070, -1, 0, 0, 0},
-	{"Yacute", 221, -1, 0, 0, 0},
-	{"Ycirc", 374, -1, 0, 0, 0},
-	{"Ycy", 1067, -1, 0, 0, 0},
-	{"Yfr", 120092, -1, 0, 0, 0},
-	{"Yopf", 120144, -1, 0, 0, 0},
-	{"Yscr", 119988, -1, 0, 0, 0},
-	{"Yuml", 376, -1, 0, 0, 0},
-	{"ZHcy", 1046, -1, 0, 0, 0},
-	{"Zacute", 377, -1, 0, 0, 0},
-	{"Zcaron", 381, -1, 0, 0, 0},
-	{"Zcy", 1047, -1, 0, 0, 0},
-	{"Zdot", 379, -1, 0, 0, 0},
-	{"ZeroWidthSpace", 8203, -1, 0, 0, 0},
-	{"Zfr", 8488, -1, 0, 0, 0},
-	{"Zopf", 8484, -1, 0, 0, 0},
-	{"Zscr", 119989, -1, 0, 0, 0},
-	{"aacute", 225, -1, 0, 0, 0},
-	{"abreve", 259, -1, 0, 0, 0},
-	{"ac", 10511, -1, 0, 0, 0},
-	{"acE", 10715, -1, 0, 0, 0},
-	{"acd", 8767, -1, 0, 0, 0},
-	{"acirc", 226, -1, 0, 0, 0},
-	{"acute", 180, -1, 0, 0, 0},
-	{"acy", 1072, -1, 0, 0, 0},
-	{"aelig", 230, -1, 0, 0, 0},
-	{"af", 8289, -1, 0, 0, 0},
-	{"afr", 120094, -1, 0, 0, 0},
-	{"agrave", 224, -1, 0, 0, 0},
-	{"aleph", 8501, -1, 0, 0, 0},
-	{"alpha", 945, -1, 0, 0, 0},
-	{"amacr", 257, -1, 0, 0, 0},
-	{"amalg", 10815, -1, 0, 0, 0},
-	{"amp", 38, -1, 0, 0, 0},
-	{"and", 8743, -1, 0, 0, 0},
-	{"andand", 10837, -1, 0, 0, 0},
-	{"andd", 10844, -1, 0, 0, 0},
-	{"andslope", 10840, -1, 0, 0, 0},
-	{"andv", 10842, -1, 0, 0, 0},
-	{"ang", 8736, -1, 0, 0, 0},
-	{"ange", 10660, -1, 0, 0, 0},
-	{"angle", 8736, -1, 0, 0, 0},
-	{"angmsd", 8737, -1, 0, 0, 0},
-	{"angmsdaa", 10664, -1, 0, 0, 0},
-	{"angmsdab", 10665, -1, 0, 0, 0},
-	{"angmsdac", 10666, -1, 0, 0, 0},
-	{"angmsdad", 10667, -1, 0, 0, 0},
-	{"angmsdae", 10668, -1, 0, 0, 0},
-	{"angmsdaf", 10669, -1, 0, 0, 0},
-	{"angmsdag", 10670, -1, 0, 0, 0},
-	{"angmsdah", 10671, -1, 0, 0, 0},
-	{"angrt", 8735, -1, 0, 0, 0},
-	{"angrtvb", 10653, -1, 0, 0, 0},
-	{"angrtvbd", 10653, -1, 0, 0, 0},
-	{"angsph", 8738, -1, 0, 0, 0},
-	{"angst", 8491, -1, 0, 0, 0},
-	{"angzarr", 9084, -1, 0, 0, 0},
-	{"aogon", 261, -1, 0, 0, 0},
-	{"aopf", 120146, -1, 0, 0, 0},
-	{"ap", 8776, -1, 0, 0, 0},
-	{"apE", 8778, -1, 0, 0, 0},
-	{"apacir", 10863, -1, 0, 0, 0},
-	{"ape", 8778, -1, 0, 0, 0},
-	{"apid", 8779, -1, 0, 0, 0},
-	{"apos", 39, -1, 0, 0, 0},
-	{"approx", 8776, -1, 0, 0, 0},
-	{"approxeq", 8778, -1, 0, 0, 0},
-	{"aring", 229, -1, 0, 0, 0},
-	{"ascr", 119990, -1, 0, 0, 0},
-	{"ast", 42, -1, 0, 0, 0},
-	{"asymp", 8781, -1, 0, 0, 0},
-	{"atilde", 227, -1, 0, 0, 0},
-	{"auml", 228, -1, 0, 0, 0},
-	{"awconint", 8755, -1, 0, 0, 0},
-	{"awint", 10769, -1, 0, 0, 0},
-	{"bNot", 10989, -1, 0, 0, 0},
-	{"backcong", 8780, -1, 0, 0, 0},
-	{"backepsilon", 1014, -1, 0, 0, 0},
-	{"backprime", 8245, -1, 0, 0, 0},
-	{"backsim", 8765, -1, 0, 0, 0},
-	{"backsimeq", 8909, -1, 0, 0, 0},
-	{"barvee", 8893, -1, 0, 0, 0},
-	{"barwed", 8892, -1, 0, 0, 0},
-	{"barwedge", 8892, -1, 0, 0, 0},
-	{"bbrk", 9141, -1, 0, 0, 0},
-	{"bcong", 8780, -1, 0, 0, 0},
-	{"bcy", 1073, -1, 0, 0, 0},
-	{"becaus", 8757, -1, 0, 0, 0},
-	{"because", 8757, -1, 0, 0, 0},
-	{"bemptyv", 10672, -1, 0, 0, 0},
-	{"bepsi", 1014, -1, 0, 0, 0},
-	{"bernou", 8492, -1, 0, 0, 0},
-	{"beta", 946, -1, 0, 0, 0},
-	{"beth", 8502, -1, 0, 0, 0},
-	{"between", 8812, -1, 0, 0, 0},
-	{"bfr", 120095, -1, 0, 0, 0},
-	{"bigcap", 8898, -1, 0, 0, 0},
-	{"bigcirc", 9711, -1, 0, 0, 0},
-	{"bigcup", 8899, -1, 0, 0, 0},
-	{"bigodot", 8857, -1, 0, 0, 0},
-	{"bigoplus", 8853, -1, 0, 0, 0},
-	{"bigotimes", 8855, -1, 0, 0, 0},
-	{"bigsqcup", 8852, -1, 0, 0, 0},
-	{"bigstar", 9733, -1, 0, 0, 0},
-	{"bigtriangledown", 9661, -1, 0, 0, 0},
-	{"bigtriangleup", 9651, -1, 0, 0, 0},
-	{"biguplus", 8846, -1, 0, 0, 0},
-	{"bigvee", 8897, -1, 0, 0, 0},
-	{"bigwedge", 8896, -1, 0, 0, 0},
-	{"bkarow", 10509, -1, 0, 0, 0},
-	{"blacklozenge", 10731, -1, 0, 0, 0},
-	{"blacksquare", 9642, -1, 0, 0, 0},
-	{"blacktriangle", 9652, -1, 0, 0, 0},
-	{"blacktriangledown", 9662, -1, 0, 0, 0},
-	{"blacktriangleleft", 9666, -1, 0, 0, 0},
-	{"blacktriangleright", 9656, -1, 0, 0, 0},
-	{"blank", 9251, -1, 0, 0, 0},
-	{"blk12", 9618, -1, 0, 0, 0},
-	{"blk14", 9617, -1, 0, 0, 0},
-	{"blk34", 9619, -1, 0, 0, 0},
-	{"block", 9608, -1, 0, 0, 0},
-	{"bne", 61, -1, 0, 0, 0},
-	{"bnequiv", 8801, -1, 0, 0, 0},
-	{"bnot", 8976, -1, 0, 0, 0},
-	{"bopf", 120147, -1, 0, 0, 0},
-	{"bot", 8869, -1, 0, 0, 0},
-	{"bottom", 8869, -1, 0, 0, 0},
-	{"bowtie", 8904, -1, 0, 0, 0},
-	{"boxDL", 9559, -1, 0, 0, 0},
-	{"boxDR", 9556, -1, 0, 0, 0},
-	{"boxDl", 9558, -1, 0, 0, 0},
-	{"boxDr", 9555, -1, 0, 0, 0},
-	{"boxH", 9552, -1, 0, 0, 0},
-	{"boxHD", 9574, -1, 0, 0, 0},
-	{"boxHU", 9577, -1, 0, 0, 0},
-	{"boxHd", 9572, -1, 0, 0, 0},
-	{"boxHu", 9575, -1, 0, 0, 0},
-	{"boxUL", 9565, -1, 0, 0, 0},
-	{"boxUR", 9562, -1, 0, 0, 0},
-	{"boxUl", 9564, -1, 0, 0, 0},
-	{"boxUr", 9561, -1, 0, 0, 0},
-	{"boxV", 9553, -1, 0, 0, 0},
-	{"boxVH", 9580, -1, 0, 0, 0},
-	{"boxVL", 9571, -1, 0, 0, 0},
-	{"boxVR", 9568, -1, 0, 0, 0},
-	{"boxVh", 9579, -1, 0, 0, 0},
-	{"boxVl", 9570, -1, 0, 0, 0},
-	{"boxVr", 9567, -1, 0, 0, 0},
-	{"boxbox", 10697, -1, 0, 0, 0},
-	{"boxdL", 9557, -1, 0, 0, 0},
-	{"boxdR", 9554, -1, 0, 0, 0},
-	{"boxdl", 9488, -1, 0, 0, 0},
-	{"boxdr", 9484, -1, 0, 0, 0},
-	{"boxh", 9472, -1, 0, 0, 0},
-	{"boxhD", 9573, -1, 0, 0, 0},
-	{"boxhU", 9576, -1, 0, 0, 0},
-	{"boxhd", 9516, -1, 0, 0, 0},
-	{"boxhu", 9524, -1, 0, 0, 0},
-	{"boxminus", 8863, -1, 0, 0, 0},
-	{"boxplus", 8862, -1, 0, 0, 0},
-	{"boxtimes", 8864, -1, 0, 0, 0},
-	{"boxuL", 9563, -1, 0, 0, 0},
-	{"boxuR", 9560, -1, 0, 0, 0},
-	{"boxul", 9496, -1, 0, 0, 0},
-	{"boxur", 9492, -1, 0, 0, 0},
-	{"boxv", 9474, -1, 0, 0, 0},
-	{"boxvH", 9578, -1, 0, 0, 0},
-	{"boxvL", 9569, -1, 0, 0, 0},
-	{"boxvR", 9566, -1, 0, 0, 0},
-	{"boxvh", 9532, -1, 0, 0, 0},
-	{"boxvl", 9508, -1, 0, 0, 0},
-	{"boxvr", 9500, -1, 0, 0, 0},
-	{"bprime", 8245, -1, 0, 0, 0},
-	{"breve", 728, -1, 0, 0, 0},
-	{"brvbar", 166, -1, 0, 0, 0},
-	{"bscr", 119991, -1, 0, 0, 0},
-	{"bsemi", 8271, -1, 0, 0, 0},
-	{"bsim", 8765, -1, 0, 0, 0},
-	{"bsime", 8909, -1, 0, 0, 0},
-	{"bsol", 92, -1, 0, 0, 0},
-	{"bsolb", 10693, -1, 0, 0, 0},
-	{"bsolhsub", 92, -1, 0, 0, 0},
-	{"bull", 8226, -1, 0, 0, 0},
-	{"bullet", 8226, -1, 0, 0, 0},
-	{"bump", 8782, -1, 0, 0, 0},
-	{"bumpE", 10926, -1, 0, 0, 0},
-	{"bumpe", 8783, -1, 0, 0, 0},
-	{"bumpeq", 8783, -1, 0, 0, 0},
-	{"cacute", 263, -1, 0, 0, 0},
-	{"cap", 8745, -1, 0, 0, 0},
-	{"capand", 10820, -1, 0, 0, 0},
-	{"capbrcup", 10825, -1, 0, 0, 0},
-	{"capcap", 10827, -1, 0, 0, 0},
-	{"capcup", 10823, -1, 0, 0, 0},
-	{"capdot", 10816, -1, 0, 0, 0},
-	{"caps", 8745, -1, 0, 0, 0},
-	{"caret", 8257, -1, 0, 0, 0},
-	{"caron", 711, -1, 0, 0, 0},
-	{"ccaps", 10829, -1, 0, 0, 0},
-	{"ccaron", 269, -1, 0, 0, 0},
-	{"ccedil", 231, -1, 0, 0, 0},
-	{"ccirc", 265, -1, 0, 0, 0},
-	{"ccups", 10828, -1, 0, 0, 0},
-	{"ccupssm", 10832, -1, 0, 0, 0},
-	{"cdot", 267, -1, 0, 0, 0},
-	{"cedil", 184, -1, 0, 0, 0},
-	{"cemptyv", 10674, -1, 0, 0, 0},
-	{"cent", 162, -1, 0, 0, 0},
-	{"centerdot", 183, -1, 0, 0, 0},
-	{"cfr", 120096, -1, 0, 0, 0},
-	{"chcy", 1095, -1, 0, 0, 0},
-	{"check", 10003, -1, 0, 0, 0},
-	{"checkmark", 10003, -1, 0, 0, 0},
-	{"chi", 967, -1, 0, 0, 0},
-	{"cir", 9675, -1, 0, 0, 0},
-	{"cirE", 10691, -1, 0, 0, 0},
-	{"circ", 94, -1, 0, 0, 0},
-	{"circeq", 8791, -1, 0, 0, 0},
-	{"circlearrowleft", 8634, -1, 0, 0, 0},
-	{"circlearrowright", 8635, -1, 0, 0, 0},
-	{"circledR", 174, -1, 0, 0, 0},
-	{"circledS", 9416, -1, 0, 0, 0},
-	{"circledast", 8859, -1, 0, 0, 0},
-	{"circledcirc", 8858, -1, 0, 0, 0},
-	{"circleddash", 8861, -1, 0, 0, 0},
-	{"cire", 8791, -1, 0, 0, 0},
-	{"cirfnint", 10768, -1, 0, 0, 0},
-	{"cirmid", 10991, -1, 0, 0, 0},
-	{"cirscir", 10690, -1, 0, 0, 0},
-	{"clubs", 9827, -1, 0, 0, 0},
-	{"clubsuit", 9827, -1, 0, 0, 0},
-	{"colon", 58, -1, 0, 0, 0},
-	{"colone", 8788, -1, 0, 0, 0},
-	{"coloneq", 8788, -1, 0, 0, 0},
-	{"comma", 44, -1, 0, 0, 0},
-	{"commat", 64, -1, 0, 0, 0},
-	{"comp", 8705, -1, 0, 0, 0},
-	{"compfn", 8728, -1, 0, 0, 0},
-	{"complement", 8705, -1, 0, 0, 0},
-	{"complexes", 8450, -1, 0, 0, 0},
-	{"cong", 8773, -1, 0, 0, 0},
-	{"congdot", 10861, -1, 0, 0, 0},
-	{"conint", 8750, -1, 0, 0, 0},
-	{"copf", 120148, -1, 0, 0, 0},
-	{"coprod", 8720, -1, 0, 0, 0},
-	{"copy", 169, -1, 0, 0, 0},
-	{"copysr", 8471, -1, 0, 0, 0},
-	{"cross", 10007, -1, 0, 0, 0},
-	{"cscr", 119992, -1, 0, 0, 0},
-	{"csub", 10959, -1, 0, 0, 0},
-	{"csube", 10961, -1, 0, 0, 0},
-	{"csup", 10960, -1, 0, 0, 0},
-	{"csupe", 10962, -1, 0, 0, 0},
-	{"ctdot", 8943, -1, 0, 0, 0},
-	{"cudarrl", 10552, -1, 0, 0, 0},
-	{"cudarrr", 10549, -1, 0, 0, 0},
-	{"cuepr", 8926, -1, 0, 0, 0},
-	{"cuesc", 8927, -1, 0, 0, 0},
-	{"cularr", 8630, -1, 0, 0, 0},
-	{"cularrp", 10557, -1, 0, 0, 0},
-	{"cup", 8746, -1, 0, 0, 0},
-	{"cupbrcap", 10824, -1, 0, 0, 0},
-	{"cupcap", 10822, -1, 0, 0, 0},
-	{"cupcup", 10826, -1, 0, 0, 0},
-	{"cupdot", 8845, -1, 0, 0, 0},
-	{"cupor", 10821, -1, 0, 0, 0},
-	{"cups", 8746, -1, 0, 0, 0},
-	{"curarr", 8631, -1, 0, 0, 0},
-	{"curarrm", 10556, -1, 0, 0, 0},
-	{"curlyeqprec", 8926, -1, 0, 0, 0},
-	{"curlyeqsucc", 8927, -1, 0, 0, 0},
-	{"curlyvee", 8910, -1, 0, 0, 0},
-	{"curlywedge", 8911, -1, 0, 0, 0},
-	{"curren", 164, -1, 0, 0, 0},
-	{"curvearrowleft", 8630, -1, 0, 0, 0},
-	{"curvearrowright", 8631, -1, 0, 0, 0},
-	{"cuvee", 8910, -1, 0, 0, 0},
-	{"cuwed", 8911, -1, 0, 0, 0},
-	{"cwconint", 8754, -1, 0, 0, 0},
-	{"cwint", 8753, -1, 0, 0, 0},
-	{"cylcty", 9005, -1, 0, 0, 0},
-	{"dArr", 8659, -1, 0, 0, 0},
-	{"dHar", 10597, -1, 0, 0, 0},
-	{"dagger", 8224, -1, 0, 0, 0},
-	{"daleth", 8504, -1, 0, 0, 0},
-	{"darr", 8595, -1, 0, 0, 0},
-	{"dash", 8208, -1, 0, 0, 0},
-	{"dashv", 8867, -1, 0, 0, 0},
-	{"dbkarow", 10511, -1, 0, 0, 0},
-	{"dblac", 733, -1, 0, 0, 0},
-	{"dcaron", 271, -1, 0, 0, 0},
-	{"dcy", 1076, -1, 0, 0, 0},
-	{"dd", 8518, -1, 0, 0, 0},
-	{"ddagger", 8225, -1, 0, 0, 0},
-	{"ddarr", 8650, -1, 0, 0, 0},
-	{"ddotseq", 10871, -1, 0, 0, 0},
-	{"deg", 176, -1, 0, 0, 0},
-	{"delta", 948, -1, 0, 0, 0},
-	{"demptyv", 10673, -1, 0, 0, 0},
-	{"dfisht", 10623, -1, 0, 0, 0},
-	{"dfr", 120097, -1, 0, 0, 0},
-	{"dharl", 8643, -1, 0, 0, 0},
-	{"dharr", 8642, -1, 0, 0, 0},
-	{"diam", 8900, -1, 0, 0, 0},
-	{"diamond", 8900, -1, 0, 0, 0},
-	{"diamondsuit", 9830, -1, 0, 0, 0},
-	{"diams", 9830, -1, 0, 0, 0},
-	{"die", 168, -1, 0, 0, 0},
-	{"digamma", 988, -1, 0, 0, 0},
-	{"disin", 8946, -1, 0, 0, 0},
-	{"div", 247, -1, 0, 0, 0},
-	{"divide", 247, -1, 0, 0, 0},
-	{"divideontimes", 8903, -1, 0, 0, 0},
-	{"divonx", 8903, -1, 0, 0, 0},
-	{"djcy", 1106, -1, 0, 0, 0},
-	{"dlcorn", 8990, -1, 0, 0, 0},
-	{"dlcrop", 8973, -1, 0, 0, 0},
-	{"dollar", 36, -1, 0, 0, 0},
-	{"dopf", 120149, -1, 0, 0, 0},
-	{"dot", 729, -1, 0, 0, 0},
-	{"doteq", 8784, -1, 0, 0, 0},
-	{"doteqdot", 8785, -1, 0, 0, 0},
-	{"dotminus", 8760, -1, 0, 0, 0},
-	{"dotplus", 8724, -1, 0, 0, 0},
-	{"dotsquare", 8865, -1, 0, 0, 0},
-	{"doublebarwedge", 8966, -1, 0, 0, 0},
-	{"downarrow", 8595, -1, 0, 0, 0},
-	{"downdownarrows", 8650, -1, 0, 0, 0},
-	{"downharpoonleft", 8643, -1, 0, 0, 0},
-	{"downharpoonright", 8642, -1, 0, 0, 0},
-	{"drbkarow", 10512, -1, 0, 0, 0},
-	{"drcorn", 8991, -1, 0, 0, 0},
-	{"drcrop", 8972, -1, 0, 0, 0},
-	{"dscr", 119993, -1, 0, 0, 0},
-	{"dscy", 1109, -1, 0, 0, 0},
-	{"dsol", 10742, -1, 0, 0, 0},
-	{"dstrok", 273, -1, 0, 0, 0},
-	{"dtdot", 8945, -1, 0, 0, 0},
-	{"dtri", 9663, -1, 0, 0, 0},
-	{"dtrif", 9662, -1, 0, 0, 0},
-	{"duarr", 8693, -1, 0, 0, 0},
-	{"duhar", 10607, -1, 0, 0, 0},
-	{"dwangle", 10662, -1, 0, 0, 0},
-	{"dzcy", 1119, -1, 0, 0, 0},
-	{"dzigrarr", 62882, -1, 0, 0, 0},
-	{"eDDot", 10871, -1, 0, 0, 0},
-	{"eDot", 8785, -1, 0, 0, 0},
-	{"eacute", 233, -1, 0, 0, 0},
-	{"easter", 8795, -1, 0, 0, 0},
-	{"ecaron", 283, -1, 0, 0, 0},
-	{"ecir", 8790, -1, 0, 0, 0},
-	{"ecirc", 234, -1, 0, 0, 0},
-	{"ecolon", 8789, -1, 0, 0, 0},
-	{"ecy", 1101, -1, 0, 0, 0},
-	{"edot", 279, -1, 0, 0, 0},
-	{"ee", 8519, -1, 0, 0, 0},
-	{"efDot", 8786, -1, 0, 0, 0},
-	{"efr", 120098, -1, 0, 0, 0},
-	{"eg", 10906, -1, 0, 0, 0},
-	{"egrave", 232, -1, 0, 0, 0},
-	{"egs", 8925, -1, 0, 0, 0},
-	{"egsdot", 10904, -1, 0, 0, 0},
-	{"el", 10905, -1, 0, 0, 0},
-	{"ell", 8467, -1, 0, 0, 0},
-	{"els", 8924, -1, 0, 0, 0},
-	{"elsdot", 10903, -1, 0, 0, 0},
-	{"emacr", 275, -1, 0, 0, 0},
-	{"empty", 8709, -1, 0, 0, 0},
-	{"emptyset", 8709, -1, 0, 0, 0},
-	{"emptyv", 8709, -1, 0, 0, 0},
-	{"emsp", 8195, -1, 0, 0, 0},
-	{"emsp13", 8196, -1, 0, 0, 0},
-	{"emsp14", 8197, -1, 0, 0, 0},
-	{"eng", 331, -1, 0, 0, 0},
-	{"ensp", 8194, -1, 0, 0, 0},
-	{"eogon", 281, -1, 0, 0, 0},
-	{"eopf", 120150, -1, 0, 0, 0},
-	{"epar", 8917, -1, 0, 0, 0},
-	{"eparsl", 10723, -1, 0, 0, 0},
-	{"eplus", 10865, -1, 0, 0, 0},
-	{"epsi", 949, -1, 0, 0, 0},
-	{"epsiv", 603, -1, 0, 0, 0},
-	{"eqcirc", 8790, -1, 0, 0, 0},
-	{"eqcolon", 8789, -1, 0, 0, 0},
-	{"eqsim", 8770, -1, 0, 0, 0},
-	{"eqslantgtr", 8925, -1, 0, 0, 0},
-	{"eqslantless", 8924, -1, 0, 0, 0},
-	{"equals", 61, -1, 0, 0, 0},
-	{"equest", 8799, -1, 0, 0, 0},
-	{"equiv", 8801, -1, 0, 0, 0},
-	{"equivDD", 10872, -1, 0, 0, 0},
-	{"eqvparsl", 10725, -1, 0, 0, 0},
-	{"erDot", 8787, -1, 0, 0, 0},
-	{"erarr", 10609, -1, 0, 0, 0},
-	{"escr", 8495, -1, 0, 0, 0},
-	{"esdot", 8784, -1, 0, 0, 0},
-	{"esim", 8770, -1, 0, 0, 0},
-	{"eta", 951, -1, 0, 0, 0},
-	{"eth", 240, -1, 0, 0, 0},
-	{"euml", 235, -1, 0, 0, 0},
-	{"excl", 33, -1, 0, 0, 0},
-	{"exist", 8707, -1, 0, 0, 0},
-	{"expectation", 8496, -1, 0, 0, 0},
-	{"exponentiale", 8519, -1, 0, 0, 0},
-	{"fallingdotseq", 8786, -1, 0, 0, 0},
-	{"fcy", 1092, -1, 0, 0, 0},
-	{"female", 9792, -1, 0, 0, 0},
-	{"ffilig", 64259, -1, 0, 0, 0},
-	{"fflig", 64256, -1, 0, 0, 0},
-	{"ffllig", 64260, -1, 0, 0, 0},
-	{"ffr", 120099, -1, 0, 0, 0},
-	{"filig", 64257, -1, 0, 0, 0},
-	{"flat", 9837, -1, 0, 0, 0},
-	{"fllig", 64258, -1, 0, 0, 0},
-	{"fnof", 402, -1, 0, 0, 0},
-	{"fopf", 120151, -1, 0, 0, 0},
-	{"forall", 8704, -1, 0, 0, 0},
-	{"fork", 8916, -1, 0, 0, 0},
-	{"forkv", 10969, -1, 0, 0, 0},
-	{"fpartint", 10765, -1, 0, 0, 0},
-	{"frac12", 189, -1, 0, 0, 0},
-	{"frac13", 8531, -1, 0, 0, 0},
-	{"frac14", 188, -1, 0, 0, 0},
-	{"frac15", 8533, -1, 0, 0, 0},
-	{"frac16", 8537, -1, 0, 0, 0},
-	{"frac18", 8539, -1, 0, 0, 0},
-	{"frac23", 8532, -1, 0, 0, 0},
-	{"frac25", 8534, -1, 0, 0, 0},
-	{"frac34", 190, -1, 0, 0, 0},
-	{"frac35", 8535, -1, 0, 0, 0},
-	{"frac38", 8540, -1, 0, 0, 0},
-	{"frac45", 8536, -1, 0, 0, 0},
-	{"frac56", 8538, -1, 0, 0, 0},
-	{"frac58", 8541, -1, 0, 0, 0},
-	{"frac78", 8542, -1, 0, 0, 0},
-	{"frown", 8994, -1, 0, 0, 0},
-	{"fscr", 119995, -1, 0, 0, 0},
-	{"gE", 8807, -1, 0, 0, 0},
-	{"gEl", 8923, -1, 0, 0, 0},
-	{"gacute", 501, -1, 0, 0, 0},
-	{"gamma", 947, -1, 0, 0, 0},
-	{"gammad", 988, -1, 0, 0, 0},
-	{"gap", 8819, -1, 0, 0, 0},
-	{"gbreve", 287, -1, 0, 0, 0},
-	{"gcirc", 285, -1, 0, 0, 0},
-	{"gcy", 1075, -1, 0, 0, 0},
-	{"gdot", 289, -1, 0, 0, 0},
-	{"ge", 8805, -1, 0, 0, 0},
-	{"gel", 8923, -1, 0, 0, 0},
-	{"geq", 8805, -1, 0, 0, 0},
-	{"geqq", 8807, -1, 0, 0, 0},
-	{"geqslant", 10878, -1, 0, 0, 0},
-	{"ges", 10878, -1, 0, 0, 0},
-	{"gescc", 10921, -1, 0, 0, 0},
-	{"gesdot", 10880, -1, 0, 0, 0},
-	{"gesdoto", 10882, -1, 0, 0, 0},
-	{"gesdotol", 10884, -1, 0, 0, 0},
-	{"gesl", 8923, -1, 0, 0, 0},
-	{"gesles", 10900, -1, 0, 0, 0},
-	{"gfr", 120100, -1, 0, 0, 0},
-	{"gg", 8811, -1, 0, 0, 0},
-	{"ggg", 8921, -1, 0, 0, 0},
-	{"gimel", 8503, -1, 0, 0, 0},
-	{"gjcy", 1107, -1, 0, 0, 0},
-	{"gl", 8823, -1, 0, 0, 0},
-	{"glE", 10898, -1, 0, 0, 0},
-	{"gla", 10917, -1, 0, 0, 0},
-	{"glj", 10916, -1, 0, 0, 0},
-	{"gnE", 8809, -1, 0, 0, 0},
-	{"gnap", 10890, -1, 0, 0, 0},
-	{"gnapprox", 10890, -1, 0, 0, 0},
-	{"gne", 8809, -1, 0, 0, 0},
-	{"gneq", 8809, -1, 0, 0, 0},
-	{"gneqq", 8809, -1, 0, 0, 0},
-	{"gnsim", 8935, -1, 0, 0, 0},
-	{"gopf", 120152, -1, 0, 0, 0},
-	{"grave", 96, -1, 0, 0, 0},
-	{"gscr", 8458, -1, 0, 0, 0},
-	{"gsim", 8819, -1, 0, 0, 0},
-	{"gsime", 10894, -1, 0, 0, 0},
-	{"gsiml", 10896, -1, 0, 0, 0},
-	{"gt", 62, -1, 0, 0, 0},
-	{"gtcc", 10919, -1, 0, 0, 0},
-	{"gtcir", 10874, -1, 0, 0, 0},
-	{"gtdot", 8919, -1, 0, 0, 0},
-	{"gtlPar", 10645, -1, 0, 0, 0},
-	{"gtquest", 10876, -1, 0, 0, 0},
-	{"gtrapprox", 8819, -1, 0, 0, 0},
-	{"gtrarr", 10616, -1, 0, 0, 0},
-	{"gtrdot", 8919, -1, 0, 0, 0},
-	{"gtreqless", 8923, -1, 0, 0, 0},
-	{"gtreqqless", 8923, -1, 0, 0, 0},
-	{"gtrless", 8823, -1, 0, 0, 0},
-	{"gtrsim", 8819, -1, 0, 0, 0},
-	{"gvertneqq", 8809, -1, 0, 0, 0},
-	{"gvnE", 8809, -1, 0, 0, 0},
-	{"hArr", 8660, -1, 0, 0, 0},
-	{"hairsp", 8202, -1, 0, 0, 0},
-	{"half", 189, -1, 0, 0, 0},
-	{"hamilt", 8459, -1, 0, 0, 0},
-	{"hardcy", 1098, -1, 0, 0, 0},
-	{"harr", 8596, -1, 0, 0, 0},
-	{"harrcir", 10568, -1, 0, 0, 0},
-	{"harrw", 8621, -1, 0, 0, 0},
-	{"hbar", 8463, -1, 0, 0, 0},
-	{"hcirc", 293, -1, 0, 0, 0},
-	{"heartsuit", 9825, -1, 0, 0, 0},
-	{"hellip", 8230, -1, 0, 0, 0},
-	{"hercon", 8889, -1, 0, 0, 0},
-	{"hfr", 120101, -1, 0, 0, 0},
-	{"hksearow", 10533, -1, 0, 0, 0},
-	{"hkswarow", 10534, -1, 0, 0, 0},
-	{"hoarr", 8703, -1, 0, 0, 0},
-	{"homtht", 8763, -1, 0, 0, 0},
-	{"hookleftarrow", 8617, -1, 0, 0, 0},
-	{"hookrightarrow", 8618, -1, 0, 0, 0},
-	{"hopf", 120153, -1, 0, 0, 0},
-	{"horbar", 8213, -1, 0, 0, 0},
-	{"hscr", 119997, -1, 0, 0, 0},
-	{"hslash", 8463, -1, 0, 0, 0},
-	{"hstrok", 295, -1, 0, 0, 0},
-	{"hybull", 8259, -1, 0, 0, 0},
-	{"hyphen", 8208, -1, 0, 0, 0},
-	{"iacute", 237, -1, 0, 0, 0},
-	{"ic", 8203, -1, 0, 0, 0},
-	{"icirc", 238, -1, 0, 0, 0},
-	{"icy", 1080, -1, 0, 0, 0},
-	{"iecy", 1077, -1, 0, 0, 0},
-	{"iexcl", 161, -1, 0, 0, 0},
-	{"iff", 8660, -1, 0, 0, 0},
-	{"ifr", 120102, -1, 0, 0, 0},
-	{"igrave", 236, -1, 0, 0, 0},
-	{"ii", 8520, -1, 0, 0, 0},
-	{"iiiint", 10764, -1, 0, 0, 0},
-	{"iiint", 8749, -1, 0, 0, 0},
-	{"iinfin", 10716, -1, 0, 0, 0},
-	{"iiota", 8489, -1, 0, 0, 0},
-	{"ijlig", 307, -1, 0, 0, 0},
-	{"imacr", 299, -1, 0, 0, 0},
-	{"image", 8465, -1, 0, 0, 0},
-	{"imagline", 8464, -1, 0, 0, 0},
-	{"imagpart", 8465, -1, 0, 0, 0},
-	{"imath", 305, -1, 0, 0, 0},
-	{"imof", 8887, -1, 0, 0, 0},
-	{"imped", 120131, -1, 0, 0, 0},
-	{"in", 8712, -1, 0, 0, 0},
-	{"incare", 8453, -1, 0, 0, 0},
-	{"infin", 8734, -1, 0, 0, 0},
-	{"inodot", 305, -1, 0, 0, 0},
-	{"int", 8747, -1, 0, 0, 0},
-	{"intcal", 8890, -1, 0, 0, 0},
-	{"integers", 8484, -1, 0, 0, 0},
-	{"intercal", 8890, -1, 0, 0, 0},
-	{"intlarhk", 10775, -1, 0, 0, 0},
-	{"intprod", 10812, -1, 0, 0, 0},
-	{"iocy", 1105, -1, 0, 0, 0},
-	{"iogon", 303, -1, 0, 0, 0},
-	{"iopf", 120154, -1, 0, 0, 0},
-	{"iota", 953, -1, 0, 0, 0},
-	{"iprod", 10812, -1, 0, 0, 0},
-	{"iquest", 191, -1, 0, 0, 0},
-	{"iscr", 119998, -1, 0, 0, 0},
-	{"isin", 8712, -1, 0, 0, 0},
-	{"isinE", 8953, -1, 0, 0, 0},
-	{"isindot", 8949, -1, 0, 0, 0},
-	{"isins", 8948, -1, 0, 0, 0},
-	{"isinsv", 8947, -1, 0, 0, 0},
-	{"isinv", 8712, -1, 0, 0, 0},
-	{"it", 8290, -1, 0, 0, 0},
-	{"itilde", 297, -1, 0, 0, 0},
-	{"iukcy", 1110, -1, 0, 0, 0},
-	{"iuml", 239, -1, 0, 0, 0},
-	{"jcirc", 309, -1, 0, 0, 0},
-	{"jcy", 1081, -1, 0, 0, 0},
-	{"jfr", 120103, -1, 0, 0, 0},
-	{"jmath", 106, -1, 0, 0, 0},
-	{"jopf", 120155, -1, 0, 0, 0},
-	{"jscr", 119999, -1, 0, 0, 0},
-	{"jsercy", 1112, -1, 0, 0, 0},
-	{"jukcy", 1108, -1, 0, 0, 0},
-	{"kappa", 954, -1, 0, 0, 0},
-	{"kappav", 1008, -1, 0, 0, 0},
-	{"kcedil", 311, -1, 0, 0, 0},
-	{"kcy", 1082, -1, 0, 0, 0},
-	{"kfr", 120104, -1, 0, 0, 0},
-	{"kgreen", 312, -1, 0, 0, 0},
-	{"khcy", 1093, -1, 0, 0, 0},
-	{"kjcy", 1116, -1, 0, 0, 0},
-	{"kopf", 120156, -1, 0, 0, 0},
-	{"kscr", 120000, -1, 0, 0, 0},
-	{"lAarr", 8666, -1, 0, 0, 0},
-	{"lArr", 8656, -1, 0, 0, 0},
-	{"lAtail", 10523, -1, 0, 0, 0},
-	{"lBarr", 10510, -1, 0, 0, 0},
-	{"lE", 8806, -1, 0, 0, 0},
-	{"lEg", 8922, -1, 0, 0, 0},
-	{"lHar", 10594, -1, 0, 0, 0},
-	{"lacute", 314, -1, 0, 0, 0},
-	{"laemptyv", 10676, -1, 0, 0, 0},
-	{"lagran", 8466, -1, 0, 0, 0},
-	{"lambda", 955, -1, 0, 0, 0},
-	{"lang", 9001, -1, 0, 0, 0},
-	{"langd", 10641, -1, 0, 0, 0},
-	{"langle", 9001, -1, 0, 0, 0},
-	{"lap", 8818, -1, 0, 0, 0},
-	{"laquo", 171, -1, 0, 0, 0},
-	{"larr", 8592, -1, 0, 0, 0},
-	{"larrb", 8676, -1, 0, 0, 0},
-	{"larrbfs", 10527, -1, 0, 0, 0},
-	{"larrfs", 10525, -1, 0, 0, 0},
-	{"larrhk", 8617, -1, 0, 0, 0},
-	{"larrlp", 8619, -1, 0, 0, 0},
-	{"larrpl", 10553, -1, 0, 0, 0},
-	{"larrsim", 10611, -1, 0, 0, 0},
-	{"larrtl", 8610, -1, 0, 0, 0},
-	{"lat", 10923, -1, 0, 0, 0},
-	{"latail", 10521, -1, 0, 0, 0},
-	{"late", 10925, -1, 0, 0, 0},
-	{"lates", 10925, -1, 0, 0, 0},
-	{"lbarr", 10508, -1, 0, 0, 0},
-	{"lbbrk", 12308, -1, 0, 0, 0},
-	{"lbrace", 123, -1, 0, 0, 0},
-	{"lbrack", 91, -1, 0, 0, 0},
-	{"lbrke", 10635, -1, 0, 0, 0},
-	{"lbrksld", 10639, -1, 0, 0, 0},
-	{"lbrkslu", 10637, -1, 0, 0, 0},
-	{"lcaron", 318, -1, 0, 0, 0},
-	{"lcedil", 316, -1, 0, 0, 0},
-	{"lceil", 8968, -1, 0, 0, 0},
-	{"lcub", 123, -1, 0, 0, 0},
-	{"lcy", 1083, -1, 0, 0, 0},
-	{"ldca", 10550, -1, 0, 0, 0},
-	{"ldquo", 8220, -1, 0, 0, 0},
-	{"ldquor", 8222, -1, 0, 0, 0},
-	{"ldrdhar", 10599, -1, 0, 0, 0},
-	{"ldrushar", 10571, -1, 0, 0, 0},
-	{"ldsh", 8626, -1, 0, 0, 0},
-	{"le", 8804, -1, 0, 0, 0},
-	{"leftarrow", 8592, -1, 0, 0, 0},
-	{"leftarrowtail", 8610, -1, 0, 0, 0},
-	{"leftharpoondown", 8637, -1, 0, 0, 0},
-	{"leftharpoonup", 8636, -1, 0, 0, 0},
-	{"leftleftarrows", 8647, -1, 0, 0, 0},
-	{"leftrightarrow", 8596, -1, 0, 0, 0},
-	{"leftrightarrows", 8646, -1, 0, 0, 0},
-	{"leftrightharpoons", 8651, -1, 0, 0, 0},
-	{"leftrightsquigarrow", 8621, -1, 0, 0, 0},
-	{"leftthreetimes", 8907, -1, 0, 0, 0},
-	{"leg", 8922, -1, 0, 0, 0},
-	{"leq", 8804, -1, 0, 0, 0},
-	{"leqq", 8806, -1, 0, 0, 0},
-	{"leqslant", 10877, -1, 0, 0, 0},
-	{"les", 10877, -1, 0, 0, 0},
-	{"lescc", 10920, -1, 0, 0, 0},
-	{"lesdot", 10879, -1, 0, 0, 0},
-	{"lesdoto", 10881, -1, 0, 0, 0},
-	{"lesdotor", 10883, -1, 0, 0, 0},
-	{"lesg", 8922, -1, 0, 0, 0},
-	{"lesges", 10899, -1, 0, 0, 0},
-	{"lessapprox", 8818, -1, 0, 0, 0},
-	{"lessdot", 8918, -1, 0, 0, 0},
-	{"lesseqgtr", 8922, -1, 0, 0, 0},
-	{"lesseqqgtr", 8922, -1, 0, 0, 0},
-	{"lessgtr", 8822, -1, 0, 0, 0},
-	{"lesssim", 8818, -1, 0, 0, 0},
-	{"lfisht", 10620, -1, 0, 0, 0},
-	{"lfloor", 8970, -1, 0, 0, 0},
-	{"lfr", 120105, -1, 0, 0, 0},
-	{"lg", 8822, -1, 0, 0, 0},
-	{"lgE", 10897, -1, 0, 0, 0},
-	{"lhard", 8637, -1, 0, 0, 0},
-	{"lharu", 8636, -1, 0, 0, 0},
-	{"lharul", 10602, -1, 0, 0, 0},
-	{"lhblk", 9604, -1, 0, 0, 0},
-	{"ljcy", 1113, -1, 0, 0, 0},
-	{"ll", 8810, -1, 0, 0, 0},
-	{"llarr", 8647, -1, 0, 0, 0},
-	{"llcorner", 8990, -1, 0, 0, 0},
-	{"llhard", 10603, -1, 0, 0, 0},
-	{"lltri", 9722, -1, 0, 0, 0},
-	{"lmidot", 320, -1, 0, 0, 0},
-	{"lmoust", 9136, -1, 0, 0, 0},
-	{"lmoustache", 9136, -1, 0, 0, 0},
-	{"lnE", 8808, -1, 0, 0, 0},
-	{"lnap", 10889, -1, 0, 0, 0},
-	{"lnapprox", 10889, -1, 0, 0, 0},
-	{"lne", 8808, -1, 0, 0, 0},
-	{"lneq", 8808, -1, 0, 0, 0},
-	{"lneqq", 8808, -1, 0, 0, 0},
-	{"lnsim", 8934, -1, 0, 0, 0},
-	{"loang", 62808, -1, 0, 0, 0},
-	{"loarr", 8701, -1, 0, 0, 0},
-	{"lobrk", 12314, -1, 0, 0, 0},
-	{"longleftarrow", 62838, -1, 0, 0, 0},
-	{"longleftrightarrow", 62840, -1, 0, 0, 0},
-	{"longmapsto", 62845, -1, 0, 0, 0},
-	{"longrightarrow", 62839, -1, 0, 0, 0},
-	{"looparrowleft", 8619, -1, 0, 0, 0},
-	{"looparrowright", 8620, -1, 0, 0, 0},
-	{"lopar", 12312, -1, 0, 0, 0},
-	{"lopf", 120157, -1, 0, 0, 0},
-	{"loplus", 10797, -1, 0, 0, 0},
-	{"lotimes", 10804, -1, 0, 0, 0},
-	{"lowast", 8727, -1, 0, 0, 0},
-	{"lowbar", 95, -1, 0, 0, 0},
-	{"loz", 9674, -1, 0, 0, 0},
-	{"lozenge", 9674, -1, 0, 0, 0},
-	{"lozf", 10731, -1, 0, 0, 0},
-	{"lpar", 40, -1, 0, 0, 0},
-	{"lparlt", 10643, -1, 0, 0, 0},
-	{"lrarr", 8646, -1, 0, 0, 0},
-	{"lrcorner", 8991, -1, 0, 0, 0},
-	{"lrhar", 8651, -1, 0, 0, 0},
-	{"lrhard", 10605, -1, 0, 0, 0},
-	{"lrtri", 8895, -1, 0, 0, 0},
-	{"lscr", 8467, -1, 0, 0, 0},
-	{"lsh", 8624, -1, 0, 0, 0},
-	{"lsim", 8818, -1, 0, 0, 0},
-	{"lsime", 10893, -1, 0, 0, 0},
-	{"lsimg", 10895, -1, 0, 0, 0},
-	{"lsqb", 91, -1, 0, 0, 0},
-	{"lsquo", 8216, -1, 0, 0, 0},
-	{"lsquor", 8218, -1, 0, 0, 0},
-	{"lstrok", 322, -1, 0, 0, 0},
-	{"lt", 60, -1, 0, 0, 0},
-	{"ltcc", 10918, -1, 0, 0, 0},
-	{"ltcir", 10873, -1, 0, 0, 0},
-	{"ltdot", 8918, -1, 0, 0, 0},
-	{"lthree", 8907, -1, 0, 0, 0},
-	{"ltimes", 8905, -1, 0, 0, 0},
-	{"ltlarr", 10614, -1, 0, 0, 0},
-	{"ltquest", 10875, -1, 0, 0, 0},
-	{"ltrPar", 10646, -1, 0, 0, 0},
-	{"ltri", 9667, -1, 0, 0, 0},
-	{"ltrie", 8884, -1, 0, 0, 0},
-	{"ltrif", 9666, -1, 0, 0, 0},
-	{"lurdshar", 10570, -1, 0, 0, 0},
-	{"luruhar", 10598, -1, 0, 0, 0},
-	{"lvertneqq", 8808, -1, 0, 0, 0},
-	{"lvnE", 8808, -1, 0, 0, 0},
-	{"mDDot", 8762, -1, 0, 0, 0},
-	{"macr", 175, -1, 0, 0, 0},
-	{"male", 9794, -1, 0, 0, 0},
-	{"malt", 10016, -1, 0, 0, 0},
-	{"maltese", 10016, -1, 0, 0, 0},
-	{"map", 8614, -1, 0, 0, 0},
-	{"mapsto", 8614, -1, 0, 0, 0},
-	{"mapstodown", 8615, -1, 0, 0, 0},
-	{"mapstoleft", 8612, -1, 0, 0, 0},
-	{"mapstoup", 8613, -1, 0, 0, 0},
-	{"marker", 9646, -1, 0, 0, 0},
-	{"mcomma", 10793, -1, 0, 0, 0},
-	{"mcy", 1084, -1, 0, 0, 0},
-	{"mdash", 8212, -1, 0, 0, 0},
-	{"measuredangle", 8737, -1, 0, 0, 0},
-	{"mfr", 120106, -1, 0, 0, 0},
-	{"mho", 8487, -1, 0, 0, 0},
-	{"micro", 181, -1, 0, 0, 0},
-	{"mid", 8739, -1, 0, 0, 0},
-	{"midast", 42, -1, 0, 0, 0},
-	{"midcir", 10992, -1, 0, 0, 0},
-	{"middot", 183, -1, 0, 0, 0},
-	{"minus", 8722, -1, 0, 0, 0},
-	{"minusb", 8863, -1, 0, 0, 0},
-	{"minusd", 8760, -1, 0, 0, 0},
-	{"minusdu", 10794, -1, 0, 0, 0},
-	{"mlcp", 10971, -1, 0, 0, 0},
-	{"mldr", 8230, -1, 0, 0, 0},
-	{"mnplus", 8723, -1, 0, 0, 0},
-	{"models", 8871, -1, 0, 0, 0},
-	{"mopf", 120158, -1, 0, 0, 0},
-	{"mp", 8723, -1, 0, 0, 0},
-	{"mscr", 120002, -1, 0, 0, 0},
-	{"mstpos", 8766, -1, 0, 0, 0},
-	{"mu", 956, -1, 0, 0, 0},
-	{"multimap", 8888, -1, 0, 0, 0},
-	{"mumap", 8888, -1, 0, 0, 0},
-	{"nGg", 8921, -1, 0, 0, 0},
-	{"nGt", 8811, -1, 0, 0, 0},
-	{"nGtv", 8811, -1, 0, 0, 0},
-	{"nLeftarrow", 8653, -1, 0, 0, 0},
-	{"nLeftrightarrow", 8654, -1, 0, 0, 0},
-	{"nLl", 8920, -1, 0, 0, 0},
-	{"nLt", 8810, -1, 0, 0, 0},
-	{"nLtv", 8810, -1, 0, 0, 0},
-	{"nRightarrow", 8655, -1, 0, 0, 0},
-	{"nVDash", 8879, -1, 0, 0, 0},
-	{"nVdash", 8878, -1, 0, 0, 0},
-	{"nabla", 8711, -1, 0, 0, 0},
-	{"nacute", 324, -1, 0, 0, 0},
-	{"nang", 8736, -1, 0, 0, 0},
-	{"nap", 8777, -1, 0, 0, 0},
-	{"napE", 10864, -1, 0, 0, 0},
-	{"napid", 8779, -1, 0, 0, 0},
-	{"napos", 329, -1, 0, 0, 0},
-	{"napprox", 8777, -1, 0, 0, 0},
-	{"natur", 9838, -1, 0, 0, 0},
-	{"natural", 9838, -1, 0, 0, 0},
-	{"naturals", 8469, -1, 0, 0, 0},
-	{"nbsp", 160, -1, 0, 0, 0},
-	{"nbump", 8782, -1, 0, 0, 0},
-	{"nbumpe", 8783, -1, 0, 0, 0},
-	{"ncap", 10819, -1, 0, 0, 0},
-	{"ncaron", 328, -1, 0, 0, 0},
-	{"ncedil", 326, -1, 0, 0, 0},
-	{"ncong", 8775, -1, 0, 0, 0},
-	{"ncongdot", 10861, -1, 0, 0, 0},
-	{"ncup", 10818, -1, 0, 0, 0},
-	{"ncy", 1085, -1, 0, 0, 0},
-	{"ndash", 8211, -1, 0, 0, 0},
-	{"ne", 8800, -1, 0, 0, 0},
-	{"neArr", 8663, -1, 0, 0, 0},
-	{"nearhk", 10532, -1, 0, 0, 0},
-	{"nearr", 8599, -1, 0, 0, 0},
-	{"nearrow", 8599, -1, 0, 0, 0},
-	{"nedot", 8800, -1, 0, 0, 0},
-	{"nequiv", 8802, -1, 0, 0, 0},
-	{"nesear", 10536, -1, 0, 0, 0},
-	{"nesim", 8770, -1, 0, 0, 0},
-	{"nexist", 8708, -1, 0, 0, 0},
-	{"nexists", 8708, -1, 0, 0, 0},
-	{"nfr", 120107, -1, 0, 0, 0},
-	{"ngE", 8817, -1, 0, 0, 0},
-	{"nge", 8817, -1, 0, 0, 0},
-	{"ngeq", 8817, -1, 0, 0, 0},
-	{"ngeqq", 8817, -1, 0, 0, 0},
-	{"ngeqslant", 8817, -1, 0, 0, 0},
-	{"nges", 8817, -1, 0, 0, 0},
-	{"ngsim", 8821, -1, 0, 0, 0},
-	{"ngt", 8815, -1, 0, 0, 0},
-	{"ngtr", 8815, -1, 0, 0, 0},
-	{"nhArr", 8654, -1, 0, 0, 0},
-	{"nharr", 8622, -1, 0, 0, 0},
-	{"nhpar", 10994, -1, 0, 0, 0},
-	{"ni", 8715, -1, 0, 0, 0},
-	{"nis", 8956, -1, 0, 0, 0},
-	{"nisd", 8954, -1, 0, 0, 0},
-	{"niv", 8715, -1, 0, 0, 0},
-	{"njcy", 1114, -1, 0, 0, 0},
-	{"nlArr", 8653, -1, 0, 0, 0},
-	{"nlE", 8816, -1, 0, 0, 0},
-	{"nlarr", 8602, -1, 0, 0, 0},
-	{"nldr", 8229, -1, 0, 0, 0},
-	{"nle", 8816, -1, 0, 0, 0},
-	{"nleftarrow", 8602, -1, 0, 0, 0},
-	{"nleftrightarrow", 8622, -1, 0, 0, 0},
-	{"nleq", 8816, -1, 0, 0, 0},
-	{"nleqq", 8816, -1, 0, 0, 0},
-	{"nleqslant", 8816, -1, 0, 0, 0},
-	{"nles", 8816, -1, 0, 0, 0},
-	{"nless", 8814, -1, 0, 0, 0},
-	{"nlsim", 8820, -1, 0, 0, 0},
-	{"nlt", 8814, -1, 0, 0, 0},
-	{"nltri", 8938, -1, 0, 0, 0},
-	{"nltrie", 8940, -1, 0, 0, 0},
-	{"nmid", 8740, -1, 0, 0, 0},
-	{"nopf", 120159, -1, 0, 0, 0},
-	{"not", 172, -1, 0, 0, 0},
-	{"notin", 8713, -1, 0, 0, 0},
-	{"notindot", 8950, -1, 0, 0, 0},
-	{"notinva", 8713, -1, 0, 0, 0},
-	{"notinvb", 8951, -1, 0, 0, 0},
-	{"notinvc", 8950, -1, 0, 0, 0},
-	{"notni", 8716, -1, 0, 0, 0},
-	{"notniva", 8716, -1, 0, 0, 0},
-	{"notnivb", 8958, -1, 0, 0, 0},
-	{"notnivc", 8957, -1, 0, 0, 0},
-	{"npar", 8742, -1, 0, 0, 0},
-	{"nparallel", 8742, -1, 0, 0, 0},
-	{"nparsl", 8741, -1, 0, 0, 0},
-	{"npart", 8706, -1, 0, 0, 0},
-	{"npolint", 10772, -1, 0, 0, 0},
-	{"npr", 8832, -1, 0, 0, 0},
-	{"nprcue", 8928, -1, 0, 0, 0},
-	{"npre", 10927, -1, 0, 0, 0},
-	{"nprec", 8832, -1, 0, 0, 0},
-	{"npreceq", 10927, -1, 0, 0, 0},
-	{"nrArr", 8655, -1, 0, 0, 0},
-	{"nrarr", 8603, -1, 0, 0, 0},
-	{"nrarrc", 10547, -1, 0, 0, 0},
-	{"nrarrw", 8605, -1, 0, 0, 0},
-	{"nrightarrow", 8603, -1, 0, 0, 0},
-	{"nrtri", 8939, -1, 0, 0, 0},
-	{"nrtrie", 8941, -1, 0, 0, 0},
-	{"nsc", 8833, -1, 0, 0, 0},
-	{"nsccue", 8929, -1, 0, 0, 0},
-	{"nsce", 10928, -1, 0, 0, 0},
-	{"nscr", 120003, -1, 0, 0, 0},
-	{"nshortmid", 8740, -1, 0, 0, 0},
-	{"nshortparallel", 8742, -1, 0, 0, 0},
-	{"nsim", 8769, -1, 0, 0, 0},
-	{"nsime", 8772, -1, 0, 0, 0},
-	{"nsimeq", 8772, -1, 0, 0, 0},
-	{"nsmid", 8740, -1, 0, 0, 0},
-	{"nspar", 8742, -1, 0, 0, 0},
-	{"nsqsube", 8930, -1, 0, 0, 0},
-	{"nsqsupe", 8931, -1, 0, 0, 0},
-	{"nsub", 8836, -1, 0, 0, 0},
-	{"nsubE", 8840, -1, 0, 0, 0},
-	{"nsube", 8840, -1, 0, 0, 0},
-	{"nsubset", 8836, -1, 0, 0, 0},
-	{"nsubseteq", 8840, -1, 0, 0, 0},
-	{"nsubseteqq", 8840, -1, 0, 0, 0},
-	{"nsucc", 8833, -1, 0, 0, 0},
-	{"nsucceq", 10928, -1, 0, 0, 0},
-	{"nsup", 8837, -1, 0, 0, 0},
-	{"nsupE", 8841, -1, 0, 0, 0},
-	{"nsupe", 8841, -1, 0, 0, 0},
-	{"nsupset", 8837, -1, 0, 0, 0},
-	{"nsupseteq", 8841, -1, 0, 0, 0},
-	{"nsupseteqq", 8841, -1, 0, 0, 0},
-	{"ntgl", 8825, -1, 0, 0, 0},
-	{"ntilde", 241, -1, 0, 0, 0},
-	{"ntlg", 8824, -1, 0, 0, 0},
-	{"ntriangleleft", 8938, -1, 0, 0, 0},
-	{"ntrianglelefteq", 8940, -1, 0, 0, 0},
-	{"ntriangleright", 8939, -1, 0, 0, 0},
-	{"ntrianglerighteq", 8941, -1, 0, 0, 0},
-	{"nu", 957, -1, 0, 0, 0},
-	{"num", 35, -1, 0, 0, 0},
-	{"numero", 8470, -1, 0, 0, 0},
-	{"numsp", 8199, -1, 0, 0, 0},
-	{"nvDash", 8877, -1, 0, 0, 0},
-	{"nvHarr", 8654, -1, 0, 0, 0},
-	{"nvap", 8777, -1, 0, 0, 0},
-	{"nvdash", 8876, -1, 0, 0, 0},
-	{"nvge", 8817, -1, 0, 0, 0},
-	{"nvgt", 8815, -1, 0, 0, 0},
-	{"nvinfin", 10718, -1, 0, 0, 0},
-	{"nvlArr", 8653, -1, 0, 0, 0},
-	{"nvle", 8816, -1, 0, 0, 0},
-	{"nvlt", 8814, -1, 0, 0, 0},
-	{"nvltrie", 8940, -1, 0, 0, 0},
-	{"nvrArr", 8655, -1, 0, 0, 0},
-	{"nvrtrie", 8941, -1, 0, 0, 0},
-	{"nvsim", 8769, -1, 0, 0, 0},
-	{"nwArr", 8662, -1, 0, 0, 0},
-	{"nwarhk", 10531, -1, 0, 0, 0},
-	{"nwarr", 8598, -1, 0, 0, 0},
-	{"nwarrow", 8598, -1, 0, 0, 0},
-	{"nwnear", 10535, -1, 0, 0, 0},
-	{"oS", 9416, -1, 0, 0, 0},
-	{"oacute", 243, -1, 0, 0, 0},
-	{"oast", 8859, -1, 0, 0, 0},
-	{"ocir", 8858, -1, 0, 0, 0},
-	{"ocirc", 244, -1, 0, 0, 0},
-	{"ocy", 1086, -1, 0, 0, 0},
-	{"odash", 8861, -1, 0, 0, 0},
-	{"odblac", 337, -1, 0, 0, 0},
-	{"odiv", 10808, -1, 0, 0, 0},
-	{"odot", 8857, -1, 0, 0, 0},
-	{"odsold", 10684, -1, 0, 0, 0},
-	{"oelig", 339, -1, 0, 0, 0},
-	{"ofcir", 10687, -1, 0, 0, 0},
-	{"ofr", 120108, -1, 0, 0, 0},
-	{"ogon", 731, -1, 0, 0, 0},
-	{"ograve", 242, -1, 0, 0, 0},
-	{"ogt", 10689, -1, 0, 0, 0},
-	{"ohbar", 10677, -1, 0, 0, 0},
-	{"ohm", 8486, -1, 0, 0, 0},
-	{"oint", 8750, -1, 0, 0, 0},
-	{"olarr", 8634, -1, 0, 0, 0},
-	{"olcir", 10686, -1, 0, 0, 0},
-	{"olcross", 10683, -1, 0, 0, 0},
-	{"olt", 10688, -1, 0, 0, 0},
-	{"omacr", 333, -1, 0, 0, 0},
-	{"omega", 969, -1, 0, 0, 0},
-	{"omid", 10678, -1, 0, 0, 0},
-	{"ominus", 8854, -1, 0, 0, 0},
-	{"oopf", 120160, -1, 0, 0, 0},
-	{"opar", 10679, -1, 0, 0, 0},
-	{"operp", 10681, -1, 0, 0, 0},
-	{"oplus", 8853, -1, 0, 0, 0},
-	{"or", 8744, -1, 0, 0, 0},
-	{"orarr", 8635, -1, 0, 0, 0},
-	{"ord", 10845, -1, 0, 0, 0},
-	{"order", 8500, -1, 0, 0, 0},
-	{"orderof", 8500, -1, 0, 0, 0},
-	{"ordf", 170, -1, 0, 0, 0},
-	{"ordm", 186, -1, 0, 0, 0},
-	{"origof", 8886, -1, 0, 0, 0},
-	{"oror", 10838, -1, 0, 0, 0},
-	{"orslope", 10839, -1, 0, 0, 0},
-	{"orv", 10843, -1, 0, 0, 0},
-	{"oscr", 8500, -1, 0, 0, 0},
-	{"oslash", 248, -1, 0, 0, 0},
-	{"osol", 8856, -1, 0, 0, 0},
-	{"otilde", 245, -1, 0, 0, 0},
-	{"otimes", 8855, -1, 0, 0, 0},
-	{"otimesas", 10806, -1, 0, 0, 0},
-	{"ouml", 246, -1, 0, 0, 0},
-	{"ovbar", 9021, -1, 0, 0, 0},
-	{"par", 8741, -1, 0, 0, 0},
-	{"para", 182, -1, 0, 0, 0},
-	{"parallel", 8741, -1, 0, 0, 0},
-	{"parsim", 10995, -1, 0, 0, 0},
-	{"parsl", 8741, -1, 0, 0, 0},
-	{"part", 8706, -1, 0, 0, 0},
-	{"pcy", 1087, -1, 0, 0, 0},
-	{"percnt", 37, -1, 0, 0, 0},
-	{"period", 46, -1, 0, 0, 0},
-	{"permil", 8240, -1, 0, 0, 0},
-	{"perp", 8869, -1, 0, 0, 0},
-	{"pertenk", 8241, -1, 0, 0, 0},
-	{"pfr", 120109, -1, 0, 0, 0},
-	{"phi", 966, -1, 0, 0, 0},
-	{"phiv", 981, -1, 0, 0, 0},
-	{"phmmat", 8499, -1, 0, 0, 0},
-	{"phone", 9742, -1, 0, 0, 0},
-	{"pi", 960, -1, 0, 0, 0},
-	{"pitchfork", 8916, -1, 0, 0, 0},
-	{"piv", 982, -1, 0, 0, 0},
-	{"planck", 8463, -1, 0, 0, 0},
-	{"planckh", 8462, -1, 0, 0, 0},
-	{"plankv", 8463, -1, 0, 0, 0},
-	{"plus", 43, -1, 0, 0, 0},
-	{"plusacir", 10787, -1, 0, 0, 0},
-	{"plusb", 8862, -1, 0, 0, 0},
-	{"pluscir", 10786, -1, 0, 0, 0},
-	{"plusdo", 8724, -1, 0, 0, 0},
-	{"plusdu", 10789, -1, 0, 0, 0},
-	{"pluse", 10866, -1, 0, 0, 0},
-	{"plusmn", 177, -1, 0, 0, 0},
-	{"plussim", 10790, -1, 0, 0, 0},
-	{"plustwo", 10791, -1, 0, 0, 0},
-	{"pm", 177, -1, 0, 0, 0},
-	{"pointint", 10773, -1, 0, 0, 0},
-	{"popf", 120161, -1, 0, 0, 0},
-	{"pound", 163, -1, 0, 0, 0},
-	{"pr", 8826, -1, 0, 0, 0},
-	{"prE", 10927, -1, 0, 0, 0},
-	{"prap", 8830, -1, 0, 0, 0},
-	{"prcue", 8828, -1, 0, 0, 0},
-	{"pre", 10927, -1, 0, 0, 0},
-	{"prec", 8826, -1, 0, 0, 0},
-	{"precapprox", 8830, -1, 0, 0, 0},
-	{"preccurlyeq", 8828, -1, 0, 0, 0},
-	{"preceq", 10927, -1, 0, 0, 0},
-	{"precnapprox", 8936, -1, 0, 0, 0},
-	{"precneqq", 10933, -1, 0, 0, 0},
-	{"precnsim", 8936, -1, 0, 0, 0},
-	{"precsim", 8830, -1, 0, 0, 0},
-	{"prime", 8242, -1, 0, 0, 0},
-	{"primes", 8473, -1, 0, 0, 0},
-	{"prnE", 10933, -1, 0, 0, 0},
-	{"prnap", 8936, -1, 0, 0, 0},
-	{"prnsim", 8936, -1, 0, 0, 0},
-	{"prod", 8719, -1, 0, 0, 0},
-	{"profalar", 9006, -1, 0, 0, 0},
-	{"profline", 8978, -1, 0, 0, 0},
-	{"profsurf", 8979, -1, 0, 0, 0},
-	{"prop", 8733, -1, 0, 0, 0},
-	{"propto", 8733, -1, 0, 0, 0},
-	{"prsim", 8830, -1, 0, 0, 0},
-	{"prurel", 8880, -1, 0, 0, 0},
-	{"pscr", 120005, -1, 0, 0, 0},
-	{"psi", 968, -1, 0, 0, 0},
-	{"puncsp", 8200, -1, 0, 0, 0},
-	{"qfr", 120110, -1, 0, 0, 0},
-	{"qint", 10764, -1, 0, 0, 0},
-	{"qopf", 120162, -1, 0, 0, 0},
-	{"qprime", 8279, -1, 0, 0, 0},
-	{"qscr", 120006, -1, 0, 0, 0},
-	{"quaternions", 8461, -1, 0, 0, 0},
-	{"quatint", 10774, -1, 0, 0, 0},
-	{"quest", 63, -1, 0, 0, 0},
-	{"questeq", 8799, -1, 0, 0, 0},
-	{"quot", 34, -1, 0, 0, 0},
-	{"rAarr", 8667, -1, 0, 0, 0},
-	{"rArr", 8658, -1, 0, 0, 0},
-	{"rAtail", 10524, -1, 0, 0, 0},
-	{"rBarr", 10511, -1, 0, 0, 0},
-	{"rHar", 10596, -1, 0, 0, 0},
-	{"race", 10714, -1, 0, 0, 0},
-	{"racute", 341, -1, 0, 0, 0},
-	{"radic", 8730, -1, 0, 0, 0},
-	{"raemptyv", 10675, -1, 0, 0, 0},
-	{"rang", 9002, -1, 0, 0, 0},
-	{"rangd", 10642, -1, 0, 0, 0},
-	{"range", 10661, -1, 0, 0, 0},
-	{"rangle", 9002, -1, 0, 0, 0},
-	{"raquo", 187, -1, 0, 0, 0},
-	{"rarr", 8594, -1, 0, 0, 0},
-	{"rarrap", 10613, -1, 0, 0, 0},
-	{"rarrb", 8677, -1, 0, 0, 0},
-	{"rarrbfs", 10528, -1, 0, 0, 0},
-	{"rarrc", 10547, -1, 0, 0, 0},
-	{"rarrfs", 10526, -1, 0, 0, 0},
-	{"rarrhk", 8618, -1, 0, 0, 0},
-	{"rarrlp", 8620, -1, 0, 0, 0},
-	{"rarrpl", 10565, -1, 0, 0, 0},
-	{"rarrsim", 10612, -1, 0, 0, 0},
-	{"rarrtl", 8611, -1, 0, 0, 0},
-	{"rarrw", 8605, -1, 0, 0, 0},
-	{"ratail", 8611, -1, 0, 0, 0},
-	{"ratio", 8758, -1, 0, 0, 0},
-	{"rationals", 8474, -1, 0, 0, 0},
-	{"rbarr", 10509, -1, 0, 0, 0},
-	{"rbbrk", 12309, -1, 0, 0, 0},
-	{"rbrace", 125, -1, 0, 0, 0},
-	{"rbrack", 93, -1, 0, 0, 0},
-	{"rbrke", 10636, -1, 0, 0, 0},
-	{"rbrksld", 10638, -1, 0, 0, 0},
-	{"rbrkslu", 10640, -1, 0, 0, 0},
-	{"rcaron", 345, -1, 0, 0, 0},
-	{"rcedil", 343, -1, 0, 0, 0},
-	{"rceil", 8969, -1, 0, 0, 0},
-	{"rcub", 125, -1, 0, 0, 0},
-	{"rcy", 1088, -1, 0, 0, 0},
-	{"rdca", 10551, -1, 0, 0, 0},
-	{"rdldhar", 10601, -1, 0, 0, 0},
-	{"rdquo", 8221, -1, 0, 0, 0},
-	{"rdquor", 8221, -1, 0, 0, 0},
-	{"rdsh", 8627, -1, 0, 0, 0},
-	{"real", 8476, -1, 0, 0, 0},
-	{"realine", 8475, -1, 0, 0, 0},
-	{"realpart", 8476, -1, 0, 0, 0},
-	{"reals", 8477, -1, 0, 0, 0},
-	{"rect", 9645, -1, 0, 0, 0},
-	{"reg", 174, -1, 0, 0, 0},
-	{"rfisht", 10621, -1, 0, 0, 0},
-	{"rfloor", 8971, -1, 0, 0, 0},
-	{"rfr", 120111, -1, 0, 0, 0},
-	{"rhard", 8641, -1, 0, 0, 0},
-	{"rharu", 8640, -1, 0, 0, 0},
-	{"rharul", 10604, -1, 0, 0, 0},
-	{"rho", 961, -1, 0, 0, 0},
-	{"rhov", 1009, -1, 0, 0, 0},
-	{"rightarrow", 8594, -1, 0, 0, 0},
-	{"rightarrowtail", 8611, -1, 0, 0, 0},
-	{"rightharpoondown", 8641, -1, 0, 0, 0},
-	{"rightharpoonup", 8640, -1, 0, 0, 0},
-	{"rightleftarrows", 8644, -1, 0, 0, 0},
-	{"rightleftharpoons", 8652, -1, 0, 0, 0},
-	{"rightrightarrows", 8649, -1, 0, 0, 0},
-	{"rightsquigarrow", 8605, -1, 0, 0, 0},
-	{"rightthreetimes", 8908, -1, 0, 0, 0},
-	{"ring", 730, -1, 0, 0, 0},
-	{"risingdotseq", 8787, -1, 0, 0, 0},
-	{"rlarr", 8644, -1, 0, 0, 0},
-	{"rlhar", 8652, -1, 0, 0, 0},
-	{"rmoust", 9137, -1, 0, 0, 0},
-	{"rmoustache", 9137, -1, 0, 0, 0},
-	{"rnmid", 10990, -1, 0, 0, 0},
-	{"roang", 62809, -1, 0, 0, 0},
-	{"roarr", 8702, -1, 0, 0, 0},
-	{"robrk", 12315, -1, 0, 0, 0},
-	{"ropar", 12313, -1, 0, 0, 0},
-	{"ropf", 120163, -1, 0, 0, 0},
-	{"roplus", 10798, -1, 0, 0, 0},
-	{"rotimes", 10805, -1, 0, 0, 0},
-	{"rpar", 41, -1, 0, 0, 0},
-	{"rpargt", 10644, -1, 0, 0, 0},
-	{"rppolint", 10770, -1, 0, 0, 0},
-	{"rrarr", 8649, -1, 0, 0, 0},
-	{"rscr", 120007, -1, 0, 0, 0},
-	{"rsh", 8625, -1, 0, 0, 0},
-	{"rsqb", 93, -1, 0, 0, 0},
-	{"rsquo", 8217, -1, 0, 0, 0},
-	{"rsquor", 8217, -1, 0, 0, 0},
-	{"rthree", 8908, -1, 0, 0, 0},
-	{"rtimes", 8906, -1, 0, 0, 0},
-	{"rtri", 9657, -1, 0, 0, 0},
-	{"rtrie", 8885, -1, 0, 0, 0},
-	{"rtrif", 9656, -1, 0, 0, 0},
-	{"rtriltri", 10702, -1, 0, 0, 0},
-	{"ruluhar", 10600, -1, 0, 0, 0},
-	{"rx", 8478, -1, 0, 0, 0},
-	{"sacute", 347, -1, 0, 0, 0},
-	{"sc", 8827, -1, 0, 0, 0},
-	{"scE", 8830, -1, 0, 0, 0},
-	{"scap", 8831, -1, 0, 0, 0},
-	{"scaron", 353, -1, 0, 0, 0},
-	{"sccue", 8829, -1, 0, 0, 0},
-	{"sce", 8829, -1, 0, 0, 0},
-	{"scedil", 351, -1, 0, 0, 0},
-	{"scirc", 349, -1, 0, 0, 0},
-	{"scnE", 10934, -1, 0, 0, 0},
-	{"scnap", 8937, -1, 0, 0, 0},
-	{"scnsim", 8937, -1, 0, 0, 0},
-	{"scpolint", 10771, -1, 0, 0, 0},
-	{"scsim", 8831, -1, 0, 0, 0},
-	{"scy", 1089, -1, 0, 0, 0},
-	{"sdot", 8901, -1, 0, 0, 0},
-	{"sdotb", 8865, -1, 0, 0, 0},
-	{"sdote", 10854, -1, 0, 0, 0},
-	{"seArr", 8664, -1, 0, 0, 0},
-	{"searhk", 10533, -1, 0, 0, 0},
-	{"searr", 8600, -1, 0, 0, 0},
-	{"searrow", 8600, -1, 0, 0, 0},
-	{"sect", 167, -1, 0, 0, 0},
-	{"semi", 59, -1, 0, 0, 0},
-	{"seswar", 10537, -1, 0, 0, 0},
-	{"setminus", 8726, -1, 0, 0, 0},
-	{"setmn", 8726, -1, 0, 0, 0},
-	{"sext", 10038, -1, 0, 0, 0},
-	{"sfr", 120112, -1, 0, 0, 0},
-	{"sharp", 9839, -1, 0, 0, 0},
-	{"shchcy", 1097, -1, 0, 0, 0},
-	{"shcy", 1096, -1, 0, 0, 0},
-	{"shortmid", 8739, -1, 0, 0, 0},
-	{"shortparallel", 8741, -1, 0, 0, 0},
-	{"shy", 173, -1, 0, 0, 0},
-	{"sigma", 963, -1, 0, 0, 0},
-	{"sigmav", 962, -1, 0, 0, 0},
-	{"sim", 8764, -1, 0, 0, 0},
-	{"simdot", 10858, -1, 0, 0, 0},
-	{"sime", 8771, -1, 0, 0, 0},
-	{"simeq", 8771, -1, 0, 0, 0},
-	{"simg", 10910, -1, 0, 0, 0},
-	{"simgE", 10912, -1, 0, 0, 0},
-	{"siml", 10909, -1, 0, 0, 0},
-	{"simlE", 10911, -1, 0, 0, 0},
-	{"simne", 8774, -1, 0, 0, 0},
-	{"simplus", 10788, -1, 0, 0, 0},
-	{"simrarr", 10610, -1, 0, 0, 0},
-	{"slarr", 8592, -1, 0, 0, 0},
-	{"smallsetminus", 8726, -1, 0, 0, 0},
-	{"smashp", 10803, -1, 0, 0, 0},
-	{"smeparsl", 10724, -1, 0, 0, 0},
-	{"smid", 8739, -1, 0, 0, 0},
-	{"smile", 8995, -1, 0, 0, 0},
-	{"smt", 10922, -1, 0, 0, 0},
-	{"smte", 10924, -1, 0, 0, 0},
-	{"smtes", 10924, -1, 0, 0, 0},
-	{"softcy", 1100, -1, 0, 0, 0},
-	{"sol", 47, -1, 0, 0, 0},
-	{"solb", 10692, -1, 0, 0, 0},
-	{"solbar", 9023, -1, 0, 0, 0},
-	{"sopf", 120164, -1, 0, 0, 0},
-	{"spades", 9824, -1, 0, 0, 0},
-	{"spadesuit", 9824, -1, 0, 0, 0},
-	{"spar", 8741, -1, 0, 0, 0},
-	{"sqcap", 8851, -1, 0, 0, 0},
-	{"sqcaps", 8851, -1, 0, 0, 0},
-	{"sqcup", 8852, -1, 0, 0, 0},
-	{"sqcups", 8852, -1, 0, 0, 0},
-	{"sqsub", 8847, -1, 0, 0, 0},
-	{"sqsube", 8849, -1, 0, 0, 0},
-	{"sqsubset", 8847, -1, 0, 0, 0},
-	{"sqsubseteq", 8849, -1, 0, 0, 0},
-	{"sqsup", 8848, -1, 0, 0, 0},
-	{"sqsupe", 8850, -1, 0, 0, 0},
-	{"sqsupset", 8848, -1, 0, 0, 0},
-	{"sqsupseteq", 8850, -1, 0, 0, 0},
-	{"squ", 9633, -1, 0, 0, 0},
-	{"square", 9633, -1, 0, 0, 0},
-	{"squarf", 9642, -1, 0, 0, 0},
-	{"squf", 9642, -1, 0, 0, 0},
-	{"srarr", 8594, -1, 0, 0, 0},
-	{"sscr", 120008, -1, 0, 0, 0},
-	{"ssetmn", 8726, -1, 0, 0, 0},
-	{"sstarf", 8902, -1, 0, 0, 0},
-	{"star", 8902, -1, 0, 0, 0},
-	{"starf", 9733, -1, 0, 0, 0},
-	{"straightepsilon", 949, -1, 0, 0, 0},
-	{"straightphi", 966, -1, 0, 0, 0},
-	{"sub", 8834, -1, 0, 0, 0},
-	{"subE", 8838, -1, 0, 0, 0},
-	{"subdot", 10941, -1, 0, 0, 0},
-	{"sube", 8838, -1, 0, 0, 0},
-	{"subedot", 10947, -1, 0, 0, 0},
-	{"submult", 10945, -1, 0, 0, 0},
-	{"subnE", 8842, -1, 0, 0, 0},
-	{"subne", 8842, -1, 0, 0, 0},
-	{"subplus", 10943, -1, 0, 0, 0},
-	{"subrarr", 10617, -1, 0, 0, 0},
-	{"subset", 8834, -1, 0, 0, 0},
-	{"subseteq", 8838, -1, 0, 0, 0},
-	{"subseteqq", 8838, -1, 0, 0, 0},
-	{"subsetneq", 8842, -1, 0, 0, 0},
-	{"subsetneqq", 8842, -1, 0, 0, 0},
-	{"subsim", 10951, -1, 0, 0, 0},
-	{"subsub", 10965, -1, 0, 0, 0},
-	{"subsup", 10963, -1, 0, 0, 0},
-	{"succ", 8827, -1, 0, 0, 0},
-	{"succapprox", 8831, -1, 0, 0, 0},
-	{"succcurlyeq", 8829, -1, 0, 0, 0},
-	{"succeq", 8829, -1, 0, 0, 0},
-	{"succnapprox", 8937, -1, 0, 0, 0},
-	{"succneqq", 10934, -1, 0, 0, 0},
-	{"succnsim", 8937, -1, 0, 0, 0},
-	{"succsim", 8831, -1, 0, 0, 0},
-	{"sum", 8721, -1, 0, 0, 0},
-	{"sung", 9834, -1, 0, 0, 0},
-	{"sup", 8835, -1, 0, 0, 0},
-	{"sup1", 185, -1, 0, 0, 0},
-	{"sup2", 178, -1, 0, 0, 0},
-	{"sup3", 179, -1, 0, 0, 0},
-	{"supE", 8839, -1, 0, 0, 0},
-	{"supdot", 10942, -1, 0, 0, 0},
-	{"supdsub", 10968, -1, 0, 0, 0},
-	{"supe", 8839, -1, 0, 0, 0},
-	{"supedot", 10948, -1, 0, 0, 0},
-	{"suphsol", 8835, -1, 0, 0, 0},
-	{"suphsub", 10967, -1, 0, 0, 0},
-	{"suplarr", 10619, -1, 0, 0, 0},
-	{"supmult", 10946, -1, 0, 0, 0},
-	{"supnE", 8843, -1, 0, 0, 0},
-	{"supne", 8843, -1, 0, 0, 0},
-	{"supplus", 10944, -1, 0, 0, 0},
-	{"supset", 8835, -1, 0, 0, 0},
-	{"supseteq", 8839, -1, 0, 0, 0},
-	{"supseteqq", 8839, -1, 0, 0, 0},
-	{"supsetneq", 8843, -1, 0, 0, 0},
-	{"supsetneqq", 8843, -1, 0, 0, 0},
-	{"supsim", 10952, -1, 0, 0, 0},
-	{"supsub", 10964, -1, 0, 0, 0},
-	{"supsup", 10966, -1, 0, 0, 0},
-	{"swArr", 8665, -1, 0, 0, 0},
-	{"swarhk", 10534, -1, 0, 0, 0},
-	{"swarr", 8601, -1, 0, 0, 0},
-	{"swarrow", 8601, -1, 0, 0, 0},
-	{"swnwar", 10538, -1, 0, 0, 0},
-	{"szlig", 223, -1, 0, 0, 0},
-	{"target", 8982, -1, 0, 0, 0},
-	{"tau", 964, -1, 0, 0, 0},
-	{"tbrk", 9140, -1, 0, 0, 0},
-	{"tcaron", 357, -1, 0, 0, 0},
-	{"tcedil", 355, -1, 0, 0, 0},
-	{"tcy", 1090, -1, 0, 0, 0},
-	{"tdot", 8411, -1, 0, 0, 0},
-	{"telrec", 8981, -1, 0, 0, 0},
-	{"tfr", 120113, -1, 0, 0, 0},
-	{"there4", 8756, -1, 0, 0, 0},
-	{"therefore", 8756, -1, 0, 0, 0},
-	{"theta", 952, -1, 0, 0, 0},
-	{"thetav", 977, -1, 0, 0, 0},
-	{"thickapprox", 8776, -1, 0, 0, 0},
-	{"thicksim", 8764, -1, 0, 0, 0},
-	{"thinsp", 8201, -1, 0, 0, 0},
-	{"thkap", 8776, -1, 0, 0, 0},
-	{"thksim", 8764, -1, 0, 0, 0},
-	{"thorn", 254, -1, 0, 0, 0},
-	{"tilde", 732, -1, 0, 0, 0},
-	{"times", 215, -1, 0, 0, 0},
-	{"timesb", 8864, -1, 0, 0, 0},
-	{"timesbar", 10801, -1, 0, 0, 0},
-	{"timesd", 10800, -1, 0, 0, 0},
-	{"tint", 8749, -1, 0, 0, 0},
-	{"toea", 10536, -1, 0, 0, 0},
-	{"top", 8868, -1, 0, 0, 0},
-	{"topbot", 9014, -1, 0, 0, 0},
-	{"topcir", 10993, -1, 0, 0, 0},
-	{"topf", 120165, -1, 0, 0, 0},
-	{"topfork", 10970, -1, 0, 0, 0},
-	{"tosa", 10537, -1, 0, 0, 0},
-	{"tprime", 8244, -1, 0, 0, 0},
-	{"trade", 8482, -1, 0, 0, 0},
-	{"triangle", 9653, -1, 0, 0, 0},
-	{"triangledown", 9663, -1, 0, 0, 0},
-	{"triangleleft", 9667, -1, 0, 0, 0},
-	{"trianglelefteq", 8884, -1, 0, 0, 0},
-	{"triangleq", 8796, -1, 0, 0, 0},
-	{"triangleright", 9657, -1, 0, 0, 0},
-	{"trianglerighteq", 8885, -1, 0, 0, 0},
-	{"tridot", 9708, -1, 0, 0, 0},
-	{"trie", 8796, -1, 0, 0, 0},
-	{"triminus", 10810, -1, 0, 0, 0},
-	{"triplus", 10809, -1, 0, 0, 0},
-	{"trisb", 10701, -1, 0, 0, 0},
-	{"tritime", 10811, -1, 0, 0, 0},
-	{"tscr", 120009, -1, 0, 0, 0},
-	{"tscy", 1094, -1, 0, 0, 0},
-	{"tshcy", 1115, -1, 0, 0, 0},
-	{"tstrok", 359, -1, 0, 0, 0},
-	{"twixt", 8812, -1, 0, 0, 0},
-	{"twoheadleftarrow", 8606, -1, 0, 0, 0},
-	{"twoheadrightarrow", 8608, -1, 0, 0, 0},
-	{"uArr", 8657, -1, 0, 0, 0},
-	{"uHar", 10595, -1, 0, 0, 0},
-	{"uacute", 250, -1, 0, 0, 0},
-	{"uarr", 8593, -1, 0, 0, 0},
-	{"ubrcy", 1118, -1, 0, 0, 0},
-	{"ubreve", 365, -1, 0, 0, 0},
-	{"ucirc", 251, -1, 0, 0, 0},
-	{"ucy", 1091, -1, 0, 0, 0},
-	{"udarr", 8645, -1, 0, 0, 0},
-	{"udblac", 369, -1, 0, 0, 0},
-	{"udhar", 10606, -1, 0, 0, 0},
-	{"ufisht", 10622, -1, 0, 0, 0},
-	{"ufr", 120114, -1, 0, 0, 0},
-	{"ugrave", 249, -1, 0, 0, 0},
-	{"uharl", 8639, -1, 0, 0, 0},
-	{"uharr", 8638, -1, 0, 0, 0},
-	{"uhblk", 9600, -1, 0, 0, 0},
-	{"ulcorn", 8988, -1, 0, 0, 0},
-	{"ulcorner", 8988, -1, 0, 0, 0},
-	{"ulcrop", 8975, -1, 0, 0, 0},
-	{"ultri", 9720, -1, 0, 0, 0},
-	{"umacr", 363, -1, 0, 0, 0},
-	{"uml", 168, -1, 0, 0, 0},
-	{"uogon", 371, -1, 0, 0, 0},
-	{"uopf", 120166, -1, 0, 0, 0},
-	{"uparrow", 8593, -1, 0, 0, 0},
-	{"updownarrow", 8597, -1, 0, 0, 0},
-	{"upharpoonleft", 8639, -1, 0, 0, 0},
-	{"upharpoonright", 8638, -1, 0, 0, 0},
-	{"uplus", 8846, -1, 0, 0, 0},
-	{"upsi", 965, -1, 0, 0, 0},
-	{"upsilon", 965, -1, 0, 0, 0},
-	{"upuparrows", 8648, -1, 0, 0, 0},
-	{"urcorn", 8989, -1, 0, 0, 0},
-	{"urcorner", 8989, -1, 0, 0, 0},
-	{"urcrop", 8974, -1, 0, 0, 0},
-	{"uring", 367, -1, 0, 0, 0},
-	{"urtri", 9721, -1, 0, 0, 0},
-	{"uscr", 120010, -1, 0, 0, 0},
-	{"utdot", 8944, -1, 0, 0, 0},
-	{"utilde", 361, -1, 0, 0, 0},
-	{"utri", 9653, -1, 0, 0, 0},
-	{"utrif", 9652, -1, 0, 0, 0},
-	{"uuarr", 8648, -1, 0, 0, 0},
-	{"uuml", 252, -1, 0, 0, 0},
-	{"uwangle", 10663, -1, 0, 0, 0},
-	{"vArr", 8661, -1, 0, 0, 0},
-	{"vBar", 10984, -1, 0, 0, 0},
-	{"vBarv", 10985, -1, 0, 0, 0},
-	{"vDash", 8872, -1, 0, 0, 0},
-	{"vangrt", 8894, -1, 0, 0, 0},
-	{"varepsilon", 603, -1, 0, 0, 0},
-	{"varkappa", 1008, -1, 0, 0, 0},
-	{"varnothing", 8709, -1, 0, 0, 0},
-	{"varphi", 981, -1, 0, 0, 0},
-	{"varpi", 982, -1, 0, 0, 0},
-	{"varpropto", 8733, -1, 0, 0, 0},
-	{"varr", 8597, -1, 0, 0, 0},
-	{"varrho", 1009, -1, 0, 0, 0},
-	{"varsigma", 962, -1, 0, 0, 0},
-	{"varsubsetneq", 8842, -1, 0, 0, 0},
-	{"varsubsetneqq", 8842, -1, 0, 0, 0},
-	{"varsupsetneq", 8843, -1, 0, 0, 0},
-	{"varsupsetneqq", 8843, -1, 0, 0, 0},
-	{"vartheta", 977, -1, 0, 0, 0},
-	{"vartriangleleft", 8882, -1, 0, 0, 0},
-	{"vartriangleright", 8883, -1, 0, 0, 0},
-	{"vcy", 1074, -1, 0, 0, 0},
-	{"vdash", 8866, -1, 0, 0, 0},
-	{"vee", 8744, -1, 0, 0, 0},
-	{"veebar", 8891, -1, 0, 0, 0},
-	{"veeeq", 8794, -1, 0, 0, 0},
-	{"vellip", 8942, -1, 0, 0, 0},
-	{"verbar", 124, -1, 0, 0, 0},
-	{"vert", 124, -1, 0, 0, 0},
-	{"vfr", 120115, -1, 0, 0, 0},
-	{"vltri", 8882, -1, 0, 0, 0},
-	{"vnsub", 8836, -1, 0, 0, 0},
-	{"vnsup", 8837, -1, 0, 0, 0},
-	{"vopf", 120167, -1, 0, 0, 0},
-	{"vprop", 8733, -1, 0, 0, 0},
-	{"vrtri", 8883, -1, 0, 0, 0},
-	{"vscr", 120011, -1, 0, 0, 0},
-	{"vsubnE", 8842, -1, 0, 0, 0},
-	{"vsubne", 8842, -1, 0, 0, 0},
-	{"vsupnE", 8843, -1, 0, 0, 0},
-	{"vsupne", 8843, -1, 0, 0, 0},
-	{"vzigzag", 10650, -1, 0, 0, 0},
-	{"wcirc", 373, -1, 0, 0, 0},
-	{"wedbar", 10847, -1, 0, 0, 0},
-	{"wedge", 8743, -1, 0, 0, 0},
-	{"wedgeq", 8793, -1, 0, 0, 0},
-	{"weierp", 8472, -1, 0, 0, 0},
-	{"wfr", 120116, -1, 0, 0, 0},
-	{"wopf", 120168, -1, 0, 0, 0},
-	{"wp", 8472, -1, 0, 0, 0},
-	{"wr", 8768, -1, 0, 0, 0},
-	{"wreath", 8768, -1, 0, 0, 0},
-	{"wscr", 120012, -1, 0, 0, 0},
-	{"xcap", 8898, -1, 0, 0, 0},
-	{"xcirc", 9711, -1, 0, 0, 0},
-	{"xcup", 8899, -1, 0, 0, 0},
-	{"xdtri", 9661, -1, 0, 0, 0},
-	{"xfr", 120117, -1, 0, 0, 0},
-	{"xhArr", 62843, -1, 0, 0, 0},
-	{"xharr", 62840, -1, 0, 0, 0},
-	{"xi", 958, -1, 0, 0, 0},
-	{"xlArr", 62841, -1, 0, 0, 0},
-	{"xlarr", 62838, -1, 0, 0, 0},
-	{"xmap", 62845, -1, 0, 0, 0},
-	{"xnis", 8955, -1, 0, 0, 0},
-	{"xodot", 8857, -1, 0, 0, 0},
-	{"xopf", 120169, -1, 0, 0, 0},
-	{"xoplus", 8853, -1, 0, 0, 0},
-	{"xotime", 8855, -1, 0, 0, 0},
-	{"xrArr", 62842, -1, 0, 0, 0},
-	{"xrarr", 62839, -1, 0, 0, 0},
-	{"xscr", 120013, -1, 0, 0, 0},
-	{"xsqcup", 8852, -1, 0, 0, 0},
-	{"xuplus", 8846, -1, 0, 0, 0},
-	{"xutri", 9651, -1, 0, 0, 0},
-	{"xvee", 8897, -1, 0, 0, 0},
-	{"xwedge", 8896, -1, 0, 0, 0},
-	{"yacute", 253, -1, 0, 0, 0},
-	{"yacy", 1103, -1, 0, 0, 0},
-	{"ycirc", 375, -1, 0, 0, 0},
-	{"ycy", 1099, -1, 0, 0, 0},
-	{"yen", 165, -1, 0, 0, 0},
-	{"yfr", 120118, -1, 0, 0, 0},
-	{"yicy", 1111, -1, 0, 0, 0},
-	{"yopf", 120170, -1, 0, 0, 0},
-	{"yscr", 120014, -1, 0, 0, 0},
-	{"yucy", 1102, -1, 0, 0, 0},
-	{"yuml", 255, -1, 0, 0, 0},
-	{"zacute", 378, -1, 0, 0, 0},
-	{"zcaron", 382, -1, 0, 0, 0},
-	{"zcy", 1079, -1, 0, 0, 0},
-	{"zdot", 380, -1, 0, 0, 0},
-	{"zeetrf", 8488, -1, 0, 0, 0},
-	{"zeta", 950, -1, 0, 0, 0},
-	{"zfr", 120119, -1, 0, 0, 0},
-	{"zhcy", 1078, -1, 0, 0, 0},
-	{"zigrarr", 8669, -1, 0, 0, 0},
-	{"zopf", 120171, -1, 0, 0, 0},
-	{"zscr", 120015, -1, 0, 0, 0},
-	{"zzzz", -1, -1, 0, 0, 0}   /* this last entry is required */
-};
-#endif /*_GREEKGESTION*/
+
+  int i;
+  
+  if (h < LOW_HEIGHT)
+    i = CharacterWidth (65, font);
+  else if (h < MID_HEIGHT)
+    i = CharacterWidth (38, font);
+  else 
+    i = CharacterWidth (52, font);
+  return i;
+}
+
+
+
+/*----------------------------------------------------------------------
+  DrawStixChar draw a one glyph symbol.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixChar (PtrFont font, unsigned char symb, 
+		   int x, int y, 
+		   int l, int h, 
+		   int fg, int frame)
+{
+   x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
+   y = y + ((h - CharacterHeight ((char)symb, font)) / 2) 
+     + CharacterAscent ((char) symb, font);
+
+   DrawChar ((char) symb, frame, x, y, font, fg);
+   
+}
+
+/*----------------------------------------------------------------------
+  GetMathFontWidth : Calculates the width of the stix char
+----------------------------------------------------------------------*/
+int GetMathFontWidth (SpecFont fontset,
+		      char shape,
+		      int size,
+		      int height)
+{
+  PtrFont       Ptrfont = NULL;
+  int           i;
+
+  i = 0;
+
+  if (height > 0) 
+    {
+      GetMathFontFromChar (shape,
+			   fontset,
+			   (void **) &Ptrfont,
+			   SizetoLogical(height-5));
+    }
+  else
+    return 0;
+  
+  if (Ptrfont != NULL)
+    {
+      switch (shape)
+	{
+	case 'd':	/* double integral */
+	  i = StixIntegralWidth (size, Ptrfont)/2;
+	case 'i':	/* integral */
+	case 'c':	/* circle integral */
+	  i += StixIntegralWidth (size, Ptrfont);
+	  break;
+	case '(':
+	case ')':
+	  i = StixParenthesisWidth (size, Ptrfont); 
+	  break;
+	case '{':
+	case '}':
+	  i = StixBraceWidth (size, Ptrfont);
+	  break;
+	case '[':
+	case ']':
+	  i = StixBracketWidth (size, Ptrfont);	
+	  break;
+	default:
+	  break;
+	}
+    }
+  return i;
+}
+/*----------------------------------------------------------------------
+   GiveStixSize gives the internal size of a symbol box.
+  ----------------------------------------------------------------------*/
+void GiveStixSize (PtrFont Ptrfont, PtrAbstractBox pAb, 
+		   int *width, int *height, int size)
+{
+  int                 hfont;
+
+  hfont = FontHeight (Ptrfont);
+  *height = hfont * 2;
+  switch (pAb->AbShape)
+    {
+      
+    case 'd':	/* double integral */
+      *width = StixIntegralWidth (size, Ptrfont) + 
+	StixIntegralWidth (size, Ptrfont)/2;
+      *height *= 4;
+      break;      
+    case 'i':	/* integral */
+    case 'c':	/* circle integral */
+      *width = StixIntegralWidth (size, Ptrfont);
+      *height *= 2;
+      break;
+    case '(':
+    case ')':
+      *width = StixParenthesisWidth (size, Ptrfont); 
+      break;
+    case '{':
+    case '}':
+      *width = StixBraceWidth (size, Ptrfont);
+      break;
+    case '[':
+    case ']':
+      *width = StixBracketWidth (size, Ptrfont);	
+      break;
+#ifdef o
+    case '<':
+    case '>':
+      *width = BoxCharacterWidth (241, font);
+      *height = hfont;
+      break;
+    case 'o':       /* overbrace */
+    case 'u':       /* underbrace */
+      *width = *height;
+      *height = hfont / 2;
+      break;
+    case 'I':	/*intersection */
+    case 'U':	/*union */
+      *width = BoxCharacterWidth (229, font);
+      *height = hfont;
+      break;
+#endif /**/
+    }
+}
 
 
 
 
+int GetFontandIndexFromGreekChar (char  *c,
+				  void  **font,
+				  char  *code,
+				  int  *encoding,
+				  int size)
+{
+  *encoding = ISO_8859_7;	      
+  *c = ((int) TtaGetCharFromWC (*c, *encoding));
+  *c = *c - 79;
+  if (*c != 'r')
+   *c = *c - 1;
+  
+  *code = '7';
+  
+  *font = LoadStixFont (10, size);
+  return 1;
+}
 
 
+void GetMathFontFromChar (char typesymb,
+			  SpecFont fontset,
+			  void **font,
+			  int height)
+{
+  static ThotBool IsStixOk = TRUE;
 
-
+  if (IsStixOk)
+    {
+      switch (typesymb)
+	{
+	  /*integral, union...*/
+	case 'i':
+	case 'c':
+	case 'd':	  
+	case 'I':
+	case 'U':
+	case 'o':
+	case 'u':
+	*font =  LoadStixFont (6, height);
+	  break;
+	case '(':
+	case ')':
+	case '{':
+	case '}':
+	case '[':
+	case ']':
+	case '<':
+	case '>':
+	  *font = LoadStixFont (7, height);
+	  break;
+	default:
+	  *font = NULL;	  
+	  return;
+	break;
+      }
+    
+    if (*font == NULL)
+      IsStixOk = FALSE;
+    else
+      IsStixOk = TRUE;
+    }
+}

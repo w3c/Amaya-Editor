@@ -57,6 +57,9 @@ typedef struct _Frame_Ctl {
 #endif /* _WINDOWS */
   ThotWidget Text_Zone;                 /* List of text-zone Widgets         */
   Proc       Call_Text;                 /* List of text-zone Callbacks       */
+#ifdef _GL
+  ThotBool   DblBuffNeedSwap;
+#endif /*_GL*/
 } Frame_Ctl;
 #endif /* !NODISPLAY */
 

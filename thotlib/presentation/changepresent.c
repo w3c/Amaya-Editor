@@ -475,6 +475,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
 	    case PtFillPattern:
 	       return PRFillPattern;
 	       break;
+	    case PtOpacity:
+	       return PROpacity;
+	       break;
 	    case PtBackground:
 	       return PRBackground;
 	       break;

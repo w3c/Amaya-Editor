@@ -66,6 +66,11 @@
 /* Some GL in it */
 #include <gtkgl/gtkglarea.h>
 #include "glwindowdisplay.h"
+#ifdef _SHARELIST
+/* in order to share textures 
+   and displays list between windows*/
+static GtkGLArea *GL_context = NULL;
+#endif /*_SHARELIST*/
 #endif/*  _GL */
 #else /* _GTK */
 #include "input_f.h"
@@ -298,6 +303,11 @@ LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
 			break;
 		}
+		break;
+
+
+	case CBN_SELCHANGE:
+		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
 		break;
 
 	case VK_RETURN: 
@@ -2199,7 +2209,8 @@ void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
    listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
 int TtaAddTextZone (Document doc, View view, char *label,
-		    ThotBool editable, void (*procedure) (), char *listUrl)
+		    ThotBool editable, void (*procedure) (), 
+		    char *listUrl)
 {
   int            frame, ret;
   ThotWidget     w;
@@ -2854,9 +2865,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
        GDK_GL_DOUBLEBUFFER,
        GDK_GL_NONE
      };
-   /* in order to share textures 
-      and displays list between windows*/
-   static GtkGLArea *GL_context = NULL;
 #endif/*  _GL */
 #else /* _GTK */
    ThotWidget          table1;
@@ -3223,31 +3231,40 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* Put the drawing area */
 #ifdef _GL
 	   /* Is opengl working ? */
-	   if(gdk_gl_query() == FALSE)
+	   if(gdk_gl_query() == FALSE) 
 	     {
 	       g_print("OpenGL not supported!\n");
 	       exit(0);
 	     }
+#ifndef _SHARELIST	  
+	   if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
+	     {
+	       g_print("Error creating GtkGLArea!\n");
+	       exit(0);
+	     }
+#else /*_SHARELIST*/
 	   /* can we create a new opengl context 
 	      (or shall we share it with the first one
-	      we had in order to share display list and texture binding ?)*/
+	      we had in order to share display list and texture binding ?)*/	   
 	   if (GL_context == NULL)
 	     {
+	       
 	       if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
 		 {
 		   g_print("Error creating GtkGLArea!\n");
 		   exit(0);
-		 }
+		 }	       
 	       GL_context = (GtkGLArea *) drawing_area;
 	     }
 	   else
 	     {
-	       if ((drawing_area = gtk_gl_area_share_new(attrlist, GL_context)) == NULL) 
-	       {
-		 g_print("Error creating GtkGLArea!\n");
+	       if ((drawing_area = gtk_gl_area_share_new (attrlist, GL_context)) == NULL) 
+		 {
+		   g_print("Error creating GtkGLArea!\n");
 		 exit(0);
-	       }
-	     }
+		 }
+	     }	       
+#endif /*_SHARELIST*/
 #else /*  _GL */
 	   drawing_area = gtk_drawing_area_new ();
 #endif /*  _GL */	  
@@ -3865,7 +3882,19 @@ void DestroyFrame (int frame)
       XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
       XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
-      gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
+#ifdef _GL
+	/* In case of destroying the context frame
+	   we must see if we can find another one
+	   else we'll segfault when drawing*/
+#ifdef _SHARELIST
+	if (GL_context == FrameTable[frame].WdFrame)
+	  {
+
+	  }
+#endif /*_SHARELIST*/
+	
+#endif /*_GL*/
+	gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
       for (i = 0; i < MAX_BUTTON; i++)
 	FrameTable[frame].Button[i] = 0;

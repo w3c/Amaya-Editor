@@ -1022,6 +1022,14 @@ ATTRIBUTES
 	create height_;
 	create DoubleQuote;
 	END;
+	
+   opacity:
+	BEGIN
+	create SAN;
+	create 'opacity="';
+	create opacity;
+	create DoubleQuote;
+	END;
 
    transform:
 	BEGIN

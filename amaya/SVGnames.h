@@ -97,6 +97,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"onbegin", "", 'A', SVG_ATTR_onbegin, L_OtherValue},
    {"onend", "", 'A', SVG_ATTR_onend, L_OtherValue},
    {"onrepeat", "", 'A', SVG_ATTR_onrepeat, L_OtherValue},
+   {"opacity", "", 'A', SVG_ATTR_opacity, L_OtherValue},
    {"origin", "", 'A', SVG_ATTR_origin, L_OtherValue},
    {"path", "", 'A', SVG_ATTR_path_, L_OtherValue},
    {"pathLength", "", 'A', SVG_ATTR_pathLength, L_OtherValue},

@@ -44,6 +44,23 @@
 #ifdef _GTK
 #include <gdk/gdkx.h>
 #include <gtk/gtkprivate.h>
+
+ThotBool is_gtk_font_2byte (PtrFont font)
+{
+  XFontStruct *xfs;
+  
+  xfs = GDK_FONT_XFONT(font);
+  if (xfs->min_byte1 != 0 || 
+      xfs->max_byte1 != 0)
+    {
+#ifdef _PCLDEBUGFONT
+      g_print ("This is a 2-byte font and may not be displayed correctly.");
+#endif /*_PCLDEBUGFONT*/
+      return TRUE;      
+    }
+  return FALSE;  
+}
+
 #endif /*_GTK*/
 
 /*----------------------------------------------------------------------
@@ -302,7 +319,11 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 #ifdef XFTGTK
 	  DrawAAText(frame, font, buff, lg, x, y);
 #else
-	  gdk_draw_string (w, font,TtLineGC, x, y, buff);
+	  if (is_gtk_font_2byte (font))
+	    gdk_draw_text_wc (w, font,TtLineGC, x, y, 
+			     (GdkWChar *)buff, lg * 2);
+	  else
+	    gdk_draw_string (w, font,TtLineGC, x, y, buff);
 #endif
 	  if (hyphen)
 	    /* draw the hyphen */
@@ -378,7 +399,8 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 #ifdef XFTGTK
 	  DrawAAText(frame, font, buff, lg*2, x, y);
 #else
-	gdk_draw_text_wc (w, font,TtLineGC, x, y, (GdkWChar *)buff, lg * 2);
+	gdk_draw_text_wc (w, font,TtLineGC, x, y, 
+			  (GdkWChar *)buff, lg * 2);
 #endif
 	  if (hyphen)
 	    /* draw the hyphen */

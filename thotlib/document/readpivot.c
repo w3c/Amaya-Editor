@@ -1421,6 +1421,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_FILLPATTERN:
       TypeRP = PtFillPattern;
       break;
+    case C_PR_OPACITY:
+      TypeRP = PtOpacity;
+      break;
     case C_PR_BACKGROUND:
       TypeRP = PtBackground;
       break;
@@ -1529,6 +1532,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	sign = ReadSign (pivFile);
 	break;
       case PtFillPattern:
+      case PtOpacity:
       case PtDepth:
 	TtaReadShort (pivFile, &val);
 	break;
@@ -1746,6 +1750,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	    break;
 	  case PtDepth:
 	  case PtFillPattern:
+	  case PtOpacity:
 	    pPRule->PrAttrValue = FALSE;
 	    pPRule->PrIntValue = val;
 	    break;

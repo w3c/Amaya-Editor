@@ -360,6 +360,7 @@ static void         CreatePRule (PRuleType t, indLine wi)
 	    case PtVisibility:
 	    case PtDepth:
 	    case PtFillPattern:
+	    case PtOpacity:
 	    case PtBackground:
 	    case PtForeground:
 	    case PtBorderTopColor:
@@ -2180,6 +2181,14 @@ static void         CheckDefaultRules ()
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtFillPattern;
+	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Opacity par defaut, on en cree une : */
+      /* Opacity: Enclosing =; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtOpacity;
 	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtBackground, pPSchema->PsFirstDefaultPRule) == NULL)

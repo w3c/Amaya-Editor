@@ -14,7 +14,18 @@
 
 #ifdef _FONTCONFIG
 
+#include "thot_sys.h"
+#include "libmsg.h"
+#include "message.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "frame.h"
+#include "appdialogue.h"
 #include "application.h"
+
+#ifdef _GTK
+#include <gdk/gdkx.h>
+#endif /*_GTK*/
 
 /* Each Family can 
    have different 
@@ -45,21 +56,74 @@ typedef struct FontScript
   */
 } FontScript;
 
-void FontConfigCreate ()
+#ifdef O
+/*----------------------------------------------------------------------
+   FontConfigCreate
+  ----------------------------------------------------------------------*/
+static void FontConfigCreate ()
 {
   
 }
-
-void FontConfigUserSelect ()
+/*----------------------------------------------------------------------
+   FontConfigUserSelect                                                    
+  ----------------------------------------------------------------------*/
+static void FontConfigUserSelect ()
 {
 
 }
+#endif
 
+#ifndef _GL
+/*----------------------------------------------------------------------
+   IsXLFDName                                                    
+  ----------------------------------------------------------------------*/
+static ThotBool IsXLFDName (char *font)
+{
+  int k = 0;
+    
+  while (*font)
+    if (*font++ == '-')
+      k++;
+  return (k == 14) ? TRUE : FALSE;
+}
+/*----------------------------------------------------------------------
+   IsXLFDFont                                                    
+  ----------------------------------------------------------------------*/
+static int IsXLFDPatterneAFont (char *pattern)
+{
+#ifdef _GTK
+  char **fontlist;
+  int count=0;  
+
+  if (IsXLFDName (pattern))
+    {
+      fontlist = XListFonts (GDK_DISPLAY(), 
+			     pattern, 
+			     1, 
+			     &count);
+      if (count)
+	{
+	  XFreeFontNames(fontlist);
+	  return 1;      
+	}
+    }
+  return 0;
+#else /*_GTK*/
+  return IsXLFDName (pattern);  
+#endif /*_GTK*/
+}
+#endif /*_GL*/
+/*----------------------------------------------------------------------
+   isnum                                                    
+  ----------------------------------------------------------------------*/
 static int isnum( char c )
 {
   return( c >= '0' && c <= '9' ? 1 : 0 );
 }
 
+/*----------------------------------------------------------------------
+   AdvanceNextWord                                                    
+  ----------------------------------------------------------------------*/
 static int AdvanceNextWord (unsigned char *line, int indline)
 {
   
@@ -70,12 +134,6 @@ static int AdvanceNextWord (unsigned char *line, int indline)
 	while (line[indline] != EOL 
 	       && line[indline] != EOS)
 	  indline++;
-      /* skip spaces if there are */
-      /*
-	while (line[indline] <= SPACE 
-	     && line[indline] != EOS)
-	     indline++;
-      */
       indline++;
     }
   return indline;
@@ -126,7 +184,7 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 	   word[indword++] = EOS;
 	   indline++;
 	   /*we return to the '1=' */
-	   while (line[indline] > SPACE && 
+	   while (line[indline] >= SPACE && 
 		  line[indline] != ';' &&
 		  line[indline] != EOS)
 	     word[indword++] = line[indline++];
@@ -179,8 +237,10 @@ static int getFontFamily (int indline, unsigned char *line, char *word)
 
 #undef MAX_TXT_LEN
 #define MAX_TXT_LEN 8144 
-
-FontScript **FontConfigLoad ()
+/*----------------------------------------------------------------------
+   FontConfigLoad : Fill a structure for name - font correspondance
+  ----------------------------------------------------------------------*/
+static FontScript **FontConfigLoad ()
 {  
   FontScript         **Fonts;
   FILE               *file;
@@ -277,7 +337,9 @@ FontScript **FontConfigLoad ()
 }
 
 static FontScript **Fonttab = NULL;
-
+/*----------------------------------------------------------------------
+   FontLoadFromConfig : GEt a font dame upon its characteristics
+  ----------------------------------------------------------------------*/
 char *FontLoadFromConfig (char script, 
 			  int family, 
 			  int highlight)
@@ -297,9 +359,27 @@ char *FontLoadFromConfig (char script,
       break;
     case 'E':
       /* ESSTIX FONTS ???*/
-      intscript = 20;
-      family = 1;
-      highlight = 1;
+	intscript = 21;
+	switch (family)
+	{
+	case 6:
+	    family = 2;
+	    highlight = 1;
+	    break;
+	case 7:
+	    family = 2;
+	    highlight = 2;
+	    break;	  
+	case 10:
+	    family = 3;
+	    highlight = 1;
+	    break;
+	default:
+	    intscript = 20;
+	    family = 1;
+	    highlight = 1;
+	    break;
+	}
       break;
     case 'G':
       /*Symbols*/
@@ -324,37 +404,64 @@ char *FontLoadFromConfig (char script,
       break;
     }
 
-  switch (highlight)
+  if (intscript != 21)
     {
-    case 0:
-      highlight = 1;
-      break;
-    case 4:
-      highlight = 3;
-      break;
-    case 5:
-      highlight = 3;
-      break;
-    default:
-      if (highlight > 5 || highlight < 0)
-	highlight = 1;
-      break;
+      switch (highlight)
+	{
+	case 0:
+	  highlight = 1;
+	  break;
+	case 4:
+	  highlight = 3;
+	  break;
+	case 5:
+	  highlight = 3;
+	  break;
+	default:
+	  if (highlight > 5 || highlight < 0)
+	    highlight = 1;
+	  break;
+	}
     }
-
-  if (family < 0 || family > 5)
+  
+    if (family < 0 || family > 5)
     family = 1;
 
   if (Fonttab[intscript])
     if (Fonttab[intscript]->family[family])
+    {
+#ifdef _PCLFONTDEBUG
+      g_print ("\n%s",
+	       Fonttab[intscript]->family[family]->highlight[highlight]);
+#endif /*_PCLFONTDEBUG*/
+#ifndef _GL
+#ifndef _WINDOWS
+      if (IsXLFDPatterneAFont (Fonttab[intscript]->family[family]->highlight[highlight]))
+      	return (Fonttab[intscript]->family[family]->highlight[highlight]);
+      else
+	return NULL;
+#else /*_WINDOWS*/
       return (Fonttab[intscript]->family[family]->highlight[highlight]);
+#endif /*_WINDOWS*/
+#else /*_GL*/
+      return  (Fonttab[intscript]->family[family]->highlight[highlight]);
+#endif /*_GL*/
+    }
   
   return NULL;
 }
 
+  
 
+/*----------------------------------------------------------------------
+   FreeFontConfig : Free teh correspondance structure
+  ----------------------------------------------------------------------*/
 void FreeFontConfig ()
 {
   int script, family, highlight;
+  
+  if (Fonttab == NULL)
+    return;
   
   script = 0;
   while (script < 30)

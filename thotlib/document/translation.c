@@ -2652,6 +2652,9 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      case PtFillPattern:
 		PutPattern (pRPres->PrIntValue, fnum, pDoc, *lineBreak);
 		break;
+	      case PtOpacity:
+		PutInt (pRPres->PrIntValue, fnum,  NULL, pDoc, *lineBreak);
+		break;
 	      case PtBackground:
 	      case PtForeground:
 		PutColor (pRPres->PrIntValue, fnum, pDoc, *lineBreak);

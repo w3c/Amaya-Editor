@@ -795,8 +795,10 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   AttributePres      *attrs;
   char               *attrVal;
   unsigned int        elementType;
-  int                 nbrules, match;
+  int                 nbrules;
   int                 i, j, val;
+  unsigned int        match;
+  
 
   /* select the right attribute */
   attrs = tsch->PsAttrPRule->AttrPres[attrType - 1];
@@ -846,7 +848,8 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 		}
 	      break;
 	    case AtTextAttr:
-	      if (attrVal && !strcmp (attrs->ApString, attrVal) &&
+	      if (attrVal &&
+		  !strcmp (attrs->ApString, attrVal) &&
 		  attrs->ApMatch == match)
 		ppRule = &(attrs->ApTextFirstPRule);
 	      else if (!attrVal && attrs->ApString[0] == EOS)
@@ -1391,6 +1394,13 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrAttrValue = 0;
       rule->PrIntValue = value;
       break;
+
+    case PtOpacity:
+      rule->PrPresMode = PresImmediate;
+      rule->PrAttrValue = 0;
+      rule->PrIntValue = value;
+      break;
+
     case PtFont:
       rule->PrPresMode = PresImmediate;
       switch (value)
@@ -1914,9 +1924,9 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtBorderRightColor:
     case PtBorderBottomColor:
     case PtBorderLeftColor:
+    case PtOpacity:
       value = rule->PrIntValue;
       break;
-
     case PtFont:
       switch (rule->PrChrValue)
 	{
@@ -2454,6 +2464,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRFillPattern:
       *intRule = PtFillPattern;
       break;
+    case PROpacity:
+      *intRule = PtOpacity;
+      break;
     case PRBackground:
       *intRule = PtBackground;
       break;
@@ -2639,6 +2652,9 @@ static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setti
       break;
     case PtFillPattern:
       setting->type = PRFillPattern;
+      break;
+    case PtOpacity:
+      setting->type = PROpacity;
       break;
     case PtBackground:
       setting->type = PRBackground;

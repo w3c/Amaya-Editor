@@ -7,7 +7,7 @@
 AMAYAVERSION=v.r
 THOTDIR=$PWD/../..
 DEST=$HOME
-PLATFORMS="solaris8 LINUX-ELF GTK"
+PLATFORMS="solaris8 LINUX-ELF GTK GL"
 
 TAR="tar cvzfh "
 COMPRESS="gzip -9"

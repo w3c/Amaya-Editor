@@ -27,8 +27,6 @@ typedef struct _XArc {
 
 #ifdef _GTK
 
-void glMatroxBUG (int frame, int x, int y, int width, int height);
-
 gboolean GL_DrawCallback (ThotWidget widget, 
 			  GdkEventExpose *event, 
 			  gpointer data);
@@ -46,6 +44,8 @@ gboolean  GL_Destroy (ThotWidget widget,
 		      gpointer data);
 #endif /*_GTK*/
 
+
+int glMatroxBUG (int frame, int x, int y, int width, int height);
 
 /* Drawing */
 void InitDrawing (int style, int thick, int fg);
@@ -77,7 +77,7 @@ int GL_UnicodeDrawString (int fg,
 void GL_DrawUnicodeChar (CHAR_T const c, 
 			 float x, float y, 
 			 void *GL_font, int fg);
-void GL_DrawStixChar (void *GL_font, CHAR_T const c, int x, int y, 
+void GL_DrawStixChar (void *GL_font, unsigned char const c, int x, int y, 
 		      int fg, int size, int l, int h, int Totalheight);
 
 
@@ -85,7 +85,7 @@ void GL_DrawStixChar (void *GL_font, CHAR_T const c, int x, int y,
 
 /* GL specific */
 void GL_Swap (int frame);
-int GL_MakeCurrent (int frame);
+int  GL_MakeCurrent (int frame);
 void SetGlPipelineState ();
 void GLResize (int width, int height, int x, int y);
 void GL_SetForeground (int fg);
@@ -95,12 +95,13 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height);
 void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Totalheight);
 
+void GL_SetOpacity (int opacity);
 
 void GL_ActivateDrawing();
 void GL_DrawAll (ThotWidget widget, int frame);
 
 
-ThotBool GL_prepare (ThotWidget *widget);
+ThotBool GL_prepare (ThotWidget *widget, int frame);
 ThotBool SavePng (const char *filename, 
 		 unsigned char *m_pData,
 		 unsigned int m_width,
@@ -108,6 +109,5 @@ ThotBool SavePng (const char *filename,
 void GL_realize ();
 
 void saveBuffer (int width, int height);
-
 
 #endif

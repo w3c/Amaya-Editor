@@ -220,6 +220,9 @@ void CopyPictInfo (int *Imdcopie, int *Imdsource)
    imagec->PicHeight = images->PicHeight;
    imagec->PicPresent = images->PicPresent;
    imagec->PicType = images->PicType;
+#ifdef _GL
+   imagec->TextureBind = images->TextureBind;
+#endif /*_GL*/
 }
 
 
