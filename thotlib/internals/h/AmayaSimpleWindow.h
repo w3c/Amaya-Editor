@@ -47,6 +47,7 @@ class AmayaSimpleWindow : public AmayaWindow
   virtual ~AmayaSimpleWindow();
 
   virtual AmayaFrame * GetActiveFrame() const;
+  virtual void         CleanUp();
 
   bool         AttachFrame( AmayaFrame * p_frame );
   AmayaFrame * DetachFrame();

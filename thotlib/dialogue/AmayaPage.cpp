@@ -34,11 +34,10 @@
 
 #include "wx/log.h"
 
-#include "AmayaWindow.h"
+#include "AmayaNormalWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaPage.h"
 #include "AmayaNotebook.h"
-//#include "AmayaCanvas.h"
 
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
@@ -734,6 +733,22 @@ void AmayaPage::SetWindowEnableToolBarButtons( int frame_id )
  */
 void AmayaPage::SetPageId( int page_id )
 {
+  // update each owned frames
+  int frame_id = 1;
+  while( frame_id < MAX_FRAME )
+    {
+      if (!TtaFrameIsClosed(frame_id))
+	{
+	  // if this frame is owned by this page
+	  if (FrameTable[frame_id].FrPageId == m_PageId)
+	    {
+	      FrameTable[frame_id].FrPageId = page_id;	      
+	    }
+	}
+      frame_id++;
+    }
+
+  // update the internal page_id with the new one
   m_PageId = page_id;
 }
 /*

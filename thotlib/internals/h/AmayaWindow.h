@@ -88,6 +88,7 @@ class AmayaWindow : public wxFrame
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
   int           GetKind() const { return m_Kind; }
 
+  virtual void         CleanUp();
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
 
@@ -129,6 +130,7 @@ class AmayaWindow : public wxFrame
 
  protected:
   void OnSize( wxSizeEvent& event );
+  void OnIdle( wxIdleEvent& event );
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -137,6 +139,7 @@ class AmayaWindow : public wxFrame
   int               m_WindowId;           // amaya window id
   int               m_DocsId[MAX_DOC];    // documents contained by this window
   bool              m_IsClosing;
+  bool              m_ShouldCleanUp;
 };
 
 #endif // __AMAYAWINDOW_H__

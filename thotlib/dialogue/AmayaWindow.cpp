@@ -65,6 +65,7 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_IsClosing( FALSE ),
   m_Kind( kind )
 {
+  wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
 }
 
 /*
@@ -76,6 +77,7 @@ AmayaWindow::AmayaWindow (  int            window_id
  */
 AmayaWindow::~AmayaWindow()
 {
+  wxLogDebug( _T("AmayaWindow::~AmayaWindow: window_id=%d"), m_WindowId );
   // empty the current window entry
   memset(&WindowTable[m_WindowId], 0, sizeof(Window_Ctl));
 }
@@ -373,6 +375,28 @@ AmayaFrame * AmayaWindow::DetachFrame()
   return NULL;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  CleanUp
+ * Description:  check that there is no empty pages
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::CleanUp()
+{
+}
+
+void AmayaWindow::OnIdle( wxIdleEvent& event )
+{
+  if (m_ShouldCleanUp)
+    {
+      m_ShouldCleanUp = false;
+      /* now check that there is no empty pages */
+      TtaCleanUpWindow( GetWindowId() );
+    }
+
+  event.Skip();
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -380,6 +404,7 @@ AmayaFrame * AmayaWindow::DetachFrame()
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE( AmayaWindow::OnSize )
+  EVT_IDLE( AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

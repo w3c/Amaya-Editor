@@ -566,6 +566,41 @@ AmayaToolBar * AmayaNormalWindow::GetAmayaToolBar()
   return m_pToolBar;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  CleanUp
+ * Description:  check that there is no empty pages
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::CleanUp()
+{
+  int         page_id = 0;
+  AmayaPage * p_page  = NULL;
+  while ( page_id < GetPageCount() )
+    {
+      p_page = GetPage( page_id );
+      if ( !p_page->GetFrame(1) && !p_page->GetFrame(2) )
+	{
+	  // the page do not have anymore frames !
+	  // close it
+	  p_page->Close();
+	  m_pNotebook->DeletePage(page_id);
+	  m_pNotebook->UpdatePageId();
+	  TtaHandlePendingEvents ();
+	}
+      else
+	page_id++;
+    }
+
+
+
+  // now check that notebook is not empty
+  if (GetPageCount() == 0)
+    Close();
+}
+
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type

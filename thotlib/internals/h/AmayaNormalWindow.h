@@ -61,6 +61,7 @@ class AmayaNormalWindow : public AmayaWindow
 
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
+  virtual void         CleanUp();
 
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface

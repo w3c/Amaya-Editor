@@ -2397,7 +2397,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       TtaGetActiveView( &oldDoc, &activeView );
       /* now if there is no active document,
 	 then really create a new window even if inNewWindow was FALSE */
-      if (oldDoc == 0)
+      /* TODO: trouver une meilleur methode pour ne pas afficher un CSS ds la meme fenetre que les erreurs (docLog) */
+      if (oldDoc == 0 || DocumentTypes[oldDoc] == docLog)
 	inNewWindow = TRUE;
     }
 
@@ -2469,10 +2470,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* get the old document window */
        isOpen = TRUE;
        window_id = TtaGetDocumentWindowId( doc, -1 );
-       if (docType == docSource || docType == docLog)
+       if (docType == docSource)
 	 {
+	   /* if the document is a source view, open it into the same page as formatted view */
 	   TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
-	   
+	   page_position = 2;     
+#if 0
 	   /* check what type of document is allready opened in order to adapte 
 	      what should be open and where 
 	      ex: open the source view in the bottom frame if there is no Log */
@@ -2493,6 +2496,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     }
 	   else
 	     page_position = 2;
+#endif /* 0 */
 	 }
        else
 	 {
@@ -2608,7 +2612,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
 	     }
 	   else
-	     window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, parent_window_id );
+	     {
+	       /* a normal window should never had a parent ! */
+	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
+	     }
 	   page_id = TtaGetFreePageId( window_id );
 	   page_position = 1;    
 	 }

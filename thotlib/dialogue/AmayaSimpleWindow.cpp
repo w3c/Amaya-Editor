@@ -178,14 +178,33 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
   AmayaFrame * p_frame = m_pFrame;
   if (m_pFrame)
     {
+      m_pFrame->Hide();
       m_pTopSizer->Detach(0);
       Layout();
       //      p_frame->Reparent( NULL );
       m_pFrame = NULL;
     }
+
+  // if we detach the frame form a simple window, it's because we want to kill the window
+  // so close it
+  //Close();
+
   return p_frame;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSimpleWindow
+ *      Method:  CleanUp
+ * Description:  check that this is not an empty window
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSimpleWindow::CleanUp()
+{
+  // now check that the frame exist
+  if (!m_pFrame)
+    Close();
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared

@@ -277,6 +277,8 @@ int TtaMakeFrame( const char * schema_name,
       /* get the first existing window (a virtual parent) */
       /* the window parent is override when the frame is attached to a page */
       int window_id = 1;
+      while ( window_id < MAX_WINDOW && !WindowTable[window_id].WdWindow )
+	  window_id++;
       AmayaWindow * p_AmayaWindow = WindowTable[window_id].WdWindow; 
       wxASSERT_MSG(p_AmayaWindow, _T("TtaMakeFrame: the window must be created before any frame"));
       
@@ -474,13 +476,13 @@ ThotBool TtaDestroyFrame( int frame_id )
 #ifdef _WX
   wxLogDebug(_T("TtaDestroyFrame: frame_id=%d"), frame_id);
 
-  AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
+  int          window_id = FrameTable[frame_id].FrWindowId;
+  AmayaFrame * p_frame   = FrameTable[frame_id].WdFrame;
   
   if (!p_frame)
     return FALSE;
   
   TtaDetachFrame( frame_id );
-
   TtaHandlePendingEvents();
   p_frame->FreeFrame();
 
@@ -489,6 +491,35 @@ ThotBool TtaDestroyFrame( int frame_id )
   return FALSE;
 #endif /* #ifdef _WX */
 }
+
+/*----------------------------------------------------------------------
+  TtaCleanUpWindow check that there is no empty pages
+  params:
+    + int window_id : the window which contains the pages
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaCleanUpWindow( int window_id )
+{
+  AmayaWindow * p_window = NULL;
+  if (window_id == 0)
+    {
+      /* check every existing windows */
+      window_id = 1;
+      while ( window_id < MAX_WINDOW )
+	{
+	  TtaCleanUpWindow( window_id );
+	  window_id++;
+	}
+    }
+  else
+    {
+      /* check only one window */
+      p_window = TtaGetWindowFromId( window_id );
+      if (p_window)
+	p_window->CleanUp();
+    }
+}
+
 
 /*----------------------------------------------------------------------
   TtaGetFreePageId returns a free page id for the given window
