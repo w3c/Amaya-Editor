@@ -195,7 +195,7 @@ STRUCT
 
   Definition_Item (ATTR COMPACT) = BEGIN
 	Term_List = LIST OF (Term = Basic_Set);
-	Definition = LIST OF (Block);
+	? Definition = LIST OF (Block);
 	END;
 
   Form (ATTR !Script_URL = Text; METHOD = Get_, Post_; ENCTYPE = Text) =

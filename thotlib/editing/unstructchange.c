@@ -735,7 +735,7 @@ int                *lastChar;
 /*----------------------------------------------------------------------
    ReturnCreateNewElem
    verifie si la touche Return frappee a la fin (ou au debut, selon begin)
-   de l'element pEl (qui fait partie de l'element CsList pListEl) doit 
+   de l'element pEl (qui fait partie de l'element liste pListEl) doit 
    creer un element de meme type que pEl ou un element d'un type different.
    Retourne le type de l'element a creer dans (typeNum, pSS).
   ----------------------------------------------------------------------*/
@@ -795,13 +795,13 @@ void                TtcCreateElement (doc, view)
 {
    PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling,
                        pClose, pAncest, pElem, pParent, pElDelete, pPrevious,
-                       pNext, pElReplicate;
+                       pNext, pElReplicate, pAggregEl;
    PtrDocument         pDoc;
    PtrSSchema          pSS;
    NotifyElement       notifyEl;
    int                 firstChar, lastChar, NSiblings, typeNum;
    boolean             ok, replicate, createAfter, selBegin, selEnd, ready,
-                       empty;
+                       empty, list, optional;
 
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
@@ -811,11 +811,15 @@ void                TtcCreateElement (doc, view)
       /* il y a bien une selection et le document est modifiable */
      {
 	pListEl = NULL;
+	pAggregEl = NULL;
 	createAfter = TRUE;
 	replicate = TRUE;
 	ready = FALSE;
 	empty = FALSE;
+	list = TRUE;
 	pElDelete = NULL;
+	typeNum = 0;
+	pSS = NULL;
 
 	/* si la selection ne comprend qu'un element vide, on essaie de */
 	/* remplacer cet element vide par un autre au niveau superieur */
@@ -832,11 +836,38 @@ void                TtcCreateElement (doc, view)
 		     pListEl = AncestorList (pParent);
 		     if (pListEl == NULL)
 		       {
-			  pParent = pParent->ElParent;
-			  if (pParent != NULL)
-			     pListEl = AncestorList (pParent);
+			  if (GetElementConstruct (pParent->ElParent) == CsAggregate)
+			    {
+			    SRuleForSibling (pParent, FALSE, 1, &typeNum, &pSS,
+					     &list, &optional);
+			    if (typeNum == 0)
+				list = TRUE;
+			    if (typeNum > 0 && !list)
+			       {
+			       pAggregEl = pParent->ElParent;
+			       ready = TRUE;
+			       pElDelete = pElem;
+			       pElReplicate = pParent;
+			       replicate = FALSE;
+			       if (pElem->ElPrevious != NULL && pElem->ElNext == NUL)
+			          createAfter = TRUE;
+			       else if (pElem->ElNext != NULL && pElem->ElPrevious == NULL)
+				  createAfter = FALSE;
+			       else
+				  {
+				  list = TRUE;
+				  pAggregEl = NULL;
+				  }
+			       }
+			    }
+			  if (pAggregEl == NULL)
+			    {
+			    pParent = pParent->ElParent;
+			    if (pParent != NULL)
+			       pListEl = AncestorList (pParent);
+			    }
 		       }
-		     if (pListEl != NULL)
+		     if (list && pListEl != NULL)
 		       {
 			  if (pElem->ElPrevious != NULL && pElem->ElNext == NULL)
 			    {
@@ -870,7 +901,7 @@ void                TtcCreateElement (doc, view)
 				  pListEl = NULL;
 			    }
 		       }
-		     if (pListEl == NULL)
+		     if (list && pListEl == NULL)
 		       {
 			  pListEl = AncestorList (pElem);
 			  if (pListEl != NULL)
@@ -882,7 +913,7 @@ void                TtcCreateElement (doc, view)
 			    }
 		       }
 		  }
-	     if (ready)
+	     if (ready && list)
 	       {
 		  replicate = FALSE;
 		  ReturnCreateNewElem (pListEl, pElReplicate, !createAfter, pDoc,
@@ -982,8 +1013,10 @@ void                TtcCreateElement (doc, view)
 	if (pListEl != NULL)
 	   if (!CanChangeNumberOfElem (pListEl, 1))
 	      pListEl = NULL;
-	if (pListEl != NULL)
+	if (pListEl != NULL || pAggregEl != NULL)
 	  {
+	     if (pListEl == NULL)
+		pListEl = pAggregEl;
 	     /* demande a l'application si on peut creer ce type d'element */
 	     notifyEl.event = TteElemNew;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
@@ -997,7 +1030,8 @@ void                TtcCreateElement (doc, view)
 		  NSiblings++;
 		  pSibling = pSibling->ElPrevious;
 	       }
-	     NSiblings++;
+	     if (createAfter)
+	        NSiblings++;
 	     notifyEl.position = NSiblings;
 	     if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
 		/* l'application refuse */
