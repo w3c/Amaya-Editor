@@ -503,4 +503,6 @@ EXCEPT
    MRowExt:             Invisible;
    MLineBelow:	        Invisible;
    MLineOnTheRight:	Invisible;
+   MLineBelowExt:	Invisible;
+   MLineOnTheRightExt:	Invisible;
 END
