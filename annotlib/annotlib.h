@@ -188,6 +188,7 @@ extern List *annot_schema_list;  /* a list of schemas */
 extern CHAR_T *ANNOT_NS;
 extern CHAR_T *ANNOTATION_CLASSNAME;
 extern RDFClassP ANNOTATION_CLASS;
+extern RDFClassP DEFAULT_ANNOTATION_TYPE;
 extern RDFPropertyP PROP_Email;
 extern RDFPropertyP PROP_name;
 extern RDFPropertyP PROP_firstName;

@@ -562,7 +562,7 @@ ThotBool useDocRoot;
   annot->mdate = TtaStrdup (annot->cdate);
 
   /* Annotation type */
-  annot->type = ANNOTATION_CLASS;
+  annot->type = DEFAULT_ANNOTATION_TYPE;
 
   /* Annotation XPointer */
   annot->xptr = XPointer_build (source_doc, 1, useDocRoot);

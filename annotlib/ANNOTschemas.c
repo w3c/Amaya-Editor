@@ -49,6 +49,7 @@ RDFPropertyP PROP_name = NULL;
 RDFPropertyP PROP_firstName = NULL;
 RDFPropertyP PROP_Email = NULL;
 RDFClassP ANNOTATION_CLASS;
+RDFClassP DEFAULT_ANNOTATION_TYPE;
 
 typedef struct _ReadCallbackContext
 {
@@ -444,14 +445,16 @@ static void SetAnnotNS ()
     ANNOTATION_CLASS = ANNOT_FindRDFResource (&annot_schema_list,
 					      FALLBACK_ANNOTATION_CLASSNAME,
 					      TRUE);
+
+  /* Establish an ultimate fallback type for new annotations */
+  DEFAULT_ANNOTATION_TYPE = ANNOTATION_CLASS;
 }
 
 
 /*------------------------------------------------------------
    SCHEMA_InitSchemas
   ------------------------------------------------------------
-   Initializes the annotation schemas from a config file.
-  
+   Initializes the annotation schemas (annot_schema_list) from a config file.
   ------------------------------------------------------------*/
 #ifdef __STDC__
 void SCHEMA_InitSchemas (Document doc)
@@ -606,6 +609,41 @@ void SCHEMA_InitSchemas (doc)
 
   fclose (fp);
   TtaFreeMemory (buffer);
+
+  /* Establish a default type for new annotations. */
+
+  /* @@ RRS: ANNOT_DEFAULT_TYPE should be accessible from the config menu */
+  buffer = TtaGetEnvString ("ANNOT_DEFAULT_TYPE");
+  if (!buffer)
+    buffer = TEXT("Comment");	/* fallback default type */
+
+  /* two options; user can specify a full property URI or just the localname */
+  if (IsW3Path (buffer)) /* full URI */
+    DEFAULT_ANNOTATION_TYPE = ANNOT_FindRDFResource (&annot_schema_list,
+						     buffer,
+						     TRUE);
+  else /* localname only */
+    { /* Search the subtypes of ANNOTATION_CLASS for one whose name matches */
+      RDFClassP annotType = ANNOTATION_CLASS;
+      if (annotType && annotType->class)
+	{
+	  int len = strlen (buffer);
+	  List *item = annotType->class->subClasses;
+	  for (; item; item=item->next)
+	    {
+	      RDFClassP annotType = (RDFClassP)item->object;
+	      int p = strlen (annotType->name) - len;
+
+	      /* @@ RRS: should check the entire localname, not just the tail.
+		 Use rdfs:isDefinedBy to split out the namespace name. */
+	      if (!strncmp (buffer, &annotType->name[p], len))
+		{
+		  DEFAULT_ANNOTATION_TYPE = annotType;
+		  break;
+		}
+	    }
+	}
+    }
 }
 
 
@@ -662,7 +700,7 @@ static ThotBool SCHEMA_FreeRDFResource( void *item )
    SCHEMA_FreeAnnotSchema
   ------------------------------------------------------------
    Frees the dynamic heap for all resources in the RDF Model
-   for the loads schema(s)
+   for the loaded schema(s)
   ------------------------------------------------------------*/
 #ifdef __STDC__
 void SCHEMA_FreeAnnotSchema( void )
@@ -670,11 +708,15 @@ void SCHEMA_FreeAnnotSchema( void )
 void SCHEMA_FreeAnnotSchema()
 #endif /* __STDC__ */
 {
-  List_delAll (&annot_schema_list, SCHEMA_FreeRDFResource);
+  SCHEMA_FreeRDFModel (&annot_schema_list);
   subclassOfP = NULL;
   typeP = NULL;
   labelP = NULL;
+  PROP_name = NULL;
+  PROP_firstName = NULL;
   PROP_Email = NULL;
+  ANNOTATION_CLASS = NULL;
+  DEFAULT_ANNOTATION_TYPE = NULL;
   FreeAnnotNS();
 }
 
