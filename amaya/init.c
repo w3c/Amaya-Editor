@@ -2611,8 +2611,7 @@ View                view;
    documentname = TtaAllocString (MAX_LENGTH);
    /* if the document is a template, restore the template script URL */
    if (DocumentMeta[doc]->method == CE_TEMPLATE)
-      /* ReloadTemplateParams (&(DocumentURLs[doc]), &(DocumentMeta[doc]->method)); */
-      ReloadTemplateParams (DocumentURLs[doc], &(DocumentMeta[doc]->method));
+      ReloadTemplateParams (&(DocumentURLs[doc]), &(DocumentMeta[doc]->method));
    NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
    if (DocumentMeta[doc]->form_data)
      form_data = TtaWCSdup (DocumentMeta[doc]->form_data);

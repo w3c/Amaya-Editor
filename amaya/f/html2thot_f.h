@@ -35,6 +35,9 @@ extern void CreateAttrWidthPercentPxl ( STRING buffer,
 extern void CreateAttrIntSize ( STRING buffer,
                                 Element el,
                                 Document doc );
+extern void GetFallbackCharacter ( int code,
+                                   USTRING fallback,
+                                   Language* lang );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
 extern void SetElemLineNumber ( Element el );
@@ -88,6 +91,9 @@ extern void CreateAttrWidthPercentPxl (/* STRING buffer,
 extern void CreateAttrIntSize (/* STRING buffer,
                                   Element el,
                                   Document doc */);
+extern void GetFallbackCharacter (/* int code,
+                                     USTRING fallback,
+                                     Language* lang */);
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
 extern void SetElemLineNumber (/* Element el */);

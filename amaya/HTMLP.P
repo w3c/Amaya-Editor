@@ -5922,6 +5922,7 @@ RULES
 #endif
 	IN Structure_view BEGIN
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		MarginTop: 0;
 		MarginLeft: 0;
 		MarginRight: 0;
 #ifndef PAGE
@@ -5930,6 +5931,9 @@ RULES
 #endif
 		END;
 	IN Links_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginRight: 0;
 		Visibility: Enclosing =;
 		Height: Enclosed . Height;
 		END;
@@ -6883,6 +6887,7 @@ RULES
  XMLGraphics: BEGIN
 	CreateBefore(Graph_S);
 	VertPos: Top = Previous NOT MAP . Bottom;
+	Gather: Yes;
 	MarginTop: 0.4;
 	LineBreak: No;
 	LineWeight: 0;

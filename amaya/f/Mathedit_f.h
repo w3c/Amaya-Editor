@@ -17,6 +17,8 @@ extern void CreateMROOT ( Document document,
                           View view );
 extern void CreateMSQRT ( Document document,
                           View view );
+extern void CreateMENCLOSE ( Document document,
+                             View view );
 extern void CreateMFRAC ( Document document,
                           View view );
 extern void CreateMSUBSUP ( Document document,
@@ -37,8 +39,6 @@ extern void CreateMMULTISCRIPTS ( Document document,
                                   View view );
 extern void CreateMTABLE ( Document document,
                            View view );
-extern void CreateCharStringElement ( int typeNum,
-                                      Document doc );
 extern void CreateMTEXT ( Document document,
                           View view );
 extern void CreateMI ( Document document,
@@ -48,8 +48,8 @@ extern void CreateMN ( Document document,
 extern void CreateMO ( Document document,
                        View view );
 extern void InitMathML ( void );
-extern void CreateMathEntity ( Document document,
-                               View view );
+extern void CreateMCHAR ( Document document,
+                          View view );
 extern void SetMathCharFont ( Document doc,
                               int attribute );
 extern void MtextCreated ( NotifyElement *event );
@@ -71,6 +71,9 @@ extern void MathAttrColorCreated ( NotifyAttribute *event );
 extern ThotBool MathAttrColorDelete ( NotifyAttribute *event );
 extern void MathAttrBackgroundCreated ( NotifyAttribute *event );
 extern ThotBool MathAttrBackgroundDelete ( NotifyAttribute *event );
+extern void AttrStretchyChanged ( NotifyAttribute *event );
+extern void AttrBeveledChanged ( NotifyAttribute *event );
+extern void AttrNameChanged ( NotifyAttribute *event );
 extern void AttrOpenCloseChanged ( NotifyAttribute *event );
 extern void FencedSeparatorModified ( NotifyOnTarget *event );
 extern void AttrSeparatorsChanged ( NotifyAttribute *event );
@@ -88,6 +91,8 @@ extern void CreateMROOT (/* Document document,
                             View view */);
 extern void CreateMSQRT (/* Document document,
                             View view */);
+extern void CreateMENCLOSE (/* Document document,
+                               View view */);
 extern void CreateMFRAC (/* Document document,
                             View view */);
 extern void CreateMSUBSUP (/* Document document,
@@ -108,8 +113,6 @@ extern void CreateMMULTISCRIPTS (/* Document document,
                                     View view */);
 extern void CreateMTABLE (/* Document document,
                              View view */);
-extern void CreateCharStringElement (/* int typeNum,
-                                        Document doc */);
 extern void CreateMTEXT (/* Document document,
                             View view */);
 extern void CreateMI (/* Document document,
@@ -119,8 +122,8 @@ extern void CreateMN (/* Document document,
 extern void CreateMO (/* Document document,
                          View view */);
 extern void InitMathML (/* void */);
-extern void CreateMathEntity (/* Document document,
-                                 View view */);
+extern void CreateMCHAR (/* Document document,
+                            View view */);
 extern void SetMathCharFont (/* Document doc,
                                 int attribute */);
 extern void MtextCreated (/* NotifyElement *event */);
@@ -142,6 +145,9 @@ extern void MathAttrColorCreated (/* NotifyAttribute *event */);
 extern ThotBool MathAttrColorDelete (/* NotifyAttribute *event */);
 extern void MathAttrBackgroundCreated (/* NotifyAttribute *event */);
 extern ThotBool MathAttrBackgroundDelete (/* NotifyAttribute *event */);
+extern void AttrStretchyChanged (/* NotifyAttribute *event */);
+extern void AttrBeveledChanged (/* NotifyAttribute *event */);
+extern void AttrNameChanged (/* NotifyAttribute *event */);
 extern void AttrOpenCloseChanged (/* NotifyAttribute *event */);
 extern void FencedSeparatorModified (/* NotifyOnTarget *event */);
 extern void AttrSeparatorsChanged (/* NotifyAttribute *event */);

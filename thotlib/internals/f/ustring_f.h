@@ -18,30 +18,28 @@ extern int ustrcoll ( const CHAR_T* str1,
                       const CHAR_T* str2 );
 extern CHAR_T* ustrcpy ( CHAR_T* dest,
                          const CHAR_T* src );
-extern CHAR_T* iso2wc_strcpy ( CHAR_T* dest,
-                              const char* src );
 extern CHAR_T* ustrdup ( const CHAR_T* str );
-extern CHAR_T* iso2wc_strdup ( const char* str );
-extern char* wc2iso_strdup ( const CHAR_T* str );
+extern CHAR_T* iso2wc_strcpy ( CHAR_T* dest,
+                               const char* src );
 extern size_t ustrlen ( const CHAR_T* str );
 extern int ustrncasecmp ( const CHAR_T* str1,
                           const CHAR_T* str2,
                           unsigned int count );
 extern CHAR_T* ustrncat ( CHAR_T* dest,
-                         const CHAR_T* src,
-                         unsigned int count );
+                          const CHAR_T* src,
+                          unsigned int count );
 extern CHAR_T* ustrncmp ( const CHAR_T* str1,
                           const CHAR_T* str2,
                           unsigned int count );
 extern CHAR_T* ustrncpy ( CHAR_T* dest,
-                         const CHAR_T* src,
-                         unsigned int count );
+                          const CHAR_T* src,
+                          unsigned int count );
 extern CHAR_T* ustrrchr ( const CHAR_T* str,
-                         CHAR_T c );
+                          CHAR_T c );
 extern CHAR_T* ustrtok ( CHAR_T* str,
-                        const CHAR_T* delemiter );
+                         const CHAR_T* delemiter );
 extern CHAR_T* ustrstr ( const CHAR_T* str,
-                        const CHAR_T* strCharSet );
+                         const CHAR_T* strCharSet );
 extern int wc2iso_strcasecmp ( const CHAR_T* str1,
                                const char* str2 );
 extern int iso2wc_strcasecmp ( const char* str1,
@@ -53,6 +51,9 @@ extern char* wc2iso_strncpy ( char* dest,
                               int count );
 extern int wc2iso_strcmp ( CHAR_T* str1,
                            const char* str2 );
+extern int TtaGetNextWideCharFromMultibyteString ( CHAR_T* car,
+                                                   unsigned char** txt,
+                                                   CHARSET encoding );
 
 #else /* __STDC__ */
 
@@ -68,30 +69,28 @@ extern int ustrcoll (/* const CHAR_T* str1,
                         const CHAR_T* str2 */);
 extern CHAR_T* ustrcpy (/* CHAR_T* dest,
                            const CHAR_T* src */);
-extern CHAR_T* iso2wc_strcpy (/* CHAR_T* dest,
-                                const char* src */);
 extern CHAR_T* ustrdup (/* const CHAR_T* str */);
-extern CHAR_T* iso2wc_strdup (/* const char* str */);
-extern char* wc2iso_strdup (/* const CHAR_T* str */);
+extern CHAR_T* iso2wc_strcpy (/* CHAR_T* dest,
+                                 const char* src */);
 extern size_t ustrlen (/* const CHAR_T* str */);
 extern int ustrncasecmp (/* const CHAR_T* str1,
                             const CHAR_T* str2,
                             unsigned int count */);
 extern CHAR_T* ustrncat (/* CHAR_T* dest,
-                           const CHAR_T* src,
-                           unsigned int count */);
+                            const CHAR_T* src,
+                            unsigned int count */);
 extern CHAR_T* ustrncmp (/* const CHAR_T* str1,
                             const CHAR_T* str2,
                             unsigned int count */);
 extern CHAR_T* ustrncpy (/* CHAR_T* dest,
-                           const CHAR_T* src,
-                           unsigned int count */);
+                            const CHAR_T* src,
+                            unsigned int count */);
 extern CHAR_T* ustrrchr (/* const CHAR_T* str,
-                           CHAR_T c */);
+                            CHAR_T c */);
 extern CHAR_T* ustrtok (/* CHAR_T* str,
-                          const CHAR_T* delemiter */);
+                           const CHAR_T* delemiter */);
 extern CHAR_T* ustrstr (/* const CHAR_T* str,
-                          const CHAR_T* strCharSet */);
+                           const CHAR_T* strCharSet */);
 extern int wc2iso_strcasecmp (/* const CHAR_T* str1,
                                  const char* str2 */);
 extern int iso2wc_strcasecmp (/* const char* str1,
@@ -103,6 +102,9 @@ extern char* wc2iso_strncpy (/* char* dest,
                                 int count */);
 extern int wc2iso_strcmp (/* CHAR_T* str1,
                              const char* str2 */);
+extern int TtaGetNextWideCharFromMultibyteString (/* CHAR_T* car,
+                                                     unsigned char** txt,
+                                                     CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

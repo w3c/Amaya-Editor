@@ -10,6 +10,10 @@ extern int uctoi ( const STRING string );
 extern long uctol ( const STRING string );
 extern CHAR_T utolower ( CHAR_T c );
 extern int wctoi ( const CHAR_T* string );
+extern unsigned char TtaGetISOLatin2CodeFromUnicode ( const CHAR_T wc );
+extern CHAR_T TtaGetUnicodeValueFromISOLatin2Code ( const unsigned char c );
+extern unsigned char TtaGetISOLatin6CodeFromUnicode ( const CHAR_T wc );
+extern CHAR_T TtaGetUnicodeValueFromISOLatin6Code ( const unsigned char c );
 
 #else /* __STDC__ */
 
@@ -17,6 +21,10 @@ extern int uctoi (/* const STRING string */);
 extern long uctol (/* const STRING string */);
 extern CHAR_T utolower (/* CHAR_T c */);
 extern int wctoi (/* const CHAR_T* string */);
+extern unsigned char TtaGetISOLatin2CodeFromUnicode (/* const CHAR_T wc */);
+extern CHAR_T TtaGetUnicodeValueFromISOLatin2Code (/* const unsigned char c */);
+extern unsigned char TtaGetISOLatin6CodeFromUnicode (/* const CHAR_T wc */);
+extern CHAR_T TtaGetUnicodeValueFromISOLatin6Code (/* const unsigned char c */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

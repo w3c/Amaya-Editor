@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool TtaWithinUndoSequence ( Document document );
+extern ThotBool TtaPrepareUndo ( Document document );
 extern void TtaOpenUndoSequence ( Document document,
                                   Element firstSel,
                                   Element lastSel,
@@ -41,7 +41,7 @@ extern void TtaUndoNoRedo ( Document document );
 
 #else /* __STDC__ */
 
-extern ThotBool TtaWithinUndoSequence (/* Document document */);
+extern ThotBool TtaPrepareUndo (/* Document document */);
 extern void TtaOpenUndoSequence (/* Document document,
                                     Element firstSel,
                                     Element lastSel,

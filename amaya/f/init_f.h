@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern Document IsDocumentLoaded ( CHAR_T* documentURL,
-                                   STRING form_data );
+                                   CHAR_T* form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
                                             View view );
 extern void ExtractParameters ( CHAR_T* aName,
@@ -29,13 +29,13 @@ extern void SetWindowTitle ( Document sourceDoc,
                              View view );
 extern void InitFormAnswer ( Document document,
                              View view,
-                             STRING auth_realm,
-                             STRING server );
-extern void InitInfo ( STRING label,
-                       STRING info );
+                             CHAR_T* auth_realm,
+                             CHAR_T* server );
+extern void InitInfo ( CHAR_T* label,
+                       CHAR_T* info );
 extern void InitConfirm ( Document document,
                           View view,
-                          STRING label );
+                          CHAR_T* label );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
 extern void OpenNew ( Document document,
@@ -51,9 +51,9 @@ extern Document InitDocView ( Document doc,
                               ThotBool logFile );
 extern void Reload_callback ( int doc,
                               int status,
-                              STRING urlName,
-                              STRING outputfile,
-                              STRING content_type,
+                              CHAR_T* urlName,
+                              CHAR_T* outputfile,
+                              CHAR_T* content_type,
                               void * context );
 extern void Reload ( Document doc,
                      View view );
@@ -77,11 +77,11 @@ extern ThotBool ViewToClose ( NotifyDialog * event );
 extern void GetHTMLDocument_callback ( int newdoc,
                                        int status,
                                        CHAR_T* urlName,
-                                       STRING outputfile,
-                                       STRING content_type,
+                                       CHAR_T* outputfile,
+                                       CHAR_T* content_type,
                                        void * context );
 extern Document GetHTMLDocument ( const CHAR_T* documentPath,
-                                  STRING form_data,
+                                  CHAR_T* form_data,
                                   Document doc,
                                   Document baseDoc,
                                   ClickEvent CE_event,
@@ -152,7 +152,7 @@ extern void AmayaClose ( Document document,
 #else /* __STDC__ */
 
 extern Document IsDocumentLoaded (/* CHAR_T* documentURL,
-                                     STRING form_data */);
+                                     CHAR_T* form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,
                                               View view */);
 extern void ExtractParameters (/* CHAR_T* aName,
@@ -174,13 +174,13 @@ extern void SetWindowTitle (/* Document sourceDoc,
                                View view */);
 extern void InitFormAnswer (/* Document document,
                                View view,
-                               STRING auth_realm,
-                               STRING server */);
-extern void InitInfo (/* STRING label,
-                         STRING info */);
+                               CHAR_T* auth_realm,
+                               CHAR_T* server */);
+extern void InitInfo (/* CHAR_T* label,
+                         CHAR_T* info */);
 extern void InitConfirm (/* Document document,
                             View view,
-                            STRING label */);
+                            CHAR_T* label */);
 extern void OpenDocInNewWindow (/* Document document,
                                    View view */);
 extern void OpenNew (/* Document document,
@@ -196,9 +196,9 @@ extern Document InitDocView (/* Document doc,
                                 ThotBool logFile */);
 extern void Reload_callback (/* int doc,
                                 int status,
-                                STRING urlName,
-                                STRING outputfile,
-                                STRING content_type,
+                                CHAR_T* urlName,
+                                CHAR_T* outputfile,
+                                CHAR_T* content_type,
                                 void * context */);
 extern void Reload (/* Document doc,
                        View view */);
@@ -222,11 +222,11 @@ extern ThotBool ViewToClose (/* NotifyDialog * event */);
 extern void GetHTMLDocument_callback (/* int newdoc,
                                          int status,
                                          CHAR_T* urlName,
-                                         STRING outputfile,
-                                         STRING content_type,
+                                         CHAR_T* outputfile,
+                                         CHAR_T* content_type,
                                          void * context */);
 extern Document GetHTMLDocument (/* const CHAR_T* documentPath,
-                                    STRING form_data,
+                                    CHAR_T* form_data,
                                     Document doc,
                                     Document baseDoc,
                                     ClickEvent CE_event,

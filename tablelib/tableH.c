@@ -70,9 +70,10 @@ PtrAbstractBox    table;
 int               frame;
 #endif /* __STDC__ */
 {
-  int                 i;
   PtrLockRelations    pLockRel;
   PtrLockRelations    pPreviousLockRel;
+  PtrAbstractBox      pAb;
+  int                 i, j;
   ThotBool            toCreate;
 
   if (table == NULL)
@@ -92,6 +93,16 @@ int               frame;
 	  if (pLockRel->LockRTable[i] == table)
 	    /* The table is already registered */
 	    return;
+	  else if (IsParentBox (pLockRel->LockRTable[i]->AbBox, table->AbBox))
+	    {
+	      /* exchange information for managing enclosing tables first */
+	      j = pLockRel->LockRFrame[i];
+	      pAb = pLockRel->LockRTable[i];
+	      pLockRel->LockRFrame[i] = frame;
+	      pLockRel->LockRTable[i] = table;
+	      frame = j;
+	      table = pAb;
+	    }
 	  else
 	    i++;
 	}

@@ -159,10 +159,10 @@ Document doc;
   to reload a template
   ----------------------------------------------------------------------*/
 #ifdef __STDC__    
-void ReloadTemplateParams (CHAR_T* docURL, ClickEvent *method)
+void        ReloadTemplateParams (CHAR_T **docURL, ClickEvent *method)
 #else /* __STDC__ */
-void ReloadTemplateParams (docURL, method)
-CHAR_T* docURL;
+void        ReloadTemplateParams (docURL, method)
+CHAR_T    **docURL;
 ClickEvent *method;
 #endif /* __STDC__ */
 {

@@ -9,14 +9,16 @@
 extern CHAR_T* ufgets ( CHAR_T* string,
                         int n,
                         FILE *stream );
+extern FILE* ufopen ( const CHAR_T* name,
+                      const CHAR_T* mode );
 
-extern FILE* ufopen (const CHAR_T* name, const CHAR_T* mode);
 #else /* __STDC__ */
 
 extern CHAR_T* ufgets (/* CHAR_T* string,
                           int n,
                           FILE *stream */);
+extern FILE* ufopen (/* const CHAR_T* name,
+                        const CHAR_T* mode */);
 
-extern FILE* ufopen (/* CHAR_T* name, CHAR_T* mode */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

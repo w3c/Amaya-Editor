@@ -45,8 +45,6 @@ extern void CheckFence ( Element el,
 extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
                                      ThotBool record );
-extern void TransformMFENCED ( Element el,
-                               Document doc );
 extern void MathMLElementComplete ( Element el,
                                     Document doc );
 extern void SetFontfamily ( Document doc,
@@ -102,8 +100,6 @@ extern void CheckFence (/* Element el,
 extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
                                        ThotBool record */);
-extern void TransformMFENCED (/* Element el,
-                                 Document doc */);
 extern void MathMLElementComplete (/* Element el,
                                       Document doc */);
 extern void SetFontfamily (/* Document doc,
