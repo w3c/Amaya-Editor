@@ -20,10 +20,11 @@
  
 
 #include "openglfonts.h"
-
-#ifdef _GTK
+/* Using Bitmap font !!
+(mainly cause texture font 
+needs caching)*/
 #define MESA
-#endif /*_GTK*/
+ 
 
 /* Memory state Var needed often*/
 static FT_Library FTlib = NULL;
@@ -321,11 +322,11 @@ static GL_glyph  *MakeTextureGlyph(GL_font *font, unsigned int g,
 	  data = MakeAlphaBitmap (source->buffer, destWidth, destHeight, srcPitch);
 	   if(activeTextureID != glTextureID[(*numTextures)-1])
 	     {
-	       glBindTexture( GL_TEXTURE_2D, glTextureID[(*numTextures)-1]);
+	       glBindTexture (GL_TEXTURE_2D, glTextureID[(*numTextures)-1]);
 	       activeTextureID = glTextureID[(*numTextures)-1];
 	     }
 	   info->textureid = glTextureID[(*numTextures)-1];
-	   glTexSubImage2D( GL_TEXTURE_2D, 0, 
+	   glTexSubImage2D (GL_TEXTURE_2D, 0, 
 			   *xOffset, *yOffset, 
 			   destWidth, destHeight, 
 			   GL_ALPHA, GL_UNSIGNED_BYTE, data);
@@ -576,7 +577,7 @@ static int FontFaceSize (GL_font *font, const unsigned int size, const unsigned 
 {
   unsigned int err;
   
-  err = FT_Set_Char_Size (*(font->face), 0L, size * 64, res, res);
+  err = FT_Set_Char_Size (*(font->face), 0, size * 64, 96, 96);
   /*res x_resolution, res, y_resolution*/
   if (err)
     return err;
@@ -805,7 +806,7 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 	  free (gl_font);
 	  return NULL;
 	}
-      err = FontFaceSize (gl_font, size, 72);	
+      err = FontFaceSize (gl_font, size, 120);	
       if (err)
 	{
 	  FT_Done_Face (*(gl_font->face));
@@ -941,14 +942,19 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 		 Width, 
 		 currenty,
 		 finalwidth);
+  
   glRasterPos2f (x, y + Height - miny);
   glDrawPixels (finalwidth,
 		currenty,
 		GL_ALPHA,
 		GL_UNSIGNED_BYTE,
-		(const GLubyte *) (data2));  
+		(const GLubyte *) (data2));
+  
+  
+
   free (data2);
   free (data);
+  
   return pen.x;
 }
 #endif /*MESA*/

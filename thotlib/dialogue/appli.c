@@ -358,21 +358,21 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 	 pFrame->FrClipXEnd = 0;
 	 pFrame->FrClipYBegin = 0;
 	 pFrame->FrClipYEnd = 0;
-#ifndef _GL
 	 DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right,
 		 ps.rcPaint.bottom);
 	 EndPaint (w, &ps);
 	 DisplayFrame (frame);
-#else /*_GL*/
-	GL_ActivateDrawing();
-	GL_DrawAll (NULL, frame);
-#endif /*_GL*/
 	 /* restore the previous clipping */
      pFrame = &ViewFrameTable[frame - 1];
 	 pFrame->FrClipXBegin = xmin;
 	 pFrame->FrClipXEnd = xmax;
 	 pFrame->FrClipYBegin = ymin;
 	 pFrame->FrClipYEnd = ymax;
+#ifndef _GL
+#else /*_GL*/
+    GL_MakeCurrent (frame);	
+	GL_Swap (frame);
+#endif /*_GL*/
    }
  }
 }
@@ -389,26 +389,22 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 
    if ((width <= 0) || (height <= 0))
       return;
-
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
-
-
    FrameToView (frame, &doc, &view);
    FrameTable[frame].FrTopMargin = top_delta;
-
    /* FrameTable[frame].FrWidth = (int) width - bottom_delta; */
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
    FrameTable[frame].FrHeight = (int) height;
-
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
-
    /* recompute the scroll bars */
     UpdateScrollbars (frame);
 #ifdef _GL
-    ActiveFrame = frame;
+    GL_MakeCurrent (frame);	
     GLResize (width, height, 0 ,0);
+	GL_ActivateDrawing ();
+	GL_DrawAll (NULL, frame);
 #endif/*_GL*/
 }
 #else /* _WINDOWS */
@@ -1594,11 +1590,13 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     ShowWindow (StatusBar, SW_SHOWNORMAL);
     UpdateWindow (StatusBar);
  
-    hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, 
+    hwndClient = CreateWindowEx (WS_EX_OVERLAPPEDWINDOW |
+								 WS_EX_ACCEPTFILES
+								 , 
 								 "ClientWndProc", 
-								NULL,
-								WS_CHILD | WS_VISIBLE | WS_BORDER, 
-								0, 0, 0, 0,
+								 NULL,
+								 WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE | WS_BORDER, 
+								 0, 0, 0, 0,
 				 hwnd, (HMENU) 2, hInstance, NULL);
 #ifdef _GL
         /* initialize OpenGL rendering */
@@ -2119,6 +2117,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     default:
       break;
     }
+	
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
 #endif /* _WINDOWS */
@@ -3077,6 +3076,10 @@ int GetWindowWinMainFrame (ThotWindow w)
   ----------------------------------------------------------------------*/
 void GetSizesFrame (int frame, int *width, int *height)
 {
+#ifdef _GL
+   *width = FrameTable[frame].FrWidth;
+   *height = FrameTable[frame].FrHeight;
+#else /*_GL*/
 #ifndef _WINDOWS
    *width = FrameTable[frame].FrWidth;
    *height = FrameTable[frame].FrHeight;
@@ -3094,6 +3097,7 @@ void GetSizesFrame (int frame, int *width, int *height)
      *width = 0;
    }
 #endif /* _WINDOWS */
+#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------

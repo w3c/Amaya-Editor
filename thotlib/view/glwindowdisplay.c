@@ -96,30 +96,22 @@
 #define P2(N) (N*N)
 
 #ifdef _GTK
-
 #include <gtkgl/gtkglarea.h>
-
 #ifdef _PCLDEBUG
 /* Unix timer */
 #include <unistd.h>
 #include <sys/timeb.h>
 #endif /*_PCLDEBUG*/
-
 /*#define GLU_CALLBACK_CAST (void (*)())*/
-
 #else /*WINDOWS*/
-
 #include <windows.h>
-
 /*
 #ifndef CALLBACK
 #define CALLBACK
 #endif
 #define GLU_CALLBACK_CAST
 */
-
 #endif /*_GTK*/
-
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -128,14 +120,12 @@
 #define CALLBACK
 #endif
 
-#ifdef GL_MESA_window_pos
-#define MESA
-#endif
-
-/* Texture Font */
-/* ~/Amaya/thotlib/internals/h */
 #include "openglfont.h"
 #include "glwindowdisplay.h"
+/* Using Bitmap font !!
+(mainly cause texture font 
+needs caching)*/
+#define MESA
 
 /* Vertex list when tesselation is called 
    This list is filled with all new vertex 
@@ -194,9 +184,9 @@ static void GL_SetupPixelFormat (HDC hDC)
 	{
         sizeof(PIXELFORMATDESCRIPTOR),  /* size */
         1,                              /* version */
-        PFD_SUPPORT_OPENGL
-         | PFD_DRAW_TO_WINDOW 
-         | PFD_DOUBLEBUFFER,               /* support double-buffering */
+        PFD_DRAW_TO_WINDOW |			/* Format Must Support Window*/
+		PFD_SUPPORT_OPENGL |			/* Format Must Support OpenGL*/
+		PFD_DOUBLEBUFFER,               /* support double-buffering */
         PFD_TYPE_RGBA,                  /* color type */
         32,                             /* prefered color depth */
         0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
@@ -204,7 +194,7 @@ static void GL_SetupPixelFormat (HDC hDC)
         0,                              /* alpha bits (ignored) */
         0,                              /* no accumulation buffer */
         0, 0, 0, 0,                     /* accum bits (ignored) */
-        0,                             /* depth buffer */
+        32,                             /* depth buffer */
         0,                              /* no stencil buffer */
         0,                              /* no auxiliary buffers */
         PFD_MAIN_PLANE,                 /* main layer */
@@ -1391,7 +1381,27 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
     }
 }
 #endif /* I18N */
-
+void GL_Swap (int frame)
+{
+#ifdef _WINDOWS
+	SwapBuffers (GL_Windows[frame]);
+#else
+	gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
+#endif /*_WINDOWS*/
+}
+/*----------------------------------------------------------------------
+   GL_MakeCurrent : Point to correct buffer to draw into
+  ----------------------------------------------------------------------*/
+void GL_MakeCurrent (int frame)
+{
+#ifdef _WINDOWS
+ if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+    return;		
+#else
+  if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+    return;
+#endif /*_WINDOWS*/
+}
 /*----------------------------------------------------------------------
    GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
@@ -1439,11 +1449,13 @@ void GL_DrawAll (ThotWidget widget, int frame)
 
    if (GL_Modif && !GL_Drawing && !FrameUpdating)	
      { 
+       if (!(frame > 0 && frame <= MAX_FRAME)) 
+			frame = ActiveFrame;
 #ifdef _PCLDEBUG
        ftime(&before);
 #endif /*_PCLDEBUG*/
        widget = FrameTable[frame].WdFrame;
-       if (widget)
+     if (widget)
 	 if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
 	   { 	  
 	     ActiveFrame = frame;
@@ -1471,14 +1483,16 @@ void GL_DrawAll (ThotWidget widget, int frame)
 #else /*_GTK*/
  if (GL_Modif && !GL_Drawing && !FrameUpdating)	
      { 
-       frame = ActiveFrame;
+       if (!(frame > 0 && frame <= MAX_FRAME)) 
+			frame = ActiveFrame;
        if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
 	   { 	  
 	      GL_Drawing = TRUE;  
-	      RedrawFrameBottom (frame, 0, NULL); 
+	      RedrawFrameBottom (frame, 0, NULL);
+		  glFinish ();	 
 	      SwapBuffers (GL_Windows[frame]);
 	      if (GL_Err())
-		WinErrorBox (NULL, "Bad drawing\n");
+			WinErrorBox (NULL, "Bad drawing\n");
 	      GL_Drawing = FALSE;
 	   }        
 	   GL_Modif = FALSE;
@@ -1604,12 +1618,9 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-  GL_ActivateDrawing ();
   DefRegion (frame, 
 	     xd, yd+FrameTable[frame].FrTopMargin, 
 	     width+xd, yd+height+FrameTable[frame].FrTopMargin);
-  GL_DrawAll (0, frame);
-
 #ifdef PCL
 #ifdef _WINDOWS
   if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
@@ -1637,10 +1648,6 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 ------------------------------------*/
 void GLResize (int width, int height, int x, int y)
 {	
-#ifdef _WINDOWS
-  if (! wglMakeCurrent (GL_Windows[ActiveFrame], GL_Context[ActiveFrame]))
-    return;
-#endif /*_WINDOWS*/
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 

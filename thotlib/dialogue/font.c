@@ -98,8 +98,13 @@ void *GL_LoadFont (char alphabet, int family,
 		   char *xlfd)
 {    
   char filename[2048];
-
-  size = LogicalPointsSizes[size];
+  
+   if (size > MaxNumberOfSizes)
+	size = LogicalPointsSizes[MaxNumberOfSizes];
+   else if (size >= 0)
+	size = LogicalPointsSizes[size];
+   else
+	size = 12;
   if (GetFontFilename(alphabet, family, 
 		      highlight, size, 
 		      UseLucidaFamily, UseAdobeFamily,

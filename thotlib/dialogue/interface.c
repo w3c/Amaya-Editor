@@ -1422,7 +1422,7 @@ void TtaMainLoop ()
   /* First Time drawing (if we don't have focus)  */
   while (gtk_events_pending ()) 
     gtk_main_iteration ();    
-  GL_DrawAll (NULL, ActiveFrame);
+  GL_DrawAll (NULL, -1);
 #endif /*_GL*/
 #endif /*_GTK*/
   /* Loop wainting for the events */
@@ -1436,7 +1436,7 @@ void TtaMainLoop ()
       TtaHandleOneEvent (&ev);
 #ifdef _GL
       /* buffer swapping, when needed*/
-      GL_DrawAll (NULL, ActiveFrame);
+      GL_DrawAll (NULL, -1);
 #endif/*  _GL */
     }
 #ifdef _GTK
