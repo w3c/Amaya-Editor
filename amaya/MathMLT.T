@@ -645,6 +645,11 @@ ATTRIBUTES
 	create '"';
 	end;
 
+ mode = inline_math:
+	Create ' mode="inline"';
+ mode = display_:
+	Create ' mode="display"';
+
    fontsize:
 	begin
 	create SAN;

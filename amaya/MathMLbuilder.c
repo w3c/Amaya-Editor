@@ -315,6 +315,9 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_largeop, TEXT("true"), MathML_ATTR_largeop_VAL_true},
  {MathML_ATTR_largeop, TEXT("false"), MathML_ATTR_largeop_VAL_false},
 
+ {MathML_ATTR_mode, TEXT("display"), MathML_ATTR_mode_VAL_display_},
+ {MathML_ATTR_mode, TEXT("inline"), MathML_ATTR_mode_VAL_inline_math},
+
  {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
  {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},
 

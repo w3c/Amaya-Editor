@@ -35,7 +35,8 @@ STRUCT
 	        display = block, inline_;
 	        overflow = scroll, elide, truncate, scale_;
 	        altimg = TEXT;
-	        alttext = TEXT)
+	        alttext = TEXT;
+		mode = display_, inline_math)
 	  = MROW + (XMLcomment);
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
