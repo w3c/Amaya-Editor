@@ -229,6 +229,32 @@ char               *documentURL;
       return ((Document) None);
 }
 
+/*----------------------------------------------------------------------
+  CanReplaceCurrentDocument
+  Return TRUE if the document has not been modified of if the user
+  agrees to loose the changes he/she has made.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean		CanReplaceCurrentDocument (Document document, View view)
+#else
+boolean		CanReplaceCurrentDocument (document, view)
+Document	document;
+View		view;
+#endif
+{
+   boolean	ret;
+
+   ret = TRUE;
+   if (TtaIsDocumentModified (document))
+     {
+	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
+	if (UserAnswer)
+	   TtaSetDocumentUnmodified (document);
+	else
+	   ret = FALSE;
+     }
+   return ret;
+}
 
 /*----------------------------------------------------------------------
    ExtractParameters extract parameters from document nane.        
@@ -559,7 +585,9 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   TextAction                                                      
+   TextURL                                                      
+   The Address text field in a document window has been modified by the user
+   Load the corresponding document in that window.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         TextURL (Document document, View view, char *text)
@@ -591,18 +619,12 @@ char               *text;
 	    }
 	}
 
-      if (TtaIsDocumentModified (document))
+      if (!CanReplaceCurrentDocument (document, view))
 	{
-	  InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
-	  if (UserAnswer)
-	    TtaSetDocumentUnmodified (document);
-	  else
-	    {
-	      /* restore the previous value */
-	      TtaSetTextZone (document, view, 1, DocumentURLs[document]);
-	      /* abort the command */
-	      return;
-	    }
+	  /* restore the previous value */
+	  TtaSetTextZone (document, view, 1, DocumentURLs[document]);
+	  /* abort the command */
+	  return;
 	}
 
       /* do the same thing as a callback form open document form */
@@ -623,7 +645,9 @@ char               *text;
 }
 
 /*----------------------------------------------------------------------
-   TextAction                                                      
+   TextTitle
+   The Tile text field in a document window has been modified by the user
+   Update the TITLE element for the corresponding document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         TextTitle (Document document, View view, char *text)
@@ -796,18 +820,12 @@ View                view;
 
 #endif
 {
-   if (TtaIsDocumentModified (document))
+   if (CanReplaceCurrentDocument (document, view))
      {
-	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
-	if (UserAnswer)
-	   TtaSetDocumentUnmodified (document);
-	else
-	   /* abort the command */
-	   return;
+       /* load the new document */
+       InNewWindow = FALSE;
+       InitOpenDocForm (document, view);
      }
-   /* load the new document */
-   InNewWindow = FALSE;
-   InitOpenDocForm (document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -1129,6 +1147,10 @@ boolean		    history;
 	   /* this document is displayed */
 	   TtaSetTextZone (newdoc, 1, 1, s);
 	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname);
+	if (newdoc != doc)
+	   /* the document is displayed in a different window */
+	   /* reset the history of the window */
+           DocHistoryIndex[newdoc] = -1;
 	if (history)
 	   /* add this URL in history */
 	   AddDocHistory (newdoc, DocumentURLs[newdoc]);
@@ -1161,18 +1183,13 @@ View                view;
       /* the document has not been loaded yet */
       return;
 
-   /* abort all current echanges concerning this docid */
+   /* abort all current exchanges concerning this document */
    StopTransfer (document, 1);
 
-   if (TtaIsDocumentModified (document))
-     {
-	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
-	if (UserAnswer)
-	   TtaSetDocumentUnmodified (document);
-	else
-	   /* abort the command */
-	   return;
-     }
+   if (!CanReplaceCurrentDocument (document, view))
+      /* abort the command */
+      return;
+
    /* reload the document */
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
@@ -1450,15 +1467,9 @@ NotifyDialog       *event;
      }
    else
      /* closing main view */
-     if (TtaIsDocumentModified (document))
-     {
-	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
-	if (UserAnswer)
-	   TtaSetDocumentUnmodified (document);
-	else
-	   /* abort the command */
-	  return TRUE;		/* don't let Thot perform normal operation */
-     }
+     if (!CanReplaceCurrentDocument (document, view))
+	/* abort the command */
+	return TRUE;		/* don't let Thot perform normal operation */
 
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaCloseView (document, structView);

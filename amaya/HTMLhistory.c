@@ -7,21 +7,21 @@
 
 /*
  *
- * Author: D. Veillard
+ * Author: V. Quint
  *
  */
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "css.h"
 
 #include "HTMLhistory_f.h"
 #include "init_f.h"
 
 /*----------------------------------------------------------------------
-   GotoPreviousHTML                                               
+   GotoPreviousHTML
+   This function is called when the user presses the Previous button
   ----------------------------------------------------------------------*/
-/*ARGUSED */
+
 #ifdef __STDC__
 void                GotoPreviousHTML (Document doc, View view)
 #else
@@ -40,12 +40,17 @@ View                view;
       return;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
+   if (!CanReplaceCurrentDocument (doc, view))
+      return;
 
+   /* previous document in history */
    prev = DocHistoryIndex[doc];
    if (prev ==  0)
       prev = DOC_HISTORY_SIZE - 1;
    else
       prev--;
+
+   /* nothing to do if there is no previous document */
    if (DocHistory[doc][prev] == NULL)
       return;
 
@@ -75,9 +80,10 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   GotoNextHTML                                                   
+   GotoNextHTML
+   This function is called when the user presses the Next button
   ----------------------------------------------------------------------*/
-/*ARGUSED */
+
 #ifdef __STDC__
 void                GotoNextHTML (Document doc, View view)
 #else
@@ -96,14 +102,18 @@ View                view;
       return;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
+   if (!CanReplaceCurrentDocument (doc, view))
+      return;
 
    /* next entry in history */
    next = DocHistoryIndex[doc] + 1;
    next %= DOC_HISTORY_SIZE;
+
+   /* nothing to do if there is no next document */
    if (DocHistory[doc][next] == NULL)
       return;
 
-   /* set the Back button on if it is off */
+   /* set the Back button on if it's off */
    i = DocHistoryIndex[doc];
    if (i ==  0)
       i = DOC_HISTORY_SIZE - 1;
@@ -130,7 +140,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   AddDocHistory                                                 
+   AddDocHistory
+   Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__

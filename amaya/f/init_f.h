@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern Document IsDocumentLoaded ( char *documentURL );
+extern boolean CanReplaceCurrentDocument ( Document document,
+                                           View view );
 extern void ExtractParameters ( char *aName,
                                 char *parameters );
 extern void ExtractSuffix ( char *aName,
@@ -98,6 +100,8 @@ extern void AmayaClose ( Document document,
 #else /* __STDC__ */
 
 extern Document IsDocumentLoaded (/* char *documentURL */);
+extern boolean CanReplaceCurrentDocument (/* Document document,
+                                             View view */);
 extern void ExtractParameters (/* char *aName,
                                   char *parameters */);
 extern void ExtractSuffix (/* char *aName,
