@@ -35,6 +35,7 @@
 #include "thotmsg_f.h"
 #include "dialogapi_f.h"
 #include "callback_f.h"
+#include "registry_f.h"
 
 #ifdef _WINGUI
   #include "winsys.h"
@@ -620,6 +621,16 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
      }
    else
      {
+       char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
+       char               *appHome;
+       appHome = TtaGetEnvString ("APP_HOME");
+       strcpy (fname, appHome);
+       strcat (fname, DIR_STR);
+       strcat (fname, "gtkrc");
+       if (SearchFile (fname, 0, name))
+	 gtk_rc_parse (name);
+       else if (SearchFile ("gtkrc", 2, name))
+	 gtk_rc_parse (name);
        TtDisplay = GDK_DISPLAY ();
      }
    DefaultFont = gdk_font_load ("fixed");
