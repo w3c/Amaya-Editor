@@ -2524,9 +2524,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       pAb->AbLeafType == LtGraphics ||
       pAb->AbLeafType == LtPath)
     {
-      if ( box->VisibleModification &&
-	   !selected &&
-	   glIsList (box->DisplayList))
+      if (0 &&
+	  !(box->VisibleModification) &&
+	  !selected &&
+	  glIsList (box->DisplayList))
 	{
 	  glCallList (box->DisplayList);
 	  return;

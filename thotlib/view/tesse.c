@@ -48,21 +48,21 @@ typedef struct _ThotPoint {
 /***************************/
 
 /* initial number of allocated points*/
-#define ALLOC_POINTS 100
+#define ALLOC_POINTS 3000
 
 /*Structure describing points 
 we need double precision here.*/
 typedef struct _ThotDblePoint {
   double         x;
   double         y; 
-  double         z; 
+/*   double         z;  */
 } ThotDblePoint;
 
 /*Structure describing points 
 resulting of tesselation
 (linked list)*/
 typedef struct _Mesh {
-  double          data[3];
+  double          data[2];/* data[3]; */
   struct _Mesh   *next;
 } Mesh_list;
 
@@ -86,7 +86,8 @@ void CALLBACK myGL_Err (GLenum errCode, ThotPath *path)
 {
   if(errCode != GL_NO_ERROR)
     {
-      printf ("\n%s :", (char*) gluErrorString (errCode));      
+      printf ("\n%s : points :%i Contours : %i", (char*) gluErrorString (errCode),
+	      path->nsize, path->cont);      
     }
 }
 /*----------------------------------------------------------------------
@@ -116,7 +117,7 @@ void CALLBACK myCombine (GLdouble coords[3],
   ptr->next = NULL;
   ptr->data[0] = coords[0];
   ptr->data[1] = coords[1];
-  ptr->data[2] = 0.0f;
+  /* ptr->data[2] = 0.0f; */
   *dataOut = ptr->data;
 }
 #endif /* _GL */
@@ -156,21 +157,23 @@ void MeshNewPoint (float x, float y, void *v_path)
   int             size;
   ThotPath        *path;
   double          xd, yd;
-  
+
+  tmp = NULL;
   path = (ThotPath *) v_path;  
   /* ignore identical points */
   xd = (double) x;
   yd = (double) y;
-  if (path->nsize > 0 && 
+  if (path->nsize > 0 &&
       path->npoints[path->nsize - 1].x == xd &&
       path->npoints[path->nsize - 1].y == yd)
-      if (!(path->cont > 0 && 
+      if (!(path->cont > 0 &&
 	    path->nsize == path->ncontour[path->cont - 1]))
       return;
   if (path->nsize >= path->maxpoints)
     {
       size = path->maxpoints + ALLOC_POINTS;
-      if ((tmp = (ThotDblePoint*)realloc(path->npoints, size * sizeof(ThotDblePoint))) ==0)
+      tmp = (ThotDblePoint*) realloc (path->npoints, size * sizeof(ThotDblePoint));
+      if (tmp == NULL)
 	return;
       else
 	{
@@ -181,7 +184,7 @@ void MeshNewPoint (float x, float y, void *v_path)
     }
   path->npoints[path->nsize].x = xd;
   path->npoints[path->nsize].y = yd;
-  path->npoints[path->nsize].z = 0.0f;
+  /* path->npoints[path->nsize].z = 0.0f; */
   (path->nsize)++;
   return;
 #endif /* _GL */
@@ -196,14 +199,16 @@ void CountourCountAdd (void *v_path)
   int             size;
   ThotPath        *path;
   int             *tmp;
-  
+
+  tmp = NULL;
   path = (ThotPath *) v_path;  
   if (path->nsize > 0)
     {      
       if (path->cont >= path->maxcont)
 	{
 	  size = path->maxcont + ALLOC_POINTS;
-	  if ((tmp = (int*) realloc(path->npoints, size * sizeof(int))) == 0)
+	  tmp = (int*) realloc (path->npoints, size * sizeof(int));
+	  if (tmp == NULL)
 	    return;
 	  else
 	    {
@@ -274,7 +279,7 @@ void MakeMesh (void *v_path)
   /* gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE); */
   gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
   gluTessProperty (tobj, GLU_TESS_TOLERANCE, 0);
-  gluTessNormal (tobj, 0.0f, 0.0f, 1.0f);
+  gluTessNormal (tobj, 0.0f, 0.0f, 1.0f); 
   gluTessBeginPolygon (tobj, path);  
   while (c < path->cont)
     {
@@ -293,7 +298,7 @@ void MakeMesh (void *v_path)
 #endif /* _GL */
 }
 /*----------------------------------------------------------------------
-MakeMeshLines : Display path outline 
+  MakeMeshLines : Display path outline 
   ----------------------------------------------------------------------*/
 void MakeMeshLines  (void *v_path)
 {
@@ -328,10 +333,10 @@ void MakefloatMesh (ThotPoint *points, int npoints)
   c = p = 0;  
   mesh = GetNewMesh ();
   while (c < npoints)
-      {
-	  MeshNewPoint (points[c].x, points[c].y, mesh);
-	  c++;	  
-      }  
+    {
+      MeshNewPoint (points[c].x, points[c].y, mesh);
+      c++;	  
+    }  
   CountourCountAdd (mesh);  
   MakeMesh (mesh);
   FreeMesh (mesh);  
