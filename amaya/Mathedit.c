@@ -308,8 +308,7 @@ char               *data;
 	  /* check whether the parent is a row */
 	  row = TtaGetParent (sibling);
 	  elType = TtaGetElementType (row);
-	  if (elType.ElTypeNum != MathML_EL_MathML
-	      && elType.ElTypeNum != MathML_EL_MROW)
+	  if (elType.ElTypeNum != MathML_EL_MROW)
 	    {
 	      /* generates a new row element to include both elements */
 	      elType.ElTypeNum = MathML_EL_MROW;

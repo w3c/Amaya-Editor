@@ -165,8 +165,8 @@ BOXES
 		END;
 	END;
 
- MFENCE_S: BEGIN
-	Content: Text 'MFENCE';
+ MF_S: BEGIN
+	Content: Text 'MF';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		VertPos: Top = Enclosing . Top + 0.5;
@@ -261,7 +261,7 @@ BOXES
 		Visibility: 0;
 	END;
 
- SymbRadical:
+ RadicalSymbol:
 	BEGIN
 	Height: Enclosing . Height;
 	Width: Enclosing . Width;
@@ -306,6 +306,8 @@ RULES
 	BEGIN
 	CreateFirst(MROW_S);
 	CreateWith(VerticalLine);
+        HorizRef: Enclosed not MF . HRef;
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -318,6 +320,7 @@ RULES
 
    Component:
 	BEGIN
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
@@ -328,6 +331,7 @@ RULES
 
    Construction:
 	BEGIN
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width - 1;
 		Height: Enclosed . Height;
@@ -338,10 +342,11 @@ RULES
 
    MROOT:
         BEGIN
-	CreateFirst(SymbRadical);
+	CreateFirst(RadicalSymbol);
 	CreateFirst(MROOT_S);
 	CreateWith(VerticalLine);
 	HorizRef: Enclosed Root_exp . HRef ;
+	VertPos: HRef = Previous not MF . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -355,10 +360,11 @@ RULES
 
    MSQRT:
         BEGIN
-	CreateFirst(SymbRadical);
+	CreateFirst(RadicalSymbol);
 	CreateFirst(MSQRT_S);
 	CreateWith(VerticalLine);
 	HorizRef: Enclosed Root_exp . HRef ;
+	VertPos: HRef = Previous not MF . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -402,6 +408,7 @@ RULES
 	CreateFirst(MFRAC_S);
 	CreateWith(VerticalLine);
 	HorizRef: Enclosed Bar . Bottom + 0.1;
+	VertPos: HRef = Previous not MF . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -445,6 +452,7 @@ RULES
 	HorizRef: Enclosed  Base. HRef;
 	CreateFirst(MSUBSUP_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -461,6 +469,7 @@ RULES
 	HorizRef: Enclosed  Base. HRef;
 	CreateFirst(MSUB_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -477,6 +486,7 @@ RULES
 	HorizRef: Enclosed  Base. HRef;
 	CreateFirst(MSUP_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -530,7 +540,8 @@ RULES
    Block:
 	BEGIN
 	Gather: Yes;
-        HorizRef: Enclosed Block_exp . HRef;
+        HorizRef: Enclosed not MF . HRef;
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -555,12 +566,12 @@ RULES
 		END;
 	END;
 
-   MFENCE:
+   MF:
 	BEGIN
-	CreateFirst(MFENCE_S);
+	CreateFirst(MF_S);
 	CreateWith(VerticalLine);
 	Height: Enclosing . Height;
-	HorizPos: Left = Previous . Right + 0.1;
+	HorizPos: Left = Previous . Right;
 	VertPos: Top =  Enclosing . Top;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -576,6 +587,7 @@ RULES
 	BEGIN
 	CreateFirst(MI_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	Style: Italics;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -592,6 +604,7 @@ RULES
 	BEGIN
 	CreateFirst(MO_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -606,6 +619,7 @@ RULES
 	BEGIN
 	CreateFirst(MN_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -620,6 +634,7 @@ RULES
 	BEGIN
 	CreateFirst(MS_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -634,6 +649,7 @@ RULES
 	BEGIN
 	CreateFirst(MTEXT_S);
 	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - 1;
@@ -663,6 +679,8 @@ RULES
 	BEGIN
 	VertRef: Enclosed . VRef;
 	LineBreak: Yes;
+	IF immediately within MF
+	   VertPos: HMiddle = Enclosing . HMiddle;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Height: Enclosed . Height;

@@ -11,10 +11,6 @@ RULES
 
    MathML:
 	begin
-	create '<mrow>\12';
-	indent +2;
-	indent -2 after;
-	create '</mrow>\12' after;
 	end;
 
    MROW:
@@ -73,7 +69,15 @@ RULES
 	create '</msup>\12' after;
 	end;
 
-   MFENCE :
+   Block :
+	begin
+	create '<mrow>\12';
+	indent +2;
+	indent -2 after;
+	create '</mrow>\12' after;
+	end;
+	
+   MF :
 	begin
 	create '<mf>';
 	create '</mf>\12' after;
@@ -116,7 +120,7 @@ RULES
 
    SYMBOL_UNIT :
 	begin
-	if NOT Within MFENCE
+	if NOT Within MF
 		begin
 		create '<mo>';
 		create '</mo>\12' after;

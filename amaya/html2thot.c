@@ -233,7 +233,7 @@ MathEntity        MathEntityTable[] =
 
 static GIMapping    MathGIMappingTable[] =
 {
-   {"MFENCE", SPACE, MathML_EL_MFENCE, NULL},
+   {"MF", SPACE, MathML_EL_MF, NULL},
    {"MFRAC", SPACE, MathML_EL_MFRAC, NULL},
    {"MI", SPACE, MathML_EL_MI, NULL},
    {"MO", SPACE, MathML_EL_MO, NULL},
@@ -1564,7 +1564,7 @@ Element            *el;
 }
 
 /*----------------------------------------------------------------------
-   TextToMath  Put the content of input buffer in the document.
+   TextToMath  Put the content of input buffer into the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         TextToMath (char alphabet)
@@ -1575,7 +1575,7 @@ char	alphabet;
 #endif
 {
    ElementType         elType;
-   Element             elText, parent;
+   Element             elContent, parent;
    int                 i;
    boolean             ignoreLeadingSpaces;
    Language	       lang;
@@ -1592,6 +1592,7 @@ char	alphabet;
 	     parent = TtaGetParent (lastElement);
 	     if (parent == NULL)
 		parent = lastElement;
+	     elType = TtaGetElementType (parent);
 	  }
 	else
 	   /* the new Text element should be the first child of the latest
@@ -1612,18 +1613,38 @@ char	alphabet;
 	      i++;
 	if (inputBuffer[i] != EOS)
 	  {
-	    /* create a TEXT element */
+	    if (elType.ElTypeNum == MathML_EL_MF &&
+		(inputBuffer[i] == '(' ||
+		 inputBuffer[i] == ')' ||
+		 inputBuffer[i] == '[' ||
+		 inputBuffer[i] == ']' ||
+		 inputBuffer[i] == '{' ||
+		 inputBuffer[i] == '}'))
+	       /* create a Thot SYMBOL */
+	       elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+	    else if (elType.ElTypeNum == MathML_EL_MF &&
+		     inputBuffer[i] == '|')
+	       /* create a Thot GRAPHIC */
+	       {
+	       elType.ElTypeNum = MathML_EL_GRAPHICS_UNIT;
+	       inputBuffer[i] = 'v';
+	       }
+	    else
+	       /* create a TEXT element */
+	       elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 	    elType.ElSSchema = MathSSchema;
-	    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	    elText = TtaNewElement (theDocument, elType);
-	    InsertMathElement (&elText);
+	    elContent = TtaNewElement (theDocument, elType);
+	    InsertMathElement (&elContent);
 	    lastElementClosed = TRUE;
 	    MergeText = FALSE;
-	    /* put the content of the input buffer into the TEXT element */
-	    lang = TtaGetLanguageIdFromAlphabet(alphabet);
-	    if (elText != NULL)
-	       TtaSetTextContent (elText, &(inputBuffer[i]), lang,
-				  theDocument);
+	    if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	       {
+	       /* put the content of the input buffer into the TEXT element */
+	       lang = TtaGetLanguageIdFromAlphabet(alphabet);
+	       TtaSetTextContent (elContent, &(inputBuffer[i]), lang, theDocument);
+	       }
+	    else
+	       TtaSetGraphicsShape (elContent, inputBuffer[i], theDocument);
 	  }
      }
    InitBuffer ();

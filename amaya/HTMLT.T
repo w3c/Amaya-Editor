@@ -343,10 +343,6 @@ RULES
  MathML:
         begin
 	Use MathMLT;	
-        create '<mrow>\12';
-        indent +2;
-        indent -2 after;
-        create '</mrow>\12' after;
         end;
 #endif
 

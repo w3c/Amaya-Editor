@@ -46,9 +46,9 @@ STRUCT
 		  	Sup_exp;
 			END;
 		  Block = BEGIN
-		  	MFENCE = SYMBOL;
+		  	MF = SYMBOL;
 			Block_exp = Component;
-			MFENCE;
+			MF;
 			END;
 		  MN = BEGIN TEXT; END;
 		  MI = BEGIN TEXT; END;
@@ -68,6 +68,5 @@ EXCEPT
    Base:	  Hidden;
    Sub_exp:	  Hidden;
    Sup_exp:	  Hidden;
-   Block:	  Hidden;
    Block_exp:	  Hidden;
 END
