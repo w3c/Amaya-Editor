@@ -96,6 +96,8 @@ private:
   
   // "Color" tab
   wxColourData colour_data;
+
+  bool m_IsInitialized;
 };
 
 #endif  // __PREFERENCEDLGWX_H__

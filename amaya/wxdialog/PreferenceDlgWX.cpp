@@ -66,6 +66,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
 				  wxWindow* parent,
 				  const wxArrayString & url_list ) :
   AmayaDialog( parent, ref )
+  ,m_IsInitialized(false) // this flag is used to know when events can be proceed
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
   m_UrlList = url_list;
@@ -77,13 +78,6 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   if (page_id)
     p_notebook->DeletePage(page_id );
 #endif /* DAV */
-
-#ifdef _WINDOWS
-  // change the notebook style for windows
-  p_notebook->SetWindowStyleFlag( wxNB_MULTILINE );
-  p_notebook->Refresh();
-  p_notebook->Fit();
-#endif /* _WINDOWS */
 
   // setup dialog title
   SetTitle( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DLGPREFERENCE_TITLE)));
@@ -128,6 +122,10 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   colour_data.SetChooseFull(true);
 
   SetAutoLayout( TRUE );
+
+  // this flag is used to know when events can be proceed
+  // for example : when resources are loaded it produces "Page changed" events
+  m_IsInitialized = true;
 }
 
 /*----------------------------------------------------------------------
@@ -170,7 +168,7 @@ void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   wxPanel *    p_new_page = (wxPanel *)((event.GetSelection()>=0 && p_notebook)?p_notebook->GetPage(event.GetSelection()):NULL);
 
-  if(!p_new_page || !XRCCTRL(*this,"wxID_OK",wxButton) || !XRCCTRL(*this,"wxID_DEFAULT",wxButton))
+  if(!m_IsInitialized || !p_new_page || !XRCCTRL(*this,"wxID_OK",wxButton) || !XRCCTRL(*this,"wxID_DEFAULT",wxButton))
   {
     event.Skip();
     return;
@@ -228,9 +226,9 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetString(2,TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NONE)) );
 
   // setup range of zoom
-  XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSlider)->SetRange( 10, 1000 );
+  XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetRange( 10, 1000 );
   // setup menu font size range
-  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSlider)->SetRange( 8, 20 );
+  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSpinCtrl)->SetRange( 8, 20 );
 
   // fill the combobox with url list
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->Append(m_UrlList);
@@ -246,8 +244,8 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
 {
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
 
-  XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSlider)->SetValue( prop.Zoom );
-  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSlider)->SetValue( prop.FontMenuSize );
+  XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetValue( prop.Zoom );
+  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSpinCtrl)->SetValue( prop.FontMenuSize );
 
   XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetValue( prop.PasteLineByLine );
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetValue( prop.S_AutoSave );
@@ -276,8 +274,8 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   value = XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->GetValue();
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
-  prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSlider)->GetValue();
-  prop.FontMenuSize = XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSlider)->GetValue();
+  prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
+  prop.FontMenuSize = XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSpinCtrl)->GetValue();
 
   prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();
   prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();
@@ -476,8 +474,8 @@ void PreferenceDlgWX::SetupLabelDialog_Cache()
 
   XRCCTRL(*this, "wxID_BUTTON_EMPTYCACHE", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FLUSH_CACHE_BUTTON)) );
 
-  XRCCTRL(*this, "wxID_CACHESIZE_VALUE", wxSlider)->SetRange( 1, 100 );
-  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE", wxSlider)->SetRange( 1, 5 );
+  XRCCTRL(*this, "wxID_CACHESIZE_VALUE", wxSpinCtrl)->SetRange( 1, 100 );
+  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE", wxSpinCtrl)->SetRange( 1, 5 );
 }
 
 /*----------------------------------------------------------------------
@@ -495,8 +493,8 @@ void PreferenceDlgWX::SetupDialog_Cache( const Prop_Cache & prop )
 
   XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.CacheDirectory) );
 
-  XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->SetValue( prop.CacheSize );
-  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSlider)->SetValue( prop.MaxCacheFile );
+  XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSpinCtrl)->SetValue( prop.CacheSize );
+  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSpinCtrl)->SetValue( prop.MaxCacheFile );
 }
 
 /*----------------------------------------------------------------------
@@ -519,8 +517,8 @@ Prop_Cache PreferenceDlgWX::GetValueDialog_Cache()
   value = XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->GetValue();
   strcpy( prop.CacheDirectory, (const char*)value.mb_str(wxConvUTF8) );
 
-  prop.CacheSize = XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->GetValue();
-  prop.MaxCacheFile = XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSlider)->GetValue();
+  prop.CacheSize = XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSpinCtrl)->GetValue();
+  prop.MaxCacheFile = XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSpinCtrl)->GetValue();
 
   return prop;
 }
@@ -997,9 +995,9 @@ void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
     val = 0;
   XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetSelection( val );
   if (prop.numberTimeout < 300)
-  XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSlider)->SetValue( 300 );
+  XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSpinCtrl)->SetValue( 300 );
   else
-    XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSlider)->SetValue( prop.numberTimeout );
+    XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSpinCtrl)->SetValue( prop.numberTimeout );
 
   XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->SetValue( prop.toggleAwareness1 );
   XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->SetValue( prop.toggleAwareness2 );
@@ -1039,7 +1037,7 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
   else
     strcpy (prop.radioTimeout, "Infinite");
 
-  prop.numberTimeout = XRCCTRL(*this, "wxID_TIMEOUT_VALUE",  wxSlider)->GetValue();
+  prop.numberTimeout = XRCCTRL(*this, "wxID_TIMEOUT_VALUE",  wxSpinCtrl)->GetValue();
 
   prop.toggleAwareness1 = XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->GetValue();
   prop.toggleAwareness2 = XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->GetValue();

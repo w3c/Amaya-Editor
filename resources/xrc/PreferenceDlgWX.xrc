@@ -9,7 +9,6 @@
       <object class="sizeritem">
         <object class="wxNotebook" name="wxID_NOTEBOOK">
           <usenotebooksizer>1</usenotebooksizer>
-          <style platform="win">wxNB_MULTILINE</style>
           <style platform="unix">wxNB_LEFT</style>
           <focused>1</focused>
           <object class="notebookpage">
@@ -57,13 +56,11 @@
                           </object>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxSlider" name="wxID_CHARMENUSIZE_VALUE">
+                          <object class="wxSpinCtrl" name="wxID_CHARMENUSIZE_VALUE">
                             <value>12</value>
                             <min>8</min>
                             <max>20</max>
                             <size>0,0</size>
-                            <style>wxSL_LABELS</style>
-                            <hidden>1</hidden>
                           </object>
                           <flag>wxEXPAND</flag>
                         </object>
@@ -80,11 +77,10 @@
                           </object>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxSlider" name="wxID_CHARZOOM_VALUE">
-                            <value></value>
+                          <object class="wxSpinCtrl" name="wxID_CHARZOOM_VALUE">
+                            <value>0</value>
                             <min>10</min>
-                            <max>100</max>
-                            <style>wxSL_LABELS</style>
+                            <max>1000</max>
                           </object>
                           <option>1</option>
                           <flag>wxALL|wxEXPAND</flag>
@@ -485,11 +481,10 @@
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
-                              <object class="wxSlider" name="wxID_CACHESIZE_VALUE">
+                              <object class="wxSpinCtrl" name="wxID_CACHESIZE_VALUE">
                                 <value>10</value>
                                 <min>1</min>
                                 <max>100</max>
-                                <style>wxSL_LABELS</style>
                               </object>
                               <option>1</option>
                               <flag>wxALL|wxEXPAND</flag>
@@ -516,11 +511,10 @@
                           <object class="wxBoxSizer">
                             <orient>wxHORIZONTAL</orient>
                             <object class="sizeritem">
-                              <object class="wxSlider" name="wxID_MAXSIZEITEM_VALUE">
+                              <object class="wxSpinCtrl" name="wxID_MAXSIZEITEM_VALUE">
                                 <value>3</value>
                                 <min>1</min>
                                 <max>5</max>
-                                <style>wxSL_LABELS</style>
                               </object>
                               <option>1</option>
                               <flag>wxALL|wxEXPAND</flag>
@@ -964,11 +958,10 @@
                       <flag>wxALL|wxEXPAND</flag>
                     </object>
                     <object class="sizeritem">
-                      <object class="wxSlider" name="wxID_TIMEOUT_VALUE">
+                      <object class="wxSpinCtrl" name="wxID_TIMEOUT_VALUE">
                         <value>300</value>
                         <min>300</min>
                         <max>1000</max>
-                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                       </object>
                       <option>1</option>
                       <flag>wxALIGN_BOTTOM</flag>
