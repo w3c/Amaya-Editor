@@ -119,6 +119,10 @@ static ThotBool     WelcomePage = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
    document view twice */
 static int          Loading_method = CE_INIT;
+/* list of previous open URLs */
+#define MAX_URL_list 20
+static char        *URL_list = NULL;
+static int          URL_list_len = 0;
 
 #ifndef _WINDOWS
 static ThotIcon       stopR;
@@ -2681,11 +2685,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     }
 	   else
 	     {
-	       string = InitStringForCombobox ();
 	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			       TRUE, TextURL, string);
-	       if (string)
-		 TtaFreeMemory (string);
+			       TRUE, TextURL, URL_list);
 	       /* turn off the assign annotation buttons (should be
 		  contextual */
 	       TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
@@ -5133,6 +5134,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      TtaSetStatus (CurrentDocument, 1,
 			    TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			    DocumentName);
+	      /* update the list of URLs */
+	      if (!NewFile)
+		AddURLInCombobox (LastURLName);
 	      if (NewFile)
 		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
 	      /* load an URL */ 
@@ -5150,6 +5154,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      strcpy (tempfile, DirectoryName);
 	      strcat (tempfile, DIR_STR);
 	      strcat (tempfile, DocumentName);
+	      /* update the list of URLs */
+	      if (!NewFile)
+		AddURLInCombobox (tempfile);
 	      if (FileExistTarget (tempfile))
 		{
 		  if (InNewWindow)
@@ -6584,13 +6591,12 @@ void InitAmaya (NotifyEvent * event)
 /* MKP: disable "Cooperation" menu if DAV is not defined or
  *      initialize davlib module otherwise */
 #ifdef DAV
-    InitDAV();
+   InitDAV();
 #endif /* DAV */
-
 #ifdef _SVGLIB
-    InitLibrary();
+   InitLibrary();
 #endif /* _SVGLIB */
-   
+   InitStringForCombobox ();   
    CurrentDocument = 0;
    DocBook = 0;
    InNewWindow = FALSE;
@@ -7313,41 +7319,115 @@ void AmayaClose (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-  InitStringForCombobox
-  Initializes a string for a list box in a combobox
+  AddURLInCombobox
+  Updates the URLs string for combobox
   ----------------------------------------------------------------------*/
-char *InitStringForCombobox()
+void AddURLInCombobox (char *url)
 {
-  char     *buffer = NULL;
-  char     *url_home, *urlstring, *app_home;
-  FILE     *urlfile;
+  char     *urlstring, *app_home, *ptr;
+  FILE     *file;
+  int       i, j, len, nb, end;
 
-  /* Initialize string
-     by reading a file in APPHOME 
-     .amaya/list_url.dat */
-  url_home = (char *) TtaGetMemory (MAX_LENGTH);
+  if (url == NULL || url[0] == EOS)
+    return;
+
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
-  
-  
-  /* Read list_url.dat into APP_HOME directory */
+  /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
-  sprintf (url_home, "%s%clist_url.dat", app_home, DIR_SEP);
-  /* ./.amaya/list_url.dat */
-  urlfile = TtaReadOpen (url_home);
+  sprintf (urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
+  file = TtaWriteOpen (urlstring);
   *urlstring = EOS;
-  if (urlfile)
+  /* keep the previous list */
+  ptr = URL_list;
+  /* create a new list */
+  len = strlen (url);
+  i = 0;
+  j = len;
+  nb = 1;
+  URL_list_len = URL_list_len + len + 2;
+  URL_list = TtaGetMemory (URL_list_len);  
+  if (file)
     {
-      buffer = (char *) TtaGetMemory (MAX_LENGTH);
-      *buffer = EOS;
-      if (fscanf (urlfile, "%s", urlstring) > 0)
-	strcat (buffer, urlstring);
-      while (fscanf (urlfile, "%s", urlstring) > 0)
+      /* put the new url */
+      strcpy (URL_list, url);
+      fprintf (file, "\"%s\"\n", url);
+      if (ptr)
 	{
-	  sprintf (buffer, "%s%c%s", buffer, EOL, urlstring);
+	  /* now write other urls */
+	  while (ptr[i] != EOS && nb < MAX_URL_list)
+	    {
+	      end = 0;
+	      while (ptr[i + end] != EOL && ptr[i + end] != EOS)
+		end++;
+	      ptr[i + end] = EOS;
+	      if (end != len || strncmp (url, &ptr[i], len))
+		{
+		  /* add the newline between two urls */
+		  URL_list[j++] = EOL;
+		  strcpy (&URL_list[j], &ptr[i]);
+		  fprintf (file, "\"%s\"\n", &ptr[i]);
+		  j += end;
+		  nb++;
+		}
+	      i = i + end + 1;
+	    }
 	}
-      TtaReadClose (urlfile);
+      URL_list[j + 1] = EOS;
+      TtaWriteClose (file);
     }
-  TtaFreeMemory (url_home);
+  TtaFreeMemory (ptr);
   TtaFreeMemory (urlstring);
-  return buffer;
+  /*printf ("-------\n%s\n------\n", URL_list);*/
 }
+
+
+/*----------------------------------------------------------------------
+  InitStringForCombobox
+  Initializes the URLs string for combobox
+  ----------------------------------------------------------------------*/
+void InitStringForCombobox ()
+{
+  char     *urlstring, *app_home;
+  FILE     *file;
+  int       i, nb, len;
+
+  /* remove the previous list */
+  TtaFreeMemory (URL_list);
+  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
+  /* open the file list_url.dat into APP_HOME directory */
+  app_home = TtaGetEnvString ("APP_HOME");
+  sprintf (urlstring, "%s%clist_url.dat", app_home, DIR_SEP);
+  file = TtaReadOpen (urlstring);
+  *urlstring = EOS;
+  if (file)
+    {
+      /* get the size of the file */
+      fseek (file, 0L, 2);	/* end of the file */
+      URL_list_len = ftell (file) + MAX_URL_list + 4;
+      URL_list = TtaGetMemory (URL_list_len);
+      fseek (file, 0L, 0);	/* beginning of the file */
+      /* initialize the list by reading the file */
+      i = 0;
+      nb = 0;
+      while (fscanf (file, "%s", urlstring) > 0 && nb < MAX_URL_list)
+	{
+	  if (i > 0)
+	    /* add the newline between two urls */
+	    URL_list[i++] = EOL;
+	  len = strlen (urlstring) - 1;
+	  if (urlstring[0] == '"' && urlstring[len] == '"')
+	    {
+	      urlstring[len--] = EOS;
+	      strcpy (&URL_list[i], &urlstring[1]);
+	      i += len;
+	      nb++;
+	    }
+	  else
+	    i--;
+	}
+      URL_list[i + 1] = EOS;
+      TtaReadClose (file);
+    }
+  TtaFreeMemory (urlstring);
+}
+

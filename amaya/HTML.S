@@ -942,6 +942,7 @@ EXCEPT
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
 	PrintURL:       Invisible;
+	NoImages:       Invisible;
 	Namespaces:	Invisible;
 	RealLang:	Invisible;
 	Charset:	Invisible;
