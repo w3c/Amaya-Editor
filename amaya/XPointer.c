@@ -885,7 +885,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	 length */
       if (firstEl == lastEl)
 	{
-	  firstLen = lastCh - firstCh + 1;
+	  firstLen = lastCh - firstCh;
 	  lastEl = NULL;
 	  mode  = mode & ~(SEL_START_POINT | SEL_END_POINT);
 	}

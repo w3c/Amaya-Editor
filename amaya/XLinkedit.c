@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 2000
+ *  (c) COPYRIGHT MIT and INRIA, 2000-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -22,7 +22,7 @@
 /*----------------------------------------------------------------------
    SetXLinkTypeSimple attach an attribute xlink:type="simple" to element el
   ----------------------------------------------------------------------*/
-void         SetXLinkTypeSimple (Element el, Document doc, ThotBool withUndo)
+void SetXLinkTypeSimple (Element el, Document doc, ThotBool withUndo)
 {
   AttributeType	attrType;
   Attribute	attr;

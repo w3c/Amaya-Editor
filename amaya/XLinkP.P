@@ -209,6 +209,7 @@ RULES
  PICTURE_UNIT: BEGIN
 #ifndef PAGE
  	{Visibility: 0;}
+	Depth: Enclosing - 1;
         HorizRef: * . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
