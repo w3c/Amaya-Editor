@@ -165,7 +165,7 @@ char               *txt;
 		 {
 		    /* conserve le nom du document a ouvrir */
 		    TtaExtractName (txt, NomDirectorySauver, BufDir);
-		    /* Retire le suffixe .PIV du nom de fichier */
+		    /* RemoveElement le suffixe .PIV du nom de fichier */
 		    i = strlen (BufDir) - 4;
 		    if (!strcmp (&BufDir[i], ".PIV"))
 		       BufDir[i] = '\0';

@@ -25,65 +25,65 @@
 #include "except.f"
 
 /* ---------------------------------------------------------------------- */
-/* |    VisuPartiel trace le contour de la boite de texte ibox          | */
+/* |    VisuPartiel trace le contour de la boite de texte pBox          | */
 /* |            dans les limitesde la fenetre entre x1 et x2.           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         VisuPartiel (int frame, int x1, int x2, PtrBox ibox)
+static void         VisuPartiel (int frame, int x1, int x2, PtrBox pBox)
 #else  /* __STDC__ */
-static void         VisuPartiel (frame, x1, x2, ibox)
+static void         VisuPartiel (frame, x1, x2, pBox)
 int                 frame;
 int                 x1;
 int                 x2;
-PtrBox            ibox;
+PtrBox            pBox;
 
 #endif /* __STDC__ */
 {
    int                 larg, haut;
    int                 yh, h;
    PtrBox            boxmere;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    PtrAbstractBox             pPa1;
 
-   pFe1 = &FntrTable[frame - 1];
-   if (ibox->BxAbstractBox != NULL)
+   pFrame = &FntrTable[frame - 1];
+   if (pBox->BxAbstractBox != NULL)
       /* On limite la visibilite de la selection aux portions de texte */
       /* affichees dans les paragraphes.                               */
      {
 	/* Si on holophraste la racine du document */
 	/* le texte n'a pas de pave englobant */
-	if (ibox->BxAbstractBox->AbEnclosing == NULL)
-	   boxmere = ibox;
+	if (pBox->BxAbstractBox->AbEnclosing == NULL)
+	   boxmere = pBox;
 	else
 	  {
-	     boxmere = ibox->BxAbstractBox->AbEnclosing->AbBox;
+	     boxmere = pBox->BxAbstractBox->AbEnclosing->AbBox;
 	     while (boxmere->BxType == BoGhost)
 	       {
 		  pPa1 = boxmere->BxAbstractBox;
 		  if (pPa1->AbEnclosing == NULL)
-		     boxmere = ibox;
+		     boxmere = pBox;
 		  else
 		     boxmere = pPa1->AbEnclosing->AbBox;
 	       }
 	  }
 	/* clipping par rapport a la boite englobante */
-	haut = boxmere->BxYOrg + boxmere->BxHeight - pFe1->FrYOrg;
+	haut = boxmere->BxYOrg + boxmere->BxHeight - pFrame->FrYOrg;
 	/* +2 pour le curseur de fin de ligne */
-	larg = boxmere->BxXOrg + boxmere->BxWidth + 2 - pFe1->FrXOrg;
+	larg = boxmere->BxXOrg + boxmere->BxWidth + 2 - pFrame->FrXOrg;
 
-	yh = ibox->BxYOrg - pFe1->FrYOrg;
-	h = ibox->BxHeight;
+	yh = pBox->BxYOrg - pFrame->FrYOrg;
+	h = pBox->BxHeight;
 	if (yh > haut)
 	   h = 0;
 	else if (yh + h > haut)
 	   h = haut - yh;
 
-	x1 = x1 + ibox->BxXOrg - pFe1->FrXOrg;
+	x1 = x1 + pBox->BxXOrg - pFrame->FrXOrg;
 	if (x1 > larg)
 	   larg = 0;
 	else
 	  {
-	     x2 = x2 + ibox->BxXOrg - pFe1->FrXOrg;
+	     x2 = x2 + pBox->BxXOrg - pFrame->FrXOrg;
 	     if (x2 > larg)
 		larg -= x1;
 	     else
@@ -95,15 +95,15 @@ PtrBox            ibox;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VisuBoite trace le contour de la boite ibox dans les limites de | */
+/* |    VisuBoite trace le contour de la boite pBox dans les limites de | */
 /* |            la fenetre.                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         VisuBoite (int frame, PtrBox ibox, int pointselect)
+static void         VisuBoite (int frame, PtrBox pBox, int pointselect)
 #else  /* __STDC__ */
-static void         VisuBoite (frame, ibox, pointselect)
+static void         VisuBoite (frame, pBox, pointselect)
 int                 frame;
-PtrBox            ibox;
+PtrBox            pBox;
 int                 pointselect;
 
 #endif /* __STDC__ */
@@ -115,18 +115,18 @@ int                 pointselect;
    int                 j, nb;
    PtrTextBuffer      adbuff;
    PtrBox            box1;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    PtrAbstractBox             pPa1;
 
 
-   if (ibox != NULL)
+   if (pBox != NULL)
      {
-	pFe1 = &FntrTable[frame - 1];
-	pPa1 = ibox->BxAbstractBox;
+	pFrame = &FntrTable[frame - 1];
+	pPa1 = pBox->BxAbstractBox;
 
-	if (ibox->BxType == BoGhost
+	if (pBox->BxType == BoGhost
 	    || (pPa1 != NULL
-		&& ExceptTypeElem (ExcHighlightChildren, pPa1->AbElement->ElTypeNumber, pPa1->AbElement->ElSructSchema)))
+		&& TypeHasException (ExcHighlightChildren, pPa1->AbElement->ElTypeNumber, pPa1->AbElement->ElSructSchema)))
 	  {
 	     /* -> La boite est eclatee (boite fantome) */
 	     /* On visualise toutes les boites filles */
@@ -141,29 +141,29 @@ int                 pointselect;
 		     box1 = NULL;
 	       }
 	  }
-	else if (ibox->BxType != BoSplit)
+	else if (pBox->BxType != BoSplit)
 	  {
 	     /* La boite est entiere */
-	     xgauche = ibox->BxXOrg - pFe1->FrXOrg;
-	     yhaut = ibox->BxYOrg - pFe1->FrYOrg;
-	     ybas = yhaut + ibox->BxHeight;
-	     xdroit = xgauche + ibox->BxWidth;
-	     xmin = xgauche + ibox->BxWidth / 2;
-	     yhmoyen = yhaut + ibox->BxHeight / 2;
+	     xgauche = pBox->BxXOrg - pFrame->FrXOrg;
+	     yhaut = pBox->BxYOrg - pFrame->FrYOrg;
+	     ybas = yhaut + pBox->BxHeight;
+	     xdroit = xgauche + pBox->BxWidth;
+	     xmin = xgauche + pBox->BxWidth / 2;
+	     yhmoyen = yhaut + pBox->BxHeight / 2;
 
 	     if (pPa1 == NULL)
 		/* C'est une boite sans pave */
 		Invideo (frame, xdroit - xgauche, ybas - yhaut, xgauche, yhaut);
-	     else if (pPa1->AbLeafType == LtPlyLine && ibox->BxNChars > 1)
+	     else if (pPa1->AbLeafType == LtPlyLine && pBox->BxNChars > 1)
 	       {
 		  /* C'est une boite polyline */
 		  /* On marque le(s) point(s) caracteristique(s) de la polyline */
 		  /* si la polyline contient au moins 1 point (effectif) */
-		  adbuff = ibox->BxBuffer;
-		  xgauche = ibox->BxXOrg - pFe1->FrXOrg;
-		  yhaut = ibox->BxYOrg - pFe1->FrYOrg;
+		  adbuff = pBox->BxBuffer;
+		  xgauche = pBox->BxXOrg - pFrame->FrXOrg;
+		  yhaut = pBox->BxYOrg - pFrame->FrYOrg;
 		  j = 1;
-		  nb = ibox->BxNChars;
+		  nb = pBox->BxNChars;
 		  for (i = 1; i < nb; i++)
 		    {
 		       if (j >= adbuff->BuLength)
@@ -315,7 +315,7 @@ int                 pointselect;
 	  {
 	     /* La boite est coupee */
 	     /* Calcul des points caracteristiques de la premiere boite coupee */
-	     box1 = ibox->BxNexChild;
+	     box1 = pBox->BxNexChild;
 	     while (box1 != NULL)
 	       {
 		  VisuBoite (frame, box1, 0);
@@ -332,37 +332,37 @@ int                 pointselect;
 /* |            selection.                                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajPavSelect (int frame, PtrAbstractBox adpave, boolean Etat)
+void                MajPavSelect (int frame, PtrAbstractBox pAb, boolean Etat)
 #else  /* __STDC__ */
-void                MajPavSelect (frame, adpave, Etat)
+void                MajPavSelect (frame, pAb, Etat)
 int                 frame;
-PtrAbstractBox             adpave;
+PtrAbstractBox             pAb;
 boolean             Etat;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox             pavefils;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
-   if (adpave != NULL)
+   if (pAb != NULL)
      {
 	/* Le pave est selectionne */
-	if (adpave->AbSelected)
+	if (pAb->AbSelected)
 	  {
-	     pFe1 = &FntrTable[frame - 1];
+	     pFrame = &FntrTable[frame - 1];
 	     /* On ne visualise pas les bornes de la selection */
-	     if (pFe1->FrSelectionBegin.VsBox == NULL ||
-		 pFe1->FrSelectionEnd.VsBox == NULL)
-		VisuBoite (frame, adpave->AbBox, 0);
-	     else if (adpave != pFe1->FrSelectionBegin.VsBox->BxAbstractBox &&
-		      adpave != pFe1->FrSelectionEnd.VsBox->BxAbstractBox)
-		VisuBoite (frame, adpave->AbBox, 0);
-	     adpave->AbSelected = Etat;
+	     if (pFrame->FrSelectionBegin.VsBox == NULL ||
+		 pFrame->FrSelectionEnd.VsBox == NULL)
+		VisuBoite (frame, pAb->AbBox, 0);
+	     else if (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
+		      pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
+		VisuBoite (frame, pAb->AbBox, 0);
+	     pAb->AbSelected = Etat;
 	  }
 	else
 	   /* Sinon on parcours le sous-arbre */
 	  {
-	     pavefils = adpave->AbFirstEnclosed;
+	     pavefils = pAb->AbFirstEnclosed;
 	     while (pavefils != NULL)
 	       {
 		  MajPavSelect (frame, pavefils, Etat);
@@ -386,39 +386,39 @@ boolean             Etat;
 
 #endif /* __STDC__ */
 {
-   PtrBox            ibox;
-   PtrAbstractBox             adpave;
-   ViewFrame            *pFe1;
+   PtrBox            pBox;
+   PtrAbstractBox             pAb;
+   ViewFrame            *pFrame;
    ViewSelection            *pMa1;
    PtrBox            pBo1;
    ViewSelection            *pMa2;
 
    /* On ne visualise la selection que si la selection est coherente */
-   pFe1 = &FntrTable[frame - 1];
-   pMa1 = &pFe1->FrSelectionBegin;
-   if (pMa1->VsBox != NULL && pFe1->FrSelectionEnd.VsBox != NULL)
+   pFrame = &FntrTable[frame - 1];
+   pMa1 = &pFrame->FrSelectionBegin;
+   if (pMa1->VsBox != NULL && pFrame->FrSelectionEnd.VsBox != NULL)
      {
 	/* Est-ce que les marques de selection sont dans la meme boite ? */
-	if (pFe1->FrSelectionEnd.VsBox == pMa1->VsBox)
-	   if (!StructSelectionMode && pFe1->FrSelectOnePosition)
+	if (pFrame->FrSelectionEnd.VsBox == pMa1->VsBox)
+	   if (!StructSelectionMode && pFrame->FrSelectOnePosition)
 	      /* on ne visualise que la position */
 	      VisuPartiel (frame, pMa1->VsXPos, pMa1->VsXPos + 2, pMa1->VsBox);
 	   else if (pMa1->VsBuffer == NULL
 		    || (pMa1->VsBox->BxNChars == 0 && pMa1->VsBox->BxType == BoComplete))
 	      VisuBoite (frame, pMa1->VsBox, pMa1->VsIndBox);
 	   else
-	      VisuPartiel (frame, pMa1->VsXPos, pFe1->FrSelectionEnd.VsXPos, pMa1->VsBox);
+	      VisuPartiel (frame, pMa1->VsXPos, pFrame->FrSelectionEnd.VsXPos, pMa1->VsBox);
 	else
 	   /* Les marques de selection sont dans deux boites differentes */
 	   /* Si les deux bornes de la selection sont compatibles */
 	  {
-	     adpave = NULL;
+	     pAb = NULL;
 	     pBo1 = pMa1->VsBox;
 	     if (pMa1->VsBuffer == NULL || pBo1->BxNChars == 0)
 		VisuBoite (frame, pMa1->VsBox, 0);
 	     else
 	       {
-		  adpave = pBo1->BxAbstractBox;
+		  pAb = pBo1->BxAbstractBox;
 		  /* Est-ce que la selection debute en fin de boite ? */
 		  if (pMa1->VsXPos == pBo1->BxWidth)
 		     VisuPartiel (frame, pMa1->VsXPos,
@@ -429,17 +429,17 @@ boolean             Etat;
 		  /* Parcours les boites coupees soeurs */
 		  if (pBo1->BxType == BoPiece || pBo1->BxType == BoDotted)
 		    {
-		       ibox = pBo1->BxNexChild;
-		       while (ibox != NULL &&
-			      ibox != pFe1->FrSelectionEnd.VsBox)
+		       pBox = pBo1->BxNexChild;
+		       while (pBox != NULL &&
+			      pBox != pFrame->FrSelectionEnd.VsBox)
 			 {
-			    if (ibox->BxNChars > 0)
-			       VisuBoite (frame, ibox, 0);
-			    ibox = ibox->BxNexChild;
+			    if (pBox->BxNChars > 0)
+			       VisuBoite (frame, pBox, 0);
+			    pBox = pBox->BxNexChild;
 			 }
 		    }
 	       }
-	     pMa2 = &pFe1->FrSelectionEnd;
+	     pMa2 = &pFrame->FrSelectionEnd;
 	     pBo1 = pMa2->VsBox;
 	     if (pMa2->VsBuffer == NULL || pBo1->BxNChars == 0)
 		VisuBoite (frame, pMa2->VsBox, 0);
@@ -447,26 +447,26 @@ boolean             Etat;
 	       {
 		  /* Parcours les boites coupees soeurs */
 		  if ((pBo1->BxType == BoPiece || pBo1->BxType == BoDotted)
-		      && pBo1->BxAbstractBox != adpave)
+		      && pBo1->BxAbstractBox != pAb)
 		    {
-		       ibox = pBo1->BxAbstractBox->AbBox->BxNexChild;
-		       while (ibox != NULL &&
-			      ibox != pMa2->VsBox)
+		       pBox = pBo1->BxAbstractBox->AbBox->BxNexChild;
+		       while (pBox != NULL &&
+			      pBox != pMa2->VsBox)
 			 {
-			    VisuBoite (frame, ibox, 0);
-			    ibox = ibox->BxNexChild;
+			    VisuBoite (frame, pBox, 0);
+			    pBox = pBox->BxNexChild;
 			 }
 		    }
 		  VisuPartiel (frame, 0, pMa2->VsXPos, pMa2->VsBox);
 	       }
 	  }
 	/* Bascule l'indicateur de la selection allumee */
-	pFe1->FrSelectShown = !pFe1->FrSelectShown;
+	pFrame->FrSelectShown = !pFrame->FrSelectShown;
 
-	MajPavSelect (frame, pFe1->FrAbstractBox, Etat);
+	MajPavSelect (frame, pFrame->FrAbstractBox, Etat);
      }
    else if (Etat == False)
       /* Annule la selection meme s'il n'y a plus de boite selectionnee */
-      pFe1->FrSelectShown = False;
+      pFrame->FrSelectShown = False;
 }
 /* End Of Module visu */

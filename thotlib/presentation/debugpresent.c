@@ -38,7 +38,7 @@ static PtrPSchema   pSchemaPrs;
 static char         filename[1000];
 
 #endif
-static int          i, j, El, Attr, Val;
+static int          i, j, El, GetAttributeOfElement, Val;
 
 /* Identification des messages */
 static int          PRS;
@@ -1707,10 +1707,10 @@ char               *output_file;
 	     fprintf (output, "\n");
 	     fprintf (output, "ATTRIBUTES\n");
 	     fprintf (output, "\n");
-	     for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
+	     for (GetAttributeOfElement = 1; GetAttributeOfElement <= pSchemaStr->SsNAttributes; GetAttributeOfElement++)
 	       {
-		  pAt1 = &pSchemaStr->SsAttribute[Attr - 1];
-		  pRP1 = pSc1->PsAttrPRule[Attr - 1];
+		  pAt1 = &pSchemaStr->SsAttribute[GetAttributeOfElement - 1];
+		  pRP1 = pSc1->PsAttrPRule[GetAttributeOfElement - 1];
 		  if (pRP1 != NULL)
 		    {
 		       /* si cette attribut a une presentation */

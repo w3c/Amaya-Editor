@@ -49,17 +49,17 @@ static void TraiteSArbre();
 
 /* ---------------------------------------------------------------------- */
 /* |	ApplHerit on vient d'appliquer la regle de presentation de type	| */
-/* |		TypeR au pave pPav. Verifie si les paves environnants	| */
+/* |		TypeR au pave pAb. Verifie si les paves environnants	| */
 /* |		heritent de cette regle et si oui leur applique		| */
 /* |		l'heritage.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void ApplHerit(PRuleType TypeR, PtrAbstractBox pPav, PtrDocument pDoc)
+static void ApplHerit(PRuleType TypeR, PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else /* __STDC__ */
-static void ApplHerit(TypeR, pPav, pDoc)
+static void ApplHerit(TypeR, pAb, pDoc)
 	PRuleType TypeR;
-	PtrAbstractBox pPav;
+	PtrAbstractBox pAb;
 	PtrDocument pDoc;
 #endif /* __STDC__ */
 
@@ -76,8 +76,8 @@ static void ApplHerit(TypeR, pPav, pDoc)
  boolean bool;
 #endif /* __COLPAGE__ */
   
-  pEl = pPav->AbElement;
-  vue = pPav->AbDocView;
+  pEl = pAb->AbElement;
+  vue = pAb->AbDocView;
   if (pEl->ElNext != NULL)
     {
       /* l'element a un suivant. Celui-ci herite-t-il de son precedent ? */
@@ -101,7 +101,7 @@ static void ApplHerit(TypeR, pPav, pDoc)
 	}
       if (pP != NULL)
 	{
-	  /* il y a un element suivant dont le pave pP pourrait heriter de pPav */
+	  /* il y a un element suivant dont le pave pP pourrait heriter de pAb */
 	  pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, True, &pAttrib);
 	  if (pRegle != NULL)
 	    {
@@ -129,7 +129,7 @@ static void ApplHerit(TypeR, pPav, pDoc)
 		  }
 	    }
 	}
-      pEl = pPav->AbElement;
+      pEl = pAb->AbElement;
     }
   if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
     /* l'element a des descendants. Ceux-ci heritent-t-il de leur */
@@ -160,7 +160,7 @@ static void ApplHerit(TypeR, pPav, pDoc)
       if (pP != NULL)
 	{
 	  /* il y a un element ascendant dont le pave pP pourrait heriter */
-	  /* de pPav */
+	  /* de pAb */
 	  pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, True, &pAttrib);
 	  pRe1 = pRegle;
 	  if (pRegle != NULL)
@@ -188,13 +188,13 @@ static void ApplHerit(TypeR, pPav, pDoc)
 	}
     }
 
-  if (!pPav->AbPresentationBox)
+  if (!pAb->AbPresentationBox)
     /* ce n'est pas un pave de presentation. On regarde si les paves de */
     /* presentation crees par l'element heritent de leur createur */
     {
       /* on regarde d'abord les paves crees devant (par CreateBefore) */
-      pEl = pPav->AbElement;
-      pP = pPav->AbPrevious;
+      pEl = pAb->AbElement;
+      pP = pAb->AbPrevious;
       while (pP != NULL)
 	if (!pP->AbPresentationBox || pP->AbElement != pEl)
 	    /* ce n'est pas un pave de presentation de l'element, on arrete */
@@ -226,7 +226,7 @@ static void ApplHerit(TypeR, pPav, pDoc)
 	    pP = pP->AbPrevious;
           }
       /* on regarde les paves crees derriere (par CreateAfter) */
-      pP = pPav->AbNext;
+      pP = pAb->AbNext;
       while (pP != NULL)
 	if (!pP->AbPresentationBox || pP->AbElement != pEl)
 	    /* ce n'est pas un pave de presentation de l'element, on arrete */
@@ -258,7 +258,7 @@ static void ApplHerit(TypeR, pPav, pDoc)
 	    pP = pP->AbNext;
           }
       /* on regarde les paves crees au niveau inferieur (par Create et CreateLast) */
-      pP = pPav->AbFirstEnclosed;
+      pP = pAb->AbFirstEnclosed;
       while (pP != NULL)
 	{
 	  if (pP->AbPresentationBox && pP->AbElement == pEl)
@@ -575,38 +575,38 @@ PtrAbstractBox PaveDeElem(pEl, Vue)
 	int Vue;
 #endif /* __STDC__ */
 {
-  PtrAbstractBox         pPav;
+  PtrAbstractBox         pAb;
   boolean         stop;
   
-  pPav = NULL;
+  pAb = NULL;
   if (Vue > 0)
     if (pEl->ElAbstractBox[Vue - 1] != NULL)
       /* on prend le pave de la vue choisie par l'utilisateur */
-      pPav = pEl->ElAbstractBox[Vue - 1];
+      pAb = pEl->ElAbstractBox[Vue - 1];
   /* saute les paves de presentation */
   stop = False;
   do
-    if (pPav == NULL)
+    if (pAb == NULL)
       stop = True;
-    else if (!pPav->AbPresentationBox)
+    else if (!pAb->AbPresentationBox)
       stop = True;
     else
-      pPav = pPav->AbNext;
+      pAb = pAb->AbNext;
   while (!(stop));
-  return pPav;
+  return pAb;
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |	PavResizable  est appele' par le Mediateur, pour savoir si la	| */
-/* |		boite du pave' pPav peut etre retaillee horizontalement	| */
+/* |		boite du pave' pAb peut etre retaillee horizontalement	| */
 /* |		ou verticalement (selon Horiz).				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean  PavResizable(PtrAbstractBox pPav, boolean Horiz)
+boolean  PavResizable(PtrAbstractBox pAb, boolean Horiz)
 #else /* __STDC__ */
-boolean  PavResizable(pPav, Horiz)
-	PtrAbstractBox pPav;
+boolean  PavResizable(pAb, Horiz)
+	PtrAbstractBox pAb;
 	boolean Horiz;
 #endif /* __STDC__ */
 {
@@ -614,8 +614,8 @@ boolean  PavResizable(pPav, Horiz)
   PtrElement pEl;
   PtrDocument pDoc;
   
-  pEl = pPav->AbElement;
-  pDoc = DocuDeElem(pEl); /* le document auquel appartient le pave */
+  pEl = pAb->AbElement;
+  pDoc = DocumentOfElement(pEl); /* le document auquel appartient le pave */
   if (pDoc->DocReadOnly)
     {
       TtaDisplaySimpleMessage(LIB, INFO,LIB_NOT_ALLOWED_READ_ONLY_DOC);
@@ -625,18 +625,18 @@ boolean  PavResizable(pPav, Horiz)
     if (pEl->ElIsCopy)
       result = False;
     else
-      if (ElemReadOnly(pEl))
+      if (ElementIsReadOnly(pEl))
 	result = False;
       else
-        if (ExceptTypeElem(ExcNoResize, pEl->ElTypeNumber, pEl->ElSructSchema))
+        if (TypeHasException(ExcNoResize, pEl->ElTypeNumber, pEl->ElSructSchema))
 	  result = False;
         else
 	  if (Horiz)
 	    result = 
-	      !ExceptTypeElem(ExcNoHResize, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoHResize, pEl->ElTypeNumber, pEl->ElSructSchema);
 	  else
 	    result = 
-	      !ExceptTypeElem(ExcNoVResize, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoVResize, pEl->ElTypeNumber, pEl->ElSructSchema);
   return result;
 }
 
@@ -644,14 +644,14 @@ boolean  PavResizable(pPav, Horiz)
 
 /* ---------------------------------------------------------------------- */
 /* |	PavMovable  est appele' par le Mediateur, pour savoir si la	| */
-/* |		boite du pave' pPav peut etre deplacee horizontalement	| */
+/* |		boite du pave' pAb peut etre deplacee horizontalement	| */
 /* |		ou  verticalement (selon Horiz).			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean PavMovable(PtrAbstractBox pPav, boolean Horiz)
+boolean PavMovable(PtrAbstractBox pAb, boolean Horiz)
 #else /* __STDC__ */
-boolean PavMovable(pPav, Horiz)
-	PtrAbstractBox pPav;
+boolean PavMovable(pAb, Horiz)
+	PtrAbstractBox pAb;
 	boolean Horiz;
 #endif /* __STDC__ */
 {
@@ -659,8 +659,8 @@ boolean PavMovable(pPav, Horiz)
   PtrElement pEl;
   PtrDocument pDoc;
   
-  pEl = pPav->AbElement;
-  pDoc = DocuDeElem(pEl); 
+  pEl = pAb->AbElement;
+  pDoc = DocumentOfElement(pEl); 
   if (pDoc == NULL)
      return False;
   if (pDoc->DocReadOnly)
@@ -672,18 +672,18 @@ boolean PavMovable(pPav, Horiz)
     if (pEl->ElIsCopy)
       result = False;
     else
-      if (ElemReadOnly(pEl))
+      if (ElementIsReadOnly(pEl))
 	result = False;
       else
-        if (ExceptTypeElem(ExcNoMove, pEl->ElTypeNumber, pEl->ElSructSchema))
+        if (TypeHasException(ExcNoMove, pEl->ElTypeNumber, pEl->ElSructSchema))
 	  result = False;
         else
 	  if (Horiz)
 	    result = 
-	      !ExceptTypeElem(ExcNoHMove, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoHMove, pEl->ElTypeNumber, pEl->ElSructSchema);
 	  else
 	    result = 
-	      !ExceptTypeElem(ExcNoVMove, pEl->ElTypeNumber, pEl->ElSructSchema);
+	      !TypeHasException(ExcNoVMove, pEl->ElTypeNumber, pEl->ElSructSchema);
   return result;
 }
 
@@ -691,17 +691,17 @@ boolean PavMovable(pPav, Horiz)
 /* ---------------------------------------------------------------------- */
 /* |	NouvPosition est appele' par le Mediateur, lorsque		| */
 /* |		l'utilisateur deplace une boite a l'ecran.		| */
-/* |		pPav est le pave deplace' et deltaX et deltaY		| */
+/* |		pAb est le pave deplace' et deltaX et deltaY		| */
 /* |		representent l'amplitude du deplacement en pixels	| */
 /* |		frame indique la fenetre.				| */
 /* |		Disp indique s'il faut reafficher ou simplement		| */
 /* |		recalculer l'image.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void NouvPosition(PtrAbstractBox pPav, int deltaX, int deltaY, int frame, boolean Disp)
+void NouvPosition(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean Disp)
 #else /* __STDC__ */
-void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
-	PtrAbstractBox pPav;
+void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
+	PtrAbstractBox pAb;
 	int deltaX;
 	int deltaY;
 	int frame;
@@ -733,14 +733,14 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
   for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
     updateframe[vue - 1] = 0;
   reaff = False;  		/* rien a reafficher */
-  pEl = pPav->AbElement;	/* l'element auquel correspond le pave */
-  pDoc = DocuDeElem(pEl);	/* le document auquel il appartient */ 
+  pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
+  pDoc = DocumentOfElement(pEl);	/* le document auquel il appartient */ 
   /* numero de cette vue */ 
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, pPav->AbDocView);
+  VueSch = VueAAppliquer(pEl, NULL, pDoc, pAb->AbDocView);
   /* le pave est-il dans une mise en lignes ? */
   lignes = False;	/* a priori non */
   doit = False;
-  pP = pPav->AbEnclosing;
+  pP = pAb->AbEnclosing;
   /* on examine les paves englobants */
   while (!lignes && pP != NULL)
     {
@@ -762,24 +762,24 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
       /* on ne decale pas les paves qui ont une position flottante ou qui */
       /* sont dans une mise en ligne */
       if (pRStd->PrPosRule.PoPosDef != NoEdge 
-	  && pPav->AbVertPos.PosAbRef != NULL 
+	  && pAb->AbVertPos.PosAbRef != NULL 
 	  && !lignes)
 	{
 	  if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	    {
-	      if (pPav->AbEnclosing == NULL || pPav->AbEnclosing->AbBox == NULL)
+	      if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 		DimFenetre(frame, &x, &y);
 	      else
-		y = pPav->AbEnclosing->AbBox->BxHeight;
+		y = pAb->AbEnclosing->AbBox->BxHeight;
 	      deltaY = LogicalValue(deltaY, UnPercent, (PtrAbstractBox)y);
 	    }
 	  else if (pRStd->PrPosRule.PoDistUnit != UnPixel)
-	    deltaY = LogicalValue(deltaY, pRStd->PrPosRule.PoDistUnit, pPav);
+	    deltaY = LogicalValue(deltaY, pRStd->PrPosRule.PoDistUnit, pAb);
 	  /* cherche si la position verticale de l'element est determinee */
 	  /* par un attribut auquel est associee l'exception NewVPos */
 	  attr = False;
 	  if (pAttr != NULL)
-	    if (ExceptAttr(ExcNewVPos,pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	    if (AttrHasException(ExcNewVPos,pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	      /* la nouvelle position sera rangee dans l'attribut */ 
 	      attr = True;
 	  doit = True;
@@ -802,7 +802,7 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 		pAttr->AeAttrValue += deltaY;
 		/* fait reafficher les variables de presentation utilisant */
 		/* l'attribut */
-		ReaffAttribut(pAttr, pEl, pDoc);
+		RedisplayAttribute(pAttr, pEl, pDoc);
 		if (Disp)
 		   /* la nouvelle valeur de l'attribut doit etre prise en */
 		   /* compte dans les copies-inclusions de l'element */
@@ -816,7 +816,7 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 	    {
 	      /* cherche si l'element possede deja une regle de position */
 	      /* verticale specifique */
-	      pRegle = ChReglePres(pEl, PtVertPos, &nouveau, pDoc, pPav->AbDocView);
+	      pRegle = ChReglePres(pEl, PtVertPos, &nouveau, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
 
 	      doit = !PRuleMessagePre(pEl, pRegle, pDoc, nouveau);
@@ -856,9 +856,9 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 	      if (pEl->ElAbstractBox[vue -1] != NULL)
 	        /* l'element traite' a un pave dans cette vue */
 	        if (pDoc->DocView[vue - 1].DvSSchema == 
-		    pDoc->DocView[pPav->AbDocView -1].DvSSchema
+		    pDoc->DocView[pAb->AbDocView -1].DvSSchema
 		    && pDoc->DocView[vue - 1].DvPSchemaView ==
-		    pDoc->DocView[pPav->AbDocView -1].DvPSchemaView)
+		    pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
 		  /* c'est une vue de meme type que la vue traitee, on */
 		  /* traite le pave de l'element dans cette vue */
 		  {
@@ -908,24 +908,24 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
       /* on ne decale pas les paves qui ont une position flottante ou qui */
       /* sont mis en lignes */
       if (pRStd->PrPosRule.PoPosDef != NoEdge 
-	  && pPav->AbHorizPos.PosAbRef != NULL 
+	  && pAb->AbHorizPos.PosAbRef != NULL 
 	  && !lignes)
 	{
 	  if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	    {
-	      if (pPav->AbEnclosing == NULL || pPav->AbEnclosing->AbBox == NULL)
+	      if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 		DimFenetre(frame, &x, &y);
 	      else
-		x = pPav->AbEnclosing->AbBox->BxWidth;
+		x = pAb->AbEnclosing->AbBox->BxWidth;
 	      deltaX = LogicalValue(deltaX, UnPercent, (PtrAbstractBox)x);
 	    }
 	  else if (pRStd->PrPosRule.PoDistUnit != UnPixel)
-	    deltaX = LogicalValue(deltaX, pRStd->PrPosRule.PoDistUnit, pPav); 
+	    deltaX = LogicalValue(deltaX, pRStd->PrPosRule.PoDistUnit, pAb); 
 	  /* cherche si la position horizontale de l'element est determinee */
 	  /* par un attribut auquel est associee l'exception NewHPos */
 	  attr = False;
 	  if (pAttr != NULL)
-	    if (ExceptAttr(ExcNewHPos, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	    if (AttrHasException(ExcNewHPos, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	      /* la nouvelle position sera rangee dans l'attribut */
 	      attr = True;
 	  doit = True;
@@ -948,7 +948,7 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 		  pAttr->AeAttrValue += deltaX;
 		  /* fait reafficher les variables de presentation utilisant */
 		  /* l'attribut */
-		  ReaffAttribut(pAttr,pEl,pDoc);
+		  RedisplayAttribute(pAttr,pEl,pDoc);
 		  if (Disp)
 		     /* la nouvelle valeur de l'attribut doit etre prise en */
 		     /* compte dans les copies-inclusions de l'element */
@@ -961,7 +961,7 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 	    {
 	      /* cherche si l'element possede deja une regle de position */
 	      /* horizontale specifique */
-	      pRegle = ChReglePres(pEl, PtHorizPos, &nouveau, pDoc, pPav->AbDocView);
+	      pRegle = ChReglePres(pEl, PtHorizPos, &nouveau, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
 	      doit = !PRuleMessagePre(pEl, pRegle, pDoc, nouveau);
 	      if (doit)
@@ -999,9 +999,9 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 	      if (pEl->ElAbstractBox[vue -1] != NULL)
 	        /* l'element traite' a un pave dans cette vue */
 	        if ((pDoc->DocView[vue - 1].DvSSchema ==
-		     pDoc->DocView[pPav->AbDocView -1].DvSSchema)
+		     pDoc->DocView[pAb->AbDocView -1].DvSSchema)
 		    && (pDoc->DocView[vue - 1].DvPSchemaView ==
-		        pDoc->DocView[pPav->AbDocView -1].DvPSchemaView))
+		        pDoc->DocView[pAb->AbDocView -1].DvPSchemaView))
 		  /* c'est une vue de meme type que la vue traitee, on */
 		  /* traite le pave de l'element dans cette vue */
 		  {
@@ -1062,7 +1062,7 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 
 /* ---------------------------------------------------------------------- */
 /* |	NouvDimension est appele par le Mediateur, lorsque l'utilisateur| */
-/* |		deforme une boite a l'ecran. pPav est le pave deforme'	| */
+/* |		deforme une boite a l'ecran. pAb est le pave deforme'	| */
 /* |		et deltaX,deltaY representent l'amplitude de la		| */
 /* |		deformation en pixels.					| */
 /* |		frame indique la fenetre.				| */
@@ -1070,10 +1070,10 @@ void NouvPosition(pPav, deltaX, deltaY, frame, Disp)
 /* |		recalculer l'image.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void NouvDimension(PtrAbstractBox pPav, int deltaX, int deltaY, int frame, boolean Disp)
+void NouvDimension(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean Disp)
 #else /* __STDC__ */
-void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
-	PtrAbstractBox pPav;
+void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
+	PtrAbstractBox pAb;
 	int deltaX;
 	int deltaY;
 	int frame;
@@ -1105,10 +1105,10 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
   for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
     updateframe[vue - 1] = 0;
   reaff = False;		/* rien a reafficher */
-  pEl = pPav->AbElement;	/* l'element auquel correspond le pave */
-  pDoc = DocuDeElem(pEl);	/* le document auquel appartient le pave */ 
+  pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
+  pDoc = DocumentOfElement(pEl);	/* le document auquel appartient le pave */ 
   /* numero de cette vue dans le schema de presentation qui la definit */
-  VueSch = VueAAppliquer(pEl, NULL, pDoc, pPav->AbDocView);
+  VueSch = VueAAppliquer(pEl, NULL, pDoc, pAb->AbDocView);
   doit = False;
 
   /* traite le changement de largeur */
@@ -1124,7 +1124,7 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 	{
 	if (pRStd->PrDimRule.DrRelation == RlEnclosed)
 	  /* largeur du contenu */
-	  if (pPav->AbLeafType != LtPicture)
+	  if (pAb->AbLeafType != LtPicture)
 	    /* sauf si image */
 	    ok = False;
 	  else
@@ -1136,33 +1136,33 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
       if (ok)
 	{
 	  /* largeur courante de la boite */
-	  largeur =  pPav->AbBox->BxWidth;
+	  largeur =  pAb->AbBox->BxWidth;
 	  if (pRStd->PrDimRule.DrUnit == UnPercent)
 	    {
 	      if (!pRStd->PrDimRule.DrAbsolute)
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* d'une autre boite */
-		largeurRef = pPav->AbWidth.DimAbRef->AbBox->BxWidth;
-	      else if (pPav->AbEnclosing == NULL)
+		largeurRef = pAb->AbWidth.DimAbRef->AbBox->BxWidth;
+	      else if (pAb->AbEnclosing == NULL)
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
 		DimFenetre(frame, &largeurRef, &hauteurRef);
 	      else
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
-		largeurRef = pPav->AbEnclosing->AbBox->BxWidth;
+		largeurRef = pAb->AbEnclosing->AbBox->BxWidth;
 	      /* calcule le nouveau rapport (pourcentage) de la boite */
 	      x = LogicalValue(deltaX+largeur, UnPercent, (PtrAbstractBox)largeurRef);
 	    }
 	  else
 	    /* calcule la nouvelle largeur en unite logique */
-	    x = LogicalValue(deltaX+largeur, pRStd->PrDimRule.DrUnit, pPav);
+	    x = LogicalValue(deltaX+largeur, pRStd->PrDimRule.DrUnit, pAb);
 
 	  /* cherche si la largeur de l'element est determinee par un */
 	  /* attribut auquel est associee l'exception NewWidth */
 	  attr = False;
 	  if (pAttr != NULL)
-	      if (ExceptAttr(ExcNewWidth, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	      if (AttrHasException(ExcNewWidth, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 		/* la nouvelle largeur sera rangee dans l'attribut */
 		attr = True;
 
@@ -1186,7 +1186,7 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 		    pAttr->AeAttrValue = x;
 		    /* fait reafficher les variables de presentation */
 		    /* utilisant l'attribut */
-		    ReaffAttribut(pAttr, pEl, pDoc);
+		    RedisplayAttribute(pAttr, pEl, pDoc);
 		    if (Disp)
 		      /* la nouvelle valeur de l'attribut doit etre prise en */
 		      /* compte dans les copies-inclusions de l'element */
@@ -1198,7 +1198,7 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 	    /* de presentation specifique */
 	    {
 	      /* cherche si l'element a deja une regle de largeur specifique */
-	      pRegle = ChReglePres(pEl, PtWidth, &nouveau, pDoc, pPav->AbDocView);
+	      pRegle = ChReglePres(pEl, PtWidth, &nouveau, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
 	      doit = !PRuleMessagePre(pEl, pRegle, pDoc, nouveau);
 	      if (doit)
@@ -1232,8 +1232,8 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 	      for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 		if (pEl->ElAbstractBox[vue -1] != NULL)
 		  /* l'element traite' a un pave dans cette vue */
-		  if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocView[pPav->AbDocView -1].DvSSchema
-		      && pDoc->DocView[vue - 1].DvPSchemaView == pDoc->DocView[pPav->AbDocView -1].DvPSchemaView)
+		  if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocView[pAb->AbDocView -1].DvSSchema
+		      && pDoc->DocView[vue - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
 		    /* c'est une vue de meme type que la vue traitee, on */
 		    /* traite le pave de l'element dans cette vue */
 		    {
@@ -1288,7 +1288,7 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 	{
 	if (pRStd->PrDimRule.DrRelation == RlEnclosed)
 	  /* hauteur du contenu */ 
-	  if (pPav->AbLeafType != LtPicture)
+	  if (pAb->AbLeafType != LtPicture)
 	    ok = False;
 	  else
 	    imagetrick = True;
@@ -1299,33 +1299,33 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
       if (ok)
 	{
 	  /* hauteur courante de la boite */
-	  hauteur =  pPav->AbBox->BxHeight;
+	  hauteur =  pAb->AbBox->BxHeight;
 	  if (pRStd->PrDimRule.DrUnit == UnPercent)
 	    {
 	      if (!pRStd->PrDimRule.DrAbsolute)
 		/* la hauteur de la boite est un pourcentage de la hauteur */
 		/* d'une autre boite */
-		hauteurRef = pPav->AbWidth.DimAbRef->AbBox->BxHeight;
-	      else if (pPav->AbEnclosing == NULL)
+		hauteurRef = pAb->AbWidth.DimAbRef->AbBox->BxHeight;
+	      else if (pAb->AbEnclosing == NULL)
 		/* la hauteur de la boite est un pourcentage de la hauteur */
 		/* de la boite englobante */
 		DimFenetre(frame, &largeurRef, &hauteurRef);
 	      else
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
-		hauteurRef = pPav->AbEnclosing->AbBox->BxHeight;
+		hauteurRef = pAb->AbEnclosing->AbBox->BxHeight;
 	      /* calcule le nouveau rapport (pourcentage) de la boite */
 	      y = LogicalValue(deltaY+hauteur, UnPercent, (PtrAbstractBox)hauteurRef);
 	    }
 	  else
 	    /* calcule la nouvelle largeur en unite logique */
-	    y = LogicalValue(deltaY+hauteur, pRStd->PrDimRule.DrUnit, pPav);
+	    y = LogicalValue(deltaY+hauteur, pRStd->PrDimRule.DrUnit, pAb);
 
 	  /* cherche si la hauteur de l'element est determinee par un */
 	  /* attribut auquel est associee l'exception NewHeight */
 	  attr = False;
 	  if (pAttr != NULL)
-	    if (ExceptAttr(ExcNewHeight, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	    if (AttrHasException(ExcNewHeight, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	      /* la nouvelle hauteur sera rangee dans l'attribut */
 	      attr = True;
 	  doit = True;
@@ -1348,7 +1348,7 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 		    pAttr->AeAttrValue = y;
 		    /* fait reafficher les variables de presentation */
 		    /* utilisant l'attribut */
-		    ReaffAttribut(pAttr,pEl,pDoc);
+		    RedisplayAttribute(pAttr,pEl,pDoc);
 		    if (Disp)
 		      /* la nouvelle valeur de l'attribut doit etre prise en */
 		      /* compte dans les copies-inclusions de l'element */
@@ -1361,7 +1361,7 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 	    /* de presentation specifique */
 	    {
 	      /* cherche si l'element a deja une regle de hauteur specifique */
-	      pRegle = ChReglePres(pEl, PtHeight, &nouveau, pDoc, pPav->AbDocView);
+	      pRegle = ChReglePres(pEl, PtHeight, &nouveau, pDoc, pAb->AbDocView);
 	      /* envoie un message APP a l'application */
 	      doit = !PRuleMessagePre(pEl, pRegle, pDoc, nouveau);
 	      if (doit)
@@ -1395,8 +1395,8 @@ void NouvDimension(pPav, deltaX, deltaY, frame, Disp)
 	      for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 		if (pEl->ElAbstractBox[vue -1] != NULL)
 		  /* l'element traite' a un pave dans cette vue */
-		  if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocView[pPav->AbDocView -1].DvSSchema
-		      && pDoc->DocView[vue - 1].DvPSchemaView == pDoc->DocView[pPav->AbDocView -1].DvPSchemaView)
+		  if (pDoc->DocView[vue - 1].DvSSchema == pDoc->DocView[pAb->AbDocView -1].DvSSchema
+		      && pDoc->DocView[vue - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView -1].DvPSchemaView)
 		    /* c'est une vue de meme type que la vue traitee, on */
 		    /* traite le pave de l'element dans cette vue */
 		    {
@@ -1593,7 +1593,7 @@ static void TraiteSArbre(pE, TypeR, pDoc, pRegle, vue)
 	TraiteSArbre(pE, TypeR, pDoc, pRegle, vue);
       else
 	{
-	  /* il y a un element descendant dont les paves peuvent heriter de pPav. 
+	  /* il y a un element descendant dont les paves peuvent heriter de pAb. 
 	     On parcourt ses paves dans la vue */
 	  stop = False;
 	  while (!stop)
@@ -1692,7 +1692,7 @@ void ApplNouvRegle(pDoc, pRegle, pEl)
 	PtrElement pEl;
 #endif /* __STDC__ */
 {
-  PtrAbstractBox        pPav;
+  PtrAbstractBox        pAb;
   int            vue;
   boolean        stop;
 #ifdef __COLPAGE__
@@ -1708,48 +1708,48 @@ void ApplNouvRegle(pDoc, pRegle, pEl)
 	  {
 	    /* c'est une vue de meme type que la vue traitee, on */
 	    /* traite le pave de l'element dans cette vue */
-	    pPav = pEl->ElAbstractBox[vue - 1];
+	    pAb = pEl->ElAbstractBox[vue - 1];
 	    /* saute les paves de presentation */
 	    stop = False;
 	    do
-	      if (pPav == NULL)
+	      if (pAb == NULL)
 		stop = True;
 	      else
-		if (!pPav->AbPresentationBox)
+		if (!pAb->AbPresentationBox)
 		  stop = True;
 		else
-		  pPav = pPav->AbNext;
+		  pAb = pAb->AbNext;
 	    while (!stop);
 #ifdef __COLPAGE__
      /* boucle sur les paves de l'element */
-     while (pPav != NULL)
+     while (pAb != NULL)
        {
 #else /* __COLPAGE__ */
-	    if (pPav != NULL)
+	    if (pAb != NULL)
 #endif /* __COLPAGE__ */
 	      /* applique la regle de presentation specifique a ce pave' */
 #ifdef __COLPAGE__
-	      if (Applique(pRegle, NULL, pPav, pDoc, NULL, &bool))
+	      if (Applique(pRegle, NULL, pAb, pDoc, NULL, &bool))
 #else /* __COLPAGE__ */
-	      if (Applique(pRegle, NULL, pPav, pDoc, NULL))
+	      if (Applique(pRegle, NULL, pAb, pDoc, NULL))
 #endif /* __COLPAGE__ */
 		{
 		  switch (pRegle->PrType)
 		    {
 		    case PtHeight:
-			 pPav->AbHeightChange = True;
+			 pAb->AbHeightChange = True;
 			 break;
 		    case PtWidth:
-			 pPav->AbWidthChange = True;
+			 pAb->AbWidthChange = True;
 			 break;
 		    case PtVertPos:
-			 pPav->AbVertPosChange = True;
+			 pAb->AbVertPosChange = True;
 			 break;
 		    case PtHorizPos:
-			 pPav->AbHorizPosChange = True;
+			 pAb->AbHorizPosChange = True;
 			 break;
 		    case PtSize:
-			 pPav->AbSizeChange = True;
+			 pAb->AbSizeChange = True;
 			 break;
 		    case PtDepth:
 		    case PtLineStyle:
@@ -1757,18 +1757,18 @@ void ApplNouvRegle(pDoc, pRegle, pEl)
 		    case PtFillPattern:
 		    case PtBackground:
 		    case PtForeground:
-			 pPav->AbAspectChange = True;
+			 pAb->AbAspectChange = True;
 			 break;
 		    default:
-			 pPav->AbChange = True;
+			 pAb->AbChange = True;
 			 break;
 		    }
-		  ApplHerit(pRegle->PrType, pPav, pDoc);
+		  ApplHerit(pRegle->PrType, pAb, pDoc);
 		  /* indique le pave a faire reafficher */
-		  PavReaff(pPav, pDoc);
+		  PavReaff(pAb, pDoc);
 		}
 #ifdef __COLPAGE__
-         pPav = pPav->AbNextRepeated;
+         pAb = pAb->AbNextRepeated;
        }
 #endif /* __COLPAGE__ */
 	  }
@@ -1994,7 +1994,7 @@ void ChangeCouleur(numCouleur, Fond)
 {
   PtrDocument	SelDoc;
   PtrElement	PremSel, DerSel, pEl;
-  PtrAbstractBox	pPav;
+  PtrAbstractBox	pAb;
   int		premcar, dercar;
   boolean	selok, ChangeTrame;
   int		numTrame;
@@ -2013,7 +2013,7 @@ void ChangeCouleur(numCouleur, Fond)
       /* Coupe les elements du debut et de la fin de la selection*/
       /* s'ils sont partiellement selectionnes */
       if (premcar > 1 || dercar > 0)
-        CoupeSelection(SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+        CutSelection(SelDoc, &PremSel, &DerSel, &premcar, &dercar);
       /* parcourt les elements selectionnes */
       pEl = PremSel;
       while (pEl != NULL)
@@ -2021,7 +2021,7 @@ void ChangeCouleur(numCouleur, Fond)
 	  /* on saute les elements qui sont des copies */
 	  if (!pEl->ElIsCopy)
 	    /* on saute les elements non modifiables */
-	    if (!ElemReadOnly(pEl))
+	    if (!ElementIsReadOnly(pEl))
 	      /* on saute les marques de page */
 	      if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
 		{
@@ -2030,9 +2030,9 @@ void ChangeCouleur(numCouleur, Fond)
 		  if (Fond)
 		    /* on change la couleur de fond avec la souris */
 		    {
-		      pPav = PaveDeElem(pEl, SelVue);
-		      if (pPav != NULL)
-			if (pPav->AbFillPattern < 2)
+		      pAb = PaveDeElem(pEl, SelVue);
+		      if (pAb != NULL)
+			if (pAb->AbFillPattern < 2)
 			  /* on force la trame backgroundcolor si la trame du pave */
 			  /* est nopattern ou foregroundcolor */
 			  {
@@ -2397,7 +2397,7 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, VueSch)
 #endif /* __STDC__ */
 {
 	PtrPRule    pRP;
-	PtrAbstractBox         pPav;
+	PtrAbstractBox         pAb;
 	PtrPSchema      pSPR;
 	PtrAttribute     pAttr;
 	boolean         stop;
@@ -2423,30 +2423,30 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, VueSch)
 		/* c'est une vue de meme type que la vue traitee, on */
 		/* traite le pave de l'element dans cette vue */
 		{
-		  pPav = pEl->ElAbstractBox[vue -1];
+		  pAb = pEl->ElAbstractBox[vue -1];
 		  /* saute les paves de presentation */
 		  stop = False;
 		  do
-		    if (pPav == NULL)
+		    if (pAb == NULL)
 		      stop = True;
 		    else
-		      if (!pPav->AbPresentationBox)
+		      if (!pAb->AbPresentationBox)
 			stop = True;
 		      else
-			pPav = pPav->AbNext;
+			pAb = pAb->AbNext;
 		  while (!stop);
-		  if (pPav != NULL)
+		  if (pAb != NULL)
 		    {
 		      /* cherche la regle standard si on ne l'a pas encore */
 		      if (pRP == NULL)
-			pRP = LaRegle(pDoc, pPav, &pSPR, TypeRegleP, True, &pAttr);
+			pRP = LaRegle(pDoc, pAb, &pSPR, TypeRegleP, True, &pAttr);
 #ifdef __COLPAGE__
-	              Applique(pRP, pSPR, pPav, pDoc, pAttr, &bool);
+	              Applique(pRP, pSPR, pAb, pDoc, pAttr, &bool);
 #else /* __COLPAGE__ */
-	              Applique(pRP, pSPR, pPav, pDoc, pAttr);
+	              Applique(pRP, pSPR, pAb, pDoc, pAttr);
 #endif /* __COLPAGE__ */
 			/* marque que le pave a change' et doit etre reaffiche' */
-			  pPa1 = pPav;
+			  pPa1 = pAb;
 			  switch (TypeRegleP)
 			    {
 		      case PtVertRef:
@@ -2483,10 +2483,10 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, VueSch)
 			      break;
 			    }
 			  
-			  PavReaff(pPav, pDoc);
+			  PavReaff(pAb, pDoc);
 			  /* applique la regle de meme type aux paves environnants */
 			  /* s'ils heritent de ce parametre de presentation */
-			  ApplHerit(TypeRegleP, pPav, pDoc);
+			  ApplHerit(TypeRegleP, pAb, pDoc);
 		    }
 		}
 }

@@ -597,7 +597,7 @@ View                view;
    PtrElement          PremSel, DerSel;
    int                 premcar, dercar;
    boolean             selok;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    PtrDocument         pDoc;
 
 #ifndef NEW_WILLOWS
@@ -632,11 +632,11 @@ View                view;
 
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pPav = PaveDeElem (PremSel, 1);
+	   pAb = PaveDeElem (PremSel, 1);
 	else
-	   pPav = PaveDeElem (PremSel, view);
+	   pAb = PaveDeElem (PremSel, view);
 
-	if (pPav != NULL)
-	   ThotSelectPalette (pPav->AbBackground, pPav->AbForeground);
+	if (pAb != NULL)
+	   ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);
      }
 }

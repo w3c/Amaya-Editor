@@ -118,7 +118,7 @@ PtrDocument         pDoc;
 		  && nbentrees < nbmaxentrees)
 	     {
 		att++;
-		if (!ExceptAttr (ExcInvisible, att, TableNaturesDoc[i]))
+		if (!AttrHasException (ExcInvisible, att, TableNaturesDoc[i]))
 		   /* l'attribut est montrable a l'utilisateur */
 		  {
 		     /* conserve dans la table des attributs a chercher le */
@@ -198,7 +198,7 @@ static void         ConstruitSelecteurTypes ()
 	      if (regle != (int) Refer + 1)
 		 /* on ne retient que les types qui ne portent pas */
 		 /* l'exception Hidden */
-		 if (!ExceptTypeElem (ExcHidden, regle, pSS))
+		 if (!TypeHasException (ExcHidden, regle, pSS))
 		   {
 		      strncpy (ListeTypes + lgmenu, pSS->SsRule[regle - 1].SrName,
 			       MAX_NAME_LENGTH);
@@ -229,19 +229,19 @@ static void         ConstruitSelecteurTypes ()
 /* ---------------------------------------------------------------------- */
 /* |    ChAttr  cherche dans le domaine decrit par context et a partir  | */
 /* |            partir de (et a l'interieur de) l'element elCour, le    | */
-/* |            premier element portant l'attribut Attr (cet attribut   | */
+/* |            premier element portant l'attribut GetAttributeOfElement (cet attribut   | */
 /* |            est defini dans le schema de structure pointe' par pSS).| */
 /* |            Retourne NULL si pas trouve', sinon retourne un         | */
 /* |            pointeur sur le bloc attribut trouve' et selectionne    | */
 /* |            l'element trouve'.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PtrAttribute  ChAttr (PtrElement elCour, PtrSearchContext context, int Attr, PtrSSchema pSS)
+static PtrAttribute  ChAttr (PtrElement elCour, PtrSearchContext context, int GetAttributeOfElement, PtrSSchema pSS)
 #else
-static PtrAttribute  ChAttr (elCour, context, Attr, pSS)
+static PtrAttribute  ChAttr (elCour, context, GetAttributeOfElement, pSS)
 PtrElement          elCour;
 PtrSearchContext           context;
-int                 Attr;
+int                 GetAttributeOfElement;
 PtrSSchema        pSS;
 
 #endif
@@ -269,11 +269,11 @@ PtrSSchema        pSS;
      {
 	if (context->SStartToEnd)
 	   /* Recherche en avant */
-	   pEl = AvAttrCherche (pEl, Attr, ValAttrCherche,
+	   pEl = FwdSearchAttribute (pEl, GetAttributeOfElement, ValAttrCherche,
 				ValAttrTxtCherche, pSS);
 	else
 	   /* Recherche en arriere */
-	   pEl = ArAttrCherche (pEl, Attr, ValAttrCherche,
+	   pEl = BackSearchAttribute (pEl, GetAttributeOfElement, ValAttrCherche,
 				ValAttrTxtCherche, pSS);
 	if (pEl != NULL)
 	   /* on a trouve' un element portant l'attribut voulu, on verifie */
@@ -286,7 +286,7 @@ PtrSSchema        pSS;
 		pAscendant = pAscendant->ElParent;
 	     if (pAscendant->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
-		if (!ElemHidden (pEl))
+		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' */
 		  {
 		     /* cherche l'attribut sur l'element */
@@ -298,9 +298,9 @@ PtrSSchema        pSS;
 			do
 			  {
 			     if ((pSS == NULL || pAttr->AeAttrSSchema->SsCode == pSS->SsCode) &&
-				 (Attr == 0 || pAttr->AeAttrNum == Attr))
+				 (GetAttributeOfElement == 0 || pAttr->AeAttrNum == GetAttributeOfElement))
 				/* c'est l'attribut cherche' */
-				if (!ExceptAttr (ExcInvisible, pAttr->AeAttrNum,
+				if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum,
 						 pAttr->AeAttrSSchema))
 				   /* l'attribut est montrable a l'utilisateur */
 				   trouve = True;
@@ -324,7 +324,7 @@ PtrSSchema        pSS;
 		if (pEl != context->SEndElement)
 		   /* l'element trouve' n'est pas l'element ou` il faut */
 		   /* s'arreter */
-		   if (Avant (context->SEndElement, pEl))
+		   if (ElemIsBefore (context->SEndElement, pEl))
 		      /* l'element trouve' est apres l'element de fin, on */
 		      /* fait comme si on n'avait pas trouve' */
 		      pEl = NULL;
@@ -334,7 +334,7 @@ PtrSSchema        pSS;
 	   if (pEl != context->SStartElement)
 	      /* l'element trouve' n'est pas l'element ou` il faut */
 	      /* s'arreter */
-	      if (Avant (pEl, context->SStartElement))
+	      if (ElemIsBefore (pEl, context->SStartElement))
 		 /* l'element trouve' est avant le debut du domaine, on */
 		 /* fait comme si on n'avait pas trouve' */
 		 pEl = NULL;
@@ -383,10 +383,10 @@ char               *NomType;
      {
 	if (context->SStartToEnd)
 	   /* Recherche en avant */
-	   pEl = AvChNomType (pEl, NomType);
+	   pEl = FwdSearchElemByTypeName (pEl, NomType);
 	else
 	   /* Recherche en arriere */
-	   pEl = ArChNomType (pEl, NomType);
+	   pEl = BackSearchElemByTypeName (pEl, NomType);
 	if (pEl != NULL)
 	   /* on a trouve' un element du type voulu, on verifie que cet */
 	   /* element ne fait pas partie d'une inclusion et n'est pas */
@@ -397,7 +397,7 @@ char               *NomType;
 		pAscendant = pAscendant->ElParent;
 	     if (pAscendant->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
-		if (!ElemHidden (pEl))
+		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' a l'utilisateur */
 		   trouve = True;
 	  }
@@ -412,7 +412,7 @@ char               *NomType;
 	      /* il faut s'arreter avant l'extremite' du document */
 	      if (pEl != context->SEndElement)
 		 /*l'element trouve' n'est pas l'element ou il faut s'arreter */
-		 if (Avant (context->SEndElement, pEl))
+		 if (ElemIsBefore (context->SEndElement, pEl))
 		    /* l'element trouve' est apres l'element de fin, on */
 		    /* fait comme si on n'avait pas trouve' */
 		    pEl = NULL;
@@ -423,7 +423,7 @@ char               *NomType;
 	      /* il faut s'arreter avant l'extremite' du document */
 	      if (pEl != context->SStartElement)
 		 /*l'element trouve' n'est pas l'element ou il faut s'arreter */
-		 if (Avant (pEl, context->SStartElement))
+		 if (ElemIsBefore (pEl, context->SStartElement))
 		    /* l'element trouve' est apres l'element de fin, on */
 		    /* fait comme si on n'avait pas trouve' */
 		    pEl = NULL;
@@ -590,7 +590,7 @@ PtrSSchema        pSchAttr;
 		       trouve = True;
 		    break;
 		 case AtTextAttr:
-		    if (ChaineEtTexteEgaux (ValAttrTxtCherche, pA->AeAttrText))
+		    if (StringAndTextEqual (ValAttrTxtCherche, pA->AeAttrText))
 		       trouve = True;
 		    break;
 		 case AtReferenceAttr:
@@ -748,7 +748,7 @@ PtrSearchContext           DomaineCherche;
    if (NomTypeAChercher[0] != '\0')
      {
 	pStrTypeCherche = DomaineCherche->SDocument->DocSSchema;
-	ChRegle (&NumTypeCherche, &pStrTypeCherche, NomTypeAChercher);
+	GetSRuleFromName (&NumTypeCherche, &pStrTypeCherche, NomTypeAChercher);
 	if (NumTypeCherche == 0)
 	  {
 	     /* message 'Type inconnu' dans la feuille de saisie */
@@ -943,7 +943,7 @@ void                ChercheResValAttr ()
 		    strcpy (LabelBuffer, NomAtt);
 		    lg = strlen (LabelBuffer);
 		    lg1 = LgLabelBuffer - lg - 1;
-		    CopieTexteDansChaine (pAttrTrouve->AeAttrText,
+		    CopyTextToString (pAttrTrouve->AeAttrText,
 					  LabelBuffer + lg, &lg1);
 		    break;
 	      }

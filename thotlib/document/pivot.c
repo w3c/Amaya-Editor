@@ -70,7 +70,7 @@ char               *documentName;
    UserErrorCode = 0;
    pDoc = NULL;
    doc = 0;
-   CreeDocument (&pDoc);
+   CreateDocument (&pDoc);
    if (pDoc == NULL)
       TtaError (ERR_too_many_documents);
    else
@@ -810,7 +810,7 @@ char               *label;
       TtaError (ERR_invalid_element_type);
    else
      {
-	element = (Element) CreeSArbre (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
+	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
 		    TabDocuments[document - 1], 0, False, True, True, (*label) == '\0');
 	if (*label != '\0')
 	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);

@@ -63,8 +63,8 @@ char               *BufItemSplit;
 			      &ElemADupliquer))
 	   CanSplitElement (premEl, premcar, False, &pListe, &pPointDiv,
 			    &ElemADupliquer);
-	if (ElemADupliquer != NULL && !ElemReadOnly (pListe) &&
-	    !ElemReadOnly (ElemADupliquer))
+	if (ElemADupliquer != NULL && !ElementIsReadOnly (pListe) &&
+	    !ElementIsReadOnly (ElemADupliquer))
 	   /* la commande Split est valide, on compose l'item */
 	   /* correspondant du menu Edit */
 	  {

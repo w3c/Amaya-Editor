@@ -22,7 +22,7 @@
 #include "modimabs.f"
 
 /* ---------------------------------------------------------------------- */
-/* |    CreeTabAttrHerites alloue et remplit une table de type          | */
+/* |    CreateInheritedAttrTable alloue et remplit une table de type          | */
 /* |            InheritAttrTable. Un element de cette table indique pour  | */
 /* |            un element les attributs dont il herite des regles de   | */
 /* |            presentation. table[att] = True si le schema de		| */
@@ -31,10 +31,10 @@
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                CreeTabAttrHerites (PtrElement pEl)
+void                CreateInheritedAttrTable (PtrElement pEl)
 
 #else  /* __STDC__ */
-void                CreeTabAttrHerites (pEl)
+void                CreateInheritedAttrTable (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -77,14 +77,14 @@ PtrElement          pEl;
 /* |	autres attributs qui se comparent a cet attribut pour		| */
 /* |	l'application des regles de presentation a` cet attribut.	| */
 /* |	table[i] = True si, dans la section ATTRIBUTES, le schema de	| */
-/* |	presentation contient des regles du type "Attr > n : ...".	| */
+/* |	presentation contient des regles du type "GetAttributeOfElement > n : ...".	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                CreeTabAttrComparant (PtrAttribute pAttr)
+void                CreateComparAttrTable (PtrAttribute pAttr)
 
 #else  /* __STDC__ */
-void                CreeTabAttrComparant (pAttr)
+void                CreateComparAttrTable (pAttr)
 PtrAttribute         pAttr;
 
 #endif /* __STDC__ */
@@ -141,16 +141,16 @@ PtrAttribute         pAttr;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    TransmetValElem transmet la valeur de l'element pEl a`		| */
+/* |    TransmitElementContent transmet la valeur de l'element pEl a`		| */
 /* |    l'attribut de nom attrName des documents inclus dans le document| */
 /* |    pDoc par la regle inclRule du schema de structure pSchS	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TransmetValElem (PtrElement pEl, PtrDocument pDoc, Name attrName, int inclRule, PtrSSchema pSS)
+void                TransmitElementContent (PtrElement pEl, PtrDocument pDoc, Name attrName, int inclRule, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-void                TransmetValElem (pEl, pDoc, attrName, inclRule, pSS)
+void                TransmitElementContent (pEl, pDoc, attrName, inclRule, pSS)
 PtrElement          pEl;
 PtrDocument         pDoc;
 Name                 attrName;
@@ -192,7 +192,7 @@ PtrSSchema        pSS;
 		       {
 			  /* l'element qui reference est du type cherche' */
 			  /* accede au document inclus (a sa racine) */
-			  pIncludedEl = ElemRefer (pRef, &IncludedDocIdent, &pIncludedDoc);
+			  pIncludedEl = ReferredElement (pRef, &IncludedDocIdent, &pIncludedDoc);
 			  if (pIncludedEl != NULL)
 			    {
 			       /* le document inclus est charge', cherche */
@@ -233,12 +233,12 @@ PtrSSchema        pSS;
 				    if (found)
 				      {
 					 /* copie le contenu de la feuille */
-					 CopieTexteDansTexte ((PtrTextBuffer) pChild->ElText->BuContent,
+					 CopyTextToText ((PtrTextBuffer) pChild->ElText->BuContent,
 						  pAttr->AeAttrText, &len);
 					 /* met l'attribut sur la racine du document */
-					 PutAttributs (pIncludedEl, pIncludedDoc, pAttr);
+					 AttachAttrWithValue (pIncludedEl, pIncludedDoc, pAttr);
 				      }
-				    AttrSupprime (NULL, pAttr);
+				    DeleteAttribute (NULL, pAttr);
 				 }
 			    }
 		       }
@@ -258,10 +258,10 @@ PtrSSchema        pSS;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ApplReglesTransmit (PtrElement pEl, PtrDocument pDoc)
+void                ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                ApplReglesTransmit (pEl, pDoc)
+void                ApplyTransmitRules (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -305,10 +305,10 @@ PtrDocument         pDoc;
 			  /* les elements de type srcNumType+1 transmettent leur valeur */
 			  /* aux documents qui nous interessent. On cherche un */
 			  /* element de ce type a partir de la racine du document */
-			  pSrcEl = AvCherche (pDoc->DocRootElement, srcNumType+1, pSS);
+			  pSrcEl = FwdSearchTypedElem (pDoc->DocRootElement, srcNumType+1, pSS);
 			  if (pSrcEl != NULL)
 			     /* applique la regle Transmit a l'element trouve' */
-			     TransmetValElem (pSrcEl, pDoc, pTransR->TeTargetAttr,
+			     TransmitElementContent (pSrcEl, pDoc, pTransR->TeTargetAttr,
 					      pTransR->TeTargetDoc, pSS);
 		       }
 		  }
@@ -336,10 +336,10 @@ PtrDocument         pDoc;
 /* |									| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PostApplReglesTransmit (PtrElement pTransmEl, PtrElement pEl, PtrDocument pDoc)
+void                RepApplyTransmitRules (PtrElement pTransmEl, PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                PostApplReglesTransmit (pTransmEl, pEl, pDoc)
+void                RepApplyTransmitRules (pTransmEl, pEl, pDoc)
 PtrElement          pTransmEl;
 PtrElement          pEl;
 PtrDocument         pDoc;
@@ -350,9 +350,9 @@ PtrDocument         pDoc;
    if (pTransmEl != NULL)
       while (pEl != NULL)
 	{
-	   pEl = AvCherche (pEl, pTransmEl->ElTypeNumber, pTransmEl->ElSructSchema);
+	   pEl = FwdSearchTypedElem (pEl, pTransmEl->ElTypeNumber, pTransmEl->ElSructSchema);
 	   if (pEl != NULL)
 	      if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
-		ApplReglesTransmit (pEl, pDoc);
+		ApplyTransmitRules (pEl, pDoc);
 	}
 }

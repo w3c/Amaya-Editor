@@ -793,7 +793,7 @@ Document            document;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 v, frame;
    int                 x, y;
 
@@ -817,30 +817,30 @@ Document            document;
 	     else
 		/* vue d'elements associes */
 		v = 1;
-	     pPav = PaveDeElem ((PtrElement) element, v);
-	     if (pPav == NULL)
+	     pAb = PaveDeElem ((PtrElement) element, v);
+	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
 	       {
 		  /* Convert values to pixels */
 		  if (unit == UnPercent)
 		    {
-		       if (pPav->AbEnclosing == NULL || pPav->AbEnclosing->AbBox == NULL)
+		       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 			  DimFenetre (frame, &x, &y);
 		       else
 			 {
-			    x = pPav->AbEnclosing->AbBox->BxWidth;
-			    y = pPav->AbEnclosing->AbBox->BxHeight;
+			    x = pAb->AbEnclosing->AbBox->BxWidth;
+			    y = pAb->AbEnclosing->AbBox->BxHeight;
 			 }
 		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x);
 		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y);
 		    }
 		  else if (unit != UnPixel)
 		    {
-		       deltaX = PixelValue (deltaX, unit, pPav);
-		       deltaY = PixelValue (deltaY, unit, pPav);
+		       deltaX = PixelValue (deltaX, unit, pAb);
+		       deltaY = PixelValue (deltaY, unit, pAb);
 		    }
-		  NouvDimension (pPav, deltaX, deltaY, frame, False);
+		  NouvDimension (pAb, deltaX, deltaY, frame, False);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }
@@ -875,7 +875,7 @@ TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 v, frame;
    int                 x, y;
 
@@ -899,30 +899,30 @@ TypeUnit            unit;
 	     else
 		/* vue d'elements associes */
 		v = 1;
-	     pPav = PaveDeElem ((PtrElement) element, v);
-	     if (pPav == NULL)
+	     pAb = PaveDeElem ((PtrElement) element, v);
+	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
 	       {
 		  /* Convert values to pixels */
 		  if (unit == UnPercent)
 		    {
-		       if (pPav->AbEnclosing == NULL || pPav->AbEnclosing->AbBox == NULL)
+		       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 			  DimFenetre (frame, &x, &y);
 		       else
 			 {
-			    x = pPav->AbEnclosing->AbBox->BxWidth;
-			    y = pPav->AbEnclosing->AbBox->BxHeight;
+			    x = pAb->AbEnclosing->AbBox->BxWidth;
+			    y = pAb->AbEnclosing->AbBox->BxHeight;
 			 }
 		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x);
 		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y);
 		    }
 		  else if (unit != UnPixel)
 		    {
-		       deltaX = PixelValue (deltaX, unit, pPav);
-		       deltaY = PixelValue (deltaY, unit, pPav);
+		       deltaX = PixelValue (deltaX, unit, pAb);
+		       deltaY = PixelValue (deltaY, unit, pAb);
 		    }
-		  NouvPosition (pPav, deltaX, deltaY, frame, False);
+		  NouvPosition (pAb, deltaX, deltaY, frame, False);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }
@@ -959,7 +959,7 @@ int                *height;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 v, frame;
    int                 x, y;
 
@@ -985,31 +985,31 @@ int                *height;
 	     else
 		/* vue d'elements associes */
 		v = 1;
-	     pPav = PaveDeElem ((PtrElement) element, v);
-	     if (pPav == NULL)
+	     pAb = PaveDeElem ((PtrElement) element, v);
+	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
 	       {
-		  *width = pPav->AbBox->BxWidth;
-		  *height = pPav->AbBox->BxHeight;
+		  *width = pAb->AbBox->BxWidth;
+		  *height = pAb->AbBox->BxHeight;
 
 		  /* Convert values to pixels */
 		  if (unit == UnPercent)
 		    {
-		       if (pPav->AbEnclosing == NULL || pPav->AbEnclosing->AbBox == NULL)
+		       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 			  DimFenetre (frame, &x, &y);
 		       else
 			 {
-			    x = pPav->AbEnclosing->AbBox->BxWidth;
-			    y = pPav->AbEnclosing->AbBox->BxHeight;
+			    x = pAb->AbEnclosing->AbBox->BxWidth;
+			    y = pAb->AbEnclosing->AbBox->BxHeight;
 			 }
 		       *width = PixelValue (*width, UnPercent, (PtrAbstractBox) x);
 		       *height = PixelValue (*height, UnPercent, (PtrAbstractBox) y);
 		    }
 		  else if (unit != UnPixel)
 		    {
-		       *width = PixelValue (*width, unit, pPav);
-		       *height = PixelValue (*height, unit, pPav);
+		       *width = PixelValue (*width, unit, pAb);
+		       *height = PixelValue (*height, unit, pAb);
 		    }
 	       }
 	  }
@@ -1049,7 +1049,7 @@ int                *yCoord;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 v, frame;
    int                 x, y;
 
@@ -1075,21 +1075,21 @@ int                *yCoord;
 	     else
 		/* vue d'elements associes */
 		v = 1;
-	     pPav = PaveDeElem ((PtrElement) element, v);
-	     if (pPav == NULL)
+	     pAb = PaveDeElem ((PtrElement) element, v);
+	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
 	       {
-		  if (pPav->AbEnclosing == NULL || pPav->AbEnclosing->AbBox == NULL)
+		  if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 		     DimFenetre (frame, &x, &y);
 		  else
 		    {
-		       x = pPav->AbEnclosing->AbBox->BxWidth;
-		       y = pPav->AbEnclosing->AbBox->BxHeight;
+		       x = pAb->AbEnclosing->AbBox->BxWidth;
+		       y = pAb->AbEnclosing->AbBox->BxHeight;
 		    }
 
-		  *xCoord = pPav->AbBox->BxXOrg - pPav->AbEnclosing->AbBox->BxXOrg;
-		  *yCoord = pPav->AbBox->BxYOrg - pPav->AbEnclosing->AbBox->BxYOrg;
+		  *xCoord = pAb->AbBox->BxXOrg - pAb->AbEnclosing->AbBox->BxXOrg;
+		  *yCoord = pAb->AbBox->BxYOrg - pAb->AbEnclosing->AbBox->BxYOrg;
 		  /* Convert values to pixels */
 		  if (unit == UnPercent)
 		    {
@@ -1098,8 +1098,8 @@ int                *yCoord;
 		    }
 		  else if (unit != UnPixel)
 		    {
-		       *xCoord = PixelValue (*xCoord, unit, pPav);
-		       *yCoord = PixelValue (*yCoord, unit, pPav);
+		       *xCoord = PixelValue (*xCoord, unit, pAb);
+		       *yCoord = PixelValue (*yCoord, unit, pAb);
 		    }
 	       }
 	  }

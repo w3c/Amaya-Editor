@@ -234,16 +234,16 @@ PtrPSchema         *pSchP;
 #else  /* __COLPAGE__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    DansPage marque tous les paves du sous arbre de racine pPav     | */
+/* |    DansPage marque tous les paves du sous arbre de racine pAb     | */
 /* |            comme faisant partie de la page courante                | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                DansPage (PtrAbstractBox pPav)
+void                DansPage (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                DansPage (pPav)
-PtrAbstractBox             pPav;
+void                DansPage (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -251,7 +251,7 @@ PtrAbstractBox             pPav;
    PtrAbstractBox             pPa1;
 
 
-   pPa1 = pPav;
+   pPa1 = pAb;
    pPa1->AbAfterPageBreak = False;
    pPa1->AbOnPageBreak = False;
    pPa1 = pPa1->AbFirstEnclosed;
@@ -341,7 +341,7 @@ int                 VueNb;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pPav, PavR, PavRac;
+   PtrAbstractBox             pAb, PavR, PavRac;
    boolean             ret, det;
 
    ret = True;			/* initialisation de ret, est-ce bon ? */
@@ -357,9 +357,9 @@ int                 VueNb;
 	   || pPage->AbElement->ElPageType == PgComputed
 	   || pPage->AbElement->ElPageType == PgUser))
      {
-	pPav = pPage->AbElement->ElAbstractBox[VueNb - 1];
+	pAb = pPage->AbElement->ElAbstractBox[VueNb - 1];
 	/* premier pave de la page */
-	PavRac = pPav->AbEnclosing;	/* racine */
+	PavRac = pAb->AbEnclosing;	/* racine */
 	if (PavRac == NULL || PavRac->AbEnclosing != NULL)
 	   /* erreur image abstraite */
 	   AffPaveDebug (pPage);
@@ -367,13 +367,13 @@ int                 VueNb;
 	/* mais on laisse le pave racine non coupe en tete pour */
 	/* que les paves detruits ne soient pas recrees dans l'appel */
 	/* de AfFinFenetre (pour le print) */
-	pPav = pPav->AbPrevious;
+	pAb = pAb->AbPrevious;
 	det = False;		/* a priori pas de paves detruits */
-	while (pPav != NULL)
+	while (pAb != NULL)
 	  {
-	     TuePave (pPav);
-	     SuppRfPave (pPav, &PavReaff, pDoc);
-	     pPav = pPav->AbPrevious;
+	     TuePave (pAb);
+	     SuppRfPave (pAb, &PavReaff, pDoc);
+	     pAb = pAb->AbPrevious;
 	     det = True;	/* des paves ont ete detruits */
 	  }
 	/* signale les paves morts au Mediateur */
@@ -414,7 +414,7 @@ int                 VueNb;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pPav, PavReaff, PavRac, pSuiv;
+   PtrAbstractBox             pAb, PavReaff, PavRac, pSuiv;
    boolean             stop, ret;
    int                 h, yhaut, NbCar, yfilet;
    PtrAbstractBox             pPa1;
@@ -427,55 +427,55 @@ int                 VueNb;
    DansPage (PavRac);
    /* detruit, dans le pave Marque Page, les boites de bas de page qui */
    /* precedent le filet marquant le saut de page. */
-   pPav = pPage->AbFirstEnclosed;
+   pAb = pPage->AbFirstEnclosed;
    stop = False;
    do
-      if (pPav == NULL)
+      if (pAb == NULL)
 	 stop = True;
-      else if (!pPav->AbPresentationBox)
+      else if (!pAb->AbPresentationBox)
 	 /* Note: le filet n'est pas un pave de presentation, alors que */
 	 /* toutes les autres boites de bas de page sont des paves de */
 	 /* presentation */
 	{
 	   stop = True;
 	   /* demande au Mediateur la position verticale du filet */
-	   HautCoupure (pPav, True, &h, &yfilet, &NbCar);
+	   HautCoupure (pAb, True, &h, &yfilet, &NbCar);
 	}
       else
 	{
-	   TuePave (pPav);
-	   pPav = pPav->AbNext;
+	   TuePave (pAb);
+	   pAb = pAb->AbNext;
 	}
    while (!(stop));
    /* detruit tous les paves qui precedent le pave Marque Page et ses */
    /* paves englobants, mais pas ceux qui contiennent un saut de page */
-   pPav = pPage;
-   while (pPav != NULL)
+   pAb = pPage;
+   while (pAb != NULL)
      {
-	while (pPav->AbPrevious != NULL)
+	while (pAb->AbPrevious != NULL)
 	  {
-	     pPav = pPav->AbPrevious;
-	     pPa1 = pPav;
+	     pAb = pAb->AbPrevious;
+	     pPa1 = pAb;
 	     if (!pPa1->AbOnPageBreak)
 		if (pPa1->AbPresentationBox)
 		   /* Tue les paves de presentation */
 		  {
-		     TuePave (pPav);
-		     SuppRfPave (pPav, &PavReaff, pDoc);
+		     TuePave (pAb);
+		     SuppRfPave (pAb, &PavReaff, pDoc);
 		  }
 		else
 		   DetPavVue (pPa1->AbElement, pDoc, False, VueNb);
 	  }
-	pPav = pPav->AbEnclosing;
+	pAb = pAb->AbEnclosing;
 	/* marque les paves englobant la marque de page */
-	if (pPav != NULL)
-	   pPav->AbOnPageBreak = True;
+	if (pAb != NULL)
+	   pAb->AbOnPageBreak = True;
      }
    /* Verifie les paves suivant la marque de page aux niveaux superieurs */
-   pPav = pPage;
-   while (pPav != NULL)
+   pAb = pPage;
+   while (pAb != NULL)
      {
-	pSuiv = pPav->AbNext;
+	pSuiv = pAb->AbNext;
 	while (pSuiv != NULL)
 	  {
 	     if (!pSuiv->AbDead)
@@ -499,7 +499,7 @@ int                 VueNb;
 	       }
 	     pSuiv = pSuiv->AbNext;
 	  }
-	pPav = pPav->AbEnclosing;
+	pAb = pAb->AbEnclosing;
      }
    /* signale les paves morts au Mediateur */
    Hauteurffective = HauteurPage;

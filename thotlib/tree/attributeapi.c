@@ -136,14 +136,14 @@ Document            document;
    else
       /* parametre document correct */
       /* l'element porte-t-il deja un attribut du meme type ? */
-   if (ValAttr ((PtrElement) element, (PtrAttribute) attribute) != NULL)
+   if (AttributeValue ((PtrElement) element, (PtrAttribute) attribute) != NULL)
       /* oui, erreur */
      {
 	TtaError (ERR_duplicate_attribute);
      }
    else
       /* peut-on appliquer l'attribut a l'element ? */
-   if (AvecControleStruct && !ApplicationPossible ((PtrElement) element, NULL, (PtrAttribute) attribute, &obligatoire))
+   if (AvecControleStruct && !CanAssociateAttr ((PtrElement) element, NULL, (PtrAttribute) attribute, &obligatoire))
       /* non, erreur */
      {
 	TtaError (ERR_attribute_element_mismatch);
@@ -263,7 +263,7 @@ Document            document;
 	  }
 	else
 	  {
-	     (void) ApplicationPossible ((PtrElement) element, pAttr, pAttr,
+	     (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr,
 					 &obligatoire);
 	     if (!obligatoire)
 		/* on interdit d'enlever l'attribut Langue d'un element */
@@ -278,7 +278,7 @@ Document            document;
 	       }
 	     else
 	       {
-		  AttrSupprime ((PtrElement) element, pAttr);
+		  DeleteAttribute ((PtrElement) element, pAttr);
 #ifndef NODISPLAY
 		  UndisplayHeritAttr ((PtrElement) element, pAttr, document, True);
 #endif
@@ -424,9 +424,9 @@ Document            document;
 	if (pAttr->AeAttrText == NULL)
 	   GetBufTexte (&pAttr->AeAttrText);
 	else
-	   VideTexte (pAttr->AeAttrText);
+	   ClearText (pAttr->AeAttrText);
 	/* met le nouveau contenu */
-	CopieChaineDansTexte (buffer, pAttr->AeAttrText, &lg);
+	CopyStringToText (buffer, pAttr->AeAttrText, &lg);
 	if (pAttr->AeAttrNum == 1)
 	  {
 	     GetAttr (&pAttrNouv);
@@ -435,8 +435,8 @@ Document            document;
 	     pAttrNouv->AeDefAttr = False;
 	     pAttrNouv->AeAttrType = pAttr->AeAttrType;
 	     GetBufTexte (&pAttrNouv->AeAttrText);
-	     CopieChaineDansTexte (buffer, pAttrNouv->AeAttrText, &lg);
-	     ApplAttrToSel (pAttrNouv, 0, 0, (PtrElement) element, (PtrElement) element,
+	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
+	     AttachAttrToRange (pAttrNouv, 0, 0, (PtrElement) element, (PtrElement) element,
 			    TabDocuments[document - 1]);
 	  }
 #ifndef NODISPLAY
@@ -729,7 +729,7 @@ int                *attrKind;
 		       /* cherche dans cette extension de schema la regle */
 		       /* d'extension pour l'element */
 		       if (pSS != NULL)
-			  pRe1 = RegleExtens (((PtrElement) element)->ElSructSchema,
+			  pRe1 = ExtensionRule (((PtrElement) element)->ElSructSchema,
 				       ((PtrElement) element)->ElTypeNumber, pSS);
 		    }
 	       }
@@ -979,7 +979,7 @@ int                *length;
      }
    else
      {
-	CopieTexteDansChaine (((PtrAttribute) attribute)->AeAttrText, buffer,
+	CopyTextToString (((PtrAttribute) attribute)->AeAttrText, buffer,
 			      length);
      }
 }
@@ -1045,15 +1045,15 @@ Attribute          *attributeFound;
    if (ok)
      {
 	if (scope == SearchBackward)
-	   pEl = ArAttrCherche ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
+	   pEl = BackSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
 			    (PtrSSchema) (searchedAttribute.AttrSSchema));
 	else
-	   pEl = AvAttrCherche ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
+	   pEl = FwdSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
 			    (PtrSSchema) (searchedAttribute.AttrSSchema));
 	if (pEl != NULL)
 	   if (scope == SearchInTree)
 	     {
-		if (!DansSArbre (pEl, (PtrElement) element))
+		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
 		   pEl = NULL;
 	     }
 	if (pEl != NULL)

@@ -48,13 +48,13 @@ int                 Zoom;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
-	pFe1 = &FntrTable[frame - 1];
-	pFe1->FrVisibility = Visibilite;
-	pFe1->FrMagnification = Zoom;
+	pFrame = &FntrTable[frame - 1];
+	pFrame->FrVisibility = Visibilite;
+	pFrame->FrMagnification = Zoom;
      }
 }
 
@@ -76,13 +76,13 @@ int                *Zoom;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
-	pFe1 = &FntrTable[frame - 1];
-	*Visibilite = pFe1->FrVisibility;
-	*Zoom = pFe1->FrMagnification;
+	pFrame = &FntrTable[frame - 1];
+	*Visibilite = pFrame->FrVisibility;
+	*Zoom = pFrame->FrMagnification;
      }
 }
 
@@ -107,28 +107,28 @@ int                 Zoom;
    int                 c1;
    int                 cN;
    int                 h;
-   PtrAbstractBox             adpave;
+   PtrAbstractBox             pAb;
    PtrAbstractBox             pv1;
    PtrAbstractBox             pvN;
    int                 x, y;
    boolean             unique;
 
    /* boolean         retour; */
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    ViewSelection            *pMa1;
 
    EndInsert ();
    c1 = 0;
    cN = 0;
    /* On enregistre le seuil de visibilite et facteur de zoom de la fenetre */
-   pFe1 = &FntrTable[frame - 1];
-   pFe1->FrVisibility = Visibilite;
-   pFe1->FrMagnification = Zoom;
+   pFrame = &FntrTable[frame - 1];
+   pFrame->FrVisibility = Visibilite;
+   pFrame->FrMagnification = Zoom;
    EvalAffich = False;
-   if (pFe1->FrAbstractBox != NULL)
+   if (pFrame->FrAbstractBox != NULL)
       /* On sauvegarde la selection courante dans la fenetre */
      {
-	pMa1 = &pFe1->FrSelectionBegin;
+	pMa1 = &pFrame->FrSelectionBegin;
 	if (pMa1->VsBox != NULL)
 	  {
 	     pv1 = pMa1->VsBox->BxAbstractBox;
@@ -141,7 +141,7 @@ int                 Zoom;
 	  }
 	else
 	   pv1 = NULL;
-	pMa1 = &pFe1->FrSelectionEnd;
+	pMa1 = &pFrame->FrSelectionEnd;
 	if (pMa1->VsBox != NULL)
 	  {
 	     pvN = pMa1->VsBox->BxAbstractBox;
@@ -154,22 +154,22 @@ int                 Zoom;
 	  }
 	else
 	   pvN = NULL;
-	unique = pFe1->FrSelectOneBox;
+	unique = pFrame->FrSelectOneBox;
 	/* On libere de la hierarchie avant recreation */
-	adpave = pFe1->FrAbstractBox;
+	pAb = pFrame->FrAbstractBox;
 	/* On sauvegarde la position de la fenetre dans le document */
-	x = pFe1->FrXOrg;
-	y = pFe1->FrYOrg;
-	DispBoite (adpave, True, frame);
+	x = pFrame->FrXOrg;
+	y = pFrame->FrYOrg;
+	DispBoite (pAb, True, frame);
 	LibFont (frame);
 	/* On libere les polices de caracteres utilisees */
-	pFe1->FrAbstractBox = NULL;
+	pFrame->FrAbstractBox = NULL;
 	/* Recreation de la vue */
 	h = 0;
-	(void) ModifVue (frame, &h, adpave);
+	(void) ModifVue (frame, &h, pAb);
 	/* On restaure la position de la fenetre dans le document */
-	pFe1->FrXOrg = x;
-	pFe1->FrYOrg = y;
+	pFrame->FrXOrg = x;
+	pFrame->FrYOrg = y;
 	DefClip (frame, -1, -1, -1, -1);
 	AfficherVue (frame);
 	/* On restaure la selection courante dans la fenetre */

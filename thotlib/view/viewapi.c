@@ -480,7 +480,7 @@ boolean             complete;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 h;
    int                 frame;
    PtrAbstractBox             PavRacine;
@@ -510,11 +510,11 @@ boolean             complete;
      }
    else
      {
-	pPav = PavRacine->AbFirstEnclosed;
-	while (pPav != NULL)
+	pAb = PavRacine->AbFirstEnclosed;
+	while (pAb != NULL)
 	  {
-	     TuePave (pPav);
-	     pPav = pPav->AbNext;
+	     TuePave (pAb);
+	     pAb = pAb->AbNext;
 	  }
 #ifdef __COLPAGE__
 	/* vide la chaine des regles en retard sur la racine */
@@ -1245,7 +1245,7 @@ PtrDocument         pDoc;
 {
    boolean             result, fini, trouve;
    PtrElement          pAsc;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
 
    result = True;
    fini = False;
@@ -1254,35 +1254,35 @@ PtrDocument         pDoc;
    if (pEl->ElPrevious != NULL)
       /* il y a un voisin precedent */
      {
-	pPav = pEl->ElPrevious->ElAbstractBox[vue - 1];
-	if (pPav != NULL)
+	pAb = pEl->ElPrevious->ElAbstractBox[vue - 1];
+	if (pAb != NULL)
 	   /* l'element precedent a un pave dans la vue */
 	  {
 	     fini = True;
 	     /* si le pave de l'element precedent est complet en queue, */
 	     /* l'element aura son pave dans l'image existante */
-	     if (pPav->AbInLine || pPav->AbLeafType != LtCompound)
+	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
 		/* les paves mis en lignes ou feuille sont toujours entiers */
 		result = True;
 	     else
-		result = !pPav->AbTruncatedTail;
+		result = !pAb->AbTruncatedTail;
 	  }
      }
    else if (pEl->ElNext != NULL)
       /* il y a un voisin suivant */
      {
-	pPav = pEl->ElNext->ElAbstractBox[vue - 1];
-	if (pPav != NULL)
+	pAb = pEl->ElNext->ElAbstractBox[vue - 1];
+	if (pAb != NULL)
 	   /* l'element suivant a un pave dans la vue */
 	  {
 	     fini = True;
 	     /* si le pave de l'element suivant est complet en tete, */
 	     /* l'element aura son pave dans l'image existante */
-	     if (pPav->AbInLine || pPav->AbLeafType != LtCompound)
+	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
 		/* les paves mis en lignes sont toujours entiers */
 		result = True;
 	     else
-		result = !pPav->AbTruncatedHead;
+		result = !pAb->AbTruncatedHead;
 	  }
      }
    else
@@ -1318,10 +1318,10 @@ PtrDocument         pDoc;
       /* premier pave feuille de la vue et celui qui possede le dernier */
      {
 	/* cherche le premier pave feuille */
-	pPav = pavRacine;
-	while (pPav->AbFirstEnclosed != NULL)
-	   pPav = pPav->AbFirstEnclosed;
-	if (Avant (pEl, pPav->AbElement))
+	pAb = pavRacine;
+	while (pAb->AbFirstEnclosed != NULL)
+	   pAb = pAb->AbFirstEnclosed;
+	if (ElemIsBefore (pEl, pAb->AbElement))
 	   /* notre element se trouve avant l'element qui a la premiere */
 	   /* feuille */
 	   if (!pavRacine->AbTruncatedHead)
@@ -1336,14 +1336,14 @@ PtrDocument         pDoc;
 	   /* a la derniere feuille de l'image ? */
 	  {
 	     /* cherche d'abord le dernier pave feuille */
-	     pPav = pavRacine;
-	     while (pPav->AbFirstEnclosed != NULL)
+	     pAb = pavRacine;
+	     while (pAb->AbFirstEnclosed != NULL)
 	       {
-		  pPav = pPav->AbFirstEnclosed;
-		  while (pPav->AbNext != NULL)
-		     pPav = pPav->AbNext;
+		  pAb = pAb->AbFirstEnclosed;
+		  while (pAb->AbNext != NULL)
+		     pAb = pAb->AbNext;
 	       }
-	     if (Avant (pEl, pPav->AbElement))
+	     if (ElemIsBefore (pEl, pAb->AbElement))
 		/* notre element se trouve avant l'element qui a la derniere */
 		/* feuille, il est dans l'image */
 		result = True;
@@ -1588,31 +1588,31 @@ boolean             reaffiche;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pPav, pPavFils;
+   PtrAbstractBox             pAb, pPavFils;
    boolean             stop;
 
-   pPav = pEl->ElAbstractBox[vue - 1];
-   if (pPav != NULL)
+   pAb = pEl->ElAbstractBox[vue - 1];
+   if (pAb != NULL)
      {
 	stop = False;
 	while (!stop)
-	   if (pPav->AbElement != pEl)
+	   if (pAb->AbElement != pEl)
 	      /* ce n'est pas un pave de l'element, on arrete */
 	      stop = True;
 	   else
 	      /* c'est un pave de l'element, on le traite */
 	     {
-		pPav->AbReadOnly = !newPavModif;
+		pAb->AbReadOnly = !newPavModif;
 		if (reaffiche)
-		   pPav->AbAspectChange = True;
-		if (!pPav->AbPresentationBox)
+		   pAb->AbAspectChange = True;
+		if (!pAb->AbPresentationBox)
 		   /* c'est le pave principal de l'element */
 		  {
 		     /* les paves de presentation restent non modifiables */
-		     pPav->AbCanBeModified = newPavModif;
+		     pAb->AbCanBeModified = newPavModif;
 		     /* traite les paves de presentation crees par Create et */
 		     /* CreateLast */
-		     pPavFils = pPav->AbFirstEnclosed;
+		     pPavFils = pAb->AbFirstEnclosed;
 		     while (pPavFils != NULL)
 		       {
 			  if (pPavFils->AbElement == pEl)
@@ -1625,9 +1625,9 @@ boolean             reaffiche;
 			  pPavFils = pPavFils->AbNext;
 		       }
 		  }
-		if (pPav->AbNext != NULL)
+		if (pAb->AbNext != NULL)
 		   /* passe au pave suivant */
-		   pPav = pPav->AbNext;
+		   pAb = pAb->AbNext;
 		else
 		   stop = True;
 	     }
@@ -1834,7 +1834,7 @@ Document            document;
 	     }
 	   else
 	     {
-		if (DansSArbre (premSel, pEl) && DansSArbre (derSel, pEl))
+		if (ElemIsWithinSubtree (premSel, pEl) && ElemIsWithinSubtree (derSel, pEl))
 		   /* la selection est entierement a l'interieur de l'element */
 		   /* on annule la selection courante */
 		   DeSelDoc (pDoc);
@@ -1855,7 +1855,7 @@ Document            document;
 	   selEl = premSel;
 	   /* parcourt tous les elements selectionne' */
 	   while (selEl != NULL)
-	      if (DansSArbre (pEl, selEl))
+	      if (ElemIsWithinSubtree (pEl, selEl))
 		 /* l'element selEl est selectionne' et se trouve dans le */
 		 /* sous-arbre de l'element detruit */
 		{
@@ -1895,7 +1895,7 @@ Document            document;
    /* on retire simplement l'element de l'arbre abstrait */
    if (pDoc->DocSSchema->SsPSchema == NULL)
      {
-	Retire (pEl);
+	RemoveElement (pEl);
 	return;
      }
    /* si le document est en mode de non calcul de l'image, */
@@ -1906,7 +1906,7 @@ Document            document;
       if (pEl->ElParent == NULL)
 	{
 	   DetrPaves (pEl, pDoc, True);
-	   Retire (pEl);
+	   RemoveElement (pEl);
 	   if (pEl != pDoc->DocRootElement)
 	     {
 		for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
@@ -1919,7 +1919,7 @@ Document            document;
 	}
       else
 	{
-	   Retire (pEl);
+	   RemoveElement (pEl);
 	   return;
 	}
    VerifieElementSelectionne (pEl, document);
@@ -1936,21 +1936,21 @@ Document            document;
 	 pPrec = pPrec->ElPrevious;
    while (!(stop));
    /* cherche le premier element apres l'element a detruire : pSuiv */
-   pSuiv = Successeur (pEl);
+   pSuiv = NextElement (pEl);
    stop = False;
    do
       if (pSuiv == NULL)
 	 stop = True;
       else if (pSuiv->ElTerminal && pSuiv->ElLeafType == LtPageColBreak)
-	 pSuiv = Successeur (pSuiv);
+	 pSuiv = NextElement (pSuiv);
       else
 	 stop = True;
    while (!(stop));
    if (pSuiv == NULL)
-      pSuiv = Successeur (pPrec);
+      pSuiv = NextElement (pPrec);
    DetrPaves (pEl, pDoc, True);
    pPere = pEl->ElParent;
-   Retire (pEl);
+   RemoveElement (pEl);
    /* cherche l'element a partir duquel il faudra transmettre les */
    /* compteurs */
    if (pPrec != NULL)
@@ -2037,7 +2037,7 @@ Document            document;
 	/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
 	/* s'il y a des elements apres */
 	if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
-	   PostApplReglesTransmit (pEl, pSS, pDoc);
+	   RepApplyTransmitRules (pEl, pSS, pDoc);
      }
 }
 
@@ -2182,8 +2182,8 @@ Document            document;
    /* supprime les anciens paves de la reference */
    DetrPaves (element, pDoc, False);
    MajImAbs (pDoc);
-   ApplReglesTransmit (element, pDoc);
-   PostApplReglesTransmit (element, element, pDoc);
+   ApplyTransmitRules (element, pDoc);
+   RepApplyTransmitRules (element, element, pDoc);
    CreeTousPaves (element, pDoc);
    MajImAbs (pDoc);
    RedisplayCommand (document);
@@ -2336,7 +2336,7 @@ Document            document;
    PtrElement          pEl;
    PtrDocument         pDoc;
    int                 vue, dvol;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
 
    pDoc = TabDocuments[document - 1];
    if (pDoc == NULL)
@@ -2371,18 +2371,18 @@ Document            document;
    /* met a jour le volume des paves du premier element de texte */
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
      {
-	pPav = pEl->ElAbstractBox[vue - 1];
-	if (pPav != NULL)
+	pAb = pEl->ElAbstractBox[vue - 1];
+	if (pAb != NULL)
 	  {
-	     dvol = pEl->ElTextLength - pPav->AbVolume;
-	     pPav->AbVolume += dvol;
-	     pPav->AbChange = True;
+	     dvol = pEl->ElTextLength - pAb->AbVolume;
+	     pAb->AbVolume += dvol;
+	     pAb->AbChange = True;
 	     if (!VueAssoc (pEl))
 		pDoc->DocViewModifiedAb[vue - 1] =
-		   Englobant (pPav, pDoc->DocViewModifiedAb[vue - 1]);
+		   Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
 	     else
 		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		   Englobant (pPav, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+		   Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	  }
      }
    MajImAbs (pDoc);
@@ -2408,7 +2408,7 @@ Document            document;
    boolean             stop;
    PtrDocument         pDoc;
    int                 vue, dvol, h, frame;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
 
    pDoc = TabDocuments[document - 1];
    if (pDoc == NULL)
@@ -2439,34 +2439,34 @@ Document            document;
    /* met a jour le volume des paves correspondants */
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
      {
-	pPav = pEl->ElAbstractBox[vue - 1];
-	if (pPav != NULL)
+	pAb = pEl->ElAbstractBox[vue - 1];
+	if (pAb != NULL)
 	  {
-	     dvol = pEl->ElTextLength - pPav->AbVolume;
-	     pPav->AbVolume += dvol;
-	     pPav->AbChange = True;
+	     dvol = pEl->ElTextLength - pAb->AbVolume;
+	     pAb->AbVolume += dvol;
+	     pAb->AbChange = True;
 	     if (!VueAssoc (pEl))
 	       {
 		  pDoc->DocViewModifiedAb[vue - 1] =
-		     Englobant (pPav, pDoc->DocViewModifiedAb[vue - 1]);
+		     Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
 		  frame = pDoc->DocViewFrame[vue - 1];
 	       }
 	     else
 	       {
 		  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		     Englobant (pPav, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+		     Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 		  frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 	       }
 	     h = 0;		/* on ne s'occupe pas de la hauteur de page */
-	     ModifVue (frame, &h, pPav->AbEnclosing);
-	     if (pPav->AbDead && pPav->AbNext != NULL)
-		pPav->AbNext->AbVolume += dvol;
+	     ModifVue (frame, &h, pAb->AbEnclosing);
+	     if (pAb->AbDead && pAb->AbNext != NULL)
+		pAb->AbNext->AbVolume += dvol;
 	     do
 	       {
-		  pPav->AbVolume += dvol;
-		  pPav = pPav->AbEnclosing;
+		  pAb->AbVolume += dvol;
+		  pAb = pAb->AbEnclosing;
 	       }
-	     while (!(pPav == NULL));
+	     while (!(pAb == NULL));
 	  }
      }
    RedisplayCommand (document);
@@ -2508,7 +2508,7 @@ boolean             suppression;
       pOldAttr = pAttr;
    else
       /* l'element porte-t-il deja un attribut du meme type ? */
-      pOldAttr = ValAttr (pEl, pAttr);
+      pOldAttr = AttributeValue (pEl, pAttr);
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    heritage = (pAttr->AeAttrSSchema->SsPSchema->
 	       PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
@@ -2517,7 +2517,7 @@ boolean             suppression;
    if (heritage || comparaison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
-      pAttrAsc = GetAttrInEnclosing (pEl, pAttr->AeAttrNum,
+      pAttrAsc = GetTypedAttrAncestor (pEl, pAttr->AeAttrNum,
 				     pAttr->AeAttrSSchema, &pElAttr);
    else
       pAttrAsc = NULL;
@@ -2526,19 +2526,19 @@ boolean             suppression;
      {
 	/* on supprime d'abordles regles de presentation liees */
 	/* a l'attribut sur l'element lui-meme */
-	SupprPresAttr (pEl, TabDocuments[document - 1], pOldAttr, False, NULL);
+	RemoveAttrPresentation (pEl, TabDocuments[document - 1], pOldAttr, False, NULL);
 	/* puis on supprime sur pEl et sur les elements du sous arbre pEl */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
 	if (heritage)
-	   SupprPresHeriteesAttr (pEl, TabDocuments[document - 1], pOldAttr);
+	   RemoveInheritedAttrPresent (pEl, TabDocuments[document - 1], pOldAttr);
 	/* puis on supprime sur les elements du sous-arbre pEl */
 	/* les regles de presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
 	if (!pEl->ElTerminal && comparaison)
 	   for (pElFils = pEl->ElFirstChild; pElFils != NULL;
 		pElFils = pElFils->ElNext)
-	      SupprPresCompareeAttr (pElFils, TabDocuments[document - 1], pOldAttr);
+	      RemoveComparAttrPresent (pElFils, TabDocuments[document - 1], pOldAttr);
      }
    else if (pAttrAsc != NULL)
      {
@@ -2548,12 +2548,12 @@ boolean             suppression;
 	/* liees a l'heritage de cet attribut par le sous-arbre s'il */
 	/* existe des elements heritants de celui-ci */
 	if (heritage)
-	   SupprPresHeriteesAttr (pEl, TabDocuments[document - 1], pAttrAsc);
+	   RemoveInheritedAttrPresent (pEl, TabDocuments[document - 1], pAttrAsc);
 	/* puis on supprime sur le sous-arbre pEl les regles de */
 	/* presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
 	if (comparaison)
-	   SupprPresCompareeAttr (pEl, TabDocuments[document - 1], pAttrAsc);
+	   RemoveComparAttrPresent (pEl, TabDocuments[document - 1], pAttrAsc);
      }
 }
 
@@ -2592,22 +2592,22 @@ Document            document;
 		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
-   ApplReglesAttr (pEl, TabDocuments[document - 1], pAttr, False);
+   ApplyAttrPRulesToElem (pEl, TabDocuments[document - 1], pAttr, False);
    /* puis on applique sur pEl et les elements du sous-arbre pEl */
    /* les regles de presentation liees a l'heritage de cet attribut */
    /* par le sous arbre s'il existe des elements heritants de celui-ci */
    if (heritage)
-      ApplReglesPresHeriteesAttr (pEl, TabDocuments[document - 1], pAttr);
+      ApplyAttrPRulesToSubtree (pEl, TabDocuments[document - 1], pAttr);
    /* puis on applique sur les elements du sous arbre pEl */
    /* les regles de presentation liees a la comparaison d'un attribut */
    /* du sous-arbre avec cetype d'attribut */
    if (!pEl->ElTerminal && comparaison)
       for (pElFils = pEl->ElFirstChild; pElFils != NULL; pElFils = pElFils->ElNext)
-	 ApplReglesPresCompareesAttr (pElFils, TabDocuments[document - 1], pAttr);
+	 ApplyAttrPRules (pElFils, TabDocuments[document - 1], pAttr);
    if (pAttr->AeAttrType == AtNumAttr)
       /* s'il s'agit d'un attribut initialisant un compteur, il */
       /* faut mettre a jour les boites utilisant ce compteur */
-      AttrInitCompteur (pEl, pAttr, TabDocuments[document - 1]);
+      UpdateCountersByAttr (pEl, pAttr, TabDocuments[document - 1]);
    /* on applique les regles retardee */
    ApplReglesRetard (pEl, TabDocuments[document - 1]);
    MajImAbs (TabDocuments[document - 1]);
@@ -2654,7 +2654,7 @@ Document            document;
    if (heritage || comparaison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
-      pAttrAsc = GetAttrInEnclosing (pEl, pAttr->AeAttrNum,
+      pAttrAsc = GetTypedAttrAncestor (pEl, pAttr->AeAttrNum,
 				     pAttr->AeAttrSSchema, &pElAttr);
    else
       pAttrAsc = NULL;
@@ -2665,12 +2665,12 @@ Document            document;
 	/* on applique sur les elements du sous arbre pEl  */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
-	ApplReglesPresHeriteesAttr (pEl, TabDocuments[document - 1], pAttrAsc);
+	ApplyAttrPRulesToSubtree (pEl, TabDocuments[document - 1], pAttrAsc);
 
 	/* puis on applique sur les elements du sous-arbre pEl */
 	/* les regles de presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
-	ApplReglesPresCompareesAttr (pEl, TabDocuments[document - 1], pAttrAsc);
+	ApplyAttrPRules (pEl, TabDocuments[document - 1], pAttrAsc);
      }
    MajImAbs (TabDocuments[document - 1]);
    RedisplayCommand (document);

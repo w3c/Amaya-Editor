@@ -62,11 +62,11 @@ extern PtrBox     DansLaBoite ();
 /* |            le pave fils qui l'emporte.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                StrDesBoite (PtrBox * result, PtrAbstractBox adpave, int frame, int x, int y, int *pointselect)
+void                StrDesBoite (PtrBox * result, PtrAbstractBox pAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-void                StrDesBoite (result, adpave, frame, x, y, pointselect)
+void                StrDesBoite (result, pAb, frame, x, y, pointselect)
 PtrBox           *result;
-PtrAbstractBox             adpave;
+PtrAbstractBox             pAb;
 int                 frame;
 int                 x;
 int                 y;
@@ -75,47 +75,47 @@ int                *pointselect;
 #endif /* __STDC__ */
 {
    PtrAbstractBox             pav;
-   PtrBox            sbox, ibox;
+   PtrBox            sbox, pBox;
    PtrBox            testbox;
    int                 distmax;
    int                 lepoint;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
    /* On admet une erreur de precision de DELTA dans la designation */
    distmax = x - DELTA;
-   pFe1 = &FntrTable[frame - 1];
+   pFrame = &FntrTable[frame - 1];
    sbox = NULL;
-   pav = adpave;
+   pav = pAb;
    while (pav != NULL)
      {
 	/* Est-ce le pave selectionne ? */
-	if (pav->AbVisibility >= pFe1->FrVisibility)
+	if (pav->AbVisibility >= pFrame->FrVisibility)
 	  {
-	     ibox = DansLaBoite (pav, distmax, x, y, &lepoint);
-	     if (ibox != NULL)
+	     pBox = DansLaBoite (pav, distmax, x, y, &lepoint);
+	     if (pBox != NULL)
 		/* Si c'est le premier pave trouve */
 		if (sbox == NULL)
 		  {
-		     sbox = ibox;
+		     sbox = pBox;
 		     *pointselect = lepoint;	/* le point selectionne */
 		  }
 	     /* Si le pave est sur un plan au dessus du precedent */
 	     /* ou si le pave est un fils du precedent */
 		else if (sbox->BxAbstractBox->AbDepth > pav->AbDepth
-			 || (sbox->BxAbstractBox->AbLeafType == LtCompound && ibox->BxAbstractBox->AbLeafType != LtCompound)
-			 || Parent (sbox, ibox))
+			 || (sbox->BxAbstractBox->AbLeafType == LtCompound && pBox->BxAbstractBox->AbLeafType != LtCompound)
+			 || Parent (sbox, pBox))
 		  {
-		     sbox = ibox;
+		     sbox = pBox;
 		     *pointselect = lepoint;
 		  }
 		else
 		  {
 		     /* Verifie que le point designe est strictement dans la boite */
-		     ibox = DansLaBoite (pav, x, x, y, &lepoint);
+		     pBox = DansLaBoite (pav, x, x, y, &lepoint);
 		     testbox = DansLaBoite (sbox->BxAbstractBox, x, x, y, &lepoint);
-		     if (testbox == NULL && ibox != NULL)
+		     if (testbox == NULL && pBox != NULL)
 		       {
-			  sbox = ibox;
+			  sbox = pBox;
 			  *pointselect = lepoint;	/* le point selectionne */
 		       }
 		  }

@@ -719,13 +719,13 @@ boolean             AvecFermeDoc;
 
 /* ---------------------------------------------------------------------- */
 /* |    MajPavesAccessMode met a` jour le mode d'acces accessMode sur   | */
-/* |            le pave pPav et tous ses descendants.                   | */
+/* |            le pave pAb et tous ses descendants.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         MajPavesAccessMode (PtrAbstractBox pPav, int accessMode)
+static void         MajPavesAccessMode (PtrAbstractBox pAb, int accessMode)
 #else  /* __STDC__ */
-static void         MajPavesAccessMode (pPav, accessMode)
-PtrAbstractBox             pPav;
+static void         MajPavesAccessMode (pAb, accessMode)
+PtrAbstractBox             pAb;
 int                 accessMode;
 
 #endif /* __STDC__ */
@@ -734,26 +734,26 @@ int                 accessMode;
 
    if (accessMode == 0)		/* read only */
      {
-	pPav->AbCanBeModified = False;	/* non modifiable */
-	pPav->AbReadOnly = True;
+	pAb->AbCanBeModified = False;	/* non modifiable */
+	pAb->AbReadOnly = True;
 	/* le pave a change (pour que le mediateur reevalue les regles) */
-	pPav->AbChange = True;
+	pAb->AbChange = True;
      }
    else
       /* read write */
-      /* on laisse en read only si l'element est en read only */ if (!(ElemReadOnly (pPav->AbElement)))
+      /* on laisse en read only si l'element est en read only */ if (!(ElementIsReadOnly (pAb->AbElement)))
      {
-	if (!pPav->AbPresentationBox)
+	if (!pAb->AbPresentationBox)
 	   /* ce n'est pas un pave de presentation, il est donc modifiable */
-	   pPav->AbCanBeModified = True;
-	else if (PavPresentModifiable (pPav))
-	   pPav->AbCanBeModified = True;
-	pPav->AbReadOnly = False;
+	   pAb->AbCanBeModified = True;
+	else if (PavPresentModifiable (pAb))
+	   pAb->AbCanBeModified = True;
+	pAb->AbReadOnly = False;
 	/* le pave a change (pour que le mediateur reevalue les regles) */
-	pPav->AbChange = True;
+	pAb->AbChange = True;
      }
    /* on passe aux fils */
-   PavFils = pPav->AbFirstEnclosed;
+   PavFils = pAb->AbFirstEnclosed;
    while (PavFils != NULL)
      {
 	MajPavesAccessMode (PavFils, accessMode);
@@ -867,12 +867,12 @@ PtrDocument         pDoc;
 	while (pF != NULL)
 	  {
 	     pL = pF->ElNext;
-	     Supprime (&pF);
+	     DeleteElement (&pF);
 	     pF = pL;
 	     /* effectue une nouvelle copie */
 	  }
      }
-   CopieInclus (pEl, pDoc);
+   CopyIncludedElem (pEl, pDoc);
    /* cree les paves de la nouvelle copie dans les vues ou il y avait */
    /* deja des paves */
    if (!VueAssoc (pEl))
@@ -897,7 +897,7 @@ PtrDocument         pDoc;
    MajImAbs (pDoc);
    ReaffDoc (pDoc);
    /* Reaffiche les numeros suivants qui changent */
-   MajNumeros (Successeur (pEl), pEl, pDoc, True);
+   MajNumeros (NextElement (pEl), pEl, pDoc, True);
 }
 
 
@@ -1481,7 +1481,7 @@ PtrDocument         pDoc;
 				   if (pRef->RdElement->ElSource != NULL)
 				      /* c'est une inclusion avec expansion, on */
 				      /* copie d'abord l'element inclus */
-				      CopieInclus (pRef->RdElement, pDocRef);
+				      CopyIncludedElem (pRef->RdElement, pDocRef);
 			     ReafReference (pRef, NULL, pDocRef);
 			  }
 		  }
@@ -1804,10 +1804,10 @@ PathBuffer          nomdir;
 			if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
 			  {
 			     /* cree la representation interne d'un document vide */
-			     pDo1->DocRootElement = CreeSArbre (pDo1->DocSSchema->SsRootElem,
+			     pDo1->DocRootElement = NewSubtree (pDo1->DocSSchema->SsRootElem,
 								pDo1->DocSSchema, pDo1, 0, True, True, True, True);
 			     /* supprime les elements exclus (au sens SGML) */
-			     RetireExclus (&pDo1->DocRootElement);
+			     RemoveExcludedElem (&pDo1->DocRootElement);
 			  }
 		     }
 	     }
@@ -1818,7 +1818,7 @@ PathBuffer          nomdir;
 	     {
 
 		pDo1->DocRootElement->ElAccess = AccessReadWrite;
-		VerifieLangueRacine (pDo1, pDo1->DocRootElement);
+		CheckLanguageAttr (pDo1, pDo1->DocRootElement);
 #ifdef __COLPAGE__
 		/* il n'est plus necessaire d'ajouter un saut de page */
 		/* a la fin de l'arbre principal */
@@ -1859,7 +1859,7 @@ PathBuffer          nomdir;
 		notifyDoc.view = 0;
 		ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
 		/* traitement des attributs requis */
-		AttrRequis (pDo1->DocRootElement, pDo1);
+		AttachMandatoryAttributes (pDo1->DocRootElement, pDo1);
 		if (pDo1->DocSSchema != NULL)
 		   /* le document n'a pas ete ferme' pendant l'attente */
 		   /* des attributs requis */
@@ -1871,7 +1871,7 @@ PathBuffer          nomdir;
 		     /* ouvre les vues du document cree' */
 		     OuvreVuesInit (pDo1);
 		     /* selectionne la 1ere feuille */
-		     pEl = PremFeuille (pDo1->DocRootElement);
+		     pEl = FirstLeaf (pDo1->DocRootElement);
 		     SelectEl (pDo1, pEl, True, True);
 		  }
 	     }
@@ -1891,7 +1891,7 @@ PtrBuffer           nomsch;
 {
    PtrDocument         pDoc;
 
-   CreeDocument (&pDoc);
+   CreateDocument (&pDoc);
    if (pDoc != NULL)
       NewDocument (&pDoc, nomsch, TtaGetMessage (LIB, LIB_NO_NAME), "");
 }
@@ -1931,7 +1931,7 @@ PtrElement          RacineVue;
    PtrDocument         SelDoc;
    PtrElement          PremSel, DerSel;
    int                 PremCar, DerCar;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 retour;
    NotifyElement       notifyEl;
    boolean             complet;
@@ -2011,20 +2011,20 @@ PtrElement          RacineVue;
 		  if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
 		    {
 		       pDoc->DocAssocRoot[elass - 1] =
-			  CreeSArbre (r, pSS, pDoc, elass, True, True, True, True);
+			  NewSubtree (r, pSS, pDoc, elass, True, True, True, True);
 		       /* supprime les elements exclus (au sens SGML) */
-		       RetireExclus (&pDoc->DocAssocRoot[elass - 1]);
+		       RemoveExcludedElem (&pDoc->DocAssocRoot[elass - 1]);
 		       if (pDoc->DocAssocRoot[elass - 1] != NULL)
 			 {
 			    pDoc->DocAssocRoot[elass - 1]->ElAccess = AccessReadWrite;
-			    VerifieLangueRacine (pDoc, pDoc->DocAssocRoot[elass - 1]);
+			    CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[elass - 1]);
 			    /* traitement des exceptions */
 			    if (ThotLocalActions[T_Tableau_Creation]!= NULL)
 			      (*ThotLocalActions[T_Tableau_Creation])	
 				(pDoc->DocAssocRoot[elass - 1], pDoc);  
 			    /* creation d'une table */
 			    /* traitement des attributs requis */
-			    AttrRequis (pDoc->DocAssocRoot[elass - 1], pDoc);
+			    AttachMandatoryAttributes (pDoc->DocAssocRoot[elass - 1], pDoc);
 #ifdef __COLPAGE__
 			    /* Inutile d'ajouter un saut de page a la fin */
 #else  /* __COLPAGE__ */
@@ -2071,7 +2071,7 @@ PtrElement          RacineVue;
 		     debut = True;
 	       }
 	     if (debut)
-		pPav = CreePaves (pDoc->DocAssocRoot[elass - 1], pDoc, 1, True, True, &complet);
+		pAb = CreePaves (pDoc->DocAssocRoot[elass - 1], pDoc, 1, True, True, &complet);
 	     else
 		/* on cree l'image abstraite autour du premier */
 		/* element selectionne' */
@@ -2136,15 +2136,15 @@ PtrElement          RacineVue;
 		VerifPave (PremSel, vuelibre, pDoc, False, False);
 	     else
 	       {
-		  pPav = pDoc->DocRootElement->ElAbstractBox[vuedesignee - 1];
-		  if (pPav == NULL)
+		  pAb = pDoc->DocRootElement->ElAbstractBox[vuedesignee - 1];
+		  if (pAb == NULL)
 		     coupetete = False;
-		  else if (pPav->AbLeafType != LtCompound)
+		  else if (pAb->AbLeafType != LtCompound)
 		     coupetete = False;
-		  else if (pPav->AbInLine)
+		  else if (pAb->AbInLine)
 		     coupetete = False;
 		  else
-		     coupetete = pPav->AbTruncatedHead;
+		     coupetete = pAb->AbTruncatedHead;
 		  if (!coupetete)
 		     /* la vue designee commence au debut du */
 		     /* document, on cree la nouvelle image depuis */
@@ -2159,28 +2159,28 @@ PtrElement          RacineVue;
 		          dont le debut n'est pas coupe' */
 		       stop = False;
 		       do
-			  if (pPav == NULL)
+			  if (pAb == NULL)
 			     stop = True;
 			  else
 			    {
-			       if (pPav->AbLeafType != LtCompound)
+			       if (pAb->AbLeafType != LtCompound)
 				  coupetete = False;
-			       else if (pPav->AbInLine)
+			       else if (pAb->AbInLine)
 				  coupetete = False;
 			       else
-				  coupetete = pPav->AbTruncatedHead;
+				  coupetete = pAb->AbTruncatedHead;
 			       if (!coupetete)
 				  stop = True;
 			       else
-				  pPav = pPav->AbFirstEnclosed;
+				  pAb = pAb->AbFirstEnclosed;
 			    }
 		       while (!(stop));
 
 		       /* cree la nouvelle vue a partir de cet element */
-		       if (pPav == NULL)
+		       if (pAb == NULL)
 			  VerifPave (pDoc->DocRootElement, vuelibre, pDoc, True, False);
 		       else
-			  VerifPave (pPav->AbElement, vuelibre, pDoc, True, False);
+			  VerifPave (pAb->AbElement, vuelibre, pDoc, True, False);
 
 		    }
 	       }

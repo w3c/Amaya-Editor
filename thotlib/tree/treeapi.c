@@ -127,7 +127,7 @@ ElementType         elementType;
      }
    else
      {
-	element = CreeSArbre (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
+	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 	     TabDocuments[document - 1], 0, False, True, True, True);
 	if (element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
@@ -193,7 +193,7 @@ char               *label;
      }
    else
      {
-	element = CreeSArbre (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
+	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 		     TabDocuments[document - 1], 0, True, True, True,
 			      (*label) == '\0');
 	if (element->ElSructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
@@ -232,7 +232,7 @@ PtrDocument         pDoc;
    /* affecte un nouveau label a l'element */
    LabelIntToString (NewLabel (pDoc), pElem->ElLabel);
    if (pElem->ElReferredDescr != NULL)
-      /* cet element est reference'. CopieArbre n'a pas copie' son */
+      /* cet element est reference'. CopyTree n'a pas copie' son */
       /* descripteur d'element reference', qui est encore partage' avec */
       /* celui de l'element source */
       /* traite les references a l'element source qui sont dans le */
@@ -248,7 +248,7 @@ PtrDocument         pDoc;
 	   /* parcourt les references a l'element source */
 	  {
 	     pRefSuiv = pRef->RdNext;	/* prepare la reference suivante */
-	     if (DansSArbre (pRef->RdElement, pRac))
+	     if (ElemIsWithinSubtree (pRef->RdElement, pRac))
 		/* la reference est dans le sous-arbre de racine pRac, on la */
 		/* fait pointer vers l'element traite' (pElem) */
 	       {
@@ -256,7 +256,7 @@ PtrDocument         pDoc;
 		     /* l'element n'a pas de descripteur d'element reference', */
 		     /* on lui en affecte un */
 		    {
-		       pElem->ElReferredDescr = NewRef (pDoc);
+		       pElem->ElReferredDescr = NewReferredElDescr (pDoc);
 		       if (!pElem->ElReferredDescr->ReExternalRef)
 			  pElem->ElReferredDescr->ReReferredElem = pElem;
 		    }
@@ -375,7 +375,7 @@ Element             parent;
 		   pSS = ((PtrElement) sourceElement)->ElSructSchema;
 	  }
 	/* effectue la copie */
-	element = CopieArbre (((PtrElement) sourceElement),
+	element = CopyTree (((PtrElement) sourceElement),
 			      TabDocuments[sourceDocument - 1], 0, pSS,
 			      TabDocuments[destinationDocument - 1],
 			      (PtrElement) parent,
@@ -469,7 +469,7 @@ boolean             withContent;
 	if (!pEl->ElTerminal)
 	   /* on ne cree pas de descendance dans une copie */
 	   if (!pEl->ElIsCopy)
-	      firstCreated = Descendance (pEl->ElTypeNumber, pEl->ElSructSchema,
+	      firstCreated = CreateDescendant (pEl->ElTypeNumber, pEl->ElSructSchema,
 		  TabDocuments[document - 1], &lastCreated, pEl->ElAssocNum,
 					  elementType.ElTypeNum,
 				    (PtrSSchema) (elementType.ElSSchema));
@@ -491,7 +491,7 @@ boolean             withContent;
 		    {
 		       pSuiv = pFrere->ElNext;
 		       if (pFrere != firstCreated)
-			  Supprime (&pFrere);
+			  DeleteElement (&pFrere);
 		       pFrere = pSuiv;
 		    }
 	       }
@@ -507,7 +507,7 @@ boolean             withContent;
 #ifndef NODISPLAY
 		  ChaineChoix (pEl, &firstCreated, TabDocuments[document - 1]);
 #else
-		  InsChoix (pEl, &firstCreated, False);
+		  InsertElemInChoice (pEl, &firstCreated, False);
 #endif
 		  /* chaine l'element cree */
 		  if (pEl == firstCreated && ident)
@@ -515,7 +515,7 @@ boolean             withContent;
 	       }
 	     else
 	       {
-		  if (PremierFilsPossible (pEl, TabDocuments[document - 1],
+		  if (AllowedFirstChild (pEl, TabDocuments[document - 1],
 			    firstCreated->ElTypeNumber, firstCreated->ElSructSchema,
 					   False, False))
 		    {
@@ -524,15 +524,15 @@ boolean             withContent;
 			  if (pFils->ElTerminal &&
 			      pFils->ElLeafType == LtPageColBreak)
 			     /* saute les marques de page qui sont en tete */
-			     SautePageDebut (&pFils);
+			     SkipPageBreakBegin (&pFils);
 			  else
 			     pFils = NULL;
 		       if (pFils != NULL)
 			  /* il y a des marques de page, on insere l'element */
 			  /* apres ces marques */
-			  InsApres (pFils, firstCreated);
+			  InsertElementAfter (pFils, firstCreated);
 		       else
-			  AjPremFils (pEl, firstCreated);
+			  InsertFirstChild (pEl, firstCreated);
 		    }
 		  else
 		    {
@@ -540,7 +540,7 @@ boolean             withContent;
 		       ok = False;
 		       while (pFils != NULL && !ok)
 			 {
-			    if (VoisinPossible (pFils, TabDocuments[document - 1],
+			    if (AllowedSibling (pFils, TabDocuments[document - 1],
 			    firstCreated->ElTypeNumber, firstCreated->ElSructSchema,
 						False, False, False))
 			       /* notre arbre peut se placer apres pFils */
@@ -550,7 +550,7 @@ boolean             withContent;
 			       else
 				  /* on verifie que notre arbre peut se placer */
 				  /* devant le frere suivant de pFils */
-				  ok = VoisinPossible (pFils->ElNext,
+				  ok = AllowedSibling (pFils->ElNext,
 						 TabDocuments[document - 1],
 						       firstCreated->ElTypeNumber,
 						  firstCreated->ElSructSchema,
@@ -561,10 +561,10 @@ boolean             withContent;
 		       if (pFils == NULL)
 			 {
 			    lastCreated = NULL;
-			    Supprime (&firstCreated);
+			    DeleteElement (&firstCreated);
 			 }
 		       else
-			  InsApres (pFils, firstCreated);
+			  InsertElementAfter (pFils, firstCreated);
 		    }
 	       }
 	     if (firstCreated != NULL)
@@ -572,15 +572,15 @@ boolean             withContent;
 #ifndef NODISPLAY
 		  pVoisin = firstCreated->ElNext;
 		  /* saute les marques de page qui suivent */
-		  SauteMarquePage (&pVoisin);
+		  FwdSkipPageBreak (&pVoisin);
 #endif
 		  if (withContent)
 		     if (!lastCreated->ElTerminal)
 			if (lastCreated->ElSructSchema->SsRule[lastCreated->ElTypeNumber - 1].SrConstruct != CsChoice)
 			  {
-			     pFils = CreeSArbre (lastCreated->ElTypeNumber, lastCreated->ElSructSchema, TabDocuments[document - 1], lastCreated->ElAssocNum, True, False, True, True);
+			     pFils = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElSructSchema, TabDocuments[document - 1], lastCreated->ElAssocNum, True, False, True, True);
 			     if (pFils != NULL)
-				AjPremFils (lastCreated, pFils);
+				InsertFirstChild (lastCreated, pFils);
 			  }
 		  pE = firstCreated;
 		  while (pE != NULL)
@@ -589,14 +589,14 @@ boolean             withContent;
 			  pSuiv = NULL;
 		       else
 			  pSuiv = pE->ElNext;
-		       RetireExclus (&pE);
+		       RemoveExcludedElem (&pE);
 		       if (pE != NULL)
 			 {
 			    /* traitement des exceptions */
 			    TraiteExceptionCreation (pE, TabDocuments[document - 1]);
 #ifndef NODISPLAY
 			    /* traite les attributs requis des elements crees */
-			    AttrRequis (pE, TabDocuments[document - 1]);
+			    AttachMandatoryAttributes (pE, TabDocuments[document - 1]);
 			    RedispNewElement (document, pE, pVoisin,
 					      True, True);
 #endif
@@ -726,8 +726,8 @@ Document            document;
 	  {
 	     pDoc = TabDocuments[document - 1];
 	     pEl = (PtrElement) element;
-	     NoteRefSortantes (pEl, pDoc, False);
-	     NoteElemRefDetruits (pEl, pDoc);
+	     RegisterExternalRef (pEl, pDoc, False);
+	     RegisterDeletedReferredElem (pEl, pDoc);
 	     racine = (pEl->ElParent == NULL);
 #ifndef NODISPLAY
 	     UndisplayElement (pEl, document);
@@ -739,7 +739,7 @@ Document            document;
 		else if (pDoc->DocAssocRoot[pEl->ElAssocNum - 1] == pEl)
 		   /* c'est la racine d'un arbre associe' */
 		   pDoc->DocAssocRoot[pEl->ElAssocNum - 1] = NULL;
-	     Supprime (&pEl);
+	     DeleteElement (&pEl);
 	  }
      }
 }
@@ -831,7 +831,7 @@ Document            document;
 		  if (pDoc->DocRootElement != NULL)
 		     UndisplayElement (pDoc->DocRootElement, document);
 #endif
-		  Supprime (&pDoc->DocRootElement);
+		  DeleteElement (&pDoc->DocRootElement);
 		  pDoc->DocRootElement = pRoot;
 		  numAssocLibre = 0;
 		  ok = True;
@@ -893,7 +893,7 @@ Document            document;
 			       UndisplayElement (pDoc->DocAssocRoot[numAssoc - 1],
 						 document);
 #endif
-			    Supprime (&pDoc->DocAssocRoot[numAssoc - 1]);
+			    DeleteElement (&pDoc->DocAssocRoot[numAssoc - 1]);
 			    if (numAssocLibre == 0)
 			       numAssocLibre = numAssoc;
 			 }
@@ -913,7 +913,7 @@ Document            document;
 		  pRoot->ElAccess = AccessReadWrite;
 		  SetAssocNumber (pRoot, numAssocLibre);
 		  /* verifie que la nouvelle racine porte un attribut Langue */
-		  VerifieLangueRacine (pDoc, pRoot);
+		  CheckLanguageAttr (pDoc, pRoot);
 #ifndef NODISPLAY
 		  RedispNewElement (document, pRoot, NULL, True, True);
 #endif
@@ -980,7 +980,7 @@ Document            document;
      }
    else
       /* parametre document correct */
-      if (AvecControleStruct && !VoisinPossible ((PtrElement) sibling,
+      if (AvecControleStruct && !AllowedSibling ((PtrElement) sibling,
 						 TabDocuments[document - 1],
 					  ((PtrElement) newElement)->ElTypeNumber,
 				     ((PtrElement) newElement)->ElSructSchema,
@@ -994,17 +994,17 @@ Document            document;
 	  {
 #ifndef NODISPLAY
 	     pVoisin = ((PtrElement) sibling)->ElPrevious;
-	     SauteArMarquePage (&pVoisin);
+	     BackSkipPageBreak (&pVoisin);
 #endif
-	     InsAvant ((PtrElement) sibling, (PtrElement) newElement);
+	     InsertElementBefore ((PtrElement) sibling, (PtrElement) newElement);
 	  }
 	else
 	  {
 #ifndef NODISPLAY
 	     pVoisin = ((PtrElement) sibling)->ElNext;
-	     SauteMarquePage (&pVoisin);
+	     FwdSkipPageBreak (&pVoisin);
 #endif
-	     InsApres ((PtrElement) sibling, (PtrElement) newElement);
+	     InsertElementAfter ((PtrElement) sibling, (PtrElement) newElement);
 	  }
 	/* met a jour le numero d'element associe' */
 	SetAssocNumber ((PtrElement) newElement,
@@ -1012,7 +1012,7 @@ Document            document;
 	/* Traite les exclusions dans l'element cree */
 	pEl = (PtrElement) newElement;
 	if (AvecControleStruct)
-	   RetireExclus (&pEl);
+	   RemoveExcludedElem (&pEl);
 	if (pEl != NULL)
 	  {
 	     /* traitement des exceptions */
@@ -1021,11 +1021,11 @@ Document            document;
 	     /* s'il s'agit d'un element de paire, etablit le */
 	     /* chainage avec son homologue */
 	     if (((PtrElement) newElement)->ElSructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-		AutreMarque ((PtrElement) newElement);
+		GetOtherPairedElement ((PtrElement) newElement);
 #ifndef NODISPLAY
 	     /* traite les attributs requis des elements crees */
 	     if (AvecControleStruct)
-		AttrRequis (pEl, TabDocuments[document - 1]);
+		AttachMandatoryAttributes (pEl, TabDocuments[document - 1]);
 	     if (pVoisin != NULL)
 		/* l'element qui vient d'etre insere' n'est ni le */
 		/* premier ni le dernier parmi ses freres */
@@ -1106,12 +1106,12 @@ Document            document;
 	     ChaineChoix ((PtrElement) parent, (PtrElement *) newElement,
 			  TabDocuments[document - 1]);
 #else
-	     InsChoix ((PtrElement) parent, (PtrElement *) newElement, False);
+	     InsertElemInChoice ((PtrElement) parent, (PtrElement *) newElement, False);
 #endif
 	     ok = True;
 	  }
 	else if (AvecControleStruct
-		 && !PremierFilsPossible ((PtrElement) parent, TabDocuments[document - 1],
+		 && !AllowedFirstChild ((PtrElement) parent, TabDocuments[document - 1],
 					  ((PtrElement) (*newElement))->ElTypeNumber, ((PtrElement) (*newElement))->ElSructSchema, False, False))
 	   TtaError (ERR_element_does_not_match_DTD);
 	else
@@ -1120,15 +1120,15 @@ Document            document;
 	     if (pFils != NULL)
 		if (pFils->ElTerminal && pFils->ElLeafType == LtPageColBreak)
 		   /* saute les marques de page qui sont en tete */
-		   SautePageDebut (&pFils);
+		   SkipPageBreakBegin (&pFils);
 		else
 		   pFils = NULL;
 	     if (pFils != NULL)
 		/* il y a des marques de page, on insere l'element */
 		/* apres ces marques */
-		InsApres (pFils, (PtrElement) (*newElement));
+		InsertElementAfter (pFils, (PtrElement) (*newElement));
 	     else
-		AjPremFils ((PtrElement) parent, (PtrElement) (*newElement));
+		InsertFirstChild ((PtrElement) parent, (PtrElement) (*newElement));
 	     ok = True;
 	  }
 
@@ -1137,14 +1137,14 @@ Document            document;
 #ifndef NODISPLAY
 	     pVoisin = ((PtrElement) (*newElement))->ElNext;
 	     /* saute les marques de page qui suivent */
-	     SauteMarquePage (&pVoisin);
+	     FwdSkipPageBreak (&pVoisin);
 #endif
 	     /* met a jour le numero d'element associe' */
 	     SetAssocNumber ((PtrElement) (*newElement),
 			     ((PtrElement) parent)->ElAssocNum);
 	     /* Traite les exclusions dans l'element cree */
 	     if (AvecControleStruct)
-		RetireExclus ((PtrElement *) newElement);
+		RemoveExcludedElem ((PtrElement *) newElement);
 	     if ((PtrElement) (*newElement) != NULL)
 	       {
 		  /* traitement des exceptions */
@@ -1153,7 +1153,7 @@ Document            document;
 #ifndef NODISPLAY
 		  /* traite les attributs requis des elements crees */
 		  if (AvecControleStruct)
-		     AttrRequis ((PtrElement) (*newElement), TabDocuments[document - 1]);
+		     AttachMandatoryAttributes ((PtrElement) (*newElement), TabDocuments[document - 1]);
 		  RedispNewElement (document, (PtrElement) (*newElement),
 				    pVoisin, True, True);
 #endif
@@ -1285,13 +1285,13 @@ Document            document;
       /* parametre document correct */
      {
 	pDoc = TabDocuments[document - 1];
-	NoteRefSortantes ((PtrElement) element, pDoc, False);
-	NoteElemRefDetruits ((PtrElement) element, pDoc);
+	RegisterExternalRef ((PtrElement) element, pDoc, False);
+	RegisterDeletedReferredElem ((PtrElement) element, pDoc);
 	racine = (((PtrElement) element)->ElParent == NULL);
 #ifndef NODISPLAY
 	UndisplayElement ((PtrElement) element, document);
 #else
-	Retire ((PtrElement) element);
+	RemoveElement ((PtrElement) element);
 #endif
 	if (racine)
 	   if (pDoc->DocRootElement == (PtrElement) element)
@@ -1348,9 +1348,9 @@ Document            document;
 	   /* parametre document correct */
 	  {
 #ifndef NODISPLAY
-	     if (ElemHidden ((PtrElement) element))
+	     if (ElementIsHidden ((PtrElement) element))
 		oldAccessRight = (AccessRight) AccessHidden;
-	     else if (ElemReadOnly ((PtrElement) element))
+	     else if (ElementIsReadOnly ((PtrElement) element))
 		oldAccessRight = (AccessRight) AccessReadOnly;
 	     else
 		oldAccessRight = (AccessRight) AccessReadWrite;
@@ -1378,9 +1378,9 @@ Document            document;
 		      case Inherited:
 			 ((PtrElement) element)->ElAccess = AccessInherited;
 #ifndef NODISPLAY
-			 if (ElemHidden ((PtrElement) element))
+			 if (ElementIsHidden ((PtrElement) element))
 			    newAccessRight = (AccessRight) AccessHidden;
-			 else if (ElemReadOnly ((PtrElement) element))
+			 else if (ElementIsReadOnly ((PtrElement) element))
 			    newAccessRight = (AccessRight) AccessReadOnly;
 			 else
 			    newAccessRight = (AccessRight) AccessReadWrite;
@@ -1898,7 +1898,7 @@ Element             element;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      successor = Successeur ((PtrElement) element);
+      successor = NextElement ((PtrElement) element);
    return ((Element) successor);
 }
 
@@ -2015,7 +2015,7 @@ Element             element2;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      ancestor = AncetreCommun ((PtrElement) element1, (PtrElement) element2);
+      ancestor = CommonAncestor ((PtrElement) element1, (PtrElement) element2);
    return ((Element) ancestor);
 }
 
@@ -2059,7 +2059,7 @@ ElementType         ancestorType;
      }
    else
      {
-	ancestor = Ascendant (((PtrElement) element)->ElParent,
+	ancestor = GetTypedAncestor (((PtrElement) element)->ElParent,
 			      ancestorType.ElTypeNum,
 			      (PtrSSchema) (ancestorType.ElSSchema));
      }
@@ -2187,7 +2187,7 @@ char               *name;
      }
    else
      {
-	ChRegle (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name);
+	GetSRuleFromName (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name);
      }
 }
 
@@ -2662,7 +2662,7 @@ Element             element;
      }
    else
      {
-	if (ElemReadOnly ((PtrElement) element))
+	if (ElementIsReadOnly ((PtrElement) element))
 	   result = 1;
      }
    return result;
@@ -2701,7 +2701,7 @@ Element             element;
      }
    else
      {
-	if (ElemHidden ((PtrElement) element))
+	if (ElementIsHidden ((PtrElement) element))
 	   result = 1;
      }
    return result;
@@ -2786,7 +2786,7 @@ Element             ancestor;
      }
    else
      {
-	if (Englobe ((PtrElement) ancestor, (PtrElement) element))
+	if (ElemIsAnAncestor ((PtrElement) ancestor, (PtrElement) element))
 	   result = 1;
      }
    return result;
@@ -2828,7 +2828,7 @@ Element             element2;
      }
    else
      {
-	if (Avant ((PtrElement) element1, (PtrElement) element2))
+	if (ElemIsBefore ((PtrElement) element1, (PtrElement) element2))
 	   result = 1;
      }
    return result;
@@ -2926,7 +2926,7 @@ Document            document;
 	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
-      ret = VoisinPossible ((PtrElement) sibling, TabDocuments[document - 1],
+      ret = AllowedSibling ((PtrElement) sibling, TabDocuments[document - 1],
 			    elementType.ElTypeNum,
 			    (PtrSSchema) (elementType.ElSSchema),
 			    before, False, False);
@@ -2980,7 +2980,7 @@ Document            document;
 	    elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else
-      ret = PremierFilsPossible ((PtrElement) parent, TabDocuments[document - 1],
+      ret = AllowedFirstChild ((PtrElement) parent, TabDocuments[document - 1],
 				 elementType.ElTypeNum,
 				 (PtrSSchema) (elementType.ElSSchema),
 				 False, False);
@@ -3023,7 +3023,7 @@ Element             element;
      }
    else
      {
-	pDoc = DocuDeElem ((PtrElement) element);
+	pDoc = DocumentOfElement ((PtrElement) element);
 	if (pDoc != NULL)
 	   ret = IdentDocument (pDoc);
      }
@@ -3177,14 +3177,14 @@ Element             element;
    if (ok)
      {
 	if (scope == SearchBackward)
-	   pEl = ArCherche ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+	   pEl = BackSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
 	else
-	   pEl = AvCherche ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+	   pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
 
 	if (pEl != NULL)
 	   if (scope == SearchInTree)
 	     {
-		if (!DansSArbre (pEl, (PtrElement) element))
+		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
 		   pEl = NULL;
 	     }
 	if (pEl != NULL)
@@ -3311,13 +3311,13 @@ Element             element;
    else
      {
 	if (scope == SearchBackward)
-	   pEl = ArChercheVideOuRefer ((PtrElement) element, 1);
+	   pEl = BackSearchRefOrEmptyElem ((PtrElement) element, 1);
 	else
-	   pEl = AvChercheVideOuRefer ((PtrElement) element, 1);
+	   pEl = FwdSearchRefOrEmptyElem ((PtrElement) element, 1);
 	if (pEl != NULL)
 	   if (scope == SearchInTree)
 	     {
-		if (!DansSArbre (pEl, (PtrElement) element))
+		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
 		   pEl = NULL;
 	     }
 	if (pEl != NULL)
@@ -3363,7 +3363,7 @@ Element             element;
 	TtaError (ERR_invalid_element_type);
      }
    else
-      pairedElement = AutreMarque ((PtrElement) element);
+      pairedElement = GetOtherPairedElement ((PtrElement) element);
    return ((Element) pairedElement);
 }
 
@@ -3409,12 +3409,12 @@ boolean             forward;
 	if (forward)
 	  {
 	     noPage = ((PtrElement) element)->ElNext;
-	     SauteMarquePage (&noPage);
+	     FwdSkipPageBreak (&noPage);
 	  }
 	else
 	  {
 	     noPage = ((PtrElement) element)->ElPrevious;
-	     SauteArMarquePage (&noPage);
+	     BackSkipPageBreak (&noPage);
 	  }
      }
    return ((Element) noPage);

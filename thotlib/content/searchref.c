@@ -123,7 +123,7 @@ boolean             DocExtSuivant;
    if (pRef == NULL)
       /* c'etait la derniere reference dans ce document, cherche dans */
       /* un autre document la 1ere reference au meme element */
-      pRef = ChRefDocExt (pEl, pDocEl, TraiteNonCharge, pDocRef, pDE,
+      pRef = SearchExternalReferenceToElem (pEl, pDocEl, TraiteNonCharge, pDocRef, pDE,
 			  DocExtSuivant);
    return pRef;
 }
@@ -248,7 +248,7 @@ boolean             DocExtSuivant;
 	  }
 	/* on ignore les references dans les partie cachees */
 	if (ok)
-	   if (ElemHidden ((*ReferCour)->RdElement))
+	   if (ElementIsHidden ((*ReferCour)->RdElement))
 	      /* on est dans une partie cachee */
 	      ok = False;
 	/* on ignore les references qui sont dans le tampon de Copier-Couper */
@@ -328,7 +328,7 @@ void                ChElemRefer ()
 	  {
 	     if (pAttr->AeAttrType == AtReferenceAttr)
 		/* c'est un attribut reference */
-		if (ExceptAttr (ExcActiveRef, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+		if (AttrHasException (ExcActiveRef, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 		   /* cet attribut a l'exception ActiveRef, on le prend */
 		   if (pAttr->AeAttrReference != NULL)
 		     {
@@ -352,7 +352,7 @@ void                ChElemRefer ()
 	   /* c'est bien une reference qui est selectionnee */
 	  {
 	     /* l'element reference' est pointe' par pEl */
-	     pEl = ElemRefer (pRef, &IdentDoc, &pDoc);
+	     pEl = ReferredElement (pRef, &IdentDoc, &pDoc);
 	     if (pEl == NULL)
 		/* il n'y a pas d'element reference' */
 		if (IdentDocNul (IdentDoc) || pDoc != NULL)
@@ -364,7 +364,7 @@ void                ChElemRefer ()
 		   /* on proposera ce nom comme nom par defaut lorsque */
 		   /* l'utilisateur demandera a ouvrir un document */
 		  {
-		     CreeDocument (&pDoc);
+		     CreateDocument (&pDoc);
 		     if (pDoc != NULL)
 		       {
 			  CopyIdentDoc (&pDoc->DocIdent, IdentDoc);
@@ -375,10 +375,10 @@ void                ChElemRefer ()
 		     if (pDoc != NULL)
 			/* le chargement du document a reussi */
 		       {
-			  pEl = ElemRefer (pRef, &IdentDoc, &pDoc);
+			  pEl = ReferredElement (pRef, &IdentDoc, &pDoc);
 			  /* s'il s'agit d'une inclusion de */
 			  /* document, applique les regles Transmit */
-			  ApplReglesTransmit (pRef->RdElement, docsel);
+			  ApplyTransmitRules (pRef->RdElement, docsel);
 
 		       }
 		  }
@@ -441,7 +441,7 @@ LabelString         AncienLabel;
 	   ElemRef->CrNext = pDoc->DocChangedReferredEl;
 	   pDoc->DocChangedReferredEl = ElemRef;
 	   /* copie la liste des documents qui referencent l'element */
-	   CopieDocExt (pEl, ElemRef);
+	   CopyDescrExtDoc (pEl, ElemRef);
 	}
 }
 
@@ -498,7 +498,7 @@ PtrDocument         pDoc;
 	/* changement de document), il prend un nouveau label.                 */
 
 	/* alloue a l'element un descripteur d'element reference' */
-	pRac->ElReferredDescr = NewRef (pDoc);
+	pRac->ElReferredDescr = NewReferredElDescr (pDoc);
 	pRac->ElReferredDescr->ReExternalRef = False;
 	pRac->ElReferredDescr->ReReferredElem = pRac;
 	if (!ChangerLabel && pSource != NULL && pDoc == DocDeSauve)
@@ -513,7 +513,7 @@ PtrDocument         pDoc;
 	       {
 		  /* on ne considere pas le document lui-meme comme externe... */
 		  if (!MemeIdentDoc (pDocExt->EdDocIdent, pDoc->DocIdent))
-		     AjDocRefExt (pRac, pDocExt->EdDocIdent, pDoc);
+		     AddDocOfExternalRef (pRac, pDocExt->EdDocIdent, pDoc);
 		  pDocExt = pDocExt->EdNext;
 	       }
 	  }
@@ -542,7 +542,7 @@ PtrDocument         pDoc;
 		     pElemRef = NULL;
 		  else
 		     pElemRef = pRef->RdElement;
-		  LieReference (pElemRef, pRef->RdAttribute, pRac, pDocRef, pDoc, False, False);
+		  SetReference (pElemRef, pRef->RdAttribute, pRac, pDocRef, pDoc, False, False);
 		  /* si c'est une reference par attribut, verifie la */
 		  /* validite de l'attribut dans le cas des extensions de */
 		  /* cellule des tableaux */
@@ -595,7 +595,7 @@ PtrDocument         pDoc;
 			      (*ThotLocalActions[T_TableauAttributRef])
 				(pAttr, &attrref);
 			    if (!attrref)
-			      AttrSupprime (pRac, pAttr);
+			      DeleteAttribute (pRac, pAttr);
 			  }
 		     }
 	  }
@@ -640,7 +640,7 @@ PtrDocument         pDoc;
 				   l'element reference', pElRef */
 	   if (pRef->RdReferred != NULL)
 	     {
-		pElRef = ElemRefer (pRef, &IdentDocRef, &pDocRef);
+		pElRef = ReferredElement (pRef, &IdentDocRef, &pDocRef);
 		if (pElRef == NULL && IdentDocNul (IdentDocRef))
 		   /* la reference ne designe rien */
 		   pRef->RdReferred = NULL;
@@ -671,7 +671,7 @@ PtrDocument         pDoc;
 			  /* meme temps */
 			  if (!pRef->RdInternalRef)
 			     /* lie la reference a l'element designe' par l'original */
-			     LieReference (pRac, NULL, pElRef, pDoc, pDocRef, False, False);
+			     SetReference (pRac, NULL, pElRef, pDoc, pDocRef, False, False);
 			  else
 			     /* la reference originale etait une reference interne */
 			    {
@@ -685,7 +685,7 @@ PtrDocument         pDoc;
 
 				  /* etablit le lien entre la reference copie'e et */
 				  /* l'element reference */
-				  LieReference (pRac, NULL, pElRef, pDoc, pDocRef, False, False);
+				  SetReference (pRac, NULL, pElRef, pDoc, pDocRef, False, False);
 			    }
 		       }
 		  }

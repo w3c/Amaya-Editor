@@ -1168,11 +1168,11 @@ PtrReferenceChange      pFRC;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetPave (PtrAbstractBox * pPav)
+void                GetPave (PtrAbstractBox * pAb)
 
 #else  /* __STDC__ */
-void                GetPave (pPav)
-PtrAbstractBox            *pPav;
+void                GetPave (pAb)
+PtrAbstractBox            *pAb;
 
 #endif /* __STDC__ */
 
@@ -1180,15 +1180,15 @@ PtrAbstractBox            *pPav;
    PtrAbstractBox             pPa1;
 
    if (PtFreePave == NULL)
-      *pPav = (PtrAbstractBox) TtaGetMemory (sizeof (AbstractBox));
+      *pAb = (PtrAbstractBox) TtaGetMemory (sizeof (AbstractBox));
    else
      {
-	*pPav = PtFreePave;
-	PtFreePave = (*pPav)->AbNext;
+	*pAb = PtFreePave;
+	PtFreePave = (*pAb)->AbNext;
 	NbLibPave--;
      }
    NbOccPave++;
-   pPa1 = *pPav;
+   pPa1 = *pAb;
    memset (pPa1, 0, sizeof (AbstractBox));
    pPa1->AbElement = NULL;
    pPa1->AbEnclosing = NULL;
@@ -1207,28 +1207,28 @@ PtrAbstractBox            *pPav;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreePave (PtrAbstractBox pPav)
+void                FreePave (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                FreePave (pPav)
-PtrAbstractBox             pPav;
+void                FreePave (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
 {
 
-   if (pPav->AbLeafType == LtPicture)
+   if (pAb->AbLeafType == LtPicture)
      {
-	/* FreeImage(pPav->AbBox, pPav->AbBox->BxImageDescriptor ); */
+	/* FreeImage(pAb->AbBox, pAb->AbBox->BxImageDescriptor ); */
      }
-   pPav->AbElement = NULL;
-   pPav->AbEnclosing = NULL;
-   pPav->AbPrevious = NULL;
-   pPav->AbFirstEnclosed = NULL;
-   pPav->AbNextRepeated = NULL;
-   pPav->AbPreviousRepeated = NULL;
-   pPav->AbNext = PtFreePave;
-   PtFreePave = pPav;
+   pAb->AbElement = NULL;
+   pAb->AbEnclosing = NULL;
+   pAb->AbPrevious = NULL;
+   pAb->AbFirstEnclosed = NULL;
+   pAb->AbNextRepeated = NULL;
+   pAb->AbPreviousRepeated = NULL;
+   pAb->AbNext = PtFreePave;
+   PtFreePave = pAb;
    NbLibPave++;
    NbOccPave--;
 }
@@ -1770,19 +1770,19 @@ void                MemInit ()
 
 {
    int                 i;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
    /* Toutes les frames sont libres */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-	pFe1 = &FntrTable[i - 1];
-	pFe1->FrAbstractBox = NULL;
-	pFe1->FrXOrg = 0;
-	pFe1->FrYOrg = 0;
-	pFe1->FrClipXBegin = 0;
-	pFe1->FrClipXEnd = 0;
-	pFe1->FrClipYBegin = 0;
-	pFe1->FrClipYEnd = 0;
+	pFrame = &FntrTable[i - 1];
+	pFrame->FrAbstractBox = NULL;
+	pFrame->FrXOrg = 0;
+	pFrame->FrYOrg = 0;
+	pFrame->FrClipXBegin = 0;
+	pFrame->FrClipXEnd = 0;
+	pFrame->FrClipYBegin = 0;
+	pFrame->FrClipYEnd = 0;
      }
    /* Aucune boite allouee et liberee */
    PtFreBox = NULL;
@@ -1928,15 +1928,15 @@ PtrDimRelations     *adbloc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetBox Alloue un nouveau contexte de boite pour le pave adpave. | */
+/* |    GetBox Alloue un nouveau contexte de boite pour le pave pAb. | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-PtrBox            GetBox (PtrAbstractBox adpave)
+PtrBox            GetBox (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-PtrBox            GetBox (adpave)
-PtrAbstractBox             adpave;
+PtrBox            GetBox (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -1959,7 +1959,7 @@ PtrAbstractBox             adpave;
    if (adboite != NULL)
      {
 	memset (adboite, 0, sizeof (Box));
-	adboite->BxAbstractBox = adpave;
+	adboite->BxAbstractBox = pAb;
 	adboite->BxPrevious = NULL;
 	adboite->BxNext = NULL;
 	adboite->BxType = BoComplete;

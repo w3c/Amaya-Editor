@@ -311,7 +311,7 @@ char               *data;
 		    i = strlen (data);
 		    if (i >= MAX_NAME_LENGTH)
 		      {
-			 /* Retire le suffixe .PIV du nom de fichier */
+			 /* RemoveElement le suffixe .PIV du nom de fichier */
 			 if (!strcmp (&data[i - 4], ".PIV"))
 			    data[i - 4] = '\0';
 		      }
@@ -351,7 +351,7 @@ char               *data;
 		  /* le fichier PIV existe, on ouvre le document */
 		 {
 		    /* acquiert et initialise un descripteur de document */
-		    CreeDocument (&pDoc);
+		    CreateDocument (&pDoc);
 		    if (pDoc != NULL)
 		      {
 			 strcpy (pDoc->DocDirectory, NomDirectory);

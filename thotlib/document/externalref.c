@@ -391,7 +391,7 @@ PtrDocument         pDoc;
 			 {
 			    pRefSuiv = pRef->RdNext;
 			    pRef->RdInternalRef = True;
-			    RefSupprime (pRef);
+			    DeleteReference (pRef);
 			    pRef = pRefSuiv;
 			 }
 		    }

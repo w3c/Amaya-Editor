@@ -33,11 +33,11 @@
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         VoirXHorsStruct (PtrBox ibox, int SeuilVisu, int frame)
+static void         VoirXHorsStruct (PtrBox pBox, int SeuilVisu, int frame)
 
 #else  /* __STDC__ */
-static void         VoirXHorsStruct (ibox, SeuilVisu, frame)
-PtrBox            ibox;
+static void         VoirXHorsStruct (pBox, SeuilVisu, frame)
+PtrBox            pBox;
 int                 SeuilVisu;
 int                 frame;
 
@@ -50,7 +50,7 @@ int                 frame;
    BoxRelation           *pRe1;
 
 
-   adpos = ibox->BxPosRelations;
+   adpos = pBox->BxPosRelations;
    while (adpos != NULL)
      {
 	i = 1;
@@ -62,7 +62,7 @@ int                 frame;
 		/* Relation hors-struture sur l'origine de la boite */
 		if (pRe1->ReOp == OpHorizDep
 		    && pRe1->ReBox->BxXOutOfStruct
-		    && pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == ibox->BxAbstractBox
+		    && pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pBox->BxAbstractBox
 		    && pRe1->ReBox->BxXToCompute)
 		  {
 		     /* La boite distante va etre placee */
@@ -85,11 +85,11 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         VoirYHorsStruct (PtrBox ibox, int SeuilVisu, int frame)
+static void         VoirYHorsStruct (PtrBox pBox, int SeuilVisu, int frame)
 
 #else  /* __STDC__ */
-static void         VoirYHorsStruct (ibox, SeuilVisu, frame)
-PtrBox            ibox;
+static void         VoirYHorsStruct (pBox, SeuilVisu, frame)
+PtrBox            pBox;
 int                 SeuilVisu;
 int                 frame;
 
@@ -102,7 +102,7 @@ int                 frame;
    BoxRelation           *pRe1;
 
 
-   adpos = ibox->BxPosRelations;
+   adpos = pBox->BxPosRelations;
    while (adpos != NULL)
      {
 	i = 1;
@@ -114,7 +114,7 @@ int                 frame;
 		/* Relation hors-struture sur l'origine de la boite */
 		if (pRe1->ReOp == OpVertDep
 		    && pRe1->ReBox->BxYOutOfStruct
-		    && pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef == ibox->BxAbstractBox
+		    && pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pBox->BxAbstractBox
 		    && pRe1->ReBox->BxYToCompute)
 		  {
 		     /* La boite distante va etre placee */
@@ -133,7 +133,7 @@ int                 frame;
 
 /* ---------------------------------------------------------------------- */
 /* |    Placer met a` jour toutes les origines des boi^tes correpondant | */
-/* |            aux pave's inclus dans adpave.                          | */
+/* |            aux pave's inclus dans pAb.                          | */
 /* |            A chaque niveau la proce'dure additionnne le de'calage  | */
 /* |            de la boi^te englobante aux origines des boi^tes        | */
 /* |            incluses, en X et en Y selon la valeur de l'indicateur  | */
@@ -142,11 +142,11 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                Placer (PtrAbstractBox adpave, int SeuilVisu, int frame, boolean EnX, boolean EnY)
+void                Placer (PtrAbstractBox pAb, int SeuilVisu, int frame, boolean EnX, boolean EnY)
 
 #else  /* __STDC__ */
-void                Placer (adpave, SeuilVisu, frame, EnX, EnY)
-PtrAbstractBox             adpave;
+void                Placer (pAb, SeuilVisu, frame, EnX, EnY)
+PtrAbstractBox             pAb;
 int                 SeuilVisu;
 int                 frame;
 boolean             EnX;
@@ -170,27 +170,27 @@ boolean             EnY;
    boolean             reenglobx;
    boolean             reengloby;
    PtrBox            pBo1;
-   PtrBox            ibox;
+   PtrBox            pBox;
    BoxRelation           *pRe1;
 
    /* Origine de la boite du pave le plus englobant */
-   ibox = adpave->AbBox;
-   x = ibox->BxXOrg;
-   y = ibox->BxYOrg;
-   larg = ibox->BxWidth;
-   haut = ibox->BxHeight;
-   Peclate = ibox->BxType == BoGhost;
-   pavefils = adpave->AbFirstEnclosed;
+   pBox = pAb->AbBox;
+   x = pBox->BxXOrg;
+   y = pBox->BxYOrg;
+   larg = pBox->BxWidth;
+   haut = pBox->BxHeight;
+   Peclate = pBox->BxType == BoGhost;
+   pavefils = pAb->AbFirstEnclosed;
 
    /* Indique s'il faut reevaluer l'englobement du contenu apres mise a jour */
    reenglobx = False;
    reengloby = False;
-   /* EnX et EnY indiquent que la boite mere (ibox) transmet son decalage */
+   /* EnX et EnY indiquent que la boite mere (pBox) transmet son decalage */
    /* newX et newY indiquent que la boite fille (pBo1) accepte le decalage */
    /* placeenX et placeenY indiquent que la boite fille transmet son decalage */
 
    /* Transforme origines relatives des boites filles en origines absolues */
-   if (adpave->AbVisibility >= SeuilVisu)
+   if (pAb->AbVisibility >= SeuilVisu)
       while (pavefils != NULL)
 	{
 
@@ -374,7 +374,7 @@ boolean             EnY;
 			      && !eclate
 			      && i > 1
 			      && !pBo1->BxHorizFlex
-			      && !ibox->BxHorizFlex)
+			      && !pBox->BxHorizFlex)
 			    {
 			       Erreur = True;
 			       if (HardMsgAff)
@@ -471,7 +471,7 @@ boolean             EnY;
 			      && !eclate
 			      && i > 1
 			      && !pBo1->BxVertFlex
-			      && !ibox->BxVertFlex)
+			      && !pBox->BxVertFlex)
 			    {
 			       Erreur = True;
 			       if (HardMsgAff)
@@ -552,11 +552,11 @@ boolean             EnY;
    /* Si une dimension de la boite depend du contenu et qu'une des  */
    /* boites filles est positionnee par une relation hors-structure */
    /* --> il faut reevaluer la dimension correspondante.            */
-   if (reenglobx && ibox->BxContentWidth)
-      DiffereEnglobement (ibox, True);
+   if (reenglobx && pBox->BxContentWidth)
+      DiffereEnglobement (pBox, True);
 
-   if (reengloby && ibox->BxContentHeight)
-      DiffereEnglobement (ibox, False);
+   if (reengloby && pBox->BxContentHeight)
+      DiffereEnglobement (pBox, False);
 }				/* Placer */
 
 
@@ -572,11 +572,11 @@ boolean             EnY;
 
 
 #ifdef __STDC__
-static void         SurLaPage (PtrAbstractBox adpave, int *haut, boolean * modifpage)
+static void         SurLaPage (PtrAbstractBox pAb, int *haut, boolean * modifpage)
 
 #else  /* __STDC__ */
-static void         SurLaPage (adpave, haut, modifpage)
-PtrAbstractBox             adpave;
+static void         SurLaPage (pAb, haut, modifpage)
+PtrAbstractBox             pAb;
 int                *haut;
 boolean            *modifpage;
 
@@ -584,22 +584,22 @@ boolean            *modifpage;
 
 {
 
-   if (adpave != NULL)
+   if (pAb != NULL)
      {
-	if (!adpave->AbAcceptPageBreak && *haut > adpave->AbBox->BxYOrg)
+	if (!pAb->AbAcceptPageBreak && *haut > pAb->AbBox->BxYOrg)
 	  {
 	     /* La boite est sur la limite de page mais non secable */
 	     /* deplace la limite de page sur l'origine de la boite */
-	     *haut = adpave->AbBox->BxYOrg;
+	     *haut = pAb->AbBox->BxYOrg;
 	     *modifpage = True;
 	  }
-	else if (!adpave->AbOnPageBreak)
+	else if (!pAb->AbOnPageBreak)
 	  {
-	     adpave->AbOnPageBreak = True;
-	     adpave->AbAfterPageBreak = False;
+	     pAb->AbOnPageBreak = True;
+	     pAb->AbAfterPageBreak = False;
 	     /* On traite le pave pere */
-	     if (adpave->AbVertEnclosing)
-		SurLaPage (adpave->AbEnclosing, haut, modifpage);
+	     if (pAb->AbVertEnclosing)
+		SurLaPage (pAb->AbEnclosing, haut, modifpage);
 	  }
      }
 }				/*SurLaPage */
@@ -614,11 +614,11 @@ boolean            *modifpage;
 
 
 #ifdef __STDC__
-static void         HorsDeLaPage (PtrAbstractBox adpave, int *haut, boolean * modifpage)
+static void         HorsDeLaPage (PtrAbstractBox pAb, int *haut, boolean * modifpage)
 
 #else  /* __STDC__ */
-static void         HorsDeLaPage (adpave, haut, modifpage)
-PtrAbstractBox             adpave;
+static void         HorsDeLaPage (pAb, haut, modifpage)
+PtrAbstractBox             pAb;
 int                *haut;
 boolean            *modifpage;
 
@@ -627,12 +627,12 @@ boolean            *modifpage;
 {
    PtrAbstractBox             pavepere;
 
-   if (adpave != NULL)
+   if (pAb != NULL)
      {
-	adpave->AbOnPageBreak = False;
-	adpave->AbAfterPageBreak = True;
-	pavepere = adpave->AbEnclosing;
-	if (adpave->AbVertEnclosing && pavepere != NULL)
+	pAb->AbOnPageBreak = False;
+	pAb->AbAfterPageBreak = True;
+	pavepere = pAb->AbEnclosing;
+	if (pAb->AbVertEnclosing && pavepere != NULL)
 	   /* Le pere est sur la page ou hors de la page */
 	   if (pavepere->AbBox->BxType == BoGhost)
 	     {
@@ -826,19 +826,19 @@ boolean            *modifpage;
 #ifdef __COLPAGE__
 /* ---------------------------------------------------------------------- */
 /* |    RazPage remet a faux les boolens AbOnPageBreak et PageHorsPage     | */
-/* |            dans tous les paves du sous-arbre pPav                  | */
+/* |            dans tous les paves du sous-arbre pAb                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         RazPage (PtrAbstractBox pPav)
+static void         RazPage (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-static void         RazPage (pPav)
-PtrAbstractBox             pPav;
+static void         RazPage (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox             pP;
 
-   pP = pPav;
+   pP = pAb;
    pP->AbOnPageBreak = False;
    pP->AbAfterPageBreak = False;
    pP = pP->AbFirstEnclosed;
@@ -1108,37 +1108,37 @@ int                *largeur;
 /* |            placement.                                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MarqueAPlacer (PtrAbstractBox adpave, boolean EnX, boolean EnY)
+void                MarqueAPlacer (PtrAbstractBox pAb, boolean EnX, boolean EnY)
 #else  /* __STDC__ */
-void                MarqueAPlacer (adpave, EnX, EnY)
-PtrAbstractBox             adpave;
+void                MarqueAPlacer (pAb, EnX, EnY)
+PtrAbstractBox             pAb;
 boolean             EnX;
 boolean             EnY;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox             pavefils;
-   PtrBox            ibox;
+   PtrBox            pBox;
 
-   ibox = adpave->AbBox;
-   if (ibox == NULL)
+   pBox = pAb->AbBox;
+   if (pBox == NULL)
       return;
 
    /* Les boites englobees des boites elastiques */
    /* sont toujours placees en absolue           */
-   if (ibox->BxHorizFlex || ibox->BxXOutOfStruct)
+   if (pBox->BxHorizFlex || pBox->BxXOutOfStruct)
       EnX = False;
-   if (ibox->BxVertFlex || ibox->BxYOutOfStruct)
+   if (pBox->BxVertFlex || pBox->BxYOutOfStruct)
       EnY = False;
 
-   if (ibox->BxType != BoSplit)
+   if (pBox->BxType != BoSplit)
      {
-	ibox->BxXToCompute = EnX;
-	ibox->BxYToCompute = EnY;
+	pBox->BxXToCompute = EnX;
+	pBox->BxYToCompute = EnY;
      }
 
    /* Marque les paves englobes */
-   pavefils = adpave->AbFirstEnclosed;
+   pavefils = pAb->AbFirstEnclosed;
    while (pavefils != NULL)
      {
 	MarqueAPlacer (pavefils, EnX, EnY);

@@ -49,14 +49,14 @@ extern void         AfficherVue ();
 /* ---------------------------------------------------------------------- */
 /* |    TypePave  rend un pointeur sur un buffer qui contient           | */
 /* |            le type de l'element de structure auquel correspond le  | */
-/* |            pave pointe' par pPav.                                  | */
+/* |            pave pointe' par pAb.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-char               *TypePave (PtrAbstractBox pPav)
+char               *TypePave (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-char               *TypePave (pPav)
-PtrAbstractBox             pPav;
+char               *TypePave (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -65,24 +65,24 @@ PtrAbstractBox             pPav;
    PresentationBox             *pBo1;
    PtrElement          pEl1;
 
-   if (pPav == NULL)
+   if (pAb == NULL)
       strcpy (texte, " ");
    else
      {
-	if (pPav->AbPresentationBox)
+	if (pAb->AbPresentationBox)
 	  {
-	     pRe1 = &pPav->AbElement->ElSructSchema->SsRule[pPav->AbElement->ElTypeNumber - 1];
+	     pRe1 = &pAb->AbElement->ElSructSchema->SsRule[pAb->AbElement->ElTypeNumber - 1];
 	     /* copie le nom du type d'element structure qui a cree la boite */
 	     strcpy (texte, pRe1->SrName);
 	     strcat (texte, ".");
 	     /* copie a la suite le nom du type de boite de presentation */
-	     pBo1 = &pPav->AbPSchema->PsPresentBox[pPav->AbTypeNum - 1];
+	     pBo1 = &pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1];
 	     strcat (texte, pBo1->PbName);
 	  }
 	else
 	   /* pave d'un element de structure */
 	  {
-	     pEl1 = pPav->AbElement;
+	     pEl1 = pAb->AbElement;
 	     strcpy (texte, pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrName);
 	  }
      }
@@ -93,15 +93,15 @@ PtrAbstractBox             pPav;
 
 /* ---------------------------------------------------------------------- */
 /* |    LibPavVue libere, pour une seule vue, tous les paves            | */
-/* |            englobes par le pave pointe par pPav, lui-meme compris. | */
+/* |            englobes par le pave pointe par pAb, lui-meme compris. | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                LibPavVue (PtrAbstractBox pPav)
+void                LibPavVue (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                LibPavVue (pPav)
-PtrAbstractBox             pPav;
+void                LibPavVue (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -123,9 +123,9 @@ PtrAbstractBox             pPav;
 
 #endif /* __COLPAGE__ */
 
-   if (pPav != NULL)
+   if (pAb != NULL)
      {
-	pP = pPav->AbFirstEnclosed;
+	pP = pAb->AbFirstEnclosed;
 	/* libere tous les paves englobes */
 	while (pP != NULL)
 	  {
@@ -133,7 +133,7 @@ PtrAbstractBox             pPav;
 	     LibPavVue (pP);
 	     pP = pPSuiv;
 	  }
-	pPa1 = pPav;
+	pPa1 = pAb;
 	if (pPa1->AbBox != NULL)
 	  {
 	     pEl1 = pPa1->AbElement;
@@ -145,16 +145,16 @@ PtrAbstractBox             pPav;
 	  }
 #ifdef __COLPAGE__
 	/* debug */
-	ok = PaveCorrect (pPav);
+	ok = PaveCorrect (pAb);
 	if (!ok)
 #endif /* __COLPAGE__ */
-	   /* dechaine pPav des autres paves */
+	   /* dechaine pAb des autres paves */
 	   if (pPa1->AbNext != NULL)
 	      pPa1->AbNext->AbPrevious = pPa1->AbPrevious;
 	if (pPa1->AbPrevious != NULL)
 	   pPa1->AbPrevious->AbNext = pPa1->AbNext;
 	if (pPa1->AbEnclosing != NULL)
-	   if (pPa1->AbEnclosing->AbFirstEnclosed == pPav)
+	   if (pPa1->AbEnclosing->AbFirstEnclosed == pAb)
 	      pPa1->AbEnclosing->AbFirstEnclosed = pPa1->AbNext;
 #ifdef __COLPAGE__
 	if (pPa1->AbNextRepeated != NULL)
@@ -164,7 +164,7 @@ PtrAbstractBox             pPav;
 	   pPa1->AbPreviousRepeated->AbNextRepeated =
 	      pPa1->AbNextRepeated;
 	/* debug */
-	ok = PaveCorrect (pPav);
+	ok = PaveCorrect (pAb);
 	if (!ok)
 	   printf ("erreur apres dechainage LibPavVue \n");
 #endif /* __COLPAGE__ */
@@ -209,7 +209,7 @@ PtrAbstractBox             pPav;
 		       while (pBT != NULL)
 			 {
 			    pBTSuiv = pBT->BuNext;
-			    SuppBufTexte (&pBT);
+			    DeleteTextBuffer (&pBT);
 			    pBT = pBTSuiv;
 			 }
 		       break;
@@ -224,11 +224,11 @@ PtrAbstractBox             pPav;
 		    default:
 		       break;
 		 }
-	/* dechaine pPav de son element */
-	if (pPa1->AbElement->ElAbstractBox[pPa1->AbDocView - 1] == pPav)
+	/* dechaine pAb de son element */
+	if (pPa1->AbElement->ElAbstractBox[pPa1->AbDocView - 1] == pAb)
 #ifdef __COLPAGE__
 	   if (!pPa1->AbPresentationBox)
-	      /* si le pave pPav est le pave principal (non presentation) */
+	      /* si le pave pAb est le pave principal (non presentation) */
 	      /* l'elt va pointer sur le dup (s'il existe) */
 	      /* On ne considere pas les paves de pres rep suivants TODO ? */
 	      pPa1->AbElement->ElAbstractBox[pPa1->AbDocView - 1] = pPa1->AbNextRepeated;
@@ -267,7 +267,7 @@ PtrAbstractBox             pPav;
 		/* elements associes. Le pave est-il associe' a l'un des */
 		/* elements associes du document ? */
 	       {
-		  pDoc = DocuDeElem (pPa1->AbElement);
+		  pDoc = DocumentOfElement (pPa1->AbElement);
 		  if (pDoc != NULL)
 		    {
 		       for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
@@ -288,14 +288,14 @@ PtrAbstractBox             pPav;
 #endif /* __COLPAGE__ */
 #ifdef __COLPAGE__
 	/* debug */
-	ok = PaveCorrect (pPav);
+	ok = PaveCorrect (pAb);
 	if (!ok)
 	   printf ("erreur avant dechainage elem LibPavVue \n");
 #endif /* __COLPAGE__ */
 	/* libere les regles retardees qui n'ont pas ete appliquees */
-	if (pPav->AbDelayedPRule != NULL)
+	if (pAb->AbDelayedPRule != NULL)
 	  {
-	     pDelPR = pPav->AbDelayedPRule;
+	     pDelPR = pAb->AbDelayedPRule;
 	     while (pDelPR != NULL)
 	       {
 		  pNextDelPR = pDelPR->DpNext;
@@ -303,7 +303,7 @@ PtrAbstractBox             pPav;
 		  pDelPR = pNextDelPR;
 	       }
 	  }
-	FreePave (pPav);
+	FreePave (pAb);
      }
 }
 
@@ -410,15 +410,15 @@ PtrElement          pEl;
 
 /* ---------------------------------------------------------------------- */
 /* |    LibPavMort libere tous les paves marques Mort dans le           | */
-/* |            sous-arbre de racine pPav.                              | */
+/* |            sous-arbre de racine pAb.                              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                LibPavMort (PtrAbstractBox pPav)
+void                LibPavMort (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                LibPavMort (pPav)
-PtrAbstractBox             pPav;
+void                LibPavMort (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -426,12 +426,12 @@ PtrAbstractBox             pPav;
    PtrAbstractBox             pP, pPSuiv;
 
 
-   if (pPav != NULL)
-      if (pPav->AbDead)
-	 LibPavVue (pPav);
+   if (pAb != NULL)
+      if (pAb->AbDead)
+	 LibPavVue (pAb);
       else
 	{
-	   pP = pPav->AbFirstEnclosed;
+	   pP = pAb->AbFirstEnclosed;
 	   /* teste tous les paves englobes */
 	   while (pP != NULL)
 	     {
@@ -446,16 +446,16 @@ PtrAbstractBox             pPav;
  /* procedure de reevaluation des regles recursives */
  /* ---------------------------------------------------------- */
  /* |     RecursEvalCP appelle NouvRfPave pour tous les paves | */
- /* |                du sous-arbre pPav                     | */
+ /* |                du sous-arbre pAb                     | */
  /* ---------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                RecursEvalCP (PtrAbstractBox pPav, PtrDocument pDoc)
+void                RecursEvalCP (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                RecursEvalCP (pPav, pDoc)
-PtrAbstractBox             pPav;
+void                RecursEvalCP (pAb, pDoc)
+PtrAbstractBox             pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -463,7 +463,7 @@ PtrDocument         pDoc;
 {
    PtrAbstractBox             pP, PavR;
 
-   pP = pPav;
+   pP = pAb;
    if (pP != NULL)
      {
 	NouvRfPave (pP, pP, &PavR, pDoc);
@@ -499,7 +499,7 @@ boolean             Tete;
 
 #ifdef __COLPAGE__
 {
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    PtrAbstractBox             pPa1;
    PtrElement          pEl;
    boolean             complet;
@@ -509,7 +509,7 @@ boolean             Tete;
 	/* cree les paves de la partie coupee jusqu'a concurrence du volume libre */
 	pEl = PavRacine->AbElement;
 	pPa1 = PavRacine;
-	pPav = CreePaves (pEl, pDoc, pPa1->AbDocView, !Tete, True, &complet);
+	pAb = CreePaves (pEl, pDoc, pPa1->AbDocView, !Tete, True, &complet);
 	/* on reapplique les regles  a tous les paves */
 	/* TO DO a affiner ! */ RecursEvalCP (PavRacine, pDoc);
 	if (VueAssoc (pEl))
@@ -522,7 +522,7 @@ boolean             Tete;
 #else  /* __COLPAGE__ */
 
 {
-   PtrAbstractBox             pPav, PavReaff, PavR, PcFirst, PcLast, pP;
+   PtrAbstractBox             pAb, PavReaff, PavR, PcFirst, PcLast, pP;
    boolean             stop;
    PtrAbstractBox             pPa1;
    PtrDocument         pDo1;
@@ -533,14 +533,14 @@ boolean             Tete;
      {
 	/* cree les paves de la partie coupee jusqu'a concurence du volume libre */
 	pPa1 = PavRacine;
-	pPav = CreePaves (pPa1->AbElement, pDoc, pPa1->AbDocView, !Tete, True, &complet);
+	pAb = CreePaves (pPa1->AbElement, pDoc, pPa1->AbDocView, !Tete, True, &complet);
 	/* recherche tous les paves crees, a partir du premier pave de plus */
 	/* haut niveau cree', et aux niveaux inferieurs. */
-	while (pPav != NULL)
+	while (pAb != NULL)
 	  {
 	     /* cherche le premier et le dernier freres crees a ce niveau */
-	     PcFirst = pPav;
-	     PcLast = pPav;
+	     PcFirst = pAb;
+	     PcLast = pAb;
 	     stop = False;
 	     do
 		if (PcLast->AbNext == NULL)
@@ -562,10 +562,10 @@ boolean             Tete;
 	     if (PcFirst == PcLast)
 		/* un seul pave cree a ce niveau, c'est lui qu'il faudra */
 		/* reafficher. */
-		PavReaff = pPav;
+		PavReaff = pAb;
 	     else
 		/* plusieurs paves crees, on reaffichera l'englobant */
-		PavReaff = pPav->AbEnclosing;
+		PavReaff = pAb->AbEnclosing;
 	     /* modifie les paves environnant les paves crees */
 	     NouvRfPave (PcFirst, PcLast, &PavR, pDoc);
 	     PavReaff = Englobant (PavReaff, PavR);	/* conserve le pointeur sur le pave a reafficher */
@@ -580,34 +580,34 @@ boolean             Tete;
 		   Englobant (PavReaff, pDo1->DocViewModifiedAb[PavRacine->AbDocView - 1]);
 	     /* passe au niveau inferieur */
 	     if (Tete)
-		pPav = PcLast->AbNext;
+		pAb = PcLast->AbNext;
 	     else
-		pPav = PcFirst->AbPrevious;
-	     if (pPav != NULL)
+		pAb = PcFirst->AbPrevious;
+	     if (pAb != NULL)
 	       {
 		  /* saute les paves de presentation produits par CreateWith */
 		  if (Tete)
-		     while (pPav->AbPresentationBox && pPav->AbNext != NULL)
-			pPav = pPav->AbNext;
+		     while (pAb->AbPresentationBox && pAb->AbNext != NULL)
+			pAb = pAb->AbNext;
 		  else
-		     while (pPav->AbPresentationBox && pPav->AbPrevious != NULL)
-			pPav = pPav->AbPrevious;
+		     while (pAb->AbPresentationBox && pAb->AbPrevious != NULL)
+			pAb = pAb->AbPrevious;
 		  /* passe au premier pave fils */
-		  pPav = pPav->AbFirstEnclosed;
-		  if (pPav != NULL)
+		  pAb = pAb->AbFirstEnclosed;
+		  if (pAb != NULL)
 		     if (Tete)
-			if (pPav->AbNew)
+			if (pAb->AbNew)
 			  {
 			     /* verifie s'il y a un pave ancien a ce niveau */
-			     pP = pPav;
+			     pP = pAb;
 			     stop = False;
 			     do
 				if (pP == NULL)
 				  {
 				     /* pas d'ancien, on s'arrete si l'englobant est */
 				     /* lui-meme un nouveau pave */
-				     if (pPav->AbEnclosing->AbNew)
-					pPav = NULL;
+				     if (pAb->AbEnclosing->AbNew)
+					pAb = NULL;
 				     stop = True;
 				  }
 				else if (!pP->AbNew)
@@ -621,16 +621,16 @@ boolean             Tete;
 			     /* cherche le premier niveau ou il y a un nouveau en tete */
 			     stop = False;
 			     do
-				if (pPav == NULL)
+				if (pAb == NULL)
 				   stop = True;
-				else if (pPav->AbNew)
+				else if (pAb->AbNew)
 				   stop = True;
 				else
 				  {
 				     /* saute les paves de presentation produits par CreateWith */
-				     while (pPav->AbPresentationBox && pPav->AbNext != NULL)
-					pPav = pPav->AbNext;
-				     pPav = pPav->AbFirstEnclosed;
+				     while (pAb->AbPresentationBox && pAb->AbNext != NULL)
+					pAb = pAb->AbNext;
+				     pAb = pAb->AbFirstEnclosed;
 				  }
 			     while (!(stop));
 			  }
@@ -638,36 +638,36 @@ boolean             Tete;
 		       {
 			  /* on a ajoute' en queue */
 			  /* on cherche le premier cree' a ce niveau */
-			  if (pPav->AbNew)
+			  if (pAb->AbNew)
 			    {
 			       /* il n'y a que des paves nouveaux, on arrete si */
 			       /* l'englobant est lui-meme nouveau */
-			       if (pPav->AbEnclosing->AbNew)
-				  pPav = NULL;
+			       if (pAb->AbEnclosing->AbNew)
+				  pAb = NULL;
 			    }
 			  else
 			    {
 			       stop = False;
 			       do
-				  if (pPav == NULL)
+				  if (pAb == NULL)
 				     stop = True;
-				  else if (pPav->AbNew)
+				  else if (pAb->AbNew)
 				     stop = True;
-				  else if (pPav->AbNext == NULL)
+				  else if (pAb->AbNext == NULL)
 				    {
 				       /* saute les paves de presentation produits par CreateWith */
-				       while (pPav->AbPresentationBox && pPav->AbPrevious != NULL)
-					  pPav = pPav->AbPrevious;
-				       pPav = pPav->AbFirstEnclosed;
+				       while (pAb->AbPresentationBox && pAb->AbPrevious != NULL)
+					  pAb = pAb->AbPrevious;
+				       pAb = pAb->AbFirstEnclosed;
 				    }
 				  else
-				     pPav = pPav->AbNext;
+				     pAb = pAb->AbNext;
 			       while (!(stop));
 			    }
 			  /* cherche le dernier  cree' */
-			  if (pPav != NULL)
-			     while (pPav->AbNext != NULL)
-				pPav = pPav->AbNext;
+			  if (pAb != NULL)
+			     while (pAb->AbNext != NULL)
+				pAb = pAb->AbNext;
 		       }
 	       }
 	  }
@@ -678,7 +678,7 @@ boolean             Tete;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    NonSecable retourne vrai si le pave pointe par pPav est         | */
+/* |    NonSecable retourne vrai si le pave pointe par pAb est         | */
 /* |            englobe (a n'importe quel niveau) par un pave           | */
 /* |            mis en ligne ou explicitement non secable. Les marques  | */
 /* |            de page son traitees comme non-secables.                | */
@@ -686,11 +686,11 @@ boolean             Tete;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             NonSecable (PtrAbstractBox pPav)
+boolean             NonSecable (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-boolean             NonSecable (pPav)
-PtrAbstractBox             pPav;
+boolean             NonSecable (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -704,9 +704,9 @@ PtrAbstractBox             pPav;
    retour = False;
    /* a priori le pave est secable */
    /* boucle sur les paves englobants */
-   while (pPav != NULL && !retour)
+   while (pAb != NULL && !retour)
      {
-	pPa1 = pPav;
+	pPa1 = pAb;
 #ifndef __COLPAGE__
 	if (pPa1->AbLeafType == LtCompound)
 	   /* pave' compose' */
@@ -723,7 +723,7 @@ PtrAbstractBox             pPav;
 	     ChSchemaPres (pPa1->AbElement, &pSchP, &Entree, &pSchS);
 	     retour = pSchP->PsBuildAll[Entree - 1];
 	  }
-	pPav = pPa1->AbEnclosing;
+	pAb = pPa1->AbEnclosing;
 	/* passe a l'englobant */
      }
    return retour;
@@ -732,7 +732,7 @@ PtrAbstractBox             pPav;
 #ifdef __COLPAGE__
 
 /*------------------------------------------------------------------------------*/
- /*TuePresDroite tue tous les paves de presentation a droite de pPav     */
+ /*TuePresDroite tue tous les paves de presentation a droite de pAb     */
  /*              on ne considere que les paves a l'interieur d'une page */
  /*             sauf les REPEATED                                      */
 /*------------------------------------------------------------------------------*/
@@ -740,11 +740,11 @@ PtrAbstractBox             pPav;
 
 
 #ifdef __STDC__
-void                TuePresDroite (PtrAbstractBox pPav, PtrDocument pDoc)
+void                TuePresDroite (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                TuePresDroite (pPav, pDoc)
-PtrAbstractBox             pPav;
+void                TuePresDroite (pAb, pDoc)
+PtrAbstractBox             pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -753,9 +753,9 @@ PtrDocument         pDoc;
    PtrAbstractBox             PavEnglob, pP, PavR;
    boolean             stop;
 
-   if (pPav->AbElement->ElTypeNumber != ord (PageBreak) + 1)
+   if (pAb->AbElement->ElTypeNumber != ord (PageBreak) + 1)
      {
-	PavEnglob = pPav->AbEnclosing;
+	PavEnglob = pAb->AbEnclosing;
 	while (PavEnglob != NULL && !(PavEnglob->AbTruncatedTail))
 	  {
 	     /* on saute le pave corps de page, pour ne pas detruire ses paves */
@@ -767,7 +767,7 @@ PtrDocument         pDoc;
 		  /* cherche et supprime les paves crees par CreateLast */
 		  /* si PavEnglob est la racine, ses paves de presentation */
 		  /* sont sous le dernier pave corps de page */
-		  if (PavEnglob == pDoc->DocViewRootAb[pPav->AbDocView - 1])
+		  if (PavEnglob == pDoc->DocViewRootAb[pAb->AbDocView - 1])
 		    {
 		       pP = PavEnglob->AbFirstEnclosed;
 		       if (pP != NULL && pP->AbElement->ElTerminal
@@ -846,16 +846,16 @@ PtrDocument         pDoc;
 
  /* -------------------------------------------------------- */
  /* |  DetrPaveSuivants detruit les paves a partir         | */
- /* |               de pPav                               | */
+ /* |               de pAb                               | */
  /* -------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                DetrPaveSuivants (PtrAbstractBox pPav, PtrDocument pDoc)
+void                DetrPaveSuivants (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                DetrPaveSuivants (pPav, pDoc)
-PtrAbstractBox             pPav;
+void                DetrPaveSuivants (pAb, pDoc)
+PtrAbstractBox             pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -864,7 +864,7 @@ PtrDocument         pDoc;
    PtrAbstractBox             PavRac, pP2, pP1, PavR;
 
    PavRac = NULL;
-   pP1 = pPav;
+   pP1 = pAb;
    if (pP1 != NULL
        && pP1->AbEnclosing != NULL
        && !(pP1->AbElement->ElTypeNumber == ord (PageBreak) + 1
@@ -941,22 +941,22 @@ PtrDocument         pDoc;
 /* |    SaufCreeAvec                                                    | */
 /* ---------------------------------------------------------------------- */
 /* |    TuePresVoisin detruit les paves de presentation crees par les   | */
-/* |    regles CreateBefore et CreateAfter de pPav.                     | */
+/* |    regles CreateBefore et CreateAfter de pAb.                     | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                TuePresVoisin (PtrAbstractBox pVoisin, boolean Avant, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pPav, boolean SaufRep)
+void                TuePresVoisin (PtrAbstractBox pVoisin, boolean ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pAb, boolean SaufRep)
 
 #else  /* __STDC__ */
-void                TuePresVoisin (pVoisin, Avant, pDoc, PavR, PavReaff, volsupp, pPav, SaufRep)
+void                TuePresVoisin (pVoisin, ElemIsBefore, pDoc, PavR, PavReaff, volsupp, pAb, SaufRep)
 PtrAbstractBox             pVoisin;
-boolean             Avant;
+boolean             ElemIsBefore;
 PtrDocument         pDoc;
 PtrAbstractBox            *PavR;
 PtrAbstractBox            *PavReaff;
 int                *volsupp;
-PtrAbstractBox             pPav;
+PtrAbstractBox             pAb;
 boolean             SaufRep;
 
 #endif /* __STDC__ */
@@ -968,7 +968,7 @@ boolean             SaufRep;
    do
       if (pVoisin == NULL)
 	 stop = True;
-      else if (pVoisin->AbElement != pPav->AbElement)
+      else if (pVoisin->AbElement != pAb->AbElement)
 	 stop = True;
       else
 	{
@@ -982,7 +982,7 @@ boolean             SaufRep;
 		   SuppRfPave (pVoisin, PavR, pDoc);
 		   *PavReaff = Englobant (*PavReaff, *PavR);
 		}
-	   if (Avant)
+	   if (ElemIsBefore)
 	      pVoisin = pVoisin->AbPrevious;
 	   else
 	      pVoisin = pVoisin->AbNext;
@@ -994,22 +994,22 @@ boolean             SaufRep;
 
 /* ---------------------------------------------------------------------- */
 /* |    TuePresVoisin detruit les paves de presentation crees par les   | */
-/* |    regles CreateBefore et CreateAfter de pPav.                     | */
+/* |    regles CreateBefore et CreateAfter de pAb.                     | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-static void         TuePresVoisin (PtrAbstractBox pVoisin, boolean Avant, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pPav, boolean SaufCreeAvec)
+static void         TuePresVoisin (PtrAbstractBox pVoisin, boolean ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pAb, boolean SaufCreeAvec)
 
 #else  /* __STDC__ */
-static void         TuePresVoisin (pVoisin, Avant, pDoc, PavR, PavReaff, volsupp, pPav, SaufCreeAvec)
+static void         TuePresVoisin (pVoisin, ElemIsBefore, pDoc, PavR, PavReaff, volsupp, pAb, SaufCreeAvec)
 PtrAbstractBox             pVoisin;
-boolean             Avant;
+boolean             ElemIsBefore;
 PtrDocument         pDoc;
 PtrAbstractBox            *PavR;
 PtrAbstractBox            *PavReaff;
 int                *volsupp;
-PtrAbstractBox             pPav;
+PtrAbstractBox             pAb;
 boolean             SaufCreeAvec;
 
 #endif /* __STDC__ */
@@ -1021,12 +1021,12 @@ boolean             SaufCreeAvec;
    do
       if (pVoisin == NULL)
 	 stop = True;
-      else if (pVoisin->AbElement != pPav->AbElement)
+      else if (pVoisin->AbElement != pAb->AbElement)
 	 stop = True;
       else
 	{
 	   if (pVoisin->AbPresentationBox)
-	      if (!SaufCreeAvec || RegleCree (pDoc, pPav, pVoisin) != FnCreateWith)
+	      if (!SaufCreeAvec || RegleCree (pDoc, pAb, pVoisin) != FnCreateWith)
 		{
 		   *volsupp += pVoisin->AbVolume;
 		   TuePave (pVoisin);
@@ -1035,7 +1035,7 @@ boolean             SaufCreeAvec;
 		   SuppRfPave (pVoisin, PavR, pDoc);
 		   *PavReaff = Englobant (*PavReaff, *PavR);
 		}
-	   if (Avant)
+	   if (ElemIsBefore)
 	      pVoisin = pVoisin->AbPrevious;
 	   else
 	      pVoisin = pVoisin->AbNext;
@@ -1050,7 +1050,7 @@ boolean             SaufCreeAvec;
 /* |    SaufCreeAvec                                                    | */
 /* ---------------------------------------------------------------------- */
 /* |    TuePresEnglob supprime tous les paves de presentation           | */
-/* |            crees par pPav et les paves de presentation crees par   | */
+/* |            crees par pAb et les paves de presentation crees par   | */
 /* |            les paves englobants a l'aide de regles CreateFirst et  | */
 /* |            CreateBefore (si Tete est vrai) ou CreateAfter et       | */
 /* |            CreateLast (si Tete est faux).                          | */
@@ -1060,11 +1060,11 @@ boolean             SaufCreeAvec;
 
 
 #ifdef __STDC__
-static void         TuePresEnglob (PtrAbstractBox pPav, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufRep)
+static void         TuePresEnglob (PtrAbstractBox pAb, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufRep)
 
 #else  /* __STDC__ */
-static void         TuePresEnglob (pPav, Tete, pDoc, PavReaff, volsupp, SaufRep)
-PtrAbstractBox             pPav;
+static void         TuePresEnglob (pAb, Tete, pDoc, PavReaff, volsupp, SaufRep)
+PtrAbstractBox             pAb;
 boolean             Tete;
 PtrDocument         pDoc;
 PtrAbstractBox            *PavReaff;
@@ -1079,13 +1079,13 @@ boolean             SaufRep;
 
    *volsupp = 0;
    /* Detruit les paves de presentation crees par les regles */
-   /* CreateBefore et CreateAfter de pPav. */
-   TuePresVoisin (pPav->AbPrevious, True,
-		  pDoc, &PavR, PavReaff, volsupp, pPav, SaufRep);
-   TuePresVoisin (pPav->AbNext, False,
-		  pDoc, &PavR, PavReaff, volsupp, pPav, SaufRep);
+   /* CreateBefore et CreateAfter de pAb. */
+   TuePresVoisin (pAb->AbPrevious, True,
+		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufRep);
+   TuePresVoisin (pAb->AbNext, False,
+		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufRep);
    /* traite les paves englobants */
-   PavEnglob = pPav->AbEnclosing;
+   PavEnglob = pAb->AbEnclosing;
    while (PavEnglob != NULL)
       /* le test sur AbTruncatedHead ou AbTruncatedTail n'est plus significatif */
       /* a cause des paves de presentation repetes */
@@ -1263,7 +1263,7 @@ boolean             SaufRep;
 
 /* ---------------------------------------------------------------------- */
 /* |    TuePresEnglob supprime tous les paves de presentation           | */
-/* |            crees par pPav et les paves de presentation crees par   | */
+/* |            crees par pAb et les paves de presentation crees par   | */
 /* |            les paves englobants a l'aide de regles Create et       | */
 /* |            CreateBefore (si Tete est vrai) ou CreateAfter et       | */
 /* |            CreateLast (si Tete est faux).                          | */
@@ -1273,11 +1273,11 @@ boolean             SaufRep;
 
 
 #ifdef __STDC__
-static void         TuePresEnglob (PtrAbstractBox pPav, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufCreeAvec)
+static void         TuePresEnglob (PtrAbstractBox pAb, boolean Tete, PtrDocument pDoc, PtrAbstractBox * PavReaff, int *volsupp, boolean SaufCreeAvec)
 
 #else  /* __STDC__ */
-static void         TuePresEnglob (pPav, Tete, pDoc, PavReaff, volsupp, SaufCreeAvec)
-PtrAbstractBox             pPav;
+static void         TuePresEnglob (pAb, Tete, pDoc, PavReaff, volsupp, SaufCreeAvec)
+PtrAbstractBox             pAb;
 boolean             Tete;
 PtrDocument         pDoc;
 PtrAbstractBox            *PavReaff;
@@ -1293,13 +1293,13 @@ boolean             SaufCreeAvec;
 
    *volsupp = 0;
    /* Detruit les paves de presentation crees par les regles */
-   /* CreateBefore et CreateAfter de pPav. */
-   TuePresVoisin (pPav->AbPrevious, True,
-		  pDoc, &PavR, PavReaff, volsupp, pPav, SaufCreeAvec);
-   TuePresVoisin (pPav->AbNext, False,
-		  pDoc, &PavR, PavReaff, volsupp, pPav, SaufCreeAvec);
+   /* CreateBefore et CreateAfter de pAb. */
+   TuePresVoisin (pAb->AbPrevious, True,
+		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufCreeAvec);
+   TuePresVoisin (pAb->AbNext, False,
+		  pDoc, &PavR, PavReaff, volsupp, pAb, SaufCreeAvec);
    /* traite les paves englobants */
-   PavEnglob = pPav->AbEnclosing;
+   PavEnglob = pAb->AbEnclosing;
    while (PavEnglob != NULL)
       if ((Tete && PavEnglob->AbTruncatedHead)
 	  || (!Tete && PavEnglob->AbTruncatedTail))
@@ -1453,7 +1453,7 @@ int                *dvol;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pPav, pFrere, PavReaff, PavR;
+   PtrAbstractBox             pAb, pFrere, PavReaff, PavR;
    int                 volsupp, volpres;
    boolean             stop, stop1;
    PtrElement          pEl1;
@@ -1467,12 +1467,12 @@ int                *dvol;
 
    /* cherche le premier pave englobe' de volume inferieur a dvol et qui */
    /* soit secable */
-   pPav = PavRacine;
+   pAb = PavRacine;
 #ifdef __COLPAGE__
    PavReaff = NULL;
    /* suppression d'une page si la vue est paginee */
    caspage = False;
-   Vue = pPav->AbDocView;
+   Vue = pAb->AbDocView;
    pP = PavRacine->AbFirstEnclosed;
    if (pP != NULL && pP->AbElement->ElLeafType == LtPageColBreak)
       caspage = True;
@@ -1487,49 +1487,49 @@ int                *dvol;
 	/* volume des paves de presentation des elem englobants */
 	stop = False;
 	do
-	   if (pPav == NULL)
+	   if (pAb == NULL)
 	      stop = True;
-	   else if (pPav->AbVolume + volpres <= *dvol || NonSecable (pPav))
+	   else if (pAb->AbVolume + volpres <= *dvol || NonSecable (pAb))
 	      stop = True;
 	   else
 	     {
 		/* premier pave du niveau inferieur */
-		pPav = pPav->AbFirstEnclosed;
-		if (pPav != NULL)
+		pAb = pAb->AbFirstEnclosed;
+		if (pAb != NULL)
 		   /* si on supprime en tete, cherche le premier pave qui ne soit */
 		   /* pas un pave de presentation */
 		   /* si on supprime en queue, cherche le dernier pave qui ne soit */
 		   /* pas un pave de presentation */
 		  {
 		     if (!Tete)
-			while (pPav->AbNext != NULL)
-			   pPav = pPav->AbNext;
+			while (pAb->AbNext != NULL)
+			   pAb = pAb->AbNext;
 		     stop1 = False;
 		     do
-			if (pPav == NULL)
+			if (pAb == NULL)
 			   stop1 = True;
-			else if (!pPav->AbPresentationBox)
+			else if (!pAb->AbPresentationBox)
 			   stop1 = True;
-			else if (pPav->AbFirstEnclosed != NULL &&
-			pPav->AbFirstEnclosed->AbElement == pPav->AbElement)
+			else if (pAb->AbFirstEnclosed != NULL &&
+			pAb->AbFirstEnclosed->AbElement == pAb->AbElement)
 			   /* un pave de presentation cree' par la regle FnCreateEnclosing */
 			   /* on le considere comme un pave' d'element structure' */
 			   stop1 = True;
 			else
 			  {
-			     volpres += pPav->AbVolume;
+			     volpres += pAb->AbVolume;
 			     if (Tete)
-				pPav = pPav->AbNext;
+				pAb = pAb->AbNext;
 			     else
-				pPav = pPav->AbPrevious;
+				pAb = pAb->AbPrevious;
 			  }
 		     while (!(stop1));
 		  }
 	     }
 	while (!(stop));
-	if (pPav == NULL)
+	if (pAb == NULL)
 	   *dvol = 0;
-	else if (pPav->AbVolume + volpres > *dvol)
+	else if (pAb->AbVolume + volpres > *dvol)
 	   /* on ne peut rien supprimer */
 	   *dvol = 0;
 	if (*dvol > 0)
@@ -1579,21 +1579,21 @@ int                *dvol;
 		  /* pas de pages : pas de changement de code */
 
 #endif /* __COLPAGE__ */
-		  /* on peut supprimer le pave pPav */
+		  /* on peut supprimer le pave pAb */
 		  /* calcule le nouveau volume qui restera a supprimer apres la */
-		  /* suppression de pPav */
-		  *dvol -= pPav->AbVolume;
-		  PavReaff = pPav;
-		  /* il faudra reafficher au moins pPav */
-		  /* tous les paves englobant pPav sont coupe's. On supprime leurs */
+		  /* suppression de pAb */
+		  *dvol -= pAb->AbVolume;
+		  PavReaff = pAb;
+		  /* il faudra reafficher au moins pAb */
+		  /* tous les paves englobant pAb sont coupe's. On supprime leurs */
 		  /* paves de presentation. On supprime aussi ceux crees par le pave */
 		  /* tue'. */
-		  TuePresEnglob (pPav, Tete, pDoc, &PavReaff, &volsupp, False);
+		  TuePresEnglob (pAb, Tete, pDoc, &PavReaff, &volsupp, False);
 		  *dvol -= volsupp;
 		  /* detruit le pave trouve' et toute sa descendance */
-		  TuePave (pPav);
+		  TuePave (pAb);
 		  /* detruit les paves freres tant qu'il reste du volume a supprimer */
-		  pFrere = pPav;
+		  pFrere = pAb;
 		  while (*dvol > 0 && pFrere != NULL)
 		    {
 		       if (Tete)
@@ -1609,7 +1609,7 @@ int                *dvol;
 			     SupprPaves (pFrere, pDoc, Tete, dvol);
 		       /* traite ensuite les paves qui se referent au pave detruit */
 		    }
-		  SuppRfPave (pPav, &PavR, pDoc);
+		  SuppRfPave (pAb, &PavR, pDoc);
 		  PavReaff = Englobant (PavReaff, PavR);
 		  pEl1 = PavRacine->AbElement;
 		  if (VueAssoc (PavRacine->AbElement))
@@ -1767,7 +1767,7 @@ PtrDocument         pDoc;
    PtrElement          pEl1;
 
 #ifdef __COLPAGE__
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 nb;
 
 #endif /* __COLPAGE__ */
@@ -1789,12 +1789,12 @@ PtrDocument         pDoc;
 		     /* si oui, on compte le nombre de pages actuel */
 		     /* pour etre sur d'ajouter au moins une page */
 		     /* (sauf si fin de vue) */
-		     pPav = pDo1->DocViewRootAb[vue - 1];
-		     if (pPav->AbFirstEnclosed != NULL
-			 && pPav->AbFirstEnclosed->AbElement->ElTypeNumber ==
+		     pAb = pDo1->DocViewRootAb[vue - 1];
+		     if (pAb->AbFirstEnclosed != NULL
+			 && pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
 			 ord (PageBreak) + 1)
 		       {
-			  nb = NbPages (pPav);
+			  nb = NbPages (pAb);
 			  pDo1->DocViewNPages[vue - 1] = nb;
 			  pDo1->DocViewFreeVolume[vue - 1] = THOT_MAXINT;
 		       }
@@ -1815,13 +1815,13 @@ PtrDocument         pDoc;
 	      /* dans des boites de haut ou bas de page */
 	     {
 #ifdef __COLPAGE__
-		pPav = pDo1->DocAssocRoot[pEl1->ElAssocNum - 1]->ElAbstractBox[0];
-		if (pPav->AbFirstEnclosed != NULL
-		    && pPav->AbFirstEnclosed->AbElement->ElTypeNumber ==
+		pAb = pDo1->DocAssocRoot[pEl1->ElAssocNum - 1]->ElAbstractBox[0];
+		if (pAb->AbFirstEnclosed != NULL
+		    && pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
 		    ord (PageBreak) + 1)
 		   /* vue du document paginee */
 		  {
-		     nb = NbPages (pPav);
+		     nb = NbPages (pAb);
 		     pDo1->DocAssocNPages[vue - 1] = nb;
 		     pDo1->DocAssocFreeVolume[pEl1->ElAssocNum - 1] = THOT_MAXINT;
 		  }
@@ -1864,7 +1864,7 @@ int                 frame;
    PtrDocument         pDoc;
    int                 vue, h;
    boolean             assoc;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
 
 #ifdef __COLPAGE__
    PtrElement          pElRacine, pEl1;
@@ -1886,12 +1886,12 @@ int                 frame;
 	if (assoc)
 	  {
 	     /* element associe */
-	     pPav = pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0];
+	     pAb = pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0];
 #ifdef __COLPAGE__
 	     /* attention, vue contient le numero d'element associe */
 	     pElRacine = pDoc->DocAssocRoot[vue - 1];
 #endif /* __COLPAGE__ */
-	     pDoc->DocAssocVolume[vue - 1] = pPav->AbVolume + dVol;
+	     pDoc->DocAssocVolume[vue - 1] = pAb->AbVolume + dVol;
 	     pDoc->DocAssocFreeVolume[vue - 1] = dVol;
 	  }
 	else
@@ -1900,8 +1900,8 @@ int                 frame;
 #ifdef __COLPAGE__
 	     pElRacine = pDoc->DocRootElement;
 #endif /* __COLPAGE__ */
-	     pPav = pDoc->DocViewRootAb[vue - 1];
-	     pDoc->DocViewVolume[vue - 1] = pPav->AbVolume + dVol;
+	     pAb = pDoc->DocViewRootAb[vue - 1];
+	     pDoc->DocViewVolume[vue - 1] = pAb->AbVolume + dVol;
 	     pDoc->DocViewFreeVolume[vue - 1] = dVol;
 	  }
 #ifdef __COLPAGE__
@@ -1917,7 +1917,7 @@ int                 frame;
 	   /* pour etre sur d'ajouter au moins une page */
 	   /* (sauf si fin de vue) */
 	  {
-	     nb = NbPages (pPav);
+	     nb = NbPages (pAb);
 	     if (assoc)
 		/* element associe */
 	       {
@@ -1932,10 +1932,10 @@ int                 frame;
 	       }
 	  }
 #endif /* __COLPAGE__ */
-	if (!NonSecable (pPav))
+	if (!NonSecable (pAb))
 	  {
 	     /* cree les paves de la partie qui va apparaitre */
-	     AjoutePaves (pPav, pDoc, EnTete);
+	     AjoutePaves (pAb, pDoc, EnTete);
 
 	     /* signale au Mediateur les paves crees et detruits */
 #ifdef __COLPAGE__
@@ -2000,7 +2000,7 @@ int                 frame;
    PtrDocument         pDoc;
    int                 vue, h;
    boolean             assoc;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
 
 #ifdef __COLPAGE__
    FILE               *list;
@@ -2018,39 +2018,39 @@ int                 frame;
 	  {
 	     /* element associe */
 	     /* attention, vue contient le numero d'element associe */
-	     pPav = pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0];
-	     pDoc->DocAssocVolume[vue - 1] = pPav->AbVolume - dVol;
+	     pAb = pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0];
+	     pDoc->DocAssocVolume[vue - 1] = pAb->AbVolume - dVol;
 	  }
 	else
 	  {
 	     /* element de l'arbre principal */
-	     pPav = pDoc->DocViewRootAb[vue - 1];
-	     pDoc->DocViewVolume[vue - 1] = pPav->AbVolume - dVol;
+	     pAb = pDoc->DocViewRootAb[vue - 1];
+	     pDoc->DocViewVolume[vue - 1] = pAb->AbVolume - dVol;
 	  }
-	if (pPav != NULL)
+	if (pAb != NULL)
 #ifdef __COLPAGE__
 	  {
 #endif /* __COLPAGE__ */
-	     if (dVol >= pPav->AbVolume)
-		printf ("Erreur VolReduit: dVol=%3d volume vue=%3d\n", dVol, pPav->AbVolume);
+	     if (dVol >= pAb->AbVolume)
+		printf ("Erreur VolReduit: dVol=%3d volume vue=%3d\n", dVol, pAb->AbVolume);
 	     /* supprime les paves */
-	     SupprPaves (pPav, pDoc, EnTete, &dVol);
+	     SupprPaves (pAb, pDoc, EnTete, &dVol);
 #ifdef __COLPAGE__
 	     /* sauvegarde de l'image abstraite pour tests */
 	     list = fopen ("/perles/roisin/debug/volred", "w");
 	     if (list != NULL)
 	       {
-		  NumPav (pPav);
-		  AffPaves (pPav, 2, list);
+		  NumPav (pAb);
+		  AffPaves (pAb, 2, list);
 		  fclose (list);
 	       }
 	     /* signale au Mediateur les paves modifies */
 	     h = HauteurCoupPage;
 	     /* appel de modifVue depuis la racine car de nouvelles */
 	     /* pages ont pu etre detruites */
-	     (void) ModifVue (frame, &h, pPav);
+	     (void) ModifVue (frame, &h, pAb);
 	     /* meme chose pour LibPavMort */
-	     LibPavMort (pPav);
+	     LibPavMort (pAb);
 	     /* DocAssocModifiedAb et DocViewModifiedAb non utilises */
 	     if (assoc)
 		pDoc->DocAssocModifiedAb[vue - 1] = NULL;
@@ -2256,7 +2256,7 @@ int                 frame;
 			  pEl1 = pEl;
 			  while (!trouve && pEl1 != NULL)
 			    {
-			       pElPage = ArCherche (pEl1, ord (PageBreak) + 1, NULL);
+			       pElPage = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
 			       if (pElPage != NULL && pElPage->ElViewPSchema == VueSch
 				   && (pElPage->ElPageType == PgBegin
 				       || pElPage->ElPageType == PgComputed
@@ -2931,7 +2931,7 @@ int                 frame;
       int                 VolAvant, VolCourant;
       boolean             apres;
       int                 position;
-      PtrAbstractBox             PaveRacine, pPav;
+      PtrAbstractBox             PaveRacine, pAb;
       PtrElement          Suiv;
 
       position = 0;
@@ -2968,30 +2968,30 @@ int                 frame;
 			    }
 		       }
 		     if (pEl == NULL)
-			pPav = NULL;
+			pAb = NULL;
 		     else
 		       {
-			  pPav = pEl->ElAbstractBox[Vue - 1];
-			  if (pPav == NULL)
+			  pAb = pEl->ElAbstractBox[Vue - 1];
+			  if (pAb == NULL)
 			    {
 			       VerifPave (pEl, Vue, pDoc, False, False);
-			       pPav = pEl->ElAbstractBox[Vue - 1];
+			       pAb = pEl->ElAbstractBox[Vue - 1];
 			    }
 		       }
 		     apres = True;
-		     while (pEl != NULL && pPav == NULL)
+		     while (pEl != NULL && pAb == NULL)
 			/* pEl n'a pas de pave dans le vue traitee. */
 			/* On cherche la feuille la plus proche de pEl qui */
 			/* soit visible dans la vue */
 		       {
 			  if (apres)
-			     Suiv = Successeur (pEl);
+			     Suiv = NextElement (pEl);
 			  else
 			     Suiv = NULL;
 			  if (Suiv != NULL)
 			     /* on prend la feuille suivante */
 			     if (!Suiv->ElTerminal)
-				pEl = PremFeuille (Suiv);
+				pEl = FirstLeaf (Suiv);
 			     else
 				pEl = Suiv;
 			  else
@@ -3014,23 +3014,23 @@ int                 frame;
 			  if (pEl != NULL)
 			    {
 			       VerifPave (pEl, Vue, pDoc, False, False);
-			       pPav = pEl->ElAbstractBox[Vue - 1];
+			       pAb = pEl->ElAbstractBox[Vue - 1];
 			    }
 		       }
 
-		     pPav = NULL;
+		     pAb = NULL;
 		     /* positionne l'image dans sa frame, en l'affichant */
 		     if (distance == 0)
 			/* boite racine de la vue en haut de la fenetre */
 		       {
 			  position = 0;
-			  pPav = PaveRacine;
+			  pAb = PaveRacine;
 		       }
 		     else if (distance == 100)
 			/* boite racine de la vue en bas de la fenetre */
 		       {
 			  position = 2;
-			  pPav = PaveRacine;
+			  pAb = PaveRacine;
 		       }
 		     else if (pEl != NULL)
 			/* boite de l'element au milieu de la fenetre */
@@ -3038,13 +3038,13 @@ int                 frame;
 			  if (pEl->ElAbstractBox[Vue - 1] == NULL)
 			     /* cherche le premier element precedent qui a */
 			     /* un pave' dans la vue */
-			     pEl = ArChElVisible (PaveRacine->AbElement, pEl, Vue);
+			     pEl = BackSearchVisibleElem (PaveRacine->AbElement, pEl, Vue);
 			  if (pEl != NULL)
-			     pPav = pEl->ElAbstractBox[Vue - 1];
+			     pAb = pEl->ElAbstractBox[Vue - 1];
 			  position = 1;
 		       }
-		     if (pPav != NULL)
-			MontrerBoite (frame, pPav->AbBox, position, 0);
+		     if (pAb != NULL)
+			MontrerBoite (frame, pAb->AbBox, position, 0);
 
 		     /* Allume la selection */
 		     AllumeSelection (False, False);
@@ -3056,69 +3056,69 @@ int                 frame;
 #ifdef __COLPAGE__
 
 /** debut ajout */
-/* affichage du contexte de pPav pour debug */
+/* affichage du contexte de pAb pour debug */
 
 #ifdef __STDC__
-   void                AffPaveDebug (PtrAbstractBox pPav)
+   void                AffPaveDebug (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-   void                AffPaveDebug (pPav)
-   PtrAbstractBox             pPav;
+   void                AffPaveDebug (pAb)
+   PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
    {
       PtrElement          pEl;
 
-      if (pPav != NULL)
+      if (pAb != NULL)
 	{
-	   pEl = pPav->AbElement;
-	   printf ("contexte pPav = %x", (int) pPav, " %s",
+	   pEl = pAb->AbElement;
+	   printf ("contexte pAb = %x", (int) pAb, " %s",
 		   pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
-	   printf ("pres = %d", pPav->AbPresentationBox);
+	   printf ("pres = %d", pAb->AbPresentationBox);
 	   printf ("\n");
-	   printf ("pere = %x", (int) pPav->AbEnclosing);
-	   if (pPav->AbEnclosing != NULL)
+	   printf ("pere = %x", (int) pAb->AbEnclosing);
+	   if (pAb->AbEnclosing != NULL)
 	      printf (" %s",
-		      pPav->AbEnclosing->AbElement->ElSructSchema->SsRule[pPav->AbEnclosing->AbElement->ElTypeNumber - 1].SrName);
+		      pAb->AbEnclosing->AbElement->ElSructSchema->SsRule[pAb->AbEnclosing->AbElement->ElTypeNumber - 1].SrName);
 	   printf ("\n");
-	   printf ("frere avant = %x", (int) pPav->AbPrevious);
-	   if (pPav->AbPrevious != NULL)
+	   printf ("frere avant = %x", (int) pAb->AbPrevious);
+	   if (pAb->AbPrevious != NULL)
 	      printf (" %s",
-		      pPav->AbPrevious->AbElement->ElSructSchema->SsRule[pPav->AbPrevious->AbElement->ElTypeNumber - 1].SrName);
+		      pAb->AbPrevious->AbElement->ElSructSchema->SsRule[pAb->AbPrevious->AbElement->ElTypeNumber - 1].SrName);
 	   printf ("\n");
-	   printf ("frere apres  = %x", (int) pPav->AbNext);
-	   if (pPav->AbNext != NULL)
+	   printf ("frere apres  = %x", (int) pAb->AbNext);
+	   if (pAb->AbNext != NULL)
 	      printf (" %s",
-		      pPav->AbNext->AbElement->ElSructSchema->SsRule[pPav->AbNext->AbElement->ElTypeNumber
+		      pAb->AbNext->AbElement->ElSructSchema->SsRule[pAb->AbNext->AbElement->ElTypeNumber
 							     - 1].SrName);
 	   printf ("\n");
-	   if (pPav->AbPreviousRepeated != NULL)
-	      printf (" dup precedent = %x", (int) pPav->AbPreviousRepeated);
-	   if (pPav->AbNextRepeated != NULL)
-	      printf (" dup suivant  = %x", (int) pPav->AbNextRepeated);
+	   if (pAb->AbPreviousRepeated != NULL)
+	      printf (" dup precedent = %x", (int) pAb->AbPreviousRepeated);
+	   if (pAb->AbNextRepeated != NULL)
+	      printf (" dup suivant  = %x", (int) pAb->AbNextRepeated);
 	   printf ("\n");
 	}
    }
 
    /* ------------------------------------------------------------------ */
-   /*  PaveCorrect verifie les conditions d'invariance sur le pave pPav| */
+   /*  PaveCorrect verifie les conditions d'invariance sur le pave pAb| */
    /*            et affiche un message d'erreur si une condition       | */
    /*            pas respectee. On verifie que :                       | */
-   /*            1. la suite des paves de l'element pPav               | */
+   /*            1. la suite des paves de l'element pAb               | */
    /*               ne contienne pas que des paves de presentation,    | */
-   /*           2. si pPav->AbPreviousRepeated != NULL                    | */
-   /*               alors l'element ne pointe pas sur pPav             | */
-   /*            3. si pPav->AbNextRepeated(ou Prec)  != NULL           | */
+   /*           2. si pAb->AbPreviousRepeated != NULL                    | */
+   /*               alors l'element ne pointe pas sur pAb             | */
+   /*            3. si pAb->AbNextRepeated(ou Prec)  != NULL           | */
    /*               alors tous les ascendants doivent l'etre aussi     | */
    /* ------------------------------------------------------------------ */
 
 #ifdef __STDC__
-   boolean             PaveCorrect (PtrAbstractBox pPav)
+   boolean             PaveCorrect (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-   boolean             PaveCorrect (pPav)
-   PtrAbstractBox             pPav;
+   boolean             PaveCorrect (pAb)
+   PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -3128,12 +3128,12 @@ int                 frame;
       boolean             correct, tousmorts;
       int                 AbDocView;
 
-      pPa1 = pPav;
-      AbDocView = pPav->AbDocView;
+      pPa1 = pAb;
+      AbDocView = pAb->AbDocView;
       /* a priori le pave est correct */
       correct = True;
       tousmorts = True;
-      pEl = pPav->AbElement;
+      pEl = pAb->AbElement;
 
       /* premiere verification */
       /* message d'erreur si la suite des paves pointes par */
@@ -3165,8 +3165,8 @@ int                 frame;
 	}
 
       /* un pave de presentation ne peut pas etre duplique ?? */
-      if (pPav->AbPresentationBox &&
-	  (pPav->AbPreviousRepeated != NULL || pPav->AbNextRepeated != NULL))
+      if (pAb->AbPresentationBox &&
+	  (pAb->AbPreviousRepeated != NULL || pAb->AbNextRepeated != NULL))
 	{
 	   correct = False;
 	   printf ("Erreur dans l'i.a. : pave de pres duplique %s",
@@ -3174,24 +3174,24 @@ int                 frame;
 	   printf ("\n");
 	}
       /* deuxieme verification */
-      if (pPav->AbPreviousRepeated != NULL)
+      if (pAb->AbPreviousRepeated != NULL)
 	{
-	   if (pEl->ElAbstractBox[AbDocView - 1] == pPav)
-	      /* l'element pointe sur pPav alors qu'il a un dupPrec */
+	   if (pEl->ElAbstractBox[AbDocView - 1] == pAb)
+	      /* l'element pointe sur pAb alors qu'il a un dupPrec */
 	     {
 		correct = False;
-		printf ("Erreur dans l'i.a.:l'elem pointe sur pPav %s",
+		printf ("Erreur dans l'i.a.:l'elem pointe sur pAb %s",
 		    pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 		printf ("\n");
 	     }
 	}
 
       /* troisieme verification */
-      /* si pPav a AbNextRepeated(ou Prec) != NULL alors tous ses ascendants ont */
+      /* si pAb a AbNextRepeated(ou Prec) != NULL alors tous ses ascendants ont */
       /* AbNextRepeated != NULL (jusqu'a corps de page) */
-      if (pPav->AbNextRepeated != NULL || pPav->AbPreviousRepeated != NULL)
+      if (pAb->AbNextRepeated != NULL || pAb->AbPreviousRepeated != NULL)
 	{
-	   pP = pPav->AbEnclosing;
+	   pP = pAb->AbEnclosing;
 	   if (pP == NULL)
 	     {
 		correct = False;
@@ -3203,8 +3203,8 @@ int                 frame;
 	     {
 		while (pP != NULL && pP->AbElement->ElTypeNumber != ord (PageBreak) + 1)
 		  {
-		     if ((pPav->AbNextRepeated != NULL && pP->AbNextRepeated == NULL)
-			 || (pPav->AbPreviousRepeated != NULL && pP->AbPreviousRepeated == NULL))
+		     if ((pAb->AbNextRepeated != NULL && pP->AbNextRepeated == NULL)
+			 || (pAb->AbPreviousRepeated != NULL && pP->AbPreviousRepeated == NULL))
 		       {
 			  /*cas d'erreur */
 			  correct = False;
@@ -3227,7 +3227,7 @@ int                 frame;
 	}
       if (!correct)
 	 /* affichage du contexte */
-	 AffPaveDebug (pPav);
+	 AffPaveDebug (pAb);
 
       return correct;
    }

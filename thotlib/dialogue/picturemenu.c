@@ -301,16 +301,16 @@ char               *txt;
 /* |  Menu appele lors de la modification d'une image                    | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void MenuImage (char *nom, boolean *result, int *typim, int *pres, PtrBox ibox)
+void MenuImage (char *nom, boolean *result, int *typim, int *pres, PtrBox pBox)
 
 #else  /* __STDC__ */
-void MenuImage (nom, result, typim, pres, ibox)
+void MenuImage (nom, result, typim, pres, pBox)
 char               *nom;
 boolean            *result;
 int                *typim;
 int                *pres;
 int                *pres;
-PtrBox            ibox;
+PtrBox            pBox;
 
 #endif /* __STDC__ */
 {
@@ -391,12 +391,12 @@ PtrBox            ibox;
 	strcpy (nom, NomImage);
 	*typim = GetImageType (IndexTypeImage);
 	*pres = GetImagePresentation (IndexPresImage);
-	image = (ImageDescriptor *) ibox->BxImageDescriptor;
+	image = (ImageDescriptor *) pBox->BxImageDescriptor;
 	strcpy (image->imageFileName, nom);
 	image->imagePres = *pres;
 	image->imageType = *typim;
 	/* TODO: l'image frame n'est pas encore dispo ! */
-	EditImage (0, ibox, image);
+	EditImage (0, pBox, image);
 
 	/*  sprintf (nom, "%s/%s", DirectoryImage, NomImage); */
 	/*       TtaSetTextContent (elem, nom, 1, doc); */

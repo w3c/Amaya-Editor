@@ -429,7 +429,7 @@ void CreerUnLien (event)
    * ----          ----                 -----
    * event              NotifyElement*  Evenement ayant declanche l'ECF
    *
-   * Functionality : Supprime le lien et tout ce qui doit etre detruit sur un lien
+   * Functionality : DeleteElement le lien et tout ce qui doit etre detruit sur un lien
    * composite. Lance le retaillage de ces derniers.
    *
    ------------------------------------------------------------------------------
@@ -872,7 +872,7 @@ void NewDraw (event)
    * ----          ----          -----
    * event              NotifyElement*  Evenement ayant declanche l'action
    *
-   * Functionality : Supprime les boutons de la fenetre principale lorsqu'il
+   * Functionality : DeleteElement les boutons de la fenetre principale lorsqu'il
    * n'y a plus de Draw3 dans le document.
    *
    ------------------------------------------------------------------------------

@@ -317,7 +317,7 @@ Document            document;
 	   /* cree un buffer pour la 2eme partie de texte */
 	if (lengthBefore < pBuf->BuLength)
 	  {
-	     newBuf = NewBufTexte (pBuf);
+	     newBuf = NewTextBuffer (pBuf);
 	     strcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
 	     newBuf->BuLength = pBuf->BuLength - lengthBefore;
 	  }
@@ -340,7 +340,7 @@ Document            document;
 	     while (stringLength > 0)
 	       {
 		  if (pBuf == NULL)
-		     pBuf = NewBufTexte (pBufPrec);
+		     pBuf = NewTextBuffer (pBufPrec);
 		  if (stringLength >= MAX_CHAR)
 		     l = MAX_CHAR - 1;
 		  else
@@ -777,7 +777,7 @@ Document            document;
      }
    else
      {
-	CoupeTexte ((PtrElement) element, position + 1,
+	SplitTextElement ((PtrElement) element, position + 1,
 		    TabDocuments[document - 1], False);
 #ifndef NODISPLAY
 	RedispSplittedText ((PtrElement) element, position, document);
@@ -857,13 +857,13 @@ Document            document;
 				  /* detruit les paves du 2eme element de texte */
 				  DetrPaves (pEl2, TabDocuments[document - 1], False);
 #endif
-				  FondTexte ((PtrElement) element, &FreeElement,
+				  MergeTextElements ((PtrElement) element, &FreeElement,
 					 TabDocuments[document - 1], False);
 #ifndef NODISPLAY
 				  RedispMergedText ((PtrElement) element, document);
 #endif
 				  if (FreeElement != NULL)
-				     Supprime (&FreeElement);
+				     DeleteElement (&FreeElement);
 				  ok = True;
 			       }
      }
@@ -962,7 +962,7 @@ Document            document;
 		       delta = -((PtrElement) element)->ElNPoints;
 		       if (shape != '\0')
 			  delta++;
-		       VideTexte (((PtrElement) element)->ElPolyLineBuffer);
+		       ClearText (((PtrElement) element)->ElPolyLineBuffer);
 		       FreeBufTexte (((PtrElement) element)->ElPolyLineBuffer);
 		       ((PtrElement) element)->ElLeafType = LtGraphics;
 		    }

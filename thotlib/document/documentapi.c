@@ -14,7 +14,7 @@
 
 #ifdef NODISPLAY
 /*** pour la bibliotheque ThotKernel, on definit les variables SelPremier
-     et SelDernier, qui sont utilisees a la fin de la procedure FondTexte
+     et SelDernier, qui sont utilisees a la fin de la procedure MergeTextElements
      de textelem.c ***/
 #undef EXPORT
 #define EXPORT
@@ -125,7 +125,7 @@ char               *documentName;
    else
      {
 	/* initialise un contexte de document */
-	CreeDocument (&pDoc);
+	CreateDocument (&pDoc);
 	if (pDoc == NULL)
 	   /* plus de contexte de document libre */
 	  {
@@ -156,10 +156,10 @@ char               *documentName;
 		  InitSchAppli (pDoc->DocSSchema);
 #endif
 		  /* on cree la representation interne d'un document vide. */
-		  pDoc->DocRootElement = CreeSArbre (pDoc->DocSSchema->SsRootElem,
+		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
 		    pDoc->DocSSchema, pDoc, 0, True, True, True, True);
 		  /* supprime les elements exclus (au sens SGML) */
-		  RetireExclus (&pDoc->DocRootElement);
+		  RemoveExcludedElem (&pDoc->DocRootElement);
 		  if (pDoc->DocRootElement == NULL)
 		    {
 		       LibDocument (&pDoc);
@@ -170,12 +170,12 @@ char               *documentName;
 		       pDoc->DocRootElement->ElAccess = AccessReadWrite;
 #ifndef NODISPLAY
 		       /* cree les attributs requis de tout l'arbre cree' */
-		       AttrRequis (pDoc->DocRootElement, pDoc);
+		       AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
 #endif
 		       /* traitement des exceptions */
 		       TraiteExceptionCreation (pDoc->DocRootElement, pDoc);
 		       /* on met un attribut Langue sur la racine */
-		       VerifieLangueRacine (pDoc, pDoc->DocRootElement);
+		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		       /* on donne son nom au document */
 		       strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		       /* on acquiert in identificateur pour le document */
@@ -238,7 +238,7 @@ int                 accessMode;
    /* a priori, on va pas y arriver */
    document = 0;
    /* initialise un contexte de document */
-   CreeDocument (&pDoc);
+   CreateDocument (&pDoc);
    if (pDoc == NULL)
       /* trop de documents deja ouverts */
      {
@@ -532,21 +532,21 @@ Document            document;
 	/* Note d'abord dans le contexte du document tous les liens de */
 	/* reference externe */
 	/* traite l'arbre principal du document */
-	NoteRefSortantes (pDoc->DocRootElement, pDoc, False);
-	NoteElemRefDetruits (pDoc->DocRootElement, pDoc);
+	RegisterExternalRef (pDoc->DocRootElement, pDoc, False);
+	RegisterDeletedReferredElem (pDoc->DocRootElement, pDoc);
 	/* traite les arbres d'elements associes */
 	for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	   if (pDoc->DocAssocRoot[i - 1] != NULL)
 	     {
-		NoteRefSortantes (pDoc->DocAssocRoot[i - 1], pDoc, False);
-		NoteElemRefDetruits (pDoc->DocAssocRoot[i - 1], pDoc);
+		RegisterExternalRef (pDoc->DocAssocRoot[i - 1], pDoc, False);
+		RegisterDeletedReferredElem (pDoc->DocAssocRoot[i - 1], pDoc);
 	     }
 	/* traite les parametres */
 	for (i = 1; i <= MAX_PARAM_DOC; i++)
 	   if (pDoc->DocParameters[i - 1] != NULL)
 	     {
-		NoteRefSortantes (pDoc->DocParameters[i - 1], pDoc, False);
-		NoteElemRefDetruits (pDoc->DocParameters[i - 1], pDoc);
+		RegisterExternalRef (pDoc->DocParameters[i - 1], pDoc, False);
+		RegisterDeletedReferredElem (pDoc->DocParameters[i - 1], pDoc);
 	     }
 	/* modifie les fichiers .EXT des documents qui etaient */
 	/* reference's par le document detruit */
@@ -868,12 +868,12 @@ int                *removedAttributes;
 	if ((*pEl)->ElSructSchema == pSSExt)
 	   /* this element belongs to the extension schema to be removed */
 	  {
-	     NoteRefSortantes (*pEl, pDoc, False);
-	     NoteElemRefDetruits (*pEl, pDoc);
+	     RegisterExternalRef (*pEl, pDoc, False);
+	     RegisterDeletedReferredElem (*pEl, pDoc);
 #ifndef NODISPLAY
 	     UndisplayElement (*pEl, document);
 #endif
-	     Supprime (pEl);
+	     DeleteElement (pEl);
 	     *pEl = NULL;
 	     (*removedElements)++;
 	  }

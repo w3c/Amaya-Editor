@@ -101,9 +101,9 @@ PtrElement          pEl;
 }
 
 #ifdef __STDC__
-void                PutAttributs (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
+void                AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
 #else  /* __STDC__ */
-void                PutAttributs (pEl, pDoc, pNewAttr)
+void                AttachAttrWithValue (pEl, pDoc, pNewAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute         pNewAttr;
@@ -140,10 +140,10 @@ boolean             RemplRefer ()
 }
 
 #ifdef __STDC__
-void                NouvPosition (PtrAbstractBox pPav, int DeltaX, int DeltaY, int frame, boolean Disp)
+void                NouvPosition (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
 #else  /* __STDC__ */
-void                NouvPosition (pPav, DeltaX, DeltaY, frame, Disp)
-PtrAbstractBox             pPav;
+void                NouvPosition (pAb, DeltaX, DeltaY, frame, Disp)
+PtrAbstractBox             pAb;
 int                 DeltaX;
 int                 DeltaY;
 int                 frame;
@@ -154,10 +154,10 @@ boolean             Disp;
 }
 
 #ifdef __STDC__
-void                NouvDimension (PtrAbstractBox pPav, int DeltaX, int DeltaY, int frame, boolean Disp)
+void                NouvDimension (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
 #else  /* __STDC__ */
-void                NouvDimension (pPav, DeltaX, DeltaY, frame, Disp)
-PtrAbstractBox             pPav;
+void                NouvDimension (pAb, DeltaX, DeltaY, frame, Disp)
+PtrAbstractBox             pAb;
 int                 DeltaX;
 int                 DeltaY;
 int                 frame;
@@ -168,10 +168,10 @@ boolean             Disp;
 }
 
 #ifdef __STDC__
-boolean             PavResizable (PtrAbstractBox pPav, boolean Horiz)
+boolean             PavResizable (PtrAbstractBox pAb, boolean Horiz)
 #else  /* __STDC__ */
-boolean             PavResizable (pPav, Horiz)
-PtrAbstractBox             pPav;
+boolean             PavResizable (pAb, Horiz)
+PtrAbstractBox             pAb;
 boolean             Horiz;
 
 #endif /* __STDC__ */
@@ -180,10 +180,10 @@ boolean             Horiz;
 }
 
 #ifdef __STDC__
-boolean             PavMovable (PtrAbstractBox pPav, boolean Horiz)
+boolean             PavMovable (PtrAbstractBox pAb, boolean Horiz)
 #else  /* __STDC__ */
-boolean             PavMovable (pPav, Horiz)
-PtrAbstractBox             pPav;
+boolean             PavMovable (pAb, Horiz)
+PtrAbstractBox             pAb;
 boolean             Horiz;
 
 #endif /* __STDC__ */
@@ -266,10 +266,10 @@ void                EndInsert ()
 }
 
 #ifdef __STDC__
-void                FinInsertParagraph (PtrAbstractBox adpave, int frame)
+void                FinInsertParagraph (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-void                FinInsertParagraph (adpave, frame)
-PtrAbstractBox             adpave;
+void                FinInsertParagraph (pAb, frame)
+PtrAbstractBox             pAb;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -533,11 +533,11 @@ int                 dercar;
 
 
 #ifdef __STDC__
-void                MajPavSelect (int frame, PtrAbstractBox adpave, boolean Etat)
+void                MajPavSelect (int frame, PtrAbstractBox pAb, boolean Etat)
 #else  /* __STDC__ */
-void                MajPavSelect (frame, adpave, Etat)
+void                MajPavSelect (frame, pAb, Etat)
 int                 frame;
-PtrAbstractBox             adpave;
+PtrAbstractBox             pAb;
 boolean             Etat;
 
 #endif /* __STDC__ */
@@ -545,10 +545,10 @@ boolean             Etat;
 }
 
 #ifdef __STDC__
-void                ModeCreation (PtrBox ibox, int frame)
+void                ModeCreation (PtrBox pBox, int frame)
 #else  /* __STDC__ */
-void                ModeCreation (ibox, frame)
-PtrBox            ibox;
+void                ModeCreation (pBox, frame)
+PtrBox            pBox;
 int                 frame;
 
 #endif /* __STDC__ */

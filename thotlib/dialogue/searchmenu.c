@@ -166,7 +166,7 @@ int                 menu;
    switch (val)
 	 {
 	    case 0:
-	       /* Avant la selection */
+	       /* ElemIsBefore la selection */
 	       DomaineCherche->SStartToEnd = False;
 	       break;
 	    case 1:
@@ -190,7 +190,7 @@ int                 menu;
 	   if (DomaineCherche->SStartToEnd)
 	      TtaSetMenuForm (ref, 2);	/* Apres selection */
 	   else
-	      TtaSetMenuForm (ref, 0);	/* Avant selection */
+	      TtaSetMenuForm (ref, 0);	/* ElemIsBefore selection */
      }
 }
 
@@ -236,10 +236,10 @@ PtrSearchContext           context;
      {
 	if (context->SStartToEnd)
 	   /* Recherche en avant */
-	   pEl = AvChercheVideOuRefer (pEl, 1);
+	   pEl = FwdSearchRefOrEmptyElem (pEl, 1);
 	else
 	   /* Recherche en arriere */
-	   pEl = ArChercheVideOuRefer (pEl, 1);
+	   pEl = BackSearchRefOrEmptyElem (pEl, 1);
 	if (pEl != NULL)
 	   /* on a trouve' un element vide, on verifie que cet element ne */
 	   /* fait pas partie d'une inclusion et n'est pas cache' a */
@@ -250,7 +250,7 @@ PtrSearchContext           context;
 		pAscendant = pAscendant->ElParent;
 	     if (pAscendant->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
-		if (!ElemHidden (pEl))
+		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' a l'utilisateur */
 		   trouve = True;
 	  }
@@ -266,7 +266,7 @@ PtrSearchContext           context;
 		/* il faut s'arreter avant l'extremite' du document */
 		if (pEl != context->SEndElement)
 		   /*l'element trouve' n'est pas l'element ou il faut s'arreter */
-		   if (Avant (context->SEndElement, pEl))
+		   if (ElemIsBefore (context->SEndElement, pEl))
 		      /* l'element trouve' est apres l'element de fin, on */
 		      /* fait comme si on n'avait pas trouve' */
 		      pEl = NULL;
@@ -275,7 +275,7 @@ PtrSearchContext           context;
 	   /* il faut s'arreter avant l'extremite' du document */
 	   if (pEl != context->SStartElement)
 	      /*l'element trouve' n'est pas l'element ou il faut s'arreter */
-	      if (Avant (pEl, context->SStartElement))
+	      if (ElemIsBefore (pEl, context->SStartElement))
 		 /* l'element trouve' est avant le debut du domaine, on */
 		 /* fait comme si on n'avait pas trouve' */
 		 pEl = NULL;
@@ -336,10 +336,10 @@ PtrSearchContext           context;
      {
 	if (context->SStartToEnd)
 	   /* Recherche en avant */
-	   pEl = AvChercheVideOuRefer (pEl, 2);
+	   pEl = FwdSearchRefOrEmptyElem (pEl, 2);
 	else
 	   /* Recherche en arriere */
-	   pEl = ArChercheVideOuRefer (pEl, 2);
+	   pEl = BackSearchRefOrEmptyElem (pEl, 2);
 	if (pEl != NULL)
 	   /* on a trouve' une reference vide, on verifie que cette */
 	   /* reference ne fait pas partie d'une inclusion ou d'un arbre */
@@ -350,7 +350,7 @@ PtrSearchContext           context;
 		pAscendant = pAscendant->ElParent;
 	     if (pAscendant->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
-		if (!ElemHidden (pEl))
+		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' a l'utilisateur */
 		   if (pEl->ElReference == NULL)
 		      /* la reference est vide */
@@ -378,7 +378,7 @@ PtrSearchContext           context;
 		/* il faut s'arreter avant l'extremite' du document */
 		if (pEl != context->SEndElement)
 		   /*l'element trouve' n'est pas l'element ou il faut s'arreter */
-		   if (Avant (context->SEndElement, pEl))
+		   if (ElemIsBefore (context->SEndElement, pEl))
 		      /* l'element trouve' est apres l'element de fin, on */
 		      /* fait comme si on n'avait pas trouve' */
 		      pEl = NULL;
@@ -387,7 +387,7 @@ PtrSearchContext           context;
 	   /* il faut s'arreter avant l'extremite' du document */
 	   if (pEl != context->SStartElement)
 	      /*l'element trouve' n'est pas l'element ou il faut s'arreter */
-	      if (Avant (pEl, context->SStartElement))
+	      if (ElemIsBefore (pEl, context->SStartElement))
 		 /* l'element trouve' est avant le debut du domaine, on */
 		 /* fait comme si on n'avait pas trouve' */
 		 pEl = NULL;
@@ -923,7 +923,7 @@ int                 Data;
 		     if (!IdentDocNul (pDocExtCour->EdDocIdent))
 		       {
 			  /* acquiert et initialise un descripteur de document */
-			  CreeDocument (&pDoc);
+			  CreateDocument (&pDoc);
 			  if (pDoc != NULL)
 			    {
 			       /* charge le document */
@@ -1224,7 +1224,7 @@ char               *txt;
 				       /* texte cherche' */
 				       /* on ne remplace pas dans un sous-arbre en */
 				       /* lecture seule */
-				       if (ElemReadOnly (premsel))
+				       if (ElementIsReadOnly (premsel))
 					  TtaNewLabel (NumLabelValeurAttribut, NumFormChercheTexte,
 						       TtaGetMessage (LIB, LIB_ELEM_READ_ONLY));
 				       else if (!premsel->ElIsCopy && premsel->ElText != NULL

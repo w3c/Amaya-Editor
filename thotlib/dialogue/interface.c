@@ -1358,8 +1358,8 @@ int                *Y;
 
 {
    int                 frame;
-   PtrAbstractBox             adpave;
-   ViewFrame            *pFe1;
+   PtrAbstractBox             pAb;
+   ViewFrame            *pFrame;
 
    /* verifie le parametre document */
    UserErrorCode = 0;
@@ -1375,16 +1375,16 @@ int                *Y;
 	else
 	  {
 	     /* calcule la position de la souris dans la boite designee */
-	     pFe1 = &FntrTable[frame - 1];
-	     adpave = ((PtrElement) element)->ElAbstractBox[view - 1];
-	     if (adpave == NULL)
+	     pFrame = &FntrTable[frame - 1];
+	     pAb = ((PtrElement) element)->ElAbstractBox[view - 1];
+	     if (pAb == NULL)
 		TtaError (ERR_no_selection_in_view);
 	     else
 	       {
-		  while (adpave->AbPresentationBox && adpave->AbNext != NULL)
-		     adpave = adpave->AbNext;
-		  *X = DesX + pFe1->FrXOrg - adpave->AbBox->BxXOrg;
-		  *Y = DesY + pFe1->FrYOrg - adpave->AbBox->BxYOrg;
+		  while (pAb->AbPresentationBox && pAb->AbNext != NULL)
+		     pAb = pAb->AbNext;
+		  *X = DesX + pFrame->FrXOrg - pAb->AbBox->BxXOrg;
+		  *Y = DesY + pFrame->FrYOrg - pAb->AbBox->BxYOrg;
 	       }
 	  }
      }

@@ -138,7 +138,7 @@ char                BufMenu[MAX_TXT_LEN];
       if (pEl->ElPrevious != NULL)
 	{
 	   pEl = pEl->ElPrevious;
-	   if (!ElemHidden (pEl))
+	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
 	   stop1 = False;
 	   while (!stop1)
@@ -189,9 +189,9 @@ char                BufMenu[MAX_TXT_LEN];
 		   pEl2 = pEl2->ElFirstChild;
 		   while (pEl2->ElNext != NULL)
 		      pEl2 = pEl2->ElNext;
-		   while (ElemHidden (pEl2) && pEl2->ElPrevious != NULL)
+		   while (ElementIsHidden (pEl2) && pEl2->ElPrevious != NULL)
 		      pEl2 = pEl2->ElPrevious;
-		   if (!ElemHidden (pEl2))
+		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
 		      stop1 = True;	/* on a rien trouve sur pEl */
@@ -223,7 +223,7 @@ char                BufMenu[MAX_TXT_LEN];
       if (pEl->ElPrevious != NULL)
 	{
 	   pEl = pEl->ElPrevious;
-	   if (!ElemHidden (pEl))
+	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
 	   stop1 = False;
 	   while (!stop1)
@@ -279,9 +279,9 @@ char                BufMenu[MAX_TXT_LEN];
 		   pEl2 = pEl2->ElFirstChild;
 		   while (pEl2->ElNext != NULL)
 		      pEl2 = pEl2->ElNext;
-		   while (ElemHidden (pEl2) && pEl2->ElPrevious != NULL)
+		   while (ElementIsHidden (pEl2) && pEl2->ElPrevious != NULL)
 		      pEl2 = pEl2->ElPrevious;
-		   if (!ElemHidden (pEl2))
+		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
 		      stop1 = True;	/* on a rien trouve sur pEl */
@@ -313,7 +313,7 @@ char                BufMenu[MAX_TXT_LEN];
       if (pEl->ElNext != NULL)
 	{
 	   pEl = pEl->ElNext;
-	   if (!ElemHidden (pEl))
+	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
 	   stop1 = False;
 	   while (!stop1)
@@ -362,9 +362,9 @@ char                BufMenu[MAX_TXT_LEN];
 	      else
 		{
 		   pEl2 = pEl2->ElFirstChild;
-		   while (ElemHidden (pEl2) && pEl2->ElNext != NULL)
+		   while (ElementIsHidden (pEl2) && pEl2->ElNext != NULL)
 		      pEl2 = pEl2->ElNext;
-		   if (!ElemHidden (pEl2))
+		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
 		      stop1 = True;	/* on a rien trouve sur pEl */
@@ -397,7 +397,7 @@ char                BufMenu[MAX_TXT_LEN];
       if (pEl->ElNext != NULL)
 	{
 	   pEl = pEl->ElNext;
-	   if (!ElemHidden (pEl))
+	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
 	   stop1 = False;
 	   while (!stop1)
@@ -453,9 +453,9 @@ char                BufMenu[MAX_TXT_LEN];
 	      else
 		{
 		   pEl2 = pEl2->ElFirstChild;
-		   while (ElemHidden (pEl2) && pEl2->ElNext != NULL)
+		   while (ElementIsHidden (pEl2) && pEl2->ElNext != NULL)
 		      pEl2 = pEl2->ElNext;
-		   if (!ElemHidden (pEl2))
+		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
 		      stop1 = True;	/* on a rien trouve sur pEl */

@@ -89,7 +89,7 @@ Document            targetDocument;
 		/* annulation de la reference */
 	       {
 		  if (((PtrElement) element)->ElReference != NULL)
-		     RefSupprime (((PtrElement) element)->ElReference);
+		     DeleteReference (((PtrElement) element)->ElReference);
 		  ok = True;
 	       }
 	     else
@@ -111,7 +111,7 @@ Document            targetDocument;
 		     /* cet element n'a pas encore de descripteur */
 		     /* d'element reference', on lui en associe un */
 		    {
-		       ((PtrElement) target)->ElReferredDescr = NewRef (pRefDoc);
+		       ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 		       ((PtrElement) target)->ElReferredDescr->ReReferredElem =
 			  (PtrElement) target;
 		    }
@@ -121,7 +121,7 @@ Document            targetDocument;
 		     (PtrElement) element;
 		  ((PtrElement) element)->ElReference->RdTypeRef = RefFollow;
 		  saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
-		  ok = LieReference ((PtrElement) element, NULL,
+		  ok = SetReference ((PtrElement) element, NULL,
 				     (PtrElement) target,
 				     TabDocuments[document - 1], pRefDoc,
 				     True, False);
@@ -203,7 +203,7 @@ Document            targetDocument;
    else
       /* parametre targetDocument correct */
      {
-	inclusion = CreeSArbre (((PtrElement) target)->ElTypeNumber,
+	inclusion = NewSubtree (((PtrElement) target)->ElTypeNumber,
 				((PtrElement) target)->ElSructSchema,
 				TabDocuments[document - 1], 0, False,
 				True, True, True);
@@ -216,13 +216,13 @@ Document            targetDocument;
 	   /* cet element n'a pas encore de descripteur */
 	   /* d'element reference', on lui en associe un */
 	  {
-	     ((PtrElement) target)->ElReferredDescr = NewRef (pRefDoc);
+	     ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 	     ((PtrElement) target)->ElReferredDescr->ReReferredElem = (PtrElement) target;
 	  }
 	saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
-	if (LieReference (inclusion, NULL, (PtrElement) target,
+	if (SetReference (inclusion, NULL, (PtrElement) target,
 			  TabDocuments[document - 1], pRefDoc, True, False))
-	   CopieInclus (inclusion, TabDocuments[document - 1]);
+	   CopyIncludedElem (inclusion, TabDocuments[document - 1]);
 	else
 	  {
 	     TtaError (ERR_cannot_set_link);
@@ -276,12 +276,12 @@ Element             source;
      }
    else
      {
-	RefAnnule ((PtrElement) element);
+	CancelReference ((PtrElement) element);
 	if (((PtrElement) source)->ElReference != NULL)
 	  {
 	     if (((PtrElement) element)->ElReference == NULL)
 		GetReference (&((PtrElement) element)->ElReference);
-	     CopieRef (((PtrElement) element)->ElReference,
+	     CopyReference (((PtrElement) element)->ElReference,
 		 ((PtrElement) source)->ElReference, (PtrElement *) & element);
 	  }
      }
@@ -363,7 +363,7 @@ Document            targetDocument;
 		/* annulation de la reference */
 	       {
 		  if (((PtrAttribute) attribute)->AeAttrReference != NULL)
-		     RefSupprime (((PtrAttribute) attribute)->AeAttrReference);
+		     DeleteReference (((PtrAttribute) attribute)->AeAttrReference);
 		  ok = True;
 	       }
 	     else
@@ -392,7 +392,7 @@ Document            targetDocument;
 			  /* cet element n'a pas encore de descripteur */
 			  /* d'element reference', on lui en associe un */
 			 {
-			    ((PtrElement) target)->ElReferredDescr = NewRef (pRefDoc);
+			    ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 			    ((PtrElement) target)->ElReferredDescr->ReReferredElem =
 			       (PtrElement) target;
 			 }
@@ -407,7 +407,7 @@ Document            targetDocument;
 		       ref->RdAttribute = (PtrAttribute) attribute;
 		       ref->RdTypeRef = RefFollow;
 		       saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
-		       ok = LieReference (NULL, (PtrAttribute) attribute,
+		       ok = SetReference (NULL, (PtrAttribute) attribute,
 					  (PtrElement) target,
 					  pDoc, pRefDoc, True, False);
 		       /* an API function is not supposed to change */
@@ -469,7 +469,7 @@ Attribute           source;
 	if (((PtrAttribute) attribute)->AeAttrReference == NULL)
 	   GetReference (&((PtrAttribute) attribute)->AeAttrReference);
 	pEl = (PtrElement) element;
-	CopieRef (((PtrAttribute) attribute)->AeAttrReference,
+	CopyReference (((PtrAttribute) attribute)->AeAttrReference,
 		  ((PtrAttribute) source)->AeAttrReference, &pEl);
      }
 }
@@ -525,7 +525,7 @@ Document           *targetDocument;
    else
      {
 	if (((PtrElement) element)->ElReference != NULL)
-	   *target = (Element) ElemRefer (((PtrElement) element)->ElReference,
+	   *target = (Element) ReferredElement (((PtrElement) element)->ElReference,
 					  &iDocExt, &pDocExt);
 	if (!IdentDocNul (iDocExt))
 	  {
@@ -702,7 +702,7 @@ Document           *targetDocument;
    else
      {
 	if (((PtrAttribute) attribute)->AeAttrReference != NULL)
-	   *target = (Element) ElemRefer (((PtrAttribute) attribute)->AeAttrReference,
+	   *target = (Element) ReferredElement (((PtrAttribute) attribute)->AeAttrReference,
 					  &iDocExt, &pDocExt);
 	if (!IdentDocNul (iDocExt))
 	  {
@@ -901,7 +901,7 @@ Document           *referenceDocument;
 		   /* l'element est reference' en externe */
 		  {
 		     pDE = NULL;
-		     pRef = ChRefDocExt ((PtrElement) target,
+		     pRef = SearchExternalReferenceToElem ((PtrElement) target,
 				    TabDocuments[targetDocument - 1], False,
 					 &pDocRef, &pDE, True);
 		     if (pRef != NULL)
@@ -972,7 +972,7 @@ Document           *referenceDocument;
 			 {
 			    /* on cherche la 1ere reference dans le document */
 			    /* referencant retenu */
-			    pRef = ChRefDocExt ((PtrElement) target,
+			    pRef = SearchExternalReferenceToElem ((PtrElement) target,
 					   TabDocuments[targetDocument - 1],
 					      False, &pDocRef, &pDE, False);
 			    if (pRef != NULL)
@@ -1135,13 +1135,13 @@ Element             element;
    else
      {
 	if (scope == SearchBackward)
-	   pEl = ArChercheVideOuRefer (((PtrElement) element), 2);
+	   pEl = BackSearchRefOrEmptyElem (((PtrElement) element), 2);
 	else
-	   pEl = AvChercheVideOuRefer (((PtrElement) element), 2);
+	   pEl = FwdSearchRefOrEmptyElem (((PtrElement) element), 2);
 	if (pEl != NULL)
 	   if (scope == SearchInTree)
 	     {
-		if (!DansSArbre (pEl, ((PtrElement) element)))
+		if (!ElemIsWithinSubtree (pEl, ((PtrElement) element)))
 		   pEl = NULL;
 	     }
 	if (pEl != NULL)

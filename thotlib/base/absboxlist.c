@@ -109,16 +109,16 @@ FILE               *outfile;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    WrPav ecrit les informations sur la boite de pPav dans le       | */
+/* |    WrPav ecrit les informations sur la boite de pAb dans le       | */
 /* |            fichier outfile.                                        | */
 /**CP cette procedure n'est plus static car appelee ailleurs 	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WrPav (PtrAbstractBox pPav, int Indent, FILE * outfile)
+void                WrPav (PtrAbstractBox pAb, int Indent, FILE * outfile)
 
 #else  /* __STDC__ */
-void                WrPav (pPav, Indent, outfile)
-PtrAbstractBox             pPav;
+void                WrPav (pAb, Indent, outfile)
+PtrAbstractBox             pAb;
 int                 Indent;
 FILE               *outfile;
 
@@ -126,11 +126,11 @@ FILE               *outfile;
 
 {
    int                 i, j;
-   PtrAbstractBox             adpave;
+   PtrAbstractBox             pAb;
    PtrTextBuffer      adbuff;
    PtrPosRelations      adpos;
    PtrDimRelations      addim;
-   PtrBox            ibox;
+   PtrBox            pBox;
    PtrBox            box1;
    boolean             boucle;
    PtrPosRelations      pTa1;
@@ -138,87 +138,87 @@ FILE               *outfile;
    PtrDimRelations      pTabD1;
    ImageDescriptor    *image;
 
-   if (pPav->AbBox != NULL)
+   if (pAb->AbBox != NULL)
      {
 	for (j = 1; j <= Indent; j++)
 	   fprintf (outfile, " ");
-	ibox = pPav->AbBox;
-	wrnumber (ibox->BxAbstractBox->AbNum, outfile);
+	pBox = pAb->AbBox;
+	wrnumber (pBox->BxAbstractBox->AbNum, outfile);
 	fprintf (outfile, " ");
-	wrtext (TypePave (pPav), outfile);
+	wrtext (TypePave (pAb), outfile);
 	fprintf (outfile, "\n");
-	if (ibox != NULL)
+	if (pBox != NULL)
 	  {
 	     for (j = 1; j <= Indent; j++)
 		fprintf (outfile, " ");
 	     fprintf (outfile, " Characters:");
-	     wrnumber (pPav->AbVolume, outfile);
-	     if (!pPav->AbHorizEnclosing)
+	     wrnumber (pAb->AbVolume, outfile);
+	     if (!pAb->AbHorizEnclosing)
 		fprintf (outfile, " Not-Horiz-Enclosed");
-	     if (!pPav->AbVertEnclosing)
+	     if (!pAb->AbVertEnclosing)
 		fprintf (outfile, " Not-Vert-Enclosed");
 	     /* On liste les relations hors-structure */
-	     if (ibox->BxXOutOfStruct)
+	     if (pBox->BxXOutOfStruct)
 		fprintf (outfile, " XRelation-Out-Enclosing");
-	     if (ibox->BxYOutOfStruct)
+	     if (pBox->BxYOutOfStruct)
 		fprintf (outfile, " YRelation-Out-Enclosing");
-	     if (ibox->BxWOutOfStruct)
+	     if (pBox->BxWOutOfStruct)
 		fprintf (outfile, " HDimRelation-Out-Enclosing");
-	     if (ibox->BxHOutOfStruct)
+	     if (pBox->BxHOutOfStruct)
 		fprintf (outfile, " VDimRelation-Out-Enclosing");
 
-	     if (pPav->AbLeafType == LtText)
+	     if (pAb->AbLeafType == LtText)
 	       {
 		  fprintf (outfile, " Spaces:");
-		  wrnumber (ibox->BxNSpaces, outfile);
+		  wrnumber (pBox->BxNSpaces, outfile);
 	       }
 	     fprintf (outfile, "\n");
 	     for (j = 1; j <= Indent; j++)
 		fprintf (outfile, " ");
 	     fprintf (outfile, " Width:");
-	     wrnumber (ibox->BxWidth, outfile);
+	     wrnumber (pBox->BxWidth, outfile);
 	     fprintf (outfile, " Height:");
-	     wrnumber (ibox->BxHeight, outfile);
-	     if (ibox->BxContentWidth)
+	     wrnumber (pBox->BxHeight, outfile);
+	     if (pBox->BxContentWidth)
 		fprintf (outfile, " Minimum-Width:");
 	     else
 		fprintf (outfile, " Content-Width:");
-	     wrnumber (ibox->BxRuleWidth, outfile);
-	     if (ibox->BxContentWidth)
+	     wrnumber (pBox->BxRuleWidth, outfile);
+	     if (pBox->BxContentWidth)
 		fprintf (outfile, " Minimum-Height:");
 	     else
 		fprintf (outfile, " Content-Height:");
-	     wrnumber (ibox->BxRuleHeigth, outfile);
+	     wrnumber (pBox->BxRuleHeigth, outfile);
 	     fprintf (outfile, " Base:");
-	     wrnumber (ibox->BxHorizRef, outfile);
+	     wrnumber (pBox->BxHorizRef, outfile);
 	     fprintf (outfile, " Axis:");
-	     wrnumber (ibox->BxVertRef, outfile);
+	     wrnumber (pBox->BxVertRef, outfile);
 	     fprintf (outfile, " X:");
-	     if (ibox->BxType == BoSplit)
-		wrnumber (ibox->BxNexChild->BxXOrg, outfile);
+	     if (pBox->BxType == BoSplit)
+		wrnumber (pBox->BxNexChild->BxXOrg, outfile);
 	     else
-		wrnumber (ibox->BxXOrg, outfile);
+		wrnumber (pBox->BxXOrg, outfile);
 	     fprintf (outfile, " Y:");
-	     if (ibox->BxType == BoSplit)
-		wrnumber (ibox->BxNexChild->BxYOrg, outfile);
+	     if (pBox->BxType == BoSplit)
+		wrnumber (pBox->BxNexChild->BxYOrg, outfile);
 	     else
-		wrnumber (ibox->BxYOrg, outfile);
+		wrnumber (pBox->BxYOrg, outfile);
 	     fprintf (outfile, " Nature:");
-	     switch (pPav->AbLeafType)
+	     switch (pAb->AbLeafType)
 		   {
 		      case LtCompound:
-			 if (ibox->BxType == BoGhost)
+			 if (pBox->BxType == BoGhost)
 			    fprintf (outfile, "BREAK-COMP");
-			 else if (pPav->AbInLine)
+			 else if (pAb->AbInLine)
 			    fprintf (outfile, "LINES");
 			 else
 			    fprintf (outfile, "COMP");
 			 break;
 		      case LtText:
-			 if (ibox->BxType == BoSplit)
+			 if (pBox->BxType == BoSplit)
 			   {
 			      fprintf (outfile, "BREAK-TEXT\n");
-			      box1 = ibox->BxNexChild;
+			      box1 = pBox->BxNexChild;
 			      while (box1 != NULL)
 				{
 				   for (j = 1; j <= Indent + 6; j++)
@@ -264,9 +264,9 @@ FILE               *outfile;
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (outfile, " ");
 			 fprintf (outfile, "\'");
-			 adbuff = pPav->AbText;
+			 adbuff = pAb->AbText;
 			 j = 1;
-			 i = pPav->AbVolume;
+			 i = pAb->AbVolume;
 			 if (i > 60)
 			    i = 60;
 			 /* On est en fin de buffer ? */
@@ -285,7 +285,7 @@ FILE               *outfile;
 			 fprintf (outfile, "\'");
 			 break;
 		      case LtPicture:
-			 image = (ImageDescriptor *) pPav->AbImageDescriptor;
+			 image = (ImageDescriptor *) pAb->AbImageDescriptor;
 			 fprintf (outfile, "PICTURE\n");
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (outfile, " ");
@@ -304,7 +304,7 @@ FILE               *outfile;
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (outfile, " ");
 			 fprintf (outfile, "\'");
-			 putc (pPav->AbShape, outfile);
+			 putc (pAb->AbShape, outfile);
 			 fprintf (outfile, "\'");
 			 break;
 		      case LtGraphics:
@@ -312,10 +312,10 @@ FILE               *outfile;
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (outfile, " ");
 			 fprintf (outfile, "\'");
-			 putc (pPav->AbShape, outfile);
+			 putc (pAb->AbShape, outfile);
 			 fprintf (outfile, "\'");
 			 fprintf (outfile, " printed graphics: \'");
-			 putc (pPav->AbRealShape, outfile);
+			 putc (pAb->AbRealShape, outfile);
 			 fprintf (outfile, "\'");
 			 break;
 		      case LtPlyLine:
@@ -323,36 +323,36 @@ FILE               *outfile;
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (outfile, " ");
 			 fprintf (outfile, "\'");
-			 putc (pPav->AbPolyLineShape, outfile);
+			 putc (pAb->AbPolyLineShape, outfile);
 			 fprintf (outfile, "\' ");
-			 for (i = 0; i < pPav->AbVolume && i < 8; i++)
+			 for (i = 0; i < pAb->AbVolume && i < 8; i++)
 			   {
 			      fprintf (outfile, "%d,%d ",
-				   pPav->AbPolyLineBuffer->BuPoints[i].XCoord,
-				  pPav->AbPolyLineBuffer->BuPoints[i].YCoord);
+				   pAb->AbPolyLineBuffer->BuPoints[i].XCoord,
+				  pAb->AbPolyLineBuffer->BuPoints[i].YCoord);
 			   }
-			 if (i < pPav->AbVolume)
+			 if (i < pAb->AbVolume)
 			    fprintf (outfile, "...");
 			 break;
 		      default:
 			 break;
 		   }
 
-	     if (ibox->BxHorizFlex)
+	     if (pBox->BxHorizFlex)
 	       {
 		  fprintf (outfile, ", Horiz-ELASTIC");
-		  if (ibox->BxHorizInverted)
+		  if (pBox->BxHorizInverted)
 		     fprintf (outfile, ", Horiz-INVERTED");
 	       }
-	     if (ibox->BxVertFlex)
+	     if (pBox->BxVertFlex)
 	       {
 		  fprintf (outfile, ", Vert-ELASTIC");
-		  if (ibox->BxVertInverted)
+		  if (pBox->BxVertInverted)
 		     fprintf (outfile, ", Vert-INVERTED");
 	       }
 
 	     /* CsList des relations de position de la boite */
-	     adpos = ibox->BxPosRelations;
+	     adpos = pBox->BxPosRelations;
 	     while (adpos != NULL)
 	       {
 		  pTa1 = adpos;
@@ -408,7 +408,7 @@ FILE               *outfile;
 	       }
 	     fprintf (outfile, "\n");
 	     /* CsList des dependances de largeur */
-	     addim = ibox->BxWidthRelations;
+	     addim = pBox->BxWidthRelations;
 	     while (addim != NULL)
 	       {
 		  pTabD1 = addim;
@@ -439,7 +439,7 @@ FILE               *outfile;
 		  addim = pTabD1->DimRNext;
 	       }
 	     /* CsList des dependances de hauteur */
-	     addim = ibox->BxHeightRelations;
+	     addim = pBox->BxHeightRelations;
 	     while (addim != NULL)
 	       {
 		  pTabD1 = addim;
@@ -469,16 +469,16 @@ FILE               *outfile;
 		  /* Bloc suivant */
 	       }
 	     fprintf (outfile, "\n");
-	     if (pPav->AbLeafType == LtCompound)
+	     if (pAb->AbLeafType == LtCompound)
 	       {
 		  for (j = 1; j <= Indent + 6; j++)
 		     fprintf (outfile, " ");
 		  fprintf (outfile, "\n");
-		  adpave = pPav->AbFirstEnclosed;
-		  while (adpave != NULL)
+		  pAb = pAb->AbFirstEnclosed;
+		  while (pAb != NULL)
 		    {
-		       WrPav (adpave, Indent + 2, outfile);
-		       adpave = adpave->AbNext;
+		       WrPav (pAb, Indent + 2, outfile);
+		       pAb = pAb->AbNext;
 		    }
 	       }
 	  }
@@ -504,10 +504,10 @@ int                 frame;
    int                 i;
    FILE               *outfile;
 
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
-   pFe1 = &FntrTable[frame - 1];
-   if (frame != 0 && pFe1->FrAbstractBox != NULL)
+   pFrame = &FntrTable[frame - 1];
+   if (frame != 0 && pFrame->FrAbstractBox != NULL)
       /* Une petite cuisine pour passer le nom du fichier en parametre */
      {
 	/* On teste le droit d'ecriture du fichier */
@@ -516,14 +516,14 @@ int                 frame;
 	  {
 	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_CANNOT_WRITE, fname);
 	  }
-	else if (pFe1->FrAbstractBox != NULL)
+	else if (pFrame->FrAbstractBox != NULL)
 	   /* On ouvre le fichier */
 	  {
 	     outfile = fopen (fname, "w");
 	     /* On numerote les paves */
-	     NumPav (pFe1->FrAbstractBox);
+	     NumPav (pFrame->FrAbstractBox);
 	     /* On ecrit les informations sur les boites crees */
-	     WrPav (pFe1->FrAbstractBox, 0, outfile);
+	     WrPav (pFrame->FrAbstractBox, 0, outfile);
 	     /* On ferme le fichier */
 	     fclose (outfile);
 	  }
@@ -536,11 +536,11 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         StPav (PtrAbstractBox pPav, L_Relations TabPos, L_Relations TabDimH, L_Relations TabDimV)
+static void         StPav (PtrAbstractBox pAb, L_Relations TabPos, L_Relations TabDimH, L_Relations TabDimV)
 
 #else  /* __STDC__ */
-static void         StPav (pPav, TabPos, TabDimH, TabDimV)
-PtrAbstractBox             pPav;
+static void         StPav (pAb, TabPos, TabDimH, TabDimV)
+PtrAbstractBox             pAb;
 L_Relations         TabPos;
 L_Relations         TabDimH;
 L_Relations         TabDimV;
@@ -548,7 +548,7 @@ L_Relations         TabDimV;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             adpave;
+   PtrAbstractBox             pAb;
    int                 i, j;
    PtrPosRelations      adpos;
    PtrDimRelations      addim;
@@ -557,9 +557,9 @@ L_Relations         TabDimV;
    PtrPosRelations      pTa1;
    PtrDimRelations      pTabD1;
 
-   if (pPav->AbBox != NULL)
+   if (pAb->AbBox != NULL)
      {
-	pBo1 = pPav->AbBox;
+	pBo1 = pAb->AbBox;
 	/* On note le nombre de relations de position de la boite */
 	adpos = pBo1->BxPosRelations;
 	j = 0;
@@ -639,11 +639,11 @@ L_Relations         TabDimV;
 	if (j > 0)
 	   TabDimV[j - 1]++;
 	/* On passe aux boites filles */
-	adpave = pPav->AbFirstEnclosed;
-	while (adpave != NULL)
+	pAb = pAb->AbFirstEnclosed;
+	while (pAb != NULL)
 	  {
-	     StPav (adpave, TabPos, TabDimH, TabDimV);
-	     adpave = adpave->AbNext;
+	     StPav (pAb, TabPos, TabDimH, TabDimV);
+	     pAb = pAb->AbNext;
 	  }
      }
 }
@@ -668,7 +668,7 @@ FILE               *outfile;
    L_Relations         TabDimH;
    L_Relations         TabDimV;
    int                 total = 0;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
 
    /* On ecrit les informations sur les blocs de memoires utilises */
@@ -726,9 +726,9 @@ FILE               *outfile;
      }
    for (i = 1; i <= MAX_FRAME; i++)
      {
-	pFe1 = &FntrTable[i - 1];
-	if (pFe1->FrAbstractBox != NULL)
-	   StPav (pFe1->FrAbstractBox, TabPos, TabDimH, TabDimV);
+	pFrame = &FntrTable[i - 1];
+	if (pFrame->FrAbstractBox != NULL)
+	   StPav (pFrame->FrAbstractBox, TabPos, TabDimH, TabDimV);
      }
    /* Evaluation des pourcentages de nombres d'entrees utilisees */
    fprintf (outfile, "\n");

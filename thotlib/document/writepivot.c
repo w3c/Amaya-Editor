@@ -110,7 +110,7 @@ PtrElement          pEl2;
 	while (pAttr1 != NULL && egal)
 	   /* cherche si le 2eme element possede cet attribut du 1er elem */
 	  {
-	     pAttr2 = Attr (pEl2, pAttr1);
+	     pAttr2 = GetAttributeOfElement (pEl2, pAttr1);
 	     if (pAttr2 == NULL)
 		/* le 2eme element n'a pas cet attribut, fin */
 		egal = False;
@@ -132,7 +132,7 @@ PtrElement          pEl2;
 				 egal = False;
 				 break;
 			      case AtTextAttr:
-				 egal = TextesEgaux (pAttr2->AeAttrText, pAt1->AeAttrText);
+				 egal = TextsEqual (pAttr2->AeAttrText, pAt1->AeAttrText);
 				 break;
 			      default:
 				 break;
@@ -658,7 +658,7 @@ PtrDocument         pDoc;
 	 attrok = False;
       else
 	{
-	   ElRef = ElemRefer (pAttr->AeAttrReference, &IdentDocRef, &pDocRef);
+	   ElRef = ReferredElement (pAttr->AeAttrReference, &IdentDocRef, &pDocRef);
 	   if (ElRef == NULL)
 	      attrok = False;
 	   else if (DansTampon (ElRef))
@@ -1235,7 +1235,7 @@ PtrDocument         pDoc;
 			     if (pSauve->ElSructSchema == pRe1->SrSSchemaNat
 				 && pSauve->ElTypeNumber == pRe1->SrSSchemaNat->SsRootElem)
 				NbO--;
-			     pSauve = AvCherche (pSauve, pRe1->SrSSchemaNat->SsRootElem,
+			     pSauve = FwdSearchTypedElem (pSauve, pRe1->SrSSchemaNat->SsRootElem,
 						 pRe1->SrSSchemaNat);
 			  }
 			while (!(pSauve == NULL));
@@ -1379,7 +1379,7 @@ PtrElement          RlRoot;
    pEl = RlRoot;
    while (pEl != NULL)
      {
-	pEl = AvCherche (pEl, ord (CharString) + 1, NULL);
+	pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
 	if (pEl != NULL)
 	  {
 	     trouve = False;

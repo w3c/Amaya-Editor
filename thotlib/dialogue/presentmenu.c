@@ -114,7 +114,7 @@ static void         AppliqueModPresent ()
    boolean             LocChngHyphen;
    boolean             LocChngIndent;
    boolean             LocChngInterL;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 CorpsCourant;
    int                 i;
    int                 Signe;
@@ -155,7 +155,7 @@ static void         AppliqueModPresent ()
 	      /* coupe les elements du debut et de la fin de la selection */
 	      /* s'ils sont partiellement selectionnes */
 	      if (premcar > 1 || dercar > 0)
-		 CoupeSelection (SelDoc, &PremSel, &DerSel, &premcar, &dercar);
+		 CutSelection (SelDoc, &PremSel, &DerSel, &premcar, &dercar);
 
 	   if (ChngCaracteres || ChngFormat || ChngGraphiques ||
 	       ChngCarStandard || ChngCoulStandard || ChngFormStandard || ChngGeomStandard || ChngGraphStandard)
@@ -169,34 +169,34 @@ static void         AppliqueModPresent ()
 		     /* evalue les difference entre le pave traite' et les demandes
 		        de l'utilisateur */
 		     if (pEl->ElAssocNum > 0)
-			pPav = PaveDeElem (pEl, 1);
+			pAb = PaveDeElem (pEl, 1);
 		     else
-			pPav = PaveDeElem (pEl, SelVue);
-		     if (pPav != NULL)
+			pAb = PaveDeElem (pEl, SelVue);
+		     if (pAb != NULL)
 		       {
-			  if (pPav->AbSizeUnit == UnPoint)
-			     CorpsCourant = pPav->AbSize;
+			  if (pAb->AbSizeUnit == UnPoint)
+			     CorpsCourant = pAb->AbSize;
 			  else
-			     CorpsCourant = TailleEnPoints (pPav->AbSize);
+			     CorpsCourant = TailleEnPoints (pAb->AbSize);
 
 			  /* famille de polices de caracteres */
 			  if (ChngFamille)
-			     LocChngFamille = (Famille != pPav->AbFont);
+			     LocChngFamille = (Famille != pAb->AbFont);
 			  else
 			     LocChngFamille = False;
 			  /* style des caracteres */
 			  if (ChngStyle)
-			     LocChngStyle = (Style != pPav->AbHighlight);
+			     LocChngStyle = (Style != pAb->AbHighlight);
 			  else
 			     LocChngStyle = False;
 			  /* style du souligne */
 			  if (ChngSouligne)
-			     LocChngSouligne = (SoulStyle != pPav->AbUnderline);
+			     LocChngSouligne = (SoulStyle != pAb->AbUnderline);
 			  else
 			     LocChngSouligne = False;
 			  /* epaisseur du souligne */
 			  if (ChngEpais)
-			     LocChngEpais = (SoulEpais != pPav->AbThickness);
+			     LocChngEpais = (SoulEpais != pAb->AbThickness);
 			  else
 			     LocChngEpais = False;
 			  /* corps en points typo */
@@ -207,7 +207,7 @@ static void         AppliqueModPresent ()
 			  /* alignement des lignes */
 			  if (ChngCadr)
 			    {
-			       switch (pPav->AbAdjust)
+			       switch (pAb->AbAdjust)
 				     {
 					case AlignLeft:
 					   i = 1;
@@ -231,12 +231,12 @@ static void         AppliqueModPresent ()
 			     LocChngCadr = False;
 			  /* justification */
 			  if (ChngJustif)
-			     LocChngJustif = (Justif != pPav->AbJustify);
+			     LocChngJustif = (Justif != pAb->AbJustify);
 			  else
 			     LocChngJustif = False;
 			  /* coupure des mots */
 			  if (ChngHyphen)
-			     LocChngHyphen = (Hyphenate != pPav->AbHyphenate);
+			     LocChngHyphen = (Hyphenate != pAb->AbHyphenate);
 			  else
 			     LocChngHyphen = False;
 
@@ -244,14 +244,14 @@ static void         AppliqueModPresent ()
 			  if (ChngIndent)
 			    {
 			       LocChngIndent = True;
-			       if (pPav->AbIndent > 0)
+			       if (pAb->AbIndent > 0)
 				  Signe = 1;
-			       else if (pPav->AbIndent == 0)
+			       else if (pAb->AbIndent == 0)
 				  Signe = 0;
 			       else
 				  Signe = -1;
-			       i = abs (pPav->AbIndent);
-			       if (pPav->AbIndentUnit == UnRelative)
+			       i = abs (pAb->AbIndent);
+			       if (pAb->AbIndentUnit == UnRelative)
 				  /* convertit AbIndent en points typographiques */
 				 {
 				    i = (CorpsCourant * i) / 10;
@@ -275,8 +275,8 @@ static void         AppliqueModPresent ()
 			  if (ChngInterL)
 			    {
 			       LocChngInterL = True;
-			       i = pPav->AbLineSpacing;
-			       if (pPav->AbLineSpacingUnit == UnRelative)
+			       i = pAb->AbLineSpacing;
+			       if (pAb->AbLineSpacingUnit == UnRelative)
 				  /* convertit 'interligne en points typographiques */
 				 {
 				    i = (CorpsCourant * i) / 10;
@@ -290,19 +290,19 @@ static void         AppliqueModPresent ()
 			     LocChngInterL = False;
 			  /* style des traits graphiques */
 			  if (ChngStyleTrait)
-			     LocChngStyleTrait = (StyleTrait != pPav->AbLineStyle);
+			     LocChngStyleTrait = (StyleTrait != pAb->AbLineStyle);
 			  else
 			     LocChngStyleTrait = False;
 
 			  /* epaisseur des traits graphiques */
-			  LocEpaisTraitUnit = pPav->AbLineWeightUnit;
+			  LocEpaisTraitUnit = pAb->AbLineWeightUnit;
 			  if (ChngEpaisTrait)
 			    {
-			       if (pPav->AbLineWeightUnit == UnPoint)
-				  i = pPav->AbLineWeight;
+			       if (pAb->AbLineWeightUnit == UnPoint)
+				  i = pAb->AbLineWeight;
 			       else
 				 {
-				    i = (CorpsCourant * pPav->AbLineWeight) / 10;
+				    i = (CorpsCourant * pAb->AbLineWeight) / 10;
 				    if ((CorpsCourant * i) % 10 >= 5)
 				       i++;
 				 }
@@ -312,7 +312,7 @@ static void         AppliqueModPresent ()
 
 			  /* trame de remplissage */
 			  if (ChngTrame)
-			     LocChngTrame = (Trame != pPav->AbFillPattern);
+			     LocChngTrame = (Trame != pAb->AbFillPattern);
 			  else
 			     ChngTrame = False;
 		       }
@@ -731,7 +731,7 @@ View                view;
    PtrElement          PremSel, DerSel;
    int                 premcar, dercar;
    boolean             selok;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    PtrElement          pEl;
    char                chaine[MAX_TXT_LEN];
    char               *s;
@@ -757,7 +757,7 @@ View                view;
 	pEl = PremSel;
 	selok = True;
 	while (selok && pEl != NULL)
-	   if (ElemReadOnly (pEl))
+	   if (ElementIsReadOnly (pEl))
 	      selok = False;
 	   else
 	      pEl = SelSuivant (pEl, DerSel);
@@ -767,11 +767,11 @@ View                view;
       /* pas d'element protege', on peut modifier la presentation */
      {
 	if (view > 100)
-	   pPav = PaveDeElem (PremSel, 1);
+	   pAb = PaveDeElem (PremSel, 1);
 	else
-	   pPav = PaveDeElem (PremSel, view);
+	   pAb = PaveDeElem (PremSel, view);
 
-	if (pPav != NULL)
+	if (pAb != NULL)
 	  {
 	     /* annule les etats memorises */
 	     RazRetoursMenus ();
@@ -842,7 +842,7 @@ View                view;
 	     TtaNewSubmenu (NumMenuCorpsCaract, NumFormPresCaract, 0,
 			    TtaGetMessage (LIB, LIB_BODY_SIZE_PTS), nbitem, chaine, NULL, False);
 	     /* initialise la zone 'Famille de caracteres' */
-	     switch (pPav->AbFont)
+	     switch (pAb->AbFont)
 		   {
 		      case 't':
 		      case 'T':
@@ -862,16 +862,16 @@ View                view;
 		   }
 	     TtaSetMenuForm (NumMenuFamilleCaract, i - 1);
 	     /* initialise le catalogue 'Style des caracteres' */
-	     TtaSetMenuForm (NumMenuStyleCaract, pPav->AbHighlight);
-	     TtaSetMenuForm (NumMenuTypeSouligne, pPav->AbUnderline);
+	     TtaSetMenuForm (NumMenuStyleCaract, pAb->AbHighlight);
+	     TtaSetMenuForm (NumMenuTypeSouligne, pAb->AbUnderline);
 	     /* initialise le catalogue 'Epaisseur du souligne' */
-	     TtaSetMenuForm (NumMenuEpaisSouligne, pPav->AbThickness);
+	     TtaSetMenuForm (NumMenuEpaisSouligne, pAb->AbThickness);
 	     /* initialise le sous-menu 'Corps des caracteres' */
-	     if (pPav->AbSizeUnit == UnPoint)
+	     if (pAb->AbSizeUnit == UnPoint)
 		/* convertit la taille */
-		i = PseudoTaille (pPav->AbSize);
+		i = PseudoTaille (pAb->AbSize);
 	     else
-		i = pPav->AbSize;
+		i = pAb->AbSize;
 	     TtaSetMenuForm (NumMenuCorpsCaract, i);
 	  }
 	DocModPresent = pDoc;
@@ -900,7 +900,7 @@ View                view;
    PtrElement          PremSel, DerSel;
    int                 premcar, dercar;
    boolean             selok;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 CorpsCourant;
    char                chaine[MAX_TXT_LEN];
    PtrDocument         pDoc;
@@ -922,11 +922,11 @@ View                view;
      {
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pPav = PaveDeElem (PremSel, 1);
+	   pAb = PaveDeElem (PremSel, 1);
 	else
-	   pPav = PaveDeElem (PremSel, view);
+	   pAb = PaveDeElem (PremSel, view);
 
-	if (pPav != NULL)
+	if (pAb != NULL)
 	  {
 	     /* annule les etats memorises */
 	     RazRetoursMenus ();
@@ -951,7 +951,7 @@ View                view;
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuStyleTraits, i, "icones", ThotColorNone, -1);
 	     /* initialise le sous-menu style des traits */
-	     switch (pPav->AbLineStyle)
+	     switch (pAb->AbLineStyle)
 		   {
 		      case 'S':
 			 i = 1;	/* trait continu (Solid) */
@@ -977,15 +977,15 @@ View                view;
 	     TtaNewToggleMenu (NumToggleEpaisseurInchangee, NumFormPresGraphiques,
 			       NULL, 1, chaine, NULL, False);
 	     /* initialise la zone de saisie epaisseur des traits */
-	     if (pPav->AbLineWeightUnit == UnPoint)
-		i = pPav->AbLineWeight;
+	     if (pAb->AbLineWeightUnit == UnPoint)
+		i = pAb->AbLineWeight;
 	     else
 	       {
-		  if (pPav->AbSizeUnit == UnPoint)
-		     CorpsCourant = pPav->AbSize;
+		  if (pAb->AbSizeUnit == UnPoint)
+		     CorpsCourant = pAb->AbSize;
 		  else
-		     CorpsCourant = TailleEnPoints (pPav->AbSize);
-		  i = (CorpsCourant * pPav->AbLineWeight) / 10;
+		     CorpsCourant = TailleEnPoints (pAb->AbSize);
+		  i = (CorpsCourant * pAb->AbLineWeight) / 10;
 		  if ((CorpsCourant * i) % 10 >= 5)
 		     i++;
 	       }
@@ -1005,7 +1005,7 @@ View                view;
 				  TtaGetMessage (LIB, LIB_FILL_PATTERN),
 				  nbitem, chaine, i, NULL, True, False);
 		  /* initialise le selecteur sur sa premiere entree */
-		  TtaSetSelector (NumSelectPattern, pPav->AbFillPattern, "");
+		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
 	       }
 	     /* Toggle button Motif de remplissage inchange' */
 	     i = 0;
@@ -1041,7 +1041,7 @@ View                view;
    PtrElement          PremSel, DerSel;
    int                 premcar, dercar;
    boolean             selok;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 CorpsCourant;
    char                chaine[MAX_TXT_LEN];
    PtrDocument         pDoc;
@@ -1063,11 +1063,11 @@ View                view;
      {
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pPav = PaveDeElem (PremSel, 1);
+	   pAb = PaveDeElem (PremSel, 1);
 	else
-	   pPav = PaveDeElem (PremSel, view);
+	   pAb = PaveDeElem (PremSel, view);
 
-	if (pPav != NULL)
+	if (pAb != NULL)
 	  {
 
 	     RazRetoursMenus ();
@@ -1091,7 +1091,7 @@ View                view;
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuAlignement, i, "icones", ThotColorNone, -1);
 	     /* initialise le menu de cadrage des lignes */
-	     switch (pPav->AbAdjust)
+	     switch (pAb->AbAdjust)
 		   {
 		      case AlignLeft:
 			 i = 1;
@@ -1112,12 +1112,12 @@ View                view;
 	     TtaNewNumberForm (NumZoneRenfoncement, NumFormPresFormat,
 			 TtaGetMessage (LIB, LIB_INDENT_PTS), 0, 300, True);
 	     /* initialise la valeur du renfoncement */
-	     if (pPav->AbSizeUnit == UnPoint)
-		CorpsCourant = pPav->AbSize;
+	     if (pAb->AbSizeUnit == UnPoint)
+		CorpsCourant = pAb->AbSize;
 	     else
-		CorpsCourant = TailleEnPoints (pPav->AbSize);
-	     ValIndent = abs (pPav->AbIndent);
-	     if (pPav->AbIndentUnit == UnRelative)
+		CorpsCourant = TailleEnPoints (pAb->AbSize);
+	     ValIndent = abs (pAb->AbIndent);
+	     if (pAb->AbIndentUnit == UnRelative)
 		/* convertit ValIndent en points typographiques */
 	       {
 		  ValIndent = (CorpsCourant * ValIndent) / 10;
@@ -1139,7 +1139,7 @@ View                view;
 	     for (i = 0; i < 2; i++)
 		TtaRedrawMenuEntry (NumMenuSensRenfoncement, i, "icones", ThotColorNone, -1);
 	     /* initialise le sens de renfoncement */
-	     if (pPav->AbIndent > 0)
+	     if (pAb->AbIndent > 0)
 		i = 0;
 	     else
 		i = 1;
@@ -1155,7 +1155,7 @@ View                view;
 	     TtaNewSubmenu (NumMenuJustification, NumFormPresFormat, 0,
 	     TtaGetMessage (LIB, LIB_JUSTIFICATION), 3, chaine, NULL, False);
 	     /* menu de justification */
-	     if (pPav->AbJustify)
+	     if (pAb->AbJustify)
 		i = 1;		/* avec justification */
 	     else
 		i = 2;		/* sans justification */
@@ -1180,12 +1180,12 @@ View                view;
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuInterligne, i, "icones", ThotColorNone, -1);
 	     /* initialise l'interligne en points typographiques */
-	     if (pPav->AbSizeUnit == UnPoint)
-		CorpsCourant = pPav->AbSize;
+	     if (pAb->AbSizeUnit == UnPoint)
+		CorpsCourant = pAb->AbSize;
 	     else
-		CorpsCourant = TailleEnPoints (pPav->AbSize);
-	     i = pPav->AbLineSpacing;
-	     if (pPav->AbLineSpacingUnit == UnRelative)
+		CorpsCourant = TailleEnPoints (pAb->AbSize);
+	     i = pAb->AbLineSpacing;
+	     if (pAb->AbLineSpacingUnit == UnRelative)
 		/* convertit l'interligne en points typographiques */
 	       {
 		  i = (CorpsCourant * i) / 10;
@@ -1198,7 +1198,7 @@ View                view;
 	     /* saisie de l'interligne par un menu */
 	     if (oldinterligne <= (INTERLGN_SIMPLE * 3) / 2)
 		i = 0;
-	     else if (pPav->AbLineSpacing >= INTERLGN_SIMPLE * 2)
+	     else if (pAb->AbLineSpacing >= INTERLGN_SIMPLE * 2)
 		i = 2;
 	     else
 		i = 1;

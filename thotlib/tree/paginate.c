@@ -423,7 +423,7 @@ static void SupprMarquePage(pPage, pDoc, pLib)
     notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
     notifyEl.elementType.ElSSchema = (SSchema)(pPage->ElSructSchema);
     nbFreres = 0;
-    Supprime(&pPage);
+    DeleteElement(&pPage);
     *pLib = NULL;
     if (pPrec != NULL)
       {
@@ -467,7 +467,7 @@ static void DtrMarquesDePages(pDoc, pElRacine, VueSch)
   while (pEl != NULL)
     /* cherche la prochaine marque de page */
     {
-      pEl = AvCherche(pEl, ord(PageBreak) + 1, NULL);
+      pEl = FwdSearchTypedElem(pEl, ord(PageBreak) + 1, NULL);
       if (pEl != NULL)
 	if (pEl->ElViewPSchema == VueSch)
 	  /* on a trouve' une marque de page concernant la vue */
@@ -486,7 +486,7 @@ static void DtrMarquesDePages(pDoc, pElRacine, VueSch)
 		{
 		  SupprMarquePage(pElPage, pDoc, &pElLib);
 		  if (pElLib != NULL)
-		    Supprime(&pElLib);
+		    DeleteElement(&pElLib);
 		}
 	      /* on supprimera cette marque de page au tour suivant */
 	      pElPage = pEl;
@@ -502,7 +502,7 @@ static void DtrMarquesDePages(pDoc, pElRacine, VueSch)
     {
       SupprMarquePage(pElPage, pDoc, &pElLib);
       if (pElLib != NULL)
-	Supprime(&pElLib);
+	DeleteElement(&pElLib);
     }
 
 } /*DtrMarquesDePages */ 
@@ -641,7 +641,7 @@ static	void Aff_Select_Pages (pDoc, PremPage, Vue, Assoc, sel, SelPrem, SelDer, 
   /* met a jour les numeros qui changent dans les autres vues a cause */
   /* de la creation des nouvelles marques de page */
   if (PremPage != NULL)
-    MajNumeros(Successeur(PremPage), PremPage, pDoc, True);
+    MajNumeros(NextElement(PremPage), PremPage, pDoc, True);
 
 } /* Aff_Select_Pages */
 #endif /* PAGINEETIMPRIME */
@@ -669,7 +669,7 @@ static	void Coupe(pEl, CarCoupe, pDoc, VueNb)
   int             dvol;
   PtrAbstractBox         pPa1;
 
-  CoupeTexte(pEl, CarCoupe + 1, pDoc, True);
+  SplitTextElement(pEl, CarCoupe + 1, pDoc, True);
   /* reduit le volume du pave de l'element precedant le point de */
   /* coupure et de ses paves englobants, si ces paves existent dans la */
   /* vue traitee. */
@@ -707,7 +707,7 @@ static	void Coupe(pEl, CarCoupe, pDoc, VueNb)
 
 /* ---------------------------------------------------------------------- */
 /* |	Secable	retourne 'Vrai' si le pave pointe' par			| */
-/* |		pPav est secable et 'Faux' sinon.			| */
+/* |		pAb est secable et 'Faux' sinon.			| */
 /* |		Au retour, si la boite est secable, pR1 pointe sur la	| */
 /* |		regle NoBreak1 a appliquer a l'element			| */
 /* |		(pR1 est NULL s'il n'y a pas de regle NoBreak1 a		| */
@@ -725,11 +725,11 @@ static	void Coupe(pEl, CarCoupe, pDoc, VueNb)
 
 
 #ifdef __STDC__
-static boolean Secable(PtrAbstractBox pPav, PtrPRule *pR1, PtrAttribute *pAt1, PtrPRule *pR2, PtrAttribute *pAt2, int VueSch)
+static boolean Secable(PtrAbstractBox pAb, PtrPRule *pR1, PtrAttribute *pAt1, PtrPRule *pR2, PtrAttribute *pAt2, int VueSch)
 
 #else /* __STDC__ */
-static boolean Secable(pPav, pR1, pAt1, pR2, pAt2, VueSch)
-	PtrAbstractBox pPav;
+static boolean Secable(pAb, pR1, pAt1, pR2, pAt2, VueSch)
+	PtrAbstractBox pAb;
 	PtrPRule *pR1;
 	PtrAttribute *pAt1;
 	PtrPRule *pR2;
@@ -746,12 +746,12 @@ static boolean Secable(pPav, pR1, pAt1, pR2, pAt2, VueSch)
   *pR1 = NULL;
   *pR2 = NULL;
 
-  if (!pPav->AbAcceptPageBreak)
+  if (!pAb->AbAcceptPageBreak)
     /* le pave est insecable */
     ret = False;
   else
     /* le pave est secable */
-    if (pPav->AbPresentationBox)
+    if (pAb->AbPresentationBox)
        /* c'est un pave de presentation */
        ret = True;
     else
@@ -759,13 +759,13 @@ static boolean Secable(pPav, pR1, pAt1, pR2, pAt2, VueSch)
       /* NoBreak1 et NoBreak2 */
       {
       /* cherche le schema de presentation a appliquer a l'element */
-      ChSchemaPres(pPav->AbElement, &pSchP, &Entree, &pSchS);
+      ChSchemaPres(pAb->AbElement, &pSchP, &Entree, &pSchS);
       ret = True;
       /* cherche la regle NoBreak1 qui s'applique au pave */
-      *pR1 = ReglePEl(pPav->AbElement, &pSchP, &pSchS, 0, NULL, VueSch, PtBreak1,
+      *pR1 = ReglePEl(pAb->AbElement, &pSchP, &pSchS, 0, NULL, VueSch, PtBreak1,
 		      False, True, pAt1);
       /* cherche la regle NoBreak2 qui s'applique au pave */
-      *pR2 = ReglePEl(pPav->AbElement, &pSchP, &pSchS, 0, NULL, VueSch, PtBreak2,
+      *pR2 = ReglePEl(pAb->AbElement, &pSchP, &pSchS, 0, NULL, VueSch, PtBreak2,
 		      False, True, pAt2);
       }
   return ret;
@@ -823,15 +823,15 @@ static PtrElement SautDePage(pEl, VueSch)
 /* |		Retourne un pointeur sur l'element Marque de Page	| */
 /* |		insere'.						| */
  /*      On detruit la partie de l'i.a. qui suit cette marque    | */
- /*      et on reconstruit l'i.a. (donc le pave pPav change ! )  | */
+ /*      et on reconstruit l'i.a. (donc le pave pAb change ! )  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __COLPAGE__
 #ifdef __STDC__
-static PtrElement InsereMarque(PtrAbstractBox pPav, int frame, int VueNb, PtrAbstractBox *PaveCoupeOrig, boolean *PaveTropHaut, int VueSch, PtrDocument pDoc, PtrElement ElRacine)
+static PtrElement InsereMarque(PtrAbstractBox pAb, int frame, int VueNb, PtrAbstractBox *PaveCoupeOrig, boolean *PaveTropHaut, int VueSch, PtrDocument pDoc, PtrElement ElRacine)
 
 #else /* __STDC__ */
-static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, VueSch, pDoc, ElRacine)
-	PtrAbstractBox pPav;
+static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, VueSch, pDoc, ElRacine)
+	PtrAbstractBox pAb;
 	int frame;
 	int VueNb;
 	PtrAbstractBox *PaveCoupeOrig;
@@ -843,11 +843,11 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 
 #else  /*__COLPAGE__ */
 #ifdef __STDC__
-static PtrElement InsereMarque(PtrAbstractBox pPav, int frame, int VueNb, PtrAbstractBox *PaveCoupeOrig, boolean *PaveTropHaut, int VueSch, PtrDocument pDoc, PtrElement ElRacine)
+static PtrElement InsereMarque(PtrAbstractBox pAb, int frame, int VueNb, PtrAbstractBox *PaveCoupeOrig, boolean *PaveTropHaut, int VueSch, PtrDocument pDoc, PtrElement ElRacine)
 
 #else /* __STDC__ */
-static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, VueSch, pDoc, ElRacine)
-	PtrAbstractBox pPav;
+static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, VueSch, pDoc, ElRacine)
+	PtrAbstractBox pAb;
 	int frame;
 	int VueNb;
 	PtrAbstractBox *PaveCoupeOrig;
@@ -861,7 +861,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 
 {
   PtrElement      pElPage, pEl;
-  boolean         /* bool,*/  stop, enhaut, Avant, coupe;
+  boolean         /* bool,*/  stop, enhaut, ElemIsBefore, coupe;
   PtrAbstractBox         pP1, pP;
   int             cpt, h;
   PtrPSchema      pSchP;
@@ -884,8 +884,8 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 #ifdef __COLPAGE__
 
   pElPage = NULL;
-  pP = pPav;
- /* si pPav est un pave de marque page, inutile d'inserer */
+  pP = pAb;
+ /* si pAb est un pave de marque page, inutile d'inserer */
  /* une marque en plus : le decoupage courant est satisfaisant */
  if (!(pP->AbElement->ElTypeNumber == ord(PageBreak)+1
 	    && (pP->AbElement->ElPageType == PgBegin
@@ -895,7 +895,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 #else /* __COLPAGE__ */ 
   RefAssocHautPage = NULL;
   pElPage = NULL;
-  pP = pPav;
+  pP = pAb;
 #endif /* __COLPAGE__ */
   /* teste si le pave est le premier d'un pave mis en lignes */
   if (pP->AbEnclosing != NULL)
@@ -942,7 +942,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
   while (!(stop));
 
   pEl = pP->AbElement;
-  Avant = True;	/* on inserera la nouvelle marque de page avant pEl */
+  ElemIsBefore = True;	/* on inserera la nouvelle marque de page avant pEl */
   /*on regarde s'il n'y a pas deja une marque de page juste avant pEl*/
   pEl1 = pEl;
   if (pEl->ElPrevious != NULL)
@@ -956,13 +956,13 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
            stop = True;
         else
            if (pEl1->ElPrevious->ElIsCopy &&
-               ExceptTypeElem(ExcPageBreakRepetition, pEl1->ElPrevious->ElTypeNumber, pEl1->ElPrevious->ElSructSchema))
+               TypeHasException(ExcPageBreakRepetition, pEl1->ElPrevious->ElTypeNumber, pEl1->ElPrevious->ElSructSchema))
               pEl1 = pEl1->ElPrevious;
            else
               stop = True;
      while (!stop);
     }
-  pEl1 = FeuillePrecedente(pEl1);
+  pEl1 = PreviousLeaf(pEl1);
   if (pEl1 != NULL)
       if (pEl1->ElTerminal && pEl1->ElLeafType == LtPageColBreak)
 	if (pEl1->ElViewPSchema == VueSch)
@@ -970,7 +970,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 	     pour cette vue */
 	  /* on mettra la nouvelle marque apres l'element pEl */
 	  {
-	    Avant = False;
+	    ElemIsBefore = False;
 	    /* il y a un pave plus haut que la page avant la */
 	    /* nouvelle marque de page que l'on va inserer */
 	    *PaveTropHaut = True;
@@ -982,7 +982,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
    if (pP->AbPresentationBox)
    {
      pRegle = RegleFonction(pEl, &pSchP);
-     while (pRegle != NULL && Avant == True)
+     while (pRegle != NULL && ElemIsBefore == True)
        {
          if (pP->AbTypeNum == pRegle->PrPresBox[0]
              && pP->AbPSchema == pSchP)
@@ -992,7 +992,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
              /* on insere la marque apres l'element */
              {
                *PaveCoupeOrig = NULL;
-               Avant = False;
+               ElemIsBefore = False;
              }
          pRegle = pRegle->PrNextPRule;
          if (pRegle != NULL && ord(pRegle->PrType) > ord(PtFunction))
@@ -1001,14 +1001,14 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
    }
 
   pEl1 = pEl;
-  if (!Avant)
+  if (!ElemIsBefore)
     if (*PaveCoupeOrig != NULL)
       /* Il y a un pave insecable plus haut qu'une page, on inserera */
       /* la marque de page apres l'element de ce pave */
       pEl1 = (*PaveCoupeOrig)->AbElement;
 /*653*/ if (pEl1->ElParent == NULL)
 /*653*/   /* si pEl1 est la racine il faut descendre d'un niveau */
-/*653*/   if (Avant)
+/*653*/   if (ElemIsBefore)
 /*653*/     pEl1 = pEl1->ElFirstChild;
 /*653*/   else
 /*653*/     {
@@ -1016,9 +1016,9 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 /*653*/       while (pEl1->ElNext != NULL)
 /*653*/         pEl1 = pEl1->ElNext;
 /*653*/	    }
-  if (Avant && pEl1->ElTypeNumber == ord(PageBreak)+1)
+  if (ElemIsBefore && pEl1->ElTypeNumber == ord(PageBreak)+1)
      return pEl1;
-  if (Avant)
+  if (ElemIsBefore)
     {
     pElPage = SautDePage(pEl1, VueSch);
     if (pElPage != NULL)	
@@ -1040,19 +1040,19 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
     nbFreres++;
     pF = pF->ElPrevious;
     }
-  if (!Avant)
+  if (!ElemIsBefore)
     nbFreres++;
   notifyEl.position = nbFreres;
   ThotSendMessage((NotifyEvent *)&notifyEl, True);
   /* cree l'element Marque de Page */
-  pElPage = CreeSArbre(ord(PageBreak)+1, ElRacine->ElSructSchema,
+  pElPage = NewSubtree(ord(PageBreak)+1, ElRacine->ElSructSchema,
 		       pDoc, pEl->ElAssocNum, True, True, True, True);
   /* insere l'element dans l'arbre abstrait */
   if (pEl1->ElParent != NULL)
-    if (Avant)
-      InsAvant(pEl1, pElPage);
+    if (ElemIsBefore)
+      InsertElementBefore(pEl1, pElPage);
     else
-      InsApres(pEl1, pElPage);
+      InsertElementAfter(pEl1, pElPage);
   pEl1 = pElPage;
 #ifdef __COLPAGE__
  /* tout le reste du code de la procedure est different */
@@ -1067,7 +1067,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
  /* la page ; si oui, on recherche la regle colonne pour */
  /* savoir si il reste des colonnes a creer et on la cree. */
  /* Sinon, on  cree une page. */
- pP = pPav;
+ pP = pAb;
  trouve = False;
  while (pP->AbElement->ElTypeNumber != ord(PageBreak)+1)
    pP = pP->AbEnclosing;
@@ -1082,7 +1082,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
       b = TypeBCol (pP->AbElement, VueNb, &pSchP, &NbCol);
 	     if (b == 0)
 		 /* erreur */
-	       AffPaveDebug (pPav);
+	       AffPaveDebug (pAb);
 	     else
 	       if (pP->AbElement->ElPageNumber < NbCol)
 		   /* la nouvelle marque doit etre une colonne */
@@ -1095,18 +1095,18 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 		   /* il faut creer une nouvelle marque de page, */
 		   pEl1->ElPageType = PgComputed;
 	            /* creer une nouvelle marque de colonnes ColGroup */
-	           pElColG = CreeSArbre(ord(PageBreak)+1, ElRacine->ElSructSchema,
+	           pElColG = NewSubtree(ord(PageBreak)+1, ElRacine->ElSructSchema,
 	                       pDoc, pEl->ElAssocNum, True, True, True, True);
 		   /* insere l'element dans l'arbre abstrait */
-	           InsApres(pEl1, pElColG);
+	           InsertElementAfter(pEl1, pElColG);
 		   pElColG->ElPageType = ColGroup;
 		   pElColG->ElPageNumber = 0;
 		   pElColG->ElViewPSchema = VueSch;   
 		   /* et creer une nouvelle marque de colonne gauche */
-	           pElCol = CreeSArbre(ord(PageBreak)+1, ElRacine->ElSructSchema,
+	           pElCol = NewSubtree(ord(PageBreak)+1, ElRacine->ElSructSchema,
 	                       pDoc, pEl->ElAssocNum, True, True, True, True);
 		   /* insere l'element dans l'arbre abstrait */
-	           InsApres(pElColG, pElCol);
+	           InsertElementAfter(pElColG, pElCol);
 		   pElCol->ElPageType = ColComputed;
 		   pElCol->ElPageNumber = 1;
 		   pElCol->ElViewPSchema = VueSch;   
@@ -1143,7 +1143,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
  /* on tue tous les freres droits en remontant l'arbre jusqu'au */
  /* corps de page */
  pP = pEl->ElAbstractBox[VueNb -1];
- if (!Avant && *PaveCoupeOrig != NULL)
+ if (!ElemIsBefore && *PaveCoupeOrig != NULL)
    pP = (*PaveCoupeOrig)->AbElement->ElAbstractBox[VueNb -1];
   /* on detruit les paves a partir du premier pave qui */
   /* se trouve dans la page ou colonne courante (si il n'y */
@@ -1151,7 +1151,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
   /* car il ne peut y avoir de duplique precedent sur une */
   /* colonne precedente pour cet element  */
  pP1 = pP;
- if (Avant)
+ if (ElemIsBefore)
    { /* destruction des paves de l'element pEl */
      pP2 = pP1;
      while (pP2 != NULL && pP2->AbElement == pEl)
@@ -1264,7 +1264,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
        }
    }
  /* pb car lors de la creation de l'ia pour la nouvelle marque de page */
- /* et pour les elements suivants, pPav a change : c'est un descendant */
+ /* et pour les elements suivants, pAb a change : c'est un descendant */
  /* du pave de la marque de page (il est dans la nouvelle page) */
  /* le code ci-dessous est-il a changer ? ... supprime  ! */
  } /* fin cas ou pP n'est pas une marquePage */
@@ -1362,11 +1362,11 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
     stop = False;
     do
       {
-      pPav->AbOnPageBreak = False;
-      if (pPav == pP)
+      pAb->AbOnPageBreak = False;
+      if (pAb == pP)
 	stop = True;
       else
-	pPav = pPav->AbEnclosing;
+	pAb = pAb->AbEnclosing;
       }
     while (!(stop));
     }
@@ -1377,7 +1377,7 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 
 /* ---------------------------------------------------------------------- */
 /* |	DeplCoupure cherche dans les paves du sous-arbre de racine	| */
-/* |		pPav, en appliquant les regles de condition de coupure	| */
+/* |		pAb, en appliquant les regles de condition de coupure	| */
 /* |		NoBreak1 (ou NoBreak2, selon NoBr1), le premier pave qui| */
 /* |		necessite un deplacement (vers le haut) de la frontiere	| */
 /* |		de page. Retourne la nouvelle frontiere de page, en	| */
@@ -1386,11 +1386,11 @@ static PtrElement InsereMarque(pPav, frame, VueNb, PaveCoupeOrig, PaveTropHaut, 
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int DeplCoupure(PtrAbstractBox pPav, boolean NoBr1, int VueSch)
+static int DeplCoupure(PtrAbstractBox pAb, boolean NoBr1, int VueSch)
 
 #else /* __STDC__ */
-static int DeplCoupure(pPav, NoBr1, VueSch)
-	PtrAbstractBox pPav;
+static int DeplCoupure(pAb, NoBr1, VueSch)
+	PtrAbstractBox pAb;
 	boolean NoBr1;
 	int VueSch;
 #endif /* __STDC__ */
@@ -1404,12 +1404,12 @@ static int DeplCoupure(pPav, NoBr1, VueSch)
   
   ret = 0;
   /* cherche si la coupure de page convient au pave */
-  if (pPav->AbOnPageBreak)
+  if (pAb->AbOnPageBreak)
 
-    if (!Secable(pPav, &pRNoBr1, &pA1, &pRNoBr2, &pA2, VueSch))
+    if (!Secable(pAb, &pRNoBr1, &pA1, &pRNoBr2, &pA2, VueSch))
       /* le pave est insecable, on coupe avant ce pave */
       {
-	HautCoupure(pPav, True, &Hauteur, &PosV, &CarCoupe);
+	HautCoupure(pAb, True, &Hauteur, &PosV, &CarCoupe);
 	ret = PosV;
       } 
     else	/* le pave' n'est pas insecable */
@@ -1420,27 +1420,27 @@ static int DeplCoupure(pPav, NoBr1, VueSch)
 	  /* une regle NoBreak1 doit etre appliquee a l'element */
 	  /* on ne l'applique que si le pave est complet */
 	  {
-	    if (pPav->AbLeafType != LtCompound)
+	    if (pAb->AbLeafType != LtCompound)
 	      pavecoupe = False;
-	    else if (pPav->AbInLine)
+	    else if (pAb->AbInLine)
 	      pavecoupe = False;
 	    else
-	      pavecoupe = pPav->AbTruncatedHead;
+	      pavecoupe = pAb->AbTruncatedHead;
     /* si la boite est eclatee, on ignore la regle NoBreak1 */
-    if (pPav->AbBox != NULL)
-       if (pPav->AbBox->BxType == BoGhost)
+    if (pAb->AbBox != NULL)
+       if (pAb->AbBox->BxType == BoGhost)
 	  pavecoupe = True;
 	    if (!pavecoupe)
 	      {
 		pRe1 = pRNoBr1;
 		/* demande au Mediateur la position du haut du pave dans la page */
-		HautCoupure(pPav, True, &Hauteur,&PosV, &CarCoupe);
+		HautCoupure(pAb, True, &Hauteur,&PosV, &CarCoupe);
 		/* calcule la hauteur minimum avant coupure, en points typographiques */
 		if (pRe1->PrMinAttr)
 		  i = AttrValue(pA1);
 		else
 		  i = pRe1->PrMinValue;
-		Min = PixelValue(i, pRe1->PrMinUnit, pPav);
+		Min = PixelValue(i, pRe1->PrMinUnit, pAb);
 		if (Hauteurffective-PosV < Min)
 		  /* la hauteur minimum n'y est pas, on deplace la */
 		  /* hauteur de page en haut du pave */
@@ -1453,32 +1453,32 @@ static int DeplCoupure(pPav, NoBr1, VueSch)
 	  /* une regle NoBreak2 doit etre appliquee a l'element */
 	  /* on ne l'applique que si le pave est complet */
 	  {
-	    if (pPav->AbLeafType != LtCompound)
+	    if (pAb->AbLeafType != LtCompound)
 	      pavecoupe = False;
 #ifdef __COLPAGE__
        /* si un pave est mis en ligne, il peut etre coupe. */
        /* ce cas est retire */
 #else /* __COLPAGE__ */
-	    else if (pPav->AbInLine)
+	    else if (pAb->AbInLine)
 	      pavecoupe = False;
 #endif /* __COLPAGE__ */
 	    else
-	      pavecoupe = pPav->AbTruncatedTail;
+	      pavecoupe = pAb->AbTruncatedTail;
     /* si la boite est eclatee, on ignore la regle NoBreak2 */
-    if (pPav->AbBox != NULL)
-       if (pPav->AbBox->BxType == BoGhost)
+    if (pAb->AbBox != NULL)
+       if (pAb->AbBox->BxType == BoGhost)
 	  pavecoupe = True;
 	    if (!pavecoupe)
 	      {
 		pRe1 = pRNoBr2;
 		/* demande au Mediateur ou se place le pave dans la page */
-		HautCoupure(pPav, True, &Hauteur, &PosV, &CarCoupe);
+		HautCoupure(pAb, True, &Hauteur, &PosV, &CarCoupe);
 		/* calcule la hauteur minimum apres coupure, en points typographiques */
 		if (pRe1->PrMinAttr)
 		  i = AttrValue(pA2);
 		else
 		  i = pRe1->PrMinValue;
-		Min = PixelValue(i, pRe1->PrMinUnit, pPav);
+		Min = PixelValue(i, pRe1->PrMinUnit, pAb);
 		if (PosV + Hauteur - Hauteurffective < Min)
 		  /* la frontiere de page passe trop pres du bas du */
 		  /* pave, on la ramene en haut de la zone autorisee */
@@ -1488,23 +1488,23 @@ static int DeplCoupure(pPav, NoBr1, VueSch)
   if (ret == 0)
     /* la coupure convient au pave, cherche si elle convient aux paves englobes. */
     {
-      pPav = pPav->AbFirstEnclosed;
+      pAb = pAb->AbFirstEnclosed;
 #ifdef __COLPAGE__
    /* on saute les paves de colonnes pour arriver a la derniere */
    /* cf. procedure CoupSurPage de pos.c (lignes #800) */
-   if (pPav != NULL)
-	    while (pPav->AbElement->ElTypeNumber == ord(PageBreak)+1
-		   && (pPav->AbElement->ElPageType == ColBegin
-		       || pPav->AbElement->ElPageType == ColComputed
-		       || pPav->AbElement->ElPageType == ColUser
-		       || pPav->AbElement->ElPageType == ColGroup)
-	           && pPav->AbNext != NULL)
-	      pPav = pPav->AbNext;      
+   if (pAb != NULL)
+	    while (pAb->AbElement->ElTypeNumber == ord(PageBreak)+1
+		   && (pAb->AbElement->ElPageType == ColBegin
+		       || pAb->AbElement->ElPageType == ColComputed
+		       || pAb->AbElement->ElPageType == ColUser
+		       || pAb->AbElement->ElPageType == ColGroup)
+	           && pAb->AbNext != NULL)
+	      pAb = pAb->AbNext;      
 #endif /* __COLPAGE__ */
-      while (ret == 0 && pPav != NULL)
+      while (ret == 0 && pAb != NULL)
 	{
-	  ret = DeplCoupure(pPav, NoBr1, VueSch);
-	  pPav = pPav->AbNext;
+	  ret = DeplCoupure(pAb, NoBr1, VueSch);
+	  pAb = pAb->AbNext;
 	}
     }
   return ret;
@@ -1515,7 +1515,7 @@ static int DeplCoupure(pPav, NoBr1, VueSch)
  /* procedure PlaceMarque changee : on ne traite plus le cas de */
  /* CreateWith */
 /* ---------------------------------------------------------------------- */
-/* |	PlaceMarque place dans l'arbre de racine pPav les marques de	| */
+/* |	PlaceMarque place dans l'arbre de racine pAb les marques de	| */
 /* |		page en fonction de la position des paves relativement	| */
 /* |		a la limite de page					| */
  /*      cette procedure n'est appelee que sur un pave d'element | */
@@ -1523,11 +1523,11 @@ static int DeplCoupure(pPav, NoBr1, VueSch)
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void PlaceMarque(PtrAbstractBox pPav, PtrElement ElRacine, PtrDocument pDoc, int VueSch, boolean *PaveTropHaut, PtrAbstractBox *PaveCoupeOrig, int VueNb, int frame, PtrElement *pPage)
+static void PlaceMarque(PtrAbstractBox pAb, PtrElement ElRacine, PtrDocument pDoc, int VueSch, boolean *PaveTropHaut, PtrAbstractBox *PaveCoupeOrig, int VueNb, int frame, PtrElement *pPage)
 
 #else /* __STDC__ */
-static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOrig, VueNb, frame, pPage)
-	PtrAbstractBox pPav;
+static void PlaceMarque(pAb, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOrig, VueNb, frame, pPage)
+	PtrAbstractBox pAb;
 	PtrElement ElRacine;
 	PtrDocument pDoc;
 	int VueSch;
@@ -1543,9 +1543,9 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
   boolean         DejaFait;
   PtrAbstractBox         pPa1;
 		
-  if (pPav != NULL && !pPav->AbPresentationBox)
+  if (pAb != NULL && !pAb->AbPresentationBox)
     {
-      pPa1 = pPav;
+      pPa1 = pAb;
       if (pPa1->AbOnPageBreak)
 	/* le pave' est traverse' par la limite de page */ 
 	if (pPa1->AbFirstEnclosed == NULL)
@@ -1554,10 +1554,10 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
 	      /* demande au mediateur sur quel caractere a lieu la coupure */
 	      /* (si ce n'est pas une feuille de texte, on placera la marque */
 	      /* de page avant le pave) */
-	      HautCoupure(pPav, True, &Hauteur, &PosV, &CarCoupe);
+	      HautCoupure(pAb, True, &Hauteur, &PosV, &CarCoupe);
 	      if (CarCoupe <= 0)
 	        /* place la marque de page avant le pave */
-	        *pPage = InsereMarque(pPav, frame, VueNb,
+	        *pPage = InsereMarque(pAb, frame, VueNb,
 				  PaveCoupeOrig, PaveTropHaut,
 				  VueSch, pDoc, ElRacine);
 	      else if (CarCoupe >= pPa1->AbElement->ElTextLength)
@@ -1571,9 +1571,9 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
 	        {
 		Coupe(pPa1->AbElement, CarCoupe, pDoc, VueNb);
 		pPa1->AbOnPageBreak = False;
-		pPav = pPa1->AbNext;
-		pPav->AbAfterPageBreak = True;
-		*pPage = InsereMarque(pPav, frame, VueNb,
+		pAb = pPa1->AbNext;
+		pAb->AbAfterPageBreak = True;
+		*pPage = InsereMarque(pAb, frame, VueNb,
 				  PaveCoupeOrig, PaveTropHaut, 
 				  VueSch, pDoc, ElRacine);
 	        }
@@ -1585,25 +1585,25 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
    /* on saute les paves de colonnes pour arriver a la derniere */
    /* cf. procedure CoupSurPage de pos.c (lignes #800) */
 	  {
-	    pPav = pPav->AbFirstEnclosed;
-	    while (pPav->AbElement->ElTypeNumber == ord(PageBreak)+1
-		   && (pPav->AbElement->ElPageType == ColBegin
-		       || pPav->AbElement->ElPageType == ColComputed
-		       || pPav->AbElement->ElPageType == ColUser
-		       || pPav->AbElement->ElPageType == ColGroup)
-	           && pPav->AbNext != NULL)
-	      pPav = pPav->AbNext;
+	    pAb = pAb->AbFirstEnclosed;
+	    while (pAb->AbElement->ElTypeNumber == ord(PageBreak)+1
+		   && (pAb->AbElement->ElPageType == ColBegin
+		       || pAb->AbElement->ElPageType == ColComputed
+		       || pAb->AbElement->ElPageType == ColUser
+		       || pAb->AbElement->ElPageType == ColGroup)
+	           && pAb->AbNext != NULL)
+	      pAb = pAb->AbNext;
 	    DejaFait = False;
      /* on s'arrete des qu'on a cree une marque de page */
-     while (pPav != NULL && !DejaFait)
+     while (pAb != NULL && !DejaFait)
 	      {
-         /* si pPav est un pave de presentation, on passe */
+         /* si pAb est un pave de presentation, on passe */
          /* au pave suivant */
-		if (pPav->AbOnPageBreak && !pPav->AbPresentationBox)
+		if (pAb->AbOnPageBreak && !pAb->AbPresentationBox)
 		  /* la frontiere de page traverse ce pave, on place une */
 		  /* marque de page a l'interieur */
 		  {
-		    PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut,
+		    PlaceMarque(pAb, ElRacine, pDoc, VueSch, PaveTropHaut,
 				PaveCoupeOrig, VueNb, frame, pPage);
 		    DejaFait = *pPage != NULL;
 		  } 
@@ -1611,26 +1611,26 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
          /* si le pave est un filet, on considere qu'il */
          /* n'est pas sur la limite. (page complete) */
          /* a voir si c'est necessaire !!! */
-           if (pPav->AbOnPageBreak
-              && pPav->AbElement->ElTypeNumber == ord(PageBreak) +1
-              && pPav->AbLeafType == LtGraphics)
+           if (pAb->AbOnPageBreak
+              && pAb->AbElement->ElTypeNumber == ord(PageBreak) +1
+              && pAb->AbLeafType == LtGraphics)
              {
-               pPav->AbOnPageBreak = False;
+               pAb->AbOnPageBreak = False;
                *pPage = pPa1->AbElement; 
                /* on retourne l'element MP prec */
                /* pour detruire l'i.a. correspondante */
              }
-		  else if (pPav->AbAfterPageBreak && !pPav->AbPresentationBox)
+		  else if (pAb->AbAfterPageBreak && !pAb->AbPresentationBox)
 		    if (!DejaFait)
 		      /* c'est le premier pave englobe' au-dela de la */
 		      /* frontiere, on pose une marque de page devant lui */
 		      {
-		        *pPage=InsereMarque(pPav, frame, VueNb,
+		        *pPage=InsereMarque(pAb, frame, VueNb,
 			       PaveCoupeOrig, PaveTropHaut, VueSch, pDoc, ElRacine);
 		        DejaFait = True;
 		      }
-		if (pPav != NULL && !DejaFait)
-		  pPav = pPav->AbNext;
+		if (pAb != NULL && !DejaFait)
+		  pAb = pAb->AbNext;
 	      } /* fin du while */
 	  }
     }
@@ -1639,17 +1639,17 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
 #else /* __COLPAGE__ */
 
 /* ---------------------------------------------------------------------- */
-/* |	PlaceMarque place dans l'arbre de racine pPav la marque de	| */
+/* |	PlaceMarque place dans l'arbre de racine pAb la marque de	| */
 /* |		page en fonction de la position des paves relativement	| */
 /* |		a la limite de page					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void PlaceMarque(PtrAbstractBox pPav, PtrElement ElRacine, PtrDocument pDoc, int VueSch, boolean *PaveTropHaut, PtrAbstractBox *PaveCoupeOrig, int VueNb, int frame, PtrElement *pPage)
+static void PlaceMarque(PtrAbstractBox pAb, PtrElement ElRacine, PtrDocument pDoc, int VueSch, boolean *PaveTropHaut, PtrAbstractBox *PaveCoupeOrig, int VueNb, int frame, PtrElement *pPage)
 
 #else /* __STDC__ */
-static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOrig, VueNb, frame, pPage)
-	PtrAbstractBox pPav;
+static void PlaceMarque(pAb, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOrig, VueNb, frame, pPage)
+	PtrAbstractBox pAb;
 	PtrElement ElRacine;
 	PtrDocument pDoc;
 	int VueSch;
@@ -1667,9 +1667,9 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
   boolean	  onCoupe;
   PtrAbstractBox	  pCreateur;
   
-  if (pPav != NULL)
+  if (pAb != NULL)
     {
-      pPa1 = pPav;
+      pPa1 = pAb;
       if (pPa1->AbOnPageBreak)
 	/* le pave' est traverse' par la limite de page */ 
 	if (pPa1->AbFirstEnclosed == NULL)
@@ -1677,16 +1677,16 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
 	  {
 	    /* a priori on va le couper en deux */
 	    onCoupe = True;
-	    if (pPav->AbPresentationBox)
+	    if (pAb->AbPresentationBox)
 	      /* c'est un pave de presentation */
 	      {
 	      /* on cherche le pave qui l'a cree' pour connaitre sa regle */
 	      /* de creation */
-	      pCreateur = pPav->AbElement->ElAbstractBox[pPav->AbDocView - 1];
+	      pCreateur = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
 	      while (pCreateur->AbPresentationBox)
 		pCreateur = pCreateur->AbNext;
 	      /* on cherche la regle de creation */
-	      if (RegleCree(pDoc, pCreateur, pPav) == FnCreateWith)
+	      if (RegleCree(pDoc, pCreateur, pAb) == FnCreateWith)
 		 /* c'est une regle CreateWith, on ne fait rien */
 		 onCoupe = False;
 	      }
@@ -1695,10 +1695,10 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
 	      /* demande au mediateur sur quel caractere a lieu la coupure */
 	      /* (si ce n'est pas une feuille de texte, on placera la marque */
 	      /* de page avant le pave) */
-	      HautCoupure(pPav, True, &Hauteur, &PosV, &CarCoupe);
+	      HautCoupure(pAb, True, &Hauteur, &PosV, &CarCoupe);
 	      if (CarCoupe <= 0)
 	        /* place la marque de page avant le pave */
-	        *pPage = InsereMarque(pPav, frame, VueNb,
+	        *pPage = InsereMarque(pAb, frame, VueNb,
 				  PaveCoupeOrig, PaveTropHaut,
 				  VueSch, pDoc, ElRacine);
 	      else if (CarCoupe >= pPa1->AbElement->ElTextLength)
@@ -1711,9 +1711,9 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
 	        {
 		Coupe(pPa1->AbElement, CarCoupe, pDoc, VueNb);
 		pPa1->AbOnPageBreak = False;
-		pPav = pPa1->AbNext;
-		pPav->AbAfterPageBreak = True;
-		*pPage = InsereMarque(pPav, frame, VueNb,
+		pAb = pPa1->AbNext;
+		pAb->AbAfterPageBreak = True;
+		*pPage = InsereMarque(pAb, frame, VueNb,
 				  PaveCoupeOrig, PaveTropHaut, 
 				  VueSch, pDoc, ElRacine);
 	        }
@@ -1723,30 +1723,30 @@ static void PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOri
 	  /* ce n'est pas un pave feuille, on examine tous les paves */
 	  /* englobes par ce pave' */
 	  {
-	    pPav = pPav->AbFirstEnclosed;
+	    pAb = pAb->AbFirstEnclosed;
 	    DejaFait = False;
-	    while (pPav != NULL)
+	    while (pAb != NULL)
 	      {
-		if (pPav->AbOnPageBreak)
+		if (pAb->AbOnPageBreak)
 		  /* la frontiere de page traverse ce pave, on place une */
 		  /* marque de page a l'interieur */
 		  {
-		    PlaceMarque(pPav, ElRacine, pDoc, VueSch, PaveTropHaut,
+		    PlaceMarque(pAb, ElRacine, pDoc, VueSch, PaveTropHaut,
 				PaveCoupeOrig, VueNb, frame, pPage);
 		    DejaFait = *pPage != NULL;
 		  } 
-		else if (pPav->AbAfterPageBreak)
+		else if (pAb->AbAfterPageBreak)
 		  if (!DejaFait)
 		    /* c'est le premier pave englobe' au-dela de la */
 		    /* frontiere, on pose une marque de page devant lui */
 		    {
-		      *pPage=InsereMarque(pPav, frame, VueNb,
+		      *pPage=InsereMarque(pAb, frame, VueNb,
 				      PaveCoupeOrig, PaveTropHaut, VueSch, pDoc, ElRacine);
 		      DejaFait = True;
-		      pPav = NULL;
+		      pAb = NULL;
 		    }
-		if (pPav != NULL)
-		  pPav = pPav->AbNext;
+		if (pAb != NULL)
+		  pAb = pAb->AbNext;
 	      }
 	  }
     }
@@ -1854,7 +1854,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 #endif /* __COLPAGE__ */
 
 {
-  PtrAbstractBox         pPav;
+  PtrAbstractBox         pAb;
   PtrElement      pPage;
   /* boolean         ret; */
   boolean         PaveTropHaut;
@@ -1878,45 +1878,45 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
   /* connaitre ce pave' s'il est plus haut qu'une page et qu'on doit */
   /* inserer une marque de page apres lui. */
   PaveCoupeOrig = NULL;	/* on n'a pas encore trouve' ce pave' */
-  pPav = ElRacine->ElAbstractBox[VueNb-1]; /* on commence par le pave racine */
+  pAb = ElRacine->ElAbstractBox[VueNb-1]; /* on commence par le pave racine */
   do
-    if (pPav->AbAfterPageBreak)
-      PaveCoupeOrig = pPav;	/* pave au-dela de la limite de page */
-    else if (pPav->AbOnPageBreak)
+    if (pAb->AbAfterPageBreak)
+      PaveCoupeOrig = pAb;	/* pave au-dela de la limite de page */
+    else if (pAb->AbOnPageBreak)
       {
-	if (pPav->AbPresentationBox)
+	if (pAb->AbPresentationBox)
 	  /* pave de presentation, donc insecable */
-	  PaveCoupeOrig = pPav;
+	  PaveCoupeOrig = pAb;
 	else 
 	  {
-	    ChSchemaPres(pPav->AbElement, &pSchPres, &Ent, &pSS);
+	    ChSchemaPres(pAb->AbElement, &pSchPres, &Ent, &pSS);
 	    if (!pSchPres->PsAcceptPageBreak[Ent-1])
-	      PaveCoupeOrig = pPav;	/* pave insecable */
+	      PaveCoupeOrig = pAb;	/* pave insecable */
 	  }
 	if (PaveCoupeOrig == NULL)
-	  if (pPav->AbFirstEnclosed == NULL)
-	    PaveCoupeOrig = pPav;	/* pave feuille */
+	  if (pAb->AbFirstEnclosed == NULL)
+	    PaveCoupeOrig = pAb;	/* pave feuille */
 	  else	
 #ifdef __COLPAGE__
    /* on saute les paves de colonnes pour arriver a la derniere */
    /* cf. procedure CoupSurPage de pos.c (lignes #800) */
 	  {
-	    pPav = pPav->AbFirstEnclosed;
-	    while (pPav->AbElement->ElTypeNumber == ord(PageBreak)+1
-		   && (pPav->AbElement->ElPageType == ColBegin
-		       || pPav->AbElement->ElPageType == ColComputed
-		       || pPav->AbElement->ElPageType == ColUser
-		       || pPav->AbElement->ElPageType == ColGroup)
-	           && pPav->AbNext != NULL)
-	      pPav = pPav->AbNext;
+	    pAb = pAb->AbFirstEnclosed;
+	    while (pAb->AbElement->ElTypeNumber == ord(PageBreak)+1
+		   && (pAb->AbElement->ElPageType == ColBegin
+		       || pAb->AbElement->ElPageType == ColComputed
+		       || pAb->AbElement->ElPageType == ColUser
+		       || pAb->AbElement->ElPageType == ColGroup)
+	           && pAb->AbNext != NULL)
+	      pAb = pAb->AbNext;
    }
 #else /* __COLPAGE__ */
-	    pPav = pPav->AbFirstEnclosed;
+	    pAb = pAb->AbFirstEnclosed;
 #endif /* __COLPAGE__ */
       } 
     else	/* le pave est avant la limite de page */
-      pPav = pPav->AbNext;	/* passe au pave suivant */
-  while (!(PaveCoupeOrig != NULL || pPav == NULL));
+      pAb = pAb->AbNext;	/* passe au pave suivant */
+  while (!(PaveCoupeOrig != NULL || pAb == NULL));
   /* place les marques de page sans tenir compte des boites de haut et de */
   /* bas de page de hauteur variable (notes de bas de page par exemple) */
  /* dans la version de Vincent, ModifVue est appelee avec une */
@@ -1956,22 +1956,22 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
       /* pas une boite de presentation. */
       {
 	if (pPage->ElAbstractBox[VueNb-1] != NULL)
-	   pPav = pPage->ElAbstractBox[VueNb-1]->AbFirstEnclosed;
+	   pAb = pPage->ElAbstractBox[VueNb-1]->AbFirstEnclosed;
 	else
-	   pPav = NULL;
+	   pAb = NULL;
 	stop = False;
 	do
-	  if (pPav == NULL)
+	  if (pAb == NULL)
 	    stop = True;
-	  else if (!pPav->AbPresentationBox)
+	  else if (!pAb->AbPresentationBox)
 	    stop = True;
-	  else	pPav = pPav->AbNext;
+	  else	pAb = pAb->AbNext;
 	while (!(stop));
-	if (pPav == NULL)
+	if (pAb == NULL)
 	  PosVFilet = 0;
 	else
 	  /* demande au mediateur la position verticale de cette boite filet */
-	  HautCoupure(pPav, True, &Hauteur, &PosVFilet, &CarCoupe);
+	  HautCoupure(pAb, True, &Hauteur, &PosVFilet, &CarCoupe);
 	/* verifie la hauteur de la page */
 	if (PosVFilet > HauteurPage + HauteurBasPage)
 	  /* la page est trop haute */
@@ -2029,7 +2029,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		Hauteurffective = HauteurPage;
 		(void) ModifVue(frame, &Hauteurffective, PavReaff);
 		/* libere tous les paves morts de la vue */ 
-		LibPavMort(pPav);
+		LibPavMort(pAb);
 		/* detruit la marque de page a liberer dans l'arbre abstrait */
 		SupprMarquePage(pPage, pDoc, &pElLib);
 		/* signale au Mediateur les paves morts par suite de */
@@ -2045,7 +2045,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
 		    (void) ModifVue(frame, &h, PavReaff);
 		  }
 		/* libere les elements rendus inutiles par les fusions */
-		Supprime(&pElLib);
+		DeleteElement(&pElLib);
 		pPage = NULL;
 		CompteurPages--;
 		/* on place les marques de page plus haut */
@@ -2095,7 +2095,7 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
   PtrPSchema      pSchP;
   boolean         stop;
   PtrPSchema      pSc1;
-   PtrAbstractBox   pP, pPav, pCorps;
+   PtrAbstractBox   pP, pAb, pCorps;
    int             Hauteur, PosV, CarCoupe; /* pour calcul page */
    int             h;
    boolean         bool, nouveau;
@@ -2189,14 +2189,14 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
      if (pP->AbPresentationBox) 
        {
          /* il y a un haut de page : on evalue sa hauteur */
-         pPav = pP;
+         pAb = pP;
          h = -1; /* changement de signification de h */
          /* on signale au mediateur les paves (au cas ou il ne les */
          /* ait pas encore vus) */
          /* on appelle Modifvue a partir du pave haut de page */
-         bool = ModifVue(frame, &h, pPav);
+         bool = ModifVue(frame, &h, pAb);
          /* calcul de la hauteur du pave haut ou bas de page */
-         HautCoupure(pPav, True, &Hauteur, &PosV, &CarCoupe);
+         HautCoupure(pAb, True, &Hauteur, &PosV, &CarCoupe);
          HauteurRefHautPage = Hauteur;
        }
      /* on saute le corps de page pour voir s'il y a un bas de page */
@@ -2208,14 +2208,14 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
          && pP->AbNext->AbLeafType == LtCompound) /* pas filet */
        {
          /* il y a un bas : on evalue sa hauteur */
-         pPav = pP->AbNext;
+         pAb = pP->AbNext;
          h = -1; /* changement de signification de h */		
          /* on signale au mediateur les paves (au cas ou il ne les */
          /* ait pas encore vus) */
          /* on appelle Modifvue a partir du pave haut de page */
-         bool = ModifVue(frame, &h, pPav);
+         bool = ModifVue(frame, &h, pAb);
          /* calcul de la hauteur du pave haut ou bas de page */
-         HautCoupure(pPav, True, &Hauteur, &PosV, &CarCoupe);
+         HautCoupure(pAb, True, &Hauteur, &PosV, &CarCoupe);
          HauteurRefBasPage = Hauteur;
        }
      /* mise a jour de la hauteur de reference de la page */
@@ -2283,7 +2283,7 @@ static void DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch)
 #endif /* __STDC__ */
 
 {
-  PtrAbstractBox         pPav;
+  PtrAbstractBox         pAb;
   int             h;
   /* boolean        tropcourt;*/
   int            frame;
@@ -2313,11 +2313,11 @@ static void DetrImAbs_Pages(Vue, Assoc, pDoc, VueSch)
    {
   /* tous les paves englobes par le pave racine de la vue sont marques*/
   /* morts */
-    pPav = PavRacine->AbFirstEnclosed;
-  while (pPav != NULL)
+    pAb = PavRacine->AbFirstEnclosed;
+  while (pAb != NULL)
     {
-      TuePave(pPav);
-      pPav = pPav->AbNext;
+      TuePave(pAb);
+      pAb = pAb->AbNext;
     }
   /* ceci est signale au Mediateur */
 #ifdef __COLPAGE__
@@ -2450,10 +2450,10 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
       if (ok)
 	{
 	/* cree l'element marque de page */
-	pElPage = CreeSArbre(ord(PageBreak)+1, pElRacine->ElSructSchema, pDoc,
+	pElPage = NewSubtree(ord(PageBreak)+1, pElRacine->ElSructSchema, pDoc,
 			     pEl->ElAssocNum, True, True, True, True);
 	/* insere la nouvelle marque de page apres le dernier fils */
-	InsApres(pEl, pElPage);	/* remplit cette marque de page */
+	InsertElementAfter(pEl, pElPage);	/* remplit cette marque de page */
 	pElPage->ElPageType = PgComputed;
 	pElPage->ElViewPSchema = VueSch;
 	/* cherche le compteur de page a appliquer */
@@ -3134,7 +3134,7 @@ HauteurTotalePage = 0;
 		    /* normale */
 
 #ifdef PAGINEETIMPRIME
-		    MajNumeros(Successeur(pEl1), pEl1, pDoc, True);
+		    MajNumeros(NextElement(pEl1), pEl1, pDoc, True);
 		    /* serait-ce plus rapide si on faisait durectement l'appel : */
 		    /* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElSructSchema, True); */
 #endif PAGINEETIMPRIME

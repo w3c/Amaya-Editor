@@ -81,7 +81,7 @@ boolean             Affiche;
 {
    int                 ibuf1, ibuf2, lg, diff, dvol, vue, i;
    PtrTextBuffer      pBT1, pBT2, pBTn;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    PtrTextBuffer      pBu1;
    PtrDocument         pDo1;
    PtrElement          pAsc;
@@ -219,28 +219,28 @@ boolean             Affiche;
    UnPave = False;
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
      {
-	pPav = pEl->ElAbstractBox[vue - 1];
-	if (pPav != NULL)
+	pAb = pEl->ElAbstractBox[vue - 1];
+	if (pAb != NULL)
 	  {
 	     UnPave = True;
-	     pPav->AbChange = True;
+	     pAb->AbChange = True;
 	     pDo1 = docsel;
 	     if (!VueAssoc (pEl))
-		pDo1->DocViewModifiedAb[vue - 1] = Englobant (pPav, pDo1->DocViewModifiedAb[vue - 1]);
+		pDo1->DocViewModifiedAb[vue - 1] = Englobant (pAb, pDo1->DocViewModifiedAb[vue - 1]);
 	     else
 	       {
 		  pDo1->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		     Englobant (pPav, pDo1->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+		     Englobant (pAb, pDo1->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	       }
-	     dvol = pPav->AbVolume - pEl->ElTextLength;
+	     dvol = pAb->AbVolume - pEl->ElTextLength;
 	     do
 	       {
-		  pPa1 = pPav;
+		  pPa1 = pAb;
 		  /* met a jour le volume du premier pave */
 		  pPa1->AbVolume -= dvol;
-		  pPav = pPa1->AbEnclosing;
+		  pAb = pPa1->AbEnclosing;
 	       }
-	     while (!(pPav == NULL));
+	     while (!(pAb == NULL));
 	  }
      }
    /* reaffiche toutes les vues */
@@ -651,7 +651,7 @@ int                 LgChaineCh;
 		  }
 	     while (!trouve && pEl != NULL)
 	       {
-		  pEl = AvCherche (pEl, ord (CharString) + 1, NULL);
+		  pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
 		  if (pEl != NULL)
 		     /* on a trouve un element de texte */
 		    {
@@ -663,7 +663,7 @@ int                 LgChaineCh;
 			  pAscendant = pAscendant->ElParent;
 		       if (pAscendant->ElSource == NULL)
 			  /* on n'est pas dans une inclusion */
-			  if (!ElemHidden (pEl))
+			  if (!ElementIsHidden (pEl))
 			     /* l'element n'est pas dans une partie cachee */
 			    {
 			       icar = 1;
@@ -697,7 +697,7 @@ int                 LgChaineCh;
 		  }
 	     while (!trouve && pEl != NULL)
 	       {
-		  pEl = ArCherche (pEl, ord (CharString) + 1, NULL);
+		  pEl = BackSearchTypedElem (pEl, ord (CharString) + 1, NULL);
 		  if (pEl != NULL)
 		     /* on a trouve' un element de texte */
 		    {
@@ -709,7 +709,7 @@ int                 LgChaineCh;
 			  pAscendant = pAscendant->ElParent;
 		       if (pAscendant->ElSource == NULL)
 			  /* on n'est pas dans une inclusion */
-			  if (!ElemHidden (pEl))
+			  if (!ElementIsHidden (pEl))
 			     /* l'element n'est pas dans une partie cachee */
 			    {
 			       pBT = pEl->ElText;
@@ -749,12 +749,12 @@ int                 LgChaineCh;
 		}
 	      else if (EnAvant)
 		{
-		   if (Avant (*pElFin, pEl))
+		   if (ElemIsBefore (*pElFin, pEl))
 		      /* l'element trouve' est apres l'element de fin, on fait */
 		      /* comme si on n'avait pas trouve' */
 		      trouve = False;
 		}
-	      else if (Avant (pEl, *pElFin))
+	      else if (ElemIsBefore (pEl, *pElFin))
 		 trouve = False;
 	if (trouve)
 	  {
@@ -999,7 +999,7 @@ boolean             relatif;
 	pp = from;
 	while (depl > 0 && pp != NULL)
 	  {
-	     pp = AvCherche (from, ord (PageBreak) + 1, NULL);
+	     pp = FwdSearchTypedElem (from, ord (PageBreak) + 1, NULL);
 	     if (pp != NULL)
 	       {
 		  if (pp->ElViewPSchema == vue)
@@ -1023,7 +1023,7 @@ boolean             relatif;
    else
       while (depl < 0 && pp != NULL)
 	{
-	   pp = ArCherche (from, ord (PageBreak) + 1, NULL);
+	   pp = BackSearchTypedElem (from, ord (PageBreak) + 1, NULL);
 	   if (pp != NULL)
 	     {
 		if (pp->ElViewPSchema == vue)

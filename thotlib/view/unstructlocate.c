@@ -66,11 +66,11 @@ extern int          DistBox ();
 /* |            le pave fils qui l'emporte.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesBoite (PtrBox * result, PtrAbstractBox adpave, int frame, int x, int y, int *pointselect)
+void                DesBoite (PtrBox * result, PtrAbstractBox pAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-void                DesBoite (result, adpave, frame, x, y, pointselect)
+void                DesBoite (result, pAb, frame, x, y, pointselect)
 PtrBox           *result;
-PtrAbstractBox             adpave;
+PtrAbstractBox             pAb;
 int                 frame;
 int                 x;
 int                 y;
@@ -79,29 +79,29 @@ int                *pointselect;
 #endif /* __STDC__ */
 {
    PtrAbstractBox             pav;
-   PtrBox            sbox, ibox;
+   PtrBox            sbox, pBox;
    PtrBox            testbox;
    int                 distmax;
    int                 lepoint;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    int                 d;
 
-   ibox = NULL;
+   pBox = NULL;
    sbox = NULL;
    distmax = 2000;		/* au-dela, on n'accepte pas la selection */
-   pFe1 = &FntrTable[frame - 1];
+   pFrame = &FntrTable[frame - 1];
 
-   if (pFe1->FrAbstractBox != NULL)
-      ibox = pFe1->FrAbstractBox->AbBox;
+   if (pFrame->FrAbstractBox != NULL)
+      pBox = pFrame->FrAbstractBox->AbBox;
 
-   if (ibox != NULL)
+   if (pBox != NULL)
      {
-	ibox = ibox->BxNext;
-	while (ibox != NULL)
+	pBox = pBox->BxNext;
+	while (pBox != NULL)
 	  {
-	     pav = ibox->BxAbstractBox;
+	     pav = pBox->BxAbstractBox;
 	     lepoint = 0;
-	     if (pav->AbVisibility >= pFe1->FrVisibility)
+	     if (pav->AbVisibility >= pFrame->FrVisibility)
 	       {
 		  if (pav->AbPresentationBox || pav->AbLeafType == LtGraphics || pav->AbLeafType == LtPlyLine)
 		    {
@@ -113,7 +113,7 @@ int                *pointselect;
 		    }
 		  else if (pav->AbLeafType == LtSymbol && pav->AbShape == 'r')
 		     /* glitch pour le symbole racine */
-		     d = DistGraphique (x, y, ibox, 1);
+		     d = DistGraphique (x, y, pBox, 1);
 		  else if (pav->AbLeafType == LtText
 			   || pav->AbLeafType == LtSymbol
 			   || pav->AbLeafType == LtPicture
@@ -123,15 +123,15 @@ int                *pointselect;
 		       if (pav->AbLeafType == LtPicture)
 			 {
 			    /* detecte si on selectionne la droite de l'image */
-			    d = ibox->BxXOrg + (ibox->BxWidth / 2);
+			    d = pBox->BxXOrg + (pBox->BxWidth / 2);
 			    if (x > d)
 			       lepoint = 1;
-			    d = DistBox (x, y, ibox->BxXOrg, ibox->BxYOrg,
-					 ibox->BxWidth, ibox->BxHeight);
+			    d = DistBox (x, y, pBox->BxXOrg, pBox->BxYOrg,
+					 pBox->BxWidth, pBox->BxHeight);
 			 }
 		       else
-			  d = DistBox (x, y, ibox->BxXOrg, ibox->BxYOrg,
-				       ibox->BxWidth, ibox->BxHeight);
+			  d = DistBox (x, y, pBox->BxXOrg, pBox->BxYOrg,
+				       pBox->BxWidth, pBox->BxHeight);
 		    }
 		  else
 		     d = distmax + 1;
@@ -140,7 +140,7 @@ int                *pointselect;
 		  if (d < distmax)
 		    {
 		       distmax = d;
-		       sbox = ibox;
+		       sbox = pBox;
 		       *pointselect = lepoint;	/* le point selectionne */
 		    }
 		  else if (d == distmax)
@@ -149,19 +149,19 @@ int                *pointselect;
 		       if (sbox == NULL)
 			 {
 			    distmax = d;
-			    sbox = ibox;
+			    sbox = pBox;
 			    *pointselect = lepoint;	/* le point selectionne */
 			 }
 		       /* Si la boite est sur un plan au dessus de la precedente */
-		       else if (sbox->BxAbstractBox->AbDepth > ibox->BxAbstractBox->AbDepth)
+		       else if (sbox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
 			 {
 			    distmax = d;
-			    sbox = ibox;
+			    sbox = pBox;
 			    *pointselect = lepoint;	/* le point selectionne */
 			 }
 		    }
 	       }
-	     ibox = ibox->BxNext;
+	     pBox = pBox->BxNext;
 	  }
      }
    *result = sbox;

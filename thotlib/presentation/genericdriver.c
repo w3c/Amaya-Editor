@@ -1474,7 +1474,7 @@ void               *param;
    TtAttribute           *pAt1;
    AttributePres      *pRP1;
    int                 El;
-   int                 Attr;
+   int                 GetAttributeOfElement;
    int                 Val;
 
    /*
@@ -1541,10 +1541,10 @@ void               *param;
     */
    if (pSchemaStr->SsNAttributes > 0)
      {
-	for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
+	for (GetAttributeOfElement = 1; GetAttributeOfElement <= pSchemaStr->SsNAttributes; GetAttributeOfElement++)
 	  {
-	     pAt1 = &pSchemaStr->SsAttribute[Attr - 1];
-	     pRP1 = pSc1->PsAttrPRule[Attr - 1];
+	     pAt1 = &pSchemaStr->SsAttribute[GetAttributeOfElement - 1];
+	     pRP1 = pSc1->PsAttrPRule[GetAttributeOfElement - 1];
 	     if (pAt1 == NULL)
 		continue;
 	     if (pRP1 == NULL)
@@ -1580,7 +1580,7 @@ void               *param;
 				 CleanGenericContext (ctxt);
 				 StoreConds (ctxt, cond);
 				 ctxt->class = pRP1->ApString;
-				 ctxt->classattr = Attr;
+				 ctxt->classattr = GetAttributeOfElement;
 
 				 /*
 				  * call the handler provided by the user.
@@ -1622,7 +1622,7 @@ void               *param;
 				 prevcond = cond;
 				 CleanGenericContext (ctxt);
 				 StoreConds (ctxt, cond);
-				 ctxt->attr = Attr;
+				 ctxt->attr = GetAttributeOfElement;
 				 ctxt->attrval = Val;
 
 				 /*

@@ -48,57 +48,57 @@ boolean             *ApplAttr;
    PtrElement          pElAttr;
 
     *ApplAttr = True; /* a priori, on peut appliquer la regle */
-   if (ExceptTypeElem (EXC_TR_Tableau_ATTRIBUT, pEl->ElTypeNumber, pEl->ElSructSchema))
+   if (TypeHasException (EXC_TR_Tableau_ATTRIBUT, pEl->ElTypeNumber, pEl->ElSructSchema))
      {
 	/* on est dans un tableau sur un element necessitant
 	   un traitement particulier pour ses attributs */
-	attr = ExceptNumAttr (EXC_ID_Type_Tableau, pEl->ElSructSchema);
-	if ((pAttrTab = GetAttrInEnclosing (pEl, attr, pEl->ElSructSchema,
+	attr = GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElSructSchema);
+	if ((pAttrTab = GetTypedAttrAncestor (pEl, attr, pEl->ElSructSchema,
 					    &pElAttr)))
 	  {
 	     /* le tableau porte bien un attribut Type_Tableau */
 
-	     if (pEl->ElTypeNumber == ExceptNumType (EXC_ID_Titre_Tableau, pEl->ElSructSchema))
+	     if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Titre_Tableau, pEl->ElSructSchema))
 	       {
 		  /* on inhibe la regle de largeur de l'attribut Largeur_Titre 
 		     quand l'attribut Type_Tableau vaut Colonnes ou Tabulations */
-		  if (pAttr->AeAttrNum == ExceptNumAttr (EXC_ID_Largeur_Titre, pEl->ElSructSchema)
+		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Largeur_Titre, pEl->ElSructSchema)
 		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
 		     *ApplAttr = False;
 	       }
 
-	     else if (pEl->ElTypeNumber == ExceptNumType (EXC_ID_Colonne_Composee, pEl->ElSructSchema))
+	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Colonne_Composee, pEl->ElSructSchema))
 	       {
 		  /* on inhibe la regle de creation de l'attribut Filet_bas 
 		     quand l'attribut Type_Tableau vaut Lignes ou Tabulations */
-		  if (pAttr->AeAttrNum == ExceptNumAttr (EXC_ID_Filet_Bas_ColComp, pEl->ElSructSchema)
+		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Filet_Bas_ColComp, pEl->ElSructSchema)
 		  && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
 		     *ApplAttr = False;
 	       }
 
-	     else if (pEl->ElTypeNumber == ExceptNumType (EXC_ID_Ligne_Composee, pEl->ElSructSchema))
+	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Ligne_Composee, pEl->ElSructSchema))
 	       {
 		  /* on inhibe la regle de creation de l'attribut Filet_Droit 
 		     quand l'attribut Type_Tableau vaut Colonnes ou Tabulations */
-		  if (pAttr->AeAttrNum == ExceptNumAttr (EXC_ID_Filet_Droit_LigComp, pEl->ElSructSchema)
+		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Filet_Droit_LigComp, pEl->ElSructSchema)
 		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
 		     *ApplAttr = False;
 	       }
 
-	     else if (pEl->ElTypeNumber == ExceptNumType (EXC_ID_En_Tetes, pEl->ElSructSchema))
+	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_En_Tetes, pEl->ElSructSchema))
 	       {
 		  /* on inhibe la regle de creation de l'attribut Filet_Inferieur 
 		     quand l'attribut Type_Tableau vaut Lignes ou Tabulations */
-		  if (pAttr->AeAttrNum == ExceptNumAttr (EXC_ID_Filet_Inf_EnTetes, pEl->ElSructSchema)
+		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Filet_Inf_EnTetes, pEl->ElSructSchema)
 		  && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
 		     *ApplAttr = False;
 	       }
 
-	     else if (pEl->ElTypeNumber == ExceptNumType (EXC_ID_Les_Colonnes, pEl->ElSructSchema))
+	     else if (pEl->ElTypeNumber == GetElemWithException (EXC_ID_Les_Colonnes, pEl->ElSructSchema))
 	       {
 		  /* on inhibe la regle de creation de l'attribut Filet_Gauche 
 		     quand l'attribut Type_Tableau vaut Colonnes ou Tabulations */
-		  if (pAttr->AeAttrNum == ExceptNumAttr (EXC_ID_Filet_Gauche_LesCol, pEl->ElSructSchema)
+		  if (pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Filet_Gauche_LesCol, pEl->ElSructSchema)
 		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
 		     *ApplAttr = False;
 	       }
@@ -111,7 +111,7 @@ boolean             *ApplAttr;
 /* |    Tableau_PaveRef traite la regle de hauteur des filets verticaux.| */
 /* |            Cette procedure est appelee lors de l'application de    | */
 /* |            toute regle de hauteur ou de largeur elastique.         | */
-/* |            - pPav est le pave auquel on applique la regle.         | */
+/* |            - pAb est le pave auquel on applique la regle.         | */
 /* |            - pRegle est la regle a` traiter.                       | */
 /* |            - Posit definit la position qui determine la hauteur    | */
 /* |            elastique                                               | */
@@ -123,16 +123,16 @@ boolean             *ApplAttr;
 /* |            un element Bas_tableau.                                 | */
 /* |            Dans ce cas, la procedure retourne un pointeur sur le   | */
 /* |            pave du premier element BasPageTableau qui suit         | */
-/* |            l'element de pPav. Dans les autres cas, ou si le pave   | */
+/* |            l'element de pAb. Dans les autres cas, ou si le pave   | */
 /* |            cherche' n'existe pas, elle retourne NULL.              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void Tableau_PaveRef(PtrAbstractBox pPav, PosRule *Posit, PtrPRule pRegle, PtrAbstractBox *pPavBas)
+void Tableau_PaveRef(PtrAbstractBox pAb, PosRule *Posit, PtrPRule pRegle, PtrAbstractBox *pPavBas)
 
 #else  /* __STDC__ */
-void Tableau_PaveRef(pPav, Posit, pRegle, *pPavBas)
-PtrAbstractBox             pPav;
+void Tableau_PaveRef(pAb, Posit, pRegle, *pPavBas)
+PtrAbstractBox             pAb;
 PosRule           *Posit;
 PtrPRule        pRegle;
 PtrAbstractBox            *pPavBas;
@@ -145,34 +145,34 @@ PtrAbstractBox            *pPavBas;
   *pPavBas = NULL;
    if (pRegle->PrType == PtHeight)
       /* c'est bien une regle de hauteur */
-      if (pPav->AbPresentationBox)
+      if (pAb->AbPresentationBox)
 	 /* cette regle s'applique a un pave de presentation */
 	{
-	   pEl = pPav->AbElement;
-	   if (ExceptTypeElem (EXC_ID_BasTableau, Posit->PoTypeRefElem,
+	   pEl = pAb->AbElement;
+	   if (TypeHasException (EXC_ID_BasTableau, Posit->PoTypeRefElem,
 			       pEl->ElSructSchema))
 	      /* la regle exprime une position par rapport a un element */
 	      /* Bas_tableau */
-	      if (ExceptTypeElem (EXC_ID_En_Tetes, pEl->ElTypeNumber,
+	      if (TypeHasException (EXC_ID_En_Tetes, pEl->ElTypeNumber,
 				  pEl->ElSructSchema) ||
-		  ExceptTypeElem (EXC_ID_Les_Colonnes, pEl->ElTypeNumber,
+		  TypeHasException (EXC_ID_Les_Colonnes, pEl->ElTypeNumber,
 				  pEl->ElSructSchema) ||
-		  ExceptTypeElem (EXC_ID_Colonne_Simple, pEl->ElTypeNumber,
+		  TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber,
 				  pEl->ElSructSchema) ||
-		  ExceptTypeElem (EXC_ID_Colonne_Composee, pEl->ElTypeNumber,
+		  TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber,
 				  pEl->ElSructSchema))
 		 /* c'est un pave de presentation d'un element En\240T\352tes */
 		 /* Les\240Colonnes, Colonne\240Simple ou Colonne\240Compos\351e */
 		{
 		   /* supprime l'indicateur AbstractBox Actif pour eviter que le */
 		   /* filet soit affiche' en couleur */
-		   pPav->AbSensitive = False;
+		   pAb->AbSensitive = False;
 		   /* cherche le premier element Bas_tableau qui suit */
-		   pEl = AvCherche (pEl, ExceptNumType (EXC_ID_BasTableau,
+		   pEl = FwdSearchTypedElem (pEl, GetElemWithException (EXC_ID_BasTableau,
 				       pEl->ElSructSchema), pEl->ElSructSchema);
 		   if (pEl != NULL)
 		      /* retourne le pave de l'element trouve' */
-		      *pPavBas = pEl->ElAbstractBox[pPav->AbDocView - 1];
+		      *pPavBas = pEl->ElAbstractBox[pAb->AbDocView - 1];
 		}
 	}
 }
@@ -197,11 +197,11 @@ boolean            *PcLast;
 #endif /* __STDC__ */
 
 {
-   if (ExceptTypeElem (EXC_ID_Ligne_Simple, pEl->ElTypeNumber, pEl->ElSructSchema)
-   || ExceptTypeElem (EXC_ID_Ligne_Composee, pEl->ElTypeNumber, pEl->ElSructSchema))
+   if (TypeHasException (EXC_ID_Ligne_Simple, pEl->ElTypeNumber, pEl->ElSructSchema)
+   || TypeHasException (EXC_ID_Ligne_Composee, pEl->ElTypeNumber, pEl->ElSructSchema))
       /* c'est bien une ligne simple ou composee de tableau */
       if (pEl->ElParent != NULL)
-	 if (ExceptTypeElem (EXC_ID_Les_Lignes, pEl->ElParent->ElTypeNumber,
+	 if (TypeHasException (EXC_ID_Les_Lignes, pEl->ElParent->ElTypeNumber,
 			     pEl->ElParent->ElSructSchema))
 	    /* c'est une ligne du 1er niveau */
 	   {
@@ -211,7 +211,7 @@ boolean            *PcLast;
 		{
 		   *PcLast = False;
 		   if (pEl->ElNext != NULL)
-		      if (ExceptTypeElem (EXC_ID_BasTableau, pEl->ElNext->ElTypeNumber,
+		      if (TypeHasException (EXC_ID_BasTableau, pEl->ElNext->ElTypeNumber,
 					  pEl->ElNext->ElSructSchema))
 			 /* le suivant est un element BasTableau */
 			 *PcLast = True;
@@ -225,12 +225,12 @@ boolean            *PcLast;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TableauDebordeVertical (PtrPRule pRegle, PtrAbstractBox pPav)
+void                TableauDebordeVertical (PtrPRule pRegle, PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                TableauDebordeVertical (pRegle, pPav)
+void                TableauDebordeVertical (pRegle, pAb)
 PtrPRule        pRegle;
-PtrAbstractBox             pPav;
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 
@@ -243,13 +243,13 @@ PtrAbstractBox             pPav;
    if (pRegle->PrType == PtHeight || pRegle->PrType == PtVertPos)
       /* c'est une regle de hauteur ou de position verticale */
      {
-	pEl = pPav->AbElement;
-	if (ExceptTypeElem (EXC_ID_Cellule, pEl->ElTypeNumber, pEl->ElSructSchema))
+	pEl = pAb->AbElement;
+	if (TypeHasException (EXC_ID_Cellule, pEl->ElTypeNumber, pEl->ElSructSchema))
 	   /* c'est un pave d'une cellule de tableau */
 	  {
 	     /* cherche si la cellule possede l'attribut Debordement_vert */
 	     /* cherche d'abord le numero de l'attribut */
-	     attr = ExceptNumAttr (EXC_ID_Extens_Vertic, pEl->ElSructSchema);
+	     attr = GetAttrWithException (EXC_ID_Extens_Vertic, pEl->ElSructSchema);
 	     /* cherche si cet attribut est porte' par l'element */
 	     pAttr = pEl->ElFirstAttr;
 	     trouve = False;
@@ -266,13 +266,13 @@ PtrAbstractBox             pPav;
 		  /* Dans la vue "Source_View" du schema de presentation HTMLP.P */
 		  /* les cellules etendues verticalement doivent quand meme   */
 		  /* respecter l'englobement */
-		  if (pRegle->PrViewNum != 2 || strcmp (pPav->AbElement->ElSructSchema->SsName, "HTML") != 0)
-		     pPav->AbVertEnclosing = False;
+		  if (pRegle->PrViewNum != 2 || strcmp (pAb->AbElement->ElSructSchema->SsName, "HTML") != 0)
+		     pAb->AbVertEnclosing = False;
 	       }
 	     else
 		/* l'element ne porte pas (ou plus) cet attribut, le pave */
 		/* ne deborde pas (plus) verticalement de son englobant */
-		pPav->AbVertEnclosing = True;
+		pAb->AbVertEnclosing = True;
 	  }
      }
 }
@@ -280,15 +280,15 @@ PtrAbstractBox             pPav;
 
 /* HauteurPavesFilets   reapplique la regle de hauteur de toutes */
 /* les boites de presentation qui representent un filet vertical */
-/* dans le sous-arbre de pPav. */
+/* dans le sous-arbre de pAb. */
 /* verticaux */
 
 #ifdef __STDC__
-static void         HauteurPavesFilets (PtrAbstractBox pPav, int Vue, PtrDocument pDoc)
+static void         HauteurPavesFilets (PtrAbstractBox pAb, int Vue, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         HauteurPavesFilets (pPav, Vue, pDoc)
-PtrAbstractBox             pPav;
+static void         HauteurPavesFilets (pAb, Vue, pDoc)
+PtrAbstractBox             pAb;
 int                 Vue;
 PtrDocument         pDoc;
 
@@ -301,10 +301,10 @@ PtrDocument         pDoc;
    PtrPSchema          pSPR;
    PtrAttribute         pAttr;
 
-   if (pPav->AbFirstEnclosed != NULL)
+   if (pAb->AbFirstEnclosed != NULL)
       /* ce pave a des descendants, on traite tous ses fils */
      {
-	pFils = pPav->AbFirstEnclosed;
+	pFils = pAb->AbFirstEnclosed;
 	do
 	  {
 	     HauteurPavesFilets (pFils, Vue, pDoc);
@@ -314,43 +314,43 @@ PtrDocument         pDoc;
      }
    else
       /* ce pave est une feuille */
-   if (pPav->AbPresentationBox)
+   if (pAb->AbPresentationBox)
       /* c'est un pave de presentantion */
      {
-	pEl = pPav->AbElement;
-	if (ExceptTypeElem (EXC_ID_En_Tetes, pEl->ElTypeNumber,
+	pEl = pAb->AbElement;
+	if (TypeHasException (EXC_ID_En_Tetes, pEl->ElTypeNumber,
 			    pEl->ElSructSchema) ||
-	    ExceptTypeElem (EXC_ID_Les_Colonnes, pEl->ElTypeNumber,
+	    TypeHasException (EXC_ID_Les_Colonnes, pEl->ElTypeNumber,
 			    pEl->ElSructSchema) ||
-	    ExceptTypeElem (EXC_ID_Colonne_Simple, pEl->ElTypeNumber,
+	    TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber,
 			    pEl->ElSructSchema) ||
-	    ExceptTypeElem (EXC_ID_Colonne_Composee, pEl->ElTypeNumber,
+	    TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber,
 			    pEl->ElSructSchema))
 	   /* c'est un pave de presentation d'un element En_Tetes */
 	   /* Les_Colonnes, Colonne_Simple ou Colonne_Composee */
 	  {
 	     /* on cherche sa regle de hauteur */
-	     pRegle = LaRegle (pDoc, pPav, &pSPR, PtHeight, True, &pAttr);
+	     pRegle = LaRegle (pDoc, pAb, &pSPR, PtHeight, True, &pAttr);
 	     if (pRegle->PrDimRule.DrPosition)
 		/* c'est une hauteur elastique */
 		if (pRegle->PrDimRule.DrPosRule.PoRefElem)
-		   if (ExceptTypeElem (EXC_ID_BasTableau,
+		   if (TypeHasException (EXC_ID_BasTableau,
 		       pRegle->PrDimRule.DrPosRule.PoTypeRefElem, pEl->ElSructSchema))
 		      /* la regle exprime une position par rapport a un */
 		      /* element Bas_tableau */
 		      /*c'est bien un filet vertical, on reapplique la regle */
-		      if (Applique (pRegle, pSPR, pPav, pDoc, pAttr))
+		      if (Applique (pRegle, pSPR, pAb, pDoc, pAttr))
 			{
 			   /* indique que la hauteur du pave' a change' */
-			   pPav->AbHeightChange = True;
+			   pAb->AbHeightChange = True;
 			   /* conserve le pointeur sur le pave a reafficher */
 			   if (VueAssoc (pEl))
 			      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-				 Englobant (pPav, pDoc->DocAssocModifiedAb[pEl->
+				 Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->
 							   ElAssocNum - 1]);
 			   else
 			      pDoc->DocViewModifiedAb[Vue - 1] =
-				 Englobant (pPav, pDoc->DocViewModifiedAb[Vue - 1]);
+				 Englobant (pAb, pDoc->DocViewModifiedAb[Vue - 1]);
 			}
 	  }
      }
@@ -373,16 +373,16 @@ PtrDocument         pDoc;
 
 {
    PtrElement          pEl;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    int                 vue;
    int                 NType;
    boolean             stop;
 
    /* cherche l'element precedent de type En_Tetes */
    pEl = NULL;
-   NType = ExceptNumType (EXC_ID_En_Tetes, pBasTableau->ElSructSchema);
+   NType = GetElemWithException (EXC_ID_En_Tetes, pBasTableau->ElSructSchema);
    if (NType != 0)
-      pEl = ArCherche (pBasTableau, NType, pBasTableau->ElSructSchema);
+      pEl = BackSearchTypedElem (pBasTableau, NType, pBasTableau->ElSructSchema);
    if (pEl != NULL)
       /* pEl est l'element En_Tetes dont on doit recalculer les filets */
       /* on examine tous les paves de l'element En_tetes dans toutes */
@@ -390,20 +390,20 @@ PtrDocument         pDoc;
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	{
 	   /* premier pave de l'element En_Tetes dans la vue courante */
-	   pPav = pEl->ElAbstractBox[vue - 1];
+	   pAb = pEl->ElAbstractBox[vue - 1];
 	   stop = False;
 	   do
-	      if (pPav == NULL)
+	      if (pAb == NULL)
 		 stop = True;
-	      else if (pPav->AbElement != pEl)
+	      else if (pAb->AbElement != pEl)
 		 /* ce pave n'appartient pas a l'element En_Tetes */
 		 stop = True;
 	      else
 		{
 		   /* traite les hauteurs des filets de ce sous-arbre */
-		   HauteurPavesFilets (pPav, vue, pDoc);
+		   HauteurPavesFilets (pAb, vue, pDoc);
 		   /* passe au pave suivant */
-		   pPav = pPav->AbNext;
+		   pAb = pAb->AbNext;
 		}
 	   while (!stop);
 	}
@@ -427,47 +427,47 @@ PtrDocument         pDoc;
 {
    PtrElement          pEl;
    int                 vue;
-   PtrAbstractBox             pPav;
+   PtrAbstractBox             pAb;
    boolean             trouve;
 
    /* supprime le filet horizontal du bas de la ligne precedente */
    pEl = pElPage->ElPrevious;	/* element precedent le saut de page */
    if (pEl != NULL)
-      if (ExceptTypeElem (EXC_ID_Ligne_Simple, pEl->ElTypeNumber, pEl->ElSructSchema) ||
-      ExceptTypeElem (EXC_ID_Ligne_Composee, pEl->ElTypeNumber, pEl->ElSructSchema))
+      if (TypeHasException (EXC_ID_Ligne_Simple, pEl->ElTypeNumber, pEl->ElSructSchema) ||
+      TypeHasException (EXC_ID_Ligne_Composee, pEl->ElTypeNumber, pEl->ElSructSchema))
 	 /* c'est bien une ligne de tableau */
 	 /* on examine toutes les vues du document */
 	 for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	   {
-	      pPav = pEl->ElAbstractBox[vue - 1];	/* 1er pave de la ligne */
+	      pAb = pEl->ElAbstractBox[vue - 1];	/* 1er pave de la ligne */
 	      trouve = False;
-	      while (pPav != NULL && !trouve)
-		 if (pPav->AbElement != pEl)
+	      while (pAb != NULL && !trouve)
+		 if (pAb->AbElement != pEl)
 		    /* ce pave n'appartient pas a la ligne, fin de la */
 		    /* recherche */
-		    pPav = NULL;
+		    pAb = NULL;
 		 else
 		   {
-		      if (pPav->AbPresentationBox)
-			 if (pPav->AbLeafType == LtGraphics)
+		      if (pAb->AbPresentationBox)
+			 if (pAb->AbLeafType == LtGraphics)
 			    /* c'est un pave de presentation graphique */
 			    trouve = True;
 		      if (!trouve)
 			 /* passe au pave suivant */
-			 pPav = pPav->AbNext;
+			 pAb = pAb->AbNext;
 		   }
 	      if (trouve)
 		{
 		   /* detruit le pave trouve' */
-		   TuePave (pPav);
+		   TuePave (pAb);
 		   /* conserve le pointeur sur le pave a reafficher */
 		   if (VueAssoc (pEl))
 		      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			 Englobant (pPav, pDoc->DocAssocModifiedAb[pEl->
+			 Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->
 							   ElAssocNum - 1]);
 		   else
 		      pDoc->DocViewModifiedAb[vue - 1] =
-			 Englobant (pPav, pDoc->DocViewModifiedAb[vue - 1]);
+			 Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
 		}
 	   }
 }
@@ -514,13 +514,13 @@ boolean             Restrict;
 		    {
 		       if (pE->ElSource == NULL)	/* ce n'est pas une copie */
 			 {
-			    if (ExceptTypeElem (TypeExcept, pE->ElTypeNumber, pE->ElSructSchema))	/* exception ok */
+			    if (TypeHasException (TypeExcept, pE->ElTypeNumber, pE->ElSructSchema))	/* exception ok */
 			      {
 				 Repetition = pE;	/* c'est donc le bon */
 				 break;
 			      }
 			    else
-			       /* recursion si l'element ne porte pas l'exception ExcPageBreak */ if (!ExceptTypeElem (ExcPageBreak, pE->ElTypeNumber, pE->ElSructSchema))
+			       /* recursion si l'element ne porte pas l'exception ExcPageBreak */ if (!TypeHasException (ExcPageBreak, pE->ElTypeNumber, pE->ElSructSchema))
 			       ChercheRepetition (pE, StopElem, TypeExcept, Restrict);
 			 }
 		    }
@@ -565,13 +565,13 @@ boolean             *coupe;
 	   fin = True;
 	else
 	  {
-	     if (ExceptTypeElem (ExcPageBreak, pSpecial->ElTypeNumber,
+	     if (TypeHasException (ExcPageBreak, pSpecial->ElTypeNumber,
 				 pSpecial->ElSructSchema))
 		/* cet element demande une coupure speciale */
 	       {
 		  *coupe = True;
 		  /* cas particulier des tableaux */
-		  if (ExceptTypeElem (EXC_ID_Les_Lignes, pElPage->ElParent->ElTypeNumber,
+		  if (TypeHasException (EXC_ID_Les_Lignes, pElPage->ElParent->ElTypeNumber,
 				      pElPage->ElParent->ElSructSchema))
 		     /* supprime le filet horizontal du bas de la ligne precedente */
 		     if (VueNb == 0)	/* inutile lors de la pagination */
@@ -582,28 +582,28 @@ boolean             *coupe;
 		  if (pACopier != NULL)
 		     /* il y a bien un element a repeter avant le saut de page */
 		    {
-		       pEl = CreeSArbre (pACopier->ElTypeNumber, pACopier->ElSructSchema,
+		       pEl = NewSubtree (pACopier->ElTypeNumber, pACopier->ElSructSchema,
 				    pDoc, pACopier->ElAssocNum, False, True,
 					 True, True);
 		       GetReference (&pEl->ElSource);
 		       if (pEl->ElSource == NULL)
-			  Supprime (&pEl);
+			  DeleteElement (&pEl);
 		       else
 			 {
 			    pEl->ElSource->RdElement = pEl;
 			    pEl->ElSource->RdTypeRef = RefInclusion;
 			    /* insere l'element cree' dans l'arbre abstrait */
-			    InsAvant (pElPage, pEl);
+			    InsertElementBefore (pElPage, pEl);
 			    /* lie l'inclusion a l'element trouve' */
-			    if (LieReference (pEl, NULL, pACopier, pDoc, pDoc, False, False))
+			    if (SetReference (pEl, NULL, pACopier, pDoc, pDoc, False, False))
 			       /* l'element a inclure est connu, on le copie */
-			       CopieInclus (pEl, pDoc);
+			       CopyIncludedElem (pEl, pDoc);
 			    /* cree les paves du nouvel element */
 			    CreeTousPaves (pEl, pDoc);
 			 }
 		       if (VueNb == 0)
 			  /* cas particulier des tableaux */
-			  if (ExceptTypeElem (EXC_ID_Les_Lignes, pElPage->ElParent->ElTypeNumber,
+			  if (TypeHasException (EXC_ID_Les_Lignes, pElPage->ElParent->ElTypeNumber,
 					      pElPage->ElParent->ElSructSchema))
 			     /* reapplique les regles de hauteur des filets verticaux */
 			     HauteurFilets (pEl, pDoc);
@@ -617,23 +617,23 @@ boolean             *coupe;
 		  if (pACopier != NULL)
 		     /* il y a bien un element a repeter apres le saut de page */
 		    {
-		       pEl = CreeSArbre (pACopier->ElTypeNumber, pACopier->ElSructSchema,
+		       pEl = NewSubtree (pACopier->ElTypeNumber, pACopier->ElSructSchema,
 				    pDoc, pACopier->ElAssocNum, False, True,
 					 True, True);
 		       /* associe un bloc reference a l'element cree' */
 		       GetReference (&pEl->ElSource);
 		       if (pEl->ElSource == NULL)
-			  Supprime (&pEl);
+			  DeleteElement (&pEl);
 		       else
 			 {
 			    pEl->ElSource->RdElement = pEl;
 			    pEl->ElSource->RdTypeRef = RefInclusion;
 			    /* insere l'element cree dans l'arbre abstrait */
-			    InsApres (pElPage, pEl);
+			    InsertElementAfter (pElPage, pEl);
 			    /* lie l'inclusion a l'element trouve' */
-			    if (LieReference (pEl, NULL, pACopier, pDoc, pDoc, False, False))
+			    if (SetReference (pEl, NULL, pACopier, pDoc, pDoc, False, False))
 			       /* l'element a inclure est connu, on le copie */
-			       CopieInclus (pEl, pDoc);
+			       CopyIncludedElem (pEl, pDoc);
 			    /* cree les paves du nouvel element */
 			    CreeTousPaves (pEl, pDoc);
 			 }
@@ -670,7 +670,7 @@ PtrDocument         pDoc;
      {
 	if (Prec == NULL)
 	   stop = True;		/* pas d'autre element precedent */
-	else if (!ExceptTypeElem (ExcPageBreakRepBefore, Prec->ElTypeNumber,
+	else if (!TypeHasException (ExcPageBreakRepBefore, Prec->ElTypeNumber,
 				  Prec->ElSructSchema))
 	   /* l'element precedent n'est pas une repetition */
 	   stop = True;
@@ -681,7 +681,7 @@ PtrDocument         pDoc;
 	   /* il faut supprimer cet element precedent */
 	  {
 	     Prec1 = Prec->ElPrevious;
-	     Supprime (&Prec);
+	     DeleteElement (&Prec);
 	     Prec = Prec1;
 	  }
      }
@@ -692,7 +692,7 @@ PtrDocument         pDoc;
      {
 	if (Suiv == NULL)
 	   stop = True;		/* pas d'autre element suivant */
-	else if (!ExceptTypeElem (ExcPageBreakRepetition, Suiv->ElTypeNumber,
+	else if (!TypeHasException (ExcPageBreakRepetition, Suiv->ElTypeNumber,
 				  Suiv->ElSructSchema))
 	   /* l'element suivant n'est pas une repetition */
 	   stop = True;
@@ -703,7 +703,7 @@ PtrDocument         pDoc;
 	   /* il faut supprimer cet element suivant */
 	  {
 	     Suiv1 = Suiv->ElNext;
-	     Supprime (&Suiv);
+	     DeleteElement (&Suiv);
 	     Suiv = Suiv1;
 	  }
      }
@@ -737,7 +737,7 @@ int                 VueNb;
      {
 	if (Prec == NULL)
 	   stop = True;		/* pas d'autre element precedent */
-	else if (!ExceptTypeElem (ExcPageBreakRepBefore, Prec->ElTypeNumber,
+	else if (!TypeHasException (ExcPageBreakRepBefore, Prec->ElTypeNumber,
 				  Prec->ElSructSchema))
 	   /* l'element precedent n'est pas une repetition */
 	   stop = True;
@@ -758,7 +758,7 @@ int                 VueNb;
      {
 	if (Suiv == NULL)
 	   stop = True;		/* pas d'autre element suivant */
-	else if (!ExceptTypeElem (ExcPageBreakRepetition, Suiv->ElTypeNumber,
+	else if (!TypeHasException (ExcPageBreakRepetition, Suiv->ElTypeNumber,
 				  Suiv->ElSructSchema))
 	   /* l'element suivant n'est pas une repetition */
 	   stop = True;

@@ -20,13 +20,13 @@
 #include "structure.f"
 
 /* ---------------------------------------------------------------------- */
-/* |    ExceptTypeElem retourne Vrai si le numero d'exception exceptNum | */
+/* |    TypeHasException retourne Vrai si le numero d'exception exceptNum | */
 /* |            est associe' au type typeNum du schema de structure pSS	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             ExceptTypeElem (int exceptNum, int typeNum, PtrSSchema pSS)
+boolean             TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 #else  /* __STDC__ */
-boolean             ExceptTypeElem (exceptNum, typeNum, pSS)
+boolean             TypeHasException (exceptNum, typeNum, pSS)
 int                 exceptNum;
 int                 typeNum;
 PtrSSchema        pSS;
@@ -63,7 +63,7 @@ PtrSSchema        pSS;
 	     while (pExtSS != NULL && !ret)
 	       {
 		  /* cherche la regle d'extension du type d'element traite' */
-		  pSRule = RegleExtens (pSS, typeNum, pExtSS);
+		  pSRule = ExtensionRule (pSS, typeNum, pExtSS);
 		  if (pSRule != NULL)
 		     /* examine les exceptions de cette regle d'extension */
 		     if (pSRule->SrFirstExcept != 0)
@@ -86,16 +86,16 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ExceptAttr retourne Vrai si le numero d'exception exceptNum est | */
+/* |    AttrHasException retourne Vrai si le numero d'exception exceptNum est | */
 /* |            associe' a` l'attribut attr defini dans le schema de    | */
 /* |            structure pSS.						| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ExceptAttr (int exceptNum, int attr, PtrSSchema pSS)
+boolean             AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             ExceptAttr (exceptNum, attr, pSS)
+boolean             AttrHasException (exceptNum, attr, pSS)
 int                 exceptNum;
 int                 attr;
 PtrSSchema        pSS;
@@ -129,17 +129,17 @@ PtrSSchema        pSS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ExceptNumAttr recherche dans le schema de structure pSS		| */
+/* |    GetAttrWithException recherche dans le schema de structure pSS		| */
 /* |            l'attribut auquel est associe' le numero d'exception	| */
 /* |            exceptNum et retourne son numero d'attribut.		| */
 /* |            Retourne 0 en cas d'echec.				| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 ExceptNumAttr (int exceptNum, PtrSSchema pSS)
+int                 GetAttrWithException (int exceptNum, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-int                 ExceptNumAttr (exceptNum, pSS)
+int                 GetAttrWithException (exceptNum, pSS)
 int                 exceptNum;
 PtrSSchema        pSS;
 
@@ -155,7 +155,7 @@ PtrSSchema        pSS;
       while (ret == 0 && attr < pSS->SsNAttributes)
 	{
 	   attr++;
-	   if (ExceptAttr (exceptNum, attr, pSS))
+	   if (AttrHasException (exceptNum, attr, pSS))
 	      /* on a trouve' l'attribut cherche' */
 	      ret = attr;
 	}
@@ -163,17 +163,17 @@ PtrSSchema        pSS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ExceptNumType recherche dans le schema de structure pSS	le	| */
+/* |    GetElemWithException recherche dans le schema de structure pSS	le	| */
 /* |            type d'element auquel est associe' le numero		| */
 /* |            d'exception exceptNum et retourne son numero de type.	| */
 /* |            Retourne 0 en cas d'echec.				| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 ExceptNumType (int exceptNum, PtrSSchema pSS)
+int                 GetElemWithException (int exceptNum, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-int                 ExceptNumType (exceptNum, pSS)
+int                 GetElemWithException (exceptNum, pSS)
 int                 exceptNum;
 PtrSSchema        pSS;
 
@@ -188,7 +188,7 @@ PtrSSchema        pSS;
    while (ret == 0 && typ < pSS->SsNRules)
      {
 	typ++;
-	if (ExceptTypeElem (exceptNum, typ, pSS))
+	if (TypeHasException (exceptNum, typ, pSS))
 	   /* on a trouve' le type d'element cherche' */
 	   ret = typ;
      }

@@ -240,15 +240,15 @@ PtrDocument         pDoc;
 	  }
 	pDoc->DocComment = NULL;
 	/* libere tout l'arbre du document et ses descripteurs de reference */
-	Supprime (&pDoc->DocRootElement);
+	DeleteElement (&pDoc->DocRootElement);
 	/* libere les elements associes */
 	for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	   if (pDoc->DocAssocRoot[i - 1] != NULL)
-	      Supprime (&pDoc->DocAssocRoot[i - 1]);
+	      DeleteElement (&pDoc->DocAssocRoot[i - 1]);
 	/* libere les parametres */
 	for (i = 1; i <= MAX_PARAM_DOC; i++)
 	   if (pDoc->DocParameters[i - 1] != NULL)
-	      Supprime (&pDoc->DocParameters[i - 1]);
+	      DeleteElement (&pDoc->DocParameters[i - 1]);
 	/* libere le 1er descripteur de reference (bidon) */
 	FreeDescReference (pDoc->DocReferredEl);
 	pDoc->DocReferredEl = NULL;

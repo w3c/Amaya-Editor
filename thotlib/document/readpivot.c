@@ -529,7 +529,7 @@ boolean             oldformat;
 		       {
 			  b->BuLength = n;
 			  b->BuContent[n] = '\0';
-			  b = NewBufTexte (b);
+			  b = NewTextBuffer (b);
 			  n = 0;
 
 		       }
@@ -891,7 +891,7 @@ PtrDocument         pDoc;
       /* on n'a pas trouve' le descripteur */
       /* on cree et chaine un nouveau descripteur */
      {
-	pr = NewRef (pDoc);
+	pr = NewReferredElDescr (pDoc);
 	/* on initialise le descripteur de reference cree'. */
 	pDe1 = pr;
 	strncpy (pDe1->ReReferredLabel, Lab, MAX_LABEL_LEN);
@@ -1225,7 +1225,7 @@ PtrDocument         pDoc;
 	       {
 		  /* cherche dans ce schema d'extension la regle qui concerne */
 		  /* le type de l'element */
-		  pRegle = RegleExtens (pEl->ElSructSchema, pEl->ElTypeNumber, pSS);
+		  pRegle = ExtensionRule (pEl->ElSructSchema, pEl->ElTypeNumber, pSS);
 		  if (pRegle != NULL)
 		     /* il y a une regle d'extension, on la traite */
 		     VerifAttrRequis1Regle (pEl, pRegle, pSS);
@@ -1290,14 +1290,14 @@ PtrAttribute        *pAttr;
    BIOreadShort (fichpiv, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
      {
-	PivotFormatError ("Nature Num Attr ");
+	PivotFormatError ("Nature Num GetAttributeOfElement ");
 	PivotError (fichpiv);
      }
    else
       pSchAttr = pDoc->DocNatureSSchema[n];
    if (pSchAttr == NULL)
      {
-	PivotFormatError ("Nature Attr");
+	PivotFormatError ("Nature GetAttributeOfElement");
 	PivotError (fichpiv);
      }
    BIOreadShort (fichpiv, &attr);	/* lit l'attribut */
@@ -1359,7 +1359,7 @@ PtrAttribute        *pAttr;
 			    {
 			       pBT->BuContent[pBT->BuLength] = '\0';	/* fin du buffer */
 			       /* acquiert un nouveau buffer */
-			       pBT = NewBufTexte (pBT);
+			       pBT = NewTextBuffer (pBT);
 			    }
 		       while (!(error || stop)) ;
 		       pBT->BuLength--;
@@ -1383,7 +1383,7 @@ PtrAttribute        *pAttr;
 	else
 	  {
 	     /* Si c'est un attribut impose', a valeur fixe ou modifiable, */
-	     /* il a deja ete cree' par CreeSArbre. On cherche si l'element */
+	     /* il a deja ete cree' par NewSubtree. On cherche si l'element */
 	     /* possede deja cet attribut */
 	     trouve = False;
 	     if (pEl != NULL)
@@ -1870,7 +1870,7 @@ PtrDocument         pDoc;
 	if (SendAttributeMessage (&notifyAttr, True))
 	   /* l'application ne veut pas lire l'attribut */
 	   /* on l'avait deja lu, on le retire */
-	   AttrSupprime (pEl, pAttr);
+	   DeleteAttribute (pEl, pAttr);
 	else
 	  {
 	     /* prepare et envoie le message AttrRead.Post s'il est demande' */
@@ -2113,7 +2113,7 @@ boolean             creedesc;
 		  else
 		     parametre = False;
 		  /* il ne faut pas que le label max. du document augmente */
-		  pEl = CreeSArbre (TypeElement, pSchStr, pDoc, NAssoc, False, True, False, False);
+		  pEl = NewSubtree (TypeElement, pSchStr, pDoc, NAssoc, False, True, False, False);
 		  if (pEl != NULL)
 		     pEl->ElLabel[0] = '\0';
 		  if (parametre)
@@ -2398,7 +2398,7 @@ boolean             creedesc;
 								  pEl->ElTextLength += n;
 								  b->BuLength = n;
 								  b->BuContent[n] = '\0';
-								  b = NewBufTexte (b);
+								  b = NewTextBuffer (b);
 								  n = 0;
 							       }
 							     n++;
@@ -2547,7 +2547,7 @@ boolean             creedesc;
 							       if (j >= MAX_POINT_POLY)
 								  /* buffer courant plein */
 								 {
-								    b = NewBufTexte (b);
+								    b = NewTextBuffer (b);
 								    j = 0;
 								 }
 							       BIOreadInteger (fichpiv, &b->BuPoints[j].XCoord);
@@ -2630,7 +2630,7 @@ boolean             creedesc;
 						   {
 						      if (pEl != NULL)
 							 pEl->ElParent = NULL;
-						      InsApres (ElPreced, p);
+						      InsertElementAfter (ElPreced, p);
 						      if (pEl != NULL)
 							 pEl->ElParent = Pere;
 						   }
@@ -2648,16 +2648,16 @@ boolean             creedesc;
 								    pEl2 = p;
 								    /* il ne faut pas que le label */
 								    /* max. du document augmente */
-								    pElInt = CreeSArbre (pEl2->ElSructSchema->SsRootElem,
+								    pElInt = NewSubtree (pEl2->ElSructSchema->SsRootElem,
 											 pEl2->ElSructSchema,
 											 pDoc, NAssoc, False, True, False, False);
 
 								    pElInt->ElLabel[0] = '\0';
-								    AjPremFils (pElInt, p);
+								    InsertFirstChild (pElInt, p);
 								    p = pElInt;
 								 }
 						      pEl->ElParent = NULL;
-						      AjPremFils (pEl, p);
+						      InsertFirstChild (pEl, p);
 						      pEl->ElParent = Pere;
 						   }
 						 else
@@ -2725,7 +2725,7 @@ PtrDocument         pDoc;
     {
       if (pEl->ElPrevious != NULL)
 	{
-	  if (!VoisinPossible (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
+	  if (!AllowedSibling (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
 			       pEl->ElSructSchema, False, False, True))
 	    {
 	      ok = False;
@@ -2737,7 +2737,7 @@ PtrDocument         pDoc;
 	}
       else if (pEl->ElParent != NULL)
 	{
-	  if (!PremierFilsPossible (pEl->ElParent, pDoc, pEl->ElTypeNumber,
+	  if (!AllowedFirstChild (pEl->ElParent, pDoc, pEl->ElTypeNumber,
 				    pEl->ElSructSchema, False, True))
 	    {
 	      ok = False;
@@ -2781,7 +2781,7 @@ PtrElement          pRacine;
    /* cherche tous les elements produits par le constructeur CsPairedElement */
    while (pEl1 != NULL)
      {
-	pEl1 = AvChercheVideOuRefer (pEl1, 3);
+	pEl1 = FwdSearchRefOrEmptyElem (pEl1, 3);
 	if (pEl1 != NULL)
 	   /* on a trouve' un element de paire */
 	   if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrFirstOfPair)
@@ -2792,7 +2792,7 @@ PtrElement          pRacine;
 		trouve = False;
 		do
 		  {
-		     pEl2 = AvCherche (pEl2, pEl1->ElTypeNumber + 1, pEl1->ElSructSchema);
+		     pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1, pEl1->ElSructSchema);
 		     if (pEl2 != NULL)
 			/* on a trouve' un element du type cherche' */
 			/* c'est le bon s'il a le meme identificateur */
@@ -3362,7 +3362,7 @@ boolean             WithAPPEvent;
 		if (!error)
 		  {
 		     /* retire les elements exclus (au sens SGML) */
-		     RetireExclus (&p);
+		     RemoveExcludedElem (&p);
 		     /* accouple les paires */
 		     AccouplePaires (p);
 		     pDoc->DocParameters[i - 1] = p;
@@ -3405,7 +3405,7 @@ boolean             WithAPPEvent;
 		  /* On retire les elements exclus (au sens SGML) */
 		  if (p != NULL)
 		    {
-		       RetireExclus (&pDoc->DocAssocRoot[assoc - 1]);
+		       RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
 		       /* accouple les paires */
 		       AccouplePaires (p);
 		    }
@@ -3432,7 +3432,7 @@ boolean             WithAPPEvent;
 			       if (premier == NULL)
 				  premier = s;
 			       if (p != NULL)
-				  InsApres (p, s);
+				  InsertElementAfter (p, s);
 			       p = s;
 			    }
 		       }
@@ -3449,7 +3449,7 @@ boolean             WithAPPEvent;
 			    do
 			      {
 				 if (pSchS1->SsRule[j - 1].SrConstruct == CsList)
-				    if (Equivalent (pSchS1->SsRule[j - 1].SrListItem,
+				    if (EquivalentSRules (pSchS1->SsRule[j - 1].SrListItem,
 						 pSchS1, typelu, pSS, NULL))
 				       found = True;
 				 if (!found)
@@ -3470,14 +3470,14 @@ boolean             WithAPPEvent;
 		       else
 			  /* cree l'element liste pour ce type d'elements associes */
 			 {
-			    pDoc->DocAssocRoot[assoc - 1] = CreeSArbre (j, pSchS1,
+			    pDoc->DocAssocRoot[assoc - 1] = NewSubtree (j, pSchS1,
 			      pDoc, assoc, False, True, False, True);
 			    if (premier != NULL)
 			      {
 				 /* chaine le 1er elem. associe dans cette liste */
-				 AjPremFils (pDoc->DocAssocRoot[assoc - 1], premier);
+				 InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], premier);
 				 /* retire les elements exclus (au sens SGML) */
-				 RetireExclus (&pDoc->DocAssocRoot[assoc - 1]);
+				 RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
 				 /* accouple les paires */
 				 AccouplePaires (pDoc->DocAssocRoot[assoc - 1]);
 			      }
@@ -3497,11 +3497,11 @@ boolean             WithAPPEvent;
 		       if (s != NULL)
 			 {
 			    if (p == NULL)
-			       AjPremFils (pDoc->DocAssocRoot[assoc - 1], s);
+			       InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], s);
 			    else
-			       InsApres (p, s);
+			       InsertElementAfter (p, s);
 			    /* retire les elements exclus (au sens SGML) */
-			    RetireExclus (&s);
+			    RemoveExcludedElem (&s);
 			    /* accouple les paires */
 			    AccouplePaires (s);
 			    if (s != NULL)
@@ -3546,19 +3546,19 @@ boolean             WithAPPEvent;
 			/* force la creation d'un element racine */
 			if (p == NULL)
 			   /* rien n'a ete cree */
-			   p = CreeSArbre (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
+			   p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
 					   False, True, True, True);
 			else if (p->ElSructSchema != pDoc->DocSSchema
 				 || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
 			   /* ce n'est pas la racine attendue */
 			  {
 			     s = p;
-			     p = CreeSArbre (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
+			     p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
 					     False, True, True, True);
-			     AjPremFils (p, s);
+			     InsertFirstChild (p, s);
 			  }
 			/* traite les elements exclus (au sens SGML) */
-			RetireExclus (&p);
+			RemoveExcludedElem (&p);
 			/* accouple les paires */
 			AccouplePaires (p);
 			pDoc->DocRootElement = p;
@@ -3657,7 +3657,7 @@ boolean             WithAPPEvent;
 			       if (ChargeDocExt)
 				  /* l'element inclus est-il accessible ? */
 				 {
-				    pSource = ElemRefer (pRef, &IdentDocSource, &pDocSource);
+				    pSource = ReferredElement (pRef, &IdentDocSource, &pDocSource);
 				    if (pSource == NULL)
 				       if (!IdentDocNul (IdentDocSource))
 					  if (pDocSource == NULL)
@@ -3675,7 +3675,7 @@ boolean             WithAPPEvent;
 						  /* on a trouve' une entree libre, on */
 						  /* charge  le document externe */
 						 {
-						    CreeDocument (&TabDocExt[NumDocExt - 1]);
+						    CreateDocument (&TabDocExt[NumDocExt - 1]);
 						    if (TabDocExt[NumDocExt - 1] != NULL)
 						      {
 							 CopyIdentDoc (&TabDocExt[NumDocExt - 1]->DocIdent, IdentDocSource);
@@ -3706,7 +3706,7 @@ boolean             WithAPPEvent;
 				 }
 			       /* il s'agit plus precisement de l'inclusion */
 			       /* d'un document externe */
-			       CopieInclus (pRef->RdElement, pDoc);
+			       CopyIncludedElem (pRef->RdElement, pDoc);
 			    }
 		       pRef = pRef->RdNext;
 		       /* passe a la reference suivante */
@@ -3735,18 +3735,18 @@ boolean             WithAPPEvent;
 		     }
 	     /* verifie que les racines de tous les arbres du document possedent */
 	     /* bien un attribut langue */
-	     VerifieLangueRacine (pDoc, pDoc->DocRootElement);
+	     CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 	     pDoc->DocRootElement->ElAccess = AccessReadWrite;
 	     for (i = 1; i <= MAX_PARAM_DOC; i++)
 		if (pDoc->DocParameters[i - 1] != NULL)
 		  {
-		     VerifieLangueRacine (pDoc, pDoc->DocParameters[i - 1]);
+		     CheckLanguageAttr (pDoc, pDoc->DocParameters[i - 1]);
 		     pDoc->DocParameters[i - 1]->ElAccess = AccessReadOnly;
 		  }
 	     for (i = 1; i <= MAX_ASSOC_DOC; i++)
 		if (pDoc->DocAssocRoot[i - 1] != NULL)
 		  {
-		     VerifieLangueRacine (pDoc, pDoc->DocAssocRoot[i - 1]);
+		     CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[i - 1]);
 		     pDoc->DocAssocRoot[i - 1]->ElAccess = AccessReadWrite;
 		  }
 	     if (ThotLocalActions[T_indexschema] != NULL)

@@ -54,7 +54,7 @@ int                 Val;
    PtrAttribute         pAt1;
 
    pEl1 = pEl;
-   attr = ExceptNumAttr (NumExcept, pSS);
+   attr = GetAttrWithException (NumExcept, pSS);
 
    /* verifie que l'element ne porte pas deja cet attribut */
    pAttr = pEl1->ElFirstAttr;
@@ -103,7 +103,7 @@ PtrDocument         pDoc;
 
    ret = False;
    if (pEl->ElParent != NULL)
-      if (ExceptTypeElem (ExcExtendedSelection, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
+      if (TypeHasException (ExcExtendedSelection, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
 	 /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	 /* d'un dessin */
 	{
@@ -184,7 +184,7 @@ PtrAttribute        *pAttr;
 		  if (trouve)
 		     /* l'attribut courant est exclusif du nouvel attribut, on */
 		     /* le supprime */
-		     AttrSupprime (*pEl, pA);
+		     DeleteAttribute (*pEl, pA);
 	       }
 	     pA = pASuiv;
 	     /* passe a l'attribut suivant de l'element */
@@ -223,7 +223,7 @@ PtrElement          pEl;
 
 
    if (pEl->ElParent != NULL)
-      if (ExceptTypeElem (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
+      if (TypeHasException (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
 	 /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	 /* d'un dessin */
 	 /* Les quatre attributs de position verticale (PositionV, */
@@ -250,8 +250,8 @@ PtrElement          pEl;
 		ok = TraiteAjAttr_DrawAjAttr (Ens, &pEl, pAttr);
 		if (!ok)
 		   /* Le nouvel attribut est-il un attribut de boite elastique ? */
-		   if (ExceptAttr (361, (*pAttr)->AeAttrNum, (*pAttr)->AeAttrSSchema) ||
-		       ExceptAttr (362, (*pAttr)->AeAttrNum, (*pAttr)->AeAttrSSchema))
+		   if (AttrHasException (361, (*pAttr)->AeAttrNum, (*pAttr)->AeAttrSSchema) ||
+		       AttrHasException (362, (*pAttr)->AeAttrNum, (*pAttr)->AeAttrSSchema))
 		      /* c'est un attribut de boite elastique */
 		      /* Verifie que la boite elastique ne fait pas reference a */
 		      /* elle-meme */
@@ -272,7 +272,7 @@ PtrElement          pEl;
 			if (!ok)
 			   /* l'attribut est incorrect, on le supprime */
 			  {
-			     AttrSupprime (pEl, *pAttr);
+			     DeleteAttribute (pEl, *pAttr);
 			     *pAttr = NULL;
 			  }
 			else
@@ -301,7 +301,7 @@ PtrElement          pEl;
 						  /* l'attribut a une des exception  identifiant un */
 						  /* attribut a supprimer, on supprime l'attribut */
 						 {
-						    AttrSupprime (pEl, pA);
+						    DeleteAttribute (pEl, pA);
 						    pA = NULL;
 						 }
 					       else
@@ -423,7 +423,7 @@ PtrElement          pEl;
 
    if (pEl != NULL)
       if (pEl->ElParent != NULL)
-	 if (ExceptTypeElem (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
+	 if (TypeHasException (ExcIsDraw, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
 	    /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	    /* d'un dessin */
 	    /* Un au moins des attributs suivants doit etre present : PositionV, */

@@ -52,11 +52,11 @@ int                *YOrg;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
-   pFe1 = &FntrTable[frame - 1];
-   *XOrg = pFe1->FrXOrg;
-   *YOrg = pFe1->FrYOrg;
+   pFrame = &FntrTable[frame - 1];
+   *XOrg = pFrame->FrXOrg;
+   *YOrg = pFrame->FrYOrg;
 }
 /*fin */
 
@@ -79,64 +79,64 @@ int                 yf;
 
 {
    int                 large, haut;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
    if (frame > 0 && frame <= MAX_FRAME)
      {
-	pFe1 = &FntrTable[frame - 1];
+	pFrame = &FntrTable[frame - 1];
 	/* Faut-il prendre toute la largeur de la fenetre? */
 	if (xd == xf && xd == -1)
 	  {
 	     DimFenetre (frame, &large, &haut);
-	     pFe1->FrClipXBegin = pFe1->FrXOrg;
-	     pFe1->FrClipXEnd = large + pFe1->FrXOrg;
+	     pFrame->FrClipXBegin = pFrame->FrXOrg;
+	     pFrame->FrClipXEnd = large + pFrame->FrXOrg;
 	  }
 	/* On termine un reaffichage */
 	else if (xd == xf && xd == 0)
 	  {
-	     pFe1->FrClipXBegin = 0;
-	     pFe1->FrClipXEnd = 0;
+	     pFrame->FrClipXBegin = 0;
+	     pFrame->FrClipXEnd = 0;
 	  }
 	/* Faut-il initialiser la zone de reaffichage? */
-	else if (pFe1->FrClipXBegin == pFe1->FrClipXEnd && pFe1->FrClipXBegin == 0)
+	else if (pFrame->FrClipXBegin == pFrame->FrClipXEnd && pFrame->FrClipXBegin == 0)
 	  {
-	     pFe1->FrClipXBegin = xd;
-	     pFe1->FrClipXEnd = xf;
+	     pFrame->FrClipXBegin = xd;
+	     pFrame->FrClipXEnd = xf;
 	  }
 	/* On met a jour la zone de reaffichage */
 	else
 	  {
-	     if (pFe1->FrClipXBegin > xd)
-		pFe1->FrClipXBegin = xd;
-	     if (pFe1->FrClipXEnd < xf)
-		pFe1->FrClipXEnd = xf;
+	     if (pFrame->FrClipXBegin > xd)
+		pFrame->FrClipXBegin = xd;
+	     if (pFrame->FrClipXEnd < xf)
+		pFrame->FrClipXEnd = xf;
 	  }
 	/* Faut-il prendre toute la hauteur de la fenetre? */
 	if (yd == yf && yd == -1)
 	  {
 	     DimFenetre (frame, &large, &haut);
-	     pFe1->FrClipYBegin = pFe1->FrYOrg;
-	     pFe1->FrClipYEnd = haut + pFe1->FrYOrg;
+	     pFrame->FrClipYBegin = pFrame->FrYOrg;
+	     pFrame->FrClipYEnd = haut + pFrame->FrYOrg;
 	     /* On termine un reaffichage */
 	  }
 	else if (yd == yf && yd == 0)
 	  {
-	     pFe1->FrClipYBegin = 0;
-	     pFe1->FrClipYEnd = 0;
+	     pFrame->FrClipYBegin = 0;
+	     pFrame->FrClipYEnd = 0;
 	  }
 	/* Faut-il initialiser la zone de reaffichage? */
-	else if (pFe1->FrClipYBegin == pFe1->FrClipYEnd && pFe1->FrClipYBegin == 0)
+	else if (pFrame->FrClipYBegin == pFrame->FrClipYEnd && pFrame->FrClipYBegin == 0)
 	  {
-	     pFe1->FrClipYBegin = yd;
-	     pFe1->FrClipYEnd = yf;
+	     pFrame->FrClipYBegin = yd;
+	     pFrame->FrClipYEnd = yf;
 	  }
 	/* On met a jour la zone de reaffichage */
 	else
 	  {
-	     if (pFe1->FrClipYBegin > yd)
-		pFe1->FrClipYBegin = yd;
-	     if (pFe1->FrClipYEnd < yf)
-		pFe1->FrClipYEnd = yf;
+	     if (pFrame->FrClipYBegin > yd)
+		pFrame->FrClipYBegin = yd;
+	     if (pFrame->FrClipYEnd < yf)
+		pFrame->FrClipYEnd = yf;
 	  }
      }
 }				/*DefClip */
@@ -160,11 +160,11 @@ int                 yf;
 #endif /* __STDC__ */
 
 {
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
 
-   pFe1 = &FntrTable[frame - 1];
-   DefClip (frame, xd + pFe1->FrXOrg, yd + pFe1->FrYOrg, xf + pFe1->FrXOrg, yf + pFe1->FrYOrg);
+   pFrame = &FntrTable[frame - 1];
+   DefClip (frame, xd + pFrame->FrXOrg, yd + pFrame->FrYOrg, xf + pFrame->FrXOrg, yf + pFrame->FrYOrg);
 }
 
 /* ajout de fonction */
@@ -206,7 +206,7 @@ int                 delta;
 #endif /* __STDC__ */
 
 {
-   PtrBox            ibox;
+   PtrBox            pBox;
    PtrBox            min, max;
    int                 y, x, vol, h, l;
    int                 haut, bas;
@@ -219,35 +219,35 @@ int                 delta;
    int                 plan;
    int                 plansuiv;
    PtrBox            prembox;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    PtrBox            pBo1;
    PtrBox            pBo2;
 
    /* A priori on n'ajoute pas de nouveaux paves */
    ajoute = False;
-   pFe1 = &FntrTable[frame - 1];
-   if (pFe1->FrReady && pFe1->FrAbstractBox != NULL
-       && pFe1->FrClipXBegin < pFe1->FrClipXEnd
-       && pFe1->FrClipYBegin < pFe1->FrClipYEnd)
+   pFrame = &FntrTable[frame - 1];
+   if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
+       && pFrame->FrClipXBegin < pFrame->FrClipXEnd
+       && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
      {
-	pFe1->FrYOrg -= delta;
-	framexmin = pFe1->FrClipXBegin;
-	framexmax = pFe1->FrClipXEnd;
-	frameymin = pFe1->FrClipYBegin;
-	frameymax = pFe1->FrClipYEnd;
-	SetClip (frame, pFe1->FrXOrg, pFe1->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
+	pFrame->FrYOrg -= delta;
+	framexmin = pFrame->FrClipXBegin;
+	framexmax = pFrame->FrClipXEnd;
+	frameymin = pFrame->FrClipYBegin;
+	frameymax = pFrame->FrClipYEnd;
+	SetClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
 	DimFenetre (frame, &l, &h);
-	haut = pFe1->FrYOrg;
+	haut = pFrame->FrYOrg;
 	bas = haut + h;
 	/* S'il y a quelque chose a reafficher ? */
 	if (framexmin < framexmax && frameymin < frameymax)
 	  {
 	     /* Recherche la 1ere boite au dessus du bas de la fenetre */
 	     /* La recherche commence par la derniere boite affichee */
-	     ibox = pFe1->FrAbstractBox->AbBox->BxPrevious;
-	     if (ibox == NULL)
+	     pBox = pFrame->FrAbstractBox->AbBox->BxPrevious;
+	     if (pBox == NULL)
 		/* Document vide */
-		ibox = pFe1->FrAbstractBox->AbBox;
+		pBox = pFrame->FrAbstractBox->AbBox;
 	     audessous = True;
 	     min = NULL;
 	     max = NULL;
@@ -256,7 +256,7 @@ int                 delta;
 	     x = bas + h / 2;
 	     while (audessous)
 	       {
-		  pBo1 = ibox;
+		  pBo1 = pBox;
 		  if (pBo1->BxYOrg < bas)
 		     audessous = False;
 		  else
@@ -265,30 +265,30 @@ int                 delta;
 			  if (pBo1->BxType != BoPiece && pBo1->BxType != BoDotted)
 			     /* Ce n'est pas une boite de coupure */
 			     vol += pBo1->BxAbstractBox->AbVolume;
-			  else if (pBo1->BxAbstractBox->AbBox->BxNexChild == ibox)
+			  else if (pBo1->BxAbstractBox->AbBox->BxNexChild == pBox)
 			     /* C'est la 1ere boite de coupure */
 			     vol += pBo1->BxAbstractBox->AbVolume;
 		       if (pBo1->BxPrevious == NULL)
 			  audessous = False;
-		       ibox = pBo1->BxPrevious;
+		       pBox = pBo1->BxPrevious;
 		    }
 	       }
 
 	     /* On affiche les plans dans l'orde n a 0 */
 	     plan = 65536;
 	     plansuiv = plan - 1;
-	     prembox = ibox;
+	     prembox = pBox;
 	     while (plan != plansuiv)
 		/* Il y a un nouveau plan a afficher */
 	       {
 		  plan = plansuiv;
-		  ibox = prembox;
+		  pBox = prembox;
 		  /* On reparcourt toutes les boites */
 
 		  /* Affiche toutes les boites non encore entierement affichees */
-		  while (ibox != NULL)
+		  while (pBox != NULL)
 		    {
-		       pBo1 = ibox;
+		       pBo1 = pBox;
 		       if (pBo1->BxAbstractBox->AbDepth == plan)
 			  /* La boite est affichee dans le plan courant */
 			 {
@@ -299,16 +299,16 @@ int                 delta;
 			    if (y > haut && pBo1->BxYOrg < bas)
 			      {
 				 if (max == NULL)
-				    max = ibox;
-				 min = ibox;
+				    max = pBox;
+				 min = pBox;
 			      }
 			    if (y >= frameymin
 				&& pBo1->BxYOrg <= frameymax
 				&& x >= framexmin
 				&& pBo1->BxXOrg <= framexmax)
-			       AfBoite (ibox, frame);
+			       AfBoite (pBox, frame);
 			    /* On passe a la boite suivante */
-			    ibox = pBo1->BxPrevious;
+			    pBox = pBo1->BxPrevious;
 			 }
 		       else if (pBo1->BxAbstractBox->AbDepth < plan)
 			  /* On retient la plus grande valeur de plan inferieur */
@@ -317,10 +317,10 @@ int                 delta;
 			       plansuiv = pBo1->BxAbstractBox->AbDepth;
 			    else if (pBo1->BxAbstractBox->AbDepth > plansuiv)
 			       plansuiv = pBo1->BxAbstractBox->AbDepth;
-			    ibox = pBo1->BxPrevious;
+			    pBox = pBo1->BxPrevious;
 			 }
 		       else
-			  ibox = pBo1->BxPrevious;
+			  pBox = pBo1->BxPrevious;
 		    }
 	       }
 
@@ -329,10 +329,10 @@ int                 delta;
 	     ResetClip (frame);
 
 	     /* On complete eventuellement l'image partielle */
-	     ibox = pFe1->FrAbstractBox->AbBox;
+	     pBox = pFrame->FrAbstractBox->AbBox;
 	     if (!Complete && !Insert)
 	       {
-		  pBo1 = ibox;
+		  pBo1 = pBox;
 		  Complete = True;
 		  /* On est en train de completer l'image */
 		  y = haut - pBo1->BxYOrg;
@@ -342,17 +342,17 @@ int                 delta;
 		  if (vol > 0 && y > x)
 		     /* On calcule le volume a retirer */
 		    {
-		       ibox = pBo1->BxNext;
+		       pBox = pBo1->BxNext;
 		       haut -= x;
 		       y = 0;
-		       while (ibox != NULL)
+		       while (pBox != NULL)
 			 {
-			    pBo2 = ibox;
+			    pBo2 = pBox;
 			    if (pBo2->BxYOrg + pBo2->BxHeight > haut)
-			       ibox = NULL;
+			       pBox = NULL;
 			    else
 			      {
-				 ibox = pBo2->BxNext;
+				 pBox = pBo2->BxNext;
 				 if (pBo2->BxType != BoPiece && pBo2->BxType != BoDotted)
 				    y += pBo2->BxAbstractBox->AbVolume;
 				 else if (pBo2->BxNexChild == NULL)
@@ -360,14 +360,14 @@ int                 delta;
 				 /* else while */
 			      }
 			 }
-		       pFe1->FrVolume = pFe1->FrAbstractBox->AbVolume - vol - y;
+		       pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
 		    }
 
 		  /* Il manque un morceau d'image concrete en haut de la fenetre */
-		  else if (pFe1->FrAbstractBox->AbTruncatedHead && y < 0)
+		  else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
 		    {
 		       /* On libere des paves en bas */
-		       if (vol > 0 && vol < pFe1->FrAbstractBox->AbVolume)
+		       if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
 			 {
 			    VolReduit (False, vol, frame);
 			    DefClip (frame, 0, 0, 0, 0);
@@ -375,13 +375,13 @@ int                 delta;
 			 }
 
 		       /* Volume a ajouter */
-		       if (pFe1->FrAbstractBox == NULL)
+		       if (pFrame->FrAbstractBox == NULL)
 			 {
 			    printf ("ERR: plus de pave dans %d\n", frame);
-			    vol = -pFe1->FrVolume;
+			    vol = -pFrame->FrVolume;
 			 }
 		       else
-			  vol = pFe1->FrVolume - pFe1->FrAbstractBox->AbVolume;
+			  vol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
 
 		       /* Hauteur a ajouter */
 		       x -= y;
@@ -409,17 +409,17 @@ int                 delta;
 			    y = -y + pBo2->BxYOrg;
 			    /* y=deplacement de l'ancienne 1ere boite */
 			    /* Ce qui est deja affiche depend de l'ancienne 1ere boite */
-			    pFe1->FrYOrg += y;
+			    pFrame->FrYOrg += y;
 			    /* x = limite du reaffichage apres decalage */
 			    if (y > 0)
 			       x = pBo2->BxYOrg + pBo2->BxHeight;
 			    /* Nouvelle position limite */
-			    pFe1->FrClipYEnd = x;
+			    pFrame->FrClipYEnd = x;
 			 }
 		       else
 			  /* Il n'y a pas d'ancienne boite : */
 			  /* la fenetre est cadree en haut de l'image */
-			  pFe1->FrYOrg = 0;
+			  pFrame->FrYOrg = 0;
 
 		       /* On a fini de completer l'image */
 		       Complete = False;
@@ -427,7 +427,7 @@ int                 delta;
 		    }
 
 		  /* Il manque un morceau d'image concrete en bas de la fenetre */
-		  else if (pFe1->FrAbstractBox->AbTruncatedTail && bas > pBo1->BxYOrg + pBo1->BxHeight)
+		  else if (pFrame->FrAbstractBox->AbTruncatedTail && bas > pBo1->BxYOrg + pBo1->BxHeight)
 		    {
 		       y = pBo1->BxYOrg + pBo1->BxHeight;
 		       /* Volume de la surface manquante */
@@ -436,11 +436,11 @@ int                 delta;
 		       vol = VolumCar (vol);
 
 		       /* On nettoie le bas de la fenetre */
-		       Clear (frame, l, pFe1->FrYOrg + h - y, 0, y);
+		       Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
 		       /* Il faut eviter de boucler quand le volume n'est pas modifie */
-		       y = pFe1->FrAbstractBox->AbVolume;
+		       y = pFrame->FrAbstractBox->AbVolume;
 		       VolAugmente (False, vol, frame);
-		       y -= pFe1->FrAbstractBox->AbVolume;
+		       y -= pFrame->FrAbstractBox->AbVolume;
 		       /* On a fini de completer l'image */
 		       Complete = False;
 		       if (y == 0)
@@ -452,7 +452,7 @@ int                 delta;
 
 		  /* Le volume est satisfaisant */
 		  else
-		     pFe1->FrVolume = pFe1->FrAbstractBox->AbVolume;
+		     pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 		  /* On a fini de completer l'image */
 		  Complete = False;
 	       }
@@ -462,7 +462,7 @@ int                 delta;
 	   DefClip (frame, 0, 0, 0, 0);
 
      }
-   else if (pFe1->FrReady)
+   else if (pFrame->FrReady)
      {
 	/* Il n'y avait rien a afficher */
 	DefClip (frame, 0, 0, 0, 0);
@@ -476,19 +476,19 @@ int                 delta;
 /* ---------------------------------------------------------------------- */
 /* |    AjouteACreer enregistre dans adbloc la filiation des boites a`  | */
 /* |            creer, en partant de la boite la plus englobante a` la  | */
-/* |            boite ibox elle-meme.                                   | */
+/* |            boite pBox elle-meme.                                   | */
 /* |            Une boite ne peut etre presente qu'une seule fois dans  | */
 /* |            adbloc.                                                 | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                AjouteACreer (PtrBox * acreer, PtrBox ibox, int frame)
+void                AjouteACreer (PtrBox * acreer, PtrBox pBox, int frame)
 
 #else  /* __STDC__ */
-void                AjouteACreer (acreer, ibox, frame)
+void                AjouteACreer (acreer, pBox, frame)
 PtrBox           *acreer;
-PtrBox            ibox;
+PtrBox            pBox;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -498,7 +498,7 @@ int                 frame;
    int                 i;
 
    /* Recherche si un pave pere a l'indicateur PavGraphCreation */
-   pPa1 = ibox->BxAbstractBox->AbEnclosing;
+   pPa1 = pBox->BxAbstractBox->AbEnclosing;
    i = 0;
    while (i == 0)
       if (pPa1 == NULL)
@@ -524,8 +524,8 @@ int                 frame;
    /* Enregistrement de la boite a creer s'il n'y en a pas une  */
    /* englobante enregistree et si la boite a creer est visible */
    if (*acreer == NULL
-       && ibox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
-      *acreer = ibox;
+       && pBox->BxAbstractBox->AbVisibility >= FntrTable[frame - 1].FrVisibility)
+      *acreer = pBox;
 }				/*function AjouteACreer */
 
 /* ---------------------------------------------------------------------- */
@@ -549,7 +549,7 @@ int                 delta;
 #endif /* __STDC__ */
 
 {
-   PtrBox            ibox;
+   PtrBox            pBox;
    PtrBox            min /*, max */ ;
    int                 y, x, vol, h, l;
    int                 haut, bas;
@@ -562,7 +562,7 @@ int                 delta;
    int                 plan;
    int                 plansuiv;
    PtrBox            prembox;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    PtrBox            pBo1;
    PtrAbstractBox             pPa1;
    PtrBox            pBo2;
@@ -574,25 +574,25 @@ int                 delta;
    /* A priori on n'a pas besoin de creer interactivement des boites */
    ACreer = NULL;
 
-   pFe1 = &FntrTable[frame - 1];
-   if (pFe1->FrReady && pFe1->FrAbstractBox != NULL
-       && pFe1->FrClipXBegin < pFe1->FrClipXEnd
-       && pFe1->FrClipYBegin < pFe1->FrClipYEnd)
+   pFrame = &FntrTable[frame - 1];
+   if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
+       && pFrame->FrClipXBegin < pFrame->FrClipXEnd
+       && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
      {
-	pFe1->FrYOrg += delta;
-	framexmin = pFe1->FrClipXBegin;
-	framexmax = pFe1->FrClipXEnd;
-	frameymin = pFe1->FrClipYBegin;
-	frameymax = pFe1->FrClipYEnd;
-	SetClip (frame, pFe1->FrXOrg, pFe1->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
+	pFrame->FrYOrg += delta;
+	framexmin = pFrame->FrClipXBegin;
+	framexmax = pFrame->FrClipXEnd;
+	frameymin = pFrame->FrClipYBegin;
+	frameymax = pFrame->FrClipYEnd;
+	SetClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
 	DimFenetre (frame, &l, &h);
-	haut = pFe1->FrYOrg;
+	haut = pFrame->FrYOrg;
 	bas = haut + h;
 
 	/* On recherche la premiere boite visible ou en dessous */
-	ibox = pFe1->FrAbstractBox->AbBox->BxNext;
-	if (ibox == NULL)
-	   ibox = pFe1->FrAbstractBox->AbBox;	/* Document vide */
+	pBox = pFrame->FrAbstractBox->AbBox->BxNext;
+	if (pBox == NULL)
+	   pBox = pFrame->FrAbstractBox->AbBox;	/* Document vide */
 
 	audessus = True;
 	min = NULL;
@@ -603,52 +603,52 @@ int                 delta;
 	/* On affiche les plans dans l'orde n a 0 */
 	plan = 65536;
 	plansuiv = plan - 1;
-	prembox = ibox;
+	prembox = pBox;
 	while (plan != plansuiv)
 	   /* Il y a un nouveau plan a afficher */
 	  {
 	     plan = plansuiv;
-	     ibox = prembox;
+	     pBox = prembox;
 	     /* On reparcourt toute les boites */
 
 	     /* On affiche toutes les boites non encore entierement affichees */
-	     while (ibox != NULL)
+	     while (pBox != NULL)
 	       {
 
 		  /* Faut-il comptabiliser ce volume comme volume au dessus */
 		  if (audessus)
-/**485*/ if (ibox->BxYOrg + ibox->BxHeight < haut - h / 4)
+/**485*/ if (pBox->BxYOrg + pBox->BxHeight < haut - h / 4)
 		       {
-/**HYP*/ if ((ibox->BxType != BoPiece && ibox->BxType != BoDotted)
-	     || ibox->BxNexChild == NULL)
-			     vol += ibox->BxAbstractBox->AbVolume;
+/**HYP*/ if ((pBox->BxType != BoPiece && pBox->BxType != BoDotted)
+	     || pBox->BxNexChild == NULL)
+			     vol += pBox->BxAbstractBox->AbVolume;
 		       }
 		     else
 			audessus = False;
 
-		  if (ibox->BxAbstractBox != NULL && ibox->BxAbstractBox->AbDepth == plan)
+		  if (pBox->BxAbstractBox != NULL && pBox->BxAbstractBox->AbDepth == plan)
 		    {
 		       /* La boite est affichee dans le plan courant */
-		       y = ibox->BxYOrg + ibox->BxHeight;
+		       y = pBox->BxYOrg + pBox->BxHeight;
 		       /* Il faut tenir compte du remplissage de fin de bloc */
-		       x = ibox->BxXOrg + ibox->BxWidth + ibox->BxEndOfBloc;
+		       x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
 
 		       /* On note la premiere et derniere boite visible */
-		       if (y > haut && ibox->BxYOrg < bas)
+		       if (y > haut && pBox->BxYOrg < bas)
 			 {
 			    if (min == NULL)
-			       min = ibox;
-			    /*max = ibox; */
+			       min = pBox;
+			    /*max = pBox; */
 			 }	/*if */
 
 		       /* Si la boite est affichee pour la premiere fois, */
 		       /* on regarde si elle ou une de ces boites parentes */
 		       /* doit etre creee interactivement ? */
-		       if (ibox->BxNew)
+		       if (pBox->BxNew)
 			 {
 			    /* La boite n'est plus nouvelle */
-			    ibox->BxNew = 0;
-			    pPa1 = ibox->BxAbstractBox;
+			    pBox->BxNew = 0;
+			    pPa1 = pBox->BxAbstractBox;
 			    i = 0;
 			    while (i == 0)
 			       if (pPa1 == NULL)
@@ -675,24 +675,24 @@ int                 delta;
 			  /* Enregistre la boite a creer */
 			  AjouteACreer (&ACreer, pPa1->AbBox, frame);
 		       else if (y >= frameymin
-				&& ibox->BxYOrg <= frameymax
+				&& pBox->BxYOrg <= frameymax
 				&& x >= framexmin
-				&& ibox->BxXOrg <= framexmax)
-			  AfBoite (ibox, frame);
+				&& pBox->BxXOrg <= framexmax)
+			  AfBoite (pBox, frame);
 		       /* On passe a la boite suivante */
-		       ibox = ibox->BxNext;
+		       pBox = pBox->BxNext;
 		    }
-		  else if (ibox->BxAbstractBox != NULL && ibox->BxAbstractBox->AbDepth < plan)
+		  else if (pBox->BxAbstractBox != NULL && pBox->BxAbstractBox->AbDepth < plan)
 		    {
 		       /* On retient la plus grande valeur de plan inferieur */
 		       if (plan == plansuiv)
-			  plansuiv = ibox->BxAbstractBox->AbDepth;
-		       else if (ibox->BxAbstractBox->AbDepth > plansuiv)
-			  plansuiv = ibox->BxAbstractBox->AbDepth;
-		       ibox = ibox->BxNext;
+			  plansuiv = pBox->BxAbstractBox->AbDepth;
+		       else if (pBox->BxAbstractBox->AbDepth > plansuiv)
+			  plansuiv = pBox->BxAbstractBox->AbDepth;
+		       pBox = pBox->BxNext;
 		    }
 		  else
-		     ibox = ibox->BxNext;
+		     pBox = pBox->BxNext;
 	       }
 	  }
 
@@ -725,19 +725,19 @@ int                 delta;
 	ResetClip (frame);
 
 	/* On complete eventuellement l'image partielle */
-	ibox = pFe1->FrAbstractBox->AbBox;
+	pBox = pFrame->FrAbstractBox->AbBox;
 	if (!Complete && (!Insert || delta > 0))
 	  {
-	     pBo1 = ibox;
+	     pBo1 = pBox;
 	     Complete = True;
 	     /* On est en train de completer l'image */
 	     y = haut - pBo1->BxYOrg;
 
-	     if (pFe1->FrAbstractBox->AbInLine)
+	     if (pFrame->FrAbstractBox->AbInLine)
 		Complete = False;
 
 	     /* Il manque un morceau d'image concrete en haut de la fenetre */
-	     else if (pFe1->FrAbstractBox->AbTruncatedHead && y < 0)
+	     else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
 	       {
 		  /* On complete en haut -> On decale toute l'image concrete */
 		  haut = h / 2 - y;
@@ -760,47 +760,47 @@ int                 delta;
 		       y = -y + pBo2->BxYOrg;
 		       /* y=deplacement de l'ancienne 1ere boite */
 		       /* Ce qui est deja affiche depend de l'ancienne 1ere boite */
-		       pFe1->FrYOrg += y;
+		       pFrame->FrYOrg += y;
 		       /* x = limite du reaffichage apres decalage */
 		       if (y > 0)
 			  x = pBo2->BxYOrg + pBo2->BxHeight;
 		       /* Nouvelle position limite */
-		       pFe1->FrClipYEnd = x;
+		       pFrame->FrClipYEnd = x;
 		    }
 		  audessus = AfDebFenetre (frame, 0);
 	       }
-	     y = pFe1->FrYOrg + h - pBo1->BxYOrg - pBo1->BxHeight;
+	     y = pFrame->FrYOrg + h - pBo1->BxYOrg - pBo1->BxHeight;
 	     x = h / 2;
 
 	     /* L'image depasse d'une 1/2 frame en haut et en bas */
 	     if (vol > 0 && -y > x)
 		/* On calcule le volume a retirer */
 	       {
-		  ibox = pBo1->BxPrevious;
+		  pBox = pBo1->BxPrevious;
 		  bas += x;
 		  y = 0;
-		  while (ibox != NULL)
+		  while (pBox != NULL)
 		    {
-		       pBo2 = ibox;
+		       pBo2 = pBox;
 		       if (pBo2->BxYOrg < bas)
-			  ibox = NULL;
+			  pBox = NULL;
 		       else
 			 {
-			    ibox = pBo2->BxPrevious;
+			    pBox = pBo2->BxPrevious;
 			    if (pBo2->BxType != BoPiece && pBo2->BxType != BoDotted)
 			       y += pBo2->BxAbstractBox->AbVolume;
-			    else if (pBo2->BxAbstractBox->AbBox->BxNexChild == ibox)
+			    else if (pBo2->BxAbstractBox->AbBox->BxNexChild == pBox)
 			       y += pBo2->BxAbstractBox->AbVolume;
 			 }
 		    }
-		  pFe1->FrVolume = pFe1->FrAbstractBox->AbVolume - vol - y;
+		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
 	       }
 
 	     /* Il manque un morceau d'image concrete en bas de la fenetre */
-	     else if (pFe1->FrAbstractBox->AbTruncatedTail && y > 0)
+	     else if (pFrame->FrAbstractBox->AbTruncatedTail && y > 0)
 		/* On libere des paves en haut */
 	       {
-		  if (vol > 0 && vol < pFe1->FrAbstractBox->AbVolume)
+		  if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
 		    {
 		       if (min != NULL)
 			  y = min->BxYOrg;
@@ -808,16 +808,16 @@ int                 delta;
 		       DefClip (frame, 0, 0, 0, 0);
 		       /* Il faut repositionner la fenetre dans l'image concrete */
 		       if (min != NULL)
-			  pFe1->FrYOrg = pFe1->FrYOrg - y + min->BxYOrg;
+			  pFrame->FrYOrg = pFrame->FrYOrg - y + min->BxYOrg;
 		       /* On complete en bas */
 		    }
-		  if (pFe1->FrAbstractBox == NULL)
+		  if (pFrame->FrAbstractBox == NULL)
 		    {
 		       printf ("ERR: Plus de pave dans %d\n", frame);
-		       vol = -pFe1->FrVolume;
+		       vol = -pFrame->FrVolume;
 		    }
 		  else
-		     vol = pFe1->FrVolume - pFe1->FrAbstractBox->AbVolume;
+		     vol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
 
 		  /* Volume a ajouter */
 		  if (vol <= 0)
@@ -830,11 +830,11 @@ int                 delta;
 
 		  y = pBo1->BxYOrg + pBo1->BxHeight;
 		  /* On nettoie le bas de la fenetre */
-		  Clear (frame, l, pFe1->FrYOrg + h - y, 0, y);
+		  Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
 		  /* Il faut eviter de boucler quand le volume n'est pas modifie */
-		  y = pFe1->FrAbstractBox->AbVolume;
+		  y = pFrame->FrAbstractBox->AbVolume;
 		  VolAugmente (False, vol, frame);
-		  y -= pFe1->FrAbstractBox->AbVolume;
+		  y -= pFrame->FrAbstractBox->AbVolume;
 		  /* On a fini de completer l'image */
 		  Complete = False;
 		  if (y == 0)
@@ -850,7 +850,7 @@ int                 delta;
 		  /* Faut-il nettoyer le bas de la fenetre ? */
 		  if (y > 0)
 		     Clear (frame, l, y, 0, h - y);
-		  pFe1->FrVolume = pFe1->FrAbstractBox->AbVolume;
+		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 	       }
 
 	     /* On a fini de completer l'image */
@@ -859,7 +859,7 @@ int                 delta;
 
 
      }
-   else if (pFe1->FrReady)
+   else if (pFrame->FrReady)
      {
 	/* Il n'y avait rien a afficher */
 	DefClip (frame, 0, 0, 0, 0);
@@ -892,25 +892,25 @@ int                 frame;
 
 {
    /*boolean ajoute; */
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    int                 l, h;
 
    /* Est-ce que la vue existe et n'est pas en cours d'evaluation? */
-   pFe1 = &FntrTable[frame - 1];
-   if (pFe1->FrAbstractBox != NULL)
+   pFrame = &FntrTable[frame - 1];
+   if (pFrame->FrAbstractBox != NULL)
      {
 	/* Affichage du rectangle mis a jour */
 	AfFinFenetre (frame, 0);
 	/* Mise en evidence des boites en erreur */
 	if (Erreur)
 	  {
-	     MajPavSelect (frame, pFe1->FrAbstractBox, True);
+	     MajPavSelect (frame, pFrame->FrAbstractBox, True);
 	     if (HardMsgAff)
 		/* Attend un moment avant d'annuler les mises en evidences */
 	       {
 		  TtaDisplaySimpleMessage (LIB, INFO, LIB_CONFIRM);
 	       }
-	     MajPavSelect (frame, pFe1->FrAbstractBox, False);
+	     MajPavSelect (frame, pFrame->FrAbstractBox, False);
 	     Erreur = False;
 	  }
 

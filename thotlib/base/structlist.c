@@ -705,14 +705,14 @@ FILE               *fileDescriptor;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    NumeroPave numerote recursivement des paves a partir de pPav.   | */
+/* |    NumeroPave numerote recursivement des paves a partir de pAb.   | */
 /* |            cptpave est le compte des paves.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         NumeroPave (PtrAbstractBox pPav, int *cptpave)
+static void         NumeroPave (PtrAbstractBox pAb, int *cptpave)
 #else  /* __STDC__ */
-static void         NumeroPave (pPav, cptpave)
-PtrAbstractBox             pPav;
+static void         NumeroPave (pAb, cptpave)
+PtrAbstractBox             pAb;
 int                *cptpave;
 
 #endif /* __STDC__ */
@@ -720,8 +720,8 @@ int                *cptpave;
    PtrAbstractBox             pP;
 
    (*cptpave)++;
-   pPav->AbNum = *cptpave;
-   pP = pPav->AbFirstEnclosed;
+   pAb->AbNum = *cptpave;
+   pP = pAb->AbFirstEnclosed;
    while (pP != NULL)
      {
 	NumeroPave (pP, cptpave);
@@ -939,14 +939,14 @@ FILE               *outfile;
 
 /* ---------------------------------------------------------------------- */
 /* |    AffPaves ecrit dans le fichier outfile le sous-arbre de paves   | */
-/* |            commencant au pave pointe' par pPav, et avec            | */
+/* |            commencant au pave pointe' par pAb, et avec            | */
 /* |            l'indentation Indent.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AffPaves (PtrAbstractBox pPav, int Indent, FILE * outfile)
+void                AffPaves (PtrAbstractBox pAb, int Indent, FILE * outfile)
 #else  /* __STDC__ */
-void                AffPaves (pPav, Indent, outfile)
-PtrAbstractBox             pPav;
+void                AffPaves (pAb, Indent, outfile)
+PtrAbstractBox             pAb;
 int                 Indent;
 FILE               *outfile;
 
@@ -962,9 +962,9 @@ FILE               *outfile;
    PtrAttribute         pAt1;
    ImageDescriptor    *image;
 
-   if (pPav != NULL)
+   if (pAb != NULL)
      {
-	pPa1 = pPav;
+	pPa1 = pAb;
 	fprintf (outfile, "\n%d ", pPa1->AbNum);	/* numero du pave */
 	for (i = 1; i <= Indent; i++)
 	   fprintf (outfile, " ");
@@ -1249,7 +1249,7 @@ FILE               *outfile;
 	     f = pPa1->AbFirstEnclosed;
 	     while (f != NULL)
 	       {
-		  if (f->AbEnclosing != pPav)
+		  if (f->AbEnclosing != pAb)
 		     if (f->AbEnclosing == NULL)
 			fprintf (outfile,
 				 "AbstractBox suivant : AbEnclosing=NULL\n");

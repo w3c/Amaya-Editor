@@ -47,12 +47,12 @@
 #define MAXVERTS 100
 
 #ifdef __STDC__
-extern boolean      ExceptTypeElem (int, int, PtrSSchema);
+extern boolean      TypeHasException (int, int, PtrSSchema);
 extern void         DefClip (int, int, int, int, int);
 extern boolean      AfFinFenetre (int, int);
 
 #else  /* __STDC__ */
-extern boolean      ExceptTypeElem ();
+extern boolean      TypeHasException ();
 extern void         DefClip ();
 extern boolean      AfFinFenetre ();
 
@@ -143,12 +143,12 @@ int                 H;
 /* |            Rend la distance de la boite au point.                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 DistGraphique (int Xpoint, int Ypoint, PtrBox ibox, int val)
+int                 DistGraphique (int Xpoint, int Ypoint, PtrBox pBox, int val)
 #else  /* __STDC__ */
-int                 DistGraphique (Xpoint, Ypoint, ibox, val)
+int                 DistGraphique (Xpoint, Ypoint, pBox, val)
 int                 Xpoint;
 int                 Ypoint;
-PtrBox            ibox;
+PtrBox            pBox;
 int                 val;
 
 #endif /* __STDC__ */
@@ -157,10 +157,10 @@ int                 val;
    int                 X, Y, W, H;
 
    /* centrer la boite */
-   W = ibox->BxWidth / 2;
-   X = ibox->BxXOrg + W;
-   H = ibox->BxHeight / 2;
-   Y = ibox->BxYOrg + H;
+   W = pBox->BxWidth / 2;
+   X = pBox->BxXOrg + W;
+   H = pBox->BxHeight / 2;
+   Y = pBox->BxYOrg + H;
    distance = 1000;
 
    switch (val)
@@ -889,15 +889,15 @@ int                 y;
 
 /* ---------------------------------------------------------------------- */
 /* |    DansLaBoite teste si le point x, y appartient au pave'          | */
-/* |    adpave.                                                         | */
+/* |    pAb.                                                         | */
 /* |    Si oui, retourne l'adresse du pave' correspondant               | */
 /* |    sinon, la valeur NULL.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrBox            DansLaBoite (PtrAbstractBox adpave, int Xmin, int Xmax, int y, int *pointselect)
+PtrBox            DansLaBoite (PtrAbstractBox pAb, int Xmin, int Xmax, int y, int *pointselect)
 #else  /* __STDC__ */
-PtrBox            DansLaBoite (adpave, Xmin, Xmax, y, pointselect)
-PtrAbstractBox             adpave;
+PtrBox            DansLaBoite (pAb, Xmin, Xmax, y, pointselect)
+PtrAbstractBox             pAb;
 int                 Xmin;
 int                 Xmax;
 int                 y;
@@ -905,64 +905,64 @@ int                *pointselect;
 
 #endif /* __STDC__ */
 {
-   PtrBox            ibox;
+   PtrBox            pBox;
 
    *pointselect = 0;
 
-   if (adpave->AbBox == NULL)
+   if (pAb->AbBox == NULL)
       return (NULL);
    else
      {
-	ibox = adpave->AbBox;
+	pBox = pAb->AbBox;
 	/* Est-ce une boite de coupure incluse ? */
-	if (ibox->BxType == BoSplit)
+	if (pBox->BxType == BoSplit)
 	  {
-	     for (ibox = ibox->BxNexChild; ibox != NULL; ibox = ibox->BxNexChild)
+	     for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
 	       {
-		  if (ibox->BxNChars > 0 &&
-		      ibox->BxXOrg <= Xmax &&
-		      ibox->BxXOrg + ibox->BxWidth >= Xmin &&
-		      ibox->BxYOrg <= y &&
-		      ibox->BxYOrg + ibox->BxHeight >= y)
-		     return (ibox);
+		  if (pBox->BxNChars > 0 &&
+		      pBox->BxXOrg <= Xmax &&
+		      pBox->BxXOrg + pBox->BxWidth >= Xmin &&
+		      pBox->BxYOrg <= y &&
+		      pBox->BxYOrg + pBox->BxHeight >= y)
+		     return (pBox);
 	       }
 	     return (NULL);
 	  }
 	/* C'est une boite eclatee ? */
-	else if (ibox->BxType == BoGhost)
+	else if (pBox->BxType == BoGhost)
 	   return (NULL);
 	/* Si le pave englobe le point designe */
-	else if (ibox->BxXOrg <= Xmax
-		 && ibox->BxXOrg + ibox->BxWidth >= Xmin
-		 && ibox->BxYOrg <= y
-		 && ibox->BxYOrg + ibox->BxHeight >= y)
+	else if (pBox->BxXOrg <= Xmax
+		 && pBox->BxXOrg + pBox->BxWidth >= Xmin
+		 && pBox->BxYOrg <= y
+		 && pBox->BxYOrg + pBox->BxHeight >= y)
 	   /* Si c'est un pave graphique */
-	   if (adpave->AbLeafType == LtGraphics && adpave->AbVolume != 0)
+	   if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
 	     {
-		ibox = SurLeGraphique (adpave, Xmax, y);
-		if (ibox != NULL)
-		   return (ibox);
+		pBox = SurLeGraphique (pAb, Xmax, y);
+		if (pBox != NULL)
+		   return (pBox);
 		/* le point n'est pas sur un des segments */
-		if (DansLeGraphique (adpave, Xmax, y))
-		   return (adpave->AbBox);
+		if (DansLeGraphique (pAb, Xmax, y))
+		   return (pAb->AbBox);
 		else
-		   return (ibox);
+		   return (pBox);
 	     }
-	   else if (adpave->AbLeafType == LtPlyLine && adpave->AbVolume > 2)
+	   else if (pAb->AbLeafType == LtPlyLine && pAb->AbVolume > 2)
 	     {
 		/* La polyline contient au moins un segment */
-		ibox = SurLaPolyLine (adpave, Xmax, y, pointselect);
-		if (ibox != NULL)
-		   return (ibox);
+		pBox = SurLaPolyLine (pAb, Xmax, y, pointselect);
+		if (pBox != NULL)
+		   return (pBox);
 		/* le point n'est pas sur un des segments */
-		if ((adpave->AbPolyLineShape == 'p' || adpave->AbPolyLineShape == 's')
-		    && DansLaPolyLine (adpave, Xmax, y))
-		   return (adpave->AbBox);
+		if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
+		    && DansLaPolyLine (pAb, Xmax, y))
+		   return (pAb->AbBox);
 		else
-		   return (ibox);
+		   return (pBox);
 	     }
 	   else
-	      return (ibox);
+	      return (pBox);
 	else
 	   return (NULL);
      }
@@ -985,20 +985,20 @@ int                 y;
 
 #endif /* __STDC__ */
 {
-   ViewFrame            *pFe1;
-   PtrBox            ibox;
+   ViewFrame            *pFrame;
+   PtrBox            pBox;
    int                 pointselect;
 
-   pFe1 = &FntrTable[frame - 1];
-   ibox = NULL;
-   if (pFe1->FrAbstractBox != NULL)
+   pFrame = &FntrTable[frame - 1];
+   pBox = NULL;
+   if (pFrame->FrAbstractBox != NULL)
       if (ThotLocalActions[T_desboite] != NULL)
-	 (*ThotLocalActions[T_desboite]) (&ibox, pFe1->FrAbstractBox, frame, x + pFe1->FrXOrg,
-				       y + pFe1->FrYOrg, &pointselect);
-   if (ibox == NULL)
+	 (*ThotLocalActions[T_desboite]) (&pBox, pFrame->FrAbstractBox, frame, x + pFrame->FrXOrg,
+				       y + pFrame->FrYOrg, &pointselect);
+   if (pBox == NULL)
       return (NULL);
    else
-      return (ibox->BxAbstractBox);
+      return (pBox->BxAbstractBox);
 }
 
 
@@ -1007,27 +1007,27 @@ int                 y;
 /* |            suivant du pere.                                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrAbstractBox             Pave_Suivant (PtrAbstractBox adpave)
+PtrAbstractBox             Pave_Suivant (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-PtrAbstractBox             Pave_Suivant (adpave)
-PtrAbstractBox             adpave;
+PtrAbstractBox             Pave_Suivant (pAb)
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 {
-   if (adpave->AbFirstEnclosed != NULL)
-      return (adpave->AbFirstEnclosed);	/*le premier fils */
-   else if (adpave->AbNext != NULL)
-      return (adpave->AbNext);	/*le suivant */
-   else if (adpave->AbEnclosing != NULL)
+   if (pAb->AbFirstEnclosed != NULL)
+      return (pAb->AbFirstEnclosed);	/*le premier fils */
+   else if (pAb->AbNext != NULL)
+      return (pAb->AbNext);	/*le suivant */
+   else if (pAb->AbEnclosing != NULL)
      {
 	/* Le suivant d'un pere */
 	do
-	   if (adpave->AbEnclosing != NULL)
-	      adpave = adpave->AbEnclosing;
+	   if (pAb->AbEnclosing != NULL)
+	      pAb = pAb->AbEnclosing;
 	   else
 	      return (NULL);
-	while (adpave->AbNext == NULL);
-	return (adpave->AbNext);
+	while (pAb->AbNext == NULL);
+	return (pAb->AbNext);
      }
    else
       return (NULL);
@@ -1050,33 +1050,33 @@ int                 y;
 #endif /* __STDC__ */
 {
    PtrAbstractBox             pav;
-   PtrBox            sbox, ibox;
+   PtrBox            sbox, pBox;
    PtrBox            testbox;
    int                 distmax;
    int                 lepoint;
    int                 d;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
-   ibox = NULL;
+   pBox = NULL;
    sbox = NULL;
    distmax = 2000;		/* au-dela, on n'accepte pas la selection */
-   pFe1 = &FntrTable[frame - 1];
+   pFrame = &FntrTable[frame - 1];
 
-   if (pFe1->FrAbstractBox != NULL)
-      ibox = pFe1->FrAbstractBox->AbBox;
-   if (ibox != NULL)
+   if (pFrame->FrAbstractBox != NULL)
+      pBox = pFrame->FrAbstractBox->AbBox;
+   if (pBox != NULL)
      {
-	ibox = ibox->BxNext;
-	while (ibox != NULL)
+	pBox = pBox->BxNext;
+	while (pBox != NULL)
 	  {
-	     pav = ibox->BxAbstractBox;
-	     if (pav->AbVisibility >= pFe1->FrVisibility
+	     pav = pBox->BxAbstractBox;
+	     if (pav->AbVisibility >= pFrame->FrVisibility
 		 && (!pav->AbPresentationBox || pav->AbCanBeModified))
 	       {
 		  if (pav->AbLeafType == LtGraphics || pav->AbLeafType == LtPlyLine)
 		    {
 		       testbox = DansLaBoite (pav, x, x, y, &lepoint);
-		       /*d = DistGraphique(x, y, ibox, (int)pav->AbRealShape); */
+		       /*d = DistGraphique(x, y, pBox, (int)pav->AbRealShape); */
 		       if (testbox == NULL)
 			  d = distmax + 1;
 		       else
@@ -1084,13 +1084,13 @@ int                 y;
 		    }
 		  else if (pav->AbLeafType == LtSymbol && pav->AbShape == 'r')
 		     /* glitch pour le symbole racine */
-		     d = DistGraphique (x, y, ibox, 1);
+		     d = DistGraphique (x, y, pBox, 1);
 		  else if (pav->AbLeafType == LtText
 			   || pav->AbLeafType == LtSymbol
 			   || pav->AbLeafType == LtPicture
 		     /* ou une boite composee vide */
 		   || (pav->AbLeafType == LtCompound && pav->AbVolume == 0))
-		     d = DistBox (x, y, ibox->BxXOrg, ibox->BxYOrg, ibox->BxWidth, ibox->BxHeight);
+		     d = DistBox (x, y, pBox->BxXOrg, pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
 		  else
 		     d = distmax + 1;
 
@@ -1098,7 +1098,7 @@ int                 y;
 		  if (d < distmax)
 		    {
 		       distmax = d;
-		       sbox = ibox;
+		       sbox = pBox;
 		    }
 		  else if (d == distmax)
 		    {
@@ -1106,17 +1106,17 @@ int                 y;
 		       if (sbox == NULL)
 			 {
 			    distmax = d;
-			    sbox = ibox;
+			    sbox = pBox;
 			 }
 		       /* Si la boite est sur un plan au dessus de la precedente */
-		       else if (sbox->BxAbstractBox->AbDepth > ibox->BxAbstractBox->AbDepth)
+		       else if (sbox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
 			 {
 			    distmax = d;
-			    sbox = ibox;
+			    sbox = pBox;
 			 }
 		    }
 	       }
-	     ibox = ibox->BxNext;
+	     pBox = pBox->BxNext;
 	  }
      }
    return sbox;
@@ -1255,7 +1255,7 @@ int                *max;
 
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
-   if (!ExceptTypeElem (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
+   if (!TypeHasException (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
       ok = False;
    else
 #endif
@@ -1386,8 +1386,8 @@ int                 ym;
 
 #endif /* __STDC__ */
 {
-   PtrBox            ibox;
-   PtrAbstractBox             adpave;
+   PtrBox            pBox;
+   PtrAbstractBox             pAb;
    boolean             encore, okH, okV;
    int                 x, large;
    int                 y, haut;
@@ -1395,26 +1395,26 @@ int                 ym;
    int                 yr, Xmax;
    int                 ymin;
    int                 ymax;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
    int                 pointselect;
 
-   pFe1 = &FntrTable[frame - 1];
+   pFrame = &FntrTable[frame - 1];
    pointselect = 0;		/* pas de point selectionne */
-   if (pFe1->FrAbstractBox != NULL)
+   if (pFrame->FrAbstractBox != NULL)
      {
 	/* On note les coordonnees par rapport a l'image concrete */
-	xr = xm + pFe1->FrXOrg;
-	yr = ym + pFe1->FrYOrg;
+	xr = xm + pFrame->FrXOrg;
+	yr = ym + pFrame->FrYOrg;
 
 	/* On recherche la boite englobant le point designe */
 
 	if (ThotLocalActions[T_desboite] != NULL)
-	   (*ThotLocalActions[T_desboite]) (&ibox, pFe1->FrAbstractBox, frame, xr, yr,
+	   (*ThotLocalActions[T_desboite]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
 					 &pointselect);
-	if (ibox == NULL)
-	   adpave = NULL;
+	if (pBox == NULL)
+	   pAb = NULL;
 	else
-	   adpave = ibox->BxAbstractBox;
+	   pAb = pBox->BxAbstractBox;
 
 	if (pointselect != 0)
 	   encore = False;
@@ -1425,17 +1425,17 @@ int                 ym;
 	/* On boucle tant que l'on ne trouve pas une boite deplacable */
 	while (encore)
 	  {
-	     if (adpave == NULL)
-		ibox = NULL;
+	     if (pAb == NULL)
+		pBox = NULL;
 	     else
-		ibox = adpave->AbBox;
-	     if (ibox == NULL)
+		pBox = pAb->AbBox;
+	     if (pBox == NULL)
 		encore = False;	/* Il n'y a pas de boite */
 	     /* On regarde si le deplacement est autorise */
 	     else
 	       {
-		  okH = PModifiable (adpave, frame, True, &Xmin, &Xmax);
-		  okV = PModifiable (adpave, frame, False, &ymin, &ymax);
+		  okH = PModifiable (pAb, frame, True, &Xmin, &Xmax);
+		  okV = PModifiable (pAb, frame, False, &ymin, &ymax);
 		  if (okH || okV)
 		     encore = False;
 	       }
@@ -1443,53 +1443,53 @@ int                 ym;
 	     /* Si on n'a pas trouve, il faut remonter */
 	     if (encore)
 		/* On passe a la boite englobante */
-		if (adpave != NULL)
-		   adpave = adpave->AbEnclosing;
+		if (pAb != NULL)
+		   pAb = pAb->AbEnclosing;
 		else
 		  {
-		     ibox = NULL;
+		     pBox = NULL;
 		     encore = False;
 		  }
 	  }
 
 	/* Est-ce que l'on a trouve une boite ? */
-	if (ibox != NULL)
+	if (pBox != NULL)
 	  {
-	     x = ibox->BxXOrg - pFe1->FrXOrg;
-	     y = ibox->BxYOrg - pFe1->FrYOrg;
-	     large = ibox->BxWidth;
-	     haut = ibox->BxHeight;
+	     x = pBox->BxXOrg - pFrame->FrXOrg;
+	     y = pBox->BxYOrg - pFrame->FrYOrg;
+	     large = pBox->BxWidth;
+	     haut = pBox->BxHeight;
 
 	     if (pointselect != 0)
 	       {
-		  if (!APPgraphicModify (ibox->BxAbstractBox->AbElement, pointselect, frame, True))
+		  if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, True))
 		    {
 		       /* Deplacement d'un point de la polyline */
-		       x = ibox->BxXOrg - pFe1->FrXOrg;
-		       y = ibox->BxYOrg - pFe1->FrYOrg;
-		       TtaDisplaySimpleMessageString (LIB, INFO, LIB_MOVING_THE_BOX, TypePave (ibox->BxAbstractBox));
+		       x = pBox->BxXOrg - pFrame->FrXOrg;
+		       y = pBox->BxYOrg - pFrame->FrYOrg;
+		       TtaDisplaySimpleMessageString (LIB, INFO, LIB_MOVING_THE_BOX, TypePave (pBox->BxAbstractBox));
 		       /* Note si le trace est ouvert ou ferme */
-		       encore = (adpave->AbPolyLineShape == 'p' || adpave->AbPolyLineShape == 's');
-		       PolyLineModification (frame, x, y, adpave->AbPolyLineBuffer, ibox->BxBuffer, ibox->BxNChars, pointselect, encore);
+		       encore = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
+		       PolyLineModification (frame, x, y, pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, pointselect, encore);
 		       /* Pour les courbes il faut recalculer les points de controle */
-		       if (ibox->BxImageDescriptor != NULL)
+		       if (pBox->BxImageDescriptor != NULL)
 			 {
-			    free ((char *) ibox->BxImageDescriptor);
-			    ibox->BxImageDescriptor = (int *) PointsControle (ibox->BxBuffer, ibox->BxNChars);
+			    free ((char *) pBox->BxImageDescriptor);
+			    pBox->BxImageDescriptor = (int *) PointsControle (pBox->BxBuffer, pBox->BxNChars);
 			 }
 		       /* on force le reaffichage de la boite */
-		       DefClip (frame, ibox->BxXOrg - EXTRA_GRAPH, ibox->BxYOrg - EXTRA_GRAPH, ibox->BxXOrg + large + EXTRA_GRAPH, ibox->BxYOrg + haut + EXTRA_GRAPH);
+		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + large + EXTRA_GRAPH, pBox->BxYOrg + haut + EXTRA_GRAPH);
 		       AfFinFenetre (frame, 0);
 		       SetSelect (frame, False);	/* Reaffiche la selection */
-		       NouvContenu (adpave);
-		       APPgraphicModify (ibox->BxAbstractBox->AbElement, pointselect, frame, False);
+		       NouvContenu (pAb);
+		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, False);
 		    }
 	       }
 	     else
 	       {
 
 		  /* On note les coordonnees du point de reference */
-		  switch (ibox->BxHorizEdge)
+		  switch (pBox->BxHorizEdge)
 			{
 			   case Left:
 			      xr = x;
@@ -1501,14 +1501,14 @@ int                 ym;
 			      xr = x + large / 2;
 			      break;
 			   case VertRef:
-			      xr = x + ibox->BxVertRef;
+			      xr = x + pBox->BxVertRef;
 			      break;
 			   default:
 			      xr = x;
 			      break;
 			}
 
-		  switch (ibox->BxVertEdge)
+		  switch (pBox->BxVertEdge)
 			{
 			   case Top:
 			      yr = y;
@@ -1520,26 +1520,26 @@ int                 ym;
 			      yr = y + haut / 2;
 			      break;
 			   case HorizRef:
-			      yr = y + ibox->BxHorizRef;
+			      yr = y + pBox->BxHorizRef;
 			      break;
 			   default:
 			      yr = y;
 			      break;
 			}
 
-		  TtaDisplaySimpleMessageString (LIB, INFO, LIB_MOVING_THE_BOX, TypePave (ibox->BxAbstractBox));
+		  TtaDisplaySimpleMessageString (LIB, INFO, LIB_MOVING_THE_BOX, TypePave (pBox->BxAbstractBox));
 		  /* On retablit les positions par rapport a la fenetre */
-		  Xmin -= pFe1->FrXOrg;
-		  Xmax -= pFe1->FrXOrg;
-		  ymin -= pFe1->FrYOrg;
-		  ymax -= pFe1->FrYOrg;
+		  Xmin -= pFrame->FrXOrg;
+		  Xmax -= pFrame->FrXOrg;
+		  ymin -= pFrame->FrYOrg;
+		  ymax -= pFrame->FrYOrg;
 		  /* On initialise la boite fantome */
 		  ChPosition (frame, &x, &y, large, haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
 
 		  /* On transmet la modification a l'editeur */
-		  x = x + pFe1->FrXOrg - ibox->BxXOrg;
-		  y = y + pFe1->FrYOrg - ibox->BxYOrg;
-		  NouvPosition (ibox->BxAbstractBox, x, y, frame, True);
+		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
+		  y = y + pFrame->FrYOrg - pBox->BxYOrg;
+		  NouvPosition (pBox->BxAbstractBox, x, y, frame, True);
 	       }
 	  }
 	else
@@ -1580,7 +1580,7 @@ int                *max;
 
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
-   if (!ExceptTypeElem (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
+   if (!TypeHasException (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
       ok = False;
    else
 #endif
@@ -1657,8 +1657,8 @@ int                 ym;
 
 #endif /* __STDC__ */
 {
-   PtrBox            ibox;
-   PtrAbstractBox             adpave;
+   PtrBox            pBox;
+   PtrAbstractBox             pAb;
    boolean             encore, okH, okV;
    int                 x, large;
    int                 y, haut;
@@ -1666,46 +1666,46 @@ int                 ym;
    int                 yr, Xmax;
    int                 ymin;
    int                 ymax;
-   ViewFrame            *pFe1;
+   ViewFrame            *pFrame;
 
    int                 pointselect;
 
    okH = False;
    okV = False;
-   pFe1 = &FntrTable[frame - 1];
-   if (pFe1->FrAbstractBox != NULL)
+   pFrame = &FntrTable[frame - 1];
+   if (pFrame->FrAbstractBox != NULL)
      {
 	/* On note les coordonnees par rapport a l'image concrete */
-	xr = xm + pFe1->FrXOrg;
-	yr = ym + pFe1->FrYOrg;
+	xr = xm + pFrame->FrXOrg;
+	yr = ym + pFrame->FrYOrg;
 
 	/* On recherche la boite englobant le point designe */
 	/* designation style Grenoble */
 	if (ThotLocalActions[T_desboite] != NULL)
-	   (*ThotLocalActions[T_desboite]) (&ibox, pFe1->FrAbstractBox, frame, xr, yr,
+	   (*ThotLocalActions[T_desboite]) (&pBox, pFrame->FrAbstractBox, frame, xr, yr,
 					 &pointselect);
-	if (ibox == NULL)
-	   adpave = NULL;
+	if (pBox == NULL)
+	   pAb = NULL;
 	else
-	   adpave = ibox->BxAbstractBox;
+	   pAb = pBox->BxAbstractBox;
 
 	/* ctrlClick */
 	encore = True;
 	/* On boucle tant que l'on ne trouve pas une boite modifiable */
 	while (encore)
 	  {
-	     if (adpave == NULL)
-		ibox = NULL;
+	     if (pAb == NULL)
+		pBox = NULL;
 	     else
-		ibox = adpave->AbBox;
+		pBox = pAb->AbBox;
 
-	     if (ibox == NULL)
+	     if (pBox == NULL)
 		encore = False;	/* Il n'y a pas de boite */
 	     /* On regarde si les modifications sont autorisees */
 	     else
 	       {
-		  okH = DModifiable (adpave, frame, True, &Xmin, &Xmax);
-		  okV = DModifiable (adpave, frame, False, &ymin, &ymax);
+		  okH = DModifiable (pAb, frame, True, &Xmin, &Xmax);
+		  okV = DModifiable (pAb, frame, False, &ymin, &ymax);
 		  if (okH || okV)
 		     encore = False;
 	       }
@@ -1713,25 +1713,25 @@ int                 ym;
 	     /* Si on n'a pas trouve, il faut remonter */
 	     if (encore)
 		/* On passe a la boite englobante */
-		if (adpave != NULL)
-		   adpave = adpave->AbEnclosing;
+		if (pAb != NULL)
+		   pAb = pAb->AbEnclosing;
 		else
 		  {
-		     ibox = NULL;
+		     pBox = NULL;
 		     encore = False;
 		  }
 	  }
 
 	/* Est-ce que l'on a trouve une boite ? */
-	if (ibox != NULL)
+	if (pBox != NULL)
 	  {
-	     x = ibox->BxXOrg - pFe1->FrXOrg;
-	     y = ibox->BxYOrg - pFe1->FrYOrg;
-	     large = ibox->BxWidth;
-	     haut = ibox->BxHeight;
+	     x = pBox->BxXOrg - pFrame->FrXOrg;
+	     y = pBox->BxYOrg - pFrame->FrYOrg;
+	     large = pBox->BxWidth;
+	     haut = pBox->BxHeight;
 
 	     /* On note les coordonnees du point de reference */
-	     switch (ibox->BxHorizEdge)
+	     switch (pBox->BxHorizEdge)
 		   {
 		      case Left:
 			 xr = x;
@@ -1743,14 +1743,14 @@ int                 ym;
 			 xr = x + large / 2;
 			 break;
 		      case VertRef:
-			 xr = x + ibox->BxVertRef;
+			 xr = x + pBox->BxVertRef;
 			 break;
 		      default:
 			 xr = x + large;
 			 break;
 		   }
 
-	     switch (ibox->BxVertEdge)
+	     switch (pBox->BxVertEdge)
 		   {
 		      case Top:
 			 yr = y;
@@ -1762,32 +1762,32 @@ int                 ym;
 			 yr = y + haut / 2;
 			 break;
 		      case HorizRef:
-			 yr = y + ibox->BxHorizRef;
+			 yr = y + pBox->BxHorizRef;
 			 break;
 		      default:
 			 yr = y + haut;
 			 break;
 		   }
 
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_CHANGING_THE_BOX, TypePave (ibox->BxAbstractBox));
+	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_CHANGING_THE_BOX, TypePave (pBox->BxAbstractBox));
 	     /* On retablit les positions par rapport a la fenetre */
-	     Xmin -= pFe1->FrXOrg;
+	     Xmin -= pFrame->FrXOrg;
 	     if (okH)
-		Xmax -= pFe1->FrXOrg;
+		Xmax -= pFrame->FrXOrg;
 	     else
 		Xmax = Xmin;
-	     ymin -= pFe1->FrYOrg;
+	     ymin -= pFrame->FrYOrg;
 	     if (okV)
-		ymax -= pFe1->FrYOrg;
+		ymax -= pFrame->FrYOrg;
 	     else
 		ymax = ymin;
 	     /* On initialise la boite fantome */
 	     ChDimension (frame, x, y, &large, &haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
 
 	     /* On transmet la modification a l'editeur */
-	     large = large - ibox->BxWidth;
-	     haut = haut - ibox->BxHeight;
-	     NouvDimension (ibox->BxAbstractBox, large, haut, frame, True);
+	     large = large - pBox->BxWidth;
+	     haut = haut - pBox->BxHeight;
+	     NouvDimension (pBox->BxAbstractBox, large, haut, frame, True);
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
@@ -1801,10 +1801,10 @@ int                 ym;
 /* |            interactive des boi^tes.                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ModeCreation (PtrBox ibox, int frame)
+void                ModeCreation (PtrBox pBox, int frame)
 #else  /* __STDC__ */
-void                ModeCreation (ibox, frame)
-PtrBox            ibox;
+void                ModeCreation (pBox, frame)
+PtrBox            pBox;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -1814,8 +1814,8 @@ int                 frame;
    int                 xr, yr;
    int                 Xmin, Xmax;
    int                 Ymin, Ymax;
-   ViewFrame            *pFe1;
-   PtrAbstractBox             adpave;
+   ViewFrame            *pFrame;
+   PtrAbstractBox             pAb;
    boolean             modPosition, modDimension;
 
    /* Il ne faut realiser qu'une seule creation interactive a la fois */
@@ -1824,29 +1824,29 @@ int                 frame;
    else
       EnCreation = True;
 
-   pFe1 = &FntrTable[frame - 1];
+   pFrame = &FntrTable[frame - 1];
 
    /* Il faut verifier que la boite reste visible dans la fenetre */
    DimFenetre (frame, &large, &haut);
-   if (ibox->BxXOrg < pFe1->FrXOrg)
+   if (pBox->BxXOrg < pFrame->FrXOrg)
       x = 0;
-   else if (ibox->BxXOrg > pFe1->FrXOrg + large)
+   else if (pBox->BxXOrg > pFrame->FrXOrg + large)
       x = large;
    else
-      x = ibox->BxXOrg - pFe1->FrXOrg;
+      x = pBox->BxXOrg - pFrame->FrXOrg;
 
-   if (ibox->BxYOrg < pFe1->FrYOrg)
+   if (pBox->BxYOrg < pFrame->FrYOrg)
       y = 0;
-   else if (ibox->BxYOrg > pFe1->FrYOrg + haut)
+   else if (pBox->BxYOrg > pFrame->FrYOrg + haut)
       y = haut;
    else
-      y = ibox->BxYOrg - pFe1->FrYOrg;
-   large = ibox->BxWidth;
-   haut = ibox->BxHeight;
-   adpave = ibox->BxAbstractBox;
+      y = pBox->BxYOrg - pFrame->FrYOrg;
+   large = pBox->BxWidth;
+   haut = pBox->BxHeight;
+   pAb = pBox->BxAbstractBox;
 
    /* On note les coordonnees du point de reference */
-   switch (ibox->BxHorizEdge)
+   switch (pBox->BxHorizEdge)
 	 {
 	    case Left:
 	       xr = x;
@@ -1858,14 +1858,14 @@ int                 frame;
 	       xr = x + large / 2;
 	       break;
 	    case VertRef:
-	       xr = x + ibox->BxVertRef;
+	       xr = x + pBox->BxVertRef;
 	       break;
 	    default:
 	       xr = x;
 	       break;
 	 }
 
-   switch (ibox->BxVertEdge)
+   switch (pBox->BxVertEdge)
 	 {
 	    case Top:
 	       yr = y;
@@ -1877,56 +1877,56 @@ int                 frame;
 	       yr = y + haut / 2;
 	       break;
 	    case HorizRef:
-	       yr = y + ibox->BxHorizRef;
+	       yr = y + pBox->BxHorizRef;
 	       break;
 	    default:
 	       yr = y;
 	       break;
 	 }
 
-   modPosition = (PModifiable (adpave, frame, True, &Xmin, &Xmax)
-		  || PModifiable (adpave, frame, False, &Ymin, &Ymax));
+   modPosition = (PModifiable (pAb, frame, True, &Xmin, &Xmax)
+		  || PModifiable (pAb, frame, False, &Ymin, &Ymax));
    if (!modPosition)
      {
-	adpave->AbHorizPos.PosUserSpecified = False;
-	adpave->AbVertPos.PosUserSpecified = False;
+	pAb->AbHorizPos.PosUserSpecified = False;
+	pAb->AbVertPos.PosUserSpecified = False;
      }
-   modDimension = (DModifiable (adpave, frame, True, &Xmin, &Xmax)
-		   || DModifiable (adpave, frame, False, &Ymin, &Ymax));
+   modDimension = (DModifiable (pAb, frame, True, &Xmin, &Xmax)
+		   || DModifiable (pAb, frame, False, &Ymin, &Ymax));
    if (!modDimension)
      {
-	adpave->AbWidth.DimUserSpecified = False;
-	adpave->AbHeight.DimUserSpecified = False;
+	pAb->AbWidth.DimUserSpecified = False;
+	pAb->AbHeight.DimUserSpecified = False;
      }
    if (modPosition || modDimension)
      {
 	/* Determine les limites de deplacement de la boite */
-	DepZone (adpave, frame, True, &Xmin, &Xmax);
-	DepZone (adpave, frame, False, &Ymin, &Ymax);
-	TtaDisplaySimpleMessageString (LIB, INFO, LIB_CREATING_THE_BOX, TypePave (adpave));
+	DepZone (pAb, frame, True, &Xmin, &Xmax);
+	DepZone (pAb, frame, False, &Ymin, &Ymax);
+	TtaDisplaySimpleMessageString (LIB, INFO, LIB_CREATING_THE_BOX, TypePave (pAb));
 	/* On retablit les positions par rapport a la fenetre */
-	Xmin -= pFe1->FrXOrg;
-	Xmax -= pFe1->FrXOrg;
-	Ymin -= pFe1->FrYOrg;
-	Ymax -= pFe1->FrYOrg;
+	Xmin -= pFrame->FrXOrg;
+	Xmax -= pFrame->FrXOrg;
+	Ymin -= pFrame->FrYOrg;
+	Ymax -= pFrame->FrYOrg;
 	GeomCreation (frame, &x, &y, xr, yr, &large, &haut,
 		      Xmin, Xmax, Ymin, Ymax,
-		      adpave->AbHorizPos.PosUserSpecified,
-		      adpave->AbVertPos.PosUserSpecified,
-		      adpave->AbWidth.DimUserSpecified,
-		      adpave->AbHeight.DimUserSpecified);
+		      pAb->AbHorizPos.PosUserSpecified,
+		      pAb->AbVertPos.PosUserSpecified,
+		      pAb->AbWidth.DimUserSpecified,
+		      pAb->AbHeight.DimUserSpecified);
 
 	/* Notification de la boite saisie */
-	adpave->AbHorizPos.PosUserSpecified = False;
-	adpave->AbVertPos.PosUserSpecified = False;
-	adpave->AbWidth.DimUserSpecified = False;
-	adpave->AbHeight.DimUserSpecified = False;
-	x = x + pFe1->FrXOrg - ibox->BxXOrg;
-	y = y + pFe1->FrYOrg - ibox->BxYOrg;
-	NouvPosition (adpave, x, y, frame, True);
-	large = large - ibox->BxWidth;
-	haut = haut - ibox->BxHeight;
-	NouvDimension (adpave, large, haut, frame, True);
+	pAb->AbHorizPos.PosUserSpecified = False;
+	pAb->AbVertPos.PosUserSpecified = False;
+	pAb->AbWidth.DimUserSpecified = False;
+	pAb->AbHeight.DimUserSpecified = False;
+	x = x + pFrame->FrXOrg - pBox->BxXOrg;
+	y = y + pFrame->FrYOrg - pBox->BxYOrg;
+	NouvPosition (pAb, x, y, frame, True);
+	large = large - pBox->BxWidth;
+	haut = haut - pBox->BxHeight;
+	NouvDimension (pAb, large, haut, frame, True);
      }
 
    /* Traitement de la creation interactive termine */
@@ -1935,7 +1935,7 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DesCaractere cherche le caractere affiche dans la boite ibox    | */
+/* |    DesCaractere cherche le caractere affiche dans la boite pBox    | */
 /* |            avec un decalage x. Rend le pointeur sur le buffer qui  | */
 /* |            contient le caractere designe', l'index du caractere    | */
 /* |            dans le buffer, l'index du caractere dans la boite et   | */
@@ -1943,10 +1943,10 @@ int                 frame;
 /* |            Met a jour la valeur x.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesCaractere (PtrBox ibox, PtrTextBuffer * adbuff, int *x, int *icar, int *nbcar, int *nbbl)
+void                DesCaractere (PtrBox pBox, PtrTextBuffer * adbuff, int *x, int *icar, int *nbcar, int *nbbl)
 #else  /* __STDC__ */
-void                DesCaractere (ibox, adbuff, x, icar, nbcar, nbbl)
-PtrBox            ibox;
+void                DesCaractere (pBox, adbuff, x, icar, nbcar, nbbl)
+PtrBox            pBox;
 PtrTextBuffer     *adbuff;
 int                *x;
 int                *icar;
@@ -1971,30 +1971,30 @@ int                *nbbl;
    *nbbl = 0;
    car = '\0';
    lgcar = 0;
-   if (ibox->BxNChars == 0 || *x <= 0)
+   if (pBox->BxNChars == 0 || *x <= 0)
      {
 	*x = 0;
-	*adbuff = ibox->BxBuffer;
-	*icar = ibox->BxFirstChar;
+	*adbuff = pBox->BxBuffer;
+	*icar = pBox->BxFirstChar;
      }
    else
      {
-	font = ibox->BxFont;
+	font = pBox->BxFont;
 	dx = 0;
-	newcar = ibox->BxFirstChar;
+	newcar = pBox->BxFirstChar;
 	*icar = newcar;
-	*adbuff = ibox->BxBuffer;
-	reste = ibox->BxNChars;
+	*adbuff = pBox->BxBuffer;
+	reste = pBox->BxNChars;
 	/* Calcule la largeur des blancs */
-	if (ibox->BxSpaceWidth == 0)
+	if (pBox->BxSpaceWidth == 0)
 	  {
 	     lgbl = CarWidth (BLANC, font);
 	     restbl = 0;
 	  }
 	else
 	  {
-	     lgbl = ibox->BxSpaceWidth;
-	     restbl = ibox->BxNPixels;
+	     lgbl = pBox->BxSpaceWidth;
+	     restbl = pBox->BxNPixels;
 	  }
 
 	/* Recherche le caractere designe dans la boite */
@@ -2076,7 +2076,7 @@ int                *nbbl;
 	     *x = dx - lgcar;	/* BAlignment sur le caractere */
 	     if (car == BLANC)
 	       {
-		  if (*nbbl > 0 && ibox->BxNPixels >= *nbbl)
+		  if (*nbbl > 0 && pBox->BxNPixels >= *nbbl)
 		     (*x)--;
 		  (*nbbl)--;
 	       }

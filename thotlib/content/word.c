@@ -198,7 +198,7 @@ PtrSearchContext           context;
 	context->SWholeDocument = False;
 	/* Attention les indices de caracteres sont des indices a */
 	/* la C (0 ... n) et des indices a la Pascal (1 ... n+1)  */
-	if (domain == 0)	/* Avant la selection */
+	if (domain == 0)	/* ElemIsBefore la selection */
 	  {
 	     context->SStartElement = NULL;
 	     context->SStartChar = 0;
@@ -224,7 +224,7 @@ PtrSearchContext           context;
 		if (CarFinSelInitial == 0 || CarFinSelInitial > ElFinSelInitial->ElTextLength)
 		   if (!ElFinSelInitial->ElTerminal)
 		     {
-			context->SStartElement = Successeur (ElFinSelInitial);
+			context->SStartElement = NextElement (ElFinSelInitial);
 			context->SStartChar = 0;
 		     }
 	     context->SEndElement = NULL;
@@ -373,7 +373,7 @@ PtrSearchContext           context;
 	   if (*elCourant != NULL)
 	      if (!context->SStartToEnd)
 		{
-		   *elCourant = DerFeuille (*elCourant);
+		   *elCourant = LastLeaf (*elCourant);
 		   *carCourant = (*elCourant)->ElVolume;
 		}
 	   ret = (context->STree >= 0);
@@ -454,12 +454,12 @@ PtrSearchContext           context;
      {
 	/* Recherche le premier element texte non vide et modifiable */
 
-	pEl = AvCherche (pEl, ord (CharString) + 1, NULL);
+	pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
 	icar = 0;
 	if (pEl != NULL)
 	  {
 	     if (Elfin != NULL)
-		if (Avant (Elfin, pEl))
+		if (ElemIsBefore (Elfin, pEl))
 		   /* l'element trouve' est apres l'element de fin, */
 		   /* on fait comme si on n'avait pas trouve' */
 		   pEl = NULL;
@@ -472,7 +472,7 @@ PtrSearchContext           context;
 		if (ArbreSuivant (&pEl, &icar, context))
 		   /* Il se peut que l'element rendu soit de type texte  */
 		   if (pEl->ElTypeNumber != ord (CharString) + 1)
-		      pEl = AvCherche (pEl, ord (CharString) + 1, NULL);
+		      pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
 	     }
 
 	if (pEl != NULL)
@@ -484,7 +484,7 @@ PtrSearchContext           context;
 		pAscendant = pAscendant->ElParent;
 	     if (pAscendant->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
-		if (!ElemHidden (pEl))
+		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' */
 		   /* On saute les elements vides */
 		   if (pEl->ElTextLength != 0)
@@ -620,11 +620,11 @@ PtrSearchContext           context;
    while (adbuff == NULL && pEl != NULL)
      {
 	/* Recherche le premier element texte non vide */
-	pEl = ArCherche (pEl, ord (CharString) + 1, NULL);
+	pEl = BackSearchTypedElem (pEl, ord (CharString) + 1, NULL);
 	if (pEl != NULL)
 	  {
 	     if (Elfin != NULL)
-		if (Avant (pEl, Elfin))
+		if (ElemIsBefore (pEl, Elfin))
 		   /* l'element trouve' est avant l'element de debut, */
 		   /* on fait comme si on n'avait pas trouve' */
 		   pEl = NULL;
@@ -637,7 +637,7 @@ PtrSearchContext           context;
 		if (ArbreSuivant (&pEl, &icar, context))
 		   /* Il se peut que l'element rendu soit de type texte */
 		   if (pEl->ElTypeNumber != ord (CharString) + 1)
-		      pEl = ArCherche (pEl, ord (CharString) + 1, NULL);
+		      pEl = BackSearchTypedElem (pEl, ord (CharString) + 1, NULL);
 	     }
 
 	/* On saute les elements vides */
@@ -650,7 +650,7 @@ PtrSearchContext           context;
 		pAscendant = pAscendant->ElParent;
 	     if (pAscendant->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
-		if (!ElemHidden (pEl))
+		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' */
 		   if (pEl->ElTextLength != 0)
 		     {

@@ -988,7 +988,7 @@ PtrDocument         pDoc;
 		     /* c'est peut-etre une inclusion */
 		     pRef = pEl->ElSource;
 		  if (pRef != NULL)
-		     pElem = ElemRefer (pRef, &IDocExt, &pDocExt);
+		     pElem = ReferredElement (pRef, &IDocExt, &pDocExt);
 	       }
 	     if (pElem == NULL)
 		ret = False;
@@ -1010,13 +1010,13 @@ PtrDocument         pDoc;
 			    if (Cond->TcAscendNature[0] == '\0')
 			       /* le type de l'ascendant est defini dans le meme schema de
 			          structure que l'element traite' */
-			       typeOK = Equivalent (Cond->TcAscendType, pEl->ElSructSchema,
+			       typeOK = EquivalentSRules (Cond->TcAscendType, pEl->ElSructSchema,
 						    pElem->ElTypeNumber, pElem->ElSructSchema, pElem->ElParent);
 			    else
 			       /* le type de l'ascendant est defini dans un autre schema */
 			       if (strcmp (Cond->TcAscendNature,
 					pElem->ElSructSchema->SsName) == 0)
-			       typeOK = Equivalent (Cond->TcAscendType,
+			       typeOK = EquivalentSRules (Cond->TcAscendType,
 					  pElem->ElSructSchema, pElem->ElTypeNumber,
 					 pElem->ElSructSchema, pElem->ElParent);
 			    pElem = pElem->ElParent;
@@ -1103,7 +1103,7 @@ PtrDocument         pDoc;
 						if (pRe1->SrConstruct == CsReference)
 						   /* c'est une reference */
 						   if (pRe1->SrReferredType != 0)
-						      refpossible = Equivalent (pRe1->SrReferredType, pSc1, pEl1->ElTypeNumber, pSc1, pEl1->ElParent);
+						      refpossible = EquivalentSRules (pRe1->SrReferredType, pSc1, pEl1->ElTypeNumber, pSc1, pEl1->ElParent);
 					     }
 					   while (!(refpossible || i >= pSc1->SsNRules));
 					   if (!refpossible)
@@ -1120,7 +1120,7 @@ PtrDocument         pDoc;
 							/* c'est une reference */
 							if (pSc1->SsAttribute[i - 1].AttrTypeRef != 0)
 							   refpossible = (pSc1->SsAttribute[i - 1].AttrTypeRefNature[0] == '\0'	/* meme schema de structure */
-									  && Equivalent (pSc1->SsAttribute[i - 1].AttrTypeRef, pSc1, pEl1->ElTypeNumber, pSc1, pEl1->ElParent));
+									  && EquivalentSRules (pSc1->SsAttribute[i - 1].AttrTypeRef, pSc1, pEl1->ElTypeNumber, pSc1, pEl1->ElParent));
 						  }
 						while (!(refpossible || i >= pSc1->SsNAttributes));
 					     }
@@ -1205,10 +1205,10 @@ PtrDocument         pDoc;
 					      while (pEl1 != NULL)
 						{
 						   if (pSchS != NULL)
-						      typeOK = Equivalent (Cond->TcElemType, pSchS,
+						      typeOK = EquivalentSRules (Cond->TcElemType, pSchS,
 									   pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElSructSchema->SsName) == 0)
-						      typeOK = Equivalent (Cond->TcElemType,
+						      typeOK = EquivalentSRules (Cond->TcElemType,
 									   pEl1->ElSructSchema, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
 						   else
 						      typeOK = False;
@@ -1226,10 +1226,10 @@ PtrDocument         pDoc;
 					      while (pEl1 != NULL)
 						{
 						   if (pSchS != NULL)
-						      typeOK = Equivalent (Cond->TcElemType, pSchS,
+						      typeOK = EquivalentSRules (Cond->TcElemType, pSchS,
 									   pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElSructSchema->SsName) == 0)
-						      typeOK = Equivalent (Cond->TcElemType,
+						      typeOK = EquivalentSRules (Cond->TcElemType,
 									   pEl1->ElSructSchema, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
 						   else
 						      typeOK = False;
@@ -1273,7 +1273,7 @@ PtrDocument         pDoc;
 							  if (Cond->TcTextValue[0] == '\0')
 							     ret = True;
 							  else
-							     ret = ChaineEtTexteEgaux (Cond->TcTextValue,
+							     ret = StringAndTextEqual (Cond->TcTextValue,
 										       pAt1->AeAttrText);
 							  break;
 						       case AtReferenceAttr:
@@ -1493,7 +1493,7 @@ PtrElement          pElNum;
 		  if (pTr1->TnOperation != TCntrRank || pTr1->TnAcestorLevel == 0)
 		     /* Cherche le premier element de type TnElemType1 */
 		     /* englobant l'element a numeroter */
-		     pEl = Ascendant (pElNum, pTr1->TnElemType1, PSchStr);
+		     pEl = GetTypedAncestor (pElNum, pTr1->TnElemType1, PSchStr);
 		  else
 		    {
 		       /* Cherche le nieme element de type TnElemType1 qui englobe */
@@ -1540,7 +1540,7 @@ PtrElement          pElNum;
 		     /* compte les marques de page qui precedent l'element */
 		     do
 		       {
-			  pEl = ArCherche (pEl, ord (PageBreak) + 1, NULL);
+			  pEl = BackSearchTypedElem (pEl, ord (PageBreak) + 1, NULL);
 			  if (pEl != NULL)
 			     /* cas page rappel supprime */
 			     /* on ne compte que les marques de page de la vue 1 */
@@ -1560,7 +1560,7 @@ PtrElement          pElNum;
 		     while (pEl->ElPrevious != NULL)
 		       {
 			  pEl = pEl->ElPrevious;
-			  if (TypeOK (pEl, pTr1->TnElemType1, PSchStr))
+			  if (EquivalentType (pEl, pTr1->TnElemType1, PSchStr))
 			     /* on ne compte pas les eventuelles marques de page */
 			     val++;
 		       }
@@ -1578,12 +1578,12 @@ PtrElement          pElNum;
 		  /* compteur. */
 		  do
 		    {
-		       pEl = Av2Cherche (pEl, pTr1->TnElemType2, pElNum->ElTypeNumber, PSchStr,
+		       pEl = FwdSearchElem2Types (pEl, pTr1->TnElemType2, pElNum->ElTypeNumber, PSchStr,
 					 pElNum->ElSructSchema);
 		       if (pEl != NULL)
 			 {
 			    pEl1 = pEl;
-			    if (TypeOK (pEl, pTr1->TnElemType2, PSchStr))
+			    if (EquivalentType (pEl, pTr1->TnElemType2, PSchStr))
 			       /* on ignore les pages qui ne */
 			       /* concernent pas la vue 1 */
 			       if (pEl1->ElTypeNumber != ord (PageBreak) + 1 ||
@@ -1649,7 +1649,7 @@ Name                 NomSS;
 		  SchOk = pEl1->ElSructSchema->SsCode == pSS->SsCode;
 		  pSS1 = pSS;
 	       }
-	     if (SchOk && Equivalent (TypeCh, pSS1, pEl1->ElTypeNumber, pSS1, *pEl))
+	     if (SchOk && EquivalentSRules (TypeCh, pSS1, pEl1->ElTypeNumber, pSS1, *pEl))
 		*pEl = pElFils;	/* Trouve' ! */
 	     else
 	       {
@@ -1785,7 +1785,7 @@ PtrDocument         pDoc;
 		 case AtTextAttr:
 		    if (pRT1->AtrTextValue[0] == '\0')
 		       pBloc = pRT1->AtrTxtTRuleBlock;
-		    else if (ChaineEtTexteEgaux (pRT1->AtrTextValue, pAttr->AeAttrText))
+		    else if (StringAndTextEqual (pRT1->AtrTextValue, pAttr->AeAttrText))
 		       pBloc = pRT1->AtrTxtTRuleBlock;
 		    break;
 		 case AtReferenceAttr:
@@ -2198,7 +2198,7 @@ boolean             lineBreak;
 			  pRef = pEl->ElSource;
 		    if (pRef != NULL)
 		      {
-			 pElRef = ElemRefer (pRef, &IDocExt, &pDocExt);
+			 pElRef = ReferredElement (pRef, &IDocExt, &pDocExt);
 			 if (pElRef == NULL)
 			    /* la reference ne designe rien */
 			    i = 0;
@@ -2659,7 +2659,7 @@ PtrDocument         pDoc;
 			      pRef = pEl->ElSource;
 			   if (pRef != NULL)
 			     {
-				pElRef = ElemRefer (pRef, &IDocExt, &pDocExt);
+				pElRef = ReferredElement (pRef, &IDocExt, &pDocExt);
 				nomASortir = NULL;
 				if (pRe1->TrObject == ToReferredDocumentName)
 				  {
@@ -2715,7 +2715,7 @@ PtrDocument         pDoc;
 			      pRef = pEl->ElSource;
 			   if (pRef != NULL)
 			     {
-				pElRef = ElemRefer (pRef, &IDocExt, &pDocExt);
+				pElRef = ReferredElement (pRef, &IDocExt, &pDocExt);
 				if (pElRef != NULL)
 				   /* la reference designe l'element pElRef */
 				   /* On le prend s'il a le type voulu */
@@ -2725,11 +2725,11 @@ PtrDocument         pDoc;
 				     else
 					pSS = NULL;
 				     if (!((pSS != NULL &&
-					    Equivalent (pRe1->TrObjectNum, pSS, pElRef->ElTypeNumber, pElRef->ElSructSchema, pElRef->ElParent)
+					    EquivalentSRules (pRe1->TrObjectNum, pSS, pElRef->ElTypeNumber, pElRef->ElSructSchema, pElRef->ElParent)
 					   )
 					   || (pSS == NULL &&
 					       strcmp (pRe1->TrObjectNature, pElRef->ElSructSchema->SsName) == 0
-					       && Equivalent (pRe1->TrObjectNum, pElRef->ElSructSchema,
+					       && EquivalentSRules (pRe1->TrObjectNum, pElRef->ElSructSchema,
 							      pElRef->ElTypeNumber, pElRef->ElSructSchema, pElRef->ElParent)
 					   )
 					 )
@@ -2782,7 +2782,7 @@ PtrDocument         pDoc;
 				   pRef = pEl->ElSource;
 				if (pRef != NULL)
 				  {
-				     pElGet = ElemRefer (pRef, &IDocExt, &pDocExt);
+				     pElGet = ReferredElement (pRef, &IDocExt, &pDocExt);
 				     if (pElGet == NULL && IDocExt[0] != '\0')
 					/* reference a un document externe non charge' */
 					if (pRef != NULL)
@@ -2823,7 +2823,7 @@ PtrDocument         pDoc;
 					       if (pSS->SsRule[i - 1].SrConstruct == CsReference)
 						  /* c'est une reference */
 						  if (pSS->SsRule[i - 1].SrReferredType != 0)
-						     refpossible = Equivalent (pSS->SsRule[i - 1].SrReferredType, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent);
+						     refpossible = EquivalentSRules (pSS->SsRule[i - 1].SrReferredType, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent);
 					    }
 					  while (!(refpossible || i >= pSS->SsNRules));
 				       }
@@ -2841,7 +2841,7 @@ PtrDocument         pDoc;
 						  /* c'est une reference */
 						  if (pSS->SsAttribute[i - 1].AttrTypeRef != 0)
 						     refpossible = (pSS->SsAttribute[i - 1].AttrTypeRefNature[0] == '\0'	/* meme schema de structure */
-								    && Equivalent (pSS->SsAttribute[i - 1].AttrTypeRef, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent));
+								    && EquivalentSRules (pSS->SsAttribute[i - 1].AttrTypeRef, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent));
 					    }
 					  while (!(refpossible || i >= pSS->SsNAttributes));
 				       }
@@ -2917,7 +2917,7 @@ PtrDocument         pDoc;
 				pEl1 = pElGet;
 				if ((pEl1->ElSructSchema == pEl->ElSructSchema ||
 				     (strcmp (pRe1->TrElemNature, pEl1->ElSructSchema->SsName) == 0))
-				    && Equivalent (pRe1->TrElemType, pEl1->ElSructSchema,
+				    && EquivalentSRules (pRe1->TrElemType, pEl1->ElSructSchema,
 						   pEl1->ElTypeNumber, pEl1->ElSructSchema, pElGet->ElParent))
 				   trouve = True;
 				else
@@ -2952,7 +2952,7 @@ PtrDocument         pDoc;
 			   if (pRef == NULL)
 			      pElGet = NULL;
 			   else
-			      pElGet = ElemRefer (pEl->ElReference, &IDocExt, &pDocExt);
+			      pElGet = ReferredElement (pEl->ElReference, &IDocExt, &pDocExt);
 			   if (pElGet != NULL)
 			      /* il y a bien un element designe'. On le prend s'il */
 			      /* a le type voulu */
@@ -2963,11 +2963,11 @@ PtrDocument         pDoc;
 				else
 				   pSS = NULL;
 				if (!((pSS != NULL &&
-				       Equivalent (pRe1->TrElemType, pSS, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent)
+				       EquivalentSRules (pRe1->TrElemType, pSS, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent)
 				      )
 				      || (pSS == NULL &&
 					  strcmp (pRe1->TrElemNature, pEl1->ElSructSchema->SsName) == 0
-					  && Equivalent (pRe1->TrElemType, pEl1->ElSructSchema,
+					  && EquivalentSRules (pRe1->TrElemType, pEl1->ElSructSchema,
 							 pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent)
 				      )
 				    )

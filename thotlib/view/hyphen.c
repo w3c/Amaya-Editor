@@ -647,20 +647,20 @@ boolean            *hyphen;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             Hyphenable (PtrBox ibox)
+boolean             Hyphenable (PtrBox pBox)
 
 #else  /* __STDC__ */
-boolean             Hyphenable (ibox)
-PtrBox            ibox;
+boolean             Hyphenable (pBox)
+PtrBox            pBox;
 
 #endif /* __STDC__ */
 
 {
    Language            langue;
 
-   if (!Insert && ibox->BxAbstractBox->AbHyphenate)
+   if (!Insert && pBox->BxAbstractBox->AbHyphenate)
      {
-	langue = ibox->BxAbstractBox->AbLanguage;
+	langue = pBox->BxAbstractBox->AbLanguage;
 /*PhL */ if (TtaExistPatternList (langue))
 	   /*PhL *//* il existe une table de pattern */
 /*PhL */ return True;

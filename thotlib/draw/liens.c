@@ -795,7 +795,7 @@ CalculerFleche (Fleche, TypeLien, AncreOrig, AncreDest)
    * Fleche     Element       Polygone pour lequel on veut detruire les points
    * Doc                Document      Document contenant le polygone
    *
-   * Functionality : Supprime tous les points du polygone en vue d'une mise a jour
+   * Functionality : DeleteElement tous les points du polygone en vue d'une mise a jour
    *
    ------------------------------------------------------------------------------
    !EF */

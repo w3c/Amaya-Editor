@@ -1403,8 +1403,8 @@ boolean             forw;
 			 {
 			    /* se placer sur le prochain texte */
 			    *pEl2 = forw ?
-			       AvCherche (*pEl2, ord (CharString) + 1, NULL) :
-			       ArCherche (*pEl2, ord (CharString) + 1, NULL);
+			       FwdSearchTypedElem (*pEl2, ord (CharString) + 1, NULL) :
+			       BackSearchTypedElem (*pEl2, ord (CharString) + 1, NULL);
 			    if ((*pEl2) != NULL)
 			       *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 			    else
@@ -1416,7 +1416,7 @@ boolean             forw;
 			    if (pos1 == 0 && !forw)
 			      {
 				 /* se placer sur le texte precedent */
-				 *pEl2 = ArCherche (*pEl2, ord (CharString) + 1, NULL);
+				 *pEl2 = BackSearchTypedElem (*pEl2, ord (CharString) + 1, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
@@ -1427,7 +1427,7 @@ boolean             forw;
 /*HR */ if (pos1 > pEl1->ElTextLength && forw)
 			      {
 				 /* se placer sur le prochain texte */
-				 *pEl2 = AvCherche (*pEl2, ord (CharString) + 1, NULL);
+				 *pEl2 = FwdSearchTypedElem (*pEl2, ord (CharString) + 1, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
@@ -2010,8 +2010,8 @@ char               *expression;
 		  if (pEl1 != NULL && pEl1->ElTypeNumber != 1)
 		    {
 		       pEl1 = EnAvant ?
-			  AvCherche (pEl1, ord (CharString) + 1, NULL) :
-			  ArCherche (Successeur (pEl1), ord (CharString) + 1, NULL);
+			  FwdSearchTypedElem (pEl1, ord (CharString) + 1, NULL) :
+			  BackSearchTypedElem (NextElement (pEl1), ord (CharString) + 1, NULL);
 		       if (pEl1 != NULL)
 			  inx1 = EnAvant ? 1 : pEl1->ElTextLength;
 		    }
@@ -2031,8 +2031,8 @@ char               *expression;
 				 if (*textchar == -1)
 				   {
 				      pEl1 = EnAvant ?
-					 AvCherche (pEl1, ord (CharString) + 1, NULL) :
-					 ArCherche (Successeur (pEl1), ord (CharString) + 1,
+					 FwdSearchTypedElem (pEl1, ord (CharString) + 1, NULL) :
+					 BackSearchTypedElem (NextElement (pEl1), ord (CharString) + 1,
 						    NULL);
 				      if (pEl1 == NULL)
 					{
@@ -2128,8 +2128,8 @@ char               *expression;
 			    if (*textchar == -1)
 			      {
 /*HR */ pEl1 = EnAvant ?
-				    AvCherche (pEl1old, ord (CharString) + 1, NULL) :
-				    ArCherche (pEl1old, ord (CharString) + 1,
+				    FwdSearchTypedElem (pEl1old, ord (CharString) + 1, NULL) :
+				    BackSearchTypedElem (pEl1old, ord (CharString) + 1,
 					       NULL);
 				 if (pEl1 == NULL)
 				    goto Lstop;
@@ -2177,12 +2177,12 @@ char               *expression;
 		}
 	      else if (EnAvant)
 		{
-		   if (Avant (*pElFin, pEl1))
+		   if (ElemIsBefore (*pElFin, pEl1))
 		      /* l'element trouve' est apres l'element de fin, on fait */
 		      /* comme si on n'avait pas trouve' */
 		      trouve = False;
 		}
-	      else if (Avant (pEl1, *pElFin))
+	      else if (ElemIsBefore (pEl1, *pElFin))
 		 trouve = False;
 	/*HR *//* fin ajout */
 	if (trouve)

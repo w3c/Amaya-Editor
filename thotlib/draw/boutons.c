@@ -387,7 +387,7 @@ static void AttacherIcones (doc, view)
    * doc                Document        Document duquel on veut modifier la fenetre
    * view               View            Vue concernee
    *
-   * Functionality : Supprime les boutons sur la vue principale.
+   * Functionality : DeleteElement les boutons sur la vue principale.
    *
    ------------------------------------------------------------------------------
    !EF */

@@ -322,17 +322,17 @@ ptrfont             font;
 /* ---------------------------------------------------------------------- */
 /* |    PixelValue calcule la valeur pixel en fonction de l'unite       | */
 /* |            logique associee.                                       | */
-/* |            Le parametre adpave donne l'adresse du pave courant,    | */
-/* |            sauf dans le cas UnPercent, ou adpave contient la       | */
+/* |            Le parametre pAb donne l'adresse du pave courant,    | */
+/* |            sauf dans le cas UnPercent, ou pAb contient la       | */
 /* |            valeur de reference.                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox adpave)
+int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 #else  /* __STDC__ */
-int                 PixelValue (val, unit, adpave)
+int                 PixelValue (val, unit, pAb)
 int                 val;
 TypeUnit            unit;
-PtrAbstractBox             adpave;
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 {
@@ -341,16 +341,16 @@ PtrAbstractBox             adpave;
    switch (unit)
 	 {
 	    case UnRelative:
-	       if (adpave == NULL || adpave->AbBox == NULL || adpave->AbBox->BxFont == NULL)
+	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 		  dist = 0;
 	       else
-		  dist = (val * FontHeight (adpave->AbBox->BxFont) + 5) / 10;
+		  dist = (val * FontHeight (pAb->AbBox->BxFont) + 5) / 10;
 	       break;
 	    case UnXHeight:
-	       if (adpave == NULL || adpave->AbBox == NULL || adpave->AbBox->BxFont == NULL)
+	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 		  dist = 0;
 	       else
-		  dist = (val * CarHeight ('X', adpave->AbBox->BxFont)) / 10;
+		  dist = (val * CarHeight ('X', pAb->AbBox->BxFont)) / 10;
 	       break;
 	    case UnPoint:
 	       dist = PtEnPixel (val, 1);
@@ -359,7 +359,7 @@ PtrAbstractBox             adpave;
 	       dist = val;
 	       break;
 	    case UnPercent:
-	       i = val * (int) adpave;
+	       i = val * (int) pAb;
 	       dist = i / 100;
 	       break;
 	 }
@@ -369,17 +369,17 @@ PtrAbstractBox             adpave;
 /* ---------------------------------------------------------------------- */
 /* |    PixelValue calcule la valeur logique a partir de la valeur      | */
 /* |            pixel en fonction de l'unite logique associee.          | */
-/* |            Le parametre adpave donne l'adresse du pave courant,    | */
-/* |            sauf dans le cas UnPercent, ou adpave contient la       | */
+/* |            Le parametre pAb donne l'adresse du pave courant,    | */
+/* |            sauf dans le cas UnPercent, ou pAb contient la       | */
 /* |            valeur de reference.                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox adpave)
+int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 #else  /* __STDC__ */
-int                 LogicalValue (val, unit, adpave)
+int                 LogicalValue (val, unit, pAb)
 int                 val;
 TypeUnit            unit;
-PtrAbstractBox             adpave;
+PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 {
@@ -388,16 +388,16 @@ PtrAbstractBox             adpave;
    switch (unit)
 	 {
 	    case UnRelative:
-	       if (adpave == NULL || adpave->AbBox == NULL || adpave->AbBox->BxFont == NULL)
+	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 		  dist = 0;
 	       else
-		  dist = val * 10 / FontHeight (adpave->AbBox->BxFont);
+		  dist = val * 10 / FontHeight (pAb->AbBox->BxFont);
 	       break;
 	    case UnXHeight:
-	       if (adpave == NULL || adpave->AbBox == NULL || adpave->AbBox->BxFont == NULL)
+	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 		  dist = 0;
 	       else
-		  dist = val * 10 / CarHeight ('x', adpave->AbBox->BxFont);
+		  dist = val * 10 / CarHeight ('x', pAb->AbBox->BxFont);
 	       break;
 	    case UnPoint:
 	       dist = PixelEnPt (val, 1);
@@ -406,12 +406,12 @@ PtrAbstractBox             adpave;
 	       dist = val;
 	       break;
 	    case UnPercent:
-	       if (adpave == NULL)
+	       if (pAb == NULL)
 		  dist = 0;
 	       else
 		 {
 		    i = val * 100;
-		    dist = i / (int) adpave;
+		    dist = i / (int) pAb;
 		 }
 	       break;
 	 }

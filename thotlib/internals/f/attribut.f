@@ -4,46 +4,46 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PtrAttribute MetAttribut ( int NumExcept, PtrElement pEl, PtrElement pElRef, PtrDocument pDoc );
-extern void ReaffAttribut ( PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc );
-extern void CoupeSelection ( PtrDocument SelDoc, PtrElement *PremSel, PtrElement *DerSel, int *premcar, int *dercar );
+extern PtrAttribute AttachAttrByExceptNum ( int NumExcept, PtrElement pEl, PtrElement pElRef, PtrDocument pDoc );
+extern void RedisplayAttribute ( PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc );
+extern void CutSelection ( PtrDocument SelDoc, PtrElement *PremSel, PtrElement *DerSel, int *premcar, int *dercar );
 extern boolean MemesAttributs ( PtrElement pEl1, PtrElement pEl2 );
-extern void ApplReglesAttr ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean herit );
-extern void ApplReglesPresHeriteesAttr ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
-extern void ApplReglesPresCompareesAttr ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
-extern void ChaineLib ( PtrElement pL, PtrElement *PremLib );
-extern void ChngLanguage ( PtrDocument pDoc, PtrElement pEl, Language langue, boolean force );
-extern void AttrInitCompteur ( PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc );
-extern void SupprPresAttr ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttrSuppr, boolean herit, PtrAttribute pAttrComp );
-extern void SupprPresHeriteesAttr ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
-extern void SupprPresCompareeAttr ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
-extern PtrAttribute AjouteAttribut ( PtrElement pEl, PtrAttribute pAttrNouv );
-extern void ApplAttrToSel ( PtrAttribute pAttrNouv, int dercar, int premcar, PtrElement DerSel, PtrElement PremSel, PtrDocument SelDoc );
-extern void AttrRequis ( PtrElement pEl, PtrDocument pDoc );
-extern PtrAttribute AttrExceptElem ( PtrElement pEl, int NumExcept );
-extern void ChngValAttr ( PtrElement pEl, PtrDocument pDoc, int NouvVal, int NumExcept );
-extern void PutAttributs(PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr);
+extern void ApplyAttrPRulesToElem ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean herit );
+extern void ApplyAttrPRulesToSubtree ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
+extern void ApplyAttrPRules ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
+extern void KeepFreeElements ( PtrElement pL, PtrElement *PremLib );
+extern void ChangeLanguage ( PtrDocument pDoc, PtrElement pEl, Language langue, boolean force );
+extern void UpdateCountersByAttr ( PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc );
+extern void RemoveAttrPresentation ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttrSuppr, boolean herit, PtrAttribute pAttrComp );
+extern void RemoveInheritedAttrPresent ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
+extern void RemoveComparAttrPresent ( PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr );
+extern PtrAttribute AddAttrToElem ( PtrElement pEl, PtrAttribute pAttrNouv );
+extern void AttachAttrToRange ( PtrAttribute pAttrNouv, int dercar, int premcar, PtrElement DerSel, PtrElement PremSel, PtrDocument SelDoc );
+extern void AttachMandatoryAttributes ( PtrElement pEl, PtrDocument pDoc );
+extern PtrAttribute GetAttrByExceptNum ( PtrElement pEl, int NumExcept );
+extern void SetAttrValueByExceptNum ( PtrElement pEl, PtrDocument pDoc, int NouvVal, int NumExcept );
+extern void AttachAttrWithValue(PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr);
 
 #else /* __STDC__ */
 
-extern PtrAttribute MetAttribut (/* int NumExcept, PtrElement pEl, PtrElement pElRef, PtrDocument pDoc */);
-extern void ReaffAttribut (/* PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc */);
-extern void CoupeSelection (/* PtrDocument SelDoc, PtrElement *PremSel, PtrElement *DerSel, int *premcar, int *dercar */);
+extern PtrAttribute AttachAttrByExceptNum (/* int NumExcept, PtrElement pEl, PtrElement pElRef, PtrDocument pDoc */);
+extern void RedisplayAttribute (/* PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc */);
+extern void CutSelection (/* PtrDocument SelDoc, PtrElement *PremSel, PtrElement *DerSel, int *premcar, int *dercar */);
 extern boolean MemesAttributs (/* PtrElement pEl1, PtrElement pEl2 */);
-extern void ApplReglesAttr (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean herit */);
-extern void ApplReglesPresHeriteesAttr (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
-extern void ApplReglesPresCompareesAttr (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
-extern void ChaineLib (/* PtrElement pL, PtrElement *PremLib */);
-extern void ChngLanguage (/* PtrDocument pDoc, PtrElement pEl, Language langue, boolean force */);
-extern void AttrInitCompteur (/* PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc */);
-extern void SupprPresAttr (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttrSuppr, boolean herit, PtrAttribute pAttrComp */);
-extern void SupprPresHeriteesAttr (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
-extern void SupprPresCompareeAttr (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
-extern PtrAttribute AjouteAttribut (/* PtrElement pEl, PtrAttribute pAttrNouv */);
-extern void ApplAttrToSel (/* PtrAttribute pAttrNouv, int dercar, int premcar, PtrElement DerSel, PtrElement PremSel, PtrDocument SelDoc */);
-extern void AttrRequis (/* PtrElement pEl, PtrDocument pDoc */);
-extern PtrAttribute AttrExceptElem (/* PtrElement pEl, int NumExcept */);
-extern void ChngValAttr (/* PtrElement pEl, PtrDocument pDoc, int NouvVal, int NumExcept */);
-extern void PutAttributs(/*PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr*/);
+extern void ApplyAttrPRulesToElem (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean herit */);
+extern void ApplyAttrPRulesToSubtree (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
+extern void ApplyAttrPRules (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
+extern void KeepFreeElements (/* PtrElement pL, PtrElement *PremLib */);
+extern void ChangeLanguage (/* PtrDocument pDoc, PtrElement pEl, Language langue, boolean force */);
+extern void UpdateCountersByAttr (/* PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc */);
+extern void RemoveAttrPresentation (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttrSuppr, boolean herit, PtrAttribute pAttrComp */);
+extern void RemoveInheritedAttrPresent (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
+extern void RemoveComparAttrPresent (/* PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr */);
+extern PtrAttribute AddAttrToElem (/* PtrElement pEl, PtrAttribute pAttrNouv */);
+extern void AttachAttrToRange (/* PtrAttribute pAttrNouv, int dercar, int premcar, PtrElement DerSel, PtrElement PremSel, PtrDocument SelDoc */);
+extern void AttachMandatoryAttributes (/* PtrElement pEl, PtrDocument pDoc */);
+extern PtrAttribute GetAttrByExceptNum (/* PtrElement pEl, int NumExcept */);
+extern void SetAttrValueByExceptNum (/* PtrElement pEl, PtrDocument pDoc, int NouvVal, int NumExcept */);
+extern void AttachAttrWithValue(/*PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr*/);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

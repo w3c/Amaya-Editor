@@ -69,7 +69,7 @@ char               *data;
 	   if (CurrentDialog == NumFormCreerDoc)
 	     {
 		/* confirme la creation */
-		CreeDocument (&pDoc);	/* acquiert un contexte de document */
+		CreateDocument (&pDoc);	/* acquiert un contexte de document */
 		if (pDoc != NULL)
 		   /* cree un document dans ce contexte */
 		   NewDocument (&pDoc, (PtrBuffer) ClasseDocACreer,

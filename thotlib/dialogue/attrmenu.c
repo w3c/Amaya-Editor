@@ -148,7 +148,7 @@ PtrAttribute         AttCour;
 
    /* cherche la valeur heritee de l'attribut Langue */
    strcpy (Lab, TtaGetMessage (LIB, LIB_INHERITED_LANGUAGE));
-   pAttrHerit = GetAttrInEnclosing (PremSel, 1, NULL, &pElAttr);
+   pAttrHerit = GetTypedAttrAncestor (PremSel, 1, NULL, &pElAttr);
    if (pAttrHerit != NULL)
       if (pAttrHerit->AeAttrText != NULL)
 	 strcat (Lab, pAttrHerit->AeAttrText->BuContent);
@@ -321,8 +321,8 @@ char               *txt;
 	       if (PtrAttrRequis->AeAttrText == NULL)
 		  GetBufTexte (&PtrAttrRequis->AeAttrText);
 	       else
-		  VideTexte (PtrAttrRequis->AeAttrText);
-	       CopieChaineDansTexte (txt, PtrAttrRequis->AeAttrText, &lg);
+		  ClearText (PtrAttrRequis->AeAttrText);
+	       CopyStringToText (txt, PtrAttrRequis->AeAttrText, &lg);
 	       break;
 	    case NumMenuAttrEnumRequis:
 	       /* menu des valeurs d'un attribut a valeurs enumerees */
@@ -454,7 +454,7 @@ int                 ActiveAttr[];
 			    /* on saute les attributs locaux */
 			    if (pSS->SsAttribute[att - 1].AttrGlobal)
 			       /* on saute les attributs ayant l'exception Invisible */
-			       if (!ExceptAttr (ExcInvisible, att, pSS))
+			       if (!AttrHasException (ExcInvisible, att, pSS))
 				  /* on saute l'attribut Langue, sauf la 1ere fois */
 				  if (nbentrees == 0 || att != 1)
 				     if (TteItemMenuAttr (pSS, att, PremSel, SelDoc))
@@ -486,7 +486,7 @@ int                 ActiveAttr[];
 		/* prend les attributs locaux definis dans cette regle */
 		for (att = 1; att <= pRe1->SrNLocalAttrs; att++)
 		   if (nbentrees < LgMaxMenuAttribut && nbentrees < MAX_ENTRY - 1)
-		      if (!ExceptAttr (ExcInvisible, pRe1->SrLocalAttr[att - 1], pSS))
+		      if (!AttrHasException (ExcInvisible, pRe1->SrLocalAttr[att - 1], pSS))
 			 if (TteItemMenuAttr (pSS, pRe1->SrLocalAttr[att - 1], PremSel,
 					      SelDoc))
 			   {
@@ -504,7 +504,7 @@ int                 ActiveAttr[];
 	     if (pSchExt != NULL)
 	       {
 		  pSS = pSchExt;
-		  pRe1 = RegleExtens (PremSel->ElSructSchema, PremSel->ElTypeNumber,
+		  pRe1 = ExtensionRule (PremSel->ElSructSchema, PremSel->ElTypeNumber,
 				      pSchExt);
 	       }
 	  }
@@ -531,7 +531,7 @@ int                 ActiveAttr[];
 		     sprintf (BufEtoileNom, "T%s...", pAt2->AttrName);
 		  /* met une etoile devant le nom de l'attribut s'il a une */
 		  /* valeur pour la selection courante */
-		  if (ValAttr (PremSel, pAttrNouv) != NULL)
+		  if (AttributeValue (PremSel, pAttrNouv) != NULL)
 		     ActiveAttr[att] = 1;
 		  else
 		     ActiveAttr[att] = 0;
@@ -541,7 +541,7 @@ int                 ActiveAttr[];
 		  lgmenu += i;
 	       }
 	  }
-	AttrSupprime (NULL, pAttrNouv);
+	DeleteAttribute (NULL, pAttrNouv);
      }
    return nbentrees;
 }
@@ -703,7 +703,7 @@ char               *valtexte;
 					/* la valeur saisie devient la valeur courante */
 					pAttrNouv->AeAttrValue = ValeurNumAttribut;
 				     /* applique les attributs a la partie selectionnee */
-				     ApplAttrToSel (pAttrNouv, dercar, premcar, DerSel, PremSel,
+				     AttachAttrToRange (pAttrNouv, dercar, premcar, DerSel, PremSel,
 						    SelDoc);
 				     break;
 
@@ -717,12 +717,12 @@ char               *valtexte;
 					  if (pAttrNouv->AeAttrText == NULL)
 					     GetBufTexte (&pAttrNouv->AeAttrText);
 					  else
-					     VideTexte (pAttrNouv->AeAttrText);
-					  CopieChaineDansTexte (ValeurTexteAttribut,
+					     ClearText (pAttrNouv->AeAttrText);
+					  CopyStringToText (ValeurTexteAttribut,
 					      pAttrNouv->AeAttrText, &lg);
 				       }
 				     /* applique les attributs a la partie selectionnee */
-				     ApplAttrToSel (pAttrNouv, dercar, premcar, DerSel, PremSel,
+				     AttachAttrToRange (pAttrNouv, dercar, premcar, DerSel, PremSel,
 						    SelDoc);
 				     break;
 
@@ -738,7 +738,7 @@ char               *valtexte;
 					/* la valeur choisie devient la valeur courante */
 					pAttrNouv->AeAttrValue = ValeurNumAttribut;
 				     /* applique les attributs a la partie selectionnee */
-				     ApplAttrToSel (pAttrNouv, dercar, premcar, DerSel, PremSel,
+				     AttachAttrToRange (pAttrNouv, dercar, premcar, DerSel, PremSel,
 						    SelDoc);
 				     break;
 
@@ -747,7 +747,7 @@ char               *valtexte;
 			       }
 			 MajMenuAttr (SelDoc);
 		      }
-		    AttrSupprime (NULL, pAttrNouv);
+		    DeleteAttribute (NULL, pAttrNouv);
 		 }
 	       break;
 	 }
@@ -807,7 +807,7 @@ int                 frame;
 		     MajImAbs (SelDoc);
 		  }
 		/* applique l'attribut a la partie selectionnee */
-		ApplAttrToSel (pAttrNouv, dercar, premcar, DerSel, PremSel,
+		AttachAttrToRange (pAttrNouv, dercar, premcar, DerSel, PremSel,
 			       SelDoc);
 		MajMenuAttr (SelDoc);
 	     }
@@ -815,7 +815,7 @@ int                 frame;
 	     {
 		/* cherche la valeur de cet attribut pour le premier element */
 		/* selectionne' */
-		AttCour = ValAttr (PremSel, pAttrNouv);
+		AttCour = AttributeValue (PremSel, pAttrNouv);
 		if (pAttrNouv->AeAttrNum == 1)
 		  {
 		     InitFormLangue (doc, view, PremSel, AttCour);
@@ -834,7 +834,7 @@ int                 frame;
 			/* suppression de l'attribut */
 			pAttrNouv->AeAttrValue = 0;
 		     /* applique l'operation a la partie selectionnee */
-		     ApplAttrToSel (pAttrNouv, dercar, premcar, DerSel, PremSel,
+		     AttachAttrToRange (pAttrNouv, dercar, premcar, DerSel, PremSel,
 				    SelDoc);
 		  }
 		else
@@ -855,7 +855,7 @@ int                 frame;
 		     /* affiche le formulaire */
 		     TtaShowDialogue (NumMenuAttr, True);
 		  }
-		AttrSupprime (NULL, pAttrNouv);
+		DeleteAttribute (NULL, pAttrNouv);
 	     }
 	}
 }
