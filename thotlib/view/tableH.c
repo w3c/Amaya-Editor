@@ -646,7 +646,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   int                 min, max, sum;
   int                 percent, sumPercent;
   int                 minOfPercent, minOfWidth;
-  int                 mbp, var;
+  int                 mbp, var, cellspacing;
   ThotBool            constraint, useMax = FALSE;
   ThotBool            addPixels;
 
@@ -767,6 +767,12 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   /* get the extra width of the table */
   min = min;
   max = max;
+  /* take into account the cell spacing */
+  if (colBox[0] && colBox[0]->AbEnclosing && colBox[0]->AbEnclosing->AbBox)
+    cellspacing = colBox[0]->AbEnclosing->AbBox->BxLPadding * (cNumber + 1);
+  else
+    cellspacing = 0;
+  width -= cellspacing;
   if (sumPercent > 0)
     {
       minOfPercent = sumPercent * width / 100;
@@ -812,7 +818,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       /*if (width != pBox->BxW)*/
 	/* don't pack rows with each cell */
 	PackRows = FALSE;
-      ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, width + cellspacing - pBox->BxW,
+		   0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  box = colBox[cRef]->AbBox;
@@ -847,7 +854,8 @@ printf ("Minimum Widths ...\n");
       /*if (width != pBox->BxW)*/
 	/* don't pack rows with each cell */
 	PackRows = FALSE;
-      ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, width + cellspacing - pBox->BxW,
+		   0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  box = colBox[cRef]->AbBox;
@@ -881,7 +889,8 @@ printf ("Specific Widths ...\n");
       /*if (width != pBox->BxW)*/
 	/* don't pack rows with each cell */
 	PackRows = FALSE;
-      ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, width + cellspacing - pBox->BxW,
+		   0, 0, 0, frame);
       /* get the space available for stretchable columns */      
       delta = width - sum - sumPercent;
       /* display with the maximum or the minimum widths */
@@ -1454,7 +1463,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 
 		      cell = pAb;
 		      box = cell->AbBox;
-		      /* get the min and max and constrained widths */
+ 		      /* get the min and max and constrained widths */
 		      GiveCellWidths (cell, frame, &min, &max, &cellWidth, &percent);
 		      if (box->BxMinWidth != min)
 			box->BxMinWidth = min;
@@ -1541,8 +1550,9 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 	    }
 	  else
 	    {
-	      realMin += colBox[cRef]->AbBox->BxWidth;
-	      realMax += colBox[cRef]->AbBox->BxWidth;
+	      realMin += colBox[cRef]->AbBox->BxMinWidth;
+	      realMax += colBox[cRef]->AbBox->BxMaxWidth;
+	      percent += colPercent[cRef];
 	    }
 	}
 	  

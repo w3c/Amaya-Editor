@@ -685,14 +685,6 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 
   if (pBox != NULL)
     {
-#ifdef TAB_DEBUG
-      if (pBox->BxType == BoTable)
-	printf ("ChangeWidth (table=%s, value=%d)\n",
-		pBox->BxAbstractBox->AbElement->ElLabel, delta);
-      else if (pBox->BxType == BoColumn)
-	printf ("ChangeWidth (column=%s, value=%d)\n",
-		pBox->BxAbstractBox->AbElement->ElLabel, delta);
-#endif
       minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
 		     && pBox->BxAbstractBox->AbWidth.DimMinimum);
 

@@ -115,9 +115,30 @@ PtrAbstractBox SearchNextAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
     }
 }
 
+/*----------------------------------------------------------------------
+  GetParentTable returns the enclosing table or NULL.                
+  ----------------------------------------------------------------------*/
+PtrAbstractBox GetParentTable (PtrBox pBox)
+{
+   PtrAbstractBox      pAb;
+   ThotBool            found;
+
+   /* check parents */
+   found = FALSE;
+   pAb = pBox->BxAbstractBox->AbEnclosing;
+   while (pAb != NULL && !found)
+     {
+       if (pAb->AbBox != NULL && pAb->AbBox->BxType == BoTable)
+	 found = TRUE;
+       else
+	 pAb = pAb->AbEnclosing;
+     }
+   return (pAb);
+}
+
 
 /*----------------------------------------------------------------------
-  GetParentCell returns the enlcosing cell or NULL.                
+  GetParentCell returns the enclosing cell or NULL.                
   ----------------------------------------------------------------------*/
 PtrAbstractBox GetParentCell (PtrBox pBox)
 {
@@ -3066,7 +3087,7 @@ static void TransmitDeadStatus (PtrAbstractBox pAb)
 ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 {
   PtrLine             pLine;
-  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr;
+  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr, table;
   PtrBox              pNextBox;
   PtrBox              pCurrentBox = NULL;
   PtrBox              pMainBox;
@@ -4102,6 +4123,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			(void *)pCell,
 			(void *)NULL,
 			(void *)frame);
+	      else
+		{
+		  table = GetParentTable (pCurrentBox);
+		  if (table &&  ThotLocalActions[T_checktable])
+		(*(Proc4)ThotLocalActions[T_checktable]) (
+			(void *)table,
+			(void *)NULL,
+			(void *)NULL,
+			(void *)frame);
+		}
 	    }
 	  /* Restore the propagation */
 	  Propagate = savpropage;
