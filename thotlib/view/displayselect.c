@@ -427,7 +427,6 @@ PtrBox       pBox;
 {
   PtrBox              pChildBox;
   PtrAbstractBox      pAb;
-  int                 leftX, topY;
 
   if (pBox != NULL)
     {

@@ -1715,208 +1715,208 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer       pTargetBuffer;
-   PtrTextBuffer       pSourceBuffer;
-   PictInfo           *pictInfo;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
-   ptrfont             font;
-   int                 sourceInd, targetInd;
-   int                 length;
-   int                 i;
-   int                 adjust;
-   int                 yDelta;
-   int                 width, height;
+  PtrTextBuffer       pTargetBuffer;
+  PtrTextBuffer       pSourceBuffer;
+  PictInfo           *pictInfo;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  ptrfont             font;
+  int                 sourceInd, targetInd;
+  int                 length;
+  int                 i;
+  int                 adjust;
+  int                 yDelta;
+  int                 width, height;
 
-   font = pBox->BxFont;
-   width = CharacterWidth ('m', font);
-   height = FontHeight (font);
-   if (pAb->AbVolume == 0)
-     {
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
-	DefClip (frame, 0, 0, 0, 0);
-     }
-   else
-      switch (pAb->AbLeafType)
-	    {
-	       case LtText:
-		  pFrame = &ViewFrameTable[frame - 1];
-		  pViewSel = &pFrame->FrSelectionBegin;
+  font = pBox->BxFont;
+  width = CharacterWidth ('m', font);
+  height = FontHeight (font);
+  if (pAb->AbVolume == 0)
+    {
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
+      DefClip (frame, 0, 0, 0, 0);
+    }
+  else
+    switch (pAb->AbLeafType)
+      {
+      case LtText:
+	pFrame = &ViewFrameTable[frame - 1];
+	pViewSel = &pFrame->FrSelectionBegin;
+	
+	/* Note que le texte de l'e'le'ment va changer */
+	StartTextInsertion (NULL, frame, NULL, NULL, 0, 0);
+	/* fusionne le premier et dernier buffer de la selection */
+	/* premier buffer=destination */
+	pTargetBuffer = pViewSel->VsBuffer;
+	/* indice de destination */
+	targetInd = pViewSel->VsIndBuf;
+	/* dernier buffer=pSourceBuffer */
+	pSourceBuffer = pFrame->FrSelectionEnd.VsBuffer;
+	/* indice de pSourceBuffer */
+	sourceInd = pFrame->FrSelectionEnd.VsIndBuf;
+	/* nombre de caracteres a copier */
+	i = pSourceBuffer->BuLength - sourceInd;
+	
+	/* ==>Nombre de caracteres a copier nul */
+	if (i <= 0)
+	  i = targetInd - 1;
+	/* ==>Il y a des caracteres a deplacer */
+	else
+	  {
+	    length = THOT_MAX_CHAR - targetInd;
+	    /* deplace en deux fois? */
+	    if (i > length)
+	      {
+		ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], length);
+		pTargetBuffer->BuLength = FULL_BUFFER;
+		pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = EOS;
+		targetInd = 1;
+		sourceInd += length;
+		i -= length;
+		pTargetBuffer = pTargetBuffer->BuNext;
+	      }
+	    ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], i);
+	    i = i + targetInd - 1;
+	  }
+	
+	pTargetBuffer->BuLength = i;
+	pTargetBuffer->BuContent[i] = EOS;
+	
+	/* Faut-il liberer le buffer 'pTargetBuffer' ? */
+	if (pTargetBuffer->BuLength == 0 && charsDelta != pAb->AbVolume)
+	  {
+	    /* Est-ce que l'on libere le premier buffer du pave ? */
+	    if (pTargetBuffer == pAb->AbText)
+	      {
+		pAb->AbText = pSourceBuffer->BuNext;
+		pAb->AbBox->BxBuffer = pAb->AbText;
+	      }
 
-		  /* Note que le texte de l'e'le'ment va changer */
-		  StartTextInsertion (NULL, frame, NULL, NULL, 0, 0);
-		  /* fusionne le premier et dernier buffer de la selection */
-		  /* premier buffer=destination */
-		  pTargetBuffer = pViewSel->VsBuffer;
-		  /* indice de destination */
-		  targetInd = pViewSel->VsIndBuf;
-		  /* dernier buffer=pSourceBuffer */
-		  pSourceBuffer = pFrame->FrSelectionEnd.VsBuffer;
-		  /* indice de pSourceBuffer */
-		  sourceInd = pFrame->FrSelectionEnd.VsIndBuf;
-		  /* nombre de caracteres a copier */
-		  i = pSourceBuffer->BuLength - sourceInd;
-
-		  /* ==>Nombre de caracteres a copier nul */
-		  if (i <= 0)
-		     i = targetInd - 1;
-		  /* ==>Il y a des caracteres a deplacer */
-		  else
-		    {
-		       length = THOT_MAX_CHAR - targetInd;
-		       /* deplace en deux fois? */
-		       if (i > length)
-			 {
-			    ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], length);
-			    pTargetBuffer->BuLength = FULL_BUFFER;
-			    pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = EOS;
-			    targetInd = 1;
-			    sourceInd += length;
-			    i -= length;
-			    pTargetBuffer = pTargetBuffer->BuNext;
-			 }
-		       ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], i);
-		       i = i + targetInd - 1;
-		    }
-
-		  pTargetBuffer->BuLength = i;
-		  pTargetBuffer->BuContent[i] = EOS;
-
-		  /* Faut-il liberer le buffer 'pTargetBuffer' ? */
-		  if (pTargetBuffer->BuLength == 0 && charsDelta != pAb->AbVolume)
-		    {
-		       /* Est-ce que l'on libere le premier buffer du pave ? */
-		       if (pTargetBuffer == pAb->AbText)
-			 {
-			    pAb->AbText = pSourceBuffer->BuNext;
-			    pAb->AbBox->BxBuffer = pAb->AbText;
-			 }
-
-		       /* Est-ce que l'on libere le premier buffer d'une boite ? */
-		       if (pTargetBuffer == pBox->BxBuffer)
-			  pBox->BxBuffer = pSourceBuffer->BuNext;
-
-		       /* Si la selection courante reference le buffer libere */
-		       if (pTargetBuffer == pViewSel->VsBuffer)
-			  if (pSourceBuffer->BuNext != NULL)	/* Apres la destruction */
-			     pViewSel->VsBuffer = pSourceBuffer->BuNext;
-			  else
-			     /* ElemIsBefore la destruction */
-			    {
-			       pViewSel->VsBuffer = pTargetBuffer->BuPrevious;
-			       if (pViewSel->VsBuffer != NULL)
-				  pViewSel->VsIndBuf = pViewSel->VsBuffer->BuLength + 1;
-			    }
-
-		       if (pTargetBuffer == pSourceBuffer)
-			  pSourceBuffer = NULL;
-		       pTargetBuffer = DeleteBuffer (pTargetBuffer, frame);
-		    }
-
-		  /* detruit les buffers qui ont ete vides */
-		  while (pSourceBuffer != NULL && pSourceBuffer != pTargetBuffer)
-		     pSourceBuffer = DeleteBuffer (pSourceBuffer, frame);
-
-		  /* Evaluation des changements sur la boite */
-		  if (pBox->BxSpaceWidth != 0)
-		    {
-		       /* Si la boite est adjustifiee */
-		       i = CharacterWidth (SPACE, font);
-		       adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
-		    }
-		  else
-		     adjust = 0;
-		  if (charsDelta == pAb->AbVolume)
-		    {
-		       /* La boite devient vide */
-		       yDelta = width;
-		       /* Largeur forcee */
-		       xDelta = pAb->AbBox->BxWidth - yDelta;
-		       if (pBox == pAb->AbBox && adjust != 0)
-			  adjust = xDelta;
-		       else
-			  /* Le bloc de ligne est reevalue */
-			  adjust = 0;
-		       pViewSel->VsBox = pAb->AbBox;
-		    }
-		  else if (pViewSel->VsIndBox == pBox->BxNChars - charsDelta)
-		     /* En fin de boite */
-		     yDelta = 2;
-		  else if (pViewSel->VsIndBuf > pViewSel->VsBuffer->BuLength)
-		    {
-		       /* En fin de buffer -> on va chercher le caractere suivant */
-		       pSourceBuffer = pViewSel->VsBuffer->BuNext;
-		       /* Il peut etre vide s'il y a des blancs en fin de ligne */
-		       if (pSourceBuffer == NULL)
-			  yDelta = 2;
-		       else
-			 {
-			    /* deplace la selection sur le debut du buffer suivant */
-			    pViewSel->VsBuffer = pSourceBuffer;
-			    pViewSel->VsIndBuf = 1;
-			    yDelta = CharacterWidth (pSourceBuffer->BuContent[0], font);
-			 }
-		    }
-		  else
-		     yDelta = CharacterWidth (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1], font);
-
-		  /* Mise a jour de la selection sur le caractere suivant */
-		  pFrame->FrSelectionEnd.VsBox = pViewSel->VsBox;
-		  pFrame->FrSelectionEnd.VsXPos = pViewSel->VsXPos + yDelta;
-		  pFrame->FrSelectionEnd.VsBuffer = pViewSel->VsBuffer;
-		  pFrame->FrSelectionEnd.VsIndBuf = pViewSel->VsIndBuf;
-		  pFrame->FrSelectionEnd.VsIndBox = pViewSel->VsIndBox;
-		  pFrame->FrSelectionEnd.VsNSpaces = pViewSel->VsNSpaces;
-		  pFrame->FrSelectionEnd.VsLine = pLine;
-
-		  /* Mise a jour des boites */
-		  pAb->AbVolume -= charsDelta;
-		  BoxUpdate (pAb->AbBox, pLine, -charsDelta, -spacesDelta, -xDelta, -adjust, 0, frame, FALSE);
-		  CloseTextInsertion ();
-		  break;
-
-	       case LtPicture:
-		  /* pPa1->AbPictInfo->PicFileName->BuLength = 0; */
-		  /*ustrcpy(pPa1->AbPictInfo->PicFileName, ""); */
-		  pAb->AbVolume = 0;
-		  /* met a jour la boite */
-		  pictInfo = (PictInfo *) pBox->BxPictInfo;
-		  if (pictInfo->PicPixmap != 0)
-		    {
-		       if (defaultWidth)
-			  xDelta = pictInfo->PicWArea - width;
-		       else
-			  xDelta = 0;
-		       if (defaultHeight)
-			  yDelta = pictInfo->PicHArea - height;
-		       else
-			  yDelta = 0;
-		       BoxUpdate (pBox, pLine, 0, 0, -xDelta, 0, -yDelta, frame, FALSE);
-		    }
-		  break;
-
-	       case LtSymbol:
-	       case LtGraphics:
-		  /* send an event to the application and register the change
-		     in the Undo queue */
-		  APPgraphicModify (pBox->BxAbstractBox->AbElement,
-				    (int) pAb->AbShape, frame, TRUE);
-		  if (defaultWidth)
-		     xDelta = pBox->BxWidth - width;
-		  else
-		     xDelta = 0;
-		  if (defaultHeight)
-		     yDelta = pBox->BxHeight - height;
-		  else
-		     yDelta = 0;
-		  BoxUpdate (pBox, pLine, -1, 0, -xDelta, 0, -yDelta, frame, FALSE);
-		  pAb->AbVolume = 0;
-		  pAb->AbShape = EOS;
-		  break;
-
-	       default:
-		  break;
-	    }
+	    /* Est-ce que l'on libere le premier buffer d'une boite ? */
+	    if (pTargetBuffer == pBox->BxBuffer)
+	      pBox->BxBuffer = pSourceBuffer->BuNext;
+	    
+	    /* Si la selection courante reference le buffer libere */
+	    if (pTargetBuffer == pViewSel->VsBuffer)
+	      if (pSourceBuffer->BuNext != NULL)	/* Apres la destruction */
+		pViewSel->VsBuffer = pSourceBuffer->BuNext;
+	      else
+		/* ElemIsBefore la destruction */
+		{
+		  pViewSel->VsBuffer = pTargetBuffer->BuPrevious;
+		  if (pViewSel->VsBuffer != NULL)
+		    pViewSel->VsIndBuf = pViewSel->VsBuffer->BuLength + 1;
+		}
+	    
+	    if (pTargetBuffer == pSourceBuffer)
+	      pSourceBuffer = NULL;
+	    pTargetBuffer = DeleteBuffer (pTargetBuffer, frame);
+	  }
+	
+	/* detruit les buffers qui ont ete vides */
+	while (pSourceBuffer != NULL && pSourceBuffer != pTargetBuffer)
+	  pSourceBuffer = DeleteBuffer (pSourceBuffer, frame);
+	
+	/* Evaluation des changements sur la boite */
+	if (pBox->BxSpaceWidth != 0)
+	  {
+	    /* Si la boite est adjustifiee */
+	    i = CharacterWidth (SPACE, font);
+	    adjust = xDelta + (pBox->BxSpaceWidth - i) * spacesDelta;
+	  }
+	else
+	  adjust = 0;
+	if (charsDelta == pAb->AbVolume)
+	  {
+	    /* La boite devient vide */
+	    yDelta = width;
+	    /* Largeur forcee */
+	    xDelta = pAb->AbBox->BxWidth - yDelta;
+	    if (pBox == pAb->AbBox && adjust != 0)
+	      adjust = xDelta;
+	    else
+	      /* Le bloc de ligne est reevalue */
+	      adjust = 0;
+	    pViewSel->VsBox = pAb->AbBox;
+	  }
+	else if (pViewSel->VsIndBox == pBox->BxNChars - charsDelta)
+	  /* En fin de boite */
+	  yDelta = 2;
+	else if (pViewSel->VsIndBuf > pViewSel->VsBuffer->BuLength)
+	  {
+	    /* En fin de buffer -> on va chercher le caractere suivant */
+	    pSourceBuffer = pViewSel->VsBuffer->BuNext;
+	    /* Il peut etre vide s'il y a des blancs en fin de ligne */
+	    if (pSourceBuffer == NULL)
+	      yDelta = 2;
+	    else
+	      {
+		/* deplace la selection sur le debut du buffer suivant */
+		pViewSel->VsBuffer = pSourceBuffer;
+		pViewSel->VsIndBuf = 1;
+		yDelta = CharacterWidth (pSourceBuffer->BuContent[0], font);
+	      }
+	  }
+	else
+	  yDelta = CharacterWidth (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1], font);
+	
+	/* Mise a jour de la selection sur le caractere suivant */
+	pFrame->FrSelectionEnd.VsBox = pViewSel->VsBox;
+	pFrame->FrSelectionEnd.VsXPos = pViewSel->VsXPos + yDelta;
+	pFrame->FrSelectionEnd.VsBuffer = pViewSel->VsBuffer;
+	pFrame->FrSelectionEnd.VsIndBuf = pViewSel->VsIndBuf;
+	pFrame->FrSelectionEnd.VsIndBox = pViewSel->VsIndBox;
+	pFrame->FrSelectionEnd.VsNSpaces = pViewSel->VsNSpaces;
+	pFrame->FrSelectionEnd.VsLine = pLine;
+	
+	/* Mise a jour des boites */
+	pAb->AbVolume -= charsDelta;
+	BoxUpdate (pAb->AbBox, pLine, -charsDelta, -spacesDelta, -xDelta, -adjust, 0, frame, FALSE);
+	CloseTextInsertion ();
+	break;
+	
+      case LtPicture:
+	/* pPa1->AbPictInfo->PicFileName->BuLength = 0; */
+	/*ustrcpy(pPa1->AbPictInfo->PicFileName, ""); */
+	pAb->AbVolume = 0;
+	/* met a jour la boite */
+	pictInfo = (PictInfo *) pBox->BxPictInfo;
+	if (pictInfo->PicPixmap != 0)
+	  {
+	    if (defaultWidth)
+	      xDelta = pictInfo->PicWArea - width;
+	    else
+	      xDelta = 0;
+	    if (defaultHeight)
+	      yDelta = pictInfo->PicHArea - height;
+	    else
+	      yDelta = 0;
+	    BoxUpdate (pBox, pLine, 0, 0, -xDelta, 0, -yDelta, frame, FALSE);
+	  }
+	break;
+	
+      case LtSymbol:
+      case LtGraphics:
+	/* send an event to the application and register the change
+	   in the Undo queue */
+	APPgraphicModify (pBox->BxAbstractBox->AbElement,
+			  (int) pAb->AbShape, frame, TRUE);
+	if (defaultWidth)
+	  xDelta = pBox->BxWidth - width;
+	else
+	  xDelta = 0;
+	if (defaultHeight)
+	  yDelta = pBox->BxHeight - height;
+	else
+	  yDelta = 0;
+	BoxUpdate (pBox, pLine, -1, 0, -xDelta, 0, -yDelta, frame, FALSE);
+	pAb->AbVolume = 0;
+	pAb->AbShape = EOS;
+	break;
+	
+      default:
+	break;
+      }
 }
 
 
@@ -2152,12 +2152,13 @@ int                 editType;
    int                 frame;
    ThotBool            still, ok, textPasted;
    ThotBool            defaultWidth, defaultHeight;
-   ThotBool            show;
+   ThotBool            show, graphEdit;
 
    /* termine l'insertion de caracteres en cours */
    CloseTextInsertion ();
    pCell = NULL;
    textPasted = FALSE;
+   graphEdit = FALSE;
 
    /* Traitement de la Commande PASTE de l'application */
    if (editType == TEXT_PASTE && ClipboardThot.BuLength == 0 && !FromKeyboard)
@@ -2386,27 +2387,31 @@ int                 editType;
 			     pAb->AbPolyLineShape != 'y' &&
 			     pAb->AbPolyLineShape != 'z')
 		      {
-			/* Destruction du point courant de la polyline */
 			charsDelta = pViewSel->VsIndBox;
-			DeletePointInPolyline (&(pAb->AbPolyLineBuffer), charsDelta);
-			DeletePointInPolyline (&(pBox->BxBuffer), charsDelta);
-			(pBox->BxNChars)--;
-			if (pBox->BxPictInfo != NULL)
+			if (!APPgraphicModify (pAb->AbElement, pAb->AbPolyLineShape, frame, TRUE))
 			  {
-			    /* reevalue les points de controle */
-			    free ((STRING) pBox->BxPictInfo);
-			    pBox->BxPictInfo = NULL;
-			  }
-			(pAb->AbVolume)--;
-			if (charsDelta == pBox->BxNChars)
-			  /* on vient de detruire le dernier point de la polyline */
-			  if (charsDelta == 1)
-			    charsDelta = 0;
+			    /* Destruction du point courant de la polyline */
+			    DeletePointInPolyline (&(pAb->AbPolyLineBuffer), charsDelta);
+			    DeletePointInPolyline (&(pBox->BxBuffer), charsDelta);
+			    graphEdit = TRUE;
+			    (pBox->BxNChars)--;
+			    if (pBox->BxPictInfo != NULL)
+			      {
+				/* reevalue les points de controle */
+				free ((STRING) pBox->BxPictInfo);
+				pBox->BxPictInfo = NULL;
+			      }
+			    (pAb->AbVolume)--;
+			    if (charsDelta == pBox->BxNChars)
+			      /* on vient de detruire le dernier point de la polyline */
+			      if (charsDelta == 1)
+				charsDelta = 0;
 			  else
 			    charsDelta = 1;
-			pViewSel->VsIndBox = charsDelta;
-			/* on force le reaffichage de la boite (+ les points de selection) */
-			DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
+			    pViewSel->VsIndBox = charsDelta;
+			    /* on force le reaffichage de la boite (+ les points de selection) */
+			    DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
+			  }
 		      }
 		  }
 		else
@@ -2619,7 +2624,8 @@ int                 editType;
 	     if (textPasted)
 	        /* send event TteElemTextModify.Post */
 	        APPtextModify (pAb->AbElement, frame, FALSE);
-
+	     else if (graphEdit)
+	       APPgraphicModify (pAb->AbElement,pAb->AbPolyLineShape, frame, FALSE);
 	     /* signale la nouvelle selection courante */
 	     if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
 		  editType == TEXT_X_PASTE || editType == TEXT_DEL ||

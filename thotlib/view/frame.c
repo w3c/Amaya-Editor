@@ -943,7 +943,8 @@ PtrAbstractBox      subtree;
 	delta = height - h / 2;
 
 	/* Redraw from top to bottom all filled boxes */
-	if (subtree == NULL || subtree->AbLeafType != LtPolyLine)
+	if (subtree == NULL ||
+	    (subtree->AbLeafType != LtPolyLine && subtree->AbLeafType != LtGraphics))
 	  {
 
 	    DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);

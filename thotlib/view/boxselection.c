@@ -162,7 +162,7 @@ int                 frame;
 			x2 = pBox1->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
 		      }
 		    DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
-		    /* undisplay current the selection */
+		    /* undisplay the current selection */
 		    if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
 		      /* need to redraw more than one box */
 		      RedrawFrameBottom (frame, 0, NULL);
@@ -189,7 +189,7 @@ int                 frame;
 		    x1 = pBox2->BxXOrg;
 		    x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
 		    DefClip (frame, x1, pBox2->BxYOrg, x2, pBox2->BxYOrg + pBox2->BxHeight);
-		    /* undisplay current the selection */
+		    /* undisplay the current selection */
 		    RedrawFrameBottom (frame, 0, pAb1);
 		  }
 		else
@@ -779,7 +779,11 @@ ThotBool            alone;
 		  if (pViewSel->VsIndBox == 0)
 		    {
 		      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-		      RedrawFrameBottom (frame, 0, pAb);
+		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			/* need to redraw more than one box */
+			RedrawFrameBottom (frame, 0, NULL);
+		      else
+			RedrawFrameBottom (frame, 0, pAb);
 		    }
 		  else if (pBox != pFrame->FrSelectionBegin.VsBox)
 		    {
