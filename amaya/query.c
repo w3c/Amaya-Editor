@@ -2020,13 +2020,13 @@ int                 docid;
    HTList             *cur;
    AHTDocId_Status    *docid_status;
    AHTReqContext      *me;
-   int                 open_requests;
-
    HTNet              *reqNet;
    HTHost             *reqHost;
    HTChannel          *reqChannel;
    int                 reqSock;
- 
+#ifdef DEBUG_LIBWWW
+   int                 open_requests;
+#endif /* DEBUG_LIBWWW */
   
    if (Amaya)
      {
@@ -2041,7 +2041,9 @@ int                 docid;
 	if (docid_status == (AHTDocId_Status *) NULL)
 	   return;
 
+#ifdef DEBUG_LIBWWW
 	open_requests = docid_status->counter;
+#endif /* DEBUG_LIBWWW */
 
 	/* First, kill all pending requests */
 	/* We first inhibit the activation of pending requests */
@@ -2060,26 +2062,24 @@ int                 docid;
 		 ** If it's a SYNC request, we just mark it as aborted
 		 */
 		 me->reqStatus = HT_ABORT;
-		 if (HTRequest_net (me->request))
-		   /* delete the libwww request context */
-		   HTRequest_kill (me->request);
-
-#ifndef _WINDOWS
-		 if (!(me->mode & AMAYA_ASYNC_SAFE_STOP) 
-		     && ((me->mode & AMAYA_IASYNC) ||
-			 (me->mode & AMAYA_ASYNC)))
+		 if ((me->mode & AMAYA_IASYNC)
+		     ||	 (me->mode & AMAYA_ASYNC) 
+		     && !(me->mode & AMAYA_ASYNC_SAFE_STOP))
 		   {
+		     if (HTRequest_net (me->request))
+		       /* delete the libwww request context */
+		       HTRequest_kill (me->request);
+#ifndef _WINDOWS
 		     /* delete the Amaya request context */
 		     AHTReqContext_delete (me);
+#endif /* !_WINDOWS */
 		     cur = Amaya->reqlist;
+#ifdef DEBUG_LIBWWW
+		     /* update the number of open requests */
+		     open_requests--;		   
+#endif /* DEBUG_LIBWWW */
 		   }
-#else /* _WINDOWS */
-		 cur = Amaya->reqlist;
-#endif /* _WINDOWS */
 
-		 /* update the number of open requests */
-		 open_requests--;		   
-		 
 		 if (HTHost_isIdle (reqHost) ) {
 #ifdef DEBUG_LIBWWW
 		   fprintf (stderr, "Host is idle, killing socket %d\n",
@@ -2089,7 +2089,7 @@ int                 docid;
 		   HTEvent_unregister (reqSock, FD_ALL);
 		   HTEvent_register(reqSock, NULL, (SockOps) FD_READ,
 				    HTHost_catchClose,  HT_PRIORITY_MAX);
-		   close (reqSock);
+		   NETCLOSE (reqSock);
 		   /*	
    		   if (reqChannel && reqHost)
 		   HTHost_clearChannel(reqHost, HT_OK);
@@ -2111,18 +2111,30 @@ int                 docid;
 		 switch (me->reqStatus)
 		   {
 		   case HT_ABORT:
+#ifdef DEBUG_LIBWWW
+fprintf (stderr, "Stop: url %s says abort", me->urlName);
+#endif /* DEBUG_LIBWWW */
 		     break;
 		  
 		   case HT_END:
+#ifdef DEBUG_LIBWWW
+fprintf (stderr, "Stop: url %s says end", me->urlName);
+#endif /* DEBUG_LIBWWW */
 		     break;
 
 		   case HT_BUSY:
 		     me->reqStatus = HT_ABORT;
+#ifdef DEBUG_LIBWWW
+fprintf (stderr, "Stop: url %s going from busy to abort\n", me->urlName);
+#endif /* DEBUG_LIBWWW */
 		     break;
 
 		   case HT_NEW_PENDING:
 		   case HT_WAITING:
 		   default:
+#ifdef DEBUG_LIBWWW
+fprintf (stderr, "Stop: url %s says NEW_PENDING, WAITING", me->urlName);
+#endif /* DEBUG_LIBWWW */
 		     me->reqStatus = HT_ABORT;
 		     
 #                 ifndef _WINDOWS
@@ -2134,20 +2146,23 @@ int                 docid;
 		     reqChannel = HTChannel_find(reqSock);
 		     reqHost = HTChannel_host (reqChannel);
 
+		 if ((me->mode & AMAYA_IASYNC)
+		     ||	 (me->mode & AMAYA_ASYNC)
+		     && !(me->mode & AMAYA_ASYNC_SAFE_STOP))
+		   {
 		     if (HTRequest_net (me->request))
+		       /* delete the libwww request context */
 		       HTRequest_kill (me->request);
-
 #ifndef _WINDOWS
-		     if (!(me->mode & AMAYA_ASYNC_SAFE_STOP) 
-			 && ((me->mode & AMAYA_IASYNC) 
-			     || (me->mode & AMAYA_ASYNC)))
-		       {
-			 AHTReqContext_delete (me);		       
-			 cur = Amaya->reqlist;
-		       }
-#else /* _WINDOWS */
+		     /* delete the Amaya request context */
+		     AHTReqContext_delete (me);
+#endif /* !_WINDOWS */
 		     cur = Amaya->reqlist;
-#endif /* _WINDOWS */
+#ifdef DEBUG_LIBWWW
+		     /* update the number of open requests */
+		     open_requests--;		   
+#endif /* DEBUG_LIBWWW */
+		   }
 
 		     /* if there are no more requests, then close
 			the connection */
@@ -2164,7 +2179,7 @@ int                 docid;
 					(SockOps) FD_READ,
 					HTHost_catchClose,
 					HT_PRIORITY_MAX);
-		       close (reqSock);				
+		       NETCLOSE (reqSock);				
 		       HTHost_clearChannel (reqHost, HT_ERROR);
 		       /*
 			 if (reqChannel && reqHost)
@@ -2177,9 +2192,9 @@ int                 docid;
 				HTHost_isIdle (reqHost));
 #endif                          /* DEBUG_LIBWWW */
 		     }
-		     
+#ifdef DEBUG_LIBWWW		     
 		     open_requests--;
-		     
+#endif /* DEBUG_LIBWWW */		     
 		     break;
 		     
 		   }	/* switch */

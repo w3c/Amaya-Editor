@@ -1451,7 +1451,7 @@ View                view;
 			       NULL, NULL, NULL, NULL, YES, &content_type[0]);
 #else /* AMAYA_JAVA */
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
-			       AMAYA_ASYNC | AMAYA_ASYNC_SAFE_STOP,
+			       AMAYA_ASYNC,
 			       NULL, NULL, (void *) Reload_callback, 
 			       (void *) documentname, YES, (char *) content_type);
 #endif /* AMAYA_JAVA */
@@ -2043,7 +2043,7 @@ void               *ctx_cbf;
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 		 mode = AMAYA_ASYNC;
 #else
-	         mode = AMAYA_ASYNC | AMAYA_ASYNC_SAFE_STOP;
+	         mode = AMAYA_ASYNC;
 #endif /* AMAYA_JAVA */
 	       if (IsW3Path (pathname))
 		 {

@@ -163,7 +163,14 @@ XtInputId          *id;
 
    me->reqStatus = HT_BUSY;
 
+   if ((me->mode & AMAYA_ASYNC)
+       || (me->mode & AMAYA_IASYNC))
+       /* set protection to avoid stopping an active request */
+       me->mode |= AMAYA_ASYNC_SAFE_STOP;
+
+       /* invoke the libwww callback */
    status = (*cbf) (socket, rqp, ops);
+
 #ifdef DEBUG_LIBWWW
    if (status != HT_OK)
       HTTrace ("Callback.... returned a value != HT_OK");
@@ -182,10 +189,14 @@ XtInputId          *id;
     * HT_END:     Request has ended
     */
 
+   if ((me->mode & AMAYA_ASYNC)
+       || (me->mode & AMAYA_IASYNC))
+       /* remove protection to avoid stopping an active request */
+       me->mode &= ~AMAYA_ASYNC_SAFE_STOP;
+
    if (me->reqStatus == HT_ABORT) {
    /* Has the user stopped the request? */
      me->reqStatus = HT_WAITING;
-     me->mode &= ~AMAYA_ASYNC_SAFE_STOP;
      StopRequest (me->docid);
      return (0);
    }
@@ -221,9 +232,9 @@ XtInputId          *id;
 
        if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
 	 {
-	   AHTPrintPendingRequestStatus (me->docid, YES);
 	   /* free the memory allocated for async requests */
 	   AHTReqContext_delete (me);
+	   AHTPrintPendingRequestStatus (me->docid, YES);
 	 } 
 
        else if (me->reqStatus == HT_END &&
