@@ -43,6 +43,10 @@
 #include "selection.h"
 #include "styleparser_f.h"
 
+#ifdef ANNOTATIONS
+#include "annot.h"
+#endif
+
 #ifdef _WINDOWS
 #include "wininclude.h"
 
@@ -597,6 +601,10 @@ Document            doc;
 {
    AttributeType       attrType;
    Attribute           HrefAttr, PseudoAttr, attr;
+#ifdef ANNOTATIONS
+   Attribute           isAnnotLink;
+#endif /* ANNOTATIONS */
+
    ElementType         elType;
    Document            targetDocument;
    SSchema             HTMLSSchema;
@@ -608,6 +616,9 @@ Document            doc;
 
    info = NULL;
    HrefAttr = NULL;
+#ifdef ANNOTATIONS
+   isAnnotLink = NULL;
+#endif /* ANNOTATIONS */
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 
    if (anchor != NULL)
@@ -653,6 +664,12 @@ Document            doc;
 		       TtaAttachAttribute (anchor, PseudoAttr, doc);
 		    }
 		  TtaSetAttributeText (PseudoAttr, TEXT("active"), anchor, doc);
+
+#ifdef ANNOTATIONS
+		  /* see if it's a link to an annotation */
+		  attrType.AttrTypeNum = HTML_ATTR_Annotation;
+		  isAnnotLink = TtaGetAttribute (anchor, attrType);
+#endif /* ANNOTATIONS */
 	       }
 	     /* get the URL itself */
 	     TtaGiveTextAttributeValue (HrefAttr, url, &length);
@@ -710,9 +727,21 @@ Document            doc;
 		 /* interrupt current transfer */
 		 StopTransfer (doc, 1);	   
 		 /* get the referred document */
+#ifdef ANNOTATIONS
 		 targetDocument = GetHTMLDocument (documentURL, NULL,
-				   doc, doc, CE_RELATIVE, TRUE, 
-				   (void *) FollowTheLink_callback, (void *) ctx);
+						   (isAnnotLink) ? 0 : doc,
+						   doc,
+						   CE_RELATIVE, TRUE, 
+				   (void *) FollowTheLink_callback,
+						   (void *) ctx);
+#else
+		 targetDocument = GetHTMLDocument (documentURL, NULL,
+						   doc, 
+						   doc, 
+						   CE_RELATIVE, TRUE, 
+				   (void *) FollowTheLink_callback,
+						   (void *) ctx);
+#endif /* ANNOTATIONS */
 	       }
 	return (TRUE);
 	  }
@@ -801,7 +830,8 @@ NotifyElement      *event;
 	    elType.ElTypeNum == HTML_EL_Reset_Input ||
 	    elType.ElTypeNum == HTML_EL_BUTTON ||
 	    elType.ElTypeNum == HTML_EL_File_Input ||
-	    elType.ElTypeNum == HTML_EL_FRAME)
+	    elType.ElTypeNum == HTML_EL_FRAME ||
+	    elType.ElTypeNum == HTML_EL_Anchor)
 	   ok = TRUE;
    if (!ok)
       /* DoubleClick is disabled for this element type */
@@ -1020,6 +1050,9 @@ void                CheckAmayaClosed ()
       QueryClose ();
 #endif
 #endif
+#ifdef ANNOTATIONS
+      ANNOT_Quit ();
+#endif /* ANNOTATIONS */
       TtaFreeMemory (LastURLName);
       TtaFreeMemory (DocumentName);
       TtaFreeMemory (SavePath);

@@ -219,7 +219,9 @@ STRUCT
 	 { coords         tabindex }
 	   onfocus = Text; onblur = Text;
 	 { onfocus         onblur }
-	   InternalLink; ExternalLink) =
+	   InternalLink; ExternalLink;
+	   Annotation = Text;
+         { Annotation}) =
 	Basic_Set;
 
   Basic_Elem = CASE OF						{ special }
@@ -820,6 +822,7 @@ EXCEPT
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;
+	Annotation:     Invisible;
 	IntWidthPercent:NewPercentWidth, Invisible;
 	IntWidthPxl:	NewWidth, Invisible;
 	IntItemStyle:	Invisible;

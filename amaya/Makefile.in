@@ -44,6 +44,7 @@ bindir = @bindir@
 math_schema: $(amaya_math_schema)
 graph_schema: $(amaya_graph_schema)
 comp_plugin: $(amaya_comp_plugin)
+comp_annot: $(amaya_comp_annot)
 comp_libwww : $(amaya_comp_libwww)
 
 #
@@ -121,6 +122,9 @@ force :
 #include the fragment "amaya/Makefile.math" for math if configured in
 @math_frag@
 
+#include the fragment "amaya/Makefile.annot" for annotations if configured in
+@annot_frag@
+
 #include the fragment "ilulib/Makefile.ilu" for ILU if configured in
 @ilu_frag@
 
@@ -133,31 +137,33 @@ force :
 
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) $(AMAYA_JAVA_OPTIONS) \
 	 $(AMAYA_PLUGIN_OPTIONS) $(AMAYA_LIBWWW_OPTIONS) \
-	 $(AMAYA_MATH_OPTIONS) $(AMAYA_GRAPH_OPTIONS) $(AMAYA_ILU_OPTIONS)
+	 $(AMAYA_MATH_OPTIONS) $(AMAYA_GRAPH_OPTIONS) $(AMAYA_ANNOT_OPTIONS) \
+	 $(AMAYA_ILU_OPTIONS)
 
 AMAYA_OPTION_INCLUDES= $(AMAYA_JAVA_INCLUDES) $(AMAYA_PLUGIN_INCLUDES) \
          $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_MATH_INCLUDES) \
-	 $(AMAYA_GRAPH_INCLUDES) $(AMAYA_ILU_INCLUDES)
+	 $(AMAYA_GRAPH_INCLUDES) $(AMAYA_ANNOT_INCLUDES)  $(AMAYA_ILU_INCLUDES)
 
 AMAYA_OPTION_OBJ= $(AMAYA_JAVA_OBJ) $(AMAYA_PLUGIN_OBJ) \
          $(AMAYA_LIBWWW_OBJ) $(AMAYA_GRAPH_OBJ) $(AMAYA_MATH_OBJ) \
-         $(AMAYA_ILU_OBJ)
+         $(AMAYA_ANNOT_OBJ) $(AMAYA_ILU_OBJ)
 
 AMAYA_SRC= $(AMAYA_JAVA_SRC) $(AMAYA_PLUGIN_SRC) \
          $(AMAYA_LIBWWW_SRC) $(AMAYA_MATH_SRC) $(AMAYA_GRAPH_SRC) \
-         $(AMAYA_ILU_SRC)
+         $(AMAYA_ANNOT_SRC) $(AMAYA_ILU_SRC)
 
 AMAYA_OPTION_LIBS= $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
          $(AMAYA_LIBWWW_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
-         $(AMAYA_ILU_LIBS)
+         $(AMAYA_ANNOT_LIBS) $(AMAYA_ILU_LIBS)
 
 AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_JAVA_EXTRA_LIBS) $(AMAYA_PLUGIN_EXTRA_LIBS) \
          $(AMAYA_LIBWWW_EXTRA_LIBS) $(AMAYA_MATH_EXTRA_LIBS) \
-         $(AMAYA_GRAPH_EXTRA_LIBS) $(AMAYA_ILU_EXTRA_LIBS)
+         $(AMAYA_GRAPH_EXTRA_LIBS) $(AMAYA_ANNOT_EXTRA_LIBRS) \
+	 $(AMAYA_ILU_EXTRA_LIBS)
 
 AMAYA_OPTION_SCHEMAS= $(AMAYA_JAVA_SCHEMAS) $(AMAYA_PLUGIN_SCHEMAS) \
          $(AMAYA_LIBWWW_SCHEMAS) $(AMAYA_MATH_SCHEMAS) $(AMAYA_GRAPH_SCHEMAS) \
-         $(AMAYA_ILU_SCHEMAS)
+         $(AMAYA_ANNOT_SCHEMAS) $(AMAYA_ILU_SCHEMAS)
 
 AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 		-I@srcdir@/f -I@srcdir@/xpm \

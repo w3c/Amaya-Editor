@@ -814,10 +814,15 @@ RULES
 	END;
 
  Anchor: BEGIN
-	Create '<a';
-	Create Attributes;
-	Create '>';
-	Create '</a>' After;
+	if Annotation BEGIN
+		Remove;
+		END;
+	if NOT Annotation BEGIN
+		Create '<a';
+		Create Attributes;
+		Create '>';
+		Create '</a>' After;
+		END;
 	END;
 
  MAP:
@@ -1140,9 +1145,14 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-	Create ' href="';
-	Create HREF_;
-	Create DoubleQuote;
+	If Annotation BEGIN
+		Remove;
+		END;
+	If NOT Annotation BEGIN
+		Create ' href="';
+		Create HREF_;
+		Create DoubleQuote;
+		END;
 	END;
 
  hreflang :
@@ -1638,16 +1648,20 @@ ATTRIBUTES
 	END;
 
  NAME: BEGIN
-	Create ' name="';
-	Create NAME;
-	Create DoubleQuote;
+	if Anchor and Annotation BEGIN
+		Remove;
+		END;
+	if NOT Annotation BEGIN
+		Create ' name="';
+		Create NAME;
+		Create DoubleQuote;
+                END;
 #ifdef XML
-	if Anchor and not ID
-	       BEGIN
-	       Create ' id="';
-	       Create NAME;
-	       Create DoubleQuote;
-	       END;
+	if Anchor and not ID and NOT Annotation BEGIN
+       		Create ' id="';
+    		Create NAME;
+       		Create DoubleQuote;
+	       	END;
 #endif
 	END;
 

@@ -2477,5 +2477,39 @@ View view;
 #endif /* AMAYA_JAVA */
 }
 
+/*----------------------------------------------------------------------
+  AnnotateDocument
+  Frontend to the function that creates an annotation
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AnnotateDocument (Document doc, View view)
+#else 
+void AnnotateDocument (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#ifdef ANNOTATIONS
+  ANNOT_Create (doc, view);
+#endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
+  LoadAnnotations
+  Frontend to the function that loads the annotations related to a document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void LoadAnnotations (Document doc, View view)
+#else 
+void LoadAnnotations (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#ifdef ANNOTATIONS
+  ANNOT_Load (doc, view);
+#endif /* ANNOTATIONS */
+}
+
 
 
