@@ -54,7 +54,6 @@ echo "Platform ------->" $MACH
    Amaya/annotlib/AnnotT.TRA \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html* \
-   Amaya/amaya/*.png \
    Amaya/amaya/*.conf \
    Amaya/amaya/HTML.STR \
    Amaya/amaya/HTML.trans \
