@@ -2639,7 +2639,7 @@ boolean            *changeSelectEnd;
 	  /* recherche la premiere boite mise en ligne */
 	  pAb = pBox->BxAbstractBox->AbFirstEnclosed;
 	  while (pFirstBox == NULL && pAb != NULL)
-	    if (pAb->AbBox->BxType == BoGhost)
+	    if (pAb->AbBox == NULL || pAb->AbBox->BxType == BoGhost)
 	      /* c'est un pave fantome -> descend la hierarchie */
 	      pAb = pAb->AbFirstEnclosed;
 	    else
