@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void __assert_fail ( char *expression,
-                            char *file,
-                            unsigned int lineno );
 extern void CSSClassChanged ( NotifyAttribute * event );
 extern void PrintCSS ( CSSInfoPtr css,
                        FILE * output );
@@ -81,9 +78,6 @@ extern void CloseCSS ( void );
 
 #else /* __STDC__ */
 
-extern void __assert_fail (/* char *expression,
-                              char *file,
-                              unsigned int lineno */);
 extern void CSSClassChanged (/* NotifyAttribute * event */);
 extern void PrintCSS (/* CSSInfoPtr css,
                          FILE * output */);

@@ -1127,7 +1127,13 @@ void                StructReturnKey ()
 	  }
 	if (pListEl != NULL)
 	  {
-	     ok = !ElementIsReadOnly (pListEl);
+             /* On determine l'element apres lequel  */
+             /* l'insertion aura effectivement lieu. */
+             pEl = lastSel;
+             while (pEl->ElParent != pListEl)
+               pEl = pEl->ElParent;
+             ok = !CannotInsertNearElement (pEl,
+                                            FALSE); /* After element */
 	     if (ok)
 	       {
 		  TtaClearViewSelections ();
