@@ -387,7 +387,7 @@ void                DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Charset */
-   charsetName = TtaGetCharsetName (TtaGetDocumentCharset (document));
+   charsetName = DocumentMeta[document]->charset;
    if (charsetName != NULL)
      content = charsetName;
    else
@@ -2151,6 +2151,7 @@ static Document  LoadDocument (Document doc, char *pathname,
   DocumentType        docType;
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
+  CHAR_T              charsetname[MAX_LENGTH];
   char               *charEncoding;
   char               *tempdocument;
   char               *tempdir;
@@ -2168,6 +2169,7 @@ static Document  LoadDocument (Document doc, char *pathname,
   docType = docText;
   unknown = TRUE;
   tempdir = tempdocument = NULL;
+  charsetname[0] = EOS;
   http_content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
   /* make a copy we can modify */
   if (http_content_type)
@@ -2177,19 +2179,19 @@ static Document  LoadDocument (Document doc, char *pathname,
 
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != EOS)
-    CheckDocHeader (tempfile, &xmlDec, &withDoctype,
-		    &isXML, &parsingLevel, &charset, &thotType);
+    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML,
+		    &parsingLevel, &charset, charsetname, &thotType);
   else
-    CheckDocHeader (pathname, &xmlDec, &withDoctype,
-		    &isXML, &parsingLevel, &charset, &thotType);
+    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML,
+		    &parsingLevel, &charset, charsetname, &thotType);
 
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
   if (charset == UNDEFINED_CHARSET)
     {
       if (tempfile[0] != EOS)
-	CheckCharsetInMeta (tempfile, &metacharset);
+	CheckCharsetInMeta (tempfile, &metacharset, charsetname);
       else
-	CheckCharsetInMeta (pathname, &metacharset);
+	CheckCharsetInMeta (pathname, &metacharset, charsetname);
     }
   if (method == CE_CSS)
     {
@@ -2527,24 +2529,40 @@ static Document  LoadDocument (Document doc, char *pathname,
       DocumentSource[newdoc] = 0;
 
       /* Set character encoding */
+      DocumentMeta[newdoc]->charset = NULL;
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
       httpcharset = TtaGetCharset (charEncoding);
+
       if (charset != UNDEFINED_CHARSET)
-	TtaSetDocumentCharset (newdoc, charset);
-      else if (httpcharset != UNDEFINED_CHARSET)
-	TtaSetDocumentCharset (newdoc, httpcharset);
+	{
+	  TtaSetDocumentCharset (newdoc, charset);
+	  DocumentMeta[newdoc]->charset = TtaWCSdup (charsetname);
+	}
+      else if (httpcharset != UNDEFINED_CHARSET && charEncoding)
+	{
+	  TtaSetDocumentCharset (newdoc, httpcharset);
+	  DocumentMeta[newdoc]->charset = TtaWCSdup (charEncoding);
+	}
       else if (metacharset != UNDEFINED_CHARSET)
-	TtaSetDocumentCharset (newdoc, metacharset);
+	{
+	  TtaSetDocumentCharset (newdoc, metacharset);
+	  DocumentMeta[newdoc]->charset = TtaWCSdup (charsetname);
+	}
+      else if (charsetname[0] != EOS)
+	DocumentMeta[newdoc]->charset = TtaWCSdup (charsetname);
+
       /* @@@ JK: Test do we need to copy the charset? @@@ */
       /* copy some headers to the metadata */
       if (http_content_type)
 	DocumentMeta[newdoc]->content_type = TtaWCSdup (http_content_type);
       else
 	DocumentMeta[newdoc]->content_type = NULL;
-      if (charEncoding)
+      /*
+	if (charEncoding)
 	DocumentMeta[newdoc]->charset = TtaWCSdup (charEncoding);
-      else
+	else
 	DocumentMeta[newdoc]->charset = NULL;
+      */
       /* @@@ JK: Test @@@ */
       
       if (TtaGetViewFrame (newdoc, 1) != 0)

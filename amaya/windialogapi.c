@@ -3023,7 +3023,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       /* charset */
       SetDlgItemText (hwnDlg, IDC_DICHARSET,
 		      TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE));
-      charsetName = TtaGetCharsetName (TtaGetDocumentCharset (doc));
+      charsetName = DocumentMeta[document]->charset;
       if (charsetName != NULL)
 	SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, charsetName);
       else

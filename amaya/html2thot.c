@@ -4814,12 +4814,11 @@ void           ReadTextFile (FILE *infile, char* textbuf,
 void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 			      ThotBool *docType, ThotBool *isXML,
 			      int *parsingLevel, CHARSET *charset,
-			      DocumentType *thotType)
+			      STRING charsetname, DocumentType *thotType)
 {
   gzFile      stream;
   char        file_name[MAX_LENGTH];
   char       *ptr, *end;
-  char        charsetname[MAX_LENGTH];
   int         res, i, j, k;
   ThotBool    endOfSniffedFile, beginning;
   ThotBool    found;
@@ -4896,7 +4895,7 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
 			{
 			  /* get the document charset */
 			  k = 0; j = 1;
-			  while (&ptr[j] != end)
+			  while (&ptr[j] != end && k < MAX_LENGTH)
 			    charsetname[k++] = ptr[j++];
 			  charsetname[k] = WC_EOS;
 			  *charset = TtaGetCharset (charsetname);
@@ -5079,12 +5078,11 @@ void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
   Parses the loaded file to detect if it includes a charset value 
   in a META element 
   ----------------------------------------------------------------------*/
-void         CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset)
+void         CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset, STRING charsetname)
 {
   gzFile     stream;
   char       file_name[MAX_LENGTH];
   char      *ptr, *end, *end2,*meta, *content, *body, *http;
-  char       charsetname[MAX_LENGTH];
   int        res, i, j, k;
   ThotBool   endOfSniffedFile;
 
@@ -5147,7 +5145,7 @@ void         CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset)
 			    {
 			      /* get the document charset */
 			      k = 0; j = 1;
-			      while (&ptr[j] != end)
+			      while (&ptr[j] != end && k < MAX_LENGTH)
 				charsetname[k++] = ptr[j++];
 			      charsetname[k] = WC_EOS;
 			      *charset = TtaGetCharset (charsetname);

@@ -968,6 +968,7 @@ static void RestartParser (Document doc, CHAR_T *localFile, CHAR_T *tempdir,
 {
   CHARSET             charset;
   CHAR_T              htmlErrFile [80];
+  CHAR_T              charsetname[MAX_LENGTH];
   int                 parsingLevel;
   int                 i;
   ThotBool            xmlDec, withDoctype, isXML;
@@ -997,7 +998,7 @@ static void RestartParser (Document doc, CHAR_T *localFile, CHAR_T *tempdir,
 
   /* check if there is an XML declaration with a charset declaration */
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML,
-		  &parsingLevel, &charset, &thotType);
+		  &parsingLevel, &charset, charsetname, &thotType);
   DocumentMeta[doc]->xmlformat = isXML;
 
   /* When the mode was set to browser by a parsing error,
