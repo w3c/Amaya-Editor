@@ -867,7 +867,11 @@ char               *appArgv0;
     }
 
   /* No this should NOT be a call to TtaGetEnvString */
+# ifdef _WINDOWS
   home_dir = getenv ("HOME");
+# else /* _WINDOWS */
+  home_dir = getenv ("HOME");
+# endif /* _WINDOWS */
   /*
    * We are looking for the absolute pathname to the binary of the
    * application.
