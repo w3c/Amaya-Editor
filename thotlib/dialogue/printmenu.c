@@ -154,13 +154,13 @@ char               *viewsToPrint;
 
    PrintInit (userOrientation, tempDir, dir, name);
    if (printer[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, printer, PageSize, nCopies,
-	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld PRINTER &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "lp", PageSize, nCopies,
-	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %d %d %d %s %d %d %d %d %d %ld PRINTER %S &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
    res = system (cmd);
    if (res == -1)
@@ -221,13 +221,13 @@ char               *viewsToPrint;
    PrintInit (userOrientation, tempDir, dir, name);
 
    if (psName[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, psName, PageSize, nCopies,
-	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, viewsToPrint, realName, "out.ps", PageSize, nCopies,
-	       hShift, vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0]);
+      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
    res = system (cmd);
    if (res == -1)
@@ -236,7 +236,7 @@ char               *viewsToPrint;
 
 
 /*----------------------------------------------------------------------
-   ConnectPrint:  initialise les valeurs du formulaire d'impression.   
+   ConnectPrint:  Initializes printing parameters.
   ----------------------------------------------------------------------*/
 static void         ConnectPrint ()
 {
@@ -258,7 +258,6 @@ static void         ConnectPrint ()
 	strcpy (PageSize, "A4");
      }
 }
-
 
 /*----------------------------------------------------------------------
    TtcPrint traite les retours du formulaire d'impression. 
