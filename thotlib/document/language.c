@@ -279,7 +279,8 @@ char *TtaGetLanguageCodeFromName (char *name)
   CodeBuffer[0] = EOS;
   for (i = 0; CodeBuffer[0] == EOS && ISO639table[i].fullName[0] != EOS; i++)
     {
-      if (!strcasecmp (name, (const char *)ISO639table[i].fullName))
+      if (!strcasecmp (name, (const char *)ISO639table[i].fullName) ||
+	  !strcasecmp (name, (const char *)ISO639table[i].code))
 	strcpy (CodeBuffer, (const char *)ISO639table[i].code);
     }
   if (CodeBuffer[0] == EOS)

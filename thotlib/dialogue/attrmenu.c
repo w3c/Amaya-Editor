@@ -165,7 +165,7 @@ static void InitFormLanguage (Document doc, View view,
 	 i = nbItem;
        TtaNewSelector (NumSelectLanguage, NumFormLanguage,
 		       TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
-		       i, NULL, TRUE, TRUE);
+		       i, NULL, TRUE, FALSE);
      }
    if (defItem >= 0)
      TtaSetSelector (NumSelectLanguage, defItem, NULL);
@@ -1518,47 +1518,51 @@ void CallbackLanguageMenu (int ref, int val, char *txt)
 {
   ThotBool   doit;
   char       TmpTextAttrValue[LgMaxAttrText];
-  int        TmpNumCurrentAttr;
+  int        TmpNumCurrentAttr, lang;
 
   doit = FALSE;
   switch (ref)
     {
     case NumSelectLanguage:
-      /* retour de la langue choisie par l'utilisateur */
+      /* current language name */
       if (txt == NULL)
 	LangAttrValue[0] = EOS;
       else
-	strncpy (LangAttrValue, TtaGetLanguageCodeFromName (txt), LgMaxAttrText);
-#ifdef _GTK
-      TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
-#endif /* _GTK */
-      val = 1;
-      /*doit = TRUE;*/
+	strncpy (LangAttrValue, txt, LgMaxAttrText);
       break;
     case NumFormLanguage:
-      /* retour du formulaire lui-meme */
       switch (val)
 	{
 	case 0:
-	  /* abandon du formulaire */
+	  /* cancel */
 	  break;
 	case 1:
+	  /* apply the new value if it's a valid language */
+	  strcpy (TmpTextAttrValue, LangAttrValue);
+	  strcpy (LangAttrValue, TtaGetLanguageCodeFromName (TmpTextAttrValue));
+	  doit = LangAttrValue[0] != EOS;
+#ifdef _GTK
+	  if (doit)
+	    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
+#endif /* _GTK */
+ 	  break;
 	case 2:
-	  /* appliquer la nouvelle valeur */
+	  /* remove the current value */
 	  doit = TRUE;
 	  break;
 	}
+      if (doit)
+	{
+	  /* temporary change of TextAttrValue and NumCurrentAttr */
+	  strcpy (TmpTextAttrValue, TextAttrValue);
+	  strcpy (TextAttrValue, LangAttrValue);
+	  TmpNumCurrentAttr = NumCurrentAttr;
+	  NumCurrentAttr = 1;
+	  CallbackValAttrMenu (NumMenuAttr, val, NULL);
+	  strcpy (TextAttrValue, TmpTextAttrValue);
+	  NumCurrentAttr = TmpNumCurrentAttr;
+	}
       break;
-    }
-  if (doit)
-    {
-      strcpy (TmpTextAttrValue, TextAttrValue);
-      strcpy (TextAttrValue, LangAttrValue);
-      TmpNumCurrentAttr = NumCurrentAttr;
-      NumCurrentAttr = 1;
-      CallbackValAttrMenu (NumMenuAttr, val, NULL);
-      strcpy (TextAttrValue, TmpTextAttrValue);
-      NumCurrentAttr = TmpNumCurrentAttr;
     }
 }
 
