@@ -3692,6 +3692,13 @@ BOXES
 	   Underline: NoUnderline;
 	   END;
 	END;
+#else
+
+ BodyBottomSpace: BEGIN
+	Content: Graphics ' ';
+	Height: 1 cm;
+	Width: 1;
+	END;
 #endif
 
 RULES
@@ -3786,6 +3793,7 @@ RULES
 	Height: Enclosing . Height min;
 	HorizPos: Left = Enclosing . Left + 0.5 cm;
 	Hyphenate: No;
+	CreateLast(BodyBottomSpace);
 #endif
 	CreateBefore(BODY_S);
 	IN Structure_view BEGIN
