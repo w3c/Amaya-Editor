@@ -39,8 +39,9 @@ This file  is used to define global parameters for Thot applications (Amaya is
 a Thot application). In this file, there's a section called
 <code>[amaya]</code> where the configuration options are specified for <a
 href="#L138">the default home page</a>, <a href="#Specifying">proxies</a><a>,
-</a><a href="#Network">network timeouts</a>, <a href="#Cache">cacheing</a>, <a
-href="#Multi-key"> multi-key support</a>, <a href="#L139">default colors</a>,
+</a><a href="#Network">network timeouts</a>, <a href="#Cache">network cache</a>, <a
+href="#Multi-key"> multi-key support</a>, <a href="#Double-click">double-click
+delay, <a href="#L139">default colors</a>,
 <a href="#Default">default zoom-factor</a>,<a href="#L140"> colors
 palette</a>, <a href="#L141">dialogue language</a>, <a
 href="#Personnal">personal dictionary</a>, and <a href="#L242"> default
@@ -126,8 +127,8 @@ Timeout while consulting a domain name server
 <dd>
 Timeout before closing an idle persistent connection (keep-alive)
 </dd>
-<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 20000
-ms]</dt>
+<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 60000
+ms, use -1 to supress the timeout]</dt>
 <dd>
 Timeout while waiting for a network event (e.g., while opening a connection)
 </dd>
@@ -141,7 +142,7 @@ by default and is stored in a directory which is called
 <p>
 Three registry files entries allow you to control the cache:</p>
 <dl>
-<dt><strong>USE_CACHE</strong> [YES/NO, default YES]</dt>
+<dt><strong>ENABLE_CACHE</strong> [YES/NO, default YES]</dt>
 <dd>
 Activates or desactivates the cache
 </dd>
@@ -544,6 +545,19 @@ By default, this input method is disabled. To active it the user has to edit
 his/her <a href="#Configuring">registry file</a> <code>$HOME/.thotrc</code>
 (Unix) or <code>Thot/config/thot.rc</code> (Windows) to set the parameter
 value "<code>ENABLE_MULTIKEY=yes</code>".</p>
+
+<h3><a name="Double-click">Double-click delay</a></h3>
+<p>
+On Unix platforms only, the variable <code>DOUBLECLICKDELAY</code> of the
+registry $HOME/.thotrc allows one to control the delay under
+which two mouse clicks are classed as a double-click. The syntax of this
+variable is:</p>
+<dl>
+<dt></dt>
+<dd>
+<strong>DOUBLECLICKDELAY</strong> [value in milliseconds, default 
+500 ms]</dd>
+</dl>
 
 <h3><a name="L236">Keyboard Shortcuts</a></h3>
 <p>
