@@ -18,6 +18,9 @@ class wxAmayaSocketEventLoop : public wxTimer
 
   void Notify();
 
+  static void InitSocketLib();
+  static void CleanupSocketLib();
+
  protected:
   bool m_Started;
   int m_PollingDelay;

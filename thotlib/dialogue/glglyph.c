@@ -481,7 +481,7 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
   while (n < size && text[n])
     {
       /* convert character code to glyph index */
-      glyph = Char_index_lookup_cache (font, text[n], &glyph_index, true);
+      glyph = Char_index_lookup_cache (font, text[n], &glyph_index, TRUE);
       if (glyph)
 	{
 #ifdef _TRACE_GL_BUGS_GLISLIST

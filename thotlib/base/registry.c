@@ -1591,7 +1591,11 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #if defined(_WX) /* SG TODO : a valider */
 	   wxString homedir = wxGetHomeDir();
 	   wxCSConv conv_ascii(_T("ISO-8859-1"));
+#ifdef _WINDOWS
+	   sprintf (app_home, "%s%c%s", homedir.mb_str(conv_ascii) , DIR_SEP, AppNameW);
+#else  /* _WINDOWS */
 	   sprintf (app_home, "%s%c.%s", homedir.mb_str(conv_ascii) , DIR_SEP, AppNameW);
+#endif /* _WINDOWS */
 #endif /* _WX */
 #endif /* _UNIX */
 #endif /*_WINGUI */

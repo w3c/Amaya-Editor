@@ -22,7 +22,11 @@
 #endif /* !_WINGUI */
 
 #ifdef _WX
+  #include "wx/utils.h"
+  #include "wx/dir.h"
+  #include "AmayaApp.h"
   #include "wxAmayaSocketEvent.h"
+  #include "wxAmayaSocketEventLoop.h"
 #endif /* _WX */
 
 #define AMAYA_WWW_CACHE
@@ -655,13 +659,13 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 	  
        if (me->error_stream != (char *) NULL)
 	 HT_FREE (me->error_stream);
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS	
        if (me->read_xtinput_id || me->write_xtinput_id ||
 	   me->except_xtinput_id)
 	 RequestKillAllXtevents(me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
        
        if (me->reqStatus == HT_ABORT)
 	 {
@@ -743,11 +747,11 @@ static void         Thread_deleteAll (void)
 	      if (me->request)
 		{
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS 
 		  RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
       
 		  if (!HTRequest_kill (me->request))
 		    AHTReqContext_delete (me);
@@ -1826,9 +1830,10 @@ static void         AHTProtocolInit (void)
   HTTransport_add("buffered_tcp", HT_TP_SINGLE, HTReader_new, 
 		  HTBufferWriter_new);
   HTProtocol_add ("http", "buffered_tcp", HTTP_PORT, NO, HTLoadHTTP, NULL);
-#ifdef _WINGUI
+#ifdef _WINDOWS
+  /* TODO: verifier que le param YES est adapte pour WX */
   HTProtocol_add ("file", "local", 0, YES, HTLoadFile, NULL);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
@@ -1883,9 +1888,9 @@ static void         AHTNetInit (void)
   HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED, HT_FILTER_MIDDLE);
 #endif /* AMAYA_LOST_UPDATE */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
   HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
   
    /**** for later ?? ****/
    /*  HTNet_addAfter(HTInfoFilter, 	NULL,		NULL, HT_ALL,		HT_FILTER_LATE); */
@@ -1970,7 +1975,46 @@ static void RecCleanCache (char *dirname)
     }
   FindClose (hFindFile);
 #endif /* _WINGUI */
+
+#if defined(_WX)
+  char buftmp[256];
+  wxString wx_dir_name = wxString(dirname, AmayaApp::conv_ascii);
+
+    /* try to delete the current directory */
+  wxRmdir(wx_dir_name);
   
+  if (!wxDirExists(wx_dir_name))
+	  return;
+
+  /* try to delete the files & directorys inside */
+  {
+	  wxDir wx_dir(wx_dir_name);	
+	  wxString name;
+	  ThotBool cont = wx_dir.GetFirst(&name);
+	  while (cont)
+	  {
+		name = wx_dir.GetName()+_T("\\")+name;
+		sprintf(buftmp, "%s\\", name.mb_str(AmayaApp::conv_ascii) );
+		if (wxDirExists(name))
+		{
+			/* it's a sub-directory */
+			sprintf(buftmp, "%s\\", name.mb_str(AmayaApp::conv_ascii) );
+			/* delete it recursively */
+			RecCleanCache(buftmp);
+		}
+		else
+		{
+			/* it's a file */
+			wxRemoveFile(name);
+		}
+
+		cont = wx_dir.GetNext(&name);
+	  }
+  }
+  /* try to delete the current directory */
+  wxRmdir(wx_dir_name);
+#endif /* _WX */
+
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   DIR *dp;
   struct stat st;
@@ -2450,7 +2494,7 @@ static void         AHTProfile_delete (void)
   if (HTLib_isInitialized ())      
     HTEventTerminate ();
 #endif /* _WINGUI; */		
-    
+
   /* Clean up the persistent cache (if any) */
 #ifdef AMAYA_WWW_CACHE
   clear_cachelock ();
@@ -2508,6 +2552,10 @@ void         QueryInit ()
 #ifdef _WINGUI
    HTEventInit ();
 #endif /* _WINGUI */
+
+#ifdef _WX
+   wxAmayaSocketEventLoop::InitSocketLib();
+#endif /* _WX */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
    HTEvent_setRegisterCallback ( AHTEvent_register);
@@ -2720,11 +2768,11 @@ void QueryClose ()
      a non-existent Amaya window */
   HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
   HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
   /** need to erase all existing timers too **/
    HTTimer_registerSetTimerCallback (NULL);
    HTTimer_registerDeleteTimerCallback (NULL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
   HTHost_setActivateRequestCallback (NULL);
   Thread_deleteAll ();
  
@@ -3108,22 +3156,23 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
        else
 	 me->urlName = (char *)TtaGetMemory (MAX_LENGTH + 2);
        strcpy (me->urlName, urlName);
-#ifdef _WINDOWS
+	 /* TODO: a tester que ca marche bien avec WX */
+#ifdef _WINGUI
      /* force windows ASYNC requests to always be non preemptive */
      HTRequest_setPreemptive (me->request, NO);
-#endif /*_WINDOWS */
+#endif /*_WINGUI */
      } /* AMAYA_ASYNC mode */ 
    else 
-#ifdef _WINDOWS
+#ifdef _WINGUI
      {
        me->outputfile = outputfile;
        me->urlName = urlName;
        /* force windows SYNC requests to always be non preemptive */
        HTRequest_setPreemptive (me->request, YES);
      }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
    
-#if defined(_UNIX)
+#if defined(_UNIX) || defined(_WX)
      {
        me->outputfile = outputfile;
        me->urlName = urlName;
@@ -3135,7 +3184,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
      generated
      ****/
    HTRequest_setPreemptive (me->request, NO);
-#endif /* #if defined(_UNIX) */
+#endif /* #if defined(_UNIX) || defined(_WX) */
 
    /*
    ** Make sure that the first request is flushed immediately and not
@@ -3729,14 +3778,14 @@ void                StopAllRequests (int docid)
 			 }
 		       cur = Amaya->reqlist;
 		     }
-#if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
 #ifdef WWW_XWINDOWS
 		   /* to be on the safe side, remove all outstanding 
 		      X events */
 		   else 
 		     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
 		 }
 	     }
 	   /* Delete remaining channels */

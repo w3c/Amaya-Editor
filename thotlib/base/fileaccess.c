@@ -1103,7 +1103,7 @@ ThotBool TtaMakeDirectory (char *directory)
   ----------------------------------------------------------------------*/
 ThotBool TtaCheckDirectory (char *directory)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
    DWORD               attribs;
 
    /* NEW_WINDOWS - mark for furthur security stuff - EGP
@@ -1115,7 +1115,7 @@ ThotBool TtaCheckDirectory (char *directory)
    if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
       return FALSE;
    return TRUE;
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
    struct stat         fileStat;
 
    /* does the directory exist ? */
@@ -1131,7 +1131,7 @@ ThotBool TtaCheckDirectory (char *directory)
       return (TRUE);
    else
       return (FALSE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 

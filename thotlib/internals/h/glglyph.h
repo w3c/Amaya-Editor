@@ -47,12 +47,12 @@
  * a glList or a bitmap
  * it's necessary to indicate the type of the data to be able to free it.
  */
-enum GL_glyph_DataType
+typedef enum
   {
     GL_GLYPH_DATATYPE_NONE,
     GL_GLYPH_DATATYPE_GLLIST, /* a glList */
     GL_GLYPH_DATATYPE_FTBITMAP /* a freetype bitmap */
-  };
+} GL_glyph_DataType;
 
 typedef struct _GL_glyph
 {

@@ -419,7 +419,7 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
 #ifdef _WINDOWS
   /* under windows, libwww requires an explicit FD_CLOSE registration 
      to detect HTTP responses not having a Content-Length header */
-  status = HTEventList_register (sock, type | HTEvent_CLOSE , event);
+  status = HTEventList_register (sock, (HTEventType)(type | HTEvent_CLOSE) , event);
 #endif /* _WINDOWS */
 
 #if defined(_UNIX)

@@ -325,8 +325,11 @@ void GL_SetPrintForeground (int fg)
       ColorPs = fg;
 
       /* SG : bug fix, when a new textcolor is set, the lastrgb must be reinitialized */
-      for (int i = 0; i < 4; i++)
-	LastRgb[i] = -1.;
+	  {
+		int i;
+		for (i = 0; i < 4; i++)
+	      LastRgb[i] = -1.;
+	  }
     }
   /*******
   float rgb[3];

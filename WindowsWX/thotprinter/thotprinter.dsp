@@ -140,6 +140,18 @@ SOURCE=..\..\Amaya\styleparser.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\amaya\wxAmayaSocketEvent.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\amaya\wxAmayaSocketEventLoop.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\amaya\wxAmayaTimer.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\printlib.lib
 # End Source File
 # End Target
