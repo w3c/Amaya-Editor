@@ -405,7 +405,7 @@ static void PropagateYOutOfStruct (PtrAbstractBox pCurrentAb,
   updates the position value according to the current edge used.
   The initial value of val depends on the refered box.
   ----------------------------------------------------------------------*/
-void    SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
+void SetPositionConstraint (BoxEdge localEdge, PtrBox pBox, int *val)
 {
   AbPosition         *pPosAb;
 
@@ -627,7 +627,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   <-LMargin-><-LBorder-><-LPadding-><-W-><-RPadding-><-RBorder-><-LRargin->
   <---------------------------------Width--------------------------------->
   ----------------------------------------------------------------------*/
-void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
+void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 {
   PtrAbstractBox      pRefAb;
   PtrAbstractBox      pAb, child;
@@ -679,7 +679,8 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	      if (rule.PosUnit == UnPercent)
 		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) x, 0);
 	      else
-		dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
+				   ViewFrameTable[frame - 1].FrMagnification);
 	    }
 	  else
 	    {
@@ -703,7 +704,8 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 		  pRefBox = pRefAb->AbBox;
 		  if (rule.PosUnit == UnPercent)
 		    /* poucentage de la largeur de l'englobant */
-		    dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pAb->AbEnclosing, 0);
+		    dist = PixelValue (rule.PosDistance, UnPercent,
+				       (PtrAbstractBox) pAb->AbEnclosing, 0);
 		  else
 		    dist = 0;
 		  refEdge = Left;
@@ -764,7 +766,8 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	      pAb->AbHorizPos.PosUnit = UnPixel;
 	    }
 	  else
-	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
 	}
     }
   else
@@ -795,13 +798,14 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	      if (rule.PosUnit == UnPercent)
 		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) y, 0);
 	      else
-		dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
+				   ViewFrameTable[frame - 1].FrMagnification);
 	    }
 	  else
 	    {
 	      /* there is an enclosing box */
 	      pRefAb = GetPosRelativeAb (pAb, horizRef);
-	      if (pRefAb != NULL)
+	      if (pRefAb)
 		{
 		  /* Align baselines */
 		  sibling = TRUE;
@@ -869,12 +873,13 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 		  pBox->BxYOutOfStruct = TRUE;
 		  PropagateYOutOfStruct (pAb, TRUE, pAb->AbVertEnclosing);
 		}
-	      else if (pRefAb->AbBox != NULL)
+	      else if (pRefAb->AbBox)
 		{
 		  /* depend on a sibling box */
 		  sibling = TRUE;
 		  if (pRefAb->AbBox->BxYOutOfStruct
-		      || (pRefAb->AbBox->BxHorizFlex && pRefAb->AbLeafType == LtCompound && pRefAb->AbInLine && refEdge != Top)
+		      || (pRefAb->AbBox->BxHorizFlex && pRefAb->AbLeafType == LtCompound &&
+			  pRefAb->AbInLine && refEdge != Top)
 		      || (pRefAb->AbBox->BxHOutOfStruct && refEdge != Top))
 		    {
 		      /* The box inherits out from a structure position */
@@ -899,11 +904,12 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	      pAb->AbVertPos.PosUnit = UnPixel;
 	    }
 	  else
-	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
 	}
     }
 
-  if (pRefAb != NULL)
+  if (pRefAb)
     {
       /* Depend on another box */
       pRefBox = pRefAb->AbBox;
@@ -1008,10 +1014,10 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	  x = x + pRefBox->BxVertRef;
 	  break;
 	case HorizMiddle:
-	  y = y + (pRefBox->BxHeight / 2);
+	  y = y + (pRefBox->BxH / 2);
 	  break;
 	case VertMiddle:
-	  x = x + (pRefBox->BxWidth / 2);
+	  x = x + (pRefBox->BxW / 2);
 	  break;
 	default:
 	  break;
@@ -1038,7 +1044,7 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	  break;
 	}
     }
-
+ 
   /* Calcule l'origine de la boite et les points fixes */
   if (horizRef)
     {
@@ -1118,7 +1124,7 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
    - Else get the sibling box which gives the position.     
    Return a box or NULL.                        
   ----------------------------------------------------------------------*/
-PtrBox              GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
+PtrBox GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
 {
   PtrBox              pRelativeBox;
   PtrPosRelations     pPosRel;
@@ -2235,10 +2241,10 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
     case Top:
       break;
     case Bottom:
-      y += pRefBox->BxHeight;
+      y += pRefBox->BxH;
       break;
     case Right:
-      x += pRefBox->BxWidth;
+      x += pRefBox->BxW;
       break;
     case HorizRef:
       y += pRefBox->BxHorizRef;
@@ -2259,7 +2265,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
   /* Met a jour l'axe de la boite */
   if (horizRef)
     {
-      x = x + dist + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pBox->BxVertRef;
+      x = x + dist - pBox->BxVertRef;
       MoveVertRef (pBox, NULL, x, frame);
       /* la regle axe de reference est interpretee */
       pAb->AbVertRefChange = FALSE;
@@ -2268,7 +2274,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
     }
   else
     {
-      y = y + dist + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
+      y = y + dist - pBox->BxHorizRef;
       MoveHorizRef (pBox, NULL, y, frame);
       /* la regle axe de reference est interpretee */
       pAb->AbHorizRefChange = FALSE;

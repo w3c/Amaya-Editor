@@ -954,7 +954,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
       /* pFromBoxedemment designee on garde l'ancienne boite */
       if (IsParentBox (PackBoxRoot, pParentBox))
 	PackBoxRoot = pParentBox;
-      
+
       if (pBox->BxType == BoSplit ||
 	  pBox->BxType == BoMulScript)
 	{
@@ -1583,7 +1583,7 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 				    {
 				    if (pRelation->ReOp == OpVertRef)
 				      /* move a baseline */
-				      MoveHorizRef (pRelation->ReBox, pFromBox,
+				      MoveHorizRef (pRelation->ReBox, pBox,
 						    delta, frame);
 				    else if ((pRelation->ReOp == OpVertDep &&
 					      pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
@@ -2688,6 +2688,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		else
 		  box = box->BxMoved;
 	    }
+
 	  /* add the box in the history */
 	  pBox->BxMoved = pFromBox;
 	  /* keep in mind that the box should be placed */
