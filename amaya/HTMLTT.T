@@ -571,6 +571,12 @@ RULES
  Comment_line:
 	Remove;
 
+ XMLPI:
+	Remove;
+
+ PI_line:
+	Remove;
+
  FRAMESET: BEGIN
 	END;
 
