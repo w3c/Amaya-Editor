@@ -1,9 +1,8 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   label.c :  gestion des labels des elements des arbres abstraits.
-   (Thotfon utilise une implementation differente de ce module)
+   This module handles element labels.
+   Each element in an abstract tree has a label which is a unique
+   identifier for that element in its document.
  */
 
 #include "constmedia.h"
