@@ -188,15 +188,14 @@ une chaîne de caractères stylée (en gras, en italique ou dans tout autre
 style) si vous placez le point d'insertion à la fin du paragraphe et tapez du
 texte, les caractères sont ajoutés à la fin de l'ancre ou de la chaîne
 stylée. Si vous voulez saisir du simple texte après cet élément, il vous
-suffit de presser la touche "Enter" pour sortir de l'élément et de continuer
-à taper.</p>
+suffit de presser la touche "Enter" pour sortir de l'élément et de taper.</p>
 
 <p>Quand un paragraphe ou un autre bloc de texte débute par une ancre ou une
 chaîne de caractères stylée, si vous placez le point d'insertion au début du
-paragraphe et tapez du texte, les caractères sont insérés dans  l'ancre ou de
+paragraphe et tapez du texte, les caractères sont insérés dans l'ancre ou de
 la chaîne stylée. Si vous voulez saisir du simple texte avant cet élément, il
 vous suffit de presser la touche "Enter" pour sortir de l'élément et de
-continuer à taper.</p>
+taper.</p>
 
 <h4 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h4>
 

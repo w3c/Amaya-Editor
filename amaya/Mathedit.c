@@ -144,6 +144,8 @@ static void MathSetAttributes (Element el, Document doc, Element* selEl)
   Element	parent, grandParent;
 
   elType = TtaGetElementType (el);
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    return;
   if (elType.ElTypeNum == MathML_EL_MO)
      {
      SetIntAddSpaceAttr (el, doc);
@@ -545,7 +547,8 @@ static void RegenerateFencedSeparators (Element el, Document doc, ThotBool recor
      next = child;
      TtaNextSibling (&next);
      elType = TtaGetElementType (child);
-     if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+     if (elType.ElTypeNum == MathML_EL_FencedSeparator &&
+	 !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
        {
         if (record)
 	  TtaRegisterElementDelete (child, doc);
@@ -1053,8 +1056,9 @@ static void         CreateMathConstruct (int construct)
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
       
-      if (elType.ElTypeNum == MathML_EL_MROW ||
-	  elType.ElTypeNum == MathML_EL_MathML)
+      if ((elType.ElTypeNum == MathML_EL_MROW ||
+	   elType.ElTypeNum == MathML_EL_MathML) &&
+	  elType.ElSSchema == mathSchema)
 	{
 	  /* the selected element is a MROW or the MathML element */
 	  row = sibling;
@@ -1087,7 +1091,8 @@ static void         CreateMathConstruct (int construct)
 	    {
 	      /* check whether the selected element is a Construct */
 	      elType = TtaGetElementType (sibling);
-	      if (elType.ElTypeNum == MathML_EL_Construct)
+	      if (elType.ElTypeNum == MathML_EL_Construct &&
+		  elType.ElSSchema == mathSchema)
 		{
 		  TtaInsertFirstChild (&el, sibling, doc);
 		  RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
@@ -1098,7 +1103,8 @@ static void         CreateMathConstruct (int construct)
 		TtaRegisterElementCreate (el, doc);
 	    }
 	}
-      else if (elType.ElTypeNum == MathML_EL_Construct)
+      else if (elType.ElTypeNum == MathML_EL_Construct &&
+	       elType.ElSSchema == mathSchema)
 	{
 	  /* replace the Construct element */
 	  TtaInsertFirstChild (&el, sibling, doc);
@@ -1178,7 +1184,8 @@ static void         CreateMathConstruct (int construct)
 	 create the associated FencedSeparator elements */
       parent = TtaGetParent (el);
       elType = TtaGetElementType (parent);
-      if (elType.ElTypeNum == MathML_EL_FencedExpression)
+      if (elType.ElTypeNum == MathML_EL_FencedExpression &&
+	  elType.ElSSchema == mathSchema)
 	RegenerateFencedSeparators (parent, doc, TRUE);
 
       /* insert placeholders before and/or after the new element if
@@ -1425,7 +1432,8 @@ static void CheckMROW (Element* el, Document doc)
   int           oldStructureChecking;
 
   elType = TtaGetElementType (*el);
-  if (elType.ElTypeNum == MathML_EL_MROW)
+  if (elType.ElTypeNum == MathML_EL_MROW &&
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
      /* the parent of the deleted element is a MROW */
      {
      firstChild = TtaGetFirstChild (*el);
@@ -1623,10 +1631,11 @@ static void CreateCharStringElement (int typeNum, Document doc)
        elType = TtaGetElementType (firstSel);
        if (elType.ElTypeNum != typeNum)
 	  /* the type of this element is not the type requested by the user */
-	  if (elType.ElTypeNum == MathML_EL_MTEXT ||
-	      elType.ElTypeNum == MathML_EL_MI ||
-	      elType.ElTypeNum == MathML_EL_MN ||
-	      elType.ElTypeNum == MathML_EL_MO)
+	  if ((elType.ElTypeNum == MathML_EL_MTEXT ||
+	       elType.ElTypeNum == MathML_EL_MI ||
+	       elType.ElTypeNum == MathML_EL_MN ||
+	       elType.ElTypeNum == MathML_EL_MO) &&
+	      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	    /* the selected element is compatible with the type requested */
 	    /* just change the type of this element */
 	    {
@@ -1644,16 +1653,18 @@ static void CreateCharStringElement (int typeNum, Document doc)
      /* first checks that only siblings elements are selected and that
 	all selected elements are MI, MN, MO or MTEXT */
      elType = TtaGetElementType (firstSel);
-     if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
-	 elType.ElTypeNum == MathML_EL_MGLYPH)
-        first = TtaGetParent (firstSel);
+     if ((elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	  elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
+	  elType.ElTypeNum == MathML_EL_MGLYPH) &&
+	 strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+       first = TtaGetParent (firstSel);
      else
-        first = firstSel;
+       first = firstSel;
      elType = TtaGetElementType (lastSel);
-     if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
-	 elType.ElTypeNum == MathML_EL_MGLYPH)
+     if ((elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	  elType.ElTypeNum == MathML_EL_SYMBOL_UNIT ||
+	  elType.ElTypeNum == MathML_EL_MGLYPH) &&
+	 strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
         last = TtaGetParent (lastSel);
      else
         last = lastSel;
@@ -1664,10 +1675,11 @@ static void CreateCharStringElement (int typeNum, Document doc)
        while (el && !done)
 	 {
 	 elType = TtaGetElementType (el);
-         if (elType.ElTypeNum == MathML_EL_MTEXT ||
-	     elType.ElTypeNum == MathML_EL_MI ||
-	     elType.ElTypeNum == MathML_EL_MN ||
-	     elType.ElTypeNum == MathML_EL_MO)
+         if ((elType.ElTypeNum == MathML_EL_MTEXT ||
+	      elType.ElTypeNum == MathML_EL_MI ||
+	      elType.ElTypeNum == MathML_EL_MN ||
+	      elType.ElTypeNum == MathML_EL_MO) &&
+	     strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	   {
 	   if (el == last)
 	      el = NULL;
@@ -1699,8 +1711,9 @@ static void CreateCharStringElement (int typeNum, Document doc)
 	   el = SplitTextInMathML (doc, lastSel, lastChar+1, &mrowCreated);
 	   }
 	 elType = TtaGetElementType (firstSel);
-	 if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-	     elType.ElTypeNum == MathML_EL_MGLYPH)
+	 if ((elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	      elType.ElTypeNum == MathML_EL_MGLYPH) &&
+	     strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	   /* the first selected element is a character string.
 	      Split it, as well as its parent (mtext, mi, mo, mn) */
 	   {
@@ -1900,8 +1913,7 @@ static ThotBool MathMoveForward ()
 	    }
 	  else
 	    {
-	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
-			    "MathML") &&
+	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") &&
 		  elType.ElTypeNum == MathML_EL_MTABLE)
 		/* don't select within hidden element MTable_head. Skip it */
 		{
@@ -2175,7 +2187,8 @@ static Element ClosestLeaf (Element el, int* pos)
       if (prev != NULL)
 	 {
          elType = TtaGetElementType (prev);
-         if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+         if (elType.ElTypeNum == MathML_EL_FencedSeparator &&
+	     strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	    /* avoid selecting FencedSeparator elements */
 	    TtaPreviousSibling (&prev);
 	 }
@@ -2185,7 +2198,8 @@ static Element ClosestLeaf (Element el, int* pos)
 	 if (next != NULL)
 	    {
 	    elType = TtaGetElementType (next);
-	    if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+	    if (elType.ElTypeNum == MathML_EL_FencedSeparator &&
+		strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	       /* avoid selecting FencedSeparator elements */
 	       TtaNextSibling (&next);
 	    }
@@ -2262,7 +2276,8 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
     currentMI = NULL;
     /* only MI elements may contain function names */
     elType = TtaGetElementType (el);
-    if (elType.ElTypeNum == MathML_EL_MI)
+    if (elType.ElTypeNum == MathML_EL_MI &&
+	strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
        {
        split = FALSE;
        /* if the MI element has to be split, its pieces will replace itself */
@@ -2541,7 +2556,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   elType2 = TtaGetElementType (theText);
   if (elType2.ElTypeNum == MathML_EL_TEXT_UNIT)
      textEl = theText;
-  else if (elType2.ElTypeNum == MathML_EL_MGLYPH)
+  else if (elType2.ElTypeNum == MathML_EL_MGLYPH &&
+	   elType2.ElSSchema == MathMLSchema)
      textEl = TtaGetFirstChild (theText);
   else
      textEl = NULL;
@@ -2665,7 +2681,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	  /* if the deleted element is a child of a FencedExpression element,
 	     upate the associated FencedSeparator elements */
 	  elType = TtaGetElementType (parent);
-	  if (elType.ElTypeNum == MathML_EL_FencedExpression)
+	  if (elType.ElTypeNum == MathML_EL_FencedExpression &&
+	      elType.ElSSchema == MathMLSchema)
 	    RegenerateFencedSeparators (parent, doc, TRUE);
 
 	  CheckMROW (&parent, doc);
@@ -2803,9 +2820,10 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	    {
 	    parent = TtaGetParent (newEl);
 	    elType = TtaGetElementType (parent);
-	    if (elType.ElTypeNum == MathML_EL_UnderOverBase ||
-		elType.ElTypeNum == MathML_EL_Underscript ||
-		elType.ElTypeNum == MathML_EL_Overscript)
+	    if ((elType.ElTypeNum == MathML_EL_UnderOverBase ||
+		 elType.ElTypeNum == MathML_EL_Underscript ||
+		 elType.ElTypeNum == MathML_EL_Overscript) &&
+		elType.ElSSchema == MathMLSchema)
 	       SetSingleIntHorizStretchAttr (parent, doc, &newSelEl);
 	    }
 	  }
@@ -2847,10 +2865,12 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	FencedSeparator elements */
      parent = TtaGetParent (firstEl);
      elType = TtaGetElementType (parent);
-     if (elType.ElTypeNum == MathML_EL_FencedExpression)
+     if (elType.ElTypeNum == MathML_EL_FencedExpression &&
+	 elType.ElSSchema == MathMLSchema)
        RegenerateFencedSeparators (parent, doc, TRUE);
 
-     if (elType.ElTypeNum == MathML_EL_MROW)
+     if (elType.ElTypeNum == MathML_EL_MROW &&
+	 elType.ElSSchema == MathMLSchema)
        /* delete the parent MROW element if it is no longer useful */
        CheckMROW (&parent, doc);
      else
@@ -2955,7 +2975,8 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
     {
       parent = TtaGetParent (firstSel);
       elType1 = TtaGetElementType (parent);
-      if (elType1.ElTypeNum == MathML_EL_MGLYPH)
+      if (elType1.ElTypeNum == MathML_EL_MGLYPH &&
+	  strcmp (TtaGetSSchemaName (elType1.ElSSchema), "MathML") == 0)
 	/* the first selected element is within a mglyph. The new text
 	   leaf will be inserted as a sibling of this mglyph */
 	sibling = parent;
@@ -3129,12 +3150,13 @@ static void SetElementCharFont (Element el, AttributeType attrType, int val,
   ThotBool            newAttr;
 
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_MTEXT ||
-      elType.ElTypeNum == MathML_EL_MI ||
-      elType.ElTypeNum == MathML_EL_MO ||
-      elType.ElTypeNum == MathML_EL_MN ||
-      elType.ElTypeNum == MathML_EL_MS ||
-      elType.ElTypeNum == MathML_EL_MSTYLE)
+  if ((elType.ElTypeNum == MathML_EL_MTEXT ||
+       elType.ElTypeNum == MathML_EL_MI ||
+       elType.ElTypeNum == MathML_EL_MO ||
+       elType.ElTypeNum == MathML_EL_MN ||
+       elType.ElTypeNum == MathML_EL_MS ||
+       elType.ElTypeNum == MathML_EL_MSTYLE) &&
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
      /* the required attribute can be associated with that element */
      {
      attr = TtaGetAttribute (el, attrType);
@@ -3363,7 +3385,8 @@ void MathElementPasted (NotifyElement *event)
       create the associated FencedSeparator elements */
    parent = TtaGetParent (event->element);
    elTypeParent = TtaGetElementType (parent);
-   if (elTypeParent.ElTypeNum == MathML_EL_FencedExpression)
+   if (elTypeParent.ElTypeNum == MathML_EL_FencedExpression &&
+       strcmp (TtaGetSSchemaName (elTypeParent.ElSSchema), "MathML") == 0)
      RegenerateFencedSeparators (parent, event->document, FALSE/******/);
 
    /* if the pasted element is a character string within a MI, MN, or MO
@@ -3371,9 +3394,10 @@ void MathElementPasted (NotifyElement *event)
       operators */
    if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
      {
-     if (elTypeParent.ElTypeNum == MathML_EL_MI ||
-         elTypeParent.ElTypeNum == MathML_EL_MO ||
-	 elTypeParent.ElTypeNum == MathML_EL_MN)
+     if ((elTypeParent.ElTypeNum == MathML_EL_MI ||
+	  elTypeParent.ElTypeNum == MathML_EL_MO ||
+	  elTypeParent.ElTypeNum == MathML_EL_MN) &&
+	 strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
        /* if it's a call from Undo command, don't do anything */
        if (event->info != 1)
 	 ParseMathString (event->element, parent, event->document);
@@ -3447,7 +3471,8 @@ void DeleteMColumn (Document document, View view)
        elType = TtaGetElementType (el);
        if (elType.ElSSchema == GetMathMLSSchema (document))
 	 {
-	   if (elType.ElTypeNum == MathML_EL_MTD)
+	   if (elType.ElTypeNum == MathML_EL_MTD &&
+	       strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	     cell = el;
 	   else
 	     {
@@ -3524,7 +3549,8 @@ void MathElementDeleted (NotifyElement *event)
    parent = event->element; /* parent of the deleted element */
    parentType = TtaGetElementType (parent);
 
-   if (parentType.ElTypeNum == MathML_EL_FencedExpression)
+   if (parentType.ElTypeNum == MathML_EL_FencedExpression &&
+       strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML") == 0)
       /* a child of a FencedExpression element has been deleted,
          re-generate all FencedSeparator elements in that FencedExpression */
      RegenerateFencedSeparators (parent, event->document, FALSE/*****/);
@@ -3575,40 +3601,48 @@ void MathElementDeleted (NotifyElement *event)
 	break;
 
       case MathML_EL_Subscript:		/* a Subscript has been deleted */
-	if (parentType.ElTypeNum == MathML_EL_MSUBSUP)
+	if (parentType.ElTypeNum == MathML_EL_MSUBSUP &&
+	    strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML") == 0)
 	   /* a Subscript in a MSUBSUP. Transform the MSUBSUP into a MSUP */
 	   newTypeNum = MathML_EL_MSUP;
-	else if (parentType.ElTypeNum == MathML_EL_MSUB)
+	else if (parentType.ElTypeNum == MathML_EL_MSUB &&
+		 !strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML"))
 	   /* a Subscript in a MSUB. Remove the MSUB and the Base */
 	   newTypeNum = -1;
 	break;
 
       case MathML_EL_Superscript:	/* a Superscript has been deleted */
-	if (parentType.ElTypeNum == MathML_EL_MSUBSUP)
+	if (parentType.ElTypeNum == MathML_EL_MSUBSUP &&
+	    strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML") == 0)
 	   /* a Superscript in a MSUBSUP. Transform the MSUBSUP into a MSUB */
 	   newTypeNum = MathML_EL_MSUB;
-	else if (parentType.ElTypeNum == MathML_EL_MSUP)
+	else if (parentType.ElTypeNum == MathML_EL_MSUP &&
+		 !strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML"))
 	   /* a Superscript in a MSUP. Remove the MSUP and the Base */
 	   newTypeNum = -1;
 	break;
 
       case MathML_EL_Underscript:	/* an Underscript has been deleted */
-	if (parentType.ElTypeNum == MathML_EL_MUNDEROVER)
+	if (parentType.ElTypeNum == MathML_EL_MUNDEROVER &&
+	    strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML") == 0)
 	   /* an Underscript in a MUNDEROVER. Transform the MUNDEROVER into
 	      a MOVER */
 	   newTypeNum = MathML_EL_MOVER;
-	else if (parentType.ElTypeNum == MathML_EL_MUNDER)
+	else if (parentType.ElTypeNum == MathML_EL_MUNDER &&
+		 !strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML"))
 	   /* an Underscript in a MUNDER. Remove the MUNDER and the
 	      UnderOverBase */
 	   newTypeNum = -1;
 	break;
 
       case MathML_EL_Overscript:	/* an Overscript has been deleted */
-	if (parentType.ElTypeNum == MathML_EL_MUNDEROVER)
+	if (parentType.ElTypeNum == MathML_EL_MUNDEROVER &&
+	    strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML") == 0)
 	   /* an Overscript in a MUNDEROVER. Transform the MUNDEROVER into
 	      a MUNDER */
 	   newTypeNum = MathML_EL_MUNDER;
-	else if (parentType.ElTypeNum == MathML_EL_MOVER)
+	else if (parentType.ElTypeNum == MathML_EL_MOVER &&
+		 !strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML"))
 	   /* an Overscript in a MOVER. Remove the MOVER and the
 	      UnderOverBase */
 	   newTypeNum = -1;
@@ -4115,7 +4149,8 @@ void FencedSeparatorModified (NotifyOnTarget *event)
   while (child != NULL)
      {
      elType = TtaGetElementType (child);
-     if (elType.ElTypeNum == MathML_EL_FencedSeparator)
+     if (elType.ElTypeNum == MathML_EL_FencedSeparator &&
+	 strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	{
 	content = TtaGetFirstChild (child);
         len = 31 - i;
@@ -4167,7 +4202,8 @@ void AttrSeparatorsChanged (NotifyAttribute *event)
   do
     {
     elType = TtaGetElementType (child);
-    if (elType.ElTypeNum == MathML_EL_FencedExpression)
+    if (elType.ElTypeNum == MathML_EL_FencedExpression &&
+	strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
        fencedExpression = child;
     else
        TtaNextSibling (&child);
@@ -4284,7 +4320,8 @@ void HandleRowalignAttribute (Attribute attr, Element el, Document doc,
   Element          row;
 
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum != MathML_EL_MTABLE)
+  if (elType.ElTypeNum != MathML_EL_MTABLE ||
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
     /* ignore rowalign attribute on mstyle elements */
     /* process it only on mtable elements */
     return;
@@ -4313,8 +4350,9 @@ void HandleRowalignAttribute (Attribute attr, Element el, Document doc,
     {
     elType = TtaGetElementType (row);
     /* skip comments and other non row elements */
-    if (elType.ElTypeNum == MathML_EL_MTR ||
-	elType.ElTypeNum == MathML_EL_MLABELEDTR)
+    if ((elType.ElTypeNum == MathML_EL_MTR ||
+	 elType.ElTypeNum == MathML_EL_MLABELEDTR) &&
+	strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
       {
       if (delete)
 	DeleteIntRowAlign (row, doc);
@@ -4491,8 +4529,9 @@ static void RowWithoutColalignAttr (Element *row, Element *cell,
   while (*row != NULL && *cell == NULL)
     {
       elType = TtaGetElementType (*row);
-      if (elType.ElTypeNum != MathML_EL_MTR &&
-          elType.ElTypeNum != MathML_EL_MLABELEDTR)
+      if ((elType.ElTypeNum != MathML_EL_MTR &&
+          elType.ElTypeNum != MathML_EL_MLABELEDTR) ||
+	  strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
 	/* not a row. Skip it */
 	TtaNextSibling (row);
       else
@@ -4531,9 +4570,10 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
   ThotBool         fullTable;
 
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum != MathML_EL_MTABLE &&
-      elType.ElTypeNum != MathML_EL_MTR &&
-      elType.ElTypeNum != MathML_EL_MLABELEDTR)
+  if ((elType.ElTypeNum != MathML_EL_MTABLE &&
+       elType.ElTypeNum != MathML_EL_MTR &&
+       elType.ElTypeNum != MathML_EL_MLABELEDTR) ||
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
     /* ignore columnalign attribute on mstyle elements */
     /* process it only on mtable elements */
     return;
@@ -4584,7 +4624,8 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
     {
     elType = TtaGetElementType (cell);
     /* skip comments and other non cell elements */
-    if (elType.ElTypeNum == MathML_EL_MTD)
+    if (elType.ElTypeNum == MathML_EL_MTD &&
+	strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
       {
         if (delete)
 	  DeleteIntColAlign (cell, doc);
@@ -4675,8 +4716,9 @@ void AttrColAlignDeleted (NotifyAttribute *event)
   HandleColalignAttribute (NULL, event->element, event->document, TRUE, FALSE);
   /* if the enclosing mtable has a columnalign attribute applies it */
   elType = TtaGetElementType (event->element);
-  if (elType.ElTypeNum == MathML_EL_MTR ||
-      elType.ElTypeNum == MathML_EL_MLABELEDTR)
+  if ((elType.ElTypeNum == MathML_EL_MTR ||
+       elType.ElTypeNum == MathML_EL_MLABELEDTR) &&
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
     {
       elType.ElTypeNum = MathML_EL_MTABLE;
       asc = TtaGetTypedAncestor (event->element, elType);
