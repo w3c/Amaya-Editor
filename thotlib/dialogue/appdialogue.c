@@ -62,6 +62,7 @@
 #include "dictionary_f.h"
 #include "font_f.h"
 #include "inites_f.h"
+#include  "profiles_f.h"
 #include "input_f.h"
 #ifndef _WINDOWS 
 #include "LiteClue_f.h"
