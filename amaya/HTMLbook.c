@@ -623,6 +623,7 @@ Document            document;
 	     {
 	       /* create a new document and loads the target document */
 	       includedDocument = TtaNewDocument ("HTML", "tmp");
+	       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), text);
 	       newdoc = GetHTMLDocument (text, NULL, includedDocument,
 					 document, DC_TRUE);
 	       if (newdoc != 0 && newdoc != document)
@@ -665,6 +666,7 @@ View                view;
    el = body;
    while (el != NULL)
       el = GetIncludedDocuments (el, document);
+   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), "");
 }
 
 
