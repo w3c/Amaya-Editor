@@ -30,13 +30,13 @@
 <h2>Sélectionner</h2>
 
 <p>De nombreuses commandes sur  <strong>Amaya</strong> agissent sur la
-sélection courante. La sélection courante se faire de différentes
+sélection courante. La sélection courante peut être changée de différentes
 manières.</p>
 <dl>
   <dt>Sélectionner avec la souris.</dt>
     <dd>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
       souris pour déplacer le point d'insertion.
-      <p>Pour sélectionner du texte, glissez sur une zone ,déplacez la souris
+      <p>Pour sélectionner du texte, glissez sur une zone, déplacez la souris
       en maintenant  le bouton gauche enfoncé et relâchez-la quand la partie
       désirée a été selectionnée.</p>
       <p>Vous pouvez aussi étendre la sélection en cliquant sur le bouton
@@ -53,9 +53,9 @@ manières.</p>
 </dl>
 
 <p>Quelque soit la manière dont vous effectuez la sélection courante, le type
-du premier élément sélectionné est affiché sur le fond de la fenetre. Il est
+du premier élément sélectionné est affiché sur le fond de la fenêtre. Il est
 suivi par les caractères des éléments pris en compte dans la structure. Cela
-peut  être utile quand la structure du document est complexe.</p>
+peut être utile quand la structure du document est complexe.</p>
 
 <h3><a name="Selecting1">Sélectionner par la structure</a></h3>
 

@@ -34,23 +34,23 @@
 est de placer le point d'insertion dans la position voulue et d'utiliser
 le menu Eléments, ou les boutons correspondant aux éléments les plus communs
 (images, en-têtes, listes...). Ces boutons ou articles de menu créent
-l'élément correspondant à la position en cours. <strong></strong></p>
+l'élément correspondant à la position courante. </p>
 
 <p>Dans certains cas, l'élément désiré ne peut pas être créé exactement dans
 la position choisie à cause des contraintes imposées par le HTML DTD.
 <strong>Amaya</strong> tente alors de créer l'élément à l'endroit le plus
 proche possible. Par exemple, si le point d'insertion se trouve à la fin de la
-dernière ligne d'un paragraphe, quand vous cliquez sur le bouton <img
+dernière ligne d'un paragraphe  quand vous cliquez sur le bouton <img
 src="../Icons/H2.gif" alt="H2" /> , <strong>Amaya</strong> ne crée pas la
 nouvelle en-tête à cette position (elle serait invalide) mais aprés le
 paragraphe.</p>
 
 <p>Dans d'autres cas,  <strong>Amaya</strong> modifie la structure existante
 pour créer l'élément désiré. Si le point d'insertion est quelque part dans la
-liste d'articles  (LI) quand vous créez un second niveau d'en-tête (par
-exemple avec le bouton  <img src="../Icons/H2.gif" alt="H2" /> ou à partir du
-menu), la liste d'articles et sa liste incluse sont automatiquement divisées
-afin de créer l'en-tête demandé et de se conformer au HTML DTD.</p>
+liste d'articles  (LI) quand vous créez une en-tête de second  (par exemple
+avec le bouton  <img src="../Icons/H2.gif" alt="H2" /> ou à partir du menu),
+la liste d'articles et sa liste incluse sont automatiquement divisées afin de
+créer l'en-tête demandé et de se conformer au HTML DTD.</p>
 
 <p>Quand vous créez de nouveaux éléments, il est important de sélectionner un
 <em> point d'insertion</em>, et non du texte ou un caractère unique: si la
@@ -59,36 +59,36 @@ href="Changing.html#L631"><em>transformer</em></a> la partie sélectionnée dans
 le type de l'élément choisi.</p>
 
 <p>De la documentation sur <a href="HTML-elements/infoTypes.html">comment
-utiliser les éléments caractères</a> est disponible, ainsi que les brèves
-notes de la <a href="HTML.html">liste de tous les éléments HTML 4.0.</a></p>
+utiliser les types d'éléments </a> est disponible, ainsi que les brèves notes
+de la <a href="HTML.html">liste de tous les éléments HTML 4.0.</a></p>
 
 <h3><a name="Structure">Menu Structure</a></h3>
 
 <p>Le <a href="#Types">menu Eléments </a>vous permet seulement de créer des
 éléments qui font partie du document BODY.  Pour créer des éléments dans le
 document HEAD, utilisez le menu <strong>Structure</strong>  à partir de la  <a
-href="Views.html#Structure">Structure vue</a>.  Ce menu fonctionne de la même
+href="Views.html#Structure">Vue structure</a>.  Ce menu fonctionne de la même
 manière que le menu  <strong>Eléments</strong>:  mettez le point d'insertion
 dans la position désirée et choisissez le type d'élément à partir du menu
 <strong>Structure.</strong></p>
 
 <p>Le menu <strong>Structure</strong> vous permet aussi de créer des
-commentaires, en utilisant son entrée "comment". Les commentaires sont
-seulement visibles dans la   <a href="Views.html#Structure">Structure
-vue,</a>, mais ils peuvent être insérés dans n'importe quelle position dans le
+commentaires, en utilisant son entrée "commentaires". Les commentaires sont
+seulement visibles dans la   <a href="Views.html#Structure">Vus structure</a>,
+mais ils peuvent être insérés dans n'importe quelle position dans le
 document.</p>
 
-<h4>Elements engendrés</h4>
+<h4>Eléments engendrés</h4>
 
 <p>Certains éléments HTML sont constitués de plusieurs  autres éléments de
-différent types. Par exemple, un tableau contient d'habitude un caption
+différents  types. Par exemple, une  table contient d'habitude une  légende
 (CAPTION), plusieurs colonnes (TR) et plusieurs cellules (TD ou TH) dans
 chaque colonne.</p>
 
 <p>Quand  <strong>Amaya</strong> crée de tels élements, il crée aussi leurs
-composants. Un tableau est créé avec un caption et une colonne contenant une
-seule cellule. Le point d'insertion est automatiquement placé dans le premier
-de ces composants. Vous pouvez entrer dans le contenu de ce composant
+composants. Une  table est créée  avec une  légende  et une colonne contenant
+une seule cellule. Le point d'insertion est automatiquement placé dans le
+premier de ces composants. Vous pouvez entrer dans le contenu de ce composant
 immédiatement ou plus tard. Vous pouvez vous déplacer jusqu'au prochain
 composant (vide) avec la souris ou avec les flèches de direction.</p>
 
@@ -96,24 +96,24 @@ composant (vide) avec la souris ou avec les flèches de direction.</p>
 
 <p>Lorsque vous écrivez un nouveau document ou une nouvelle partie dans un
 document, vous êtes souvent amenés à créer de nouveaux élément  Pour  cela, il
-suffit de presser la touche Entrée (ou Retour-charriot). L'élément en cours
-est clos et un nouveau est créé juste aprés  Ceci s'applique évidemment aux
-paragraphes, mais aussi à d'autres types d'éléments, comme les en-têtes ou 
-les <a href="Tables.html#Editing">cellules de tableau</a> par exemple.</p>
+suffit de presser la touche Entrée (ou Retour-charriot). L'élément courant est
+clos et un nouveau est créé juste aprés.  Ceci s'applique évidemment aux
+paragraphes, mais aussi à d'autres types d'éléments, comme les en-têtes ou les
+<a href="Tables.html#Editing">cellules de table </a> par exemple.</p>
 
-<p>Plus souvent, le nouvel élément créé est simplement un paragraphe, quel que
-soit le type de l'élément précédent. Si vous avez besoin d'un autre type
+<p>Le plus souvent, le nouvel élément créé est simplement un paragraphe, quel
+que soit le type de l'élément précédent. Si vous avez besoin d'un autre type
 d'élément, vous pouvez changer immédiatement le type de cet élément, en
 sélectionnant le type désiré dans le menu "Eléments" ou en cliquant sur le
-bouton correspondant, mais vous pouvez aussi continuer à taper et  <a
+bouton correspondant. Vous pouvez aussi continuer à taper et  <a
 href="Changing.html#L653">changer le type</a> plus tard.</p>
 
 <h4>Plusieurs pressions sur la touche Entrée à la fin d'un élément</h4>
 
 <p>Quand le point d'insertion est dans un élément vide, une pression sur la
-touche "Entrée" <em>replace </em> cet  élément dans un autre élément vide au
+touche "Entrée" <em>remplace </em> cet  élément dans un autre élément vide au
 niveau supérieur de la structure du document.. Cette caractéristique vous
-permet de créer trés rapidement de complexes structures emboitées.</p>
+permet de créer trés rapidement des structures  complexes  emboitées.</p>
 
 <p>Considérez par exemple la structure suivante:</p>
 <ol>
@@ -123,7 +123,7 @@ permet de créer trés rapidement de complexes structures emboitées.</p>
   <li>Le second article.
     <ol type="a">
       <li>Le premier article dans la liste emboitée.</li>
-      <li>Le second article dans la liste emboité</li>
+      <li>Le second article dans la liste emboitée.</li>
     </ol>
   </li>
   <li>Le dernier article dans la liste.</li>
@@ -134,23 +134,23 @@ premier article (par exemple en cliquant sur le bouton  <img
 alt="Numbered List " border="0" src="../Icons/NumList.gif" align="middle" /> )
 et tapez sur la première ligne.  A la fin de cette première ligne, pressez la
 touche "Entrée": cela crée un nouveau paragraphe dans la liste. A la fin de ce
-paragraphe, pressez la touche "Entrée"- mais presser encore la même touche
-replace ce paragraphe dans un article vide 2. A la fin de la première ligne de
-l'article 2, créez une nouvelle liste avec son premier article (cliquez par
-exemple sur le bouton  <img border="0" alt="Numbered List "
-src="../Icons/NumList.gif" align="middle" /> ). La nouvelle liste sera
-automatiquement emboitée. L'article b. est créé en appuyant deux fois sur la
-touche "Entrée" à la fin de l'article a. Quand le point d'insertion est à  la
-fin de l'article b.,  créez l'article 3 en appuyant quatre fois sur la touche
-"Entrée". Pour créer le paragraphe qui suit ces listes, pressez la
-touche"Entrée" trois fois lorsque le point d'insertion est à la fin de
-l'article 3.</p>
+paragraphe, pressez la touche "Entrée": cela crée encore un nouveau
+paragraphe. Par contre, en  pressant  encore la même touche, vous remplacez ce
+paragraphe dans un article vide 2.  A la fin de la première ligne de l'article
+2, créez une nouvelle liste avec son premier article (cliquez par exemple sur
+le bouton  <img border="0" alt="Numbered List " src="../Icons/NumList.gif"
+align="middle" /> ). La nouvelle liste sera automatiquement emboitée.
+L'article b. est créé en appuyant deux fois sur la touche "Entrée" à la fin de
+l'article a. Quand le point d'insertion est à  la fin de l'article b.,  créez
+l'article 3 en appuyant quatre fois sur la touche "Entrée". Pour créer le
+paragraphe qui suit ces listes, pressez la touche "Entrée" trois fois lorsque
+le point d'insertion est à la fin de l'article 3.</p>
 
 <h4>Plusieurs pressions sur la touche Entrée au début d'un élément</h4>
 
-<p>La touche "Entrée" fonctionne de la même manière quand le point d'insertion
-est au début d'un élément, mais elle crée de nouveaux éléments avant l'élément
-en cours.</p>
+<p>La touche "Entrée" fonctionne de la même manière que précédemment quand le
+point d'insertion est au début d'un élément, mais elle crée de nouveaux
+éléments avant l'élément en cours.</p>
 
 <p>Par exemple, pour ajouter un paragaphe initial dans une liste d'articles,
 déplacez le point d'insertion avant le premier caractère de cet article et
@@ -167,8 +167,8 @@ particulièrement commode pour <a href="Manual.html">créer des tables.</a></p>
 <p>Quand un paragraphe ou un autre bloc de texte est stylisé _ délimité par
 une ancre ou une chaîne de caractères en gras, en italique ou dans tout autre
 style_ déplacer le point d'insertion à la fin et taper ajoute des caractères à
-l'ancre ou à la chaîne stylysée.. Si vous voulez sortir de cet élément stylisé
-et entrer dans le plein texte, il suffit de presser la touche "Entrée" et de
+l'ancre ou à la chaîne stysée. Si vous voulez sortir de cet élément stylisé et
+entrer dans le plein texte, il suffit de presser la touche "Entrée" et de
 continuer à taper.</p>
 
 <p>La même méthode peut être utilisée pour entrer dans le plein texte au début
@@ -190,7 +190,7 @@ définitions. Considérez l'exemple suivant:</p>
 <p>C'est une liste de définitins  (<code>dl</code>) contenant deux termes
 (<code>dt</code>) suivis par une définition  (<code>dd</code>). Pour ajouter
 un nouveau paragraphe à l'intérieur de la définition (<code>dd</code>), placez
- le point d'insertion à la fin(aprés le mot "termes") et appuyez sur la touche
+le point d'insertion à la fin(aprés le mot "termes") et appuyez sur la touche
 "Entrée". Si vous pressez "Entrée" deux fois, vous sortez de la définition en
 cours (<code>dd</code>) et vous créez un nouveau terme (<code>dt</code>). A la
 fin de ce nouveau terme, presser une fois la touche "Entrée" vous permet de
@@ -199,9 +199,9 @@ nouvelle définition (<code>dd</code>).</p>
 
 <p>Si vous voulez créer un nouveau terme avec sa définition <em> avant</em> le
 Terme 1,  mettez le point d'insertion au début du terme 1 et appuyez sur
-"Entrée". Taper le nouveau terme (<code>dt</code>). Puis presser "Entrée" deux
-fois: une nouvelle définition (<code>dd</code>) est crééedirectement aprés le
-nouveau terme.</p>
+"Entrée". Tapez  le nouveau terme (<code>dt</code>), puis  pressez "Entrée"
+deux fois: une nouvelle définition (<code>dd</code>) est créée directement
+aprés le nouveau terme.</p>
 
 <h4><a name="Changing">Changer le titre du document</a></h4>
 
@@ -209,7 +209,7 @@ nouveau terme.</p>
 menu  <strong>Eléments/changer le titre.</strong></p>
 
 <p>Vous pouvez aussi éditer le titre du document dans la  <a
-href="Views.html#Structure">structure vue</a>.</p>
+href="Views.html#Structure">vue structure</a>.</p>
 </div>
 
 <p align="right"><a href="Views.html"><img alt="previous" border="0"
