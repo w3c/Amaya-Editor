@@ -49,7 +49,7 @@ static int MakeAliasTypeCount (Counter *pCounter, CounterOp op,
   else				/* on s'est trompe c'est un CntrRank */
     return pCounter->CnItem[0].CiElemType;
 
-  NewAlias = (PtrSRule) malloc (sizeof (SRule));
+  NewAlias = (PtrSRule) TtaGetMemory (sizeof (SRule));
   pSchStr->SsRule->SrElem[rule -1] = NewAlias;
 
   /* initialise l'alias temporaire */
@@ -89,7 +89,8 @@ static int MakeAliasTypeCount (Counter *pCounter, CounterOp op,
   ----------------------------------------------------------------------*/
 static void ReleaseAliasTypeCount (int typeNum, PtrSSchema pSS)
 {
-  free (pSS->SsRule->SrElem[typeNum -1]);
+  TtaFreeMemory (pSS->SsRule->SrElem[typeNum -1]->SrName);
+  TtaFreeMemory (pSS->SsRule->SrElem[typeNum -1]);
   pSS->SsRule->SrElem[typeNum -1] = NULL;
 }
 
