@@ -2020,44 +2020,6 @@ BOXES
 		Visibility: 0;
 	END;
 
- Option_Box: BEGIN
-	VertPos: Top = Previous AnyElem . Bottom;
-	HorizPos: Left = Enclosing . Left;
-	Width: Enclosed . Width;
-	Height: Enclosed . Height;
-	LineBreak: No;
-	BorderTopWidth: Creator =;
-	BorderRightWidth: Creator =;
-	BorderBottomWidth: Creator =;
-	BorderLeftWidth: Creator =;
-	BorderTopColor: Grey;
-	BorderRightColor: Black;
-	BorderBottomColor: Black;
-	BorderLeftColor: Grey;
-{**	BorderTopColor: Creator =;
-	BorderRightColor: Creator =;
-	BorderBottomColor: Creator =;
-	BorderLeftColor: Creator =;**}
-	BorderTopStyle: Solid;
-	BorderRightStyle: Solid;
-	BorderBottomStyle: Solid;
-	BorderLeftStyle: Solid;
-	Foreground: Creator =;
-	FillPattern: Creator =;
-	Depth: Creator =;
-#ifndef BLACK_WHITE
-	Background: Creator =;
-#else
-	Background : Grey;
-#endif
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
 #ifndef PAGE
  Target_gif: BEGIN
 	Content: Picture 'target.gif';
