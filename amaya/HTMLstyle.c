@@ -25,13 +25,6 @@
 #include "UIcss_f.h"
 #include "HTMLimage_f.h"
 
-#ifdef AMAYA_DEBUG
-#define MSG(msg) fprintf(stderr,msg)
-#else
-static char        *last_message = NULL;
-
-#define MSG(msg) last_message = msg
-#endif
 extern boolean      NonPPresentChanged;
 
 /* CSSLEVEL2 adding new features to the standard */
@@ -406,15 +399,19 @@ static HTML3StyleAttribute HTML3StyleAttributes[] =
 #define READ_IOF(ptr,i,f) { int d; READ_I(ptr,i); \
         if (*ptr == '.') { ptr++; READ_I(ptr,d); f }
 
+
 #ifdef AMAYA_DEBUG
-#define TODO { fprintf(stderr,"code incomplete file %s line %d\n",\
+#define TODO { fprintf(stderr, "code incomplete file %s line %d\n",\
                        __FILE__,__LINE__); };
-#define MSG(msg) fprintf(stderr,msg)
+#define MSG(msg) fprintf(stderr, msg)
 #else
 	/*static char        *last_message = NULL; */
 
 #define TODO
 	/*#define MSG(msg) last_message = msg */
+static char        *last_message = NULL;
+
+#define MSG(msg) last_message = msg
 #endif
 
 

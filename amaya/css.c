@@ -424,14 +424,12 @@ Document            doc;
 	     css = prev->NextCSS;
 	     continue;
 	  }
-	if (css->documents[doc] != 0)
+	if (css->documents[doc])
 	  {
-	     in_use = (boolean) FALSE;
+	     in_use = FALSE;
 	     css->documents[doc] = FALSE;
-	     if (css->pschema)
-		TtaRemovePSchema (css->pschema, doc);
 	     for (i = 0; i <= DocumentTableLength; i++)
-		if (css->documents[i] != 0)
+		if (css->documents[i])
 		  {
 		     in_use = (boolean) TRUE;
 		     break;

@@ -99,7 +99,6 @@ NotifyElement      *event;
    char               *url, *info;
    char                documentURL[MAX_LENGTH];
    Document            targetDocument;
-   int                 i, iName;
    View                view;
 
    /* Check if the current element is a text, an image or a graphics */
@@ -236,32 +235,12 @@ NotifyElement      *event;
 	       {
 		  /* the target element is part of the same document */
 		  targetDocument = event->document;
-		  iName = 0;
 	       }
 	     else
 	       {
 		  /* the target element is in another document */
 		  strcpy (documentURL, url);
-		  /* looks for a '#' in the url */
-		  i = length;
-		  while (url[i] != '#' && i > 0)
-		     i--;
-		  if (i == 0)
-		    {
-		       /* there is no '#' in the URL */
-		       url[0] = EOS;
-		       iName = 0;
-		    }
-		  else
-		    {
-		       /* 
-		        *there is a '#' character in the URL 
-		        * separate document name and element name 
-		        */
-		       documentURL[i] = EOS;
-		       iName = i;
-		    }
-
+		  url[0] = EOS;
 		  /* is the source element an image map */
 		  elType = TtaGetElementType (event->element);
 		  attrType.AttrSSchema = elType.ElSSchema;
@@ -288,10 +267,10 @@ NotifyElement      *event;
 	     TtaSetSelectionMode (TRUE);
 	     if (PseudoAttr != NULL)
 	       TtaSetAttributeText (PseudoAttr, "visited", anchor, event->document);
-	     if (url[iName] == '#' && targetDocument != 0)
+	     if (url[0] == '#' && targetDocument != 0)
 	       {
 		  /* attribute HREF contains the NAME of a target anchor */
-		  elFound = SearchNAMEattribute (targetDocument, &url[iName + 1], NULL);
+		  elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
 		  if (elFound != NULL)
 		    {
 		       /* show the target element in all views */
@@ -300,8 +279,8 @@ NotifyElement      *event;
 			     TtaShowElement (targetDocument, view, elFound, 10);
 		    }
 	       }
-	     else if (targetDocument > 0)
-		 TtaRaiseView (targetDocument, 1);
+	     if (targetDocument > 0)
+	       TtaRaiseView (targetDocument, 1);
 	     TtaFreeMemory (url);
 	     return TRUE;
 	  }

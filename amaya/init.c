@@ -204,6 +204,49 @@ char               *parameters;
 
 
 /*----------------------------------------------------------------------
+   ExtractTarget extract the target name from document nane.        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ExtractTarget (char *aName, char *target)
+#else
+static void         ExtractTarget (aName, target)
+char               *aName;
+char               *target;
+
+#endif
+{
+   int                 lg, i;
+   char               *ptr, *oldptr;
+
+   if (!target || !aName)
+      return;			/* bad target */
+
+   target[0] = EOS;
+   lg = strlen (aName);
+   if (lg)
+     {
+	/* the name is not empty */
+	oldptr = ptr = &aName[0];
+	do
+	  {
+	     ptr = strrchr (oldptr, '#');
+	     if (ptr)
+		oldptr = &ptr[1];
+	  }
+	while (ptr);
+
+	i = (int) (oldptr) - (int) (aName);	/* name length */
+	if (i > 1)
+	  {
+	     aName[i - 1] = EOS;
+	     if (i != lg)
+		strcpy (target, oldptr);
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
    ExtractSuffix extract suffix from document nane.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -219,7 +262,7 @@ char               *aSuffix;
    char               *ptr, *oldptr;
 
    if (!aSuffix || !aName)
-      return;			/* bad parameters */
+      return;			/* bad suffix */
 
    aSuffix[0] = EOS;
    lg = strlen (aName);
@@ -1231,20 +1274,24 @@ DoubleClickEvent    DC_event;
 
 #endif
 {
+   Element             elFound;
+   Document            newdoc, res;
    char                tempfile[MAX_LENGTH];
    char                tempdocument[MAX_LENGTH];
    char                parameters[MAX_LENGTH];
+   char                target[MAX_LENGTH];
    char                pathname[MAX_LENGTH];
    char                documentname[MAX_LENGTH];
-   Document            newdoc, res;
    int                 toparse;
    int                 i;
-   char               *s;
    int                 slash;
+   char               *s;
 
    /* Extract parameters if necessary */
    strcpy (tempdocument, documentPath);
    ExtractParameters (tempdocument, parameters);
+   /* Extract the target if necessary */
+   ExtractTarget (tempdocument, target);
    /* Add the  base content if necessary */
    if (DC_event & DC_TRUE)
       NormalizeURL (tempdocument, baseDoc, pathname, documentname);
@@ -1369,6 +1416,19 @@ DoubleClickEvent    DC_event;
 	       }
 	     ResetStop(newdoc);
 	  }
+     }
+   /* select the target if present */
+   if (target[0] != EOS && newdoc != 0)
+     {
+       /* attribute HREF contains the NAME of a target anchor */
+       elFound = SearchNAMEattribute (newdoc, target, NULL);
+       if (elFound != NULL)
+	 {
+	   /* show the target element in all views */
+	   for (i = 1; i < 4; i++)
+	     if (TtaIsViewOpened (newdoc, i))
+	       TtaShowElement (newdoc, i, elFound, 10);
+	 }
      }
    return (newdoc);
 }
