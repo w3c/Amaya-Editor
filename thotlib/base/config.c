@@ -1681,7 +1681,7 @@ ThotBool            motif_conversion;
 #ifdef __STDC__
 void                TtaGetViewWH (Document doc, int view, int *width, int *height)
 #else  /* __STDC__ */
-void                TtaSetViewWH (doc, view, width, height)
+void                TtaGetViewWH (doc, view, width, height)
 Document       doc;
 int            view;
 int           *width;
@@ -1692,11 +1692,26 @@ int           *height;
   int                 frame;
   int                 n;
   ThotWidget          widget;
+#ifdef _GTK
+  GtkArg              args[20];
+#else /* ! _GTK */
   Arg                 args[20];
+#endif /* ! _GTK */
   Dimension           w, h;
 
   frame =  GetWindowNumber (doc, view);
   widget = (ThotWidget) FrameTable[frame].WdFrame;
+#ifdef _GTK
+  widget = widget->parent->parent;
+    
+  args[0].name = "width";
+  args[1].name = "height";
+  gtk_object_getv(GTK_OBJECT(widget), 
+                  2, 
+                  args);
+
+
+#else /* !_GTK */
   widget = XtParent (XtParent (widget));
   /* Ask X what's the geometry of the frame */
   n = 0;
@@ -1705,6 +1720,7 @@ int           *height;
   XtSetArg (args[n], XmNheight, &h);
   n++;
   XtGetValues (widget, args, n);
+#endif /* !_GTK */
   /* convert the result into mm */
   *width = pixeltomm ((int) w, 1, TRUE);
   *height = pixeltomm ((int) h, 0, TRUE);

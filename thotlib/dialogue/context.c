@@ -30,7 +30,7 @@
 #include "thotcolor_tv.h"
 #include "appdialogue_tv.h"
 
-ThotColorStruct         cblack;
+ ThotColorStruct  cblack;
 static ThotColorStruct  cwhite;
 
 #include "appli_f.h"
@@ -308,7 +308,7 @@ char*               name;
    XVisualInfo         vinfo;
 #endif /* _GTK */
    ThotColorStruct     col;
-   int                 i;
+   int                 test, i;
 
 #ifdef _GTK
    vptr = gdk_visual_get_best ();

@@ -18,6 +18,7 @@
 #include "thot_sys.h"
 #include "interface.h"
 
+#ifndef _GTK
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   XLookupString
@@ -42,6 +43,7 @@ ThotComposeStatus     *status;
    return (TtaXLookupString (event, buffer, nbytes, keysym, status));
 }
 #endif /* ! _WINDOWS */
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------
@@ -57,3 +59,4 @@ void                LookupLoadResources ()
    TtaUseOwnXLookupString = 1;
 #endif /* ! _WINDOWS */
 }
+

@@ -28,7 +28,7 @@
 #include "typemedia.h"
 #include "copyright.xbm"
 //#include "dialog.h"
-#include "gtkdialog.h"
+//#include "gtkdialog.h"
 
 #include "application.h"
 #include "interface.h"

@@ -1176,6 +1176,7 @@ ThotEvent          *ev;
        XtAppNextEvent (app_cont, ev);
      }
 #endif /* ! _WINDOWS */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1191,6 +1192,7 @@ ThotBool            TtaFetchOneAvailableEvent (ev)
 ThotEvent             *ev;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
 #ifndef _WINDOWS
    XtInputMask         status;
 #endif /* ! _WINDOWS */

@@ -155,7 +155,9 @@ ThotColorStruct colrs[256];
 	     colrs[i].green = cinfo.colormap[1][i] << 8;
 	     colrs[i].blue = cinfo.colormap[2][i] << 8;
 	     colrs[i].pixel = i;
+#ifndef _GTK
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* ! _GTK */
 #            else /* _WINDOWS */
 	     colrs[i].red = cinfo.colormap[0][i];
 	     colrs[i].green = cinfo.colormap[1][i];
@@ -170,7 +172,9 @@ ThotColorStruct colrs[256];
 #            ifndef _WINDOWS
 	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
 	     colrs[i].pixel = i;
+#ifndef _GTK
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* ! _GTK */
 #            else /* _WINDOWS */
 	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
 #            endif /* _WINDOWS */

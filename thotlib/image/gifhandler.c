@@ -324,7 +324,9 @@ ThotColorStruct colrs[256];
           colrs[i].green = GifScreen.ColorMap[1][i] * scale;
           colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
           colrs[i].pixel = i;
+#ifndef _GTK
           colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* !_GTK */
 #         else  /* _WINDOWS */
           colrs[i].red   = GifScreen.ColorMap[0][i];
           colrs[i].green = GifScreen.ColorMap[1][i];
@@ -338,7 +340,9 @@ ThotColorStruct colrs[256];
           colrs[i].blue = 0;
 #         ifndef _WINDOWS
           colrs[i].pixel = i;
+#ifndef _GTK
           colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* !_GTK */
 #         endif /* !_WINDOWS */
 	  }
 
@@ -384,7 +388,9 @@ ThotColorStruct colrs[256];
               colrs[i].green = localColorMap[1][i] * scale;
               colrs[i].blue  = localColorMap[2][i] * scale;
               colrs[i].pixel = i;
+#ifndef _GTK
               colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* !_GTK */
 #             else  /* _WINDOWS */
               colrs[i].red   = GifScreen.ColorMap[0][i];
               colrs[i].green = GifScreen.ColorMap[1][i];
@@ -397,7 +403,9 @@ ThotColorStruct colrs[256];
               colrs[i].blue  = 0;
 #             ifndef _WINDOWS
               colrs[i].pixel = i;
+#ifndef _GTK
               colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* !_GTK */
 #             endif /* _WINDOWS */
 		  }
           data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
@@ -855,6 +863,7 @@ int                 bg;
 	}
    }
 
+#ifndef _GTK
    PicMask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
 
    if ((PicMask == (Pixmap) None) || (newmask == NULL)) {
@@ -871,7 +880,7 @@ int                 bg;
 	  XDestroyImage (newmask);
 	  XFreeGC (TtDisplay, tmp_gc);
    }
-
+#endif /* _GTK */
    return (PicMask);
 }
 #  endif /* _WINDOWS */
@@ -1221,7 +1230,9 @@ int               **thotColors;
        tmpcolr.green = colrs[i].green;
        tmpcolr.blue  = colrs[i].blue;
        tmpcolr.pixel = 0;
+#ifndef _GTK
        tmpcolr.flags = DoRed | DoGreen | DoBlue;
+#endif /* !_GTK */
        if (TtIsTrueColor)
 	 Mapping[i] = i;
        else if (TtWDepth == 1)
@@ -1343,17 +1354,21 @@ int               **thotColors;
 
    if ((tmpimage == None) || (Img == (Pixmap) None))
      {
-       if (tmpimage != None)
+#ifndef _GTK 
+      if (tmpimage != None)
 	 XDestroyImage (tmpimage);
        if (Img != (Pixmap) None)
 	 XFreePixmap (TtDisplay, Img);
+#endif /* _GTK */
        Img = None;
      }
    else
      {
+#ifndef _GTK 
        XPutImage (TtDisplay, Img, GCimage, tmpimage, 0, 0, 0, 0, width, height);
        XDestroyImage (tmpimage);
-     }
+#endif /* _GTK */
+    }
    TtaFreeMemory ( Mapping);
 
    return (Img);

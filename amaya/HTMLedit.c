@@ -2474,6 +2474,7 @@ STRING              title;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
 #ifndef _WINDOWS
    STRING              v;
    int                 v_size;
@@ -2496,6 +2497,7 @@ STRING              title;
 		    v, v_size);
    TtaFreeMemory (v);
 #endif /* !_WINDOWS */
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------

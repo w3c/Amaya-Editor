@@ -423,6 +423,7 @@ ThotGC              GClocal;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    int                 length;
 
    length = 1;
@@ -433,6 +434,7 @@ ThotGC              GClocal;
    FontOrig (font, ch, &x, &y);
    XDrawString (TtDisplay, w, GClocal, x, y, &ch, length);
 #endif
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -450,9 +452,11 @@ caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
 #ifndef _WINDOWS
    XtPopdown (Keyboards[index]);
 #endif /* _WINDOWS */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -469,6 +473,7 @@ caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    UCHAR_T       car;
    ThotWidget          wp;
    int                 i;
@@ -492,6 +497,7 @@ caddr_t             call_d;
    /* Insere le caractere selectionne */
    if (ThotLocalActions[T_insertchar] != NULL)
       (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, KeyboardMode);
+#endif /* _GTK */
 }
 
 
@@ -510,6 +516,7 @@ XmDrawnButtonCallbackStruct *infos;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    int                 y;
    int                 i, kb;
    ITEM               *it;
@@ -542,6 +549,7 @@ XmDrawnButtonCallbackStruct *infos;
 	y = FontHeight (KbFonts[kb]);
 	WChaine (infos->window, it->legend, 4, y, FontDialogue, GCkey);
      }
+#endif /* _GTK */
 }
 
 
@@ -564,6 +572,7 @@ int                 nbitem;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    int                 n;
    int                 i;
    register ITEM      *it;
@@ -744,6 +753,7 @@ int                 nbitem;
 	     XtAddCallback (w, XmNexposeCallback, (XtCallbackProc) ExposeKbd, (XtPointer) (param + i));
 	  }
      }
+#endif /* _GTK */
 }
 
 
@@ -758,6 +768,7 @@ static void         LoadKbd (number)
 int                 number;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
   ptrfont             pFontAc;
   ptrfont             pFontIg;
 
@@ -802,6 +813,7 @@ int                 number;
 		      KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
       break;
     }
+#endif /* _GTK */
 }
 #endif /* _WINDOWS */
 
@@ -818,6 +830,7 @@ int                 kb;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
 #ifndef _WINDOWS
    if (kb >= 0 && kb < MAX_KEYBOARD)
      {
@@ -831,6 +844,7 @@ int                 kb;
 	  }
      }
 #endif /* _WINDOWS */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -839,6 +853,7 @@ int                 kb;
   ----------------------------------------------------------------------*/
 void                GraphicsLoadResources ()
 {
+#ifndef _GTK
    int                 i;
 
    if (ThotLocalActions[T_keyboard] == NULL)
@@ -865,6 +880,7 @@ void                GraphicsLoadResources ()
        TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivgraf");
        GraphicsIcons = FontDialogue;
      }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -873,6 +889,7 @@ void                GraphicsLoadResources ()
   ----------------------------------------------------------------------*/
 void                KeyboardsLoadResources ()
 {
+#ifndef _GTK
    int                 i;
 
    if (ThotLocalActions[T_keyboard] == NULL)
@@ -899,6 +916,7 @@ void                KeyboardsLoadResources ()
 	} 
 #   endif /* _WINDOWS */
 
+#endif /* _GTK */
 }
 
 
@@ -916,12 +934,14 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
 #  ifndef _WINDOWS
    TtaSetDialoguePosition ();
 #  endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (0);
+#endif /* _GTK */
 }
 
 
@@ -939,12 +959,14 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
 #  ifndef _WINDOWS
    TtaSetDialoguePosition ();
 #  endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (1);
+#endif /* _GTK */
 }
 
 
@@ -962,12 +984,14 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
 #  ifndef _WINDOWS 
    TtaSetDialoguePosition ();
 #  endif /* !_WINDOWS */
    TtaSetCurrentKeyboard (2);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -984,6 +1008,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
 #  ifndef _WINDOWS 
@@ -993,4 +1018,5 @@ View                view;
 #  ifdef _WINDOWS
    CreateGreekKeyboardDlgWindow (NULL);
 #  endif /* _WINDOWS */
+#endif /* _GTK */
 }

@@ -25,7 +25,15 @@
 
 /* Frames table */
 THOT_EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
-THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];		/* window references */
+#ifdef _GTK
+THOT_EXPORT GtkWidget  *DefaultWindow;
+THOT_EXPORT GtkWidget  *DefaultDrawingarea;
+THOT_EXPORT GdkDrawable *DefaultDrawable;
+THOT_EXPORT GdkDrawable *FrRef[MAX_FRAME + 2];          /* window references */
+#else
+THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];           /* window references */
+#endif /* _GTK */
+
 #ifdef _WINDOWS
 THOT_EXPORT ThotWindow  FrMainRef[MAX_FRAME + 2];	/* window references */
 THOT_EXPORT CHAR_T      wTitle [256];
@@ -56,6 +64,22 @@ THOT_EXPORT HRGN         clipRgn;
 THOT_EXPORT WIN_GC_BLK   TtLineGC;
 THOT_EXPORT ThotBool     TtIsPrinterTrueColor;
 #else /* _WINDOWS */
+#ifdef _GTK
+THOT_EXPORT ThotWidget   RootShell;
+THOT_EXPORT XmFontList   DefaultFont;  /* default Font                */
+THOT_EXPORT Time         t1;
+THOT_EXPORT Display*     TtDisplay;     /* Identification du serveur X          */
+THOT_EXPORT int          TtScreen;      /* Identification de l'ecran            */
+THOT_EXPORT GdkColormap    *TtCmap;     /* Table des couleurs pour Thot         */
+THOT_EXPORT GdkGC       *TtWhiteGC;
+THOT_EXPORT GdkGC       *TtBlackGC;
+THOT_EXPORT GdkGC       *TtInvertGC;
+THOT_EXPORT GdkGC       *TtGreyGC;
+THOT_EXPORT GdkGC       *TtLineGC;
+THOT_EXPORT GdkGC       *TtDialogueGC;
+THOT_EXPORT GdkGC       *TtGraphicGC;   /* Graphic context pour les images      */
+
+#else /* _GTK */
 THOT_EXPORT ThotWidget   RootShell;
 THOT_EXPORT XmFontList   DefaultFont;  /* default Font                */
 THOT_EXPORT Time         t1;
@@ -69,6 +93,7 @@ THOT_EXPORT ThotGC       TtGreyGC;
 THOT_EXPORT ThotGC       TtLineGC;
 THOT_EXPORT ThotGC       TtDialogueGC;
 THOT_EXPORT ThotGC       TtGraphicGC;	/* Graphic context pour les images      */
+#endif /* _GTK */
 #endif /* _WINDOWS */
 
 THOT_EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/

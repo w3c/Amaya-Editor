@@ -29,7 +29,9 @@
 #include "edit_tv.h"
 #include "thotcolor_tv.h"
 
-extern ThotColorStruct cblack;
+static ThotColorStruct cblack;
+static ThotColorStruct  cwhite;
+
 
 #define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2)	(((v1)+(v2))/2.0)
@@ -94,28 +96,47 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
+#ifdef _GTK
+ThotColor           gc_fg;
+#endif /* _GTK */
    if (active)
      {
        if (TtWDepth == 1)
 	 {
+#ifdef _GTK
 	   /* Modify the fill style of the characters */
+	   gdk_gc_set_fill (TtLineGC, GDK_TILED);
+#else /* _GTK */
 	   XSetFillStyle (TtDisplay, TtLineGC, FillTiled);
+#endif /* _GTK */
 	 }
        else
 	 {
+#ifdef _GTK
 	   /* Modify the color of the active boxes */
+	   gdk_rgb_gc_set_foreground (TtLineGC, Box_Color);
+#else /* _GTK */
 	   XSetForeground (TtDisplay, TtLineGC, Box_Color);
+#endif /* _GTK */
 	 }
      }
    else if (RO && ColorPixel (fg) == cblack.pixel)
      {
+#ifdef _GTK
        /* Color of ReadOnly parts */
+       gdk_rgb_gc_set_foreground (TtLineGC, RO_Color);
+#else /* _GTK */
        XSetForeground (TtDisplay, TtLineGC, RO_Color);
+#endif /* _GTK */
      }
    else
      {
+#ifdef _GTK
        /* Color of the box */
+       gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
+#else /* _GTK */
        XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
+#endif /* _GTK */
      }
 }
 
@@ -141,14 +162,23 @@ int                 fg;
     CHAR_T                dash[2];
     if (style == 0)
       {
+#ifdef _GTK
+	gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_SOLID, GDK_CAP_BUTT, GDK_JOIN_MITER);
+#else /* _GTK */
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
-      }
+#endif /* _GTK */
+     }
     else
       {
 	dash[0] = (CHAR_T) (style * 4);
 	dash[1] = (CHAR_T) 4;
+#ifdef _GTK
+	gdk_gc_set_dashes ( TtLineGC, 0, dash, 2); 
+	gdk_gc_set_line_attributes (TtLineGC, thick, GDK_LINE_ON_OFF_DASH, GDK_CAP_BUTT, GDK_JOIN_MITER);
+#else /* _GTK */
 	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
 	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
+#endif /* _GTK */
       }
    /* Load the correct color */
     LoadColor (disp, RO, active, fg);
@@ -170,7 +200,11 @@ int                 active;
 {
   if (TtWDepth == 1 && (active || RO))
     {
+#ifdef _GTK
+     gdk_gc_set_fill (TtLineGC, GDK_SOLID);
+#else /* _GTK */
       XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
+#endif /* _GTK */
     }
 }
 
@@ -194,7 +228,11 @@ int                 y2;
    y1 += FrameTable[frame].FrTopMargin;
    x2 += FrameTable[frame].FrLeftMargin;
    y2 += FrameTable[frame].FrTopMargin;
+#ifdef _GTK
+   gdk_draw_line (FrRef[frame], TtLineGC, x1, y1, x2, y2);
+#else /* _GTK */
    XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
+#endif /* _GTK */
 }
 
 
@@ -268,8 +306,16 @@ int                 fg;
 
    LoadColor (0, RO, active, fg);
 
+#ifdef _GTK
+   gdk_draw_string (w, font, TtLineGC, 
+		    x + FrameTable[frame].FrLeftMargin, 
+		    y + FrameTable[frame].FrTopMargin + FontBase (font), 
+		    &car);
+
+#else /* _GTK */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
    XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
+#endif /* _GTK */
 
    FinishDrawing (0, RO, active);
 }
@@ -314,13 +360,18 @@ int                 shadow;
    STRING              ptcar;
    int                 width;
    register int        j;
+#ifdef _GTK
+   CHAR_T              car;
+#endif /* _GTK */
 
    w = FrRef[frame];
    if (lg > 0 && w != None)
      {
       ptcar = &buff[i - 1];
       /* Dealing with BR tag for windows */
+#ifndef _GTK
       XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
+#endif /* _GTK */
       /* compute the width of the string */
       width = 0;
       j = 0;
@@ -347,8 +398,12 @@ int                 shadow;
 	     ptcar[lg] = EOS;
 	     SpaceToChar (ptcar);	/* substitute spaces */
 	   }
-	
+#ifdef _GTK
+	     gdk_draw_string ( w, font,TtLineGC, x + FrameTable[frame].FrLeftMargin, 
+			       y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
+#else /* _GTK */
          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+#endif /* _GTK */
          TtaFreeMemory (ptcar);
       } else {
            if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
@@ -357,15 +412,28 @@ int                 shadow;
              lg--;
            }
            if (lg != 0) {
+#ifdef _GTK
+	     car = ptcar[lg];
+	     ptcar[lg] = EOS;
+	     gdk_draw_string ( w, font,TtLineGC, x + FrameTable[frame].FrLeftMargin, 
+			       y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
+	     ptcar[lg] = car;
+#else /* _GTK */
 	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+#endif /* _GTK */
 	     }
 	}
 
       if (hyphen)
 	{
          /* draw the hyphen */
+#ifdef _GTK
+     	  gdk_draw_string (w, font,TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
+			   y + FrameTable[frame].FrTopMargin + FontBase (font), "\255");
+#else /* _GTK */
          XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
          y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
+#endif /* _GTK */
 	}
       FinishDrawing (0, RO, active);
       return (width);
@@ -520,7 +588,11 @@ int                 fg;
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
+#ifdef _GTK
+	     gdk_draw_string (w,font, TtLineGC, xcour, y, ptcar);
+#else /* _GTK */
 	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
+#endif /* _GTK */
 	     xcour += width;
 	     nb--;
 	  }
@@ -803,7 +875,11 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
 
 	/* Upper part */
+#ifdef _GTK
+	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+#else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+#endif /* _GTK */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -847,7 +923,14 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
 	/* Lower part */
+#ifdef _GTK
+	gdk_draw_arc (FrRef[frame], TtLineGC,FALSE,
+		      x + 1, y + h - arc * 2 - 2,
+		      l - 3, arc * 2,
+		      -0 * 64, -180 * 64);
+#else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
+#endif /* _GTK */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -904,9 +987,16 @@ int                 fg;
    pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0)
      {
+#ifdef _GTK
+      gdk_gc_set_tile (TtGreyGC, pattern);
+      gdk_draw_polygon (FrRef[frame], TtGreyGC,TRUE,  point, 3);
+      gdk_pixmap_unref (pattern);
+
+#else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pattern);     
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
       XFreePixmap (TtDisplay, pattern);
+#endif /* _GTK */
      }
 }
 
@@ -1368,18 +1458,33 @@ int                 pattern;
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
    if (pat != 0) {
+#ifdef _GTK
+     gdk_gc_set_tile ( TtGreyGC, pat);    
+     gdk_draw_rectangle ( FrRef[frame], TtGreyGC, TRUE, 
+			  x + FrameTable[frame].FrLeftMargin, 
+			  y + FrameTable[frame].FrTopMargin, width-1, height-1);
+     gdk_pixmap_unref (pat);
+#else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
     
       XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
                       x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
       XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
    }
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg); 
+#ifdef _GTK
+	gdk_draw_rectangle ( FrRef[frame],TtLineGC,FALSE, 
+			     x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 
+			     width, height);
+
+#else /* _GTK */
 	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#endif /* _GTK */
 	FinishDrawing (0, RO, active);
    }
 }
@@ -1437,18 +1542,28 @@ int                 pattern;
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0)
      {
+#ifdef _GTK
+      gdk_gc_set_tile (TtGreyGC, pat);
+      gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 5);
+      gdk_pixmap_unref (pat); 
+#else /* _GTK */
        XSetTile (TtDisplay, TtGreyGC, pat);
        XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 5, Convex, CoordModeOrigin);
        XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
      }
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+	gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, point, 5);
+#else /* _GTK */
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 		    point, 5, CoordModeOrigin);
+#endif /* _GTK */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -1488,7 +1603,7 @@ int                 arrow;
 
 {
    ThotPoint          *points;
-   int                 i, j;
+   int                 i, j, k;
    PtrTextBuffer       adbuff;
 
    if (thick == 0)
@@ -1521,7 +1636,13 @@ int                 arrow;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+   for (k=0;k< nb-2;k++){
+     gdk_draw_line (FrRef[frame], TtLineGC,points[k].x,points[k].y,points[k+1].x,points[k+1].y);
+   }
+#else /* _GTK */
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1, CoordModeOrigin);
+#endif /* _GTK */
    FinishDrawing (0, RO, active);
 
    /* Forward arrow */
@@ -1595,15 +1716,25 @@ int                 pattern;
    /* Fill in the polygone */
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0) {
+#ifdef _GTK
+     gdk_gc_set_tile (TtGreyGC, pat);
+     gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, nb); 
+     gdk_pixmap_unref (pat);
+#else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb, Complex, CoordModeOrigin);
       XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
    }
 
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+      gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, nb); 
+#else /* _GTK */
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
+#endif /* _GTK */
       FinishDrawing (0, RO, active);
    }
    /* free the table of points */
@@ -1854,8 +1985,11 @@ C_points           *controls;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
-   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
-
+#ifdef _GTK
+  gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
+#else /* _GTK */
+  XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
+#endif /* _GTK */
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
       TraceFleche (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
@@ -1964,15 +2098,25 @@ C_points           *controls;
    /* Fill in the polygone */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0) {
+#ifdef _GTK
+      gdk_gc_set_tile ( TtGreyGC, pat);
+      gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE , points, npoints); 
+      gdk_pixmap_unref (pat);
+#else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
       XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
      }
 
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+      gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, npoints);
+#else /* _GTK */
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
+#endif /* _GTK */
       FinishDrawing (0, RO, active);
    }
 
@@ -2116,20 +2260,44 @@ int                 pattern;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
+#ifdef _GTK
+	gdk_gc_set_tile (TtGreyGC, pat);
+	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 13);
+	
+	/* Trace quatre arcs de cercle */
+	for (i=0;i<4;i++){
+	  gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE,
+			xarc[i].x, xarc[i].y, 
+			xarc[i].width, xarc[i].height, 
+			xarc[i].angle1,xarc[i].angle2); 
+	}
+	gdk_pixmap_unref (pat);
+#else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
 	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
 	XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
      }
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+	for (i=0;i<4;i++){
+	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
+			xarc[i].x, xarc[i].y, 
+			xarc[i].width, xarc[i].height, 
+			xarc[i].angle1,xarc[i].angle2);
+	}
+	gdk_draw_segments (FrRef[frame], TtLineGC, seg, 4);
+#else /* _GTK */
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
+#endif /* _GTK */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -2175,15 +2343,25 @@ int                 pattern;
       return;
 
    if (pat != 0) {
+#ifdef _GTK
+      gdk_gc_set_tile ( TtGreyGC, pat);
+      gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE, x, y, width, height, 0, 360 * 64);
+      gdk_pixmap_unref (pat);
+#else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
       XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
    }
 
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+      gdk_draw_arc (FrRef[frame], TtLineGC,FALSE,  x, y, width, height, 0, 360 * 64);
+#else /* _GTK */
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
+#endif /* _GTK */
       FinishDrawing (0, RO, active);
    }
 }
@@ -2389,8 +2567,12 @@ int                 fg;
 	       point[2].y = y;
 	       break;
 	 }
+#ifdef _GTK
+   gdk_draw_lines (FrRef[frame], TtLineGC, point, 3);
+#else /* _GTK */
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	       point, 3, CoordModeOrigin);
+#endif /* _GTK */
    FinishDrawing (0, RO, active);
 }
 
@@ -2541,12 +2723,25 @@ int                 pattern;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
+#ifdef _GTK
+	gdk_gc_set_tile (TtGreyGC, pat);
+	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE,  point, 13);
+	/* Trace quatre arcs de cercle */
+	for (i=0;i<4;i++){  
+	  gdk_draw_arc (FrRef[frame], TtGreyGC,TRUE,  
+			xarc[i].x, xarc[i].y, 
+			xarc[i].width, xarc[i].height, 
+			xarc[i].angle1,xarc[i].angle2);
+	}
+	gdk_pixmap_unref (pat);
+#else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
 	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
 	XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
      }
 
    /* Draw the border */
@@ -2554,11 +2749,29 @@ int                 pattern;
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+	for (i=0;i<4;i++){  
+	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
+			xarc[i].x, xarc[i].y, 
+			xarc[i].width, xarc[i].height, 
+			xarc[i].angle1,xarc[i].angle2); 
+	}
+#else /* _GTK */
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
-	if (arc2 < height / 2)
+#endif /* _GTK */
+	if (arc2 < height / 2) {
+#ifdef _GTK
+	   gdk_draw_segments (FrRef[frame], TtLineGC, seg, 5);
+#else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
-	else
+#endif /* _GTK */
+	} else {
+#ifdef _GTK
+	   gdk_draw_segments (FrRef[frame], TtLineGC, seg, 4);
+#else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
+#endif /* _GTK */
+	}
 	FinishDrawing (0, RO, active);
      }
 }
@@ -2607,18 +2820,30 @@ int                 pattern;
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0)
      {
+#ifdef _GTK
+        gdk_gc_set_tile (TtGreyGC, pat);
+	gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE,
+		  x, y, width, height, 0, 360 * 64);
+	gdk_pixmap_unref (pat);
+#else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
 		  x, y, width, height, 0, 360 * 64);
 	XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
      }
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
+#ifdef _GTK
+	gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,
+		      x, y, width, height, 0, 360 * 64); 
+#else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
 		  x, y, width, height, 0, 360 * 64);
+#endif /* _GTK */
 
 	px7mm = (7 * DOT_PER_INCHE) / 25.4 + 0.5;
 	if (height > 2 * px7mm)
@@ -2626,9 +2851,14 @@ int                 pattern;
 	     A = ((double) height - 2 * px7mm) / height;
 	     A = 1.0 - sqrt (1 - A * A);
 	     shiftX = width * A * 0.5 + 0.5;
-	    
+
+#ifdef _GTK
+	     gdk_draw_line (FrRef[frame], TtLineGC,
+			    x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
+#else /* _GTK */	    
 	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
 		      x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
+#endif /* _GTK */
 	  }
 	FinishDrawing (0, RO, active);
      }
@@ -2673,7 +2903,14 @@ int          frame;
 int          color;
 #endif /* __STDC__ */
 {
+#ifdef _GTK
+   GdkColor gdkcolor;
+
+   gdkcolor.pixel = gdk_rgb_xpixel_from_rgb (ColorPixel (color));
+   gdk_window_set_background (FrRef[frame], &gdkcolor);
+#else /* _GTK */
    XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2695,7 +2932,11 @@ int                 y;
    w = FrRef[frame];
    if (w != None)
      {
+#ifdef _GTK
+       gdk_window_clear_area (w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#else /* _GTK */
 	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
+#endif /* _GTK */
      }
 }
 
@@ -2715,9 +2956,13 @@ ThotGC              GClocal;
 
 #endif /* __STDC__ */
 {
+#ifdef _GTK
+   gdk_draw_string (w, font, GClocal, x, y, string); 
+#else /* _GTK */
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, string[0], &x, &y);
    XDrawString (TtDisplay, w, GClocal, x, y, string, ustrlen (string));
+#endif /* _GTK */
 }
 
 
@@ -2742,7 +2987,12 @@ int                 y;
    w = FrRef[frame];
 
    if (w != None)
+#ifdef _GTK
+      gdk_draw_rectangle (w, TtInvertGC, TRUE, x + FrameTable[frame].FrLeftMargin, 
+			  y + FrameTable[frame].FrTopMargin, width, height);
+#else /* _GTK */
      XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#endif /* _GTK */
 }
 
 
@@ -2764,7 +3014,18 @@ int yf;
 #endif /* __STDC__ */
 {
    if (FrRef[frame] != None) {
+#ifdef _GTK
+      gdk_window_copy_area (FrRef[frame], TtWhiteGC,
+			   xf + FrameTable[frame].FrLeftMargin,
+			   yf + FrameTable[frame].FrTopMargin,
+			   FrRef[frame],
+			   xd + FrameTable[frame].FrLeftMargin,
+			   yd + FrameTable[frame].FrTopMargin,
+			   width,
+			   height);
+#else /* _GTK */
       XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
+#endif /* _GTK */
    }
 }
 
@@ -2802,7 +3063,9 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    XFlush (TtDisplay);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2838,11 +3101,30 @@ int                 pattern;
    pat = (Pixmap) CreatePattern (0, RO, active, fg, 0, pattern);
    if (pat != 0)
      {
+#ifdef _GTK
+        gdk_gc_set_tile (TtGreyGC, pat);
+#else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
-	if (w != 0)
+#endif /* _GTK */
+	if (w != 0) {
+#ifdef _GTK
+	  gdk_draw_rectangle (w, TtGreyGC, TRUE, x, y, width, height);
+#else /* _GTK */
 	  XFillRectangle (TtDisplay, w, TtGreyGC, x, y, width, height);
-	else
+#endif /* _GTK */
+	} else {
+#ifdef _GTK
+	  gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE,
+			      x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 
+			      width, height);
+#else /* _GTK */
 	  XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#endif /* _GTK */
+	}
+#ifdef _GTK
+	gdk_pixmap_unref (pat);
+#else /* _GTK */
 	XFreePixmap (TtDisplay, pat);
+#endif /* _GTK */
      }
 }

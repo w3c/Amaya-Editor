@@ -1,7 +1,7 @@
+#ifdef _GTK
 
 #include "gtkdialogue_box.h"
-
-#include "gtknew_file_selection.h"
+#include "gtkbrowser.h"
 
 /* N'arrivant pas à inclure "thotcolor.h" j'ai redéfini _RGBstruct */
 typedef struct _RGBstruct{
@@ -5205,3 +5205,5 @@ void ChangeDocumentStyle (Document doc, View view)
   style_dialog = create_dialog_style();
   gtk_widget_show (style_dialog);
 }
+
+#endif /* _GTK */

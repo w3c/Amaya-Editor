@@ -864,6 +864,7 @@ PictInfo           *imageDesc;
 	{
 	case ReScale:
 #         ifndef _WINDOWS
+#ifndef _GTK
 	  if (imageDesc->PicMask)
 	    {
 	      XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
@@ -875,6 +876,7 @@ PictInfo           *imageDesc;
 	       XSetClipMask (TtDisplay, TtGraphicGC, None);
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
+#endif /* _GTK */
 #         else /* _WINDOWS */
 	case RealSize:
 	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
@@ -912,7 +914,9 @@ PictInfo           *imageDesc;
           values.tile = pixmap;
           values.ts_x_origin = xFrame;
           values.ts_y_origin = yFrame;
+#ifndef _GTK 
           XChangeGC (TtDisplay, tiledGC, valuemask, &values);
+#endif /* _GTK */
 	  
           rect.x = pFrame->FrClipXBegin;
           rect.y = pFrame->FrClipYBegin;
@@ -965,6 +969,7 @@ PictInfo           *imageDesc;
                else
                   rect.width = delta;
 	    }
+#ifndef _GTK 
 	  if (imageDesc->PicMask)
 	    {
 	      XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg, yFrame - picYOrg);
@@ -984,6 +989,7 @@ PictInfo           *imageDesc;
 	       XSetClipMask (TtDisplay, tiledGC, None);
 	       XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	     }
+#endif /* _GTK */
 #         else  /* _WINDOWS */
           x          = pFrame->FrClipXBegin;
           y          = pFrame->FrClipYBegin;

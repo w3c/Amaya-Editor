@@ -73,10 +73,11 @@ int                 zoom;
       *hif = h;
       *width = w;
       *height = h;
-
+#ifndef _GTK
       pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, DefaultDepth (TtDisplay, DefaultScreen (TtDisplay)));
       XCopyPlane (TtDisplay, bitmap, pixmap, GCpicture, 0, 0, w, h, 0, 0, 1);
       XFreePixmap (TtDisplay, bitmap);
+#endif /* _GTK */
       return (pixmap);
     }
 # else /* _WINDOWS */

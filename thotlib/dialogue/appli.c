@@ -1181,6 +1181,7 @@ CONST STRING        name;
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
 	     SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #else  /* _WINDOWS */
+#ifndef _GTK
 	     if (name != NULL)
 	       {
 		  /* text est un format */
@@ -1193,6 +1194,7 @@ CONST STRING        name;
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
 	     XtManageChild (FrameTable[frame].WdStatus);
 	     XmStringFree (title_string);
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	    }
      }
@@ -1966,7 +1968,9 @@ void               *event;
      case KeyPress:
        t1 = 0;
        TtaAbortShowDialogue ();
+#ifndef _GTK
        XCharTranslation (ev);
+#endif /* _GTK */
        break;
 
      case EnterNotify:
@@ -2408,8 +2412,9 @@ int                 raz;
 #ifdef _GTK 
    GdkRectangle      rect;
 #else /* _GTK */
-#endif /* _GTK */
    XRectangle        rect;
+#endif /* _GTK */
+
 #endif /* _WINDOWS */
 
    if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {

@@ -98,11 +98,19 @@ ThotColorStruct  *colr;
    int                 cindx;
    int                 NumCells;
 
-   match = XAllocColor (dsp, colormap, colr);
+#ifdef _GTK
+ match =  gdk_colormap_alloc_color (colormap, colr, FALSE, TRUE);
+#else /* _GTK */
+ match = XAllocColor (dsp, colormap, colr);
+#endif /* _GTK */
    NumCells = 0;
    if (match == 0)
      {
+#ifdef _GTK
+        NumCells = gdk_colormap_get_system_size ();
+#else /* _GTK */
 	NumCells = XDisplayCells (dsp, TtScreen);
+#endif /* _GTK */
 	if (!have_colors)
 	  {
 	     for (i = 0; i < NumCells; i++)
@@ -766,8 +774,6 @@ int         motif;
    ThotColorStruct     gdkFgPixel;
    ThotColorStruct     gdkBgPixel;
 
-   gdkFgPixel.pixel = gdk_rgb_xpixel_from_rgb (FgPixel);
-   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
 #endif /* _GTK */
 
 #ifndef _WIN_PRINT
@@ -789,6 +795,11 @@ int         motif;
 	FgPixel = ColorPixel (fg);
 	BgPixel = ColorPixel (bg);
      }
+
+#ifdef _GTK
+   gdkFgPixel.pixel = gdk_rgb_xpixel_from_rgb (FgPixel);
+   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
+#endif /* _GTK */
 
 #ifdef _WINDOWS
    if (WIN_LastBitmap != 0)

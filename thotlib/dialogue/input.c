@@ -529,7 +529,64 @@ LPARAM lParam;
 }
 #endif /* _WINDOWS */
 
+#ifdef _GTK
+#ifdef __STDC__
+void                XCharTranslation (GdkEventKey * event, gpointer * data)
+#else  /* __STDC__ */
+void                XCharTranslation (event, data)
+GdkEventKey             *event;
+gpointer *data;
+#endif /* __STDC__ */
+{
+   int                 status;
+   int                 PicMask;
+   int                 frame;
+   unsigned int        state, save;
+   UCHAR_T       string[2];
+   ThotComposeStatus      ComS;
+   KeySym              KS;
 
+   frame = (int) data;
+   if (frame > MAX_FRAME)
+      frame = 0;
+
+   status = 0;
+   /* control, alt and mouse status bits of the state are ignored */
+
+   state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK );
+   if (event->state == state) {
+       /* status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS); */
+     strncpy(string, event->string, 2);
+     KS = event->keyval;
+     /*ComS = NULL ; */
+
+  } else
+     {
+       save = event->state;
+       event->state = state;
+       state = save;
+       /* status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);*/
+       strncpy(string, event->string, 2);
+       KS = event->keyval;
+       /* ComS = NULL ;*/
+
+     }
+
+   PicMask = 0;
+   if (state & GDK_SHIFT_MASK)
+      PicMask |= THOT_MOD_SHIFT;
+   if (state & GDK_LOCK_MASK)
+      PicMask |= THOT_MOD_SHIFT;
+   if (state & GDK_CONTROL_MASK)
+      PicMask |= THOT_MOD_CTRL;
+   if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
+      PicMask |= THOT_MOD_ALT;
+
+   ThotInput (frame, &string[0], event->length, PicMask, KS);
+}
+
+
+#else /* _GTK */
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    XCharTranslation
@@ -583,6 +640,8 @@ ThotEvent             *event;
    ThotInput (frame, &string[0], status, PicMask, KS);
 }
 #endif /* !_WINDOWS */
+#endif /* _GTK */
+
 
 /*----------------------------------------------------------------------
    ThotInput

@@ -632,7 +632,9 @@ int *bg;
 	    colrs[i].green = info_ptr->palette[i].green << 8;
 	    colrs[i].blue  = info_ptr->palette[i].blue << 8;
 	    colrs[i].pixel = i;
+#ifndef _GTK
 	    colrs[i].flags = DoRed|DoGreen|DoBlue;
+#endif /* ! _GTK */
 #else /* _WINDOWS */
 	    colrs[i].red   = info_ptr->palette[i].red;
 	    colrs[i].green = info_ptr->palette[i].green;
@@ -653,7 +655,10 @@ int *bg;
 	  colrs[i].green = std_color_cube[i].green << 8;
 	  colrs[i].blue  = std_color_cube[i].blue << 8;
 	  colrs[i].pixel = i;
+#ifndef _GTK
 	  colrs[i].flags = DoRed|DoGreen|DoBlue;
+#endif /* ! _GTK */
+
 #              endif /* _WINDOWS */
 	}       
       }
@@ -664,15 +669,21 @@ int *bg;
 	for (i=0; i < 15; i++ )
 	  {
 	    colrs[i].red   = colrs[i].green = colrs[i].blue = i * 65535/15;
-#              ifndef _WINDOWS
+#ifndef _GTK
+#              ifndef _WINDOWS 
 	    colrs[i].flags = DoRed|DoGreen|DoBlue;
-#              endif /* _WINDOWS */
+#              endif /* _WINDOWS */ 
+#endif /* ! _GTK */
+
 	  }
 #          ifdef _WINDOWS
 	colrs[15].red = colrs[15].green = colrs[15].blue = 255;
 #          else /* !_WINDOWS */
 	colrs[15].red = colrs[15].green = colrs[15].blue = 65535;
+#ifndef _GTK
 	colrs[15].flags = DoRed|DoGreen|DoBlue;
+#endif /* ! _GTK */
+
 #          endif /* _WINDOWS */
       }
     else

@@ -221,7 +221,8 @@ AMAYA_OBJ = \
 	templates.o \
 	trans.o \
 	transparse.o \
-	UIcss.o
+	UIcss.o \
+	gtkdialogue_box.o
 
 #
 # Structure schema compilation.

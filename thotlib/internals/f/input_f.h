@@ -5,8 +5,12 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+#ifdef _GTK
+extern void XCharTranslation (GdkEventKey * event, gpointer * data);
 
+#else /* _GTK */
 extern void XCharTranslation ( ThotEvent * event );
+#endif /* _GTK */
 extern void ThotInput ( int frame,
                         USTRING string,
                         unsigned int nb,

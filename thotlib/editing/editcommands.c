@@ -541,6 +541,7 @@ static ThotBool CloseTextInsertionWithControl ()
 
    /* elimine systematiquement les exposes en attente */
 #ifndef _WINDOWS
+#ifndef _GTK
    while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) &event))
      {
        if (event.type == GraphicsExpose || event.type == Expose)
@@ -550,6 +551,7 @@ static ThotBool CloseTextInsertionWithControl ()
 	   XtDispatchEvent (&event);
 	 }
      }
+#endif /*_GTK */
 #endif /* !_WINDOWS */
    return (notified);
 }

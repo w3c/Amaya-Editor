@@ -99,7 +99,9 @@ typedef int            ThotIcon;
 #define PIXEL_ALREADY_TYPEDEFED /* for XPM stuff ! */
 
 #include "simx.h"
+#ifndef _GTK
 typedef XColor    ThotColorStruct;
+#endif
 
 #else  /* _WINDOWS */
 /************************************************************************
@@ -149,10 +151,14 @@ typedef XColor    ThotColorStruct;
  * some X11 specific structures.
  */
 
+
+
 #ifdef OWN_XLOOKUPSTRING
 #define X_USEBFUNCS
 #include <X11/Xlibint.h>
 #endif /* OWN_XLOOKUPSTRING */
+
+
 #ifdef _GTK
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -164,7 +170,7 @@ typedef Drawable       ThotBitmap;
 typedef GC             ThotGC;
 typedef unsigned long  ThotColor;
 typedef GdkColor       ThotColorStruct;
-typedef int           *ptrfont;
+typedef GdkFont        *ptrfont;
 typedef Cursor         ThotCursor;
 typedef XPoint         ThotPoint;
 typedef XEvent         ThotEvent;

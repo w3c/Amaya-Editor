@@ -81,13 +81,13 @@ char              **d;
 
    if (d != NULL)
      {
-       pixmap = gdk_pixmap_create_from_xpm (Main_Wd->window, &mask ,
-					    &style->bg[GTK_STATE_NORMAL] ,(gchar *) picture); 
+       pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &mask ,
+					    &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,(gchar **) d); 
        icon = gtk_pixmap_new (pixmap, mask);
        gdk_pixmap_unref (pixmap);
        gdk_bitmap_unref (mask);	
      }	    
-   return (icon);
+   return (pixmap);
 #else /* _GTK */
    Pixmap              PicMask;
    XpmAttributes       att;

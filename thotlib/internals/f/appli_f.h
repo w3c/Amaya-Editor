@@ -18,9 +18,15 @@ extern void FrameToRedisplay ( ThotWindow w,
 extern void FrameRedraw ( int frame,
                           Dimension width,
                           Dimension height );
+#ifdef _GTK
+extern void                FrameResized (GtkWidget *w, 
+			GdkEventConfigure *event, 
+			gpointer data);
+#else /* ! _GTK */
 extern void FrameResized ( int *w,
                            int frame,
                            int *info );
+#endif /* ! _GTK */
 extern void FrameHScrolled ( int *w,
                              int frame,
                              int *param );

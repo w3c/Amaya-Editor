@@ -28,10 +28,10 @@
 #include "dialog.h"
 #include "logowindow.h"
 #include "application.h"
-#ifdef _GTK
-#include "gtkdialog.h"
-#else /* _GTK */
 #include "dialog.h"
+
+#ifdef _GTK
+#include "logo.xpm"
 #endif /* _GTK */
 #include "document.h"
 #include "message.h"
@@ -1351,6 +1351,7 @@ ThotWidget   toplevel;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    Arg                 args[MAX_ARGS];
    int                 n;
    int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
@@ -1381,6 +1382,7 @@ ThotWidget   toplevel;
    XtSetArg (args[n], XgcNwaitPeriod, wait_ms);
    n++;
    XtSetValues (liteClue, args, n);
+#endif /* _GTK */
 }
 #endif /* _WINDOWS */
 
@@ -1459,12 +1461,15 @@ ThotBool   state;
 		    {
 		      /* insert the icon */
 		      w = gtk_pixmap_new (picture, NULL);
-		      row = gtk_toolbar_append_item (GTK_TOOLBAR (FrameTable[frame].Button[0]), NULL, NULL ,"private", 
-						       w, GTK_SIGNAL_FUNC (APP_ButtonCallback), (gpointer)frame);
+		      row = gtk_toolbar_append_item (GTK_TOOLBAR (FrameTable[frame].Button[0]), 
+						     NULL, info ,"private", 
+						     w, GTK_SIGNAL_FUNC (APP_ButtonCallback), 
+						     (gpointer)frame);
 		   
 		      gtk_widget_show (row);
 		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		    }
+                  FrameTable[frame].Button[i] = row;
 #else /* _GTK */
 		  row = FrameTable[frame].Button[0];
 		  n = 0;
@@ -1512,8 +1517,8 @@ ThotBool   state;
 		    }
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
+                  FrameTable[frame].Button[i] = w;
 #endif /* _GTK */
-		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].EnabledButton[i] = state;
 		  index = i;
 #ifndef _GTK
@@ -1659,6 +1664,7 @@ int                 index;
 		    SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (FALSE, 0));
 		}
 #else  /* !_WINDOWS */
+#ifndef _GTK
 	      n = 0;
 	      XtSetArg (args[n], XmNtopShadowColor, &top);
 	      n++;
@@ -1671,6 +1677,7 @@ int                 index;
 	      XtSetArg (args[n], XmNbottomShadowColor, top);
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	    }
 	}
@@ -1731,11 +1738,13 @@ ThotBool            state;
 		  FrameTable[frame].Button[index]->iBitmap = picture;
 	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (state, 0));
 #else  /* !_WINDOWS */
+#ifndef _GTK
 	      n = 0;
 	      XtSetArg (args[n], XmNlabelPixmap, picture);
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
 	      FrameTable[frame].EnabledButton[index] = state;
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	    }
 	}
@@ -1829,6 +1838,7 @@ View                view;
 
 #ifndef _WINDOWS
    row = FrameTable[frame].Button[0];
+#ifndef _GTK
    XtSetArg (args[0], XmNheight, &dy);
    if (row != 0)
      {
@@ -1850,6 +1860,7 @@ View                view;
 	XtManageChild (XtParent (row));
 	XtManageChild (XtParent (XtParent (row)));
      }
+#endif /* _GTK */
 #else  /* _WINDOWS */
    if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame])) {
       hmenu = WIN_GetMenu (frame); 
@@ -1908,7 +1919,9 @@ XmTextVerifyCallbackStruct *call_d;
      {
 	FrameToView (frame, &document, &view);
 #   ifndef _WINDOWS
+#ifndef _GTK
 	text = XmTextGetString (w);
+#endif /* _GTK */
 #   else  /* _WINDOWS */
 	GetWindowText (w, text, sizeof (text) + 1);
 #   endif /* _WINDOWS */
@@ -1976,6 +1989,7 @@ void                (*procedure) ();
 		  row = FrameTable[frame].Text_Zone[0];
 		  /*XtManageChild(row); */
 #                 ifndef _WINDOWS
+#ifndef _GTK
 		  XtUnmanageChild (XtParent (XtParent (row)));
 
 		  /* Insere la nouvelle zone de texte */
@@ -2083,6 +2097,7 @@ void                (*procedure) ();
 		  XtManageChild (row);
 		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
+#endif /* _GTK */
 #                 else  /* _WINDOWS */
 		          currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
@@ -2155,8 +2170,10 @@ STRING              text;
 	     /*XtRemoveCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
 #            ifndef _WINDOWS
 	     w = FrameTable[frame].Text_Zone[index];
+#ifndef _GTK
 	     if (w != 0)
 		XmTextSetString (w, text);
+#endif /* _GTK */
 #            else  /* _WINDOWS */
 	     w = FrameTable[frame].Text_Zone[index - 1];
 	     if (w != 0)
@@ -2220,6 +2237,7 @@ View                view;
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
 #         ifndef _WINDOWS
+#ifndef _GTK
 	     row = XtParent (FrameTable[frame].Text_Zone[0]);
 	     XtSetArg (args[0], XmNwidth, &dy);
 	     if (row != 0)
@@ -2246,6 +2264,7 @@ View                view;
 		  FrameResized ((int *) w, frame, NULL);
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
+#endif /* _GTK */
 #         else  /* _WINDOWS */
 	     for (index = 0; index <  MAX_TEXTZONE; index++) {
 		 if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
@@ -2292,6 +2311,262 @@ int                *infos;
 #endif /* __STDC__ */
 {
 }
+
+/*----------------------------------------------------------------------
+  Callback function appellée par une frame lorsque celle-ci recoit un
+  evenement de type exposer. Redessine la page.
+  Le paramètre widget indique le widget qui a appellé cette fonction.
+  Le parametre event contient des informations sur l'evenement.
+  Le parametre data contient le numero de la frame.
+-------------------------------------------------------------------------*/
+#ifdef _GTK
+gint ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data)
+{
+  int nframe;
+  int                 x;
+  int                 y;
+  int                 l;
+  int                 h;
+
+  nframe = (int )data;
+   x = event->area.x;
+   y = event->area.y;
+   l = event->area.width;
+   h = event->area.height;
+
+
+  if (nframe > 0 && nframe <= MAX_FRAME)
+     {
+       DefRegion (nframe, x, y, l+x, y+h );
+       RedrawFrameBottom(nframe,0);
+     }
+
+ return FALSE;
+}
+
+gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data)
+{
+    TtaAbortShowDialogue ();
+    XCharTranslation (event, data);
+ return FALSE;
+}
+
+gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+  int nframe;
+  int                 x;
+  int                 y;
+  int                 l;
+  int                 frame;
+
+   PtrDocument         docsel;
+   PtrElement          firstSel, lastSel;
+   Document            document;
+   View                view;
+   int                 firstCar, lastCar;
+   ThotBool            ok;
+   int                 comm, dx, dy, sel, h;
+
+   frame = (int )data;
+   gtk_widget_grab_focus(widget);
+
+    /* ne pas traiter si le document est en mode NoComputedDisplay */
+   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+      return FALSE ;
+   /*_______> S'il n'y a pas d'evenement associe */
+   else if (event == NULL)
+      return FALSE;
+   /*_______> Si une designation de pave est attendue*/
+   else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
+     {
+        ClickIsDone = 0;
+        ClickFrame = frame;
+        ClickX = event->x;
+        ClickY = event->y;
+        return FALSE;
+     }
+
+   switch (event->type)
+     {
+     case GDK_BUTTON_PRESS:
+
+       /*_____________________________________________________*/
+       switch (event->button)
+         {
+           /* ==========BOUTON GAUCHE========== */
+         case 1:
+           /* Termine l'insertion courante s'il y en a une */
+           CloseInsertion ();
+
+           /* Est-ce que la touche modifieur de geometrie est active ? */
+           if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
+             {
+               /* On change la position d'une boite */
+               ApplyDirectTranslate (frame, event->x, event->y);
+             }
+           /* Est-ce que la touche modifieur d'extension est active ? */
+           else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
+             {
+               TtaAbortShowDialogue ();
+               LocateSelectionInView (frame, event->x, event->y, 0);
+               FrameToView (frame, &document, &view);
+               TtcCopyToClipboard (document, view);
+             }
+           /* Est-ce un double clic */
+           /* else if (t1 + (Time) DoubleClickDelay > event->time)
+             {
+               TtaAbortShowDialogue ();
+               TtaLockMainLoop();
+               TtaFetchOneEvent (&event);
+               while (event.type != ButtonRelease)
+                 {
+                   TtaHandleOneEvent (&event);
+                   TtaFetchOneEvent (&event);
+                 }
+                 TtaUnlockMainLoop(); */
+
+               /* memorise la position de la souris */
+           /* if (ClickFrame == frame
+                   && (ClickX - event->x < 3 || ClickX - event->x > 3)
+                   && (ClickY - event->y < 3 || ClickY - event->y > 3))*/
+                 /* it's really a double click */
+           /*sel = 3;
+               else
+                 sel = 2;
+               ClickFrame = frame;
+               ClickX = event->x;
+               ClickY = event->y;
+               LocateSelectionInView (frame, ClickX, ClickY, sel);
+               } */
+           /* Sinon c'est une selection normale */
+           else
+             {
+               t1 = event->time;
+               ClickFrame = frame;
+               ClickX = event->x;
+               ClickY = event->y;
+               LocateSelectionInView (frame, ClickX, ClickY, 2);
+
+               /* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
+               comm = 0;        /* il n'y a pas de drag */
+               TtaLockMainLoop();
+               /*TtaFetchOneEvent (&event);*/
+               FrameToView (frame, &document, &view);
+               h = FrameTable[frame].FrHeight;
+               /*while (event.type != GDK_BUTTON_RELEASE && event.type != GDK_BUTTON_PRESS)
+                 {
+                   if (event.type == MotionNotify ||
+                       (event.type != ConfigureNotify &&
+                        event.type != MapNotify &&
+                        event.type != UnmapNotify &&
+                        event.type != DestroyNotify &&*/
+                        /*event.type != NoExpose && */
+               /*(event.xmotion.y > h || event.xmotion.y < 0)))
+                     {
+                       dx = event.xmotion.x - ClickX;
+                       dy = event.xmotion.y - ClickY;
+                       if (dx > 2 || dx < -2 || dy > 2 || dy < -2 ||
+                           event.xmotion.y > h || event.xmotion.y < 0)
+                         {
+                           LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
+                           comm = 1;
+                           if (event.xmotion.y > h)
+                             TtcLineDown (document, view);
+                           else if (event.xmotion.y < 0)
+                             TtcLineUp (document, view);
+                         }
+                     }
+                   TtaHandleOneEvent (&event);
+                   TtaFetchOrWaitEvent (&event);
+                 }
+               TtaHandleOneEvent (&event);
+               TtaUnlockMainLoop();*/
+
+               /* S'il y a un drag on termine la selection */
+               FrameToView (frame, &document, &view);
+               if (comm == 1)
+                 LocateSelectionInView (frame, event->x, event->y, 0);
+               else if (comm == 0)
+                  /* click event */
+                 LocateSelectionInView (frame, event->x, event->y, 4);
+
+               if (comm != 0)
+                 TtcCopyToClipboard (document, view);
+             }
+           break;
+
+           /* ==========BOUTON MILIEU========== */
+         case 2:
+           /* Termine l'insertion courante s'il y en a une */
+           CloseInsertion ();
+           /* Est-ce que la touche modifieur de geometrie est active ? */
+           if ((event->state & GDK_CONTROL_MASK) != 0)
+             {
+               /* On modifie les dimensions d'une boite */
+               ApplyDirectResize (frame, event->x, event->y);
+             }
+           else
+             {
+               FrameToView (frame, &document, &view);
+               if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
+                 (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (document, view);
+             }
+           break;
+
+           /* ==========BOUTON DROIT========== */
+         case 3:
+           /* Termine l'insertion courante s'il y en a une */
+           CloseInsertion ();
+           if ((event->state & GDK_CONTROL_MASK) != 0)
+             {
+               /* On modifie les dimensions d'une boite */
+               ApplyDirectResize (frame, event->x, event->y);
+             }
+           else if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
+             /* non, message 'Selectionnez' */
+             TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+           else if (docsel->DocReadOnly)
+             /* on ne peut inserer ou coller dans un document en lecture seule */
+             TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
+           else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPolyLine)
+             {
+               /* selection a l'interieur d'une polyline */
+               if (ThotLocalActions[T_editfunc] != NULL)
+                 (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
+             }
+           else
+             {
+               TtaSetDialoguePosition ();
+               if (ThotLocalActions[T_insertpaste] != NULL)
+                 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('R'), &ok);
+             }
+
+         default:
+           break;
+         }
+       break;
+
+       /*    case KeyPress:
+       t1 = 0;
+       TtaAbortShowDialogue ();
+       XCharTranslation (ev);
+       break;
+
+     case EnterNotify:
+       t1 = 0;
+       break;
+
+     case LeaveNotify:
+       t1 = 0;
+       break; */
+
+     default:
+       break;
+     }
+ return FALSE;
+}
+
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
    Cree une frame a' la position X,Y et aux dimensions large et       
@@ -2380,6 +2655,9 @@ int                 doc;
    ustrcpy (wTitle, name);
 #  endif /* _WINDOWS */
 
+#ifdef _GTK
+   menu_bar = NULL;
+#endif /* _GTK */
    frame = 0;
    if (schema != NULL)
      {
@@ -2459,6 +2737,23 @@ int                 doc;
 	       WinMenus[frame] = menu_bar;
 	   }
 #else /* _WINDOWS */
+	   if (large < MIN_LARG)
+	     dx = (Dimension) MIN_LARG;
+	   else
+	     dx = (Dimension) large;
+	   if (haut < MIN_HAUT)
+	     dy = (Dimension) MIN_HAUT;
+	   else
+	     dy = (Dimension) haut;
+	   if (X <= 0)
+	     X = 92;
+	   else
+	     X = mmtopixel (X, 1);
+	   if (Y <= 0)
+	     Y = 2;
+	   else
+	     Y = mmtopixel (Y, 0);
+
 #ifdef _GTK
 	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -2477,27 +2772,11 @@ int                 doc;
 	   gtk_widget_show (vbox2);
 	   gtk_box_pack_start (GTK_BOX (vbox1), vbox2, FALSE, TRUE, 0);
 
-	   if (wind_pixmap != 0)
+	   /*if (wind_pixmap != 0) */
 	     /* Creation de la fenetre icone associee */
 	     /*XtSetArg (args[n], XmNiconPixmap, wind_pixmap)*/;
 #else /* _GTK */
 	   /*** Building the document window ***/
-	   if (large < MIN_LARG)
-	     dx = (Dimension) MIN_LARG;
-	   else
-	     dx = (Dimension) large;
-	   if (haut < MIN_HAUT)
-	     dy = (Dimension) MIN_HAUT;
-	   else
-	     dy = (Dimension) haut;
-	   if (X <= 0)
-	     X = 92;
-	   else
-	     X = mmtopixel (X, 1);
-	   if (Y <= 0)
-	     Y = 2;
-	   else
-	     Y = mmtopixel (Y, 0);
 	   n = 0;
 	   XtSetArg (args[n], XmNdefaultFontList, DefaultFont);
 	   n++;
@@ -2685,7 +2964,7 @@ int                 doc;
 	   /* logo */
 	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
 						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
-						      amaya);
+						      logo_xpm);
 	   logo_pixmap = gtk_pixmap_new (amaya_pixmap, amaya_mask);
 	   gdk_pixmap_unref (amaya_pixmap);
 	   gdk_bitmap_unref (amaya_mask);
@@ -2760,26 +3039,39 @@ int                 doc;
 
 	   /* Creation de la drawing area */
 	   drawing_area = gtk_drawing_area_new ();
-	   gtk_drawing_area_size(GTK_DRAWING_AREA(drawing_area), dx, dy);
+
 	   gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
-	   gtk_widget_show(drawing_area);
+	   gtk_drawing_area_size(GTK_DRAWING_AREA(drawing_area), dx, dy);
+           GTK_WIDGET_SET_FLAGS(drawing_area, GTK_CAN_FOCUS);
+           gtk_widget_grab_focus(drawing_area);
+
+           gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
+                           (GtkSignalFunc) ExposeEvent2, (gpointer) frame);
+           gtk_signal_connect (GTK_OBJECT (drawing_area), "selection_notify_event",
+                           (GtkSignalFunc) ExposeEvent2, (gpointer) frame);
 	   gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
-                           (GtkSignalFunc) ExposeEvent, (gpointer) frame);
+                           (GtkSignalFunc) ExposeCB, (gpointer) frame);
 	   gtk_signal_connect (GTK_OBJECT(drawing_area),"configure_event",
                            (GtkSignalFunc)FrameResized, (gpointer) frame);
-	   gtk_widget_set_events (drawing_area, GDK_EXPOSURE_MASK);
+           gtk_widget_set_events (drawing_area, GDK_BUTTON_PRESS_MASK
+                                  | GDK_KEY_PRESS_MASK
+                                  | GDK_EXPOSURE_MASK
+                                  /* | GDK_KEY_RELEASE_MASK */
+                                  | GDK_FOCUS_CHANGE_MASK
+                                  ); 
+	   gtk_widget_show(drawing_area);
 
 	   /*** Creation of scrollbars ***/
 	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
 	   gtk_widget_show (vscrl);
 	   gtk_box_pack_start (GTK_BOX (hbox2), vscrl, FALSE, TRUE, 0);
 	   /* gtk_signal_connect (GTK_OBJECT (vscrl), "value_changed",
-			       GTK_SIGNAL_FUNC (FrameVScrolled), &frame);*/
+	      GTK_SIGNAL_FUNC (FrameVScrolled), &frame);*/
 	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
 	   gtk_widget_show (hscrl);
 	   gtk_box_pack_start (GTK_BOX (vbox1), hscrl, FALSE, TRUE, 0);
 	   /* gtk_signal_connect (GTK_OBJECT (hscrl), "value_changed",
-			       GTK_SIGNAL_FUNC (FrameHScrolled), NULL);*/
+	      GTK_SIGNAL_FUNC (FrameHScrolled), NULL); */
 	   /* status bar */
 	   statusbar = gtk_statusbar_new ();
 	   gtk_widget_show (statusbar);
@@ -2789,8 +3081,7 @@ int                 doc;
 	   
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
-	   FrameTable[frame].WdFrame =  drawing_area;
-	   FrRef[frame] = drawing_area->window;
+           FrRef[frame] = drawing_area->window;
 #else /* _GTK */
 	   /*** Creation of scrollbars ***/
 	   n = 0;
@@ -3020,6 +3311,7 @@ int                 doc;
 #endif /* _GTK */
 	   FrameTable[frame].FrWidth  = (int) dx;
 	   FrameTable[frame].FrHeight = (int) dy;
+           FrameTable[frame].WdFrame =  drawing_area;
 #else  /* _WINDOWS */
 	   /*** scrollbars ***/
 	   hscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,

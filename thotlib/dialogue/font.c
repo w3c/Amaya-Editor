@@ -261,6 +261,11 @@ UCHAR_T       c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
+#ifdef _GTK
+    int l;
+#endif /* _GTK */
+
+
   if (font == NULL)
     return (0);
 #ifdef _WINDOWS
@@ -270,6 +275,7 @@ ptrfont             font;
 #ifdef _GTK
   else
     l = gdk_char_height (font, c);
+    return (l);
 #else /* _GTK */
   else if (((XFontStruct *) font)->per_char == NULL)
     return FontHeight (font);
@@ -291,6 +297,11 @@ UCHAR_T       c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
+
+#ifdef _GTK
+   int lbearing, rbearing, width, ascent, descent;
+#endif /* _GTK */
+
   if (font == NULL)
     return (0);
 #ifdef _WINDOWS
@@ -298,8 +309,10 @@ ptrfont             font;
     return font->FiAscent;
 #else  /* _WINDOWS */
 #ifdef _GTK
-  else
+  else {
     gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
+    return (ascent);
+  }
 #else /* _GTK */
   else if (((XFontStruct *) font)->per_char == NULL)
     return ((XFontStruct *) font)->max_bounds.ascent;
@@ -325,11 +338,10 @@ ptrfont             font;
   else
     return (font->FiAscent);
 #else  /* _WINDOWS */
-#ifdef _GTK
   else
+#ifdef _GTK
     return (font->ascent);
 #else /* _GTK */
-  else
     return (((XFontStruct *) font)->ascent);
 #endif /* _GTK */
 #endif /* !_WINDOWS */
@@ -345,6 +357,13 @@ int                 FontHeight (font)
 ptrfont             font;
 #endif /* __STDC__ */
 {
+
+#ifdef _GTK
+   int lbearing, rbearing, width, ascent, descent;
+  char c[]="Xp";
+  int l;   
+#endif /* _GTK */
+
   if (font == NULL)
     return (0);
 #ifdef _WINDOWS
@@ -1242,6 +1261,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+    /* TODO : Free the gtk fonts */
    int                 i, j, mask;
    int                 flag;
 
@@ -1281,7 +1301,11 @@ int                 frame;
             TtFonts[i]->FiFont = (HFONT)0;
 		    TtaFreeMemory (TtFonts[i]);
 #                   else  /* _WINDOWS */
+#ifdef _GTK
+ 		    gdk_font_unref (TtFonts[i]);
+#else /* _GTK */
 		    XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
+#endif /* _GTK */
 #                   endif /* _WINDOWS */
 		    TtFonts[i] = NULL;
 	       }
