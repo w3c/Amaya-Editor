@@ -869,7 +869,7 @@ static void SafePut_delete (void)
 
 /*----------------------------------------------------------------------
   SafePut_query
-  returns true if the domain to which belongs the URL accepts an automatic
+  returns true if the domain to which the URL belongs accepts an automatic
   PUT redirect.
   ----------------------------------------------------------------------*/
 static ThotBool SafePut_query (char *url)
@@ -892,7 +892,7 @@ static ThotBool SafePut_query (char *url)
 	  found = TRUE;
 	  break;
 	} 
-    } 
+    }
 
   return (found);
 }
@@ -970,7 +970,8 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        ** Start request with new credentials 
        */
        /* only do a redirect using a network protocol understood by Amaya */
-       strcpy (urlAdr, new_anchor->parent->address);
+       strncpy (urlAdr, new_anchor->parent->address, MAX_LENGTH - 1);
+       urlAdr[MAX_LENGTH - 1] = EOS;
        if (IsValidProtocol (urlAdr))
 	 {
 	   /* if it's a valid URL, we try to normalize it */

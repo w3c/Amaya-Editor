@@ -1707,9 +1707,14 @@ char   *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
   /* Make working copies of input strings to cut up: */
   return_value = NULL;
   result[0] = 0;		/* Clear string  */
-  strcpy (name, aName);
-  if (relatedName != NULL)  
-    strcpy (rel, relatedName);
+  rel[0] = EOS;
+  strncpy (name, aName, MAX_LENGTH - 1);
+  name[MAX_LENGTH - 1] = EOS;
+  if (relatedName != NULL)
+    {
+      strncpy (rel, relatedName, MAX_LENGTH - 1);
+      rel[MAX_LENGTH - 1] = EOS;
+    }
   else
     relatedName[0] = EOS;
   
