@@ -109,10 +109,23 @@ Numbered list:(ul{(li{(*)+})+})+;
 	* > ol:li.*;
         }
 
-Remove definition list: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
+Definition data:dt{(*)+};
 	{
-	 dtc > :<* style="font-weight:bold">;
-	 ddc > :*;
+	* > dd:*;
+	}
+
+Definition term:dd{(p|*)+};
+	{
+	dd > :dt;
+	p > :dt;
+	* > dt:*;
+	}
+
+Remove definition list:(dl{(dt{(dtc:*)+}|dd{(p|*)+})+})+;
+	{
+	dtc > h4:*;
+	p > p;
+	* > p:*;
 	}
 
 !flattering headings 
@@ -217,12 +230,6 @@ Headings h3:(dl{(dt1:dt|dd{(dl{(dt2:dt|dd{(dl{(dt3:dt|dd{content:*})+}|content:*
 	content > :*;
 	}
 
-Definition list: p,*+;
-	{
-	p > dl:dt;
-	* > dl.dd:*;
-	}
-
 ! Preformatted to/from paragraphs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -235,58 +242,6 @@ Paragraph: (pre{*+})+;
 	{
 	*   > p:*;
 	}
-
-
-!Tables to/from lists
-!!!!!!!!!!!!!!!!!!!!
-
-Table: *{(lev1:li{?(*{(lev2:li)+}|elem:*)+})+};
-	{
-	lev1 > <table border="1">:tr;
-	elem > table.tr:td.*;
-	lev2 > table.tr:td;
-	}
-
-Table: dl{(dt|dd)+};
-	{
-	dt > <table border="1">.tbody:tr.td;
-	dd > table.tbody.tr:td;
-	}
-
-Numbered List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-  	{
-	caption > :ol.li.strong;
-	block > :ol;
-	tr > ol:li;
-	td > ol.li:;
-	th > ol.li:;
-	td2 > ol.li.ul:li;
-	th2 > ol.li.ul:li;
-	}
-
-Bulleted List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-	{
-	caption > :ul.li.strong;
-	block > :ul;
-	tr > ul:li;
-	td > ul.li:;
-	th > ul.li:;
-	td2 > ul.li.ul:li;
-	th2 > ul.li.ul:li;
-	}
-
-Definition List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-        {
-        caption > :dl.dt;
-        block   > :dl;
-        td      > dl:dt;
-        th      > dl:dt;
-        td2     > dl:dd;
-        th2     > dl:dd;
-        }
-
-! Other transformations
-!!!!!!!!!!!!!!!!!!!!!!
 
 Merge items: li,(li2:li)+;
 	{
@@ -368,9 +323,9 @@ Remove two list levels: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 ! Forms to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-Enclosing into Form: *+;
+Enclosing into Form: (h1|h2|h3|h4|h5|h6|p)+;
 	{
-	* > Form:*;
+	* > form:*;
 	}
 
 Remove the Form: form{?*+};
@@ -402,53 +357,8 @@ Numbered list:(p|ul|menu|dir|pre|form)+;
         form > ol:li.form;
         }
 
-! Tables to/from elements
+! Remove elements
 !!!!!!!!!!!!!!!!!!!!!!!!!
-
-Vertical table: *+;
-	{
-	* > <table border="1">:tr.td.*;
-	}
-
-Horizontal table : *+;
-	{
-	* > <table border="1">.tr:td.*;
-	}
-
-
-Remove the table:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-        {
-        caption > :div.p;
-        block   > :div;
-        td      > :div;
-        th      > :div;
-        td2     > :div;
-        th2     > :div;
-        }
-
-!Remove Table:table{?caption,?(body:*{(tr{(*{(?cell_content:*)+})+})+})+};
-!	{
-!	caption > h3;
-!	cell_content > :*;
-!	}
-
-Transpose the table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
-	{
-	td > <table border=table.border>:tr.td;
-	th > table:tr.td;
-	td2 > <table border=table.border>.tr:td;
-	th2 > table.tr:td;
-	}
-
-Heading cell :?(td|th)+,td,?(td|th)+;
-	{
-	$ChangeToHeadingCell;
-	}
-
-Data cell :?(td|th)+,th,?(td|th)+;
-	{
-	$ChangeToDataCell;
-	}
 
 Remove the division: (div{*+})+;
 	{
@@ -498,6 +408,92 @@ Remove the Quotation: q{*+};
 Remove the BiDi: bdo{*+};
 	{
         * > :*;
+	}
+
+! Tables to/from elements
+!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Table: *{(lev1:li{?(*{(lev2:li)+}|elem:*)+})+};
+	{
+	lev1 > <table border="1">:tr;
+	elem > table.tr:td.*;
+	lev2 > table.tr:td;
+	}
+
+Table: dl{(dt|dd)+};
+	{
+	dt > <table border="1">.tbody:tr.td;
+	dd > table.tbody.tr:td;
+	}
+
+Numbered List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+  	{
+	caption > :ol.li.strong;
+	block > :ol;
+	tr > ol:li;
+	td > ol.li:;
+	th > ol.li:;
+	td2 > ol.li.ul:li;
+	th2 > ol.li.ul:li;
+	}
+
+Bulleted List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+	{
+	caption > :ul.li.strong;
+	block > :ul;
+	tr > ul:li;
+	td > ul.li:;
+	th > ul.li:;
+	td2 > ul.li.ul:li;
+	th2 > ul.li.ul:li;
+	}
+
+Definition List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+        {
+        caption > :dl.dt;
+        block   > :dl;
+        td      > dl:dt;
+        th      > dl:dt;
+        td2     > dl:dd;
+        th2     > dl:dd;
+        }
+
+Vertical table: *+;
+	{
+	* > <table border="1">:tr.td.*;
+	}
+
+Horizontal table : *+;
+	{
+	* > <table border="1">.tr:td.*;
+	}
+
+Remove the table:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+        {
+        caption > :div.p;
+        block   > :div;
+        td      > :div;
+        th      > :div;
+        td2     > :div;
+        th2     > :div;
+        }
+
+Transpose the table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
+	{
+	td > <table border=table.border>:tr.td;
+	th > table:tr.td;
+	td2 > <table border=table.border>.tr:td;
+	th2 > table.tr:td;
+	}
+
+Heading cell:?(td|th)+,td,?(td|th)+;
+	{
+	$ChangeToHeadingCell;
+	}
+
+Data cell:?(td|th)+,th,?(td|th)+;
+	{
+	$ChangeToDataCell;
 	}
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

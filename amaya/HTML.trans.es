@@ -112,10 +112,23 @@ Lista numerada:(ul{(li{(*)+})+})+;
 	* > ol:li.*;
         }
 
-Borrar lista de definición: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
+Definición:dt{(*)+};
 	{
-	 dtc > :<* style="font-weight:bold">;
-	 ddc > :*;
+	* > dd:*;
+	}
+
+Término:dd{(p|*)+};
+	{
+	dd > :dt;
+	p > :dt;
+	* > dt:*;
+	}
+
+Borrar lista de definición:(dl{(dt{(dtc:*)+}|dd{(p|*)+})+})+;
+	{
+	dtc > h4:*;
+	p > p;
+	* > p:*;
 	}
 
 ! Eliminar Encabezados
@@ -239,58 +252,6 @@ Párrafo: (pre{*+})+;
 	*   > p:*;
 	}
 
-
-! Tablas en/desde listas
-!!!!!!!!!!!!!!!!!!!!!!!!
-
-Tabla: *{(lev1:li{?(*{(lev2:li)+}|elem:*)+})+};
-	{
-	lev1 > <table border="1">:tr;
-	elem > table.tr:td.*;
-	lev2 > table.tr:td;
-	}
-
-Tabla: dl{(dt|dd)+};
-	{
-	dt > <table border="1">.tbody:tr.td;
-	dd > table.tbody.tr:td;
-	}
-
-Lista numerada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-  	{
-	caption > :ol.li.strong;
-	block > :ol;
-	tr > ol:li;
-	td > ol.li:;
-	th > ol.li:;
-	td2 > ol.li.ul:li;
-	th2 > ol.li.ul:li;
-	}
-
-Lista no numerada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-	{
-	caption > :ul.li.strong;
-	block > :ul;
-	tr > ul:li;
-	td > ul.li:;
-	th > ul.li:;
-	td2 > ul.li.ul:li;
-	th2 > ul.li.ul:li;
-	}
-
-Lista de definición:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-        {
-        caption > :dl.dt;
-        block   > :dl;
-        td      > dl:dt;
-        th      > dl:dt;
-        td2     > dl:dd;
-        th2     > dl:dd;
-        }
-
-! Otras transformaciones
-!!!!!!!!!!!!!!!!!!!!!!!!
-
 Unir elementos: li,(li2:li)+;
 	{
 	li > li:;
@@ -373,9 +334,9 @@ Eliminar dos niveles de listas: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 ! Formularios en/desde elementos
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Incluir en formulario: *+;
+Incluir en formulario:(h1|h2|h3|h4|h5|h6|p)+;
 	{
-	* > Form:*;
+	* > form:*;
 	}
 
 Eliminar formulario: form{?*+};
@@ -407,52 +368,8 @@ Lista numerada:(p|ul|menu|dir|pre|form)+;
         form > ol:li.form;
         }
 
-! Tablas en/desde elementos
-!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Tabla vertical: *+;
-	{
-	* > <table border="1">:tr.td.*;
-	}
-
-Tabla horizontal: *+;
-	{
-	* > <table border="1">.tr:td.*;
-	}
-
-Eliminar tabla:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
-        {
-        caption > :div.p;
-        block   > :div;
-        td      > :div;
-        th      > :div;
-        td2     > :div;
-        th2     > :div;
-        }
-
-!Eliminar tabla:table{?caption,?(body:*{(tr{(*{(?cell_content:*)+})+})+})+};
-!	{
-!	caption > h3;
-!	cell_content > :*;
-!	}
-
-Transponer tabla:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
-	{
-	td > <table border=table.border>:tr.td;
-	th > table:tr.td;
-	td2 > <table border=table.border>.tr:td;
-	th2 > table.tr:td;
-	}
-
-Celdas de encabezado:?(td|th)+,td,?(td|th)+;
-	{
-	$ChangeToHeadingCell;
-	}
-
-Celdas de datos:?(td|th)+,th,?(td|th)+;
-	{
-	$ChangeToDataCell;
-	}
+! Remove elements
+!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Eliminar división: (div{*+})+;
 	{
@@ -501,6 +418,92 @@ Eleminar elemento cita (q): q{*+};
 Eliminar elemento bidi: bdo{*+};
 	{
         * > :*;
+	}
+
+! Tablas en/desde elementos
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Tabla: *{(lev1:li{?(*{(lev2:li)+}|elem:*)+})+};
+	{
+	lev1 > <table border="1">:tr;
+	elem > table.tr:td.*;
+	lev2 > table.tr:td;
+	}
+
+Tabla: dl{(dt|dd)+};
+	{
+	dt > <table border="1">.tbody:tr.td;
+	dd > table.tbody.tr:td;
+	}
+
+Lista numerada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+  	{
+	caption > :ol.li.strong;
+	block > :ol;
+	tr > ol:li;
+	td > ol.li:;
+	th > ol.li:;
+	td2 > ol.li.ul:li;
+	th2 > ol.li.ul:li;
+	}
+
+Lista no numerada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+	{
+	caption > :ul.li.strong;
+	block > :ul;
+	tr > ul:li;
+	td > ul.li:;
+	th > ul.li:;
+	td2 > ul.li.ul:li;
+	th2 > ul.li.ul:li;
+	}
+
+Lista de definición:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+        {
+        caption > :dl.dt;
+        block   > :dl;
+        td      > dl:dt;
+        th      > dl:dt;
+        td2     > dl:dd;
+        th2     > dl:dd;
+        }
+
+Tabla vertical: *+;
+	{
+	* > <table border="1">:tr.td.*;
+	}
+
+Tabla horizontal: *+;
+	{
+	* > <table border="1">.tr:td.*;
+	}
+
+Eliminar tabla:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+        {
+        caption > :div.p;
+        block   > :div;
+        td      > :div;
+        th      > :div;
+        td2     > :div;
+        th2     > :div;
+        }
+
+Transponer tabla:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
+	{
+	td > <table border=table.border>:tr.td;
+	th > table:tr.td;
+	td2 > <table border=table.border>.tr:td;
+	th2 > table.tr:td;
+	}
+
+Celdas de encabezado:?(td|th)+,td,?(td|th)+;
+	{
+	$ChangeToHeadingCell;
+	}
+
+Celdas de datos:?(td|th)+,th,?(td|th)+;
+	{
+	$ChangeToDataCell;
 	}
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
