@@ -453,14 +453,14 @@ char* fileName;
                                          currentFile = (char*) 0;
 									  }
                                       if (SrcFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
+                                         free (SrcFileName);
+                                         SrcFileName = (char*) 0;
 									  }
                                       if (WorkFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
+                                         _unlink (WorkFileName);
+                                         free (WorkFileName);
+                                         WorkFileName = (char*) 0;
 									  }
-                                      _unlink (WorkFileName);
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       break;
@@ -545,14 +545,14 @@ char* fileName;
                                          currentFile = (char*) 0;
 									  }
                                       if (SrcFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
+                                         free (SrcFileName);
+                                         SrcFileName = (char*) 0;
 									  }
                                       if (WorkFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
+                                         _unlink (WorkFileName);
+                                         free (WorkFileName);
+                                         WorkFileName = (char*) 0;
 									  }
-                                      _unlink (WorkFileName);
 
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
@@ -807,14 +807,10 @@ char* fileName;
                     line++;
 			  } 
 			  for (i = 0; i < indexBinFiles; i++) {
-                  if (SrcFileName) {
+                  /* if (SrcFileName) {
                      free (SrcFileName);
                      SrcFileName = (char*) 0;
-				  }
-                  if (WorkFileName) {
-                     free (WorkFileName);
-                     WorkFileName = (char*) 0;
-				  }
+				  }*/
                   len = strlen (WorkPath);
                   if (WorkPath [len - 1] == '\\') {
                       SrcFileName = (char*) malloc (len + strlen (BinFiles[i]) + 1);
@@ -902,7 +898,7 @@ int       iCmdShow;
                             DS_MODALFRAME | WS_POPUP | WS_VSCROLL |
                             WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                             0, 0,
-                            600, 1100,
+                            600, 700,
                             NULL, NULL, hInstance, NULL) ;
 
     ShowWindow (hwnd, SW_SHOWNORMAL) ;

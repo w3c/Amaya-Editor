@@ -1789,7 +1789,6 @@ char              **argv;
 #  ifdef _WINDOWS 
    *Y = _CY_;
    ReleaseDC (hwnd, compilersDC);
-   CleanRegistry ();
 #  else  /* !_WINDOWS */
    exit (0);
 #  endif /* _WINDOWS */

@@ -998,7 +998,11 @@ char               *fileName;
 		  fileOK = TtaReadByte (grmFile, &inputLine[j]);
 		  j++;
 	       }
+#        ifdef _WINDOWS
+	     while (j < LINE_LENGTH && inputLine [j-1] != 13 && inputLine[j - 1] != '\n' && fileOK);
+#        else
 	     while (j < LINE_LENGTH && inputLine[j - 1] != '\n' && fileOK);
+#        endif
 	     /* marque la fin reelle de la ligne */
 	     inputLine[j - 1] = '\0';
 	     /* traite la ligne */
