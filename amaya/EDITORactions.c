@@ -19,6 +19,7 @@
 #include "undo.h"
  
 #ifdef ANNOTATIONS
+#include "annotlib.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTmenu_f.h"
 #endif /* ANNOTATIONS */

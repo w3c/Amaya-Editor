@@ -41,6 +41,7 @@
 #include "XMLparser_f.h"
 
 #ifdef ANNOTATIONS
+#include "annotlib.h"
 #include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 

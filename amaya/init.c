@@ -75,6 +75,7 @@
 #endif /* AMAYA_PLUGIN */
 
 #ifdef ANNOTATIONS
+#include "annotlib.h"
 #include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 

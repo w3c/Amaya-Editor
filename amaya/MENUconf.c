@@ -380,8 +380,8 @@ void InitAmayaDefEnv ()
   /* annotations */
 #ifdef ANNOTATIONS
   TtaSetDefEnvString ("ANNOT_USER", TEXT(""), FALSE);
-  TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT("locahost"), FALSE);
-  TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost"), FALSE);
+  TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT(""), FALSE);
+  TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost http://quake.w3.org/CGI/annotate"), FALSE);
   TtaSetDefEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
 #endif /* ANNOTATIONS */
 
@@ -3950,12 +3950,18 @@ static void SetAnnotConf (void)
 static void SetAnnotConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString ("ANNOTP_USER", AnnotUser, TRUE);
-  TtaSetEnvString ("ANNOTP_POST_SERVER", AnnotPostServer, TRUE);
+  TtaSetEnvString ("ANNOT_USER", AnnotUser, TRUE);
+  TtaSetEnvString ("ANNOT_POST_SERVER", AnnotPostServer, TRUE);
   TtaSetEnvString ("ANNOT_SERVERS", AnnotServers, TRUE);
   TtaSetEnvBoolean ("ANNOT_AUTOLOAD", AnnotAutoLoad, TRUE);
 
   TtaSaveAppRegistry ();
+
+  /* and restart the annotlib */
+  /* @@ we could make this finer granularity, and more elegant  */
+  StopAllRequests (1);
+  ANNOT_Quit ();
+  ANNOT_Init ();
 }
 
 /*----------------------------------------------------------------------
