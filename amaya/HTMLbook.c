@@ -496,106 +496,107 @@ Element             nextEl;
   document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MoveDocumentBody (Element *el, Document destDoc,
-				      Document sourceDoc, boolean deleteTree)
+static void    MoveDocumentBody (Element *el, Document destDoc,
+				 Document sourceDoc, char *target, boolean deleteTree)
 #else
-static void         MoveDocumentBody (el, destDoc, sourceDoc, deleteTree)
-Element            *el;
-Document           destDoc;
-Document           sourceDoc;
-boolean            deleteTree;
+static void    MoveDocumentBody (el, destDoc, sourceDoc, target, deleteTree)
+Element       *el;
+Document       destDoc;
+Document       sourceDoc;
+char          *target;
+boolean        deleteTree;
 #endif
 {
-   Element	   root, body, ancestor, elem, firstInserted,
-		   lastInserted, srce, copy, old, parent, sibling;
-   ElementType	   elType;
-   NotifyElement   event;
-   int		   checkingMode;
+  Element	   root, body, ancestor, elem, firstInserted;
+  Element          lastInserted, srce, copy, old, parent, sibling;
+  ElementType	   elType;
+  NotifyElement    event;
+  int		   checkingMode;
 
-   firstInserted = NULL;
-   /* get the BODY element of source document */
-   root = TtaGetMainRoot (sourceDoc);
-   elType = TtaGetElementType (root);
-   elType.ElTypeNum = HTML_EL_BODY;
-   body = TtaSearchTypedElement (elType, SearchForward, root);
-   if (body != NULL)
-     {
-     /* don't check the abstract tree against the structure schema */
-     checkingMode = TtaGetStructureChecking (destDoc);
-     TtaSetStructureChecking (0, destDoc);
-     /* get elem, the ancestor of *el which is a child of a DIV or BODY
-	element in the destination document. The copied elements will be
-	inserted just before this element. */
-     elem = *el;
-     do
+  firstInserted = NULL;
+  /* get the BODY element of source document */
+  root = TtaGetMainRoot (sourceDoc);
+  elType = TtaGetElementType (root);
+  elType.ElTypeNum = HTML_EL_BODY;
+  body = TtaSearchTypedElement (elType, SearchForward, root);
+  if (body != NULL)
+    {
+      /* don't check the abstract tree against the structure schema */
+      checkingMode = TtaGetStructureChecking (destDoc);
+      TtaSetStructureChecking (0, destDoc);
+      /* get elem, the ancestor of *el which is a child of a DIV or BODY
+	 element in the destination document. The copied elements will be
+	 inserted just before this element. */
+      elem = *el;
+      do
 	{
-        ancestor = TtaGetParent (elem);
-	if (ancestor != NULL);
-	   {
-	   elType = TtaGetElementType (ancestor);
-	   if (elType.ElTypeNum == HTML_EL_BODY ||
-	       elType.ElTypeNum == HTML_EL_Division)
-	      ancestor = NULL;
-	   else
-	      elem = ancestor;
-	   }
+	  ancestor = TtaGetParent (elem);
+	  if (ancestor != NULL)
+	    {
+	      elType = TtaGetElementType (ancestor);
+	      if (elType.ElTypeNum == HTML_EL_BODY ||
+		  elType.ElTypeNum == HTML_EL_Division)
+		ancestor = NULL;
+	      else
+		elem = ancestor;
+	    }
 	}
-     while (ancestor != NULL);
-     parent = TtaGetParent (elem);
+      while (ancestor != NULL);
+      parent = TtaGetParent (elem);
      
-     /* do copy */
-     lastInserted = NULL;
-     srce = TtaGetFirstChild (body);
-     while (srce != NULL)
+      /* do copy */
+      lastInserted = NULL;
+      srce = TtaGetFirstChild (body);
+      while (srce != NULL)
 	{
-	copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
-	if (copy != NULL)
-	   {
-	   if (lastInserted == NULL)
-	      /* this is the first copied element. Insert it before elem */
-	      {
-	      TtaInsertSibling (copy, elem, TRUE, destDoc);
-	      firstInserted = copy;
-	      }
-	   else
-	      /* insert the new copied element after the element previously
-		 copied */
-	      TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
-	   lastInserted = copy;
-	   /* update the NAMEs and URLs in the copied element */
-	   event.document = destDoc;
-	   event.position = sourceDoc;
-	   UpdateURLsInSubtree(&event, copy);
-	   }
-	/* get the next element in the source document */
-	old = srce;
-	TtaNextSibling (&srce);
-	if (deleteTree)
-	  TtaDeleteTree (old, sourceDoc);
+	  copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
+	  if (copy != NULL)
+	    {
+	      if (lastInserted == NULL)
+		/* this is the first copied element. Insert it before elem */
+		{
+		  TtaInsertSibling (copy, elem, TRUE, destDoc);
+		  firstInserted = copy;
+		}
+	      else
+		/* insert the new copied element after the element previously
+		   copied */
+		TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
+	      lastInserted = copy;
+	      /* update the NAMEs and URLs in the copied element */
+	      event.document = destDoc;
+	      event.position = sourceDoc;
+	      UpdateURLsInSubtree(&event, copy);
+	    }
+	  /* get the next element in the source document */
+	  old = srce;
+	  TtaNextSibling (&srce);
+	  if (deleteTree)
+	    TtaDeleteTree (old, sourceDoc);
 	}
-
-     /* delete the element(s) containing the link to the copied document */
-     /* delete the parent element of *el and all empty ancestors */
-     elem = TtaGetParent (*el);
-     do
+      
+      /* delete the element(s) containing the link to the copied document */
+      /* delete the parent element of *el and all empty ancestors */
+      elem = TtaGetParent (*el);
+      do
 	{
-	sibling = elem;
-        TtaNextSibling (&sibling);
-	if (sibling == NULL)
-	   {
-	   sibling = elem;
-	   TtaPreviousSibling (&sibling);
-	   if (sibling == NULL)
-	      elem = TtaGetParent (elem);
-	   }
+	  sibling = elem;
+	  TtaNextSibling (&sibling);
+	  if (sibling == NULL)
+	    {
+	      sibling = elem;
+	      TtaPreviousSibling (&sibling);
+	      if (sibling == NULL)
+		elem = TtaGetParent (elem);
+	    }
 	}
-     while (sibling == NULL);
-     TtaDeleteTree (elem, destDoc);
-     /* restore previous chacking mode */
-     TtaSetStructureChecking (checkingMode, destDoc);
-     /* return the address of the first copied element */
-     *el = firstInserted;
-     }
+      while (sibling == NULL);
+      TtaDeleteTree (elem, destDoc);
+      /* restore previous chacking mode */
+      TtaSetStructureChecking (checkingMode, destDoc);
+      /* return the address of the first copied element */
+      *el = firstInserted;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -616,7 +617,7 @@ Document            document;
    Attribute		RelAttr, HrefAttr;
    AttributeType	attrType;
    int			length;
-   char			*text, *ptr;
+   char			*text, *ptr, *url;
    Document		includedDocument, newdoc;
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
@@ -651,24 +652,36 @@ Document            document;
 	   length = TtaGetTextAttributeLength (HrefAttr);
 	   text = TtaGetMemory (length + 1);
 	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	   /* ignore links to a particular position within a document */
 	   ptr = strrchr (text, '#');
-	   if (ptr == NULL)
-	     /* this link designate the whole document */
+	   url = text;
+	   if (ptr != NULL)
+	     {
+	       if (ptr == text)
+		 url = NULL;
+	       /* link to a particular position within a document */
+	       ptr[0] = EOS;
+	       ptr = &ptr[1];
+	     }
+
+	   if (url != NULL)
+	     /* this link designate an external document */
 	     {
 	       /* create a new document and loads the target document */
 	       includedDocument = TtaNewDocument ("HTML", "tmp");
-	       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), text);
-	       newdoc = GetHTMLDocument (text, NULL, includedDocument,
+	       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
+	       newdoc = GetHTMLDocument (url, NULL, includedDocument,
 					 document, DC_TRUE);
 	       if (newdoc != 0 && newdoc != document)
+		 {
 		   /* it's not the document itself */
 		   /* copy the target document at the position of the link */
-		   MoveDocumentBody (&next, document, newdoc,
+		   MoveDocumentBody (&next, document, newdoc, ptr,
 				     newdoc == includedDocument);
+		 }
 	       FreeDocumentResource (includedDocument);
 	       TtaCloseDocument (includedDocument);
 	     }
+	     
 	   TtaFreeMemory (text);
 	 }
        return (next);

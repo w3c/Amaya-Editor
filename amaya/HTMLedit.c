@@ -252,10 +252,13 @@ Element             el;
 	      {
 		if (url[i] == ' ' || url[i] == EOS)
 		  {
-		    found = (i-space > 3 || (i != space && url[i] == EOS));
+		    found = (i - space > 3 || (i != space && url[i] == EOS));
 		    if (found)
 		      {
 			/* url = the word */
+			if (i > space + 10)
+			  /* limit the word length */
+			  i = space + 10;
 			url[i] = EOS;
 			if (space != 0)
 			  strcpy (url, &url[space]);

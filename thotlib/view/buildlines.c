@@ -352,7 +352,7 @@ boolean             orgYComplete;
 	else
 	   pBox = pBoxInLine;
 
-	if (!pBoxInLine->BxAbstractBox->AbNotInLine)
+	if (!pBox->BxAbstractBox->AbNotInLine)
 	  {
 	    XMove (pBox, NULL, x - pBox->BxXOrg, frame);
 	    YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
@@ -1987,6 +1987,7 @@ int                *height;
 			  x = x + pLine->LiXMax - pLine->LiRealLength;
 		       /* Decale toutes les boites de la ligne */
 		       Align (pBox, pLine, x, frame, orgXComplete, orgYComplete);
+		       
 		    }
 	       }
 	     if (pLine->LiLastBox != NULL)
