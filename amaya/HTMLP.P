@@ -813,11 +813,11 @@ BOXES
 	END;
  Target_space: BEGIN
 	Content: (Graphics ' ');
-	HorizPos: Left = Enclosing . Left;
+	HorizPos: Left = Previous . Right;
 	VertPos: Top = Enclosing . Top;
-	Visibility: Enclosing =;
+	Visibility: 4;
 	Width: 1 px;
-	Height: 4 px;
+	Height: 1 px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
