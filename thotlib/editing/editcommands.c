@@ -1192,11 +1192,16 @@ char                c;
    if (document != 0)
      {
 	frame = GetWindowNumber (document, view);
+	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	if (pViewSel->VsBox != NULL &&
+	    pViewSel->VsBox->BxAbstractBox != NULL &&
+	    pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+	  /* nothing to do */
+	  return;
 	if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
 	  {
 	    /* Delete the current selection */
 	    CloseInsertion ();
-	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	    if (pViewSel->VsBox != NULL)
 	      {
 		pAb = pViewSel->VsBox->BxAbstractBox;
@@ -1205,14 +1210,15 @@ char                c;
 		  ||  pAb->AbLeafType == LtGraphics
 		  ||  pAb->AbLeafType == LtText)
 		{
-		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL) {
+		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL)
+		    {
 		      if (((*MenuActionList[CMD_DeleteSelection].User_Action) (
 			     MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
                           (MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
 		          (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-		  } else
-		     if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		        (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		    }
+		  else if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
+		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 		}
 	      else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
 		TtcPreviousChar (document, view);

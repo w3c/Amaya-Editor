@@ -1128,304 +1128,304 @@ char               *txt;
    boolean             foundString;
    boolean             error;
 
-
    error = FALSE;
-	 switch (ref)
-	       {
-		  case NumZoneTextSearch:
-		     /* Chaine a chercher */
-		     strcpy (pSearchedString, txt);
-		     if (strcmp (pSearchedString, pPrecedentString) != 0)
+   switch (ref)
+     {
+     case NumZoneTextSearch:
+       /* Chaine a chercher */
+       strcpy (pSearchedString, txt);
+       if (strcmp (pSearchedString, pPrecedentString) != 0)
+	 {
+	   ReplaceDone = FALSE;
+	   strcpy (pPrecedentString, pSearchedString);
+	 }
+       SearchedStringLen = strlen (pSearchedString);
+       break;
+     case NumZoneTextReplace:
+       /* Chaine a remplacer */
+       strcpy (pReplaceString, txt);
+       ReplaceStringLen = strlen (pReplaceString);
+       /* bascule automatiquement le remplacement */
+       if (!WithReplace && !searchDomain->SDocument->DocReadOnly)
+	 {
+	   WithReplace = TRUE;
+	   DoReplace = TRUE;
+	   TtaSetMenuForm (NumMenuReplaceMode, 1);
+	 }
+       break;
+     case NumToggleUpperEqualLower:
+       if (val == 0)
+	 /* toggle button UPPERCASE = lowercase */
+	 CaseEquivalent = !CaseEquivalent;
+       break;
+     case NumMenuReplaceMode:
+       /* sous-menu mode de remplacement */
+       if (searchDomain->SDocument->DocReadOnly)
+	 val = 0;
+       switch (val)
+	 {
+	 case 0:
+	   /* Sans remplacement */
+	   WithReplace = FALSE;
+	   AutoReplace = FALSE;
+	   DoReplace = FALSE;
+	   break;
+	 case 1:
+	   /* Remplacement a la demande */
+	   WithReplace = TRUE;
+	   AutoReplace = FALSE;
+	   DoReplace = TRUE;
+	   break;
+	 case 2:
+	   /* Remplacement automatique */
+	   WithReplace = TRUE;
+	   AutoReplace = TRUE;
+	   DoReplace = TRUE;
+	   break;
+	 }
+       break;
+     case NumFormSearchText:
+       /* Boutons de la feuille de dialogue */
+       TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
+       if (searchDomain->SDocument == NULL)
+	 {
+	   TtaDestroyDialogue (NumFormSearchText);
+	   return;
+	 }
+       if (searchDomain->SDocument->DocSSchema == NULL)
+	 return;
+       if (val == 2 && WithReplace && !StartSearch)
+	 DoReplace = FALSE;
+       else if (val == 0)
+	 /* Abandon de la recherche */
+	 return;
+
+       selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
+					  &pLastSel, &firstChar, &lastChar);
+       if (selectionOK)
+	 if (pDocSel != searchDomain->SDocument)
+	   selectionOK = FALSE;
+       if (!selectionOK && StartSearch)
+	 {
+	   /* Pas de selection -> recherche dans tout le document */
+	   pCurrEl = NULL;
+	 }
+       else if (pDocSel != searchDomain->SDocument)
+	 {
+	   /* pas de selection dans le document d'ou vient la commande */
+	   TtaDestroyDialogue (NumFormSearchText);
+	   return;
+	 }
+       else if (StartSearch)
+	 {
+	   pCurrEl = NULL;
+	 }
+       else if (searchDomain->SStartToEnd)
+	 {
+	   pCurrEl = pLastSel;
+	 }
+       else
+	 {
+	   pCurrEl = pFirstSel;
+	 }
+       
+       /* la recherche est demandee, on recupere les parametres */
+       if (ThotLocalActions[T_strsearchgetparams] != NULL)
+	 (*ThotLocalActions[T_strsearchgetparams]) (&error, searchDomain);
+       if (!error || SearchedStringLen != 0)
+	 {
+	   found = FALSE;
+	   if (SearchedStringLen == 0)
+	     {
+	       if (ThotLocalActions[T_strsearchonly] != NULL)
+		 (*ThotLocalActions[T_strsearchonly]) (pCurrEl, searchDomain, &found);
+	     }
+	   else
+	     /* on cherche une chaine de caracteres */
+	     /* eventuellement, avec remplacement */
+	     {
+	       pFirstSel = pCurrEl;
+	       do
+		 {
+		   stop = TRUE;
+		   /* on sortira de la boucle si on ne */
+		   /* trouve pas le texte cherche' */
+		   if (WithReplace && DoReplace && !StartSearch
+		       && TextOK
+		       && DocTextOK == searchDomain->SDocument
+		       && ElemTextOK == pFirstSel
+		       && FirstCharTextOK == firstChar
+		       && LastCharTextOK == lastChar)
+		     /* il faut faire un remplacement et on est sur le */
+		     /* texte cherche' */
+		     /* on ne remplace pas dans un sous-arbre en */
+		     /* lecture seule */
+		     if (ElementIsReadOnly (pFirstSel))
+		       TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
+				    TtaGetMessage (LIB, TMSG_EL_RO));
+		     else if (!pFirstSel->ElIsCopy && pFirstSel->ElText != NULL
+			      && pFirstSel->ElTerminal
+			      && pFirstSel->ElLeafType == LtText)
+		       /* on ne remplace pas dans une copie */
 		       {
-			  ReplaceDone = FALSE;
-			  strcpy (pPrecedentString, pSearchedString);
-		       }
-		     SearchedStringLen = strlen (pSearchedString);
-		     break;
-		  case NumZoneTextReplace:
-		     /* Chaine a remplacer */
-		     strcpy (pReplaceString, txt);
-		     ReplaceStringLen = strlen (pReplaceString);
-		     /* bascule automatiquement le remplacement */
-		     if (!WithReplace)
-		       {
-			  WithReplace = TRUE;
-			  DoReplace = TRUE;
-			  TtaSetMenuForm (NumMenuReplaceMode, 1);
-		       }
-		     break;
-		  case NumToggleUpperEqualLower:
-		     if (val == 0)
-			/* toggle button UPPERCASE = lowercase */
-			CaseEquivalent = !CaseEquivalent;
-		     break;
-		  case NumMenuReplaceMode:
-		     /* sous-menu mode de remplacement */
-		     switch (val)
+			 found = TRUE;
+			 if (ThotLocalActions[T_strsearcheletattr] != NULL)
+			   (*ThotLocalActions[T_strsearcheletattr]) (pFirstSel, &found);
+			 if (found)
 			   {
-			      case 0:
-				 /* Sans remplacement */
-				 WithReplace = FALSE;
-				 AutoReplace = FALSE;
-				 DoReplace = FALSE;
-				 break;
-			      case 1:
-				 /* Remplacement a la demande */
-				 WithReplace = TRUE;
-				 AutoReplace = FALSE;
-				 DoReplace = TRUE;
-				 break;
-			      case 2:
-				 /* Remplacement automatique */
-				 WithReplace = TRUE;
-				 AutoReplace = TRUE;
-				 DoReplace = TRUE;
-				 break;
+			     /* effectue le remplacement du texte */
+			     ReplaceString (searchDomain->SDocument,
+					    pFirstSel, firstChar, SearchedStringLen,
+					    pReplaceString, ReplaceStringLen,
+					    !AutoReplace);
+			     ReplaceDone = TRUE;
+			     StartSearch = FALSE;
+			     /* met eventuellement a jour la borne de */
+			     /* fin du domaine de recherche */
+			     if (pFirstSel == searchDomain->SEndElement)
+			       /* la borne est dans l'element ou` on a */
+			       /* fait le remplacement */
+			       if (searchDomain->SEndChar != 0)
+				 /* la borne n'est pas a la fin de */
+				 /* l'element, on decale la borne */
+				 searchDomain->SEndChar += ReplaceStringLen - SearchedStringLen;
+			     /* recupere les parametres de la nouvelle */
+			     /* chaine */
+			     if (!AutoReplace)
+			       selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel,
+								  &firstChar, &lastChar);
 			   }
-		     break;
-		  case NumFormSearchText:
-		     /* Boutons de la feuille de dialogue */
-		     TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
-				  " ");
-		     if (searchDomain->SDocument == NULL)
-			{
-			TtaDestroyDialogue (NumFormSearchText);
-			return;
-			}
-		     if (searchDomain->SDocument->DocSSchema == NULL)
-			return;
-		     if (val == 2 && WithReplace && !StartSearch)
-			DoReplace = FALSE;
-		     else if (val == 0)
-			/* Abandon de la recherche */
-			return;
-
-		     selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
-					&pLastSel, &firstChar, &lastChar);
-		     if (selectionOK)
-			if (pDocSel != searchDomain->SDocument)
-			   selectionOK = FALSE;
-		     if (!selectionOK && StartSearch)
-		       {
-			  /* Pas de selection -> recherche dans tout le document */
-			  pCurrEl = NULL;
 		       }
-		     else if (pDocSel != searchDomain->SDocument)
-		       {
-			  /* pas de selection dans le document d'ou vient la commande */
-			  TtaDestroyDialogue (NumFormSearchText);
-			  return;
-		       }
-		     else if (StartSearch)
-		       {
-			  pCurrEl = NULL;
-		       }
-		     else if (searchDomain->SStartToEnd)
-		       {
-			  pCurrEl = pLastSel;
-		       }
-		     else
-		       {
-			  pCurrEl = pFirstSel;
-		       }
-
-		     /* la recherche est demandee, on recupere les parametres */
-		     if (ThotLocalActions[T_strsearchgetparams] != NULL)
-			(*ThotLocalActions[T_strsearchgetparams]) (&error, searchDomain);
-		     if (!error || SearchedStringLen != 0)
-		       {
-			  found = FALSE;
-			  if (SearchedStringLen == 0)
-			    {
-			       if (ThotLocalActions[T_strsearchonly] != NULL)
-				  (*ThotLocalActions[T_strsearchonly]) (pCurrEl, searchDomain, &found);
-			    }
-			  else
-			     /* on cherche une chaine de caracteres */
-			     /* eventuellement, avec remplacement */
-			    {
-			       pFirstSel = pCurrEl;
-			       do
-				 {
-				    stop = TRUE;
-				    /* on sortira de la boucle si on ne */
-				    /* trouve pas le texte cherche' */
-				    if (WithReplace && DoReplace && !StartSearch
-					&& TextOK
-				     && DocTextOK == searchDomain->SDocument
-					&& ElemTextOK == pFirstSel
-					&& FirstCharTextOK == firstChar
-					&& LastCharTextOK == lastChar)
-				       /* il faut faire un remplacement et on est sur le */
-				       /* texte cherche' */
-				       /* on ne remplace pas dans un sous-arbre en */
-				       /* lecture seule */
-				       if (ElementIsReadOnly (pFirstSel))
-					  TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
-					   TtaGetMessage (LIB, TMSG_EL_RO));
-				       else if (!pFirstSel->ElIsCopy && pFirstSel->ElText != NULL
-						&& pFirstSel->ElTerminal
-					 && pFirstSel->ElLeafType == LtText)
-					  /* on ne remplace pas dans une copie */
-					 {
-					    found = TRUE;
-					    if (ThotLocalActions[T_strsearcheletattr] != NULL)
-					       (*ThotLocalActions[T_strsearcheletattr]) (pFirstSel, &found);
-					    if (found)
-					      {
-						 /* effectue le remplacement du texte */
-						 ReplaceString (searchDomain->SDocument,
-								pFirstSel, firstChar, SearchedStringLen,
-								pReplaceString, ReplaceStringLen,
-							      !AutoReplace);
-						 ReplaceDone = TRUE;
-						 StartSearch = FALSE;
-						 /* met eventuellement a jour la borne de */
-						 /* fin du domaine de recherche */
-						 if (pFirstSel == searchDomain->SEndElement)
-						    /* la borne est dans l'element ou` on a */
-						    /* fait le remplacement */
-						    if (searchDomain->SEndChar != 0)
-						       /* la borne n'est pas a la fin de */
-						       /* l'element, on decale la borne */
-						       searchDomain->SEndChar += ReplaceStringLen - SearchedStringLen;
-						 /* recupere les parametres de la nouvelle */
-						 /* chaine */
-						 if (!AutoReplace)
-						    selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel,
-						     &firstChar, &lastChar);
-					      }
-					 }
-
-				    do
-				      {
-					 /*Recherche de la prochaine occurence du texte cherche' */
-					 if (pFirstSel == NULL)
-					   {
-					      /* debut de recherche */
-					      if (searchDomain->SStartToEnd)
-						{
-						   pFirstSel = searchDomain->SStartElement;
-						   firstChar = searchDomain->SStartChar;
-						   if (pFirstSel == NULL)
-						      pFirstSel = searchDomain->SDocument->DocRootElement;
-						}
-					      else
-						{
-						   pFirstSel = searchDomain->SEndElement;
-						   firstChar = searchDomain->SEndChar;
-						}
-					   }
-					 else if (searchDomain->SStartToEnd)
-					   {
-					      pFirstSel = pLastSel;
-					      firstChar = lastChar + 1;
-					   }
-
-					 if (searchDomain->SStartToEnd)
-					   {
-					      pLastSel = searchDomain->SEndElement;
-					      lastChar = searchDomain->SEndChar;
-					   }
-					 else
-					   {
-					      pLastSel = searchDomain->SStartElement;
-					      lastChar = searchDomain->SStartChar;
-					   }
-					 found = SearchText (searchDomain->SDocument,
-					      &pFirstSel, &firstChar, &pLastSel,
-					      &lastChar, searchDomain->SStartToEnd,
-					      CaseEquivalent, pSearchedString,
-					      SearchedStringLen);
-					 if (found)
-					    lastChar--;
-
-					 foundString = found;
-					 if (found)
-					    /* on a trouve' la chaine cherchee */
-					   {
-					      stop = FALSE;
-					      if (ThotLocalActions[T_strsearcheletattr] != NULL)
-						 (*ThotLocalActions[T_strsearcheletattr]) (pFirstSel, &found);
-					   }
-				      }
-				    while (foundString && !found);
-
-				    if (found)
-				      {
-					 /* on a trouve la chaine recherchee dans le bon type */
-					 /* d'element et avec le bon attribut */
-					 if (!AutoReplace)
-					   {
-					      /* selectionne la chaine trouvee */
-					      SelectStringWithEvent (searchDomain->SDocument,
-								     pFirstSel, firstChar, lastChar);
-					      /* arrete la boucle de recherche */
-					      stop = TRUE;
-					      lastChar++;
-					   }
-					 TextOK = TRUE;
-					 DocTextOK = searchDomain->SDocument;
-					 ElemTextOK = pFirstSel;
-					 FirstCharTextOK = firstChar;
-					 LastCharTextOK = lastChar;
-				      }
-				    else
-				      {
-					 TextOK = FALSE;
-					 stop = TRUE;
-					 if (searchDomain->SWholeDocument)
-					    /* il faut rechercher dans tout le document */
-					    /* cherche l'arbre a traiter apres celui ou` on */
-					    /* n'a pas trouve' */
-					    if (NextTree (&pFirstSel, &firstChar, searchDomain))
-					      {
-						 stop = FALSE;
-						 pLastSel = pFirstSel;
-						 lastChar = 0;
-					      }
-				      }
-				    StartSearch = FALSE;
-				 }
-			       while (!stop);
-			    }
-			  if (found)
-			    {
-			       /* on a trouve' et selectionne'. */
-			       if (!AutoReplace)
-				  /* On prepare la recherche suivante */
-				  if (searchDomain->SStartToEnd)
-				     /* After selection */
-				     TtaSetMenuForm (NumMenuOrSearchText, 2);
-				  else
-				     /* Before selection */
-				     TtaSetMenuForm (NumMenuOrSearchText, 0);
-			       StartSearch = FALSE;
-			       if (ThotLocalActions[T_strsearchshowvalattr] != NULL)
-				  (*ThotLocalActions[T_strsearchshowvalattr]) ();
-			    }
-			  else
-			     /* on n'a pas trouve' */
-			    {
-			       if (WithReplace && ReplaceDone)
-				  /* message "Plus de remplacement" */
-				  TtaNewLabel (NumLabelAttributeValue,
-					       NumFormSearchText,
-					       TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE));
-			       else
-				  /* message "Pas trouve'" */
-				  TtaNewLabel (NumLabelAttributeValue,
-					       NumFormSearchText,
-				       TtaGetMessage (LIB, TMSG_NOT_FOUND));
-			       StartSearch = TRUE;
-			    }
-		       }
-		     break;
-		  default:
-		     if (ThotLocalActions[T_strsearchretmenu] != NULL)
-			(*ThotLocalActions[T_strsearchretmenu]) (ref, val, txt, searchDomain);
-		     break;
-	       }
+		   
+		   do
+		     {
+		       /*Recherche de la prochaine occurence du texte cherche' */
+		       if (pFirstSel == NULL)
+			 {
+			   /* debut de recherche */
+			   if (searchDomain->SStartToEnd)
+			     {
+			       pFirstSel = searchDomain->SStartElement;
+			       firstChar = searchDomain->SStartChar;
+			       if (pFirstSel == NULL)
+				 pFirstSel = searchDomain->SDocument->DocRootElement;
+			     }
+			   else
+			     {
+			       pFirstSel = searchDomain->SEndElement;
+			       firstChar = searchDomain->SEndChar;
+			     }
+			 }
+		       else if (searchDomain->SStartToEnd)
+			 {
+			   pFirstSel = pLastSel;
+			   firstChar = lastChar + 1;
+			 }
+		       
+		       if (searchDomain->SStartToEnd)
+			 {
+			   pLastSel = searchDomain->SEndElement;
+			   lastChar = searchDomain->SEndChar;
+			 }
+		       else
+			 {
+			   pLastSel = searchDomain->SStartElement;
+			   lastChar = searchDomain->SStartChar;
+			 }
+		       found = SearchText (searchDomain->SDocument,
+					   &pFirstSel, &firstChar, &pLastSel,
+					   &lastChar, searchDomain->SStartToEnd,
+					   CaseEquivalent, pSearchedString,
+					   SearchedStringLen);
+		       if (found)
+			 lastChar--;
+		       
+		       foundString = found;
+		       if (found)
+			 /* on a trouve' la chaine cherchee */
+			 {
+			   stop = FALSE;
+			   if (ThotLocalActions[T_strsearcheletattr] != NULL)
+			     (*ThotLocalActions[T_strsearcheletattr]) (pFirstSel, &found);
+			 }
+		     }
+		   while (foundString && !found);
+		   
+		   if (found)
+		     {
+		       /* on a trouve la chaine recherchee dans le bon type */
+		       /* d'element et avec le bon attribut */
+		       if (!AutoReplace)
+			 {
+			   /* selectionne la chaine trouvee */
+			   SelectStringWithEvent (searchDomain->SDocument,
+						  pFirstSel, firstChar, lastChar);
+			   /* arrete la boucle de recherche */
+			   stop = TRUE;
+			   lastChar++;
+			 }
+		       TextOK = TRUE;
+		       DocTextOK = searchDomain->SDocument;
+		       ElemTextOK = pFirstSel;
+		       FirstCharTextOK = firstChar;
+		       LastCharTextOK = lastChar;
+		     }
+		   else
+		     {
+		       TextOK = FALSE;
+		       stop = TRUE;
+		       if (searchDomain->SWholeDocument)
+			 /* il faut rechercher dans tout le document */
+			 /* cherche l'arbre a traiter apres celui ou` on */
+			 /* n'a pas trouve' */
+			 if (NextTree (&pFirstSel, &firstChar, searchDomain))
+			   {
+			     stop = FALSE;
+			     pLastSel = pFirstSel;
+			     lastChar = 0;
+			   }
+		     }
+		   StartSearch = FALSE;
+		 }
+	       while (!stop);
+	     }
+	   if (found)
+	     {
+	       /* on a trouve' et selectionne'. */
+	       if (!AutoReplace)
+		 /* On prepare la recherche suivante */
+		 if (searchDomain->SStartToEnd)
+		   /* After selection */
+		   TtaSetMenuForm (NumMenuOrSearchText, 2);
+		 else
+		   /* Before selection */
+		   TtaSetMenuForm (NumMenuOrSearchText, 0);
+	       StartSearch = FALSE;
+	       if (ThotLocalActions[T_strsearchshowvalattr] != NULL)
+		 (*ThotLocalActions[T_strsearchshowvalattr]) ();
+	     }
+	   else
+	     /* on n'a pas trouve' */
+	     {
+	       if (WithReplace && ReplaceDone)
+		 /* message "Plus de remplacement" */
+		 TtaNewLabel (NumLabelAttributeValue,
+			      NumFormSearchText,
+			      TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE));
+	       else
+		 /* message "Pas trouve'" */
+		 TtaNewLabel (NumLabelAttributeValue,
+			      NumFormSearchText,
+			      TtaGetMessage (LIB, TMSG_NOT_FOUND));
+	       StartSearch = TRUE;
+	     }
+	 }
+       break;
+     default:
+       if (ThotLocalActions[T_strsearchretmenu] != NULL)
+	 (*ThotLocalActions[T_strsearchretmenu]) (ref, val, txt, searchDomain);
+       break;
+     }
 }
 
 /*----------------------------------------------------------------------

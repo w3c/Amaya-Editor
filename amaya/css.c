@@ -364,22 +364,19 @@ CSSInfoPtr          css;
       buffer[buf.st_size] = 0;
       fclose (res);
 
-      if (oldcss == NULL && css == NULL)
-	{
-	  /* allocate a new Presentation structure */
-	  css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
-	  /* apply CSS rules */
-	  ReadCSSRules (0, doc, css, buffer);
-	}
-      else if (oldcss != NULL || !oldcss->documents[doc])
+      if (oldcss == NULL)
+	/* allocate a new Presentation structure */
+	oldcss = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+
+      if (css != NULL)
+	/* apply CSS rules in current Presentation structure (import) */
+	ReadCSSRules (0, doc, css, buffer);
+      else if (!oldcss->documents[doc])
 	{
 	  /* apply CSS rules */
 	  oldcss->documents[doc] = TRUE;
 	  ReadCSSRules (oldcss->doc, doc, oldcss, buffer);
 	}
-      else if (css != NULL)
-	/* apply CSS rules */
-	ReadCSSRules (0, doc, css, buffer);
 	
       TtaFreeMemory (buffer);
     }
