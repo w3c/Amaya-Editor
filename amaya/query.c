@@ -350,7 +350,6 @@ AHTReqContext      *me;
 
 	if (me->content_type)
 	  TtaFreeMemory (me->content_type);
-   
 	if (me->mode & AMAYA_FORM_POST)
 	  TtaFreeMemory (me->mem_ptr);
 
@@ -778,43 +777,38 @@ int                 status;
 
    /* copy the content_type */  
    content_type = request->anchor->content_type->name; 
-   if (content_type && content_type [0] != EOS)  
+   if (content_type && content_type [0] != EOS)
      {
-        /* libwww gives www/unknown when it gets an error. As this is 
-           an HTML test, we force the type to text/html */
-	if (!strcmp (content_type, "www/unknown"))
-          {
-	    if (me->content_type == NULL)
-	      me->content_type = TtaStrdup ("text/html");
-	    else
-	      strcpy (me->content_type, "text/html");
-          }
-        else 
-          {
-	    if (me->content_type == NULL)
-	      me->content_type = TtaStrdup (content_type);
-	    else
-	      {
-		strncpy (me->content_type, content_type, NAME_LENGTH -1);
-		me->content_type [NAME_LENGTH-1] = '\0';
-	      }
-           
-           /* Content-Type can be specified by a server's admin. To be on
-              the safe side, we normalize its case */
-           ConvertToLowerCase (me->content_type);
-          } 
+       /* libwww gives www/unknown when it gets an error. As this is 
+	  an HTML test, we force the type to text/html */
+       if (!strcmp (content_type, "www/unknown"))
+	 me->content_type = TtaStrdup ("text/html");
+       else
+	 me->content_type = TtaStrdup (content_type);
+
+       /* Content-Type can be specified by an httpd  server's admin. To be on
+	  the safe side, we normalize its case */
+       ConvertToLowerCase (me->content_type);
+
 #ifdef DEBUG_LIBWWW
         fprintf (stderr, "content type is: %s\n", me->content_type);
 #endif /* DEBUG_LIBWWW */
-     }
- 
+     } 
+
+   /* to avoid a hangup during downloading of css files */
+   if (AmayaAlive && !strcmp (me->content_type, "text/css"))
+       TtaSetStatus (me->docid, 1, 
+		     TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
+		     me->status_urlName);
+
    /* don't remove or Xt will hang up during the PUT */
    if (AmayaAlive  && ((me->method == METHOD_POST) ||
 		       (me->method == METHOD_PUT)))
      {
        PrintTerminateStatus (me, status);
      } 
-   
+
+       
    ProcessTerminateRequest (request, response, context, status);
    return HT_OK;
 }
@@ -1518,6 +1512,7 @@ char 	     *content_type;
    AHTReqContext      *me;
    char               *ref;
    int                 status, l;
+   int                 tempsubdir;
 
    if (urlName == NULL || outputfile == NULL) {
       /* no file to be loaded */
@@ -1545,8 +1540,13 @@ char 	     *content_type;
       return HT_ERROR;
    }
 
+   /* we store CSS in subdir named 0; all the other files go to a subidr
+      named after their own docid */
+   
+   tempsubdir = (mode & AMAYA_LOAD_CSS) ? 0 : docid;
+
    /*create a tempfilename */
-   sprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, DIR_SEP, docid, DIR_SEP, object_counter);
+   sprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, DIR_SEP, tempsubdir, DIR_SEP, object_counter);
 
    /* update the object_counter */
    object_counter++;
@@ -1629,6 +1629,7 @@ char 	     *content_type;
    } else {
      me->outputfile = outputfile;
      me->urlName = urlName;
+     me->content_type = content_type;
      HTRequest_setPreemptive (me->request, YES);
    }
 #  else /* !_WINDOWS */
@@ -1655,6 +1656,13 @@ char 	     *content_type;
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
    TtaFreeMemory (ref);
+
+   if (mode & AMAYA_NOCACHE) 
+     {
+      HTRequest_addGnHd (me->request, HT_G_PRAGMA_NO_CACHE);
+      HTRequest_addCacheControl (me->request, "no-cache", "");
+      HTAnchor_clearHeader(me->anchor);
+     }
 
    if (mode & AMAYA_FORM_POST) {
       HTAnchor_setFormat ((HTParentAnchor *) me->anchor, HTAtom_for ("application/x-www-form-urlencoded"));
@@ -1960,6 +1968,13 @@ char               *outputfile;
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlName);
 
+   if (mode & AMAYA_NOCACHE)
+     {
+      HTRequest_addGnHd (me->request, HT_G_PRAGMA_NO_CACHE);
+      HTRequest_addCacheControl (me->request, "no-cache", "");
+      HTAnchor_clearHeader(me->anchor);
+     }
+
    /* Set the Content-Type of the file we are uploading */
    HTAnchor_setFormat ((HTParentAnchor *) me->anchor,
 		       AHTGuessAtom_for (me->urlName, contentType));
@@ -1970,6 +1985,7 @@ char               *outputfile;
    ChopURL (me->status_urlName, me->urlName);
    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
 		     me->status_urlName);
+
    status = HTLoadAbsolute (urlName, me->request);
 
 #ifndef _WINDOWS

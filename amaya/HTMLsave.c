@@ -469,7 +469,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
 #ifdef AMAYA_JAVA
   res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
 #else /* AMAYA_JAVA */
-  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC, filetype, NULL, NULL);
+  res = PutObjectWWW (doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
 #endif /* AMAYA_JAVA */
   if (res)
     /* The HTTP PUT method failed ! */
@@ -486,7 +486,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
   res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
 		      NULL, NULL, NULL, NULL, NO, NULL);
 #else /* AMAYA_JAVA */
-  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES, NULL);
+  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE, NULL, NULL, NULL, NULL, YES, NULL);
 #endif /* AMAYA_JAVA */
   if (res)
     {

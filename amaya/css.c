@@ -297,7 +297,8 @@ CSSInfoPtr          css;
 	  if (oldcss == NULL)
 	    {
 	      /* the document is not loaded yet */
-	      toparse = GetObjectWWW (0, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
+	      /* changed this to doc */
+	      toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
 	      if (toparse || tempfile[0] == EOS || !TtaFileExist (tempfile))
 		{
 		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);

@@ -1427,14 +1427,11 @@ View                view;
    char               *tempfile;
    char               *pathname;
    char               *documentname;
-   char                content_type[NAME_LENGTH];
    int                 toparse;
 
    if (DocumentURLs[(int) document] == NULL)
       /* the document has not been loaded yet */
       return;
-
-   content_type[0] = '\0';
 
    /* abort all current exchanges concerning this document */
    StopTransfer (document, 1);
@@ -1480,12 +1477,12 @@ View                view;
 #ifdef AMAYA_JAVA
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
 			       AMAYA_SYNC | AMAYA_NOCACHE,
-			       NULL, NULL, NULL, NULL, YES, &content_type[0]);
+			       NULL, NULL, NULL, NULL, YES, NULL);
 #else /* AMAYA_JAVA */
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
-			       AMAYA_ASYNC,
+			       AMAYA_ASYNC | AMAYA_NOCACHE,
 			       NULL, NULL, (void *) Reload_callback, 
-			       (void *) documentname, YES, (char *) content_type);
+			       (void *) documentname, YES, NULL);
 #endif /* AMAYA_JAVA */
      }
    else if (TtaFileExist (pathname))

@@ -309,7 +309,7 @@ int                 status;
 	  me->outputfile[0] = EOS;
 	}
     }
-
+  
 #ifdef _WINDOWS
    /* we erase the context if we're dealing with an asynchronous request */
   if ((me->mode & AMAYA_ASYNC) ||
