@@ -46,11 +46,6 @@ typedef struct stack_point
 StackPoint;
 static StackPoint   stack[MAX_STACK];
 static int          stack_deep;
-static DWORD        fontLangInfo = -1;
-static int          SameBox = 0; /* 1 if the text is in the same box */
-static int          NbWhiteSp;
-
-extern BOOL autoScroll;
 extern int          LastPageNumber, LastPageWidth, LastPageHeight;
 
 int                 X, Y;
@@ -241,8 +236,8 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
    hOldFont = WinLoadFont (TtPrinterDC, font);
    TextOut (TtPrinterDC, x, y, (USTRING) str, 1);   
    SelectObject (TtPrinterDC, hOldFont);
-   DeleteObject (currentActiveFont);
-   currentActiveFont = (HFONT)0;
+   DeleteObject (ActiveFont);
+   ActiveFont = (HFONT)0;
 #else /* _WIN_PRINT */
    WIN_GetDeviceContext (frame);
    SetTextColor (TtDisplay, ColorPixel (fg));
@@ -252,8 +247,8 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
    SelectClipRgn (TtDisplay, clipRgn);
    TextOut (TtDisplay, x, y, (USTRING) str, 1);
    SelectObject (TtDisplay, hOldFont);
-   DeleteObject (currentActiveFont);
-   currentActiveFont = (HFONT)0;
+   DeleteObject (ActiveFont);
+   ActiveFont = (HFONT)0;
    WIN_ReleaseDeviceContext ();
 
 #endif /* _WIN_PRINT */
@@ -262,293 +257,97 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
 /*----------------------------------------------------------------------
   DrawString draw a char string of lg chars beginning at buff[i].
   Drawing starts at (x, y) in frame and using font.
-  lgboite gives the width of the final box or zero,
+  boxWidth gives the width of the final box or zero,
   this is used only by the thot formmating engine.
   bl indicates taht there is a space before the string
   hyphen indicates whether an hyphen char has to be added.
-  debutbloc is 1 if the text is at a paragraph beginning
+  startABlock is 1 if the text is at a paragraph beginning
   (no justification of first spaces).
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
-		ptrfont font, int lgboite, int bl, int hyphen, int debutbloc,
+		ptrfont font, int boxWidth, int bl, int hyphen, int startABlock,
 		int fg, int shadow)
 {
-   STRING              ptcar;
-   int                 j, width;
-   SIZE                size;
-   HFONT               hOldFont;
-#ifdef _WIN_PRINT
-   int                 encoding, NonJustifiedWhiteSp;
-#else  /* _WIN_PRINT */
-   RECT                rect;
-   UINT                outOpt; 
+  HDC                 display;
+  HFONT               hOldFont;
+  STRING              ptcar;
+  SIZE                size;
+  RECT                rect;
+  UINT                outOpt; 
+  int                 j, width;
 #ifdef _I18N_
-   GCP_RESULTS         results;
-   USHORT              auGlyphs [2000];
-   CHAR_T              szNewText [2000];
-   UINT                infoFlag;
-   int                 anDX [2000];
+  GCP_RESULTS         results;
+  USHORT              auGlyphs [2000];
+  CHAR_T              szNewText [2000];
+  UINT                infoFlag;
+  int                 anDX [2000];
 #endif /* _I18N_ */
-#endif /* _WIN_PRINT */
+
+  if (lg <= 0)
+    return 0;
 
 #ifdef _WIN_PRINT
-   encoding = 0;
-   if (y < 0)
-      return 0;
+  if (y < 0)
+    return 0;
+  display = TtPrinterDC;
+#else /* _WIN_PRINT */
+  if (FrRef[frame] == NULL)
+    return 0;
+  WIN_GetDeviceContext (frame);
+  display = TtDisplay;
+  SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
 
-#ifdef _WIN_PRINT
-   y += FrameTable[frame].FrTopMargin;
-   /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
-   /* and equal to 0 if a justified space is to be printed */
-
-   NonJustifiedWhiteSp = debutbloc;
-   /* Is this a new box ? */
-   if (SameBox == 0)
-     {
-      /* Beginning of a new box */
-      SameBox = 1;
-      X = x;
-      Y = y + FontBase (font);
-      NbWhiteSp = 0;
-
-      if (fg >= 0 )
-	  {
-       /* Do we need to change the current color ? */
-	   SetTextColor (TtPrinterDC, ColorPixel (fg));
-	   SetBkMode (TtPrinterDC, TRANSPARENT);
-	   /* Do we need to change the current font ? */
-	   hOldFont = WinLoadFont (TtPrinterDC, font);
-	  }
-     }
-
-   if (shadow)
-     {
-       /* replace each character by a star */
-       j = 0;
-       ptcar = TtaAllocString ((size_t) (lg + 1));
-       while (j < lg)
-	     ptcar[j++] = '*';
-       ptcar[lg] = EOS;
-       bl = 0;
-     }
-   else
-     ptcar = &buff[i - 1];
-
-     /* Add the justified white space */
-     if (ptcar[0] == '\212' || ptcar[0] == '\12')
-	 {
-         /* skip the Control return char */
-         ptcar++;
-         lg--;
-	 }
-     if (fg >= 0)
-	 {
-          SetMapperFlags (TtPrinterDC, 1);
-	  GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
-	  width = size.cx;
-	  if (lg > 0)
-	    if (!TextOut (TtPrinterDC, x, y, (USTRING) ptcar, lg))
-	      WinErrorBox (NULL, TEXT("DrawString (1)"));
-	  
-	  if (hyphen) /* draw the hyphen */
-	    if (!TextOut (TtPrinterDC, x + width, y, TEXT("\255"), 1))
-	      WinErrorBox (NULL, TEXT("DrawString (2)"));
-	 }
-     if (lgboite != 0)
-       SameBox = 0;
-   if (lg > 0)
-     {
-       /* compute the width of the string */
-       width = 0;
-       j = 0;
-       while (j < lg)
-	 width += CharacterWidth (ptcar[j++], font);
-       return (width);
-     } 
-   
-   if (shadow)
-     TtaFreeMemory (ptcar);
-   return (0);
-   
-#else  /* _WIN_PRINT */
-   if (lg > 0 && FrRef[frame] != None)
-     {
-      /* Dealing with BR tag for windows */
-      WIN_GetDeviceContext (frame);
-      SetMapperFlags (TtDisplay, 1);
-      hOldFont = WinLoadFont (TtDisplay, font);
-      ptcar = &buff[i - 1];
-      GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
-      width = size.cx;
-
-      if (fg < 0)
-	/* color is transparent. Don't do anything */
-        return (width);
-      SelectClipRgn (TtDisplay, clipRgn);
-      SetTextColor (TtDisplay, ColorPixel (fg));
-      SetBkMode (TtDisplay, TRANSPARENT);
-      if (!ShowSpace || shadow)
+  SetMapperFlags (display, 1);
+  hOldFont = WinLoadFont (display, font);
+  ptcar = TtaAllocString (lg + 1);
+  if (shadow)
+    {
+      /* replace each character by a star */
+      j = 0;
+      while (j < lg)
+	ptcar[j++] = TEXT('*');
+      ptcar[lg] = EOS;
+    }
+  else
+    {
+      if (buff[i - 1] == '\212' || buff[i - 1] == '\12')
 	{
-	 /* draw the spaces */
-         ptcar = TtaAllocString (lg + 1);
-         if (shadow)
-	   {
-	    /* replace each character by a star */
-	    j = 0;
-	    while (j < lg)
-	      ptcar[j++] = TEXT('*');
-	    ptcar[lg] = EOS;
-	   }
-	 else
-	   {
-	    ustrncpy (ptcar, &buff[i - 1], lg);
-	    ptcar[lg] = EOS;
-	    SpaceToChar (ptcar);	/* substitute spaces */
-	   } 
-         GetClientRect (FrRef [frame], &rect);
-         outOpt = 0;
-
-#if 0 /* ifdef _I18N_ */
-         fontLangInfo = GetFontLanguageInfo (TtDisplay);
-
-         if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-            WinErrorBox (NULL, TEXT("DrawString (1)"));
-
-         if (fontLangInfo & GCP_DIACRITIC)
-            infoFlag |= GCP_DIACRITIC;
-         
-         if (fontLangInfo & GCP_GLYPHSHAPE)
-	   {
-            /* The font/language contains multiple glyphs per code point or
-	       per code point combination (supports shaping and/or ligation),
-	       and the font contains advanced glyph tables to provide extra
-	       glyphs for the extra shapes. If this value is given,
-	       the lpGlyphs array must be used with the GetCharacterPlacement
-	       function and the ETO_GLYPHINDEX value must be passed to the
-	       ExtTextOut function when the string is drawn. */
-	     infoFlag |= GCP_GLYPHSHAPE;
-	   } 
-         
-         if (fontLangInfo & GCP_USEKERNING)
-            /* The font contains a kerning table which can be used to
-	       provide better spacing between the characters and glyphs. */
-            infoFlag |= GCP_USEKERNING;
-         
-         if (fontLangInfo & GCP_REORDER)
-            /* The language requires reordering for display--for example,
-	       Hebrew or Arabic. */
-            infoFlag |= GCP_CLASSIN;
-
-         infoFlag |= GCP_DISPLAYZWG;
-
-         results.lStructSize = sizeof (results);
-         results.lpOutString = &szNewText[0];
-         results.lpOrder     = NULL;
-         results.lpDx        = &anDX[0];
-         results.lpCaretPos  = NULL;
-         results.lpClass     = NULL;
-         results.lpGlyphs    = &auGlyphs[0];
-         results.nGlyphs     = 2000;
-         results.nMaxFit     = 0;
-
-         GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar),
-				GCP_MAXEXTENT, &results, infoFlag);
-
-         ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt,
-		     &rect, (USTRING) szNewText, lg, anDX); 
-#endif /* else  /* !_I18N_ */
-         /* ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, 0,
-	                &rect, (USTRING) ptcar, lg, NULL);  */
-         TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin,
-		  (USTRING) ptcar, lg);
-/* #        endif /* !_I18N_ */
-         TtaFreeMemory (ptcar);
+	  /* skip the Control return char */
+	  i++;
+	  lg--;
 	}
-      else
-	{
-	 if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12'))
-	   {
-	    /* skip the Control return char */
-	    ptcar++;
-	    lg--;
-	   }
-	 if (lg != 0)
-	   {
-	    outOpt = 0;
-
-#if 0 /* ifdef _I18N_ */
-	    fontLangInfo = GetFontLanguageInfo (TtDisplay);
-
-	    if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-	      WinErrorBox (NULL, TEXT("DrawString (2)"));
-
-	    if (fontLangInfo & GCP_DIACRITIC)
-	      infoFlag |= GCP_DIACRITIC;
-	    
-	    if (fontLangInfo & GCP_GLYPHSHAPE)
-	      {
-	       /* The font/language contains multiple glyphs per code point
-		  or per code point combination (supports shaping and/or
-		  ligation), and the font contains advanced glyph tables
-		  to provide extra glyphs for the extra shapes. If this
-		  value is given, the lpGlyphs array must be used with
-		  the GetCharacterPlacement function and the ETO_GLYPHINDEX
-		  value must be passed to the ExtTextOut function when
-		  the string is drawn. */
-		infoFlag |= GCP_GLYPHSHAPE;
-	      }  
-         
-	    if (fontLangInfo & GCP_USEKERNING)
-	      /* The font contains a kerning table which can be used to
-		 provide better spacing between the characters and glyphs. */
-	      infoFlag |= GCP_USEKERNING;
-         
-	    if (fontLangInfo & GCP_REORDER)
-	      /* The language requires reordering for display--for example,
-		 Hebrew or Arabic. */
-	      infoFlag |= GCP_CLASSIN;
-
-	    infoFlag |= GCP_DISPLAYZWG;
-
-	    results.lStructSize = sizeof (results);
-	    results.lpOutString = &szNewText[0];
-	    results.lpOrder     = NULL;
-	    results.lpDx        = &anDX[0];
-	    results.lpCaretPos  = NULL;
-	    results.lpClass     = NULL;
-	    results.lpGlyphs    = &auGlyphs[0];
-	    results.nGlyphs     = 2000;
-	    results.nMaxFit     = 0;
-	    GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar),
-				   GCP_MAXEXTENT, &results, infoFlag);
-
-	    ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin,
-			outOpt, &rect, (USTRING) szNewText, lg, anDX);
-#endif /* 00000 else  /* !_I18N_ */ */
-	    TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin,
-		     (USTRING) ptcar, lg);
-/* #               endif /* !_18N_ */
-	   } 
-	} 
- 
+      ustrncpy (ptcar, &buff[i - 1], lg);
+      ptcar[lg] = EOS;
+      if (!ShowSpace)
+	SpaceToChar (ptcar);	/* substitute spaces */
+    }
+  /* get the string size */
+  GetTextExtentPoint (display, ptcar, lg, &size);
+  width = size.cx;
+  if (fg >= 0)
+    {
+      /* not transparent -> draw charaters */
+      y += FrameTable[frame].FrTopMargin;
+      SetTextColor (display, ColorPixel (fg));
+      SetBkMode (display, TRANSPARENT);
+      TextOut (display, x, y, (USTRING) ptcar, lg);
       if (hyphen)
-	{
-         /* draw the hyphen */
-         TextOut (TtDisplay, x + width, y + FrameTable[frame].FrTopMargin,
-		  TEXT("\255"), 1);
-	} 
-      SelectObject (TtDisplay, hOldFont);
-      DeleteObject (currentActiveFont);
-      currentActiveFont = (HFONT)0;
-      /* WIN_ReleaseDeviceContext (); */
-      return (width);
-     }
-   else
-     return (0);
+	/* draw the hyphen */
+	TextOut (display, x + width, y, TEXT("\255"), 1);
+    }
+
+  TtaFreeMemory (ptcar);
+  SelectObject (display, hOldFont);
+  DeleteObject (ActiveFont);
+  ActiveFont = (HFONT)0;
+
+#ifndef _WIN_PRINT
+  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
+  return (width);
 }
 
 /*----------------------------------------------------------------------
@@ -629,7 +428,7 @@ void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
   DrawPoints draw a line of dot.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void      DrawPoints (int frame, int x, int y, int lgboite, int fg)
+void      DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
   ptrfont             font;
   int                 xcour;
@@ -643,15 +442,15 @@ void      DrawPoints (int frame, int x, int y, int lgboite, int fg)
 
   y += FrameTable[frame].FrTopMargin;
   font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
-  if (lgboite > 0)
+  if (boxWidth > 0)
     {
       y = y - FontAscent (font) + CharacterAscent (' ', font);
       ptcar = TEXT(" .");
       /* compute lenght of the string " ." */
       width = CharacterWidth (SPACE, font) + CharacterWidth (TEXT('.'), font);
       /* compute the number of string to write */
-      nb = lgboite / width;
-      xcour = x + (lgboite % width);
+      nb = boxWidth / width;
+      xcour = x + (boxWidth % width);
       y = y + FrameTable[frame].FrTopMargin - FontBase (font);
 
       /* draw the points */
@@ -2736,51 +2535,6 @@ void StorePageInfo (int pagenum, int width, int height)
 void psBoundingBox (int frame, int width, int height)
 {
 }
-
-#ifndef _WIN_PRINT
-/*----------------------------------------------------------------------
-  Clear clear the area of frame located at (x, y) and of size width x height.
-  ----------------------------------------------------------------------*/
-void Clear (int frame, int width, int height, int x, int y)
-{
-   ThotWindow          w;
-   HBRUSH              hBrush;
-   HBRUSH              hOldBrush;
-
-   w = FrRef[frame];
-   if (w != None)
-     {
-	WIN_GetDeviceContext (frame);
-	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
-	hOldBrush = SelectObject (TtDisplay, hBrush);
-	PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-	SelectObject (TtDisplay, hOldBrush);
-        WIN_ReleaseDeviceContext ();
-	DeleteObject (hBrush);
-     }
-}
-
-/*----------------------------------------------------------------------
-  Scroll do a scrolling/Bitblt of frame of a width x height area
-  from (xd,yd) to (xf,yf).
-  ----------------------------------------------------------------------*/
-void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
-{
-  RECT cltRect;
-
-  if (FrRef[frame] != None)
-  {
-    WIN_GetDeviceContext (frame);
-    GetClientRect (FrRef [frame], &cltRect);
-    if (autoScroll)
-      ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
-    else 
-	  /* UpdateWindow (FrRef [frame]); */
-	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_INVALIDATE);
-    WIN_ReleaseDeviceContext ();
-  }
-}
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)

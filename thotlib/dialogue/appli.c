@@ -104,16 +104,62 @@ static CHAR_T    URL_txt [500];
 static CHAR_T    doc_title [500];
 static int       oldXPos;
 static int       oldYPos;
+static ThotBool  AutoScroll = FALSE;
 
 int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
-BOOL        autoScroll = FALSE;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
 #include "wininclude.h"
+
+#ifndef _WIN_PRINT
+/*----------------------------------------------------------------------
+  Clear clear the area of frame located at (x, y) and of size width x height.
+  ----------------------------------------------------------------------*/
+void Clear (int frame, int width, int height, int x, int y)
+{
+   ThotWindow          w;
+   HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
+
+   w = FrRef[frame];
+   if (w != None)
+     {
+	WIN_GetDeviceContext (frame);
+	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
+	hOldBrush = SelectObject (TtDisplay, hBrush);
+	PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
+	SelectObject (TtDisplay, hOldBrush);
+        WIN_ReleaseDeviceContext ();
+	DeleteObject (hBrush);
+     }
+}
+
+/*----------------------------------------------------------------------
+  Scroll do a scrolling/Bitblt of frame of a width x height area
+  from (xd,yd) to (xf,yf).
+  ----------------------------------------------------------------------*/
+void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
+{
+  RECT cltRect;
+
+  if (FrRef[frame])
+    {
+      WIN_GetDeviceContext (frame);
+      GetClientRect (FrRef [frame], &cltRect);
+      if (AutoScroll)
+	ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
+      else 
+	/* UpdateWindow (FrRef [frame]); */
+	ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect,
+			NULL, NULL, SW_INVALIDATE);
+      WIN_ReleaseDeviceContext ();
+    }
+}
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1560,8 +1606,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       fBlocking = TRUE;
       if (!moved)	  
 	LocateSelectionInView (frame, ClickX, ClickY, 4);
-      if (autoScroll)
-	autoScroll = FALSE;
+      if (AutoScroll)
+	AutoScroll = FALSE;
       return 0;
 
     case WM_LBUTTONDBLCLK:/* left double click handling */
@@ -1638,7 +1684,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       if (firstTime && fBlocking)
 	{
 	  winCapture = GetCapture ();
-	  autoScroll = TRUE;
+	  AutoScroll = TRUE;
 	  firstTime = FALSE;
 	  SetCapture (hwnd);
 	}

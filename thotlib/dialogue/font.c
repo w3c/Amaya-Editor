@@ -168,45 +168,51 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, 
 /*----------------------------------------------------------------------
  *      WinLoadFont : Load a Windows font in a Device context.
  *----------------------------------------------------------------------*/
-HFONT    WinLoadFont (HDC hdc, ptrfont font)
+HFONT WinLoadFont (HDC hdc, ptrfont font)
 {
-   if (LastUsedFont == (ptrFC)0) {
-      LastUsedFont            = (ptrFC) TtaGetMemory (sizeof (FontCharacteristics));
+  if (LastUsedFont == (ptrFC)0)
+    {
+      LastUsedFont = (ptrFC) TtaGetMemory (sizeof (FontCharacteristics));
       LastUsedFont->highlight = font->highlight; 
-      LastUsedFont->size      = font->size;
-      LastUsedFont->alphabet  = font->alphabet; 
-      LastUsedFont->family    = font->family; 
+      LastUsedFont->size = font->size;
+      LastUsedFont->alphabet = font->alphabet; 
+      LastUsedFont->family = font->family; 
+      
+      if (ActiveFont != (HFONT)0)
+	{
+	  if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
+            WinErrorBox (NULL, "WinLoadFont (1)");
+	  ActiveFont = (HFONT)0;
+	}
+    }
+  else if (LastUsedFont->highlight != font->highlight ||
+	   LastUsedFont->size != font->size ||
+	   LastUsedFont->alphabet != font->alphabet ||
+	   LastUsedFont->family != font->family)
+    {
+    if (ActiveFont != (HFONT)0)
+      {
+	SelectObject (hdc, GetStockObject (SYSTEM_FONT));
+	if (!DeleteObject (ActiveFont))
+	  WinErrorBox (NULL, "WinLoadFont (2)");
+	ActiveFont = (HFONT)0;
 
-      if (currentActiveFont != (HFONT)0) {
-         if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
-            WinErrorBox (NULL, TEXT("WinLoadFont (1)"));
-         currentActiveFont = (HFONT)0;
-	  }
-   } else if ((LastUsedFont->highlight != font->highlight) ||
-              (LastUsedFont->size      != font->size)      ||
-              (LastUsedFont->alphabet  != font->alphabet)  ||
-              (LastUsedFont->family    != font->family)) {
-          if (currentActiveFont != (HFONT)0) {
-             SelectObject (hdc, GetStockObject (SYSTEM_FONT));
-             if (!DeleteObject (currentActiveFont))
-                WinErrorBox (NULL, TEXT("WinLoadFont (2)"));
-             currentActiveFont = (HFONT)0;
-
-             LastUsedFont->highlight = font->highlight; 
-             LastUsedFont->size      = font->size;
-             LastUsedFont->alphabet  = font->alphabet; 
-             LastUsedFont->family    = font->family; 
-		  } 
+	LastUsedFont->highlight = font->highlight; 
+	LastUsedFont->size      = font->size;
+	LastUsedFont->alphabet  = font->alphabet; 
+	LastUsedFont->family    = font->family; 
+      } 
    }
 
-   if (currentActiveFont == (HFONT)0)
-   {
-      currentActiveFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, 0);
-      if (currentActiveFont == (HFONT)0)
-         WinErrorBox (NULL, TEXT("WinLoadFont (3)"));
-      return (OldFont = SelectObject (hdc, currentActiveFont));
-   }
-   return (OldFont = SelectObject (hdc, currentActiveFont));
+  if (ActiveFont == (HFONT)0)
+    {
+      ActiveFont = WIN_LoadFont (font->alphabet, font->family,
+				 font->highlight, font->size, 0);
+      if (ActiveFont == (HFONT)0)
+	WinErrorBox (NULL, "WinLoadFont (3)");
+      return (OldFont = SelectObject (hdc, ActiveFont));
+    }
+  return (OldFont = SelectObject (hdc, ActiveFont));
 }
 #endif /* _WINDOWS */
 
@@ -230,30 +236,18 @@ int GetCharsCapacity (int volpixel)
 /*----------------------------------------------------------------------
  *      CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
-int                 CharacterWidth (UCHAR_T c, ptrfont font)
+int CharacterWidth (UCHAR_T c, ptrfont font)
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
-      SIZE wsize;
-      HFONT currentFont, HOldFont; 
-      WIN_GetDeviceContext (-1);
-      
-      currentFont = WinLoadFont (TtDisplay, font);
-      GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
-      SelectObject (TtDisplay, currentFont);
-#     if 0
-      if (currentActiveFont) {
-         currentFont = SelectObject (TtDisplay, currentActiveFont);
-         GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
-         SelectObject (TtDisplay, currentFont);
-	  } else {
-             currentFont = WinLoadFont (TtDisplay, font);
-             GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
-             SelectObject (TtDisplay, currentFont);
-	  }
-      WIN_ReleaseDeviceContext ();
-#     endif /* 00000000 */
-      return wsize.cx;
+  SIZE wsize;
+  HFONT currentFont, HOldFont; 
+
+  WIN_GetDeviceContext (-1); 
+  currentFont = WinLoadFont (TtDisplay, font);
+  GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+  SelectObject (TtDisplay, currentFont);
+  return wsize.cx;
 #else  /* !_WINDOWS */
 #endif /* _WINDOWS */
 #else /* !_I18N_ */

@@ -43,7 +43,7 @@
    Le parametre selection indique s'il faut ge'rer la      
    selection (valeur 1) ou non (valeur 0).                 
   ----------------------------------------------------------------------*/
-void                VerticalScroll (int frame, int delta, int selection)
+void VerticalScroll (int frame, int delta, int selection)
 {
    int                 y, height;
    int                 max, width;
@@ -145,7 +145,7 @@ void                VerticalScroll (int frame, int delta, int selection)
    Le parametre selection indique s'il faut gerer la       
    selection (valeur 1) ou non (valeur 0).                 
   ----------------------------------------------------------------------*/
-void                HorizontalScroll (int frame, int delta, int selection)
+void HorizontalScroll (int frame, int delta, int selection)
 {
   int                 x, height;
   int                 min, max, width;
@@ -218,7 +218,7 @@ void                HorizontalScroll (int frame, int delta, int selection)
    Le parame`tre y donne la position demande'e et le       
    parame`tre haut la hauteur de la fenetree^tre.          
   ----------------------------------------------------------------------*/
-void                ShowYPosition (int frame, int y, int height)
+void ShowYPosition (int frame, int y, int height)
 {
    ViewFrame          *pFrame;
    PtrBox              pBox;
@@ -295,7 +295,7 @@ void                ShowYPosition (int frame, int y, int height)
    nbCharEnd indique le nombre de carate`res apres l'image abstraite.    
    total indique le nombre total de carate`res du document.        
   ----------------------------------------------------------------------*/
-int                 PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
+int PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
 {
    ViewFrame          *pFrame;
    PtrBox              premiere;
@@ -353,7 +353,7 @@ int                 PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd,
    - width : la largeur de la portion de l'arbre visualise'e.    
    - height : la hauteur de la portion de l'arbre visualise'e.    
   ----------------------------------------------------------------------*/
-void                ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *height)
+void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *height)
 {
    PtrBox              pBoxFirst;
    PtrBox              pBoxLast;
@@ -566,7 +566,7 @@ void                ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int 
    haut de la fenetre et le haut de la boite, exprimee en  
    pourcentage de la hauteur de la fenetre.                
   ----------------------------------------------------------------------*/
-void                ShowBox (int frame, PtrBox pBox, int position, int percent)
+void ShowBox (int frame, PtrBox pBox, int position, int percent)
 {
    int                 ymin, ymax;
    int                 width, height;
@@ -623,7 +623,7 @@ void                ShowBox (int frame, PtrBox pBox, int position, int percent)
    Le parame`tre selection indique s'il faut ge'rer la     
    se'lection (valeur 1) ou non (valeur 0).                
   ----------------------------------------------------------------------*/
-ThotBool            IsScrolled (int frame, int selection)
+ThotBool IsScrolled (int frame, int selection)
 {
    int                 xmin, xmax;
    int                 ymin, ymax;
@@ -683,7 +683,7 @@ ThotBool            IsScrolled (int frame, int selection)
    frame et rend cette frame active si l'indicateur actif     
    est Vrai.                                               
   ----------------------------------------------------------------------*/
-void                ShowSelectedBox (int frame, ThotBool actif)
+void ShowSelectedBox (int frame, ThotBool actif)
 {
    ViewFrame          *pFrame;
    PtrBox              pBo1;
@@ -756,7 +756,7 @@ void                ShowSelectedBox (int frame, ThotBool actif)
    IsAbsBoxVisible retourne Vrai si le pAb deborde de la          
    frame du document.                                       
   ----------------------------------------------------------------------*/
-ThotBool            IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
+ThotBool IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
 {
    ViewFrame          *pFrame;
    int                 y, ymax;

@@ -22,7 +22,7 @@ THOT_EXPORT ptrfont   SymbolIcons;	/* Symblol icons          */
 THOT_EXPORT int	      MenuSize;	        /* Dialogue font size     */
 THOT_EXPORT int       FontZoom;         /* Zoom applied to fonts  */
 #ifdef _WINDOWS
-THOT_EXPORT HFONT     currentActiveFont;
+THOT_EXPORT HFONT     ActiveFont;
 #endif /* _WINDOWS */
 
 #endif

@@ -26,8 +26,8 @@
 /* Frames table */
 THOT_EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
 #ifdef _GTK
-THOT_EXPORT GtkWidget  *DefaultWindow;
-THOT_EXPORT GtkWidget  *DefaultDrawingarea;
+THOT_EXPORT GtkWidget   *DefaultWindow;
+THOT_EXPORT GtkWidget   *DefaultDrawingarea;
 THOT_EXPORT GdkDrawable *DefaultDrawable;
 THOT_EXPORT GdkDrawable *FrRef[MAX_FRAME + 2];    /* window references */
 #else /* _GTK */
@@ -36,7 +36,7 @@ THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];     /* window references */
 
 #ifdef _WINDOWS
 THOT_EXPORT ThotWindow  FrMainRef[MAX_FRAME + 2]; /* window references */
-THOT_EXPORT CHAR_T      wTitle [256];
+THOT_EXPORT char        wTitle [256];
 #endif /* _WINDOWS */
 THOT_EXPORT ThotColor BackgroundColor[MAX_FRAME + 2]; /* Background color */
 THOT_EXPORT int       DefaultBColor;    /* default background color index */
