@@ -92,6 +92,7 @@ typedef struct _Frame_Ctl {
   int        FrPageId;                  /* Frame page id                     */
   int        FrDoc;                     /* Document ID                       */
   int        FrView;                    /* Presentation schema View          */
+  char       FrViewName[50];            /* The corresponding view name (Structure, Toc, Log ...) */
   
   ThotScrollBar WdScrollV;              /* Widget of Vertical Scroll         */
   ThotScrollBar WdScrollH;              /* Widget of Horizontal Scroll       */

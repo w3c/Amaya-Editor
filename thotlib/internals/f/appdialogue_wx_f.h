@@ -20,7 +20,8 @@ extern int TtaMakeFrame ( const char * schema_name,
                           const char * doc_name,
                           int width,
                           int height,
-                          int * volume );
+                          int * volume,
+                          const char * viewName );
 extern ThotBool TtaAttachFrame ( int frame_id,
                                  int window_id,
                                  int page_id,
@@ -109,7 +110,8 @@ extern int TtaMakeFrame ( const char * schema_name,
                             const char * doc_name,
                             int width,
                             int height,
-                            int * volume );
+                            int * volume,
+                            const char * viewName );
 extern ThotBool TtaAttachFrame ( int frame_id,
                                    int window_id,
                                    int page_id,

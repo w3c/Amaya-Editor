@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern char *TtaSkipBlanks ( char *ptr );
 extern ThotBool TtaIsBlank ( char *ptr );
 extern ThotBool TtaGetEnvInt ( char *name,
@@ -39,7 +38,6 @@ extern int SearchFile ( char *fileName,
                         char *fullName );
 
 #else /* __STDC__ */
-
 extern char *TtaSkipBlanks ( char *ptr );
 extern ThotBool TtaIsBlank ( char *ptr );
 extern ThotBool TtaGetEnvInt ( char *name,

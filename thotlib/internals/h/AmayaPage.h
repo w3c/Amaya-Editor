@@ -147,6 +147,8 @@ public:
   bool               m_IsSelected;
 
   int                m_MasterFrameId;
+
+  char               m_LastOpenViewName[50];
 };
 
 #endif // __AMAYAPAGE_H__

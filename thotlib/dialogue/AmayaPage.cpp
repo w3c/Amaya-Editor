@@ -108,6 +108,9 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
   // refresh the correspondig menu item state
   RefreshSplitToggleMenu();
 
+  // initialize the last open view name
+  strcpy(m_LastOpenViewName, "Formatted_view");
+
   SetAutoLayout(TRUE);
 }
 
@@ -223,6 +226,9 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
 
   // refresh the correspondig menu item state
   RefreshSplitToggleMenu();
+
+  // remember the last open view
+  strcpy(m_LastOpenViewName, FrameTable[p_frame->GetFrameId()].FrViewName);
 
   // return the old frame : needs to be manualy deleted ..
   return oldframe;
@@ -346,7 +352,6 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
  * Description:  this method is called when the button for quickly split is pushed
  *--------------------------------------------------------------------------------------
  */
-extern void ShowStructure (Document doc, View view);
 void AmayaPage::OnSplitButton( wxCommandEvent& event )
 {
   if ( event.GetId() != m_pSplitButtonBottom->GetId() )
@@ -377,7 +382,18 @@ void AmayaPage::DoSplitUnsplit()
       AmayaFrame * p_frame = GetFrame(1);
       Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
       View view         = FrameTable[p_frame->GetFrameId()].FrView;
-      ShowStructure (document, view);
+      
+      if ( !strcmp(m_LastOpenViewName, "Formatted_view") )
+	TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
+      else if ( !strcmp(m_LastOpenViewName, "Links_view") )
+	TtaExecuteMenuAction ("ShowLinks", document, view, FALSE);
+      else if ( !strcmp(m_LastOpenViewName, "Alternate_view") )
+	TtaExecuteMenuAction ("ShowAlternate", document, view, FALSE);
+      else if ( !strcmp(m_LastOpenViewName, "Table_of_contents") )
+	TtaExecuteMenuAction ("ShowToC", document, view, FALSE);
+      else // if ( !strcmp(m_LastOpenViewName, "Structure_view") )
+	TtaExecuteMenuAction ("ShowStructure", document, view, FALSE);
+
     }
   else
     {

@@ -533,7 +533,8 @@ int CreateAbstractImage (PtrDocument pDoc, int v, PtrSSchema pSS,
 void OpenCreatedView (PtrDocument pDoc, int view,
                       int X, int Y, int width, int height,
 		      ThotBool withMenu, ThotBool withButton,
-		      int window_id, int page_id, int page_position)
+		      int window_id, int page_id, int page_position, 
+		      const char * viewName)
 {
   PtrSSchema          pSS;
   int                 volume = 0;
@@ -556,7 +557,8 @@ void OpenCreatedView (PtrDocument pDoc, int view,
 	                    schView,
 			    doc_id,
 			    pDoc->DocDName,
-			    width, height, &volume );
+			    width, height, &volume,
+			    viewName );
 
       /* the new document need to be attached to a page */      
       TtaAttachFrame( frame,
@@ -700,7 +702,7 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
 		TtaGetDocumentPageId( doc_id, schView, &page_id, &page_position );
 		
 		OpenCreatedView (pDoc, ret, X, Y, width, height, TRUE, TRUE,
-                                 window_id, page_id, page_position);
+                                 window_id, page_id, page_position, viewName);
 		
 		notifyDoc.event = TteViewOpen;
 		notifyDoc.document = (Document) IdentDocument (pDoc);
@@ -714,6 +716,7 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
    return ret;
 }
 
+#if 0 /* not used */
 /*----------------------------------------------------------------------
    OpenViewByMenu ouvre effectivement une vue apres les retours	
    des menus d'ouverture de Vues                           
@@ -766,6 +769,7 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
 	 }
       }
 }
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
    BuildViewList construit le menu des vues qu'il est possible	

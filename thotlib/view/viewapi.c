@@ -124,7 +124,7 @@ View TtaOpenMainView ( Document document,
 	      nView = CreateAbstractImage (pDoc, 1, pDoc->DocSSchema, 1,
 					   TRUE, NULL);
 	      OpenCreatedView (pDoc, nView, x, y, w, h, withMenu, withButton,
-		               window_id, page_id, page_position);
+		               window_id, page_id, page_position, "Formatted_view");
 	      view = nView;
 	    }
      }
@@ -219,7 +219,7 @@ static View OpenView (Document document, char *viewName,
 		    page_position = 2;
 
 		    OpenCreatedView (pDoc, nView, x, y, w, h, TRUE, TRUE,
-                                     window_id, page_id, page_position);
+                                     window_id, page_id, page_position, viewName);
 		    view = nView;
 		  }
 	      }

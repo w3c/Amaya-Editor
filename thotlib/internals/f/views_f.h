@@ -35,17 +35,14 @@ extern void OpenCreatedView ( PtrDocument pDoc,
                               ThotBool withButton,
                               int window_id,
                               int page_id,
-                              int page_position );
+                              int page_position,
+                              const char * viewName );
 extern int OpenViewByName ( PtrDocument pDoc,
                             Name viewName,
                             int X,
                             int Y,
                             int width,
                             int height );
-extern void OpenViewByMenu ( PtrDocument pDoc,
-                             int menuItem,
-                             PtrElement subTree,
-                             DocViewNumber selectedView );
 extern void BuildViewList ( PtrDocument pDoc,
                             char *buffer,
                             int *nItems );
@@ -85,17 +82,14 @@ extern void OpenCreatedView ( PtrDocument pDoc,
                                 ThotBool withButton,
                                 int window_id,
                                 int page_id,
-                                int page_position );
+                                int page_position,
+                                const char * viewName );
 extern int OpenViewByName ( PtrDocument pDoc,
                               Name viewName,
                               int X,
                               int Y,
                               int width,
                               int height );
-extern void OpenViewByMenu ( PtrDocument pDoc,
-                               int menuItem,
-                               PtrElement subTree,
-                               DocViewNumber selectedView );
 extern void BuildViewList ( PtrDocument pDoc,
                               char *buffer,
                               int *nItems );

@@ -346,7 +346,8 @@ int TtaMakeFrame( const char * schema_name,
 		  const char * doc_name,
 		  int width,
 		  int height,
-		  int * volume )
+		  int * volume,
+		  const char * viewName )
 {
 #ifdef _WX
   /* finding a free frame id */
@@ -408,6 +409,7 @@ int TtaMakeFrame( const char * schema_name,
   FrameTable[frame_id].FrScrollWidth  = 0; // TODO
   FrameTable[frame_id].FrWidth        = 0; //width
   FrameTable[frame_id].FrHeight       = 0; // height
+  strcpy( FrameTable[frame_id].FrViewName, viewName );
   
   /* Initialise la visibilite et le zoom de la fenetre */
   /* get the old value : 0 if this is the first */
