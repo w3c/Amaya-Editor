@@ -170,71 +170,73 @@ static ThotBool	EnclosingAbsBoxesBreakable (PtrElement pEl, int v,
   ----------------------------------------------------------------------*/
 static void SupprFollowingAbsBoxes (PtrElement pEl, PtrDocument pDoc, int view)
 {
-   PtrAbstractBox	pAb, pNextAb, pParentAb, pAbbRedisp, pAbbR;
+  PtrAbstractBox	pAb, pNextAb, pParentAb, pAbbRedisp, pAbbR;
 
-   pAbbRedisp = NULL;
-   /* look for the first abstract box (pAb) corresponding to a following
-      sibling of pEl or to a following sibling of its ancestors */
-   pAb = NULL;
-   while (!pAb && pEl)
-      {
+  pAbbRedisp = NULL;
+  /* look for the first abstract box (pAb) corresponding to a following
+     sibling of pEl or to a following sibling of its ancestors */
+  pAb = NULL;
+  while (!pAb && pEl)
+    {
       if (pEl->ElNext)
-	 {
-         pAb = pEl->ElNext->ElAbstractBox[view - 1];
-         if (!pAb)
+	{
+	  pAb = pEl->ElNext->ElAbstractBox[view - 1];
+	  if (!pAb)
 	    pEl = pEl->ElNext;
-	 }
+	}
       else
-	 pEl = pEl->ElParent;
-      }
-   /* now, delete the abstract box we have found and all following abstract
-      boxes */
-   if (pAb)
-      {
+	pEl = pEl->ElParent;
+    }
+  /* now, delete the abstract box we have found and all following abstract
+     boxes */
+  if (pAb)
+    {
       /* we will have to redisplay at least pAb */
       pAbbRedisp = pAb;
       do
 	{
-        pParentAb = pAb->AbEnclosing;
-	/* kill pAb and all its following siblings */
-	while (pAb)
-	   {
-	   pNextAb = pAb->AbNext;
-           SetDeadAbsBox (pAb);
-	   ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
-	   pAbbRedisp = Enclosing (pAbbRedisp, pAbbR);
-	   pAb = pNextAb;
-	   }
-        /* look for the first ancestor abstract box that has a next sibling */
-	pAb = pParentAb;
-	if (pAb)
-	  {
-	   if (pAb->AbNext)
-	      pAb = pAb->AbNext;
-	   else
-	      {
-	      pNextAb = NULL;
-	      while (pAb && !pNextAb)
-		 {
-	         pAb = pAb->AbEnclosing;
-		 if (pAb)
+	  pParentAb = pAb->AbEnclosing;
+	  /* kill pAb and all its following siblings */
+	  while (pAb)
+	    {
+	      pNextAb = pAb->AbNext;
+	      SetDeadAbsBox (pAb);
+	      ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
+	      pAbbRedisp = Enclosing (pAbbRedisp, pAbbR);
+	      pAb = pNextAb;
+	    }
+	  /* look for the first ancestor abstract box that has a next sibling*/
+	  pAb = pParentAb;
+	  if (pAb)
+	    {
+	      /* the parent abstract box is no longer complete */
+	      pAb->AbTruncatedTail = TRUE;
+	      if (pAb->AbNext)
+		pAb = pAb->AbNext;
+	      else
+		{
+		  pNextAb = NULL;
+		  while (pAb && !pNextAb)
 		    {
-		    pNextAb = pAb->AbNext;
-		    if (pNextAb)
-		       pAb = pNextAb;
+		      pAb = pAb->AbEnclosing;
+		      if (pAb)
+			{
+			  pNextAb = pAb->AbNext;
+			  if (pNextAb)
+			    pAb = pNextAb;
+			}
 		    }
-	         }
-	      }
-	  }
+		}
+	    }
 	}
       while (pAb);
-      }
-   /* remember the abstract box that has to be redisplayed */
-   if (pAbbRedisp)
-      {
+    }
+  /* remember the abstract box that has to be redisplayed */
+  if (pAbbRedisp)
+    {
       pDoc->DocViewModifiedAb[view - 1] =
-		Enclosing (pAbbRedisp, pDoc->DocViewModifiedAb[view - 1]);
-      }
+	Enclosing (pAbbRedisp, pDoc->DocViewModifiedAb[view - 1]);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -258,6 +260,7 @@ void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
 	  /* l'element est a l'interieur de l'image deja construite */
 	  {
 	    if (!EnclosingAbsBoxesBreakable (pEl, view, pDoc) ||
+		pEl->ElVolume < 10 ||
 		pEl->ElVolume + pDoc->DocViewRootAb[view - 1]->AbVolume
 					< 2 * pDoc->DocViewVolume[view - 1])
 	      /* on cree tous les paves du nouvel element */
