@@ -12,7 +12,7 @@
  * requests.
  *
  * Author: J Kahan
- *         R. Guetari/J. Kahan Windows NT/95 routines
+ *         J. K./R. G. Windows NT/95 routines
  *
  */
 #ifndef AMAYA_JAVA
@@ -548,9 +548,17 @@ HTPriority          p;
 		me->urlName, sock, ops, me->output);
 #endif /* DEBUG_LIBWWW */       
      } /* if *rqp */
-   
+
+#ifdef __WINDOWS   
+  /* under windows, libwww requires an explicit FD_CLOSE registration 
+   to detect HTTP responses not having a Content-Length header */
+   status = HTEventrg_register (sock, rqp, ops | FD_CLOSE,
+				cbf, p);
+#else
    status = HTEventrg_register (sock, rqp, ops,
 				cbf, p);
+#endif /* __WINDOWS */
+
    return (status);
 }
 
