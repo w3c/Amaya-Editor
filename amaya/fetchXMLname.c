@@ -219,41 +219,41 @@ ElementType       elType;
 Document          doc;
 #endif
 {
-   int                 i;
-   ElemMapping        *ptr;
-   STRING              name;
-   ThotBool            invalid = FALSE;
+  ElemMapping        *ptr;
+  STRING              name;
+  int                 i;
+  ThotBool            invalid = FALSE;
 
-   if (elType.ElTypeNum > 0)
-     {
-	i = 0;
-	/* Select the table which matches with the element schema */
-	name = TtaGetSSchemaName (elType.ElSSchema);
-	if (ustrcmp (TEXT("MathML"), name) == 0)
-	  ptr = MathMLElemMappingTable;
-	else if (ustrcmp (TEXT("GraphML"), name) == 0)
-	  ptr = GraphMLElemMappingTable;
-        else
-	  ptr = XHTMLElemMappingTable;
-
-	if (ptr)
-	  do
-	    {
-	      if (ptr[i].ThotType == elType.ElTypeNum)
-		{
-		  if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
-		    return ptr[i].XMLname;
-		  else
-		    invalid = TRUE;
-		}
-	      i++;
-	    }
-	  while (ptr[i].XMLname[0] != WC_EOS);	  
-     }
-   if (invalid)
-     return TEXT("");
-   else
-     return TEXT("???");
+  if (elType.ElTypeNum > 0)
+    {
+      i = 0;
+      /* Select the table which matches with the element schema */
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      if (ustrcmp (TEXT("MathML"), name) == 0)
+	ptr = MathMLElemMappingTable;
+      else if (ustrcmp (TEXT("GraphML"), name) == 0)
+	ptr = GraphMLElemMappingTable;
+      else
+	ptr = XHTMLElemMappingTable;
+      
+      if (ptr)
+	do
+	  {
+	    if (ptr[i].ThotType == elType.ElTypeNum)
+	      {
+		if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
+		  return ptr[i].XMLname;
+		else
+		  invalid = TRUE;
+	      }
+	    i++;
+	  }
+	while (ptr[i].XMLname[0] != WC_EOS);	  
+    }
+  if (invalid)
+    return TEXT("");
+  else
+    return TEXT("???");
 }
 
 
@@ -337,34 +337,38 @@ Document          doc;
   AttributeMapping   *ptr;
   STRING              name;
   int                 i;
+  ThotBool            invalid = FALSE;
 
-   if (attrType.AttrTypeNum > 0)
-     {
-	i = 0;
-	/* Select the table which matches with the element schema */
-	name = TtaGetSSchemaName (attrType.AttrSSchema);
-	if (ustrcmp (TEXT("MathML"), name) == 0)
-	  ptr = MathMLAttributeMappingTable;
-	else if (ustrcmp (TEXT("GraphML"), name) == 0)
-	  ptr = GraphMLAttributeMappingTable;
-	else if (ustrcmp (TEXT("XLink"), name) == 0)
-	  ptr = XLinkAttributeMappingTable;
-        else
-	  ptr = XHTMLAttributeMappingTable;
-
-	if (ptr)
-	  do
-	    {
+  if (attrType.AttrTypeNum > 0)
+    {
+      i = 0;
+      /* Select the table which matches with the element schema */
+      name = TtaGetSSchemaName (attrType.AttrSSchema);
+      if (ustrcmp (TEXT("MathML"), name) == 0)
+	ptr = MathMLAttributeMappingTable;
+      else if (ustrcmp (TEXT("GraphML"), name) == 0)
+	ptr = GraphMLAttributeMappingTable;
+      else if (ustrcmp (TEXT("XLink"), name) == 0)
+	ptr = XLinkAttributeMappingTable;
+      else
+	ptr = XHTMLAttributeMappingTable;
+      
+      if (ptr)
+	do
+	  {
 	    if (ptr[i].ThotAttribute == attrType.AttrTypeNum)
 	      {
 		if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
 		  return ptr[i].XMLattribute;
 		else
-		  return TEXT("???");
+		  invalid = TRUE;
 	      }
 	    i++;
-	    }
-	  while (ptr[i].XMLattribute[0] != WC_EOS);	  
-     }
-   return TEXT("???");
+	  }
+	while (ptr[i].XMLattribute[0] != WC_EOS);	  
+    }
+  if (invalid)
+    return TEXT("");
+  else
+    return TEXT("???");
 }

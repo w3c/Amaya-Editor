@@ -32,7 +32,6 @@
 +config
 +css-style
 +edit
-+basic-form-module
 +forms
 +link-module
 +base-module
@@ -49,21 +48,43 @@
 +templates
 +views
 
-################# XHTML
-<XHTML>
+################# XHTML-TRANSITONAL
+<XHTML-transitional>
 +amayabase
 +areas
 +browsing
 +config
 +css-style
 +edit
-+basic-form-module
 +forms
 +link-module
 +base-module
 +meta-module
 +head
 +html-style
++makebook
++maths
++object-module
++print
++source-view
++spell
++tables
++templates
++views
+
+################# XHTML-STRICT
+<XHTML-strict>
++amayabase
++areas
++browsing
++config
++css-style
++edit
++forms
++link-module
++base-module
++meta-module
++head
 +makebook
 +maths
 +object-module
@@ -77,6 +98,7 @@
 ################# AMAYA XHTML-BASIC
 <XHTML-basic>
 +amayabase
++basic-form-module
 +basic-table-module
 +browsing
 +basic-css-style
@@ -267,21 +289,6 @@ ShowTargets
 &CreateList
 &CreateNumberedList
 
-[basic-form-module]
-&CreateForm
-&CreateToggle
-&CreateFileInput
-&CreateHiddenInput
-&CreateImageInput
-&CreatePasswordInput
-&CreateRadio
-&CreateReset
-&CreateSubmit
-&CreateTextInput
-&CreateLabel
-&CreateOption
-&CreateTextArea
-
 [image-module]
 &CreateImage
 
@@ -305,14 +312,29 @@ CreateAreaRect
 ShowMapAreas
 HelpImageMaps
 
+[basic-form-module]
+&CreateForm
+&CreateToggle
+&CreateFileInput
+&CreateHiddenInput
+&CreateImageInput
+&CreatePasswordInput
+&CreateRadio
+&CreateReset
+&CreateSubmit
+&CreateTextInput
+&CreateLabel
+&CreateOption
+&CreateTextArea
+
 [forms]
++basic-form-module
 &CreatePushButton
 &CreateFieldset
 &CreateOptGroup
 
 [basic-table-module]
 &CreateTable
-&CreateCaption
 &CreateTBody
 &CreateRow
 &CreateDataCell
@@ -322,10 +344,11 @@ HelpTables
 
 [tables]
 +basic-table-module
-&CreateTHead
-&CreateTFoot
+&CreateCaption
 &CreateColgroup
 &CreateCol
+&CreateTHead
+&CreateTFoot
 
 ################# MATHML
 [maths]

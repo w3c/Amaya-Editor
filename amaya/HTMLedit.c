@@ -2134,82 +2134,81 @@ NotifyAttribute    *event;
 {
    ElementType         elType;
    SSchema	       HTMLSSchema;
-   STRING              tag, attr;
+   STRING              attr;
+
+   attr = GetXMLAttributeName (event->attributeType, event->document);
+   if (attr[0] == WC_EOS)
+      return TRUE;	/* don't put an invalid attribute in the menu */
 
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
    elType = TtaGetElementType (event->element);
-   tag = GetXMLElementName (elType, event->document);
-   
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
-     /* it's not a HTML document */
-      return TRUE;	/* don't put any HTML attribute in the menu */
+   if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+     {
+      /* it's a HTML element */
 
-   if (!TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-      /* it's not a HTML element */
-      return TRUE;	/* don't put any HTML attribute in the menu */
-
-   /* BASE and SCRIPT do not accept any global attribute */
-   if (elType.ElTypeNum == HTML_EL_BASE ||
-       elType.ElTypeNum == HTML_EL_SCRIPT)
-      return TRUE;
-
-   /* BASEFONT and PARAM accept only ID */
-   if (elType.ElTypeNum == HTML_EL_BaseFont ||
-       elType.ElTypeNum == HTML_EL_Parameter)
-      return (event->attributeType.AttrTypeNum != HTML_ATTR_ID);
-
-   /* coreattrs */
-   if (event->attributeType.AttrTypeNum == HTML_ATTR_ID ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_Class ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_Style_ ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_Title)
-      if (elType.ElTypeNum == HTML_EL_HEAD ||
-	  elType.ElTypeNum == HTML_EL_TITLE ||
-	  elType.ElTypeNum == HTML_EL_META ||
-	  elType.ElTypeNum == HTML_EL_STYLE_ ||
-	  elType.ElTypeNum == HTML_EL_HTML)
+       /* BASE and SCRIPT do not accept any global attribute */
+       if (elType.ElTypeNum == HTML_EL_BASE ||
+	   elType.ElTypeNum == HTML_EL_SCRIPT)
 	 return TRUE;
-      else
-	 return FALSE;
-   /* i18n */
-   if (event->attributeType.AttrTypeNum == HTML_ATTR_dir ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_Langue)
-     if (elType.ElTypeNum == HTML_EL_BR ||
-	 elType.ElTypeNum == HTML_EL_Applet ||
-	 elType.ElTypeNum == HTML_EL_Horizontal_Rule ||
-	 elType.ElTypeNum == HTML_EL_FRAMESET ||
-	 elType.ElTypeNum == HTML_EL_FRAME ||
-	 elType.ElTypeNum == HTML_EL_IFRAME)
-	return TRUE;
-     else
-	return FALSE;
-   /* events */
-   if (event->attributeType.AttrTypeNum == HTML_ATTR_onclick ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_ondblclick ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onmousedown ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onmouseup ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onmouseover ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onmousemove ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onmouseout ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onkeypress ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onkeydown ||
-       event->attributeType.AttrTypeNum == HTML_ATTR_onkeyup)
-     if (elType.ElTypeNum == HTML_EL_BDO ||
-	 elType.ElTypeNum == HTML_EL_Font_ ||
-	 elType.ElTypeNum == HTML_EL_BR ||
-	 elType.ElTypeNum == HTML_EL_Applet ||
-	 elType.ElTypeNum == HTML_EL_FRAMESET ||
-	 elType.ElTypeNum == HTML_EL_FRAME ||
-	 elType.ElTypeNum == HTML_EL_IFRAME ||
-	 elType.ElTypeNum == HTML_EL_HEAD ||
-	 elType.ElTypeNum == HTML_EL_TITLE ||
-	 elType.ElTypeNum == HTML_EL_META ||
-	 elType.ElTypeNum == HTML_EL_STYLE_ ||
-	 elType.ElTypeNum == HTML_EL_HTML ||
-	 elType.ElTypeNum == HTML_EL_ISINDEX)
-	return TRUE;
 
-   return FALSE;
+       /* BASEFONT and PARAM accept only ID */
+       if (elType.ElTypeNum == HTML_EL_BaseFont ||
+	   elType.ElTypeNum == HTML_EL_Parameter)
+	 return (event->attributeType.AttrTypeNum != HTML_ATTR_ID);
+
+       /* coreattrs */
+       if (event->attributeType.AttrTypeNum == HTML_ATTR_ID ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_Class ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_Style_ ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_Title)
+	 if (elType.ElTypeNum == HTML_EL_HEAD ||
+	     elType.ElTypeNum == HTML_EL_TITLE ||
+	     elType.ElTypeNum == HTML_EL_META ||
+	     elType.ElTypeNum == HTML_EL_STYLE_ ||
+	     elType.ElTypeNum == HTML_EL_HTML)
+	   return TRUE;
+	 else
+	   return FALSE; /* let Thot perform normal operation */
+       /* i18n */
+       if (event->attributeType.AttrTypeNum == HTML_ATTR_dir ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_Langue)
+	 if (elType.ElTypeNum == HTML_EL_BR ||
+	     elType.ElTypeNum == HTML_EL_Applet ||
+	     elType.ElTypeNum == HTML_EL_Horizontal_Rule ||
+	     elType.ElTypeNum == HTML_EL_FRAMESET ||
+	     elType.ElTypeNum == HTML_EL_FRAME ||
+	     elType.ElTypeNum == HTML_EL_IFRAME)
+	   return TRUE;
+	 else
+	   return FALSE;
+       /* events */
+       if (event->attributeType.AttrTypeNum == HTML_ATTR_onclick ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_ondblclick ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onmousedown ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onmouseup ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onmouseover ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onmousemove ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onmouseout ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onkeypress ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onkeydown ||
+	   event->attributeType.AttrTypeNum == HTML_ATTR_onkeyup)
+	 if (elType.ElTypeNum == HTML_EL_BDO ||
+	     elType.ElTypeNum == HTML_EL_Font_ ||
+	     elType.ElTypeNum == HTML_EL_BR ||
+	     elType.ElTypeNum == HTML_EL_Applet ||
+	     elType.ElTypeNum == HTML_EL_FRAMESET ||
+	     elType.ElTypeNum == HTML_EL_FRAME ||
+	     elType.ElTypeNum == HTML_EL_IFRAME ||
+	     elType.ElTypeNum == HTML_EL_HEAD ||
+	     elType.ElTypeNum == HTML_EL_TITLE ||
+	     elType.ElTypeNum == HTML_EL_META ||
+	     elType.ElTypeNum == HTML_EL_STYLE_ ||
+	     elType.ElTypeNum == HTML_EL_HTML ||
+	     elType.ElTypeNum == HTML_EL_ISINDEX)
+	   return TRUE;
+       return FALSE;
+     }
+   return TRUE;	/* don't put an invalid attribute in the menu */
 }
 
 /*----------------------------------------------------------------------
