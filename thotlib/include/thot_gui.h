@@ -188,10 +188,15 @@ typedef XtTranslations ThotTranslations;
  ************************************************************************/
 
 typedef struct
-  {
-     int                 depth;
-     int                 class;
-  }
+{
+#ifdef __cplusplus
+  int                 v_depth;
+  int                 v_class;
+#else
+  int                 depth;
+  int                 class;
+#endif
+}
 THOT_VInfo;
 
 #endif /* THOT_GUI_H */

@@ -612,7 +612,7 @@ char               *extension;
    nameLength = strlen (fileName);
    if (nameLength >= MAX_CHAR)
       ok = FALSE;
-   else if (nameLength > 0 && extLength > 0)
+   else if (extLength > 0 && nameLength > extLength)
      {
 	ok = TRUE;
 	j = nameLength - 1;

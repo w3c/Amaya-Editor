@@ -1329,16 +1329,18 @@ void               *event;
 				TtaFetchOneEvent (&event);
 				while (event.type != ButtonRelease)
 				  {
-				     dx = event.xbutton.x - ClickX;
-				     dy = event.xbutton.y - ClickY;
-				     if (event.type == MotionNotify
-					 && (dx > 2 || dx < -2 || dy > 2 || dy < -2))
-				       {
-					  LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
-					  comm = 1;	/* il y a un drag */
-				       }
-				     TtaHandleOneEvent (&event);
-				     TtaFetchOneEvent (&event);
+				    if (event.type == MotionNotify)
+				      {
+					dx = event.xmotion.x - ClickX;
+					dy = event.xmotion.y - ClickY;
+					if (dx > 2 || dx < -2 || dy > 2 || dy < -2)
+					  {
+					    LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
+					    comm = 1;	/* il y a un drag */
+					  }
+				      }
+				    TtaHandleOneEvent (&event);
+				    TtaFetchOneEvent (&event);
 				  }	/*while */
 				TtaHandleOneEvent (&event);
 
