@@ -828,8 +828,8 @@ Document            document;
 		sscanf (text, "%d,%d %d", &x1, &y1, &r);
 	     TtaSetAttributeValue (attrX, x1 - r, element, document);
 	     TtaSetAttributeValue (attrY, y1 - r, element, document);
-	     TtaSetAttributeValue (attrW, x1 + r, element, document);
-	     TtaSetAttributeValue (attrH, y1 + r, element, document);
+	     TtaSetAttributeValue (attrW, 2 * r, element, document);
+	     TtaSetAttributeValue (attrH, 2 * r, element, document);
 	  }
      }
    else if (shape == HTML_ATTR_shape_VAL_polygon)
