@@ -2770,7 +2770,7 @@ STRING              entityName;
        lang = -1;
        /* print an error message */
        usprintf (msgBuffer,
-		 TEXT("Unknown entity &%s;"),
+		 TEXT("Unknown entity %s"),
 		 entityName);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
