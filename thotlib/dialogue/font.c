@@ -1338,8 +1338,14 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
       car = UNDISPLAYED_UNICODE;
       *font = NULL;
     }
+  else if (car == EOS)
+    {
+      /* generate a square */
+      car = UNDISPLAYED_UNICODE;
+      *font = NULL;
+    }
   else
-    *font = lfont;
+    *font = lfont;    
   return car;
 #else /* _I18N_ */
   *font = fontset;
