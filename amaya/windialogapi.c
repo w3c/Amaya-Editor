@@ -2996,27 +2996,31 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 	  doc = TmpDoc;
       DocInfo[doc] = hwnDlg;
       /* init the dialog's text */
-      SetWindowText (hwnDlg, TEXT("Document Info"));
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE)TEXT);
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
 		     TtaGetMessage (LIB, TMSG_DONE));
 
       /* set up the other fields */
 
       /* document URL */
-      SetDlgItemText (hwnDlg, IDC_DIURL, TEXT("Location:"));
+      SetDlgItemText (hwnDlg, IDC_DIURL,
+		      TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE));
       SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
 
       /* MIME type */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, TEXT("Content Type:"));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE,
+		      TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE));
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, 
 		      DocumentMeta[doc]->content_type);
 
       /* charset */
-      SetDlgItemText (hwnDlg, IDC_DICHARSET, TEXT("Charset:"));
+      SetDlgItemText (hwnDlg, IDC_DICHARSET,
+		      TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE));
       SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, DocumentMeta[doc]->charset);
 
       /* content length */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, TEXT("Content Length:"));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN,
+		      TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE));
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, 0);
       break;
 
