@@ -235,6 +235,15 @@ void MapMathMLEntity (char *entityName, char *entityValue,
 }
 
 /*----------------------------------------------------------------------
+   MathMLEntityCreated
+  ----------------------------------------------------------------------*/
+void MathMLEntityCreated (unsigned char *entityValue, Language lang,
+                        char *entityName, Document doc)
+
+ {
+ }
+
+/*----------------------------------------------------------------------
   ElementNeedsPlaceholder
   returns TRUE if element el needs a sibling placeholder.
   ----------------------------------------------------------------------*/
