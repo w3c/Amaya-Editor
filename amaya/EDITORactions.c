@@ -840,12 +840,39 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el;
+   int                 firstSelectedChar, i;
+   AttributeType       attrType;
+   Attribute           attr;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
        elType.ElTypeNum = HTML_EL_Table;
        TtaCreateElement (elType, document);
+       /* get the new Table */
+       TtaGiveFirstSelectedElement (document, &el, &firstSelectedChar, &i);
+       elType = TtaGetElementType (el);
+       while (elType.ElTypeNum != HTML_EL_Table && el != NULL)
+	 {
+	   el = TtaGetParent (el);
+	   if (el != NULL)
+	      elType = TtaGetElementType (el);
+	 }
+       if (el != NULL)
+	 {
+         /* if the Table has no Border attribute, create one */
+         attrType.AttrSSchema = elType.ElSSchema;
+         attrType.AttrTypeNum = HTML_ATTR_Border;
+         attr = TtaGetAttribute (el, attrType);
+         if (attr == NULL)
+	   {
+	   /* create the Border attribute */
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, attr, document);
+	   TtaSetAttributeValue (attr, 1, el, document);
+	   }
+	 }
      }
 }
 

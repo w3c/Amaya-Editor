@@ -2218,6 +2218,7 @@ BOXES
  UL_DISC: BEGIN
 	Content: Text Greek '\267';
 	Height: 0.8;
+	Size: Creator =;
 	VertPos: HRef = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
@@ -2229,6 +2230,7 @@ BOXES
 	Content: Graphics 'R';
 	Height: 0.4;
 	Width: 0.4;
+	Size: Creator =;
 	LineWeight: 1 px;
 	VertPos: Bottom = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
@@ -2240,6 +2242,7 @@ BOXES
 	Content: Graphics 'c';
 	Height: 0.4;
 	Width: 0.4;
+	Size: Creator =;
 	LineWeight: 1 px;
 	VertPos: Bottom = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
@@ -5327,8 +5330,11 @@ RULES
 #ifdef PAGE
 	CreateAfter(LinkPageNumber);
 #endif
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
+	if not immediately within BODY
+	   BEGIN
+	   HorizPos: Left = Previous . Right;
+	   VertPos: HRef = Previous . HRef;
+	   END;
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
 		Underline: Enclosing =;

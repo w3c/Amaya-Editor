@@ -5229,12 +5229,18 @@ char                c;
    strncpy (theGI, inputBuffer, MaxBufferLength - 1);
    theGI[MaxBufferLength - 1] = EOS;
    InitBuffer ();
+   if (lastElementClosed && (lastElement == rootElement))
+      /* an element after the tag </html>, ignore it */
+      {
+      ParseHTMLError (theDocument, "Element after tag </html>. Ignored");
+      return;
+      }
 #ifdef MATHML
    if (WithinMathML)
-       ProcessStartMathGI (theGI);
+      ProcessStartMathGI (theGI);
    else
 #endif /* MATHML */
-   ProcessStartGI (theGI);
+      ProcessStartGI (theGI);
 }
 
 /*----------------------------------------------------------------------
@@ -5464,7 +5470,8 @@ char                c;
      }
    else
       IgnoreAttr = FALSE;
-   if (tableEntry != NULL && lastElement != NULL)
+   if (tableEntry != NULL && lastElement != NULL &&
+       (!lastElementClosed || (lastElement != rootElement)))
      {
 	lastAttrEntry = tableEntry;
 	translation = lastAttrEntry->AttrOrContent;
@@ -5709,8 +5716,11 @@ char                c;
    CloseBuffer ();
    /* inputBuffer contains the attribute value */
    done = FALSE;
+   if (lastElementClosed && (lastElement == rootElement))
+      /* an attribute after the tag </html>, ignore it */
+      done = TRUE;
    /* treatments of some particular HTML attributes */
-   if (!strcmp (lastAttrEntry->htmlAttribute, "STYLE"))
+   else if (!strcmp (lastAttrEntry->htmlAttribute, "STYLE"))
      {
 #ifndef STANDALONE
 	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
