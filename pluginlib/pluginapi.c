@@ -38,6 +38,9 @@
 #include "picture_tv.h"
 #include "frame_tv.h"
 
+#define DC_TRUE    1
+#define AMAYA_SYNC 1
+
 extern ThotAppContext   app_cont;
 extern PluginInfo*      pluginTable [100];
 extern Document         currentDocument;
@@ -356,7 +359,74 @@ NPP instance ;
 }
 
 /*----------------------------------------------------------------------
+  AP_GetURL_callback
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AP_GetURL_callback (NPP instance, char *tempfile)
+#else
+void AP_GetURL_callback (instance, tempfile)
+NPP instance;
+char *tempfile;
+#endif /* __STDC __ */
+{
+    NPStream*   stream;
+    NPByteRange range;
+    NPWindow*   pwindow;
+    char        widthText[10], heightText[10];
+    char*       argn[6], *argv[6];
+    char*       url;
+    char*       message = (char*) NULL;
+    uint16      stype;
+    int         ret;
+    int16       argc  = 6; /* to parametrize */
+    /* int16       argc  = 3; */ /* to parametrize */
+    struct stat sbuf;
+
+  stat (url, &sbuf);
+
+  stream               = (NPStream*) malloc (sizeof (NPStream));
+  stream->url          = strdup (url);
+  stream->end          = 0;
+  stream->pdata        = instance->pdata;
+  stream->ndata        = NULL;
+  stream->notifyData   = NULL;
+  stream->end          = sbuf.st_size;
+  stream->lastmodified = sbuf.st_mtime; 
+
+    ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) (instance,
+                                                                         pluginTable [currentExtraHandler]->pluginMimeType,
+                                                                         stream, 
+                                                                         FALSE, 
+                                                                         &stype); 
+
+    printf ("Stype : %d\n", stype);
+
+    switch (stype) {
+           case NP_NORMAL:     Ap_Normal (instance, stream, url); 
+                               break;
+           case NP_ASFILEONLY: (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) (instance, stream, url);
+                               break;
+	   case NP_ASFILE:     Ap_AsFile (instance, stream, url);
+	       /*case NP_ASFILE:     Ap_Normal (indexPlug, (NPP) (imageDesc->pluginInstance), stream, url);  */
+                               break;
+           case NP_SEEK:       /* ?????????????????????????????
+                                  CALL Ap_RequestRead
+                                  ????????????????????????????? */
+                               break;
+           default:            printf ("Error unknown mode %d\n", stype);
+                               break;
+    }
+
+    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) (instance, stream, url);
+    /* (*(pluginTable [indexPlug]->pluginFunctionsTable->destroystream)) ((NPP)(imageDesc->pluginInstance), stream, NPRES_DONE);*/
+    range.offset = 0; /*10; */
+    range.length = 2000; /*20;*/
+    range.next   = NULL;
+}
+
+/*----------------------------------------------------------------------
   Ap_GetURL
+  A faire: remplacer le 1 dans Getxxx par doc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 NPError Ap_GetURL (NPP instance, const char* url, const char* window)
@@ -368,21 +438,29 @@ const char* window ;
 #endif /* __STDC__ */
 {
    /*NPStream * stream;*/
+  int result;
+  char tempfile [200]; /* MAX_LENGTH */
 
-    printf ("***** Ap_GetURL *****\n") ; 
-    
-   if (window) {
-      /* pass the stream to AMAYA */
-      printf ("AM_geturl: Passing the stream to AMAYA\n");
-   } else { /* window = NULL */
-	  /* pass the stream to the plug-in */
+    printf ("***** Ap_GetURL *****\n"); 
+    if (IsValidProtocol (url)) {
+      if (window) {
+	/* pass the stream to AMAYA */
+	printf ("AM_geturl: Passing the stream to AMAYA\n");
+	GetHTMLDocument (url, NULL, 1, 1, DC_TRUE);
+      }
+      else {/* pass the stream to the plug-in */
+	result = GetObjectWWW (1, url, (char *) NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, 0);
+	if (result != -1) {
 	  printf ("AM_geturl: Passing stream to the plug-in\n");
-
+	  AP_GetURL_callback (instance, tempfile);
 	  /*NPP_NewStream();*/
 	  /* NPP_WriteReady(); */
 	  /* NPP_Write(); */  /* Until the stream ends */
 	  /* NPP_DestroyStream(); */
-   }
+	}
+      }
+    }  else /* java? */
+    printf ("AM_geturl: Passing the stream to Java Interpreter\n");
    return NPERR_NO_ERROR;
 }
 
