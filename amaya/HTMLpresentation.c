@@ -31,8 +31,6 @@
 #include "undo.h"
 #include "XHTMLbuilder_f.h"
 
-void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc,
-		ThotBool showBoxAllowed);
 
 /*----------------------------------------------------------------------
   MakeASpan
