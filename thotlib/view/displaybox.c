@@ -231,7 +231,7 @@ static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
 	      break;
 	    case '?':
-	      DrawRectangle (frame, i, 5, xd, yd, width, height, fg, 0, 0);
+	      DrawRectangle (frame, 1, 5, xd, yd, width, height, fg, 0, 0);
 	      break;
 	    default:
 	      DrawChar (pBox->BxAbstractBox->AbShape, frame, xd, yd, font, fg);
