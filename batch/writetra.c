@@ -548,7 +548,7 @@ void                WriteBlockPtr (PtrTRuleBlock pBlock)
 /*----------------------------------------------------------------------
    WriteBlocks   ecrit une suite de blocs de regles		
   ----------------------------------------------------------------------*/
-void                WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
+void WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
 {
    PtrTRuleBlock       curBlock, nextBlock;
    TranslCondition    *pCond;
@@ -639,7 +639,7 @@ void                WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
    WriteTRulesAttr  ecrit les regles de traduction de l'attribut	
    de numero att appartenant au schema de structure pSS		
   ----------------------------------------------------------------------*/
-void                WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
+void WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
 {
    AttributeTransl    *pAttrT;
    TranslNumAttrCase  *pCase;
@@ -679,7 +679,7 @@ void                WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
    WritePRuleTrans ecrit les regles de traduction de la presentation 
    de numero pres							
   ----------------------------------------------------------------------*/
-void                WritePRuleTrans (int pres, PtrSSchema pSS, PtrTSchema pTSch)
+void WritePRuleTrans (int pres, PtrSSchema pSS, PtrTSchema pTSch)
 {
    PRuleTransl        *pPRuleTr;
    TranslNumAttrCase  *pCase;
@@ -717,7 +717,7 @@ void                WritePRuleTrans (int pres, PtrSSchema pSS, PtrTSchema pTSch)
    WriteTranslationSchema cree le fichier de sortie et y ecrit le	
    schema de traduction						
   ----------------------------------------------------------------------*/
-ThotBool             WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS)
+ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS)
 {
    TCounter           *pCntr;
    TranslVariable     *pVar;

@@ -171,7 +171,7 @@ static void MenuActionList (PtrAppMenu firstMenu)
    PtrAppName          curItem, prevItem;
    PtrAppMenu          menu;
    PtrAppMenuItem      item, menuitem;
-   ThotBool             found;
+   ThotBool            found;
 
    menu = firstMenu;
    /* check the new set of menus */
@@ -333,13 +333,13 @@ static void MakeMenusAndActionList ()
    registered events and returns True if yes, and the rank of the  
    event in the list (rank).                                       
   ----------------------------------------------------------------------*/
-static ThotBool RegisteredEvent (char* eventName, int *rank)
+static ThotBool RegisteredEvent (char *eventName, int *rank)
 {
    int                 evtNum, evt;
    ThotBool             found;
 
    /* cherche le nom de l'evenement dans la table */
-   evtNum = sizeof (RegisteredAppEvents) / sizeof (STRING);
+   evtNum = sizeof (RegisteredAppEvents) / sizeof (char *);
 
    found = False;
    for (evt = 0; evt < evtNum && !found; (evt)++)
@@ -1295,15 +1295,15 @@ static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
 /*----------------------------------------------------------------------
    WriteDefineFile                                                 
   ----------------------------------------------------------------------*/
-static void         WriteDefineFile (STRING fname)
+static void         WriteDefineFile (char *fname)
 {
-   ThotBool            firstLocalAttribute, first;
-   int                 firstRule;
-   int                 i;
-   int                 rule;
    SRule              *pRule;
    Name                HFileName;
    FILE               *Hfile;
+   int                 firstRule;
+   int                 i;
+   int                 rule;
+   ThotBool            firstLocalAttribute, first;
 
    sprintf (HFileName, "%s.h", fname);
    Hfile = fopen (HFileName, "w");
@@ -1413,7 +1413,7 @@ int       main (int argc, char **argv)
    FILE               *filedesc;
    ThotBool            fileOK;
    char                buffer[200];
-   STRING              pwd, ptr;
+   char               *pwd, *ptr;
    Name                srceFileName;
    int                 i;
    int                 wi;	/* position du debut du mot courant dans la ligne */

@@ -8,7 +8,7 @@
 
 extern void CharTranslation ( ThotKeyEvent *event );
 extern void ThotInput ( int frame,
-                        USTRING string,
+                        unsigned char *string,
                         unsigned int nb,
                         int PicMask,
                         int key );
@@ -26,7 +26,7 @@ extern ThotTranslations InitTranslations ( char *appliname );
 
 extern void CharTranslation (/* ThotKeyEvent *event */);
 extern void ThotInput (/* int frame,
-                          USTRING string,
+                          unsigned char *string,
                           unsigned int nb,
                           int PicMask,
                           int key */);

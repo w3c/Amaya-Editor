@@ -14,7 +14,7 @@
  * par le traducteur, pour guider sa traduction.
  *
  * Author: V. Quint (INRIA)
- *         R. Guetari (W3C/INRIA): Windows & Unicode.
+ *         R. Guetari (W3C/INRIA): Windows.
  *
  */
 
@@ -131,11 +131,7 @@ static ThotBool    SecondInPair;/* on a rencontre' "Second" */
 /*----------------------------------------------------------------------
    Initialize	initialise le schema de traduction en memoire   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Initialize ()
-#else  /* __STDC__ */
-static void         Initialize ()
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -172,9 +168,9 @@ static void         Initialize ()
 
    /* initialise le schema de traduction */
    pTSchema->TsLineLength = 0;	/* pas de longueur max des lignes traduites */
-   ustrcpy (pTSchema->TsEOL, "\n");	/* caractere fin de ligne par
+   strcpy (pTSchema->TsEOL, "\n");	/* caractere fin de ligne par
 					   defaut */
-   ustrcpy (pTSchema->TsTranslEOL, "\n");	/* fin de ligne a inserer par
+   strcpy (pTSchema->TsTranslEOL, "\n");	/* fin de ligne a inserer par
 						   defaut */
    pTSchema->TsNConstants = 0;	/* nombre de constantes */
    pTSchema->TsNCounters = 0;	/* nombre de compteurs */
@@ -206,11 +202,7 @@ static void         Initialize ()
 /*----------------------------------------------------------------------
    initialise les regles de traduction des attributs               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitAttrTransl ()
-#else  /* __STDC__ */
-static void         InitAttrTransl ()
-#endif /* __STDC__ */
 {
    int                 i, j;
    AttributeTransl    *pAttTr;
@@ -255,12 +247,7 @@ static void         InitAttrTransl ()
    traite le type d'element indique' dans une condition Within ou  
    FirstWithin Le nom du type se trouve dans la variable TypeWithin 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfCondition (PtrSSchema pSS)
-#else  /* __STDC__ */
-static void         EndOfCondition (pSS)
-PtrSSchema          pSS;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -268,10 +255,10 @@ PtrSSchema          pSS;
      /* verifie si le type existe dans le schema de structure */
      {
        i = 0;
-       while (ustrcmp (TypeWithin, pSS->SsRule[i].SrName) != 0 &&
+       while (strcmp (TypeWithin, pSS->SsRule[i].SrName) != 0 &&
 	      i < pSS->SsNRules - 1)
 	 i++;
-       if (ustrcmp (TypeWithin, pSS->SsRule[i].SrName) != 0)
+       if (strcmp (TypeWithin, pSS->SsRule[i].SrName) != 0)
 	 /* type inconnu */
 	 CompilerMessage (BeginTypeWithin, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
@@ -286,13 +273,7 @@ PtrSSchema          pSS;
    traite le type d'element indique' dans une clause Ancestor      
    Le nom du type se trouve dans la variable AncestorName.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessAncestorName (PtrSSchema pSS)
-#else  /* __STDC__ */
-static void         ProcessAncestorName (pSS)
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+static void ProcessAncestorName (PtrSSchema pSS)
 {
    int                 i;
 
@@ -300,10 +281,10 @@ PtrSSchema          pSS;
      /* verifie si le type existe dans le schema de structure */
      {
        i = 0;
-       while (ustrcmp (AncestorName, pSS->SsRule[i].SrName) != 0 &&
+       while (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0 &&
 	      i < pSS->SsNRules - 1)
 	 i++;
-       if (ustrcmp (AncestorName, pSS->SsRule[i].SrName) != 0)
+       if (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0)
 	 /* type inconnu */
 	 CompilerMessage (BeginAncestorName, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
@@ -317,14 +298,7 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
    traite un nom de regle de presentation passee en parametre      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
-#else  /* __STDC__ */
-static void         PresentationName (TypeRPres, pr, wi)
-PRuleType           TypeRPres;
-SyntRuleNum         pr;
-int                 wi;
-#endif /* __STDC__ */
+static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 {
    int                 i, j;
    PRuleTransl        *pPresTrans;
@@ -411,13 +385,7 @@ int                 wi;
 /*----------------------------------------------------------------------
    traite le mot-cle' representant une valeur d'une presentation.  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PresentValue (char value, int wi)
-#else  /* __STDC__ */
-static void         PresentValue (value, wi)
-char                value;
-int                 wi;
-#endif /* __STDC__ */
+static void PresentValue (char value, int wi)
 {
   int                 i;
   PRuleTransl        *pPresTrans;
@@ -454,17 +422,8 @@ int                 wi;
 /*----------------------------------------------------------------------
    SrceStringGreater                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          SrceStringGreater (int framet, int lent, int rank,
-				       ThotBool * equal, SourceString source)
-#else  /* __STDC__ */
-static int          SrceStringGreater (framet, lent, rank, equal, source)
-int                 framet;
-int                 lent;
-int                 rank;
-ThotBool            *equal;
-SourceString        source;
-#endif /* __STDC__ */
+static int SrceStringGreater (int framet, int lent, int rank,
+			      ThotBool *equal, SourceString source)
 {
    int                 i, k, s;
    ThotBool             eq;
@@ -500,13 +459,7 @@ SourceString        source;
    indx : index dans inputLine du premier caractere de la chaine,  
    len est la longueur de la chaine.                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         NewSourceString (int indx, int len)
-#else  /* __STDC__ */
-static void         NewSourceString (indx, len)
-int                 indx;
-int                 len;
-#endif /* __STDC__ */
+static void NewSourceString (int indx, int len)
 {
    int                 k;
    ThotBool             equal;
@@ -557,7 +510,7 @@ int                 len;
 	   /* on l'insere dans la table */
 	   for (k = lastEntry; k >= CurEntry; k--)
 	     pTSchema->TsCharTransl[k] = pTSchema->TsCharTransl[k - 1];
-	   ustrncpy (pTSchema->TsCharTransl[CurEntry - 1].StSource, source,
+	   strncpy (pTSchema->TsCharTransl[CurEntry - 1].StSource, source,
 		     MAX_SRCE_LEN + 1);
 	   if (TextTrans)
 	     /* on est dans les traductions de texte */
@@ -583,13 +536,7 @@ int                 len;
    indx: index dans inputLine du premier caractere de la chaine,   
    len est la longueur de la chaine.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessTargetString (int indx, int len)
-#else  /* __STDC__ */
-static void         ProcessTargetString (indx, len)
-int                 indx;
-int                 len;
-#endif /* __STDC__ */
+static void ProcessTargetString (int indx, int len)
 {
    int                 k;
    TargetString        target;
@@ -598,18 +545,14 @@ int                 len;
    for (k = 0; k <= len - 2; k++)
      target[k] = inputLine[indx + k - 1];
    target[len - 1] = '\0';
-   ustrncpy (pTSchema->TsCharTransl[CurEntry - 1].StTarget, target,
+   strncpy (pTSchema->TsCharTransl[CurEntry - 1].StTarget, target,
 	     MAX_TARGET_LEN + 1);
 }
 
 /*----------------------------------------------------------------------
    Cree et initialise un nouveau bloc de regles                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         NewRuleBlock ()
-#else  /* __STDC__ */
-static void         NewRuleBlock ()
-#endif /* __STDC__ */
+static void NewRuleBlock ()
 {
    PtrTRuleBlock       pBlock;
    AttributeTransl    *pAttrTrans;
@@ -680,11 +623,7 @@ static void         NewRuleBlock ()
 /*----------------------------------------------------------------------
    cree une nouvelle regle, la chaine et l'initialise              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewTransRule ()
-#else  /* __STDC__ */
-static void         NewTransRule ()
-#endif /* __STDC__ */
 {
    PtrTRule            pTRule;
 
@@ -714,16 +653,7 @@ static void         NewTransRule ()
    traite le type d'element indique' dans une regle Get.           
    Le nom du type se trouve dans la variable TypeInGetRule.        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         ProcessTypeName (PtrSSchema pSS)
-
-#else  /* __STDC__ */
-static void         ProcessTypeName (pSS)
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
    int                 i, j;
    ThotBool             found;
@@ -734,10 +664,10 @@ PtrSSchema          pSS;
      /* verifie si le type existe dans le schema de structure */
      {
        i = 1;
-       while (ustrcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0 &&
+       while (strcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0 &&
 	      i < pSS->SsNRules)
 	 i++;
-       if (ustrcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0)
+       if (strcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0)
 	 /* type inconnu */
 	 CompilerMessage (BeginTypeInGetRule, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
@@ -759,43 +689,22 @@ PtrSSchema          pSS;
 /*----------------------------------------------------------------------
    copie le mot traite dans n                                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         CopyWord (Name n, indLine wi, indLine wl)
-
-#else  /* __STDC__ */
-static void         CopyWord (n, wi, wl)
-Name                n;
-indLine             wi;
-indLine             wl;
-
-#endif /* __STDC__ */
-
 {
-   if (wl > MAX_NAME_LENGTH - 1)
-     CompilerMessage (wi, TRA, FATAL, MAX_NAME_SIZE_OVERFLOW, inputLine,
+  if (wl > MAX_NAME_LENGTH - 1)
+    CompilerMessage (wi, TRA, FATAL, MAX_NAME_SIZE_OVERFLOW, inputLine,
 		      LineNum);
-   else
-     {
-       ustrncpy (n, &inputLine[wi - 1], wl);
-       n[wl] = '\0';
-     }
+  else
+    {
+      strncpy (n, &inputLine[wi - 1], wl);
+      n[wl] = '\0';
+    }
 }
 
 /*----------------------------------------------------------------------
    cree une nouvelle constante                                     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         NewConstant (indLine wl, indLine wi)
-
-#else  /* __STDC__ */
-static void         NewConstant (wl, wi)
-indLine             wl;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -824,17 +733,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    cree un attribut dans une regle Create ou Write                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
-
-#else  /* __STDC__ */
-static void         AttrInCreateOrWrite (att, pr, wi)
-int                 att;
-SyntRuleNum         pr;
-indLine             wi;
-
-#endif /* __STDC__ */
-
+static void AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
 {
    SRule              *pSRule;
    TranslVariable     *pTransVar;
@@ -902,17 +801,7 @@ indLine             wi;
    PatternNum   retourne le rang du nom n dans le fichier          
    des patterns de Thot.                                   
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          PatternNum (Name n, indLine wi)
-
-#else  /* __STDC__ */
-static int          PatternNum (n, wi)
-Name                n;
-indLine             wi;
-
-#endif /* __STDC__ */
-
+static int PatternNum (Name n, indLine wi)
 {
    unsigned int         i;
    ThotBool             ok;
@@ -921,11 +810,11 @@ indLine             wi;
    i = 0;
    ok = False;
    do
-     if (ustrcmp (n, Name_patterns[i]) == 0)
+     if (strcmp (n, Name_patterns[i]) == 0)
        ok = True;
      else
        i++;
-   while (!ok && i < sizeof (Name_patterns) / sizeof (STRING));
+   while (!ok && i < sizeof (Name_patterns) / sizeof (char *));
 
    if (!ok)
      {
@@ -941,22 +830,12 @@ indLine             wi;
    ColorNum   retourne le rang du nom n dans le fichier            
    des couleurs de Thot.                                   
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static int          ColorNum (Name n, indLine wi)
-
-#else  /* __STDC__ */
-static int          ColorNum (n, wi)
-Name                n;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
    i = 0;
-   while (i < MAX_COLOR && ustrcmp (Name_colors[i], n))
+   while (i < MAX_COLOR && strcmp (Name_colors[i], n))
      i++;
    if (i == MAX_COLOR)
      CompilerMessage (wi, TRA, FATAL, MISSING_COLOR, inputLine,
@@ -970,17 +849,7 @@ indLine             wi;
    wi du buffer de lecture est un nom de type d'element, retourne  
    le numero de type correspondant, sinon retourne 0.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static int          ElementTypeNum (indLine wi, indLine wl)
-
-#else  /* __STDC__ */
-static int          ElementTypeNum (wi, wl)
-indLine             wi;
-indLine             wl;
-
-#endif /* __STDC__ */
-
 {
    Name                n;
    int                 i;
@@ -988,10 +857,10 @@ indLine             wl;
    CopyWord (n, wi, wl);
    /* verifie si le type existe dans le schema de structure */
    i = 1;
-   while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName) != 0 &&
+   while (strcmp (n, pSSchema->SsRule[i - 1].SrName) != 0 &&
 	  i < pSSchema->SsNRules)
      i++;
-   if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName) != 0)
+   if (strcmp (n, pSSchema->SsRule[i - 1].SrName) != 0)
      /* type inconnu */
      {
        CompilerMessage (wi, TRA, FATAL, BAD_TYPE, inputLine, LineNum);
@@ -1006,17 +875,7 @@ indLine             wl;
    lecture est un nom d'attribut, retourne le numero de cet attribut,
    sinon retourne 0.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static int          AttributeNum (indLine wi, indLine wl)
-
-#else  /* __STDC__ */
-static int          AttributeNum (wi, wl)
-indLine             wi;
-indLine             wl;
-
-#endif /* __STDC__ */
-
 {
    Name                n;
    int                 i;
@@ -1025,10 +884,10 @@ indLine             wl;
    CopyWord (n, wi, wl);
    /* verifie si l'attribut existe bien dans le schema de structure */
    i = 1;
-   while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0 &&
+   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0 &&
           i < pSSchema->SsNAttributes)
      i++;
-   if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
+   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
      /* attribut inconnu */
      i = 0;
    return i;
@@ -1040,17 +899,7 @@ indLine             wl;
    lecture est un type d'element, traite ce type comme apparaissant
    dans une condition "if type"
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool      ElementTypeInCond (indLine wi, indLine wl)
-
-#else  /* __STDC__ */
-static ThotBool      ElementTypeInCond (wi, wl)
-indLine             wi;
-indLine             wl;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -1079,21 +928,7 @@ indLine             wl;
    contient son rang dans la table des identificateurs. r est le   
    numero de la regle dans laquelle apparait ce mot.               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
-
-#else  /* __STDC__ */
-static void         ProcessToken (wi, wl, c, r, nb, pr)
-indLine             wi;
-indLine             wl;
-SyntacticCode       c;
-SyntacticCode       r;
-int                 nb;
-SyntRuleNum         pr;
-
-#endif /* __STDC__ */
-
+static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
 {
    int                 i, k;
    Name                n;
@@ -1972,7 +1807,7 @@ SyntRuleNum         pr;
 		 else
 		   {
 		     CurTRule->TrType = TUse;
-		     ustrncpy (CurTRule->TrNature,
+		     strncpy (CurTRule->TrNature,
 			       pSSchema->SsRule[CurType - 1].SrName,
 			       MAX_NAME_LENGTH);
 		   }
@@ -2330,7 +2165,7 @@ SyntRuleNum         pr;
 		       TtaDisplaySimpleMessage (FATAL, TRA,
 						CANT_READ_STRUCT_SCHEM);
 		     else
-		       if (ustrcmp (pTSchema->TsStructName, pSSchema->SsName))
+		       if (strcmp (pTSchema->TsStructName, pSSchema->SsName))
 			 CompilerMessage (wi, TRA, FATAL,
 					  STRUCT_SCHEM_DOES_NOT_MATCH,
 					  inputLine, LineNum);
@@ -2369,7 +2204,7 @@ SyntRuleNum         pr;
 			   else
 			     /* le schema de structure a ete charge' */
 			     {
-			       ustrncpy (CurBlock->TbCondition[CurBlock->
+			       strncpy (CurBlock->TbCondition[CurBlock->
 					   TbNConditions - 1].TcElemNature, n,
 					 MAX_NAME_LENGTH);
 			       EndOfCondition (pExtSSchema);
@@ -2404,7 +2239,7 @@ SyntRuleNum         pr;
 			 else
 			   /* le schema de    structure a ete charge' */
 			   {
-			     ustrncpy (CurBlock->TbCondition[CurBlock->
+			     strncpy (CurBlock->TbCondition[CurBlock->
 					  TbNConditions - 1].TcAscendNature,
 				       n, MAX_NAME_LENGTH);
 			     ProcessAncestorName (pExtSSchema);
@@ -2443,10 +2278,10 @@ SyntRuleNum         pr;
 			     /* le schema de    structure a ete charge' */
 			     {
 			       if (InGetRule)
-				 ustrncpy (CurTRule->TrElemNature, n,
+				 strncpy (CurTRule->TrElemNature, n,
 					   MAX_NAME_LENGTH);
 			       else
-				 ustrncpy (CurTRule->TrObjectNature, n,
+				 strncpy (CurTRule->TrObjectNature, n,
 					   MAX_NAME_LENGTH);
 			       ProcessTypeName (pExtSSchema);
 			     }
@@ -2918,10 +2753,10 @@ SyntRuleNum         pr;
 		 else
 		   {
 		     i = 1;
-		     while (ustrcmp (n, pAttr->AttrEnumValue[i - 1]) != 0 &&
+		     while (strcmp (n, pAttr->AttrEnumValue[i - 1]) != 0 &&
 			    i < pAttr->AttrNEnumValues)
 		       i++;
-		     if (ustrcmp (n, pAttr->AttrEnumValue[i - 1]) != 0)
+		     if (strcmp (n, pAttr->AttrEnumValue[i - 1]) != 0)
 		       /* valeur d'attribut  incorrecte */
 		       CompilerMessage (wi, TRA, FATAL, BAD_ATTR_VALUE,
 					inputLine, LineNum);
@@ -3462,29 +3297,12 @@ SyntRuleNum         pr;
    main                                                            
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-#ifdef __STDC__
-int                 TRAmain (HWND hwnd, HWND statusBar, int argc, STRING *argv, int* Y)
-#else  /* __STDC__ */
-int                 TRAmain (hwnd, argc, argv, hDC, Y)
-HWND                hwnd;
-int                 argc;
-STRING*             argv;
-int*                Y;
-#endif /* __STDC__ */
-#else  /* !_WINDOWS */
-#ifdef __STDC__
-int                 main (int argc, char **argv)
-#else  /* __STDC__ */
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-#endif /* __STDC__ */
+int TRAmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
+#else  /* _WINDOWS */
+int main (int argc, char **argv)
 #endif /* _WINDOWS */
 {
    FILE               *infile;
-   ThotBool            fileOK;
-   CHAR_T              fname[200], buffer[200];
-   STRING              pwd, ptr;
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi; /* position du debut du mot courant dans la ligne */
    indLine             wl; /* longueur du mot courant */
@@ -3492,28 +3310,30 @@ char              **argv;
    SyntRuleNum         r;  /* numero de regle */
    SyntRuleNum         pr; /* numero de la regle precedente */
    SyntacticCode       c;  /* code grammatical du mot trouve */
-   int                 nb; /* indice dans Identifier du mot trouve, si c'est un
-			      identificateur */
+   char                fname[200], buffer[200];
+   char               *pwd, *ptr;
+   int                 nb; /* index within the identifier */
    int                 i;
    int                 param;
 #ifdef _WINDOWS
    char*               cmd [100];
    int                 ndx, pIndex = 0;
-   CHAR_T                msg [800];
+   char                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #else  /* !_WINDOWS */
    char                cmd[800];
 #endif /* _WINDOWS */
+   ThotBool            fileOK;
 
 #ifdef _WINDOWS 
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   ustrcpy (msg, "Executing tra ");
+   strcpy (msg, "Executing tra ");
    for (ndx = 1; ndx < argc; ndx++) {
-     ustrcat (msg, argv [ndx]);
-     ustrcat (msg, " ");
+     strcat (msg, argv [ndx]);
+     strcat (msg, " ");
    }
 
    TtaDisplayMessage (INFO, msg);
@@ -3545,7 +3365,7 @@ char              **argv;
 	 {
 	   /* keep cpp params */
 #ifdef _WINDOWS
-	   cmd [pIndex] = TtaGetMemory (ustrlen (argv[param]) + 1);
+	   cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
 	   wc2iso_strcpy (cmd [pIndex++], argv[param]);
 #else  /* !_WINDOWS */
 	   strcat (cmd, argv[param]);
@@ -3565,17 +3385,17 @@ char              **argv;
 	   exit (1);
 #endif /* _WINDOWS */
 	 }
-       ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+       strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
        srceFileName[MAX_NAME_LENGTH - 1] = '\0';
        param++;
-       ustrcpy (fname, srceFileName);
+       strcpy (fname, srceFileName);
        /* check if the name contains a suffix */
-       ptr = ustrrchr(fname, '.');
-       nb = ustrlen (srceFileName);
+       ptr = strrchr(fname, '.');
+       nb = strlen (srceFileName);
        if (!ptr)
 	 /* there is no suffix */
-	 ustrcat (srceFileName, ".T");
-       else if (ustrcmp(ptr, ".T"))
+	 strcat (srceFileName, ".T");
+       else if (strcmp(ptr, ".T"))
 	 {
 	   /* it's not the valid suffix */
 	   TtaDisplayMessage (FATAL, TtaGetMessage (TRA, INVALID_FILE),
@@ -3594,7 +3414,7 @@ char              **argv;
 	   nb -= 2; /* length without the suffix */
 	 }
        /* add the suffix .SCH in srceFileName */
-       ustrcat (fname, ".SCH");
+       strcat (fname, ".SCH");
        
        /* does the file to compile exist */
        if (TtaFileExist (srceFileName) == 0)
@@ -3610,16 +3430,16 @@ char              **argv;
 	   if (pwd != NULL)
 	     {
 #ifdef _WINDOWS
-	       CHAR_T* CMD;
-	       CMD = TtaAllocString (3 + ustrlen (pwd));
-	       usprintf (CMD, "-I%s", pwd);
-	       cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
+	       char* CMD;
+	       CMD = TtaGetMemory (3 + strlen (pwd));
+	       sprintf (CMD, "-I%s", pwd);
+	       cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
 	       wc2iso_strcpy (cmd [pIndex++], CMD);
 	       cmd [pIndex] = TtaGetMemory (3);
 	       strcpy (cmd [pIndex++], "-C");
-	       cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+	       cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
 	       wc2iso_strcpy (cmd [pIndex++], srceFileName);
-	       cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
+	       cmd [pIndex] = TtaGetMemory (strlen (fname) + 1);
 	       wc2iso_strcpy (cmd [pIndex++], fname);
 #else  /* !_WINDOWS */
 	       sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
@@ -3630,9 +3450,9 @@ char              **argv;
 #ifdef _WINDOWS
                cmd [pIndex] = TtaGetMemory (3);
                strcpy (cmd [pIndex++], "-C");
-               cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+               cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
                wc2iso_strcpy (cmd [pIndex++], srceFileName);
-               cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 2);
+               cmd [pIndex] = TtaGetMemory (strlen (fname) + 2);
                wc2iso_strcpy (cmd [pIndex++], fname);
 #else  /* !_WINDOWS */
                sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
@@ -3664,7 +3484,7 @@ char              **argv;
 	     srceFileName[nb] = '\0';
 	   else
 	     /* read the output name */
-	     ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	     strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
 	   /* le fichier a compiler est ouvert */
 
 	   /* acquiert la memoire pour le schema de traduction */
@@ -3736,7 +3556,7 @@ char              **argv;
 		TtaFileUnlink (fname);
 		/* ecrit le schema compile' dans le fichier de sortie */
 		/* le directory des schemas est le directory courant */
-		ustrcat (srceFileName, ".TRA");
+		strcat (srceFileName, ".TRA");
 		fileOK = WriteTranslationSchema (srceFileName, pTSchema,
 						 pSSchema);
 		if (!fileOK)

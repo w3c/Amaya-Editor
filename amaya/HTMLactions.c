@@ -1119,7 +1119,7 @@ void DoAction (Document doc, View view)
 /*----------------------------------------------------------------------
   AccessKeyHandler handles links or select elements
   ----------------------------------------------------------------------*/
-void AccessKeyHandler (Document doc, void * param)
+void AccessKeyHandler (Document doc, void *param)
 {
   Element             el, child, next;
   ElementType         elType;

@@ -7,18 +7,18 @@
 #ifdef __STDC__
 
 extern Element SearchNAMEattribute ( Document doc,
-                                     STRING nameVal,
+                                     char *nameVal,
                                      Attribute ignore );
 extern void FollowTheLink_callback ( int targetDocument,
                                      int status,
-                                     STRING urlName,
-                                     STRING outputfile,
+                                     char *urlName,
+                                     char *outputfile,
                                      AHTHeaders *http_headers,
-                                     void * context );
+                                     void *context );
 extern void DoAction ( Document doc,
                        View view );
 extern void AccessKeyHandler ( Document doc,
-                               void * param );
+                               void *param );
 extern ThotBool IgnoreEvent ( NotifyElement *event );
 extern ThotBool DoubleClick ( NotifyElement *event );
 extern ThotBool SimpleClick ( NotifyElement *event );
@@ -30,25 +30,25 @@ extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
 extern void SynchronizeSourceView ( NotifyElement * event );
-extern void SelectionChanged ( NotifyElement * event );
+extern void SelectionChanged ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
 
 #else /* __STDC__ */
 
 extern Element SearchNAMEattribute (/* Document doc,
-                                       STRING nameVal,
+                                       char *nameVal,
                                        Attribute ignore */);
 extern void FollowTheLink_callback (/* int targetDocument,
                                        int status,
-                                       STRING urlName,
-                                       STRING outputfile,
+                                       char *urlName,
+                                       char *outputfile,
                                        AHTHeaders *http_headers,
-                                       void * context */);
+                                       void *context */);
 extern void DoAction (/* Document doc,
                          View view */);
 extern void AccessKeyHandler (/* Document doc,
-                                 void * param */);
+                                 void *param */);
 extern ThotBool IgnoreEvent (/* NotifyElement *event */);
 extern ThotBool DoubleClick (/* NotifyElement *event */);
 extern ThotBool SimpleClick (/* NotifyElement *event */);
@@ -60,7 +60,7 @@ extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void ResetHighlightedElement (/* void */);
 extern void SynchronizeSourceView (/* NotifyElement * event */);
-extern void SelectionChanged (/* NotifyElement * event */);
+extern void SelectionChanged (/* NotifyElement *event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int elemtype */);
 

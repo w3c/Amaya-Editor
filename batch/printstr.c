@@ -41,8 +41,8 @@ TtAttribute        *pAt1;
 
 #include "readstr_f.h"
 
-extern CHAR_T*      TtaGetEnvString (char*);
-extern void         TtaInitializeAppRegistry (CHAR_T*);
+extern char*      TtaGetEnvString (char*);
+extern void         TtaInitializeAppRegistry (char*);
 extern void         TtaSaveAppRegistry (void);
 
 /*----------------------------------------------------------------------

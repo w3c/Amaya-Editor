@@ -135,6 +135,7 @@ extern PtrAttribute GetTypedAttrAncestor ( PtrElement pEl,
 extern void CheckLanguageAttr ( PtrDocument pDoc,
                                 PtrElement pEl );
 extern Element TtaGetMainRoot ( Document document );
+extern Element TtaGetRootElement ( Document document );
 extern Document TtaGetDocument ( Element element );
 extern Element TtaGetParent ( Element element );
 extern ElementType TtaGetElementType ( Element element );
@@ -278,6 +279,7 @@ extern PtrAttribute GetTypedAttrAncestor (/* PtrElement pEl,
 extern void CheckLanguageAttr (/* PtrDocument pDoc,
                                   PtrElement pEl */);
 extern Element TtaGetMainRoot (/* Document document */);
+extern Element TtaGetRootElement (/* Document document */);
 extern Document TtaGetDocument (/* Element element */);
 extern Element TtaGetParent (/* Element element */);
 extern ElementType TtaGetElementType (/* Element element */);

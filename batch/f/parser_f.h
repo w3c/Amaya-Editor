@@ -11,18 +11,18 @@ extern int AsciiToInt ( indLine index,
                         indLine len );
 extern void OctalToChar ( void );
 extern void GetNextToken ( indLine start,
-                           indLine * wi,
-                           indLine * wl,
-                           SyntacticType * wn );
+                           indLine *wi,
+                           indLine *wl,
+                           SyntacticType *wn );
 extern void AnalyzeToken ( indLine wi,
                            indLine wl,
                            SyntacticType wn,
-                           SyntacticCode * c,
-                           SyntRuleNum * r,
+                           SyntacticCode *c,
+                           SyntRuleNum *r,
                            int *rank,
-                           SyntRuleNum * pr );
+                           SyntRuleNum *pr );
 extern void ParserEnd ( void );
-extern void InitSyntax ( STRING fileName );
+extern void InitSyntax ( char *fileName );
 
 #else /* __STDC__ */
 
@@ -31,18 +31,18 @@ extern int AsciiToInt (/* indLine index,
                           indLine len */);
 extern void OctalToChar (/* void */);
 extern void GetNextToken (/* indLine start,
-                             indLine * wi,
-                             indLine * wl,
-                             SyntacticType * wn */);
+                             indLine *wi,
+                             indLine *wl,
+                             SyntacticType *wn */);
 extern void AnalyzeToken (/* indLine wi,
                              indLine wl,
                              SyntacticType wn,
-                             SyntacticCode * c,
-                             SyntRuleNum * r,
+                             SyntacticCode *c,
+                             SyntRuleNum *r,
                              int *rank,
-                             SyntRuleNum * pr */);
+                             SyntRuleNum *pr */);
 extern void ParserEnd (/* void */);
-extern void InitSyntax (/* STRING fileName */);
+extern void InitSyntax (/* char *fileName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -55,7 +55,7 @@ static ParserStackItem Stack[STACKSIZE];	/* pile d'analyse */
 /*----------------------------------------------------------------------
    InitParser initialise les donnees de l'analyseur syntaxique.     
   ----------------------------------------------------------------------*/
-void                InitParser ()
+void InitParser ()
 {
    Comment = False;		/* pas de commentaire en cours */
    level = 0;			/* initialise la pile */
@@ -70,7 +70,7 @@ void                InitParser ()
    Retourne dans ret le code de ce mot-cle ou 0 si ce	
    n'est pas un mot-cle court.				
   ----------------------------------------------------------------------*/
-static void         CheckShortKeyword (indLine index, SyntacticCode * ret)
+static void CheckShortKeyword (indLine index, SyntacticCode * ret)
 {
    int                 i;
 
@@ -92,7 +92,7 @@ static void         CheckShortKeyword (indLine index, SyntacticCode * ret)
    long. Rend dans ret le code de ce mot-cle' ou 0 si ce   
    n'est pas un mot cle long.                              
   ----------------------------------------------------------------------*/
-static void         CheckLongKeyword (indLine index, indLine len, SyntacticCode * ret)
+static void CheckLongKeyword (indLine index, indLine len, SyntacticCode *ret)
 {
    int                 i;
 
@@ -101,7 +101,7 @@ static void         CheckLongKeyword (indLine index, indLine len, SyntacticCode 
    do
      {
        if (Keywords[i].SrcKeywordLen == len)
-	 if (ustrncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
+	 if (strncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
 	   *ret = Keywords[i].SrcKeywordCode;
        i++;
      }
@@ -127,7 +127,7 @@ static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret,
    do
      {
 	if (Identifier[i].SrcIdentLen == len)
-	   if (ustrncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
+	   if (strncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
 	     {
 		*rank = i + 1;
 		*ret = Identifier[i].SrcIdentCode;
@@ -251,10 +251,10 @@ void                OctalToChar ()
    si wn=SynString).                                           
    - wn: SyntacticType du mot trouve, ou SynError si pas trouve.       
   ----------------------------------------------------------------------*/
-void                GetNextToken (indLine start, indLine * wi, indLine * wl, SyntacticType * wn)
+void GetNextToken (indLine start, indLine *wi, indLine *wl, SyntacticType *wn)
 {
   indLine             j, k;
-  ThotBool             stop;
+  ThotBool            stop;
 
   *wi = 0;
   *wl = 0;
@@ -365,7 +365,8 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
 			  (inputLine[j] >= 'a' && inputLine[j] <= 'z') || 
 			  (inputLine[j] == NBSP) || /*nobreakspace */
 			  (inputLine[j] >= '0' && inputLine[j] <= '9') || 
-			  ((int)inputLine[j] >= 192 && (int) inputLine[j] <= 255)  || /* lettre accentuee */
+			  ((int)inputLine[j] >= 192 &&
+			   (int) inputLine[j] <= 255)  || /* lettre accentuee */
 			  inputLine[j] == '_')) {
 		      CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD,
 				       inputLine, LineNum);
@@ -431,7 +432,8 @@ void                GetNextToken (indLine start, indLine * wi, indLine * wl, Syn
    regle r de la grammaire. Rend dans rank le rang du mot  
    dans la table Identifier si c'est un identificateur.    
   ----------------------------------------------------------------------*/
-static ThotBool      TokenMatch (indLine wi, indLine wl, SyntacticType wn, SyntacticCode c, SyntacticCode r, int *rank)
+static ThotBool TokenMatch (indLine wi, indLine wl, SyntacticType wn,
+			    SyntacticCode c, SyntacticCode r, int *rank)
 {
   SyntacticCode       code;
   ThotBool             match;
@@ -518,13 +520,14 @@ static ThotBool      TokenMatch (indLine wi, indLine wl, SyntacticType wn, Synta
    identificateur. Dans pr se trouve le numero de l'avant  
    derniere regle appliquee.                               
   ----------------------------------------------------------------------*/
-void                AnalyzeToken (indLine wi, indLine wl, SyntacticType wn, SyntacticCode * c, SyntRuleNum * r, int *rank, SyntRuleNum * pr)
+void AnalyzeToken (indLine wi, indLine wl, SyntacticType wn, SyntacticCode *c,
+		   SyntRuleNum *r, int *rank, SyntRuleNum *pr)
 {
   ThotBool             stop;
   ThotBool             st1;
   ThotBool             ok;
   ThotBool             meta;
-  int                 s;
+  int                  s;
 
   *pr = 0;
   if (level < 0)
@@ -789,7 +792,7 @@ void                AnalyzeToken (indLine wi, indLine wl, SyntacticType wn, Synt
    ParserEnd verifie, en fin de fichier source, que tout est correct
    du point de vue syntaxique.                             
   ----------------------------------------------------------------------*/
-void                ParserEnd ()
+void ParserEnd ()
 {
   if (level >= 0)
     /* la pile n'est pas vide */
@@ -809,21 +812,21 @@ void                ParserEnd ()
    regles a` partir d'un fichier grammaire de type GRM.		
    fileName est le nom du fichier grammaire, avec le suffixe .GRM.	
   ----------------------------------------------------------------------*/
-void                InitSyntax (STRING fileName)
+void InitSyntax (char *fileName)
 {
   indLine             j, wind, wlen;
   SyntacticType       wnat;
-  int                 l;
-  ThotBool            readingKeywordTable;
-  int                 ruleptr;
-  int                 currule;
-  CHAR_T              pgrname[200];
-  CHAR_T              pnomcourt[200];
   SrcKeywordDesc     *pkw1;
   BinFile             grmFile;
+  char                pgrname[200];
+  char                pnomcourt[200];
+  int                 l;
+  int                 ruleptr;
+  int                 currule;
+  ThotBool            readingKeywordTable;
   ThotBool             fileOK;
 
-  ustrcpy (pnomcourt, fileName);
+  strcpy (pnomcourt, fileName);
   /* cherche dans le directory compil si le fichier grammaire existe */
   if (SearchFile (pnomcourt, 3, pgrname) == 0)
     CompilerMessage (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND, inputLine, LineNum);
@@ -891,9 +894,9 @@ void                InitSyntax (STRING fileName)
 			 for (l = 0; l < wlen; l++)
 			   {
 			     pkw1->SrcKeyword[l] = inputLine[wind + l - 1];
-			     if ((CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
-				 && (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
-			       pkw1->SrcKeyword[l] = (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32);
+			     if ((char) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
+				 && (char) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
+			       pkw1->SrcKeyword[l] = (char) (((int) pkw1->SrcKeyword[l]) - 32);
 			   }
 			 /* traduit le mot-cle en majuscules */
 			 j = wind + wlen;

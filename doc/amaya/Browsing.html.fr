@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.3.1" />
+  <meta name="GENERATOR" content="amaya V4.3.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -190,11 +190,27 @@ src="../Icons/Reload.png" alt="reload" /> de la barre des boutons.</p>
 
 <h3><a name="Keyboard">Contrôle du clavier</a></h3>
 
-<p>Amaya fournit un contrôle clavier pour de nombreuses fonctions. Les
-commandes clavier par défaut sont fournies à leurs places appropriées dans la
-documentation. La section d'aide sur <a href="Configure.html.fr">Configurer
-Amaya</a> décrit comment changer les valeurs par défaut, et les raccourcis
-clavier sont affichés à côté des entrées auxquelles ils sont associés.</p>
+<p>Amaya fournit un contrôle pour associer des commandes clavier à de
+nombreuses fonctions. Les commandes clavier par défaut sont fournies à leurs
+places appropriées dans la documentation. La section d'aide sur <a
+href="Configure.html.fr">Configurer Amaya</a> décrit comment changer les
+valeurs par défaut, et les raccourcis clavier sont affichés à côté des entrées
+auxquelles ils sont associés.</p>
+
+<p>Pour les utilisateurs familiers de Emacs un fichier de configuration
+<code>Amaya/config/amaya.emacs</code> est disponible. L'utilisateur peut donc
+créer un lien depuis son espace privé <code>$HOME/.amaya/amaya.keyboard</code>
+vers ce fichier s'il veut disposer des raccourcis clavier à la Emacs.</p>
+
+<p>Quelques touche du clavier sont pré-affectée, comme :</p>
+<ul>
+  <li>La touche <strong>Enter</strong> dans un élément de formulaire
+    <code>input</code> (de type <code>text</code> ou <code>password</code>)
+    sousmet le formulaire correspondant.</li>
+  <li>La touche <strong>Tab</strong> dans un élément de formulaire déplace la
+    sélection sur l'élément de formulaire suivant, ou saute au premier élément
+    de formulaire du formulaire courant.</li>
+</ul>
 </div>
 
 <p align="right"><a href="Manual.html.fr"><img alt="" /></a></p>

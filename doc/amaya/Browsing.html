@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Browsing with Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.3.1" />
+  <meta name="GENERATOR" content="amaya V4.3.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -64,7 +64,7 @@ it displays a '?' (or it displays the entity value when the entity is within
 an attribute value or when the entityi s unknown). In all cases entities are
 restored when the document is saved, except if the document encoding is
 ISO-latin-1 and the entity corresponds to an ISO-latin-1 character. If the
-document encoding is ASCII,  Amaya translates ISO-latin-1 characters into
+document encoding is ASCII, Amaya translates ISO-latin-1 characters into
 entities.</p>
 
 <h3><a name="Activating">Activating a link</a></h3>
@@ -185,10 +185,25 @@ alt="reload" /> button on the button bar.</p>
 <h3><a name="Keyboard">Keyboard control</a></h3>
 
 <p>Amaya provides keyboard control for many functions. Default keyboard
-commands are provided at appropriate places in the documentation.. The help
+commands are provided at appropriate places in the documentation. The help
 section on <a href="Configure.html">Configuring Amaya</a> describes how to
 change the defaults, and the current key bindings are provided next to the
 relevant menu option in all menus.</p>
+
+<p>For Emacs users, a configuration file <code>Amaya/config/amaya.emacs</code>
+is available. The user can create a link from his own private space
+<code>$HOME/.amaya/amaya.keyboard</code> to this file if he wants to work with
+Emacs shortcuts.</p>
+
+<p>Some keys are predefined, like:</p>
+<ul>
+  <li>The key <strong>Enter</strong>  within a <code>input</code> (type
+    <code>text</code> or <code>password</code>) submits the corresponding
+    form.</li>
+  <li>The key <strong>Tab</strong> within a form element moves the cursor
+    focus on the next form element, or skips to the first form element within
+    the form.</li>
+</ul>
 </div>
 
 <p align="right"><a href="Manual.html"><img alt="" /></a></p>

@@ -13,7 +13,6 @@
  * Il produit un fichier de type .PRS qui sera ensuite utilise par Thot
  *
  * Authors: V. Quint (INRIA)
- *          C. Roisin (INRIA) - Columns and pages
  *          R. Guetari (W3C/INRIA): Windows routines.
  *
  */
@@ -173,11 +172,7 @@ static ThotBool      AttrInitCounter;	/* on a rencontre' "Init" dans une definit
 /*----------------------------------------------------------------------
    Initialize							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Initialize ()
-#else  /* __STDC__ */
-static void         Initialize ()
-#endif	/* __STDC__ */
 {
    int                 i;
 
@@ -262,24 +257,13 @@ static void         Initialize ()
    CopyName        copy the word of length wl startig at position	
    wi in buffer inputLine into string n.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         CopyName (Name n, indLine wi, indLine wl)
-
-#else  /* __STDC__ */
-static void         CopyName (n, wi, wl)
-Name                n;
-indLine             wi;
-indLine             wl;
-
-#endif /* __STDC__ */
-
 {
    if (wl > MAX_NAME_LENGTH - 1)
       CompilerMessage (wi, PRS, FATAL, WORD_SIZE_OVERFLOW, inputLine, LineNum);
    else
      {
-	ustrncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
+	strncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
 	n[wl] = '\0';
      }
 }
@@ -288,15 +272,7 @@ indLine             wl;
    CheckConditions verifie qu'il n'y a aucune condition courante   
    ou qu'il n'y a que des conditions Within ou Root.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CheckConditions (indLine wi)
-
-#else  /* __STDC__ */
-static void         CheckConditions (wi)
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    PtrCondition        pCond;
 
@@ -336,16 +312,7 @@ static void         ConditionEnd ()
 /*----------------------------------------------------------------------
    CreatePRule cree une nouvelle regle de type t                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreatePRule (PRuleType t, indLine wi)
-
-#else  /* __STDC__ */
-static void         CreatePRule (t, wi)
-PRuleType           t;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    PtrPRule            pPRuleV;
 
@@ -477,17 +444,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    SetLevel                                                          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         SetLevel (Level lev, indLine wi)
-
-#else  /* __STDC__ */
-static void         SetLevel (lev, wi)
-Level               lev;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    if ((CurRule->PrType == PtVertRef || CurRule->PrType == PtHorizRef) &&
        !(lev == RlEnclosed || lev == RlSelf))
@@ -542,13 +499,7 @@ static void         CheckBoxEnd ()
    d'attribut. On verifie si au moins une regle a  
    ete definie pour ce type ou cet attribut.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfRulesForType ()
-
-#else  /* __STDC__ */
-static void         EndOfRulesForType ()
-#endif				/* __STDC__ */
-
 {
    AttributePres      *pPRuleA;
    NumAttrCase        *pAttrCase;
@@ -601,14 +552,7 @@ static void         EndOfRulesForType ()
    NewVarListItem alloue une nouvelle entree dans la table des     
    items constituant une variable de presentation.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewVarListItem (PresVariable * pVar, indLine wi)
-#else  /* __STDC__ */
-static void         NewVarListItem (pVar, wi)
-PresVariable       *pVar;
-indLine             wi;
-
-#endif /* __STDC__ */
 {
    if (pVar->PvNItems > 0)
       /* ce n'est pas le premier element de la variable */
@@ -630,12 +574,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    NewCondition alloue une nouvelle condition                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewCondition (indLine wi)
-#else  /* __STDC__ */
-static void         NewCondition (wi)
-indLine             wi;
-#endif /* __STDC__ */
 {
    PtrCondition        newCond;
 
@@ -663,13 +602,7 @@ indLine             wi;
    NewConst        alloue une nouvelle entree dans la table des    
    constantes du schema de presentation            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewConst (indLine wi)
-#else  /* __STDC__ */
-static void         NewConst (wi)
-indLine             wi;
-#endif /* __STDC__ */
-
 {
    if (pPSchema->PsNConstants >= MAX_PRES_CONST)
       CompilerMessage (wi, PRS, FATAL, MAX_CONSTANTS_OVERFLOW, inputLine,
@@ -687,16 +620,7 @@ indLine             wi;
    NewVar  alloue une nouvelle entree dans la table des variables  
    variables du schema de presentation                     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         NewVar (indLine wi)
-
-#else  /* __STDC__ */
-static void         NewVar (wi)
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    if (pPSchema->PsNVariables >= MAX_PRES_VARIABLE)
       CompilerMessage (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine,
@@ -709,13 +633,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    Round arrondit un float en un int.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          Round (float e)
-#else  /* __STDC__ */
-static int          Round (e)
-float               e;
-
-#endif /* __STDC__ */
 {
    register int        result;
 
@@ -729,11 +647,7 @@ float               e;
 /*----------------------------------------------------------------------
    EndOfNumber                                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfNumber ()
-#else  /* __STDC__ */
-static void         EndOfNumber ()
-#endif				/* __STDC__ */
 {
    TypeUnit            unit;
 
@@ -894,12 +808,7 @@ static void         EndOfNumber ()
    NewAttrPRule    allocation et initialisation d'une structure    
    AttributePres en fonction de l'attribut de numero att   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static AttributePres *NewAttrPRule (int att)
-#else  /* __STDC__ */
-static AttributePres *NewAttrPRule (att)
-int                 att;
-#endif /* __STDC__ */
 {
    AttributePres      *pPRuleA;
    NumAttrCase        *pAttrCase;
@@ -949,15 +858,7 @@ int                 att;
    GenerateRPresAttribut	alloue eventuellement une nouvelle	
    structure AttributePres et initialise la regle concernee	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         GenerateRPresAttribut (indLine wi)
-
-#else  /* __STDC__ */
-static void         GenerateRPresAttribut (wi)
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    AttributePres      *pPRuleA;
    NumAttrCase        *pAttrCase;
@@ -1053,7 +954,7 @@ indLine             wi;
 	       break;
 
 	    case AtTextAttr:
-	       ustrcpy (pPRuleA->ApString, CurTextEqual);
+	       strcpy (pPRuleA->ApString, CurTextEqual);
 	       CurTextEqual[0] = '\0';
 	       pPRuleA->ApTextFirstPRule = NextRule;
 	       FirstRule = NextRule;
@@ -1095,16 +996,7 @@ indLine             wi;
    pageView et indique dans ces compteurs que la boite de numero   
    boxNum peut etre modifiee par ces compteurs.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PageCounterChangeBox (int boxNum, int pageView)
-
-#else  /* __STDC__ */
-static void         PageCounterChangeBox (boxNum, pageView)
-int                 boxNum;
-int                 pageView;
-
-#endif /* __STDC__ */
-
+static void PageCounterChangeBox (int boxNum, int pageView)
 {
    int                 counter;
    int                 item;
@@ -1130,17 +1022,7 @@ int                 pageView;
 /*----------------------------------------------------------------------
    ProcessShortKeyWord                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
-
-#else  /* __STDC__ */
-static void         ProcessShortKeyWord (x, wi, gCode)
-int                 x;
-indLine             wi;
-SyntacticCode       gCode;
-
-#endif /* __STDC__ */
-
+static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 {
   PresVariable       *pPresVar;
 
@@ -1396,16 +1278,7 @@ SyntacticCode       gCode;
 /*----------------------------------------------------------------------
    ProcessAxis                                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ProcessAxis (BoxEdge axis, indLine wi)
-
-#else  /* __STDC__ */
-static void         ProcessAxis (axis, wi)
-BoxEdge             axis;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
   switch (CurRule->PrType)
      {
@@ -1457,16 +1330,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    CreateConstant                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreateConstant (BasicType constType, indLine wi)
-
-#else  /* __STDC__ */
-static void         CreateConstant (constType, wi)
-BasicType           constType;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    PresVariable       *pPresVar;
 
@@ -1505,16 +1369,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    NewCounterOper                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewCounterOper (CounterOp oper, indLine wi)
-
-#else  /* __STDC__ */
-static void         NewCounterOper (oper, wi)
-CounterOp           oper;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    Counter            *pCntr;
 
@@ -1541,16 +1396,7 @@ indLine             wi;
    GetTypedRule   cherche la regle de type ruleType pour la vue 1
    dans la liste de regles qui commence par la regle firstR.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrPRule     GetTypedRule (PRuleType ruleType, PtrPRule firstR)
-
-#else  /* __STDC__ */
-static PtrPRule     GetTypedRule (ruleType, firstR)
-PRuleType           ruleType;
-PtrPRule            firstR;
-
-#endif /* __STDC__ */
-
 {
    PtrPRule            pRule;
    ThotBool             stop;
@@ -1572,12 +1418,7 @@ PtrPRule            firstR;
    CreateDefaultRule cree une nouvelle regle de presentation par	
    defaut.							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreateDefaultRule ()
-#else  /* __STDC__ */
-static void         CreateDefaultRule ()
-#endif				/* __STDC__ */
-
 {
    if (CurRule != NULL)
       CurRule->PrNextPRule = NextRule;
@@ -1599,12 +1440,7 @@ static void         CreateDefaultRule ()
    InheritRule transforme la regle de presentation courante en     
    une regle d'heritage de type inheritType.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InheritRule (InheritMode inheritType)
-#else  /* __STDC__ */
-static void         InheritRule (inheritType)
-InheritMode         inheritType;
-#endif /* __STDC__ */
 {
    CurRule->PrPresMode = PresInherit;
    CurRule->PrInheritMode = inheritType;
@@ -1622,15 +1458,7 @@ InheritMode         inheritType;
    sont presentes pour la vue 1 et si certaines sont absentes, on  
    les ajoute.                                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CheckDefaultRules ()
-
-#else  /* __STDC__ */
-static void         CheckDefaultRules ()
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    if (pPSchema->PsFirstDefaultPRule == NextRule)
       pPSchema->PsFirstDefaultPRule = NULL;
@@ -2111,14 +1939,7 @@ indLine             wi;
    CheckForwardRef    verifie que toutes les references de boites  
    en avant sont resolues.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CheckForwardRef (indLine wi)
-
-#else  /* __STDC__ */
-static void         CheckForwardRef (wi)
-indLine             wi;
-
-#endif /* __STDC__ */
 {
    int                 box;
    int                 i, j;
@@ -2156,16 +1977,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    LayoutRule                                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         LayoutRule (FunctionType layoutFonct, indLine wi)
-
-#else  /* __STDC__ */
-static void         LayoutRule (layoutFonct, wi)
-FunctionType        layoutFonct;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    PtrPRule            pPRule;
 
@@ -2194,7 +2006,7 @@ indLine             wi;
 	CurRule->PrElement = False;
 	CurRule->PrExternal = False;
 	CurRule->PrNPresBoxes = 0;
-	CurRule->PrPresBoxName[0] = WC_EOS;
+	CurRule->PrPresBoxName[0] = EOS;
 	/* verifie que cette regle n'est pas deja presente pour cette */
 	/* vue  uniquement pour layoutFonct = FnLine ou FnPage ou FnColumn */
 	if (layoutFonct == FnLine || layoutFonct == FnPage
@@ -2226,16 +2038,7 @@ indLine             wi;
    (indique' par InBreakRule, InLineBreakRule, InPageBreakRule, InGatherRule
    ou InInLineRule) de la boite courante ou des regles par defaut.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BooleanValue (ThotBool bool, indLine wi)
-
-#else  /* __STDC__ */
-static void         BooleanValue (bool, wi)
-ThotBool             bool;
-indLine		    wi;
-
-#endif /* __STDC__ */
-
 {
    int                 k;
 
@@ -2338,16 +2141,7 @@ indLine		    wi;
 /*----------------------------------------------------------------------
    CreationRule                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreationRule (FunctionType creatFonct, indLine wi)
-
-#else  /* __STDC__ */
-static void         CreationRule (creatFonct, wi)
-FunctionType        creatFonct;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    if (DefaultRuleDef)
       /* pas de creation dans les regles par defaut */
@@ -2374,23 +2168,14 @@ indLine             wi;
 	CurRule->PrElement = False;
 	CurRule->PrExternal = False;
 	CurRule->PrNPresBoxes = 0;
-	CurRule->PrPresBoxName[0] = WC_EOS;
+	CurRule->PrPresBoxName[0] = EOS;
      }
 }
 
 /*----------------------------------------------------------------------
    GenerateCopyRule                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         GenerateCopyRule (FunctionType fonctType, indLine wi)
-
-#else  /* __STDC__ */
-static void         GenerateCopyRule (fonctType, wi)
-FunctionType        fonctType;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    PtrPRule            R;
 
@@ -2404,7 +2189,7 @@ indLine             wi;
    CurRule->PrElement = False;
    CurRule->PrExternal = False;
    CurRule->PrNPresBoxes = 0;
-   CurRule->PrPresBoxName[0] = WC_EOS;
+   CurRule->PrPresBoxName[0] = EOS;
    /* S'il n'y a pas de condition courante, verifie qu'il n'y a pas */
    /* deja une regle Copy ou Content sans condition pour cette vue */
    if (Conditions != NULL)
@@ -2429,16 +2214,7 @@ indLine             wi;
    SameConditions compare deux chaines de conditions et retourne   
    True si elles sont egales.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
-
-#else  /* __STDC__ */
-static ThotBool      SameConditions (pCond1, pCond2)
-PtrCondition        pCond1;
-PtrCondition        pCond2;
-
-#endif /* __STDC__ */
-
 {
    ThotBool             different, sameRules, oneRule;
    PtrCondition        curCond1;
@@ -2507,9 +2283,9 @@ PtrCondition        pCond2;
 			sameRules = False;
 		     else if (curCond1->CoAncestorRel != curCond2->CoAncestorRel)
 			sameRules = False;
-		     else if (ustrcmp (curCond1->CoAncestorName, curCond2->CoAncestorName) != 0)
+		     else if (strcmp (curCond1->CoAncestorName, curCond2->CoAncestorName) != 0)
 			sameRules = False;
-		     else if (ustrcmp (curCond1->CoSSchemaName, curCond2->CoSSchemaName) != 0)
+		     else if (strcmp (curCond1->CoSSchemaName, curCond2->CoSSchemaName) != 0)
 			sameRules = False;
 		    }
 		  if (sameRules)
@@ -2530,17 +2306,7 @@ PtrCondition        pCond2;
 /*----------------------------------------------------------------------
    ProcessLongKeyWord                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
-
-#else  /* __STDC__ */
-static void         ProcessLongKeyWord (x, gCode, wi)
-int                 x;
-SyntacticCode       gCode;
-indLine             wi;
-
-#endif /* __STDC__ */
-
+static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 {
    int                 i;
    ThotBool             assoc;
@@ -3800,27 +3566,17 @@ indLine             wi;
    GetTypeNumber        retourne le numero du type d'element dont	
    le nom est typeName.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          GetTypeNumber (indLine wl, indLine wi, Name typeName)
-
-#else  /* __STDC__ */
-static int          GetTypeNumber (wl, wi, typeName)
-indLine             wl;
-indLine             wi;
-Name                typeName;
-
-#endif /* __STDC__ */
-
+static int GetTypeNumber (indLine wl, indLine wi, Name typeName)
 {
    int                 i;
 
    CopyName (typeName, wi, wl);
    /* verifie si le type est declare' dans le schema de structure */
    i = 1;
-   while (ustrcmp (typeName, pSSchema->SsRule[i - 1].SrName)
+   while (strcmp (typeName, pSSchema->SsRule[i - 1].SrName)
 	  && i < pSSchema->SsNRules)
       i++;
-   if (ustrcmp (typeName, pSSchema->SsRule[i - 1].SrName))
+   if (strcmp (typeName, pSSchema->SsRule[i - 1].SrName))
       i = 0;
    else if (InclusionRefName)
       /* on cherche une reference a un document importe' */
@@ -3831,7 +3587,7 @@ Name                typeName;
 	   /* ce n'est pas ce que l'on cherche, on continue */
 	  {
 	     i++;
-	     while (ustrcmp (typeName, pSSchema->SsRule[i - 1].SrName) &&
+	     while (strcmp (typeName, pSSchema->SsRule[i - 1].SrName) &&
 		    i < pSSchema->SsNRules)
 		i++;
 	  }
@@ -3845,18 +3601,8 @@ Name                typeName;
 /*----------------------------------------------------------------------
    ProcessTypeName    traite un nom de type d'element		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessTypeName (SyntacticCode prevRule, Name typeName, indLine wi, indLine wl)
-
-#else  /* __STDC__ */
-static void         ProcessTypeName (prevRule, typeName, wi, wl)
-SyntacticCode       prevRule;
-Name                typeName;
-indLine             wi;
-indLine             wl;
-
-#endif /* __STDC__ */
-
+static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
+			     indLine wi, indLine wl)
 {
    int                 i;
    ThotBool             found;
@@ -4069,17 +3815,7 @@ indLine             wl;
 /*----------------------------------------------------------------------
    NewBoxName      traite un nouveau nom de boite de presentation  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         NewBoxName (indLine wl, indLine wi, int identnum)
-
-#else  /* __STDC__ */
-static void         NewBoxName (wl, wi, identnum)
-indLine             wl;
-indLine             wi;
-int                 identnum;
-
-#endif /* __STDC__ */
-
 {
    PresentationBox    *pPresBox;
 
@@ -4106,17 +3842,7 @@ int                 identnum;
    IntAttribute  traite un nom d'attribut qui apparait a la place d'une 
    valeur numerique entiere.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         IntAttribute (int attr, SyntacticCode prevRule, indLine wi)
-
-#else  /* __STDC__ */
-static void         IntAttribute (attr, prevRule, wi)
-int                 attr;
-SyntacticCode       prevRule;
-indLine             wi;
-
-#endif /* __STDC__ */
-
 {
    if (pSSchema->SsAttribute[attr - 1].AttrType != AtNumAttr)
       /* not an attribute of type Integer, error */
@@ -4208,20 +3934,14 @@ indLine             wi;
 /*----------------------------------------------------------------------
    ColorName
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     ColorName (indLine wi, indLine wl)
-#else  /* __STDC__ */
-static void     ColorName (wi, wl)
-indLine   wi;
-indLine   wl;
-#endif /* __STDC__ */
 {
    Name n;
    int  i;
 
    i = 0;
    CopyName (n, wi, wl);
-   while (i < MAX_COLOR && ustrcmp (Name_colors[i], n))
+   while (i < MAX_COLOR && strcmp (Name_colors[i], n))
       i++;
    if (i == MAX_COLOR)
       CompilerMessage (wi, PRS, FATAL, MISSING_COLOR, inputLine, LineNum);
@@ -4235,17 +3955,8 @@ indLine   wl;
 /*----------------------------------------------------------------------
    ProcessName         traite un nom.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRule, indLine wl, indLine wi)
-#else  /* __STDC__ */
-static void         ProcessName (gCode, identnum, prevRule, wl, wi)
-SyntacticCode       gCode;
-int                 identnum;
-SyntacticCode       prevRule;
-indLine             wl;
-indLine             wi;
-#endif /* __STDC__ */
-
+static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRule,
+			 indLine wl, indLine wi)
 {
    Name                n;
    int                 i, j;
@@ -4275,13 +3986,13 @@ indLine             wi;
 	  if (!ReadStructureSchema (n, pSSchema))
 	     TtaDisplaySimpleMessage (FATAL, PRS, MISSING_STRUCT_SCHEM);
 	  /* echec lecture du schema de structure */
-	  else if (ustrcmp (n, pSSchema->SsName))
+	  else if (strcmp (n, pSSchema->SsName))
 	     CompilerMessage (wi, PRS, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH,
 			      inputLine, LineNum);
 	  else
 	     {
 	     Initialize ();
-	     ustrncpy (pPSchema->PsStructName, n, MAX_NAME_LENGTH);
+	     strncpy (pPSchema->PsStructName, n, MAX_NAME_LENGTH);
 	     }
 	  }
        else if (prevRule == RULE_ExtStruct)
@@ -4297,10 +4008,10 @@ indLine             wi;
 	     /* le schema de structure externe a ete charge' */
 	     {
 	     i = 1;
-	     while (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0
+	     while (strcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0
 		    && i < pExternalSS->SsNRules)
 	        i++;
-	     if (ustrcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0)
+	     if (strcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0)
 	        /* type inconnu */
 	        if (PresBoxDef || InWithinCond)
 		   /* on est dans une boite de presentation, erreur */
@@ -4326,7 +4037,7 @@ indLine             wi;
 					  inputLine, LineNum);
 		      else
 			 {
-			 ustrncpy (CurRule->PrPresBoxName, CopyType,
+			 strncpy (CurRule->PrPresBoxName, CopyType,
 				   MAX_NAME_LENGTH);
 			 /* indique qu'on copie une boite de presentation
 			    et non un element */
@@ -4335,7 +4046,7 @@ indLine             wi;
 		   }
 	     else if (InWithinCond)
 	        {
-	        ustrncpy (Conditions->CoAncestorName, CopyType,
+	        strncpy (Conditions->CoAncestorName, CopyType,
 			  MAX_NAME_LENGTH);
 		CopyName (Conditions->CoSSchemaName, wi, wl);
 		Conditions->CoTypeAncestor = 0;
@@ -4347,7 +4058,7 @@ indLine             wi;
 		   presentation */
 		CurRule->PrElement = True;
 		/* nom du type d'element a copier */
-		ustrncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
+		strncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
 		/* indique que PrPresBoxName est un nom de type defini */
 		/* dans un autre schema */
 		CurRule->PrExternal = True;
@@ -4363,13 +4074,13 @@ indLine             wi;
 	  CopyName (n, wi, wl);
 	  /* verifie si le type existe dans le schema de structure */
 	  i = 1;
-	  while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName) &&
+	  while (strcmp (n, pSSchema->SsRule[i - 1].SrName) &&
 		 i < pSSchema->SsNRules)
 	     i++;
 	  if (InWithinCond)
 	     /* un nom de type d'element dans une condition Within */
 	     {
-	     if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
+	     if (strcmp (n, pSSchema->SsRule[i - 1].SrName))
 	        /* type inconnu */
 	        {
 		/* c'est peut-etre un type defini dans un autre schema */
@@ -4385,7 +4096,7 @@ indLine             wi;
 	  else
 	     /* on est dans une condition, mais pas apres Within */
 	     {
-	     if (!ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
+	     if (!strcmp (n, pSSchema->SsRule[i - 1].SrName))
 	        /* c'est bien un nom de type d'element */
 	        {
 		/* la regle est-elle bien pour un attribut ? */
@@ -4403,10 +4114,10 @@ indLine             wi;
 	        {
 		/* cherche ce nom parmi les attributs du schema de structure */
 		i = 1;
-		while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+		while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
 		       i < pSSchema->SsNAttributes)
 		   i++;
-		if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+		if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 		   /* on ne l'a pas trouve, erreur */
 		   CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 				    inputLine, LineNum);
@@ -4429,10 +4140,10 @@ indLine             wi;
 	  CopyName (n, wi, wl);
 	  /* verifie si le type existe dans le schema de structure */
 	  i = 1;
-	  while (ustrcmp (n, pSSchema->SsRule[i - 1].SrName) &&
+	  while (strcmp (n, pSSchema->SsRule[i - 1].SrName) &&
 		 i < pSSchema->SsNRules)
 	     i++;
-	  if (ustrcmp (n, pSSchema->SsRule[i - 1].SrName))
+	  if (strcmp (n, pSSchema->SsRule[i - 1].SrName))
 	     /* type inconnu */
 	     CompilerMessage (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine,LineNum);
 	  else
@@ -4583,10 +4294,10 @@ indLine             wi;
 	     /* cherche ce nom parmi les attributs du schema de structure */
 	     CopyName (n, wi, wl);
 	     i = 1;
-	     while (ustrcmp (n, pSSchema->SsAttribute[i -1].AttrName) &&
+	     while (strcmp (n, pSSchema->SsAttribute[i -1].AttrName) &&
 		    i < pSSchema->SsNAttributes)
 	        i++;
-	     if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	     if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 	        /* on ne l'a pas trouve, erreur */
 	        CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 				 inputLine, LineNum);
@@ -4682,10 +4393,10 @@ indLine             wi;
        /* cherche ce nom d'attribut dans le schema de structure */
        CopyName (n, wi, wl);
        i = 1;
-       while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+       while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
 	      i < pSSchema->SsNAttributes)
 	  i++;
-       if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 	  /* on ne l'a pas trouve, erreur */
 	  CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
        else if (!(prevRule == RULE_Attr
@@ -4855,10 +4566,10 @@ indLine             wi;
 	     {
 	     CopyName (n, wi, wl);
 	     i = 1;
-	     while (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
+	     while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) &&
 		    i < pSSchema->SsNAttributes)
 	        i++;
-	     if (ustrcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
+	     if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 	        /* on ne l'a pas trouve, erreur */
 	        CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 				 inputLine, LineNum);
@@ -5185,12 +4896,12 @@ indLine             wi;
 	  i = 0;
 	  ok = False;
 	  do
-	     if (ustrcmp (n, Name_patterns[i]) == 0)
+	     if (strcmp (n, Name_patterns[i]) == 0)
 	        ok = True;
 	     else
 	        i++;
 	  while (!ok &&
-		 (unsigned int)i < sizeof (Name_patterns) / sizeof (STRING));
+		 (unsigned int)i < sizeof (Name_patterns) / sizeof (char *));
 	  if (!ok)
 	     CompilerMessage (wi, PRS, FATAL, MISSING_PATTERN, inputLine,
 			      LineNum);
@@ -5227,10 +4938,10 @@ indLine             wi;
        else
 	  {
 	  i = 1;
-	  while (ustrcmp (n, pAttr->AttrEnumValue[i - 1]) &&
+	  while (strcmp (n, pAttr->AttrEnumValue[i - 1]) &&
 		 i < pAttr->AttrNEnumValues)
 	     i++;
-	  if (ustrcmp (n, pAttr->AttrEnumValue[i - 1]))
+	  if (strcmp (n, pAttr->AttrEnumValue[i - 1]))
 	     /* on ne trouve pas cette valeur, erreur */
 	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
 			      LineNum);
@@ -5260,17 +4971,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    ProcessInteger	traite un nombre.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
-
-#else  /* __STDC__ */
-static void         ProcessInteger (gCode, wl, wi)
-SyntacticCode       gCode;
-indLine             wl;
-indLine             wi;
-
-#endif /* __STDC__ */
-
+static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 {
    int                 n;
    Counter            *pCntr;
@@ -5533,17 +5234,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    ProcessString       traitee une chaine de caracteres.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
-
-#else  /* __STDC__ */
-static void         ProcessString (gCode, wl, wi)
-SyntacticCode       gCode;
-indLine             wl;
-indLine             wi;
-
-#endif /* __STDC__ */
-
+static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 {
    int                 i;
    PresConstant       *pPresConst;
@@ -5587,20 +5278,8 @@ indLine             wi;
    apparait ce mot, pr est le numero de la regle precedente, celle 
    qui a appele la regle r.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int identnum, SyntacticCode pr)
-
-#else  /* __STDC__ */
-static void         ProcessToken (wi, wl, c, r, identnum, pr)
-indLine             wi;
-indLine             wl;
-SyntacticCode       c;
-SyntacticCode       r;
-int                 identnum;
-SyntacticCode       pr;
-
-#endif /* __STDC__ */
-
+static void ProcessToken (indLine wi, indLine wl, SyntacticCode c,
+			  SyntacticCode r, int identnum, SyntacticCode pr)
 {
    if (c < 1000)
       /* symbole intermediaire de la grammaire, erreur */
@@ -5635,16 +5314,7 @@ SyntacticCode       pr;
    Return TRUE if pPRule1 must occur before pPRule2 in a sequence of
    presentation rules.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool      RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
-
-#else  /* __STDC__ */
-static ThotBool      RuleBefore (pPRule1, pPRule2)
-PtrPRule            pPRule1;
-PtrPRule            pPRule2;
-
-#endif /* __STDC__ */
-
+static ThotBool RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
 {
    ThotBool             ret;
 
@@ -5683,16 +5353,7 @@ PtrPRule            pPRule2;
 /*----------------------------------------------------------------------
    SortPresRules                                                   
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         SortPresRules (PtrPRule * firstPRule)
-
-#else  /* __STDC__ */
-static void         SortPresRules (firstPRule)
-PtrPRule           *firstPRule;
-
-#endif /* __STDC__ */
-
 {
    PtrPRule            oldPRule, curOldPRule, newPRule, curNewPRule, newAnchor;
    ThotBool            done, stop;
@@ -5765,13 +5426,7 @@ PtrPRule           *firstPRule;
    pour l'application des regles lors de la production des images  
    abstraites.                                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SortAllPRules ()
-
-#else  /* __STDC__ */
-void                SortAllPRules ()
-#endif				/* __STDC__ */
-
 {
    int                 j, l;
    int                 k;
@@ -5825,16 +5480,7 @@ void                SortAllPRules ()
    un compteur de page. Retourne Vrai si c'est un compteur de	
    pages, Faux sinon.                                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool      PageCounter (int counter)
-
-#else  /* __STDC__ */
-static ThotBool      PageCounter (counter)
-int                 counter;
-
-#endif /* __STDC__ */
-
 {
    Counter            *pCntr;
    ThotBool             ret;
@@ -5854,14 +5500,7 @@ int                 counter;
    de ce type dans la chaine et retourne un pointeur sur la        
    regle creee.                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrPRule     SearchPRule (PtrPRule * firstRule, PRuleType ruleType, int view)
-#else  /* __STDC__ */
-static PtrPRule     SearchPRule (firstRule, ruleType, view)
-PtrPRule           *firstRule;
-PRuleType           ruleType;
-int                 view;
-#endif /* __STDC__ */
+static PtrPRule SearchPRule (PtrPRule *firstRule, PRuleType ruleType, int view)
 {
    PtrPRule            pR, pPRule;
    ThotBool             stop, cree;
@@ -5933,11 +5572,7 @@ int                 view;
    declarees pour les pages sont bien utilisees et adapte les      
    regles des boites pages.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CheckPageBoxes ()
-#else  /* __STDC__ */
-static void         CheckPageBoxes ()
-#endif /* __STDC__ */
 {
    PtrPRule            pR, pHeadR, pPRule, pRule;
    int                 b, hfB, el, view, footHeight, headHeight, h, i,
@@ -6605,19 +6240,10 @@ static void         CheckPageBoxes ()
    regles de creation ou de mise en page. Marque utilisee la       
    boite de presentation utilisee dans ces regles                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckUsedBoxes (PtrPRule pRule, ThotBool usedBox[MAX_PRES_BOX])
-
-#else  /* __STDC__ */
-static void         CheckUsedBoxes (pRule, usedBox)
-PtrPRule            pRule;
-ThotBool             usedBox[MAX_PRES_BOX];
-
-#endif /* __STDC__ */
-
+static void CheckUsedBoxes (PtrPRule pRule, ThotBool usedBox[MAX_PRES_BOX])
 {
-   ThotBool             stop;
    int                 i;
+   ThotBool            stop;
 
    stop = False;
    do
@@ -6658,14 +6284,7 @@ ThotBool             usedBox[MAX_PRES_BOX];
    declarees dans le schema sont bien utilisees dans une regle de  
    creation ou une regle Page                                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         CheckAllBoxesUsed ()
-
-#else  /* __STDC__ */
-static void         CheckAllBoxesUsed ()
-#endif				/* __STDC__ */
-
 {
    int                 b, el, att, k, l;
    ThotBool             usedBox[MAX_PRES_BOX];
@@ -6729,29 +6348,12 @@ static void         CheckAllBoxesUsed ()
    main                                                            
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
-#ifdef __STDC__
-int                 PRSmain (HWND hwnd, HWND statusBar, int argc, STRING *argv, int* Y)
-#else  /* __STDC__ */
-int                 PRSmain (hwnd, argc, argv, Y)
-HWND                hwnd;
-int                 argc;
-STRING*              argv;
-int*                Y;
-#endif /* __STDC__ */
+int PRSmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
 #else  /* !_WINDOWS */
-#ifdef __STDC__
-int                 main (int argc, char **argv)
-#else  /* __STDC__ */
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-#endif /* __STDC__ */
+int main (int argc, char **argv)
 #endif /* _WINDOWS */
 {
    FILE               *infile;
-   ThotBool             fileOK;
-   CHAR_T                fname[200], buffer[200];
-   STRING              pwd, ptr;
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la
 				   ligne en cours */
@@ -6760,29 +6362,32 @@ char              **argv;
    SyntRuleNum         r;	/* numero de regle de grammaire */
    SyntRuleNum         pr;	/* numero de la regle de grammaire precedente*/
    SyntacticCode       c;	/* code grammatical du mot trouve */
+   char               *pwd, *ptr;
+   char                fname[200], buffer[200];
    int                 nb;	/* indice dans Identifier du mot trouve', si
 				   identificateur */
    int                 i;
    int                 param;
 #ifdef _WINDOWS
-   char*               cmd [100];
+   char               *cmd [100];
    int                 ndx, pIndex = 0;
-   CHAR_T                msg [800];
+   char                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #else  /* !_WINDOWS */
    char                cmd [800];
 #endif /* _WINDOWS */
+   ThotBool            fileOK;
 
 #ifdef _WINDOWS 
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   ustrcpy (msg, "Executing prs ");
+   strcpy (msg, "Executing prs ");
    for (ndx = 1; ndx < argc; ndx++)
      {
-       ustrcat (msg, argv [ndx]);
-       ustrcat (msg, " ");
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
      }
 
    TtaDisplayMessage (INFO, msg);
@@ -6814,7 +6419,7 @@ char              **argv;
 	 {
 	   /* keep cpp params */
 #ifdef _WINDOWS
-	   cmd [pIndex] = TtaGetMemory (ustrlen (argv[param]) + 1);
+	   cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
 	   wc2iso_strcpy (cmd [pIndex++], argv[param]);
 #else  /* !_WINDOWS */
 	   strcat (cmd, argv[param]);
@@ -6834,16 +6439,16 @@ char              **argv;
 	   exit (1);
 #endif /* _WINDOWS */
 	 } 
-       ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+       strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
        srceFileName[MAX_NAME_LENGTH - 1] = '\0';
        param++;
-       ustrcpy (fname, srceFileName);
+       strcpy (fname, srceFileName);
        /* check if the name contains a suffix */
-       ptr = ustrrchr(fname, '.');
-       nb = ustrlen (srceFileName);
+       ptr = strrchr(fname, '.');
+       nb = strlen (srceFileName);
        if (!ptr) /* there is no suffix */
-         ustrcat (srceFileName, ".P");
-       else if (ustrcmp(ptr, ".P"))
+         strcat (srceFileName, ".P");
+       else if (strcmp(ptr, ".P"))
 	 {
 	   /* it's not the valid suffix */
 	   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
@@ -6861,7 +6466,7 @@ char              **argv;
 	   nb -= 2; /* length without the suffix */
 	 } 
        /* add the suffix .SCH in srceFileName */
-       ustrcat (fname, ".SCH");
+       strcat (fname, ".SCH");
        
        /* does the file to compile exist */
        if (TtaFileExist (srceFileName) == 0)
@@ -6877,16 +6482,16 @@ char              **argv;
            if (pwd != NULL)
 	     {
 #ifdef _WINDOWS
-	       CHAR_T* CMD;
-	       CMD = TtaAllocString (3 + ustrlen (pwd));
-	       usprintf (CMD, "-I%s", pwd);
-	       cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
+	       char* CMD;
+	       CMD = TtaGetMemory (3 + strlen (pwd));
+	       sprintf (CMD, "-I%s", pwd);
+	       cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
 	       wc2iso_strcpy (cmd [pIndex++], CMD);
 	       cmd [pIndex] = TtaGetMemory (3);
 	       strcpy (cmd [pIndex++], "-C");
-	       cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+	       cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
 	       wc2iso_strcpy (cmd [pIndex++], srceFileName);
-	       cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
+	       cmd [pIndex] = TtaGetMemory (strlen (fname) + 1);
 	       wc2iso_strcpy (cmd [pIndex++], fname);
 #else  /* !_WINDOWS */
 	       sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
@@ -6897,9 +6502,9 @@ char              **argv;
 #ifdef _WINDOWS
 	       cmd [pIndex] = TtaGetMemory (3);
 	       strcpy (cmd [pIndex++], "-C");
-	       cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+	       cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
 	       wc2iso_strcpy (cmd [pIndex++], srceFileName);
-	       cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
+	       cmd [pIndex] = TtaGetMemory (strlen (fname) + 1);
 	       wc2iso_strcpy (cmd [pIndex++], fname);
 #else  /* !_WINDOWS */
 	       sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
@@ -6932,7 +6537,7 @@ char              **argv;
 	     srceFileName[nb] = '\0';
            else
 	     /* read the output name */
-	     ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	     strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
            /* le fichier a compiler est ouvert */
            NIdentifiers = 0;	/* table des identificateurs vide */
            LineNum = 0;	/* encore aucune ligne lue */
@@ -7002,7 +6607,7 @@ char              **argv;
 	       if (pPSchema->PsNViews == 0)
 		 {
 		   pPSchema->PsNViews = 1;
-		   ustrcpy (pPSchema->PsView[0],
+		   strcpy (pPSchema->PsView[0],
 			    TtaGetMessage (PRS, SINGLE_VIEW));
 		   pPSchema->PsHostViewList[0] = NULL;
 		 }
@@ -7017,7 +6622,7 @@ char              **argv;
 	       /* write the compiled schema into the output file */
 	       /* remove temporary file */
 	       TtaFileUnlink (fname);
-	       ustrcat (srceFileName, ".PRS");
+	       strcat (srceFileName, ".PRS");
 	       fileOK = WritePresentationSchema (srceFileName, pPSchema,
 						 pSSchema);
 	       if (!fileOK)

@@ -32,7 +32,7 @@
 #include "fileaccess.h"
 #include "thotdir.h"
 
-typedef CHAR_T        fname[30];	/* nom de fichier */
+typedef char        fname[30];	/* nom de fichier */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -41,8 +41,6 @@ typedef CHAR_T        fname[30];	/* nom de fichier */
 #define THOT_EXPORT extern
 #include "analsynt_tv.h"
 
-#include "compilmsg_f.h"
-#include "fileaccess_f.h"
 
 #define NBSTRING 200		/* nombre max de chaines dans une grammaire */
 #define MAXNRULE 160		/* nombre max de regles de la grammaire */
@@ -77,19 +75,12 @@ static int           curRule;	/* regle en cours de generation */
 static int           curIndx;	/* position courante dans la regle courante */
 static FILE         *listFile;	/* fichier des listes */
 
+#include "compilmsg_f.h"
+#include "fileaccess_f.h"
 #include "parser_f.h"
 #include "platform_f.h"
 #include "message_f.h"
-
-#ifdef __STDC__
-extern void         TtaInitializeAppRegistry (CHAR_T*);
-extern void         TtaSaveAppRegistry (void);
-
-#else
-extern void         TtaInitializeAppRegistry ();
-extern void         TtaSaveAppRegistry ();
-
-#endif /* __STDC__ */
+#include "registry_f.h"
 
 #ifdef _WINDOWS
 #define DLLEXPORT __declspec (dllexport)
@@ -101,13 +92,7 @@ extern void         TtaSaveAppRegistry ();
 /*----------------------------------------------------------------------
    InitRefTables initialise les tables des references.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         InitRefTables ()
-
-#else  /* __STDC__ */
-static void         InitRefTables ()
-#endif				/* __STDC__ */
-
+static void InitRefTables ()
 {
    int                 j;
 
@@ -125,17 +110,7 @@ static void         InitRefTables ()
    AddRefToTable ajoute le numero de la regle courante dans la     
    liste des references passee en parametre.               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         AddRefToTable (RefList * ref, indLine wi)
-
-#else  /* __STDC__ */
-static void         AddRefToTable (ref, wi)
-RefList            *ref;
-indLine             wi;
-
-#endif /* __STDC__ */
-
+static void AddRefToTable (RefList * ref, indLine wi)
 {
    if (ref->NRuleRefs >= MAX_RULE_REF)
       CompilerMessage (wi, GRM, FATAL, NO_SPACE_LEFT_IN_REF_TABLE, inputLine,
@@ -148,17 +123,7 @@ indLine             wi;
 /*----------------------------------------------------------------------
    PutToken	Put a token in the current rule.                
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         PutToken (SyntacticCode code, indLine wi)
-
-#else  /* __STDC__ */
-static void         PutToken (code, wi)
-SyntacticCode       code;
-indLine             wi;
-
-#endif /* __STDC__ */
-
+static void PutToken (SyntacticCode code, indLine wi)
 {
    if (curIndx >= RULE_LENGTH)
       CompilerMessage (wi, GRM, FATAL, INVALID_RULE_SIZE, inputLine, LineNum);
@@ -173,20 +138,7 @@ indLine             wi;
    apparaissant dans la regl r. Si c'est un identif, rank    
    contient son rang dans la table des identificateurs.    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         ProcessToken (indLine wi, indLine wl, SyntacticCode code, int r, int rank)
-
-#else  /* __STDC__ */
-static void         ProcessToken (wi, wl, code, r, rank)
-indLine             wi;
-indLine             wl;
-SyntacticCode       code;
-int                 r;
-int                 rank;
-
-#endif /* __STDC__ */
-
+static void ProcessToken (indLine wi, indLine wl, SyntacticCode code, int r, int rank)
 {
   int                 i;
   int                 j;
@@ -333,14 +285,7 @@ int                 rank;
    InitGrammar initialise la table des mots-cles et la table des   
    regles.                                                 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         InitGrammar ()
-
-#else  /* __STDC__ */
-static void         InitGrammar ()
-#endif				/* __STDC__ */
-
 {
   Keywords[0].SrcKeywordLen = 1;
   Keywords[0].SrcKeyword[0] = '=';
@@ -364,17 +309,17 @@ static void         InitGrammar ()
   Keywords[6].SrcKeyword[0] = '>';
   Keywords[6].SrcKeywordCode = 1007;
   LastShortKeyword = 7;
-  ustrncpy (Keywords[7].SrcKeyword, "END", KEWWORD_LENGTH);
-  Keywords[7].SrcKeywordLen = ustrlen (Keywords[7].SrcKeyword);
+  strncpy (Keywords[7].SrcKeyword, "END", KEWWORD_LENGTH);
+  Keywords[7].SrcKeywordLen = strlen (Keywords[7].SrcKeyword);
   Keywords[7].SrcKeywordCode = 1101;
-  ustrncpy (Keywords[8].SrcKeyword, "NAME", KEWWORD_LENGTH);
-  Keywords[8].SrcKeywordLen = ustrlen (Keywords[8].SrcKeyword);
+  strncpy (Keywords[8].SrcKeyword, "NAME", KEWWORD_LENGTH);
+  Keywords[8].SrcKeywordLen = strlen (Keywords[8].SrcKeyword);
   Keywords[8].SrcKeywordCode = 1102;
-  ustrncpy (Keywords[9].SrcKeyword, "STRING", KEWWORD_LENGTH);
-  Keywords[9].SrcKeywordLen = ustrlen (Keywords[9].SrcKeyword);
+  strncpy (Keywords[9].SrcKeyword, "STRING", KEWWORD_LENGTH);
+  Keywords[9].SrcKeywordLen = strlen (Keywords[9].SrcKeyword);
   Keywords[9].SrcKeywordCode = 1103;
-  ustrncpy (Keywords[10].SrcKeyword, "NUMBER", KEWWORD_LENGTH);
-  Keywords[10].SrcKeywordLen = ustrlen (Keywords[10].SrcKeyword);
+  strncpy (Keywords[10].SrcKeyword, "NUMBER", KEWWORD_LENGTH);
+  Keywords[10].SrcKeywordLen = strlen (Keywords[10].SrcKeyword);
   Keywords[10].SrcKeywordCode = 1104;
   NKeywords = 11;
   GramRule[0][1] = 2;
@@ -442,28 +387,21 @@ static void         InitGrammar ()
    sortie de type .GRM, produit le fichier .LST et le      
    fichier .h                                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteFiles ()
-
-#else  /* __STDC__ */
-static void         WriteFiles ()
-#endif				/* __STDC__ */
-
 {
+  FILE               *GRMfile;
+  FILE               *Hfile;
   int                 mc, l, r, i, j, ic;
   int                 lineLength;
   int                 maxIdent;
-  FILE               *GRMfile;
-  FILE               *Hfile;
 
   /* met le suffixe GRM a la fin du nom de fichier */
   lineLength = 0;
   while (fileName[lineLength] != '.')
     lineLength++;
-  ustrcpy (&fileName[lineLength + 1], "GRM");
+  strcpy (&fileName[lineLength + 1], "GRM");
   /* cree le fichier .GRM */
-  GRMfile = ufopen (fileName, "w");
+  GRMfile = fopen (fileName, "w");
   if (GRMfile == NULL)
     {
       TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE),
@@ -472,8 +410,8 @@ static void         WriteFiles ()
     }
   
   /* cree le fichier .h */
-  ustrcpy (&fileName[lineLength + 1], "h");
-  Hfile = ufopen (fileName, "w");
+  strcpy (&fileName[lineLength + 1], "h");
+  Hfile = fopen (fileName, "w");
   if (Hfile == NULL)
     {
       TtaDisplayMessage (FATAL, TtaGetMessage (GRM, CANT_CREATE_HEADER_FILE),
@@ -691,17 +629,7 @@ static void         WriteFiles ()
    position wi de la ligne courante est un mot-cle bien    
    forme'.                                                 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         CheckKeyword (indLine wi, indLine wl)
-
-#else  /* __STDC__ */
-static void         CheckKeyword (wi, wl)
-indLine             wi;
-indLine             wl;
-
-#endif /* __STDC__ */
-
 {
   indLine             j;
 
@@ -752,14 +680,7 @@ indLine             wl;
    CheckDefAndRef verifie que tous les symboles intermediaires     
    sont bien definis et reference's.                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool      CheckDefAndRef ()
-
-#else  /* __STDC__ */
-static ThotBool      CheckDefAndRef ()
-#endif				/* __STDC__ */
-
 {
   int                 ic;
   ThotBool             ok;
@@ -789,23 +710,9 @@ static ThotBool      CheckDefAndRef ()
    main program                                                    
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-#ifdef __STDC__
-int                 GRMmain (HWND hwnd, int argc, STRING *argv, int* Y)
-#else  /* __STDC__ */
-int                 GRMmain (hwnd, argc, argv, Y)
-HWND                hwnd;
-int                 argc;
-STRING*              argv;
-int*                Y;
-#endif /* __STDC__ */
+int GRMmain (HWND hwnd, int argc, char **argv, int *Y)
 #else  /* !_WINDOWS */
-#ifdef __STDC__
-int                 main (int argc, char **argv)
-#else  /* __STDC__ */
-int                 main (argc, argv)
-int                 argc;
-char              **argv;
-#endif /* __STDC__ */
+int main (int argc, char **argv)
 #endif /* _WINDOWS */
 {
   FILE               *infile;
@@ -822,15 +729,15 @@ char              **argv;
   int                 rank;	/* indice dans Identifier du mot trouve, si
                                    identificateur */
 #ifdef _WINDOWS 
-  CHAR_T              msg [800];
+  char              msg [800];
   int                 ndx;
 #endif /* _WINDOWS */
 
 #ifdef _I18N_
 #ifdef _WINDOWS
-  CHAR_T*             UArgv = argv[0];
+  char*             UArgv = argv[0];
 #else  /* !_WINDOWS */
-  CHAR_T              UArgv[MAX_TXT_LEN];
+  char              UArgv[MAX_TXT_LEN];
 #endif /* _WINDOWS */
 #else  /* !_I18M_ */
   char                UArgv[MAX_TXT_LEN];
@@ -840,11 +747,11 @@ char              **argv;
   hWnd = hwnd;
   compilersDC = GetDC (hwnd);
   _CY_ = *Y;
-  ustrcpy (msg, "Executing grm ");
+  strcpy (msg, "Executing grm ");
   for (ndx = 1; ndx < argc; ndx++)
     {
-      ustrcat (msg, argv [ndx]);
-      ustrcat (msg, " ");
+      strcat (msg, argv [ndx]);
+      strcat (msg, " ");
     }
   TtaDisplayMessage (INFO, msg);
 #endif /* _WINDOWS */
@@ -865,10 +772,10 @@ char              **argv;
     TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
   else
     {
-      ustrncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
-      i = ustrlen (fileName);
+      strncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
+      i = strlen (fileName);
       /* ajoute le suffixe .LAN */
-      ustrcat (fileName, ".LAN");
+      strcat (fileName, ".LAN");
       
       if (TtaFileExist (fileName) == 0)
 	TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
@@ -888,7 +795,7 @@ char              **argv;
 	  InitRefTables ();	/* initialise la table des references */
 	  InitParser ();	/* initialise l'analyseur syntaxique */
 	  /* met le suffixe LST a la fin du nom de fichier */
-	  ustrcpy (&fileName[i + 1], "LST");
+	  strcpy (&fileName[i + 1], "LST");
 	  /* cree le fichier .LST */
 	  listFile = fopen (fileName, "w");
 	  if (listFile == NULL)
@@ -919,7 +826,7 @@ char              **argv;
 	      /* marque la fin reelle de la ligne */
 	      inputLine[i - 1] = '\0';
 	      /* garde une copie de la ligne avant traduction */
-	      ustrncpy (sourceLine, inputLine, LINE_LENGTH);
+	      strncpy (sourceLine, inputLine, LINE_LENGTH);
 	      LineNum++;
 	      /* traduit les caracteres de la ligne */
 	      OctalToChar ();
