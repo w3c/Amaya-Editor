@@ -499,17 +499,20 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 					     pNextRow->ElStructSchema))
 	/* skip comments */
 	pNextRow = pNextRow->ElNext;
-      if (pNextRow == NULL && pRow->ElParent &&
-	  pRow->ElParent != pTable && pRow->ElParent->ElNext)
+      if (!pNextRow)
 	{
-	  pAsc = pRow->ElParent->ElNext;
-	  while (pNextRow == NULL && pAsc)
+	  pAsc = pRow->ElParent;
+	  while (pAsc && pAsc != pTable && !pAsc->ElNext)
+	    pAsc = pAsc->ElParent;
+	  while (!pNextRow &&pAsc && pAsc->ElNext)
 	    {
-	      /* look for a row in another tbody */
-	      pNextRow = SearchTypedElementInSubtree (pAsc,
-						      pRow->ElTypeNumber,
-						      pRow->ElStructSchema);
 	      pAsc = pAsc->ElNext;
+	      if (pAsc)
+		/* look for a row in another tbody or in tfoot */
+		/***** attention, 2 types de rows en MathML *****/
+		pNextRow = SearchTypedElementInSubtree (pAsc,
+							pRow->ElTypeNumber,
+							pRow->ElStructSchema);
 	    }
 	}
     }
@@ -3395,10 +3398,10 @@ ThotBool SelectPairInterval ()
 
 
 /*----------------------------------------------------------------------
-   SelectColumn
+   SelColumn
    Select the whole column.
   ----------------------------------------------------------------------*/
-static void SelectColumn (PtrElement column)
+static void SelColumn (PtrElement column)
 {
   PtrElement          pNextRow, pCell;
   PtrElement          pFirst, pLast, pRow, pTable;
@@ -3412,7 +3415,7 @@ static void SelectColumn (PtrElement column)
 			    pTable->ElStructSchema))
     pTable = pTable->ElParent;
   /* get the first row of the table */
-  /* ********* TODO: there are several types in MathML */
+  /* ********* TODO: there are several types of rows in MathML */
   rowType = GetElemWithException (ExcIsRow, column->ElStructSchema);
   pRow = FwdSearchTypedElem (column, rowType, column->ElStructSchema);
   /* get the relevant cell in the first row */
@@ -3485,7 +3488,7 @@ void TtaSelectEnclosingColumn (Element el)
 {
   el = TtaGetColumn (el);
   if (el)
-    SelectColumn ((PtrElement) el);
+    SelColumn ((PtrElement) el);
 }
 
 /*----------------------------------------------------------------------
@@ -3589,7 +3592,7 @@ void SelectAround (int val)
 		    {
 		      /* the current selection contains only complete cells */
 		      /* select all cells in the column */
-		      SelectColumn (SelectedColumn);
+		      SelColumn (SelectedColumn);
 		      return;
 		    }
 		}
