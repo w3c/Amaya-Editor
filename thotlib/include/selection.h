@@ -45,6 +45,12 @@ extern void         TtaSelectElement (Document document, Element selectedElement
 extern Document   TtaGetSelectedDocument ();
 
 /*----------------------------------------------------------------------
+   TtaGetActiveView returns the selected document and the active view
+   in that document
+  ----------------------------------------------------------------------*/
+extern void TtaGetActiveView (Document *doc, View *view);
+
+/*----------------------------------------------------------------------
    TtaSelectView posts the selected view in the document
   ----------------------------------------------------------------------*/
 extern void         TtaSelectView (Document document, View view);

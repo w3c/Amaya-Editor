@@ -3012,6 +3012,9 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
    ElementType         elType;
    Element             elAnchor, ancestor;
    SSchema             XLinkSchema;
+   ThotBool            found;
+   View                activeView;
+   Document            activeDoc;
 
    elAnchor = NULL;
    *HrefAttr = NULL;
@@ -3064,8 +3067,20 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 		!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	 /* the current element belongs to the SVG namespace */
 	 {
-	   if (elType.ElTypeNum == SVG_EL_use_ ||
-	       elType.ElTypeNum == SVG_EL_a)
+	   found = FALSE;
+	   if (elType.ElTypeNum == SVG_EL_a)
+	     found = TRUE;
+	   else if (elType.ElTypeNum == SVG_EL_use_)
+	     /* it's a use element. Consider it only if the active view is the
+		Structure view, to allow anchors to be activated in the main
+		view, even if they contain a use element */
+	     {
+	       TtaGetActiveView (&activeDoc, &activeView);
+	       if (activeDoc == doc && activeView != 0)
+		 if (!strcmp (TtaGetViewName (doc, activeView), "Structure_view"))
+		   found = TRUE;
+	     }
+	   if (found)
 	     /* look for the corresponding href attribute */
 	     {
 	       attrType.AttrSSchema = elType.ElSSchema;
