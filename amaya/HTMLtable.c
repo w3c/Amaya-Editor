@@ -564,108 +564,94 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
   Element             table, child;
   ElementType         elType;
   int                 rowspan;
-  ThotBool            select, backward, span;
+  ThotBool            select, span;
 
   if (lastcolhead == NULL)
     return NULL;
   select = (row == NULL);
   span = FALSE;
+  /* create a new column head */
   elType = TtaGetElementType (lastcolhead);
   colhead = TtaNewTree (doc, elType, "");
   if (colhead != NULL)
     {
-      elType.ElTypeNum = HTML_EL_Table;
-      table = TtaGetTypedAncestor (lastcolhead, elType);
+      /* insert the new column head */
       prevCol = nextCol = lastcolhead;
       if (before)
 	TtaPreviousSibling (&prevCol);
       else
-	TtaNextSibling (&nextCol);	
-
+	TtaNextSibling (&nextCol);
       TtaInsertSibling (colhead, lastcolhead, before, doc);
       TtaRegisterElementCreate (colhead, doc);
+      elType.ElTypeNum = HTML_EL_Table;
+      table = TtaGetTypedAncestor (lastcolhead, elType);
       if (generateEmptyCells)
 	/* add empty cells to all other rows */
 	{
+	  if (inMath)
+	    elType.ElTypeNum = MathML_EL_TableRow;
+	  else
+	    elType.ElTypeNum = HTML_EL_Table_row;
 	  if (row)
+	    /* get the first row in the same group of rows */
 	    {
-	      /* process the row group except the given row */
-	      currentrow = GetSiblingRow (row, TRUE, inMath);
-	      if (!last && currentrow == NULL)
-		{
-		  /* when last is TRUE, only cells of previous rows
-		     should be created  */
-		  currentrow = GetSiblingRow (row, FALSE, inMath);
-		  backward = FALSE;
-		}
-	      else
-		backward = TRUE;
+	      group = TtaGetParent (row);
+	      currentrow = TtaSearchTypedElement (elType, SearchInTree, group);
 	    }
 	  else
-	    {
-	      elType = TtaGetElementType (lastcolhead);
-	      /* get the first row */
-	      if (inMath)
-		elType.ElTypeNum = MathML_EL_TableRow;
-	      else
-		elType.ElTypeNum = HTML_EL_Table_row;
-	      currentrow = TtaSearchTypedElement (elType, SearchInTree, table);
-	      backward = FALSE;
-	    }
+	    /* get the first row of the table */
+	    currentrow = TtaSearchTypedElement (elType, SearchInTree, table);
 
 	  while (currentrow)
 	    {
 	      rowspan = 1;
-	      /* get the sibling cell */
-	      if (last)
-		child = TtaGetLastChild (currentrow);
-	      else
-		/* look for the previous cell */
-		child = GetCloseCell (currentrow, prevCol, doc, TRUE,
-				      TRUE, inMath, &span, &rowspan, FALSE);
-	      if (child)
+	      if (currentrow == row && last)
+		/* we are not supposed to create more rows. Stop */
+		currentrow = NULL;
+	      /* don't process the row containing the initial cell */
+	      else if (currentrow != row)
 		{
-		  if (!span)
+		  /* get the sibling cell */
+		  if (last)
+		    child = TtaGetLastChild (currentrow);
+		  else
+		    /* look for the previous cell */
+		    child = GetCloseCell (currentrow, prevCol, doc, TRUE, TRUE,
+					  inMath, &span, &rowspan, FALSE);
+		  if (child)
 		    {
-		      if (select && row == NULL)
-			/* first row where a cell is created */
-			row = currentrow;
-		      /* add a new cell after */
-		      AddEmptyCellInRow (currentrow, colhead, child, FALSE,
-					 doc, inMath, FALSE, TRUE);
-		      TtaChangeInfoLastRegisteredElem (doc, 3);
-		    }
-		}
-	      else
-		{
-		  /* look for the next cell */
-		  child = GetCloseCell (currentrow, nextCol, doc, FALSE,
-					TRUE, inMath, &span, &rowspan, FALSE);
-		  if (select && row == NULL)
-		    /* first row where a cell is created */
-		    row = currentrow;
-		  /* add a cell before */
-		  AddEmptyCellInRow (currentrow, colhead, child, TRUE, doc,
-				     inMath, FALSE, TRUE);
-		  TtaChangeInfoLastRegisteredElem (doc, 3);
-		}
-	      if (rowspan == 0)
-		rowspan = THOT_MAXINT;
-	      while (rowspan >= 1 && currentrow)
-		{
-		  if (backward)
-		    {
-		      TtaPreviousSibling (&currentrow);
-		      if (currentrow == NULL && !last)
+		      if (!span)
 			{
-			  /* we have to manage following rows too */
-			  currentrow = GetSiblingRow (row, FALSE, inMath);
-			  backward = FALSE;
-			  rowspan = 1;
+			  if (select && row == NULL)
+			    /* first row where a cell is created */
+			    row = currentrow;
+			  /* add a new cell after */
+			  AddEmptyCellInRow (currentrow, colhead, child, FALSE,
+					     doc, inMath, FALSE, TRUE);
+			  TtaChangeInfoLastRegisteredElem (doc, 3);
 			}
 		    }
 		  else
-		    currentrow = GetSiblingRow (currentrow, FALSE, inMath);
+		    {
+		      /* look for the next cell */
+		      child = GetCloseCell (currentrow, nextCol, doc, FALSE,
+					 TRUE, inMath, &span, &rowspan, FALSE);
+		      if (select && row == NULL)
+			/* first row where a cell is created */
+			row = currentrow;
+		      /* add a cell before */
+		      AddEmptyCellInRow (currentrow, colhead, child, TRUE, doc,
+					 inMath, FALSE, TRUE);
+		      TtaChangeInfoLastRegisteredElem (doc, 3);
+		    }
+		  if (rowspan == 0)
+		    rowspan = THOT_MAXINT;
+		}
+	      /* find the next row where a cell has to be created. Skip the
+	         spanned rows */
+	      while (rowspan >= 1 && currentrow)
+		{
+		  currentrow = GetSiblingRow (currentrow, FALSE, inMath);
 		  rowspan--;
 		}
 	    }
