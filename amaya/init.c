@@ -1760,7 +1760,6 @@ void InitMimeType (Document document, View view, char *url, char *status)
   else if (DocumentTypes[document] == docSVG)
     {
       mimetypes_list = 	AM_SVG_MIME_TYPE"\0"
-	"image/svg+xml\0"
 	"application/xml\0"
 	"text/xml\0";
       nbmimetypes = 4;
