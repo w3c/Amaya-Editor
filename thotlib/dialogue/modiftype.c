@@ -38,8 +38,9 @@
 
 
 /*----------------------------------------------------------------------
-   ComposeItemSplitsele compose dans le buffer BufItemSplit        
-   l'intitule' de l'entree Split du menu Edit.             
+   ComposeItemSplit
+   Composes in the BufItemSplit buffer the name of the Split item of
+   the Edit menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ComposeItemSplit (char *bufItemSplit)
@@ -80,8 +81,9 @@ char               *bufItemSplit;
 }
 
 /*----------------------------------------------------------------------
-   UpdateSplitItem    met a jour l'intitule' de l'item Split du menu  
-   Edit dans toutes les frame du document pDoc.            
+   UpdateSplitItem
+   updates the title of the Split item of the Edit menu in all the frames
+   of document pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateSplitItem (PtrDocument pDoc)
@@ -105,7 +107,8 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
-   TtcSplit coupe un element.                                         
+   TtcSplit
+   splits an element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSplit (Document document, View view)
@@ -125,8 +128,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   StructEditingingLoadResources connecte les fonctions               
-   de  modification de structure.                          
+   StructEditingingLoadResources
+   connects the modify structure functions.
   ----------------------------------------------------------------------*/
 void                StructEditingLoadResources ()
 {
@@ -141,3 +144,10 @@ void                StructEditingLoadResources ()
 	ImageMenuLoadResources ();
      }
 }
+
+
+
+
+
+
+

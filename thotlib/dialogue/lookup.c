@@ -13,14 +13,13 @@
 #include "interface.h"
 
 #ifndef _WINDOWS
-/*
- * Use the Thot XLookupString function instead of
- * the default X11 one. May generate problems when
- * linking with the X11 libraries, but enable support
- * for ISO-Latin-1 charset in Motif dialogs even if
- * there is no correct Locale support.
- */
-
+/*----------------------------------------------------------------------
+  XLookupString
+  Thot XLookupString function replacement for the default X11 one.
+  May generate problems when linking with the X11 libraries, but
+  enables support for ISO-Latin-1 charset in Motif dialogs even if
+  there is no correct Locale support.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 XLookupString (XKeyEvent * event, char *buffer, int nbytes,
 				   KeySym * keysym, XComposeStatus * status)
@@ -38,8 +37,10 @@ XComposeStatus     *status;
 }
 #endif /* ! _WINDOWS */
 
+
 /*----------------------------------------------------------------------
-   LookupLoadResources : link in the XLookupString replacement        
+   LookupLoadResources 
+  link in the XLookupString replacement        
   ----------------------------------------------------------------------*/
 void                LookupLoadResources ()
 {

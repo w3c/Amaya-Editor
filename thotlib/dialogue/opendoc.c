@@ -21,6 +21,9 @@
 #define MAX_ARGS 20
 
 #ifdef SONY
+/*----------------------------------------------------------------------
+   strstr
+  ----------------------------------------------------------------------*/
 char               *strstr (s1, s2)
 char               *s1, *s2;
 {
@@ -78,11 +81,11 @@ static Name         NewSchemaName;
 #include "docs_f.h"
 
 /*----------------------------------------------------------------------
-   BuildPathDocBuffer construit une chaine des paths de documents     
-   pour les dialogues de l'editeur Thot.                   
-   la chaine est construite dans bufDir et les entrees sont        
-   separees par separator, le nombre d'entrees est 
-   retourne dans nbItems                            
+   BuildPathDocBuffer
+   builds a document path for the Thot editor dialogues.
+   The path is built in bufDir and the entries are separated by
+   separator. 
+   nbItems returns the number of entries.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildPathDocBuffer (char *bufDir, char separator, int *nbItems)
@@ -111,10 +114,12 @@ int                *nbItems;
 
 
 /*----------------------------------------------------------------------
-   BuildSchPresNameMenu        demande a l'utilisateur le schema de    
-   presentation a charger pour le schema de structure pSchStr.     
-   A l'appel, name contient le nom du schema propose' par Thot,    
-   au retour, name contient le nom entre' par l'utilisateur.       
+   BuildSchPresNameMenu
+   queries the user for the presentation scheme to be loaded by
+   the structure scheme pSchStr.
+   When the function is called, name contains the schema name proposed
+   by Thot.
+   When it returns, name contains the name entered by the user.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildSchPresNameMenu (PtrSSchema pSchStr, Name name)
@@ -161,7 +166,8 @@ Name                name;
 
 
 /*----------------------------------------------------------------------
-   CallbackSchPresNameMenu met a jour le choix du schema de presentation.     
+   CallbackSchPresNameMenu
+   updates the presentation scheme choice.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackSchPresNameMenu (int ref, int typedata, char *data)
@@ -189,7 +195,8 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
-   CallbackImportMenu met a jour le formulaire de import.                      
+   CallbackImportMenu
+   updates the ImportMenu form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackImportMenu (int ref, int typedata, char *data)
@@ -229,7 +236,8 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
-   CallbackOpenDocMenu met a jour le formulaire de opendoc.                    
+   CallbackOpenDocMenu
+   updates the OpenDoc form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackOpenDocMenu (int ref, int typedata, char *data)
@@ -387,7 +395,8 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
-   TtcOpenDocument initialise le changement de opendoc.                       
+   TtcOpenDocument
+   initializes the OpenDoc form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcOpenDocument (Document document, View view)
@@ -467,3 +476,11 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumFormOpenDoc, TRUE);
 }
+
+
+
+
+
+
+
+

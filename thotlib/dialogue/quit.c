@@ -20,7 +20,8 @@ static boolean      InProcedureQuitThot = FALSE;
 #include "viewcommands_f.h"
 #include "closedoc_f.h"
 /*----------------------------------------------------------------------
-   TtcQuit initialise le changement de TtcQuit.                       
+   TtcQuit
+   Initializes and shows the quit form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcQuit (Document document, View view)
@@ -67,3 +68,4 @@ View                view;
      }
    InProcedureQuitThot = FALSE;
 }
+

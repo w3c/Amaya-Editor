@@ -29,7 +29,8 @@ static DocViewNumber ReferenceView;
 #include "viewapi_f.h"
 
 /*----------------------------------------------------------------------
-   CallbackOpenView met a jour le formulaire de openview.               
+   CallbackOpenView
+   updates the openview form
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackOpenView (int ref, int dataType, char *data)
@@ -53,7 +54,8 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
-   TtcOpenView initialise le menu de openview.                        
+   TtcOpenView
+   initializes the openview menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcOpenView (Document document, View view)
@@ -72,10 +74,10 @@ View                view;
 
    PtrDocument         pDoc;
 
-   /* Connexion initiale */
+   /* initial connection */
    if (ThotLocalActions[T_openview] == NULL)
      {
-	/* Connecte les actions liees au traitement de la commande */
+	/* connects the callback actions associated to the command */
 	TteConnectAction (T_openview, (Proc) CallbackOpenView);
      }
 
@@ -85,14 +87,14 @@ View                view;
 
    if (ViewToOpenDoc != NULL)
      {
-	/* construit le menus des vues que l'on peut ouvrir */
+	/* builds a menu of views which we can open */
 	BuildViewList (pDoc, buf, &nbItems);
 	if (nbItems == 0)
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_ALL_VIEWS_ALREADY_CREATED);
 	else
 	  {
 	     ViewToOpenNumber = -1;
-	     /* ajoute un 'B' au debut de chaque entree du menu */
+	     /* adds a 'B' at the beginning of each menu entry */
 	     dest = &bufMenu[0];
 	     src = &buf[0];
 	     for (k = 1; k <= nbItems; k++)
@@ -113,7 +115,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   TtcCloseView ferme une frame de document.                          
+   TtcCloseView
+   closes a document view.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcCloseView (Document document, View viewIn)
@@ -138,8 +141,8 @@ View                viewIn;
 
 
 /*----------------------------------------------------------------------
-   TtcSynchronizeView l'utilisateur demande le changement du mode  
-   de synchronisation de la vue indiquee du document.      
+   TtcSynchronizeView
+   Switches the synchronizaton mode of the view of a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SwitchSynchronize (Document document, View view)
@@ -154,11 +157,19 @@ View                view;
 
    if (document == 0 && view == 0)
       return;
-   /* les vues d'elements associes ne sont pas concernees */
+   /* the views of associated elements are not concerned */
    else if (view < 100)
      {
-	/* change le mode de synchronisation de la vue */
+	/* changes the synchronization mode of the view */
 	pDoc = LoadedDocument[document - 1];
 	pDoc->DocView[view - 1].DvSync = !pDoc->DocView[view - 1].DvSync;
      }
 }
+
+
+
+
+
+
+
+

@@ -3,7 +3,7 @@
  */
 
 /*
-   fonctions d'edition -- menus fichier, vue, import export.
+   Edition functions == file, view, import, and export menus
  */
 
 #include "thot_sys.h"
@@ -62,8 +62,9 @@ extern void         EntreeMenu ();
 #endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
-   CheckPresImage valide ou invalide le type de presentation en    
-   fonction du type d'image.                               
+   CheckPresImage
+   validates or invalidates the presentation type according to the
+   image type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckPresImage (int indexType)
@@ -91,7 +92,8 @@ int                 indexType;
 }
 
 /*----------------------------------------------------------------------
-   InitPathImage   initialise les paths des images.                
+   InitPathImage
+   inits the images paths.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitPathImage ()
@@ -152,7 +154,8 @@ static void         InitPathImage ()
 
 
 /*----------------------------------------------------------------------
-   CallbackPictureMenu enregistre les retours du formulaire Picture            
+   CallbackPictureMenu
+   records the return values of the Picture form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackPictureMenu (int ref, int typeData, char *txt)
@@ -282,7 +285,8 @@ char               *txt;
 
 
 /*----------------------------------------------------------------------
-   Menu appele lors de la modification d'une image                    
+  BuildPictureMenu
+  This menu is called whenever an image is modified.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildPictureMenu (char *name, boolean * result, int *typim, int *pres, PtrBox pBox)
@@ -383,8 +387,10 @@ PtrBox              pBox;
    *result = RedisplayPicture;
 }
 /*----------------------------------------------------------------------
+  ImageMenuLoadResources
   ----------------------------------------------------------------------*/
 void                ImageMenuLoadResources ()
+
 {
    BaseDlgImage = TtaSetCallback (CallbackPictureMenu, MAX_IMAGE_MENU);
    if (BaseDlgImage != 0)
