@@ -233,7 +233,7 @@
 	<message xml:lang="es">Sinchronizar</message>
 </label>
 <label define="BLatinReading">
-	<message xml:lang="en">Reopen ISO-latin-1</message>
+	<message xml:lang="en">Reopen in ISO-latin-1</message>
 	<message xml:lang="fr">Reouvrir en ISO-latin-1</message>
 	<message xml:lang="de">Dokument mit ISO-latin-1 neu parsen</message>
 	<message xml:lang="it">Riapri in ISO-latin-1</message>

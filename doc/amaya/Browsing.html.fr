@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya V4.3.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -43,6 +43,24 @@ ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode"
 est également disponible à partir de l'option <strong>Mode Editeur</strong> du
 menu d'Édition, ou bien par le raccourci clavier
 (<strong>Shift-Control-*</strong> par défaut).</p>
+
+<p>Les documents HTML sont lus par défaut comme des fichiers ISO-latin-1. Sans
+information sur le "charset" dans l'en-tête HTTP ou dans un élément META, un
+document HTML est considéré comme encodé en ISO-latin-1. Les documents XHTML
+sont lus par défaut comme des fichiers UTF 8. Quand il n'y a pas d'information
+sur le "charset" dans l'en-tête HTTP, dans la déclaration XML, ou dans un
+élément META, un document XHTML est considéré comme encodé en UTF 8. Comme les
+encodages par défaut de HTML et de XHTML sont différents, il arrive souvent
+que des auteurs aient créé des documents XHTML ISO-latin-1 qui ne fournissent
+pas d'information sur l'encodage. Dès qu'un caractère analysé par le parseur
+XML ne correspond pas à un caractère UTF 8 valide (cela doit arriver si le
+document est encodé en ISO-latin-1 mais lu comme un fichier UTF 8), le
+document est considéré comme invalide: le parseur s'arrête and un message
+d'erreur est affiché. Dans ce cas, la commande "<strong>Reopen in
+ISO-latin-1</strong>" est activée. Cette commande vous permet de re-ouvrir le
+document avec le "charset" correspondant à l'ISO-latin-1. Le document est
+maintenant considéré comme modifié (un charset a été ajouté) and peut être
+sauvé.</p>
 
 <h3><a name="Activating">Activer un lien</a></h3>
 

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Browsing with Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya V4.3.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -41,6 +41,31 @@ src="../Icons/Browser.gif" alt="browser-mode" /> and you can only browse and
 fill in forms. This option is also available from the Edit menu option
 <strong>Editor Mode</strong>, and as a keyboard shortcut (the default is
 <strong>Shift-Control-*</strong>).</p>
+
+<p>HTML documents are read by default as ISO-latin-1 files. Without any
+information about the charset in the HTTP header or in a META element, a HTML
+document is considered as encoded in ISO-latin-1. XHTML documents are read by
+default as UTF 8 files. When there is no information about the charset in the
+HTTP header, in the XML declaration, or in a META element, a XHTML document is
+considered as encoded in UTF 8. As the default charset is different for HTML
+documents and XHTML documents, it often occurs that authors created
+ISO-latin-1 XHTML documents which don't provide information about the charset.
+As soon as a character analyzed by the XML parser doesn't match a valid UTF 8
+character (it should occur if the document is encoded in ISO-latin-1 but
+parsed as an UTF 8 file), the document is considered as invalid: the parsing
+is stopped and an error message is displayed. In that specific case, the
+command "<strong>Reopen in ISO-latin-1</strong>" is activated. That command
+allows you to reopen the document with a charset set to ISO-latin-1. The
+reopen document is now considered as modified (a charset has been added) and
+can be saved.</p>
+
+<p>Amaya interprets character entities.: When it's not able to interpret it,
+it displays a '?' (or it displays the entity value when the entity is within
+an attribute value or when the entityi s unknown). In all cases entities are
+restored when the document is saved, except if the document encoding is
+ISO-latin-1 and the entity corresponds to an ISO-latin-1 character. If the
+document encoding is ASCII,  Amaya translates ISO-latin-1 characters into
+entities.</p>
 
 <h3><a name="Activating">Activating a link</a></h3>
 
