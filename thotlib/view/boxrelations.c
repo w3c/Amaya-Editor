@@ -1901,8 +1901,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      else
 		pDimAb->DimUnit = UnPixel;
 	    }
-	  else if (pAb->AbLeafType == LtCompound &&
-		   horizRef && pDimAb->DimAbRef &&
+	  else if (horizRef && pDimAb->DimAbRef &&
 		   pDimAb->DimUnit != UnAuto &&
 		   pDimAb->DimAbRef == pAb->AbEnclosing &&
 		   pAb->AbEnclosing->AbWidth.DimAbRef == NULL &&
@@ -1920,19 +1919,22 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  pDimAb->DimValue = -1;
 		}
 	    }
-	  else if (pAb->AbLeafType == LtCompound &&
-		   !horizRef && pDimAb->DimAbRef &&
+	  else if (!horizRef && pDimAb->DimAbRef &&
 		   pDimAb->DimUnit != UnAuto &&
 		   pDimAb->DimAbRef == pAb->AbEnclosing &&
 		   pAb->AbEnclosing->AbHeight.DimAbRef == NULL &&
 		   pAb->AbEnclosing->AbHeight.DimValue == -1)
 	    {
-		  /* the height depends on the parent height
-		     when the parent height depends on its contents */
+	      /* the height depends on the parent height
+		 when the parent height depends on its contents */
 	      pChildAb = pAb->AbEnclosing->AbFirstEnclosed;
 	      while (pChildAb && pChildAb->AbHeight.DimAbRef == pAb->AbEnclosing)
 		pChildAb = pChildAb->AbNext;
-	      if (pChildAb == NULL)
+	      if (pChildAb == NULL ||
+		  (pAb->AbEnclosing->AbBox &&
+		   (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
+		    pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+		    pAb->AbEnclosing->AbBox->BxType == BoGhost)))
 		{
 		  /* all child heights depend on the parent height */
 		  pDimAb->DimAbRef = NULL;
