@@ -137,8 +137,8 @@ void AmayaAttributePanel::SendDataToPanel( AmayaPanelParams& p )
       ShowAttributValue( wxATTR_TYPE_NONE );
       break;
     case wxATTR_ACTION_SETUPLANG:
-      SetMandatoryState( false );
-      SetupLangValue( (const char *)p.param2,(const char *)p.param3, (const char *)p.param4, (int)p.param5, (int)p.param6 );
+      SetMandatoryState( (bool)p.param2 );
+      SetupLangValue( (const char *)p.param3,(const char *)p.param4, (const char *)p.param5, (int)p.param6, (int)p.param7 );
       ShowAttributValue( wxATTR_TYPE_LANG );
       break;
     case wxATTR_ACTION_SETUPTEXT:
