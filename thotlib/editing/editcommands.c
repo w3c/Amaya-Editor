@@ -3879,7 +3879,7 @@ View                view;
 #ifdef _WINDOWS
    HANDLE hMem   = 0;
    CHAR_T* lpData = 0;
-   CHAR_T* ptrData;
+   /* CHAR_T* ptrData; */
    CHAR_T* pBuff;
    int    frame;
 
@@ -3911,20 +3911,26 @@ View                view;
           else {
                EmptyClipboard ();
 
-               hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-               lpData = GlobalLock (hMem);
-               ptrData = lpData;
-               pBuff  = Xbuffer;
-			   lstrcpy (lpData, Xbuffer);
-               /* for (ndx = 0; ndx < ClipboardLength; ndx++)
-                   *ptrData++ = *pBuff++;
-			   *ptrData = 0; */
+			   /* if the clipboard buffer is empty, don't copy anything into it */
+			   if (Xbuffer)
+			   {
+                 hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
+                 lpData = GlobalLock (hMem);
+                 pBuff  = Xbuffer;
+			     lstrcpy (lpData, Xbuffer);
+                 /* 
+				     ptrData = lpData;
+				     for (ndx = 0; ndx < ClipboardLength; ndx++)
+                    *ptrData++ = *pBuff++;
+			        *ptrData = 0;
+				 */
 
-               GlobalUnlock (hMem);
+                 GlobalUnlock (hMem);
 
-               if (!SetClipboardData (CF_TEXT, hMem))
-                  WinErrorBox (NULL, TEXT(""));
-               CloseClipboard ();
+                 if (!SetClipboardData (CF_TEXT, hMem))
+                    WinErrorBox (NULL, TEXT(""));
+                 CloseClipboard ();
+			   }
 		  } 
    }
 #endif /* _WINDOWS */
