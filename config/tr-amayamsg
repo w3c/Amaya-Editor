@@ -143,3 +143,5 @@
 142 **Request timeout - server did not respond
 143 **%s already exists. Overwrite it?
 144 **%s has changed. Overwrite it?
+145 **Background image
+146 **Background image not allowed here
