@@ -451,6 +451,90 @@ LabelString         oldLabel;
 	}
 }
 
+/*----------------------------------------------------------------------*/
+  /* UpdateReferences      */    
+   /* traitement particulier a faire sur les references si */
+   /* la copie n'est pas dans le meme document que l'original */
+   /* et que l'on a fait un copier/coller d'un element LtReference */
+   /* ou d'un element portant un attribut reference, */
+/*----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void                UpdateReferences (PtrElement pRoot, PtrDocument pDoc, PtrReference pRef)
+#else  /* __STDC__ */
+static void                updateReferences (pRoot, pDoc, pRef)
+PtrElement          pRoot;
+PtrDocument         pDoc;
+PtrReference        pRef;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          pElRef;
+   DocumentIdentifier  docIdentRef;
+   PtrDocument         pDocRef;
+   boolean             sameDoc;
+
+	   if (pRef->RdReferred != NULL)
+	     {
+		pElRef = ReferredElement (pRef, &docIdentRef, &pDocRef);
+		if (pElRef == NULL && DocIdentIsNull (docIdentRef))
+		   /* la reference ne designe rien */
+		   pRef->RdReferred = NULL;
+		else
+		  {
+		     if (pElRef != NULL)
+			if (!IsASavedElement (pElRef))
+			   if (IsWithinANewElement (pElRef))
+			      /* l'element reference' est aussi colle' */
+			      pDocRef = pDoc;
+		     if (pRef->RdInternalRef)
+			/* l'original etait une reference interne a son document */
+			/* d'origine, l'element reference' appartient donc au */
+			/* document d'origine */
+			pDocRef = DocOfSavedElements;
+		     else
+			/* l'original etait une reference externe a son document */
+			/* d'origine */
+		     if (SameDocIdent (pDoc->DocIdent, docIdentRef))
+			/* l'element reference' et la reference sont dans le */
+			/* meme document */
+			pDocRef = pDoc;
+		     if (pDocRef != NULL)
+			/* le document contenant l'element reference' est charge' */
+		       {
+			  /* si l'original n'est pas une reference interne, */
+			  /* l'element reference' ne peut pas avoir ete copie' en */
+			  /* meme temps */
+			  if (!pRef->RdInternalRef)
+			    {
+			     /* lie la reference a l'element designe' par l'original */
+		             if (pRef->RdAttribute != NULL)
+		               pRoot = NULL;
+			     SetReference (pRoot, pRef->RdAttribute, pElRef, pDoc, pDocRef, FALSE, FALSE);
+			    }
+			  else
+			     /* la reference originale etait une reference interne */
+			    {
+			       sameDoc = FALSE;
+			       if (pElRef != NULL)
+				  if (!IsASavedElement (pElRef))
+				     /* l'element reference' est aussi colle', on ne fait */
+				     /* rien : ce cas est traite' plus haut */
+				     sameDoc = IsWithinANewElement (pElRef);
+			       if (!sameDoc)
+
+				  /* etablit le lien entre la reference copie'e et */
+				  /* l'element reference */
+				 {
+				   if (pRef->RdAttribute != NULL)
+				     pRoot = NULL;
+				  SetReference (pRoot, pRef->RdAttribute, pElRef, pDoc, pDocRef, FALSE, FALSE);
+				 }
+			    }
+		       }
+		  }
+	     }
+}
 
 /*----------------------------------------------------------------------
    CheckReferences        On vient de coller le sous-arbre de racine	
@@ -576,34 +660,38 @@ PtrDocument         pDoc;
 	  {
 	     pElRef = NULL;
 	     if (pAttr->AeAttrReference != NULL)
-		if (pAttr->AeAttrReference->RdReferred != NULL)
-		   if (!pAttr->AeAttrReference->RdReferred->ReExternalRef)
-		      pElRef = pAttr->AeAttrReference->RdReferred->ReReferredElem;
-	     /* si l'element reference' est aussi colle', */
-	     /* on ne fait rien: ce cas est traite' plus haut */
-	     if (pElRef != NULL)
-		if (!IsASavedElement (pElRef))
-		   if (!IsWithinANewElement (pElRef))
-		     {
-			/* verifie la validite de l'attribut dans le cas des */
-			/* extensions de cellule des tableaux */
-			if (ThotLocalActions[T_checkextens] != NULL)
-			   (*ThotLocalActions[T_checkextens])
-			      (pAttr, pRoot, pRoot, TRUE);
-			if (DocOfSavedElements != pDoc)
-			   /* reference et objet reference' sont */
-			   /* dans des documents differents, on */
-			   /* supprime l'attribut, sauf dans le */
-			   /* cas particulier des tableaux. */
-			  {
-			     attrRef = TRUE;
-			     if (ThotLocalActions[T_refattr] != NULL)
-				(*ThotLocalActions[T_refattr])
-				   (pAttr, &attrRef);
-			     if (!attrRef)
-				DeleteAttribute (pRoot, pAttr);
-			  }
-		     }
+		 if (pAttr->AeAttrReference->RdReferred != NULL)
+		   {
+		     if (!pAttr->AeAttrReference->RdReferred->ReExternalRef)
+		       pElRef = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+			/* si l'element reference' est aussi colle', */
+		     /* on ne fait rien: ce cas est traite' plus haut */
+		     if (pElRef != NULL)
+		       if (!IsASavedElement (pElRef))
+			 if (!IsWithinANewElement (pElRef))
+			   {
+			     /* verifie la validite de l'attribut dans le cas des */
+			     /* extensions de cellule des tableaux */
+			     if (ThotLocalActions[T_checkextens] != NULL)
+			       (*ThotLocalActions[T_checkextens])
+				 (pAttr, pRoot, pRoot, TRUE);
+			     if (DocOfSavedElements != pDoc)
+			       /* reference et objet reference' sont */
+			       /* dans des documents differents, on */
+			       /* supprime l'attribut, sauf dans le */
+			       /* cas particulier des tableaux. */
+			       {
+				 attrRef = TRUE;
+				 if (ThotLocalActions[T_refattr] != NULL)
+				   (*ThotLocalActions[T_refattr])
+				     (pAttr, &attrRef);
+				 if (!attrRef)
+				   DeleteAttribute (pRoot, pAttr);
+			       }
+			   }
+		     /* on traite le cas des references qui pointent sur de nouveaux elements */
+		     UpdateReferences (pRoot, pDoc, pAttr->AeAttrReference);
+		   }  
 	  }
 	pAttr = pAttr->AeNext;
      }
@@ -642,60 +730,9 @@ PtrDocument         pDoc;
 	   pRef = pRoot->ElReference;
 	else			/* c'est peut-etre une inclusion */
 	   pRef = pRoot->ElSource;
-	if (pRef != NULL)	/* c'est une reference, on cherche
-				   l'element reference', pElRef */
-	   if (pRef->RdReferred != NULL)
-	     {
-		pElRef = ReferredElement (pRef, &docIdentRef, &pDocRef);
-		if (pElRef == NULL && DocIdentIsNull (docIdentRef))
-		   /* la reference ne designe rien */
-		   pRef->RdReferred = NULL;
-		else
-		  {
-		     if (pElRef != NULL)
-			if (!IsASavedElement (pElRef))
-			   if (IsWithinANewElement (pElRef))
-			      /* l'element reference' est aussi colle' */
-			      pDocRef = pDoc;
-		     if (pRef->RdInternalRef)
-			/* l'original etait une reference interne a son document */
-			/* d'origine, l'element reference' appartient donc au */
-			/* document d'origine */
-			pDocRef = DocOfSavedElements;
-		     else
-			/* l'original etait une reference externe a son document */
-			/* d'origine */
-		     if (SameDocIdent (pDoc->DocIdent, docIdentRef))
-			/* l'element reference' et la reference sont dans le */
-			/* meme document */
-			pDocRef = pDoc;
-		     if (pDocRef != NULL)
-			/* le document contenant l'element reference' est charge' */
-		       {
-			  /* si l'original n'est pas une reference interne, */
-			  /* l'element reference' ne peut pas avoir ete copie' en */
-			  /* meme temps */
-			  if (!pRef->RdInternalRef)
-			     /* lie la reference a l'element designe' par l'original */
-			     SetReference (pRoot, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
-			  else
-			     /* la reference originale etait une reference interne */
-			    {
-			       sameDoc = FALSE;
-			       if (pElRef != NULL)
-				  if (!IsASavedElement (pElRef))
-				     /* l'element reference' est aussi colle', on ne fait */
-				     /* rien : ce cas est traite' plus haut */
-				     sameDoc = IsWithinANewElement (pElRef);
-			       if (!sameDoc)
-
-				  /* etablit le lien entre la reference copie'e et */
-				  /* l'element reference */
-				  SetReference (pRoot, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
-			    }
-		       }
-		  }
-	     }
+	if (pRef != NULL)	/* c'est une reference, on */
+	                        /*  met a jour la reference si besoin */
+	   UpdateReferences (pRoot, pDoc, pRef);
      }
    if (!pRoot->ElTerminal && pRoot->ElSource == NULL)
       /* ce n'est ni une inclusion ni un terminal, on traite tous les fils */
