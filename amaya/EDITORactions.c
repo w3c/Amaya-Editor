@@ -279,6 +279,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  CreateBreak
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateBreak (Document document, View view)
@@ -541,6 +542,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  CreateScript
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateScript (Document document, View view)
@@ -580,9 +582,11 @@ View                view;
      InsertWithinHead (document, view, HTML_EL_SCRIPT);
    else
      {
-       /* create Script within the body */
-       elType.ElSSchema = docSchema;
-       if (ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")) == 0)
+       /* create Script in the body if we are within an HTML document
+	  and within an HTML element */
+       elType = TtaGetElementType (el);
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) &&
+           !ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")))
 	 {
 	   elType.ElTypeNum = HTML_EL_SCRIPT;
 	   TtaCreateElement (elType, document);
@@ -592,6 +596,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  CreateParagraph
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateParagraph (Document document, View view)
