@@ -125,15 +125,9 @@ extern HWND      currentDlg;
 extern int       ReturnOption;
 extern int       Window_Curs;
 
-static HWND      winCapture = (HWND) -1;
 static HWND      hwndHead;
 static char     *txtZoneLabel;
 static char      URL_txt [500];
-static int       oldXPos;
-static int       oldYPos;
-static ThotBool  fBlocking;
-static ThotBool  moved = FALSE;
-static ThotBool  firstTime = TRUE;
 static ThotBool  paletteRealized = FALSE;
 
 int         X_Pos;
@@ -1873,6 +1867,10 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   RECT         rect;
   RECT         cRect;
   ThotBool     isSpecial;
+  /* Used to limit selection extension
+	on mouse move  */
+  static int       oldXPos;
+  static int       oldYPos;
 
   frame = GetFrameNumber (hwnd);
   /* do not handle events if the Document is in NoComputedDisplay mode. */
@@ -1897,21 +1895,24 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  ClickY = HIWORD (lParam);
 	  return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 	}
-    } 
+   } 
 
-  if (wParam & MK_LBUTTON && frame != -1 && winCapture != (HWND) -1)
+  /* Handle the Scroll Drag */
+  if (wParam & MK_LBUTTON && frame != -1)
     {
-      if (winCapture != hwnd)
+	  /* if scroll concerns this window*/
+      if (GetCapture () == hwnd)
 	{
 	  GetWindowRect (hwnd, &rect);
-	  GetClientRect (hwnd, &cRect);
-	  GetCursorPos (&ptCursor);
-	  /* generate a scroll if necessary */
+	  GetCursorPos (&ptCursor);	  
+	  /* generate a scroll if necessary 
+	  (cursor position outside client bounds)*/
 	  if (ptCursor.y > rect.bottom ||
 	      ptCursor.y < rect.top ||
 	      ptCursor.x > rect.right ||
-	      ptCursor.x < rect.left + 1)
+	      ptCursor.x < rect.left)
 	  {
+	  GetClientRect (hwnd, &cRect);
 	  if (ptCursor.y > rect.bottom)
 	    {
 	      Y_Pos = cRect.bottom;
@@ -1919,7 +1920,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	    }
 	  else if (ptCursor.y < rect.top)
 	    {
-	      Y_Pos = rect.top;
+	      Y_Pos = 0;
 	      TtcLineUp (document, view);
 	    }
 	  if (ptCursor.x > rect.right)
@@ -1927,17 +1928,32 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	      X_Pos = cRect.right;
 	      TtcScrollRight (document, view);
 	    }
-	  else if (ptCursor.x < rect.left + 1)
+	  else if (ptCursor.x < rect.left)
 	    {
-	      X_Pos = rect.left + 1;
+	      X_Pos = 0;
 	      TtcScrollLeft (document, view);
 	    }
-	  LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-	  /* if (wParam & MK_LBUTTON) */
-	  SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
+ 	  LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
 	  }
-	}
-    }
+	  else
+	  {
+		  /* Just Extending Selection*/
+		  if (mMsg == WM_MOUSEMOVE)
+		  {	
+			X_Pos = LOWORD (lParam);
+			Y_Pos = HIWORD (lParam);
+			if ((oldXPos <= X_Pos - 1 || oldXPos >= X_Pos + 1) ||  
+				  (oldYPos <= Y_Pos - 1 || oldYPos >= Y_Pos + 1))
+			{
+					LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+					oldXPos = X_Pos;
+					oldYPos = Y_Pos;
+			 }
+		  }
+	  }
+	 }
+  }
+    
   switch (mMsg)
     {
     case WM_CREATE:
@@ -2062,6 +2078,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_LBUTTONDOWN:
       /* Activate the client window */
       SetFocus (FrRef[frame]);
+	  SetCapture (hwnd);
 	  /* stop any current insertion of text */
       CloseInsertion ();
       ClickFrame = frame;
@@ -2079,23 +2096,18 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  /* This is the beginning of a selection */
 	  else
 	    LocateSelectionInView (frame, ClickX, ClickY, 2);
-	  fBlocking = TRUE;
-	  moved = FALSE;
 	}
       return 0;
 
     case WM_LBUTTONUP:
       X_Pos = LOWORD (lParam);
       Y_Pos = HIWORD (lParam);
-      ReleaseCapture ();
-      winCapture = (HWND) -1;
-      firstTime = TRUE;
-      if (fBlocking)
-	fBlocking = FALSE;
-      /* is it a single click */
-      fBlocking = TRUE;
-      if (!moved)	  
-	LocateSelectionInView (frame, ClickX, ClickY, 4);
+	  if (GetCapture () == hwnd)
+		{
+			ReleaseCapture ();
+			/*End Selection*/
+			LocateSelectionInView (frame, ClickX, ClickY, 4);
+		}
      return 0;
 
     case WM_LBUTTONDBLCLK:
@@ -2152,33 +2164,12 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       /* left double click handling */
       return 0;
 
-    case WM_MOUSEMOVE:
-      /* SetActiveWindow (FrMainRef[frame]); 
-	 SetFocus (hwnd); */
-      X_Pos = LOWORD (lParam);
-      Y_Pos = HIWORD (lParam);
-      if (wParam & MK_LBUTTON)
-	{
-	  if ((oldXPos <= X_Pos - 1 || oldXPos >= X_Pos + 1) ||  
-	      (oldYPos <= Y_Pos - 1 || oldYPos >= Y_Pos + 1))
-	    {
-	      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-	      moved = TRUE;
-	    }
-	}
-      else
-	fBlocking = FALSE;
-      oldXPos = X_Pos;
-      oldYPos = Y_Pos;
-      return 0;
 
     case WM_NCMOUSEMOVE:
-      if (firstTime && fBlocking)
-	{
-	  winCapture = GetCapture ();
-	  firstTime = FALSE;
-	  SetCapture (hwnd);
-	}
+		/* Mouse move outside client area*/
+      return 0;
+    case WM_MOUSEMOVE:
+		/* Mouse move inside client area*/
       return 0;
 
     default:
