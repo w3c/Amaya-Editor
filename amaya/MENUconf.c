@@ -1706,18 +1706,26 @@ static void ValidateGeneralConf ()
   if (change)
     SetDlgItemText (GeneralHwnd, IDC_TMPDIR, AppTmpDir);
 
-  /* copy the cache if it was under APP_TMPDIR */
+  /* if AppTmpDir changed, update the cache dir env variables */
   GetEnvString ("APP_TMPDIR", old_AppTmpDir);
-  usprintf (s, "%s%clibwww-cache", old_AppTmpDir, DIR_SEP); 
-  ptr = TtaGetEnvString ("CACHE_DIR");
-  /* if the cache was in AppTmpDir and AppTmpDir changed, change
-     the cache */
-  if (!ustrcasecmp (s, ptr) && ustrcasecmp (AppTmpDir, old_AppTmpDir))
+  if (ustrcasecmp (AppTmpDir, old_AppTmpDir))
     {
-      usprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);		  
-      TtaSetEnvString ("CACHE_DIR", s, YES);
-      libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
+      /* the new default cache value is AppTmpDir/libwww-cache */
+      usprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);
+      TtaSetDefEnvString ("CACHE_DIR", s, TRUE);
+
+      /* if the cache was in AppTmpDir and AppTmpDir changed, move
+	 the cache */
+      usprintf (s, "%s%clibwww-cache", old_AppTmpDir, DIR_SEP); 
+      ptr = TtaGetEnvString ("CACHE_DIR");
+      if (!ustrcasecmp (s, ptr) && ustrcasecmp (AppTmpDir, old_AppTmpDir))
+	{
+	  usprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);		  
+	  TtaSetEnvString ("CACHE_DIR", s, TRUE);
+	  libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
+	}
     }
+  
   /*
   **  add here other files that you'd like to copy to the new APP_TMPDIR
   */
