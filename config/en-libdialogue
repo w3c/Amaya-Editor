@@ -281,4 +281,5 @@
 281 Document format
 282 Events
 283 Remove attribute
-
+284 Left button sets the selection color
+285 Middle or Right button sets the caret color

@@ -281,4 +281,5 @@
 281 Formato del documento
 282 Eventi
 283 Rimuovi l\'attributo
-
+284 **Left button sets the selection color
+285 **Middle or Right button sets the caret color
