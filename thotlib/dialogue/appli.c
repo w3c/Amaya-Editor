@@ -2586,7 +2586,10 @@ ThotBool FrameButtonUpCallback(
     ClickX = x;
     ClickY = y;
     LocateSelectionInView (frame, ClickX, ClickY, 4);
-    TtaAbortShowDialogue ();
+    // SG: j'ai commente la ligne suivante car si le document est modifie 
+    // et qu'on desire suivre un lien, un evenement keyup est generer
+    // et tue le dialogue qui demande si on veut sauver.
+    //    TtaAbortShowDialogue ();
   }
 #endif /* _WX */
   return TRUE;
