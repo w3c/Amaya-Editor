@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC
+     "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
+     "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Mathematics</title>
@@ -6,7 +9,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="en">
 
 <table border="0" summary="toc">
   <tbody>
@@ -37,7 +40,7 @@ HTML documents. All editing commands provided by Amaya for handling text are
 also available for math, and there are some additional controls for entering
 mathematical constructs.</p>
 
-<h3><a name="Creating">Creating a mathematical expression</a></h3>
+<h3><a id="Creating">Creating a mathematical expression</a></h3>
 
 <h4>The Math palette and the Types/Math menu</h4>
 
@@ -245,7 +248,7 @@ available constructs are:</p>
  ) displays another palette from which you can insert mathematical symbols
 and greek characters.</p>
 
-<h4><a name="Entering">Entering constructs from the keyboard</a></h4>
+<h4><a id="Entering">Entering constructs from the keyboard</a></h4>
 
 <p>You are not required to use a menu or a palette to create and edit
 mathematical expressions. You can enter mathematical constructs directly from
@@ -259,7 +262,7 @@ the caret according to the structure of the mathematical expression. For
 instance, in a fraction, when the caret is at the end of a numerator, key
 &rarr; moves it to the beginning of the denominator.</p>
 
-<h3><a name="Entering1">Entering characters</a></h3>
+<h3><a id="Entering1">Entering characters</a></h3>
 
 <p>When you type a character string in a MathML element, Amaya parses that
 string and generates elements <code>mo</code> (operator), <code>mn</code>
@@ -319,7 +322,7 @@ Types/Math menu.</p>
  . Use the Parentheses command from menu Types/Math or from the palette
 instead.</p>
 
-<h3><a name="Structure">Structure editing</a></h3>
+<h3><a id="Structure">Structure editing</a></h3>
 
 <p>Amaya provides the same method to create and edit matrices as to <a
 href="Tables.html#Editing">edit HTML tables</a>. Similar to tables there is a
@@ -337,7 +340,7 @@ Select the expression you want to transform and the
 <strong>Transform</strong> command will display a menu with all possible
 changes.</p>
 
-<h3><a name="Math_Struc">Structure view</a></h3>
+<h3><a id="Math_Struc">Structure view</a></h3>
 
 <p>Whenever a document contains some MathML elements, choosing the <a
 href="Views.html#Structure">Show Structure</a> item from the
@@ -371,7 +374,7 @@ you want to add something <em>within</em> the square root or <em>after</em>
 it. Selecting (or checking) in the Structure view avoids any ambiguity. You
 can also check the status line, at the bottom of the main window.</p>
 
-<h3><a name="Links">Links in MathML</a></h3>
+<h3><a id="Links">Links in MathML</a></h3>
 
 <p>You can create and use links in mathematical expressions. These links are
 represented using a draft version of the <a
@@ -385,8 +388,8 @@ below is a link to the W3C home page:</p>
     <mi>y</mi>
     <mo>=</mo>
     <mi></mi>
-    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-    xlink:href="http://www.w3.org/">
+    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink"
+           xlink:href="http://www.w3.org/">
       <mn>1</mn>
       <msqrt>
         <mrow>
@@ -413,7 +416,7 @@ expression in a formula, you first have to turn that expression into a
 target. Just select the expression and select "Create target" from the Links
 menu. This creates an <code>id</code> attribute for the target expression.</p>
 
-<h3><a name="Current">Current limitations</a></h3>
+<h3><a id="Current">Current limitations</a></h3>
 
 <p>Amaya implements only the <em>Presentation Tags</em> from MathML 2.0, not
 the <em>Content Markup</em>. All presentation elements and attributes are

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC
+     "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
+     "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des mathématiques</title>
-  <meta name="GENERATOR" content="amaya V5.0 alpha" />
+  <meta name="GENERATOR" content="amaya V5.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr">
 
 <table border="0" summary="toc">
   <tbody>
@@ -38,7 +41,7 @@ fournies par Amaya pour traiter le texte sont également utilisables pour les
 mathématiques. Il y a quelques manipulations supplémentaires pour entrer des
 constructions mathématiques.</p>
 
-<h3><a name="Creating">Créer une expression mathématique</a></h3>
+<h3><a id="Creating">Créer une expression mathématique</a></h3>
 
 <h4>La palette Math et le menu Eléments/Math</h4>
 
@@ -177,7 +180,6 @@ disponibles sont :</p>
       <munder>
         <mi>x</mi>
         <mo>-</mo>
-        <mi></mi>
       </munder>
     </math>
   </li>
@@ -249,7 +251,7 @@ disponibles sont :</p>
  ) affiche une autre palette à partir de laquelle vous pouvez insérer des
 symboles mathématiques et des caractères grecs.</p>
 
-<h4><a name="Entering">Entrer des constructions à partir du clavier.</a></h4>
+<h4><a id="Entering">Entrer des constructions à partir du clavier.</a></h4>
 
 <p>Vous n'êtes pas obligé d'utiliser le menu ou la palette pour créer et
 éditer des expressions mathématiques. Vous pouvez entrer des constructions
@@ -265,7 +267,7 @@ horizontales permettent de se déplacer selon la structure de l'expression
 mathématique. Par exemple, en fin de numérateur d'une fraction, la touche
 &rarr; fait passer au début du dénominateur.</p>
 
-<h3><a name="Entering1">Entrer des caractères</a></h3>
+<h3><a id="Entering1">Entrer des caractères</a></h3>
 
 <p>Quand vous tapez une chaîne de caractères dans un élement MathML, Amaya
 analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
@@ -335,7 +337,7 @@ Vous obtiendriez:</p>
 <p>Utilisez plutôt la commande Prentheses du menu Eléments/Math ou de la
 palette.</p>
 
-<h3><a name="Structure">Editer la structure</a></h3>
+<h3><a id="Structure">Editer la structure</a></h3>
 
 <p>Amaya prévoit la même méthode pour créer et éditer des matrices que pour
 <a href="Tables.html.fr#Editing">éditer des tables HTML</a>. Comme pour les
@@ -354,7 +356,7 @@ l'expression que vous voulez transformer et la
 commande<strong>Transformer</strong> affichera un menu avec tous les
 changements possibles.</p>
 
-<h3><a name="Math_Struc">Vue Structure</a></h3>
+<h3><a id="Math_Struc">Vue Structure</a></h3>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la sélection
 de l'article <a href="Views.html.fr#Structure">Montrer la structure</a> du
@@ -389,7 +391,7 @@ l'intérieur</em>de la racine carrée ou <em>aprés</em> elle. Sélectionner (ou
 vérifier ) dans la vue Structure évite toute ambiguïté. Vous pouvez également
 vérifier la position de la ligne, en bas de la fenêtre pricipale.</p>
 
-<h3><a name="Links">Les liens dans MathML</a></h3>
+<h3><a id="Links">Les liens dans MathML</a></h3>
 
 <p>Vous pouvez créer et utiliser des liens dans des expressions
 mathématiques. Ces liens sont représentés en utilisant une version détachée
@@ -404,8 +406,8 @@ fraction dans la formule ci-dessous est un lien vers la page d'accueil du W3C
     <mi>y</mi>
     <mo>=</mo>
     <mi></mi>
-    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-    xlink:href="http://www.w3.org/">
+    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink"
+           xlink:href="http://www.w3.org/">
       <mn>1</mn>
       <msqrt>
         <mrow>
@@ -433,7 +435,7 @@ formule, vous devez d'abord transformer cette expression en cible. Il suffit
 de sélectionner l'expression ainsi que le "créer cible" du menu Liens. Ceci
 crée un attribut <code>id</code> pour l'expression cible.</p>
 
-<h3><a name="Current">Limites courantes</a></h3>
+<h3><a id="Current">Limites courantes</a></h3>
 
 <p>Amaya implémente seulement les <em>Balises de Présentation</em> à partir
 du MathML 2.0, et non le <em>Balisage du Contenu</em>. Tous les éléments de
