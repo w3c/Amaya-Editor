@@ -90,6 +90,7 @@ char              **d;
 	att.valuemask |= XpmReturnPixels;
 	att.valuemask |= XpmRGBCloseness;
 	att.valuemask |= XpmColorSymbols;
+	att.pixels = NULL;
 	att.red_closeness = 40000;
 	att.green_closeness = 40000;
 	att.blue_closeness = 40000;
@@ -104,6 +105,9 @@ char              **d;
 #else
 	XpmCreatePixmapFromData (TtDisplay, TtRootWindow, d, &pixmap, &PicMask, &att);
 #endif
+	if (att.pixels != NULL)
+	  XpmFree (att.pixels);
+
 	if (PicMask)
 	   XFreePixmap (TtDisplay, PicMask);
      }
