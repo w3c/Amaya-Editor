@@ -294,6 +294,7 @@ static int          CharLevelElement[] =
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
    HTML_EL_Input,
+   HTML_EL_BR,
    0};
 
 /* block level elements */
@@ -1570,7 +1571,7 @@ Element             parent;
       return(FALSE);
    ret = FALSE;
    elType = TtaGetElementType (*el);
-   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_BR)
      {
 	/* the element to be inserted is a character string */
 	/* Search the ancestor that is not a character level element */
@@ -4004,8 +4005,6 @@ static sourceTransition sourceAutomaton[] =
    {5, '*', (Proc) PutInBuffer, 7},
 /* state 6: reading an attribute value between double quotes */
    {6, '\"', (Proc) EndOfAttrValue, 8},
-   {6, '>', (Proc) EndOfAttrValueAndTag, 0},	/* to recover from a
-						   missing closing double quote, but a '>' within a string is allowed... */
    {6, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20... */
    {6, '&', (Proc) PutInBuffer, 6},	/* ...except for HREF */
    {6, '*', (Proc) PutInBuffer, 6},
