@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void TtaShowWindow ( int window_id,
-                            bool show );
+                            ThotBool show );
 extern int TtaMakeWindow ( void );
 extern int TtaMakeFrame ( Document doc,
                           int view,
@@ -30,7 +30,7 @@ extern ThotBool TtaFrameIsActive ( int frame_id );
 #else /* __STDC__ */
 
 extern void TtaShowWindow ( int window_id,
-                              bool show );
+                              ThotBool show );
 extern int TtaMakeWindow ( void );
 extern int TtaMakeFrame ( Document doc,
                             int view,

@@ -52,7 +52,7 @@
     + int window_id
     + bool show : if true then show, if false then hide the window
   ----------------------------------------------------------------------*/
-void TtaShowWindow( int window_id, bool show )
+void TtaShowWindow( int window_id, ThotBool show )
 {
 #ifdef _WX  
   AmayaWindow * p_window = WindowsTable[window_id];
@@ -118,8 +118,8 @@ int TtaMakeFrame( Document doc,
 #ifdef _WX
   
   /* finding a free frame id */
-  int    frame_id = 1;
-  bool   found = false;
+  int        frame_id = 1;
+  ThotBool   found = FALSE;
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrDoc == 0 && FrameTable[frame_id].WdFrame == 0);
