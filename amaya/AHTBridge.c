@@ -549,7 +549,7 @@ HTPriority          p;
 #endif /* DEBUG_LIBWWW */       
      } /* if *rqp */
 
-#ifdef __WINDOWS   
+#ifdef _WINDOWS   
   /* under windows, libwww requires an explicit FD_CLOSE registration 
    to detect HTTP responses not having a Content-Length header */
    status = HTEventrg_register (sock, rqp, ops | FD_CLOSE,
@@ -557,7 +557,7 @@ HTPriority          p;
 #else
    status = HTEventrg_register (sock, rqp, ops,
 				cbf, p);
-#endif /* __WINDOWS */
+#endif /* _WINDOWS */
 
    return (status);
 }
