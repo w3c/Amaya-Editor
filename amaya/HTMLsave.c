@@ -669,13 +669,16 @@ boolean            *ok;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          SafeSaveFileThroughNet (Document doc, char *localfile,
-                          char *remotefile, PicType filetype)
+                          char *remotefile, PicType filetype,
+			  boolean use_preconditions)
 #else
-static int          SafeSaveFileThroughNet (doc, localfile, remotefile, filetype)
+static int          SafeSaveFileThroughNet (doc, localfile, remotefile, filetype,
+					    use_preconditions)
 Document            doc;
 char               *localfile;
 char               *remotefile;
 PicType             filetype;
+boolean             use_preconditions;
 #endif
 {
   char              msg[MAX_LENGTH];
@@ -683,6 +686,7 @@ PicType             filetype;
   char              tempURL[MAX_LENGTH];  /* May be redirected */
   char             *verify_publish;
   int               res;
+  int               mode = 0;
 
   verify_publish = TtaGetEnvString("VERIFY_PUBLISH");
   /* verify the PUT by default */
@@ -696,10 +700,13 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
   /* JK: SYNC requests assume that the remotefile name is a static array */
   strcpy (tempfile, remotefile);
 #ifdef AMAYA_JAVA
-  res = PutObjectWWW (doc, localfile, tempfile, AMAYA_SYNC | AMAYA_NOCACHE, filetype, NULL, NULL);
+  mode = AMAYA_SYNC | AMAYA_NOCACHE;
 #else /* AMAYA_JAVA */
-  res = PutObjectWWW (doc, localfile, tempfile, AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST, filetype, NULL, NULL);
+  mode = AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
+  mode = mode | ((use_preconditions) ? AMAYA_USE_PRECONDITIONS : 0);
 #endif /* AMAYA_JAVA */
+
+  res = PutObjectWWW (doc, localfile, remotefile, mode, filetype, NULL, NULL);
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
@@ -768,14 +775,16 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      SaveDocumentThroughNet (Document document, View view,
-					 boolean confirm, boolean with_images)
+					 boolean confirm, boolean with_images,
+					    boolean use_preconditions)
 #else
 static boolean      SaveDocumentThroughNet (document, view, confirm,
-                                         with_images)
+                                         with_images, use_preconditions)
 Document            document;
 View                view;
 boolean             confirm;
 boolean             with_images;
+boolean             use_preconditions;
 #endif
 {
   LoadedImageDesc *pImage;
@@ -865,7 +874,8 @@ boolean             with_images;
       pImage = NULL;
 
       res = SafeSaveFileThroughNet (document, tempname,
-				    DocumentURLs[document], unknown_type);
+				    DocumentURLs[document], unknown_type, 
+				    use_preconditions);
       if (res != 0)
 	{
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
@@ -910,7 +920,8 @@ boolean             with_images;
 	    {
 	      imageType = pImage->imageType;
 	      res = SafeSaveFileThroughNet(document, pImage->localName,
-					   pImage->originalName, imageType);
+					   pImage->originalName, imageType,
+					   use_preconditions);
 	      if (res)
 		{
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
@@ -1021,7 +1032,7 @@ DBG(fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);)
 
 DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
 
-       if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE))
+       if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE, TRUE))
 	 {
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
 	   ok = TRUE;
@@ -1736,7 +1747,7 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 
 	    /* now save the file as through the normal process of saving */
 	    /* to a remote URL. */
-	    ok = SaveDocumentThroughNet (doc, 1, TRUE, CopyImages);
+	    ok = SaveDocumentThroughNet (doc, 1, TRUE, CopyImages, FALSE);
 	  }
 
 	    
@@ -1865,11 +1876,13 @@ void                DoSaveObjectAs ()
 #ifdef AMAYA_JAVA
 	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
 			    unknown_type,
-			    AMAYA_SYNC | AMAYA_NOCACHE, NULL, NULL);
+			    AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_USE_PRECONDITIONS, NULL, NULL);
 #else
+	/* @@ We need to check the use of AMAYA_PREWRITE_VERIFY in this function*/
 	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
 			    unknown_type,
-			    AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST, NULL, NULL);
+			    AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST 
+			    | AMAYA_USE_PRECONDITIONS, NULL, NULL);
 #endif /* AMAYA_JAVA */
 
 

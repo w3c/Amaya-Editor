@@ -22,6 +22,7 @@
 #ifndef _WINDOWS
 #endif /* !_WINDOWS */
 #define AMAYA_WWW_CACHE
+#define AMAYA_LOST_UPDATE
 
 #define CACHE_DIR_NAME DIR_STR"libwww-cache"
 #define DEFAULT_CACHE_SIZE 5
@@ -788,99 +789,125 @@ void               *context;
 int                 status;
 #endif /* __STDC__ */
 {
-  AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
-  int conflict = 0;
+  AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
+  HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
+  boolean force_put;
+  char *tmp_buf;
 
   if (!me)
     return HT_OK;		/* not an Amaya request */
 
-   if (me->output && me->output != stdout)
-     {
-       fclose (me->output);
-       me->output = NULL;
-     }
- 
-   if (conflict == 1) 
-     {
-       /* start a new PUT request without preconditions */
-       /* @@@ put some form here */
-       /* Stop here */
-       return HT_ERROR;
-     }
-   else 
-     if (conflict == 2)
-       {
-	 /* Stop here */
-	 return HT_ERROR;
-       }
-   else
-     return HT_OK; /* Just finish the request */
-}       
+  if (prompt)
+       force_put = (*prompt) (request, HT_A_CONFIRM,  HT_MSG_RULES,
+			      NULL, NULL, NULL);
+  else
+    force_put = NO;
+  
+  if (force_put)
+    {
+      /* start a new PUT request without preconditions */
+      /* @@ do we need to kill the request? */
+      if (me->output && me->output != stdout)
+	{
+	  fclose (me->output);
+	  me->output = NULL;
+	}
+      /* turn off preconditions */
+      HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+      /*
+      ** reset the Amaya and libwww request status 
+      */
+      me->reqStatus = HT_NEW; 
+      /* clear the errors */
+      HTError_deleteAll (HTRequest_error (request));
+      HTRequest_setError (request, NULL);
+      /* make the request */
+      status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
+      /* stop here */
+      return HT_ERROR;
+    }
+  else
+    {
+      /* abort the request */
+      /* @@ should we call StopRequest here? */
+      me->reqStatus = HT_ABORT;
+      /* stop here */
+      return HT_ERROR; 
+    }
+}
 
-/*
-**  Request HEAD checker filter
-*/
-PRIVATE int check_handler (HTRequest * request, HTResponse * response,
+/*----------------------------------------------------------------------
+  check_handler
+  Request HEAD checker filter
+  ----------------------------------------------------------------------*/
+static int check_handler (HTRequest * request, HTResponse * response,
                            void * param, int status)
 {
-  int conflict = 0;
-  /***
-    CRequest * req = (CRequest *) HTRequest_context(request);
-    CVersionConflict conflict;
-   
-    req->Cleanup();
-    ***/
-    /*
-    ** If head request showed that the document doesn't exist
-    ** then just go ahead and PUT it. Otherwise ask for help
-    */
-    if (status==HT_INTERRUPTED || status==HT_TIMEOUT)
-      {
-	return HT_ERROR;
-      } 
-    else
-      if (abs(status)/100!=2) 
+  AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
+  HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
+  boolean force_put;
+  char *tmp_buf;
+
+  if (!me)
+    return HT_OK;		/* not an Amaya request */
+
+  HTRequest_deleteAfter(me->request, check_handler);
+  /*
+  ** If head request showed that the document doesn't exist
+  ** then just go ahead and PUT it. Otherwise ask for help
+  */
+  if (status == HT_ERROR || status == HT_INTERRUPTED || status == HT_TIMEOUT)
+    {
+      /* we'd need to call terminate_handler, to free the resources */
+      /* abort the request */
+      /* @@ should we call StopRequest here? */
+      me->reqStatus = HT_ABORT;
+      /* stop here */
+      return HT_ERROR; 
+    } 
+  else if (status == HT_NO_ACCESS || status == HT_NO_PROXY_ACCESS) 
+    {
+      /* we'd need to call terminate_handler, to free the resources */
+      /* abort the request */
+      /* @@ should we call StopRequest here? */
+      me->reqStatus = HT_ABORT;
+      /* stop here */
+      return HT_ERROR; 
+    }
+  else if ( (abs(status)/100) != 2) 
+    {
+      /* it's a new ressource, so we start a new PUT request with a 
+	 "if-none-match *" precondition */
+      HTRequest_setPreconditions(me->request, HT_DONT_MATCH_ANY);
+      status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
+      return HT_ERROR; /* stop here */
+    } 
+  else 
+    {
+      if (prompt)
+	  force_put = (*prompt) (request, HT_A_CONFIRM, HT_MSG_FILE_REPLACE,
+				 NULL, NULL, NULL);
+      else
+	force_put = FALSE;
+
+      if (force_put)
 	{
 	  /* Start a new PUT request without preconditions */
-	  /***
-	    HTAnchor * source = req->Source();
-	    HTAnchor * dest = req->Destination();
-	    CRequest * new_req = new CRequest(req->m_pDoc);
-	    delete req;
-	    new_req->PutDocument(source, dest, FALSE);
-	    ***/
+	  HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+	  status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
+	  return HT_ERROR; /* stop here */
 	} 
-      else 
-	if (conflict)
-	  {
-	    if (conflict == 1) 
-	      {
-		/*** 
-		  HTAnchor * source = req->Source();
-		  HTAnchor * dest = req->Destination();
-		  CRequest * new_req = new CRequest(req->m_pDoc);
-		  delete req;
-		  ***/
-		/* Start a new PUT request without preconditions */
-		/***
-		  new_req->PutDocument(source, dest, FALSE);
-		  ***/
-	      } 
-	    else 
-	      if (conflict == 2) 
-		{
-		  /***
-		  HTAnchor * address = req->Source();
-		  CRequest * new_req = new CRequest(req->m_pDoc);
-		  delete req;
-		  ***/
-		  /* Start a new GET request  */
-		  /***
-		    new_req->GetDocument(address, 2);
-		    ***/
-		}
-	  }
-    return HT_ERROR;
+      else
+	{
+	  /* we'd need to call terminate_handler, to free the resources */
+	  /* abort the request */
+	  /* @@ should we call StopRequest here? */
+	  me->reqStatus = HT_ABORT;
+	  /* stop here */
+	  return HT_ERROR; 
+	}
+    }
+  return HT_ERROR;
 }
 #endif /* AMAYA_LOST_UPDATE */
 
@@ -1274,7 +1301,7 @@ static void         AHTProtocolInit (void)
 #endif
 
    /* initialize pipelining */
-  strptr = (char *) TtaGetEnvString ("USE_PIPELINING");
+  strptr = (char *) TtaGetEnvString ("ENABLE_PIPELINING");
   if (strptr && *strptr && strcasecmp (strptr,"yes" ))
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
@@ -1318,6 +1345,8 @@ static void         AHTNetInit (void)
 		  HT_FILTER_MIDDLE);
   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT,
 		  HT_FILTER_MIDDLE);
+  HTNet_addAfter(HTAuthInfoFilter, 	"http://*", NULL, HT_ALL, 
+		 HT_FILTER_MIDDLE);
   HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY,
 		  HT_FILTER_MIDDLE);
 #ifdef AMAYA_WWW_CACHE
@@ -2522,8 +2551,10 @@ void               *context_tcbf;
    int                 fd;
    struct stat         file_stat;
    char               *fileURL;
-   /* temporarily put it here, should come in the API */
-   boolean             UsePreconditions = FALSE;
+   char               *etag = NULL;
+   int                 UsePreconditions;
+
+   UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
 
    AmayaLastHTTPErrorMsg [0] = EOS;
    
@@ -2569,15 +2600,13 @@ void               *context_tcbf;
      }
 
    /* prepare the request context */
-
    if (THD_TRACE)
       fprintf (stderr, "file size == %u\n", (unsigned) file_stat.st_size);
 
    me = AHTReqContext_new (docid);
-
    if (me == NULL)
      {
-	/* @@ need an error message here */
+       /* @@ need an error message here */
 	TtaHandlePendingEvents (); 
 	return (HT_ERROR);
      }
@@ -2598,22 +2627,26 @@ void               *context_tcbf;
 
 #ifdef _WINDOWS
    /* libwww's HTParse function doesn't take into account the drive name;
-   so we sidestep it */
+      so we sidestep it */
    fileURL = NULL;
    StrAllocCopy (fileURL, "file:");
    StrAllocCat (fileURL, fileName);
 #else
    fileURL = HTParse (fileName, "file:/", PARSE_ALL);
 #endif /* _WINDOWS */
-   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (fileURL);
+   me->source = HTAnchor_findAddress (fileURL);
    HT_FREE (fileURL);
 
+   me->dest = HTAnchor_findAddress (urlName);
+
    /* Set the Content-Type of the file we are uploading */
-   HTAnchor_setFormat ((HTParentAnchor *) me->anchor,
+   HTAnchor_setFormat (HTAnchor_parent (me->source),
+		       AHTGuessAtom_for (me->urlName, contentType));
+   HTAnchor_setFormat (HTAnchor_parent (me->dest),
 		       AHTGuessAtom_for (me->urlName, contentType));
 
    /* associate the anchor to the request */
-   HTRequest_setEntityAnchor (me->request, me->anchor);
+   HTRequest_setEntityAnchor (me->request, HTAnchor_parent (me->source));
 
    /* define other request characteristics */
 #ifdef _WINDOWS
@@ -2628,10 +2661,21 @@ void               *context_tcbf;
    */
    if (mode & AMAYA_FLUSH_REQUEST)
      HTRequest_setFlush(me->request, YES);
-
+   
    /* Should we use preconditions? */
-   if (UsePreconditions)
-     HTRequest_setPreconditions(me->request, YES);
+   if (UsePreconditions) 
+     etag = HTAnchor_etag (HTAnchor_parent (me->dest));
+
+   if (etag) 
+     {
+       HTRequest_setPreconditions(me->request, HT_MATCH_THIS);
+     }
+   else
+     {
+       HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+       HTRequest_addAfter(me->request, check_handler, NULL, NULL, HT_ALL,
+			  HT_FILTER_MIDDLE, YES);
+     }
    
    /* don't use the cache while saving a document */
    HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
@@ -2641,23 +2685,26 @@ void               *context_tcbf;
    HTRequest_setOutputStream (me->request, HTBlackHole());        
    */
 
-   /* prepare the URLname that will be displayed in teh status bar */
+   /* prepare the URLname that will be displayed in the status bar */
    ChopURL (me->status_urlName, me->urlName);
    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
-		     me->status_urlName);
+		 me->status_urlName);
 
    /* make the request */
-   status = HTPutDocumentAbsolute (me->anchor, urlName, me->request);
+   if (!UsePreconditions || !etag)
+     status = HTHeadAnchor (me->dest, me->request);
+   else
+     status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
 
    if (status == YES && me->reqStatus != HT_ERR)
      {
-	/* part of the stop button handler */
-	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
-	    status = LoopForStop (me);
+       /* part of the stop button handler */
+       if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
+	 status = LoopForStop (me);
      }
    if (!HTRequest_kill (me->request))
      AHTReqContext_delete (me);
-
+   
    TtaHandlePendingEvents ();
 
    return (status == YES ? 0 : -1);

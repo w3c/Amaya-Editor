@@ -152,4 +152,6 @@ int                 AMAYA;
 #define AM_AUTHENTICATION_REALM	      140
 #define AM_BUTTON_BrowseEdit          141
 #define AM_REQUEST_TIMEOUT	      142
-#define AMAYA_MSG_MAX                 143
+#define AM_OVERWRITE_CHECK            143
+#define AM_ETAG_CHANGED	      	      144
+#define AMAYA_MSG_MAX                 145

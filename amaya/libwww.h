@@ -80,14 +80,14 @@ typedef struct _AHTReqContext
     HTMethod            method;	/* What method are we envoking                  */
     int                 docid;	        /* docid to which this request belongs          */
     AHTReqStatus        reqStatus;	/* status of the request                        */
-    HTEventType             read_type;	/* The type operation which must be used during
+    HTEventType         read_type;	/* The type operation which must be used during
 					** an Xt read callback */
     
-    HTEventType             write_type;	/* The type operation which must be used during
+    HTEventType         write_type;	/* The type operation which must be used during
 					** an Xt write callback */
     
-    HTEventType             except_type;	/* The type operation which must be used during
-						** an Xt exception callback */
+    HTEventType         except_type;	/* The type operation which must be used during
+					** an Xt exception callback */
     
 #ifdef WWW_XWINDOWS
     XtInputId           read_xtinput_id;	/* The read xt event id assocciated with
@@ -105,8 +105,8 @@ typedef struct _AHTReqContext
     /*** End of experimental stuff ****/
     
     char               *outputfile;	/* file to receive incoming data         */
-    FILE               *output;	/* file pointer to outputfile            */
-    int                 mode;	/* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
+    FILE               *output;	        /* file pointer to outputfile            */
+    int                 mode;	        /* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
     char               *urlName;	/* url to retrieve/or that was retrieved */
     char               status_urlName [MAX_LENGTH]; /* url name to be displayed on the status bar */
     TIcbf              *incremental_cbf;	/* For IASYNC mode, @ of callback function */
@@ -123,18 +123,18 @@ typedef struct _AHTReqContext
     char               *content_type;
 
     /* The following elements are used for the PUT and POST */
-
-    HTParentAnchor     *dest;	/* Destination for PUT etc.              */
-    unsigned long       block_size;	/* size in bytes of the file to put      */
-    int                 put_counter;	/* number of bytes already put           */
+    HTAnchor           *source;
+    HTAnchor           *dest;	/* Destination for PUT etc.              */
+    unsigned long       block_size;	 /* size in bytes of the file to put      */
+    int                 put_counter;	 /* number of bytes already put           */
     HTAssocList        *formdata;        /* ptr to a struct containing the formdata used with POST */
 
-     char               *error_stream;        /* pointer to an error message associated with the
-						 request */
-     int                 error_stream_size;   /* size of the above message */
-     boolean                error_html;       /* If TRUE, means the applications wants to display
-						 error_stream. If false, error_stream is not 
-						 displayed at all */
+    char               *error_stream;      /* pointer to an error message associated with the
+					      request */
+    int                 error_stream_size; /* size of the above message */
+    boolean             error_html;        /* If TRUE, means the applications wants to display
+					      error_stream. If false, error_stream is not 
+					      displayed at all */
   }
 AHTReqContext;
 

@@ -202,6 +202,8 @@ HTAlertPar         *reply;
 #endif /* __STDC__ */
 {
   boolean answer;
+  char *tmp_buf;
+  AHTReqContext      *me = HTRequest_context (request);
 
     /* for the moment, we only take into account confirmation for
        authentication */
@@ -216,6 +218,24 @@ HTAlertPar         *reply;
       break;
     case HT_MSG_REDIRECTION:
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
+      break;
+    case HT_MSG_FILE_REPLACE:
+      tmp_buf = (char *) TtaGetMemory (strlen (me->urlName)
+		  		     + strlen (TtaGetMessage (AMAYA, 
+						   AM_OVERWRITE_CHECK))
+				     + 10); /*a bit more than enough memory */
+      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), me->urlName);
+      InitConfirm (0, 0, tmp_buf);
+      TtaFreeMemory (tmp_buf);
+      break;
+    case HT_MSG_RULES:
+      tmp_buf = (char *) TtaGetMemory (strlen (me->urlName)
+					+ strlen (TtaGetMessage (AMAYA, 
+						  AM_ETAG_CHANGED))
+					+ 10); /*a bit more than enough memory */
+      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_ETAG_CHANGED), me->urlName);
+      InitConfirm (0, 0, tmp_buf);
+      TtaFreeMemory (tmp_buf);
       break;
     default:
       return TRUE;
@@ -320,10 +340,10 @@ HTAlertPar         *reply;
        label = (char *) TtaGetMemory (((host) ? strlen (host) : 0)
 				     + strlen (TtaGetMessage (AMAYA, 
 						   AM_AUTHENTICATION_REALM))
-				     + strlen (realm)
+				      + ((realm) ? strlen (realm) : 0)
 				     + 20); /*a bit more than enough memory */
        sprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM),
-		realm, 	((host) ? host : ""));
+		((realm) ? realm : ""), 	((host) ? host : ""));
        TtaSetStatus (me->docid, 1, label, NULL);
        if (host)
 	 TtaFreeMemory (host);
