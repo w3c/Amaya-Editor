@@ -203,6 +203,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaWindow.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaWindowIterator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaXHTMLPanel.cpp
 # End Source File
 # Begin Source File
