@@ -155,10 +155,10 @@ sélectionner une colonne :</p>
 ligne&nbsp;:</p>
 <ul>
   <li><strong>Insérer une ligne avant</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
+    <strong>Table</strong> (<code>Ctrl t Ctrl i</code>) ajoute une nouvelle
     ligne avant la ligne sélectionnée.</li>
   <li><strong>Insérer une ligne après</strong> dans le sous-menu
-    <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
+    <strong>Table</strong> (<code>Ctrl t Ctrl n</code>)ajoute une nouvelle
     ligne après la ligne sélectionnée.</li>
 </ul>
 
