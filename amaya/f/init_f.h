@@ -29,7 +29,7 @@ extern void SetWindowTitle ( Document sourceDoc,
                              View view );
 extern void InitFormAnswer ( Document document,
                              View view,
-                             CHAR_T* auth_realm,
+                             const CHAR_T* auth_realm,
                              CHAR_T* server );
 extern void InitInfo ( CHAR_T* label,
                        CHAR_T* info );
@@ -179,7 +179,7 @@ extern void SetWindowTitle (/* Document sourceDoc,
                                View view */);
 extern void InitFormAnswer (/* Document document,
                                View view,
-                               CHAR_T* auth_realm,
+                               const CHAR_T* auth_realm,
                                CHAR_T* server */);
 extern void InitInfo (/* CHAR_T* label,
                          CHAR_T* info */);

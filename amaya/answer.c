@@ -776,9 +776,9 @@ int status;
       else if (errorElement == HTERR_NO_REMOTE_HOST)
 	{
 	  TtaSetStatus (me->docid, 1,
-			TEXT("Host %s doesn't exist"), error->par);
+			TEXT("Host %s doesn't exist"), (char *) error->par);
 	  usprintf (AmayaLastHTTPErrorMsg, 
-		    TEXT("Host %s doesn't exist"), error->par);
+		    TEXT("Host %s doesn't exist"), (char *) error->par);
 	}
       else if (errorElement == HTERR_INTERNAL)
 	{

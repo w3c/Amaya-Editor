@@ -1086,12 +1086,12 @@ View                view;
   Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitFormAnswer (Document document, View view, CHAR_T* auth_realm, CHAR_T* server)
+void                InitFormAnswer (Document document, View view, const CHAR_T* auth_realm, CHAR_T* server)
 #else
 void                InitFormAnswer (document, view, auth_realm, server)
 Document            document;
 View                view;
-CHAR_T*              auth_realm;
+const CHAR_T*       auth_realm;
 CHAR_T*              server;
 
 #endif
