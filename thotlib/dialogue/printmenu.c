@@ -59,7 +59,7 @@
 #include "print_tv.h"
 
 static char         Orientation[MAX_NAME_LENGTH];
-static Func         pProcExportPrintDoc;
+static Func         pFuncExportPrintDoc;
 /*----------------------------------------------------------------------
   PrintInit
   ----------------------------------------------------------------------*/
@@ -337,9 +337,9 @@ char               *viewNames;
 #else  /* WWW_MSWINDOWS */
    mktemp (tmpDocName);
 #endif /* !WWW_MSWINDOWS */
-   if (pProcExportPrintDoc !=NULL)
+   if (pFuncExportPrintDoc !=NULL)
      /* a export procedure is defined */
-     ok = (*pProcExportPrintDoc)(document, tmpDocName, tmpDirName);
+     ok = (*pFuncExportPrintDoc)(document, tmpDocName, tmpDirName);
    else
      /* standard export */
      {
@@ -404,15 +404,15 @@ char               *viewNames;
 }
 
 /*----------------------------------------------------------------------
-  TtaSetPrintExportProc: Sets a non-standard document export function for printing
+  TtaSetPrintExportFunc: Sets a non-standard document export function for printing
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void TtaSetPrintExportProc (Func exportProc)
+void TtaSetPrintExportFunc (Func exportFunc)
 #else /* __STDC__ */
-void TtaSetPrintExportProc (Func exportProc)
+void TtaSetPrintExportFunc (Func exportFunc)
 #endif /*__STDC__ */
 {
-  pProcExportPrintDoc = exportProc;
+  pFuncExportPrintDoc = exportFunc;
 }
 
 /*----------------------------------------------------------------------
