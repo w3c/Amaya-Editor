@@ -6058,7 +6058,7 @@ STRING	           pathURL;
 {
   Element             parent, el, prev;
   ElementType         elType;
-  UCHAR_T               charRead;
+  UCHAR_T             charRead;
   ThotBool            endOfFile;
 
   InputText = textbuf;
@@ -6080,17 +6080,17 @@ STRING	           pathURL;
       prev = TtaNewTree (doc, elType, "");
       TtaInsertFirstChild (&prev, parent, doc);
       if (pathURL != NULL && prev != NULL)
-	{
-	  el = TtaGetFirstChild (prev);     
-	  TtaSetTextContent (el, pathURL, currentLanguage, doc);
-	}
+        {
+          el = TtaGetFirstChild (prev);
+          TtaSetTextContent (el, pathURL, currentLanguage, doc);
+        }
       /* insert the BODY element */
       elType.ElTypeNum = TextFile_EL_BODY;
       el = TtaNewElement (doc, elType);
       if (prev != NULL)
-	TtaInsertSibling (el, prev,  FALSE, doc);
+        TtaInsertSibling (el, prev,  FALSE, doc);
       else
-	TtaInsertFirstChild (&el, parent, doc);
+        TtaInsertFirstChild (&el, parent, doc);
       parent = el;
     }
   prev = el = NULL;
@@ -7398,7 +7398,7 @@ STRING              htmlFileName;
 STRING              documentName;
 STRING              documentDirectory;
 STRING              pathURL;
-ThotBool	            plainText;
+ThotBool	    plainText;
 #endif
 {
   gzFile              stream;
@@ -7406,9 +7406,9 @@ ThotBool	            plainText;
   AttributeType       attrType;
   Attribute           attr;
   STRING              s;
-  CHAR_T                tempname[MAX_LENGTH];
-  CHAR_T                temppath[MAX_LENGTH];
-  int		       length;
+  CHAR_T              tempname[MAX_LENGTH];
+  CHAR_T              temppath[MAX_LENGTH];
+  int		      length;
   ThotBool            isHTML;
 
   theDocument = doc;
@@ -7564,7 +7564,9 @@ ThotBool	            plainText;
 	handleLinkHeaders (doc);
         #endif /* AMAYA_JAVA */
 	TtaFreeMemory (docURL);
-        OpenTemplateDocument (doc);
+	/* an HTML document could be a template */
+	if (!plainText)
+	  OpenTemplateDocument (doc);
 	TtaSetDisplayMode (doc, DisplayImmediately);
 #endif /* STANDALONE */
 	/* check the Thot abstract tree against the structure schema. */

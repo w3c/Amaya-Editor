@@ -8,6 +8,10 @@
 
 extern void New ( Document document,
                   View view );
+extern void NewCss ( Document document,
+                     View view );
+extern void InitializeNewDoc ( STRING url,
+                               ThotBool isHTML );
 extern void SpellCheck ( Document document,
                          View view );
 extern void CreateBreak ( Document document,
@@ -152,6 +156,10 @@ extern void SaveOptions ( Document doc,
 
 extern void New (/* Document document,
                     View view */);
+extern void NewCss (/* Document document,
+                       View view */);
+extern void InitializeNewDoc (/* STRING url,
+                                 ThotBool isHTML */);
 extern void SpellCheck (/* Document document,
                            View view */);
 extern void CreateBreak (/* Document document,

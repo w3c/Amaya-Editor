@@ -157,18 +157,3 @@ ClickEvent *method;
    *method = CE_FORM_GET;
    ustrcpy (docURL, script_URL);
 }
- 
-/*----------------------------------------------------------------------
-   NewCss: Creates a new Css document
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               NewCss (Document doc, View view)
-#else  /* __STDC__ */
-void               NewCss (doc, view)
-Document doc; 
-View view;
-#endif /* __STDC__ */
-
-{
-
-}

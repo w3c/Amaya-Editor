@@ -47,109 +47,170 @@ Document            document;
 View                view;
 #endif /* __STDC__ */
 {
-   STRING              tempfile = (STRING) TtaGetMemory (MAX_LENGTH);
-   STRING              suffix = (STRING) TtaGetMemory (MAX_LENGTH);
-   int                 val, i, j;
-   Document            doc;
-   ThotBool            exist;
-   ElementType         elType;
-   Element             root, title, text, el, head, child, meta, body;
-   AttributeType       attrType;
-   Attribute	       attr;
+  OpenNew (document, view, TRUE);
+}
+ 
+/*----------------------------------------------------------------------
+   NewCss: Creates a new Css document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               NewCss (Document document, View view)
+#else  /* __STDC__ */
+void               NewCss (document, view)
+Document           document; 
+View               view;
+#endif /* __STDC__ */
+{
+  OpenNew (document, view, FALSE);
+}
 
-   ustrcpy (tempfile, DirectoryName);
-   ustrcat (tempfile, DIR_STR);
-   val = ustrlen (tempfile);
-   i = 0;
-#ifdef _WINDOWS
-   ustrcat (tempfile, "New.htm");
-#else /* _WINDOWS */
-   ustrcat (tempfile, "New.html");
-#endif /* _WINDOWS */
-   /* check if a previous new file is open in Amaya */
-   exist = TRUE;
-   while (exist)
-     {
-	exist = FALSE;
-	j = 1;
-	while (!exist && j < DocumentTableLength)
-	  {
-	     if (DocumentURLs[j] != NULL)
-		exist = (ustrcmp (DocumentURLs[j], tempfile) == 0);
-	     j++;
-	  }
-	if (!exist)
-	   exist = TtaFileExist (tempfile);
-	if (exist)
-	  {
-	     /* the file exists -> generate a new name */
-	     i++;
-#ifdef _WINDOWS
-	     sprintf (suffix, "New%d.htm", i);
-#else /* _WINDOWS */
-	     sprintf (suffix, "New%d.html", i);
-#endif /* _WINDOWS */
-	     ustrcpy (&tempfile[val], suffix);
-	  }
-     }
-   /* ****** */
-   doc = GetHTMLDocument (tempfile, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
-   ResetStop (doc);
-   root = TtaGetMainRoot (doc);
-   LoadUserStyleSheet (doc);
-   elType = TtaGetElementType (root);
-   /* default ATTR_PrintURL */
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (root, attr, doc);
 
-   /* create a default title if there is no content in the TITLE element */
-   elType.ElTypeNum = HTML_EL_TITLE;
-   title = TtaSearchTypedElement (elType, SearchInTree, root);
-   text = TtaGetFirstChild (title);
-   if (TtaGetTextLength (text) == 0)
-      TtaSetTextContent (text, "No title", TtaGetDefaultLanguage (), doc);
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                InitializeNewDoc (STRING url, ThotBool isHTML)
+#else  /* __STDC__ */
+void                InitializeNewDoc (url, isHTML)
+STRING              url;
+ThotBool            isHTML;
+#endif /* __STDC__ */
+{
+  ElementType          elType;
+  Element              root, title, text, el, head, child, meta, body;
+  AttributeType        attrType;
+  Attribute            attr;
+  Language             language;
+  STRING               pathname;
+  STRING               documentname;
+  STRING               s;
+  CHAR_T               tempfile[MAX_LENGTH];
+  int                  doc;
 
-   /* create a META element in the HEAD with attributes name="GENERATOR" */
-   /* and content="Amaya" */
-   elType.ElTypeNum = HTML_EL_HEAD;
-   head = TtaSearchTypedElement (elType, SearchInTree, root);
-   child = TtaGetLastChild (head);
-   elType.ElTypeNum = HTML_EL_META;
-   meta = TtaNewElement (doc, elType);
-   attrType.AttrTypeNum = HTML_ATTR_meta_name;
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (meta, attr, doc);
-   TtaSetAttributeText (attr, "GENERATOR", meta, doc);
-   attrType.AttrTypeNum = HTML_ATTR_meta_content;
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (meta, attr, doc);
-   ustrcpy (tempfile, HTAppName);
-   ustrcat (tempfile, " ");
-   ustrcat (tempfile, HTAppVersion);
-   TtaSetAttributeText (attr, tempfile, meta, doc);
-   TtaInsertSibling (meta, child, FALSE, doc);
+  pathname = TtaGetMemory (MAX_LENGTH);
+  documentname = TtaGetMemory (MAX_LENGTH);
+  NormalizeURL (url, 0, pathname, documentname, NULL);
+  if (isHTML)
+    doc = InitDocView (0, documentname, docHTML, FALSE);
+  else
+    doc = InitDocView (0, documentname, docCSS, FALSE);
+   TtaFreeMemory (documentname);
+   TtaFreeMemory (pathname);
 
-   /* create a BODY element if there is not */
-   elType.ElTypeNum = HTML_EL_BODY;
-   body = TtaSearchTypedElement (elType, SearchInTree, root);
-   if (!body)
-      {
-      body = TtaNewTree (doc, elType, "");
-      TtaInsertSibling (body, head, FALSE, doc);
-      }
-   /* Search the first element in the BODY to set initial selection */
-   elType.ElTypeNum = HTML_EL_Element;
-   el = TtaSearchTypedElement (elType, SearchInTree, body);
-   /* set the initial selection */
-   TtaSelectElement (doc, el);
-   if (SelectionDoc != 0)
-       UpdateContextSensitiveMenus (SelectionDoc);
-   SelectionDoc = doc;
-   UpdateContextSensitiveMenus (doc);
-   TtaFreeMemory (tempfile);
-   TtaFreeMemory (suffix);
+   /* save the document name into the document table */
+   s = TtaStrdup (url);
+   TtaSetTextZone (doc, 1, 1, url);
+   DocumentURLs[doc] = s;
+   DocumentMeta[doc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+   DocumentMeta[doc]->form_data = NULL;
+   DocumentMeta[doc]->method = CE_ABSOLUTE;
+ 
+  ResetStop (doc);
+  language = TtaGetDefaultLanguage ();
+  root = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (root);
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (isHTML)
+    {
+      LoadUserStyleSheet (doc);
+
+      /* create a default title if there is no content in the TITLE element */
+      elType.ElTypeNum = HTML_EL_TITLE;
+      title = TtaSearchTypedElement (elType, SearchInTree, root);
+      text = TtaGetFirstChild (title);
+      if (TtaGetTextLength (text) == 0)
+	TtaSetTextContent (text, "No title", language, doc);
+      
+      elType.ElTypeNum = HTML_EL_HEAD;
+      head = TtaSearchTypedElement (elType, SearchInTree, root);
+
+      /* create a Document_URL element as the first child of HEAD */
+      elType.ElTypeNum = HTML_EL_Document_URL;
+      el = TtaSearchTypedElement (elType, SearchInTree, head);
+      if (el == NULL)
+	{
+	  /* there is no Document_URL element */
+	  el = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&el, head, doc);
+	  TtaSetAccessRight (el, ReadOnly, doc);
+	}
+      /* element Document_URL already exists */
+      text = TtaGetFirstChild (el);
+      if (text == NULL)
+	{
+	  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	  text = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&text, el, doc);
+	}
+      if (url != NULL && text != NULL)
+	TtaSetTextContent (text, url, language, doc);
+
+      /* create a META element in the HEAD with attributes name="GENERATOR" */
+      /* and content="Amaya" */
+      child = TtaGetLastChild (head);
+      elType.ElTypeNum = HTML_EL_META;
+      meta = TtaNewElement (doc, elType);
+      attrType.AttrTypeNum = HTML_ATTR_meta_name;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (meta, attr, doc);
+      TtaSetAttributeText (attr, "GENERATOR", meta, doc);
+      attrType.AttrTypeNum = HTML_ATTR_meta_content;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (meta, attr, doc);
+      ustrcpy (tempfile, HTAppName);
+      ustrcat (tempfile, " ");
+      ustrcat (tempfile, HTAppVersion);
+      TtaSetAttributeText (attr, tempfile, meta, doc);
+      TtaInsertSibling (meta, child, FALSE, doc);
+
+      /* create a BODY element if there is not */
+      elType.ElTypeNum = HTML_EL_BODY;
+      body = TtaSearchTypedElement (elType, SearchInTree, root);
+      if (!body)
+	{
+	  body = TtaNewTree (doc, elType, "");
+	  TtaInsertSibling (body, head, FALSE, doc);
+	}
+
+      /* Search the first element in the BODY to set initial selection */
+      elType.ElTypeNum = HTML_EL_Element;
+      el = TtaSearchTypedElement (elType, SearchInTree, body);
+      /* set the initial selection */
+      TtaSelectElement (doc, el);
+      if (SelectionDoc != 0)
+	UpdateContextSensitiveMenus (SelectionDoc);
+      SelectionDoc = doc;
+      UpdateContextSensitiveMenus (doc);
+      attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+    }
+  else
+    {
+      /* insert the Document_URL element */
+      el = TtaGetFirstChild (root);
+      if (el == NULL)
+	{
+	  elType.ElTypeNum = TextFile_EL_Document_URL;
+	  el = TtaNewTree (doc, elType, "");
+	  TtaInsertFirstChild (&el, root, doc);
+	}
+      el = TtaGetFirstChild (el);     
+      TtaSetTextContent (el, url, language, doc);
+
+      body = TtaGetLastChild (root);
+      /* create a new line */
+      elType.ElTypeNum = TextFile_EL_Line_;
+      el = TtaNewTree (doc, elType, "");
+      /* first line */
+      TtaInsertFirstChild (&el, body, doc);
+
+      /* set the initial selection */
+      TtaSelectElement (doc, el);
+      SelectionDoc = doc;
+      attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+    }
+
+  /* default ATTR_PrintURL */
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (root, attr, doc);
 }
 
 /*----------------------------------------------------------------------

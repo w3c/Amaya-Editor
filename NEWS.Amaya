@@ -41,6 +41,8 @@ Fixed bugs 2.1:
 * Amaya could crash after a copy/paste of a mathematical formula from one
   page to another.
 
+* Sometimes the paste command mixed the list of elements to be pasted.
+
 * It was impossible to set font-size to 20 in the preference menu.
 
 * Amaya didn't take care to the Shift in the keyboard configuration file. Now

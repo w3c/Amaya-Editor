@@ -129,6 +129,9 @@ static STRING       Manual[] = {
 "Configure.html"
 };
 
+static ThotBool  NewCSSfile = FALSE;
+static ThotBool  NewHTMLfile = FALSE;
+
 #ifndef _WINDOWS
 static ThotIcon       stopR;
 static ThotIcon       stopN;
@@ -218,14 +221,15 @@ static ThotIcon       iconJava;
 #define iconBrowser   23
 #define iconEditor    23
 #define iconHome      10
-static ThotBool itemChecked = FALSE;
-extern int     currentFrame;
-extern int     menu_item;
+
+extern int       currentFrame;
+extern int       menu_item;
 extern CHAR_T    LostPicturePath [512];
 
-ThotBool       tbStringsInitialized = FALSE;
-int            tipIndex;
-int            iString;
+static ThotBool  itemChecked = FALSE;
+static ThotBool  tbStringsInitialized = FALSE;
+static int       tipIndex;
+static int       iString;
 
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -1258,12 +1262,12 @@ STRING              label;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitOpenDocForm (Document document, View view)
+static void        InitOpenDocForm (Document document, View view, STRING title)
 #else
-static void         InitOpenDocForm (document, view)
-Document            document;
-View                view;
-
+static void        InitOpenDocForm (document, view, title)
+Document           document;
+View               view;
+STRING             title;
 #endif
 {
 #  ifndef _WINDOWS
@@ -1282,10 +1286,10 @@ View                view;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
    TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),
-		TtaGetMessage (AMAYA, AM_OPEN_URL),
+		title,
 		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
-		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
+		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
    TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
@@ -1326,9 +1330,53 @@ View                view;
 #endif
 {
    InNewWindow = TRUE;
-   InitOpenDocForm (document, view);
+   InitOpenDocForm (document, view, TtaGetMessage (AMAYA, AM_OPEN_URL));
 }
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void        OpenNew (Document document, View view, ThotBool isHTML)
+#else
+void        OpenNew (document, view, isHTML)
+Document    document;
+View        view;
+ThotBool    isHTML;
+#endif
+{
+  CHAR_T              tempfile[MAX_LENGTH];
+
+  /* create a new document */
+  InNewWindow = TRUE;
+  if (isHTML)
+    {
+      NewCSSfile = FALSE;
+      NewHTMLfile = TRUE;
+      /* generate a default name for the new document */
+      if (LastURLName[0] != EOS)
+	{
+	  TtaExtractName (LastURLName, tempfile, DocumentName);
+	  sprintf (LastURLName, "%s/New.html", tempfile);
+	}
+      else
+	ustrcpy (DocumentName, "New.html");
+      InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
+    }
+  else
+    {
+      NewCSSfile = TRUE;
+      NewHTMLfile = FALSE;
+      if (LastURLName[0] != EOS)
+	{
+	  TtaExtractName (LastURLName, tempfile, DocumentName);
+	  sprintf (LastURLName, "%s/New.css", tempfile);
+	}
+      else
+      ustrcpy (DocumentName, "New.css");
+      InitOpenDocForm (document, view, TtaGetMessage (1, BCss));
+    }
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1345,9 +1393,10 @@ View                view;
      {
        /* load the new document */
        InNewWindow = FALSE;
-       InitOpenDocForm (document, view);
+       InitOpenDocForm (document, view, TtaGetMessage (AMAYA, AM_OPEN_URL));
      }
 }
+
 /*----------------------------------------------------------------------
   Load the Home page
   ----------------------------------------------------------------------*/
@@ -1384,13 +1433,13 @@ View            view;
    logFile is TRUE if the new view is created to display a log file
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     InitDocView (Document doc, STRING docname, DocumentType docType, ThotBool logFile)
+Document     InitDocView (Document doc, STRING docname, DocumentType docType, ThotBool logFile)
 #else
-static Document     InitDocView (doc, docname, logFile)
-Document            doc;
-STRING              docname;
-DocumentType        docType;
-ThotBool            logFile;
+Document     InitDocView (doc, docname, logFile)
+Document     doc;
+STRING       docname;
+DocumentType docType;
+ThotBool     logFile;
 #endif
 {
   View                mainView, structView, altView, linksView, tocView;
@@ -2247,9 +2296,7 @@ ThotBool	    history;
 	}
       
       /* save the document name into the document table */
-      i = ustrlen (pathname) + 1;
-      s = TtaGetMemory (i);
-      ustrcpy (s, pathname);
+      s = TtaStrdup (pathname);
       if (DocumentURLs[newdoc] != NULL)
 	TtaFreeMemory (DocumentURLs[newdoc]);
       DocumentURLs[newdoc] = s;
@@ -3569,8 +3616,10 @@ STRING              data;
 	     {
 	       if (LastURLName[0] != EOS)
 		 {
+		   if (NewCSSfile || NewHTMLfile)
+		       InitializeNewDoc (LastURLName, NewHTMLfile);
 		   /* load an URL */
-		   if (InNewWindow)
+		   else if (InNewWindow)
 		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
 		   else
 		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_ABSOLUTE, TRUE, NULL, NULL);
@@ -3589,6 +3638,8 @@ STRING              data;
 		       else
 			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_ABSOLUTE, TRUE, NULL, NULL);
 		     }
+		   else if (NewCSSfile || NewHTMLfile)
+		     InitializeNewDoc (tempfile, NewHTMLfile);
 		   else
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
 		   TtaFreeMemory (tempfile);
@@ -3602,6 +3653,8 @@ STRING              data;
 		   else
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
 		 }
+	       NewCSSfile = FALSE;
+	       NewHTMLfile = FALSE;
 	       CurrentDocument = 0;
 	     }
 	 }
@@ -3977,7 +4030,7 @@ STRING           docname;
 DocumentType     docType;
 #endif
 {
-  CHAR_T                tempfile[MAX_LENGTH];
+  CHAR_T              tempfile[MAX_LENGTH];
   int                 newdoc, len;
   ThotBool            stopped_flag;
 

@@ -564,7 +564,7 @@ int             frame;
 		  else
 		    pAb = NextSiblingAbsBox (pAb, cell);
 		}
-	      /* add space between the the cell and the encluding row */
+	      /* add space between the the cell and its parent row */
 	      if (firstRow != NULL)
 		height += org - firstRow->AbBox->BxYOrg;
 

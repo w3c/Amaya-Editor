@@ -38,8 +38,15 @@ extern void InitConfirm ( Document document,
                           STRING label );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
+extern void OpenNew ( Document document,
+                      View view,
+                      ThotBool isHTML );
 extern void OpenDoc ( Document document,
                       View view );
+extern Document InitDocView ( Document doc,
+                              STRING docname,
+                              DocumentType docType,
+                              ThotBool logFile );
 extern void Reload_callback ( int doc,
                               int status,
                               STRING urlName,
@@ -165,8 +172,15 @@ extern void InitConfirm (/* Document document,
                             STRING label */);
 extern void OpenDocInNewWindow (/* Document document,
                                    View view */);
+extern void OpenNew (/* Document document,
+                        View view,
+                        ThotBool isHTML */);
 extern void OpenDoc (/* Document document,
                         View view */);
+extern Document InitDocView (/* Document doc,
+                                STRING docname,
+                                DocumentType docType,
+                                ThotBool logFile */);
 extern void Reload_callback (/* int doc,
                                 int status,
                                 STRING urlName,

@@ -2258,7 +2258,7 @@ int                 frame;
 {
   PtrBox              pNextBox;
   PtrLine             pLine;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, pCell;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   PtrDimRelations     pDimRel;
@@ -2662,11 +2662,12 @@ int                 frame;
 		     if (pAb->AbInLine)
 		       /* Inclusion dans un bloc de ligne */
 		       EncloseInLine (pBox, frame, pAb);
-		     /*else if (pBox->BxType == BoTable &&
-			      (pCell = GetParentCell (pBox)) &&
-			      ThotLocalActions[T_checkcolumn])
-		       (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);*/
-
+		     else if ((pCell = GetParentCell (pBox)) &&
+			      pAb->AbBox->BxPacking <= 1)
+		       {
+			 /* */
+			 HeightPack (pAb, pSourceBox, frame);
+		       }
 		     /* Si l'englobement n'est pas prevu en fin de traitement */
 		     else if (pAb->AbBox != PackBoxRoot &&
 			      !IsParentBox (pAb->AbBox, PackBoxRoot) /*&&
