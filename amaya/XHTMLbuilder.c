@@ -210,7 +210,7 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 	     {
 	       name1 = TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, name1, &length);
-	       if (!strcmp (name1, "application/mathml+xml") ||
+	       if (!strcmp (name1, AM_MATHML_MIME_TYPE) ||
 		   !strcmp (name1, "application/postscript") ||
 		   !strcmp (name1, "image/x-bitmap") ||
 		   !strcmp (name1, "image/x-xpixmap") ||
@@ -218,7 +218,7 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 		   !strcmp (name1, "image/jpeg") ||
 		   !strcmp (name1, "image/png") ||
 		   !strcmp (name1, "image/svg") ||
-		   !strcmp (name1, "application/svg+xml"))
+		   !strcmp (name1, AM_SVG_MIME_TYPE))
 		 isImage = TRUE;
 	       TtaFreeMemory (name1);
 	     }

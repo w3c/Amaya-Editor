@@ -1704,7 +1704,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
     }
   else if (DocumentTypes[document] == docSVG)
     {
-      mimetypes_list = 	"application/svg+xml\0"
+      mimetypes_list = 	AM_SVG_MIME_TYPE"\0"
 	"image/svg+xml\0"
 	"application/xml\0"
 	"text/xml\0";
@@ -1712,7 +1712,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
     }
   else if (DocumentTypes[document] == docMath)
     {
-      mimetypes_list = "application/mathml+xml\0"
+      mimetypes_list = AM_MATHML_MIME_TYPE"\0"
 	"application/xml\0"
 	"text/xml\0";
       nbmimetypes = 3;
@@ -1720,7 +1720,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
   else if (DocumentTypes[document] == docHTML && DocumentMeta[document] &&
 	   DocumentMeta[document]->xmlformat)
     {
-      mimetypes_list = "application/xhtml+xml\0"
+      mimetypes_list = AM_XHTML_MIME_TYPE"\0"
 	"text/html\0"
 	"application/xml\0"
 	"text/xml\0";
@@ -1729,7 +1729,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
   else
     {
       mimetypes_list = "text/html\0"
-	"application/xhtml+xml\0"
+	AM_XHTML_MIME_TYPE"\0"
 	"application/xml\0"
 	"text/xml\0"
 	"text/plain\0"
@@ -2936,9 +2936,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       /* Assign a content type to that local document */
       if (docType == docMath)
-	strcpy (local_content_type , "application/mathml+xml");
+	strcpy (local_content_type , AM_MATHML_MIME_TYPE);
       else if (docType == docSVG)
-	strcpy (local_content_type , "application/svg+xml");
+	strcpy (local_content_type , AM_SVG_MIME_TYPE);
       else if (docType == docXml)
 	strcpy (local_content_type , "text/xml");
       else if (docType == docText || docType == docCSS ||
@@ -2947,7 +2947,7 @@ static Document LoadDocument (Document doc, char *pathname,
       else if (docType == docHTML)
 	{
 	  if (isXML)
-	    strcpy (local_content_type , "application/xhtml+xml");
+	    strcpy (local_content_type , AM_XHTML_MIME_TYPE);
 	  else
 	    strcpy (local_content_type , "text/html");
 	}

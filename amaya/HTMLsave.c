@@ -760,18 +760,18 @@ void SaveDocumentAs (Document doc, View view)
        if (DocumentTypes[doc] == docHTML)
 	 {
 	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-	     strcpy (UserMimeType, "application/xhtml+xml");
+	     strcpy (UserMimeType, AM_XHTML_MIME_TYPE);
 	   else
 	     strcpy (UserMimeType, "text/html");
 	 }
        else if (DocumentTypes[doc] == docText)
 	 strcpy (UserMimeType, "text/plain");
        else if (DocumentTypes[doc] == docSVG)
-	 strcpy (UserMimeType, "application/svg+xml");
+	 strcpy (UserMimeType, AM_SVG_MIME_TYPE);
        else if (DocumentTypes[doc] == docMath)
-	 strcpy (UserMimeType, "application/mathml+xml");
+	 strcpy (UserMimeType, AM_MATHML_MIME_TYPE);
        else if (DocumentTypes[doc] == docXml)
-	 strcpy (UserMimeType, "text/xml");
+	 strcpy (UserMimeType, AM_GENERIC_XML_MIME_TYPE);
        else
 	 UserMimeType[0] = EOS;
      }

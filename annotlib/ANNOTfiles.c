@@ -82,7 +82,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   else
     tmp = "annotation";
 
-  annotDoc = InitDocAndView (0, tmp, docAnnot, 0, FALSE, L_Other);
+  annotDoc = InitDocAndView (0, tmp, docAnnot, 0, FALSE, L_OtherValue);
 
   if (annotDoc == 0) 
     {
@@ -103,7 +103,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
       /* set the charset to be UTF-8 by default */
       TtaSetDocumentCharset (annotDoc, TtaGetCharset ("UTF-8"));
       DocumentMeta[annotDoc]->charset = TtaStrdup ("UTF-8");
-      DocumentMeta[annotDoc]->content_type = TtaStrdup ("text/html");
+      DocumentMeta[annotDoc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
       
       /* activate, remove buttons from the annot view */
       ANNOT_PrepareAnnotView (annotDoc);

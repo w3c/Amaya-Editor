@@ -23,22 +23,6 @@
 #define AMAYA_WWW_CACHE
 #define AMAYA_LOST_UPDATE
 
-#ifdef _WINDOWS
-#define CACHE_DIR_NAME "\\libwww-cache\\"
-#else
-#define CACHE_DIR_NAME "/libwww-cache/"
-#endif
-
-/* libwww default parameters */
-#define DEFAULT_CACHE_SIZE 10
-#define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
-#define DEFAULT_MAX_SOCKET 32
-#define DEFAULT_DNS_TIMEOUT 1800L
-#define DEFAULT_PERSIST_TIMEOUT 60L
-#define DEFAULT_NET_EVENT_TIMEOUT 60000
-/* defines the priority for image content negotiation */
-#define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png,image/svg+xml,application/svg+xml"
-
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -84,6 +68,23 @@ struct _HTError
 /* Type definitions and global variables etc. local to this module */
 
 /*----------------------------------------------------------------------*/
+
+/* libwww default parameters */
+#ifdef _WINDOWS
+#define CACHE_DIR_NAME "\\libwww-cache\\"
+#else
+#define CACHE_DIR_NAME "/libwww-cache/"
+#endif
+
+#define DEFAULT_CACHE_SIZE 10
+#define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
+#define DEFAULT_MAX_SOCKET 32
+#define DEFAULT_DNS_TIMEOUT 1800L
+#define DEFAULT_PERSIST_TIMEOUT 60L
+#define DEFAULT_NET_EVENT_TIMEOUT 60000
+/* defines the priority for image content negotiation */
+#define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png,image/svg+xml,"AM_SVG_MIME_TYPE
+
 /*** private variables ***/
 
 static HTList      *converters = NULL;	/* List of global converters */
@@ -1483,8 +1484,8 @@ static void           AHTAcceptTypesInit (HTList *c)
    /* Register additional bindings */
    HTBind_add("htm", "text/html",  NULL, "8bit", NULL, 1.0);
    HTBind_add("tgz", "application/gnutar",  NULL, "binary", NULL, 1.0);
-   HTBind_add("mml", "application/mathml+xml",  NULL, "8bit", NULL, 1.0);
-   HTBind_add("svg", "application/svg+xml",  NULL, "8bit", NULL, 1.0);
+   HTBind_add("mml", AM_MATHML_MIME_TYPE,  NULL, "8bit", NULL, 1.0);
+   HTBind_add("svg", AM_SVG_MIME_TYPE,  NULL, "8bit", NULL, 1.0);
    HTBind_add("xsl", "text/xml",  NULL, "8bit", NULL, 1.0);
    /* Don't do any case distinction */
    HTBind_caseSensitive (FALSE);

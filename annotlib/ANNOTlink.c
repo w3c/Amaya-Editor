@@ -827,7 +827,7 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
 
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
-  annot->content_type = TtaStrdup ("text/html");
+  annot->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
   if (!IsW3Path (DocumentURLs[annot_doc]) 
       && !IsFilePath (DocumentURLs[annot_doc]))
     {

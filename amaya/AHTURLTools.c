@@ -324,7 +324,7 @@ char *PicTypeToMIME (PicType contentType)
       mime_type ="image/png";
       break;
     case svg_type:
-      mime_type ="application/svg+xml";
+      mime_type =AM_SVG_MIME_TYPE;
       break;
    case unknown_type:
    default:
