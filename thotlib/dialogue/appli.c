@@ -594,8 +594,10 @@ gboolean  GL_Init (ThotWidget widget,
 		   GdkEventExpose *event, 
 		   gpointer data)
 {
+  int frame;
   static ThotBool dialogfont_enabled = FALSE;
 
+  frame = (int) data;
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     {       
       SetGlPipelineState ();
@@ -604,6 +606,8 @@ gboolean  GL_Init (ThotWidget widget,
 	    InitDialogueFonts ("");
 	    dialogfont_enabled = TRUE;
 	  } 
+      GL_ActivateDrawing ();
+      GL_DrawAll (widget, frame);
       return TRUE;
     }
   else
@@ -638,11 +642,6 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
 	     x, y+FrameTable[frame].FrTopMargin, 
 	     width+x, y+height+FrameTable[frame].FrTopMargin);
   GL_DrawAll (widget, frame);
-
-  /*
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-  */  
 return TRUE;
 }
 /*----------------------------------------------------------------------
@@ -3171,7 +3170,9 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* _GTK */
-#endif /* _WINDOWS */	
+#endif /* _WINDOWS */
+	if (raz > 0)
+	  Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
 	glEnable (GL_SCISSOR_TEST);
 	glScissor ( clipx,
@@ -3180,9 +3181,9 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 		    - (clipy + clipheight),
 		    clipwidth,
 		    clipheight);
-#endif /*_GL*/
-	if (raz > 0)
+	if (raz > 0 && frame == ActiveFrame)
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
+#endif /*_GL*/
      }
 }
 
