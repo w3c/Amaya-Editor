@@ -154,6 +154,14 @@ char * BM_GetMDate (void *object)
 }
 
 /*-----------------------------------------------------------
+  BM_GetType
+  ------------------------------------------------------------*/
+ThotBool BM_IsTopic (void *object)
+{
+  return ((BookmarkP) object)->isTopic;
+}
+
+/*-----------------------------------------------------------
   BM_expandBookmarks
 ------------------------------------------------------------*/
 List *BM_expandBookmarks (List **list)

@@ -5,7 +5,16 @@ DEFAULT
      ElemRClick.Pre -> BM_ShowProperties;
      ElemActivate.Pre -> BM_FollowBookmark;
      ElemDelete.Pre -> BM_ItemDelete;
+     ElemCopy.Pre -> BM_Copy;
      DocClose.Post -> DocumentClosed;
+
+     ElemPaste.Pre -> BM_IgnoreEvent;
+     ElemTextModify.Pre -> BM_IgnoreEvent;
+     ElemMenu.Pre  -> BM_IgnoreEvent;
+     ElemInclude.Pre -> BM_IgnoreEvent;
+     ElemCopy.Post -> BM_IgnoreEvent;
+     ElemNew.Pre -> BM_IgnoreEvent;
+     ElemTextModify.Pre -> BM_IgnoreEvent;
    END;
 
 

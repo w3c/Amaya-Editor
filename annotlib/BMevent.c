@@ -75,6 +75,118 @@ char *GetHomeTopicURI (void)
 */
 
 /*-----------------------------------------------------------------------
+  BM_Open
+  Opens a given rdf file and, if it contains bookmarks, keeps it in
+  memory and returns TRUE.
+  Otherwise, returns FALSE.
+  @ Keep the mime type?
+  -----------------------------------------------------------------------*/
+ThotBool BM_Open (char *url, char *tmpfile)
+{
+  int ref;
+  ThotBool result;
+  char *normalized_url;
+
+  /* it may be that we need to do a workaround for this protection */
+  if (!GetBookmarksEnabledConfirm (FALSE) || !tmpfile 
+      || ! TtaFileExist (tmpfile))
+    return FALSE;
+  
+  if (!IsHTTPPath (url) && !IsFilePath (url))
+    normalized_url = FixFileURL (url);
+  else
+    normalized_url = url;
+
+  /* initialize it anyway, as this gets raptor initialized too */
+  ref = redland_init (normalized_url, tmpfile, FALSE);
+
+  BM_parse (ref, tmpfile, normalized_url);
+
+  if (normalized_url != url)
+    TtaFreeMemory (normalized_url);
+
+  if (BM_containsBookmarks (ref))
+    {
+      int count;
+      int item_count;
+      List *list = NULL;
+      List *items = NULL;
+
+      /* set the doc that's open */
+      result = TRUE;
+      count = Model_dumpAsList (ref, &list, TRUE);
+      item_count = Model_dumpAsList (ref, &items, FALSE);
+      if (item_count)
+	{
+	  count += item_count;
+	  items = BM_expandBookmarks (&items);
+	  list = List_merge (list, items);
+	}
+      /* BM_InitDocumentStructure (doc, list); */
+      List_delAll (&list, BMList_delItem);
+    }
+  else
+    {
+      redland_free (ref, FALSE);
+      result = FALSE;
+    }
+  return result;
+}
+
+/*-----------------------------------------------------------------------
+  BM_UpdateTempFile
+  Updates the value of the temporary file to which bookmarks can be
+  stored.
+  -----------------------------------------------------------------------*/
+ThotBool BM_TempFileSet (char *url, char *tmpfile)
+{
+  int ref;
+  ThotBool res;
+
+  if (BM_Context_reference (url, &ref))
+    res = BMContext_tmpfileSet (ref, tmpfile);
+  else
+    res = FALSE;
+
+  return res;
+}
+
+/*-----------------------------------------------------------------------
+  BM_Close
+  Removes a given rdf model from memory
+  -----------------------------------------------------------------------*/
+ThotBool BM_Close (Document doc)
+{
+  int ref;
+  ThotBool result;
+
+  /* ref = 0 is the default bookmark file; it will stay open until we close
+     amaya */
+  if (!BM_Context_reference (DocumentURLs[doc], &ref) || ref == 0)
+    result = FALSE;
+  else
+    {
+      redland_free (ref, FALSE);
+      result = TRUE;
+    }
+  return result;
+}
+
+/*-----------------------------------------------------------------------
+  BM_FreeDocumentResource
+  Frees all the resources related to a given bookmark document
+  -----------------------------------------------------------------------*/
+void BM_FreeDocumentResource (Document doc)
+{
+  if (DocumentTypes[doc] != docBookmark)
+    return;
+
+  /* we don't much here yet, but here's where we would add other functions */
+  BM_Close (doc);
+}
+
+
+/*-----------------------------------------------------------------------
   BM_Init
   -----------------------------------------------------------------------*/
 void BM_Init (void)
@@ -103,15 +215,6 @@ void BM_Init (void)
 	}
     }
 
-  /* initialize it anyway, as this gets raptor initialized too */
-  redland_init ();
-  
-  if (!GetBookmarksEnabledConfirm (FALSE))
-    return;
-
-  /* The TopicURL menu */
-  InitTopicURL ();
-
   /* the local bookmark file name */
   ptr =  TtaGetEnvString ("APP_HOME");
   if (ptr != NULL)
@@ -123,9 +226,19 @@ void BM_Init (void)
   HomeTopicURI = (char *)TtaGetMemory (strlen (LocalBookmarksBaseURI) + sizeof (HOME_TOPIC_ANCHOR) + 2);
   sprintf (HomeTopicURI, "%s%s", LocalBookmarksBaseURI, HOME_TOPIC_ANCHOR);
 
+
+  /* initialize it anyway, as this gets raptor initialized too */
+  redland_init (LocalBookmarksBaseURI, LocalBookmarksFile, TRUE);
+  
+  if (!GetBookmarksEnabledConfirm (FALSE))
+    return;
+
+  /* The TopicURL menu */
+  InitTopicURL ();
+
   if (TtaFileExist (LocalBookmarksFile))
     {
-      BM_parse (LocalBookmarksFile, LocalBookmarksBaseURI);
+      BM_parse (0, LocalBookmarksFile, LocalBookmarksBaseURI);
       /* get the value of the home topic */
     }
   else
@@ -145,7 +258,7 @@ void BM_Init (void)
       me->isTopic = TRUE;
       me->parent_url[0] = EOS;
       /* add and save it right now */
-      BM_addTopic (me, FALSE);
+      BM_addTopic (0, 0, me, FALSE);
       Bookmark_free (me);
     }
 }
@@ -169,12 +282,15 @@ void BM_Quit (void)
 {
   if (GetBookmarksEnabledConfirm (FALSE))
     {
-      /* save the bookmark file */
-      BM_save (LocalBookmarksFile);
+      /* save the local bookmark file */
+      BM_save (0, LocalBookmarksFile);
       BM_FreeConf ();
     }
   /* we always initialize and close redland, because raptor depends on it */
-  redland_free ();
+  redland_free (0, TRUE);
+
+  /* free the cut/paste buffer */
+  BM_FreePasteBuffer ();
 }
 
 /*-----------------------------------------------------------------------
@@ -186,7 +302,9 @@ void BM_CreateBM (Document doc, View view)
   if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
-  BM_BookmarkMenu (doc, view, NULL);
+  /* force the creation on the default file. We need another widget
+     to select where to create bookmarks */
+  BM_BookmarkMenu (doc, view, 0, NULL);
 }
 
 /*-----------------------------------------------------------------------
@@ -198,26 +316,37 @@ void BM_CreateTopic (Document doc, View view)
   if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
-  BM_TopicMenu (doc, view, NULL);
+  /* force the creation on the default file. We need another widget
+     to select where to create bookmarks */
+  BM_TopicMenu (doc, view, 0, NULL);
 }
 
 /*-----------------------------------------------------------------------
   BM_ViewBookmarks
-  Opens a dialog for bookmarking the URL viewed in doc.
+  Opens a dialog for viewing the current bookmarks
   -----------------------------------------------------------------------*/
-void BM_ViewBookmarks (Document doc, View view)
+void BM_ViewBookmarks (Document doc, View view, ThotBool isRefresh)
 {
   List *list = NULL;
   List *items = NULL;
   int count;
   int item_count;
+  int ref;
   Document bookmark_doc;
 
   if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
-  count = Model_dumpAsList (&list, TRUE);
-  item_count = Model_dumpAsList (&items, FALSE);
+  if (doc != 0)
+    {
+      if (!BM_Context_reference (DocumentURLs[doc], &ref))
+	return;
+    }
+  else
+    ref = 0;
+
+  count = Model_dumpAsList (ref, &list, TRUE);
+  item_count = Model_dumpAsList (ref, &items, FALSE);
   if (item_count)
     {
       count += item_count;
@@ -228,44 +357,84 @@ void BM_ViewBookmarks (Document doc, View view)
   if (count > 0)
     BM_bookmarksSort (&list);
 
-  /* are we viewing the bookmark view? */
-  for (bookmark_doc = 1; bookmark_doc < DocumentTableLength; bookmark_doc++)
-    if (DocumentTypes[bookmark_doc] == docBookmark)
-      break;
-
-  if (bookmark_doc == DocumentTableLength)
-    /* it is a new document */
-    bookmark_doc = BM_NewDocument ();
-  else if (view == 0) /* view == 0 only when called thru the menu bar */
-    TtaRaiseView (bookmark_doc, 1);
+  if (!isRefresh)
+    {
+      /* doc == 0 only when called thru the menu bar */
+      if (doc == 0)
+	{
+	  /* are we viewing the bookmark view? */
+	  for (bookmark_doc = 1; bookmark_doc < DocumentTableLength; bookmark_doc++)
+	    if (DocumentTypes[bookmark_doc] == docBookmark
+		&& !strcmp (DocumentURLs[bookmark_doc], LocalBookmarksFile))
+	      break;
+	  
+	  if (bookmark_doc == DocumentTableLength)
+	    /* it is a new document */
+	    bookmark_doc = BM_NewDocument (0, 0);
+	  else if (view == 0) /* view == 0 only when called thru the menu bar */
+	    TtaRaiseView (bookmark_doc, 1);
+	}
+      else
+	bookmark_doc = BM_NewDocument (doc, ref);
+    }
+  else
+    bookmark_doc = doc;
 
   /* get the info for each bookmark using the abookmark structure, e.g., calling
      a bmfile function to fill it up with the fields we want, then adding them
      to the model thru BMview.c */
   BM_InitDocumentStructure (bookmark_doc, list);
- 
   List_delAll (&list, BMList_delItem);
 }
 
 /*-----------------------------------------------------------
   BM_refreshBookmarkView
   ------------------------------------------------------------*/
-void BM_refreshBookmarkView (void)
+void BM_refreshBookmarkView (int ref)
 {
-  /* @@ JK: I should add here refresh for multiple bookmark views */
+  ThotBool modified;
+  int doc;
+  Element el;
+  int ch, i;
+  ElementType elType;
+  char *url = NULL;
 
-  Document doc;
+  doc = BM_getDocumentFromRef (ref);
+  if (doc == 0)
+    return; /* nothing found */
 
-  /* find the bookmark view document */
-  for (doc = 1; doc < DocumentTableLength; doc++)
-    if (DocumentTypes[doc] == docBookmark)
-      break;
+  /* we save the state because we're clearing the tree and this
+     resests all the flags *.bookmark window and
+     this is lost */
+  modified =  TtaIsDocumentModified (doc);
+  /* store the URL of the selected entry */
 
-  if (doc == DocumentTableLength)
-    return; /* not found */
+  if (TtaIsDocumentSelected (doc))
+    {
+      TtaGiveFirstSelectedElement (doc, &el, &ch, &i);
+      elType = TtaGetElementType (el);
+      while (el && elType.ElTypeNum != Topics_EL_Bookmark_item
+	     && elType.ElTypeNum != Topics_EL_Topic_item)
+	{
+	  el = TtaGetParent (el);
+	  elType = TtaGetElementType (el);
+	}
+      if (el)
+	url = BM_topicGetModelHref (el);
+      /* get the model's URL */
+    }
 
+  /* @@ JK: how to give the correct doc? */
   /* if found, clear the tree and make a new one */
-  BM_ViewBookmarks (1, 1);
+  BM_ViewBookmarks (doc, 1, TRUE);
+  if (url)
+    {
+      /* search the URL of the previous selected entry. If it is there,
+	 reselect it */
+      TtaFreeMemory (url);
+    }
+  if (modified)
+    TtaSetDocumentModified (doc);
 }
 
 /*-----------------------------------------------------------------------
@@ -290,18 +459,42 @@ void BM_ImportTopics (Document doc, View view)
       /* @@ JK: warning, the parsing is not so easy. We have to avoid
 	 accepting statements that are already in the bookmakrs. Otherwise,
 	 we cannot sort them (infinite loop */
-      BM_parse (normalized_url, normalized_url);
+      BM_parse (0, normalized_url, normalized_url);
       if (url != normalized_url)
 	TtaFreeMemory (normalized_url);
 
       /* save the modified model */
-      BM_save (LocalBookmarksFile);
+      BM_save (0, LocalBookmarksFile);
 
       /* refresh the view if found */
-      BM_refreshBookmarkView ();
+      /* @@ JK: how to choose the topic? Using 0 means we only import topics in the
+       default bookmark view */
+      BM_refreshBookmarkView (0);
     }
 }
 
+/*-----------------------------------------------------------------------
+  BM_PasteHandler
+  Frontend to the paste function.
+  -----------------------------------------------------------------------*/
+void BM_PasteHandler (Document doc, View view)
+{
+  Element el;
+  int first, last;
+
+  if (TtaGetSelectedDocument () != doc
+      || !TtaIsSelectionEmpty ())
+    return; /* selection must be in the same document, and only
+	     a caret */
+
+  /* do we need to be careful about what is first and last? */
+  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+
+  if (!el)
+    return;
+
+  BM_Paste (doc, el);
+}
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -434,13 +627,18 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
 	      i = TtaGetTextAttributeLength (attr);
 	      if (i > 0)
 		{
-		  /* allocate some memory: length of name + 6 cars for noname */
-		  url = (char *)TtaGetMemory (i + 1);
-		  TtaGiveTextAttributeValue (attr, url, &i);
-		  Model_dumpTopicAsList (&dump, url, TRUE);
-		  TtaFreeMemory (url);
-		  BM_OpenTopic (doc, dump->next);
-		  List_delAll (&dump, BMList_delItem);
+		  int ref;
+
+		  if (BM_Context_reference (DocumentURLs[doc], &ref)) 
+		    {
+		      /* allocate some memory: length of name + 6 cars for noname */
+		      url = (char *) TtaGetMemory (i + 1);
+		      TtaGiveTextAttributeValue (attr, url, &i);
+		      Model_dumpTopicAsList (ref, &dump, url, TRUE);
+		      TtaFreeMemory (url);
+		      BM_OpenTopic (doc, dump->next);
+		      List_delAll (&dump, BMList_delItem);
+		    }
 		}
 	    }
 	}
@@ -466,6 +664,7 @@ ThotBool BM_ShowProperties (NotifyElement *event)
   AttributeType    attrType;
   Attribute	   attr;
   int              i;
+  int              ref;
   char            *url;
   BookmarkP        bookmark;
 
@@ -499,10 +698,17 @@ ThotBool BM_ShowProperties (NotifyElement *event)
       i++;
       url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
-      if (elType.ElTypeNum == Topics_EL_Bookmark_item)
-	bookmark = BM_getItem (url, FALSE);
+
+      /* get the bookmark file reference number */
+      if (BM_Context_reference (DocumentURLs[doc], &ref))
+	{
+	  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+	    bookmark = BM_getItem (ref, url, FALSE);
+	  else
+	    bookmark = BM_getItem (ref, url, TRUE);
+	}
       else
-	  bookmark = BM_getItem (url, TRUE);
+	bookmark = NULL;
       TtaFreeMemory (url);
 
       if (!bookmark)
@@ -511,11 +717,11 @@ ThotBool BM_ShowProperties (NotifyElement *event)
       bookmark->isUpdate = TRUE;
 
       if (elType.ElTypeNum == Topics_EL_Bookmark_item)
-	BM_BookmarkMenu (doc, 1, bookmark);
+	BM_BookmarkMenu (doc, 1, ref, bookmark);
       else
 	{
 	  bookmark->isTopic = TRUE;
-	  BM_TopicMenu (doc, 1, bookmark);
+	  BM_TopicMenu (doc, 1, ref, bookmark);
 	}
       
       /* free the temporary bookmark structure */
@@ -545,6 +751,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   DisplayMode      dispMode;
   ThotBool         isTopic;
   ThotBool         isHomeTopic;
+  int              ref;
 
   doc = event->document;
   el = event->element;
@@ -552,6 +759,11 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   /* point to the correct item */
   el = GetItemElement (el);
   if (!el)
+    return TRUE;
+
+  /* get the models reference */
+  /* @@ JK: don't know how to save an edited file */
+  if (!BM_Context_reference (DocumentURLs[doc], &ref))
     return TRUE;
 
   elType = TtaGetElementType (el);
@@ -591,11 +803,11 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   if (isTopic)
     {
       /* get a list of all items in the topic and remove them */
-      Model_dumpTopicAsList (&dump, url, FALSE);
+      Model_dumpTopicAsList (ref, &dump, url, FALSE);
       if (isHomeTopic)
-	BM_deleteItemList (url, dump->next);
+	BM_deleteItemList (ref, url, dump->next);
       else
-	BM_deleteItemList (url, dump);
+	BM_deleteItemList (ref, url, dump);
       List_delAll (&dump, BMList_delItem);
     }
   else
@@ -611,26 +823,43 @@ ThotBool BM_ItemDelete (NotifyElement *event)
 	  elType = TtaGetElementType (el2);
 	}
       if (!el2)
-	return TRUE; /* didn't find anything! We just return */
+	{
+	  TtaFreeMemory (url);
+	  return TRUE; /* didn't find anything! We just return */
+	}
       attr = TtaGetAttribute (el2, attrType);
       if (!attr)
-	return TRUE;
+	{
+	  TtaFreeMemory (url);
+	  return TRUE;
+	}
       i = TtaGetTextAttributeLength (attr);
       if (i < 1)
 	{
 	  /* item seems empty. We just return */
+	  TtaFreeMemory (url);
 	  return TRUE;
 	}
       i++;
       topic_url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, topic_url, &i);
-      BM_deleteBookmarkItem (topic_url, url);
+      BM_deleteBookmarkItem (ref, topic_url, url);
       TtaFreeMemory (topic_url);
     }
   TtaFreeMemory (url);
 
-  /* save the modified model */
-  BM_save (LocalBookmarksFile);
+  if (ref == 0)
+    {
+      /* save the modified model */
+      BM_save (ref, LocalBookmarksFile);
+    }
+  else
+    {
+      /* save the modified model in the temporary file */
+      BM_tmpsave (ref);
+      /* mark the document as modified. Let the user do the save */
+      TtaSetDocumentModified (doc);
+    }
 
   /*
   **  move the selection up
@@ -708,9 +937,24 @@ ThotBool BM_ItemDelete (NotifyElement *event)
     TtaSetDisplayMode (doc, dispMode);
 
   /* refresh the bookmark and topic widgets if they are open */
-  BM_RefreshTopicTree ();
+  BM_RefreshTopicTree (doc);
 
   /* don't let Thot perform the normal operation */
   return TRUE;
 }
+/*----------------------------------------------------------------------
+  BM_DocSave
+  Writes the bookmark model to filename.
+  ----------------------------------------------------------------------*/
+ThotBool BM_DocSave (Document doc, char *filename)
+{
+  int ref;
+  ThotBool result;
 
+ if (!BM_Context_reference (DocumentURLs[doc], &ref))
+   result = FALSE;
+ else 
+   result = BM_save (ref, filename);
+ 
+ return result;
+}

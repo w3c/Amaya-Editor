@@ -13,6 +13,7 @@ extern ThotBool BMList_delItem ( void *me );
 extern ThotBool BMList_containsURL ( List *list,
                                      char *url );
 extern char * BM_GetMDate ( void *object );
+extern ThotBool BM_IsTopic ( void *object );
 extern List *BM_expandBookmarks ( List **list );
 extern BM_dyn_buffer * BM_bufferNew ( void );
 extern void BM_bufferFree ( BM_dyn_buffer * me );
@@ -32,6 +33,7 @@ extern ThotBool BMList_delItem (/* void *me */);
 extern ThotBool BMList_containsURL (/* List *list,
                                        char *url */);
 extern char * BM_GetMDate (/* void *object */);
+extern ThotBool BM_IsTopic (/* void *object */);
 extern List *BM_expandBookmarks (/* List **list */);
 extern BM_dyn_buffer * BM_bufferNew (/* void */);
 extern void BM_bufferFree (/* BM_dyn_buffer * me */);

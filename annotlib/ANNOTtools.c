@@ -1258,23 +1258,42 @@ static void Container_sortByDate (Container **list, char * (*get_date_function)(
     return;
 
   /* simple bubble sort */
+
   while (1)
     {
+      int count;
       swap = FALSE;
       previous = NULL;
       entry_cur = *list;
+      count = 0;
       while (entry_cur && entry_cur->next)
 	{
 	  entry_next = entry_cur->next;
 	  date_cur = StrDateToCalTime ((*get_date_function) (entry_cur->object));
 	  date_next = StrDateToCalTime ((*get_date_function) (entry_next->object));
+
+#if 0
+	  printf ("%d: date cur %d %cdate next %d\n", count++, date_cur, 
+		  (date_cur > date_next) ? '>' : '<',  date_next);
+#endif
 	  /* sort by most recent date */
 	  if (date_cur < date_next)
 	    {
-	      /* swap */
+#if 0
+	      printf ("switching date cur and date next\n");
+	      printf ("before:\n\tprevious = %p, previous-next = %p\n"
+		      "entry_cur = %p, entry_cur_next = %p\n"
+		      "entry_next = %p, entry_next->next = %p\n",
+		      previous, (previous) ? previous->next : NULL,
+		      entry_cur, entry_cur->next,
+		      entry_next, entry_next->next);
+#endif
+	      /* swap cur and next */
 	      swap = TRUE;
 	      entry_cur->next = entry_next->next;
 	      entry_next->next = entry_cur;
+
+	      /* update previous */
 	      if (previous)
 		previous->next = entry_next;
 	      else
@@ -1282,6 +1301,15 @@ static void Container_sortByDate (Container **list, char * (*get_date_function)(
 		  *list = entry_next;
 		  entry_next->parent->child = entry_next;
 		}
+
+#if 0
+	      printf ("after:\n\tprevious = %p, previous-next = %p\n"
+		      "entry_cur = %p, entry_cur_next = %p\n"
+		      "entry_next = %p, entry_next->next = %p\n",
+		      (previous) ? previous : NULL, (previous) ? previous->next : NULL,
+		      entry_cur, entry_cur->next,
+		      entry_next, entry_next->next);
+#endif
 	      previous = entry_next;
 	    }
 	  else
@@ -1465,6 +1493,87 @@ void AnnotThread_sortThreadList (List **thread_list)
 }
 
 /*------------------------------------------------------------
+   BM_recursiveSort
+   recursively sorts the bookmark containers
+   ------------------------------------------------------------*/
+static void BM_recursiveSort (Container *root)
+{
+  Container *topics, *topics_cur;
+  Container *bookmarks, *bookmarks_cur;
+
+  Container *tmp_entry, *next;
+  
+  tmp_entry = root->child;
+
+  if (!tmp_entry)
+    return;
+
+  /* 
+  ** first sort all the children at this level
+  */
+  
+
+  /* separate the topics and the bookmarks, for putting topics before bookmarks */
+  topics = NULL;
+  bookmarks = NULL;
+  while (tmp_entry)
+    {
+      next = tmp_entry->next;
+      if (BM_IsTopic (tmp_entry->object))
+	{
+	  if (!topics)
+	    topics = tmp_entry;
+	  else
+	    topics_cur->next = tmp_entry;
+	  topics_cur = tmp_entry;
+	  topics_cur->next = NULL;
+	}
+      else 
+	{
+	  if (!bookmarks)
+	    bookmarks = tmp_entry;
+	  else
+	    bookmarks_cur->next = tmp_entry;
+	  bookmarks_cur = tmp_entry;
+	  bookmarks_cur->next = NULL;
+	}
+      tmp_entry = next;
+    }
+
+  /* sort topics and bookmarks separately */
+  tmp_entry = topics;
+  Container_sortByDate (&tmp_entry, BM_GetMDate);
+  /* the first element may have changed, so we update it */
+  topics = tmp_entry;
+  tmp_entry = bookmarks;
+  Container_sortByDate (&tmp_entry, BM_GetMDate);
+  bookmarks = tmp_entry;
+
+  /* link the bookmarks back to the topics */
+  if (topics)
+    {
+      root->child = topics;
+      if (bookmarks) {
+	tmp_entry = topics;
+	while (tmp_entry->next)
+	  tmp_entry = tmp_entry->next;
+	tmp_entry->next = bookmarks;
+      }
+    }
+  else
+      root->child = bookmarks;
+
+  /* now sort each of its children recursively */
+  tmp_entry = root->child;
+  while (tmp_entry)
+    {
+      if (tmp_entry->child)
+	BM_recursiveSort (tmp_entry);
+      tmp_entry = tmp_entry->next;
+    }
+}
+
+/*------------------------------------------------------------
    BM_bookmarksSort
    Sorts the bookmark list according to parents
    ------------------------------------------------------------*/
@@ -1508,11 +1617,19 @@ void BM_bookmarksSort (List **bookmark_list)
 	  sprintf (url, "%s:%s", bookmark_cur->self_url, bookmark_cur->parent_url);
 	}
       cur_entry = (Container *) HTHashtable_object (id_table, url);
+      if (!bookmark_cur->isTopic && cur_entry)
+	{
+	  printf ("Warning, cur_entry already exists for url %s\n", url);
+	  TtaFreeMemory (url);
+	  list_cur = list_cur->next;
+	  continue;
+	}
       if (!cur_entry)
 	{
 	  cur_entry = ThreadItem_new ();
 	  HTHashtable_addObject (id_table, url, cur_entry);
 	}
+
       cur_entry->object = (void *) bookmark_cur;
       if (!bookmark_cur->isTopic)
 	TtaFreeMemory (url);
@@ -1523,6 +1640,7 @@ void BM_bookmarksSort (List **bookmark_list)
 	url = bookmark_cur->parent_url;
       else
 	url = "";
+
       par_entry = (Container *) HTHashtable_object (id_table, url); 
       if (!par_entry)
 	{
@@ -1539,7 +1657,14 @@ void BM_bookmarksSort (List **bookmark_list)
 	{
 	  tmp_entry = par_entry->child;
 	  while (tmp_entry->next)
-	    tmp_entry = tmp_entry->next;
+	    {
+	      if (tmp_entry == tmp_entry->next)
+		{
+		  printf ("uh oh loop with tmp_entry");
+		  break;
+		}
+	      tmp_entry = tmp_entry->next;
+	    }
 	  tmp_entry->next = cur_entry;
 	}
       list_cur = list_cur->next;
@@ -1580,23 +1705,17 @@ void BM_bookmarksSort (List **bookmark_list)
     }
 
   /* all is sorted by reply to, now sort it according to dates */
+
   tmp_entry = root;
   while (tmp_entry)
     {
-      Container *tmp_child;
-      
-      tmp_child = tmp_entry->child;
-      while (tmp_child)
-	{
-	  Container_sortByDate (&tmp_child, BM_GetMDate);
-	  tmp_child = tmp_child->child;
-	}
+      BM_recursiveSort (tmp_entry);
       tmp_entry = tmp_entry->next;
     }
 
   /* mark the root orphan annotations as such. After all the above sorts,
      these are all the siblings of the first container */
-  /* @@ JK: is this needed? */
+  /* @@ JK: is this needed for bookmarks? */
   /* AnnotThread_markOrphan (root); */
 
   /* copy the result to annot_list. The children of root are live replies.

@@ -68,4 +68,11 @@ typedef struct _dynBookmark
   BM_dyn_buffer *title;      
   BM_dyn_buffer *author;
   BM_dyn_buffer *description;
+  int ref;                       /* context reference */
+  Document doc;                  /* the document from which this widget was 
+				    called */
 } dynBookmark, *dynBookmarkP;
+
+
+
+

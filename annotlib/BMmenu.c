@@ -314,10 +314,21 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 {
   char *ptr;
   char *ptr2;
-
+  int   ref;
  BMmenu_Bookmark_new_init (bookmark, FALSE, &aBookmark, &aDynBookmark);
+ if (bookmark)
+   {
+     /* if we have a bookmark pointer, it means we're viewing
+	a bookmark file and examing the properties of one of 
+	its items */
+     BM_Context_reference (DocumentURLs[doc], &ref);
+   }
+ else
+   ref = 0;
+ aDynBookmark->ref = ref;
+ aDynBookmark->doc = BM_getDocumentFromRef (ref);
 
-  if (!bookmark)
+ if (!bookmark)
     {
       if (!IsW3Path (DocumentURLs[doc])
 	  && !IsW3Path (DocumentURLs[doc]))
@@ -359,11 +370,28 @@ static void InitBookmarkMenu (Document doc, BookmarkP bookmark)
 
 /*----------------------------------------------------------------------
   RefreshBookmarkMenu
-  Displays the current registry values in the menu
+  Displays the current bookmark structure values in the menu
   ----------------------------------------------------------------------*/
 static void RefreshBookmarkMenu ()
 {
+  char ** bm_urls = NULL;
+  int count;
+  ThotWidget combo;
+
+  
   /* set the menu entries to the current values */
+
+  /* count how many open bookmark files we have */
+  /* get all the bookmark files */
+  
+  count = BM_Context_dumpAsCharList (&bm_urls);
+  if (count) 
+    {
+      combo = TtaCatWidget (BookmarkBase + mBMBFileList);
+      TtaInitComboBox (combo, count, bm_urls);
+      TtaFreeMemory (bm_urls);
+    }
+
   TtaSetTextForm (BookmarkBase + mBMTitle, BM_bufferContent (aDynBookmark->title));
   TtaSetTextForm (BookmarkBase + mBMBookmarks, BM_bufferContent (aDynBookmark->bookmarks));
   TtaSetTextForm (BookmarkBase + mBMAuthor, BM_bufferContent (aDynBookmark->author));
@@ -432,24 +460,29 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		      List_delAll (&tmp, (ThotBool (*)(void*)) TtaFreeMemory);
 		    }
 		  aBookmark->parent_url_list = parent_url_list;
-		  if (aBookmark->isUpdate)
-		    result = BM_updateItem (aBookmark, FALSE);
+		  /* @@ JK: Editing only the local file with these menus */
+		  if (aBookmark->isUpdate) 
+		    result = BM_updateItem (aDynBookmark->doc,
+					    aDynBookmark->ref, aBookmark, FALSE);
 		  else
-		    result = BM_addBookmark (aBookmark);
+		    result = BM_addBookmark (aDynBookmark->doc, 
+					     aDynBookmark->ref, aBookmark);
 		  if (result)
 		    {
 		      /* if successful, close the dialog */
-		      BMmenu_bookmarkFree (&aDynBookmark, &aBookmark);
 		      TtaCloseDocument (BTopicTree);
 		      BTopicTree = 0;
-		      TtaDestroyDialogue (ref);
 		      /* refresh the view */
-		      BM_refreshBookmarkView ();
+		      BM_refreshBookmarkView (aDynBookmark->ref);
+		      BMmenu_bookmarkFree (&aDynBookmark, &aBookmark);
+		      TtaDestroyDialogue (ref);
 		    }
 		}
 	      break;
 	    case 2: /* new topic */
-	      BM_TopicMenu (1, 1, NULL);
+	      /* @@ JK: we force them to the local one, but we 
+	       need more context to give the good ref. */
+	      BM_TopicMenu (aDynBookmark->doc, 1, aDynBookmark->ref, NULL);
 	      break;
 
 	    default:
@@ -457,6 +490,31 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 	    }
 	  break;
 
+	case mBMBFileList:
+	  if (typedata == STRING_DATA && data && data[0])
+	    {
+	      int ref; 
+	      ThotBool found;
+
+	      if (!strcmp (data, "Default bookmark file"))
+		{
+		  ref = 0;
+		  found = TRUE;
+		}
+	      else 
+		found = BM_Context_reference (data, &ref);
+
+	      if (found)
+		{
+		  aDynBookmark->ref = ref;
+		  /* change the doc so that we update the correct view */
+		  aDynBookmark->doc =  BM_getDocumentFromRef (ref);
+		  BM_RefreshTopicTree (ref);
+		}
+	      else
+		printf ("uh oh, no ref\n");
+	    }
+	  break;
 	case mBMTitle:
 	  if (data)
 	    BM_bufferCopy (aDynBookmark->title, data);
@@ -495,7 +553,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
   BM_BookmarkMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
+void BM_BookmarkMenu (Document doc, View view, int ref, BookmarkP bookmark)
 {
 #ifndef _WINGUI
    int i;
@@ -522,10 +580,10 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    /* dump the topics as a thot three */
    if (BTopicTree != 0)
      TtaCloseDocument (BTopicTree);
-   BTopicTree = BM_GetTopicTree ();
+   BTopicTree = BM_GetTopicTree (ref);
    
    /* select the topics in the tree that correspond to those in the bookmark */
-   BM_topicsPreSelect (BTopicTree, bookmark);
+   BM_topicsPreSelect (ref, BTopicTree, bookmark);
 
    /* Create the dialogue form */
    i = 0;
@@ -537,6 +595,19 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 		TtaGetViewFrame (doc, view),
 		TtaGetMessage (AMAYA, AM_BM_BPROPERTIES),
 		3, s, TRUE, 2, 'L', D_DONE);
+
+#if 0
+   if (!bookmark)
+     {
+       /* we only show this property for new bookmarks */
+       /* bookmark files */
+       TtaNewPaddedLabel (BookmarkBase + mBMBFileListL,  BookmarkBase + BookmarkMenu, 
+			  "Bookmark Files", longest_label);
+       TtaNewComboBox (BookmarkBase + mBMBFileList,
+		       BookmarkBase + BookmarkMenu,
+		       NULL, TRUE);
+     }
+#endif
 
    /* topic hiearchy */
    label = TtaGetMessage (AMAYA, AM_BM_TOPIC_HIERARCHY);
@@ -631,9 +702,25 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
 {
   char *annotUser;
   char *tmp;
+  int   ref;
 
   BMmenu_Bookmark_new_init (bookmark, TRUE, &aTopic, &aDynTopic);
   aTopic->isTopic = TRUE;
+
+ if (bookmark)
+   {
+     /* if we have a bookmark pointer, it means we're viewing
+	a bookmark file and examing the properties of one of 
+	its items */
+     BM_Context_reference (DocumentURLs[doc], &ref);
+   }
+ else if (DocumentTypes[doc] == docBookmark)
+     BM_Context_reference (DocumentURLs[doc], &ref);     
+ else
+   ref = 0;
+
+  aDynTopic->ref = ref;
+  aDynTopic->doc = BM_getDocumentFromRef (ref);
 
   if (!bookmark)
     {
@@ -710,21 +797,29 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 	    case 1: /* create topic */
 	      ControlURIs (aDynTopic);
 	      BMenu_bookmarkSynchronize (aDynTopic, aTopic);
+	      /* @@ JK: Editing only the local file with these menus */
 	      if (aTopic->isUpdate)
-		result = BM_updateItem (aTopic, TRUE);
+		result = BM_updateItem (aDynTopic->doc, aDynTopic->ref,
+					aTopic, TRUE);
 	      else
-		result = BM_addTopic (aTopic, TRUE);
+		result = BM_addTopic (aDynTopic->doc, aDynTopic->ref,
+				      aTopic, TRUE);
 	      if (result)
 		{
+		  Document a_doc;
+		  int      a_ref;
+
 		  /* if successful, close the dialog */
+		  a_doc = aDynTopic->doc;
+		  a_ref = aDynTopic->ref;
 		  BMmenu_bookmarkFree (&aDynTopic, &aTopic);
 		  TtaCloseDocument (TTopicTree);
 		  TTopicTree = 0;
-		  TtaDestroyDialogue (ref);
 		  /* refresh the topic view */
-		  BM_refreshBookmarkView ();
+		  BM_refreshBookmarkView (a_ref);
 		  /* and the open widgets */
-		  BM_RefreshTopicTree ();
+		  BM_RefreshTopicTree (a_ref);
+		  TtaDestroyDialogue (ref);
 		}
 	      break;
 
@@ -771,7 +866,7 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
   BM_TopicMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
+void BM_TopicMenu (Document doc, View view, int ref, BookmarkP bookmark)
 {
 #ifndef _WINGUI
    int i;
@@ -795,16 +890,18 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    /* make the new topic */
    InitTopicMenu (doc, bookmark);
 
+   ref = aDynTopic->ref;
+
    /* dump the topics as a thot three */
    if (TTopicTree != 0)
      TtaCloseDocument (TTopicTree);
-   TTopicTree = BM_GetTopicTree ();
+   TTopicTree = BM_GetTopicTree (ref);
 
    /* remove the child entries. We cannot move a topic to its children */
    BM_topicsPrune (TTopicTree, bookmark);
 
    /* select the topics in the tree that correspond to those in the bookmark */
-   BM_topicsPreSelect (TTopicTree, bookmark);
+   BM_topicsPreSelect (ref, TTopicTree, bookmark);
 
    /* Create the dialogue form */
    i = 0;
@@ -1087,7 +1184,7 @@ char *GetTopicURL (Document document, View view)
   Redisplays the topic tree in the topic and bookmark widgets, if they
   are open.
   ----------------------------------------------------------------------*/
-void BM_RefreshTopicTree ()
+void BM_RefreshTopicTree (int ref)
 {
   ThotWidget tree;
 
@@ -1097,10 +1194,10 @@ void BM_RefreshTopicTree ()
       tree = TtaClearTree (tree);
       if (BTopicTree)
 	TtaCloseDocument (BTopicTree);
-      BTopicTree = BM_GetTopicTree ();
+      BTopicTree = BM_GetTopicTree (ref);
       /* select the topics in the tree that correspond to those in the bookmark */
       aBookmark->self_url = BM_bufferContent (aDynBookmark->self_url);
-      BM_topicsPreSelect (BTopicTree, aBookmark);
+      BM_topicsPreSelect (ref, BTopicTree, aBookmark);
       aBookmark->self_url = NULL;
       BM_InitTreeWidget (tree, BTopicTree);
     }
@@ -1108,16 +1205,19 @@ void BM_RefreshTopicTree ()
   if (aTopic)
     {
       tree = TtaCatWidget (TopicBase + mTMTopicTree);
-      tree = TtaClearTree (tree);
-      if (TTopicTree)
-	TtaCloseDocument (TTopicTree);
-      TTopicTree = BM_GetTopicTree ();
-      /* select the topics in the tree that correspond to those in the bookmark */
-      aTopic->self_url = BM_bufferContent (aDynTopic->self_url);
-      aTopic->parent_url = BM_bufferContent (aDynTopic->parent_url);
-      BM_topicsPreSelect (TTopicTree, aTopic);
-      aTopic->self_url = NULL;
-      aTopic->parent_url = NULL;
-      BM_InitTreeWidget (tree, TTopicTree);
+      if (tree)
+	{
+	  tree = TtaClearTree (tree);
+	  if (TTopicTree)
+	    TtaCloseDocument (TTopicTree);
+	  TTopicTree = BM_GetTopicTree (ref);
+	  /* select the topics in the tree that correspond to those in the bookmark */
+	  aTopic->self_url = BM_bufferContent (aDynTopic->self_url);
+	  aTopic->parent_url = BM_bufferContent (aDynTopic->parent_url);
+	  BM_topicsPreSelect (ref, TTopicTree, aTopic);
+	  aTopic->self_url = NULL;
+	  aTopic->parent_url = NULL;
+	  BM_InitTreeWidget (tree, TTopicTree);
+	}
     }
 }

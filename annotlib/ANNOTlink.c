@@ -340,7 +340,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
       int docModified;
 
       docModified = TtaIsDocumentModified (source_doc);
-      TtaSetPictureContent (el, (unsigned char *)iconName, SPACE, source_doc, "image/gif");
+      TtaSetPictureContent (el, (unsigned char *)iconName, SPACE, source_doc, "image/png");
       if (!docModified)
 	{
 	  TtaSetDocumentUnmodified (source_doc);

@@ -28,7 +28,9 @@
 #define mBMDescriptionL         14
 #define mBMTitleL               15
 #define mBMTopicTreeL           16
-#define MAX_BOOKMARKMENU_DLG    17
+#define mBMBFileList            17
+#define mBMBFileListL           18
+#define MAX_BOOKMARKMENU_DLG    19
 
 #define TopicMenu               1
 #define mTMParentTopic          2

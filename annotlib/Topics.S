@@ -14,9 +14,7 @@ STRUCT
 
   Topics
      (ATTR  XmlBody = Yes_; Charset = Text) = 
-          BEGIN
-	  Topic_item;
-	  END;
+	 LIST OF (Item);
 
   { a topic item is made of a title, a reference to the model, and an optional list
     of Items }
@@ -40,11 +38,9 @@ STRUCT
 		END;
 
 EXCEPT 
-	Topics:		NoMove, NoResize, NoCut;
-	Item:		Hidden, NoCut;
-
+	Topics:		NoResize, NoMove, NoResize, NoCut;
+ 
 	{ topics }
-	Topic_item:     NoCut;
 	Topic_title:	NoCut, NoSelect, Hidden;
 	Topic_content:	NoSelect, Hidden;
 

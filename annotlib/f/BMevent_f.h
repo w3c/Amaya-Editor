@@ -10,6 +10,12 @@ extern ThotBool GetBookmarksEnabled ( void );
 extern char *GetLocalBookmarksFile ( void );
 extern char *GetLocalBookmarksBaseURI ( void );
 extern char *GetHomeTopicURI ( void );
+extern ThotBool BM_Open ( char *url,
+                          char *tmpfile );
+extern ThotBool BM_TempFileSet ( char *url,
+                                 char *tmpfile );
+extern ThotBool BM_Close ( Document doc );
+extern void BM_FreeDocumentResource ( Document doc );
 extern void BM_Init ( void );
 extern void BM_FreeConf ( void );
 extern void BM_Quit ( void );
@@ -18,13 +24,18 @@ extern void BM_CreateBM ( Document doc,
 extern void BM_CreateTopic ( Document doc,
                              View view );
 extern void BM_ViewBookmarks ( Document doc,
-                               View view );
-extern void BM_refreshBookmarkView ( void );
+                               View view,
+                               ThotBool isRefresh );
+extern void BM_refreshBookmarkView ( int ref );
 extern void BM_ImportTopics ( Document doc,
+                              View view );
+extern void BM_PasteHandler ( Document doc,
                               View view );
 extern ThotBool BM_FollowBookmark ( NotifyElement *event );
 extern ThotBool BM_ShowProperties ( NotifyElement *event );
 extern ThotBool BM_ItemDelete ( NotifyElement *event );
+extern ThotBool BM_DocSave ( Document doc,
+                             char *filename );
 
 #else /* __STDC__ */
 
@@ -32,6 +43,12 @@ extern ThotBool GetBookmarksEnabled (/* void */);
 extern char *GetLocalBookmarksFile (/* void */);
 extern char *GetLocalBookmarksBaseURI (/* void */);
 extern char *GetHomeTopicURI (/* void */);
+extern ThotBool BM_Open (/* char *url,
+                            char *tmpfile */);
+extern ThotBool BM_TempFileSet (/* char *url,
+                                   char *tmpfile */);
+extern ThotBool BM_Close (/* Document doc */);
+extern void BM_FreeDocumentResource (/* Document doc */);
 extern void BM_Init (/* void */);
 extern void BM_FreeConf (/* void */);
 extern void BM_Quit (/* void */);
@@ -40,13 +57,18 @@ extern void BM_CreateBM (/* Document doc,
 extern void BM_CreateTopic (/* Document doc,
                                View view */);
 extern void BM_ViewBookmarks (/* Document doc,
-                                 View view */);
-extern void BM_refreshBookmarkView (/* void */);
+                                 View view,
+                                 ThotBool isRefresh */);
+extern void BM_refreshBookmarkView (/* int ref */);
 extern void BM_ImportTopics (/* Document doc,
+                                View view */);
+extern void BM_PasteHandler (/* Document doc,
                                 View view */);
 extern ThotBool BM_FollowBookmark (/* NotifyElement *event */);
 extern ThotBool BM_ShowProperties (/* NotifyElement *event */);
 extern ThotBool BM_ItemDelete (/* NotifyElement *event */);
+extern ThotBool BM_DocSave (/* Document doc,
+                               char *filename */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

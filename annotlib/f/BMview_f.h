@@ -30,20 +30,29 @@ extern void BM_CloseTopic ( Document doc,
                             Element topic_item );
 extern void BM_OpenTopic ( Document doc,
                            List *bm_list );
-extern Document BM_NewDocument ( void );
+extern Document BM_NewDocument ( Document requested_doc,
+                                 int ref );
 extern void BM_topicsPrune ( Document doc,
                              BookmarkP me );
 extern void BM_InitTreeWidget ( ThotWidget tree,
                                 Document TopicTree );
 extern void BM_dumpTopicTreeSelections ( Document TopicTree,
                                          List **list );
-extern Document BM_GetTopicTree ( void );
+extern Document BM_GetTopicTree ( int ref );
 extern void BM_topicSelectToggle ( Document doc,
                                    char *topic_url,
                                    ThotBool select );
 extern ThotBool BM_topicIsSelected ( Element el );
-extern void BM_topicsPreSelect ( Document TopicTree,
+extern void BM_topicsPreSelect ( int ref,
+                                 Document TopicTree,
                                  BookmarkP bookmark );
+extern void BM_FreePasteBuffer ( void );
+extern ThotBool BM_Paste ( Document doc,
+                           Element target );
+extern ThotBool BM_PastePost ( NotifyOnValue *event );
+extern ThotBool BM_PasteNew ( NotifyElement *event );
+extern ThotBool BM_Copy ( NotifyElement *event );
+extern ThotBool BM_IgnoreEvent ( NotifyOnTarget * );
 
 #else /* __STDC__ */
 
@@ -71,20 +80,29 @@ extern void BM_CloseTopic (/* Document doc,
                               Element topic_item */);
 extern void BM_OpenTopic (/* Document doc,
                              List *bm_list */);
-extern Document BM_NewDocument (/* void */);
+extern Document BM_NewDocument (/* Document requested_doc,
+                                   int ref */);
 extern void BM_topicsPrune (/* Document doc,
                                BookmarkP me */);
 extern void BM_InitTreeWidget (/* ThotWidget tree,
                                   Document TopicTree */);
 extern void BM_dumpTopicTreeSelections (/* Document TopicTree,
                                            List **list */);
-extern Document BM_GetTopicTree (/* void */);
+extern Document BM_GetTopicTree (/* int ref */);
 extern void BM_topicSelectToggle (/* Document doc,
                                      char *topic_url,
                                      ThotBool select */);
 extern ThotBool BM_topicIsSelected (/* Element el */);
-extern void BM_topicsPreSelect (/* Document TopicTree,
+extern void BM_topicsPreSelect (/* int ref,
+                                   Document TopicTree,
                                    BookmarkP bookmark */);
+extern void BM_FreePasteBuffer (/* void */);
+extern ThotBool BM_Paste (/* Document doc,
+                             Element target */);
+extern ThotBool BM_PastePost (/* NotifyOnValue *event */);
+extern ThotBool BM_PasteNew (/* NotifyElement *event */);
+extern ThotBool BM_Copy (/* NotifyElement *event */);
+extern ThotBool BM_IgnoreEvent (/* NotifyOnTarget * */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
