@@ -89,6 +89,7 @@
 #define C_TR_ADD_COUNTER 'A'
 #define C_TR_NOLINEBREAK 'B'
 #define C_TR_INDENT 'i'
+#define C_TR_REMOVEFILE 'f'
 
 /* position where the translator-produced chains must be created */
 #define C_TR_AFTER 'A'

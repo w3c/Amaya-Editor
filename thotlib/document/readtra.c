@@ -211,6 +211,9 @@ BinFile             file;
 	       case C_TR_INDENT:
 		  ruleType = TIndent;
 		  break;
+	       case C_TR_REMOVEFILE:
+		  ruleType = TRemoveFile;
+		  break;
 	       default:
 		  TSchemaError (4);
 		  ruleType = TRemove;
@@ -655,6 +658,7 @@ PtrTRule           *pNextTRule;
 			  TtaReadShort (file, &pTRule->TrInclFile);
 			  break;
 		       case TChangeMainFile:
+		       case TRemoveFile:
 			  TtaReadShort (file, &pTRule->TrNewFileVar);
 			  break;
 		       case TSetCounter:

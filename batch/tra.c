@@ -1130,7 +1130,7 @@ SyntRuleNum         pr;
 		 {
 		    case CHR_59:
 		       /*  ;  */
-		       if (r == RULE_Rule1)	/* fin d'une regle */
+		       if (r == RULE_RuleA || r == RULE_RuleB)	/* fin d'une regle */
 			 {
 			    if (CurTRule->TrType == TUse)
 			       if (CurType == pSSchema->SsRootElem)
@@ -1186,7 +1186,7 @@ SyntRuleNum         pr;
 			       CurTRule->TrObject = ToVariable;
 			       CurTRule->TrObjectNum = pTSchema->TsNVariables;
 			    }
-		       else if (r == RULE_Rule1)
+		       else if (r == RULE_RuleA)
 			  ExternalSchema = True;
 		       else if (r == RULE_CondOnAscend || r == RULE_LevelOrType)
 			  /* On est dans une condition. Un nom de schema externe suit */
@@ -1440,7 +1440,7 @@ SyntRuleNum         pr;
 			    pCntr->TnOperation = TCntrSet;
 			    pCntr->TnElemType1 = 0;
 			 }
-		       else if (r == RULE_Rule1)
+		       else if (r == RULE_RuleB)
 			  /* instruction de traduction Set */
 			 {
 			    NewTransRule ();
@@ -1453,7 +1453,7 @@ SyntRuleNum         pr;
 		       break;	/* rien */
 
 		    case KWD_Add:	/* Add */
-		       if (r == RULE_Rule1)
+		       if (r == RULE_RuleB)
 			  /* instruction de traduction Add */
 			 {
 			    NewTransRule ();
@@ -1953,7 +1953,7 @@ SyntRuleNum         pr;
 		    case KWD_Indent:
 		       if (r == RULE_PresRule)
 		          PresentationName (PtIndent, pr, wi);
-		       else if (r == RULE_Rule1)
+		       else if (r == RULE_RuleB)
 			  /* instruction de traduction Indent */
 			  {
 			  NewTransRule ();
@@ -1962,6 +1962,11 @@ SyntRuleNum         pr;
 			  CurTRule->TrIndentFileNameVar = 0;
 			  IndentSign = 0;
 			  }
+		       break;
+
+		    case KWD_RemoveFile:	/* RemoveFile */
+		       NewTransRule ();
+		       CurTRule->TrType = TRemoveFile;
 		       break;
 
 		    case KWD_LineSpacing:
@@ -2266,7 +2271,7 @@ SyntRuleNum         pr;
 					InUseRule = False;
 					InGetRule = False;
 					InCreateWriteRule = (pr == RULE_Token);
-					if (pr == RULE_Rule1)
+					if (pr == RULE_RuleA)
 					  {
 					     if (CurTRule->TrType == TUse)
 						InUseRule = True;
@@ -2465,7 +2470,7 @@ SyntRuleNum         pr;
 					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvLength = 0;
 					pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle = CntArabic;
 				     }
-				   else if (pr == RULE_Rule1)
+				   else if (pr == RULE_RuleB)
 				      /* un compteur dans une instruction Set ou Add */
 				      if (pTSchema->TsCounter[Identifier[nb - 1].SrcIdentDefRule - 1].TnOperation != TCntrNoOp)
 					 CompilerMessage (wi, TRA, FATAL, BAD_COUNTER, inputLine, LineNum);
@@ -2506,7 +2511,7 @@ SyntRuleNum         pr;
 					     pTransVar->TrvNItems++;
 					  }
 				     }
-				   else if (pr == RULE_Rule1)
+				   else if (pr == RULE_RuleA)
 				      /* dans une regle Read */
 				      CurTRule->TrBuffer = Identifier[nb - 1].SrcIdentDefRule;
 				   else if (pr == RULE_Token)
@@ -2567,7 +2572,7 @@ SyntRuleNum         pr;
 					     CurTRule->TrObjectNum = Identifier[nb - 1].SrcIdentDefRule;
 					  }
 				     }
-				   else if (pr == RULE_Rule1)
+				   else if (pr == RULE_RuleA || pr == RULE_RuleB)
 				      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 					 /* variable non definie */
 					 CompilerMessage (wi, TRA, FATAL, UNKNOWN_VARIABLE, inputLine, LineNum);
@@ -2578,7 +2583,8 @@ SyntRuleNum         pr;
 					 CurTRule->TrNewFileVar = Identifier[nb - 1].SrcIdentDefRule;
 				      else if (CurTRule->TrType == TIndent)
 					 CurTRule->TrIndentFileNameVar = Identifier[nb - 1].SrcIdentDefRule;
-
+				      else if (CurTRule->TrType == TRemoveFile)
+					 CurTRule->TrNewFileVar = Identifier[nb - 1].SrcIdentDefRule;
 				   break;
 
 				case RULE_AttrIdent:	/* AttrIdent */
@@ -2787,7 +2793,7 @@ SyntRuleNum         pr;
 				   if (pr == RULE_CountFunction)
 				      /* dans une definition de compteur */
 				      pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnParam1 = k;
-				   else if (pr == RULE_Rule1)
+				   else if (pr == RULE_RuleB)
 				      /* dans une instruction de traduction Set */
 				      CurTRule->TrCounterParam = k;
 				   break;
@@ -2796,7 +2802,7 @@ SyntRuleNum         pr;
 				   if (pr == RULE_CountFunction)
 				      /* dans une definition de compteur */
 				      pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnParam2 = k;
-				   else if (pr == RULE_Rule1)
+				   else if (pr == RULE_RuleB)
 				      /* dans une instruction de traduction Add */
 				      CurTRule->TrCounterParam = k;
 				   break;

@@ -7,12 +7,11 @@ COUNTERS
   AnchorCounter;
 
 CONST
-  TmpFileName = '/tmp/amaya.tmp';
   DoubleQuote  = '"';
   DashLine = '--------------------------------------------------------------';
 VAR
   OUT_AnchorCounter : '[' Value(AnchorCounter) ']';
-  TmpFile : TmpFileName;
+  TmpFile : '/tmp/amaya.tmp';
 
 RULES
 
@@ -77,6 +76,7 @@ RULES
 	Create '\12' After;
 	Create 'List of References\12\12' After;
 	Include '/tmp/amaya.tmp' After;
+	RemoveFile TmpFile After;
 	END;
 
  H1:	BEGIN

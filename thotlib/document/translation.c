@@ -56,6 +56,7 @@ typedef struct _AnOutputFile
      int		 OfIndent;	/* current value of indentation */
      boolean		 OfStartOfLine;	/* start a new line */
      char                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
+     boolean		 OfCannotOpen;	/* open failure */
   }
 AnOutputFile;
 
@@ -129,27 +130,29 @@ boolean		    open;
       /* table saturee */
      {
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_TOO_MANY_OUTPUT_FILES);
-	return 0;
+	return -1;
      }
    else
      {
 	OutputFile[NOutputFiles].OfFileDesc = fopen (fName, "w");
 	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP),
-				fName);
-	     return 0;
+	     if (!OutputFile[NOutputFiles].OfCannotOpen)
+		{
+	        TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB,
+					TMSG_CREATE_FILE_IMP), fName);
+	        OutputFile[NOutputFiles].OfCannotOpen = TRUE;
+		}
 	  }
 	else
 	   /* fichier ouvert */
-	  {
-	     strcpy (OutputFile[NOutputFiles].OfFileName, fName);
-	     OutputFile[NOutputFiles].OfBufferLen = 0;
-	     OutputFile[NOutputFiles].OfIndent = 0;
-	     OutputFile[NOutputFiles].OfStartOfLine = TRUE;
-	     NOutputFiles++;
-	     return (NOutputFiles - 1);
-	  }
+	     OutputFile[NOutputFiles].OfCannotOpen = FALSE;
+	strcpy (OutputFile[NOutputFiles].OfFileName, fName);
+	OutputFile[NOutputFiles].OfBufferLen = 0;
+	OutputFile[NOutputFiles].OfIndent = 0;
+	OutputFile[NOutputFiles].OfStartOfLine = TRUE;
+	NOutputFiles++;
+	return (NOutputFiles - 1);
      }
 }
 
@@ -193,16 +196,16 @@ boolean             lineBreak;
    else if (fileNum == 0)
       /* la sortie doit se faire dans stdout. On sort le caractere */
       putchar (c);
-   else
+   else if (fileNum > 0)
       /* sortie dans un fichier */
      {
 	/* on cherche le schema de traduction du document pour acceder aux */
 	/* parametres definissant la longueur de ligne et le caractere de */
 	/* fin de ligne */
 	pTSch = GetTranslationSchema (pDoc->DocSSchema);
-	if (pTSch != NULL)
+	fileDesc = OutputFile[fileNum].OfFileDesc;
+	if (pTSch != NULL && fileDesc != NULL)
 	  {
-	     fileDesc = OutputFile[fileNum].OfFileDesc;
 	     if (pTSch->TsLineLength == 0)
 		/* pas de longueur max. des lignes de sortie, on ecrit */
 		/* directement le caractere dans le fichier de sortie */
@@ -2367,6 +2370,7 @@ boolean            *removeEl;
    PathBuffer          directoryName;
    FILE               *newFile;
    char                currentFileName[MAX_PATH];	/* nom du fichier principal */
+   char		      *cmd[MAX_PATH];
    boolean             found, possibleRef;
    char                c;
 
@@ -2836,7 +2840,18 @@ boolean            *removeEl;
 			 OutputFile[1].OfIndent = 0;
 			 OutputFile[1].OfStartOfLine = TRUE;
 			 OutputFile[1].OfFileDesc = newFile;
+			 OutputFile[1].OfCannotOpen = FALSE;
 		      }
+		 }
+	       break;
+
+	    case TRemoveFile:
+	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar,
+			    FALSE, currentFileName, 0, pDoc, lineBreak);
+	       if (currentFileName[0] != '\0')
+		 {
+		    sprintf (cmd, "/bin/rm %s\n", currentFileName);
+		    system (cmd);
 		 }
 	       break;
 
@@ -2860,10 +2875,11 @@ boolean            *removeEl;
 			         FALSE, secondaryFileName, 0, pDoc, lineBreak);
 		    fileNum = GetSecondaryFile (secondaryFileName, pDoc, TRUE);
 		 }
-	       if (pTRule->TrRelativeIndent)
-		  OutputFile[fileNum].OfIndent += pTRule->TrIndentVal;
-	       else
-		  OutputFile[fileNum].OfIndent = pTRule->TrIndentVal;
+	       if (fileNum >= 0)
+	          if (pTRule->TrRelativeIndent)
+		     OutputFile[fileNum].OfIndent += pTRule->TrIndentVal;
+	          else
+		     OutputFile[fileNum].OfIndent = pTRule->TrIndentVal;
 	       break;
 
 	    case TGet:
@@ -3010,7 +3026,7 @@ boolean            *removeEl;
 	       /* si le fichier a inclure est deja ouvert en ecriture, on
 		  le flush.  */
 	       i = GetSecondaryFile (fullName, pDoc, FALSE);
-	       if (i != 0)
+	       if (i >= 0)
 		  fflush (OutputFile[i].OfFileDesc);
 	       /* ouvre le fichier a inclure */
 	       includedFile = TtaReadOpen (fullName);
@@ -3322,12 +3338,15 @@ PtrDocument         pDoc;
    OutputFile[0].OfBufferLen = 0;
    OutputFile[0].OfIndent = 0;
    OutputFile[0].OfStartOfLine = TRUE;
+   OutputFile[0].OfCannotOpen = FALSE;
+
    /* Entree 1 : fichier de sortie principal */
    OutputFile[1].OfFileName[0] = '\0';
    OutputFile[1].OfFileDesc = mainFile;
    OutputFile[1].OfBufferLen = 0;
    OutputFile[1].OfIndent = 0;
    OutputFile[1].OfStartOfLine = TRUE;
+   OutputFile[1].OfCannotOpen = FALSE;
    NOutputFiles = 2;
 }
 
@@ -3348,12 +3367,13 @@ PtrDocument         pDoc;
    int                 i, fich;
 
    for (fich = 1; fich < NOutputFiles; fich++)
-     {
+     if (OutputFile[fich].OfFileDesc != NULL)
+        {
 	for (i = 0; i < OutputFile[fich].OfBufferLen; i++)
 	   putc (OutputFile[fich].OfBuffer[i], OutputFile[fich].OfFileDesc);
 	if (OutputFile[fich].OfFileDesc != NULL)
 	   fclose (OutputFile[fich].OfFileDesc);
-     }
+        }
 }
 
 /*----------------------------------------------------------------------

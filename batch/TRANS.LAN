@@ -118,7 +118,8 @@ TrSchema =       NAME .
 
 SeqOfRules1 =    'Begin' < Rule1 > 'End' ';' / Rule1 .
 
-Rule1 =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
+Rule1 =		 RuleA / RuleB .
+RuleA =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
                  'Get' [ RelPosition ] TypeIdent [ '(' TypeIdent ')' ]
                        [ Position ] ';' /
 		 'Copy' [ RelPosition ] TypeIdent [ '(' TypeIdent ')' ]
@@ -129,12 +130,13 @@ Rule1 =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
                  'Read' BufferIdent [ Position ] ';' /
                  'Include' File [ Position ] ';' /
 		 'NoTranslation' ';' /
-                 'NoLineBreak' ';' /
-		 'ChangeMainFile' VariableIdent [ Position ] ';' /
+                 'NoLineBreak' ';' .
+RuleB =		 'ChangeMainFile' VariableIdent [ Position ] ';' /
 		 'Set' CounterIdent InitValue [ Position ] ';' /
 		 'Add' CounterIdent IncrValue [ Position ] ';' /
                  'Indent' [ 'IN' VariableIdent ] [ IndentSign ] IndentVal
-                          [ Position ] ';' .
+                          [ Position ] ';' /
+		 'RemoveFile' VariableIdent [ Position ] ';' .
 
 IndentSign =     '+' / '-' .
 IndentVal =	 NUMBER .

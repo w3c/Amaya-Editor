@@ -294,6 +294,9 @@ TRuleType           typ;
 	    case TIndent:
 	       TtaWriteByte (outfile, C_TR_INDENT);
 	       break;
+	    case TRemoveFile:
+	       TtaWriteByte (outfile, C_TR_REMOVEFILE);
+	       break;
 	 }
 
 }
@@ -635,6 +638,7 @@ PtrTRule            pTRule;
 		    WriteShort (currentRule->TrInclFile);
 		    break;
 		 case TChangeMainFile:
+		 case TRemoveFile:
 		    WriteShort (currentRule->TrNewFileVar);
 		    break;
 		 case TSetCounter:

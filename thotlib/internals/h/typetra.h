@@ -73,7 +73,8 @@ typedef enum
 	TSetCounter,
 	TAddCounter,
 	TNoLineBreak,
-	TIndent
+	TIndent,
+	TRemoveFile
 } TRuleType;
 
 /* the position where the translator-produced strings are created */
@@ -278,9 +279,9 @@ typedef struct _TranslRule
 							   buffer containing the name of
 							   the file to include */
 	} s5;
-      struct	/* TrType = TChangeMainFile */
+      struct	/* TrType = TChangeMainFile, TRemoveFile */
 	{
-	  int	_TrNewFileVar_;			/* variable defining the new filename */ 
+	  int	_TrNewFileVar_;	    /* variable defining the new filename */ 
 	} s6;
      struct	/* TrType = TSetCounter, TAddCounter */
 	{
