@@ -793,6 +793,7 @@ static void SaveElement (PtrElement pEl, PtrElement pParent)
 void CopyCommand ()
 {
   PtrElement          firstSel, lastSel, pEl, pCopy, pE, pElAttr, pSecond;
+  PtrElement          enclosingCell;
   PtrPasteElem        pSave;
   PtrDocument         pSelDoc;
   PtrAttribute        pAttrLang, pAttrHerit;
@@ -829,56 +830,55 @@ void CopyCommand ()
 	     come from */
 	  if (CopyAndCutFunction)
 	    (*(Proc1)CopyAndCutFunction) ((void*)IdentDocument (DocOfSavedElements));
+	  /* first selected element */
 	  pEl = firstSel;
-	  /* premier element selectionne */
-	  while (pEl != NULL)
-	    /* pEl : pointeur sur l'element a sauver */
+	  enclosingCell = NULL;
+	  while (pEl)
 	    {
-	      /* copie l'element courant avec ses attributs */
-	      /* S'il est reference', perd le lien avec la
-		 reference */
+	      /* copy the element with its attributes */
+	      /* if referred loose the reference */
+	      if (enclosingCell == NULL &&
+		  TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+				    pEl->ElStructSchema))
+		{
+		  enclosingCell = pEl;
+		  pEl = pEl->ElFirstChild;
+		}
 	      if (IsolatedPairedElem (pEl, firstSel, lastSel))
 		pCopy = NULL;
+	      /* send the ElemCopy.Pre event */
 	      else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0))
-		/* envoie l'evenement ElemCopy.Pre et demande a
-		   l'application si elle est d'accord pour copier
-		   l'element */
-		/* l'application ne veut pas que l'editeur copie
-		   cet element */
+		/* l'application refuses the copy of this element */
 		pCopy = NULL;
 	      else
-		/* The application agrees */
-		/* create a deep copy of the element */
+		/* the application agrees, create a deep copy of the element */
 		pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
 				  pSelDoc, NULL, FALSE, TRUE, FALSE, TRUE);
-	      if (pCopy != NULL)
-		/* met la copie de l'element courant dans la 
-		   chaine des elements sauvegardes */
+	      if (pCopy)
+		/* store the copy into the list of saved elements */
 		{
 		  if (pEl == firstSel && firstChar > 1)
-		    /* coupe le premier element sauve' */
+		    /* only a sub-string of the first element was selected */
 		    {
 		      pE = pCopy;
+		      /* split the string */
 		      SplitTextElement (pCopy, firstChar,
-					pSelDoc, FALSE,
-					&pSecond, FALSE);
+					pSelDoc, FALSE, &pSecond, FALSE);
 		      pCopy = pSecond;
-		      /* supprime la premiere partie */
+		      /* remove the first part */
 		      DeleteElement (&pE, pSelDoc);
 		      if (firstSel == lastSel)
-			/* la fin de la selection est dans le
-			   nouvel element */
+			/* the end of the selection is within the element */
 			lastChar = lastChar - firstChar + 1;
 		    }
 		  if (pEl == lastSel &&
 		      lastChar > 0 &&
 		      lastChar <= pCopy->ElTextLength)
-		    /* coupe le dernier element sauve' */
+		    /* only a sub-string of the last element was selected */
 		    {
 		      SplitTextElement (pCopy, lastChar,
-					pSelDoc, FALSE, &pE,
-					FALSE);
-		      /* supprime la deuxieme partie */
+					pSelDoc, FALSE, &pE, FALSE);
+		      /* remove the last part */
 		      DeleteElement (&pE, pSelDoc);
 		    }
 		  SaveElement (pCopy, pEl->ElParent);
@@ -901,9 +901,19 @@ void CopyCommand ()
 		    }
 		}
 		  
-	      /* cherche l'element a traiter apres l'element
-		 courant */
-	      pEl = NextInSelection (pEl, lastSel);
+	      /* next selected element */
+	      if (enclosingCell)
+		{
+		  /* removing enclosed elements of a cell */
+		  pEl = pEl->ElNext;
+		  if (pEl == NULL)
+		    {
+		      pEl = NextInSelection (enclosingCell, lastSel);
+		      enclosingCell = NULL;
+		    }
+		}
+	      else
+		pEl = NextInSelection (pEl, lastSel);
 	    }
 	}
       /* parmi les elements de la copie, cherche et traite tous ceux */
@@ -1377,14 +1387,11 @@ void CutCommand (ThotBool save)
 				/* la selection se termine a l'interieur d'un
 				   element, on le coupe en deux */
 				{
-				  AddEditOpInHistory (lastSel, pSelDoc, TRUE,
-						      FALSE);
+				  AddEditOpInHistory (lastSel, pSelDoc, TRUE, FALSE);
 				  recorded = TRUE;
-				  SplitAfterSelection (lastSel, lastChar,
-						       pSelDoc);
+				  SplitAfterSelection (lastSel, lastChar, pSelDoc);
 				  pNext = lastSel->ElNext;
-				  AddEditOpInHistory (pNext, pSelDoc, FALSE,
-						      TRUE);
+				  AddEditOpInHistory (pNext, pSelDoc, FALSE, TRUE);
 				  pAncestorNext[0] = pNext;
 				}
 			      pEl = NULL;

@@ -3192,6 +3192,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		    }
 		}
 	    }
+
 	  if (copyType != 0)
 	    {
 	      /* get an element for the copy */
@@ -3219,6 +3220,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		  /* computes the value of the label */
 		  ConvertIntToLabel (NewLabel (pDocCopy), pEl->ElLabel);
 		}
+
 	      pSource->ElCopy = pEl;
 	      pEl->ElCopy = pSource;
 	      pEl->ElIsCopy = pSource->ElIsCopy;
@@ -3231,14 +3233,13 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 #ifdef _GL
 	      if (pSource->ElAnimation)
 		pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
-
 	      if (pSource->ElTransform)
 		pEl->ElTransform = (Transform*)TtaCopyTransform (pSource->ElTransform);
-
-	      /* if (pSource->ElGradient) */
-	      /* 		pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
+	      /* if (pSource->ElGradient)
+		 pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
 #endif /* _GL */
 	      pEl->ElTerminal = pSource->ElTerminal;
+
 	      if (!pEl->ElTerminal)
 		pEl->ElFirstChild = NULL;
 	      else
