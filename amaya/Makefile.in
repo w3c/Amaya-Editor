@@ -519,8 +519,9 @@ install : all @NOPRINT@../bin/print
 	  for file in `$(ECHO) $(THOTDIR)/config/libconfig/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/config/libconfig 2>/dev/null || true ; \
 	  done ; done)
-	(for i in $(ANNOTFILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/annotlib/$$i` ; do \
+	(cd $(THOTDIR)/annotlib ; \
+          for i in $(ANNOTFILES) ; do \
+	  for file in `$(ECHO) $$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/annotlib 2>/dev/null || true ; \
 	  done ; done)
 	(for i in $(DICOFILES) ; do \
