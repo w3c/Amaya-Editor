@@ -411,7 +411,7 @@ PtrSSchema        scheme;
    if (strfile == 0)
       /* echec */
      {
-	strncpy (filename, fname, MAX_NAME_LEN);
+	strncpy (filename, fname, MAX_PATH);
 	strcat (filename, ".STR");
 	/* message 'Fichier inaccessible' */
 	TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, filename);

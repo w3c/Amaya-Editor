@@ -482,7 +482,7 @@ PtrSSchema        SS;
    fich = BIOreadOpen (texte);
    if (fich == 0)
      {
-	strncpy (texte, fname, MAX_NAME_LEN);
+	strncpy (texte, fname, MAX_PATH);
 	strcat (texte, ".TYP");
 	TtaDisplaySimpleMessageString (LIB, INFO, LIB_MISSING_FILE, texte);
      }
