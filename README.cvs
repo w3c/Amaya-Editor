@@ -1,0 +1,6 @@
+<p> This folder contains the <a href="http://www.w3.org/Amaya/">Amaya</a>
+sources. You will aso neet the <a href="http://www.w3.org/Library/">libwww</a>
+sources for compiling the Amaya Application. Extract it in a sibling directory
+of your Amaya extract tree, configure will look for it there.</p>
+
+<p>$Date$ $Author$</p>
