@@ -1263,7 +1263,9 @@ void CreateRuby (Document document, View view)
   ElementType   elType;
   Element       el, selEl, rbEl, rubyEl, firstEl, lastEl, nextEl, prevEl;
   int           i, j, lg, firstSelectedChar, lastSelectedChar,
-                oldStructureChecking;
+                oldStructureChecking, min, max;
+  Language      lang;
+  CHAR_T        *buffer;
   ThotBool      error;
   DisplayMode   dispMode;
 
@@ -1352,7 +1354,24 @@ void CreateRuby (Document document, View view)
 		      if (lastSelectedChar <= lg && lastSelectedChar > 1)
 			/* the last selected element is only partly selected.
 			   Split it */
-			TtaSplitText (lastEl, lastSelectedChar, document);
+			{
+			  /* exclude trailing spaces from the selection */
+			  if (lg > 0)
+			    {
+			      lg++;
+			      buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+			      TtaGiveBufferContent (lastEl, buffer, lg, &lang);
+			      if (lastEl == firstEl)
+				min = firstSelectedChar;
+			      else
+				min = 1;
+			      while (lastSelectedChar > min &&
+				     buffer[lastSelectedChar - 2] == SPACE)
+				lastSelectedChar--;
+			      TtaFreeMemory (buffer);
+			    }
+			  TtaSplitText (lastEl, lastSelectedChar, document);
+			}
 		    }
 		  /* process the first selected element */
 		  elType = TtaGetElementType (firstEl);
@@ -1362,8 +1381,27 @@ void CreateRuby (Document document, View view)
 		      /* that element is only partly selected. Split it */
 		      {
 			el = firstEl;
-			TtaSplitText (firstEl, firstSelectedChar, document);
-			TtaNextSibling (&firstEl);
+			lg = TtaGetElementVolume (firstEl);
+			/* exclude leading spaces from the selection */
+			if (lg > 0)
+			  {
+			    lg++;
+			    buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+			    TtaGiveBufferContent (firstEl, buffer, lg, &lang);
+			    if (lastEl == firstEl)
+			      max = lastSelectedChar;
+			    else
+			      max = lg;
+			    while (firstSelectedChar < max &&
+				   buffer[firstSelectedChar - 1] == SPACE)
+			      firstSelectedChar++;
+			    TtaFreeMemory (buffer);
+			  }
+			if (firstSelectedChar <= lg)
+			  {
+			    TtaSplitText (firstEl, firstSelectedChar,document);
+			    TtaNextSibling (&firstEl);
+			  }
 			if (lastEl == el)
 			  /* we have to change the end of selection because the
 			     last selected element was split */

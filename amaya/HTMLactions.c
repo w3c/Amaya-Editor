@@ -2571,7 +2571,9 @@ void SetCharFontOrPhrase (int document, int elemtype)
   Element             lastSelectedElem, child, next, elFont, lastEl;
   ElementType         elType, selType;
   DisplayMode         dispMode;
-  int                 length, firstSelectedChar, lastSelectedChar, i;
+  int                 length, firstSelectedChar, lastSelectedChar, i, max, min;
+  Language            lang;
+  CHAR_T              *buffer;
   ThotBool            remove, done, toset;
 
   if (!TtaGetDocumentAccessMode (document))
@@ -2635,17 +2637,36 @@ void SetCharFontOrPhrase (int document, int elemtype)
       if (!done)
 	{
 	  /* split that text leaf if it is not entirely selected */
-	  if (lastSelectedChar < firstSelectedChar && lastEl == firstSelectedElem)
+	  if (lastSelectedChar < firstSelectedChar &&
+	      lastEl == firstSelectedElem)
 	    /* it's a caret */
 	    lastSelectedChar = firstSelectedChar;
 	  length = TtaGetElementVolume (lastEl);
 	  if (lastSelectedChar != 0 && lastSelectedChar <= length)
 	    {
-	      TtaRegisterElementReplace (lastEl, document);	     
-	      TtaSplitText (lastEl, lastSelectedChar, document);
-	      elem = lastEl;
-	      TtaNextSibling (&elem);
-	      TtaRegisterElementCreate (elem, document);
+	      /* exclude trailing spaces from the selection */
+	      if (length > 0)
+		{
+		  length++;
+		  buffer = TtaGetMemory (length * sizeof(CHAR_T));
+		  TtaGiveBufferContent (lastEl, buffer, length, &lang);
+		  if (lastEl == firstSelectedElem)
+		    min = firstSelectedChar;
+		  else
+		    min = 1;
+		  while (lastSelectedChar > min &&
+			 buffer[lastSelectedChar - 2] == SPACE)
+		    lastSelectedChar--;
+		  TtaFreeMemory (buffer);
+		}
+	      if (lastSelectedChar > 1)
+		{
+		  TtaRegisterElementReplace (lastEl, document);	     
+		  TtaSplitText (lastEl, lastSelectedChar, document);
+		  elem = lastEl;
+		  TtaNextSibling (&elem);
+		  TtaRegisterElementCreate (elem, document);
+		}
 	    }
 	}
     }
@@ -2693,9 +2714,27 @@ void SetCharFontOrPhrase (int document, int elemtype)
 		}
 	      else
 		{
-		  /* split the first string */
-		  TtaRegisterElementReplace (selectedEl, document);
-		  TtaSplitText (selectedEl, firstSelectedChar, document);
+		  /* exclude leading spaces from the selection */
+		  if (length > 0)
+		    {
+		      length++;
+		      buffer = TtaGetMemory (length * sizeof(CHAR_T));
+		      TtaGiveBufferContent (selectedEl, buffer, length, &lang);
+		      if (lastEl == firstSelectedElem)
+			max = lastSelectedChar;
+		      else
+			max = length;
+		      while (firstSelectedChar < max &&
+			     buffer[firstSelectedChar - 1] == SPACE)
+			firstSelectedChar++;
+		      TtaFreeMemory (buffer);
+		    }
+		  if (firstSelectedChar <= length)
+		    /* split the first string */
+		    {
+		      TtaRegisterElementReplace (selectedEl, document);
+		      TtaSplitText (selectedEl, firstSelectedChar, document);
+		    }
 		}
 	      TtaNextSibling (&selectedEl);
 	      TtaRegisterElementCreate (selectedEl, document);
@@ -2704,7 +2743,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
 		  lastSelectedElem = selectedEl;
 		  if (firstSelectedChar <= length)
 		    /* a substring is selected */
-		    lastSelectedChar = lastSelectedChar - firstSelectedChar + 2;
+		    lastSelectedChar = lastSelectedChar - firstSelectedChar + 1;
 		}
 	      firstSelectedElem = selectedEl;
 	      firstSelectedChar = 1;

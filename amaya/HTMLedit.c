@@ -1018,7 +1018,10 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   AttributeType       attrType;
   Attribute           attr;
   DisplayMode         dispMode;
-  int                 firstChar, lastChar, lg, i, levelFirst, levelLast;
+  int                 firstChar, lastChar, lg, i, levelFirst, levelLast, min,
+                      max;
+  Language            lang;
+  CHAR_T              *buffer;
   ThotBool            noAnchor, ok;
 
   if (!TtaGetDocumentAccessMode (doc))
@@ -1188,13 +1191,32 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		lastChar = firstChar;
 	      lg = TtaGetElementVolume (last);
 	      if (lastChar <= lg)
-		/* split the last text */
+		/* split the last text element */
 		{
-		  TtaRegisterElementReplace (last, doc);
-		  TtaSplitText (last, lastChar, doc);
-		  next = last;
-		  TtaNextSibling (&next);
-		  TtaRegisterElementCreate (next, doc);
+		  /* exclude trailing spaces from the anchor */
+		  if (lg > 0)
+		    {
+		      lg++;
+		      buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+		      TtaGiveBufferContent (last, buffer, lg, &lang);
+		      if (last == first)
+			min = firstChar;
+		      else
+			min = 1;
+		      while (lastChar > min &&
+			     buffer[lastChar - 2] == SPACE)
+			lastChar--;
+		      TtaFreeMemory (buffer);
+		    }
+		  if (lastChar > 1)
+		    {
+
+		      TtaRegisterElementReplace (last, doc);
+		      TtaSplitText (last, lastChar, doc);
+		      next = last;
+		      TtaNextSibling (&next);
+		      TtaRegisterElementCreate (next, doc);
+		    }
 		}
 	    }
 	  if (last != first)
@@ -1259,9 +1281,27 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		}
 	      else
 		{
-		  /* split the first string */
-		  TtaRegisterElementReplace (first, doc);
-		  TtaSplitText (first, firstChar, doc);
+		  /* exclude leading spaces from the selection */
+		  if (lg > 0)
+		    {
+		      lg++;
+		      buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+		      TtaGiveBufferContent (first, buffer, lg, &lang);
+		      if (last == first)
+			max = lastChar;
+		      else
+			max = lg;
+		      while (firstChar < max &&
+			     buffer[firstChar - 1] == SPACE)
+			firstChar++;
+		      TtaFreeMemory (buffer);
+		    }
+		  if (firstChar <= lg)
+		    /* split the first string */
+		    {
+		      TtaRegisterElementReplace (first, doc);
+		      TtaSplitText (first, firstChar, doc);
+		    }
 		}
 	      TtaNextSibling (&first);
 	      TtaRegisterElementCreate (first, doc);
@@ -2318,11 +2358,11 @@ void ElementPasted (NotifyElement * event)
 void CheckNewLines (NotifyOnTarget *event)
 {
   Element     ancestor, selEl, leaf, newLeaf, firstLeaf, firstParag, el,
-              child, orig, prev, next;
+              child, orig, prev, next, parent;
   Document    doc;
   ElementType elType;
-  CHAR_T      *content;
-  int         firstSelChar, lastSelChar, length, i, j;
+  CHAR_T      *content, *sibContent;
+  int         firstSelChar, lastSelChar, length, i, j, sibLength, start;
   Language    lang;
   ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended,
               prevCharEOL;
@@ -2544,13 +2584,139 @@ void CheckNewLines (NotifyOnTarget *event)
 	}
     }
 
+  start = 0;
   /* all the content of the modified element has now been processed */
+  /* if we are within an inline element and there is a space at the beginning
+     or at the end of the text element, tries to move that space to the
+     previous (resp. next) text element */
+  parent = TtaGetParent (leaf);
+  elType = TtaGetElementType (parent);
+  if (elType.ElTypeNum == HTML_EL_Anchor ||
+      elType.ElTypeNum == HTML_EL_Font_ ||
+      elType.ElTypeNum == HTML_EL_Subscript ||
+      elType.ElTypeNum == HTML_EL_Superscript ||
+      elType.ElTypeNum == HTML_EL_Span ||
+      elType.ElTypeNum == HTML_EL_BDO ||
+      elType.ElTypeNum == HTML_EL_Teletype_text ||
+      elType.ElTypeNum == HTML_EL_Italic_text ||
+      elType.ElTypeNum == HTML_EL_Bold_text ||
+      elType.ElTypeNum == HTML_EL_Underlined_text ||
+      elType.ElTypeNum == HTML_EL_Struck_text ||
+      elType.ElTypeNum == HTML_EL_Big_text ||
+      elType.ElTypeNum == HTML_EL_Small_text ||
+      elType.ElTypeNum == HTML_EL_Emphasis ||
+      elType.ElTypeNum == HTML_EL_Strong ||
+      elType.ElTypeNum == HTML_EL_Def ||
+      elType.ElTypeNum == HTML_EL_Code ||
+      elType.ElTypeNum == HTML_EL_Sample ||
+      elType.ElTypeNum == HTML_EL_Keyboard ||
+      elType.ElTypeNum == HTML_EL_Variable_ ||
+      elType.ElTypeNum == HTML_EL_Cite ||
+      elType.ElTypeNum == HTML_EL_ABBR ||
+      elType.ElTypeNum == HTML_EL_ACRONYM ||
+      elType.ElTypeNum == HTML_EL_rb)
+    /* we are within an inline element */
+    {
+      next = leaf;
+      TtaNextSibling (&next);
+      if (j > 0 && content[j-1] == SPACE && !next)
+	/* the text element has a trailing space and no following sibling */
+	/* try to move the trailing space to the beginning of the following
+	   text leaf */
+	{
+	  next = parent;
+	  if (elType.ElTypeNum == HTML_EL_rb)
+	    next = TtaGetParent (parent);
+	  TtaNextSibling (&next);
+	  if (next &&
+	      TtaGetElementType(next).ElTypeNum == HTML_EL_TEXT_UNIT)
+	    {
+	      /* the next sibling of the parent element is a character string*/
+	      /* remove the trailing space */
+	      j--;
+	      changed = TRUE;
+	      if (selEl)
+		if (firstSelChar >= j)
+		  /* The selection is after the current position. Update it */
+		  {
+		    firstSelChar--;
+		    selChanged = TRUE;
+		  }
+	      /* check the next character string */
+	      sibLength = TtaGetElementVolume (next);
+	      sibLength+= 2;
+	      sibContent = TtaGetMemory (sibLength * sizeof(CHAR_T));
+	      TtaGiveBufferContent (next, &sibContent[1], sibLength-1, &lang);
+	      if (sibContent[1] != SPACE)
+		/* no space at the beginning of the next text element */
+		{
+		  /* insert a space */
+		  if (!undoSeqExtended)
+		    {
+		      TtaExtendUndoSequence (doc);
+		      undoSeqExtended = TRUE;
+		    }
+		  TtaRegisterElementReplace (next, doc);
+		  sibContent[0] = SPACE;
+		  TtaSetBufferContent (next, sibContent, lang, doc);
+		}
+	      TtaFreeMemory (sibContent);
+	    }
+	}
+      prev = leaf;
+      TtaPreviousSibling (&prev);
+      if (content[0] == SPACE && !prev)
+	/* the text element has a leading space and no previous sibling */
+	/* try to move the leading space to the end of the preceding text
+	   leaf */
+	{
+	  prev = parent;
+	  if (elType.ElTypeNum == HTML_EL_rb)
+	    prev = TtaGetParent (parent);
+	  TtaPreviousSibling (&prev);
+	  if (prev &&
+	      TtaGetElementType(prev).ElTypeNum == HTML_EL_TEXT_UNIT)
+	    {
+	      /* the previous sibling of the parent element is a character
+		 string. Remove the leading space */
+	      start = 1;
+	      changed = TRUE;
+	      if (selEl)
+		/* The selection is after the current position.
+		   Update it */
+		{
+		  firstSelChar--;
+		  selChanged = TRUE;
+		}
+	      /* check the end of the previous character string */
+	      sibLength = TtaGetElementVolume (prev);
+	      sibLength+= 2;
+	      sibContent = TtaGetMemory (sibLength * sizeof(CHAR_T));
+	      TtaGiveBufferContent (prev, sibContent, sibLength-1, &lang);
+	      if (sibLength > 2 && sibContent[sibLength-3] != SPACE)
+		{
+		  /* insert a space at the end of the previous text element */
+		  if (!undoSeqExtended)
+		    {
+		      TtaExtendUndoSequence (doc);
+		      undoSeqExtended = TRUE;
+		    }
+		  TtaRegisterElementReplace (prev, doc);
+		  sibContent[sibLength-2] = SPACE;
+		  sibContent[sibLength-1] = EOS;
+		  TtaSetBufferContent (prev, sibContent, lang, doc);
+		}
+	      TtaFreeMemory (sibContent);
+	    }
+	}
+    }
+
   if (j < length)
     content[j] = EOS;
   if (changed)
     /* we have made changes in the text buffer, update the element */
     {
-      TtaSetBufferContent (leaf, content, lang, doc);
+      TtaSetBufferContent (leaf, &content[start], lang, doc);
       if (selChanged)
 	/* update the current selection */
 	TtaSelectString (doc, leaf, firstSelChar, firstSelChar-1);

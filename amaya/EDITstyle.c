@@ -597,14 +597,16 @@ void UpdateStylePost (NotifyAttribute * event)
 static void DoApplyClass (Document doc)
 {
   Element             firstSelectedEl, lastSelectedEl, curEl, el, span, next,
-		      firstChild, lastChild, parent;
+		      firstChild, lastChild, parent, child;
   ElementType	      elType;
   Attribute           attr;
   AttributeType       attrType;
   char               *a_class = CurrentClass;
-  int		      firstSelectedChar, lastSelectedChar, i, lg;
+  int		      firstSelectedChar, lastSelectedChar, i, lg, min, max;
+  Language            lang;
+  CHAR_T              *buffer;
   DisplayMode         dispMode;
-  ThotBool	      setClassAttr;
+  ThotBool	      setClassAttr, empty;
 
   if (!a_class)
     return;
@@ -632,16 +634,49 @@ static void DoApplyClass (Document doc)
 
   TtaGiveLastSelectedElement (doc, &lastSelectedEl, &i, &lastSelectedChar);
   TtaUnselect (doc);
+  TtaOpenUndoSequence (doc, firstSelectedEl, lastSelectedEl, 0, 0);
 
   /* process the last selected element */
+  empty = FALSE;
   elType = TtaGetElementType (lastSelectedEl);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      /* it's a text element */
      {
+     if (lastSelectedChar < firstSelectedChar &&
+	 firstSelectedEl == lastSelectedEl)
+       /* it's a caret */
+       {
+	 empty = TRUE;
+	 lastSelectedChar = firstSelectedChar;
+       }
      lg = TtaGetElementVolume (lastSelectedEl);
      if (lastSelectedChar <= lg && lastSelectedChar > 1)
-	/* the last selected element is only partly selected. Split it */
-	TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
+       /* the last selected element is only partly selected. Split it */
+       {
+	 /* exclude trailing spaces from the anchor */
+	 if (lg > 0)
+	   {
+	     lg++;
+	     buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+	     TtaGiveBufferContent (lastSelectedEl, buffer, lg, &lang);
+	     if (lastSelectedEl == firstSelectedEl)
+	       min = firstSelectedChar;
+	     else
+	       min = 1;
+	     while (lastSelectedChar > min &&
+		    buffer[lastSelectedChar - 2] == SPACE)
+	       lastSelectedChar--;
+	     TtaFreeMemory (buffer);
+	   }
+	 if (lastSelectedChar > 1)
+	   {
+	     TtaRegisterElementReplace (lastSelectedEl, doc);
+	     TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
+	     next = lastSelectedEl;
+	     TtaNextSibling (&next);
+	     TtaRegisterElementCreate (next, doc);
+	   }
+       }
      else
 	/* selection ends at the end of the text element */
 	if (lastSelectedEl != firstSelectedEl ||
@@ -693,18 +728,51 @@ static void DoApplyClass (Document doc)
 	/* that element is only partly selected. Split it */
 	{
 	el = firstSelectedEl;
-	TtaSplitText (firstSelectedEl, firstSelectedChar, doc);
-	TtaNextSibling (&firstSelectedEl);
-	if (lastSelectedEl == el)
-	   {
-	   /* we have to change the end of selection because the last
-	      selected element was split */
-	   lastSelectedEl = firstSelectedEl;
-	   }
+	lg = TtaGetElementVolume (firstSelectedEl);
+	if (firstSelectedChar > lg)
+	  {
+	    /* insert an empty box */
+	    child = TtaNewTree (doc, elType, "");
+	    TtaInsertSibling (child, firstSelectedEl, FALSE, doc);
+	    TtaRegisterElementCreate (child, doc);
+	    firstSelectedChar = 0;
+	    lastSelectedChar = 0;
+	    firstSelectedEl = child;
+	    lastSelectedEl = child;
+	  }
+	else
+	  {
+	    /* exclude leading spaces from the selection */
+	    if (lg > 0)
+	      {
+		lg++;
+		buffer = TtaGetMemory (lg * sizeof(CHAR_T));
+		TtaGiveBufferContent (firstSelectedEl, buffer, lg, &lang);
+		if (lastSelectedEl == firstSelectedEl)
+		  max = lastSelectedChar;
+		else
+		  max = lg;
+		while (firstSelectedChar < max &&
+		       buffer[firstSelectedChar - 1] == SPACE)
+		  firstSelectedChar++;
+		TtaFreeMemory (buffer);
+	      }
+	    if (firstSelectedChar <= lg)
+	      {
+		TtaRegisterElementReplace (firstSelectedEl, doc);
+		TtaSplitText (firstSelectedEl, firstSelectedChar, doc);
+		TtaNextSibling (&firstSelectedEl);
+		if (lastSelectedEl == el)
+		  {
+		    /* we have to change the end of selection because the last
+		       selected element was split */
+		    lastSelectedEl = firstSelectedEl;
+		  }
+	      }
+	  }
 	}
     }
 
-  TtaOpenUndoSequence (doc, firstSelectedEl, lastSelectedEl, 0, 0);
   /* process all selected elements */
   curEl = firstSelectedEl;
   while (curEl != NULL)
@@ -747,14 +815,17 @@ static void DoApplyClass (Document doc)
 		  if (span)
 		    /* a SPAN element was created */
 		    {
-		      if (curEl == firstSelectedEl)
+		      if (!empty)
 			{
-			  firstSelectedEl = span;
-			  if (firstSelectedEl == lastSelectedEl)
+			  if (curEl == firstSelectedEl)
+			    {
+			      firstSelectedEl = span;
+			      if (firstSelectedEl == lastSelectedEl)
+				lastSelectedEl = span;
+			    }
+			  else if (curEl == lastSelectedEl)
 			    lastSelectedEl = span;
 			}
-		      else if (curEl == lastSelectedEl)
-			lastSelectedEl = span;
 		      curEl = span;
 		    }
 	        }
