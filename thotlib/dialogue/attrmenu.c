@@ -130,6 +130,7 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "structschema_f.h"
 #include "tree_f.h"
 #include "uconvert_f.h"
+#include "undo_f.h"
 #include "dialogapi_f.h"
 
 /*----------------------------------------------------------------------
@@ -1377,25 +1378,27 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
    /* sont partiellement selectionnes */
    IsolateSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
    /* start an operation sequence in editing history */
-   if (ThotLocalActions[T_openhistory] != NULL)
-     (*(Proc6)ThotLocalActions[T_openhistory]) (
-		(void *)pDoc,
-		(void *)pFirstSel,
-		(void *)pLastSel,
-		(void *)NULL,
-		(void *)firstChar,
-		(void *)lastChar);
+   OpenHistorySequence (pDoc, pFirstSel, pLastSel, NULL, firstChar, lastChar);
    /* parcourt les elements selectionnes */
    pEl = pFirstSel;
    while (pEl != NULL)
      {
-	AttachAttrToElem (pAttr, pEl, pDoc);
+       if (pEl->ElStructSchema &&
+	   pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1] &&
+	   pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
+	 {
+	   /* cannot attach the attribute to that element */
+	   if (pEl->ElParent &&
+	       pEl->ElNext == NULL && pEl->ElPrevious == NULL)
+	     AttachAttrToElem (pAttr, pEl->ElParent, pDoc);
+	 }
+       else
+	 AttachAttrToElem (pAttr, pEl, pDoc);
 	/* cherche l'element a traiter ensuite */
 	pEl = NextInSelection (pEl, pLastSel);
      }
    /* close the editing sequence */
-   if (ThotLocalActions[T_closehistory] != NULL)
-	(*(Proc1)ThotLocalActions[T_closehistory]) ((void *)pDoc);
+   CloseHistorySequence (pDoc);
    /* parcourt a nouveau les elements selectionnes pour fusionner les */
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
    /* toutes les vues et retablit la selection */

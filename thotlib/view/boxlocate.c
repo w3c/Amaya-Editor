@@ -126,25 +126,12 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame,
 	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != EOS) ||
 	  (pEl->ElLeafType == LtPath))
 	{
-	  if (ThotLocalActions[T_openhistory] != NULL)
-	    (*(Proc6)ThotLocalActions[T_openhistory]) (
-			(void *)pDoc,
-			(void *)pEl,
-			(void *)pEl,
-			(void *)NULL,
-			(void *)0,
-			(void *)0);
-	  if (ThotLocalActions[T_addhistory] != NULL)
-	    (*(Proc4)ThotLocalActions[T_addhistory]) (
-			(void *)pEl,
-			(void *)pDoc,
-			(void *)TRUE,
-			(void *)TRUE);
+	  OpenHistorySequence (pDoc, pEl, pEl, NULL, 0, 0);
+	  AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
 	}
     }
-  if (!pre && openclose && isGraph &&
-      ThotLocalActions[T_closehistory] != NULL)
-    (*(Proc1)ThotLocalActions[T_closehistory]) ((void *)pDoc);
+  if (!pre && openclose && isGraph)
+    CloseHistorySequence (pDoc);
   return result;
 }
 

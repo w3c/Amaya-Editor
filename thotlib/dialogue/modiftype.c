@@ -51,12 +51,11 @@
    Composes in the BufItemSplit buffer the name of the Split item of
    the Edit menu.
   ----------------------------------------------------------------------*/
-static void         ComposeItemSplit (char *bufItemSplit)
+static void ComposeItemSplit (char *bufItemSplit)
 {
-   PtrElement          pFirstEl, pLastEl, pList, pPointDiv, pElToDuplicate,
-                       pEl;
-   int                 firstChar, lastChar;
-   PtrDocument         pDoc;
+  PtrElement     pFirstEl, pLastEl, pList, pPointDiv, pElToDuplicate, pEl;
+  int            firstChar, lastChar;
+  PtrDocument    pDoc;
 
    bufItemSplit[0] = EOS;
    /* verifie si la commande Split est valide pour la selection */
@@ -90,7 +89,7 @@ static void         ComposeItemSplit (char *bufItemSplit)
   ----------------------------------------------------------------------*/
 void UpdateSplitItem (PtrDocument pDoc)
 {
-   char              bufItemSplit[MAX_TXT_LEN];
+  char              bufItemSplit[MAX_TXT_LEN];
 
    bufItemSplit[0] = EOS;
    if (pDoc == NULL || pDoc != SelectedDocument)

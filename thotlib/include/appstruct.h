@@ -20,11 +20,6 @@ typedef void        (*Proc2) (void *,void *);
 typedef void        (*Proc3) (void *,void *,void *);
 typedef void        (*Proc4) (void *,void *,void *,void *);
 typedef void        (*Proc5) (void *,void *,void *,void *,void *);
-typedef void        (*Proc6) (void *,void *,void *,void *,void *,void *);
-typedef void        (*Proc7) (void *,void *,void *,void *,void *,void *,void *);
-typedef void        (*Proc8) (void *,void *,void *,void *,void *,void *,void *,void *);
-typedef void        (*Proc9) (void *,void *,void *,void *,void *,void *,void *,void *,void *);
-typedef void        (*Proc10) (void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 typedef int         (*UserProc) ();
 typedef             ThotBool (*Func) ();
 /* for c++ compatibility */

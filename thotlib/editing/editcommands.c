@@ -4248,12 +4248,7 @@ void EditingLoadResources ()
      {
 	/* Connecte les actions d'edition */
 	TteConnectAction (T_clearhistory, (Proc) ClearHistory);
-	TteConnectAction (T_openhistory, (Proc) OpenHistorySequence);
-	TteConnectAction (T_addhistory, (Proc) AddEditOpInHistory);
 	TteConnectAction (T_attraddhistory, (Proc) AddAttrEditOpInHistory);
-	TteConnectAction (T_cancelhistory, (Proc) CancelLastEditFromHistory);
-	TteConnectAction (T_closehistory, (Proc) CloseHistorySequence);
-
 	MenuActionList[0].Call_Action = (Proc) TtcInsertChar;
 	MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) TtcDeletePreviousChar;
 	MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) TtcDeleteSelection;
