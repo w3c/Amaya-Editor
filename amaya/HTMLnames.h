@@ -22,7 +22,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"blockquote", SPACE, HTML_EL_Block_Quote, L_Basic, FALSE},
    {"body", SPACE, HTML_EL_BODY, L_Basic, FALSE},
    {"br", 'E', HTML_EL_BR, L_Basic, TRUE},
-   {"button", SPACE, HTML_EL_BUTTON, L_Strict, TRUE},
+   {"button", SPACE, HTML_EL_BUTTON_, L_Strict, TRUE},
    {"c", SPACE, HTML_EL_TEXT_UNIT, L_Other, TRUE}, /* used by the trans.c */
    {"caption", SPACE, HTML_EL_CAPTION, L_Basic, FALSE},
    {"center", SPACE, HTML_EL_Center, L_Transitional, FALSE},
