@@ -377,7 +377,7 @@ cache est activé et est stocké dans le répertoire
     <dd>Donne la taille maximum d'entrée d'un cache.</dd>
 </dl>
 
-<h4><a name="Proxy">Préférences proxy</a></h4>
+<h4><a name="Proxy">Préférences du proxy</a></h4>
 
 <p style="text-align: center"><img src="../Icons/ProxyMenu.gif"
 alt="Proxy Preferences Menu" /></p>
@@ -422,101 +422,111 @@ alt="Color Preferences Menu" /></p>
 plan par défaut pour les documents. Il permet également de contrôler les
 couleurs: utilisez Amaya pour visualiser la sélection courante.</p>
 <ul type="square">
-  <li><strong>Caret color</strong> gives the foreground color that shows the
-    selection when it's limited to an insert point;</li>
-  <li><strong>Selection colo</strong>r gives the background that shows the
-    current selection when it's extended.</li>
+  <li><strong>Couleur du point d'insertion</strong> donne la couleur du
+    premier plan qui montre la sélection quand elle est limitée à un point
+    d'insertion;</li>
+  <li><strong>Selection de la couleur</strong> donne la couleur de l'arrière
+    plan qui montre la sélection courante quand elle est étendue.</li>
 </ul>
 
-<p>The Unix version also provides entries for changing the menu colors. To
-change menu colors in Windows, you will need to use the standard Windows
-configuration control, found in the Control Panel folder.</p>
+<p>La version Unix fournit également des entrées pour changer le menu des
+couleurs. Pour changer le menu des couleurs sur Windows, vous avez besoin
+d'uitliser le contrôle de configuration standard de Windows, se trouvant dans
+le répertoire <code>Control Panel</code>.</p>
 
-<p>All these colors may be selected by name, hex code, or rgb format:</p>
+<p>Toutes ces couleurs peuvent être sélectionnées par leur nom, leur code hex,
+ou leur format rgb:</p>
 <ul type="square">
-  <li>Valid names are: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
-    Navy, Olive, Purple, Red, Silver, Teal, Yellow, and White.</li>
-  <li>Valid hexcode format is #FF00FF as an example.</li>
-  <li>Valid rgb format is rgb(255, 0, 255) as an example.</li>
+  <li>Les noms valides sont: Aqua, Black, Blue, Fuschia, Gray, Green, Lime,
+    Maroon, Navy, Olive, Purple, Red, Silver, Teal, yellow, et White.</li>
+  <li>Le format hexcode valide est #FF00FF par exemple.</li>
+  <li>Le format rgb valide est rgb(255, 0, 255) par exemple.</li>
 </ul>
 
-<p>If you enter an invalid color, the default colors will be used instead.</p>
+<p>Si vous entrez une couleur invalide, les couleurs par défaut seront
+utilisées à la place.</p>
 
-<p>In Windows, you can also select colors by means of a color palette.</p>
+<p>Sur Windows, vous pouvez également sélectionner des couleurs par le biais
+de la palette de couleur.</p>
 
-<p><strong>Note:</strong> the color changes will be effective when you open a
-new document window or when reloading a document.</p>
+<p><strong>Note:</strong> le changement des couleurs sera effectif  when vous
+ouvrirez une nouvelle fenêtre de document ou quand vous télechargez un
+document.</p>
 
-<p>Setting or changing colors for links, visited links, and active links is
-done through the Amaya.css style sheet.</p>
+<p>Le moyen de fixer ou de changer les couleurs des liens, des liens visités
+et des liens activés est donné dans la feuille de style Amaya.css </p>
 
-<h4><a name="HTML">Window geometry preferences</a></h4>
+<h4><a name="HTML">Les préférences de géométrie</a></h4>
 
 <p style="text-align: center"><img src="../Icons/GeomMenu.gif"
 alt="Geometry Preferences Menu" /></p>
 
-<p>This menu allows you to save the current window position and size size of
-the different views of a document (formatted, structure, alternate, links, and
-Table of Contents.) or to restore the default values. Note that the values
-that are saved are those belonging to the views of the document where you
-called this menu. These changes will be reflected when you open new document
-windows.</p>
+<p>Ce menu vous permet de sauver la position de la fenêtre courante et la
+taille des différentes vues d'un document (formaté, structure, alterné, liens,
+and Table des Matières.) ou pour restaurer les valeurs par défaut. Notez que
+les valeurs qui sont sauvées appartiennent aux vues du document d'où vous
+appeliez le menu. Ces changements seront effectifs quand vous ouvrirez des
+nouvelles fenêtres document. </p>
 
-<h4><a name="lang">Language negotiation preferences</a></h4>
+<h4><a name="lang">Les préférences de négociation de langues</a></h4>
 
 <p style="text-align: center"><img src="../Icons/LangueNegotiation.gif"
 alt="Language negotiation menu" /></p>
 
-<p>If a document exists in different languages and your server is configured
-to do language negotiation, you can use this menu to enter your language
-preferences (first one has the highest priority). Try browsing this <a
-href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html"> press release</a>,
-which exists in French, English, and Japanese versions. By changing the
-language negotiation to the ISO codes for the above languages
-(<strong>fr</strong>, <strong>en</strong>, or <strong>ja</strong> you can
-transparently request any of these versions.</p>
+<p>Si un document existe en différentes langues et que votre serveur est
+configuré pour faire une négociation de langue, vous pouvez utiliser ce menu
+pour entrer vos préférences de langue (La première à la plus grande priorité).
+Essayez de naviguer ce<a
+href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html"> communiqué</a>,
+qui existe en versions Française, Anglaise et Japonaise. En changeant la
+négociation de la langue en code ISO pour les langues ci dessus 
+(<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous pouvez
+demander de façon transparente n'importe laquelle de ces versions.</p>
 
-<h4><a name="Profiles">Profiles</a></h4>
+<h4><a name="Profiles">Profils</a></h4>
 
 <p style="text-align: center"><img src="../Icons/ProfilesMenu.gif"
 alt="Profiles  menu" /></p>
 
-<p>In Amaya, a <strong>profile</strong> defines the look and feel of of the
-Amaya user interface. You can use profiles to hide or display the Amaya
-buttons and menus. This menu allows you to choose a given profile definition
-file and select among any of the profiles proposed by that file. Amaya
-proposes four  sample profiles: <em>editor</em>, <em>mini-editor</em>,
-<em>browser</em>, <em>mini-browser</em>, each one with different capabilities.
-Any profile change will be effective upon the next launch of Amaya.</p>
+<p>Dans Amaya, un <strong>profil</strong> défini l'apperçu et le ressentiment
+de l'interface Amaya de l'utilisateur. Vous pouvez utilliser des profils pour
+cacher ou visualiser des boutons ou des menus d'Amaya. Ce menu vous permet de
+choisir un fichier de définition de profil donné et d'en sélectionner un parmi
+n'importe quel profil proposé dans ce fichier. Amaya propose quatre exemples
+de profils: <em>editor</em>, <em>mini-editor</em>, <em>browser</em>,
+<em>mini-browser</em>, chacun ayant différentes capacités. N'importe quel
+changement de profil sera effectif au prochain lancement d'Amaya.</p>
 
-<h4><a name="Templates">Templates</a></h4>
+<h4><a name="Templates">Modéles de pages</a></h4>
 
 <p style="text-align: center"><img src="../Icons/TemplatesMenu.gif"
 alt="Templates " /></p>
 
-<p>A <strong>template</strong> is a model, or skeleton, of a document that you
-may use for creating your own documents. This menu allows you to specify the
-URL of a template server, which may be either local to your station or stored
-in some server. You'll need to quit Amaya to validate this option. When you
-launch Amaya again., there will be a new <code>File/New/From Template</code>
-entry. Following this entry will open a new document showing you the results
-of browsing the template URL. The idea is that this page acts as an index to
-the templates available in your station or in the template server. A sample
-template server is available at <a
+<p>Un  <strong>modèle de page</strong> est un modèle, ou un squelette d'un
+document que vous,pouvez utiliser pour créer vos propres documents. Ce menu
+vous permet de spécifier l'URL du serveur du modèle de page, qui pourra être
+soit localisé sur votre station soit stocké dans un serveur particulier. Vous
+aurez besoin de quitter Amaya pour valider cette option. Quand vous lancerez
+Amaya de nouveau, il y aura une nouvelle entrée de fichier
+<code>Fichier/Nouveau/depuis modèle de page</code>. En suivant cette entrée,
+vous ouvrirrez un nouveau document montrant les résultats de navigation de
+l'URL du modèle de page. L'idée est que cette page agit comme un index des
+modèles de page disponibles sur votre station ou sur le serveur des modèles de
+page. Un exemple de modèle de page est disponible à cette adresse <a
 href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
-For more info, browse the <a
-href="http://www.w3.org/Amaya/User/Templates.html">using templates with
-Amaya</a> page.</p>
+Pour plus d'information, naviguer la page <a
+href="http://www.w3.org/Amaya/User/Templates.html">utilisez des modèles de
+page avec Amaya</a>.</p>
 
-<h3><a name="shortcuts">Keyboard shortcuts</a></h3>
+<h3><a name="shortcuts">Les raccourcis clavier</a></h3>
 
-<p>It is useful to be able to invoke menu commands directly from the keyboard.
-The Thot toolkit provides a facility that lets user accomplish this by means
-of an application keyboard shortcuts file. This file defines a list of
-associations between a keyboard sequence and the corresponding invoked
-command.</p>
+<p>Il est utile de pouvoir invoquer les commandes des menus directement depuis
+le clavier. La boîte à outils de Thot fournit une facililté qui laisse
+l'utilisateur accomplir ceci par le biais d'un fichier d'application des
+raccourcis clavier. Ce fichier défini une liste d'associations entre une
+séquence au clavier et la commande correspondante invoquée.</p>
 
-<p>The syntax used to define an association is:</p>
+<p>La synthaxe utilisée pour définir une association est:</p>
 <pre> Directive = KeySeq ':' IdentCommand ;
  KeysSeq = KeySet [ ',' KeySet ] ;
  KeySet = [ Modifier ] [ 'Shift' ] Key ;
@@ -529,42 +539,43 @@ command.</p>
  IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
  Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </pre>
 
-<p>For an example, see the standard files <code>amaya.keyboard</code> (for
-Unix platforms) and <code>amaya.kb</code> (for Windows platforms), which are
-by default located in the directory <code>Amaya/config</code>.</p>
+<p>Par exemple, regardez les fichiers standards <code>amaya.keyboard</code>
+(for Unix platforms) et <code>amaya.kb</code> (pour stations Windows), qui
+sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 
-<p>The list of available commands is:</p>
+<p>La liste des commandes diponibles est:</p>
 <ul>
-  <li>Moving commands:
+  <li>Commandes de déplacement:
     <ul>
       <li><span style="color: #E55500" class="menuItems">TtcNextChar,
-        TtcPreviousChar</span>: move character by character.</li>
+        TtcPreviousChar</span>: déplace caractère par caractère.</li>
       <li><span style="color: #E55500" class="menuItems">TtcNextLine,
-        TtcPreviousLine, TtcStartOfLine, TtcEndOfLine</span>: move line by
-        line.</li>
+        TtcPreviousLine, TtcStartOfLine, TtcEndOfLine</span>: déplace ligne
+        par ligne.</li>
       <li><span style="color: #E55500" class="menuItems">TtcNextElement,
-        TtcPreviousElement, TtcChildElement, TtcParentElement</span>: move
-        element by element.</li>
+        TtcPreviousElement, TtcChildElement, TtcParentElement</span>: déplace
+        élément par élément.</li>
       <li><span style="color: #E55500" class="menuItems">TtcPageDown,
-        TtcPageUp, TtcPageTop, TtcPageEnd</span>: scroll from page to
+        TtcPageUp, TtcPageTop, TtcPageEnd</span>: fait défiler page par
       page.</li>
       <li><span style="color: #E55500" class="menuItems">TtcLineUp,
-        TtcLineDown</span> scroll one line up or one line down.</li>
+        TtcLineDown</span> fait défiler une ligne en haut ou une ligne en
+      bas.</li>
     </ul>
   </li>
-  <li>A command that allows one to follow a link or to activate a form element
-    (menu, button, etc.):
+  <li>Une commande qui permet de suivre un lien ou d'activer un élément de
+    boîte de dialogue (menu, bouton, etc.):
     <p class="menuItems">DoAction.</p>
   </li>
-  <li>In <code>File</code> menu:
-    <p class="menuItems">New, NewTemplate, NewCss, OpenDoc,
-    OpenDocInNewWindow, Reload, GotoPreviousHTML, GotoNextHTML, GoToHome,
-    SaveDocument, SaveDocumentAs, Synchronize, SetupAndPrint, PrintAs
-    CloseDocument, AmayaClose</p>
+  <li>Dans le menu <code>Fichier</code>:
+    <p class="menuItems">Nouveau, Nouveau document HTML, Nouvelle feuille de
+    style, Ouvrir, Ouvrir dans nouvelle fenêtre, Recharger le document,
+    Précédant, Suivant, Fermer la fenêtre, Sauver, Sauver comme, Synchroniser,
+    Paramétrer et imprimer, Imprimer, Quitter Amaya</p>
   </li>
-  <li>In Edit menu:
-    <p class="menuItems">TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection,
-    TtcPaste, TtcDeleteSelection, SetBrowserEditor, TtcSearchText, SpellCheck,
+  <li>Dans le menu Édition:
+    <p class="menuItems">Défaire, Refaire, Couper, Copier, Coller,
+    TtcDeleteSelection, SetBrowserEditor, TtcSearchText, SpellCheck,
     TransformType.</p>
   </li>
   <li>In <code>Structure</code> menu:
