@@ -633,6 +633,8 @@ int TtaGetWindowNumber( )
       window_id++;
     }
   return TtaGetWindowFromId(window_id) ? MAX_WINDOW : window_id - 1;
+#else /* #ifdef _WX */
+  return 1;
 #endif /* #ifdef _WX */
 }
 
