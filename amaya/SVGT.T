@@ -758,6 +758,14 @@ ATTRIBUTES
 	create 'externalResourcesRequired="true"';
 	END;
 
+   baseProfile:
+	BEGIN
+	create SAN;
+	create 'baseProfile="';
+	create baseProfile;
+	create DoubleQuote;
+	END;
+
    fill:
 	BEGIN
 	create SAN;

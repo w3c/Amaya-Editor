@@ -1124,6 +1124,9 @@ ATTRIBUTES
   externalResourcesRequired:
 	CreateBefore (AttrNameAndValue);
 
+  baseProfile:
+	CreateBefore (AttrNameAndValue);
+
   fill:
 	BEGIN
 	CreateBefore (AttrName);

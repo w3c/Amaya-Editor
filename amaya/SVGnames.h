@@ -59,6 +59,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"attributeName", "", 'A', SVG_ATTR_attributeName_, L_OtherValue},
    {"attributeType", "", 'A', SVG_ATTR_attributeType, L_OtherValue},
    {"baseline-shift", "", 'A', SVG_ATTR_baseline_shift, L_OtherValue},
+   {"baseProfile", "", 'A', SVG_ATTR_baseProfile, L_OtherValue},
    {"begin", "", 'A', SVG_ATTR_begin_, L_OtherValue},
    {"by", "", 'A', SVG_ATTR_by, L_OtherValue},
    {"calcMode", "", 'A', SVG_ATTR_calcMode, L_OtherValue},

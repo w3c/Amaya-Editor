@@ -31,6 +31,7 @@ STRUCT
 	(ATTR requiredFeatures = text;
 	      requiredExtensions = text;
 	      systemLanguage = text;
+	      baseProfile = text;
 	      externalResourcesRequired = false, true;
 	      fill = text;
 	      stroke = text;
