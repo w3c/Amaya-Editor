@@ -764,7 +764,7 @@ PtrDocument         pDoc;
 		if (pCell == NULL && pCellPrec != NULL)
 		  {
 		     /* on cree une nouvelle cellule */
-		     NewSubtree (pCellPrec->ElTypeNumber, pEl->ElStructSchema, pDoc,
+		     pCell = NewSubtree (pCellPrec->ElTypeNumber, pEl->ElStructSchema, pDoc,
 				 pCellPrec->ElAssocNum, TRUE, TRUE,
 				 TRUE, TRUE);
 		     /* on insere cette nouvelle cellule dans l'arbre */
