@@ -16,7 +16,7 @@
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+        src="../../resources/icons/22x22/logo.png" /></p>
       </td>
       <td><p><a href="ImageMaps.html.fr" accesskey="p"><img alt="previous"
         src="../images/left.gif" /></a> <a href="Manual.html.fr"
@@ -28,22 +28,46 @@
   </tbody>
 </table>
 
+<div class="toc">
+<ul>
+  <li><a href="#Editer">Editer des mathématiques</a>
+    <ul>
+      <li><a href="#L65">Créer une expression mathématique</a>
+        <ul>
+          <li><a href="#palette">La palette Math et le menu XML</a></li>
+          <li><a href="#Entrer">Entrer des constructions à partir du
+            clavier</a></li>
+        </ul>
+      </li>
+      <li><a href="#Entrer1">Entrer des caractères</a></li>
+      <li><a href="#Caract1">Caractères spéciaux</a></li>
+      <li><a href="#Editer1">Editer la structure</a></li>
+      <li><a href="#Structure1">Vue Structure</a></li>
+      <li><a href="#liens">Les liens dans MathML</a></li>
+      <li><a href="#Limites">Limites courantes</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <div id="Math">
-<h2>Editer des mathématiques</h2>
+<h2 id="Editer">Editer des mathématiques</h2>
 
 <p>Amaya permet d'inclure des expressions mathématiques dans les pages web,
 suivant la spécification du <a
-href="http://www.w3.org/TR/REC-MathML/">langage MathML</a>. Les expressions
-mathématiques y sont traitées comme des composants structurés, de la même
-manière que les éléments HTML. Vous pouvez donc manipuler les expressions
-mathématiques comme vous manipulez les autres parties des documents HTML.
-Toutes les commandes d'édition fournies par Amaya pour traiter le texte sont
-également utilisables pour les mathématiques. Il y a quelques manipulations
-supplémentaires pour entrer des constructions mathématiques.</p>
+href="http://www.w3.org/TR/REC-MathML/">langage MathML</a>.</p>
 
-<h3><a id="Creating">Créer une expression mathématique</a></h3>
+<p>Les expressions mathématiques sont traitées comme des composants
+structurés, de la même manière que les éléments HTML. Vous pouvez donc
+manipuler les expressions mathématiques comme vous manipulez les autres
+parties des documents HTML. Toutes les commandes d'édition fournies par Amaya
+pour traiter le texte sont également utilisables pour les mathématiques. Il y
+a quelques manipulations supplémentaires pour entrer des constructions
+mathématiques.</p>
 
-<h4>La palette Math et le menu XML</h4>
+<h3 id="L65"><a id="Creating">Créer une expression mathématique</a></h3>
+
+<h4 id="palette">La palette Math et le menu XML</h4>
 
 <p>Pour créer une expression mathématique dans un document, il suffit de <a
 href="Selecting.html.fr#Selecting">placer le point d'insertion</a> à
@@ -55,29 +79,30 @@ le point d'insertion est dans un élément HTML ou <a
 href="SVG.html.fr">SVG</a> (mais le point d'insertion ne devrait pas être à
 l'intérieur d'un élément MathML).</p>
 
-<p>Dans le menu <strong>XML/Eléments de base</strong>, les éléments suivants
-vous donnent la possibilité de créer de nouveaux éléments de base (non
-disponibles dans la palette) : Texte (<code>mtext</code>), Identificateur
-(<code>mi</code>), Nombre (<code>mn</code>), Opérateur (<code>mo</code>),
-Espace (<code>mspace</code>). Vous pouvez également utiliser ces commandes
-pour changer le type d'un élément seul ou d'une séquence d'éléments.</p>
+<p>Dans le menu <strong>XML/Eléments math de base</strong>, les éléments
+suivants vous donnent la possibilité de créer de nouveaux éléments
+mathématiques de base (non disponibles dans la palette) : Texte
+(<code>mtext</code>), Identificateur (<code>mi</code>), Nombre
+(<code>mn</code>), Opérateur (<code>mo</code>), Espace (<code>mspace</code>).
+Vous pouvez également utiliser ces commandes pour changer le type d'un
+élément seul ou d'une séquence d'éléments.</p>
 
 <p id="Car">Ces items sont suivis de l'entrée Caractère
 (<code>&amp;xxx;</code>). Cette commande vous permet d'entrer un caractère
 qui n'est pas disponible sur le clavier. Elle affiche une boîte de dialogue
 dans laquelle vous devez entrer le nom du caractère (par exemple
 <em>alpha</em> pour le caractère grec &#x3b1;). Les deux dernières entrées du
-menu <strong>XML/Eléments de base</strong> permettent d'entrer rapidement
-deux de ces caractères spéciaux souvent utilisés :
+menu <strong>XML/Eléments math de base</strong> permettent d'entrer
+rapidement deux de ces caractères spéciaux souvent utilisés :
 <code>InvisibleTimes</code> et <code>ApplyFunction</code>.</p>
 
-<p>Les éléments suivants du menu <strong>XML/Constructions</strong> (ou de la
-palette Math) vous permettent de créer de nouvelles constructions à
+<p>Les éléments suivants du menu <strong>XML/Constructions math</strong> (ou
+de la palette Math) vous permettent de créer de nouvelles constructions à
 l'intérieur d'une formule. Si le point d'insertion n'est pas dans une
 formule, un élément Math est d'abord créé pour accepter la nouvelle
 construction. Les constructions disponibles sont :</p>
 <ul>
-  <li>Racine (<code>mroot dans</code> MathML) : <math
+  <li>Racine (<code>mroot</code> dans MathML) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
@@ -236,7 +261,8 @@ courante. Les matrices se manipulent comme <a href="Tables.html.fr">les
 tableaux HTML</a>. Une douzaine de commandes spécifiques sont disponibles
 dans le menu <strong>XML/Matrices</strong>.</p>
 
-<h4><a id="Entering">Entrer des constructions à partir du clavier</a></h4>
+<h4 id="Entrer"><a id="Entering">Entrer des constructions à partir du
+clavier</a></h4>
 
 <p>Vous n'êtes pas obligé d'utiliser un menu ou la palette
 <strong>Math</strong> pour créer et éditer des expressions mathématiques.
@@ -252,7 +278,7 @@ horizontales permettent de se déplacer selon la structure de l'expression
 mathématique. Par exemple, en fin de numérateur d'une fraction, la touche
 &rarr; fait passer au début du dénominateur.</p>
 
-<h3><a id="Entering1">Entrer des caractères</a></h3>
+<h3 id="Entrer1"><a id="Entering1">Entrer des caractères</a></h3>
 
 <p>Quand vous tapez une chaîne de caractères dans un élément MathML, Amaya
 analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
@@ -317,31 +343,32 @@ Vous obtiendriez:</p>
 <p>Utilisez plutôt la commande Parenthèses du menu XML/Math ou de la
 palette.</p>
 
-<h3><a id="Caract">Caractères spéciaux</a></h3>
+<h3 id="Caract1"><a id="Caract">Caractères spéciaux</a></h3>
 
 <p>Pour entrer les caractères et symboles mathématiques qui ne sont pas
 disponibles au clavier, on peut utiliser la commande <a
-href="#Caract">Caractères</a> du menu <strong>XML/Eléments de base</strong>,
-si on connaît le nom du caractère à entrer. On peut aussi utiliser la palette
-Caractères spéciaux qui se trouve en-dessous de la palette Math. Les boutons
-de la partie supérieure de cette palette permettent de choisir un groupe de
-caractères qui sont alors disponibles dans le menu qui se trouve en-dessous.
-On choisit le caractère voulu dans ce menu, puis on l'insère dans le document
-à l'aide du bouton voisin.</p>
+href="#Caract">Caractères</a> du menu <strong>XML/Eléments math de
+base</strong>, si on connaît le nom du caractère à entrer. On peut aussi
+utiliser la palette Caractères spéciaux qui se trouve en-dessous de la
+palette Math. Les boutons de la partie supérieure de cette palette permettent
+de choisir un groupe de caractères qui sont alors disponibles dans le menu
+qui se trouve en-dessous. On choisit le caractère voulu dans ce menu, puis on
+l'insère dans le document à l'aide du bouton voisin.</p>
 
-<h3><a id="Structure">Editer la structure</a></h3>
+<h3 id="Editer1"><a id="Structure">Editer la structure</a></h3>
 
 <p>Si vous voulez changer la structure d'une expression existante, pour
 ajouter par exemple un exposant ou mettre des parenthèses autour d'une
 expression, il suffit de sélectionner dans le document l'expression à
 transformer et d'entrer la nouvelle expression avec la palette Math, le menu
-<strong>XML/Constructions</strong> ou le <a href="#Entering">clavier</a>.
-Vous pouvez également utiliser la commande <strong>Transformer</strong> du
-menu <strong>Edition</strong>. Sélectionnez l'expression que vous voulez
-transformer et la commande <strong>Transformer</strong> affichera un menu
-avec tous les changements possibles.</p>
+<strong>XML/Constructions math</strong> ou le <a
+href="#Entering">clavier</a>. Vous pouvez également utiliser la commande
+<strong>Transformer</strong> du menu <strong>Edition</strong>. Sélectionnez
+l'expression que vous voulez transformer et la commande
+<strong>Transformer</strong> affichera un menu avec tous les changements
+possibles.</p>
 
-<h3><a id="Math_Struc">Vue Structure</a></h3>
+<h3 id="Structure1"><a id="Math_Struc">Vue Structure</a></h3>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la sélection
 de l'article <a href="Views.html.fr#Structure">Montrer la structure</a> du
@@ -374,7 +401,7 @@ l'intérieur</em> de la racine carrée ou <em>après</em> elle. Sélectionner (ou
 vérifier ) dans la vue Structure évite toute ambiguïté. Vous pouvez également
 vérifier dans la ligne d'état, en bas de la fenêtre.</p>
 
-<h3><a id="Links">Les liens dans MathML</a></h3>
+<h3 id="liens"><a id="Links">Les liens dans MathML</a></h3>
 
 <p>Vous pouvez créer et utiliser des liens hypertexte dans des expressions
 mathématiques. Ces liens sont représentés en utilisant le <a
@@ -415,7 +442,7 @@ dans une formule, vous devez d'abord faire de cette expression une cible. Il
 suffit de sélectionner l'expression ainsi que l'entrée "Créer cible" du menu
 Liens. Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
 
-<h3><a id="Current">Limites courantes</a></h3>
+<h3 id="Limites"><a id="Current">Limites courantes</a></h3>
 
 <p>Amaya implémente seulement les <em>Balises de Présentation</em> de MathML
 2.0, et non le <em>Balisage du Contenu</em>. Tous les éléments de
