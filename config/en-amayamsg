@@ -141,3 +141,5 @@
 140 Please authenticate for realm \'%s\' at server \'%s\'
 141 Editor/Browser
 142 Request timeout - server did not respond
+143 %s already exists. Overwrite it?
+144 %s has changed. Overwrite it?

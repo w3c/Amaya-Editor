@@ -141,3 +141,5 @@
 140 Authentication requise pour le domaine \'%s\' du serveur \'%s\'
 141 Editeur/Navigateur
 142 Timeout - le serveur n'a pas repondu
+143 %s existe d\351j\340. Forcer l'\351criture?
+144 %s a chang\351. Forcer l'\351criture?
