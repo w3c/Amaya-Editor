@@ -54,7 +54,7 @@ CSSInfoPtr      css;
   found = FALSE;
   while (pInfo != NULL && !found)
     {
-      if (sSchema == pInfo->PiSSchema)
+      if (sSchema == pInfo->PiSSchema && pInfo->PiPSchema != NULL)
 	/* the pschema is already known */
 	return (pInfo->PiPSchema);
       else if (pInfo->PiDoc == doc)
@@ -72,6 +72,7 @@ CSSInfoPtr      css;
       css->infos = pInfo;
       pInfo->PiLink = NULL;
       pInfo->PiDoc = doc;
+      pInfo->PiPSchema = NULL;
     }
 
   /* create the presentation schema for this structure */
