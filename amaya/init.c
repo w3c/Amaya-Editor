@@ -2443,7 +2443,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     {
 	       /* we try to open a source document */
 	       /* test if the bottom frame contains a Log document */
-	       if (doc_id_2 != -1 && DocumentTypes[doc_id_2] != docLog)
+	       if (doc_id_2 == -1 || DocumentTypes[doc_id_2] != docLog)
 		 /* the bottom frame (2) do not contains a Log document so,
 		    open the source view into the bottom frame (2)*/
 		 page_position = 2;
@@ -2698,7 +2698,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetMenuOff (doc, 1, Types);
 	   TtaSetMenuOff (doc, 1, XMLTypes);
 	   TtaSetMenuOff (doc, 1, Links);
-	   TtaSetMenuOff (doc, 1, Views);
+#ifdef _WX
+	   if (DocumentTypes[doc] != docSource)
+#endif /* _WX */
+	     TtaSetMenuOff (doc, 1, Views);
 	   TtaSetMenuOff (doc, 1, Style);
 	   TtaSetMenuOff (doc, 1, Attributes_);
 #ifdef ANNOTATIONS
@@ -3019,10 +3022,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 	   TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	   TtaSetItemOff (doc, 1, Views, TShowTargets);
-	   TtaSetItemOff (doc, 1, Views, BShowAlternate);
-	   TtaSetItemOff (doc, 1, Views, BShowLinks);
-	   TtaSetItemOff (doc, 1, Views, BShowToC);
-	   TtaSetItemOff (doc, 1, Views, BShowTimeLine);
 	   TtaSetMenuOff (doc, 1, Doctype1);
 	   TtaSetMenuOff (doc, 1, Types);
 	   TtaSetMenuOff (doc, 1, Links);
@@ -3037,10 +3036,13 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     }
 	   else
 	     {
+#ifdef _WX
+	       if (DocumentTypes[doc] != docSource)
+#endif /* _WX */
+		 TtaSetMenuOff (doc, 1, Views);
 	       TtaSetItemOff (doc, 1, Edit_, BTransform);
 	       SwitchIconMath (doc, 1, FALSE);
 	       TtaSetMenuOff (doc, 1, XMLTypes);
-	       TtaSetMenuOff (doc, 1, Views);
 	       TtaSetMenuOff (doc, 1, Style);
 	       TtaSetMenuOff (doc, 1, Attributes_);
 	     }
