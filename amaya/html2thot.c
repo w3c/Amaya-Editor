@@ -487,6 +487,9 @@ static AttributeMapping HTMLAttributeMappingTable[] =
 #endif
    {"HEIGHT", "TD", 'A', HTML_ATTR_Cell_height},
    {"HEIGHT", "TH", 'A', HTML_ATTR_Cell_height},
+#ifdef GRAPHML
+   {"HEIGHT", "XMLGRAPHICS", 'A', HTML_ATTR_Height_},
+#endif
    {"HREF", "", 'A', HTML_ATTR_HREF_},
    {"HSPACE", "", 'A', HTML_ATTR_hspace},
    {"HTTP-EQUIV", "", 'A', HTML_ATTR_http_equiv},
@@ -558,6 +561,9 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"WIDTH", "TABLE", 'A', HTML_ATTR_Width__},
    {"WIDTH", "TD", 'A', HTML_ATTR_Width__},
    {"WIDTH", "TH", 'A', HTML_ATTR_Width__},
+#ifdef GRAPHML
+   {"WIDTH", "XMLGRAPHICS", 'A', HTML_ATTR_Width__},
+#endif
    {"ZZGHOST", "", 'A', HTML_ATTR_Ghost_restruct},
    {"", "", EOS, 0}		/* Last entry. Mandatory */
 };

@@ -2,8 +2,8 @@ APPLICATION GraphML;
 
 DEFAULT
    BEGIN
-   PRuleCreate.Post -> GraphicsPRuleChanged;
-   PRuleModify.Post -> GraphicsPRuleChanged;
+   PRuleCreate.Pre -> GraphicsPRuleChange;
+   PRuleModify.Pre -> GraphicsPRuleChange;
    ElemSelect.Pre -> SelectGraphMLElement;
    ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
    END;

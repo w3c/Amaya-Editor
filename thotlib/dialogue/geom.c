@@ -30,11 +30,12 @@ static int          GridSize = 1;
 #define DO_ALIGN(val) ((val + (GridSize/2)) / GridSize) * GridSize
 
 #include "appli_f.h"
-#include "windowdisplay_f.h"
-#include "font_f.h"
-#include "units_f.h"
-#include "memory_f.h"
+#include "buildboxes_f.h"
 #include "content_f.h"
+#include "font_f.h"
+#include "memory_f.h"
+#include "units_f.h"
+#include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
 /* BOOL WIN_UserGeometry = FALSE ; */
@@ -120,15 +121,17 @@ boolean             withborder;
 }
 
 /*----------------------------------------------------------------------
- *      RedrawPolyLine shows the current state of the polyline (closed or
- *		not) in a given frame.
- *	This function returns the coordinates of the following control points :
- *	- x1, y1 predecessor of point
- *      - x2, y2 point
- *      - x3, y3 successor of point
+  RedrawPolyLine shows the current state of the polyline (closed or
+  not) in a given frame.
+  This function returns the coordinates of the following control points :
+  - x1, y1 predecessor of point
+  - x2, y2 point
+  - x3, y3 successor of point
+  - xMin, yMin, xMax, yMax update the current bounding box excluding
+  the selected point.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, boolean close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3)
+static void         RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, boolean close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3, int *xMin, int *yMin, int *xMax, int *yMax)
 #else  /* __STDC__ */
 static void         RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y1, x2, y2, x3, y3)
 int                 frame;
@@ -148,124 +151,359 @@ int                *y3;
 
 {
 #ifndef _WINDOWS
-   ThotPoint          *points;
-   int                 i, j;
-   PtrTextBuffer       adbuff;
+  ThotPoint          *points;
+  int                 i, j;
+  PtrTextBuffer       adbuff;
 
-   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = -1;
-   /* allocate a table of points */
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb));
-   adbuff = buffer;
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength)
-	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* change the buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
-	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
-	/* write down predecessor and sucessor of point */
-	if (i == point - 1)
-	  {
-	     *x1 = points[i - 1].x;
-	     *y1 = points[i - 1].y;
-	  }
-	else if (i == point)
-	  {
-	     *x2 = points[i - 1].x;
-	     *y2 = points[i - 1].y;
-	  }
-	if (i == point + 1)
-	  {
-	     *x3 = points[i - 1].x;
-	     *y3 = points[i - 1].y;
-	  }
-	j++;
-     }
+  *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = -1;
+  /* allocate a table of points */
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
+  adbuff = buffer;
+  j = 1;
+  for (i = 0; i < nb - 1; i++)
+    {
+      if (j >= adbuff->BuLength)
+	{
+	  if (adbuff->BuNext != NULL)
+	    {
+	      /* change the buffer */
+	      adbuff = adbuff->BuNext;
+	      j = 0;
+	    }
+	}
+      points[i].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+      points[i].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+      /* write down predecessor and sucessor of point */
+      if (i + 1 == point)
+	{
+	  /* selected point */
+	  *x2 = points[i].x;
+	  *y2 = points[i].y;
+	}
+      else
+	{
+	  if (points[i].x < *xMin)
+	    *xMin = points[i].x;
+	  if (points[i].x > *xMax)
+	    *xMax = points[i].x;
+	  if (points[i].y < *yMin)
+	    *yMin = points[i].y;
+	  if (points[i].y > *yMax)
+	    *yMax = points[i].y;
+	  if (i + 1 == point - 1)
+	    {
+	      /* predecessor */
+	      *x1 = points[i].x;
+	      *y1 = points[i].y;
+	    }
+	  else if (i == point)
+	    {
+	      /* succesor */
+	      *x3 = points[i].x;
+	      *y3 = points[i].y;
+	    }
+	}
+      j++;
+    }
 
-   /* Draw the border */
-   if (close && nb > 3)
-     {
-	/* This is a closed polyline with more than 2 points */
-	points[nb - 1].x = points[0].x;
-	points[nb - 1].y = points[0].y;
-	if (point == 1)
-	  {
-	     *x1 = points[nb - 2].x;
-	     *y1 = points[nb - 2].y;
-	  }
-	if (point == nb - 1)
-	  {
-	     *x3 = points[0].x;
-	     *y3 = points[0].y;
-	  }
-	XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb, CoordModeOrigin);
-     }
-   else
-      XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb - 1, CoordModeOrigin);
-
-   /* free the table of points */
-   free ((char *) points);
+  /* Draw the border */
+  if (close && nb > 3)
+    {
+      /* This is a closed polyline with more than 2 points */
+      points[nb - 1].x = points[0].x;
+      points[nb - 1].y = points[0].y;
+      if (point == 1)
+	{
+	  *x1 = points[nb - 2].x;
+	  *y1 = points[nb - 2].y;
+	}
+      if (point == nb - 1)
+	{
+	  *x3 = points[0].x;
+	  *y3 = points[0].y;
+	}
+      XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb, CoordModeOrigin);
+    }
+  else
+    XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb - 1, CoordModeOrigin);
+  /* free the table of points */
+  free ((char *) points);
 #endif	/* _WINDOWS */
 }
+
+
+/*----------------------------------------------------------------------
+  TranslatePoints updates Polyline buffers.
+  pBbuff points to the first box buffer.
+  ppbuff points to the first abstract box buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         TranslatePoints (int dx, int dy, PtrTextBuffer pBbuff, PtrTextBuffer pPbuff, int nbPoints)
+#else  /* __STDC__ */
+static void         TranslatePoints (dx, dy, pBbuff, pPbuff, nbPoints)
+int                 dx;
+int                 dy;
+PtrTextBuffer       pBbuff;
+PtrTextBuffer       pPbuff;
+int                 nbPoints;
+#endif /* __STDC__ */
+{
+  int i, j;
+
+  /* translate points */
+  j = 1;
+
+  for (i = 1; i < nbPoints; i++)
+    {
+      if (j >= pBbuff->BuLength)
+	{
+	  if (pBbuff->BuNext != NULL)
+	    {
+	      /* Next buffer */
+	      pBbuff = pBbuff->BuNext;
+	      pPbuff = pPbuff->BuNext;
+	      j = 0;
+	    }
+	}
+      if (dx != 0)
+	{
+	  pBbuff->BuPoints[j].XCoord = pBbuff->BuPoints[j].XCoord + dx;
+	  pPbuff->BuPoints[j].XCoord = pBbuff->BuPoints[j].XCoord;
+	}
+      if (dy != 0)
+	{
+	  pBbuff->BuPoints[j].YCoord = pBbuff->BuPoints[j].YCoord + dy;
+	  pPbuff->BuPoints[j].YCoord = pBbuff->BuPoints[j].YCoord;
+	}
+      j++;
+    }
+}
+
+/*----------------------------------------------------------------------
+  SetBoundingBox updates Polyline buffer and origins to fit exactely the
+  box given by xMin,yMin xMax,yMax.
+  xMin, yMin, xMax and yMax are expressed in Millipoints.
+  xOrg and yOrg are expressed in pixels.
+  If xMin differs from *xOrg, *xOrg and points are horizontally translated.
+  If yMin differs from *yOrg, *yOrg and points are vertically translated.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetBoundingBox (int xMin, int xMax, int *xOrg, int yMin, int yMax, int *yOrg, PtrBox pBox, int nbPoints)
+#else  /* __STDC__ */
+void                SetBoundingBox (xMin, xMax, xOrg, yMin, yMax, yOrg, pBox, nbPoints)
+int                 xMin;
+int                 xMax;
+int                *xOrg;
+int                 yMin;
+int                 yMax;
+int                *yOrg;
+PtrBox              pBox;
+int                 nbPoints;
+#endif /* __STDC__ */
+{
+  PtrTextBuffer     Pbuffer;
+  PtrTextBuffer     Bbuffer;
+  C_points         *controls;
+  int               dx, dy;
+  int               oldx, oldy;
+  int               width, height;
+  int               i;
+
+  Bbuffer = pBox->BxBuffer;
+  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
+  /* convert into Millipoints */
+  oldx = PixelToPoint (*xOrg) * 1000;
+  oldy = PixelToPoint (*yOrg) * 1000;
+  width = xMax - xMin;
+  height = yMax - yMin;
+
+  /* update horizontal origin of the box */
+  if (xMin != oldx)
+    {
+      dx = xMin - oldx;
+      *xOrg = PointToPixel (xMin / 1000);
+    }
+  else
+    dx = 0;
+  
+  /* update vertical origin of the box */
+  if (yMin != oldy)
+    {
+      dy = yMin - oldy;
+      *yOrg = PointToPixel (yMin / 1000);
+    }
+  else
+    dy = 0;
+
+  while (dx != 0 || dy != 0)
+    {
+      /* now move each point */
+      TranslatePoints (dx, dy, Bbuffer, Pbuffer, nbPoints);
+
+      /* For curves we need to compute control points */
+      if (pBox->BxAbstractBox->AbPolyLineShape == 'B' ||
+	  pBox->BxAbstractBox->AbPolyLineShape == 'A' ||
+	  pBox->BxAbstractBox->AbPolyLineShape == 'F' ||
+	  pBox->BxAbstractBox->AbPolyLineShape == 'D' ||
+	  pBox->BxAbstractBox->AbPolyLineShape == 's')
+	{
+	  if (pBox->BxPictInfo != NULL)
+	    free ((char *) pBox->BxPictInfo);
+	  controls = ComputeControlPoints (Bbuffer, pBox->BxNChars);
+	  pBox->BxPictInfo = (int *) controls;
+	  /* save previous xMin and yMin */
+	  oldx = xMin;
+	  oldy = yMin;
+	  for (i = 0; i <  pBox->BxNChars; i++)
+	    {
+	      if (xMin > controls[i].lx)
+		xMin = controls[i].lx;
+	      if (width < controls[i].lx)
+		width = controls[i].lx;
+	      if (xMin > controls[i].rx)
+		xMin = controls[i].rx;
+	      if (width < controls[i].rx)
+		width = controls[i].rx;
+	      if (yMin > controls[i].ly)
+		yMin = controls[i].ly;
+	      if (height < controls[i].ly)
+		height = controls[i].ly;
+	      if (yMin > controls[i].ry)
+		yMin = controls[i].ry;
+	      if (height < controls[i].ry)
+		height = controls[i].ry;
+	    }
+	  /* do we need to retranslate the box */
+	  /* update horizontal origin of the box */
+	  if (xMin != oldx)
+	    {
+	      dx = xMin - oldx;
+	      *xOrg = PointToPixel (xMin / 1000);
+	    }
+	  else
+	    dx = 0;
+	  
+	  /* update vertical origin of the box */
+	  if (yMin != oldy)
+	    {
+	      dy = yMin - oldy;
+	      *yOrg = PointToPixel (yMin / 1000);
+	    }
+	  else
+	    dy = 0;
+	}
+      else
+	{
+	  dx = 0;
+	  dy = 0;
+	}
+    }
+
+  /* now update box width and height */
+  if (width != Bbuffer->BuPoints[0].XCoord)
+    {
+      Bbuffer->BuPoints[0].XCoord = (int) width;
+      Pbuffer->BuPoints[0].XCoord = (int) width;
+    }
+  if (height != Bbuffer->BuPoints[0].YCoord)
+    {
+      Bbuffer->BuPoints[0].YCoord = (int) height;
+      Pbuffer->BuPoints[0].YCoord = (int) height;
+    }
+}
+
 
 /*----------------------------------------------------------------------
   PolyLineCreation interract with the user to read the point forming
   a polyline in a given frame.
-  x and y values gives the position of the box in the frame.
+  *xOrg and *yOrg values gives the position of the box pBox in the frame.
+  These values can be changed if there is limits depend of an other box
+  (draw != NULL).
+  Bbuffer points to the first buffer of the concrete box.
   Pbuffer points to the first buffer of the abstract box, i.e.
   the list of control points modified. The first point in the
   list gives the maximum width and height of the polyline.
-  I f the parameter maxPoints is greater than 1 if the number of
+  If the parameter maxPoints is greater than 1 if the number of
   points to be selected must be equal to this value.
   This fonction update both  list of control points and
   returns the number of point in the polyline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PolyLineCreation (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer, int maxPoints)
+int                 PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int maxPoints)
 #else  /* __STDC__ */
-int                 PolyLineCreation (frame, x, y, Pbuffer, Bbuffer, maxPoints)
+int                 PolyLineCreation (frame, xOrg, yOrg, pBox, draw, maxPoints)
 int                 frame;
-int                 x;
-int                 y;
-PtrTextBuffer       Pbuffer;
-PtrTextBuffer       Bbuffer;
+int                *xOrg;
+int                *yOrg;
+PtrBox              pBox;
+PtrAbstractBox      draw;
 int                 maxPoints;
 #endif /* __STDC__ */
 {
+  ThotWindow          w, wdum;
+  ThotEvent           event;
+  PtrTextBuffer       Pbuffer;
+  PtrTextBuffer       Bbuffer;
   float               ratioX, ratioY;
   int                 width, height;
   int                 e, dx, dy;
   int                 ret, f;
+  int                 x, y;
   int                 newx, newy, lastx, lasty;
+  int                 xMin, yMin, xMax, yMax;
   int                 x1, y1, nbpoints;
-  ThotWindow          w, wdum;
-  ThotEvent           event;
 #ifdef _WINDOWS
   RECT  rect;
   POINT cursorPos;
 #endif /* _WINDOWS */
 
-  /* box size */
-  width = Bbuffer->BuPoints[0].XCoord;
-  height = Bbuffer->BuPoints[0].YCoord;
-  /* computes the trasformation foctors between the box and the abstract box */
-  ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-  ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
-  width = PointToPixel (width / 1000);
-  height = PointToPixel (height / 1000);
+  if (pBox == NULL || pBox->BxAbstractBox == NULL)
+    return (0);
+  Bbuffer = pBox->BxBuffer;
+  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
 
-  /* change the cursor */
-  w = FrRef[frame];
+  /* Initialize the bounding box */
+  draw = NULL;
+  if (draw != NULL && draw->AbBox != NULL)
+    {
+      /* constraint is done by the draw element */
+      x = draw->AbBox->BxXOrg;
+      *xOrg = x;
+      width = draw->AbBox->BxWidth;
+      /* trasformation factor between the box and the abstract box */
+      ratioX = 1.;
+      y = draw->AbBox->BxYOrg;
+      *yOrg = y;
+      /* trasformation factor between the box and the abstract box */
+      ratioY = 1.;
+      height = draw->AbBox->BxHeight;
+      /* min and max will give the polyline bounding box */
+      xMin = PixelToPoint (x + width) * 1000;
+      xMax = 0;
+      yMin = PixelToPoint (y + height) * 1000;
+      yMax = 0;
+    }
+  else
+    {
+      /* constraint is done by the polyline element */
+      x = *xOrg;
+      width = Bbuffer->BuPoints[0].XCoord;
+      /* trasformation factor between the box and the abstract box */
+      ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+      width = PointToPixel (width / 1000);
+      y = *yOrg;
+      height = Bbuffer->BuPoints[0].YCoord;
+      /* trasformation factor between the box and the abstract box */
+      ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+      height = PointToPixel (height / 1000);
+      /* we don't need to compute the polyline bounding box */
+      xMin = yMin = xMax = yMax = 0;
+    }
   x1 = -1;
   y1 = -1;
   nbpoints = 1;
+  /* need the window to change the cursor */
+  w = FrRef[frame];
 #ifdef _WINDOWS
   GetWindowRect (w, &rect);
   /* The grid stepping begins at the origin */
@@ -285,7 +523,8 @@ int                 maxPoints;
   XFlush (TtDisplay);
 #endif /* _WINDOWS */
 
-  /* shows up the box border */
+
+  /* shows up limit borders */
   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
   /* loop waiting for the user input */
@@ -303,17 +542,19 @@ int                 maxPoints;
 	newx = x + DO_ALIGN ((int) ClickX - FrameTable[frame].FrLeftMargin - x);
 	newy = y + DO_ALIGN ((int) ClickY - FrameTable[frame].FrTopMargin - y);
 	/* CHKR_LIMIT to size of the box */
+	/* new X valid position */
 	if (newx < x)
-	  lastx = x + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
+	  lastx = x + FrameTable[frame].FrLeftMargin;
 	else if (newx > x + width)
-	  lastx = x + width + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
+	  lastx = x + width + FrameTable[frame].FrLeftMargin;
 	else
 	  lastx = newx + FrameTable[frame].FrLeftMargin;
 	
+	/* new Y valid position */
 	if (newy < y)
-	  lasty = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+	  lasty = y + FrameTable[frame].FrTopMargin;
 	else if (newy > y + height)
-	  lasty = y + height + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+	  lasty = y + height + FrameTable[frame].FrTopMargin;
 	else
 	  lasty = newy + FrameTable[frame].FrTopMargin;
 	
@@ -324,6 +565,15 @@ int                 maxPoints;
 	/* update the box buffer */
 	newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
 	newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+	/* register the min and the max */
+	if (newx < xMin)
+	  xMin = newx;
+	if (newx > xMax)
+	  xMax = newx;
+	if (newy < yMin)
+	  yMin = newy;
+	if (newy > yMax)
+	  yMax = newy;
 	AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
 	/* update the abstract box buffer */
 	newx = (int) ((float) newx * ratioX);
@@ -343,17 +593,19 @@ int                 maxPoints;
 	newy += y;
 	if (newx < x || newx > x + width || newy < y || newy > y + height) {
 	  /* CHKR_LIMIT to size of the box */
+	  /* new X valid position */
 	  if (newx < x)
-	    newx = x + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
+	    newx = x + FrameTable[frame].FrLeftMargin;
 	  else if (newx > x + width)
-	    newx = x + width + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
+	    newx = x + width + FrameTable[frame].FrLeftMargin;
 	  else
 	    newx += FrameTable[frame].FrLeftMargin;
 	  
+	  /* new Y valid position */
 	  if (newy < y)
-	    newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+	    newy = y + FrameTable[frame].FrTopMargin;
 	  else if (newy > y + height)
-	    newy = y + height + FrameTable[frame].FrTopMargin;		/* nouvelle position en Y valide */
+	    newy = y + height + FrameTable[frame].FrTopMargin;
 	  else
 	    newy += FrameTable[frame].FrTopMargin;
 	} else {
@@ -396,17 +648,19 @@ int                 maxPoints;
 	newy += y;
 	if ((newx - rect.left) < x || (newx - rect.left) > x + width || (newy - rect.top) < y || (newy - rect.top) > y + height) {
 	  /* CHKR_LIMIT to size of the box */
+	  /* new X valid position */
 	  if (newx - rect.left < x)
-	    newx = x + FrameTable[frame].FrLeftMargin + rect.left;		/* nouvelle position en X valide */
+	    newx = x + FrameTable[frame].FrLeftMargin + rect.left;
 	  else if (newx - rect.left > x + width)
-	    newx = x + width + FrameTable[frame].FrLeftMargin + rect.left;		/* nouvelle position en X valide */
+	    newx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
 	  else
 	    newx += FrameTable[frame].FrLeftMargin;
 	  
+	  /* new Y valid position */
 	  if (newy - rect.top < y)
-	    newy = y + FrameTable[frame].FrTopMargin + rect.top;	/* nouvelle position en Y valide */
+	    newy = y + FrameTable[frame].FrTopMargin + rect.top;
 	  else if (newy - rect.top > y + height)
-	    newy = y + height + FrameTable[frame].FrTopMargin + rect.top;		/* nouvelle position en Y valide */
+	    newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
 	  else
 	    newy += FrameTable[frame].FrTopMargin;
 	  
@@ -451,17 +705,19 @@ int                 maxPoints;
 	newx = x + DO_ALIGN ((int) cursorPos.x - FrameTable[frame].FrLeftMargin - x);
 	newy = y + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - y);
 	/* CHKR_LIMIT to size of the box */
+	/* new X valid position */
 	if (newx - rect.left < x)
-	  lastx = x + FrameTable[frame].FrLeftMargin + rect.left;	/* nouvelle position en X valide */
+	  lastx = x + FrameTable[frame].FrLeftMargin + rect.left;
 	else if (newx - rect.left > x + width)
-	  lastx = x + width + FrameTable[frame].FrLeftMargin + rect.left;	/* nouvelle position en X valide */
+	  lastx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
 	else
 	  lastx = newx + FrameTable[frame].FrLeftMargin;
 	
+	/* new Y valid position */
 	if (newy - rect.top< y)
-	  lasty = y + FrameTable[frame].FrTopMargin + rect.top;	/* nouvelle position en Y valide */
+	  lasty = y + FrameTable[frame].FrTopMargin + rect.top;
 	else if (newy - rect.top> y + height)
-	  lasty = y + height + FrameTable[frame].FrTopMargin + rect.top;	/* nouvelle position en Y valide */
+	  lasty = y + height + FrameTable[frame].FrTopMargin + rect.top;
 	else
 	  lasty = newy + FrameTable[frame].FrTopMargin;
 	
@@ -485,6 +741,15 @@ int                 maxPoints;
 	  /* update the box buffer */
 	  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x - rect.left) * 1000;
 	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y - rect.top) * 1000;
+	  /* register the min and the max */
+	  if (newx < xMin)
+	    xMin = newx;
+	  if (newx > xMax)
+	    xMax = newx;
+	  if (newy < yMin)
+	    yMin = newy;
+	  if (newy > yMax)
+	    yMax = newy;
 	  AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
 	  /* update the abstract box buffer */
 	  newx = (int) ((float) newx * ratioX);
@@ -592,6 +857,15 @@ int                 maxPoints;
 		  /* update the box buffer */
 		  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
 		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+		  /* register the min and the max */
+		  if (newx < xMin)
+		    xMin = newx;
+		  if (newx > xMax)
+		    xMax = newx;
+		  if (newy < yMin)
+		    yMin = newy;
+		  if (newy > yMax)
+		    yMax = newy;
 		  AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
@@ -631,206 +905,269 @@ int                 maxPoints;
   ThotUngrab ();
   XFlush (TtDisplay);
 #endif /* _WINDOWS */
+
   /* need at least 3 points for a valid polyline */
   if (nbpoints < 3)
     {
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
       return (1);
     }
-  else
+  else if (draw)
+    {
+      x = PixelToPoint (x) * 1000;
+      y = PixelToPoint (y) * 1000;
+      SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
+    }
     return (nbpoints);
 }
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
- *      PolyLineModification interract with the user to move a point part
- * 		a polyline in a given frame.
- *		x and y values gives the position of the box in the frame.
- *		Pbuffer points to the first buffer of the abstract box, i.e.
- *		the list of control points modified. Pbuffer points to
- *		the first buffer of the box, i.e. the list of control points
- *		as shown. The first point in the lists gives the maximum
- *		width and height of the polyline.
- *		nbpoints gives the number of points in the polyline.
- *		point expricitely indicate the point to be moved.
- *		This fonction update both  list of control points.
+  PolyLineModification interract with the user to move a point part
+  a polyline in a given frame.
+  *xOrg and *yOrg values gives the position of the box pBox in the frame.
+  These values can be changed if there is limits depend of an other box
+  (draw != NULL).
+  Bbuffer points to the first buffer of the box, i.e. the list of control
+  points as shown. The first point in the lists gives the maximum
+  width and height of the polyline.
+  Pbuffer points to the first buffer of the abtract box.
+  nbpoints gives the number of points in the polyline.
+  point expricitely indicate the point to be moved.
+  This fonction update both  list of control points.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PolyLineModification (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer, int nbpoints, int point, boolean close)
+void                PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, boolean close)
 #else  /* __STDC__ */
-void                PolyLineModification (frame, x, y, Pbuffer, Bbuffer, nbpoints, point, close)
+void                PolyLineModification (frame, xOrg, yOrg, pBox, draw, nbpoints, point, close)
 int                 frame;
-int                 x;
-int                 y;
-PtrTextBuffer       Pbuffer;
-PtrTextBuffer       Bbuffer;
+int                *xOrg;
+int                *yOrg;
+PtrBox              pBox;
+PtrAbstractBox      draw;
 int                 nbpoints;
 int                 point;
 boolean             close;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
-   float               ratioX, ratioY;
-   int                 width, height;
-   int                 e;
-   int                 ret, f;
-   int                 newx, newy, lastx, lasty;
-   int                 x1, y1, x3, y3;
-   ThotWindow          w;
-   ThotEvent              event;
-   boolean             wrap;
+  ThotWindow          w;
+  ThotEvent           event;
+  PtrTextBuffer       Pbuffer;
+  PtrTextBuffer       Bbuffer;
+  float               ratioX, ratioY;
+  int                 width, height;
+  int                 e;
+  int                 ret, f;
+  int                 newx, newy, lastx, lasty;
+  int                 xMin, yMin, xMax, yMax;
+  int                 x1, y1, x3, y3;
+  int                 x, y, dx, dy;
+  boolean             wrap;
 
-   /* box size */
-   width = Bbuffer->BuPoints[0].XCoord;
-   height = Bbuffer->BuPoints[0].YCoord;
-   /* distortion ratios between the abstract box and the box */
-   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
-   width = PointToPixel (width / 1000);
-   height = PointToPixel (height / 1000);
+  if (pBox == NULL || pBox->BxAbstractBox == NULL)
+    return;
+  Bbuffer = pBox->BxBuffer;
+  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
 
-   /* change cursor size */
-   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
-   w = FrRef[frame];
-   XMapRaised (TtDisplay, w);
-   XFlush (TtDisplay);
-   wrap = FALSE;
-   ThotGrab (w, HVCurs, e, 0);
+  /* Initialize the bounding box */
+  draw = NULL;
+  if (draw != NULL && draw->AbBox != NULL)
+    {
+      /* constraint is done by the draw element */
+      x = draw->AbBox->BxXOrg;
+      *xOrg = x;
+      width = draw->AbBox->BxWidth;
+      /* trasformation factor between the box and the abstract box */
+      ratioX = 1.;
+      y = draw->AbBox->BxYOrg;
+      *yOrg = y;
+      /* trasformation factor between the box and the abstract box */
+      ratioY = 1.;
+      height = draw->AbBox->BxHeight;
+      /* min and max will give the polyline bounding box */
+      xMin = PixelToPoint (x + width) * 1000;
+      xMax = 0;
+      yMin = PixelToPoint (y + height) * 1000;
+      yMax = 0;
+      dx = PixelToPoint ((x - *xOrg)) * 1000;
+      dy = PixelToPoint ((y - *yOrg)) * 1000;
+      TranslatePoints (dx, dy, Bbuffer, Pbuffer, nbpoints);
+    }
+  else
+    {
+      /* constraint is done by the polyline element */
+      x = *xOrg;
+      width = Bbuffer->BuPoints[0].XCoord;
+      /* trasformation factor between the box and the abstract box */
+      ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+      width = PointToPixel (width / 1000);
+      y = *yOrg;
+      height = Bbuffer->BuPoints[0].YCoord;
+      /* trasformation factor between the box and the abstract box */
+      ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+      height = PointToPixel (height / 1000);
+      /* we don't need to compute the polyline bounding box */
+      xMin = yMin = xMax = yMax = 0;
+    }
 
-   /* shows up the box border */
-   /*Clear(frame, width, height, x, y); */
-   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
-		   &x1, &y1, &lastx, &lasty, &x3, &y3);
-   /* the grid step begins at the origin of the box */
-   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-   XFlush (TtDisplay);
+  /* need the window to change the cursor */
+  w = FrRef[frame];
+  e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
+  XMapRaised (TtDisplay, w);
+  XFlush (TtDisplay);
+  ThotGrab (w, HVCurs, e, 0);
+  wrap = FALSE;
 
-   /* Loop waiting for user interraction */
-   ret = 0;
-   while (ret == 0)
-     {
-	XNextEvent (TtDisplay, &event);
+  /* shows up limit borders */
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
+		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+  /* the grid step begins at the origin of the box */
+  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+  XFlush (TtDisplay);
 
-	/* check the coordinates */
-	newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
-	newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	/* are limited to the box size */
-	/* Update the X position */
-	if (newx < x)
-	  {
-	     newx = x + FrameTable[frame].FrLeftMargin;
-	     wrap = TRUE;
-	  }
-	else if (newx > x + width)
-	  {
-	     newx = x + width + FrameTable[frame].FrLeftMargin;
-	     wrap = TRUE;
-	  }
-	else
-	   newx += FrameTable[frame].FrLeftMargin;
+  /* Loop waiting for user interraction */
+  ret = 0;
+  while (ret == 0)
+    {
+      XNextEvent (TtDisplay, &event);
+      
+      /* check the coordinates */
+      newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+      newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
+      /* are limited to the box size */
+      /* Update the X position */
+      if (newx < x)
+	{
+	  newx = x + FrameTable[frame].FrLeftMargin;
+	  wrap = TRUE;
+	}
+      else if (newx > x + width)
+	{
+	  newx = x + width + FrameTable[frame].FrLeftMargin;
+	  wrap = TRUE;
+	}
+      else
+	newx += FrameTable[frame].FrLeftMargin;
+      
+      /* Update the Y position */
+      if (newy < y)
+	{
+	  newy = y + FrameTable[frame].FrTopMargin;
+	  wrap = TRUE;
+	}
+      else if (newy > y + height)
+	{
+	  newy = y + height + FrameTable[frame].FrTopMargin;
+	  wrap = TRUE;
+	}
+      else
+	newy += FrameTable[frame].FrTopMargin;
 
-	/* Update the Y position */
-	if (newy < y)
-	  {
-	     newy = y + FrameTable[frame].FrTopMargin;
-	     wrap = TRUE;
-	  }
-	else if (newy > y + height)
-	  {
-	     newy = y + height + FrameTable[frame].FrTopMargin;
-	     wrap = TRUE;
-	  }
-	else
-	   newy += FrameTable[frame].FrTopMargin;
+      switch (event.type)
+	{
+	case ButtonRelease:
+	  lastx = newx;
+	  lasty = newy;
+	  /* update the box buffer */
+	  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+	  /* register the min and the max */
+	  if (newx < xMin)
+	    xMin = newx;
+	  if (newx > xMax)
+	    xMax = newx;
+	  if (newy < yMin)
+	    yMin = newy;
+	  if (newy > yMax)
+	    yMax = newy;
+	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
+	  /* update the abstract box buffer */
+	  newx = (int) ((float) newx * ratioX);
+	  newy = (int) ((float) newy * ratioY);
+	  ModifyPointInPolyline (Pbuffer, point, newx, newy);
+	  ret = 1;
+	  break;
+	  
+	case MotionNotify:
+	  /* shows the new adjacent segment position */
+	  if (newx != lastx || newy != lasty)
+	    {
+	      if (x1 != -1)
+		{
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
+		}
+	      if (x3 != -1)
+		{
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
+		}
+	      XFlush (TtDisplay);
+	    }
+	  lastx = newx;
+	  lasty = newy;
+	  if (wrap)
+	    {
+	      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+	      wrap = FALSE;
+	    }
+	  break;
+	  
+	case Expose:
+	  f = GetWindowFrame (event.xexpose.window);
+	  if (f <= MAX_FRAME + 1)
+	    FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
+	  XtDispatchEvent (&event);
+	  break;
+	  
+	default:
+	  break;
+	}
+    }
+  
+  /* erase the box border */
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-	switch (event.type)
-	      {
-		 case ButtonRelease:
-		    lastx = newx;
-		    lasty = newy;
-		    /* update the box buffer */
-		    newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
-		    newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-		    ModifyPointInPolyline (Bbuffer, point, newx, newy);
-		    /* update the abstract box buffer */
-		    newx = (int) ((float) newx * ratioX);
-		    newy = (int) ((float) newy * ratioY);
-		    ModifyPointInPolyline (Pbuffer, point, newx, newy);
-		    ret = 1;
-		    break;
-
-		 case MotionNotify:
-		    /* shows the new adjacent segment position */
-		    if (newx != lastx || newy != lasty)
-		      {
-			 if (x1 != -1)
-			   {
-			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
-			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
-			   }
-			 if (x3 != -1)
-			   {
-			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
-			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
-			   }
-			 XFlush (TtDisplay);
-		      }
-		    lastx = newx;
-		    lasty = newy;
-		    if (wrap)
-		      {
-			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-			 wrap = FALSE;
-		      }
-		    break;
-
-		 case Expose:
-		    f = GetWindowFrame (event.xexpose.window);
-		    if (f <= MAX_FRAME + 1)
-		       FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
-		    XtDispatchEvent (&event);
-		    break;
-
-		 default:
-		    break;
-	      }			/*switch */
-     }
-
-   /* erase the box border */
-   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-
-   /* returns to previous state of the Thot library */
-   ThotUngrab ();
-   XFlush (TtDisplay);
+  /* returns to previous state of the Thot library */
+  ThotUngrab ();
+  XFlush (TtDisplay);
+  if (draw)
+    {
+      x = PixelToPoint (x) * 1000;
+      y = PixelToPoint (y) * 1000;
+      SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
+    }
 #endif /* _WINDOWS */
 }
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
- *      PolyLineExtension interract with the user to add points to
- * 		an existing polyline in a given frame.
- *		x and y values gives the position of the box in the frame.
- *		Pbuffer points to the first buffer of the abstract box, i.e.
- *		the list of control points modified. Pbuffer points to
- *		the first buffer of the box, i.e. the list of control points
- *		as shown. The first point in the lists gives the maximum
- *		width and height of the polyline.
- *		nbpoints gives the number of points in the polyline.
- *		point expricitely indicate the point to be moved.
- *		close indicate whether the polyline is closed.
- *		This fonction update both  list of control points and
- *		returns the new number of points in the polyline.
+  PolyLineExtension interract with the user to add points to
+  an existing polyline in a given frame.
+  *xOrg and *yOrg values gives the position of the box pBox in the frame.
+  These values can be changed if there is limits depend of an other box
+  (draw != NULL).
+  Bbuffer points to the first buffer of the box, i.e. the list of control
+  points as shown. The first point in the lists gives the maximum
+  width and height of the polyline.
+  Pbuffer points to the first buffer of the abtract box.
+  nbpoints gives the number of points in the polyline.
+  point expricitely indicate the point to be moved.
+  close indicate whether the polyline is closed.
+  This fonction update both  list of control points and
+  returns the new number of points in the polyline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PolyLineExtension (int frame, int x, int y, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer, int nbpoints, int point, boolean close)
+int                 PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, boolean close)
 #else  /* __STDC__ */
-int                 PolyLineExtension (frame, x, y, Pbuffer, Bbuffer, nbpoints, point, close)
+int                 PolyLineExtension (frame, xOrg, yOrg, pBox, draw, nbpoints, point, close)
 int                 frame;
-int                 x;
-int                 y;
-PtrTextBuffer       Pbuffer;
-PtrTextBuffer       Bbuffer;
+int                *xOrg;
+int                *yOrg;
+PtrBox              pBox;
+PtrAbstractBox      draw;
 int                 nbpoints;
 int                 point;
 boolean             close;
@@ -838,197 +1175,252 @@ boolean             close;
 
 {
 #ifndef _WINDOWS
-   float               ratioX, ratioY;
-   int                 width, height;
-   int                 e, dx, dy;
-   int                 ret, f;
-   int                 newx, newy, lastx, lasty;
-   int                 x1, y1, x3, y3;
-   ThotWindow          w, wdum;
-   ThotEvent              event;
-   boolean             wrap;
+  ThotWindow          w, wdum;
+  ThotEvent           event;
+  PtrTextBuffer       Pbuffer;
+  PtrTextBuffer       Bbuffer;
+  float               ratioX, ratioY;
+  int                 width, height;
+  int                 e, dx, dy;
+  int                 ret, f;
+  int                 newx, newy, lastx, lasty;
+  int                 xMin, yMin, xMax, yMax;
+  int                 x1, y1, x3, y3;
+  int                 x, y;
+  boolean             wrap;
 
-   /* the box size */
-   width = Bbuffer->BuPoints[0].XCoord;
-   height = Bbuffer->BuPoints[0].YCoord;
-   /* the box size *ompute the distortion ratios between box and abstract box */
-   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
-   width = PointToPixel (width / 1000);
-   height = PointToPixel (height / 1000);
+  if (pBox == NULL || pBox->BxAbstractBox == NULL)
+    return (0);
+  Bbuffer = pBox->BxBuffer;
+  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
 
-   /* change the cursor */
-   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
-   w = FrRef[frame];
-   wrap = FALSE;
-   XMapRaised (TtDisplay, w);
-   XFlush (TtDisplay);
-   ThotGrab (w, HVCurs, e, 0);
+  /* Initialize the bounding box */
+  draw = NULL;
+  if (draw != NULL && draw->AbBox != NULL)
+    {
+      /* constraint is done by the draw element */
+      x = draw->AbBox->BxXOrg;
+      *xOrg = x;
+      width = draw->AbBox->BxWidth;
+      /* trasformation factor between the box and the abstract box */
+      ratioX = 1.;
+      y = draw->AbBox->BxYOrg;
+      *yOrg = y;
+      /* trasformation factor between the box and the abstract box */
+      ratioY = 1.;
+      height = draw->AbBox->BxHeight;
+      /* min and max will give the polyline bounding box */
+      xMin = PixelToPoint (x + width) * 1000;
+      xMax = 0;
+      yMin = PixelToPoint (y + height) * 1000;
+      yMax = 0;
+      dx = PixelToPoint (x - *xOrg) * 1000;
+      dy = PixelToPoint (y - *yOrg) * 1000;
+      TranslatePoints (dx, dy, Bbuffer, Pbuffer, nbpoints);
+    }
+  else
+    {
+      /* constraint is done by the polyline element */
+      x = *xOrg;
+      width = Bbuffer->BuPoints[0].XCoord;
+      /* trasformation factor between the box and the abstract box */
+      ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
+      width = PointToPixel (width / 1000);
+      y = *yOrg;
+      height = Bbuffer->BuPoints[0].YCoord;
+      /* trasformation factor between the box and the abstract box */
+      ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
+      height = PointToPixel (height / 1000);
+      /* we don't need to compute the polyline bounding box */
+      xMin = yMin = xMax = yMax = 0;
+    }
 
-   /* draw the box border */
-   /*Clear(frame, width, height, x, y); */
-   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
-		   &x1, &y1, &lastx, &lasty, &x3, &y3);
-   /* the grid step begins at the origin */
-   XFlush (TtDisplay);
-   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-   x1 = lastx;
-   y1 = lasty;
+  /* need the window to change the cursor */
+  w = FrRef[frame];
+  e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
+  XMapRaised (TtDisplay, w);
+  XFlush (TtDisplay);
+  ThotGrab (w, HVCurs, e, 0);
+  wrap = FALSE;
 
-   /* Loop waiting for user input */
-   ret = 0;
-   while (ret == 0)
-     {
-	if (XPending (TtDisplay) == 0)
-	  {
+  /* draw the box border */
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
+		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+  /* the grid step begins at the origin */
+  XFlush (TtDisplay);
+  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+  x1 = lastx;
+  y1 = lasty;
 
-	     /* current cursor location */
-	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
-	     /* check the coordinates */
-	     newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
-	     newx += x;
-	     newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
-	     newy += y;
-	     if (newx < x || newx > x + width || newy < y || newy > y + height)
-	       {
-		  /* CHKR_LIMIT them to the box area */
-		  if (newx < x)
-		     newx = x + FrameTable[frame].FrLeftMargin;
-		  else if (newx > x + width)
-		     newx = x + width + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
-		  else
-		     newx += FrameTable[frame].FrLeftMargin;
+  /* Loop waiting for user input */
+  ret = 0;
+  while (ret == 0)
+    {
+      if (XPending (TtDisplay) == 0)
+	{
+	  /* current cursor location */
+	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
+	  /* check the coordinates */
+	  newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
+	  newx += x;
+	  newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
+	  newy += y;
+	  if (newx < x || newx > x + width || newy < y || newy > y + height)
+	    {
+	      /* CHKR_LIMIT them to the box area */
+	      /* new X valid position */
+	      if (newx < x)
+		newx = x + FrameTable[frame].FrLeftMargin;
+	      else if (newx > x + width)
+		newx = x + width + FrameTable[frame].FrLeftMargin;
+	      else
+		newx += FrameTable[frame].FrLeftMargin;
+	      
+	      /* new Y valid position */
+	      if (newy < y)
+		newy = y + FrameTable[frame].FrTopMargin;
+	      else if (newy > y + height)
+		newy = y + height + FrameTable[frame].FrTopMargin;
+	      else
+		newy += FrameTable[frame].FrTopMargin;
+	      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
+	    }
+	  else
+	    {
+	      newx += FrameTable[frame].FrLeftMargin;
+	      newy += FrameTable[frame].FrTopMargin;
+	    }
+	  
+	  /* Draw the new segments resulting of the new point */
+	  if (newx != lastx || newy != lasty)
+	    {
+	      if (x1 != -1)
+		{
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
+		}
+	      if (x3 != -1)
+		{
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
+		}
+	      
+	      XFlush (TtDisplay);
+	      lastx = newx;
+	      lasty = newy;
+	    }
+	}
+      else
+	{
+	  XNextEvent (TtDisplay, &event);
+	  
+	  /* check the coordinates */
+	  newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
+	  newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
+	  /* CHKR_LIMIT them to the box area */
+	  if (newx < x)
+	    {
+	      newx = x + FrameTable[frame].FrLeftMargin;
+	      wrap = TRUE;
+	    }
+	  else if (newx > x + width)
+	    {
+	      newx = x + width + FrameTable[frame].FrLeftMargin;
+	      wrap = TRUE;
+	    }
+	  else
+	    newx += FrameTable[frame].FrLeftMargin;
 
-		  if (newy < y)
-		     newy = y + FrameTable[frame].FrTopMargin;
-		  else if (newy > y + height)
-		     newy = y + height + FrameTable[frame].FrTopMargin;		/* nouvelle position en Y valide */
-		  else
-		     newy += FrameTable[frame].FrTopMargin;
-		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
-	       }
-	     else
-	       {
-		  newx += FrameTable[frame].FrLeftMargin;
-		  newy += FrameTable[frame].FrTopMargin;
-	       }
+	  if (newy < y)
+	    {
+	      newy = y + FrameTable[frame].FrTopMargin;
+	      wrap = TRUE;
+	    }
+	  else if (newy > y + height)
+	    {
+	      newy = y + height + FrameTable[frame].FrTopMargin;
+	      wrap = TRUE;
+	    }
+	  else
+	    newy += FrameTable[frame].FrTopMargin;
 
-	     /* Draw the new segments resulting of the new point */
-	     if (newx != lastx || newy != lasty)
-	       {
-		  if (x1 != -1)
-		    {
-		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
-		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
-		    }
-		  if (x3 != -1)
-		    {
-		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
-		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
-		    }
-
-		  XFlush (TtDisplay);
+	  switch (event.type)
+	    {
+	    case ButtonPress:
+	      lastx = newx;
+	      lasty = newy;
+	      if (wrap)
+		{
+		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+		  wrap = FALSE;
+		}
+	      break;
+	      
+	    case ButtonRelease:
+	      if (event.xbutton.button != Button3)
+		{
+		  /* left button : keep the new point */
+		  /* write down the new segment start point */
 		  lastx = newx;
 		  lasty = newy;
-	       }
-	  }
-	else
-	  {
-	     XNextEvent (TtDisplay, &event);
+		  x1 = lastx;
+		  y1 = lasty;
+		  nbpoints++;
+		  point++;
+		  /* update the box buffer */
+		  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+		  /* register the min and the max */
+		  if (newx < xMin)
+		    xMin = newx;
+		  if (newx > xMax)
+		    xMax = newx;
+		  if (newy < yMin)
+		    yMin = newy;
+		  if (newy > yMax)
+		    yMax = newy;
+		  AddPointInPolyline (Bbuffer, point, newx, newy);
+		  /* update the abstact box buffer */
+		  newx = (int) ((float) newx * ratioX);
+		  newy = (int) ((float) newy * ratioY);
+		  AddPointInPolyline (Pbuffer, point, newx, newy);
+		  
+		  if (event.xbutton.button != Button1)
+		    /* any other button : end of interraction */
+		    ret = 1;
+		}
+	      break;
 
-	     /* check the coordinates */
-	     newx = x + DO_ALIGN ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
-	     newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	     /* CHKR_LIMIT them to the box area */
-	     if (newx < x)
-	       {
-		  newx = x + FrameTable[frame].FrLeftMargin;
-		  wrap = TRUE;
-	       }
-	     else if (newx > x + width)
-	       {
-		  newx = x + width + FrameTable[frame].FrLeftMargin;
-		  wrap = TRUE;
-	       }
-	     else
-		newx += FrameTable[frame].FrLeftMargin;
+	    case Expose:
+	      f = GetWindowFrame (event.xexpose.window);
+	      if (f <= MAX_FRAME + 1)
+		FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
+	      XtDispatchEvent (&event);
+	      break;
+	      
+	    default:
+	      break;
+	    }
+	}
+    }
 
-	     if (newy < y)
-	       {
-		  newy = y + FrameTable[frame].FrTopMargin;
-		  wrap = TRUE;
-	       }
-	     else if (newy > y + height)
-	       {
-		  newy = y + height + FrameTable[frame].FrTopMargin;
-		  wrap = TRUE;
-	       }
-	     else
-		newy += FrameTable[frame].FrTopMargin;
+  /* erase the box border */
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-	     switch (event.type)
-		   {
-		      case ButtonPress:
-			 lastx = newx;
-			 lasty = newy;
-			 if (wrap)
-			   {
-			      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-			      wrap = FALSE;
-			   }
-			 break;
-
-		      case ButtonRelease:
-			 if (event.xbutton.button != Button3)
-			   {
-			      /* left button : keep the new point */
-			      /* write down the new segment start point */
-			      lastx = newx;
-			      lasty = newy;
-			      x1 = lastx;
-			      y1 = lasty;
-			      nbpoints++;
-			      point++;
-			      /* update the box buffer */
-			      newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
-			      newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-			      AddPointInPolyline (Bbuffer, point, newx, newy);
-			      /* update the abstact box buffer */
-			      newx = (int) ((float) newx * ratioX);
-			      newy = (int) ((float) newy * ratioY);
-			      AddPointInPolyline (Pbuffer, point, newx, newy);
-
-			      if (event.xbutton.button != Button1)
-				 /* any other button : end of interraction */
-				 ret = 1;
-			   }
-			 break;
-
-		      case Expose:
-			 f = GetWindowFrame (event.xexpose.window);
-			 if (f <= MAX_FRAME + 1)
-			    FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
-			 XtDispatchEvent (&event);
-			 break;
-
-		      default:
-			 break;
-		   }		/*switch */
-	  }
-     }
-
-   /* erase the box border */
-   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-
-   /* go back to previous state of Thot library */
-   ThotUngrab ();
-   XFlush (TtDisplay);
-   /* a valid polyline need at least 3 points */
-   if (nbpoints < 3)
-      return 1;
-   else
-      return nbpoints;
+  /* go back to previous state of Thot library */
+  ThotUngrab ();
+  XFlush (TtDisplay);
+  /* a valid polyline need at least 3 points */
+  if (nbpoints < 3)
+    return (1);
+  else if (draw)
+    {
+      x = PixelToPoint (x) * 1000;
+      y = PixelToPoint (y) * 1000;
+      SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
+    }
+  return (nbpoints);
 #endif /* _WINDOWS */
 }
 

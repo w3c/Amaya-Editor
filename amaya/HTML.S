@@ -73,7 +73,11 @@ STRUCT
 	MathDisp (ATTR mode = display, inline_math) = MathML;
 #endif
 #ifdef GRAPHML
-        XMLGraphics = GraphML;
+        XMLGraphics (ATTR Height_ = Integer; Width__ = Text;
+			IntWidthPercent = Integer;
+			IntWidthPxl = Integer)
+	 = GraphML
+	   with Height_ ?= 200, Width__ ?= '100%', IntWidthPercent ?= 100;
 #endif
 	Form;
 	Table;
@@ -88,8 +92,8 @@ STRUCT
 
   Horizontal_Rule (ATTR Align = left_, center_, right_;
 			NoShade = NoShade_; Size_ = Integer;
-			Width__ = Text; IntWidthPercent = Integer;
-			IntWidthPxl = Integer) =
+			Width__; IntWidthPercent;
+			IntWidthPxl) =
 	CONSTANT C_Empty;
 
   AddressContent = CASE OF
@@ -122,7 +126,7 @@ STRUCT
   Basic_Elem = CASE OF
         TEXT;
 	PICTURE (ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
-		 Height_ = Integer; Width__; IntWidthPercent; IntWidthPxl;
+		 Height_; Width__; IntWidthPercent; IntWidthPxl;
 		 hspace = Integer; vspace = Integer; Img_border = Integer;
 		 ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
 	Anchor;
@@ -390,6 +394,7 @@ EXCEPT
 	Preformatted:	ReturnCreateNL;
 #ifdef GRAPHML
 	HTMLfragment:	NoMove, NoResize, Hidden, NoSelect;
+	XMLGraphics:    MoveResize, NoMove;
 #endif
 
 #ifndef COUGAR

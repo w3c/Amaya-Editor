@@ -148,6 +148,40 @@ PtrBox              pBox;
 
 
 /*----------------------------------------------------------------------
+  GetParentCell returns the enlcosing Draw or NULL.                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrAbstractBox      GetParentDraw (PtrBox pBox)
+#else  /* __STDC__ */
+PtrAbstractBox      GetParentDraw (pBox)
+PtrBox              pBox;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox      pAb;
+   boolean             found;
+
+   if (pBox == NULL)
+     pAb = NULL;
+   else if (pBox->BxAbstractBox == NULL)
+     pAb = NULL;
+   else
+     {
+       /* check parents */
+       found = FALSE;
+       pAb = pBox->BxAbstractBox->AbEnclosing;
+       while (pAb != NULL && !found)
+	 {
+	   if (TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+	     found = TRUE;
+	   else
+	     pAb = pAb->AbEnclosing;
+	 }
+     }
+   return (pAb);
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetControlPoints (float x, float y, float l1, float l2, float theta1, float theta2, C_points * cp)

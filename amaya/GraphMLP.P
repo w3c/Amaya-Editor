@@ -624,6 +624,8 @@ RULES
    GraphML:
 	BEGIN
 	CreateLast (HR_Graph);
+        Width: Enclosing . Width;
+        Height: Enclosing . Height;
 	PageBreak: No;
 	LineBreak: No;
 	Justify: No;
@@ -631,6 +633,7 @@ RULES
 	LineWeight: 1 pt;
 	IN Graph_Structure_view BEGIN
 		Width: Enclosing . Width;
+        	Height	: Enclosed . Height;
 		Visibility: 10;
 		END;
 	END;

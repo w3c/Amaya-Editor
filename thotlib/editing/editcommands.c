@@ -77,6 +77,7 @@ static boolean      FromKeyboard;
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
+#include "changepresent_f.h"
 #include "content_f.h"
 #include "editcommands_f.h"
 #include "callback_f.h"
@@ -1399,13 +1400,16 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-  int                 xDelta, yDelta;
+  PtrAbstractBox      draw;
   PtrTextBuffer       pBuffer;
+  int                 xDelta, yDelta;
   int                 width, height;
+  int                 x, y;
 
   if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, TRUE))
     {
-      SwitchSelection (frame, FALSE);		/* fface la selection precedente */
+      SwitchSelection (frame, FALSE);
+      /* efface la selection precedente */
       switch (c)
 	{
 	case 'S':	/* Segments */
@@ -1433,30 +1437,38 @@ int                 frame;
 	      /* creation du buffer initial pour ranger les points de la polyline */
 	      GetTextBuffer (&(pAb->AbPolyLineBuffer));
 	      pAb->AbPolyLineBuffer->BuLength = 1;
-	      pAb->AbPolyLineBuffer->BuPoints[0].XCoord = PixelToPoint (width * 1000);
-	      pAb->AbPolyLineBuffer->BuPoints[0].YCoord = PixelToPoint (height * 1000);
+	      pAb->AbPolyLineBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
+	      pAb->AbPolyLineBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
 	      GetTextBuffer (&(pBox->BxBuffer));
 	      /* initialise la dimension de la boite polyline */
 	      pBox->BxBuffer->BuLength = 1;
-	      pBox->BxBuffer->BuPoints[0].XCoord = PixelToPoint (width * 1000);
-	      pBox->BxBuffer->BuPoints[0].YCoord = PixelToPoint (height * 1000);
+	      pBox->BxBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
+	      pBox->BxBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
 	      pBox->BxNChars = 1;
 	    }
 	  
 	  if (pBox->BxNChars == 1)
 	    {
 	      /* il faut saisir les points de la polyline */
+	      x = pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
+	      y = pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
+	      draw = GetParentDraw (pBox);
 	      if (c == 'w' || c == 'x' || c == 'y' || c == 'z')
-		pAb->AbVolume = PolyLineCreation (frame,
-						  pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg, pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg,
-						  pAb->AbPolyLineBuffer, pBox->BxBuffer,
-						  2);
+		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, draw, 2);
 	      else
-		pAb->AbVolume = PolyLineCreation (frame,
-						  pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg, pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg,
-						  pAb->AbPolyLineBuffer, pBox->BxBuffer,
-						  0);
+		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, draw, 0);
 	      pBox->BxNChars = pAb->AbVolume;
+	      if (draw)
+		{
+		  /* on force le reaffichage de la boite (+ les points de selection) */
+		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+		if (x != pBox->BxXOrg || y != pBox->BxYOrg)
+		  NewPosition (pAb, x, y, frame, TRUE);
+		width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
+		height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
+		if (width != pBox->BxWidth || height != pBox->BxHeight)
+		  NewDimension (pAb, width, height, frame, TRUE);
+		}
 #ifndef _WINDOWS
 	      pBox->BxXRatio = 1;
 	      pBox->BxYRatio = 1;
@@ -2172,7 +2184,7 @@ int                 editType;
 {
    PtrBox              pBox;
    PtrBox              pSelBox;
-   PtrAbstractBox      pAb, pCell;
+   PtrAbstractBox      pAb, pCell, draw;
    PtrAbstractBox      pLastAb, pBlock;
    AbDimension        *pPavD1;
    ViewSelection      *pViewSel;
@@ -2182,7 +2194,7 @@ int                 editType;
    Propagation         savePropagate;
    PtrLine             pLine;
    int                 xDelta, yDelta;
-   int                 i, j;
+   int                 i, j, width, height;
    int                 spacesDelta, charsDelta;
    int                 frame;
    boolean             still, ok;
@@ -2232,7 +2244,7 @@ int                 editType;
 		pAb = pBox->BxAbstractBox;
 	  }
 
-/*-- La commande coller concerne le mediateur --*/
+        /*-- La commande coller concerne le mediateur --*/
 	if (editType == TEXT_PASTE && !FromKeyboard)
 	   /* Il faut peut-etre deplacer la selection courante */
 	   SetInsert (&pAb, &frame, ClipboardType, FALSE);
@@ -2245,20 +2257,40 @@ int                 editType;
 	     {
 		if (pAb->AbLeafType == LtPolyLine)
 		  {
-		     /* Ajout de points dans une polyline */
-		     still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
-		     xDelta = pBox->BxXOrg - pFrame->FrXOrg;
-		     yDelta = pBox->BxYOrg - pFrame->FrYOrg;
-		     i = pViewSel->VsIndBox;
-		     pBox->BxNChars = PolyLineExtension (frame, xDelta, yDelta,
-							 pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, i, still);
-		     pAb->AbVolume = pBox->BxNChars;
-		     if (pBox->BxPictInfo != NULL)
-		       {
-			  /* reevalue les points de controle */
-			  free ((char *) pBox->BxPictInfo);
-			  pBox->BxPictInfo = NULL;
-		       }
+		    if (pAb->AbPolyLineShape != 'w' &&
+			pAb->AbPolyLineShape != 'x' &&
+			pAb->AbPolyLineShape != 'y' &&
+			pAb->AbPolyLineShape != 'z')
+		      {
+			/* Ajout de points dans une polyline */
+			still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
+			xDelta = pBox->BxXOrg - pFrame->FrXOrg;
+			yDelta = pBox->BxYOrg - pFrame->FrYOrg;
+			i = pViewSel->VsIndBox;
+			draw = GetParentDraw (pBox);
+			pBox->BxNChars = PolyLineExtension (frame,
+							    &xDelta, &yDelta,
+							    pBox, draw,
+							    pBox->BxNChars,
+							    i, still);
+			pAb->AbVolume = pBox->BxNChars;
+			if (draw)
+			  {
+			    /* on force le reaffichage de la boite (+ les points de selection) */
+			    width = pBox->BxWidth;
+			    height = pBox->BxHeight;
+			    DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+			    if (xDelta != pBox->BxXOrg || yDelta != pBox->BxYOrg)
+			      NewPosition (pAb, xDelta, yDelta, frame, TRUE);
+			    width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
+			    height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
+			    if (width != pBox->BxWidth || height != pBox->BxHeight)
+			      NewDimension (pAb, width, height, frame, TRUE);
+		}
+		      }
+		    else
+		      /* la commande est realisee par l'application */
+		      pAb = NULL;
 		  }
 		else
 		  {
@@ -2358,7 +2390,10 @@ int                 editType;
 		  {
 		    if (pBox->BxNChars <= 3)
 		      TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
-		    else
+		    else if (pAb->AbPolyLineShape != 'w' &&
+			     pAb->AbPolyLineShape != 'x' &&
+			     pAb->AbPolyLineShape != 'y' &&
+			     pAb->AbPolyLineShape != 'z')
 		      {
 			/* Destruction du point courant de la polyline */
 			charsDelta = pViewSel->VsIndBox;

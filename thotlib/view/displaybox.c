@@ -602,7 +602,7 @@ PtrBox              pBox;
      height = 0;
 
    /* Compute ratio for axis X */
-   val = PixelToPoint (width * 1000);
+   val = PixelToPoint (width) * 1000;
    if (val != pBox->BxBuffer->BuPoints[0].XCoord
        && pBox->BxBuffer->BuPoints[0].XCoord > 0)
      {
@@ -617,7 +617,7 @@ PtrBox              pBox;
       xRatio = 1.0;
 
    /* Compute ratio for axis Y */
-   val = PixelToPoint (height * 1000);
+   val = PixelToPoint (height) * 1000;
    if (val != pBox->BxBuffer->BuPoints[0].YCoord
        && pBox->BxBuffer->BuPoints[0].YCoord > 0)
      {

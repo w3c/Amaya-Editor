@@ -174,24 +174,28 @@ STRUCT
 
 EXCEPT
 
-   GraphML:		MoveResize, Hidden;
-   Label:		NoMove, Noresize;
-   Line_:		HighlightChildren;
-   Rectangle:		HighlightChildren;
-   RoundRect:		HighlightChildren;
-   Circle:		HighlightChildren;
-   Oval:		HighlightChildren;
-   Polyline:		HighlightChildren;
-   Polygon:		HighlightChildren;
-   Spline:		HighlightChildren;
-   ClosedSpline:	HighlightChildren;
+   GraphML:		NoMove, NoResize, Hidden;
+   Label:		NoMove, NoResize;
+   Line_:		MoveResize, HighlightChildren;
+   Rectangle:		MoveResize, HighlightChildren;
+   RoundRect:		MoveResize, HighlightChildren;
+   Circle:		MoveResize, HighlightChildren;
+   Oval:		MoveResize, HighlightChildren;
+   Polyline:		MoveResize, HighlightChildren;
+   Polygon:		MoveResize, HighlightChildren;
+   Spline:		MoveResize, HighlightChildren;
+   ClosedSpline:	MoveResize, HighlightChildren;
+   Group:               MoveResize;
+   GRAPHICS:		NoMove, NoResize;
+   TEXT:		NoMove, NoResize;
+   PICTURE:		MoveResize;
 
    Invalid_attribute:	Invisible;
    Ghost_restruct:	Invisible;
    IntPosX:		Invisible, NewHPos; 
    IntPosY:		Invisible, NewVPos;
-   IntWidth:		Invisible, NewWidth;
-   IntHeight:		Invisible, NewHeight;
+   IntWidth:		NewWidth, Invisible;
+   IntHeight:		NewHeight, Invisible;
    IntEmptyShape:	Invisible;
    IntLeftDistance:	Invisible;
    IntRightDistance:	Invisible;

@@ -4748,6 +4748,9 @@ RULES
 	CreateBefore(Graph_S);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
+	LineWeight: 1 pt;
+	Justify: No;
+	Hyphenate: No;
         IN Structure_view BEGIN
                 Width: 1 pt;
                 Height: 1 pt;
@@ -4760,9 +4763,8 @@ RULES
 	END;
  GraphML:
 	BEGIN
-	Justify: No;
-	Hyphenate: No;
-	LineWeight: 1 pt;
+	{Width: Enclosing . Width;
+	Height: Enclosing . Height;}
 	IN Structure_view
 		BEGIN
 		Visibility: 0;

@@ -343,6 +343,12 @@ extern void         TtaRaiseView (Document document, View view);
 extern void         TtaGiveActiveView (Document * document, /*OUT*/ View * view);
 
 /*----------------------------------------------------------------------
+  TtaClipPolyline update the Polyline box to fit the polyline bounding
+  box. Need to be within a draw
+  ----------------------------------------------------------------------*/
+extern void         TtaClipPolyline (Element element, Document doc, View view);
+
+/*----------------------------------------------------------------------
    TtaSetDisplayMode
 
    Changes display mode for a document. Three display modes are available.
@@ -443,6 +449,7 @@ extern boolean      TtaIsViewOpened ( /*Document document, View view */ );
 extern View         TtaGetViewFromName ( /* Document document, char *viewName */ );
 extern void         TtaRaiseView ( /*Document document, View view */ );
 extern void         TtaGiveActiveView ( /* Document *document, View *view */ );
+extern void         TtaClipPolyline ( /* Element element, Document doc, View view */ );
 extern void         TtaSetDisplayMode ( /* Document document, DisplayMode newDisplayMode */ );
 extern DisplayMode  TtaGetDisplayMode ( /* Document document */ );
 extern void         TtaListView ( /*Document document, View view, FILE *fileDescriptor */ );

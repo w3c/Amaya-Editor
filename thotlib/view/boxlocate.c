@@ -34,28 +34,28 @@
 #include "frame_tv.h"
 #include "units_tv.h"
 #include "platform_tv.h"
-#include "appdialogue_tv.h"
 
+#include "absboxes_f.h"
+#include "appdialogue_tv.h"
+#include "applicationapi_f.h"
 #include "appli_f.h"
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
-#include "views_f.h"
-#include "callback_f.h"
-#include "font_f.h"
-#include "units_f.h"
-#include "geom_f.h"
-#include "absboxes_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
+#include "callback_f.h"
 #include "changepresent_f.h"
-#include "boxselection_f.h"
+#include "exceptions_f.h"
+#include "font_f.h"
+#include "frame_f.h"
+#include "geom_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
-#include "exceptions_f.h"
-#include "applicationapi_f.h"
-#include "frame_f.h"
+#include "units_f.h"
+#include "views_f.h"
 
 #ifdef WWW_MSWINDOWS		/* map to MSVC library system calls */
 #include <math.h>
@@ -589,7 +589,7 @@ int                 y;
 		  i++;		/* changement de point */
 		  prevY = nextY;
 		  prevX = nextX;
-		  if (i == max)
+		  if (i > max)
 		    {
 		      nextX = 0;
 		      nextY = 0;
@@ -619,7 +619,7 @@ int                 y;
 		  i++;		/* changement de point */
 		  prevY = nextY;
 		  prevX = nextX;
-		  if (i == max)
+		  if (i > max)
 		    {
 		      nextX = 0;
 		      nextY = 0;
@@ -1608,7 +1608,7 @@ int                 ym;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
-   PtrAbstractBox      pAb;
+   PtrAbstractBox      pAb, draw;
    boolean             still, okH, okV;
    int                 x, width;
    int                 y, height;
@@ -1692,20 +1692,26 @@ int                 ym;
 		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
 		       /* Note si le trace est ouvert ou ferme */
 		       still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
-		       PolyLineModification (frame, x, y, pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, pointselect, still);
-		       /* Pour les courbes il faut recalculer les points de controle */
-		       if (pBox->BxPictInfo != NULL)
-			 {
-			    free ((char *) pBox->BxPictInfo);
-			    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
-			 }
-		       /* on force le reaffichage de la boite */
-		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
-		       RedrawFrameBottom (frame, 0);
 		       /* Reaffiche la selection */
 		       SwitchSelection (frame, FALSE);
+		       draw = GetParentDraw (pBox);
+		       PolyLineModification (frame, &x, &y,
+					     pBox, draw,
+					     pBox->BxNChars,
+					     pointselect, still);
+		       /* on force le reaffichage de la boite */
+		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+		       if (x != pBox->BxXOrg || y != pBox->BxYOrg)
+			 NewPosition (pAb, x, y, frame, TRUE);
+		       width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
+		       height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
+		       if (width != pBox->BxWidth || height != pBox->BxHeight)
+			 NewDimension (pAb, width, height, frame, TRUE);
+		       RedrawFrameBottom (frame, 0);
 		       NewContent (pAb);
 		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, FALSE);
+		       /* Reaffiche la selection */
+		       SwitchSelection (frame, TRUE);
 		    }
 	       }
 	     else

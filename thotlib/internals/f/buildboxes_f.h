@@ -9,6 +9,7 @@
 extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
                                          PtrAbstractBox pRoot );
 extern PtrAbstractBox GetParentCell ( PtrBox pBox );
+extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                         int nb );
 extern void GiveTextParams ( PtrTextBuffer pBuffer,
@@ -59,6 +60,7 @@ extern boolean ChangeConcreteImage ( int frame,
 extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb,
                                            PtrAbstractBox pRoot */);
 extern PtrAbstractBox GetParentCell (/* PtrBox pBox */);
+extern PtrAbstractBox GetParentDraw (/* PtrBox pBox */);
 extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
                                           int nb */);
 extern void GiveTextParams (/* PtrTextBuffer pBuffer,

@@ -2678,6 +2678,101 @@ Document            document;
 
 
 /*----------------------------------------------------------------------
+  TtaClipPolyline update the Polyline box to fit the polyline bounding
+  box. Need to be within a draw
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaClipPolyline (Element element, Document doc, View view)
+#else  /* __STDC__ */
+void                TtaClipPolyline (element, doc, view)
+Element             element;
+Document            doc;
+View                view;
+#endif /* __STDC__ */
+{
+  PtrDocument         pDoc;
+  PtrAbstractBox      pAb;
+  PtrBox              pBox;
+  PtrTextBuffer       Bbuffer;
+  int                 xMin, yMin, xMax, yMax;
+  int                 x, y, width, height;
+  int                 nbpoints, i, j;
+  int                 frame;
+
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!((PtrElement) element)->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (((PtrElement) element)->ElLeafType != LtPolyLine)
+    TtaError (ERR_invalid_element_type);
+  else if (doc < 1 || doc > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      pDoc = LoadedDocument[doc - 1];
+      if (pDoc == NULL)
+	TtaError (ERR_invalid_document_parameter);
+      else
+	{
+	  /* parameter document is correct */
+	  frame = GetWindowNumber (doc, view);
+	  pAb = pDoc->DocViewRootAb[view - 1];
+	  if (pAb != NULL && pAb->AbBox != NULL)
+	    {
+	      pBox = pAb->AbBox;
+	      /* it's a polyline: check the box limits */
+	      Bbuffer = pBox->BxBuffer;
+	      xMin = PixelToPoint (pBox->BxWidth) * 1000;
+	      xMax = 0.;
+	      yMin = PixelToPoint (pBox->BxHeight) * 1000;
+	      yMax = 0.;
+	      nbpoints = pBox->BxNChars;
+	      if (nbpoints == 0)
+		return;
+	      for (i = 1; i < nbpoints; i++)
+		{
+		  if (j >= Bbuffer->BuLength)
+		    {
+		      if (Bbuffer->BuNext != NULL)
+			{
+			  /* Next buffer */
+			  Bbuffer = Bbuffer->BuNext;
+			  j = 0;
+			}
+		    }
+		  x = Bbuffer->BuPoints[j].XCoord;
+		  y = Bbuffer->BuPoints[j].YCoord;
+		  /* register the min and the max */
+		  if (x < xMin)
+		    xMin = x;
+		  if (x > xMax)
+		    xMax = x;
+		  if (y < yMin)
+		    yMin = y;
+		  if (y > yMax)
+		    yMax = y;
+		  j++;
+		}
+	      x = pBox->BxXOrg;
+	      y = pBox->BxYOrg;
+	      /* pack the box and return the new origins */
+	      SetBoundingBox (xMin, xMax, &x, yMin, yMax, &y, pBox, nbpoints);
+	      if (x != pBox->BxXOrg || y != pBox->BxYOrg)
+		NewPosition (pAb, x, y, frame, TRUE);
+	      width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
+	      height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
+	      if (width != pBox->BxWidth || height != pBox->BxHeight)
+		NewDimension (pAb, width, height, frame, TRUE);
+	      /*RedrawFrameBottom (frame, 0);*/
+	      /* Reaffiche la selection */
+	      /*SwitchSelection (frame, FALSE);*/
+	    }
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
    TtaSetDisplayMode
 
    Changes display mode for a document. Three display modes are available.

@@ -30,22 +30,23 @@
 #endif
 #include "typecorr.h"
 
-#include "tree_f.h"
-#include "attributes_f.h"
-#include "font_f.h"
-#include "units_f.h"
-#include "picture_f.h"
-#include "changepresent_f.h"
-#include "changeabsbox_f.h"
-#include "memory_f.h"
-#include "structselect_f.h"
 #ifndef NODISPLAY
 #include "boxselection_f.h"
+#include "geom_f.h"
 #endif
+#include "attributes_f.h"
+#include "changepresent_f.h"
+#include "changeabsbox_f.h"
 #include "content_f.h"
+#include "font_f.h"
+#include "picture_f.h"
+#include "memory_f.h"
+#include "structselect_f.h"
 #include "thotmsg_f.h"
-#include "writepivot_f.h"
+#include "tree_f.h"
+#include "units_f.h"
 #include "viewapi_f.h"
+#include "writepivot_f.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT

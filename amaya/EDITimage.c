@@ -580,7 +580,7 @@ NotifyElement      *event;
    imagename = (char*) TtaGetMemory (MAX_LENGTH);
    pathimage = (char*) TtaGetMemory (MAX_LENGTH);
    strcpy (imagename, " ");
-   TtaExtractName (text, pathimage, &imagename[7]);
+   TtaExtractName (text, pathimage, &imagename[1]);
    strcat (imagename, " ");
    TtaSetAttributeText (attr, imagename, elSRC, doc);
    TtaFreeMemory (pathimage);
