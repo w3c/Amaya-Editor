@@ -276,11 +276,6 @@ RULES
  BDO:	BEGIN
 	END;
 
- IFRAME: BEGIN
-	Create '\12';
-	Create '\12' After;
-	END;
-
 #ifdef MATHML
  Math:  BEGIN
         Create '[math]';
@@ -567,6 +562,23 @@ RULES
 
  Comment_line:
 	Remove;
+
+ FRAMESET: BEGIN
+	END;
+
+ Frames: BEGIN
+	END;
+
+ NOFRAMES: BEGIN
+	END;
+
+ FRAME: BEGIN
+	END;
+
+ IFRAME: BEGIN
+	Create '\12';
+	Create '\12' After;
+	END;
 
 ATTRIBUTES
 
@@ -1165,6 +1177,43 @@ ATTRIBUTES
 		END;
 
  No_wrap = no_wrap:
+		BEGIN
+		END;
+
+ RowHeight:
+		BEGIN
+		END;
+ ColWidth:
+		BEGIN
+		END;
+ FrameName:
+		BEGIN
+		END;
+ FrameSrc:
+		BEGIN
+		END;
+ frameborder = Border1:
+		BEGIN
+		END;
+ frameborder = Border0:
+		BEGIN
+		END;
+ marginwidth:
+		BEGIN
+		END;
+ marginheight:
+		BEGIN
+		END;
+ no_resize:
+		BEGIN
+		END;
+ scrolling = Yes_:
+		BEGIN
+		END;
+ scrolling = No_:
+		BEGIN
+		END;
+ scrolling = auto:
 		BEGIN
 		END;
 

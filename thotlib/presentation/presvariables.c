@@ -69,7 +69,7 @@ PtrSSchema          pSchStr;
       return pCounter->CnItem[0].CiElemType;
 
    /* initialise l'alias temporaire */
-   strncpy (NewAlias->SrName, "Alias de compteur", 17);
+   strcpy (NewAlias->SrName, "Counter alias");
    NewAlias->SrNDefAttrs = 0;
    NewAlias->SrNLocalAttrs = 0;
    NewAlias->SrAssocElem = FALSE;
@@ -257,10 +257,11 @@ PtrElement          pEl;
 {
    int		i;
 
-   for (i = 0; i < pCounter->CnNItems; i++)
-      if (pCounter->CnItem[i].CiCntrOp == cntrOp)
-	if (EquivalentType (pEl, pCounter->CnItem[i].CiElemType, pSS))
-   	    return i;
+   if (pEl)
+      for (i = 0; i < pCounter->CnNItems; i++)
+         if (pCounter->CnItem[i].CiCntrOp == cntrOp)
+	    if (EquivalentType (pEl, pCounter->CnItem[i].CiElemType, pSS))
+   	      return i;
    return (-1);
 }
 
@@ -793,7 +794,7 @@ int                 view;
 	/* Cherche le premier element de type TypeSet englobant l'element */
 	/* a numeroter */
 	pEl = GetTypedAncestor (pElNum, TypeSet, pSS);
-	if (CondAttr)
+	if (CondAttr && pEl)
 	  /* there is a condition on attributes for this counter */
 	  {
 	  found = FALSE;

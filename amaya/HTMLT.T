@@ -18,7 +18,10 @@ RULES
 	Create '<html xmlns="http://www.w3.org/TR/REC-html40"\12';
 	Create Namespaces;
 #else
-	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\12';
+	if HtmlDTD = Frameset
+	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12   "http://www.w3.org/TR/REC-html40/frameset.dtd">\12';
+        if not HtmlDTD = Frameset
+	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\12';
 	Create '<html';
 #endif
 	Create Attributes;
@@ -402,13 +405,6 @@ RULES
 	Create Attributes;
 	Create '>';
 	Create '</bdo>' After;
-	END;
-
- IFRAME: BEGIN
-	Create '<iframe';
-	Create Attributes;
-	Create '>\12';
-	Create '</iframe>\12' After;	
 	END;
 
 #ifdef MATHML
@@ -856,6 +852,45 @@ RULES
 
  Comment_line: BEGIN
 	if not last create '\12' after;
+	END;
+
+ FRAMESET: BEGIN
+	Create '<frameset';
+	Create Attributes;
+	Create '>\12';
+        indent +2;
+        indent -2 after;
+	Create '</frameset>\12' After;
+	END;
+
+ Frames: BEGIN
+	END;
+
+ NOFRAMES: BEGIN
+	Create '<noframes';
+	Create Attributes;
+	Create '>\12';
+        indent +2;
+        indent -2 after;
+	Create '</noframes>\12' After;
+	END;
+
+ FRAME: BEGIN
+	Create '<frame';
+	Remove;
+	Create Attributes;
+#ifdef XML
+	Create ' />\12';
+#else
+	Create '>\12';
+#endif
+	END;
+
+ IFRAME: BEGIN
+	Create '<iframe';
+	Create Attributes;
+	Create '>\12';
+	Create '</iframe>\12' After;	
 	END;
 
 ATTRIBUTES
@@ -1757,6 +1792,58 @@ ATTRIBUTES
 
  No_wrap = no_wrap:
 	Create ' nowrap';
+
+ RowHeight: BEGIN
+	Create ' rows="';
+	Create RowHeight;
+	Create DoubleQuote;
+	END;
+
+ ColWidth: BEGIN
+	Create ' cols="';
+	Create ColWidth;
+	Create DoubleQuote;
+	END;
+
+ FrameName: BEGIN
+	Create ' name="';
+	Create FrameName;
+	Create DoubleQuote;
+	END;
+
+ FrameSrc: BEGIN
+	Create ' src="';
+	Create FrameSrc;
+	Create DoubleQuote;
+	END;
+
+ frameborder = Border1:
+	Create ' frameborder="1"';
+ frameborder = Border0:
+	Create ' frameborder="0"';
+
+ marginwidth: BEGIN
+	Create ' marginwidth="';
+	Create marginwidth;
+	Create DoubleQuote;
+	END;
+
+ marginheight: BEGIN
+	Create ' marginheight="';
+	Create marginheight;
+	Create DoubleQuote;
+	END;
+
+ no_resize: BEGIN
+	Create ' noresize="noresize"';
+	END;
+
+ scrolling = Yes_:
+	Create ' scrolling="yes"';
+ scrolling = No_:
+	Create ' scrolling="no"';
+ scrolling = auto:
+	Create ' scrolling="auto"';
 
  Invalid_attribute:
 	Create Invalid_attribute;

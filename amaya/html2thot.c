@@ -562,6 +562,8 @@ static GIMapping    HTMLGIMappingTable[] =
    {"EM", SPACE, HTML_EL_Emphasis, NULL},
    {"FONT", SPACE, HTML_EL_Font_, NULL},
    {"FORM", SPACE, HTML_EL_Form, NULL},
+   {"FRAME", 'E', HTML_EL_FRAME, NULL},
+   {"FRAMESET", SPACE, HTML_EL_FRAMESET, NULL},
    {"H1", SPACE, HTML_EL_H1, NULL},
    {"H2", SPACE, HTML_EL_H2, NULL},
    {"H3", SPACE, HTML_EL_H3, NULL},
@@ -590,6 +592,7 @@ static GIMapping    HTMLGIMappingTable[] =
 #endif
    {"MENU", SPACE, HTML_EL_Menu, NULL},
    {"META", 'E', HTML_EL_META, NULL},
+   {"NOFRAMES", SPACE, HTML_EL_NOFRAMES, NULL},
    {"NOSCRIPT", SPACE, HTML_EL_NOSCRIPT, NULL},
    {"OBJECT", SPACE, HTML_EL_Object, NULL},
    {"OL", SPACE, HTML_EL_Numbered_List, NULL},
@@ -641,7 +644,7 @@ static int          NoTextChild[] =
    HTML_EL_Form, HTML_EL_Menu, HTML_EL_Numbered_List, HTML_EL_Option_Menu,
    HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
    HTML_EL_MAP, HTML_EL_Applet,
-   HTML_EL_Object, HTML_EL_IFRAME,
+   HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
    HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
    HTML_EL_Table, HTML_EL_thead, HTML_EL_tbody, HTML_EL_tfoot, HTML_EL_Table_row,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
@@ -657,13 +660,14 @@ static int          EmptyElement[] =
    HTML_EL_BASE,
    HTML_EL_BaseFont,
    HTML_EL_BR,
+   HTML_EL_FRAME,
    HTML_EL_Horizontal_Rule,
-   HTML_EL_PICTURE_UNIT,
    HTML_EL_Input,
    HTML_EL_ISINDEX,
    HTML_EL_LINK,
    HTML_EL_META,
    HTML_EL_Parameter,
+   HTML_EL_PICTURE_UNIT,
    0};
 
 /* character level elements */
@@ -780,6 +784,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"ALIGN", "H5", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "H6", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "HR", 'A', HTML_ATTR_TextAlign},
+   {"ALIGN", "IFRAME", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "IMG", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "INPUT", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "OBJECT", 'A', HTML_ATTR_Alignment},
@@ -817,7 +822,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"CODETYPE", "", 'A', HTML_ATTR_codetype},
    {"COLOR", "BASEFONT", 'A', HTML_ATTR_BaseFontColor},
    {"COLOR", "", 'A', HTML_ATTR_color},
-   {"COLS", "", 'A', HTML_ATTR_Columns},
+   {"COLS", "FRAMESET", 'A', HTML_ATTR_ColWidth},
+   {"COLS", "TEXTAREA", 'A', HTML_ATTR_Columns},
    {"COLSPAN", "", 'A', HTML_ATTR_colspan_},
    {"COMPACT", "", 'A', HTML_ATTR_COMPACT},
    {"CONTENT", "", 'A', HTML_ATTR_meta_content},
@@ -839,6 +845,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"FOR", "LABEL", 'A', HTML_ATTR_Associated_control},
    {"FOR", "SCRIPT", 'A', HTML_ATTR_for_},
    {"FRAME", "TABLE", 'A', HTML_ATTR_frame},
+   {"FRAMEBORDER", "", 'A', HTML_ATTR_frameborder},
 
    {"HEADERS", "", 'A', HTML_ATTR_headers},
    {"HEIGHT", "", 'A', HTML_ATTR_Height_},
@@ -856,6 +863,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"LINK", "", 'A', HTML_ATTR_LinkColor},
    {"LONGDESC", "", 'A', HTML_ATTR_longdesc},
 
+   {"MARGINHEIGHT", "", 'A', HTML_ATTR_marginheight},
+   {"MARGINWIDTH", "", 'A', HTML_ATTR_marginwidth},
    {"MAXLENGTH", "", 'A', HTML_ATTR_MaxLength},
    {"MEDIA", "", 'A', HTML_ATTR_media},
    {"METHOD", "", 'A', HTML_ATTR_METHOD},
@@ -866,10 +875,13 @@ static AttributeMapping HTMLAttributeMappingTable[] =
 
    {"N", "", 'C', 0},
    {"NAME", "APPLET", 'A', HTML_ATTR_applet_name},
+   {"NAME", "FRAME", 'A', HTML_ATTR_FrameName},
+   {"NAME", "IFRAME", 'A', HTML_ATTR_FrameName},
    {"NAME", "META", 'A', HTML_ATTR_meta_name},
    {"NAME", "PARAM", 'A', HTML_ATTR_Param_name},
    {"NAME", "", 'A', HTML_ATTR_NAME},
    {"NOHREF", "", 'A', HTML_ATTR_nohref},
+   {"NORESIZE", "", 'A', HTML_ATTR_no_resize},
    {"NOSHADE", "", 'A', HTML_ATTR_NoShade},
    {"NOWRAP", "", 'A', HTML_ATTR_No_wrap},
 
@@ -899,12 +911,14 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"READONLY", "", 'A', HTML_ATTR_readonly},
    {"REL", "", 'A', HTML_ATTR_REL},
    {"REV", "", 'A', HTML_ATTR_REV},
-   {"ROWS", "", 'A', HTML_ATTR_Rows},
+   {"ROWS", "FRAMESET", 'A', HTML_ATTR_RowHeight},
+   {"ROWS", "TEXTAREA", 'A', HTML_ATTR_Rows},
    {"ROWSPAN", "", 'A', HTML_ATTR_rowspan_},
    {"RULES", "TABLE", 'A', HTML_ATTR_rules_},
 
    {"SCHEME", "META", 'A', HTML_ATTR_scheme},
    {"SCOPE", "", 'A', HTML_ATTR_scope},
+   {"SCROLLING", "", 'A', HTML_ATTR_scrolling},
    {"SELECTED", "", 'A', HTML_ATTR_Selected},
    {"SHAPE", "", 'A', HTML_ATTR_shape},
    {"SIZE", "BASEFONT", 'A', HTML_ATTR_BaseFontSize},
@@ -912,6 +926,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"SIZE", "HR", 'A', HTML_ATTR_Size_},
    {"SIZE", "INPUT", 'A', HTML_ATTR_Area_Size},
    {"SIZE", "SELECT", 'A', HTML_ATTR_MenuSize},
+   {"SRC", "FRAME", 'A', HTML_ATTR_FrameSrc},
+   {"SRC", "IFRAME", 'A', HTML_ATTR_FrameSrc},
    {"SRC", "SCRIPT", 'A', HTML_ATTR_script_src},
    {"SRC", "", 'A', HTML_ATTR_SRC},
    {"STANDBY", "", 'A', HTML_ATTR_standby},
@@ -953,6 +969,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
 
    {"WIDTH", "APPLET", 'A', HTML_ATTR_Width__},
    {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
+   {"WIDTH", "IFRAME", 'A', HTML_ATTR_Width__},
    {"WIDTH", "IMG", 'A', HTML_ATTR_Width__},
    {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width__},
    {"WIDTH", "PRE", 'A', HTML_ATTR_Width__},
@@ -1025,6 +1042,13 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_frame, "VSIDES", HTML_ATTR_frame_VAL_vsides},
    {HTML_ATTR_frame, "BOX", HTML_ATTR_frame_VAL_box},
    {HTML_ATTR_frame, "BORDER", HTML_ATTR_frame_VAL_border},
+
+   {HTML_ATTR_frameborder, "0", HTML_ATTR_frameborder_VAL_Border0},
+   {HTML_ATTR_frameborder, "1", HTML_ATTR_frameborder_VAL_Border1},
+
+   {HTML_ATTR_scrolling, "YES", HTML_ATTR_scrolling_VAL_Yes_},
+   {HTML_ATTR_scrolling, "NO", HTML_ATTR_scrolling_VAL_No_},
+   {HTML_ATTR_scrolling, "AUTO", HTML_ATTR_scrolling_VAL_auto},
 
    {HTML_ATTR_rules_, "NONE", HTML_ATTR_rules__VAL_none},
    {HTML_ATTR_rules_, "GROUPS", HTML_ATTR_rules__VAL_groups},
@@ -2665,7 +2689,8 @@ Element             el;
 #endif
 {
    ElementType         elType, newElType, childType;
-   Element             constElem, child, desc, leaf, prev, next, last;
+   Element             constElem, child, desc, leaf, prev, next, last,
+		       elFrames, lastFrame, lastChild;
    Attribute           attr;
    AttributeType       attrType;
    char               *text;
@@ -2798,6 +2823,41 @@ Element             el;
 	   prev = child;
 	   child = next;
 	   }
+	break;
+
+    case HTML_EL_FRAMESET:
+	/* The FRAMESET element is now complete.  Gather all its FRAMESET
+	   and FRAME children and wrap them up in a Frames element */
+	elFrames = NULL; lastFrame = NULL;
+	lastChild = NULL;
+	child = TtaGetFirstChild (el);
+	while (child != NULL)
+	   {
+	   next = child;
+	   TtaNextSibling (&next);
+	   elType = TtaGetElementType (child);
+	   if (elType.ElTypeNum == HTML_EL_FRAMESET ||
+	       elType.ElTypeNum == HTML_EL_FRAME ||
+	       elType.ElTypeNum == HTML_EL_Comment_)
+	       {
+	       /* create the Frames element if it does not exist */
+	       if (elFrames == NULL)
+		 {
+		    newElType.ElSSchema = HTMLSSchema;
+		    newElType.ElTypeNum = HTML_EL_Frames;
+		    elFrames = TtaNewElement (theDocument, newElType);
+		    TtaInsertSibling (elFrames, child, TRUE, theDocument);
+		 }
+	       /* move the element as the last child of the Frames element */
+	       TtaRemoveTree (child, theDocument);
+	       if (lastFrame == NULL)
+		  TtaInsertFirstChild (&child, elFrames, theDocument);
+	       else
+		  TtaInsertSibling (child, lastFrame, FALSE, theDocument);
+	       lastFrame = child;
+	       }
+	   child = next;
+           }
 	break;
 
     case HTML_EL_Input:	/* it's an INPUT without any TYPE attribute */
@@ -4224,6 +4284,7 @@ int                 oldWidth;
   AttributeType      attrTypePxl, attrTypePercent;
   Attribute          attrOld, attrNew;
   int                length, val;
+  unsigned char      msgBuffer[MaxMsgLength];
 #ifndef STANDALONE
   ElementType	     elType;
   int                w, h;
@@ -4233,7 +4294,7 @@ int                 oldWidth;
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT);
 #endif
 
-  /* is the last character a '%' ? */
+  /* remove trailing spaces */
   length = strlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
     length--;
@@ -4241,6 +4302,7 @@ int                 oldWidth;
   attrTypePercent.AttrSSchema = TtaGetDocumentSSchema (doc);
   attrTypePxl.AttrTypeNum = HTML_ATTR_IntWidthPxl;
   attrTypePercent.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+  /* is the last character a '%' ? */
   if (buffer[length] == '%')
     {
       /* remove IntWidthPxl */
@@ -4287,8 +4349,15 @@ int                 oldWidth;
 
   if (attrOld != NULL)
     TtaRemoveAttribute (el, attrOld, doc);
-  sscanf (buffer, "%d", &val);
-  TtaSetAttributeValue (attrNew, val, el, doc);
+  if (sscanf (buffer, "%d", &val))
+    TtaSetAttributeValue (attrNew, val, el, doc);
+  else
+    /* its not a number. Delete attribute and send an error message */
+    {
+    TtaRemoveAttribute (el, attrNew, doc);
+    sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+    ParseHTMLError (doc, msgBuffer);
+    }
 #ifndef STANDALONE
   if (isImage)
     UpdateImageMap (el, doc, oldWidth, -1);
@@ -4312,6 +4381,7 @@ Document            doc;
    AttributeType       attrType;
    int                 val, ind, factor, delta;
    Attribute           attr;
+   unsigned char       msgBuffer[MaxMsgLength];
 
    /* is the first character a '+' or a '-' ? */
    ind = 0;
@@ -4336,15 +4406,25 @@ Document            doc;
      }
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-     {
-       /* this attribute doesn't exist, create it */
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (el, attr, doc);
-     }
-   sscanf (&buffer[ind], "%d", &val);
-   val = val * factor + delta;
-   TtaSetAttributeValue (attr, val, el, doc);
+   if (sscanf (&buffer[ind], "%d", &val))
+      {
+      val = val * factor + delta;
+      if (attr == NULL)
+        {
+        /* this attribute doesn't exist, create it */
+        attr = TtaNewAttribute (attrType);
+        TtaAttachAttribute (el, attr, doc);
+        }
+      TtaSetAttributeValue (attr, val, el, doc);
+      }
+   else
+      /* its not a number. Delete attribute and send an error message */
+      {
+      if (attr)
+         TtaRemoveAttribute (el, attr, doc);
+      sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+      ParseHTMLError (doc, msgBuffer);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -4414,169 +4494,184 @@ char                c;
 
    if (!done)
      {
-	val = 0;
-	translation = lastAttrEntry->AttrOrContent;
-	switch (translation)
+     val = 0;
+     translation = lastAttrEntry->AttrOrContent;
+     switch (translation)
+	{
+	 case 'C':	/* Content */
+	    child = PutInContent (inputBuffer);
+	    if (child != NULL)
+	       TtaAppendTextContent (child, "\" ", theDocument);
+	    break;
+	 case 'A':
+	    if (lastAttribute != NULL)
 	      {
-		 case 'C':	/* Content */
-		    child = PutInContent (inputBuffer);
-		    if (child != NULL)
-		       TtaAppendTextContent (child, "\" ", theDocument);
-		    break;
-		 case 'A':
-		    if (lastAttribute != NULL)
-		      {
-			 TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
-			 switch (attrKind)
-			       {
-				  case 0:	/* enumerate */
-				     val = MapAttrValue (lastAttrEntry->ThotAttribute, inputBuffer);
-				     if (val < 0)
-				       {
-					  TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
-					  attrName = TtaGetAttributeName (attrType);
-					  sprintf (msgBuffer, "Unknown attribute value \"%s = %s\"",
-						   attrName, inputBuffer);
-					  ParseHTMLError (theDocument, msgBuffer);
-					  /* remove the attribute and replace it by an */
-					  /* Invalid_attribute */
-					  TtaRemoveAttribute (lastAttrElement, lastAttribute,
-							      theDocument);
-					  attrType.AttrSSchema = HTMLSSchema;
-					  attrType.AttrTypeNum = HTMLAttributeMappingTable[0].ThotAttribute;
-					  sprintf (msgBuffer, "%s=%s", attrName, inputBuffer);
-					  CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
-				       }
-				     else
-					  TtaSetAttributeValue (lastAttribute,
-					    val, lastAttrElement, theDocument);
-				     break;
-				  case 1:	/* integer */
-				    if (attrType.AttrTypeNum == HTML_ATTR_Border &&
-					!strcasecmp (inputBuffer, "border") )
-					/* BORDER="BORDER" for a TABLE */
-					val = 1;
-				    else
-				        sscanf (inputBuffer, "%d", &val);
-				     TtaSetAttributeValue (lastAttribute, val, lastAttrElement,
-							   theDocument);
-				     break;
-				  case 2:	/* text */
-				     if (!IgnoreAttr)
-					{
-					TtaSetAttributeText (lastAttribute, inputBuffer,
+		TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+		switch (attrKind)
+		  {
+		  case 0:	/* enumerate */
+		     val = MapAttrValue (lastAttrEntry->ThotAttribute,
+					 inputBuffer);
+		     if (val < 0)
+		        {
+			TtaGiveAttributeType (lastAttribute, &attrType,
+					      &attrKind);
+			attrName = TtaGetAttributeName (attrType);
+			sprintf (msgBuffer, "Unknown attribute value \"%s = %s\"",
+				 attrName, inputBuffer);
+			ParseHTMLError (theDocument, msgBuffer);
+			/* remove the attribute and replace it by an */
+			/* Invalid_attribute */
+			TtaRemoveAttribute (lastAttrElement, lastAttribute,
+					    theDocument);
+			attrType.AttrSSchema = HTMLSSchema;
+			attrType.AttrTypeNum = HTMLAttributeMappingTable[0].ThotAttribute;
+			sprintf (msgBuffer, "%s=%s", attrName, inputBuffer);
+			CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
+		        }
+		     else
+			TtaSetAttributeValue (lastAttribute, val,
 					      lastAttrElement, theDocument);
-					if (attrType.AttrTypeNum == HTML_ATTR_Langue)
-					   /* it's a LANG attribute value */
-					   {
-					   lang = TtaGetLanguageIdFromName (inputBuffer);
-					   if (lang == 0)
-					      {
-					      sprintf (msgBuffer, "Unknown language: %s", inputBuffer);
-					      ParseHTMLError (theDocument, msgBuffer);
-					      }
-					   else
-					      {
-					      /* change current language */
-					      currentLanguage = lang;
-					      LanguageStack[StackLevel - 1] = currentLanguage;
-					      }
-					   }
-					}
-				     else
-					/* this is the content of an invalid attribute */
-					/* append it to the current Invalid_attribute */
-				       {
-					  length = strlen (inputBuffer) + 2;
-					  length += TtaGetTextAttributeLength (lastAttribute);
-					  buffer = TtaGetMemory (length + 1);
-					  TtaGiveTextAttributeValue (lastAttribute, buffer, &length);
-					  strcat (buffer, "=");
-					  strcat (buffer, inputBuffer);
-					  TtaSetAttributeText (lastAttribute, buffer,
-					      lastAttrElement, theDocument);
-					  TtaFreeMemory (buffer);
-				       }
-				     break;
-				  case 3:	/* reference */
-				     break;
-			       }
-		      }
-		    break;
-		 case SPACE:
-		    TypeAttrValue (inputBuffer);
-		    break;
-		 default:
-		    break;
-	      }
-
-	if (lastAttrEntry->ThotAttribute == HTML_ATTR_Width__)
-	   /* HTML attribute "width" for a Table or a HR */
-	   /* create the corresponding attribute IntWidthPercent or */
-	   /* IntWidthPxl */
-	   CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument, -1);
-
-	else if (!strcmp (lastAttrEntry->XMLattribute, "SIZE"))
-	  {
-	     TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
-	     if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
-		CreateAttrIntSize (inputBuffer, lastAttrElement, theDocument);
-	  }
-	else if (!strcmp (lastAttrEntry->XMLattribute, "SHAPE"))
-	  {
-	     child = TtaGetFirstChild (lastAttrElement);
-	     if (child != NULL)
-	       {
-		  switch (val)
+		     break;
+		  case 1:	/* integer */
+		     if (attrType.AttrTypeNum == HTML_ATTR_Border &&
+			 !strcasecmp (inputBuffer, "border") )
+			/* BORDER="BORDER" for a TABLE */
 			{
-			   case HTML_ATTR_shape_VAL_rectangle:
-			      shape = 'R';
-			      break;
-			   case HTML_ATTR_shape_VAL_circle:
-			      shape = 'a';
-			      break;
-			   case HTML_ATTR_shape_VAL_polygon:
-			      shape = 'p';
-			      break;
-			   default:
-			      shape = SPACE;
-			      break;
+			val = 1;
+			TtaSetAttributeValue (lastAttribute, val,
+					      lastAttrElement, theDocument);
 			}
-		  TtaSetGraphicsShape (child, shape, theDocument);
-	       }
-	  }
-	else if (!strcmp (lastAttrEntry->XMLattribute, "VALUE"))
-	  {
-	     elType = TtaGetElementType (lastAttrElement);
-	     if (elType.ElTypeNum == HTML_EL_Text_Input ||
-		 elType.ElTypeNum == HTML_EL_Password_Input ||
-		 elType.ElTypeNum == HTML_EL_File_Input ||
-		 elType.ElTypeNum == HTML_EL_Input)
-		/* create a Default_Value attribute with the same content */
+		     else
+		        if (sscanf (inputBuffer, "%d", &val))
+			   TtaSetAttributeValue (lastAttribute, val,
+						 lastAttrElement, theDocument);
+			else
+			   {
+			   TtaRemoveAttribute (lastAttrElement, lastAttribute,
+					       theDocument);
+			   sprintf (msgBuffer, "Invalid attribute value \"%s\"", inputBuffer);
+			   ParseHTMLError (theDocument, msgBuffer);
+			   }
+		     break;
+		  case 2:	/* text */
+		     if (!IgnoreAttr)
+			{
+			TtaSetAttributeText (lastAttribute, inputBuffer,
+			      lastAttrElement, theDocument);
+			if (attrType.AttrTypeNum == HTML_ATTR_Langue)
+			   /* it's a LANG attribute value */
+			   {
+			   lang = TtaGetLanguageIdFromName (inputBuffer);
+			   if (lang == 0)
+			      {
+			      sprintf (msgBuffer, "Unknown language: %s",
+				       inputBuffer);
+			      ParseHTMLError (theDocument, msgBuffer);
+			      }
+			   else
+			      {
+			      /* change current language */
+			      currentLanguage = lang;
+			      LanguageStack[StackLevel - 1] = currentLanguage;
+			      }
+			   }
+			}
+		     else
+			/* this is the content of an invalid attribute */
+			/* append it to the current Invalid_attribute */
+		        {
+			length = strlen (inputBuffer) + 2;
+			length += TtaGetTextAttributeLength (lastAttribute);
+			buffer = TtaGetMemory (length + 1);
+			TtaGiveTextAttributeValue (lastAttribute, buffer,
+						   &length);
+			strcat (buffer, "=");
+			strcat (buffer, inputBuffer);
+			TtaSetAttributeText (lastAttribute, buffer,
+					     lastAttrElement, theDocument);
+			TtaFreeMemory (buffer);
+		        }
+		     break;
+		  case 3:	/* reference */
+		     break;
+	          }
+	      }
+	    break;
+	 case SPACE:
+	    TypeAttrValue (inputBuffer);
+	    break;
+	 default:
+	    break;
+	}
+
+     if (lastAttrEntry->ThotAttribute == HTML_ATTR_Width__)
+        /* HTML attribute "width" for a Table or a HR */
+        /* create the corresponding attribute IntWidthPercent or */
+        /* IntWidthPxl */
+        CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument, -1);
+
+     else if (!strcmp (lastAttrEntry->XMLattribute, "SIZE"))
+       {
+       TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+       if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
+	  CreateAttrIntSize (inputBuffer, lastAttrElement, theDocument);
+       }
+     else if (!strcmp (lastAttrEntry->XMLattribute, "SHAPE"))
+       {
+       child = TtaGetFirstChild (lastAttrElement);
+       if (child != NULL)
+          {
+	  switch (val)
 		{
-		attrType1.AttrSSchema = attrType.AttrSSchema;
-		attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
-		attr = TtaNewAttribute (attrType1);
-		TtaAttachAttribute (lastAttrElement, attr, theDocument);
-		TtaSetAttributeText (attr, inputBuffer, lastAttrElement, theDocument);
+		case HTML_ATTR_shape_VAL_rectangle:
+		     shape = 'R';
+		     break;
+		case HTML_ATTR_shape_VAL_circle:
+		     shape = 'a';
+		     break;
+		case HTML_ATTR_shape_VAL_polygon:
+		     shape = 'p';
+		     break;
+		default:
+		     shape = SPACE;
+		     break;
 		}
-	  }
+     	  TtaSetGraphicsShape (child, shape, theDocument);
+          }
+       }
+     else if (!strcmp (lastAttrEntry->XMLattribute, "VALUE"))
+       {
+       elType = TtaGetElementType (lastAttrElement);
+       if (elType.ElTypeNum == HTML_EL_Text_Input ||
+     	   elType.ElTypeNum == HTML_EL_Password_Input ||
+     	   elType.ElTypeNum == HTML_EL_File_Input ||
+     	   elType.ElTypeNum == HTML_EL_Input)
+     	  /* create a Default_Value attribute with the same content */
+     	 {
+     	 attrType1.AttrSSchema = attrType.AttrSSchema;
+     	 attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
+     	 attr = TtaNewAttribute (attrType1);
+     	 TtaAttachAttribute (lastAttrElement, attr, theDocument);
+     	 TtaSetAttributeText (attr, inputBuffer, lastAttrElement, theDocument);
+     	 }
+       }
 #ifndef STANDALONE
-	/* Some HTML attributes are equivalent to a CSS property:      */
-	/*      background     ->                   background         */
-	/*      bgcolor        ->                   background         */
-	/*      text           ->                   color              */
-	/*      color          ->                   color              */
-	else if (!strcmp (lastAttrEntry->XMLattribute, "BACKGROUND"))
-	  {
-	     sprintf (msgBuffer, "background: url(%s)", inputBuffer);
-	     ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
-	  }
-	else if (!strcmp (lastAttrEntry->XMLattribute, "BGCOLOR"))
-	   HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
-	else if (!strcmp (lastAttrEntry->XMLattribute, "TEXT") ||
-		 !strcmp (lastAttrEntry->XMLattribute, "COLOR"))
-	   HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
+     /* Some HTML attributes are equivalent to a CSS property:      */
+     /*      background     ->                   background         */
+     /*      bgcolor        ->                   background         */
+     /*      text           ->                   color              */
+     /*      color          ->                   color              */
+     else if (!strcmp (lastAttrEntry->XMLattribute, "BACKGROUND"))
+        {
+        sprintf (msgBuffer, "background: url(%s)", inputBuffer);
+        ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
+        }
+     else if (!strcmp (lastAttrEntry->XMLattribute, "BGCOLOR"))
+        HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
+     else if (!strcmp (lastAttrEntry->XMLattribute, "TEXT") ||
+	      !strcmp (lastAttrEntry->XMLattribute, "COLOR"))
+        HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
 #endif /* !STANDALONE */
      }
    InitBuffer ();
@@ -6218,17 +6313,19 @@ char               *pathURL;
 #endif
 {
    ElementType	elType, newElType, headElType;
-   Element	el, elHead, elBody, nextEl, newEl, prevEl, lastChild,
-		firstTerm, lastTerm, termList, child, parent, firstEntry,
-		lastEntry, glossary, list, elText, previous,
-		elLinks, lastLink, elMetas, lastMeta, elScripts, lastScript,
-		elStyles, lastStyle;
+   Element	el, elHead, elBody, elFrameset, elNoframes, nextEl, newEl,
+		prevEl, lastChild, firstTerm, lastTerm, termList, child,
+		parent, firstEntry, lastEntry, glossary, list, elText,
+		previous, elLinks, lastLink, elMetas, lastMeta, elScripts,
+		lastScript, elStyles, lastStyle;
    boolean	ok, moved;
 
-   /* the root element only accepts elements HEAD, BODY and Comment as */
-   /* children */
+   /* the root element only accepts elements HEAD, BODY, FRAMESET and Comment*/
+   /* as children */
    elHead = NULL;
    elBody = NULL;
+   elFrameset = NULL;
+   elNoframes = NULL;
    el = TtaGetFirstChild (rootElement);
    if (el != NULL)
      {
@@ -6436,7 +6533,7 @@ char               *pathURL;
 		  el = nextEl;
 	       }
 	  }
-	/* check the children of the root, except HEAD */
+	/* check the children of the root */
 	lastChild = NULL;
 	el = TtaGetFirstChild (rootElement);
 	previous = elHead;
@@ -6449,12 +6546,23 @@ char               *pathURL;
 	     if (elType.ElTypeNum == HTML_EL_BODY)
 		/* stop */
 		nextEl = NULL;
+	     else if (elType.ElTypeNum == HTML_EL_FRAMESET)
+		{
+		if (elFrameset == NULL)
+		   elFrameset = el;
+		}
+	     else if (elType.ElTypeNum == HTML_EL_NOFRAMES)
+		{
+		if (elNoframes == NULL)
+		   elNoframes = el;
+		}
 	     else if (!moved && (elType.ElTypeNum == HTML_EL_Invalid_element ||
 				 elType.ElTypeNum == HTML_EL_Comment_))
 		/* don't move Comments and Invalid_elements if the previous
 		   element has not been moved */
 		previous = el;
-	     else if (elType.ElTypeNum != HTML_EL_HEAD)
+	     else if (elType.ElTypeNum != HTML_EL_HEAD &&
+		      elType.ElTypeNum != HTML_EL_FRAMESET)
 		/* this element should be a child of BODY */
 	       {
 		  /* create the BODY element if it does not exist */
@@ -6480,6 +6588,23 @@ char               *pathURL;
 	     /* get next child of the root */
 	     el = nextEl;
 	  }
+	if (elFrameset && elNoframes)
+	   if (!TtaIsAncestor(elNoframes, elFrameset))
+	      /* moves the NOFRAMES element within the FRAMESET element */
+	     {
+	     el = TtaGetFirstChild(elFrameset);
+	     previous = NULL;
+	     while (el)
+		{
+		previous = el;
+		TtaNextSibling (&el);
+		}
+	     TtaRemoveTree (elNoframes, theDocument);
+	     if (previous == NULL)
+		TtaInsertFirstChild (&elNoframes, elFrameset, theDocument);
+	     else
+		TtaInsertSibling (elNoframes, previous, FALSE, theDocument);
+	     }
 
 	/* handle character-level elements which contain block-level elements*/
 	CheckBlocksInCharElem (theDocument);

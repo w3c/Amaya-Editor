@@ -198,6 +198,13 @@ coords: coords
 nohref: nohref
 x_coord: x
 y_coord: y
+RowHeight: rows
+ColWidth: cols
+FrameName: name
+FrameSrc: src
+Border1: 1
+Border0: 0
+no_resize: noresize
 height\240: height
 left_: left
 center_: center

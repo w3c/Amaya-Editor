@@ -39,26 +39,13 @@ STRUCT
 
   HTML								{ HTML }
      (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
+	   HtmlDTD = Transitional, Frameset;
 	   Namespaces = Text) =
 	BEGIN
 	HEAD;
-	BODY;
+      ? BODY;	{ only one of BODY, FRAMESET is allowed }
+      ? FRAMESET;
 	END + (Invalid_element, Comment\240);
-
-#ifdef FRAMES
-  FRAMESET							{ FRAMESET }
-     (ATTR RowHeight = Text; ColWidth = Text) =
-	 { rows              cols }
-	AGGREGATE
-	Frames = LIST [1, *] OF (CASE OF FRAMESET; FRAME; END);
-      ?	NOFRAMES = BODY;					{ NOFRAMES }
-	END;
-
-  FRAME								{ FRAME }
-     (ATTR FrameName = Text; FrameSrc = Text) =
-	    { name		src }
-	CONSTANT C_Empty;
-#endif
 
   BODY								{ BODY }
      (ATTR onload = Text; onunload = Text;
@@ -86,7 +73,7 @@ STRUCT
       ? Scripts = LIST OF (SCRIPT);
       ? Metas = LIST OF (META);
       ? Links = LIST OF (LINK);
-	END;
+	END + (Object);
 
   STYLE_							{ STYLE }
      (ATTR Notation = Text; media = Text) =
@@ -352,12 +339,12 @@ STRUCT
 		 IntWidthPxl ?= 400;
 
   INS								{ INS }
-     (ATTR cite; datetime = Text) =
+     (ATTR cite; datetime = Text; InternalLink; ExternalLink) =
 	 { cite  datetime }
 	Basic_Set;
 
   DEL								{ DEL }
-     (ATTR cite; datetime) =
+     (ATTR cite; datetime; InternalLink; ExternalLink) =
 	 { cite  datetime }
 	Basic_Set;
 
@@ -715,24 +702,49 @@ STRUCT
 	GRAPHICS with x_coord ?= 0, y_coord ?= 0,
 		      IntWidthPxl ?= 25, height\240 ?= 10;
 
-  FRAMESET =							{ FRAMESET }
+  FRAMESET							{ FRAMESET }
+     (ATTR RowHeight = Text; ColWidth = Text;
+	 { rows              cols }
+	   onload; onunload) =
+	 { onload  onunload }
 	AGGREGATE
-	LIST OF (FrameElem);
-	NOFRAMES = LIST OF (Element);				{ NOFRAMES }
+	Frames = LIST [1 .. *] OF (FrameElem = CASE OF
+					FRAME;
+					FRAMESET;
+					END - (NOFRAMES));
+      ? NOFRAMES = BODY + (INS, DEL);				{ NOFRAMES }
 	END;
 
-  FRAME =							{ FRAME }
+  FRAME								{ FRAME }
+     (ATTR longdesc; FrameName = Text; FrameSrc = Text;
+	 { longdesc  name	       src }
+	   frameborder = Border1, Border0;
+	 { frameborder   1        0 }
+	   marginwidth = Integer; marginheight = Integer;
+	 { marginwidth            marginheight }
+	   no_resize = Yes_; scrolling = Yes_, No_, auto) =
+	 { noresize          scrolling   yes   no   auto }
 	CONSTANT C_Empty;
 
-  FrameElem = CASE OF
-	FRAMESET;
-	FRAME;
-	END;
-
   IFRAME							{ IFRAME }
-     (ATTR longdesc) =
-	 { longdesc }
+     (ATTR longdesc; FrameName; FrameSrc; frameborder;
+	 { longdesc  name       src       frameborder }
+	   marginwidth; marginheight; scrolling;
+	 { marginwidth  marginheight  scrolling }
+	   Alignment; Width__; Height_) =
+	 { align      width    height }
 	LIST OF (Element);
+
+  { AnyLink is an alias for all elements with an attribute
+    of type URI.  Only elements to be shown in the Links view
+    are taken into account }
+  AnyLink = CASE OF
+	Anchor;		{ HREF_ }
+	Block_Quote;	{ cite }
+	Quotation;	{ cite }
+	INS;		{ cite }
+	DEL;		{ cite }
+	END;
 
 EXCEPT
 	HTML:           NoMove, NoResize;
@@ -746,6 +758,7 @@ EXCEPT
 	Scripts:	Hidden;
 	Metas:		Hidden;
 	Links:		Hidden;
+	Frames:		Hidden;
 	Frame:		Hidden, NoCut;
 	Inserted_Text:	Hidden, NoCut;
 	Basic_Set:	Hidden;
@@ -800,6 +813,7 @@ EXCEPT
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
 	Namespaces:	Invisible;
+	HtmlDTD:	Invisible;
 	shape:		Invisible;
 	Data_cell:	IsCell, NoMove, NoResize;
 	Heading_cell:	IsCell, NoMove, NoResize;

@@ -322,6 +322,7 @@ Document            doc;
    char                documentURL[MAX_LENGTH];
    char               *url, *form_data, *info, *sourceDocUrl;
    int                 length;
+   boolean		isHTML;
    FollowTheLink_context *ctx;
 
    info = NULL;
@@ -331,13 +332,16 @@ Document            doc;
    if (anchor != NULL)
      {
         elType = TtaGetElementType (anchor);
+	isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
 	/* search the HREF or CITE attribute */
-        if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema) &&
+        if (isHTML &&
 		(elType.ElTypeNum == HTML_EL_Quotation ||
 		 elType.ElTypeNum == HTML_EL_Block_Quote ||
 		 elType.ElTypeNum == HTML_EL_INS ||
 		 elType.ElTypeNum == HTML_EL_DEL))
 	   attrType.AttrTypeNum = HTML_ATTR_cite;
+	else if (isHTML && elType.ElTypeNum == HTML_EL_FRAME)
+	   attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
 	else
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	attrType.AttrSSchema = HTMLSSchema;
@@ -519,7 +523,8 @@ NotifyElement      *event;
 	    elType.ElTypeNum == HTML_EL_Submit_Input ||
 	    elType.ElTypeNum == HTML_EL_Reset_Input ||
 	    elType.ElTypeNum == HTML_EL_BUTTON ||
-	    elType.ElTypeNum == HTML_EL_File_Input)
+	    elType.ElTypeNum == HTML_EL_File_Input ||
+	    elType.ElTypeNum == HTML_EL_FRAME)
 	   ok = TRUE;
    if (!ok)
       /* DoubleClick is disabled for this element type */
@@ -554,7 +559,7 @@ NotifyElement      *event;
 		       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
 		       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT))
      {
-       /* is it a double click in BUTTON element? */
+       /* is it a double click in a BUTTON element? */
        elType1.ElSSchema = elType.ElSSchema;
        elType1.ElTypeNum = HTML_EL_BUTTON;
        elFound = TtaGetTypedAncestor (element, elType1);
@@ -626,7 +631,8 @@ NotifyElement      *event;
    /* Search the anchor or LINK element */
    anchor = SearchAnchor (event->document, element, TRUE);
    if (anchor == NULL)
-      if (isHTML && elType.ElTypeNum == HTML_EL_LINK)
+      if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
+		     elType.ElTypeNum == HTML_EL_FRAME))
 	   anchor = element;
       else
 	{

@@ -27,6 +27,7 @@ PRINT
 #define ATTRVALUE_Color Black
 #define INVALID_Color Black
 #define UNKNOWNTAG_Color Black
+#define LINK_Color Black
 #else
 #define TAG_Color Blue
 #define ATTR_Color Blue
@@ -34,7 +35,6 @@ PRINT
 #define INVALID_Color Red
 #define UNKNOWNTAG_Color Red
 #define LINK_Color DarkIndigo1
-#define TARGET_Color DarkGreen2
 #endif
 
 #define TAG_Font Helvetica
@@ -70,9 +70,11 @@ COUNTERS
    CptToCPage : Rank of Page(Table_of_contents);
 #endif
 #ifdef LINK_NUMBER
-   AnchorCounter : Set 0 on BODY add 1 on Anchor with ExternalLink
+   AnchorCounter : Set 0 on HTML add 1 on Anchor with ExternalLink
 				 add 1 on Quotation with ExternalLink
-				 add 1 on Block_Quote with ExternalLink;
+				 add 1 on Block_Quote with ExternalLink
+				 add 1 on INS with ExternalLink
+				 add 1 on DEL with ExternalLink;
 #endif
    H2Counter : Set 0 on H1 add 1 on H2;
    H3Counter : Set 0 on H1 set 0 on H2 add 1 on H3;
@@ -128,17 +130,31 @@ BOXES
 		Visibility: 0;
 	END;
 
+ BlockNumInFormattedView:
+	BEGIN
+	Content: (Text ' [' Value(AnchorCounter, Arabic) Text ']');
+	Visibility: Creator =;
+	HorizPos: Left = Creator . Right;
+	VertPos: HRef = Creator . HRef;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
  AnchorNumInLinkView:
 	BEGIN
 	Content: (Text '[' Value(AnchorCounter, Arabic) Text ']  ');
 	Visibility: 0;
 	IN Links_view
-		BEGIN
 		Visibility: Creator =;
-		Font: Creator =;
-		Style: Creator =;
-		Size: Creator =;
-		END;
 	END;
 
  TargetPageNumber:
@@ -1069,7 +1085,229 @@ BOXES
 		END;
 	END;
 
-{ ---- Style CSS end ---- }
+ VALUE_ROWHEIGHT: BEGIN
+	Content: (RowHeight);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ VALUE_COLWIDTH: BEGIN
+	Content: (ColWidth);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ VALUE_FRAMENAME: BEGIN
+	Content: (FrameName);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_FRAMENAME: BEGIN
+	Content: Text ' name= ';
+	Style: Bold;
+	IN Links_view BEGIN
+		Style: Enclosing =;
+#ifndef PAGE
+		Foreground: ATTR_Color;
+#endif
+		END;
+	IN Structure_view
+		Visibility: 0;
+	IN Table_of_contents
+	        Visibility: 0;
+	END;
+
+ VALUE_FRAMENAME1: BEGIN
+	Content: (FrameName);
+	IN Structure_view
+		Visibility: 0;
+	IN Table_of_contents
+	        Visibility: 0;
+	END;
+
+ VALUE_FRAMESRC: BEGIN
+	Content: (FrameSrc);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_FRAMESRC: BEGIN
+	Content: Text ' src=';
+	Style: Bold;
+	IN Links_view BEGIN
+		Style: Enclosing =;
+#ifndef PAGE
+		Foreground: ATTR_Color;
+#endif
+		END;
+	IN Structure_view
+		Visibility: 0;
+	IN Table_of_contents
+	        Visibility: 0;
+	END;
+
+ VALUE_FRAMESRC1: BEGIN
+	Content: (FrameSrc);
+	Foreground: LINK_Color;
+	IN Links_view BEGIN
+		Foreground: Enclosing =;
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#endif
+		END;
+	IN Alternate_view BEGIN
+		Foreground: Enclosing =;
+		Underline: Underlined;
+		END;
+	IN Structure_view
+		Visibility: 0;
+	IN Table_of_contents
+	        Visibility: 0;
+	END;
+
+ ATTR_FRAMEBORDER_1: BEGIN
+	Content: Text ' frameborder=1';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+ ATTR_FRAMEBORDER_0: BEGIN
+	Content: Text ' frameborder=0';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_MARGINWIDTH: BEGIN
+	Content: Text ' marginwidth=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_MARGINWIDTH: BEGIN
+	Content: (marginwidth);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_MARGINHEIGHT: BEGIN
+	Content: Text ' marginheight=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_MARGINHEIGHT: BEGIN
+	Content: (marginheight);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_NORESIZE: BEGIN
+	Content: Text ' noresize';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_SCROLLING_YES: BEGIN
+	Content: Text ' scrolling=yes';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_SCROLLING_NO: BEGIN
+	Content: Text ' scrolling=no';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_SCROLLING_AUTO: BEGIN
+	Content: Text ' scrolling=auto';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
 
   ATTR_LANG: BEGIN
 	Content: Text ' lang=';
@@ -1803,7 +2041,7 @@ BOXES
  BrowseButton_Mark: BEGIN
 	Content: Graphics 'Z';
 	VertPos: Top = Creator . Top;
-	HorizPos: Left = Creator . Right - 1 px;
+	HorizPos: Left = Creator . Right;
 	Width: 4;
 	Height: Creator . Height;
 	Foreground : White;
@@ -1830,10 +2068,10 @@ BOXES
 
  ButtonElem_Frame: BEGIN
 	Content: Graphics 'R';
-	VertPos: Top = Creator . Top - 1 px;
-	HorizPos: Left = Creator . Left - 1 px;
-	Width: Creator . Width;
-	Height: Creator . Height;
+	VertPos: Top = Creator . Top - 2 px;
+	HorizPos: Left = Creator . Left - 2 px;
+	Width: Creator . Width + 6 px;
+	Height: Creator . Height + 4 px;
 	Foreground : Black;
 #ifndef BLACK_WHITE
 	Background : Grey;
@@ -1851,10 +2089,10 @@ BOXES
 
  ButtonElem_Mark: BEGIN
 	Content: Graphics 'Z';
-	VertPos: Top = Creator . Top;
+	VertPos: Top = Creator . Top - 1 px;
 	HorizPos: Left = Creator . Left - 1 px;
-	Width: Creator . Width;
-	Height: Creator . Height;
+	Width: Creator . Width + 6 px;
+	Height: Creator . Height + 4 px;
 	Foreground : White;
 	LineWeight: 2 px;
 	Depth: 3;
@@ -3049,6 +3287,69 @@ BOXES
 		END;
 	END;
 
+ FRAMESET_S: BEGIN
+	Content: (Text 'FRAMESET');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+#ifndef PAGE
+ FRAME_Label: BEGIN
+	Content: (Text 'FRAME');
+	Style: Bold;
+	IN Structure_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+
+ NOFRAMES_Sep1: BEGIN
+	Content: Graphics 'h';
+	LineWeight: 1 px;
+	Width: Enclosing . Width;
+	Height: 0.5;
+	IN Structure_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+
+ NOFRAMES_Sep2: BEGIN
+	Content: Graphics 'h';
+	LineWeight: 1 px;
+	Width: Enclosing . Width;
+	Height: 0.5;
+	IN Structure_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+#endif
+
+ NOFRAMES_S: BEGIN
+	Content: (Text 'NOFRAMES');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ FRAME_S: BEGIN
+	Content: (Text 'FRAME');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  IFRAME_S: BEGIN
 	Content: (Text 'IFRAME');
 	Visibility: 0;
@@ -3352,6 +3653,8 @@ BOXES
 #else
 		Foreground: ATTR_Color;
 #endif
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		Visibility: 5;
 		END;
 	END;
@@ -3359,8 +3662,32 @@ BOXES
  VALUE_TITLE_ANCH: BEGIN
 	Content: (Title);
 	Visibility: 0;
-	IN Links_view
+	IN Links_view BEGIN
 		Visibility: 5;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		END;
+	END;
+
+ ATTR_TITLE_FRAME: BEGIN
+	Content: Text ' title=';
+	Style: Bold;
+	IN Structure_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+
+ VALUE_TITLE_FRAME: BEGIN
+	Content: (Title);
+	IN Structure_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
 	END;
 
  ATTR_ACCESSKEY: BEGIN
@@ -3547,7 +3874,7 @@ BOXES
 	Size: Creator =;
 	LineWeight: 1 px;
 	FillPattern: foregroundcolor;
-	VertPos: HRef = Creator . HRef;
+	VertPos: Bottom = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_UL_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
@@ -5599,7 +5926,13 @@ RULES
 	END;
 
  BODY:	BEGIN
-	VertPos: Top = Previous AnyElem . Bottom + 0.5 cm;
+	CreateBefore(BODY_S);
+	IF NOT within NOFRAMES
+		VertPos: Top = Previous AnyElem . Bottom + 0.5 cm;
+	IF within NOFRAMES BEGIN
+		CreateWith(VerticalLine);
+		VertPos: Top = Previous . Bottom;
+		END;
 #ifdef PAGE
 	Width: Enclosing . Width;
 	Hyphenate: Yes;
@@ -5608,9 +5941,9 @@ RULES
 	Height: Enclosing . Height min;
 	HorizPos: Left = Enclosing . Left + 0.5 cm;
 	Hyphenate: No;
-	CreateLast(BodyBottomSpace);
+	IF NOT within NOFRAMES
+		CreateLast(BodyBottomSpace);
 #endif
-	CreateBefore(BODY_S);
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 #ifndef PAGE
@@ -6436,11 +6769,14 @@ RULES
  Object: BEGIN
 	CreateBefore(OBJECT_S);
 	CreateWith(VerticalLine);
+	if within HEAD
+		Visibility: 0;
 	Width: Enclosing . Width;
 	Height: 100;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -6474,15 +6810,15 @@ RULES
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IF not within Quotation
-	   BEGIN
-	   CreateBefore(DOUBLE_QUOTE);
-	   CreateAfter(DOUBLE_QUOTE);
-	   END;
+		BEGIN
+		CreateBefore(DOUBLE_QUOTE);
+		CreateAfter(DOUBLE_QUOTE);
+		END;
 	IF within Quotation
-	   BEGIN
-	   CreateBefore(QUOTE);
-	   CreateAfter(QUOTE);
-	   END;
+		BEGIN
+		CreateBefore(QUOTE);
+		CreateAfter(QUOTE);
+		END;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -6535,20 +6871,6 @@ RULES
 	CreateWith(VerticalLine);
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
-
- IFRAME: BEGIN
-	CreateBefore(IFRAME_S);
-	CreateWith(VerticalLine);
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	Width: 3 cm;
-	LineBreak: No;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7160,8 +7482,10 @@ RULES
  BUTTON: BEGIN
 	CreateBefore(BUTTON_S);
 	CreateWith(VerticalLine);
-	CreateBefore(ButtonElem_Frame);
-	CreateBefore(ButtonElem_Mark);
+	CreateBefore(Text_Space);
+	CreateAfter(ButtonElem_Frame);
+	CreateAfter(ButtonElem_Mark);
+	CreateAfter(Text_Space);
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
@@ -7187,7 +7511,19 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Links_view
-		Visibility: 0;
+		BEGIN
+		Visibility: 0;	{ attribute "cite" changes visibility }
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
+		Line;
+		Indent: -2;
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Enclosing . Width - 28 pt;
+#else
+		Width: Enclosing . Width;
+#endif
+		END;
 	END;
 
  PICTURE_UNIT: BEGIN
@@ -7685,6 +8021,94 @@ RULES
 	VertPos: Top = Previous . Bottom + 0.2;
 	END;
 
+  FRAMESET: BEGIN
+	CreateBefore(FRAMESET_S);
+	CreateWith(VerticalLine);
+#ifdef PAGE
+	Width: Enclosing . Width;
+#else
+	IF within FRAMESET
+		Width: Enclosing . Width;
+	IF not within FRAMESET
+		BEGIN
+		HorizPos: Left = Enclosing . Left + 0.5 cm;
+		Width: Enclosing . Width - 1 cm;
+		END;
+#endif
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;		
+	END;
+
+  Frames: BEGIN
+        Width: Enclosing . Width;
+        END;
+
+  NOFRAMES: BEGIN
+	VertPos: Top = Previous AnyElem . Bottom;
+	Width: Enclosing . Width;
+#ifdef PAGE
+	Hyphenate: Yes;
+#else
+	Height: Enclosing . Height min;
+	Hyphenate: No;
+	CreateFirst(NOFRAMES_Sep1);
+	CreateLast(NOFRAMES_Sep2);
+#endif
+	CreateBefore(NOFRAMES_S);
+	CreateWith(VerticalLine);
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+#ifndef PAGE
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+#endif
+		END;
+	IN Links_view BEGIN
+		Visibility: Enclosing =;
+		Height: Enclosed . Height;
+		END;
+	IN Table_of_contents BEGIN
+		Visibility: 0;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+  FRAME: BEGIN
+	CreateBefore(FRAME_S);
+#ifdef PAGE
+	Visibility: 0;
+#else
+	CreateFirst (FRAME_Label);
+#endif
+	Line;
+	Indent: -3;
+	Width: Enclosing . Width;
+	IN Structure_view BEGIN
+		Visibility: 1;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;		
+	IN Table_of_contents
+		Visibility: 0;
+	END;
+
+  IFRAME: BEGIN
+	CreateBefore(IFRAME_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Width: 3 cm;
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
 ATTRIBUTES
 
  Langue:
@@ -7761,16 +8185,29 @@ ATTRIBUTES
 	CreateLast(ATTR_CITE_LINKS_VIEW);
 	CreateLast(VALUE_CITE_LINKS_VIEW);
 #ifdef LINK_NUMBER
-        IF not InternalLink
-           BEGIN
-           CreateFirst(AnchorNumInLinkView);
+	IF not InternalLink
+	   CreateFirst(AnchorNumInLinkView);
+        IF not InternalLink and not Block_Quote
            CreateAfter(AnchorNumInFormattedView);
-           END;
+	IF not InternalLink and Block_Quote
+           CreateBefore(BlockNumInFormattedView);
 #endif
 #ifdef PAGE
-	IN Links_view
-	   Visibility: 7;
+	CreateAfter(LinkPageNumber);
 #endif
+	IN Links_view BEGIN
+		Visibility: 7;
+		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
+		Line;
+		Indent: -2;
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Enclosing . Width - 28 pt;
+#else
+		Width: Enclosing . Width;
+#endif
+		END;
 	END;
 
  datetime:
@@ -7911,6 +8348,11 @@ ATTRIBUTES
 	CreateBefore(VALUE_TITLE);
 	CreateLast(ATTR_TITLE_ANCH);
 	CreateLast(VALUE_TITLE_ANCH);
+	IF FRAME
+		BEGIN
+		CreateLast (ATTR_TITLE_FRAME);
+		CreateLast (VALUE_TITLE_FRAME);
+		END;
 	END;
 
  accesskey: BEGIN
@@ -9281,6 +9723,62 @@ ATTRIBUTES
 	CreateBefore(ATTR_ONCHANGE);
 	CreateBefore(VALUE_ONCHANGE);
 	END;
+
+  RowHeight:
+	BEGIN
+	CreateBefore(ATTR_ROWS);
+	CreateBefore(VALUE_ROWHEIGHT);
+	END;
+
+  ColWidth:
+	BEGIN
+	CreateBefore(ATTR_COLS);
+	CreateBefore(VALUE_COLWIDTH);
+	END;
+
+  FrameName:
+	BEGIN
+	CreateBefore(ATTR_NAME);
+	CreateBefore(VALUE_FRAMENAME);
+	CreateLast (ATTR_FRAMENAME);
+	CreateLast (VALUE_FRAMENAME1);
+	END;
+
+  FrameSrc:
+	BEGIN
+	CreateBefore(ATTR_SRC);
+	CreateBefore(VALUE_FRAMESRC);
+	CreateLast (ATTR_FRAMESRC);
+	CreateLast (VALUE_FRAMESRC1);
+	END;
+
+  frameborder = Border1:
+	CreateBefore(ATTR_FRAMEBORDER_1);
+
+  frameborder = Border0:
+	CreateBefore(ATTR_FRAMEBORDER_0);
+
+  marginwidth:
+	BEGIN
+	CreateBefore(ATTR_MARGINWIDTH);
+	CreateBefore(VALUE_MARGINWIDTH);
+	END;
+
+  marginheight:
+	BEGIN
+	CreateBefore(ATTR_MARGINHEIGHT);
+	CreateBefore(VALUE_MARGINHEIGHT);
+	END;
+
+  no_resize:
+	CreateBefore(ATTR_NORESIZE);
+
+  scrolling = Yes_:
+	CreateBefore(ATTR_SCROLLING_YES);
+  scrolling = No_:
+	CreateBefore(ATTR_SCROLLING_NO);
+  scrolling = auto:
+	CreateBefore(ATTR_SCROLLING_AUTO);
 
   Invalid_attribute:
 	BEGIN

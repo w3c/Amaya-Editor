@@ -478,6 +478,7 @@ char                c;
 {
   char	DTDname[100];
   unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
+  unsigned char *      s;
 
   if (currentElementContent == 'X' && c != '/')
      /* the current element will contain elements from another DTD */
@@ -497,8 +498,11 @@ char                c;
 	{
         if (DTDname[0] == EOS)
 	   {
-	   sprintf (msgBuffer, "Don't know what DTD to use for element %s",
-		    XMLelementType[stackLevel - 1]);
+	     if (XMLelementType[stackLevel - 1])
+	        s = XMLelementType[stackLevel - 1];
+	     else
+	        s = inputBuffer;
+	   sprintf (msgBuffer, "Don't know what DTD to use for element %s", s);
 	   ParseHTMLError (currentDocument, msgBuffer);
 	   }
         else

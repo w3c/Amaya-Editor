@@ -369,22 +369,25 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   SetNamespaces	set the content of the Namespaces attribute
-   (on the root element) according to the SSchemas used in the document.
+   SetNamespacesAndDTD
+   Set the content of the Namespaces attribute (on the root element)
+   according to the SSchemas used in the document.
+   Set the HtmlDTD attribute to Frameset if the document uses Frames.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetNamespaces (Document doc)
+static void         SetNamespacesAndDTD (Document doc)
 #else
-static void         SetNamespaces (doc)
+static void         SetNamespacesAndDTD (doc)
 Document            doc;
 
 #endif
 {
-   Element		root;
+   Element		root, el;
+   ElementType		elType;
    AttributeType	attrType;
    Attribute		attr;
    char			buffer[200];
-   boolean		useMathML, useGraphML;
+   boolean		useMathML, useGraphML, useFrames;
 
    useMathML = FALSE;
    useGraphML = FALSE;
@@ -420,6 +423,29 @@ Document            doc;
 	 }
       TtaSetAttributeText (attr, buffer, root, doc);
       }
+   /* looks for a FRAMESET element and set attribute HtmlDTD */
+   useFrames = FALSE;
+   el = TtaGetFirstChild (root);
+   while (el && !useFrames)
+      {
+      elType = TtaGetElementType (el);
+      if (elType.ElSSchema == attrType.AttrSSchema &&
+	  elType.ElTypeNum == HTML_EL_FRAMESET)
+	 useFrames = TRUE;
+      else
+         TtaNextSibling (&el);
+      }
+   attrType.AttrTypeNum = HTML_ATTR_HtmlDTD;
+   attr = TtaGetAttribute (root, attrType);
+   if (!attr)
+      {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (root, attr, doc);
+      }
+   if (useFrames)
+      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Frameset, root, doc);
+   else
+      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Transitional, root, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -449,11 +475,9 @@ DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentN
      }
    else
      {
+       SetNamespacesAndDTD (SavingDocument);
        if (SaveAsXML)
-         {
-	   SetNamespaces (SavingDocument);
-	   TtaExportDocument (SavingDocument, tempname, "HTMLTX");
-         }
+	 TtaExportDocument (SavingDocument, tempname, "HTMLTX");
        else
          TtaExportDocument (SavingDocument, tempname, "HTMLT");
        TtaSetDocumentDirectory (SavingDocument, directoryName);
@@ -635,7 +659,7 @@ boolean             with_images;
     return (-1);
 
   /* First step : build the output and ask for confirmation */
-  SetNamespaces (SavingDocument);
+  SetNamespacesAndDTD (SavingDocument);
   TtaExportDocument (document, tempname, "HTMLT");
   res = 0;
   if (confirm && with_images)
@@ -873,7 +897,7 @@ DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
 
 DBG(fprintf(stderr, "SaveDocument : local saving\n");)
 
-       SetNamespaces (SavingDocument);
+       SetNamespacesAndDTD (SavingDocument);
        TtaExportDocument (document, tempname, "HTMLT");
        TtaSetDocumentUnmodified (document);
        TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);

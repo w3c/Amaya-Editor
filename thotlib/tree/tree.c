@@ -1436,6 +1436,8 @@ PtrSSchema          pSS;
    int                 i;
    boolean             SSok;
 
+   if (!pEl)
+      return FALSE;
    ok = FALSE;			/* assume a FALSE reply */
    if (pSS == NULL)
       SSok = TRUE;		/* use any struct. scheme */

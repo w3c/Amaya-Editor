@@ -42,7 +42,7 @@ View                view;
    Document            doc;
    boolean             exist;
    ElementType         elType;
-   Element             root, title, text, el, head, child, metas, meta;
+   Element             root, title, text, el, head, child, metas, meta, body;
    AttributeType       attrType;
    Attribute	       attr;
 
@@ -115,9 +115,18 @@ View                view;
    strcat (tempfile, HTAppVersion);
    TtaSetAttributeText (attr, tempfile, meta, doc);
    TtaInsertFirstChild (&meta, metas, doc);
+
+   /* create a BODY element if there is not */
+   elType.ElTypeNum = HTML_EL_BODY;
+   body = TtaSearchTypedElement (elType, SearchInTree, root);
+   if (!body)
+      {
+      body = TtaNewTree (doc, elType, "");
+      TtaInsertSibling (body, head, FALSE, doc);
+      }
    /* Search the first element in the BODY to set initial selection */
    elType.ElTypeNum = HTML_EL_Element;
-   el = TtaSearchTypedElement (elType, SearchInTree, root);
+   el = TtaSearchTypedElement (elType, SearchInTree, body);
    /* set the initial selection */
    TtaSelectElement (doc, el);
    if (SelectionDoc != 0)

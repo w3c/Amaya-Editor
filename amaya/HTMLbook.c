@@ -174,9 +174,8 @@ void             SetInternalLinks (document)
 Document                document;
 #endif
 {
-  Element	        root, el, div;
-  Element		link, target, sibling;
-  ElementType		elType;
+  Element	        el, div, link, target, sibling;
+  ElementType		elType, linkType;
   Attribute		HrefAttr, IntLinkAttr;
   Attribute             attr, ExtLinkAttr;
   AttributeType	        attrType;
@@ -188,15 +187,12 @@ Document                document;
 
   /* Remember the current status of the document */
   status = TtaIsDocumentModified (document);
-  root = TtaGetMainRoot (document);
-  volume = TtaGetElementVolume (root);
-  elType = TtaGetElementType (root);
-  elType.ElTypeNum = HTML_EL_BODY;
-  el = TtaSearchTypedElement (elType, SearchForward, root);
-
-  elType.ElTypeNum = HTML_EL_Anchor;
+  el = TtaGetMainRoot (document);
+  volume = TtaGetElementVolume (el);
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = HTML_EL_AnyLink;
   attrType.AttrSSchema = elType.ElSSchema;
-  /* looks for all anchors in the document */
+  /* looks for all links in the document */
   link = el;
   while (link != NULL)
     {
@@ -221,16 +217,20 @@ Document                document;
       TtaHandlePendingEvents ();
       link = TtaSearchTypedElement (elType, SearchForward, link);
       if (link != NULL)
-	/* an anchor has been found */
+	/* a link has been found */
 	{
-	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  linkType = TtaGetElementType (link);
+	  if (linkType.ElTypeNum == HTML_EL_Anchor)
+	     attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  else
+	     attrType.AttrTypeNum = HTML_ATTR_cite;
 	  HrefAttr = TtaGetAttribute (link, attrType);
 	  attrType.AttrTypeNum = HTML_ATTR_InternalLink;
 	  IntLinkAttr = TtaGetAttribute (link, attrType);
 	  attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
 	  ExtLinkAttr = TtaGetAttribute (link, attrType);
 	  if (HrefAttr == NULL)
-	    /* this anchor is not a link (no href attribute) */
+	    /* this element is not a link (no href or cite attribute) */
 	    /* remove attributes InternalLink and ExternalLink if they
 	       are present */
 	    {
@@ -240,7 +240,7 @@ Document                document;
 		TtaRemoveAttribute (link, ExtLinkAttr, document);	   
 	    }
 	  else
-	    /* this anchor has an HREF attribute */
+	    /* this element has an HREF or cite attribute */
 	    {
 	      length = TtaGetTextAttributeLength (HrefAttr);
 	      text = TtaGetMemory (length + 1);
@@ -299,7 +299,8 @@ Document                document;
 				  /* continue the search */
 				  i++;
 				  sprintf (&value[length], "%d", i);
-				  target = SearchNAMEattribute (document, &value[1], NULL);
+				  target = SearchNAMEattribute (document,
+							&value[1], NULL);
 				}
 			    }
 			}
@@ -335,7 +336,8 @@ Document                document;
 		  target = SearchNAMEattribute (document, ptr, NULL);
 		  if (target != NULL)
 		    /* set the Thot link */
-		    TtaSetAttributeReference (IntLinkAttr, link, document, target, document);
+		    TtaSetAttributeReference (IntLinkAttr, link, document,
+					      target, document);
 		}
 	      else
 		/* it's an external link */
@@ -445,6 +447,13 @@ Document            document;
        else
 	 TtaSetPrintSchema ("HTMLPLPUS");
        strcat (viewsToPrint, "Links_view ");
+     }
+   else
+     {
+       if (PageSize == PP_A4)
+	 TtaSetPrintSchema ("HTMLPP");
+       else
+	 TtaSetPrintSchema ("HTMLPPUS");     
      }
    TtaPrint (docPrint, viewsToPrint);
 }
