@@ -1979,7 +1979,7 @@ void TtaGiveBoxSize (Element element, Document document, View view,
 	if (frame != 0)
 	  {
 	     pAb = AbsBoxOfEl ((PtrElement) element, view);
-	     if (pAb == NULL)
+	     if (pAb == NULL || pAb->AbBox == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
 	       {
