@@ -1,6 +1,6 @@
 #!/bin/sh
 AMAYAVERSION=0.95a
-THOTDIR=$HOME/opera
+THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"
 
@@ -20,7 +20,7 @@ Thot/dicopar/*.ptn \
 for MACH in $PLATFORMS
 do
    $TAR - \
-        Thot/NEWS.Amaya.09 \
+        Thot/NEWS.Amaya.095\
    Thot/COPYRIGHT \
    Thot/README \
    Thot/config/XKeysymDB \
@@ -37,8 +37,8 @@ do
    Thot/config/fr-libdialogue \
    Thot/config/fr-transdialogue \
    Thot/config/fr-corrdialogue \
-   Thot/$MACH/amaya \
-   Thot/$MACH/print \
+   Thot/$MACH/bin/amaya \
+   Thot/$MACH/bin/print \
    Thot/amaya/COPYRIGHT \
    Thot/amaya/COPYRIGHT.html \
    Thot/amaya/HTML.STR \
