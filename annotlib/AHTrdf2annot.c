@@ -46,8 +46,6 @@ static const char * HTTP_CONTENT_TYPE   = "ContentType";
 static const char * RDFMS_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 static const char * RDFMS_TYPE = "type";
 
-static const char * FILE_SCHEME = "file://";
-
 /********************** global variables ***********************/
 
 List *annot_list;  /* a list of annotations */
@@ -94,7 +92,7 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
    ------------------------------------------------------------*/
 static void ParseXptrFragment (AnnotMeta *annot, char *buff)
 {
-  CHAR_T *c, *d;
+  CHAR_T *c;
   
   c = strchr (buff, TEXT('#'));
   if (c)
@@ -259,9 +257,6 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
  ------------------------------------------------------------*/
 List *RDF_parseFile (char *file_name, AnnotFileType type)
 {
-  char *uri = file_name;
-  AnnotMeta *annot = NULL;
-
   annot_list = NULL;
 
   if (type != ANNOT_LIST)
