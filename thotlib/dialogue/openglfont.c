@@ -570,7 +570,7 @@ static unsigned char *MakeAlphaBitmap (unsigned char *source,
       ptr = source + (y * destWidth - Pitch);
       for (x = 0; x < destWidth; x++)
 	{
-	  *( data + current) = *(ptr++);
+	  *(data + current) = *(ptr++);
 	  current++;
 	}
     }
@@ -609,7 +609,6 @@ static GL_glyph  *MakeBitmapGlyph (GL_font *font, unsigned int g)
       if( err || ft_glyph_format_bitmap != Glyph->format)
 	{
 	  FT_Done_Glyph (Glyph);
-	  return NULL; 	
 	}
       else
 	{
@@ -632,8 +631,14 @@ static GL_glyph  *MakeBitmapGlyph (GL_font *font, unsigned int g)
 	  return BitmapGlyph;
 	}
     }
-  else
-    return NULL;
+  BitmapGlyph = (GL_glyph *) TtaGetMemory (sizeof (GL_glyph) );
+  BitmapGlyph->data = NULL;
+  BitmapGlyph->advance = 0;
+  BitmapGlyph->pos.x = 0;
+  BitmapGlyph->pos.y = 0;   
+  BitmapGlyph->dimension.x = 0;
+  BitmapGlyph->dimension.y = 0;  
+  return BitmapGlyph;	   
 }
 /*--------------------------------------------------
   BitmapAppend : Add the right portion of a 
@@ -647,22 +652,23 @@ static void BitmapAppend (unsigned char *data,
 {  
   register unsigned int i = 0;
  
-  while (height--)
-    {      
-      while (i < width)
-	{
-	  if (*(append_data + i) > 0)
-	    *(data + i) = *(append_data + i);
-	  i++;
-	}
-      i = 0;
-      data += Width;
-      append_data += width;
-    }
+  if (data && append_data)
+    while (height--)
+      {      
+	while (i < width)
+	  {
+	    if (*(append_data + i) > 15)
+	      *(data + i) = *(append_data + i);
+	    i++;
+	  }
+	i = 0;
+	data += Width;
+	append_data += width;
+      }
 }
 
 
-
+/***************** FONT RENDERING *************/
 /*-------------------------------------
  UnicodeFontRenderCharSize :
 --------------------------------------*/

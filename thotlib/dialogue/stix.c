@@ -1,8 +1,32 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996-2002.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+/*
+ * Handles Stix fonts for MathML 
+ * 
+ * Author: P. Cheyrou-lagreze (INRIA)
+ *
+ */
 #ifdef _GL
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-#include "openglfonts.h"
+#include "ustring.h"
+#include "math.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "frame.h"
+#include "appdialogue.h"
+#include "registry.h"
+
 #include "openglfont.h"
+
 
 typedef struct _Stixmap {
 	char *entity;
@@ -2128,122 +2152,121 @@ void GetStixFontDir (char *final)
 void GetMathFontFromChar (char typesymb, void **font)
 {
     char           filename[2048];
-	char           *s = NULL;;	
-
-	if (Greekfont == NULL)
-	{
-	  GetStixFontDir(filename);
-	  strcat (filename, ESSTIXFONTDIR);
-	  strcat (filename, "10.TTF"); 
-	  Greekfont = gl_font_init (filename, 'M', 12);
-	}
+    
+    if (Greekfont == NULL)
+      {
+	GetStixFontDir(filename);
+	strcat (filename, ESSTIXFONTDIR);
+	strcat (filename, "10.TTF"); 
+	Greekfont = gl_font_init (filename, 'M', 12);
+      }
     if (MathBigsymb == NULL)
-	{
-	  GetStixFontDir(filename);
-	  strcat (filename, ESSTIXFONTDIR);
-	  strcat (filename, "6_.TTF"); 
-	  MathBigsymb = gl_font_init (filename, 'M', 12);	
-	}
-	if (MathBigEnclo == NULL)
-	{
-	  GetStixFontDir(filename);
-	  strcat (filename, ESSTIXFONTDIR);
-	  strcat (filename, "7_.TTF"); 
-	  MathBigEnclo = gl_font_init (filename, 'M', 12);	
-	}
-	switch (typesymb)
-	    {
-			/* radix */
-	    case 'r':
-			*font = Greekfont; 
-			break;
-			/*integral*/
-	    case 'i':
-			*font = MathBigsymb; 
-			break;
-	    case 'c':
-			*font = MathBigsymb; 
-			break;
-	    case 'd':
-			*font = MathBigsymb; 
-			break;
-			/*sigma pi*/
-	    case 'S':
-			*font = MathBigsymb; 
-			break;
-	    case 'P':
-			*font = Greekfont; 
-			break;
-			/*intersection union*/
-	    case 'I':
-			*font = MathBigsymb; 
-			break;
-	    case 'U':
-			*font = MathBigsymb; 
-			break;
-			/*braces*/
-        case 'o':
-			*font = MathBigsymb; 
-			break;
-        case 'u':
-			*font = MathBigsymb; 
-			break;
-			/*lines*/
-	    case 'h':
-	    case 'v':
-			/*arrow*/
-	    case 'R':
-	    case '^':
-	    case 'L':
-	    case 'V':
-			*font = Greekfont; 
-			break;
-	    case '(':
-			*font = MathBigEnclo; 
-			break;
-	    case ')':
-			*font = MathBigEnclo; 
-			break;
-	    case '{':
-			*font = MathBigEnclo; 
-			break;
-	    case '}':
-			*font = MathBigEnclo; 
-			break;
-	    case '[':
-			*font = MathBigEnclo; 
-			break;
-	    case ']':
-			*font = MathBigEnclo; 
-			break;
-	    case '<':
-			*font = MathBigEnclo; 
-			break;
-	    case '>':
-			*font = MathBigEnclo; 
-			break;
-			/*lines*/
-	    case '|':
-	    case 'D':
-			*font = Greekfont; 
-			break;
-	    case '?':
-       /*case UNDISPLAYED_UNICODE:
-			break;*/
-	    default:
-			*font = Greekfont;
-			break;
-	    }
+      {
+	GetStixFontDir(filename);
+	strcat (filename, ESSTIXFONTDIR);
+	strcat (filename, "6_.TTF"); 
+	MathBigsymb = gl_font_init (filename, 'M', 12);	
+      }
+    if (MathBigEnclo == NULL)
+      {
+	GetStixFontDir(filename);
+	strcat (filename, ESSTIXFONTDIR);
+	strcat (filename, "7_.TTF"); 
+	MathBigEnclo = gl_font_init (filename, 'M', 12);	
+      }
+    switch (typesymb)
+      {
+	/* radix */
+      case 'r':
+	*font = Greekfont; 
+	break;
+	/*integral*/
+      case 'i':
+	*font = MathBigsymb; 
+	break;
+      case 'c':
+	*font = MathBigsymb; 
+	break;
+      case 'd':
+	*font = MathBigsymb; 
+	break;
+	/*sigma pi*/
+      case 'S':
+	*font = MathBigsymb; 
+	break;
+      case 'P':
+	*font = Greekfont; 
+	break;
+	/*intersection union*/
+      case 'I':
+	*font = MathBigsymb; 
+	break;
+      case 'U':
+	*font = MathBigsymb; 
+	break;
+	/*braces*/
+      case 'o':
+	*font = MathBigsymb; 
+	break;
+      case 'u':
+	*font = MathBigsymb; 
+	break;
+	/*lines*/
+      case 'h':
+      case 'v':
+	/*arrow*/
+      case 'R':
+      case '^':
+      case 'L':
+      case 'V':
+	*font = Greekfont; 
+	break;
+      case '(':
+	*font = MathBigEnclo; 
+	break;
+      case ')':
+	*font = MathBigEnclo; 
+	break;
+      case '{':
+	*font = MathBigEnclo; 
+	break;
+      case '}':
+	*font = MathBigEnclo; 
+	break;
+      case '[':
+	*font = MathBigEnclo; 
+	break;
+      case ']':
+	*font = MathBigEnclo; 
+	break;
+      case '<':
+	*font = MathBigEnclo; 
+	break;
+      case '>':
+	*font = MathBigEnclo; 
+	break;
+	/*lines*/
+      case '|':
+      case 'D':
+	*font = Greekfont; 
+	break;
+      case '?':
+	/*case UNDISPLAYED_UNICODE:
+	  break;*/
+      default:
+	*font = Greekfont;
+	break;
+      }
 }
 
 void FreeMathFonts()
 {
-	if (Greekfont != NULL)
-		gl_font_delete (Greekfont);
-    if (MathBigsymb != NULL)
-		gl_font_delete (MathBigsymb);
-	if (MathBigEnclo != NULL)
-	    gl_font_delete (MathBigEnclo);	
+  if (Greekfont != NULL)
+    gl_font_delete (Greekfont);
+  if (MathBigsymb != NULL)
+    gl_font_delete (MathBigsymb);
+  if (MathBigEnclo != NULL)
+    gl_font_delete (MathBigEnclo);	
 }
 
 #endif /*_GL*/

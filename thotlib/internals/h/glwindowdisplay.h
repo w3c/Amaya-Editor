@@ -1,4 +1,6 @@
 
+#ifndef _GLWINDOWDISPLAY_H_
+#define _GLWINDOWDISPLAY_H_
 
 #ifdef _WINDOWS
 
@@ -65,8 +67,6 @@ void CountourCountAdd (int npoints);
 
 
 /*Text rendering*/
-void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
-				  ThotBool selected);
 void TranslateChars (CHAR_T *text);
 int UnicodeCharacterWidth (CHAR_T c, PtrFont font);
 int GL_UnicodeDrawString (int fg, 
@@ -108,3 +108,6 @@ ThotBool SavePng (const char *filename,
 void GL_realize ();
 
 void saveBuffer (int width, int height);
+
+
+#endif

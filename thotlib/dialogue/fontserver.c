@@ -45,7 +45,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
   /* XftPatternAddBool (pat, XFT_RENDER, True); */
   /* XftPatternAddBool (pat, XFT_CORE, True); */
   /* XftPatternAddBool (pat, XFT_ANTIALIAS, True);  */
-  if (script != 'L' && script != 'G')
+  if (script != 'L')
     {      
       switch (script)
 	{
@@ -72,6 +72,25 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	case '8':
 	  /* HEBREW_CHARSET */
 	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-8");
+	  break;
+	case 'G':
+	  /*  GREEK_CHARSET */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-7");
+	  break;
+	case 'F':
+	  /* ?????? */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-15");
+	  break;
+	case 'D':
+	  /* ?????? */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-13");
+	  break;
+        case 'Z':
+	   /* UNICODE (jis ?) */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso10646-1");
+	default:
+	  /* UNICODE */
+	  XftPatternAddString (pat, XFT_ENCODING, "iso10646-1");
 	  break;
 	}
       if (highlight == 0)
@@ -239,7 +258,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	 ok = 1;
        }
      XftPatternDestroy (match);
-    }    
+    }
   XftPatternDestroy (pat); 
   return ok;
 #else /* _GTK */

@@ -1481,8 +1481,12 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
       *font = NULL;
     }
   else
-    *font = lfont;    
+    *font = lfont;  
+#ifndef _GL  
   return car;
+#else /*_GL*/
+  return c;
+#endif /*_GL*/
 #else /* _I18N_ */
   *font = fontset;
   return c;

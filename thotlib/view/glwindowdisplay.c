@@ -1015,6 +1015,46 @@ void GL_DrawUnicodeCharSized (CHAR_T const c, float x, float y, void *GL_font, i
 	  size, FrameTable[ActiveFrame].FrHeight);
   ResetPixelTransferBias();
 }
+/*----------------------------------------------------------------------
+  WDrawString draw a char string of lg chars beginning in buff.
+  Drawing starts at (x, y) in frame and using font.
+  boxWidth gives the width of the final box or zero,
+  this is used only by the thot formmating engine.
+  bl indicates that there are one or more spaces before the string
+  hyphen indicates whether an hyphen char has to be added.
+  startABlock is 1 if the text is at a paragraph beginning
+  (no justification of first spaces).
+  parameter fg indicates the drawing color
+  Returns the lenght of the string drawn.
+  ----------------------------------------------------------------------*/
+int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
+		 PtrFont font, int boxWidth, int bl, int hyphen,
+		 int startABlock, int fg, int shadow)
+{
+  int j;
+
+  if (lg < 0)
+    return 0;
+
+  y += FrameTable[frame].FrTopMargin;
+  if (shadow)
+	{
+	  /* replace each character by a star */
+	  j = 0;
+	  while (j < lg)
+	    {
+	      buff[j++] = '*';
+	    }
+	  buff[lg] = EOS;
+	}
+  return (GL_UnicodeDrawString (fg, 
+				buff, 
+				(float) x,
+				(float) y, 
+				hyphen,
+				(void *)font, 
+				lg));
+}
 
 /*----------------------------------------------------------------------
  GL_DrawString : Draw a string in a texture or a bitmap 
@@ -1023,7 +1063,8 @@ int GL_UnicodeDrawString (int fg,
 			  CHAR_T *str, 
 			  float x, float y, 
 			  int hyphen,
-			  void *GL_font, int end)
+			  void *GL_font, 
+			  int end)
 {
   int width;
 
@@ -1102,450 +1143,6 @@ int CharacterWidth (int c, PtrFont font)
   return l;
 }
 
-#ifdef _I18N_
-/*----------------------------------------------------------------------
-  DisplayJustifiedText display the content of a Text box tweaking
-  the space sizes to ajust line length to the size of the frame.
-  Remaining pixel space (BxNPixels) is equally dispatched 
-  on all spaces in the line.
-  ----------------------------------------------------------------------*/
-void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
-				  ThotBool selected)
-{
-  PtrTextBuffer       adbuff;
-  ViewFrame          *pFrame;
-  PtrBox              nbox;
-  PtrAbstractBox      pAb;
-  SpecFont            font;
-  PtrFont             prevfont = NULL;
-  PtrFont             nextfont = NULL;
-  CHAR_T              bchar;
-  CHAR_T              *bbuffer;
-  int                 restbl;
-  int                 newbl, lg;
-  int                 charleft;
-  int                 buffleft;
-  int                 indbuff, bl;
-  int                 indmax;
-  int                 nbcar, x, y, y1; 
-  int                 lgspace, whitespace;
-  int                 fg, bg;
-  int                 shadow;
-  int                 width;
-  int                 left, right;
-  ThotBool            blockbegin;
-  ThotBool            withbackground;
-  ThotBool            hyphen, rtl;
-
-  indmax = 0;
-  buffleft = 0;
-  adbuff = NULL;
-  indbuff = 0;
-  restbl = 0;
-  pAb = pBox->BxAbstractBox;
-  /* is it a box with a right-to-left writing? */
-  bchar = pBox->BxScript;
-  if (pAb->AbUnicodeBidi == 'O')
-    rtl = (pAb->AbDirection == 'R');
-  else
-    rtl = (bchar == 'A' || bchar == 'H');
-  font = pBox->BxFont;
-  /* do we have to display stars instead of characters? */
-  if (pAb->AbBox->BxShadow)
-    shadow = 1;
-  else
-    shadow = 0;  
-  /* Is this box the first of a block of text? */
-  if (mbox == pBox)
-    blockbegin = TRUE;
-  else if (mbox->BxType != BoBlock || mbox->BxFirstLine == NULL)
-    blockbegin = TRUE;
-  else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
-    blockbegin = TRUE;
-  else if ((pBox->BxType == BoPiece ||
-	    pBox->BxType == BoScript ||
-	    pBox->BxType == BoDotted) &&
-	   mbox->BxFirstLine->LiFirstPiece == pBox)
-    blockbegin = TRUE;
-  else
-    blockbegin = FALSE;
-  
-  /* Is an hyphenation mark needed at the end of the box? */
-  if (pBox->BxType == BoDotted)
-    hyphen = TRUE;
-  else
-    hyphen = FALSE;
-  /* in SVG foreground and background are inverted in the main view */
-  if (!strcmp(pAb->AbElement->ElStructSchema->SsName, "SVG") &&
-      FrameTable[frame].FrView == 1)
-    {
-      bg = pAb->AbForeground;
-      fg = pAb->AbBackground;
-      withbackground = FALSE;
-    }
-  else
-    {
-      fg = pAb->AbForeground;
-      bg = pAb->AbBackground;
-      withbackground = (pAb->AbBox->BxFill && pAb->AbBox->BxDisplay);
-    }
-  pFrame = &ViewFrameTable[frame - 1];
-  left = 0;
-  right = 0;
-  if (pAb->AbVisibility >= pFrame->FrVisibility)
-    {
-      /* Initialization */
-      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-	  pBox->BxLPadding - pFrame->FrXOrg;
-      y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-	  pBox->BxTPadding - pFrame->FrYOrg;
-      /* no previous spaces */
-      bl = 0;
-      charleft = pBox->BxNChars;
-      newbl = pBox->BxNPixels;
-      lg = 0;
-	   
-      /* box sizes have to be positive */
-      width = pBox->BxW;
-      if (width < 0)
-	width = 0;
-      whitespace = BoxCharacterWidth (SPACE, font);
-      lgspace = pBox->BxSpaceWidth;
-      if (lgspace == 0)
-	lgspace = whitespace;
-      
-      /* locate the first character */
-      LocateFirstChar (pBox, rtl, &adbuff, &indbuff);
-      /* Search the first displayable char */
-      if (charleft > 0 && adbuff)
-	{
-	  /* there is almost one character to display */
-	  do
-	    {
-	      /* skip invisible characters */
-	      restbl = newbl;
-	      x += lg;
-	      bchar = adbuff->BuContent[indbuff];
-	      GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
-					     font, &nextfont);
-	      if (bchar == SPACE)
-		{
-		  lg = lgspace;
-		  if (newbl > 0)
-		    {
-		      newbl--;
-		      lg++;
-		    } 
-		}
-	      else
-		lg = CharacterWidth (bchar, nextfont);
-	      /* Skip to the next char */
-	      if (x + lg <= 0)
-		{
-		  if (LocateNextChar (&adbuff, &indbuff, rtl))
-		    charleft--;
-		  else
-		    charleft = 0;
-		}
-	    }
-	  while (x + lg <= 0 && charleft > 0);
-	   
-	  /* Display the list of text buffers pointed by adbuff */
-	  /* beginning at indbuff and of lenght charleft.       */
-	  /* -------------------------------------------------- */
-	  if (adbuff == NULL)
-	    charleft = 0;
-	  else
-	    {
-	      /* number of characters to be displayed in the current buffer */
-	      if (rtl)
-		{
-		  buffleft = indbuff + 1;
-		  if (charleft < buffleft)
-		    {
-		      indmax = indbuff - charleft;
-		      buffleft = charleft;		      
-		    }
-		  else
-		    indmax = 0;
-		}
-	      else
-		{
-		  buffleft = adbuff->BuLength - indbuff;
-		  if (charleft < buffleft)
-		    {
-		      indmax = indbuff + charleft - 1;
-		      buffleft = charleft;
-		    }
-		  else
-		    indmax = adbuff->BuLength - 1;
-		}
-	    } 
-	  
-	  /* Do we need to draw a background */
-	  if (withbackground)
-	    DrawRectangle (frame, 0, 0,
-			   x - pBox->BxLPadding, y - pBox->BxTPadding,
-			   width + pBox->BxLPadding + pBox->BxRPadding,
-			   BoxFontHeight (font) + pBox->BxTPadding + pBox->BxBPadding,
-			   0, bg, 2);
-	}
-
-      /* check if the box is selected */
-      if (selected)
-	{
-	  if (pBox == pFrame->FrSelectionBegin.VsBox ||
-	      pBox == pFrame->FrSelectionEnd.VsBox)
-	    {
-	      if (pFrame->FrSelectOnePosition)
-		{
-		  left = pFrame->FrSelectionBegin.VsXPos;
-		  right = left + 2;
-		}
-	      else
-		{
-		  /* almost one character is selected */
-		  if (pBox == pFrame->FrSelectionBegin.VsBox)
-		    left = pFrame->FrSelectionBegin.VsXPos;
-		  if (pBox == pFrame->FrSelectionEnd.VsBox &&
-		      pFrame->FrSelectionEnd.VsXPos != 0)
-		    right = pFrame->FrSelectionEnd.VsXPos;
-		  else
-		    right = pBox->BxWidth;
-		  DisplayStringSelection (frame, left, right, pBox);
-		  /* the selection is done now */
-		  left = 0;
-		  right = 0;
-		}
-	    }
-	  else if (pBox->BxType == BoPiece ||
-		   pBox->BxType == BoScript ||
-		   pBox->BxType == BoDotted)
-	    {
-	      /* check if the box in within the selection */
-	      if (pFrame->FrSelectionBegin.VsBox &&
-		  pAb == pFrame->FrSelectionBegin.VsBox->BxAbstractBox)
-		{
-		  nbox = pFrame->FrSelectionBegin.VsBox;
-		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox &&
-			 nbox != pBox)
-		    nbox = nbox->BxNexChild;
-		  if (nbox == pBox)
-		    /* it's within the current selection */
-		    DisplayBgBoxSelection (frame, pBox);
-		}
-	      else if (pFrame->FrSelectionEnd.VsBox &&
-		       pAb == pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
-		{
-		  nbox = pBox->BxNexChild;
-		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox)
-		    nbox = nbox->BxNexChild;
-		  if (nbox == pFrame->FrSelectionEnd.VsBox)
-		    /* it's within the current selection */
-		    DisplayBgBoxSelection (frame, pBox);
-		}
-	      else
-		DisplayBgBoxSelection (frame, pBox);
-	    }
-	  else
-	    DisplayBgBoxSelection (frame, pBox);
-	}
-
-      /* allocate a buffer to store converted characters */
-      bbuffer = TtaGetMemory (sizeof (CHAR_T) * (pBox->BxNChars + 2));  
-      nbcar = 0;
-      while (charleft > 0)
-	{
-	  /* handle each char in the buffer */
-	  while ((rtl && indbuff >= indmax) ||
-		 (!rtl && indbuff <= indmax))
-	    {
-	      bchar = adbuff->BuContent[indbuff];
-	      GetFontAndIndexFromSpec (bchar, font, &nextfont);
-	      if (bchar == SPACE || bchar == THIN_SPACE ||
-		  bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB ||
-		  bchar == EOL)
-		{
-		  /* display previous chars handled */
-		  if (nbcar > 0)
-		    {
-		      y1 = y + BoxFontBase (pBox->BxFont);
-		      x += GL_UnicodeDrawString (fg, bbuffer, 
-						 x, REALY(y1),  
-						 0, prevfont, nbcar); 
-
-		      /* all previous spaces are declared */
-		      bl = 0;
-		    }		  
-		  if (shadow)
-		    {
-		      y1 = y + BoxFontBase (pBox->BxFont);
-		      GL_DrawUnicodeChar ('*', x, y1, nextfont, fg);
-		    }
-		  else if (!ShowSpace)
-		    {
-		      /* Show the space chars */
-		      if (bchar == SPACE || bchar == TAB) 
-			GL_DrawUnicodeChar (SHOWN_SPACE, x, y,
-					    nextfont, fg);
-		      else if (bchar == THIN_SPACE)
-			GL_DrawUnicodeChar (SHOWN_THIN_SPACE, x, y, 
-					    nextfont, fg);
-		      else if (bchar == HALF_EM)
-			GL_DrawUnicodeChar (SHOWN_HALF_EM, x, y, 
-					    nextfont, fg);
-		      else if (bchar == UNBREAKABLE_SPACE)
-			GL_DrawUnicodeChar (SHOWN_UNBREAKABLE_SPACE, x, y,
-					    nextfont, fg);
-		    }
-		 
-		  nbcar = 0;
-#ifdef _WINDOWS
-		  if (bchar != EOS)
-#else /* _WINDOWS */
-		  if (!Printing)
-#endif /* _WINDOWS */
-		    {
-		  if (bchar == SPACE)
-		    {
-		      if (restbl > 0)
-			{
-			  /* Pixel space splitting */
-			  x = x + lgspace + 1;
-			  restbl--;
-			}
-		      else
-			x += lgspace;
-		    }
-		  else
-		    x += CharacterWidth (bchar, nextfont);
-		    }
-		  /* a new space is handled */
-		  bl++;
-		}
-	      else if (bchar == INVISIBLE_CHAR)
-		/* do nothing */;
-	      else if (nextfont == NULL && bchar == UNDISPLAYED_UNICODE)
-		{
-		  /* display previous chars handled */
-		  if (nbcar > 0)
-		    {
-		      y1 = y + BoxFontBase (pBox->BxFont);
-		      x += GL_UnicodeDrawString (fg, bbuffer, 
-						  x, REALY(y1),  
-						  0, prevfont, nbcar); 
-		    }
-		  nbcar = 0;
-		  /* all previous spaces are declared */
-		  bl = 0;
-		  prevfont = nextfont;
-		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
-		  x += 6;
-		}
-	      else
-		{
-		  if (prevfont != nextfont)
-		    {
-		      /* display previous chars handled */
-		      if (nbcar > 0)
-			{
-		          y1 = y + BoxFontBase (pBox->BxFont);
-			  x += GL_UnicodeDrawString (fg, bbuffer, 
-						      x, REALY(y1),  
-						      0, prevfont, nbcar); 
-			  /* all previous spaces are declared */
-			  bl = 0;
-			}
-		      nbcar = 0;
-		      prevfont = nextfont;
-		    }
-		  /* add the new char */
-		  bbuffer[nbcar++] = bchar; 
-		}
-	      /* Skip to next char */
-	      if (rtl)
-		indbuff--;
-	      else
-		indbuff++;
-	    }
-
-	  /* Draw previous chars in the buffer */
-	  charleft -= buffleft;
-	  if (charleft > 0)
-	    {
-	      /* number of characters to be displayed in the next buffer */
-	      if (rtl)
-		{
-		  if (adbuff->BuPrevious == NULL)
-		    charleft = 0;
-		  else
-		    {
-		      adbuff = adbuff->BuPrevious;
-		      indbuff = adbuff->BuLength - 1;
-		      buffleft = adbuff->BuLength;
-		      if (charleft < buffleft)
-			{
-			  indmax = indbuff - charleft;
-			  buffleft = charleft;		      
-			}
-		      else
-			indmax = 0;
-		    }
-		}
-	      else
-		{
-		  if (adbuff->BuNext == NULL)
-		    charleft = 0;
-		  else
-		    {
-		      adbuff = adbuff->BuNext;
-		      indbuff = 0;
-		      buffleft = adbuff->BuLength;
-		      if (charleft < buffleft)
-			{
-			  indmax = charleft - 1;
-			  buffleft = charleft;		      
-			}
-		      else
-			indmax = adbuff->BuLength - 1;
-		    }
-		}
-	    }
-	  if (charleft <= 0)
-	    {
-	      /*
-		Draw the content of the buffer.
-		Call the function in any case to let Postscript justify the
-		text of the box.
-	      */	      
-	      y1 = y + BoxFontBase (pBox->BxFont);
-	      x += GL_UnicodeDrawString (fg, bbuffer,
-					  x, REALY(y1), 
-					  hyphen, prevfont, nbcar);
-	      if (pBox->BxUnderline != 0)
-		DisplayUnderline (frame, x, y, nextfont,
-				  pBox->BxUnderline, width, fg);
-	      nbcar = 0;
-	    }
-	} 
-      
-      /* Should the end of the line be filled with dots */
-      if (pBox->BxEndOfBloc > 0)
-	{
-	  /* fill the end of the line with dots */
-	  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-	    pBox->BxLPadding;
-	  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y,
-		      pBox->BxEndOfBloc, fg);
-	}
-      /* display a caret if needed */
-      if (left != right)
-	DisplayStringSelection (frame, left, right, pBox);
-      TtaFreeMemory (bbuffer);  
-    }
-}
-#endif /* I18N */
 void GL_Swap (int frame)
 {
 #ifdef _WINDOWS

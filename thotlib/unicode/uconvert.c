@@ -465,6 +465,7 @@ wchar_t KOI8 [] = {
   ----------------------------------------------------------------------*/
 unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
 {
+#ifndef _GL
   unsigned int  c, max, base;
   wchar_t      *table;
 
@@ -581,7 +582,11 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
         else
 	  return EOS;
     }
+#else /*_GL*/
+  return (unsigned char) wc;
+#endif /*_GL*/
 }
+
 
 /*-------------------------------------------------------------
   TtaConvertJisToWC convert a jis 2 byte character to a unicode

@@ -1,3 +1,7 @@
+
+#ifndef _OPENGLFONT_H_
+#define _OPENGLFONT_H_
+
 int   gl_font_char_width  (void *gl_void_font, wchar_t c);
 int   gl_font_char_height (void *gl_void_font, wchar_t *c);
 int   gl_font_char_ascent (void *gl_void_font, wchar_t *c);
@@ -20,3 +24,5 @@ int   GetFontFilename     (char script, int family,
 			   char *filename);
 void  FreeMathFonts();
 void  FTLibraryFree ();
+
+#endif

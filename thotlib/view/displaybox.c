@@ -947,7 +947,6 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
   Remaining pixel space (BxNPixels) is equally dispatched 
   on all spaces in the line.
   ----------------------------------------------------------------------*/
-#if !defined (_GL) 
 static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 				  ThotBool selected)
 {
@@ -1194,10 +1193,15 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	}
 
       /* allocate a buffer to store converted characters */
+#ifndef _GL
       if (script == 'Z')
 	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
       else
 	buffer = TtaGetMemory (pBox->BxNChars + 1);
+#else /*_GL*/
+      wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
+#endif /*_GL*/
+
       nbcar = 0;
       org = x;
       while (charleft > 0)
@@ -1220,12 +1224,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      org -= x;
 		      if (org == 0)
 			org = -1;
+#ifndef _GL
 		      if (script == 'Z')
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg, shadow);
 		      else
 			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
 					 org, bl, x, blockbegin, fg, shadow);
+#else /*_GL*/
+		      x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
+					org, bl, x, blockbegin, fg, shadow);
+		     
+#endif /*_GL*/
 		      width = width - x;
 		    }
 		  nbcar = 0;
@@ -1251,7 +1261,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  width = width + org;
 			  org -= x;
 			  if (org == 0)
-			    org = -1;
+			    org = -1;			  
+#ifndef _GL
 			  if (script == 'Z')
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					      prevfont, org, bl, 0, blockbegin,
@@ -1260,6 +1271,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			    x += DrawString (buffer, nbcar, frame, x, y1,
 					     prevfont, org, bl, 0, blockbegin,
 					     fg, shadow);
+#else /*_GL*/
+			  x += WDrawString (wbuffer, nbcar, frame, x, y1,
+					    prevfont, org, bl, 0, blockbegin,
+					    fg, shadow);
+#endif /*_GL*/
 			  width = width - x;
 			  org = x;
 			  /* all previous spaces are declared */
@@ -1275,13 +1291,19 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* display previous chars handled */
 		      if (nbcar > 0)
 			{
-			  y1 = y + BoxFontBase (pBox->BxFont);
+			  y1 = y + BoxFontBase (pBox->BxFont);			  
+#ifndef _GL
 			  if (script == 'Z')
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
 					      0, bl, 0, blockbegin, fg, shadow);
 			  else
 			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
 					     0, bl, 0, blockbegin, fg, shadow);
+#else /*_GL*/
+			  x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
+					      0, bl, 0, blockbegin, fg, shadow);
+
+#endif /*_GL*/
 			  /* all previous spaces are declared */
 			  bl = 0;
 			}
@@ -1330,12 +1352,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* a new space is handled */
 		      bl++;
 		    }
+#ifndef _GL
 		  else if (script == 'Z')
 		    /* add the new char */
 		    wbuffer[nbcar++] = val;
 		  else
 		    /* add the new char */
 		    buffer[nbcar++] = val;
+#else /*_GL*/
+		  else 
+		    /* add the new char */
+		    wbuffer[nbcar++] = val;
+#endif /*_GL*/
 		}
 	      /* Skip to next char */
 	      if (rtl)
@@ -1393,13 +1421,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		Call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-	      y1 = y + BoxFontBase (pBox->BxFont);
+	      y1 = y + BoxFontBase (pBox->BxFont); 
+#ifndef _GL
 	      if (script == 'Z')
 		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
 				 bl, hyphen, blockbegin, fg, shadow);
 	      else
 		x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 				 bl, hyphen, blockbegin, fg, shadow);
+#else /*_GL*/
+	      x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
+				 bl, hyphen, blockbegin, fg, shadow);
+#endif /*_GL*/
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
 				  pBox->BxUnderline, width, fg);
@@ -1424,7 +1457,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       TtaFreeMemory (buffer);
     }
 }
-#endif /* _GL  !I18N*/
 
 /*----------------------------------------------------------------------
   DisplayBorders displays the box borders.

@@ -3215,7 +3215,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 16);
+			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",

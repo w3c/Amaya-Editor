@@ -1,4 +1,7 @@
 
+#ifndef _OPENGLFONTS_H_
+#define _OPENGLFONTS_H_
+
 #ifdef _WINDOWS
 #include <windows.h>
 #endif /*_WINDOWS*/
@@ -90,6 +93,7 @@ static GL_glyph      *MakeBitmapGlyph (GL_font *font, unsigned int g);
 #define FALSE 0
 #endif 
 
+#endif
 
 
 

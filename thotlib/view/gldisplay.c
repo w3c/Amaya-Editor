@@ -339,39 +339,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
    DoDrawOneLine (frame, xm, y, x + l, y);
 }
 
-/*----------------------------------------------------------------------
-  DrawIntegral draws an integral. depending on type :
-  - simple if type = 0
-  - contour if type = 1
-  - double if type = 2.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
-		   int type, PtrFont font, int fg)
-{
 
-  /* Integrals using esstix6 charmap
-     52 - => 3x text 3 line eq
-     33 - => 2x text 2 line eq
-     69 - => 1x+2 text or 18 for oneline eq */
-
-   if (h < 37)
-     /* display a single glyph */
-
-     {
-	   GL_DrawStixChar (font, 69, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
-     }
-   else if (h < 60)
-	/* display a single glyph */
-     {
-	   GL_DrawStixChar (font, 33, x, y, fg, 24, l, h, FrameTable[frame].FrHeight);
-     }
-   else
-    /* display a single glyph */
-     {
-	GL_DrawStixChar (font, 52, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
-     }
-}
 
 /*----------------------------------------------------------------------
   DrawMonoSymb draw a one glyph symbol.
@@ -667,7 +635,43 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
 	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, fg);
      }
 }
+#define LOW_CHAR 25
+#define MID_CHAR 45
+#define HIGH_CHAR 45
 
+/*----------------------------------------------------------------------
+  DrawIntegral draws an integral. depending on type :
+  - simple if type = 0
+  - contour if type = 1
+  - double if type = 2.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
+		   int type, PtrFont font, int fg)
+{
+
+  /* Integrals using esstix6 charmap
+     52 - => 3x text 3 line eq
+     33 - => 2x text 2 line eq
+     69 - => 1x+2 text or 18 for oneline eq */
+
+   if (h < LOW_CHAR)
+     /* display a single glyph */
+
+     {
+	   GL_DrawStixChar (font, 69, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+     }
+   else if (h < MID_CHAR)
+	/* display a single glyph */
+     {
+	   GL_DrawStixChar (font, 33, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+     }
+   else
+    /* display a single glyph */
+     {
+	GL_DrawStixChar (font, 52, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+     }
+}
 /*----------------------------------------------------------------------
   DrawBracket draw an opening or closing bracket (depending on direction)
   parameter fg indicates the drawing color
@@ -676,6 +680,40 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 		  int direction, PtrFont font, int fg)
 {
   int                 xm, yf, yend;
+
+ /*
+  Esstix 7 : 
+  61 normal
+  33 2 line
+  48 3 line
+  */
+  if (h < LOW_CHAR )
+    {
+      if (direction == 0)
+	GL_DrawStixChar (font, 63, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      
+      else
+	GL_DrawStixChar (font, 64, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+  else if (h < MID_CHAR)
+    {
+      if (direction == 0)
+	GL_DrawStixChar (font, 36, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	GL_DrawStixChar (font, 37, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+  else
+    {
+      if (direction == 0)
+	GL_DrawStixChar (font, 50, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	GL_DrawStixChar (font, 51, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+
+  /* Symbol */
 
   if (FontHeight (font) >= h)
     {
@@ -741,6 +779,40 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 
   if (fg < 0)
     return;
+
+/*
+  Esstix 7 : 
+  61 normal
+  33 2 line
+  48 3 line
+  */
+  if (h <  LOW_CHAR)
+    {
+      if (direction == 0)
+	GL_DrawStixChar (font, 67, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      
+      else
+	GL_DrawStixChar (font, 68, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+  else if (h < MID_CHAR)
+    {
+      if (direction == 0)
+	GL_DrawStixChar (font, 41, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	GL_DrawStixChar (font, 42, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+  else
+    {
+      if (direction == 0)
+	GL_DrawStixChar (font, 54, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	GL_DrawStixChar (font, 55, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+  
+  /*symbol*/
   if (0 && FontHeight (font) >= h)
     {
       /* With only one glyph */
@@ -749,6 +821,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 	  /* Draw a opening bracket */
 	  xm = x + ((l - CharacterWidth (225, font)) / 2);
 	  yf = y + ((h - CharacterHeight (225, font)) / 2) + CharacterAscent (225, font);
+
 	  DrawChar ('\341', frame, xm, yf, font, fg);
 	}
       else
@@ -794,48 +867,50 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
   33 2 line
   48 3 line
   */
-  if (h < 25)
+  if (h < LOW_CHAR)
+    {
+      if (direction == 0)
+	  GL_DrawStixChar (font, 61, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	  GL_DrawStixChar (font, 62, x, y, fg, h-5, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+  else if (h < MID_CHAR)
+  {
+      if (direction == 0)
+	  GL_DrawStixChar (font, 33, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	  GL_DrawStixChar (font, 35, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+  }
+  else
+  {
+      if (direction == 0)
+	  GL_DrawStixChar (font, 48, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	  GL_DrawStixChar (font, 49, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+  }
+
+  /* Symbol */
+   if (h <= (int) (1.3 * FontHeight (font)) )
     {
       /* With only one glyph */
       if (direction == 0)
 	{
 	  /* draw a opening parenthesis */
-	  GL_DrawStixChar (font, 61, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+	  xm = x + ((l - CharacterWidth (40, font)) / 2);
+	  yf = y + ((h - CharacterHeight (40, font)) / 2) + CharacterAscent (40, font);
+	  DrawChar ('(', frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* draw a closing parenthesis */
-	  GL_DrawStixChar (font, 62, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+	  xm = x + ((l - CharacterWidth (41, font)) / 2);
+	  yf = y + ((h - CharacterHeight (41, font)) / 2) + CharacterAscent (41, font);
+	  DrawChar (')', frame, xm, yf, font, fg);
 	}
     }
-  else if (h <= 57)
-  {
-  /* With only one glyph */
-      if (direction == 0)
-	{
-	  /* draw a opening parenthesis */
-	  GL_DrawStixChar (font, 33, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-	}
-      else
-	{
-	  /* draw a closing parenthesis */
-	  GL_DrawStixChar (font, 35, x, y, fg, 24, l, h, FrameTable[frame].FrHeight);
-	}
-  }
-  else if ( h > 57)
-  {
-  /* With only one glyph */
-      if (direction == 0)
-	{
-	  /* draw a opening parenthesis */
-	  GL_DrawStixChar (font, 48, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
-	}
-      else
-	{
-	  /* draw a closing parenthesis */
-	  GL_DrawStixChar (font, 49, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
-	}
-  }
   else
     {
       /* Need more than one glyph */
@@ -848,10 +923,10 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
 	  DrawChar ('\350', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (231, font);
-	  hd = CharacterHeight (231, font);
-	  delta = yend - yf- hd;
+	  hd = asc; /*CharacterHeight (231, font);*/
+	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0 && hd > 0)
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -860,7 +935,6 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 		}
 	    }
 	}
-      
       else
 	{
 	  /* draw a closing parenthesis */
@@ -870,10 +944,10 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
 	  DrawChar ('\370', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (247, font);
-	  hd = CharacterHeight (247, font);
+	  hd = asc; /*CharacterHeight (247, font);*/
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0 && hd > 0)
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -894,6 +968,38 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 {
   int                 xm, ym, yf, yend, delta, hd, asc;
 
+/*
+  Esstix 7 : 
+  61 normal
+  33 2 line
+  48 3 line
+  */
+  if (h < LOW_CHAR)
+    {
+      if (direction == 0)
+	  GL_DrawStixChar (font, 65, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	  GL_DrawStixChar (font, 66, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+    }
+  else if (h < MID_CHAR)
+  {
+      if (direction == 0)
+	  GL_DrawStixChar (font, 38, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	  GL_DrawStixChar (font, 40, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+  }
+  else
+  {
+      if (direction == 0)
+	  GL_DrawStixChar (font, 42, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      else
+	  GL_DrawStixChar (font, 53, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+      return;
+  }
+
+  /* symbol */
   if (h <= (int) (1.3 * FontHeight (font)) )
     {
       /* need only one char */
