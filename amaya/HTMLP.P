@@ -7738,7 +7738,7 @@ RULES
 #ifdef PAGE
 	CreateAfter(LinkPageNumber);
 #endif
-	if not immediately within BODY
+	if not immediately within BODY and not immediately within Division
 	   BEGIN
 	   HorizPos: Left = Previous . Right;
 	   VertPos: HRef = Previous . HRef;
