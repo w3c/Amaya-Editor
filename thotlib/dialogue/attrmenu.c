@@ -335,7 +335,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 	  
 	case IDCANCEL:
 	case ID_DONE:
-	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char *) 0);
+	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char *) 1);
 	  DestroyWindow (hwnd);
 	  /* Traitement ID_DONE */
 	  break;
@@ -580,10 +580,13 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
      {
      case AtNumAttr: /* attribut a valeur numerique */
        {
-	 subform = form + 1;
+	 if (required)
+	   subform = NumMenuAttrNumNeeded;
+	 else
+	   subform = form + 1;
 #ifdef _GTK
 	 TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL,
-			   MAX_INT_ATTR_VAL, TRUE);
+			   MAX_INT_ATTR_VAL, FALSE);
 	 TtaAttachForm (subform);
 #endif /* _GTK */
 	 if (currAttr == NULL)
@@ -598,8 +601,8 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 #ifdef _WINGUI
 	 sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
 	 formValue = i;
-     DialogBox (hInstance, MAKEINTRESOURCE (NUMATTRDIALOG), NULL, 
-		   (DLGPROC) InitNumAttrDialogWndProc);
+	 DialogBox (hInstance, MAKEINTRESOURCE (NUMATTRDIALOG), NULL, 
+		    (DLGPROC) InitNumAttrDialogWndProc);
 #endif /* _WINGUI */
 #ifdef _WX
 	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
@@ -611,7 +614,10 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
        
      case AtTextAttr: /* attribut a valeur textuelle */
        {
-	 subform = form + 2;
+	 if (required)
+	   subform = NumMenuAttrTextNeeded;
+	 else
+	   subform = form + 2;
 	 if (currAttr && currAttr->AeAttrText)
 	   {
 	     i = LgMaxAttrText - 2;
@@ -648,7 +654,10 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
        
      case AtEnumAttr: /* attribut a valeurs enumerees */
        {
-	 subform = form + 3;
+	 if (required)
+	   subform = NumMenuAttrEnumNeeded;
+	 else
+	   subform = form + 3;
 	 /* cree un menu de toutes les valeurs possibles de l'attribut */
 	 lgmenu = 0;
 	 val = 0;
@@ -683,9 +692,11 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	     lgmenu += i;
 	   }
 	 /* current value */
-	 i = -1;
-	 if (currAttr != NULL)
+	 i = 0;
+	 if (currAttr != NULL && currAttr->AeAttrValue > 0)
 	   i = currAttr->AeAttrValue - 1;
+	 if (PtrReqAttr)
+	   PtrReqAttr->AeAttrValue = i + 1;
 #ifdef _WX
 	 AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
 	 p_dlg->SetupEnumValue( bufMenu, val, i );
@@ -693,16 +704,14 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 #endif /* _WX */
 #ifdef _GTK
 	 /* cree le menu des valeurs de l'attribut */
-	 TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, 0, TRUE);
+	 TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, 0, FALSE);
 	 TtaAttachForm (subform);
 	 TtaSetMenuForm (subform, i);
 #endif /* _GTK */
 #ifdef _WINGUI
 	 nbDlgItems = val;
-	 if (i = -1)
-		 i = 1;
-     CreateAttributeDlgWindow (pAttr->AttrName, i, nbDlgItems,
-		        WIN_buffMenu, required);
+	 CreateAttributeDlgWindow (pAttr->AttrName, i+1, nbDlgItems,
+				   WIN_buffMenu, required);
 #endif /* _WINGUI */
        }
        break;
@@ -727,6 +736,12 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
       /* retour de la feuille de dialogue elle-meme */
       /* on detruit cette feuille de dialogue sauf si c'est */
       /* un abandon */
+      if (PtrReqAttr == NULL)
+	{
+	  TtaDestroyDialogue (NumMenuAttrRequired);
+	  MandatoryAttrFormExists = FALSE;
+	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char *)1);
+	}
       if (val != 0)
 	{
 	  TtaDestroyDialogue (NumMenuAttrRequired);
@@ -737,21 +752,31 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
       break;
     case NumMenuAttrNumNeeded:
       /* zone de saisie de la valeur numerique de l'attribut */
-      if (val >= -MAX_INT_ATTR_VAL || val <= MAX_INT_ATTR_VAL)
+      if (PtrReqAttr == NULL)
+	NumAttrValue = val;
+      else if (val >= -MAX_INT_ATTR_VAL || val <= MAX_INT_ATTR_VAL)
 	PtrReqAttr->AeAttrValue = val;
       break;
     case NumMenuAttrTextNeeded:
-      /* zonee de saisie du texte de l'attribut */
-      if (PtrReqAttr->AeAttrText == NULL)
-	GetTextBuffer (&PtrReqAttr->AeAttrText);
+      /* zone de saisie du texte de l'attribut */
+      if (PtrReqAttr == NULL)
+	strncpy (TextAttrValue, txt, LgMaxAttrText);
       else
-	ClearText (PtrReqAttr->AeAttrText);
-      CopyStringToBuffer ((unsigned char*)txt, PtrReqAttr->AeAttrText, &length);
+	{
+	  if (PtrReqAttr->AeAttrText == NULL)
+	    GetTextBuffer (&PtrReqAttr->AeAttrText);
+	  else
+	    ClearText (PtrReqAttr->AeAttrText);
+	  CopyStringToBuffer ((unsigned char*)txt, PtrReqAttr->AeAttrText, &length);
+	}
       break;
     case NumMenuAttrEnumNeeded:
       /* menu des valeurs d'un attribut a valeurs enumerees */
       val++;
-      PtrReqAttr->AeAttrValue = val;
+      if (PtrReqAttr == NULL)
+	NumAttrValue = val;
+      else
+	PtrReqAttr->AeAttrValue = val;
       break;
     default:
       break;
@@ -1579,6 +1604,8 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 
 		/* construit le formulaire de saisie de la valeur de */
 		/* l'attribut */
+		PtrReqAttr = NULL;
+		PtrDocOfReqAttr = NULL;
 		MenuValues (pAttr, mandatory, currAttr, SelDoc, view);
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = AttrStruct[att];
