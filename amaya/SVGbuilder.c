@@ -11,6 +11,7 @@
  *
  * Authors: V. Quint
  *          I. Vatton
+ *          P. Cheyrou-Lagreze
  */
  
 #define THOT_EXPORT extern

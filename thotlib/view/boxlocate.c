@@ -279,8 +279,12 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	      if (pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 		{
+#ifndef _GLTRANSFORMATION
 		  pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder
 		    - pBox->BxLPadding;
+#else /* _GLTRANSFORMATION */
+		  pos = x - pBox->BxClipX;
+#endif /* _GLTRANSFORMATION */
 		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
 				     &nChars, &nSpaces);
 		  nChars = pBox->BxFirstChar + nChars;
@@ -360,10 +364,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    /* the application asks Thot to do nothing */
 		    return;
 		  /* check if the curseur is within the box */
+#ifndef _GLTRANSFORMATION
 		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 		    pBox->BxLPadding;
 		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 		    pBox->BxTPadding;
+#else /* _GLTRANSFORMATION */
+		  xOrg =  pBox->BxClipX;
+		  yOrg =  pBox->BxClipY;
+#endif /* _GLTRANSFORMATION */
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
@@ -378,10 +387,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  break;
 		case 5:
 		  /* check if the curseur is within the box */
+#ifndef _GLTRANSFORMATION
 		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 		    pBox->BxLPadding;
 		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 		    pBox->BxTPadding;
+#else /* _GLTRANSFORMATION */
+		  xOrg =  pBox->BxClipX;
+		  yOrg =  pBox->BxClipY;
+#endif /* _GLTRANSFORMATION */
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
@@ -400,10 +414,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  break;
 		case 6:
 		  /* check if the curseur is within the box */
+#ifndef _GLTRANSFORMATION
 		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 		    pBox->BxLPadding;
 		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 		    pBox->BxTPadding;
+#else /* _GLTRANSFORMATION */
+		  xOrg =  pBox->BxClipX;
+		  yOrg =  pBox->BxClipY;
+#endif /* _GLTRANSFORMATION */
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
@@ -2135,8 +2154,13 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 		       /* empty or compound box */
 		       (pAb->AbLeafType == LtCompound &&
 			pAb->AbVolume == 0))
+#ifndef _GLTRANSFORMATION
 		d = GetBoxDistance (xRef, yRef, pBox->BxXOrg, pBox->BxYOrg,
 				    pBox->BxWidth, pBox->BxHeight);
+#else /*_GLTRANSFORMATION */
+		d = GetBoxDistance (xRef, yRef, pBox->BxClipX, pBox->BxClipY,
+				    pBox->BxClipW, pBox->BxClipH);
+#endif /*_GLTRANSFORMATION */
 	      else
 		d = max + 1;
 
@@ -2539,10 +2563,17 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 			}
 		    }
 		  /* redisplay the box */
+#ifndef _GLTRANSFORMATION
 		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
 			   pBox->BxYOrg - EXTRA_GRAPH,
 			   pBox->BxXOrg + width + EXTRA_GRAPH,
 			   pBox->BxYOrg + height + EXTRA_GRAPH);
+#else /* _GLTRANSFORMATION */
+		  DefClip (frame, pBox->BxClipX - EXTRA_GRAPH,
+			   pBox->BxClipY - EXTRA_GRAPH,
+			   pBox->BxClipX + width + EXTRA_GRAPH,
+			   pBox->BxClipY + height + EXTRA_GRAPH);
+#endif /* _GLTRANSFORMATION */
 		  RedrawFrameBottom (frame, 0, NULL);
 		}
 	      else
@@ -2985,8 +3016,16 @@ void                DirectCreation (PtrBox pBox, int frame)
 	NewDimension (pAb, width, 0, frame, TRUE);
       else
 	NewDimension (pAb, width, height, frame, TRUE);
+#ifndef _GLTRANSFORMATION		  
       DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 	       pBox->BxXOrg + width, pBox->BxYOrg + height);
+#else /* _GLTRANSFORMATION */
+      DefClip (frame, pBox->BxClipX,
+	       pBox->BxClipY,
+	       pBox->BxClipX + width,
+	       pBox->BxClipY + height);
+#endif /* _GLTRANSFORMATION */
+
       pAb->AbHorizPos.PosUserSpecified = FALSE;
       pAb->AbVertPos.PosUserSpecified = FALSE;
       pAb->AbWidth.DimUserSpecified = FALSE;

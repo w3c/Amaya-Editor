@@ -154,7 +154,7 @@ void SetFrameParams (int frame, int Visibilite, int Zoom)
 		 InsertViewSelMarks (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
 	       /* On visualise la selection que l'on vient de poser */
 	     }
-	   DefClip (frame, -1, -1, -1, -1);
+ 	   DefClip (frame, -1, -1, -1, -1);
 	   DisplayFrame (frame);
 	 }
        ReadyToDisplay = TRUE;

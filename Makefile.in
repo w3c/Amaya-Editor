@@ -75,6 +75,11 @@ clean : rebuild
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" clean ; \
 	  cd .. ; fi ;done )
 
+tempclean : 
+	find ../ -name '.#*' -print0 | xargs -0r rm -f
+	find ../ -name \*~ -exec rm {} \;
+	find ../ \( -name '*~' -o -name '#*#' \) -print0 | xargs --no-run-if-empty --null rm -vf
+
 install : rebuild
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \

@@ -1625,6 +1625,70 @@ static void wrtext (char *Text, FILE *fileDescriptor)
    fprintf (fileDescriptor, "%s", Text);
 }
 
+static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
+{
+#ifdef _GLTRANSFORMATION
+
+
+  while (Trans)
+    {
+      switch (Trans->TransType)
+	{
+	case  PtElBoxTranslate:
+	  fprintf (fileDescriptor, "ORIGIN Box Translation: ");
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  break;
+
+	case  PtElviewboxScale:
+	  fprintf (fileDescriptor, "viewboxScale: ");
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  break;
+
+	case PtElviewboxTranslate:
+	  fprintf (fileDescriptor, "viewboxTranslate: ");
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  break;
+
+	case  PtElScale:
+	  fprintf (fileDescriptor, "Scale: ");
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  break;
+
+	case PtElTranslate:
+	  fprintf (fileDescriptor, "Translation: ");
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  break;
+
+	case PtElRotate:
+	  fprintf (fileDescriptor, "Rotate: ");
+	  fprintf (fileDescriptor, "Angle %2e X=%2e, Y=%2e ", Trans->Angle, Trans->XRotate, Trans->YRotate);
+	  break;
+
+	case PtElMatrix:
+	  fprintf (fileDescriptor, "Matrix: ");
+	  fprintf (fileDescriptor, "A %2e B %2e C %2e D %2e E %2e F %2e ", 
+		   Trans->AMatrix, Trans->BMatrix, Trans->CMatrix, Trans->DMatrix,
+		   Trans->EMatrix, Trans->FMatrix);
+	  break;
+	case PtElSkewX:
+	  fprintf (fileDescriptor, "SkewX : ");
+	  fprintf (fileDescriptor, " %2e ", Trans->Factor);
+	  break;
+
+	case PtElSkewY: 
+	  fprintf (fileDescriptor, "SkewY : ");
+	  fprintf (fileDescriptor, " %2e ", Trans->Factor);
+	  break;
+
+	default:
+	  break;
+	}
+      Trans = Trans->Next;
+    }
+ 
+#endif /* _GLTRANSFORMATION */
+    }
+ 
 
 /*----------------------------------------------------------------------
    ListBoxTree
@@ -1678,7 +1742,8 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		wrnumber (pBox->BxNexChild->BxYOrg, fileDescriptor);
 	     else
 		wrnumber (pBox->BxYOrg, fileDescriptor);
-#ifdef _GLTRANSFORMATION
+
+#ifdef _GLTRANSFORMATION 
 	     fprintf (fileDescriptor, " ClipX:");
 	     wrnumber (pBox->BxClipX, fileDescriptor);
 	     fprintf (fileDescriptor, " ClipY:");
@@ -1687,6 +1752,18 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     wrnumber (pBox->BxClipW, fileDescriptor);
 	     fprintf (fileDescriptor, " ClipH:");
 	     wrnumber (pBox->BxClipH, fileDescriptor);
+	     if (pAb->AbElement->ElSystemOrigin)
+	       {
+		 fprintf (fileDescriptor, " Origin System");
+	       } 
+	     if (pAb->AbElement->ElTransform)
+	       {
+		 fprintf (fileDescriptor, "\n");
+		 for (j = 1; j <= Indent; j++)
+		   fprintf (fileDescriptor, " ");
+                 PrintTransformation (pAb->AbElement->ElTransform ,fileDescriptor);
+	       }
+	     
 #endif /* _GLTRANSFORMATION */
 	     fprintf (fileDescriptor, " Base:");
 	     wrnumber (pBox->BxHorizRef, fileDescriptor);

@@ -124,6 +124,9 @@ extern void TtaAppendTransform ( Element element,
 extern void TtaReplaceTransform ( Element element,
                                   void *transform,
                                   Document document );
+extern void TtaAddTransform ( Element element,
+                              void *transform,
+                              Document document );
 extern void TtaInsertTransform ( Element element,
                                  void *transform,
                                  Document document );
@@ -294,6 +297,9 @@ extern void TtaAppendTransform (/* Element element,
 extern void TtaReplaceTransform (/* Element element,
                                     void *transform,
                                     Document document */);
+extern void TtaAddTransform (/* Element element,
+                                void *transform,
+                                Document document */);
 extern void TtaInsertTransform (/* Element element,
                                    void *transform,
                                    Document document */);

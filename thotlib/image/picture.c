@@ -2435,12 +2435,22 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (h == 0)
 	h = hBox;
       /* Do you have to extend the clipping */
+#ifndef _GLTRANSFORMATION
       if (pAb->AbLeafType == LtCompound)
 	DefClip (frame, box->BxXOrg, box->BxYOrg,
 		 box->BxXOrg + w, box->BxYOrg + h);
       else
 	DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
 		 box->BxXOrg + right + w, box->BxYOrg + bottom + h);
+#else/*  _GLTRANSFORMATION */
+      if (pAb->AbLeafType == LtCompound)
+	DefClip (frame, box->BxClipX, box->BxClipY,
+		 box->BxClipX + w, box->BxClipY + h);
+      else
+	DefClip (frame, box->BxClipX - left, box->BxClipY - top,
+		 box->BxClipX + right + w, box->BxClipY + bottom + h);
+#endif /*  _GLTRANSFORMATION */
+
       if (pAb->AbLeafType == LtPicture)
 	{
 	  /* transmit picture dimensions */

@@ -1303,7 +1303,12 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 	    }
 
 	  /* on force le reaffichage de la boite (+ les points de selection) */
+#ifndef _GLTRANSFORMATION
 	  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+#else/* _GLTRANSFORMATION */  
+	  DefClip (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, pBox->BxClipX + width + EXTRA_GRAPH, pBox->BxClipY + height + EXTRA_GRAPH);
+#endif /* _GLTRANSFORMATION */
+
 	  break;
 
 	default:	/* un graphique simple */
@@ -2267,10 +2272,13 @@ static void ContentEditing (int editType)
 			  pViewSel->VsIndBox = charsDelta;
 			  /* on force le reaffichage de la boite
 			     (+ les points de selection) */
-			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
-				   pBox->BxYOrg - EXTRA_GRAPH,
-				   pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH,
-				  pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
+#ifndef _GLTRANSFORMATION
+			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, 
+				   pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
+#else/* _GLTRANSFORMATION */  
+			  DefClip (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, 
+				   pBox->BxClipX + pBox->BxClipW + EXTRA_GRAPH, pBox->BxClipY + pBox->BxClipH + EXTRA_GRAPH);			  
+#endif /* _GLTRANSFORMATION */
 			}
 		    }
 		}
@@ -2309,15 +2317,27 @@ static void ContentEditing (int editType)
 	      if (pBox->BxType == BoSplit)
 		{
 		  pSelBox = pBox->BxNexChild;
+#ifndef _GLTRANSFORMATION
 		  DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
 			   pSelBox->BxXOrg + pSelBox->BxWidth,
 			   pSelBox->BxYOrg + pSelBox->BxHeight);
+#else /* _GLTRANSFORMATION */
+		  DefClip (frame, pSelBox->BxClipX, pSelBox->BxClipY,
+			   pSelBox->BxClipX + pSelBox->BxClipW,
+			   pSelBox->BxClipY + pSelBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
 		}
 	      else
 		{
+#ifndef _GLTRANSFORMATION
 		  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			   pBox->BxXOrg + pBox->BxWidth,
 			   pBox->BxYOrg + pBox->BxHeight);
+#else /* _GLTRANSFORMATION */
+		  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+			   pBox->BxClipX + pBox->BxClipW,
+			   pBox->BxClipY + pBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
 		}
 	      
 	      /* Est-ce que les dimensions de la boite dependent du contenu */
@@ -2353,7 +2373,7 @@ static void ContentEditing (int editType)
 		    {
 		      if (ThotLocalActions[T_deletenextchar] != NULL)
 			(*ThotLocalActions[T_deletenextchar]) (frame,
-							pAb->AbElement, FALSE);
+							       pAb->AbElement, FALSE);
 		      else
 			/* Pas de reaffichage */
 			DefClip (frame, 0, 0, 0, 0);
@@ -2375,7 +2395,7 @@ static void ContentEditing (int editType)
 		      DefClip (frame, 0, 0, 0, 0);		      
 		    else if (ThotLocalActions[T_deletenextchar] != NULL)
 		      (*ThotLocalActions[T_deletenextchar]) (frame,
-						       pAb->AbElement, FALSE);
+							     pAb->AbElement, FALSE);
 		    else
 		      /* do nothing */
 		      DefClip (frame, 0, 0, 0, 0);
@@ -2402,9 +2422,15 @@ static void ContentEditing (int editType)
 		      pBox = pViewSel->VsBox;
 		      if (pBox != NULL)
 			{
+#ifndef _GLTRANSFORMATION
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
+#else /* _GLTRANSFORMATION */
+			  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+				   pBox->BxClipX + pBox->BxClipW,
+				   pBox->BxClipY + pBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
 			  pAb = pBox->BxAbstractBox;
 			}
 		      else
@@ -2529,7 +2555,7 @@ static void ContentEditing (int editType)
 
 
 /*----------------------------------------------------------------------
-   Insere un caractere dans une boite de texte.                    
+  Insere un caractere dans une boite de texte.                    
   ----------------------------------------------------------------------*/
 void InsertChar (int frame, CHAR_T c, int keyboard)
 {
@@ -2670,105 +2696,64 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		  
 		      if (toDelete)
 			{
-			/* ========================== Delete */
-			if (beginOfBox)
-			  {
-			    /* no removable character here */
-			    CloseTextInsertion ();
-			    if (ThotLocalActions[T_deletenextchar] != NULL)
-			      (*ThotLocalActions[T_deletenextchar]) (frame,
-							 pAb->AbElement, TRUE);
-			    pFrame->FrReady = TRUE;
-			    return;
-			  }
-			else
-			  {
-			    if (pBuffer->BuLength == 0)
-			      {
-				if (pBuffer->BuPrevious)
+			  /* ========================== Delete */
+			  if (beginOfBox)
+			    {
+			      /* no removable character here */
+			      CloseTextInsertion ();
+			      if (ThotLocalActions[T_deletenextchar] != NULL)
+				(*ThotLocalActions[T_deletenextchar]) (frame,
+								       pAb->AbElement, TRUE);
+			      pFrame->FrReady = TRUE;
+			      return;
+			    }
+			  else
+			    {
+			      if (pBuffer->BuLength == 0)
 				{
-				  /* if pBuffer = first buffer of the box? */
-				  if (pSelBox->BxBuffer == pBuffer)
+				  if (pBuffer->BuPrevious)
 				    {
-				      /* free the current buffer */
-				      pBuffer = DeleteBuffer (pBuffer, frame);
-				      pSelBox->BxBuffer = pBuffer;
-				      if (pSelBox->BxIndChar == 0)
+				      /* if pBuffer = first buffer of the box? */
+				      if (pSelBox->BxBuffer == pBuffer)
 					{
-					  /* update the piece of box */
-					  pBox->BxBuffer = pBuffer;
-					  pAb->AbText = pBuffer;
-					  /* Is there an empty box before? */
-					  if (pBox->BxNexChild != pSelBox &&
-					      pBox->BxNexChild)
-					    pBox->BxNexChild->BxBuffer = pBuffer;
+					  /* free the current buffer */
+					  pBuffer = DeleteBuffer (pBuffer, frame);
+					  pSelBox->BxBuffer = pBuffer;
+					  if (pSelBox->BxIndChar == 0)
+					    {
+					      /* update the piece of box */
+					      pBox->BxBuffer = pBuffer;
+					      pAb->AbText = pBuffer;
+					      /* Is there an empty box before? */
+					      if (pBox->BxNexChild != pSelBox &&
+						  pBox->BxNexChild)
+						pBox->BxNexChild->BxBuffer = pBuffer;
+					    }
+					  else if (pSelBox->BxPrevious->BxNChars == 0)
+					    /* update the previous box */
+					    pSelBox->BxPrevious->BxBuffer = pBuffer;
 					}
-				      else if (pSelBox->BxPrevious->BxNChars == 0)
-					/* update the previous box */
-					pSelBox->BxPrevious->BxBuffer = pBuffer;
+				      else
+					/* free the buffer */
+					pBuffer = DeleteBuffer (pBuffer, frame);
 				    }
-				  else
-				    /* free the buffer */
-				    pBuffer = DeleteBuffer (pBuffer, frame);
-				}
-			      else if (pBuffer->BuNext)
-				{
-				  /* pBuffer = first buffer of the box */
-				  /* update the box */
-				  pSelBox->BxBuffer = pBuffer->BuNext;
-				  /* free the buffer */
-				  pBuffer = DeleteBuffer (pBuffer, frame);
-				  pBuffer = pSelBox->BxBuffer;
-				  if (pSelBox->BxFirstChar == 1)
+				  else if (pBuffer->BuNext)
 				    {
-				      pAb->AbText = pBuffer;
-				      if (pBox && pBox != pSelBox)
-					{
-					  pBox->BxBuffer = pBuffer;
-					  /* Is there an empty box before? */
-					  if (pBox->BxNexChild != pSelBox &&
-					      pBox->BxNexChild)
-					    pBox->BxNexChild->BxBuffer = pBuffer;
-					}
-				    }
-				  else if (pSelBox->BxPrevious->BxNChars == 0)
-				    /* update the previous box */
-				    pSelBox->BxPrevious->BxBuffer = pBuffer;
-				}
-			      }
-			    /* remove the character in the buffer */
-			    pBuffer->BuLength--;
-			    c = pBuffer->BuContent[pBuffer->BuLength];
-			    pBuffer->BuContent[pBuffer->BuLength] = EOS;
-			    
-			    /* update the selection at the end of the buffer */
-			    if (pViewSel->VsBuffer == pBuffer)
-			      {
-				pViewSel->VsIndBuf--;
-				ind--;
-				pViewSelEnd->VsIndBuf--;
-			      }
-			    if (pBuffer->BuLength == 0)
-			      if (pBuffer->BuPrevious)
-				{
-				  /* free that buffer */
-				  if (pSelBox->BxBuffer == pBuffer)
-				    {
-				      /* and update the box */
+				      /* pBuffer = first buffer of the box */
+				      /* update the box */
+				      pSelBox->BxBuffer = pBuffer->BuNext;
+				      /* free the buffer */
 				      pBuffer = DeleteBuffer (pBuffer, frame);
-				      pSelBox->BxBuffer = pBuffer;
-				      /* the index will be decremented */
-				      pSelBox->BxIndChar = pBuffer->BuLength + 1;
+				      pBuffer = pSelBox->BxBuffer;
 				      if (pSelBox->BxFirstChar == 1)
 					{
 					  pAb->AbText = pBuffer;
 					  if (pBox && pBox != pSelBox)
 					    {
-					      /* update the split box */
 					      pBox->BxBuffer = pBuffer;
+					      /* Is there an empty box before? */
 					      if (pBox->BxNexChild != pSelBox &&
 						  pBox->BxNexChild)
-						/* there is an empty box before */
 						pBox->BxNexChild->BxBuffer = pBuffer;
 					    }
 					}
@@ -2776,154 +2761,195 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 					/* update the previous box */
 					pSelBox->BxPrevious->BxBuffer = pBuffer;
 				    }
-				  else
-				    pBuffer = DeleteBuffer (pBuffer, frame);
 				}
+			      /* remove the character in the buffer */
+			      pBuffer->BuLength--;
+			      c = pBuffer->BuContent[pBuffer->BuLength];
+			      pBuffer->BuContent[pBuffer->BuLength] = EOS;
 			    
-			    /* Initialise la detruction d'un caractere */
-			    charsDelta = -1;
-			    pix = 0;
-			    adjust = 0;
-			    if (c == SPACE)
-			      spacesDelta = -1;
-			    else
-			      spacesDelta = 0;
-			    toSplit = FALSE;
+			      /* update the selection at the end of the buffer */
+			      if (pViewSel->VsBuffer == pBuffer)
+				{
+				  pViewSel->VsIndBuf--;
+				  ind--;
+				  pViewSelEnd->VsIndBuf--;
+				}
+			      if (pBuffer->BuLength == 0)
+				if (pBuffer->BuPrevious)
+				  {
+				    /* free that buffer */
+				    if (pSelBox->BxBuffer == pBuffer)
+				      {
+					/* and update the box */
+					pBuffer = DeleteBuffer (pBuffer, frame);
+					pSelBox->BxBuffer = pBuffer;
+					/* the index will be decremented */
+					pSelBox->BxIndChar = pBuffer->BuLength + 1;
+					if (pSelBox->BxFirstChar == 1)
+					  {
+					    pAb->AbText = pBuffer;
+					    if (pBox && pBox != pSelBox)
+					      {
+						/* update the split box */
+						pBox->BxBuffer = pBuffer;
+						if (pBox->BxNexChild != pSelBox &&
+						    pBox->BxNexChild)
+						  /* there is an empty box before */
+						  pBox->BxNexChild->BxBuffer = pBuffer;
+					      }
+					  }
+					else if (pSelBox->BxPrevious->BxNChars == 0)
+					  /* update the previous box */
+					  pSelBox->BxPrevious->BxBuffer = pBuffer;
+				      }
+				    else
+				      pBuffer = DeleteBuffer (pBuffer, frame);
+				  }
 			    
-			    if (previousChars == 1 &&
-				pSelBox->BxType == BoComplete &&
-				pSelBox->BxNChars == 1)
-			      {
-				/* the box becomes empty */
-				/* update selection marks */
-				xDelta = BoxCharacterWidth (109, font);
-				pViewSel->VsXPos = 0;
-				pViewSel->VsIndBox = 0;
-				pViewSel->VsNSpaces = 0;
-				pViewSelEnd->VsXPos = xDelta;
-				pViewSelEnd->VsIndBox = 0;
-				pViewSelEnd->VsNSpaces = 0;
-				/* prepare the box update */
-				xDelta -= pSelBox->BxWidth;
-				pFrame->FrClipXBegin = pSelBox->BxXOrg;
-			      }
-			    else if (previousChars == 0 && c != SPACE)
-			      {
-				/* delete a broken word or a Ctrl Return */
-				/* recompute the paragraph */
-				toSplit = TRUE;
-				/* move the selection mark to the previous box */
-				pSelBox = pSelBox->BxPrevious;
-				/* update the redisplayed area */
-				topY = pSelBox->BxYOrg;
-				DefClip (frame, xx, topY, xx, bottomY);
-				if ((c == BREAK_LINE || c == NEW_LINE) &&
-				    pAb->AbBox->BxNChars == 1)
-				  {
-				    /* the box becomes empty */
-				    xDelta = BoxCharacterWidth (109, font);
-				    pFrame->FrClipXBegin = pSelBox->BxXOrg;
-				    /* update selection marks */
-				    pSelBox = pAb->AbBox;
-				    pViewSel->VsXPos = 0;
-				    pViewSel->VsIndBox = 0;
-				    if (pViewSel->VsLine)
-				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
-				    pViewSelEnd->VsBox = pSelBox;
-				    pViewSelEnd->VsLine = pViewSel->VsLine;
-				    pViewSelEnd->VsXPos = xDelta;
-				    pViewSelEnd->VsIndBox = 0;
-				    pViewSel->VsBox = pSelBox;
-				  }
-				else
-				  {
-				    xDelta = - BoxCharacterWidth (c, font);
-				    pViewSel->VsBox = pSelBox;
-				    pViewSel->VsIndBox = pSelBox->BxNChars;
-				    if (pViewSel->VsLine)
-				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
-				    pViewSelEnd->VsBox = pSelBox;
-				    pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
-				    pViewSelEnd->VsLine = pViewSel->VsLine;
-				    pFrame->FrClipXBegin += xDelta;
-				  }
-			      }
-			    else if ((previousChars > pSelBox->BxNChars ||
-				      previousChars == 0) &&
-				     c == SPACE)
-			      {
-				/* removing a space between two boxes */
-				/* recompute the paragraph */
-				toSplit = TRUE;
-				xDelta = - BoxCharacterWidth (c, font);
-				if (previousChars == 0)
-				  {
-				    /* selection at the beginning of the box  */
-				    /* recompute from the previous box */
-				    pBox = pSelBox->BxPrevious;
-				    if (pViewSel->VsLine)
-				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
-				    if (pBox->BxNChars == 0 &&
-					pBox->BxFirstChar == 1)
-				      {
-					/* the empty previous box is the first */
-					pBox = pAb->AbBox;
-					/*
-					  update the first position of the selected
-					  box because a space is removed before
-					*/
-					pSelBox->BxFirstChar--;
-					if (pBox->BxNChars == 1)
-					  /* the box becomes empty */
-					  xDelta = BoxCharacterWidth (109, font) - pBox->BxWidth;
-				      }
-				    else if (pBox->BxFirstChar == 1)
-				      {
-					/* recompute the whole split box */
-					pBox = pAb->AbBox;
-					/*
-					  update the first position of the selected
-					  box because a space is removed before
-					*/
-					pSelBox->BxFirstChar--;
-				      }
-				    pSelBox = pBox;
-				  }
-				else
-				  {
-				    pViewSel->VsIndBox--;
-				    pViewSelEnd->VsIndBox--;
-				  }
-				/* update the displayed area */
-				pFrame->FrClipXBegin += xDelta;
-			      }
-			    else
-			      {
-				/* other cases */
-				if (c == SPACE)
-				  {
-				    xDelta = - BoxCharacterWidth (SPACE, font);
-				    adjust = - pSelBox->BxSpaceWidth;
-				    if (adjust < 0)
-				      {
-					if (pSelBox->BxNPixels >= pViewSel->VsNSpaces)
-					  pix = -1;
-				      }
-				  }
-				else if (c == EOS)
-				  /* null character */
-				  xDelta = 0;
-				else
+			      /* Initialise la detruction d'un caractere */
+			      charsDelta = -1;
+			      pix = 0;
+			      adjust = 0;
+			      if (c == SPACE)
+				spacesDelta = -1;
+			      else
+				spacesDelta = 0;
+			      toSplit = FALSE;
+			    
+			      if (previousChars == 1 &&
+				  pSelBox->BxType == BoComplete &&
+				  pSelBox->BxNChars == 1)
+				{
+				  /* the box becomes empty */
+				  /* update selection marks */
+				  xDelta = BoxCharacterWidth (109, font);
+				  pViewSel->VsXPos = 0;
+				  pViewSel->VsIndBox = 0;
+				  pViewSel->VsNSpaces = 0;
+				  pViewSelEnd->VsXPos = xDelta;
+				  pViewSelEnd->VsIndBox = 0;
+				  pViewSelEnd->VsNSpaces = 0;
+				  /* prepare the box update */
+				  xDelta -= pSelBox->BxWidth;
+				  pFrame->FrClipXBegin = pSelBox->BxXOrg;
+				}
+			      else if (previousChars == 0 && c != SPACE)
+				{
+				  /* delete a broken word or a Ctrl Return */
+				  /* recompute the paragraph */
+				  toSplit = TRUE;
+				  /* move the selection mark to the previous box */
+				  pSelBox = pSelBox->BxPrevious;
+				  /* update the redisplayed area */
+				  topY = pSelBox->BxYOrg;
+				  DefClip (frame, xx, topY, xx, bottomY);
+				  if ((c == BREAK_LINE || c == NEW_LINE) &&
+				      pAb->AbBox->BxNChars == 1)
+				    {
+				      /* the box becomes empty */
+				      xDelta = BoxCharacterWidth (109, font);
+				      pFrame->FrClipXBegin = pSelBox->BxXOrg;
+				      /* update selection marks */
+				      pSelBox = pAb->AbBox;
+				      pViewSel->VsXPos = 0;
+				      pViewSel->VsIndBox = 0;
+				      if (pViewSel->VsLine)
+					pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
+				      pViewSelEnd->VsBox = pSelBox;
+				      pViewSelEnd->VsLine = pViewSel->VsLine;
+				      pViewSelEnd->VsXPos = xDelta;
+				      pViewSelEnd->VsIndBox = 0;
+				      pViewSel->VsBox = pSelBox;
+				    }
+				  else
+				    {
+				      xDelta = - BoxCharacterWidth (c, font);
+				      pViewSel->VsBox = pSelBox;
+				      pViewSel->VsIndBox = pSelBox->BxNChars;
+				      if (pViewSel->VsLine)
+					pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
+				      pViewSelEnd->VsBox = pSelBox;
+				      pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
+				      pViewSelEnd->VsLine = pViewSel->VsLine;
+				      pFrame->FrClipXBegin += xDelta;
+				    }
+				}
+			      else if ((previousChars > pSelBox->BxNChars ||
+					previousChars == 0) &&
+				       c == SPACE)
+				{
+				  /* removing a space between two boxes */
+				  /* recompute the paragraph */
+				  toSplit = TRUE;
 				  xDelta = - BoxCharacterWidth (c, font);
-				/* update the displayed area */
-				pFrame->FrClipXBegin += xDelta;
-				/* update selection marks */
-				if (adjust)
-				  UpdateViewSelMarks (frame, adjust + pix, spacesDelta, charsDelta);
-				else
-				  UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
-			      }
-			  }
+				  if (previousChars == 0)
+				    {
+				      /* selection at the beginning of the box  */
+				      /* recompute from the previous box */
+				      pBox = pSelBox->BxPrevious;
+				      if (pViewSel->VsLine)
+					pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
+				      if (pBox->BxNChars == 0 &&
+					  pBox->BxFirstChar == 1)
+					{
+					  /* the empty previous box is the first */
+					  pBox = pAb->AbBox;
+					  /*
+					    update the first position of the selected
+					    box because a space is removed before
+					  */
+					  pSelBox->BxFirstChar--;
+					  if (pBox->BxNChars == 1)
+					    /* the box becomes empty */
+					    xDelta = BoxCharacterWidth (109, font) - pBox->BxWidth;
+					}
+				      else if (pBox->BxFirstChar == 1)
+					{
+					  /* recompute the whole split box */
+					  pBox = pAb->AbBox;
+					  /*
+					    update the first position of the selected
+					    box because a space is removed before
+					  */
+					  pSelBox->BxFirstChar--;
+					}
+				      pSelBox = pBox;
+				    }
+				  else
+				    {
+				      pViewSel->VsIndBox--;
+				      pViewSelEnd->VsIndBox--;
+				    }
+				  /* update the displayed area */
+				  pFrame->FrClipXBegin += xDelta;
+				}
+			      else
+				{
+				  /* other cases */
+				  if (c == SPACE)
+				    {
+				      xDelta = - BoxCharacterWidth (SPACE, font);
+				      adjust = - pSelBox->BxSpaceWidth;
+				      if (adjust < 0)
+					{
+					  if (pSelBox->BxNPixels >= pViewSel->VsNSpaces)
+					    pix = -1;
+					}
+				    }
+				  else if (c == EOS)
+				    /* null character */
+				    xDelta = 0;
+				  else
+				    xDelta = - BoxCharacterWidth (c, font);
+				  /* update the displayed area */
+				  pFrame->FrClipXBegin += xDelta;
+				  /* update selection marks */
+				  if (adjust)
+				    UpdateViewSelMarks (frame, adjust + pix, spacesDelta, charsDelta);
+				  else
+				    UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
+				}
+			    }
 			}
 		      else
 			{
@@ -2945,8 +2971,13 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			       pSelBox->BxScript != script)
 			    {
 			      /* update the clipping */
+#ifndef _GLTRANSFORMATION
 			      DefClip (frame, pSelBox->BxXOrg, topY,
 				       pSelBox->BxXOrg + pSelBox->BxWidth, bottomY);
+#else /* _GLTRANSFORMATION */
+			      DefClip (frame, pSelBox->BxClipX, topY,
+				       pSelBox->BxClipX + pSelBox->BxClipWidth, bottomY);
+#endif /* _GLTRANSFORMATION */
 			      /* split the current box */
 			      pBox = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
 						     previousChars,
@@ -3051,9 +3082,16 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  toSplit = TRUE;
 				  xDelta = 0;
 				}
+#ifndef _GLTRANSFORMATION
 			      DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
 				       pSelBox->BxXOrg + pSelBox->BxWidth,
 				       pSelBox->BxYOrg + pSelBox->BxHeight);
+#else /* _GLTRANSFORMATION */
+			      DefClip (frame, pSelBox->BxClipX, pSelBox->BxClipY,
+				       pSelBox->BxClipX + pSelBox->BxClipW,
+				       pSelBox->BxClipY + pSelBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
+			      
 			      /* Prepare la mise a jour de la boite */
 			      xDelta -= pSelBox->BxWidth;
 			    }

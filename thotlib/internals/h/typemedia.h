@@ -189,9 +189,6 @@ typedef struct _Box
   int             BxXOrg;	/* X origin from the root */
   int             BxYOrg;	/* Y origin from the root */
 #ifdef _GL
-  int             BxRelX; 
-  int             BxRelY; 
-
   int             BxClipX; 
   int             BxClipY; 
 

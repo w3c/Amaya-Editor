@@ -2758,9 +2758,15 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
    else
       pBox = pLine->LiFirstBox;
    limit = pBox->BxXOrg;
+#ifndef _GLTRANSFORMATION
    DefClip (frame, limit, pBox->BxYOrg + pBox->BxHorizRef - pLine->LiHorizRef,
 	    limit + pLine->LiXMax,
      pBox->BxYOrg + pBox->BxHorizRef - pLine->LiHorizRef + pLine->LiHeight);
+#else /* _GLTRANSFORMATION */
+   DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+	    pBox->BxClipX + pBox->BxClipW,
+	    pBox->BxClipY + pBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
 
    /* met a jour chaque boite */
    do
@@ -3022,10 +3028,17 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	     if (pBox->BxWidth > l)
 		l = pBox->BxWidth;
 	     l += pBox->BxXOrg;
+#ifndef _GLTRANSFORMATION
 	     if (height > pBox->BxHeight)
-		DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + height);
+	       DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + height);
 	     else
-		DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + pBox->BxHeight);
+	       DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + pBox->BxHeight);
+#else /* _GLTRANSFORMATION */	     
+	     if (height > pBox->BxClipH)
+	       DefClip (frame, pBox->BxClipX, h, l, pBox->BxClipY + height);
+	     else
+	       DefClip (frame, pBox->BxClipX, h, l, pBox->BxClipY + pBox->BxClipH);
+#endif /*_GLTRANSFORMATION*/
 	  }
 
 	/* Faut-il reevaluer les marques de selection ? */

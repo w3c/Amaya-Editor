@@ -1885,13 +1885,108 @@ void TtaReplaceTransform (Element element, void *transform,
      }
 }
 /*----------------------------------------------------------------------
+   TransformAddition
+   Add A transformation to one already existing
+   Parameters:
+   Trans1: the Graphics element to be modified.
+   Trans2: the new transform .
+  ----------------------------------------------------------------------*/
+static void TransformAddition (PtrTransform Trans1, PtrTransform Trans2)
+{
+  switch (Trans2->TransType)
+    {
+    case PtElBoxTranslate:
+    case PtElviewboxScale:
+    case PtElviewboxTranslate:
+    case PtElScale:
+    case PtElTranslate:
+      Trans1->XScale += Trans2->XScale;
+      Trans1->YScale += Trans2->YScale;
+      break;
+    case PtElRotate:
+      Trans1->Angle += Trans2->Angle;	  
+      Trans1->XRotate += Trans2->XRotate;	  
+      Trans1->YRotate += Trans2->YRotate;	  
+      break;
+    case PtElMatrix:
+      Trans1->AMatrix += Trans2->AMatrix;
+      Trans1->BMatrix += Trans2->BMatrix;
+      Trans1->CMatrix += Trans2->CMatrix;
+      Trans1->DMatrix += Trans2->DMatrix;
+      Trans1->EMatrix += Trans2->EMatrix;
+      Trans1->FMatrix += Trans2->FMatrix;
+      break;
+    case PtElSkewX:
+    case PtElSkewY: 
+      Trans1->Factor = Trans2->Factor;	  
+      break;
+
+    default:
+      break;
+    }
+}
+/*----------------------------------------------------------------------
+   TtaAddTransform
+
+   Insert or Add a Transform at the beginning of a Graphics basic element
+   if a transformation of the same type exists in the list, it is replaced
+   with old_value + delta
+
+   Parameters:
+   element: the Graphics element to be modified.
+   transform: the transformation to be inserted.
+   document: the document containing the element.
+  ----------------------------------------------------------------------*/
+void TtaAddTransform (Element element, void *transform, 
+			 Document document)
+{
+   PtrTransform       pPa, pPrevPa, found;
+     
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     /* verifies the parameter document */
+     if (document < 1 || document > MAX_DOCUMENTS)
+       TtaError (ERR_invalid_document_parameter);
+     else if (LoadedDocument[document - 1] == NULL)
+       TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       if (element && transform)
+	 {
+	  pPa = ((PtrElement) element)->ElTransform;
+	   pPrevPa = NULL;
+	   while (pPa)
+	     {
+	       if (pPa->TransType == ((PtrTransform)transform)->TransType)
+		 {
+		   TransformAddition (pPa, transform);
+		   TtaFreeMemory (transform);		   
+		
+		  return;
+		 }	       
+	       pPrevPa = pPa;
+	       pPa = pPa->Next;
+	     }
+
+	   if (pPrevPa == NULL)
+	     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+	   else
+	     pPrevPa->Next = (PtrTransform) transform;
+
+	 }
+     }
+}
+/*----------------------------------------------------------------------
    TtaInsertTransform
 
    Insert a Transform at the beginning of a Graphics basic element
 
    Parameters:
    element: the Graphics element to be modified.
-   transform: the path segment to be inserted.
+   transform: the Transformation to be inserted.
    document: the document containing the element.
   ----------------------------------------------------------------------*/
 void TtaInsertTransform (Element element, void *transform, 

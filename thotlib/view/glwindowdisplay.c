@@ -544,7 +544,7 @@ void GL_SetClipping (int x, int y, int width, int height)
 {
   glEnable (GL_SCISSOR_TEST);
   glScissor (x, y, width, height);
-if (width_previous_clip == 0 && height_previous_clip == 0)
+  if (width_previous_clip == 0 && height_previous_clip == 0)
     {
       x_previous_clip = x;
       y_previous_clip = y;
@@ -555,38 +555,38 @@ if (width_previous_clip == 0 && height_previous_clip == 0)
 
 void GL_UnsetClippingRestore (ThotBool Restore)
 {  
-   glDisable (GL_SCISSOR_TEST);
-   if (Restore)
-     {
-       if (width_previous_clip != 0 && height_previous_clip != 0)
-	 {
-	 GL_SetClipping (x_previous_clip, y_previous_clip, 
-			 width_previous_clip, height_previous_clip);
-	 width_previous_clip = 0;
-	 height_previous_clip = 0;
-	 }
-     }
-   else
-     {
-       width_previous_clip = 0;
-       height_previous_clip = 0;
-     }
+  glDisable (GL_SCISSOR_TEST);
+  if (Restore)
+    {
+      if (width_previous_clip != 0 && height_previous_clip != 0)
+	{
+	  GL_SetClipping (x_previous_clip, y_previous_clip, 
+			  width_previous_clip, height_previous_clip);
+	  width_previous_clip = 0;
+	  height_previous_clip = 0;
+	}
+    }
+  else
+    {
+      width_previous_clip = 0;
+      height_previous_clip = 0;
+    }
 }
 void GL_UnsetClipping  (int x, int y, int width, int height)
 {  
-   glDisable (GL_SCISSOR_TEST);
-   if (width && height)
-     {       
-       GL_SetClipping (x, y, 
-		       width, height);
-     }
-   else
-     { 
-       x_previous_clip = 0;
-       y_previous_clip = 0;
-       width_previous_clip = 0;
-       height_previous_clip = 0;
-     }
+  glDisable (GL_SCISSOR_TEST);
+  if (width && height)
+    {       
+      GL_SetClipping (x, y, 
+		      width, height);
+    }
+  else
+    { 
+      x_previous_clip = 0;
+      y_previous_clip = 0;
+      width_previous_clip = 0;
+      height_previous_clip = 0;
+    }
 }
 void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
 {  
@@ -1579,6 +1579,11 @@ void printBuffer(GLint size, GLfloat *buffer)
 
 static void computeisminmax (double number, double *min, double *max)
 {
+  if (*min < 0)
+    *min = number;
+  if (*max < 0)
+    *min = number;
+
   if (number < *min)
     *min = number;
   else if (number > *max)
@@ -1670,8 +1675,8 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
 
   if (size > 0)
     {
-      box->BxClipX = box->BxXOrg;
-      box->BxClipY = box->BxYOrg;
+      box->BxClipX = -1;
+      box->BxClipY = -1;
 
       getboundingbox (size, feedBuffer, frame,
 		      &box->BxClipX,
@@ -1765,7 +1770,7 @@ void TtaPlay (Document doc, View view)
 	if (FrameTable[frame].Anim_play)
 	  {
 	    if (FrameTable[frame].Timer == 0)
-	      FrameTable[frame].Timer = gtk_timeout_add (5, 
+	      FrameTable[frame].Timer = gtk_timeout_add (50, 
 							 (gpointer) GL_DrawAll, 
 							 (gpointer)   NULL); 	      
 	    FrameTable[frame].BeginTime = 0;

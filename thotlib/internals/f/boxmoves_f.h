@@ -47,6 +47,10 @@ extern void MoveBoxEdge ( PtrBox pBox,
                           int delta,
                           int frame,
                           ThotBool horizRef );
+extern void CoordinateSystemUpdate ( PtrAbstractBox pAb,
+                                     int frame,
+                                     int x,
+                                     int y );
 extern void XMoveAllEnclosed ( PtrBox pBox,
                                int delta,
                                int frame );
@@ -134,6 +138,10 @@ extern void MoveBoxEdge (/* PtrBox pBox,
                             int delta,
                             int frame,
                             ThotBool horizRef */);
+extern void CoordinateSystemUpdate (/* PtrAbstractBox pAb,
+                                       int frame,
+                                       int x,
+                                       int y */);
 extern void XMoveAllEnclosed (/* PtrBox pBox,
                                  int delta,
                                  int frame */);

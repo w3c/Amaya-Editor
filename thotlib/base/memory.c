@@ -1786,8 +1786,6 @@ PtrBox GetBox (PtrAbstractBox pAb)
       pBox->BxEditable = FALSE;
       pBox->BxBoundinBoxComputed = FALSE;
       pBox->BxTransformationComputed = FALSE;
-      pBox->BxRelX = 0;
-      pBox->BxRelY = 0;
       pBox->BxClipX = 0; 
       pBox->BxClipY = 0; 
       pBox->BxClipW = 0;

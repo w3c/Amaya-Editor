@@ -2262,6 +2262,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
      {
      /* Si la largeur de la boite ne depend pas de son contenu  */
      /* on doit forcer le reaffichage jusqua la fin de la boite */
+#ifndef _GLTRANSFORMATION
      if (pBox->BxLMargin < 0)
        DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 		pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -2269,6 +2270,10 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
      else
        DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+#else /*  _GLTRANSFORMATION */      
+     DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+	      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
      }
    Propagate = savpropage;
 }
@@ -2585,6 +2590,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      pCurrentBox->BxType == BoPicture)
 	    {
 		  k = EXTRA_GRAPH;
+#ifndef _GLTRANSFORMATION
 	      if (pCurrentBox->BxLMargin)
 		DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin - k,
 			 pCurrentBox->BxYOrg - k,
@@ -2594,6 +2600,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
 			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
 			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
+#else /* _GLTRANSFORMATION */		
+		DefClip (frame, pCurrentBox->BxClipX - k,
+			 pCurrentBox->BxClipY - k,
+			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
+			 pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
+#endif /* _GLTRANSFORMATION */
 	    }
 	}
     }
@@ -2714,6 +2726,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    condition = !pCurrentAb->AbInLine;
 	  if (condition)
 	    {
+#ifndef _GLTRANSFORMATION
 	      if (pBox->BxLMargin < 0)
 		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -2721,6 +2734,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		       pBox->BxXOrg + pBox->BxWidth,
 		       pBox->BxYOrg + pBox->BxHeight);
+#else /* _GLTRANSFORMATION */
+	      DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		       pBox->BxClipX + pBox->BxClipW,
+		       pBox->BxClipY + pBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
+
 	    }
 	  
 	  /* On verifie la coherence des positions par defaut */
@@ -2896,6 +2915,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      /* mark the zone to be displayed */
 	      if (pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0)
 		{
+#ifndef _GLTRANSFORMATION
 		  if (pBox->BxLMargin < 0)
 		    DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
 			     pCurrentBox->BxYOrg,
@@ -2905,6 +2925,11 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		    DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
 			     pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
 			     pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+#else /* _GLTRANSFORMATION */
+		    DefClip (frame, pCurrentBox->BxClipX, pCurrentBox->BxClipY,
+			     pCurrentBox->BxClipX + pCurrentBox->BxClipW,
+			     pCurrentBox->BxClipY + pCurrentBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
 		}
 	    }
 	  else if (pAb->AbLeafType == LtCompound)
@@ -2919,6 +2944,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 	      
 	      /* mark the zone to be displayed */
+#ifndef _GLTRANSFORMATION
 	      if (pBox->BxLMargin < 0)
 		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -2926,7 +2952,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else
 		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			 pBox->BxXOrg + pBox->BxWidth,
-			 pBox->BxYOrg + pBox->BxHeight);
+			 pBox->BxYOrg + pBox->BxHeight); 
+#else /* _GLTRANSFORMATION */
+	      DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		       pBox->BxClipX + pBox->BxClipW,
+		       pBox->BxClipY + pBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
 	    }
 	  else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
 	    {
@@ -2934,6 +2965,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      ComputeRadius (pAb, frame, TRUE);
 	      ComputeRadius (pAb, frame, FALSE);
 	      /* mark the zone to be displayed */
+
+#ifndef _GLTRANSFORMATION
 	      if (pBox->BxLMargin < 0)
 		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -2942,6 +2975,11 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			 pBox->BxXOrg + pBox->BxWidth,
 			 pBox->BxYOrg + pBox->BxHeight);
+#else /* _GLTRANSFORMATION */
+	      DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		       pBox->BxClipX + pBox->BxClipW,
+		       pBox->BxClipY + pBox->BxClipH);
+#endif /* _GLTRANSFORMATION */
 	    }
 
 	  /* Is it a filled box? */
@@ -3695,6 +3733,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	/* Faut-il reevaluer les regles d'une boite elastique */
 	if (pBox->BxHorizFlex && pAb->AbWidthChange)
 	  {
+#ifndef _GLTRANSFORMATION
 	    if (pBox->BxLMargin < 0)
 	     DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 		      pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -3702,7 +3741,10 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	    else
 	     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		      pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-
+#else  /* _GLTRANSFORMATION */
+	    DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
+#endif /*  _GLTRANSFORMATION */
 	     /* Annulation de la position */
 	     if (pAb->AbHorizPosChange)
 	       {
@@ -3720,6 +3762,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	  {
 	     if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
 	       {
+#ifndef _GLTRANSFORMATION
 		 if (pBox->BxLMargin < 0)
 		   DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 			    pBox->BxXOrg + pBox->BxWidth,
@@ -3728,6 +3771,10 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 		   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			    pBox->BxXOrg + pBox->BxWidth,
 			    pBox->BxYOrg + pBox->BxHeight);
+#else  /* _GLTRANSFORMATION */
+	    DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
+#endif /*  _GLTRANSFORMATION */
 	       }
 	     /* Annulation et reevaluation de la position */
 	     if (pAb->AbVertPosChange)
@@ -4264,12 +4311,6 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	     /* englobe et depend de relations hors-structure ?           */
 	     ComputeEnclosing (frame);
 
-#ifdef _GL
-	     AddBoxTransformation (pAb, pFrame->FrVisibility, frame,
-				   0,
-				   0,
-				   TRUE);
-#endif /* _GL */
 	     /* Verification de la mise en page */
 	     if (*pageHeight > 0)
 		/* changement de la signification de page */

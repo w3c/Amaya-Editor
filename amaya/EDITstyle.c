@@ -921,7 +921,7 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
       else if (!strcmp (schName, "SVG"))
 	/* it's a SVG document */
 	attrType.AttrTypeNum = SVG_ATTR_style_;
-#endif _SVG
+#endif /* _SVG */
       else
 	return;
       attr = TtaGetAttribute (el, attrType);
