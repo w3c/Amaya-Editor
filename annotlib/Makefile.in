@@ -1,7 +1,9 @@
 #
 # Makefile for the annotlib directory
 # Generated from annotlib/Makefile.in
-# Jose Kahan, 1999
+# Nov 1999 (Jose Kahan) : first version
+# Mar 2000 (Jose Kahan) : rewrote it to take better advantage of gmake.
+#		          Added some missing dependencies.
 #
 
 @VPATHOPT@= @srcdir@
@@ -20,13 +22,9 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
 
-#
-# Rule to build objects
-#
-.c.o :  
-	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $< -o $@
+############################################
 
-all : libAnnot
+all : libAnnotSchemas libAnnot
 
 clean :
 	$(RM) libAnnot.a
@@ -34,8 +32,10 @@ clean :
 	$(RM) $(ANNOTLIB)/AnnotP.PRS
 	$(RM) $(ANNOTLIB)/Annot.STR
 	$(RM) $(ANNOTLIB)/Annot.SCH
+	$(RM) $(ANNOTLIB)/AnnotT.TRA
 	$(RM) $(ANNOTLIB)/AnnotAPP.c
 	$(RM) $(ANNOTLIB)/Annot.h
+	$(RM) $(ANNOTLIB)/Annotations.proto
 
 install :
 
@@ -49,69 +49,98 @@ include .depends
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
 
+###################################################
+# Template rules to build objects
+###################################################
+
+.SUFFIXES: .c .o .A .S .STR .T .TRA .P .PRS
+
+#
+# C files
+#
+.c.o :  
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $< -o $@
+
+#
+# Structure schema compilation
+#
+.S.STR : ../bin/str
+	@(STR=`pwd`/../bin/str; \
+	THOTDIR=`pwd`/.. ; export THOTDIR; \
+	cd `dirname $<`; \
+	$$STR $(ALL_AMAYA_OPTIONS) `basename $<`)
+
+#
+# Translation schema compilation
+#
+.T.TRA : ../bin/tra
+	@(TRA=`pwd`/../bin/tra; \
+	THOTDIR=`pwd`/../.. ;export THOTDIR; \
+	cd `dirname $<`; \
+	$$TRA $(ALL_AMAYA_OPTIONS) `basename $<`)
+
+#
+# Presentation schemas compilation
+#
+.P.PRS : ../bin/prs
+	@(PRS=`pwd`/../bin/prs;\
+	THOTDIR=`pwd`/../.. ;export THOTDIR; \
+	cd `dirname $<`; \
+	$$PRS $(ALL_AMAYA_OPTIONS) `basename $<`)
+
+#
+# Structure schema compilation
+#
+#.A.c : ../bin/app
+
+
 #########################################################################
 #									#
 #		Rules to build the library				#
 #									#
 #########################################################################
 
-#
-# Translation schema compilation
-#
-compANNOTT: $(ANNOTLIB)/AnnotT.TRA
-
-$(ANNOTLIB)/AnnotT.TRA : ../../annotlib/AnnotT.T ../bin/tra
-	TRA=`pwd`/../bin/tra; \
-	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$TRA $(ALL_AMAYA_OPTIONS) AnnotT
-
-#
-# Structure schema compilation
-#
-compANNOTA: $(ANNOTLIB)/Annot.SCH
-
-$(ANNOTLIB)/Annot.SCH : $(ANNOTLIB)/Annot.A $(ANNOTLIB)/Annot.STR \
-			$(ANNOTLIB)/AnnotP.PRS ../bin/app
-	APP=`pwd`/../bin/app;\
-	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$APP $(ALL_AMAYA_OPTIONS) Annot.A
-
-#
-# Structure schema compilation
-#
-
-compANNOTS: $(ANNOTLIB)/Annot.STR
-
-$(ANNOTLIB)/Annot.STR : ../../annotlib/Annot.S ../bin/str
-	STR=`pwd`/../bin/str; \
-	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$STR $(ALL_AMAYA_OPTIONS) Annot
-
-#
-# Presentation schemas compilation
-#
-compANNOTP: $(ANNOTLIB)/Annot.STR $(ANNOTLIB)/AnnotP.PRS
-
-$(ANNOTLIB)/AnnotP.PRS : ../../annotlib/AnnotP.P ../bin/prs
-	PRS=`pwd`/../bin/prs;\
-	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$PRS $(ALL_AMAYA_OPTIONS) AnnotP
-
-amaya_annot_schema= compANNOTS compANNOTP compANNOTT compANNOTA
+AMAYA_ANNOT_SCHEMA= \
+	Annot.STR \
+	Annot.h \
+	AnnotP.PRS \
+	AnnotT.TRA
 
 AMAYA_ANNOT_OBJ= \
 	AnnotAPP.o \
 	ANNOTevent.o \
 	ANNOTfiles.o \
 	ANNOTlink.o \
-	ANNOTtools.o
+	ANNOTtools.o \
 
-libAnnot : $(amaya_annot_schema) libAnnot.a
+# special case for generation Annot.h and AnnotAPP.c
+Annot.h : Annot.A
+	@(APP=`pwd`/../bin/app;\
+	THOTDIR=`pwd`/../.. ;export THOTDIR; \
+	cd `dirname $<`; \
+	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
 
-libAnnot.a : $(AMAYA_ANNOT_OBJ)
+#
+# dependencies
+#
+
+# recompile all the schemas if Annot.S or HTML.S have changed
+$(AMAYA_ANNOT_SCHEMA) : Annot.S $(THOTDIR)/amaya/HTML.S
+
+# recompile all the objects if the h files (generated or not) change
+$(AMAYA_ANNOT_OBJ) : Annot.h annotlib.h $(THOTDIR)/amaya/EDITOR.h
+
+libAnnot : $(AMAYA_ANNOT_SCHEMA) libAnnot.a
+
+libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA) 
+
+libAnnot.a : Annot.STR  $(AMAYA_ANNOT_OBJ)
 	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ)
 	$(RANLIB) libAnnot.a
 
+##################################################
+# Other common compilation stuff
+##################################################
 
 CEXTRACT= ../bin/cextract
 
@@ -139,10 +168,6 @@ proto : ../bin/cextract
 	      $(MV) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h ; \
 	  fi ; \
 	 done)
-
-
-
-
 
 
 

@@ -16,7 +16,7 @@ AMAYA_ANNOT_LIBS= ../annotlib/libAnnot.a
 
 AMAYA_ANNOT_EXTRA_LIBS=
 
-AMAYA_ANNOT_SCHEMAS= ../annotlib/Annot.A ../annotlib/AnnotP ../annotlib/Annot
+AMAYA_ANNOT_SCHEMAS= amaya_annot_schemas
 
 AMAYA_ANNOT_INSTALL=
 
@@ -24,6 +24,14 @@ AMAYA_ANNOT_UNINSTALL=
 
 annot_force :
 
+amaya_annot_schemas : annot_force
+	@(cd ../annotlib ; $(MAKE) libAnnotSchemas)
+
 amaya_comp_annot :  ../annotlib/libAnnot.a
 ../annotlib/libAnnot.a : annot_force
 	@(cd ../annotlib ; $(MAKE) libAnnot)
+
+
+
+
+
