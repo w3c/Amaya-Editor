@@ -628,7 +628,8 @@ ThotBool IsXMLName (const char *path)
    if (!strcasecmp (suffix, "xml") ||
        !strcasecmp (suffix, "xht") ||
        !strcmp (suffix, "xhtm") ||
-       !strcmp (suffix, "xhtml"))
+       !strcmp (suffix, "xhtml") ||
+       !strcmp (suffix, "smi"))
      return (TRUE);
    else if (!strcmp (suffix, "gz"))
      {
@@ -637,7 +638,8 @@ ThotBool IsXMLName (const char *path)
        if (!strcasecmp (suffix, "xml") ||
 	   !strcasecmp (suffix, "xht") ||
 	   !strcmp (suffix, "xhtm") ||
-	   !strcmp (suffix, "xhtml"))
+	   !strcmp (suffix, "xhtml") ||
+	   !strcmp (suffix, "smi"))
 	 return (TRUE);
        else
 	 return (FALSE);

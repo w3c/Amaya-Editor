@@ -1816,8 +1816,9 @@ void InitMimeType (Document document, View view, char *url, char *status)
 	"application/xml\0"
 	"text/xml\0"
 	"text/plain\0"
-	"text/css\0";
-      nbmimetypes = 6;
+	"text/css\0"
+	"application/smil\0";
+      nbmimetypes = 7;
     }
 
 #ifndef _WINDOWS
@@ -3326,6 +3327,18 @@ static Document LoadDocument (Document doc, char *pathname,
 		   isXML = TRUE;
 		   docType = docMath;
 		   parsingLevel = L_MathML;
+		   unknown = FALSE;
+		 }
+	       else if (!strncasecmp (&content_type[i+1], "smil", 4))
+		 {
+		   /* it's a SMIL document. We handle it as an XML one */
+		   isXML = TRUE;
+#ifdef XML_GENERIC      
+		   docType = docXml;
+#else /* XML_GENERIC */
+		   docType = docText;
+#endif /* XML_GENERIC */
+		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
 	     }
