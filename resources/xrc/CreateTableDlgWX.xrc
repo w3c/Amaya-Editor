@@ -24,7 +24,6 @@
               <focused>1</focused>
             </object>
             <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_NUMBER_ROW_TXT">
@@ -40,7 +39,6 @@
               <max>50</max>
             </object>
             <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_TABLE_BORDER_TXT">
@@ -56,9 +54,10 @@
               <max>50</max>
             </object>
             <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
           </object>
         </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
