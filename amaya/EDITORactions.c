@@ -91,6 +91,7 @@ ThotBool            isHTML;
   STRING               documentname;
   STRING               s;
   CHAR_T               tempfile[MAX_LENGTH];
+  STRING               profile;
   int                  doc;
 
   pathname = TtaAllocString (MAX_LENGTH);
@@ -112,9 +113,9 @@ ThotBool            isHTML;
   DocumentMeta[doc]->initial_url = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentMeta[doc]->put_default_name = FALSE;
-  /* by default the document will be saved in XHTML */
-  DocumentMeta[doc]->xmlformat = TRUE;
   DocumentSource[doc] = 0;
+  /* default parsing level */
+  ParsingLevel[doc] = L_Transitional;
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
@@ -128,8 +129,16 @@ ThotBool            isHTML;
   attrType.AttrSSchema = elType.ElSSchema;
   if (isHTML)
     {
+      /* force the XML parsing */
+      DocumentMeta[doc]->xmlformat = TRUE;
+      /* check the current profile */
+      profile = TtaGetEnvString ("Profile");
+      if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
+	ParsingLevel[doc] = L_Basic;
+      else if (!ustrncmp (profile, TEXT("XHTML-strict"), 10))
+	ParsingLevel[doc] = L_Strict;
+      
       LoadUserStyleSheet (doc);
-
       /* attach an attribute PrintURL to the document root */
       attrType.AttrTypeNum = HTML_ATTR_PrintURL;
       attr = TtaNewAttribute (attrType);
