@@ -177,7 +177,10 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 	     while (i + pBuf->BuLength < rank)
 	       {
 		  i += pBuf->BuLength;
-		  pBuf = pBuf->BuNext;
+		  if (pBuf->BuNext)
+		    pBuf = pBuf->BuNext;
+		  else
+		    rank = i;
 	       }
 	     /* longueur +1 du texte qui restera dans le dernier buffer (pBuf)
 	        de la premiere partie */

@@ -560,7 +560,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       if (pAb->AbLeftMarginUnit == UnAuto || pAb->AbRightMarginUnit == UnAuto)
 	{
 	  if (pParent && evalAuto &&
-	      pParent->BxType != BoBlock && pParent->BxType != BoGhost)
+	      pParent->BxType != BoBlock &&
+	      pParent->BxType != BoGhost &&
+	      pParent->BxW >= dim)
 	    {
 	      dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
 	      if (pAb->AbLeftMarginUnit == UnAuto && pAb->AbRightMarginUnit == UnAuto)
@@ -573,10 +575,13 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	      else if (pAb->AbRightMarginUnit == UnAuto)
 		pBox->BxRMargin = dim - pBox->BxLMargin;
 	    }
-	  else if (pAb->AbLeftMarginUnit == UnAuto)
-	    pBox->BxLMargin = 0;
-	   else if (pAb->AbRightMarginUnit == UnAuto)
-	     pBox->BxRMargin = 0;
+	  else
+	    {
+	      if (pAb->AbLeftMarginUnit == UnAuto)
+		pBox->BxLMargin = 0;
+	      if (pAb->AbRightMarginUnit == UnAuto)
+		pBox->BxRMargin = 0;
+	    }
 	}
     }
   else
