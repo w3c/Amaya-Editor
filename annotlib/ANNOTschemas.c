@@ -189,6 +189,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #ifdef RAPTOR_RDF_PARSER
   ParseContextP parse_ctx = (ParseContextP) context;
   List **listP = parse_ctx->annot_schema_list;
+  char test;
 #else
   List **listP = (List**) context;
 #endif
@@ -198,7 +199,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
     {
       char * predicate = AM_RAPTOR_URI_AS_STRING(triple->predicate);
       char * subject = NULL;
-      char * object;
+      char * object = NULL;
 #else
   if (rdfp && triple) 
     {
@@ -223,6 +224,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	}
       else
 	subject = AM_RAPTOR_URI_AS_STRING(triple->subject);
+      test = subject[2];
+
 #endif
       subjectP = ANNOT_FindRDFResource (listP, subject, TRUE);
 
@@ -231,9 +234,18 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #ifdef AM_REDLAND
       if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
 	object = (char *) triple->object;
+      else if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
+	{
+	  ParseContext *parseCtx = (ParseContext *) context;
+	  char *base_uri = parseCtx->base_uri;
+	  char *ptr =  (char *) triple->object;
+	  object = TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
+	  sprintf (object, "%s#%s", base_uri, ptr);
+	}
       else
 #endif /* AM_REDLAND */
 	object = AM_RAPTOR_URI_AS_STRING(triple->object);
+      test = object[2];
 
       objectP = ANNOT_FindRDFResource (listP, object, TRUE);
 #else

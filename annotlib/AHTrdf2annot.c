@@ -443,6 +443,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
   List **listP = ((ParseContextP) context)->annot_list;
   List **rdf_model = ((ParseContextP) context)->rdf_model;
 
+  char test;
+
 #ifdef RAPTOR_RDF_PARSER
   if (triple) 
     {
@@ -472,6 +474,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       else
 	subject = AM_RAPTOR_URI_AS_STRING(triple->subject);
 
+      test = subject[2];
+
 #ifdef AM_REDLAND
       if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
 	object = (char *) triple->object;
@@ -488,6 +492,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	object = AM_RAPTOR_URI_AS_STRING(triple->object);
 #endif
 
+      test = object[2];
+	  
 #ifdef _RDFDEBUG
       fprintf (stdout, "PRD = %s\n", predicate);
       fprintf (stdout, "SUB = %s\n", subject);

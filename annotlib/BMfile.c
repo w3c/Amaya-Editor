@@ -136,8 +136,6 @@ static void parse_file (librdf_world *world, char *filename, char *base, int ntr
   librdf_parser_set_feature(parser, LIBRDF_MS_aboutEachPrefix_URI, "yes");
 
   stream = librdf_parser_parse_as_stream (parser, uri, base_uri);
-  librdf_free_uri (uri);
-  librdf_free_uri (base_uri); 
 
   if (!stream)
     {
@@ -162,6 +160,8 @@ static void parse_file (librdf_world *world, char *filename, char *base, int ntr
   }
   librdf_free_stream (stream);  
   librdf_free_parser (parser);
+  librdf_free_uri (uri);
+  librdf_free_uri (base_uri); 
 #ifdef BMFILE_DEBUG
   fprintf(stderr, "Added %d statements\n", count);
 #endif /* BMFILE_DEBUG */
