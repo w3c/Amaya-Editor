@@ -812,6 +812,12 @@ word). The replacement operation is performed by the checker.
 </DL>
 
 <DL>
+<DT>TtcStandardGeometry (Document,View):</DT>
+
+<DD>Allow user to restore the standard geometry of selected elements.
+</DL>
+
+<DL>
 <DT>TtcStartOfLine (Document, View):</DT>
 
 <DD>Move the cursor to the beginning of the line.
@@ -1440,6 +1446,27 @@ this subtree.
 </DL>
 
 <DL>
+<DT>ElemFetchInclude.Pre (NotifyOnTarget)</DT>
+
+<DD>The user requires that the copy element <TT>element </TT>be up to date
+with the value of its source element.
+<P>In any case the source element are not accessible (for example when this is
+placed in a non loaded document), so the <TT>element target</TT> and
+<TT>targetdocument</TT> components are equal to NULL. Otherwise, the
+element<TT> target</TT> and <TT>targetdocument</TT> point to the source
+element and document where this is placed, respectively. <TT> </TT></P>
+
+</DL>
+
+<DL>
+<DT>ElemFetchInclude.Post (NotifyOnTarget)</DT>
+
+<DD>If the document where the source element is placed is accessible, the copy
+element <TT>element</TT> was up to dated with the value of element
+<TT>target</TT>.
+</DL>
+
+<DL>
 <DT>ElemCopy.Pre (NotifyElement):</DT>
 
 <DD>The user is going to copy the element <TT>element </TT>contained in the
@@ -1930,17 +1957,21 @@ typedef enum {
   TteElemActivate,
   TteElemSetReference,
   TteElemInclude,
+  TteElemFetchInclude,
   TteElemPaste,
   TteElemChange,
   TteElemMove,
   TteElemTextModify,
   TteElemGraphModify,
+  TteElemMouseOver,
+  TteElemMouseOut,
  
   TtePRuleCreate,
   TtePRuleModify,
   TtePRuleDelete,
  
   TteDocOpen,
+  TteDocTmpOpen,
   TteDocCreate,
   TteDocClose,
   TteDocSave,
