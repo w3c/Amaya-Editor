@@ -162,8 +162,8 @@
 160 Expoente (sup)
 161 Citação (q)
 162 Sobrepor BiDi (bdo)
-163 Matemática
-164 Nova fórmula (math)
+163 Nova fórmula (math)
+164 **Basic &Elements
 165 Texto puro (mtext)
 166 Identificador (mi)
 167 Número (mn)
@@ -172,115 +172,127 @@
 170 Carácter (&xxx;)
 171 Multiplicação Invisível (InvisibleTimes)
 172 Aplicar função (ApplyFunction)
-173 Raiz (mroot)
-174 Raiz quadrada (msqrt)
-175 Englobar (menclose)
-176 Fração (mfrac)
-177 Índice e Expoente (msubsup)
-178 Índice (msub)
-179 Expoente (msup)
-180 Sob e sobre (munderover)
-181 Sob (munder)
-182 Sobre (mover)
-183 Parêntesis (mrow)
-184 Multiscripts (mmultiscripts)
-185 Matriz (mtable)
-186 eliminar coluna de matriz
-187 SVG
-188 **Show SVG Library
-189 **Add selection in SVG Library
-190 **XML elements...
-191 Ligar ao destino precedente
-192 Criar ou mudar enlace (link)...
-193 Create destino
-194 Apagar âncora
-195 Salvar seleção como XPointer
-196 Exibir barra de ferramentas
-197 Exibir endereço
-198 Exibir áreas de mapa
-199 Exibir destinos
-200 Ampliar (Zoom in)
-201 Reduzir (Zoom out)
-202 Exibir erros de gramática (parsing)
-203 Exibir estrutura
-204 Exibir alternativa
-205 Exibir enlaces (links)
-206 Exibir índice de conteúdos
-207 Exibir fonte
-208 Estilo de carácter...
-209 Cores...
-210 Formato...
-211 Imagem de fundo...
-212 Criar regra...
-213 Aplicar classe...
-214 **Show applied style...
-215 Ligar...
-216 Abrir...
-217 Desabilitar...
-218 Habilitar...
-219 Remover...
-220 Numeração de seção
-221 Construir livro
-222 Adicionar/Remover IDs...
-223 Preferências
-224 Geral...
-225 **&Browsing...
-226 Publicação...
-227 Cache...
-228 Proxy...
-229 Cores...
-230 Geometria da janela...
-231 Negociação de idioma...
-232 Perfís...
-233 Templates...
-234 Anotar seleção
-235 Anotar documento
-236 Mover até a seleção
-237 Mover para o XPointer memorizado
-238 Responder à anotação
-239 Registrar
-240 Apagar
-241 Carregar
-242 Personalizar consulta...
-243 Filtro local...
-244 Configurar...
-245 **New Bookmark
-246 **New Topic
-247 **View Bookmarks
-248 **Import a topic hierarchy
-249 Travar o recurso
-250 Destravar o recurso
-251 Exibir as propriedades do recurso
-252 Copiar a informação da trava...
-253 Travado?
-254 Preferências...
-255 Sobre Amaya
-256 Sobre Amaya no W3C
-257 Índice
-258 Navegar
-259 Vistas
-260 Selecionar
-261 Documento
-262 Criar elementos
-263 Atributos
-264 Caracteres
-265 Reestruturar
-266 Enlaces (links)
-267 Tabelas
-268 Mapas de Imagem
-269 Matemática
-270 Gráficos
-271 Suporte à XML
-272 Folhas de estilo
-273 Achar...
-274 Verificar ortografia
-275 Publicar
-276 WebDAV
-277 Imprimir
-278 Numberar
-279 Criar livros
-280 Anotações
-281 **&Bookmarks
-282 Configurar Amaya
-283 Atalhos
-284 Accessibilidade em Amaya
+173 **&Constructions
+174 Raiz (mroot)
+175 Raiz quadrada (msqrt)
+176 Englobar (menclose)
+177 Fração (mfrac)
+178 Índice e Expoente (msubsup)
+179 Índice (msub)
+180 Expoente (msup)
+181 Sob e sobre (munderover)
+182 Sob (munder)
+183 Sobre (mover)
+184 Parêntesis (mrow)
+185 Multiscripts (mmultiscripts)
+186 **&Matrices
+187 Matriz (mtable)
+188 **Join with the cell at the right
+189 **Join with the cell below
+190 **Shrink horizontal extend
+191 **Shrink vertical extend
+192 **Select the row
+193 **Insert a row before
+194 **Insert a row after
+195 **Select the column
+196 **Insert a column before
+197 **Insert a column after
+198 **Paste before
+199 **Paste after
+200 **Show the graphic library
+201 **Add the selected graphics in the library
+202 **XML elements...
+203 Ligar ao destino precedente
+204 Criar ou mudar enlace (link)...
+205 Create destino
+206 Apagar âncora
+207 Adicionar/Remover IDs...
+208 Exibir barra de ferramentas
+209 Exibir endereço
+210 Exibir áreas de mapa
+211 Exibir destinos
+212 Ampliar (Zoom in)
+213 Reduzir (Zoom out)
+214 Exibir erros de gramática (parsing)
+215 Exibir estrutura
+216 Exibir fonte
+217 Exibir enlaces (links)
+218 Exibir alternativa
+219 Exibir índice de conteúdos
+220 Estilo de carácter...
+221 Cores...
+222 Formato...
+223 Imagem de fundo...
+224 Criar regra...
+225 Aplicar classe...
+226 **Show applied style...
+227 Ligar...
+228 Abrir...
+229 Desabilitar...
+230 Habilitar...
+231 Remover...
+232 Numeração de seção
+233 Construir livro
+234 Preferências
+235 Geral...
+236 **&Browsing...
+237 Publicação...
+238 Cache...
+239 Proxy...
+240 Cores...
+241 Geometria da janela...
+242 Negociação de idioma...
+243 Perfís...
+244 Templates...
+245 Anotar seleção
+246 Anotar documento
+247 Mover até a seleção
+248 Salvar seleção como XPointer
+249 Mover para o XPointer memorizado
+250 Responder à anotação
+251 Registrar
+252 Apagar
+253 Carregar
+254 Personalizar consulta...
+255 Filtro local...
+256 Configurar...
+257 **New Bookmark
+258 **New Topic
+259 **View Bookmarks
+260 **Import a topic hierarchy
+261 Travar o recurso
+262 Destravar o recurso
+263 Exibir as propriedades do recurso
+264 Copiar a informação da trava...
+265 Travado?
+266 Preferências...
+267 Sobre Amaya
+268 Sobre Amaya no W3C
+269 Índice
+270 Navegar
+271 Vistas
+272 Selecionar
+273 Documento
+274 Criar elementos
+275 Atributos
+276 Caracteres
+277 Reestruturar
+278 Enlaces (links)
+279 Tabelas
+280 Mapas de Imagem
+281 Matemática
+282 Gráficos
+283 Suporte à XML
+284 Folhas de estilo
+285 Achar...
+286 Verificar ortografia
+287 Publicar
+288 WebDAV
+289 Imprimir
+290 Numberar
+291 Criar livros
+292 Anotações
+293 **&Bookmarks
+294 Configurar Amaya
+295 Atalhos
+296 Accessibilidade em Amaya

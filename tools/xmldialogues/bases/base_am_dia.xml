@@ -1551,16 +1551,6 @@
 	<message xml:lang="fi">BiDi syrjäyttävänä (bdo)</message>
 	<message xml:lang="tr">BiDi (bdo)</message>
 </label>
-<label define="Math">
-	<message xml:lang="en">&amp;Math</message>
-	<message xml:lang="fr">&amp;Math</message>
-	<message xml:lang="de">Formel</message>
-	<message xml:lang="it">Math</message>
-	<message xml:lang="tr">Matematik</message>
-	<message xml:lang="es">&amp;MathML</message>
-	<message xml:lang="pt">Matemática</message>
-	<message xml:lang="fi">Matematiikka</message>
-</label>
 <label define="BDisplayMath">
 	<message xml:lang="en">New formula (math)</message>
 	<message xml:lang="fr">Nouvelle formule (math)</message>
@@ -1570,6 +1560,10 @@
 	<message xml:lang="es">Nueva fórmula (math)</message>
 	<message xml:lang="pt">Nova fórmula (math)</message>
 	<message xml:lang="fi">Uusi kaava (math)</message>
+</label>
+<label define="MathElement">
+	<message xml:lang="en">Basic &amp;Elements</message>
+	<message xml:lang="fr">&amp;Eléments de base</message>
 </label>
 <label define="BMText">
 	<message xml:lang="en">Plain text (mtext)</message>
@@ -1650,6 +1644,10 @@
 	<message xml:lang="pt">Aplicar função (ApplyFunction)</message>
 	<message xml:lang="fi">Käytä funktiota</message>
 	<message xml:lang="tr">Fonksiyonu onayla</message>
+</label>
+<label define="MathConstruct">
+	<message xml:lang="en">&amp;Constructions</message>
+	<message xml:lang="fr">&amp;Constructions</message>
 </label>
 <label define="BNthRoot">
 	<message xml:lang="en">Root (mroot)</message>
@@ -1771,9 +1769,13 @@
 	<message xml:lang="pt">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="fi">Multiscript (mmultiscripts)</message>
 </label>
+<label define="MathMatrix">
+	<message xml:lang="en">&amp;Matrices</message>
+	<message xml:lang="fr">&amp;Matrices</message>
+</label>
 <label define="BMatrix">
-	<message xml:lang="en">Matrix (mtable)</message>
-	<message xml:lang="fr">Matrice (mtable)</message>
+	<message xml:lang="en">New matrix (mtable)</message>
+	<message xml:lang="fr">Nouvelle matrice (mtable)</message>
 	<message xml:lang="de">Matrix (mtable)</message>
 	<message xml:lang="it">Matrice (mtable)</message>
 	<message xml:lang="tr">Matris (mtable)</message>
@@ -1781,37 +1783,65 @@
 	<message xml:lang="pt">Matriz (mtable)</message>
 	<message xml:lang="fi">Matriisi (mtable)</message>
 </label>
-<label define="BDeleteMColumn">
-	<message xml:lang="en">Delete matrix column</message>
-	<message xml:lang="fr">Détruire une colonne de matrice</message>
-	<message xml:lang="de">Matrixspalte löschen</message>
-	<message xml:lang="it">Cancella colonna della matrice</message>
-	<message xml:lang="es">Borrar columna de matriz</message>
-	<message xml:lang="pt">eliminar coluna de matriz</message>
-	<message xml:lang="fi">Poista matriisin pystyrivi</message>
-	<message xml:lang="tr">Matris sütununu sil</message>
+<label define="BCellHExtend">
+	<message xml:lang="en">Join with the cell at the right</message>
+	<message xml:lang="fr">Joindre avec la cellule de droite</message>
 </label>
-<label define="SVG_">
-	<message xml:lang="en">&amp;SVG</message>
-	<message xml:lang="fr">&amp;SVG</message>
-	<message xml:lang="de">SVG</message>
-	<message xml:lang="it">SVG</message>
-	<message xml:lang="tr">SVG</message>
-	<message xml:lang="es">&amp;SVG</message>
-	<message xml:lang="pt">SVG</message>
-	<message xml:lang="fi">SVG</message>
+<label define="BCellVExtend">
+	<message xml:lang="en">Join with the cell below</message>
+	<message xml:lang="fr">Joindre avec la cellule au-dessous</message>
+</label>
+<label define="BCellHShrink">
+	<message xml:lang="en">Shrink horizontal extend</message>
+	<message xml:lang="fr">Réduire extension horizontale</message>
+</label>
+<label define="BCellHShrink">
+	<message xml:lang="en">Shrink vertical extend</message>
+	<message xml:lang="fr">Réduire extension verticale</message>
+</label>
+<label define="BSelectRow">
+	<message xml:lang="en">Select the row</message>
+	<message xml:lang="fr">Sélectionner la ligne</message>
+</label>
+<label define="BCreateRowB">
+	<message xml:lang="en">Insert a row before</message>
+	<message xml:lang="fr">Insérer une ligne avant</message>
+</label>
+<label define="BCreateRowA">
+	<message xml:lang="en">Insert a row after</message>
+	<message xml:lang="fr">Insérer une ligne après</message>
+</label>
+<label define="BSelectColumn">
+	<message xml:lang="en">Select the column</message>
+	<message xml:lang="fr">Sélectionner la colonne</message>
+</label>
+<label define="BCreateColumnB">
+	<message xml:lang="en">Insert a column before</message>
+	<message xml:lang="fr">Insérer une colonne avant</message>
+</label>
+<label define="BCreateColumnA">
+	<message xml:lang="en">Insert a column after</message>
+	<message xml:lang="fr">Insérer une colonne après</message>
+</label>
+<label define="BPasteBefore">
+	<message xml:lang="en">Paste before</message>
+	<message xml:lang="fr">Coller avant</message>
+</label>
+<label define="BPasteAfter">
+	<message xml:lang="en">Paste after</message>
+	<message xml:lang="fr">Coller après</message>
 </label>
 <label define="BShowLibrary">
-	<message xml:lang="en">Show SVG Library</message>
-	<message xml:lang="fr">Montrer la librairie SVG</message>
+	<message xml:lang="en">Show the graphic library</message>
+	<message xml:lang="fr">Montrer la librairie graphique</message>
 	<message xml:lang="it">Mostri librería SVG</message>
 	<message xml:lang="es">&amp;Ver Biblioteca SVG</message>
 	<message xml:lang="de">SVG-Bibliothek anzeigen...</message>
 	<message xml:lang="tr">SVG kütüphanesini göster</message>
 </label>
 <label define="BAddNewModel">
-	<message xml:lang="en">Add selection in SVG Library</message>
-	<message xml:lang="fr">Ajouter la sélection dans une librairie</message>
+	<message xml:lang="en">Add the selected graphics in the library</message>
+	<message xml:lang="fr">Ajouter le graphique sélectionné dans la librairie</message>
 	<message xml:lang="it">Aggiunga la selezione nella librería SVG</message>
 	<message xml:lang="es">&amp;Añadir la selección a la Biblioteca SVG</message>
 	<message xml:lang="de">Markierung in SVG-Bibliothek einfügen</message>
@@ -1865,15 +1895,15 @@
 	<message xml:lang="pt">Apagar âncora</message>
 	<message xml:lang="fi">Poista linkki</message>
 </label>
-<label define="BMemorizeXPtr">
-	<message xml:lang="en">Store selection as &amp;XPointer</message>
-	<message xml:lang="fr">Sauver la séléction comme &amp;XPointer</message>
-	<message xml:lang="de">Als XPointer speichern</message>
-	<message xml:lang="es">Guardar selección como &amp;XPointer</message>
-	<message xml:lang="it">Salva la selezione come XPointer</message>
-	<message xml:lang="pt">Salvar seleção como XPointer</message>
-	<message xml:lang="fi">Tallenna valinta XPointer:iin</message>
-	<message xml:lang="tr">seçilen alanı XPointer gibi kaydet</message>
+<label define="BMakeID">
+	<message xml:lang="en">&amp;Add/Remove IDs...</message>
+	<message xml:lang="fr">&amp;Ajouter/Retirer des attributs ID...</message>
+	<message xml:lang="es">&amp;Crear/Borrar atributos id...</message>
+	<message xml:lang="it">Aggiungi/Togli ID...</message>
+	<message xml:lang="de">Id hinzufügen/entfernen...</message>
+	<message xml:lang="pt">Adicionar/Remover IDs...</message>
+	<message xml:lang="fi">Lisää/Poista elementti...</message>
+	<message xml:lang="tr">IDs ekle/sil</message>
 </label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show &amp;button bar</message>
@@ -1955,15 +1985,15 @@
 	<message xml:lang="pt">Exibir estrutura</message>
 	<message xml:lang="fi">Näytä rakenne</message>
 </label>
-<label define="BShowAlternate">
-	<message xml:lang="en">Show &amp;alternate</message>
-	<message xml:lang="fr">Montrer la vue &amp;alternée</message>
-	<message xml:lang="de">Textbrowser</message>
-	<message xml:lang="it">Mostra la vista alternativa</message>
-	<message xml:lang="tr">Alternatif gösterim</message>
-	<message xml:lang="es">A&amp;lternativo</message>
-	<message xml:lang="pt">Exibir alternativa</message>
-	<message xml:lang="fi">Show alternate</message>
+<label define="BShowSource">
+	<message xml:lang="en">Show so&amp;urce</message>
+	<message xml:lang="fr">Montrer le s&amp;ource</message>
+	<message xml:lang="it">Mostra sorgente</message>
+	<message xml:lang="de">Quelltext</message>
+	<message xml:lang="es">Código &amp;fuente</message>
+	<message xml:lang="pt">Exibir fonte</message>
+	<message xml:lang="fi">Näytä lähdekoodi</message>
+	<message xml:lang="tr">kaynak göster</message>
 </label>
 <label define="BShowLinks">
 	<message xml:lang="en">Show lin&amp;ks</message>
@@ -1975,6 +2005,16 @@
 	<message xml:lang="pt">Exibir enlaces (links)</message>
 	<message xml:lang="fi">Näytä linkit</message>
 </label>
+<label define="BShowAlternate">
+	<message xml:lang="en">Show &amp;alternate</message>
+	<message xml:lang="fr">Montrer la vue &amp;alternée</message>
+	<message xml:lang="de">Textbrowser</message>
+	<message xml:lang="it">Mostra la vista alternativa</message>
+	<message xml:lang="tr">Alternatif gösterim</message>
+	<message xml:lang="es">A&amp;lternativo</message>
+	<message xml:lang="pt">Exibir alternativa</message>
+	<message xml:lang="fi">Show alternate</message>
+</label>
 <label define="BShowToC">
 	<message xml:lang="en">Show table &amp;of contents</message>
 	<message xml:lang="fr">Montrer la table des &amp;matières</message>
@@ -1984,16 +2024,6 @@
 	<message xml:lang="es">Tabla de &amp;contenidos</message>
 	<message xml:lang="pt">Exibir índice de conteúdos</message>
 	<message xml:lang="fi">Näytä sisällysluettelo</message>
-</label>
-<label define="BShowSource">
-	<message xml:lang="en">Show so&amp;urce</message>
-	<message xml:lang="fr">Montrer le s&amp;ource</message>
-	<message xml:lang="it">Mostra sorgente</message>
-	<message xml:lang="de">Quelltext</message>
-	<message xml:lang="es">Código &amp;fuente</message>
-	<message xml:lang="pt">Exibir fonte</message>
-	<message xml:lang="fi">Näytä lähdekoodi</message>
-	<message xml:lang="tr">kaynak göster</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>
@@ -2130,16 +2160,6 @@
 	<message xml:lang="es">&amp;Hacer libro</message>
 	<message xml:lang="pt">Construir livro</message>
 	<message xml:lang="fi">Valmista kooste</message>
-</label>
-<label define="BMakeID">
-	<message xml:lang="en">&amp;Add/Remove IDs...</message>
-	<message xml:lang="fr">&amp;Ajouter/Retirer des attributs ID...</message>
-	<message xml:lang="es">&amp;Crear/Borrar atributos id...</message>
-	<message xml:lang="it">Aggiungi/Togli ID...</message>
-	<message xml:lang="de">Id hinzufügen/entfernen...</message>
-	<message xml:lang="pt">Adicionar/Remover IDs...</message>
-	<message xml:lang="fi">Lisää/Poista elementti...</message>
-	<message xml:lang="tr">IDs ekle/sil</message>
 </label>
 <label define="Coptions">
 	<message xml:lang="en">&amp;Preferences</message>
@@ -2279,6 +2299,16 @@
 	<message xml:lang="pt">Mover até a seleção</message>
 	<message xml:lang="fi">Siirrä valintaan</message>
 	<message xml:lang="tr">Seçili alanı taşı</message>
+</label>
+<label define="BMemorizeXPtr">
+	<message xml:lang="en">Store selection as &amp;XPointer</message>
+	<message xml:lang="fr">Sauver la séléction comme &amp;XPointer</message>
+	<message xml:lang="de">Als XPointer speichern</message>
+	<message xml:lang="es">Guardar selección como &amp;XPointer</message>
+	<message xml:lang="it">Salva la selezione come XPointer</message>
+	<message xml:lang="pt">Salvar seleção como XPointer</message>
+	<message xml:lang="fi">Tallenna valinta XPointer:iin</message>
+	<message xml:lang="tr">seçilen alanı XPointer gibi kaydet</message>
 </label>
 <label define="BMoveAnnotXPtr">
 	<message xml:lang="en">Move to stored XPointer</message>

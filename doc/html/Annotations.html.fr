@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -125,7 +125,7 @@ d'annotations sur lequel les annotations distantes sont enregistrées.</p>
 <p>La plupart des commandes utilisées pour la gestion des annotations se
 trouvent dans le menu d'annotations représenté ci dessous.</p>
 
-<p style="text-align: center"><img src="../images/annotationsmenu--fr.png"
+<p style="text-align: center"><img src="../images/annotationsmenu-fr.png"
 alt="Annotations menu" /></p>
 
 <h3 id="Configurat">Menu de configuration pour les annotations</h3>
@@ -340,11 +340,12 @@ la position courante du curseur sans avoir besoin de faire la sélection.</p>
 annotation, par exemple pour déplacer plusieurs annotations vers le même
 endroit ou pour se déplacer dans la fenêtre avant de faire la manipulation.
 Pour cela, faire la sélection (ou placer le curseur) à l'endroit désiré puis,
-utiliser le menu <strong>Link/Store link as XPointer</strong> pour créer un
-XPointer représentant cette sélection. Enfin, dans la fenêtre d'annotation,
-utiliser le menu <strong>Annotations/Move to stored XPointer</strong> pour
-déplacer l'annotation à la nouvelle position. Comme précédemment, vous devrez
-sauver l'annotation pour rendre ce changement effectif.</p>
+utiliser le menu <strong>Annotations/Sauver la séelction comme
+XPointer</strong> pour créer un XPointer représentant cette sélection. Enfin,
+dans la fenêtre d'annotation, utiliser le menu <strong>Annotations/Déplacer
+sur le XPointer enregistré</strong> pour déplacer l'annotation à la nouvelle
+position. Comme précédemment, vous devrez sauver l'annotation pour rendre ce
+changement effectif.</p>
 
 <h3 id="Threads">Répondre aux annotations / fils de discussion</h3>
 
@@ -361,8 +362,8 @@ href="#Creating">Créer une annotation</a>).</p>
 
 <p>Quand la réponse est terminée, l'utilisateur peut la poster sur un serveur
 par à la commande <strong>Enregistrer sur le serveur</strong> ou la sauver
-localement par la commande <strong>Fichier / Sauver</strong>. La commande
-<strong>Annotations / Détruire</strong> supprime la réponse.</p>
+localement par la commande <strong>Fichier/Sauver</strong>. La commande
+<strong>Annotations/Détruire</strong> supprime la réponse.</p>
 
 <p>Les réponses peuvent également être annotées comme n'importe quel document
 comme expliqué dans la section <a href="#Creating">Créer une

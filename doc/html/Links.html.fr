@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Liens et Ancres</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -86,7 +86,7 @@ valeur a été entrée, Amaya vérifie la valeur et la change si elle est déjà
 utilisée pour un autre attribut NAME ou ID dans le même document.</p>
 
 <p>Vous pouvez enfin utiliser l'entrée <strong>Ajouter/Retirer attributs
-ID</strong> du menu <strong>Spécial</strong> pour ajouter automatiquement un
+ID</strong> du menu <strong>Liens</strong> pour ajouter automatiquement un
 attribut sur tous les éléments portant le même nom et ce dans le document
 entier ou à l'intérieur de la sélection. Pour cela, vous devez saisir le nom
 de l'élément concerné et choisir le bouton <strong>Ajouter ID</strong> ou

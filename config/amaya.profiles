@@ -466,8 +466,19 @@ HelpTables
 &CreateMROW
 &CreateMMULTISCRIPTS
 &CreateMTABLE
-&DeleteMColumn
-HelpMath
+ellVertExtend
+&CellHorizExtend
+&CellVertShrink
+&CellHorizShrink
+SelectRow
+&CreateRowBefore
+&CreateRowAfter
+SelectColumn
+&CreateColumnBefore
+&CreateColumnAfter
+&PasteBefore
+&PasteAfter
+HelpTables
 
 ################# SVG
 [svg]

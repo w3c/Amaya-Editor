@@ -162,8 +162,8 @@
 160 Hochgestellt (sup)
 161 Zitat (q)
 162 Textrichtung LTR/RTL (bdo)
-163 Formel
-164 Neue Formel (math)
+163 Neue Formel (math)
+164 **Basic &Elements
 165 Text (mtext)
 166 Bezeichner (mi)
 167 Zahl (mn)
@@ -172,115 +172,127 @@
 170 Zeichen (&xxx;)
 171 Unsichtbare Multiplikation
 172 Angewendete Funktion
-173 Wurzel (mroot)
-174 Quadratwurzel (msqrt)
-175 Einschluß (menclose)
-176 Bruch (mfrac)
-177 Index und Exponent (msubsup)
-178 Index (msub)
-179 Exponent (msup)
-180 Unter- und Überschrift (munderover)
-181 Unterschrift (munder)
-182 Überschrift (mover)
-183 Klammern (mrow)
-184 Vierfachindex (mmultiscripts)
-185 Matrix (mtable)
-186 Matrixspalte löschen
-187 SVG
-188 SVG-Bibliothek anzeigen...
-189 Markierung in SVG-Bibliothek einfügen
-190 Elemente XML...
-191 Auf vorherigen Anker
-192 Erzeugen/Ändern...
-193 Anker erzeugen
-194 Verweis/Anker löschen
-195 Als XPointer speichern
-196 Symbolleiste anzeigen
-197 Adresszeile anzeigen
-198 Aktive Bildbereiche
-199 Anker anzeigen
-200 Schrift vergrößern
-201 Schrift verkleinern
-202 Parserfehler anzeigen
-203 Struktur
-204 Textbrowser
-205 Verweise
-206 Inhaltsverzeichnis
-207 Quelltext
-208 Schrift...
-209 Farbe...
-210 Ausrichtung...
-211 Hintergrundbild...
-212 Regel erzeugen...
-213 Klasse übernehmen...
-214 **Show applied style...
-215 Verknüpfen...
-216 Öffnen...
-217 Deaktivieren...
-218 Aktivieren...
-219 Entfernen...
-220 Abschnitte numerieren
-221 Buch erstellen
-222 Id hinzufügen/entfernen...
-223 Einstellungen
-224 Allgemein...
-225 Browser...
-226 Veröffentlichen...
-227 Cache...
-228 Proxy...
-229 Farben...
-230 Fenstergeometrie...
-231 Sprachen...
-232 Profile...
-233 Schablonen...
-234 Zur Markierung
-235 Zum Dokument
-236 Auf Markierung verschieben
-237 Auf XPointer verschieben
-238 Beantworten
-239 Veröffentlichen
-240 Löschen
-241 Laden
-242 Abfrage bearbeiten...
-243 Filter...
-244 Konfigurieren...
-245 **New Bookmark
-246 **New Topic
-247 Lesezeichen ansehen
-248 **Import a topic hierarchy
-249 Resource sperren...
-250 Resource entsperren...
-251 Resourceeigenschaften anzeigen...
-252 Sperrinformation kopieren...
-253 Gesperrt?
-254 Einstellungen...
-255 Info
-256 Über Amaya
-257 Index
-258 Browsen
-259 Ansichten
-260 Markieren
-261 Dokument
-262 Elemente
-263 Attribute
-264 Zeichen
-265 Transformieren
-266 Verweise
-267 Tabellen
-268 Aktive Bildbereiche
-269 Formeln
-270 SVG
-271 XML
-272 Formate/Formatvorlagen
-273 Suchen/Ersetzen
-274 Rechtschreibprüfung
-275 Speichern/Veröffentlichen
-276 WebDAV
-277 Drucken
-278 Abschnitte numerieren
-279 Buch erstellen
-280 Anmerkungen
-281 &Lesezeichen
-282 Konfiguration
-283 Tastenkürzel
-284 Benutzerfreundlichkeit
+173 **&Constructions
+174 Wurzel (mroot)
+175 Quadratwurzel (msqrt)
+176 Einschluß (menclose)
+177 Bruch (mfrac)
+178 Index und Exponent (msubsup)
+179 Index (msub)
+180 Exponent (msup)
+181 Unter- und Überschrift (munderover)
+182 Unterschrift (munder)
+183 Überschrift (mover)
+184 Klammern (mrow)
+185 Vierfachindex (mmultiscripts)
+186 **&Matrices
+187 Matrix (mtable)
+188 **Join with the cell at the right
+189 **Join with the cell below
+190 **Shrink horizontal extend
+191 **Shrink vertical extend
+192 **Select the row
+193 **Insert a row before
+194 **Insert a row after
+195 **Select the column
+196 **Insert a column before
+197 **Insert a column after
+198 **Paste before
+199 **Paste after
+200 SVG-Bibliothek anzeigen...
+201 Markierung in SVG-Bibliothek einfügen
+202 Elemente XML...
+203 Auf vorherigen Anker
+204 Erzeugen/Ändern...
+205 Anker erzeugen
+206 Verweis/Anker löschen
+207 Id hinzufügen/entfernen...
+208 Symbolleiste anzeigen
+209 Adresszeile anzeigen
+210 Aktive Bildbereiche
+211 Anker anzeigen
+212 Schrift vergrößern
+213 Schrift verkleinern
+214 Parserfehler anzeigen
+215 Struktur
+216 Quelltext
+217 Verweise
+218 Textbrowser
+219 Inhaltsverzeichnis
+220 Schrift...
+221 Farbe...
+222 Ausrichtung...
+223 Hintergrundbild...
+224 Regel erzeugen...
+225 Klasse übernehmen...
+226 **Show applied style...
+227 Verknüpfen...
+228 Öffnen...
+229 Deaktivieren...
+230 Aktivieren...
+231 Entfernen...
+232 Abschnitte numerieren
+233 Buch erstellen
+234 Einstellungen
+235 Allgemein...
+236 Browser...
+237 Veröffentlichen...
+238 Cache...
+239 Proxy...
+240 Farben...
+241 Fenstergeometrie...
+242 Sprachen...
+243 Profile...
+244 Schablonen...
+245 Zur Markierung
+246 Zum Dokument
+247 Auf Markierung verschieben
+248 Als XPointer speichern
+249 Auf XPointer verschieben
+250 Beantworten
+251 Veröffentlichen
+252 Löschen
+253 Laden
+254 Abfrage bearbeiten...
+255 Filter...
+256 Konfigurieren...
+257 **New Bookmark
+258 **New Topic
+259 Lesezeichen ansehen
+260 **Import a topic hierarchy
+261 Resource sperren...
+262 Resource entsperren...
+263 Resourceeigenschaften anzeigen...
+264 Sperrinformation kopieren...
+265 Gesperrt?
+266 Einstellungen...
+267 Info
+268 Über Amaya
+269 Index
+270 Browsen
+271 Ansichten
+272 Markieren
+273 Dokument
+274 Elemente
+275 Attribute
+276 Zeichen
+277 Transformieren
+278 Verweise
+279 Tabellen
+280 Aktive Bildbereiche
+281 Formeln
+282 SVG
+283 XML
+284 Formate/Formatvorlagen
+285 Suchen/Ersetzen
+286 Rechtschreibprüfung
+287 Speichern/Veröffentlichen
+288 WebDAV
+289 Drucken
+290 Abschnitte numerieren
+291 Buch erstellen
+292 Anmerkungen
+293 &Lesezeichen
+294 Konfiguration
+295 Tastenkürzel
+296 Benutzerfreundlichkeit

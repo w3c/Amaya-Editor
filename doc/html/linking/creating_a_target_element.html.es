@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="generator"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Crear un Elemento Destino</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -56,7 +56,7 @@ convertirlo en elemento destino.</p>
     del atributo, Amaya comprueba que sea único y lo cambia si ya está siendo
     utilizando por otros atributo <code>NAME</code> o <code>ID</code> en el
     mismo documento. Otro método para crear atributos <code>ID</code> es
-    utilizar el comando de menú <strong>Especial &gt; Crear/Borrar atributos
+    utilizar el comando de menú <strong>Enlaces &gt; Crear/Borrar atributos
     ID</strong>. Al elegir este comando se añade automáticamente un atributo
     <code>ID</code> a todos los elementos con un nombre determinado en el
     documento o en la parte seleccionada. Simplemente escribe el nombre del

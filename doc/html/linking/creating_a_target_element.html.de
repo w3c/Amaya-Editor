@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Ein Ankerelement erzeugen</title>
   <style type="text/css">
   </style>
@@ -55,12 +54,12 @@ muss man dieses zuerst als Anker deklarieren.</p>
     Doppeldeutigkeit geprüft und gegebenenfalls abgeändert, falls er in einem
     anderen Attribut (<code>name</code> oder <code>id</code>) vorkommt. Eine
     anderer Weg, diese Attribute zu erzeugen ist über das Menü
-    <strong>Extras</strong>, Befehl <strong>Id hinzufügen/entfernen</strong>.
-    Hierbei erzeugt Amaya für alle Elemente, innerhalb eines Dokuments oder
-    innerhalb einer Markierung, deren Attribut <code>name</code> einem
-    bestimmten Wert entspricht, das Attribut <code>id</code>. Im Dialog
-    einfach den Namen eingeben und den Knopf <strong>Id erzeugen</strong>
-    anklicken.</p>
+    <strong>Verweis</strong>, Befehl <strong>Id
+    hinzufügen/entfernen</strong>. Hierbei erzeugt Amaya für alle Elemente,
+    innerhalb eines Dokuments oder innerhalb einer Markierung, deren Attribut
+    <code>name</code> einem bestimmten Wert entspricht, das Attribut
+    <code>id</code>. Im Dialog einfach den Namen eingeben und den Knopf
+    <strong>Id erzeugen</strong> anklicken.</p>
   </li>
 </ol>
 </div>

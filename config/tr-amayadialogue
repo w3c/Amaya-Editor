@@ -162,8 +162,8 @@
 160 Üst (sup)
 161 Alıntılama (q)
 162 BiDi (bdo)
-163 Matematik
-164 Yeni formül (math)
+163 Yeni formül (math)
+164 **Basic &Elements
 165 Düz yazı (mtext)
 166 Teşhis eden (mi)
 167 Numara (mn)
@@ -172,115 +172,127 @@
 170 Karakter (&xxx;)
 171 Kayip zaman
 172 Fonksiyonu onayla
-173 Kök (mroot)
-174 Karekök (msqrt)
-175 Kapsamak (menclose)
-176 Kesir (mfrac)
-177 Alt ve üstyazı (msubsup)
-178 altyazı (msub)
-179 üstyazı (msup)
-180 alt ve üst (munderover)
-181 alt (munder)
-182 üst (mover)
-183 Parantezler (mrow)
-184 Multiscripts (mmultiscripts)
-185 Matris (mtable)
-186 Matris sütununu sil
-187 SVG
-188 SVG kütüphanesini göster
-189 SVG kütüphanesine seçili alanı ekle
-190 XML elementlerin
-191 Önceki hedefe bağlantı
-192 Baglantı yarat...
-193 Hedef yarat
-194 tanımı sil
-195 seçilen alanı XPointer gibi kaydet
-196 Tusları göster
-197 Adres göster
-198 Yakınlaştır
-199 Hedefi göster
-200 Uzaklaştır
-201 Harita alanlarını göster
-202 Pars hatalarını göster
-203 Yapıyı göster
-204 Alternatif gösterim
-205 Bağlantıları göster
-206 Içindekileri göster
-207 kaynak göster
-208 Karakter tarzı...
-209 Renkler...
-210 Biçim...
-211 Arkaplan görüntüsü...
-212 Kural yarat...
-213 \'class\' uygula...
-214 **Show applied style...
-215 Bağlantı
-216 Aç
-217 Olumsuzla
-218 Olumla
-219 Sil
-220 Bölüm numaralandırması
-221 Kitap yap
-222 IDs ekle/sil
-223 Tercih
-224 Genel...
-225 Tarama...
-226 Derleme...
-227 Önbellekleme...
-228 Proxy...
-229 Renkler...
-230 Geometri...
-231 Ülke dilleri...
-232 Profiller...
-233 Sayfa modelleri...
-234 Seçili alan ekleme
-235 Doküman eklemek
-236 Seçili alanı taşı
-237 Xpointer\'daki birikenleri taşı
-238 Tekrar ekle
-239 Server\'e kaydet
-240 Sil
-241 Yükle
-242 Kişisel ayarlama...
-243 Sabit filitre...
-244 **Configure...
-245 **New Bookmark
-246 **New Topic
-247 kilitli bilgileri kopyala
-248 **Import a topic hierarchy
-249 Tekrar okumayı kitle...
-250 Tekrar okumayı kilidi aç...
-251 Tekrar okuma ayarlarını göster...
-252 kilitli bilgileri kopyala...
-253 kitli mi?
-254 Ayarlar...
-255 Amaya hakkında
-256 W3C deki Amaya hakkında
-257 Içerik
-258 Tarama
-259 Görünümler
-260 Seç
-261 Döküman
-262 Yarat
-263 Tarz tanımları
-264 karakterler
-265 Yeniden yapılandırma
-266 Bağlantılar
-267 Tablolar
-268 Aktif alan
-269 Matematik
-270 Grafik
-271 XML desteği
-272 Görüntü haritaları
-273 Yazı hataları arama
-274 Yazı hataları düzeltmek
-275 Bastırma
-276 WebDAV
-277 Sayfa yerleştirme
-278 Numaralandır
-279 Kitap oluşturma
-280 Not ekleme
-281 &Birlikte çalışmak
-282 Amaya yapılandırması
-283 Kısalmalar
-284 Amaya\'ya ulaşmak
+173 **&Constructions
+174 Kök (mroot)
+175 Karekök (msqrt)
+176 Kapsamak (menclose)
+177 Kesir (mfrac)
+178 Alt ve üstyazı (msubsup)
+179 altyazı (msub)
+180 üstyazı (msup)
+181 alt ve üst (munderover)
+182 alt (munder)
+183 üst (mover)
+184 Parantezler (mrow)
+185 Multiscripts (mmultiscripts)
+186 **&Matrices
+187 Matris (mtable)
+188 **Join with the cell at the right
+189 **Join with the cell below
+190 **Shrink horizontal extend
+191 **Shrink vertical extend
+192 **Select the row
+193 **Insert a row before
+194 **Insert a row after
+195 **Select the column
+196 **Insert a column before
+197 **Insert a column after
+198 **Paste before
+199 **Paste after
+200 SVG kütüphanesini göster
+201 SVG kütüphanesine seçili alanı ekle
+202 XML elementlerin
+203 Önceki hedefe bağlantı
+204 Baglantı yarat...
+205 Hedef yarat
+206 tanımı sil
+207 IDs ekle/sil
+208 Tusları göster
+209 Adres göster
+210 Yakınlaştır
+211 Hedefi göster
+212 Uzaklaştır
+213 Harita alanlarını göster
+214 Pars hatalarını göster
+215 Yapıyı göster
+216 kaynak göster
+217 Bağlantıları göster
+218 Alternatif gösterim
+219 Içindekileri göster
+220 Karakter tarzı...
+221 Renkler...
+222 Biçim...
+223 Arkaplan görüntüsü...
+224 Kural yarat...
+225 \'class\' uygula...
+226 **Show applied style...
+227 Bağlantı
+228 Aç
+229 Olumsuzla
+230 Olumla
+231 Sil
+232 Bölüm numaralandırması
+233 Kitap yap
+234 Tercih
+235 Genel...
+236 Tarama...
+237 Derleme...
+238 Önbellekleme...
+239 Proxy...
+240 Renkler...
+241 Geometri...
+242 Ülke dilleri...
+243 Profiller...
+244 Sayfa modelleri...
+245 Seçili alan ekleme
+246 Doküman eklemek
+247 Seçili alanı taşı
+248 seçilen alanı XPointer gibi kaydet
+249 Xpointer\'daki birikenleri taşı
+250 Tekrar ekle
+251 Server\'e kaydet
+252 Sil
+253 Yükle
+254 Kişisel ayarlama...
+255 Sabit filitre...
+256 **Configure...
+257 **New Bookmark
+258 **New Topic
+259 kilitli bilgileri kopyala
+260 **Import a topic hierarchy
+261 Tekrar okumayı kitle...
+262 Tekrar okumayı kilidi aç...
+263 Tekrar okuma ayarlarını göster...
+264 kilitli bilgileri kopyala...
+265 kitli mi?
+266 Ayarlar...
+267 Amaya hakkında
+268 W3C deki Amaya hakkında
+269 Içerik
+270 Tarama
+271 Görünümler
+272 Seç
+273 Döküman
+274 Yarat
+275 Tarz tanımları
+276 karakterler
+277 Yeniden yapılandırma
+278 Bağlantılar
+279 Tablolar
+280 Aktif alan
+281 Matematik
+282 Grafik
+283 XML desteği
+284 Görüntü haritaları
+285 Yazı hataları arama
+286 Yazı hataları düzeltmek
+287 Bastırma
+288 WebDAV
+289 Sayfa yerleştirme
+290 Numaralandır
+291 Kitap oluşturma
+292 Not ekleme
+293 &Birlikte çalışmak
+294 Amaya yapılandırması
+295 Kısalmalar
+296 Amaya\'ya ulaşmak
