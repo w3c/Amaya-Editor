@@ -229,11 +229,11 @@ AMAYA_OBJ = \
 	wxdialog/AuthentDlgWX.o \
 	wxdialog/CheckedListDlgWX.o \
 	wxdialog/CreateTableDlgWX.o \
-	wxdialog/CSSDlgWX.o \
 	wxdialog/DocInfoDlgWX.o \
 	wxdialog/HRefDlgWX.o \
 	wxdialog/ImageDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
+	wxdialog/ListDlgWX.o \
 	wxdialog/ObjectDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \
 	wxdialog/PreferenceDlgWX.o \

@@ -1145,7 +1145,8 @@ static void InitCSSDialog (Document doc, char *s)
 
   /* display the form */
 #ifdef _WX
-  ThotBool created = CreateCSSDlgWX (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), nb, buf, s );
+  ThotBool created = CreateCSSDlgWX (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1),
+				     s, nb, buf);
   TtaFreeMemory (buf);
   if (created)
     {

@@ -1,29 +1,27 @@
 #ifdef _WX
 
-#ifndef __CSSDLGWX_H__
-#define __CSSDLGWX_H__
+#ifndef __LISTDLGWX_H__
+#define __LISTDLGWX_H__
 
 //-----------------------------------------------------------------------------
 // Headers
 //-----------------------------------------------------------------------------
-
 #include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
-// Class definition: CSSDlgWX
+// Class definition: ListDlgWX
 //-----------------------------------------------------------------------------
-
-class CSSDlgWX : public AmayaDialog
+class ListDlgWX : public AmayaDialog
 {
 public: 
   // Constructor.
-  CSSDlgWX( int ref,
+  ListDlgWX( int ref,
 	    wxWindow* parent,
 	    const wxString & title,
 	    const wxArrayString& items );
     
   // Destructor.                  
-  virtual ~CSSDlgWX();
+  virtual ~ListDlgWX();
 
 private:
   void OnOkButton( wxCommandEvent& event );
@@ -37,6 +35,6 @@ private:
 
 };
 
-#endif  //__CSSDLGWX_H__
+#endif  //__LISTDLGWX_H__
 
 #endif /* _WX */

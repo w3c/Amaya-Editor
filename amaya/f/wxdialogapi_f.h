@@ -59,9 +59,14 @@ extern ThotBool CreateAuthentDlgWX ( int ref,
                                      char *server );
 extern ThotBool CreateCSSDlgWX ( int ref,
                                  ThotWindow parent,
+                                 char *title,
                                  int nb_item,
-                                 char *items,
-                                 char *title );
+                                 char *items );
+extern ThotBool CreateListDlgWX ( int ref,
+                                  ThotWindow parent,
+                                  char *title,
+                                  int nb_item,
+                                  char *items );
 extern ThotBool CreateCheckedListDlgWX ( int ref,
                                          ThotWindow parent,
                                          char *title,
@@ -150,9 +155,14 @@ extern ThotBool CreateAuthentDlgWX ( int ref,
                                        char *server );
 extern ThotBool CreateCSSDlgWX ( int ref,
                                    ThotWindow parent,
+                                   char *title,
                                    int nb_item,
-                                   char *items,
-                                   char *title );
+                                   char *items );
+extern ThotBool CreateListDlgWX ( int ref,
+                                    ThotWindow parent,
+                                    char *title,
+                                    int nb_item,
+                                    char *items );
 extern ThotBool CreateCheckedListDlgWX ( int ref,
                                            ThotWindow parent,
                                            char *title,

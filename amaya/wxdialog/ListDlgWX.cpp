@@ -5,7 +5,7 @@
 #include "wx/string.h"
 
 #include "AmayaApp.h"
-#include "CSSDlgWX.h"
+#include "ListDlgWX.h"
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -18,25 +18,25 @@ static int      MyRef;
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(CSSDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_OK"),       CSSDlgWX::OnOkButton )
-  EVT_BUTTON(     XRCID("wxID_CANCEL"),   CSSDlgWX::OnCancelButton )
-  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST"), CSSDlgWX::OnOkButton)
+BEGIN_EVENT_TABLE(ListDlgWX, AmayaDialog)
+  EVT_BUTTON(     XRCID("wxID_OK"),       ListDlgWX::OnOkButton )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"),   ListDlgWX::OnCancelButton )
+  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST"), ListDlgWX::OnOkButton)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
-  CSSDlgWX create the dialog used to open/disable/enabel.. a CSS file
+  ListDlgWX create the dialog used to open/disable/enabel.. a CSS file
   params:
     + parent : parent window
     + title : dialog title
   ----------------------------------------------------------------------*/
-CSSDlgWX::CSSDlgWX( int ref,
+ListDlgWX::ListDlgWX( int ref,
 		    wxWindow* parent,
 		    const wxString & title,
 		    const wxArrayString& items ) :
   AmayaDialog( parent, ref )
 {
-  wxXmlResource::Get()->LoadDialog(this, parent, wxT("CSSDlgWX"));
+  wxXmlResource::Get()->LoadDialog(this, parent, wxT("ListDlgWX"));
   MyRef = ref;
 
   // update dialog labels with given ones
@@ -55,7 +55,7 @@ CSSDlgWX::CSSDlgWX( int ref,
 /*----------------------------------------------------------------------
   Destructor. (Empty, as I don't need anything special done when destructing).
   ----------------------------------------------------------------------*/
-CSSDlgWX::~CSSDlgWX()
+ListDlgWX::~ListDlgWX()
 {
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
@@ -65,19 +65,17 @@ CSSDlgWX::~CSSDlgWX()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void CSSDlgWX::OnOkButton( wxCommandEvent& event )
+void ListDlgWX::OnOkButton( wxCommandEvent& event )
 {
   wxString selected_item = XRCCTRL(*this, "wxID_LIST", wxListBox)->GetStringSelection();
   if ( !selected_item.IsEmpty() )
     {  
-      wxLogDebug( _T("CSSDlgWX::OnOkButton - selected=") + selected_item );
-
       // allocate a temporary buffer
       char buffer[512];
       wxASSERT( selected_item.Len() < 512 );
       strcpy( buffer, (const char*)selected_item.mb_str(wxConvUTF8) );
 
-      ThotCallback (BaseCSS + CSSSelect, STRING_DATA, buffer);
+      ThotCallback (MyRef + 1, STRING_DATA, buffer);
     }
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
@@ -88,9 +86,8 @@ void CSSDlgWX::OnOkButton( wxCommandEvent& event )
   params:
   returns:
   ----------------------------------------------------------------------*/
-void CSSDlgWX::OnCancelButton( wxCommandEvent& event )
+void ListDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("CSSDlgWX::OnCancelButton") );
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
