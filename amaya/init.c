@@ -2963,7 +2963,6 @@ char     *tempdoc;
 char     *docname;
 #endif
 {
-  FILE               *f;
   char                tempfile[MAX_LENGTH];
   int                 newdoc, len;
   boolean             aDoc;
@@ -3016,8 +3015,7 @@ static boolean        RestoreAmayaDocs ()
 {
   FILE               *f;
   char                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  char                docname[MAX_LENGTH], tempfile[MAX_LENGTH];
-  int                 newdoc, len;
+  char                docname[MAX_LENGTH];
   boolean             aDoc;
 
   /* check if Amaya has crashed */
