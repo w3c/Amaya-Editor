@@ -412,9 +412,6 @@ PtrSSchema          pSS;
    PathBuffer          buf;
    PathBuffer          dirBuffer;
    int                 i;
-#  ifdef _WINDOWS
-   STRING              pwdPath;
-#  endif /* _WINDOWS */
 
    /* compose le nom du fichier a ouvrir */
 #  if 0 

@@ -129,6 +129,7 @@ static int          entityNameLength = 0; /* length of entity name read so
 
 #include "callback_f.h"
 #include "fileaccess_f.h"
+#include "referenceapi_f.h"
 #include "thotmodule_f.h"
 #include "translatexml_f.h"
 #include "xmlmodule_f.h"
@@ -1549,7 +1550,7 @@ char	 *name;
   file = TtaReadOpen (name);
   i=0;
   strcpy(tempDocName,name);
-  while(i<strlen(tempDocName)&&tempDocName[i]!='.')
+  while((size_t)i < strlen (tempDocName) && tempDocName [i] != '.')
     {
       if (tempDocName[i]=='/')
 	firstNameChar = i+1;

@@ -614,7 +614,7 @@ PtrDocument         pDoc;
 		    break;
 		 case AtNumAttr:
 		    PutShort (pivFile, abs (pAttr->AeAttrValue));
-		    PutSign (pivFile, pAttr->AeAttrValue >= 0);
+		    PutSign (pivFile, (boolean)(pAttr->AeAttrValue >= 0));
 		    break;
 		 case AtReferenceAttr:
 		    PutReference (pivFile, pAttr->AeAttrReference);
@@ -705,7 +705,7 @@ PtrPRule      pPRule;
 	    TtaWriteByte (pivFile, C_PR_HPOS);
 	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
 	  PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
-	  PutSign (pivFile, pPRule->PrPosRule.PoDistance >= 0);
+	  PutSign (pivFile, (boolean)(pPRule->PrPosRule.PoDistance >= 0));
 	  break;
 	case PtSize:
 	  TtaWriteByte (pivFile, C_PR_SIZE);
@@ -742,7 +742,7 @@ PtrPRule      pPRule;
 	  TtaWriteByte (pivFile, C_PR_INDENT);
 	  PutShort (pivFile, abs (pPRule->PrMinValue));
 	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  PutSign (pivFile, pPRule->PrMinValue >= 0);
+	  PutSign (pivFile, (boolean)(pPRule->PrMinValue >= 0));
 	  break;
 	case PtLineSpacing:
 	  TtaWriteByte (pivFile, C_PR_LINESPACING);

@@ -566,7 +566,6 @@ Element		    last;
 #endif /* __STDC__ */
 
 {
-   PtrDocument         pDoc;
    PtrElement          pEl;
 
    UserErrorCode = 0;
@@ -580,7 +579,7 @@ Element		    last;
    else
       /* Parameters document and last are correct */
      {
-	pEl = NextInSelection ((PtrElement) * element, last);
+	pEl = NextInSelection ((PtrElement) (*element), (PtrElement)last);
 	*element = (Element) pEl;
      }
 }

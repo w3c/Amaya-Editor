@@ -83,7 +83,7 @@ static int          defPageSize;
 static Name         PresSchema;
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 
 #if 0
 #ifdef __STDC__

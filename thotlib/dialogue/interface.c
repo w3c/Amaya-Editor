@@ -40,6 +40,11 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 #include "edit_tv.h"
 #include "font_tv.h"
 #include "boxes_tv.h"
@@ -1305,7 +1310,7 @@ ThotEvent             *ev;
    Processes one given event in the Window application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaHandleOneWindowEvent (MSG * msg)
+void                TtaHandleOneWindowEvent (MSG* msg)
 #else  /* __STDC__ */
 void                TtaHandleOneWindowEvent (msg)
 MSG                *msg;

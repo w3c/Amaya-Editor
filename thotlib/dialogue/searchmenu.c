@@ -1294,7 +1294,7 @@ STRING              txt;
 			     ReplaceString (searchDomain->SDocument,
 					    pFirstSel, firstChar, SearchedStringLen,
 					    pReplaceString, ReplaceStringLen,
-					    !AutoReplace);
+					    (boolean)(!AutoReplace));
 			     ReplaceDone = TRUE;
 			     StartSearch = FALSE;
 			     /* met eventuellement a jour la borne de */

@@ -44,7 +44,7 @@ Proc                procedure;
 {
    ThotLocalActions[id] = procedure;
 }
-
+ 
 /*----------------------------------------------------------------------
    TtaSetBackup connect the backup function: procedure().
   ----------------------------------------------------------------------*/

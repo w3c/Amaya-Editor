@@ -93,7 +93,7 @@ static boolean      FromKeyboard;
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS 
-#include "win_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 #ifdef _WINDOWS

@@ -86,7 +86,7 @@ static ThotGC       GCkey;
 #include "inites_f.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 
 static int   WIN_LastFg, WIN_CurrentFg, WIN_LastBg, WIN_CurrentBg;
 #endif /* _WINDOWS */
@@ -731,7 +731,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	 HPEN        hPen;
 	 HPEN        hOldPen;
      int         i, x, y, nbPalEntries;
-	 int         XPos, YPos;
+	 int         YPos;
 	 int         red, green, blue;
 	 HWND        hwnLButton;
 	 HWND        hwnRButton;

@@ -844,7 +844,7 @@ STRING              label;
    else
      {
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
-					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (*label) == EOS);
+					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (boolean)(*label == EOS));
 	if (*label != EOS)
 	   ustrncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }

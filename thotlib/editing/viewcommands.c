@@ -78,6 +78,7 @@
 #include "docs_f.h"
 #include "frame_f.h"
 #include "fileaccess_f.h"
+#include "undo_f.h"
 
 static PtrDocument      pDocChangeSchPresent;
 static PtrSSchema       TableNaturesSchPresent[NbMaxMenuPresNature];

@@ -1164,7 +1164,7 @@ void                TtcCreateElement (doc, view)
 	     if (ready && list)
 	       {
 		  replicate = FALSE;
-		  ReturnCreateNewElem (pListEl, pElReplicate, !createAfter, pDoc,
+		  ReturnCreateNewElem (pListEl, pElReplicate, (boolean)!createAfter, pDoc,
 				       &typeNum, &pSS);
 	       }
 	     else

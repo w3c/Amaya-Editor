@@ -70,6 +70,7 @@ static CHAR         SpecialChars[] =
 #include "views_f.h"
 #include "savedoc_f.h"
 #include "structselect_f.h"
+#include "message_f.h"
 
 #ifdef _WINDOWS 
 extern HWND wordButton;

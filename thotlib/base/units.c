@@ -25,7 +25,7 @@
 #include "frame_tv.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 
 extern int ScreenDPI;
 extern int PrinterDPI;

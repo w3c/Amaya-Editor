@@ -247,7 +247,7 @@ STRING              label;
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 			  LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
-			      (*label) == EOS);
+			      (boolean)(*label == EOS));
 	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
@@ -1499,8 +1499,7 @@ Document            document;
 			  if (SaveDisplayMode != DeferredDisplay)
 			     TtaSetDisplayMode (document, DeferredDisplay);
 			  /* change AbCanBeModified for all abstract boxes */
-			  ChangeAbsBoxModif ((PtrElement) element, document,
-				       (newAccessRight == AccessReadWrite));
+			  ChangeAbsBoxModif ((PtrElement) element, document, (boolean)(newAccessRight == AccessReadWrite));
 			  /* Restore the display mode of the document */
 			  /* Redisplay if the mode is immediat display */
 			  if (SaveDisplayMode != DeferredDisplay)

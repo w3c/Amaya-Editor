@@ -39,7 +39,7 @@ static int          GridSize = 1;
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 /* BOOL WIN_UserGeometry = FALSE ; */
 
 extern int X_Pos;
@@ -376,21 +376,21 @@ int                 nbPoints;
 	  for (i = 0; i <  pBox->BxNChars; i++)
 	    {
 	      if (xMin > controls[i].lx)
-		xMin = controls[i].lx;
+		xMin = (int) controls[i].lx;
 	      if (width < controls[i].lx)
-		width = controls[i].lx;
+		width = (int) controls[i].lx;
 	      if (xMin > controls[i].rx)
-		xMin = controls[i].rx;
+		xMin = (int) controls[i].rx;
 	      if (width < controls[i].rx)
-		width = controls[i].rx;
+		width = (int) controls[i].rx;
 	      if (yMin > controls[i].ly)
-		yMin = controls[i].ly;
+		yMin = (int) controls[i].ly;
 	      if (height < controls[i].ly)
-		height = controls[i].ly;
+		height = (int) controls[i].ly;
 	      if (yMin > controls[i].ry)
-		yMin = controls[i].ry;
+		yMin = (int) controls[i].ry;
 	      if (height < controls[i].ry)
-		height = controls[i].ry;
+		height = (int) controls[i].ry;
 	    }
 	  /* do we need to retranslate the box */
 	  /* update horizontal origin of the box */

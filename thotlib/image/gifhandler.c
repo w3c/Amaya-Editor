@@ -45,7 +45,7 @@
 #include "gifhandler_f.h"
 #include "picture_f.h"
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 #define	MAXCOLORMAPSIZE		256
 #define scale 65536 / MAXCOLORMAPSIZE;

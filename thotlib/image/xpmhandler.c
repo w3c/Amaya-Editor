@@ -224,14 +224,14 @@ unsigned long       BackGroundPixel;
 	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
 		 {
 		    Scx = (float) wif / (float) PicWArea;
-		    yif += (hif - (PicHArea * Scx)) / 2;
-		    hif = PicHArea * Scx;
+		    yif += (int) ((hif - (PicHArea * Scx)) / 2);
+		    hif = (int) (PicHArea * Scx);
 		 }
 	       else
 		 {
 		    Scy = (float) hif / (float) PicHArea;
-		    xif += (wif - (PicWArea * Scy)) / 2;
-		    wif = PicWArea * Scy;
+		    xif += (int) ((wif - (PicWArea * Scy)) / 2);
+		    wif = (int) (PicWArea * Scy);
 		 }
 	       break;
 	    default:
@@ -240,15 +240,15 @@ unsigned long       BackGroundPixel;
 
    /* reads the colorspace palette to produce the ps */
 
-   for (i = 0; i < image.ncolors; i++)
+   for (i = 0; i < (int) (image.ncolors); i++)
      {
 	if (ustrncmp (image.colorTable[i].c_color, "None", 4) == 0)
 
 	  {
 	     TtaGiveThotRGB ((int) BackGroundPixel, &red, &green, &blue);
-	     colorTab[i].red = red;
-	     colorTab[i].green = green;
-	     colorTab[i].blue = blue;
+	     colorTab[i].red = (unsigned char) red;
+	     colorTab[i].green = (unsigned char) green;
+	     colorTab[i].blue = (unsigned char) blue;
 #            ifndef _WINDOWS
 	     colorTab[i].pixel = i;
 	     /*NoneColor = i; */

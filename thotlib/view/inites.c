@@ -31,7 +31,7 @@
 #include "context_f.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 #endif /* _WINDOW S*/
 
 static ThotColorStruct def_colrs[256];

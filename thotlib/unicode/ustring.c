@@ -7,9 +7,9 @@
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-unsigned int ustrcasecmp (STRING str1, const STRING str2)
+int ustrcasecmp (STRING str1, const STRING str2)
 #else  /* __STDC__ */
-unsigned int ustrcasecmp (str1, str2)
+int ustrcasecmp (str1, str2)
 const STRING str1;
 const STRING str2;
 #endif /* __STDC__ */
@@ -123,9 +123,9 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-unsigned int ustrlen (const STRING str)
+int ustrlen (const STRING str)
 #else  /* __STDC__ */
-unsigned int ustrlen (str)
+int ustrlen (str)
 const STRING str;
 #endif /* __STDC__ */
 {
@@ -138,9 +138,9 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-unsigned int ustrncasecmp (STRING str1, const STRING str2, unsigned int count)
+int ustrncasecmp (STRING str1, const STRING str2, unsigned int count)
 #else  /* __STDC__ */
-unsigned int ustrncasecmp (str1, str2, count)
+int ustrncasecmp (str1, str2, count)
 const STRING str1;
 const STRING str2;
 unsigned int  count;

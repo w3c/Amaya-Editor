@@ -13,7 +13,7 @@
  * will be available in English in the next release.
  * 
  */
- 
+  
 /*
  * This module maintains constraints between boxes
  *
@@ -2258,7 +2258,7 @@ int                 frame;
 {
   PtrBox              pNextBox;
   PtrLine             pLine;
-  PtrAbstractBox      pAb, pCell;
+  PtrAbstractBox      pAb;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   PtrDimRelations     pDimRel;

@@ -154,7 +154,7 @@ PresentationValue   v;
    if (pRule == NULL)
       return (-1);
    doc = ctxt->doc;
-   ApplyPRulesElement (pRule, elem, LoadedDocument[doc - 1], ctxt->destroy);
+   ApplyPRulesElement (pRule, elem, LoadedDocument[doc - 1], (boolean)ctxt->destroy);
    return(0);
 }
 

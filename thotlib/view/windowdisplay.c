@@ -56,7 +56,7 @@ static int          stack_deep;
 #include "buildlines_f.h"
 
 #ifdef _WINDOWS 
-#include "win_f.h"
+#include "wininclude.h"
 
 extern BOOL autoScroll;
 #endif /* _WINDOWS */
@@ -1019,11 +1019,11 @@ int                 fg;
    ThotPoint           point[3];
 #  endif /* _WINDOWS */
 
-   width = 5 + thick;
+   width = (float)(5 + thick);
    height = 10;
    dx = (float) (x2 - x1);
    dy = (float) (y1 - y2);
-   l = sqrt ((double) (dx * dx + dy * dy));
+   l = (float) sqrt ((double) (dx * dx + dy * dy));
    if (l == 0)
       return;
    sina = dy / l;
@@ -1032,11 +1032,11 @@ int                 fg;
    yb = x2 * sina + y2 * cosa;
    x = xb - height;
    y = yb - width / 2;
-   xc = FloatToInt (x * cosa + y * sina + .5);
-   yc = FloatToInt (-x * sina + y * cosa + .5);
+   xc = FloatToInt ((float)(x * cosa + y * sina + .5));
+   yc = FloatToInt ((float)(-x * sina + y * cosa + .5));
    y = yb + width / 2;
-   xd = FloatToInt (x * cosa + y * sina + .5);
-   yd = FloatToInt (-x * sina + y * cosa + .5);
+   xd = FloatToInt ((float)(x * cosa + y * sina + .5));
+   yd = FloatToInt ((float)(-x * sina + y * cosa + .5));
 
    /* draw */
    point[0].x = x2;
@@ -1050,7 +1050,7 @@ int                 fg;
    point[3].y = y2;
 #  endif /* _WINDOWS */
 
-   pattern = CreatePattern (0, RO, active, fg, fg, 1);
+   pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0)
      {
 #  ifdef _WINDOWS
@@ -2003,18 +2003,18 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
 	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
 	else
 	  {
-	     tx   = MIDDLE_OF (x2, x3);
-	     ty   = MIDDLE_OF (y2, y3);
-	     sx1  = MIDDLE_OF (x1, x2);
-	     sy1  = MIDDLE_OF (y1, y2);
-	     sx2  = MIDDLE_OF (sx1, tx);
-	     sy2  = MIDDLE_OF (sy1, ty);
-	     tx2  = MIDDLE_OF (x3, x4);
-	     ty2  = MIDDLE_OF (y3, y4);
-	     tx1  = MIDDLE_OF (tx2, tx);
-	     ty1  = MIDDLE_OF (ty2, ty);
-	     xmid = MIDDLE_OF (sx2, tx1);
-	     ymid = MIDDLE_OF (sy2, ty1);
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx1  = (float) MIDDLE_OF (x1, x2);
+	     sy1  = (float) MIDDLE_OF (y1, y2);
+	     sx2  = (float) MIDDLE_OF (sx1, tx);
+	     sy2  = (float) MIDDLE_OF (sy1, ty);
+	     tx2  = (float) MIDDLE_OF (x3, x4);
+	     ty2  = (float) MIDDLE_OF (y3, y4);
+	     tx1  = (float) MIDDLE_OF (tx2, tx);
+	     ty1  = (float) MIDDLE_OF (ty2, ty);
+	     xmid = (float) MIDDLE_OF (sx2, tx1);
+	     ymid = (float) MIDDLE_OF (sy2, ty1);
 
 	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
 	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
@@ -2344,7 +2344,7 @@ int                 pattern;
 
    WIN_GetDeviceContext (frame);
 
-   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+   arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
 
    if (width > thick + 1)
      width = width - thick - 1;

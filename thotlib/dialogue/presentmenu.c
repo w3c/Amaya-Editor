@@ -62,7 +62,7 @@
 #include "viewcommands_f.h"
 
 #ifdef _WINDOWS 
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 static PtrDocument  DocModPresent;

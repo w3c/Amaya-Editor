@@ -4351,7 +4351,7 @@ boolean            *complete;
 		   /* pave vide, il n'est pas coupe' */
 		   {
 		     *complete = TRUE;
-		     pAbbPres = TruncateOrCompleteAbsBox (pNewAbbox, FALSE, !forward, pDoc);
+		     pAbbPres = TruncateOrCompleteAbsBox (pNewAbbox, FALSE, (boolean)(!forward), pDoc);
 		     if (pAbbPres != NULL)
 		       /* on a cree des paves de presentation */
 		       if (pAbbPres->AbEnclosing != pNewAbbox)
@@ -4425,7 +4425,7 @@ boolean            *complete;
 		       while (!stop);
 		       /* marque ce pave coupe' */
 		       if (pElParent != NULL)
-			 pAbbPres = TruncateOrCompleteAbsBox (pElParent->ElAbstractBox[viewNb - 1], TRUE, !forward, pDoc);
+			 pAbbPres = TruncateOrCompleteAbsBox (pElParent->ElAbstractBox[viewNb - 1], TRUE, (boolean)(!forward), pDoc);
 		     }
 		   else
 		     /* Cree les paves d'un fils et passe a un autre fils */

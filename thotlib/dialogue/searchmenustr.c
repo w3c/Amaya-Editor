@@ -869,7 +869,7 @@ PtrSearchContext    DomaineCherche;
 	{
 	   pEl = ChTypeAttr (elCour, DomaineCherche,
 			     NomTypeAChercher,
-			     NomAttrAChercher[0] != EOS,
+			     (boolean)(NomAttrAChercher[0] != EOS),
 			     NumAttrCherche, SchAttrCherche,
 			     &pAttrTrouve);
 	   *trouve = (pEl != NULL);

@@ -347,7 +347,7 @@ boolean             head;
      {
        /* cree les paves de la partie coupee jusqu'a concurrence du volume libre */
        pEl = pAbbRoot->AbElement;
-       pAb = AbsBoxesCreate (pEl, pDoc, pAbbRoot->AbDocView, !head, TRUE, &complete);
+       pAb = AbsBoxesCreate (pEl, pDoc, pAbbRoot->AbDocView, (boolean)(!head), TRUE, (boolean*)(&complete));
        /* recherche tous les paves crees, a partir du premier pave de plus */
        /* haut niveau cree', et aux niveaux inferieurs. */
        while (pAb != NULL)
@@ -967,7 +967,7 @@ PtrDocument         pDoc;
 	   /* milieu est dans la premiere moitie de l'image, et inversement */
 	  {
 	     dvol = pAbbRoot->AbVolume - VolOpt;
-	     SupprAbsBoxes (pAbbRoot, pDoc, !midHead, &dvol);
+	     SupprAbsBoxes (pAbbRoot, pDoc, (boolean)(!midHead), &dvol);
 	  }
      }
 }

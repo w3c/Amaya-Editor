@@ -29,6 +29,7 @@
 
 #include <setjmp.h>
 #include <signal.h>
+#include <math.h>
 #define M_PI            3.14159265358979323846  /* pi */
 #define M_PI_2          1.57079632679489661923  /* pi/2 */
 
@@ -167,7 +168,7 @@ int                 _getpid (void);
 #else  /* WWW_WINDOWS */
 
 #ifdef _WINDOWS
-typedef char        Boolean;	/* X11/Intrinsic.h */
+typedef BOOL        Boolean;	/* X11/Intrinsic.h */
 
 #define Bool		int	/* X11/Xlib.h */
 #define None		0L	/* X11/X.h */

@@ -544,7 +544,7 @@ int *bg;
     else 
       gamma_correction = (double)0.45;
 
-    if (abs ((2.2 * gamma_correction) - 1) > 0.011)
+    if (fabs ((2.2 * gamma_correction) - 1.0) > 0.011)
       png_set_gamma (png_ptr, (double) 2.2, gamma_correction);
     
     /*
@@ -784,10 +784,10 @@ int *bg;
 		  { 	      
 		    a=(*pp++);
 		    /*if(a!=0xff) {*/
-		    cr  = (a/255.0) * cr  + ((255.0-a)/255.0) * 211;
-		    cg  = (a/255.0) * cg  + ((255.0-a)/255.0) * 211;
-		    cb  = (a/255.0) * cb  + ((255.0-a)/255.0) * 211;
-		    cgr = (a/255.0) * cgr + ((255.0-a)/255.0) * 211;
+		    cr  = (int) ((a/255.0) * cr  + ((255.0-a)/255.0) * 211.0);
+		    cg  = (int) ((a/255.0) * cg  + ((255.0-a)/255.0) * 211.0);
+		    cb  = (int) ((a/255.0) * cb  + ((255.0-a)/255.0) * 211.0);
+		    cgr = (int) ((a/255.0) * cgr + ((255.0-a)/255.0) * 211.0);
 		    /*}*/
 		  }
    

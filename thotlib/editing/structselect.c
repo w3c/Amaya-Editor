@@ -2279,7 +2279,7 @@ boolean             drag;
 	     if (change || !drag)
 		/* the new selection is not the same as the previous one */
 		/* highlight it */
-		HighlightSelection (FirstSelectedElement != oldFirstEl, TRUE);
+		HighlightSelection ((boolean)(FirstSelectedElement != oldFirstEl), TRUE);
 	     if (!drag)
 		/* update all menus that change with the selection */
 		if (SelectionUpdatesMenus)

@@ -1589,7 +1589,7 @@ int                 lastChar;
        if (lastSel != firstSel)
 	 if (discreteSelection)
 	   for (index = 1; index <= NSelectedEls; index++)
-	     AddInSelection (SelectedEl[index - 1], (index == NSelectedEls));
+	     AddInSelection (SelectedEl[index - 1], (boolean)(index == NSelectedEls));
 	 else
 	   ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
      }

@@ -38,6 +38,7 @@
 
 #ifdef _WINDOWS
 #include "winsys.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
@@ -157,21 +158,22 @@ static Display*       GDp;
 #include "thotmsg_f.h"
 
 #ifdef _WINDOWS
+/*****************************
+ * MS-Windows Specific part. *
+ *****************************/
+
 typedef struct struct_winerror {
         WORD  errNo;
         STRING errstr;
 };
 
 struct struct_winerror win_errtab[] = {
-#include "winerrdata.c"
+#      include "winerrdata.c"
 };
 
 #define NB_WIN_ERROR (sizeof(win_errtab) / sizeof(struct struct_winerror))
-
-/*****************************
- * MS-Windows Specific part. *
- *****************************/
 #define MAX_FRAMECAT 50
+
 typedef struct FrCatalogue {
         struct Cat_Context*  Cat_Table[MAX_FRAMECAT] ;
 } FrCatalogue ;
@@ -250,13 +252,151 @@ static WIN_Form formulary ;
 static BYTE     fVirt;
 static CHAR     key;
 
-#define TAB     '\t'
-#define SPACE   ' '
-
 UINT subMenuID [MAX_FRAME];
-#endif /* _WINDOWS */
 
-#ifdef _WINDOWS
+ThotWindow WIN_curWin = (ThotWindow)(-1);
+
+#ifdef __STDC__
+extern void main (int, char**);
+#else  /* !__STDC__ */
+extern void main ();
+#endif /* __STDC__ */
+
+/*----------------------------------------------------------------------
+   WinErrorBox :  Pops-up a message box when an MS-Window error      
+   occured.                                                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WinErrorBox (HWND hWnd)
+#else  /* !__STDC__ */
+void WinErrorBox (hWnd)
+HWND hWnd;
+#endif /* __STDC__ */
+{
+   int                 msg;
+   CHAR                str[200];
+
+   WinLastError = GetLastError ();
+   if (WinLastError == 0)
+      return;
+
+   for (msg = 0; msg < NB_WIN_ERROR; msg++)
+       if (win_errtab[msg].errNo == WinLastError)
+	  break;
+
+   if (msg >= NB_WIN_ERROR)
+      sprintf (str, "Error %d : not registered\n", WinLastError);
+   else
+       sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
+
+   MessageBox (hWnd, str, tszAppName, MB_OK);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean isOnlyBlank (CONST STRING text)
+#else  /* __STDC__ */
+static boolean isOnlyBlank (text)
+CONST STRING text;
+#endif /* __STDC__ */
+{
+    STRING pText = text;
+    while (pText && *pText == ' ')
+	  pText++;
+    if (*pText == EOS)
+       return TRUE;
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
+   GetMainFrameNumber :  returns the Thot window number associated to an     
+   MS-Windows window.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int GetMainFrameNumber  (ThotWindow win)
+#else  /* !__STDC__ */
+int GetMainFrameNumber (win)
+ThotWindow win ;
+#endif /* __STDC__ */
+{
+   int frame;
+
+   for (frame = 0; frame <= MAX_FRAME; frame++)
+       if (FrMainRef[frame] == win)
+	  return (frame);
+
+   return -1;
+}
+
+/*----------------------------------------------------------------------
+   WIN_GetDeviceContext :  select a Device Context for a given       
+   thot window.                                                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_GetDeviceContext (int frame)
+#else  /* !__STDC__ */
+void WIN_GetDeviceContext (frame)
+int frame;
+#endif /* __STDC__ */
+{
+#  ifdef _WIN_PRINT
+   WIN_curWin = NULL;
+   TtDisplay = GetDC (WIN_curWin);
+#  else  /* !_WIN_PRINT */
+   if (frame == -1) {
+      if (TtDisplay != 0)
+         return;
+      for (frame = 0; frame <= MAX_FRAME; frame++)
+	  if (FrRef[frame] != 0)
+	     break;
+   }
+   if ((frame < 0) || (frame > MAX_FRAME)) {
+      TtDisplay = GetDC (WIN_curWin = NULL);
+      return;
+   }
+   
+   if (FrRef[frame] == 0)
+      return;
+
+   /* if the correct Device Context is already selected, returns. */
+   if ((WIN_curWin == FrRef[frame]) && (TtDisplay != 0))
+      return;
+
+   /* release the previous Device Context. */
+   if (TtDisplay)
+      ReleaseDC (WIN_curWin, TtDisplay);
+
+   WIN_curWin = (ThotWindow) (-1);
+   TtDisplay = 0;
+
+   /* load the new Context. */
+   TtDisplay = GetDC (FrRef[frame]);
+   if (TtDisplay != 0)
+      WIN_curWin = FrRef[frame];
+#  endif /* !_WIN_PRINT */
+}
+
+/*----------------------------------------------------------------------
+   WIN_ReleaseDeviceContext :  unselect the Device Context           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_ReleaseDeviceContext (void)
+#else  /* !__STDC__ */
+void WIN_ReleaseDeviceContext ()
+#endif /* __STDC__ */
+{
+   /* release the previous Device Context. */
+   /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
+   if (TtDisplay != 0)
+      if (!ReleaseDC (WIN_curWin, TtDisplay))
+         WinErrorBox (NULL);
+
+   WIN_curWin = (ThotWindow) (-1);
+   TtDisplay = 0;
+}
+
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -491,22 +631,6 @@ int  cmd;
 
    }
 }
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static boolean isOnlyBlank (CONST STRING text)
-#else  /* __STDC__ */
-static boolean isOnlyBlank (text)
-CONST STRING text;
-#endif /* __STDC__ */
-{
-    STRING pText = text;
-    while (pText && *pText == ' ')
-	  pText++;
-    if (*pText == EOS)
-       return TRUE;
-    return FALSE;
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -534,29 +658,6 @@ CONST WNDCLASS lpwc ;
    wcex.cbSize = sizeof(WNDCLASSEX);
    wcex.hIconSm  = LoadIcon (hInstance, IDI_APPLICATION) ;
    return RegisterClassEx( &wcex );
-}
-
-/*----------------------------------------------------------------------
-   GetMainFrameNumber :  returns the Thot window number associated to an     
-   MS-Windows window.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int GetMainFrameNumber  (ThotWindow win)
-#else  /* !__STDC__ */
-int GetMainFrameNumber (win)
-ThotWindow win ;
-#endif /* __STDC__ */
-{
-   int frame;
-
-   for (frame = 0; frame <= MAX_FRAME; frame++)
-       if (FrMainRef[frame] == win)
-	  return (frame);
-
-#  ifdef AMAYA_DEBUG
-   fprintf (stderr, "Could not get MS-Windows number for %X\n", win);
-#  endif /* AMAYA_DEBUG */
-   return -1;
 }
 
 /*----------------------------------------------------------------------
@@ -631,8 +732,6 @@ ThotWindow hScroll ;
    return -1;
 }
 
-ThotWindow WIN_curWin = (ThotWindow)(-1);
-
 /*----------------------------------------------------------------------
    WIN_GetDeviceContext :  select a Device Context for a given       
    thot window.                                                
@@ -645,73 +744,6 @@ HMENU WIN_GetMenu (int frame)
 {
     return (GetMenu (FrMainRef [frame]));
 }
-/*----------------------------------------------------------------------
-   WIN_GetDeviceContext :  select a Device Context for a given       
-   thot window.                                                
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WIN_GetDeviceContext (int frame)
-#else  /* !__STDC__ */
-void WIN_GetDeviceContext (frame)
-int frame;
-#endif /* __STDC__ */
-{
-#  ifdef _WIN_PRINT
-   WIN_curWin = NULL;
-   TtDisplay = GetDC (WIN_curWin);
-#  else  /* !_WIN_PRINT */
-   if (frame == -1) {
-      if (TtDisplay != 0)
-         return;
-      for (frame = 0; frame <= MAX_FRAME; frame++)
-	  if (FrRef[frame] != 0)
-	     break;
-   }
-   if ((frame < 0) || (frame > MAX_FRAME)) {
-      TtDisplay = GetDC (NULL);
-      return;
-   }
-   
-   if (FrRef[frame] == 0)
-      return;
-
-   /* if the correct Device Context is already selected, returns. */
-   if ((WIN_curWin == FrRef[frame]) && (TtDisplay != 0))
-      return;
-
-   /* release the previous Device Context. */
-   if (TtDisplay)
-      ReleaseDC (WIN_curWin, TtDisplay);
-
-   WIN_curWin = (ThotWindow) (-1);
-   TtDisplay = 0;
-
-   /* load the new Context. */
-   TtDisplay = GetDC (FrRef[frame]);
-   if (TtDisplay != 0)
-      WIN_curWin = FrRef[frame];
-#  endif /* !_WIN_PRINT */
-}
-
-/*----------------------------------------------------------------------
-   WIN_ReleaseDeviceContext :  unselect the Device Context           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WIN_ReleaseDeviceContext (void)
-#else  /* !__STDC__ */
-void WIN_ReleaseDeviceContext ()
-#endif /* __STDC__ */
-{
-   /* release the previous Device Context. */
-   /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
-   if (TtDisplay != 0)
-      ReleaseDC (WIN_curWin, TtDisplay);
-
-   WIN_curWin = (ThotWindow) (-1);
-   TtDisplay = 0;
-}
-
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -844,36 +876,6 @@ int        ref;
 }
 
 /*----------------------------------------------------------------------
-   WinErrorBox :  Pops-up a message box when an MS-Window error      
-   occured.                                                    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WinErrorBox (HWND hWnd)
-#else  /* !__STDC__ */
-void WinErrorBox (hWnd)
-HWND hWnd;
-#endif /* __STDC__ */
-{
-   int                 msg;
-   CHAR                str[200];
-
-   WinLastError = GetLastError ();
-   if (WinLastError == 0)
-      return;
-
-   for (msg = 0; msg < NB_WIN_ERROR; msg++)
-       if (win_errtab[msg].errNo == WinLastError)
-	  break;
-
-   if (msg >= NB_WIN_ERROR)
-      sprintf (str, "Error %d : not registered\n", WinLastError);
-   else
-       sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
-
-   MessageBox (hWnd, str, tszAppName, MB_OK);
-}
-
-/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int makeArgcArgv (HINSTANCE hInst, STRING** pArgv, STRING commandLine)
@@ -935,7 +937,6 @@ STRING     commandLine;
     }
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    WinMain
   ----------------------------------------------------------------------*/
@@ -963,6 +964,7 @@ int       nShow;
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetFrameNumber :  returns the Thot window number associated to an         
    X-Window window.                                            
@@ -984,7 +986,6 @@ ThotWindow win;
    return (-1);
 }
 
-#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Procedure de retour par defaut.                                    
   ----------------------------------------------------------------------*/
@@ -1749,7 +1750,6 @@ caddr_t             call_d;
      }
 }
 #endif /* _WINDOWS */
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    warning handler                                                    
@@ -1757,7 +1757,6 @@ caddr_t             call_d;
 void                MyWarningHandler ()
 {
 }
-
 
 /*----------------------------------------------------------------------
    TtaInitDialogue
@@ -1795,7 +1794,6 @@ Display           **Dp;
 #  endif /* !_WINDOWS */
 
 #  ifdef _WINDOWS
-#  ifndef _WIN_PRINT
    RootShell.style         = 0;
    RootShell.lpfnWndProc   = WndProc ;
    RootShell.cbClsExtra    = 0 ;
@@ -1843,7 +1841,6 @@ Display           **Dp;
    
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
-#  endif /* !_WIN_PRINT */
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS
@@ -1878,12 +1875,10 @@ Display           **Dp;
    /* Initialisation des catalogues */
    NbOccCat = 0;
    NbLibCat = 0;
-#ifndef _WIN_PRINT
    PtrCatalogue = NewCatList ();
    NbOccE_List = 0;
    NbLibE_List = 0;
    PtrFreeE_List = NULL;
-#endif /* _WIN_PRINT */
    /* Initialisation des couleurs et des translations */
 #  ifndef _WINDOWS
    TextTranslations = NULL;
@@ -2199,6 +2194,7 @@ STRING              textmenu;
      }
 #  endif /* _WINDOWS */
 }
+#endif /* !_WIN_PRINT */
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -3192,7 +3188,7 @@ ThotWidget          parent;
 	  }
 #   else  /* _WINDOWS */
 	frame = GetMainFrameNumber (owner);
-    EnableMenuItem (WinMenus[frame], parent, MF_GRAYED);
+    EnableMenuItem ((UINT)WinMenus[frame], parent, MF_GRAYED);
 	DrawMenuBar (FrMainRef[frame]); 
 #            endif /* _WINDOWS */
      }
@@ -3247,7 +3243,7 @@ ThotWidget          parent;
              XtManageChild (parent);
 #            else  /* _WINDOWS */
 			 frame = GetMainFrameNumber (owner);
-             EnableMenuItem (WinMenus[frame], parent, MF_ENABLED);
+             EnableMenuItem ((UINT)WinMenus[frame], parent, MF_ENABLED);
 			 DrawMenuBar (FrMainRef[frame]); 
 #            endif /* _WINDOWS */
 	  }
@@ -5920,10 +5916,10 @@ int                 cattype;
 		       adbloc->E_ThotWidget[ent] = w;
 #                      else  /* _WINDOWS */
                        strSize = ustrlen (&text[index]) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", &text[index], 
+                       formulary.Buttons[bIndex] = CreateWindow ((LPCTSTR)"BUTTON", (LPCTSTR)(&text[index]), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                                                 bAbsBase, 300, strSize, 20, parent, 
-                                                                 ref + bIndex, hInstance, NULL) ;
+                                                                 bAbsBase, 300, strSize, 20, (HWND)parent, 
+                                                                 (HMENU)(ref + bIndex), (HINSTANCE)hInstance, (LPVOID)NULL) ;
                        bAbsBase += (strSize + 10);
                        bIndex++ ;
 	               adbloc->E_ThotWidget[ent] = (ThotWidget) bIndex;
@@ -6025,8 +6021,8 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-   BOOL    modified;
-   Element el;
+   /* BOOL    modified; */
+   /* Element el; */
    struct Cat_Context* catalogue;
    int                 no = 0;
    int                 frame = GetMainFrameNumber (hWnd);
@@ -6048,16 +6044,16 @@ LPARAM lParam;
              case CAT_PULL:
              case CAT_MENU:
              case CAT_POPUP:
-                  CallMenu (no, catalogue, NULL);
+                  CallMenu ((ThotWidget)no, catalogue, NULL);
                   break;
 
              case CAT_TMENU:
-                  CallToggle (no, catalogue, NULL);
+                  CallToggle ((ThotWidget)no, catalogue, NULL);
                   break;
 
              case CAT_SHEET:
              case CAT_FMENU:
-                  CallRadio (no, catalogue, NULL);
+                  CallRadio ((ThotWidget)no, catalogue, NULL);
 				  break;
 
              default:

@@ -146,8 +146,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc ();
 #include "language_f.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -830,14 +829,14 @@ int                 view;
 {
   int                 i, lgmenu, val;
   int                 form, subform;
-  CHAR                title[MAX_NAME_LENGTH + 2];
   CHAR                bufMenu[MAX_TXT_LEN];
   Document            doc;
-
-#ifdef _WINDOWS
+# ifndef _WINDOWS
+  CHAR                title[MAX_NAME_LENGTH + 2];
+# else  /* _WINDOWS */
   WIN_pAttr1 = pAttr1;
   WIN_currAttr	= currAttr;
-#endif /* _WINDOWS */
+# endif /* _WINDOWS */
 
   doc = (Document) IdentDocument (pDoc);
   /* detruit la feuille de dialogue et la recree */
@@ -1353,7 +1352,6 @@ PtrDocument         pDoc;
 	  else
 	    {
 #ifdef _WINDOWS
-          HMENU sMenu;
 	      int nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
 		  for (i = 0; i < nbOldItems ; i ++) {
               if (!DeleteMenu (FrameTable[frame].WdMenus[menu], ref + i, MF_BYCOMMAND))
@@ -1427,7 +1425,7 @@ PtrDocument         pDoc;
 	      /* marque les attributs actifs */
 	      for (i = 0; i < nbItemAttr; i++)
 #            ifdef _WINDOWS
-		WIN_TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1), FrMainRef [frame]);
+             WIN_TtaSetToggleMenu (ref, i, (boolean)(ActiveAttr[i] == 1), FrMainRef [frame]);
 #            else  /* !_WINDOWS */
 	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 #            endif /* _WINDOWS */

@@ -56,7 +56,7 @@ static boolean      UseBitStreamFamily;
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 
 static CHAR  WIN_lpszFace [255];
 static int   WIN_nHeight;

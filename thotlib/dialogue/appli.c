@@ -144,7 +144,7 @@ DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TO
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
-#include "win_f.h"
+#include "wininclude.h"
 
 #ifdef __STDC__
 BOOL InitToolTip (HWND hwndToolBar)
@@ -343,7 +343,7 @@ LPARAM     lParam;
          DisplayFrame (frame);
          SwitchSelection (frame, TRUE);
          EndPaint (w, &ps);
-         WIN_ReleaseDeviceContext ();
+         /* WIN_ReleaseDeviceContext (); */
       }
    }
 }
@@ -1526,7 +1526,7 @@ LPARAM lParam;
             case WM_CHAR:
                  TtaAbortShowDialogue ();
 				 key = (int) wParam;
-                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, &key))
+                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (STRING)&key))
                     /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
                     WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam);
                  return 0;

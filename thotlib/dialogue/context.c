@@ -45,7 +45,7 @@ static ThotColorStruct cwhite;
 #include "registry_f.h"
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 
 static int palSize ;
 int nbPalEntries;
@@ -143,6 +143,7 @@ void WinInitColors ()
        BackgroundColor[i] = 0;
 
    initialized = 1;
+   WIN_ReleaseDeviceContext ();
 
 }
 #endif /* _WINDOWS */

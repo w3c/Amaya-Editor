@@ -31,6 +31,7 @@
 #define THOT_EXPORT extern
 #include "edit_tv.h"
 #include "platform_tv.h"
+#include "undo_f.h"
 #ifndef NODISPLAY
 #include "modif_tv.h"
 #endif
@@ -59,6 +60,7 @@
 #include "applicationapi_f.h"
 #include "platform_f.h"
 #include "appdialogue_f.h"
+#include "createabsbox_f.h"
 
 extern int          UserErrorCode;
 static Name         nameBuffer;
@@ -1533,7 +1535,7 @@ int                 bufferLength;
    else
       /* parameter document is correct */
      {
-	if (strlen (LoadedDocument[document - 1]->DocDirectory) >= bufferLength)
+	if (strlen (LoadedDocument[document - 1]->DocDirectory) >= (size_t) bufferLength)
 	   TtaError (ERR_buffer_too_small);
 	strncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
      }
@@ -2236,7 +2238,7 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (strlen (DocumentPath) >= bufferLength)
+   if (strlen (DocumentPath) >= (size_t)bufferLength)
       TtaError (ERR_buffer_too_small);
    strncpy (buffer, DocumentPath, bufferLength - 1);
 }
@@ -2269,7 +2271,7 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (strlen (SchemaPath) >= bufferLength)
+   if (strlen (SchemaPath) >= (size_t)bufferLength)
       TtaError (ERR_buffer_too_small);
    strncpy (buffer, SchemaPath, bufferLength - 1);
 }

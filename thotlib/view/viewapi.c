@@ -1461,9 +1461,9 @@ boolean             creation;
    if (creation)
      {
 	/* reaffiche les paves qui copient le nouvel element */
-	RedisplayCopies (newElement, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayCopies (newElement, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* reaffiche les numeros suivants qui changent */
-	UpdateNumbers (newElement, newElement, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+	UpdateNumbers (newElement, newElement, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
      }
 }
 
@@ -1857,7 +1857,7 @@ Document            document;
 	   PageHeight = 1;
 	while (pE != NULL)
 	  {
-	     UpdateNumbers (pNext, pE, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+	     UpdateNumbers (pNext, pE, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 	     pE = pE->ElNext;
 	  }
 	PageHeight = savePageHeight;
@@ -1905,13 +1905,13 @@ Document            document;
    if (pEl != NULL)
      {
 	/* reaffiche les paves qui copient les elements detruits */
-	RedisplayCopies (pEl, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayCopies (pEl, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* la renumerotation est faite plus haut */
 	/* reaffiche les references aux elements detruits */
 	/* et enregistre les references sortantes coupees */
 	/* ainsi que les elements coupe's qui sont reference's par */
 	/* d'autres documents */
-	RedisplayEmptyReferences (pEl, &pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayEmptyReferences (pEl, &pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
 	/* s'il y a des elements apres */
 	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
@@ -2063,7 +2063,7 @@ Document            document;
    AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
    /* reaffiche les paves qui copient l'element */
-   RedisplayCopies (element, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (element, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------
@@ -2175,7 +2175,7 @@ int                 delta;
    /* si l'element modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */
    /* dans d'autres, il faut reafficher ses copies */
-   RedisplayCopies (element, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (element, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2444,7 +2444,7 @@ Document            document;
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2503,7 +2503,7 @@ Document            document;
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2533,7 +2533,7 @@ PtrPRule            pRule;
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------
@@ -2568,7 +2568,7 @@ int                 view;
    RedisplayCommand (document);
    /* le retrait de la regle de presentation doit etre pris en compte */
    /* dans les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------
@@ -2595,7 +2595,7 @@ PtrElement          pEl;
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------

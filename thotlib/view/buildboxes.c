@@ -222,10 +222,10 @@ C_points           *cp;
    s *= r;
    l1 *= s;
    l2 *= s;
-   cp->lx = x + l1 * cos ((double) theta1);
-   cp->ly = y - l1 * sin ((double) theta1);
-   cp->rx = x + l2 * cos ((double) theta2);
-   cp->ry = y - l2 * sin ((double) theta2);
+   cp->lx = x + l1 * (float) cos ((double) theta1);
+   cp->ly = y - l1 * (float) sin ((double) theta1);
+   cp->rx = x + l2 * (float) cos ((double) theta2);
+   cp->ry = y - l2 * (float) sin ((double) theta2);
 }
 
 
@@ -275,26 +275,26 @@ int                 nb;
 
    dx = x1 - x2;
    dy = y2 - y1;
-   l1 = sqrt ((double) (dx * dx + dy * dy));
+   l1 = (float) sqrt ((double) (dx * dx + dy * dy));
    if (l1 == 0.0)
       theta1 = 0.0;
    else
-      theta1 = atan2 ((double) dy, (double) dx);
+      theta1 = (float) atan2 ((double) dy, (double) dx);
 
    dx = x3 - x2;
    dy = y2 - y3;
-   l2 = sqrt ((double) (dx * dx + dy * dy));
+   l2 = (float) sqrt ((double) (dx * dx + dy * dy));
    if (l2 == 0.0)
       theta2 = 0.0;
    else
-      theta2 = atan2 ((double) dy, (double) dx);
+      theta2 = (float) atan2 ((double) dy, (double) dx);
 
    /* -PI <= theta1, theta2 <= PI */
    /* 0 <= theta1, theta2 < 2PI */
    if (theta1 < 0)
-      theta1 += _2xPI;
+      theta1 += (float) _2xPI;
    if (theta2 < 0)
-      theta2 += _2xPI;
+      theta2 += (float) _2xPI;
    SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[2]);
 
    nb--;			/* dernier point */
@@ -306,9 +306,9 @@ int                 nb;
 	y2 = y3;
 	l1 = l2;
 	if (theta2 >= M_PI)
-	   theta1 = theta2 - M_PI;
+	   theta1 = theta2 - (float) M_PI;
 	else
-	   theta1 = theta2 + M_PI;
+	   theta1 = theta2 + (float) M_PI;
 
 	if (i == nb)
 	  {
@@ -333,13 +333,13 @@ int                 nb;
 	  }
 	dx = x3 - x2;
 	dy = y2 - y3;
-	l2 = sqrt ((double) (dx * dx + dy * dy));
+	l2 = (float) sqrt ((double) (dx * dx + dy * dy));
 	if (l2 == 0.0)
 	   theta2 = 0.0;
 	else
-	   theta2 = atan2 ((double) dy, (double) dx);
+	   theta2 = (float) atan2 ((double) dy, (double) dx);
 	if (theta2 < 0)
-	   theta2 += _2xPI;
+	   theta2 += (float) _2xPI;
 	SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[i]);
      }
 
@@ -348,19 +348,19 @@ int                 nb;
    y2 = y3;
    l1 = l2;
    if (theta2 >= M_PI)
-      theta1 = theta2 - M_PI;
+      theta1 = theta2 - (float) M_PI;
    else
-      theta1 = theta2 + M_PI;
+      theta1 = theta2 + (float) M_PI;
 
    dx = x - x2;
    dy = y2 - y;
-   l2 = sqrt ((double) (dx * dx + dy * dy));
+   l2 = (float) sqrt ((double) (dx * dx + dy * dy));
    if (l2 == 0.0)
       theta2 = 0.0;
    else
-      theta2 = atan2 ((double) dy, (double) dx);
+      theta2 = (float) atan2 ((double) dy, (double) dx);
    if (theta2 < 0)
-      theta2 += _2xPI;
+      theta2 += (float) _2xPI;
    SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[1]);
 
    return (controls);
@@ -1137,10 +1137,10 @@ int                 frame;
   else
     {
       color = pBox->BxAbstractBox->AbBackground;
-      if (BackgroundColor[frame] != color)
+      if (BackgroundColor[frame] != (ThotColor)color)
         {
           /* change the window background color */
-          BackgroundColor[frame] = color;
+          BackgroundColor[frame] = (ThotColor)color;
           SetMainWindowBackgroundColor (frame, color);
         }
     }
@@ -1448,7 +1448,7 @@ int                *carIndex;
 		    pChildAb = pAb->AbFirstEnclosed;
 		    while (pChildAb != NULL)
 		      {
-			 pBox = CreateBox (pChildAb, frame, split || pAb->AbInLine, carIndex);
+			 pBox = CreateBox (pChildAb, frame, (boolean) (split || pAb->AbInLine), carIndex);
 			 pChildAb = pChildAb->AbNext;
 		      }
 		    GiveEnclosureSize (pAb, frame, &width, &height);
@@ -2214,11 +2214,11 @@ int                 frame;
 	     if (!orgXComplete || !orgYComplete)
 	       {
 		  /* Initialise le placement des boites creees */
-		  SetBoxToTranslate (pAb, !orgXComplete, !orgYComplete);
+		  SetBoxToTranslate (pAb, (boolean)(!orgXComplete), (boolean)!orgYComplete);
 		  /* La boite racine va etre placee */
 		  pBox->BxXToCompute = FALSE;
 		  pBox->BxYToCompute = FALSE;
-		  AddBoxTranslations (pAb, pFrame->FrVisibility, frame, !orgXComplete, !orgYComplete);
+		  AddBoxTranslations (pAb, pFrame->FrVisibility, frame, (boolean)(!orgXComplete), (boolean)(!orgYComplete));
 	       }
 
 	     /* On prepare le reaffichage */

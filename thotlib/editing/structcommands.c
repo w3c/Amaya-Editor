@@ -2488,7 +2488,7 @@ PtrDocument	 pDoc;
          Sibling = pElem->ElPrevious;
          pElem->ElPrevious = NULL;
          }
-     ok = AllowedSibling (pElem, pDoc, typeNum, pSS, !createAfter, TRUE,FALSE);
+     ok = AllowedSibling (pElem, pDoc, typeNum, pSS, (boolean)(!createAfter), TRUE,FALSE);
      /* restore link with sibling */
      if (*splitElem)
        if (createAfter)
@@ -2886,7 +2886,7 @@ boolean             Before;
 			      do
 				{
 				  ok = AllowedSibling (pElem, pSelDoc, typeNum,
-					       pSS, !createAfter, TRUE, FALSE);
+					       pSS, (boolean)(!createAfter), TRUE, FALSE);
 				  if (ok)
 				    {
 				      pEl = pElem;

@@ -3070,8 +3070,7 @@ boolean            *removeEl;
 	       if (pElGet != NULL)
 		  /* traduit l'element a prendre, sauf s'il a deja ete traduit et */
 		  /* qu'il s'agit d'une regle Get */
-		  TranslateTree (pElGet, pDocGet, *transChar, *lineBreak,
-				 pTRule->TrType == TCopy);
+		  TranslateTree (pElGet, pDocGet, *transChar, *lineBreak, (boolean)(pTRule->TrType == TCopy));
 	       break;
 	    case TUse:
 	       /* On ne fait rien. Cette regle est utilisee uniquement */

@@ -69,7 +69,7 @@ int                 UserErrorCode;
 boolean             PrintErrorMessages = TRUE;
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 #ifndef _WIN_PRINT
@@ -222,6 +222,7 @@ STRING              applicationName;
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (-1);
    DOT_PER_INCHE = GetDeviceCaps(TtDisplay, LOGPIXELSY);
+   WIN_ReleaseDeviceContext ();
    /* DOT_PER_INCHE = 72; */
 #  else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;

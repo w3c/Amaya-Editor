@@ -11,6 +11,8 @@
 #include "constint.h"
 #include "typeint.h"
 
+#include "fileaccess_f.h"
+
 static PtrTranslationSchema TranslationSchemas = NULL;
 static int                  NbTranslationSchema = 0;
 static int                  CurrentTypeNum      = 0;
@@ -327,7 +329,7 @@ SSchema sSchema;
 #endif /*__STDC__*/
 
 {
-  FILE     *file;
+  BinFile   file;
   int       i=0;
   int       f=0;
   boolean   ok=FALSE;
@@ -356,7 +358,7 @@ SSchema sSchema;
 	  strcat(filename,".X");
 	  if (TtaFileExist(filename))
 	    {
-	      file=TtaReadOpen(filename);
+	      file = TtaReadOpen (filename);
 	      ok=TRUE;
 	    }
 	  else {

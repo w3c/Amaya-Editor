@@ -90,7 +90,7 @@ static Menu_Ctl    *DocumentMenuList;
 static SchemaMenu_Ctl *SchemasMenuList;
 
 #ifdef _WINDOWS
-#include "win_f.h"
+#include "wininclude.h"
 #define WM_ENTER (WM_USER)
 
 extern TBADDBITMAP ThotTBBitmap;
@@ -1908,11 +1908,11 @@ View                view;
      }
 #  else  /* _WINDOWS */
    if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame])) {
-      hmenu = GetMenu (FrMainRef[frame]); 
+      hmenu = WIN_GetMenu (frame); 
       CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
       ShowWindow (WinToolBar[frame], SW_HIDE);
    } else {
-        hmenu = GetMenu (FrMainRef[frame]); 
+        hmenu = WIN_GetMenu (frame); 
         CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
         ShowWindow (WinToolBar[frame], SW_SHOW);
    }
@@ -2306,7 +2306,7 @@ View                view;
 	     for (index = 0; index <  MAX_TEXTZONE; index++) {
 		 if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
             if (!itemChecked) {
-               hmenu = GetMenu (FrMainRef[frame]); 
+               hmenu = WIN_GetMenu (frame); 
                CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
                itemChecked = TRUE ;
             }
@@ -2315,7 +2315,7 @@ View                view;
 		    ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE);
 		 } else {
               if (!itemChecked) {
-                 hmenu = GetMenu (FrMainRef[frame]); 
+                 hmenu = WIN_GetMenu (frame); 
                  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
               }
 
@@ -3264,7 +3264,7 @@ boolean      on;
 	      ref = FrameTable[frame].MenuUndo;
 	      item = FrameTable[frame].EntryUndo;
 #ifdef _WINDOWS
-	      hMenu = GetMenu (frame);
+	      hMenu = WIN_GetMenu (frame);
 	      if (on)
 		EnableMenuItem (hMenu, ref + item, MF_ENABLED);
 	      else
@@ -3291,7 +3291,7 @@ boolean      on;
 	  ref = FrameTable[frame].MenuUndo;
 	  item = FrameTable[frame].EntryUndo;
 #ifdef _WINDOWS
-	  hMenu = GetMenu (frame);
+	  hMenu = WIN_GetMenu (frame);
 	  if (on)
 	    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
 	  else
@@ -3344,7 +3344,7 @@ boolean      on;
 	      ref = FrameTable[frame].MenuRedo;
 	      item = FrameTable[frame].EntryRedo;
 #ifdef _WINDOWS
-	      hMenu = GetMenu (frame);
+	      hMenu = WIN_GetMenu (frame);
 	      if (on)
 		EnableMenuItem (hMenu, ref + item, MF_ENABLED);
 	      else
@@ -3371,7 +3371,7 @@ boolean      on;
 	  ref = FrameTable[frame].MenuRedo;
 	  item = FrameTable[frame].EntryRedo;
 #ifdef _WINDOWS
-	  hMenu = GetMenu (frame);
+	  hMenu = WIN_GetMenu (frame);
 	  if (on)
 	    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
 	  else
@@ -3426,7 +3426,7 @@ boolean      on;
 	      if (ref != -1)
 		{
 #ifdef _WINDOWS
-		  hMenu = GetMenu (frame);
+		  hMenu = WIN_GetMenu (frame);
 		  if (on)
 		    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
 		  else

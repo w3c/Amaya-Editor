@@ -71,7 +71,7 @@
 #ifdef _WINDOWS 
 #include "units_tv.h"
 
-#include "win_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
@@ -844,8 +844,8 @@ PictInfo           *imageDesc;
       yFrame = yFrame - picYOrg;
       picYOrg = 0;
     }
-# ifdef _WINDOWS 
-		 
+
+# ifdef _WINDOWS 		 
   if (!TtIsTrueColor) {
      WIN_InitSystemColors (TtDisplay);
      SelectPalette (TtDisplay, TtCmap, FALSE);

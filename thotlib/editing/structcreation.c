@@ -101,6 +101,7 @@ static boolean      createPasteMenuOK;
 #include "structselect_f.h"
 #include "structschema_f.h"
 #include "tree_f.h"
+#include "undo_f.h"
 #include "viewcommands_f.h"
 #include "views_f.h"
 
@@ -2297,7 +2298,7 @@ boolean             inclusion;
 	     notifyEl.position = nSiblings;
 	     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	       {
-		  pNew = NewSubtree (typeNum, pSS, pDoc, pEl->ElAssocNum, !inclusion,
+		  pNew = NewSubtree (typeNum, pSS, pDoc, pEl->ElAssocNum, (boolean)(!inclusion),
 				     TRUE, TRUE, TRUE);
 		  if (inclusion)
 		     /* dans le cas d'une inclusion, si l'element a inclure */
@@ -2372,7 +2373,7 @@ boolean             inclusion;
 		       switch (pLeaf->ElStructSchema->SsRule[pLeaf->ElTypeNumber - 1].SrConstruct)
 			     {
 				case CsChoice:
-				   ok = CreeChoix (pDoc, &pLeaf, &pRet, &assocCreated, !inclusion);
+				   ok = CreeChoix (pDoc, &pLeaf, &pRet, &assocCreated, (boolean)(!inclusion));
 				   if (!ok)
 				      /* l'utilisateur a abandonne' la creation de cet element */
 				     {
@@ -3302,8 +3303,8 @@ int                *nItems;
 		 && ElemTypeAction[i] == ElemTypeAction[*nItems - 1]
 		 && SSchemaAction[i] == SSchemaAction[*nItems - 1])
 	       {
-		  UserElementName (ElemAction[i], Action[i] == InsertBefore, typeName1);
-		  UserElementName (ElemAction[*nItems - 1], Action[i] == InsertBefore, typeName2);
+		  UserElementName (ElemAction[i], (boolean)(Action[i] == InsertBefore), typeName1);
+		  UserElementName (ElemAction[*nItems - 1], (boolean)(Action[i] == InsertBefore), typeName2);
 		  if (ustrcmp (typeName1, typeName2) == 0)
 		     found = TRUE;
 	       }
@@ -3704,7 +3705,7 @@ boolean            *ret;
 	ok = FALSE;
 	while (pEl != NULL && !ok)
 	  {
-	     ok = CanCreateWithinElement (pEl, (!create && !paste));
+	     ok = CanCreateWithinElement (pEl, (boolean)(!create && !paste));
 	     if (!ok)
 		pEl = NextInSelection (pEl, lastSel);
 	  }

@@ -270,7 +270,7 @@ Restruct resctx;
    SEmp = resctx->RSrcPrint->SPrint;
    /* si les empreintes n'ont pas la meme longueur, ce n'est pas la peine */
    l = strlen (SEmp);
-   if (l != strlen (DEmp))
+   if ((size_t)l != strlen (DEmp))
      {
        resctx->RRelation = NONE;
        return;

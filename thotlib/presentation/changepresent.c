@@ -2023,7 +2023,7 @@ boolean             Background;
 			   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
 					   ' ', FALSE, 0, FALSE,
 					   modifFillPattern, fillPatternNum,
-					   Background, colorNum, !Background,
+					   (boolean)Background, colorNum, (boolean)(!Background),
 					   colorNum);
 			/* si on est dans un element copie' par inclusion,   */
 			/* on met a jour les copies de cet element. */

@@ -71,8 +71,9 @@ STRING        name;
 #endif /* __STDC__ */
 {
     UCHAR idx = 0;
+	PCHAR ptr = name;
 
-    while (*name != EOS) idx += (UCHAR) *name++;
+    while (*ptr != EOS) idx += (UCHAR) *ptr++;
     return((int) idx);
 }
 

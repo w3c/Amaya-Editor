@@ -3440,7 +3440,7 @@ boolean		    removeExclusions
    if (!error && (tag == (CHAR) C_PIV_COMMENT ||
 		  tag == (CHAR) C_PIV_OLD_COMMENT))
      {
-	pDoc->DocComment = ReadComment (file, TRUE, (tag == (CHAR) C_PIV_OLD_COMMENT));
+	pDoc->DocComment = ReadComment (file, TRUE, (boolean)(tag == (CHAR) C_PIV_OLD_COMMENT));
 	/* lit l'octet suivant le commentaire */
 	if (!TtaReadByte (file, &tag))
 	   PivotError (file);
@@ -3521,7 +3521,7 @@ boolean		    removeExclusions
 		rule = 0;
 		pNat = NULL;
 		p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0, TRUE,
-				 !pDoc->DocExportStructure, &rule, &pNat,
+				 (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
 				 &typeRead, &pSS, createPages, NULL, TRUE);
 		if (withEvent && pDoc->DocSSchema != NULL && !error)
 		   SendEventAttrRead (p, pDoc);
@@ -3557,7 +3557,7 @@ boolean		    removeExclusions
 	     pNat = NULL;
 
 	     p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc, FALSE,
-			      !pDoc->DocExportStructure, &rule, &pNat,
+			      (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
 			      &typeRead, &pSS, createPages, NULL, TRUE);
 	     if (withEvent && pDoc->DocSSchema != NULL && !error)
 		SendEventAttrRead (p, pDoc);
@@ -3591,7 +3591,7 @@ boolean		    removeExclusions
 			  rule = 0;
 			  pNat = NULL;
 			  s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-			     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
+			     FALSE, (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
 				  &typeRead, &pSS, createPages, NULL, TRUE);
 			  if (withEvent && pDoc->DocSSchema != NULL && !error)
 			     SendEventAttrRead (s, pDoc);
@@ -3658,7 +3658,7 @@ boolean		    removeExclusions
 		       rule = 0;
 		       pNat = NULL;
 		       s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-			     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
+			     FALSE, (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
 					&typeRead, &pSS, createPages,
 					pDoc->DocAssocRoot[assoc - 1], TRUE);
 		       if (withEvent && pDoc->DocSSchema != NULL && !error)
@@ -3709,7 +3709,7 @@ boolean		    removeExclusions
 			rule = 0;
 			pNat = NULL;
 			p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
-			     FALSE, !pDoc->DocExportStructure, &rule, &pNat,
+			     FALSE, (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
 				  &typeRead, &pSS, createPages, NULL, TRUE);
 			if (withEvent && pDoc->DocSSchema != NULL && !error)
 			   SendEventAttrRead (p, pDoc);
