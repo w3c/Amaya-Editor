@@ -2670,6 +2670,7 @@ void MathMLSetScriptLevel (doc, el, value)
        {
        if (relative)
 	 {
+	 percentage = 100;
          if (pval.typed_data.value == 0)
 	   /* scriptlevel="+0" */
 	   percentage = 100;
