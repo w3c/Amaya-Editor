@@ -2788,10 +2788,11 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
     return;
   if (sel_data->type != GDK_SELECTION_TYPE_STRING)
     return;
-  if (Xbuffer)
-    TtaFreeMemory (Xbuffer);
-  Xbuffer = TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
-  strcpy (Xbuffer, sel_data->data);
+  if (Xbuffer == NULL)
+    {
+      Xbuffer = TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
+      strcpy (Xbuffer, sel_data->data);
+    }
   return;
 } 
 
@@ -2800,35 +2801,30 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
   get_targets
   Signal handler invoked when user focus on drawing area 
   -------------------------------------------------------------------------*/
-void get_targets ( GtkWidget *widget,  gpointer data )
+void get_targets (GtkWidget *widget, gpointer data)
 {
   static GdkAtom targets_atom = GDK_NONE;
   
   if (targets_atom == GDK_NONE)
     targets_atom = gdk_atom_intern ("STRING", FALSE);
   if (FrameTable[ActiveFrame].WdFrame)
-    {
-      gtk_selection_convert (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame), 
-			     GDK_SELECTION_PRIMARY, 
-			     targets_atom,  
-			     GDK_CURRENT_TIME);
-    }
+    gtk_selection_convert (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame), 
+			   GDK_SELECTION_PRIMARY, 
+			   targets_atom,  
+			   GDK_CURRENT_TIME);
 }
 
 /*-----------------------------------------------------------------------
  selection_clear
  Called when another application claims the selection 
 -------------------------------------------------------------------------*/
-gint selection_clear ( GtkWidget         *widget,
-    GdkEventSelection *event,
-    gpointer data )
+gint selection_clear (GtkWidget *widget, GdkEventSelection *event, gpointer data)
 {
-  if (Xbuffer != NULL)
+  if (Xbuffer)
     free(Xbuffer);
   Xbuffer = NULL;
   ClipboardLength = 0;
   TtaClearViewSelections ();
-  
   return TRUE;
 }
  
@@ -2849,19 +2845,19 @@ void selection_handle (GtkWidget        *widget,
 			    GDK_SELECTION_TYPE_STRING,
 			    8, 
 			    Xbuffer, 
-			    strlen(Xbuffer));
+			    strlen (Xbuffer));
 }
 
-/*When user begin a new selection*/
+/*-----------------------------------------------------------------------
+  When user begin a new selection
+-------------------------------------------------------------------------*/
 void gtk_claim_selection()
 {
   if (FrameTable[ActiveFrame].WdFrame)
-    {
-      /* but now we own the selection, so goodbye to the other app */
-      gtk_selection_owner_set (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame),
-			       GDK_SELECTION_PRIMARY,
-			       GDK_CURRENT_TIME);
-    }
+    /* but now we own the selection, so goodbye to the other app */
+    gtk_selection_owner_set (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame),
+			     GDK_SELECTION_PRIMARY,
+			     GDK_CURRENT_TIME);
 }
 #endif /* _GTK */
 /*----------------------------------------------------------------------
