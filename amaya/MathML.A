@@ -18,4 +18,6 @@ ELEMENTS
 	ElemTextModify.Post -> MathStringModified;
    TEXT_UNIT:
 	ElemNew.Post -> NewMathString;
+   Construct:
+	ElemDelete.Pre -> DeleteConstruct;
 END

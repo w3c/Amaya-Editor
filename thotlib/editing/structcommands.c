@@ -1468,6 +1468,11 @@ boolean             save;
 			     if (pAncestorNext[i] != NULL)
 				if (DocumentOfElement (pAncestorNext[i]) == pSelDoc)
 				   pNext = pAncestorNext[i];
+				else
+				   if (pAncestorPrev[i] != NULL)
+				      if (DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
+					if (pAncestorPrev[i]->ElNext != NULL)
+					   pNext = pAncestorPrev[i]->ElNext;
 			     }
 
 			  pPrev = NULL;
@@ -1476,6 +1481,11 @@ boolean             save;
 			     if (pAncestorPrev[i] != NULL)
 				if (DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
 				   pPrev = pAncestorPrev[i];
+				else
+				   if (pAncestorNext[i] != NULL)
+				      if (DocumentOfElement (pAncestorNext[i]) == pSelDoc)
+					if (pAncestorNext[i]->ElPrevious != NULL)
+					   pPrev = pAncestorNext[i]->ElPrevious;
 			     }
 
 			  /* reaffiche les paves qui copient les elements detruits */

@@ -109,26 +109,81 @@ int                 index;
 }
 
 /*----------------------------------------------------------------------
-   InsertPlaceholder
+  DeleteIfPlaceholder
+  
+  Delete element el if it's a placeholder.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void          InsertPlaceholder (Element el, boolean before, Document doc)
+static void       DeleteIfPlaceholder (Element* el, Document doc)
 #else
-static void          InsertPlaceholder (el, before, doc)
+static void       DeleteIfPlaceholder (el, doc)
+Element* el;
+Document doc;
+
+#endif
+{
+Attribute	attr;
+ElementType	elType;
+AttributeType	attrType;
+
+     elType = TtaGetElementType (*el);
+     if (elType.ElTypeNum == MathML_EL_Construct)
+	{
+        attrType.AttrSSchema = elType.ElSSchema;
+        attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	attr = TtaGetAttribute (*el, attrType);
+	if (attr != NULL)
+	   /* this element is a placeholder. Delete it */
+	   {
+	   TtaDeleteTree (*el, doc);
+	   *el = NULL;
+	   }
+	}
+}
+
+/*----------------------------------------------------------------------
+  InsertPlaceholder
+  
+  Return the new placeholder, if one has been created. Return NULL if
+  no placeholder created.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element       InsertPlaceholder (Element el, boolean before, Document doc)
+#else
+static Element       InsertPlaceholder (el, before, doc)
 Element el;
 boolean before;
 Document doc;
 
 #endif
 {
-Element		sibling;
+Element		sibling, placeholderEl;
 Attribute	attr;
 ElementType	elType;
 AttributeType	attrType;
 boolean		createConstruct;
 
+     placeholderEl = NULL;
      elType = TtaGetElementType (el);
-     if (elType.ElTypeNum == MathML_EL_MROW ||
+
+     if (elType.ElTypeNum == MathML_EL_Construct)
+	{
+        attrType.AttrSSchema = elType.ElSSchema;
+        attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	attr = TtaGetAttribute (el, attrType);
+	if (attr != NULL)
+	   /* this element is a placeholder. Delete its next or previous
+	      siblings if they are placeholders too */
+	   {	
+	   sibling = el;
+	   TtaPreviousSibling (&sibling);
+	   DeleteIfPlaceholder (&sibling, doc);
+	   sibling = el;
+	   TtaNextSibling (&sibling);
+	   DeleteIfPlaceholder (&sibling, doc);
+	   }
+	}
+     else if (elType.ElTypeNum == MathML_EL_MROW ||
 	 elType.ElTypeNum == MathML_EL_MROOT ||
 	 elType.ElTypeNum == MathML_EL_MSQRT ||
 	 elType.ElTypeNum == MathML_EL_MFRAC ||
@@ -145,23 +200,25 @@ boolean		createConstruct;
 	if (before)
 	   TtaPreviousSibling (&sibling);
 	else
-	TtaNextSibling (&sibling);
+	   TtaNextSibling (&sibling);
 	createConstruct = TRUE;
 	if (sibling != NULL)
-	if (!ElementNeedsPlaceholder (sibling))
-	   createConstruct = FALSE;
+	   if (!ElementNeedsPlaceholder (sibling))
+	      createConstruct = FALSE;
 	if (createConstruct)
 	   {
 	   elType.ElTypeNum = MathML_EL_Construct;
-	   sibling = TtaNewElement (doc, elType);
-	   TtaInsertSibling (sibling, el, before, doc);
+	   placeholderEl = TtaNewElement (doc, elType);
+	   TtaInsertSibling (placeholderEl, el, before, doc);
            attrType.AttrSSchema = elType.ElSSchema;
            attrType.AttrTypeNum = MathML_ATTR_placeholder;
            attr = TtaNewAttribute (attrType);
-           TtaAttachAttribute (sibling, attr, doc);
-           TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, sibling, doc);
+           TtaAttachAttribute (placeholderEl, attr, doc);
+           TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_,
+				 placeholderEl, doc);
 	   }
 	}
+     return placeholderEl;
 }
 
 /*----------------------------------------------------------------------
@@ -264,7 +321,8 @@ int                 construct;
 #endif
 {
   Document           doc;
-  Element            sibling, last, el, row, fence, symbol, child, leaf;
+  Element            sibling, last, el, row, fence, symbol, child, leaf,
+		     placeholderEl;
   ElementType        newType, elType, symbType;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len;
@@ -586,8 +644,8 @@ int                 construct;
 	  
 	  CreateParentMROW (el, doc);
 	  
-	  InsertPlaceholder (el, TRUE, doc);
-	  InsertPlaceholder (el, FALSE, doc);
+	  placeholderEl = InsertPlaceholder (el, TRUE, doc);
+	  placeholderEl = InsertPlaceholder (el, FALSE, doc);
 
 	  TtaSetDisplayMode (doc, DisplayImmediately);
 	  /* check the Thot abstract tree against the structure schema. */
@@ -935,8 +993,11 @@ static void CheckMROW (el, doc)
   Document doc;
 #endif /* __STDC__*/
 {
-  Element	firstChild, child;
+  Element	child, firstChild, next;
   ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		nChildren;
 
   elType = TtaGetElementType (*el);
   if (elType.ElTypeNum == MathML_EL_MROW)
@@ -944,14 +1005,41 @@ static void CheckMROW (el, doc)
      {
      firstChild = TtaGetFirstChild (*el);
      child = firstChild;
-     TtaNextSibling (&child);
-     if (child == NULL)
-       /* there is only one element in the MROW. Remove the MROW */
+     /* count all children that are not placeholders */
+     nChildren = 0;
+     while (child != NULL && nChildren < 2)
+	{
+	elType = TtaGetElementType (child);
+	if (elType.ElTypeNum != MathML_EL_Construct)
+	   /* this is not a Construct */
+	   nChildren++;
+	else
+	   {
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	   attr = TtaGetAttribute (child, attrType);
+	   if (attr == NULL)
+	      /* this is not a placeholder */
+	      nChildren++;
+	   }
+        TtaNextSibling (&child);
+	}
+
+     if (nChildren == 1)
+       /* there is only one element that is not a placeholder in the MROW.
+          Remove the MROW */
        {
        TtaSetDisplayMode (doc, DeferredDisplay);
        TtaSetStructureChecking (0, doc);
-       TtaRemoveTree (firstChild, doc);
-       TtaInsertSibling (firstChild, *el, TRUE, doc);
+       child = firstChild;
+       while (child != NULL)
+	  {
+	  next = child;
+	  TtaNextSibling (&next);
+          TtaRemoveTree (child, doc);
+          TtaInsertSibling (child, *el, TRUE, doc);
+	  child = next;
+	  }
        TtaDeleteTree (*el, doc);
        *el = NULL;
        TtaSetStructureChecking (1, doc);
@@ -1178,7 +1266,8 @@ static void ParseMathString (theText, theElem, doc)
 
 {
   Element	el, selEl, prevEl, nextEl, textEl, newEl, lastEl,
-		firstEl, newSelEl, prev, next, parent, UnderOverComp;
+		firstEl, newSelEl, prev, next, parent, UnderOverComp,
+		placeholderEl;
   ElementType	elType, elType2;
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
@@ -1285,13 +1374,30 @@ static void ParseMathString (theText, theElem, doc)
        el = theText;
        TtaNextSibling (&el);
        if (el == NULL)
-	  /* the text element has no sibling */
+	  /* the text element has no sibling, delete its parent */
 	  {
 	  if (newSelEl != NULL)
 	     newSelEl = ClosestLeaf (theElem, &newSelChar);
 	  el = TtaGetParent (theElem);
+	  prev = theElem;
+	  TtaPreviousSibling (&prev);
+	  if (prev == NULL)
+	     {
+	     next = theElem;
+	     TtaNextSibling (&next);
+	     }
+
 	  TtaDeleteTree (theElem, doc);
 	  theElem = NULL;
+
+	  placeholderEl = NULL;
+	  if (prev != NULL)
+	     placeholderEl = InsertPlaceholder (prev, FALSE, doc);
+	  else if (next != NULL)
+	     placeholderEl = InsertPlaceholder (next, TRUE, doc);
+	  if (placeholderEl != NULL)
+	     newSelEl = placeholderEl;   
+
 	  CheckMROW (&el, doc);
 	  if (el != NULL)
 	   if (TtaGetFirstChild (el) == NULL)
@@ -1338,8 +1444,7 @@ static void ParseMathString (theText, theElem, doc)
 	     else if (next != NULL)
 	        TtaInsertSibling (theElem, next, TRUE, doc);
 	     else
-	        TtaInsertFirstChild (&theElem, parent, doc);
-	     
+	        TtaInsertFirstChild (&theElem, parent, doc);	     
 	     }
 	  textEl = theText;
 	  firstEl = theElem;
@@ -1498,16 +1603,19 @@ void MathElementPasted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
+   Element	placeholderEl;
+
    TtaSetStructureChecking (0, event->document);
-   InsertPlaceholder (event->element, TRUE, event->document);
-   InsertPlaceholder (event->element, FALSE, event->document);
+   placeholderEl = InsertPlaceholder (event->element, TRUE, event->document);
+   placeholderEl = InsertPlaceholder (event->element, FALSE, event->document);
    TtaSetStructureChecking (1, event->document);
 }
 
 
 /*----------------------------------------------------------------------
  MathElementDeleted
- An element has been deleed in a MathML structure.
+ An element has been deleted in a MathML structure.
+ Create the necessary placeholders.
  Remove the enclosing MROW element if it has only one child.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1517,7 +1625,58 @@ void MathElementDeleted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
+   Element	child, placeholderEl;
+   int		i;
+
+   child = TtaGetFirstChild (event->element);
+   if (event->position == 0)
+      {
+      /* the first child of event->element has been deleted.
+	 Create a placeholder before the new first child */
+      if (child != NULL)
+         placeholderEl = InsertPlaceholder (child, TRUE, event->document);
+      }
+   else
+      {
+      for (i = 1; i < event->position && child != NULL; i++)
+         TtaNextSibling (&child);
+      if (child != NULL)
+         placeholderEl = InsertPlaceholder (child, FALSE, event->document);
+      }
+   
    CheckMROW (&event->element, event->document);
 }
+
+/*----------------------------------------------------------------------
+ DeleteConstruct
+ The user wants to delete a Construct element
+ Prevent him from deleting plave holders.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean DeleteConstruct (NotifyElement *event)
+#else /* __STDC__*/
+boolean DeleteConstruct(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+
+  elType = TtaGetElementType (event->element);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_placeholder;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (attr == NULL)
+     /* this is not a placeholder */
+     return FALSE; /* let Thot perform normal operation */
+  else
+     {
+     TtaSelectElement (event->document, event->element);
+     /* ask Thot to not perform the Delete operation */
+     return TRUE;
+     }
+}
+
 
 #endif /* MATHML */
