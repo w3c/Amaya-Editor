@@ -13,6 +13,7 @@
  *
  */
 
+#ifdef _GL
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
 #include <GL/gl.h>
@@ -25,7 +26,7 @@
 #include <GL/glu.h>
 #endif /* _WINDOWS */
 #endif /*_GTK*/
-
+#endif /*  _GL */
 
 #include "ustring.h"
 #include "math.h"
