@@ -196,16 +196,17 @@ int                 extra;
    while (cur != NULL)
      {
        /* shortcut : rules are sorted by type and view number */
-       if (cur->PrType > type)
+       if (cur->PrType > type ||
+	  (cur->PrType == type && type == PtFunction && cur->PrPresFunction > extra))
 	 cur = NULL;
        else
 	 {
 	   /* last specific rule */
 	   prev = cur;
-	   if ((cur->PrViewNum == 1) &&
-	       ((cur->PrType == type && extra <= 0) ||
-		/* check for extra specification in case of function rule */
-		(cur->PrType == PRFunction && cur->PrPresFunction == extra)))
+	   if (cur->PrViewNum == 1 && cur->PrType == type &&
+	       (type != PRFunction ||
+	       /* check for extra specification in case of function rule */
+	       (type == PRFunction && cur->PrPresFunction == extra)))
 	     {
 	       /* this specific rule already exists */
 	       pRule = cur;
@@ -610,8 +611,6 @@ PresentationValue   v;
    PtrPRule            rule;
    SpecificTarget      el = (SpecificTarget) t;
    SpecificContext     ctxt = (SpecificContext) c;
-   int                 cst;
-   PSchema             tsch = GetDocumentMainPSchema (ctxt->doc);
 
    if (ctxt->destroy)
      {
@@ -637,7 +636,6 @@ PresentationValue  *v;
 #endif
 {
    SpecificTarget      el = (SpecificTarget) t;
-   PtrPSchema          pSchemaPrs;
    SpecificContext     ctxt = (SpecificContext) c;
    PtrPRule            rule;
 
@@ -662,8 +660,6 @@ PresentationValue   v;
    PtrPRule            rule;
    SpecificTarget      el = (SpecificTarget) t;
    SpecificContext     ctxt = (SpecificContext) c;
-   int                 cst;
-   PSchema             tsch = GetDocumentMainPSchema (ctxt->doc);
 
    if (ctxt->destroy)
      {
@@ -689,7 +685,6 @@ PresentationValue  *v;
 #endif
 {
    SpecificTarget      el = (SpecificTarget) t;
-   PtrPSchema          pSchemaPrs;
    SpecificContext     ctxt = (SpecificContext) c;
    PtrPRule            rule;
 
@@ -778,8 +773,6 @@ PresentationValue   v;
    PtrPRule            rule;
    SpecificTarget      el = (SpecificTarget) t;
    SpecificContext     ctxt = (SpecificContext) c;
-   int                 cst;
-   PSchema             tsch = GetDocumentMainPSchema (ctxt->doc);
 
    if (ctxt->destroy)
      {
@@ -806,7 +799,6 @@ PresentationValue  *v;
 #endif
 {
    SpecificTarget      el = (SpecificTarget) t;
-   PtrPSchema          pSchemaPrs;
    SpecificContext     ctxt = (SpecificContext) c;
    PtrPRule            rule;
 
