@@ -61,6 +61,22 @@ thotlib_APISelection_TtaSelectElement(struct Hthotlib_APISelection* none, jint d
 }
 
 /*
+ * Java to C function TtaSelectView stub.
+ */
+void
+thotlib_APISelection_TtaSelectView(struct Hthotlib_APISelection* none, jint document, jint view)
+{
+
+
+	thotlib_APISelection_LOCK();
+
+	TtaSelectView((Document ) document, (View ) view);
+
+	thotlib_APISelection_UNLOCK();
+
+}
+
+/*
  * Java to C function TtaSelectString stub.
  */
 void
@@ -240,28 +256,13 @@ thotlib_APISelection_TtaGiveLastSelectedElement(struct Hthotlib_APISelection* no
 }
 
 /*
- * Java to C function TtaSelectView stub.
- */
-void
-thotlib_APISelection_TtaSelectView(struct Hthotlib_APISelection* none, jint document, jint view)
-{
-
-
-	thotlib_APISelection_LOCK();
-
-	TtaSelectView((Document ) document, (View ) view);
-
-	thotlib_APISelection_UNLOCK();
-
-}
-
-/*
  * Function to register all thotlib_APISelection stubs.
  */
 void register_thotlib_APISelection_stubs(void)
 {
 	addNativeMethod("thotlib_APISelection_TtaIsDocumentSelected", thotlib_APISelection_TtaIsDocumentSelected);
 	addNativeMethod("thotlib_APISelection_TtaSelectElement", thotlib_APISelection_TtaSelectElement);
+	addNativeMethod("thotlib_APISelection_TtaSelectView", thotlib_APISelection_TtaSelectView);
 	addNativeMethod("thotlib_APISelection_TtaSelectString", thotlib_APISelection_TtaSelectString);
 	addNativeMethod("thotlib_APISelection_TtaExtendSelection", thotlib_APISelection_TtaExtendSelection);
 	addNativeMethod("thotlib_APISelection_TtaSelectInterval", thotlib_APISelection_TtaSelectInterval);
@@ -270,6 +271,5 @@ void register_thotlib_APISelection_stubs(void)
 	addNativeMethod("thotlib_APISelection_TtaGiveFirstSelectedElement", thotlib_APISelection_TtaGiveFirstSelectedElement);
 	addNativeMethod("thotlib_APISelection_TtaGiveNextSelectedElement", thotlib_APISelection_TtaGiveNextSelectedElement);
 	addNativeMethod("thotlib_APISelection_TtaGiveLastSelectedElement", thotlib_APISelection_TtaGiveLastSelectedElement);
-	addNativeMethod("thotlib_APISelection_TtaSelectView", thotlib_APISelection_TtaSelectView);
 }
 

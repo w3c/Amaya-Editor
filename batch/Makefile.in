@@ -11,7 +11,7 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-LIBS	= ../thotlib/libThotKernel.a @LIBS@
+LIBS	= ../thotlib/libThotKernel.a @LIBS@ @EXTRA_LIBS@
 INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
 
 prefix = @prefix@
@@ -29,7 +29,7 @@ all : ../bin $(COMPILERS)
 force :
 
 ../thotlib/libThotKernel.a : force
-	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotKernel.a)
+	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotKernel)
 
 ../bin :
 	$(MKDIR) ../bin
@@ -42,7 +42,7 @@ GRM_OBJ= \
 	parser.o \
 	grammar.o 
 
-grm : ../bin ../bin/grm
+grm : ../thotlib/libThotKernel.a ../bin ../bin/grm
 	
 
 ../bin/grm : $(GRM_OBJ) ../thotlib/libThotKernel.a
@@ -58,7 +58,7 @@ STR_OBJ = \
 	writestr.o \
 	str.o
 
-str : ../bin ../bin/str
+str : ../thotlib/libThotKernel.a ../bin ../bin/str
 	
 
 ../bin/str : $(STR_OBJ) ../thotlib/libThotKernel.a
@@ -74,7 +74,7 @@ PRS_OBJ = \
 	writeprs.o \
 	prs.o
 
-prs : ../bin ../bin/prs
+prs : ../thotlib/libThotKernel.a ../bin ../bin/prs
 	
 
 ../bin/prs : $(PRS_OBJ) ../thotlib/libThotKernel.a
@@ -90,7 +90,7 @@ TYP_OBJ = \
 	writetyp.o \
 	typ.o
 
-typ : ../bin ../bin/typ
+typ : ../thotlib/libThotKernel.a ../bin ../bin/typ
 	
 
 ../bin/typ : $(TYP_OBJ) ../thotlib/libThotKernel.a
@@ -106,7 +106,7 @@ TRA_OBJ = \
 	writetra.o \
 	tra.o
 
-tra : ../bin ../bin/tra
+tra : ../thotlib/libThotKernel.a ../bin ../bin/tra
 	
 
 ../bin/tra : $(TRA_OBJ) ../thotlib/libThotKernel.a
@@ -123,7 +123,7 @@ APP_OBJ = \
 	writeapp.o \
 	app.o
 
-app : ../bin ../bin/app
+app : ../thotlib/libThotKernel.a ../bin ../bin/app
 	
 
 ../bin/app : $(APP_OBJ) ../thotlib/libThotKernel.a
@@ -136,7 +136,7 @@ app : ../bin ../bin/app
 PRINTSTR_OBJ = \
 	printstr.o
 
-printstr : ../bin ../bin/printstr
+printstr : ../thotlib/libThotKernel.a ../bin ../bin/printstr
 	
 
 ../bin/printstr : $(PRINTSTR_OBJ) ../thotlib/libThotKernel.a
@@ -150,7 +150,7 @@ PRINTPRS_OBJ = \
 	../thotlib/document/readprs.o \
 	printprs.o
 
-printprs : ../bin ../bin/printprs
+printprs : ../thotlib/libThotKernel.a ../bin ../bin/printprs
 	
 
 ../bin/printprs : $(PRINTPRS_OBJ) ../thotlib/libThotKernel.a
@@ -164,7 +164,7 @@ PRINTTYP_OBJ = \
 	../thotlib/document/readtyp.o \
 	printtyp.o
 
-printtyp : ../bin ../bin/printtyp
+printtyp : ../thotlib/libThotKernel.a ../bin ../bin/printtyp
 	
 
 ../bin/printtyp : $(PRINTTYP_OBJ) ../thotlib/libThotKernel.a

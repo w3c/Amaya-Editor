@@ -10,8 +10,9 @@ THOTDIR = @top_srcdir@
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) @X_CFLAGS@
-LIBS	= -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor $(IMGLIBS) $(AMAYA_OPTION_LIBS) \
-          @X_LIBS@ -lXm -lXt -lXext @X_PRE_LIBS@ -lX11 @X_EXTRA_LIBS@ @LIBS@ -lm
+LIBS	= -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
+          $(IMGLIBS) $(AMAYA_OPTION_LIBS) $(X_LIBS) -lXm -lXt -lXext \
+	  $(X_PRE_LIBS) -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -41,10 +42,10 @@ force :
 	@(cd ../batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" app str prs tra)
 
 ../thotlib/libThotEditor.a : force
-	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotEditor.a)
+	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotEditor)
 
 ../tablelib/libThotTable.a : force
-	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable.a)
+	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" libThotTable)
 
 ../libjpeg.a :
 	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")

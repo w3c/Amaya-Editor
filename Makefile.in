@@ -17,6 +17,7 @@ LIBZ	= libz
 
 LINKS	= schemas schemasOPERA config
 SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya
+EXTRA_SUBDIRS= misc
 
 srcdir	= @top_srcdir@
 
@@ -37,6 +38,10 @@ amaya: rebuild force
 	@(if test -d amaya ; then cd amaya ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" amaya ; fi)
 
+misc: rebuild force
+	@(if test -d misc ; then cd misc ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
+
 all : rebuild
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
@@ -44,7 +49,7 @@ all : rebuild
 	  cd .. ; fi ;done )
 
 clean : rebuild
-	@(for dir in $(SUBDIRS) ;\
+	@(for dir in $(SUBDIRS) $(EXTRA_SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" clean ; \
 	  cd .. ; fi ;done )

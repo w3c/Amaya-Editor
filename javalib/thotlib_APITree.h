@@ -33,6 +33,7 @@ typedef struct Classthotlib_APITree {
 } Classthotlib_APITree;
 HandleTo(thotlib_APITree);
 
+extern void thotlib_APITree_ChangeElementType(struct Hthotlib_APITree*, jlong, jint);
 extern jlong thotlib_APITree_TtaNewElement(struct Hthotlib_APITree*, jint, jlong);
 extern jlong thotlib_APITree_TtaNewTree(struct Hthotlib_APITree*, jint, jlong, struct Hjava_lang_String*);
 extern jlong thotlib_APITree_TtaCopyTree(struct Hthotlib_APITree*, jlong, jint, jint, jlong);

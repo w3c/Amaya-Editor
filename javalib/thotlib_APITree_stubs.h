@@ -12,6 +12,7 @@
 #include "../thotlib/include/tree.h"
 
 
+extern void ChangeElementType(Element element, int typeNum);
 extern Element TtaNewElement(Document document, ElementType elementType);
 extern Element TtaNewTree(Document document, ElementType elementType, char *label);
 extern Element TtaCopyTree(Element sourceElement, Document sourceDocument, Document destinationDocument, Element parent);

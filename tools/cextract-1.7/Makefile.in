@@ -8,7 +8,7 @@ THOTDIR = @top_srcdir@
 
 include ../../Options
 
-LIBS	= @LIBS@ -lm
+LIBS	= @LIBS@ @EXTRA_LIBS@ -lm
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

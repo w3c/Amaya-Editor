@@ -48,6 +48,8 @@ TABLE_OBJ = \
 	table.o \
 	table2.o
 
+libThotTable : libThotTable.a
+
 libThotTable.a : $(TABLE_OBJ)
 	$(AR) libThotTable.a $(TABLE_OBJ)
 	$(RANLIB) libThotTable.a

@@ -1707,6 +1707,8 @@ char               *data;
 	     DoSaveAs ();
 	   else if (SavingObject != 0)
 	     DoSaveObjectAs ();
+	   if ((SavingObject == 0) && (SavingDocument == 0))
+	     TtaDestroyDialogue (BaseDialog + SaveForm);
 	 }
        else if (val == 2)
 	 /* Clear */

@@ -69,6 +69,8 @@ THOT_JAVA_OBJ = \
 	thotlib_APIRegistry_stubs.o \
 	thotlib_APIDialog_stubs.o
 
+libThotJava : libThotJava.a
+
 libThotJava.a : $(THOT_JAVA_OBJ)
 	$(AR) libThotJava.a $(THOT_JAVA_OBJ)
 	$(RANLIB) libThotJava.a
@@ -79,6 +81,8 @@ AMAYA_JAVA_OBJ = \
 	amaya_APIHtml_stubs.o \
 	amaya_APIJavaAmaya_stubs.o \
 	amaya_APIAmayaMsg_stubs.o
+
+libAmayaJava : libAmayaJava.a
 
 libAmayaJava.a : $(AMAYA_JAVA_OBJ)
 	$(AR) libAmayaJava.a $(AMAYA_JAVA_OBJ)

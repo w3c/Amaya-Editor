@@ -152,6 +152,15 @@ KAFFE_VER="0.8.4"
 LIBWWW_VER="5.0a"
 
 dnl
+dnl Check when building with Insure from Parasoft
+dnl
+
+AC_ARG_WITH(thot, --{with|without}-insure : Uses Insure Parasoft debugger)
+if test "$with_insure" = "no" ; then
+    build_thot="no"
+fi
+
+dnl
 dnl Check for availability of amaya and thot editor sources
 dnl
 
@@ -176,6 +185,36 @@ fi
 if test ! -f $srcdir/amaya/Makefile.in ; then
     AC_MSG_WARN(Amaya browser/editor sources not found, disabling Amaya build !)
     build_amaya="no"
+fi
+
+dnl
+dnl Check for external, Thot related programs
+dnl
+
+build_misc="no"
+if test "$build_thot" = "yes" ;  then
+    if test -f $srcdir/misc/Makefile.in ; then
+	build_misc="yes"
+	build_annotations="no"
+	if test -f $srcdir/misc/annotations/Makefile.in ; then
+	    build_annotations="yes"
+	fi
+	if test -f $srcdir/misc/util/Makefile.in ; then
+	    build_util="yes"
+	    build_tableaux="no"
+	    build_transform="no"
+	    build_versions="no"
+	    if test -f $srcdir/misc/util/tableaux/Makefile.in ; then
+		build_tableaux="yes"
+	    fi
+	    if test -f $srcdir/misc/util/transform/Makefile.in ; then
+		build_transform="yes"
+	    fi
+	    if test -f $srcdir/misc/util/versions/Makefile.in ; then
+		build_versions="yes"
+	    fi
+	fi
+    fi
 fi
 
 dnl
@@ -237,6 +276,7 @@ dnl JAVA_OPTIONS="-DDEBUG_KAFFE -DDEBUG_LOCK -DDEBUG_SELECT -DDEBUG_SELECT_CHANN
 JAVA_OPTIONS=
 ANNOTATIONS_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
+EXTRA_LIBS=
 
 dnl
 dnl Set up the PATHs needed
@@ -280,6 +320,7 @@ AC_SUBST(PLUGIN_OPTIONS)
 AC_SUBST(JAVA_OPTIONS)
 AC_SUBST(ANNOTATIONS_OPTIONS)
 AC_SUBST(IMGLIBS)
+AC_SUBST(EXTRA_LIBS)
 
 dnl
 dnl Include the option Makefile.xxx fragment for plugin and or Java options
@@ -336,8 +377,53 @@ $srcdir/pluginlib/Makefile.plugin"
 fi
 
 if test "$build_thot" = "yes" ; then
+
     make_output="$make_output thot/Makefile"
-    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN $srcdir/thot/Makefile.in"
+    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/thot/Makefile.in"
+
+    if test "$build_misc" = "yes" ; then
+
+	make_output="$make_output misc/Makefile"
+	EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/misc/Makefile.in"
+
+	if test "$build_annotations" = "yes" ; then
+
+	    make_output="$make_output misc/annotations/Makefile"
+	    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/misc/annotations/Makefile.in"
+
+	fi
+	if test "$build_util" = "yes" ; then
+
+	    make_output="$make_output misc/util/Makefile"
+	    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/misc/util/Makefile.in"
+
+	    if test "$build_tableaux" = "yes" ; then
+
+		make_output="$make_output misc/util/tableaux/Makefile"
+		EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/misc/util/tableaux/Makefile.in"
+
+	    fi
+	    if test "$build_transform" = "yes" ; then
+
+		make_output="$make_output misc/util/transform/Makefile"
+		EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/misc/util/transform/Makefile.in"
+
+	    fi
+	    if test "$build_versions" = "yes" ; then
+
+		make_output="$make_output misc/util/versions/Makefile"
+		EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
+$srcdir/misc/util/versions/Makefile.in"
+
+	    fi
+	fi
+    fi
 fi
 
 AC_SUBST(EXTRA_MAKEFILE_IN)

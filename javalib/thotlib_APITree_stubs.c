@@ -23,6 +23,25 @@
 #endif /* thotlib_APITree_UNLOCK */
 
 /*
+ * Java to C function ChangeElementType stub.
+ */
+void
+thotlib_APITree_ChangeElementType(struct Hthotlib_APITree* none, jlong jelement, jint typeNum)
+{
+	Element element;
+
+	/* convert arg jlong jelement to Element element */
+	Javalong2CElement(jelement,&element);
+
+	thotlib_APITree_LOCK();
+
+	ChangeElementType((Element ) element, (int ) typeNum);
+
+	thotlib_APITree_UNLOCK();
+
+}
+
+/*
  * Java to C function TtaNewElement stub.
  */
 jlong
@@ -1391,6 +1410,7 @@ thotlib_APITree_TtaAskFirstCreation(struct Hthotlib_APITree* none)
  */
 void register_thotlib_APITree_stubs(void)
 {
+	addNativeMethod("thotlib_APITree_ChangeElementType", thotlib_APITree_ChangeElementType);
 	addNativeMethod("thotlib_APITree_TtaNewElement", thotlib_APITree_TtaNewElement);
 	addNativeMethod("thotlib_APITree_TtaNewTree", thotlib_APITree_TtaNewTree);
 	addNativeMethod("thotlib_APITree_TtaCopyTree", thotlib_APITree_TtaCopyTree);
