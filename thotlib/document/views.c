@@ -716,15 +716,6 @@ PtrDocument         pDoc;
 	(*ThotLocalActions[T_chattr]) (pDoc);
       if (pDoc->DocRootElement != NULL)
 	{
-#ifdef __COLPAGE__
-	  /* test si pagine */
-	  if (GetPageBoxType (pDoc->DocRootElement->ElFirstChild, view, &pSchPage) != 0)
-	    /* document pagine, on initialise NbPages et VolLibre */
-	    {
-	      pDoc->DocViewNPages[0] = 0;
-	      pDoc->DocViewFreeVolume[0] = THOT_MAXINT;
-	    }
-#endif /* __COLPAGE__ */
 	  pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement,
 						   pDoc, 1, TRUE, TRUE, &bool);
 	  i = 0;
@@ -779,12 +770,6 @@ PtrElement          viewRoot;
                        ret;
    boolean             stop, sel, selInMainTree, bool;
    boolean             truncHead, assocPresent;
-
-#ifdef __COLPAGE__
-   PtrPSchema          pPagePsch;
-   FILE               *list;
-
-#endif /* __COLPAGE__ */
 
    ret = 0;
    freeView = 0;
@@ -870,16 +855,12 @@ PtrElement          viewRoot;
 			    /* creation d'une table */
 			    /* traitement des attributs requis */
 			    AttachMandatoryAttributes (pDoc->DocAssocRoot[assoc - 1], pDoc);
-#ifdef __COLPAGE__
-			    /* Inutile d'ajouter un saut de page a la fin */
-#else  /* __COLPAGE__ */
 			    if (pDoc->DocSSchema != NULL)
 			      {
 				 /* Ajoute un saut de page a la fin si necessaire */
 				 AddLastPageBreak (pDoc->DocAssocRoot[assoc - 1],
 						   1, pDoc, TRUE);
 			      }
-#endif /* __COLPAGE__ */
 			    /* envoie l'evenement ElemNew.Post */
 			    NotifySubTree (TteElemNew, pDoc, pDoc->DocAssocRoot[assoc - 1], 0);
 			 }
@@ -894,14 +875,6 @@ PtrElement          viewRoot;
 	     pDoc->DocAssocSubTree[assoc - 1] = viewRoot;
 	     pDoc->DocAssocVolume[assoc - 1] = volume;
 	     pDoc->DocAssocFreeVolume[assoc - 1] = pDoc->DocAssocVolume[assoc - 1];
-#ifdef __COLPAGE__
-	     if (GetPageBoxType (pDoc->DocAssocRoot[assoc - 1]->ElFirstChild, 1, &pPagePsch) != 0)
-		/* document pagine */
-	       {
-		  pDoc->DocAssocNPages[assoc - 1] = 0;	/* nbpages = 0 */
-		  pDoc->DocAssocFreeVolume[assoc - 1] = THOT_MAXINT;
-	       }
-#endif /* __COLPAGE__ */
 	     if (!begin)
 	       {
 		  /* prend la selection courante */
@@ -935,14 +908,6 @@ PtrElement          viewRoot;
 
 	pDoc->DocViewVolume[freeView - 1] = volume;
 	pDoc->DocViewFreeVolume[freeView - 1] = pDoc->DocViewVolume[freeView - 1];
-#ifdef __COLPAGE__
-	if (GetPageBoxType (pDoc->DocRootElement->ElFirstChild, v, &pPagePsch) != 0)
-	   /* document pagine */
-	  {
-	     pDoc->DocViewNPages[freeView - 1] = 0;	/* nbpages = 0 */
-	     pDoc->DocViewFreeVolume[freeView - 1] = THOT_MAXINT;
-	  }
-#endif /* __COLPAGE__ */
 	ret = freeView;
 
 	if (begin)

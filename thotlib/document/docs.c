@@ -158,10 +158,6 @@ char               *fileName;
 #endif /* __STDC__ */
 {
    PathBuffer          directoryBuffer;
-#ifdef __COLPAGE__
-   FILE               *list;
-   PtrPSchema          pPagePsch;
-#endif /* __COLPAGE__ */
    int                 i, j, len;
    boolean             ok;
    char                URL_DIR_SEP;
@@ -280,14 +276,9 @@ PathBuffer          directory;
    PathBuffer          directoryBuffer;
    PathBuffer          fileNameBuffer;
 
-#ifdef __COLPAGE__
-   PtrPSchema          pPagePsch;
-
-#else  /* __COLPAGE__ */
    PtrPSchema          pPSchema;
    int                 view;
 
-#endif /* __COLPAGE__ */
    int                 i;
 
    if (*pDoc != NULL)
@@ -361,10 +352,6 @@ PathBuffer          directory;
 
 		(*pDoc)->DocRootElement->ElAccess = AccessReadWrite;
 		CheckLanguageAttr (*pDoc, (*pDoc)->DocRootElement);
-#ifdef __COLPAGE__
-		/* il n'est plus necessaire d'ajouter un saut de page */
-		/* a la fin de l'arbre principal */
-#else  /* __COLPAGE__ */
 		/* ajoute un saut de page a la fin de l'arbre principal */
 		/* pour toutes les vues qui sont mises en page */
 		/* schema de presentation du document */
@@ -374,7 +361,6 @@ PathBuffer          directory;
 		   if (pPSchema->PsPaginatedView[view])
 		      /* cette vue est mise en page */
 		      AddLastPageBreak ((*pDoc)->DocRootElement, view + 1, *pDoc, TRUE);
-#endif /* __COLPAGE__ */
 		/* le document appartient au directory courant */
 		if (directory[0] != EOS)
 		   strncpy (directoryBuffer, directory, MAX_PATH);

@@ -358,17 +358,7 @@ boolean             Maximum;
 				  pSSpr->SsCode;
 
 			    /* on ignore les pages qui ne concernent pas la view */
-#ifdef __COLPAGE__
-			    /* ainsi que les marques colonnes */
-			    if ((pEl->ElViewPSchema == view) &&
-				(pEl->ElPageType != ColBegin
-				 && pEl->ElPageType != ColUser
-				 && pEl->ElPageType != ColComputed
-				 && pEl->ElPageType != ColGroup)
-				&& (pstop))
-#else  /* __COLPAGE__ */
 			    if ((pEl->ElViewPSchema == view) && (pstop))
-#endif /* __COLPAGE__ */
 			       stop = TRUE;
 			 }
 		    }
@@ -634,18 +624,8 @@ int                 view;
 			  pstop = pEl->ElStructSchema->SsCode == pSSpr->SsCode;
 
 		       /* on ignore les pages qui ne concernent pas la view */
-#ifdef __COLPAGE__
-		       /* ainsi que les marques colonnes */
-		       if ((pEl->ElViewPSchema == view) &&
-			   (pEl->ElPageType != ColBegin &&
-			    pEl->ElPageType != ColUser &&
-			    pEl->ElPageType != ColComputed &&
-			    pEl->ElPageType != ColGroup) &&
-			   (pstop))
-#else  /* __COLPAGE__ */
 		       /* on ignore les pages qui ne concernent pas la view */
 		       if ((pEl->ElViewPSchema == view) && (pstop))
-#endif /* __COLPAGE__ */
 			  stop = TRUE;
 		    }
 	       }
@@ -664,13 +644,8 @@ int                 view;
 	     else
 		/* on prend pour valeur le numero de la marque de page precedente */
 		value = pEl->ElPageNumber;
-#ifdef __COLPAGE__
-	     if (pElNum->ElTerminal && pElNum->ElLeafType == LtPageColBreak)
-		/* cas page rappel supprime */
-#else  /* __COLPAGE__ */
 	     if (pElNum->ElTerminal && pElNum->ElLeafType == LtPageColBreak)
 		/* on numerote une marque de page  */
-#endif /* __COLPAGE__ */
 		/* on incremente la valeur */
 		value++;
 	  }
@@ -1135,7 +1110,6 @@ PtrDocument         pDoc;
 		       /* valeur courante du compteur */
 		       i = CounterVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
 			   pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView);
-#ifndef __COLPAGE__
 		    /* le cas particulier des compteurs en bas de page (ou il */
 		    /* fallait decrementer la valeur) est supprime dans V4 car  */
 		    /* le bas de page est associe a la page courante et non la */
@@ -1150,7 +1124,6 @@ PtrDocument         pDoc;
 			     i--;
 			  else
 			     i -= pCo1->CnItem[1].CiParamValue;
-#endif /* __COLPAGE__ */
 		    /* traduit l'entier en ASCII */
 		    GetCounterValue (i, pVa1->ViStyle, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);

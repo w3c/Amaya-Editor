@@ -1920,7 +1920,6 @@ boolean            *appl;
 		     }
 		else if (pPRule->PrType == PtVertPos)
 		  {
-#ifndef __COLPAGE__
 		     /* regarde si le premier fils de l'englobant est un saut de page */
 		     pAbbParent = pAbb1->AbEnclosing;
 		     if (pAbbParent->AbFirstEnclosed != pAbb1
@@ -1949,7 +1948,6 @@ boolean            *appl;
 			    }
 			  PPos->PosUserSpecified = FALSE;
 		       }
-#endif /* __COLPAGE__ */
 		     if (PPos->PosDistance < 0)
 		       {
 			  if (PPos->PosEdge == Top && PPos->PosRefEdge == Top)
@@ -2245,354 +2243,6 @@ PtrDocument         pDoc;
 }
 
 
-#ifdef __COLPAGE__
-/*----------------------------------------------------------------------
-   	ApplyCol		applique une regle Column			
-   	on insere l'element marque Column AVANT l'element		
-   	si element racine, on insere la marque col comme premier fils	
-   	si element marque page, on insere la marque col APRES.		
-   	le boolean de result indique si le pave pAb a ete detruit.	
-   	On ajoute une marque colonne apres l'element pour permettre	
-   	de reprendre une presentation conforme a la regle qui		
-   	s'appliquait avant l'element pAb->AbElement			
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static boolean      ApplyCol (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch, PtrPRule pPRule)
-#else  /* __STDC__ */
-static boolean      ApplyCol (pDoc, pAb, viewSch, pPRule)
-PtrDocument         pDoc;
-PtrAbstractBox      pAb;
-int                 viewSch;
-PtrPRule            pPRule;
-
-#endif /* __STDC__ */
-{
-   PtrElement          pElCol, pEl1, pEl, pPrec;
-   PtrAbstractBox      pP;
-   boolean             colexiste, stop, beforepEl;
-   boolean             complete;
-   PtrAbstractBox      pAbbR;
-   int                 frame, h, view;
-   boolean             bool, destroyedAb, found;
-   PtrElement          pElGrCols, pElGr1, pSuiv;
-
-   destroyedAb = FALSE;		/* a priori pas de destruction de paves */
-   if (pPRule->PrViewNum == viewSch)
-      /* la regle Column concerne la vue du pave traite' */
-     {
-	view = pAb->AbDocView;
-	pEl = pAb->AbElement;
-	pElCol = NULL;
-	colexiste = FALSE;
-	beforepEl = FALSE;	/* il faut recreer l'image si les marques sont creees */
-	/* a priori, on n'a pas a creer les paves si la */
-	/* colonne existe deja (sauf si manque colgroupee */
-	/* si pEl est une marque page qui n'est pas une page debut */
-	/* on ignore la regle. */
-	if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak
-	      && (pEl->ElPageType == PgUser
-		  || pEl->ElPageType == PgComputed)))
-	  {
-	     /* creation d'un element Marque colonne debut comme frere avant pEl */
-	     /* sauf si pEl est la racine (creation comme premier fils) */
-	     /* ou un element Marque Page (regle Column dans une boite Page) */
-
-	     /* tout d'abord, on verifie que la marque colonne n'existe pas deja */
-	     pEl1 = NULL;
-	     if (pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak)
-		/* on verifie que la marque colonne n'existe pas deja apres */
-		pEl1 = pEl->ElNext;
-	     else if (pEl->ElParent == NULL)
-		/* on verifie que la marque colonne n'existe pas deja comme fils */
-		pEl1 = pEl->ElFirstChild;
-	     if (pEl1 != NULL)
-	       {
-		  while (pEl1->ElTerminal && pEl1->ElTypeNumber == PageBreak + 1
-			 && (pEl1->ElViewPSchema != viewSch
-			     || pEl1->ElPageType != ColBegin))
-		     /* ignore les sauts de page pour les autres vues */
-		     /* et les marques autres que ColBegin */
-		     pEl1 = pEl1->ElNext;
-
-		  if (pEl1 != NULL &&
-		    pEl1->ElTerminal && pEl1->ElTypeNumber == PageBreak + 1)
-		     /* on est sur que l'on est sur une marque ColBegin */
-		     /* donc on ne cree pas une nouvelle marque */
-		    {
-		       pElCol = pEl1;
-		       colexiste = TRUE;
-		       /* code temporaire : si pas de ColGroup qui precede */
-		       /* ce ColBegin, on en ajoute un pour etre conforme au */
-		       /* nouveau code */
-		       if (!(pElCol->ElPrevious != NULL
-			&& pElCol->ElPrevious->ElTypeNumber == PageBreak + 1
-			     && pElCol->ElPrevious->ElPageType == ColGroup))
-			 {
-			    /* si l'element ColGroup existe, on ne cree rien */
-			    /* sinon, on cree l'element ColGroup */
-			    pElGrCols = NewSubtree (PageBreak + 1, pEl->ElStructSchema,
-			     pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-			    InsertElementBefore (pElCol, pElGrCols);
-			    pElGrCols->ElPageType = ColGroup;
-			    pElGrCols->ElViewPSchema = viewSch;
-			    pElGrCols->ElPageNumber = 0;	/* numero attribue pour les groupes */
-			    /* pas besoin de recreer l'image car l'element */
-			    /* colgroupees est place apres l'element marque page */
-			 }
-		    }
-	       }		/* fin pEl1 != NULL pour pEl = marque page ou racine */
-
-	     if (!((pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak)
-		   || (pEl->ElParent == NULL)))
-		/* regle colonne sur un element quelconque */
-		/* l'element est-il precede' par un saut de colonne identique a */
-		/* celui qu'on veut creer ? */
-	       {
-		  pPrec = pEl;
-		  while (pPrec->ElPrevious == NULL && pPrec->ElParent != NULL)
-		     pPrec = pPrec->ElParent;
-		  pPrec = pPrec->ElPrevious;
-		  stop = pPrec == NULL;
-		  while (!stop)
-		     if (pPrec->ElTerminal)
-		       {
-			  stop = TRUE;
-			  /* ignore les sauts de page pour les autres vues */
-			  if (pPrec->ElTypeNumber == PageBreak + 1)
-			     if (pPrec->ElViewPSchema != viewSch)
-			       {
-				  pPrec = pPrec->ElPrevious;
-				  stop = pPrec == NULL;
-			       }
-		       }
-		     else
-		       {
-			  pPrec = pPrec->ElFirstChild;
-			  if (pPrec == NULL)
-			     stop = TRUE;
-			  else
-			     while (pPrec->ElNext != NULL)
-				pPrec = pPrec->ElNext;
-		       }
-		  if (pPrec != NULL)
-		    {
-		       pEl1 = pPrec;
-		       if (pEl1->ElTerminal)
-			  if (pEl1->ElTypeNumber == PageBreak + 1)
-			     if (pEl1->ElViewPSchema == viewSch
-				 && pEl1->ElPageType == ColBegin)
-			       {
-				  colexiste = TRUE;
-				  pElCol = pEl1;
-				  /* code temporaire : si pas de ColGroup qui precede */
-				  /* ce ColBegin, on en ajoute un pour etre conforme au */
-				  /* nouveau code */
-				  if (!(pEl1->ElPrevious != NULL
-					&& pEl1->ElPrevious->ElTypeNumber == PageBreak + 1
-					&& pEl1->ElPrevious->ElPageType == ColGroup))
-				     /* l'element ColGroup existe, on ne cree rien */
-				    {
-				       /* on cree l'element ColGroup */
-				       pElGrCols = NewSubtree (PageBreak + 1, pEl->ElStructSchema,
-							       pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-				       InsertElementBefore (pElCol, pElGrCols);
-				       pElGrCols->ElPageType = ColGroup;
-				       pElGrCols->ElViewPSchema = viewSch;
-				       pElGrCols->ElPageNumber = 0;
-				       /* numero attribue pour les groupes */
-				       beforepEl = TRUE;	/* pour recreer l'image */
-				       /* on detruit le pave de pElCol pour */
-				       /* le recreer apres pElGrCols */
-				       pP = pElCol->ElAbstractBox[view - 1];
-				       while (pP != NULL && pP->AbElement == pElCol)
-					 {
-					    SetDeadAbsBox (pP);
-					    ApplyRefAbsBoxSupp (pP, &pAbbR, pDoc);
-					    pP = pP->AbNext;
-					 }
-				    }
-				  /* on ajoute une marque colonne gauche si elle */
-				  /* n'existe pas deja,  pour revenir */
-				  /* a l'ancienne regle apres l'element */
-				  if (pEl->ElNext == NULL
-				      || pEl->ElNext->ElTypeNumber != PageBreak + 1)
-				    {
-				       pEl1 = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
-							  pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-				       InsertElementAfter (pEl, pEl1);
-				       pEl1->ElPageType = ColComputed;
-				       pEl1->ElViewPSchema = viewSch;
-				       pEl1->ElPageNumber = 1;
-				       /* numero attribue pour les colonnes gauche */
-
-				       /* on cree une marque groupe de colonnes */
-				       pElGr1 = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
-							    pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-				       InsertElementAfter (pEl, pElGr1);
-				       pElGr1->ElPageType = ColGroup;
-				       pElGr1->ElViewPSchema = viewSch;
-				       pElGr1->ElPageNumber = 0;
-				       /* numero attribue pour les groupes */
-
-				    }
-
-			       }
-		    }
-	       }
-
-	     if (!colexiste &&
-		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsChoice)
-	       {
-		  /* on cree une marque de colonne */
-		  /* et une marque groupe de colonnes Cols */
-		  pElGrCols = NewSubtree (PageBreak + 1, pEl->ElStructSchema,
-			     pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-		  pElCol = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
-				   pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-		  if (pElCol != NULL)
-		     /* on a cree une marque de colonne */
-		    {
-		       if (pEl->ElTypeNumber == PageBreak + 1)
-			  /* si pEl est une PageBreak on chainepElGrCols et pElCol apres pEl */
-			 {
-			    InsertElementAfter (pEl, pElGrCols);
-			    InsertElementAfter (pElGrCols, pElCol);
-			 }
-		       else if (pEl->ElParent == NULL)
-			  /* si pEl est la racine, on la chaine comme fils de pEl, */
-			  /* apres l'element marque page de PgBegin */
-			 {
-			    pEl1 = pEl->ElFirstChild;
-			    if (!pEl1->ElTerminal && !(pEl1->ElLeafType == LtPageColBreak))
-			       /* erreur */
-			       ;
-			    else
-			      {
-				 while (pEl1 != NULL && pEl1->ElViewPSchema != viewSch
-					&& pEl1->ElPageType != PgBegin)
-				    pEl1 = pEl1->ElNext;
-				 if (pEl1 != NULL)
-				   {
-				      InsertElementAfter (pEl1, pElGrCols);
-				      InsertElementAfter (pElGrCols, pElCol);
-				   }
-			      }
-			 }
-		       else
-			 {
-			    /* insersion avant pEl (comme pour une regle Page) */
-			    beforepEl = TRUE;
-			    InsertElementBefore (pEl, pElCol);
-			    InsertElementBefore (pElCol, pElGrCols);
-			    /* on cree une marque colonne et une marque groupe */
-			    /* de colonnes apres pour revenir */
-			    /* a l'ancienne regle apres l'element */
-			    /* si l'element a des suivants */
-			    pSuiv = pEl;
-			    found = FALSE;
-			    while (!found && pSuiv != NULL)
-			      {
-				 found = (pSuiv->ElNext != NULL);
-				 if (!found)
-				    pSuiv = pSuiv->ElParent;
-			      }
-			    if (found)
-			      {
-				 /* on cree une marque colonne et une marque groupe */
-				 /* de colonnes apres pour revenir */
-				 /* a l'ancienne regle apres l'element */
-				 pEl1 = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
-				   pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-				 pElGr1 = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
-				   pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-				 InsertElementAfter (pEl, pElGr1);
-				 InsertElementAfter (pElGr1, pEl1);
-				 pEl1->ElPageType = ColComputed;
-				 pEl1->ElViewPSchema = viewSch;
-				 pEl1->ElPageNumber = 1;	/* premiere colonne de la serie */
-				 pElGr1->ElPageType = ColGroup;
-				 pElGr1->ElViewPSchema = viewSch;
-				 pElGr1->ElPageNumber = 0;	/* numero attribue pour les groupes */
-			      }
-			 }
-		       /* on initialise pElCol et pElGrCols */
-		       pElCol->ElPageType = ColBegin;
-		       pElCol->ElViewPSchema = viewSch;
-		       pElCol->ElPageNumber = 1;	/* premiere colonne de la page */
-		       pElGrCols->ElPageType = ColGroup;
-		       pElGrCols->ElViewPSchema = viewSch;
-		       pElGrCols->ElPageNumber = 0;	/* numero attribue pour les groupes */
-		    }		/* fin pElCol != NULL */
-	       }		/* fin de !colexiste */
-	     if (beforepEl)
-	       {
-		  /* creation des paves : il faut detruire ceux de pEl */
-		  /* cf. code de InsereMarque de page.c */
-		  pP = pEl->ElAbstractBox[view - 1];
-		  /* destruction des paves de l'element pEl */
-		  if (pP != NULL)
-		     destroyedAb = TRUE;	/* code result */
-		  while (pP != NULL && pP->AbElement == pEl)
-		    {
-		       SetDeadAbsBox (pP);
-		       ApplyRefAbsBoxSupp (pP, &pAbbR, pDoc);
-		       pP = pP->AbNext;
-		    }
-		  if (AssocView (pEl))
-		    {
-		       pP = pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0];
-		       frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-		    }
-		  else
-		    {
-		       pP = pDoc->DocRootElement->ElAbstractBox[view - 1];
-		       frame = pDoc->DocViewFrame[view - 1];
-		    }
-		  if (!(pEl->ElAbstractBox[view - 1])->AbNew)
-		     /* on previent le mediateur */
-		    {
-		       h = 0;
-		       ChangeConcreteImage (frame, &h, pP);
-		    }
-		  /* on nettoie l'image abstraite des paves morts */
-		  FreeDeadAbstractBoxes (pP);	/* liberation a partir de la racine car */
-		  /* un pave colonne a pu etre detruit */
-
-		  /* cree les paves de la marque de colonne et groupe de colonnes */
-		  /* correspondant a la regle Column */
-		  pP = AbsBoxesCreate (pElGrCols, pDoc, view, TRUE, TRUE, &complete);
-		  if (pElGrCols->ElAbstractBox[view - 1] != NULL)
-		     pP = AbsBoxesCreate (pElCol, pDoc, view, TRUE, TRUE, &complete);
-	       }		/* fin beforepEl */
-
-	  }			/* fin pEl marque page non debut */
-     }
-   return destroyedAb;
-}
-
-#endif /* __COLPAGE__ */
-
-#ifdef __COLPAGE__
-/*----------------------------------------------------------------------
-   	ApplyPage 	applique une regle Page				
-   	on insere l'element marque page AVANT l'element (sauf racine)	
-   	le boolean de result indique si le pave pAb a ete detruit	
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static boolean      ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch, PtrPRule pPRule, FunctionType pageType)
-
-#else  /* __STDC__ */
-static boolean      ApplyPage (pDoc, pAb, viewSch, pPRule, pageType)
-PtrDocument         pDoc;
-PtrAbstractBox      pAb;
-int                 viewSch;
-PtrPRule            pPRule;
-FunctionType        pageType;
-
-#endif /* __STDC__ */
-
-#else  /* __COLPAGE__ */
 /*----------------------------------------------------------------------
    	ApplyPage 	applique une regle Page				
   ----------------------------------------------------------------------*/
@@ -2607,10 +2257,7 @@ PtrAbstractBox      pAb;
 int                 viewSch;
 PtrPRule            pPRule;
 FunctionType        pageType;
-
 #endif /* __STDC__ */
-#endif /* __COLPAGE__ */
-
 {
    PtrElement          pElPage, pEl, pElChild, pPrec;
    PtrAbstractBox      pP;
@@ -2619,26 +2266,11 @@ FunctionType        pageType;
    PtrPSchema          pSchP;
    PtrElement          pEl1;
    boolean             complete;
-
-#ifdef __COLPAGE__
-   PtrAbstractBox      pAbbR;
-   int                 frame, h, view;
-   boolean             bool, destroyedAb;
-
-#else  /* __COLPAGE__ */
    boolean             cree;
 
-#endif /* __COLPAGE__ */
-
-#ifdef __COLPAGE__
-   destroyedAb = FALSE;		/* a priori pas de destruction de paves */
-#endif /* __COLPAGE__ */
    if (pPRule->PrViewNum == viewSch)
       /* la regle Page concerne la vue du pave traite' */
      {
-#ifdef __COLPAGE__
-	view = pAb->AbDocView;
-#endif /* __COLPAGE__ */
 	pElPage = NULL;
 	exitingPage = FALSE;
 	pEl = pAb->AbElement;
@@ -2657,35 +2289,11 @@ FunctionType        pageType;
 		     if (pEl1->ElTypeNumber != PageBreak + 1)
 			stop = TRUE;
 		     else if (pEl1->ElViewPSchema == viewSch && pEl1->ElPageType == PgBegin)
-#ifdef __COLPAGE__
-			/* on deplace l'element marque page devant l'element */
-			if (pEl->ElParent != NULL
-			    && (pEl1->ElAbstractBox[view - 1] == NULL))
-			   /* sauf si pEl est racine ! */
-			   /* et sauf si l'element  MP a deja un pave dans la vue */
-			   /* en effet c'est dans le cas ou la construction de */
-			   /* l'image se fait en arriere : la destruction des paves */
-			   /* ne peut se faire si simplement. On prefere laisser */
-			   /* cet element 1er fils, il sera deplace lors d'une autre */
-			   /* construction de l'image */
-			  {
-			     DeleteElement (&pEl1);
-			     stop = TRUE;
-			  }
-			else
-			   /* pEl est la racine ou la MP a deja des paves */
-			  {
-			     pElPage = pEl1;
-			     exitingPage = TRUE;
-			     stop = TRUE;
-			  }
-#else  /* __COLPAGE__ */
 		       {
 			  pElPage = pEl1;
 			  exitingPage = TRUE;
 			  stop = TRUE;
 		       }
-#endif /* __COLPAGE__ */
 		     else
 			/* on saute les eventuelles marque page d'autres vues ? */
 			pElChild = pEl1->ElNext;
@@ -2708,16 +2316,7 @@ FunctionType        pageType;
 		     stop = TRUE;
 		     /* ignore les saut de pages pour les autres vues */
 		     if (pPrec->ElTypeNumber == PageBreak + 1)
-#ifdef __COLPAGE__
-			/* ainsi que les sauts de colonne */
-			if (pPrec->ElViewPSchema != viewSch
-			    || pPrec->ElPageType == ColBegin
-			    || pPrec->ElPageType == ColComputed
-			    || pPrec->ElPageType == ColGroup
-			    || pPrec->ElPageType == ColUser)
-#else  /* __COLPAGE__ */
 			if (pPrec->ElViewPSchema != viewSch)
-#endif /* __COLPAGE__ */
 			  {
 			     pPrec = pPrec->ElPrevious;
 			     stop = pPrec == NULL;
@@ -2755,91 +2354,6 @@ FunctionType        pageType;
 		/* on a cree une marque de page */
 
 		/* le reste de la procedure est different entre les deux versions */
-#ifdef __COLPAGE__
-		/* on la chaine comme premier fils de l'element si pEl est la racine */
-		if (pEl->ElParent == NULL)
-		  {
-		     InsertFirstChild (pEl, pElPage);
-		     /* on l'initialise */
-		     pEl1 = pElPage;
-		     pEl1->ElPageType = PgBegin;
-		     pEl1->ElViewPSchema = viewSch;
-		     /* cherche le compteur de pages a appliquer */
-		     counter = GetPageCounter (pElPage, pEl1->ElViewPSchema, &pSchP);
-		     if (counter > 0)
-			/* calcule la valeur du compteur de pages */
-			pEl1->ElPageNumber = CounterVal (counter, pElPage->ElStructSchema, pSchP, pElPage,
-						       pEl1->ElViewPSchema);
-		     else
-			/* page non numerotee */
-			pEl1->ElPageNumber = 1;
-		  }
-		else
-		   /* insersion avant pEl */
-		  {
-		     InsertElementBefore (pEl, pElPage);
-		     /* on l'initialise */
-		     pEl1 = pElPage;
-		     pEl1->ElPageType = PgBegin;
-		     pEl1->ElViewPSchema = viewSch;
-		     /* cherche le compteur de pages a appliquer */
-		     counter = GetPageCounter (pElPage, pEl1->ElViewPSchema, &pSchP);
-		     if (counter > 0)
-			/* calcule la valeur du compteur de pages */
-			pEl1->ElPageNumber = CounterVal (counter, pElPage->ElStructSchema, pSchP, pElPage,
-						       pEl1->ElViewPSchema);
-		     else
-			/* page non numerotee */
-			pEl1->ElPageNumber = 1;
-		     /* creation des paves : il faut detruire ceux de pEl */
-		     /* cf. code de InsereMarque de page.c */
-		     pP = pEl->ElAbstractBox[view - 1];
-		     /* destruction des paves de l'element pEl */
-		     destroyedAb = TRUE;	/* code result */
-		     while (pP != NULL && pP->AbElement == pEl)
-		       {
-			  SetDeadAbsBox (pP);
-			  ApplyRefAbsBoxSupp (pP, &pAbbR, pDoc);
-			  pP = pP->AbNext;
-		       }
-		     if (!pAb->AbNew)
-			/* on previent le mediateur */
-		       {
-			  if (AssocView (pEl))
-			    {
-			       pP = (pDoc->DocAssocRoot[pEl->ElAssocNum - 1])->ElAbstractBox[0];
-			       frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-			    }
-			  else
-			    {
-			       pP = pDoc->DocRootElement->ElAbstractBox[view - 1];
-			       frame = pDoc->DocViewFrame[view - 1];
-			    }
-			  h = 0;
-			  bool = ChangeConcreteImage (frame, &h, pP);
-		       }
-		     /* on nettoie l'image abstraite des paves morts */
-		     FreeDeadAbstractBoxes (pAb->AbEnclosing);
-		  }
-
-	     /* TODO quand on traitera les regles recto verso */
-	     /*  on verifie que la cardinalite de la page est en accord avec la
-	        regle appliquee */
-	     PagePleine (view, pDoc, pElPage, TRUE);
-	     if (pElPage != NULL
-		 && !IsViewFull (view, pDoc, pElPage))
-		/* cree les paves de la marque de page */
-		/* correspondant a la regle page */
-		/* si la vue n'est pas pleine */
-		pP = AbsBoxesCreate (pElPage, pDoc, view, TRUE, TRUE, &complete);
-	     /* on met a jour les numeros des pages suivantes */
-	     UpdateNumbers (NextElement (pElPage), pElPage, pDoc, TRUE);
-	  }			/* fin de !exitingPage */
-     }
-   return destroyedAb;
-}				/* fin de ApplyPage */
-
-#else  /* __COLPAGE__ */
 		/* on la chaine comme premier fils de l'element */
 	       {
 		  InsertFirstChild (pEl, pElPage);
@@ -2884,7 +2398,6 @@ FunctionType        pageType;
 	   appliquee */
      }
 }
-#endif /* __COLPAGE__ */
 
 
 /*----------------------------------------------------------------------
@@ -3231,11 +2744,6 @@ boolean             withDescCopy;
    PtrAttribute        pAttr;
    boolean             Ref;
 
-#ifdef __COLPAGE__
-   PtrElement          pEl;
-
-#endif /* __COLPAGE__ */
-
    pEl1 = pAb->AbElement;
    pE = NULL;
    Ref = FALSE;
@@ -3377,36 +2885,10 @@ boolean             withDescCopy;
 	   /* on n'a pas found' l'element a copier */
 	   if (pEl1->ElTypeNumber == PageBreak + 1)
 	      if (pEl1->ElPageType == PgBegin)
-#ifdef __COLPAGE__
-		 /* la marque de page est placee devant l'element qui porte */
-		 /* la regle de creation de marque page */
-		 /* sauf dans le cas ou la marque de page a ete cree par la racine */
-		{
-		   pEl = pEl1;
-		   /* on saute les eventuelles autres marques de pages */
-		   /*  (des autres vues) et marques de colonnes */
-		   while (pEl != NULL
-			  && pEl->ElTypeNumber == PageBreak + 1)
-		      pEl = pEl->ElNext;
-		   /* pEl est l'element qui a cree la marque de page */
-		   /*  On cherche dans cet element */
-		   if (pEl != NULL)
-		      pE = SearchElInSubTree (pEl, pPRule->PrPresBox[0],
-				pEl->ElStructSchema, pPRule->PrPresBoxName);
-		   if (pE == NULL)
-		      /* si on n'a pas found pE, c'est que c'etait une marque */
-		      /* page qui avait ete genere par la racine : elle a ete */
-		      /* placee comme premier fils : on applique lors le code */
-		      /* de la V3 (recherche sur le pere)  */
-		      pE = SearchElInSubTree (pEl1->ElParent, pPRule->PrPresBox[0],
-			       pEl1->ElStructSchema, pPRule->PrPresBoxName);
-		}
-#else  /* __COLPAGE__ */
 		 /* on travaille pour une marque de page qui est engendree par */
 		 /* le debut d'un element. On cherche dans cet element */
 		 pE = SearchElInSubTree (pEl1->ElParent, pPRule->PrPresBox[0],
 			       pEl1->ElStructSchema, pPRule->PrPresBoxName);
-#endif /* __COLPAGE__ */
 	/* si on n'a pas found', on cherche en arriere l'element a copier */
 	if (pE == NULL)
 	   if (pPRule->PrNPresBoxes > 0)
@@ -3482,20 +2964,6 @@ boolean             withDescCopy;
    		d'autres paves seront construits.			
 	   le boolean de destroyedAb indique si le pave pAb a ete detruit
   ----------------------------------------------------------------------*/
-#ifdef __COLPAGE__
-#ifdef __STDC__
-boolean             ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr, boolean * destroyedAb)
-#else  /* __STDC__ */
-boolean             ApplyRule (pPRule, pSchP, pAb, pDoc, pAttr, destroyedAb)
-PtrPRule            pPRule;
-PtrPSchema          pSchP;
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-boolean            *destroyedAb;
-
-#endif /* __STDC__ */
-#else  /* __COLPAGE__ */
 #ifdef __STDC__
 boolean             ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
 #else  /* __STDC__ */
@@ -3507,7 +2975,6 @@ PtrDocument         pDoc;
 PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
-#endif /* __COLPAGE__ */
 {
   TypeUnit            unit;
   AbPosition          Posit;
@@ -3518,12 +2985,8 @@ PtrAttribute        pAttr;
   char                c;
   int                 viewSch, i;
   boolean             appl;
-#ifdef __COLPAGE__
-  *destroyedAb = FALSE;
-#else  /* __COLPAGE__ */
   boolean             insidePage, afterPageBreak;
   AbPosition         *pPavP1;
-#endif /* __COLPAGE__ */
 
   appl = FALSE;
   if (pPRule != NULL && pAb != NULL)
@@ -3793,22 +3256,6 @@ PtrAttribute        pAttr;
 	  case PtVertPos:
 	    /* erreur : ce n'est pas a l'editeur d'interpreter */
 	    /* la mise en ligne. On supprime ce code */
-#ifdef __COLPAGE__
-	    /* changement complete du code */
-	    /* plus de cas particulier pour les pages et colonnes */
-	    /* ce n'est pas un cas particulier : on applique */
-	    /* ses regles */
-	    /* applique la regle de positionnement de l'element */
-	    Posit = pAbb1->AbVertPos;
-	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
-		      pDoc, &appl);
-	    pAbb1->AbVertPos = Posit;
-	    /* traitement special pour le debordement vertical des cellules */
-	    /* de tableau etendues verticalement */
-	    if (ThotLocalActions[T_vertspan] != NULL)
-	      (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
-	    break;
-#else  /* __COLPAGE__ */
 	    /* Si le precedent est un separateur de page, le pave est */
 	    /* positionne' en dessous de ce saut de page, sauf si le pave */
 	    /* positionne' fait partie d'un separateur de page (c'est une */
@@ -3901,7 +3348,6 @@ PtrAttribute        pAttr;
 	    if (ThotLocalActions[T_vertspan] != NULL)
 	      (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
 	    break;
-#endif /* __COLPAGE__ */
 	  case PtHorizPos:
 	    Posit = pAbb1->AbHorizPos;
 	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP,
@@ -3931,25 +3377,10 @@ PtrAttribute        pAttr;
 		  }
 		break;
 	      case FnPage:
-#ifdef __COLPAGE__
-		if (ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction))
-		  {
-		    *destroyedAb = TRUE;
-		    appl = TRUE;
-		  }
-#else  /* __COLPAGE__ */
 		ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction);
 		appl = TRUE;
-#endif /* __COLPAGE__ */
 		break;
 	      case FnColumn:
-#ifdef __COLPAGE__
-		if (ApplyCol (pDoc, pAb, viewSch, pPRule))
-		  {
-		    *destroyedAb = TRUE;
-		    appl = TRUE;
-		  }
-#endif /* __COLPAGE__ */
 		break;
 	      case FnSubColumn:
 		
@@ -4196,11 +3627,6 @@ PtrAbstractBox      pAb;
    boolean             stop;
    int                 view;
 
-#ifdef __COLPAGE__
-   boolean             bool;
-
-#endif /* __COLPAGE__ */
-
    pPRuleDimH = NULL;
    pPRuleDimV = NULL;
    /* nettoie la table des frames a reafficher */
@@ -4314,19 +3740,11 @@ PtrAbstractBox      pAb;
 		     {
 			/* applique la nouvelle regle specifique Horizontale */
 			if (pPRuleDimH != NULL)
-#ifdef __COLPAGE__
-			   if (ApplyRule (pPRuleDimH, pSPR, pAbb, pDoc, pAttr, &bool))
-#else  /* __COLPAGE__ */
 			   if (ApplyRule (pPRuleDimH, pSPR, pAbb, pDoc, pAttr))
-#endif /* __COLPAGE__ */
 			      pAbb->AbWidthChange = TRUE;
 			/* applique la nouvelle regle specifique Verticale */
 			if (pPRuleDimV != NULL)
-#ifdef __COLPAGE__
-			   if (ApplyRule (pPRuleDimV, pSPR, pAbb, pDoc, pAttr, &bool))
-#else  /* __COLPAGE__ */
 			   if (ApplyRule (pPRuleDimV, pSPR, pAbb, pDoc, pAttr))
-#endif /* __COLPAGE__ */
 			      pAbb->AbHeightChange = TRUE;
 
 			RedispAbsBox (pAbb, pDoc);	/* indique le pave a reafficherv */

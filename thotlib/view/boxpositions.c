@@ -233,34 +233,6 @@ boolean            *isPageBreakChanged;
 }
 
 
-#ifdef __COLPAGE__
-/*----------------------------------------------------------------------
-   ClearPageIndicators remet a faux les boolens AbOnPageBreak et   
-   PageHorsPage dans tous les paves du sous-arbre pAb      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ClearPageIndicators (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-static void         ClearPageIndicators (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-{
-   PtrAbstractBox      pAbb;
-
-   pAbb = pAb;
-   pAbb->AbOnPageBreak = FALSE;
-   pAbb->AbAfterPageBreak = FALSE;
-   pAbb = pAbb->AbFirstEnclosed;
-   while (pAbb != NULL)
-     {
-	ClearPageIndicators (pAbb);
-	pAbb = pAbb->AbNext;
-     }
-}
-#endif /* __COLPAGE__ */
-
-
 /*----------------------------------------------------------------------
    SetPageIndicators teste la position d'un pave' par rapport a`  
    la limite de page. Positionne les indicateurs du pave': 
@@ -396,18 +368,6 @@ boolean            *isPageBreakChanged;
                /* des coupures de boites quand la limite de    */
                /* page est deplacee */
                while (pChildAb != NULL && !*isPageBreakChanged) {
-#ifdef __COLPAGE__
-                     /* on saute les paves de colonnes pour arriver a la */
-                     /* derniere car c'est toujours pour la derniere */
-                     /* colonne qu'on evalue la coupure */
-                     while (pChildAb->AbElement->ElTypeNumber == PageBreak + 1 && 
-                            (pChildAb->AbElement->ElPageType == ColBegin || 
-                             pChildAb->AbElement->ElPageType == ColComputed || 
-                             pChildAb->AbElement->ElPageType == ColUser || 
-                             pChildAb->AbElement->ElPageType == ColGroup) && 
-                             pChildAb->AbNext != NULL)
-                            pChildAb = pChildAb->AbNext;
-#endif /* __COLPAGE__ */
                             SetPageIndicators (pChildAb, table, height, isPageBreakChanged);
                             /* passe au suivant */
                             pChildAb = pChildAb->AbNext;
@@ -442,12 +402,6 @@ int                *page;
 
    /* height = PixelValue (*page, UnPoint, pAb, 0); */
    height = *page;
-#ifdef __COLPAGE__
-   /* comme dans le cas des colonnes, il y a des branches de l'image */
-   /* qui ne sont pas examinees et mises a jour par SetPageIndicators, */
-   /* on parcourt l'arbre pour mettre AbOnPageBreak et AbAfterPageBreak a faux */
-   ClearPageIndicators (pAb);
-#endif /* __COLPAGE__ */
    result = TRUE;
 
    /* look at if there is a table ancestor */

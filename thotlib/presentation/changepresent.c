@@ -91,11 +91,6 @@ int                 view;
    PtrPSchema          pSPR;
    PtrAttribute        pAttr;
 
-#ifdef __COLPAGE__
-   boolean             bool;
-
-#endif /* __COLPAGE__ */
-
    if (pE->ElTerminal)
       pE = NULL;
    else
@@ -124,11 +119,7 @@ int                 view;
 			    (*pPRule)->PrInheritMode == InheritGrandFather))
 			  /* la regle de ce pave herite de l'ascendant, */
 			  /* on applique la regle */
-#ifdef __COLPAGE__
-			  if (ApplyRule (*pPRule, pSPR, pAbb, pDoc, pAttr, &bool))
-#else  /* __COLPAGE__ */
 			  if (ApplyRule (*pPRule, pSPR, pAbb, pDoc, pAttr))
-#endif /* __COLPAGE__ */
 			    {
 			       if (ruleType == PtSize)
 				  pAbb->AbSizeChange = TRUE;
@@ -157,11 +148,7 @@ int                 view;
 				   {
 				      if ((*pPRule)->PrPresMode == PresInherit
 					  && (*pPRule)->PrInheritMode == InheritParent)
-#ifdef __COLPAGE__
-					 if (ApplyRule (*pPRule, pSPR, pAbbF, pDoc, pAttr, &bool))
-#else  /* __COLPAGE__ */
 					 if (ApplyRule (*pPRule, pSPR, pAbbF, pDoc, pAttr))
-#endif /* __COLPAGE__ */
 					   {
 					      if (ruleType == PtSize)
 						 pAbbF->AbSizeChange = TRUE;
@@ -221,11 +208,6 @@ PtrDocument         pDoc;
    PtrPSchema          pSchP;
    PtrAttribute        pAttrib;
 
-#ifdef __COLPAGE__
-   boolean             bool;
-
-#endif /* __COLPAGE__ */
-
    pEl = pAb->AbElement;
    view = pAb->AbDocView;
    if (pEl->ElNext != NULL)
@@ -259,11 +241,7 @@ PtrDocument         pDoc;
 		      pPRule->PrInheritMode == InheritPrevious)
 		     /* la regle de cet element herite du precedent, on applique */
 		     /* la regle */
-#ifdef __COLPAGE__
-		     if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib, &bool))
-#else  /* __COLPAGE__ */
 		     if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
-#endif /* __COLPAGE__ */
 		       {
 			  if (ruleType == PtSize)
 			     pAbbCur->AbSizeChange = TRUE;
@@ -316,11 +294,7 @@ PtrDocument         pDoc;
 		    pPRule->PrInheritMode == InheritChild)
 		   /* la regle de cet element herite du descendant, on */
 		   /* applique la regle */
-#ifdef __COLPAGE__
-		   if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib, &bool))
-#else  /* __COLPAGE__ */
 		   if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
-#endif /* __COLPAGE__ */
 		     {
 			if (ruleType == PtSize)
 			   pAbbCur->AbSizeChange = TRUE;
@@ -353,11 +327,7 @@ PtrDocument         pDoc;
 		if (pPRule != NULL)
 		   if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
 		      /* la regle de ce pave herite de son createur, on l'applique */
-#ifdef __COLPAGE__
-		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib, &bool))
-#else  /* __COLPAGE__ */
 		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
-#endif /* __COLPAGE__ */
 			{
 			   if (ruleType == PtSize)
 			      pAbbCur->AbSizeChange = TRUE;
@@ -385,11 +355,7 @@ PtrDocument         pDoc;
 		if (pPRule != NULL)
 		   if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
 		      /* la regle de ce pave herite de son createur, on l'applique */
-#ifdef __COLPAGE__
-		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib, &bool))
-#else  /* __COLPAGE__ */
 		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
-#endif /* __COLPAGE__ */
 			{
 			   if (ruleType == PtSize)
 			      pAbbCur->AbSizeChange = TRUE;
@@ -416,11 +382,7 @@ PtrDocument         pDoc;
 		  if (pPRule != NULL)
 		     if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
 			/* la regle de ce pave herite de son createur, on l'applique */
-#ifdef __COLPAGE__
-			if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib, &bool))
-#else  /* __COLPAGE__ */
 			if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
-#endif /* __COLPAGE__ */
 			  {
 			     if (ruleType == PtSize)
 				pAbbCur->AbSizeChange = TRUE;
@@ -789,9 +751,6 @@ boolean             display;
    boolean             bValue;
    boolean             attr, stop, doit;
    boolean             isNew, reDisp, isLined;
-#ifdef __COLPAGE__
-   boolean             bool;
-#endif /* __COLPAGE__ */
 
    /* nettoie la table des frames a reafficher */
    for (view = 1; view <= MAX_VIEW_DOC; view++)
@@ -954,11 +913,7 @@ boolean             display;
 
 		       if (pAbbCur != NULL)
 			 /* applique la nouvelle regle de position verticale */
-#ifdef __COLPAGE__
-			 ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr, &bool);
-#else  /* __COLPAGE__ */
 		         ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
-#endif /* __COLPAGE__ */
 
 			 pAbbCur->AbVertPosChange = TRUE;
 			 /* la position vert.du pave a change' */
@@ -1103,11 +1058,7 @@ boolean             display;
 		       while (!stop);
 		       if (pAbbCur != NULL)
 			 /* applique la nouvelle regle de position verticale */
-#ifdef __COLPAGE__
-			 ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr, &bool);
-#else  /* __COLPAGE__ */
 		         ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
-#endif /* __COLPAGE__ */
 			 pAbbCur->AbHorizPosChange = TRUE;
 			 /* indique le pave a reafficher */
 			 RedispAbsBox (pAbbCur, pDoc);
@@ -1184,9 +1135,6 @@ boolean             display;
    boolean             bValue, bAbs;
    boolean             attr, stop, doit;
    boolean             isNew, reDisp, ok;
-#ifdef __COLPAGE__
-   boolean             bool;
-#endif /* __COLPAGE__ */
 
    /* nettoie la table des frames a reafficher */
    for (view = 0; view < MAX_VIEW_DOC; view++)
@@ -1355,11 +1303,7 @@ boolean             display;
 		       while (!stop);
 		       if (pAbbCur != NULL)
 			 /* applique la nouvelle regle specifique */
-#ifdef __COLPAGE__
-			 if (ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr, &bool))
-#else  /* __COLPAGE__ */
 			 if (ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr))
-#endif /* __COLPAGE__ */
 			   {
 			     pAbbCur->AbWidthChange = TRUE;
 			     /* la position vert.du pave a change' */
@@ -1524,11 +1468,7 @@ boolean             display;
 		       while (!stop);
 		       if (pAbbCur != NULL)
 			 /* applique la nouvelle regle specifique */
-#ifdef __COLPAGE__
-			 if (ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr, &bool))
-#else  /* __COLPAGE__ */
 			 if (ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr))
-#endif /* __COLPAGE__ */
 			   {
 			     pAbbCur->AbHeightChange = TRUE;
 			     RedispAbsBox (pAbbCur, pDoc);	/* indique le pave a reafficher */
@@ -1588,9 +1528,6 @@ PtrElement          pEl;
   PtrAbstractBox      pAb;
   int                 view;
   boolean             stop;
-#ifdef __COLPAGE__
-  boolean             bool;
-#endif /* __COLPAGE__ */
 
   /* parcourt toutes les vues du document */
   for (view = 1; view <= MAX_VIEW_DOC; view++)
@@ -1612,19 +1549,9 @@ PtrElement          pEl;
 	    else
 	      pAb = pAb->AbNext;
 	  while (!stop);
-#ifdef __COLPAGE__
-	  /* boucle sur les paves de l'element */
-	  while (pAb != NULL)
-	    {
-#else  /* __COLPAGE__ */
 	      if (pAb != NULL)
-#endif /* __COLPAGE__ */
 		/* applique la regle de presentation specifique a ce pave' */
-#ifdef __COLPAGE__
-		if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL, &bool))
-#else  /* __COLPAGE__ */
 		  if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL))
-#endif /* __COLPAGE__ */
 		    {
 		      switch (pPRule->PrType)
 			{
@@ -1667,10 +1594,6 @@ PtrElement          pEl;
 		      /* indique le pave a faire reafficher */
 		      RedispAbsBox (pAb, pDoc);
 		    }
-#ifdef __COLPAGE__
-	      pAb = pAb->AbNextRepeated;
-	    }
-#endif /* __COLPAGE__ */
 	}
 }
 
@@ -2477,18 +2400,10 @@ PtrPSchema          pSPR;
 
 #endif /* __STDC__ */
 {
-#ifdef __COLPAGE__
-  boolean           bool;
-#endif /* __COLPAGE__ */
-
   if (pRP == NULL)
      return;
 
-#ifdef __COLPAGE__
-  ApplyRule (pRP, pSPR, pAb, pDoc, pAttr, &bool);
-#else  /* __COLPAGE__ */
   ApplyRule (pRP, pSPR, pAb, pDoc, pAttr);
-#endif /* __COLPAGE__ */
   /* marque que le pave a change' et doit etre reaffiche' */
   switch (pRP->PrType)
     {
@@ -2564,10 +2479,6 @@ int                 viewSch;
   boolean             stop;
   int                 view;
 
-#ifdef __COLPAGE__
-  boolean             bool;
-
-#endif /* __COLPAGE__ */
   /* applique la regle standard de meme type que la regle courante */
   /* aux paves de l'element qui existent dans les vues de meme type */
   /* que la view active. */

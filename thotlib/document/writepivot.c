@@ -349,20 +349,6 @@ PageType            t;
 	    case PgUser:
 	       TtaWriteByte (pivFile, C_PIV_USER_PAGE);
 	       break;
-#ifdef __COLPAGE__
-	    case ColComputed:
-	       TtaWriteByte (pivFile, C_PIV_COMPUTED_COL);
-	       break;
-	    case ColBegin:
-	       TtaWriteByte (pivFile, C_PIV_START_COL);
-	       break;
-	    case ColUser:
-	       TtaWriteByte (pivFile, C_PIV_USER_COL);
-	       break;
-	    case ColGroup:
-	       TtaWriteByte (pivFile, C_PIV_COL_GROUP);
-	       break;
-#endif /* __COLPAGE__ */
 	    default:
 	       break;
 	 }

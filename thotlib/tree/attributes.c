@@ -265,18 +265,10 @@ PtrAttribute        pAttr;
 		   frame = (pDoc)->DocAssocFrame[(pEl)->ElAssocNum - 1];
 		else
 		   frame = (pDoc)->DocViewFrame[view - 1];
-#ifdef __COLPAGE__
-		height = BreakPageHeight;
-#else  /* __COLPAGE__ */
 		height = PageHeight;
-#endif /* __COLPAGE__ */
 		ChangeConcreteImage (frame, &height, pAbsBox);
 		/* on ne reaffiche pas si on est en train de calculer les pages */
-#ifdef __COLPAGE__
-		if (BreakPageHeight == 0)
-#else  /* __COLPAGE__ */
 		if (PageHeight == 0)
-#endif /* __COLPAGE__ */
 		   DisplayFrame (frame);
 	     }
      }

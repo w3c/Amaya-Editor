@@ -875,7 +875,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 frame;
-   int                 valvisib, valzoom;
+   int                 valzoom;
    int                 value;
 
    UserErrorCode = 0;
@@ -2697,9 +2697,9 @@ View                view;
 	      /* it's a polyline: check the box limits */
 	      Bbuffer = pBox->BxBuffer;
 	      xMin = PixelToPoint (pBox->BxWidth) * 1000;
-	      xMax = 0.;
+	      xMax = 0;
 	      yMin = PixelToPoint (pBox->BxHeight) * 1000;
-	      yMax = 0.;
+	      yMax = 0;
 	      nbpoints = pBox->BxNChars;
 	      if (nbpoints == 0)
 		return;

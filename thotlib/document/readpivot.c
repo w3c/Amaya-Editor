@@ -651,36 +651,20 @@ BinFile             file;
 	       /* un message est affiche a l'utilisateur pour qu'il */
 	       /* repagine s'il le desire */
 	    case C_PIV_COMPUTED_COL:
-#ifdef __COLPAGE__
-	       typ = ColComputed;
-#else  /* __COLPAGE__ */
 	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-#endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_START_COL:
-#ifdef __COLPAGE__
-	       typ = ColBegin;
-#else  /* __COLPAGE__ */
 	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-#endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_USER_COL:
-#ifdef __COLPAGE__
-	       typ = ColUser;
-#else  /* __COLPAGE__ */
 	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-#endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_COL_GROUP:
-#ifdef __COLPAGE__
-	       typ = ColGroup;
-#else  /* __COLPAGE__ */
 	       typ = PgComputed;
 	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-#endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_REPEAT_PAGE:
 	       /* les tags page rappel sont transformees */
