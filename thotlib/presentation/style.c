@@ -3272,22 +3272,18 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
       break;
     case PRBorderTopColor:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      elType = TtaGetElementType(el);
       sprintf (buffer, "border-top-color: #%02X%02X%02X", red, green, blue);
       break;
     case PRBorderRightColor:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      elType = TtaGetElementType(el);
       sprintf (buffer, "border-right-color: #%02X%02X%02X", red, green, blue);
       break;
     case PRBorderBottomColor:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      elType = TtaGetElementType(el);
       sprintf (buffer, "border-bottom-color: #%02X%02X%02X", red, green, blue);
       break;
     case PRBorderLeftColor:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      elType = TtaGetElementType(el);
       sprintf (buffer, "border-left-color: #%02X%02X%02X", red, green, blue);
       break;
     case PRBorderTopStyle:
@@ -3429,24 +3425,41 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
     case PRDepth:
       break;
     case PRAdjust:
-      switch (settings->value.typed_data.value)
+      elType = TtaGetElementType(el);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	{
-	case AdjustLeft:
-	  strcpy (buffer, "text-align: left");
-	  break;
-	case AdjustRight:
-	  strcpy (buffer, "text-align: right");
-	  break;
-	case Centered:
-	  strcpy (buffer, "text-align: center");
-	  break;
-	case LeftWithDots:
-	  strcpy (buffer, "text-align: left");
-	  break;
-        case Justify:
-	  strcpy (buffer, "text-align: justify");
-	  break;
+	switch (settings->value.typed_data.value)
+	  {
+	  case AdjustLeft:
+	    strcpy (buffer, "text-anchor: start");
+	    break;
+	  case AdjustRight:
+	    strcpy (buffer, "text-anchor: end");
+	    break;
+	  case Centered:
+	    strcpy (buffer, "text-anchor: middle");
+	    break;
+	  }
 	}
+      else
+	switch (settings->value.typed_data.value)
+	  {
+	  case AdjustLeft:
+	    strcpy (buffer, "text-align: left");
+	    break;
+	  case AdjustRight:
+	    strcpy (buffer, "text-align: right");
+	    break;
+	  case Centered:
+	    strcpy (buffer, "text-align: center");
+	    break;
+	  case LeftWithDots:
+	    strcpy (buffer, "text-align: left");
+	    break;
+	  case Justify:
+	    strcpy (buffer, "text-align: justify");
+	    break;
+	  }
       break;
     case PRDirection:
       switch (settings->value.typed_data.value)

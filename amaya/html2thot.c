@@ -5106,7 +5106,8 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   DocumentTypes[doc] != docText &&
-		   (charRead == '<' || charRead == '>' ||
+		   (charRead == '<' || 
+		    (charRead == '>' && withinMarkup) ||
 		    (LgBuffer == 0 && withinMarkup)))
 	    {
 	      if (charRead == '<' || charRead == '>')

@@ -7948,7 +7948,10 @@ void AmayaClose (Document document, View view)
 	      /* normal close */
 	      RemoveAutoSavedDoc (i, url);
 	      if (url != NULL)
-		TtaFreeMemory (url);
+		{
+		  TtaFreeMemory (url);
+		  url = NULL;
+		}
 	    }
 	  else
 	    {
@@ -8148,7 +8151,7 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
   AutoSave_list = TtaGetMemory (AutoSave_list_len + 1);  
 
   len = strlen (url) + strlen (name) + 1;
-  len += 7; /*doctype + quotation marks + spaces */
+  len += 17; /*doctype + quotation marks + spaces */
   list_item  = TtaGetMemory (len);
   sprintf (list_item, "\"%s\" \"%s\" %d", name, url, doctype);
 

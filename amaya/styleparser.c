@@ -1502,6 +1502,61 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+  ParseCSSTextAnchor: parse a CSS text-anchor property (SVG property)
+  We use the Thot Adjust PRule to represent the text-anchor property
+  for CSS 1.0, as Adjust is not used otherwise in this context.
+  ----------------------------------------------------------------------*/
+static char *ParseCSSTextAnchor (Element element, PSchema tsch,
+				 PresentationContext context, char *cssRule,
+				 CSSInfoPtr css, ThotBool isHTML)
+{
+   PresentationValue   align;
+
+   align.typed_data.value = 0;
+   align.typed_data.unit = UNIT_REL;
+   align.typed_data.real = FALSE;
+
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "start", 5))
+     {
+	align.typed_data.value = AdjustLeft;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "middle", 6))
+     {
+	align.typed_data.value = Centered;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "end", 3))
+     {
+	align.typed_data.value = AdjustRight;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "inherit", 7))
+     {
+       /* not implemented */
+       cssRule = SkipWord (cssRule);
+       return (cssRule);
+     }
+   else
+     {
+       cssRule = SkipValue ("Invalid text-anchor value", cssRule);
+       return (cssRule);
+     }
+
+   /*
+    * install the new presentation.
+    */
+   if (align.typed_data.value && DoApply)
+     {
+       if (tsch)
+	 cssRule = CheckImportantRule (cssRule, context);
+       TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
+     }
+   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
    ParseCSSDirection: parse a CSS direction property
   ----------------------------------------------------------------------*/
 static char *ParseCSSDirection (Element element, PSchema tsch,
@@ -3980,6 +4035,7 @@ static CSSProperty CSSProperties[] =
    {"position", ParseCSSPosition},
    {"right", ParseCSSRight},
    {"text-align", ParseCSSTextAlign},
+   {"text-anchor", ParseCSSTextAnchor},
    {"text-indent", ParseCSSTextIndent},
    {"text-decoration", ParseCSSTextDecoration},
    {"text-transform", ParseCSSTextTransform},
