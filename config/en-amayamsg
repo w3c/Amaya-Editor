@@ -28,73 +28,72 @@
 27 Contacting %s
 28 Looking up %s
 29 Unknown Status
-30 Detected an Xt Error
-31 Authentication Dialogue
-32 Authorization failure for %s
-33 %s loaded but no data is available
-34 Transfer interrupted!
-35 %s is not available at the moment. Please retry at some other time
-36 %s loaded
-37 Saving %s
-38 Cannot save %s
-39 english system errors messages
-40 An anchor cannot contain these elements
-41 Cannot create an anchor within an anchor
-42 Sorry, no GET support yet for this kind of URL: %s
-43 Sorry, no PUT support yet for this kind of URL: %s
-44 This version of Amaya does not support this feature
-45 Finished writing %s
-46 Could not normalize %s
-47 Coult not create temporary file directory %s
-48 No transformation applicable to the selection
-49 The transformation failed 
-50 syntax error in file HTML.trans line %s
-51 Add
-52 Show
-53 Browse
-54 External CSS
-55 Delete CSS
-56 Delete
-57 Save
-58 Save as
-59 Reload
-60 New
-61 CSS
-62 Saving will overwrite the following URLs:
-63 Failed to save to URL
-64 Save to disk ?
-65 BCopy Images
-66 BTransform URLs
-67 Document location
-68 Images location
-69 Object location
-70 Document style
-71 User's Preferences
-72 CSS file 1                                            
-73 Rule list for file 1                                   
-74 CSS file 2                                            
-75 Rule list for file 2                                   
-76 Select an external Style Sheet
-77 Delete a Style Sheet
-78 <HTML><HEAD>ERROR</HEAD><BODY><TITLE>ERROR: The requested URL could not be retrieved</TITLE><H2>The requested URL could not be retrieved</H2><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
-79 Please enter username:
-80 %d outstanding requests
-81 Garbage collecting persistent cache - please wait...
-82 Interrupt transfer
-83 Previous document
-84 Next document
-85 Reload
-86 Save
-87 Print
-88 Search
-89 Emphasis
-90 Strong
-91 Fixed font
-92 Style sheet
-93 Insert image
-94 Heading level 1
-95 Heading level 2
-96 Heading level 3
-97 Bulleted list
-98 Numbered list
-99 Definition list
+30 Authentication Dialogue
+31 Authorization failure for %s
+32 %s loaded but no data is available
+33 Transfer interrupted!
+34 %s is not available at the moment. Please retry at some other time
+35 %s loaded
+36 Saving %s
+37 Cannot save %s
+38 english system errors messages
+39 An anchor cannot contain these elements
+40 Cannot create an anchor within an anchor
+41 Sorry, no GET support yet for this kind of URL: %s
+42 Sorry, no PUT support yet for this kind of URL: %s
+43 This version of Amaya does not support this feature
+44 Finished writing %s
+45 Could not normalize %s
+46 Coult not create temporary file directory %s
+47 No transformation applicable to the selection
+48 The transformation failed 
+49 syntax error in file HTML.trans line %s
+50 Add
+51 Show
+52 Browse
+53 External CSS
+54 Delete CSS
+55 Delete
+56 Save
+57 Save as
+58 Reload
+59 New
+60 CSS
+61 Saving will overwrite the following URLs:
+62 Failed to save to URL
+63 Save to disk ?
+64 BCopy Images
+65 BTransform URLs
+66 Document location
+67 Images location
+68 Object location
+69 Document style
+70 User's Preferences
+71 CSS file 1                                            
+72 Rule list for file 1                                   
+73 CSS file 2                                            
+74 Rule list for file 2                                   
+75 Select an external Style Sheet
+76 Delete a Style Sheet
+77 <HTML><HEAD>ERROR</HEAD><BODY><TITLE>ERROR: The requested URL could not be retrieved</TITLE><H2>The requested URL could not be retrieved</H2><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
+78 Please enter username:
+79 %d outstanding requests
+80 Garbage collecting persistent cache - please wait...
+81 Interrupt transfer
+82 Previous document
+83 Next document
+84 Reload
+85 Save
+86 Print
+87 Search
+88 Emphasis
+89 Strong
+90 Fixed font
+91 Style sheet
+92 Insert image
+93 Heading level 1
+94 Heading level 2
+95 Heading level 3
+96 Bulleted list
+97 Numbered list
+98 Definition list

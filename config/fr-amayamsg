@@ -28,73 +28,72 @@
 27 Connexion vers %s
 28 Recherche de %s
 29 Status inconnu
-30 Une erreur Xt est survenue
-31 Dialogue d'authentification
-32 Manque d'autorisation pour acc\351der \340 %s
-33 %s charg\351 mais ne comporte pas de donn\351es
-34 Interruption du transfert!
-35 Indisponibilit\351 momentaire de %s. Ressayez plus tard
-36 %s  charg\351
-37 Sauvegarde de %s
-38 Impossible de sauvegarder %s
-39 french system error messages
-40 Une ancre ne peut pas contenir ces \351l\351ments
-41 Impossible de cr\351er une ancre dans une ancre
-42 Pas de support GET pour cette URL: %s
-43 Pas de support PUT pour cette URL: %s
-44 Cette version d'Amaya ne supporte pas cette option
-45 Fin d'\351criture de %s
-46 Imposible de normalizer %s
-47 Imposible de creer le r\351pertoire temporaire %s
-48 Aucune transformation possible
-49 La transformation a echou\351
-50 HTML.trans erreur de syntaxe ligne %s
-51 Ajouter
-52 Visualiser
-53 Browse
-54 CSS Externe
-55 Supprimer CSS
-56 Supprimer
-57 Sauvegarder
-58 Sauvegarder sous
-59 Recharger
-60 Nouveau
-61 CSS
-62 La sauvegarde entrainera \351craser les URLs suivantes :
-63 Erreur de sauvegarde de l'URL 
-64 Sauvegarder sur le disque ?
-65 BCopier Images
-66 Btransformer URLs
-67 Emplacement du document
-68 Emplacement des images
-69 Emplacement de l'objet
-70 Style du document
-71 Pr\351f\351rences de l'utilisateur
-72 Fichier 1 CSS                                         
-73 Liste de r\350gle pour fichier 1                         
-74 Fichier 2 CSS                                         
-75 Liste de règle pour fichier 2                           
-76 S\351lectionner une nouvelle feuille de style
-77 Supprimer une feuille de style
-78 <HTML><HEAD>ERREUR</HEAD><BODY><TITLE>ERREUR: L'URL recherchée pourrait ne pas être accessible</TITLE><H2>ERREUR: L'URL recherchée pourrait ne pas être accessible</H2><HR><P>Lors de la recherche de l'URL:<A HREF=\"%s\">%s</A></P><P>l'erreur suivante s'est produite :</P><UL><LI><STRONG>Connection echouée</STRONG></UL><P>Le système indique:</P><PRE><I>(%d) %s</I></PRE><P>Ce qui voudrait dire :</P><PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.</PRE><PRE>Essayer plus tard.</PRE><P></P><HR>\n</BODY></HTML>
-79 Entrer le nom utilisateur:
-80 Il y a %d requêtes en cours
-81 Netoyage du cache persistant - cela peut prendre quelques secondes ...
-82 Interrompre le chargement
-83 Document pr\351c\351dent
-84 Document suivant
-85 Recharger
-86 Sauver
-87 Imprimer
-88 Chercher
-89 Italique
-90 Gras
-91 Fonte fixe
-92 Feuille de style
-93 Ajout d'une image
-94 Titre niveau 1
-95 Titre niveau 2
-96 Titre niveau 3
-97 Liste
-98 Liste num\351rot\351e
-99 Liste de d\351finitions
+30 Dialogue d'authentification
+31 Manque d'autorisation pour acc\351der \340 %s
+32 %s charg\351 mais ne comporte pas de donn\351es
+33 Interruption du transfert!
+34 Indisponibilit\351 momentaire de %s. Ressayez plus tard
+35 %s  charg\351
+36 Sauvegarde de %s
+37 Impossible de sauvegarder %s
+38 french system error messages
+39 Une ancre ne peut pas contenir ces \351l\351ments
+40 Impossible de cr\351er une ancre dans une ancre
+41 Pas de support GET pour cette URL: %s
+42 Pas de support PUT pour cette URL: %s
+43 Cette version d'Amaya ne supporte pas cette option
+44 Fin d'\351criture de %s
+45 Imposible de normalizer %s
+46 Imposible de creer le r\351pertoire temporaire %s
+47 Aucune transformation possible
+48 La transformation a echou\351
+49 HTML.trans erreur de syntaxe ligne %s
+50 Ajouter
+51 Visualiser
+52 Browse
+53 CSS Externe
+54 Supprimer CSS
+55 Supprimer
+56 Sauvegarder
+57 Sauvegarder sous
+58 Recharger
+59 Nouveau
+60 CSS
+61 La sauvegarde entrainera \351craser les URLs suivantes :
+62 Erreur de sauvegarde de l'URL 
+63 Sauvegarder sur le disque ?
+64 BCopier Images
+65 Btransformer URLs
+66 Emplacement du document
+67 Emplacement des images
+68 Emplacement de l'objet
+69 Style du document
+70 Pr\351f\351rences de l'utilisateur
+71 Fichier 1 CSS                                         
+72 Liste de r\350gle pour fichier 1                         
+73 Fichier 2 CSS                                         
+74 Liste de règle pour fichier 2                           
+75 S\351lectionner une nouvelle feuille de style
+76 Supprimer une feuille de style
+77 <HTML><HEAD>ERREUR</HEAD><BODY><TITLE>ERREUR: L'URL recherchée pourrait ne pas être accessible</TITLE><H2>ERREUR: L'URL recherchée pourrait ne pas être accessible</H2><HR><P>Lors de la recherche de l'URL:<A HREF=\"%s\">%s</A></P><P>l'erreur suivante s'est produite :</P><UL><LI><STRONG>Connection echouée</STRONG></UL><P>Le système indique:</P><PRE><I>(%d) %s</I></PRE><P>Ce qui voudrait dire :</P><PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.</PRE><PRE>Essayer plus tard.</PRE><P></P><HR>\n</BODY></HTML>
+78 Entrer le nom utilisateur:
+79 Il y a %d requêtes en cours
+80 Netoyage du cache persistant - cela peut prendre quelques secondes ...
+81 Interrompre le chargement
+82 Document pr\351c\351dent
+83 Document suivant
+84 Recharger
+85 Sauver
+86 Imprimer
+87 Chercher
+88 Italique
+89 Gras
+90 Fonte fixe
+91 Feuille de style
+92 Ajout d'une image
+93 Titre niveau 1
+94 Titre niveau 2
+95 Titre niveau 3
+96 Liste
+97 Liste num\351rot\351e
+98 Liste de d\351finitions
