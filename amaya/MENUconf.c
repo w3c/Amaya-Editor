@@ -4390,9 +4390,11 @@ Prop_Color GetProp_Color()
   ----------------------------------------------------------------------*/
 void SetProp_Annot( const Prop_Annot * prop )
 {
+#ifdef ANNOTATIONS
 #ifdef _WX
   GProp_Annot = *prop;
 #endif /* _WX */
+#endif /* ANNOTATIONS */
 }
 
 /*----------------------------------------------------------------------
@@ -4400,6 +4402,7 @@ void SetProp_Annot( const Prop_Annot * prop )
   ----------------------------------------------------------------------*/
 Prop_Annot GetProp_Annot()
 {
+#ifdef ANNOTATIONS
 #ifdef _WX
   return GProp_Annot;
 #else /* _WX */
@@ -4407,6 +4410,7 @@ Prop_Annot GetProp_Annot()
   memset(&prop, 0, sizeof(Prop_Annot) );
   return prop;
 #endif /* _WX */
+#endif /* ANNOTATIONS */
 }
 
 /*----------------------------------------------------------------------
