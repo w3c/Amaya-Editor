@@ -1849,12 +1849,12 @@
 	<message xml:lang="fr">Caractères invalides</message>
 </label>
 <label define="AM_XML_PROFILE">
-	<message xml:lang="en">In the current Amaya profile:</message>
-	<message xml:lang="fr">Dans le profil Amaya courant :</message>
-	<message xml:lang="it">Nel profilo attuale di Amaya:</message>
-	<message xml:lang="de">Im gegenwärtigen Amaya Profil:</message>
-	<message xml:lang="es">En el perfil actual de Amaya:</message>
-	<message xml:lang="pt">No perfil Amaya atual:</message>
+	<message xml:lang="en">With the current Amaya profile:</message>
+	<message xml:lang="fr">Avec le profil Amaya courant :</message>
+	<message xml:lang="it">Con profilo attuale di Amaya:</message>
+	<message xml:lang="de">Durch gegenwärtigen Amaya Profil:</message>
+	<message xml:lang="es">Con el perfil actual de Amaya:</message>
+	<message xml:lang="pt">Com perfil Amaya atual:</message>
 </label>
 <label define="AM_XML_WARNING">
 	<message xml:lang="en">Some tags/attributes are ignored - see Views/Show parsing errors</message>
@@ -1873,8 +1873,9 @@
 	<message xml:lang="pt">A codificação deste documento não é suportada por Amaya</message>
 </label>
 <label define="AM_XML_MISMATCH_PROFILE">
-	<message xml:lang="en">Warning: the user's profile will replace the document one</message>
-	<message xml:lang="fr">Le profil utilisateur remplacera celui défini dans le document</message>
+	<message xml:lang="en">Editing and saving this document will change its
+	type</message>
+	<message xml:lang="fr">Editer et sauver ce document changera son type</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>

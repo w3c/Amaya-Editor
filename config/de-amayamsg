@@ -216,10 +216,10 @@
 214 **Invalid XML - Show parsing errors?
 215 **Invalid characters - Reload as HTML or show parsing errors?
 216 **Invalid characters
-217 Im gegenwärtigen Amaya Profil:
+217 Durch gegenwärtigen Amaya Profil:
 218 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
 219 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-220 **Warning: the user's profile will replace the document one
+220 **Editing and saving this document will change its	type
 221 Nicht verfügbar
 222 Browsen
 223 Datei-Browser

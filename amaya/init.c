@@ -997,6 +997,9 @@ void    ChangeToEditorMode (Document doc)
 {
    Document  docSel;
 
+   if (DocumentTypes[doc] == docXml)
+     /* don't allow editing mode for XML document today */
+     return;
    docSel = TtaGetSelectedDocument ();
    if (docSel == doc)
      TtaUnselect (doc);
@@ -1140,7 +1143,11 @@ void CleanUpParsingErrors ()
 void CheckParsingErrors (Document doc)
 {
   char      *profile, *ptr, *reload;
-  
+
+  /* current Amaya profile */
+  profile = TtaGetEnvString ("Profile");
+  if (!profile)
+    profile = "";
   if (ErrFile)
     {
       /* Active the menu entry */
@@ -1189,9 +1196,6 @@ void CheckParsingErrors (Document doc)
 	{
 	  /* Some elements or attributes are not supported */
 	  /* for the current profile */
-	  profile = TtaGetEnvString ("Profile");
-	  if (!profile)
-	    profile = "";
 	  InitConfirm3L (doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
 			 profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
 	  CleanUpParsingErrors ();
@@ -1206,8 +1210,8 @@ void CheckParsingErrors (Document doc)
   else
     {
       TtaSetItemOff (doc, 1, Views, BShowLogFile);
-      /* Check the current parsing level */
-      if ((CurrentParsingLevel != L_Other) && TtaGetDocumentAccessMode (doc))
+      if ((CurrentParsingLevel != L_Other) && TtaCanEdit ())
+	/* Check the current profile increases the current parsing level */
 	if ((CurrentParsingLevel == L_Basic &&
 	     (ParsingLevel[doc] == L_Strict ||
 	      ParsingLevel[doc] == L_Xhtml11 ||
@@ -1217,7 +1221,9 @@ void CheckParsingErrors (Document doc)
 	      ParsingLevel[doc] == L_Transitional)) ||
 	    (CurrentParsingLevel == L_Xhtml11 &&
 	     ParsingLevel[doc] == L_Transitional))
-	  InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_XML_MISMATCH_PROFILE));
+	  InitConfirm3L (doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
+			 profile, TtaGetMessage (AMAYA, AM_XML_MISMATCH_PROFILE),
+			 FALSE);
     }
 }
 
@@ -1879,9 +1885,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 
       if (DocumentTypes[doc] == docHTML ||
 	  DocumentTypes[doc] == docSVG ||
-#ifdef XML_GENERIC      
 	  DocumentTypes[doc] == docXml ||
-#endif /* XML_GENERIC */
 	  DocumentTypes[doc] == docMath)
 	{
 	  /* close the Alternate view if it is open */
@@ -2448,7 +2452,7 @@ void ParseAsHTML (Document document, View view)
    /* parse with the HTML parser */
    StartParser (document, tempdocument, documentname, tempdir,
 		   tempdocument, FALSE);
-   DocumentMeta[document]->xmlformat = FALSE;
+   /* DocumentMeta[document]->xmlformat = FALSE; */
    
    /* fetch and display all images referred by the document */
    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
@@ -2872,7 +2876,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       /* if the document was already loaded, warn the user */
       if (IsDocumentLoaded (s, form_data))
-	InitConfirm3L (newdoc, 1,  TtaGetMessage (AMAYA, AM_DOUBLE_LOAD),
+	InitConfirm3L (newdoc, 1, TtaGetMessage (AMAYA, AM_DOUBLE_LOAD),
 		       TtaGetMessage (AMAYA, AM_UNSAVE), NULL, FALSE);
       DocumentURLs[newdoc] = s;
 
