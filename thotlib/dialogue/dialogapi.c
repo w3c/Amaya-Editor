@@ -35,9 +35,14 @@
 #include "appli_f.h"
 #include "message.h"
 
+#ifdef _WINDOWS
+#include "winsys.h"
+#endif /* _WINDOWS */
+
 #define THOT_EXPORT extern
 #include "thotcolor_tv.h"
 #include "frame_tv.h"
+#include "font_tv.h"
 
 /* Catalogues structures */
 #define CAT_INT        0
@@ -146,6 +151,8 @@ static Display*       GDp;
 #ifdef _WINDOWS
 static OPENFILENAME OpenFileName;
 static int cyValue = 10;
+
+static HWND   currentParent;
 #endif /* _WINDOWS */
 
 static ThotTranslations TextTranslations;
@@ -175,7 +182,7 @@ struct struct_winerror win_errtab[] = {
 /*****************************
  * MS-Windows Specific part. *
  *****************************/
-#define MAX_FRAMECAT 500
+#define MAX_FRAMECAT 50
 typedef struct FrCatalogue {
         struct Cat_Context*  Cat_Table[MAX_FRAMECAT] ;
 } FrCatalogue ;
@@ -271,16 +278,6 @@ ThotWindow win;
 }
 
 #ifdef _WINDOWS
-#if defined (WIN32)
-#   define IS_WIN32 TRUE
-#else
-#   define IS_WIN32 FALSE
-#endif
-
-#define IS_NT      IS_WIN32 && (BOOL)(GetVersion () < 0x80000000)
-#define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE (LOWORD (GetVersion ())) < 4))
-#define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2647,6 +2644,10 @@ char               *equiv;
                   WIN_AddFrameCatalogue (parent, catalogue) ;
 #                 endif /* _WINDOWS */
 	       }
+#          ifdef _WINDOWS
+           else	if (currentParent != 0)
+               WIN_AddFrameCatalogue (currentParent, catalogue) ;
+#          endif /* _WINDOWS */
 	     return;
 	  }
 
@@ -2895,6 +2896,8 @@ ThotWidget          parent;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+#  else  /* _WINDOWS */
+   int nbItems, i;
 #  endif /* _WINDOWS */
 
    if (ref == 0)
@@ -2912,6 +2915,12 @@ ThotWidget          parent;
 	     XtSetArg (args[0], XmNsubMenuId, NULL);
 	     XtSetValues (parent, args, 1);
 	     XtManageChild (parent);
+#            else  /* _WINDOWS */
+#            if 0
+             nbItems = GetMenuItemCount (parent);
+		     for (i = 0; i < nbItems; i ++)
+                  EnableMenuItem (parent, ref + i, MF_GRAYED);
+#            endif /* 0 */
 #            endif /* _WINDOWS */
 	  }
      }
@@ -2996,6 +3005,7 @@ char                button;
 
 #  ifdef _WINDOWS
    HMENU               menu;
+   int                 nbOldItems, ndx;
 #  else  /* _WINDOWS */
    Arg                 args[MAX_ARGS];
    ThotWidget          menu;
@@ -3043,6 +3053,9 @@ char                button;
 	     /* Creation du Popup Shell pour contenir le menu */
 #            ifdef _WINDOWS
 	     menu = parent;
+         if (menu == 0) {
+            menu = CreatePopupMenu ();
+         }
 #            else  /* _WINDOWS */
 	     n = 0;
 	     /*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
@@ -3113,6 +3126,11 @@ char                button;
 
 	catalogue->Cat_Data = -1;
 
+#   ifdef _WINDOWS
+    if (currentParent != 0)
+       WIN_AddFrameCatalogue (currentParent, catalogue) ;
+#   endif /* _WINDOWS */
+
 /*** Cree le titre du menu ***/
 	if (title != NULL)
 	  {
@@ -3179,6 +3197,12 @@ char                button;
 	if (equiv != NULL)
 	   n++;
 #       endif /* !_WINDOWS */
+#   ifdef _WINDOWS
+    nbOldItems = GetMenuItemCount (menu);
+    for (ndx = 0; ndx < nbOldItems; ndx ++)
+        RemoveMenu (menu, ref + ndx, MF_BYCOMMAND) ;
+#   endif /* _WINDOWS */
+
 	i = 0;
 	index = 0;
 	eindex = 0;
@@ -5616,6 +5640,7 @@ LPARAM lParam;
 #  endif /* AMAYA_DEBUG */
 
    if (frame != - 1) {
+      currentParent = FrMainRef [frame];
       catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
       if (catalogue != NULL)
 	 no = LOWORD (wParam) - catalogue->Cat_Ref;
@@ -5629,6 +5654,7 @@ LPARAM lParam;
       switch (catalogue->Cat_Type) {
              case CAT_PULL:
 	     case CAT_MENU:
+	     case CAT_POPUP:
 	          CallMenu (no, catalogue, NULL);
 	          break;
 	     case CAT_TMENU:
@@ -7219,8 +7245,13 @@ boolean             remanent;
 	XtSetValues (w, args, n);
 	XtManageChild (w);
 #       else  /* _WINDOWS */
-	ShowWindow (w, SW_SHOWNORMAL);
-	UpdateWindow (w);
+	if (catalogue->Cat_Type == CAT_POPUP) {
+	   if (!TrackPopupMenu (w,  TPM_LEFTALIGN, 20, 20, 0, currentParent, NULL))
+		   WinErrorBox (NULL);
+	} else {
+          ShowWindow (w, SW_SHOWNORMAL);
+          UpdateWindow (w);
+    }
 #       endif /* _WINDOWS */
      }
    /*===========> Active un formulaire */

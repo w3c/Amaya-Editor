@@ -485,7 +485,7 @@ LPARAM lParam;
 	string[0] = (char) wParam;
 	len = 1;
 	ThotInput (frame, &string[0], len, keyboard_mask, wParam);
-   } else if ((msg == WM_KEYDOWN) && (wParam >= 37) && (wParam <= 40)) {
+   } else if ((msg == WM_KEYDOWN) && (wParam >= 32) && (wParam <= 46)) {
 	  string[0] = (char) wParam;
 	  len = 1;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);

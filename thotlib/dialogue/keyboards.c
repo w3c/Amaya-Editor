@@ -451,9 +451,9 @@ caddr_t             call_d;
    handles the keyboard keys.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
+void         KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 #else  /* __STDC__ */
-static void         KbdCallbackHandler (w, param, call_d)
+void         KbdCallbackHandler (w, param, call_d)
 ThotWidget          w;
 int                 param;
 caddr_t             call_d;
@@ -882,14 +882,13 @@ void                KeyboardsLoadResources ()
      }
 
 #   ifndef _WINDOWS
-   SymbolIcons = LoadFont ("ivsymb");
+    SymbolIcons = LoadFont ("ivsymb");
 #   endif /* _WINDOWS */
-   if (SymbolIcons == NULL)
-     {
-       /*Fonte 'ivsymb' inaccessible */
-       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
-       SymbolIcons = FontDialogue;
-     }
+   if (SymbolIcons == NULL) {
+      /*Fonte 'ivsymb' inaccessible */
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
+      SymbolIcons = FontDialogue;
+   }
 }
 
 
@@ -974,4 +973,7 @@ View                view;
    /* Enregistre la position pour le dialogue */
    TtaSetDialoguePosition ();
    TtaSetCurrentKeyboard (3);
+#  ifdef _WINDOWS
+   CreateGreekKeyboardDlgWindow (NULL);
+#  endif /* _WINDOWS */
 }

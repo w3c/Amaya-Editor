@@ -9,7 +9,7 @@
  * Module dedicated to font handling.
  *
  * Author: I. Vatton (INRIA)
- *         D. Veillard (W3C/INRIA): Amaya porting on Windows NT and Window 95
+ *         R. Guetari & D. Veillard (W3C/INRIA): Windows NT/95 routines
  *
  */
 
@@ -65,6 +65,99 @@ static int  WIN_fdwStrikeOut;
 
 
 #ifdef _WINDOWS
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+ *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
+ *                    characteristics.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit)
+#else  /* __STDC__ */
+static HFONT WIN_LoadFont (alphabet, family, highlight, size, unit)
+char     alphabet;
+char     family;
+int      highlight;
+int      size;
+TypeUnit unit;
+#endif /* __STDC__ */
+{
+   HFONT hFont      = (HFONT) 0;
+
+   WIN_nHeight      = 0;
+   WIN_nWidth       = 0;
+   WIN_fnWeight     = FW_NORMAL;
+   WIN_fdwItalic    = FALSE;
+   WIN_fdwUnderline = FALSE;
+   WIN_fdwStrikeOut = FALSE;
+
+   if (alphabet != 'L' && alphabet != 'G' && alphabet != 'g')
+      return NULL;
+
+   if (alphabet == 'g' || alphabet == 'G') {
+      family    = 's';
+      highlight = 0 ;
+   }
+
+   switch (family) {
+          case 'T':
+          case 't':
+               sprintf (&WIN_lpszFace[0], "Times New Roman");
+               break;
+
+          case 'H':
+          case 'h':
+               sprintf (&WIN_lpszFace[0], "Arial");
+               break;
+
+          case 'C':
+          case 'c':
+               sprintf (&WIN_lpszFace[0], "Courier New");
+               break;
+
+          case 'S':
+          case 's':
+               sprintf (&WIN_lpszFace[0], "Symbol");
+               break;
+
+          default:
+               return NULL;
+   }
+
+   switch (StylesTable[highlight]) {
+          case 'r':
+               break;
+
+          case 'i':
+          case 'o':
+               WIN_fdwItalic = TRUE;
+               break;
+
+          case 'b':
+          case 'g':
+          case 'q':
+               WIN_fnWeight = FW_BOLD;
+               break;
+
+          default:
+               return NULL;
+   }
+
+   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
+
+   hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
+                       WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
+                       DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
+                       PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
+                       WIN_lpszFace);
+
+   if (hFont == NULL) {
+      WinErrorBox (NULL);
+   } 
+
+   return (hFont);									   
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
  *      WinLoadFont : Load a Windows font in a Device context.
  *----------------------------------------------------------------------*/
@@ -76,7 +169,37 @@ HDC     hdc;
 ptrfont font;
 #endif /* __STDC__ */
 {
-   SelectObject (hdc, font);
+   /* SelectObject (hdc, font); */
+	if (currentFont && currentFontCharacteristics) {
+	   if (currentFontCharacteristics->alphabet  != font->alphabet  ||
+	       currentFontCharacteristics->family    != font->family    ||
+		   currentFontCharacteristics->highlight != font->highlight ||
+		   currentFontCharacteristics->size      != font->size      ||
+		   currentFontCharacteristics->unit      != font->unit) {
+          TtaFreeMemory (currentFontCharacteristics);
+          currentFontCharacteristics = (ptrfont) TtaGetMemory (sizeof (winFont));
+		  currentFontCharacteristics->alphabet  = font->alphabet;
+          currentFontCharacteristics->family    = font->family;
+		  currentFontCharacteristics->highlight = font->highlight;
+		  currentFontCharacteristics->size      = font->size;
+		  currentFontCharacteristics->unit      = font->unit;
+
+          DeleteObject (currentFont);
+          currentFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, font->unit)	;
+	   }
+    } else {
+         TtaFreeMemory (currentFontCharacteristics);
+         currentFontCharacteristics = (ptrfont) TtaGetMemory (sizeof (winFont));
+         currentFontCharacteristics->alphabet  = font->alphabet;
+         currentFontCharacteristics->family    = font->family;
+         currentFontCharacteristics->highlight = font->highlight;
+         currentFontCharacteristics->size      = font->size;
+         currentFontCharacteristics->unit      = font->unit;
+
+         DeleteObject (currentFont);
+         currentFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, font->unit)	;
+    }
+    SelectObject (hdc, currentFont);
 }
 #endif /* _WINDOWS */
 
@@ -127,6 +250,7 @@ ptrfont             font;
         WinLoadFont (TtDisplay, font);
         /* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
         GetTextExtentPoint (TtDisplay, &c, 1, &size);
+		WIN_ReleaseDeviceContext ();
         return (size.cx);
 #       else  /* _WINDOWS */
         int                 l;
@@ -261,6 +385,7 @@ ptrfont             font;
         WIN_GetDeviceContext (-1);
         WinLoadFont (TtDisplay, font);
         res = GetTextMetrics (TtDisplay, &textMetric);
+		WIN_ReleaseDeviceContext ();
         if (res)
            return (textMetric.tmAscent + textMetric.tmDescent);
         else
@@ -620,100 +745,6 @@ TypeUnit            unit;
 #  endif /* _WINDOWS */
 }
 
-#ifdef _WINDOWS
-/*----------------------------------------------------------------------
- *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
- *                    characteristics.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame)
-#else  /* __STDC__ */
-static HFONT WIN_LoadFont (alphabet, family, highlight, size, unit, frame)
-char     alphabet;
-char     family;
-int      highlight;
-int      size;
-TypeUnit unit;
-int      frame;
-#endif /* __STDC__ */
-{
-   HFONT hFont      = (HFONT) 0;
-
-   WIN_nHeight      = 0;
-   WIN_nWidth       = 0;
-   WIN_fnWeight     = FW_NORMAL;
-   WIN_fdwItalic    = FALSE;
-   WIN_fdwUnderline = FALSE;
-   WIN_fdwStrikeOut = FALSE;
-
-   if (alphabet != 'L' && alphabet != 'G' && alphabet != 'g')
-      return NULL;
-
-   if (alphabet == 'g' || alphabet == 'G') {
-      family    = 's';
-      highlight = 0 ;
-   }
-
-   switch (family) {
-          case 'T':
-          case 't':
-               sprintf (&WIN_lpszFace[0], "Times New Roman");
-               break;
-
-          case 'H':
-          case 'h':
-               sprintf (&WIN_lpszFace[0], "Arial");
-               break;
-
-          case 'C':
-          case 'c':
-               sprintf (&WIN_lpszFace[0], "Courier New");
-               break;
-
-          case 'S':
-          case 's':
-               sprintf (&WIN_lpszFace[0], "Symbol");
-               break;
-
-          default:
-               return NULL;
-   }
-
-   switch (StylesTable[highlight]) {
-          case 'r':
-               break;
-
-          case 'i':
-          case 'o':
-               WIN_fdwItalic = TRUE;
-               break;
-
-          case 'b':
-          case 'g':
-          case 'q':
-               WIN_fnWeight = FW_BOLD;
-               break;
-
-          default:
-               return NULL;
-   }
-
-   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
-
-   hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
-                       WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
-                       DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
-                       PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
-                       WIN_lpszFace);
-
-   if (hFont == NULL) {
-      WinErrorBox (FrRef[frame]);
-   } 
-
-   return (hFont);									   
-}
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
  *      LoadNearestFont load the nearest possible font given a set
  *		of attributes like alphabet, family, the size and for
@@ -803,7 +834,20 @@ boolean             increase;
 	   strcpy (&TtPsFontName[i * 8], PsName);
 	   
 #          ifdef _WINDOWS
-	   ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame);
+	   ptfont = (ptrfont) TtaGetMemory (sizeof (winFont));
+	   ptfont->alphabet  = alphabet;
+	   ptfont->family    = family;
+	   ptfont->highlight = highlight;
+	   ptfont->size      = size;
+	   ptfont->unit      = unit;
+
+	   currentFontCharacteristics = (ptrfont) TtaGetMemory (sizeof (winFont));
+	   currentFontCharacteristics->alphabet  = alphabet;
+	   currentFontCharacteristics->family    = family;
+	   currentFontCharacteristics->highlight = highlight;
+	   currentFontCharacteristics->size      = size;
+	   currentFontCharacteristics->unit      = unit;
+	   /* ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame); */
 #          else  /* _WINDOWS */
 	   ptfont = LoadFont (textX);
 #          endif /* !_WINDOWS */

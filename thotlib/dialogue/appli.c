@@ -81,6 +81,12 @@ static XmString     null_string;
 #define ToolBar_GetToolTips(hwnd) \
     (HWND)SendMessage((hwnd), TB_GETTOOLTIPS, 0, 0L)
 
+#define ToolBar_ButtonStructSize(hwnd) \
+    (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
+
+#define ToolBar_AddBitmap(hwnd, nButtons, lptbab) \
+    (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
+
 #define ToolBar_AddString(hwnd, hinst, idString) \
     (int)SendMessage((hwnd), TB_ADDSTRING, (WPARAM)(HINSTANCE)hinst, (LPARAM)idString)
 
@@ -95,6 +101,8 @@ extern BOOL      WIN_UserGeometry;
 static HWND      hwndHead   ;
 static char*     txtZoneLabel;
 static boolean   paletteRealized = FALSE;
+
+static HRGN      hrgn;
 
 static char      URL_txt [500];
 static char      doc_title [500];
@@ -942,7 +950,8 @@ View                view;
 	if (w != 0)
 	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #   else  /* _WINDOWS */
-    SetActiveWindow (FrMainRef [idwindow]);
+    /* SetActiveWindow (FrMainRef [idwindow]); */
+	SetForegroundWindow (FrMainRef [idwindow]);
 #endif /* _WINDOWS */
      }
 }
@@ -1123,6 +1132,10 @@ LPARAM      lParam;
                  AmayaTBBitmap.nID   = IDR_TOOLBAR;
                  ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
+
+                 /*  ToolBar_ButtonStructSize (hwnd);
+				  ToolBar_AddBitmap (hwnd, 1, &AmayaTBBitmap); */
+
 #                ifdef AMAYA_TOOLTIPS
                  ToolBar_AddString (ToolBar, 0, &szTbStrings [0]);
                  hwndToolTip = ToolBar_GetToolTips (ToolBar);
@@ -1190,7 +1203,7 @@ LPARAM      lParam;
 					   APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
 				 else 
 					 WIN_ThotCallBack (hwnd, wParam, lParam);
-	             return (0);
+	             break;
 
             case WM_DESTROY:
 				 if (!viewClosed) {
@@ -1204,7 +1217,7 @@ LPARAM      lParam;
 
                  viewClosed = FALSE;
                  PostQuitMessage (0);
-                 return 0 ;
+                 break ;
 
             case WM_SIZE: {
                  int   cx = LOWORD (lParam) ;
@@ -2047,26 +2060,24 @@ int                 raz;
 #endif /* __STDC__ */
 {
    int              clipx, clipy, clipwidth, clipheight;
-#ifndef _WINDOWS
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
    XRectangle        rect;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
-   if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf)
-     {
+   if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
 	/* On calcule le rectangle de clipping su la fenetre */
 	clipx = *xd - orgx;
-	if (clipx < 0)
-	  {
-	     *xd -= clipx;
-	     clipx = 0;
-	  }
+	if (clipx < 0) {
+	   *xd -= clipx;
+	   clipx = 0;
+	}
 
 	clipy = *yd - orgy;
-	if (clipy < 0)
-	  {
-	     *yd -= clipy;
-	     clipy = 0;
-	  }
+	if (clipy < 0) {
+	   *yd -= clipy;
+	   clipy = 0;
+	}
 
 	clipwidth = FrameTable[frame].FrWidth + orgx;
 	if (*xf > clipwidth)
@@ -2076,7 +2087,7 @@ int                 raz;
 	   *yf = clipheight;
 	clipwidth = *xf - *xd;
 	clipheight = *yf - *yd;
-#ifndef _WINDOWS
+#   ifndef _WINDOWS
 	rect.x = 0;
 	rect.y = 0;
 	rect.width = clipwidth;
@@ -2087,9 +2098,18 @@ int                 raz;
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-#endif /* _WINDOWS */
+#   else  /* _WINDOWS */ 
+    WIN_GetDeviceContext (frame);
+    hrgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
+                          clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight);
+    SelectClipRgn(TtDisplay, hrgn); 
+#   endif /* _WINDOWS */
 	if (raz > 0)
+#      ifdef _WINDOWS 
+	   Clear (frame, clipwidth, clipheight, clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin);
+#      else  /* _WINDOWS */
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
+#      endif /* _WINDOWS */
      }
 }
 
@@ -2105,7 +2125,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    XRectangle          rect;
 
    rect.x = 0;
@@ -2116,7 +2136,9 @@ int                 frame;
    XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted); 
    XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+   SelectClipRgn(TtDisplay, NULL); 
+#  endif /* _WINDOWS */
 }
 
 

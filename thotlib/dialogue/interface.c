@@ -1222,11 +1222,10 @@ MSG                *msg;
 
 #endif /* __STDC__ */
 {
-   if (msg->message == WM_QUIT)
-      exit (0);
-
-   TranslateMessage (msg);
-   DispatchMessage (msg);
+   if (msg->message != WM_QUIT)	{
+      TranslateMessage (msg);
+      DispatchMessage (msg);
+   }
 }
 #endif
 

@@ -42,6 +42,10 @@
 static boolean      CloseDontSave;
 static boolean      SaveBeforeClosing;
 
+#ifdef _WINDOWS
+extern boolean viewClosed;
+#endif /* _WINDOWS */
+
 #include "views_f.h"
 #include "appdialogue_f.h"
 #include "actions_f.h"
@@ -219,5 +223,8 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   viewClosed = TRUE;
+#  endif /* _WINDOWS */
    CloseADocument (document, document, view);
 }

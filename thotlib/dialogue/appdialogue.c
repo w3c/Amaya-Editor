@@ -87,7 +87,6 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #define WM_ENTER (WM_USER)
 
 extern TBADDBITMAP AmayaTBBitmap;
-extern boolean     viewClosed;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static int     currentFrame;
@@ -102,17 +101,17 @@ static HWND hwndTB;
 static int   tipIndex = 0;
 static int   strIndex = 0;
 extern int   CommandToString [MAX_BUTTON];
-extern char  szTbStrings [MAX_FRAME][4096];
+extern char  szTbStrings [4096];
 #endif /* AMAYA_TOOLTIPS */
-
-#define ToolBar_ButtonStructSize(hwnd) \
-    (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
 
 #define ToolBar_AddBitmap(hwnd, nButtons, lptbab) \
     (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
 
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
+
+#define ToolBar_ButtonStructSize(hwnd) \
+    (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
 
 HMENU hmenu;
 int   menu_item ;
@@ -129,7 +128,7 @@ int iString;
    LPSTR pString ;
 
    /* Cycle through to requested string */
-   pString = &szTbStrings[frame][0] ;
+   pString = &szTbStrings [0] ;
    for (i = 0 ; i < iString ; i++) {
        cb = lstrlen (pString) ;
        pString += (cb + 1) ;
@@ -1434,8 +1433,8 @@ char               *info;
 #                    endif /* AMAYA_TOOLTIPS */
                      FrameTable[frame].Button[i] = w;
                      FrameTable[frame].Call_Button[i] = (Proc) procedure;
-                     ToolBar_ButtonStructSize (WinToolBar[frame]);
-                     ToolBar_AddBitmap (WinToolBar[frame], i+1, &AmayaTBBitmap);
+					 ToolBar_ButtonStructSize (WinToolBar[frame]);
+                     ToolBar_AddBitmap (WinToolBar[frame], i+1 , &AmayaTBBitmap);
                      ToolBar_InsertButton (WinToolBar[frame], i, w);
                   } else {
                         w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
@@ -1455,7 +1454,7 @@ char               *info;
                   if (info != NULL) {
 #                    ifdef _WINDOWS
 #            ifdef AMAYA_TOOLTIPS
-		     strcat (&szTbStrings[frame][strIndex], info);
+		     strcat (&szTbStrings[strIndex], info);
 		     strIndex += (strlen (info) + 1);
 #            endif /* AMAYA_TOOLTIPS */
 #                    else  /* !_WINDOWS */
