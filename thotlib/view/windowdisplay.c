@@ -1528,28 +1528,35 @@ int                 pattern;
    if (width <= 0 || height <= 0)
       return;
 
-   if (width > thick + 1)
-     width = width - thick - 1;
-   if (height > thick + 1)
-     height = height - thick - 1;
-   x += thick / 2;
-   y += thick / 2;
-
    WIN_GetDeviceContext (frame);
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
    /* SelectClipRgn(TtDisplay, clipRgn); */
    if (pat == 0 && thick <= 0)
+	 if (pattern > 2)
+	 {
+	   /* draw an empty box instead of nothing */
+	   thick = 1;
+	   style = 0;
+	 }
+	 else
       return;
 
+   if (width > thick + 1)
+     width = width - thick - 1;
+   if (height > thick + 1)
+     height = height - thick - 1;
+   x = x + (thick+1) / 2;
+   y = y + (thick+1) / 2;
+
    WinLoadGC (TtDisplay, fg, RO);
-   if (pat != 0) {
+   /*if (pat != 0) {*/
       hBrush = CreateSolidBrush (ColorPixel (bg));
       hOldBrush = SelectObject (TtDisplay, hBrush);
-   } else {
+   /*} else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
 		 hBrush = (HBRUSH) 0;
-   }
+   }*/
 
    if (thick > 0) {
       if (thick <= 1) {
