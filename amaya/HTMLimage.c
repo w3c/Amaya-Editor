@@ -271,7 +271,6 @@ Element             el;
 		       if (i != HT_ERROR) 
 			 desc->status = IMAGE_LOADED;
 		       else {
-			 FilesLoading[doc]--;
 			 update = TRUE;
 			 desc->status = IMAGE_NOT_LOADED;
 		       }
