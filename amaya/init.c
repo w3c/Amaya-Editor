@@ -348,6 +348,73 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
 }
 
 /*----------------------------------------------------------------------
+   DocumentTypeString
+   Returns a string that represents the document type or the current
+   profile.
+  ----------------------------------------------------------------------*/
+char * DocumentTypeString (Document document)
+{
+  char *result;
+
+  result = NULL;
+  switch (DocumentTypes[document])
+    {
+    case docText:
+      result = "Text file";
+      break;
+    case docImage:
+      result = "Image";
+    case docCSS:
+      result = "CSS Style Sheet";
+      break;
+    case docSource:
+      result = "Document source";
+      break;
+    case docAnnot:
+      result = "Annotation";
+      break;
+    case docLog:
+      result = "Log File"; 
+      break;
+    case docSVG:
+      result = "SVG";
+      break;
+    case docXml:
+      result = "Generic XML";
+      break;
+    default:
+      break;
+    }
+
+  if (!result) /* try the profiles */
+    {
+      switch (TtaGetDocumentProfile (document))
+	{
+	case L_Xhtml11:
+	  result = "XHTML 1.1";
+	  break;
+	case L_Other:
+	  result = "Unknown";
+	  break;
+	case L_Basic:
+	  result = "XHTML 1.0 Basic";
+	  break;
+	case L_Strict:
+	  result = "XHTML 1.0 Strict";
+	  break;
+	case L_Transitional:
+	  result = "XHTML 1.0 Transitional";
+	  break;
+	case L_MathML:
+	  result = "Mathml";
+	  break;
+	}
+    }
+
+  return (result);
+}
+
+/*----------------------------------------------------------------------
    DocumentInfo
    Displays the document informations given by the header
   ----------------------------------------------------------------------*/
@@ -359,7 +426,7 @@ void DocumentInfo (Document document, View view)
   /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
 		"Document Information",
-		0, NULL, FALSE, 7, 'L', D_DONE);
+		0, NULL, FALSE, 8, 'L', D_DONE);
 
    /* Document information labels */
    TtaNewLabel (BaseDialog + DocInfoTitle1,
@@ -370,6 +437,11 @@ void DocumentInfo (Document document, View view)
    TtaNewLabel (BaseDialog + DocInfoURLTitle,
 		BaseDialog + DocInfoForm,
 		"URL");
+
+   /* Document type */
+   TtaNewLabel (BaseDialog + DocInfoDocTypeTitle,
+		BaseDialog + DocInfoForm,
+		"DOCUMENT TYPE");
 
    /* Mime Type */
    TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
@@ -404,6 +476,13 @@ void DocumentInfo (Document document, View view)
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
    TtaNewLabel (BaseDialog + DocInfoURL,
+		BaseDialog + DocInfoForm, content);
+
+   /* Document Type */
+   content = DocumentTypeString (document);
+   if (!content)
+     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
+   TtaNewLabel (BaseDialog + DocInfoDocType,
 		BaseDialog + DocInfoForm, content);
 
    /* Mime Type */

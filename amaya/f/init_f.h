@@ -8,6 +8,7 @@
 
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
+extern char * DocumentTypeString ( Document document );
 extern void DocumentInfo ( Document document,
                            View view );
 extern Document IsDocumentLoaded ( char *documentURL,
@@ -197,6 +198,7 @@ extern void AmayaClose ( Document document,
 
 extern DocumentMetaDataElement *DocumentMetaDataAlloc (/* void */);
 extern void DocumentMetaClear (/* DocumentMetaDataElement *me */);
+extern char * DocumentTypeString (/* Document document */);
 extern void DocumentInfo (/* Document document,
                              View view */);
 extern Document IsDocumentLoaded (/* char *documentURL,
