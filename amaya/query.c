@@ -3779,13 +3779,11 @@ ThotBool CheckSingleInstance (char *pid_dir)
 	  sscanf (ptr, DIR_STR"%d", &pid);
 	  if (kill (pid, 0) == -1)
 	    {
-	      printf ("removing stale instance process id %s\n", filename);
 	      /* erase the stale pid file */
 	      TtaFileUnlink (filename);
 	    }
 	  else /* we found one live instance */
 	    {
-	      printf ("found live instance %s\n", filename);
 	      instances++;
 	    }
 	  break;
@@ -3807,7 +3805,6 @@ void FreeAmayaCache (void)
 
   /* unregister this instance of Amaya */
   pid = getpid ();
-  printf ("unregistrering instance %d\n", pid);
   sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
   if (TtaFileExist (str))
     TtaFileUnlink (str);
@@ -3863,7 +3860,6 @@ void InitAmayaCache (void)
       for (i = 0; i < DocumentTableLength; i++)
 	{      
 	  sprintf (str, "%s%c%d%c", TempFileDirectory, DIR_SEP, i, DIR_SEP);
-	  printf ("Cleaning %s\n", str);
 	  RecCleanCache (str);
 	}
     }
@@ -3878,7 +3874,6 @@ void InitAmayaCache (void)
 #ifndef _WINDOWS
   /* register this instance of Amaya */
   pid = getpid ();
-  printf ("Registering instance %d\n", pid);
   sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
   fd_pid = open (str, O_CREAT, S_IRUSR | S_IWUSR );
   if (fd_pid != -1)
@@ -3887,6 +3882,3 @@ void InitAmayaCache (void)
     printf ("Couldn't create fd_pid %s\n", str);
 #endif /* _WINDOWS */
 }
-
-
-
