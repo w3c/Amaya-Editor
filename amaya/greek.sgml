@@ -1,192 +1,154 @@
 TextTRANSLATE Grec
-	BEGIN
-	'\40' -> '&emsp;';
-	'\41' -> '&excl;';
-	'\42' -> '&forall;';
-	'\43' -> '&num;';
-	'\44' -> '&exist;';
-	'\45' -> '&percnt;';
+  BEGIN
+  '\42' -> '&forall;';	{ for all, U+2200 ISOtech }
+  '\44' -> '&exist;';	{ there exists, U+2203 ISOtech }
 	'\46' -> '&amp;';
-	'''' -> '&ni;';
-	'\50' -> '&lpar;';
-	'\51' -> '&rpar;';
-	'\52' -> '&ast;';
-	'\53' -> '&plus;';
-	'\54' -> '&comma;';
-	'\55' -> '&minus;';
-	'\56' -> '&period;';
-	'\57' -> '&sol;';
-	'\60' -> '&zero;';
-	'\61' -> '&one;';
-	'\62' -> '&two;';
-	'\63' -> '&three;';
-	'\64' -> '&four;';
-	'\65' -> '&five;';
-	'\66' -> '&six;';
-	'\67' -> '&seven;';
-	'\70' -> '&eight;';
-	'\71' -> '&nine;';
-	'\72' -> '&colon;';
-	'\73' -> '&semi;';
-	'\74' -> '&lt;';
-	'\75' -> '&equals;';
-	'\76' -> '&gt;';
-	'\77' -> '&quest;';
-	'\100' -> '&cong;';
-	'\101' -> '&Agr;';
-	'\102' -> '&Bgr;';
-	'\103' -> '&KHgr;';
-	'\104' -> '&Delta;';
-	'\105' -> '&Egr;';
-	'\106' -> '&Phi;';
-	'\107' -> '&Gamma;';
-	'\110' -> '&EEgr;';
-	'\111' -> '&Igr;';
-	'\112' -> '&thetav;';
-	'\113' -> '&Kgr;';
-	'\114' -> '&Lambda;';
-	'\115' -> '&Mgr;';
-	'\116' -> '&Ngr;';
-	'\117' -> '&Ogr;';
-	'\120' -> '&Pi;';
-	'\121' -> '&Theta;';
-	'\122' -> '&Rgr;';
-	'\123' -> '&Sigma;';
-	'\124' -> '&Tgr;';
-	'\125' -> '&Upsi;';
-	'\126' -> '&sigmav;';
-	'\127' -> '&Omega;';
-	'\130' -> '&Xi;';
-	'\131' -> '&Psi;';
-	'\132' -> '&Zgr;';
-	'\133' -> '&lsqb;';
-	'\134' -> '&there4;';
-	'\135' -> '&rsqb;';
-	'\136' -> '&bottom;';
-	'\137' -> '&lowbar;';
-	'\141' -> '&alpha;';
-	'\142' -> '&beta;';
-	'\143' -> '&chi;';
-	'\144' -> '&delta;';
-	'\145' -> '&epsiv;';
-	'\146' -> '&phi;';
-	'\147' -> '&gamma;';
-	'\150' -> '&eta;';
-	'\151' -> '&iota;';
-	'\152' -> '&phiv;';
-	'\153' -> '&kappa;';
-	'\154' -> '&lambda;';
-	'\155' -> '&mu;';
-	'\156' -> '&nu;';
-	'\157' -> '&ogr;';
-	'\160' -> '&pi;';
-	'\161' -> '&theta;';
-	'\162' -> '&rho;';
-	'\163' -> '&sigma;';
-	'\164' -> '&tau;';
-	'\165' -> '&upsi;';
-	'\166' -> '&piv;';
-	'\167' -> '&omega;';
-	'\170' -> '&xi;';
-	'\171' -> '&psi;';
-	'\172' -> '&zeta;';
-	'\173' -> '&lcub;';
-	'\174' -> '&RightArrow;';
-	'\175' -> '&rcub;';
-	'\176' -> '&tilde;';
-	'\240' -> '&nbsp;';
-	'\241' -> '&Upsi1;';
-	'\242' -> '&int;';
-	'\243' -> '&le;';
-	'\244' -> '&Sol;';
-	'\245' -> '&infin;';
-	'\246' -> '&florin;';
-	'\247' -> '&clubs;';
-	'\250' -> '&diams;';
-	'\251' -> '&hearts;';
-	'\252' -> '&spades;';
-	'\253' -> '&lrarr;';
-	'\254' -> '&larr;';
-	'\255' -> '&uarr;';
-	'\256' -> '&rarr;';
-	'\257' -> '&darr;';
-	'\260' -> '&deg;';
-	'\261' -> '&PlusMinus;';
-	'\262' -> '&rdquo;';
-	'\263' -> '&ge;';
-	'\264' -> '&times;';
-	'\265' -> '&prop;';
-	'\266' -> '&part;';
-	'\267' -> '&bull;';
-	'\270' -> '&divide;';
-	'\271' -> '&ne;';
-	'\272' -> '&equiv;';
-	'\273' -> '&ap;';
-	'\274' -> '&mldr;';
-	'\275' -> '&Verbar;';
-	'\276' -> '&horbar;';
-	'\277' -> '&cr;';
-	'\300' -> '&aleph;';
-	'\301' -> '&ifraktur;';
-	'\302' -> '&rfraktur;';
-	'\303' -> '&weierp;';
-	'\304' -> '&otimes;';
-	'\305' -> '&oplus;';
-	'\306' -> '&empty;';
-	'\307' -> '&cap;';
-	'\310' -> '&cup;';
-	'\311' -> '&sup;';
-	'\312' -> '&supe;';
-	'\313' -> '&subne;';
-	'\314' -> '&sub;';
-	'\315' -> '&sube;';
-	'\316' -> '&isin;';
-	'\317' -> '&notin;';
-	'\320' -> '&angle;';
-	'\321' -> '&dtri;';
-	'\322' -> '&regsf;';
-	'\323' -> '&copysf;';
-	'\324' -> '&tradesf;';
-	'\325' -> '&PI;';
-	'\326' -> '&radic;';
-	'\327' -> '&middot;';
-	'\330' -> '&not;';
-	'\331' -> '&and;';
-	'\332' -> '&or;';
-	'\333' -> '&lrArr;';
-	'\334' -> '&lArr;';
-	'\335' -> '&uArr;';
-	'\336' -> '&rArr;';
-	'\337' -> '&dArr;';
-	'\340' -> '&loz;';
-	'\341' -> '&lang;';
-	'\342' -> '&regssf;';
-	'\343' -> '&copyssf;';
-	'\344' -> '&tradessf;';
-	'\345' -> '&sum;';
-	'\346' -> '&tlpar;';
-	'\347' -> '&lparex;';
-	'\350' -> '&blpar;';
-	'\351' -> '&tlbrack;';
-	'\352' -> '&lbrackex;';
-	'\353' -> '&blbrack;';
-	'\354' -> '&tlbrace;';
-	'\355' -> '&mlbrace;';
-	'\356' -> '&blbrace;';
-	'\357' -> '&lbraceex;';
-	'\360' -> '&apple;';
-	'\361' -> '&rang;';
-	'\362' -> '&int;';
-	'\363' -> '&tint;';
-	'\364' -> '&intex;';
-	'\365' -> '&bint;';
-	'\366' -> '&trpar;';
-	'\367' -> '&rparex;';
-	'\370' -> '&brpar;';
-	'\371' -> '&trbrack;';
-	'\372' -> '&rbrackex;';
-	'\373' -> '&brbrack;';
-	'\374' -> '&trbrace;';
-	'\375' -> '&mrbrace;';
-	'\376' -> '&brbrace;';
-	END;
+  '''' -> '&ni;';	{ contains as member, U+220B ISOtech }
+  '\52' -> '&lowast;';	{ asterisk operator, U+2217 ISOtech }
+  '\55' -> '&minus;';	{ minus sign, U+2212 ISOtech }
+  '\100' -> '&cong;';	{ approximately equal to, U+2245 ISOtech }
+  '\101' -> '&Alpha;';	{ greek capital letter alpha, U+0391 }
+  '\102' -> '&Beta;';	{ greek capital letter beta, U+0392 }
+  '\103' -> '&Chi;';	{ greek capital letter chi, U+03A7 }
+  '\104' -> '&Delta;';	{ greek capital letter delta, U+0394 ISOgrk3 }
+  '\105' -> '&Epsilon;';{ greek capital letter epsilon, U+0395 }
+  '\106' -> '&Phi;';	{ greek capital letter phi, U+03A6 ISOgrk3 }
+  '\107' -> '&Gamma;';	{ greek capital letter gamma, U+0393 ISOgrk3 }
+  '\110' -> '&Eta;';	{ greek capital letter eta, U+0397 }
+  '\111' -> '&Iota;';	{ greek capital letter iota, U+0399 }
+  '\112' -> '&thetasym;';{ greek small letter theta symbol, U+03D1 NEW }
+  '\113' -> '&Kappa;';	{ greek capital letter kappa, U+039A }
+  '\114' -> '&Lambda;';	{ greek capital letter lambda, U+039B ISOgrk3 }
+  '\115' -> '&Mu;';	{ greek capital letter mu, U+039C }
+  '\116' -> '&Nu;';	{ greek capital letter nu, U+039D }
+  '\117' -> '&Omicron;';{ greek capital letter omicron, U+039F }
+  '\120' -> '&Pi;';	{ greek capital letter pi, U+03A0 ISOgrk3 }
+  '\121' -> '&Theta;';	{ greek capital letter theta, U+0398 ISOgrk3 }
+  '\122' -> '&Rho;';	{ greek capital letter rho, U+03A1 }
+  '\123' -> '&Sigma;';	{ greek capital letter sigma, U+03A3 ISOgrk3 }
+  '\124' -> '&Tau;';	{ greek capital letter tau, U+03A4 }
+  '\125' -> '&Upsilon;';{ greek capital letter upsilon, U+03A5 ISOgrk3 }
+  '\126' -> '&sigmaf;';	{ greek small letter final sigma, U+03C2 ISOgrk3 }
+  '\127' -> '&Omega;';	{ greek capital letter omega, U+03A9 ISOgrk3 }
+  '\130' -> '&Xi;';	{ greek capital letter xi, U+039E ISOgrk3 }
+  '\131' -> '&Psi;';	{ greek capital letter psi, U+03A8 ISOgrk3 }
+  '\132' -> '&Zeta;';	{ greek capital letter zeta, U+0396 }
+  '\134' -> '&there4;';	{ therefore, U+2234 ISOtech }
+  '\136' -> '&perp;';	{ up tack = orthogonal to = perpendicular, U+22A5 ISOtech }
+  '\141' -> '&alpha;';	{ greek small letter alpha, U+03B1 ISOgrk3 }
+  '\142' -> '&beta;';	{ greek small letter beta, U+03B2 ISOgrk3 }
+  '\143' -> '&chi;';	{ greek small letter chi, U+03C7 ISOgrk3 }
+  '\144' -> '&delta;';	{ greek small letter delta, U+03B4 ISOgrk3 }
+  '\145' -> '&epsilon;';{ greek small letter epsilon, U+03B5 ISOgrk3 }
+  '\146' -> '&phi;';	{ greek small letter phi, U+03C6 ISOgrk3 }
+  '\147' -> '&gamma;';	{ greek small letter gamma, U+03B3 ISOgrk3 }
+  '\150' -> '&eta;';	{ greek small letter eta, U+03B7 ISOgrk3 }
+  '\151' -> '&iota;';	{ greek small letter iota, U+03B9 ISOgrk3 }
+  '\153' -> '&kappa;';	{ greek small letter kappa, U+03BA ISOgrk3 }
+  '\154' -> '&lambda;';	{ greek small letter lambda, U+03BB ISOgrk3 }
+  '\155' -> '&mu;';	{ greek small letter mu, U+03BC ISOgrk3 }
+  '\156' -> '&nu;';	{ greek small letter nu, U+03BD ISOgrk3 }
+  '\157' -> '&omicron;';{ greek small letter omicron, U+03BF NEW }
+  '\160' -> '&pi;';	{ greek small letter pi, U+03C0 ISOgrk3 }
+  '\161' -> '&theta;';	{ greek small letter theta, U+03B8 ISOgrk3 }
+  '\162' -> '&rho;';	{ greek small letter rho, U+03C1 ISOgrk3 }
+  '\163' -> '&sigma;';	{ greek small letter sigma, U+03C3 ISOgrk3 }
+  '\164' -> '&tau;';	{ greek small letter tau, U+03C4 ISOgrk3 }
+  '\165' -> '&upsilon;';{ greek small letter upsilon, U+03C5 ISOgrk3 }
+  '\166' -> '&piv;';	{ greek pi symbol, U+03D6 ISOgrk3 }
+  '\167' -> '&omega;';	{ greek small letter omega, U+03C9 ISOgrk3 }
+  '\170' -> '&xi;';	{ greek small letter xi, U+03BE ISOgrk3 }
+  '\171' -> '&psi;';	{ greek small letter psi, U+03C8 ISOgrk3 }
+  '\172' -> '&zeta;';	{ greek small letter zeta, U+03B6 ISOgrk3 }
+  '\176' -> '&sim;';	{ tilde operator = varies with = similar to, U+223C ISOtech }
+        '\240' -> '&nbsp;';
+  '\241' -> '&upsih;';	{ greek upsilon with hook symbol, U+03D2 NEW }
+  '\242' -> '&prime;';	{ prime = minutes = feet, U+2032 ISOtech }
+  '\243' -> '&le;';	{ less-than or equal to, U+2264 ISOtech }
+  '\244' -> '&frasl;';	{ fraction slash, U+2044 NEW }
+  '\245' -> '&infin;';	{ infinity, U+221E ISOtech }
+  '\246' -> '&fnof;';	{ latin small f with hook = function = florin, U+0192 ISOtech }
+  '\247' -> '&clubs;';	{ black club suit = shamrock, U+2663 ISOpub }
+  '\250' -> '&diams;';	{ black diamond suit, U+2666 ISOpub }
+  '\251' -> '&hearts;';	{ black heart suit = valentine, U+2665 ISOpub }
+  '\252' -> '&spades;';	{ black spade suit, U+2660 ISOpub }
+  '\253' -> '&harr;';	{ left right arrow, U+2194 ISOamsa }
+  '\254' -> '&larr;';	{ leftwards arrow, U+2190 ISOnum }
+  '\255' -> '&uarr;';	{ upwards arrow, U+2191 ISOnum}
+  '\256' -> '&rarr;';	{ rightwards arrow, U+2192 ISOnum }
+  '\257' -> '&darr;';	{ downwards arrow, U+2193 ISOnum }
+  '\262' -> '&Prime;';	{ double prime = seconds = inches, U+2033 ISOtech }
+  '\263' -> '&ge;';	{ greater-than or equal to, U+2265 ISOtech }
+  '\265' -> '&prop;';	{ proportional to, U+221D ISOtech }
+  '\266' -> '&part;';	{ partial differential, U+2202 ISOtech }
+  '\267' -> '&bull;';	{ bullet = black small circle, U+2022 ISOpub }
+  '\271' -> '&ne;';	{ not equal to, U+2260 ISOtech }
+  '\272' -> '&equiv;';	{ identical to, U+2261 ISOtech }
+  '\273' -> '&asymp;';	{ almost equal to = asymptotic to, U+2248 ISOamsr }
+  '\274' -> '&hellip;';	{ horizontal ellipsis = three dot leader, U+2026 ISOpub }
+        '\270' -> '\367;';
+        '\275' -> '|';
+        '\276' -> '&mdash;';
+  '\277' -> '&crarr;';	{ downwards arrow with corner leftwards = carriage return, U+21B5 NEW }
+  '\300' -> '&alefsym;';{ alef symbol = first transfinite cardinal, U+2135 NEW }
+  '\301' -> '&image;';	{ blackletter capital I = imaginary part, U+2111 ISOamso }
+  '\302' -> '&real;';	{ blackletter capital R = real part symbol, U+211C ISOamso }
+  '\303' -> '&weierp;';	{ script capital P = power set = Weierstrass p, U+2118 ISOamso }
+  '\304' -> '&otimes;';	{ circled times = vector product, U+2297 ISOamsb }
+  '\305' -> '&oplus;';	{ circled plus = direct sum, U+2295 ISOamsb }
+  '\306' -> '&empty;';	{ empty set = null set = diameter, U+2205 ISOamso }
+  '\307' -> '&cap;';	{ intersection = cap, U+2229 ISOtech }
+  '\310' -> '&cup;';	{ union = cup, U+222A ISOtech }
+  '\311' -> '&sup;';	{ superset of, U+2283 ISOtech }
+  '\312' -> '&supe;';	{ superset of or equal to, U+2287 ISOtech }
+  '\313' -> '&nsub;';	{ not a subset of, U+2284 ISOamsn }
+  '\314' -> '&sub;';	{ subset of, U+2282 ISOtech }
+  '\315' -> '&sube;';	{ subset of or equal to, U+2286 ISOtech }
+  '\316' -> '&isin;';	{ element of, U+2208 ISOtech }
+  '\317' -> '&notin;';	{ not an element of, U+2209 ISOtech }
+  '\320' -> '&ang;';	{ angle, U+2220 ISOamso }
+  '\321' -> '&nabla;';	{ nabla = backward difference, U+2207 ISOtech }
+  '\324' -> '&trade;';	{ trade mark sign, U+2122 ISOnum }
+  '\325' -> '&prod;';	{ n-ary product = product sign, U+220F ISOamsb }
+  '\326' -> '&radic;';	{ square root = radical sign, U+221A ISOtech }
+  '\327' -> '&sdot;';	{ dot operator, U+22C5 ISOamsb }
+        '\330' -> '\254';
+  '\331' -> '&and;';	{ logical and = wedge, U+2227 ISOtech }
+  '\332' -> '&or;';	{ logical or = vee, U+2228 ISOtech }
+  '\333' -> '&hArr;';	{ left right double arrow, U+21D4 ISOamsa }
+  '\334' -> '&lArr;';	{ leftwards double arrow, U+21D0 ISOtech }
+  '\335' -> '&uArr;';	{ upwards double arrow, U+21D1 ISOamsa }
+  '\336' -> '&rArr;';	{ rightwards double arrow, U+21D2 ISOtech }
+  '\337' -> '&dArr;';	{ downwards double arrow, U+21D3 ISOamsa }
+  '\340' -> '&loz;';	{ lozenge, U+25CA ISOpub }
+  '\341' -> '&lang;';	{ left-pointing angle bracket = bra, U+2329 ISOtech }
+        '\342' -> '&reg;';
+        '\343' -> '&copy;';
+        '\344' -> '&trade;';
+  '\345' -> '&sum;';	{ n-ary sumation, U+2211 ISOamsb }
+        '\346' -> '(';
+        '\347' -> '|';
+        '\350' -> '(';
+  '\351' -> '&lceil;';	{ left ceiling = apl upstile, U+2308 ISOamsc }
+        '\352' -> '|';
+  '\353' -> '&lfloor;';	{ left floor = apl downstile, U+230A ISOamsc }
+        '\354' -> '{';
+        '\355' -> '{';
+        '\356' -> '{';
+        '\357' -> '|';
+        '\360' -> ' ';
+  '\361' -> '&rang;';	{ right-pointing angle bracket = ket, U+232A ISOtech }
+  '\362' -> '&int;';	{ integral, U+222B ISOtech }
+        '\363' -> '&int;';
+        '\364' -> '&int;';
+        '\365' -> '&int;';
+        '\366' -> ')';
+        '\367' -> '|';
+        '\370' -> '(';
+  '\371' -> '&rceil;';	{ right ceiling, U+2309 ISOamsc }
+        '\372' -> '|';
+  '\373' -> '&rfloor;';	{ right floor, U+230B ISOamsc }
+        '\374' -> '}';
+        '\375' -> '}';
+        '\376' -> '}';
+  END;

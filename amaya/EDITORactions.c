@@ -320,40 +320,6 @@ int                 elementT;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateLinkInHead (Document document, View view)
-#else  /* __STDC__ */
-void                CreateLinkInHead (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   ElementType         elType;
-   Element             el;
-   int                 firstSelectedChar, i;
-
-
-   if (MoveWithinHead (document, view, HTML_EL_LINK))
-     {
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_LINK;
-       TtaInsertElement (elType, document);
-       /* Select a new destination */
-       TtaGiveFirstSelectedElement (document, &el, &firstSelectedChar, &i);
-       elType = TtaGetElementType (el);
-       while (elType.ElTypeNum != HTML_EL_LINK)
-	 {
-	   el = TtaGetParent (el);
-	   elType = TtaGetElementType (el);
-	 }
-       SelectDestination (document, el);
-     }
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateBase (Document document, View view)
 #else  /* __STDC__ */
 void                CreateBase (document, view)
@@ -390,6 +356,84 @@ View                view;
      {
        elType.ElSSchema = TtaGetDocumentSSchema (document);
        elType.ElTypeNum = HTML_EL_META;
+       TtaInsertElement (elType, document);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateLinkInHead (Document document, View view)
+#else  /* __STDC__ */
+void                CreateLinkInHead (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+   Element             el;
+   int                 firstSelectedChar, i;
+
+
+   if (MoveWithinHead (document, view, HTML_EL_LINK))
+     {
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_LINK;
+       TtaInsertElement (elType, document);
+       /* Select a new destination */
+       TtaGiveFirstSelectedElement (document, &el, &firstSelectedChar, &i);
+       elType = TtaGetElementType (el);
+       while (elType.ElTypeNum != HTML_EL_LINK)
+	 {
+	   el = TtaGetParent (el);
+	   elType = TtaGetElementType (el);
+	 }
+       SelectDestination (document, el);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateScript (Document document, View view)
+#else  /* __STDC__ */
+void                CreateScript (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   if (MoveWithinHead (document, view, HTML_EL_SCRIPT))
+     {
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_SCRIPT;
+       TtaInsertElement (elType, document);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateStyle (Document document, View view)
+#else  /* __STDC__ */
+void                CreateStyle (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   if (MoveWithinHead (document, view, HTML_EL_STYLE_))
+     {
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_STYLE_;
        TtaInsertElement (elType, document);
      }
 }

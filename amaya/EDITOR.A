@@ -53,6 +53,8 @@ MENUS
 	view:2 StructTypes button:BBase -> CreateBase;
 	view:2 StructTypes button:BMeta -> CreateMeta;
 	view:2 StructTypes button:BLink -> CreateLinkInHead;
+	view:2 StructTypes button:BScript -> CreateScript;
+	view:2 StructTypes button:BStyle -> CreateStyle;
 	view:2 StructTypes button:BComment -> CreateComment;
 	
 	Types button:BParagraph -> CreateParagraph;

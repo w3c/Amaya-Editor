@@ -12,12 +12,16 @@ extern void SpellCheck ( Document document,
                          View view );
 extern void CreateBreak ( Document document,
                           View view );
-extern void CreateLinkInHead ( Document document,
-                               View view );
 extern void CreateBase ( Document document,
                          View view );
 extern void CreateMeta ( Document document,
                          View view );
+extern void CreateLinkInHead ( Document document,
+                               View view );
+extern void CreateScript ( Document document,
+                               View view );
+extern void CreateStyle ( Document document,
+                               View view );
 extern void CreateComment ( Document document,
                             View view );
 extern void CreateParagraph ( Document document,
@@ -123,12 +127,16 @@ extern void SpellCheck (/* Document document,
                            View view */);
 extern void CreateBreak (/* Document document,
                             View view */);
-extern void CreateLinkInHead (/* Document document,
-                                 View view */);
 extern void CreateBase (/* Document document,
                            View view */);
 extern void CreateMeta (/* Document document,
                            View view */);
+extern void CreateLinkInHead (/* Document document,
+                                 View view */);
+extern void CreateScript (/* Document document,
+                                 View view */);
+extern void CreateStyle (/* Document document,
+                                 View view */);
 extern void CreateComment (/* Document document,
                               View view */);
 extern void CreateParagraph (/* Document document,

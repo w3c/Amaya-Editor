@@ -53,119 +53,444 @@
 #include "parser.h"
 
 typedef unsigned char entityName[10];
-typedef struct _ISOlat1entry
+typedef struct _CharEntityEntry
   {			 /* a SGML entity representing an ISO-Latin1 char */
      entityName          charName;	/* entity name */
      int                 charCode;	/* decimal code of ISO-Latin1 char */
   }
-ISOlat1entry;
+CharEntityEntry;
 
 
-ISOlat1entry        ISOlat1table[] =
+CharEntityEntry        CharEntityTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {"AElig", 198},
-   {"Aacute", 193},
-   {"Acirc", 194},
-   {"Agrave", 192},
-   {"Aring", 197},
-   {"Atilde", 195},
-   {"Auml", 196},
-   {"Ccedil", 199},
-   {"ETH", 208},
-   {"Eacute", 201},
-   {"Ecirc", 202},
-   {"Egrave", 200},
-   {"Euml", 203},
-   {"Iacute", 205},
-   {"Icirc", 206},
-   {"Igrave", 204},
-   {"Iuml", 207},
-   {"Ntilde", 209},
-   {"Oacute", 211},
-   {"Ocirc", 212},
-   {"Ograve", 210},
-   {"Oslash", 216},
-   {"Otilde", 213},
-   {"Ouml", 214},
-   {"THORN", 222},
-   {"Uacute", 218},
-   {"Ucirc", 219},
-   {"Ugrave", 217},
-   {"Uuml", 220},
-   {"Yacute", 221},
-   {"aacute", 225},
-   {"acirc", 226},
-   {"acute", 180},
-   {"aelig", 230},
-   {"agrave", 224},
-   {"amp", 38},
-   {"aring", 229},
-   {"atilde", 227},
-   {"auml", 228},
-   {"brvbar", 166},
-   {"ccedil", 231},
-   {"cedil", 184},
-   {"cent", 162},
-   {"copy", 169},
-   {"curren", 164},
-   {"deg", 176},
-   {"divide", 247},
-   {"eacute", 233},
-   {"ecirc", 234},
-   {"egrave", 232},
-   {"eth", 240},
-   {"euml", 235},
-   {"frac12", 189},
-   {"frac14", 188},
-   {"frac34", 190},
-   {"gt", 62},			/* Numeric and Special Graphic Entity */
-   {"hyphen", 173},
-   {"iacute", 237},
-   {"icirc", 238},
-   {"iexcl", 161},
-   {"igrave", 236},
-   {"iquest", 191},
-   {"iuml", 239},
-   {"laquo", 171},		/* added by VQ */
-   {"lt", 60},			/* Numeric and Special Graphic Entity */
-   {"macr", 175},
-   {"micro", 181},
-   {"middot", 183},
-   {"nbsp", 160},		/* Non breaking space */
-   {"not", 172},
-   {"ntilde", 241},
-   {"oacute", 243},
-   {"ocirc", 244},
-   {"ograve", 242},
-   {"ordf", 170},
-   {"ordm", 186},
-   {"oslash", 248},
-   {"otilde", 245},
-   {"ouml", 246},
-   {"para", 182},
-   {"plusmn", 177},
-   {"pound", 163},
-   {"quot", 34},		/* Numeric and Special Graphic Entity */
-   {"raquo", 187},		/* added by VQ */
-   {"reg", 174},
-   {"sect", 167},
-   {"shy", 45},			/* Soft hyphen */
-   {"sup1", 185},
-   {"sup2", 178},
-   {"sup3", 179},
-   {"szlig", 223},
-   {"thorn", 254},
-   {"times", 215},
-   {"uacute", 250},
-   {"ucirc", 251},
-   {"ugrave", 249},
-   {"uml", 168},
-   {"uuml", 252},
-   {"yacute", 253},
-   {"yen", 165},
-   {"yuml", 255},
+{"AElig", 198},		/* latin capital letter AE = latin capital ligature AE, U+00C6 ISOlat1 */
+{"Aacute", 193},	/* latin capital letter A with acute, U+00C1 ISOlat1 */
+{"Acirc", 194},		/* latin capital letter A with circumflex, U+00C2 ISOlat1 */
+{"Agrave", 192},	/* latin capital letter A with grave = latin capital letter A grave, U+00C0 ISOlat1 */
+{"Alpha", 913},		/* greek capital letter alpha, U+0391 */
+{"Aring", 197},		/* latin capital letter A with ring above = latin capital letter A ring, U+00C5 ISOlat1 */
+{"Atilde", 195},	/* latin capital letter A with tilde, U+00C3 ISOlat1 */
+{"Auml", 196},		/* latin capital letter A with diaeresis, U+00C4 ISOlat1 */
+{"Beta", 914},		/* greek capital letter beta, U+0392 */
+{"Ccedil", 199},	/* latin capital letter C with cedilla, U+00C7 ISOlat1 */
+{"Chi", 935},		/* greek capital letter chi, U+03A7 */
+{"Dagger", 8225},	/* double dagger, U+2021 ISOpub */
+{"Delta", 916},		/* greek capital letter delta, U+0394 ISOgrk3 */
+{"ETH", 208},		/* latin capital letter ETH, U+00D0 ISOlat1 */
+{"Eacute", 201},	/* latin capital letter E with acute, U+00C9 ISOlat1 */
+{"Ecirc", 202},		/* latin capital letter E with circumflex, U+00CA ISOlat1 */
+{"Egrave", 200},	/* latin capital letter E with grave, U+00C8 ISOlat1 */
+{"Epsilon", 917},	/* greek capital letter epsilon, U+0395 */
+{"Eta", 919},		/* greek capital letter eta, U+0397 */
+{"Euml", 203},		/* latin capital letter E with diaeresis, U+00CB ISOlat1 */
+{"Gamma", 915},		/* greek capital letter gamma, U+0393 ISOgrk3 */
+{"Iacute", 205},	/* latin capital letter I with acute, U+00CD ISOlat1 */
+{"Icirc", 206},		/* latin capital letter I with circumflex, U+00CE ISOlat1 */
+{"Igrave", 204},	/* latin capital letter I with grave, U+00CC ISOlat1 */
+{"Iota", 921},		/* greek capital letter iota, U+0399 */
+{"Iuml", 207},		/* latin capital letter I with diaeresis, U+00CF ISOlat1 */
+{"Kappa", 922},		/* greek capital letter kappa, U+039A */
+{"Lambda", 923},	/* greek capital letter lambda, U+039B ISOgrk3 */
+{"Mu", 924},		/* greek capital letter mu, U+039C */
+{"Ntilde", 209},	/* latin capital letter N with tilde, U+00D1 ISOlat1 */
+{"Nu", 925},		/* greek capital letter nu, U+039D */
+{"OElig", 338},		/* latin capital ligature OE, U+0152 ISOlat2 */
+{"Oacute", 211},	/* latin capital letter O with acute, U+00D3 ISOlat1 */
+{"Ocirc", 212},		/* latin capital letter O with circumflex, U+00D4 ISOlat1 */
+{"Ograve", 210},	/* latin capital letter O with grave, U+00D2 ISOlat1 */
+{"Omega", 937},		/* greek capital letter omega, U+03A9 ISOgrk3 */
+{"Omicron", 927},	/* greek capital letter omicron, U+039F */
+{"Oslash", 216},	/* latin capital letter O with stroke = latin capital letter O slash, U+00D8 ISOlat1 */
+{"Otilde", 213},	/* latin capital letter O with tilde, U+00D5 ISOlat1 */
+{"Ouml", 214},		/* latin capital letter O with diaeresis, U+00D6 ISOlat1 */
+{"Phi", 934},		/* greek capital letter phi, U+03A6 ISOgrk3 */
+{"Pi", 928},		/* greek capital letter pi, U+03A0 ISOgrk3 */
+{"Prime", 8243},	/* double prime = seconds = inches, U+2033 ISOtech */
+{"Psi", 936},		/* greek capital letter psi, U+03A8 ISOgrk3 */
+{"Rho", 929},		/* greek capital letter rho, U+03A1 */
+{"Scaron", 352},	/* latin capital letter S with caron, U+0160 ISOlat2 */
+{"Sigma", 931},		/* greek capital letter sigma, U+03A3 ISOgrk3 */
+{"THORN", 222},		/* latin capital letter THORN, U+00DE ISOlat1 */
+{"Tau", 932},		/* greek capital letter tau, U+03A4 */
+{"Theta", 920},		/* greek capital letter theta, U+0398 ISOgrk3 */
+{"Uacute", 218},	/* latin capital letter U with acute, U+00DA ISOlat1 */
+{"Ucirc", 219},		/* latin capital letter U with circumflex, U+00DB ISOlat1 */
+{"Ugrave", 217},	/* latin capital letter U with grave, U+00D9 ISOlat1 */
+{"Upsilon", 933},	/* greek capital letter upsilon, U+03A5 ISOgrk3 */
+{"Uuml", 220},		/* latin capital letter U with diaeresis, U+00DC ISOlat1 */
+{"Xi", 926},		/* greek capital letter xi, U+039E ISOgrk3 */
+{"Yacute", 221},	/* latin capital letter Y with acute, U+00DD ISOlat1 */
+{"Yuml", 376},		/* latin capital letter Y with diaeresis, U+0178 ISOlat2 */
+{"Zeta", 918},		/* greek capital letter zeta, U+0396 */
+{"aacute", 225},	/* latin small letter a with acute, U+00E1 ISOlat1 */
+{"acirc", 226},		/* latin small letter a with circumflex, U+00E2 ISOlat1 */
+{"acute", 180},		/* acute accent = spacing acute, U+00B4 ISOdia */
+{"aelig", 230},		/* latin small letter ae = latin small ligature ae, U+00E6 ISOlat1 */
+{"agrave", 224},	/* latin small letter a with grave = latin small letter a grave, U+00E0 ISOlat1 */
+{"alefsym", 8501},	/* alef symbol = first transfinite cardinal, U+2135 NEW */
+{"alpha", 945},		/* greek small letter alpha, U+03B1 ISOgrk3 */
+{"amp", 38},		/* ampersand, U+0026 ISOnum */
+{"and", 8743},		/* logical and = wedge, U+2227 ISOtech */
+{"ang", 8736},		/* angle, U+2220 ISOamso */
+{"aring", 229},		/* latin small letter a with ring above = latin small letter a ring, U+00E5 ISOlat1 */
+{"asymp", 8776},	/* almost equal to = asymptotic to, U+2248 ISOamsr */
+{"atilde", 227},	/* latin small letter a with tilde, U+00E3 ISOlat1 */
+{"auml", 228},		/* latin small letter a with diaeresis, U+00E4 ISOlat1 */
+{"bdquo", 8222},	/* double low-9 quotation mark, U+201E NEW */
+{"beta", 946},		/* greek small letter beta, U+03B2 ISOgrk3 */
+{"brvbar", 166},	/* broken bar = broken vertical bar, U+00A6 ISOnum */
+{"bull", 8226},		/* bullet = black small circle, U+2022 ISOpub */
+{"cap", 8745},		/* intersection = cap, U+2229 ISOtech */
+{"ccedil", 231},	/* latin small letter c with cedilla, U+00E7 ISOlat1 */
+{"cedil", 184},		/* cedilla = spacing cedilla, U+00B8 ISOdia */
+{"cent", 162},		/* cent sign, U+00A2 ISOnum */
+{"chi", 967},		/* greek small letter chi, U+03C7 ISOgrk3 */
+{"circ", 710},		/* modifier letter circumflex accent, U+02C6 ISOpub */
+{"clubs", 9827},	/* black club suit = shamrock, U+2663 ISOpub */
+{"cong", 8773},		/* approximately equal to, U+2245 ISOtech */
+{"copy", 169},		/* copyright sign, U+00A9 ISOnum */
+{"crarr", 8629},	/* downwards arrow with corner leftwards = carriage return, U+21B5 NEW */
+{"cup", 8746},		/* union = cup, U+222A ISOtech */
+{"curren", 164},	/* currency sign, U+00A4 ISOnum */
+{"dArr", 8659},		/* downwards double arrow, U+21D3 ISOamsa */
+{"dagger", 8224},	/* dagger, U+2020 ISOpub */
+{"darr", 8595},		/* downwards arrow, U+2193 ISOnum */
+{"deg", 176},		/* degree sign, U+00B0 ISOnum */
+{"delta", 948},		/* greek small letter delta, U+03B4 ISOgrk3 */
+{"diams", 9830},	/* black diamond suit, U+2666 ISOpub */
+{"divide", 247},	/* division sign, U+00F7 ISOnum */
+{"eacute", 233},	/* latin small letter e with acute, U+00E9 ISOlat1 */
+{"ecirc", 234},		/* latin small letter e with circumflex, U+00EA ISOlat1 */
+{"egrave", 232},	/* latin small letter e with grave, U+00E8 ISOlat1 */
+{"empty", 8709},	/* empty set = null set = diameter, U+2205 ISOamso */
+{"emsp", 8195},		/* em space, U+2003 ISOpub */
+{"ensp", 8194},		/* en space, U+2002 ISOpub */
+{"epsilon", 949},	/* greek small letter epsilon, U+03B5 ISOgrk3 */
+{"equiv", 8801},	/* identical to, U+2261 ISOtech */
+{"eta", 951},		/* greek small letter eta, U+03B7 ISOgrk3 */
+{"eth", 240},		/* latin small letter eth, U+00F0 ISOlat1 */
+{"euml", 235},		/* latin small letter e with diaeresis, U+00EB ISOlat1 */
+{"euro", 8364},		/* euro sign, U+20AC NEW */
+{"exist", 8707},	/* there exists, U+2203 ISOtech */
+{"fnof", 402},		/* latin small f with hook = function = florin, U+0192 ISOtech */
+{"forall", 8704},	/* for all, U+2200 ISOtech */
+{"frac12", 189},	/* vulgar fraction one half = fraction one half, U+00BD ISOnum */
+{"frac14", 188},	/* vulgar fraction one quarter = fraction one quarter, U+00BC ISOnum */
+{"frac34", 190},	/* vulgar fraction three quarters = fraction three quarters, U+00BE ISOnum */
+{"frasl", 8260},	/* fraction slash, U+2044 NEW */
+{"gamma", 947},		/* greek small letter gamma, U+03B3 ISOgrk3 */
+{"ge", 8805},		/* greater-than or equal to, U+2265 ISOtech */
+{"gt", 62},		/* greater-than sign, U+003E ISOnum */
+{"hArr", 8660},		/* left right double arrow, U+21D4 ISOamsa */
+{"harr", 8596},		/* left right arrow, U+2194 ISOamsa */
+{"hearts", 9829},	/* black heart suit = valentine, U+2665 ISOpub */
+{"hellip", 8230},	/* horizontal ellipsis = three dot leader, U+2026 ISOpub */
+{"hyphen", 173},	/* hyphen = discretionary hyphen, U+00AD ISOnum */
+{"iacute", 237},	/* latin small letter i with acute, U+00ED ISOlat1 */
+{"icirc", 238},		/* latin small letter i with circumflex, U+00EE ISOlat1 */
+{"iexcl", 161},		/* inverted exclamation mark, U+00A1 ISOnum */
+{"igrave", 236},	/* latin small letter i with grave, U+00EC ISOlat1 */
+{"image", 8465},	/* blackletter capital I = imaginary part, U+2111 ISOamso */
+{"infin", 8734},	/* infinity, U+221E ISOtech */
+{"int", 8747},		/* integral, U+222B ISOtech */
+{"iota", 953},		/* greek small letter iota, U+03B9 ISOgrk3 */
+{"iquest", 191},	/* inverted question mark = turned question mark, U+00BF ISOnum */
+{"isin", 8712},		/* element of, U+2208 ISOtech */
+{"iuml", 239},		/* latin small letter i with diaeresis, U+00EF ISOlat1 */
+{"kappa", 954},		/* greek small letter kappa, U+03BA ISOgrk3 */
+{"lArr", 8656},		/* leftwards double arrow, U+21D0 ISOtech */
+{"lambda", 955},	/* greek small letter lambda, U+03BB ISOgrk3 */
+{"lang", 9001},		/* left-pointing angle bracket = bra, U+2329 ISOtech */
+{"laquo", 171},		/* left-pointing double angle quotation mark = left pointing guillemet, U+00AB ISOnum */
+{"larr", 8592},		/* leftwards arrow, U+2190 ISOnum */
+{"lceil", 8968},	/* left ceiling = apl upstile, U+2308 ISOamsc */
+{"ldquo", 8220},	/* left double quotation mark, U+201C ISOnum */
+{"le", 8804},		/* less-than or equal to, U+2264 ISOtech */
+{"lfloor", 8970},	/* left floor = apl downstile, U+230A ISOamsc */
+{"lowast", 8727},	/* asterisk operator, U+2217 ISOtech */
+{"loz", 9674},		/* lozenge, U+25CA ISOpub */
+{"lrm", 8206},		/* left-to-right mark, U+200E NEW RFC 2070 */
+{"lsaquo", 8249},	/* single left-pointing angle quotation mark, U+2039 ISO proposed */
+{"lsquo", 8216},	/* left single quotation mark, U+2018 ISOnum */
+{"lt", 60},		/* less-than sign, U+003C ISOnum */
+{"macr", 175},		/* macron = spacing macron = overline = APL overbar, U+00AF ISOdia */
+{"mdash", 8212},	/* em dash, U+2014 ISOpub */
+{"micro", 181},		/* micro sign, U+00B5 ISOnum */
+{"middot", 183},	/* middle dot = Georgian comma = Greek middle dot, U+00B7 ISOnum */
+{"minus", 8722},	/* minus sign, U+2212 ISOtech */
+{"mu", 956},		/* greek small letter mu, U+03BC ISOgrk3 */
+{"nabla", 8711},	/* nabla = backward difference, U+2207 ISOtech */
+{"nbsp", 160},		/* no-break space = non-breaking space, U+00A0 ISOnum */
+{"ndash", 8211},	/* en dash, U+2013 ISOpub */
+{"ne", 8800},		/* not equal to, U+2260 ISOtech */
+{"ni", 8715},		/* contains as member, U+220B ISOtech */
+{"not", 172},		/* not sign, U+00AC ISOnum */
+{"notin", 8713},	/* not an element of, U+2209 ISOtech */
+{"nsub", 8836},		/* not a subset of, U+2284 ISOamsn */
+{"ntilde", 241},	/* latin small letter n with tilde, U+00F1 ISOlat1 */
+{"nu", 957},		/* greek small letter nu, U+03BD ISOgrk3 */
+{"oacute", 243},	/* latin small letter o with acute, U+00F3 ISOlat1 */
+{"ocirc", 244},		/* latin small letter o with circumflex, U+00F4 ISOlat1 */
+{"oelig", 339},		/* latin small ligature oe, U+0153 ISOlat2 */
+{"ograve", 242},	/* latin small letter o with grave, U+00F2 ISOlat1 */
+{"oline", 8254},	/* overline = spacing overscore, U+203E NEW */
+{"omega", 969},		/* greek small letter omega, U+03C9 ISOgrk3 */
+{"omicron", 959},	/* greek small letter omicron, U+03BF NEW */
+{"oplus", 8853},	/* circled plus = direct sum, U+2295 ISOamsb */
+{"or", 8744},		/* logical or = vee, U+2228 ISOtech */
+{"ordf", 170},		/* feminine ordinal indicator, U+00AA ISOnum */
+{"ordm", 186},		/* masculine ordinal indicator, U+00BA ISOnum */
+{"oslash", 248},	/* latin small letter o with stroke, = latin small letter o slash, U+00F8 ISOlat1 */
+{"otilde", 245},	/* latin small letter o with tilde, U+00F5 ISOlat1 */
+{"otimes", 8855},	/* circled times = vector product, U+2297 ISOamsb */
+{"ouml", 246},		/* latin small letter o with diaeresis, U+00F6 ISOlat1 */
+{"para", 182},		/* pilcrow sign = paragraph sign, U+00B6 ISOnum */
+{"part", 8706},		/* partial differential, U+2202 ISOtech */
+{"permil", 8240},	/* per mille sign, U+2030 ISOtech */
+{"perp", 8869},		/* up tack = orthogonal to = perpendicular, U+22A5 ISOtech */
+{"phi", 966},		/* greek small letter phi, U+03C6 ISOgrk3 */
+{"pi", 960},		/* greek small letter pi, U+03C0 ISOgrk3 */
+{"piv", 982},		/* greek pi symbol, U+03D6 ISOgrk3 */
+{"plusmn", 177},	/* plus-minus sign = plus-or-minus sign, U+00B1 ISOnum */
+{"pound", 163},		/* pound sign, U+00A3 ISOnum */
+{"prime", 8242},	/* prime = minutes = feet, U+2032 ISOtech */
+{"prod", 8719},		/* n-ary product = product sign, U+220F ISOamsb */
+{"prop", 8733},		/* proportional to, U+221D ISOtech */
+{"psi", 968},		/* greek small letter psi, U+03C8 ISOgrk3 */
+{"quot", 34},		/* quotation mark = APL quote, U+0022 ISOnum */
+{"rArr", 8658},		/* rightwards double arrow, U+21D2 ISOtech */
+{"radic", 8730},	/* square root = radical sign, U+221A ISOtech */
+{"rang", 9002},		/* right-pointing angle bracket = ket, U+232A ISOtech */
+{"raquo", 187},		/* right-pointing double angle quotation mark = right pointing guillemet, U+00BB ISOnum */
+{"rarr", 8594},		/* rightwards arrow, U+2192 ISOnum */
+{"rceil", 8969},	/* right ceiling, U+2309 ISOamsc */
+{"rdquo", 8221},	/* right double quotation mark, U+201D ISOnum */
+{"real", 8476},		/* blackletter capital R = real part symbol, U+211C ISOamso */
+{"reg", 174},		/* registered sign = registered trade mark sign, U+00AE ISOnum */
+{"rfloor", 8971},	/* right floor, U+230B ISOamsc */
+{"rho", 961},		/* greek small letter rho, U+03C1 ISOgrk3 */
+{"rlm", 8207},		/* right-to-left mark, U+200F NEW RFC 2070 */
+{"rsaquo", 8250},	/* single right-pointing angle quotation mark, U+203A ISO proposed */
+{"rsquo", 8217},	/* right single quotation mark, U+2019 ISOnum */
+{"sbquo", 8218},	/* single low-9 quotation mark, U+201A NEW */
+{"scaron", 353},	/* latin small letter s with caron, U+0161 ISOlat2 */
+{"sdot", 8901},		/* dot operator, U+22C5 ISOamsb */
+{"sect", 167},		/* section sign, U+00A7 ISOnum */
+{"shy", 173},		/* soft hyphen = discretionary hyphen, U+00AD ISOnum */
+{"sigma", 963},		/* greek small letter sigma, U+03C3 ISOgrk3 */
+{"sigmaf", 962},	/* greek small letter final sigma, U+03C2 ISOgrk3 */
+{"sim", 8764},		/* tilde operator = varies with = similar to, U+223C ISOtech */
+{"spades", 9824},	/* black spade suit, U+2660 ISOpub */
+{"sub", 8834},		/* subset of, U+2282 ISOtech */
+{"sube", 8838},		/* subset of or equal to, U+2286 ISOtech */
+{"sum", 8721},		/* n-ary sumation, U+2211 ISOamsb */
+{"sup", 8835},		/* superset of, U+2283 ISOtech */
+{"sup1", 185},		/* superscript one = superscript digit one, U+00B9 ISOnum */
+{"sup2", 178},		/* superscript two = superscript digit two = squared, U+00B2 ISOnum */
+{"sup3", 179},		/* superscript three = superscript digit three = cubed, U+00B3 ISOnum */
+{"supe", 8839},		/* superset of or equal to, U+2287 ISOtech */
+{"szlig", 223},		/* latin small letter sharp s = ess-zed, U+00DF ISOlat1 */
+{"tau", 964},		/* greek small letter tau, U+03C4 ISOgrk3 */
+{"there4", 8756},	/* therefore, U+2234 ISOtech */
+{"theta", 952},		/* greek small letter theta, U+03B8 ISOgrk3 */
+{"thetasym", 977},	/* greek small letter theta symbol, U+03D1 NEW */
+{"thinsp", 8201},	/* thin space, U+2009 ISOpub */
+{"thorn", 254},		/* latin small letter thorn with, U+00FE ISOlat1 */
+{"tilde", 732},		/* small tilde, U+02DC ISOdia */
+{"times", 215},		/* multiplication sign, U+00D7 ISOnum */
+{"trade", 8482},	/* trade mark sign, U+2122 ISOnum */
+{"uArr", 8657},		/* upwards double arrow, U+21D1 ISOamsa */
+{"uacute", 250},	/* latin small letter u with acute, U+00FA ISOlat1 */
+{"uarr", 8593},		/* upwards arrow, U+2191 ISOnum*/
+{"ucirc", 251},		/* latin small letter u with circumflex, U+00FB ISOlat1 */
+{"ugrave", 249},	/* latin small letter u with grave, U+00F9 ISOlat1 */
+{"uml", 168},		/* diaeresis = spacing diaeresis, U+00A8 ISOdia */
+{"upsih", 978},		/* greek upsilon with hook symbol, U+03D2 NEW */
+{"upsilon", 965},	/* greek small letter upsilon, U+03C5 ISOgrk3 */
+{"uuml", 252},		/* latin small letter u with diaeresis, U+00FC ISOlat1 */
+{"weierp", 8472},	/* script capital P = power set = Weierstrass p, U+2118 ISOamso */
+{"xi", 958},		/* greek small letter xi, U+03BE ISOgrk3 */
+{"yacute", 253},	/* latin small letter y with acute, U+00FD ISOlat1 */
+{"yen", 165},		/* yen sign = yuan sign, U+00A5 ISOnum */
+{"yuml", 255},		/* latin small letter y with diaeresis, U+00FF ISOlat1 */
+{"zeta", 950},		/* greek small letter zeta, U+03B6 ISOgrk3 */
+{"zwj", 8205},		/* zero width joiner, U+200D NEW RFC 2070 */
+{"zwnj", 8204},		/* zero width non-joiner, U+200C NEW RFC 2070 */
+
    {"zzzz", 0}			/* this last entry is required */
+};
+
+typedef struct _UnicodeFallbackEntry
+  {
+     int	unicodeVal;	/* the Unicode code */
+     int	EightbitCode;   /* the corresponding glyph to be used from the ISO Latin-1 or Symbol
+				   character set.
+   if 0 < EightbitCode < 255, it's the Symbol code for the correct glyph
+   if 1000 < EightbitCode < 1256, it's the ISO Latin-1 code + 1000 of an approaching glyph
+   if 2000 < EightbitCode < 2256, it's the Symbol code + 2000 of an approaching glyph	*/
+  }
+UnicodeFallbackEntry;
+
+UnicodeFallbackEntry	UnicodeFallbackTable[] =
+{
+	/* This table MUST be ordered according to the first field of each
+	   entry (Unicode code) */
+
+/* OElig    */ {338, 1079}, /* latin capital ligature OE, U+0152 ISOlat2 */
+/* oelig    */ {339, 1111}, /* latin small ligature oe, U+0153 ISOlat2 */
+/* Scaron   */ {352, 1083}, /* latin capital letter S with caron, U+0160 ISOlat2 */
+/* scaron   */ {353, 1115}, /* latin small letter s with caron, U+0161 ISOlat2 */
+/* Yuml     */ {376, 1089}, /* latin capital letter Y with diaeresis, U+0178 ISOlat2 */
+/* fnof     */ {402, 166}, /* latin small f with hook = function = florin, U+0192 ISOtech */
+/* circ     */ {710, 2217}, /* modifier letter circumflex accent, U+02C6 ISOpub */
+/* tilde    */ {732, 1126}, /* small tilde, U+02DC ISOdia */
+/* Alpha    */ {913, 65}, /* greek capital letter alpha, U+0391 */
+/* Beta     */ {914, 66}, /* greek capital letter beta, U+0392 */
+/* Gamma    */ {915, 71}, /* greek capital letter gamma, U+0393 ISOgrk3 */
+/* Delta    */ {916, 68}, /* greek capital letter delta, U+0394 ISOgrk3 */
+/* Epsilon  */ {917, 69}, /* greek capital letter epsilon, U+0395 */
+/* Zeta     */ {918, 90}, /* greek capital letter zeta, U+0396 */
+/* Eta      */ {919, 72}, /* greek capital letter eta, U+0397 */
+/* Theta    */ {920, 81}, /* greek capital letter theta, U+0398 ISOgrk3 */
+/* Iota     */ {921, 73}, /* greek capital letter iota, U+0399 */
+/* Kappa    */ {922, 75}, /* greek capital letter kappa, U+039A */
+/* Lambda   */ {923, 76}, /* greek capital letter lambda, U+039B ISOgrk3 */
+/* Mu       */ {924, 77}, /* greek capital letter mu, U+039C */
+/* Nu       */ {925, 78}, /* greek capital letter nu, U+039D */
+/* Xi       */ {926, 88}, /* greek capital letter xi, U+039E ISOgrk3 */
+/* Omicron  */ {927, 79}, /* greek capital letter omicron, U+039F */
+/* Pi       */ {928, 80}, /* greek capital letter pi, U+03A0 ISOgrk3 */
+/* Rho      */ {929, 82}, /* greek capital letter rho, U+03A1 */
+/* Sigma    */ {931, 83}, /* greek capital letter sigma, U+03A3 ISOgrk3 */
+/* Tau      */ {932, 84}, /* greek capital letter tau, U+03A4 */
+/* Upsilon  */ {933, 85}, /* greek capital letter upsilon, U+03A5 ISOgrk3 */
+/* Phi      */ {934, 70}, /* greek capital letter phi, U+03A6 ISOgrk3 */
+/* Chi      */ {935, 67}, /* greek capital letter chi, U+03A7 */
+/* Psi      */ {936, 89}, /* greek capital letter psi, U+03A8 ISOgrk3 */
+/* Omega    */ {937, 87}, /* greek capital letter omega, U+03A9 ISOgrk3 */
+/* alpha    */ {945, 97}, /* greek small letter alpha, U+03B1 ISOgrk3 */
+/* beta     */ {946, 98}, /* greek small letter beta, U+03B2 ISOgrk3 */
+/* gamma    */ {947, 103}, /* greek small letter gamma, U+03B3 ISOgrk3 */
+/* delta    */ {948, 100}, /* greek small letter delta, U+03B4 ISOgrk3 */
+/* epsilon  */ {949, 101}, /* greek small letter epsilon, U+03B5 ISOgrk3 */
+/* zeta     */ {950, 122}, /* greek small letter zeta, U+03B6 ISOgrk3 */
+/* eta      */ {951, 104}, /* greek small letter eta, U+03B7 ISOgrk3 */
+/* theta    */ {952, 113}, /* greek small letter theta, U+03B8 ISOgrk3 */
+/* iota     */ {953, 105}, /* greek small letter iota, U+03B9 ISOgrk3 */
+/* kappa    */ {954, 107}, /* greek small letter kappa, U+03BA ISOgrk3 */
+/* lambda   */ {955, 108}, /* greek small letter lambda, U+03BB ISOgrk3 */
+/* mu       */ {956, 109}, /* greek small letter mu, U+03BC ISOgrk3 */
+/* nu       */ {957, 110}, /* greek small letter nu, U+03BD ISOgrk3 */
+/* xi       */ {958, 120}, /* greek small letter xi, U+03BE ISOgrk3 */
+/* omicron  */ {959, 111}, /* greek small letter omicron, U+03BF NEW */
+/* pi       */ {960, 112}, /* greek small letter pi, U+03C0 ISOgrk3 */
+/* rho      */ {961, 114}, /* greek small letter rho, U+03C1 ISOgrk3 */
+/* sigmaf   */ {962, 86}, /* greek small letter final sigma, U+03C2 ISOgrk3 */
+/* sigma    */ {963, 115}, /* greek small letter sigma, U+03C3 ISOgrk3 */
+/* tau      */ {964, 116}, /* greek small letter tau, U+03C4 ISOgrk3 */
+/* upsilon  */ {965, 117}, /* greek small letter upsilon, U+03C5 ISOgrk3 */
+/* phi      */ {966, 102}, /* greek small letter phi, U+03C6 ISOgrk3 */
+/* chi      */ {967, 99}, /* greek small letter chi, U+03C7 ISOgrk3 */
+/* psi      */ {968, 121}, /* greek small letter psi, U+03C8 ISOgrk3 */
+/* omega    */ {969, 119}, /* greek small letter omega, U+03C9 ISOgrk3 */
+/* thetasym */ {977, 74}, /* greek small letter theta symbol, U+03D1 NEW */
+/* upsih    */ {978, 161}, /* greek upsilon with hook symbol, U+03D2 NEW */
+/* piv      */ {982, 118}, /* greek pi symbol, U+03D6 ISOgrk3 */
+/* ensp     */ {8194, 1130}, /* en space, U+2002 ISOpub */
+/* emsp     */ {8195, 1160}, /* em space, U+2003 ISOpub */
+/* thinsp   */ {8201, 1129}, /* thin space, U+2009 ISOpub */
+/* zwnj     */ {8204, 1063}, /* zero width non-joiner, U+200C NEW RFC 2070 */
+/* zwj      */ {8205, 1063}, /* zero width joiner, U+200D NEW RFC 2070 */
+/* lrm      */ {8206, 1063}, /* left-to-right mark, U+200E NEW RFC 2070 */
+/* rlm      */ {8207, 1063}, /* right-to-left mark, U+200F NEW RFC 2070 */
+/* ndash    */ {8211, 2045}, /* en dash, U+2013 ISOpub */
+/* mdash    */ {8212, 2190}, /* em dash, U+2014 ISOpub */
+/* lsquo    */ {8216, 1096}, /* left single quotation mark, U+2018 ISOnum */
+/* rsquo    */ {8217, 1039}, /* right single quotation mark, U+2019 ISOnum */
+/* sbquo    */ {8218, 1044}, /* single low-9 quotation mark, U+201A NEW */
+/* ldquo    */ {8220, 1096}, /* left double quotation mark, U+201C ISOnum */
+/* rdquo    */ {8221, 1039}, /* right double quotation mark, U+201D ISOnum */
+/* bdquo    */ {8222, 1044}, /* double low-9 quotation mark, U+201E NEW */
+/* dagger   */ {8224, 2042}, /* dagger, U+2020 ISOpub */
+/* Dagger   */ {8225, 2042}, /* double dagger, U+2021 ISOpub */
+/* bull     */ {8226, 183}, /* bullet = black small circle,  U+2022 ISOpub  */
+/* hellip   */ {8230, 188}, /* horizontal ellipsis = three dot leader,  U+2026 ISOpub  */
+/* permil   */ {8240, 2037}, /* per mille sign, U+2030 ISOtech */
+/* prime    */ {8242, 162}, /* prime = minutes = feet, U+2032 ISOtech */
+/* Prime    */ {8243, 178}, /* double prime = seconds = inches,  U+2033 ISOtech */
+/* lsaquo   */ {8249, 1060}, /* single left-pointing angle quotation mark, U+2039 ISO proposed */
+/* rsaquo   */ {8250, 1062}, /* single right-pointing angle quotation mark, U+203A ISO proposed */
+/* oline    */ {8254, 1175}, /* overline = spacing overscore,  U+203E NEW */
+/* frasl    */ {8260, 164}, /* fraction slash, U+2044 NEW */
+/* euro     */ {8364, 2206}, /* euro sign, U+20AC NEW */
+/* image    */ {8465, 193}, /* blackletter capital I = imaginary part,  U+2111 ISOamso */
+/* weierp   */ {8472, 195}, /* script capital P = power set  = Weierstrass p, U+2118 ISOamso */
+/* real     */ {8476, 194}, /* blackletter capital R = real part symbol,  U+211C ISOamso */
+/* trade    */ {8482, 212}, /* trade mark sign, U+2122 ISOnum */
+/* alefsym  */ {8501, 192}, /* alef symbol = first transfinite cardinal,  U+2135 NEW */
+/* larr     */ {8592, 172}, /* leftwards arrow, U+2190 ISOnum */
+/* uarr     */ {8593, 173}, /* upwards arrow, U+2191 ISOnum*/
+/* rarr     */ {8594, 174}, /* rightwards arrow, U+2192 ISOnum */
+/* darr     */ {8595, 175}, /* downwards arrow, U+2193 ISOnum */
+/* harr     */ {8596, 171}, /* left right arrow, U+2194 ISOamsa */
+/* crarr    */ {8629, 191}, /* downwards arrow with corner leftwards  = carriage return, U+21B5 NEW */
+/* lArr     */ {8656, 220}, /* leftwards double arrow, U+21D0 ISOtech */
+/* uArr     */ {8657, 221}, /* upwards double arrow, U+21D1 ISOamsa */
+/* rArr     */ {8658, 222}, /* rightwards double arrow,  U+21D2 ISOtech */
+/* dArr     */ {8659, 223}, /* downwards double arrow, U+21D3 ISOamsa */
+/* hArr     */ {8660, 219}, /* left right double arrow,  U+21D4 ISOamsa */
+/* forall   */ {8704, 34}, /* for all, U+2200 ISOtech */
+/* part     */ {8706, 182}, /* partial differential, U+2202 ISOtech  */
+/* exist    */ {8707, 36}, /* there exists, U+2203 ISOtech */
+/* empty    */ {8709, 198}, /* empty set = null set = diameter,  U+2205 ISOamso */
+/* nabla    */ {8711, 209}, /* nabla = backward difference,  U+2207 ISOtech */
+/* isin     */ {8712, 206}, /* element of, U+2208 ISOtech */
+/* notin    */ {8713, 207}, /* not an element of, U+2209 ISOtech */
+/* ni       */ {8715, 39}, /* contains as member, U+220B ISOtech */
+/* prod     */ {8719, 213}, /* n-ary product = product sign,  U+220F ISOamsb */
+/* sum      */ {8721, 229}, /* n-ary sumation, U+2211 ISOamsb */
+/* minus    */ {8722, 45}, /* minus sign, U+2212 ISOtech */
+/* lowast   */ {8727, 42}, /* asterisk operator, U+2217 ISOtech */
+/* radic    */ {8730, 214}, /* square root = radical sign,  U+221A ISOtech */
+/* prop     */ {8733, 181}, /* proportional to, U+221D ISOtech */
+/* infin    */ {8734, 165}, /* infinity, U+221E ISOtech */
+/* ang      */ {8736, 208}, /* angle, U+2220 ISOamso */
+/* and      */ {8743, 217}, /* logical and = wedge, U+2227 ISOtech */
+/* or       */ {8744, 218}, /* logical or = vee, U+2228 ISOtech */
+/* cap      */ {8745, 199}, /* intersection = cap, U+2229 ISOtech */
+/* cup      */ {8746, 200}, /* union = cup, U+222A ISOtech */
+/* int      */ {8747, 242}, /* integral, U+222B ISOtech */
+/* there4   */ {8756, 92}, /* therefore, U+2234 ISOtech */
+/* sim      */ {8764, 126}, /* tilde operator = varies with = similar to,  U+223C ISOtech */
+/* cong     */ {8773, 64}, /* approximately equal to, U+2245 ISOtech */
+/* asymp    */ {8776, 187}, /* almost equal to = asymptotic to,  U+2248 ISOamsr */
+/* ne       */ {8800, 185}, /* not equal to, U+2260 ISOtech */
+/* equiv    */ {8801, 186}, /* identical to, U+2261 ISOtech */
+/* le       */ {8804, 163}, /* less-than or equal to, U+2264 ISOtech */
+/* ge       */ {8805, 179}, /* greater-than or equal to,  U+2265 ISOtech */
+/* sub      */ {8834, 204}, /* subset of, U+2282 ISOtech */
+/* sup      */ {8835, 201}, /* superset of, U+2283 ISOtech */
+/* nsub     */ {8836, 203}, /* not a subset of, U+2284 ISOamsn */
+/* sube     */ {8838, 205}, /* subset of or equal to, U+2286 ISOtech */
+/* supe     */ {8839, 202}, /* superset of or equal to,  U+2287 ISOtech */
+/* oplus    */ {8853, 197}, /* circled plus = direct sum,  U+2295 ISOamsb */
+/* otimes   */ {8855, 196}, /* circled times = vector product,  U+2297 ISOamsb */
+/* perp     */ {8869, 94}, /* up tack = orthogonal to = perpendicular,  U+22A5 ISOtech */
+/* sdot     */ {8901, 215}, /* dot operator, U+22C5 ISOamsb */
+/* lceil    */ {8968, 233}, /* left ceiling = apl upstile,  U+2308 ISOamsc  */
+/* rceil    */ {8969, 249}, /* right ceiling, U+2309 ISOamsc  */
+/* lfloor   */ {8970, 235}, /* left floor = apl downstile,  U+230A ISOamsc  */
+/* rfloor   */ {8971, 251}, /* right floor, U+230B ISOamsc  */
+/* lang     */ {9001, 225}, /* left-pointing angle bracket = bra,  U+2329 ISOtech */
+/* rang     */ {9002, 241}, /* right-pointing angle bracket = ket,  U+232A ISOtech */
+/* loz      */ {9674, 224}, /* lozenge, U+25CA ISOpub */
+/* spades   */ {9824, 170}, /* black spade suit, U+2660 ISOpub */
+/* clubs    */ {9827, 167}, /* black club suit = shamrock,  U+2663 ISOpub */
+/* hearts   */ {9829, 169}, /* black heart suit = valentine,  U+2665 ISOpub */
+/* diams    */ {9830, 168}, /* black diamond suit, U+2666 ISOpub */
+
+/* THE END  */ {0, 0}		/* last entry (required) */
 };
 
 typedef struct _ElemToBeChecked *PtrElemToBeChecked;
@@ -598,7 +923,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"TYPE", "OL", 'A', HTML_ATTR_NumberStyle},
    {"TYPE", "PARAM", 'A', HTML_ATTR_Param_type},
    {"TYPE", "SCRIPT", 'A', HTML_ATTR_content_type},
-   {"TYPE", "STYLE_", 'A', HTML_ATTR_Notation},
+   {"TYPE", "STYLE", 'A', HTML_ATTR_Notation},
    {"TYPE", "UL", 'A', HTML_ATTR_BulletStyle},
    {"TYPE", "", SPACE, DummyAttribute},
 
@@ -4148,6 +4473,79 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
+   PutNonISOlatin1Char     put a Unicode character in the input buffer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         PutNonISOlatin1Char (int code)
+#else
+static void         PutNonISOlatin1Char (code)
+int                 code;
+
+#endif
+{
+   int		i, c;
+   Language	lang, l;
+
+   /* look for that code in the fallback table */
+   for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
+	       UnicodeFallbackTable[i].unicodeVal > 0;  i++);
+   if (UnicodeFallbackTable[i].unicodeVal == code)
+      {
+      if (UnicodeFallbackTable[i].EightbitCode < 255)
+	 {
+	 /* Symbol character */
+	 lang = TtaGetLanguageIdFromAlphabet('G');
+	 c = UnicodeFallbackTable[i].EightbitCode;
+	 }
+      else if (UnicodeFallbackTable[i].EightbitCode < 2000)
+	 {
+	 /* ISO latin-1 fallback */
+	 lang = TtaGetLanguageIdFromAlphabet('L');
+	 c = UnicodeFallbackTable[i].EightbitCode - 1000;
+	 }
+      else
+	 {
+	 /* Symbol fallback */
+	 lang = TtaGetLanguageIdFromAlphabet('G');
+	 c = UnicodeFallbackTable[i].EightbitCode - 2000;
+	 }
+      }
+
+   if (lang == currentLanguage)
+      PutInBuffer ((char) c);
+   else
+      {
+      TextToDocument ();
+      MergeText = FALSE;
+      l = currentLanguage;
+      currentLanguage = lang;
+      PutInBuffer ((char) c);
+      TextToDocument ();
+      MergeText = FALSE;
+      currentLanguage = l;
+      }
+
+   /* some special cases: insert a second character */
+   /* this pair of characters should not be saved as is in the output file.
+      The original entity should be saved instead */
+
+   if (code == 338)		/* OE ligature */
+      PutInBuffer ('E');
+   else if (code == 339)	/* oe ligature */
+      PutInBuffer ('e');
+   else if (code == 8195)	/* em space, U+2003 ISOpub */
+      PutInBuffer ('\240');
+   else if (code == 8220)	/* left double quotation mark */
+      PutInBuffer ('\140');
+   else if (code == 8221)	/* right double quotation mark */
+      PutInBuffer ('\47');
+   else if (code == 8222)	/* double low-9 quotation mark */
+      PutInBuffer (',');
+   else if (code == 8240)	/* per mille sign */
+      PutInBuffer ('\260');
+}
+
+/*----------------------------------------------------------------------
    EndOfEntity     End of a HTML entity. Search that entity in the
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
@@ -4163,9 +4561,12 @@ char                c;
    unsigned char       msgBuffer[MaxMsgLength];
 
    EntityName[LgEntityName] = EOS;
-   if (ISOlat1table[EntityTableEntry].charName[CharRank] == EOS)
+   if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
       /* the entity read matches the current entry of entity table */
-      PutInBuffer ((char) (ISOlat1table[EntityTableEntry].charCode));
+      if (CharEntityTable[EntityTableEntry].charCode > 255)
+	 PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
+      else
+	 PutInBuffer ((char) (CharEntityTable[EntityTableEntry].charCode));
    else
       /* entity not in the table. Print an error message */
      {
@@ -4194,14 +4595,39 @@ unsigned char       c;
 {
    int                 i;
    unsigned char       msgBuffer[MaxMsgLength];
-   boolean	       OK;
+   boolean	       OK, done, stop;
 
-   if (ISOlat1table[EntityTableEntry].charName[CharRank] == EOS)
+   done = FALSE;
+   if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
       /* the entity name read so far matches the current entry of */
       /* entity table */
+      /* does it also match the next entry? */
      {
+     OK = FALSE;
+     i = EntityTableEntry+1;
+     stop = FALSE;
+     do
+	{
+	if (strncmp (EntityName, CharEntityTable[i].charName, LgEntityName) != 0)
+	   stop = TRUE;
+	else
+	   if (CharEntityTable[i].charName[CharRank] < c)
+	      i++;
+	   else
+	      {
+	      stop = TRUE;
+	      if (CharEntityTable[i].charName[CharRank] == c)
+		 OK = TRUE;
+	      }
+	}
+     while (!stop);     
+     if (!OK)
+        {
 	/* assume that semicolon is missing and put the corresponding char */
-	PutInBuffer ((char) (ISOlat1table[EntityTableEntry].charCode));
+	if (CharEntityTable[EntityTableEntry].charCode > 255)
+	   PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode);
+	else
+	   PutInBuffer ((char) (CharEntityTable[EntityTableEntry].charCode));
 	if (c != SPACE)
 	   /* print an error message */
 	   ParseHTMLError (theDocument, "Missing semicolon");
@@ -4212,17 +4638,19 @@ unsigned char       c;
 	currentState = returnState;
 	/* end of entity */
 	LgEntityName = 0;
+	done = TRUE;
+        }
      }
-   else
+   if (!done)
      {
-	while (ISOlat1table[EntityTableEntry].charName[CharRank] < c
-	       && ISOlat1table[EntityTableEntry].charCode != 0)
+	while (CharEntityTable[EntityTableEntry].charName[CharRank] < c
+	       && CharEntityTable[EntityTableEntry].charCode != 0)
 	   EntityTableEntry++;
-	if (ISOlat1table[EntityTableEntry].charName[CharRank] != c)
+	if (CharEntityTable[EntityTableEntry].charName[CharRank] != c)
 	  OK = FALSE;
 	else
 	  if (LgEntityName > 0 &&
-	      strncmp (EntityName, ISOlat1table[EntityTableEntry].charName,
+	      strncmp (EntityName, CharEntityTable[EntityTableEntry].charName,
 		       LgEntityName) != 0)
 	     OK = FALSE;
 	  else

@@ -31,130 +31,132 @@
 30 Base
 31 Meta
 32 Link
-33 Comment
-34 Paragraph
-35 Image...
-36 Break
-37 Heading
-38 H1
-39 H2
-40 H3
-41 H4
-42 H5
-43 H6
-44 List
-45 Bulleted list
-46 Numbered list
-47 Definition list
-48 Term
-49 Definition
-50 Horizontal rule
-51 Block quote
-52 Preformatted
-53 Address
-54 Table
-55 Table
-56 Caption
-57 THead
-58 TBody
-59 TFoot
-60 Row
-61 Data cell
-62 Heading cell
-63 Form
-64 Form
-65 Toggle
-66 Radio
-67 Option
-68 Text input
-69 Text area
-70 Submit
-71 Reset
-72 Area map
-73 Rectangle
-74 Circle
-75 Polygon
-76 Division
-77 NoScript
-78 Object
-79 Object
-80 Parameter
-81 Inline frame
-82 Math
-83 Inline math
-84 Equation (display)
-85 Root
-86 sQuare root
-87 Fraction
-88 Subscript and superscript
-89 Subscript
-90 suPerscript
-91 Under and over
-92 Under
-93 Over
-94 Parentheses
-95 Multiscripts
-96 Matrix
-97 create Link...
-98 create Target
-99 Change link...
-100 Delete anchor
-101 Show buttonbar
-102 Show address & title
-103 Show map areas
-104 Zoom In
-105 Zoom Out
-106 Show structure
-107 Show alternate
-108 Show links
-109 Show table of contents
-110 Character style...
-111 Colors...
-112 Format...
-113 Background image...
-114 Create rule...
-115 Apply class...
-116 Style sheets
-117 Information type
-118 Emphasis
-119 Strong
-120 Cite
-121 Definition
-122 Code
-123 Variable
-124 Sample
-125 Keyboard
-126 Abbreviation
-127 Acronym
-128 Insertion
-129 Deletion
-130 Character element
-131 Italic
-132 Bold
-133 Teletype
-134 Big
-135 Small
-136 Subscript
-137 Superscript
-138 Quotation
-139 BiDi override
-140 Transform...
-141 Section numbering
-142 Make book
-143 About Amaya
-144 Browsing
-145 Selecting
-146 Searching
-147 Views
-148 Creating elements
-149 Links
-150 Restructuring
-151 Tables
-152 Math
-153 Image maps
-154 Style sheets
-155 Attributes
-156 Publishing
-157 Printing
-158 Making books
-159 Configuring Amaya
+33 Script
+34 Style
+35 Comment
+36 Paragraph
+37 Image...
+38 Break
+39 Heading
+40 H1
+41 H2
+42 H3
+43 H4
+44 H5
+45 H6
+46 List
+47 Bulleted list
+48 Numbered list
+49 Definition list
+50 Term
+51 Definition
+52 Horizontal rule
+53 Block quote
+54 Preformatted
+55 Address
+56 Table
+57 Table
+58 Caption
+59 THead
+60 TBody
+61 TFoot
+62 Row
+63 Data cell
+64 Heading cell
+65 Form
+66 Form
+67 Toggle
+68 Radio
+69 Option
+70 Text input
+71 Text area
+72 Submit
+73 Reset
+74 Area map
+75 Rectangle
+76 Circle
+77 Polygon
+78 Division
+79 NoScript
+80 Object
+81 Object
+82 Parameter
+83 Inline frame
+84 Math
+85 Inline math
+86 Equation (display)
+87 Root
+88 sQuare root
+89 Fraction
+90 Subscript and superscript
+91 Subscript
+92 suPerscript
+93 Under and over
+94 Under
+95 Over
+96 Parentheses
+97 Multiscripts
+98 Matrix
+99 create Link...
+100 create Target
+101 Change link...
+102 Delete anchor
+103 Show buttonbar
+104 Show address & title
+105 Show map areas
+106 Zoom In
+107 Zoom Out
+108 Show structure
+109 Show alternate
+110 Show links
+111 Show table of contents
+112 Character style...
+113 Colors...
+114 Format...
+115 Background image...
+116 Create rule...
+117 Apply class...
+118 Style sheets
+119 Information type
+120 Emphasis
+121 Strong
+122 Cite
+123 Definition
+124 Code
+125 Variable
+126 Sample
+127 Keyboard
+128 Abbreviation
+129 Acronym
+130 Insertion
+131 Deletion
+132 Character element
+133 Italic
+134 Bold
+135 Teletype
+136 Big
+137 Small
+138 Subscript
+139 Superscript
+140 Quotation
+141 BiDi override
+142 Transform...
+143 Section numbering
+144 Make book
+145 About Amaya
+146 Browsing
+147 Selecting
+148 Searching
+149 Views
+150 Creating elements
+151 Links
+152 Restructuring
+153 Tables
+154 Math
+155 Image maps
+156 Style sheets
+157 Attributes
+158 Publishing
+159 Printing
+160 Making books
+161 Configuring Amaya
