@@ -1430,7 +1430,7 @@ caddr_t             call_d;
    TtaDestroyDialogue (parentCatalogue->Cat_Ref);
 }
 
-
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Callback de saisie de valeur.                                      
   ----------------------------------------------------------------------*/
@@ -1496,7 +1496,7 @@ caddr_t             call_d;
 	  }
       }
 }
-
+#endif /* !WINDOWS */
 
 /*----------------------------------------------------------------------
    Callback de feuillet.                                              
