@@ -186,13 +186,28 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
    docSSchema = TtaGetDocumentSSchema (doc);
 
    elType = TtaGetElementType (el);
-   /* is this a block-level element in a character-level element? */
-   if (!IsXMLElementInline (elType, doc) &&
-       elType.ElTypeNum != HTML_EL_Comment_ &&
-       elType.ElTypeNum != HTML_EL_XMLPI)
+   newElType.ElSSchema = elType.ElSSchema;
+
+   if (IsXMLElementInline (elType, doc))
+     /* It's an inline element. If it is empty, insert a Basic_Elem to allow
+	the user to put the selection within this element */
+     {
+       child = TtaGetFirstChild (el);
+       if (child == NULL)
+	 /* it's an empty inline element */
+	 /* insert a Basic_Elem element in the element */
+	 {
+	   newElType.ElTypeNum = HTML_EL_Basic_Elem;
+	   child = TtaNewTree (doc, newElType, "");
+	   TtaInsertFirstChild (&child, el, doc);
+	 }
+     }
+   else
+     /* It's a block-level element. Is it within a character-level element? */
+     if (elType.ElTypeNum != HTML_EL_Comment_ &&
+	 elType.ElTypeNum != HTML_EL_XMLPI)
        BlockInCharLevelElem (el);
 
-   newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
      {
      case HTML_EL_Object:	/* it's an object */
