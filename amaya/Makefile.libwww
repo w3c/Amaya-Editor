@@ -46,7 +46,7 @@ AMAYA_LIBWWW_EXTRA_LIBS=
 AMAYA_LIBWWW_INCLUDES= -I../libwww \
 		-I$(THOTDIR)/../libwww/Library/src \
 		-I$(THOTDIR)../libwww/modules/md5 \
-		-I$(THOTDIR)../libwww/modules/expat/lib
+		-I$(THOTDIR)/../libwww/modules/expat/lib
 
 # this dependency calls the ../Makefile rule that compiles libwww
 AMAYA_LIBWWW_SRC= $(LIBZ) amaya_comp_libwww
