@@ -185,8 +185,8 @@ PtrDico            *pDictionary;
 	if (dictTable[d] == *pDictionary)
 	  {
 	     /* Releases the string and the list of words */
-	     FreeChaine (*pDictionary);
-	     FreeDico (*pDictionary);
+	     FreeStringInDict (*pDictionary);
+	     FreeDictionary (*pDictionary);
 	     dictTable[d] = NULL;
 	     *pDictionary = NULL;
 	  }
@@ -243,7 +243,7 @@ PtrDocument         document;
     
     {
       /* Getting a descriptor of a dictionary */
-      GetDico (&dictTable[d]);
+      GetDictionary (&dictTable[d]);
       *pDictionary = dictTable[d];
       (*pDictionary)->DicoDoc = document;
     }
@@ -300,16 +300,16 @@ char               *dictDirectory;
    int                 ret, i;
    char                tempbuffer[MAX_CHAR];
 
-   DoFileName (dictName, "dic", dictDirectory, tempbuffer, &i);
-   if (FileExist (tempbuffer) == 0)	/* Unknown file */
+   FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
+   if (ThotFile_exist (tempbuffer) == 0)	/* Unknown file */
      {
 	/* Looks for not pre-treated dictionary */
-	DoFileName (dictName, "DIC", dictDirectory, tempbuffer, &i);
-	if (FileExist (tempbuffer) == 0)
+	FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
+	if (ThotFile_exist (tempbuffer) == 0)
 	  {			/* File .DIC unknown */
 	     /* Looks for a dictionary LEX not pre-treated */
-	     DoFileName (dictName, "LEX", dictDirectory, tempbuffer, &i);
-	     if (FileExist (tempbuffer) == 0)	/* unknown file */
+	     FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
+	     if (ThotFile_exist (tempbuffer) == 0)	/* unknown file */
 		ret = -1;	/* unknown file */
 	     else
 		ret = 2;	/* File .LEX exists */
@@ -470,17 +470,17 @@ boolean             toTreat;
    *pDictionary = NULL;
    /* Opening the file */
    if (treated)
-      DoFileName (dictName, "dic", dictDirectory, tempbuffer, &i);
+      FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
    else
      {
 	if (toTreat)
-	   DoFileName (dictName, "DIC", dictDirectory, tempbuffer, &i);
+	   FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
 	else
-	   DoFileName (dictName, "LEX", dictDirectory, tempbuffer, &i);
+	   FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
      }
    if (readonly == FALSE)
      {				/* Alterable dictionary */
-	if (FileExist (tempbuffer) != 0)
+	if (ThotFile_exist (tempbuffer) != 0)
 	  {
 	     dictFile = fopen (tempbuffer, "rw");	/* updating the dictionary */
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, DICO), dictName);
@@ -578,7 +578,7 @@ boolean             toTreat;
 	  }			/* end of else (treated) */
      }				/* end of if (new == FALSE) */
    /* Provide space for 50 words and 600 characters if not readonly */
-   if (GetChaine (pDictionary, readonly) == -1)
+   if (GetStringInDict (pDictionary, readonly) == -1)
      {
 	/* Not enough memory to open this dictionary */
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_LOAD), dictName);
@@ -587,7 +587,7 @@ boolean             toTreat;
 	*pDictionary = NULL;
 	fclose (dictFile);
 	return;
-     }				/* end of if GetChaine == -1 */
+     }				/* end of if GetStringInDict == -1 */
 
    if (treated == TRUE)
      {				/* Read the pre-treated file */
@@ -731,8 +731,8 @@ PtrDico            *pDictionary;
 	     strcpy (dictName, pdict->DicoNom);
 	     document = pdict->DicoDoc;
 	     /* Release the string and the list of words ... */
-	     FreeChaine (pdict);
-	     FreeDico (pdict);
+	     FreeStringInDict (pdict);
+	     FreeDictionary (pdict);
 	     dictTable[d] = NULL;
 	     pdict = NULL;
 	  }

@@ -213,7 +213,7 @@ PtrSSchema        pSS;
 				    pAttr->AeAttrSSchema = pIncludedEl->ElStructSchema;
 				    pAttr->AeAttrNum = att;
 				    pAttr->AeAttrType = AtTextAttr;
-				    GetBufTexte (&pAttr->AeAttrText);
+				    GetTextBuffer (&pAttr->AeAttrText);
 				    /* copie le texte de l'element pEl dans l'attribut */
 				    pChild = pEl;
 				    /* cherche la premiere feuille de texte */

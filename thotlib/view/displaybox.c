@@ -105,7 +105,7 @@ int                 frame;
 	if (haut > i)
 	   haut = i;
 
-	DrawImage (pBox, (PictInfo *) pBox->BxPictInfo, frame);
+	DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame);
 
 	pFrame = &ViewFrameTable[frame - 1];
 	/* Should the end of de line be filled with dots */

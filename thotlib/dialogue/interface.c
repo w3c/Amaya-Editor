@@ -1098,16 +1098,16 @@ XEvent             *ev;
 
    XtDispatchEvent (ev);
    /* Manage document events */
-   frame = GetFenetre (ev->xany.window);
+   frame = GetWindowFrame (ev->xany.window);
    /* the event does not concern a document */
    if ((frame > 0) && (frame <= MAX_FRAME))
      {
 	if (FrameTable[frame].WdFrame != 0)
 	  {
 	     if (ev->type == GraphicsExpose || ev->type == Expose)
-		TraiteExpose (0, frame, (XExposeEvent *) ev);
+		FrameToRedisplay (0, frame, (XExposeEvent *) ev);
 	     else
-		RetourFntr (frame, ev);
+		FrameCallback (frame, ev);
 	  }
      }
 }
@@ -1310,7 +1310,7 @@ Element            *element;
 	*element = (Element) None;
 	*document = (Document) None;
 
-	DesignationPave (&frame, (int *) &absBox);
+	GiveClickedAbsBox (&frame, (int *) &absBox);
 	if (frame == 0 || absBox == 0)
 	   return;
 	else

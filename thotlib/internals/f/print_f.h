@@ -19,7 +19,7 @@ extern boolean GetCurrentSelection ( PtrDocument * SDoc,
                             PtrElement * DerEl,
                             int *PrCar,
                             int *DerCar );
-extern void DimFenetre ( int frame,
+extern void GetSizesFrame ( int frame,
                          int *larg,
                          int *haut );
 extern ThotWindow TtaGetThotWindow ( int frame );
@@ -53,7 +53,7 @@ extern boolean GetCurrentSelection (/* PtrDocument * SDoc,
                               PtrElement * DerEl,
                               int *PrCar,
                               int *DerCar */);
-extern void DimFenetre (/* int frame,
+extern void GetSizesFrame (/* int frame,
                            int *larg,
                            int *haut */);
 extern ThotWindow TtaGetThotWindow (/* int frame */);

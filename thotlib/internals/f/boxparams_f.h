@@ -6,25 +6,25 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void InitVisu ( int frame,
+extern void InitializeFrameParams ( int frame,
                        int Visibilite,
                        int Zoom );
-extern void GetVisu ( int frame,
+extern void GetFrameParams ( int frame,
                       int *Visibilite,
                       int *Zoom );
-extern void ModVisu ( int frame,
+extern void SetFrameParams ( int frame,
                       int Visibilite,
                       int Zoom );
 
 #else /* __STDC__ */
 
-extern void InitVisu (/* int frame,
+extern void InitializeFrameParams (/* int frame,
                          int Visibilite,
                          int Zoom */);
-extern void GetVisu (/* int frame,
+extern void GetFrameParams (/* int frame,
                         int *Visibilite,
                         int *Zoom */);
-extern void ModVisu (/* int frame,
+extern void SetFrameParams (/* int frame,
                         int Visibilite,
                         int Zoom */);
 

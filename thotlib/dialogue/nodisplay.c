@@ -53,10 +53,10 @@ int                *desc;
 }
 
 #ifdef __STDC__
-void                FreeImage (int *desc)
+void                FreePicture (int *desc)
 
 #else  /* __STDC__ */
-void                FreeImage (desc)
+void                FreePicture (desc)
 int                *desc;
 
 #endif /* __STDC__ */

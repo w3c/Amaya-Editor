@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void getFileName ( char *word );
+extern void ExtractFileName ( char *word );
 extern boolean TtaIsSuffixFileIn ( char *aDirectory,
                                    char *suffix );
 extern void TtaListDirectory ( char *aDirectory,
@@ -19,7 +19,7 @@ extern void TtaListDirectory ( char *aDirectory,
 
 #else /* __STDC__ */
 
-extern void getFileName (/* char *word */);
+extern void ExtractFileName (/* char *word */);
 extern boolean TtaIsSuffixFileIn (/* char *aDirectory,
                                      char *suffix */);
 extern void TtaListDirectory (/* char *aDirectory,

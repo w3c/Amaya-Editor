@@ -375,7 +375,7 @@ typedef struct _ElementDescr
 #define ElPolyLineType u.s1.u.s5._ElPolyLineType_
 #define ElPictureName u.s1.u.s6._ElPictureName_
 #define ElNameLength u.s1.u.s6._ElNameLength_
-#define ElImageDescriptor u.s1.u.s6._ElImageDescriptor_
+#define ElPictInfo u.s1.u.s6._ElImageDescriptor_
 
     /* Le pointeur ElFirstChild est interprete suivant le constructeur de la
      regle definissant l'element :

@@ -28,7 +28,7 @@ extern void AttachAttrWithValue ( PtrElement pEl,
                                   PtrDocument pDoc,
                                   PtrAttribute pNewAttr );
 extern boolean IsASavedElement ( PtrElement pEl );
-extern void SaisitNomSchPres ( PtrSSchema pSchStr,
+extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
                                Name name );
 extern boolean LinkReference ( void );
 extern void NouvPosition ( PtrAbstractBox pAb,
@@ -48,7 +48,7 @@ extern boolean PavMovable ( PtrAbstractBox pAb,
 extern boolean MemesRegleSpecif ( PtrElement pEl1,
                                   PtrElement pEl2 );
 extern void ModPresent ( boolean OnlyChars );
-extern void MontrerBoite ( int frame,
+extern void ShowBox ( int frame,
                            PtrBox boite,
                            int position,
                            int pourcent );
@@ -57,28 +57,28 @@ extern boolean CallEventType ( int *notifyEvent,
                                boolean pre );
 extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                     boolean pre );
-extern void EndInsert ( void );
+extern void CloseInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                  int frame );
 extern void InsertChar ( unsigned char car,
                          int clavier );
-extern void EmacsCommand ( int code );
+extern void MovingCommands ( int code );
 extern void ContentEditing ( int numero,
                                 boolean IsCar );
 extern void PasteXClipboard ( unsigned char *Xbuffer,
                             int nbytes );
-extern int CopierXBuffer ( unsigned char **buffer );
-extern void MajScrolls ( int frame );
-extern void ChangeTitre ( int frame,
+extern int CopyXClipboard ( unsigned char **buffer );
+extern void UpdateScrollbars ( int frame );
+extern void ChangeFrameTitle ( int frame,
                           char *texte );
-extern void SetClip ( int frame,
+extern void DefineClipping ( int frame,
                       int orgx,
                       int orgy,
                       int *xd,
                       int *yd,
                       int *xf,
                       int *yf );
-extern void ResetClip ( int frame );
+extern void RemoveClipping ( int frame );
 extern void SetCursorWatch ( int thotWindowid );
 extern void ResetCursorWatch ( int thotWindowid );
 extern void InsertOption ( PtrElement pEl,
@@ -197,7 +197,7 @@ extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pNewAttr */);
 extern boolean IsASavedElement (/* PtrElement pEl */);
-extern void SaisitNomSchPres (/* PtrSSchema pSchStr,
+extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
                                  Name name */);
 extern boolean LinkReference (/* void */);
 extern void NouvPosition (/* PtrAbstractBox pAb,
@@ -217,7 +217,7 @@ extern boolean PavMovable (/* PtrAbstractBox pAb,
 extern boolean MemesRegleSpecif (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
 extern void ModPresent (/* boolean OnlyChars */);
-extern void MontrerBoite (/* int frame,
+extern void ShowBox (/* int frame,
                              PtrBox boite,
                              int position,
                              int pourcent */);
@@ -226,28 +226,28 @@ extern boolean CallEventType (/* int *notifyEvent,
                                  boolean pre */);
 extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                       boolean pre */);
-extern void EndInsert (/* void */);
+extern void CloseInsertion (/* void */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                    int frame */);
 extern void InsertChar (/* unsigned char car,
                            int clavier */);
-extern void EmacsCommand (/* int code */);
+extern void MovingCommands (/* int code */);
 extern void ContentEditing (/* int numero,
                                   boolean IsCar */);
 extern void PasteXClipboard (/* unsigned char *Xbuffer,
                               int nbytes */);
-extern int CopierXBuffer (/* unsigned char **buffer */);
-extern void MajScrolls (/* int frame */);
-extern void ChangeTitre (/* int frame,
+extern int CopyXClipboard (/* unsigned char **buffer */);
+extern void UpdateScrollbars (/* int frame */);
+extern void ChangeFrameTitle (/* int frame,
                             char *texte */);
-extern void SetClip (/* int frame,
+extern void DefineClipping (/* int frame,
                         int orgx,
                         int orgy,
                         int *xd,
                         int *yd,
                         int *xf,
                         int *yf */);
-extern void ResetClip (/* int frame */);
+extern void RemoveClipping (/* int frame */);
 extern void SetCursorWatch (/* int thotWindowid */);
 extern void ResetCursorWatch (/* int thotWindowid */);
 extern void InsertOption (/* PtrElement pEl,

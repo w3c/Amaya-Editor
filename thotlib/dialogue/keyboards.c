@@ -763,12 +763,12 @@ int                 number;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    KBMap mappe un clavier.                                         | */
+/* |    KeyboardMap mappe un clavier.                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                KBMap (int kb)
+void                KeyboardMap (int kb)
 #else  /* __STDC__ */
-void                KBMap (kb)
+void                KeyboardMap (kb)
 int                 kb;
 
 #endif /* __STDC__ */
@@ -803,7 +803,7 @@ void                KeyboardsLoadResources ()
 
    if (ThotLocalActions[T_keyboard] == NULL)
      {
-	TteConnectAction (T_keyboard, (Proc) KBMap);
+	TteConnectAction (T_keyboard, (Proc) KeyboardMap);
 
 	/* Initialise la table des claviers */
 	for (i = 0; i < MAX_KEYBOARD; i++)

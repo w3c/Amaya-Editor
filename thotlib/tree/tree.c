@@ -1260,7 +1260,7 @@ boolean             Check;
 		     /* dans lequel on copie le contenu */
 		     if (pAttr1->AeAttrText != NULL)
 		       {
-			  GetBufTexte (&pAttr2->AeAttrText);
+			  GetTextBuffer (&pAttr2->AeAttrText);
 			  CopyTextToText (pAttr1->AeAttrText, pAttr2->AeAttrText, &len);
 		       }
 		  /* chaine la copie */
@@ -1306,13 +1306,13 @@ PtrElement          pEl2;
       pEl2->ElFirstPRule = NULL;	/* pas de presentation specifique */
    else
      {
-	GetReglePres (&pRC1);	/* acquiert une premiere regle */
+	GetPresentRule (&pRC1);	/* acquiert une premiere regle */
 	pEl2->ElFirstPRule = pRC1;
 	*pRC1 = *pEl->ElFirstPRule;	/* copie la premiere regle */
 	pRS = pEl->ElFirstPRule->PrNextPRule;
 	while (pRS != NULL)
 	  {
-	     GetReglePres (&pRC2);	/* acquiert une regle pour la copie */
+	     GetPresentRule (&pRC2);	/* acquiert une regle pour la copie */
 	     *pRC2 = *pRS;	/* copie le contenu */
 	     pRC1->PrNextPRule = pRC2;	/* chaine cette regle a la precedente */
 	     pRC1 = pRC2;
@@ -2583,7 +2583,7 @@ boolean             del;
 	     switch (pEl->ElLeafType)
 		   {
 		      case LtPicture:
-			 pEl->ElImageDescriptor = (*pNew)->ElImageDescriptor;
+			 pEl->ElPictInfo = (*pNew)->ElPictInfo;
 		      case LtText:
 			 pEl->ElText = (*pNew)->ElText;
 			 pEl->ElTextLength = (*pNew)->ElTextLength;
@@ -2720,7 +2720,7 @@ PtrDocument         pDoc;
 		    pAttr->AeAttrValue = pSRule->SrDefAttrValue[i];
 		    break;
 		 case AtTextAttr:
-		    GetBufTexte (&pAttr->AeAttrText);
+		    GetTextBuffer (&pAttr->AeAttrText);
 		    CopyStringToText (pSS->SsConstBuffer + pSRule->SrDefAttrValue[i] - 1,
 					  pAttr->AeAttrText, &l);
 		    break;
@@ -2882,7 +2882,7 @@ boolean             withLabel;
 				     CreateTextBuffer (pEl);
 				     pEl->ElLeafType = LtPicture;
 				     pEl->ElVolume = 0;
-				     pEl->ElImageDescriptor = NULL;
+				     pEl->ElPictInfo = NULL;
 				     break;
 				  case GraphicElem:
 				     pEl->ElLeafType = LtGraphics;
@@ -3276,7 +3276,7 @@ PtrAttribute         pAttr;
 		     pEl->ElFirstPRule = pPRnext;
 		  else
 		     pPRprev->PrNextPRule = pPRnext;
-		  FreeReglePres (pPR);
+		  FreePresentRule (pPR);
 		  pPR = pPRnext;
 	       }
 	     else
@@ -3304,7 +3304,7 @@ PtrAttribute         pAttr;
 	     while (buf != NULL)
 	       {
 		  nextbuf = buf->BuNext;
-		  FreeBufTexte (buf);
+		  FreeTextBuffer (buf);
 		  buf = nextbuf;
 	       }
 	  }
@@ -3373,8 +3373,8 @@ PtrElement         *pEl;
 		  /* Liberation du descripteur d'image */
 		  if (pEl1->ElLeafType == LtPicture)
 		    {
-		       FreeImageDescriptor (pEl1->ElImageDescriptor);
-		       pEl1->ElImageDescriptor = NULL;
+		       FreeImageDescriptor (pEl1->ElPictInfo);
+		       pEl1->ElPictInfo = NULL;
 		    }
 	       }
 	     if (pEl1->ElLeafType == LtPlyLine)
@@ -3419,7 +3419,7 @@ PtrElement         *pEl;
 	     if (pCD->CdCopiedAb != NULL)
 		pCD->CdCopiedAb->AbCopyDescr = NULL;
 	     pNextCD = pCD->CdNext;
-	     FreeDescCopie (pCD);
+	     FreeDescCopy (pCD);
 	     pCD = pNextCD;
 	  }
 
@@ -3443,7 +3443,7 @@ PtrElement         *pEl;
 	while (pRule != NULL)
 	  {
 	     pNextRule = pRule->PrNextPRule;
-	     FreeReglePres (pRule);
+	     FreePresentRule (pRule);
 	     pRule = pNextRule;
 	  }
 	/* supprime le commentaire associe a l'element */
@@ -3730,7 +3730,7 @@ boolean             shareRef;
 		       switch (pEl->ElLeafType)
 			     {
 				case LtPicture:
-				   pEl->ElImageDescriptor = NULL;
+				   pEl->ElPictInfo = NULL;
 				   /* copie le contenu d'un texte ou d'une image */
 				   pEl->ElText = CopyText (pSource->ElText, pEl);
 				   pEl->ElTextLength = pSource->ElTextLength;
@@ -3961,7 +3961,7 @@ PtrDocument         pDoc;
 		  CopyPresRules (pSource, pEl);
 		  /* copie le commentaire associe a l'element */
 		  ClearText (pEl->ElComment);
-		  FreeBufTexte (pEl->ElComment);
+		  FreeTextBuffer (pEl->ElComment);
 		  if (pSource->ElComment != NULL)
 		     pEl->ElComment = CopyText (pSource->ElComment, pEl);
 		  if (pEl->ElTerminal)
@@ -3979,7 +3979,7 @@ PtrDocument         pDoc;
 					  pEl->ElPolyLineBuffer != NULL)
 					{
 					   ClearText (pEl->ElPolyLineBuffer);
-					   FreeBufTexte (pEl->ElPolyLineBuffer);
+					   FreeTextBuffer (pEl->ElPolyLineBuffer);
 					}
 				      pEl->ElLeafType = LtPlyLine;
 				      pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
@@ -4246,7 +4246,7 @@ PtrElement          pEl;
 	   pAttr->AeAttrNum = 1;
 	   pAttr->AeDefAttr = FALSE;
 	   pAttr->AeAttrType = AtTextAttr;
-	   GetBufTexte (&pAttr->AeAttrText);
+	   GetTextBuffer (&pAttr->AeAttrText);
 	   CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
 	   if (pEl->ElFirstAttr == NULL)
 	      /* c'est le 1er attribut de l'element */

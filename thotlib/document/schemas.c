@@ -186,7 +186,7 @@ PtrPRule       *arp;
    while (p != NULL)
      {
 	s = p->PrNextPRule;
-	FreeReglePres (p);
+	FreePresentRule (p);
 	p = s;
      }
    *arp = NULL;
@@ -276,7 +276,7 @@ PtrSSchema        pSS;
 	/* libere les regles de presentation des types */
 	for (i = 0; i < pSS->SsNRules; i++)
 	   LibListeRegles (&pSch->PsElemPRule[i]);
-	FreeSPres (pSch);
+	FreeSchPres (pSch);
      }
 }
 
@@ -313,7 +313,7 @@ int         r;
       /* echec */
      {
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
-	FreeSStruct (PtrStrNat);
+	FreeSchStruc (PtrStrNat);
 	PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
      }
    else
@@ -349,7 +349,7 @@ int         r;
 	   /* echec chargement schema */
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
-	     FreeSStruct (PtrStrNat);
+	     FreeSchStruc (PtrStrNat);
 	     PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
 	  }
 	InitApplicationSchema (PtrStrNat);
@@ -522,13 +522,13 @@ boolean             Extension;
 	if (!ReadStructureSchema (fname, *pSS))
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
-	     FreeSStruct (*pSS);
+	     FreeSchStruc (*pSS);
 	     *pSS = NULL;
 	  }
 	else if ((*pSS)->SsExtension != Extension)
 	   /* on voulait un schema d'extension et ce n'en est pas un, ou l'inverse */
 	  {
-	     FreeSStruct (*pSS);
+	     FreeSchStruc (*pSS);
 	     *pSS = NULL;
 	  }
 	else
@@ -573,7 +573,7 @@ boolean             Extension;
 	   /* echec chargement schema */
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fname);
-	     FreeSStruct (*pSS);
+	     FreeSchStruc (*pSS);
 	     *pSS = NULL;
 	  }
      }
@@ -715,7 +715,7 @@ PtrSSchema        pSS;
 	   /* libere le schema de presentation associe' */
 	   FreePresentationSchema (pSS->SsPSchema, pSS);
 	/* rend la memoire */
-	FreeSStruct (pSS);
+	FreeSchStruc (pSS);
      }
    return ret;
 }
@@ -758,7 +758,7 @@ PtrDocument         pDoc;
 	/* libere le schema de presentation et de structure */
 	if (pSc1->SsPSchema != NULL)
 	   FreePresentationSchema (pSc1->SsPSchema, pSc1);
-	FreeSStruct (pSc1);
+	FreeSchStruc (pSc1);
 	pSc1 = pSSuiv;
      }
    pDoc->DocSSchema = NULL;

@@ -570,7 +570,7 @@ CSSInfoPtr          css;
       if (css->css_rule)
 	 TtaFreeMemory (css->css_rule);
       if (css->tempfile) {
-	 if (FileExist (css->tempfile) != 0) {
+	 if (ThotFile_exist (css->tempfile) != 0) {
 	    if (RemoveFile (css->tempfile) != 0) {
 #ifdef DEBUG_CSS
 	       fprintf (stderr, "cannot remove %s\n", css->tempfile);
@@ -1734,10 +1734,10 @@ Document            doc;
     * I don't know why, D.V. !!!
     */
 #ifndef NEW_WILLOWS
-   frame = GetFenetre (XtWindow (TtaGetViewFrame (doc, 1)));
-   DimFenetre (frame, &framexmax, &frameymax);
+   frame = GetWindowFrame (XtWindow (TtaGetViewFrame (doc, 1)));
+   GetSizesFrame (frame, &framexmax, &frameymax);
    DefClip (frame, 0, 0, framexmax, frameymax);
-   XChangeTaille ((int *) TtaGetViewFrame (doc, 1), frame, NULL);
+   FrameResized ((int *) TtaGetViewFrame (doc, 1), frame, NULL);
 #endif /* NEW_WILLOWS */
 #endif /* linux */
 }

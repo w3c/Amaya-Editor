@@ -1759,7 +1759,7 @@ PathBuffer          fileName;
 	  {
 	     pNextExtDoc = pExtDoc->EdNext;
 	     /* libere le descripteur de document externe */
-	     FreeDocExterne (pExtDoc);
+	     FreeExternalDoc (pExtDoc);
 	     pExtDoc = pNextExtDoc;
 	  }
 	/* libere le descripteur d'element reference' */
@@ -1823,9 +1823,9 @@ PtrDocument         pDoc;
 	/* Charge le fichier .EXT du document externe */
 	/* demande d'abord dans quel directory se trouve le fichier .PIV */
 	strncpy (directoryName, DocumentPath, MAX_PATH);
-	BuildFileName (extDocIdent, "PIV", directoryName, fileName, &i);
+	MakeCompleteName (extDocIdent, "PIV", directoryName, fileName, &i);
 	/* cherche le fichier .EXT dans le meme directory */
-	DoFileName (extDocIdent, "EXT", directoryName, fileName, &i);
+	FindCompleteName (extDocIdent, "EXT", directoryName, fileName, &i);
 	if (fileName[0] != '\0')
 	  {
 	     extFile = BIOreadOpen (fileName);
@@ -1889,7 +1889,7 @@ PtrDocument         pDoc;
 			    pFirstRefD = pRefD;
 			    /* associe a ce descripteur un 1er descripteur de */
 			    /* document referencant */
-			    GetDocExterne (&pExtDoc);
+			    GetExternalDoc (&pExtDoc);
 			    CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
 			    pRefD->ReExtDocRef = pExtDoc;
 			 }
@@ -1948,7 +1948,7 @@ PtrDocument         pDoc;
 					   pRefD = NULL;
 					}
 				   }
-				 FreeDocExterne (pExtDoc);
+				 FreeExternalDoc (pExtDoc);
 			      }
 			 }
 		       else
@@ -1959,7 +1959,7 @@ PtrDocument         pDoc;
 			  /* il s'agit d'une reference creee, on ajoute un */
 			  /* descripteur de document referencant */
 			 {
-			    GetDocExterne (&pExtDoc);
+			    GetExternalDoc (&pExtDoc);
 			    CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
 			    pExtDoc->EdNext = pRefD->ReExtDocRef;
 			    pRefD->ReExtDocRef = pExtDoc;
@@ -1973,7 +1973,7 @@ PtrDocument         pDoc;
 			  pDoc->DocNewOutRef = pCreatedRef->OrNext;
 		       else
 			  pPrevCreatedRef->OrNext = pCreatedRef->OrNext;
-		       FreeRefSortante (pCreatedRef);
+		       FreeOutputRef (pCreatedRef);
 		       pCreatedRef = pNextCreatedRef;
 		    }
 		  else
@@ -1983,7 +1983,7 @@ PtrDocument         pDoc;
 			  pDoc->DocDeadOutRef = pDeadRef->OrNext;
 		       else
 			  pPrevDeadRef->OrNext = pDeadRef->OrNext;
-		       FreeRefSortante (pDeadRef);
+		       FreeOutputRef (pDeadRef);
 		       pDeadRef = pNextDeadRef;
 		    }
 	       }
@@ -2034,10 +2034,10 @@ PtrDocument         pDoc;
      {
 	/* on va charger le fichier .EXT du document */
 	/* acquiert d'abord un descripteur de ce fichier */
-	GetRefEntrantes (&pExtFileD);
+	GetInputRef (&pExtFileD);
 	/* ce fichier est dans le meme directory que le document */
 	strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "EXT", directoryName, fileName, &i);
+	FindCompleteName (pDoc->DocDName, "EXT", directoryName, fileName, &i);
 	/* initialise le descripteur du fichier .EXT */
 	pExtFileD->ErFirstReferredEl = NULL;
 	CopyDocIdent (&pExtFileD->ErDocIdent, pDoc->DocIdent);
@@ -2082,7 +2082,7 @@ PtrDocument         pDoc;
 			    {
 			       pNextExtDoc = pExtDoc->EdNext;
 			       /* libere le descripteur de document externe */
-			       FreeDocExterne (pExtDoc);
+			       FreeExternalDoc (pExtDoc);
 			       pExtDoc = pNextExtDoc;
 			    }
 			  /* libere le descripteur d'element reference' */
@@ -2111,7 +2111,7 @@ PtrDocument         pDoc;
 		  pPrevExtDoc = NULL;
 		  while (pOriginExtDoc != NULL)
 		    {
-		       GetDocExterne (&pExtDoc);
+		       GetExternalDoc (&pExtDoc);
 		       CopyDocIdent (&pExtDoc->EdDocIdent, pOriginExtDoc->EdDocIdent);
 		       /* chaine la copie */
 		       if (pPrevExtDoc == NULL)
@@ -2138,7 +2138,7 @@ PtrDocument         pDoc;
 		  if (!found)
 		     /* le fichier .REF n'est pas charge', on le charge */
 		    {
-		       GetFichRefChng (&pFile);
+		       GetFileRefChng (&pFile);
 		       pFile->RcNext = pFirstFile;
 		       pFirstFile = pFile;
 		       pFile->RcFirstChange = NULL;
@@ -2146,9 +2146,9 @@ PtrDocument         pDoc;
 		       /* demande d'abord dans quel directory se trouve le */
 		       /* fichier .PIV de ce document */
 		       strncpy (directoryName, DocumentPath, MAX_PATH);
-		       BuildFileName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
+		       MakeCompleteName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
-		       DoFileName (pFile->RcDocIdent, "REF", directoryName, fileName, &i);
+		       FindCompleteName (pFile->RcDocIdent, "REF", directoryName, fileName, &i);
 		       strncpy (pFile->RcFileName, fileName, MAX_PATH);
 		       if (fileName[0] != '\0')
 			 {
@@ -2227,7 +2227,7 @@ PtrDocument         pDoc;
 		    }
 		  pNextExtDoc = pExtDoc->EdNext;
 		  /* libere le descripteur de document externe */
-		  FreeDocExterne (pExtDoc);
+		  FreeExternalDoc (pExtDoc);
 		  /* passe au document externe suivant */
 		  pExtDoc = pNextExtDoc;
 	       }
@@ -2242,7 +2242,7 @@ PtrDocument         pDoc;
 	/* ecrit le fichier .EXT mis a jour */
 	SauveExt (pExtFileD->ErFirstReferredEl, pExtFileD->ErFileName);
 	/* rend le descripteur de ce fichier */
-	FreeRefEntrantes (pExtFileD);
+	FreeInputRef (pExtFileD);
 	/* ecrit les fichiers .REF mis a jour */
 	pFile = pFirstFile;
 	while (pFile != NULL)
@@ -2252,7 +2252,7 @@ PtrDocument         pDoc;
 		SauveRef (pFile->RcFirstChange, pFile->RcFileName);
 	     pNextFile = pFile->RcNext;
 	     /* libere le descripteur de fichier */
-	     FreeFichRefChng (pFile);
+	     FreeFileRefChng (pFile);
 	     /* passe au fichier suivant */
 	     pFile = pNextFile;
 	  }
@@ -2369,10 +2369,10 @@ boolean             copyDoc;
 		  /* demande d'abord dans quel directory se trouve le */
 		  /* fichier .PIV */
 		  strncpy (directoryName, DocumentPath, MAX_PATH);
-		  BuildFileName (pRefD->ReExtDocument, "PIV", directoryName,
+		  MakeCompleteName (pRefD->ReExtDocument, "PIV", directoryName,
 				 fileName, &i);
 		  /* cherche le fichier .EXT dans le meme directory */
-		  DoFileName (pRefD->ReExtDocument, "EXT", directoryName, fileName, &i);
+		  FindCompleteName (pRefD->ReExtDocument, "EXT", directoryName, fileName, &i);
 		  if (fileName[0] != '\0')
 		    {
 		       extFile = BIOreadOpen (fileName);
@@ -2388,7 +2388,7 @@ boolean             copyDoc;
 		    {
 		       /* on garde la chaine de descripteurs chargee et le */
 		       /* nom du fichier fileName */
-		       GetRefEntrantes (&pInRef);
+		       GetInputRef (&pInRef);
 		       pInRef->ErNext = pFirstInRef;
 		       pFirstInRef = pInRef;
 		       pInRef->ErFirstReferredEl = pFirstRefD;
@@ -2420,7 +2420,7 @@ boolean             copyDoc;
 			 {
 			    /* ajoute un descripteur de document referencant */
 			    pOriginExtDoc = pExtDoc;
-			    GetDocExterne (&pExtDoc);
+			    GetExternalDoc (&pExtDoc);
 			    pExtDoc->EdNext = pOriginExtDoc->EdNext;
 			    pOriginExtDoc->EdNext = pExtDoc;
 			 }
@@ -2434,7 +2434,7 @@ boolean             copyDoc;
 	/* ecrit le fichier .EXT traite' */
 	SauveExt (pInRef->ErFirstReferredEl, pInRef->ErFileName);
 	pNextInRef = pInRef->ErNext;
-	FreeRefEntrantes (pInRef);
+	FreeInputRef (pInRef);
 	/* passe au fichier .EXT suivant en memoire */
 	pInRef = pNextInRef;
      }
@@ -2499,7 +2499,7 @@ Name                 newName;
 		     /* le document referencant n'a pas encore ete rencontre' */
 		     /* on le met dans la liste des document referencant */
 		    {
-		       GetFichRefChng (&pFile);
+		       GetFileRefChng (&pFile);
 		       pFile->RcNext = pFirstREFfile;
 		       pFirstREFfile = pFile;
 		       pFile->RcFirstChange = NULL;
@@ -2507,9 +2507,9 @@ Name                 newName;
 		       /* demande dans quel directory se trouve le fichier */
 		       /* .PIV de ce document */
 		       strncpy (directoryName, DocumentPath, MAX_PATH);
-		       BuildFileName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
+		       MakeCompleteName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
-		       DoFileName (pFile->RcDocIdent, "REF", directoryName, pFile->RcFileName, &i);
+		       FindCompleteName (pFile->RcDocIdent, "REF", directoryName, pFile->RcFileName, &i);
 		    }
 		  /* passe au descripteur de document referencant suivant */
 		  pExtDoc = pExtDoc->EdNext;
@@ -2585,7 +2585,7 @@ Name                 newName;
 	SauveRef (pFile->RcFirstChange, pFile->RcFileName);
 	pNextFile = pFile->RcNext;
 	/* libere le descripteur de fichier */
-	FreeFichRefChng (pFile);
+	FreeFileRefChng (pFile);
 	/* passe au fichier suivant */
 	pFile = pNextFile;
      }

@@ -22,25 +22,25 @@
 
 #ifdef __STDC__
 extern void         DefClip (int, int, int, int, int);
-extern void         EndInsert (void);
+extern void         CloseInsertion (void);
 extern void         DisplayFrame (int);
 
 #else
 extern void         DefClip ();
-extern void         EndInsert ();
+extern void         CloseInsertion ();
 extern void         DisplayFrame ();
 
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* |    InitVisu initialise le seuil de visibilite et le facteur de     | */
+/* |    InitializeFrameParams initialise le seuil de visibilite et le facteur de     | */
 /* |            zoom de la fenetre frame.                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                InitVisu (int frame, int Visibilite, int Zoom)
+void                InitializeFrameParams (int frame, int Visibilite, int Zoom)
 
 #else  /* __STDC__ */
-void                InitVisu (frame, Visibilite, Zoom)
+void                InitializeFrameParams (frame, Visibilite, Zoom)
 int                 frame;
 int                 Visibilite;
 int                 Zoom;
@@ -60,15 +60,15 @@ int                 Zoom;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GetVisu retourne les valeurs courantes du seuil de visibilite et| */
+/* |    GetFrameParams retourne les valeurs courantes du seuil de visibilite et| */
 /* |            du facteur de zoom de la fenetre.                       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetVisu (int frame, int *Visibilite, int *Zoom)
+void                GetFrameParams (int frame, int *Visibilite, int *Zoom)
 
 #else  /* __STDC__ */
-void                GetVisu (frame, Visibilite, Zoom)
+void                GetFrameParams (frame, Visibilite, Zoom)
 int                 frame;
 int                *Visibilite;
 int                *Zoom;
@@ -88,15 +88,15 @@ int                *Zoom;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ModVisu reevalue la vue designee apres decalage des tailles     | */
+/* |    SetFrameParams reevalue la vue designee apres decalage des tailles     | */
 /* |            ou/et modification du seuil de visibilite des boites.   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ModVisu (int frame, int Visibilite, int Zoom)
+void                SetFrameParams (int frame, int Visibilite, int Zoom)
 
 #else  /* __STDC__ */
-void                ModVisu (frame, Visibilite, Zoom)
+void                SetFrameParams (frame, Visibilite, Zoom)
 int                 frame;
 int                 Visibilite;
 int                 Zoom;
@@ -117,7 +117,7 @@ int                 Zoom;
    ViewFrame            *pFrame;
    ViewSelection            *pViewSel;
 
-   EndInsert ();
+   CloseInsertion ();
    c1 = 0;
    cN = 0;
    /* On enregistre le seuil de visibilite et facteur de zoom de la fenetre */

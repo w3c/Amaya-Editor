@@ -245,7 +245,7 @@ int                 Visib;
    PtrElement          pAscend;
    boolean             stop;
 
-   GetPave (&pAb);
+   GetAbstractBox (&pAb);
    pAb->AbElement = pEl;
    pAb->AbEnclosing = NULL;
    pAb->AbNext = NULL;
@@ -691,7 +691,7 @@ PtrAbstractBox             pPRP;
 
    if (pAb != NULL)
      {
-	GetRRetard (&NpDelR);
+	GetDifferedRule (&NpDelR);
 	NpDelR->DpPRule = pR;
 	NpDelR->DpPSchema = pSP;
 	NpDelR->DpAbsBox = pAbb;
@@ -774,7 +774,7 @@ PtrAttribute        *pAttr;
 		  *pAbb = pDelR->DpAbsBox;
 		  *pAttr = pDelR->DpAttribute;
 		  pAb2->AbDelayedPRule = pDelR->DpNext;
-		  FreeRRetard (pDelR);
+		  FreeDifferedRule (pDelR);
 	       }
 	  }
      }
@@ -2572,10 +2572,10 @@ boolean             completeCreator;
 			       FreeImageDescriptor (pAb->AbPictInfo);
 			    pAb->AbPictInfo = NULL;
 			 }
-		       FreePave (pAb);
+		       FreeAbstractBox (pAb);
 		    }
 		  else if (pAb)
-		     FreePave (pAb);
+		     FreeAbstractBox (pAb);
 	       }
 	     else
 		/* rend non modifiable le pave de presentation */

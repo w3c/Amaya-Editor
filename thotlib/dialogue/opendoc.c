@@ -105,16 +105,16 @@ int                *nbitem;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    SaisitNomSchPres        demande a l'utilisateur le schema de    | */
+/* |    BuildSchPresNameMenu        demande a l'utilisateur le schema de    | */
 /* |    presentation a charger pour le schema de structure pSchStr.     | */
 /* |    A l'appel, name contient le nom du schema propose' par Thot,    | */
 /* |    au retour, name contient le nom entre' par l'utilisateur.       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                SaisitNomSchPres (PtrSSchema pSchStr, Name name)
+void                BuildSchPresNameMenu (PtrSSchema pSchStr, Name name)
 
 #else  /* __STDC__ */
-void                SaisitNomSchPres (pSchStr, name)
+void                BuildSchPresNameMenu (pSchStr, name)
 PtrSSchema        pSchStr;
 Name                 name;
 
@@ -156,13 +156,13 @@ Name                 name;
 
 
 /* ---------------------------------------------------------------------- */
-/* | retpresentation met a jour le choix du schema de presentation.     | */
+/* | CallbackSchPresNameMenu met a jour le choix du schema de presentation.     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                retpresentation (int ref, int typedata, char *data)
+void                CallbackSchPresNameMenu (int ref, int typedata, char *data)
 
 #else  /* __STDC__ */
-void                retpresentation (ref, typedata, data)
+void                CallbackSchPresNameMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -184,13 +184,13 @@ char               *data;
 
 
 /* ---------------------------------------------------------------------- */
-/* | retimport met a jour le formulaire de import.                      | */
+/* | CallbackImportMenu met a jour le formulaire de import.                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                retimport (int ref, int typedata, char *data)
+void                CallbackImportMenu (int ref, int typedata, char *data)
 
 #else  /* __STDC__ */
-void                retimport (ref, typedata, data)
+void                CallbackImportMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -204,7 +204,7 @@ char               *data;
 	 {
 	    case NumSelectImportClass:
 	       /* conserve le nom interne du schema de structure d'importation */
-	       ConfigNomInterneSSchema (data, SchStrImport, TRUE);
+	       ConfigSSchemaInternalName (data, SchStrImport, TRUE);
 	       if (SchStrImport[0] == '\0')
 		  /* pas de fichier .langue, on prend le nom tel quel */
 		 {
@@ -224,13 +224,13 @@ char               *data;
 
 
 /* ---------------------------------------------------------------------- */
-/* | retopendoc met a jour le formulaire de opendoc.                    | */
+/* | CallbackOpenDocMenu met a jour le formulaire de opendoc.                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                retopendoc (int ref, int typedata, char *data)
+void                CallbackOpenDocMenu (int ref, int typedata, char *data)
 
 #else  /* __STDC__ */
-void                retopendoc (ref, typedata, data)
+void                CallbackOpenDocMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -298,7 +298,7 @@ char               *data;
 		 {
 		    /* compose le path complet du fichier pivot */
 		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
-		    BuildFileName (docName, "PIV", DirectoryName, data, &i);
+		    MakeCompleteName (docName, "PIV", DirectoryName, data, &i);
 		    TtaExtractName (docName, DirectoryName, DefaultDocumentName);
 		 }
 	       else
@@ -342,9 +342,9 @@ char               *data;
 			 }
 		    }
 
-	       BuildFileName (DefaultDocumentName, "PIV", DirectoryName, docName, &i);
+	       MakeCompleteName (DefaultDocumentName, "PIV", DirectoryName, docName, &i);
 	       /* teste si le fichier 'PIV' existe */
-	       if (FileExist (docName) != 0)
+	       if (ThotFile_exist (docName) != 0)
 		  /* le fichier PIV existe, on ouvre le document */
 		 {
 		    /* acquiert et initialise un descripteur de document */
@@ -361,8 +361,8 @@ char               *data;
 		 {
 		    /* cherche s'il existe un fichier de ce nom, sans extension */
 		    strncpy (DirectoryName, DocumentPath, MAX_PATH);
-		    BuildFileName (DefaultDocumentName, "", DirectoryName, docName, &i);
-		    if (FileExist (docName) == 0)
+		    MakeCompleteName (DefaultDocumentName, "", DirectoryName, docName, &i);
+		    if (ThotFile_exist (docName) == 0)
 		       /* le fichier n'existe pas */
 		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), DefaultDocumentName);
 		    else
@@ -402,10 +402,10 @@ View                view;
    if (ThotLocalActions[T_opendoc] == NULL)
      {
 	/* Connecte les actions liees au traitement de la opendoc */
-	TteConnectAction (T_opendoc, (Proc) retopendoc);
-	TteConnectAction (T_import, (Proc) retimport);
-	TteConnectAction (T_presentation, (Proc) retpresentation);
-	TteConnectAction (T_presentchoice, (Proc) SaisitNomSchPres);
+	TteConnectAction (T_opendoc, (Proc) CallbackOpenDocMenu);
+	TteConnectAction (T_import, (Proc) CallbackImportMenu);
+	TteConnectAction (T_presentation, (Proc) CallbackSchPresNameMenu);
+	TteConnectAction (T_presentchoice, (Proc) BuildSchPresNameMenu);
 	TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
      }
    /* Creation du Formulaire Ouvrir */

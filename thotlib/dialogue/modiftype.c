@@ -80,13 +80,13 @@ char               *BufItemSplit;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    MajItemSplit    met a jour l'intitule' de l'item Split du menu  | */
+/* |    UpdateSplitItem    met a jour l'intitule' de l'item Split du menu  | */
 /* |            Edit dans toutes les frame du document pDoc.            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajItemSplit (PtrDocument pDoc)
+void                UpdateSplitItem (PtrDocument pDoc)
 #else  /* __STDC__ */
-void                MajItemSplit (pDoc)
+void                UpdateSplitItem (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -133,11 +133,11 @@ void                StructEditingLoadResources ()
    if (ThotLocalActions[T_chsplit] == NULL)
      {
 	/* Connecte les actions liees au traitement du split */
-	TteConnectAction (T_chsplit, (Proc) MajItemSplit);
+	TteConnectAction (T_chsplit, (Proc) UpdateSplitItem);
 	TteConnectAction (T_insertpaste, (Proc) CreatePasteIncludeCmd);
 	TteConnectAction (T_rcinsertpaste, (Proc) CreatePasteIncludeMenuCallback);
 	TteConnectAction (T_rchoice, (Proc) ChoiceMenuCallback);
-	TteConnectAction (T_raskfornew, (Proc) RetMenuAskForNew);
+	TteConnectAction (T_raskfornew, (Proc) CallbackAskForNew);
 	ImageMenuLoadResources ();
      }
 }

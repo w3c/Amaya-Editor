@@ -373,7 +373,7 @@ PtrReferredDescr    pRefD;
 	while (pExtDoc != NULL)
 	  {
 	     pNextExtDoc = pExtDoc->EdNext;
-	     FreeDocExterne (pExtDoc);
+	     FreeExternalDoc (pExtDoc);
 	     pExtDoc = pNextExtDoc;
 	  }
 	/* libere le descripteur d'element reference' */
@@ -812,14 +812,14 @@ boolean             new;
 		   else
 		      pRefSortPrec->OrNext = pRefSort->OrNext;
 		   /* on la libere */
-		   FreeRefSortante (pRefSort);
+		   FreeOutputRef (pRefSort);
 		   pRefSort = NULL;
 		}
 	      else
 		 /* la reference sortante n'est pas dans l'autre liste */
 		{
 		   /* acquiert un descripteur de ref sortante */
-		   GetRefSortante (&pRefSort);
+		   GetOutputRef (&pRefSort);
 		   /* remplit ce descripteur */
 		   strncpy (pRefSort->OrLabel, pDElemRef->ReReferredLabel, MAX_LABEL_LEN);
 		   CopyDocIdent (&(pRefSort->OrDocIdent), pDElemRef->ReExtDocument);
@@ -930,7 +930,7 @@ PtrDocument         pDoc2;
 	       /* cet element n'est encore reference' par aucun document externe, */
 	       /* on lui acquiert un premier descripteur de document externe      */
 	      {
-		 GetDocExterne (&pExtDoc);
+		 GetExternalDoc (&pExtDoc);
 		 pEl->ElReferredDescr->ReExtDocRef = pExtDoc;
 		 if (pExtDoc != NULL)
 		    CopyDocIdent (&(pExtDoc->EdDocIdent), docIdent);
@@ -953,7 +953,7 @@ PtrDocument         pDoc2;
 		    /* ajoute un descripteur de document externe qui reference */
 		    /* l'element */
 		   {
-		      GetDocExterne (&pExtDoc->EdNext);
+		      GetExternalDoc (&pExtDoc->EdNext);
 		      if (pExtDoc->EdNext != NULL)
 			 CopyDocIdent (&(pExtDoc->EdNext->EdDocIdent), docIdent);
 		   }
@@ -1210,7 +1210,7 @@ PtrChangedReferredEl      pChngRef;
    pPrevExtDoc = NULL;
    while (pExtDocSrc != NULL)
      {
-	GetDocExterne (&pExtDoc);
+	GetExternalDoc (&pExtDoc);
 	CopyDocIdent (&(pExtDoc->EdDocIdent), pExtDocSrc->EdDocIdent);
 	if (pPrevExtDoc == NULL)
 	   pChngRef->CrReferringDoc = pExtDoc;

@@ -39,14 +39,14 @@ static char         result[MAX_TXT_LEN];
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* |    TransCani convertit les code d'accents du fichier de message    | */
+/* |    AsciiTranslate convertit les code d'accents du fichier de message    | */
 /* |            en accents.                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-char               *TransCani (char *buffer)
+char               *AsciiTranslate (char *buffer)
 
 #else  /* __STDC__ */
-char               *TransCani (buffer)
+char               *AsciiTranslate (buffer)
 char               *buffer;
 
 #endif /* __STDC__ */
@@ -187,7 +187,7 @@ int                 msgNumber;
 	while (((fscanf (file, "%d %[^#\n]", &num, texte)) != EOF) && (num < msgNumber))
 	  {
 	    s = (char *) TtaGetMemory (strlen (texte) + 1);
-	    strcpy (s, TransCani (texte));
+	    strcpy (s, AsciiTranslate (texte));
 	    currenttable->TabMessages[num] = s;
 	  }
 	fclose (file);
@@ -323,14 +323,14 @@ int                 number;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PivotFormatError traite les erreurs survenues a` la lecture d'un| */
+/* |    DisplayPivotMessage traite les erreurs survenues a` la lecture d'un| */
 /* |            fichier pivot.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PivotFormatError (char *code)
+void                DisplayPivotMessage (char *code)
 
 #else  /* __STDC__ */
-void                PivotFormatError (code)
+void                DisplayPivotMessage (code)
 char               *code;
 
 #endif /* __STDC__ */

@@ -6,44 +6,44 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void RetMenuAttrRequis ( int ref,
+extern void CallbackReqAttrMenu ( int ref,
                                 int val,
                                 char *txt );
-extern void ConstruitMenuAttrRequis ( PtrAttribute pAttr,
+extern void BuildReqAttrMenu ( PtrAttribute pAttr,
                                       PtrDocument pDoc );
-extern int ComposeMenuAttributs ( char *BufMenu,
+extern int BuildAttrMenu ( char *BufMenu,
                                   PtrDocument pDoc,
                                   int ActiveAttr[] );
-extern void MajMenuAttr ( PtrDocument pDoc );
-extern void RetMenuValAttr ( int ref,
+extern void UpdateAttrMenu ( PtrDocument pDoc );
+extern void CallbackValAttrMenu ( int ref,
                              int valmenu,
                              char *valtexte );
-extern void RetMenuAttributs ( int refmenu,
+extern void CallbackAttrMenu ( int refmenu,
                                int att,
                                int frame );
-extern void RetMenuLangue ( int ref,
+extern void CallbackLanguageMenu ( int ref,
                             int val,
                             char *txt );
 extern void AttributeMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void RetMenuAttrRequis (/* int ref,
+extern void CallbackReqAttrMenu (/* int ref,
                                   int val,
                                   char *txt */);
-extern void ConstruitMenuAttrRequis (/* PtrAttribute pAttr,
+extern void BuildReqAttrMenu (/* PtrAttribute pAttr,
                                         PtrDocument pDoc */);
-extern int ComposeMenuAttributs (/* char *BufMenu,
+extern int BuildAttrMenu (/* char *BufMenu,
                                     PtrDocument pDoc,
                                     int ActiveAttr[] */);
-extern void MajMenuAttr (/* PtrDocument pDoc */);
-extern void RetMenuValAttr (/* int ref,
+extern void UpdateAttrMenu (/* PtrDocument pDoc */);
+extern void CallbackValAttrMenu (/* int ref,
                                int valmenu,
                                char *valtexte */);
-extern void RetMenuAttributs (/* int refmenu,
+extern void CallbackAttrMenu (/* int refmenu,
                                  int att,
                                  int frame */);
-extern void RetMenuLangue (/* int ref,
+extern void CallbackLanguageMenu (/* int ref,
                               int val,
                               char *txt */);
 extern void AttributeMenuLoadResources (/* void */);

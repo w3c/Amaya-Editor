@@ -160,7 +160,7 @@ int                 view;
 {
    PtrPRule        pPRule;
 
-   GetReglePres (&pPRule);
+   GetPresentRule (&pPRule);
    /* initialise d'abord la nouvelle regle */
    pPRule->PrPresMode = PresImmediate;
    pPRule->PrSpecifAttr = 0;
@@ -328,7 +328,7 @@ BinFile             file;
 	       break;
 	    default:
 	       PivotError (file);
-	       PivotFormatError ("l");
+	       DisplayPivotMessage ("l");
 	       align = AlignLeft;
 	       break;
 	 }
@@ -413,7 +413,7 @@ BinFile             file;
 	       break;
 	    default:
 	       PivotError (file);
-	       PivotFormatError ("C");
+	       DisplayPivotMessage ("C");
 	       typ = PgComputed;
 	       break;
 	 }
@@ -457,7 +457,7 @@ boolean             oldformat;
      {
 	PivotError (file);
 	/* tag debut de commentaire ancien format absente */
-	PivotFormatError ("y");
+	DisplayPivotMessage ("y");
 	firstBuf = NULL;
      }
    else
@@ -499,7 +499,7 @@ boolean             oldformat;
 	else
 	  {
 	     /* on lit effectivement le texte du commentaire */
-	     GetBufTexte (&pBuf);
+	     GetTextBuffer (&pBuf);
 	     firstBuf = pBuf;
 	     n = 0;
 	     if (oldformat)
@@ -547,7 +547,7 @@ boolean             oldformat;
 	     if (c != (char) C_PIV_END)
 	       {
 		  PivotError (file);
-		  PivotFormatError ("c");
+		  DisplayPivotMessage ("c");
 	       }
 	  }
      }
@@ -643,7 +643,7 @@ BinFile             file;
 	       break;
 	    default:
 	       PivotError (file);
-	       PivotFormatError ("PICT");
+	       DisplayPivotMessage ("PICT");
 	       scaling = RealSize;
 	       break;
 	 }
@@ -986,7 +986,7 @@ char                *tag;
 	if (nat < 0 || nat >= pDoc->DocNNatures)
 	  {
 	     PivotError (pivFile);
-	     PivotFormatError ("Nature Num");
+	     DisplayPivotMessage ("Nature Num");
 	  }
 	/* lit le tag de type qui suit */
 	if (!error)
@@ -1015,7 +1015,7 @@ char                *tag;
 		     if (rule == 0)
 		       {
 			  PivotError (pivFile);
-			  PivotFormatError ("n");
+			  DisplayPivotMessage ("n");
 		       }
 		     else
 			*pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
@@ -1036,7 +1036,7 @@ char                *tag;
 	{
 	   rule = 0;
 	   PivotError (pivFile);
-	   PivotFormatError ("t");
+	   DisplayPivotMessage ("t");
 	}
 
    return rule;
@@ -1278,14 +1278,14 @@ PtrAttribute        *pAttr;
    BIOreadShort (pivFile, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
      {
-	PivotFormatError ("Nature Num GetAttributeOfElement ");
+	DisplayPivotMessage ("Nature Num GetAttributeOfElement ");
 	PivotError (pivFile);
      }
    else
       pSchAttr = pDoc->DocNatureSSchema[n];
    if (pSchAttr == NULL)
      {
-	PivotFormatError ("Nature GetAttributeOfElement");
+	DisplayPivotMessage ("Nature GetAttributeOfElement");
 	PivotError (pivFile);
      }
    /* lit l'attribut */
@@ -1319,13 +1319,13 @@ PtrAttribute        *pAttr;
 			if (!BIOreadByte (pivFile, &c))
 			  {
 			     PivotError (pivFile);
-			     PivotFormatError ("A");
+			     DisplayPivotMessage ("A");
 			  }
 		     while (!error && c != '\0');
 		  else
 		    {
 		       /* acquiert un premier buffer de texte */
-		       GetBufTexte (&pPremBuff);
+		       GetTextBuffer (&pPremBuff);
 		       pBT = pPremBuff;
 		       /* lit tout le texte de l'attribut */
 		       stop = FALSE;
@@ -1334,7 +1334,7 @@ PtrAttribute        *pAttr;
 			     /* erreur de lecture */
 			    {
 			       PivotError (pivFile);
-			       PivotFormatError ("A");
+			       DisplayPivotMessage ("A");
 			    }
 			  else
 			     /* on a lu correctement un caractere */
@@ -1615,7 +1615,7 @@ boolean             link;
 	       break;
 	    default:
 	       PivotError (pivFile);
-	       PivotFormatError ("p");
+	       DisplayPivotMessage ("p");
 	       break;
 	 }
 
@@ -1678,7 +1678,7 @@ boolean             link;
 
    if (create)
      {
-	GetReglePres (&pPRule);
+	GetPresentRule (&pPRule);
 	*pRuleRead = pPRule;
 	/* initialise d'abord la nouvelle regle */
 	pPRule->PrPresMode = PresImmediate;
@@ -1969,7 +1969,7 @@ boolean             createDesc;
 	  }
 	printf ("\n");
 /*************/
-	PivotFormatError ("I");	/* erreur */
+	DisplayPivotMessage ("I");	/* erreur */
 	PivotError (pivFile);
      }
    else
@@ -2150,7 +2150,7 @@ boolean             createDesc;
 			/* portant ce label, erreur */
 		       {
 			  pEl->ElReferredDescr = NULL;
-			  PivotFormatError ("L");
+			  DisplayPivotMessage ("L");
 		       }
 		     else
 			pEl->ElReferredDescr->ReReferredElem = pEl;
@@ -2217,7 +2217,7 @@ boolean             createDesc;
 			  if (*tag != (char) C_PIV_REFERENCE)
 			    {
 			       PivotError (pivFile);
-			       PivotFormatError ("R");	/* erreur */
+			       DisplayPivotMessage ("R");	/* erreur */
 			    }
 			  else
 			     /* traitement des references : on lit la reference */
@@ -2233,7 +2233,7 @@ boolean             createDesc;
 			  if (*tag != (char) C_PIV_BEGIN)
 			    {
 			       PivotError (pivFile);
-			       PivotFormatError ("M");	/* erreur, pas de tag debut */
+			       DisplayPivotMessage ("M");	/* erreur, pas de tag debut */
 			    }
 			  else
 			     /* traitement des paires : on lit l'identificateur */
@@ -2249,7 +2249,7 @@ boolean             createDesc;
 				  /* erreur, pas de tag de fin */
 				 {
 				    PivotError (pivFile);
-				    PivotFormatError ("m");
+				    DisplayPivotMessage ("m");
 				 }
 			       else if (!BIOreadByte (pivFile, tag))
 				  PivotError (pivFile);
@@ -2281,7 +2281,7 @@ boolean             createDesc;
 				       /* langues du document */
 				       if (i < 0 || i >= pDoc->DocNLanguages)
 					 {
-					    PivotFormatError ("Invalid language");
+					    DisplayPivotMessage ("Invalid language");
 					    pEl->ElLanguage = TtaGetDefaultLanguage ();
 					 }
 				       else
@@ -2422,7 +2422,7 @@ boolean             createDesc;
 						     pBuf = pEl->ElPictureName;
 						     n = 0;
 						     pEl->ElNameLength = 0;
-						     pEl->ElImageDescriptor = NULL;
+						     pEl->ElPictInfo = NULL;
 						     ch = *tag;
 						     do
 							if (ch != '\0')
@@ -2431,7 +2431,7 @@ boolean             createDesc;
 							     if (n == MAX_CHAR - 1)
 							       {
 								  PivotError (pivFile);
-								  PivotFormatError ("x");
+								  DisplayPivotMessage ("x");
 							       }
 							     n++;
 							     /* range le caractere et lit le suivant */
@@ -2497,7 +2497,7 @@ boolean             createDesc;
 						       {
 							  /* transforme l'element graphique simple en Polyline */
 							  pEl->ElLeafType = LtPlyLine;
-							  GetBufTexte (&pEl->ElPolyLineBuffer);
+							  GetTextBuffer (&pEl->ElPolyLineBuffer);
 							  pEl->ElVolume = n;
 							  pEl->ElPolyLineType = ch;
 							  pEl->ElNPoints = n;
@@ -2547,7 +2547,7 @@ boolean             createDesc;
 			       if (*tag != (char) C_PIV_END)
 				 {
 				    PivotError (pivFile);
-				    PivotFormatError ("F");
+				    DisplayPivotMessage ("F");
 				 }
 
 			       if (!BIOreadByte (pivFile, tag))
@@ -2562,7 +2562,7 @@ boolean             createDesc;
 				  if (pEl->ElTerminal)
 				    {
 				       PivotError (pivFile);
-				       PivotFormatError ("f");
+				       DisplayPivotMessage ("f");
 				    }
 			       /* erreur: feuille avec contenu */
 			       if (!error)
@@ -2827,7 +2827,7 @@ int                 rank;
 
    if (rank > pDoc->DocNNatures + 1)
       /* le rang voulu pour la nature est invraissemblable */
-      PivotFormatError ("Err nature ???");
+      DisplayPivotMessage ("Err nature ???");
    /* on cherche (par son nom) si la nature existe dans la table */
    i = 1;
    found = FALSE;
@@ -2910,7 +2910,7 @@ PtrSSchema          pLoadedSS;
    if (SSName[i - 1] != '\0')
      {
 	PivotError (file);
-	PivotFormatError ("Z");
+	DisplayPivotMessage ("Z");
      }
    else
      {
@@ -3065,7 +3065,7 @@ char               *tag;
 	   if (languageName[i - 1] != '\0')
 	     {
 		PivotError (file);
-		PivotFormatError ("Z");
+		DisplayPivotMessage ("Z");
 	     }
 	   else
 	     {
@@ -3240,7 +3240,7 @@ boolean             withEvent;
    if (!error && tag != (char) C_PIV_NATURE)
      {
 	PivotError (file);
-	PivotFormatError ("N");	/* tag classe absente */
+	DisplayPivotMessage ("N");	/* tag classe absente */
      }
    if (!error)
       /* lit les noms des schemas de structure et de presentation */
@@ -3284,7 +3284,7 @@ boolean             withEvent;
 	/* reference's par d'autres documents (on en aura besoin */
 	/* pendant la lecture du fichier .PIV). On cherche ce */
 	/* fichier dans le meme directory que le fichier .PIV */
-	DoFileName (pDoc->DocDName, "EXT", pDoc->DocDirectory, buffer, &i);
+	FindCompleteName (pDoc->DocDName, "EXT", pDoc->DocDirectory, buffer, &i);
 	EXTfile = BIOreadOpen (buffer);
 	if (EXTfile != 0)
 	  {
@@ -3303,7 +3303,7 @@ boolean             withEvent;
 	   if (i > MAX_PARAM_DOC)
 	     {
 		PivotError (file);
-		PivotFormatError ("Y");
+		DisplayPivotMessage ("Y");
 	     }
 	   else
 	     {
@@ -3422,7 +3422,7 @@ boolean             withEvent;
 		       if (!found)
 			 {
 			    PivotError (file);
-			    PivotFormatError ("a");
+			    DisplayPivotMessage ("a");
 			 }
 		       else
 			  /* cree l'element liste pour ce type d'elements associes */
@@ -3480,7 +3480,7 @@ boolean             withEvent;
 	      if (tag != (char) C_PIV_STRUCTURE)
 		{
 		   PivotError (file);
-		   PivotFormatError ("O");
+		   DisplayPivotMessage ("O");
 		}
 	      else
 		{
@@ -3489,7 +3489,7 @@ boolean             withEvent;
 		   if (tag != (char) C_PIV_TYPE && tag != (char) C_PIV_NATURE)
 		     {
 			PivotError (file);
-			PivotFormatError ("P");
+			DisplayPivotMessage ("P");
 		     }
 		   else
 		     {
@@ -3562,7 +3562,7 @@ boolean             withEvent;
 		     previousSSchema->SsNextExtens = curExtension->SsNextExtens;
 		     if (curExtension->SsNextExtens != NULL)
 			curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
-		     FreeSStruct (curExtension);
+		     FreeSchStruc (curExtension);
 		     curExtension = previousSSchema->SsNextExtens;
 		  }
 		else

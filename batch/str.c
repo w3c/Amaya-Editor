@@ -2912,7 +2912,7 @@ char              **argv;
 	     /* ajoute le suffixe .SCH */
 	     strcat (srceFileName, ".SCH");
 	     /* teste si le fichier a compiler existe */
-	     if (FileExist (srceFileName) == 0)
+	     if (ThotFile_exist (srceFileName) == 0)
 		TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
 	     else
 		/* le fichier d'entree existe, on l'ouvre */

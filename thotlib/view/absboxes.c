@@ -177,7 +177,7 @@ PtrAbstractBox             pAb;
 	     if (pAbbox1->AbCopyDescr->CdNext != NULL)
 		pAbbox1->AbCopyDescr->CdNext->CdPrevious =
 		   pAbbox1->AbCopyDescr->CdPrevious;
-	     FreeDescCopie (pAbbox1->AbCopyDescr);
+	     FreeDescCopy (pAbbox1->AbCopyDescr);
 	  }
 	/* si c'est un pave de presentation ou le pave d'une reference ou */
 	/* celui d'une marque de paire, on libere les buffers */
@@ -295,11 +295,11 @@ PtrAbstractBox             pAb;
 	     while (pDelPR != NULL)
 	       {
 		  pNextDelPR = pDelPR->DpNext;
-		  FreeRRetard (pDelPR);
+		  FreeDifferedRule (pDelPR);
 		  pDelPR = pNextDelPR;
 	       }
 	  }
-	FreePave (pAb);
+	FreeAbstractBox (pAb);
      }
 }
 
@@ -2050,7 +2050,7 @@ int                 frame;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VerifAbsBoxe verifie que l'element pointe' par pEl a au moins      | */
+/* |    CheckAbsBox verifie que l'element pointe' par pEl a au moins      | */
 /* |            un pave dans la vue Vue. S'il n'en a pas, essaie d'en   | */
 /* |            creer un en modifiant l'image abstraite de cette vue.   | */
 /* |            Si debut est vrai, on cree l'image de la vue en         | */
@@ -2059,9 +2059,9 @@ int                 frame;
 /* |            Si affiche est Vrai, l'image est reaffichee.            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-   void                VerifAbsBoxe (PtrElement pEl, int Vue, PtrDocument pDoc, boolean begin, boolean display)
+   void                CheckAbsBox (PtrElement pEl, int Vue, PtrDocument pDoc, boolean begin, boolean display)
 #else  /* __STDC__ */
-   void                VerifAbsBoxe (pEl, Vue, pDoc, begin, display)
+   void                CheckAbsBox (pEl, Vue, pDoc, begin, display)
    PtrElement          pEl;
    int                 Vue;
    PtrDocument         pDoc;
@@ -2248,7 +2248,7 @@ int                 frame;
 			      || (pEl->ElTypeNumber == PageBreak + 1
 				  && pEl->ElViewPSchema != viewSch)))
 			  {
-			     printf ("peut etre erreur VerifAbsBoxe : pas trouve de marque page %s",
+			     printf ("peut etre erreur CheckAbsBox : pas trouve de marque page %s",
 				     pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 			     printf ("\n");
 			     acreer = FALSE;
@@ -2377,11 +2377,11 @@ int                 frame;
 		   /* et creer l'image concrete */
 		  {
 		     IncreaseVolume (FALSE, THOT_MAXINT, frame);
-		     /* on appelle MontrerBoite pour positionner correctement l'i.a. */
+		     /* on appelle ShowBox pour positionner correctement l'i.a. */
 		     /* dans la fenetre */
 		     if (display && !begin && pEl->ElAbstractBox[Vue - 1] != NULL)
 			/* TODO : que faire dans les autres cas */
-			MontrerBoite (frame, pEl->ElAbstractBox[Vue - 1]->AbBox, 1, 0);
+			ShowBox (frame, pEl->ElAbstractBox[Vue - 1]->AbBox, 1, 0);
 
 		     if (display)
 			DisplayFrame (frame);
@@ -2927,7 +2927,7 @@ int                 frame;
 			  pAb = pEl->ElAbstractBox[Vue - 1];
 			  if (pAb == NULL)
 			    {
-			       VerifAbsBoxe (pEl, Vue, pDoc, FALSE, FALSE);
+			       CheckAbsBox (pEl, Vue, pDoc, FALSE, FALSE);
 			       pAb = pEl->ElAbstractBox[Vue - 1];
 			    }
 		       }
@@ -2966,7 +2966,7 @@ int                 frame;
 			  /* rend l'element visible dans sa frame, sans l'afficher */
 			  if (pEl != NULL)
 			    {
-			       VerifAbsBoxe (pEl, Vue, pDoc, FALSE, FALSE);
+			       CheckAbsBox (pEl, Vue, pDoc, FALSE, FALSE);
 			       pAb = pEl->ElAbstractBox[Vue - 1];
 			    }
 		       }
@@ -2997,7 +2997,7 @@ int                 frame;
 			  position = 1;
 		       }
 		     if (pAb != NULL)
-			MontrerBoite (frame, pAb->AbBox, position, 0);
+			ShowBox (frame, pAb->AbBox, position, 0);
 
 		     /* Allume la selection */
 		     HighlightSelection (FALSE, FALSE);

@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void retconfirm ( int ref,
+extern void CallbackConfirmMenu ( int ref,
                          int typedata,
                          char *data );
-extern void retcreatedoc ( int ref,
+extern void CallbackNewDocMenu ( int ref,
                            int typedata,
                            char *data );
 extern void TtcCreateDocument ( Document document,
@@ -17,10 +17,10 @@ extern void TtcCreateDocument ( Document document,
 
 #else /* __STDC__ */
 
-extern void retconfirm (/* int ref,
+extern void CallbackConfirmMenu (/* int ref,
                            int typedata,
                            char *data */);
-extern void retcreatedoc (/* int ref,
+extern void CallbackNewDocMenu (/* int ref,
                              int typedata,
                              char *data */);
 extern void TtcCreateDocument (/* Document document,

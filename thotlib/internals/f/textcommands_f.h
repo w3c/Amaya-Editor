@@ -18,9 +18,9 @@ extern void TtcStartOfLine ( Document document,
                              View view );
 extern void TtcEndOfLine ( Document document,
                            View view );
-extern void EndInsert ( void );
-extern void EmacsCommand ( int code );
-extern int CopierXBuffer ( unsigned char **buffer );
+extern void CloseInsertion ( void );
+extern void MovingCommands ( int code );
+extern int CopyXClipboard ( unsigned char **buffer );
 extern void TtcCopyToClipboard ( Document document,
                                  View view );
 
@@ -38,9 +38,9 @@ extern void TtcStartOfLine (/* Document document,
                                View view */);
 extern void TtcEndOfLine (/* Document document,
                              View view */);
-extern void EndInsert (/* void */);
-extern void EmacsCommand (/* int code */);
-extern int CopierXBuffer (/* unsigned char **buffer */);
+extern void CloseInsertion (/* void */);
+extern void MovingCommands (/* int code */);
+extern int CopyXClipboard (/* unsigned char **buffer */);
 extern void TtcCopyToClipboard (/* Document document,
                                    View view */);
 

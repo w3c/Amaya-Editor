@@ -6,18 +6,18 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern int ComposeMenuSelection ( char BufMenu[MAX_TXT_LEN] );
-extern void MajMenuSelect ( PtrDocument pDoc );
-extern void RetMenuSelect ( int refmenu,
+extern int BuildSelectMenu ( char BufMenu[MAX_TXT_LEN] );
+extern void UpdateSelectMenu ( PtrDocument pDoc );
+extern void CallbackSelectMenu ( int refmenu,
                             int val,
                             int frame );
 extern void SelectionMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern int ComposeMenuSelection (/* char BufMenu[MAX_TXT_LEN] */);
-extern void MajMenuSelect (/* PtrDocument pDoc */);
-extern void RetMenuSelect (/* int refmenu,
+extern int BuildSelectMenu (/* char BufMenu[MAX_TXT_LEN] */);
+extern void UpdateSelectMenu (/* PtrDocument pDoc */);
+extern void CallbackSelectMenu (/* int refmenu,
                               int val,
                               int frame */);
 extern void SelectionMenuLoadResources (/* void */);

@@ -391,7 +391,7 @@ boolean            *import;
 	     else
 	       {
 		  *doctypeTrans = TtaGetMemory (strlen (texte) + 1);
-		  strcpy (*doctypeTrans, TransCani (texte));
+		  strcpy (*doctypeTrans, AsciiTranslate (texte));
 	       }
 	  }
      }
@@ -608,17 +608,17 @@ boolean             doc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ConfigNomExterneSSchema retourne dans NomUtilisateur le nom     | */
+/* |    ConfigSSchemaExternalName retourne dans NomUtilisateur le nom     | */
 /* |    externe, dans la langue de l'utilisateur, du schema de          | */
 /* |    structure dont le nom interne est NomSchema.                    | */
 /* |    Typ indique s'il s'agit d'un schema de document (1), de         | */
 /* |    nature (2) ou d'extension (3).                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConfigNomExterneSSchema (char *NomUtilisateur, char *NomSchema, int Typ)
+void                ConfigSSchemaExternalName (char *NomUtilisateur, char *NomSchema, int Typ)
 
 #else  /* __STDC__ */
-void                ConfigNomExterneSSchema (NomUtilisateur, NomSchema, Typ)
+void                ConfigSSchemaExternalName (NomUtilisateur, NomSchema, Typ)
 char               *NomUtilisateur;
 char               *NomSchema;
 int                 Typ;
@@ -680,17 +680,17 @@ int                 Typ;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ConfigNomInterneSSchema donne le nom du schema de structure qui | */
+/* |    ConfigSSchemaInternalName donne le nom du schema de structure qui | */
 /* |    correspond a un nom traduit dans la langue de l'utilisateur.    | */
 /* |    Si Doc est vrai, il s'agit d'un schema de document, sinon c'est | */
 /* |    un schema de nature.                                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ConfigNomInterneSSchema (char *NomUtilisateur, char *NomSchema, boolean Doc)
+void                ConfigSSchemaInternalName (char *NomUtilisateur, char *NomSchema, boolean Doc)
 
 #else  /* __STDC__ */
-void                ConfigNomInterneSSchema (NomUtilisateur, NomSchema, Doc)
+void                ConfigSSchemaInternalName (NomUtilisateur, NomSchema, Doc)
 char               *NomUtilisateur;
 char               *NomSchema;
 boolean             Doc;
@@ -763,7 +763,7 @@ boolean             lang;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas et le suffixe */
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   BuildFileName (name, suffix, DirBuffer, filename, &i);
+   MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    /* ouvre le fichier */
    file = fopen (filename, "r");
    return file;
@@ -828,7 +828,7 @@ char               *BufMenu;
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       strcpy (texteISO, TransCani (texte));
+			       strcpy (texteISO, AsciiTranslate (texte));
 			       if (pres_items[nbitem] != NULL)
 				  TtaFreeMemory (pres_items[nbitem]);
 			       pres_items[nbitem] = TtaGetMemory (strlen (mot) + 1);
@@ -855,15 +855,15 @@ char               *BufMenu;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ConfigGetNomPSchema recupere dans la table des schemas de       | */
+/* |    ConfigGetPSchemaName recupere dans la table des schemas de       | */
 /* |            presentation le nom interne du schema qui se trouve     | */
 /* |            a l'entree de rang choix.                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConfigGetNomPSchema (int choix, char *schpres)
+void                ConfigGetPSchemaName (int choix, char *schpres)
 
 #else  /* __STDC__ */
-void                ConfigGetNomPSchema (choix, schpres)
+void                ConfigGetPSchemaName (choix, schpres)
 int                 choix;
 char               *schpres;
 
@@ -981,7 +981,7 @@ char               *BufMenu;
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       strcpy (texteISO, TransCani (texte));
+			       strcpy (texteISO, AsciiTranslate (texte));
 			       if (export_items[nbitem] != NULL)
 				  TtaFreeMemory (export_items[nbitem]);
 			       export_items[nbitem] = TtaGetMemory (strlen (mot) + 1);
@@ -1008,15 +1008,15 @@ char               *BufMenu;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ConfigGetNomExportSchema recupere dans la table des schemas de  | */
+/* |    ConfigGetExportSchemaName recupere dans la table des schemas de  | */
 /* |            traduction le nom interne du schema qui se trouve       | */
 /* |            a l'entree de rang choix.                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConfigGetNomExportSchema (int choix, char *schtrad)
+void                ConfigGetExportSchemaName (int choix, char *schtrad)
 
 #else  /* __STDC__ */
-void                ConfigGetNomExportSchema (choix, schtrad)
+void                ConfigGetExportSchemaName (choix, schtrad)
 int                 choix;
 char               *schtrad;
 
@@ -1049,12 +1049,12 @@ char               *trans;
    char               *terme;
 
    found = FALSE;
-   terme = TransCani (mot);
+   terme = AsciiTranslate (mot);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules && !found; i++)
       if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
 	{
-	   strncpy (pSS->SsRule[i].SrName, TransCani (trans), MAX_NAME_LENGTH - 1);
+	   strncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 	   found = TRUE;
 	}
    /* cherche ensuite parmi les noms d'attributs et de valeurs d'attributs */
@@ -1064,14 +1064,14 @@ char               *trans;
 	   pAttr = &pSS->SsAttribute[i];
 	   if (strcmp (terme, pAttr->AttrName) == 0)
 	     {
-		strncpy (pAttr->AttrName, TransCani (trans), MAX_NAME_LENGTH - 1);
+		strncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues && !found; j++)
 		 if (strcmp (terme, pAttr->AttrEnumValue[j]) == 0)
 		   {
-		      strncpy (pAttr->AttrEnumValue[j], TransCani (trans), MAX_NAME_LENGTH - 1);
+		      strncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		      found = TRUE;
 		   }
 	}
@@ -1082,7 +1082,7 @@ char               *trans;
 	    if (strcmp (terme, pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
 	      {
 		 strncpy (pSS->SsExtensBlock->EbExtensRule[i].SrName,
-			  TransCani (trans), MAX_NAME_LENGTH - 1);
+			  AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		 found = TRUE;
 	      }
    return found;

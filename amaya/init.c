@@ -370,7 +370,7 @@ char               *text;
 
   if (text)
     {
-      if (IsW3Path (text) || FileExist (text))
+      if (IsW3Path (text) || ThotFile_exist (text))
 	strcpy (LastURLName, text);
       else
 	{
@@ -743,7 +743,7 @@ char               *documentname;
 	{
 	  /* It is a document loaded from the Web */
 	  /* ------------------------------------ */
-	  if (!FileExist (tempfile))
+	  if (!ThotFile_exist (tempfile))
 	    {
 	      /* Nothing is loaded */
 	      W3Loading = 0;
@@ -1042,7 +1042,7 @@ DoubleClickEvent    DC_event;
   if (newdoc == (Document) None)
     {
       /* document not loaded yet */
-      if (DC_event & DC_TRUE && !IsW3Path (pathname) && !FileExist (pathname))
+      if (DC_event & DC_TRUE && !IsW3Path (pathname) && !ThotFile_exist (pathname))
 	/* the target document doesn't exist */
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
       else
@@ -1213,7 +1213,7 @@ char               *data;
 			 strcpy (tempfile, DirectoryName);
 			 strcat (tempfile, DIR_STR);
 			 strcat (tempfile, DocumentName);
-			 if (FileExist (tempfile))
+			 if (ThotFile_exist (tempfile))
 			   {
 			     if (InNewWindow)
 			       GetHTMLDocument (tempfile, NULL, 0, DC_FALSE);
@@ -1640,7 +1640,7 @@ NotifyEvent        *event;
       strcpy (LastURLName, s);
       CallbackDialogue (BaseDialog + FormOuvrir, INTEGER_DATA, (char *) 1);
     }
-  else if (FileExist (s))
+  else if (ThotFile_exist (s))
     {
       NormalizeFile (s, LastURLName);
       /* check if it is an absolute or a relative name */

@@ -286,7 +286,7 @@ static void         ConnectPrint ()
    if (ThotLocalActions[T_rprint] == NULL)
      {
 	/* Connecte les actions liees au traitement du print */
-	TteConnectAction (T_rprint, (Proc) RetMenuImprimer);
+	TteConnectAction (T_rprint, (Proc) CallbackPrintmenu);
 	/* read DEFAULTPRINTER shell variable */
 	ptr = TtaGetEnvString ("THOTPRINT");
 	if (ptr == NULL)
@@ -378,12 +378,12 @@ View                view;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RetMenuImprimer analyse les retours du formulaire d'impression. | */
+/* |    CallbackPrintmenu analyse les retours du formulaire d'impression. | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuImprimer (int ref, int val, char *txt)
+void                CallbackPrintmenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
-void                RetMenuImprimer (ref, val, txt)
+void                CallbackPrintmenu (ref, val, txt)
 int                 ref;
 int                 val;
 char               *txt;

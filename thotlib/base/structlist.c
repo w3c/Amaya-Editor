@@ -683,8 +683,8 @@ FILE               *fileDescriptor;
 	   else
 	     {
 		PavRacine = pDoc->DocViewRootAb[view - 1];
-		NumPav (PavRacine);
-		AffPaves (PavRacine, 0, fileDescriptor);
+		NumberAbsBox (PavRacine);
+		ListAbsBox (PavRacine, 0, fileDescriptor);
 	     }
 	else
 	   /* vue d'elements associes */
@@ -695,8 +695,8 @@ FILE               *fileDescriptor;
 	     else
 	       {
 		  PavRacine = pDoc->DocAssocRoot[numAssoc - 1]->ElAbstractBox[0];
-		  NumPav (PavRacine);
-		  AffPaves (PavRacine, 0, fileDescriptor);
+		  NumberAbsBox (PavRacine);
+		  ListAbsBox (PavRacine, 0, fileDescriptor);
 	       }
 	  }
      }
@@ -730,13 +730,13 @@ int                *cptpave;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    NumPav numerote tous les paves du sous-arbre dont la racine est | */
+/* |    NumberAbsBox numerote tous les paves du sous-arbre dont la racine est | */
 /* |            pointee par pP. Appelle NumeroPave.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                NumPav (PtrAbstractBox pP)
+void                NumberAbsBox (PtrAbstractBox pP)
 #else  /* __STDC__ */
-void                NumPav (pP)
+void                NumberAbsBox (pP)
 PtrAbstractBox             pP;
 
 #endif /* __STDC__ */
@@ -938,14 +938,14 @@ FILE               *outfile;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AffPaves ecrit dans le fichier outfile le sous-arbre de paves   | */
+/* |    ListAbsBox ecrit dans le fichier outfile le sous-arbre de paves   | */
 /* |            commencant au pave pointe' par pAb, et avec            | */
 /* |            l'indentation Indent.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AffPaves (PtrAbstractBox pAb, int Indent, FILE * outfile)
+void                ListAbsBox (PtrAbstractBox pAb, int Indent, FILE * outfile)
 #else  /* __STDC__ */
-void                AffPaves (pAb, Indent, outfile)
+void                ListAbsBox (pAb, Indent, outfile)
 PtrAbstractBox             pAb;
 int                 Indent;
 FILE               *outfile;
@@ -1256,7 +1256,7 @@ FILE               *outfile;
 		     else
 			fprintf (outfile,
 				 "AbstractBox suivant : erreur AbEnclosing\n");
-		  AffPaves (f, Indent + 2, outfile);
+		  ListAbsBox (f, Indent + 2, outfile);
 		  f = f->AbNext;
 	       }
 	  }

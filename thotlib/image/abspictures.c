@@ -38,7 +38,7 @@ PtrElement          pEl;
      {
 	/* cet element n'a aucune regle de presentation specifique, on en */
 	/* cree une et on la chaine a l'element */
-	GetReglePres (&pRegle);
+	GetPresentRule (&pRegle);
 	new = (pRegle != NULL);
 	pEl->ElFirstPRule = pRegle;
      }
@@ -61,7 +61,7 @@ PtrElement          pEl;
 	       {
 		  /* On a examine' toutes les regles specifiques de */
 		  /* l'element, ajoute une nouvelle regle en fin de chaine */
-		  GetReglePres (&pRegle);
+		  GetPresentRule (&pRegle);
 		  new = (pRegle != NULL);
 		  pR->PrNextPRule = pRegle;
 	       }
@@ -126,8 +126,8 @@ int                 typeimage;
 /* ---------------------------------------------------------------------- */
 /* |    NewImageDescriptor cree un descripteur par element image.       | */
 /* |            Si le pointeur sur le descripteur existe deja (champ    | */
-/* |            ElImageDescriptor dans l'element), la procedure recopie | */
-/* |            le champ ElImageDescriptor dans le pave.                | */
+/* |            ElPictInfo dans l'element), la procedure recopie | */
+/* |            le champ ElPictInfo dans le pave.                | */
 /* |            Si le pointeur sur le descripteur n'existe pas, la      | */
 /* |            procedure commence par creer le descripteur.            | */
 /* ---------------------------------------------------------------------- */
@@ -150,13 +150,13 @@ int                 imagetype;
    if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
      {
 	/* C'est un element image -. accroche le descripteur a l'element */
-	if (ppav->AbElement->ElImageDescriptor == NULL)
+	if (ppav->AbElement->ElPictInfo == NULL)
 	  {
 	     /* Creation du descripteur */
 	     image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	     if (filename == NULL)
 	       {
-		  GetBufTexte (&pBuffer);
+		  GetTextBuffer (&pBuffer);
 		  ppav->AbElement->ElText = pBuffer;
 		  filename = &pBuffer->BuContent[0];
 	       }
@@ -169,9 +169,9 @@ int                 imagetype;
 	     image->PicYArea = 0;
 	     image->PicWArea = 0;
 	     image->PicHArea = 0;
-	     ppav->AbElement->ElImageDescriptor = (int *) image;
+	     ppav->AbElement->ElPictInfo = (int *) image;
 	  }
-	ppav->AbPictInfo = ppav->AbElement->ElImageDescriptor;
+	ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
      }
    else
      {
@@ -179,7 +179,7 @@ int                 imagetype;
 	image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	if (filename == NULL)
 	  {
-	     GetBufTexte (&pBuffer);
+	     GetTextBuffer (&pBuffer);
 	     ppav->AbElement->ElText = pBuffer;
 	     filename = &pBuffer->BuContent[0];
 	  }
@@ -217,7 +217,7 @@ int                *desc;
    if (desc != NULL)
      {
 	image = (PictInfo *) desc;
-	FreeImage (image);
+	FreePicture (image);
 	TtaFreeMemory ((char *) image);
      }
 

@@ -89,7 +89,7 @@ BinFile             file;
 	       while (label[j - 1] != '\0');
 	       break;
 	    default:
-	       PivotFormatError ("S");
+	       DisplayPivotMessage ("S");
 	       break;
 	 }
 }
@@ -188,7 +188,7 @@ boolean             labelsOnly;
 	if (c != (char) C_PIV_DOCNAME || error)
 	  {
 	     /* ce n'est pas une marque de nom */
-	     PivotFormatError ("T");
+	     DisplayPivotMessage ("T");
 	     error = TRUE;
 	  }
 	while (c == (char) C_PIV_DOCNAME && !error)
@@ -198,7 +198,7 @@ boolean             labelsOnly;
 	     if (pRefD != NULL && !error && !labelsOnly)
 		/* cree et chaine un descripteur d'element referencant */
 	       {
-		  GetDocExterne (&pNewExtDoc);
+		  GetExternalDoc (&pNewExtDoc);
 		  CopyDocIdent (&pNewExtDoc->EdDocIdent, docIdent);
 		  if (pRefD->ReExtDocRef == NULL)
 		     /* premier descripteur de document referencant */
@@ -277,7 +277,7 @@ PtrChangedReferredEl     *Anchor;
 	     if (c != (char) C_PIV_DOCNAME)
 	       {
 		  /* a name was expected */
-		  PivotFormatError ("T");
+		  DisplayPivotMessage ("T");
 		  error = TRUE;
 	       }
 	     else
@@ -292,7 +292,7 @@ PtrChangedReferredEl     *Anchor;
 		  if (c != (char) C_PIV_DOCNAME)
 		    {
 		       /* a name was expected */
-		       PivotFormatError ("T");
+		       DisplayPivotMessage ("T");
 		       error = TRUE;
 		    }
 		  else

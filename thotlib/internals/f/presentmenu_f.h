@@ -8,9 +8,9 @@
 
 extern void TtcStandardPresentation ( Document document,
                                       View view );
-extern void RetMenuPresentStandard ( int ref,
+extern void CallbackStdPresMenu ( int ref,
                                      int val );
-extern void RetMenuPresent ( int ref,
+extern void CallbackPresMenu ( int ref,
                              int val,
                              char *txt );
 extern void TtcChangeCharacters ( Document document,
@@ -24,9 +24,9 @@ extern void TtcChangeFormat ( Document document,
 
 extern void TtcStandardPresentation (/* Document document,
                                         View view */);
-extern void RetMenuPresentStandard (/* int ref,
+extern void CallbackStdPresMenu (/* int ref,
                                        int val */);
-extern void RetMenuPresent (/* int ref,
+extern void CallbackPresMenu (/* int ref,
                                int val,
                                char *txt */);
 extern void TtcChangeCharacters (/* Document document,

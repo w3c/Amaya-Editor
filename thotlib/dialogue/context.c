@@ -693,14 +693,14 @@ void                InitDocContexts ()
    int                 i;
 
    /* Initialize the memory allocator */
-   MemInit ();
+   InitKernelMemory ();
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
       FrRef[i] = 0;
    PackBoxRoot = NULL;	/* Don't do englobing placement for current boxes */
    DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
    BoxCreating = FALSE;	/* no interractive creation yet */
-   InitAutreContexts ();
+   InitializeOtherThings ();
 }
 
 #ifndef NEW_WILLOWS

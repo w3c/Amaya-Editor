@@ -6,70 +6,70 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void DefFenV ( int frame,
+extern void VerticalScroll ( int frame,
                       int delta,
                       int selection );
-extern void DefFenH ( int frame,
+extern void HorizontalScroll ( int frame,
                       int delta,
                       int selection );
-extern void CadrerVueEnX ( int frame,
+extern void ShowXPosition ( int frame,
                            int x,
                            int large );
-extern void CadrerVueEnY ( int frame,
+extern void ShowYPosition ( int frame,
                            int y,
                            int haut );
-extern int ZoneImageAbs ( int frame,
+extern int ImageAbs ( int frame,
                           int *debut,
                           int *fin,
                           int *total );
-extern void VolumeAffiche ( int frame,
+extern void ComputeDisplayedChars ( int frame,
                             int *Xpos,
                             int *Ypos,
                             int *largeur,
                             int *hauteur );
-extern void MontrerBoite ( int frame,
+extern void ShowBox ( int frame,
                            PtrBox pBox,
                            int position,
                            int pourcent );
-extern boolean SansDef ( int frame,
+extern boolean IsScrollNeeded ( int frame,
                          int selection );
-extern void MontrerSelection ( int frame,
+extern void ShowSelectedBox ( int frame,
                                boolean actif );
-extern boolean PaveHorsFenetre ( int frame,
+extern boolean IsAbsBoxVisible ( int frame,
                                  PtrAbstractBox pave );
 
 #else /* __STDC__ */
 
-extern void DefFenV (/* int frame,
+extern void VerticalScroll (/* int frame,
                         int delta,
                         int selection */);
-extern void DefFenH (/* int frame,
+extern void HorizontalScroll (/* int frame,
                         int delta,
                         int selection */);
-extern void CadrerVueEnX (/* int frame,
+extern void ShowXPosition (/* int frame,
                              int x,
                              int large */);
-extern void CadrerVueEnY (/* int frame,
+extern void ShowYPosition (/* int frame,
                              int y,
                              int haut */);
-extern int ZoneImageAbs (/* int frame,
+extern int ImageAbs (/* int frame,
                             int *debut,
                             int *fin,
                             int *total */);
-extern void VolumeAffiche (/* int frame,
+extern void ComputeDisplayedChars (/* int frame,
                               int *Xpos,
                               int *Ypos,
                               int *largeur,
                               int *hauteur */);
-extern void MontrerBoite (/* int frame,
+extern void ShowBox (/* int frame,
                              PtrBox pBox,
                              int position,
                              int pourcent */);
-extern boolean SansDef (/* int frame,
+extern boolean IsScrollNeeded (/* int frame,
                            int selection */);
-extern void MontrerSelection (/* int frame,
+extern void ShowSelectedBox (/* int frame,
                                  boolean actif */);
-extern boolean PaveHorsFenetre (/* int frame,
+extern boolean IsAbsBoxVisible (/* int frame,
                                    PtrAbstractBox pave */);
 
 #endif /* __STDC__ */

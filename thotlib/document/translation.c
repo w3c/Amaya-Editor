@@ -2564,7 +2564,7 @@ boolean           *removeEl;
 					   /* le document reference' n'est pas charge' */
 					  {
 					     strncpy (directoryName, DocumentPath, MAX_PATH);
-					     BuildFileName (docIdent, "PIV", directoryName, fullName, &i);
+					     MakeCompleteName (docIdent, "PIV", directoryName, fullName, &i);
 					     if (fullName[0] != '\0')
 						/* on a trouve' le fichier */
 						nameBuffer = directoryName;
@@ -2927,7 +2927,7 @@ boolean           *removeEl;
 		 {
 		    /* construit le nom de fichier */
 		    strncpy (directoryName, SchemaPath, MAX_PATH);
-		    BuildFileName (fname, "", directoryName, fullName, &i);
+		    MakeCompleteName (fname, "", directoryName, fullName, &i);
 		 }
 	       /* ouvre le fichier a inclure */
 	       includedFile = BIOreadOpen (fullName);

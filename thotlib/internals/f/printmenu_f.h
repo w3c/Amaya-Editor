@@ -8,7 +8,7 @@
 
 extern void TtcPrint ( Document document,
                        View view );
-extern void RetMenuImprimer ( int ref,
+extern void CallbackPrintmenu ( int ref,
                               int val,
                               char *txt );
 extern void TtcPrintSetup ( Document document,
@@ -18,7 +18,7 @@ extern void TtcPrintSetup ( Document document,
 
 extern void TtcPrint (/* Document document,
                          View view */);
-extern void RetMenuImprimer (/* int ref,
+extern void CallbackPrintmenu (/* int ref,
                                 int val,
                                 char *txt */);
 extern void TtcPrintSetup (/* Document document,

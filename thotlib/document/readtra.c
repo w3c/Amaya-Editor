@@ -1121,7 +1121,7 @@ PtrSSchema        SS;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
    strncpy (DirBuffer, (char *) SchemaPath, MAX_PATH);
-   BuildFileName (fname, "TRA", DirBuffer, texte, &i);
+   MakeCompleteName (fname, "TRA", DirBuffer, texte, &i);
 
    /* ouvre le fichier */
    fich = BIOreadOpen (texte);

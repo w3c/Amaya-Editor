@@ -869,7 +869,7 @@ PtrEventsSet        pAppli;
 	WriteDotHFile (dotHFile, infoFILE);
 	fclose (infoFILE);
 	fclose (dotHFile);
-	if (!FileExist ("logo.xpm"))
+	if (!ThotFile_exist ("logo.xpm"))
 	  {
 	     /* cree le fichier logo.xpm */
 	     infoFILE = fopen ("logo.xpm", "w");
@@ -884,7 +884,7 @@ PtrEventsSet        pAppli;
 	     fprintf (infoFILE, "\"%s\"};\n", ptr[i]);
 	     fclose (infoFILE);
 	  }
-	if (!FileExist ("logo.xbm"))
+	if (!ThotFile_exist ("logo.xbm"))
 	  {
 	     /* cree le fichier logo.xbm */
 	     infoFILE = fopen ("logo.xbm", "w");

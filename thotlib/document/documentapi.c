@@ -126,7 +126,7 @@ char               *documentName;
 		/* failure while reading the structure schema or while loading
                    a schema extension */
 	       {
-		  FreeSStruct (pDoc->DocSSchema);
+		  FreeSchStruc (pDoc->DocSSchema);
 		  pDoc->DocSSchema = NULL;
 		  UnloadDocument (&pDoc);
 		  TtaError (ERR_cannot_read_struct_schema);
@@ -316,7 +316,7 @@ char               *documentName;
 	else
 	  {
 	     /* Arrange the file name */
-	     DoFileName (documentName, "PIV", pDoc->DocDirectory, path, &i);
+	     FindCompleteName (documentName, "PIV", pDoc->DocDirectory, path, &i);
 	     pivotFile = BIOwriteOpen (path);
 	     if (pivotFile == 0)
 	       {
@@ -533,16 +533,16 @@ Document            document;
 	UpdateRef (pDoc);
 	/* destroys files .PIV, .EXT, .REF et .BAK of the document */
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, text, &i);
+	FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, text, &i);
 	RemoveFile (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "EXT", DirectoryOrig, text, &i);
+	FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, text, &i);
 	RemoveFile (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "REF", DirectoryOrig, text, &i);
+	FindCompleteName (pDoc->DocDName, "REF", DirectoryOrig, text, &i);
 	RemoveFile (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "BAK", DirectoryOrig, text, &i);
+	FindCompleteName (pDoc->DocDName, "BAK", DirectoryOrig, text, &i);
 #ifndef NODISPLAY
 	/* All the opened views relating to the document are closed */
 	/* First, one close the main tree views */
@@ -1074,7 +1074,7 @@ int                *removedAttributes;
 #ifndef NODISPLAY
 	     FreePresentationSchema (curExtension->SsPSchema, curExtension);
 #endif
-	     FreeSStruct (curExtension);
+	     FreeSchStruc (curExtension);
 	  }
      }
 }
@@ -1889,7 +1889,7 @@ char               *presentationName;
    presentationName[0] = '\0';
    /* Arrange the name of the file to be opened with the documents directory name */
    strncpy (DirBuffer, DocumentPath, MAX_PATH);
-   BuildFileName (documentName, "PIV", DirBuffer, text, &i);
+   MakeCompleteName (documentName, "PIV", DirBuffer, text, &i);
    /* Verify if the file exists */
    file = BIOreadOpen (text);
    if (file == 0)

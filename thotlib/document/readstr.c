@@ -403,7 +403,7 @@ PtrSSchema        scheme;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   BuildFileName (fname, "STR", DirBuffer, filename, &i);
+   MakeCompleteName (fname, "STR", DirBuffer, filename, &i);
 
    /* ouvre le fichier */
    strfile = BIOreadOpen (filename);
@@ -470,7 +470,7 @@ PtrSSchema        scheme;
 		if (scheme->SsNExtensRules > 0)
 		  {
 		     /* acquiert un bloc d'extension */
-		     GetBlocExtens (&scheme->SsExtensBlock);
+		     GetExternalBlock (&scheme->SsExtensBlock);
 		     if (scheme->SsExtensBlock != NULL)
 			/* lit les regles d'extension */
 			for (i = 0; i < scheme->SsNExtensRules; i++)

@@ -6154,7 +6154,7 @@ char              **argv;
 	strcpy (fname, srceFileName);
 	strcat (fname, ".SCH");
 	/* ouvre le fichier a compiler */
-	if (FileExist (fname) == 0)
+	if (ThotFile_exist (fname) == 0)
 	   TtaDisplayMessage (FATAL, TtaGetMessage(PRS, UNKNOWN_FILE), fname);
 	else
 	  {

@@ -8,7 +8,7 @@
 /* booleen utilise dans les drivers graphiques specifiques 	*/
 EXPORT Bool ImageDriverPrinting;
 EXPORT ThotGC GCpicture; /* for bitmap */
-EXPORT char *SuffixImage[];
+EXPORT char *FileExtension[];
 EXPORT THOT_VInfo THOT_vInfo;
 #ifdef WWW_XWINDOWS
 EXPORT	XVisualInfo *vptr;

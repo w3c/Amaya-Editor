@@ -122,7 +122,7 @@ BoxEdge           targetEdge;
 	/* Faut-il creer un nouveau bloc de relations ? */
 	if (loop)
 	  {
-	     GetBPos (&pPosRel);
+	     GetPosBlock (&pPosRel);
 	     if (pPreviousPosRel == NULL)
 		pOrginBox->BxPosRelations = pPosRel;
 	     else
@@ -163,7 +163,7 @@ BoxEdge           targetEdge;
 	/* Faut-il creer un nouveau bloc de relations ? */
 	if (loop)
 	  {
-	     GetBPos (&pPosRel);
+	     GetPosBlock (&pPosRel);
 	     if (pPreviousPosRel == NULL)
 		pTargetBox->BxPosRelations = pPosRel;
 	     else
@@ -234,7 +234,7 @@ boolean           horizRef;
    /* Faut-il creer un nouveau bloc de relations ? */
    if (loop)
      {
-	GetBDim (&pDimRel);
+	GetDimBlock (&pDimRel);
 	if (pPreviousDimRel == NULL)
 	   if (horizRef)
 	      pOrginBox->BxWidthRelations = pDimRel;
@@ -431,7 +431,7 @@ boolean           horizRef;
    /* On calcule la position de reference */
    op = (OpRelation) 0;
    refEdge = (BoxEdge) 0;
-   DimFenetre (frame, &x, &y);
+   GetSizesFrame (frame, &x, &y);
    pCurrentBox = NULL;
    pAb = rule.PosAbRef;
    pCurrentAb = pBox->BxAbstractBox;
@@ -1245,7 +1245,7 @@ boolean             horizRef;
 			defaultDim = TRUE;
 		     else
 		       {
-			  DimFenetre (frame, &val, &i);
+			  GetSizesFrame (frame, &val, &i);
 			  if (pDimAb->DimValue < 0)
 			     val += pDimAb->DimValue;
 			  else if (pDimAb->DimUnit == UnPercent)
@@ -1262,7 +1262,7 @@ boolean             horizRef;
 			defaultDim = TRUE;
 		     else
 		       {
-			  DimFenetre (frame, &i, &val);
+			  GetSizesFrame (frame, &i, &val);
 			  if (pDimAb->DimValue < 0)
 			     val = 0;
 			  else if (pDimAb->DimUnit == UnPercent)
@@ -2093,7 +2093,7 @@ boolean             horizRef;
 		pOrginBox->BxPosRelations = NULL;
 	     else
 		precpos->PosRNext = NULL;
-	     FreeBPos (&pPosRel);
+	     FreePosBlock (&pPosRel);
 	  }
 	else
 	   pPosRel->PosRTable[i - 1].ReBox = NULL;
@@ -2189,7 +2189,7 @@ boolean             horizRef;
 			pOrginBox->BxHeightRelations = NULL;
 		  else
 		     pPreviousDimRel->DimRNext = NULL;
-		  FreeBDim (&pDimRel);
+		  FreeDimBlock (&pDimRel);
 	       }
 	     else
 		pDimRel->DimRTable[i - 1] = NULL;

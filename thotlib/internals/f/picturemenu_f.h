@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void RetMenuImage ( int ref,
+extern void CallbackPictureMenu ( int ref,
                            int typedata,
                            char *txt );
-extern void MenuImage ( char *nom,
+extern void BuildPictureMenu ( char *nom,
                         boolean *result,
                         int *typim,
                         int *pres,
@@ -18,10 +18,10 @@ extern void ImageMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void RetMenuImage (/* int ref,
+extern void CallbackPictureMenu (/* int ref,
                              int typedata,
                              char *txt */);
-extern void MenuImage (/* char *nom,
+extern void BuildPictureMenu (/* char *nom,
                           boolean *result,
                           int *typim,
                           int *pres,

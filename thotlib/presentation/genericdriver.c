@@ -44,14 +44,14 @@
 #include "genericdriver.h"
 
 #ifdef __STDC__
-extern void         GetReglePres (PtrPRule * pRP);
-extern void         GetCondReglePres (PtrCondition *);
-extern void         FreeReglePres (PtrPRule);
+extern void         GetPresentRule (PtrPRule * pRP);
+extern void         GetPresentRuleCond (PtrCondition *);
+extern void         FreePresentRule (PtrPRule);
 
 #else  /* __STDC__ */
-extern void         GetReglePres ();
-extern void         GetCondReglePres ();
-extern void         FreeReglePres ();
+extern void         GetPresentRule ();
+extern void         GetPresentRuleCond ();
+extern void         FreePresentRule ();
 
 #endif /* __STDC__ */
 
@@ -732,7 +732,7 @@ int                 nr;
 {
    PtrCondition        cond = NULL;
 
-   GetCondReglePres (&cond);
+   GetPresentRuleCond (&cond);
    memset (cond, 0, sizeof (Condition));
    if (cond == NULL)
      {
@@ -766,7 +766,7 @@ int                 type;
 {
    PtrCondition        cond = NULL;
 
-   GetCondReglePres (&cond);
+   GetPresentRuleCond (&cond);
    memset (cond, 0, sizeof (Condition));
    if (cond == NULL)
      {
@@ -1063,7 +1063,7 @@ PRuleType           pres;
       return (cur);
 
    /* not found, allocate it, fill it and insert it */
-   GetReglePres (&new);
+   GetPresentRule (&new);
    if (new == NULL)
      {
 	TtaDisplaySimpleMessage (FATAL, LIB, NO_MEMORY);
@@ -1289,13 +1289,13 @@ PresentationValue   v;
 	     if (prev == NULL)
 	       {
 		  *chain = cur->PrNextPRule;
-		  FreeReglePres (cur);	/* conditions are automagically freed ! */
+		  FreePresentRule (cur);	/* conditions are automagically freed ! */
 		  cur = *chain;
 	       }
 	     else
 	       {
 		  prev->PrNextPRule = cur->PrNextPRule;
-		  FreeReglePres (cur);
+		  FreePresentRule (cur);
 		  cur = prev->PrNextPRule;
 	       }
 	     continue;

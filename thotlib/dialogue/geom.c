@@ -338,9 +338,9 @@ PtrTextBuffer      Bbuffer;
 			 break;
 
 		      case Expose:
-			 f = GetFenetre (event.xexpose.window);
+			 f = GetWindowFrame (event.xexpose.window);
 			 if (f <= MAX_FRAME + 1)
-			    TraiteExpose (event.xexpose.window, f, (XExposeEvent *) & event);
+			    FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
 			 XtDispatchEvent (&event);
 			 break;
 
@@ -516,9 +516,9 @@ boolean             close;
 		    break;
 
 		 case Expose:
-		    f = GetFenetre (event.xexpose.window);
+		    f = GetWindowFrame (event.xexpose.window);
 		    if (f <= MAX_FRAME + 1)
-		       TraiteExpose (event.xexpose.window, f, (XExposeEvent *) & event);
+		       FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
 		    XtDispatchEvent (&event);
 		    break;
 
@@ -739,9 +739,9 @@ boolean             close;
 			 break;
 
 		      case Expose:
-			 f = GetFenetre (event.xexpose.window);
+			 f = GetWindowFrame (event.xexpose.window);
 			 if (f <= MAX_FRAME + 1)
-			    TraiteExpose (event.xexpose.window, f, (XExposeEvent *) & event);
+			    FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
 			 XtDispatchEvent (&event);
 			 break;
 
@@ -901,9 +901,9 @@ int                 DimY;
 			 break;
 
 		      case Expose:
-			 f = GetFenetre (event.xexpose.window);
+			 f = GetWindowFrame (event.xexpose.window);
 			 if (f <= MAX_FRAME + 1)
-			    TraiteExpose (event.xexpose.window, f, (XExposeEvent *) & event);
+			    FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
 			 XtDispatchEvent (&event);
 			 break;
 

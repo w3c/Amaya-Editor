@@ -13,7 +13,7 @@ extern int BaseName ( char *filename,
 extern int DirName ( char *filename,
                      char *dirname,
                      char delim );
-extern int FileExist ( char *filename );
+extern int ThotFile_exist ( char *filename );
 extern int RemoveFile ( char *filename );
 extern int ThotDirBrowse_first ( ThotDirBrowse * me,
                                  char *dir,
@@ -47,7 +47,7 @@ extern int BaseName (/* char *filename,
 extern int DirName (/* char *filename,
                        char *dirname,
                        char delim */);
-extern int FileExist (/* char *filename */);
+extern int ThotFile_exist (/* char *filename */);
 extern int RemoveFile (/* char *filename */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse * me,
                                    char *dir,

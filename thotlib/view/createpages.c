@@ -1604,8 +1604,8 @@ boolean             forward;
    list = fopen ("/perles/roisin/debug/pbfig", "w");
    if (list != NULL)
      {
-	NumPav (pAbb1);
-	AffPaves (pAbb1, 2, list);
+	NumberAbsBox (pAbb1);
+	ListAbsBox (pAbb1, 2, list);
 	fclose (list);
      }
 }
@@ -2223,7 +2223,7 @@ boolean            *arret;
 	 /* derniere marque de page de la vue : il ne faut pas creer de pave */
 	{
 	   /* Verifier que l'on a pas a liberer un descripteur d'image ? */
-	   FreePave (pNewAbbox);
+	   FreeAbstractBox (pNewAbbox);
 	   pNewAbbox = NULL;
 	   *AdrNouvPave = NULL;	/* seul cas ou pNewAbbox est en retour */
 	   *complete = TRUE;
@@ -2246,7 +2246,7 @@ boolean            *arret;
 	   if (!found)
 	     {
 		/* Verifier que l'on a pas a liberer un descripteur d'image ? */
-		FreePave (pNewAbbox);
+		FreeAbstractBox (pNewAbbox);
 		pNewAbbox = NULL;
 		*AdrNouvPave = NULL;	/* seul cas ou pNewAbbox est en retour */
 		*complete = TRUE;
@@ -3006,7 +3006,7 @@ boolean            *arret;
 				       FreeImageDescriptor (pAb->AbPictInfo);
 				    pAb->AbPictInfo = NULL;
 				 }
-			       FreePave (pAb);
+			       FreeAbstractBox (pAb);
 
 			    }	/* fin cas a detruire */
 

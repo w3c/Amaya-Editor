@@ -6,36 +6,36 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void ConstStrMenuCherche ( int pDoc );
-extern void RetMenuStrRemplacer ( int ref,
+extern void BuildStructSearchMenu ( int pDoc );
+extern void CallbackStructSearchMenu ( int ref,
                                   int val,
                                   char *txt,
                                   PtrSearchContext DomaineCherche );
-extern void ChercheRecupereParams ( boolean * erreur,
+extern void BuildSearchOptions ( boolean * erreur,
                                     PtrSearchContext DomaineCherche );
-extern void ChercheStructure ( PtrElement elCour,
+extern void StructSearch ( PtrElement elCour,
                                PtrSearchContext DomaineCherche,
                                boolean * trouve );
-extern void ChercheElEtAttr ( PtrElement premsel,
+extern void StructAndAttrSearch ( PtrElement premsel,
                               boolean * ok );
-extern void ChercheResValAttr ( void );
+extern void ValAttrSearch ( void );
 extern void StructSearchLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void ConstStrMenuCherche (/* int pDoc */);
-extern void RetMenuStrRemplacer (/* int ref,
+extern void BuildStructSearchMenu (/* int pDoc */);
+extern void CallbackStructSearchMenu (/* int ref,
                                     int val,
                                     char *txt,
                                     PtrSearchContext DomaineCherche */);
-extern void ChercheRecupereParams (/* boolean * erreur,
+extern void BuildSearchOptions (/* boolean * erreur,
                                       PtrSearchContext DomaineCherche */);
-extern void ChercheStructure (/* PtrElement elCour,
+extern void StructSearch (/* PtrElement elCour,
                                  PtrSearchContext DomaineCherche,
                                  boolean * trouve */);
-extern void ChercheElEtAttr (/* PtrElement premsel,
+extern void StructAndAttrSearch (/* PtrElement premsel,
                                 boolean * ok */);
-extern void ChercheResValAttr (/* void */);
+extern void ValAttrSearch (/* void */);
 extern void StructSearchLoadResources (/* void */);
 
 #endif /* __STDC__ */

@@ -25,10 +25,10 @@ extern void DrawImageBox ( PtrBox box,
                            int frame,
                            int wlogo,
                            int hlogo );
-extern void DrawImage ( PtrBox box,
+extern void DrawPicture ( PtrBox box,
                         PictInfo * imageDesc,
                         int frame );
-extern void ReadImage ( int frame,
+extern void LoadPicture ( int frame,
                         PtrBox box,
                         PictInfo * imageDesc );
 extern void PrintImage ( int typeImage,
@@ -44,10 +44,10 @@ extern void PrintImage ( int typeImage,
                          int PicHArea,
                          FILE * fd,
                          unsigned long BackGroundPixel );
-extern void FreeImage ( PictInfo * imageDesc );
+extern void FreePicture ( PictInfo * imageDesc );
 extern int GetImageType ( int menuIndex );
-extern int GetImTypeIndex ( int PicType );
-extern int GetImPresIndex ( PictureScaling PicPresent );
+extern int GetPictTypeIndex ( int PicType );
+extern int GetPictPresIndex ( PictureScaling PicPresent );
 extern PictureScaling GetImagePresentation ( int menuIndex );
 extern void GetPictureHandlersList ( int *count,
                                      char *buffer );
@@ -75,10 +75,10 @@ extern void DrawImageBox (/* PtrBox box,
                              int frame,
                              int wlogo,
                              int hlogo */);
-extern void DrawImage (/* PtrBox box,
+extern void DrawPicture (/* PtrBox box,
                           PictInfo * imageDesc,
                           int frame */);
-extern void ReadImage (/* int frame,
+extern void LoadPicture (/* int frame,
                           PtrBox box,
                           PictInfo * imageDesc */);
 extern void PrintImage (/* int typeImage,
@@ -94,10 +94,10 @@ extern void PrintImage (/* int typeImage,
                            int PicHArea,
                            FILE * fd,
                            unsigned long BackGroundPixel */);
-extern void FreeImage (/* PictInfo * imageDesc */);
+extern void FreePicture (/* PictInfo * imageDesc */);
 extern int GetImageType (/* int menuIndex */);
-extern int GetImTypeIndex (/* int PicType */);
-extern int GetImPresIndex (/* PictureScaling PicPresent */);
+extern int GetPictTypeIndex (/* int PicType */);
+extern int GetPictPresIndex (/* PictureScaling PicPresent */);
 extern PictureScaling GetImagePresentation (/* int menuIndex */);
 extern void GetPictureHandlersList (/* int *count,
                                        char *buffer */);

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void MaTranslation ( int frame,
+extern void ThotInput ( int frame,
                             unsigned char *chaine,
                             unsigned int nb,
                             int PicMask,
@@ -14,7 +14,7 @@ extern void MaTranslation ( int frame,
 
 #else /* __STDC__ */
 
-extern void MaTranslation (/* int frame,
+extern void ThotInput (/* int frame,
                               unsigned char *chaine,
                               unsigned int nb,
                               int PicMask,

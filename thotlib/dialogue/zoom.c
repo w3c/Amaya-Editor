@@ -53,7 +53,7 @@ char               *data;
    char                chaine[100];
 
    bouton = (int) data;
-   GetVisu (Fenzoomview, &valvisib, &valzoom);
+   GetFrameParams (Fenzoomview, &valvisib, &valzoom);
    if (bouton == 0)
       /* Abandon du formulaire */
       Fenzoomview = 0;
@@ -63,7 +63,7 @@ char               *data;
 	valzoom++;
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
-	ModVisu (Fenzoomview, valvisib, valzoom);
+	SetFrameParams (Fenzoomview, valvisib, valzoom);
      }
    else if (bouton == 2 && valzoom > -10)
      {
@@ -71,7 +71,7 @@ char               *data;
 	valzoom--;
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
-	ModVisu (Fenzoomview, valvisib, valzoom);
+	SetFrameParams (Fenzoomview, valvisib, valzoom);
      }
    else if (bouton == 4)
      {

@@ -123,12 +123,12 @@ int                 lastChar;
      {
 	if (lastEl->ElTextLength >= lastChar)
 	   /* there is a following character in the same element */
-	   if (!SeparateurMot (lastEl->ElText->BuContent[lastChar - 1]))
+	   if (!IsSeparatorChar (lastEl->ElText->BuContent[lastChar - 1]))
 	      /* it's not a word separator. The string is not a word */
 	      return (FALSE);
 	if (firstChar > 1)
 	   /* there is a previous character in the same element */
-	   if (!SeparateurMot (firstEl->ElText->BuContent[firstChar - 2]))
+	   if (!IsSeparatorChar (firstEl->ElText->BuContent[firstChar - 2]))
 	      /* it's not a word separator. The string is not a word */
 	      return (FALSE);
      }
@@ -504,7 +504,7 @@ PtrSearchContext    context;
 	charact = pBuf->BuContent[index];
 
 	/* On se place au debut du mot */
-	while (charact != 0 && SeparateurMot (charact)
+	while (charact != 0 && IsSeparatorChar (charact)
 	       && (pEl != endEl || iChar < endChar))
 	  {
 	     charact = NextCharacter (&pBuf, &index);
@@ -514,7 +514,7 @@ PtrSearchContext    context;
 	/* Recherche le premier separateur apres le mot */
 	/* On verifie que l'on ne depasse pas la fin du domaine de recherche */
 	len = 0;
-	while (len < MAX_WORD_LEN && charact != 0 && !SeparateurMot (charact)
+	while (len < MAX_WORD_LEN && charact != 0 && !IsSeparatorChar (charact)
 	       && (pEl != endEl || iChar < endChar))
 	  {
 	     word[len++] = charact;
@@ -671,7 +671,7 @@ PtrSearchContext    context;
 	index = len;
 	charact = pBuf->BuContent[index];
 	/* On se place a la fin du mot */
-	while (charact != 0 && iChar >= 0 && SeparateurMot (charact)
+	while (charact != 0 && iChar >= 0 && IsSeparatorChar (charact)
 	       && (pEl != endEl || iChar >= endChar))
 	  {
 	     charact = PreviousCharacter (&pBuf, &index);
@@ -680,7 +680,7 @@ PtrSearchContext    context;
 
 	/* On se place au debut du mot et recupere le mot a l'envers */
 	len = 0;
-	while (len < MAX_WORD_LEN && charact != 0 && iChar >= 0 && !SeparateurMot (charact)
+	while (len < MAX_WORD_LEN && charact != 0 && iChar >= 0 && !IsSeparatorChar (charact)
 	       && (pEl != endEl || iChar >= endChar))
 	  {
 	     reverse[len++] = charact;

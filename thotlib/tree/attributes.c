@@ -940,7 +940,7 @@ PtrAttribute         pNewAttr;
 	    case AtTextAttr:
 	       if (pNewAttr->AeAttrText != NULL)
 		 {
-		    GetBufTexte (&pAttr->AeAttrText);
+		    GetTextBuffer (&pAttr->AeAttrText);
 		    CopyTextToText (pNewAttr->AeAttrText, pAttr->AeAttrText, &len);
 		 }
 	       break;

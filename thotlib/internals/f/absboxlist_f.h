@@ -6,18 +6,18 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void WrPav ( PtrAbstractBox pAb,
+extern void ListAbsBoxes ( PtrAbstractBox pAb,
                     int Indent,
                     FILE * outfile );
-extern void ListeBoites ( Name fname,
+extern void ListBoxes ( Name fname,
                           int frame );
 
 #else /* __STDC__ */
 
-extern void WrPav (/* PtrAbstractBox pAb,
+extern void ListAbsBoxes (/* PtrAbstractBox pAb,
                       int Indent,
                       FILE * outfile */);
-extern void ListeBoites (/* Name fname,
+extern void ListBoxes (/* Name fname,
                             int frame */);
 
 #endif /* __STDC__ */

@@ -53,7 +53,7 @@ char               *data;
    char                chaine[100];
 
    bouton = (int) data;
-   GetVisu (Fenvisibilityview, &valvisib, &valzoom);
+   GetFrameParams (Fenvisibilityview, &valvisib, &valzoom);
    if (bouton == 0)
       /* Abandon du formulaire */
       Fenvisibilityview = 0;
@@ -62,14 +62,14 @@ char               *data;
 	valvisib--;
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
-	ModVisu (Fenvisibilityview, valvisib, valzoom);
+	SetFrameParams (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 2 && valvisib < 10)
      {
 	valvisib++;
 	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
-	ModVisu (Fenvisibilityview, valvisib, valzoom);
+	SetFrameParams (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 4)
      {

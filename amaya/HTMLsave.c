@@ -407,7 +407,7 @@ View                view;
       return;
    SavingDocument = document;
 
-   EndInsert ();
+   CloseInsertion ();
    TtaGetDocumentDirectory (document, tempname, MAX_LENGTH);
 
    /* attempt to save through network if possible */
@@ -548,7 +548,7 @@ void                DoSaveAs ()
       strcpy (tempfile, DirectoryName);
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
-      if (FileExist (tempfile)) {
+      if (ThotFile_exist (tempfile)) {
 	 /* ask confirmation */
 	 sprintf (tempname, TtaGetMessage (LIB, FILE_EXIST), tempfile);
 	 InitConfirm (SavingDocument, 1, tempname);
@@ -581,7 +581,7 @@ void                DoSaveAs ()
       strcpy (tempfile, DirectoryName);
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
-      if (FileExist (tempfile)) {
+      if (ThotFile_exist (tempfile)) {
 	 /* ask confirmation */
 	 sprintf (tempname, TtaGetMessage (LIB, FILE_EXIST), tempfile);
 	 InitConfirm (SavingDocument, 1, tempname);
@@ -907,7 +907,7 @@ void                DoSaveObjectAs ()
       SavingDocument = (Document) None;
       return;
    }
-   if (FileExist (tempfile)) {
+   if (ThotFile_exist (tempfile)) {
       /* ask confirmation */
       sprintf (msg, TtaGetMessage (LIB, FILE_EXIST), tempfile);
       InitConfirm (SavingObject, 1, msg);

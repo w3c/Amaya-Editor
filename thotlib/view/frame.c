@@ -72,7 +72,7 @@ int                 yf;
 	/* Should we take the whole width of the frame ? */
 	if (xd == xf && xd == -1)
 	  {
-	     DimFenetre (frame, &width, &height);
+	     GetSizesFrame (frame, &width, &height);
 	     pFrame->FrClipXBegin = pFrame->FrXOrg;
 	     pFrame->FrClipXEnd = width + pFrame->FrXOrg;
 	  }
@@ -99,7 +99,7 @@ int                 yf;
 	/* Should we take the whole height of the frame ? */
 	if (yd == yf && yd == -1)
 	  {
-	     DimFenetre (frame, &width, &height);
+	     GetSizesFrame (frame, &width, &height);
 	     pFrame->FrClipYBegin = pFrame->FrYOrg;
 	     pFrame->FrClipYEnd = height + pFrame->FrYOrg;
 	     /* On termine un reaffichage */
@@ -221,8 +221,8 @@ int                 delta;
 	framexmax = pFrame->FrClipXEnd;
 	frameymin = pFrame->FrClipYBegin;
 	frameymax = pFrame->FrClipYEnd;
-	SetClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
-	DimFenetre (frame, &l, &h);
+	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
+	GetSizesFrame (frame, &l, &h);
 	height = pFrame->FrYOrg;
 	bottom = height + h;
 
@@ -316,7 +316,7 @@ int                 delta;
 
 	     /* The updated area is redrawn */
 	     DefClip (frame, 0, 0, 0, 0);
-	     ResetClip (frame);
+	     RemoveClipping (frame);
 
 	     /* If needed complete the partial existing image */
 	     pBox = pFrame->FrAbstractBox->AbBox;
@@ -470,7 +470,7 @@ int                 delta;
      {
 	/* Nothing to draw */
 	DefClip (frame, 0, 0, 0, 0);
-	ResetClip (frame);
+	RemoveClipping (frame);
      }
 
    return toadd;
@@ -588,8 +588,8 @@ int                 delta;
 	framexmax = pFrame->FrClipXEnd;
 	frameymin = pFrame->FrClipYBegin;
 	frameymax = pFrame->FrClipYEnd;
-	SetClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
-	DimFenetre (frame, &l, &h);
+	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
+	GetSizesFrame (frame, &l, &h);
 	height = pFrame->FrYOrg;
 	bottom = height + h;
 
@@ -727,7 +727,7 @@ int                 delta;
 
 	/* The updated area is redrawn */
 	DefClip (frame, 0, 0, 0, 0);
-	ResetClip (frame);
+	RemoveClipping (frame);
 
 	/* If needed complete the partial existing image */
 	pBox = pFrame->FrAbstractBox->AbBox;
@@ -880,7 +880,7 @@ int                 delta;
      {
 	/* Nothing to draw */
 	DefClip (frame, 0, 0, 0, 0);
-	ResetClip (frame);
+	RemoveClipping (frame);
      }
    FirstCreation = FALSE;
 
@@ -915,13 +915,13 @@ int                 frame;
 	RedrawFrameBottom (frame, 0);
 
 	/* recompute scrolls */
-	MajScrolls (frame);
+	UpdateScrollbars (frame);
 
      }
    else
      {
 	/* clean the frame */
-	DimFenetre (frame, &w, &h);
+	GetSizesFrame (frame, &w, &h);
 	Clear (frame, w, h, 0, 0);
      }
 }

@@ -59,7 +59,7 @@ int         r;
    if (!ReadStructureSchema (fname, PtrStrNat))
       /* echec */
      {
-	FreeSStruct (PtrStrNat);
+	FreeSchStruc (PtrStrNat);
 	PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
      }
    else
@@ -67,7 +67,7 @@ int         r;
    if (PtrStrNat->SsExtension)
       /* c'est une extension de schema, on abandonne */
      {
-	FreeSStruct (PtrStrNat);
+	FreeSchStruc (PtrStrNat);
 	PtrStrNat = NULL;
 	PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
      }
@@ -231,14 +231,14 @@ boolean             Extension;
 	GetSchStruct (pSS);
 	if (!ReadStructureSchema (fname, *pSS))
 	  {
-	     FreeSStruct (*pSS);
+	     FreeSchStruc (*pSS);
 	     *pSS = NULL;
 	  }
 	else if ((*pSS)->SsExtension != Extension)
 	   /* on voulait un schema d'extension et ce n'en est pas un, */
 	   /* ou l'inverse */
 	  {
-	     FreeSStruct (*pSS);
+	     FreeSchStruc (*pSS);
 	     *pSS = NULL;
 	  }
 	else
@@ -354,7 +354,7 @@ PtrSSchema        pSS;
    if (LibRegleNat (pSPere, pSS))
      {
 	ret = TRUE;
-	FreeSStruct (pSS);
+	FreeSchStruc (pSS);
      }
    return ret;
 }
@@ -388,7 +388,7 @@ PtrDocument         pDoc;
 	  pRule = &pSc1->SsRule[i];
 	}***/
 	/* libere le schemas de structure */
-	FreeSStruct (pSc1);
+	FreeSchStruc (pSc1);
 	pSc1 = pSSuiv;
      }
    pDoc->DocSSchema = NULL;

@@ -124,9 +124,9 @@ PtrElement          pEl;
 }
 
 #ifdef __STDC__
-void                SaisitNomSchPres (PtrSSchema pSchStr, Name name)
+void                BuildSchPresNameMenu (PtrSSchema pSchStr, Name name)
 #else  /* __STDC__ */
-void                SaisitNomSchPres (pSchStr, name)
+void                BuildSchPresNameMenu (pSchStr, name)
 PtrSSchema        pSchStr;
 Name                 name;
 
@@ -214,9 +214,9 @@ boolean             OnlyChars;
 }
 
 #ifdef __STDC__
-void                MontrerBoite (int frame, PtrBox boite, int position, int pourcent)
+void                ShowBox (int frame, PtrBox boite, int position, int pourcent)
 #else  /* __STDC__ */
-void                MontrerBoite (frame, boite, position, pourcent)
+void                ShowBox (frame, boite, position, pourcent)
 int                 frame;
 PtrBox            boite;
 int                 position;
@@ -261,7 +261,7 @@ boolean             pre;
    return FALSE;
 }
 
-void                EndInsert ()
+void                CloseInsertion ()
 {
 }
 
@@ -288,9 +288,9 @@ int                 clavier;
 }
 
 #ifdef __STDC__
-void                EmacsCommand (int code)
+void                MovingCommands (int code)
 #else  /* __STDC__ */
-void                EmacsCommand (code)
+void                MovingCommands (code)
 int                 code;
 
 #endif /* __STDC__ */
@@ -320,9 +320,9 @@ int                 nbytes;
 }
 
 #ifdef __STDC__
-int                 CopierXBuffer (unsigned char **buffer)
+int                 CopyXClipboard (unsigned char **buffer)
 #else  /* __STDC__ */
-int                 CopierXBuffer (buffer)
+int                 CopyXClipboard (buffer)
 unsigned char     **buffer;
 
 #endif /* __STDC__ */
@@ -331,9 +331,9 @@ unsigned char     **buffer;
 }
 
 #ifdef __STDC__
-void                MajScrolls (int frame)
+void                UpdateScrollbars (int frame)
 #else  /* __STDC__ */
-void                MajScrolls (frame)
+void                UpdateScrollbars (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -341,9 +341,9 @@ int                 frame;
 }
 
 #ifdef __STDC__
-void                ChangeTitre (int frame, char *texte)
+void                ChangeFrameTitle (int frame, char *texte)
 #else  /* __STDC__ */
-void                ChangeTitre (frame, texte)
+void                ChangeFrameTitle (frame, texte)
 int                 frame;
 char               *texte;
 
@@ -352,9 +352,9 @@ char               *texte;
 }
 
 #ifdef __STDC__
-void                SetClip (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf)
+void                DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf)
 #else  /* __STDC__ */
-void                SetClip (frame, orgx, orgy, xd, yd, xf, yf)
+void                DefineClipping (frame, orgx, orgy, xd, yd, xf, yf)
 int                 frame;
 int                 orgx;
 int                 orgy;
@@ -368,9 +368,9 @@ int                *yf;
 }
 
 #ifdef __STDC__
-void                ResetClip (int frame)
+void                RemoveClipping (int frame)
 #else  /* __STDC__ */
-void                ResetClip (frame)
+void                RemoveClipping (frame)
 int                 frame;
 
 #endif /* __STDC__ */

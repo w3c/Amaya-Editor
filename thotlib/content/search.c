@@ -122,7 +122,7 @@ boolean             select;
 	   /* a remplacer */
 	  {
 	     pBufn = pBuf2->BuNext;
-	     GetBufTexte (&pBuf2->BuNext);
+	     GetTextBuffer (&pBuf2->BuNext);
 	     pBuf2->BuNext->BuPrevious = pBuf2;
 	     pBuf2->BuNext->BuNext = pBufn;
 	     if (pBufn != NULL)
@@ -924,7 +924,7 @@ PtrDocument         pDoc;
    /* le code qui suit etait precedemment dans MoveToPage */
    if (pPage != NULL)
      {
-	VerifAbsBoxe (pPage, view, pDoc, TRUE, FALSE);
+	CheckAbsBox (pPage, view, pDoc, TRUE, FALSE);
 	if (pPage->ElAbstractBox[view - 1] != NULL)
 	  {
 	     pAb = pPage->ElAbstractBox[view - 1]->AbFirstEnclosed;
@@ -947,7 +947,7 @@ PtrDocument         pDoc;
 		     frame = pDoc->DocViewFrame[view - 1];
 		  else
 		     frame = pDoc->DocAssocFrame[pPage->ElAssocNum - 1];
-		  MontrerBoite (frame, pAbGraph->AbBox, 0, 0);
+		  ShowBox (frame, pAbGraph->AbBox, 0, 0);
 	       }
 	  }
      }

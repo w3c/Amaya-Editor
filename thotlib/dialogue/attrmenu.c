@@ -272,13 +272,13 @@ int                 view;
 
 
 /* ---------------------------------------------------------------------- */
-/* | RetMenuAttrRequis traite le retour du menu de saisie des           | */
+/* | CallbackReqAttrMenu traite le retour du menu de saisie des           | */
 /* |    attributs obligatoires.                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuAttrRequis (int ref, int val, char *txt)
+void                CallbackReqAttrMenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
-void                RetMenuAttrRequis (ref, val, txt)
+void                CallbackReqAttrMenu (ref, val, txt)
 int                 ref;
 int                 val;
 char               *txt;
@@ -309,7 +309,7 @@ char               *txt;
 	    case NumMenuAttrTextNeeded:
 	       /* zonee de saisie du texte de l'attribut */
 	       if (PtrReqAttr->AeAttrText == NULL)
-		  GetBufTexte (&PtrReqAttr->AeAttrText);
+		  GetTextBuffer (&PtrReqAttr->AeAttrText);
 	       else
 		  ClearText (PtrReqAttr->AeAttrText);
 	       CopyStringToText (txt, PtrReqAttr->AeAttrText, &length);
@@ -325,13 +325,13 @@ char               *txt;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ConstruitMenuAttrRequis construit le menu de saisie de la valeur| */
+/* |    BuildReqAttrMenu construit le menu de saisie de la valeur| */
 /* |            de l'attribut requis defini par la regle pRuleAttr.    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConstruitMenuAttrRequis (PtrAttribute pAttr, PtrDocument pDoc)
+void                BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                ConstruitMenuAttrRequis (pAttr, pDoc)
+void                BuildReqAttrMenu (pAttr, pDoc)
 PtrAttribute         pAttr;
 PtrDocument         pDoc;
 
@@ -381,13 +381,13 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |  ComposeMenuAttributs construit le menu Attributs et               | */
+/* |  BuildAttrMenu construit le menu Attributs et               | */
 /* |  retourne le nombre d'attributs mis dans le menu compose'.         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 ComposeMenuAttributs (char *BufMenu, PtrDocument pDoc, int ActiveAttr[])
+int                 BuildAttrMenu (char *BufMenu, PtrDocument pDoc, int ActiveAttr[])
 #else  /* __STDC__ */
-int                 ComposeMenuAttributs (BufMenu, pDoc, ActiveAttr)
+int                 BuildAttrMenu (BufMenu, pDoc, ActiveAttr)
 char               *BufMenu;
 PtrDocument         pDoc;
 int                 ActiveAttr[];
@@ -538,14 +538,14 @@ int                 ActiveAttr[];
 
 
 /* ---------------------------------------------------------------------- */
-/* |  MajMenuAttr                                                       | */
+/* |  UpdateAttrMenu                                                       | */
 /* |  Met a jour le menu des Attributs                                  | */
 /* |    - de toutes les frames ouvertes du document pDoc.               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajMenuAttr (PtrDocument pDoc)
+void                UpdateAttrMenu (PtrDocument pDoc)
 #else  /* __STDC__ */
-void                MajMenuAttr (pDoc)
+void                UpdateAttrMenu (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -559,7 +559,7 @@ PtrDocument         pDoc;
 
    /* Compose le menu des attributs */
    if (pDoc == SelectedDocument)
-      NbItemAttr = ComposeMenuAttributs (BufMenuAttr, pDoc, ActiveAttr);
+      NbItemAttr = BuildAttrMenu (BufMenuAttr, pDoc, ActiveAttr);
    else
       NbItemAttr = 0;
 
@@ -622,7 +622,7 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | RetMenuValAttr traite le retour du formulaire de saisie des        | */
+/* | CallbackValAttrMenu traite le retour du formulaire de saisie des        | */
 /* |    valeurs d'attribut : applique aux elements selectionne's les    | */
 /* |    attributs choisis par l'utilisateur.                            | */
 /* |    ref: reference de l'element de dialogue dont on traite le retour| */
@@ -630,9 +630,9 @@ PtrDocument         pDoc;
 /* |    valtexte: pointeur sur le texte saisi dans cet element de dialogue */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuValAttr (int ref, int valmenu, char *valtext)
+void                CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 #else  /* __STDC__ */
-void                RetMenuValAttr (ref, valmenu, valtext)
+void                CallbackValAttrMenu (ref, valmenu, valtext)
 int                 ref;
 int                 valmenu;
 char               *valtext;
@@ -705,7 +705,7 @@ char               *valtext;
 				       {
 					  /* la valeur saisie devient la valeur courante */
 					  if (pAttrNew->AeAttrText == NULL)
-					     GetBufTexte (&pAttrNew->AeAttrText);
+					     GetTextBuffer (&pAttrNew->AeAttrText);
 					  else
 					     ClearText (pAttrNew->AeAttrText);
 					  CopyStringToText (TextAttrValue,
@@ -735,7 +735,7 @@ char               *valtext;
 				  default:
 				     break;
 			       }
-			 MajMenuAttr (SelDoc);
+			 UpdateAttrMenu (SelDoc);
 		      }
 		    DeleteAttribute (NULL, pAttrNew);
 		 }
@@ -745,13 +745,13 @@ char               *valtext;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RetMenuAttributs traite les retours du menu 'Attributs':        | */
+/* |    CallbackAttrMenu traite les retours du menu 'Attributs':        | */
 /* |    cree un formulaire pour saisir la valeur de l'attribut choisi.  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuAttributs (int refmenu, int att, int frame)
+void                CallbackAttrMenu (int refmenu, int att, int frame)
 #else  /* __STDC__ */
-void                RetMenuAttributs (refmenu, att, frame)
+void                CallbackAttrMenu (refmenu, att, frame)
 int                 refmenu;
 int                 att;
 int                 frame;
@@ -767,7 +767,7 @@ int                 frame;
    Document            doc;
    View                view;
 
-   VueDeFenetre (frame, &doc, &view);
+   FrameToView (frame, &doc, &view);
 
    if (att >= 0)
       if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -799,7 +799,7 @@ int                 frame;
 		/* applique l'attribut a la partie selectionnee */
 		AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
 			       SelDoc);
-		MajMenuAttr (SelDoc);
+		UpdateAttrMenu (SelDoc);
 	     }
 	   else
 	     {
@@ -851,12 +851,12 @@ int                 frame;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | RetMenuLangue traite les retours du formulaire Langue.             | */
+/* | CallbackLanguageMenu traite les retours du formulaire Langue.             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuLangue (int ref, int val, char *txt)
+void                CallbackLanguageMenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
-void                RetMenuLangue (ref, val, txt)
+void                CallbackLanguageMenu (ref, val, txt)
 int                 ref;
 int                 val;
 char               *txt;
@@ -883,7 +883,7 @@ char               *txt;
 			case 1:
 			case 2:
 			   /* appliquer la nouvelle valeur */
-			   RetMenuValAttr (NumMenuAttr, val, NULL);
+			   CallbackValAttrMenu (NumMenuAttr, val, NULL);
 			   break;
 		     }
 	       break;
@@ -898,12 +898,12 @@ void                AttributeMenuLoadResources ()
    if (ThotLocalActions[T_chattr] == NULL)
      {
 	/* Connecte les actions de selection */
-	TteConnectAction (T_chattr, (Proc) MajMenuAttr);
-	TteConnectAction (T_rattr, (Proc) RetMenuAttributs);
-	TteConnectAction (T_rattrval, (Proc) RetMenuValAttr);
-	TteConnectAction (T_rattrlang, (Proc) RetMenuLangue);
-	TteConnectAction (T_attrreq, (Proc) ConstruitMenuAttrRequis);
-	TteConnectAction (T_rattrreq, (Proc) RetMenuAttrRequis);
+	TteConnectAction (T_chattr, (Proc) UpdateAttrMenu);
+	TteConnectAction (T_rattr, (Proc) CallbackAttrMenu);
+	TteConnectAction (T_rattrval, (Proc) CallbackValAttrMenu);
+	TteConnectAction (T_rattrlang, (Proc) CallbackLanguageMenu);
+	TteConnectAction (T_attrreq, (Proc) BuildReqAttrMenu);
+	TteConnectAction (T_rattrreq, (Proc) CallbackReqAttrMenu);
      }
 }
 

@@ -16,7 +16,7 @@
 #include "platform_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    BuildFileName compose un nom de fichier absolu en concatenant   | */
+/* |    MakeCompleteName compose un nom de fichier absolu en concatenant   | */
 /* |            un nom de directory, le nom de fichier (fname) et       | */
 /* |            l'extension (fext).                                     | */
 /* |            Retourne le nom compose' dans nomabs.                   | */
@@ -30,14 +30,14 @@
 /* |            directory_list n'est pas change'.                       | */
 /* |            Si le fichier n'existe pas, on retourne nomabs vide et  | */
 /* |            dans directory_list le 1er nom du path fourni a` l'appel| */
-/* |            (BuildFileName est utilise pour la lecture)             | */
+/* |            (MakeCompleteName est utilise pour la lecture)             | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                BuildFileName (Name fname, char *fext, PathBuffer directory_list, PathBuffer nomabs, int *lg)
+void                MakeCompleteName (Name fname, char *fext, PathBuffer directory_list, PathBuffer nomabs, int *lg)
 
 #else  /* __STDC__ */
-void                BuildFileName (fname, fext, directory_list, nomabs, lg)
+void                MakeCompleteName (fname, fext, directory_list, nomabs, lg)
 Name                 fname;
 char               *fext;
 PathBuffer          directory_list;
@@ -74,8 +74,8 @@ int                *lg;
 	if (first_directory[0] == '\0')
 	   strncpy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
-	DoFileName (fname, fext, single_directory, nomabs, lg);
-	if (FileExist (nomabs))
+	FindCompleteName (fname, fext, single_directory, nomabs, lg);
+	if (ThotFile_exist (nomabs))
 	  {
 	     trouve = TRUE;
 	     strncpy (directory_list, single_directory, MAX_PATH);
@@ -94,7 +94,7 @@ int                *lg;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetImageFileName construit dans fn le nom absolu d'un fichier   | */
+/* |    GetPictureFileName construit dans fn le nom absolu d'un fichier   | */
 /* |            image a` partir du nom du fichier contenu dans name     | */
 /* |            partir du nom du fichier contenu dans name et des'      | */
 /* |            repertoires de documents ou de sche'mas.                | */
@@ -102,10 +102,10 @@ int                *lg;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetImageFileName (char *name, char *fn)
+void                GetPictureFileName (char *name, char *fn)
 
 #else  /* __STDC__ */
-void                GetImageFileName (name, fn)
+void                GetPictureFileName (name, fn)
 char               *name;
 char               *fn;
 
@@ -121,12 +121,12 @@ char               *fn;
    else
      {
 	strcpy (Directory, DocumentPath);
-	BuildFileName (name, "", Directory, fn, &lg);
-	if (!FileExist (fn))
+	MakeCompleteName (name, "", Directory, fn, &lg);
+	if (!ThotFile_exist (fn))
 	  {
 	     /* Recherche le fichier dans les repertoires de schemas */
 	     strcpy (Directory, SchemaPath);
-	     BuildFileName (name, "", Directory, fn, &lg);
+	     MakeCompleteName (name, "", Directory, fn, &lg);
 	  }
      }
 }
@@ -176,7 +176,7 @@ char               *fext;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DoFileName compose un nom de fichier absolu en concatenant le   | */
+/* |    FindCompleteName compose un nom de fichier absolu en concatenant le   | */
 /* |            nom de directory, le nom de fichier (fname) et          | */
 /* |            l'extension (fext).                                     | */
 /* |            Retourne le nom compose' dans nomabs et la longueur     | */
@@ -186,10 +186,10 @@ char               *fext;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                DoFileName (Name fname, char *fext, PathBuffer directory, PathBuffer nomabs, int *lg)
+void                FindCompleteName (Name fname, char *fext, PathBuffer directory, PathBuffer nomabs, int *lg)
 
 #else  /* __STDC__ */
-void                DoFileName (fname, fext, directory, nomabs, lg)
+void                FindCompleteName (fname, fext, directory, nomabs, lg)
 Name                 fname;
 char               *fext;
 PathBuffer          directory;

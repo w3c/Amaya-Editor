@@ -73,16 +73,16 @@ boolean            *addHyphen;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | SeparateurMot teste si ce caractere est un separateur de mot       | */
+/* | IsSeparatorChar teste si ce caractere est un separateur de mot       | */
 /* |                 retourne TRUE si c'est un separateur               | */
 /* |                          FALSE sinon                               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SeparateurMot (char car)
+boolean             IsSeparatorChar (char car)
 
 #else  /* __STDC__ */
-boolean             SeparateurMot (car)
+boolean             IsSeparatorChar (car)
 char                car;
 
 #endif /* __STDC__ */
@@ -97,18 +97,18 @@ char                car;
 	   return (TRUE);
      }
    return (FALSE);
-}				/*SeparateurMot */
+}				/*IsSeparatorChar */
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Minuscule convertit les caracte`res majuscules en minuscules.   | */
+/* |    SmallLettering convertit les caracte`res majuscules en minuscules.   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                Minuscule (char *word)
+void                SmallLettering (char *word)
 
 #else  /* __STDC__ */
-void                Minuscule (word)
+void                SmallLettering (word)
 char               *word;
 
 #endif /* __STDC__ */
@@ -436,7 +436,7 @@ int                *width;
 		  }
 		else
 		   encore = FALSE;
-	     else if (SeparateurMot (word[j]))
+	     else if (IsSeparatorChar (word[j]))
 	       {
 		  /* On ne traite pas les separateurs en debut de mot */
 		  if (j != 0)
@@ -505,7 +505,7 @@ boolean            *hyphen;
 {
 
    /* Convertit le mot en minuscule */
-   Minuscule (word);
+   SmallLettering (word);
    return PatternHyphen (word, length, language, hyphen);
 }
 
@@ -526,10 +526,10 @@ boolean            *hyphen;
 
 
 #ifdef __STDC__
-int                 CutLastWord (ptrfont font, Language langue, PtrTextBuffer * buffer, int *rank, int *width, boolean * hyphen)
+int                 HyphenLastWord (ptrfont font, Language langue, PtrTextBuffer * buffer, int *rank, int *width, boolean * hyphen)
 
 #else  /* __STDC__ */
-int                 CutLastWord (font, langue, buffer, rank, width, hyphen)
+int                 HyphenLastWord (font, langue, buffer, rank, width, hyphen)
 ptrfont             font;
 Language            langue;
 PtrTextBuffer     *buffer;
@@ -640,16 +640,16 @@ boolean            *hyphen;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    Hyphenable rend de la valeur VRAI s'il existe un traitement de  | */
+/* |    CanHyphen rend de la valeur VRAI s'il existe un traitement de  | */
 /* |            coupure des mots et l'autorisation de coupure pour la   | */
 /* |            boi^te donne'e.                                         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             Hyphenable (PtrBox pBox)
+boolean             CanHyphen (PtrBox pBox)
 
 #else  /* __STDC__ */
-boolean             Hyphenable (pBox)
+boolean             CanHyphen (pBox)
 PtrBox            pBox;
 
 #endif /* __STDC__ */

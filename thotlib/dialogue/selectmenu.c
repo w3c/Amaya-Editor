@@ -40,13 +40,13 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |  ComposeMenuSelection compose dans le buffer BufMenu le menu       | */
+/* |  BuildSelectMenu compose dans le buffer BufMenu le menu       | */
 /* |      Selection et retourne le nombre d'entrees de ce menu.         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 ComposeMenuSelection (char BufMenu[MAX_TXT_LEN])
+int                 BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
 #else  /* __STDC__ */
-int                 ComposeMenuSelection (BufMenu)
+int                 BuildSelectMenu (BufMenu)
 char                BufMenu[MAX_TXT_LEN];
 
 #endif /* __STDC__ */
@@ -481,14 +481,14 @@ char                BufMenu[MAX_TXT_LEN];
 }
 
 /* ---------------------------------------------------------------------- */
-/* |  MajMenuSelect                                                     | */
+/* |  UpdateSelectMenu                                                     | */
 /* |  Met a jour le menu de Selection                                   | */
 /* |    - de toutes les frames ouvertes du document pDoc                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajMenuSelect (PtrDocument pDoc)
+void                UpdateSelectMenu (PtrDocument pDoc)
 #else  /* __STDC__ */
-void                MajMenuSelect (pDoc)
+void                UpdateSelectMenu (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -501,7 +501,7 @@ PtrDocument         pDoc;
    Menu_Ctl           *ptrmenu;
 
    if (pDoc == SelectedDocument)
-      NbItemSel = ComposeMenuSelection (BufMenuSel);
+      NbItemSel = BuildSelectMenu (BufMenuSel);
    else
       NbItemSel = 0;
 
@@ -557,13 +557,13 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RetMenuAttributs traite les retours du menu 'Attributs':        | */
+/* |    CallbackAttrMenu traite les retours du menu 'Attributs':        | */
 /* |    cree un formulaire pour saisir la valeur de l'attribut choisi.  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuSelect (int refmenu, int val, int frame)
+void                CallbackSelectMenu (int refmenu, int val, int frame)
 #else  /* __STDC__ */
-void                RetMenuSelect (refmenu, val, frame)
+void                CallbackSelectMenu (refmenu, val, frame)
 int                 refmenu;
 int                 val;
 int                 frame;
@@ -581,7 +581,7 @@ void                SelectionMenuLoadResources ()
    if (ThotLocalActions[T_chselect] == NULL)
      {
 	/* Connecte les actions de selection */
-	TteConnectAction (T_chselect, (Proc) MajMenuSelect);
-	TteConnectAction (T_rselect, (Proc) RetMenuSelect);
+	TteConnectAction (T_chselect, (Proc) UpdateSelectMenu);
+	TteConnectAction (T_rselect, (Proc) CallbackSelectMenu);
      }
 }

@@ -63,13 +63,13 @@ static XmString     null_string;
 #include "thotmsg_f.h"
 
 #ifdef __STDC__
-extern void         EndInsert (void);
+extern void         CloseInsertion (void);
 extern void         DefRegion (int, int, int, int, int);
 extern boolean      RedrawFrameBottom (int, int);
 extern PtrAbstractBox      GetClickedAbsBox (int, int, int);
 
 #else
-extern void         EndInsert ();
+extern void         CloseInsertion ();
 extern void         DefRegion ();
 extern boolean      RedrawFrameBottom ();
 extern PtrAbstractBox      GetClickedAbsBox ();
@@ -77,14 +77,14 @@ extern PtrAbstractBox      GetClickedAbsBox ();
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* |    VueDeFenetre retourne, sous la forme qui convient a l'API Thot, | */
+/* |    FrameToView retourne, sous la forme qui convient a l'API Thot, | */
 /* |            les parametres identifiant le document et la vue        | */
 /* |            qui correspondent a une frame donnee.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                VueDeFenetre (int frame, int *doc, int *view)
+void                FrameToView (int frame, int *doc, int *view)
 #else  /* __STDC__ */
-void                VueDeFenetre (frame, doc, view)
+void                FrameToView (frame, doc, view)
 int                 frame;
 int                *doc;
 int                *view;
@@ -119,10 +119,10 @@ int                *view;
 /* | Evenement sur une frame document.                              | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetourKill (int *w, int frame, int *info)
+void                FrameKilled (int *w, int frame, int *info)
 
 #else  /* __STDC__ */
-void                RetourKill (w, frame, info)
+void                FrameKilled (w, frame, info)
 int                *w;
 int                 frame;
 int                *info;
@@ -167,13 +167,13 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 
 #ifndef NEW_WILLOWS
 /* ---------------------------------------------------------------------- */
-/* |    TraiteExpose effectue le traitement des expositions X11 des     | */
+/* |    FrameToRedisplay effectue le traitement des expositions X11 des     | */
 /* |            frames de dialogue et de documents.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TraiteExpose (ThotWindow w, int frame, XExposeEvent * event)
+void                FrameToRedisplay (ThotWindow w, int frame, XExposeEvent * event)
 #else  /* __STDC__ */
-void                TraiteExpose (w, frame, event)
+void                FrameToRedisplay (w, frame, event)
 ThotWindow          w;
 int                 frame;
 XExposeEvent       *event;
@@ -220,7 +220,7 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   VueDeFenetre (frame, &doc, &vview);
+   FrameToView (frame, &doc, &vview);
    FrameTable[frame].TopMargin = top_delta;
    FrameTable[frame].LeftMargin = 0;
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
@@ -230,7 +230,7 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
    RebuildConcreteImage (frame);
 
    /* recompute the scroll bars
-      MajScrolls(frame); */
+      UpdateScrollbars(frame); */
 }
 #endif /* NEW_WILLOWS */
 
@@ -240,9 +240,9 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
 /* | Evenement sur une frame document.                              | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                XChangeTaille (int *w, int frame, int *info)
+void                FrameResized (int *w, int frame, int *info)
 #else  /* __STDC__ */
-void                XChangeTaille (w, frame, info)
+void                FrameResized (w, frame, info)
 int                *w;
 int                 frame;
 int                *info;
@@ -267,7 +267,7 @@ int                *info;
    && documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
      {
 	notifyDoc.event = TteViewResize;
-	VueDeFenetre (frame, &doc, &view);
+	FrameToView (frame, &doc, &view);
 	notifyDoc.document = doc;
 	notifyDoc.view = view;
 	dx = width - FrameTable[frame].FrWidth;
@@ -283,7 +283,7 @@ int                *info;
 	     RebuildConcreteImage (frame);
 
 	     /* Reevalue les ascenseurs */
-	     MajScrolls (frame);
+	     UpdateScrollbars (frame);
 	     notifyDoc.event = TteViewResize;
 	     notifyDoc.document = doc;
 	     notifyDoc.view = view;
@@ -316,7 +316,7 @@ int                *info;
 #endif
 	  }
      }
-}				/*XChangeTaille */
+}				/*FrameResized */
 
 #endif /* !NEW_WILLOWS */
 
@@ -358,19 +358,19 @@ int                 value;
 	       break;
 	    case SB_LINEUP:
 	       delta = -13;
-	       DefFenV (frame, delta, TRUE);
+	       VerticalScroll (frame, delta, TRUE);
 	       break;
 	    case SB_LINEDOWN:
 	       delta = 13;
-	       DefFenV (frame, delta, TRUE);
+	       VerticalScroll (frame, delta, TRUE);
 	       break;
 	    case SB_PAGEUP:
 	       delta = -FrameTable[frame].FrHeight;
-	       DefFenV (frame, delta, TRUE);
+	       VerticalScroll (frame, delta, TRUE);
 	       break;
 	    case SB_PAGEDOWN:
 	       delta = FrameTable[frame].FrHeight;
-	       DefFenV (frame, delta, TRUE);
+	       VerticalScroll (frame, delta, TRUE);
 	       break;
 	/*************************
 	case SB_THUMBPOSITION:
@@ -388,7 +388,7 @@ int                 value;
     * for this document.
     */
 
-   n = ZoneImageAbs (frame, &start, &end, &total);
+   n = ImageAbs (frame, &start, &end, &total);
    switch (n)
 	 {
 	    case -1:
@@ -418,9 +418,9 @@ int                 value;
 /* | Demande de scroll horizontal.                                    | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                XChangeHScroll (int *w, int frame, int *param)
+void                FrameHScrolled (int *w, int frame, int *param)
 #else  /* __STDC__ */
-void                XChangeHScroll (w, frame, param)
+void                FrameHScrolled (w, frame, param)
 int                *w;
 int                 frame;
 int                *param;
@@ -455,7 +455,7 @@ int                *param;
       delta = MAX_SIZE;		/* indeterminee */
 
    notifyDoc.event = TteViewScroll;
-   VueDeFenetre (frame, &doc, &view);
+   FrameToView (frame, &doc, &view);
    notifyDoc.document = doc;
    notifyDoc.view = view;
    notifyDoc.verticalValue = 0;
@@ -475,16 +475,16 @@ int                *param;
 	     else
 		delta = info->value;
 	     /* Cadre a la position demandee */
-	     CadrerVueEnX (frame, delta, FrameTable[frame].FrWidth);
+	     ShowXPosition (frame, delta, FrameTable[frame].FrWidth);
 	  }
 	else if (info->reason == XmCR_TO_TOP)
 	   /* Cadre a gauche */
-	   CadrerVueEnX (frame, 0, FrameTable[frame].FrWidth);
+	   ShowXPosition (frame, 0, FrameTable[frame].FrWidth);
 	else if (info->reason == XmCR_TO_BOTTOM)
 	   /* Cadre a droite */
-	   CadrerVueEnX (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrWidth);
+	   ShowXPosition (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrWidth);
 	else
-	   DefFenH (frame, delta, 1);
+	   HorizontalScroll (frame, delta, 1);
 
 	notifyDoc.document = doc;
 	notifyDoc.view = view;
@@ -492,15 +492,15 @@ int                *param;
 	notifyDoc.horizontalValue = delta;
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
-}				/*XChangeHScroll */
+}				/*FrameHScrolled */
 
 /* -------------------------------------------------------------------- */
 /* | Demande de scroll vertical.                                      | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                XChangeVScroll (int *w, int frame, int *param)
+void                FrameVScrolled (int *w, int frame, int *param)
 #else  /* __STDC__ */
-void                XChangeVScroll (w, frame, param)
+void                FrameVScrolled (w, frame, param)
 int                *w;
 int                 frame;
 int                *param;
@@ -540,7 +540,7 @@ int                *param;
       delta = MAX_SIZE;		/* indeterminee */
 
    notifyDoc.event = TteViewScroll;
-   VueDeFenetre (frame, &doc, &view);
+   FrameToView (frame, &doc, &view);
    notifyDoc.document = doc;
    notifyDoc.view = view;
    notifyDoc.verticalValue = delta;
@@ -558,7 +558,7 @@ int                *param;
 	     XtGetValues (FrameTable[frame].WdScrollV, args, n);
 
 	     /* Regarde ou se situe l'image abstraite dans le document */
-	     n = ZoneImageAbs (frame, &start, &end, &total);
+	     n = ImageAbs (frame, &start, &end, &total);
 	     /* au retour n = 0 si l'Picture est complete */
 	     /* Calcule le nombre de caracteres represente par un pixel */
 	     carparpix = (float) total / (float) FrameTable[frame].FrHeight;
@@ -577,7 +577,7 @@ int                *param;
 		     y = delta;
 		  else
 		     y = infos->value - start;
-		  CadrerVueEnY (frame, y, delta);
+		  ShowYPosition (frame, y, delta);
 	       }
 	     else
 	       {
@@ -593,7 +593,7 @@ int                *param;
 		  delta = (delta * 100) / FrameTable[frame].FrHeight;
 		  JumpIntoView (frame, delta);
 		  /* Mise a jour des bandes de scroll pour ajustement */
-		  MajScrolls (frame);
+		  UpdateScrollbars (frame);
 	       }
 	  }
 	else if (infos->reason == XmCR_TO_TOP)
@@ -601,17 +601,17 @@ int                *param;
 	     /* Sauter au debut du document */
 	     JumpIntoView (frame, 0);
 	     /* Mise a jour des bandes de scroll pour ajustement */
-	     MajScrolls (frame);
+	     UpdateScrollbars (frame);
 	  }
 	else if (infos->reason == XmCR_TO_BOTTOM)
 	  {
 	     /* Sauter a la fin du document */
 	     JumpIntoView (frame, 100);
 	     /* Mise a jour des bandes de scroll pour ajustement */
-	     MajScrolls (frame);
+	     UpdateScrollbars (frame);
 	  }
 	else
-	   DefFenV (frame, delta, 1);
+	   VerticalScroll (frame, delta, 1);
 
 	notifyDoc.document = doc;
 	notifyDoc.view = view;
@@ -619,7 +619,7 @@ int                *param;
 	notifyDoc.horizontalValue = 0;
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
-}				/*XChangeVScroll */
+}				/*FrameVScrolled */
 
 #endif /* !NEW_WILLOWS */
 
@@ -643,7 +643,7 @@ View                view;
       frame = GetWindowNumber (document, view);
 
    infos.reason = XmCR_PAGE_DECREMENT;
-   XChangeVScroll (0, frame, (int *) &infos);
+   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* NEW_WILLOWS */
 }
 
@@ -667,7 +667,7 @@ View                view;
       frame = GetWindowNumber (document, view);
 
    infos.reason = XmCR_PAGE_INCREMENT;
-   XChangeVScroll (0, frame, (int *) &infos);
+   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* NEW_WILLOWS */
 }
 
@@ -692,7 +692,7 @@ View                view;
       frame = GetWindowNumber (document, view);
 
    infos.reason = XmCR_TO_TOP;
-   XChangeVScroll (0, frame, (int *) &infos);
+   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* NEW_WILLOWS */
 }
 
@@ -716,7 +716,7 @@ View                view;
       frame = GetWindowNumber (document, view);
 
    infos.reason = XmCR_TO_BOTTOM;
-   XChangeVScroll (0, frame, (int *) &infos);
+   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* NEW_WILLOWS */
 }
 
@@ -724,9 +724,9 @@ View                view;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    InitAutreContexts initialise les contextes complementaires.     | */
+/* |    InitializeOtherThings initialise les contextes complementaires.     | */
 /* ---------------------------------------------------------------------- */
-void                InitAutreContexts ()
+void                InitializeOtherThings ()
 {
    int                 i;
 
@@ -745,7 +745,7 @@ void                InitAutreContexts ()
 #ifndef NEW_WILLOWS
    null_string = XmStringCreateSimple ("");
 #endif
-}				/*InitAutreContexts */
+}				/*InitializeOtherThings */
 
 
 /* -------------------------------------------------------------------- */
@@ -806,14 +806,14 @@ View                view;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | MsgSelect affiche la se'lection donne'e en parame`tre (texte) dans | */
+/* | DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans | */
 /* | la fenetree^tre active.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MsgSelect (char *text)
+void                DisplaySelMessage (char *text)
 
 #else  /* __STDC__ */
-void                MsgSelect (text)
+void                DisplaySelMessage (text)
 char               *text;
 
 #endif /* __STDC__ */
@@ -832,7 +832,7 @@ char               *text;
 	     TtaSetStatus ((Document) doc, view, text, NULL);
 	  }
      }
-}				/*MsgSelect */
+}				/*DisplaySelMessage */
 
 
 /* ---------------------------------------------------------------------- */
@@ -969,7 +969,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	    case WM_LBUTTONDOWN:
 	       /* stop any current insertion of text */
-	       EndInsert ();
+	       CloseInsertion ();
 
 	       /* if the CTRL key is pressed this is a geometry change */
 	       if (GetKeyState (VK_CONTROL))
@@ -1015,7 +1015,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	    case WM_MBUTTONDOWN:
 	       /* stop any current insertion of text */
-	       EndInsert ();
+	       CloseInsertion ();
 
 	       /* if the CTRL key is pressed this is a size change */
 	       if (GetKeyState (VK_CONTROL))
@@ -1078,10 +1078,10 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 /* |   D.V. equivalent de la fontion MS-Windows ci dessus !           | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetourFntr (int frame, XEvent * ev)
+void                FrameCallback (int frame, XEvent * ev)
 
 #else  /* __STDC__ */
-void                RetourFntr (frame, ev)
+void                FrameCallback (frame, ev)
 int                 frame;
 XEvent             *ev;
 
@@ -1126,7 +1126,7 @@ XEvent             *ev;
 			   /* ==========BOUTON GAUCHE========== */
 			case Button1:
 			   /* Termine l'insertion courante s'il y en a une */
-			   EndInsert ();
+			   CloseInsertion ();
 
 			   /* Est-ce que la touche modifieur de geometrie est active ? */
 			   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
@@ -1187,7 +1187,7 @@ XEvent             *ev;
 			   /* ==========BOUTON MILIEU========== */
 			case Button2:
 			   /* Termine l'insertion courante s'il y en a une */
-			   EndInsert ();
+			   CloseInsertion ();
 
 			   /* Est-ce que la touche modifieur de geometrie est active ? */
 			   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
@@ -1205,7 +1205,7 @@ XEvent             *ev;
 			   /* ==========BOUTON DROIT========== */
 			case Button3:
 			   /* Termine l'insertion courante s'il y en a une */
-			   EndInsert ();
+			   CloseInsertion ();
 			   TtaSetDialoguePosition ();
 			   if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
 			      TtaDisplaySimpleMessage (INFO, LIB, SEL_EL);
@@ -1240,7 +1240,7 @@ XEvent             *ev;
 	    default:
 	       break;
 	 }			/*switch */
-}				/*RetourFntr */
+}				/*FrameCallback */
 #endif /* NEW_WILLOWS */
 
 
@@ -1440,14 +1440,14 @@ View                view;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | DesignationPave retourne l'identification de la fenetre et du pave | */
+/* | GiveClickedAbsBox retourne l'identification de la fenetre et du pave | */
 /* |            designe.                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesignationPave (int *frame, int *pave)
+void                GiveClickedAbsBox (int *frame, int *pave)
 
 #else  /* __STDC__ */
-void                DesignationPave (frame, pave)
+void                GiveClickedAbsBox (frame, pave)
 int                *frame;
 int                *pave;
 
@@ -1499,17 +1499,17 @@ int                *pave;
       *pave = (int) GetClickedAbsBox (ClickFrame, ClickX, ClickY);
    else
       *pave = 0;
-}				/*DesignationPave */
+}				/*GiveClickedAbsBox */
 
 
 /* -------------------------------------------------------------------- */
 /* | Modifie le titre de la fenetre d'indice frame.                     | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChangeTitre (int frame, char *text)
+void                ChangeFrameTitle (int frame, char *text)
 
 #else  /* __STDC__ */
-void                ChangeTitre (frame, text)
+void                ChangeFrameTitle (frame, text)
 int                 frame;
 char               *text;
 
@@ -1532,16 +1532,16 @@ char               *text;
 	XtSetValues (w, args, n);
      }
 #endif /* NEW_WILLOWS */
-}				/*ChangeTitre */
+}				/*ChangeFrameTitle */
 
 
 /* -------------------------------------------------------------------- */
 /* | La frame d'indice frame devient la fenetre active.               | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChangeSelFntr (int frame)
+void                ChangeSelFrame (int frame)
 #else  /* __STDC__ */
-void                ChangeSelFntr (frame)
+void                ChangeSelFrame (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -1560,17 +1560,17 @@ int                 frame;
 #endif /* NEW_WILLOWS */
 	  }
      }
-}				/*ChangeSelFntr */
+}				/*ChangeSelFrame */
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GetFenetre retourne l'indice de la table des Cadres associe'    | */
+/* |    GetWindowFrame retourne l'indice de la table des Cadres associe'    | */
 /* |            a` la fenetre w.                                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 GetFenetre (ThotWindow w)
+int                 GetWindowFrame (ThotWindow w)
 #else  /* __STDC__ */
-int                 GetFenetre (w)
+int                 GetWindowFrame (w)
 ThotWindow          w;
 
 #endif /* __STDC__ */
@@ -1588,13 +1588,13 @@ ThotWindow          w;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DimFenetre retourne les dimensions de la fenetre d'indice frame.        | */
+/* |    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DimFenetre (int frame, int *width, int *height)
+void                GetSizesFrame (int frame, int *width, int *height)
 
 #else  /* __STDC__ */
-void                DimFenetre (frame, width, height)
+void                GetSizesFrame (frame, width, height)
 int                 frame;
 int                *width;
 int                *height;
@@ -1608,14 +1608,14 @@ int                *height;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    SetClip limite la zone de reaffichage sur la fenetre frame et   | */
+/* |    DefineClipping limite la zone de reaffichage sur la fenetre frame et   | */
 /* |            recalcule ses limites sur l'image concrete.             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                SetClip (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
+void                DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
 
 #else  /* __STDC__ */
-void                SetClip (frame, orgx, orgy, xd, yd, xf, yf, raz)
+void                DefineClipping (frame, orgx, orgy, xd, yd, xf, yf, raz)
 int                 frame;
 int                 orgx;
 int                 orgy;
@@ -1678,12 +1678,12 @@ int                 raz;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ResetClip annule le rectangle de clipping de la fenetre frame.  | */
+/* |    RemoveClipping annule le rectangle de clipping de la fenetre frame.  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ResetClip (int frame)
+void                RemoveClipping (int frame)
 #else  /* __STDC__ */
-void                ResetClip (frame)
+void                RemoveClipping (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -1704,13 +1704,13 @@ int                 frame;
 
 
 /* -------------------------------------------------------------------- */
-/* | MajScrolls met a jour les bandes de defilement de la fenetree^tre    | */
+/* | UpdateScrollbars met a jour les bandes de defilement de la fenetree^tre    | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MajScrolls (int frame)
+void                UpdateScrollbars (int frame)
 
 #else  /* __STDC__ */
-void                MajScrolls (frame)
+void                UpdateScrollbars (frame)
 int                 frame;
 
 #endif /* __STDC__ */
@@ -1728,7 +1728,7 @@ int                 frame;
 #endif /* NEW_WILLOWS */
 
    /* Demande le volume affiche dans la fenetre */
-   VolumeAffiche (frame, &Xpos, &Ypos, &width, &height);
+   ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
    hscroll = FrameTable[frame].WdScrollH;
    vscroll = FrameTable[frame].WdScrollV;
    l = FrameTable[frame].FrWidth;
@@ -1765,7 +1765,7 @@ int                 frame;
 #ifdef NEW_WILLOWS
 #endif /* NEW_WILLOWS */
 #endif /* NEW_WILLOWS */
-}				/*MajScrolls */
+}				/*UpdateScrollbars */
 
 
 /* End Of Module Thot */

@@ -41,12 +41,12 @@ extern void         TtaExtractName ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* | retconfirm met a jour le formulaire de confirm.                    | */
+/* | CallbackConfirmMenu met a jour le formulaire de confirm.                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                retconfirm (int ref, int typedata, char *data)
+void                CallbackConfirmMenu (int ref, int typedata, char *data)
 #else  /* __STDC__ */
-void                retconfirm (ref, typedata, data)
+void                CallbackConfirmMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -85,12 +85,12 @@ char               *data;
 
 
 /* ---------------------------------------------------------------------- */
-/* | retcreatedoc met a jour le formulaire de createdoc.                | */
+/* | CallbackNewDocMenu met a jour le formulaire de createdoc.                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                retcreatedoc (int ref, int typedata, char *data)
+void                CallbackNewDocMenu (int ref, int typedata, char *data)
 #else  /* __STDC__ */
-void                retcreatedoc (ref, typedata, data)
+void                CallbackNewDocMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -123,7 +123,7 @@ char               *data;
 		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, MISSING_DIR), DirectoryDocToCreate);
 		    else
 		      {
-			 if (FileExist (docName))
+			 if (ThotFile_exist (docName))
 			   {
 			      /* demande confirmation */
 			      sprintf (BufDir, TtaGetMessage (LIB, FILE_EXIST), docName);
@@ -217,8 +217,8 @@ View                view;
    if (ThotLocalActions[T_createdoc] == NULL)
      {
 	/* Connecte les actions liees au traitement de la createdoc */
-	TteConnectAction (T_createdoc, (Proc) retcreatedoc);
-	TteConnectAction (T_confirmcreate, (Proc) retconfirm);
+	TteConnectAction (T_createdoc, (Proc) CallbackNewDocMenu);
+	TteConnectAction (T_confirmcreate, (Proc) CallbackConfirmMenu);
 	TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
      }
    /* Creation du formulaire Creer document */

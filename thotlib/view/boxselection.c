@@ -258,7 +258,7 @@ int                frame;
 	  }
      }
 
-   FreeBufTexte (pBuffer);
+   FreeTextBuffer (pBuffer);
    return pPreviousBuffer;
 }
 
@@ -682,7 +682,7 @@ int                 frame;
 	    pAb = pAb->AbEnclosing;
 
    /* regarde si le pavee est affiche dans la fenetre */
-   DimFenetre (frame, &min, &max);
+   GetSizesFrame (frame, &min, &max);
    min = ViewFrameTable[frame - 1].FrYOrg;
    max += min;
    if (pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight < min || pAb->AbBox->BxYOrg > max)

@@ -146,7 +146,7 @@ boolean             withAppEvent;
 		strncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	     BuildFileName (pDoc->DocDName, "PIV", directoryName, text, &i);
+	     MakeCompleteName (pDoc->DocDName, "PIV", directoryName, text, &i);
 	     /* ouvre le fichier 'PIV' */
 	     pivotFile = BIOreadOpen (text);
 	     if (pivotFile != 0)
@@ -165,7 +165,7 @@ boolean             withAppEvent;
 		       ret = TRUE;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
-		       DoFileName (pDoc->DocDName, "EXT", directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, "EXT", directoryName, text, &i);
 		       pivotFile = BIOreadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -174,7 +174,7 @@ boolean             withAppEvent;
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */
 		       /* s'il existe dans le meme directory que le fichier .PIV */
-		       DoFileName (pDoc->DocDName, "REF", directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, "REF", directoryName, text, &i);
 		       pivotFile = BIOreadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -225,7 +225,7 @@ PtrDocument         pDoc;
 	while (pBuf != NULL)
 	  {
 	     pNextBuf = pBuf->BuNext;
-	     FreeBufTexte (pBuf);
+	     FreeTextBuffer (pBuf);
 	     pBuf = pNextBuf;
 	  }
 	pDoc->DocComment = NULL;
@@ -247,7 +247,7 @@ PtrDocument         pDoc;
 	while (pOutRef != NULL)
 	  {
 	     pNextOutRef = pOutRef->OrNext;
-	     FreeRefSortante (pOutRef);
+	     FreeOutputRef (pOutRef);
 	     pOutRef = pNextOutRef;
 	  }
 	/* libere les descripteurs de references sortantes detruites */
@@ -255,7 +255,7 @@ PtrDocument         pDoc;
 	while (pOutRef != NULL)
 	  {
 	     pNextOutRef = pOutRef->OrNext;
-	     FreeRefSortante (pOutRef);
+	     FreeOutputRef (pOutRef);
 	     pOutRef = pNextOutRef;
 	  }
 	/* libere les decripteurs d'element reference's change's */
@@ -269,7 +269,7 @@ PtrDocument         pDoc;
 	     while (pExtDoc != NULL)
 	       {
 		  pNextExtDoc = pExtDoc->EdNext;
-		  FreeDocExterne (pExtDoc);
+		  FreeExternalDoc (pExtDoc);
 		  pExtDoc = pNextExtDoc;
 	       }
 	     FreeElemRefChng (pChnRef);

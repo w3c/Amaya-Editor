@@ -11,20 +11,20 @@ extern void ConfigReadConfigFiles ( void );
 extern int ConfigMakeDocTypeMenu ( char *BufMenu,
                                    int *lgmenu,
                                    boolean doc );
-extern void ConfigNomExterneSSchema ( char *NomUtilisateur,
+extern void ConfigSSchemaExternalName ( char *NomUtilisateur,
                                       char *NomSchema,
                                       int Typ );
-extern void ConfigNomInterneSSchema ( char *NomUtilisateur,
+extern void ConfigSSchemaInternalName ( char *NomUtilisateur,
                                       char *NomSchema,
                                       boolean Doc );
 extern int ConfigMakeMenuPres ( char *schema,
                                 char *BufMenu );
-extern void ConfigGetNomPSchema ( int choix,
+extern void ConfigGetPSchemaName ( int choix,
                                   char *schpres );
 extern int ConfigMakeImportMenu ( char *BufMenu );
 extern int ConfigMakeMenuExport ( char *schema,
                                   char *BufMenu );
-extern void ConfigGetNomExportSchema ( int choix,
+extern void ConfigGetExportSchemaName ( int choix,
                                        char *schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern boolean ConfigDefaultPSchema ( char *schstr,
@@ -66,20 +66,20 @@ extern void ConfigReadConfigFiles (/* void */);
 extern int ConfigMakeDocTypeMenu (/* char *BufMenu,
                                      int *lgmenu,
                                      boolean doc */);
-extern void ConfigNomExterneSSchema (/* char *NomUtilisateur,
+extern void ConfigSSchemaExternalName (/* char *NomUtilisateur,
                                         char *NomSchema,
                                         int Typ */);
-extern void ConfigNomInterneSSchema (/* char *NomUtilisateur,
+extern void ConfigSSchemaInternalName (/* char *NomUtilisateur,
                                         char *NomSchema,
                                         boolean Doc */);
 extern int ConfigMakeMenuPres (/* char *schema,
                                   char *BufMenu */);
-extern void ConfigGetNomPSchema (/* int choix,
+extern void ConfigGetPSchemaName (/* int choix,
                                     char *schpres */);
 extern int ConfigMakeImportMenu (/* char *BufMenu */);
 extern int ConfigMakeMenuExport (/* char *schema,
                                     char *BufMenu */);
-extern void ConfigGetNomExportSchema (/* int choix,
+extern void ConfigGetExportSchemaName (/* int choix,
                                          char *schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern boolean ConfigDefaultPSchema (/* char *schstr,

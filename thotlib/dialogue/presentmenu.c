@@ -402,13 +402,13 @@ View                view;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | RetMenuPresentStandard traite le retour du popup Presentation      | */
+/* | CallbackStdPresMenu traite le retour du popup Presentation      | */
 /* |    Standard.                                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuPresentStandard (int ref, int val)
+void                CallbackStdPresMenu (int ref, int val)
 #else  /* __STDC__ */
-void                RetMenuPresentStandard (ref, val)
+void                CallbackStdPresMenu (ref, val)
 int                 ref;
 int                 val;
 
@@ -473,12 +473,12 @@ int                 val;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | RetMenuPresent traite les retours des formulaires de Presentation  | */
+/* | CallbackPresMenu traite les retours des formulaires de Presentation  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuPresent (int ref, int val, char *txt)
+void                CallbackPresMenu (int ref, int val, char *txt)
 #else  /* __STDC__ */
-void                RetMenuPresent (ref, val, txt)
+void                CallbackPresMenu (ref, val, txt)
 int                 ref;
 int                 val;
 char               *txt;
@@ -1216,8 +1216,8 @@ static void         RazRetoursMenus ()
    if (ThotLocalActions[T_presentstd] == NULL)
      {
 	/* Connecte les actions liees au traitement de la TtcSplit */
-	TteConnectAction (T_presentstd, (Proc) RetMenuPresentStandard);
-	TteConnectAction (T_present, (Proc) RetMenuPresent);
+	TteConnectAction (T_presentstd, (Proc) CallbackStdPresMenu);
+	TteConnectAction (T_present, (Proc) CallbackPresMenu);
      }
    ChngCarStandard = FALSE;
    ChngCoulStandard = FALSE;

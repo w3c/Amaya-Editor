@@ -238,15 +238,15 @@ unsigned int        n;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    EdInitMem effectue l'initialisation des variables de gestion de | */
+/* |    InitEditorMemory effectue l'initialisation des variables de gestion de | */
 /* |            liste.                                                  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                EdInitMem ()
+void                InitEditorMemory ()
 
 #else  /* __STDC__ */
-void                EdInitMem ()
+void                InitEditorMemory ()
 #endif				/* __STDC__ */
 
 {
@@ -339,14 +339,14 @@ void                EdInitMem ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ListeMem fait un listing de l'occupation memoire.               | */
+/* |    ListMemoryStatus fait un listing de l'occupation memoire.               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ListeMem (FILE * outfile)
+void                ListMemoryStatus (FILE * outfile)
 
 #else  /* __STDC__ */
-void                ListeMem (outfile)
+void                ListMemoryStatus (outfile)
 FILE               *outfile;
 
 #endif /* __STDC__ */
@@ -516,14 +516,14 @@ FILE               *outfile;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetBufTexte alloue un buffer de texte.                          | */
+/* |    GetTextBuffer alloue un buffer de texte.                          | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetBufTexte (PtrTextBuffer * pBT)
+void                GetTextBuffer (PtrTextBuffer * pBT)
 
 #else  /* __STDC__ */
-void                GetBufTexte (pBT)
+void                GetTextBuffer (pBT)
 PtrTextBuffer     *pBT;
 
 #endif /* __STDC__ */
@@ -554,14 +554,14 @@ PtrTextBuffer     *pBT;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeBufTexte libere un buffer de texte.                         | */
+/* |    FreeTextBuffer libere un buffer de texte.                         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeBufTexte (PtrTextBuffer pBT)
+void                FreeTextBuffer (PtrTextBuffer pBT)
 
 #else  /* __STDC__ */
-void                FreeBufTexte (pBT)
+void                FreeTextBuffer (pBT)
 PtrTextBuffer      pBT;
 
 #endif /* __STDC__ */
@@ -769,14 +769,14 @@ PtrReferredDescr    pDR;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetDescCopie alloue un descripteur de copie.                    | */
+/* |    GetDescCopy alloue un descripteur de copie.                    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetDescCopie (PtrCopyDescr * pDC)
+void                GetDescCopy (PtrCopyDescr * pDC)
 
 #else  /* __STDC__ */
-void                GetDescCopie (pDC)
+void                GetDescCopy (pDC)
 PtrCopyDescr       *pDC;
 
 #endif /* __STDC__ */
@@ -803,14 +803,14 @@ PtrCopyDescr       *pDC;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeDescCopie libere un descripteur de copie.                   | */
+/* |    FreeDescCopy libere un descripteur de copie.                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeDescCopie (PtrCopyDescr pDC)
+void                FreeDescCopy (PtrCopyDescr pDC)
 
 #else  /* __STDC__ */
-void                FreeDescCopie (pDC)
+void                FreeDescCopy (pDC)
 PtrCopyDescr        pDC;
 
 #endif /* __STDC__ */
@@ -823,14 +823,14 @@ PtrCopyDescr        pDC;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetDocExterne alloue un descripteur de document externe.        | */
+/* |    GetExternalDoc alloue un descripteur de document externe.        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetDocExterne (PtrExternalDoc * pDE)
+void                GetExternalDoc (PtrExternalDoc * pDE)
 
 #else  /* __STDC__ */
-void                GetDocExterne (pDE)
+void                GetExternalDoc (pDE)
 PtrExternalDoc      *pDE;
 
 #endif /* __STDC__ */
@@ -855,14 +855,14 @@ PtrExternalDoc      *pDE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeDocExterne libere un descripteur de document externe.       | */
+/* |    FreeExternalDoc libere un descripteur de document externe.       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeDocExterne (PtrExternalDoc pDE)
+void                FreeExternalDoc (PtrExternalDoc pDE)
 
 #else  /* __STDC__ */
-void                FreeDocExterne (pDE)
+void                FreeExternalDoc (pDE)
 PtrExternalDoc       pDE;
 
 #endif /* __STDC__ */
@@ -933,14 +933,14 @@ PtrReference        pRef;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetRefSortante alloue un descripteur de reference sortante.     | */
+/* |    GetOutputRef alloue un descripteur de reference sortante.     | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetRefSortante (PtrOutReference * pRS)
+void                GetOutputRef (PtrOutReference * pRS)
 
 #else  /* __STDC__ */
-void                GetRefSortante (pRS)
+void                GetOutputRef (pRS)
 PtrOutReference     *pRS;
 
 #endif /* __STDC__ */
@@ -965,14 +965,14 @@ PtrOutReference     *pRS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeRefSortante libere un descripteur de reference sortante.    | */
+/* |    FreeOutputRef libere un descripteur de reference sortante.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeRefSortante (PtrOutReference pRS)
+void                FreeOutputRef (PtrOutReference pRS)
 
 #else  /* __STDC__ */
-void                FreeRefSortante (pRS)
+void                FreeOutputRef (pRS)
 PtrOutReference      pRS;
 
 #endif /* __STDC__ */
@@ -1040,14 +1040,14 @@ PtrChangedReferredEl      pER;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetRefEntrantes alloue un descripteur de reference entrante.    | */
+/* |    GetInputRef alloue un descripteur de reference entrante.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetRefEntrantes (PtrEnteringReferences * pRE)
+void                GetInputRef (PtrEnteringReferences * pRE)
 
 #else  /* __STDC__ */
-void                GetRefEntrantes (pRE)
+void                GetInputRef (pRE)
 PtrEnteringReferences    *pRE;
 
 #endif /* __STDC__ */
@@ -1073,14 +1073,14 @@ PtrEnteringReferences    *pRE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeRefEntrantes libere un descripteur de reference entrante.   | */
+/* |    FreeInputRef libere un descripteur de reference entrante.   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeRefEntrantes (PtrEnteringReferences pRE)
+void                FreeInputRef (PtrEnteringReferences pRE)
 
 #else  /* __STDC__ */
-void                FreeRefEntrantes (pRE)
+void                FreeInputRef (pRE)
 PtrEnteringReferences     pRE;
 
 #endif /* __STDC__ */
@@ -1093,15 +1093,15 @@ PtrEnteringReferences     pRE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetFichRefChng alloue un descripteur de changement de reference | */
+/* |    GetFileRefChng alloue un descripteur de changement de reference | */
 /* |            fichier.                                                | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetFichRefChng (PtrReferenceChange * pFRC)
+void                GetFileRefChng (PtrReferenceChange * pFRC)
 
 #else  /* __STDC__ */
-void                GetFichRefChng (pFRC)
+void                GetFileRefChng (pFRC)
 PtrReferenceChange     *pFRC;
 
 #endif /* __STDC__ */
@@ -1127,15 +1127,15 @@ PtrReferenceChange     *pFRC;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeFichRefChng libere un descripteur de changement de reference| */
+/* |    FreeFileRefChng libere un descripteur de changement de reference| */
 /* |            fichier                                                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeFichRefChng (PtrReferenceChange pFRC)
+void                FreeFileRefChng (PtrReferenceChange pFRC)
 
 #else  /* __STDC__ */
-void                FreeFichRefChng (pFRC)
+void                FreeFileRefChng (pFRC)
 PtrReferenceChange      pFRC;
 
 #endif /* __STDC__ */
@@ -1148,14 +1148,14 @@ PtrReferenceChange      pFRC;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetPave alloue un pave.                                         | */
+/* |    GetAbstractBox alloue un pave.                                         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetPave (PtrAbstractBox * pAb)
+void                GetAbstractBox (PtrAbstractBox * pAb)
 
 #else  /* __STDC__ */
-void                GetPave (pAb)
+void                GetAbstractBox (pAb)
 PtrAbstractBox            *pAb;
 
 #endif /* __STDC__ */
@@ -1187,14 +1187,14 @@ PtrAbstractBox            *pAb;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreePave libere un pave.                                        | */
+/* |    FreeAbstractBox libere un pave.                                        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreePave (PtrAbstractBox pAb)
+void                FreeAbstractBox (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                FreePave (pAb)
+void                FreeAbstractBox (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -1203,7 +1203,7 @@ PtrAbstractBox             pAb;
 
    if (pAb->AbLeafType == LtPicture)
      {
-	/* FreeImage(pAb->AbBox, pAb->AbBox->BxPictInfo ); */
+	/* FreePicture(pAb->AbBox, pAb->AbBox->BxPictInfo ); */
      }
    pAb->AbElement = NULL;
    pAb->AbEnclosing = NULL;
@@ -1401,14 +1401,14 @@ PtrPSchema         *pSP;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeSPres libere un schemas de presentation.                    | */
+/* |    FreeSchPres libere un schemas de presentation.                    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeSPres (PtrPSchema pSP)
+void                FreeSchPres (PtrPSchema pSP)
 
 #else  /* __STDC__ */
-void                FreeSPres (pSP)
+void                FreeSchPres (pSP)
 PtrPSchema          pSP;
 
 #endif /* __STDC__ */
@@ -1475,16 +1475,16 @@ PtrHandlePSchema    pHSP;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetBlocExtens alloue un bloc d'extension pour un schema de      | */
+/* |    GetExternalBlock alloue un bloc d'extension pour un schema de      | */
 /* |    structure.                                                      | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                GetBlocExtens (PtrExtensBlock * pBE)
+void                GetExternalBlock (PtrExtensBlock * pBE)
 
 #else  /* __STDC__ */
-void                GetBlocExtens (pBE)
+void                GetExternalBlock (pBE)
 PtrExtensBlock      *pBE;
 
 #endif /* __STDC__ */
@@ -1505,15 +1505,15 @@ PtrExtensBlock      *pBE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeBlocExtens libere un bloc extension de schema de structure. | */
+/* |    FreeExternalBlock libere un bloc extension de schema de structure. | */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                FreeBlocExtens (PtrExtensBlock pBE)
+void                FreeExternalBlock (PtrExtensBlock pBE)
 
 #else  /* __STDC__ */
-void                FreeBlocExtens (pBE)
+void                FreeExternalBlock (pBE)
 PtrExtensBlock       pBE;
 
 #endif /* __STDC__ */
@@ -1558,21 +1558,21 @@ PtrSSchema       *pSS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeSStruct libere un schema de structure.                      | */
+/* |    FreeSchStruc libere un schema de structure.                      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeSStruct (PtrSSchema pSS)
+void                FreeSchStruc (PtrSSchema pSS)
 
 #else  /* __STDC__ */
-void                FreeSStruct (pSS)
+void                FreeSchStruc (pSS)
 PtrSSchema        pSS;
 
 #endif /* __STDC__ */
 
 {
    if (pSS->SsExtensBlock != NULL)
-      FreeBlocExtens (pSS->SsExtensBlock);
+      FreeExternalBlock (pSS->SsExtensBlock);
    pSS->SsNextExtens = PtFreeSStruct;
    PtFreeSStruct = pSS;
    NbLibSchStruct++;
@@ -1580,14 +1580,14 @@ PtrSSchema        pSS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetReglePres alloue une regle de presentation.                  | */
+/* |    GetPresentRule alloue une regle de presentation.                  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetReglePres (PtrPRule * pRP)
+void                GetPresentRule (PtrPRule * pRP)
 
 #else  /* __STDC__ */
-void                GetReglePres (pRP)
+void                GetPresentRule (pRP)
 PtrPRule       *pRP;
 
 #endif /* __STDC__ */
@@ -1611,14 +1611,14 @@ PtrPRule       *pRP;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeReglePres libere une regle de presentation.                 | */
+/* |    FreePresentRule libere une regle de presentation.                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeReglePres (PtrPRule pRP)
+void                FreePresentRule (PtrPRule pRP)
 
 #else  /* __STDC__ */
-void                FreeReglePres (pRP)
+void                FreePresentRule (pRP)
 PtrPRule        pRP;
 
 #endif /* __STDC__ */
@@ -1630,7 +1630,7 @@ PtrPRule        pRP;
    while (pCond != NULL)
      {
 	nextCond = pCond->CoNextCondition;
-	FreeCondReglePres (pCond);
+	FreePresentRuleCond (pCond);
 	pCond = nextCond;
      }
    pRP->PrNextPRule = PtFreeReglePres;
@@ -1640,15 +1640,15 @@ PtrPRule        pRP;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetCondReglePres alloue une condition pour une regle de         | */
+/* |    GetPresentRuleCond alloue une condition pour une regle de         | */
 /* |    presentation.                                                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetCondReglePres (PtrCondition * pCond)
+void                GetPresentRuleCond (PtrCondition * pCond)
 
 #else  /* __STDC__ */
-void                GetCondReglePres (pCond)
+void                GetPresentRuleCond (pCond)
 PtrCondition       *pCond;
 
 #endif /* __STDC__ */
@@ -1670,15 +1670,15 @@ PtrCondition       *pCond;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeCondReglePres libere une condition sur une regle de         | */
+/* |    FreePresentRuleCond libere une condition sur une regle de         | */
 /* |    presentation.                                                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeCondReglePres (PtrCondition pCond)
+void                FreePresentRuleCond (PtrCondition pCond)
 
 #else  /* __STDC__ */
-void                FreeCondReglePres (pCond)
+void                FreePresentRuleCond (pCond)
 PtrCondition        pCond;
 
 #endif /* __STDC__ */
@@ -1691,14 +1691,14 @@ PtrCondition        pCond;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetRRetard alloue une regle retardee.                           | */
+/* |    GetDifferedRule alloue une regle retardee.                           | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetRRetard (PtrDelayedPRule * pRR)
+void                GetDifferedRule (PtrDelayedPRule * pRR)
 
 #else  /* __STDC__ */
-void                GetRRetard (pRR)
+void                GetDifferedRule (pRR)
 PtrDelayedPRule    *pRR;
 
 #endif /* __STDC__ */
@@ -1721,14 +1721,14 @@ PtrDelayedPRule    *pRR;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeRRetard libere une regle retardee.                          | */
+/* |    FreeDifferedRule libere une regle retardee.                          | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeRRetard (PtrDelayedPRule pRR)
+void                FreeDifferedRule (PtrDelayedPRule pRR)
 
 #else  /* __STDC__ */
-void                FreeRRetard (pRR)
+void                FreeDifferedRule (pRR)
 PtrDelayedPRule     pRR;
 
 #endif /* __STDC__ */
@@ -1742,14 +1742,14 @@ PtrDelayedPRule     pRR;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    MemInit initialise l'allocation memoire pour le mediateur.      | */
+/* |    InitKernelMemory initialise l'allocation memoire pour le mediateur.      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                MemInit ()
+void                InitKernelMemory ()
 
 #else  /* __STDC__ */
-void                MemInit ()
+void                InitKernelMemory ()
 #endif				/* __STDC__ */
 
 {
@@ -1788,14 +1788,14 @@ void                MemInit ()
 }
 
 /* ---------------------------------------------------------------------- */
-/* |     GetBPos alloue un bloc de relations de position.               | */
+/* |     GetPosBlock alloue un bloc de relations de position.               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetBPos (PtrPosRelations * adbloc)
+void                GetPosBlock (PtrPosRelations * adbloc)
 
 #else  /* __STDC__ */
-void                GetBPos (adbloc)
+void                GetPosBlock (adbloc)
 PtrPosRelations     *adbloc;
 
 #endif /* __STDC__ */
@@ -1826,14 +1826,14 @@ PtrPosRelations     *adbloc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeBPos libere le bloc de relations.                           | */
+/* |    FreePosBlock libere le bloc de relations.                           | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeBPos (PtrPosRelations * adbloc)
+void                FreePosBlock (PtrPosRelations * adbloc)
 
 #else  /* __STDC__ */
-void                FreeBPos (adbloc)
+void                FreePosBlock (adbloc)
 PtrPosRelations     *adbloc;
 
 #endif /* __STDC__ */
@@ -1848,14 +1848,14 @@ PtrPosRelations     *adbloc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetBDim alloue un bloc de relations de dimension.               | */
+/* |    GetDimBlock alloue un bloc de relations de dimension.               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetBDim (PtrDimRelations * adbloc)
+void                GetDimBlock (PtrDimRelations * adbloc)
 
 #else  /* __STDC__ */
-void                GetBDim (adbloc)
+void                GetDimBlock (adbloc)
 PtrDimRelations     *adbloc;
 
 #endif /* __STDC__ */
@@ -1889,14 +1889,14 @@ PtrDimRelations     *adbloc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeBDim libere le bloc de relations de dimension.              | */
+/* |    FreeDimBlock libere le bloc de relations de dimension.              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                FreeBDim (PtrDimRelations * adbloc)
+void                FreeDimBlock (PtrDimRelations * adbloc)
 
 #else  /* __STDC__ */
-void                FreeBDim (adbloc)
+void                FreeDimBlock (adbloc)
 PtrDimRelations     *adbloc;
 
 #endif /* __STDC__ */
@@ -2034,7 +2034,7 @@ PtrBox            adboite;
    while (pPosRel != NULL)
      {
 	nepos = pPosRel->PosRNext;
-	FreeBPos (&pPosRel);
+	FreePosBlock (&pPosRel);
 	pPosRel = nepos;
      }
 
@@ -2042,7 +2042,7 @@ PtrBox            adboite;
    while (pDimRel != NULL)
      {
 	nedim = pDimRel->DimRNext;
-	FreeBDim (&pDimRel);
+	FreeDimBlock (&pDimRel);
 	pDimRel = nedim;
      }
 
@@ -2050,7 +2050,7 @@ PtrBox            adboite;
    while (pDimRel != NULL)
      {
 	nedim = pDimRel->DimRNext;
-	FreeBDim (&pDimRel);
+	FreeDimBlock (&pDimRel);
 	pDimRel = nedim;
      }
    return NextBox;
@@ -2188,12 +2188,12 @@ PtrSearchContext          *pSearch;
 
 
 /* ---------------------------------------------------------------------- */
-/* | FreeChaine libere les entre'es d'un dictionnaire.                  | */
+/* | FreeStringInDict libere les entre'es d'un dictionnaire.                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                FreeChaine (PtrDico pDict)
+void                FreeStringInDict (PtrDico pDict)
 #else  /* __STDC__ */
-void                FreeChaine (pDict)
+void                FreeStringInDict (pDict)
 PtrDico             pDict;
 #endif /* __STDC__ */
 {
@@ -2242,13 +2242,13 @@ unsigned int        n;
 
 
 /* ---------------------------------------------------------------------- */
-/* | GetChaine retourne -1 en cas de manque de memoire                  | */
+/* | GetStringInDict retourne -1 en cas de manque de memoire                  | */
 /* |            retourne  0 si OK.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 GetChaine (PtrDico * pDict, boolean readonly)
+int                 GetStringInDict (PtrDico * pDict, boolean readonly)
 #else  /* __STDC__ */
-int                 GetChaine (pDict, readonly)
+int                 GetStringInDict (pDict, readonly)
 PtrDico            *pDict;
 boolean             readonly;
 #endif /* __STDC__ */
@@ -2264,7 +2264,7 @@ boolean             readonly;
  if (pdict->chaine == NULL)
  
      {
-       FreeChaine (pdict);
+       FreeStringInDict (pdict);
        return (-1);
  
      }
@@ -2275,7 +2275,7 @@ boolean             readonly;
  if (pdict->commun == NULL)
  
      {
-       FreeChaine (pdict);
+       FreeStringInDict (pdict);
        return (-1);
  
      }
@@ -2286,7 +2286,7 @@ boolean             readonly;
  if (pdict->pdico == NULL)
  
      {
- FreeChaine (pdict);
+ FreeStringInDict (pdict);
  return (-1);
  
      }
@@ -2297,13 +2297,13 @@ boolean             readonly;
 
 
 /* ---------------------------------------------------------------------- */
-/* | GetDico retourne dans pDico un pointeur vers le dictionaire alloue | */
+/* | GetDictionary retourne dans pDico un pointeur vers le dictionaire alloue | */
 /* | ou NULL si manque de memoire                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                GetDico (PtrDico * pDico)
+void                GetDictionary (PtrDico * pDico)
 #else  /* __STDC__ */
-void                GetDico (pDico)
+void                GetDictionary (pDico)
 PtrDico            *pDico;
 #endif /* __STDC__ */
 {
@@ -2354,12 +2354,12 @@ PtrDico            *pDico;
 
 
 /* ---------------------------------------------------------------------- */
-/* | FreeDico libere le dictionnaire.                                   | */
+/* | FreeDictionary libere le dictionnaire.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                FreeDico (PtrDico pDico)
+void                FreeDictionary (PtrDico pDico)
 #else  /* __STDC__ */
-void                FreeDico (pDico)
+void                FreeDictionary (pDico)
 PtrDico             pDico;
 #endif /* __STDC__ */
 {

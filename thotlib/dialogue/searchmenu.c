@@ -150,12 +150,12 @@ static void         ActiveMenuOuRechercher ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |  RetMenuOuRechercher traite le retour du sous-menu "Ou rechercher" | */
+/* |  CallbackWhereToSearch traite le retour du sous-menu "Ou rechercher" | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuOuRechercher (int ref, int val)
+void                CallbackWhereToSearch (int ref, int val)
 #else  /* __STDC__ */
-void                RetMenuOuRechercher (ref, val)
+void                CallbackWhereToSearch (ref, val)
 int                 val;
 int                 menu;
 
@@ -408,15 +408,15 @@ PtrSearchContext           context;
 
 
 /* ----------------------------------------------------------------------- */
-/* | RetMenuChercheElemVide traite les retours du formulaire Recherche   | */
+/* | CallbackSearchEmptyEl traite les retours du formulaire Recherche   | */
 /* |            elements vides.                                          | */
 /* |            ref: reference de l'element de dialogue a traiter        | */
 /* |            val: valeur de l'element de dialogue                     | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuChercheElemVide (int ref, int val)
+void                CallbackSearchEmptyEl (int ref, int val)
 #else  /* __STDC__ */
-void                RetMenuChercheElemVide (ref, val)
+void                CallbackSearchEmptyEl (ref, val)
 int                 ref;
 int                 val;
 
@@ -548,15 +548,15 @@ View                view;
 
 
 /* ----------------------------------------------------------------------- */
-/* | RetMenuChercheReferVide traite les retours du formulaire Recherche  | */
+/* | CallbackSearchEmptyref traite les retours du formulaire Recherche  | */
 /* |            references vides.                                        | */
 /* |            ref: reference de l'element de dialogue a traiter        | */
 /* |            val: valeur de l'element de dialogue                     | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuChercheReferVide (int ref, int val)
+void                CallbackSearchEmptyref (int ref, int val)
 #else  /* __STDC__ */
-void                RetMenuChercheReferVide (ref, val)
+void                CallbackSearchEmptyref (ref, val)
 int                 ref;
 int                 val;
 
@@ -697,9 +697,9 @@ View                view;
 static int          ValRetourMenuChoixRefer;
 
 #ifdef __STDC__
-void                RetMenuChoixRefer (int val)
+void                CallbackReferenceMenu (int val)
 #else  /* __STDC__ */
-void                RetMenuChoixRefer (val)
+void                CallbackReferenceMenu (val)
 int                 val;
 
 #endif /* __STDC__ */
@@ -710,9 +710,9 @@ int                 val;
 /* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                CreeEtActiveMenuReferences (char *bufMenu, int nbEntrees, int *entreeChoisie)
+void                BuildReferenceMenu (char *bufMenu, int nbEntrees, int *entreeChoisie)
 #else  /* __STDC__ */
-void                CreeEtActiveMenuReferences (bufMenu, nbEntrees, entreeChoisie)
+void                BuildReferenceMenu (bufMenu, nbEntrees, entreeChoisie)
 char               *bufMenu;
 int                 nbEntrees;
 int                *entreeChoisie;
@@ -742,7 +742,7 @@ int                *entreeChoisie;
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumMenuReferenceChoice, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */
-   /* mediateur ait appele' RetMenuChoixRefer */
+   /* mediateur ait appele' CallbackReferenceMenu */
    TtaWaitShowDialogue ();
    *entreeChoisie = ValRetourMenuChoixRefer;
 }
@@ -782,14 +782,14 @@ boolean             DocExtSuiv;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChercherLesReferences lance la commande de recherche des        | */
+/* |    BuildSearchReferences lance la commande de recherche des        | */
 /* |            references qui designent l'element selectionne' du      | */
 /* |            document pDoc.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChercherLesReferences (PtrDocument pDoc)
+void                BuildSearchReferences (PtrDocument pDoc)
 #else  /* __STDC__ */
-void                ChercherLesReferences (pDoc)
+void                BuildSearchReferences (pDoc)
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -879,19 +879,19 @@ View                view;
 
 	/* label "Pas trouve'" pour Recherche des references a` un element */
 	TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, " ");
-	ChercherLesReferences (pDoc);
+	BuildSearchReferences (pDoc);
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    RetMenuChercheRefA      traite les retours de la feuille de     | */
+/* |    CallbackReferenceTo      traite les retours de la feuille de     | */
 /* |            dialogue "Recherche les references a`".                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuChercheRefA (int Ref, int Data)
+void                CallbackReferenceTo (int Ref, int Data)
 #else  /* __STDC__ */
-void                RetMenuChercheRefA (Ref, Data)
+void                CallbackReferenceTo (Ref, Data)
 int                 Ref;
 int                 Data;
 
@@ -1071,15 +1071,15 @@ View                view;
 
 
 /* ----------------------------------------------------------------------- */
-/* | RetMenuRemplacerTexte traite les retours du formulaire Recherche-   | */
+/* | CallbackTextReplace traite les retours du formulaire Recherche-   | */
 /* |            Remplacement de texte.                                   | */
 /* |            ref: reference de l'element de dialogue a traiter        | */
 /* |            val: valeur de l'element de dialogue                     | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuRemplacerTexte (int ref, int val, char *txt)
+void                CallbackTextReplace (int ref, int val, char *txt)
 #else  /* __STDC__ */
-void                RetMenuRemplacerTexte (ref, val, txt)
+void                CallbackTextReplace (ref, val, txt)
 int                 ref;
 int                 val;
 char               *txt;
@@ -1397,12 +1397,12 @@ char               *txt;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    MenuAllerPage traite la commande Aller page numero              | */
+/* |    BuildGoToPageMenu traite la commande Aller page numero              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MenuAllerPage (PtrDocument pDoc, int VueDoc, int VueSch, boolean Assoc)
+void                BuildGoToPageMenu (PtrDocument pDoc, int VueDoc, int VueSch, boolean Assoc)
 #else  /* __STDC__ */
-void                MenuAllerPage (pDoc, VueDoc, VueSch, Assoc)
+void                BuildGoToPageMenu (pDoc, VueDoc, VueSch, Assoc)
 PtrDocument         pDoc;
 int                 VueDoc;
 int                 VueSch;
@@ -1413,7 +1413,7 @@ boolean             Assoc;
    char                buffTitre[200];
 
    if (ThotLocalActions[T_searchpage] == NULL)
-      TteConnectAction (T_searchpage, (Proc) RetMenuAllerPage);
+      TteConnectAction (T_searchpage, (Proc) CallbackGoToPageMenu);
 
    /* garde le pointeur sur le document concerne' par la commande */
    DocPageCherchee = pDoc;
@@ -1511,7 +1511,7 @@ int                 func;
 			 PP = SearchPageBreak (premv, VueSch, -1, TRUE);
 			 break;
 		      case 5 /* Page Numero N */ :
-			 MenuAllerPage (docsel, VueDoc, VueSch, assoc);
+			 BuildGoToPageMenu (docsel, VueDoc, VueSch, assoc);
 			 break;
 
 		   }
@@ -1529,13 +1529,13 @@ int                 func;
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* |    RetMenuAllerPage traite les retours du formulaire de saisie du  | */
+/* |    CallbackGoToPageMenu traite les retours du formulaire de saisie du  | */
 /* |            numero de la page ou aller.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuAllerPage (int ref, int val)
+void                CallbackGoToPageMenu (int ref, int val)
 #else  /* __STDC__ */
-void                RetMenuAllerPage (ref, val)
+void                CallbackGoToPageMenu (ref, val)
 int                 ref;
 int                 val;
 
@@ -1579,8 +1579,8 @@ void                SearchLoadResources ()
    if (ThotLocalActions[T_searchtext] == NULL)
      {
 	/* Connecte les actions liees au traitement du search */
-	TteConnectAction (T_searchtext, (Proc) RetMenuRemplacerTexte);
-	TteConnectAction (T_locatesearch, (Proc) RetMenuOuRechercher);
+	TteConnectAction (T_searchtext, (Proc) CallbackTextReplace);
+	TteConnectAction (T_locatesearch, (Proc) CallbackWhereToSearch);
 	ReferCour = NULL;
 	DocDeReferCour = NULL;
 	ElemRefCour = NULL;

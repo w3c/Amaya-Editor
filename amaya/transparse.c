@@ -1989,7 +1989,7 @@ char* name;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas et le suffixe */
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   BuildFileName (name,"trans", DirBuffer, filename, &i);
+   MakeCompleteName (name,"trans", DirBuffer, filename, &i);
  
    /* verifie la date du fichier */
    StatBuffer = (struct stat*) malloc (sizeof (struct stat));

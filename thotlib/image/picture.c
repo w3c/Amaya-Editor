@@ -49,7 +49,7 @@ THOT_VInfo             THOT_vInfo;
 XVisualInfo            *vptr;
 Visual                 *theVisual;
 #endif
-char *SuffixImage[] ={".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
+char *FileExtension[] ={".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
 
 
 /* ---------------------------------------------------------------------- */
@@ -384,7 +384,7 @@ int                *typeImage;
    if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
       *typeImage = UNKNOWN_FORMAT;
 
-   if (FileExist (fileName))
+   if (ThotFile_exist (fileName))
      {
 	if (*typeImage == UNKNOWN_FORMAT)
 	  {
@@ -697,9 +697,9 @@ int               hlogo;
 /* | DrawPicture draws the picture in the frame window.                   | */
 /* ------------------------------------------------------------------------ */
 #ifdef __STDC__
-void                DrawImage (PtrBox box, PictInfo * imageDesc, int frame)
+void                DrawPicture (PtrBox box, PictInfo * imageDesc, int frame)
 #else  /* __STDC__ */
-void                DrawImage (box, imageDesc, frame)
+void                DrawPicture (box, imageDesc, frame)
 PtrBox            box;
 PictInfo    *imageDesc;
 int                 frame;
@@ -724,7 +724,7 @@ int                 frame;
   drawable = TtaGetThotWindow (frame);
   GetXYOrg (frame, &XOrg, &YOrg);
   typeImage = imageDesc->PicType;
-  GetImageFileName (imageDesc->PicFileName, fileName);
+  GetPictureFileName (imageDesc->PicFileName, fileName);
 
   pres = imageDesc->PicPresent;
   xif = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
@@ -747,7 +747,7 @@ int                 frame;
 	{
 	  if (!IsValid (box, imageDesc))
 	    {
-	      ReadImage (frame, box, imageDesc);
+	      LoadPicture (frame, box, imageDesc);
 	      myDrawable = imageDesc->PicPixmap;
 	    }
 	  else
@@ -786,9 +786,9 @@ int                 frame;
 /* |  Requests the picture handlers to get the corresponding pixmaps    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ReadImage (int frame, PtrBox box, PictInfo * imageDesc)
+void                LoadPicture (int frame, PtrBox box, PictInfo * imageDesc)
 #else  /* __STDC__ */
-void                ReadImage (frame, box, imageDesc)
+void                LoadPicture (frame, box, imageDesc)
 int                 frame;
 PtrBox            box;
 PictInfo    *imageDesc;
@@ -811,7 +811,7 @@ PictInfo    *imageDesc;
       return;
    if (imageDesc->PicFileName[0] == '\0')
       return;
-   GetImageFileName (imageDesc->PicFileName, fileName);
+   GetPictureFileName (imageDesc->PicFileName, fileName);
    /* typeImage = imageDesc->PicType;*/
    typeImage = UNKNOWN_FORMAT;
 
@@ -913,12 +913,12 @@ PictInfo    *imageDesc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |   FreeImage frees the Picture Info structure from pixmaps          | */
+/* |   FreePicture frees the Picture Info structure from pixmaps          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                FreeImage (PictInfo * imageDesc)
+void                FreePicture (PictInfo * imageDesc)
 #else  /* __STDC__ */
-void                FreeImage (imageDesc)
+void                FreePicture (imageDesc)
 PictInfo    *imageDesc;
 #endif /* __STDC__ */
 {
@@ -957,13 +957,13 @@ int                 menuIndex;
 }			
 
 /* ---------------------------------------------------------------------- */
-/* |    GetImTypeIndex returns the menu type index of the picture.      | */
+/* |    GetPictTypeIndex returns the menu type index of the picture.      | */
 /* |		If the type is unkown we return 0.                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 GetImTypeIndex (int PicType)
+int                 GetPictTypeIndex (int PicType)
 #else  /* __STDC__ */
-int                 GetImTypeIndex (PicType)
+int                 GetPictTypeIndex (PicType)
 int                 PicType;
 #endif /* __STDC__ */
 {
@@ -983,13 +983,13 @@ int                 PicType;
    return 0;
 }			
 /* ---------------------------------------------------------------------- */
-/* |    GetImPresIndex returns the index of of the presentation.        | */
+/* |    GetPictPresIndex returns the index of of the presentation.        | */
 /* |     	If the presentation is unknown we return RealSize.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 GetImPresIndex (PictureScaling PicPresent)
+int                 GetPictPresIndex (PictureScaling PicPresent)
 #else  /* __STDC__ */
-int                 GetImPresIndex (PicPresent)
+int                 GetPictPresIndex (PicPresent)
 PictureScaling      PicPresent;
 #endif /* __STDC__ */
 {
@@ -1086,7 +1086,7 @@ char               *imageFile;
   ThotWindow     frame;
   int        vue;
 
-  GetImageFileName(imageFile, fileName);
+  GetPictureFileName(imageFile, fileName);
   typeImage = GetPictureFormat(fileName);
   myDrawable = (*(PictureHandlerTable[typeImage].
 		  Produce_Picture))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,

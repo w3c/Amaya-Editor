@@ -103,15 +103,15 @@ FILE               *outfile;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    WrPav ecrit les informations sur la boite de pAb dans le       | */
+/* |    ListAbsBoxes ecrit les informations sur la boite de pAb dans le       | */
 /* |            fichier outfile.                                        | */
 /**CP cette procedure n'est plus static car appelee ailleurs 	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WrPav (PtrAbstractBox pAb, int Indent, FILE * outfile)
+void                ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE * outfile)
 
 #else  /* __STDC__ */
-void                WrPav (pAb, Indent, outfile)
+void                ListAbsBoxes (pAb, Indent, outfile)
 PtrAbstractBox             pAb;
 int                 Indent;
 FILE               *outfile;
@@ -471,7 +471,7 @@ FILE               *outfile;
 		  pAbEnclosed = pAb->AbFirstEnclosed;
 		  while (pAbEnclosed != NULL)
 		    {
-		       WrPav (pAbEnclosed, Indent + 2, outfile);
+		       ListAbsBoxes (pAbEnclosed, Indent + 2, outfile);
 		       pAbEnclosed = pAbEnclosed->AbNext;
 		    }
 	       }
@@ -480,13 +480,13 @@ FILE               *outfile;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ListeBoites cree un fichier fname qui contient la liste des     | */
+/* |    ListBoxes cree un fichier fname qui contient la liste des     | */
 /* |            relations entre boites dans la fenetre frame.           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ListeBoites (Name fname, int frame)
+void                ListBoxes (Name fname, int frame)
 #else  /* __STDC__ */
-void                ListeBoites (fname, frame)
+void                ListBoxes (fname, frame)
 Name                 fname;
 int                 frame;
 #endif /* __STDC__ */
@@ -511,9 +511,9 @@ int                 frame;
 	  {
 	     outfile = fopen (fname, "w");
 	     /* On numerote les paves */
-	     NumPav (pFrame->FrAbstractBox);
+	     NumberAbsBox (pFrame->FrAbstractBox);
 	     /* On ecrit les informations sur les boites crees */
-	     WrPav (pFrame->FrAbstractBox, 0, outfile);
+	     ListAbsBoxes (pFrame->FrAbstractBox, 0, outfile);
 	     /* On ferme le fichier */
 	     fclose (outfile);
 	  }

@@ -333,7 +333,7 @@ void                FindReferredEl ()
 	   pRef = pRefTable[0];
 	else
 	  {
-	     CreeEtActiveMenuReferences (menuBuf, nMenuItems, &chosenItem);
+	     BuildReferenceMenu (menuBuf, nMenuItems, &chosenItem);
 	     pRef = pRefTable[chosenItem];
 	  }
 	if (pRef != NULL)

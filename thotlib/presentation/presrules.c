@@ -1228,7 +1228,7 @@ void GetBufConst(pAb)
   PtrTextBuffer  pBT;
   
   
-  GetBufTexte(&pBT);
+  GetTextBuffer(&pBT);
   pAb->AbText = pBT;
   pAb->AbLanguage = TtaGetDefaultLanguage();
   pAb->AbVolume = 0;
@@ -2937,7 +2937,7 @@ static void CopyLeaves(pEC, pAb, pBuffPrec)
 	  /* copie les buffers de l'element */ 
 	  {
 	    pAbb1 = *pAb;
-	    GetBufTexte(&pBuffP);  
+	    GetTextBuffer(&pBuffP);  
 	    /* acquiert un buffer pour la copie */
 	    /* chaine le buffer de la copie */
 	    if (*pBuffPrec == NULL)
@@ -3303,7 +3303,7 @@ void ApplyCopy(pDoc, pPRule, pAb, withDescCopy)
 	      if (withDescCopy)
 	{
 	/* ajoute a l'element copie' un descripteur d'element copie' */
-	GetDescCopie(&pDC);
+	GetDescCopy(&pDC);
 	pDC->CdCopiedAb = pAb;
 	pDC->CdCopiedElem = pE;
 	pDC->CdCopyRule = pPRule;
@@ -3837,7 +3837,7 @@ PtrPRule SearchPresRule(pEl, ruleType, isNew, pDoc, view)
 	{
 	  /* cet element n'a aucune regle de presentation specifique, on en */
 	  /* cree une et on la chaine a l'element */
-	  GetReglePres(&pResultRule);
+	  GetPresentRule(&pResultRule);
 	  *isNew = TRUE;
 	  pEl->ElFirstPRule = pResultRule;
 	  pResultRule->PrType = ruleType;
@@ -3861,7 +3861,7 @@ PtrPRule SearchPresRule(pEl, ruleType, isNew, pDoc, view)
 		{
 		  /* On a examine' toutes les regles specifiques de */
 		  /* l'element, ajoute une nouvelle regle en fin de chaine */
-		  GetReglePres(&pResultRule);
+		  GetPresentRule(&pResultRule);
 		  *isNew = TRUE;
 		  pPRule->PrNextPRule = pResultRule;
 		  pResultRule->PrType = ruleType;

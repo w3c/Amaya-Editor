@@ -270,7 +270,7 @@ extern int              PtEnPixel (int value, int horiz);             /* thot in
 extern int              PixelEnPt (int value, int horiz);             /* thot internal function */
 extern void             CreateNewElement (int, SSchema, Document);
 extern void             SelectInitial (Document);
-extern int              FileExist (char*);
+extern int              ThotFile_exist (char*);
 extern boolean          OpenMainView (Document, char*, char*);
 extern void             SetTarget (Document, View);
 extern void             SetTableWidths (Document);
@@ -296,15 +296,15 @@ extern void             InsertChar (unsigned char, int);
 extern void             ClearAllViewSelection (void);
 extern int              RemoveFile (char *);
 extern void             QuitEditor (void);
-extern void             EndInsert (void);
+extern void             CloseInsertion (void);
 extern char*            ThotRealloc (char *, unsigned int);
 extern int              TtaGiveRGB (char *colname, unsigned short *, unsigned short *, unsigned short *);
-extern int              GetFenetre (ThotWindow);
-extern void             DimFenetre (int, int *, int *);
+extern int              GetWindowFrame (ThotWindow);
+extern void             GetSizesFrame (int, int *, int *);
 extern void             DefClip (int, int, int, int, int);
-extern void             XChangeTaille (int *, int, int *);
+extern void             FrameResized (int *, int, int *);
 extern char*            TtaStrdup (char *str);
-extern void             BuildFileName (char*, char*, PathBuffer, PathBuffer, int*);
+extern void             MakeCompleteName (char*, char*, PathBuffer, PathBuffer, int*);
 extern void             ColorRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue);
 extern void             TtaSetAttributeReference (Attribute attribute, Element element, Document document, Element target, Document targetDocument) ;
 
@@ -313,7 +313,7 @@ extern int              PtEnPixel ();             /* thot internal function */
 extern int              PixelEnPt ();             /* thot internal function */
 extern void             CreateNewElement ();
 extern void             SelectInitial ();
-extern int              FileExist ();
+extern int              ThotFile_exist ();
 extern boolean          OpenMainView ();
 extern void             SetTarget ();
 extern void             SetTableWidths ();
@@ -339,15 +339,15 @@ extern void             InsertChar ();
 extern void             ClearAllViewSelection ();
 extern int              RemoveFile ();
 extern void             QuitEditor ();
-extern void             EndInsert ();
+extern void             CloseInsertion ();
 extern char*            ThotRealloc ();
 extern int              TtaGiveRGB ();
-extern int              GetFenetre ();
-extern void             DimFenetre ();
+extern int              GetWindowFrame ();
+extern void             GetSizesFrame ();
 extern void             DefClip ();
-extern void             XChangeTaille ();
+extern void             FrameResized ();
 extern char*            TtaStrdup ();
-extern void             BuildFileName ();
+extern void             MakeCompleteName ();
 extern void             ColorRGB ();
 extern void             TtaSetAttributeReference () ;
 #endif /* __STDC__ */

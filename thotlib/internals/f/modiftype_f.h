@@ -6,14 +6,14 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void MajItemSplit ( PtrDocument pDoc );
+extern void UpdateSplitItem ( PtrDocument pDoc );
 extern void TtcSplit ( Document document,
                        View view );
 extern void StructEditingLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void MajItemSplit (/* PtrDocument pDoc */);
+extern void UpdateSplitItem (/* PtrDocument pDoc */);
 extern void TtcSplit (/* Document document,
                          View view */);
 extern void StructEditingLoadResources (/* void */);

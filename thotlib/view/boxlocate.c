@@ -99,7 +99,7 @@ int                 button;
 	else
 	   pAb = NULL;
 
-	EndInsert ();
+	CloseInsertion ();
 	if (pAb != NULL)
 	   /* Initialisation de la selection */
 	   if (button == 3)
@@ -1880,7 +1880,7 @@ int                 frame;
    pFrame = &ViewFrameTable[frame - 1];
 
    /* Il faut verifier que la boite reste visible dans la fenetre */
-   DimFenetre (frame, &width, &height);
+   GetSizesFrame (frame, &width, &height);
    if (pBox->BxXOrg < pFrame->FrXOrg)
       x = 0;
    else if (pBox->BxXOrg > pFrame->FrXOrg + width)

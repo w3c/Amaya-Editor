@@ -370,7 +370,7 @@ LoadedImageDesc   **desc;
    LoadedImageDesc    *pImage, *previous;
    char                localname[MAX_LENGTH];
 
-   if (!FileExist (fullname))
+   if (!ThotFile_exist (fullname))
       return (FALSE);
 
    *desc = NULL;

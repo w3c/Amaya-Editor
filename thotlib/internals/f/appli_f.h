@@ -6,22 +6,22 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void VueDeFenetre ( int frame,
+extern void FrameToView ( int frame,
                            int *doc,
                            int *view );
-extern void RetourKill ( int *w,
+extern void FrameKilled ( int *w,
                          int frame,
                          int *info );
-extern void TraiteExpose ( ThotWindow w,
+extern void FrameToRedisplay ( ThotWindow w,
                            int frame,
                            XExposeEvent * event );
-extern void XChangeTaille ( int *w,
+extern void FrameResized ( int *w,
                             int frame,
                             int *info );
-extern void XChangeHScroll ( int *w,
+extern void FrameHScrolled ( int *w,
                              int frame,
                              int *param );
-extern void XChangeVScroll ( int *w,
+extern void FrameVScrolled ( int *w,
                              int frame,
                              int *param );
 extern void TtcPageUp ( Document document,
@@ -32,17 +32,17 @@ extern void TtcPageTop ( Document document,
                          View view );
 extern void TtcPageEnd ( Document document,
                          View view );
-extern void InitAutreContexts ( void );
+extern void InitializeOtherThings ( void );
 extern void TtaRaiseView ( Document document,
                            View view );
 extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
-extern void MsgSelect ( char *text );
+extern void DisplaySelMessage ( char *text );
 extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
                            char *name );
-extern void RetourFntr ( int frame,
+extern void FrameCallback ( int frame,
                          XEvent * ev );
 extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
@@ -60,16 +60,16 @@ extern void TtaSetCursorWatch ( Document document,
                                 View view );
 extern void TtaResetCursor ( Document document,
                              View view );
-extern void DesignationPave ( int *frame,
+extern void GiveClickedAbsBox ( int *frame,
                               int *pave );
-extern void ChangeTitre ( int frame,
+extern void ChangeFrameTitle ( int frame,
                           char *text );
-extern void ChangeSelFntr ( int frame );
-extern int GetFenetre ( ThotWindow w );
-extern void DimFenetre ( int frame,
+extern void ChangeSelFrame ( int frame );
+extern int GetWindowFrame ( ThotWindow w );
+extern void GetSizesFrame ( int frame,
                          int *width,
                          int *height );
-extern void SetClip ( int frame,
+extern void DefineClipping ( int frame,
                       int orgx,
                       int orgy,
                       int *xd,
@@ -77,27 +77,27 @@ extern void SetClip ( int frame,
                       int *xf,
                       int *yf,
                       int raz );
-extern void ResetClip ( int frame );
-extern void MajScrolls ( int frame );
+extern void RemoveClipping ( int frame );
+extern void UpdateScrollbars ( int frame );
 
 #else /* __STDC__ */
 
-extern void VueDeFenetre (/* int frame,
+extern void FrameToView (/* int frame,
                              int *doc,
                              int *view */);
-extern void RetourKill (/* int *w,
+extern void FrameKilled (/* int *w,
                            int frame,
                            int *info */);
-extern void TraiteExpose (/* ThotWindow w,
+extern void FrameToRedisplay (/* ThotWindow w,
                              int frame,
                              XExposeEvent * event */);
-extern void XChangeTaille (/* int *w,
+extern void FrameResized (/* int *w,
                               int frame,
                               int *info */);
-extern void XChangeHScroll (/* int *w,
+extern void FrameHScrolled (/* int *w,
                                int frame,
                                int *param */);
-extern void XChangeVScroll (/* int *w,
+extern void FrameVScrolled (/* int *w,
                                int frame,
                                int *param */);
 extern void TtcPageUp (/* Document document,
@@ -108,17 +108,17 @@ extern void TtcPageTop (/* Document document,
                            View view */);
 extern void TtcPageEnd (/* Document document,
                            View view */);
-extern void InitAutreContexts (/* void */);
+extern void InitializeOtherThings (/* void */);
 extern void TtaRaiseView (/* Document document,
                              View view */);
 extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
-extern void MsgSelect (/* char *text */);
+extern void DisplaySelMessage (/* char *text */);
 extern void TtaSetStatus (/* Document document,
                              View view,
                              char *text,
                              char *name */);
-extern void RetourFntr (/* int frame,
+extern void FrameCallback (/* int frame,
                            XEvent * ev */);
 extern void ThotGrab (/* ThotWindow win,
                          ThotCursor cursor,
@@ -136,16 +136,16 @@ extern void TtaSetCursorWatch (/* Document document,
                                   View view */);
 extern void TtaResetCursor (/* Document document,
                                View view */);
-extern void DesignationPave (/* int *frame,
+extern void GiveClickedAbsBox (/* int *frame,
                                 int *pave */);
-extern void ChangeTitre (/* int frame,
+extern void ChangeFrameTitle (/* int frame,
                             char *text */);
-extern void ChangeSelFntr (/* int frame */);
-extern int GetFenetre (/* ThotWindow w */);
-extern void DimFenetre (/* int frame,
+extern void ChangeSelFrame (/* int frame */);
+extern int GetWindowFrame (/* ThotWindow w */);
+extern void GetSizesFrame (/* int frame,
                            int *width,
                            int *height */);
-extern void SetClip (/* int frame,
+extern void DefineClipping (/* int frame,
                         int orgx,
                         int orgy,
                         int *xd,
@@ -153,8 +153,8 @@ extern void SetClip (/* int frame,
                         int *xf,
                         int *yf,
                         int raz */);
-extern void ResetClip (/* int frame */);
-extern void MajScrolls (/* int frame */);
+extern void RemoveClipping (/* int frame */);
+extern void UpdateScrollbars (/* int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

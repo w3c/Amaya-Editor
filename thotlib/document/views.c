@@ -582,7 +582,7 @@ char               *newName;
 	{
 	   pView = &pDoc->DocView[view];
 	   strncpy (&buffer[len], pView->DvSSchema->SsPSchema->PsView[pView->DvPSchemaView - 1], MAX_NAME_LENGTH);
-	   ChangeTitre (pDoc->DocViewFrame[view], buffer);
+	   ChangeFrameTitle (pDoc->DocViewFrame[view], buffer);
 	}
    /* traite les vues des elements associes */
    for (view = 0; view < MAX_ASSOC_DOC; view++)
@@ -593,7 +593,7 @@ char               *newName;
 	      strncpy (&buffer[len], pDoc->DocAssocRoot[view]->ElStructSchema->SsRule[pDoc->DocAssocRoot[view]->ElTypeNumber - 1].SrName,
 		       MAX_NAME_LENGTH);
 	      /* change le titre de la fenetre */
-	      ChangeTitre (pDoc->DocAssocFrame[view], buffer);
+	      ChangeFrameTitle (pDoc->DocAssocFrame[view], buffer);
 	   }
 }
 
@@ -911,15 +911,15 @@ PtrElement          viewRoot;
 	     else
 		/* on cree l'image abstraite autour du premier */
 		/* element selectionne' */
-		VerifAbsBoxe (firstSel, 1, pDoc, FALSE, FALSE);
+		CheckAbsBox (firstSel, 1, pDoc, FALSE, FALSE);
 	  }
 #ifdef __COLPAGE__
 	/* sauvegarde de l'image abstraite pour tests */
 	list = fopen ("/perles/roisin/debug/totoassoc", "w");
 	if (list != NULL)
 	  {
-	     NumPav (pDoc->DocAssocRoot[assoc - 1]->ElAbstractBox[0]);
-	     AffPaves (pDoc->DocAssocRoot[assoc - 1]->ElAbstractBox[0], 2, list);
+	     NumberAbsBox (pDoc->DocAssocRoot[assoc - 1]->ElAbstractBox[0]);
+	     ListAbsBox (pDoc->DocAssocRoot[assoc - 1]->ElAbstractBox[0], 2, list);
 	     fclose (list);
 	  }
 #endif /* __COLPAGE__ */
@@ -969,7 +969,7 @@ PtrElement          viewRoot;
 		/* de l'arbre principal du document concerne', */
 		/* on cree l'image abstraite de la vue avec */
 		/* l'element selectionne' au milieu */
-		VerifAbsBoxe (firstSel, freeView, pDoc, FALSE, FALSE);
+		CheckAbsBox (firstSel, freeView, pDoc, FALSE, FALSE);
 	     else
 	       {
 		  pAb = pDoc->DocRootElement->ElAbstractBox[chosenView - 1];
@@ -1014,9 +1014,9 @@ PtrElement          viewRoot;
 
 		       /* cree la nouvelle vue a partir de cet element */
 		       if (pAb == NULL)
-			  VerifAbsBoxe (pDoc->DocRootElement, freeView, pDoc, TRUE, FALSE);
+			  CheckAbsBox (pDoc->DocRootElement, freeView, pDoc, TRUE, FALSE);
 		       else
-			  VerifAbsBoxe (pAb->AbElement, freeView, pDoc, TRUE, FALSE);
+			  CheckAbsBox (pAb->AbElement, freeView, pDoc, TRUE, FALSE);
 
 		    }
 	       }

@@ -6,15 +6,15 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void RetMenuFermer ( int ref,
+extern void CallbackCloseDocMenu ( int ref,
                             int typedata,
                             char *data );
-extern void ConfirmeFerme ( PtrDocument pDoc,
+extern void AskToConfirm ( PtrDocument pDoc,
                             Document document,
                             View view,
                             boolean * confirme,
                             boolean * sauver );
-extern boolean FermeUnDocument ( Document document,
+extern boolean CloseADocument ( Document document,
                                  Document docform,
                                  View viewform );
 extern void TtcCloseDocument ( Document document,
@@ -22,15 +22,15 @@ extern void TtcCloseDocument ( Document document,
 
 #else /* __STDC__ */
 
-extern void RetMenuFermer (/* int ref,
+extern void CallbackCloseDocMenu (/* int ref,
                               int typedata,
                               char *data */);
-extern void ConfirmeFerme (/* PtrDocument pDoc,
+extern void AskToConfirm (/* PtrDocument pDoc,
                               Document document,
                               View view,
                               boolean * confirme,
                               boolean * sauver */);
-extern boolean FermeUnDocument (/* Document document,
+extern boolean CloseADocument (/* Document document,
                                    Document docform,
                                    View viewform */);
 extern void TtcCloseDocument (/* Document document,

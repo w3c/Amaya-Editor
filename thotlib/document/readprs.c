@@ -1048,7 +1048,7 @@ PtrPRule       *nextr;
 	do
 	  {
 	     r = *nextr;	/* acquiert un buffer pour la regle suivante */
-	     GetReglePres (nextr);
+	     GetPresentRule (nextr);
 	     (*nextr)->PrCond = NULL;
 	     /* lit une regle */
 	     pRe1 = r;
@@ -1058,7 +1058,7 @@ PtrPRule       *nextr;
 	     typeCond = rdTypeCondition (file);
 	     while (typeCond != PcNoCondition && !erreur)
 	       {
-		  GetCondReglePres (&pCond);
+		  GetPresentRuleCond (&pCond);
 		  pCond->CoNextCondition = pRe1->PrCond;
 		  pRe1->PrCond = pCond;
 		  pCond->CoCondition = typeCond;
@@ -1258,7 +1258,7 @@ PtrSSchema        SS;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   BuildFileName (fname, "PRS", DirBuffer, texte, &i);
+   MakeCompleteName (fname, "PRS", DirBuffer, texte, &i);
 
    /* teste si le fichier existe */
 
@@ -1276,7 +1276,7 @@ PtrSSchema        SS;
 
 	texte[i - 4] = '\0';
 	GetSchPres (&pSchP);
-	GetReglePres (&nextr);	/* ce sera la prochaine regle lue */
+	GetPresentRule (&nextr);	/* ce sera la prochaine regle lue */
 	nextr->PrCond = NULL;
 	/* met son nom dans le schema de presentation */
 	strncpy (pSchP->PsPresentName, fname, MAX_NAME_LENGTH - 1);
@@ -1316,8 +1316,8 @@ PtrSSchema        SS;
 	   ret = ReadStructureSchema (pSc1->PsStructName, SS);
 	if (!ret || pSchP->PsStructCode != SS->SsCode)
 	  {
-	     FreeSPres (pSchP);
-	     FreeReglePres (nextr);
+	     FreeSchPres (pSchP);
+	     FreePresentRule (nextr);
 	     nextr = NULL;
 	     pSchP = NULL;
 	     /* Schemas incompatibles */
@@ -1646,7 +1646,7 @@ PtrSSchema        SS;
 		     BIOreadShort (file, &pSc1->PsTransmElem[i].TeTargetDoc);
 		     BIOreadName (file, pSc1->PsTransmElem[i].TeTargetAttr);
 		  }
-	     FreeReglePres (nextr);
+	     FreePresentRule (nextr);
 	  }
 
 	/* ferme le fichier */

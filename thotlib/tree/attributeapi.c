@@ -415,7 +415,7 @@ Document            document;
 	   UndisplayHeritAttr ((PtrElement) element, pAttr, document, FALSE);
 #endif
 	if (pAttr->AeAttrText == NULL)
-	   GetBufTexte (&pAttr->AeAttrText);
+	   GetTextBuffer (&pAttr->AeAttrText);
 	else
 	   ClearText (pAttr->AeAttrText);
 	/* Sets the new value */
@@ -427,7 +427,7 @@ Document            document;
 	     pAttrNouv->AeAttrNum = 1;
 	     pAttrNouv->AeDefAttr = FALSE;
 	     pAttrNouv->AeAttrType = pAttr->AeAttrType;
-	     GetBufTexte (&pAttrNouv->AeAttrText);
+	     GetTextBuffer (&pAttrNouv->AeAttrText);
 	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
 	     AttachAttrToRange (pAttrNouv, 0, 0, (PtrElement) element, (PtrElement) element,
 			    LoadedDocument[document - 1]);

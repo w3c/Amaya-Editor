@@ -151,7 +151,7 @@ Document            document;
 	     do
 	       {
 		  if (pBuf == NULL)
-		     GetBufTexte (&pBuf);
+		     GetTextBuffer (&pBuf);
 		  if (length >= MAX_CHAR)
 		     l = MAX_CHAR - 1;
 		  else
@@ -180,7 +180,7 @@ Document            document;
 	       {
 		 pNextBuff = pBuf->BuNext;
 #ifdef NODISPLAY
-		  FreeBufTexte (pBuf);
+		  FreeTextBuffer (pBuf);
 #else
 		  DeleteBuffer (pBuf, ActiveFrame);
 #endif
@@ -196,8 +196,8 @@ Document            document;
 	     if (((PtrElement) element)->ElLeafType == LtPicture)
 	       {
 		  /* Releases the  pixmap */
-		  if (((PtrElement) element)->ElImageDescriptor != NULL)
-		     FreeImage ((PictInfo *) (((PtrElement) element)->ElImageDescriptor));
+		  if (((PtrElement) element)->ElPictInfo != NULL)
+		     FreePicture ((PictInfo *) (((PtrElement) element)->ElPictInfo));
 	       }
 
 #ifndef NODISPLAY
@@ -304,7 +304,7 @@ Document            document;
 	   /* one insert before the first character of the element */
 	  {
 	     /* one add a buffer before the existing buffers */
-	     GetBufTexte (&pBuf);
+	     GetTextBuffer (&pBuf);
 	     pBuf->BuNext = pEl->ElText;
 	     pBuf->BuPrevious = NULL;
 	     if (pBuf->BuNext != NULL)
@@ -604,7 +604,7 @@ Document            document;
 		  if (pBufLast->BuNext != NULL)
 		     pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
 #ifdef NODISPLAY
-		  FreeBufTexte (pBufLast);
+		  FreeTextBuffer (pBufLast);
 #else
 		  DeleteBuffer (pBufLast, ActiveFrame);
 #endif
@@ -656,7 +656,7 @@ Document            document;
 	     if (pBufFirst->BuNext != NULL)
 		pBufFirst->BuNext->BuPrevious = pBufFirst->BuPrevious;
 #ifdef NODISPLAY
-	     FreeBufTexte (pBufFirst);
+	     FreeTextBuffer (pBufFirst);
 #else
 	     DeleteBuffer (pBufFirst, ActiveFrame);
 #endif
@@ -673,7 +673,7 @@ Document            document;
 		if (pBufLast->BuNext != NULL)
 		   pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
 #ifdef NODISPLAY
-		FreeBufTexte (pBufLast);
+		FreeTextBuffer (pBufLast);
 #else
 		DeleteBuffer (pBufLast, ActiveFrame);
 #endif
@@ -936,7 +936,7 @@ Document            document;
 		     /* changing simple graphic --> polyline */
 		    {
 		       ((PtrElement) element)->ElLeafType = LtPlyLine;
-		       GetBufTexte (&((PtrElement) element)->ElPolyLineBuffer);
+		       GetTextBuffer (&((PtrElement) element)->ElPolyLineBuffer);
 		       ((PtrElement) element)->ElNPoints = 1;
 		       ((PtrElement) element)->ElText->BuLength = 1;
 		       ((PtrElement) element)->ElText->BuPoints[0].XCoord = 0;
@@ -949,7 +949,7 @@ Document            document;
 		       if (shape != '\0')
 			  delta++;
 		       ClearText (((PtrElement) element)->ElPolyLineBuffer);
-		       FreeBufTexte (((PtrElement) element)->ElPolyLineBuffer);
+		       FreeTextBuffer (((PtrElement) element)->ElPolyLineBuffer);
 		       ((PtrElement) element)->ElLeafType = LtGraphics;
 		    }
 		  else if (((PtrElement) element)->ElLeafType == LtGraphics)

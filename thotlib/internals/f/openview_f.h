@@ -6,26 +6,26 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void returnopenview ( int ref,
+extern void CallbackOpenView ( int ref,
                              int typedata,
                              char *data );
 extern void TtcOpenView ( Document document,
                           View vue );
 extern void TtcCloseView ( Document document,
                            View view );
-extern void changesynchronize ( Document document,
+extern void SwitchSynchronize ( Document document,
                                 View view );
 
 #else /* __STDC__ */
 
-extern void returnopenview (/* int ref,
+extern void CallbackOpenView (/* int ref,
                                int typedata,
                                char *data */);
 extern void TtcOpenView (/* Document document,
                             View vue */);
 extern void TtcCloseView (/* Document document,
                              View view */);
-extern void changesynchronize (/* Document document,
+extern void SwitchSynchronize (/* Document document,
                                   View view */);
 
 #endif /* __STDC__ */

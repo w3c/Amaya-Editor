@@ -17,10 +17,10 @@
 #include "appdialogue.h"
 
 #ifdef __STDC__
-extern void         EndInsert (void);
+extern void         CloseInsertion (void);
 
 #else
-extern void         EndInsert ();
+extern void         CloseInsertion ();
 
 #endif
 
@@ -453,7 +453,7 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 	len = 1;
      }
 
-   MaTranslation (frame, &string[0], len, keyboard_mask, wParam);
+   ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
 #endif /* NEW_WILLOWS */
 
@@ -479,7 +479,7 @@ XEvent             *event;
    XComposeStatus      ComS;
    KeySym              KS, KS1;
 
-   frame = GetFenetre (event->xany.window);
+   frame = GetWindowFrame (event->xany.window);
    if (frame > MAX_FRAME)
       frame = 0;
 
@@ -514,18 +514,18 @@ XEvent             *event;
    if (i & Mod2Mask)
       PicMask |= THOT_MOD_ALT;
 
-   MaTranslation (frame, &string[0], status, PicMask, KS);
+   ThotInput (frame, &string[0], status, PicMask, KS);
 }
 #endif /* WWW_XWINDOWS */
 
 /* ---------------------------------------------------------------------- */
-/* |    MaTranslation handle the caracter encoding.                     | */
+/* |    ThotInput handle the caracter encoding.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MaTranslation (int frame, unsigned char *string, unsigned int nb,
+void                ThotInput (int frame, unsigned char *string, unsigned int nb,
 				   int PicMask, int key)
 #else  /* __STDC__ */
-void                MaTranslation (frame, string, nb, PicMask, key)
+void                ThotInput (frame, string, nb, PicMask, key)
 int                 frame;
 unsigned char      *string;
 unsigned int        nb;
@@ -713,13 +713,13 @@ int                 key;
    if (Automata_current == NULL)
      {
 	/* Appel d'une action Thot */
-	VueDeFenetre (frame, &document, &view);
+	FrameToView (frame, &document, &view);
 	if (command > 0)
 	  {
 	     /* Termine l'insertion eventuellement en cours */
 	     if (command != CMD_DeletePrevChar)
 		/* Ce n'est pas un delete, il faut terminer l'insertion courante */
-		EndInsert ();
+		CloseInsertion ();
 	     /* Faut-il passer un parametre ? */
 	     if (MenuActionList[command].ActionActive[frame])
 	       {
@@ -738,7 +738,7 @@ int                 key;
 	     if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
 	       {
 		  /* Delete the current selection */
-		  EndInsert ();
+		  CloseInsertion ();
 		  if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
 		     (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 	       }
@@ -790,7 +790,7 @@ int                 key;
 	       }
 	  }
      }
-}				/*MaTranslation */
+}				/*ThotInput */
 
 
 #ifdef WWW_XWINDOWS
@@ -1025,7 +1025,7 @@ char               *appliname;
 		       if (!strcmp (ch, CST_InsertChar))
 			 {
 			    strcat (text, "insert-string(");
-			    strcat (text, TransCani (&adr[1]));
+			    strcat (text, AsciiTranslate (&adr[1]));
 			 }
 		       else if (!strcmp (ch, CST_DeleteSelection))
 			  strcat (text, "delete-selection()");
@@ -1051,10 +1051,10 @@ char               *appliname;
 		       /* C'est l'action insert-string */
 		       /* FnCopy la ligne dans le source de la table de translations */
 		       strcat (text, line);
-		       strcat (text, TransCani (name));
+		       strcat (text, AsciiTranslate (name));
 		       strcat (text, "\n");
 		       /* C'est un encodage de caractere */
-		       adr = TransCani (&name[len]);
+		       adr = AsciiTranslate (&name[len]);
 		       MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
 		    }
 		  else if (i < max)

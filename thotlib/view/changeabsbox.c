@@ -2075,7 +2075,7 @@ PtrAbstractBox            *pAbbReDisp;
 	SearchPresSchema (pEl, &pSchP, &index, &pSchS);
 	if (pElPage->ElAbstractBox[viewNb - 1] == NULL)
 	   /* cette marque de page n'a pas de pave, il faut les creer */
-	   VerifAbsBoxe (pElPage, viewNb, pDoc, TRUE, TRUE);
+	   CheckAbsBox (pElPage, viewNb, pDoc, TRUE, TRUE);
 	if (pElPage->ElAbstractBox[viewNb - 1] != NULL)
 	   /* cherche dans les boites de la marque de page celle qui */
 	   /* doit contenir notre element associe' */
@@ -5510,7 +5510,7 @@ PtrAttribute         pAttrComp;
 						   pEl1->ElFirstPRule = pRS;
 						else
 						   pRP->PrNextPRule = pRS;
-						FreeReglePres (pRSpecif);
+						FreePresentRule (pRSpecif);
 						/* libere la regle */
 					     }
 					}

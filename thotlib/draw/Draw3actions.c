@@ -824,7 +824,7 @@ void ModifAttributsRectangle (event)
       break;
     case Draw3_EL_Image:
 /*
-   MenuImage (Name, &type, &pres, event->element,
+   BuildPictureMenu (Name, &type, &pres, event->element,
    event->document);
  */
       break;

@@ -94,7 +94,7 @@ Document            document;
 	   v = 1;
 	if (v > 0)
 	  {
-	     GetReglePres (&pPres);
+	     GetPresentRule (&pPres);
 	     pPres->PrType = (PRuleType) presentationType;
 	     pPres->PrNextPRule = NULL;
 	     pPres->PrViewNum = v;
@@ -159,7 +159,7 @@ Document            document;
    else
       /* parameters document and view are correct */
      {
-	GetReglePres (&pPres);
+	GetPresentRule (&pPres);
 	pPres->PrType = (PRuleType) presentationType;
 	pPres->PrNextPRule = NULL;
 	pPres->PrViewNum = view;
@@ -244,7 +244,7 @@ Document            document;
 	   TtaError (ERR_invalid_parameter);
 	else
 	  {
-	     GetReglePres (&pPres);
+	     GetPresentRule (&pPres);
 	     pPres->PrType = (PRuleType) presentationType;
 	     pPres->PrNextPRule = NULL;
 	     pPres->PrViewNum = vue;
@@ -287,7 +287,7 @@ PRule               pRule;
      }
    else
      {
-	GetReglePres (&copy);
+	GetPresentRule (&copy);
 	*copy = *((PtrPRule) pRule);
 	copy->PrNextPRule = NULL;
      }
@@ -446,7 +446,7 @@ Document            document;
 	     RedispPresStandard (document, (PtrElement) element,
 				 pPres->PrType, pPres->PrViewNum);
 #endif
-	     FreeReglePres (pPres);
+	     FreePresentRule (pPres);
 	  }
      }
 }
@@ -821,7 +821,7 @@ Document            document;
 		  if (unit == UnPercent)
 		    {
 		       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-			  DimFenetre (frame, &x, &y);
+			  GetSizesFrame (frame, &x, &y);
 		       else
 			 {
 			    x = pAb->AbEnclosing->AbBox->BxWidth;
@@ -903,7 +903,7 @@ TypeUnit            unit;
 		  if (unit == UnPercent)
 		    {
 		       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-			  DimFenetre (frame, &x, &y);
+			  GetSizesFrame (frame, &x, &y);
 		       else
 			 {
 			    x = pAb->AbEnclosing->AbBox->BxWidth;
@@ -992,7 +992,7 @@ int                *height;
 		  if (unit == UnPercent)
 		    {
 		       if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-			  DimFenetre (frame, &x, &y);
+			  GetSizesFrame (frame, &x, &y);
 		       else
 			 {
 			    x = pAb->AbEnclosing->AbBox->BxWidth;
@@ -1076,7 +1076,7 @@ int                *yCoord;
 	     else
 	       {
 		  if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-		     DimFenetre (frame, &x, &y);
+		     GetSizesFrame (frame, &x, &y);
 		  else
 		    {
 		       x = pAb->AbEnclosing->AbBox->BxWidth;

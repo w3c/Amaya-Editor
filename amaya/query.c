@@ -69,9 +69,9 @@ static HTList      *encodings = NULL;
 
 /***
 #ifdef __STDC__
-char *getFileName(char);
+char *ExtractFileName(char);
 #else
-char *getFileName();
+char *ExtractFileName();
 #endif *__STDC__*
 ***/
 
@@ -1308,7 +1308,7 @@ BOOL                error_html;
       return HT_ERROR;
    }
    /* verify if that file name existed */
-   if (FileExist (outputfile)) {
+   if (ThotFile_exist (outputfile)) {
       RemoveFile (outputfile);
    }
 
@@ -1540,7 +1540,7 @@ void               *context_tcbf;
    unsigned long       block_size;
 
    if (urlName == NULL || docid == 0 || fileName == NULL ||
-       !FileExist (fileName))
+       !ThotFile_exist (fileName))
       /* no file to be uploaded */
       return HT_ERROR;
 

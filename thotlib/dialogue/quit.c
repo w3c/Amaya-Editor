@@ -16,11 +16,11 @@ static boolean      InProcedureQuitThot = FALSE;
 #include "viewcommands_f.h"
 
 #ifdef __STDC__
-extern boolean      FermeUnDocument (Document, Document, View);
+extern boolean      CloseADocument (Document, Document, View);
 extern void         QuitEditor (void);
 
 #else
-extern boolean      FermeUnDocument ();
+extern boolean      CloseADocument ();
 extern void         QuitEditor ();
 
 #endif
@@ -58,9 +58,9 @@ View                view;
 	for (doc = 0; doc < MAX_DOCUMENTS && ok; doc++)
 	   if (doc != document)
 	      /* traite d'abord tous les autres documents */
-	      ok = FermeUnDocument (doc, document, view);
+	      ok = CloseADocument (doc, document, view);
 	/* Traite le document */
-	ok = FermeUnDocument (document, document, view);
+	ok = CloseADocument (document, document, view);
 	/* si la commande n'a pas ete annulee, on quitte Thot a regrets */
 	if (ok)
 	  {

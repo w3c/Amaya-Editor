@@ -30,12 +30,12 @@ extern void         FermerDocument ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    RetMenuFermer   traite les retours du formulaire "Fermer"       | */
+/* |    CallbackCloseDocMenu   traite les retours du formulaire "Fermer"       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuFermer (int ref, int typedata, char *data)
+void                CallbackCloseDocMenu (int ref, int typedata, char *data)
 #else  /* __STDC__ */
-void                RetMenuFermer (ref, typedata, data)
+void                CallbackCloseDocMenu (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -61,7 +61,7 @@ char               *data;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ConfirmeFerme demande a` l'utilisateur s'il veut sauver puis    | */
+/* |    AskToConfirm demande a` l'utilisateur s'il veut sauver puis    | */
 /* |            fermer le document dont le contexte est pointe' par     | */
 /* |            pDoc.                                                   | */
 /* |            Retourne un booleen indiquant si la fermeture du        | */
@@ -69,9 +69,9 @@ char               *data;
 /* |            Au retour, Sauver indique si la sauvegarde est demandee.| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConfirmeFerme (PtrDocument pDoc, Document document, View view, boolean * confirmation, boolean * save)
+void                AskToConfirm (PtrDocument pDoc, Document document, View view, boolean * confirmation, boolean * save)
 #else  /* __STDC__ */
-void                ConfirmeFerme (pDoc, document, view, confirmation, save)
+void                AskToConfirm (pDoc, document, view, confirmation, save)
 PtrDocument         pDoc;
 Document            document;
 View                view;
@@ -106,7 +106,7 @@ boolean            *save;
    TtaNewLabel (NumLabelSaveBeforeClosing, NumFormClose, buftext);
    /* active le formulaire "Fermer" */
    TtaShowDialogue (NumFormClose, FALSE);
-   /* attend le retour de ce formulaire (traite' par RetMenuFermer) */
+   /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
    TtaWaitShowDialogue ();
    *save = SaveBeforeClosing;
    *confirmation = !CloseDontSave;
@@ -114,12 +114,12 @@ boolean            *save;
 
 
 /* ---------------------------------------------------------------------- */
-/* | FermeUnDocument ferme un document.                                 | */
+/* | CloseADocument ferme un document.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             FermeUnDocument (Document document, Document docform, View viewform)
+boolean             CloseADocument (Document document, Document docform, View viewform)
 #else  /* __STDC__ */
-boolean             FermeUnDocument (document, docform, viewform)
+boolean             CloseADocument (document, docform, viewform)
 Document            document;
 View                view;
 
@@ -143,10 +143,10 @@ View                view;
 		  if (ThotLocalActions[T_confirmclose] == NULL)
 		    {
 		       /* Connecte le traitement de la TtcCloseDocument */
-		       TteConnectAction (T_confirmclose, (Proc) ConfirmeFerme);
-		       TteConnectAction (T_rconfirmclose, (Proc) RetMenuFermer);
+		       TteConnectAction (T_confirmclose, (Proc) AskToConfirm);
+		       TteConnectAction (T_rconfirmclose, (Proc) CallbackCloseDocMenu);
 		    }
-		  ConfirmeFerme (pDoc, docform, viewform, &ok, &save);
+		  AskToConfirm (pDoc, docform, viewform, &ok, &save);
 		  if (ok)
 		     /* pas d'annulation */
 		    {
@@ -178,5 +178,5 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   FermeUnDocument (document, document, view);
+   CloseADocument (document, document, view);
 }

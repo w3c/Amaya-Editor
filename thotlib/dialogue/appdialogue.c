@@ -80,14 +80,14 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #include "thotmsg_f.h"
 
 #ifdef __STDC__
-extern void         EndInsert (void);
+extern void         CloseInsertion (void);
 extern void         InitDocContexts (void);
 extern void         ThotInitDisplay (char *, int, int);
 extern void         TteLoadApplications (void);
 extern ThotWidget   XmCreateForem (ThotWidget, char *, Arg[], int);
 
 #else
-extern void         EndInsert ();
+extern void         CloseInsertion ();
 extern void         InitDocContexts ();
 extern void         ThotInitDisplay ();
 extern void         TteLoadApplications ();
@@ -1024,8 +1024,8 @@ caddr_t             call_d;
       i++;
    if (i < MAX_BUTTON)
      {
-	EndInsert ();
-	VueDeFenetre (frame, &document, &view);
+	CloseInsertion ();
+	FrameToView (frame, &document, &view);
 	(*FrameTable[frame].Call_Button[i]) (document, view);
      }
 }
@@ -1334,7 +1334,7 @@ View                view;
 	     XtGetValues (row, args, 1);
 	  }
 
-	/*XChangeTaille((int *)w, frame, NULL); */
+	/*FrameResized((int *)w, frame, NULL); */
 	XtManageChild (XtParent (row));
 	XtManageChild (XtParent (XtParent (row)));
      }
@@ -1363,13 +1363,13 @@ XmTextVerifyCallbackStruct *call_d;
    int                 i;
    char               *text;
 
-   EndInsert ();
+   CloseInsertion ();
    i = 0;
    while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != w)
       i++;
    if (i < MAX_TEXTZONE)
      {
-	VueDeFenetre (frame, &document, &view);
+	FrameToView (frame, &document, &view);
 	text = XmTextGetString (w);
 	(*FrameTable[frame].Call_Text[i]) (document, view, text);
      }
@@ -1661,7 +1661,7 @@ View                view;
 		  XtGetValues (row, args, 1);
 		  XtSetArg (args[0], XmNwidth, y + dy);
 		  XtSetValues (row, args, 1);
-		  XChangeTaille ((int *) w, frame, NULL);
+		  FrameResized ((int *) w, frame, NULL);
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
 #endif /* NEW_WILLOWS */
@@ -1879,7 +1879,7 @@ int                 doc;
 	     Main_Wd = XmCreateMainWindow (shell, "Thot_Doc", args, n);
 
 	     XtManageChild (Main_Wd);
-	     XtAddCallback (shell, XmNdestroyCallback, (XtCallbackProc) RetourKill, (XtPointer) frame);
+	     XtAddCallback (shell, XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 #endif /* NEW_WILLOWS */
 
 	     /* Recherche la liste des menus a construire */
@@ -2009,14 +2009,14 @@ int                 doc;
 	     n++;
 	     hscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
 	     XtManageChild (hscrl);
-	     /*XtAddCallback (hscrl, XmNvalueChangedCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);*/
-	     XtAddCallback (hscrl, XmNdragCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
-	     XtAddCallback (hscrl, XmNdecrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
-	     XtAddCallback (hscrl, XmNincrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
-	     XtAddCallback (hscrl, XmNpageDecrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
-	     XtAddCallback (hscrl, XmNpageIncrementCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
-	     XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
-	     XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) XChangeHScroll, (XtPointer) frame);
+	     /*XtAddCallback (hscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);*/
+	     XtAddCallback (hscrl, XmNdragCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNdecrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNincrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNpageDecrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+	     XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 
 /*** La barre de scroll verticale ***/
 	     n = 0;
@@ -2028,14 +2028,14 @@ int                 doc;
 	     n++;
 	     vscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
 	     XtManageChild (vscrl);
-	     /*XtAddCallback (vscrl, XmNvalueChangedCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);*/
-	     XtAddCallback (vscrl, XmNdragCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
-	     XtAddCallback (vscrl, XmNdecrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
-	     XtAddCallback (vscrl, XmNincrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
-	     XtAddCallback (vscrl, XmNpageDecrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
-	     XtAddCallback (vscrl, XmNpageIncrementCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
-	     XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
-	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) XChangeVScroll, (XtPointer) frame);
+	     /*XtAddCallback (vscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);*/
+	     XtAddCallback (vscrl, XmNdragCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNdecrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNincrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNpageDecrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 #endif /* NEW_WILLOWS */
 
 /*** Creation de la zone boutons  ***/
@@ -2290,7 +2290,7 @@ int                 doc;
 	     XtSetValues (shell, args, n);
 	     XtPopup (shell, XtGrabNonexclusive);
 
-	     XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) XChangeTaille, (XtPointer) frame);
+	     XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
 
 	     FrameTable[frame].WdFrame = w;
 	     FrRef[frame] = XtWindowOfObject (w);
@@ -2309,11 +2309,11 @@ int                 doc;
 #endif /* NEW_WILLOWS */
 	  }
 	else
-	   ChangeTitre (frame, name);
+	   ChangeFrameTitle (frame, name);
 
 	FrameTable[frame].FrDoc = doc;
 	FrameTable[frame].FrView = view;
-	InitVisu (frame, 5, 0);	/* Initialise la visibilite et le zoom de la fenetre */
+	InitializeFrameParams (frame, 5, 0);	/* Initialise la visibilite et le zoom de la fenetre */
      }
 
    return (frame);
@@ -2385,7 +2385,7 @@ int                 frame;
 #ifndef NEW_WILLOWS
 	XFlushOutput (0);
 	/* Detache les procedures de callback */
-	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) RetourKill, (XtPointer) frame);
+	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #endif /* NEW_WILLOWS */
@@ -2940,7 +2940,7 @@ char               *data;
    PtrCallbackCTX      ctxCallback;
 
    /* Termine l'insertion courante s'il y en a une */
-   EndInsert ();
+   CloseInsertion ();
 
    if (ref >= MAX_ThotMenu)
      {
@@ -3144,7 +3144,7 @@ char               *data;
 	  }
 	else
 	  {
-	     VueDeFenetre (frame, &document, &view);
+	     FrameToView (frame, &document, &view);
 	     if (document == 0)
 		return;
 	     menuThot = FindMenu (frame, FrameTable[frame].MenuAttr, &ptrmenu) - 1;

@@ -2533,13 +2533,13 @@ static void Equilibrer_Col (pDoc, PavRacine, VueNb, VueSch)
 	list = fopen("/perles/roisin/debug/equil","w");
 	if (list != NULL)
 	{
-	NumPav(pDoc->DocViewRootAb[VueNb-1]);
-	AffPaves(pDoc->DocViewRootAb[0], 2, list);
+	NumberAbsBox(pDoc->DocViewRootAb[VueNb-1]);
+	ListAbsBox(pDoc->DocViewRootAb[0], 2, list);
 	fclose(list);
 	list = fopen("/perles/roisin/debug/btequil","w");
 	if (list != NULL)
 	{
-	WrPav(PavRacine, 0, list);
+	ListAbsBoxes(PavRacine, 0, list);
 	fclose(list);
 	}
 	}
@@ -2838,8 +2838,8 @@ WholePageHeight = 0;
              list = fopen("/perles/roisin/debug/avajoutpage","w");
              if (list != NULL)
                {
-                 NumPav(PavRacine);
-                 AffPaves(PavRacine, 2, list);
+                 NumberAbsBox(PavRacine);
+                 ListAbsBox(PavRacine, 2, list);
                  fclose(list);
               }		
                     AddAbsBoxes(PavRacine, pDoc, FALSE);
@@ -2988,8 +2988,8 @@ WholePageHeight = 0;
           list = fopen("/perles/roisin/debug/posemarque","w");
           if (list != NULL)
             {
-              NumPav(PavRacine);
-              AffPaves(PavRacine, 2, list);
+              NumberAbsBox(PavRacine);
+              ListAbsBox(PavRacine, 2, list);
               fclose(list);
             }		
          PoseMarque(pElRacine, VueNb, pDoc, frame,

@@ -325,10 +325,10 @@ int                 memdico ()
 /*CORR */
 
 #ifdef __STDC__
-void                GetChaine ()
+void                GetStringInDict ()
 
 #else  /* __STDC__ */
-void                GetChaine ()
+void                GetStringInDict ()
 #endif				/* __STDC__ */
 
 {
@@ -394,7 +394,7 @@ char               *argv[];
 			 {
 			    pdict->MAXmots = im;
 			    pdict->MAXcars = ic;
-			    GetChaine ();
+			    GetStringInDict ();
 			    printf ("*** Lecture du dictionnaire %s\n", nomdico);
 			    charger (fichdico, pdict);
 			    pretraitement (pdict);

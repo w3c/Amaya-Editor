@@ -15,12 +15,12 @@ static int          ls_fileNbr;
 static char         EmptyMsg[] = "";
 
 /* ---------------------------------------------------------------------- */
-/* |    getFileName extrait un nom de fichier de ls_stream.             | */
+/* |    ExtractFileName extrait un nom de fichier de ls_stream.             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                getFileName (char *word)
+void                ExtractFileName (char *word)
 #else  /* __STDC__ */
-void                getFileName (word)
+void                ExtractFileName (word)
 char               *word;
 
 #endif /* __STDC__ */

@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void DesactiveEntree ( int ref,
+extern void UnsetEntryMenu ( int ref,
                               int ent );
-extern void TraiteSauverDoc ( void );
-extern void RetMenuSauverDoc ( int ref,
+extern void BuildSaveDocMenu ( void );
+extern void CallbackSaveDocMenu ( int ref,
                                int typedata,
                                char *txt );
 extern void TtcSaveDocumentAs ( Document document,
@@ -19,10 +19,10 @@ extern void TtcSaveDocument ( Document document,
 
 #else /* __STDC__ */
 
-extern void DesactiveEntree (/* int ref,
+extern void UnsetEntryMenu (/* int ref,
                                 int ent */);
-extern void TraiteSauverDoc (/* void */);
-extern void RetMenuSauverDoc (/* int ref,
+extern void BuildSaveDocMenu (/* void */);
+extern void CallbackSaveDocMenu (/* int ref,
                                  int typedata,
                                  char *txt */);
 extern void TtcSaveDocumentAs (/* Document document,

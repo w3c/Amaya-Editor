@@ -6,27 +6,27 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern boolean SeparateurMot ( char car );
-extern void Minuscule ( char *word );
-extern int CutLastWord ( ptrfont font,
+extern boolean IsSeparatorChar ( char car );
+extern void SmallLettering ( char *word );
+extern int HyphenLastWord ( ptrfont font,
                          Language langue,
                          PtrTextBuffer * buffer,
                          int *rank,
                          int *width,
                          boolean * hyphen );
-extern boolean Hyphenable ( PtrBox pBox );
+extern boolean CanHyphen ( PtrBox pBox );
 
 #else /* __STDC__ */
 
-extern boolean SeparateurMot (/* char car */);
-extern void Minuscule (/* char *word */);
-extern int CutLastWord (/* ptrfont font,
+extern boolean IsSeparatorChar (/* char car */);
+extern void SmallLettering (/* char *word */);
+extern int HyphenLastWord (/* ptrfont font,
                            Language langue,
                            PtrTextBuffer * buffer,
                            int *rank,
                            int *width,
                            boolean * hyphen */);
-extern boolean Hyphenable (/* PtrBox pBox */);
+extern boolean CanHyphen (/* PtrBox pBox */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

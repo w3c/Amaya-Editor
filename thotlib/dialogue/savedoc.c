@@ -32,11 +32,11 @@ extern void         FontIdentifier (char, char, int, int, TypeUnit, char[], char
 extern boolean      StoreDocument (PtrDocument, Name, PathBuffer, boolean, boolean);
 extern int          IdentDocument (PtrDocument);
 extern boolean      CallEventType (NotifyEvent *, boolean);
-extern void         DoFileName (Name, char *, PathBuffer, PathBuffer, int *);
+extern void         FindCompleteName (Name, char *, PathBuffer, PathBuffer, int *);
 extern void         ExportDocument (PtrDocument, char *, char *);
 extern boolean      TtaIsSuffixFileIn (char *, char *);
-extern void         ConfigGetNomExportSchema (int, char *);
-extern int          FileExist (char *);
+extern void         ConfigGetExportSchemaName (int, char *);
+extern int          ThotFile_exist (char *);
 extern int          ConfigMakeMenuExport (char *, char *);
 extern void         EntreeMenu (int *, char *, char[]);
 extern int          GetWindowNumber (Document, View);
@@ -47,11 +47,11 @@ extern void         FontIdentifier ();
 extern boolean      StoreDocument ();
 extern int          IdentDocument ();
 extern boolean      CallEventType ();
-extern void         DoFileName ();
+extern void         FindCompleteName ();
 extern void         ExportDocument ();
 extern boolean      TtaIsSuffixFileIn ();
-extern void         ConfigGetNomExportSchema ();
-extern int          FileExist ();
+extern void         ConfigGetExportSchemaName ();
+extern int          ThotFile_exist ();
 extern int          ConfigMakeMenuExport ();
 extern void         EntreeMenu ();
 extern int          GetWindowNumber ();
@@ -60,13 +60,13 @@ extern boolean      WriteDocument ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* | DesactiveEntree visualise comme non active l'entree ent du menu    | */
+/* | UnsetEntryMenu visualise comme non active l'entree ent du menu    | */
 /* | dont la re'fe'rence est passe'e en parame`tre.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesactiveEntree (int ref, int ent)
+void                UnsetEntryMenu (int ref, int ent)
 #else  /* __STDC__ */
-void                DesactiveEntree (ref, ent)
+void                UnsetEntryMenu (ref, ent)
 int                 ref;
 int                 ent;
 
@@ -82,12 +82,12 @@ int                 ent;
 	FontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
-}				/*DesactiveEntree */
+}				/*UnsetEntryMenu */
 
 /* ----------------------------------------------------------------------- */
-/* | TraiteSauverDoc traite la Sauvegarde du Fichier                     | */
+/* | BuildSaveDocMenu traite la Sauvegarde du Fichier                     | */
 /* ----------------------------------------------------------------------- */
-void                TraiteSauverDoc ()
+void                BuildSaveDocMenu ()
 
 {
    PathBuffer          outputFileName;
@@ -117,7 +117,7 @@ void                TraiteSauverDoc ()
 	   /* l'application accepte que Thot exporte le document */
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, EXPORTING), DocumentToSave->DocDName);
-	     DoFileName (SaveFileName, "", SaveDirectoryName, outputFileName, &i);
+	     FindCompleteName (SaveFileName, "", SaveDirectoryName, outputFileName, &i);
 	     ExportDocument (DocumentToSave, outputFileName, TraductionSchemaName);
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN), outputFileName);
 	     /* envoie le message DocExport.Post a l'application */
@@ -130,13 +130,13 @@ void                TraiteSauverDoc ()
 }
 
 /* ----------------------------------------------------------------------- */
-/* | RetMenuSauverDoc traite les retours du menu Sauver Fichier          | */
+/* | CallbackSaveDocMenu traite les retours du menu Sauver Fichier          | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuSauverDoc (int ref, int typedata, char *txt)
+void                CallbackSaveDocMenu (int ref, int typedata, char *txt)
 
 #else  /* __STDC__ */
-void                RetMenuSauverDoc (ref, typedata, txt)
+void                CallbackSaveDocMenu (ref, typedata, txt)
 int                 ref;
 int                 typedata;
 char               *txt;
@@ -231,9 +231,9 @@ char               *txt;
 		 }
 	       else
 		 {
-		    ConfigGetNomExportSchema (val, TraductionSchemaName);
-		    DesactiveEntree (NumMenuCopyOrRename, 0);
-		    DesactiveEntree (NumMenuCopyOrRename, 1);
+		    ConfigGetExportSchemaName (val, TraductionSchemaName);
+		    UnsetEntryMenu (NumMenuCopyOrRename, 0);
+		    UnsetEntryMenu (NumMenuCopyOrRename, 1);
 		 }
 	       /* reinitialise la zone du nom de document */
 	       TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
@@ -285,7 +285,7 @@ char               *txt;
 			       strcat (ptTranslatedName, SaveFileName);
 			       if (TraductionSchemaName[0] == '\0')
 				  strcat (ptTranslatedName, ".PIV");
-			       if (FileExist (ptTranslatedName))
+			       if (ThotFile_exist (ptTranslatedName))
 				 {
 				    /* demande confirmation */
 				    sprintf (BufDir, TtaGetMessage (LIB, FILE_EXIST), ptTranslatedName);
@@ -431,9 +431,9 @@ View                view;
 	  {
 	     if (ThotLocalActions[T_savedoc] == NULL)
 	       {
-		  TteConnectAction (T_savedoc, (Proc) TraiteSauverDoc);
-		  TteConnectAction (T_confirmcreate, (Proc) retconfirm);
-		  TteConnectAction (T_rsavedoc, (Proc) RetMenuSauverDoc);
+		  TteConnectAction (T_savedoc, (Proc) BuildSaveDocMenu);
+		  TteConnectAction (T_confirmcreate, (Proc) CallbackConfirmMenu);
+		  TteConnectAction (T_rsavedoc, (Proc) CallbackSaveDocMenu);
 		  TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
 	       }
 	     frame = GetWindowNumber (document, view);

@@ -6,14 +6,14 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void BuildFileName ( Name fname,
+extern void MakeCompleteName ( Name fname,
                             char *fext,
                             PathBuffer directory_list,
                             PathBuffer nomabs,
                             int *lg );
-extern void GetImageFileName ( char *name,
+extern void GetPictureFileName ( char *name,
                                char *fn );
-extern void DoFileName ( Name fname,
+extern void FindCompleteName ( Name fname,
                          char *fext,
                          PathBuffer directory,
                          PathBuffer nomabs,
@@ -21,14 +21,14 @@ extern void DoFileName ( Name fname,
 
 #else /* __STDC__ */
 
-extern void BuildFileName (/* Name fname,
+extern void MakeCompleteName (/* Name fname,
                               char *fext,
                               PathBuffer directory_list,
                               PathBuffer nomabs,
                               int *lg */);
-extern void GetImageFileName (/* char *name,
+extern void GetPictureFileName (/* char *name,
                                  char *fn */);
-extern void DoFileName (/* Name fname,
+extern void FindCompleteName (/* Name fname,
                            char *fext,
                            PathBuffer directory,
                            PathBuffer nomabs,

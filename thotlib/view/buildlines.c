@@ -638,7 +638,7 @@ PtrTextBuffer     *pNewBuff;
 	   still = FALSE;
      }
 
-   if (length < pBox->BxWidth && Hyphenable (pBox) && wordWidth > 1 && !TextInserting)
+   if (length < pBox->BxWidth && CanHyphen (pBox) && wordWidth > 1 && !TextInserting)
      {
 	/* Il faut verifier les coupures en fin de lignes precedentes */
 	still = TRUE;
@@ -674,7 +674,7 @@ PtrTextBuffer     *pNewBuff;
 		  width = length;
 		  pBuffer = pBox->BxBuffer;
 		  charIndex = pBox->BxFirstChar;
-		  wordWidth = CutLastWord (font, language, &pBuffer, &charIndex, &width, &still);
+		  wordWidth = HyphenLastWord (font, language, &pBuffer, &charIndex, &width, &still);
 		  /* Si la coupure a reussi */
 		  if (wordWidth > 0)
 		    {
@@ -689,7 +689,7 @@ PtrTextBuffer     *pNewBuff;
 	       {
 		  /* essaie de couper le mot qui suit le dernier blanc */
 		  width = length - *boxWidth - dummySpaces * spaceAdjust;
-		  wordWidth = CutLastWord (font, language, pNewBuff, newIndex, &width, &still);
+		  wordWidth = HyphenLastWord (font, language, pNewBuff, newIndex, &width, &still);
 	       }
 
 	     if (wordWidth > 0)
@@ -1507,7 +1507,7 @@ boolean            *adjust;
 	     if (pNextBox->BxAbstractBox->AbLeafType == LtText
 		 && pNextBox->BxAbstractBox->AbAcceptLineBreak
 	     /* avec au moins un blanc ou avec coupure de mot */
-		 && (Hyphenable (pNextBox) || pNextBox->BxNSpaces != 0))
+		 && (CanHyphen (pNextBox) || pNextBox->BxNSpaces != 0))
 	       {
 		 /* coupure sur blanc */
 		  BreakMainBox (pLine, pNextBox, maxLength, pRootAb, FALSE);

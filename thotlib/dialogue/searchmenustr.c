@@ -498,7 +498,7 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-void                ConstStrMenuCherche (pDoc)
+void                BuildStructSearchMenu (pDoc)
 {
    /* menu des natures utilisees dans le document */
    /* NumMenuSearchNature, cree' dynamiquement par cherche.c */
@@ -689,9 +689,9 @@ PtrAttribute        *AttrTrouve;
 }
 
 #ifdef __STDC__
-void                RetMenuStrRemplacer (int ref, int val, char *txt, PtrSearchContext DomaineCherche)
+void                CallbackStructSearchMenu (int ref, int val, char *txt, PtrSearchContext DomaineCherche)
 #else
-void                RetMenuStrRemplacer (ref, val, txt, DomaineCherche)
+void                CallbackStructSearchMenu (ref, val, txt, DomaineCherche)
 int                 ref;
 int                 val;
 char               *txt;
@@ -722,12 +722,12 @@ PtrSearchContext           DomaineCherche;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    MenuAllerPage traite la commande Aller page numero              | */
+/* |    BuildGoToPageMenu traite la commande Aller page numero              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChercheRecupereParams (boolean * erreur, PtrSearchContext DomaineCherche)
+void                BuildSearchOptions (boolean * erreur, PtrSearchContext DomaineCherche)
 #else
-void                ChercheRecupereParams (erreur, DomaineCherche)
+void                BuildSearchOptions (erreur, DomaineCherche)
 boolean            *erreur;
 PtrSearchContext           DomaineCherche;
 
@@ -800,9 +800,9 @@ PtrSearchContext           DomaineCherche;
 
 
 #ifdef __STDC__
-void                ChercheStructure (PtrElement elCour, PtrSearchContext DomaineCherche, boolean * trouve)
+void                StructSearch (PtrElement elCour, PtrSearchContext DomaineCherche, boolean * trouve)
 #else
-void                ChercheStructure (elCour, DomaineCherche, trouve)
+void                StructSearch (elCour, DomaineCherche, trouve)
 boolean            *trouve;
 PtrElement          elCour;
 PtrSearchContext           DomaineCherche;
@@ -860,9 +860,9 @@ PtrSearchContext           DomaineCherche;
 
 
 #ifdef __STDC__
-void                ChercheElEtAttr (PtrElement premsel, boolean * ok)
+void                StructAndAttrSearch (PtrElement premsel, boolean * ok)
 #else
-void                ChercheElEtAttr (premsel, ok)
+void                StructAndAttrSearch (premsel, ok)
 PtrElement          premsel;
 boolean            *ok;
 
@@ -902,9 +902,9 @@ boolean            *ok;
 }
 
 #ifdef __STDC__
-void                ChercheResValAttr ()
+void                ValAttrSearch ()
 #else
-void                ChercheResValAttr ()
+void                ValAttrSearch ()
 #endif
 {
    char                NomAtt[100];
@@ -956,11 +956,11 @@ void                StructSearchLoadResources ()
 {
    if (ThotLocalActions[T_strsearchconstmenu] == NULL)
      {
-	TteConnectAction (T_strsearchconstmenu, (Proc) ConstStrMenuCherche);
-	TteConnectAction (T_strsearchgetparams, (Proc) ChercheRecupereParams);
-	TteConnectAction (T_strsearchonly, (Proc) ChercheStructure);
-	TteConnectAction (T_strsearcheletattr, (Proc) ChercheElEtAttr);
-	TteConnectAction (T_strsearchshowvalattr, (Proc) ChercheResValAttr);
-	TteConnectAction (T_strsearchretmenu, (Proc) RetMenuStrRemplacer);
+	TteConnectAction (T_strsearchconstmenu, (Proc) BuildStructSearchMenu);
+	TteConnectAction (T_strsearchgetparams, (Proc) BuildSearchOptions);
+	TteConnectAction (T_strsearchonly, (Proc) StructSearch);
+	TteConnectAction (T_strsearcheletattr, (Proc) StructAndAttrSearch);
+	TteConnectAction (T_strsearchshowvalattr, (Proc) ValAttrSearch);
+	TteConnectAction (T_strsearchretmenu, (Proc) CallbackStructSearchMenu);
      }
 }

@@ -103,14 +103,14 @@ char                delim;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FileExist teste l'existence d'un fichier.                       | */
+/* |    ThotFile_exist teste l'existence d'un fichier.                       | */
 /* |            Rend 1 si le fichier a e't'e trouve' et 0 sinon.        | */
 /* |            Si filename est un repertoire, on retourne 0.           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 FileExist (char *filename)
+int                 ThotFile_exist (char *filename)
 #else  /* __STDC__ */
-int                 FileExist (filename)
+int                 ThotFile_exist (filename)
 char               *filename;
 #endif /* __STDC__ */
 {

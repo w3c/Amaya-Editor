@@ -83,14 +83,14 @@ Name                 NomType;
 }
 
 /* --------------------------------------------------------------------  */
-/* | RetMenuAskForNew   traite le retour du menu qui demande a         | */
+/* | CallbackAskForNew   traite le retour du menu qui demande a         | */
 /* |    l'utilisateur s'il veut designer un element a referencer       | */
 /* |    s'il prefere creer un nouvel element.                          | */
 /* --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                RetMenuAskForNew (int Val)
+void                CallbackAskForNew (int Val)
 #else  /* __STDC__ */
-void                RetMenuAskForNew (Val)
+void                CallbackAskForNew (Val)
 int                 Val;
 
 #endif /* __STDC__ */
@@ -111,9 +111,9 @@ int                 Val;
 /*  --------------------------------------------------------------------  */
 /*  --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                CreeEtActiveMenuChoix (char *BufMenu, Name TitreMenu, int nbentree, boolean NatureChoice)
+void                BuildChoiceMenu (char *BufMenu, Name TitreMenu, int nbentree, boolean NatureChoice)
 #else  /* __STDC__ */
-void                CreeEtActiveMenuChoix (BufMenu, TitreMenu, nbentree, NatureChoice)
+void                BuildChoiceMenu (BufMenu, TitreMenu, nbentree, NatureChoice)
 char               *BufMenu;
 Name                 TitreMenu;
 int                 nbentree;
@@ -180,13 +180,13 @@ boolean             NatureChoice;
 
 
 /*  --------------------------------------------------------------------  */
-/* |    SeparMenuCreeColle      met un separateur dans le menu Inserer/ | */
+/* |    InsertSeparatorInMenu      met un separateur dans le menu Inserer/ | */
 /* |                            Coller / Inclure                        | */
 /*  --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                SeparMenuCreeColle (int *prevmenuind, int *nbentree, int *menuind, char *BufMenu)
+void                InsertSeparatorInMenu (int *prevmenuind, int *nbentree, int *menuind, char *BufMenu)
 #else  /* __STDC__ */
-void                SeparMenuCreeColle (prevmenuind, nbentree, menuind, BufMenu)
+void                InsertSeparatorInMenu (prevmenuind, nbentree, menuind, BufMenu)
 int                *prevmenuind;
 int                *nbentree;
 int                *menuind;
@@ -206,9 +206,9 @@ char               *BufMenu;
 /*  --------------------------------------------------------------------  */
 /*  --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                CreeEtActiveMenuCreeColle (int RefMenu, char *BufMenu, Name titre, int nbentree, char bouton)
+void                BuildPasteMenu (int RefMenu, char *BufMenu, Name titre, int nbentree, char bouton)
 #else  /* __STDC__ */
-void                CreeEtActiveMenuCreeColle (RefMenu, BufMenu, titre, nbentree, bouton)
+void                BuildPasteMenu (RefMenu, BufMenu, titre, nbentree, bouton)
 int                 RefMenu;
 char               *BufMenu;
 Name                 titre;

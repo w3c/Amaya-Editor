@@ -279,7 +279,7 @@ PathBuffer          directory;
 	   (*pDoc)->DocDirectory[i] = '\0';
 	   /* on suppose que le mon de schema est dans la langue de */
 	   /* l'utilisateur: on le traduit en nom interne */
-	   ConfigNomInterneSSchema ((char *) SSchemaName, docType, TRUE);
+	   ConfigSSchemaInternalName ((char *) SSchemaName, docType, TRUE);
 	   if (docType[0] == '\0')
 	      /* ce nom n'est pas dans le fichier langue, on le prend */
 	      /* tel quel */
@@ -287,10 +287,10 @@ PathBuffer          directory;
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
 	   strncpy (directoryBuffer, SchemaPath, MAX_PATH);
-	   BuildFileName (docType, "STR", directoryBuffer, fileNameBuffer, &i);
+	   MakeCompleteName (docType, "STR", directoryBuffer, fileNameBuffer, &i);
 	   /* teste si le fichier '.STR' existe */
 
-	   if (FileExist (fileNameBuffer) == 0)
+	   if (ThotFile_exist (fileNameBuffer) == 0)
 	     {
 		strncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
 		strcat (fileNameBuffer, ".STR");
@@ -362,7 +362,7 @@ PathBuffer          directory;
 			i++;
 		     directoryBuffer[i] = '\0';
 		  }
-		DoFileName (docNameBuffer, "PIV", directoryBuffer, fileNameBuffer, &i);
+		FindCompleteName (docNameBuffer, "PIV", directoryBuffer, fileNameBuffer, &i);
 		strncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 		strncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_NAME_LENGTH);
 		/* le document appartient au directory courant */
@@ -671,7 +671,7 @@ PtrDocument         pDoc;
 		  while (pBuf != NULL)
 		    {
 		       pNextBuf = pBuf->BuNext;
-		       FreeBufTexte (pBuf);
+		       FreeTextBuffer (pBuf);
 		       pBuf = pNextBuf;
 		    }
 		  pEl->ElText = NULL;
@@ -682,7 +682,7 @@ PtrDocument         pDoc;
 		  while (pBuf != NULL)
 		    {
 		       pNextBuf = pBuf->BuNext;
-		       FreeBufTexte (pBuf);
+		       FreeTextBuffer (pBuf);
 		       pBuf = pNextBuf;
 		    }
 		  pEl->ElPolyLineBuffer = NULL;
@@ -829,7 +829,7 @@ char               *extension;
 
    if (pDoc == NULL)
       return FALSE;
-   DoFileName (pDoc->DocDName, extension, pDoc->DocDirectory, buffer, &i);
+   FindCompleteName (pDoc->DocDName, extension, pDoc->DocDirectory, buffer, &i);
    if (simpleSave (pDoc, buffer, FALSE))
      {
 	UpdateAllInclusions (pDoc);
@@ -884,18 +884,18 @@ boolean             SauveDocAvecMove;
 	   SauverDansMemeFichier = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
-	DoFileName (pDoc->DocDName, "BAK", pDoc->DocDirectory, NomAuto, &i);
+	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, NomAuto, &i);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
 	/*     On fait ensuite des renommages                    */
-	DoFileName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
+	FindCompleteName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
 	/* on teste d'abord le droit d'ecriture sur le .PIV */
 	ok = FileWriteAccess (buffer) == 0;
 	if (ok)
 	  {
-	     DoFileName (NomDuDocument, "Tmp", NomDirectory, NomTemporaire, &i);
+	     FindCompleteName (NomDuDocument, "Tmp", NomDirectory, NomTemporaire, &i);
 	     /* on teste le droit d'ecriture sur le .Tmp */
 	     ok = FileWriteAccess (NomTemporaire) == 0;
 	     if (ok)
@@ -909,7 +909,7 @@ boolean             SauveDocAvecMove;
 	if (!ok)
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
-	     DoFileName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
+	     FindCompleteName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
 	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP),
 					    buffer);
 	     status = FALSE;
@@ -920,14 +920,14 @@ boolean             SauveDocAvecMove;
 	     /* Le nom et le directory du document peuvent avoir change'. */
 	     /* le fichier .OLD reste dans l'ancien directory, avec */
 	     /* l'ancien nom */
-	     DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, NomFichier, &i);
+	     FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, NomFichier, &i);
 	     if (!SauveDocAvecCopie)
 	       {
-		  DoFileName (pDoc->DocDName, "OLD", DirectoryOrig, NomBackup, &i);
+		  FindCompleteName (pDoc->DocDName, "OLD", DirectoryOrig, NomBackup, &i);
 		  i = rename (NomFichier, NomBackup);
 	       }
 	     /* 2- faire mv du .Tmp sur le .PIV */
-	     DoFileName (NomDuDocument, "PIV", NomDirectory, NomFichier, &i);
+	     FindCompleteName (NomDuDocument, "PIV", NomDirectory, NomFichier, &i);
 	     i = rename (NomTemporaire, NomFichier);
 	     if (i >= 0)
 		/* >> tout s'est bien passe' << */
@@ -951,7 +951,7 @@ boolean             SauveDocAvecMove;
 		  /* document */
 		  UpdateRef (pDoc);
 		  /* detruit le fichier .REF du document sauve' */
-		  DoFileName (pDoc->DocDName, "REF", DirectoryOrig, buffer, &i);
+		  FindCompleteName (pDoc->DocDName, "REF", DirectoryOrig, buffer, &i);
 		  RemoveFile (buffer);
 		  if (!SauverDansMemeFichier)
 		    {
@@ -961,11 +961,11 @@ boolean             SauveDocAvecMove;
 			  if (SauveDocAvecMove)
 			    {
 			       /* deplacer le fichier .EXT dans le nouveau directory */
-			       DoFileName (pDoc->DocDName, "EXT", DirectoryOrig, buffer, &i);
-			       DoFileName (pDoc->DocDName, "EXT", NomDirectory, NomFichier, &i);
+			       FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, buffer, &i);
+			       FindCompleteName (pDoc->DocDName, "EXT", NomDirectory, NomFichier, &i);
 			       rename (buffer, NomFichier);
 			       /* detruire l'ancien fichier PIV */
-			       DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, buffer, &i);
+			       FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, buffer, &i);
 			       RemoveFile (buffer);
 			    }
 
@@ -988,13 +988,13 @@ boolean             SauveDocAvecMove;
 				 ChangeNomRef (pDoc, NomDuDocument);
 				 /* renomme le fichier .EXT du document qui change */
 				 /* de nom */
-				 DoFileName (pDoc->DocDName, "EXT", DirectoryOrig, buffer,
+				 FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, buffer,
 					     &i);
-				 DoFileName (NomDuDocument, "EXT", NomDirectory,
+				 FindCompleteName (NomDuDocument, "EXT", NomDirectory,
 					     NomFichier, &i);
 				 rename (buffer, NomFichier);
 				 /* detruit l'ancien fichier .PIV */
-				 DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, buffer,
+				 FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, buffer,
 					     &i);
 				 RemoveFile (buffer);
 			      }

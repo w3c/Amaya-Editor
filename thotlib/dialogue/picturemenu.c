@@ -31,7 +31,7 @@
 #define IMAGE_MENU_MAX			7
 extern PathBuffer   DocumentPath;
 extern PathBuffer   SchemaPath;
-extern char        *SuffixImage[];
+extern char        *FileExtension[];
 
 #undef EXPORT
 #define EXPORT static
@@ -44,17 +44,17 @@ static char         DirectoryImage[MAX_PATH] = "";
 #include "picture_f.h"
 
 #ifdef __STDC__
-extern void         DesactiveEntree (int, int);
+extern void         UnsetEntryMenu (int, int);
 extern boolean      TtaIsSuffixFileIn (char *, char *);
 extern void         TtaListDirectory (char *, int, char *, int, char *, char *, int);
-extern void         BuildFileName (Name, char *, PathBuffer, PathBuffer, int *);
+extern void         MakeCompleteName (Name, char *, PathBuffer, PathBuffer, int *);
 extern void         EntreeMenu (int *, char *, char[]);
 
 #else
-extern void         DesactiveEntree ();
+extern void         UnsetEntryMenu ();
 extern boolean      TtaIsSuffixFileIn ();
 extern void         TtaListDirectory ();
-extern void         BuildFileName ();
+extern void         MakeCompleteName ();
 extern void         EntreeMenu ();
 
 #endif /* __STDC__ */
@@ -81,8 +81,8 @@ int                 indexType;
    else
      {
 	/* Le strech n'est pas autorise pour les autres images */
-	DesactiveEntree (BaseDlgImage + MyNumMenuCadrageImage, 1);
-	DesactiveEntree (BaseDlgImage + MyNumMenuCadrageImage, 2);
+	UnsetEntryMenu (BaseDlgImage + MyNumMenuCadrageImage, 1);
+	UnsetEntryMenu (BaseDlgImage + MyNumMenuCadrageImage, 2);
 	IndexPresImage = 0;
 	TtaSetMenuForm (BaseDlgImage + MyNumMenuCadrageImage, IndexPresImage);
      }
@@ -150,13 +150,13 @@ static void         InitPathImage ()
 
 
 /* ----------------------------------------------------------------------- */
-/* |  RetMenuImage enregistre les retours du formulaire Picture            | */
+/* |  CallbackPictureMenu enregistre les retours du formulaire Picture            | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetMenuImage (int ref, int typedata, char *txt)
+void                CallbackPictureMenu (int ref, int typedata, char *txt)
 
 #else  /* __STDC__ */
-void                RetMenuImage (ref, typedata, txt)
+void                CallbackPictureMenu (ref, typedata, txt)
 int                 ref;
 int                 typedata;
 char               *txt;
@@ -192,7 +192,7 @@ char               *txt;
 		 {
 		    /* Est-ce un nouveau directory qui contient des documents */
 		    if (!TtaIsInDocumentPath (DirectoryImage))
-		       if (TtaIsSuffixFileIn (DirectoryImage, SuffixImage[IndexTypeImage]))
+		       if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
 			 {
 			    /* il faut ajouter le directory au path */
 			    i = strlen (DocumentPath);
@@ -202,7 +202,7 @@ char               *txt;
 				 strcat (DocumentPath, DirectoryImage);
 				 InitPathImage ();
 				 TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-						   SuffixImage[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+						   FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
 			      }
 			 }
 		 }
@@ -213,7 +213,7 @@ char               *txt;
 		    /* compose le path complet du fichier pivot */
 		    strncpy (DirectoryImage, DocumentPath, MAX_PATH);
 		    /* recheche indirectement le directory */
-		    BuildFileName (txt, "", DirectoryImage, nomcomplet, &i);
+		    MakeCompleteName (txt, "", DirectoryImage, nomcomplet, &i);
 		    /* separe directory et nom */
 		    TtaExtractName (nomcomplet, DirectoryImage, NomImage);
 		 }
@@ -234,7 +234,7 @@ char               *txt;
 		      {
 			 /* Est-ce un nouveau directory qui contient des documents */
 			 if (!TtaIsInDocumentPath (DirectoryImage))
-			    if (TtaIsSuffixFileIn (DirectoryImage, SuffixImage[IndexTypeImage]))
+			    if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
 			      {
 				 /* il faut ajouter le directory au path */
 				 i = strlen (DocumentPath);
@@ -247,7 +247,7 @@ char               *txt;
 			      }
 		      }
 		    TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-				      SuffixImage[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+				      FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
 		    CheckPresImage (val);
 		 }
 	       break;
@@ -258,14 +258,14 @@ char               *txt;
 		    /* Faut-il mettre a jour la liste des fichiers */
 		    if (DirectoryImage[0] != '\0')
 		       TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-					 SuffixImage[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+					 FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
 		 }
 	       break;
 	    case MyNumZoneDirImage:
 	       strcpy (DirectoryImage, txt);
 	       TtaSetTextForm (BaseDlgImage + MyNumZoneFichierImage, DirectoryImage);
 	       TtaListDirectory (DirectoryImage, BaseDlgImage + MyNumFormImage, NULL, -1,
-				 SuffixImage[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
+				 FileExtension[IndexTypeImage], "Fichiers", BaseDlgImage + MyNumSelImage);
 	       break;
 	    case MyNumFormImage:
 	       if (val == 1)
@@ -283,10 +283,10 @@ char               *txt;
 /* |  Menu appele lors de la modification d'une image                    | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-void MenuImage (char *nom, boolean *result, int *typim, int *pres, PtrBox pBox)
+void BuildPictureMenu (char *nom, boolean *result, int *typim, int *pres, PtrBox pBox)
 
 #else  /* __STDC__ */
-void MenuImage (nom, result, typim, pres, pBox)
+void BuildPictureMenu (nom, result, typim, pres, pBox)
 char               *nom;
 boolean            *result;
 int                *typim;
@@ -304,8 +304,8 @@ PtrBox            pBox;
    PictInfo    *image;
 
 
-   IndexTypeImage = GetImTypeIndex (*typim);
-   IndexPresImage = GetImPresIndex (*pres);
+   IndexTypeImage = GetPictTypeIndex (*typim);
+   IndexPresImage = GetPictPresIndex (*pres);
    strcpy (NomImage, nom);
    DirectoryImage[0] = '\0';
    redisplayPicture = FALSE;
@@ -383,7 +383,7 @@ PtrBox            pBox;
 /* ----------------------------------------------------------------------- */
 void                ImageMenuLoadResources ()
 {
-   BaseDlgImage = TtaSetCallback (RetMenuImage, IMAGE_MENU_MAX);
+   BaseDlgImage = TtaSetCallback (CallbackPictureMenu, IMAGE_MENU_MAX);
    if (BaseDlgImage != 0)
-      TteConnectAction (T_imagemenu, (Proc) MenuImage);
+      TteConnectAction (T_imagemenu, (Proc) BuildPictureMenu);
 }

@@ -29,12 +29,12 @@ static DocViewNumber    VueDeReference;
 
 
 /* ---------------------------------------------------------------------- */
-/* | returnopenview met a jour le formulaire de openview.               | */
+/* | CallbackOpenView met a jour le formulaire de openview.               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                returnopenview (int ref, int typedata, char *data)
+void                CallbackOpenView (int ref, int typedata, char *data)
 #else  /* __STDC__ */
-void                returnopenview (ref, typedata, data)
+void                CallbackOpenView (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
@@ -76,7 +76,7 @@ View                vue;
    if (ThotLocalActions[T_openview] == NULL)
      {
 	/* Connecte les actions liees au traitement de la commande */
-	TteConnectAction (T_openview, (Proc) returnopenview);
+	TteConnectAction (T_openview, (Proc) CallbackOpenView);
      }
 
    pDoc = LoadedDocument[document - 1];
@@ -142,9 +142,9 @@ View                view;
 /* |            de synchronisation de la vue indiquee du document.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                changesynchronize (Document document, View view)
+void                SwitchSynchronize (Document document, View view)
 #else  /* __STDC__ */
-void                changesynchronize (document, view)
+void                SwitchSynchronize (document, view)
 Document            document;
 View                view;
 

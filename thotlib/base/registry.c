@@ -63,12 +63,12 @@ static char        *AppRegistryEntryAppli = NULL;
 static char        *Thot_Dir;
 
 #ifdef __STDC__
-extern int          FileExist (char *);
-extern void         BuildFileName (Name, char *, PathBuffer, PathBuffer, int *);
+extern int          ThotFile_exist (char *);
+extern void         MakeCompleteName (Name, char *, PathBuffer, PathBuffer, int *);
 
 #else  /* __STDC__ */
-extern int          FileExist ();
-extern void         BuildFileName ();
+extern int          ThotFile_exist ();
+extern void         MakeCompleteName ();
 
 #endif
 
@@ -607,7 +607,7 @@ static int         IsThotDir (const char *path)
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (FileExist (filename)) return(1);
+   if (ThotFile_exist (filename)) return(1);
    else return(0);
 }
 
@@ -966,7 +966,7 @@ char               *appArgv0;
     * second case, the argv[0] indicate a relative path name.
     * The exec name is obtained by appending the current directory.
     */
-   else if (FileExist (appArgv0))
+   else if (ThotFile_exist (appArgv0))
      {
 	getcwd (&execname[0], sizeof (execname));
 	strcat (execname, DIR_STR);
@@ -995,9 +995,9 @@ char               *appArgv0;
 
 	execname_len = sizeof (execname);
 #ifdef _WINDOWS
-	BuildFileName (appArgv0, "EXE", path, execname, &execname_len);
+	MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
 #else
-	BuildFileName (appArgv0, "", path, execname, &execname_len);
+	MakeCompleteName (appArgv0, "", path, execname, &execname_len);
 #endif
 	if (execname[0] == '\0')
 	  {
@@ -1138,7 +1138,7 @@ char               *appArgv0;
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (FileExist (filename))
+   if (ThotFile_exist (filename))
      {
 #ifdef DEBUG_REGISTRY
 	fprintf (stderr, "reading system %s from %s\n",
@@ -1156,7 +1156,7 @@ char               *appArgv0;
 	strcpy (filename, home_dir);
 	strcat (filename, DIR_STR);
 	strcat (filename, THOT_INI_FILENAME);
-	if (FileExist (filename))
+	if (ThotFile_exist (filename))
 	  {
 #ifdef DEBUG_REGISTRY
 	     fprintf (stderr, "reading user's %s from %s\n",
@@ -1214,7 +1214,7 @@ char               *fullName;
 	    case 1:
 		/* Recherche dans les schemas et les documents */
 	       strcat (fullName, fileName);
-	       ret = FileExist (fullName);
+	       ret = ThotFile_exist (fullName);
 	       /* Recherche le fichier dans les directories de schemas */
 	       i = 0;
 	       j = 0;
@@ -1228,7 +1228,7 @@ char               *fullName;
 		    i++;
 		    j = 0;
 		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
-		    ret = FileExist (fullName);
+		    ret = ThotFile_exist (fullName);
 		 }
 
 	       /* continue la recheche dans les repertoires de documents */
@@ -1244,7 +1244,7 @@ char               *fullName;
 		    i++;
 		    j = 0;
 		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
-		    ret = FileExist (fullName);
+		    ret = ThotFile_exist (fullName);
 		 }
 	       break;
 
@@ -1270,11 +1270,11 @@ char               *fullName;
 	 }
 
    /* on cherche le fichier */
-   ret = FileExist (fullName);
+   ret = ThotFile_exist (fullName);
    if (ret == 0)
      {
 	strcpy (fullName, fileName);
-	ret = FileExist (fullName);
+	ret = ThotFile_exist (fullName);
      }
    return ret;
 }

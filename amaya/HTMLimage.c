@@ -266,7 +266,7 @@ Element        el;
 	       if (desc == NULL)
 		  /* it is a local image */
 		  DisplayImage (doc, el, pathname);
-	       else if (FileExist (desc->localName))
+	       else if (ThotFile_exist (desc->localName))
 		  DisplayImage (doc, el, desc->localName);
 	       else {
 		  /* chain this new element as waiting for this image */

@@ -8,16 +8,16 @@
 
 extern boolean AskForNew_RemplRefer ( boolean * Creer,
                                       Name NomType );
-extern void RetMenuAskForNew ( int Val );
-extern void CreeEtActiveMenuChoix ( char *BufMenu,
+extern void CallbackAskForNew ( int Val );
+extern void BuildChoiceMenu ( char *BufMenu,
                                     Name TitreMenu,
                                     int nbentree,
                                     boolean NatureChoice );
-extern void SeparMenuCreeColle ( int *prevmenuind,
+extern void InsertSeparatorInMenu ( int *prevmenuind,
                                  int *nbentree,
                                  int *menuind,
                                  char *BufMenu );
-extern void CreeEtActiveMenuCreeColle ( int RefMenu,
+extern void BuildPasteMenu ( int RefMenu,
                                         char *BufMenu,
                                         Name titre,
                                         int nbentree,
@@ -27,16 +27,16 @@ extern void CreeEtActiveMenuCreeColle ( int RefMenu,
 
 extern boolean AskForNew_RemplRefer (/* boolean * Creer,
                                         Name NomType */);
-extern void RetMenuAskForNew (/* int Val */);
-extern void CreeEtActiveMenuChoix (/* char *BufMenu,
+extern void CallbackAskForNew (/* int Val */);
+extern void BuildChoiceMenu (/* char *BufMenu,
                                       Name TitreMenu,
                                       int nbentree,
                                       boolean NatureChoice */);
-extern void SeparMenuCreeColle (/* int *prevmenuind,
+extern void InsertSeparatorInMenu (/* int *prevmenuind,
                                    int *nbentree,
                                    int *menuind,
                                    char *BufMenu */);
-extern void CreeEtActiveMenuCreeColle (/* int RefMenu,
+extern void BuildPasteMenu (/* int RefMenu,
                                           char *BufMenu,
                                           Name titre,
                                           int nbentree,

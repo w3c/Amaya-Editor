@@ -11,7 +11,7 @@ extern boolean CallEventType ( NotifyEvent * notifyEvent,
 extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                     boolean pre );
 extern void FreeImageDescriptor ( int *desc );
-extern void FreeImage ( int *desc );
+extern void FreePicture ( int *desc );
 extern int Corr_Charger ( Language langue );
 extern void AddInSelection ( PtrElement pEl,
                         boolean dernier );
@@ -42,7 +42,7 @@ extern boolean CallEventType (/* NotifyEvent * notifyEvent,
 extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                       boolean pre */);
 extern void FreeImageDescriptor (/* int *desc */);
-extern void FreeImage (/* int *desc */);
+extern void FreePicture (/* int *desc */);
 extern int Corr_Charger (/* Language langue */);
 extern void AddInSelection (/* PtrElement pEl,
                           boolean dernier */);

@@ -1,5 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -54,7 +52,7 @@
 
 extern int          UserErrorCode;
 
-/* descripteur de la selection a effectuer apres reaffichage */
+/* descriptor of the selection to do after redosplaying */
 typedef struct _SelectionDescriptor
   {
      boolean             SDSelActive;
@@ -127,10 +125,10 @@ View                view;
 {
    PtrDocument         pDoc;
    boolean             assoc;
-   int                 vue, win;
+   int                 aView, win;
 
    win = 0;
-   /* verifie les parametres */
+   /* Checks parameters */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
@@ -140,11 +138,11 @@ View                view;
    else
      {
 	pDoc = LoadedDocument[document - 1];
-	GetViewInfo (document, view, &vue, &assoc);
+	GetViewInfo (document, view, &aView, &assoc);
 	if (assoc)
-	   win = pDoc->DocAssocFrame[vue - 1];
+	   win = pDoc->DocAssocFrame[aView - 1];
 	else
-	   win = pDoc->DocViewFrame[vue - 1];
+	   win = pDoc->DocViewFrame[aView - 1];
      }
    return win;
 }				/*GetWindowNumber */
@@ -183,18 +181,18 @@ int                 h;
 
 {
    PtrDocument         pDoc;
-   int                 nVue;
+   int                 nView;
    View                view;
 
    UserErrorCode = 0;
    view = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (pDoc->DocSSchema != NULL)
@@ -203,14 +201,13 @@ int                 h;
 	   else
 	     {
 #ifndef __COLPAGE__
-		/* Ajoute le saut de page qui manque eventuellement a la */
-		/* fin du document */
+		/* Add a pagebreak probably missed at the end of the document */
 		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
 		   AddLastPageBreak (pDoc->DocRootElement, 1, pDoc, FALSE);
 #endif /* __COLPAGE__ */
-		nVue = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1, TRUE, NULL);
-		OpenCreatedView (pDoc, nVue, FALSE, x, y, w, h);
-		view = nVue;
+		nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1, TRUE, NULL);
+		OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
+		view = nView;
 	     }
      }
    return view;
@@ -247,81 +244,81 @@ Element             subtree;
 
 #endif /* __STDC__ */
 {
-   int                 nVue;
-   int                 nbvues;
+   int                 nView;
+   int                 nbViews;
    int                 i;
    int                 v;
    PtrDocument         pDoc;
-   AvailableView           toutesLesVues;
+   AvailableView       allViews;
    boolean             assoc;
-   boolean             trouve;
+   boolean             found;
    View                view;
 
    UserErrorCode = 0;
    view = 0;
    v = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
    if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
       TtaError (ERR_no_presentation_schema);
    else
      {
 	pDoc = LoadedDocument[document - 1];
 	assoc = FALSE;
-	nVue = 0;
-	/* etablit la liste de toutes les vues possibles pour ce document */
-	nbvues = BuildDocumentViewList (pDoc, toutesLesVues);
-	/* cherche dans cette liste le nom de la vue a ouvrir */
-	trouve = FALSE;
-	for (i = 0; i < nbvues && !trouve; i++)
+	nView = 0;
+	/* Enumerate the list of all pssible views for this document */
+	nbViews = BuildDocumentViewList (pDoc, allViews);
+	/* Looks in the list for the name of the view to be opened */
+	found = FALSE;
+	for (i = 0; i < nbViews && !found; i++)
 	  {
-	     trouve = strcmp (viewName, toutesLesVues[i].VdViewName) == 0;
-	     if (trouve)
+	     found = strcmp (viewName, allViews[i].VdViewName) == 0;
+	     if (found)
 		v = i;
 	  }
-	if (!trouve)
+	if (!found)
 	   TtaError (ERR_invalid_parameter);
 	else
-	   /* on a trouve' cette vue */
+	   /* View found */
 	  {
-	     /* on ouvre la vue */
-	     if (toutesLesVues[v].VdAssoc)
+	     /* Open the view */
+	     if (allViews[v].VdAssoc)
 	       {
 #ifndef __COLPAGE__
-		  /* Ajoute le saut de page qui manque eventuellement a la fin */
-		  if (toutesLesVues[v].VdView > 0)
+		  /* Add a page break probably missed at the end */
+		  if (allViews[v].VdView > 0)
 		     if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
-			AddLastPageBreak (pDoc->DocAssocRoot[toutesLesVues[v].VdView - 1], 1, pDoc, FALSE);
+			AddLastPageBreak (pDoc->DocAssocRoot[allViews[v].VdView - 1], 1, pDoc, FALSE);
 #endif /* __COLPAGE__ */
-		  nVue = CreateAbstractImage (pDoc, 0, toutesLesVues[v].VdAssocNum,
-		    toutesLesVues[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
+		  nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
+		    allViews[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
 		  assoc = TRUE;
 	       }
 	     else
 	       {
 #ifndef __COLPAGE__
-		  /* Ajoute le saut de page qui manque eventuellement a la fin */
-		  if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[toutesLesVues[v].VdView])
-		     AddLastPageBreak (pDoc->DocRootElement, toutesLesVues[v].VdView, pDoc, FALSE);
+		  /* Add a page break probably missed at the end */
+		  if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[allViews[v].VdView])
+		     AddLastPageBreak (pDoc->DocRootElement, allViews[v].VdView, pDoc, FALSE);
 #endif /* __COLPAGE__ */
-		  nVue = CreateAbstractImage (pDoc, toutesLesVues[v].VdView, 0,
-		   toutesLesVues[v].VdSSchema, 1, FALSE, (PtrElement) subtree);
+		  nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
+		   allViews[v].VdSSchema, 1, FALSE, (PtrElement) subtree);
 		  assoc = FALSE;
 	       }
-	     if (nVue == 0)
+	     if (nView == 0)
 		TtaError (ERR_cannot_open_view);
 	     else
 	       {
-		  OpenCreatedView (pDoc, nVue, assoc, x, y, w, h);
+		  OpenCreatedView (pDoc, nView, assoc, x, y, w, h);
 		  if (assoc)
-		     view = nVue + 100;
+		     view = nView + 100;
 		  else
-		     view = nVue;
+		     view = nView;
 	       }
 	  }
      }
@@ -428,17 +425,17 @@ View                view;
    int                 numAssoc;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
-	   /* vue de l'arbre principal */
+	   /* View of the main tree */
 	   if (view < 1 || view > MAX_VIEW_DOC)
 	      TtaError (ERR_invalid_parameter);
 	   else
@@ -447,7 +444,7 @@ View                view;
 		CloseDocumentView (pDoc, view, FALSE, FALSE);
 	     }
 	else
-	   /* vue d'elements associes */
+	   /* View of associated elements */
 	  {
 	     numAssoc = view - 100;
 	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
@@ -462,48 +459,45 @@ View                view;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |  DetruitImageVue detruit l'image abstraite de la vue Vue du        | */
-/* |     document pDoc. Procedure partiellement reprise de              | */
-/* |     DetrImAbs_Pages du module page.c                               | */
-/* |     Vue = numero de vue ou d'elt assoc si vue associee.            | */
-/* |     complete = TRUE si on libere complement la fenetre             | */
+/* |  CleanImageView cleans the abstract of View corresponding to pDoc. | */
+/* |     View = view number or assoc. elem. number if assoc. view.      | */
+/* |     complete = TRUE if the window is completely cleaned.           | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         DetruitImageVue (int Vue, boolean Assoc, PtrDocument pDoc, boolean complete)
+static void         CleanImageView (int View, boolean Assoc, PtrDocument pDoc, boolean complete)
 #else  /* __STDC__ */
-static void         DetruitImageVue (Vue, Assoc, pDoc, complete)
-int                 Vue;
+static void         CleanImageView (View, Assoc, pDoc, complete)
+int                 View;
 boolean             Assoc;
 PtrDocument         pDoc;
 boolean             complete;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    int                 h;
    int                 frame;
-   PtrAbstractBox             pAbbRoot;
+   PtrAbstractBox      pAbbRoot;
 
-   frame = 1;			/* initialisation (pour le compilateur !) */
-   pAbbRoot = NULL;		/* initialisation (pour le compilateur !) */
+   frame = 1;			/* initialization (for the compiler !) */
+   pAbbRoot = NULL;		/* initialization (for the compiler !) */
    if (Assoc)
      {
-	/* c'est une vue d'elements associes */
-	pAbbRoot = pDoc->DocAssocRoot[Vue - 1]->ElAbstractBox[0];
-	frame = pDoc->DocAssocFrame[Vue - 1];
+	/* Associated element view */
+	pAbbRoot = pDoc->DocAssocRoot[View - 1]->ElAbstractBox[0];
+	frame = pDoc->DocAssocFrame[View - 1];
      }
    else
      {
-	pAbbRoot = pDoc->DocViewRootAb[Vue - 1];
-	frame = pDoc->DocViewFrame[Vue - 1];
+	pAbbRoot = pDoc->DocViewRootAb[View - 1];
+	frame = pDoc->DocViewFrame[View - 1];
      }
-   /* tous les paves englobes par le pave racine de la vue sont marques */
-   /* morts */
+   /* All abstract boxes included into the root abs. box are marked dead */
    if (complete)
      {
 	SetDeadAbsBox (pAbbRoot);
 	ChangeConcreteImage (frame, &h, pAbbRoot);
-	CloseDocumentView (pDoc, Vue, Assoc, TRUE);
+	CloseDocumentView (pDoc, View, Assoc, TRUE);
 	FrameTable[frame].FrDoc = 0;
 	/*ViewFrameTable[frame - 1].FrAbstractBox = NULL; */
      }
@@ -516,18 +510,15 @@ boolean             complete;
 	     pAb = pAb->AbNext;
 	  }
 #ifdef __COLPAGE__
-	/* vide la chaine des regles en retard sur la racine */
-	/* normalement doit etre deja vide ! */
+	/* Flush the deferred rules on the root */
 	ApplDelayedRule (pAbbRoot->AbFirstEnclosed->AbElement, pDoc);
-	/* libere tous les paves morts de la vue */
-	/* ceci est signale au Mediateur */
-	/* ceci est signale au Mediateur */
-	h = -1;			/* changement de signification de h */
+	/* Realease all dead abstract boxes */
+	h = -1;			/* Changing the meaning of h */
 #else  /* __COLPAGE__ */
 	h = 0;
 #endif /* __COLPAGE__ */
 	ChangeConcreteImage (frame, &h, pAbbRoot);
-	/* libere tous les paves morts de la vue */
+	/* Releases all dead abstract boxes of the view */
 	FreeDeadAbstractBoxes (pAbbRoot);
 
 	/* indique qu'il faudra reappliquer les regles de presentation du */
@@ -542,7 +533,7 @@ boolean             complete;
 	if (pAbbRoot->AbLeafType == LtCompound)
 	   pAbbRoot->AbTruncatedHead = FALSE;
      }
-}				/* DetruitImageVue */
+}				/* CleanImageView */
 
 /* ----------------------------------------------------------------------
    TtaFreeView
@@ -568,13 +559,13 @@ View                view;
    int                 numAssoc;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
@@ -582,7 +573,7 @@ View                view;
 	   if (view < 1 || view > MAX_VIEW_DOC)
 	      TtaError (ERR_invalid_parameter);
 	   else
-	      DetruitImageVue (view, FALSE, pDoc, TRUE);
+	      CleanImageView (view, FALSE, pDoc, TRUE);
 	else
 	   /* vue d'elements associes */
 	  {
@@ -590,7 +581,7 @@ View                view;
 	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
 		TtaError (ERR_invalid_parameter);
 	     else
-		DetruitImageVue (numAssoc, TRUE, pDoc, TRUE);
+		CleanImageView (numAssoc, TRUE, pDoc, TRUE);
 	  }
      }
 }
@@ -623,13 +614,13 @@ char               *title;
    int                 numAssoc;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
@@ -637,7 +628,7 @@ char               *title;
 	   if (view < 1 || view > MAX_VIEW_DOC)
 	      TtaError (ERR_invalid_parameter);
 	   else
-	      ChangeTitre (pDoc->DocViewFrame[view - 1], title);
+	      ChangeFrameTitle (pDoc->DocViewFrame[view - 1], title);
 	else
 	   /* vue d'elements associes */
 	  {
@@ -645,7 +636,7 @@ char               *title;
 	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
 		TtaError (ERR_invalid_parameter);
 	     else
-		ChangeTitre (pDoc->DocAssocFrame[numAssoc - 1], title);
+		ChangeFrameTitle (pDoc->DocAssocFrame[numAssoc - 1], title);
 	  }
      }
 }
@@ -683,13 +674,13 @@ int                 value;
    frame = GetWindowNumber (document, view);
    if (frame != 0)
      {
-	GetVisu (frame, &valvisib, &valzoom);
+	GetFrameParams (frame, &valvisib, &valzoom);
 	/* Traduction de la sensibilite en seuil */
 	valvisib = 10 - value;
 	if (valvisib < 1 || valvisib > 10)
 	   TtaError (ERR_invalid_parameter);
 	else
-	   ModVisu (frame, valvisib, valzoom);
+	   SetFrameParams (frame, valvisib, valzoom);
      }
 }				/*TtaSetSensibility */
 
@@ -726,13 +717,13 @@ int                 value;
    frame = GetWindowNumber (document, view);
    if (frame != 0)
      {
-	GetVisu (frame, &valvisib, &valzoom);
+	GetFrameParams (frame, &valvisib, &valzoom);
 	/* Traduction de la sensibilite en seuil */
 	valzoom += value;
 	if (valzoom < 1 || valzoom > 10)
 	   TtaError (ERR_invalid_parameter);
 	else
-	   ModVisu (frame, valvisib, valzoom);
+	   SetFrameParams (frame, valvisib, valzoom);
      }
 }				/*TtaSetZoom */
 
@@ -785,15 +776,15 @@ int                 position;
 	      vue = 1;
 	   pEl = (PtrElement) element;
 	   /* si l'element a un pave' incomplet en tete, on supprime ce pave' */
-	   /* et VerifAbsBoxe le recreera depuis la tete de l'element */
+	   /* et CheckAbsBox le recreera depuis la tete de l'element */
 	   if (pEl->ElAbstractBox[vue - 1] != NULL)
 	      if (pEl->ElAbstractBox[vue - 1]->AbLeafType == LtCompound)
 		 if (pEl->ElAbstractBox[vue - 1]->AbTruncatedHead)
 		    /* on detruit les paves de l'element dans cette vue */
 		    DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE, vue);
-	   VerifAbsBoxe (pEl, vue, LoadedDocument[document - 1], FALSE, FALSE);
+	   CheckAbsBox (pEl, vue, LoadedDocument[document - 1], FALSE, FALSE);
 	   if (pEl->ElAbstractBox[vue - 1] != NULL)
-	      MontrerBoite (frame, pEl->ElAbstractBox[vue - 1]->AbBox, 0, position);
+	      ShowBox (frame, pEl->ElAbstractBox[vue - 1]->AbBox, 0, position);
 	}
 }				/*TtaShowElement */
 
@@ -833,7 +824,7 @@ View                view;
    frame = GetWindowNumber (document, view);
    if (frame != 0)
      {
-	GetVisu (frame, &valvisib, &valzoom);
+	GetFrameParams (frame, &valvisib, &valzoom);
 	/* Traduction du seuil en sensibilite */
 	value = 10 - valvisib;
      }
@@ -875,7 +866,7 @@ View                view;
    frame = GetWindowNumber (document, view);
    if (frame != 0)
      {
-	GetVisu (frame, &valvisib, &value);
+	GetFrameParams (frame, &valvisib, &value);
      }
    return value;
 }				/*TtaGetZoom */
@@ -917,7 +908,7 @@ char               *presentationName;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   BuildFileName (presentationName, "PRS", DirBuffer, texte, &i);
+   MakeCompleteName (presentationName, "PRS", DirBuffer, texte, &i);
    /* teste si le fichier existe */
    file = BIOreadOpen (texte);
    if (file == 0)
@@ -963,13 +954,13 @@ int                *nbViews;
 {
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
       BuildViewList (LoadedDocument[document - 1], buffer, nbViews);
 }
 
@@ -1003,13 +994,13 @@ View                view;
 
    UserErrorCode = 0;
    nameBuffer[0] = '\0';
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
@@ -1070,13 +1061,13 @@ View                view;
 
    UserErrorCode = 0;
    opened = FALSE;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (view < 100)
@@ -1136,7 +1127,7 @@ char               *viewName;
 
    UserErrorCode = 0;
    view = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1146,7 +1137,7 @@ char               *viewName;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
 	/* on cherche parmi les vues ouvertes de l'arbre principal */
@@ -1242,7 +1233,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   boolean             result, fini, trouve;
+   boolean             result, fini, found;
    PtrElement          pAsc;
    PtrAbstractBox             pAb;
 
@@ -1289,13 +1280,13 @@ PtrDocument         pDoc;
       /* ait un pave dans la vue */
      {
 	pAsc = pEl->ElParent;
-	trouve = FALSE;
-	while (pAsc != NULL && !trouve)
+	found = FALSE;
+	while (pAsc != NULL && !found)
 	   if (pAsc->ElAbstractBox[vue - 1] == NULL)
 	      pAsc = pAsc->ElParent;
 	   else
-	      trouve = TRUE;
-	if (trouve)
+	      found = TRUE;
+	if (found)
 	   if (pAsc->ElAbstractBox[vue - 1]->AbInLine ||
 	       ((!pAsc->ElAbstractBox[vue - 1]->AbTruncatedHead) &&
 		(!pAsc->ElAbstractBox[vue - 1]->AbTruncatedTail)))
@@ -1407,10 +1398,10 @@ PtrDocument         pDoc;
 
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
       if (pDoc->DocView[vue - 1].DvPSchemaView > 0)
-	 DetruitImageVue (vue, FALSE, pDoc, FALSE);
+	 CleanImageView (vue, FALSE, pDoc, FALSE);
    for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
       if (pDoc->DocAssocFrame[assoc - 1] > 0)
-	 DetruitImageVue (assoc, TRUE, pDoc, FALSE);
+	 CleanImageView (assoc, TRUE, pDoc, FALSE);
 }				/* DetruitImage */
 
 
@@ -2832,13 +2823,13 @@ DisplayMode         newDisplayMode;
 #endif /* __STDC__ */
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
      {
 	/* si le document n'a pas de schema de presentation, on ne fait rien */
 	if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
@@ -2955,13 +2946,13 @@ Document            document;
 
    UserErrorCode = 0;
    result = DisplayImmediately;
-   /* verifie le parametre document */
+   /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parametre document correct */
+      /* parameter document is ok */
       result = documentDisplayMode[document - 1];
    return result;
 }

@@ -565,7 +565,7 @@ static boolean PRuleMessagePre(pEl, pRule, pDoc, isNew)
 		 else
 		    pRPrec->PrNextPRule = pRule->PrNextPRule;
 		 /* libere la regle */
-		 FreeReglePres(pRule);
+		 FreePresentRule(pRule);
 		 pR = NULL;
 		 }
 	     }
@@ -886,7 +886,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	  if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	    {
 	      if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-		DimFenetre(frame, &x, &y);
+		GetSizesFrame(frame, &x, &y);
 	      else
 		y = pAb->AbEnclosing->AbBox->BxHeight;
 	      deltaY = LogicalValue(deltaY, UnPercent, (PtrAbstractBox)y);
@@ -1032,7 +1032,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	  if (pRStd->PrPosRule.PoDistUnit == UnPercent)
 	    {
 	      if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
-		DimFenetre(frame, &x, &y);
+		GetSizesFrame(frame, &x, &y);
 	      else
 		x = pAb->AbEnclosing->AbBox->BxWidth;
 	      deltaX = LogicalValue(deltaX, UnPercent, (PtrAbstractBox)x);
@@ -1264,7 +1264,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	      else if (pAb->AbEnclosing == NULL)
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
-		DimFenetre(frame, &largeurRef, &hauteurRef);
+		GetSizesFrame(frame, &largeurRef, &hauteurRef);
 	      else
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
@@ -1427,7 +1427,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	      else if (pAb->AbEnclosing == NULL)
 		/* la hauteur de la boite est un pourcentage de la hauteur */
 		/* de la boite englobante */
-		DimFenetre(frame, &largeurRef, &hauteurRef);
+		GetSizesFrame(frame, &largeurRef, &hauteurRef);
 	      else
 		/* la largeur de la boite est un pourcentage de la largeur */
 		/* de la boite englobante */
@@ -1952,7 +1952,7 @@ static void SupprPres(pEl, pDoc, rules, viewToApply)
 	    pR->PrNextPRule = pRS;
 	  ruleType = pRule->PrType;	
 	  /* libere la regle */
-	  FreeReglePres(pRule);
+	  FreePresentRule(pRule);
 	  pDoc->DocModified = TRUE;	/* le document est modifie' */
 	  /* applique la regle standard de meme type que la regle courante */
 	  /* aux paves de l'element qui existent dans les vues de meme type */

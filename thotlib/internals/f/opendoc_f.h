@@ -9,15 +9,15 @@
 extern void BuildPathDocBuffer ( char *BufDir,
                                  char separator,
                                  int *nbitem );
-extern void SaisitNomSchPres ( PtrSSchema pSchStr,
+extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
                                Name name );
-extern void retpresentation ( int ref,
+extern void CallbackSchPresNameMenu ( int ref,
                               int typedata,
                               char *data );
-extern void retimport ( int ref,
+extern void CallbackImportMenu ( int ref,
                         int typedata,
                         char *data );
-extern void retopendoc ( int ref,
+extern void CallbackOpenDocMenu ( int ref,
                          int typedata,
                          char *data );
 extern void TtcOpenDocument ( Document document,
@@ -28,15 +28,15 @@ extern void TtcOpenDocument ( Document document,
 extern void BuildPathDocBuffer (/* char *BufDir,
                                    char separator,
                                    int *nbitem */);
-extern void SaisitNomSchPres (/* PtrSSchema pSchStr,
+extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
                                  Name name */);
-extern void retpresentation (/* int ref,
+extern void CallbackSchPresNameMenu (/* int ref,
                                 int typedata,
                                 char *data */);
-extern void retimport (/* int ref,
+extern void CallbackImportMenu (/* int ref,
                           int typedata,
                           char *data */);
-extern void retopendoc (/* int ref,
+extern void CallbackOpenDocMenu (/* int ref,
                            int typedata,
                            char *data */);
 extern void TtcOpenDocument (/* Document document,

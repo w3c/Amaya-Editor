@@ -500,7 +500,7 @@ PtrBox            pBox;
 	while (pBuffer != NULL)
 	  {
 	     pBox->BxBuffer = pBuffer->BuNext;
-	     FreeBufTexte (pBuffer);
+	     FreeTextBuffer (pBuffer);
 	     pBuffer = pBox->BxBuffer;
 	  }
      }
@@ -1110,7 +1110,7 @@ int                *carIndex;
 		      }
 
 		    if (picture->PicPixmap == None)
-		       ReadImage (frame, pCurrentBox, picture);
+		       LoadPicture (frame, pCurrentBox, picture);
 		    GivePictureSize (pAb, &width, &height);
 		    break;
 		 case LtSymbol:
@@ -1862,7 +1862,7 @@ int                 frame;
 		  /* Il faut forcer le rechargement des images */
 
 		  SetCursorWatch (frame);
-		  ReadImage (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+		  LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 		  ResetCursorWatch (frame);
 	       }
 	     else if (pBox->BxType == BoSplit)
@@ -1941,7 +1941,7 @@ int                 frame;
 			      if (pAb->AbChange)
 				{
 				   SetCursorWatch (frame);
-				   ReadImage (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+				   LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 				   ResetCursorWatch (frame);
 				   GivePictureSize (pAb, &width, &height);
 				}
@@ -2308,7 +2308,7 @@ boolean             horizRef;
    /* Faut-il creer un nouveau bloc de relations ? */
    if (toCreate)
      {
-	GetBDim (&pDimRel);
+	GetDimBlock (&pDimRel);
 	if (pPreviousDimRel == NULL)
 	   DifferedPackBlocks = pDimRel;
 	else
@@ -2364,7 +2364,7 @@ int                 frame;
      {
 	pDimRel = DifferedPackBlocks;
 	DifferedPackBlocks = DifferedPackBlocks->DimRNext;
-	FreeBDim (&pDimRel);
+	FreeDimBlock (&pDimRel);
      }
 }
 
@@ -2427,7 +2427,7 @@ int                 frame;
 	     ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
 
 	     /* On elimine le scroll horizontal */
-	     DimFenetre (frame, &width, &height);
+	     GetSizesFrame (frame, &width, &height);
 	     if (pFrame->FrXOrg != 0)
 	       {
 		  pFrame->FrXOrg = 0;
@@ -2544,14 +2544,14 @@ int                 frame;
      {
 	pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	/* Faut-il retirer les marques de selection dans la fenetre */
-	EndInsert ();
+	CloseInsertion ();
 	ClearViewSelection (frame);
 	/* Liberation de la hierarchie */
 	RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
 	pFrame->FrAbstractBox = NULL;
 	pFrame->FrReady = TRUE;	/* La frame est affichable */
 	DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
-	SetClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
+	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
 		 &pFrame->FrClipXEnd, &pFrame->FrClipYEnd, 1);
      }
 }

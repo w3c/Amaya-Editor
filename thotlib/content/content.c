@@ -36,7 +36,7 @@ PtrTextBuffer      pBuf;
 {
    PtrTextBuffer      pNewBuf;
 
-   GetBufTexte (&pNewBuf);
+   GetTextBuffer (&pNewBuf);
    pNewBuf->BuNext = pBuf->BuNext;
    pNewBuf->BuPrevious = pBuf;
    if (pNewBuf->BuNext != NULL)
@@ -65,7 +65,7 @@ PtrElement          pEl;
 
    pEl->ElLeafType = LtText;
    pEl->ElTextLength = 0;
-   GetBufTexte (&pBuf);
+   GetTextBuffer (&pBuf);
    pEl->ElText = pBuf;
 }
 
@@ -90,7 +90,7 @@ PtrTextBuffer     *pBuf;
 	   (*pBuf)->BuPrevious->BuNext = (*pBuf)->BuNext;
 	if ((*pBuf)->BuNext != NULL)
 	   (*pBuf)->BuNext->BuPrevious = (*pBuf)->BuPrevious;
-	FreeBufTexte (*pBuf);
+	FreeTextBuffer (*pBuf);
 	*pBuf = NULL;
      }
 }
@@ -228,7 +228,7 @@ boolean             withAppEvent;
 		     /* supprime le dernier buffer de la premiere partie : il est */
 		     /* vide */
 		     pBuf1->BuPrevious->BuNext = NULL;
-		     FreeBufTexte (pBuf);
+		     FreeTextBuffer (pBuf);
 		  }
 	     /* accroche les buffers de la deuxieme partie a leur element */
 	     pBuf = pEl2->ElText;
@@ -367,7 +367,7 @@ boolean             withAppEvent;
 				      pBuf1->BuNext = pBuf2->BuNext;
 				      if (pBuf1->BuNext != NULL)
 					 pBuf1->BuNext->BuPrevious = pBuf1;
-				      FreeBufTexte (pBuf2);
+				      FreeTextBuffer (pBuf2);
 				      pBuf2 = pBuf1->BuNext;
 				   }
 				 else
@@ -493,7 +493,7 @@ PtrElement          pEl;
    PtrTextBuffer      pBufSource1, pBufSource2, pBufCopy1, pBufCopy2, ret;
 
    /* acquiert un premier buffer de texte */
-   GetBufTexte (&pBufCopy1);
+   GetTextBuffer (&pBufCopy1);
    ret = pBufCopy1;
    pBufSource1 = pBuf;
    *pBufCopy1 = *pBufSource1;
@@ -504,7 +504,7 @@ PtrElement          pEl;
    pBufSource2 = pBufSource1->BuNext;
    while (pBufSource2 != NULL)
      {
-	GetBufTexte (&pBufCopy2);
+	GetTextBuffer (&pBufCopy2);
 	*pBufCopy2 = *pBufSource2;
 	pBufCopy2->BuPrevious = pBufCopy1;
 	pBufCopy1->BuNext = pBufCopy2;
@@ -848,7 +848,7 @@ PtrTextBuffer      pBuf;
 	while (pBuf != NULL)
 	  {
 	     pNextBuf = pBuf->BuNext;
-	     FreeBufTexte (pBuf);
+	     FreeTextBuffer (pBuf);
 	     pBuf = pNextBuf;
 	  }
      }
@@ -1008,7 +1008,7 @@ int                 rank;
 	   *firstBuffer = pBuf->BuNext;
 	if (pBuf->BuNext != NULL)
 	   pBuf->BuNext->BuPrevious = pBuf->BuPrevious;
-	FreeBufTexte (pBuf);
+	FreeTextBuffer (pBuf);
      }
 }
 

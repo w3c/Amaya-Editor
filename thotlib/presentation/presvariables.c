@@ -1051,7 +1051,7 @@ PtrDocument         pDoc;
 	do
 	  {
 	     pBTN = Nouveau->BuNext;
-	     FreeBufTexte (Nouveau);
+	     FreeTextBuffer (Nouveau);
 	     Nouveau = pBTN;
 	  }
 	while (Nouveau != NULL);

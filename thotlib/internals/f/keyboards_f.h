@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void KBMap ( int kb );
+extern void KeyboardMap ( int kb );
 extern void KeyboardsLoadResources ( void );
 extern void TtcDisplayMathKeyboard ( Document document,
                                      View view );
@@ -19,7 +19,7 @@ extern void TtcDisplayGreekKeyboard ( Document document,
 
 #else /* __STDC__ */
 
-extern void KBMap (/* int kb */);
+extern void KeyboardMap (/* int kb */);
 extern void KeyboardsLoadResources (/* void */);
 extern void TtcDisplayMathKeyboard (/* Document document,
                                        View view */);

@@ -14,8 +14,8 @@ extern void TtaListAbstractTree ( Element root,
 extern void TtaListView ( Document document,
                           View view,
                           FILE * fileDescriptor );
-extern void NumPav ( PtrAbstractBox pP );
-extern void AffPaves ( PtrAbstractBox pAb,
+extern void NumberAbsBox ( PtrAbstractBox pP );
+extern void ListAbsBox ( PtrAbstractBox pAb,
                        int Indent,
                        FILE * outfile );
 
@@ -29,8 +29,8 @@ extern void TtaListAbstractTree (/* Element root,
 extern void TtaListView (/* Document document,
                             View view,
                             FILE * fileDescriptor */);
-extern void NumPav (/* PtrAbstractBox pP */);
-extern void AffPaves (/* PtrAbstractBox pAb,
+extern void NumberAbsBox (/* PtrAbstractBox pP */);
+extern void ListAbsBox (/* PtrAbstractBox pAb,
                          int Indent,
                          FILE * outfile */);
 
