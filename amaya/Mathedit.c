@@ -2237,7 +2237,7 @@ void                InitMathML ()
    GetCharType
    returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
-static int GetCharType (unsigned char c, char script)
+static int GetCharType (CHAR_T c, char script)
 {
   int	ret;
 
