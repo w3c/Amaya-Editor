@@ -1157,7 +1157,7 @@ static void computeisminmax (double number, double *min, double *max)
 /*----------------------------------------------------------------------
  getboundingbox : Get bound values of the box
   ----------------------------------------------------------------------*/
-void getboundingbox (GLint size, GLfloat *buffer, int frame,
+void getboundingbox (int size, float *buffer, int frame,
 			    int *xorig, int *yorig, 
 			    int *worig, int *horig)
 {
