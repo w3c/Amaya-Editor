@@ -171,7 +171,9 @@ boolean           orgYComplete;
       pBoxInLine = pLine->LiFirstPiece;
    else
       pBoxInLine = pLine->LiFirstBox;
-   do				/* Boucle sur les boites de la ligne */
+
+   /* Boucle sur les boites de la ligne */
+   do
      {
 	if (pBoxInLine->BxType == BoSplit)
 	   pBox = pBoxInLine->BxNexChild;
@@ -187,9 +189,9 @@ boolean           orgYComplete;
 	/* passe a la boite suivante */
 	pBoxInLine = Suivante (pBox->BxAbstractBox);
      }
+   while (pBox != pLine->LiLastBox && pBox != pLine->LiLastPiece);
 
    /* Calcul de la taille des blancs en pixels */
-   while (!(pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece));
    if (pLine->LiXMax > length)
      {
 	pLine->LiNPixels = pLine->LiXMax - length;
@@ -200,7 +202,8 @@ boolean           orgYComplete;
 	pLine->LiNSpaces = nSpaces;
 	/* Largeur minimum de ligne */
 	pLine->LiMinLength = length + nSpaces * MIN_BLANC;
-	pLine->LiNPixels -= pLine->LiSpaceWidth * nSpaces;	/* Pixels restants a repartir */
+	/* Pixels restants a repartir */
+	pLine->LiNPixels -= pLine->LiSpaceWidth * nSpaces;
      }
    else
      {
@@ -249,7 +252,7 @@ boolean           orgYComplete;
 	/* passe a la boite suivante */
 	pBoxInLine = Suivante (pBox->BxAbstractBox);
      }
-   while (!(pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece));
+   while (pBox != pLine->LiLastBox && pBox != pLine->LiLastPiece);
 }
 
 
@@ -322,7 +325,7 @@ boolean           orgYComplete;
 	/* passe a la boite suivante */
 	pBoxInLine = Suivante (pBox->BxAbstractBox);
      }
-   while (!(pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece));
+   while (pBox != pLine->LiLastBox && pBox != pLine->LiLastPiece);
 }
 
 
@@ -2210,7 +2213,7 @@ int                spaceDelta;
 	length += pFirstBox->BxWidth;
 	pBox = Suivante (pFirstBox->BxAbstractBox);
      }
-   while (!(pFirstBox == pLine->LiLastBox || pFirstBox == pLine->LiLastPiece));
+   while (pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
    EvalAffich = TRUE;
 }
 
@@ -2350,7 +2353,7 @@ boolean            *changeSelectEnd;
 				 *changeSelectEnd = TRUE;
 			      }
 			 }
-		       while (!(pRemainBox == NULL));
+		       while (pRemainBox != NULL);
 
 		       /* Met a jour la boite de coupure */
 		       if (pBox->BxType == BoPiece)
@@ -2889,7 +2892,7 @@ PtrAbstractBox    pAb;
 				 DepOrgY (pFirstBox, NULL, descent, frame);
 				 pPieceBox = Suivante (pFirstBox->BxAbstractBox);
 			      }
-			    while (!(pFirstBox == pNextLine->LiLastBox || pFirstBox == pNextLine->LiLastPiece));
+			    while (pFirstBox != pNextLine->LiLastBox && pFirstBox != pNextLine->LiLastPiece);
 
 			    pNextLine = pNextLine->LiNext;
 			 }
@@ -2923,7 +2926,7 @@ PtrAbstractBox    pAb;
 		       /* passe a la boite suivante */
 		       pPieceBox = Suivante (pFirstBox->BxAbstractBox);
 		    }
-		  while (!(pPieceBox == NULL || pFirstBox == pLine->LiLastBox || pFirstBox == pLine->LiLastPiece));
+		  while (pPieceBox != NULL && pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
 		  /* Valeurs limites du bas de la ligne precedente */
 		  /* et de la position de reference ligne courante */
 		  if (pLine->LiPrevious != NULL)
@@ -3000,7 +3003,7 @@ PtrAbstractBox    pAb;
 				    DepOrgY (pFirstBox, NULL, i, frame);
 				 pPieceBox = Suivante (pFirstBox->BxAbstractBox);
 			      }
-			    while (!(pPieceBox == NULL || pFirstBox == pLine->LiLastBox || pFirstBox == pLine->LiLastPiece));
+			    while (pPieceBox != NULL && pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
 
 			 }
 
@@ -3052,7 +3055,7 @@ PtrAbstractBox    pAb;
 				 DepOrgY (pFirstBox, NULL, h, frame);
 				 pPieceBox = Suivante (pFirstBox->BxAbstractBox);
 			      }
-			    while (!(pFirstBox == pNextLine->LiLastBox || pFirstBox == pNextLine->LiLastPiece));
+			    while (pFirstBox != pNextLine->LiLastBox && pFirstBox != pNextLine->LiLastPiece);
 
 			    pNextLine = pNextLine->LiNext;
 			 }

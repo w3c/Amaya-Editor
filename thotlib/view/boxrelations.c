@@ -50,7 +50,7 @@ BoxEdge           targetEdge;
    int                 i;
    boolean             loop;
    boolean             empty;
-   PtrPosRelations     cepos;
+   PtrPosRelations     pPreviousPosRel;
    PtrPosRelations     pPosRel;
    BoxRelation        *pRelation;
 
@@ -60,12 +60,12 @@ BoxEdge           targetEdge;
      {
 	/* On recherche une entree libre */
 	pPosRel = pOrginBox->BxPosRelations;
-	cepos = NULL;
+	pPreviousPosRel = NULL;
 	loop = TRUE;
 	while (loop && pPosRel != NULL)
 	  {
 	     i = 0;
-	     cepos = pPosRel;
+	     pPreviousPosRel = pPosRel;
 	     do
 	       {
 		  i++;
@@ -84,10 +84,10 @@ BoxEdge           targetEdge;
 	if (loop)
 	  {
 	     GetBPos (&pPosRel);
-	     if (cepos == NULL)
+	     if (pPreviousPosRel == NULL)
 		pOrginBox->BxPosRelations = pPosRel;
 	     else
-		cepos->PosRNext = pPosRel;
+		pPreviousPosRel->PosRNext = pPosRel;
 	     i = 1;
 	  }
 	pRelation = &pPosRel->PosRTable[i - 1];
@@ -101,18 +101,18 @@ BoxEdge           targetEdge;
      {
 	/* On recherche une entree libre */
 	pPosRel = pTargetBox->BxPosRelations;
-	cepos = NULL;
+	pPreviousPosRel = NULL;
 	loop = TRUE;
 	while (loop && pPosRel != NULL)
 	  {
 	     i = 0;
-	     cepos = pPosRel;
+	     pPreviousPosRel = pPosRel;
 	     do
 	       {
 		  i++;
 		  empty = pPosRel->PosRTable[i - 1].ReBox == NULL;
 	       }
-	     while (!(i == MAX_RELAT_POS || empty));
+	     while (i != MAX_RELAT_POS && !empty);
 
 	     if (empty)
 		loop = FALSE;
@@ -125,10 +125,10 @@ BoxEdge           targetEdge;
 	if (loop)
 	  {
 	     GetBPos (&pPosRel);
-	     if (cepos == NULL)
+	     if (pPreviousPosRel == NULL)
 		pTargetBox->BxPosRelations = pPosRel;
 	     else
-		cepos->PosRNext = pPosRel;
+		pPreviousPosRel->PosRNext = pPosRel;
 	     i = 1;
 	  }
 	pRelation = &pPosRel->PosRTable[i - 1];
@@ -157,8 +157,8 @@ boolean             horizRef;
    int                 i;
    boolean             loop;
    boolean             empty;
-   PtrDimRelations      cedim;
-   PtrDimRelations      pDimRel;
+   PtrDimRelations     cedim;
+   PtrDimRelations     pDimRel;
 
    i = 0;
    /* On determine la dimension affectee */
@@ -184,7 +184,7 @@ boolean             horizRef;
 	     i++;
 	     empty = pDimRel->DimRTable[i - 1] == NULL;
 	  }
-	while (!(i == MAX_RELAT_DIM || empty));
+	while (i != MAX_RELAT_DIM && !empty);
 
 	if (empty)
 	   loop = FALSE;
@@ -1877,7 +1877,7 @@ boolean             horizRef;
    int                 j, k;
    boolean             loop;
    boolean             nonempty;
-   PtrPosRelations      cepos;
+   PtrPosRelations      pPreviousPosRel;
    PtrPosRelations      precpos;
    PtrPosRelations      pPosRel;
    PtrAbstractBox             pAb;
@@ -1888,7 +1888,7 @@ boolean             horizRef;
    /* On recherche l'entree a detruire et la derniere entree occupee */
    trouve = 0;
    i = 0;
-   cepos = NULL;
+   pPreviousPosRel = NULL;
    pPosRel = pOrginBox->BxPosRelations;
    precpos = NULL;
    loop = TRUE;
@@ -1925,7 +1925,8 @@ boolean             horizRef;
 		     if (i == MAX_RELAT_POS)
 			pRelation->ReBox = NULL;
 		     else
-			i--;	/* Il faut reexaminer cette entree */
+		       /* il faut reexaminer cette entree */
+			i--;
 		  }
 		/* Si c'est une relation en X */
 		else if (horizRef)
@@ -1939,7 +1940,7 @@ boolean             horizRef;
 			     || (!Pos && !Axe && pRelation->ReOp == OpWidth)))
 		       {
 			  trouve = i;
-			  cepos = pPosRel;
+			  pPreviousPosRel = pPosRel;
 		       }
 
 		     /* Est-ce la relation de position du pave lepave ? */
@@ -1960,7 +1961,7 @@ boolean             horizRef;
 			  if (pAb != lepave)
 			    {
 			       trouve = i;
-			       cepos = pPosRel;
+			       pPreviousPosRel = pPosRel;
 			    }
 		       }
 		  }
@@ -1974,7 +1975,7 @@ boolean             horizRef;
 			     || (!Pos && !Axe && pRelation->ReOp == OpHeight)))
 		  {
 		     trouve = i;
-		     cepos = pPosRel;
+		     pPreviousPosRel = pPosRel;
 		  }
 
 		/* Est-ce la relation de position du pave lepave ? */
@@ -1995,7 +1996,7 @@ boolean             horizRef;
 		     if (pAb != lepave)
 		       {
 			  trouve = i;
-			  cepos = pPosRel;
+			  pPreviousPosRel = pPosRel;
 		       }
 		  }
 		i++;
@@ -2014,7 +2015,7 @@ boolean             horizRef;
    /* On a trouve -> on retasse la liste */
    if (trouve > 0)
      {
-	pRelation = &cepos->PosRTable[trouve - 1];
+	pRelation = &pPreviousPosRel->PosRTable[trouve - 1];
 
 	/* Faut-il defaire la relation inverse ? */
 	if (lepave != NULL && (pRelation->ReOp == OpHorizDep || pRelation->ReOp == OpVertDep))
