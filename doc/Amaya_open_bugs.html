@@ -399,6 +399,18 @@
       <td></td>
     </tr>
     <tr>
+      <td>If you have an SVG image with references to other documents (such
+        as in the Amaya splash page), doing a Save As with the copy image
+        function enabled will also copy the documents that are referenced in
+        the SVG image, regardless of their being links to images or to
+        something else. The xlink:href attribute should probably be only
+        interpreted in this case if it's inside an image element.</td>
+      <td>2002-10-21</td>
+      <td>Jose</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
       <td>Internals 'use' elements are sometimes considered as images at the
         export</td>
       <td>2002-10-18</td>
@@ -800,7 +812,7 @@
       <td></td>
       <td>Yves Lafon</td>
       <td>José</td>
-      <td></td>
+      <td>2002-10-21</td>
     </tr>
   </tbody>
 </table>
