@@ -1151,8 +1151,8 @@ BOXES
 		Visibility: 0;
 	END;
 
- Option_xpm: BEGIN
-	Content: Picture 'option.xpm';
+ Option_gif: BEGIN
+	Content: Picture 'option.gif';
 	HorizPos: Left = Enclosing . Left + 0.2;
 	VertPos: HMiddle = Option . HMiddle;
 	IN Structure_view
@@ -1752,32 +1752,32 @@ BOXES
 		Visibility: 0;
 	END;
 
- Toggle_xpm: BEGIN
-	Content: Picture 'toggle.xpm';
+ Toggle_gif: BEGIN
+	Content: Picture 'toggle.gif';
 	HorizPos: Left = Previous . Right + 1;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
 		Visibility: 0;
 	END;
 
- ToggleS_xpm: BEGIN
-	Content: Picture 'toggle-s.xpm';
+ ToggleS_gif: BEGIN
+	Content: Picture 'toggle-s.gif';
 	HorizPos: Left = Previous . Right + 1;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
 		Visibility: 0;
 	END;
 
- Radio_xpm: BEGIN
-	Content: Picture 'radio.xpm';
+ Radio_gif: BEGIN
+	Content: Picture 'radio.gif';
 	HorizPos: Left = Previous . Right + 1;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
 		Visibility: 0;
 	END;
 
- RadioS_xpm: BEGIN
-	Content: Picture 'radio-s.xpm';
+ RadioS_gif: BEGIN
+	Content: Picture 'radio-s.gif';
 	HorizPos: Left = Previous . Right + 1;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
@@ -4958,7 +4958,7 @@ RULES
 	CreateBefore(VALUE_NAME);
 	CreateWith(VerticalLine);
 	CreateAfter(Option_Frame);
-	CreateFirst(Option_xpm);
+	CreateFirst(Option_gif);
 	HorizPos: Left = Enclosing . Left + 2 pt;	
 	VertPos: Top = Enclosing . Top + 2 pt;
 	LineBreak: No;
@@ -6402,19 +6402,19 @@ ATTRIBUTES
 
  Checked(Checkbox_Input) = Yes_:
 	BEGIN
-	CreateBefore(ToggleS_xpm);
+	CreateBefore(ToggleS_gif);
 	CreateBefore(ATTR_CHECKED);
 	END;
  Checked(Checkbox_Input) = No_:
-	CreateBefore(Toggle_xpm);
+	CreateBefore(Toggle_gif);
 
  Checked(Radio_Input) = Yes_:
 	BEGIN
-	CreateBefore(RadioS_xpm);
+	CreateBefore(RadioS_gif);
 	CreateBefore(ATTR_CHECKED);
 	END;
  Checked(Radio_Input) = No_:
-	CreateBefore(Radio_xpm);
+	CreateBefore(Radio_gif);
 
  Area_Size:
 	BEGIN
