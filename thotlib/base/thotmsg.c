@@ -10,7 +10,7 @@
 #include "libmsg.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "functions.h"
+
 #include "application.h"
 #include "language.h"
 #include "message.h"

@@ -1,10 +1,7 @@
-/* -- Copyright (c) 1990 - 1996 Inria/CNRS  All rights reserved. -- */
-
 /*
  * Structures de donnees pour le traducteur.
  *
  * Declarations de types pour la traduction des documents
- * V. Quint	Janvier 1988 
  *
  */
 

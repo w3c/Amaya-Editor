@@ -16,7 +16,7 @@
 #include "constmenu.h"
 #include "libmsg.h"
 #include "message.h"
-#include "functions.h"
+
 #include "constmedia.h"
 #include "typemedia.h"
 #include "storage.h"

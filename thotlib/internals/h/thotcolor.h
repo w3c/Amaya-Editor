@@ -1,5 +1,5 @@
 /*
- * thotcolor.h : definition of the Thot palettes data structures
+ * thotcolor.h : define the Thot palettes data structures
  */
 
 #ifndef THOT_COLOR_H

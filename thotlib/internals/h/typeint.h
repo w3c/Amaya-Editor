@@ -1,13 +1,10 @@
-#ifndef __TYPE_INT_H__
-#define __TYPE_INT_H__
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 
 /*  Structure interne des documents, arbre abstrait, attribut, reference.
     Declarations de types pour la representation 
     interne des documents.
-    V. Quint	Juin 1984 
 */
+#ifndef __TYPE_INT_H__
+#define __TYPE_INT_H__
 
 #include "typestr.h"
 #include "typeprs.h"

@@ -1,10 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
  * Declarations des types du Mediateur, pour la gestion du dialogue.  
  * typemedia.h : Declarations des types du Mediateur	
- * I. Vatton - Juillet 87
  *
  */
 

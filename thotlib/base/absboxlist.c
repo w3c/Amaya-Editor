@@ -634,19 +634,3 @@ L_Relations         TabDimV;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    StatMedia liste dans le fichier outfile l'etat de l'allocation  | */
-/* |            memoire.                                                | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                StatMedia (FILE * outfile)
-
-#else  /* __STDC__ */
-void                StatMedia (outfile)
-FILE               *outfile;
-
-#endif /* __STDC__ */
-
-{
-}

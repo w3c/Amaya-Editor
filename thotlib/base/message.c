@@ -8,7 +8,6 @@
 #include "constmedia.h"
 #include "typemedia.h"
 
-#include "thotkey.h"
 #include "libmsg.h"
 #include "message.h"
 #include "dialog.h"

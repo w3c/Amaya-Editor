@@ -1,17 +1,18 @@
-/* constmot.h : Declaration des constantes du module de decoupage en mots */
+/* Constants for 8 bits words (Eric Picheral)  */
 
-/* Constantes pour les mots 8 bits (Eric Picheral)  */
-
-/* types de caracteres (sur 8 bits) :
-    U majuscule anglaise    L minuscule anglaise
+/* character types (8 bits) :
+    U english capital letter
+    L english small letter
     N numerique
-    S espace, CR, NL, FF, TAB
-    P ponctuation anglaise
-    C caractere de commande
-    X hexa maj ou min (a-f A-F)
+    S space, CR, NL, FF, TAB
+    P english punctuation
+    C command character
+    X hexa capital or small letter (a-f A-F)
     B
-    F majuscule francaise   G minuscule francaise
-    H majuscule ISO-Latin1  I minuscule ISO-Latin1
+    F french capital letter
+    G french small letter
+    H ISO-Latin1 capital letter
+    I ISO-Latin1 small letter
 */
 #ifndef _U
 #define	_U	01
@@ -56,7 +57,3 @@
 
 #define isimaj(c)       ((_cType_+1)[(unsigned char)c]&(_H|_U))
 #define isalphiso(c)    ((_cType_+1)[(unsigned char)c]&(_H|_I|_U|_L))
-/*
-#define toupper(c)      ((c)-'a'+'A')
-#define tolower(c)      ((c)-'A'+'a')
-*/

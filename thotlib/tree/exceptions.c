@@ -11,7 +11,7 @@
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "functions.h"
+
 
 #define EXPORT extern
 #include "edit_tv.h"

@@ -18,7 +18,7 @@
 #include "document.h"
 
 
-/* #include "functions.h" */
+/*  */
 #include "picture.h"
 #undef EXPORT
 #define EXPORT extern

@@ -13,7 +13,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "constmedia.h"
-#include "functions.h"
+
 #include "typemedia.h"
 #include "view.h"
 #include "document.h"

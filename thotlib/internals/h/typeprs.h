@@ -1,8 +1,4 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 /* Declarations de types pour la presentation des documents */
-
-/* V. Quint	Juin 1984 */
 
 /* DEFINITIONS
    

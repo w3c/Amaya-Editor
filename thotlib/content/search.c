@@ -4,7 +4,7 @@
  */
 
 #include "thot_sys.h"
-#include "functions.h"
+
 #include "constmedia.h"
 #include "typemedia.h"
 #include "storage.h"

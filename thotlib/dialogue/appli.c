@@ -15,7 +15,7 @@
 #include "constmedia.h"
 
 #include "constmenu.h"
-#include "functions.h"
+
 #include "typemedia.h"
 #include "message.h"
 #include "dialog.h"

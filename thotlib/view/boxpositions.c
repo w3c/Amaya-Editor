@@ -5,7 +5,7 @@
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
-#include "functions.h"
+
 #include "constmedia.h"
 #include "typemedia.h"
 

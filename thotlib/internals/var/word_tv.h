@@ -1,9 +1,4 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/* mot.var
-*/
-/* la table pour conversion et test sur alphabet */
+/* convert table for alphabets */
 
 EXPORT short _cType_[1 + 256] = {
         0,
