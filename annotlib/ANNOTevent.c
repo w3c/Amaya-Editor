@@ -1399,7 +1399,7 @@ void ANNOT_SaveDocument (Document doc_annot, View view)
 	{
 	  TtaSetDocumentUnmodified (doc_annot);
 	  /* switch Amaya buttons and menus */
-	  DocStatusUpdate (doc_annot, FALSE);
+	  /* DocStatusUpdate (doc_annot, FALSE); */
 	  LINK_SaveLink (DocumentMeta[doc_annot]->source_doc, isReplyTo);
 	}
       TtaFreeMemory (filename); 
