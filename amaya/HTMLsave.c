@@ -158,10 +158,14 @@ LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case IDC_BROWSE:
+      /* by default keep the same document name */
+	  TtaExtractName (currentDocToSave, SavePath, ObjectName);
+	  strcpy (currentDocToSave, ObjectName);
 	  WIN_ListSaveDirectory (BaseDialog + SaveForm,
 				 TtaGetMessage (AMAYA, AM_SAVE_AS),
 				 currentDocToSave);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave);
+	  ThotCallback (BaseDialog + NameSave, STRING_DATA, currentDocToSave);
 	  break;
 
 	case IDCANCEL:
@@ -172,8 +176,7 @@ LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case ID_CONFIRM:
 	  /* TODO: Extract directory and file name from urlToOpen */
 	  EndDialog (hwnDlg, ID_CONFIRM);
-	  strcpy (currentDocToSave, LastURLName);
-	  /*TtaExtractName (currentDocToSave, SavePath, ObjectName);*/
+	  strcpy (LastURLName, currentDocToSave);
 	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char *) 1);
 	  break;
 	}

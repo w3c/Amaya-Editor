@@ -1361,6 +1361,9 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	  
 	case IDC_BROWSE:
+      /* by default keep the same document name */
+      TtaExtractName (urlToOpen, SavePath, DocumentName);
+	  strcpy (urlToOpen, DocumentName);
 	  WIN_ListSaveDirectory (BaseDialog + SaveForm, TtaGetMessage (AMAYA, AM_SAVE_AS), urlToOpen);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen);
 	  ThotCallback (BaseDialog + NameSave, STRING_DATA, urlToOpen);
