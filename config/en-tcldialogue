@@ -29,13 +29,13 @@
 28 Sort order not found
 29 No bibliography in this document
 30 SORT: Sorting of %d elements ...
-31 %s cann\'ot be opened or created
+31 %s cannot be opened or created
 32 Read only element
 33 No sorting by this value 
 34 SORT: ... terminated
 35 Bad parameter in a sort command
-36 No sort. Please, select a list.
-37 SORT: Begin of sort ...
+36 No sort. Please select a list.
+37 SORT: Starting sort ...
 38 Delete the selection
 39 Text
 40 Action

@@ -7,7 +7,7 @@
 7  TCL extension is loaded
 8  File name missing
 9  TCL result: %s
-10  Recording under preparataion ...
+10  Recording in preparation ...
 11  Unknown file
 12  Not able to create file
 13  No recording: this file already exists
@@ -16,12 +16,12 @@
 15  File recording the TCL program
 16  Sound file
 17  Photo file
-18  Vodeo file
+18  Video file
 19  Script TCL
 20  Please save in a file BEFORE leaving audiotool!
 21  Please save in a file BEFORE leaving phototool!
-22  Please save in a file BEFORE leaving phototool videotool !
-23  Don't forget to save the script in an attribute To_action!
+22  Please save in a file BEFORE leaving videotool !
+23  Don't forget to save the script in a To_action attribute!
 24  Record new sound
 25  Record new photo
 26  Record new video

@@ -1,5 +1,5 @@
 # Ressources file
-# It is a list of <Code Message> paires where
+# It is a list of <Code Message> pairs where
 #   Code is the code used in the source programme
 #   Message is the message to print out
 # Empty lines and lines starting with # are ignored.
