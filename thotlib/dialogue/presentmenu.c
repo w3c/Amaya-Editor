@@ -759,6 +759,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 			  ThotBool modifLineSpacing, int LineSpacing,
 			  ThotBool modifHyphen, ThotBool Hyphenate)
 {
+  PtrElement          pParent, pGParent;
   PtrPRule            pPRule;
   PtrPSchema	      pSPR;
   PtrSSchema	      pSSR;
@@ -771,11 +772,22 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
   /* apply changes */
   if (modifAdjust && Adjust > 0)
     {
+      pParent = pEl->ElParent;
+      if (pParent)
+	pGParent = pParent->ElParent;
+      else
+	pGParent = NULL;
       pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				    PtFunction, FnLine, FALSE, TRUE, &pAttr);
       if (pPRule || pEl->ElTerminal ||
+	  /* align within a cell, a row or a table body */
 	  TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema) ||
-	  TypeHasException (ExcIsRow, pEl->ElTypeNumber, pEl->ElStructSchema))
+	  TypeHasException (ExcIsRow, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+	  /* is it a table body element */
+	  (pParent &&
+	   TypeHasException (ExcIsTable, pParent->ElTypeNumber, pParent->ElStructSchema)) ||
+	  (pGParent &&
+	   TypeHasException (ExcIsTable, pGParent->ElTypeNumber, pGParent->ElStructSchema)))
 	{
 	  pPRule = SearchPresRule (pEl, PtAdjust, (FunctionType)0, &isNew,
 				   pDoc, viewToApply);
