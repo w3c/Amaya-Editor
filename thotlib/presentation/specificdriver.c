@@ -156,14 +156,16 @@ int                 extra;
     while (cur != NULL) {
 	/* shortcut : rules are sorted by type and view number */
 	if ((cur->PrType > type) ||
-	    ((cur->PrType == type) && (cur->PrViewNum > 1)))
+	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
+	    ((cur->PrType == type) && (type == PRFunction) &&
+	     (cur->PrPresFunction > extra)))
 	  {
 	     cur = NULL;
 	     break;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) && (cur->PrPresMode != extra)) {
+	if ((type == PRFunction) && (cur->PrPresFunction != extra)) {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;
@@ -231,14 +233,16 @@ int                 extra;
     while (cur != NULL) {
 	/* shortcut : rules are sorted by type and view number */
 	if ((cur->PrType > type) ||
-	    ((cur->PrType == type) && (cur->PrViewNum > 1)))
+	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
+	    ((cur->PrType == type) && (type == PRFunction) &&
+	     (cur->PrPresFunction > extra)))
 	  {
 	     cur = NULL;
 	     break;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PresFunction) && (cur->PrPresMode != extra)) {
+	if ((type == PresFunction) && (cur->PrPresFunction != extra)) {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;

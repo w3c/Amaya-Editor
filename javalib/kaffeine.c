@@ -640,9 +640,9 @@ dns_failed:
     return(NULL);
 
 io_failed:
-    if (!retries) {
+    if (retries < 3) {
 	retries++;
-	fprintf(stderr,"restaring dns_daemon\n");
+	fprintf(stderr,"restarting dns_daemon\n");
 	fclose(dns_daemonRequest);
 	fclose(dns_daemonResult);
 	JavaInitDns();

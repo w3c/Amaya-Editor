@@ -551,6 +551,12 @@ PtrPRule            r2;
       return (-1);
    if (r1->PrType > r2->PrType)
       return (+1);
+   if ((r1->PrType == r2->PrType) && (r1->PrType == PtFunction)) {
+       if (r1->PrPresFunction > r2->PrPresFunction) 
+           return (-1);
+       if (r1->PrPresFunction < r2->PrPresFunction) 
+           return (+1);
+   }
    if (r1->PrViewNum < r2->PrViewNum)
       return (-1);
    if (r1->PrViewNum > r2->PrViewNum)
@@ -1054,16 +1060,19 @@ int                 extra;
    prev = NULL;
    while (cur != NULL)
      {
-	/* shortcut : rules are sorted by type and view number */
+	/* shortcut : rules are sorted by type and view number and
+	   Functions rules are sorted by number */
 	if ((cur->PrType > pres) ||
-	    ((cur->PrType == pres) && (cur->PrViewNum > 1)))
+	    ((cur->PrType == pres) && (cur->PrViewNum > 1)) ||
+	    ((cur->PrType == pres) && (pres == PtFunction) &&
+	     (cur->PrPresFunction > extra)))
 	  {
 	     cur = NULL;
 	     break;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((pres == PtFunction) && (cur->PrPresMode != extra)) {
+	if ((pres == PtFunction) && (cur->PrPresFunction != extra)) {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;
@@ -1178,14 +1187,16 @@ int                 extra;
      {
 	/* shortcut : rules are sorted by type and view number */
 	if ((cur->PrType > pres) ||
-	    ((cur->PrType == pres) && (cur->PrViewNum > 1)))
+	    ((cur->PrType == pres) && (cur->PrViewNum > 1)) ||
+	    ((cur->PrType == pres) && (pres == PtFunction)) &&
+	     (cur->PrPresFunction > extra))
 	  {
 	     cur = NULL;
 	     break;
 	  }
 
 	/* check for extra specification in case of function rule */
-	if ((pres == PresFunction) && (cur->PrPresMode != extra)) {
+	if ((pres == PresFunction) && (cur->PrPresFunction != extra)) {
 	    cur = cur->PrNextPRule;
 	    continue;
 	}
