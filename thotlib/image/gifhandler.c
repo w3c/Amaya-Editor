@@ -75,12 +75,12 @@ static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
 /*----------------------------------------------------------------------
   ReadGifImage
   ----------------------------------------------------------------------*/
-static unsigned char* ReadGifImage (FILE *fd, int len, int height,
+static unsigned char *ReadGifImage (FILE *fd, int *w, int *h,
 				    unsigned char clmap[3][MAXCOLORMAPSIZE],
 				    int interlace, int ignore)
 {
   unsigned char       c;
-  int                 v;
+  int                 v, len, height, lines;
   int                 xpos = 0, ypos = 0, pass = 0;
   unsigned char      *data;
   unsigned char      *dptr;
@@ -90,26 +90,22 @@ static unsigned char* ReadGifImage (FILE *fd, int len, int height,
     return (NULL);
   if (LWZReadByte (fd, TRUE, c) < 0)
     return (NULL);
-
    /* If this is an "uninteresting picture" ignore it */
   if (ignore)
-    {
-      while (LWZReadByte (fd, FALSE, c) >= 0)
-	;
-      return (NULL);
-    }
-
+    return (NULL);
+  len = *w;
+  height = *h;
+  lines = 1;
   data = (unsigned char*) TtaGetMemory (sizeof (unsigned char) * len * height);
-
   if (data == NULL)
     return (NULL);
-
   while ((v = LWZReadByte (fd, FALSE, c)) >= 0)
     {
+      /* store the byte value */
       dptr = (unsigned char *) (data + (ypos * len) + xpos);
       *dptr = (unsigned char) v;
       
-      ++xpos;
+      xpos++;
       if (xpos == len)
 	{
 	  xpos = 0;
@@ -131,7 +127,7 @@ static unsigned char* ReadGifImage (FILE *fd, int len, int height,
 	      
 	      if (ypos >= height)
 		{
-		  ++pass;
+		    ++pass;
 		  switch (pass)
 		    {
 		    case 1:
@@ -144,20 +140,27 @@ static unsigned char* ReadGifImage (FILE *fd, int len, int height,
 		      ypos = 1;
 		      break;
 		    default:
-		      goto fini;
+		      break;
 		    }
 		}
 	    }
 	  else
-	    ++ypos;
+	    ypos++;
+
+	  if (ypos >= height)
+	    break;
+	  else
+	    /* read a new line */
+	    lines++;
 	}
-      if (ypos >= height)
-	break;
     }
 
- fini:
   if (LWZReadByte (fd, FALSE, c) >= 0)
-    fprintf (stderr, "gifhandler: too much input data, ignoring extra...\n");
+    {
+      /*fprintf (stderr, "gifhandler: too much input data, ignoring extra...\n");*/
+      /* return the number of lines read */
+      *h = lines;
+    }
   return (data);
 }
 
@@ -299,15 +302,13 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 #endif /* _GTK */
 #endif /* _WINDOWS */
 	     }
-	   data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-				LM_to_uint (buf[6], buf[7]), localColorMap,
+	   data = ReadGifImage (fd, w, h, localColorMap,
 				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
 	   return (data);	/* anticipating the exit to prevent gif video */
 	 }
        else
 	 {
-	   data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-				LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
+	   data = ReadGifImage (fd, w, h, GifScreen.ColorMap,
 				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
 	   return (data);	/* anticipating the exit to prevent gif video */
 	 }
@@ -535,7 +536,7 @@ int LWZReadByte (FILE *fd, int flag, int input_code_size)
   highbit returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.     
   ----------------------------------------------------------------------*/
-static int          highbit (unsigned long ul)
+static int highbit (unsigned long ul)
 {
   int                 i;
 
@@ -547,7 +548,7 @@ static int          highbit (unsigned long ul)
   highbit16 returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.          
   ----------------------------------------------------------------------*/
-int                 highbit16 (unsigned long ul)
+int highbit16 (unsigned long ul)
 {
   int                 i;
 
@@ -558,7 +559,7 @@ int                 highbit16 (unsigned long ul)
 /*----------------------------------------------------------------------
   nbbits returns the width of a bit PicMask.
   ----------------------------------------------------------------------*/
-static int          nbbits (unsigned long ul)
+static int nbbits (unsigned long ul)
 {
   while (!(ul & 1))
     ul >>= 1;
