@@ -362,7 +362,7 @@ void InitImage (void)
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
    LastURLImage[0] = EOS;
-   strcpy (ImgFilter, "*.gif");
+   strcpy (ImgFilter, "*.png");
    /* set path on current directory */
    getcwd (DirectoryImage, MAX_LENGTH);
 }
