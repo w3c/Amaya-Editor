@@ -234,6 +234,19 @@ extern PRule        TtaCopyPRule (PRule pRule);
 extern void         TtaAttachPRule (Element element, PRule pRule, Document document);
 
 /*----------------------------------------------------------------------
+   TtaIsCSSPRule
+
+   Check whether a presentation rule is associated with a CSS rule
+
+   Parameters:
+   pRule: the presentation rule to be tested.
+
+   Return value:
+   TRUE if pRule is a CSS rule
+  ----------------------------------------------------------------------*/
+extern ThotBool    TtaIsCSSPRule (PRule pRule);
+
+/*----------------------------------------------------------------------
    TtaRemovePRule
 
    Removes a presentation rule from an element and release that rule.
@@ -625,6 +638,7 @@ extern PRule        TtaNewPRuleForView (/* int presentationType, int view, Docum
 extern PRule        TtaNewPRuleForNamedView ( /* int presentationType, STRING viewName, Document document */ );
 extern PRule        TtaCopyPRule ( /* PRule pRule */ );
 extern void         TtaAttachPRule ( /* Element element, PRule pRule, Document document */ );
+extern ThotBool     TtaIsCSSPRule ( /* PRule pRule */ );
 extern void         TtaRemovePRule ( /* Element element, PRule pRule, Document document */ );
 extern void         TtaSetPRuleValue ( /* Element element, PRule pRule, int value, Document document */ );
 extern void         TtaSetPRuleValueWithUnit ( /* Element element, PRule pRule, int value, TypeUnit unit, Document document */ );

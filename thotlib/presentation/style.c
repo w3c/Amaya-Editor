@@ -2580,7 +2580,7 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
-  GetSpecificStyleContext : user level function needed to allocate and
+  TtaGetSpecificStyleContext : user level function needed to allocate and
   initialize a SpecificContext.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2598,6 +2598,7 @@ Document                doc;
    ctxt->doc = doc;
    ctxt->schema = TtaGetDocumentSSchema (doc);
    ctxt->destroy = 0;
+   ctxt->cssLevel = 0;
    return (ctxt);
 }
 
@@ -2639,7 +2640,8 @@ Document            doc;
 	    {
 	      nextRule = rule;
 	      TtaNextPRule (el, &nextRule);
-	      TtaRemovePRule (el, rule, doc);
+	      if (TtaIsCSSPRule (rule))
+	         TtaRemovePRule (el, rule, doc);
 	      rule = nextRule;
 	    }
 	}
@@ -2676,7 +2678,8 @@ Document            doc;
 		      pRule = attrs->ApCase[j].CaFirstPRule;
 		      while (pRule != NULL)
 			{
-			  ApplyAGenericStyleRule (doc, pSS, 0, attrType+1, 0, pRule, TRUE);
+			  ApplyAGenericStyleRule (doc, pSS, 0, attrType+1, 0,
+						  pRule, TRUE);
 			  pRule = pRule->PrNextPRule;
 			}
 		    }
@@ -2693,7 +2696,8 @@ Document            doc;
 		      pRule = attrs->ApEnumFirstPRule[j];
 		      while (pRule != NULL)
 			{
-			  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0, pRule, TRUE);
+			  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0,
+						  pRule, TRUE);
 			  pRule = pRule->PrNextPRule;
 			}
 		    }

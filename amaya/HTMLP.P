@@ -641,6 +641,25 @@ BOXES
 		END;
 	END;
 
+ ATTR_ID_ANCH: BEGIN
+	Content: Text ' id=';
+	Visibility: 0;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#else
+		Foreground: ATTR_Color;
+#endif
+		Visibility: 5;
+		END;
+	END;
+ VALUE_ID_ANCH: BEGIN
+	Content: (ID);
+	Visibility: 0;
+	IN Links_view
+		Visibility: 5;
+	END;
+
  ATTR_DIR_LTR: BEGIN
 	Content: Text ' dir=ltr';
 	Visibility: 0;
@@ -10064,6 +10083,32 @@ ATTRIBUTES
 	CreateBefore(VALUE_CLASS);
 	END;
 
+ ID(Anchor):
+	BEGIN
+	CreateBefore(ATTR_ID);
+	CreateBefore(VALUE_ID);
+#ifndef PAGE
+	CreateFirst(Target_gif);
+#endif
+	CreateLast(ATTR_ID_ANCH);
+	CreateLast(VALUE_ID_ANCH);
+#ifdef LINK_NUMBER
+        CreateAfter(TargetPageNumber);
+#endif
+#ifndef PAGE
+#ifdef BLACK_WHITE
+	Underline: Underlined;
+#endif
+#endif
+	IN Structure_view BEGIN
+		Foreground: Enclosing =;
+		Underline: Enclosing =;
+		END;
+	IN Alternate_view BEGIN
+		Foreground: Enclosing =;
+		Underline: Enclosing =;
+		END;
+	END;
   ID:
 	BEGIN
 	CreateBefore(ATTR_ID);

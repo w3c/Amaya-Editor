@@ -1250,6 +1250,36 @@ int                 viewToApply;
 }
 
 /*----------------------------------------------------------------------
+   TtaIsCSSPRule
+
+   Check whether a presentation rule is associated with a CSS rule
+
+   Parameters:
+   pRule: the presentation rule to be tested.
+
+   Return value:
+   TRUE if pRule is a CSS rule
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            TtaIsCSSPRule (PRule pRule)
+#else  /* __STDC__ */
+ThotBool            TtaIsCSSPRule (pRule)
+PRule               pRule;
+#endif /* __STDC__ */
+{
+   ThotBool         ret;
+
+   ret = FALSE;
+   UserErrorCode = 0;
+   if (pRule == NULL)
+     TtaError (ERR_invalid_parameter);
+   else
+     /* parameter pRule is correct */
+     ret = (((PtrPRule) pRule)->PrLevel != 0);
+   return ret;
+}
+
+/*----------------------------------------------------------------------
    TtaRemovePRule
 
    Removes a presentation rule from an element and release that rule.

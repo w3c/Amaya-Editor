@@ -2233,6 +2233,8 @@ void MathMLScriptShift (doc, el, value, attr)
        value = ParseCSSUnit (value, &pval);
        if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	  {
+	  /* the specific presentation to be created is not a CSS rule */
+	  ctxt->cssLevel = 0;
           if (attr == MathML_ATTR_superscriptshift)
 	    pval.typed_data.value = - pval.typed_data.value;
 	  TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
@@ -2589,6 +2591,8 @@ void MathMLSetScriptLevel (doc, el, value)
 	   percentage = 282;
 	 pval.typed_data.value = percentage;
 	 pval.typed_data.unit = STYLE_UNIT_PERCENT;
+	 /* the specific presentation to be created is not a CSS rule */
+	 ctxt->cssLevel = 0;
 	 TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);       
 	 }
        else
@@ -2658,7 +2662,11 @@ void MathMLSpacingAttr (doc, el, value, attr)
       value = ParseCSSUnit (value, &pval);
       /***** we should accept namedspace for width *****/
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
-	TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+	{
+	  /* the specific presentation to be created is not a CSS rule */
+	  ctxt->cssLevel = 0;
+	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+	}
     }
   TtaFreeMemory (ctxt);
 }

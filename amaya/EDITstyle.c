@@ -51,9 +51,9 @@ static Document	    ApplyClassDoc;
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
+static void       RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 #else
-void              RemoveElementStyle (el, doc, removeSpan)
+static void       RemoveElementStyle (el, doc, removeSpan)
 Element           el;
 Document          doc;
 ThotBool          removeSpan;

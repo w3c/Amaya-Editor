@@ -4,6 +4,16 @@ export
  GraphMLT:   GraphML
 
 translation
+GraphML: svg
+style_: style
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space
+yes_: yes
+no_: no
+height_: height
+width_: width
+line_: line
+text_: text
+GRAPHICS_UNIT: \240
+

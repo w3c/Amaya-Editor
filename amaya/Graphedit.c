@@ -978,7 +978,7 @@ NotifyElement *event;
 }
 
 /*----------------------------------------------------------------------
- GraphicsPRuleChange
+ GraphicsPRuleChanged
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -997,7 +997,8 @@ NotifyPresentation *event;
   presType = event->pRuleType;
   if (presType == PRVertPos || presType == PRHorizPos ||
       presType == PRHeight ||  presType == PRWidth)
-    /* check that the svg element includes that element */
+    /* check that the enclosing svg element still encompasses the
+       element whose size or position has just been changed */
     CheckGraphMLRoot (event->document, event->element);
 }
 
@@ -1130,6 +1131,7 @@ NotifyPresentation *event;
     }
   return ret; /* let Thot perform normal operation */
 }
+
 /*----------------------------------------------------------------------
    ControlPointChanged
    A control point has been changed in a polyline, a polygon,

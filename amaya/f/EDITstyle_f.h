@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void RemoveElementStyle ( Element el,
-                                 Document doc,
-                                 ThotBool removeSpan );
 extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
                                          STRING newpath,
                                          STRING imgpath,
@@ -32,9 +29,6 @@ extern void StyleCallbackDialogue ( int ref,
 
 #else /* __STDC__ */
 
-extern void RemoveElementStyle (/* Element el,
-                                   Document doc,
-                                   ThotBool removeSpan */);
 extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
                                            STRING newpath,
                                            STRING imgpath,

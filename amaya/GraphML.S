@@ -80,6 +80,9 @@ STRUCT
 	      cx = text;
 	      cy = text;
               r = text;
+	      fill;
+              stroke;
+	      stroke_width;
               linestyle_)
         = AGGREGATE
 	      desc; title; metadata;
@@ -92,6 +95,9 @@ STRUCT
 	      cy;
 	      rx;
 	      ry;
+	      fill;
+              stroke;
+	      stroke_width;
               linestyle_)
         = AGGREGATE
 	      desc; title; metadata;
@@ -104,6 +110,9 @@ STRUCT
 	      y1 = text;
               x2 = text;
 	      y2 = text;
+	      fill;
+              stroke;
+	      stroke_width;
               linestyle_;
               arrowhead)
         = AGGREGATE
@@ -116,6 +125,9 @@ STRUCT
               height_;
 	      transform;
               points;
+	      fill;
+              stroke;
+	      stroke_width;
               arrowhead;
               linestyle_)
         = AGGREGATE
@@ -128,6 +140,9 @@ STRUCT
               height_;
 	      transform;
               points;
+	      fill;
+              stroke;
+	      stroke_width;
               linestyle_)
         = AGGREGATE
 	      desc; title; metadata;

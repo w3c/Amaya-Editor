@@ -993,6 +993,7 @@ RULES
 	LineBreak: No;
 	Justify: No;
 	Hyphenate: No;
+	Gather: Yes;
 	LineWeight: 1 pt;
 	IN Graph_Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;

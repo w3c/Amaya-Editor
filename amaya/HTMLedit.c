@@ -787,6 +787,7 @@ Boolean		    withUndo;
      }
    /* copie the text into the NAME attribute */
    TtaSetAttributeText (attr, url, el, doc);
+   TtaSetDocumentModified (doc);
    /* Check the attribute value to make sure that it's unique within */
    /* the document */
    MakeUniqueName (el, doc);

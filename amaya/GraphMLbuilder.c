@@ -934,6 +934,7 @@ ThotBool        delete
 	    if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	      {
 	      pval.typed_data.unit = STYLE_UNIT_PX;
+	      ctxt->cssLevel = 0;
               ctxt->destroy = delete;
 	      TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
 	      }
@@ -944,6 +945,7 @@ ThotBool        delete
 	    ptr++;
 	    pval.typed_data.unit = STYLE_UNIT_PX;
 	    pval.typed_data.value = 0;
+	    ctxt->cssLevel = 0;
 	    ctxt->destroy = delete;
 	    TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
 	    }

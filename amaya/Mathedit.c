@@ -471,53 +471,60 @@ Document doc;
   Element            sibling, row, parent, firstChild, lastChild, next,
                      previous;
   ElementType        elType;
-  int                nChildren;
+  int                nChildren, oldStructureChecking;
 
   /* check whether the parent is a mrow or inferred mrow */
   parent = TtaGetParent (el);
   if (parent == NULL)
-     return;
+    return;
   if (!ChildOfMRowOrInferred (el))
-	 {
-	 sibling = TtaGetFirstChild (parent);
-	 nChildren = 0;
-	 firstChild = sibling;
-	 while (sibling != NULL)
+    /* parent is a mrow or inferred mrow */
+    {
+      /* count the number of children of parent that are not placeholders */
+      sibling = TtaGetFirstChild (parent);
+      nChildren = 0;
+      firstChild = sibling;
+      while (sibling != NULL)
+	{
+	  elType = TtaGetElementType (sibling);
+	  if (elType.ElTypeNum != MathML_EL_Construct)
+	    /* it's not a placeholder, count it */
+	    nChildren++;
+	  TtaNextSibling (&sibling);
+	}
+      if (nChildren > 1)
+	{
+	  /* generate a new mrow element to include these elements */
+	  elType.ElTypeNum = MathML_EL_MROW;
+	  row = TtaNewElement (doc, elType);
+	  lastChild = TtaGetLastChild (parent);
+	  oldStructureChecking = TtaGetStructureChecking (doc);
+	  TtaSetStructureChecking (0, doc);
+	  TtaInsertSibling (row, lastChild, FALSE, doc);
+	  TtaRegisterElementCreate (row, doc);
+	  sibling = firstChild;
+	  previous = NULL;
+	  while (sibling != NULL)
 	    {
-	    elType = TtaGetElementType (sibling);
-	    if (elType.ElTypeNum != MathML_EL_Construct)
-	       nChildren++;
-	    TtaNextSibling (&sibling);
+	      next = sibling;
+	      TtaNextSibling (&next);
+	      TtaRegisterElementDelete (sibling, doc);
+	      TtaRemoveTree (sibling, doc);
+	      /* move the element into the new MROW */
+	      if (previous == NULL)
+		TtaInsertFirstChild (&sibling, row, doc);
+	      else
+		TtaInsertSibling (sibling, previous, FALSE, doc);
+	      previous = sibling;
+	      if (next == row)
+		sibling = NULL;
+	      else
+		sibling = next;
 	    }
-	 if (nChildren > 1)
-	    {
-	      /* generate a new row element to include these elements */
-	      elType.ElTypeNum = MathML_EL_MROW;
-	      row = TtaNewElement (doc, elType);
-	      lastChild = TtaGetLastChild (parent);
-	      TtaInsertSibling (row, lastChild, FALSE, doc);
-	      TtaRegisterElementCreate (row, doc);
-	      sibling = firstChild;
-	      previous = NULL;
-	      while (sibling != NULL)
-		{
-		next = sibling;
-		TtaNextSibling (&next);
-		TtaRegisterElementDelete (sibling, doc);
-	        TtaRemoveTree (sibling, doc);
-	        /* move the old element into the new MROW */
-		if (previous == NULL)
-	           TtaInsertFirstChild (&sibling, row, doc);
-		else
-		   TtaInsertSibling (sibling, previous, FALSE, doc);
-		previous = sibling;
-		if (next == row)
-		   sibling = NULL;
-		else
-		   sibling = next;
-		}
-	    }
-	 }
+	  /* resume structure checking */
+	  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
