@@ -483,7 +483,8 @@ static char *ParseBorderValue (char *cssRule, PresentationValue *border)
        if (border->typed_data.value == 0)
 	 border->typed_data.unit = UNIT_PX;
        else if (border->typed_data.unit == UNIT_INVALID ||
-		border->typed_data.unit == UNIT_BOX)
+		border->typed_data.unit == UNIT_BOX ||
+		border->typed_data.unit == UNIT_PERCENT)
 	 {
 	   border->typed_data.unit = UNIT_INVALID;
 	   border->typed_data.value = 0;
