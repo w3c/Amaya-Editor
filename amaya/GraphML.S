@@ -28,9 +28,13 @@ STRUCT
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
    GraphicsElement = CASE OF
+	
 	    desc = TEXT;                             { NEW }
+	
 	    title = TEXT;                            { NEW }
+	
 	    metadata = TEXT;                         { NEW }
+	
             Line_
                 (ATTR points = text;
                                 IntPosX = integer; IntPosY = integer;
@@ -39,6 +43,7 @@ STRUCT
                       arrowhead = none_, start, end_, both;
                       depth_ = integer)
                 = GRAPHICS;
+	
             Rectangle
                 (ATTR position = text;               { OBSOLETE }
                                 IntPosX; IntPosY;    { OBSOLETE }
@@ -56,6 +61,7 @@ STRUCT
                   Label = HTML;
                   GRAPHICS;
                   END;
+	
             RoundRect
                 (ATTR position;                      { OBSOLETE }
                                 IntPosX; IntPosY;    { OBSOLETE }
@@ -69,6 +75,7 @@ STRUCT
                   Label;
                   GRAPHICS;
                   END;
+	
             Circle
                 (ATTR position;                      { OBSOLETE }
                                 IntPosX; IntPosY;    { OBSOLETE }
@@ -80,6 +87,7 @@ STRUCT
                   Label;
                   GRAPHICS;
                   END;
+	
             Oval
                 (ATTR position;                      { OBSOLETE }
                                 IntPosX; IntPosY;    { OBSOLETE }
@@ -92,6 +100,7 @@ STRUCT
                   Label;
                   GRAPHICS;
                   END;
+	
             Polyline
                 (ATTR position;
                                 IntPosX; IntPosY;
@@ -102,6 +111,7 @@ STRUCT
                       linestyle_;
                       depth_)
                 = GRAPHICS;
+	
             Polygon
                 (ATTR position;
                                 IntPosX; IntPosY;
@@ -115,6 +125,7 @@ STRUCT
                   Label;
                   GRAPHICS;
                   END;
+	
             Spline
                 (ATTR position;
                                 IntPosX; IntPosY;
@@ -125,6 +136,7 @@ STRUCT
                       linestyle_;
                       depth_)
                 = GRAPHICS;
+	
             ClosedSpline
                 (ATTR position;
                                 IntPosX; IntPosY;

@@ -1307,10 +1307,14 @@ ThotBool            save;
 			(*ThotLocalActions[T_lock]) ();
 		      }
 		  }
-		/* on ne supprime pas l'element racine mais son contenu */
+
+		/* on ne supprime pas l'element racine ou un element
+		   obligatoire unique, mais leur contenu */
 		stop = FALSE;
 		do
-		  if (firstSel == lastSel && firstSel->ElParent == NULL)
+		  if (firstSel == lastSel && 
+		      (firstSel->ElParent == NULL  ||
+		       !CanCutElement (firstSel, pSelDoc, NULL)))
 		    /* c'est la racine */
 		    if (firstSel->ElTerminal ||
 			firstSel->ElFirstChild == NULL)
