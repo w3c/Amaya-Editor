@@ -1622,12 +1622,10 @@ void UpdateContextSensitiveMenus (Document doc)
      NewSelInElem = FALSE;
    else
      {
-#ifdef ANNOTATIONS
 	/* a quick hack before the commit */
         elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-#else
-	elType.ElSSchema = TtaGetDocumentSSchema (doc);
-#endif /* ANNOTATIONS */
+	if (!elType.ElSSchema)
+	  return;
 	elType.ElTypeNum = HTML_EL_Preformatted;
 	NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
      }
