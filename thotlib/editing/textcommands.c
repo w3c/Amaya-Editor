@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -112,25 +112,25 @@ static void MoveInLine (int frame, ThotBool toend)
    else if (toend)
      {
 	/* get the last box in the line */
-	if (pLine->LiLastPiece != NULL)
+	if (pLine->LiLastPiece)
 	   pBox = pLine->LiLastPiece;
 	else
 	   pBox = pLine->LiLastBox;
 
 	pAb = pBox->BxAbstractBox;
 	if (IsTextLeaf (pAb))
-	   nChars = pBox->BxIndChar + pBox->BxNChars + 1;
+	   nChars = pBox->BxFirstChar + pBox->BxNChars + 1;
      }
    else
      {
-	if (pLine->LiFirstPiece != NULL)
+	if (pLine->LiFirstPiece)
 	   pBox = pLine->LiFirstPiece;
 	else
 	   pBox = pLine->LiFirstBox;
 
 	pAb = pBox->BxAbstractBox;
 	if (IsTextLeaf (pAb))
-	   nChars = pBox->BxIndChar + 1;
+	   nChars = pBox->BxFirstChar;
      }
    /* update the selection */
    ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
@@ -228,12 +228,13 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 	     if (IsTextLeaf (pAb))
 	       {
 		  x -= pBox->BxXOrg;
-		  LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index, &nChars, &nbbl);
+		  LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index,
+				     &nChars, &nbbl);
 		  if (extendSel && LeftExtended && nChars == pBox->BxNChars)
 		    /* add the last char in the left selection */
-		    nChars = pBox->BxIndChar + nChars;
+		    nChars = pBox->BxFirstChar + nChars;
 		  else
-		    nChars = pBox->BxIndChar + nChars + 1;
+		    nChars = pBox->BxFirstChar + nChars + 1;
 	       }
 	     /* Change the selection */
 	     if (extendSel)
@@ -268,7 +269,7 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
 static void MovingCommands (int code, Document doc, View view, ThotBool extendSel)
 {
    PtrBox              pBox, pBoxBegin, pBoxEnd;
-   PtrElement          pEl = NULL;
+   PtrElement          pEl = NULL, firstEl, lastEl;
    PtrLine             pLine;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
@@ -279,6 +280,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
    int                 h, w;
    int                 indpos, xpos;
    int                 first, last;
+   int                 firstC, lastC;
    ThotBool            done, top = TRUE;
 
    indpos = 0;
@@ -295,13 +297,12 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
        pViewSelEnd = &(pFrame->FrSelectionEnd);
        /* beginning of the selection */
        pBoxBegin = pViewSel->VsBox;
-       if (pBoxBegin != NULL)
+       if (pBoxBegin)
 	 {
-	   indpos = pViewSel->VsIndBox;
 	   xpos = pViewSel->VsXPos;
-	   while (pBoxBegin != NULL && pBoxBegin->BxType == BoGhost &&
-		  pBoxBegin->BxAbstractBox != NULL &&
-		  pBoxBegin->BxAbstractBox->AbFirstEnclosed != NULL)
+	   while (pBoxBegin && pBoxBegin->BxType == BoGhost &&
+		  pBoxBegin->BxAbstractBox &&
+		  pBoxBegin->BxAbstractBox->AbFirstEnclosed)
 	       /* the real selection is on child elements */
 	       pBoxBegin = pBoxBegin->BxAbstractBox->AbFirstEnclosed->AbBox;
 	 }
@@ -311,8 +312,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
        if (pBoxEnd != NULL)
 	 {
 	   while (pBoxEnd != NULL && pBoxEnd->BxType == BoGhost &&
-		  pBoxEnd->BxAbstractBox != NULL &&
-		  pBoxEnd->BxAbstractBox->AbFirstEnclosed != NULL)
+		  pBoxEnd->BxAbstractBox &&
+		  pBoxEnd->BxAbstractBox->AbFirstEnclosed)
 	     {
 	       /* the real selection is on child elements */
 	       pBoxEnd = pBoxEnd->BxAbstractBox->AbFirstEnclosed->AbBox;
@@ -374,11 +375,26 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	 return;
        else
 	 Moving = TRUE;
+       if (DocSelectedAttr)
+	 {
+	   /* work within an attribute */
+	   firstC = FirstSelectedCharInAttr;
+	   lastC = LastSelectedCharInAttr;
+	   firstEl = NULL;
+	   lastEl = NULL;
+	 }
+       else
+	 {
+	   firstC = FirstSelectedChar;
+	   lastC = LastSelectedChar;
+	   firstEl = FirstSelectedElement;
+	   lastEl = LastSelectedElement;
+	 }
        /* could we shrink the current extended selection */
        if (extendSel)
 	 {
-	   if (FirstSelectedChar == LastSelectedChar &&
-	       FirstSelectedElement == LastSelectedElement &&
+	   if (firstC == lastC &&
+	       firstEl == lastEl &&
 	       SelPosition)
 	     {
 	       RightExtended = FALSE;
@@ -386,8 +402,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     }
 	   else if (!RightExtended && !LeftExtended)
 	     {
-	       if (FirstSelectedElement == FixedElement &&
-		   FirstSelectedChar == FixedChar)
+	       if (firstEl == FixedElement &&
+		   firstC == FixedChar)
 		 {
 		   RightExtended = TRUE;
 		   LeftExtended = FALSE;
@@ -426,39 +442,38 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		 {
 		   /* move the right extremity */
 		   pBox = pBoxEnd;
-		   x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
+		   x = lastC;
 		   xpos = pViewSelEnd->VsXPos;
 		 }
 	       else
 		 /* move the left extremity */
-		 x = indpos + pBox->BxIndChar;
+		 x = firstC;
 	       if (x > 0)
 		 {
 		   if (extendSel)
 		     {
-		       if (RightExtended &&
-			   FirstSelectedChar == LastSelectedChar &&
-			   FirstSelectedElement == LastSelectedElement)
+		       if (RightExtended && firstC == lastC - 1 &&
+			   firstEl == lastEl)
 			 {
 			   /* a single insert point */
 			   ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, FALSE, TRUE, FALSE, FALSE);
 			   RightExtended = FALSE;
 			 }
 		       else if (SelPosition &&
-				FirstSelectedChar == LastSelectedChar &&
-				FirstSelectedElement == LastSelectedElement)
+				firstC == lastC &&
+				firstEl == lastEl)
 			 {
 			   /* select one character */
-			   ChangeSelection (frame, pBox->BxAbstractBox, x, TRUE, TRUE, FALSE, FALSE);
+			   ChangeSelection (frame, pBox->BxAbstractBox, x - 1, TRUE, TRUE, FALSE, FALSE);
 			   LeftExtended = TRUE;
 			 }
 		       else
 			 /* extend the selection */
-			 ChangeSelection (frame, pBox->BxAbstractBox, x, TRUE, TRUE, FALSE, FALSE);
+			 ChangeSelection (frame, pBox->BxAbstractBox, x - 1, TRUE, TRUE, FALSE, FALSE);
 		     }
 		   else
-		     /* the x is equal to FirstSelectedChar - 1 */
-		     ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
+		     /* the x is equal to first */
+		     ChangeSelection (frame, pBox->BxAbstractBox, x - 1, FALSE, TRUE, FALSE, FALSE);
 		   /* show the beginning of the selection */
 		   if (pBoxBegin->BxXOrg + pViewSel->VsXPos + 4 < pFrame->FrXOrg)
 		     {
@@ -472,7 +487,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		 {
 		   /* a new box will be selected */
 		   /* check if the box is within a line */
-		   GetLine (&pLine);
+		   pLine = SearchLine (pBox);
 		   if (pLine)
 		     {
 		       y = pBox->BxYOrg + (pBox->BxHeight / 2);
@@ -526,26 +541,25 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		   else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
 		     x =  pBox->BxNChars;
 		   else
-		     x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
+		     x = lastC;
 		 }
 	       else
 		 /* move the left extremity */
-		 x = indpos + pBox->BxIndChar;
+		 x = firstC;
 	       if (x < pBox->BxAbstractBox->AbBox->BxNChars)
 		 {
 		   if (extendSel)
 		     {
-		       if (LeftExtended &&
-			   FirstSelectedChar == LastSelectedChar &&
-			   FirstSelectedElement == LastSelectedElement)
+		       if (LeftExtended && firstC == lastC - 1 &&
+			   firstEl == lastEl)
 			 {
 			   /* a single insert point */
 			   ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, FALSE, TRUE, FALSE, FALSE);
 			   LeftExtended = FALSE;
 			 }
 		       else if (SelPosition &&
-				FirstSelectedChar == LastSelectedChar &&
-				FirstSelectedElement == LastSelectedElement)
+				firstC == lastC &&
+				firstEl == lastEl)
 			 {
 			   /* select one character */
 			   ChangeSelection (frame, pBox->BxAbstractBox, x + 1, TRUE, TRUE, FALSE, FALSE);
@@ -553,10 +567,10 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 			 }
 		       else
 			 /* extend the end of the current selection */
-			 ChangeSelection (frame, pBox->BxAbstractBox, x + 2, TRUE, TRUE, FALSE, FALSE);
+			 ChangeSelection (frame, pBox->BxAbstractBox, x + 1, TRUE, TRUE, FALSE, FALSE);
 		     }
 		   else
-		     ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
+		     ChangeSelection (frame, pBox->BxAbstractBox, x + 1, FALSE, TRUE, FALSE, FALSE);
 		   /* show the beginning of the selection */
 		   if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
 		     {
@@ -569,7 +583,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	       else
 		 {
 		   /* check if the box is within a line */
-		   GetLine (&pLine);
+		   pLine = SearchLine (pBox);
 		   if (pLine)
 		     {
 		       y = pBox->BxYOrg + (pBox->BxHeight / 2);
@@ -701,23 +715,23 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   if (RightExtended)
 	     {
 	       /* shrink the current selection */
-	       first = LastSelectedChar;
-	       pEl = LastSelectedElement;
+	       first = lastC;
+	       pEl = lastEl;
 	     }
 	   else
 	     {
 	       /* extend the current selection */
-	       first = FirstSelectedChar - 1;
-	       pEl = FirstSelectedElement;
+	       first = firstC;
+	       pEl = firstEl;
 	     }
 	   done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if ((RightExtended && last >= LastSelectedChar) ||
-	       (LeftExtended && first == FirstSelectedChar - 1))
+	   if ((RightExtended && last >= lastC) ||
+	       (LeftExtended && first == firstC - 1))
 	     /* It was not the beginning of the next word */
 	     done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
 	   if (extendSel)
 	     {
-	       if (RightExtended && FirstSelectedElement == FixedElement &&
+	       if (!LeftExtended && firstEl == FixedElement &&
 		   last <= FixedChar)
 		 {
 		 /* change the extension direction */
@@ -725,7 +739,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		   LeftExtended = TRUE;
 		 }
 	       if (LeftExtended)
-		 i = first + 1;
+		 i = first;
 	       else
 		 i = last;
 	       if (pEl->ElAbstractBox[view - 1])
@@ -733,7 +747,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     }
 	   else
 	     {
-	       SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	       SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
 	       /* remove the extension direction */
 	       LeftExtended = FALSE;
 	     }
@@ -745,23 +759,23 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   if (LeftExtended)
 	     {
 	       /* shrink the current selection */
-	       last = FirstSelectedChar;
-	       pEl = FirstSelectedElement;
+	       last = firstC;
+	       pEl = firstEl;
 	     }
 	   else
 	     {
 	       /* extend the current selection */
-	       last = LastSelectedChar;
-	       pEl = LastSelectedElement;
+	       last = lastC;
+	       pEl = lastEl;
 	     }
 	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if ((!LeftExtended && first == LastSelectedChar) ||
-	       (LeftExtended && first >= FirstSelectedChar))
+	   if ((!LeftExtended && first == lastC) ||
+	       (!RightExtended && first >= firstC))
 	     /* It was not the beginning of the next word */
 	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
 	   if (extendSel)
 	     {
-	       if (LeftExtended && FirstSelectedElement == FixedElement &&
+	       if (LeftExtended && firstEl == FixedElement &&
 		   first >= FixedChar)
 		 {
 		 /* change the extension direction */
@@ -777,7 +791,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     }
 	   else
 	     {
-	       SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	       SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
 	       /* remove the extension direction */
 	       LeftExtended = FALSE;
 	     }
@@ -897,160 +911,142 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   PtrElement          pEl;
   PtrAbstractBox      pBlock, pOldBlock;
   CHAR_T             *text;
-  int                 i, j, max;
-  int                 k, lg, maxLength;
+  int                 i, max;
+  int                 lg, maxLength;
   int                 firstChar, lastChar;
-  int                 v;
+  int                 v, ind;
   ThotBool            inAttr;
 
   /* get the current view */
   v = view - 1;
-  j = 0;
   inAttr = FALSE;
-  /* Recupere la selection courante */
-  if (!GetCurrentSelection (&pDoc, &pFirstEl, &pLastEl, &firstChar, &lastChar))
-    /* Rien a copier */
-    return 0;
-
+  maxLength = 0;
+  clipboard = NULL;
   lg = 1;
-  if (lastChar == 0)
-    /* Il faut prendre tout le contenu de tout l'element */
-    lastChar = pLastEl->ElVolume;
-  if (pFirstEl->ElTypeNumber != CharString + 1)
-    /* if it's an image firstChar is not significant here. Set it to 0 */
-    firstChar = 0;
-
-  /* Calcule la longueur du buffer a produire */
-  if (pFirstEl == pLastEl)
-    /* only one element */
-    maxLength = lastChar - firstChar;
-  else
-    {
-      maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
-      pEl = pFirstEl;
-      while (pEl != NULL)
-	{
-	  pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-	  if (pEl && ElemIsBefore (pLastEl, pEl))
-	    /* l'element trouve' est apres l'element de fin, on */
-	    /* fait comme si on n'avait pas trouve' */
-	    pEl = NULL;
-
-	  /* On ajoute le volume de l'element */
-	  if (pEl != NULL)
-	    {
-	      if (pEl == pLastEl)
-		maxLength += lastChar;
-	      else
-		maxLength += pEl->ElVolume;
-	      lg += 2;
-	    }
-	}
-    }
-
-  if (pDoc == DocSelectedAttr)
+  pFirstEl = NULL;
+  if (DocSelectedAttr)
     {
       /* Selection is within an attribute */
+      pDoc = DocSelectedAttr;
       firstChar = FirstSelectedCharInAttr;
       lastChar = LastSelectedCharInAttr;
       maxLength = LastSelectedCharInAttr - FirstSelectedCharInAttr;
       inAttr = TRUE;
       clipboard = AbsBoxSelectedAttr->AbText;
     }
-  else if (maxLength == 0)
+  else if (SelectedDocument)
+    {
+      /* selection within an element */
+      pDoc = SelectedDocument;
+      pFirstEl = FirstSelectedElement;
+      pLastEl = LastSelectedElement;
+      firstChar = FirstSelectedChar;
+      lastChar = LastSelectedChar;
+      if (lastChar == 0)
+	/* Il faut prendre tout le contenu de tout l'element */
+	lastChar = pLastEl->ElVolume;
+      if (pFirstEl->ElTypeNumber != CharString + 1)
+	/* if it's an image firstChar is not significant here. Set it to 0 */
+	firstChar = 0;
+
+      /* Calcule la longueur du buffer a produire */
+      if (pFirstEl == pLastEl)
+	/* only one element */
+	maxLength = lastChar - firstChar;
+      else
+	{
+	  maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
+	  pEl = pFirstEl;
+	  while (pEl)
+	    {
+	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+	      if (pEl && ElemIsBefore (pLastEl, pEl))
+		/* l'element trouve' est apres l'element de fin, on */
+		/* fait comme si on n'avait pas trouve' */
+		pEl = NULL;
+
+	      /* On ajoute le volume de l'element */
+	      if (pEl != NULL)
+		{
+		  if (pEl == pLastEl)
+		    maxLength += lastChar;
+		  else
+		    maxLength += pEl->ElVolume;
+		  lg += 2;
+		}
+	    }
+	}
+      if (pFirstEl->ElTerminal && pFirstEl->ElLeafType == LtText)
+	clipboard = pFirstEl->ElText;
+    }
+
+  if (maxLength == 0)
     /* nothing selected */
     return 0;
-  else if (pFirstEl->ElTerminal && pFirstEl->ElLeafType == LtText)
-    clipboard = pFirstEl->ElText;
-  else
-    clipboard = NULL;
-
   /* Adding 100 characters for extra CR */
   max = maxLength + lg;
   /* Allocate a buffer with the right length */
   text = TtaGetMemory (max * sizeof (CHAR_T));
   /* Copy the text into the buffer */
   i = 0;
-  lg = 0;
-  /* Teste si le premier element est de type texte */
+  ind = firstChar - 1;
   if (clipboard)
     {
-      /* On saute les firstChar premiers caracteres */
-      k = 0;
-      j = clipboard->BuLength;
-      while (clipboard && lg < firstChar)
+      /* The first element is a text, locate the first character */
+      while (clipboard && ind > clipboard->BuLength)
 	{
-	  j = clipboard->BuLength;
-	  if (j > firstChar - lg)
-	    {
-	      /* La fin du buffer est a copier */
-	      k = firstChar - lg - 1;	/* decalage dans le clipboard */
-	      j -= k;	/* longueur restante dans le clipboard */
-	      lg = firstChar;
-	    }
-	  else
-	    {
-	      /* Il faut sauter tout le buffer */
-	      lg += j;
-	      clipboard = clipboard->BuNext;
-	      j = 0;
-	    }
+	  ind -= clipboard->BuLength;
+	  clipboard = clipboard->BuNext;
 	}
 
-      /* Recopie le texte du premier element */
-      lg = 0;
-      while (clipboard != NULL && i < max && lg < maxLength)
+      /* copy the text of the first element */
+      while (clipboard && i < max && maxLength)
 	{
-	  if (j >= max - i)
-	    j = max - i - 1;	/* deborde du buffer */
-	  if (j > maxLength - lg)
-	    j = maxLength - lg;	/* fin du texte a copier */
-	  ustrncpy (&text[i], &clipboard->BuContent[k], j);
-	  i += j;
-	  lg += j;
-	  k = 0;
+	  lg = clipboard->BuLength - ind;
+	  if (lg > maxLength)
+	    lg = maxLength;
+	  ustrncpy (&text[i], &clipboard->BuContent[ind], lg);
+	  i += lg;
+	  ind = 0;
+	  maxLength -= lg;
 	  clipboard = clipboard->BuNext;
-	  if (clipboard != NULL)
-	    j = clipboard->BuLength;
 	}
     }
   
-  /* Recopie le texte des elements suivants */
+  /* copy the text of following elements */
   pOldBlock = NULL;
   pEl = pFirstEl;
-  while (pEl != NULL)
+  while (pEl)
     {
       pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-      if (pEl != NULL)
+      if (pEl)
 	{
-	  /* l'element trouve' est pointe' par pEl */
-	  if (pEl != pLastEl &&
-	      /* l'element trouve' n'est pas l'element ou il faut s'arreter */
-	      ElemIsBefore (pLastEl, pEl))
-	    /* l'element trouve' est apres l'element de fin, on */
-	    /* fait comme si on n'avait pas trouve' */
-	    pEl = NULL;
-	  
-	  if (pEl != NULL)
+	  if (pEl != pLastEl && ElemIsBefore (pLastEl, pEl))
+	      /* it's after the last element */
+	    pEl = NULL;	  
+	  if (pEl)
 	    {
 	      pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
-	      if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
-		/* Ajoute un \n en fin d'element */
-		ustrcpy (&text[i++], TEXT ("\n\n"));
-	      
+	      if (i != 0 && pBlock != pOldBlock && pOldBlock)
+		{
+		  /* Add new lines */
+		  text[i++] = NEW_LINE;
+		  text[i++] = NEW_LINE;
+		  text[i++] = EOS;
+		}
 	      /* Recopie le texte de l'element */
 	      pOldBlock = pBlock;
 	      clipboard = pEl->ElText;
-	      while (clipboard != NULL && i < max && lg < maxLength)
+	      ind = 0;
+	      while (clipboard && i < max && maxLength)
 		{
-		  j = clipboard->BuLength;
-		  if (j >= max - i)
-		    j = max - i - 1;
-		  if (j > maxLength - lg)
-		    j = maxLength - lg;
-		  ustrncpy (&text[i], clipboard->BuContent, j);
-		  i += j;
-		  lg += j;
+		  lg = clipboard->BuLength - ind;
+		  if (lg > maxLength)
+		    lg = maxLength;
+		  ustrncpy (&text[i], &clipboard->BuContent[ind], lg);
+		  i += lg;
+		  ind = 0;
+		  maxLength -= lg;
 		  clipboard = clipboard->BuNext;
 		}
 	    }
@@ -1078,10 +1074,9 @@ void TtcCopyToClipboard (Document doc, View view)
 
    /* Signale que l'on prend la selection */
    if (doc == 0)
-      frame = (int)FrRef[0];
+      frame = FrRef[0];
    else
       frame = GetWindowNumber (doc, view);
-
    /* Signale que l'on prend la selection */
    w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
    wind = FrRef[frame];
@@ -1136,10 +1131,9 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 
   doc = FrameTable[frame].FrDoc;
   pAb = pBox->BxAbstractBox;
-  if (frame >= 1 && doc > 0 && index > 0)
+  if (frame >= 1 && doc > 0 && index >= 0)
     {
       /* check if a leaf box is selected */
-      index--;
       c = pBuffer->BuContent[index];
       if (c != SPACE && c != EOS)
 	{
@@ -1157,8 +1151,8 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	    }
 	  /* look for the end of the word */
 	  buffer = pBuffer;
-	  last = pos;
-	  i = index - 1;
+	  last = pos + 1;
+	  i = index;
 	  c = NextCharacter (&buffer, &i);
 	  isSep = IsSeparatorChar (c);
 	  while (!isSep && c != EOS)
@@ -1167,8 +1161,6 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	      c = NextCharacter (&buffer, &i);
 	      isSep = IsSeparatorChar (c);
 	    }
-	  if (isSep)
-	    last--;
 	  pDoc = LoadedDocument[doc - 1];
 	  if (pAb->AbPresentationBox && pAb->AbCanBeModified)
 	    /* user has clicked in the presentation box displaying an */
@@ -1207,23 +1199,23 @@ void TtaSelectWord (Element element, int pos, Document doc, View view)
 	  /* look for the box, the buffer and the index in the buffer */
 	  pBox = pAb->AbBox;
 	  i = pos;
-	  if (pBox->BxType == BoSplit)
+	  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      pBox = pBox->BxNexChild;
 	      while (pBox && pBox->BxNChars < i && pBox->BxNexChild)
 		{
 		  i = i - pBox->BxNChars;
 		  /* remove the delta between two boxes */
-		  i = i - pBox->BxNexChild->BxIndChar + pBox->BxNChars + pBox->BxIndChar;
+		  i = i - pBox->BxNexChild->BxFirstChar + pBox->BxNChars + pBox->BxFirstChar;
 		  pBox = pBox->BxNexChild;
 		}
 	    }
 	  pBuffer = pBox->BxBuffer;
-	  index =  pBox->BxFirstChar;
-	  while (i > pBuffer->BuLength - index + 1)
+	  index =  pBox->BxIndChar;
+	  while (i > pBuffer->BuLength - index)
 	    {
-	      i = i - pBuffer->BuLength + index - 1;
-	      index = 1;
+	      i = i - pBuffer->BuLength + index;
+	      index = 0;
 	      pBuffer = pBuffer->BuNext;
 	    }
 	  frame = GetWindowNumber (doc, view);

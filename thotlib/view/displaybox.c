@@ -248,7 +248,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	      DrawRectangle (frame, 1, 5, xd, yd, w, height-1, fg, 0, 0);
 	      break;
 	    default:
-	      DrawChar (pBox->BxAbstractBox->AbShape, frame, xd, yd, font, fg);
+	      DrawChar (pBox->BxAbstractBox->AbShape, frame, xd,
+			yd + FontBase (font), font, fg);
 	      break;
 	    }
 
@@ -870,24 +871,24 @@ void LocateFirstChar (PtrBox pBox, ThotBool rtl, PtrTextBuffer *adbuff, int *ind
   int                 buffleft;
   int                 nbcar;
   
-  *ind = pBox->BxFirstChar;
+  *ind = pBox->BxIndChar;
   *adbuff = pBox->BxBuffer;
   if (rtl && *adbuff)
     {
       /* writing right-to-left */
       nbcar = pBox->BxNChars;
-      buffleft = (*adbuff)->BuLength - *ind + 1;
+      buffleft = (*adbuff)->BuLength - *ind;
       while ((*adbuff)->BuNext && nbcar > buffleft)
 	{
 	  nbcar -= buffleft;
 	  *adbuff = (*adbuff)->BuNext;
 	  buffleft = (*adbuff)->BuLength;
-	  *ind = 1;
+	  *ind = 0;
 	}
       if (nbcar <= (*adbuff)->BuLength)
 	*ind = *ind + nbcar - 1;
       else
-	*ind = (*adbuff)->BuLength;
+	*ind = (*adbuff)->BuLength - 1;
     }
 }
 
@@ -915,16 +916,14 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
     }
   else
     {
-      if (*ind < (*adbuff)->BuLength)
-	/* continue in the same buffer */
-	*ind = *ind + 1;
-      else
+      (*ind)++;
+      if (*ind >= (*adbuff)->BuLength)
 	{
 	  /* another buffer */
 	  if ((*adbuff)->BuNext == NULL)
 	    return FALSE;
 	  *adbuff = (*adbuff)->BuNext;
-	  *ind = 1;
+	  *ind = 0;
 	}
     }
   return TRUE;
@@ -972,9 +971,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   restbl = 0;
   pAb = pBox->BxAbstractBox;
   /* is it a box with a right-to-left writing? */
-  /* rtl = (pAb->AbDirection == 'R'); */
-  car = TtaGetScript (pAb->AbLang);
-  rtl = (car == 'A' || car == 'H');
+  car = pBox->BxScript;
+  if (pAb->AbUnicodeBidi == 'O')
+    rtl = (pAb->AbDirection == 'R');
+  else
+    rtl = (car == 'A' || car == 'H');
   font = pBox->BxFont;
   /* do we have to display stars instead of characters? */
   if (pAb->AbBox->BxShadow)
@@ -989,7 +990,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
     blockbegin = TRUE;
   else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
     blockbegin = TRUE;
-  else if ((pBox->BxType == BoPiece || pBox->BxType == BoDotted) &&
+  else if ((pBox->BxType == BoPiece ||
+	    pBox->BxType == BoScript ||
+	    pBox->BxType == BoDotted) &&
 	   mbox->BxFirstLine->LiFirstPiece == pBox)
     blockbegin = TRUE;
   else
@@ -1050,8 +1053,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      /* skip invisible characters */
 	      restbl = newbl;
 	      x += lg;
-	      car = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff - 1],
+	      car = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
 					     font, &nextfont);
+	      if (car == INVISIBLE_CHAR)
+		lg = 0;
 	      if (car == SPACE)
 		{
 		  lg = lgspace;
@@ -1085,19 +1090,19 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      /* number of characters to be displayed in the current buffer */
 	      if (rtl)
 		{
-		  if (charleft < indbuff)
+		  if (charleft <= indbuff)
 		    indmax = indbuff - charleft;
 		  else
-		    indmax = 1;
-		  buffleft = indbuff;
+		    indmax = 0;
+		  buffleft = indbuff + 1;
 		}
 	      else
 		{
-		  buffleft = adbuff->BuLength - indbuff + 1;
+		  buffleft = adbuff->BuLength - indbuff;
 		  if (charleft < buffleft)
-		    indmax = indbuff - 1 + charleft;
+		    indmax = indbuff + charleft;
 		  else
-		    indmax = adbuff->BuLength;
+		    indmax = adbuff->BuLength - 1;
 		}
 	    } 
 	  
@@ -1137,7 +1142,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  right = 0;
 		}
 	    }
-	  else if (pBox->BxType == BoPiece || pBox->BxType == BoDotted)
+	  else if (pBox->BxType == BoPiece ||
+		   pBox->BxType == BoScript ||
+		   pBox->BxType == BoDotted)
 	    {
 	      /* check if the box in within the selection */
 	      if (pFrame->FrSelectionBegin.VsBox &&
@@ -1177,7 +1184,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  while ((rtl && indbuff >= indmax) ||
 		 (!rtl && indbuff <= indmax))
 	    {
-	      bchar = adbuff->BuContent[indbuff - 1];
+	      bchar = adbuff->BuContent[indbuff];
 	      car = GetFontAndIndexFromSpec (bchar, font, &nextfont);
 	      if (bchar == SPACE || bchar == THIN_SPACE ||
 		  bchar == HALF_EM || bchar == UNBREAKABLE_SPACE || bchar == TAB ||
@@ -1186,7 +1193,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* display previous chars handled */
 		  if (nbcar > 0)
 		    {
-/*****/		      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+		      y1 = y + BoxFontBase (pBox->BxFont);
                       x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
 				       0, bl, 0, blockbegin, fg, shadow);
 		      /* all previous spaces are declared */
@@ -1195,7 +1202,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  
 		  if (shadow)
 		    {
-/*****/		      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (nextfont);
+		      y1 = y + BoxFontBase (pBox->BxFont);
 		      DrawChar ('*', frame, x, y1, nextfont, fg);
 		    }
 		  else if (!ShowSpace)
@@ -1232,12 +1239,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* a new space is handled */
 		  bl++;
 		}
+	      else if (car == INVISIBLE_CHAR)
+		/* do nothing */;
 	      else if (nextfont == NULL && car == UNDISPLAYED_UNICODE)
 		{
 		  /* display previous chars handled */
 		  if (nbcar > 0)
 		    {
-/*****/		      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+		      y1 = y + BoxFontBase (pBox->BxFont);
 		      x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
 				       0, bl, x, blockbegin, fg, shadow);
 		    }
@@ -1255,7 +1264,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* display previous chars handled */
 		      if (nbcar > 0)
 			{
-/*****/		          y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+		          y1 = y + BoxFontBase (pBox->BxFont);
                           x += DrawString (buffer, nbcar, frame, x, y1,
 					   prevfont, 0, bl, 0, blockbegin,
 					   fg, shadow);
@@ -1286,10 +1295,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    {
 		      adbuff = adbuff->BuPrevious;
 		      indbuff = adbuff->BuLength;
-		      if (charleft < indbuff)
+		      if (charleft <= indbuff)
 			indmax = indbuff - charleft;
 		      else
-			indmax = 1;
+			indmax = 0;
 		      buffleft = adbuff->BuLength;
 		    }
 		}
@@ -1301,10 +1310,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    {
 		      adbuff = adbuff->BuNext;
 		      if (charleft < adbuff->BuLength)
-			indmax = charleft;
+			indmax = charleft - 1;
 		      else
-			indmax = adbuff->BuLength;
-		      indbuff = 1;
+			indmax = adbuff->BuLength - 1;
+		      indbuff = 0;
 		      buffleft = adbuff->BuLength;
 		    }
 		}
@@ -1315,7 +1324,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-/*****/	      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 			       bl, hyphen, blockbegin, fg, shadow);
 	      if (pBox->BxUnderline != 0)

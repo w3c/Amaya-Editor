@@ -225,7 +225,7 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
    /* le pave de la premiere boite selectionnee  */
    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
    endOfPicture = FALSE;
-   if (pAb == NULL && pViewSel->VsBox != NULL)
+   if (pAb == NULL && pViewSel->VsBox)
      pAb = pViewSel->VsBox->BxAbstractBox;
 
    /* S'il n'y a pas de pave selectionne */
@@ -237,7 +237,7 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
    /* qui affichent la valeur d'un attribut */
    do
      {
-       if (pAb != NULL)
+       if (pAb)
 	 ok = ((pAb->AbPresentationBox && !pAb->AbCanBeModified)
 	       || (pAb->AbLeafType == LtPicture && endOfPicture));
        else
@@ -251,14 +251,14 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
      {
 	*pBox = NULL;
 	*pBuffer = NULL;
-	*ind = 1;
+	*ind = 0;
 	*x = 0;
 	*previousChars = 0;
 	return;
      }
    else if (pAb->AbLeafType == LtText)
      {
-	if (pViewSel->VsBox != 0 && pViewSel->VsBox->BxAbstractBox == pAb)
+	if (pViewSel->VsBox && pViewSel->VsBox->BxAbstractBox == pAb)
 	  {
 	     *pBox = pViewSel->VsBox;
 	     *pBuffer = pViewSel->VsBuffer;
@@ -273,7 +273,7 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
 	     if ((*pBox)->BxType == BoSplit)
 		*pBox = (*pBox)->BxNexChild;
 	     *pBuffer = pAb->AbText;
-	     *ind = 1;
+	     *ind = 0;
 	     *x = 0;
 	     *previousChars = 0;
 	  }
@@ -282,7 +282,7 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
      {
 	*pBox = pAb->AbBox;
 	*pBuffer = NULL;
-	*ind = 1;
+	*ind = 0;
 	*x = 0;
 	*previousChars = 0;
      }
@@ -296,202 +296,197 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
   ----------------------------------------------------------------------*/
 static ThotBool CloseTextInsertionWithControl ()
 {
-   PtrElement          pEl;
-   PtrBox              pBox;
-   PtrBox              pSelBox;
-   PtrTextBuffer       pBuffer;
-   PtrTextBuffer       pbuff;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
-   ViewSelection      *pViewSelEnd;
+  PtrElement          pEl;
+  PtrBox              pBox;
+  PtrBox              pSelBox;
+  PtrTextBuffer       pBuffer;
+  PtrTextBuffer       pbuff;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  ViewSelection      *pViewSelEnd;
 #if !defined(_WINDOWS) && !defined (_GTK)
-   ThotEvent              event;
+  ThotEvent              event;
 #endif /* _WINDOWS && _GTK */
-   int                 nChars;
-   int                 i, j;
-   int                 ind;
-   int                 frame;
-   ThotBool            notified;
+  int                 nChars;
+  int                 i, j;
+  int                 ind;
+  int                 frame;
+  ThotBool            notified;
 
-   /* No more enclosing cell */
-   LastInsertCell = NULL;
-   /* recupere la fenetre active pour la selection */
-   frame = ActiveFrame;
-   notified = FALSE;
-   if (frame > 0)
-     {
-	if (TextInserting)
-	  {
-	     /* termine l'insertion courante */
-	     TextInserting = FALSE;
-
-	     /* Recherche le point d'insertion (&i non utilise) */
-	     GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &j);
-	     if (pSelBox == NULL || pSelBox->BxAbstractBox == NULL ||
-		 pSelBox->BxAbstractBox->AbLeafType != LtText)
-	       /* plus de selection courante */
-	       return (notified);
-	     /* Est-ce que le buffer d'insertion est vide ? */
-	     if ((pBuffer != NULL) && (ind > 1 || ind > pBuffer->BuLength))
-	       {
-		  if (pBuffer->BuLength == 0 && pSelBox->BxBuffer != pBuffer)
-		     pBuffer = DeleteBuffer (pBuffer, frame);
-	       }
-	     /* regroupe eventuellement les buffers */
-	     else if ((pBuffer != NULL) && (pBuffer->BuPrevious != NULL))
-	       {
-		  pbuff = pBuffer->BuPrevious;
-		  i = FULL_BUFFER - pbuff->BuLength;
-		  nChars = pBuffer->BuLength;
-		  if (pbuff->BuLength == 0 && pSelBox->BxNChars != 0)
-		     pbuff = DeleteBuffer (pbuff, frame);
-		  else if (nChars < 50 && i >= nChars)
+  /* No more enclosing cell */
+  LastInsertCell = NULL;
+  /* current frame for the selection */
+  frame = ActiveFrame;
+  notified = FALSE;
+  if (frame > 0)
+    {
+      if (TextInserting)
+	{
+	  /* close the current insertion */
+	  TextInserting = FALSE;
+	  /* Where is the insert point (&i not used)? */
+	  GiveInsertPoint (NULL, frame, &pSelBox, &pBuffer, &ind, &i, &j);
+	  if (pSelBox == NULL || pSelBox->BxAbstractBox == NULL ||
+	      pSelBox->BxAbstractBox->AbLeafType != LtText)
+	    /* no more selection */
+	    return (notified);
+	  if (pBuffer && (ind > 0 || ind >= pBuffer->BuLength))
+	    {
+	      if (pBuffer->BuLength == 0 && pSelBox->BxBuffer != pBuffer)
+		/* remove the empty buffer */
+		pBuffer = DeleteBuffer (pBuffer, frame);
+	    }
+	  else if (pBuffer && pBuffer->BuPrevious)
+	    {
+	      pbuff = pBuffer->BuPrevious;
+	      i = FULL_BUFFER - pbuff->BuLength;
+	      nChars = pBuffer->BuLength;
+	      if (pbuff->BuLength == 0 && pSelBox->BxNChars != 0)
+		/* remove the empty buffer */
+		pbuff = DeleteBuffer (pbuff, frame);
+	      else if (nChars < 50 && i >= nChars)
+		{
+		  /* collaps buffer contents */
+		  ustrncpy (&pbuff->BuContent[pbuff->BuLength],
+			    &pBuffer->BuContent[0], nChars);
+		  i = pbuff->BuLength;	/* old length */
+		  /* update boxes */
+		  if (j == 0)
+		    pBox = pSelBox;
+		  else
+		    /* start from the next child */
+		    pBox = pSelBox->BxNexChild;
+		  while (pBox && pBox->BxBuffer == pBuffer)
 		    {
-		       ustrncpy (&pbuff->BuContent[pbuff->BuLength], &pBuffer->BuContent[0], nChars);
-		       i = pbuff->BuLength;	/* Ancienne longueur */
-		       /* met a jour les indices de debut des boites de coupure */
-		       if (j == 0)
-			  pBox = pSelBox;
-		       /* La boite courante est concernee */
-		       else
-			  pBox = pSelBox->BxNexChild;
-
-		       /* commence a partir de la suivante */
-		       while (pBox != NULL)
-			 {
-			    if (pBox->BxBuffer == pBuffer)
-			      {
-				 pBox->BxBuffer = pbuff;
-				 pBox->BxFirstChar += i;
-				 pBox = pBox->BxNexChild;
-			      }
-			    else if (pBox->BxBuffer == pBuffer)
-			       pBox = pBox->BxNexChild;
-
-			    else
-			       pBox = NULL;
-			 }
-
-		       /* Liberation du buffer */
-		       pBuffer = DeleteBuffer (pBuffer, frame);
-		       pbuff->BuLength += nChars;
-		       /* fin de chaine */
-		       pbuff->BuContent[pbuff->BuLength] = EOS;
+		      pBox->BxBuffer = pbuff;
+		      pBox->BxIndChar += i;
+		      pBox = pBox->BxNexChild;
 		    }
-	       }
 
-	     /* Est-ce que l'insertion se trouve en debut de boite ? */
-	     pBox = pSelBox->BxAbstractBox->AbBox;
-	     if (j == 0)
-	       {
-		  /* Insertion en fin de buffer annulee ? */
-		  if ((pSelBox->BxBuffer->BuLength != 0) &&
-		      (pSelBox->BxFirstChar > pSelBox->BxBuffer->BuLength && pSelBox->BxNChars > 0))
-		     pSelBox->BxFirstChar = 1;
-		  /* Faut-il mettre a jour la boite mere ? */
-		  if (pBox->BxBuffer != pSelBox->BxBuffer && pBox->BxNexChild == pSelBox)
-		     pBox->BxBuffer = pBuffer;
-		  else if (ind == 1 && pBox->BxBuffer == pSelBox->BxBuffer)
-		     pBox->BxBuffer = pBuffer;
-		  pSelBox->BxBuffer = pBuffer;
-	       }
+		  /* free the empty buffer */
+		  pBuffer = DeleteBuffer (pBuffer, frame);
+		  pbuff->BuLength += nChars;
+		  pbuff->BuContent[pbuff->BuLength] = EOS;
+		}
+	    }
 
-	     /* met a jour le pave */
-	     pSelBox->BxAbstractBox->AbText = pBox->BxBuffer;
+	  /* Check if the insertion starts at the beginning of a box */
+	  pBox = pSelBox->BxAbstractBox->AbBox;
+	  if (j == 0)
+	    {
+	      if (pSelBox->BxBuffer->BuLength != 0 &&
+		  pSelBox->BxFirstChar > pSelBox->BxBuffer->BuLength &&
+		  pSelBox->BxNChars > 0)
+		/* the insertion at the end of a buffer was removed */
+		pSelBox->BxFirstChar = 1;
+	      /* update the split box */
+	      if (pBox->BxBuffer != pSelBox->BxBuffer &&
+		  pBox->BxNexChild == pSelBox)
+		pBox->BxBuffer = pBuffer;
+	      else if (ind == 0 && pBox->BxBuffer == pSelBox->BxBuffer)
+		pBox->BxBuffer = pBuffer;
+	      pSelBox->BxBuffer = pBuffer;
+	    }
+	  /* update the abstract box */
+	  pSelBox->BxAbstractBox->AbText = pBox->BxBuffer;
 
-	     /* Quand le texte insere' se trouve dans un bloc de lignes */
-	     /* on reformate le bloc de ligne pour retirer les          */
-	     /* compressions de texte et couper eventuellement les mots */
-	     while (pBox != NULL)
-		if (pBox->BxAbstractBox == NULL)
-		   pBox = NULL;
-		else if (pBox->BxAbstractBox->AbEnclosing != NULL)
-		   if (pBox->BxAbstractBox->AbEnclosing->AbBox != NULL)
-		     {
-			pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
-			if (pBox->BxType == BoBlock)
-			  {
-			     LastInsertParagraph = pBox->BxAbstractBox;
-			     LastInsertElement = LastInsertParagraph->AbElement;
-			     LastInsertThotWindow = frame;
-			     pBox = NULL;
-			  }
-			else if (pBox->BxType != BoGhost)
-			   pBox = NULL;
-		     }
-	     pFrame = &ViewFrameTable[frame - 1];
-	     pViewSel = &pFrame->FrSelectionBegin;
-	     pViewSelEnd = &pFrame->FrSelectionEnd;
-	     if (pSelBox->BxAbstractBox->AbPresentationBox &&
-		 pSelBox->BxAbstractBox->AbCreatorAttr != NULL)
-	       {
-		 /* update the selection within the attribute */
-		 FirstSelectedCharInAttr = pSelBox->BxIndChar + pViewSelEnd->VsIndBox + 1;
-		 LastSelectedCharInAttr = pSelBox->BxIndChar + pViewSel->VsIndBox + 1;
-		 SelPosition = (FirstSelectedCharInAttr < LastSelectedCharInAttr);
-	       }
-	     NewContent (pSelBox->BxAbstractBox);
-	     /* update the new selection */
-	     if (pViewSel->VsBox != NULL)
-	       {
-		 i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;
-		 if (pViewSel->VsIndBuf > 0)
-		   i++;
-		     
-		 /* Faut-il changer l'autre extremite de la selection ? */
-		 pBox = pViewSelEnd->VsBox;
-		 if (pBox != NULL)
-		   if (pBox->BxAbstractBox == pViewSel->VsBox->BxAbstractBox)
-		     {
-		       j = pBox->BxIndChar + pViewSelEnd->VsIndBox;
-		       if (pViewSelEnd->VsIndBuf > 0)
-			 j++;
-		       ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-		       if (pViewSel->VsBox->BxAbstractBox != pBox->BxAbstractBox || i != j)
-			 ChangeSelection (frame, pBox->BxAbstractBox, j, TRUE, TRUE, FALSE, FALSE);
-		     }
-		   else
-		     ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-		 else
-		   ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-		 /* Nouvelle position de reference du curseur */
-		 ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
-	       }
+	  /* Quand le texte insere' se trouve dans un bloc de lignes */
+	  /* on reformate le bloc de ligne pour retirer les          */
+	  /* compressions de texte et couper eventuellement les mots */
+	  while (pBox)
+	    {
+	      if (pBox->BxAbstractBox == NULL)
+		pBox = NULL;
+	      else if (pBox->BxAbstractBox->AbEnclosing &&
+		       pBox->BxAbstractBox->AbEnclosing->AbBox)
+		{
+		  pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+		  if (pBox->BxType == BoBlock)
+		    {
+		      LastInsertParagraph = pBox->BxAbstractBox;
+		      LastInsertElement = LastInsertParagraph->AbElement;
+		      LastInsertThotWindow = frame;
+		      pBox = NULL;
+		    }
+		  else if (pBox->BxType != BoGhost)
+		    pBox = NULL;
+		}
+	    }
+	  pFrame = &ViewFrameTable[frame - 1];
+	  pViewSel = &pFrame->FrSelectionBegin;
+	  pViewSelEnd = &pFrame->FrSelectionEnd;
+	  if (pSelBox->BxAbstractBox->AbPresentationBox &&
+	      pSelBox->BxAbstractBox->AbCreatorAttr)
+	    {
+	      /* update the selection within the attribute */
+	      FirstSelectedCharInAttr = pSelBox->BxFirstChar + pViewSelEnd->VsIndBox + 1;
+	      LastSelectedCharInAttr = pSelBox->BxFirstChar + pViewSel->VsIndBox + 1;
+	      SelPosition = (FirstSelectedCharInAttr < LastSelectedCharInAttr);
+	    }
+	  NewContent (pSelBox->BxAbstractBox);
+	  /* update the new selection */
+	  if (pViewSel->VsBox)
+	    {
+	      i = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
+	      /* Faut-il changer l'autre extremite de la selection ? */
+	      pBox = pViewSelEnd->VsBox;
+	      if (pBox)
+		{
+		  if (pBox->BxAbstractBox == pViewSel->VsBox->BxAbstractBox)
+		    {
+		      j = pBox->BxFirstChar + pViewSelEnd->VsIndBox;
+		      ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
+				       FALSE, TRUE, FALSE, FALSE);
+		      if (pViewSel->VsBox->BxAbstractBox != pBox->BxAbstractBox ||
+			  i != j)
+			ChangeSelection (frame, pBox->BxAbstractBox, j, TRUE, TRUE,
+					 FALSE, FALSE);
+		    }
+		  else
+		    ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
+				     FALSE, TRUE, FALSE, FALSE);
+		}
+	      else
+		ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE,
+				 TRUE, FALSE, FALSE);
+	      /* Nouvelle position de reference du curseur */
+	      ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+	    }
 	     
-	     if (LastInsertElText != NULL)
-	       {
-		 /* Notify the end of text insertion */
-		 pEl = LastInsertElText;
-		 LastInsertElText = NULL;
-		 APPtextModify (pEl, frame, FALSE);
-		 notified = TRUE;
-	       }
-	     else if (LastInsertAttr != NULL)
-	       {
-		 /* Notify the end of attribute change */
-		 LastInsertAttr = NULL;
-		 LastInsertAttrElem = NULL;
-		 /* the notification was already done by NewContent */
-		 notified = TRUE;
-	       }
-	  }
-     }
+	  if (LastInsertElText)
+	    {
+	      /* Notify the end of text insertion */
+	      pEl = LastInsertElText;
+	      LastInsertElText = NULL;
+	      APPtextModify (pEl, frame, FALSE);
+	      notified = TRUE;
+	    }
+	  else if (LastInsertAttr)
+	    {
+	      /* Notify the end of attribute change */
+	      LastInsertAttr = NULL;
+	      LastInsertAttrElem = NULL;
+	      /* the notification was already done by NewContent */
+	      notified = TRUE;
+	    }
+	}
+    }
 
-   /* elimine systematiquement les exposes en attente */
 #ifndef _WINDOWS
 #ifndef _GTK
-   while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) &event))
-     {
-       if (event.type == GraphicsExpose || event.type == Expose)
-	 {
-	   frame = GetWindowFrame (event.xexpose.window);
-	   FrameToRedisplay (event.xexpose.window, frame, (XExposeEvent *) & event);
-	   XtDispatchEvent (&event);
-	 }
-     }
+  /* remove waiting expose events */
+  while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) &event))
+    {
+      if (event.type == GraphicsExpose || event.type == Expose)
+	{
+	  frame = GetWindowFrame (event.xexpose.window);
+	  FrameToRedisplay (event.xexpose.window, frame, (XExposeEvent *) & event);
+	  XtDispatchEvent (&event);
+	}
+    }
 #endif /*_GTK */
 #endif /* !_WINDOWS */
-   return (notified);
+  return (notified);
 }
 
 
@@ -538,7 +533,7 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
       /* Si la selection porte sur des caracteres, le debut de la selection */
       /* visualisee correspond forcement au debut de la selection reelle    */
       /* Sinon il faut verifier la validite de la selection */
-      if (pViewSel->VsBox == NULL || pViewSel->VsIndBuf == 0)
+      if (pViewSel->VsBox == NULL || pViewSel->VsIndBox == 0)
 	TtaSetFocus ();
       pBox = pViewSel->VsBox;
 
@@ -556,7 +551,7 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
 	*pAb = pBox->BxAbstractBox;
 
       pSelAb = *pAb;
-      if (pSelAb != NULL)
+      if (pSelAb)
 	{
 	  /* deplace l'insertion avant le pave selectionne pour detruire */
 	  if (del && pViewSel->VsIndBox == 0 &&
@@ -626,7 +621,7 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
       else
 	{
 	  pSelAb = *pAb;
-	  if (pSelAb != NULL && pSelAb->AbElement != NULL && moveSelection)
+	  if (pSelAb && pSelAb->AbElement && moveSelection)
 	    {
 	    /* signale le changement de selection a l'editeur */
 	    if (pSelAb->AbVolume == 0)
@@ -646,41 +641,40 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
   ----------------------------------------------------------------------*/
 static PtrTextBuffer GetNewBuffer (PtrTextBuffer pBuffer, int frame)
 {
-   PtrTextBuffer       pNewBuffer;
-   PtrTextBuffer       pCurrentBuffer;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
-   ViewSelection      *pViewSelEnd;
+  PtrTextBuffer       pNewBuffer;
+  PtrTextBuffer       pCurrentBuffer;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  ViewSelection      *pViewSelEnd;
 
-   GetTextBuffer (&pNewBuffer);
-   pCurrentBuffer = pNewBuffer;
-   pCurrentBuffer->BuPrevious = pBuffer;
-   if (pBuffer == NULL)
-      pCurrentBuffer->BuNext = NULL;
-   else
-     {
-	pCurrentBuffer->BuNext = pBuffer->BuNext;
-	pBuffer->BuNext = pNewBuffer;
-	if (pCurrentBuffer->BuNext != NULL)
-	   pCurrentBuffer->BuNext->BuPrevious = pNewBuffer;
-     }
+  GetTextBuffer (&pNewBuffer);
+  pCurrentBuffer = pNewBuffer;
+  pCurrentBuffer->BuPrevious = pBuffer;
+  if (pBuffer == NULL)
+    pCurrentBuffer->BuNext = NULL;
+  else
+    {
+      pCurrentBuffer->BuNext = pBuffer->BuNext;
+      pBuffer->BuNext = pNewBuffer;
+      if (pCurrentBuffer->BuNext != NULL)
+	pCurrentBuffer->BuNext->BuPrevious = pNewBuffer;
+    }
 
-   /* Mise a jour des marques de selection courante */
-   pFrame = &ViewFrameTable[frame - 1];
-   pViewSel = &pFrame->FrSelectionBegin;
-   if (pViewSel->VsBuffer == pBuffer)
-     {
-	if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer)
-	  {
-	     pViewSelEnd = &pFrame->FrSelectionEnd;
-	     pViewSelEnd->VsBuffer = pNewBuffer;
-	     pViewSelEnd->VsIndBuf = pViewSelEnd->VsIndBuf - pFrame->FrSelectionBegin.VsIndBuf + 1;
-	  }
-	pViewSel->VsBuffer = pNewBuffer;
-	pViewSel->VsIndBuf = 1;
-     }
-
-   return pNewBuffer;
+  /* Mise a jour des marques de selection courante */
+  pFrame = &ViewFrameTable[frame - 1];
+  pViewSel = &pFrame->FrSelectionBegin;
+  if (pViewSel->VsBuffer == pBuffer)
+    {
+      if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer)
+	{
+	  pViewSelEnd = &pFrame->FrSelectionEnd;
+	  pViewSelEnd->VsBuffer = pNewBuffer;
+	  pViewSelEnd->VsIndBuf = pViewSelEnd->VsIndBuf - pViewSel->VsIndBuf;
+	}
+      pViewSel->VsBuffer = pNewBuffer;
+      pViewSel->VsIndBuf = 0;
+    }
+  return pNewBuffer;
 }
 
 /*----------------------------------------------------------------------
@@ -824,7 +818,7 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 	pNewBuffer = pSelBox->BxAbstractBox->AbText;
 
 	/* Insertion en debut de boite */
-	if (ind == 1 && prev == 0 && pBuffer->BuLength > 0)
+	if (ind == 0 && prev == 0 && pBuffer->BuLength > 0)
 	  {
 	     /* buffer precedent */
 	     pPreviousBuffer = pBuffer->BuPrevious;
@@ -848,47 +842,45 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 		  pBox->BxBuffer = pNewBuffer;
 		  /* Mise a jour de la boite */
 		  /* Index dans le buffer */
+		  pSelBox->BxIndChar = 0;
 		  pSelBox->BxFirstChar = 1;
 		  pSelBox->BxBuffer = pNewBuffer;
 	       }
 	     else
-		/* a la suite du buffer precedent */
 	       {
+		 /* a la suite du buffer precedent */
 		  /* Mise a jour de la boite */
 		  pSelBox->BxFirstChar = pPreviousBuffer->BuLength + 1;
 		  pSelBox->BxBuffer = pPreviousBuffer;
 	       }
 	  }
 	/* coupe le buffer courant en deux pour traiter les insertions */
-	else if (ind > 1)
-	   if (ind <= pBuffer->BuLength)
-	     {
-		pNewBuffer = pBuffer;
-		i = ind;
-		pBuffer = GetNewBuffer (pBuffer, frame);
-		k = ustrlen (&pNewBuffer->BuContent[i - 1]);
-		/* longueur a copier */
-		ustrncpy (&pBuffer->BuContent[0], &pNewBuffer->BuContent[i - 1], k);
-		pBuffer->BuContent[k] = EOS;
-		pBuffer->BuLength = k;
-		pNewBuffer->BuContent[i - 1] = EOS;
-		i--;
-		pNewBuffer->BuLength = i;
-
-		/* Mise a jour des boites de coupure suivantes */
-		pBox = pSelBox->BxNexChild;
-		while (pBox != NULL)
+	else if (ind > 0 && ind < pBuffer->BuLength - 1)
+	  {
+	    pNewBuffer = pBuffer;
+	    pBuffer = GetNewBuffer (pBuffer, frame);
+	    k = ustrlen (&pNewBuffer->BuContent[ind]);
+	    /* longueur a copier */
+	    ustrncpy (&pBuffer->BuContent[0], &pNewBuffer->BuContent[ind], k);
+	    pBuffer->BuContent[k] = EOS;
+	    pBuffer->BuLength = k;
+	    pNewBuffer->BuContent[ind] = EOS;
+	    i--;
+	    pNewBuffer->BuLength = ind;
+	    /* Mise a jour des boites de coupure suivantes */
+	    pBox = pSelBox->BxNexChild;
+	    while (pBox)
+	      {
+		if (pBox->BxBuffer == pNewBuffer)
 		  {
-		     if (pBox->BxBuffer == pNewBuffer)
-		       {
-			  pBox->BxBuffer = pBuffer;
-			  pBox->BxFirstChar -= i;
-			  pBox = pBox->BxNexChild;
-		       }
-		     else
-			pBox = NULL;
+		    pBox->BxBuffer = pBuffer;
+		    pBox->BxFirstChar -= i;
+		    pBox = pBox->BxNexChild;
 		  }
-	     }
+		else
+		  pBox = NULL;
+	      }
+	  }
      }
 }
 
@@ -996,9 +988,9 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 	    /* selection could not be modified by the application */
 	    cut = TRUE;
 	    pBox = pViewSel->VsBox;
-	    if (pBox != NULL)
+	    if (pBox)
 	      {
-		index = pBox->BxIndChar + pViewSel->VsIndBox + 1;
+		index = pBox->BxFirstChar + pViewSel->VsIndBox + 1;
 		if (index <= 1)
 		  {
 		    pSelAb = pSelAb->AbPrevious;
@@ -1018,7 +1010,7 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 		  NewTextLanguage (*pAb, index, language);
 		/* la boite peut avoir change */
 		pBox = pViewSel->VsBox;
-		if (pBox != NULL)
+		if (pBox)
 		  *pAb = pBox->BxAbstractBox;
 		else
 		  *pAb = NULL;
@@ -1030,11 +1022,12 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
 
 
 /*----------------------------------------------------------------------
-   Teste s'il y a un caracte`re de coupure de ligne dans le texte     
-   donne' en parame`tre (premier buffer, indice de de'but, longueur). 
-   Si le parame`tre charWidth est nul, regarde tous les buffers.      
+  IsLineBreakInside returns TRUE if a line-break character is found in
+  the current string.
+  Parameters pBuffer and ind give the starting character of the string
+  and length gives the string length.
   ----------------------------------------------------------------------*/
-static ThotBool IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth)
+static ThotBool IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int length)
 {
    int                 c;
    int                 nChars;
@@ -1043,39 +1036,34 @@ static ThotBool IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth
 
    if (pBuffer == NULL)
      return (FALSE);
-   /* Si l'index debute en fin de buffer on passe au buffer suivant */
-   if (ind > pBuffer->BuLength && pBuffer->BuNext != NULL)
+   if (ind >= pBuffer->BuLength && pBuffer->BuNext)
      {
+       /* End of the current buffer -> start with the next buffer */
 	pBuffer = pBuffer->BuNext;
 	i = 0;
      }
    else
-      i = ind - 1;
-   /* Nombre de caracteres dans le buffer */
-   nChars = pBuffer->BuLength - 1;
+      i = ind;
+   /* number of characters in the buffer */
+   nChars = pBuffer->BuLength;
    j = 0;
 
    /* Recherche s'il y a un caractere de coupure forcee */
-   while (i <= nChars && j < charWidth)
+   while (i < nChars && j < length)
      {
 	c = pBuffer->BuContent[i];
-	/* Est-ce un caractere de coupure forcee ? */
 	if (c == BREAK_LINE || c == NEW_LINE)
+	  /* a break-line found */
 	   return (TRUE);
-	/* Est-ce qu'il faut passer au buffer suivant ? */
-	else if (i == nChars && pBuffer->BuNext != NULL)
+	/* Next character */
+	i++;
+	if (i == nChars && pBuffer->BuNext)
 	  {
-	     pBuffer = pBuffer->BuNext;
-	     i = 0;
-	     nChars = pBuffer->BuLength - 1;
+	    pBuffer = pBuffer->BuNext;
+	    i = 0;
+	    nChars = pBuffer->BuLength;
 	  }
-	/* Sinon on continue la recherche */
-	else
-	   i++;
-
-	/* Est-ce que la longueur de la chaine est limitee */
-	if (charWidth != 0)
-	   j++;
+	j++;
      }
    return (FALSE);
 }
@@ -1387,25 +1375,25 @@ static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
 
 
 /*----------------------------------------------------------------------
-   ClearClipboard vide le contenu du Clipboard X ou Thot.          
+   ClearClipboard cleans up all allocated buffers.
   ----------------------------------------------------------------------*/
-void                ClearClipboard (PtrTextBuffer clipboard)
+void ClearClipboard (PtrTextBuffer clipboard)
 {
-   PtrTextBuffer       pBuffer;
+  PtrTextBuffer       pBuffer, pNext;
 
-   /* Reinitialise le contenu du Clipboard X ou Thot */
-   pBuffer = clipboard;
-   if (pBuffer->BuLength != 0)
-     {
-	pBuffer->BuLength = 0;
-	pBuffer->BuContent[0] = EOS;
-	pBuffer = pBuffer->BuNext;
-	while (pBuffer != NULL)
-	  {
-	     pBuffer = DeleteBuffer (pBuffer, ActiveFrame);
-	     pBuffer = pBuffer->BuNext;
-	  }
-     }
+  pBuffer = clipboard;
+  if (pBuffer->BuLength != 0)
+    {
+      pBuffer->BuLength = 0;
+      pBuffer->BuContent[0] = EOS;
+      pBuffer = pBuffer->BuNext;
+      while (pBuffer)
+	{
+	  pNext = pBuffer->BuNext;
+	  pBuffer = DeleteBuffer (pBuffer, ActiveFrame);
+	  pBuffer = pNext;
+	}
+    }
 }
 
 
@@ -1547,16 +1535,16 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	    /* deplace en deux fois? */
 	    if (i > length)
 	      {
-		ustrncpy (&pTargetBuffer->BuContent[targetInd - 1],
+		ustrncpy (&pTargetBuffer->BuContent[targetInd],
 			  &pSourceBuffer->BuContent[sourceInd], length);
 		pTargetBuffer->BuLength = FULL_BUFFER;
-		pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = EOS;
-		targetInd = 1;
+		pTargetBuffer->BuContent[FULL_BUFFER - 1] = EOS;
+		targetInd = 0;
 		sourceInd += length;
 		i -= length;
 		pTargetBuffer = pTargetBuffer->BuNext;
 	      }
-	    ustrncpy (&pTargetBuffer->BuContent[targetInd - 1],
+	    ustrncpy (&pTargetBuffer->BuContent[targetInd],
 		      &pSourceBuffer->BuContent[sourceInd], i);
 	    i = i + targetInd - 1;
 	  }
@@ -1581,14 +1569,14 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	    /* Si la selection courante reference le buffer libere */
 	    if (pTargetBuffer == pViewSel->VsBuffer)
 	      {
-		if (pSourceBuffer->BuNext != NULL)   /* Apres la destruction */
+		if (pSourceBuffer->BuNext)   /* Apres la destruction */
 		  pViewSel->VsBuffer = pSourceBuffer->BuNext;
 		else
 		  /* ElemIsBefore la destruction */
 		  {
 		    pViewSel->VsBuffer = pTargetBuffer->BuPrevious;
-		    if (pViewSel->VsBuffer != NULL)
-		      pViewSel->VsIndBuf = pViewSel->VsBuffer->BuLength + 1;
+		    if (pViewSel->VsBuffer)
+		      pViewSel->VsIndBuf = pViewSel->VsBuffer->BuLength;
 		  }
 	      }
 	    
@@ -1598,7 +1586,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	  }
 	
 	/* detruit les buffers qui ont ete vides */
-	while (pSourceBuffer != NULL && pSourceBuffer != pTargetBuffer)
+	while (pSourceBuffer && pSourceBuffer != pTargetBuffer)
 	  pSourceBuffer = DeleteBuffer (pSourceBuffer, frame);
 	
 	/* Evaluation des changements sur la boite */
@@ -1621,16 +1609,16 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	      adjust = 0;
 	    pViewSel->VsBox = pAb->AbBox;
 	  }
-	else if (pViewSel->VsIndBuf > pViewSel->VsBuffer->BuLength)
+	else if (pViewSel->VsIndBuf >= pViewSel->VsBuffer->BuLength)
 	  {
 	    /* En fin de buffer -> on va chercher le caractere suivant */
 	    pSourceBuffer = pViewSel->VsBuffer->BuNext;
 	    /* Il peut etre vide s'il y a des blancs en fin de ligne */
-	    if (pSourceBuffer != NULL)
+	    if (pSourceBuffer)
 	      {
 		/* deplace la selection sur le debut du buffer suivant */
 		pViewSel->VsBuffer = pSourceBuffer;
-		pViewSel->VsIndBuf = 1;
+		pViewSel->VsIndBuf = 0;
 	      }
 	  }
 	
@@ -1848,10 +1836,12 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 
 	       /* Si le clipboard contient un caractere de coupure forcee */
 	       /* il faut demander la reevaluation de la mise en lignes  */
-	       if (IsLineBreakInside (pBox->BxBuffer, pBox->BxFirstChar, pBox->BxNChars + charsDelta + 1))
-		  BoxUpdate (pBox, pLine, charsDelta, spacesDelta, xDelta, adjust, 0, frame, TRUE);
+	       if (IsLineBreakInside (pBox->BxBuffer, pBox->BxFirstChar, pBox->BxNChars + charsDelta))
+		  BoxUpdate (pBox, pLine, charsDelta, spacesDelta, xDelta, adjust,
+			     0, frame, TRUE);
 	       else
-		  BoxUpdate (pBox, pLine, charsDelta, spacesDelta, xDelta, adjust, 0, frame, FALSE);
+		  BoxUpdate (pBox, pLine, charsDelta, spacesDelta, xDelta, adjust,
+			     0, frame, FALSE);
 	       CloseTextInsertion ();
 	       break;
 	    case LtPicture:
@@ -1880,11 +1870,13 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 		 }
 	       break;
 	    case LtSymbol:
-	       LoadSymbol ((char)clipboard->BuContent[0], pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+	       LoadSymbol ((char)clipboard->BuContent[0], pLine, defaultHeight,
+			   defaultWidth, pBox, pAb, frame);
 	       break;
 	    case LtPolyLine:
 	    case LtGraphics:
-	       LoadShape ((char)clipboard->BuContent[0], pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+	       LoadShape ((char)clipboard->BuContent[0], pLine, defaultHeight,
+			  defaultWidth, pBox, pAb, frame);
 	       break;
 	    default:
 	       break;
@@ -1976,19 +1968,18 @@ static void         ContentEditing (int editType)
 		    /* the parent element is read-only.
 		       Don't delete anything*/
 		    return;
-		  else
+		  else if (ElementIsReadOnly (FirstSelectedElement))
 		    /* the parent is not read-only */
-		    if (ElementIsReadOnly (FirstSelectedElement))
-		      /* the selected element itself is read-only */
-		      if (FirstSelectedElement == LastSelectedElement &&
-			  FirstSelectedElement->ElTerminal &&
-			  FirstSelectedElement->ElLeafType == LtText)
-			/* selection is within a single text element */
-			if (FirstSelectedChar > 1 ||
-			    (LastSelectedChar > 0 &&
-			     LastSelectedChar < LastSelectedElement->ElVolume))
-			  /* the text element is not completely selected */
-			  return;
+		    /* the selected element itself is read-only */
+		    if (FirstSelectedElement == LastSelectedElement &&
+			FirstSelectedElement->ElTerminal &&
+			FirstSelectedElement->ElLeafType == LtText)
+		      /* selection is within a single text element */
+		      if (FirstSelectedChar > 1 ||
+			  (LastSelectedChar > 0 &&
+			   LastSelectedChar < LastSelectedElement->ElVolume))
+			/* the text element is not completely selected */
+			return;
 		}
 	    }
 	}
@@ -1999,8 +1990,7 @@ static void         ContentEditing (int editType)
 
       pFrame = &ViewFrameTable[frame - 1];
       pViewSel = &pFrame->FrSelectionBegin;
-      show = (documentDisplayMode[FrameTable[frame].FrDoc - 1] ==
-	                                                  DisplayImmediately);
+      show = (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately);
       if (pBox && editType == TEXT_SUP)
 	{
 	  /* don't remove the selection if it is at the end of the text */
@@ -2013,7 +2003,7 @@ static void         ContentEditing (int editType)
 
       if (editType == TEXT_INSERT && !FromKeyboard)
 	{
-	  if (pBox != NULL && pViewSel->VsIndBox != 0)
+	  if (pBox && pViewSel->VsIndBox != 0)
 	    {
 	      if (pAb->AbLeafType == LtPolyLine)
 		{
@@ -2073,7 +2063,7 @@ static void         ContentEditing (int editType)
 	    }
 	}
 
-      if (pAb != NULL)
+      if (pAb)
 	{
 	  pLastAb = NULL;
 	  /*-- Les commandes sont traitees dans l'application */
@@ -2108,14 +2098,14 @@ static void         ContentEditing (int editType)
 	  else if (pAb != NULL)
 	    pAb = pBox->BxAbstractBox;
 	  
-	  if (pAb != NULL)
+	  if (pAb)
 	    {
 	      if (FirstSelectedElement != LastSelectedElement ||
 		  pAb != pLastAb)
 		/* more than one element or one abstract box */
 		pAb = NULL;
 	      else if (pAb->AbElement != FirstSelectedElement &&
-		       FirstSelectedElement != NULL &&
+		       FirstSelectedElement &&
 			(editType == TEXT_CUT || editType == TEXT_DEL ||
 			 editType == TEXT_SUP || editType == TEXT_COPY))
 		pAb = NULL;
@@ -2310,8 +2300,7 @@ static void         ContentEditing (int editType)
 	      else if ((editType == TEXT_DEL || editType == TEXT_SUP) &&
 		       !FromKeyboard)
 		if (pAb->AbVolume == 0 ||
-		    pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar ==
-		                                                 pAb->AbVolume)
+		    pViewSel->VsIndBox + pViewSel->VsBox->BxFirstChar == pAb->AbVolume)
 		  {
 		    /* current selection is at the element end */
 		    if (ThotLocalActions[T_deletenextchar] != NULL)
@@ -2338,7 +2327,7 @@ static void         ContentEditing (int editType)
 		    {
 		      /* charsDelta contient le nombre de carateres qui
 			 precedent dans la boite */
-		      NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1,
+		      NewTextLanguage (pAb, charsDelta + pBox->BxFirstChar + 1,
 				       ClipboardLanguage);
 		      pBox = pViewSel->VsBox;
 		      if (pBox != NULL)
@@ -2403,7 +2392,7 @@ static void         ContentEditing (int editType)
 	  ComputeEnclosing (frame);
 	}
       
-      if (pAb != NULL)
+      if (pAb)
 	{
 	  if (pAb->AbLeafType == LtGraphics)
 	    pAb->AbRealShape = pAb->AbShape;
@@ -2455,12 +2444,8 @@ static void         ContentEditing (int editType)
 	      pViewSel->VsBox != NULL)
 	    {
 	      pViewSelEnd = &pFrame->FrSelectionEnd;
-	      i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;
-	      if (pViewSel->VsIndBuf > 0)
-		i++;
-	      j = pViewSelEnd->VsBox->BxIndChar + pViewSelEnd->VsIndBox;
-	      if (pViewSelEnd->VsIndBuf > 0)
-		j++;
+	      i = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
+	      j = pViewSelEnd->VsBox->BxFirstChar + pViewSelEnd->VsIndBox;
 	      ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
 			       FALSE, TRUE, FALSE, FALSE);
 	      if (pAb->AbLeafType != LtPolyLine && j != i)
@@ -2563,10 +2548,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 
 		  /* Recherche le point d'insertion du texte */
 		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer,
-				   &ind, &xx,
-				   &previousChars);
+				   &ind, &xx, &previousChars);
 		  
-		  if (pAb != NULL)
+		  if (pAb)
 		    {
 		      /* keyboard ni Symbol ni Graphique */
 		      /* bloque l'affichage de la fenetre */
@@ -2582,8 +2566,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      if (pBuffer == NULL)
 			return;
 		      /* La selection doit se trouver en fin de buffer */
-		      if (ind <= pBuffer->BuLength &&
-			  pBuffer->BuPrevious != NULL)
+		      if (ind < pBuffer->BuLength && pBuffer->BuPrevious)
 			pBuffer = pBuffer->BuPrevious;
 		      
 		      /* prepare le reaffichage */
@@ -2604,9 +2587,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			beginOfBox = FALSE;
 		  
 		      if (toDelete)	/* ========================== Delete */
-			/* n'a rien a detruire */
 			if (beginOfBox)
 			  {
+			    /* no removable character here */
 			    CloseTextInsertion ();
 			    if (ThotLocalActions[T_deletenextchar] != NULL)
 			      (*ThotLocalActions[T_deletenextchar]) (frame,
@@ -2616,78 +2599,72 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  }
 			else
 			  {
-			    /* libere le buffer vide */
 			    if (pBuffer->BuLength == 0)
 			      {
-			      if (pBuffer->BuPrevious != NULL)
+				if (pBuffer->BuPrevious)
 				{
-				  /* Si pBuffer = 1er buffer de la boite ? */
+				  /* if pBuffer = first buffer of the box? */
 				  if (pSelBox->BxBuffer == pBuffer)
 				    {
-				      /* Liberation du buffer */
+				      /* free the current buffer */
 				      pBuffer = DeleteBuffer (pBuffer, frame);
 				      pSelBox->BxBuffer = pBuffer;
-				      
-				      /* MAJ de la boite coupee ? */
-				      if (pSelBox->BxFirstChar == 0)
+				      if (pSelBox->BxIndChar == 0)
 					{
+					  /* update the piece of box */
 					  pBox->BxBuffer = pBuffer;
 					  pAb->AbText = pBuffer;
-					  /* S'il y a une boite vide avant
-					     pSelBox */
+					  /* Is there an empty box before? */
 					  if (pBox->BxNexChild != pSelBox &&
-					      pBox->BxNexChild != NULL)
+					      pBox->BxNexChild)
 					    pBox->BxNexChild->BxBuffer = pBuffer;
 					}
-				      /* MAJ de la boite precedente */
 				      else if (pSelBox->BxPrevious->BxNChars == 0)
+					/* update the previous box */
 					pSelBox->BxPrevious->BxBuffer = pBuffer;
 				    }
 				  else
-				    /* Liberation du buffer */
+				    /* free the buffer */
 				    pBuffer = DeleteBuffer (pBuffer, frame);
 				}
-			    /* Sinon pBuffer est le 1er buffer de la boite */
-			      else if (pBuffer->BuNext != NULL)
+			      else if (pBuffer->BuNext)
 				{
-				  /* Le nouveau 1er buffer est le suivant */
+				  /* pBuffer = first buffer of the box */
+				  /* update the box */
 				  pSelBox->BxBuffer = pBuffer->BuNext;
-				  /* Liberation du buffer */
+				  /* free the buffer */
 				  pBuffer = DeleteBuffer (pBuffer, frame);
 				  pBuffer = pSelBox->BxBuffer;
-				  
-				  /* MAJ de la boite coupee ? */
-				  if (pSelBox->BxFirstChar == 0)
+				  if (pSelBox->BxIndChar == 0)
 				    {
 				      pBox->BxBuffer = pBuffer;
 				      pAb->AbText = pBuffer;
-				      /* S'il y a une boite vide avant pSelBox */
+				      /* Is there an empty box before? */
 				      if (pBox->BxNexChild != pSelBox &&
-					  pBox->BxNexChild != NULL)
+					  pBox->BxNexChild)
 					pBox->BxNexChild->BxBuffer = pBuffer;
 				    }
-				  /* MAJ de la boite precedente */
 				  else if (pSelBox->BxPrevious->BxNChars == 0)
+				    /* update the previous box */
 				    pSelBox->BxPrevious->BxBuffer = pBuffer;
 				}
 			      }
-			    /* enleve le caractere dans la chaine des buffers */
-			    c = pBuffer->BuContent[pBuffer->BuLength - 1];
-			    pBuffer->BuContent[pBuffer->BuLength - 1] = EOS;
+			    /* remove the character in the buffer */
 			    pBuffer->BuLength--;
+			    c = pBuffer->BuContent[pBuffer->BuLength];
+			    pBuffer->BuContent[pBuffer->BuLength] = EOS;
 			    
-			    /* met a jour la selection en fin de buffer */
+			    /* update the selection at the end of the buffer */
 			    if (pViewSel->VsBuffer == pBuffer)
 			      {
 				pViewSel->VsIndBuf--;
 				ind--;
-				if (pViewSelEnd->VsBuffer == pBuffer)
-				  pViewSelEnd->VsIndBuf--;
+				pViewSelEnd->VsIndBuf--;
 			      }
 			    
 			    /* libere le buffer vide */
 			    if (pBuffer->BuLength == 0)
-			      if (pBuffer->BuPrevious != NULL)
+			      if (pBuffer->BuPrevious)
 				{
 				  /* Si pBuffer = 1er buffer de la boite ? */
 				  if (pSelBox->BxBuffer == pBuffer)
@@ -2695,15 +2672,14 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      /* Liberation du buffer */
 				      pBuffer = DeleteBuffer (pBuffer, frame);
 				      pSelBox->BxBuffer = pBuffer;
-				      
 				      /* MAJ de la boite coupee ? */
-				      if (pSelBox->BxFirstChar == 0)
+				      if (pSelBox->BxFirstChar == 1)
 					{
 					  pBox->BxBuffer = pBuffer;
 					  pAb->AbText = pBuffer;
 					  /* S'il y a une boite vide avant pSelBox */
 					  if (pBox->BxNexChild != pSelBox &&
-					      pBox->BxNexChild != NULL)
+					      pBox->BxNexChild)
 					    pBox->BxNexChild->BxBuffer = pBuffer;
 					}
 				      /* MAJ de la boite precedente */
@@ -2726,20 +2702,18 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			    toSplit = FALSE;
 			    
 			    /* ==> La boite entiere devient vide */
-			    if (previousChars == 1 && pSelBox->BxType == BoComplete
-				&& pSelBox->BxNChars == 1)
+			    if (previousChars == 1 &&
+				pSelBox->BxType == BoComplete &&
+				pSelBox->BxNChars == 1)
 			      {
 				/* Mise a jour des marques */
 				xDelta = BoxCharacterWidth (109, font);
 				pViewSel->VsXPos = 0;
 				pViewSel->VsIndBox = 0;
 				pViewSel->VsNSpaces = 0;
-				if (pViewSelEnd->VsBox == pFrame->FrSelectionBegin.VsBox)
-				  {
-				    pViewSelEnd->VsXPos = xDelta;
-				    pViewSelEnd->VsIndBox = 0;
-				    pViewSelEnd->VsNSpaces = 0;
-				  }
+				pViewSelEnd->VsXPos = xDelta;
+				pViewSelEnd->VsIndBox = 0;
+				pViewSelEnd->VsNSpaces = 0;
 				
 				/* Prepare la mise a jour de la boite */
 				xDelta -= pSelBox->BxWidth;
@@ -2770,37 +2744,31 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				    pSelBox = pAb->AbBox;
 				    pViewSel->VsXPos = 0;
 				    pViewSel->VsIndBox = 0;
-				    if (pViewSel->VsLine != NULL)
+				    if (pViewSel->VsLine)
 				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
-				    
-				    if (pViewSelEnd->VsBox == pFrame->FrSelectionBegin.VsBox)
-				      {
-					pViewSelEnd->VsBox = pSelBox;
-					pViewSelEnd->VsLine = pViewSel->VsLine;
-					pViewSelEnd->VsXPos = xDelta;
-					pViewSelEnd->VsIndBox = 0;
-				      }
+				    pViewSelEnd->VsBox = pSelBox;
+				    pViewSelEnd->VsLine = pViewSel->VsLine;
+				    pViewSelEnd->VsXPos = xDelta;
+				    pViewSelEnd->VsIndBox = 0;
 				    pViewSel->VsBox = pSelBox;
 				  }
 				else
 				  {
 				    xDelta = - BoxCharacterWidth (c, font);
 				    pViewSel->VsBox = pSelBox;
-				    if (pViewSel->VsLine != NULL)
+				    pViewSel->VsIndBox--;
+				    if (pViewSel->VsLine)
 				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
-				    
-				    if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer
-					&& pFrame->FrSelectionEnd.VsIndBuf == pViewSel->VsIndBuf)
-				      {
-					pFrame->FrSelectionEnd.VsBox = pSelBox;
-					pFrame->FrSelectionEnd.VsLine = pViewSel->VsLine;
-				      }
+				    pViewSelEnd->VsBox = pSelBox;
+				    pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
+				    pViewSelEnd->VsLine = pViewSel->VsLine;
 				    pFrame->FrClipXBegin += xDelta;
 				  }
 			      }
 			    /* ==> supprime un blanc de fin de ligne entre deux boites */
-			    else if ((previousChars > pSelBox->BxNChars || previousChars == 0)
-				     && c == SPACE)
+			    else if ((previousChars > pSelBox->BxNChars ||
+				      previousChars == 0) &&
+				     c == SPACE)
 			      {
 				/* Le bloc de ligne et marques de selection sont reevalues */
 				/* il faut reevaluer la mise en ligne */
@@ -2812,12 +2780,13 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				    /* on force la reevaluation du bloc de    */
 				    /* lignes a partir de la boite precedente */
 				    pBox = pSelBox->BxPrevious;
-				    if (pViewSel->VsLine != NULL)
+				    if (pViewSel->VsLine)
 				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
 				    
 				    /* Si la boite precedente est vide      */
 				    /* et c'est la premier boite de coupure */
-				    if (pBox->BxNChars == 0 && pBox->BxIndChar == 0)
+				    if (pBox->BxNChars == 0 &&
+					pBox->BxFirstChar == 1)
 				      {
 					pBox = pAb->AbBox;
 					/* Est-ce que la boite devient vide ? */
@@ -2825,7 +2794,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 					  xDelta = BoxCharacterWidth (109, font) - pBox->BxWidth;
 				      }
 				    /* Reevaluation du debut de la boite coupee ? */
-				    else if (pBox->BxIndChar == 0)
+				    else if (pBox->BxFirstChar == 1)
 				      pBox = pAb->AbBox;
 				    pSelBox = pBox;
 				  }	/* if previousChars=0 */
@@ -2889,34 +2858,28 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  /* ajoute le caractere dans la chaine des buffers */
 			  if (pBuffer->BuLength == FULL_BUFFER)
 			    pBuffer = GetNewBuffer (pBuffer, frame);
-			  
+			  pBuffer->BuContent[pBuffer->BuLength] = c;
 			  pBuffer->BuLength++;
-			  pBuffer->BuContent[pBuffer->BuLength - 1] = c;
 			  pBuffer->BuContent[pBuffer->BuLength] = EOS;
 			  if (pBuffer == pViewSel->VsBuffer)
 			    {
 			      /* Selection en fin de boite */
 			      pViewSel->VsIndBuf++;
-			      ind++;
-			      if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer)
-				pFrame->FrSelectionEnd.VsIndBuf = pViewSel->VsIndBuf;
+			      pViewSelEnd->VsIndBuf++;
 			    }
 			  
 			  /* ==> La boite entiere n'est plus vide */
-			  if (pSelBox->BxNChars == 0 && pSelBox->BxType == BoComplete)
+			  if (pSelBox->BxNChars == 0 &&
+			      pSelBox->BxType == BoComplete)
 			    {
 			      /* Mise a jour des marques */
 			      xDelta = BoxCharacterWidth (c, font);
 			      pViewSel->VsXPos = xDelta;
 			      pViewSel->VsIndBox = charsDelta;
 			      pViewSel->VsNSpaces = spacesDelta;
-			      if (pViewSelEnd->VsBox == pFrame->FrSelectionBegin.VsBox)
-				if (pViewSelEnd->VsBox == pFrame->FrSelectionBegin.VsBox)
-				  {
-				    pViewSelEnd->VsXPos = xDelta + 2;
-				    pViewSelEnd->VsIndBox = charsDelta;
-				    pViewSelEnd->VsNSpaces = spacesDelta;
-				  }
+			      pViewSelEnd->VsXPos = xDelta + 2;
+			      pViewSelEnd->VsIndBox = charsDelta;
+			      pViewSelEnd->VsNSpaces = spacesDelta;
 			      
 			      /* Le caractere insere' est un Ctrl Return ? */
 			      if (c == BREAK_LINE || c == NEW_LINE)
@@ -2933,9 +2896,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      xDelta -= pSelBox->BxWidth;
 			    }
 			  /* ==> Insertion d'un caractere entre deux boites */
-			  else if (previousChars > pSelBox->BxNChars
+			  else if (previousChars > pSelBox->BxNChars ||
 				   /* ==> ou d'un blanc en fin de boite      */
-				   || (c == SPACE && (previousChars == pSelBox->BxNChars || previousChars == 0)))
+				   (c == SPACE &&
+				    (previousChars == pSelBox->BxNChars ||
+				     previousChars == 0)))
 			    {
 			      /* Prepare la mise a jour de la boite */
 			      toSplit = TRUE;
@@ -2946,7 +2911,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
 			      
 			      /* Reevaluation du debut de la boite coupee ? */
-			      if (previousChars == 0 && pSelBox->BxIndChar == 0)
+			      if (previousChars == 0 && pSelBox->BxFirstChar == 0)
 				pSelBox = pAb->AbBox;
 			      else if (previousChars == 0)
 				{
@@ -3003,14 +2968,15 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			}
 		      
 		      /* Mise a jour de la boite */
-		      if (IsLineBreakInside (pSelBox->BxBuffer, pSelBox->BxFirstChar, pSelBox->BxNChars + 1))
+		      if (IsLineBreakInside (pSelBox->BxBuffer, pSelBox->BxIndChar, pSelBox->BxNChars))
 			toSplit = TRUE;
-		      BoxUpdate (pSelBox, pViewSel->VsLine, charsDelta, spacesDelta, xDelta, adjust, 0, frame, toSplit);
+		      BoxUpdate (pSelBox, pViewSel->VsLine, charsDelta,
+				 spacesDelta, xDelta, adjust, 0, frame, toSplit);
 		      /* Mise a jour du volume du pave */
 		      pAb->AbVolume += charsDelta;
 		      
 		      /* Check enclosing cell */
-		      if (LastInsertCell != NULL && ThotLocalActions[T_checkcolumn])
+		      if (LastInsertCell && ThotLocalActions[T_checkcolumn])
 			{
 			  /* we have to propage position to cell children */
 			  savePropagate = Propagate;
@@ -3167,7 +3133,7 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
   /* l'index dans le buffer, le decalage x ne sont pas utilises */
   GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &i, &previousChars);
   /* initialise l'insertion */
-  previousChars += pSelBox->BxIndChar + 1;
+  previousChars += pSelBox->BxFirstChar;
 
   /* clean up the X clipboard */
   clipboard = &XClipboard;
@@ -3268,22 +3234,22 @@ void TtcInsertChar (Document doc, View view, unsigned char c)
 	     doc =  FrameTable[ActiveFrame].FrDoc;*/
 	}
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-      if (pViewSel->VsBox != NULL &&
-	  pViewSel->VsBox->BxAbstractBox != NULL &&
+      if (pViewSel->VsBox &&
+	  pViewSel->VsBox->BxAbstractBox &&
 	  pViewSel->VsBox->BxAbstractBox->AbReadOnly)
 	{
 	  if (pViewSel->VsBox->BxAbstractBox->AbEnclosing->AbReadOnly)
 	    /* cannot insert here */
 	    return;
-	  else if (pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar > 0 &&
-		   pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar < pViewSel->VsBox->BxAbstractBox->AbVolume)
+	  else if (pViewSel->VsIndBox + pViewSel->VsBox->BxFirstChar > 0 &&
+		   pViewSel->VsIndBox + pViewSel->VsBox->BxFirstChar < pViewSel->VsBox->BxAbstractBox->AbVolume)
 	    /* cannot insert here */
 	    return;
 	}
 
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-      if (pDoc && pViewSel->VsBox != NULL)
+      if (pDoc && pViewSel->VsBox)
 	{
 	  /* avoid to redisplay step by step */
 	  dispMode = TtaGetDisplayMode (doc);
@@ -3305,7 +3271,7 @@ void TtcInsertChar (Document doc, View view, unsigned char c)
 	    {
 	      /* Delete the current selection */
 	      CloseTextInsertion ();
-	      if (pViewSel->VsBox != NULL)
+	      if (pViewSel->VsBox)
 		{
 		  pAb = pViewSel->VsBox->BxAbstractBox;
 		  draw = GetParentDraw (pViewSel->VsBox);
@@ -3493,8 +3459,8 @@ void TtcDeletePreviousChar (Document doc, View view)
 	  if (pViewSel->VsBox != NULL &&
 	      pViewSel->VsBox->BxAbstractBox != NULL &&
 	      (!pViewSel->VsBox->BxAbstractBox->AbReadOnly ||
-	       pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 0 ||
-	       (pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 1 &&
+	       pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox == 0 ||
+	       (pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox == 1 &&
 		pViewSel->VsBox->BxAbstractBox->AbVolume == 1)))
 	    InsertChar (frame, 127, -1);
 	}

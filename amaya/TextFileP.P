@@ -226,8 +226,8 @@ RULES
 
   Line\240: BEGIN
 	LineBreak: Yes;
-#ifdef PAGE
 	Line;
+#ifdef PAGE
 	Width: Enclosing . Width;
 #else
 	Width: Enclosed . Width;

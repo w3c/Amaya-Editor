@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -955,7 +955,8 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
       if (IsParentBox (PackBoxRoot, pParentBox))
 	PackBoxRoot = pParentBox;
       
-      if (pBox->BxType == BoSplit)
+      if (pBox->BxType == BoSplit ||
+	  pBox->BxType == BoMulScript)
 	{
 	  /* the box is split in lines, move all pieces */
 	  pChildBox = pBox->BxNexChild;
@@ -1105,7 +1106,8 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
       if (IsParentBox (PackBoxRoot, pParentBox))
 	PackBoxRoot = pParentBox;
       
-      if (pBox->BxType == BoSplit)
+      if (pBox->BxType == BoSplit ||
+	  pBox->BxType == BoMulScript)
 	{
 	  /* the box is split in lines, move all pieces */
 	  pChildBox = pBox->BxNexChild;
@@ -1285,7 +1287,9 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		      /* need to check inclusion */
 		      toMove = TRUE;
 		      /* register the window area to be redisplayed */
-		      if (ReadyToDisplay && pBox->BxType != BoSplit)
+		      if (ReadyToDisplay &&
+			  pBox->BxType != BoSplit &&
+			  pBox->BxType != BoMulScript)
 			{
 			  i = pBox->BxXOrg;
 			  j = pBox->BxXOrg + pBox->BxWidth;
@@ -1298,7 +1302,8 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			    j += delta;
 			  else
 			    i += delta;
-			  DefClip (frame, i - k, pBox->BxYOrg - k, j + k, pBox->BxYOrg + pBox->BxHeight + k);
+			  DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
+				   pBox->BxYOrg + pBox->BxHeight + k);
 			}
 		       
 		      if (IsXPosComplete (pBox))
@@ -1494,7 +1499,9 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		      /* need to check inclusion */
 		      toMove = TRUE;
 		      /* register the window area to be redisplayed */
-		      if (ReadyToDisplay && pBox->BxType != BoSplit)
+		      if (ReadyToDisplay &&
+			  pBox->BxType != BoSplit &&
+			  pBox->BxType != BoMulScript)
 			{
 			  i = pBox->BxYOrg;
 			  j = pBox->BxYOrg + pBox->BxHeight;
@@ -1507,7 +1514,8 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			    j += delta;
 			  else
 			    i += delta;
-			  DefClip (frame, pBox->BxXOrg - k, i - k, pBox->BxXOrg + pBox->BxWidth + k, j + k);
+			  DefClip (frame, pBox->BxXOrg - k, i - k,
+				   pBox->BxXOrg + pBox->BxWidth + k, j + k);
 			}
 		      
 		      if (IsYPosComplete (pBox))
@@ -1761,6 +1769,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* register the window area to be redisplayed */
 	  if (ReadyToDisplay
 	      && pBox->BxType != BoSplit
+	      && pBox->BxType != BoMulScript
 	      /* don't take care of a box which is not */
 	      /* at its right place in the concrete image  */
 	      && !pBox->BxXToCompute
@@ -2238,6 +2247,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* register the window area to be redisplayed */
 	  if (ReadyToDisplay
 	      && pBox->BxType != BoSplit
+	      && pBox->BxType != BoMulScript
 	      /* don't take care of a box which is not */
 	      /* at its right place in the concrete image  */
 	      && !pBox->BxXToCompute
@@ -2347,7 +2357,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				      pCurrentAb->AbHorizRef.PosAbRef == NULL)
 				    j = BoxFontBase (pBox->BxFont) + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
 				  else
-				    j = delta;
+				    j = delta - pBox->BxHorizRef;
 				  MoveHorizRef (pBox, NULL, j, frame);
 				  /* restore the history of moved boxes */
 				  pBox->BxMoved = pFromBox;
@@ -2685,7 +2695,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	  /* register the window area to be redisplayed */
 	  if (ReadyToDisplay)
 	    {
-	      if (pBox->BxType != BoSplit)
+	      if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)
 		{
 		  i = pBox->BxXOrg;
 		  j = pBox->BxXOrg + pBox->BxWidth;
@@ -2740,13 +2750,24 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		  box = box->BxMoved;
 	    }
 	  else
+	    {
 	    pBox->BxXOrg += delta;
+	    if (pBox->BxType == BoScript)
+	      {
+		/* move script boxes too */
+		box = pBox->BxNexChild;
+		while (box)
+		  {
+		    box->BxXOrg += delta;
+		    box = box->BxNexChild;
+		  }
+	      }
+	    }
 	  
 	  /* Check the validity of dependency rules */
 	  checkParent = TRUE;
-	  if (pCurrentAb->AbEnclosing != NULL)
-	    if (pCurrentAb->AbEnclosing->AbBox != NULL)
-	      checkParent = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost);
+	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
+	    checkParent = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost);
 	  
 	  /* Move remaining dependent boxes */
 	  pPosRel = pBox->BxPosRelations;
@@ -2890,7 +2911,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	  /* register the window area to be redisplayed */
 	  if (ReadyToDisplay)
 	    {
-	      if (pBox->BxType != BoSplit)
+	      if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)
 		{
 		  i = pBox->BxYOrg;
 		  j = pBox->BxYOrg + pBox->BxHeight;
@@ -2945,12 +2966,23 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		  box = box->BxMoved;
 	    }
 	  else
-	    pBox->BxYOrg += delta;
+	    {
+	      pBox->BxYOrg += delta;
+	      if (pBox->BxType == BoScript)
+		{
+		  /* move script boxes too */
+		  box = pBox->BxNexChild;
+		  while (box)
+		    {
+		      box->BxYOrg += delta;
+		      box = box->BxNexChild;
+		    }
+		}
+	    }
 
 	  /* Check the validity of dependency rules */
 	  checkParent = TRUE;
-	  if (pCurrentAb->AbEnclosing != NULL)
-	    if (pCurrentAb->AbEnclosing->AbBox != NULL)
+	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
 	      checkParent = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost);
 
 	  /* Move remaining dependent boxes */
@@ -3174,9 +3206,9 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       
       val = x - left; /* Shift of the extra left edge */
       if (notEmpty)
-	width += val; /* Nex position of the extra right edge */
+	width += val; /* Next position of the extra right edge */
       if (width == x && pAb->AbVolume == 0)
-	GiveTextSize (pAb, &width, &x, &i);
+	width = 2;
       else
 	width -= x;
       x = width - pBox->BxW; /* widths difference */
@@ -3405,7 +3437,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       if (notEmpty)
 	height += val; /* Nex position of the extra bottom edge */
       if (height == y && pAb->AbVolume == 0)
-	GiveTextSize (pAb, &y, &height, &i);
+	height = BoxFontHeight (pAb->AbBox->BxFont);
       else
 	height -= y;
       y = height - pBox->BxH; /* heights difference */

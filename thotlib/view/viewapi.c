@@ -407,7 +407,10 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
 					       &charsNumber);
 	      if (pBox != NULL && pBox->BxAbstractBox != NULL)
 		{
-		  if (pBox->BxType == BoPiece || pBox->BxType == BoSplit)
+		  if (pBox->BxType == BoPiece ||
+		      pBox->BxType == BoScript ||
+		      pBox->BxType == BoMulScript ||
+		      pBox->BxType == BoSplit)
 		    pBox = pBox->BxAbstractBox->AbBox->BxNexChild;
 		  pEl = pBox->BxAbstractBox->AbElement;
 		  /* width and height of the frame */

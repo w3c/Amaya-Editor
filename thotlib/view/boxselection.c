@@ -76,7 +76,7 @@ static void ClearAbstractBoxSelection (PtrAbstractBox pAb)
 /*----------------------------------------------------------------------
    ClearViewSelMarks annule la selection courante dans la fenetre.   
   ----------------------------------------------------------------------*/
-void                ClearViewSelMarks (int frame)
+void ClearViewSelMarks (int frame)
 {
    ViewFrame          *pFrame;
 
@@ -95,7 +95,7 @@ void                ClearViewSelMarks (int frame)
    ClearViewSelection bascule et annule la mise en evidence de la   
    selection dans la fenetre.                              
   ----------------------------------------------------------------------*/
-void                ClearViewSelection (int frame)
+void ClearViewSelection (int frame)
 {
    ViewFrame          *pFrame;
    PtrBox              pBox, pBox1, pBox2;
@@ -202,6 +202,7 @@ void                ClearViewSelection (int frame)
 		    DefClip (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxYOrg + pBox1->BxHeight);
 		    if (pBox1->BxType == BoPiece ||
+			pBox1->BxType == BoScript ||
 			pBox1->BxType == BoDotted)
 		      {
 			/* unselect the end of the split text */
@@ -241,6 +242,7 @@ void                ClearViewSelection (int frame)
 		    DefClip (frame, x1, pBox2->BxYOrg, x2,
 			     pBox2->BxYOrg + pBox2->BxHeight);
 		    if (pBox2->BxType == BoPiece ||
+			pBox2->BxType == BoScript ||
 			pBox1->BxType == BoDotted)
 		      {
 			/* select the begin of the split text */
@@ -263,7 +265,7 @@ void                ClearViewSelection (int frame)
    TtaClearViewSelections unselects and clears all current displayed
    selections.                                  
   ----------------------------------------------------------------------*/
-void                TtaClearViewSelections ()
+void TtaClearViewSelections ()
 {
    int                 frame;
 
@@ -280,7 +282,7 @@ void                TtaClearViewSelections ()
    UpdateViewSelMarks met a jour les marques de selection de frame   
    apres insertion ou destruction de caracteres.           
   ----------------------------------------------------------------------*/
-void    UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
+void UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
 {
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
@@ -304,7 +306,7 @@ void    UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta
    Detruit le buffer donne en parametre, met a jour les marques de 
    selection et rend le pointeur sur le buffer precedent.          
   ----------------------------------------------------------------------*/
-PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
+PtrTextBuffer DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 {
    PtrTextBuffer       pNextBuffer;
    PtrTextBuffer       pPreviousBuffer;
@@ -315,12 +317,12 @@ PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 
    pNextBuffer = pBuffer->BuNext;
    pPreviousBuffer = pBuffer->BuPrevious;
-   if (pPreviousBuffer != NULL)
+   if (pPreviousBuffer)
      {
 	pPreviousBuffer->BuNext = pNextBuffer;
 	length = pPreviousBuffer->BuLength;
      }
-   if (pNextBuffer != NULL)
+   if (pNextBuffer)
       pNextBuffer->BuPrevious = pPreviousBuffer;
 
    /* Mise a jour des marques de selection courante */
@@ -333,7 +335,7 @@ PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 	   if (pFrame->FrSelectionEnd.VsBuffer == pViewSel->VsBuffer)
 	     {
 	       pViewSelEnd = &pFrame->FrSelectionEnd;
-	       if (pPreviousBuffer != NULL)
+	       if (pPreviousBuffer)
 		 {
 		   /* deplace la selection dans les buffers */
 		   pViewSelEnd->VsIndBuf += length;
@@ -341,13 +343,13 @@ PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 		 }
 	       else
 		 {
-		   pViewSelEnd->VsIndBuf = 1;
+		   pViewSelEnd->VsIndBuf = 0;
 		   pViewSelEnd->VsBuffer = pNextBuffer;
 		 }
 	     }
 	   pViewSel->VsBuffer = pPreviousBuffer;
 	   
-	   if (pPreviousBuffer != NULL)
+	   if (pPreviousBuffer)
 	     {
 	       /* deplace la selection dans les buffers */
 	       pViewSel->VsIndBuf += length;
@@ -355,7 +357,7 @@ PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 	     }
 	   else
 	     {
-	       pViewSel->VsIndBuf = 1;
+	       pViewSel->VsIndBuf = 0;
 	       pViewSel->VsBuffer = pNextBuffer;
 	     }
 	 }
@@ -371,7 +373,7 @@ PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
    celui qui contient le caractere d'indice global index   
    ainsi que son indice dans ce buffer.                    
   ----------------------------------------------------------------------*/
-static void         LocateBuffer (PtrTextBuffer * pBuffer, int *index)
+static void LocateBuffer (PtrTextBuffer *pBuffer, int *index)
 {
    ThotBool            still;
 
@@ -406,129 +408,75 @@ static void         LocateBuffer (PtrTextBuffer * pBuffer, int *index)
    le precedant VsNSpaces, la position dans la boite VsXPos
    et la ligne contenant la boite VsLine.                  
   ----------------------------------------------------------------------*/
-void                ComputeViewSelMarks (ViewSelection *selMark)
+void ComputeViewSelMarks (ViewSelection *selMark)
 {
   PtrTextBuffer       pBuffer;
-  PtrTextBuffer       pSelBuffer;
   PtrBox              pBox;
-  int                 beginInd, x;
-  int                 spaceWidth;
-  int                 max, i;
-  int                 dummy;
-  ThotBool            stop;
+  int                 x;
+  int                 spaces;
+  int                 ind, pos;
 
   if (selMark->VsBox->BxAbstractBox->AbLeafType == LtText)
     {
-      /* note l'index et le buffer du caractere precedant la marque */
-      pSelBuffer = selMark->VsBuffer;
+      /* get the current selection info */
+      pos = selMark->VsIndBox;
       pBox = selMark->VsBox;
-      if (selMark->VsIndBuf == 1 && pSelBuffer != pBox->BxBuffer)
+      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+	/* select the first child */
+	pBox = pBox->BxNexChild;
+      /* look for the right box */
+      while (pBox->BxNexChild && pBox->BxNexChild->BxFirstChar <= pos &&
+	     pBox->BxNexChild->BxNChars > 0)
+	pBox = pBox->BxNexChild;
+      pos -= pBox->BxFirstChar;
+      selMark->VsIndBox = pos;
+      selMark->VsBox = pBox;
+
+      /* look for the rigth buffer and the right index */
+      pBuffer = pBox->BxBuffer;
+      ind = pBox->BxIndChar + pos;
+      while (ind >= pBuffer-> BuLength && pBuffer->BuNext)
 	{
-	  if (pSelBuffer->BuPrevious == NULL)
-	    pSelBuffer = pBox->BxBuffer;
+	  ind -= pBuffer-> BuLength;
+	  /* selection in the next buffer */
+	  pBuffer = pBuffer->BuNext;
+	}
+      selMark->VsIndBuf = ind;
+      selMark->VsBuffer = pBuffer;
+
+      /* update number of spaces and the position */
+      if (pos > pBox->BxNChars)
+	{
+	  /* selection at the end of the box? */
+	  if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
+	    x = 0;
 	  else
-	    /* En debut de buffer */
-	    pSelBuffer = pSelBuffer->BuPrevious;
-	  i = pSelBuffer->BuLength;
+	    x = pBox->BxW;
+	  if (pBox->BxNexChild)
+	    spaces = pBox->BxNSpaces + pBox->BxNexChild->BxFirstChar - pBox->BxFirstChar - pBox->BxNChars;
+	  else
+	    spaces = pBox->BxNSpaces;
 	}
       else
-	/* En fin ou en cours de buffer */
-	i = selMark->VsIndBuf - 1;
-      stop = FALSE;
-
-      /* Est-ce une boite coupee ? */
-      if (pBox->BxType == BoSplit)
-	pBox = pBox->BxNexChild;
-
-      /* Recherche l'index du caractere et la boite de coupure */
-      pBuffer = pBox->BxBuffer;
-      beginInd = 1 - pBox->BxFirstChar;
-      max = pBox->BxNChars;
-      /* Calcule le saut entre cette boite et la suivante pour */
-      /* determiner si on peut selectionner en fin de boite */
-      if (pBox->BxNexChild == NULL)
-	dummy = 0;
-      else
-	dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar - pBox->BxNChars;
-
-      /* Boucle tant que le caractere designe se trouve dans */
-      /* le buffer suivant ou dans la boite suivante */
-      while (!stop && (pBuffer != pSelBuffer || max - beginInd + dummy <= i))
-	if (max - beginInd + dummy <= i || pBuffer == NULL)
-	  {
-	    /* Box de coupure GetNextBox */
-	    /* Cas particulier des blancs supprimes en fin de boite */
-	    /* Est-ce qu'il y a une boite apres ? */
-	    if (pBox->BxNexChild == NULL)
-	      stop = TRUE;
-	    /* Il existe une boite apres mais c'est une boite fantome */
-	    else if (pBox->BxNexChild->BxNChars == 0 &&
-		     SearchLine (pBox->BxNexChild) == NULL)
-	      stop = TRUE;
-	    else
-	      stop = FALSE;
-
-	    /* Est-ce que la selection est en fin de boite ? */
-	    if (stop)
-	      {
-		dummy = i - max + beginInd;
-		/* Position dans les blancs de fin de ligne */
-		selMark->VsIndBox = pBox->BxNChars + dummy;
-		selMark->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
-		selMark->VsNSpaces = pBox->BxNSpaces + dummy;
-	      }
-	    /* Sinon on passe a la boite suivante */
-	    else
-	      {
-		pBox = pBox->BxNexChild;
-		beginInd = 1 - pBox->BxFirstChar;
-		max = pBox->BxNChars;
-		pBuffer = pBox->BxBuffer;
-		/* Calcule le saut entre cette boite et la suivante pour */
-		/* determiner si on peut selectionner en fin de boite */
-		if (pBox->BxNexChild == NULL)
-		  dummy = 0;
-		else
-		  dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar - pBox->BxNChars;
-		/* Cas particulier du premier caractere d'une boite coupee */
-		if (pSelBuffer == pBuffer->BuPrevious)
-		  {
-		    selMark->VsIndBox = 0;
-		    selMark->VsXPos = 0;
-		    selMark->VsNSpaces = 0;
-		    stop = TRUE;
-		  }
-	      }
-	  }
-	else
-	  {
-	    beginInd += pBuffer->BuLength;
-	    pBuffer = pBuffer->BuNext;
-	  }
-
-      /* on a trouve' la boite de coupure */
-      if (!stop)
 	{
-	  selMark->VsIndBox = beginInd + i;
-	  /* Reevaluation du decalage dans la boite */
-	  /* 0 si on prend la largeur reelle du blanc */
-	  spaceWidth = pBox->BxSpaceWidth;
-	  /* Index du premier caractere a traiter */
-	  x = pBox->BxFirstChar;
-	  GiveTextParams (pBox->BxBuffer, selMark->VsIndBox, pBox->BxFont,
-			  &x, &spaceWidth);
-	  selMark->VsXPos = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-	  selMark->VsNSpaces = spaceWidth;
+	  spaces = pBox->BxSpaceWidth;
+	  pBuffer = pBox->BxBuffer;
+	  ind = pBox->BxIndChar;
+	  /* Only the width is requested: Override and Latin */
+	  GiveTextParams (&pBuffer, &ind, &pos, pBox->BxFont, &x, &spaces, 'L', 'O');
+	  if (pBox->BxScript == 'A' || pBox->BxScript == 'H')
+	    x = - x + pBox->BxW;
 	  /* ajoute eventuellement les pixels repartis */
-	  if (pBox->BxSpaceWidth != 0)
+	  if (pBox->BxSpaceWidth)
 	    {
-	      if (selMark->VsNSpaces < pBox->BxNPixels)
-		selMark->VsXPos += selMark->VsNSpaces;
+	      if (spaces < pBox->BxNPixels)
+		x += selMark->VsNSpaces;
 	      else
-		selMark->VsXPos += pBox->BxNPixels;
+		x += pBox->BxNPixels;
 	    }
 	}
-      selMark->VsBox = pBox;
+      selMark->VsXPos = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      selMark->VsNSpaces = spaces;
     }
   selMark->VsLine = SearchLine (selMark->VsBox);
 }
@@ -551,222 +499,160 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
   PtrTextBuffer       pBuffer;
   PtrBox              pBox;
   ViewFrame          *pFrame;
-  ViewSelection      *pViewSel;
-  int                 ind, charIndex, w;
+  ViewSelection      *pViewSel, *pViewSelEnd;
+  CHAR_T              c;
+  int                 l;
   ThotBool            graphSel, rtl;
 
-  /* Verifie s'il faut reformater le dernier paragraphe edite */
+  /* Check if a paragraph should be reformatted after an edit */
   if (ThotLocalActions[T_updateparagraph] != NULL)
     (*ThotLocalActions[T_updateparagraph]) (pAb, frame);
 
-  if (pAb != NULL && frame > 0)
+  if (pAb && frame > 0)
     {
       pFrame = &ViewFrameTable[frame - 1];
-      if (pAb->AbBox != NULL)
+      if (pAb->AbBox)
 	{
-	  /* eteint la selection */
 	  pBox = pAb->AbBox;
-	  rtl = (pAb->AbDirection == 'R');
+	  rtl = (pBox->BxScript == 'A' || pBox->BxScript == 'H');
 	  adline = SearchLine (pBox);
 	  graphSel = (pAb->AbLeafType == LtPolyLine ||
 		      pAb->AbLeafType == LtPath ||
 		      pAb->AbLeafType == LtGraphics);
 
-	  /* verifie la coherence des indices de caracteres */
+	  /* check index values */
 	  if (pAb->AbLeafType == LtText)
-	    /* C'est une feuille de texte */
 	    {
+	      /* it's a text */
 	      if (firstChar == 0 && lastChar != 0)
 		firstChar = 1;
 	      else if (firstChar > 1 && lastChar == 0)
 		lastChar = pAb->AbVolume;
-	      else if (startSelection &&firstChar == 0 && pAb->AbVolume != 0)
-		{
-		  /* select the whole text */
-		  firstChar = 1;
-		  lastChar = pAb->AbVolume;
-		}
+	      else if (firstChar == 0)
+		firstChar = 1;
 	    }
 	  else if (!graphSel && pAb->AbLeafType != LtPicture)
 	    firstChar = 0;
 	  
-	  /* memorise si la selection relle porte sur un seul pave ou non */
+	  /* register the unicity of the selection */
 	  pFrame->FrSelectOneBox = alone;
-	  /* et si elle indique seulement une position */
 	  pFrame->FrSelectOnePosition = SelPosition;
-	  
-	  /* La selection porte sur le pave complet ou un point d'un path */
-	  /* ou d'une polyline */
+	  pViewSel = &pFrame->FrSelectionBegin;
+	  pViewSelEnd = &pFrame->FrSelectionEnd;
 	  if (firstChar == 0 || pAb->AbVolume == 0 ||
 	      graphSel || pAb->AbLeafType == LtPicture)
 	    {
-	      /* Est-ce une boite de texte ? */
+	      /* selection of a whole box or one position within
+		 a picture or a polyline */
 	      if (pAb->AbLeafType == LtText)
-		{
-		  ind = 1;
-		  pBuffer = pAb->AbText;
-		}
+		pBuffer = pAb->AbText;
 	      else
-		{
-		  ind = 0;
-		  pBuffer = NULL;
-		}
-
-	      /* memorise les marques de selection */
+		pBuffer = NULL;
+	      l = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	      /* register selection marks */
 	      if (startSelection)
 		{
-		  pViewSel = &pFrame->FrSelectionBegin;
 		  pViewSel->VsBox = pBox;
-		  if (endSelection && !graphSel &&
-		      pAb->AbLeafType != LtPicture)
-		    /* tout selectionne */
+		  if (endSelection && !graphSel && pAb->AbLeafType != LtPicture)
+		    /* select the whole box */
 		    pViewSel->VsIndBox = 0;
 		  else
 		    pViewSel->VsIndBox = firstChar;
-		  pViewSel->VsIndBuf = ind;
+		  pViewSel->VsIndBuf = 0;
 		  pViewSel->VsBuffer = pBuffer;
 		  pViewSel->VsLine = adline;
 		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
-		    pViewSel->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
-		  else if (rtl)
-		    /* right-to-left writing */
-		    pViewSel->VsXPos = pBox->BxWidth;
+		    pViewSel->VsXPos = pBox->BxW + l;
 		  else
-		    pViewSel->VsXPos = 0;
+		    pViewSel->VsXPos = l;
 		  pViewSel->VsNSpaces = 0;
 		}
 	      if (endSelection || SelPosition)
 		{
-		  pViewSel = &pFrame->FrSelectionEnd;
-		  pViewSel->VsBox = pBox;
-		  pViewSel->VsIndBox = 0;
-		  pViewSel->VsIndBuf = ind;
-		  pViewSel->VsBuffer = pBuffer;
-		  pViewSel->VsLine = adline;
-		  if ((pAb->AbLeafType == LtPicture && firstChar > 0) ||
+		  pViewSelEnd->VsBox = pBox;
+		  pViewSelEnd->VsIndBox = 0;
+		  pViewSelEnd->VsIndBuf = 0;
+		  pViewSelEnd->VsBuffer = pBuffer;
+		  pViewSelEnd->VsLine = adline;
+		  if (pAb->AbLeafType == LtText)
+		    /* select the whole text */
+		    pViewSelEnd->VsXPos = pBox->BxW + l;
+		  else if ((pAb->AbLeafType == LtPicture && firstChar > 0) ||
 		      (pAb->AbLeafType == LtSymbol && firstChar == 0))
-		    pViewSel->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
-		  else if (rtl)
-		    /* right-to-left writing */
-		    pViewSel->VsXPos = pBox->BxWidth;
+		    /* select the right side of the picture or symbol */
+		    pViewSelEnd->VsXPos = pBox->BxW + l;
+		  else if (pAb->AbLeafType == LtCompound)
+		    {
+		      /* select the whole box */
+		      pViewSel->VsXPos = 0;
+		      pViewSelEnd->VsXPos = pBox->BxWidth;
+		    }
 		  else
-		    pViewSel->VsXPos = 0;
-		  pViewSel->VsNSpaces = 0;
+		    pViewSelEnd->VsXPos = l;
+		  pViewSelEnd->VsNSpaces = 0;
 		}
 	    }
-	  /* La selection porte sur une sous-chaine */
 	  else
 	    {
-	      /* recherche le buffer et l'index dans ce buffer */
-	      if (startSelection)
-		ind = firstChar;
-	      else
-		ind = lastChar;
-	      pBuffer = pAb->AbText;
-	      if (ind > pAb->AbVolume)
-		{
-		  /* En fin de boite */
-		  charIndex = pAb->AbVolume;
-		  /* recherche le buffer et l'indice */
-		  LocateBuffer (&pBuffer, &ind);
-		}
-	      else
-		{
-		  /* Au milieu de la boite */
-		  charIndex = ind - 1;
-		  /* recherche le buffer et l'indice */
-		  LocateBuffer (&pBuffer, &ind);
-		}
-	      
-	      /* met a jour le debut de selection */
+	    /* select a substring */
 	      if (startSelection)
 		{
-		  pViewSel = &pFrame->FrSelectionBegin;
+		  /* update the first selection mark */
 		  pViewSel->VsBox = pBox;
-		  pViewSel->VsIndBox = charIndex;
-		  pViewSel->VsIndBuf = ind;
-		  pViewSel->VsBuffer = pBuffer;
-		  ComputeViewSelMarks (&pFrame->FrSelectionBegin);
+		  pViewSel->VsIndBox = firstChar;
+		  ComputeViewSelMarks (pViewSel);
 		}
-	      /* met a jour la fin de selection */
 	      if (endSelection)
 		{
-		  pViewSel = &pFrame->FrSelectionEnd;
-		  /* startSelection and endSelection on the same character */
+		  /* update the first selection mark */
 		  if (startSelection && firstChar >= lastChar)
 		    {
-		      pViewSel->VsBox = pFrame->FrSelectionBegin.VsBox;
-		      pViewSel->VsIndBox = pFrame->FrSelectionBegin.VsIndBox;
-		      pViewSel->VsLine = pFrame->FrSelectionBegin.VsLine;
-		      pViewSel->VsBuffer = pFrame->FrSelectionBegin.VsBuffer;
-		      pViewSel->VsIndBuf = pFrame->FrSelectionBegin.VsIndBuf;
-		      pViewSel->VsXPos = pFrame->FrSelectionBegin.VsXPos;
-		      pViewSel->VsNSpaces = pFrame->FrSelectionBegin.VsNSpaces;
+		      /* startSelection and endSelection on the same character */
+		      pViewSelEnd->VsBox = pViewSel->VsBox;
+		      pViewSelEnd->VsIndBox = pViewSel->VsIndBox;
+		      pViewSelEnd->VsLine = pViewSel->VsLine;
+		      pViewSelEnd->VsBuffer = pViewSel->VsBuffer;
+		      pViewSelEnd->VsIndBuf = pViewSel->VsIndBuf;
+		      pViewSelEnd->VsXPos = pViewSel->VsXPos;
+		      pViewSelEnd->VsNSpaces = pViewSel->VsNSpaces;
 		    }
 		  else
 		    {
-		      /* startSelection et endSelection sur deux caracteres
-			 differents */
-		      if (startSelection)
-			{
-			  pBuffer = pAb->AbText;
-			  ind = lastChar;
-			  if (ind > pAb->AbVolume)
-			    {
-			      /* En fin de boite */
-			      charIndex = pAb->AbVolume;
-			      /* recherche le buffer et l'indice */
-			      LocateBuffer (&pBuffer, &ind);
-			    }
-			  else
-			    {
-			      /* Au milieu de la boite */
-			      charIndex = ind - 1;
-			      /* recherche le buffer et l'indice */
-			      LocateBuffer (&pBuffer, &ind);
-			    }
-			}
-		      pViewSel->VsBox = pBox;
-		      pViewSel->VsIndBox = charIndex;
-		      pViewSel->VsIndBuf = ind;
-		      pViewSel->VsBuffer = pBuffer;
-		      ComputeViewSelMarks (&pFrame->FrSelectionEnd);
-		      /* the box could be updated */
-		      pBox =  pViewSel->VsBox;
+		      /* startSelection and endSelection differ */
+		      pViewSelEnd->VsBox = pBox;
+		      pViewSelEnd->VsIndBox = lastChar;
+		      ComputeViewSelMarks (pViewSelEnd);
 		    }
 		  
-		  /* recherche la position limite du caractere */
-		  pBox = pViewSel->VsBox;
+		  /* update the width of the selection */
+		  pBox = pViewSelEnd->VsBox;
 		  if (pBox->BxNChars == 0 && pBox->BxType == BoComplete)
+		    /* select the whole box */
+		    pViewSelEnd->VsXPos += pBox->BxW;
+		  else if (pViewSel->VsIndBox >= pBox->BxNChars)
+		    /* select the end of the box */
+		    pViewSelEnd->VsXPos += 2;
+		  else if (SelPosition)
+		    pViewSelEnd->VsXPos += 2;
+		  else if (firstChar == lastChar)
 		    {
-		      if (rtl)
-			/* right-to-left writing */
-			pViewSel->VsXPos -= pBox->BxW;
+		      c = pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf];
+		      if (c == SPACE && pBox->BxSpaceWidth != 0)
+			pViewSelEnd->VsXPos += pBox->BxSpaceWidth;
 		      else
-			pViewSel->VsXPos += pBox->BxW;
-		    }
-		  else if (pViewSel->VsIndBox == pBox->BxNChars)
-		    pViewSel->VsXPos += 2;
-		  else
-		    {
-		      charIndex = (int) (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1]);
-		      if (charIndex == SPACE && pBox->BxSpaceWidth != 0)
-			pViewSel->VsXPos += pBox->BxSpaceWidth;
-		      else
-			pViewSel->VsXPos += BoxCharacterWidth ((unsigned char) charIndex, pBox->BxFont);
+			pViewSelEnd->VsXPos += BoxCharacterWidth (c, pBox->BxFont);
 		    }
 		}
 	    }
 
-	  /* pViewSel points to the right selector */
+	  /* pViewSel points to the first selection mark */
 	  /* ready to display the current selection */
 	  if (startSelection && endSelection)
 	    {
 	      /* only one box is selected */
 	      pBox = pViewSel->VsBox;
 	      if (pBox->BxType == BoGhost ||
-		  (pAb != NULL &&
-		   FrameTable[frame].FrView == 1 &&
+		  (pAb && FrameTable[frame].FrView == 1 &&
 		   TypeHasException (ExcHighlightChildren,
 				     pAb->AbElement->ElTypeNumber,
 				     pAb->AbElement->ElStructSchema)))
@@ -774,28 +660,42 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		DrawBoxSelection (frame, pBox);
 	      else
 		{
-		  if (pBox != pFrame->FrSelectionBegin.VsBox)
+		  if (pBox != pViewSelEnd->VsBox)
 		    {
 		      /* several pieces of a split box are selected */
-		      /* the last one */
 		      if (rtl)
-			/* right-to-left writing */
-			DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg,
-				 pBox->BxXOrg + pBox->BxWidth,
-				 pBox->BxYOrg + pBox->BxHeight);
+			{
+			  /* the first one */
+			  DefClip (frame,
+				   pBox->BxXOrg,
+				   pBox->BxYOrg,
+				   pBox->BxXOrg + pViewSel->VsXPos,
+				   pBox->BxYOrg + pBox->BxHeight);
+			  /* the last one */
+			  pBox = pViewSelEnd->VsBox;
+			  DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos,
+				   pBox->BxYOrg,
+				   pBox->BxXOrg + pBox->BxWidth,
+				   pBox->BxYOrg + pBox->BxHeight);
+			}
 		      else
-			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-				 pBox->BxXOrg + pViewSel->VsXPos,
-				 pBox->BxYOrg + pBox->BxHeight);
-		      /* the first one */
-		      pBox = pFrame->FrSelectionBegin.VsBox;
-		      DefClip (frame,
-			       pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos,
-			       pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
-			       pBox->BxYOrg + pBox->BxHeight);
+			{
+			  /* the first one */
+			  DefClip (frame,
+				   pBox->BxXOrg + pViewSel->VsXPos,
+				   pBox->BxYOrg,
+				   pBox->BxXOrg + pBox->BxWidth,
+				   pBox->BxYOrg + pBox->BxHeight);
+			  /* the last one */
+			  pBox = pViewSelEnd->VsBox;
+			  DefClip (frame, pBox->BxXOrg,
+				   pBox->BxYOrg,
+				   pBox->BxXOrg + pViewSel->VsXPos,
+				   pBox->BxYOrg + pBox->BxHeight);
+			}
 		      /* intermediate boxes */
-		      pBox = pBox->BxNexChild;
-		      while (pBox != pFrame->FrSelectionEnd.VsBox)
+		      pBox = pViewSel->VsBox->BxNexChild;
+		      while (pBox != pViewSelEnd->VsBox)
 			{
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
@@ -803,37 +703,20 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			  pBox = pBox->BxNexChild;
 			}
 		    }
-		  else if (pFrame->FrSelectionBegin.VsIndBox == 0 || graphSel)
-		    {
-		      /* the whole box is selected */
-		      w =  pBox->BxWidth;
-		      if (w == 0)
-			w = 2;
-		      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			       pBox->BxXOrg + w,
-			       pBox->BxYOrg + pBox->BxHeight);
-		    }
 		  else
-		    {
-		      if (pFrame->FrSelectionBegin.VsXPos == pViewSel->VsXPos)
-			w = 2;
-		      else
-			w = 0;
-		      /* a substring or a point of the box is selected */
-		      DefClip (frame,
-			       pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos,
-			       pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos + w,
-			       pBox->BxYOrg + pBox->BxHeight);
-		    }
+		    /* a substring or a point of the box is selected */
+		    DefClip (frame,
+			     pBox->BxXOrg + pViewSel->VsXPos,
+			     pBox->BxYOrg, pBox->BxXOrg + pViewSelEnd->VsXPos,
+			     pBox->BxYOrg + pBox->BxHeight);
 		}
 	    }
 	  else if (endSelection)
 	    {
 	      /* display the end of the selection */
-	      pBox = pViewSel->VsBox;
+	      pBox = pViewSelEnd->VsBox;
 	      if (pBox->BxType == BoGhost ||
-		  (pAb != NULL &&
-		   FrameTable[frame].FrView == 1 &&
+		  (pAb && FrameTable[frame].FrView == 1 &&
 		   TypeHasException (ExcHighlightChildren,
 				     pAb->AbElement->ElTypeNumber,
 				     pAb->AbElement->ElStructSchema)))
@@ -841,22 +724,30 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		DrawBoxSelection (frame, pBox);
 	      else
 		{
-		  if (pViewSel->VsIndBox == 0)
+		  if (pViewSelEnd->VsIndBox == 0)
 		    /* the whole box is selected */
 		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
+		  else if (rtl)
+		    /* a substring or a point of the box is selected */
+		    DefClip (frame, pBox->BxXOrg + pViewSelEnd->VsXPos,
+			     pBox->BxYOrg,
+			     pBox->BxXOrg + pBox->BxWidth,
+			     pBox->BxYOrg + pBox->BxHeight);
 		  else
 		    /* a substring or a point of the box is selected */
-		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			     pBox->BxXOrg + pViewSel->VsXPos,
+		    DefClip (frame, pBox->BxXOrg,
+			     pBox->BxYOrg,
+			     pBox->BxXOrg + pViewSelEnd->VsXPos,
 			     pBox->BxYOrg + pBox->BxHeight);
 		  if (pBox->BxType == BoPiece ||
+		      pBox->BxType == BoScript ||
 		      pBox->BxType == BoDotted)
 		    {
 		      /* select the begin of the split text */
 		      pBox = pAb->AbBox->BxNexChild;
-		      while (pBox != pViewSel->VsBox)
+		      while (pBox != pViewSelEnd->VsBox)
 			{
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
@@ -871,8 +762,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	      /* display the beginning of the selection */
 	      pBox = pViewSel->VsBox;
 	      if (pBox->BxType == BoGhost ||
-		  (pAb != NULL &&
-		   FrameTable[frame].FrView == 1 &&
+		  (pAb && FrameTable[frame].FrView == 1 &&
 		   TypeHasException (ExcHighlightChildren,
 				     pAb->AbElement->ElTypeNumber,
 				     pAb->AbElement->ElStructSchema)))
@@ -885,12 +775,20 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
+		  else if (rtl)
+		    /* a substring or a point of the box is selected */
+		    DefClip (frame, pBox->BxXOrg,
+			     pBox->BxYOrg,
+			     pBox->BxXOrg + pViewSel->VsXPos,
+			     pBox->BxYOrg + pBox->BxHeight);
 		  else
 		    /* a substring or a point of the box is selected */
 		    DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos,
-			     pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
+			     pBox->BxYOrg,
+			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
 		  if (pBox->BxType == BoPiece ||
+		      pBox->BxType == BoScript ||
 		      pBox->BxType == BoDotted)
 		    {
 		      /* select the end of the split text */
@@ -913,7 +811,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
    IsAbstractBoxDisplayed rend la valeur vrai si le pave est affiche'
    dans le frame.                                          
   ----------------------------------------------------------------------*/
-ThotBool            IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
+ThotBool IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
 {
    int                 min, max;
 

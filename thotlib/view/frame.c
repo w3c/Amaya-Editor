@@ -583,7 +583,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	      else
 		{
 		  /* look for the box displayed at the top of the window */
-		  if (pBox->BxType == BoSplit)
+		  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 		    {
 		      /* the box itself doen't give right positions */
 		      box = pBox->BxNexChild;
@@ -608,7 +608,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		    *bVol = *bVol + pBox->BxAbstractBox->AbVolume;
 		  else
 		    {
-		      if (pBox->BxType == BoSplit)
+		      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 			/* the box itself doen't give right positions */
 			box = pBox->BxNexChild;
 		      else
@@ -644,7 +644,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			}
 		      if (!userSpec)
 			{
-			  if (pBox->BxType == BoSplit)
+			  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 			    while (pBox->BxNexChild)
 			      {
 				pBox = pBox->BxNexChild;

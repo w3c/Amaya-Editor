@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -565,19 +565,16 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
       return;
 
    LoadColor (fg);
+   y = y + FrameTable[frame].FrTopMargin;
 #ifdef _GTK
 #ifndef _GL
-    gdk_draw_text (w, font, TtLineGC, 
-		  x, 
-		  y + FrameTable[frame].FrTopMargin + FontBase (font), 
-		  &car,
-		  1);
+    gdk_draw_text (w, font, TtLineGC, x, y, &car, 1);
 #else /* _GL */
    GL_DrawChar(car, x, y);
 #endif/*  _GL */
 #else /* _GTK */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
-   XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
+   XDrawString (TtDisplay, w, TtLineGC, x, y, &car, 1);
 #endif /* _GTK */
 }
 
@@ -602,7 +599,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   register int        j;
 
   w = FrRef[frame];
-  y += FrameTable[frame].FrTopMargin + FontBase (font);
+  y += FrameTable[frame].FrTopMargin;
   /* compute the width of the string */
   width = 0;
   if (lg > 0 && w)
@@ -762,7 +759,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	/* compute the number of string to write */
 	nb = boxWidth / width;
 	xcour = x + (boxWidth % width);
-	y = y + FrameTable[frame].FrTopMargin - FontBase (font);
+	y = y + FrameTable[frame].FrTopMargin;
 #ifndef _GTK
       	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* !_GTK */
@@ -823,44 +820,37 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
-   int                 xm, yf, exnum;
+   int                 xm, yf;
    int                 yend, delta;
    int                 wd, asc, hd;
 
-   exnum = 0;
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
      {
      xm = x + ((l - CharacterWidth (242, font)) / 2);
-     yf = y + ((h - CharacterHeight (242, font)) / 2) - FontAscent (font) +
-	  CharacterAscent (242, font);
+     yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
      DrawChar ('\362', frame, xm, yf, font, fg);
      }
    else
      {
      /* Need more than one glyph */
      xm = x + ((l - CharacterWidth (243, font)) / 2);
-     yf = y - FontAscent (font) + CharacterAscent (243, font);
+     yf = y + CharacterAscent (243, font);
      DrawChar ('\363', frame, xm, yf, font, fg);
-     yend = y + h - CharacterHeight (245, font) - FontAscent (font) +
-	    CharacterAscent (245, font) - 1;
+     yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
      DrawChar ('\365', frame, xm, yend, font, fg);
-
-     yf += CharacterHeight (243, font);
+     asc = CharacterAscent (244, font);
+     yf += asc;
      delta = yend - yf;
-     asc = CharacterAscent (244, font)  - FontAscent (font) - 1;
-     hd = CharacterHeight (244, font) - 1;
+     hd = CharacterHeight (244, font);
      wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
      if (delta >= 0)
        {
-	for (yf += asc, yend -= hd;
-	     yf < yend;
-	     yf += CharacterHeight (244, font), exnum++)
-	   DrawChar ('\364', frame, xm+wd, yf, font, fg);
-	if (exnum)
-	   DrawChar ('\364', frame, xm+wd, yend, font, fg);
-	else
-	   DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, fg);
+	 while (yf < yend)
+	   {
+	     DrawChar ('\364', frame, xm+wd, yf, font, fg);
+	     yf += hd;
+	   }
        }
      }
    if (type == 2)		/* double integral */
@@ -869,7 +859,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 
    else if (type == 1)		/* contour integral */
       DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
-		y + (h - CharacterHeight (111, font)) / 2 - FontAscent (font) + CharacterAscent (111, font),
+		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
 		font, fg);
 }
 
@@ -883,7 +873,7 @@ static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
    int                 xm, yf;
 
    xm = x + ((l - CharacterWidth (symb, font)) / 2);
-   yf = y + ((h - CharacterHeight (symb, font)) / 2) - FontAscent (font) + CharacterAscent (symb, font);
+   yf = y + ((h - CharacterHeight (symb, font)) / 2) + CharacterAscent (symb, font);
 
    DrawChar ((char)symb, frame, xm, yf, font, fg);
 }
@@ -1169,61 +1159,55 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 		  int direction, PtrFont font, int fg)
 {
-   int                 xm, yf, yend;
+  int                 xm, yf, yend;
 
-   if (FontHeight (font) >= h)
-     {
-	/* With only one glyph */
-	if (direction == 0)
-	  {
-	     /* Draw a opening bracket */
-	     xm = x + ((l - CharacterWidth (91, font)) / 2);
-	     yf = y + ((h - CharacterHeight (91, font)) / 2) -
-		FontAscent (font) + CharacterAscent (91, font);
-	     DrawChar ('[', frame, xm, yf, font, fg);
-	  }
-	else
-	  {
-	     /* Draw a closing bracket */
-	     xm = x + ((l - CharacterWidth (93, font)) / 2);
-	     yf = y + ((h - CharacterHeight (93, font)) / 2) -
-		FontAscent (font) + CharacterAscent (93, font);
-	     DrawChar (']', frame, xm, yf, font, fg);
-	  }
+  if (FontHeight (font) >= h)
+    {
+      /* With only one glyph */
+      if (direction == 0)
+	{
+	  /* Draw a opening bracket */
+	  xm = x + ((l - CharacterWidth (91, font)) / 2);
+	  yf = y + ((h - CharacterHeight (91, font)) / 2) + CharacterAscent (91, font);
+	  DrawChar ('[', frame, xm, yf, font, fg);
+	}
+      else
+	{
+	  /* Draw a closing bracket */
+	  xm = x + ((l - CharacterWidth (93, font)) / 2);
+	  yf = y + ((h - CharacterHeight (93, font)) / 2) + CharacterAscent (93, font);
+	  DrawChar (']', frame, xm, yf, font, fg);
+	}
      }
    else
      {
-	/* Need more than one glyph */
-	if (direction == 0)
-	  {
-	     /* Draw a opening bracket */
-	     xm = x + ((l - CharacterWidth (233, font)) / 2);
-	     yf = y - FontAscent (font) + CharacterAscent (233, font);
-	     DrawChar ('\351', frame, xm, yf, font, fg);
-	     yend = y + h - CharacterHeight (235, font) -
-		FontAscent (font) + CharacterAscent (235, font);
-	     DrawChar ('\353', frame, xm, yend, font, fg);
-	     for (yf = yf + CharacterHeight (233, font) -
-		  FontAscent (font) + CharacterAscent (234, font);
-		  yf < yend;
-		  yf += CharacterHeight (234, font))
-		DrawChar ('\352', frame, xm, yf, font, fg);
-	  }
-	else
-	  {
-	     /* Draw a closing bracket */
-	     xm = x + ((l - CharacterWidth (249, font)) / 2);
-	     yf = y - FontAscent (font) + CharacterAscent (249, font);
-	     DrawChar ('\371', frame, xm, yf, font, fg);
-	     yend = y + h - CharacterHeight (251, font) -
-		FontAscent (font) + CharacterAscent (251, font);
-	     DrawChar ('\373', frame, xm, yend, font, fg);
-	     for (yf = yf + CharacterHeight (249, font) -
-		  FontAscent (font) + CharacterAscent (250, font);
-		  yf < yend;
-		  yf += CharacterHeight (250, font))
-		DrawChar ('\372', frame, xm, yf, font, fg);
-	  }
+       /* Need more than one glyph */
+       if (direction == 0)
+	 {
+	   /* Draw a opening bracket */
+	   xm = x + ((l - CharacterWidth (233, font)) / 2);
+	   yf = y + CharacterAscent (233, font);
+	   DrawChar ('\351', frame, xm, yf, font, fg);
+	   yend = y + h - CharacterHeight (235, font) + CharacterAscent (235, font);
+	   DrawChar ('\353', frame, xm, yend, font, fg);
+	   for (yf = yf + CharacterHeight (233, font) + CharacterAscent (234, font);
+		yf < yend;
+		yf += CharacterHeight (234, font))
+	     DrawChar ('\352', frame, xm, yf, font, fg);
+	 }
+       else
+	 {
+	   /* Draw a closing bracket */
+	   xm = x + ((l - CharacterWidth (249, font)) / 2);
+	   yf = y + CharacterAscent (249, font);
+	   DrawChar ('\371', frame, xm, yf, font, fg);
+	   yend = y + h - CharacterHeight (251, font) + CharacterAscent (251, font);
+	   DrawChar ('\373', frame, xm, yend, font, fg);
+	   for (yf = yf + CharacterHeight (249, font) + CharacterAscent (250, font);
+		yf < yend;
+		yf += CharacterHeight (250, font))
+	     DrawChar ('\372', frame, xm, yf, font, fg);
+	 }
      }
 }
 
@@ -1235,48 +1219,46 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 			int direction, PtrFont font, int fg)
 {
-   int         xm, yf;
+  int         xm, yf;
 
-   if (fg < 0)
-     return;
-   if (FontHeight (font) >= h)
-     {
-	/* With only one glyph */
-	if (direction == 0)
-	  {
-	     /* Draw a opening bracket */
-	     xm = x + ((l - CharacterWidth (225, font)) / 2);
-	     yf = y + ((h - CharacterHeight (225, font)) / 2) -
-		FontAscent (font) + CharacterAscent (225, font);
-	     DrawChar ('\341', frame, xm, yf, font, fg);
-	  }
-	else
-	  {
-	     /* Draw a closing bracket */
-	     xm = x + ((l - CharacterWidth (241, font)) / 2);
-	     yf = y + ((h - CharacterHeight (241, font)) / 2) -
-		FontAscent (font) + CharacterAscent (241, font);
-	     DrawChar ('\361', frame, xm, yf, font, fg);
-	  }
-     }
-   else
-     {
-	/* Need more than one glyph */
-       y += FrameTable[frame].FrTopMargin;
-       InitDrawing (5, 0, fg);
-       if (direction == 0)
-	 {
-	   /* Draw a opening bracket */
-	   DoDrawOneLine (frame, x + l, y, x, y + (h / 2));
-	   DoDrawOneLine (frame, x, y + (h / 2), x + l, y + h);
-	 }
-       else
-	 {
-	   /* Draw a closing bracket */
-	   DoDrawOneLine (frame, x, y, x + l, y + (h / 2));
-	   DoDrawOneLine (frame, x + l, y + (h / 2), x, y + h);
-	 }
-     }
+  if (fg < 0)
+    return;
+  if (FontHeight (font) >= h)
+    {
+      /* With only one glyph */
+      if (direction == 0)
+	{
+	  /* Draw a opening bracket */
+	  xm = x + ((l - CharacterWidth (225, font)) / 2);
+	  yf = y + ((h - CharacterHeight (225, font)) / 2) + CharacterAscent (225, font);
+	  DrawChar ('\341', frame, xm, yf, font, fg);
+	}
+      else
+	{
+	  /* Draw a closing bracket */
+	  xm = x + ((l - CharacterWidth (241, font)) / 2);
+	  yf = y + ((h - CharacterHeight (241, font)) / 2) + CharacterAscent (241, font);
+	  DrawChar ('\361', frame, xm, yf, font, fg);
+	}
+    }
+  else
+    {
+      /* Need more than one glyph */
+      y += FrameTable[frame].FrTopMargin;
+      InitDrawing (5, 0, fg);
+      if (direction == 0)
+	{
+	  /* Draw a opening bracket */
+	  DoDrawOneLine (frame, x + l, y, x, y + (h / 2));
+	  DoDrawOneLine (frame, x, y + (h / 2), x + l, y + h);
+	}
+      else
+	{
+	  /* Draw a closing bracket */
+	  DoDrawOneLine (frame, x, y, x + l, y + (h / 2));
+	  DoDrawOneLine (frame, x + l, y + (h / 2), x, y + h);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1286,82 +1268,73 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 		      int direction, PtrFont font, int fg)
 {
-   int                 xm, yf, yend, exnum, delta;
+  int                 xm, yf, yend, delta, asc, hd;
 
-   exnum = 0;
-
-   if (h <= (int) (1.3 * FontHeight (font)) )
-     {
-	/* With only one glyph */
-	if (direction == 0)
-	  {
-	     /* draw a opening parenthesis */
-	     xm = x + ((l - CharacterWidth (40, font)) / 2);
-	     yf = y + ((h - CharacterHeight (40, font)) / 2) - FontAscent (font) + CharacterAscent (40, font);
-	     DrawChar ('(', frame, xm, yf, font, fg);
-	  }
-	else
-	  {
-	     /* draw a closing parenthesis */
-	     xm = x + ((l - CharacterWidth (41, font)) / 2);
-	     yf = y + ((h - CharacterHeight (41, font)) / 2) - FontAscent (font) + CharacterAscent (41, font);
-	     DrawChar (')', frame, xm, yf, font, fg);
-	  }
-     }
-
-   else
-     {
-	/* Need more than one glyph */
-	if (direction == 0)
-	  {
-	     /* draw a opening parenthesis */
-	     xm = x + ((l - CharacterWidth (230, font)) / 2);
-	     yf = y - FontAscent (font) + CharacterAscent (230, font);
-	     DrawChar ('\346', frame, xm, yf, font, fg);
-	     yend = y + h - CharacterHeight (232, font) - FontAscent (font) + CharacterAscent (232, font) - 1;
-	     DrawChar ('\350', frame, xm, yend, font, fg);
-
-	     yf += CharacterHeight (230, font) - 1;
-	     delta = yend - yf;
-	     if (delta >= 0)
-	       {
-		  for (yf += CharacterAscent (231, font) - FontAscent (font),
-		       yend -= CharacterHeight (231, font) - 1;
-		       yf < yend;
-		       yf += CharacterHeight (231, font), exnum++)
-		     DrawChar ('\347', frame, xm, yf, font, fg);
-		  if (exnum)
-		     DrawChar ('\347', frame, xm, yend, font, fg);
-		  else
-		     DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, fg);
-	       }
-	  }
-
-	else
-	  {
-	     /* draw a closing parenthesis */
-	     xm = x + ((l - CharacterWidth (246, font)) / 2);
-	     yf = y - FontAscent (font) + CharacterAscent (246, font);
-	     DrawChar ('\366', frame, xm, yf, font, fg);
-	     yend = y + h - CharacterHeight (248, font) - FontAscent (font) + CharacterAscent (248, font) - 1;
-	     DrawChar ('\370', frame, xm, yend, font, fg);
-
-	     yf += CharacterHeight (246, font) - 1;
-	     delta = yend - yf;
-	     if (delta >= 0)
-	       {
-		  for (yf += CharacterAscent (247, font) - FontAscent (font),
-		       yend -= CharacterHeight (247, font) - 1;
-		       yf < yend;
-		       yf += CharacterHeight (247, font), exnum++)
-		     DrawChar ('\367', frame, xm, yf, font, fg);
-		  if (exnum)
-		     DrawChar ('\367', frame, xm, yend, font, fg);
-		  else
-		     DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight (247, font)) / 2), font, fg);
-	       }
-	  }
-     }
+  if (h <= (int) (1.3 * FontHeight (font)) )
+    {
+      /* With only one glyph */
+      if (direction == 0)
+	{
+	  /* draw a opening parenthesis */
+	  xm = x + ((l - CharacterWidth (40, font)) / 2);
+	  yf = y + ((h - CharacterHeight (40, font)) / 2) + CharacterAscent (40, font);
+	  DrawChar ('(', frame, xm, yf, font, fg);
+	}
+      else
+	{
+	  /* draw a closing parenthesis */
+	  xm = x + ((l - CharacterWidth (41, font)) / 2);
+	  yf = y + ((h - CharacterHeight (41, font)) / 2) + CharacterAscent (41, font);
+	  DrawChar (')', frame, xm, yf, font, fg);
+	}
+    }
+  else
+    {
+      /* Need more than one glyph */
+      if (direction == 0)
+	{
+	  /* draw a opening parenthesis */
+	  xm = x + ((l - CharacterWidth (230, font)) / 2);
+	  yf = y + CharacterAscent (230, font);
+	  DrawChar ('\346', frame, xm, yf, font, fg);
+	  yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
+	  DrawChar ('\350', frame, xm, yend, font, fg);
+	  asc = CharacterAscent (231, font);
+	  yf += asc;
+	  delta = yend - yf;
+	  hd = CharacterHeight (231, font);
+	  if (delta >= 0)
+	    {
+	      while (yf < yend)
+		{
+		  DrawChar ('\347', frame, xm, yf, font, fg);
+		  yf += hd;
+		}
+	    }
+	}
+      
+      else
+	{
+	  /* draw a closing parenthesis */
+	  xm = x + ((l - CharacterWidth (246, font)) / 2);
+	  yf = y + CharacterAscent (246, font);
+	  DrawChar ('\366', frame, xm, yf, font, fg);
+	  yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
+	  DrawChar ('\370', frame, xm, yend, font, fg);
+	  asc = CharacterAscent (247, font);
+	  yf += asc;
+	  delta = yend - yf;
+	  hd = CharacterHeight (247, font);
+	  if (delta >= 0)
+	    {
+	      while (yf < yend)
+		{
+		  DrawChar ('\367', frame, xm, yf, font, fg);
+		  yf += hd;
+		}
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1371,124 +1344,110 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 		int direction, PtrFont font, int fg)
 {
-   int                 xm, ym, yf, yend, exnum, delta;
+  int                 xm, ym, yf, yend, delta, hd, asc;
 
-   exnum = 0;
-
-   if (h <= (int) (1.3 * FontHeight (font)) )
-     {
-	/* need only one char */
-	if (direction == 0)
-	  {
-	     /* just use the opening brace glyph */
-	     xm = x + ((l - CharacterWidth (123, font)) / 2);
-	     yf = y + ((h - CharacterHeight (123, font)) / 2) - FontAscent (font) + CharacterAscent (123, font);
-	     DrawChar ('{', frame, xm, yf, font, fg);
-	  }
-	else
-	  {
-	     /* just use the closing brace glyph */
-	     xm = x + ((l - CharacterWidth (125, font)) / 2);
-	     yf = y + ((h - CharacterHeight (125, font)) / 2) - FontAscent (font) + CharacterAscent (125, font);
-	     DrawChar ('}', frame, xm, yf, font, fg);
-	  }
-     }
-
-   else
-     {
-	/* Brace drawn with more than one glyph */
-	if (direction == 0)
-	  {
-	     /* top */
-	     xm = x + ((l - CharacterWidth (236, font)) / 2);
-	     yf = y - FontAscent (font) + CharacterAscent (236, font);
-	     DrawChar ('\354', frame, xm, yf, font, fg);
-	     /* vertical line */
-	     ym = y + ((h - CharacterHeight (237, font)) / 2) - FontAscent (font)
-		+ CharacterAscent (237, font);
-	     DrawChar ('\355', frame, xm, ym, font, fg);
-	     /* bottom */
-	     yend = y + h - CharacterHeight (238, font) - FontAscent (font) + CharacterAscent (238, font);
-	     DrawChar ('\356', frame, xm, yend, font, fg);
-
-	     /* finish top */
-	     yf += CharacterHeight (236, font) - 1;
-	     delta = ym - yf;
-	     if (delta >= 0)
-	       {
-		  for (yf += CharacterAscent (239, font) - FontAscent (font),
-		       ym -= CharacterHeight (239, font);
-		       yf < ym;
-		       yf += CharacterHeight (239, font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, fg);
-		  if (exnum)
-		     DrawChar ('\357', frame, xm, ym, font, fg);
-		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight (239, font)) / 2), font, fg);
-	       }
-	     /* finish bottom */
-	     yf = ym + CharacterHeight (237, font) + CharacterHeight (239, font);
-	     delta = yend - yf;
-	     if (delta >= 0)
-	       {
-		  for (yf += CharacterAscent (239, font) - FontAscent (font),
-		       yend -= CharacterHeight (239, font);
-		       yf < yend;
-		       yf += CharacterHeight (239, font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, fg);
-		  if (exnum)
-		     DrawChar ('\357', frame, xm, yend, font, fg);
-		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight (239, font)) / 2), font, fg);
-	       }
-	  }
-
-	else
-	  {
-	     /* top */
-	     xm = x + ((l - CharacterWidth (252, font)) / 2);
-	     yf = y - FontAscent (font) + CharacterAscent (252, font);
-	     DrawChar ('\374', frame, xm, yf, font, fg);
-	     /* center */
-	     ym = y + ((h - CharacterHeight (253, font)) / 2)
-		- FontAscent (font) + CharacterAscent (253, font);
-	     DrawChar ('\375', frame, xm, ym, font, fg);
-	     /* bottom */
-	     yend = y + h - CharacterHeight (254, font)
-		- FontAscent (font) + CharacterAscent (254, font);
-	     DrawChar ('\376', frame, xm, yend, font, fg);
-	     /* finish top */
-	     yf += CharacterHeight (252, font) - 1;
-	     delta = ym - yf;
-	     if (delta >= 0)
-	       {
-		  for (yf += CharacterAscent (239, font) - FontAscent (font),
-		       ym -= CharacterHeight (239, font);
-		       yf < ym;
-		       yf += CharacterHeight (239, font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, fg);
-		  if (exnum)
-		     DrawChar ('\357', frame, xm, ym, font, fg);
-		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight (239, font)) / 2), font, fg);
-	       }
-	     /* finish bottom */
-	     yf = ym + CharacterHeight ('\375', font) + CharacterHeight (239, font);
-	     delta = yend - yf;
-	     if (delta >= 0)
-	       {
-		  for (yf += CharacterAscent (239, font) - FontAscent (font),
-		       yend -= CharacterHeight (239, font);
-		       yf < yend;
-		       yf += CharacterHeight (239, font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, fg);
-		  if (exnum)
-		     DrawChar ('\357', frame, xm, yend, font, fg);
-		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight (239, font)) / 2), font, fg);
-	       }
-	  }
-     }
+  if (h <= (int) (1.3 * FontHeight (font)) )
+    {
+      /* need only one char */
+      if (direction == 0)
+	{
+	  /* just use the opening brace glyph */
+	  xm = x + ((l - CharacterWidth (123, font)) / 2);
+	  yf = y + ((h - CharacterHeight (123, font)) / 2) + CharacterAscent (123, font);
+	  DrawChar ('{', frame, xm, yf, font, fg);
+	}
+      else
+	{
+	  /* just use the closing brace glyph */
+	  xm = x + ((l - CharacterWidth (125, font)) / 2);
+	  yf = y + ((h - CharacterHeight (125, font)) / 2) + CharacterAscent (125, font);
+	  DrawChar ('}', frame, xm, yf, font, fg);
+	}
+    }
+  else
+    {
+      /* Brace drawn with more than one glyph */
+      if (direction == 0)
+	{
+	  /* top */
+	  xm = x + ((l - CharacterWidth (236, font)) / 2);
+	  yf = y + CharacterAscent (236, font);
+	  DrawChar ('\354', frame, xm, yf, font, fg);
+	  /* vertical line */
+	  ym = y + ((h - CharacterHeight (237, font)) / 2) + CharacterAscent (237, font);
+	  DrawChar ('\355', frame, xm, ym, font, fg);
+	  /* bottom */
+	  yend = y + h - CharacterHeight (238, font) + CharacterAscent (238, font);
+	  DrawChar ('\356', frame, xm, yend, font, fg);
+	  /* finish top */
+	  asc = CharacterAscent (239, font);
+	  yf += asc;
+	  delta = yend - yf;
+	  hd = CharacterHeight (239, font);
+	  if (delta >= 0)
+	    {
+	      while (yf < yend)
+		{
+		  DrawChar ('\357', frame, xm, yf, font, fg);
+		  yf += hd;
+		}
+	    }
+	  /* finish bottom */
+	  yf = ym + CharacterHeight ('\355', font);
+	  yf += asc;
+	  yend -= asc;
+	  delta = yend - yf;
+	  hd = CharacterHeight (239, font);
+	  if (delta >= 0)
+	    {
+	      while (yf < yend)
+		{
+		  DrawChar ('\357', frame, xm, yf, font, fg);
+		  yf += hd;
+		}
+	    }
+	}
+      else
+	{
+	  /* top */
+	  xm = x + ((l - CharacterWidth (252, font)) / 2);
+	  yf = y + CharacterAscent (252, font);
+	  DrawChar ('\374', frame, xm, yf, font, fg);
+	  /* center */
+	  ym = y + ((h - CharacterHeight (253, font)) / 2) + CharacterAscent (253, font);
+	  DrawChar ('\375', frame, xm, ym, font, fg);
+	  /* bottom */
+	  yend = y + h - CharacterHeight (254, font) + CharacterAscent (254, font);
+	  DrawChar ('\376', frame, xm, yend, font, fg);
+	  /* finish top */
+	  asc = CharacterAscent (239, font);
+	  yf += asc;
+	  delta = yend - yf;
+	  hd = CharacterHeight (239, font);
+	  if (delta >= 0)
+	    {
+	      while (yf < yend)
+		{
+		  DrawChar ('\357', frame, xm, yf, font, fg);
+		  yf += hd;
+		}
+	    }
+	  /* finish bottom */
+	  yf = ym + CharacterHeight ('\375', font);
+	  yf += asc;
+	  yend -= asc;
+	  delta = yend - yf;
+	  hd = CharacterHeight (239, font);
+	  if (delta >= 0)
+	    {
+	      while (yf < yend)
+		{
+		  DrawChar ('\357', frame, xm, yf, font, fg);
+		  yf += hd;
+		}
+	    }
+	}
+    }
 }
 /*----------------------------------------------------------------------
   DrawRectangle draw a rectangle located at (x, y) in frame,

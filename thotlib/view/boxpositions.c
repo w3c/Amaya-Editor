@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -40,7 +40,8 @@
   SetYCompleteForOutOfStruct checks if an external box has a Y position
   that depends on that box.
   ----------------------------------------------------------------------*/
-static void SetYCompleteForOutOfStruct (PtrBox pBox, int visibility, int y, int frame)
+static void SetYCompleteForOutOfStruct (PtrBox pBox, int visibility,
+					int y, int frame)
 {
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -241,7 +242,7 @@ static void SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table,
 	toContinue = TRUE;
       if (toContinue)
 	{
-	  if (pBox->BxType == BoSplit)
+	  if (pBox->BxType == BoSplit  || pBox->BxType == BoMulScript)
 	    {
 	      /* --- mis en lignes ------------------------- */
 	      pPreviousBox = pBox;
@@ -453,7 +454,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 	    
 	    /* Decale boites englobees dont l'origine depend de l'englobante */
 	    /* La boite est coupee, on decale les boites de coupure */
-	    if (pChildBox->BxType == BoSplit)
+	    if (pChildBox->BxType == BoSplit || pChildBox->BxType == BoMulScript)
 	      {
 		box1 = pChildBox->BxNexChild;
 		while (box1 != NULL)
@@ -764,22 +765,22 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
    box = pAb->AbBox;
    if (box != NULL)
      {
-	if (box->BxType == BoSplit)
+	if (box->BxType == BoSplit || box->BxType == BoMulScript)
 	  {
 	    /* the box is split into different lines */
 	     pChildBox = box->BxNexChild;
 	     org = pChildBox->BxYOrg;
 	     /* look for the last piece */
-	     while (pChildBox->BxNexChild != NULL)
+	     while (pChildBox->BxNexChild)
 		pChildBox = pChildBox->BxNexChild;
 
 	     height = pChildBox->BxYOrg + pChildBox->BxHeight - org;
 	     /* BxMoved gives the plit box */
 	     box = box->BxMoved;
 	     /* number of characters included in the page */
-	     if (pAb->AbOnPageBreak && box != NULL)
+	     if (pAb->AbOnPageBreak && box)
 	       {
-		  *nChars = box->BxIndChar;
+		  *nChars = box->BxFirstChar;
 		  /* Il ne faut pas couper le dernier mot d'une page     */
 		  /* donc si la boite precedente est de type BtAvectrait */
 		  /* la limite de la page est deplacee sur le blanc qui  */
@@ -790,7 +791,7 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 		    {
 		      /* get the previous space */
 		      adbuff = box->BxBuffer;
-		      i = box->BxFirstChar - 1;
+		      i = box->BxIndChar;
 		      still = TRUE;
 		      while (still)
 			if (adbuff->BuContent[i] == SPACE)
@@ -804,7 +805,7 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 			  {
 			    (*nChars)--;
 			    if (i == 0)
-			      if (adbuff->BuPrevious != NULL)
+			      if (adbuff->BuPrevious)
 				{
 				  adbuff = adbuff->BuPrevious;
 				  i = adbuff->BuLength - 1;
@@ -824,7 +825,7 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 	     while (box->BxType == BoGhost)
 		box = box->BxAbstractBox->AbFirstEnclosed->AbBox;
 
-	     if (box->BxType == BoSplit)
+	     if (box->BxType == BoSplit || box->BxType == BoMulScript)
 		box = box->BxNexChild;
 	     /* get the position of the first child */
 	     org = box->BxYOrg;
@@ -832,7 +833,11 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 	     while (box != NULL)
 	       {
 		  /* get the bottom limit */
-		  if (box->BxType == BoPiece)
+		  if (box->BxType == BoSplit ||
+		      box->BxType == BoMulScript ||
+		      box->BxType == BoPiece ||
+		      box->BxType == BoScript ||
+		      box->BxType == BoDotted)
 		     /* look for the last piece */
 		     while (box->BxNexChild != NULL)
 			box = box->BxNexChild;
@@ -879,7 +884,7 @@ void SetBoxToTranslate (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef)
    if (pBox->BxYToCompute && (pBox->BxVertFlex || pBox->BxYOutOfStruct))
       vertRef = FALSE;
 
-   if (pBox->BxType != BoSplit)
+   if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)
      {
 	pBox->BxXToCompute = horizRef;
 	pBox->BxYToCompute = vertRef;

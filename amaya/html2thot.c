@@ -151,6 +151,11 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* Dagger   */ {8225, 2042}, /* double dagger, U+2021 ISOpub */
 /* bull     */ {8226, 183},  /* bullet = black small circle,  U+2022 ISOpub  */
 /* hellip   */ {8230, 188},  /* horizontal ellipsis = three dot leader,  U+2026 ISOpub  */
+/* lre      */ {8234, 1063}, /* left-to-right embed, U+202A NEW RFC 2070 */
+/* rle      */ {8235, 1063}, /* right-to-left embed, U+202B NEW RFC 2070 */
+/* pdf      */ {8236, 1063}, /* pop directional format, U+202C NEW RFC 2070 */
+/* lro      */ {8237, 1063}, /* left-to-right override, U+202D NEW RFC 2070 */
+/* rlo      */ {8238, 1063}, /* right-to-left override, U+202E NEW RFC 2070 */
 /* permil   */ {8240, 2037}, /* per mille sign, U+2030 ISOtech */
 /* prime    */ {8242, 162},  /* prime = minutes = feet, U+2032 ISOtech */
 /* Prime    */ {8243, 178},  /* double prime = seconds = inches,  U+2033 ISOtech */

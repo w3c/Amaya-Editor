@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1699,7 +1699,9 @@ PtrBox FreeBox (PtrBox pBox)
 
    /* get next child */
    if (pBox->BxType == BoSplit ||
-       pBox->BxType == BoPiece || pBox->BxType == BoDotted)
+       pBox->BxType == BoPiece ||
+       pBox->BxType == BoScript ||
+       pBox->BxType == BoDotted)
      NextBox = pBox->BxNexChild;
    else
      NextBox = NULL;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -928,7 +928,7 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
    /* substitue la nouvelle chaine et la selectionne */
    if (ChkrRange->SStartToEnd)
      {
-	idx = ChkrIndChar - stringLength + 1;
+	idx = ChkrIndChar - stringLength;
 	OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
 			     idx, idx+stringLength-1);
 	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
@@ -936,7 +936,7 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
 		       stringLength, pChaineRemplace, lgChaineRempl, TRUE);
 	/* met a jour ChkrIndChar */
-	ChkrIndChar = idx + lgChaineRempl - 1;
+	ChkrIndChar = idx + lgChaineRempl;
 
 	/* met eventuellement a jour la borne de fin du domaine de recherche */
 	if (ChkrElement == ChkrRange->SEndElement)
@@ -947,7 +947,7 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
      }
    else
      {
-	idx = ChkrIndChar + 1;
+	idx = ChkrIndChar;
 	OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
 			     idx, idx+stringLength-1);
 	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
@@ -982,13 +982,15 @@ ThotBool CheckChangeSelection ()
      {
 	pEl1 = ChkrElement;
 	c1 = ChkrIndChar;
-	ok = GetCurrentSelection (&ChkrRange->SDocument, &ChkrElement, &pElN, &cN, &ChkrIndChar);
+	ok = GetCurrentSelection (&ChkrRange->SDocument, &ChkrElement, &pElN,
+				  &cN, &ChkrIndChar);
      }
    else
      {
 	pEl1 = ChkrElement;
 	c1 = ChkrIndChar;
-	ok = GetCurrentSelection (&ChkrRange->SDocument, &pElN, &ChkrElement, &ChkrIndChar, &cN);
+	ok = GetCurrentSelection (&ChkrRange->SDocument, &pElN, &ChkrElement,
+				  &ChkrIndChar, &cN);
      }
 
    if (!ok)
@@ -1008,8 +1010,6 @@ ThotBool CheckChangeSelection ()
      {
 	ok = (ChkrElement != pEl1 || ChkrElement != pElN || ChkrIndChar != c1);
 	/* S'il s'agit d'une nouvelle selection dans le document */
-	if (ok && ChkrIndChar != 0)
-	   ChkrIndChar--;
 	return (ok);
      }
 }
@@ -1207,7 +1207,7 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
 #else /* _I18N_ */
   s = word;
 #endif /* _I18N */
-  i = 0;
+  i = 1;
   do
     {
       /* Recherche un mot a corriger */
@@ -1270,10 +1270,10 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
       /* a word is found, select it */
       if (ChkrRange->SStartToEnd)
 	SelectString (ChkrRange->SDocument, ChkrElement,
-		      ChkrIndChar - i + 1, ChkrIndChar);
+		      ChkrIndChar - i, ChkrIndChar);
       else
 	SelectString (ChkrRange->SDocument, ChkrElement,
-		      ChkrIndChar + 1, ChkrIndChar + i);
+		      ChkrIndChar, ChkrIndChar + i);
     }
   strcpy (ChkrErrWord, word);
 }

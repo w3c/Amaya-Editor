@@ -2305,7 +2305,11 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 		  found = MapXMLEntity (currentParserCtxt->XMLtype,
 					&entityName[1], &entityValue);
 #ifdef _I18N_
-		  if (found && entityValue < 0x3FF)
+		  if (found && entityValue < 0x3FF || entityValue == 0x200D ||
+		      entityValue == 0x200E /* lrm */ || entityValue == 0x200F /* rlm */ ||
+		      entityValue == 0x202A /* lre */ || entityValue == 0x202B /* rle */ ||
+		      entityValue == 0x202D /* lro */ || entityValue == 0x202E /* rlo */ ||
+		      entityValue == 0x202C /* pdf */)
 		    {
 		      /* get the UTF-8 string of the unicode character */
 		      ptr = &buffer[j];

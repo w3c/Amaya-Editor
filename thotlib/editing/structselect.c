@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -280,7 +280,7 @@ ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
    PtrElement          pEl;
 
    *pDoc = NULL;
-   if (SelectedDocument != NULL)
+   if (SelectedDocument)
      {
 	/* there is a current selection */
 	ret = TRUE;
@@ -323,9 +323,9 @@ ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
 	     if (LastSelectedChar == 0)
 		*lastChar = 0;
 	     else if (SelPosition) 
-		*lastChar = FirstSelectedChar;
+		*lastChar = FirstSelectedChar - 1;
 	     else
-		*lastChar = LastSelectedChar + 1;
+		*lastChar = LastSelectedChar;
 	  }
      }
    else if (DocSelectedAttr)
@@ -435,7 +435,7 @@ void ResetSelection (PtrDocument pDoc)
    Returns NULL if the last selected element (pLastEl) has previously been
    returned.
   ----------------------------------------------------------------------*/
-PtrElement          NextInSelection (PtrElement pEl, PtrElement pLastEl)
+PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 {
    int                 i;
    ThotBool            found;
@@ -512,11 +512,10 @@ PtrElement          NextInSelection (PtrElement pEl, PtrElement pLastEl)
 
 /*----------------------------------------------------------------------
    HiddenType
-
    Returns TRUE if, according to its type, element pEl must be hidden to
    the user.
   ----------------------------------------------------------------------*/
-ThotBool            HiddenType (PtrElement pEl)
+ThotBool HiddenType (PtrElement pEl)
 {
    PtrSRule            pSRule;
    ThotBool            ret;
@@ -551,7 +550,7 @@ ThotBool            HiddenType (PtrElement pEl)
    If showBegin is TRUE, scroll the document to show the beginning of
    the first selected element. If 
   ----------------------------------------------------------------------*/
-void        HighlightSelection (ThotBool showBegin, ThotBool clearOldSel)
+void HighlightSelection (ThotBool showBegin, ThotBool clearOldSel)
 {
   int                 view, lastView, frame;
 
@@ -740,7 +739,7 @@ static PtrAbstractBox GetAbsBoxSelectedAttr (int view)
    If showBegin is TRUE, the beginning of the selection should be made
    visible to the user.
   ----------------------------------------------------------------------*/
-void          ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
+void ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 {
   PtrElement          pEl, pNextEl;
   PtrAbstractBox      pAb, pNextAb, pSelAb[MAX_TRANSMIT];
@@ -913,7 +912,7 @@ void          ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
    DisplaySel
    Highlight the selected element pEl in view view.
   ----------------------------------------------------------------------*/
-static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
+static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
 {
   PtrAbstractBox      pAb, pNextAb, pSelAb[MAX_TRANSMIT];
   int                 firstChar, lastChar;
@@ -1075,7 +1074,7 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
    to to open a view where this element would have an abstract box, but
    only if createView is TRUE.
   ----------------------------------------------------------------------*/
-static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
+static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 {
   Document            doc;
   int                 view, lastView, frame, run;
@@ -1235,7 +1234,7 @@ static ThotBool   SelectAbsBoxes (PtrElement pEl, ThotBool createView)
    HighlightVisibleAncestor
    Highlight the first ancestor of element pEl that has an abstract box.
   ----------------------------------------------------------------------*/
-void          HighlightVisibleAncestor (PtrElement pEl)
+void HighlightVisibleAncestor (PtrElement pEl)
 {
   PtrElement          pAncest;
   int                 view, lastView, frame;
@@ -1732,7 +1731,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		  if (rank < FixedChar)
 		    {
 		      FirstSelectedChar = rank;
-		      LastSelectedChar = FixedChar - 1;
+		      LastSelectedChar = FixedChar;
 		    }
 		  else
 		    {
@@ -2274,7 +2273,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	      (pAb->AbElement->ElLeafType == LtGraphics &&
 	       pAb->AbElement->ElGraph == 'g'));
   /* process double clicks and extensions for polyline vertices */
-  if (pAb != NULL && pAb->AbElement->ElTerminal && graphSel)
+  if (pAb && pAb->AbElement->ElTerminal && graphSel)
     /* it's a polyline or a line */
     {
       if (extension)

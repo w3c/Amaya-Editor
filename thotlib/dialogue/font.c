@@ -247,75 +247,75 @@ int GetCharsCapacity (int volpixel)
 int CharacterWidth (unsigned char c, PtrFont font)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
-  XFontStruct        *xf;
-  int                 i;
+  XFontStruct        *xf = (XFontStruct *) font;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
-  int
-                 l;
+  int                 i, l;
+
   if (font == NULL)
-    return (0);
+    return 0;
+  else if (c == INVISIBLE_CHAR)
+    return 0;
+#if !defined(_WINDOWS) && !defined(_GTK)
+  else if (xf->per_char == NULL)
+    l = xf->max_bounds.width;
+  else if (c < xf->min_char_or_byte2)
+    l = 0;
+#endif /* !defined(_WINDOWS) && !defined(_GTK) */
+  else if (c == NEW_LINE || c == BREAK_LINE)
+    /* characters NEW_LINE and BREAK_LINE are equivalent */
+    l = 1;
+  else if (c == THIN_SPACE)
+#ifdef _WINDOWS
+    l = (font->FiWidths[32] + 3) / 4;
+#else  /* _WINDOWS */
+#ifdef _GTK
+    l = gdk_char_width (font, 32) / 4;
+#else /* _GTK */
+    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
+#endif  /* _GTK */
+#endif  /* _WINDOWS */
+  else if (c == HALF_EM)
+#ifdef _WINDOWS
+    l = (font->FiWidths[32] + 3) / 2;
+#else  /* _WINDOWS */
+#ifdef _GTK
+    l = gdk_char_width (font, 32) / 2;
+#else /* _GTK */
+    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 2;
+#endif  /* _GTK */
+#endif  /* _WINDOWS */
   else
     {
       if (c == START_ENTITY)
 	c = '&';
-      else if (c == NEW_LINE)
-	/* characters NEW_LINE and BREAK_LINE are equivalent */
-	c = BREAK_LINE;
-      else if (c == TAB)
+      else if (c == TAB || c == UNBREAKABLE_SPACE)
 	/* we use the SPACE width for the character TAB */
 	c = SPACE;
+
 #ifdef _WINDOWS
-      if (c == UNBREAKABLE_SPACE)
-	l = font->FiWidths[32];
-      else if (c == BREAK_LINE)
-	l = 1;
-      else if (c == THIN_SPACE)
-	l = (font->FiWidths[32] + 3) / 4;
-      else if (c == HALF_EM)
-	l = (font->FiWidths[32] + 1) / 2;
-      else
-	l = font->FiWidths[c];
+      l = font->FiWidths[c];
 #else  /* _WINDOWS */
 #ifdef _GTK
       l = gdk_char_width (font, c);
 #else /* _GTK */
-      xf = (XFontStruct *) font;
-      if (xf->per_char == NULL)
-	l = xf->max_bounds.width;
-      else if (c < xf->min_char_or_byte2)
-	l = 0;
-      else
-	{
-	  if (c == UNBREAKABLE_SPACE)
-	    l = xf->per_char[32 - xf->min_char_or_byte2].width;
-	  else if (c == BREAK_LINE)
-	    l = 1;
-	  else if (c == THIN_SPACE)
-	    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
-	  else if (c == HALF_EM)
-	    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 1) / 2;
-	  else if (c == 244)
-	    {
-	      /* a patch due to errors in standard symbol fonts */
-	      i = 0;
-	      while (i < MAX_FONT && font != TtFonts[i])
-		i++;
-	      if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
-		l = 1;
-	      else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
-		l = 2;
-	      else if (TtPatchedFont[i] == 24)
-		l = 4;
-	      else
-		l = xf->per_char[c - xf->min_char_or_byte2].width;
-	    }
-	  else
-	    l = xf->per_char[c - xf->min_char_or_byte2].width;
-	}
+      l = xf->per_char[c - xf->min_char_or_byte2].width;
 #endif /* _GTK */
+      if (c == 244)
+	{
+	  /* a patch due to errors in standard symbol fonts */
+	  i = 0;
+	  while (i < MAX_FONT && font != TtFonts[i])
+	    i++;
+	  if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
+	    l = 1;
+	  else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
+	    l = 2;
+	  else if (TtPatchedFont[i] == 24)
+	    l = 4;
+	}
+    }
 #endif /* _WINDOWS */
-     }
-   return (l);
+   return l;
 }
 
 
@@ -331,6 +331,13 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
   car = GetFontAndIndexFromSpec (c, specfont, &font);
   if (font == NULL)
     return 6;
+  else if (c == 0x200D ||
+	   c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
+	   c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
+	   c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
+	   c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
+	   c == 0x2062 /* InvisibleTimes */)
+    return 0;
   else
     return CharacterWidth (car, font);
 #else /* _I18N_ */
@@ -372,14 +379,15 @@ int CharacterHeight (unsigned char c, PtrFont font)
   ----------------------------------------------------------------------*/
 int CharacterAscent (unsigned char c, PtrFont font)
 {
-#ifdef _GTK
-  int               lbearing, rbearing, width, ascent, descent;
-#else /* _GTK */
 #ifndef _WINDOWS
-  XFontStruct      *xf;
-  int               i;
-#endif /* _WINDOWS */
+#ifdef _GTK
+  int               lbearing, rbearing, width, descent;
+#else /* _GTK */
+  XFontStruct      *xf = (XFontStruct *) font;
 #endif /* _GTK */
+  int               i;
+  int               ascent;
+#endif /* _WINDOWS */
 
   if (font == NULL)
     return (0);
@@ -387,32 +395,28 @@ int CharacterAscent (unsigned char c, PtrFont font)
   else
     return font->FiAscent;
 #else  /* _WINDOWS */
+  else
+    {
 #ifdef _GTK
-  else
-    {
       gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
-      return (ascent);
-    }
 #else /* _GTK */
-  else
-    {
-      xf = (XFontStruct *) font;
       /* a patch due to errors in standard symbol fonts */
       if (xf->per_char == NULL)
 	return (xf->max_bounds.ascent);
-      else if (c == 244)
+      ascent = xf->per_char[c - xf->min_char_or_byte2].ascent;
+#endif /* _GTK */
+      if (c == 244)
 	{
 	  /* a patch due to errors in standard symbol fonts */
 	  i = 0;
 	  while (i < MAX_FONT && font != TtFonts[i])
 	    i++;
 	  if (TtPatchedFont[i])
-	    return (xf->per_char[c - xf->min_char_or_byte2].ascent - 2);
+	    ascent -= 2;
 	}
-      return (xf->per_char[c - xf->min_char_or_byte2].ascent);
+      return (ascent);
     }
-#endif /* _GTK */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1128,6 +1132,13 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    /* using the font symbol instead of ISO_8859_7 */
 	    car = TtaGetCharFromWC (c, ISO_SYMBOL);
 	}
+      else if (c == 0x200D ||
+	       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
+	       c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
+	       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
+	       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
+	       c == 0x2062 /* InvisibleTimes */)
+	car =  INVISIBLE_CHAR;
       else if (c > 0x2000 && c < 0x2300)
 	{
 	  if (fontset->FontSymbol == NULL)

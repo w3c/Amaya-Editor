@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -99,13 +99,13 @@ void SetFrameParams (int frame, int Visibilite, int Zoom)
 	 /* On sauvegarde la selection courante dans la fenetre */
 	 {
 	   pViewSel = &pFrame->FrSelectionBegin;
-	   if (pViewSel->VsBox != NULL)
+	   if (pViewSel->VsBox)
 	     {
 	       pv1 = pViewSel->VsBox->BxAbstractBox;
-	       if (pViewSel->VsIndBuf == 0)
+	       if (pViewSel->VsIndBox == 0)
 		 c1 = 0;
 	       else
-		 c1 = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox + 1;
+		 c1 = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
 	       /* On annule le debut de selection */
 	       pViewSel->VsBox = NULL;
 	     }
@@ -115,10 +115,10 @@ void SetFrameParams (int frame, int Visibilite, int Zoom)
 	   if (pViewSel->VsBox != NULL)
 	     {
 	       pvN = pViewSel->VsBox->BxAbstractBox;
-	       if (pViewSel->VsIndBuf == 0)
+	       if (pViewSel->VsIndBox == 0)
 		 cN = 0;
 	       else
-		 cN = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox + 1;
+		 cN = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
 	       /* On annule la fin de selection */
 	       pViewSel->VsBox = NULL;
 	     }

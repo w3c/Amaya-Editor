@@ -54,10 +54,10 @@ THOT_EXPORT HPALETTE     TtCmap;       /* Color palette                */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT HRGN         clipRgn;
 #else /* _WINDOWS */
+
 #ifdef _GTK
 /*THOT_EXPORT ThotWidget   RootShell;*/
 THOT_EXPORT GdkFont     *DefaultFont;  /* default Font                  */
-
 THOT_EXPORT Display     *TtDisplay;    /* Server context                */ /* not used */
 THOT_EXPORT int          TtScreen;     /* Screen                        */
 THOT_EXPORT GdkColormap *TtCmap;       /* Color palette                 */
@@ -72,7 +72,6 @@ THOT_EXPORT GdkGC       *TtGraphicGC;   /* Graphic context for images    */
 THOT_EXPORT ThotWidget   RootShell;
 THOT_EXPORT XmFontList   DefaultFont;   /* default Font                  */
 /* The fonts symbol include wrong values for the character 244 */
-THOT_EXPORT int          TtPatchedFont[MAX_FONT];/* size of the patched font */
 THOT_EXPORT Time         t1;
 THOT_EXPORT Display     *TtDisplay;	/* Server context                */
 THOT_EXPORT int	         TtScreen; 	/* Screen                        */
@@ -85,6 +84,7 @@ THOT_EXPORT ThotGC       TtLineGC;
 THOT_EXPORT ThotGC       TtDialogueGC;
 THOT_EXPORT ThotGC       TtGraphicGC;	/* Graphic context for images    */
 #endif /* _GTK */
+THOT_EXPORT int          TtPatchedFont[MAX_FONT];/* size of the patched font */
 
 #endif /* _WINDOWS */
 THOT_EXPORT ThotWindow TtRootWindow;    /* Thot root window              */

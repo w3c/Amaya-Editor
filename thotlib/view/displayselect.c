@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -36,7 +36,7 @@
 /*----------------------------------------------------------------------
   DisplayPointSelection draw control points of the box.
   ----------------------------------------------------------------------*/
-void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
+void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -400,7 +400,7 @@ void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
   DisplayBgBoxSelection paints the box background with the selection
   color.
   ----------------------------------------------------------------------*/
-void         DisplayBgBoxSelection (int frame, PtrBox pBox)
+void DisplayBgBoxSelection (int frame, PtrBox pBox)
 {
   PtrBox              pChildBox;
   ViewFrame          *pFrame;
@@ -411,7 +411,7 @@ void         DisplayBgBoxSelection (int frame, PtrBox pBox)
     {
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
-      if (pBox->BxType == BoSplit)
+      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	{
 	  /* display the selection on pieces of the current box */
 	  pChildBox = pBox->BxNexChild;
@@ -443,7 +443,7 @@ void         DisplayBgBoxSelection (int frame, PtrBox pBox)
 /*----------------------------------------------------------------------
   DrawBoxSelection paints the box with the selection background.
   ----------------------------------------------------------------------*/
-void         DrawBoxSelection (int frame, PtrBox pBox)
+void DrawBoxSelection (int frame, PtrBox pBox)
 {
   PtrBox              pChildBox;
   PtrAbstractBox      pAb;
@@ -451,7 +451,7 @@ void         DrawBoxSelection (int frame, PtrBox pBox)
   if (pBox != NULL)
     {
       pAb = pBox->BxAbstractBox;      
-      if (pBox->BxType == BoSplit)
+      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	{
 	  /* display the selection on pieces of the current box */
 	  pChildBox = pBox->BxNexChild;
@@ -473,7 +473,7 @@ void         DrawBoxSelection (int frame, PtrBox pBox)
   SetNewSelectionStatus goes through the tree for switching the selection
   indicator.
   ----------------------------------------------------------------------*/
-void    SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
+void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
 {
   PtrAbstractBox      pChildAb;
   ViewFrame          *pFrame;
@@ -511,7 +511,7 @@ void    SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
   DisplayStringSelection the selection on a substring of text
   between leftX and rightX.
   ----------------------------------------------------------------------*/
-void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
+void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 {
   PtrBox              pParentBox;
   ViewFrame          *pFrame;

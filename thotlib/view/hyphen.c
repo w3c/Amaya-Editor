@@ -364,30 +364,33 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 
 
 /*----------------------------------------------------------------------
-   CanHyphen rend de la valeur VRAI s'il existe un traitement de  
-   coupure des mots et l'autorisation de coupure pour la   
-   boi^te donne'e.                                         
+   CanHyphen returns TRUE if it's possible to hyphanate this box.
   ----------------------------------------------------------------------*/
 ThotBool CanHyphen (PtrBox pBox)
 {
   Language            language;
 
-  if (!TextInserting && pBox->BxAbstractBox->AbHyphenate)
+  if (!TextInserting &&
+      pBox->BxAbstractBox->AbLeafType == LtText &&
+      pBox->BxAbstractBox->AbHyphenate)
     {
       language = pBox->BxAbstractBox->AbLang;
+      if (pBox->BxScript != TtaGetScript (pBox->BxAbstractBox->AbLang))
+	/* cannot hyphenate this box */
+	return FALSE;
       if (TtaExistPatternList (language))
 	/* il existe une table de pattern */
 	return TRUE;      
       else
 	{
 	  /* pas de table de patterns : on cherche a charger un dico */
-	  if (language == 0)
+	  if (language < FirstUserLang)
 	    /* On saute la langue ISOlatin-1 */
 	    return FALSE;
-	  else if (TtaGetPrincipalDictionary (language) != NULL)
+	  else if (TtaGetPrincipalDictionary (language))
 	    /* Traitement par le dictionnaire de la langue */
 	    return TRUE;
-	  else if (TtaGetSecondaryDictionary (language) != NULL)
+	  else if (TtaGetSecondaryDictionary (language))
 	    /* Pas de traitement de coupure possible */
 	    return FALSE;
 	  else

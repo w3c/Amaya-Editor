@@ -54,11 +54,13 @@ typedef struct _Line *PtrLine;
 /* Type of a described box */
 typedef enum
 {
-  BoComplete, 
-  BoSplit, 
-  BoPiece, 
-  BoBlock, 
-  BoPicture, 
+  BoComplete,
+  BoSplit,
+  BoPiece,
+  BoMulScript,
+  BoScript,
+  BoBlock,
+  BoPicture,
   BoGhost,
   BoDotted,
   BoTable,
@@ -247,6 +249,7 @@ typedef struct _Box
       int	 _BxNPixels_;	/* Number of pixels to share out */
       int	 _BxSpaceWidth_;/* >0 of the box is justified */
       int	 _BxFirstChar_;	/* First character in buffer */
+      char       _BxScript_;    /* Script of the current text */
     } s0;
     struct /* BoPicture - used for pictures, polylines and paths */
     {
@@ -293,6 +296,7 @@ typedef struct _Box
 #define BxNPixels u.s0._BxNPixels_
 #define BxSpaceWidth u.s0._BxSpaceWidth_
 #define BxFirstChar u.s0._BxFirstChar_
+#define BxScript u.s0._BxScript_
 #define BxPictInfo u.s1.u._BxPictInfo_
 #define BxFirstPathSeg u.s1.u._BxFirstPathSeg_
 #define BxXRatio u.s1._BxXRatio_

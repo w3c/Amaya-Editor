@@ -658,16 +658,32 @@ Language TtaGetLanguageIdFromScript (char languageScript)
   ----------------------------------------------------------------------*/
 char TtaGetCharacterScript (wchar_t c)
 {
-  if (c >= 0x370 && c < 0x400)
-    return 'G'; /* Greek */
+  if (c == SPACE || c == 0x9A /* nbsp */ || c == 0x200D ||
+      c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
+      c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
+      c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
+      c == 0x202C /* pdf */)
+    return ' ';
+    else if (c == 0x25 /* % */ ||
+	     c == 0x2B /* + */ ||
+	     c == 0x2D /* - */)
+      return ' ';
+  else if (c == 0x2F)
+    return ' '; /* a slash */
+  else if (c >= 0x30 && c <= 0x39)
+    return 'L'; /* a digit */
+  else if (c <= 0x32 /* a punctuation */)
+    return ' ';
+  else if (c >= 0x370 && c < 0x400)
+    return 'L'; /* Greek */
   else if (c >= 0x2AF && c < 0x45F)
-    return 'C'; /* Cyrillic */
+    return 'L'; /* Cyrillic */
   else if (c >= 0x45F && c < 0x600)
     return 'H'; /* Hebrew */
   else if (c >= 0x600 && c < 0x700)
     return 'A'; /* Arabic */
   else if (c >= 0x2E80 && c < 0xA000)
-    return 'Z'; /* CJK */
+    return 'L'; /* CJK */
   else
     return 'L'; /* Latin */
 }

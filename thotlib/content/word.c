@@ -36,7 +36,7 @@ static int          LastCharSDomain;
 CHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 {
   if (*buffer == NULL)
-    return (EOS);
+    return EOS;
   else
     {
       (*rank)++;
@@ -46,12 +46,12 @@ CHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 	  *rank = 0;
 	  *buffer = (*buffer)->BuNext;
 	  if (*buffer == NULL)
-	    return (0);
+	    return EOS;
 	  else
 	    return ((*buffer)->BuContent[*rank]);
 	}
       else
-	return ((*buffer)->BuContent[*rank]);
+	return (*buffer)->BuContent[*rank];
     }
 }
 
@@ -64,7 +64,7 @@ CHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 CHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
 {
   if (*buffer == NULL)
-    return (EOS);
+    return EOS;
   else
     {
       (*rank)--;
@@ -74,15 +74,15 @@ CHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
 	  *rank = 0;
 	  *buffer = (*buffer)->BuPrevious;
 	  if (*buffer == NULL)
-	    return (0);
+	    return EOS;
 	  else
 	    {
 	      *rank = (*buffer)->BuLength - 1;
-	      return ((*buffer)->BuContent[*rank]);
+	      return (*buffer)->BuContent[*rank];
 	    }
 	}
       else
-	return ((*buffer)->BuContent[*rank]);
+	return (*buffer)->BuContent[*rank];
     }
 }
 
@@ -121,8 +121,8 @@ ThotBool InitSearchDomain (int domain, PtrSearchContext context)
       context->STree = 0;
       context->SWholeDocument = TRUE;
       context->SEndElement = NULL;
-      context->SStartChar = 0;
-      context->SEndChar = 0;
+      context->SStartChar = 1;
+      context->SEndChar = 1;
       context->SStartToEnd = TRUE;
     }
   else if (!ok)
@@ -138,7 +138,7 @@ ThotBool InitSearchDomain (int domain, PtrSearchContext context)
 	/* Search before selection */
 	{
 	  context->SStartElement = NULL;
-	  context->SStartChar = 0;
+	  context->SStartChar = 1;
 	  context->SEndElement = FirstElSDomain;
 	  context->SEndChar = FirstCharSDomain;
 	  context->SStartToEnd = FALSE;
@@ -147,27 +147,27 @@ ThotBool InitSearchDomain (int domain, PtrSearchContext context)
 	/* search within selection */
 	{
 	  context->SStartElement = FirstElSDomain;
-	  context->SStartChar = FirstCharSDomain - 1;
+	  context->SStartChar = FirstCharSDomain;
 	  context->SEndElement = LastElSDomain;
-	  context->SEndChar = LastCharSDomain - 1;
+	  context->SEndChar = LastCharSDomain;
 	  context->SStartToEnd = TRUE;
 	}
       else if (domain == 2)
 	/* search after selection */
 	{
 	  context->SStartElement = LastElSDomain;
-	  context->SStartChar = LastCharSDomain - 1;
-	  if (context->SStartChar < 0)
-	    context->SStartChar = 0;
+	  context->SStartChar = LastCharSDomain;
+	  if (context->SStartChar < 1)
+	    context->SStartChar = 1;
 	  if (LastElSDomain && !LastElSDomain->ElTerminal &&
 	      (LastCharSDomain == 0 ||
 	       LastCharSDomain > LastElSDomain->ElTextLength))
 	    {
 	      context->SStartElement = NextElement (LastElSDomain);
-	      context->SStartChar = 0;
+	      context->SStartChar = 1;
 	    }
 	  context->SEndElement = NULL;
-	  context->SEndChar = 0;
+	  context->SEndChar = 1;
 	  context->SStartToEnd = TRUE;
 	}
     }
@@ -177,8 +177,8 @@ ThotBool InitSearchDomain (int domain, PtrSearchContext context)
       /* no search domain */
       context->SStartElement = NULL;
       context->SEndElement = NULL;
-      context->SStartChar = 0;
-      context->SEndChar = 0;
+      context->SStartChar = 1;
+      context->SEndChar = 1;
       context->STree = 0;
       context->SWholeDocument = FALSE;
       return (FALSE);
@@ -249,12 +249,12 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   *beginning = iChar;
   word[0] = EOS;
 
-  if (pEl == NULL && context != NULL)
+  if (pEl == NULL && context)
     {
       /* search start */
       pEl = context->SStartElement;
       iChar = context->SStartChar;
-      if (pEl == NULL && context->SDocument != NULL)
+      if (pEl == NULL && context->SDocument)
 	pEl = context->SDocument->DocDocElement;
     }
 
@@ -262,12 +262,11 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   /* not start on the last character */
   if (pEl != NULL)
     {
-      if (pEl->ElTypeNumber != CharString + 1 ||
-	  iChar + 1 >= pEl->ElTextLength)
+      if (pEl->ElTypeNumber != CharString + 1 || iChar >= pEl->ElTextLength)
 	{
 	  /* there is no buffer */
 	  pBuf = NULL;
-	  iChar = 0;
+	  iChar = 1;
 	}
       else
 	/* first buffer of element */
@@ -278,7 +277,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   if (context == NULL)
     {
       endEl = NULL;
-      endChar = 0;
+      endChar = 1;
     }
   else
     {
@@ -290,15 +289,15 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
     {
       /* Search the first non-empty and non-protected element */
       pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-      iChar = 0;
-      if (pEl != NULL)
+      iChar = 1;
+      if (pEl)
 	{
-	  if (endEl != NULL && ElemIsBefore (endEl, pEl))
+	  if (endEl && ElemIsBefore (endEl, pEl))
 	    /* the element found is after the end of the domain */
 	    pEl = NULL;
 	}
 
-      if (pEl != NULL)
+      if (pEl)
 	/* on verifie que cet element ne fait pas partie d'une inclusion et */
 	/* n'est pas cache' a l'utilisateur */
 	{
@@ -315,13 +314,13 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 
   if (pEl == NULL)
     return (FALSE);
-  else if (pEl == endEl && iChar >= endChar)
+  else if (pEl == endEl && iChar > endChar)
     /* On est arrive a la fin du domaine de recherche */
     return (FALSE);
   else
     {
       /* Calcule l'index de depart de la recherche */
-      len = iChar;
+      len = iChar - 1;
       while (len >= pBuf->BuLength)
 	{
 	  /* On passe au buffer suivant */
@@ -401,11 +400,11 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 
   /* Verifie que l'element est de type texte */
   /* et que la recherche ne debute pas sur le dernier caractere */
-  if (pEl->ElTypeNumber != CharString + 1 || iChar <= 0)
+  if (pEl->ElTypeNumber != CharString + 1 || iChar < 1)
     {
       /* On n'a pas trouve de buffer */
       pBuf = NULL;
-      iChar = 0;
+      iChar = 1;
     }
   else
     /* 1er Buffer de l'element */
@@ -415,7 +414,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
   if (context == NULL)
     {
       endEl = NULL;
-      endChar = 0;
+      endChar = 1;
     }
   else
     {
@@ -423,20 +422,20 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
       endChar = context->SStartChar;
     }
 
-  while (pBuf == NULL && pEl != NULL)
+  while (pBuf == NULL && pEl)
     {
       /* Recherche le premier element texte non vide */
       pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
       if (pEl != NULL)
 	{
-	  if (endEl != NULL && ElemIsBefore (pEl, endEl))
+	  if (endEl && ElemIsBefore (pEl, endEl))
 	    /* l'element trouve' est avant l'element de debut, */
 	    /* on fait comme si on n'avait pas trouve' */
 	    pEl = NULL;
 	}
 
       /* On saute les elements vides */
-      if (pEl != NULL)
+      if (pEl)
 	/* on verifie que cet element ne fait pas partie d'une inclusion et */
 	/* n'est pas cache' a l'utilisateur */
 	{
@@ -447,7 +446,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 	      pEl->ElTextLength != 0)
 	    {
 	      /* on n'est pas dans une inclusion et l'element n'est pas cache' */
-	      iChar = pEl->ElTextLength - 1;
+	      iChar = pEl->ElTextLength;
 	      pBuf = pEl->ElText;
 	    }
 	}
@@ -461,7 +460,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
   else
     {
       /* Calcule l'index de depart de la recherche */
-      len = iChar;
+      len = iChar - 1;
       while (len >= pBuf->BuLength)
 	{
 	  /* On passe au buffer suivant */

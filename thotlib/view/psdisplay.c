@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -166,7 +166,6 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
    if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
-   y = y + FontBase (font);
    if (fg >= 0)
      {
        /* Do we need to change the current color ? */
@@ -294,7 +293,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	  /* store the start postion for the justified box */
 	  SameBox = 1;
 	  X = x;
-	  Y = y + FontBase (font);
+	  Y = y;
 	  NbWhiteSp = 0;
 	  if (fg >= 0)
 	    {

@@ -342,56 +342,167 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
 
 
 /*----------------------------------------------------------------------
-   GiveTextParams calcule les dimensions : hauteur, base, largeur et     
-   nombre de blancs contenus (nSpaces).                    
-   nSpaces contient initialement 0 si la largeur           
-   du blanc est celle de la fonte sinon la valeur imposee. 
-   width contient initialement l'index du premier          
-   caractere du texte.                                     
+  GiveTextParams returns the width and the number of included spaces
+  of the box.
+  Parameters:
+  pBuffer points to the first buffer.
+  ind gives the index of the first character in the buffer.
+  nChars gives the number of characters concerned.
+  font the used font.
+  nSpaces equals 0 when the space width is default font value, or gives
+  the requested value.
+  dir gives the main direction (override, embed, or previous).
+  bidi says 'O' for override, 'E' for embed, etc.
+  Returns:
+  The script of the box.
+  pBuffer points to the next buffer.
+  ind returns the index of the next character in the buffer.
+  nChars returns the number of characters not handled.
+  width returns the width of the text.
   ----------------------------------------------------------------------*/
-void GiveTextParams (PtrTextBuffer pBuffer, int nChars, SpecFont font,
-		     int *width, int *nSpaces)
+char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
+		     SpecFont font, int *width, int *nSpaces,
+		     char dir, char bidi)
 {
-   int                 i, j;
-   int                 charWidth;
-   int                 spaceWidth;
-   CHAR_T              car;
+  char                script, embed;
+#ifdef _I18N_
+  char                newscript;
+  int                 oldind, oldpos, oldspaces, oldwidth;
+  PtrTextBuffer       oldbuff = NULL;
+#endif /* _I18N_ */
+  CHAR_T              car;
+  int                 pos, max;
+  int                 charWidth;
+  int                 spaceWidth;
 
-   /* Calcule la largeur des blancs */
-   if (*nSpaces == 0)
-      spaceWidth = BoxCharacterWidth (SPACE, font);
-   else
-      spaceWidth = *nSpaces;
-   i = *width;			/* Index dans le buffer */
-   *nSpaces = 0;
-   *width = 0;
+  /* space width */
+  if (*nSpaces == 0)
+    spaceWidth = BoxCharacterWidth (SPACE, font);
+  else
+    spaceWidth = *nSpaces;
+  /* first character in the buffer */
+  max = *nChars;
+  /* returned values */
+  *nChars = 0;
+  *nSpaces = 0;
+  *width = 0;
+  /* initial scripts */
+  script = '*';
+  embed = '*';
 
-   j = 1;
-   while (j <= nChars)
-     {
-	/* On traite les differents caracteres */
-	car = pBuffer->BuContent[i - 1];
-	if (car == SPACE)
-	  {
-	     (*nSpaces)++;	/* caractere blanc */
-	     charWidth = spaceWidth;
-	  }
-	else
-	   charWidth = BoxCharacterWidth (car, font);
-	*width += charWidth;
-	/* Caractere suivant */
-	if (i >= pBuffer->BuLength)
-	  {
-	     pBuffer = pBuffer->BuNext;
-	     if (pBuffer == NULL)
-		j = nChars + 1;
-	     i = 1;
-	  }
-	else
-	   i++;
-	if (car != EOS)
-	  j++;
-     }
+  pos = 0;
+  while (pos < max)
+    {
+      /* check the current character */
+      car = (*pBuffer)->BuContent[*ind];
+#ifdef _I18N_
+      if (bidi != 'O')
+	{
+	  /* the text must be analysed and may be split */
+	  newscript = TtaGetCharacterScript (car);
+	  if (newscript == ' ' || newscript == '+' ||
+	      newscript == ',' || newscript == '/')
+	    {
+	      if (embed != '*')
+		/* neutral gets the embed script */
+		newscript = embed;
+	      else if (oldbuff == NULL)
+		{
+		  /* keep in memory a possible splitting position */
+		  oldpos = pos;
+		  oldind = *ind;
+		  oldspaces = *nSpaces;
+		  oldwidth = *width;
+		  oldbuff = *pBuffer;
+		}
+	    }
+	  else if (script == '*')
+	    {
+	      if (oldbuff && bidi == 'E')
+		{
+		  /* neutral characters found before and direction requested */
+		  if (dir == 'R' && newscript != 'A' && newscript != 'H')
+		    script = embed = 'A';
+		  else if (dir == 'L' && (newscript == 'A' || newscript == 'H'))
+		    script = embed = 'L';
+		}
+	      else
+		{
+		  /* the script is known now */
+		  script = newscript;
+		  if (embed == '*')
+		    embed = script;
+		}
+	    }
+	  
+	  if (newscript == script && oldbuff)
+	    /* keep in memory the current position */
+	    oldbuff = NULL;
+	  else if (newscript != script &&
+		   (newscript == 'A' || newscript == 'H' || newscript == 'L'))
+	    {
+	      /* the box must be split because the script changes */
+	      if (script == 'A' || script == 'H')
+		{
+		  if (oldbuff)
+		    {
+		      /* attach neutral to the next substring */
+		      *nChars = max - oldpos;
+		      *ind = oldind;
+		      *nSpaces = oldspaces;
+		      *width = oldwidth;
+		      *pBuffer = oldbuff;
+		    }
+		  else
+		    /* attach neutral to the previous substring */
+		    *nChars = max - pos;
+		}
+	      else if (script != 'A' && script != 'H')
+		{
+		  if (oldbuff)
+		    {
+		      /* attach neutral to the next substring */
+		      *nChars = max - oldpos;
+		      *ind = oldind;
+		      *nSpaces = oldspaces;
+		      *width = oldwidth;
+		      *pBuffer = oldbuff;
+		    }
+		  else
+		    /* attach neutral to the previous substring */
+		    *nChars = max - pos;
+		}
+	      else
+		/* split here */
+		*nChars = max - pos;
+printf ("sub-script=%c pos=%d index=%d \n", script, *nChars, *ind);
+	      return script;
+	    }
+	}
+#endif /* _I18N_ */
+      if (car == SPACE)
+	{
+	  (*nSpaces)++;	/* a space */
+	  charWidth = spaceWidth;
+	}
+      else
+	charWidth = BoxCharacterWidth (car, font);
+      *width += charWidth;
+      /* next character */
+      *ind = *ind + 1;
+      if (*ind >= (*pBuffer)->BuLength)
+	{
+	  *pBuffer = (*pBuffer)->BuNext;
+	  if (*pBuffer == NULL)
+	    pos = max;
+	  *ind = 0;
+	}
+      if (car != EOS)
+	pos++;
+    }
+  if (script == '*')
+    script = 'L';
+  return script;
 }
 
 
@@ -635,14 +746,19 @@ static void FreePath (PtrBox box)
 
 
 /*----------------------------------------------------------------------
-  GiveTextSize gives the internal size of a text box.      
+  GiveTextSize gives the internal width and height of a text box.
   ----------------------------------------------------------------------*/
-void GiveTextSize (PtrAbstractBox pAb, int *width, int *height,
-		   int *nSpaces)
+static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
+			  int *height, int *nSpaces)
 {
+  PtrTextBuffer       pBuffer;
   SpecFont            font;
-  PtrBox              box;
-  int                 nChars;
+  PtrBox              box, ibox1, ibox2;
+  PtrBox              pPreviousBox, pNextBox;
+  char                script, dir;
+  int                 ind, nChars;
+  int                 l, r, v, pos;
+  int                 lg, spaces, bwidth;
 
   box = pAb->AbBox;
   font = box->BxFont;
@@ -656,11 +772,181 @@ void GiveTextSize (PtrAbstractBox pAb, int *width, int *height,
     }
   else
     {
-      /* Texte -> Calcule directement ses dimensions */
-      *width = 1;		/* Index du premier caractere a traiter */
-      *nSpaces = 0;		/* On prend la largeur reelle du blanc */
-      GiveTextParams (pAb->AbText, nChars, font, width, nSpaces);
-      *width = *width;
+      /*
+	There is a current text:
+	generate one complete box or several boxes if several scripts are used
+      */
+      /* first character to be handled */
+      pBuffer = pAb->AbText;
+      ind = box->BxIndChar;
+      l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
+      r = box->BxRMargin + box->BxRBorder + box->BxRPadding;
+      v = box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
+      *nSpaces = 0;
+      *width = 0;
+      pos = 1;
+      pPreviousBox = box->BxPrevious;
+      pNextBox = box->BxNext;
+      if (pAb->AbUnicodeBidi == 'O' || pAb->AbUnicodeBidi == 'E')
+	dir = pAb->AbDirection;
+      else
+	/* undeterminated */
+	dir = '*';
+
+      while (nChars > 0)
+	{
+	  bwidth = 0;
+	  spaces = 0; /* format with the standard space width */
+	  lg = nChars;
+	  script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
+				   dir, pAb->AbUnicodeBidi);
+	  if (pAb->AbUnicodeBidi != 'O' && pAb->AbUnicodeBidi != 'E')
+	    {
+	      /* remember the previous direction */
+	      if (script == 'A' || script == 'H')
+		dir = 'R';
+	      else
+		dir = 'L';
+	    }
+	  box->BxScript = script;
+	  *width += bwidth;
+	  *nSpaces += spaces;
+	  lg -= nChars;
+	  if (nChars > 0 && box->BxType == BoComplete)
+	    {
+	      /* Update the main box */
+	      box->BxType = BoMulScript;
+	      ibox1 = GetBox (pAb);
+	      ibox2 = GetBox (pAb);
+	      box->BxNexChild = ibox1;
+
+	      /* Initialize the first piece */
+	      ibox1->BxType = BoScript;
+	      ibox1->BxScript = script;
+	      ibox1->BxAbstractBox = box->BxAbstractBox;
+	      ibox1->BxIndChar = box->BxIndChar;
+	      ibox1->BxContentWidth = TRUE;
+	      ibox1->BxContentHeight = TRUE;
+	      ibox1->BxFont = font;
+	      ibox1->BxUnderline = box->BxUnderline;
+	      ibox1->BxThickness = box->BxThickness;
+	      ibox1->BxHorizRef = box->BxHorizRef;
+	      ibox1->BxH = *height;
+	      ibox1->BxHeight = *height + v;
+	      ibox1->BxW = bwidth;
+	      ibox1->BxWidth = bwidth + l;
+	      ibox1->BxTMargin = box->BxTMargin;
+	      ibox1->BxTBorder = box->BxTBorder;
+	      ibox1->BxTPadding = box->BxTPadding;
+	      ibox1->BxBMargin = box->BxBMargin;
+	      ibox1->BxBBorder = box->BxBBorder;
+	      ibox1->BxBPadding = box->BxBPadding;
+	      ibox1->BxLMargin = box->BxLMargin;
+	      ibox1->BxLBorder = box->BxLBorder;
+	      ibox1->BxLPadding = box->BxLPadding;
+	      ibox1->BxBuffer = box->BxBuffer;
+	      ibox1->BxFirstChar = box->BxFirstChar;
+	      ibox1->BxNChars = lg;
+	      ibox1->BxNSpaces = spaces;
+	      ibox1->BxXOrg = box->BxXOrg;
+	      /* Initialize the second piece */
+	      ibox2->BxType = BoScript;
+	      ibox2->BxAbstractBox = box->BxAbstractBox;
+	      ibox2->BxIndChar = ind;
+	      ibox2->BxContentWidth = TRUE;
+	      ibox2->BxContentHeight = TRUE;
+	      ibox2->BxFont = font;
+	      ibox2->BxUnderline = box->BxUnderline;
+	      ibox2->BxThickness = box->BxThickness;
+	      ibox2->BxHorizRef = box->BxHorizRef;
+	      ibox2->BxH = *height;
+	      ibox2->BxHeight = *height + v;
+	      ibox2->BxTMargin = box->BxTMargin;
+	      ibox2->BxTBorder = box->BxTBorder;
+	      ibox2->BxTPadding = box->BxTPadding;
+	      ibox2->BxBMargin = box->BxBMargin;
+	      ibox2->BxBBorder = box->BxBBorder;
+	      ibox2->BxBPadding = box->BxBPadding;
+	      ibox2->BxRMargin = box->BxRMargin;
+	      ibox2->BxRBorder = box->BxRBorder;
+	      ibox2->BxRPadding = box->BxRPadding;
+	      ibox2->BxBuffer = pBuffer;
+	      ibox2->BxFirstChar = ibox1->BxFirstChar + lg;
+	      ibox2->BxNChars = nChars;
+	      ibox2->BxNSpaces = 0;
+	      ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
+	      /* update the chain of leaf boxes */
+	      ibox1->BxNexChild = ibox2;
+	      ibox1->BxPrevious = pPreviousBox;
+	      if (pPreviousBox != NULL)
+		pPreviousBox->BxNext = ibox1;
+	      else
+		pMainBox->BxNext = ibox1;
+	      ibox1->BxNext = ibox2;
+	      ibox2->BxPrevious = ibox1;
+	      ibox2->BxNext = pNextBox;
+	      if (pNextBox != NULL)
+		pNextBox->BxPrevious = ibox2;
+	      else
+		pMainBox->BxPrevious = ibox2;
+	      box = ibox2;
+	    }
+	  else if (nChars > 0)
+	    {
+	      box->BxW = bwidth;
+	      box->BxWidth = bwidth + l;
+	      box->BxRMargin = 0;
+	      box->BxRBorder = 0;
+	      box->BxRPadding = 0;
+	      box->BxNChars = lg;
+	      box->BxNSpaces = spaces;
+	      /* Initialize the second piece */
+	      ibox2 = GetBox (pAb);
+	      ibox2->BxType = BoScript;
+	      ibox2->BxAbstractBox = box->BxAbstractBox;
+	      ibox2->BxIndChar = ind;
+	      ibox2->BxContentWidth = TRUE;
+	      ibox2->BxContentHeight = TRUE;
+	      ibox2->BxFont = font;
+	      ibox2->BxUnderline = box->BxUnderline;
+	      ibox2->BxThickness = box->BxThickness;
+	      ibox2->BxHorizRef = box->BxHorizRef;
+	      ibox2->BxH = *height;
+	      ibox2->BxHeight = *height + v;
+	      ibox2->BxTMargin = box->BxTMargin;
+	      ibox2->BxTBorder = box->BxTBorder;
+	      ibox2->BxTPadding = box->BxTPadding;
+	      ibox2->BxBMargin = box->BxBMargin;
+	      ibox2->BxBBorder = box->BxBBorder;
+	      ibox2->BxBPadding = box->BxBPadding;
+	      ibox2->BxRMargin = box->BxRMargin;
+	      ibox2->BxRBorder = box->BxRBorder;
+	      ibox2->BxRPadding = box->BxRPadding;
+	      ibox2->BxBuffer = pBuffer;
+	      ibox2->BxFirstChar = box->BxFirstChar + lg;
+	      ibox2->BxNChars = nChars;
+	      ibox2->BxNSpaces = 0;
+	      ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
+
+	      /* update the chain of leaf boxes */
+	      box->BxNexChild = ibox2;
+	      box->BxNext = ibox2;
+	      ibox2->BxPrevious = box;
+	      ibox2->BxNext = pNextBox;
+	      if (pNextBox != NULL)
+		pNextBox->BxPrevious = ibox2;
+	      else
+		pMainBox->BxPrevious = ibox2;
+	      box = ibox2;
+	    }
+	  else if (box->BxType == BoScript)
+	    {
+	      box->BxW = bwidth;
+	      box->BxWidth = bwidth + l;
+	      box->BxNChars = lg;
+	      box->BxNSpaces = spaces;
+	    }
+	}
     }
 }
 
@@ -900,11 +1186,10 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   if (pFirstAb == NULL && pAb->AbVolume == 0)
     {
       /* Empty box */
-      GiveTextSize (pAb, &x, &y, &val);
       if (*width == 0)
-	*width = x;
+	*width = 2;
       if (*height == 0)
-	*height = y;
+	*height = BoxFontHeight (pAb->AbBox->BxFont);
     }
 }
 
@@ -1080,7 +1365,7 @@ static void  TransmitFill (PtrBox pBox, ThotBool state)
 /*----------------------------------------------------------------------
   TransmitMBP transmits margins, borders, and paddings to children boxes.
   i = the added pixels at the beginning
-  j =the added pixels at the end
+  j = the added pixels at the end
   ----------------------------------------------------------------------*/
 static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 			 ThotBool horizontal)
@@ -1239,7 +1524,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       pAb->AbBox = pCurrentBox;
     }
 
-  if (pCurrentBox != NULL)
+  if (pCurrentBox)
     {
       /* pMainBox points to the root box of the view */
       pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
@@ -1267,7 +1552,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       pCurrentBox->BxYToCompute = FALSE;
       enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
       enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
-
+      if (pAb->AbLeafType != LtCompound)
+	{
+	  /* Positionnement des axes de la boite construite */
+	  ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
+	  /* On traite differemment la base d'un bloc de lignes  */
+	  /* s'il depend de la premiere boite englobee           */
+	  ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+	}
       /* On construit le chainage des boites terminales pour affichage */
       /* et on calcule la position des paves dans le document.         */
       if (pAb->AbFirstEnclosed == NULL)
@@ -1289,10 +1581,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	      /* BxPrevious(Root) -> Last displayed box           */
 	      pBox = pMainBox->BxPrevious;
 	      pCurrentBox->BxPrevious = pBox;
-	      if (pBox != NULL)
+	      if (pBox)
 		{
 		  pBox->BxNext = pCurrentBox;
-		  if (pBox->BxType == BoPiece)
+		  if (pBox->BxType == BoPiece || pBox->BxType == BoScript)
 		    /* update also the split parent box */
 		    pBox->BxAbstractBox->AbBox->BxNext = pCurrentBox;
 		}
@@ -1330,7 +1622,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	  pCurrentBox->BxNChars = pAb->AbVolume;
 	  pCurrentBox->BxFirstChar = 1;
 	  pCurrentBox->BxSpaceWidth = 0;
-	  GiveTextSize (pAb, &width, &height, &i);
+	  /* get the default script */
+	  pCurrentBox->BxScript = script;
+	  GiveTextSize (pAb, pMainBox, &width, &height, &i);
 	  pCurrentBox->BxNSpaces = i;
 	  break;
 	case LtPicture:
@@ -1439,7 +1733,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	  if (inLines && pAb->AbAcceptLineBreak)
 	    /* the abstract box is in line but accepts line breaks it becomes a ghost */
 	    {
-	      if (pAb->AbFirstEnclosed != NULL)
+	      if (pAb->AbFirstEnclosed)
 		{
 		  split = TRUE;
 		  pCurrentBox->BxType = BoGhost;
@@ -1485,9 +1779,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	  
 	  /* create enclosed boxes */
 	  pChildAb = pAb->AbFirstEnclosed;
-	  while (pChildAb != NULL)
+	  while (pChildAb)
 	    {
-	      pBox = CreateBox (pChildAb, frame, (ThotBool) (split || pAb->AbInLine), carIndex);
+	      pBox = CreateBox (pChildAb, frame,
+				(ThotBool) (split || pAb->AbInLine), carIndex);
 	      pChildAb = pChildAb->AbNext;
 	    }
 	  if (pCurrentBox->BxType == BoGhost)
@@ -1504,6 +1799,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	      TransmitMBP (pCurrentBox, frame, i, j, FALSE);
 	    }
 	  GiveEnclosureSize (pAb, frame, &width, &height);
+	  /* Positionnement des axes de la boite construite */
+	  ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
+	  /* On traite differemment la base d'un bloc de lignes  */
+	  /* s'il depend de la premiere boite englobee           */
+	  if (!pAb->AbInLine ||
+	      pAb->AbHorizRef.PosAbRef != pAb->AbFirstEnclosed)
+	    ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
 	  break;
 	default:
 	  break;
@@ -1538,15 +1840,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
 	GiveEnclosureSize (pAb, frame, &width, &height);
       ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
-      /* Positionnement des axes de la boite construite */
-      ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
-      
-      /* On traite differemment la base d'un bloc de lignes  */
-      /* s'il depend de la premiere boite englobee           */
-      if (pAb->AbLeafType != LtCompound
-	  || !pAb->AbInLine
-	  || pAb->AbHorizRef.PosAbRef != pAb->AbFirstEnclosed)
-	ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
       
       /* Positionnement des origines de la boite construite */
       i = 0;
@@ -1688,7 +1981,8 @@ PtrLine SearchLine (PtrBox pBox)
 	     if (pBoxInLine)
 	       do
 		 {
-		  if (pBoxInLine->BxType == BoSplit)
+		  if (pBoxInLine->BxType == BoSplit ||
+		      pBoxInLine->BxType == BoMulScript)
 		     pBoxPiece = pBoxInLine->BxNexChild;
 		  else
 		     pBoxPiece = pBoxInLine;
@@ -1739,7 +2033,9 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
    int                 j;
 
    /* Traitement particulier aux boites de coupure */
-   if (pBox->BxType == BoPiece || pBox->BxType == BoDotted)
+   if (pBox->BxType == BoPiece ||
+       pBox->BxType == BoScript ||
+       pBox->BxType == BoDotted)
      {
 	/* Mise a jour de sa boite mere (boite coupee) */
 	pMainBox = pBox->BxAbstractBox->AbBox;
@@ -1767,9 +2063,9 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 
 	/* Mise a jour des positions des boites suivantes */
 	box1 = pBox->BxNexChild;
-	while (box1 != NULL)
+	while (box1)
 	  {
-	     box1->BxIndChar += charDelta;
+	     box1->BxFirstChar += charDelta;
 	     box1 = box1->BxNexChild;
 	  }
      }
@@ -1788,10 +2084,10 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
    pDimAb = &(pBox->BxAbstractBox->AbWidth);
    if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
      /* Blanc entre deux boites de coupure */
-     if (splitBox && pLine != NULL)
+     if (splitBox && pLine)
        {
 	 /* Il faut mettre a jour la largeur de la boite coupee */
-	 if (pBox->BxType == BoSplit || adjustDelta == 0)
+	 if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript || adjustDelta == 0)
 	   {
 	     pBox->BxW += wDelta;
 	     pBox->BxWidth += wDelta;
@@ -1804,7 +2100,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 	 /* Puis refaire la mise en lignes */
 	 RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
        }
-     else if (pBox->BxType == BoSplit)
+     else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
        {
 	 /* Box coupee */
 	 Propagate = ToSiblings;
@@ -1893,7 +2189,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    {
 	      UnmapImage((PictInfo *)pBox->BxPictInfo);
 	    }
-	  else if (pBox->BxType == BoSplit)
+	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      /* libere les boites generees pour la mise en lignes */
 	      pPieceBox = pBox->BxNexChild;
@@ -2146,9 +2442,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	}
       /* Si la boite est coupee on prend la premiere boite de coupure */
-      if (pCurrentBox != NULL)
+      if (pCurrentBox)
 	{
-	  if (pCurrentBox->BxType == BoSplit)
+	  if (pCurrentBox->BxType == BoSplit ||
+	      pCurrentBox->BxType == BoMulScript)
 	    pCurrentBox = pCurrentBox->BxNexChild;
 	  if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
 	      pCurrentBox->BxType == BoPicture)
@@ -2174,8 +2471,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	{
 	  i = 0;		/* Place dans le document */
 	  /* Est-ce que la boite est coupee ? */
-	  if (pCurrentBox->BxType == BoSplit)
-	    while (pCurrentBox->BxNexChild != NULL)
+	  if (pCurrentBox->BxType == BoSplit ||
+	      pCurrentBox->BxType == BoMulScript)
+	    while (pCurrentBox->BxNexChild)
 	      pCurrentBox = pCurrentBox->BxNexChild;
 	  pNextBox = pCurrentBox->BxNext;	/* 1ere boite suivante */
 	}
@@ -2319,8 +2617,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	{
 	  pCurrentBox = pCurrentAb->AbBox;
 	  /* Est-ce que la boite est coupee ? */
-	  if (pCurrentBox->BxType == BoSplit)
-	    while (pCurrentBox->BxNexChild != NULL)
+	  if (pCurrentBox->BxType == BoSplit ||
+	      pCurrentBox->BxType == BoMulScript)
+	    while (pCurrentBox->BxNexChild)
 	      pCurrentBox = pCurrentBox->BxNexChild;
 	}
 
@@ -2367,7 +2666,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	}
 
       /* Est-ce que la boite est coupee ? */
-      if (pNextBox->BxType == BoSplit)
+      if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
 	pNextBox = pNextBox->BxNexChild;
 
       /* Destruction */
@@ -2384,10 +2683,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	{
 	  /* backward link */
 	  pNextBox->BxPrevious = pCurrentBox;
-	  if (pNextBox->BxType == BoPiece &&
-	      pNextBox->BxAbstractBox->AbBox != NULL)
+	  if ((pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript) &&
+	      pNextBox->BxAbstractBox->AbBox)
 	    {
-	      if (pCurrentBox->BxType == BoPiece)
+	      if (pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript)
 		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox->BxAbstractBox->AbBox;
 	      else
 		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox;
@@ -2400,10 +2699,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	{
 	  /* forward link */
 	  pCurrentBox->BxNext = pNextBox;
-	  if (pCurrentBox->BxType == BoPiece &&
-	      pCurrentBox->BxAbstractBox->AbBox != NULL)
+	  if ((pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript) &&
+	      pCurrentBox->BxAbstractBox->AbBox)
 	    {
-	      if (pNextBox->BxType == BoPiece)
+	      if (pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript)
 		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox->BxAbstractBox->AbBox;
 	      else
 		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox;
@@ -2431,7 +2730,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      ((PictInfo *) pBox->BxPictInfo)->PicType == XBM_FORMAT)
 	    /* Reload the image */
 	    LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
-	  else if (pBox->BxType == BoSplit)
+	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      /* extend the clipping to the last piece when the box is split */
 	      pCurrentBox = pBox;
@@ -2583,7 +2882,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  height = 0;
 		  break;
 		case LtText:
-		  GiveTextSize (pAb, &width, &height, &nSpaces);
+		  GiveTextSize (pAb, pMainBox, &width, &height, &nSpaces);
 		  
 		  /* Si la boite est justifiee */
 		  if (pBox->BxSpaceWidth != 0)
@@ -2773,7 +3072,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      switch (pAb->AbLeafType)
 		{
 		case LtText:
-		  GiveTextSize (pAb, &width, &height, &i);
+		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
 		  break;
 		case LtPicture:
 		  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
@@ -2842,7 +3141,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      switch (pAb->AbLeafType)
 		{
 		case LtText:
-		  GiveTextSize (pAb, &width, &height, &i);
+		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
 		  break;
 		case LtPicture:
 		  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
@@ -3493,8 +3792,9 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 			     {
 			       /* S'il s'agit d'une boite de texte coupee */
 			       /* on recherche la derniere boite de texte */
-			       if (pBox->BxType == BoSplit)
-				 while (pBox->BxNexChild != NULL)
+			       if (pBox->BxType == BoSplit ||
+				   pBox->BxType == BoMulScript)
+				 while (pBox->BxNexChild)
 				   pBox = pBox->BxNexChild;
 			       pLine = SearchLine (pBox);
 			     }
@@ -3508,7 +3808,8 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 		       pBox = pFirstAb->AbBox;
 		       if (pBox != NULL)
 			 {
-			   if (pBox->BxType == BoSplit && pBox->BxNexChild != NULL)
+			   if ((pBox->BxType == BoSplit || pBox->BxType == BoMulScript) &&
+			       pBox->BxNexChild)
 			     pBox = pBox->BxNexChild;
 			   pLine = SearchLine (pBox);
 			 }
@@ -3723,8 +4024,9 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 			  else
 			    {
 			       pBox = pChildAb->AbBox;
-			       if (pBox->BxType == BoSplit)
-				  while (pBox->BxNexChild != NULL)
+			       if (pBox->BxType == BoSplit ||
+				   pBox->BxType == BoMulScript)
+				  while (pBox->BxNexChild)
 				     pBox = pBox->BxNexChild;
 			       pLine = SearchLine (pBox);
 			    }
@@ -3733,7 +4035,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 		       {
 			  /* Il faut refaire la mise en lignes sur la premiere boite contenue */
 			  pBox = pAb->AbBox;
-			  if (pBox->BxType == BoSplit)
+			  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 			     pBox = pBox->BxNexChild;
 			  pLine = SearchLine (pBox);
 		       }

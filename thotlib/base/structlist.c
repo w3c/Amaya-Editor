@@ -54,7 +54,7 @@ char                mbsTmpStr[MAX_TXT_LEN];
    WrPRuleType ecrit le type de la regle de presentation       
    pointee par pRule, dans le fichier fileDescriptor.            
   ----------------------------------------------------------------------*/
-static void         WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
+static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
 {
   switch (pRule->PrType)
     {
@@ -293,32 +293,49 @@ static void         WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
    buffers de texte commencant au buffer pointe' par pBT.  
    length: longueur maximum a` ecrire.                         
   ----------------------------------------------------------------------*/
-static void WrText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
+static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor)
 {
-   PtrTextBuffer       b;
-   int                 i, l;
+  PtrTextBuffer       b;
+  unsigned char       mbc[50];
+  int                 i, l, n;
 
-   l = 0;
-   b = pBT;
-   while (b != NULL && l < length)
-      /* ecrit le contenu du buffer de texte */
-     {
-	i = 0;
-	while (i < b->BuLength && b->BuContent[i] != EOS && l < length)
-	  {
-	     putc (b->BuContent[i], fileDescriptor);
-	     i++;
-	     l++;
-	  }
-	if (l < length)
-	  {
-	     fprintf (fileDescriptor, "|");
-	     b = b->BuNext;
-	     /* buffer de texte suivant du meme element */
-	  }
-	else
-	   fprintf (fileDescriptor, "...");
-     }
+  l = 0;
+  b = pBT;
+  i = ind - 1;
+  while (b && l < length)
+    /* ecrit le contenu du buffer de texte */
+    {
+      while (i < b->BuLength && b->BuContent[i] != EOS && l < length)
+	{
+#ifdef _I18N_
+	  if (b->BuContent[i] > 255)
+	    {
+	      /* display the value */
+	      mbc[0] = '&';
+	      mbc[1] = '#';
+	      sprintf (&mbc[2], "%d",
+		       (int)b->BuContent[i]);
+	      n = 0;
+	      while (mbc[n] != EOS)
+		putc (mbc[n++], fileDescriptor);
+	      putc (';', fileDescriptor);
+	    }
+	  else
+	    putc (b->BuContent[i], fileDescriptor);
+#else /* _I18N_ */
+	  putc (b->BuContent[i], fileDescriptor);
+#endif /* _I18N_ */
+	  i++;
+	  l++;
+	}
+      if (l < length)
+	{
+	  fprintf (fileDescriptor, "|");
+	  b = b->BuNext;
+	  i = 0;
+	  /* buffer de texte suivant du meme element */
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -696,7 +713,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	    for (i = 1; i <= Indent; i++)
 	      fprintf (fileDescriptor, " ");
 	    fprintf (fileDescriptor, "\'");
-	    WrText (pNode->ElText, 72 - Indent, fileDescriptor);
+	    WrText (pNode->ElText, 1, 72 - Indent, fileDescriptor);
 	    fprintf (fileDescriptor, "\'\n");
 	    break;
 	  case LtText:
@@ -706,7 +723,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	    for (i = 1; i <= Indent; i++)
 	      fprintf (fileDescriptor, " ");
 	    fprintf (fileDescriptor, "\'");
-	    WrText (pNode->ElText, 72 - Indent, fileDescriptor);
+	    WrText (pNode->ElText, 1, 72 - Indent, fileDescriptor);
 	    fprintf (fileDescriptor, "\'\n");
 	    break;
 	  case LtPolyLine:
@@ -1427,7 +1444,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	      for (i = 1; i <= Indent + 6; i++)
 		 fprintf (fileDescriptor, " ");
 	      fprintf (fileDescriptor, " \'");
-	      WrText (pAb->AbText, 60, fileDescriptor);
+	      WrText (pAb->AbText, 1, 60, fileDescriptor);
 	      fprintf (fileDescriptor, "\'");
 	      break;
 	   case LtPolyLine:
@@ -1575,7 +1592,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 /*----------------------------------------------------------------------
    wrnumber ecrit un entier
   ----------------------------------------------------------------------*/
-static void         wrnumber (int i, FILE *fileDescriptor)
+static void wrnumber (int i, FILE *fileDescriptor)
 {
    fprintf (fileDescriptor, "%d", i);
 }
@@ -1583,7 +1600,7 @@ static void         wrnumber (int i, FILE *fileDescriptor)
 /*----------------------------------------------------------------------
    wrtext ecrit du texte
   ----------------------------------------------------------------------*/
-static void         wrtext (char *Text, FILE *fileDescriptor)
+static void wrtext (char *Text, FILE *fileDescriptor)
 {
    fprintf (fileDescriptor, "%s", Text);
 }
@@ -1597,9 +1614,7 @@ static void         wrtext (char *Text, FILE *fileDescriptor)
   ----------------------------------------------------------------------*/
 static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 {
-   int                 i, j;
    PtrAbstractBox      pAbEnclosed;
-   PtrTextBuffer       adbuff;
    PtrPosRelations     pPosRel;
    PtrDimRelations     pDimRel;
    PtrBox              pBox;
@@ -1607,6 +1622,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
    ThotBool            loop;
    BoxRelation        *pRe1;
    PictInfo           *image;
+   int                 i, j;
 
    if (pAb->AbBox != NULL)
      {
@@ -1633,12 +1649,12 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     for (j = 1; j <= Indent + 4; j++)
 		fprintf (fileDescriptor, " ");
 	     fprintf (fileDescriptor, "X:");
-	     if (pBox->BxType == BoSplit)
+	     if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 		wrnumber (pBox->BxNexChild->BxXOrg, fileDescriptor);
 	     else
 		wrnumber (pBox->BxXOrg, fileDescriptor);
 	     fprintf (fileDescriptor, " Y:");
-	     if (pBox->BxType == BoSplit)
+	     if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 		wrnumber (pBox->BxNexChild->BxYOrg, fileDescriptor);
 	     else
 		wrnumber (pBox->BxYOrg, fileDescriptor);
@@ -1773,75 +1789,67 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 			   }
 			 break;
 		      case LtText:
-			 if (pBox->BxType == BoSplit)
+			 if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 			   {
+			     if (pBox->BxType == BoSplit)
 			      fprintf (fileDescriptor, "SPLIT_TEXT\n");
-			      box1 = pBox->BxNexChild;
-			      while (box1 != NULL)
-				{
-				   for (j = 1; j <= Indent + 6; j++)
-				      fprintf (fileDescriptor, " ");
-				   fprintf (fileDescriptor, "(");
-				   fprintf (fileDescriptor, "Start:");
-				   wrnumber (box1->BxIndChar, fileDescriptor);
-				   fprintf (fileDescriptor, " Characters:");
-				   wrnumber (box1->BxNChars, fileDescriptor);
-				   fprintf (fileDescriptor, " Spaces:");
-				   wrnumber (box1->BxNSpaces, fileDescriptor);
-				   fprintf (fileDescriptor, " X:");
-				   wrnumber (box1->BxXOrg, fileDescriptor);
-				   fprintf (fileDescriptor, " Y:");
-				   wrnumber (box1->BxYOrg, fileDescriptor);
-				   fprintf (fileDescriptor, " \'");
-				   adbuff = box1->BxBuffer;
-				   j = box1->BxFirstChar;
-				   i = box1->BxNChars;
-				   if (i > 10)
-				      i = 10;
-				   while (i > 0)
-				      /* On est en fin de buffer ? */
-				     {
-					while (adbuff->BuContent[j - 1] == EOS)
-					  {
-					     adbuff = adbuff->BuNext;
-					     j = 1;
-					     fprintf (fileDescriptor, "|");
-					  }
-					putc (adbuff->BuContent[j - 1],
-					      fileDescriptor);
-					i--;
-					j++;
-				     }
-				   fprintf (fileDescriptor, "\'");
-				   fprintf (fileDescriptor, ")\n");
-				   box1 = box1->BxNexChild;
-				}
-			      fprintf (fileDescriptor, "\n");
+			     else
+			       fprintf (fileDescriptor, "MULTI_SCRIPT\n");
+			     box1 = pBox->BxNexChild;
+			     while (box1)
+			       {
+				 for (j = 1; j <= Indent + 6; j++)
+				   fprintf (fileDescriptor, " ");
+				 switch (box1->BxType)
+				   {
+				   case BoScript:
+				     fprintf (fileDescriptor, "SCRIPT");
+				     break;
+				   case BoDotted:
+				     fprintf (fileDescriptor, "WITH_HYPHEN");
+				     break;
+				   default:
+				     fprintf (fileDescriptor, "PIECE");
+				   }
+				 fprintf (fileDescriptor, " Script:%c", box1->BxScript);
+				 fprintf (fileDescriptor, " Start:");
+				 wrnumber (box1->BxFirstChar, fileDescriptor);
+				 fprintf (fileDescriptor, " NChars:");
+				 wrnumber (box1->BxNChars, fileDescriptor);
+				 fprintf (fileDescriptor, " NSpaces:");
+				 wrnumber (box1->BxNSpaces, fileDescriptor);
+				 fprintf (fileDescriptor, " X:");
+				 wrnumber (box1->BxXOrg, fileDescriptor);
+				 fprintf (fileDescriptor, " Y:");
+				 wrnumber (box1->BxYOrg, fileDescriptor);
+				 fprintf (fileDescriptor, " base:");
+				 wrnumber (box1->BxHorizRef, fileDescriptor);
+				 fprintf (fileDescriptor, " Index:");
+				 wrnumber (box1->BxIndChar, fileDescriptor);
+				 fprintf (fileDescriptor, " \'");
+				 i = box1->BxNChars;
+				 if (i > 12)
+				   i = 12;
+				 WrText (box1->BxBuffer, box1->BxIndChar + 1, i,
+					 fileDescriptor);
+				 fprintf (fileDescriptor, "\'");
+				 fprintf (fileDescriptor, "\n");
+				 box1 = box1->BxNexChild;
+			       }
+			     fprintf (fileDescriptor, "\n");
 			   }
 			 else
-			    fprintf (fileDescriptor, "TEXT\n");
+			   {
+			     fprintf (fileDescriptor, "TEXT");
+			     fprintf (fileDescriptor, " Script:%c\n", pBox->BxScript);
+			   }
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (fileDescriptor, " ");
 			 fprintf (fileDescriptor, "\'");
-			 adbuff = pAb->AbText;
-			 j = 1;
 			 i = pAb->AbVolume;
 			 if (i > 60)
 			    i = 60;
-			 /* On est en fin de buffer ? */
-			 while (i > 0)
-			   {
-			      while (adbuff->BuNext != NULL &&
-				     adbuff->BuContent[j - 1] == EOS)
-				{
-				   adbuff = adbuff->BuNext;
-				   j = 1;
-				   fprintf (fileDescriptor, "|");
-				}
-			      putc (adbuff->BuContent[j - 1], fileDescriptor);
-			      i--;
-			      j++;
-			   }
+			 WrText (pAb->AbText, 1, i, fileDescriptor);
 			 fprintf (fileDescriptor, "\'");
 			 break;
 		      case LtPicture:

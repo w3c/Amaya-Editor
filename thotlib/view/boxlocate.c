@@ -142,7 +142,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    - pBox->BxLPadding;
 		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
 				     &charsNumber, &spacesNumber);
-		  charsNumber = pBox->BxIndChar + charsNumber + 1;
+		  charsNumber = pBox->BxFirstChar + charsNumber;
 		}
 	    }
 	  else
@@ -1312,9 +1312,9 @@ PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
   box pAb.
   Returns the box address or NULL.
   ----------------------------------------------------------------------*/
-PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
-					int lowerX, int y, int frame,
-					int *pointselect)
+PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
+			       int lowerX, int y, int frame,
+			       int *pointselect)
 {
   PtrBox              pBox;
   PtrElement          pParent;
@@ -1329,7 +1329,7 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
     {
       pBox = pAb->AbBox;
       /* Is there a piece of split box? */
-      if (pBox->BxType == BoSplit)
+      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	{
 	  for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
 	    {
@@ -1616,8 +1616,7 @@ static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y,
   This selection takes only laf boxes into account.
   Returns the distance.
   ----------------------------------------------------------------------*/
-int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox,
-				      int value)
+int GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
 {
   int                 distance;
   int                 x, y, width, height;
@@ -1756,7 +1755,7 @@ int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox,
   GetClickedLeafBox looks for a leaf box located at a reference point
    xRef, yRef.
   ----------------------------------------------------------------------*/
-PtrBox              GetClickedLeafBox (int frame, int xRef, int yRef)
+PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 {
   PtrAbstractBox      pAb;
   PtrBox              pSelBox, pBox;
@@ -2722,20 +2721,23 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   int                 charWidth;
   SpecFont            font;
   CHAR_T              c;
-  unsigned char       car;
   ThotBool            notfound, rtl;
 
   /* Nombre de caracteres qui precedent */
-  *charsNumber = 0;
-  *spacesNumber = 0;
-  ind = *index;
+  *index = 0;
   c = EOS;
   charWidth = 0;
-  /* rtl = (pBox->BxAbstractBox->AbDirection == 'R'); */
-  car = TtaGetScript (pBox->BxAbstractBox->AbLang);
-  rtl = (car == 'A' || car == 'H');
+  if (pBox->BxAbstractBox->AbUnicodeBidi == 'O')
+    rtl = (pBox->BxAbstractBox->AbDirection == 'R');
+  else
+    rtl = (pBox->BxScript == 'A' || pBox->BxScript == 'H');
   /* locate the first character */
   LocateFirstChar (pBox, rtl, pBuffer, &ind);
+  if (rtl)
+      *charsNumber = pBox->BxNChars;
+  else
+      *charsNumber = 0;
+  *spacesNumber = 0;
   if (pBox->BxNChars == 0 || *x <= 0)
       *x = 0;
   else
@@ -2754,123 +2756,84 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	  spaceWidth = pBox->BxSpaceWidth;
 	  extraSpace = pBox->BxNPixels;
 	}
-      
-      /* look for the selected character */
-#ifdef STRUCT_EDIT
-      notfound = (dx < *x);
-#else /* STRUCT_EDIT */
-      /* largeur du caractere suivant */
-      c = (CHAR_T) ((*pBuffer)->BuContent[ind - 1]);
-      if (c == 0)
-	charWidth = 0;
-      else if (c == SPACE)
-	charWidth = spaceWidth;
-      else
-	charWidth = BoxCharacterWidth (c, font);
-      if (extend)
-	notfound = (dx + charWidth < *x);
-      else
-	{
-	  notfound = (dx + (charWidth / 2) < *x);
-	  if (!notfound)
-	    *x = dx;
-	}
-#endif /* STRUCT_EDIT */
+      notfound = TRUE;
       while (notfound && length > 0)
 	{
-#ifdef STRUCT_EDIT
-	  /* largeur du caractere courant */
-	  c = (CHAR_T) ((*pBuffer)->BuContent[ind - 1]);
+	  /* look for the selected character */
+	  c = (*pBuffer)->BuContent[ind];
 	  if (c == 0)
 	    charWidth = 0;
 	  else if (c == SPACE)
 	    charWidth = spaceWidth;
 	  else
 	    charWidth = BoxCharacterWidth (c, font);
-#endif
-	  
-	  if (c == SPACE)
-	    {
-	      (*spacesNumber)++;
-	      if (extraSpace > 0)
-		{
-		  dx++;
-		  extraSpace--;
-		}
-	    }
-	  
-	  dx += charWidth;
-	  (*charsNumber)++;
-
-	  /* Skip to the next char */
-	  if (LocateNextChar (pBuffer, &ind, rtl))
-	    length--;
-	  else
-	    {
-	      length = -1;
-	      if (rtl)
-		ind--;
-	      else
-		ind++;
-	    }
-#ifdef STRUCT_EDIT
-	  notfound = (dx < *x);
-#else /* STRUCT_EDIT */
-	  /* largeur du caractere suivant */
-	  c = (*pBuffer)->BuContent[ind - 1];
-	  if (c == 0)
-	    charWidth = 0;
-	  else if (c == SPACE)
-	    charWidth = spaceWidth;
-	  else
-	    charWidth = BoxCharacterWidth (c, font);
-	  
 	  if (extend)
 	    notfound = (dx + charWidth < *x);
 	  else
 	    {
-	      notfound = (dx + charWidth / 2 < *x);
+	      notfound = (dx + (charWidth / 2) < *x);
 	      if (!notfound)
 		*x = dx;
 	    }
-#endif /* STRUCT_EDIT */
-	}
 
-      /* character found, check the position x */
-      if (dx > *x)
-	{
-#ifdef STRUCT_EDIT
-	  /* get the starting position of the character */
-	  *x = dx - charWidth;
-	  if (c == SPACE)
+	  if (notfound)
 	    {
-	      if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
-		(*x)--;
-	      (*spacesNumber)--;
+	      /* continue */
+	      if (c == SPACE)
+		{
+		  (*spacesNumber)++;
+		  if (extraSpace > 0)
+		    {
+		      dx++;
+		      extraSpace--;
+		    }
+		}	  
+	      dx += charWidth;
+	      if (rtl)
+		(*charsNumber)--;
+	      else
+		(*charsNumber)++;
+	      /* next character */
+	      if (LocateNextChar (pBuffer, &ind, rtl))
+		length--;
+	      else
+		{
+		  length = -1;
+		  ind = 0;
+		}
 	    }
-
-	  if (ind == 1)
-	    *pBuffer = (*pBuffer)->BuPrevious;
-	  (*charsNumber)--;
-#else /* STRUCT_EDIT */
-	  *x = dx;
-#endif /* STRUCT_EDIT */
 	}
-      else if (dx != *x)
+
+      /* character found, manage extensions */
+      if (dx < *x)
 	{
 	  /* get the ending position of the character */
-	  *x = dx;
-	  if (ind == 1 && (*pBuffer)->BuPrevious != NULL)
-	    *pBuffer = (*pBuffer)->BuPrevious;
-	  else if (rtl)
-	    ind--;
+	  if (rtl)
+	    {
+	      if (ind <= 0 && (*pBuffer)->BuPrevious)
+		{
+		  /* selection in the next buffer */
+		  *pBuffer = (*pBuffer)->BuPrevious;
+		  ind = (*pBuffer)->BuLength;
+		}
+	      else
+		ind++;
+	      (*charsNumber)--;
+	    }
 	  else
-	    ind++;
+	    {
+	      if (ind >= (*pBuffer)->BuLength && (*pBuffer)->BuNext)
+		{
+		  /* selection in the next buffer */
+		  *pBuffer = (*pBuffer)->BuNext;
+		  ind = 0;
+		}
+	      else
+		ind++;
+	      (*charsNumber)++;
+	    }
 	}
     }
+  *x = dx;
   *index = ind;
 }
-
-
-
-
