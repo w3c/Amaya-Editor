@@ -1,5 +1,65 @@
 #!/usr/bin/perl -w
+package Import_am_msg;
 
+use strict;
+use XML::Parser;
+use Unicode::String qw(utf8 latin1);
+
+BEGIN {
+	use vars qw( @ISA @EXPORT @EXPORT_OK );
+	use Exporter;
+
+	@ISA = ('Exporter');# AutoLoader;
+
+# Items to export into callers namespace by default. Note: do not export
+# names by default without a very good reason. Use EXPORT_OK instead.
+# Do not simply export all your public functions/methods/constants.
+	@EXPORT = 	qw(
+						&import_a_language
+						);
+	@EXPORT_OK = 	qw(
+						$in_labelfile
+						$basefile
+						
+						$in_textdirectory
+						$in_textsufix
+						);
+	
+}	
+use vars  qw(		$in_labelfile
+						$basefile
+						$in_textdirectory
+						$in_textsufix
+						);
+
+
+# Global variables 
+	
+# declaration static of the variables used 
+	my $date = `date`;
+	chomp ($date);
+
+# $debug is a boolean used during the typing and used for tests
+	my $debug = 0;
+# declaration static of the files used 
+	my $language_code ;
+	my $in_textfile ;
+	my $newbasefile ;
+
+# declaration of the global variables used in all the process	
+	my %labels;	#values of label (=key)and their reference 
+	my %texts;	#references (=key) and their text
+	my $current_label;	#to notice the current label occured ,in which we are
+	my $current_tag; #to notice in which tag we are
+	my $old_text;
+	my $found = 0; #boolean used during the parse of a whole label 
+	my @list_of_lang_occur = () ;
+	my $encodage = ""; #to load the encoding type of the messages
+
+################################################################################
+##							sub exported
+################################################################################
+#	WARNING: the four parameter in @EXPORT_OK must always be felt (rempli)
 
 #	WARNING: nead a paramater at call to indicate the language treat (i.e "en")
 #	This is a small parser that makes the import
@@ -7,70 +67,21 @@
 #	for all labels in the base, the process search for the same label name in
 #	to the ".h" and is corresponding text and after verification add it in
 #	the updated base  
-
-package main;
-
-use XML::Parser;
-use Unicode::String qw(utf8 latin1);
-# read User configuration file
-#use Am_var_global;
-
-use strict;
-# Global variables and default values
-my $script_dir = "/home/ehuck/manuperl";
-my $in_labeldirectory;
-my $in_labelfile_name;
-my $in_textdirectory;
-my $in_textsufix;
-	
-my $base_directory = "/home/ehuck/xmldoc/";
-my $basename = "base_am_msg.xml"; 
-	
-# declaration static of the variables used 
-my $date = "date";
-
-eval `cat $script_dir/Am_var_global.dat`;
+sub import_a_language {
+	$language_code = shift;
+	$in_textfile = $in_textdirectory . $language_code . $in_textsufix;
+	$newbasefile = $basefile . ".new";
 
 
-# inutile pour l'instant:
-#How do I get at the characters between tags?
-#Use XML_SetCharacterDataHandler.
-#    $us = Unicode::String->new( [$initial_value] )
-#    $us->latin1("something");
-#     equivalent a
-#    $us = latin1("something");
 
 
-# $debug is a boolean used during the typing and used for tests
-	my $debug = 1;
-# declaration static of the files used 
-	my $language_code = $ARGV[0];
-   my $in_labelfile = $in_labeldirectory . $in_labelfile_name;
-	my $in_textfile = $in_textdirectory . $language_code . $in_textsufix;
-	my $basefile = $base_directory . $basename; 
-	my $newbasefile = $basefile . ".new";
 
-# declaration of the global variables used in all the process
-	my %labels;	#values of label (=key)and their reference 
-	my %texts;	#references (=key) and their text
-	my $current_label;	#to notice the current label occured ,in which we are
-	my $old_text;
-	my $found = 0; #boolean used during the parse of a whole label 
-
-################
-## main main
-################
-{
 
 # declaration of the parser
 	my $parser = new XML::Parser (
-				ErrorContext  => 0, #number of lines shown 
-															  #after a mistake  
-				NoExpand	=> 1  #like his name (i.e. don't
-																#translate '&lt'; into '<') 
-            # Namespaces    => 0, ?????
-            # ParseParamEnt => 1,  ?????
-            );
+				ErrorContext  => 0, #number of lines shown after a mistake  
+				NoExpand	=> 1  #like his name (i.e. don't translate '&lt'; into '<') 
+             );
 #	declaration of the subs used when events are noted	
 	$parser->setHandlers(
 				Start => \&start_hndl,
@@ -83,7 +94,6 @@ eval `cat $script_dir/Am_var_global.dat`;
 
 	initlabel ();
 	inittext ();						
-
 	
 	open (IN,"<$basefile") || die "can't read $basefile because: $!\n";
 	open (OUT,">$newbasefile") || die "can't create $newbasefile because: $!\n";
@@ -96,13 +106,19 @@ eval `cat $script_dir/Am_var_global.dat`;
 	rename ( $newbasefile, $basefile )  || 	
 		 	die "can't rename $newbasefile to $basefile because of: $! \nthe old base still exist, the new base name is $newbasefile\n";							
 			
+	debug ( "the encodage is $encodage ");
 	print "\tEnd IMPORT\n";
-}################
-## End main
-################
 
-sub debug { #wrote messages when necessary ($debug = 1)
-	if ($debug) { print $_[0];print "\n" }
+} #end sub import_a_language
+################################################################################
+## End main
+################################################################################
+
+sub debug { #wrote messages for debuging when necessary ($debug = 1)
+	if ($debug) { 
+		print $_[0];
+		print "\n" ;
+	}
 }#end debug
 
 #--------------------------------------------------------------------
@@ -115,10 +131,7 @@ sub addlabel {
 
 	if ( $_[0] ne "" && $_[0] =~ /^#define/i ) {
 		chomp ($_[0]);
-#		$_[0] =~ s/\s{2,}/ /; #because there is often a lot of spaces 
 		($_,$label,$label_ref,@else) = split (/\s+/, $_[0]);
-#		$label =~ s/\s+//; # to avoid that $label still had spaces						 
-#		debug ("$label $label_ref\n");
 		$labels{$label} = $label_ref;
 	}
 	else {
@@ -141,11 +154,12 @@ sub initlabel {# fill the %labels from $in_labelfile that is reading
 	do{
 		$line = <LABEL>;
 		$line_count++;
-	} while ($line eq "" || !($line =~ /^#define/i));		
+	} 
+	while ($line eq "" || !($line =~ /^#define/i) );		
 #	the first line witch we are interested in have been already read	
-	 if ($line ne "") {
-	    addlabel ($line,$line_count);
-	 }
+	if ($line ne "") {
+		addlabel ($line,$line_count);
+	}
 	
 #	reads and adds all the labels
 #	warning, the rest of the file must be well-formed without errors 	
@@ -166,34 +180,45 @@ sub initlabel {# fill the %labels from $in_labelfile that is reading
 #		}
 #	}
 	
-	print " % labels initialized ! \n";
+	debug (" % labels initialized !");
 } #end initlabel
 
 #--------------------------------------------------------------------
+#--------------------------------------------------------------------
+#--------------------------------------------------------------------
+
+
+
+
 sub addtext {
+use Unicode::String qw(utf8 latin1);
 # extract From a line (!="") given in parameter the elements and adds them in %text 
 	my $label_ref;
-	my $text;
+	my $text = shift;
 	my @else; 
+	my $textunicode = Unicode::String->new ();
 
-	if ( $_[0] ne "" ){
-		chomp ($_[0]);
-		($label_ref,@else) = split (/\s+/, $_[0]); # cut the spaces
-		
-#	group @else in $text with ' ' like character space beetween the elements
-		$text = join (' ', @else);
+	if ( $text ne "" ){
+		chomp ($text);
+		($label_ref,@else) = split (/\s+/, $text); # cut below to spaces		
+		#	group @else in $text with ' ' like character space beetween the elements
+		$text = join (' ', @else) ;
 #	tests if it not a false translate		
-		if ( $text =~ /^\*\*/ ) {
-			print "the reference don't have a text at line $_[1]\n";
+		if ( !defined ($text) || $text =~ /^\*\*/ ) {
+			print "the reference $label_ref don't have a text at line", $_[1],"\n";
 		}	
 		else {
-#	OK but need translate for any html tags and the unicode
+			#	OK but need translate for any html tags and the unicode
 			$text =~ s/&/&amp;/g;
 			$text	=~ s/</&lt;/g;
-# import an ISO-latin1 string into UTF-8 if necessary
-			$text	= latin1($text);
-		#debug ("$label_ref  pour $text");
-			$texts{"$label_ref"} = $text->utf8;
+			# imports an ISO-latin1 string into UTF-8 if necessary
+			if ($encodage eq "latin1") {
+				$textunicode = latin1($text);
+				$texts{"$label_ref"} = $textunicode;
+			}
+			else {
+				$texts{"$label_ref"} = $text;
+			}
 		}
 	}
 	else {
@@ -203,31 +228,67 @@ sub addtext {
 
 #--------------------------------------------------------------------
 
-sub inittext { # fill the %text from $in_textfile that is the file source
+sub inittext { 
+# fill the %text from $in_textfile that is the file source
+# and search into the (first)line (# encoding= ...) the encoding 
 	my $line;
 	my $line_count = 0;
+	my $diese;
+	my $define;
+	my @rest;
+	my $choice ;
 	
 # open $in_textlfile only if it exists and is readable
-	unless (-r $in_textfile){ print "fichier $in_textfile introuvable"}
-   else {open (TEXT, "<$in_textfile") || die "erreur de lecture de $in_textfile: $!";}
+	unless (-r $in_textfile) { print "fichier $in_textfile introuvable\n"}
+   else {open (TEXT, "<$in_textfile") || die "erreur de lecture de $in_textfile:$!\n";}
 
 	
 #	reads and adds all the texts
+	# reads and uses the first line used normaly for the encoding type
+	$line = <TEXT> ;
+	chomp ($line); 
+	$line_count++;
+{	if ($line =~ /^# encoding=/) {
+		($diese, $define, $encodage, @rest) = split( /\s/,$line);
+	}
+	unless ( $encodage eq "utf8"|| $encodage eq "latin1" ) {		
+		do {
+			print "\tIn what type of encoding are messages ?\n",
+					"\tutf8 (default)=>1 or latin1=>2\n";
+			chomp ($choice = <STDIN> );
+		}
+		while ($choice =~ /^\D/ || $choice <= 0 || $choice >= 3 );
+		if ($choice == 2) {
+			$encodage = "latin1";
+		}
+		else {
+			$encodage = "utf8";
+		}		
+	}
+	unless ($line eq "" || $line =~ /^# encoding=/) { # there isn't a line that mention the encoding
+		addtext ($line, $line_count);
+	}	
+}	
+
 #	warning, the file must be well-formed without errors and no comments	
 	while ( $line = <TEXT> ) {
+		chomp ($line);
 		$line_count++;
-		if ($line ne "") {addtext ($line, $line_count);}
+		if ($line ne "") {
+			addtext ($line, $line_count);
+		}
   	}
+	
 	close (TEXT) || die "problem during text'file is closed: $!";
 
 # verification
-#	if ($debug){
-#		my $i;
-#		for ($i = 0 ; $i <= 196 ; $i++) {
-#			print "ref $i give the text:\t",$texts{"$i"},"\n";
-#		}
-#	}
-	print " % texts initialized ! \n";
+	if ($debug){
+		my $i;
+		for ($i = 0 ; $i <= 196 ; $i++) {
+			print "ref $i give the text:\t",$texts{$i},"\n";
+		}
+	}
+	debug ( " % texts initialized ! \n");
 
 } #end inittext
 
@@ -237,7 +298,7 @@ sub inittext { # fill the %text from $in_textfile that is the file source
 
 sub start_hndl {
 	my $expat = shift; 
-	my $element = shift; 	# element is the name of the tag
+ 	my $element = $current_tag = shift; 	# element is the name of the tag
 	my @attributes = ();
 	my $numberparam = 0; #double of parametres, because they're going by pair
 
@@ -259,8 +320,8 @@ sub start_hndl {
 			debug ("message necessitant comparaison");
 			$found = 1 ;
 			# A TRAITER			
-			print "this translate already exist for $current_label at ";
-			print $expat->current_line . "\n" ;
+#			print "this translate already exist for $current_label at ";
+#			print $expat->current_line . "\n" ;
 		}
 		print OUT "\t";	
 		addbegintag ( $element,$numberparam, @attributes );					
@@ -332,9 +393,9 @@ sub end_hndl { #	do the modification if necessary
 				print OUT "</message>\n";
 				debug ("added");
 			}else {
-				if ( $current_label ne "AMAYA_MSG_MAX") { # This label is always empty
+				if ( $current_label !~ /MSG_MAX/ && $current_label ne "MAX_EDITOR_LABEL") { # This label is always empty
 					print '==> ' . "the label $current_label (ref ";
-					print "$labels{$current_label}" ;
+					print $labels{$current_label} ;
 					print ")don't have a translate in the message file\n";
 				}
 			}	
@@ -342,7 +403,15 @@ sub end_hndl { #	do the modification if necessary
 	}
 	elsif ($end_tag eq "control") { 
 #	if we add a new language, we have to mention it	
-		
+		my $exist = 0;
+		foreach (@list_of_lang_occur) {
+			if ($_ eq $language_code) {
+				$exist = 1;			
+			}	
+		}
+		if  ($exist == 0) {
+			print OUT "\t<language encoding=\"$encodage\">$language_code</language>\n" ;
+		}
 	}	
 	print OUT "</$end_tag>\n";
 }  # End endhndl
@@ -362,12 +431,15 @@ $test = $data;
 		print OUT $data;
 	}
 }	#End recopy
+#--------------------------------------------------------------------
 
 sub char_hndl {
 #	use Unicode::String qw(utf8 latin1);
 	my ($p, $data) = @_;
-	recopy ( $data );
-	
+	recopy ( $data ) ;
+	if ( $current_tag eq "language") {
+		push (@list_of_lang_occur, $data) ;		
+	}
 }  #End char_hndl
 
 #--------------------------------------------------------------------
@@ -376,7 +448,7 @@ sub comment_hndl { # it's just the comment that is automaticaly copied
 	my ($p, $data) = @_;
 	my $line = $p->current_line;
 	
-	debug ("Comment line $line:\t$data");
+#	debug ("Comment line $line:\t$data");
 	print OUT "<!--$data-->";
 }	#End comment_hndl
 
@@ -398,7 +470,11 @@ sub default_hndl {	#for all the cases of an invalid xml document
 		print " Y'en a marre! :line $line \=> $data\n";
 	}
 } #End default_hndl
-#------------------end of file Import_am_msg.pl-------------------------------
+
+
+1;
+__END__
+#------------------end of file Import_am_msg.pm-------------------------------
 
 
 

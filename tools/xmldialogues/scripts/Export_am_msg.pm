@@ -1,4 +1,30 @@
 #!/usr/bin/perl -w
+package Export_am_msg;
+
+use strict;
+use XML::Parser;
+use Unicode::String qw(utf8 latin1);
+	#to indicate that all string will be in utf8 (as they are read) by default
+#	Unicode::String->stringify_as( utf8 );
+ 
+use IO::File;
+
+
+BEGIN {
+	use vars qw( @ISA @EXPORT );
+	use Exporter;
+
+	@ISA = ('Exporter');# AutoLoader;
+
+# Items to export into callers namespace by default. Note: do not export
+# names by default without a very good reason. Use EXPORT_OK instead.
+# Do not simply export all your public functions/methods/constants.
+	@EXPORT = 	qw(
+						&export
+						);
+}
+
+
 
 # 	this function creates the header file that define the Labels and all the files of
 #	texts for all translates from the base in XML  
@@ -9,24 +35,17 @@
 
 
 
-use strict;
-use XML::Parser;
-use Unicode::String qw(utf8 latin1);
-	#to indicate that all string will be in utf8 (as they are read) by default
-#	Unicode::String->stringify_as( utf8 );
- 
-use IO::File;
 
 ################
-## main main
+## sub  main
 ################
-	my $base = "/home/ehuck/xmldoc/base_am_msg.xml";
+	my $base = "/home/ehuck/xmldoc/base_am_msg.xml"; #complete name of the base
 	my $where = "/home/ehuck/xmldoc"; # directory where the result files are putting
 	my $sufix = "-amayamsg"; # sufix of the dialogues files = result
+	my $head_name = "amayamsg.h";
 	
 	my @list_of_lang_occur = ();
 	my $current_label;
-#	my $last_element_occur;
 	my $current_language ;
 	my $current_element; #to know in wuitch tag we are to treat texts
 	my $reference_value = 0;
@@ -34,20 +53,23 @@ use IO::File;
 	my @list_of_dialogues_files = ();#to list the exacts names of the created files
 	
 	my @list_handles = (); #to record the names of the handles
-	my %handle_names_ref ;	#to have the handle ref of each languages when output	
-									#
-	my %record_verification ; 	#To remember what kind of languages are already
+	my %handle_names_ref = ();	#to have the handle ref of each languages when output	
+									
+	my %record_verification = (); 	#To remember what kind of languages are already
 										#read for the same label, it can be some lake
 	my $english_text_reference; #somes languages don't have text for a label
 	
 	my @text_patches = (); #used because with the html, the text is cut in several patches
 	
-	my %language_out_codages; 	#To indicate in which cadage the output file are
+	my %language_out_codages = (); 	#To indicate in which cadage the output file are
 										#some needs encoding utf-8 to iso-latin1
 	my $codage ; 	#because the codage is an attribute of <language> and the
 						#coresspondig language is nown after as a char
-{
-
+sub export {
+	$base = shift ;
+	$where = shift ;
+	$sufix = shift ;
+	$head_name = shift;
 
 # declaration of the parser
 	my $parser = new XML::Parser (
@@ -64,23 +86,27 @@ use IO::File;
 			   Comment => \&comment_hndl,
 			   Default => \&default_hndl
 				);
-				
-				
-	# pb pour le cas ou les fichiers existent deja			
-	open ( IN, "<$base") || die "can't read $where/amayamsg.h because: $! \n";
-	push (@list_of_dialogues_files, "$where/amayamsg.h") ;
+								
+# pb pour le cas ou les fichiers existent deja			
+	open ( IN, "<$base") || die "can't read $base because: $! \n";
+	push (@list_of_dialogues_files, "$base") ;
 	
 	$parser->parse (*IN); 
 	
-	close ( IN ) || die "can't close $where/amayamsg.h because: $! \n";
+	close ( IN ) || die "can't close $where/$head_name because: $! \n";
 	print "the new file names are:\n";
 	
 	my $number = @list_of_lang_occur;
-	print "voici les $number langues @list_of_lang_occur \n";
+	print "voici les $number langues @list_of_lang_occur \n"
+			,"\tEt le nom des fichiers generes\n";
+	foreach  (@list_of_dialogues_files) {
+		print $_ , "\n";
+	}
 	
 	print "\tEnd EXPORT\n";
-}################
-## end main
+}
+################
+## end sub main (export)
 ################
 #------------------------------------------------------------------------
 
@@ -120,8 +146,7 @@ sub start_hndl {
 #	}
 
 
-#	use the result 
-				
+#	use the result 				
 	if ( $element eq "message" ) {
 		if ( $attributes {"xml::lang"} ) {			 
 			$current_language = $attributes{'xml::lang'} ;
@@ -302,3 +327,5 @@ sub default_hndl {	#for all the cases of an invalid xml document
 	}
 } #End default_hndl
 #------------------end of file export_am_msg.pl-------------------------------
+1;
+__END__
