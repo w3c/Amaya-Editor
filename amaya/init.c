@@ -637,10 +637,9 @@ char               *text;
       if (change)
 	{
 	  /* change the text value */
-	  s = TtaGetMemory (MAX_LENGTH);
 	  TtaSetTextZone (document, view, 1, s);
-	  TtaFreeMemory (s);
 	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, s);
+	  TtaFreeMemory (s);
 	}
       else
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
