@@ -926,13 +926,54 @@ void FreeAbstractBox (PtrAbstractBox pAb)
 }
 
 /*----------------------------------------------------------------------
+  FreeElemNamespaceDeclarations
+  Free the namespace declarations related to an element
+  ----------------------------------------------------------------------*/
+void FreeElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl)
+{
+  PtrNsUriDescr      uriDecl;
+  PtrNsPrefixDescr   prefixDecl, nextPrefixDecl, prevPrefixDecl;
+  
+  if (pDoc->DocNsUriDecl == NULL)
+    return;
+  
+  uriDecl = pDoc->DocNsUriDecl;
+  while (uriDecl != NULL)
+    {
+      prefixDecl = uriDecl->NsPtrPrefix;
+      prevPrefixDecl = NULL;
+      while (prefixDecl != NULL)
+	{
+	  nextPrefixDecl = prefixDecl->NsNextPrefixDecl;
+	  if (prefixDecl->NsPrefixElem == pEl)
+	    {
+	      if (prefixDecl->NsPrefixName != NULL)
+		{
+		  TtaFreeMemory (prefixDecl->NsPrefixName);
+		  prefixDecl->NsPrefixName = NULL;
+		}
+	      TtaFreeMemory (prefixDecl);
+	      if (prevPrefixDecl == NULL)
+		uriDecl->NsPtrPrefix = nextPrefixDecl;
+	      else
+		prevPrefixDecl->NsNextPrefixDecl = nextPrefixDecl;
+	    }
+	  else
+	    prevPrefixDecl = prefixDecl;
+	  prefixDecl = nextPrefixDecl;
+	}
+      uriDecl = uriDecl->NsNextUriDecl;
+    } 
+}
+
+/*----------------------------------------------------------------------
   FreeNamespaceDeclarations
   Free all namespace declarations
   ----------------------------------------------------------------------*/
 void FreeNamespaceDeclarations (PtrDocument pDoc)
 {
-  PtrNsUriDescr    uriDecl, nextUriDecl;
-  PtrNsPrefixDescr prefixDecl, nextPrefixDecl;
+  PtrNsUriDescr       uriDecl, nextUriDecl;
+  PtrNsPrefixDescr    prefixDecl, nextPrefixDecl;
   
   if (pDoc->DocNsUriDecl == NULL)
     return;

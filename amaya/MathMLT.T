@@ -7,19 +7,18 @@ TRANSLATION MathML;
 
 LineLength 78;
 
+BUFFERS
+   ElemPrefixBuffer (variable);
+   AttrPrefixBuffer (variable);
+
 CONST
    tagend = '>\12';
-#ifdef XML
-   SOT = '<m:';         { Start of opening tag }
-   SCT = '</m:';        { Start of closing tag }
-   SAN = ' m:';         { Start of attribute name }
-   SUA = 'm:';          { Start of unknown attribute }
-#else
-   SOT = '<';           { Start of opening tag }
-   SCT = '</';          { Start of closing tag }
-   SAN = ' ';           { Start of attribute name }
-   SUA = '';            { Start of unknown attribute }
-#endif
+
+VAR
+   SOT : '<' ElemPrefixBuffer;	{ Start of opening tag }
+   SCT : '</' ElemPrefixBuffer;	{ Start of closing tag }
+   SAN : ' ' AttrPrefixBuffer;  { Start of attribute name }
+   SUA : '';                    { Start of unknown attribute }
 
 RULES
 
@@ -39,12 +38,14 @@ RULES
    MathML:
 	begin
 	Use XLinkT for XLink;
-	Create '<math xmlns="http://www.w3.org/1998/Math/MathML"';
+	create SOT;
+	Create 'math';
 	Create Attributes;
 	Create '>\12';
 	indent +2;
 	indent -2 after;
-	Create '</math>' after;
+	create SCT after;
+	Create 'math>\12' after;
 	end;
 
    XMLcomment:

@@ -17,7 +17,8 @@
 #include "amaya.h"
 #include "css.h"
 #include "undo.h"
- 
+#include "document.h"
+
 #ifdef ANNOTATIONS
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
@@ -310,9 +311,13 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /* Load user's style sheet */
       LoadUserStyleSheet (doc);
 
-      /* attach an attribute PrintURL to the root element */
+      /* Set the namespace declaration */
       elType.ElTypeNum = HTML_EL_HTML;
       root = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      TtaSetUriSSchema (elType.ElSSchema, XHTML_URI);
+      TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+
+      /* attach an attribute PrintURL to the root element */
       attrType.AttrTypeNum = HTML_ATTR_PrintURL;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (root, attr, doc);
@@ -404,6 +409,11 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 	TtaDeleteTree (doctype, doc);
       CreateDoctype (doc, L_MathML, FALSE, FALSE);
 
+      /* Set the namespace declaration */
+      root = TtaGetRootElement (doc);
+      TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
+      TtaSetANamespaceDeclaration (doc, root, NULL, MathML_URI);
+
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
       /* Search the first Construct to set the initial selection */
@@ -425,6 +435,11 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       if (doctype != NULL)
 	TtaDeleteTree (doctype, doc);
       CreateDoctype (doc, L_SVG, FALSE, FALSE);
+
+      /* Set the namespace declaration */
+      root = TtaGetRootElement (doc);
+      TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
+      TtaSetANamespaceDeclaration (doc, root, NULL, SVG_URI);
 
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;

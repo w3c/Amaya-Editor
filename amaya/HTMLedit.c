@@ -342,6 +342,9 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   TtaSetStructureChecking (0, doc);
 	   TtaAttachAttribute (element, attr, doc);
 	   TtaSetStructureChecking (oldStructureChecking, doc);
+	   /* Set the XLink namespace declaration */
+	   TtaSetUriSSchema (attrType.AttrSSchema, XLink_URI);
+	   TtaSetANamespaceDeclaration (doc, element, XLink_PREFIX, XLink_URI);
 	   new = TRUE;
 	 }
        else

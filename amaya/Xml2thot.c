@@ -1338,7 +1338,7 @@ static void  NsDeclarationEnd (char *ns_prefix)
   are such declarations, update the Document informations.
   Remove all current namespace declaration(s).
   ----------------------------------------------------------------------*/
-static void  NsStartProcessing (Element newElement)
+static void  NsStartProcessing (Element newElement, ThotBool declare)
 
 {
   int i;
@@ -1350,9 +1350,9 @@ static void  NsStartProcessing (Element newElement)
   /* and remove the useless declarations */
   for (i = 0; i < CurNs_Level; i++)
     {
-      if (newElement != NULL)
-	TtaSetNamespaceDeclaration (XMLcontext.doc, newElement,
-				    CurNs_Prefix[i], CurNs_Uri[i]);
+      if (newElement != NULL && declare)
+	TtaSetANamespaceDeclaration (XMLcontext.doc, newElement,
+				     CurNs_Prefix[i], CurNs_Uri[i]);
       if (CurNs_Prefix[i] != NULL)
 	{
 	  TtaFreeMemory (CurNs_Prefix[i]);
@@ -1417,7 +1417,7 @@ static void   UnknownXmlNsElement (char *ns_uri, char *elemName, ThotBool startE
       lg ++;
     }
 
-  /* Is that namespace associated with an uri ? */
+  /* Is that namespace associated with a prefix ? */
   ns_prefix = NsGetPrefix (ns_uri);
 
   if (ns_prefix != NULL)
@@ -1479,7 +1479,7 @@ static void   UnknownXmlNsElement (char *ns_uri, char *elemName, ThotBool startE
     (&XMLcontext, &newElement, elemBuffer);
   /* Store the current namespace declarations for this element */
   if (CurNs_Level > 0)
-    NsStartProcessing (newElement);
+    NsStartProcessing (newElement, FALSE);
 
 }
 
@@ -1884,7 +1884,7 @@ static void       StartOfXmlStartElement (char *name)
 		  
 		  /* Store the current namespace declarations for this element */
 		  if (CurNs_Level > 0)
-		    NsStartProcessing (newElement);
+		    NsStartProcessing (newElement, TRUE);
 		  
 		  if (newElement != NULL && elType.ElTypeNum == 1)
 		    /* If an empty Text element has been created, */

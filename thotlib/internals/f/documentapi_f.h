@@ -79,11 +79,15 @@ extern void TtaGetSchemaPath ( char *buffer,
                                int bufferLength );
 extern Document TtaGetDocumentOfSavedElements ( void );
 extern PtrDocument DocToPtr ( Document document );
-extern void TtaSetNamespaceDeclaration ( Document document,
-                                         Element element,
-                                         char *NsPrefix,
-                                         char *NsUri );
-extern void TtaFreeNamespaceDeclaration ( Document document );
+extern void TtaSetANamespaceDeclaration ( Document document,
+                                          Element element,
+                                          char *NsPrefix,
+                                          char *NsUri );
+extern void TtaShowElemNamespaceDeclarations ( Document document,
+                                               Element element );
+extern void TtaFreeElemNamespaceDeclarations ( Document document,
+                                               Element element );
+extern void TtaFreeNamespaceDeclarations ( Document document );
 extern void TtaAppendXmlAttribute ( char *xmlName,
                                     AttributeType *attrType,
                                     Document document );
@@ -184,11 +188,15 @@ extern void TtaGetSchemaPath (/* char *buffer,
                                  int bufferLength */);
 extern Document TtaGetDocumentOfSavedElements (/* void */);
 extern PtrDocument DocToPtr (/* Document document */);
-extern void TtaSetNamespaceDeclaration (/* Document document,
-                                           Element element,
-                                           char *NsPrefix,
-                                           char *NsUri */);
-extern void TtaFreeNamespaceDeclaration (/* Document document */);
+extern void TtaSetANamespaceDeclaration (/* Document document,
+                                            Element element,
+                                            char *NsPrefix,
+                                            char *NsUri */);
+extern void TtaShowElemNamespaceDeclarations (/* Document document,
+                                                 Element element */);
+extern void TtaFreeElemNamespaceDeclarations (/* Document document,
+                                                 Element element */);
+extern void TtaFreeNamespaceDeclarations (/* Document document */);
 extern void TtaAppendXmlAttribute (/* char *xmlName,
                                       AttributeType *attrType,
                                       Document document */);

@@ -683,7 +683,7 @@ typedef struct _DocumentDescr
   CHARSET         DocCharset;     /* charset of the document */
   ThotBool	  DocDefaultCharset;/* TRUE if the charset is set by default */
   int		  DocProfile;	  /* profile of the document */
-  PtrNsUriDescr   DocNsUriDecl;   /* namespace declarations */
+  PtrNsUriDescr   DocNsUriDecl;   /* first namespace declaration */
 } DocumentDescr;
 
 #endif /* __TYPE_INT_H__ */

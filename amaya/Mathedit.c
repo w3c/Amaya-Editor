@@ -23,6 +23,7 @@
 #ifdef _SVG
 #include "SVG.h"
 #endif /* _SVG */
+#include "document.h"
 
 #ifdef _WINDOWS
 #define iconMath   21 
@@ -726,8 +727,7 @@ static void         CreateMathConstruct (int construct)
 	  /* get the MathML schema associated with the current SSchema or
 	     associate it with the current SSchema if it is not associated
 	     yet */
-	  mathSchema = TtaNewNature (doc, elType.ElSSchema, "MathML",
-				     "MathMLP");
+	  mathSchema = TtaNewNature (doc, elType.ElSSchema, "MathML", "MathMLP");
 	  newType.ElTypeNum = MathML_EL_MathML;
 	  newType.ElSSchema = mathSchema;
 	  if (emptySel)
@@ -1044,6 +1044,9 @@ static void         CreateMathConstruct (int construct)
 		TtaInsertFirstChild (&el, sibling, doc);
 	      if (elType.ElTypeNum == MathML_EL_MathML)
 		SetDisplaystyleMathElement (el, doc);
+	      /* Set the MathML namespace declaration */
+	      TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
+	      TtaSetANamespaceDeclaration (doc, el, NULL, MathML_URI);
 	      /* restore structure checking mode */
 	      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
 	      sibling = TtaGetFirstChild (el);
@@ -3863,10 +3866,15 @@ void MathElementPasted (NotifyElement *event)
    XLinkPasted (event);
 
    elType = TtaGetElementType (event->element);
-   /* if it's a <math> element, set the IntDisplaystyle attribute according
-      to the context */
    if (elType.ElTypeNum == MathML_EL_MathML)
-     SetDisplaystyleMathElement (event->element, event->document);
+     {
+       /* It is the <math> element */
+       /* Set the IntDisplaystyle attribute according to the context */     
+       SetDisplaystyleMathElement (event->element, event->document);
+       /* Set the MathML namespace declaration */
+       TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
+       TtaSetANamespaceDeclaration (event->document, event->element, NULL, MathML_URI);
+     }
 
    if (elType.ElTypeNum == MathML_EL_MUNDER ||
        elType.ElTypeNum == MathML_EL_MOVER ||
@@ -3945,6 +3953,8 @@ void MathElementPasted (NotifyElement *event)
  -----------------------------------------------------------------------*/
 ThotBool MathElementWillBeDeleted (NotifyElement *event)
 {
+  ElementType	elType;
+  
   /* TTE_STANDARD_DELETE_LAST_ITEM indicates the last element to be
      deleted, but function MathElementWillBeDeleted is called afterwards
      for all decendants of this last selected element, without
@@ -3965,6 +3975,12 @@ ThotBool MathElementWillBeDeleted (NotifyElement *event)
 	IsLastDeletedElement = False;
 	}
      }
+  
+  /* Free the namespace declaration associated with the MathML root */
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == MathML_EL_MathML)
+    TtaFreeElemNamespaceDeclarations (event->document, event->element);
+      
   return FALSE; /* let Thot perform normal operation */
 }
 

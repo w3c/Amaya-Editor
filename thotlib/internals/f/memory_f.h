@@ -31,6 +31,8 @@ extern void GetReference ( PtrReference * pRef );
 extern void FreeReference ( PtrReference pRef );
 extern void GetAbstractBox ( PtrAbstractBox *pAb );
 extern void FreeAbstractBox ( PtrAbstractBox pAb );
+extern void FreeElemNamespaceDeclarations ( PtrDocument pDoc,
+                                            PtrElement pEl );
 extern void FreeNamespaceDeclarations ( PtrDocument pDoc );
 extern void GetDocument ( PtrDocument *pDoc );
 extern void FreeDocument ( PtrDocument pDoc );
@@ -104,6 +106,8 @@ extern void GetReference (/* PtrReference * pRef */);
 extern void FreeReference (/* PtrReference pRef */);
 extern void GetAbstractBox (/* PtrAbstractBox *pAb */);
 extern void FreeAbstractBox (/* PtrAbstractBox pAb */);
+extern void FreeElemNamespaceDeclarations (/* PtrDocument pDoc,
+                                              PtrElement pEl */);
 extern void FreeNamespaceDeclarations (/* PtrDocument pDoc */);
 extern void GetDocument (/* PtrDocument *pDoc */);
 extern void FreeDocument (/* PtrDocument pDoc */);

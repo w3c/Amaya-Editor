@@ -23,6 +23,7 @@
 #define MathML_URI      "http://www.w3.org/1998/Math/MathML"
 #define SVG_URI         "http://www.w3.org/2000/svg"
 #define XLink_URI       "http://www.w3.org/1999/xlink"
+#define XLink_PREFIX    "xlink"
 #define NAMESPACE_URI   "http://www.w3.org/XML/1998/namespace"
 
 #define MaxTypeNameLength 30

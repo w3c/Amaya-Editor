@@ -19,6 +19,7 @@
 #include "trans.h"
 #include "view.h"
 #include "content.h"
+#include "document.h"
 
 #include "SVG.h"
 #include "HTML.h"
@@ -204,6 +205,8 @@ void StylePasted (NotifyElement *event)
  -----------------------------------------------------------------------*/
 ThotBool ExportForeignObject (NotifyElement *event)
 {
+#ifdef OLD
+  /* useless with the support of xml namespaces */
   Element       child;
   ElementType   elType;
   Attribute     attr;
@@ -225,6 +228,7 @@ ThotBool ExportForeignObject (NotifyElement *event)
 	}
       TtaNextSibling (&child);
     }
+#endif /* OLD */
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -1029,10 +1033,23 @@ void CheckSVGRoot (Document doc, Element el)
  -----------------------------------------------------------------------*/
 void GraphElemPasted (NotifyElement *event)
 {
+  ElementType    elType;
+  SSchema	 SvgSchema;
+
   XLinkPasted (event);
   /* check that the svg element includes that element */
   CheckSVGRoot (event->document, event->element);
   SetGraphicDepths (event->document, event->element);
+
+  /* Set the namespace declaration */
+  SvgSchema = GetSVGSSchema (event->document);
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == SVG_EL_SVG &&
+      elType.ElSSchema == SvgSchema)
+    {
+      TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
+      TtaSetANamespaceDeclaration (event->document, event->element, NULL, SVG_URI);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2091,6 +2108,11 @@ void SVGCreated (NotifyElement * event)
   Attribute	attr;
 
   elType = TtaGetElementType (event->element);
+
+  /* Set the namespace declaration */
+  TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
+  TtaSetANamespaceDeclaration (event->document, event->element, NULL, SVG_URI);
+
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_width_;
   attr = TtaGetAttribute (event->element, attrType);
@@ -2187,7 +2209,6 @@ void UsePasted (NotifyElement * event)
       TtaFreeMemory (href);
     }
 }
-
 
 /*----------------------------------------------------------------------
  AttrXlinkHrefChanged

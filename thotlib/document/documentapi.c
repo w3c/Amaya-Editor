@@ -1529,9 +1529,9 @@ PtrDocument         DocToPtr (Document document)
 
 /*----------------------------------------------------------------------
   TtaSetNamespaceDeclaration
-  Sets one namespace declaration
+  Sets a namespace declaration for an element 
  ----------------------------------------------------------------------*/
-void TtaSetNamespaceDeclaration (Document document, Element element,
+void TtaSetANamespaceDeclaration (Document document, Element element,
 				 char *NsPrefix, char *NsUri)
 {
   PtrDocument pDoc;
@@ -1546,7 +1546,51 @@ void TtaSetNamespaceDeclaration (Document document, Element element,
     {
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
-      UpdateNamespaceDeclaration (pDoc, (PtrElement) element, NsPrefix, NsUri);
+      SetNamespaceDeclaration (pDoc, (PtrElement) element, NsPrefix, NsUri);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaShowElemNamespaceDeclarations
+  Show the namespaces declarations related to an element
+ ----------------------------------------------------------------------*/
+void TtaShowElemNamespaceDeclarations (Document document, Element element)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      ShowElemNamespaceDeclarations (pDoc, (PtrElement) element);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaFreeElemNamespaceDeclarations
+  Free the namespaces declarations related to an element
+ ----------------------------------------------------------------------*/
+void TtaFreeElemNamespaceDeclarations (Document document, Element element)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      FreeElemNamespaceDeclarations (pDoc, (PtrElement) element);
     }
 }
 
@@ -1554,7 +1598,7 @@ void TtaSetNamespaceDeclaration (Document document, Element element,
   TtaFreeNamespaceDeclarations
   Free all the namespaces declarations of a document
  ----------------------------------------------------------------------*/
-void TtaFreeNamespaceDeclaration (Document document)
+void TtaFreeNamespaceDeclarations (Document document)
 {
   PtrDocument pDoc;
 

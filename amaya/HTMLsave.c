@@ -1072,7 +1072,7 @@ void RestartParser (Document doc, char *localFile,
   RemoveParsingErrors (doc);
 
   /* Remove the previous namespaces declaration */
-  TtaFreeNamespaceDeclaration (doc);
+  TtaFreeNamespaceDeclarations (doc);
   TtaSetDisplayMode (doc, NoComputedDisplay);
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] != NULL)

@@ -5,8 +5,11 @@
 
 TRANSLATION XLink;
 
-CONST
-   nsdcl = ' xmlns:xlink="http://www.w3.org/1999/xlink"';
+BUFFERS
+   AttrPrefixBuffer (variable);
+
+VAR
+   SAN : ' ' AttrPrefixBuffer;  { Start of attribute name }
 
 RULES
 
@@ -21,8 +24,10 @@ ATTRIBUTES
         if XLink begin
 	   remove;
 	   end;
-	if NOT XLink
-	   create ' xlink:type="simple"';
+	if NOT XLink begin
+           create SAN;
+	   create 'type="simple"';
+	   end;
         end;
 
    type = extended:
@@ -30,8 +35,10 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink
-	   create ' xlink:type="extended"';
+        if NOT XLink begin
+           create SAN;
+	   create 'type="extended"';
+	   end;
 	end;
 
    type = locator:
@@ -39,8 +46,10 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink
-	   create ' xlink:type="locator"';
+        if NOT XLink begin
+           create SAN;
+	   create 'type="locator"';
+	   end;
 	end;
 
    type = arc:
@@ -48,8 +57,10 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink
-	   create ' xlink:type="arc"';
+        if NOT XLink begin
+           create SAN;
+	   create 'type="arc"';
+	   end;
 	end;
 
    type = resource:
@@ -57,8 +68,10 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink
-	   create ' xlink:type="resource"';
+        if NOT XLink begin
+           create SAN;
+	   create 'type="resource"';
+	   end;
 	end;
 
    type = title_:
@@ -66,8 +79,10 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink
-	   create ' xlink:type="title"';
+        if NOT XLink begin
+           create SAN;
+	   create 'type="title"';
+	   end;
 	end;
 
    type = none_:
@@ -75,8 +90,10 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink
-	   create ' xlink:type="none"';
+        if NOT XLink begin
+           create SAN;
+	   create 'type="none"';
+	   end;
 	end;
 
    href_:
@@ -85,8 +102,8 @@ ATTRIBUTES
            remove;
            end;
         if NOT XLink begin
-           create nsdcl;
-	   create ' xlink:href="';
+           create SAN;
+	   create 'href="';
 	   create href_;
 	   create '"';
 	   end;
@@ -118,7 +135,7 @@ ATTRIBUTES
            remove;
            end;
         if NOT XLink begin
-	   create ' xlink:';
+           create SAN;
 	   create Unknown_attribute;
 	   end;
 	end;

@@ -7065,12 +7065,20 @@ void HelpAmaya (Document document, View view)
 void HelpAtW3C (Document document, View view)
 {
   char      localname[MAX_LENGTH];
-  
+
+#ifdef LC
+  Element   element;
+  int       firstChar, i;
+
+  TtaGiveFirstSelectedElement (document, &element, &firstChar, &i);
+  TtaShowElemNamespaceDeclarations (document, element);
+#else 
   strcpy (localname, AMAYA_PAGE_DOC);
   strcat (localname, "BinDist.html");
   document = GetAmayaDoc (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
 			  NULL, TtaGetDefaultCharset ());
   InitDocHistory (document);
+#endif /* LC */
 }
 
 

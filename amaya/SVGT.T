@@ -3,22 +3,20 @@ TRANSLATION SVG;
 
 LINELENGTH 78;
 
-CONST
+BUFFERS
+   ElemPrefixBuffer (variable);
+   AttrPrefixBuffer (variable);
 
-#ifdef XML
-   SOT = '<g:';		{ Start of opening tag }
-   SCT = '</g:';	{ Start of closing tag }
-   SAN = ' g:';		{ Start of attribute name }
-   SUA = 'g:';          { Start of unknown attribute }
-#else
-   SOT = '<';		{ Start of opening tag }
-   SCT = '</';		{ Start of closing tag }
-   SAN = ' ';		{ Start of attribute name }
-   SUA = '';            { Start of unknown attribute }
-#endif
+CONST
    DoubleQuote = '"';
    CloseTagNL = '>\12';
    CloseEmptyTagNL = '/>\12';
+
+VAR
+   SOT : '<' ElemPrefixBuffer;	{ Start of opening tag }
+   SCT : '</' ElemPrefixBuffer;	{ Start of closing tag }
+   SAN : ' ' AttrPrefixBuffer;  { Start of attribute name }
+   SUA : '';                    { Start of unknown attribute }
 
 RULES
 
@@ -43,13 +41,15 @@ RULES
 	Use HTMLTX for HTML;
         Use MathMLT for MathML;
         Use XLinkT for XLink;
-	Create '<svg xmlns="http://www.w3.org/2000/svg"';
+	create SOT;
+	create 'svg';
         indent +5;
 	Create Attributes;
 	Create CloseTagNL;
 	indent -3;
 	indent -2 after;
-	Create '</svg>\12' After;
+	create SCT after;
+	create 'svg>\12' after;
 	END;
 
    g:
@@ -629,9 +629,9 @@ RULES
 	NoTranslation;
 	Create '\12';
         Create Content;
-	Remove;
+        Remove;
 	Create Attributes;
-	Create '>';
+	create '>';
 	END;
 
    TEXT_UNIT:
@@ -716,10 +716,11 @@ ATTRIBUTES
 
    Namespace:
 	begin
-        create SAN;
+	{
         create 'xmlns="';
         create Namespace;
         create DoubleQuote;
+        }
 	end;
 
    requiredFeatures:
@@ -1049,8 +1050,7 @@ ATTRIBUTES
 
    xlink_href:
 	BEGIN
-	create SAN;
-	create 'xlink:href="';
+	create ' xlink:href="';
 	create xlink_href;
 	create DoubleQuote;
 	END;

@@ -2500,7 +2500,18 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
 static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
 				    char *NsPrefix, PtrNsUriDescr uriDecl)
 {
-  PtrNsPrefixDescr newPrefixDecl, prefixDecl, prevPrefixDecl;
+  PtrNsPrefixDescr   newPrefixDecl, lastPrefixDecl, prevPrefixDecl;
+
+  lastPrefixDecl = uriDecl->NsPtrPrefix;
+  prevPrefixDecl = lastPrefixDecl;
+  while (lastPrefixDecl != NULL)
+    {
+      if (lastPrefixDecl->NsPrefixElem == element)
+	/* avoid to duplicate a declaration for the same element */
+	return;
+      prevPrefixDecl = lastPrefixDecl;
+      lastPrefixDecl = lastPrefixDecl->NsNextPrefixDecl;   
+    }
 
   newPrefixDecl = (PtrNsPrefixDescr) TtaGetMemory (sizeof (NsPrefixDescr));
   if (newPrefixDecl == NULL)
@@ -2516,16 +2527,9 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   if (uriDecl->NsPtrPrefix == NULL)
     uriDecl->NsPtrPrefix = newPrefixDecl;
   else
-    {
-      prevPrefixDecl = uriDecl->NsPtrPrefix;
-      prefixDecl = prevPrefixDecl->NsNextPrefixDecl;
-      while (prefixDecl != NULL)
-	{
-	  prevPrefixDecl = prefixDecl;
-	  prefixDecl = prefixDecl->NsNextPrefixDecl;
-	}
-      prevPrefixDecl->NsNextPrefixDecl = newPrefixDecl;
-    }
+    prevPrefixDecl->NsNextPrefixDecl = newPrefixDecl;
+  
+  return;
 }
 
 /*----------------------------------------------------------------------
@@ -2571,8 +2575,8 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
   UpdateNamespaceDeclaration
   Add a namespace declaration to the document
  ----------------------------------------------------------------------*/
-void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
-				 char *NsPrefix, char *NsUri)
+void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
+			      char *NsPrefix, char *NsUri)
 {
 
   PtrNsUriDescr   uriDecl;
@@ -2582,7 +2586,6 @@ void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   found = FALSE;
   if (pDoc->DocNsUriDecl != NULL)
     {
-      /* There is alreadty a namespace declaration */
       /* Search if this uri has been already declared */
       uriDecl = pDoc->DocNsUriDecl;
       if (NsUri != NULL)
@@ -2618,6 +2621,49 @@ void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   else
     /* Add a new prefix/element declaration */
     AddANewNamespacePrefix (pDoc, element, NsPrefix, uriDecl);
+}
+
+/*----------------------------------------------------------------------
+  ShowElemNamespaceDeclarations
+  Show the namespaces declarations related to an element
+ ----------------------------------------------------------------------*/
+void ShowElemNamespaceDeclarations (PtrDocument pDoc, PtrElement element)
+{
+
+  PtrNsUriDescr     uriDecl;
+  PtrNsPrefixDescr  prefixDecl;
+
+  uriDecl = NULL;
+  if (pDoc->DocNsUriDecl != NULL)
+    {
+      uriDecl = pDoc->DocNsUriDecl;
+      while (uriDecl != NULL)
+	{
+	  prefixDecl = uriDecl->NsPtrPrefix;
+	  while (prefixDecl != NULL)
+	    {
+	      if ((element != NULL && 
+		   prefixDecl->NsPrefixElem == element) ||
+		  (element == NULL))
+		{
+		  if (prefixDecl->NsPrefixName != NULL)
+		    {
+		      printf ("\nxmlns:%s", prefixDecl->NsPrefixName);
+		      if (uriDecl->NsUriName != NULL)
+			printf ("=\"%s\"", uriDecl->NsUriName);
+		    }
+		  else
+		    {
+		      if (uriDecl->NsUriName != NULL)
+			printf ("\nxmlns=\"%s\" (default)", uriDecl->NsUriName);
+		    }
+		}
+	      prefixDecl = prefixDecl->NsNextPrefixDecl;   
+	    }	  
+	  uriDecl = uriDecl->NsNextUriDecl;
+	}      
+      printf ("\n");
+    }
 }
 
 /*----------------------------------------------------------------------

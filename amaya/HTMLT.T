@@ -7,8 +7,17 @@ TRANSLATION HTML;
 
 LINELENGTH 78;
 
+BUFFERS
+   ElemPrefixBuffer (variable);
+   AttrPrefixBuffer (variable);
+
 CONST
    DoubleQuote  = '"';
+
+VAR
+   SOT : '<' ElemPrefixBuffer;	{ Start of opening tag }
+   SCT : '</' ElemPrefixBuffer;	{ Start of closing tag }
+   SAN : ' ' AttrPrefixBuffer;  { Start of attribute name }
 
 RULES
 
@@ -30,24 +39,23 @@ RULES
 	Use SVGT for SVG;
 	Use XLinkT for XLink;
 	Create PI Before;
-#ifdef XML
-	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
-	{*** Create Namespaces; ***}
-#else
-	Create '<html';
-#endif
+	create SOT;
+	Create 'html';
 	Create Attributes;
 	Create '>\12';
-	Create '</html>\12' After;
+	create SCT after;
+	Create 'html>\12' After;
 	END;
 
  HEAD:	BEGIN
-	Create '<head' Before;
+	create SOT;
+	Create 'head' Before;
 	Create Attributes Before;
 	Create '>\12' Before;
 	Indent +2 Before;
 	Indent -2 After;
-	Create '</head>\12\12' After;
+	create SCT after;
+	Create 'head>\12\12' After;
 	END;
 
  Document_URL:
@@ -56,10 +64,12 @@ RULES
 	END;
 
  TITLE:	BEGIN
-	Create '<title';
+	create SOT;
+	Create 'title';
 	Create Attributes;
 	Create '>';
-	Create '</title>\12' After;
+	create SCT after;
+	Create 'title>\12' After;
 	END;
 
  ISINDEX: BEGIN
@@ -68,7 +78,8 @@ RULES
 	  of the HEAD element }
 	Get TITLE Before;
 #endif
-	Create '<isindex';
+	create SOT;
+	Create 'isindex';
 	IF Prompt
 	   BEGIN
 	   Create ' prompt="';
@@ -90,7 +101,8 @@ RULES
 	  of the HEAD element }
 	Get TITLE Before;
 #endif
-	Create '<base ';
+	create SOT;
+	Create 'base ';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -106,7 +118,8 @@ RULES
 	  of the HEAD element }
 	Get TITLE Before;
 #endif
-	Create '<style';
+	create SOT;
+	Create 'style';
 	IF Notation
 	   BEGIN
 	   Create ' type="';
@@ -119,7 +132,8 @@ RULES
 	NoTranslation;
 	Indent Suspend;
 	Indent Resume After;
-	Create '</style>\12' After;
+	create SCT after;
+	Create 'style>\12' After;
 	END;
 
  SCRIPT_: BEGIN
@@ -128,18 +142,21 @@ RULES
 	  of the HEAD element }
 	Get TITLE Before;
 #endif
-	Create '<script';
+	create SOT;
+	Create 'script';
 	Create Attributes;
 	Create '>\12';
 	NoLineBreak;
 	NoTranslation;
 	Indent Suspend;
 	Indent Resume After;
-	Create '</script>\12' After;
+	create SCT after;
+	Create 'script>\12' After;
 	END;
 
  META: BEGIN
-	Create '<meta' Before;
+	create SOT;
+	Create 'meta' Before;
 	Create Attributes Before;
 	Remove;
 #ifdef XML
@@ -154,7 +171,8 @@ RULES
 	{ elements TITLE and BASE must be generated before }
 	Get TITLE Before;
 #endif
-	Create '<link';
+	create SOT;
+	Create 'link';
 	Remove;
 	Create Attributes;
 #ifdef XML
@@ -165,69 +183,84 @@ RULES
 	END;
 
  BODY:	BEGIN
-	Create '<body';
+	create SOT;
+	Create 'body';
 	Create Attributes;
 	Create '>\12';
-	Create '</body>\12' After;
+	create SCT after;
+	Create 'body>\12' After;
 	END;
 
  H1:	BEGIN
 	if not within Preformatted and not first Create '\12';
-	Create '<h1';
+	create SOT;
+	Create 'h1';
 	Create Attributes;
 	Create '>';
-	Create '</h1>' After;
+	create SCT after;
+	Create 'h1>' After;
 	if not within Preformatted Create '\12' After;
 	END;
 
  H2:	BEGIN
 	if not within Preformatted and not first Create '\12';
-	Create '<h2';
+	create SOT;
+	Create 'h2';
 	Create Attributes;
 	Create '>';
-	Create '</h2>' After;
+	create SCT after;
+	Create 'h2>' After;
 	if not within Preformatted Create '\12' After;
 	END;
 
  H3:	BEGIN
 	if not within Preformatted and not first Create '\12';
-	Create '<h3';
+	create SOT;
+	Create 'h3';
 	Create Attributes;
 	Create '>';
-	Create '</h3>' After;
+	create SCT after;
+	Create 'h3>' After;
 	if not within Preformatted Create '\12' After;
 	END;
 
  H4:	BEGIN
 	if not within Preformatted and not first Create '\12';
-	Create '<h4';
+	create SOT;
+	Create 'h4';
 	Create Attributes;
 	Create '>';
-	Create '</h4>' After;
+	create SCT after;
+	Create 'h4>' After;
 	if not within Preformatted Create '\12' After;
 	END;
 
  H5:	BEGIN
 	if not within Preformatted and not first Create '\12';
-	Create '<h5';
+	create SOT;
+	Create 'h5';
 	Create Attributes;
 	Create '>';
-	Create '</h5>' After;
+	create SCT after;
+	Create 'h5>' After;
 	if not within Preformatted Create '\12' After;
 	END;
 
  H6:	BEGIN
 	if not within Preformatted and not first Create '\12';
-	Create '<h6';
+	create SOT;
+	Create 'h6';
 	Create Attributes;
 	Create '>';
-	Create '</h6>' After;
+	create SCT after;
+	Create 'h6>' After;
 	if not within Preformatted Create '\12' After;
 	END;
 
  BaseFont:
 	BEGIN
-	Create '<basefont';
+	create SOT;
+	Create 'basefont';
 	Remove;
 	Create Attributes;
 #ifdef XML
@@ -238,7 +271,8 @@ RULES
 	END;
 
  BR:	BEGIN
-	Create '<br';
+	create SOT;
+	Create 'br';
 	Remove;
 	Create Attributes;
 #ifdef XML
@@ -250,156 +284,199 @@ RULES
 
  Italic_text:
 	BEGIN
-	Create '<i';
+	create SOT;
+	Create 'i';
 	Create Attributes;
 	Create '>';
-	Create '</i>' After;
+	create SCT after;
+	Create 'i>' After;
 	END;
 
  Bold_text:
 	BEGIN
-	Create '<b';
+	create SOT;
+	Create 'b';
 	Create Attributes;
 	Create '>';
-	Create '</b>' After;
+	create SCT after;
+	Create 'b>' After;
 	END;
  Teletype_text:
 	BEGIN
-	Create '<tt';
+	create SOT;
+	Create 'tt';
 	Create Attributes;
 	Create '>';
-	Create '</tt>' After;
+	create SCT after;
+	Create 'tt>' After;
 	END;
  Underlined_text:
 	BEGIN
-	Create '<u';
+	create SOT;
+	Create 'u';
 	Create Attributes;
 	Create '>';
-	Create '</u>' After;
+	create SCT after;
+	Create 'u>' After;
 	END;
  Struck_text:
 	BEGIN
-	Create '<strike';
+	create SOT;
+	Create 'strike';
 	Create Attributes;
 	Create '>';
-	Create '</strike>' After;
+	create SCT after;
+	Create 'strike>' After;
 	END;
  Big_text:
 	BEGIN
-	Create '<big';
+	create SOT;
+	Create 'big';
 	Create Attributes;
 	Create '>';
-	Create '</big>' After;
+	create SCT after;
+	Create 'big>' After;
 	END;
  Small_text:
 	BEGIN
-	Create '<small';
+	create SOT;
+	Create 'small';
 	Create Attributes;
 	Create '>';
-	Create '</small>' After;
+	create SCT after;
+	Create 'small>' After;
 	END;
  Subscript:
 	BEGIN
-	Create '<sub';
+	create SOT;
+	Create 'sub';
 	Create Attributes;
 	Create '>';
-	Create '</sub>' After;
+	create SCT after;
+	Create 'sub>' After;
 	END;
  Superscript:
 	BEGIN
-	Create '<sup';
+	create SOT;
+	Create 'sup';
 	Create Attributes;
 	Create '>';
-	Create '</sup>' After;
+	create SCT after;
+	Create 'sup>' After;
 	END;
 
  Emphasis:
 	BEGIN
-	Create '<em';
+	create SOT;
+	Create 'em';
 	Create Attributes;
 	Create '>';
-	Create '</em>' After;
+	create SCT after;
+	Create 'em>' After;
 	END;
  Strong:
 	BEGIN
-	Create '<strong';
+	create SOT;
+	Create 'strong';
 	Create Attributes;
 	Create '>';
-	Create '</strong>' After;
+	create SCT after;
+	Create 'strong>' After;
 	END;
  Def:
 	BEGIN
-	Create '<dfn';
+	create SOT;
+	Create 'dfn';
 	Create Attributes;
 	Create '>';
-	Create '</dfn>' After;
+	create SCT after;
+	Create 'dfn>' After;
 	END;
  Code:
 	BEGIN
-	Create '<code';
+	create SOT;
+	Create 'code';
 	Create Attributes;
 	Create '>';
-	Create '</code>' After;
+	create SCT after;
+	Create 'code>' After;
 	END;
  Sample:
 	BEGIN
-	Create '<samp';
+	create SOT;
+	Create 'samp';
 	Create Attributes;
 	Create '>';
-	Create '</samp>' After;
+	create SCT after;
+	Create 'samp>' After;
 	END;
  Keyboard:
 	BEGIN
-	Create '<kbd';
+	create SOT;
+	Create 'kbd';
 	Create Attributes;
 	Create '>';
-	Create '</kbd>' After;
+	create SCT after;
+	Create 'kbd>' After;
 	END;
  Variable_:
 	BEGIN
-	Create '<var';
+	create SOT;
+	Create 'var';
 	Create Attributes;
 	Create '>';
-	Create '</var>' After;
+	create SCT after;
+	Create 'var>' After;
 	END;
  Cite:
 	BEGIN
-	Create '<cite';
+	create SOT;
+	Create 'cite';
 	Create Attributes;
 	Create '>';
-	Create '</cite>' After;
+	create SCT after;
+	Create 'cite>' After;
 	END;
  ABBR:
 	BEGIN
-	Create '<abbr';
+	create SOT;
+	Create 'abbr';
 	Create Attributes;
 	Create '>';
-	Create '</abbr>' After;
+	create SCT after;
+	Create 'abbr>' After;
 	END;
  ACRONYM:
 	BEGIN
-	Create '<acronym';
+	create SOT;
+	Create 'acronym';
 	Create Attributes;
 	Create '>';
-	Create '</acronym>' After;
+	create SCT after;
+	Create 'acronym>' After;
 	END;
 
  Font_: BEGIN
-	Create '<font';
+	create SOT;
+	Create 'font';
 	Create Attributes;
 	Create '>';
-	Create '</font>' After;
+	create SCT after;
+	Create 'font>' After;
 	END;
 
  Applet: BEGIN
-	Create '<applet';
+	create SOT;
+	Create 'applet';
 	Create Attributes;
 	Create '>\12';
-	Create '</applet>\12' After;	
+	create SCT after;
+	Create 'applet>\12' After;	
 	END;
 
  Parameter: BEGIN
-	Create '<param';
+	create SOT;
+	Create 'param';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -410,56 +487,70 @@ RULES
 	END;
 
  Object: BEGIN
-	Create '<object';
+	create SOT;
+	Create 'object';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</object>\12' After;	
+	create SCT after;
+	Create 'object>\12' After;	
 	END;
 
  INS:	BEGIN
-	Create '<ins';
+	create SOT;
+	Create 'ins';
 	Create Attributes;
 	Create '>';
-	Create '</ins>' After;
+	create SCT after;
+	Create 'ins>' After;
 	END;
 
  DEL:	BEGIN
-	Create '<del';
+	create SOT;
+	Create 'del';
 	Create Attributes;
 	Create '>';
-	Create '</del>' After;
+	create SCT after;
+	Create 'del>' After;
 	END;
 
  Span:	BEGIN
-	Create '<span';
+	create SOT;
+	Create 'span';
 	Create Attributes;
 	Create '>';
-	Create '</span>' After;
+	create SCT after;
+	Create 'span>' After;
 	END;
 
  Quotation: BEGIN
-	Create '<q';
+	create SOT;
+	Create 'q';
 	Create Attributes;
 	Create '>';
-	Create '</q>' After;
+	create SCT after;
+	Create 'q>' After;
 	END;
 
  BDO: BEGIN
-	Create '<bdo';
+	create SOT;
+	Create 'bdo';
 	Create Attributes;
 	Create '>';
-	Create '</bdo>' After;
+	create SCT after;
+	Create 'bdo>' After;
 	END;
 
  Paragraph: BEGIN
 	if not within List_Item and not within Definition and not first
 		Create '\12';
-	Create '<p';
+	create SOT;
+	Create 'p';
 	Create Attributes;
 	Create '>';
-	Create '</p>\12' After;
+	create SCT after;
+	Create 'p>\12' After;
 	END;
 
  Pseudo_paragraph: BEGIN
@@ -472,98 +563,120 @@ RULES
 	END;
 
  Definition_List: BEGIN
-	Create '<dl';
+	create SOT;
+	Create 'dl';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</dl>\12' After;
+	create SCT after;
+	Create 'dl>\12' After;
 	END;
 
  Term:	BEGIN
-	Create '<dt';
+	create SOT;
+	Create 'dt';
 	Create Attributes;
 	Create '>';
-	Create '</dt>\12' After;
+	create SCT after;
+	Create 'dt>\12' After;
 	END;
 
  Definition: BEGIN
 	Indent +2;
-	Create '<dd';
+	create SOT;
+	Create 'dd';
 	Create Attributes;
 	Create '>';
 	Indent +2;
 	Indent -2 After;
-	Create '</dd>\12' After;
+	create SCT after;
+	Create 'dd>\12' After;
 	Indent -2 After;
 	END;
 
  Unnumbered_List: BEGIN
-	Create '<ul';
+	create SOT;
+	Create 'ul';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</ul>\12' After;
+	create SCT after;
+	Create 'ul>\12' After;
 	END;
 
  Numbered_List:	BEGIN
-	Create '<ol';
+	create SOT;
+	Create 'ol';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</ol>\12' After;
+	create SCT after;
+	Create 'ol>\12' After;
 	END;
 
  Address: BEGIN
-	Create '<address';
+	create SOT;
+	Create 'address';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '\12</address>\12' After;
+	Create '\12' After;
+	create SCT after;
+	Create 'address>\12' After;
 	END;
 
  Menu:	BEGIN
-	Create '<menu';
+	create SOT;
+	Create 'menu';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</menu>\12' After;
+	create SCT after;
+	Create 'menu>\12' After;
 	END;
 
  Directory: BEGIN
-	Create '<dir';
+	create SOT;
+	Create 'dir';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</dir>\12' After;
+	create SCT after;
+	Create 'dir>\12' After;
 	END;
 
  List_Item: BEGIN
-	Create '<li';
+	create SOT;
+	Create 'li';
 	Create Attributes;
 	Create '>';
 	Indent +2;
 	Indent -2 After;
-	Create '</li>\12' After;
+	create SCT after;
+	Create 'li>\12' After;
 	END;
 
  Preformatted: BEGIN
 	NoLineBreak;
-	Create '<pre';
+	create SOT;
+	Create 'pre';
 	Create Attributes;
 	Create '>';
 	Indent Suspend;
         Indent Resume After;
-	Create '</pre>\12' After;
+	create SCT after;
+	Create 'pre>\12' After;
 	END;
 
  Horizontal_Rule: BEGIN
-	Create '<hr';
+	create SOT;
+	Create 'hr';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -574,78 +687,103 @@ RULES
 	END;
 
  Form: BEGIN
-	Create '\12<form';
+	Create '\12';
+	create SOT;
+	Create 'form';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</form>\12' After;
+	create SCT after;
+	Create 'form>\12' After;
 	END;
 
  Option_Menu: BEGIN
-	Create '\12<select';
+	Create '\12';
+	create SOT;
+	Create 'select';
 	Create Attributes;
 	Create '>';
 	Indent +2;
 	Indent -2 After;
-	Create '\12</select>\12' After;
+	Create '\12' after;
+	create SCT after;
+	Create 'select>\12' After;
 	END;
 
  Option: BEGIN
-	Create '\12<option';
+	Create '\12';
+	create SOT;
+	Create 'option';
 	Create Attributes;
 	Create '>';
-	Create '</option>' After;
+	create SCT after;
+	Create 'option>' After;
 	END;
 
  OptGroup: BEGIN
-	Create '\12<optgroup';
+	Create '\12';
+	create SOT;
+	Create 'optgroup';
 	Create Attributes;
 	Create '>';
 	Indent +2;
 	Indent -2 After;
-	Create '\12</optgroup>' After;
+	Create '\12' after;
+	create SCT after;
+	Create 'optgroup>' After;
 	END;
 
  Text_Area: BEGIN
-	Create '<textarea';
+	create SOT;
+	Create 'textarea';
 	Create Attributes;
 	Create '>';
-	Create '</textarea>' After;
+	create SCT after;
+	Create 'textarea>' After;
 	END;
 
  FIELDSET: BEGIN
-	Create '<fieldset';
+	create SOT;
+	Create 'fieldset';
 	Create Attributes;
 	Create '>\12';
         Indent +2;
         Indent -2 After;
-	Create '</fieldset>\12' After;
+	create SCT after;
+	Create 'fieldset>\12' After;
 	END;
 
  LEGEND: BEGIN
-	Create '<legend';
+	create SOT;
+	Create 'legend';
 	Create Attributes;
 	Create '>';
-	Create '</legend>' After;
+	create SCT after;
+	Create 'legend>' After;
 	END;
 
  LABEL: BEGIN
-	Create '<label';
+	create SOT;
+	Create 'label';
 	Create Attributes;
 	Create '>';
-	Create '</label>' After;
+	create SCT after;
+	Create 'label>' After;
 	END;
 
  BUTTON_: BEGIN
-	Create '<button';
+	create SOT;
+	Create 'button';
 	Create Attributes;
 	Create '>';
-	Create '</button>' After;
+	create SCT after;
+	Create 'button>' After;
 	END;
 
  Checkbox_Input: BEGIN
-	Create '<input type="checkbox"';
+	create SOT;
+	Create 'input type="checkbox"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -656,7 +794,8 @@ RULES
 	END;
 
  Radio_Input: BEGIN
-	Create '<input type="radio"';
+	create SOT;
+	Create 'input type="radio"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -667,7 +806,8 @@ RULES
 	END;
 
  Text_Input: BEGIN
-	Create '<input type="text"';
+	create SOT;
+	Create 'input type="text"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -678,7 +818,8 @@ RULES
 	END;
 
  Hidden_Input: BEGIN
-	Create '<input type="hidden"';
+	create SOT;
+	Create 'input type="hidden"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -689,7 +830,8 @@ RULES
 	END;
 
  Password_Input: BEGIN
-	Create '<input type="password"';
+	create SOT;
+	Create 'input type="password"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -700,7 +842,8 @@ RULES
 	END;
 
  File_Input: BEGIN
-	Create '<input type="file"';
+	create SOT;
+	Create 'input type="file"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -711,7 +854,9 @@ RULES
 	END;
 
  Reset_Input: BEGIN
-	Create '\12<input type="reset"';
+	Create '\12';
+	create SOT;
+	Create 'input type="reset"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -722,7 +867,9 @@ RULES
 	END;
 
  Submit_Input: BEGIN
-	Create '\12<input type="submit"';
+	Create '\12';
+	create SOT;
+	Create 'input type="submit"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -733,7 +880,9 @@ RULES
 	END;
 
  Button_Input: BEGIN
-	Create '\12<input type="button"';
+	Create '\12';
+	create SOT;
+	Create 'input type="button"';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -744,17 +893,21 @@ RULES
 	END;
 
  Block_Quote: BEGIN
-	Create '\12<blockquote';
+	Create '\12';
+	create SOT;
+	Create 'blockquote';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</blockquote>\12' After;
+	create SCT after;
+	Create 'blockquote>\12' After;
 	END;
 
  PICTURE_UNIT: BEGIN
 	if IsInput BEGIN
-		Create '<input type="image"';
+	        create SOT;
+		Create 'input type="image"';
 		Create Attributes;
 #ifdef XML
 		Create ' />';
@@ -765,7 +918,8 @@ RULES
 	if Immediately within Object
 		Remove;
 	if NOT Immediately within Object AND NOT IsInput BEGIN
-		Create '<img';
+	        create SOT;
+		Create 'img';
 		Create Attributes;
 #ifdef XML
 		Create ' />';
@@ -780,7 +934,8 @@ RULES
 
  SVG_Image: BEGIN
 	if IsInput BEGIN
-		Create '<input type="image"';
+	        create SOT;
+		Create 'input type="image"';
 		Create Attributes;
 #ifdef XML
 		Create ' />';
@@ -791,7 +946,8 @@ RULES
 	if Immediately within Object
 		Remove;
 	if NOT Immediately within Object AND NOT IsInput BEGIN
-		Create '<img';
+	        create SOT;
+		Create 'img';
 		Create Attributes;
 #ifdef XML
 		Create ' />';
@@ -810,7 +966,8 @@ RULES
 
  Embed_: BEGIN
 	if NOT Immediately within Object AND NOT IsInput BEGIN
-		Create '<embed';
+	        create SOT;
+		Create 'embed';
 		Create Attributes;
 		Create ' />';
 		END;
@@ -824,35 +981,42 @@ RULES
 	END;
 
  Anchor: BEGIN
-	 Create '<a';
+	 create SOT;
+	 Create 'a';
 	 Create Attributes;
 	 Create '>';
-	 Create '</a>' After;
+  	 create SCT after;
+	 Create 'a>' After;
 	 END;
 
  MAP:
 	BEGIN
-	Create '<map';
+	create SOT;
+	Create 'map';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</map>\12' After;
+  	create SCT after;
+	Create 'map>\12' After;
 	END;
 
  map:
 	BEGIN
-	Create '<map';
+	create SOT;
+	Create 'map';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 After;
-	Create '</map>\12' After;
+  	create SCT after;
+	Create 'map>\12' After;
 	END;
 
  AREA:
 	BEGIN
-	Create '<area';
+	create SOT;
+	Create 'area';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -866,35 +1030,43 @@ RULES
 
  Table:
 	BEGIN
-	Create '\12<table';
+	Create '\12';
+	create SOT;
+	Create 'table';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 after;
-	Create '</table>\12' after;
+  	create SCT after;
+	Create 'table>\12' after;
 	END;
 
  CAPTION:
 	BEGIN
-	Create '<caption';
+	create SOT;
+	Create 'caption';
 	Create Attributes;
 	Create '>';
-	Create '</caption>\12' after;
+  	create SCT after;
+	Create 'caption>\12' after;
 	END;
 
  COLGROUP:
 	BEGIN
-	Create '<colgroup';
+	create SOT;
+	Create 'colgroup';
 	Create Attributes;
 	Create '>';
 	Indent +2;
 	Indent -2 after;
-	Create '</colgroup>\12' after;
+  	create SCT after;
+	Create 'colgroup>\12' after;
 	END;
 
  COL:
 	BEGIN
-	Create '<col';
+	create SOT;
+	Create 'col';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -909,32 +1081,38 @@ RULES
 
  thead:
 	BEGIN
-	Create '<thead';
+	create SOT;
+	Create 'thead';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 after;
-	Create '</thead>\12' after;
+  	create SCT after;
+	Create 'thead>\12' after;
 	END;
 
  tfoot:
 	BEGIN
-	Create '<tfoot';
+	create SOT;
+	Create 'tfoot';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 after;
-	Create '</tfoot>\12' after;
+  	create SCT after;
+	Create 'tfoot>\12' after;
 	END;
 
  tbody:
 	BEGIN
-	Create '<tbody';
+	create SOT;
+	Create 'tbody';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 after;
-	Create '</tbody>\12' after;
+  	create SCT after;
+	Create 'tbody>\12' after;
 	END;
 
  Table_body:
@@ -942,32 +1120,38 @@ RULES
 
  Table_row:
 	BEGIN
-	Create '<tr';
+	create SOT;
+	Create 'tr';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2 after;
-	Create '</tr>\12' after;
+  	create SCT after;
+	Create 'tr>\12' after;
 	END;
 
  Data_cell:
 	BEGIN
-	Create '<td';
+	create SOT;
+	Create 'td';
 	Create Attributes;
 	Create '>';
 	Indent +2;
 	Indent -2 after;
-	Create '</td>\12' after;
+  	create SCT after;
+	Create 'td>\12' after;
 	END;
 
  Heading_cell:
 	BEGIN
-	Create '<th';
+	create SOT;
+	Create 'th';
 	Create Attributes;
 	Create '>';
 	Indent +2;
 	Indent -2 after;
-	Create '</th>\12' after;
+  	create SCT after;
+	Create 'th>\12' after;
 	END;
 
  Table_foot:
@@ -976,24 +1160,33 @@ RULES
 	END;
 
  Division: BEGIN
-	Create '\12<div';
+	Create '\12';
+	create SOT;
+	Create 'div';
 	Create Attributes;
 	Create '>\12';
-	Create '</div>\12' After;
+  	create SCT after;
+	Create 'div>\12' After;
 	END;
 
  Center: BEGIN
-	Create '\12<center';
+	Create '\12';
+	create SOT;
+	Create 'center';
 	Create Attributes;
 	Create '>\12';
-	Create '</center>\12' After;
+  	create SCT after;
+	Create 'center>\12' After;
 	END;
 
  NOSCRIPT: BEGIN
-	Create '\12<noscript';
+	Create '\12';
+	create SOT;
+	Create 'noscript';
 	Create Attributes;
 	Create '>\12';
-	Create '</noscript>\12' After;
+  	create SCT after;
+	Create 'noscript>\12' After;
 	END;
 
  Invalid_element:
@@ -1069,28 +1262,33 @@ RULES
 	if not last create '\12' after;
 
  FRAMESET: BEGIN
-	Create '<frameset';
+	create SOT;
+	Create 'frameset';
 	Create Attributes;
 	Create '>\12';
         indent +2;
         indent -2 after;
-	Create '</frameset>\12' After;
+	create SCT after;
+	Create 'frameset>\12' After;
 	END;
 
  Frames: BEGIN
 	END;
 
  NOFRAMES: BEGIN
-	Create '<noframes';
+	create SOT;
+	Create 'noframes';
 	Create Attributes;
 	Create '>\12';
         indent +2;
         indent -2 after;
-	Create '</noframes>\12' After;
+	create SCT after;
+	Create 'noframes>\12' After;
 	END;
 
  FRAME: BEGIN
-	Create '<frame';
+	create SOT;
+	Create 'frame';
 	Create Attributes;
 	Remove;
 #ifdef XML
@@ -1101,79 +1299,102 @@ RULES
 	END;
 
  IFRAME: BEGIN
-	Create '<iframe';
+	create SOT;
+	Create 'iframe';
 	Create Attributes;
 	Create '>\12';
 	Indent +2;
 	Indent -2;
-	Create '</iframe>\12' After;	
+	create SCT after;
+	Create 'iframe>\12' After;	
 	END;
 
  ruby: BEGIN
-	Create '<ruby';
+	create SOT;
+	Create 'ruby';
 	Create Attributes;
 	Create '>';
-	Create '</ruby>' After;	
+	create SCT after;
+	Create 'ruby>' After;	
 	END;
+
  simple_ruby: BEGIN
-	Create '<ruby';
+	create SOT;
+	Create 'ruby';
 	Create Attributes;
 	Create '>';
-	Create '</ruby>' After;	
+	create SCT after;
+	Create 'ruby>' After;	
 	END;
+
  complex_ruby: BEGIN
-	Create '<ruby';
+	create SOT;
+	Create 'ruby';
 	Create Attributes;
 	Create '>';
-	Create '</ruby>' After;	
+	create SCT after;
+	Create 'ruby>' After;	
 	END;
 
  rb:    BEGIN
-	Create '<rb';
+	create SOT;
+	Create 'rb';
 	Create Attributes;
 	Create '>';
-	Create '</rb>' After;	
+	create SCT after;
+	Create 'rb>' After;	
 	END;
 
  rt:	BEGIN
-	Create '<rt';
+	create SOT;
+	Create 'rt';
 	Create Attributes;
 	Create '>';
-	Create '</rt>' After;	
+	create SCT after;
+	Create 'rt>' After;	
 	END;
 
  rp:	BEGIN
-	Create '<rp';
+	create SOT;
+	Create 'rp';
 	Create Attributes;
 	Create '>';
-	Create '</rp>' After;	
+	create SCT after;
+	Create 'rp>' After;	
 	END;
 
  rbc:	BEGIN
-	Create '<rbc';
+	create SOT;
+	Create 'rbc';
 	Create Attributes;
 	Create '>';
-	Create '</rbc>' After;	
+	create SCT after;
+	Create 'rbc>' After;	
 	END;
 
  rtc1:	BEGIN
-	Create '<rtc';
+	create SOT;
+	Create 'rtc';
 	Create Attributes;
 	Create '>';
-	Create '</rtc>' After;	
+	create SCT after;
+	Create 'rtc>' After;	
 	END;
 
  rtc2:	BEGIN
-	Create '<rtc';
+	create SOT;
+	Create 'rtc';
 	Create Attributes;
 	Create '>';
-	Create '</rtc>' After;	
+	create SCT after;
+	Create 'rtc>' After;	
 	END;
 
 ATTRIBUTES
 
  profile: BEGIN
-	Create ' profile="';
+        create SAN;
+	Create 'profile="';
 	Create profile;
 	Create DoubleQuote;
 	END;
@@ -1209,374 +1430,483 @@ ATTRIBUTES
 	END;
 
  content_type: BEGIN
-	Create ' type="';
+        create SAN;
+	Create 'type="';
 	Create content_type;
 	Create DoubleQuote;
 	END;
 
  script_src: BEGIN
-	Create ' src="';
+        create SAN;
+	Create 'src="';
 	Create script_src;
 	Create DoubleQuote;
 	END;
 
  defer: BEGIN
-	Create ' defer="defer"';
+        create SAN;
+	Create 'defer="defer"';
 	END;
 
  event: BEGIN
-	Create ' event="';
+        create SAN;
+	Create 'event="';
 	Create event;
 	Create DoubleQuote;
 	END;
 
  for_: BEGIN
-	Create ' for="';
+        create SAN;
+	Create 'for="';
 	Create for_;
 	Create DoubleQuote;
 	END;
 
  http_equiv: BEGIN
-	Create ' http-equiv="';
+        create SAN;
+	Create 'http-equiv="';
 	Create http_equiv;
 	Create DoubleQuote;
 	END;
 
  meta_name: BEGIN
-	Create ' name="';
+        create SAN;
+	Create 'name="';
 	Create meta_name;
 	Create DoubleQuote;
 	END;
 
  meta_content: BEGIN
-	Create ' content="';
+        create SAN;
+	Create 'content="';
 	Create Translated meta_content;
 	Create DoubleQuote;
 	END;
 
  scheme: BEGIN
-	Create ' scheme="';
+        create SAN;
+	Create 'scheme="';
 	Create scheme;
 	Create DoubleQuote;
 	END;
 
  charset: BEGIN
-	Create ' charset="';
+        create SAN;
+	Create 'charset="';
 	Create charset;
 	Create DoubleQuote;
 	END;
 
  REL:	BEGIN
-	Create ' rel="';
+        create SAN;
+	Create 'rel="';
 	Create REL;
 	Create DoubleQuote;
 	END;
 
  REV:	BEGIN
-	Create ' rev="';
+        create SAN;
+	Create 'rev="';
 	Create REV;
 	Create DoubleQuote;
 	END;
 
  HREF_ :
 	BEGIN
-	Create ' href="';
+        create SAN;
+	Create 'href="';
 	Create Translated HREF_;
 	Create DoubleQuote;
 	END;
 
  hreflang :
 	BEGIN
-	Create ' hreflang="';
+        create SAN;
+	Create 'hreflang="';
 	Create hreflang;
 	Create DoubleQuote;
 	END;
 
  media :
 	BEGIN
-	Create ' media="';
+        create SAN;
+	Create 'media="';
 	Create media;
 	Create DoubleQuote;
 	END;
 
  target_ :
 	BEGIN
-	Create ' target="';
+        create SAN;
+	Create 'target="';
 	Create Translated target_;
 	Create DoubleQuote;
 	END;
 
  cite:
 	BEGIN
-	Create ' cite="';
+        create SAN;
+	Create 'cite="';
 	Create Translated cite;
 	Create DoubleQuote;
 	END;
 
  datetime:
 	BEGIN
-	Create ' datetime="';
+        create SAN;
+	Create 'datetime="';
 	Create datetime;
 	Create DoubleQuote;
 	END;
 
  background_ :
 	BEGIN
-	Create ' background="';
+        create SAN;
+	Create 'background="';
 	Create Translated background_;
 	Create DoubleQuote;
 	END;
 
  BackgroundColor :
 	BEGIN
-	Create ' bgcolor="';
+        create SAN;
+	Create 'bgcolor="';
 	Create BackgroundColor;
 	Create DoubleQuote;
 	END;
 
  TextColor :
 	BEGIN
-	Create ' text="';
+        create SAN;
+	Create 'text="';
 	Create TextColor;
 	Create DoubleQuote;
 	END;
 
  LinkColor :
 	BEGIN
-	Create ' link="';
+        create SAN;
+	Create 'link="';
 	Create LinkColor;
 	Create DoubleQuote;
 	END;
 
  VisitedLinkColor :
 	BEGIN
-	Create ' vlink="';
+        create SAN;
+	Create 'vlink="';
 	Create VisitedLinkColor;
 	Create DoubleQuote;
 	END;
 
  ActiveLinkColor :
 	BEGIN
-	Create ' alink="';
+        create SAN;
+	Create 'alink="';
 	Create ActiveLinkColor;
 	Create DoubleQuote;
 	END;
 
  BaseFontSize:
 	BEGIN
-	Create ' size="';
+        create SAN;
+	Create 'size="';
 	Create BaseFontSize;
 	Create DoubleQuote;
 	END;
 
  BaseFontColor:
 	BEGIN
-	Create ' color="';
+        create SAN;
+	Create 'color="';
 	Create BaseFontColor;
 	Create DoubleQuote;
 	END;
 
  BaseFontFace:
 	BEGIN
-	Create ' face="';
+        create SAN;
+	Create 'face="';
 	Create BaseFontFace;
 	Create DoubleQuote;
 	END;
 
  Font_size :
 	BEGIN
-	Create ' size="';
+        create SAN;
+	Create 'size="';
 	Create Font_size;
 	Create DoubleQuote;
 	END;
 
  color :
 	BEGIN
-	Create ' color="';
+        create SAN;
+	Create 'color="';
 	Create color;
 	Create DoubleQuote;
 	END;
 
  face :
 	BEGIN
-	Create ' face="';
+        create SAN;
+	Create 'face="';
 	Create face;
 	Create DoubleQuote;
 	END;
 
  Clear = Left_:
-	Create ' clear="left"';
+	BEGIN
+        create SAN;
+	Create 'clear="left"';
+	END;
  Clear = Right_:
-	Create ' clear="right"';
+	BEGIN
+        create SAN;
+	Create 'clear="right"';
+	END;
  Clear = All_:
-	Create ' clear="all"';
+	BEGIN
+        create SAN;
+	Create 'clear="all"';
+	END;
  Clear = None_:
-	Create ' clear="none"';
+	BEGIN
+        create SAN;
+	Create 'clear="none"';
+	END;
 
  Align = left_:
-	Create ' align="left"';
+	BEGIN
+        create SAN;
+	Create 'align="left"';
+	END;
  Align = center_:
-	Create ' align="center"';
+	BEGIN
+        create SAN;
+	Create 'align="center"';
+	END;
  Align = right_:
-	Create ' align="right"';
+	BEGIN
+        create SAN;
+	Create 'align="right"';
+	END;
 
  TextAlign = left_:
-	Create ' align="left"';
+	BEGIN
+        create SAN;
+	Create 'align="left"';
+	END;
  TextAlign = center_:
-	Create ' align="center"';
+	BEGIN
+        create SAN;
+	Create 'align="center"';
+	END;
  TextAlign = right_:
-	Create ' align="right"';
+	BEGIN
+        create SAN;
+	Create 'align="right"';
+	END;
  TextAlign = justify_:
-	Create ' align="justify"';
+	BEGIN
+        create SAN;
+	Create 'align="justify"';
+	END;
 
  NoShade:
-	Create ' noshade="noshade"';
+	BEGIN
+        create SAN;
+	Create 'noshade="noshade"';
+	END;
 
  Size_: BEGIN
-	Create ' size="';
+        create SAN;
+	Create 'size="';
 	Create Size_;
 	Create DoubleQuote;
 	END;
 
  Width__: BEGIN
-	Create ' width="';
+        create SAN;
+	Create 'width="';
 	Create Width__;
 	Create DoubleQuote;
 	END;
 
  declare:
-	Create ' declare="declare"';
+	BEGIN
+        create SAN;
+	Create 'declare="declare"';
+	END;
 
  codebase: BEGIN
-	Create ' codebase="';
+        create SAN;
+	Create 'codebase="';
 	Create codebase;
 	Create DoubleQuote;
 	END;
 
  code:	BEGIN
-	Create ' code="';
+        create SAN;
+	Create 'code="';
 	Create code;
 	Create DoubleQuote;
 	END;
 
  object: BEGIN
-	Create ' object="';
+        create SAN;
+	Create 'object="';
 	Create object;
 	Create DoubleQuote;
 	END;
 
  applet_name: BEGIN
-	Create ' name="';
+        create SAN;
+	Create 'name="';
 	Create applet_name;
 	Create DoubleQuote;
 	END;
 
  Param_name: BEGIN
-	Create ' name="';
+        create SAN;
+	Create 'name="';
 	Create Param_name;
 	Create DoubleQuote;
 	END;
 
  Param_value: BEGIN
-	Create ' value="';
+        create SAN;
+	Create 'value="';
 	Create Param_value;
 	Create DoubleQuote;
 	END;
 
  valuetype = data_:
-	Create ' valuetype="data"';
+        BEGIN
+        create SAN;
+	Create 'valuetype="data"';
+	END;
  valuetype = ref:
-	Create ' valuetype="ref"';
+        BEGIN
+        create SAN;
+	Create 'valuetype="ref"';
+	END;
  valuetype = object_:
-	Create ' valuetype="object"';
+        BEGIN
+        create SAN;
+	Create 'valuetype="object"';
+	END;
 
  Param_type: BEGIN
-	Create ' type="';
+        create SAN;
+	Create 'type="';
 	Create Param_type;
 	Create DoubleQuote;
 	END;
 
  classid: BEGIN
-	Create ' classid="';
+        create SAN;
+	Create 'classid="';
 	Create classid;
 	Create DoubleQuote;
 	END;
 
  data: BEGIN
-	Create ' data="';
+        create SAN;
+	Create 'data="';
 	Create data;
 	Create DoubleQuote;
 	END;
 
  Object_type: BEGIN
-	Create ' type="';
+        create SAN;
+	Create 'type="';
 	Create Object_type;
 	Create DoubleQuote;
 	END;
 
  Embed_type: BEGIN
-	Create ' type="';
+        create SAN;
+	Create 'type="';
 	Create Embed_type;
 	Create DoubleQuote;
 	END;
 
  Link_type: BEGIN
-	Create ' type="';
+        create SAN;
+	Create 'type="';
 	Create Link_type;
 	Create DoubleQuote;
 	END;
 
  codetype: BEGIN
-	Create ' codetype="';
+        create SAN;
+	Create 'codetype="';
 	Create codetype;
 	Create DoubleQuote;
 	END;
 
  archive: BEGIN
-	Create ' archive="';
+        create SAN;
+	Create 'archive="';
 	Create archive;
 	Create DoubleQuote;
 	END;
 
  standby: BEGIN
-	Create ' standby="';
+        create SAN;
+	Create 'standby="';
 	Create standby;
 	Create DoubleQuote;
 	END;
 
  Title : BEGIN
-	Create ' title="';
+        create SAN;
+	Create 'title="';
 	Create Translated Title;
 	Create DoubleQuote;
 	END;
 
  accesskey: BEGIN
-	Create ' accesskey="';
+        create SAN;
+	Create 'accesskey="';
 	Create accesskey;
 	Create DoubleQuote;
 	END;
 
  tabindex: BEGIN
-	Create ' tabindex="';
+        create SAN;
+	Create 'tabindex="';
 	Create tabindex;
 	Create DoubleQuote;
 	END;
 
  Associated_control: BEGIN
-	Create ' for="';
+        create SAN;
+	Create 'for="';
 	Create Associated_control;
 	Create DoubleQuote;
 	END;
 
  Button_type = button:
-	Create ' type="button"';
+        BEGIN
+        create SAN;
+	Create 'type="button"';
+	END;
  Button_type = submit:
-	Create ' type="submit"';
+        BEGIN
+        create SAN;
+	Create 'type="submit"';
+	END;
  Button_type = reset:
-	Create ' type="reset"';
+        BEGIN
+        create SAN;
+	Create 'type="reset"';
+	END;
 
  Class: BEGIN
-	Create ' class="';
+        create SAN;
+	Create 'class="';
 	Create Class;
 	Create DoubleQuote;
 	END;
@@ -1584,307 +1914,426 @@ ATTRIBUTES
  Style\240: BEGIN
 	IF not Within HEAD
 	    BEGIN
-	    Create ' style="';
+            create SAN;
+	    Create 'style="';
 	    Create Style\240;
 	    Create DoubleQuote;
 	    END;
 	END;
 
  ID:	BEGIN
-	Create ' id="';
+        create SAN;
+	Create 'id="';
 	Create ID;
 	Create DoubleQuote;
 	END;
 
  dir = ltr_ :
 	if not Document
-	    Create ' dir="ltr"';
+            BEGIN
+            create SAN;
+	    Create 'dir="ltr"';
+	    END;
  dir = rtl_ :
 	if not Document
-	    Create ' dir="rtl"';
+            BEGIN
+            create SAN;
+	    Create 'dir="rtl"';
+	    END;
 
  onclick: BEGIN
-	Create ' onclick="';
+        create SAN;
+	Create 'onclick="';
 	Create onclick;
 	Create DoubleQuote;
 	END;
 
  ondblclick: BEGIN
-	Create ' ondblclick="';
+        create SAN;
+	Create 'ondblclick="';
 	Create ondblclick;
 	Create DoubleQuote;
 	END;
 
  onmousedown: BEGIN
-	Create ' onmousedown="';
+        create SAN;
+	Create 'onmousedown="';
 	Create onmousedown;
 	Create DoubleQuote;
 	END;
 
  onmouseup: BEGIN
-	Create ' onmouseup="';
+        create SAN;
+	Create 'onmouseup="';
 	Create onmouseup;
 	Create DoubleQuote;
 	END;
 
  onmouseover: BEGIN
-	Create ' onmouseover="';
+        create SAN;
+	Create 'onmouseover="';
 	Create onmouseover;
 	Create DoubleQuote;
 	END;
 
  onmousemove: BEGIN
-	Create ' onmousemove="';
+        create SAN;
+	Create 'onmousemove="';
 	Create onmousemove;
 	Create DoubleQuote;
 	END;
 
  onmouseout: BEGIN
-	Create ' onmouseout="';
+        create SAN;
+	Create 'onmouseout="';
 	Create onmouseout;
 	Create DoubleQuote;
 	END;
 
  onkeypress: BEGIN
-	Create ' onkeypress="';
+        create SAN;
+	Create 'onkeypress="';
 	Create onkeypress;
 	Create DoubleQuote;
 	END;
 
  onkeydown: BEGIN
-	Create ' onkeydown="';
+        create SAN;
+	Create 'onkeydown="';
 	Create onkeydown;
 	Create DoubleQuote;
 	END;
 
  onkeyup: BEGIN
-	Create ' onkeyup="';
+        create SAN;
+	Create 'onkeyup="';
 	Create onkeyup;
 	Create DoubleQuote;
 	END;
 
  onload: BEGIN
-	Create ' onload="';
+        create SAN;
+	Create 'onload="';
 	Create onload;
 	Create DoubleQuote;
 	END;
 
  onunload: BEGIN
-	Create ' onunload="';
+        create SAN;
+	Create 'onunload="';
 	Create onunload;
 	Create DoubleQuote;
 	END;
 
  onfocus: BEGIN
-	Create ' onfocus="';
+        create SAN;
+	Create 'onfocus="';
 	Create onfocus;
 	Create DoubleQuote;
 	END;
 
  onblur: BEGIN
-	Create ' onblur="';
+        create SAN;
+	Create 'onblur="';
 	Create onblur;
 	Create DoubleQuote;
 	END;
 
  onsubmit: BEGIN
-	Create ' onsubmit="';
+        create SAN;
+	Create 'onsubmit="';
 	Create onsubmit;
 	Create DoubleQuote;
 	END;
 
  onreset: BEGIN
-	Create ' onreset="';
+        create SAN;
+	Create 'onreset="';
 	Create onreset;
 	Create DoubleQuote;
 	END;
 
  onselect: BEGIN
-	Create ' onselect="';
+        create SAN;
+	Create 'onselect="';
 	Create onselect;
 	Create DoubleQuote;
 	END;
 
  onchange: BEGIN
-	Create ' onchange="';
+        create SAN;
+	Create 'onchange="';
 	Create onchange;
 	Create DoubleQuote;
 	END;
 
  BulletStyle = disc :
-	Create ' type="disc"';
+        BEGIN
+        create SAN;
+	Create 'type="disc"';
+	END;
  BulletStyle = square :
-	Create ' type="square"';
+        BEGIN
+        create SAN;
+	Create 'type="square"';
+	END;
  BulletStyle = circle :
-	Create ' type="circle"';
+        BEGIN
+        create SAN;
+	Create 'type="circle"';
+	END;
 
  COMPACT:
-	Create ' compact="compact"';
+        BEGIN
+        create SAN;
+	Create 'compact="compact"';
+	END;
 
  NumberStyle = Arabic_ :
-	Create ' type="1"';
+        BEGIN
+        create SAN;
+	Create 'type="1"';
+	END;
  NumberStyle = LowerAlpha :
-	Create ' type="a"';
+        BEGIN
+        create SAN;
+	Create 'type="a"';
+	END;
  NumberStyle = UpperAlpha :
-	Create ' type="A"';
+        BEGIN
+        create SAN;
+	Create 'type="A"';
+	END;
  NumberStyle = LowerRoman :
-	Create ' type="i"';
+        BEGIN
+        create SAN;
+	Create 'type="i"';
+	END;
  NumberStyle = UpperRoman :
-	Create ' type="I"';
+        BEGIN
+        create SAN;
+	Create 'type="I"';
+	END;
 
  Start > 1: BEGIN
-	Create ' start="';
+        create SAN;
+	Create 'start="';
 	Create Start;
 	Create DoubleQuote;
 	END;
 
  ItemStyle = disc :
-	Create ' type="disc"';
+        BEGIN
+        create SAN;
+	Create 'type="disc"';
+	END;
  ItemStyle = square :
-	Create ' type="square"';
+        BEGIN
+        create SAN;
+	Create 'type="square"';
+	END;
  ItemStyle = circle :
-	Create ' type="circle"';
+        BEGIN
+        create SAN;
+	Create 'type="circle"';
+	END;
  ItemStyle = Arabic_ :
-	Create ' type="1"';
+        BEGIN
+        create SAN;
+	Create 'type="1"';
+	END;
  ItemStyle = LowerAlpha :
-	Create ' type="a"';
+        BEGIN
+        create SAN;
+	Create 'type="a"';
+	END;
  ItemStyle = UpperAlpha :
-	Create ' type="A"';
+        BEGIN
+        create SAN;
+	Create 'type="A"';
+	END;
  ItemStyle = LowerRoman :
-	Create ' type="i"';
+        BEGIN
+        create SAN;
+	Create 'type="i"';
+	END;
  ItemStyle = UpperRoman :
-	Create ' type="I"';
+        BEGIN
+        create SAN;
+	Create 'type="I"';
+	END;
 
  ItemValue: BEGIN
-	Create ' value="';
+        create SAN;
+	Create 'value="';
 	Create ItemValue;
 	Create DoubleQuote;
 	END;
 
  Script_URL: BEGIN
-	Create ' action="';
+        create SAN;
+	Create 'action="';
 	Create Script_URL;
 	Create DoubleQuote;
 	END;
 
  METHOD=Post_:
-	Create ' method="post"';
+        BEGIN
+        create SAN;
+	Create 'method="post"';
+	END;
 
  METHOD=Get_:
-	Create ' method="get"';
+        BEGIN
+        create SAN;
+	Create 'method="get"';
+	END;
 
  ENCTYPE: BEGIN
-	Create ' enctype="';
+        create SAN;
+	Create 'enctype="';
 	Create ENCTYPE;
 	Create DoubleQuote;
 	END;
 
  accept_charset: BEGIN
-	Create ' accept-charset="';
+        create SAN;
+	Create 'accept-charset="';
 	Create accept_charset;
 	Create DoubleQuote;
 	END;
 
  NAME: BEGIN
 #ifndef XHTML11
-	Create ' name="';
+        create SAN;
+	Create 'name="';
         Create NAME;
         Create DoubleQuote;
 #endif
 #ifdef XML
 	if Anchor and not ID BEGIN
-       		Create ' id="';
+                create SAN;
+       		Create 'id="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
 #endif
 #ifdef XHTML11
 	if map and not ID BEGIN
-       		Create ' id="';
+                create SAN;
+       		Create 'id="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
 	if MAP and not ID BEGIN
-       		Create ' id="';
+                create SAN;
+       		Create 'id="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
 	if not map and not MAP and not Anchor BEGIN
-       		Create ' name="';
+                create SAN;
+       		Create 'name="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
 #endif
 	END;
 
- Multiple:
-	Create ' multiple="multiple"';
+ Multiple: BEGIN
+        create SAN;
+	Create 'multiple="multiple"';
+	END;
 
  MenuSize: BEGIN
-	Create ' size="';
+        create SAN;
+	Create 'size="';
 	Create MenuSize;
 	Create DoubleQuote;
 	END;
 
- Selected:
-	Create ' selected="selected"';
+ Selected: BEGIN
+        create SAN;
+	Create 'selected="selected"';
+	END;
 
  Value_: BEGIN
-	Create ' value="';
+        create SAN;
+	Create 'value="';
 	Create Value_;
 	Create DoubleQuote;
 	END;
 
  Rows: BEGIN
-	Create ' rows="';
+        create SAN;
+	Create 'rows="';
 	Create Rows;
 	Create DoubleQuote;
 	END;
 
  Columns: BEGIN
-	Create ' cols="';
+        create SAN;
+	Create 'cols="';
 	Create Columns;
 	Create DoubleQuote;
 	END;
 
- Checked = Yes_:
-	Create ' checked="checked"';
+ Checked = Yes_: BEGIN
+        create SAN;
+	Create 'checked="checked"';
+	END;
 
- disabled:
-	Create ' disabled="disabled"';
+ disabled: BEGIN
+        create SAN;
+	Create 'disabled="disabled"';
+	END;
 
- readonly:
-	Create ' readonly="readonly"';
+ readonly: BEGIN
+        create SAN;
+	Create 'readonly="readonly"';
+	END;
 
  label: BEGIN
-	Create ' label="';
+        create SAN;
+	Create 'label="';
 	Create label;
 	Create DoubleQuote;
 	END;
 
  accept: BEGIN
-	Create ' accept="';
+        create SAN;
+	Create 'accept="';
 	Create accept;
 	Create DoubleQuote;
 	END;
 
- LAlign = Top_:
-	Create ' align="top"';
- LAlign = Bottom_:
-	Create ' align="bottom"';
- LAlign = Left_:
-	Create ' align="left"';
- LAlign = Right_:
-	Create ' align="right"';
+ LAlign = Top_: BEGIN
+        create SAN;
+	Create 'align="top"';
+	END;
+ LAlign = Bottom_: BEGIN
+        create SAN;
+	Create 'align="bottom"';
+	END;
+ LAlign = Left_: BEGIN
+        create SAN;
+	Create 'align="left"';
+	END;
+ LAlign = Right_: BEGIN
+        create SAN;
+	Create 'align="right"';
+	END;
 
  Area_Size: BEGIN
-	Create ' size="';
+        create SAN;
+	Create 'size="';
 	Create Area_Size;
 	Create DoubleQuote;
 	END;
 
  MaxLength: BEGIN
-	Create ' maxlength="';
+        create SAN;
+	Create 'maxlength="';
 	Create MaxLength;
 	Create DoubleQuote;
 	END;
@@ -1892,7 +2341,8 @@ ATTRIBUTES
  SRC:	BEGIN
 	if not Immediately within Object
 	   BEGIN
-	   Create ' src="';
+           create SAN;
+	   Create 'src="';
 	   Create Translated SRC;
 	   Create DoubleQuote;
 	   END;
@@ -1901,299 +2351,425 @@ ATTRIBUTES
  ALT:	BEGIN
 	if not Immediately within Object
 	   BEGIN
-	   Create ' alt="';
+           create SAN;
+	   Create 'alt="';
 	   Create Translated ALT;
 	   Create DoubleQuote;
 	   END;
 	END;
 
  longdesc: BEGIN
-	Create ' longdesc="';
+        create SAN;
+	Create 'longdesc="';
 	Create longdesc;
 	Create DoubleQuote;
 	END;
 
- Alignment = Top_:
-	Create ' align="top"';
- Alignment = Middle_:
-	Create ' align="middle"';
- Alignment = Bottom_:
-	Create ' align="bottom"';
- Alignment = Left_:
-	Create ' align="left"';
- Alignment = Right_:
-	Create ' align="right"';
+ Alignment = Top_: BEGIN
+        create SAN;
+	Create 'align="top"';
+	END;
+ Alignment = Middle_: BEGIN
+        create SAN;
+	Create 'align="middle"';
+	END;
+ Alignment = Bottom_: BEGIN
+        create SAN;
+	Create 'align="bottom"';
+	END;
+ Alignment = Left_: BEGIN
+        create SAN;
+	Create 'align="left"';
+	END;
+ Alignment = Right_: BEGIN
+        create SAN;
+	Create 'align="right"';
+	END;
 
  Height_: BEGIN
-	Create ' height="';
+        create SAN;
+	Create 'height="';
 	Create Height_;
 	Create DoubleQuote;
 	END;
 
  Img_border: BEGIN
-	Create ' border="';
+        create SAN;
+	Create 'border="';
 	Create Img_border;
 	Create DoubleQuote;
 	END;
 
  hspace: BEGIN
-	Create ' hspace="';
+        create SAN;
+	Create 'hspace="';
 	Create hspace;
 	Create DoubleQuote;
 	END;
 
  vspace: BEGIN
-	Create ' vspace="';
+        create SAN;
+	Create 'vspace="';
 	Create vspace;
 	Create DoubleQuote;
 	END;
 
- ISMAP:
-	Create ' ismap="ismap"';
+ ISMAP: BEGIN
+        create SAN;
+	Create 'ismap="ismap"';
+	END;
 
  USEMAP: BEGIN
-	Create ' usemap="';
+        create SAN;
+	Create 'usemap="';
 	Create USEMAP;
 	Create DoubleQuote;
 	END;
 
- nohref:
-	Create ' nohref="nohref"';
+ nohref: BEGIN
+        create SAN;
+	Create 'nohref="nohref"';
+	END;
 
- shape = rectangle:
-	Create ' shape="rect"';
- shape = circle:
-	Create ' shape="circle"';
- shape = polygon:
-	Create ' shape="poly"';
+ shape = rectangle: BEGIN
+        create SAN;
+	Create 'shape="rect"';
+	END;
+ shape = circle: BEGIN
+        create SAN;
+	Create 'shape="circle"';
+	END;
+ shape = polygon: BEGIN
+        create SAN;
+	Create 'shape="poly"';
+	END;
 
  coords: BEGIN
-	Create ' coords="';
+        create SAN;
+	Create 'coords="';
 	Create coords;
 	Create DoubleQuote;
 	END;
 
  summary: BEGIN
-	Create ' summary="';
+        create SAN;
+	Create 'summary="';
 	Create Translated summary;
 	Create DoubleQuote;
 	END;
 
- frame = void:
-	Create ' frame="void"';
- frame = above:
-	Create ' frame="above"';
- frame = below:
-	Create ' frame="below"';
- frame = hsides:
-	Create ' frame="hsides"';
- frame = lhs:
-	Create ' frame="lhs"';
- frame = rhs:
-	Create ' frame="rhs"';
- frame = vsides:
-	Create ' frame="vsides"';
- frame = box:
-	Create ' frame="box"';
- frame = border:
-	Create ' frame="border"';
- 
- rules_ = none_:
-	Create ' rules="none"';
- rules_ = groups:
-	Create ' rules="groups"';
- rules_ = rows:
-	Create ' rules="rows"';
- rules_ = cols:
-	Create ' rules="cols"';
- rules_ = all:
-	Create ' rules="all"';
+ frame = void: BEGIN
+        create SAN;
+	Create 'frame="void"';
+	END;
+ frame = above: BEGIN
+        create SAN;
+	Create 'frame="above"';
+	END;
+ frame = below: BEGIN
+        create SAN;
+	Create 'frame="below"';
+	END;
+ frame = hsides: BEGIN
+        create SAN;
+	Create 'frame="hsides"';
+	END;
+ frame = lhs: BEGIN
+        create SAN;
+	Create 'frame="lhs"';
+	END;
+ frame = rhs: BEGIN
+        create SAN;
+	Create 'frame="rhs"';
+	END;
+ frame = vsides: BEGIN
+        create SAN;
+	Create 'frame="vsides"';
+	END;
+ frame = box: BEGIN
+        create SAN;
+	Create 'frame="box"';
+	END;
+ frame = border: BEGIN
+        create SAN;
+	Create 'frame="border"';
+ 	END;
+
+ rules_ = none_: BEGIN
+        create SAN;
+	Create 'rules="none"';
+ 	END;
+ rules_ = groups: BEGIN
+        create SAN;
+	Create 'rules="groups"';
+ 	END;
+ rules_ = rows: BEGIN
+        create SAN;
+	Create 'rules="rows"';
+ 	END;
+ rules_ = cols: BEGIN
+        create SAN;
+	Create 'rules="cols"';
+ 	END;
+ rules_ = all: BEGIN
+        create SAN;
+	Create 'rules="all"';
+ 	END;
 
  Border: BEGIN
-	Create ' border="';
+        create SAN;
+	Create 'border="';
 	Create Border;
 	Create DoubleQuote;
 	END;
 
  cellspacing: BEGIN
-	Create ' cellspacing="';
+        create SAN;
+	Create 'cellspacing="';
 	Create cellspacing;
 	Create DoubleQuote;
 	END;
 
  cellpadding: BEGIN
-	Create ' cellpadding="';
+        create SAN;
+	Create 'cellpadding="';
 	Create cellpadding;
 	Create DoubleQuote;
 	END;
 
  datapagesize: BEGIN
-	Create ' datapagesize="';
+        create SAN;
+	Create 'datapagesize="';
 	Create datapagesize;
 	Create DoubleQuote;
 	END;
 
- Position = Position_top:
-	 Create ' align="top"';
- Position = Position_bottom:
-	 Create ' align="bottom"';
- Position = Position_left:
-	 Create ' align="left"';
- Position = Position_right:
-	 Create ' align="right"';
+ Position = Position_top: BEGIN
+         create SAN;
+	 Create 'align="top"';
+	END;
+ Position = Position_bottom: BEGIN
+         create SAN;
+	 Create 'align="bottom"';
+	END;
+ Position = Position_left: BEGIN
+         create SAN;
+	 Create 'align="left"';
+	END;
+ Position = Position_right: BEGIN
+         create SAN;
+	 Create 'align="right"';
+	END;
 
- Row_valign = Row_top:
-	 Create ' valign="top"';
- Row_valign = Row_middle:
-	 Create ' valign="middle"';
- Row_valign = Row_bottom:
-	 Create ' valign="bottom"';
- Row_valign = Row_baseline:
-	 Create ' valign="baseline"';
+ Row_valign = Row_top: BEGIN
+         create SAN;
+	 Create 'valign="top"';
+	END;
+ Row_valign = Row_middle: BEGIN
+         create SAN;
+	 Create 'valign="middle"';
+	END;
+ Row_valign = Row_bottom: BEGIN
+         create SAN;
+	 Create 'valign="bottom"';
+	END;
+ Row_valign = Row_baseline: BEGIN
+         create SAN;
+	 Create 'valign="baseline"';
+	END;
 
  abbr: BEGIN
-	Create ' abbr="';
+        create SAN;
+	Create 'abbr="';
 	Create Translated abbr;
 	Create DoubleQuote;
 	END;
 
  axis: BEGIN
-	Create ' axis="';
+        create SAN;
+	Create 'axis="';
 	Create axis;
 	Create DoubleQuote;
 	END;
 
  headers: BEGIN
-	Create ' headers="';
+        create SAN;
+	Create 'headers="';
 	Create headers;
 	Create DoubleQuote;
 	END;
 
  scope: BEGIN
-	Create ' scope="';
+        create SAN;
+	Create 'scope="';
 	Create scope;
 	Create DoubleQuote;
 	END;
 
  span_: BEGIN
-	Create ' span="';
+        create SAN;
+	Create 'span="';
 	Create span_;
 	Create DoubleQuote;
 	END;
 
  rowspan_: BEGIN
-	Create ' rowspan="';
+        create SAN;
+	Create 'rowspan="';
 	Create rowspan_;
 	Create DoubleQuote;
 	END;
 
  colspan_: BEGIN
-	Create ' colspan="';
+        create SAN;
+	Create 'colspan="';
 	Create colspan_;
 	Create DoubleQuote;
 	END;
 
- Cell_align = Cell_left:
-	Create ' align="left"';
- Cell_align = Cell_center:
-	Create ' align="center"';
- Cell_align = Cell_right:
-	Create ' align="right"';
- Cell_align = Cell_justify:
-	Create ' align="justify"';
- Cell_align = Cell_char:
-	Create ' align="char"';
+ Cell_align = Cell_left: BEGIN
+        create SAN;
+	Create 'align="left"';
+	END;
+ Cell_align = Cell_center: BEGIN
+        create SAN;
+	Create 'align="center"';
+	END;
+ Cell_align = Cell_right: BEGIN
+        create SAN;
+	Create 'align="right"';
+	END;
+ Cell_align = Cell_justify: BEGIN
+        create SAN;
+	Create 'align="justify"';
+	END;
+ Cell_align = Cell_char: BEGIN
+        create SAN;
+	Create 'align="char"';
+	END;
 
  char: BEGIN
-	Create ' char="';
+        create SAN;
+	Create 'char="';
 	Create char;
 	Create DoubleQuote;
 	END;
 
  charoff: BEGIN
-	Create ' charoff="';
+        create SAN;
+	Create 'charoff="';
 	Create charoff;
 	Create DoubleQuote;
 	END;
  
- Cell_valign = Cell_top:
-	Create ' valign="top"';
- Cell_valign = Cell_middle:
-	Create ' valign="middle"';
- Cell_valign = Cell_bottom:
-	Create ' valign="bottom"';
- Cell_valign = Cell_baseline:
-	Create ' valign="baseline"';
+ Cell_valign = Cell_top: BEGIN
+        create SAN;
+	Create 'valign="top"';
+	END;
+ Cell_valign = Cell_middle: BEGIN
+        create SAN;
+	Create 'valign="middle"';
+	END;
+ Cell_valign = Cell_bottom: BEGIN
+        create SAN;
+	Create 'valign="bottom"';
+	END;
+ Cell_valign = Cell_baseline: BEGIN
+        create SAN;
+	Create 'valign="baseline"';
+	END;
 
- No_wrap = no_wrap:
-	Create ' nowrap="nowrap"';
+ No_wrap = no_wrap: BEGIN
+        create SAN;
+	Create 'nowrap="nowrap"';
+	END;
 
  RowHeight: BEGIN
-	Create ' rows="';
+        create SAN;
+	Create 'rows="';
 	Create RowHeight;
 	Create DoubleQuote;
 	END;
 
  ColWidth: BEGIN
-	Create ' cols="';
+        create SAN;
+	Create 'cols="';
 	Create ColWidth;
 	Create DoubleQuote;
 	END;
 
  FrameName: BEGIN
-	Create ' name="';
+        create SAN;
+	Create 'name="';
 	Create FrameName;
 	Create DoubleQuote;
 	END;
 
  FrameSrc: BEGIN
-	Create ' src="';
+        create SAN;
+	Create 'src="';
 	Create FrameSrc;
 	Create DoubleQuote;
 	END;
 
- frameborder = Border1:
-	Create ' frameborder="1"';
- frameborder = Border0:
-	Create ' frameborder="0"';
+ frameborder = Border1: BEGIN
+        create SAN;
+	Create 'frameborder="1"';
+	END;
+ frameborder = Border0: BEGIN
+        create SAN;
+	Create 'frameborder="0"';
+	END;
 
  marginwidth: BEGIN
-	Create ' marginwidth="';
+        create SAN;
+	Create 'marginwidth="';
 	Create marginwidth;
 	Create DoubleQuote;
 	END;
 
  marginheight: BEGIN
-	Create ' marginheight="';
+        create SAN;
+	Create 'marginheight="';
 	Create marginheight;
 	Create DoubleQuote;
 	END;
 
  no_resize: BEGIN
-	Create ' noresize="noresize"';
+        create SAN;
+	Create 'noresize="noresize"';
 	END;
 
- scrolling = Yes_:
-	Create ' scrolling="yes"';
- scrolling = No_:
-	Create ' scrolling="no"';
- scrolling = auto_:
-	Create ' scrolling="auto"';
+ scrolling = Yes_: BEGIN
+        create SAN;
+	Create 'scrolling="yes"';
+	END;
+ scrolling = No_: BEGIN
+        create SAN;
+	Create 'scrolling="no"';
+	END;
+ scrolling = auto_: BEGIN
+        create SAN;
+	Create 'scrolling="auto"';
+	END;
 
  rbspan: BEGIN
-	Create ' rbspan="';
+        create SAN;
+	Create 'rbspan="';
 	Create rbspan;
 	Create DoubleQuote;
 	END;
 
  EmbedHidden: BEGIN
-	Create ' hidden="';
+        create SAN;
+	Create 'hidden="';
 	Create EmbedHidden;
 	Create DoubleQuote;
 	END;
 
  EmbedName: BEGIN
-	Create ' name="';
+        create SAN;
+	Create 'name="';
 	Create EmbedName;
 	Create DoubleQuote;
 	END;

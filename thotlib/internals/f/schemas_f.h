@@ -93,10 +93,12 @@ extern void SetUriSSchema ( PtrSSchema pSSchema,
 extern void ChangeGenericSchemaNames ( char *sSchemaUri,
                                        char *sSchemaName,
                                        PtrDocument pDoc );
-extern void UpdateNamespaceDeclaration ( PtrDocument pDoc,
-                                         PtrElement element,
-                                         char *NsPrefix,
-                                         char *NsUri );
+extern void SetNamespaceDeclaration ( PtrDocument pDoc,
+                                      PtrElement element,
+                                      char *NsPrefix,
+                                      char *NsUri );
+extern void ShowElemNamespaceDeclarations ( PtrDocument pDoc,
+                                            PtrElement element );
 extern char * GiveCurrentNsUri ( PtrDocument pDoc,
                                  PtrElement pEl );
 
@@ -189,10 +191,12 @@ extern void SetUriSSchema (/* PtrSSchema pSSchema,
 extern void ChangeGenericSchemaNames (/* char *sSchemaUri,
                                          char *sSchemaName,
                                          PtrDocument pDoc */);
-extern void UpdateNamespaceDeclaration (/* PtrDocument pDoc,
-                                           PtrElement element,
-                                           char *NsPrefix,
-                                           char *NsUri */);
+extern void SetNamespaceDeclaration (/* PtrDocument pDoc,
+                                        PtrElement element,
+                                        char *NsPrefix,
+                                        char *NsUri */);
+extern void ShowElemNamespaceDeclarations (/* PtrDocument pDoc,
+                                              PtrElement element */);
 extern char * GiveCurrentNsUri (/* PtrDocument pDoc,
                                    PtrElement pEl */);
 

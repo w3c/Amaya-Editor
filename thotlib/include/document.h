@@ -806,17 +806,28 @@ extern void TtaSetDocumentProfile (Document document, int profile);
 
 /*----------------------------------------------------------------------
   TtaSetNamespaceDeclaration
-  Sets one namespace declaration
+  Sets a namespace declaration for an element 
  ----------------------------------------------------------------------*/
-void TtaSetNamespaceDeclaration (Document document, Element element,
+void TtaSetANamespaceDeclaration (Document document, Element element,
 				 char *Ns_Prefix, char *Ns_Uri);
+
+/*----------------------------------------------------------------------
+  TtaFreeElemNamespaceDeclarations
+  Free all the namespaces declarations of a document
+ ----------------------------------------------------------------------*/
+void TtaFreeElemNamespaceDeclarations (Document document, Element element);
 
 /*----------------------------------------------------------------------
   TtaFreeNamespaceDeclarations
   Free all the namespaces declarations of a document
  ----------------------------------------------------------------------*/
-void TtaFreeNamespaceDeclaration (Document document);
+void TtaFreeNamespaceDeclarations (Document document);
 
+/*----------------------------------------------------------------------
+  TtaShowElemNamespaceDeclarations
+  Show the namespaces declarations related to an element
+ ----------------------------------------------------------------------*/
+void TtaShowElemNamespaceDeclarations (Document document, Element element);
 
 /*----------------------------------------------------------------------
   TtaSetUriSSchema

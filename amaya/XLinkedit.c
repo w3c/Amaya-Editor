@@ -8,7 +8,8 @@
 /*
  * This module contains editing functions for handling XLink hypertext links
  *
- * Author: V. Quint
+ * Authors: V. Quint
+ *          L. Carcone (namespaces)
  *
  */
 
@@ -58,26 +59,33 @@ void SetXLinkTypeSimple (Element el, Document doc, ThotBool withUndo)
 void XLinkPasted (NotifyElement *event)
 {
   Document       originDocument;
+  ElementType	 elType;
   AttributeType  attrType;
-  Attribute      attr;
+  Attribute      attr = NULL;
   SSchema        XLinkSchema;
 
-  /* does the pasted element come from another document? */
-  originDocument = (Document) event->position;
-  if (originDocument >= 0 && originDocument != event->document)
-    /* this element has changed document. Check its links */
+  XLinkSchema = TtaGetSSchema ("XLink", event->document);
+  if (XLinkSchema)
     {
-    XLinkSchema = TtaGetSSchema ("XLink", event->document);
-    if (XLinkSchema)
-      {
       /* is there an href attribute from the XLink namespace? */
       attrType.AttrSSchema = XLinkSchema;
       attrType.AttrTypeNum = XLink_ATTR_href_;
       attr = TtaGetAttribute (event->element, attrType);
       if (attr)
-	/* the pasted element has an href attribute. Update the value
-	   of that attribute */
-        ChangeURI (event->element, attr, originDocument, event->document);
-      }
+	{
+	  /* the pasted element has an href attribute */
+	  /* does the pasted element come from another document? */
+	  originDocument = (Document) event->position;
+	  if (originDocument >= 0 && originDocument != event->document)
+	    {
+	      /* Update the value of that attribute */
+	      ChangeURI (event->element, attr, originDocument, event->document);
+	    }
+	  /* Set the XLink namespace declaration */
+	  elType = TtaGetElementType (event->element);
+	  TtaSetUriSSchema (elType.ElSSchema, XLink_URI);
+	  TtaSetANamespaceDeclaration (event->document, event->element, XLink_PREFIX, XLink_URI);   
+	}
     }
+  
 }

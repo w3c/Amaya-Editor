@@ -89,6 +89,9 @@ static ThotBool     ExportCRLF;
 #include "thotmsg_f.h"
 #include "uconvert_f.h"
 
+static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode);
+static char* ExportElemNsPrefix (PtrDocument pDoc, PtrElement pNode);
+static char* ExportAttrNsPrefix (PtrDocument pDoc, PtrElement pNode, PtrAttribute pAttr);
 
 /*----------------------------------------------------------------------
   TtaSetEntityFunction registers the function that gives entity names:
@@ -2032,9 +2035,11 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
    int                 att, nAttr = 0;
 #define MAX_ATTR_TABLE 50
    PtrAttribute        AttrTable[MAX_ATTR_TABLE];
+   char               *ns_prefix, *buffer;
 
    if (*ignoreEl)
       return;
+
    pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
    /* Si on applique les regles "After", on commence par le dernier attribut */
    /* et on traitera les attributs dans l'ordre inverse */
@@ -2051,33 +2056,48 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
    /* parcourt les attributs de l'element */
    while (pAttr != NULL && !*ignoreEl)
      {
-     /* get the next attribute to be processed: an action associated with
-	event AttrExport could remove the current attribute */
-     if (position == TAfter)
-       /* passe a l'attribut precedent de l'element */
-       {
-       if (nAttr > 0)
+       /* get the next attribute to be processed: an action associated with
+	  event AttrExport could remove the current attribute */
+       if (position == TAfter)
+	 /* passe a l'attribut precedent de l'element */
 	 {
-	 nAttr--;
-	 nextAttr = AttrTable[nAttr];
+	   if (nAttr > 0)
+	     {
+	       nAttr--;
+	       nextAttr = AttrTable[nAttr];
+	     }
+	   else
+	     nextAttr = NULL;
 	 }
        else
-	 nextAttr = NULL;
-       }
-     else
-       /* passe a l'attribut suivant de l'element */
-       nextAttr = pAttr->AeNext;
-     /* process the current attribute */
-     pTSch = GetTranslationSchema (pAttr->AeAttrSSchema);
-     if (pTSch != NULL)
-       if (pTSch->TsAttrTRule->TsAttrTransl[pAttr->AeAttrNum - 1]->AtrElemType == 0)
-	 /* les regles de traduction de l'attribut s'appliquent a */
-	 /* n'importe quel type d'element, on les applique */
-	 ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
-			       transChar, lineBreak, pDoc, recordLineNb);
-     /* next attribute to be processed */
-     pAttr = nextAttr;
+	 /* passe a l'attribut suivant de l'element */
+	 nextAttr = pAttr->AeNext;
+       /* process the current attribute */
+       pTSch = GetTranslationSchema (pAttr->AeAttrSSchema);
+       if (pTSch != NULL)
+	 if (pTSch->TsAttrTRule->TsAttrTransl[pAttr->AeAttrNum - 1]->AtrElemType == 0)
+	   {
+	     if (pEl->ElStructSchema != pAttr->AeAttrSSchema)
+	       {
+		 ns_prefix = ExportAttrNsPrefix (pDoc, pEl, pAttr);
+		 if (ns_prefix != NULL)
+		   {
+		     buffer = TtaGetMemory (strlen (ns_prefix) + 2);
+		     strcpy (buffer, ns_prefix);
+		     strcat (buffer, ":");
+		     SetVariableBuffer (pTSch, "AttrPrefixBuffer", buffer);
+		     TtaFreeMemory (buffer);
+		   }
+	       }
+	     /* les regles de traduction de l'attribut s'appliquent a */
+	     /* n'importe quel type d'element, on les applique */
+	     ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
+				   transChar, lineBreak, pDoc, recordLineNb);
+	   }
+       /* next attribute to be processed */
+       pAttr = nextAttr;
      }
+
    /* produit la traduction des attributs des elements ascendants qui */
    /* s'appliquent aux elements du type de notre element */
    pTSch = GetTranslationSchema (pEl->ElStructSchema);
@@ -2570,7 +2590,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      i++;
 	    }
 	  break;
-
 	case ToBuffer:
 	  /* ecriture du contenu d'un buffer */
 	  i = 0;
@@ -2734,6 +2753,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      }
 	  break;
 	case ToAllAttr:
+	  /* Export the namespace declarations associated with  
+	     this element before exporting its attributes */ 
+	  if (!pEl->ElTransAttr)
+	    ExportNsDeclaration (pDoc, pEl);
+
 	  /* produit la traduction de tous les attributs de l'element */
 	  ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, ignoreEl, transChar,
 			  lineBreak, pDoc, recordLineNb);
@@ -3310,16 +3334,17 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 			   ThotBool transChar, ThotBool lineBreak,
 			   ThotBool enforce, ThotBool recordLineNb)
 {
-   PtrElement          pChild;
-   PtrTSchema          pTSch, pTS;
-   PtrSSchema          pSS, pParentSS;
-   PtrSRule            pSRule;
-   NotifyElement       notifyEl;
-   int                 elemType, i;
-   ThotBool            found;
-   ThotBool            removeEl;
-   ThotBool            ignoreEl;
-   ThotBool            withBreak = lineBreak;
+   PtrElement       pChild;
+   PtrTSchema       pTSch, pTS;
+   PtrSSchema       pSS, pParentSS;
+   PtrSRule         pSRule;
+   NotifyElement    notifyEl;
+   int              elemType, i;
+   ThotBool         found;
+   ThotBool         removeEl;
+   ThotBool         ignoreEl;
+   ThotBool         withBreak = lineBreak;
+   char            *ns_prefix, *buffer;
 
    if (!pEl->ElTransContent || enforce)
      {
@@ -3327,6 +3352,27 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
      pTSch = GetTranslationSchema (pEl->ElStructSchema);
      if (pTSch == NULL)	 
 	 return;
+     
+     /* Is this element associated with a prefix ? */
+     /* We search for a prefix :
+           - when the structure schema of pEl is different from its parent's one
+           - if pEl is the (main) root element 
+     */ 
+     if ((pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem) ||
+	 ((pEl->ElParent != NULL) &&
+	  (pEl->ElStructSchema != pEl->ElParent->ElStructSchema)))
+       {
+	 ns_prefix = ExportElemNsPrefix (pDoc, pEl);
+	 if (ns_prefix != NULL)
+	   {
+	     buffer = TtaGetMemory (strlen (ns_prefix) + 2);
+	     strcpy (buffer, ns_prefix);
+	     strcat (buffer, ":");
+	     SetVariableBuffer (pTSch, "ElemPrefixBuffer", buffer);
+	     TtaFreeMemory (buffer);
+	   }
+       }
+
      removeEl = FALSE;
      ignoreEl = FALSE;
      pSS = pEl->ElStructSchema;
@@ -3393,19 +3439,22 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
        /* Cherche et applique les regles de traduction associees au type */
        /* de l'element et qui doivent s'appliquer avant la traduction du */
        /* contenu de l'element */
-
        ApplyElTypeRules (TBefore, &transChar, &withBreak, &removeEl, &ignoreEl,
 			 pEl, elemType, pTSch, pSS, pDoc, recordLineNb);
        /* on ne traduit les attributs que si ce n'est pas deja fait par */
        /* une regle Create Attributes associee au type et si on n'a pas */
        /* rencontre' de re`gle Ignore */
        if (!pEl->ElTransAttr && !ignoreEl)
-	 /* Parcourt les attributs de l'element et applique les regles
-	    des attributs qui doivent ^etre appliquees avant la
-	    traduction du contenu de l'element */
-	 ApplyAttrRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
-			 &withBreak, pDoc, recordLineNb);
-
+	 {
+	   /* Export the namespace declarations associated with  
+	      this element before exporting its attributes */
+	   ExportNsDeclaration (pDoc, pEl);
+	   /* Parcourt les attributs de l'element et applique les regles
+	      des attributs qui doivent ^etre appliquees avant la
+	      traduction du contenu de l'element */
+	   ApplyAttrRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
+			   &withBreak, pDoc, recordLineNb);
+	 }
        /* on ne traduit la presentation que si ce n'est pas deja fait par */
        /* une regle Create Presentation et si on n'a pas rencontre' de */
        /* regle Ignore */
@@ -3638,7 +3687,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 
 /*----------------------------------------------------------------------
    ExportAttrNsPrefix
-   Search if the attribute pAttr is associated with a namespace prefix
+   Search the namespace prefix associated with the attribute pAttr.
   ----------------------------------------------------------------------*/
 static char* ExportAttrNsPrefix (PtrDocument pDoc, PtrElement pNode,
 				 PtrAttribute pAttr)
@@ -3663,7 +3712,7 @@ static char* ExportAttrNsPrefix (PtrDocument pDoc, PtrElement pNode,
     return (ns_prefix);
 
   i = 0;
-  /* Search all the namespace declarations declared for the schema */
+  /* Search all the namespace declarations declared for the document */
   uriDecl = pDoc->DocNsUriDecl;
   found = FALSE;
   while (uriDecl != NULL && !found)
@@ -3671,7 +3720,7 @@ static char* ExportAttrNsPrefix (PtrDocument pDoc, PtrElement pNode,
       if (uriDecl->NsUriName != NULL &&
 	  (strcmp (uriDecl->NsUriName, pAttr->AeAttrSSchema->SsUriName) == 0))
 	{
-	  /* The attribute schema uri has been found */
+	  /* The attribute uri has been found */
 	  /* Search the associated prefix */
 	  found = TRUE;
 	  prefixDecl = uriDecl->NsPtrPrefix;
@@ -3695,7 +3744,7 @@ static char* ExportAttrNsPrefix (PtrDocument pDoc, PtrElement pNode,
 
 /*----------------------------------------------------------------------
    ExportElemNsPrefix
-   Search if the element pNode is associated with a namespace prefix
+   Search the namespace prefix associated with the element pNode.
   ----------------------------------------------------------------------*/
 static char* ExportElemNsPrefix (PtrDocument pDoc, PtrElement pNode)
 
