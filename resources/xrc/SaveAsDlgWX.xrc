@@ -17,37 +17,17 @@
                 <object class="wxBoxSizer">
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
-                    <object class="wxStaticText" name="wxID_DOC_FORMAT">
+                    <object class="wxRadioBox" name="wxID_DOC_FORMAT">
                       <label></label>
+                      <content>
+                        <item></item>
+                        <item></item>
+                        <item></item>
+                      </content>
+                      <style>wxRA_SPECIFY_COLS</style>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>5</border>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxStaticLine"/>
-                    <flag>wxALL|wxEXPAND</flag>
-                    <border>5</border>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxCheckBox" name="wxID_HTML_CHK">
-                      <label></label>
-                    </object>
-                    <flag>wxALL|wxEXPAND</flag>
-                    <border>2</border>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxCheckBox" name="wxID_XML_CHK">
-                      <label></label>
-                    </object>
-                    <flag>wxALL|wxEXPAND</flag>
-                    <border>2</border>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxCheckBox" name="wxID_TEXT_CHK">
-                      <label></label>
-                    </object>
-                    <flag>wxALL|wxEXPAND</flag>
-                    <border>2</border>
                   </object>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
