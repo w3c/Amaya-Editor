@@ -35,6 +35,7 @@ Amaya/batch/tarAmaya \
 Amaya/amaya/COPYRIGHT* \
 Amaya/amaya/Makefile.* \
 Amaya/amaya/AmayaPage.html* \
+Amaya/amaya/Amaya.svg \
 Amaya/amaya/Text_SGML.inc \
 Amaya/amaya/*.A \
 Amaya/amaya/*.P \
