@@ -59,7 +59,7 @@
                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_BMATH">
                                     <bitmap>../icons/MATHML_Bmath.png</bitmap>
                                   </object>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                  <flag>wxALL|wxEXPAND</flag>
                                   <border>2</border>
                                 </object>
                                 <object class="sizeritem">
@@ -94,7 +94,6 @@
                                       <border>2</border>
                                     </object>
                                   </object>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
@@ -128,7 +127,6 @@
                                       <border>2</border>
                                     </object>
                                   </object>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
@@ -162,7 +160,6 @@
                                       <border>2</border>
                                     </object>
                                   </object>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
@@ -237,7 +234,6 @@
                                               </object>
                                             </object>
                                           </object>
-                                          <flag>wxALL|wxALIGN_CENTRE</flag>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBoxSizer">
@@ -245,18 +241,17 @@
                                             <object class="sizeritem">
                                               <object class="wxComboBox" name="wxID_PANEL_MATH_LIST">
                                                 <content/>
-                                                <size>20,-1</size>
+                                                <size>90,-1</size>
                                                 <style>wxCB_READONLY</style>
                                               </object>
                                               <option>1</option>
-                                              <flag>wxALIGN_CENTRE</flag>
                                             </object>
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_PANEL_MATH_INSERT">
                                                 <bitmap>../icons/MATHML_insert.png</bitmap>
                                                 <tooltip>*Insert*</tooltip>
                                               </object>
-                                              <flag>wxLEFT|wxALIGN_CENTRE</flag>
+                                              <flag>wxLEFT</flag>
                                               <border>2</border>
                                             </object>
                                           </object>
@@ -269,7 +264,7 @@
                                     </object>
                                   </object>
                                   <option>1</option>
-                                  <flag>wxALL|wxEXPAND|wxALIGN_CENTRE</flag>
+                                  <flag>wxALL|wxEXPAND</flag>
                                   <border>2</border>
                                 </object>
                               </object>

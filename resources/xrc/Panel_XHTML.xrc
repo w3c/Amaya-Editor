@@ -82,7 +82,7 @@
                                     </object>
                                   </object>
                                   <option>1</option>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                  <flag>wxALL</flag>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
@@ -110,7 +110,7 @@
                                     </object>
                                   </object>
                                   <option>1</option>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                  <flag>wxALL</flag>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
@@ -138,7 +138,7 @@
                                     </object>
                                   </object>
                                   <option>1</option>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                  <flag>wxALL</flag>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
@@ -166,7 +166,7 @@
                                     </object>
                                   </object>
                                   <option>1</option>
-                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                  <flag>wxALL</flag>
                                 </object>
                               </object>
                               <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>

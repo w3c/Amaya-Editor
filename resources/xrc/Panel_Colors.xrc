@@ -68,7 +68,7 @@
                                     <object class="wxStaticBitmap" name="wxID_BUTTON_DEFAULTCOLORS">
                                       <bitmap>../icons/black_white.png</bitmap>
                                       <pos>4,34</pos>
-                                      <style>wxCLIP_CHILDREN</style>
+                                      <style></style>
                                       <hidden>1</hidden>
                                     </object>
                                     <object class="wxBitmapButton" name="wxID_BUTTON_SWITCHCOLORS">
@@ -106,22 +106,21 @@
                                     <orient>wxVERTICAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_APPLY">
-                                        <style></style>
                                         <tooltip>*Apply*</tooltip>
                                         <bitmap>../icons/ok.png</bitmap>
                                       </object>
-                                      <flag>wxEXPAND|wxALIGN_CENTRE</flag>
+                                      <flag>wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxBitmapButton" name="wxID_REFRESH">
                                         <tooltip>*ReFresh*</tooltip>
                                         <bitmap>../icons/refresh.png</bitmap>
                                       </object>
-                                      <flag>wxEXPAND|wxALIGN_CENTRE</flag>
+                                      <flag>wxEXPAND</flag>
                                     </object>
                                   </object>
                                   <option>1</option>
-                                  <flag>wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND</flag>
+                                  <flag>wxTOP|wxBOTTOM|wxRIGHT</flag>
                                   <border>4</border>
                                 </object>
                               </object>
