@@ -894,11 +894,8 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       /* write the view number */
       PutShort (pivFile, 1);
       /* write the specificity and the importance of the rule */
-      if (pPRule)
-	{
-	  PutShort (pivFile, pPRule->PrSpecificity);
-	  PutBoolean (pivFile, pPRule->PrImportant);
-	}
+      PutShort (pivFile, 0);
+      PutBoolean (pivFile, TRUE);
       /* write the presentation box number */
       PutShort (pivFile, 0);
       /* write the specific rule and its parameters */
