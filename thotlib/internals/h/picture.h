@@ -17,7 +17,6 @@
 /*
  * Definition for picture management
 */
-#ifdef AMAYA_PLUGIN
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "thotdir.h"
@@ -27,7 +26,6 @@
 
 #include "npapi.h"
 #include "npupp.h"
-#endif /* AMAYA_PLUGIN */
 
 #ifndef _PICTURE_h
 #define _PICTURE_h
@@ -67,9 +65,7 @@ typedef struct
   boolean        mapped;
   boolean        created;
   ThotWidget         wid;
-#ifdef AMAYA_PLUGIN
   NPP            pluginInstance;
-#endif /* AMAYA_PLUGIN */
 } PictInfo;
 
 typedef enum
