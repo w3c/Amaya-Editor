@@ -15,7 +15,7 @@ extern void ThotXmColorProc ( ThotColorStruct *bg,
                               ThotColorStruct *bottom );
 extern void TtaInitDialogue ( char *server,
                               ThotAppContext *app_context );
-extern void TtaInitDialogueTranslations ( ThotTranslations translations );
+extern void InitDialogueFont ( void );
 extern int TtaGetReferencesBase ( int number );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
@@ -185,7 +185,7 @@ extern void ThotXmColorProc (/* ThotColorStruct *bg,
                                 ThotColorStruct *bottom */);
 extern void TtaInitDialogue (/* char *server,
                                 ThotAppContext *app_context */);
-extern void TtaInitDialogueTranslations (/* ThotTranslations translations */);
+extern void InitDialogueFont (/* void */);
 extern int TtaGetReferencesBase (/* int number */);
 extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,

@@ -47,6 +47,13 @@ void TtaFreeAllCatalogs (void)
 }
 
 /*----------------------------------------------------------------------
+   InitDialogueFont initializes the dialogue font
+  ----------------------------------------------------------------------*/
+void InitDialogueFont ()
+{
+}
+
+/*----------------------------------------------------------------------
    TteFreeAllEventsList frees all event lists and the event/action
    context pointers.			                        
   ----------------------------------------------------------------------*/

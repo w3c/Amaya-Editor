@@ -2230,21 +2230,12 @@ void InitDialogueFonts (char *name)
     index++;
   FontDialogue =  LoadNearestFont (script, 2, 0, index, index, 0, TRUE, TRUE);
   if (FontDialogue == NULL)
-    TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
-#ifndef _WINDOWS
-#ifndef _GTK
-  DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, menufont),
-				  XmSTRING_DEFAULT_CHARSET);
-#else /* _GTK */
-  DefaultFont = FontDialogue;
-#endif /* _GTK */
-#endif /* _WINDOWS */
-  if (FontDialogue == NULL)
     {
-      FontDialogue = LoadNearestFont (script, 2, 0, index, index, 0, TRUE, TRUE);
+      FontDialogue = LoadNearestFont ('L', 2, 0, index, index, 0, TRUE, TRUE);
       if (FontDialogue == NULL)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
     }
+  InitDialogueFont ();
   IFontDialogue = LoadNearestFont (script, 1, 2, index, index, 0, TRUE, TRUE);
   if (IFontDialogue == NULL)
     {

@@ -20,7 +20,7 @@ extern void TtaAddAccessKey ( Document doc,
 extern void TtaRemoveDocAccessKeys ( Document doc );
 extern void TtaRemoveAccessKey ( Document doc,
                                  unsigned int key );
-extern ThotTranslations InitTranslations ( char *appliname );
+extern void InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
 
@@ -38,7 +38,7 @@ extern void TtaAddAccessKey (/* Document doc,
 extern void TtaRemoveDocAccessKeys (/* Document doc */);
 extern void TtaRemoveAccessKey (/* Document doc,
                                    unsigned int key */);
-extern ThotTranslations InitTranslations (/* char *appliname */);
+extern void InitTranslations (/* char *appliname */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1347,7 +1347,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
-   TtaInitDialogueTranslations (InitTranslations (name));
+   InitTranslations (name);
    /* no external action declared at that time */
    ActionList = NULL;
    TteLoadApplications ();

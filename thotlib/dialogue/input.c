@@ -1340,7 +1340,7 @@ void      TtaRemoveAccessKey (Document doc, unsigned int key)
    InitTranslations
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
-ThotTranslations InitTranslations (char *appliname)
+void InitTranslations (char *appliname)
 {
   char               *appHome;	   /* fichier de translation */
   char                fullName[200];  /* ligne en construction pour motif */
@@ -1357,7 +1357,6 @@ ThotTranslations InitTranslations (char *appliname)
   int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
   int                 len, max, value;
   FILE               *file;
-  ThotTranslations    table = 0;
   ThotBool            isSpecialKey1, isSpecialKey2;
 
   /* clean up the access key table */
@@ -1662,13 +1661,12 @@ ThotTranslations InitTranslations (char *appliname)
 	} while (e != 0);
 
       fclose (file);
-      /* Creation de la table de translation */
 #ifndef _WINDOWS
 #ifndef _GTK
-      table = XtParseTranslationTable (text);
+      /* Creation of the translation table */
+      TextTranslations = XtParseTranslationTable (text);
 #endif
-#endif  /* !_WINDOWS */
+#endif  /* _WINDOWS */
       TtaFreeMemory (text);
-      return table;
     }
 }

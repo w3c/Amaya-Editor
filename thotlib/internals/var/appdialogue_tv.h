@@ -26,7 +26,10 @@ THOT_EXPORT int                currentFrame;
 THOT_EXPORT BOOL               buttonCommand;
 #else /* _WINDOWS */
 THOT_EXPORT ThotWidget	       RootShell;
-#endif /* !_WINDOWS */
+#ifndef _GTK
+THOT_EXPORT ThotTranslations   TextTranslations;
+#endif /* _GTK */
+#endif /* _WINDOWS */
 THOT_EXPORT ThotAppContext     app_cont;
 THOT_EXPORT Proc	       CurrentCallbackAPI;
 

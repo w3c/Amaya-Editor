@@ -136,7 +136,6 @@ static int                 CurrentWait;
 static int                 ShowReturn;
 static int                 ShowX, ShowY;
 static struct Cat_Context* ShowCat = NULL;
-static ThotTranslations    TextTranslations;
 static ThotWidget          MainShell, PopShell;
 
 
@@ -2127,12 +2126,18 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
 }
 
 /*----------------------------------------------------------------------
-   TtaInitDialogueTranslations initialise les translations du         
-   dialogue. Ce sont tous les racoursis claviers.                     
+   InitDialogueFont initializes the dialogue font
   ----------------------------------------------------------------------*/
-void TtaInitDialogueTranslations (ThotTranslations translations)
+void InitDialogueFont ()
 {
-   TextTranslations = translations;
+#ifndef _WINDOWS
+#ifndef _GTK
+  DefaultFont = XmFontListCreate (XLoadQueryFont (TtDisplay, FontDialogue),
+				  XmSTRING_DEFAULT_CHARSET);
+#else /* _GTK */
+  DefaultFont = FontDialogue;
+#endif /* _GTK */
+#endif /* _WINDOWS */
 }
 
 
