@@ -82,9 +82,6 @@
       <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984"/>
       <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
     </g>
-    <text id="version" x="360" y="320" fill="#f22"
-          style="font: bold italic 16px helvetica; fill: #0192BF;">Release 8.6
-    </text>
     <text id="logo" x="304" y="162"
           style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA 
       <animateTransform attributeName="transform" attributeType="XML"

@@ -37,6 +37,8 @@ extern void HelpAmaya ( Document document,
                         View view );
 extern void HelpAtW3C ( Document document,
                         View view );
+extern void HelpLocal ( Document doc,
+                        View view );
 extern void HelpIndex ( Document document,
                         View view );
 extern void HelpBrowsing ( Document document,
@@ -126,6 +128,8 @@ extern void AddDocHistory ( Document doc,
 extern void HelpAmaya ( Document document,
                           View view );
 extern void HelpAtW3C ( Document document,
+                          View view );
+extern void HelpLocal ( Document doc,
                           View view );
 extern void HelpIndex ( Document document,
                           View view );

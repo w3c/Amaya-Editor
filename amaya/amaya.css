@@ -28,6 +28,7 @@ div p {
 }
 div {
  margin-top: 2em;
+ margin-bottom: 0;
  margin-right: 0.5em;
 }
 div div {

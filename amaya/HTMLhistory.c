@@ -845,6 +845,31 @@ void HelpAtW3C (Document document, View view)
 
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void HelpLocal (Document doc, View view)
+{
+  Document    document;
+  char        localname[MAX_LENGTH];
+  char       *s, *lang;
+
+  lang = TtaGetVarLANG ();
+  s = TtaGetEnvString ("THOTDIR");
+  if (s != NULL)
+    {
+      /* get the welcome in the current language */
+      sprintf (localname, "%s%camaya%cAmayaPage.html.%s", s, DIR_SEP, DIR_SEP, lang);
+
+      if (!TtaFileExist (localname))
+	/* get the standard english documentation */
+	sprintf (localname, "%s%camaya%cAmayaPage.html", s, DIR_SEP, DIR_SEP);
+    }
+  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
+  InitDocHistory (document);
+}
+
+
+/*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
 static void DisplayHelp (int doc, int index)
 {

@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void UnFrameMath ( void );
+extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
 extern void AddMathButton ( Document doc,
                             View view );
@@ -50,8 +52,6 @@ extern void CreateMO ( Document document,
                        View view );
 extern void CreateMSPACE ( Document document,
                            View view );
-extern void UnFrameMath ( void );
-extern void MathSelectionChanged ( NotifyElement *event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute *event );
 extern void FreeMathML ( void );
 extern void InitMathML ( void );
@@ -129,6 +129,8 @@ extern void HandleColAndRowAlignAttributes ( Element row,
 
 #else /* __STDC__ */
 
+extern void UnFrameMath ( void );
+extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
 extern void AddMathButton ( Document doc,
                               View view );
@@ -173,8 +175,6 @@ extern void CreateMO ( Document document,
                          View view );
 extern void CreateMSPACE ( Document document,
                              View view );
-extern void UnFrameMath ( void );
-extern void MathSelectionChanged ( NotifyElement *event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute *event );
 extern void FreeMathML ( void );
 extern void InitMathML ( void );

@@ -2918,8 +2918,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   if (!isOpen) /* only if this page is not already open */
     {
       /* add the amaya logo after the url bar */
-      iLogo = TtaAddToolBarButton( window_id, iconLogo,
-				   NULL, NULL, NULL, TRUE );
+      strcpy (buffer, "Amaya ");
+      strcat (buffer, HTAppVersion);
+      iLogo = TtaAddToolBarButton( window_id, iconLogo, buffer,
+				   "HelpLocal", (Proc)HelpLocal, TRUE );
     }
   /* force the logo to be enable */
   TtaChangeButton (doc, 1, iLogo, iconLogo, TRUE);
