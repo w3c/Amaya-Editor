@@ -301,12 +301,12 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    AttributeType       attrType;
    Attribute           attr;
    Element             piEl;
-   SSchema	       HTMLSSchema;
    char               *value, *base, *s;
    char                tempURL[MAX_LENGTH];
    char                buffer[MAX_LENGTH];
    int                 length, piNum;
-   ThotBool            new, oldStructureChecking, isHTML;
+   ThotBool            new, oldStructureChecking;
+   ThotBool            isHTML, isSVG;
 
    attr = 0;
    new = FALSE;  
@@ -314,19 +314,17 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    if (AttrHREFundoable)
      TtaOpenUndoSequence (doc, element, element, 0, 0);
 
-   HTMLSSchema = TtaGetSSchema ("HTML", doc);
    elType = TtaGetElementType (element);
-   if (HTMLSSchema)
-     isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
-   else
-     isHTML = FALSE;
+   s = TtaGetSSchemaName (elType.ElSSchema);
+   isHTML = !strcmp (s, "HTML");
+   isSVG = !strcmp (s, "SVG");
 
    if (!LinkAsXmlCSS)
      /* It isn't a link to an xml stylesheet */
      {
        if (isHTML)
 	 {
-	   attrType.AttrSSchema = HTMLSSchema;
+	   attrType.AttrSSchema = elType.ElSSchema;
 	   if (elType.ElTypeNum == HTML_EL_Block_Quote ||
 	       elType.ElTypeNum == HTML_EL_Quotation ||
 	       elType.ElTypeNum == HTML_EL_INS ||
@@ -337,6 +335,13 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   else
 	     attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	 }
+#ifdef _SVG
+       else if (isSVG)
+	 {
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+	 }
+#endif /* _SVG */
        else
 	 {
 	   /* the origin of the link is not a HTML element */
@@ -365,7 +370,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   TtaSetStructureChecking (0, doc);
 	   TtaAttachAttribute (element, attr, doc);
 	   TtaSetStructureChecking (oldStructureChecking, doc);
-	   if (!isHTML)
+	   if (!isHTML && !isSVG)
 	     {
 	       /* Attach the XLink namespace declaration */
 	       TtaSetUriSSchema (attrType.AttrSSchema, XLink_URI);
@@ -646,7 +651,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
    Document            targetDoc;
    Attribute           attr;
    AttributeType       attrType;
-   char               *buffer = NULL;
+   char               *buffer = NULL, *name;
    int                 length;
 
 #if defined(_MOTIF) || defined(_GTK)
@@ -713,7 +718,8 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	  {
 	    /* If the anchor has an HREF attribute, put its value in the form */
 	    elType = TtaGetElementType (el);
-	    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	    name = TtaGetSSchemaName (elType.ElSSchema);
+	    if (!strcmp (name, "HTML"))
 	      /* it's an HTML element */
 	      {
 		attrType.AttrSSchema = elType.ElSSchema;
@@ -726,6 +732,14 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 		else
 		  attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	      }
+#ifdef _SVG
+	    else if (!strcmp (name, "SVG"))
+	      /* it's an SVG element */
+	      {
+		attrType.AttrSSchema = elType.ElSSchema;
+		attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+	      }
+#endif /* _SVG */
 	    else
 	      {
 		attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
@@ -1085,42 +1099,44 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	    {
 	      elType = TtaGetElementType (el);
 	      s = TtaGetSSchemaName (elType.ElSSchema);
-	      if (!strcmp (s, "HTML") &&
-		  elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
-		  elType.ElTypeNum != HTML_EL_Teletype_text &&
-		  elType.ElTypeNum != HTML_EL_Italic_text &&
-		  elType.ElTypeNum != HTML_EL_Bold_text &&
-		  elType.ElTypeNum != HTML_EL_Underlined_text &&
-		  elType.ElTypeNum != HTML_EL_Struck_text &&
-		  elType.ElTypeNum != HTML_EL_Big_text &&
-		  elType.ElTypeNum != HTML_EL_Small_text &&
-		  elType.ElTypeNum != HTML_EL_Emphasis &&
-		  elType.ElTypeNum != HTML_EL_Strong &&
-		  elType.ElTypeNum != HTML_EL_Def &&
-		  elType.ElTypeNum != HTML_EL_Code &&
-		  elType.ElTypeNum != HTML_EL_Sample &&
-		  elType.ElTypeNum != HTML_EL_Keyboard &&
-		  elType.ElTypeNum != HTML_EL_Variable_ &&
-		  elType.ElTypeNum != HTML_EL_Cite &&
-		  elType.ElTypeNum != HTML_EL_ABBR &&
-		  elType.ElTypeNum != HTML_EL_ACRONYM &&
-		  elType.ElTypeNum != HTML_EL_INS &&
-		  elType.ElTypeNum != HTML_EL_DEL &&
-		  elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
-		  elType.ElTypeNum != HTML_EL_Applet &&
-		  elType.ElTypeNum != HTML_EL_Object &&
-		  elType.ElTypeNum != HTML_EL_Font_ &&
-		  elType.ElTypeNum != HTML_EL_SCRIPT_ &&
-		  elType.ElTypeNum != HTML_EL_MAP &&
-		  elType.ElTypeNum != HTML_EL_Quotation &&
-		  elType.ElTypeNum != HTML_EL_Subscript &&
-		  elType.ElTypeNum != HTML_EL_Superscript &&
-		  elType.ElTypeNum != HTML_EL_Span &&
-		  elType.ElTypeNum != HTML_EL_BDO &&
-		  elType.ElTypeNum != HTML_EL_simple_ruby &&
-		  elType.ElTypeNum != HTML_EL_complex_ruby &&
-		  elType.ElTypeNum != HTML_EL_IFRAME )
-		noAnchor = TRUE;
+	      if (!strcmp (s, "HTML"))
+		{
+		  if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
+		      elType.ElTypeNum != HTML_EL_Teletype_text &&
+		      elType.ElTypeNum != HTML_EL_Italic_text &&
+		      elType.ElTypeNum != HTML_EL_Bold_text &&
+		      elType.ElTypeNum != HTML_EL_Underlined_text &&
+		      elType.ElTypeNum != HTML_EL_Struck_text &&
+		      elType.ElTypeNum != HTML_EL_Big_text &&
+		      elType.ElTypeNum != HTML_EL_Small_text &&
+		      elType.ElTypeNum != HTML_EL_Emphasis &&
+		      elType.ElTypeNum != HTML_EL_Strong &&
+		      elType.ElTypeNum != HTML_EL_Def &&
+		      elType.ElTypeNum != HTML_EL_Code &&
+		      elType.ElTypeNum != HTML_EL_Sample &&
+		      elType.ElTypeNum != HTML_EL_Keyboard &&
+		      elType.ElTypeNum != HTML_EL_Variable_ &&
+		      elType.ElTypeNum != HTML_EL_Cite &&
+		      elType.ElTypeNum != HTML_EL_ABBR &&
+		      elType.ElTypeNum != HTML_EL_ACRONYM &&
+		      elType.ElTypeNum != HTML_EL_INS &&
+		      elType.ElTypeNum != HTML_EL_DEL &&
+		      elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
+		      elType.ElTypeNum != HTML_EL_Applet &&
+		      elType.ElTypeNum != HTML_EL_Object &&
+		      elType.ElTypeNum != HTML_EL_Font_ &&
+		      elType.ElTypeNum != HTML_EL_SCRIPT_ &&
+		      elType.ElTypeNum != HTML_EL_MAP &&
+		      elType.ElTypeNum != HTML_EL_Quotation &&
+		      elType.ElTypeNum != HTML_EL_Subscript &&
+		      elType.ElTypeNum != HTML_EL_Superscript &&
+		      elType.ElTypeNum != HTML_EL_Span &&
+		      elType.ElTypeNum != HTML_EL_BDO &&
+		      elType.ElTypeNum != HTML_EL_simple_ruby &&
+		      elType.ElTypeNum != HTML_EL_complex_ruby &&
+		      elType.ElTypeNum != HTML_EL_IFRAME)
+		    noAnchor = TRUE;
+		}
 #ifdef _SVG
 	      else if (strcmp (s, "SVG") ||
 		       elType.ElTypeNum == SVG_EL_SVG)
@@ -1188,17 +1204,29 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		    {
 		      elType = TtaGetElementType (ancestor);
 		      s = TtaGetSSchemaName (elType.ElSSchema);
-		      if (!strcmp (s, "HTML")
-			  && elType.ElTypeNum == HTML_EL_Anchor)
+		      if (!strcmp (s, "HTML") &&
+			  elType.ElTypeNum == HTML_EL_Anchor)
 			ok = FALSE;
 		    }
 		}
+
+	      elType = TtaGetElementType (first);
+	      s = TtaGetSSchemaName (elType.ElSSchema);
 	      if (!ok)
 		{
 		  TtaSetStatus (doc, 1,
 				TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2),
 				NULL);
 		  return;
+		}
+	      else if (!strcmp (s, "SVG") &&
+		       elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		{
+		  /* move the selection to the enclosing text of tspan */
+		  first = TtaGetParent (first);
+		  if (first == NULL)
+		    return;
+		  last = first;
 		}
 	    }
 
@@ -1209,7 +1237,6 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	  TtaUnselect (doc);
 
 	  TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
-
 	  /* process the last selected element */
 	  elType = TtaGetElementType (last);
 	  /* if its a text leaf which is partly selected, split it */
