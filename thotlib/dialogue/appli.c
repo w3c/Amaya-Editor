@@ -948,6 +948,8 @@ char               *name;
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
 	     XtManageChild (FrameTable[frame].WdStatus);
 	     XmStringFree (title_string);
+	     XFlush(TtaGetCurrentDisplay());
+	     TtaHandlePendingEvents();
 #endif /* _WINDOWS */
 	    }
      }
