@@ -958,6 +958,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   el = event->element;
   doc = event->document;
   elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
   /* if it's not an HTML picture (it could be an SVG image for instance),
      ignore */
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
@@ -978,10 +979,16 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     }
 
   elSRC = TtaGetParent (el);
-  if (elSRC != NULL)
+  if (elSRC)
+    {
+      elType = TtaGetElementType (elSRC);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
+	  elType.ElTypeNum != HTML_EL_Object)
+	elSRC = el;
+    }
+  else
     elSRC = el;
   /* add the ALT attribute */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
   attrType.AttrTypeNum = HTML_ATTR_ALT;
   attr = TtaGetAttribute (elSRC, attrType);
   if (attr == 0)
