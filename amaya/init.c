@@ -2330,11 +2330,18 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   AddGraphicsButton (doc, 1);
 #endif /* _SVG */
 	   if (docType == docAnnot)
-	     TtcSwitchCommands (doc, 1); /* no command open */
+	     {
+	       /* turn off the menus that don't make sense in the annotation view */
+	       TtcSwitchCommands (doc, 1); /* no command open */
+	       TtaSetItemOff (doc, 1, Views, BShowAlternate);
+	       TtaSetItemOff (doc, 1, Views, BShowToC);
+	       TtaSetItemOff (doc, 1, Views, BShowSource);
+	     }
 	   else
 	     {
 	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 			       TRUE, TextURL);
+
 	       /* turn off the assign annotation buttons (should be
 		  contextual */
 	       TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
@@ -2951,9 +2958,6 @@ static Document LoadDocument (Document doc, char *pathname,
 	    {
 	      docType = docAnnot;
 	      newdoc = doc;
-	      /* @@ IV: we are not currently able to use the XML parser for 
-		 annotations */
-	      /* isXML = FALSE; */
 	    }
 #endif /* ANNOTATIONS */
 	  else if (method == CE_LOG)
