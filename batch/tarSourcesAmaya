@@ -90,6 +90,7 @@ Amaya/annotlib/*.h \
 Amaya/annotlib/f/*.h \
 Amaya/config/amaya.kb \
 Amaya/config/amaya.keyboard \
+Amaya/config/amaya.profiles \
 Amaya/config/en-amayadialogue \
 Amaya/config/en-amayamsg \
 Amaya/config/en-libdialogue \

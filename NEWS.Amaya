@@ -97,6 +97,10 @@ Fixed bugs 2.2:
 * Amaya could crash if you had a single document window with pending net
   requests and you closed it.
 
+* The replace string in the Search/Replace command could be lost.
+
+* The root element HTML supports the attribute lang now.
+
 Known bugs 2.2:
 ---------------
 

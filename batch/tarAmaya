@@ -7,7 +7,7 @@
 AMAYAVERSION=2.2
 THOTDIR=/tahiti/diffusion/Amaya
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
+PLATFORMS="solaris2 LINUX-ELF RS6000"
 #PLATFORMS="osf1"
 #PLATFORMS="RS6000"
 
@@ -30,6 +30,7 @@ do
    Amaya/config/XKeysymDB \
    Amaya/config/amaya.kb \
    Amaya/config/amaya.keyboard \
+   Amaya/config/amaya.profiles \
    Amaya/config/*thot.rc \
    Amaya/config/en-amayadialogue \
    Amaya/config/en-amayamsg \

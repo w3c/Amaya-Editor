@@ -17,11 +17,121 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 <p>This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
+<h1>Amaya 2.2</h1>
+
+<p>26 October, 1999</p>
+
+<h2>New features</h2>
+<ul>
+  <li>CSS:
+    <ul>
+      <li>Amaya is now able to print with CSS. By default Amaya takes into
+        account style sheets when printing. The entry "Ignore style sheets"
+        allows one to print documents like in previous Amaya version.</li>
+      <li>For a better mapping with CSS, language P has been extended.  Style
+        and Weight are now two separate properties.  This allows Amaya to
+        handle the corresponding CSS properties (font-style, font-weight)
+        independently and to display text both italic and bold.</li>
+    </ul>
+  </li>
+  <li>A Source view is now available from the Views menu. When you select in
+    the main view, an index points at the corresponding markup in the source
+    view and conversely. You can edit the source code.  Every time you save
+    the source code or you activate the Synchronize entry of the Files menu,
+    the other views are updated to reflect the latest changes.</li>
+  <li>Four different Amaya profiles are proposed: editor, mini-editor,
+    browser, mini-browser. Amaya menus and buttons are displayed according to
+    the current profile.</li>
+  <li>User Interface:
+    <ul>
+      <li>The backspace deletes the current selection when that selection is
+        not empty and delete the previous character in other cases.</li>
+      <li>If there is no selection in the document which receives the current
+        focus and the user hits any arrow key, a selection is automatically
+        generated at the window top.</li>
+      <li>A new option in the Preferences/Publishing menu allows to declare a
+        set of domains where a PUT may be redirected, and thus avoid having a
+        popup asking a user to confirm each redirection.</li>
+      <li>It's now possible to define a shortcut to follow a link or activate
+        a form element (menu, submit, reset): the name of the function is
+        DoAction and the default shortcut is "Alt Return".</li>
+      <li>A new command "Link previous target" allows one to create a link to
+        the latest created target. The default shortcut is "Ctrl Shif L".</li>
+    </ul>
+  </li>
+  <li>A mechanism of templates allows you to experiment templates provided by
+    the W3C server or to install your own template server. To use the sample
+    W3C template server, open the Special/Preferences/Templates menu and type
+    in the following URL: http://cgi.w3.org/cgi-bin/createform.pl. Quit Amaya
+    and there'll be a new option in the File/New submenu: From template.</li>
+</ul>
+
+<h2>Fixed bugs</h2>
+<ul>
+  <li>User Interface:
+    <ul>
+      <li>It was impossible to cancel the creation of a link. Now the second
+        button in the creation popup is 'Cancel' instead of 'Done', and when
+        that button is pressed, the whole action is cancelled.</li>
+      <li>Improvement of attribute menus.</li>
+      <li>There was a confusion in the button bar.</li>
+      <li>With an extended selection the right arrow and the bottom arrow
+        moved the selection relatively to the beginning of the selection
+        instead of the end.</li>
+      <li>Empty Math boxes were not displayed on Windows platforms.</li>
+      <li>The cancel button didn't always work in the Windows authentication
+        dialogue.</li>
+    </ul>
+  </li>
+  <li>CSS:
+    <ul>
+      <li>When the color was invalid Amaya used the black. Now the CSS rule is
+        ignored.</li>
+      <li>CSS comments within style elements were lost.</li>
+      <li>The CSS parser didn't supported TABs in CSS style sheets or STYLE
+        elements.</li>
+      <li>Amaya misinterpreded complex selectors.</li>
+    </ul>
+  </li>
+  <li>SGML entites and spaces weren't being handled correctly when saving a
+    document or when browsing a URL.</li>
+  <li>Hexadecimal entity references were not recognized by the HTML and XML
+    parsers.</li>
+  <li>Relative URLs beginning with a "../../ " path were being simplifed into
+    "../"</li>
+  <li>When a Unix user launched Amaya with a not existing local file, Amaya
+    displayed a form to create a new document, but that form didn't work well.
+    If the user opened the document, the File menu was broken. If the user
+    cancelled the form the application wasn't closed.</li>
+  <li>When printing, parentheses that are part of mathematical expressions
+    were misplaced on the page.</li>
+  <li>Amaya could get stuck when creating an anchor.</li>
+  <li>Some memory leaks in the Windows version are fixed. There was a memory
+    leak when the download of a distant image failed.</li>
+  <li>Amaya could crash if you had a single document window with pending net
+    requests and you closed it.</li>
+  <li>The replace string in the Search/Replace command could be lost.</li>
+  <li>The root element HTML supports the attribute lang now.</li>
+</ul>
+
+<h2>Known bugs</h2>
+<ul>
+  <li>Opening the source view of an HTML document which doesn't have an
+    extension and which includes an image having the same name as that of the
+    document, may result in the opening of the image source, rather than that
+    of the document. Under Windows, this may happen even if the the document
+    and the image's names only differ in case.</li>
+  <li>Amaya doesn't saves yet the current positions of Windows upon exiting.
+    This will be done in the next release.</li>
+</ul>
+<hr>
+
+
 <h1>Amaya 2.1</h1>
 
 <p>24 June, 1999</p>
 
-<h2>Extensions 2.1:</h2>
+<h2>New features</h2>
 <ul>
   <li>User Interface:
     <ul>
@@ -53,7 +163,7 @@ Amaya.</p>
   <li>MathML: the full presentation part of MathML is now supported, but not
     all attributes are yet taken into account when formatting mathematical
     expressions.</li>
-  <li>LibWWW: 
+  <li>LibWWW:
     <ul>
       <li>Updated to version 5.2.9.</li>
       <li>The libwww is now compiled as a number of mini libraries instead of
@@ -84,7 +194,7 @@ Amaya.</p>
   </li>
 </ul>
 
-<h2>Fixed bugs 2.1:</h2>
+<h2>Fixed bugs</h2>
 <ul>
   <li>Amaya was not able to use the shared library libjpeg.so.</li>
   <li>There were some memory leaks in the previous version.</li>
@@ -107,12 +217,14 @@ Amaya.</p>
   <li>The libwww cache entry wasn't being updated when saving a previously
     cached document.</li>
 </ul>
+<hr>
+
 
 <h1>Amaya 2.0</h1>
 
 <p>3 May, 1999</p>
 
-<h2>Extensions 2.0:</h2>
+<h2>Extensions</h2>
 <ul>
   <li>First implementation of a multi-document, multi-level Undo/Redo
   command.</li>
@@ -195,7 +307,7 @@ Amaya.</p>
     libwww) to compile Amaya.</li>
 </ul>
 
-<h2>Fixed bugs 2.0:</h2>
+<h2>Fixed bugs</h2>
 <ul>
   <li>Scripts can now be created within the document Body and are no longer
     moved into the Head at parsing time.</li>
@@ -239,6 +351,8 @@ Amaya.</p>
   <li>It wasn't possible to browse images when the request was redirected to a
     URL having a different end name.</li>
 </ul>
+<hr>
+
 
 <h1>Amaya 1.4 and 1.4a</h1>
 
@@ -1151,7 +1265,7 @@ and its installation is now automatic.</p>
 
 <address>
   <a href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
-  $Date: 1997/07/10
+  $Date: 1997/07/10 
 </address>
 </body>
 </html>
