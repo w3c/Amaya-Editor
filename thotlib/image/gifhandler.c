@@ -1505,12 +1505,13 @@ int                 zoom;
   /* return image dimensions */
   *width = w;
   *height = h;
-  if (buffer == NULL) {
+  if (buffer == NULL)
+    {
 #ifdef _WINDOWS
-     WinErrorBox (NULL, TEXT("GifCreate(1): buffer == 0x00000000"));
+      WinErrorBox (NULL, TEXT("GifCreate(1): buffer == 0x00000000"));
 #endif /* _WINDOWS */
-     return (NULL);
-  }
+      return ((Drawable) NULL);
+    }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
     {
@@ -1528,28 +1529,30 @@ int                 zoom;
 
 #ifdef _WINDOWS
   if (TtDisplay == (HDC) 0)
-     WIN_GetDeviceContext (-1);
+    WIN_GetDeviceContext (-1);
 #endif /* _WINDOWS */
 
 #ifndef _WIN_PRINT
-  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
-     /* xif and yif contain width and height of the box */	  
-     if ((*xif * *yif) > 4000000 ) {
-        i = 4000000 / (*xif * *yif);
-        *xif = i * *xif;
-        *yif = i * *yif;
-	 }
-     buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-     TtaFreeMemory (buffer);
-     buffer = buffer2;
-     buffer2 = NULL;
-     w = *xif;
-     h = *yif;
-  }
+  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
+    {
+      /* xif and yif contain width and height of the box */	  
+      if ((*xif * *yif) > 4000000 )
+	{
+	  i = 4000000 / (*xif * *yif);
+	  *xif = i * *xif;
+	  *yif = i * *yif;
+	}
+      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+      TtaFreeMemory (buffer);
+      buffer = buffer2;
+      buffer2 = NULL;
+      w = *xif;
+      h = *yif;
+    }
 #endif /* _WIN_PRINT */
   
   if (buffer == NULL)
-    return (NULL);	
+    return ((Drawable) NULL);	
 
   if (Gif89.transparent != -1)
     {
@@ -1566,23 +1569,26 @@ int                 zoom;
 #endif /* _WINDOWS */
     }
   
-   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, &(imageDesc->PicColors));
-   if (imageDesc->PicColors != NULL)
-     imageDesc->PicNbColors = ncolors;
-   TtaFreeMemory (buffer);
-   if (pixmap == None) {
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs,
+			 &(imageDesc->PicColors));
+  if (imageDesc->PicColors != NULL)
+    imageDesc->PicNbColors = ncolors;
+  TtaFreeMemory (buffer);
+  if (pixmap == None)
+    {
 #ifdef _WINDOWS
       WinErrorBox (NULL, TEXT("GifCreate(2): pixmap == 0x00000000"));
 #endif /* _WINDOWS */
-     return (NULL);
-   } else
-     {
-       *wif = w;
-       *hif = h;
-       *xif = 0;
-       *yif = 0;
-       return (Drawable) pixmap;
-     }
+      return ((Drawable) NULL);
+    }
+  else
+    {
+      *wif = w;
+      *hif = h;
+      *xif = 0;
+      *yif = 0;
+      return (Drawable) pixmap;
+    }
 }
 
 
