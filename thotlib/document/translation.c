@@ -476,7 +476,7 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
   GetTime returns the current date in a formatted string.
   Inspired from the hypermail source code: hypermail/src/date.c
   ----------------------------------------------------------------------*/
-static void GetTime (unsigned char *s, PtrDocument pDoc)
+static void GetTime (char *s, PtrDocument pDoc)
 {
   time_t         tp;
   struct tm     *tmptr;
@@ -494,7 +494,7 @@ static void GetTime (unsigned char *s, PtrDocument pDoc)
   if (set_gmtime)
     {
       tmptr = gmtime (&tp);
-      strftime(s, DATESTRLEN, "%Y-%m-%dZ%H:%M:%S", tmptr);
+      strftime (s, DATESTRLEN, "%Y-%m-%dZ%H:%M:%S", tmptr);
     }
   else
     {
