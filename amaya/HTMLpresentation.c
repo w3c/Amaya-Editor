@@ -449,9 +449,12 @@ NotifyPresentation *event;
 		 elType.ElTypeNum == HTML_EL_Data_cell ||
 		 elType.ElTypeNum == HTML_EL_Heading_cell ||
 		 elType.ElTypeNum == HTML_EL_Object ||
+#ifdef GRAPHML
+		 elType.ElTypeNum == HTML_EL_XMLgraphics ||
+#endif /* GRAPHML */
 		 elType.ElTypeNum == HTML_EL_Applet))
 	      {
-		/* store information in Width of Height attributes */
+		/* store information in Width or Height attributes */
 		if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 		  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
 		else
