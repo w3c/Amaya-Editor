@@ -1511,7 +1511,7 @@ void        DrawDiamond (int frame, int thick, int style, int x, int y, int widt
   - a backward arrow has to be drawn (2)
   - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
-void        DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, int bg, int pattern)
+void DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, int bg, int pattern)
 {
   ThotPoint  *points;
   int         i, j;
@@ -1574,19 +1574,43 @@ static void  DoDrawPolygon (int frame, int thick, int style,
 {
    HPEN                hPen;
    HPEN                hOldPen;
+   HDC                 display;
    LOGBRUSH            logBrush;
-   HBRUSH              hBrush;
+   HBRUSH              hBrush = NULL;
    HBRUSH              hOldBrush;
-   Pixmap              pat = NULL;
+   Pixmap              pat;
 
    if (fg < 0)
      thick = 0;
+#ifdef _WIN_PRINT
+   display = TtPrinterDC;
+#else  /* _WIN_PRINT */
+   WIN_GetDeviceContext (frame);
+   display = TtDisplay;
+   SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+
+   /* how to fill the polygon */
+   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
+   if (pat != NULL)
+     {
+       logBrush.lbColor = ColorPixel (bg);
+       logBrush.lbStyle = BS_SOLID;
+       hBrush = CreateBrushIndirect (&logBrush); 
+       /* fill the polygon */
+       hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+       hOldPen = SelectObject (display, hPen);
+       hOldBrush = SelectObject (display, hBrush);
+       Polygon (display, points, npoints);
+       SelectObject (display, hOldBrush);
+       DeleteObject (hPen);
+       DeleteObject (hBrush);
+	   DeleteObject ((HGDIOBJ) pat);
+     }
 
    /* how to stroke the polygon */
-   if (thick == 0)
-     hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
-   else
-     {
+   if (thick > 0)
+    {
        switch (style)
 	 {
 	 case 3:
@@ -1599,59 +1623,14 @@ static void  DoDrawPolygon (int frame, int thick, int style,
 	   hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
 	   break;
 	 }
-     }
-   /* how to fill the polygon */
-   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-   if (pat == 0)
-     logBrush.lbStyle = BS_NULL;
-   else
-     {
-       logBrush.lbColor = ColorPixel (bg);
-       logBrush.lbStyle = BS_SOLID;
- 
-     } 
-   hBrush = CreateBrushIndirect (&logBrush);
-
-#ifdef _WIN_PRINT
-   /* fill the polygon */
-   hOldPen = SelectObject (TtPrinterDC, hPen);
-   if (hBrush)
-     {
-       hOldBrush = SelectObject (TtPrinterDC, hBrush);
-       Polygon (TtPrinterDC, points, npoints);
-       SelectObject (TtPrinterDC, hOldBrush);
-     }
-
-   /* draw the border */
-   if (thick > 0)
-     Polyline (TtPrinterDC, points, npoints);
-   SelectObject (TtPrinterDC, hOldPen);
-#else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   SelectClipRgn (TtDisplay, clipRgn);
-
-   /* fill the polygon */
-   hOldPen = SelectObject (TtDisplay, hPen);
-   if (hBrush)
-     {
-       hOldBrush = SelectObject (TtDisplay, hBrush);
-       Polygon (TtDisplay, points, npoints);
-       SelectObject (TtDisplay, hOldBrush);
-     }
-
-   /* draw the border */
-   if (thick > 0)
-     Polyline (TtDisplay, points, npoints);
-   SelectObject (TtDisplay, hOldPen);
+     /* draw the border */
+     hOldPen = SelectObject (display, hPen);
+     Polyline (display, points, npoints);
+     DeleteObject (hPen);
+    }
+#ifndef _WIN_PRINT
    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-
-   if (hBrush)
-     DeleteObject (hBrush);
-   DeleteObject (hPen);
-   if (pat != 0)
-     if (!DeleteObject ((HGDIOBJ) pat))
-       WinErrorBox (NULL, TEXT("Pattern"));
 }
 
 /*----------------------------------------------------------------------
@@ -1662,7 +1641,7 @@ static void  DoDrawPolygon (int frame, int thick, int style,
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void          DrawPolygon (int frame, int thick, int style, int x, int y,
+void DrawPolygon (int frame, int thick, int style, int x, int y,
 			   PtrTextBuffer buffer, int nb, int fg, int bg,
 			   int pattern)
 {
@@ -1691,7 +1670,7 @@ void          DrawPolygon (int frame, int thick, int style, int x, int y,
 					  ViewFrameTable[frame - 1].FrMagnification);
 	j++;
      }
-   /* Close the polygone */
+   /* Close the polygon */
    points[nb - 1].x = points[0].x;
    points[nb - 1].y = points[0].y;
    DoDrawPolygon (frame, thick, style, points, nb, fg, bg, pattern);
