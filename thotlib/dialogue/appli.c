@@ -2351,7 +2351,7 @@ PtrAbstractBox     *pave;
 #else /* _WINDOWS */
        GetMessage (&event, NULL, 0, 0);
        curFrame = GetFrameNumber (event.hwnd);
-       TtaHandleOneWindowEvent (&event);
+       TtaHandleOneEvent (&event);
        SetCursor (cursor);
 #endif /* !_WINDOWS */
      }

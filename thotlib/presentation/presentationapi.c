@@ -2101,7 +2101,6 @@ View                view;
    else
       /* parameter document is correct */
      {
-       pAb = AbsBoxOfEl ((PtrElement) element, v);
        frame = GetWindowNumber (document, view);
        if (frame != 0)
 	 {
@@ -2111,6 +2110,7 @@ View                view;
 	   else
 	     /* View of associated elements */
 	     v = 1;
+       pAb = AbsBoxOfEl ((PtrElement) element, v);
 	   if (pAb == NULL)
 	     TtaError (ERR_element_has_no_box);
 	   else

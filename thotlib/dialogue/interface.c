@@ -1277,10 +1277,10 @@ ThotEvent             *ev;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
-  if (msg->message != WM_QUIT)
+  if (ev->message != WM_QUIT)
     {
-      TranslateMessage (msg);
-      DispatchMessage (msg);
+      TranslateMessage (ev);
+      DispatchMessage (ev);
     }
 #else /* _WINDOWS */
 #ifndef _GTK
