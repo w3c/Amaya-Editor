@@ -2750,7 +2750,6 @@ BOXES
 	HorizPos: Left = RootBase . Left - ROOT_OFFSET;
 	Content: Symbol 'r';		{ root symbol }
 	LineStyle: Solid;
-	Depth: Creator + 1;
 	Background: Creator =;
 	Foreground: Creator =;
 	IN Structure_view
@@ -2766,7 +2765,6 @@ BOXES
 	HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;
 	Content: Symbol 'r';		{ root symbol }
 	LineStyle: Solid;
-	Depth: Creator + 1;
 	Background: Creator =;
 	Foreground: Creator =;
 	IN Structure_view
@@ -2782,7 +2780,6 @@ BOXES
 	HorizPos: Left = Creator . Left;
 	Content: Symbol 'r';		{ root symbol }
 	LineStyle: Solid;
-	Depth: Creator + 1;
 	Background: Creator =;
 	Foreground: Creator =;
 	IN Structure_view
