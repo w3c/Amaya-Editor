@@ -773,6 +773,13 @@ int status;
 		    TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
 	  status = -501;
 	}
+      else if (errorElement == HTERR_NO_REMOTE_HOST)
+	{
+	  TtaSetStatus (me->docid, 1,
+			TEXT("Host %s doesn't exist"), error->par);
+	  usprintf (AmayaLastHTTPErrorMsg, 
+		    TEXT("Host %s doesn't exist"), error->par);
+	}
       else if (errorElement == HTERR_INTERNAL)
 	{
 	  if ((error->length > 0) && (error->length <= 25) &&
@@ -824,3 +831,6 @@ int status;
 	}
     }
 }
+
+
+
