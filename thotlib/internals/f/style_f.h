@@ -23,9 +23,11 @@ extern int TtaGetStylePresentation ( unsigned int type,
                                      PresentationValue *v );
 extern GenericContext TtaGetGenericStyleContext ( Document doc );
 extern PresentationContext TtaGetSpecificStyleContext ( Document doc );
-extern void TtaCleanStylePresentation ( Element el,
-                                        PSchema tsch,
-                                        Document doc );
+extern void TtaCleanElementPresentation ( Element el,
+					  Document doc );
+extern void TtaCleanStylePresentation ( PSchema tsch,
+                                        Document doc,
+					SSchema sSch );
 extern void TtaApplyAllSpecificSettings ( Element el,
                                           Document doc,
                                           SettingsApplyHandler handler,

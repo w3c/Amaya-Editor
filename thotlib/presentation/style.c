@@ -2448,12 +2448,43 @@ PresentationContext TtaGetSpecificStyleContext (Document doc)
 }
 
 /*----------------------------------------------------------------------
-  Function used to remove all presentation for a given element or an
-  extended presentation schema
+  TtaCleanElementPresentation
+  Remove all specific presentation rules attached to element el
+  in document doc
   ----------------------------------------------------------------------*/
-void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
+void TtaCleanElementPresentation (Element el, Document doc)
 {
   PRule               rule, nextRule;
+  DisplayMode         dispMode;
+
+  if (el == NULL || doc == 0 || LoadedDocument[doc - 1] == NULL)
+    return;
+
+  /* avoid too many redisplay */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+  rule = (PRule) ((PtrElement) el)->ElFirstPRule;
+  while (rule)
+    {
+      nextRule = rule;
+      TtaNextPRule (el, &nextRule);
+      if (TtaIsCSSPRule (rule))
+	TtaRemovePRule (el, rule, doc);
+      rule = nextRule;
+    }
+  /* restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
+}
+
+/*----------------------------------------------------------------------
+  TtaCleanStylePresentation
+  Remove all presentation for the extended presentation schema tsch associated
+  with structure schema sSch in document doc
+  ----------------------------------------------------------------------*/
+void TtaCleanStylePresentation (PSchema tsch, Document doc, SSchema sSch)
+{
   PtrPRule            pRule;
   PtrSSchema	      pSS;
   AttributePres      *attrs;
@@ -2469,93 +2500,74 @@ void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
   pRule = NULL;
-  if (el != NULL)
+  pSS = (PtrSSchema) sSch;
+
+  /* remove all element rules */
+  max = (unsigned int) pSS->SsNRules;
+  for (elType = 0; elType < max; elType++)
     {
-      do
+      pRule = ((PtrPSchema) tsch)->PsElemPRule->ElemPres[elType];
+      while (pRule != NULL)
 	{
-	  rule = (PRule) ((PtrElement) el)->ElFirstPRule;
-	  while (rule)
-	    {
-	      nextRule = rule;
-	      TtaNextPRule (el, &nextRule);
-	      if (TtaIsCSSPRule (rule))
-	         TtaRemovePRule (el, rule, doc);
-	      rule = nextRule;
-	    }
+	  ApplyAGenericStyleRule (doc, pSS, elType+1, 0, 0, pRule, TRUE);
+	  pRule = pRule->PrNextPRule;
 	}
-      while (rule != NULL);
     }
-  else
+
+  /* remove all attribute rules */
+  max = (unsigned int) pSS->SsNAttributes;
+  for (attrType = 0; attrType < max; attrType++)
     {
-      pSS = LoadedDocument[doc - 1]->DocSSchema;
-      /* remove all element rules */
-      max = (unsigned int) pSS->SsNRules;
-      for (elType = 0; elType < max; elType++)
+      attrs = ((PtrPSchema) tsch)->PsAttrPRule->AttrPres[attrType];
+      nbrules = ((PtrPSchema) tsch)->PsNAttrPRule->Num[attrType];
+      for (i = 0; i < nbrules; i++)
 	{
-	  pRule = ((PtrPSchema) tsch)->PsElemPRule->ElemPres[elType];
+	  switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
+	    {
+	    case AtNumAttr:
+	      for (j = 0; j < attrs->ApNCases; j++)
+		{
+		  pRule = attrs->ApCase[j].CaFirstPRule;
+		  while (pRule != NULL)
+		    {
+		      ApplyAGenericStyleRule (doc, pSS, 0, attrType+1, 0,
+					      pRule, TRUE);
+		      pRule = pRule->PrNextPRule;
+		    }
+		}
+	      break;
+	    case AtTextAttr:
+	      pRule = attrs->ApTextFirstPRule;
+	      break;
+	    case AtReferenceAttr:
+	      pRule = attrs->ApRefFirstPRule;
+	      break;
+	    case AtEnumAttr:
+	      for (j = 0; j < pSS->SsAttribute->TtAttr[attrType]->AttrNEnumValues; j++)
+		{
+		  pRule = attrs->ApEnumFirstPRule[j];
+		  while (pRule != NULL)
+		    {
+		      ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0,
+					      pRule, TRUE);
+		      pRule = pRule->PrNextPRule;
+		    }
+		}
+	      break;
+	    }
+
 	  while (pRule != NULL)
 	    {
-	      ApplyAGenericStyleRule (doc, pSS, elType+1, 0, 0, pRule, TRUE);
+	      ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0, pRule, TRUE);
 	      pRule = pRule->PrNextPRule;
 	    }
-	}
-
-      /* remove all attribute rules */
-      max = (unsigned int) pSS->SsNAttributes;
-      for (attrType = 0; attrType < max; attrType++)
-	{
-	  attrs = ((PtrPSchema) tsch)->PsAttrPRule->AttrPres[attrType];
-	  nbrules = ((PtrPSchema) tsch)->PsNAttrPRule->Num[attrType];
-	  for (i = 0; i < nbrules; i++)
-	    {
-	      switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
-		{
-		case AtNumAttr:
-		  for (j = 0; j < attrs->ApNCases; j++)
-		    {
-		      pRule = attrs->ApCase[j].CaFirstPRule;
-		      while (pRule != NULL)
-			{
-			  ApplyAGenericStyleRule (doc, pSS, 0, attrType+1, 0,
-						  pRule, TRUE);
-			  pRule = pRule->PrNextPRule;
-			}
-		    }
-		  break;
-		case AtTextAttr:
-		  pRule = attrs->ApTextFirstPRule;
-		  break;
-		case AtReferenceAttr:
-		  pRule = attrs->ApRefFirstPRule;
-		  break;
-		case AtEnumAttr:
-		  for (j = 0; j < pSS->SsAttribute->TtAttr[attrType]->AttrNEnumValues; j++)
-		    {
-		      pRule = attrs->ApEnumFirstPRule[j];
-		      while (pRule != NULL)
-			{
-			  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0,
-						  pRule, TRUE);
-			  pRule = pRule->PrNextPRule;
-			}
-		    }
-		    break;
-		}
-	  
-	      while (pRule != NULL)
-		{
-		  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0, pRule, TRUE);
-		  pRule = pRule->PrNextPRule;
-		}
-	      attrs = attrs->ApNextAttrPres;
-	    }
+	  attrs = attrs->ApNextAttrPres;
 	}
     }
   /* restore the display mode */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
 }
-
 
 /*----------------------------------------------------------------------
   ApplyAllSpecificSettings browses all the PRules structures,

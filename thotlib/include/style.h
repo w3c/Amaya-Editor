@@ -239,10 +239,18 @@ extern int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
 extern void TtaApplyAllSpecificSettings (Element element, Document doc, SettingsApplyHandler handler, void *param);
 
 /*----------------------------------------------------------------------
-  Function used to remove all presentation for a given element or an
-  extended presentation schema
+  TtaCleanElementPresentation
+  Remove all specific presentation rules attached to element el
+  in document doc
   ----------------------------------------------------------------------*/
-extern void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc );
+extern void TtaCleanElementPresentation (Element el, Document doc);
+
+/*----------------------------------------------------------------------
+  TtaCleanStylePresentation
+  Remove all presentation for the extended presentation schema tsch associated
+  with structure schema sSch in document doc
+  ----------------------------------------------------------------------*/
+extern void TtaCleanStylePresentation (PSchema tsch, Document doc, SSchema sSch);
 
 /*----------------------------------------------------------------------
    TtaListStyleSchemas

@@ -94,7 +94,7 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
       }
 
    /* remove all the specific presentation rules applied to the element */
-   TtaCleanStylePresentation (el, NULL, doc);
+   TtaCleanElementPresentation (el, doc);
 }
 
 
