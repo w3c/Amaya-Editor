@@ -137,7 +137,10 @@ Document            targetDoc;
 	/* set the relative value or URL in attribute HREF */
 	base = GetBaseURL (document);
 	value = MakeRelativeURL (tempURL, base);
-	TtaSetAttributeText (attr, value, element, document);
+	if (*value == EOS)
+	  TtaSetAttributeText (attr, "./", element, document);
+	else
+	  TtaSetAttributeText (attr, value, element, document);
 	TtaFreeMemory (base);
 	TtaFreeMemory (value);
 	TtaFreeMemory (tempURL);

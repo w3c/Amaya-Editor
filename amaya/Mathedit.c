@@ -50,7 +50,6 @@ static int	MathsDialogue;
 static boolean	InitMaths;
 static boolean	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
-static Element	CurrentMatrixColumn = NULL;
 
 #include "HTMLtable_f.h"
 #include "MathMLbuilder_f.h"

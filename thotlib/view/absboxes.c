@@ -120,8 +120,11 @@ int                 frame;
 	     FreeAbView (pAbb, frame);
 	     pAbb = pAbbNext;
 	}
+
       if (pAb->AbBox != NULL)
-	RemoveBoxes (pAb, FALSE, frame);
+	/* remove the box before freeing the abstract box */
+	ComputeUpdates (pAb, frame);
+
       /* dechaine pAb des autres paves */
       if (pAb->AbNext != NULL)
 	pAb->AbNext->AbPrevious = pAb->AbPrevious;

@@ -2319,13 +2319,13 @@ int                 frame;
 	RemoveBoxes (pAb, FALSE, frame);
 
 	/* Mise a jour de la liste des boites terminales */
-	/* premiere boite de la liste */
 	if (pCurrentBox == pMainBox)
+	  /* premiere boite de la liste */
 	   pNextBox->BxPrevious = NULL;
 	else
 	   pNextBox->BxPrevious = pCurrentBox;
-	/* derniere boite de la liste */
 	if (pNextBox == pMainBox)
+	  /* derniere boite de la liste */
 	   pCurrentBox->BxNext = NULL;
 	else
 	   pCurrentBox->BxNext = pNextBox;
