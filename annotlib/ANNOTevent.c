@@ -973,7 +973,8 @@ void ANNOT_Post_callback (int doc, int status,
 			   /* @@ JK: to be tested */
 			   /* update the thread item that are children of this annotation */
 #ifdef ANNOT_ON_ANNOT
-			   if (isReplyTo && AnnotMetaData[doc].thread->annotations 
+			   if (isReplyTo 
+			       && AnnotMetaData[doc].thread->annotations 
 			       && previous_annot_url != AnnotMetaData[doc].annot_url)
 			     {
 			       ThotBool updateRoot; /* tells if we posted the root of the thread */
@@ -1280,9 +1281,6 @@ void Annot_RaiseSourceDoc_callback (int doc, int status,
 				    void * context)
 {
   RAISESOURCEDOC_context *ctx;
-#ifdef ANNOT_ON_ANNOT
-  AnnotMeta *annot;
-#endif /* ANNOT_ON_ANNOT */
 
   /* restore REMOTELOAD contextext's */  
   ctx = (RAISESOURCEDOC_context *) context;
@@ -1546,7 +1544,8 @@ void ANNOT_Delete_callback (int doc, int status,
       /* update the annotation index or delete it if it's empty */
       if (
 #ifdef ANNOT_ON_ANNOT
-	  AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0 ||
+	  (annot->inReplyTo
+	   && AnnotList_localCount (AnnotMetaData[source_doc].thread->annotations) > 0) ||
 #endif /* ANNOT_ON_ANNOT */
 	  AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
 	LINK_SaveLink (source_doc, isReplyTo);
