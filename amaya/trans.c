@@ -2535,13 +2535,15 @@ void TransformType (Document doc, View view)
 	  TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
 	}
       else
-	/* display an status message */
-	TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+	/* display a popup message */
+	InitInfo (TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+      /*TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);*/
       TtaFreeMemory (menuBuf);
     }
   else
-    /* display an status message */
-    TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+    /* display a popup message */
+    InitInfo (TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+  /*TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);*/
   TtaFreeMemory (nameSet);
 }
 

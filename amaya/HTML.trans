@@ -73,6 +73,11 @@ Address:(p{*+})+;
 	* > address:*;
 	}
 
+Paragraph:(address{*+});
+	{
+	* > p:*;
+	}
+
 !between lists
 !!!!!!!!!!!!!!
 
@@ -130,15 +135,15 @@ Paragraphs:
 ! Preformatted to/from paragraphs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!Preformatted: p+;
-!	{
-!	p>:pre;
-!	}
+Preformatted: p+;
+	{
+	p > :pre;
+	}
 
-!Paragraph: pre+;
-!	{
-!	pre>:p;
-!	}
+Paragraph: pre+;
+	{
+	pre > :p;
+	}
 
 
 !Tables to/from lists
@@ -164,8 +169,8 @@ Numbered List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	tr > ol:li;
 	td > ol.li:;
 	th > ol.li:;
-	td2 >ol.li.ul:li;
-	th2 >ol.li.ul:li;
+	td2 > ol.li.ul:li;
+	th2 > ol.li.ul:li;
 	}
 
 Bulleted List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
@@ -175,9 +180,10 @@ Bulleted List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	tr > ul:li;
 	td > ul.li:;
 	th > ul.li:;
-	td2 >ul.li.ul:li;
-	th2 >ul.li.ul:li;
+	td2 > ul.li.ul:li;
+	th2 > ul.li.ul:li;
 	}
+
 Definition List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
         {
         caption > :dl.dt;
@@ -188,18 +194,8 @@ Definition List:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
         th2     > dl:dd;
         }
 
-! List transformations
+! Other transformations
 !!!!!!!!!!!!!!!!!!!!!!
-
-Remove one level: *{(li{(cont:*)+})+};
-	{
-	cont > :*;
-	}
-
-Remove two levels: *{(li{(*{?(li{(lev2:*)+})+})+})+};
-	{
-	lev2 > :*;
-	}
 
 Merge Items: li,(li2:li)+;
 	{
@@ -223,33 +219,72 @@ Split Items: (li{a:*,(b:*)+})+;
 	b > :li.*;
 	}
 
-Merge Lists: ul{li+},(ul{li+})+;
+Merge ul lists: ul{li+},(ul{li+})+;
 	{
 	li > ul:li;
 	}
 
-Merge Lists: ol{li+},(ol{li+})+;
+Merge ol lists: ol{li+},(ol{li+})+;
 	{
 	li > ol:li;
 	}
 
-Merge Lists: dl{(dt|dd)+},(dl{(dt|dd)+})+;
+Merge dl lists: dl{(dt|dd)+},(dl{(dt|dd)+})+;
 	{
 	dt > dl:dt;
 	dd > dl:dd;
 	}
 
+!Paragraph: *{(li{(cont:*)+})+};
+!	{
+!	cont > :*;
+!	}
+
+Paragraph: *{(li{(*{?(li{(lev2:*)+})+})+})+};
+	{
+	lev2 > :*;
+	}
+
+Paragraphs: (ol{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
+	{
+	h1 > :h1;
+	h2 > :h2;
+	h3 > :h3;
+	h4 > :h4;
+	h5 > :h5;
+	h6 > :h6;
+	p > :p;
+	* > :p.*;
+	}
+
+Paragraphs: (ul{(li{(h1|h2|h3|h4|h5|h6|p|*)+})+})+;
+	{
+	h1 > :h1;
+	h2 > :h2;
+	h3 > :h3;
+	h4 > :h4;
+	h5 > :h5;
+	h6 > :h6;
+	p > :p;
+	* > :p.*;
+	}
+
+Remove two list levels: *{(li{(*{?(li{(lev2:*)+})+})+})+};
+	{
+	lev2 > :*;
+	}
+
 ! Forms to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-Form: *+;
+Enclosing Form: *+;
 	{
-	*>Form:*;
+	* > Form:*;
 	}
 
 Remove Form: form{*+};
 	{
-	*>:*;
+	* > :*;
 	}
 
 Remove submenu: (optgroup{*+})+;
@@ -263,52 +298,55 @@ Remove submenu: (optgroup{*+})+;
 Bulleted list: (p|ol|menu|dir|pre|form)+;
    	{
         p > ul:<li style=p.style>;
-        ol> ul;
-        pre> ul:li.pre;
-        form> ul:li.form;
+        ol > ul;
+        pre > ul:li.pre;
+        form > ul:li.form;
         }
 
 Numbered list:(p|ul|menu|dir|pre|form)+;
 	   {
         p > ol:li;
-        ul> ol;
-        pre> ol:li.pre;
-        form> ol:li.form;
+        ul > ol;
+        pre > ol:li.pre;
+        form > ol:li.form;
         }
 
 ! Tables to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-!Table: (h:h1|h:h2|h:h3|h:h4|h:h5|h:h6|p),(h:h1|h:h2|h:h3|h:h4|h:h5|h:h6|*)+;
-!	{
-!	p> <table border="1">.tr.td:p;
-!	h> <table border="1">:tr.td.*;
-!	*> <table border="1">.tr:td.*;
-!	}
-
-
 Vertical Table: *+;
 	{
-	*><table border="1">:tr.td.*;
+	* > <table border="1">:tr.td.*;
 	}
 
 Horizontal Table : *+;
 	{
-	*><table border="1">.tr:td.*;
+	* > <table border="1">.tr:td.*;
 	}
 
-Remove Table:table{?caption,?(body:*{(tr{(*{(?cell_content:*)+})+})+})+};
-	{
-	caption>h3;
-	cell_content>:*;
-	}
+
+Remove Table:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+        {
+        caption > :div.p;
+        block   > :div;
+        td      > :div;
+        th      > :div;
+        td2     > :div;
+        th2     > :div;
+        }
+
+!Remove Table:table{?caption,?(body:*{(tr{(*{(?cell_content:*)+})+})+})+};
+!	{
+!	caption > h3;
+!	cell_content > :*;
+!	}
 
 Transpose Table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
 	{
-	td><table border=table.border>:tr.td;
-	th>table:tr.td;
-	td2><table border=table.border>.tr:td;
-	th2>table.tr:td;
+	td > <table border=table.border>:tr.td;
+	th > table:tr.td;
+	td2 > <table border=table.border>.tr:td;
+	th2 > table.tr:td;
 	}
 
 Heading Cell :?(td|th)+,td,?(td|th)+;
@@ -352,7 +390,7 @@ Definition list:(h1,?hr,?(level1:*)+,?(h2,?(level2:*)+,?((h3|h4|h5|h6),(level3:*
 Definition list:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)+)+;
 	{
 	h2 > dl:dt;
-	level1>dl.dd:*;
+	level1 > dl.dd:*;
 	h3 > dl.dd:dl.dt ;
 	level2 > dl.dd.dl.dd:*;
 	h4 > dl.dd.dl.dd:dl.dt ;
@@ -364,7 +402,7 @@ Definition list:(h2,?hr,?(level1:*)+,(h3,?(level2:*)+,((h4|h5|h6),(level3:*)+)+)
 Definition list:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)+;
 	{
 	h3 > dl:dt;
-	level1>dl.dd:*;
+	level1 > dl.dd:*;
 	h4 > dl.dd:dl.dt ;
 	level2 > dl.dd.dl.dd:*;
 	h5 > dl.dd.dl.dd:dl.dt ;
@@ -375,7 +413,7 @@ Definition list:(h3,?hr,?(level1:*)+,?(h4,?(level2:*)+,((h5|h6),(level3:*)+)+)+)
 Multi level Definition list:(h4,?hr,?(level1:*)+,(h5,?(level2:*)+,((h6)+,(level3:*)+)+)+)+;
 	{
 	h4 > dl:dt;
-	level1>dl.dd:*;
+	level1 > dl.dd:*;
 	h5 > dl.dd:dl.dt ;
 	level2 > dl.dd.dl.dd:*;
 	h6 > dl.dd.dl.dd:dl.dt ;
@@ -439,7 +477,7 @@ Remove font: font{*+};
 
 Remove span: span{*+};
 	{
-	*>:*;
+	* > :*;
 	}
 
 Remove Subscript: sub{*+};
@@ -475,4 +513,3 @@ DistrThot: body{*+}
 	body > :<table border="0" with="100%">.tbody.tr.<td with="30%">.h2.<a href="Index.html">."Home";
 	* > table.tbody.tr:td.*;
 	}
-
