@@ -31,7 +31,7 @@ struct my_error_mgr
 
 typedef struct my_error_mgr *my_error_ptr;
 
-METHODDEF void
+ void
                     my_error_exit (j_common_ptr cinfo)
 {
    my_error_ptr        myerr = (my_error_ptr) cinfo->err;
