@@ -33,8 +33,7 @@ extern void ANNOT_Load ( Document doc,
                          View view );
 extern void ANNOT_Create ( Document doc,
                            View view,
-                           ThotBool useDocRoot,
-                           ThotBool isReplyTo );
+                           AnnotMode mode );
 extern void ANNOT_Post_callback ( int doc,
                                   int status,
                                   char *urlName,
@@ -98,8 +97,7 @@ extern void ANNOT_Load (/* Document doc,
                            View view */);
 extern void ANNOT_Create (/* Document doc,
                              View view,
-                             ThotBool useDocRoot,
-                             ThotBool isReplyTo */);
+                             AnnotMode mode */);
 extern void ANNOT_Post_callback (/* int doc,
                                     int status,
                                     char *urlName,

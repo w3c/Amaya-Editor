@@ -27,6 +27,10 @@
 #define DC_NS "http://purl.org/dc/elements/1.0/"
 #define HTTP_NS "http://www.w3.org/1999/xx/http#"
 
+#ifdef ANNOT_ON_ANNOT
+#define THREAD_NS "http://www.w3.org/2001/03/thread#"
+#endif /* ANNOT_ON_ANNOT */
+
 #define ANNOT_LOCAL_NAME "Annotation"
 #define FALLBACK_ANNOTATION_NS "http://www.w3.org/1999/xx/annotation-ns#"
 #define FALLBACK_ANNOTATION_CLASSNAME  FALLBACK_ANNOTATION_NS ANNOT_LOCAL_NAME 
@@ -62,6 +66,17 @@ typedef struct _RDFResource
   RDFClass, *RDFClassP,
   RDFProperty, *RDFPropertyP;
 
+#ifdef ANNOT_ON_ANNOT
+/* linked list of all annotation threads related to a document */
+typedef struct _AnnotThreadList {
+  /* the list of all the replies related to a document */
+  List *annotations;      /* a list of all the annotations belonging
+			     to this thread */
+  char *rootOfThread;     /* url of the root of thread */
+  int  references;       /* how many times is this thread referenced? */
+} AnnotThreadList;
+#endif /* ANNOT_ON_ANNOT */
+
 /* the info we're interested in in an annotation */
 typedef struct _AnnotMeta {
   ThotBool is_visible; /* if not set, this annotation is only used when
@@ -93,14 +108,16 @@ typedef struct _AnnotMeta {
 		       to the body (only used for local files for the moment */
   char *name;  /* the value of the name tag added to the source document 
 		  for making a reverse link */
-  ThotBool in_reply_to;     /* if the annotation is a reply, this field gets
-			       the URL of the annotation we're replying to */
+  ThotBool isReplyTo; /* says if this annotation is a reply to another
+			   one */
+#ifdef ANNOT_ON_ANNOT
+  char *rootOfThread;   /* the URL of the root of the thread */
+  char *inReplyTo;   /* if the annotation is a reply, this field gets
+			  the URL of the annotation we're replying to */
+  /* a pointer to the thread to which this annotation belongs */
+  AnnotThreadList *thread;
+#endif /* ANNOT_ON_ANNOT */
 } AnnotMeta;
-
-typedef struct _AnnotThread {
-  AnnotMeta *annotation;
-  AnnotMeta *in_reply_to;
-} AnnotThread;
 
 /* the different kind of annotation searches we can do in an
    an annotation metadata list */
@@ -126,11 +143,15 @@ typedef enum _SelType {
   BY_TYPE,
   BY_SERVER
 } SelType;
-  
+
 /* linked list of all annotations related to a document */
 typedef struct _AnnotMetaDataList {
   /* the list of all the annotations related to a document */
   List *annotations;
+#ifdef ANNOT_ON_ANNOT
+  /* the threads */
+  AnnotThreadList *thread;
+#endif /*ANNOT_ON_ANNOT */
   /* filter information */
   List *authors;
   List *types;
@@ -141,7 +162,6 @@ typedef struct _AnnotMetaDataList {
 				  document */
 } AnnotMetaDataList;
 
-
 /*************
  ** Annot Filter menu
  *************/
@@ -151,6 +171,18 @@ typedef struct _AnnotFilter {
 } AnnotFilterData;
 
 AnnotMetaDataList AnnotMetaData[DocumentTableLength];
+#ifdef ANNOT_ON_ANNOT
+AnnotThreadList   AnnotThread[DocumentTableLength];
+#endif /* ANNOT_ON_ANNOT */
+
+/***************
+ ** Annotation creation/browsing modes
+ **************/
+typedef enum _AnnotMode {
+  ANNOT_useSelection = 0,
+  ANNOT_useDocRoot = 1,
+  ANNOT_isReplyTo = 2
+} AnnotMode;
 
 /* Definition de constantes pour les annotations */
 

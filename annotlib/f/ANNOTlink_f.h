@@ -13,9 +13,9 @@ extern void LINK_RemoveLinkFromSource ( Document source_doc,
                                         Element el );
 extern void LINK_SaveLink ( Document source_doc );
 extern void LINK_DeleteLink ( Document source_doc );
-extern AnnotMeta* LINK_CreateMeta ( Document source_doc,
+extern AnnotMeta *LINK_CreateMeta ( Document source_doc,
                                     Document annot_doc,
-                                    ThotBool useDocRoot );
+                                    AnnotMode mode );
 extern void LINK_DelMetaFromMemory ( Document doc );
 extern void LINK_LoadAnnotationIndex ( Document doc,
                                        char *annotIndex,
@@ -33,9 +33,9 @@ extern void LINK_RemoveLinkFromSource (/* Document source_doc,
                                           Element el */);
 extern void LINK_SaveLink (/* Document source_doc */);
 extern void LINK_DeleteLink (/* Document source_doc */);
-extern AnnotMeta* LINK_CreateMeta (/* Document source_doc,
+extern AnnotMeta *LINK_CreateMeta (/* Document source_doc,
                                       Document annot_doc,
-                                      ThotBool useDocRoot */);
+                                      AnnotMode mode */);
 extern void LINK_DelMetaFromMemory (/* Document doc */);
 extern void LINK_LoadAnnotationIndex (/* Document doc,
                                          char *annotIndex,

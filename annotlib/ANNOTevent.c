@@ -653,12 +653,14 @@ void ANNOT_Load (Document doc, View view)
   ** To do: protect for annot/annot agains the user putting an annotation
   on other parts of the annotation than the body
   -----------------------------------------------------------------------*/
-void ANNOT_Create (Document doc, View view, ThotBool useDocRoot, ThotBool isReplyTo)
+void ANNOT_Create (Document doc, View view, AnnotMode mode)
 {
   Document    doc_annot;
   AnnotMeta  *annot;
   XPointerContextPtr ctx;
   char     *xptr;
+  ThotBool   useDocRoot = mode & ANNOT_useDocRoot;
+  ThotBool   isReplyTo = mode & ANNOT_isReplyTo;
 
 #if 0
   /* not used for the moment... select the annotation doc
@@ -669,6 +671,10 @@ void ANNOT_Create (Document doc, View view, ThotBool useDocRoot, ThotBool isRepl
 
   /* we can only annotate some types of documents and saved documents */
   if (!ANNOT_CanAnnotate (doc))
+    return;
+  
+  /* only accept reply tos in annotations */
+  if (DocumentTypes[doc] != docAnnot && isReplyTo)
     return;
 
   /* It's risky to annotate modified documents as we may end having instant
@@ -726,7 +732,7 @@ void ANNOT_Create (Document doc, View view, ThotBool useDocRoot, ThotBool isRepl
       schema_init = TRUE;
     }
 
-  annot = LINK_CreateMeta (doc, doc_annot, useDocRoot);
+  annot = LINK_CreateMeta (doc, doc_annot, mode);
   /* update the XPointer */
   annot->xptr = xptr;
 
@@ -748,9 +754,9 @@ void ANNOT_Create (Document doc, View view, ThotBool useDocRoot, ThotBool isRepl
     }
 
 #ifdef ANNOT_ON_ANNOT
-  if (DocumentTypes[doc] == docAnnot && isReplyTo)
+  if (isReplyTo)
     {
-      annot->in_reply_to = TRUE;
+      /* we should add here the current document where the thread is viewed */
       /* ANNOT_AddThreadItem (doc, annot); */
       ANNOT_AddThreadItem (2, annot);
     }

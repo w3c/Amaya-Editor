@@ -105,24 +105,40 @@ Document ANNOT_NewDocument (doc)
 }
 
 /*-----------------------------------------------------------------------
-   GetMetaData
+  GetMetaData
+  returns the annotation object that corresponds to the annotation
+  doc_annot of document doc.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 AnnotMeta *GetMetaData (Document doc, Document doc_annot)
-#else
-AnnotMeta *GetMetaData (doc, doc_annot)
-Document doc;
- Document doc_annot;
-#endif /* __STDC__ */
 {
   List *ptr;
   AnnotMeta *annot = NULL;
 
   /* get a pointer to the annot list */
   ptr = AnnotMetaData[doc].annotations;
-  if (!ptr)
-    return (NULL);
+  while (ptr)
+    {
+      annot = (AnnotMeta *) ptr->object;
+      /* @@ maybe we could add calls to NormalizeFile here */
+      if ((annot->annot_url 
+	   && (!ustrcasecmp (DocumentURLs[doc_annot], annot->annot_url)
+	       || !ustrcasecmp (DocumentURLs[doc_annot], annot->annot_url + 7)))
+	  /* RRS: newly created local annotations have only a body URI */
+	  || (annot->body_url
+	      &&  (!ustrcasecmp (DocumentURLs[doc_annot], annot->body_url) 
+		   || !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url + 7))))
+	break;
+      ptr = ptr->next;
+    }
+  
+  if (ptr)
+    return annot;
 
+#ifdef ANNOT_ON_ANNOT
+  if (AnnotMetaData[doc].thread)
+    ptr = AnnotMetaData[doc].thread->annotations;
+  else
+    ptr = NULL;
   while (ptr)
     {
       annot = (AnnotMeta *) ptr->object;
@@ -137,11 +153,11 @@ Document doc;
 	break;
       ptr = ptr->next;
     }
-
   if (ptr)
     return annot;
-  else
-    return NULL;
+#endif /* ANNOT_ON_ANNOT */
+
+  return NULL;
 }
 
 /*-----------------------------------------------------------------------

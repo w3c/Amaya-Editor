@@ -56,7 +56,8 @@ extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
 extern void AnnotList_print ( List *annot_list );
 extern void AnnotList_writeIndex ( char *indexFile,
-                                   List *annot_list );
+                                   List *annot_list,
+                                   List *thread_list );
 extern char * ANNOT_PreparePostBody ( Document doc );
 extern char *StrdupDate ( void );
 extern Element SearchAnnotation ( Document doc,
@@ -138,7 +139,8 @@ extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);
 extern void AnnotList_print (/* List *annot_list */);
 extern void AnnotList_writeIndex (/* char *indexFile,
-                                     List *annot_list */);
+                                     List *annot_list,
+                                     List *thread_list */);
 extern char * ANNOT_PreparePostBody (/* Document doc */);
 extern char *StrdupDate (/* void */);
 extern Element SearchAnnotation (/* Document doc,

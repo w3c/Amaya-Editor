@@ -51,6 +51,11 @@ static const char * HTTP_BODY           = "Body";
 static const char * HTTP_CONTENT_LENGTH = "ContentLength";
 static const char * HTTP_CONTENT_TYPE   = "ContentType";
 
+#ifdef ANNOT_ON_ANNOT
+static const char * THREAD_ROOT   = "root";
+static const char * THREAD_INREPLYTO = "inReplyTo";
+#endif /* ANNOT_ON_ANNOT */
+
 static const char * RDFMS_TYPE = "type";
 
 static char* find_last_annotURL = NULL;
@@ -292,6 +297,18 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
           annot->body_url = TtaStrdup ((char *) object);
       else if (contains (predicate, HTTP_NS, HTTP_BODY))
           annot->body = TtaStrdup ((char *) object);
+#ifdef ANNOT_ON_ANNOT
+      else if (contains (predicate, THREAD_NS, THREAD_ROOT))
+	{
+          annot->rootOfThread = TtaStrdup ((char *) object);
+	  annot->isReplyTo = TRUE;
+	}
+      else if (contains (predicate, THREAD_NS, THREAD_INREPLYTO))
+	{
+          annot->inReplyTo = TtaStrdup ((char *) object);
+	  annot->isReplyTo = TRUE;
+	}
+#endif /* ANNOT_ON_ANNOT */
       else
 	/* it's some other RDF statement; store it in the
 	   document-specific model.  Note that subjects and
@@ -356,3 +373,7 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
 
   return (annot_list);
 }
+
+
+
+

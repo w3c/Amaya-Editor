@@ -827,28 +827,14 @@ void AnnotList_print (List *annot_list)
 }
 
 /* ------------------------------------------------------------
-   AnnotList_writeIndex
-   Writes an RDF annotation index file from the contents
-   of annot_list.
+   AnnotList_dumpList
+   Dumps a list of annotations to the file pointed to by
+   fp. fp must be opened and closed outside of this function.
    ------------------------------------------------------------*/
-void AnnotList_writeIndex (char *indexFile, List *annot_list)
+static void  Annot_dumpList (List *annot_list, FILE *fp)
 {
-  AnnotMeta *annot;
   List *annot_ptr;
-  FILE *fp;
-
-  if (!annot_list || !indexFile || indexFile[0] == EOS)
-    return;
-
-  fp = fopen (indexFile, "w");
-  /* write the prologue */
-  fprintf (fp,
-	  "<?xml version=\"1.0\" ?>\n" 
-	  "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
-	  "xmlns:a=\"%s\"\n"
-	  "xmlns:http=\"" HTTP_NS "\"\n"
- 	  "xmlns:d=\"" DC_NS "\">\n",
-	   ANNOT_NS);
+  AnnotMeta *annot;
 
   /*write each annotation entry */
   annot_ptr = annot_list;
@@ -903,6 +889,18 @@ void AnnotList_writeIndex (char *indexFile, List *annot_list)
 		   "<d:date>%s</d:date>\n",
 		   annot->mdate);
 
+#ifdef ANNOT_ON_ANNOT
+	  if (annot->inReplyTo)
+	    {
+	      fprintf (fp,
+		       "<t:root>%s</t:root>\n",
+		       annot->rootOfThread);
+	      fprintf (fp,
+		       "<t:inReplyTo>%s</t:inReplyTo>\n",
+		       annot->inReplyTo);
+	    }
+#endif /* ANNOT_ON_ANNOT */
+
 	  fprintf (fp,
 		   "<a:body r:resource=\"%s\" />\n",
 		   annot->body_url);
@@ -912,6 +910,41 @@ void AnnotList_writeIndex (char *indexFile, List *annot_list)
 	}
       annot_ptr = annot_ptr->next;
     }
+}
+
+/* ------------------------------------------------------------
+   AnnotList_writeIndex
+   Writes an RDF annotation index file from the contents
+   of annot_list.
+   ------------------------------------------------------------*/
+void AnnotList_writeIndex (char *indexFile, List *annot_list, 
+			   List *thread_list)
+{
+  FILE *fp;
+
+  if (!(annot_list || thread_list) || !indexFile || indexFile[0] == WC_EOS)
+    return;
+
+  fp = fopen (indexFile, "w");
+  /* write the prologue */
+  fprintf (fp,
+	   "<?xml version=\"1.0\" ?>\n" 
+	   "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
+	   "xmlns:a=\"%s\"\n"
+#ifdef ANNOT_ON_ANNOT
+	   "xmlns:t=\"" THREAD_NS "\"\n"
+#endif /* ANNOT_ON_ANNOT */
+	   "xmlns:http=\"" HTTP_NS "\"\n"
+	   "xmlns:d=\"" DC_NS "\">\n",
+	   ANNOT_NS);
+  
+  /* dump the standard annotations */
+  Annot_dumpList (annot_list, fp);
+
+#ifdef ANNOT_ON_ANNOT
+  /* dump the replies (thread) */
+  Annot_dumpList (thread_list, fp);
+#endif /* ANNOT_ON_ANNOT */
 
   /* write the epiloge */
   fprintf (fp, 
@@ -958,11 +991,16 @@ char * ANNOT_PreparePostBody (Document doc)
   fp = fopen (rdf_tmpfile, "w");
   /* write the prologue */
   fprintf (fp,
-	  "<?xml version=\"1.0\" ?>\n" 
-	  "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
-	  "xmlns:a=\"%s\"\n"
-	  "xmlns:http=\"" HTTP_NS "\"\n"
- 	  "xmlns:d=\"" DC_NS "\">\n",
+	   "<?xml version=\"1.0\" ?>\n" 
+	   "<r:RDF xmlns:r=\"" RDFMS_NS "\"\n"
+	   "xmlns:a=\"%s\"\n"
+#ifdef ANNOT_ON_ANNOT
+	   /* @@@ jk: add an if so that we only add this NS 
+	      when dumping a reply */
+	   "xmlns:t=\"" THREAD_NS "\"\n"
+#endif /* ANNOT_ON_ANNOT */
+	   "xmlns:http=\"" HTTP_NS "\"\n"
+	   "xmlns:d=\"" DC_NS "\">\n",
 	   ANNOT_NS);
 
   /* beginning of the annotation's  metadata  */
@@ -998,6 +1036,18 @@ char * ANNOT_PreparePostBody (Document doc)
 	  fprintf (fp,
 		   "<d:date>%s</d:date>\n",
 		   annot->mdate);
+
+#ifdef ANNOT_ON_ANNOT
+	  if (annot->inReplyTo)
+	    {
+	      fprintf (fp,
+		       "<t:root>%s</t:root>\n",
+		       annot->rootOfThread);
+	      fprintf (fp,
+		       "<t:inReplyTo>%s</t:inReplyTo>\n",
+		       annot->inReplyTo);
+	    }
+#endif /* ANNOT_ON_ANNOT */
 
   /* the rest of the metadata */
   fprintf (fp,
