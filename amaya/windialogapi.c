@@ -525,6 +525,8 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+  switch (msg)
+    {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_ATTRIBUTE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TtaGetMessage (AMAYA, AM_LOCATION));
@@ -532,12 +534,12 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
       SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TEXT("Clear"));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-
+      
       EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
       SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
       HrefUrl [0] = 0;
       break;
-
+      
     case WM_COMMAND:
       if (HIWORD (wParam) == EN_UPDATE)
 	{
@@ -548,56 +550,56 @@ LPARAM lParam;
 		ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, HrefUrl);
 	    }
 	}
-
-    switch (LOWORD (wParam))
-      {
-      case ID_CONFIRM:
-	ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*)1);
-	EndDialog (hwnDlg, ID_CONFIRM);
-	break;
-      case IDC_BROWSE:
-	OpenFileName.lStructSize       = sizeof (OPENFILENAME);
-	OpenFileName.hwndOwner         = hwnDlg;
-	OpenFileName.hInstance         = hInstance;
-	OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
-	OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
-	OpenFileName.nMaxCustFilter    = 0L;
-	OpenFileName.nFilterIndex      = 1L;
-	OpenFileName.lpstrFile         = (LPTSTR) szFileName;
-	OpenFileName.nMaxFile          = 256;
-	OpenFileName.lpstrInitialDir   = NULL;
-	OpenFileName.lpstrTitle        = TEXT ("Select");
-	OpenFileName.nFileOffset       = 0;
-	OpenFileName.nFileExtension    = 0;
-	OpenFileName.lpstrDefExt       = TEXT ("html");
-	OpenFileName.lCustData         = 0;
-	OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
-	
-	if (GetOpenFileName (&OpenFileName))
-	  ustrcpy (HrefUrl, OpenFileName.lpstrFile);
       
-	SetDlgItemText (hwnDlg, IDC_GETURL, HrefUrl);
-	if (HrefUrl[0] != 0)
-	  {
-	    ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, HrefUrl);
-	    EndDialog (hwnDlg, ID_CONFIRM);
-	    ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 1);
-	  }
-	break;
-      
-      case IDC_CLEAR:
-	ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 3);
-	tmpDocName[0] = 0;
-	SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
-	break;
-      
-      case IDCANCEL:
-	ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 0);
-	HrefUrl [0] = 0;
-	EndDialog (hwnDlg, IDCANCEL);
-	break;      
-      }
-    break;
+      switch (LOWORD (wParam))
+	{
+	case ID_CONFIRM:
+	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*)1);
+	  EndDialog (hwnDlg, ID_CONFIRM);
+	  break;
+	case IDC_BROWSE:
+	  OpenFileName.lStructSize       = sizeof (OPENFILENAME);
+	  OpenFileName.hwndOwner         = hwnDlg;
+	  OpenFileName.hInstance         = hInstance;
+	  OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	  OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
+	  OpenFileName.nMaxCustFilter    = 0L;
+	  OpenFileName.nFilterIndex      = 1L;
+	  OpenFileName.lpstrFile         = (LPTSTR) szFileName;
+	  OpenFileName.nMaxFile          = 256;
+	  OpenFileName.lpstrInitialDir   = NULL;
+	  OpenFileName.lpstrTitle        = TEXT ("Select");
+	  OpenFileName.nFileOffset       = 0;
+	  OpenFileName.nFileExtension    = 0;
+	  OpenFileName.lpstrDefExt       = TEXT ("html");
+	  OpenFileName.lCustData         = 0;
+	  OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
+	  
+	  if (GetOpenFileName (&OpenFileName))
+	    ustrcpy (HrefUrl, OpenFileName.lpstrFile);
+	  
+	  SetDlgItemText (hwnDlg, IDC_GETURL, HrefUrl);
+	  if (HrefUrl[0] != 0)
+	    {
+	      ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, HrefUrl);
+	      EndDialog (hwnDlg, ID_CONFIRM);
+	      ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 1);
+	    }
+	  break;
+	  
+	case IDC_CLEAR:
+	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 3);
+	  tmpDocName[0] = 0;
+	  SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
+	  break;
+	  
+	case IDCANCEL:
+	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 0);
+	  HrefUrl [0] = 0;
+	  EndDialog (hwnDlg, IDCANCEL);
+	  break;      
+	}
+      break;
     default:
       return FALSE;
     } 
