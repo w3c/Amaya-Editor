@@ -1191,7 +1191,7 @@ CHAR_T*              label3;
    /* wait for an answer */
    TtaWaitShowDialogue ();
 #  else  /* _WINDOWS */
-   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1);
+   CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1);
 #  endif /* _WINDOWS */
 }
 

@@ -33,6 +33,7 @@ extern void CreateCharacterDlgWindow (HWND, int, int, int, int, int);
 extern void CreateCreateRuleDlgWindow (HWND, int, int, int, int, STRING);
 extern void CreateApplyClassDlgWindow (HWND, int, int, int, int, STRING);
 extern void CreateSpellCheckDlgWindow (HWND, STRING, STRING, int, int, int, int, int, int, int);
+extern void CreateInitConfirm3LDlgWindow (HWND, int, STRING, STRING, STRING, STRING);
 extern void CreateInitConfirmDlgWindow (HWND, int, STRING, STRING);
 extern void CreateChangeFormatDlgWindow (HWND);
 extern void CreateGreekKeyboardDlgWindow (HWND);

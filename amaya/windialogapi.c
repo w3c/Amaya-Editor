@@ -86,6 +86,7 @@ static CHAR_T       tmpDocName [MAX_LENGTH];
 static CHAR_T       altText [MAX_LENGTH];
 static CHAR_T       message [300];
 static CHAR_T       message2 [300];
+static CHAR_T       message3 [300];
 static CHAR_T       wndTitle [100];
 static CHAR_T       currentLabel [100];
 static CHAR_T       currentRejectedchars [100];
@@ -1075,6 +1076,37 @@ int   chkrSpecial;
  CreateInitConfirmDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
+void CreateInitConfirm3LDlgWindow (HWND parent, int ref, STRING title, STRING msg, STRING msg2, STRING msg3)
+#else  /* !__STDC__ */
+void CreateInitConfirm3LDlgWindow (parent, ref, title, msg, msg2, msg3)
+HWND  parent;
+int   ref;
+STRING title;
+STRING msg;
+STRING msg2;
+STRING msg3;
+#endif /* __STDC__ */
+{  
+	ustrcpy (message, msg);
+	if (msg2 && *msg2 != WC_EOS)
+		ustrpcy (message2, msg2);
+	else
+		message2[0] = WC_EOS;
+	if (msg3 && *msg3 != WC_EOS)
+		ustrcpy (message3, msg3);
+	else
+		message3[0] = WC_EOS;
+
+	ustrcpy (wndTitle, title);
+	currentRef = ref;
+
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateInitConfirmDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
 void CreateInitConfirmDlgWindow (HWND parent, int ref, STRING title, STRING msg)
 #else  /* !__STDC__ */
 void CreateInitConfirmDlgWindow (parent, ref, title, msg)
@@ -1088,17 +1120,7 @@ STRING msg;
 	ustrcpy (wndTitle, title);
 	currentRef = ref;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
-				break;
- 	}
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3496,12 +3518,28 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	HWND messageWnd;
+	HWND message2Wnd;
+	HWND message3Wnd;
+
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
 				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				if (message2)
+				   message2Wnd = CreateWindow (TEXT("STATIC"), message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                        15, 30, 303, 60, hwnDlg, (HMENU) 99, 
+										    (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
+				if (message3)
+				   message3Wnd = CreateWindow (TEXT("STATIC"), message3, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                        15, 45, 303, 60, hwnDlg, (HMENU) 99, 
+										    (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
 				break; 
 
 		   case WM_COMMAND:
