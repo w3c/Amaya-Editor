@@ -2098,14 +2098,60 @@ over a selectable item (as activate does)
 gboolean APP_PopWinSelect (GtkWidget *w)
 {
   GtkWidget *entry;
-
+  int x,y;
+  GdkModifierType mask = 0;
+  char *text;
+ 	     
+  gdk_window_get_pointer (w->window, 
+			 &x, 
+			 &y, 
+			 &mask);
   entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
-					     "entry");
-  gtk_signal_emit_by_name (GTK_OBJECT(entry),
-			   "activate");
+
+  if (x > 0 && x < w->allocation.width &&
+      y > 0 && y < w->allocation.height)
+    {				 
+      gtk_signal_emit_by_name (GTK_OBJECT(entry),
+			       "activate");
+      text = gtk_object_get_data (GTK_OBJECT (w), 
+			   "PreviousSelect");
+      TtaFreeMemory (text);
+      gtk_object_set_data (GTK_OBJECT (w), 
+		       "PreviousSelect", 
+		       NULL);
+      return TRUE;
+    }
+  else
+    {
+      text = gtk_object_get_data (GTK_OBJECT (w), 
+			   "PreviousSelect");
+      gtk_entry_set_text (GTK_ENTRY (entry), text);
+      TtaFreeMemory (text);
+      gtk_object_set_data (GTK_OBJECT (w), 
+		       "PreviousSelect", 
+		       NULL);
+      return TRUE;
+    }
   return FALSE;
 }
-
+/*----------------------------------------------------------------------
+APP_PopWinShow : 
+ ----------------------------------------------------------------------*/
+gboolean APP_PopWinShow (GtkWidget *w)
+{
+  GtkWidget *entry;
+  char *text, *old;
+ 
+  entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
+					     "entry");
+  text = gtk_entry_get_text (GTK_ENTRY (entry));
+  old = TtaGetMemory (strlen (text) + 1);
+  strcpy (old, text);
+  gtk_object_set_data (GTK_OBJECT (w), 
+		       "PreviousSelect", 
+		       old);
+  return FALSE;
+}
 /*----------------------------------------------------------------------
 APP_ComboEscape : Undo text modification and hide popup if needed.
  ----------------------------------------------------------------------*/
@@ -2116,7 +2162,8 @@ gboolean APP_ComboEscape (GtkWidget *w,
   GdkEventKey *event;
   GtkWidget *entry;
   int frame;  
-
+  char *text;
+  
   if (all_event->type == GDK_KEY_PRESS)
     {
       event = (GdkEventKey *) all_event;      
@@ -2136,9 +2183,26 @@ gboolean APP_ComboEscape (GtkWidget *w,
 			     "activate",
 			     GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
 			     (gpointer)frame);
-	  return TRUE;
-	  
+	  text = gtk_object_get_data (GTK_OBJECT (w), 
+				      "PreviousSelect");
+	  gtk_entry_set_text (GTK_ENTRY (entry), text);
+	  TtaFreeMemory (text);
+	  gtk_object_set_data (GTK_OBJECT (w), 
+			       "PreviousSelect", 
+			       NULL);
+	  return TRUE;	  
 	}
+      else if (event->keyval == GDK_Return)
+	{
+	  text = gtk_object_get_data (GTK_OBJECT (w), 
+				      "PreviousSelect");
+	  TtaFreeMemory (text);
+	  gtk_object_set_data (GTK_OBJECT (w), 
+			       "PreviousSelect", 
+			       NULL);
+	  return TRUE;
+	}
+      
     }
   return FALSE;
 }
@@ -2408,6 +2472,10 @@ int TtaAddTextZone (Document doc, View view, char *label,
 		  ConnectSignalGTK (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
 				      "hide",
 				      GTK_SIGNAL_FUNC (APP_PopWinSelect),
+				      (gpointer) frame);
+		  ConnectSignalGTK (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
+				      "show",
+				      GTK_SIGNAL_FUNC (APP_PopWinShow),
 				      (gpointer) frame);
 		  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
 				      "event",
@@ -2796,7 +2864,6 @@ void gtk_claim_selection()
     }
 }
 #endif /* _GTK */
-
 /*----------------------------------------------------------------------
   BuildMenus builds or rebuilds frame menus.
   The parameter RO is TRUE when only ReadOnly functions are accepted
@@ -3347,14 +3414,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     GTK_SIGNAL_FUNC (ExposeCallbackGTK),
 			     (gpointer)frame); 
 #ifdef _GL
-#ifdef _GLANIM
-	   /* whenever a draw event is send, 
-	      we draw all the opengl canvas*/
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "draw",
-			     GTK_SIGNAL_FUNC (GL_DrawCallback),
-			     (gpointer)frame);
-#endif /*_GLANIM*/
 	   /* when widget is initialized, 
 	      we define opengl pipeline state */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
