@@ -1146,6 +1146,10 @@ Document       doc;
 	  if (TtaFileExist (htmlErrFile))
 	    TtaFileUnlink (htmlErrFile);
 
+#ifdef ANNOTATIONS
+	  ANNOT_FreeDocumentResource (doc);
+#endif /* ANNOTATIONS */
+
 	  if (DocumentTypes[doc] == docImage)
 	    DocumentTypes[doc] = docHTML;
 	}
@@ -1157,9 +1161,6 @@ Document       doc;
 	  TtaFreeMemory (DocumentMeta[doc]);
 	  DocumentMeta[doc] = NULL;
 	}
-#ifdef ANNOTATIONS
-       ANNOT_FreeDocumentResource (doc);
-#endif /* ANNOTATIONS */
       if (HighlightDocument == doc)
 	ResetHighlightedElement ();
       if (DocumentTypes[doc] != docLog)
