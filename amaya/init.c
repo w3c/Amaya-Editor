@@ -260,6 +260,7 @@ typedef struct _GETHTMLDocument_context
   char      *initial_url;
   char      *form_data;
   ClickEvent method;
+  ThotBool   InNewWindow;
   char      *tempdocument;
   TTcbf     *cbf;
   void      *ctx_cbf;
@@ -2864,7 +2865,7 @@ static Document LoadDocument (Document doc, char *pathname,
 			      char *form_data, char *initial_url,
 			      int method, char *tempfile,
 			      char *documentname, AHTHeaders *http_headers,
-			      ThotBool history)
+			      ThotBool history, ThotBool *InNewWindow)
 {
   CSSInfoPtr          css;
   Document            newdoc = 0;
@@ -3498,12 +3499,12 @@ static Document LoadDocument (Document doc, char *pathname,
       if (ReadOnlyDocument[newdoc])
 	SetDocumentReadOnly (newdoc);
 
-      if (InNewWindow || newdoc != doc)
+      if (*InNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
 	InitDocHistory (newdoc);
       /* the document is loaded now */
-      InNewWindow = FALSE;
+      *InNewWindow = FALSE;
       /* hide template entry if no template server is configured */
       if (TtaGetEnvString ("TEMPLATE_URL") == NULL)
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
@@ -3563,7 +3564,7 @@ void Reload_callback (int doc, int status, char *urlName,
        /* parse and display the document, res contains the new document
 	identifier, as given by the thotlib */
        res = LoadDocument (newdoc, pathname, form_data, NULL, method,
-			   tempfile, documentname, http_headers, FALSE);
+			   tempfile, documentname, http_headers, FALSE, &InNewWindow);
 
        if (res == 0)
 	 {
@@ -4174,6 +4175,7 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
    char               *s;
    int                 i;
    ThotBool	       history;
+   ThotBool            InNewWindow;
    ThotBool            ok;
    ThotBool            stopped_flag = FALSE;
    ThotBool            local_link;
@@ -4198,7 +4200,8 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
    cbf = ctx->cbf;
    ctx_cbf = ctx->ctx_cbf;
    local_link = ctx->local_link;
-   
+   InNewWindow = ctx->InNewWindow;
+
    pathname = TtaGetMemory (MAX_LENGTH + 1);
    strncpy (pathname, urlName, MAX_LENGTH);
    pathname[MAX_LENGTH] = EOS;
@@ -4224,7 +4227,7 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 	   res = LoadDocument (newdoc, pathname, form_data, 
 			       initial_url, method,
 			       tempfile, documentname,
-			       http_headers, history);
+			       http_headers, history, &InNewWindow);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
@@ -4484,6 +4487,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
        ctx->cbf = cbf;
        ctx->ctx_cbf = ctx_cbf;
        ctx->local_link = 0;
+       ctx->InNewWindow = InNewWindow;
      }
 
    toparse = 0;
@@ -5820,7 +5824,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  else
 	      http_headers.content_type = NULL;
 	  LoadDocument (newdoc, docname, NULL, NULL, CE_ABSOLUTE, 
-			tempdoc, DocumentName, &http_headers, FALSE);
+			tempdoc, DocumentName, &http_headers, FALSE, &InNewWindow);
 	}
       else
 	{
@@ -5828,7 +5832,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  tempfile[0] = EOS;
 	  /* load the temporary file */
 	  LoadDocument (newdoc, tempdoc, NULL, NULL, CE_ABSOLUTE,
-			tempfile, DocumentName, NULL, FALSE);
+			tempfile, DocumentName, NULL, FALSE, &InNewWindow);
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);
 	  len = strlen (docname) + 1;
