@@ -474,6 +474,14 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #ifdef AM_REDLAND
       if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
 	object = (char *) triple->object;
+      else if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
+	{
+	  ParseContext *parseCtx = (ParseContext *) context;
+	  char *base_uri = parseCtx->base_uri;
+	  char *ptr =  (char *) triple->object;
+	  object = TtaGetMemory (strlen (base_uri) + strlen (ptr) + 2);
+	  sprintf (object, "%s#%s", base_uri, ptr);
+	}
       else
 #endif /* AM_REDLAND */
 	object = AM_RAPTOR_URI_AS_STRING(triple->object);
