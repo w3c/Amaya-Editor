@@ -2406,6 +2406,11 @@ View                view;
 
    /* invalid current loading */
    W3Loading = 0;
+
+#ifdef AMAYA_JAVA
+   CloseJava();
+#endif
+
    /* free each loaded document */
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)

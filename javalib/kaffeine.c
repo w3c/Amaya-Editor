@@ -742,7 +742,7 @@ void                InitJava ()
 
     char *app_name = TtaGetEnvString ("appname");
 
-    fprintf(stderr, "Initialize Java Runtime\n");
+    /* fprintf(stderr, "Initialize Java Runtime\n"); */
 
     /* Initialise */
     initialiseKaffe();
@@ -751,7 +751,7 @@ void                InitJava ()
     /* Register Thotlib stubs */
     register_stubs();
 
-    fprintf(stderr, "Java Runtime Initialized\n");
+    /* fprintf(stderr, "Java Runtime Initialized\n"); */
 
     /* Build the init class name */
     sprintf(initClass, "%s/%sInit", app_name, app_name);
@@ -770,6 +770,31 @@ void                InitJava ()
     /* Start the application loop of events */
     do_execute_java_class_method("thotlib.Interface", "main",
                    "([Ljava/lang/String;)V", args);
+}
+
+/*----------------------------------------------------------------------
+   CloseJava
+
+   Stops cleanly all the Java stuff.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CloseJava (void)
+#else
+void                CloseJava ()
+#endif
+{
+    char initClass[MAX_PATH];
+
+    char *app_name = TtaGetEnvString ("appname");
+
+    fprintf(stderr, "Stop Java Runtime\n");
+
+    /* Build the init class name */
+    sprintf(initClass, "%s/%sInit", app_name, app_name);
+
+    /* lauch the stop class for the application */
+    do_execute_java_class_method(initClass, "Stop", "()V");
+
 }
 
 /*----------------------------------------------------------------------
