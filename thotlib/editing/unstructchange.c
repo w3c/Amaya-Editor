@@ -1810,6 +1810,8 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		 pSibling = PreviousLeaf (pElem);
 	       else
 		 pSibling = NextLeaf (pElem);
+	       if (!pSibling)
+		 return;
 	     }
 	   if (!pSibling->ElTerminal ||
 	       (pSibling->ElAccess == AccessReadOnly &&
@@ -1850,7 +1852,9 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		     /* simulate a delete */
 		     TtcDeleteSelection (IdentDocument (pDoc), 0);
 		   }
-	       else
+	       else if (strcmp (pSibling->ElStructSchema->SsName, "GraphML"))
+		 /* don't delete a graphic element when the user enters
+		    Backspace at the beginning of a svg:text element */
 		 {
 		   /* set selection before the first character of the string */
 		   SelectElement (pDoc, pSibling, FALSE, FALSE);
