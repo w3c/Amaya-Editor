@@ -222,7 +222,11 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 		   !strcmp (name1, "image/jpeg") ||
 		   !strcmp (name1, "image/png") ||
 		   !strcmp (name1, "image/svg") ||
-		   !strcmp (name1, AM_SVG_MIME_TYPE))
+		   !strcmp (name1, AM_SVG_MIME_TYPE) ||
+		   !strcmp (name1, AM_XHTML_MIME_TYPE) ||
+		   !strcmp (name1, "text/html") ||
+		   !strcmp (name1, "text/htm") ||
+		   !strcmp (name1, AM_GENERIC_XML_MIME_TYPE))
 		 isImage = TRUE;
 	       TtaFreeMemory (name1);
 	     }
@@ -246,7 +250,9 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 		     !strcmp (&data[length-3], "png") ||
 		     !strcmp (&data[length-3], "svg") ||
 		     !strcmp (&data[length-4], "svgz") ||
-		     !strcmp (&data[length-3], "htm"))
+		     !strcmp (&data[length-3], "htm") ||
+		     !strcmp (&data[length-4], "html") ||
+		     !strcmp (&data[length-3], "xml"))
 		   isImage = TRUE;
 	     }
 	 }
