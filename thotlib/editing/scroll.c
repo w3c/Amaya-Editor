@@ -557,12 +557,20 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent)
    int                 ymin, ymax;
    int                 width, height;
    int                 y, dy, h;
+   PtrBox              pBox1;
    ViewFrame          *pFrame;
 
    if (pBox == NULL)
       return;
-   while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-     pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+   pBox1 = pBox;
+   while (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
+     pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
+   if (!pBox)
+     {
+       pBox = pBox1;
+       while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+	 pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+     }
 
    if (pBox->BxType == BoSplit)
      pBox = pBox->BxNexChild;
