@@ -11,7 +11,6 @@
  *
  */
 
-
 #include "thot_sys.h"
 #include "thot_gui.h"
 #include "pluginbrowse.h"
@@ -95,4 +94,3 @@ View     view;
    TtaNewLabel (BasePlugin + PLUGIN_INFO, BasePlugin + PLUGIN_FORM, buffer);
    TtaShowDialogue (BasePlugin + PLUGIN_FORM, TRUE); 
 }
-

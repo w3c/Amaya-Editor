@@ -48,7 +48,7 @@ static void*            handle = NULL;
 static NPP              pluginInstance;
 static NPSavedData*     saved = NULL;
 static NPNetscapeFuncs* amayaFunctionsTable;
-static NPPluginFuncs*   pluginFunctionsTable;
+/* static NPPluginFuncs*   pluginFunctionsTable; */
 static NPMIMEType       pluginType;
 
 static int (*ptr_NPP_GetMIMEDescription) () ;
@@ -486,7 +486,7 @@ void Ap_InitializeTable ()
 
 
     amayaFunctionsTable  = (NPNetscapeFuncs*) malloc (sizeof (NPNetscapeFuncs));
-    pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
+    pluginTable [currentPlugin]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
     printf ("Size of NPNetscapeFuncs = %d\n", (int) sizeof (NPNetscapeFuncs));
     printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs));
 
@@ -508,14 +508,14 @@ void Ap_InitializeTable ()
     amayaFunctionsTable->getJavaPeer   = ((NPN_GetJavaPeerUPP)   (Ap_GetJavaPeer));
     amayaFunctionsTable->getvalue      = ((NPN_GetValueUPP)      (Ap_GetValue));
 
-    pluginFunctionsTable->size         = ((uint16) (sizeof (NPPluginFuncs)));
+    pluginTable [currentPlugin]->pluginFunctionsTable->size         = ((uint16) (sizeof (NPPluginFuncs)));
 
     ptr_NP_Initialize = (int (*) (NPNetscapeFuncs*, NPPluginFuncs*)) dlsym (handle, "NP_Initialize");
     message = (char*) dlerror ();    
     if (message) 
 	printf ("ERROR at Initialization: %s\n", message);
 
-    ret = ptr_NP_Initialize (amayaFunctionsTable, pluginFunctionsTable);
+    ret = ptr_NP_Initialize (amayaFunctionsTable, pluginTable [currentPlugin]->pluginFunctionsTable);
     printf ("result = %d\n", ret); 
 }
 
@@ -618,15 +618,15 @@ char*    filename;
     
     pluginInstance = (NPP) malloc (sizeof (NPP_t));
 
-    (*(pluginFunctionsTable->newp)) (pluginType, pluginInstance, NP_EMBED, argc, argn, argv, /* saved */ NULL);
+    (*(pluginTable [currentPlugin]->pluginFunctionsTable->newp)) (pluginType, pluginInstance, NP_EMBED, argc, argn, argv, /* saved */ NULL);
 
     stream      = (NPStream*) malloc (sizeof (NPStream));
     stream->url = filename;
     stream->end = 0;
        
-    (*(pluginFunctionsTable->setwindow)) (pluginInstance, pwindow); 
+    (*(pluginTable [currentPlugin]->pluginFunctionsTable->setwindow)) (pluginInstance, pwindow); 
     
-    ret = (*(pluginFunctionsTable->newstream)) (pluginInstance, pluginType, stream, TRUE, &stype); 
+    ret = (*(pluginTable [currentPlugin]->pluginFunctionsTable->newstream)) (pluginInstance, pluginType, stream, TRUE, &stype); 
 
     range.offset = 0; /*10; */
     range.length = 2000; /*20;*/
@@ -636,7 +636,7 @@ char*    filename;
     /*AM_requestread(stream, &range);*/
  
     printf ("Retrun from new stream = %d\n", ret);
-    (*(pluginFunctionsTable->asfile)) (pluginInstance, stream, filename);
+    (*(pluginTable [currentPlugin]->pluginFunctionsTable->asfile)) (pluginInstance, stream, filename);
     /*dlclose(fighandle);*/       
 }
 

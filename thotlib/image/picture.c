@@ -395,6 +395,7 @@ char               *fileName;
 
    /* i = MAX_PICT_FORMATS - 1; */
    i = HandlersCounter - 1 ;
+   currentPlugin = HandlersCounter - InlineHandlers - 1;
    l = strlen (fileName);
    if (l > 4)
      {

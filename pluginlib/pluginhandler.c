@@ -249,7 +249,7 @@ char* fileName;
   /* TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO - TODO */
 
   l = strlen (fileName);
-  if (l > 4) {
+  if (l > 4 && pluginTable [currentPlugin]->fileExt) {
      while (!matched && pluginTable [currentPlugin]->fileExt [index1] != '\0') {
            index2 = 0;
            suffix [index2++] = '.';
@@ -301,3 +301,4 @@ void PluginLoadResources ()
 {
    TtaBrowsePluginDirectory ();
 }
+
