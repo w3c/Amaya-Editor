@@ -2385,15 +2385,32 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    }
 	  break;
       	case GDK_MOTION_NOTIFY:
-	  /* if a selection is doing, extend the current selection */
-	  LocateSelectionInView (frame, event->x, event->y, 0);
-	  FrameToView (frame, &document, &view);
-	  TtcCopyToClipboard (document, view);
+	  /* extend the current selection */
+	  while (event->type != GDK_BUTTON_RELEASE)
+	    {
+	      if (event->y > FrameTable[frame].FrHeight)
+		TtcLineDown (document, view);
+	      else if (event->y < 0)
+		TtcLineUp (document, view);
+	      LocateSelectionInView (frame, event->x, event->y, 0);
+	      FrameToView (frame, &document, &view);
+	      TtcCopyToClipboard (document, view);
+	      TtaFetchOrWaitEvent ((ThotEvent *)event);
+	      event = gtk_get_current_event ();
+	      gtk_main_iteration_do (TRUE);
+	    }
 	  break;
       	case GDK_BUTTON_RELEASE:
 	  /* if a button release, we save the selection in the clipboard */
           /* a selection extension */
-	    TtaAbortShowDialogue ();
+	  if (event->button == 1)
+	    {
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 4);
+	    }
+	  TtaAbortShowDialogue ();
 	  break;
 	case GDK_KEY_PRESS: 
 	    T1 = T2 = T3 = 0;
@@ -2715,7 +2732,6 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
    int                 i;
 #ifdef _GTK   
    ThotWidget          w;
-   ThotCursor          LastCurs;
 #endif /* _GTK */
 
    if (ClickIsDone == 1)
@@ -2736,10 +2752,9 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 	   XDefineCursor (TtDisplay, drawable, WindowCurs);
 #else /* _GTK */   
 	   {
-	       w = FrameTable[i].WdFrame;
-	       if (w != NULL)
-		   if (w->window != NULL)
-		       gdk_window_set_cursor(GTK_WIDGET(w)->window, WindowCurs);
+	     w = FrameTable[i].WdFrame;
+	     if (w && w->window)
+	       gdk_window_set_cursor(GTK_WIDGET(w)->window, WindowCurs);
 	   }
 #endif /* _GTK */
      }
@@ -3040,10 +3055,8 @@ void UpdateScrollbars (int frame)
    Arg                 args[MAX_ARGS];
    int                 n;
 #else /* _GTK */
-   int start,end,total;
-   float ratio;
    GtkAdjustment      *tmpw;
-#endif /* !_GTK */
+#endif /* _GTK */
 #else /* _WINDOWS */
    RECT                rWindow;
    SCROLLINFO          scrollInfo;

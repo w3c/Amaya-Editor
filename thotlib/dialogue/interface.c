@@ -1213,8 +1213,7 @@ static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
   ----------------------------------------------------------------------*/
 void TtaFetchOrWaitEvent (ThotEvent *ev)
 {
-#ifndef _GTK
-#ifndef _WINDOWS
+#if !defined(_GTK) && !defined(_WINDOWS)
    XtInputMask         status;
 
    status = XtAppPending (app_cont);
@@ -1226,10 +1225,7 @@ void TtaFetchOrWaitEvent (ThotEvent *ev)
        XtAppAddTimeOut (app_cont, 1000, (XtTimerCallbackProc) TimerCallback, NULL);
        XtAppNextEvent (app_cont, ev);
      }
-#endif /* ! _WINDOWS */
-#else /* _GTK */
-
-#endif /* !_GTK */
+#endif /* _GTK _WINDOWS*/
 }
 
 /*----------------------------------------------------------------------
@@ -1252,7 +1248,7 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
      }
    else if (status != 0)
      XtAppProcessEvent (app_cont, XtIMAll);
-#endif /* ! _WINDOWS */
+#endif /* _WINDOWS */
 #else /* _GTK */
    if (gtk_events_pending())
      {
@@ -1261,7 +1257,7 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
      }
    else
      return FALSE;
-#endif /* !_GTK */
+#endif /* _GTK */
    return (FALSE);
 }
 
