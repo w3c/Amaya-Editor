@@ -15,8 +15,8 @@ extern void WriteAttributeType ( AttribType typ );
 extern void WriteConstructor ( RConstruct constr );
 extern void WriteBasicType ( BasicType typ );
 extern ThotBool WriteStructureSchema ( Name fileName,
-                                      PtrSSchema pSS,
-                                      int code );
+                                       PtrSSchema pSS,
+                                       int code );
 
 #else /* __STDC__ */
 
@@ -29,8 +29,8 @@ extern void WriteAttributeType (/* AttribType typ */);
 extern void WriteConstructor (/* RConstruct constr */);
 extern void WriteBasicType (/* BasicType typ */);
 extern ThotBool WriteStructureSchema (/* Name fileName,
-                                        PtrSSchema pSS,
-                                        int code */);
+                                         PtrSSchema pSS,
+                                         int code */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

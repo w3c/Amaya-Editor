@@ -29,7 +29,7 @@ extern void InsertViewSelMarks ( int frame,
                                  ThotBool endSelection,
                                  ThotBool alone );
 extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
-                                        int frame );
+                                         int frame );
 
 #else /* __STDC__ */
 
@@ -56,7 +56,7 @@ extern void InsertViewSelMarks (/* int frame,
                                    ThotBool endSelection,
                                    ThotBool alone */);
 extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pAb,
-                                          int frame */);
+                                           int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

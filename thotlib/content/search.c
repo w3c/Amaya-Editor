@@ -259,8 +259,7 @@ ThotBool            select;
 	SelectStringWithEvent (pDoc, pEl, firstChar, i);
      }
    /* le document a ete modifie' */
-   pDoc->DocModified = TRUE;
-   pDoc->DocNTypedChars += replaceLen;
+   SetDocumentModified (pDoc, TRUE, replaceLen);
    /* envoie l'evenement ElemTextModify.Post a qui le demande */
    pAsc = pEl;
    while (pAsc != NULL)

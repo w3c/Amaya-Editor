@@ -650,7 +650,28 @@ Document        doc;
 	}
     }
 }
-
+/*----------------------------------------------------------------------
+   Update save button and menu entry according to the document status.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DocStatusUpdate (Document document, ThotBool modified)
+#else
+void                DocStatusUpdate (document, modified)
+Document            doc;
+ThotBool            modified;
+#endif
+{
+  if (modified && TtaGetDocumentAccessMode (document))
+    {
+       TtaSetItemOn (document, 1, File, BSave);
+       TtaChangeButton (document, 1, 7, iconSave, TRUE);
+    }
+  else
+    {
+       TtaSetItemOff (document, 1, File, BSave);
+       TtaChangeButton (document, 1, 7, iconSaveNo, FALSE);
+    }
+}
 
 /*----------------------------------------------------------------------
    Change the Broser/Editor mode                    
@@ -788,12 +809,16 @@ Document            doc;
      {
        /* the document is in ReadWrite mode */
        TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
+       if (TtaIsDocumentModified (document))
+	 {
+	   TtaSetItemOn (document, 1, File, BSave);
+	   TtaChangeButton (document, 1, 7, iconSave, TRUE);
+	 }
 #ifdef _WINDOWS 
        WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, FALSE);
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, 5, iconEditor, TRUE);
 #endif /* _WINDOWS */
-       TtaChangeButton (document, 1, 7, iconSave, TRUE);
        TtaChangeButton (document, 1, 11, iconI, TRUE);
        TtaChangeButton (document, 1, 12, iconB, TRUE);
        TtaChangeButton (document, 1, 13, iconT, TRUE);
@@ -821,8 +846,6 @@ Document            doc;
        /* update windows menus */
 
        /* update windows menus */
-       view = 1;
-       TtaSetItemOn (document, 1, File, BSave);
        TtaSetItemOn (document, 1, Edit_, BUndo);
        TtaSetItemOn (document, 1, Edit_, BRedo);
        TtaSetItemOn (document, 1, Edit_, BCut);
@@ -1435,9 +1458,9 @@ ThotBool            logFile;
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   TtaAddButton (doc, 1, iconSave, SaveDocument,
+	   TtaAddButton (doc, 1, iconSaveNo, SaveDocument,
 			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
-			 TBSTYLE_BUTTON, TRUE);
+			 TBSTYLE_BUTTON, FALSE);
 	   TtaAddButton (doc, 1, iconPrint, PrintAs,
 			 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
 			 TBSTYLE_BUTTON, TRUE);
@@ -1512,6 +1535,7 @@ ThotBool            logFile;
 	   /* initial state for menu entries */
 	   TtaSetItemOff (doc, 1, File, BBack);
 	   TtaSetItemOff (doc, 1, File, BForward);
+	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
@@ -1661,7 +1685,6 @@ ThotBool            logFile;
 	 if (DocumentTypes[doc] != docText && DocumentTypes[doc] != docCSS)
 	   {
 	     /* the document is in ReadOnly mode */
-	     TtaSetItemOff (doc, 1, File, BSave);
 	     TtaSetItemOff (doc, 1, Edit_, BUndo);
 	     TtaSetItemOff (doc, 1, Edit_, BRedo);
 	     TtaSetItemOff (doc, 1, Edit_, BCut);
@@ -1691,10 +1714,6 @@ ThotBool            logFile;
 	     TtaSetItemOff (doc, 1, Views, BShowLinks);
 	     TtaSetItemOff (doc, 1, Views, BShowToC);
 	   }
-	 if (DocumentTypes[doc] == docReadOnly ||
-	     DocumentTypes[doc] == docTextRO ||
-	     DocumentTypes[doc] == docCSSRO)
-	   TtaChangeButton (doc, 1, 7, iconSaveNo, FALSE);
 	 TtaChangeButton (doc, 1, 11, iconINo, FALSE);
 	 TtaChangeButton (doc, 1, 12, iconBNo, FALSE);
 	 TtaChangeButton (doc, 1, 13, iconTNo, FALSE);
@@ -1731,7 +1750,7 @@ ThotBool            logFile;
 #else  /* _WINDOWS */
 	     TtaChangeButton (doc, 1, 5, iconEditor, TRUE);
 #endif /* _WINDOWS */
-	     TtaChangeButton (doc, 1, 7, iconSave, TRUE);
+	     TtaChangeButton (doc, 1, 7, iconSaveNo, FALSE);
 	     TtaChangeButton (doc, 1, 11, iconI, TRUE);
 	     TtaChangeButton (doc, 1, 12, iconB, TRUE);
 	     TtaChangeButton (doc, 1, 13, iconT, TRUE);
@@ -4237,6 +4256,7 @@ NotifyEvent        *event;
 
    /* Define the backup function */
    TtaSetBackup (BackUpDocs);
+   TtaSetDocStatusUpdate ((Proc) DocStatusUpdate);
    AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
    BaseDialog = TtaSetCallback (CallbackDialogue, MAX_REF);

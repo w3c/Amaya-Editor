@@ -7,14 +7,14 @@
 #ifdef __STDC__
 
 extern ThotBool SauveXmlDoc ( BinFile xmlFile,
-                             Document doc,
-                             ThotBool withEvent );
+                              Document doc,
+                              ThotBool withEvent );
 
 #else /* __STDC__ */
 
 extern ThotBool SauveXmlDoc (/* BinFile xmlFile,
-                               Document doc,
-                               ThotBool withEvent */);
+                                Document doc,
+                                ThotBool withEvent */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

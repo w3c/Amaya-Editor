@@ -38,27 +38,28 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
+#include "applicationapi_f.h"
+#include "attributes_f.h"
 #include "attrpresent_f.h"
 #include "attrmenu_f.h"
-#include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "draw_f.h"
-#include "callback_f.h"
-#include "exceptions_f.h"
-#include "buildboxes_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
-#include "changeabsbox_f.h"
-#include "references_f.h"
 #include "boxselection_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "changeabsbox_f.h"
+#include "content_f.h"
+#include "createabsbox_f.h"
+#include "docs_f.h"
+#include "draw_f.h"
+#include "exceptions_f.h"
+#include "frame_f.h"
+#include "memory_f.h"
+#include "presvariables_f.h"
+#include "references_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
 #include "structselect_f.h"
 #include "structschema_f.h"
-#include "content_f.h"
-#include "presvariables_f.h"
-#include "applicationapi_f.h"
-#include "frame_f.h"
-#include "attributes_f.h"
+#include "tree_f.h"
 #include "undo_f.h"
 
 /*----------------------------------------------------------------------
@@ -1138,9 +1139,8 @@ PtrAttribute        pNewAttr;
 	       l'attribut sur l'element lui-meme */
 	    RemoveAttrPresentation (pEl, pDoc, pAttr, FALSE, NULL);
 	    /* indique que le document a ete modifie' */
-	    pDoc->DocModified = TRUE;
 	    /* un changement d'attribut vaut dix caracteres saisis */
-	    pDoc->DocNTypedChars += 10;
+	    SetDocumentModified (pDoc, TRUE, 10);
 	    /* On supprime de pEl de son sous-arbre  la presentation venant
 	       de l'heritage de cet attribut par le sous-arbre, s'il existe
 	       des elements heritants de celui-ci */
@@ -1185,9 +1185,8 @@ PtrAttribute        pNewAttr;
 	    /* register the attribute in history */
 	    AddAttrEditOpInHistory (pAttr, pEl, pDoc, FALSE, TRUE);
 	    /* indique que le document a ete modifie' */
-	    pDoc->DocModified = TRUE;
 	    /* un changement d'attribut vaut dix caracteres saisis */
-	    pDoc->DocNTypedChars += 10;
+	    SetDocumentModified (pDoc, TRUE, 10);
 	    /* traitement special a l'ajout d'un attribut a un element d'un
 	       objet Draw */
 	    DrawAddAttr (&pAttr, pEl);

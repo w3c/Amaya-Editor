@@ -49,13 +49,13 @@ extern void RemoveBoxes ( PtrAbstractBox pAb,
 extern void RecordEnclosing ( PtrBox pBox,
                               ThotBool horizRef );
 extern ThotBool ComputeUpdates ( PtrAbstractBox pAb,
-                                int frame );
+                                 int frame );
 extern void ComputeEnclosing ( int frame );
 extern void RebuildConcreteImage ( int frame );
 extern void ClearConcreteImage ( int frame );
 extern ThotBool ChangeConcreteImage ( int frame,
-                                     int *pageHeight,
-                                     PtrAbstractBox pAb );
+                                      int *pageHeight,
+                                      PtrAbstractBox pAb );
 
 #else /* __STDC__ */
 
@@ -102,13 +102,13 @@ extern void RemoveBoxes (/* PtrAbstractBox pAb,
 extern void RecordEnclosing (/* PtrBox pBox,
                                 ThotBool horizRef */);
 extern ThotBool ComputeUpdates (/* PtrAbstractBox pAb,
-                                  int frame */);
+                                   int frame */);
 extern void ComputeEnclosing (/* int frame */);
 extern void RebuildConcreteImage (/* int frame */);
 extern void ClearConcreteImage (/* int frame */);
 extern ThotBool ChangeConcreteImage (/* int frame,
-                                       int *pageHeight,
-                                       PtrAbstractBox pAb */);
+                                        int *pageHeight,
+                                        PtrAbstractBox pAb */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

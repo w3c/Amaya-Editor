@@ -205,8 +205,7 @@ PtrDocument         pDoc;
 		       TtaDisplayMessage (INFO, 
 					  TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN),
 					  docname);
-		       pDoc->DocModified = FALSE;
-		       pDoc->DocNTypedChars = 0;
+		       SetDocumentModified (pDoc, FALSE, 0);
 
 		       /* should update external references files */
 		       if ((ustrcmp (SaveFileName, pDoc->DocDName) != 0 ||

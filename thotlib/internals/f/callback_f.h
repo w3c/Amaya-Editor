@@ -7,22 +7,22 @@
 #ifdef __STDC__
 
 extern ThotBool ElementHasAction ( PtrElement pEl,
-                                  APPevent event,
-                                  ThotBool pre );
+                                   APPevent event,
+                                   ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                    ThotBool pre );
+                                     ThotBool pre );
 extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
-                               ThotBool pre );
+                                ThotBool pre );
 
 #else /* __STDC__ */
 
 extern ThotBool ElementHasAction (/* PtrElement pEl,
-                                    APPevent event,
-                                    ThotBool pre */);
+                                     APPevent event,
+                                     ThotBool pre */);
 extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                      ThotBool pre */);
+                                       ThotBool pre */);
 extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
-                                 ThotBool pre */);
+                                  ThotBool pre */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

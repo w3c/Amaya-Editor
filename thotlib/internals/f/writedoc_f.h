@@ -7,33 +7,33 @@
 #ifdef __STDC__
 
 extern ThotBool StoreDocument ( PtrDocument pDoc,
-                               Name docName,
-                               PathBuffer dirName,
-                               ThotBool copy,
-                               ThotBool move );
+                                Name docName,
+                                PathBuffer dirName,
+                                ThotBool copy,
+                                ThotBool move );
 extern void SetWriteDirectory ( PtrDocument pDoc,
                                 PathBuffer fileName,
                                 PathBuffer directoryName,
                                 ThotBool withCopy,
                                 ThotBool withMove );
 extern ThotBool WriteDocument ( PtrDocument pDoc,
-                               int mode );
+                                int mode );
 extern void PivotLoadResources ( void );
 
 #else /* __STDC__ */
 
 extern ThotBool StoreDocument (/* PtrDocument pDoc,
-                                 Name docName,
-                                 PathBuffer dirName,
-                                 ThotBool copy,
-                                 ThotBool move */);
+                                  Name docName,
+                                  PathBuffer dirName,
+                                  ThotBool copy,
+                                  ThotBool move */);
 extern void SetWriteDirectory (/* PtrDocument pDoc,
                                   PathBuffer fileName,
                                   PathBuffer directoryName,
                                   ThotBool withCopy,
                                   ThotBool withMove */);
 extern ThotBool WriteDocument (/* PtrDocument pDoc,
-                                 int mode */);
+                                  int mode */);
 extern void PivotLoadResources (/* void */);
 
 #endif /* __STDC__ */

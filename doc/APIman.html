@@ -145,8 +145,8 @@ functions for manipulating non hierarchical relationships (hypertext links).
 natural languages used in text contents.
 <li>Group <em>presentation</em> (section <a href="#secta16">16</a>) handles
 specific presentation.
-<li>Group <em>view</em> (section <a href="#secta17">17</a>) handles views.
-<li>Group <em>selection</em> (section <a href="#secta18">18</a>) contains the
+<li>Group <em>view</em> (section <a href="#secta18">18</a>) handles views.
+<li>Group <em>selection</em> (section <a href="#secta19">19</a>) contains the
 functions that handle the selection.
 <li>Group <em>message</em> (section <a href="#secta8">8</a>) allows the
 application program to display messages intended to the user.
@@ -191,7 +191,7 @@ structure and contents of documents without direct manipulation by a user.</p>
 
 <p>The last five groups of functions (those handling views, selections, and
 user interface to the editor) are not part of that library. Sections <a
-href="#secta17">17</a> to <a href="#secta9">9</a> of that document do not
+href="#secta18">18</a> to <a href="#secta9">9</a> of that document do not
 concern that library.</p>
 </div>
 
@@ -1658,10 +1658,11 @@ switch on the correct management.</p>
 <p>This function defines a callback procedure for a set of dialogue elements
 (menus. forms, etc.). The function returns the current base value of concerned
 dialogue elements and reserves the set of references contained between "base"
-and "base+set-1". Each element can be created now after. </p>
+and "base+set-1". After that declaration dialogue elements can be created.
+</p>
 
-<p>When user acts on these dialogue elements, the callback procedure is called
-with three parameters:</p>
+<p>When the user acts on these dialogue elements, the callback procedure is
+called with three parameters:</p>
 
 <ul>
 <li>the reference of the concerned dialogue element,
@@ -1672,15 +1673,15 @@ the dialogue element type (menu, form, text-form, etc.),
 
 <hr>
 
-<p>int TtaSetCallback (void (*callbakProcedure) (), int set)</p>
+<p>int TtaSetCallback (Proc callbakProcedure, int set)</p>
 
 <hr>
 
 <dl>
 <dt>Parameters:</dt>
 
-<dd><em>callbakProcedure</em>: the callback procedure to be called This
-function has to be previously declared like that:<br>
+<dd><em>callbakProcedure</em>: the callback procedure to be called . That
+procedure has to be previously declared like that:<br>
 void Proc (int reference, int typeData, char *data)
 <p><em>set</em>: the number of concerned dialogue elements.</p>
 
@@ -1694,7 +1695,58 @@ void Proc (int reference, int typeData, char *data)
 </div>
 
 <div class=Section>
-<h4><a name="sectc912">9.1.2</a> TtaNewForm</h4>
+<h4><a name="sectc912">9.1.2</a> TtaSetBackup</h4>
+<A NAME="L59308"></A>
+<p>This function defines a backup procedure . If the application crashes for
+any reason and almost one document is modified that procedure Backup is
+called. That procedure has no parameter.</p>
+
+<hr>
+
+<p>void TtaSetBackup (Proc Backup)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>Backup</em>: the  procedure to be called. That procedure has to be
+previously declared like that:<br>
+void Proc ()
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc913">9.1.3</a> TtaSetDocStatusUpdate</h4>
+<A NAME="L59387"></A>
+<p>This function defines a procedure which updates the application context
+each time the document of a document changes.</p>
+
+<p>When the status of a document changes (it becomes modified or unmodified)
+the procedure DocStatusUpdate is called with two parameters:</p>
+
+<ul>
+<li>the document identifier,
+<li>the new status status: TRUE if it's now modified, otherwise FALSE. 
+</ul>
+
+<hr>
+
+<p>void TtaSetDocStatusUpdate (Proc DocStatusUpdate)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>DocStatusUpdate</em>: the procedure to be called That procedure has to
+be previously declared like that:<br>
+void Proc (Document doc, ThotBool modifed)
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc914">9.1.4</a> TtaNewForm</h4>
 <A NAME="L34475"></A>
 <p>This function creates a form element attached to the ThotWidget parent.
 When the parent ThotWidget is distroyed, the ThotWidget that realizes this
@@ -1749,7 +1801,7 @@ horizontally or in the same column is arranged vertically.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc913">9.1.3</a> <a name="L34518">TtaNewSheet</a></h4>
+<h4><a name="sectc915">9.1.5</a> <a name="L34518">TtaNewSheet</a></h4>
 <A NAME="L34519"></A>
 <p>This function creates a sheet element attached to the ThotWidget parent.
 When the parent ThotWidget is destroyed, the ThotWidget that realizes this
@@ -1805,7 +1857,7 @@ horizontally or in the same column is arranged vertically.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc914">9.1.4</a> TtaNewDialogSheet</h4>
+<h4><a name="sectc916">9.1.6</a> TtaNewDialogSheet</h4>
 <A NAME="L35163"></A>
 <p>This function creates a dialog sheet element attached to the ThotWidget
 parent. When the parent ThotWidget is distroyed, the ThotWidget that realizes
@@ -1855,12 +1907,12 @@ horizontally or in the same column is arranged vertically.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc915">9.1.5</a> TtaNewSubmenu</h4>
+<h4><a name="sectc917">9.1.7</a> TtaNewSubmenu</h4>
 <A NAME="L34633"></A>
 <p>This function creates a submenu element attached to a menu entry or a form
 (form, sheet or dialog sheet). In a form, a submenu is displayed as a radio
 menu (see the menu "Paper Format" in the example presented in <a
-href="#sectc913">9.1.3</a>). Only one entry of this menu can be selected at
+href="#sectc915">9.1.5</a>). Only one entry of this menu can be selected at
 the same time.</p>
 
 <p>Each entry is typed:</p>
@@ -1921,7 +1973,7 @@ wait for the confirmation of the form to receive the selected value.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc916">9.1.6</a> TtaNewIconMenu</h4>
+<h4><a name="sectc918">9.1.8</a> TtaNewIconMenu</h4>
 <A NAME="L34679"></A>
 <p>This function creates a submenu element attached to a menu entry or a form
 (form, sheet or dialog sheet). This submenu is composed of icons. Only one
@@ -1958,11 +2010,11 @@ not treated.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc917">9.1.7</a> TtaNewToggleMenu</h4>
+<h4><a name="sectc919">9.1.9</a> TtaNewToggleMenu</h4>
 <A NAME="L34656"></A>
 <p>This function creates a toggle menu element attached to a  form (form,
 sheet or dialog sheet). This menu is displayed as a toggle menu (see the menu
-"Options" in the example presented in <a href="#sectc913">9.1.3</a>). Only or
+"Options" in the example presented in <a href="#sectc915">9.1.5</a>). Only or
 more entries of this menu can be selected at the same time.</p>
 
 <p>Each entry is typed:</p>
@@ -2012,7 +2064,7 @@ wait for the confirmation of the form to receive the selected value.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc918">9.1.8</a> TtaNewSelector</h4>
+<h4><a name="sectc9110">9.1.10</a> TtaNewSelector</h4>
 <A NAME="L34702"></A>
 <p>This function creates a selector element attached to a  form (form, sheet
 or dialog sheet).</p>
@@ -2023,7 +2075,7 @@ predefined string into the selector or to insert directly  a free text. The
 selector can be displayed with or without a label (controled by the parameter
 <code>label</code>) that allow user to select this fixed.</p>
 
-<p>In the previous example presented in <a href="#sectc913">9.1.3</a>, a
+<p>In the previous example presented in <a href="#sectc915">9.1.5</a>, a
 selector is displayed with the title "Spell checking ...", a text zone and the
 label "W3C".</p>
 
@@ -2063,11 +2115,11 @@ the confirmation of the form to receive the selected value.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc919">9.1.9</a> TtaNewLabel</h4>
+<h4><a name="sectc9111">9.1.11</a> TtaNewLabel</h4>
 <A NAME="L34725"></A>
 <p>This function creates a label element attached to a  form (form, sheet or
 dialog sheet). In the previous example presented in <a
-href="#sectc913">9.1.3</a>, there is a label element "Language: English".</p>
+href="#sectc915">9.1.5</a>, there is a label element "Language: English".</p>
 
 <hr>
 
@@ -2087,11 +2139,11 @@ href="#sectc913">9.1.3</a>, there is a label element "Language: English".</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc9110">9.1.10</a> TtaNewTextForm</h4>
+<h4><a name="sectc9112">9.1.12</a> TtaNewTextForm</h4>
 <A NAME="L34748"></A>
 <p>This function creates a text input zone attached to a  form (form, sheet or
 dialog sheet). In the previous example presented in <a
-href="#sectc913">9.1.3</a>, there is a text input zone without title.</p>
+href="#sectc915">9.1.5</a>, there is a text input zone without title.</p>
 
 <hr>
 
@@ -2120,11 +2172,11 @@ confirmation of the form to receive the final string.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc9111">9.1.11</a> TtaNewNumberForm</h4>
+<h4><a name="sectc9113">9.1.13</a> TtaNewNumberForm</h4>
 <A NAME="L34771"></A>
 <p>This function creates an input zone for integer values attached to a  form
 (form, sheet or dialog sheet). In the previous example presented in <a
-href="#sectc913">9.1.3</a>, there is an input zone for integer values (from 1
+href="#sectc915">9.1.5</a>, there is an input zone for integer values (from 1
 to 10) displayed with the title "Number of proposals".</p>
 
 <hr>
@@ -2154,7 +2206,7 @@ confirmation of the form to receive the final string.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc9112">9.1.12</a> TtaDestroyDialogue</h4>
+<h4><a name="sectc9114">9.1.14</a> TtaDestroyDialogue</h4>
 
 <p>This function destroys an existing dialogue element.</p>
 
@@ -2174,7 +2226,7 @@ confirmation of the form to receive the final string.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc9113">9.1.13</a> TtaListDirectory</h4>
+<h4><a name="sectc9115">9.1.15</a> TtaListDirectory</h4>
 <A NAME="L9232"></A>
 <p>Creates one or two selectors that allow end-user to select a directory
 and/or a file included within the current specified directory. This function
@@ -2215,7 +2267,7 @@ is not desired.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc9114">9.1.14</a> TtaIsSuffixFileIn</h4>
+<h4><a name="sectc9116">9.1.16</a> TtaIsSuffixFileIn</h4>
 <A NAME="L9290"></A>
 <p>Returns True if the specified directory contains files with the specified
 suffix.</p>
@@ -8018,17 +8070,239 @@ different elements.</p>
 </div>
 
 <div class=Section>
-<h2><a name="secta17">17</a> <a name="L7272">Views</a></h2>
+<h2><a name="secta17">17</a> Style</h2>
+
+<p>The functions described in this section require that file <em>style.h</em>
+be included in the module that calls them. They are available only in the Thot
+Editor library.</p>
+
+<p>These functions allow the application to define either generic style or
+specific style. Generic style is stored in an extended presentation schema
+attached to the document and specific style is attached to elements. The
+application needs to create a generic context to set, get or update a  generic
+style rule  and  needs to create a specific context to set, get or update a
+specific style rule.</p>
+
+<div class=Section>
+<h3><a name="sectb171">17.1</a> Constructors</h3>
+
+<div class=Section>
+<h4><a name="sectc1711">17.1.1</a> TtaGetSpecificStyleContext</h4>
+<A NAME="L58658"></A>
+<p>Create a context for setting or getting a specific style attached to an
+element.</p>
+
+<p>The specific context contains:</p>
+<PRE>
+Document   doc;/* document number */
+SSchema    schema;/* associated structure */
+int        type;      /* type of element */
+ThotBool   destroy;   /* destructive mode */
+</PRE>
+
+<hr>
+
+<p>PresentationContext TtaGetSpecificStyleContext (Document doc) </p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>doc</em>: the document for which the context is created
+</dl>
+
+<dl>
+<dt>Return value:</dt>
+
+<dd>a pointer to the allocated context.
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc1712">17.1.2</a> TtaGetGenericStyleContext</h4>
+<A NAME="L58710"></A>
+<p>Create a context for setting or getting a specific style attached to an
+element.</p>
+
+<p>The generiic context contains:</p>
+<PRE>
+Document doc;/* document number */
+SSchema  schema;/* associated structure */
+int      type;      /* type of element */
+ThotBool destroy;   /* destructive mode */
+int      box; /* specific presentation box if any */
+int      attr;     /* or attribute */
+int      attrval;  /* and the corresponding value */
+char    *class;    /* class or box name */
+int      classattr;/* class attribute */
+int      attrelem; /* elem porting the attribute */
+int      ancestors[MAX_ANCESTORS];/* ancestors type*/
+int      ancestors_nb[MAX_ANCESTORS];/* number for each */
+</PRE>
+
+<hr>
+
+<p>GenericContext TtaGetGenericStyleContext (Document doc)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>doc</em>: the document for which the context is created 
+</dl>
+
+<dl>
+<dt>Return value:</dt>
+
+<dd>a pointer to the allocated context.
+</dl>
+</div>
+</div>
+
+<div class=Section>
+<h3><a name="sectb172">17.2</a> Modificators</h3>
+
+<div class=Section>
+<h4><a name="sectc1721">17.2.1</a> TtaSetStylePresentation</h4>
+<A NAME="L58745"></A>
+<p>Add a style rule to an element (specific) or to an extended presentation
+schema (generic).</p>
+
+<hr>
+
+<p>int  TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
+PresentationContext context, PresentationValue value )</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>type</em>: type of the rule TRWidth, TRHeight, etc. (see
+presentation.h).
+<p><em>el</em>: element concerned (if specific) or Null</p>
+
+<p><em>tsch</em>:  presentation schema concerned (if generic) or Null</p>
+
+<p><em>conte</em>:  the specific or generic context.</p>
+
+<p><em>value</em>: value associated to the typed rule.</p>
+
+</dl>
+
+<dl>
+<dt>Return value:</dt>
+
+<dd>0 if the operation has been executed successfully.
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc1722">17.2.2</a> TtaUpdateStylePresentation</h4>
+<A NAME="L58780"></A>
+<p>Apply added style rules to an element (specific) or to an extended
+presentation schema (generic).</p>
+
+<hr>
+
+<p>void TtaUpdateStylePresentation (Element el, PSchema tsch,
+PresentationContext context)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>el</em>: element concerned (if specific) or Null
+<p><em>tsch</em>:  presentation schema concerned (if generic) or Null</p>
+
+<p><em>conte</em>:  the specific or generic context.</p>
+
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc1723">17.2.3</a> TtaCleanStylePresentation</h4>
+<A NAME="L58815"></A>
+<p>Remove style rules of an element (specific) or of an extended presentation
+schema (generic).</p>
+
+<hr>
+
+<p>void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>el</em>: element concerned (if specific) or Null
+<p><em>tsch</em>:  presentation schema concerned (if generic) or Null</p>
+
+<p><em>doc</em>: the document concerned</p>
+
+</dl>
+</div>
+</div>
+
+<div class=Section>
+<h3><a name="sectb173">17.3</a> Accessors</h3>
+
+<div class=Section>
+<h4><a name="sectc1731">17.3.1</a> TtaGetStylePresentation</h4>
+<A NAME="L59247"></A>
+<p>Add a style rule to an element (specific) or to an extended presentation
+schema (generic).</p>
+
+<hr>
+
+<p>int  TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
+PresentationContext context, PresentationValue *value )</p>
+
+<hr>
+
+<dl>
+<dt>Parameters:</dt>
+
+<dd><em>type</em>: type of the rule TRWidth, TRHeight, etc. (see
+presentation.h).
+<p><em>el</em>: element concerned (if specific) or Null</p>
+
+<p><em>tsch</em>:  presentation schema concerned (if generic) or Null</p>
+
+<p><em>conte</em>:  the specific or generic context.</p>
+
+</dl>
+
+<dl>
+<dt>Return values:</dt>
+
+<dd>0 if the operation has been executed successfully.
+<p><em>value</em>: value associated to the typed rule.</p>
+
+</dl>
+</div>
+
+<div class=Section>
+<h4><a name="sectc1732">17.3.2</a> </h4>
+</div>
+</div>
+</div>
+
+<div class=Section>
+<h2><a name="secta18">18</a> <a name="L7272">Views</a></h2>
 
 <p>The functions described in this section require that file <em>view.h</em>
 be included in the module that calls them. They are available only in the Thot
 Editor library.</p>
 
 <div class=Section>
-<h3><a name="sectb171">17.1</a> Constructors</h3>
+<h3><a name="sectb181">18.1</a> Constructors</h3>
 
 <div class=Section>
-<h4><a name="sectc1711">17.1.1</a> TtaOpenMainView</h4>
+<h4><a name="sectc1811">18.1.1</a> TtaOpenMainView</h4>
 <A NAME="L7287"></A>
 <p>Opens the main view of a document. This document must have a PSchema (see
 <A NAME="L7295"></A>TtaSetPSchema).</p>
@@ -8059,7 +8333,7 @@ of the window that will display the view.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1712">17.1.2</a> TtaOpenView</h4>
+<h4><a name="sectc1812">18.1.2</a> TtaOpenView</h4>
 <A NAME="L7334"></A>
 <p>Opens a view for a document. This document must have a PSchema (see <A
 NAME="L7342"></A>TtaSetPSchema).</p>
@@ -8093,7 +8367,7 @@ of the window that will display the view.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1713">17.1.3</a> TtaOpenSubView</h4>
+<h4><a name="sectc1813">18.1.3</a> TtaOpenSubView</h4>
 <A NAME="L7386"></A>
 <p>Opens a view that shows only a subtree. This document must have a PSchema
 (see <A NAME="L7394"></A>TtaSetPSchema).</p>
@@ -8131,7 +8405,7 @@ int h, Element subtree)</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1714">17.1.4</a> TtaChangeViewTitle</h4>
+<h4><a name="sectc1814">18.1.4</a> TtaChangeViewTitle</h4>
 <A NAME="L7449"></A>
 <p>Changes the title of a view.</p>
 
@@ -8153,7 +8427,7 @@ int h, Element subtree)</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1715">17.1.5</a> TtaCloseView</h4>
+<h4><a name="sectc1815">18.1.5</a> TtaCloseView</h4>
 <A NAME="L7484"></A>
 <p>Closes a view.</p>
 
@@ -8174,10 +8448,10 @@ int h, Element subtree)</p>
 </div>
 
 <div class=Section>
-<h3><a name="sectb172">17.2</a> Modificators</h3>
+<h3><a name="sectb182">18.2</a> Modificators</h3>
 
 <div class=Section>
-<h4><a name="sectc1721">17.2.1</a> TtaSetSensibility</h4>
+<h4><a name="sectc1821">18.2.1</a> TtaSetSensibility</h4>
 <A NAME="L7519"></A>
 <p>Changes the current sensibility used to display a given view of a given
 document.</p>
@@ -8200,7 +8474,7 @@ document.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1722">17.2.2</a> TtaSetZoom</h4>
+<h4><a name="sectc1822">18.2.2</a> TtaSetZoom</h4>
 <A NAME="L7555"></A>
 <p>Changes the current zoom used to display a given view of a given
 document.</p>
@@ -8223,7 +8497,7 @@ document.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1723">17.2.3</a> TtaShowElement</h4>
+<h4><a name="sectc1823">18.2.3</a> TtaShowElement</h4>
 <A NAME="L7591"></A>
 <p>Shows a given element in a given view of a given document.</p>
 
@@ -8253,7 +8527,7 @@ can be negative.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1724">17.2.4</a> TtaRaiseView</h4>
+<h4><a name="sectc1824">18.2.4</a> TtaRaiseView</h4>
 <A NAME="L28968"></A>
 <p>Maps and raises a given view of a given document.</p>
 
@@ -8274,7 +8548,7 @@ Cannot be 0.
 </div>
 
 <div class=Section>
-<h4><a name="sectc1725">17.2.5</a> TtaSetDisplayMode</h4>
+<h4><a name="sectc1825">18.2.5</a> TtaSetDisplayMode</h4>
 <A NAME="L7634"></A>
 <p>Changes display mode for a document. Three display modes are available
 (DisplayImmediately, DeferredDisplay and NoComputedDisplay). In the immediate
@@ -8308,10 +8582,10 @@ created, it is initially in the immediate mode.</p>
 </div>
 
 <div class=Section>
-<h3><a name="sectb173">17.3</a> Accessors</h3>
+<h3><a name="sectb183">18.3</a> Accessors</h3>
 
 <div class=Section>
-<h4><a name="sectc1731">17.3.1</a> TtaGetSensibility</h4>
+<h4><a name="sectc1831">18.3.1</a> TtaGetSensibility</h4>
 <A NAME="L7668"></A>
 <p>Reads the current sensibility used to display a given view of a given
 document.</p>
@@ -8338,7 +8612,7 @@ document.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1732">17.3.2</a> TtaGetZoom</h4>
+<h4><a name="sectc1832">18.3.2</a> TtaGetZoom</h4>
 <A NAME="L7707"></A>
 <p>Reads the current zoom used to display a given view of a given
 document.</p>
@@ -8371,7 +8645,7 @@ View view;
 </div>
 
 <div class=Section>
-<h4><a name="sectc1733">17.3.3</a> TtaGetFirstElementShown</h4>
+<h4><a name="sectc1833">18.3.3</a> TtaGetFirstElementShown</h4>
 <A NAME="L56625"></A>
 <p>Returns the first visible element in the view of the document. The function
 returns also, the position of the top of this element within the view.</p>
@@ -8411,7 +8685,7 @@ can be negative.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1734">17.3.4</a> TtaGetDisplayMode</h4>
+<h4><a name="sectc1834">18.3.4</a> TtaGetDisplayMode</h4>
 <A NAME="L7745"></A>
 <p>Returns the current display mode for a document.</p>
 
@@ -8435,7 +8709,7 @@ can be negative.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1735">17.3.5</a> TtaIsPSchemaValid</h4>
+<h4><a name="sectc1835">18.3.5</a> TtaIsPSchemaValid</h4>
 <A NAME="L7777"></A>
 <p>Checks if a presentation schema can be applied to a document of a given
 class. No document is needed and the schemas are not loaded by this
@@ -8464,7 +8738,7 @@ checked.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1736">17.3.6</a> TtaGiveViewsToOpen</h4>
+<h4><a name="sectc1836">18.3.6</a> TtaGiveViewsToOpen</h4>
 <A NAME="L7816"></A>
 <p>Returns the names of the views that can be opened for a document.</p>
 
@@ -8494,7 +8768,7 @@ open.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1737">17.3.7</a> TtaGetViewName</h4>
+<h4><a name="sectc1837">18.3.7</a> TtaGetViewName</h4>
 <A NAME="L7861"></A>
 <p>Returns the name of an open view.</p>
 
@@ -8520,7 +8794,7 @@ open.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1738">17.3.8</a> TtaGetViewFromName</h4>
+<h4><a name="sectc1838">18.3.8</a> TtaGetViewFromName</h4>
 <A NAME="L7899"></A>
 <p>Returns the identifier of a view of a given document from its name.</p>
 
@@ -8546,7 +8820,7 @@ open.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1739">17.3.9</a> TtaGiveActiveView</h4>
+<h4><a name="sectc1839">18.3.9</a> TtaGiveActiveView</h4>
 <A NAME="L7938"></A>
 <p>Returns the active view and the document to which that view belongs. The
 active view is the one that receives the characters typed by the user.</p>
@@ -8573,7 +8847,7 @@ active view is the one that receives the characters typed by the user.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc17310">17.3.10</a> TtaIsViewOpened</h4>
+<h4><a name="sectc18310">18.3.10</a> TtaIsViewOpened</h4>
 <A NAME="L29017"></A>
 <p>Indicates whether a view is opened.</p>
 
@@ -8600,10 +8874,10 @@ active view is the one that receives the characters typed by the user.</p>
 </div>
 
 <div class=Section>
-<h3><a name="sectb174">17.4</a> Help</h3>
+<h3><a name="sectb184">18.4</a> Help</h3>
 
 <div class=Section>
-<h4><a name="sectc1741">17.4.1</a> TtaListView</h4>
+<h4><a name="sectc1841">18.4.1</a> TtaListView</h4>
 <A NAME="L25772"></A>
 <p>Produces in a file a human-readable form of the current picture of the
 document view.</p>
@@ -8629,7 +8903,7 @@ list. This file must be open when calling the function.</p>
 </div>
 
 <div class=Section>
-<h2><a name="secta18">18</a> <a name="L7975">Selection</a></h2>
+<h2><a name="secta19">19</a> <a name="L7975">Selection</a></h2>
 
 <p>The functions described in this section require that file
 <em>selection.h</em> be included in the module that calls them. They are
@@ -8644,10 +8918,10 @@ selection; but, when necessary, they can also have access to the current user
 selection, by using the following functions.</p>
 
 <div class=Section>
-<h3><a name="sectb181">18.1</a> Constructors</h3>
+<h3><a name="sectb191">19.1</a> Constructors</h3>
 
 <div class=Section>
-<h4><a name="sectc1811">18.1.1</a> TtaSelectElement</h4>
+<h4><a name="sectc1911">19.1.1</a> TtaSelectElement</h4>
 <A NAME="L7993"></A>
 <p>Selects a single element. This element is highlighted in all views where it
 can be displayed. If it cannot be displayed in any existing view, a new view
@@ -8670,7 +8944,7 @@ the selection in the document.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1812">18.1.2</a> TtaSelectView</h4>
+<h4><a name="sectc1912">19.1.2</a> TtaSelectView</h4>
 <A NAME="L37101"></A>
 <p>Define the selected view of the document. This function has no effect if
 the document is not the current selected document and if the current selected
@@ -8692,7 +8966,7 @@ element is an associated element.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1813">18.1.3</a> TtaSelectString</h4>
+<h4><a name="sectc1913">19.1.3</a> TtaSelectString</h4>
 <A NAME="L8024"></A>
 <p>Selects a substring or places the insertion caret within a Text basic
 element. This substring is highlighted in all views where it can be
@@ -8723,7 +8997,7 @@ the character of rank firstCharacter.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1814">18.1.4</a> TtaExtendSelection</h4>
+<h4><a name="sectc1914">19.1.4</a> TtaExtendSelection</h4>
 <A NAME="L8066"></A>
 <p>Extends the current selection to a given element.</p>
 
@@ -8747,7 +9021,7 @@ to be selected. 0 if the whole element must be selected.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1815">18.1.5</a> TtaAddElementToSelection</h4>
+<h4><a name="sectc1915">19.1.5</a> TtaAddElementToSelection</h4>
 <A NAME="L57829"></A>
 <p>Add a new element to the current selection.  The new selection may then
 contain separate elements.</p>
@@ -8770,7 +9044,7 @@ calls to TtaAddElementToSelection and by the last call to TtaSelectElement.
 </div>
 
 <div class=Section>
-<h4><a name="sectc1816">18.1.6</a> TtaSelectInterval</h4>
+<h4><a name="sectc1916">19.1.6</a> TtaSelectInterval</h4>
 <A NAME="L8103"></A>
 <p>If a pair of paired elements is selected, select also all elements between
 the two paired elements. Nothing is done if the current selection is not a
@@ -8796,7 +9070,7 @@ pair.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1817">18.1.7</a> TtaUnselect</h4>
+<h4><a name="sectc1917">19.1.7</a> TtaUnselect</h4>
 <A NAME="L8132"></A>
 <p>Turns the selection off for a document.</p>
 
@@ -8820,7 +9094,7 @@ pair.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1818">18.1.8</a> TtaSwitchSelection</h4>
+<h4><a name="sectc1918">19.1.8</a> TtaSwitchSelection</h4>
 <A NAME="L57860"></A>
 <p>Switche the selection  on or off  in a view. </p>
 
@@ -8851,7 +9125,7 @@ on</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1819">18.1.9</a> TtaSetSelectionMode</h4>
+<h4><a name="sectc1919">19.1.9</a> TtaSetSelectionMode</h4>
 <A NAME="L8165"></A>
 <p>Change selection mode. If withMenu = False functions TtaSelectElement,
 TtaSelectString, TtaExtendSelection and TtaUnselect do not update the menus
@@ -8879,10 +9153,10 @@ mode is withMenu = True.</p>
 </div>
 
 <div class=Section>
-<h3><a name="sectb182">18.2</a> Accessors</h3>
+<h3><a name="sectb192">19.2</a> Accessors</h3>
 
 <div class=Section>
-<h4><a name="sectc1821">18.2.1</a> TtaGetSelectedDocument</h4>
+<h4><a name="sectc1921">19.2.1</a> TtaGetSelectedDocument</h4>
 <A NAME="L46786"></A>
 <p>Returns the selected document.</p>
 
@@ -8900,7 +9174,7 @@ mode is withMenu = True.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1822">18.2.2</a> TtaIsDocumentSelected</h4>
+<h4><a name="sectc1922">19.2.2</a> TtaIsDocumentSelected</h4>
 <A NAME="L33392"></A>
 <p>Indicates whether a document is selected.</p>
 
@@ -8924,7 +9198,7 @@ mode is withMenu = True.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1823">18.2.3</a> TtaIsSelectionEmpty</h4>
+<h4><a name="sectc1923">19.2.3</a> TtaIsSelectionEmpty</h4>
 <A NAME="L57652"></A>
 <p>Indicates whether there is an empty selection (a caret).</p>
 
@@ -8942,7 +9216,7 @@ mode is withMenu = True.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1824">18.2.4</a> TtaGiveFirstSelectedElement</h4>
+<h4><a name="sectc1924">19.2.4</a> TtaGiveFirstSelectedElement</h4>
 <A NAME="L8202"></A>
 <p>Returns the first element in the current selection in a given document. If
 this element is a Text element and if only a substring is selected, return
@@ -8980,7 +9254,7 @@ if the</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1825">18.2.5</a> TtaGiveLastSelectedElement</h4>
+<h4><a name="sectc1925">19.2.5</a> TtaGiveLastSelectedElement</h4>
 <A NAME="L57897"></A>
 <p>Returns the last element in the current selection in a given document. If
 this element is a Text element and if only a substring is selected, return
@@ -9016,7 +9290,7 @@ if the</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1826">18.2.6</a> TtaGiveNextSelectedElement</h4>
+<h4><a name="sectc1926">19.2.6</a> TtaGiveNextSelectedElement</h4>
 <A NAME="L8252"></A>
 <p>Returns the element that follows a given element in the current selection
 in a given document. If this element is a Text element and if only a substring
@@ -9055,7 +9329,7 @@ if the</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1827">18.2.7</a> TtaGiveNextElement</h4>
+<h4><a name="sectc1927">19.2.7</a> TtaGiveNextElement</h4>
 <A NAME="L57940"></A>
 <p>Returns the element that follows a given element in the selection
 order.</p>
@@ -9089,7 +9363,7 @@ found.
 </div>
 
 <div class=Section>
-<h2><a name="secta19">19</a> Printing</h2>
+<h2><a name="secta20">20</a> Printing</h2>
 
 <p>The procedures described in this section are for printing Thot documents.
 Their use require that file <em>print.h</em> be included in the modules that
@@ -9100,10 +9374,10 @@ specify print parameters, and define an export function for pre-processing
 documents to be printed.</p>
 
 <div class=Section>
-<h3><a name="sectb191">19.1</a> Constructors</h3>
+<h3><a name="sectb201">20.1</a> Constructors</h3>
 
 <div class=Section>
-<h4><a name="sectc1911">19.1.1</a> TtaPrint</h4>
+<h4><a name="sectc2011">20.1.1</a> TtaPrint</h4>
 
 <p>This procedure prints some views of a document with current print
 parameters. The names of the views to be printed have to be consistant with
@@ -9130,10 +9404,10 @@ blank character.</p>
 </div>
 
 <div class=Section>
-<h3><a name="sectb192">19.2</a> Modificators</h3>
+<h3><a name="sectb202">20.2</a> Modificators</h3>
 
 <div class=Section>
-<h4><a name="sectc1921">19.2.1</a> TtaSetPrintExportProc</h4>
+<h4><a name="sectc2021">20.2.1</a> TtaSetPrintExportProc</h4>
 
 <p>This procedure let an application have its own export function before
 printing a document. If an application wants to pre-process a document before
@@ -9161,7 +9435,7 @@ export.
 </div>
 
 <div class=Section>
-<h4><a name="sectc1922">19.2.2</a> TtaSetPrintSchema</h4>
+<h4><a name="sectc2022">20.2.2</a> TtaSetPrintSchema</h4>
 
 <p>This procedure defines the presentation schema that has to be used by the
 editor when printing or saving a PostScript file. By default, he name is ""
@@ -9183,7 +9457,7 @@ to the default status, the application has to resets the empty name "".</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1923">19.2.3</a> TtaSetPrintParameter</h4>
+<h4><a name="sectc2023">20.2.3</a> TtaSetPrintParameter</h4>
 
 <p>Thit procedure changes a print paramenter. Modifiable parameters belongs to
 PrintParameter type. The different parameters are listed below, with the range
@@ -9239,7 +9513,7 @@ of their values.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1924">19.2.4</a> TtaSetPrintCommand</h4>
+<h4><a name="sectc2024">20.2.4</a> TtaSetPrintCommand</h4>
 
 <p>This procedure modifies the system printing command called by the editor
 (the default value is given by the parameter THOTPRINT in <em>.thotrc</em>
@@ -9260,7 +9534,7 @@ option.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1925">19.2.5</a> TtaSetPsFile</h4>
+<h4><a name="sectc2025">20.2.5</a> TtaSetPsFile</h4>
 
 <p>This procedure modifies the current path used by the editor when saving a
 PostScript file.</p>
@@ -9280,10 +9554,10 @@ PostScript file.</p>
 </div>
 
 <div class=Section>
-<h3><a name="sectb193">19.3</a> Accessors</h3>
+<h3><a name="sectb203">20.3</a> Accessors</h3>
 
 <div class=Section>
-<h4><a name="sectc1931">19.3.1</a> TtaGetPrintParameter</h4>
+<h4><a name="sectc2031">20.3.1</a> TtaGetPrintParameter</h4>
 
 <p>Thit procedure returns a print paramenter value. Modifiable parameters
 belongs to PrintParameter type. The different parameters are listed below,
@@ -9343,7 +9617,7 @@ with the range of their values.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1932">19.3.2</a> TtaGetPrintCommand</h4>
+<h4><a name="sectc2032">20.3.2</a> TtaGetPrintCommand</h4>
 
 <p>This procedure returns the current printing command.</p>
 
@@ -9361,7 +9635,7 @@ with the range of their values.</p>
 </div>
 
 <div class=Section>
-<h4><a name="sectc1933">19.3.3</a> TtaGetPsFile</h4>
+<h4><a name="sectc2033">20.3.3</a> TtaGetPsFile</h4>
 
 <p>This procedure returns the current path used by the editor when saving a
 PostScript file.</p>

@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern ThotBool TtaLoadDocumentDictionary ( PtrDocument document,
-                                           int *pDictionary,
-                                           ThotBool ToCreate );
+                                            int *pDictionary,
+                                            ThotBool ToCreate );
 extern void SetUpperCase ( STRING string );
 extern void SetCapital ( STRING string );
 extern ThotBool IsUpperCase ( STRING string );
@@ -33,8 +33,8 @@ extern void NextSpellingError ( CHAR_T word[MAX_WORD_LEN],
 #else /* __STDC__ */
 
 extern ThotBool TtaLoadDocumentDictionary (/* PtrDocument document,
-                                             int *pDictionary,
-                                             ThotBool ToCreate */);
+                                              int *pDictionary,
+                                              ThotBool ToCreate */);
 extern void SetUpperCase (/* STRING string */);
 extern void SetCapital (/* STRING string */);
 extern ThotBool IsUpperCase (/* STRING string */);

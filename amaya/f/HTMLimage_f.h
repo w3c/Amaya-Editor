@@ -7,9 +7,9 @@
 #ifdef __STDC__
 
 extern ThotBool AddLoadedImage ( STRING name,
-                                STRING pathname,
-                                Document doc,
-                                LoadedImageDesc ** desc );
+                                 STRING pathname,
+                                 Document doc,
+                                 LoadedImageDesc ** desc );
 extern LoadedImageDesc *SearchLoadedImage ( STRING localpath,
                                             Document doc );
 extern void SetAreaCoords ( Document document,
@@ -42,14 +42,14 @@ extern void FetchImage ( Document doc,
                          LoadedImageCallback callback,
                          void *extra );
 extern ThotBool FetchAndDisplayImages ( Document doc,
-                                       int flags );
+                                        int flags );
 
 #else /* __STDC__ */
 
 extern ThotBool AddLoadedImage (/* STRING name,
-                                  STRING pathname,
-                                  Document doc,
-                                  LoadedImageDesc ** desc */);
+                                   STRING pathname,
+                                   Document doc,
+                                   LoadedImageDesc ** desc */);
 extern LoadedImageDesc *SearchLoadedImage (/* STRING localpath,
                                               Document doc */);
 extern void SetAreaCoords (/* Document document,
@@ -82,7 +82,7 @@ extern void FetchImage (/* Document doc,
                            LoadedImageCallback callback,
                            void *extra */);
 extern ThotBool FetchAndDisplayImages (/* Document doc,
-                                         int flags */);
+                                          int flags */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

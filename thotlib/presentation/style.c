@@ -2239,7 +2239,7 @@ PresentationContext c;
    int            attrType = 0;
    int            presBox = 0;
 
-   if (c == NULL || (el == NULL && tsch == NULL))
+   if (c == NULL || (el == NULL && tsch == NULL) || c->destroy)
      return;
 
    doc = c->doc;
@@ -2252,7 +2252,7 @@ PresentationContext c;
      {
        pRule = ((PtrElement)el)->ElFirstPRule;
        if (pRule != NULL)
-	 ApplyPRulesElement (pRule, (PtrElement) el, LoadedDocument[doc - 1], (ThotBool)c->destroy);
+	 ApplyPRulesElement (pRule, (PtrElement) el, LoadedDocument[doc - 1], FALSE);
      }
    else
      {
@@ -2280,7 +2280,7 @@ PresentationContext c;
 	 pRule = NULL;
 
        if (pRule != NULL)
-	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, (ThotBool)c->destroy);
+	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
      }
    /* restore the display mode */
    if (dispMode == DisplayImmediately)

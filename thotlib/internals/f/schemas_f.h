@@ -27,7 +27,7 @@ extern PtrSSchema LoadExtension ( USTRING SSchName,
                                   USTRING PSchName,
                                   PtrDocument pDoc );
 extern ThotBool FreeNature ( PtrSSchema pSS,
-                            PtrSSchema pNatureSS );
+                             PtrSSchema pNatureSS );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
 
@@ -54,7 +54,7 @@ extern PtrSSchema LoadExtension (/* USTRING SSchName,
                                     USTRING PSchName,
                                     PtrDocument pDoc */);
 extern ThotBool FreeNature (/* PtrSSchema pSS,
-                              PtrSSchema pNatureSS */);
+                               PtrSSchema pNatureSS */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
 extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 

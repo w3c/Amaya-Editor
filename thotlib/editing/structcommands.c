@@ -89,6 +89,7 @@ static Func         TransformIntoFunction = NULL;
 #include "content_f.h"
 #include "contentapi_f.h"
 #include "createabsbox_f.h"
+#include "docs_f.h"
 #include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "externalref_f.h"
@@ -96,9 +97,9 @@ static Func         TransformIntoFunction = NULL;
 #include "memory_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
-#include "selectmenu_f.h"
 #include "res_f.h"
 #include "search_f.h"
+#include "selectmenu_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "structschema_f.h"
@@ -561,8 +562,7 @@ PtrSSchema          newSSchema;
 		type of the element */
 	     UpdateNumbers (nextEl, pEl, pDoc, TRUE);
 	     /* indique que le document est modifie' */
-	     pDoc->DocModified = TRUE;
-	     pDoc->DocNTypedChars += 30;
+	     SetDocumentModified (pDoc, TRUE, 30);
 	     SelectElementWithEvent (pDoc, pEl, TRUE, TRUE);
 	  }
      }
@@ -1408,8 +1408,7 @@ ThotBool            save;
 				   qu'il doit etre detruit aussi */
 				if (pA != NULL)
 				  pA->ElOtherPairedEl = pA;
-				pSelDoc->DocModified = TRUE;
-				pSelDoc->DocNTypedChars += 30;
+				SetDocumentModified (pSelDoc, TRUE, 30);
 				CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 				oneAtLeast = TRUE;
 				if (pageSelected &&
@@ -2048,8 +2047,7 @@ PtrSSchema          pSS;
 	     /* nouveaux elements */
 	     UpdateNumbers (NextElement (pRoot), pRoot, pDoc, TRUE);
 	     /* on indique que le document est modifie' */
-	     pDoc->DocModified = TRUE;
-	     pDoc->DocNTypedChars += 30;
+	     SetDocumentModified (pDoc, TRUE, 30);
 	     /* on selectionne l'element englobant */
 	     SelectElementWithEvent (pDoc, pElSurround, TRUE, TRUE);
 	  }
@@ -3004,8 +3002,7 @@ ThotBool            Before;
 			  RedisplayCopies (pNew, pSelDoc, TRUE);
 			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc, TRUE);
 			  /* Indiquer que le document est modifie' */
-			  pSelDoc->DocModified = TRUE;
-			  pSelDoc->DocNTypedChars += 30;
+			  SetDocumentModified (pSelDoc, TRUE, 30);
 			  /* envoie un evenement ElemNew.Post a l'application */
 			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
 			  /* Replace la selection */

@@ -62,7 +62,7 @@ extern void TtaGiveViewsToOpen ( Document document,
 extern STRING TtaGetViewName ( Document document,
                                View view );
 extern ThotBool TtaIsViewOpened ( Document document,
-                                 View view );
+                                  View view );
 extern View TtaGetViewFromName ( Document document,
                                  STRING viewName );
 extern void TtaGiveActiveView ( Document * document,
@@ -83,7 +83,7 @@ extern void NewSelectionExtension ( Document document,
                                     Element element,
                                     int lastCharacter );
 extern ThotBool DemandeSelEnregistree ( Document document,
-                                       ThotBool * abort );
+                                        ThotBool * abort );
 extern void UndisplayElement ( PtrElement pEl,
                                Document document );
 extern void DisplayHolophrasted ( PtrElement pEl,
@@ -187,7 +187,7 @@ extern void TtaGiveViewsToOpen (/* Document document,
 extern STRING TtaGetViewName (/* Document document,
                                  View view */);
 extern ThotBool TtaIsViewOpened (/* Document document,
-                                   View view */);
+                                    View view */);
 extern View TtaGetViewFromName (/* Document document,
                                    STRING viewName */);
 extern void TtaGiveActiveView (/* Document * document,
@@ -208,7 +208,7 @@ extern void NewSelectionExtension (/* Document document,
                                       Element element,
                                       int lastCharacter */);
 extern ThotBool DemandeSelEnregistree (/* Document document,
-                                         ThotBool * abort */);
+                                          ThotBool * abort */);
 extern void UndisplayElement (/* PtrElement pEl,
                                  Document document */);
 extern void DisplayHolophrasted (/* PtrElement pEl,

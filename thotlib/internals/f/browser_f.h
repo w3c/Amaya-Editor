@@ -8,7 +8,7 @@
 
 extern void ExtractFileName ( STRING word );
 extern ThotBool TtaIsSuffixFileIn ( STRING aDirectory,
-                                   STRING suffix );
+                                    STRING suffix );
 extern void TtaListDirectory ( STRING aDirectory,
                                int formRef,
                                STRING dirTitle,
@@ -21,7 +21,7 @@ extern void TtaListDirectory ( STRING aDirectory,
 
 extern void ExtractFileName (/* STRING word */);
 extern ThotBool TtaIsSuffixFileIn (/* STRING aDirectory,
-                                     STRING suffix */);
+                                      STRING suffix */);
 extern void TtaListDirectory (/* STRING aDirectory,
                                  int formRef,
                                  STRING dirTitle,

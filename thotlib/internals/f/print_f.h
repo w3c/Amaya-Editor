@@ -14,10 +14,10 @@ extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrExternalDoc * pExtDoc,
                                         ThotBool nextExtDoc );
 extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
-                                     PtrElement * firstEl,
-                                     PtrElement * lastEl,
-                                     int *firstChar,
-                                     int *lastChar );
+                                      PtrElement * firstEl,
+                                      PtrElement * lastEl,
+                                      int *firstChar,
+                                      int *lastChar );
 extern void DefineClipping ( int frame,
                              int orgx,
                              int orgy,
@@ -58,10 +58,10 @@ extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrExternalDoc * pExtDoc,
                                           ThotBool nextExtDoc */);
 extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
-                                       PtrElement * firstEl,
-                                       PtrElement * lastEl,
-                                       int *firstChar,
-                                       int *lastChar */);
+                                        PtrElement * firstEl,
+                                        PtrElement * lastEl,
+                                        int *firstChar,
+                                        int *lastChar */);
 extern void DefineClipping (/* int frame,
                                int orgx,
                                int orgy,

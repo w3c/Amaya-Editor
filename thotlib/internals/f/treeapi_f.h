@@ -95,7 +95,7 @@ extern void TtaGiveConstructorsOfType ( ElementType **typesArray,
 extern int TtaGetRankInAggregate ( ElementType componentType,
                                    ElementType aggregateType );
 extern ThotBool TtaIsOptionalInAggregate ( int rank,
-                                          ElementType elementType );
+                                           ElementType elementType );
 extern Construct TtaGetConstruct ( Element element );
 extern AccessRight TtaGetAccessRight ( Element element );
 extern int TtaIsHolophrasted ( Element element );
@@ -108,12 +108,12 @@ extern int TtaIsBefore ( Element element1,
                          Element element2 );
 extern int TtaIsFirstPairedElement ( Element element );
 extern ThotBool TtaCanInsertSibling ( ElementType elementType,
-                                     Element sibling,
-                                     ThotBool before,
-                                     Document document );
+                                      Element sibling,
+                                      ThotBool before,
+                                      Document document );
 extern ThotBool TtaCanInsertFirstChild ( ElementType elementType,
-                                        Element parent,
-                                        Document document );
+                                         Element parent,
+                                         Document document );
 extern Document TtaGetDocument ( Element element );
 extern void TtaNextCopiedElement ( Element * element );
 extern Document TtaGetCopiedDocument ( void );
@@ -223,7 +223,7 @@ extern void TtaGiveConstructorsOfType (/* ElementType **typesArray,
 extern int TtaGetRankInAggregate (/* ElementType componentType,
                                      ElementType aggregateType */);
 extern ThotBool TtaIsOptionalInAggregate (/* int rank,
-                                            ElementType elementType */);
+                                             ElementType elementType */);
 extern Construct TtaGetConstruct (/* Element element */);
 extern AccessRight TtaGetAccessRight (/* Element element */);
 extern int TtaIsHolophrasted (/* Element element */);
@@ -236,12 +236,12 @@ extern int TtaIsBefore (/* Element element1,
                            Element element2 */);
 extern int TtaIsFirstPairedElement (/* Element element */);
 extern ThotBool TtaCanInsertSibling (/* ElementType elementType,
-                                       Element sibling,
-                                       ThotBool before,
-                                       Document document */);
+                                        Element sibling,
+                                        ThotBool before,
+                                        Document document */);
 extern ThotBool TtaCanInsertFirstChild (/* ElementType elementType,
-                                          Element parent,
-                                          Document document */);
+                                           Element parent,
+                                           Document document */);
 extern Document TtaGetDocument (/* Element element */);
 extern void TtaNextCopiedElement (/* Element * element */);
 extern Document TtaGetCopiedDocument (/* void */);

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool SameAttributes ( PtrElement pEl1,
-                                PtrElement pEl2 );
+                                 PtrElement pEl2 );
 extern void WriteVersionNumber ( BinFile pivFile );
 extern void EcritNat ( PtrSSchema pSS,
                        BinFile pivFile,
@@ -46,7 +46,7 @@ extern void ChangeNomRef ( PtrDocument pDoc,
 #else /* __STDC__ */
 
 extern ThotBool SameAttributes (/* PtrElement pEl1,
-                                  PtrElement pEl2 */);
+                                   PtrElement pEl2 */);
 extern void WriteVersionNumber (/* BinFile pivFile */);
 extern void EcritNat (/* PtrSSchema pSS,
                          BinFile pivFile,

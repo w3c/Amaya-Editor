@@ -19,9 +19,9 @@ extern ThotBool DeleteRow ( NotifyElement * event );
 extern void RowDeleted ( NotifyElement * event );
 extern ThotBool DeleteCell ( NotifyElement * event );
 extern ThotBool RemoveColumn ( Element colhead,
-                              Document doc,
-                              ThotBool ifEmpty,
-                              ThotBool inMath );
+                               Document doc,
+                               ThotBool ifEmpty,
+                               ThotBool inMath );
 extern void CellDeleted ( NotifyElement * event );
 extern void TableCreated ( NotifyElement * event );
 extern void TablebodyDeleted ( NotifyElement * event );
@@ -51,9 +51,9 @@ extern ThotBool DeleteRow (/* NotifyElement * event */);
 extern void RowDeleted (/* NotifyElement * event */);
 extern ThotBool DeleteCell (/* NotifyElement * event */);
 extern ThotBool RemoveColumn (/* Element colhead,
-                                Document doc,
-                                ThotBool ifEmpty,
-                                ThotBool inMath */);
+                                 Document doc,
+                                 ThotBool ifEmpty,
+                                 ThotBool inMath */);
 extern void CellDeleted (/* NotifyElement * event */);
 extern void TableCreated (/* NotifyElement * event */);
 extern void TablebodyDeleted (/* NotifyElement * event */);

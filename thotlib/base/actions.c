@@ -45,7 +45,7 @@ Proc                procedure;
 }
  
 /*----------------------------------------------------------------------
-   TtaSetBackup connect the backup function: procedure().
+   TtaSetBackup connects the backup function: procedure().
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetBackup (Proc procedure)
@@ -57,4 +57,22 @@ Proc                procedure;
 #endif /* __STDC__ */
 {
   TteConnectAction (T_backuponfatal, procedure);
+}
+ 
+/*----------------------------------------------------------------------
+   TtaSetDocStatusUpdate connects the function: procedure().
+   That procedure will receive two paramters:
+   - doc which is the concerned document
+   - modified which gives the new status (TRUE if it's modified) of the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetDocStatusUpdate (Proc procedure)
+#else  /* __STDC__ */
+void                TtaSetDocStatusUpdate (procedure)
+int                 id;
+Proc                procedure;
+
+#endif /* __STDC__ */
+{
+  TteConnectAction (T_docmodified, procedure);
 }

@@ -92,9 +92,9 @@ extern void UpdateBoxesCounter ( PtrElement pElBegin,
                                  PtrPSchema pSchP,
                                  PtrSSchema pSS );
 extern ThotBool ElemWithinImage ( PtrElement pEl,
-                                 int view,
-                                 PtrAbstractBox pAbbRoot,
-                                 PtrDocument pDoc );
+                                  int view,
+                                  PtrAbstractBox pAbbRoot,
+                                  PtrDocument pDoc );
 extern void UpdatePresAttr ( PtrElement pEl,
                              PtrAttribute pAttr,
                              PtrDocument pDoc,
@@ -102,8 +102,8 @@ extern void UpdatePresAttr ( PtrElement pEl,
                              ThotBool inherit,
                              PtrAttribute pAttrComp );
 extern ThotBool IsIdenticalTextType ( PtrElement pEl,
-                                     PtrDocument pDoc,
-                                     PtrElement * pLib );
+                                      PtrDocument pDoc,
+                                      PtrElement * pLib );
 
 #else /* __STDC__ */
 
@@ -193,9 +193,9 @@ extern void UpdateBoxesCounter (/* PtrElement pElBegin,
                                    PtrPSchema pSchP,
                                    PtrSSchema pSS */);
 extern ThotBool ElemWithinImage (/* PtrElement pEl,
-                                   int view,
-                                   PtrAbstractBox pAbbRoot,
-                                   PtrDocument pDoc */);
+                                    int view,
+                                    PtrAbstractBox pAbbRoot,
+                                    PtrDocument pDoc */);
 extern void UpdatePresAttr (/* PtrElement pEl,
                                PtrAttribute pAttr,
                                PtrDocument pDoc,
@@ -203,8 +203,8 @@ extern void UpdatePresAttr (/* PtrElement pEl,
                                ThotBool inherit,
                                PtrAttribute pAttrComp */);
 extern ThotBool IsIdenticalTextType (/* PtrElement pEl,
-                                       PtrDocument pDoc,
-                                       PtrElement * pLib */);
+                                        PtrDocument pDoc,
+                                        PtrElement * pLib */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -7,12 +7,12 @@
 #ifdef __STDC__
 
 extern ThotBool ReadStructureSchema ( Name fileName,
-                                     PtrSSchema pSS );
+                                      PtrSSchema pSS );
 
 #else /* __STDC__ */
 
 extern ThotBool ReadStructureSchema (/* Name fileName,
-                                       PtrSSchema pSS */);
+                                        PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

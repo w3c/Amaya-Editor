@@ -21,9 +21,9 @@ extern void DefRegion ( int frame,
                         int yf );
 extern void TtaRefresh ( void );
 extern ThotBool RedrawFrameTop ( int frame,
-                                int scroll );
+                                 int scroll );
 extern ThotBool RedrawFrameBottom ( int frame,
-                                   int scroll );
+                                    int scroll );
 extern void DisplayFrame ( int frame );
 
 #else /* __STDC__ */
@@ -43,9 +43,9 @@ extern void DefRegion (/* int frame,
                           int yf */);
 extern void TtaRefresh (/* void */);
 extern ThotBool RedrawFrameTop (/* int frame,
-                                  int scroll */);
+                                   int scroll */);
 extern ThotBool RedrawFrameBottom (/* int frame,
-                                     int scroll */);
+                                      int scroll */);
 extern void DisplayFrame (/* int frame */);
 
 #endif /* __STDC__ */

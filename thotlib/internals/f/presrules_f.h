@@ -31,10 +31,10 @@ extern void ApplyCopy ( PtrDocument pDoc,
                         PtrAbstractBox pAb,
                         ThotBool withDescCopy );
 extern ThotBool ApplyRule ( PtrPRule pPRule,
-                           PtrPSchema pSchP,
-                           PtrAbstractBox pAb,
-                           PtrDocument pDoc,
-                           PtrAttribute pAttr );
+                            PtrPSchema pSchP,
+                            PtrAbstractBox pAb,
+                            PtrDocument pDoc,
+                            PtrAttribute pAttr );
 extern PtrPRule SearchPresRule ( PtrElement pEl,
                                  PRuleType ruleType,
                                  FunctionType funcType,
@@ -72,10 +72,10 @@ extern void ApplyCopy (/* PtrDocument pDoc,
                           PtrAbstractBox pAb,
                           ThotBool withDescCopy */);
 extern ThotBool ApplyRule (/* PtrPRule pPRule,
-                             PtrPSchema pSchP,
-                             PtrAbstractBox pAb,
-                             PtrDocument pDoc,
-                             PtrAttribute pAttr */);
+                              PtrPSchema pSchP,
+                              PtrAbstractBox pAb,
+                              PtrDocument pDoc,
+                              PtrAttribute pAttr */);
 extern PtrPRule SearchPresRule (/* PtrElement pEl,
                                    PRuleType ruleType,
                                    FunctionType funcType,

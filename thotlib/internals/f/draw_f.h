@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool DrawEtendSelection ( PtrElement pEl,
-                                    PtrDocument pDoc );
+                                     PtrDocument pDoc );
 extern void DrawAddAttr ( PtrAttribute * pAttr,
                           PtrElement pEl );
 extern void DrawSupprAttr ( PtrAttribute pAttr,
@@ -16,7 +16,7 @@ extern void DrawSupprAttr ( PtrAttribute pAttr,
 #else /* __STDC__ */
 
 extern ThotBool DrawEtendSelection (/* PtrElement pEl,
-                                      PtrDocument pDoc */);
+                                       PtrDocument pDoc */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
                             PtrElement pEl */);
 extern void DrawSupprAttr (/* PtrAttribute pAttr,

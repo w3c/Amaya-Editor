@@ -7,9 +7,9 @@
 #ifdef __STDC__
 
 extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
-                               ThotBool pre );
+                                ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                    ThotBool pre );
+                                     ThotBool pre );
 extern void FreePictInfo ( PictInfo *esc );
 extern void AddInSelection ( PtrElement pEl,
                              ThotBool dernier );
@@ -28,15 +28,15 @@ extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                       PtrAttribute * pAttr );
 extern ThotBool IsASavedElement ( PtrElement pEl );
 extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
-                                     PtrElement pEl2 );
+                                      PtrElement pEl2 );
 extern void UnloadDocument ( PtrDocument * pDoc );
 
 #else /* __STDC__ */
 
 extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
-                                 ThotBool pre */);
+                                  ThotBool pre */);
 extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                      ThotBool pre */);
+                                       ThotBool pre */);
 extern void FreePictInfo (/* PictInfo *esc */);
 extern void AddInSelection (/* PtrElement pEl,
                                ThotBool dernier */);
@@ -55,7 +55,7 @@ extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         PtrAttribute * pAttr */);
 extern ThotBool IsASavedElement (/* PtrElement pEl */);
 extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
-                                       PtrElement pEl2 */);
+                                        PtrElement pEl2 */);
 extern void UnloadDocument (/* PtrDocument * pDoc */);
 
 #endif /* __STDC__ */

@@ -31,8 +31,8 @@ extern void WritePRuleTrans ( int pres,
                               PtrSSchema pSS,
                               PtrTSchema pTSch );
 extern ThotBool WriteTranslationSchema ( Name fileName,
-                                        PtrTSchema pTSch,
-                                        PtrSSchema pSS );
+                                         PtrTSchema pTSch,
+                                         PtrSSchema pSS );
 
 #else /* __STDC__ */
 
@@ -61,8 +61,8 @@ extern void WritePRuleTrans (/* int pres,
                                 PtrSSchema pSS,
                                 PtrTSchema pTSch */);
 extern ThotBool WriteTranslationSchema (/* Name fileName,
-                                          PtrTSchema pTSch,
-                                          PtrSSchema pSS */);
+                                           PtrTSchema pTSch,
+                                           PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

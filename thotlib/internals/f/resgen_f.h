@@ -21,12 +21,12 @@ extern TypeTree RestSourceRec ( TypeTree source,
 extern TypeTree RestDestRec ( TypeTree source,
                               Restruct restr );
 extern ThotBool RestChangeOnPlace ( Document doc,
-                                   Restruct restruct );
+                                    Restruct restruct );
 extern ThotBool RestChangeToType ( Document sourceDoc,
-                                  Document destDoc,
-                                  Element destParent,
-                                  Element destSibling,
-                                  Restruct restruct );
+                                   Document destDoc,
+                                   Element destParent,
+                                   Element destSibling,
+                                   Restruct restruct );
 
 #else /* __STDC__ */
 
@@ -45,12 +45,12 @@ extern TypeTree RestSourceRec (/* TypeTree source,
 extern TypeTree RestDestRec (/* TypeTree source,
                                 Restruct restr */);
 extern ThotBool RestChangeOnPlace (/* Document doc,
-                                     Restruct restruct */);
+                                      Restruct restruct */);
 extern ThotBool RestChangeToType (/* Document sourceDoc,
-                                    Document destDoc,
-                                    Element destParent,
-                                    Element destSibling,
-                                    Restruct restruct */);
+                                     Document destDoc,
+                                     Element destParent,
+                                     Element destSibling,
+                                     Restruct restruct */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -38,9 +38,9 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef );
 extern ThotBool APPgraphicModify ( PtrElement pEl,
-                                  int value,
-                                  int frame,
-                                  ThotBool pre );
+                                   int value,
+                                   int frame,
+                                   ThotBool pre );
 extern void ApplyDirectTranslate ( int frame,
                                    int xm,
                                    int ym );
@@ -90,9 +90,9 @@ extern PtrBox GetClickedLeafBox (/* int frame,
                                     int xRef,
                                     int yRef */);
 extern ThotBool APPgraphicModify (/* PtrElement pEl,
-                                    int value,
-                                    int frame,
-                                    ThotBool pre */);
+                                     int value,
+                                     int frame,
+                                     ThotBool pre */);
 extern void ApplyDirectTranslate (/* int frame,
                                      int xm,
                                      int ym */);

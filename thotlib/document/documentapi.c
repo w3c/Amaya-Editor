@@ -36,30 +36,28 @@
 #endif
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
+#include "appdialogue_f.h"
+#include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "config_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
-
+#include "createabsbox_f.h"
+#include "docs_f.h"
 #include "draw_f.h"
-#include "translation_f.h"
+#include "externalref_f.h"
+#include "fileaccess_f.h"
 #include "memory_f.h"
-
-#include "writepivot_f.h"
+#include "platform_f.h"
 #include "readpivot_f.h"
 #include "readstr_f.h"
 #include "references_f.h"
-#include "externalref_f.h"
 #include "schemas_f.h"
-#include "fileaccess_f.h"
 #include "structschema_f.h"
 #include "thotmsg_f.h"
-#include "docs_f.h"
-#include "applicationapi_f.h"
-#include "platform_f.h"
-#include "appdialogue_f.h"
-#include "createabsbox_f.h"
+#include "translation_f.h"
+#include "tree_f.h"
+#include "viewapi_f.h"
+#include "views_f.h"
+#include "writepivot_f.h"
 
 extern int          UserErrorCode;
 static Name         nameBuffer;
@@ -1294,30 +1292,23 @@ int                 notificationMode;
    document: the document.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetDocumentModified (Document document)
-
 #else  /* __STDC__ */
 void                TtaSetDocumentModified (document)
 Document            document;
-
 #endif /* __STDC__ */
 
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
-      LoadedDocument[document - 1]->DocModified = TRUE;
+     /* parameter document is correct */
+     SetDocumentModified (LoadedDocument[document - 1], TRUE, 10);
 }
 
 /*----------------------------------------------------------------------
@@ -1332,30 +1323,23 @@ Document            document;
    document: the document.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetDocumentUnmodified (Document document)
-
 #else  /* __STDC__ */
 void                TtaSetDocumentUnmodified (document)
 Document            document;
-
 #endif /* __STDC__ */
 
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
-      LoadedDocument[document - 1]->DocModified = FALSE;
+     /* parameter document is correct */
+     SetDocumentModified (LoadedDocument[document - 1], FALSE, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1993,14 +1977,11 @@ SSchema            *nature;
    loaded or created, 0 if it has not been modified.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaIsDocumentModified (Document document)
-
 #else  /* __STDC__ */
 int                 TtaIsDocumentModified (document)
 Document            document;
-
 #endif /* __STDC__ */
 
 {
@@ -2010,16 +1991,11 @@ Document            document;
    /* verifies the parameter document */
    modified = 0;
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* parameter document is correct */
-   if (LoadedDocument[document - 1]->DocModified)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1]->DocModified)
+     /* parameter document is correct */
       modified = 1;
    return modified;
 }
@@ -2035,16 +2011,12 @@ Document            document;
    0 if access mode is read only, 1 if access mode is read-write.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetDocumentAccessMode (Document document)
-
 #else  /* __STDC__ */
 int                 TtaGetDocumentAccessMode (document)
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    int                 result;
 

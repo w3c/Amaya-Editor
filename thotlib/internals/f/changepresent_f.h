@@ -12,7 +12,7 @@ extern void RuleSetPut ( RuleSet RuleS1,
                          int num );
 extern void RuleSetClr ( RuleSet RuleS1 );
 extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
-                                     PtrElement pEl2 );
+                                      PtrElement pEl2 );
 extern PtrAbstractBox AbsBoxOfEl ( PtrElement pEl,
                                    int view );
 extern void NewPosition ( PtrAbstractBox pAb,
@@ -99,7 +99,7 @@ extern void RuleSetPut (/* RuleSet RuleS1,
                            int num */);
 extern void RuleSetClr (/* RuleSet RuleS1 */);
 extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
-                                       PtrElement pEl2 */);
+                                        PtrElement pEl2 */);
 extern PtrAbstractBox AbsBoxOfEl (/* PtrElement pEl,
                                      int view */);
 extern void NewPosition (/* PtrAbstractBox pAb,

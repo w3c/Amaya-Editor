@@ -21,9 +21,9 @@ extern void XmlSetTarget ( Document doc,
                            unsigned char *value );
 extern void XmlSetRef ( Document doc );
 extern ThotBool ParseXmlAttribute ( Document doc,
-                                   Element el,
-                                   unsigned char *attrName,
-                                   unsigned char *value );
+                                    Element el,
+                                    unsigned char *attrName,
+                                    unsigned char *value );
 
 #else /* __STDC__ */
 
@@ -42,9 +42,9 @@ extern void XmlSetTarget (/* Document doc,
                              unsigned char *value */);
 extern void XmlSetRef (/* Document doc */);
 extern ThotBool ParseXmlAttribute (/* Document doc,
-                                     Element el,
-                                     unsigned char *attrName,
-                                     unsigned char *value */);
+                                      Element el,
+                                      unsigned char *attrName,
+                                      unsigned char *value */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

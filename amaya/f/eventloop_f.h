@@ -17,7 +17,7 @@ extern void AmayaHandleOneEvent ( ThotEvent *ev );
 extern void AmayaFetchEvent ( ThotAppContext app_ctxt,
                               ThotEvent *ev );
 extern ThotBool AmayaFetchAvailableEvent ( ThotAppContext app_ctxt,
-                                          ThotEvent *ev );
+                                           ThotEvent *ev );
 extern void AmayaEventLoop ( ThotAppContext app_ctxt );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
@@ -35,7 +35,7 @@ extern void AmayaHandleOneEvent (/* ThotEvent *ev */);
 extern void AmayaFetchEvent (/* ThotAppContext app_ctxt,
                                 ThotEvent *ev */);
 extern ThotBool AmayaFetchAvailableEvent (/* ThotAppContext app_ctxt,
-                                            ThotEvent *ev */);
+                                             ThotEvent *ev */);
 extern void AmayaEventLoop (/* ThotAppContext app_ctxt */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);

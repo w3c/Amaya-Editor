@@ -1261,8 +1261,7 @@ void                StructReturnKey ()
 		      pSibling = NextElement (pNewEl);
 		      UpdateNumbers (pSibling, pEl, pDoc, TRUE);
 		      /* marque le document est modifie' */
-		      pDoc->DocModified = TRUE;
-		      pDoc->DocNTypedChars += 20;
+		      SetDocumentModified (pDoc, TRUE, 20);
 		      /* envoie un evenement ElemNew.Post a l'application */
 		      NotifySubTree (TteElemNew, pDoc, pNewEl, 0);
 		      /* place la selection */

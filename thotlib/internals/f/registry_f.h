@@ -9,9 +9,9 @@
 extern STRING TtaSkipBlanks ( STRING ptr );
 extern ThotBool TtaIsBlank ( STRING ptr );
 extern ThotBool TtaGetEnvInt ( STRING name,
-                              int *value );
+                               int *value );
 extern ThotBool TtaGetEnvBoolean ( STRING name,
-                                  ThotBool *value );
+                                   ThotBool *value );
 extern STRING TtaGetEnvString ( STRING name );
 extern void TtaClearEnvString ( STRING name );
 extern void TtaSetEnvInt ( STRING name,
@@ -27,9 +27,9 @@ extern void TtaSetDefEnvString ( STRING name,
                                  STRING value,
                                  int overwrite );
 extern ThotBool TtaGetDefEnvInt ( STRING name,
-                                 int *value );
+                                  int *value );
 extern ThotBool TtaGetDefEnvBoolean ( STRING name,
-                                     ThotBool *value );
+                                      ThotBool *value );
 extern STRING TtaGetDefEnvString ( STRING name );
 extern void TtaSaveAppRegistry ( void );
 extern void TtaInitializeAppRegistry ( char* appArgv0 );
@@ -42,9 +42,9 @@ extern int SearchFile ( STRING fileName,
 extern STRING TtaSkipBlanks (/* STRING ptr */);
 extern ThotBool TtaIsBlank (/* STRING ptr */);
 extern ThotBool TtaGetEnvInt (/* STRING name,
-                                int *value */);
+                                 int *value */);
 extern ThotBool TtaGetEnvBoolean (/* STRING name,
-                                    ThotBool *value */);
+                                     ThotBool *value */);
 extern STRING TtaGetEnvString (/* STRING name */);
 extern void TtaClearEnvString (/* STRING name */);
 extern void TtaSetEnvInt (/* STRING name,
@@ -60,9 +60,9 @@ extern void TtaSetDefEnvString (/* STRING name,
                                    STRING value,
                                    int overwrite */);
 extern ThotBool TtaGetDefEnvInt (/* STRING name,
-                                   int *value */);
+                                    int *value */);
 extern ThotBool TtaGetDefEnvBoolean (/* STRING name,
-                                       ThotBool *value */);
+                                        ThotBool *value */);
 extern STRING TtaGetDefEnvString (/* STRING name */);
 extern void TtaSaveAppRegistry (/* void */);
 extern void TtaInitializeAppRegistry (/* char* appArgv0 */);

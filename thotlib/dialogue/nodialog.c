@@ -351,6 +351,16 @@ ViewSelection      *marque;
 {
 }
 
+#ifdef __STDC__
+void           SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
+#else  /* __STDC__ */
+void           SetDocumentModified (pDoc, status, length)
+PtrDocument    pDoc;
+ThotBool       satus;
+int            length;
+#endif /* __STDC__ */
+{
+}
 
 #ifdef __STDC__
 void                HighlightSelection (ThotBool DebVisible, ThotBool clearOldSel)

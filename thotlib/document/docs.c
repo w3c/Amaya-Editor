@@ -303,7 +303,7 @@ STRING              fileName;
          /* deja affichees */
          RedisplayExternalRefs (*pDoc);
        /* Set the doc unmodified */
-       (*pDoc)->DocModified = 0;
+       SetDocumentModified (*pDoc, FALSE, 0);
      }
 
 }
@@ -567,22 +567,35 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
-   DocumentModified positionne le flag modification d'un document a` TRUE.
+   SetDocumentModified set the document flag DocModified to the status.
+   The parameter length gives the number of characters added.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DocumentModified (PtrDocument pDoc, PtrElement pEl)
+void           SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
 #else  /* __STDC__ */
-void                DocumentModified (pDoc, pEl)
-PtrDocument         pDoc;
-PtrElement          pEl;
-
+void           SetDocumentModified (pDoc, status, length)
+PtrDocument    pDoc;
+ThotBool       satus;
+int            length;
 #endif /* __STDC__ */
 {
-   if (pDoc != NULL)
-     {
-	pDoc->DocModified = TRUE;
-	pDoc->DocNTypedChars += 10;
-     }
+  if (pDoc != NULL)
+    {
+      if (status)
+	{
+	  if (!pDoc->DocModified && ThotLocalActions[T_docmodified])
+	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), TRUE);
+	  pDoc->DocModified = TRUE;
+	  pDoc->DocNTypedChars += length;
+	}
+      else
+	{
+	  if (pDoc->DocModified && ThotLocalActions[T_docmodified])
+	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), FALSE);
+	  pDoc->DocModified = FALSE;
+	  pDoc->DocNTypedChars = 0;
+	}
+    }
 }
 
 
@@ -951,8 +964,7 @@ ThotBool            move;
 				     pivName);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
 		  /* directory d'origine. */
-		  pDoc->DocModified = FALSE;
-		  pDoc->DocNTypedChars = 0;
+		  SetDocumentModified (pDoc, FALSE, 0);
 
 		  /* modifie les fichiers .EXT des documents nouvellement */
 		  /* reference's ou qui ne sont plus reference's par */
@@ -1068,10 +1080,7 @@ ThotBool            ask;
 	   status = StoreDocument (pDoc, docName, directory, FALSE, FALSE);
      }
    if (status && ask)
-     {
-	pDoc->DocModified = FALSE;
-	pDoc->DocNTypedChars = 0;
-     }
+     SetDocumentModified (pDoc, FALSE, 0);
    return status;
 }
 
@@ -1098,35 +1107,35 @@ int                 mode;
 #endif /* __STDC__ */
 
 {
-   ThotBool            ok;
+  ThotBool            ok;
 
-   ok = FALSE;
-   if (pDoc != NULL)
-      if (mode >= 0 && mode <= 5)
-	 switch (mode)
-	       {
-		  case 0:
-		     ok = interactiveSave (pDoc, TRUE);
-		     break;
-		  case 1:
-		     ok = saveWithExtension (pDoc, "BAK");
-		     if (ok)
-			TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
-		     break;
-		  case 2:
-		     ok = saveWithExtension (pDoc, "BAK");
-		     break;
-		  case 3:
-		     ok = saveWithExtension (pDoc, "SAV");
-		     break;
-		  case 4:
-		     ok = interactiveSave (pDoc, FALSE);
-		     break;
-		  case 5:
-		     ok = saveWithExtension (pDoc, "PIV");
-		     break;
-	       }
-   return ok;
+  ok = FALSE;
+  if (pDoc != NULL)
+    if (mode >= 0 && mode <= 5)
+      switch (mode)
+	{
+	case 0:
+	  ok = interactiveSave (pDoc, TRUE);
+	  break;
+	case 1:
+	  ok = saveWithExtension (pDoc, "BAK");
+	  if (ok)
+	    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
+	  break;
+	case 2:
+	  ok = saveWithExtension (pDoc, "BAK");
+	  break;
+	case 3:
+	  ok = saveWithExtension (pDoc, "SAV");
+	  break;
+	case 4:
+	  ok = interactiveSave (pDoc, FALSE);
+	  break;
+	case 5:
+	  ok = saveWithExtension (pDoc, "PIV");
+	  break;
+	}
+  return ok;
 }
 
 

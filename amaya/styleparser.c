@@ -65,7 +65,6 @@ typedef struct CSSProperty
   }
 CSSProperty;
 
-#define MAX_DEEP 10
 #include "HTMLstyleColor.h"
 
 struct unit_def
@@ -358,46 +357,6 @@ Document            doc;
   return (res);
 }
 
-/*----------------------------------------------------------------------
-   GetCSSNames : return the list of strings corresponding to the   
-   CSS names of an element                                   
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int      GetCSSNames (Element el, Document doc, STRING *lst, int max)
-#else
-static int      GetCSSNames (el, doc, lst, max)
-Element         el;
-Document        doc;
-STRING*         lst;
-int             max;
-#endif
-{
-   STRING       res;
-   int          deep;
-   Element      father = el;
-
-   for (deep = 0; deep < max;)
-     {
-	el = father;
-	if (el == NULL)
-	   break;
-	father = TtaGetParent (el);
-
-	res = GITagName (el);
-
-	if (res == NULL)
-	   continue;
-	if (!ustrcmp (res, "BODY"))
-	   break;
-	if (!ustrcmp (res, "HTML"))
-	   break;
-
-	/* store this level in the array */
-	lst[deep] = res;
-	deep++;
-     }
-   return (deep);
-}
 
 /*----------------------------------------------------------------------
  PToCss :  translate a PresentationSetting to the
@@ -3752,15 +3711,11 @@ Document            doc;
   STRING              elHtmlName;
   STRING              end_str;
   STRING              sel = selector;
-  STRING              names[MAX_DEEP];
   int                 result = 0;
 
   elHtmlName = GetCSSName (el, doc);
-  GetCSSNames (el, doc, names, MAX_DEEP);
 
-  /*
-   * look for a selector (ELEM)
-   */
+  /* look for a selector (ELEM) */
   selector = SkipBlanksAndComments (selector);
   if (*selector == '(')
     {

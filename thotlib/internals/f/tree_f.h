@@ -12,7 +12,7 @@ extern PtrElement GetOtherPairedElement ( PtrElement pEl );
 extern ThotBool ElementIsHidden ( PtrElement pEl );
 extern ThotBool ElementIsReadOnly ( PtrElement pEl );
 extern ThotBool CannotInsertNearElement ( PtrElement pEl,
-                                         ThotBool beforeElement );
+                                          ThotBool beforeElement );
 extern PtrElement FwdSearchElemByTypeName ( PtrElement pEl,
                                             STRING typeName );
 extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
@@ -26,14 +26,14 @@ extern void ChangeLanguageLeaves ( PtrElement pEl,
 extern void InsertElemAfterLastSibling ( PtrElement pOld,
                                          PtrElement pNew );
 extern ThotBool ElemIsWithinSubtree ( PtrElement pEl,
-                                     PtrElement pRoot );
+                                      PtrElement pRoot );
 extern ThotBool EquivalentType ( PtrElement pEl,
-                                int typeNum,
-                                PtrSSchema pSS );
+                                 int typeNum,
+                                 PtrSSchema pSS );
 extern ThotBool ElemIsBefore ( PtrElement pEl1,
-                              PtrElement pEl2 );
+                               PtrElement pEl2 );
 extern ThotBool ElemIsAnAncestor ( PtrElement pEl1,
-                                  PtrElement pEl2 );
+                                   PtrElement pEl2 );
 extern PtrElement CommonAncestor ( PtrElement pEl1,
                                    PtrElement pEl2 );
 extern PtrElement FirstLeaf ( PtrElement pEl );
@@ -142,7 +142,7 @@ extern PtrElement GetOtherPairedElement (/* PtrElement pEl */);
 extern ThotBool ElementIsHidden (/* PtrElement pEl */);
 extern ThotBool ElementIsReadOnly (/* PtrElement pEl */);
 extern ThotBool CannotInsertNearElement (/* PtrElement pEl,
-                                           ThotBool beforeElement */);
+                                            ThotBool beforeElement */);
 extern PtrElement FwdSearchElemByTypeName (/* PtrElement pEl,
                                               STRING typeName */);
 extern PtrElement BackSearchElemByTypeName (/* PtrElement pEl,
@@ -156,14 +156,14 @@ extern void ChangeLanguageLeaves (/* PtrElement pEl,
 extern void InsertElemAfterLastSibling (/* PtrElement pOld,
                                            PtrElement pNew */);
 extern ThotBool ElemIsWithinSubtree (/* PtrElement pEl,
-                                       PtrElement pRoot */);
+                                        PtrElement pRoot */);
 extern ThotBool EquivalentType (/* PtrElement pEl,
-                                  int typeNum,
-                                  PtrSSchema pSS */);
+                                   int typeNum,
+                                   PtrSSchema pSS */);
 extern ThotBool ElemIsBefore (/* PtrElement pEl1,
-                                PtrElement pEl2 */);
+                                 PtrElement pEl2 */);
 extern ThotBool ElemIsAnAncestor (/* PtrElement pEl1,
-                                    PtrElement pEl2 */);
+                                     PtrElement pEl2 */);
 extern PtrElement CommonAncestor (/* PtrElement pEl1,
                                      PtrElement pEl2 */);
 extern PtrElement FirstLeaf (/* PtrElement pEl */);

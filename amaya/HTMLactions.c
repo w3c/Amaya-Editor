@@ -1107,8 +1107,8 @@ Document            doc
 	     TtaSetItemOff (doc, 1, Types, BObject);
 	     TtaSetItemOff (doc, 1, Style, TBig);
 	     TtaSetItemOff (doc, 1, Style, TSmall);
-	     TtaSetItemOff (doc, 1, Style, BSub);
-	     TtaSetItemOff (doc, 1, Style, BSup);
+	     TtaSetItemOff (doc, 1, Style, TSub);
+	     TtaSetItemOff (doc, 1, Style, TSup);
 	  }
 	else
 	  {
@@ -1116,8 +1116,8 @@ Document            doc
 	     TtaSetItemOn (doc, 1, Types, BObject);
 	     TtaSetItemOn (doc, 1, Style, TBig);
 	     TtaSetItemOn (doc, 1, Style, TSmall);
-	     TtaSetItemOn (doc, 1, Style, BSub);
-	     TtaSetItemOn (doc, 1, Style, BSup);
+	     TtaSetItemOn (doc, 1, Style, TSub);
+	     TtaSetItemOn (doc, 1, Style, TSup);
 	  }
      }
    /* 
@@ -1433,6 +1433,27 @@ Document            doc
 	SelectionInSMALL = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TSmall, NewSelInElem);
      }
+
+   if (SelectionInSub != NewSelInElem)
+     {
+	SelectionInSub = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TSub, NewSelInElem);
+     }
+   if (SelectionInSMALL != NewSelInElem)
+     {
+	SelectionInSup = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TSup, NewSelInElem);
+     }
+   if (SelectionInQuote != NewSelInElem)
+     {
+	SelectionInQuote = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TQuotation, NewSelInElem);
+     }
+   if (SelectionInBDO != NewSelInElem)
+     {
+	SelectionInBDO = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TBDO, NewSelInElem);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1592,6 +1613,11 @@ int                 elemtype;
 	       TtaSplitText (selectedEl, firstSelectedChar - 1, document);
 	       TtaNextSibling (&selectedEl);
 	       TtaRegisterElementCreate (selectedEl, document);
+	       if (lastSelectedElem == firstSelectedElem)
+		 {
+		   lastSelectedElem = selectedEl;
+		   lastSelectedChar = lastSelectedChar - firstSelectedChar + 1;
+		 }
 	       firstSelectedElem = selectedEl;
 	       firstSelectedChar = 0;
 	       if (elem == lastEl)
@@ -1724,6 +1750,18 @@ int                 elemtype;
 	       break;
 	    case HTML_EL_Small_text:
 	       SelectionInSMALL = !remove;
+	       break;
+	    case HTML_EL_Subscript:
+	       SelectionInSub = !remove;
+	       break;
+	    case HTML_EL_Superscript:
+	       SelectionInSup = !remove;
+	       break;
+	    case HTML_EL_Quotation:
+	       SelectionInQuote = !remove;
+	       break;
+	    case HTML_EL_BDO:
+	       SelectionInBDO = !remove;
 	       break;
 	    default:
 	       break;

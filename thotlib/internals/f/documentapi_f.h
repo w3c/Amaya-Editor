@@ -15,8 +15,8 @@ extern Document TtaOpenDocument ( STRING documentName,
 extern void TtaSaveDocument ( Document document,
                               STRING documentName );
 extern ThotBool TtaExportDocument ( Document document,
-                                   STRING fileName,
-                                   STRING TSchemaName );
+                                    STRING fileName,
+                                    STRING TSchemaName );
 extern void TtaCloseDocument ( Document document );
 extern void TtaRemoveDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
@@ -89,8 +89,8 @@ extern Document TtaOpenDocument (/* STRING documentName,
 extern void TtaSaveDocument (/* Document document,
                                 STRING documentName */);
 extern ThotBool TtaExportDocument (/* Document document,
-                                     STRING fileName,
-                                     STRING TSchemaName */);
+                                      STRING fileName,
+                                      STRING TSchemaName */);
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaRemoveDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* STRING path */);

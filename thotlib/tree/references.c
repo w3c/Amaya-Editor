@@ -1173,8 +1173,7 @@ ThotBool            withAppEvent;
 			RegisterAnExternalRef (pRef, pDoc, TRUE);
 		  ret = TRUE;
 		  /* une reference modifiee vaut 10 caracteres saisis */
-		  pDoc->DocModified = TRUE;
-		  pDoc->DocNTypedChars += 10;
+		  SetDocumentModified (pDoc, TRUE, 10);
 		  if (withAppEvent && pRefEl != NULL)
 		     /* on n'envoie un evenement que si ce n'est ni une */
 		     /* inclusion ni un attribut */

@@ -10,10 +10,10 @@ extern void TtaSetCurrentKeyboard ( int keyboard );
 extern void InitSelection ( void );
 extern void TtaSetFocus ( void );
 extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
-                                     PtrElement * firstEl,
-                                     PtrElement * lastEl,
-                                     int *firstChar,
-                                     int *lastChar );
+                                      PtrElement * firstEl,
+                                      PtrElement * lastEl,
+                                      int *firstChar,
+                                      int *lastChar );
 extern void GetActiveView ( PtrDocument * pDoc,
                             int *view,
                             ThotBool * assoc );
@@ -88,10 +88,10 @@ extern void TtaSetCurrentKeyboard (/* int keyboard */);
 extern void InitSelection (/* void */);
 extern void TtaSetFocus (/* void */);
 extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
-                                       PtrElement * firstEl,
-                                       PtrElement * lastEl,
-                                       int *firstChar,
-                                       int *lastChar */);
+                                        PtrElement * firstEl,
+                                        PtrElement * lastEl,
+                                        int *firstChar,
+                                        int *lastChar */);
 extern void GetActiveView (/* PtrDocument * pDoc,
                               int *view,
                               ThotBool * assoc */);

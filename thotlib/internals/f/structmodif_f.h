@@ -29,12 +29,12 @@ extern void NewTextLanguage ( PtrAbstractBox pAb,
                               Language lang,
                               ThotBool setLangAttr );
 extern ThotBool CompleteElement ( PtrElement pEl,
-                                 PtrDocument pDoc );
+                                  PtrDocument pDoc );
 extern ThotBool BreakElement ( PtrElement pElReplicate,
-                              PtrElement pSplitEl,
-                              int splitIndex,
-                              ThotBool block,
-                              ThotBool select );
+                               PtrElement pSplitEl,
+                               int splitIndex,
+                               ThotBool block,
+                               ThotBool select );
 extern void SelectRange ( PtrDocument pDoc,
                           PtrElement firstSel,
                           PtrElement lastSel,
@@ -66,12 +66,12 @@ extern void NewTextLanguage (/* PtrAbstractBox pAb,
                                 Language lang,
                                 ThotBool setLangAttr */);
 extern ThotBool CompleteElement (/* PtrElement pEl,
-                                   PtrDocument pDoc */);
+                                    PtrDocument pDoc */);
 extern ThotBool BreakElement (/* PtrElement pElReplicate,
-                                PtrElement pSplitEl,
-                                int splitIndex,
-                                ThotBool block,
-                                ThotBool select */);
+                                 PtrElement pSplitEl,
+                                 int splitIndex,
+                                 ThotBool block,
+                                 ThotBool select */);
 extern void SelectRange (/* PtrDocument pDoc,
                             PtrElement firstSel,
                             PtrElement lastSel,

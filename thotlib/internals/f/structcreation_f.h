@@ -46,9 +46,9 @@ extern PtrElement CreateFirstAssocElement ( PtrDocument pDoc,
                                             int typeNum,
                                             PtrSSchema pSS );
 extern ThotBool LinkReference ( PtrElement pEl,
-                               PtrAttribute pAttr,
-                               PtrDocument pDoc,
-                               PtrElement * pSelEl );
+                                PtrAttribute pAttr,
+                                PtrDocument pDoc,
+                                PtrElement * pSelEl );
 extern int MenuChoixElem ( PtrSSchema pSS,
                            int rule,
                            PtrElement pEl,
@@ -123,9 +123,9 @@ extern PtrElement CreateFirstAssocElement (/* PtrDocument pDoc,
                                               int typeNum,
                                               PtrSSchema pSS */);
 extern ThotBool LinkReference (/* PtrElement pEl,
-                                 PtrAttribute pAttr,
-                                 PtrDocument pDoc,
-                                 PtrElement * pSelEl */);
+                                  PtrAttribute pAttr,
+                                  PtrDocument pDoc,
+                                  PtrElement * pSelEl */);
 extern int MenuChoixElem (/* PtrSSchema pSS,
                              int rule,
                              PtrElement pEl,

@@ -23,10 +23,10 @@ extern void KillAbsBoxAboveLimit ( PtrAbstractBox pP,
                                    PtrDocument pDoc,
                                    PtrAbstractBox * RedispAbsBox );
 extern ThotBool KillAbsBoxBeforePage ( PtrAbstractBox pPage,
-                                      int frame,
-                                      PtrDocument pDoc,
-                                      int viewNb,
-                                      int *clipOrg );
+                                       int frame,
+                                       PtrDocument pDoc,
+                                       int viewNb,
+                                       int *clipOrg );
 
 #else /* __STDC__ */
 
@@ -47,10 +47,10 @@ extern void KillAbsBoxAboveLimit (/* PtrAbstractBox pP,
                                      PtrDocument pDoc,
                                      PtrAbstractBox * RedispAbsBox */);
 extern ThotBool KillAbsBoxBeforePage (/* PtrAbstractBox pPage,
-                                        int frame,
-                                        PtrDocument pDoc,
-                                        int viewNb,
-                                        int *clipOrg */);
+                                         int frame,
+                                         PtrDocument pDoc,
+                                         int viewNb,
+                                         int *clipOrg */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

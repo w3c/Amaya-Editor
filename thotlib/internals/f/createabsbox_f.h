@@ -29,8 +29,8 @@ extern void ConstantCopy ( int NConst,
                            PtrAbstractBox pAb );
 extern ThotBool AssocView ( PtrElement pEl );
 extern ThotBool DoesViewExist ( PtrElement pEl,
-                               PtrDocument pDoc,
-                               DocViewNumber viewNb );
+                                PtrDocument pDoc,
+                                DocViewNumber viewNb );
 extern int AppliedView ( PtrElement pEl,
                          PtrAttribute pAttr,
                          PtrDocument pDoc,
@@ -47,10 +47,10 @@ extern void GetDelayedRule ( PtrPRule * pR,
 extern void ApplDelayedRule ( PtrElement pEl,
                               PtrDocument pDoc );
 extern ThotBool CondPresentation ( PtrCondition pCond,
-                                  PtrElement pEl,
-                                  PtrAttribute pAttr,
-                                  int view,
-                                  PtrSSchema pSS );
+                                   PtrElement pEl,
+                                   PtrAttribute pAttr,
+                                   int view,
+                                   PtrSSchema pSS );
 extern PtrAbstractBox CrAbsBoxesPres ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrPRule pRCre,
@@ -70,8 +70,8 @@ extern PtrAbstractBox TruncateOrCompleteAbsBox ( PtrAbstractBox pAb,
                                                  ThotBool head,
                                                  PtrDocument pDoc );
 extern ThotBool IsViewFull ( DocViewNumber viewNb,
-                            PtrDocument pDoc,
-                            PtrElement pEl );
+                             PtrDocument pDoc,
+                             PtrElement pEl );
 extern void WaitingRule ( PtrPRule pR,
                           PtrAbstractBox pAbb,
                           PtrPSchema pSP,
@@ -113,8 +113,8 @@ extern void ConstantCopy (/* int NConst,
                              PtrAbstractBox pAb */);
 extern ThotBool AssocView (/* PtrElement pEl */);
 extern ThotBool DoesViewExist (/* PtrElement pEl,
-                                 PtrDocument pDoc,
-                                 DocViewNumber viewNb */);
+                                  PtrDocument pDoc,
+                                  DocViewNumber viewNb */);
 extern int AppliedView (/* PtrElement pEl,
                            PtrAttribute pAttr,
                            PtrDocument pDoc,
@@ -131,10 +131,10 @@ extern void GetDelayedRule (/* PtrPRule * pR,
 extern void ApplDelayedRule (/* PtrElement pEl,
                                 PtrDocument pDoc */);
 extern ThotBool CondPresentation (/* PtrCondition pCond,
-                                    PtrElement pEl,
-                                    PtrAttribute pAttr,
-                                    int view,
-                                    PtrSSchema pSS */);
+                                     PtrElement pEl,
+                                     PtrAttribute pAttr,
+                                     int view,
+                                     PtrSSchema pSS */);
 extern PtrAbstractBox CrAbsBoxesPres (/* PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrPRule pRCre,
@@ -154,8 +154,8 @@ extern PtrAbstractBox TruncateOrCompleteAbsBox (/* PtrAbstractBox pAb,
                                                    ThotBool head,
                                                    PtrDocument pDoc */);
 extern ThotBool IsViewFull (/* DocViewNumber viewNb,
-                              PtrDocument pDoc,
-                              PtrElement pEl */);
+                               PtrDocument pDoc,
+                               PtrElement pEl */);
 extern void WaitingRule (/* PtrPRule pR,
                             PtrAbstractBox pAbb,
                             PtrPSchema pSP,

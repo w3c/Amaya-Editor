@@ -29,7 +29,7 @@ extern void TtaSplitText ( Element element,
                            int position,
                            Document document );
 extern ThotBool TtaMergeText ( Element element,
-                              Document document );
+                               Document document );
 extern void TtaSetGraphicsShape ( Element element,
                                   CHAR_T shape,
                                   Document document );
@@ -101,7 +101,7 @@ extern void TtaSplitText (/* Element element,
                              int position,
                              Document document */);
 extern ThotBool TtaMergeText (/* Element element,
-                                Document document */);
+                                 Document document */);
 extern void TtaSetGraphicsShape (/* Element element,
                                     CHAR_T shape,
                                     Document document */);

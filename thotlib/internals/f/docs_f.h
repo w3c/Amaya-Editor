@@ -17,8 +17,9 @@ extern void NewDocument ( PtrDocument * pDoc,
 extern void UnloadTree ( Document document );
 extern void UnloadDocument ( PtrDocument * pDoc );
 extern void PaginateDocument ( PtrDocument pDoc );
-extern void DocumentModified ( PtrDocument pDoc,
-                               PtrElement pEl );
+extern void SetDocumentModified ( PtrDocument pDoc,
+                                  ThotBool status,
+                                  int length );
 extern void UpdateIncludedElement ( PtrElement pEl,
                                     PtrDocument pDoc );
 extern void UpdateAllInclusions ( PtrDocument pDoc );
@@ -38,8 +39,9 @@ extern void NewDocument (/* PtrDocument * pDoc,
 extern void UnloadTree (/* Document document */);
 extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void PaginateDocument (/* PtrDocument pDoc */);
-extern void DocumentModified (/* PtrDocument pDoc,
-                                 PtrElement pEl */);
+extern void SetDocumentModified (/* PtrDocument pDoc,
+                                    ThotBool status,
+                                    int length */);
 extern void UpdateIncludedElement (/* PtrElement pEl,
                                       PtrDocument pDoc */);
 extern void UpdateAllInclusions (/* PtrDocument pDoc */);

@@ -77,6 +77,7 @@ extern void         TableHLoadResources ();
 #ifdef __STDC__
 extern void         TteConnectAction (int id, Proc procedure);
 extern void         TtaSetBackup (Proc procedure);
+extern void         TtaSetDocStatusUpdate (Proc procedure);
 extern void         TteZeroMenu (WindowType windowtype, STRING schemaName);
 extern void         TteOpenMainWindow (STRING name, Pixmap logo, Pixmap icon);
 extern void         TteInitMenus (STRING name, int number);
@@ -175,6 +176,7 @@ extern void         TtcRedo  (Document document, View view);
 
 extern void         TteConnectAction ( /*int id, Proc procedure */ );
 extern void         TtaSetBackup (/* Proc procedure */);
+extern void         TtaSetDocStatusUpdate (/* Proc procedure */);
 extern void         TteZeroMenu ( /*WindowType windowtype, STRING schemaName */ );
 extern void         TteOpenMainWindow ( /*STRING name, Pixmap logo, Pixmap icon */ );
 extern void         TteInitMenus ( /*STRING name,int number */ );

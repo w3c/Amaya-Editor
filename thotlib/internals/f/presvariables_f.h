@@ -19,10 +19,10 @@ extern int CounterVal ( int counterNum,
                         int view );
 extern ThotBool PresAbsBoxUserEditable ( PtrAbstractBox pAb );
 extern ThotBool NewVariable ( int varNum,
-                             PtrSSchema pSS,
-                             PtrPSchema pSchP,
-                             PtrAbstractBox pAb,
-                             PtrDocument pDoc );
+                              PtrSSchema pSS,
+                              PtrPSchema pSchP,
+                              PtrAbstractBox pAb,
+                              PtrDocument pDoc );
 
 #else /* __STDC__ */
 
@@ -39,10 +39,10 @@ extern int CounterVal (/* int counterNum,
                           int view */);
 extern ThotBool PresAbsBoxUserEditable (/* PtrAbstractBox pAb */);
 extern ThotBool NewVariable (/* int varNum,
-                               PtrSSchema pSS,
-                               PtrPSchema pSchP,
-                               PtrAbstractBox pAb,
-                               PtrDocument pDoc */);
+                                PtrSSchema pSS,
+                                PtrPSchema pSchP,
+                                PtrAbstractBox pAb,
+                                PtrDocument pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

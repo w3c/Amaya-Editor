@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern ThotBool PaginatedView ( PtrDocument pDoc,
-                               int view,
-                               ThotBool assoc );
+                                int view,
+                                ThotBool assoc );
 extern void GetViewFromFrame ( int nframe,
                                PtrDocument pDoc,
                                int *viewNum,
@@ -63,8 +63,8 @@ extern void CloseView ( PtrDocument pDoc,
 #else /* __STDC__ */
 
 extern ThotBool PaginatedView (/* PtrDocument pDoc,
-                                 int view,
-                                 ThotBool assoc */);
+                                  int view,
+                                  ThotBool assoc */);
 extern void GetViewFromFrame (/* int nframe,
                                  PtrDocument pDoc,
                                  int *viewNum,

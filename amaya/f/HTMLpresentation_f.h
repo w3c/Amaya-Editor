@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern ThotBool MakeASpan ( Element elem,
-                           Element *span,
-                           Document doc );
+                            Element *span,
+                            Document doc );
 extern void DeleteSpanIfNoAttr ( Element el,
                                  Document doc,
                                  Element *firstChild,
@@ -29,8 +29,8 @@ extern void AttrLangCreated ( NotifyAttribute *event );
 #else /* __STDC__ */
 
 extern ThotBool MakeASpan (/* Element elem,
-                             Element *span,
-                             Document doc */);
+                              Element *span,
+                              Document doc */);
 extern void DeleteSpanIfNoAttr (/* Element el,
                                    Document doc,
                                    Element *firstChild,

@@ -8,12 +8,12 @@
 
 extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern ThotBool OpenDocument ( Name docName,
-                              PtrDocument pDoc,
-                              ThotBool loadIncludedDoc,
-                              ThotBool skeleton,
-                              PtrSSchema pSS,
-                              ThotBool withAppEvent,
-                              ThotBool removeExclusions );
+                               PtrDocument pDoc,
+                               ThotBool loadIncludedDoc,
+                               ThotBool skeleton,
+                               PtrSSchema pSS,
+                               ThotBool withAppEvent,
+                               ThotBool removeExclusions );
 extern void DeleteAllTrees ( PtrDocument pDoc );
 extern PtrTextBuffer ReadComment ( BinFile file,
                                    ThotBool store,
@@ -49,7 +49,7 @@ extern PtrElement ReadTreePiv ( BinFile pivFile,
                                 PtrElement pParent,
                                 ThotBool createDesc );
 extern ThotBool AbstractTreeOK ( PtrElement pEl,
-                                PtrDocument pDoc );
+                                 PtrDocument pDoc );
 extern void AssociatePairs ( PtrElement pRoot );
 extern void ReadSchemaNamesPiv ( BinFile file,
                                  PtrDocument pDoc,
@@ -78,12 +78,12 @@ extern void LoadDocumentPiv ( BinFile file,
 
 extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
 extern ThotBool OpenDocument (/* Name docName,
-                                PtrDocument pDoc,
-                                ThotBool loadIncludedDoc,
-                                ThotBool skeleton,
-                                PtrSSchema pSS,
-                                ThotBool withAppEvent,
-                                ThotBool removeExclusions */);
+                                 PtrDocument pDoc,
+                                 ThotBool loadIncludedDoc,
+                                 ThotBool skeleton,
+                                 PtrSSchema pSS,
+                                 ThotBool withAppEvent,
+                                 ThotBool removeExclusions */);
 extern void DeleteAllTrees (/* PtrDocument pDoc */);
 extern PtrTextBuffer ReadComment (/* BinFile file,
                                      ThotBool store,
@@ -119,7 +119,7 @@ extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrElement pParent,
                                   ThotBool createDesc */);
 extern ThotBool AbstractTreeOK (/* PtrElement pEl,
-                                  PtrDocument pDoc */);
+                                   PtrDocument pDoc */);
 extern void AssociatePairs (/* PtrElement pRoot */);
 extern void ReadSchemaNamesPiv (/* BinFile file,
                                    PtrDocument pDoc,

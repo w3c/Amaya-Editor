@@ -28,7 +28,7 @@ extern void ConfigGetExportSchemaName ( int choix,
                                         STRING schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern ThotBool ConfigDefaultPSchema ( STRING schstr,
-                                      STRING schpres );
+                                       STRING schpres );
 extern void ConfigKeyboard ( int *x,
                              int *y );
 extern void ConfigOpenFirstViews ( PtrDocument pDoc );
@@ -61,8 +61,8 @@ extern void TtaGetViewGeometryMM ( Document document,
                                    int *width,
                                    int *height );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                        STRING nameNature,
-                                        STRING presNature );
+                                         STRING nameNature,
+                                         STRING presNature );
 extern void ConfigGetPresentationOption ( PtrSSchema pSS,
                                           STRING optionName,
                                           STRING optionValue );
@@ -74,8 +74,8 @@ extern int MakeMenuPattern ( STRING BufMenu,
 extern int MakeMenuColor ( STRING BufMenu,
                            int LgMax );
 extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
-                                         STRING nameNature,
-                                         STRING schtypo );
+                                          STRING nameNature,
+                                          STRING schtypo );
 
 #else /* __STDC__ */
 
@@ -101,7 +101,7 @@ extern void ConfigGetExportSchemaName (/* int choix,
                                           STRING schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern ThotBool ConfigDefaultPSchema (/* STRING schstr,
-                                        STRING schpres */);
+                                         STRING schpres */);
 extern void ConfigKeyboard (/* int *x,
                                int *y */);
 extern void ConfigOpenFirstViews (/* PtrDocument pDoc */);
@@ -134,8 +134,8 @@ extern void TtaGetViewGeometryMM (/* Document document,
                                      int *width,
                                      int *height */);
 extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                          STRING nameNature,
-                                          STRING presNature */);
+                                           STRING nameNature,
+                                           STRING presNature */);
 extern void ConfigGetPresentationOption (/* PtrSSchema pSS,
                                             STRING optionName,
                                             STRING optionValue */);
@@ -147,8 +147,8 @@ extern int MakeMenuPattern (/* STRING BufMenu,
 extern int MakeMenuColor (/* STRING BufMenu,
                              int LgMax */);
 extern ThotBool ConfigDefaultTypoSchema (/* PtrSSchema pSS,
-                                           STRING nameNature,
-                                           STRING schtypo */);
+                                            STRING nameNature,
+                                            STRING schtypo */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

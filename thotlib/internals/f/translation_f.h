@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern ThotBool ExportDocument ( PtrDocument pDoc,
-                                STRING fName,
-                                STRING TSchemaName );
+                                 STRING fName,
+                                 STRING TSchemaName );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
                          STRING fName,
@@ -17,8 +17,8 @@ extern void ExportTree ( PtrElement pEl,
 #else /* __STDC__ */
 
 extern ThotBool ExportDocument (/* PtrDocument pDoc,
-                                  STRING fName,
-                                  STRING TSchemaName */);
+                                   STRING fName,
+                                   STRING TSchemaName */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
                            STRING fName,

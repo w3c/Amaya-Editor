@@ -15,8 +15,8 @@ extern void AskToConfirm ( PtrDocument pDoc,
                            ThotBool * confirmation,
                            ThotBool * save );
 extern ThotBool CloseADocument ( Document document,
-                                Document docform,
-                                View viewform );
+                                 Document docform,
+                                 View viewform );
 extern void TtcCloseDocument ( Document document,
                                View view );
 
@@ -31,8 +31,8 @@ extern void AskToConfirm (/* PtrDocument pDoc,
                              ThotBool * confirmation,
                              ThotBool * save */);
 extern ThotBool CloseADocument (/* Document document,
-                                  Document docform,
-                                  View viewform */);
+                                   Document docform,
+                                   View viewform */);
 extern void TtcCloseDocument (/* Document document,
                                  View view */);
 

@@ -7,27 +7,27 @@
 #ifdef __STDC__
 
 extern ThotBool TtaReadByte ( BinFile file,
-                             char* bval );
+                              char* bval );
 extern ThotBool TtaReadBool ( BinFile file,
-                             ThotBool * bval );
+                              ThotBool * bval );
 extern ThotBool TtaReadShort ( BinFile file,
-                              int *sval );
+                               int *sval );
 extern ThotBool TtaReadSignedShort ( BinFile file,
-                                    int *sval );
+                                     int *sval );
 extern ThotBool TtaReadInteger ( BinFile file,
-                                int *sval );
+                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
-                             STRING name );
+                              STRING name );
 extern BinFile TtaReadOpen ( CONST STRING filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST STRING filename );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
-                              CHAR_T bval );
+                               CHAR_T bval );
 extern ThotBool TtaWriteShort ( BinFile file,
-                               int sval );
+                                int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
-                                 int lval );
+                                  int lval );
 extern void TtaWriteDocIdent ( BinFile file,
                                DocumentIdentifier Ident );
 extern void TtaReadDocIdent ( BinFile file,
@@ -35,7 +35,7 @@ extern void TtaReadDocIdent ( BinFile file,
 extern void CopyDocIdent ( DocumentIdentifier * Dest,
                            DocumentIdentifier Source );
 extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
-                              DocumentIdentifier Ident2 );
+                               DocumentIdentifier Ident2 );
 extern void ClearDocIdent ( DocumentIdentifier * Ident );
 extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
 extern void MakeCompleteName ( STRING fname,
@@ -64,27 +64,27 @@ extern ThotBool TtaCheckDirectory ( STRING directory );
 #else /* __STDC__ */
 
 extern ThotBool TtaReadByte (/* BinFile file,
-                               char* bval */);
+                                char* bval */);
 extern ThotBool TtaReadBool (/* BinFile file,
-                               ThotBool * bval */);
+                                ThotBool * bval */);
 extern ThotBool TtaReadShort (/* BinFile file,
-                                int *sval */);
+                                 int *sval */);
 extern ThotBool TtaReadSignedShort (/* BinFile file,
-                                      int *sval */);
+                                       int *sval */);
 extern ThotBool TtaReadInteger (/* BinFile file,
-                                  int *sval */);
+                                   int *sval */);
 extern ThotBool TtaReadName (/* BinFile file,
-                               STRING name */);
+                                STRING name */);
 extern BinFile TtaReadOpen (/* CONST STRING filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern BinFile TtaWriteOpen (/* CONST STRING filename */);
 extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
-                                CHAR_T bval */);
+                                 CHAR_T bval */);
 extern ThotBool TtaWriteShort (/* BinFile file,
-                                 int sval */);
+                                  int sval */);
 extern ThotBool TtaWriteInteger (/* BinFile file,
-                                   int lval */);
+                                    int lval */);
 extern void TtaWriteDocIdent (/* BinFile file,
                                  DocumentIdentifier Ident */);
 extern void TtaReadDocIdent (/* BinFile file,
@@ -92,7 +92,7 @@ extern void TtaReadDocIdent (/* BinFile file,
 extern void CopyDocIdent (/* DocumentIdentifier * Dest,
                              DocumentIdentifier Source */);
 extern ThotBool SameDocIdent (/* DocumentIdentifier Ident1,
-                                DocumentIdentifier Ident2 */);
+                                 DocumentIdentifier Ident2 */);
 extern void ClearDocIdent (/* DocumentIdentifier * Ident */);
 extern ThotBool DocIdentIsNull (/* DocumentIdentifier Ident */);
 extern void MakeCompleteName (/* STRING fname,

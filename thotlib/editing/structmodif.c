@@ -47,38 +47,38 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
+#include "absboxes_f.h"
 #include "appli_f.h"
+#include "appdialogue_f.h"
 #include "applicationapi_f.h"
-#include "tree_f.h"
 #include "attrpresent_f.h"
 #include "attributes_f.h"
-#include "search_f.h"
-#include "textcommands_f.h"
-#include "contentapi_f.h"
-#include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "views_f.h"
-#include "appdialogue_f.h"
-#include "callback_f.h"
-#include "exceptions_f.h"
-#include "absboxes_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
+#include "callback_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
+#include "content_f.h"
+#include "contentapi_f.h"
+#include "createabsbox_f.h"
+#include "docs_f.h"
+#include "exceptions_f.h"
+#include "externalref_f.h"
+#include "fileaccess_f.h"
+#include "frame_f.h"
+#include "memory_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
-#include "externalref_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
 #include "selectmenu_f.h"
-#include "fileaccess_f.h"
+#include "structselect_f.h"
 #include "structschema_f.h"
-#include "content_f.h"
-#include "frame_f.h"
+#include "search_f.h"
 #include "searchref_f.h"
-#include "docs_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "textcommands_f.h"
+#include "tree_f.h"
+#include "views_f.h"
 
 /*----------------------------------------------------------------------
    InitSave     initialise les variables decrivant la partie copiee
@@ -1384,8 +1384,7 @@ ThotBool		    select;
 		  RedisplayCopies (pElReplicate, pDoc, TRUE);
 		  UpdateNumbers (NextElement (pChild), pEl2, pDoc, TRUE);
 		  /* indiquer que le document est modifie' */
-		  pDoc->DocModified = TRUE;
-		  pDoc->DocNTypedChars += 30;
+		  SetDocumentModified (pDoc, TRUE, 30);
 		  if (select && pNext != NULL)
 		     if (nextChar == 0)
 			SelectElementWithEvent (pDoc, pNext, TRUE, TRUE);

@@ -33,7 +33,7 @@ extern void NormalizeURL ( char *orgName,
                            char *docName,
                            char *otherPath );
 extern ThotBool IsSameHost ( const char *url1,
-                            const char *url2 );
+                             const char *url2 );
 extern ThotBool HasKnownFileSuffix ( const char *path );
 extern void ChopURL ( char *outputURL,
                       const char *inputURL );
@@ -42,7 +42,7 @@ extern char *AmayaParseUrl ( const char *aName,
                              int wanted );
 extern void SimplifyUrl ( char ** url );
 extern ThotBool NormalizeFile ( char *src,
-                               char *target );
+                                char *target );
 extern char *MakeRelativeURL ( char *aName,
                                char *relatedName );
 
@@ -75,7 +75,7 @@ extern void NormalizeURL (/* char *orgName,
                              char *docName,
                              char *otherPath */);
 extern ThotBool IsSameHost (/* const char *url1,
-                              const char *url2 */);
+                               const char *url2 */);
 extern ThotBool HasKnownFileSuffix (/* const char *path */);
 extern void ChopURL (/* char *outputURL,
                         const char *inputURL */);
@@ -84,7 +84,7 @@ extern char *AmayaParseUrl (/* const char *aName,
                                int wanted */);
 extern void SimplifyUrl (/* char ** url */);
 extern ThotBool NormalizeFile (/* char *src,
-                                 char *target */);
+                                  char *target */);
 extern char *MakeRelativeURL (/* char *aName,
                                  char *relatedName */);
 

@@ -12,8 +12,8 @@ extern void WriteVariableType ( VariableType typ );
 extern void WriteContentType ( ContentType typ );
 extern void WritePRules ( PtrPRule pPRule );
 extern ThotBool WritePresentationSchema ( Name fileName,
-                                         PtrPSchema pPSch,
-                                         PtrSSchema pSS );
+                                          PtrPSchema pPSch,
+                                          PtrSSchema pSS );
 
 #else /* __STDC__ */
 
@@ -23,8 +23,8 @@ extern void WriteVariableType (/* VariableType typ */);
 extern void WriteContentType (/* ContentType typ */);
 extern void WritePRules (/* PtrPRule pPRule */);
 extern ThotBool WritePresentationSchema (/* Name fileName,
-                                           PtrPSchema pPSch,
-                                           PtrSSchema pSS */);
+                                            PtrPSchema pPSch,
+                                            PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

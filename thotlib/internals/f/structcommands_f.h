@@ -7,9 +7,9 @@
 #ifdef __STDC__
 
 extern ThotBool SendEventSubTree ( APPevent AppEvent,
-                                  PtrDocument pDoc,
-                                  PtrElement pEl,
-                                  int end );
+                                   PtrDocument pDoc,
+                                   PtrElement pEl,
+                                   int end );
 extern void FreeSavedElements ( void );
 extern void CopyCommand ( void );
 extern PtrElement NextNotPage ( PtrElement pEl );
@@ -34,9 +34,9 @@ extern void TtcChangeType ( Document document,
 #else /* __STDC__ */
 
 extern ThotBool SendEventSubTree (/* APPevent AppEvent,
-                                    PtrDocument pDoc,
-                                    PtrElement pEl,
-                                    int end */);
+                                     PtrDocument pDoc,
+                                     PtrElement pEl,
+                                     int end */);
 extern void FreeSavedElements (/* void */);
 extern void CopyCommand (/* void */);
 extern PtrElement NextNotPage (/* PtrElement pEl */);

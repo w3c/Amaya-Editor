@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool AskForNew_RemplRefer ( ThotBool * generate,
-                                      Name typeName );
+                                       Name typeName );
 extern void CallbackAskForNew ( int Val );
 extern void BuildChoiceMenu ( STRING bufMenu,
                               Name menuTitle,
@@ -26,7 +26,7 @@ extern void BuildPasteMenu ( int RefMenu,
 #else /* __STDC__ */
 
 extern ThotBool AskForNew_RemplRefer (/* ThotBool * generate,
-                                        Name typeName */);
+                                         Name typeName */);
 extern void CallbackAskForNew (/* int Val */);
 extern void BuildChoiceMenu (/* STRING bufMenu,
                                 Name menuTitle,

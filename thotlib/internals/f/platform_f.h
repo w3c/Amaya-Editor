@@ -31,7 +31,7 @@ extern int TtaFileStat ( ThotFileHandle handle,
 extern void TtaFileCopy ( CONST STRING sourceFileName,
                           CONST STRING targetFileName );
 extern ThotBool TtaCompareFiles ( CONST STRING file1,
-                                 CONST STRING file2 );
+                                  CONST STRING file2 );
 
 #else /* __STDC__ */
 
@@ -60,7 +60,7 @@ extern int TtaFileStat (/* ThotFileHandle handle,
 extern void TtaFileCopy (/* CONST STRING sourceFileName,
                             CONST STRING targetFileName */);
 extern ThotBool TtaCompareFiles (/* CONST STRING file1,
-                                   CONST STRING file2 */);
+                                    CONST STRING file2 */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

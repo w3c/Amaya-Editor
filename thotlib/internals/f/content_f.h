@@ -15,16 +15,16 @@ extern void SplitTextElement ( PtrElement pEl,
                                ThotBool withAppEvent,
                                PtrElement *pSecondPart );
 extern ThotBool MergeTextElements ( PtrElement pEl,
-                                   PtrElement * pFreeEl,
-                                   PtrDocument pDoc,
-                                   ThotBool withAppEvent,
-                                   ThotBool removeAbsBox );
+                                    PtrElement * pFreeEl,
+                                    PtrDocument pDoc,
+                                    ThotBool withAppEvent,
+                                    ThotBool removeAbsBox );
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                 PtrElement pEl );
 extern ThotBool StringAndTextEqual ( STRING String,
-                                    PtrTextBuffer pBuf );
+                                     PtrTextBuffer pBuf );
 extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
-                            PtrTextBuffer pBuf2 );
+                             PtrTextBuffer pBuf2 );
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                              PtrTextBuffer pCopyBuf,
                              int *len );
@@ -57,16 +57,16 @@ extern void SplitTextElement (/* PtrElement pEl,
                                  ThotBool withAppEvent,
                                  PtrElement *pSecondPart */);
 extern ThotBool MergeTextElements (/* PtrElement pEl,
-                                     PtrElement * pFreeEl,
-                                     PtrDocument pDoc,
-                                     ThotBool withAppEvent,
-                                     ThotBool removeAbsBox */);
+                                      PtrElement * pFreeEl,
+                                      PtrDocument pDoc,
+                                      ThotBool withAppEvent,
+                                      ThotBool removeAbsBox */);
 extern PtrTextBuffer CopyText (/* PtrTextBuffer pBuf,
                                   PtrElement pEl */);
 extern ThotBool StringAndTextEqual (/* STRING String,
-                                      PtrTextBuffer pBuf */);
+                                       PtrTextBuffer pBuf */);
 extern ThotBool TextsEqual (/* PtrTextBuffer pBuf1,
-                              PtrTextBuffer pBuf2 */);
+                               PtrTextBuffer pBuf2 */);
 extern void CopyTextToText (/* PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,
                                int *len */);

@@ -550,7 +550,7 @@ View                view;
 	     frame = GetWindowNumber (document, view);
 	     if (ThotLocalActions[T_updateparagraph] != NULL)
 		(*ThotLocalActions[T_updateparagraph]) (ViewFrameTable[frame - 1].FrAbstractBox, frame);
-	     pDoc->DocModified = !(* (Func)ThotLocalActions[T_writedocument]) (pDoc, 4);
+	    SetDocumentModified (pDoc, !(* (Func)ThotLocalActions[T_writedocument]) (pDoc, 4), 0);
 	  }
      }
 }

@@ -22,7 +22,7 @@ extern PtrSSchema LoadExtension ( USTRING SSchName,
                                   USTRING PSchName,
                                   PtrDocument pDoc );
 extern ThotBool FreeNature ( PtrSSchema pSS,
-                            PtrSSchema pNatureSS );
+                             PtrSSchema pNatureSS );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
 
 #else /* __STDC__ */
@@ -43,7 +43,7 @@ extern PtrSSchema LoadExtension (/* USTRING SSchName,
                                     USTRING PSchName,
                                     PtrDocument pDoc */);
 extern ThotBool FreeNature (/* PtrSSchema pSS,
-                              PtrSSchema pNatureSS */);
+                               PtrSSchema pNatureSS */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */

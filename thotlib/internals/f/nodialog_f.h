@@ -32,7 +32,7 @@ extern void NewPosition ( PtrAbstractBox pAb,
                           int frame,
                           ThotBool Disp );
 extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
-                                     PtrElement pEl2 );
+                                      PtrElement pEl2 );
 extern void ModPresent ( ThotBool OnlyChars );
 extern void ShowBox ( int frame,
                       PtrBox boite,
@@ -40,9 +40,9 @@ extern void ShowBox ( int frame,
                       int pourcent );
 extern int IdentDocument ( PtrDocument pDoc );
 extern ThotBool CallEventType ( int *notifyEvent,
-                               ThotBool pre );
+                                ThotBool pre );
 extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                    ThotBool pre );
+                                     ThotBool pre );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void UpdateScrollbars ( int frame );
@@ -68,6 +68,9 @@ extern void SelectElement ( PtrDocument pDoc,
                             ThotBool Debut,
                             ThotBool Controle );
 extern void ComputeViewSelMarks ( ViewSelection * marque );
+extern void SetDocumentModified ( PtrDocument pDoc,
+                                  ThotBool status,
+                                  int length );
 extern void HighlightSelection ( ThotBool DebVisible,
                                  ThotBool clearOldSel );
 extern void CancelSelection ( void );
@@ -82,7 +85,7 @@ extern void SetNewSelectionStatus ( int frame,
 extern void DirectCreation ( PtrBox pBox,
                              int frame );
 extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pav,
-                                        int frame );
+                                         int frame );
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
 extern void Clear ( int frame,
@@ -91,10 +94,10 @@ extern void Clear ( int frame,
                     int x,
                     int y );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                        STRING nomNature,
-                                        STRING presNature );
+                                         STRING nomNature,
+                                         STRING presNature );
 extern ThotBool ConfigDefaultPSchema ( STRING schema,
-                                      STRING schpres );
+                                       STRING schpres );
 
 #else /* __STDC__ */
 
@@ -124,7 +127,7 @@ extern void NewPosition (/* PtrAbstractBox pAb,
                             int frame,
                             ThotBool Disp */);
 extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
-                                       PtrElement pEl2 */);
+                                        PtrElement pEl2 */);
 extern void ModPresent (/* ThotBool OnlyChars */);
 extern void ShowBox (/* int frame,
                         PtrBox boite,
@@ -132,9 +135,9 @@ extern void ShowBox (/* int frame,
                         int pourcent */);
 extern int IdentDocument (/* PtrDocument pDoc */);
 extern ThotBool CallEventType (/* int *notifyEvent,
-                                 ThotBool pre */);
+                                  ThotBool pre */);
 extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                      ThotBool pre */);
+                                       ThotBool pre */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
 extern void UpdateScrollbars (/* int frame */);
@@ -160,6 +163,9 @@ extern void SelectElement (/* PtrDocument pDoc,
                               ThotBool Debut,
                               ThotBool Controle */);
 extern void ComputeViewSelMarks (/* ViewSelection * marque */);
+extern void SetDocumentModified (/* PtrDocument pDoc,
+                                    ThotBool status,
+                                    int length */);
 extern void HighlightSelection (/* ThotBool DebVisible,
                                    ThotBool clearOldSel */);
 extern void CancelSelection (/* void */);
@@ -174,7 +180,7 @@ extern void SetNewSelectionStatus (/* int frame,
 extern void DirectCreation (/* PtrBox pBox,
                                int frame */);
 extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
-                                          int frame */);
+                                           int frame */);
 extern void SetMainWindowBackgroundColor (/* int frame,
                                              int color */);
 extern void Clear (/* int frame,
@@ -183,10 +189,10 @@ extern void Clear (/* int frame,
                       int x,
                       int y */);
 extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                          STRING nomNature,
-                                          STRING presNature */);
+                                           STRING nomNature,
+                                           STRING presNature */);
 extern ThotBool ConfigDefaultPSchema (/* STRING schema,
-                                        STRING schpres */);
+                                         STRING schpres */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2221,11 +2221,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
-   elType.ElTypeNum = HTML_EL_Subscript;
-   TtaCreateElement (elType, document);
+   SetCharFontOrPhrase (document, HTML_EL_Subscript);
 }
 
 
@@ -2240,11 +2236,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
-   elType.ElTypeNum = HTML_EL_Superscript;
-   TtaCreateElement (elType, document);
+   SetCharFontOrPhrase (document, HTML_EL_Superscript);
 }
 
 
@@ -2259,11 +2251,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
-   elType.ElTypeNum = HTML_EL_Quotation;
-   TtaCreateElement (elType, document);
+   SetCharFontOrPhrase (document, HTML_EL_Quotation);
 }
 
 
@@ -2278,11 +2266,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
-   elType.ElTypeNum = HTML_EL_BDO;
-   TtaCreateElement (elType, document);
+   SetCharFontOrPhrase (document, HTML_EL_BDO);
 }
 
 

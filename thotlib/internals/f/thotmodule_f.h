@@ -10,9 +10,9 @@ extern void XmlSetPageBreakProperties ( Element el );
 extern void XmlFreePresentationList ( void );
 extern void XmlSetPresentation ( Document doc );
 extern ThotBool ParseThotAttribute ( Document doc,
-                                    Element el,
-                                    char *attrName,
-                                    char *value );
+                                     Element el,
+                                     char *attrName,
+                                     char *value );
 extern void StoreTableActions ( void );
 extern void RestoreTableActions ( void );
 
@@ -22,9 +22,9 @@ extern void XmlSetPageBreakProperties (/* Element el */);
 extern void XmlFreePresentationList (/* void */);
 extern void XmlSetPresentation (/* Document doc */);
 extern ThotBool ParseThotAttribute (/* Document doc,
-                                      Element el,
-                                      char *attrName,
-                                      char *value */);
+                                       Element el,
+                                       char *attrName,
+                                       char *value */);
 extern void StoreTableActions (/* void */);
 extern void RestoreTableActions (/* void */);
 

@@ -69,6 +69,7 @@ static ThotBool     FromKeyboard;
 #include "callback_f.h"
 #include "changepresent_f.h"
 #include "content_f.h"
+#include "docs_f.h"
 #include "editcommands_f.h"
 #include "font_f.h"
 #include "frame_f.h"
@@ -3370,7 +3371,7 @@ int                 keyboard;
 		TtaDisplaySimpleMessage (INFO, LIB, TMSG_INSERTING_IMP);
 	      break;
 	    }
-	  LoadedDocument[FrameTable[frame].FrDoc - 1]->DocModified = TRUE; 
+	  SetDocumentModified (LoadedDocument[FrameTable[frame].FrDoc - 1], TRUE, 1); 
 	}
     }
 }

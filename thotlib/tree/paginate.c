@@ -54,6 +54,7 @@
 #include "content_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
+#include "docs_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
@@ -2096,6 +2097,6 @@ ThotBool            Assoc;
 		       lastSelection, FirstSelectedChar, LastSelectedChar);
 #endif /* PAGINEETIMPRIME */
    /* paginer un document le modifie ... */
-   pDoc->DocModified = TRUE;
+   SetDocumentModified (pDoc, TRUE, 0);
 }
 /* End Of Module page */

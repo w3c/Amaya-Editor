@@ -875,9 +875,8 @@ ThotBool            before;
 		  pLeaf = NULL;
 		else
 		  {
-		    pDoc->DocModified = TRUE;
+		    SetDocumentModified (pDoc, TRUE, 10);
 		    /* le document est modifie' */
-		    pDoc->DocNTypedChars += 10;
 		    FirstCreation = TRUE;
 		    for (i = 1; i <= nNew; i++)
 		      {
@@ -1178,7 +1177,7 @@ PtrAbstractBox      pAb;
 		  pAncest = pAncest->ElParent;
 	       }
 	  }
-	pDoc->DocModified = TRUE;	/* le document est modifie' */
+	SetDocumentModified (pDoc, TRUE, 0);
 	/* traite les paves correspondant dans les autres vues */
 	RedisplayNewContent (pEl, pDoc, dVol, pAb->AbDocView, pAb);
      }
@@ -4638,9 +4637,7 @@ int                 item;
 			if (newsel->ElStructSchema->SsRule[newsel->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 			   /* on vient de creer un element d'une paire */
 			   InsertSecondPairedElem (newsel, pDoc, lastSel, lastChar);
-		     pDoc->DocModified = TRUE;
-		     /* le document est modifie' */
-		     pDoc->DocNTypedChars += 20;
+		     SetDocumentModified (pDoc, TRUE, 20);
 		     /* Reaffiche les vues du document */
 		     TtaClearViewSelections ();
 		     AbstractImageUpdated (pDoc);

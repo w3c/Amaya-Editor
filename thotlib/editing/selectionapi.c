@@ -455,18 +455,18 @@ int                *lastCharacter;
    else
       /* Parameter document is correct */
      {
-	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
-	if (ok)
-	   if (pDoc == LoadedDocument[document - 1])
-	     {
-		*selectedElement = (Element) firstSelection;
-		*firstCharacter = firstChar;
-		if (lastSelection == firstSelection)
-		   if (lastChar > 1)
-		      *lastCharacter = lastChar - 1;
-		if (firstChar != 0 && lastChar == 0)
-		   *lastCharacter = firstSelection->ElVolume;
-	     }
+       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+       if (ok)
+	 if (pDoc == LoadedDocument[document - 1])
+	   {
+	     *selectedElement = (Element) firstSelection;
+	     *firstCharacter = firstChar;
+	     if (lastSelection == firstSelection)
+	       if (lastChar > 1)
+		 *lastCharacter = lastChar - 1;
+	     if (firstChar != 0 && lastChar == 0)
+	       *lastCharacter = firstSelection->ElVolume;
+	   }
      }
 }
 
@@ -632,19 +632,19 @@ int                *lastCharacter;
    else
       /* Parameter document is correct */
      {
-	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
-	if (ok)
-	   if (pDoc == LoadedDocument[document - 1])
-	     {
-		*selectedElement = (Element) lastSelection;
-		if (lastSelection == firstSelection)
-		  {
-		     *firstCharacter = firstChar;
-		     if (lastChar > 1)
-			*lastCharacter = lastChar - 1;
-		  }
-		if (lastChar > 0)
+       ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+       if (ok)
+	 if (pDoc == LoadedDocument[document - 1])
+	   {
+	     *selectedElement = (Element) lastSelection;
+	     if (lastSelection == firstSelection)
+	       {
+		 *firstCharacter = firstChar;
+		 if (lastChar > 1)
 		   *lastCharacter = lastChar - 1;
-	     }
+	       }
+	     if (lastChar > 0)
+	       *lastCharacter = lastChar - 1;
+	   }
      }
 }

@@ -31,10 +31,10 @@ extern void SRCattrModified ( NotifyAttribute * event );
 extern void CreateImage ( Document document,
                           View view );
 extern ThotBool AddLocalImage ( STRING fullname,
-                               STRING name,
-                               STRING url,
-                               Document doc,
-                               LoadedImageDesc ** desc );
+                                STRING name,
+                                STRING url,
+                                Document doc,
+                                LoadedImageDesc ** desc );
 extern void RemoveDocumentImages ( Document doc );
 
 #else /* __STDC__ */
@@ -64,10 +64,10 @@ extern void SRCattrModified (/* NotifyAttribute * event */);
 extern void CreateImage (/* Document document,
                             View view */);
 extern ThotBool AddLocalImage (/* STRING fullname,
-                                 STRING name,
-                                 STRING url,
-                                 Document doc,
-                                 LoadedImageDesc ** desc */);
+                                  STRING name,
+                                  STRING url,
+                                  Document doc,
+                                  LoadedImageDesc ** desc */);
 extern void RemoveDocumentImages (/* Document doc */);
 
 #endif /* __STDC__ */

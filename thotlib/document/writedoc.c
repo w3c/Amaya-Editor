@@ -262,8 +262,7 @@ ThotBool            move;
 				     pivName);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
 		  /* directory d'origine. */
-		  pDoc->DocModified = FALSE;
-		  pDoc->DocNTypedChars = 0;
+		  SetDocumentModified (pDoc, FALSE, 0);
 
 		  /* modifie les fichiers .EXT des documents nouvellement */
 		  /* reference's ou qui ne sont plus reference's par */
@@ -365,10 +364,7 @@ PtrDocument         pDoc;
      status = StoreDocument (pDoc, SaveFileName, SaveDirectoryName,SaveDocWithCopy, SaveDocWithMove);
     
    if (status)
-     {
-	pDoc->DocModified = FALSE;
-	pDoc->DocNTypedChars = 0;
-     }
+     SetDocumentModified (pDoc, FALSE, 0);
    return status;
 }
 

@@ -7,11 +7,11 @@
 #ifdef __STDC__
 
 extern ThotBool TypeHasException ( int exceptNum,
-                                  int typeNum,
-                                  PtrSSchema pSS );
+                                   int typeNum,
+                                   PtrSSchema pSS );
 extern ThotBool AttrHasException ( int exceptNum,
-                                  int attr,
-                                  PtrSSchema pSS );
+                                   int attr,
+                                   PtrSSchema pSS );
 extern int GetAttrWithException ( int exceptNum,
                                   PtrSSchema pSS );
 extern int GetElemWithException ( int exceptNum,
@@ -20,11 +20,11 @@ extern int GetElemWithException ( int exceptNum,
 #else /* __STDC__ */
 
 extern ThotBool TypeHasException (/* int exceptNum,
-                                    int typeNum,
-                                    PtrSSchema pSS */);
+                                     int typeNum,
+                                     PtrSSchema pSS */);
 extern ThotBool AttrHasException (/* int exceptNum,
-                                    int attr,
-                                    PtrSSchema pSS */);
+                                     int attr,
+                                     PtrSSchema pSS */);
 extern int GetAttrWithException (/* int exceptNum,
                                     PtrSSchema pSS */);
 extern int GetElemWithException (/* int exceptNum,

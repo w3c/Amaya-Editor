@@ -18,8 +18,8 @@ extern PtrBox GetHPosRelativePos ( PtrBox pBox,
 extern PtrBox GetVPosRelativeBox ( PtrBox pBox,
                                    PtrBox pPreviousBox );
 extern ThotBool ComputeDimRelation ( PtrAbstractBox pAb,
-                                    int frame,
-                                    ThotBool horizRef );
+                                     int frame,
+                                     ThotBool horizRef );
 extern void ComputeAxisRelation ( AbPosition rule,
                                   PtrBox pBox,
                                   int frame,
@@ -48,8 +48,8 @@ extern PtrBox GetHPosRelativePos (/* PtrBox pBox,
 extern PtrBox GetVPosRelativeBox (/* PtrBox pBox,
                                      PtrBox pPreviousBox */);
 extern ThotBool ComputeDimRelation (/* PtrAbstractBox pAb,
-                                      int frame,
-                                      ThotBool horizRef */);
+                                       int frame,
+                                       ThotBool horizRef */);
 extern void ComputeAxisRelation (/* AbPosition rule,
                                     PtrBox pBox,
                                     int frame,

@@ -197,10 +197,10 @@ MENUS
         view:1 Style.Font toggle:TTeletype -> CreateElemTeletype;
         view:1 Style.Font toggle:TBig -> CreateElemBig;
         view:1 Style.Font toggle:TSmall -> CreateElemSmall;
-        view:1 Style.Font button:BSub -> CreateSub;
-        view:1 Style.Font button:BSup -> CreateSup;
-        view:1 Style.Font button:BQuotation -> CreateQuotation;
-        view:1 Style.Font button:BBDO -> CreateBDO;
+        view:1 Style.Font toggle:TSub -> CreateSub;
+        view:1 Style.Font toggle:TSup -> CreateSup;
+        view:1 Style.Font toggle:TQuotation -> CreateQuotation;
+        view:1 Style.Font toggle:TBDO -> CreateBDO;
 
 	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;

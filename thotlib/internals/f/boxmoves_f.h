@@ -12,7 +12,7 @@ extern void IsXYPosComplete ( PtrBox pBox,
 extern ThotBool IsXPosComplete ( PtrBox pBox );
 extern ThotBool IsYPosComplete ( PtrBox pBox );
 extern ThotBool IsParentBox ( PtrBox pBox,
-                             PtrBox pRefBox );
+                              PtrBox pRefBox );
 extern void MirrorShape ( PtrAbstractBox pAb,
                           ThotBool horizRef,
                           ThotBool vertRef,
@@ -95,7 +95,7 @@ extern void IsXYPosComplete (/* PtrBox pBox,
 extern ThotBool IsXPosComplete (/* PtrBox pBox */);
 extern ThotBool IsYPosComplete (/* PtrBox pBox */);
 extern ThotBool IsParentBox (/* PtrBox pBox,
-                               PtrBox pRefBox */);
+                                PtrBox pRefBox */);
 extern void MirrorShape (/* PtrAbstractBox pAb,
                             ThotBool horizRef,
                             ThotBool vertRef,

@@ -47,41 +47,42 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
+#include "absboxes_f.h"
+#include "actions_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
-#include "tree_f.h"
 #include "attrpresent_f.h"
 #include "attributes_f.h"
-#include "search_f.h"
-#include "textcommands_f.h"
-#include "editcommands_f.h"
-#include "contentapi_f.h"
-#include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
-#include "callback_f.h"
-#include "exceptions_f.h"
-#include "absboxes_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
+#include "callback_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
+#include "content_f.h"
+#include "contentapi_f.h"
+#include "createabsbox_f.h"
+#include "editcommands_f.h"
+#include "exceptions_f.h"
+#include "externalref_f.h"
+#include "docs_f.h"
+#include "fileaccess_f.h"
+#include "memory_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
-#include "externalref_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
-#include "selectmenu_f.h"
-#include "fileaccess_f.h"
-#include "structschema_f.h"
-#include "content_f.h"
+#include "search_f.h"
 #include "searchref_f.h"
+#include "selectmenu_f.h"
+#include "structcommands_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structschema_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "tree_f.h"
 #include "undo_f.h"
 #include "unstructlocate_f.h"
-#include "structcommands_f.h"
-#include "actions_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
 
 /*----------------------------------------------------------------------
    InsertPastedElement
@@ -730,8 +731,7 @@ void                PasteCommand ()
 		   SelectString (pDoc, pSel, pSel->ElTextLength + 1,
 				 pSel->ElTextLength);
 		   }
-		pDoc->DocModified = TRUE;	/* le document est modifie' */
-		pDoc->DocNTypedChars += 20;
+		SetDocumentModified (pDoc, TRUE, 20);
 
 		/* Reaffiche les numeros suivants qui changent */
 		for (i = 0; i < NCreatedElements; i++)
@@ -1483,8 +1483,7 @@ void                TtcCreateElement (doc, view)
 		       RedisplayCopies (pNew, pDoc, TRUE);
 		       UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
 		       /* Indiquer que le document est modifie' */
-		       pDoc->DocModified = TRUE;
-		       pDoc->DocNTypedChars += 30;
+		       SetDocumentModified (pDoc, TRUE, 30);
 		       /* envoie un evenement ElemNew.Post a l'application */
 		       NotifySubTree (TteElemNew, pDoc, pNew, 0);
 		       /* Replace la selection */
@@ -1942,8 +1941,7 @@ ThotBool            before;
           les copies de cet element. */
        RedisplayCopies (pE, pDoc, TRUE);
        /* indique que le document est modifie' */
-       pDoc->DocModified = TRUE;
-       pDoc->DocNTypedChars += 30;
+       SetDocumentModified (pDoc, TRUE, 30);
 
        /* selectionne */
        if (!pSel)

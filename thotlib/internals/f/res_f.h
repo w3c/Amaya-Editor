@@ -15,15 +15,15 @@ extern void RestPrintType ( void *restruct,
                             ThotBool isSource );
 extern Restruct RestNewRestruct ( ElementType typeDest );
 extern ThotBool RestInitMatch ( Element elemFirst,
-                               Element elemLast );
+                                Element elemLast );
 extern ThotBool RestMatchElements ( Element elemFirst,
-                                   Element elemLast,
-                                   SSchema strSch,
-                                   int typeNum );
+                                    Element elemLast,
+                                    SSchema strSch,
+                                    int typeNum );
 extern ThotBool RestChangeType ( Element elem,
-                                Document doc,
-                                int dstTypeNum,
-                                SSchema dstSch );
+                                 Document doc,
+                                 int dstTypeNum,
+                                 SSchema dstSch );
 
 #else /* __STDC__ */
 
@@ -36,15 +36,15 @@ extern void RestPrintType (/* void *restruct,
                               ThotBool isSource */);
 extern Restruct RestNewRestruct (/* ElementType typeDest */);
 extern ThotBool RestInitMatch (/* Element elemFirst,
-                                 Element elemLast */);
+                                  Element elemLast */);
 extern ThotBool RestMatchElements (/* Element elemFirst,
-                                     Element elemLast,
-                                     SSchema strSch,
-                                     int typeNum */);
+                                      Element elemLast,
+                                      SSchema strSch,
+                                      int typeNum */);
 extern ThotBool RestChangeType (/* Element elem,
-                                  Document doc,
-                                  int dstTypeNum,
-                                  SSchema dstSch */);
+                                   Document doc,
+                                   int dstTypeNum,
+                                   SSchema dstSch */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

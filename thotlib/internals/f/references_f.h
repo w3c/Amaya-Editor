@@ -35,12 +35,12 @@ extern void AddDocOfExternalRef ( PtrElement pEl,
                                   DocumentIdentifier docIdent,
                                   PtrDocument pDoc2 );
 extern ThotBool SetReference ( PtrElement pRefEl,
-                              PtrAttribute pRefAttr,
-                              PtrElement pTargetEl,
-                              PtrDocument pDoc,
-                              PtrDocument pTargetDoc,
-                              ThotBool ancestor,
-                              ThotBool withAppEvent );
+                               PtrAttribute pRefAttr,
+                               PtrElement pTargetEl,
+                               PtrDocument pDoc,
+                               PtrDocument pTargetDoc,
+                               ThotBool ancestor,
+                               ThotBool withAppEvent );
 extern void CopyDescrExtDoc ( PtrElement pEl,
                               PtrChangedReferredEl pChngRef );
 extern void RegisterDeletedReferredElem ( PtrElement pEl,
@@ -80,12 +80,12 @@ extern void AddDocOfExternalRef (/* PtrElement pEl,
                                     DocumentIdentifier docIdent,
                                     PtrDocument pDoc2 */);
 extern ThotBool SetReference (/* PtrElement pRefEl,
-                                PtrAttribute pRefAttr,
-                                PtrElement pTargetEl,
-                                PtrDocument pDoc,
-                                PtrDocument pTargetDoc,
-                                ThotBool ancestor,
-                                ThotBool withAppEvent */);
+                                 PtrAttribute pRefAttr,
+                                 PtrElement pTargetEl,
+                                 PtrDocument pDoc,
+                                 PtrDocument pTargetDoc,
+                                 ThotBool ancestor,
+                                 ThotBool withAppEvent */);
 extern void CopyDescrExtDoc (/* PtrElement pEl,
                                 PtrChangedReferredEl pChngRef */);
 extern void RegisterDeletedReferredElem (/* PtrElement pEl,

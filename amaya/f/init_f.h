@@ -9,7 +9,7 @@
 extern Document IsDocumentLoaded ( STRING documentURL,
                                    STRING form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
-                                           View view );
+                                            View view );
 extern void ExtractParameters ( STRING aName,
                                 STRING parameters );
 extern void SetArrowButton ( Document document,
@@ -134,7 +134,7 @@ extern void AmayaClose ( Document document,
 extern Document IsDocumentLoaded (/* STRING documentURL,
                                      STRING form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,
-                                             View view */);
+                                              View view */);
 extern void ExtractParameters (/* STRING aName,
                                   STRING parameters */);
 extern void SetArrowButton (/* Document document,

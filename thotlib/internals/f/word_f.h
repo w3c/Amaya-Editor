@@ -11,25 +11,25 @@ extern UCHAR_T NextCharacter ( PtrTextBuffer * buffer,
 extern UCHAR_T PreviousCharacter ( PtrTextBuffer * buffer,
                                    int *rank );
 extern ThotBool MotOk ( PtrElement firstEl,
-                       int firstChar,
-                       PtrElement lastEl,
-                       int lastChar );
+                        int firstChar,
+                        PtrElement lastEl,
+                        int lastChar );
 extern ThotBool InitSearchDomain ( int domain,
-                                  PtrSearchContext context );
+                                   PtrSearchContext context );
 extern void UpdateDuringSearch ( PtrElement pEl,
                                  int len );
 extern void RestoreAfterSearch ( void );
 extern ThotBool NextTree ( PtrElement * pEl,
-                          int *charIndx,
-                          PtrSearchContext context );
+                           int *charIndx,
+                           PtrSearchContext context );
 extern ThotBool SearchNextWord ( PtrElement * curEl,
-                                int *curChar,
-                                CHAR_T word[MAX_WORD_LEN],
-                                PtrSearchContext context );
+                                 int *curChar,
+                                 CHAR_T word[MAX_WORD_LEN],
+                                 PtrSearchContext context );
 extern ThotBool SearchPreviousWord ( PtrElement * curEl,
-                                    int *curChar,
-                                    CHAR_T word[MAX_WORD_LEN],
-                                    PtrSearchContext context );
+                                     int *curChar,
+                                     CHAR_T word[MAX_WORD_LEN],
+                                     PtrSearchContext context );
 
 #else /* __STDC__ */
 
@@ -38,25 +38,25 @@ extern UCHAR_T NextCharacter (/* PtrTextBuffer * buffer,
 extern UCHAR_T PreviousCharacter (/* PtrTextBuffer * buffer,
                                      int *rank */);
 extern ThotBool MotOk (/* PtrElement firstEl,
-                         int firstChar,
-                         PtrElement lastEl,
-                         int lastChar */);
+                          int firstChar,
+                          PtrElement lastEl,
+                          int lastChar */);
 extern ThotBool InitSearchDomain (/* int domain,
-                                    PtrSearchContext context */);
+                                     PtrSearchContext context */);
 extern void UpdateDuringSearch (/* PtrElement pEl,
                                    int len */);
 extern void RestoreAfterSearch (/* void */);
 extern ThotBool NextTree (/* PtrElement * pEl,
-                            int *charIndx,
-                            PtrSearchContext context */);
+                             int *charIndx,
+                             PtrSearchContext context */);
 extern ThotBool SearchNextWord (/* PtrElement * curEl,
-                                  int *curChar,
-                                  CHAR_T word[MAX_WORD_LEN],
-                                  PtrSearchContext context */);
+                                   int *curChar,
+                                   CHAR_T word[MAX_WORD_LEN],
+                                   PtrSearchContext context */);
 extern ThotBool SearchPreviousWord (/* PtrElement * curEl,
-                                      int *curChar,
-                                      CHAR_T word[MAX_WORD_LEN],
-                                      PtrSearchContext context */);
+                                       int *curChar,
+                                       CHAR_T word[MAX_WORD_LEN],
+                                       PtrSearchContext context */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -50,6 +50,7 @@
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "createabsbox_f.h"
+#include "docs_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "memory_f.h"
@@ -889,7 +890,7 @@ ThotBool            display;
 	   if (doit)
 	     {
 	       /* le document est modifie' */
-	       pDoc->DocModified = TRUE;
+	       SetDocumentModified (pDoc, TRUE, 0);
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
@@ -1039,7 +1040,7 @@ ThotBool            display;
 	   if (doit)
 	     {
 	       /* le document est modifie' */
-	       pDoc->DocModified = TRUE;
+	       SetDocumentModified (pDoc, TRUE, 0);
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
@@ -1308,7 +1309,7 @@ ThotBool            display;
 	   if (doit)
 	     {
 	       /* the document is modified */
-	       pDoc->DocModified = TRUE;
+	       SetDocumentModified (pDoc, TRUE, 0);
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
@@ -1490,7 +1491,7 @@ ThotBool            display;
 	   if (doit)
 	     {
 	       /* the document is modified */
-	       pDoc->DocModified = TRUE;
+	       SetDocumentModified (pDoc, TRUE, 0);
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
@@ -1696,7 +1697,7 @@ int                 LineColor;
       pPRule->PrChrValue = LineStyle;
       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	{
-	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -1723,7 +1724,7 @@ int                 LineColor;
       pPRule->PrMinValue = LineWeight;
       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	{
-	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -1751,7 +1752,7 @@ int                 LineColor;
       pPRule->PrAttrValue = FALSE;
       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	{
-	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -1796,7 +1797,7 @@ int                 LineColor;
       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	{
 	  /* met les choix de l'utilisateur dans cette regle */
-	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -1841,7 +1842,7 @@ int                 LineColor;
       pPRule->PrAttrValue = FALSE;
       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	{
-	  pDoc->DocModified = TRUE;	/* le document est modifie' */
+	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -1907,7 +1908,7 @@ int                 viewToApply;
 		   pEl->ElFirstPRule = pRS;
 		else
 		   pR->PrNextPRule = pRS;
-		pDoc->DocModified = TRUE;	/* le document est modifie' */
+		SetDocumentModified (pDoc, TRUE, 0);
 		/* applique la regle standard de meme type que la regle courante */
 		/* aux paves de l'element qui existent dans les vues de meme type */
 		/* que la view active. */
@@ -2130,7 +2131,7 @@ int                 weightUnderline;
 	pPRule->PrChrValue = family;
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -2176,7 +2177,7 @@ int                 weightUnderline;
 	  }
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -2201,7 +2202,7 @@ int                 weightUnderline;
 	pPRule->PrMinValue = size;
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -2242,7 +2243,7 @@ int                 weightUnderline;
 	  }
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -2276,7 +2277,7 @@ int                 weightUnderline;
 	  }
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -2347,7 +2348,7 @@ ThotBool            Hyphenate;
 	  }
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	  }
@@ -2366,7 +2367,7 @@ ThotBool            Hyphenate;
 	pPRule->PrJustify = Justif;
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	  }
@@ -2385,7 +2386,7 @@ ThotBool            Hyphenate;
 	pPRule->PrJustify = Hyphenate;
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	  }
@@ -2406,7 +2407,7 @@ ThotBool            Hyphenate;
 	pPRule->PrMinValue = ValIndent;
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     /* le document est modifie' */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
@@ -2428,7 +2429,7 @@ ThotBool            Hyphenate;
 	pPRule->PrMinValue = LineSpacing;
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
-	     pDoc->DocModified = TRUE;	/* le document est modifie' */
+	     SetDocumentModified (pDoc, TRUE, 0);
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	  }

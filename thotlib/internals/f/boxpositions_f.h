@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
-                                      int *page );
+                                       int *page );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,
                                  int visibility,
                                  int frame,
@@ -25,7 +25,7 @@ extern void SetBoxToTranslate ( PtrAbstractBox pAb,
 #else /* __STDC__ */
 
 extern ThotBool SetPageBreakPosition (/* PtrAbstractBox pAb,
-                                        int *page */);
+                                         int *page */);
 extern void AddBoxTranslations (/* PtrAbstractBox pAb,
                                    int visibility,
                                    int frame,

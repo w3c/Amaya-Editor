@@ -7,14 +7,29 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 Extensions 2.1:
 ---------------
+
+* User Interface:
+  - The entry menu Save and the button Save are disabled when the document
+    cannot be saved.
+  - like other entries Quotation, Subscript, Superscript, and BDO can be set
+    and unset from the menu "Character element".
+
+* Thot API: Due to a conflict with the libjpeg definition the Thot type boolean
+  has been renamed ThotBool.
+
  
 Fixed bugs 2.1:
 ---------------
 
-* Amaya was not able to use the shared library libjpeg.so
+* Amaya was not able to use the shared library libjpeg.so.
 
-* There were memory leaks in the previous version
- 
+* There were memory leaks in the previous version.
+
+* CSS parser:
+  - CSS comments were lost in the style element
+  - The end of the style element was not detected when it included an unclosed
+    CSS comment.
+
   
 =============================================================
 2.0
