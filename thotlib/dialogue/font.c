@@ -37,7 +37,7 @@
 #include "font_tv.h"
 
 /* Store the list of frames that use each font */
-static int          TtFontMask[MAX_FONT];
+static unsigned int TtFontMask[MAX_FONT];
 /* that table for the charSThotLoacter glyphs */
 static int          FirstRemovableFont;
 static int          FirstFreeFont = 0;
@@ -1039,7 +1039,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 				ThotBool increase, ThotBool decrease)
 {
   int                 i, j, deb;
-  int                 mask, val;
+  int                 val;
+  unsigned int        mask;
   char                text[10], PsName[10], textX[100];
 #if defined (_WINDOWS) && !defined (_GL)
 
@@ -1162,7 +1163,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	}
       if (ptfont == NULL)
 	{
-	  if (script != 'L' && script != 'G' && size != -1)
+	  if (script != '1' && script != 'L' && script != 'G' && size != -1)
 	    /* try without highlight and no specific size */
 	    ptfont = LoadNearestFont (script, family, 0,
 				      -1, requestedsize, frame, FALSE, FALSE);
@@ -1228,7 +1229,8 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
   CHARSET            encoding;
   char               code;
   int                car;
-  int                mask, frame;
+  int                frame;
+  unsigned int       mask;
 
   lfont = NULL;
   if (fontset)
@@ -1507,7 +1509,7 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   int                 index;
 #ifdef _I18N_
   SpecFont            prevfontset, fontset;
-  int                 mask;
+  unsigned int        mask;
   ThotBool            specificFont = (script == 'G');
 #endif /* _I18N_ */
 
@@ -1866,7 +1868,8 @@ void ThotFreeFont (int frame)
 #ifdef _I18N_
   SpecFont            prevset, fontset, nextset;
 #endif /* _I18N_ */
-  int                 i, mask;
+  int                 i;
+  unsigned int        mask;
 
   if (frame > 0)
     {

@@ -503,7 +503,7 @@ static char *StrCaseStr (char *str1, char *str2)
 
   if (str1 == NULL || str2 == NULL)
     return NULL;
-  c = *str1;
+  c = *str2;
   len = strlen (str2);
   ptr = str1;
   while (*ptr != EOS)

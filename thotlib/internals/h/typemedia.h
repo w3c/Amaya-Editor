@@ -27,7 +27,7 @@ typedef struct _FontSet {
   int           FontFamily;
   int           FontHighlight;
   int           FontSize;
-  int           FontMask;
+  unsigned int  FontMask;
   PtrFont       FontIso_1;
   PtrFont       FontIso_2;
   PtrFont       FontIso_3;
