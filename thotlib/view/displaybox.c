@@ -999,7 +999,7 @@ ThotBool            selected;
 		  right = 0;
 		}
 	    }
-	  else if (pBox->BxType == BoPiece)
+	  else if (pBox->BxType == BoPiece || pBox->BxType == BoDotted)
 	    {
 	      /* check if the box in within the selection */
 	      if (pFrame->FrSelectionBegin.VsBox &&

@@ -929,7 +929,7 @@ int                 yRef;
 /*----------------------------------------------------------------------
   GetEnclosingClickedBox checks if the point x, y belongs to the abstract
   box pAb.
-  Returns the abstract box address or NULL.
+  Returns the box address or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int frame, int *pointselect)
