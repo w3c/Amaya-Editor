@@ -50,7 +50,6 @@ static char       currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
 #endif /* _WINDOWS */
 
-
 #define StdDefaultName "Overview.html"
 static char        *DefaultName;
 static char         tempSavedObject[MAX_LENGTH];
