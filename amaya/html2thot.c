@@ -1278,14 +1278,21 @@ static void PutInBuffer (unsigned char c)
   ----------------------------------------------------------------------*/
 void BlockInCharLevelElem (Element el)
 {
-   PtrElemToBeChecked  elTBC;
+   PtrElemToBeChecked  nextElTBC, elTBC;
    Element             parent;
 
    if (LastElemToBeChecked != NULL)
-      if (LastElemToBeChecked->Elem == el)
-	 /* this element is already in the queue */
-	 return;
-
+     {
+       nextElTBC = FirstElemToBeChecked;
+       while (nextElTBC != NULL)
+	 {
+	   if (nextElTBC->Elem == el)
+	     /* this element is already in the queue */
+	     return;
+	   else
+	     nextElTBC = nextElTBC->nextElemToBeChecked;
+	 }
+     }   
    parent = TtaGetParent (el);
    if (parent != NULL)
      if (IsCharacterLevelElement (parent))
