@@ -1088,7 +1088,6 @@ NotifyPresentation *event;
   CheckGraphMLRoot (event->document, event->element);
 }
 
-
 /*----------------------------------------------------------------------
  GraphicsPRuleChange
  A presentation rule is going to be changed by Thot.
@@ -1278,8 +1277,11 @@ void ControlPointChanged(event)
 	TtaSetAttributeText (attr, text, el, doc);
 	TtaFreeMemory (text);
      }
-  /* continue the work */
-  GraphicsChanged (event);
+  if (!InCreation)
+    /* don't check anything during the creation */
+    /* check that the enclosing svg element still encompasses the
+       element whose size or position has just been changed */
+    CheckGraphMLRoot (doc, el);
 }
 
 /*----------------------------------------------------------------------
