@@ -21,6 +21,9 @@ Fixed bugs 2.1a:
   well. If the user opened the document, the File menu was broken. If the
   user cancelled the form the application wasn't closed.
 
+* Hexadecimal entity references were not recognized by the HTML and XML
+  parsers.
+
 =============================================================
 2.1
 =============================================================
