@@ -546,26 +546,30 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
 
 #ifdef RAPTOR_RDF_PARSER
   rdfxml_parser=raptor_new();
-  full_file_name = TtaGetMemory(strlen(file_name) + strlen("file://") + 1);
 
-  if(!rdfxml_parser || !full_file_name) {
+  if(!rdfxml_parser) {
      AnnotList_free (annot_list);
      /* do not free rdf_model here; it may not have been empty to start */
      annot_list = NULL;
-     if (full_file_name)
-       TtaFreeMemory(full_file_name);
      if (rdfxml_parser)
        raptor_free(rdfxml_parser);
      return NULL;
   }  
 
-  (void) sprintf(full_file_name, "file://%s", file_name);
+   /* @@ this is what we should do eventually */
+ /* if (!IsW3Path (file_name))
+     full_file_name = LocalToWWW (file_name);
+  else
+  */
+  /* raptor doesn't grok file URIs under windows. The following is a patch so
+   that we can use it */
+  full_file_name = TtaGetMemory (strlen (file_name) + sizeof ("file:"));
+  sprintf (full_file_name, "file:%s", file_name);
 
   raptor_set_statement_handler(rdfxml_parser, (void *) &ctx, triple_handler);
 
-#ifdef RAPTOR_RDF_PARSER
+   /* remember the base name for anoynmous subjects */
   ctx.base_uri = full_file_name;
-#endif /* RAPTOR_RDF_PARSER */
 
   if (raptor_parse_file(rdfxml_parser, full_file_name, full_file_name))
 #else
