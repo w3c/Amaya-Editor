@@ -37,6 +37,7 @@
 #include "HTML.h"
 #include "MathML.h"
 #include "SVG.h"
+#include "XML.h"
 
 /* thotlib includes */
 #include "content.h"
@@ -461,8 +462,8 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
     }
   else if (!strcmp (docSchemaName, "SVG"))
     {
-      /* An annotation on a GraphMl structure. We backtrace the tree
-	 until we find the Math root element and then add the annotation as
+      /* An annotation on an SVG structure. We backtrace the tree
+	 until we find the SVG root element and then add the annotation as
 	 its first child. */
       el = first;
       while (el)
@@ -583,6 +584,41 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 		  TtaNextSibling (&first);
 		  TtaInsertSibling (anchor, first, TRUE, source_doc);
 		}
+	    }
+	}
+    }
+  else if (DocumentTypes[source_doc] == docXml)
+    {
+      /* An annotation on a generic XML structure. We don't do anything
+	 special. */
+      
+      el = first;
+      if (c1 == 0)
+	{
+	  /* add it as the first child of the element */
+	  TtaInsertFirstChild (&anchor, el, source_doc);
+	}
+      else if (c1 == 1)
+	{
+	  /* add it to the beginning of the element */
+	  TtaInsertSibling (anchor, first, TRUE, source_doc);
+	}
+      else if (c1 > 1)
+	{
+	  /* split the text */
+	  int len;
+	  
+	  len = TtaGetTextLength (first);
+	  
+	  if (cN > len && c1 == cN)
+	    /* add it to the end (a caret) */
+	    TtaInsertSibling (anchor, first, FALSE, source_doc);
+	  else
+	    {
+	      /* add it in the middle */
+	      TtaSplitText (first, c1, source_doc);
+	      TtaNextSibling (&first);
+	      TtaInsertSibling (anchor, first, TRUE, source_doc);
 	    }
 	}
     }

@@ -29,6 +29,7 @@ RULES
      Use MathMLT for MathML;
      Use SVGT for SVG;
      Use XLinkT for XLink;
+     Use XMLT for XML;
      Use TextFileT for TextFile;
    END;
 

@@ -21,6 +21,7 @@ STRUCT
                      HTML;
 		     MathML;
 		     SVG;
+		     XML;
 		     TextFile;
                    END;
 	  ? Thread;

@@ -31,6 +31,7 @@
 #include "MathML.h"
 #include "SVG.h"
 #include "XLink.h"
+#include "XML.h"
 #include "init_f.h"
 #ifdef ANNOTATIONS
 #include "Annot.h"
@@ -344,8 +345,10 @@ static char * GetIdValue (Element el)
     attrType.AttrTypeNum = MathML_ATTR_id;
   else if (!strcmp (schema_name, "SVG"))
     attrType.AttrTypeNum = SVG_ATTR_id;
-  else
+  else if (!strcmp (schema_name, "HTML") || !strcmp (schema_name, "XHTML"))
     attrType.AttrTypeNum = HTML_ATTR_ID;
+  else /* assume it is generic XML */
+    attrType.AttrTypeNum = XML_ATTR_id;
 
   attr = TtaGetAttribute (el, attrType);
   if (attr != NULL)
@@ -825,15 +828,17 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   /* only do this operation on XML and HTML documents */
   /* @@ JK: should be a function in AHTURLTools */
+
   schemaName = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp(schemaName, "HTML")
       && strcmp(schemaName, "XHTML")
       && strcmp(schemaName, "XML")
       && strcmp(schemaName, "MathML")
       && strcmp(schemaName, "SVG")
-      && strcmp(schemaName, "Annot"))
+      && strcmp(schemaName, "Annot")
+      && DocumentTypes[doc] != docXml)
     return NULL;
-
+  
   /* is the document selected? */
   if (useDocRoot)
     {
