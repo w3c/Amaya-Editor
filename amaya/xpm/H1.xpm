@@ -1,9 +1,9 @@
 /* XPM */
 static char * H1_xpm[] = {
 "16 16 5 1",
-" 	c #69A6DF7DB6DA",
+"X      c #BFBFBFBFBFBF",
 ".	c #EFBEFFFF9658",
-"X	c #D7BEDFDFAB0B",
+" 	c #D7BEDFDFAB0B",
 "o	c #000000000000",
 "O	c #59655D755965",
 " .. X ... XXX XX",

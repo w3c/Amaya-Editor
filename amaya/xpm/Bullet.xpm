@@ -2,7 +2,7 @@
 static char * Bullet_xpm[] = {
 "16 16 5 1",
 "  c #bfbfbf",
-"b c #5f5f5f",
+"b c #7f7f7f",
 "# c #DFDFCD95B73C",
 "c c #000000",
 "a c #FFFFDB6CAEBA",
