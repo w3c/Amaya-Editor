@@ -1730,13 +1730,13 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
 		    char *label3, ThotBool withCancel)
 {
 #if defined(_MOTIF) || defined(_GTK)
-   /* IV: This widget can't be called twice, but it happens when downloading a
-      document with protected images. This is a quick silution to avoid the
-      sigsev, although it doesn't fix the problem */
-   if (CriticConfirm)
-     return;
-   else
-     CriticConfirm = TRUE;
+  /* IV: This widget can't be called twice, but it happens when downloading a
+     document with protected images. This is a quick silution to avoid the
+     sigsev, although it doesn't fix the problem */
+  if (CriticConfirm)
+    return;
+  else
+    CriticConfirm = TRUE;
 
   /* Confirm form */
   if (withCancel)
@@ -1747,32 +1747,31 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
 		       TtaGetMessage(LIB, TMSG_LIB_CONFIRM),
 		       1,  TtaGetMessage(LIB, TMSG_LIB_CONFIRM),
 		       FALSE, 3, 'L');
-   /* open as many label widgets as \n we find in the label */
-   if (label1 && *label1 != EOS)
-     TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, label1);
-   else
-     TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, "");
-   /* open as many label widgets as \n we find in the label */
-   if (label2 && *label2 != EOS)
-     TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, label2);
-   else
-     TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, "");
-   if (label3 && *label3  != EOS)
-     TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, label3);
-   else
-     TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, "");
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
-   /* wait for an answer */
-   TtaWaitShowDialogue ();
+  /* open as many label widgets as \n we find in the label */
+  if (label1 && *label1 != EOS)
+    TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, label1);
+  else
+    TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, "");
+  /* open as many label widgets as \n we find in the label */
+  if (label2 && *label2 != EOS)
+    TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, label2);
+  else
+    TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, "");
+  if (label3 && *label3  != EOS)
+    TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, label3);
+  else
+    TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, "");
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+  /* wait for an answer */
+  TtaWaitShowDialogue ();
+  CriticConfirm = FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-   
 #ifdef _WINGUI
-   CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
-				 TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
-				 label2, label3, withCancel);
+  CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
+				TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
+				label2, label3, withCancel);
 #endif /* _WINGUI */
-
 }
 
 /*----------------------------------------------------------------------
@@ -1780,31 +1779,28 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
 void InitConfirm (Document document, View view, char *label)
 {
 #if defined(_MOTIF) || defined(_GTK)
-   /* Confirm form */
+  /* Confirm form */
+  /* JK: This widget can't be called twice, but it happens when downloading a
+     document with protected images. This is a quick silution to avoid the
+     sigsev, although it doesn't fix the problem */
+  if (CriticConfirm)
+    return;
+  else
+    CriticConfirm = TRUE;
 
-   /* JK: This widget can't be called twice, but it happens when downloading a
-      document with protected images. This is a quick silution to avoid the
-      sigsev, although it doesn't fix the problem */
-   if (CriticConfirm)
-     return;
-   else
-     CriticConfirm = TRUE;
-
-   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
-               TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
-   TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
-   /* wait for an answer */
-   TtaWaitShowDialogue ();
-   /* remove the critic section */
-   CriticConfirm = FALSE;
+  TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
+	      TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
+  TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+  /* wait for an answer */
+  TtaWaitShowDialogue ();
+  /* remove the critic section */
+  CriticConfirm = FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */   
-   
 #ifdef _WINGUI
-   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, label);
+  CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, label);
 #endif /* _WINGUI */
-
 #ifdef _WX
   CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, label);
 #endif /* _WX */
