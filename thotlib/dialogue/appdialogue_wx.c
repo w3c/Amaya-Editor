@@ -341,15 +341,14 @@ int TtaMakeFrame( const char * schema_name,
 
   /* the document title will be used to name the frame's page */
   p_AmayaFrame->SetFrameTitle( TtaConvMessageToWX( doc_name ) );
+#ifdef _GL
+  FrameTable[frame_id].Scroll_enabled   = TRUE;
+#endif /* _GL */
 
   /* Window volume in characters */
   *volume = GetCharsCapacity (width * height * 5);
   FrameTable[frame_id].FrDoc   		= doc_id;
   FrameTable[frame_id].FrView   	= schView;
-#ifdef _GL
-  FrameTable[frame_id].Scroll_enabled   = TRUE;
-#endif /* _GL */
-
   TtaMakeMenuBar( frame_id, schema_name );
 
   return frame_id;

@@ -4107,7 +4107,16 @@ void Reload_callback (int doc, int status, char *urlName,
      }
 
   if (stopped_flag == FALSE && newdoc)
-    ResetStop(newdoc);
+    {
+      ResetStop (newdoc);
+#ifdef _GL
+      if (FilesLoading[newdoc] == 0 &&
+	  TtaGetViewFrame (newdoc, 1) != 0)
+	/* all files included in this document have been loaded and the
+	   document is displayed. Animations can be played now */
+	TtaPlay (newdoc, 1);
+#endif /* _GL */
+    }
 
   /* check parsing errors */
   CheckParsingErrors (newdoc);

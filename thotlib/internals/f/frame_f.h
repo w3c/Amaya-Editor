@@ -14,11 +14,6 @@ extern void DefClip ( int frame,
                       int ytop,
                       int xstop,
                       int ybottom );
-extern void DefRegion ( int frame,
-                        int xstart,
-                        int ytop,
-                        int xstop,
-                        int ybottom );
 extern void DefBoxRegion ( int frame,
                            PtrBox pBox,
                            int xstart,
@@ -76,11 +71,6 @@ extern void DefClip ( int frame,
                         int ytop,
                         int xstop,
                         int ybottom );
-extern void DefRegion ( int frame,
-                          int xstart,
-                          int ytop,
-                          int xstop,
-                          int ybottom );
 extern void DefBoxRegion ( int frame,
                              PtrBox pBox,
                              int xstart,

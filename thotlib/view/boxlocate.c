@@ -2179,14 +2179,14 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 	  if (pBox != NULL)
 	    {
 	      /* A box is found */
-#ifdef _GL
+#ifdef IV
 	      if (pBox->BxBoundinBoxComputed)
 		{
-		  x = pBox->BxClipX - pFrame->FrXOrg;
-		  y = pBox->BxClipY - pFrame->FrYOrg;
+		  x = pBox->BxClipX;
+		  y = pBox->BxClipY;
 		}
 	      else
-#endif /* _GL */
+#endif /* IV */
 		{
 		  x = pBox->BxXOrg - pFrame->FrXOrg;
 		  y = pBox->BxYOrg - pFrame->FrYOrg;
@@ -2246,17 +2246,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 
 
 		  /* redisplay the box */
-#ifndef _GL
-		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
-			   pBox->BxYOrg - EXTRA_GRAPH,
-			   pBox->BxXOrg + width + EXTRA_GRAPH,
-			   pBox->BxYOrg + height + EXTRA_GRAPH);
-#else /* _GL */
-		  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH,
-			   pBox->BxClipY - EXTRA_GRAPH,
-			   pBox->BxClipX + width + EXTRA_GRAPH,
-			   pBox->BxClipY + height + EXTRA_GRAPH);
-#endif /* _GL */
+		  DefBoxRegion (frame, pBox, 0, 0, width, height);
 		  RedrawFrameBottom (frame, 0, NULL);
 		}
 	      else
@@ -2703,15 +2693,7 @@ void DirectCreation (PtrBox pBox, int frame)
 	NewDimension (pAb, width, 0, frame, TRUE);
       else
 	NewDimension (pAb, width, height, frame, TRUE);
-#ifndef _GL		  
-      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-	       pBox->BxXOrg + width, pBox->BxYOrg + height);
-#else /* _GL */
-      DefRegion (frame, pBox->BxClipX,
-	       pBox->BxClipY,
-	       pBox->BxClipX + width,
-	       pBox->BxClipY + height);
-#endif /* _GL */
+      DefBoxRegion (frame, pBox, 0, 0, width, height);
 
       pAb->AbHorizPos.PosUserSpecified = FALSE;
       pAb->AbVertPos.PosUserSpecified = FALSE;

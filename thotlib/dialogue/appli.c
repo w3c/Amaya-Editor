@@ -471,12 +471,12 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
  HDC                 hDC;
 #endif /*_GL*/
 
- if (frame > 0 && frame <= MAX_FRAME)
+ /* Do not redraw if the document is in NoComputedDisplay mode. */
+ if (frame > 0 && frame <= MAX_FRAME &&
+     documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay )
    {
 #ifndef _GL
-     /* Do not redraw if the document is in NoComputedDisplay mode. */
-     if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay &&
-	 GetUpdateRect (w, &rect, FALSE))
+     if (GetUpdateRect (w, &rect, FALSE))
        {
 	 BeginPaint (w, &ps);
 	 /* save the previous clipping */
@@ -490,7 +490,10 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 	 pFrame->FrClipXEnd = 0;
 	 pFrame->FrClipYBegin = 0;
 	 pFrame->FrClipYEnd = 0;
-	 DefRegion (frame, rect.left, rect.top, rect.right, rect.bottom);
+	 DefClip (frame, rect.left + pFrame->FrXOrg,
+		  rect.top + pFrame->FrYOrg,
+		  rect.right + pFrame->FrXOrg,
+		  rect.bottom + pFrame->FrYOrg);
 	 EndPaint (w, &ps);
 	 DisplayFrame (frame);
 	 /* restore the previous clipping */
@@ -505,7 +508,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      hDC = BeginPaint (w, &ps);
      if (GetBadCard())
 	 {
-       DefClip (frame, -1, -1, -1, -1);
+	   DefClip (frame, -1, -1, -1, -1);
 	   DisplayFrame (frame);
 	 }
      WinGL_Swap (hDC);
@@ -544,13 +547,14 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
        GLResize (width, height, 0 ,0);
        ClearAll (frame);
        GL_ActivateDrawing (frame);
-       DefRegion (frame, 0,  0, width, height);
+       /* redisplay the whole window */
+       DefClip (frame, -1, -1, -1, -1);
        RebuildConcreteImage (frame);
        GL_Swap (frame);
+       /* recompute the scroll bars */
+       /*UpdateScrollbars (frame); Done in rebuildconcreteimage, no ?*/
      }
 #endif/*_GL*/
-   /* recompute the scroll bars */
-  /*UpdateScrollbars (frame); Done in rebuildconcreteimage, no ?*/
 }
 #endif /* _WINGUI */
 
@@ -567,8 +571,8 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
   int                 xmin, xmax, ymin, ymax;
   int                 x, y, l, h;
 
-  x = event->x;
-  y = event->y;
+  x = event->x + pFrame->FrXOrg;
+  y = event->y + pFrame->FrYOrg;
   l = event->width;
   h = event->height;
   if (frame > 0 && frame <= MAX_FRAME && FrameTable[frame].FrDoc > 0 &&
@@ -585,7 +589,7 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
       pFrame->FrClipXBegin = 0;
       pFrame->FrClipXEnd = 0;
       pFrame->FrClipYBegin = 0;
-      DefRegion (frame, x, y, x + l, y + h);
+      DefClip (frame, x, y, x + l, y + h);
       RedrawFrameBottom (frame, 0, NULL);
       /* restore the previous clipping */
       pFrame = &ViewFrameTable[frame - 1];
@@ -844,9 +848,6 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   int            frame;
   int            width, height;
-#ifdef IV
-  int         forever = 0;
-#endif /* IV */
  
   frame = (int) data;
   width = event->width;
@@ -871,9 +872,11 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 	FrameTable[frame].FrWidth = width;
 	FrameTable[frame].FrHeight = height;
 	GLResize (width, height, 0, 0);
-	DefRegion (frame, 0, 0, width, height);
+	DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg,
+		 width + pFrame->FrXOrg, height + pFrame->FrYOrg);
         FrameRedraw (frame, width, height);
 #ifdef IV
+	int         forever = 0;
 	/*FrameRedraw can modify Size by hiding scrollbars
 	  so until sizes are stabilized, we resize. 
 	  if it never stabilizes itself, we stop at at
@@ -892,7 +895,8 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 		FrameTable[frame].FrWidth = width;
 		FrameTable[frame].FrHeight = height;
 		GLResize (width, height, 0, 0);
-		DefRegion (frame, 0, 0, width, height);
+		DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg,
+			 width + pFrame->FrXOrg, height + pFrame->FrYOrg);
 		FrameRedraw (frame, width, height);
 	      }
 	    while (gtk_events_pending ())
@@ -923,6 +927,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
+  ViewFrame           *pFrame;
   int                  frame;
   unsigned int         x, y;
   unsigned int         w, h;
@@ -936,7 +941,9 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     return TRUE;
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return TRUE; 
+    return TRUE;
+
+  pFrame = &ViewFrameTable[frame - 1];
 #ifdef _GL
   /* THIS JUST DOESN'T WORK !!!
      even when storing successive x,y and so on...
@@ -951,15 +958,20 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     {
       if (glhard () || GetBadCard ()) 
 	{
-	  DefRegion (frame, 0, 0, 
-		     FrameTable[frame].FrWidth, FrameTable[frame].FrHeight); 
+	  x = pFrame->FrXOrg;
+	  y = pFrame->FrYOrg;
+	  w = FrameTable[frame].FrWidth;
+	  h = FrameTable[frame].FrHeight;
+	  DefClip (frame, x, y, x + w, y + h);
 	  RedrawFrameBottom (frame, 0, NULL);
 	}
 	GL_Swap (frame);
     }
 #else /* _GL */
-      DefRegion (frame, x, y, x + w, y + h);
-      RedrawFrameBottom (frame, 0, NULL);
+  x += pFrame->FrXOrg;
+  y += pFrame->FrYOrg;
+  DefClip (frame, x, y, x + w, y + h);
+  RedrawFrameBottom (frame, 0, NULL);
 #endif /* _GL */
   return FALSE;
 }
@@ -975,18 +987,17 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     + true if the frame hs been redisplayed
     + false if not
   ----------------------------------------------------------------------*/
-ThotBool FrameExposeCallback (
-    int frame,
-    int x,
-    int y,
-    int w,
-    int h )
+ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
 {
+  ViewFrame           *pFrame;
+
   if (w <= 0 || h <= 0 || frame == 0 || frame > MAX_FRAME)
     return FALSE;
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return FALSE; 
+    return FALSE;
+
+  pFrame = &ViewFrameTable[frame - 1];
 #ifdef _GL
   /* THIS JUST DOESN'T WORK !!!
      even when storing successive x,y and so on...
@@ -1001,15 +1012,20 @@ ThotBool FrameExposeCallback (
     {
       if (glhard () || GetBadCard ()) 
 	{
-	  DefRegion( frame, 0, 0, 
-		     FrameTable[frame].FrWidth, FrameTable[frame].FrHeight ); 
-	  RedrawFrameBottom( frame, 0, NULL );
+	  x = pFrame->FrXOrg;
+	  y = pFrame->FrYOrg;
+	  w = FrameTable[frame].FrWidth;
+	  h = FrameTable[frame].FrHeight;
+	  DefClip (frame, x, y, x + w, y + h);
+	  RedrawFrameBottom (frame, 0, NULL);
 	}
-	GL_Swap( frame );
+      GL_Swap (frame);
     }
 #else /* _GL */
-      DefRegion( frame, x, y, x + w, y + h );
-      RedrawFrameBottom( frame, 0, NULL );
+  x += pFrame->FrXOrg;
+  y += pFrame->FrYOrg;
+  DefClip (frame, x, y, x + w, y + h);
+  RedrawFrameBottom (frame, 0, NULL);
 #endif /* _GL */
   return TRUE;
 }
@@ -1028,37 +1044,32 @@ ThotBool FrameExposeCallback (
 ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
 {
   /* check if the frame is valide */
-  if ( new_width <= 0 ||
-       new_height <= 0 || 
-       frame == 0 ||
-       frame > MAX_FRAME ||
-       FrameTable[frame].FrDoc == 0 ||
-       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay ||
-       ( FrameTable[frame].FrWidth == new_width &&
-	 FrameTable[frame].FrHeight == new_height)
-     )
-  {
+  if (new_width <= 0 ||
+      new_height <= 0 || 
+      frame == 0 ||
+      frame > MAX_FRAME ||
+      FrameTable[frame].FrDoc == 0 ||
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay ||
+      ( FrameTable[frame].FrWidth == new_width &&
+	FrameTable[frame].FrHeight == new_height))
     /* frame should not be displayed */
     return FALSE;
-  }
-
+  
 #ifdef _GL
-  if (GL_prepare( frame ))
-  {
-    /* prevent flickering*/
-    GL_SwapStop( frame );
-    FrameTable[frame].FrWidth = new_width;
-    FrameTable[frame].FrHeight = new_height;
-    GLResize( new_width, new_height, 0, 0 );
-    DefRegion( frame, 0, 0, new_width, new_height );
-    FrameRedraw( frame, new_width, new_height );
-//    FrameTable[frame].DblBuffNeedSwap = TRUE; 
-    GL_SwapEnable( frame );
-    GL_Swap( frame );
-//    FrameTable[frame].DblBuffNeedSwap = TRUE;  
-  }
+  if (GL_prepare( frame))
+    {
+      /* prevent flickering*/
+      GL_SwapStop (frame);
+      FrameTable[frame].FrWidth = new_width;
+      FrameTable[frame].FrHeight = new_height;
+      GLResize (new_width, new_height, 0, 0);
+      DefClip (frame, -1, -1, -1, -1);
+      FrameRedraw (frame, new_width, new_height);
+      GL_SwapEnable (frame);
+      GL_Swap (frame);
+    }
 #else /* _GL*/
-  FrameRedraw( frame, new_width, new_height );
+  FrameRedraw (frame, new_width, new_height);
 #endif /* _GL */
   return TRUE;
 }
@@ -3644,10 +3655,8 @@ void UpdateScrollbars (int frame)
 #endif /* _WINGUI */
 
   if (FrameUpdating ||
-      documentDisplayMode[FrameTable[frame].FrDoc - 1] 
-      == NoComputedDisplay)
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
-
 #ifdef _GL
   if (FrameTable[frame].Scroll_enabled == FALSE || FrameTable[frame].WdFrame == NULL)
     return;
@@ -3667,15 +3676,23 @@ void UpdateScrollbars (int frame)
   if (width < l)
   {
     FrameTable[frame].WdFrame->ShowScrollbar(2);
+#ifdef IV
     FrameTable[frame].WdFrame->GetScrollbarH()->SetScrollbar( x, width, l, width );
+#endif
+    FrameTable[frame].WdScrollH->SetScrollbar( x, width, l, width );
   }
   else
     FrameTable[frame].WdFrame->HideScrollbar(2);    
 
   if (height < h)
   {
+if (frame == 2)
+  printf ("UpdateScrollbars height=%d h=%d\n", height, h);
     FrameTable[frame].WdFrame->ShowScrollbar(1);
+#ifdef IV
     FrameTable[frame].WdFrame->GetScrollbarV()->SetScrollbar( y, height, h, height );
+#endif
+    FrameTable[frame].WdScrollV->SetScrollbar( y, height, h, height );
   }
   else
     FrameTable[frame].WdFrame->HideScrollbar(1);

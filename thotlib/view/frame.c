@@ -152,18 +152,6 @@ void DefClip (int frame, int xstart, int ytop, int xstop, int ybottom)
 }
 
 /*----------------------------------------------------------------------
-  DefRegion stores the area of frame which need to be redrawn.
-  ----------------------------------------------------------------------*/
-void DefRegion (int frame, int xstart, int ytop, int xstop, int ybottom)
-{
-  ViewFrame          *pFrame;
-
-  pFrame = &ViewFrameTable[frame - 1];
-  DefClip (frame, xstart + pFrame->FrXOrg, ytop + pFrame->FrYOrg,
-	   xstop + pFrame->FrXOrg, ybottom + pFrame->FrYOrg);
-}
-
-/*----------------------------------------------------------------------
   DefBoxRegion stores the area of a box which needs to be redrawn.
   When parameters xstart and xstop are equal to -1 the whole width box
   is clipped else only the xstart to xstop region is clipped.

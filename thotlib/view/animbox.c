@@ -24,6 +24,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "page_tv.h"
 #include "platform_tv.h"
 #include "edit_tv.h"
@@ -1187,8 +1188,9 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 ThotBool Animate_boxes (int frame, AnimTime current_time)
 {
 #ifdef _GL 
-  Animated_Cell *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
-  ThotBool isfinished;
+  ViewFrame          *pFrame;
+  Animated_Cell      *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
+  ThotBool            isfinished;
 
   /* Time update
      RefreshAnimBoxes ()
@@ -1211,11 +1213,12 @@ ThotBool Animate_boxes (int frame, AnimTime current_time)
     Clipx = 1;
   if (Clipy - 1 < 0.00001)
     Clipy = 1;
-  DefRegion (frame, 
-	     (int)(Clipx - 1), 
-	     (int)(Clipy - 1), 
-	     (int)(ClipxMax + 1), 
-	     (int)(ClipyMax + 1));
+  pFrame = &ViewFrameTable[frame - 1];
+  DefClip (frame, 
+	   (int)(Clipx - 1) + pFrame->FrXOrg, 
+	   (int)(Clipy - 1)+ pFrame->FrYOrg, 
+	   (int)(ClipxMax + 1) + pFrame->FrXOrg, 
+	   (int)(ClipyMax + 1)+ pFrame->FrYOrg);
 
   FrameTable[frame].DblBuffNeedSwap = TRUE;
   return FALSE;

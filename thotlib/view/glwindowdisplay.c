@@ -1557,21 +1557,10 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
       if ((yf+height) == FrameTable[frame].FrHeight)
 	{
 	  glRasterPos2i (xf, yf+height-1);
-
-	  glBitmap(0,
-		   0,
-		   0,
-		   0,
-		   0,
-		   -1,
-		   NULL);
+	  glBitmap(0, 0, 0, 0, 0, -1, NULL);
 	}
       glReadBuffer (GL_BACK);
-      glCopyPixels (x_source,   
-		    y_source,
-		    width,
-		    height,
-		    GL_COLOR); 
+      glCopyPixels (x_source, y_source, width, height, GL_COLOR); 
       glEnable (GL_BLEND);
       /*copy from back to front */
       GL_realize (frame);	  
@@ -1590,8 +1579,8 @@ void gl_synchronize ()
 /* 	while (gtk_events_pending ())  */
 /* 	  gtk_main_iteration (); */
 
-    gdk_gl_wait_gdk ();
-    gdk_gl_wait_gl ();
+  gdk_gl_wait_gdk ();
+  gdk_gl_wait_gl ();
 #endif /* _GTK */
 }
 #endif /* 0 */
@@ -1638,13 +1627,11 @@ ThotBool glhard()
 /*----------------------------------------------------------------------
   glMatroxBUG: expose without a drawing make black swapbuffer...
   ----------------------------------------------------------------------*/
-int glMatroxBUG (int frame, int x, int y, 
-		 int width, int height)
+int glMatroxBUG (int frame, int x, int y, int width, int height)
 {
   if (!Software_Mode)
     {
-      DefRegion (frame, x, y, 
-		 width+x, y+height);
+      DefClip (frame, -1, -1, -1, -1/*x, y, width+x, y+height*/);
       return 1;      
     }
   return 0;

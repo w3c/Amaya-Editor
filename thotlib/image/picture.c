@@ -2357,13 +2357,7 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 	{
 	  w = w + box->BxWidth - box->BxW;
 	  h = h + box->BxHeight - box->BxH;
-#ifndef _GL
-	  DefClip (frame, box->BxXOrg, box->BxYOrg,
-		   box->BxXOrg + w, box->BxYOrg + h);
-#else /* _GL */
-	  DefRegion (frame, box->BxClipX, box->BxClipY,
-		     box->BxClipX + w, box->BxClipY + h);
-#endif /* _GL */
+	  DefBoxRegion (frame, box, 0, 0, w, h);
 	}
     }
   return change;
@@ -2376,22 +2370,8 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
 		       int top, int bottom, int left, int right, int frame)
 {
-#ifndef _GL
-   if (pAb->AbLeafType == LtCompound)
-    DefClip (frame, box->BxXOrg, box->BxYOrg,
-	     box->BxXOrg + w, box->BxYOrg + h);
-  else
-    DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
-	     box->BxXOrg + right + w, box->BxYOrg + bottom + h);
-#else/*  _GL */
-   if (pAb->AbLeafType == LtCompound)
-     DefRegion (frame, box->BxClipX, box->BxClipY,
-		box->BxClipX + w, box->BxClipY + h);
-   else
-     DefRegion (frame, box->BxClipX - left, box->BxClipY - top,
-		box->BxClipX + right + w, box->BxClipY + bottom + h);
-#endif /*  _GL */
-
+  /* prepare the redisplay of the box */
+  UpdateBoxRegion (frame, box, 0, 0, w, h);
   if (pAb->AbLeafType == LtPicture)
     {
       /* transmit picture dimensions */

@@ -985,10 +985,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			    }
 			}
 
-		      DefRegion (frame, box->BxClipX - EXTRA_GRAPH,
-				 box->BxClipY - EXTRA_GRAPH,
-				 box->BxClipX + width + EXTRA_GRAPH,
-				 box->BxClipY + height + EXTRA_GRAPH);
+		      DefBoxRegion (frame, box, 0, 0, width, height);
 		      RedrawFrameBottom (frame, 0, NULL);
 		      FrameTable[frame].DblBuffNeedSwap = TRUE;
 		      GL_Swap (frame);		      
@@ -2083,10 +2080,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 		      else
 			BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 #else /* _GL */
-		      DefRegion (frame,
-				 box->BxClipX-1, box->BxClipY-1, 
-				 box->BxClipW, box->BxClipH+2);
-
+		      DefBoxRegion (frame, box, -1, -1, -1 -1);
 		      if (percentW)
 			NewDimension (box->BxAbstractBox, 0, *height, frame, TRUE);
 		      else if (percentH)
@@ -2490,19 +2484,15 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 			  BoxGeometry (frame, newx, newy, width, height, newx + xref, newy + yref);
 			}
 #else /* _GL */
-		    DefRegion (frame,
-			       box->BxClipX-1, box->BxClipY-1, 
-			       box->BxClipW, box->BxClipH+2);
-
-		    NewPosition (box->BxAbstractBox, 
-				 newx + (ViewFrameTable[frame - 1]).FrXOrg, xref, 
-				 newy + (ViewFrameTable[frame - 1]).FrYOrg, yref, 
-				 frame, TRUE);
-
-		    FrameTable[frame].DblBuffNeedSwap = TRUE;
-		    GL_Swap (frame);
+		      DefBoxRegion (frame, box, -1, -1, -1, -1);
+		      NewPosition (box->BxAbstractBox, 
+				   newx + (ViewFrameTable[frame - 1]).FrXOrg, xref, 
+				   newy + (ViewFrameTable[frame - 1]).FrYOrg, yref, 
+				   frame, TRUE);
+		      
+		      FrameTable[frame].DblBuffNeedSwap = TRUE;
+		      GL_Swap (frame);
 #endif /* _GL */
-
 		      *x = newx;
 		      *y = newy;
 		    }
