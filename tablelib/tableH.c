@@ -1207,7 +1207,7 @@ int             frame;
 	      /* change width of included columns */
 	      width = colSpan_MinWidth[i] - min;
 	      if (span > 0)
-		width = (delta + span - 1) / span;
+		width = (width + span - 1) / span;
 	      else
 		{
 		  delta = colSpan_Last[i] - colSpan_First[i] + 1;

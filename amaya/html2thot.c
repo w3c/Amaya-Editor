@@ -7407,6 +7407,7 @@ Document            doc;
 	       next = elem;
 	       TtaNextSibling (&next);
 	       }
+	     elType = TtaGetElementType (elem);
 	     if (!IsCharacterLevelElement (elem) &&
 		 elType.ElTypeNum != HTML_EL_Comment_)
 	       /* This is not a character level element */
