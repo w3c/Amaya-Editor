@@ -475,12 +475,10 @@ LPARAM lParam;
 
    status = GetKeyState (VK_CONTROL);
    if (HIBYTE (status))
-      /* if (GetKeyState (VK_CONTROL) & 0x0001) */
       keyboard_mask |= THOT_MOD_CTRL;
 
    status = GetKeyState (VK_MENU);
    if (HIBYTE (status))
-       /* if (GetKeyState (VK_MENU) & 0x0001) */
       keyboard_mask |= THOT_MOD_ALT;
 
    if (msg == WM_CHAR){
@@ -491,7 +489,6 @@ LPARAM lParam;
 	  string[0] = (char) wParam;
 	  len = 1;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
-	  printf ("Key detected %c\n", (char)wParam);
    }
 }
 #endif /* _WINDOWS */

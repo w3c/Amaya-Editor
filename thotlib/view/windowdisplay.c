@@ -374,7 +374,6 @@ int                 fg;
 #            ifdef _WINDOWS
 	     WinLoadGC (TtDisplay, &TtLineGC);
              GetClientRect (TtDisplay, &rect);
-             DrawText (TtDisplay, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #            else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
@@ -385,7 +384,6 @@ int                 fg;
 	  {
 #            ifdef _WINDOWS
 	     WinLoadGC (TtDisplay, &TtLineGC);
-             DrawText (TtDisplay, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #            else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);

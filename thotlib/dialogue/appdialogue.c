@@ -1308,6 +1308,7 @@ char               *info;
                   w->dwData    = 0 ;
                   w->iString   = 0 ;
 		  FrameTable[frame].Button[i] = w;
+		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
                   ToolBar_ButtonStructSize (WinToolBar[frame]);
                   ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
                   ToolBar_InsertButton (WinToolBar[frame], i, w);
@@ -1605,7 +1606,8 @@ void                (*procedure) ();
 #  endif /* _WINDOWS */
    ThotWidget         *brother;
 #  ifdef _WINDOWS
-   RECT rect ;
+   RECT       rect ;
+   ThotWidget wLabel;
 #  endif /* _WINDOWS */
 
    UserErrorCode = 0;
@@ -1738,12 +1740,13 @@ void                (*procedure) ();
 #                 else  /* _WINDOWS */
                   GetClientRect (FrMainRef [frame], &rect);
                   w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-                                    0, 0, 0, 0, FrMainRef [frame], (HMENU) i, hInstance, NULL) ;
+                                    0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL) ;
                   FrameTable[frame].Text_Zone[i] = w;
 
-                  w = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-                                    0, 0, 0, 0, FrMainRef [frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
-                  PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
+                  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+                                         0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
+                  FrameTable[frame].Label[i] = wLabel;
+                  PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #                 endif /* _WINDOWS */
 	       }
 	     else

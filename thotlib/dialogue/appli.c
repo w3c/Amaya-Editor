@@ -972,19 +972,19 @@ LPARAM      lParam;
      int  frame = GetMainFrameNumber (hwnd);
 
      switch (mMsg) {
-            case WM_CREATE: {
-	         /* Create toolbar (source resides in toolbar.c). */
+            case WM_CREATE:
+	         /* Create toolbar  */
                  ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
                  ShowWindow (ToolBar, SW_SHOWNORMAL);
                  UpdateWindow (ToolBar);
 
-                 /* Create status bar (source resides in statbar.c). */
+                 /* Create status bar  */
                  StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
                  ShowWindow (StatusBar, SW_SHOWNORMAL);
                  UpdateWindow (StatusBar);
 
-                 /* Create client window (contains notify list). */
+                 /* Create client window */
                  hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
                                               WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
                                               hwnd, (HMENU) 2, hInstance, NULL) ;
@@ -992,7 +992,6 @@ LPARAM      lParam;
                  UpdateWindow (hwndClient);
 
                  return 0 ;
-	    }
 
 	    case WM_VSCROLL:
 	         WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
@@ -1039,6 +1038,7 @@ LPARAM      lParam;
                  /* Adjust toolbar size. */
                  if (IsWindowVisible (WinToolBar[frame])) {
                     dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE) ;
+
                     if (dwStyle & CCS_NORESIZE)
                        MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE) ;
                     else
@@ -1116,6 +1116,7 @@ LPARAM lParam;
      int         comm;
      HDC         saveHdc;	/* Used to save TtDisplay during current event processing */
      int         frame;
+     int         status;
      PAINTSTRUCT ps;
      RECT        rect;
 
@@ -1176,15 +1177,18 @@ LPARAM lParam;
 	       WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
 	       return 0;
 
-	  case WM_LBUTTONDOWN: /* stop any current insertion of text */
+	  case WM_LBUTTONDOWN: 
+	       /* stop any current insertion of text */
+	       SetFocus (FrRef[frame]);
 	       CloseInsertion ();
 
 	       /* if the CTRL key is pressed this is a geometry change */
-	       if (GetKeyState (VK_CONTROL)) {
+               status = GetKeyState (VK_CONTROL);
+	       if (HIBYTE (status)) {
 		  /* changes the box position */
 		  ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
 
-		    /* This is the beginning of a selection */
+		  /* This is the beginning of a selection */
 	       } else {
 		     ClickFrame = frame;
 		     ClickX = LOWORD (lParam);
@@ -1219,7 +1223,8 @@ LPARAM lParam;
 	       CloseInsertion ();
 
 	       /* if the CTRL key is pressed this is a size change */
-	       if (GetKeyState (VK_CONTROL)) {
+	       status = GetKeyState (VK_CONTROL);
+	       if (HIBYTE (status)) {
 		  /* changes the box size */
 		  ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
 		  /* memorize the click position */

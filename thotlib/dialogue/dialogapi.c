@@ -7046,36 +7046,34 @@ LPARAM lParam;
 	    hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
 
    if (frame != - 1) {
+      catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
+      if (catalogue != NULL)
+	 no = LOWORD (wParam) - catalogue->Cat_Ref;
+      fprintf (stderr, "catalogue : %X, entry %d\n", catalogue, no);
 
+      if (catalogue == NULL)
+	 return;
+
+      switch (catalogue->Cat_Type) {
+             case CAT_PULL:
+	     case CAT_MENU:
+	          CallMenu (no, catalogue, NULL);
+	          break;
+	     case CAT_TMENU:
+	          CallToggle (no, catalogue, NULL);
+	          break;
+	     case CAT_SHEET:
+	          /*
+		   CallSheet (no, catalogue, NULL);
+                   break;
+	           */
+             case CAT_FMENU:
+	          CallRadio (no, catalogue, NULL);
+             default:
+	          fprintf (stderr, "unknown Cat_Type %d\n", catalogue->Cat_Type);
+	          break;
+      }
    }
 
-   catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
-   if (catalogue != NULL)
-      no = LOWORD (wParam) - catalogue->Cat_Ref;
-   fprintf (stderr, "catalogue : %X, entry %d\n", catalogue, no);
-
-   if (catalogue == NULL)
-      return;
-
-   switch (catalogue->Cat_Type)
-	 {
-	    case CAT_PULL:
-	    case CAT_MENU:
-	         CallMenu (no, catalogue, NULL);
-	         break;
-	    case CAT_TMENU:
-                 CallToggle (no, catalogue, NULL);
-                 break;
-	    case CAT_SHEET:
-		/*
-                 CallSheet (no, catalogue, NULL);
-                 break;
-		 */
-	    case CAT_FMENU:
-                 CallRadio (no, catalogue, NULL);
-	    default:
-	       fprintf (stderr, "unknown Cat_Type %d\n", catalogue->Cat_Type);
-	       break;
-	 }
 }
 #endif
