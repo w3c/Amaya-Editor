@@ -65,6 +65,11 @@ int AmayaCanvas::AttrList[] =
   0
 };
 
+#ifdef _GL
+  IMPLEMENT_DYNAMIC_CLASS(AmayaCanvas, wxGLCanvas)
+#else /* _GL*/
+  IMPLEMENT_DYNAMIC_CLASS(AmayaCanvas, wxPanel)
+#endif /* _GL */
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCanvas
@@ -100,6 +105,24 @@ AmayaCanvas::AmayaCanvas( AmayaFrame * p_parent_window,
  */
 AmayaCanvas::~AmayaCanvas( )
 {
+  //  SetEventHandler( new wxEvtHandler() );
+  wxLogDebug( _T("AmayaCanvas::~AmayaCanvas(): frame=%d"),
+	      m_pAmayaFrame->GetFrameId() );
+  /*
+  AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
+  if (p_page)
+    {
+      AmayaFrame * p_frame = p_page->GetFrame(1);
+      if (p_frame)
+	{
+	  p_frame->SetCurrent();
+	  p_frame->SetActive(TRUE);
+	}
+	  
+    }
+    Reparent(NULL);*/
+
+  m_pAmayaFrame = NULL;
 }
 
 /*
@@ -115,6 +138,10 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentPageActive())
   {
+    wxLogDebug(_T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
+	       m_pAmayaFrame->GetFrameId(),
+	       event.GetSize().GetWidth(),
+	       event.GetSize().GetHeight() );
     event.Skip();
     return;
   }
@@ -122,6 +149,10 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   // do not resize while opengl is not initialized
   if (!m_Init)
   {
+    wxLogDebug(_T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
+	       m_pAmayaFrame->GetFrameId(),
+	       event.GetSize().GetWidth(),
+	       event.GetSize().GetHeight() );
     event.Skip();
     return;
   }
@@ -174,6 +205,8 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentPageActive())
   {
+    wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d (skip)"),
+		m_pAmayaFrame->GetFrameId() );
     event.Skip();
     return;
   }
@@ -215,6 +248,16 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
  */
 void AmayaCanvas::OnMouse( wxMouseEvent& event )
 {
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentPageActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+		m_pAmayaFrame->GetFrameId() );
+
+    event.Skip();
+    return;
+  }
+
   int frame = m_pAmayaFrame->GetFrameId();
 
   int thot_mod_mask = THOT_NO_MOD;
@@ -345,6 +388,17 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
  */
 void AmayaCanvas::OnChar( wxKeyEvent& event )
 {
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentPageActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnChar : frame=%d char=%x (skip)"),
+		m_pAmayaFrame->GetFrameId(),
+		event.GetKeyCode() );
+
+    event.Skip();
+    return;
+  }
+
   wxLogDebug( _T("AmayaCanvas::OnChar : frame=%d char=%x"),
       m_pAmayaFrame->GetFrameId(),
       event.GetKeyCode() );
@@ -364,8 +418,14 @@ void AmayaCanvas::OnChar( wxKeyEvent& event )
   if (event.ShiftDown())
     thot_mask |= THOT_MOD_SHIFT;
 
-  // Call the generic function for key events management
-  ThotInput (frame, thot_keysym, 0, thot_mask, thot_keysym);
+  // check if the keycode is a valid char
+  wxString s((wxChar)thot_keysym);
+  if (s.IsAscii())
+    {
+      wxLogDebug( _T("IsAscii yes: s=")+s );
+      // Call the generic function for key events management
+      ThotInput (frame, thot_keysym, 0, thot_mask, thot_keysym);
+    }
 
   event.Skip();
 }
@@ -380,7 +440,18 @@ void AmayaCanvas::OnChar( wxKeyEvent& event )
  *--------------------------------------------------------------------------------------
  */
 void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
-{   
+{
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentPageActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x (skip)"),
+		m_pAmayaFrame->GetFrameId(),
+		event.GetKeyCode() );
+
+    event.Skip();
+    return;
+  }
+
   wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x"),
       m_pAmayaFrame->GetFrameId(),
       event.GetKeyCode() );
@@ -388,8 +459,12 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
   bool skip = TRUE; // by default forward this event (should generate OnChar event)
   int keycode =  event.GetKeyCode();
   
-  // test if the key is not a char (special)
-  if ( keycode == WXK_F2 	||
+  // test if the key is a special one
+  // + shortcut : CTRL+XXX ALT+XXX
+  // + special key : FXX HOME END ...
+  if ( event.ControlDown()      ||
+       event.AltDown()          ||
+       /*       keycode == WXK_F2 	||
        keycode == WXK_F3 	||
        keycode == WXK_F4 	||
        keycode == WXK_F5 	||
@@ -403,7 +478,7 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
        keycode == WXK_F13 	||
        keycode == WXK_F14 	||
        keycode == WXK_F15 	||
-       keycode == WXK_F16 	||
+       keycode == WXK_F16 	||*/
        keycode == WXK_INSERT 	||
        keycode == WXK_DELETE 	||
        keycode == WXK_HOME 	||
@@ -416,44 +491,18 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
        keycode == WXK_DOWN )
   {
     skip = FALSE;
-#if 0
-	  if (wParam >= 48 && wParam <= 57)
-	    {
-	      /* handling Ctrl 0-9 or Alt 0-9 */
-	      key_menu = GetKeyState (VK_MENU);
-  	      key = GetKeyState (VK_CONTROL);
-	      /* is it an Alt-GR modifier? (WIN32 interprets this
-		  as having both a control + menu key pressed down) */
-	      if (HIBYTE (key_menu) && HIBYTE (key))
-		    done = TRUE;
-	      /* is a control key pressed? */
-	      if (HIBYTE (key))
- 		    isSpecial = FALSE;
-	      else
-		  {
-		    /* is a menu key pressed? */
-		    if (HIBYTE (key_menu))
-		       isSpecial = FALSE;
-		    else
-		       /* don't handle a simple 0-9 */
-		       done = TRUE;
-		  }
-	    }
-	  else
-	    isSpecial = TRUE;
-#endif
   } 
+
     if (!skip)
     {
-//      key = (int) wParam;
-//      done = WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
-//				  lParam, isSpecial);
-      
       int frame = m_pAmayaFrame->GetFrameId();
       int thot_mask = 0;
 
       // wxkeycodes are directly mapped to thot keysyms :
       // no need to convert the wxwindows keycodes
+      // todo : verifier que le thot_keysym est ok sur otutes les plateformes
+      // Ctrl-A doit generer : thot_mask=1 et thot_keysym=97
+
       int thot_keysym = event.GetKeyCode();
 
       // convert wx key stats to thot key stats 
@@ -464,54 +513,25 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
       if (event.ShiftDown())
 	thot_mask |= THOT_MOD_SHIFT;
 
+      if (!event.ShiftDown())
+	{
+	  // shift key was not pressed
+	  // force the lowercase
+	  wxString s((wxChar)thot_keysym);
+	  if (s.IsAscii())
+	    {
+	      wxLogDebug( _T("IsAscii yes: s=")+s );
+	      s.MakeLower();
+	      wxChar c = s.GetChar(0);
+	      thot_keysym = (int)c;
+	    }
+	}
+
       // Call the generic function for key events management
       ThotInput (frame, thot_keysym, 0, thot_mask, thot_keysym);
-
     }
-  
-
-  event.Skip();
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaCanvas
- *      Method:  OnInit
- * Description:  TODO n'est jamais appele ...
- *--------------------------------------------------------------------------------------
- */
-void AmayaCanvas::OnInit( wxInitDialogEvent& event )
-{
-  wxLogDebug( _T("AmayaCanvas::OnInit") );
-  event.Skip();
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaCanvas
- *      Method:  OnActivate
- * Description:  TODO n'est jamais appele ...
- *--------------------------------------------------------------------------------------
- */
-void AmayaCanvas::OnActivate( wxActivateEvent& event )
-{
-  wxLogDebug( 	_T("AmayaCanvas::OnActivate: %s"),
-      		event.GetActive() ? _T("yes") : _T("no") );
-  event.Skip();
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaCanvas
- *      Method:  OnClose
- * Description:  rien a faire ...
- *--------------------------------------------------------------------------------------
- */
-void AmayaCanvas::OnClose( wxCloseEvent& event )
-{
-  wxLogDebug( _T("AmayaCanvas::OnClose : frame=%d"),
-     m_pAmayaFrame->GetFrameId() );
-  event.Skip();
+    else
+      event.Skip();
 }
 
 /*
@@ -643,10 +663,6 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
   EVT_CHAR(		AmayaCanvas::OnChar) // Process a wxEVT_CHAR event. 
 
   EVT_IDLE(             AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
-  
-  EVT_INIT_DIALOG(	AmayaCanvas::OnInit ) // canvas creation
-  EVT_ACTIVATE(		AmayaCanvas::OnActivate )
-  EVT_CLOSE(		AmayaCanvas::OnClose )
   
 END_EVENT_TABLE()
 
