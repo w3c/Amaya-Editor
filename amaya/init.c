@@ -1832,8 +1832,7 @@ NotifyEvent        *event;
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      {
-       /*	strcpy (LastURLName, "http://www.w3.org/pub/WWW/Amaya/"); */
-	strcpy (LastURLName, "/users/guetari/test.html");
+        strcpy (LastURLName, "http://www.w3.org/pub/WWW/Amaya/");
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else if (IsW3Path (s))
@@ -2206,7 +2205,7 @@ View                view;
       el = GetIncludedDocuments (el, document);
    SetInternalLinks (body, document);		
    /********
-   TtaPrint (document, "Formatted_view Table_of_contents Links_view");
+   TtaPrint (document, "Links_view Table_of_contents");
    *********/
 }
 

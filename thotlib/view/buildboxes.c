@@ -37,6 +37,7 @@
 #include "font_tv.h"
 
 #include "appli_f.h"
+#include "applicationapi_f.h"
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
 #include "boxpositions_f.h"

@@ -2707,7 +2707,7 @@ boolean             Before;
 		          pNew = NewSubtree (ancestorRule, pSS, pSelDoc,
                                    pEl->ElAssocNum, FALSE, TRUE, TRUE, TRUE);
 			  elType.ElTypeNum = typeNum;
-			  elType.ElSSchema = pSS;
+			  elType.ElSSchema = (SSchema) pSS;
 			  TtaCreateDescent (IdentDocument (pSelDoc),
 					    (Element) pNew, elType);
 			  ok = True;

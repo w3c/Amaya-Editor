@@ -16,6 +16,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "registry.h"
 #include "libmsg.h"
 #include "strmsg.h"
 #include "message.h"
@@ -52,31 +53,6 @@ extern void         TtaInitializeAppRegistry ();
 extern void         TtaSaveAppRegistry ();
 
 #endif /* __STDC__ */
-
-/*----------------------------------------------------------------------
-   ReadEnv lit la variable THOTSCH dans SchemaPath.          
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         ReadEnv ()
-
-#else  /* __STDC__ */
-static void         ReadEnv ()
-#endif				/* __STDC__ */
-
-{
-   char               *pT;
-
-   /* lit la variable d'environnement THOTSCH */
-   pT = (char *) TtaGetEnvString ("THOTSCH");
-   if (pT == NULL)
-      /* la variable d'environnement THOTSCH n'existe pas */
-      SchemaPath[0] = '\0';
-   else
-      /* on copie la valeur de la variable THOTSCH */
-      strncpy (SchemaPath, pT, MAX_TXT_LEN);
-}
-
 
 /*----------------------------------------------------------------------
    wrcar ecrit un caractere.                                       

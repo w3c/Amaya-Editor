@@ -530,8 +530,6 @@ boolean             closeDoc;
 
 #endif /* __STDC__ */
 {
-  NotifyDialog        notifyDoc;
-
   if (pDoc != NULL)
     /* on detruit la vue */
     {

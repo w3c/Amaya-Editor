@@ -546,11 +546,12 @@ PtrAttribute        pAttr;
 			      else
 				 /* il faut ajouter cette valeur */
 				 i = AttrValue (pAttr);
-			      if (pPRule->PrInhUnit == UnRelative || pPRule->PrInhUnit == UnXHeight)
+			      if (pPRule->PrInhUnit == UnRelative ||
+				  pPRule->PrInhUnit == UnXHeight)
 				 if (pPRule->PrType == PtIndent
 				     || pPRule->PrType == PtLineSpacing
 				     || pPRule->PrType == PtLineWeight)
-				    /* coviewertit en 1/10 de caractere */
+				    /* convertit en 1/10 de caractere */
 				    i = 10 * i;
 			   }
 			 else
@@ -614,7 +615,8 @@ PtrAttribute        pAttr;
 				      i = AttrValue (pAttr);
 				   if (pPRule->PrInhUnit == UnRelative ||
 				       pPRule->PrInhUnit == UnXHeight)
-				      if (pPRule->PrType == PtIndent || pPRule->PrType == PtLineSpacing ||
+				      if (pPRule->PrType == PtIndent ||
+					  pPRule->PrType == PtLineSpacing ||
 					  pPRule->PrType == PtLineWeight)
 					 /* convertit en 1/10 de caractere */
 					 i = 10 * i;

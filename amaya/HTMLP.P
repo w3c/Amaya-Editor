@@ -3886,12 +3886,15 @@ RULES
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: VMiddle;
+		HorizPos: Left = Enclosing . Left;
+#else
+		HorizPos: Left = Enclosing . Left + 1;
+		Width: Enclosing . Width - 1.2;
 #endif
 		Size: Enclosing +2;
 		Visibility: 10;
 		Height: 1.7 min;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
-		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Links_view BEGIN
 #ifdef PAGE
@@ -5128,6 +5131,7 @@ RULES
  PAGE_BREAK:
 	BEGIN
 	HorizOverflow : Yes;
+	Visibility: 10;
 	END;
 #endif
 

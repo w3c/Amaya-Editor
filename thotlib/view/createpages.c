@@ -2089,6 +2089,8 @@ PtrAbstractBox      pNewAbbox;
    pAbbChild->AbShape = 'h';
    pAbbChild->AbGraphAlphabet = 'L';
    pAbbChild->AbVolume = 1;
+   pAbbChild->AbLineWeight = 1;
+   pAbbChild->AbLineWeightUnit = UnPoint;
    pAbbChild->AbCanBeModified = FALSE;
    pAbbChild->AbEnclosing->AbVolume = pAbbChild->AbVolume;
    pAbbChild->AbAcceptLineBreak = FALSE;
@@ -2128,8 +2130,10 @@ PtrAbstractBox      pNewAbbox;
 		     {
 			if (pRegleV == NULL)
 			   pRegleV = pRule;
-			ApplyRule (pRegleV, pSchPPage, pAbbChild,
-				   pDoc, NULL);
+			if (!ApplyRule (pRegleV, pSchPPage, pAbbChild, pDoc,
+			     NULL))
+			   if (pRegleV->PrType == PtVisibility)
+			     pAbbChild->AbVisibility = pNewAbbox->AbVisibility;
 		     }
 		}
      }

@@ -16,6 +16,7 @@
 #include "typemedia.h"
 #include "libmsg.h"
 #include "prsmsg.h"
+#include "registry.h"
 #include "fileaccess.h"
 #include "message.h"
 
@@ -42,29 +43,6 @@ TtAttribute        *pAt1;
 AttributePres      *pRP1;
 NumAttrCase        *pCa1;
 boolean             Transm;
-
-
-/*----------------------------------------------------------------------
-   ReadEnv lit la variable THOTSCH dans SchemaPath.          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ReadEnv ()
-#else  /* __STDC__ */
-static void         ReadEnv ()
-#endif				/* __STDC__ */
-{
-   char               *pT;
-
-   /* lit la variable d'environnement THOTSCH */
-   pT = (char *) TtaGetEnvString ("THOTSCH");
-   if (pT == NULL)
-      /* la variable d'environnement THOTSCH n'existe pas */
-      SchemaPath[0] = '\0';
-   else
-      /* on copie la valeur de la variable THOTSCH */
-      strncpy (SchemaPath, pT, MAX_TXT_LEN);
-}
-
 
 /*----------------------------------------------------------------------
    wrnb ecrit au terminal l'entier nb.                             
@@ -1297,7 +1275,6 @@ char              **argv;
       goto Usage;
    argv++;
    strcpy (filename, *argv);
-   ReadEnv ();			/* on utilise le directory courant */
    /* indique que le chargement du schema de presentation doit commencer par */
    /* le chargement du schema de structure correspondant */
    GetSchStruct (&pSchemaStr);
