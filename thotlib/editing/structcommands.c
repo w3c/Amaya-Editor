@@ -1166,7 +1166,7 @@ ThotBool            save;
 {
   PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
                       pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
-                      pSel, pEl1, pA, firstSelInit, lastSelInit,
+                      pLastSave, pSel, pEl1, pA, firstSelInit, lastSelInit,
 		      pAncestor[MAX_ANCESTOR],
 		      pAncestorPrev[MAX_ANCESTOR],
 		      pAncestorNext[MAX_ANCESTOR];
@@ -1421,6 +1421,7 @@ ThotBool            save;
 		    pEl = firstSel;	/* premier element selectionne */
 		    pS = NULL;
 		    pSave = NULL;
+		    pLastSave = NULL;
 		    pFree = NULL;
 		    while (pEl != NULL)
 		      {
@@ -1587,6 +1588,7 @@ ThotBool            save;
 				    pE->ElPrevious = pS;
 				  }
 				pS = pE;
+				pLastSave = pE;
 				pE->ElParent = pParentEl;
 				/* conserve le chainage avec le pere
 				   pour SearchPresSchema appele' par
@@ -1751,8 +1753,8 @@ ThotBool            save;
 			    pS = pS->ElNext;
 			    /* element detruit suivant */
 			  }
-			/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
-			/* si il y a des elements apres */
+			/* Retransmet les valeurs des compteurs et attributs
+			   TRANSMIT si il y a des elements apres */
 			if (pPrev != NULL)
 			  pSS = pPrev;
 			else
@@ -1776,8 +1778,12 @@ ThotBool            save;
 			  }
 
 			/* did the selection change? */
-			GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
-			if (firstSel == pSave || ElemIsWithinSubtree(firstSel, pSave))
+			GetCurrentSelection (&pSelDoc, &firstSel, &lastSel,
+					     &firstChar, &lastChar);
+			if (firstSel == pSave ||
+			    ElemIsWithinSubtree(firstSel, pSave) ||
+			    lastSel == pLastSave ||
+			    ElemIsWithinSubtree(lastSel, pLastSave))
 			  {
 			    /* the selection points to deleted elements */
 			    if (pNext != NULL)
