@@ -240,6 +240,7 @@ HelpCreating
 &DeleteAnchor
 HelpLinks
 &LinkToPreviousTarget
+&XPointer_bufferStore
 ShowTargets
 
 [list-module]
@@ -418,6 +419,8 @@ HelpNumbering
 [annot]
 AnnotateSelection
 AnnotateDocument
+MoveAnnotationSel
+MoveAnnotationXPtr
 LoadAnnotations
 PostAnnotation
 DeleteAnnotation
