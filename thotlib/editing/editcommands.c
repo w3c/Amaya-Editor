@@ -4050,7 +4050,7 @@ void TtcPaste (Document doc, View view)
 		  char *dest;
 		  lpDatalength = wcslen (lpData);
 		  dest = TtaConvertWCToByte (lpData, UTF_8);
-		  if (Xbuffer == NULL || dest == NULL || strcmp (Xbuffer, dest))
+		  if (Xbuffer == NULL || dest == NULL || strncmp (Xbuffer, dest, 100))
   	        PasteXClipboardW (lpData, lpDatalength);
 	      else 
 	        ContentEditing (TEXT_PASTE);
