@@ -68,8 +68,8 @@
 66 Configurar e imprimir...
 67 Imprimir
 68 **Close &tab
-69 Sair de Amaya
-70 Fechar vista
+69 Fechar vista
+70 Sair de Amaya
 71 Desfazer
 72 Refazer
 73 Recortar
@@ -259,7 +259,7 @@
 257 Exibir enlaces (links)
 258 Exibir alternativa
 259 Exibir índice de conteúdos
-260 **Timeline
+260 **Show timeline
 261 **&Split view
 262 Estilo de carácter...
 263 Cores...

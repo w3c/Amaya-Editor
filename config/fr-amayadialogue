@@ -68,8 +68,8 @@
 66 &Paramétrer et imprimer...
 67 &Imprimer
 68 Fermer l'on&glet
-69 &Quitter Amaya
-70 &Fermer la vue
+69 &Fermer la vue
+70 &Quitter Amaya
 71 &Défaire
 72 &Refaire
 73 Cou&per
@@ -259,7 +259,7 @@
 257 Montrer les lie&ns
 258 Montrer la vue &alternée
 259 Montrer la table des &matières
-260 Ligne de temps
+260 Montrer la ligne de temps
 261 P&artager la vue
 262 Style de &caractères...
 263 C&ouleurs...

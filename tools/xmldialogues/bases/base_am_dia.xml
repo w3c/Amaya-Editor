@@ -756,17 +756,6 @@
 	<message xml:lang="it">&amp;Chiudi tab</message>
 	<message xml:lang="ru">Закрыть пан&amp;ель</message>
 </label>
-<label define="BExit">
-	<message xml:lang="en">E&amp;xit Amaya</message>
-	<message xml:lang="fr">&amp;Quitter Amaya</message>
-	<message xml:lang="de">Beenden</message>
-	<message xml:lang="it">Esci</message>
-	<message xml:lang="tr">Çıkış</message>
-	<message xml:lang="es">&amp;Salir de Amaya</message>
-	<message xml:lang="pt">Sair de Amaya</message>
-	<message xml:lang="fi">Sulje Amaya</message>
-	<message xml:lang="ru">Выйти из Amaya</message>
-</label>
 <label define="BCloseView">
 	<message xml:lang="en">&amp;Close view</message>
 	<message xml:lang="fr">&amp;Fermer la vue</message>
@@ -777,6 +766,17 @@
 	<message xml:lang="pt">Fechar vista</message>
 	<message xml:lang="fi">Sulje näkymä</message>
 	<message xml:lang="ru">Закрыть вид</message>
+</label>
+<label define="BExit">
+	<message xml:lang="en">E&amp;xit Amaya</message>
+	<message xml:lang="fr">&amp;Quitter Amaya</message>
+	<message xml:lang="de">Beenden</message>
+	<message xml:lang="it">Esci</message>
+	<message xml:lang="tr">Çıkış</message>
+	<message xml:lang="es">&amp;Salir de Amaya</message>
+	<message xml:lang="pt">Sair de Amaya</message>
+	<message xml:lang="fi">Sulje Amaya</message>
+	<message xml:lang="ru">Выйти из Amaya</message>
 </label>
 <label define="BUndo">
 	<message xml:lang="en">&amp;Undo</message>

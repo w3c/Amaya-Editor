@@ -68,8 +68,8 @@
 66 Set&up and Print...
 67 &Print
 68 Close &tab
-69 E&xit Amaya
-70 &Close view
+69 &Close view
+70 E&xit Amaya
 71 &Undo
 72 &Redo
 73 Cu&t
@@ -259,7 +259,7 @@
 257 Show lin&ks
 258 Show &alternate
 259 Show table &of contents
-260 Timeline
+260 Show timeline
 261 &Split view
 262 C&haracter style...
 263 C&olors...
