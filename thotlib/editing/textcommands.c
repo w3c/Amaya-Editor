@@ -198,7 +198,8 @@ ThotBool            extendSel;
        TtcScrollLeft (doc, view);
    else if (xDelta > 0 && x + xDelta > pFrame->FrXOrg + w)
        TtcScrollRight (doc, view);
-   else if (yDelta < 0 && y + yDelta < pFrame->FrYOrg)
+   else if (yDelta < 0 && pFrame->FrAbstractBox->AbBox->BxNext &&
+	    y + yDelta < pFrame->FrYOrg + pFrame->FrAbstractBox->AbBox->BxNext->BxYOrg)
      {
        /* try to select up to the top of the current displayed frame */
        do
@@ -218,7 +219,9 @@ ThotBool            extendSel;
 	       /* we don't see the top of the document */
 	       pFrame->FrAbstractBox->AbTruncatedHead));
      }
-   else if (yDelta > 0 && y + yDelta > pFrame->FrYOrg + h)
+   else if (yDelta > 0 && pFrame->FrAbstractBox->AbBox->BxPrevious &&
+	    (y + yDelta > pFrame->FrYOrg + h ||
+	     y + yDelta > pFrame->FrAbstractBox->AbBox->BxPrevious->BxYOrg + pFrame->FrAbstractBox->AbBox->BxPrevious->BxHeight))
      {
        /* try to select down to the bottom of the current displayed frame */
        do
@@ -232,8 +235,7 @@ ThotBool            extendSel;
 	 }
        while (y + yDelta > pFrame->FrYOrg + h &&
 	      /* we don't see the bottom of the box */
-	      (pLastBox->BxYOrg + pLastBox->BxHeight > pFrame->FrYOrg + h ||
-	       /* the frame is not on the top of the concrete image */
+	      (/* the frame is not on the top of the concrete image */
 	       pFrame->FrYOrg + h < pFrame->FrAbstractBox->AbBox->BxHeight ||
 	       /* we don't see the top of the document */
 	       pFrame->FrAbstractBox->AbTruncatedTail));
