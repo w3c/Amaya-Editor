@@ -390,8 +390,7 @@ static FontScript **FontConfigLoad ()
 
   /*Allocate the table */
   fontsscript_tab = (FontScript **)TtaGetMemory (31 * sizeof (FontScript *));
-  for (script = 0; script < 30; script++)
-    fontsscript_tab[script] = NULL;
+  memset(fontsscript_tab, 0, 31 * sizeof(FontScript *));
   /* load the first config file */
   complete = FontLoadFile (file, fontsscript_tab);
   TtaReadClose (file);
