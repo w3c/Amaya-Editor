@@ -1560,16 +1560,16 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
   if (annot->inReplyTo)
     {
       fprintf (fp, 
-	       "<r:type resource=\"%s\" />\n", "http://www.w3.org/2001/03/thread#Reply");
+	       "<r:type r:resource=\"%s\" />\n", THREAD_NS THREAD_REPLY_LOCAL_NAME);
     }
   else
 #endif /* ANNOT_ON_ANNOT */
     fprintf (fp, 
-	     "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
+	     "<r:type r:resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
   
   if (annot->type && annot->type != ANNOTATION_CLASS)
     fprintf (fp, 
-	     "<r:type resource=\"%s\" />\n",
+	     "<r:type r:resource=\"%s\" />\n",
 	     annot->type->name);
   
 #ifdef ANNOT_ON_ANNOT
