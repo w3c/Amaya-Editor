@@ -27,6 +27,14 @@ void DisplayPRule (PtrPRule RP, FILE *fileDescriptor,
 }
 
 /*----------------------------------------------------------------------
+   NewInitialSequence
+   Mark the current sequence as the initial sequence.
+  ----------------------------------------------------------------------*/
+void NewInitialSequence (PtrDocument pDoc)
+{
+}
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void ShowBox (int frame, PtrBox pBox, int position, int percent)
 {

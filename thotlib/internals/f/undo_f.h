@@ -30,6 +30,7 @@ extern void ChangeInfoLastRegisteredElem ( PtrDocument pDoc,
 extern void CancelLastEditFromHistory ( PtrDocument pDoc );
 extern void CancelLastAttrOperationFromHistory ( PtrDocument pDoc );
 extern PtrElement GetLastCreatedElemInHistory ( PtrDocument pDoc );
+extern void NewInitialSequence ( PtrDocument pDoc );
 extern void OpenHistorySequence ( PtrDocument pDoc,
                                   PtrElement firstSel,
                                   PtrElement lastSel,
@@ -70,6 +71,7 @@ extern void ChangeInfoLastRegisteredElem ( PtrDocument pDoc,
 extern void CancelLastEditFromHistory ( PtrDocument pDoc );
 extern void CancelLastAttrOperationFromHistory ( PtrDocument pDoc );
 extern PtrElement GetLastCreatedElemInHistory ( PtrDocument pDoc );
+extern void NewInitialSequence ( PtrDocument pDoc );
 extern void OpenHistorySequence ( PtrDocument pDoc,
                                     PtrElement firstSel,
                                     PtrElement lastSel,

@@ -58,6 +58,7 @@
 #include "thotmsg_f.h"
 #include "translation_f.h"
 #include "tree_f.h"
+#include "undo_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "writepivot_f.h"
@@ -735,21 +736,25 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
     {
       if (status)
 	{
+	  /* document modified */
 	  if ((!pDoc->DocUpdated || !pDoc->DocModified) &&
 	      ThotLocalActions[T_docmodified])
 	    (*(Proc2)ThotLocalActions[T_docmodified]) ((void *)IdentDocument (pDoc), (void *)TRUE);
 	  pDoc->DocModified = TRUE;
 	  pDoc->DocUpdated = TRUE;
-	  /* pDoc->DocNTypedChars += length; */
 	}
       else
 	{
+	  /* document unmodified */
 	  if ((pDoc->DocUpdated || pDoc->DocModified) &&
 	      ThotLocalActions[T_docmodified])
 	    (*(Proc2)ThotLocalActions[T_docmodified]) ((void *)IdentDocument (pDoc), (void *)FALSE);
 	  pDoc->DocModified = FALSE;
 	  pDoc->DocUpdated = FALSE;
-	  /* pDoc->DocNTypedChars = 0; */
+#ifndef NODISPLAY
+	  /* this is the new initial undo sequence */
+	  NewInitialSequence (pDoc);
+#endif /* NODISPLAY */
 	}
     }
 }

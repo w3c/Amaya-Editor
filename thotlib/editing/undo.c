@@ -771,6 +771,42 @@ static void CheckUniqueInit (PtrEditOperation Op)
 }
 
 /*----------------------------------------------------------------------
+   NewInitialSequence
+   Mark the current sequence as the initial sequence.
+  ----------------------------------------------------------------------*/
+void NewInitialSequence (PtrDocument pDoc)
+{
+  PtrEditOperation	editOp;
+
+  if (pDoc->DocLastEdit)
+    {
+      editOp = pDoc->DocLastEdit;
+      if (editOp && editOp->EoType == EtDelimiter)
+	  editOp->EoInitialSequence = TRUE;
+      editOp = editOp->EoPreviousOp;
+      while (editOp)
+	{
+	  if (editOp->EoType == EtDelimiter)
+	    editOp->EoInitialSequence = FALSE;
+	  editOp = editOp->EoPreviousOp;
+	}
+    }
+  if (pDoc->DocLastUndone)
+    {
+      editOp = pDoc->DocLastUndone;
+      if (editOp && editOp->EoType == EtDelimiter)
+	  editOp->EoInitialSequence = TRUE;
+      editOp = editOp->EoPreviousOp;
+      while (editOp)
+	{
+	  if (editOp->EoType == EtDelimiter)
+	    editOp->EoInitialSequence = FALSE;
+	  editOp = editOp->EoPreviousOp;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    OpenHistorySequence
    Open a sequence of editing operations in the history.
    firstSel, lastSel, firstSelChar, lastSelChar: indicate the selection
@@ -1042,7 +1078,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
         }
       if (editOp->EoInitialSequence)
 	/* That's the first sequence registered since the document was loaded
-	   The document is no longer modified */
+	   or saved. The document is no longer modified */
 	SetDocumentModified (LoadedDocument[doc - 1], FALSE, 0);
     }
   else if (editOp->EoType == EtAttribute)
