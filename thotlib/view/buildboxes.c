@@ -371,7 +371,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 {
   char                script,sc;
 #ifdef _I18N_
-  char                newscript, embed;
+  char                newscript, embed = '*';
   int                 oldind = 0;
   int                 oldpos = 0;
   int                 oldspaces = 0;
@@ -3148,9 +3148,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else
 #ifndef _GL
 		if (pCurrentBox->BxLMargin < 0)
-		  DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
+		  DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin,
 			   pCurrentBox->BxYOrg,
-			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pBox->BxLMargin,
+			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
 		else
 		  DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
