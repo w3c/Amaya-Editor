@@ -2476,7 +2476,7 @@ void SynchronizeSourceView (NotifyElement *event)
       /* take into account previous elements in the same line */
       el = TtaGetParent (firstSel);
       el = TtaGetFirstChild (el);
-      while (el != firstSel)
+      while (el && el != firstSel)
 	{
 	  /* add characters of previous elements */
 	  firstChar += TtaGetElementVolume (el);
