@@ -5165,6 +5165,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      if (ctxt->schema == NULL && att != 0)
 		ctxt->schema = TtaGetDocumentSSchema (doc);
 	    }
+	  if (att == 0)
+	    /* Attribute name not found: Search in the list of all loaded
+	       schemas */
+	    {
+	      attrType.AttrSSchema = NULL;
+	      TtaGetXmlAttributeType (attrs[i], &attrType, doc);
+	      att = attrType.AttrTypeNum;
+	    }
 	  if (att == DummyAttribute && !strcmp (schemaName, "HTML"))
 	    /* it's the "type" attribute for an "input" element. In the tree
 	       it's represented by the element type, not by an attribute */
