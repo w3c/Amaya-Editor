@@ -1480,7 +1480,7 @@ int                 pattern;
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
          WinErrorBox (WIN_Main_Wd);
-#  endif /* _WINDOWS */
+#     endif /* _WINDOWS */
    }
 
    /* Draw the border */
@@ -1611,7 +1611,6 @@ int                 arrow;
 #endif /* __STDC__ */
 
 {
-#  ifndef _WINDOWS
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
@@ -1646,7 +1645,13 @@ int                 arrow;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
+#  ifdef _WINDOWS
+   for (i = 1; i < nb - 1; i++) {
+       DoDrawOneLine (frame, points [i-1].x, points[i-1].y, points[i].x, points[i].y);
+   }
+#  else  /* _WINDOWS */
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1, CoordModeOrigin);
+#  endif /* _WINDOWS */
    FinishDrawing (0, RO, active);
 
    /* Forward arrow */
@@ -1655,7 +1660,6 @@ int                 arrow;
 
    /* free the table of points */
    free ((char *) points);
-#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2170,13 +2174,73 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-#  ifndef _WINDOWS
-   int                 arc, xf, yf;
+   Pixmap              pat;
+   int                 arc;
+#  ifdef _WINDOWS
+   HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
+   HPEN                hPen = 0;
+   HPEN                hOldPen;
+#  else  /* !_WINDOWS */
+   int                 xf, yf;
    XArc                xarc[4];
    XSegment            seg[4];
-   Pixmap              pat;
    ThotPoint           point[13];
+#  endif /* _WINDOWS */
 
+#  ifdef _WINDOWS 
+   WIN_GetDeviceContext (frame);
+   if (width <= 0 || height <= 0) {
+      WIN_ReleaseDeviceContext ();
+      return;
+   }
+
+   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+
+   if (width > thick + 1)
+     width = width - thick - 1;
+   if (height > thick + 1)
+     height = height - thick - 1;
+   x += thick / 2;
+   y += thick / 2;
+
+   /* Fill in the rectangle */
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat != 0) {
+      SelectClipRgn(TtDisplay, clipRgn); 
+      WinLoadGC (TtDisplay, fg, RO);
+   
+      hBrush = CreateSolidBrush (Pix_Color[bg]);
+      hOldBrush = SelectObject (TtDisplay, hBrush);
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+         WinErrorBox (WIN_Main_Wd);
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+	  if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
+         WinErrorBox (FrRef  [frame]);
+	  SelectObject (TtDisplay, hOldPen);
+      SelectObject (TtDisplay, hOldBrush);
+	  if (!DeleteObject (hPen))
+         WinErrorBox (FrRef [frame]);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (WIN_Main_Wd);
+   }
+
+   /* Draw the border */
+   if (thick > 0) {
+      InitDrawing (0, style, thick, RO, active, fg);
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+         WinErrorBox (WIN_Main_Wd);
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+      SelectObject (TtDisplay, GetStockObject (NULL_BRUSH)) ;
+	  if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
+         WinErrorBox (FrRef  [frame]);
+      SelectObject (TtDisplay, hOldPen);
+      FinishDrawing (0, RO, active);
+   }
+	WIN_ReleaseDeviceContext ();
+    if (hPen && !DeleteObject (hPen))
+       WinErrorBox (WIN_Main_Wd);
+#  else  /* !_WINDOWS */
    width -= thick;
    height -= thick;
    x += thick / 2;
@@ -2324,8 +2388,10 @@ int                 pattern;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   HPEN hPen;
-   HPEN hOldPen;
+   HPEN   hPen;
+   HPEN   hOldPen;
+   HBRUSH hBrush;
+   HBRUSH hOldBrush;
 #  endif /* _WINDOWS */
    Pixmap              pat;
 
@@ -2336,15 +2402,32 @@ int                 pattern;
 
    /* Fill in the rectangle */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-#  ifndef _WINDOWS
-   if (pat != 0)
-     {
-	XSetTile (TtDisplay, TtGreyGC, pat);
-	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
-		  x, y, width, height, 0, 360 * 64);
-	XFreePixmap (TtDisplay, pat);
-     }
+   if (pat != 0) {
+#     ifdef _WINDOWS
+      WIN_GetDeviceContext (frame);
+      SelectClipRgn(TtDisplay, clipRgn); 
+      WinLoadGC (TtDisplay, fg, RO);
+   
+      hBrush = CreateSolidBrush (Pix_Color[bg]);
+      hOldBrush = SelectObject (TtDisplay, hBrush);
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+         WinErrorBox (WIN_Main_Wd);
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+	  if (!Ellipse (TtDisplay, x, y, x + width, y + height))
+         WinErrorBox (FrRef  [frame]);
+	  SelectObject (TtDisplay, hOldPen);
+      SelectObject (TtDisplay, hOldBrush);
+	  WIN_ReleaseDeviceContext ();
+	  if (!DeleteObject (hPen))
+         WinErrorBox (FrRef [frame]);
+      if (!DeleteObject (hBrush))
+         WinErrorBox (WIN_Main_Wd);
+#     else  /* !_WINDOWS */
+      XSetTile (TtDisplay, TtGreyGC, pat);
+      XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
+      XFreePixmap (TtDisplay, pat);
 #  endif /* _WINDOWS */
+   }
 
    /* Draw the border */
    if (thick > 0) {
@@ -2364,8 +2447,8 @@ int                 pattern;
 #     else  /* !_WINDOWS */
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
 #     endif /* _WINDOWS */
-	FinishDrawing (0, RO, active);
-     }
+      FinishDrawing (0, RO, active);
+   }
 }
 
 /*----------------------------------------------------------------------

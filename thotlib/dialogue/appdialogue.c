@@ -121,10 +121,6 @@ extern char    szTbStrings [4096];
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
-#if 0
-extern HBITMAP appLogo;
-extern int     bmpID;
-#endif /* 0 */
 HMENU hmenu;
 int   menu_item ;
 #ifdef THOT_TOOLTIPS

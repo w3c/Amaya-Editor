@@ -210,10 +210,8 @@ int                 num;
       /* Emit the Poscript command */
       fact = 255;
 #     ifdef _WINDOWS
-      if (TtPrinterDC) {
+      if (TtPrinterDC)
          SetTextColor (TtPrinterDC, RGB (red, green, blue));
-	  } else
-           fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
 #     else /* !_WINDOWS */
       fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
 #     endif /* _WINDOWS */
@@ -470,8 +468,6 @@ int                 shadow;
 	  TtaGiveThotRGB (fg, &red, &green, &blue);
 	  SetTextColor (TtPrinterDC, RGB (red, green, blue));
 	}
-      else
-	CurrentColor (fout, fg);
 #     else  /* _WINDOWS */
       CurrentColor (fout, fg);
 #     endif /* _WINDOWS */
@@ -479,12 +475,7 @@ int                 shadow;
       /* Do we need to change the current font ? */
 #     ifdef _WINDOWS
       if (TtPrinterDC)
-	hOldFont = SelectObject (TtPrinterDC, font->FiFont);
-      else
-	{
-          encoding = CurrentFont (fout, font);
-          fprintf (fout, "(");
-	}
+         hOldFont = SelectObject (TtPrinterDC, font->FiFont);
 #     else  /* _WINDOWS */
       encoding = CurrentFont (fout, font);
       fprintf (fout, "(");
@@ -495,7 +486,7 @@ int                 shadow;
      {
        /* replace each character by a star */
        j = 0;
-       ptcar = TtaGetMemory (lg + 1);
+       ptcar = TtaGetMemory ((size_t) (lg + 1));
        while (j < lg)
 	 ptcar[j++] = '*';
        ptcar[lg] = EOS;
@@ -506,33 +497,27 @@ int                 shadow;
 
    /* Add the justified white space */
 #  ifdef _WINDOWS
-   if (TtPrinterDC)
-     {
-       SetMapperFlags (TtPrinterDC, 1);
-       GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
-       width = size.cx;
-       if (ptcar[0] == '\212' || ptcar[0] == '\12')
-	 {
-	   /* skip the Control return char */
-	   ptcar++;
-	   lg--;
-	 }
+   if (TtPrinterDC) {
+      SetMapperFlags (TtPrinterDC, 1);
+      GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
+      width = size.cx;
+      if (ptcar[0] == '\212' || ptcar[0] == '\12') {
+         /* skip the Control return char */
+         ptcar++;
+         lg--;
+	  }
 
-       if (lg != 0)
-         /* if (!TextOut (TtPrinterDC, X, Y, (unsigned char*) ptcar, lg)) */
+      if (lg != 0)
          if (!TextOut (TtPrinterDC, x, y, (unsigned char*) ptcar, lg))
-	   WinErrorBox (NULL);
+            WinErrorBox (NULL);
 
-       if (hyphen) /* draw the hyphen */
-         /* if (!TextOut (TtPrinterDC, X + width, Y, "\255", 1)) */
+      if (hyphen) /* draw the hyphen */
          if (!TextOut (TtPrinterDC, x + width, y, "\255", 1))
-	   WinErrorBox (NULL);
-       if (lgboite != 0)
-         SameBox = 0;
-     }
-   else
-     {
-#  endif  /* _WINDOWS */
+            WinErrorBox (NULL);
+      if (lgboite != 0)
+          SameBox = 0;
+   }
+#  else  /* _WINDOWS */
        if (bl > 0)
 	 {
 	   NbWhiteSp++;
@@ -574,8 +559,6 @@ int                 shadow;
 	     fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
 	   SameBox = 0;
 	 }
-#  ifdef _WINDOWS
-     }
 #  endif /* _WINDOWS */
    if (lg > 0)
      {
@@ -618,10 +601,13 @@ int                 fg;
    int                 middle;	/* cross-over position   */
    int                 height;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
+   int                 shift;	/* shifting of drawing   */
+
+#  ifndef _WINDOWS
    int                 l_start;	/* start of the line     */
    int                 l_end;	/* end of the line       */
-   int                 shift;	/* shifting of drawing   */
    FILE               *fout;
+#  endif /* _WINDOWS */
 
    if (y < 0)
      return;
@@ -663,11 +649,9 @@ int                 fg;
                 default: /* not underlined */
                          break;
 		 } 
-	  } 
-     }
-   else
-     {
-#  endif  /* _WINDOWS */
+	   } 
+   }
+#  else  /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
        /* The last box must be finished */
        if (SameBox == 0)
@@ -710,8 +694,6 @@ int                 fg;
 	       break;
 	     }
 	 }
-#  ifdef _WINDOWS
-     }
 #  endif /* _WINDOWS */
 }
 
@@ -735,10 +717,12 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-   int                 ex, fh;
-   FILE               *fout;
+   int                 fh;
 #  ifdef _WINDOWS
    int                 xm, xp;
+#  else  /* !_WINDOWS */
+   int                 ex;
+   FILE               *fout;
 #  endif /* _WINDOWS */
 
    if (y < 0)
@@ -747,22 +731,19 @@ int                 fg;
    if (thick < 0)
       return;
 #  ifdef _WINDOWS
-   if (TtPrinterDC)
-     {
-       fh = FontHeight (font);
-       xm = x + (fh / 2);
-       xp = x + (fh / 4);
-       /* vertical part */
-       DoPrintOneLine (fg, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
+   if (TtPrinterDC) {
+      fh = FontHeight (font);
+      xm = x + (fh / 2);
+      xp = x + (fh / 4);
+      /* vertical part */
+      DoPrintOneLine (fg, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 
-       /* Acending part */
-       DoPrintOneLine (fg, xp, y + h, xm, y);
-       /* Upper part */
-       DoPrintOneLine (fg, xm, y, x + l, y);
-     }
-   else
-     {
-#  endif /* _WINDOWS */
+      /* Acending part */
+      DoPrintOneLine (fg, xp, y + h, xm, y);
+      /* Upper part */
+      DoPrintOneLine (fg, xm, y, x + l, y);
+   }
+#  else /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
 
        /* Do we need to change the current color ? */
@@ -785,8 +766,6 @@ int                 fg;
 		  PixelToPoint (x + (fh / 2)), PixelToPoint (y),
 		  PixelToPoint (x + (fh / 2)), PixelToPoint (y + h),
 		  PixelToPoint (x), PixelToPoint (y + (2 * (h / 3))));
-#  ifdef _WINDOWS
-     }
 #  endif /* _WINDOWS */
 }
 
@@ -814,59 +793,58 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-   FILE               *fout;
-   int                 ey, ym, yf;
+   int                 yf;
 #  ifdef _WINDOWS
    int                 xm, yend, exnum, delta;
    int                 wd, asc, hd;
+#  else  /* !_WINDOWS */
+   int                 ey, ym;
+   FILE               *fout;
 #  endif  /* _WINDOWS */
 
    if (y < 0)
      return;
    y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
-   if (TtPrinterDC)
-     {
-       exnum = 0;
-       if (FontHeight (font) *1.2 >= h) { /* display a single glyph */
+   if (TtPrinterDC) {
+      exnum = 0;
+      if (FontHeight (font) *1.2 >= h) { /* display a single glyph */
          xm = x + ((l - CharacterWidth ('\362', font)) / 2);
          yf = y + ((h - CharacterHeight ('\362', font)) / 2) - FontAscent (font) +
-	   CharacterAscent ('\362', font);
+         CharacterAscent ('\362', font);
          WIN_DrawChar ('\362', frame, xm, yf, font, RO, func, fg);
-       } else { /* Need more than one glyph */
-	 xm = x + ((l - CharacterWidth ('\363', font)) / 2);
-	 yf = y - FontAscent (font) + CharacterAscent ('\363', font);
-	 WIN_DrawChar ('\363', frame, xm, yf, font, RO, func, fg);
-	 yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
+	  } else { /* Need more than one glyph */
+           xm = x + ((l - CharacterWidth ('\363', font)) / 2);
+           yf = y - FontAscent (font) + CharacterAscent ('\363', font);
+           WIN_DrawChar ('\363', frame, xm, yf, font, RO, func, fg);
+           yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
            CharacterAscent ('\365', font) - 1;
-	 WIN_DrawChar ('\365', frame, xm, yend, font, RO, func, fg);
+           WIN_DrawChar ('\365', frame, xm, yend, font, RO, func, fg);
 	 
-	 yf += CharacterHeight ('\363', font);
-	 delta = yend - yf;
-	 asc = CharacterAscent ('\364', font)  - FontAscent (font) - 1;
-	 hd = CharacterHeight ('\364', font) - 1;
-	 wd = (CharacterWidth ('\363', font) - CharacterWidth ('\364', font)) / 2;
-	 if (delta >= 0) {
-	   for (yf += asc, yend -= hd; yf < yend; yf += CharacterHeight ('\364', font), exnum++)
-	     WIN_DrawChar ('\364', frame, xm+wd, yf, font, RO, func, fg);
-	   if (exnum)
-	     WIN_DrawChar ('\364', frame, xm+wd, yend, font, RO, func, fg);
-	   else
-	     WIN_DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, func, fg);
-	 }
-       }
+           yf += CharacterHeight ('\363', font);
+           delta = yend - yf;
+           asc = CharacterAscent ('\364', font)  - FontAscent (font) - 1;
+           hd = CharacterHeight ('\364', font) - 1;
+           wd = (CharacterWidth ('\363', font) - CharacterWidth ('\364', font)) / 2;
+           if (delta >= 0) {
+              for (yf += asc, yend -= hd; yf < yend; yf += CharacterHeight ('\364', font), exnum++)
+                  WIN_DrawChar ('\364', frame, xm+wd, yf, font, RO, func, fg);
+              if (exnum)
+                 WIN_DrawChar ('\364', frame, xm+wd, yend, font, RO, func, fg);
+              else
+                 WIN_DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, func, fg);
+		   }
+	  }
 
-       if (type == 2) /* double integral */
+      if (type == 2) /* double integral */
          DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2), y, l, h, -1, font, RO, func, fg);
        
-       else if (type == 1) /* contour integral */
-	 WIN_DrawChar ('o', frame, x + ((l - CharacterWidth ('o', font)) / 2),
-		       y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
-		       font, RO, func, fg);
-     }
-   else
-     {
-#  endif  /* _WINDOWS */
+      else if (type == 1) /* contour integral */
+              WIN_DrawChar ('o', frame, x + ((l - CharacterWidth ('o', font)) / 2),
+                            y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
+                            font, RO, func, fg);
+   }
+#  else  /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
 
        /* Do we need to change the current color ? */
@@ -917,8 +895,6 @@ int                 fg;
 		 fprintf (fout, "-%d %d (o) c\n", ym, x);
 	     }
 	 }
-#  ifdef _WINDOWS
-     }
 #  endif /* _WINDOWS */
 }
 
@@ -941,9 +917,10 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-   FILE               *fout;
 #  ifdef _WINDOWS
    int                 xm, ym, fh;
+#  else  /* !_WINDOWS */
+   FILE               *fout;
 #  endif  /* !_WINDOWS */
 
    if (y < 0)
@@ -967,9 +944,7 @@ int                 fg;
          DoPrintOneLine (frame, x, y + h - 2, x + l, y + h - 2);
        }
      }
-   else
-     {
-#  endif  /* !_WINDOWS */
+#  else  /* !_WINDOWS */
        fout = (FILE *) FrRef[frame];
 
        /* Do we need to change the current color ? */
@@ -981,8 +956,6 @@ int                 fg;
        x = PixelToPoint (x + (l / 2));
        y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
        fprintf (fout, "-%d %d (\\345) c\n", y, x);
-#  ifdef _WINDOWS
-     }
 #  endif /* _WINDOWS */
 }
 
@@ -1006,45 +979,41 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-  FILE             *fout;
 #  ifdef _WINDOWS
-  int               fh;
+   int               fh;
+#  else  /* !_WINDOWS */
+   FILE             *fout;
 #  endif /* _WINDOWS */
 
    if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
-   if (TtPrinterDC)
-     {
-       fh = FontHeight (font);
-       if (h < fh * 2 && l <= CharacterWidth ('\325', font)) /* Only one glyph needed */
+   if (TtPrinterDC) {
+      fh = FontHeight (font);
+      if (h < fh * 2 && l <= CharacterWidth ('\325', font)) /* Only one glyph needed */
          WIN_DrawMonoSymb ('\325', frame, x, y, l, h, RO, func, font, fg);
-       else {
-         /* Vertical part */
-         DoPrintOneLine (fg, x + 2, y + 1, x + 2, y + h);
-         DoPrintOneLine (fg, x + l - 3, y + 1, x + l - 3, y + h);
+      else {
+           /* Vertical part */
+           DoPrintOneLine (fg, x + 2, y + 1, x + 2, y + h);
+           DoPrintOneLine (fg, x + l - 3, y + 1, x + l - 3, y + h);
 	 
-         /* Upper part */
-         DoPrintOneLine (frame, x + 1, y + 1, x + l, y);
-       }
-     }
-   else
-     {
-#  endif  /* !_WINDOWS */
-       fout = (FILE *) FrRef[frame];
+           /* Upper part */
+           DoPrintOneLine (frame, x + 1, y + 1, x + l, y);
+	  }
+   } 
+#  else  /* !_WINDOWS */
+   fout = (FILE *) FrRef[frame];
 
-       /* Do we need to change the current color ? */
-       CurrentColor (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-       /* Change the current font */
-       PoscriptFont = NULL;
-       fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-       x = PixelToPoint (x + (l / 2));
-       y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
-       fprintf (fout, "-%d %d (\\325) c\n", y, x);
-#  ifdef _WINDOWS
-     }
+   /* Change the current font */
+   PoscriptFont = NULL;
+   fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
+   x = PixelToPoint (x + (l / 2));
+   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
+   fprintf (fout, "-%d %d (\\325) c\n", y, x);
 #  endif /* _WINDOWS */
 }
 
@@ -1068,31 +1037,29 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    FILE               *fout;
+#  endif /* _WINDOWS */
 
    if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS 
-   if (TtPrinterDC)
-     {
-     }
-   else
-     {
-#  endif /* _WINDOWS */
-       fout = (FILE *) FrRef[frame];
+   if (TtPrinterDC) {
+      /* ***** A FAIRE **** */
+   }
+#  else /* _WINDOWS */
+   fout = (FILE *) FrRef[frame];
 
-       /* Do we need to change the current color ? */
-       CurrentColor (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-       /* Change the current font */
-       PoscriptFont = NULL;
-       fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-       x = PixelToPoint (x + (l / 2));
-       y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
-       fprintf (fout, "-%d %d (\\310) c\n", y, x);
-#  ifdef _WINDOWS
-     }
+   /* Change the current font */
+   PoscriptFont = NULL;
+   fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
+   x = PixelToPoint (x + (l / 2));
+   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
+   fprintf (fout, "-%d %d (\\310) c\n", y, x);
 #  endif /* _WINDOWS */
 }
 
@@ -1116,32 +1083,29 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS 
    FILE               *fout;
+#  endif /* _WINDOWS */
 
    if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
 
 #  ifdef _WINDOWS
-   if (TtPrinterDC)
-     {
-     }
-   else
-     {
-#  endif  /* _WINDOWS */
-       fout = (FILE *) FrRef[frame];
+   if (TtPrinterDC) {
+      /* **** A FAIRE **** */
+   }
+#  else  /* _WINDOWS */
+   fout = (FILE *) FrRef[frame];
+    /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-       /* Do we need to change the current color ? */
-       CurrentColor (fout, fg);
-
-       /* Change the current font */
-       PoscriptFont = NULL;
-       fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-       x = PixelToPoint (x + (l / 2));
-       y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
-       fprintf (fout, "-%d %d (\\307) c\n", y, x);
-#  ifdef _WINDOWS
-     }
+   /* Change the current font */
+   PoscriptFont = NULL;
+   fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
+   x = PixelToPoint (x + (l / 2));
+   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
+   fprintf (fout, "-%d %d (\\307) c\n", y, x);
 #  endif /* _WINDOWS */
 }
 
@@ -1324,8 +1288,10 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    int                 ey, yf;
    FILE               *fout;
+#  endif /* _WINDOWS */
 
    if (y < 0)
       return;
@@ -1348,83 +1314,54 @@ int                 fg;
                xm = x + ((l - CharacterWidth (')', font)) / 2);
                yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
                WIN_DrawChar (')', frame, xm, yf, font, RO, func, fg);
-		}
+		 }
 	  } else { /* Need more than one glyph */
-           if (direction == 0) {
-              /* draw a opening parenthesis */
-              xm = x + ((l - CharacterWidth ('\346', font)) / 2);
-              yf = y - FontAscent (font) + CharacterAscent ('\346', font);
-              WIN_DrawChar ('\346', frame, xm, yf, font, RO, func, fg);
-              yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
-              WIN_DrawChar ('\350', frame, xm, yend, font, RO, func, fg);
+             if (direction == 0) {
+                /* draw a opening parenthesis */
+                xm = x + ((l - CharacterWidth ('\346', font)) / 2);
+                yf = y - FontAscent (font) + CharacterAscent ('\346', font);
+                WIN_DrawChar ('\346', frame, xm, yf, font, RO, func, fg);
+                yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
+                WIN_DrawChar ('\350', frame, xm, yend, font, RO, func, fg);
 
-              yf += CharacterHeight ('\346', font) - 1;
-              delta = yend - yf;
-              if (delta >= 0) {
-                 for (yf += CharacterAscent ('\347', font) - FontAscent (font),
-                 yend -= CharacterHeight ('\347', font) - 1;
-                 yf < yend;
-                 yf += CharacterHeight ('\347', font), exnum++)
-                 WIN_DrawChar ('\347', frame, xm, yf, font, RO, func, fg);
-                 if (exnum)
-                    WIN_DrawChar ('\347', frame, xm, yend, font, RO, func, fg);
-                 else
-                    WIN_DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, func, fg);
-			  }
-		   } else {
-                /* draw a closing parenthesis */
-                xm = x + ((l - CharacterWidth ('\366', font)) / 2);
-                yf = y - FontAscent (font) + CharacterAscent ('\366', font);
-                WIN_DrawChar ('\366', frame, xm, yf, font, RO, func, fg);
-                yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
-                WIN_DrawChar ('\370', frame, xm, yend, font, RO, func, fg);
-
-                yf += CharacterHeight ('\366', font) - 1;
+                yf += CharacterHeight ('\346', font) - 1;
                 delta = yend - yf;
                 if (delta >= 0) {
-                   for (yf += CharacterAscent ('\367', font) - FontAscent (font),
-                        yend -= CharacterHeight ('\367', font) - 1;
-                        yf < yend;
-                        yf += CharacterHeight ('\367', font), exnum++)
-                       WIN_DrawChar ('\367', frame, xm, yf, font, RO, func, fg);
+                   for (yf += CharacterAscent ('\347', font) - FontAscent (font),
+                   yend -= CharacterHeight ('\347', font) - 1;
+                   yf < yend;
+                   yf += CharacterHeight ('\347', font), exnum++)
+                   WIN_DrawChar ('\347', frame, xm, yf, font, RO, func, fg);
                    if (exnum)
-                      WIN_DrawChar ('\367', frame, xm, yend, font, RO, func, fg);
+                      WIN_DrawChar ('\347', frame, xm, yend, font, RO, func, fg);
                    else
-                       WIN_DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, func, fg);
+                      WIN_DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, func, fg);
 				}
-		   }
-      }
-   } else {
-         fout = (FILE *) FrRef[frame];
+			 } else {
+                    /* draw a closing parenthesis */
+                    xm = x + ((l - CharacterWidth ('\366', font)) / 2);
+                    yf = y - FontAscent (font) + CharacterAscent ('\366', font);
+                    WIN_DrawChar ('\366', frame, xm, yf, font, RO, func, fg);
+                    yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
+                    WIN_DrawChar ('\370', frame, xm, yend, font, RO, func, fg);
 
-         /* Do we need to change the current color ? */
-         CurrentColor (fout, fg);
-
-         /* Do we need to change the current font ? */
-         CurrentFont (fout, font);
-
-         l--;
-         h--;
-         ey = FontHeight (font);
-         h -= ey;
-         y += FontBase (font);
-         x = PixelToPoint (x);
-         yf = PixelToPoint (y + h);
-         y = PixelToPoint (y) + 1;
-
-         if (h < ey / 4) { /* Made of only one glyph */
-            if (direction == 0)
-               fprintf (fout, "-%d %d (\\() c\n", yf, x);
-            else
-                fprintf (fout, "-%d %d (\\)) c\n", yf, x);
-		 } else { /* Drawn with more than one glyph */
-               if (direction == 0)
-                  fprintf (fout, "%d -%d -%d %s (\\346) (\\347) (\\350) s3\n", x + 1, yf, y, Scale);
-               else
-                  fprintf (fout, "%d -%d -%d %s (\\366) (\\367) (\\370) s3\n", x, yf, y, Scale);
-		 }
-	}
-#   else  /* !_WINDOWS */
+                    yf += CharacterHeight ('\366', font) - 1;
+                    delta = yend - yf;
+                    if (delta >= 0) {
+                       for (yf += CharacterAscent ('\367', font) - FontAscent (font),
+                            yend -= CharacterHeight ('\367', font) - 1;
+                            yf < yend;
+                            yf += CharacterHeight ('\367', font), exnum++)
+                           WIN_DrawChar ('\367', frame, xm, yf, font, RO, func, fg);
+                       if (exnum)
+                          WIN_DrawChar ('\367', frame, xm, yend, font, RO, func, fg);
+                       else
+                           WIN_DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, func, fg);
+					}
+			 }
+	  }
+   }
+#  else  /* !_WINDOWS */
 
    fout = (FILE *) FrRef[frame];
    /* Do we need to change the current color ? */
@@ -1551,30 +1488,23 @@ int                 pattern;
 #endif /* __STDC__ */
 {
    int    xf, yf;
-   FILE               *fout;
 #  ifdef _WINDOWS
    Pixmap pat;  
    HPEN   hPen = 0, hOldPen;
    HBRUSH hBrush, hOldBrush;
-#endif /* _WINDOWS */
+#  else  /* !_WINDOWS */
+   FILE               *fout;
+#  endif /* _WINDOWS */
 
    if (y < 0)   
       return;
    y += FrameTable[frame].FrTopMargin;
 
-#ifdef _WINDOWS
-   if (TtPrinterDC == (HDC) 0) {
-      xf = PixelToPoint (x + larg);
-      yf = PixelToPoint (y + height);
-      x  = PixelToPoint (x);
-      y  = PixelToPoint (y);
-   } else {
-        xf = x + larg;
-        yf = y + height;
-   }
-
+#  ifdef _WINDOWS
    /* Fill in the rectangle */
    if (TtPrinterDC) {
+      xf = x + larg;
+      yf = y + height;
       if (larg > thick + 1)
          larg = larg - thick - 1;
       if (height > thick + 1)
@@ -1603,15 +1533,6 @@ int                 pattern;
          SelectObject (TtPrinterDC, hOldPen);
          DeleteObject (hPen);
 	  }
-   } else {
-         fout = (FILE *) FrRef[frame];
-
-         /* Do we need to change the current color ? */
-         if (thick > 0)
-            CurrentColor (fout, fg);
-
-         FillWithPattern (fout, fg, bg, pattern);
-         fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
    }
 #  else  /* !_WINDOWS */
    fout = (FILE *) FrRef[frame];
@@ -2114,12 +2035,13 @@ int                 pattern;
 #endif /* __STDC__ */
 {
    int                 xm, ym;
-   FILE               *fout;
 #  ifdef _WINDOWS 
    Pixmap pat;  
    HPEN   hPen = 0, hOldPen;
    HBRUSH hBrush, hOldBrush;
-#endif /* _WINDOWS */
+#  else  /* !_WINDOWS */
+   FILE               *fout;
+#  endif /* _WINDOWS */
 
    if (y < 0)   
       return;
@@ -2128,17 +2050,11 @@ int                 pattern;
 #  ifdef _WINDOWS 
    larg = larg / 2;
    height = height / 2;
-   if (TtPrinterDC == (HDC) 0) {
-      xm = PixelToPoint (x + larg);
-      ym = PixelToPoint (y + height);
-      larg = PixelToPoint (larg);
-      height = PixelToPoint (height);
-   } else {
-        xm = x + larg;
-        ym = y + height;
-   }
 
    if (TtPrinterDC) {
+        xm = x + larg;
+        ym = y + height;
+
 #     if 0 /* Fill an ellipse */
       pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
       if (pat != 0) {
@@ -2162,26 +2078,6 @@ int                 pattern;
          if (!DeleteObject (hPen))
             WinErrorBox (WIN_Main_Wd);
 	  }
-   } else {
-         fout = (FILE *) FrRef[frame];
-
-         if (y < 0)
-            return;
-         /* Do we need to change the current color ? */
-         if (thick > 0)
-            CurrentColor (fout, fg);
-         larg = larg / 2;
-         height = height / 2;
-         xm = PixelToPoint (x + larg);
-         ym = PixelToPoint (y + height);
-         larg = PixelToPoint (larg);
-         height = PixelToPoint (height);
-
-         FillWithPattern (fout, fg, bg, pattern);
-        if (larg == height) /* Draw a circle */
-           fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, larg);
-        else /* Draw an ellips */
-             fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick, xm, -ym, larg, height);
    }
 #  else /* !_WINDOWS */
 
@@ -2292,31 +2188,6 @@ int                 fg;
       hOldPen = SelectObject (TtPrinterDC, pen);
       Polyline (TtPrinterDC, point, 3);
       SelectObject (TtPrinterDC, hOldPen);
-   } else {
-
-         fout = (FILE *) FrRef[frame];
-
-         /* Do we need to change the current color ? */
-         CurrentColor (fout, fg);
-         xf = PixelToPoint (x + l);
-         yf = PixelToPoint (y + h);
-         x  = PixelToPoint (x);
-         y  = PixelToPoint (y);
-
-         switch (corner) {
-                case 0: /* Top Right */
-                        fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, xf, yf, style, thick, 3);
-                        break;
-                case 1: /* Right Bottom */
-                        fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, y, xf, yf, x, yf, style, thick, 3);
-                        break;
-                case 2: /* Bottom Left */
-                        fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, x, y, style, thick, 3);
-                        break;
-                case 3: /* Left Top */
-                        fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, xf, y, style, thick, 3);
-                        break;
-		 }
    }
 #  else  /* !_WINDOWS */
 
@@ -2483,10 +2354,11 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-   int                 ym, yf, xf;
-   FILE               *fout;
 #  ifdef _WINDOWS 
    register int        Y;
+#  else  /* !_WINDOWS */
+   int                 xf, yf, ym;
+   FILE               *fout;
 #  endif /* _WINDOWS */
 
    if (y < 0)
@@ -2496,21 +2368,18 @@ int                 fg;
      return;
 
 #  ifdef _WINDOWS 
-   if (TtPrinterDC)
-     {
-       if (align == 1)
+   if (TtPrinterDC) {
+      if (align == 1)
          Y = y + (h - thick) / 2;
-       else if (align == 2)
-	 Y = y + h - thick - 1;
-       else
-	 Y = y;
+      else if (align == 2)
+           Y = y + h - thick - 1;
+      else
+          Y = y;
        
-       if (thick > 0)
+      if (thick > 0)
          DoPrintOneLine (fg, x, Y, x + l - 1, Y);
-     }
-   else
-     {
-#  endif /* _WINDOWS */
+   }
+#  else /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
 
        /* Do we need to change the current color ? */
@@ -2530,8 +2399,6 @@ int                 fg;
 	 fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
        else
 	 fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, thick, 2);
-#  ifdef _WINDOWS
-     }
 #  endif /* _WINDOWS */
 }
 
@@ -2557,55 +2424,53 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-   int                 xm, yf, xf;
-   FILE               *fout;
 #  ifdef _WINDOWS
    register int        X;
+#  else  /* !_WINDOWS */
+   int                 xm, yf, xf;
+   FILE               *fout;
 #  endif /*_WINDOWS */
 
    if (y < 0)
-     return;
+      return;
+
    y += FrameTable[frame].FrTopMargin;
+
    if (thick <= 0)
-     return;
+      return;
 
 #  ifdef _WINDOWS
-   if (TtPrinterDC)
-     {
-       if (align == 1)
+   if (TtPrinterDC) {
+      if (align == 1)
          X = x + (l - thick) / 2;
-       else if (align == 2)
-	 X = x + l - thick;
-       else
-	 X = x;
+      else if (align == 2)
+           X = x + l - thick;
+      else
+          X = x;
 
-       if (thick > 0)
+      if (thick > 0)
          DoPrintOneLine (fg, X, y, X, y + h);
-     }
+   }
+#  else  /* _WINDOWS */
+
+   fout = (FILE *) FrRef[frame];
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
+
+   l--;
+   h--;
+   xf = PixelToPoint (x + l);
+   xm = PixelToPoint (x + l / 2);
+   yf = PixelToPoint (y + h);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
+
+   if (align == 0)
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, style, thick, 2);
+   else if (align == 1)
+        fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
    else
-     {
-#  endif  /* _WINDOWS */
-
-       fout = (FILE *) FrRef[frame];
-       /* Do we need to change the current color ? */
-       CurrentColor (fout, fg);
-
-       l--;
-       h--;
-       xf = PixelToPoint (x + l);
-       xm = PixelToPoint (x + l / 2);
-       yf = PixelToPoint (y + h);
-       x = PixelToPoint (x);
-       y = PixelToPoint (y);
-
-       if (align == 0)
-	 fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, style, thick, 2);
-       else if (align == 1)
-	 fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
-       else
-	 fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, thick, 2);
-#  ifdef _WINDOWS
-     }
+       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, thick, 2);
 #  endif /* _WINDOWS */
 }
 
@@ -2653,15 +2518,9 @@ int                 fg;
          ptArray [0].y = ycour;
          ptArray [1].x = xcour + lgboite;
          ptArray [1].y = ycour;
-		 Polyline (TtPrinterDC, &ptArray, 2);
+		 Polyline (TtPrinterDC, ptArray, 2);
 		 SelectObject (TtPrinterDC, hOldPen);
 		 DeleteObject (hPen);
-	  } else {
-           fout = (FILE *) FrRef[frame];
-           xcour = PixelToPoint (x);
-           ycour = PixelToPoint (y);
-
-           fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
 	  }
 #     else  /* !_WINDOWS */
       fout = (FILE *) FrRef[frame];

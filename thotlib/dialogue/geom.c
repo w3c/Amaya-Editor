@@ -455,6 +455,7 @@ int                 maxPoints;
 # ifdef _WINDOWS
   RECT  rect;
   POINT cursorPos;
+  BOOL  input = FALSE;
 # else  /* _WINDOWS */
   int        e, f;
   int        dx, dy;
@@ -533,246 +534,143 @@ int                 maxPoints;
 
   /* loop waiting for the user input */
   ret = 0;
-  while (ret == 0)
-    {
+  while (ret == 0) {
 #ifdef _WINDOWS
       SetCursor (LoadCursor (NULL, IDC_CROSS));
       ShowCursor (TRUE);
       GetMessage (&event, NULL, 0, 0);
-#     if 0
-      eventCopy = event;
-      TtaHandleOneWindowEvent (&event);
-      if (eventCopy.message == WM_LBUTTONDOWN || eventCopy.message == WM_MBUTTONDOWN || eventCopy.message == WM_RBUTTONDOWN) {
-	newx = x + DO_ALIGN ((int) ClickX - FrameTable[frame].FrLeftMargin - x);
-	newy = y + DO_ALIGN ((int) ClickY - FrameTable[frame].FrTopMargin - y);
-	/* CHKR_LIMIT to size of the box */
-	/* new X valid position */
-	if (newx < x)
-	  lastx = x + FrameTable[frame].FrLeftMargin;
-	else if (newx > x + width)
-	  lastx = x + width + FrameTable[frame].FrLeftMargin;
-	else
-	  lastx = newx + FrameTable[frame].FrLeftMargin;
-	
-	/* new Y valid position */
-	if (newy < y)
-	  lasty = y + FrameTable[frame].FrTopMargin;
-	else if (newy > y + height)
-	  lasty = y + height + FrameTable[frame].FrTopMargin;
-	else
-	  lasty = newy + FrameTable[frame].FrTopMargin;
-	
-	x1 = lastx;
-	y1 = lasty;
-	nbpoints++;
-	
-	/* update the box buffer */
-	newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
-	newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-	/* register the min and the max */
-	if (newx < xMin)
-	  xMin = newx;
-	if (newx > xMax)
-	  xMax = newx;
-	if (newy < yMin)
-	  yMin = newy;
-	if (newy > yMax)
-	  yMax = newy;
-	AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
-	/* update the abstract box buffer */
-	newx = (int) ((float) newx * ratioX);
-	newy = (int) ((float) newy * ratioY);
-	AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
-	if (nbpoints > maxPoints && maxPoints != 0)
-	  /* we have the right number of points */
-	  ret = 1;
-	else if (maxPoints == 0 &&
-		 (eventCopy.message == WM_MBUTTONDOWN ||
-		  eventCopy.message == WM_RBUTTONDOWN))
-	  ret = 1;
-      } else if (eventCopy.message == WM_MOUSEMOVE) {
-	newx = DO_ALIGN (X_Pos - FrameTable[frame].FrLeftMargin - x);
-	newx += x;
-	newy = DO_ALIGN (Y_Pos - FrameTable[frame].FrTopMargin - y);
-	newy += y;
-	if (newx < x || newx > x + width || newy < y || newy > y + height) {
-	  /* CHKR_LIMIT to size of the box */
-	  /* new X valid position */
-	  if (newx < x)
-	    newx = x + FrameTable[frame].FrLeftMargin;
-	  else if (newx > x + width)
-	    newx = x + width + FrameTable[frame].FrLeftMargin;
-	  else
-	    newx += FrameTable[frame].FrLeftMargin;
-	  
-	  /* new Y valid position */
-	  if (newy < y)
-	    newy = y + FrameTable[frame].FrTopMargin;
-	  else if (newy > y + height)
-	    newy = y + height + FrameTable[frame].FrTopMargin;
-	  else
-	    newy += FrameTable[frame].FrTopMargin;
-	} else {
-	  newx += FrameTable[frame].FrLeftMargin;
-	  newy += FrameTable[frame].FrTopMargin;
-	}
-	
-	/* refresh the display of the two adjacent segments */
-	if (nbpoints > 1 && x1 != -1 && (newx != lastx || newy != lasty)) {
-	  POINT ptBeg;
-	  POINT ptEnd;
-	  
-	  ptBeg.x = x1;
-	  ptBeg.y = y1;
-	  ptEnd.x = lastx;
-	  ptEnd.y = lasty;
-	  
-	  DrawOutline(FrRef [frame], ptBeg, ptEnd);
-	  
-	  ptBeg.x = x1;
-	  ptBeg.y = y1;
-	  ptEnd.x = newx;
-	  ptEnd.y = newy;
-	  
-	  DrawOutline(FrRef [frame], ptBeg, ptEnd);
-	}
-	lastx = newx;
-	lasty = newy;
-      }
-#     endif /* 0 */
       if (event.message == WM_MOUSEMOVE) {
-	GetCursorPos (&cursorPos);
-	/* current pointer position */
-	newx = cursorPos.x ;
-	newy = cursorPos.y;
-	/* coordinate checking */
-	newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
-	newx += x;
-	newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
-	newy += y;
-	if ((newx - rect.left) < x || (newx - rect.left) > x + width || (newy - rect.top) < y || (newy - rect.top) > y + height) {
-	  /* CHKR_LIMIT to size of the box */
-	  /* new X valid position */
-	  if (newx - rect.left < x)
-	    newx = x + FrameTable[frame].FrLeftMargin + rect.left;
-	  else if (newx - rect.left > x + width)
-	    newx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
-	  else
-	    newx += FrameTable[frame].FrLeftMargin;
+         GetCursorPos (&cursorPos);
+         /* current pointer position */
+         newx = cursorPos.x ;
+         newy = cursorPos.y;
+         /* coordinate checking */
+         newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
+         newx += x;
+         newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
+         newy += y;
+         if ((newx - rect.left) < x || (newx - rect.left) > x + width || (newy - rect.top) < y || (newy - rect.top) > y + height) {
+            /* CHKR_LIMIT to size of the box */
+            /* new X valid position */
+            if (newx - rect.left < x)
+               newx = x + FrameTable[frame].FrLeftMargin + rect.left;
+            else if (newx - rect.left > x + width)
+                 newx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
+            else
+                 newx += FrameTable[frame].FrLeftMargin;
 	  
-	  /* new Y valid position */
-	  if (newy - rect.top < y)
-	    newy = y + FrameTable[frame].FrTopMargin + rect.top;
-	  else if (newy - rect.top > y + height)
-	    newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
-	  else
-	    newy += FrameTable[frame].FrTopMargin;
+            /* new Y valid position */
+            if (newy - rect.top < y)
+               newy = y + FrameTable[frame].FrTopMargin + rect.top;
+            else if (newy - rect.top > y + height)
+                 newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
+            else
+                 newy += FrameTable[frame].FrTopMargin;
 	  
-	  if (!SetCursorPos (newx, newy))
-	    WinErrorBox (FrRef [frame]);
-	} else {
-	  newx += FrameTable[frame].FrLeftMargin;
-	  newy += FrameTable[frame].FrTopMargin;
-	}
+            if (!SetCursorPos (newx, newy))
+               WinErrorBox (FrRef [frame]);
+		 } else {
+              newx += FrameTable[frame].FrLeftMargin;
+              newy += FrameTable[frame].FrTopMargin;
+		 }
 
-	/* refresh the display of teh two adjacent segments */
-	if (x1 != -1 && (newx != lastx || newy != lasty)) {
-	  POINT ptBeg;
-	  POINT ptEnd;
+         /* refresh the display of teh two adjacent segments */
+         if (x1 != -1 && (newx != lastx || newy != lasty)) {
+            POINT ptBeg;
+            POINT ptEnd;
 	  
-	  ptBeg.x = x1 - rect.left;
-	  ptBeg.y = y1 - rect.top;
-	  ptEnd.x = lastx - rect.left;
-	  ptEnd.y = lasty - rect.top;
-	  /* ptBeg.x = x1;
-	     ptBeg.y = y1;
-	     ptEnd.x = lastx;
-	     ptEnd.y = lasty; */
+            ptBeg.x = x1 - rect.left;
+            ptBeg.y = y1 - rect.top;
+            ptEnd.x = lastx - rect.left;
+            ptEnd.y = lasty - rect.top;
 	  
-	  DrawOutline(FrRef [frame], ptBeg, ptEnd);
+            DrawOutline(FrRef [frame], ptBeg, ptEnd);
 	  
-	  ptBeg.x = x1 - rect.left;
-	  ptBeg.y = y1 - rect.top;
-	  ptEnd.x = newx - rect.left;
-	  ptEnd.y = newy - rect.top;
-	  /* ptBeg.x = x1;
-	     ptBeg.y = y1;
-	     ptEnd.x = newx;
-	     ptEnd.y = newy; */
+            ptBeg.x = x1 - rect.left;
+            ptBeg.y = y1 - rect.top;
+            ptEnd.x = newx - rect.left;
+            ptEnd.y = newy - rect.top;
 	  
-	  DrawOutline(FrRef [frame], ptBeg, ptEnd);
-	}
-	lastx = newx;
-	lasty = newy;
-      } else {
-	/* coordinate checking */
-	newx = x + DO_ALIGN ((int) cursorPos.x - FrameTable[frame].FrLeftMargin - x);
-	newy = y + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - y);
-	/* CHKR_LIMIT to size of the box */
-	/* new X valid position */
-	if (newx - rect.left < x)
-	  lastx = x + FrameTable[frame].FrLeftMargin + rect.left;
-	else if (newx - rect.left > x + width)
-	  lastx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
-	else
-	  lastx = newx + FrameTable[frame].FrLeftMargin;
+            DrawOutline(FrRef [frame], ptBeg, ptEnd);
+		 }
+         lastx = newx;
+         lasty = newy;
+	  } else {
+           /* coordinate checking */
+           newx = x + DO_ALIGN ((int) cursorPos.x - FrameTable[frame].FrLeftMargin - x);
+           newy = y + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - y);
+           /* CHKR_LIMIT to size of the box */
+           /* new X valid position */
+           if (newx - rect.left < x)
+              lastx = x + FrameTable[frame].FrLeftMargin + rect.left;
+           else if (newx - rect.left > x + width)
+                lastx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
+           else
+                lastx = newx + FrameTable[frame].FrLeftMargin;
 	
-	/* new Y valid position */
-	if (newy - rect.top< y)
-	  lasty = y + FrameTable[frame].FrTopMargin + rect.top;
-	else if (newy - rect.top> y + height)
-	  lasty = y + height + FrameTable[frame].FrTopMargin + rect.top;
-	else
-	  lasty = newy + FrameTable[frame].FrTopMargin;
+           /* new Y valid position */
+           if (newy - rect.top< y)
+              lasty = y + FrameTable[frame].FrTopMargin + rect.top;
+           else if (newy - rect.top> y + height)
+                lasty = y + height + FrameTable[frame].FrTopMargin + rect.top;
+           else
+                lasty = newy + FrameTable[frame].FrTopMargin;
 	
-	switch (event.message) {
-	case WM_LBUTTONDOWN:
-	case WM_MBUTTONDOWN:
-	case WM_RBUTTONDOWN:
-	  if (newx - rect.left< x || newx - rect.left > x + width || newy - rect.top < y || newy - rect.top > y + height)
-	    if (!SetCursorPos (lastx, lasty))
-	      WinErrorBox (FrRef [frame]);
-	  break;
+           switch (event.message) {
+                  case WM_LBUTTONDOWN:
+                  case WM_MBUTTONDOWN:
+                  case WM_RBUTTONDOWN:
+                       input = TRUE;
+                       if (newx - rect.left< x || newx - rect.left > x + width || newy - rect.top < y || newy - rect.top > y + height)
+	                      if (!SetCursorPos (lastx, lasty))
+	                         WinErrorBox (FrRef [frame]);
+	                   break;
 	  
-	case WM_LBUTTONUP:
-	case WM_MBUTTONUP:
-	  /* left button keep the last segment built */
-	  /* keep the new segment first point coordinates */
-	  x1 = lastx;
-	  y1 = lasty;
-	  nbpoints++;
+	              case WM_LBUTTONUP:
+	              case WM_MBUTTONUP:
+                       if (input) {
+                          input = FALSE;
+	                      /* left button keep the last segment built */
+	                      /* keep the new segment first point coordinates */
+	                      x1 = lastx;
+	                      y1 = lasty;
+                          nbpoints++;
 	  
-	  /* update the box buffer */
-	  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x - rect.left) * 1000;
-	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y - rect.top) * 1000;
-	  /* register the min and the max */
-	  if (newx < xMin)
-	    xMin = newx;
-	  if (newx > xMax)
-	    xMax = newx;
-	  if (newy < yMin)
-	    yMin = newy;
-	  if (newy > yMax)
-	    yMax = newy;
-	  AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
-	  /* update the abstract box buffer */
-	  newx = (int) ((float) newx * ratioX);
-	  newy = (int) ((float) newy * ratioY);
-	  AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
+                          /* update the box buffer */
+                          newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x - rect.left) * 1000;
+                          newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y - rect.top) * 1000;
+                          /* register the min and the max */
+                          if (newx < xMin)
+                             xMin = newx;
+                          if (newx > xMax)
+                             xMax = newx;
+                          if (newy < yMin)
+                             yMin = newy;
+                          if (newy > yMax)
+                             yMax = newy;
+                          AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
+                          /* update the abstract box buffer */
+                          newx = (int) ((float) newx * ratioX);
+                          newy = (int) ((float) newy * ratioY);
+                          AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
 
-	  if (maxPoints == 0 && event.message == WM_MBUTTONUP)
-	    /* any other button : end of user input */
-	    ret = 1;
-	  break;
+                          if (nbpoints > maxPoints && maxPoints != 0)
+                             /* we have the right number of points */
+                             ret = 1;
+                          else if (maxPoints == 0 && event.message == WM_MBUTTONUP)
+                               /* any other button : end of user input */
+                               ret = 1;
+					   }
+                       break;
 	  
-	case WM_RBUTTONUP:
-	  if (maxPoints == 0)
-	    ret = 1;
-	  break;
+                  case WM_RBUTTONUP:
+                       if (maxPoints == 0)
+                          ret = 1;
+                       break;
 	  
-	default: break;
-	}
-      }
+                  default: break;
+		   }
+	  }
 #else /* !_WINDOWS */
       if (XPending (TtDisplay) == 0)
 	{
