@@ -622,21 +622,11 @@ void                PasteCommand ()
 	      /* on a effectivement colle' le contenu du buffer */
 	     {
 	        /* register the pasted elements in the editing history */
-		if (NCreatedElements > 1)
-		   OpenHistorySequence (pDoc);
+		OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
+				     lastChar-1);
 		for (i = 0; i < NCreatedElements; i++)
-		   {
-		   AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE,
-				       firstSel, lastSel, firstChar, lastChar-1);
-		   /* record the current selection only the first time */
-		   if (i == 0)
-		      {
-		      firstSel = NULL;
-		      lastSel = NULL;
-		      }
-		   }
-		if (NCreatedElements > 1)
-		   CloseHistorySequence (pDoc);
+		   AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
+		CloseHistorySequence (pDoc);
 		/* il faudra changer les labels lors du prochain Coller */
 		ChangeLabel = TRUE;
 		if (pSplitText != NULL)
@@ -975,8 +965,7 @@ void                TtcCreateElement (doc, view)
 {
    PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling,
                        pClose, pAncest, pElem, pParent, pElDelete, pPrevious,
-                       pNext, pElReplicate, pAggregEl,
-		       firstSelHist, lastSelHist;
+                       pNext, pElReplicate, pAggregEl;
    PtrDocument         pDoc;
    PtrSSchema          pSS;
    NotifyElement       notifyEl;
@@ -1008,8 +997,6 @@ void                TtcCreateElement (doc, view)
 	pSS = NULL;
 	deleteEmpty = FALSE;
 	histSeq = FALSE;	/* no history sequence open */
-	firstSelHist = firstSel;
-	lastSelHist = lastSel;
 	if (firstChar > 0 && firstChar == lastChar)
 	   lastChar--;
 
@@ -1046,10 +1033,12 @@ void                TtcCreateElement (doc, view)
 				 /* store the editing operation in the history */
 				 if (!histSeq)
 				    {
-				    OpenHistorySequence (pDoc);
+				    OpenHistorySequence (pDoc, firstSel,
+						lastSel, firstChar, lastChar);
 				    histSeq = TRUE;
 				    }
-				 AddEditOpInHistory (pParent->ElParent, pDoc, TRUE, TRUE, firstSelHist, lastSelHist, firstChar, lastChar);
+				 AddEditOpInHistory (pParent->ElParent, pDoc,
+						     TRUE, TRUE);
 			         if (!BreakElement (pParent->ElParent, pElem,
 						    0, FALSE, TRUE))
 				   /* operation failed, remove it from history */
@@ -1057,12 +1046,10 @@ void                TtcCreateElement (doc, view)
 				 else
 				   /* element pParent has been split */
 				   {
-				    /*the current selection has been recorded*/
-				    firstSelHist = NULL; lastSelHist = NULL;
 				    /* record the element that has been
 				       created by BreakElement: it has to be
 				       deleted when undoing the command */
-				    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE, NULL, NULL, 0, 0);
+				    AddEditOpInHistory (pParent->ElParent->ElNext, pDoc, FALSE, TRUE);
 				    SRuleForSibling (pDoc, pParent, FALSE, 1,
 					     &typeNum, &pSS, &list, &optional);
 				    if (typeNum > 0)
@@ -1133,21 +1120,19 @@ void                TtcCreateElement (doc, view)
 			       /* store the editing operation in the history */
                                if (!histSeq)
                                   {
-                                  OpenHistorySequence (pDoc);
+                                  OpenHistorySequence (pDoc, firstSel, lastSel,
+						       firstChar, lastChar);
                                   histSeq = TRUE;
                                   }
-			       AddEditOpInHistory (pParent, pDoc, TRUE, TRUE,
-						   firstSelHist, lastSelHist,
-						   firstChar, lastChar);
+			       AddEditOpInHistory (pParent, pDoc, TRUE, TRUE);
+						   
 			       if (BreakElement (pParent, pElem, 0, FALSE, FALSE))
 				    /* element pParent has been split */
 				 {
-				    /*the current selection has been recorded*/
-				    firstSelHist = NULL; lastSelHist = NULL;
 				    /* record the element that has been
 				       created by BreakElement: it has to be
 				       deleted when undoing the command */
-				    AddEditOpInHistory (pParent->ElNext, pDoc, FALSE, TRUE, NULL, NULL, 0, 0);
+				    AddEditOpInHistory (pParent->ElNext, pDoc, FALSE, TRUE);
 				    ready = TRUE;
 				    pElDelete = pElem;
 				    createAfter = TRUE;
@@ -1232,20 +1217,19 @@ void                TtcCreateElement (doc, view)
 		   /* register the operation in history */
                    if (!histSeq)
                       {
-                      OpenHistorySequence (pDoc);
+                      OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
+					   lastChar);
                       histSeq = TRUE;
                       }
-		   AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE,
-			   firstSelHist, lastSelHist, firstChar, lastChar);
+		   AddEditOpInHistory (pElReplicate, pDoc, TRUE, TRUE);
+			   
 		   if (BreakElement (NULL, firstSel, firstChar, TRUE, TRUE))
 		      {
-		      /* the current selection has been recorded */
-		      firstSelHist = NULL; lastSelHist = NULL;
 		      /* record the element that has been created by
 			 BreakElement: it has to be deleted when undoing the
 			 command */
 		      AddEditOpInHistory (pElReplicate->ElNext, pDoc, FALSE,
-					  TRUE, NULL, NULL, 0, 0);
+					  TRUE);
 		      CloseHistorySequence (pDoc);
 		      return;
 		      }
@@ -1358,13 +1342,12 @@ void                TtcCreateElement (doc, view)
 		       deleteEmpty = TRUE;
 		       if (!histSeq)
 			 {
-			 OpenHistorySequence (pDoc);
+			 OpenHistorySequence (pDoc, firstSel, lastSel,
+					      firstChar, lastChar);
 			 histSeq = TRUE;
 			 }
-		       AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE,
-			       firstSelHist, lastSelHist, firstChar, lastChar);
-		       /* the current selection has been recorded */
-		       firstSelHist = NULL; lastSelHist = NULL;
+		       AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
+			       
 		       pPrevious = PreviousNotPage (pElDelete);
 		       pNext = NextNotPage (pElDelete);
 		       DestroyAbsBoxes (pElDelete, pDoc, TRUE);
@@ -1438,14 +1421,13 @@ void                TtcCreateElement (doc, view)
 			  /* l'element pE n'est plus le premier fils de son pere */
 			  ChangeFirstLast (pE, pDoc, TRUE, TRUE);
 		    }
-		  if (deleteEmpty)
-		    {
-		    AddEditOpInHistory (pNew, pDoc, FALSE, TRUE,
-					NULL, NULL, 0, 0);
-		    }
-		  else
-		    AddEditOpInHistory (pNew, pDoc, FALSE, TRUE,
-			firstSelHist, lastSelHist, firstChar, lastChar);
+		  if (!histSeq)
+		     {
+		     OpenHistorySequence (pDoc, firstSel, lastSel,
+					  firstChar, lastChar);
+		     histSeq = TRUE;
+		     }
+		  AddEditOpInHistory (pNew, pDoc, FALSE, TRUE);
 		  /* traite les exclusions des elements crees */
 		  RemoveExcludedElem (&pNew, pDoc);
 		  /* traite les attributs requis des elements crees */

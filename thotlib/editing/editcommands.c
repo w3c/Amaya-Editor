@@ -186,8 +186,9 @@ int		lastCharIndex
    boolean             assoc;
 
    GetDocAndView (frame, &pDoc, &view, &assoc);
-   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE, pEl, pEl, firstCharIndex,
-		       lastCharIndex);
+   OpenHistorySequence (pDoc, pEl, pEl, firstCharIndex, lastCharIndex);
+   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
+   CloseHistorySequence (pDoc);
 }
 
 /*----------------------------------------------------------------------

@@ -37,6 +37,14 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
+/* type of an editing operation recorded in the history */
+typedef enum
+{
+	EtDelimiter,	/* Sequence delimiter */
+	EtElement,	/* Operation on elements */
+	EtAttribute	/* operation on an attribute */
+} EditOpType;
+
 typedef struct _EditOperation *PtrEditOperation;
 
 /* Description of an editing operation in the history of editing commands */
@@ -46,25 +54,42 @@ typedef struct _EditOperation
 					 history */
   PtrEditOperation EoPreviousOp;      /* previous operation in the editing
 					 history */
-  boolean	   EoToBeContinued;   /* this operation is part of a sequence
-					 to be undone at once */
-  PtrElement	   EoParent;	      /* parent of elements to be inserted to
-					 undo the operation */
-  PtrElement	   EoPreviousSibling; /* previous sibling of first element to
-					 be inserted to undo the operation */
-  PtrElement	   EoCreatedElement;  /* element to be removed to undo the
-					 operation */
-  PtrElement	   EoSavedElement;    /* copy of the element to be inserted to
-					 undo the operation */
-  PtrElement       EoFirstSelectedEl; /* first selected element */
-  int              EoFirstSelectedChar; /* index of first selected character in
-					 the first selected element, if it's a
-					 character string */
-  PtrElement       EoLastSelectedEl;  /* last selected element */
-  int              EoLastSelectedChar;/* index of last selected character in
-					 the last selected element, if it's a
-					 character string */
+  EditOpType	   EoType;	      /* type of operation */
+union
+  {
+  struct	/* EoType = EtDelimiter */
+     {
+     PtrElement    _EoFirstSelectedEl_;  /* first selected element */
+     int           _EoFirstSelectedChar_;/* index of first selected character
+					    in the first selected element,
+					    if it's acharacter string */
+     PtrElement    _EoLastSelectedEl_;  /* last selected element */
+     int           _EoLastSelectedChar_;/* index of last selected character in
+					   the last selected element, if it's a
+					   character string */
+     } s0;
+  struct	/* EoType = EtElement */
+     {
+     PtrElement	   _EoParent_;	        /* parent of elements to be inserted to
+					   undo the operation */
+     PtrElement	   _EoPreviousSibling_; /* previous sibling of first element to
+					   be inserted to undo the operation */
+     PtrElement	   _EoCreatedElement_;  /* element to be removed to undo the
+					   operation */
+     PtrElement	   _EoSavedElement_;    /* copy of the element to be inserted
+					   to undo the operation */
+     } s1;
+  } u;
 } EditOperation;
+
+#define EoFirstSelectedEl u.s0._EoFirstSelectedEl_
+#define EoFirstSelectedChar u.s0._EoFirstSelectedChar_
+#define EoLastSelectedEl u.s0._EoLastSelectedEl_
+#define EoLastSelectedChar u.s0._EoLastSelectedChar_
+#define EoParent u.s1._EoParent_
+#define EoPreviousSibling u.s1._EoPreviousSibling_
+#define EoCreatedElement u.s1._EoCreatedElement_
+#define EoSavedElement u.s1._EoSavedElement_
 
 /* Current status of editing history */
    /* document whose editing history is recorded */
@@ -75,8 +100,6 @@ typedef struct _EditOperation
    static int NbEditsInHistory = 0;
    /* a single editing command has started a sequence of editing operations */
    static boolean EditSequence = FALSE;
-   /* if EditSequence, the first operation of the sequence is expected */
-   static boolean FirstInSequence = FALSE;
    /* maximum number of editing operations recorded in the history */
 #define MAX_EDIT_HISTORY_LENGTH 20
 
@@ -119,43 +142,6 @@ static void UpdateHistoryLength (diff, pDoc)
 }
 
 /*----------------------------------------------------------------------
-   FreeSavedElementsHist
-   free the saved elements associated with editing operation editOp
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void FreeSavedElementsHist (PtrEditOperation editOp, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void FreeSavedElementsHist (editOp, pDoc)
-PtrEditOperation editOp;
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
-{
-   PtrElement	pEl;
-
-   pEl = editOp->EoSavedElement;
-   if (pEl)
-      {
-      /* if the saved selection is in the freed element, cancel it */
-      if (editOp->EoFirstSelectedEl)
-	 if (ElemIsWithinSubtree (editOp->EoFirstSelectedEl, pEl))
-	    {
-	    editOp->EoFirstSelectedEl = NULL;
-	    editOp->EoLastSelectedEl = NULL;
-	    }
-      if (editOp->EoLastSelectedEl)
-	 if (ElemIsWithinSubtree (editOp->EoLastSelectedEl, pEl))
-	    {
-	    editOp->EoFirstSelectedEl = NULL;
-	    editOp->EoLastSelectedEl = NULL;
-	    }
-      /* free the saved element */
-      DeleteElement (&pEl, pDoc);
-      }
-   editOp->EoSavedElement = NULL;
-}
-
-/*----------------------------------------------------------------------
    CancelAnEdit
    Remove and delete an editing operation from the history
   ----------------------------------------------------------------------*/
@@ -168,6 +154,9 @@ PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
+   PtrElement		pEl;
+   PtrEditOperation	prevOp;
+
    /* Error if there is no current history or if the current history is not
       related to that document */
    if (!HistoryDoc || HistoryDoc != pDoc)
@@ -182,13 +171,51 @@ PtrDocument pDoc;
       editOp->EoNextOp->EoPreviousOp = editOp->EoPreviousOp;
    if (editOp->EoPreviousOp)
       editOp->EoPreviousOp->EoNextOp = editOp->EoNextOp;
-   /* free the saved elements associated with that editing operation */
-   FreeSavedElementsHist (editOp, pDoc);
+   if (editOp->EoType == EtElement)
+      {
+      pEl = editOp->EoSavedElement;
+      if (pEl)
+         {
+         /* if the saved selection is in the freed element, cancel it */
+	 /* get the delimiter that contains the selection */
+	 prevOp = editOp;
+	 do
+	    prevOp = prevOp->EoPreviousOp;
+	 while (prevOp && prevOp->EoType != EtDelimiter);
+	 /* check that selection */
+	 if (prevOp)
+	    {
+            if (prevOp->EoFirstSelectedEl)
+	       if (ElemIsWithinSubtree (prevOp->EoFirstSelectedEl, pEl))
+	          {
+	          prevOp->EoFirstSelectedEl = NULL;
+	          prevOp->EoLastSelectedEl = NULL;
+	          }
+            if (prevOp->EoLastSelectedEl)
+	       if (ElemIsWithinSubtree (prevOp->EoLastSelectedEl, pEl))
+	          {
+	          prevOp->EoFirstSelectedEl = NULL;
+	          prevOp->EoLastSelectedEl = NULL;
+	          }
+	    }
+         /* free the saved element */
+         DeleteElement (&pEl, pDoc);
+         }
+      editOp->EoSavedElement = NULL;
+      }
+
+   if (editOp->EoType == EtAttribute)
+      {
+      /*********/;
+      }
+
+   if (editOp->EoType == EtDelimiter)
+      /* update the number of editing commands remaining in the history */
+      UpdateHistoryLength (-1, pDoc);
+
    /* free the editing operation descriptor */
    TtaFreeMemory (editOp);
    editOp = NULL;
-   /* update the number of editing operations remaining in the history */
-   UpdateHistoryLength (-1, pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -218,16 +245,15 @@ PtrDocument pDoc;
    LastEdit = NULL;
    NbEditsInHistory = 0;
    EditSequence = FALSE;
-   FirstInSequence = FALSE;
 }
 
 /*----------------------------------------------------------------------
    ChangePointersOlderEdits
    If Op and older editing operations in the history refer to elements
-   that have been copied from subtree pEl, change these reference to the
+   that have been copied from subtree pTree, change these reference to the
    corresponding copies
    If the selection saved in Op refers to elements that have been copied
-   from subtree pEl, change the saved selection to the corresponding copies.
+   from subtree pTree, change the saved selection to the corresponding copies.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void ChangePointersOlderEdits (PtrEditOperation Op, PtrElement pTree)
@@ -238,36 +264,59 @@ PtrElement pTree;
 
 #endif /* __STDC__ */
 {
-  PtrEditOperation	editOp;
+  PtrEditOperation	editOp, prevOp;
 
   editOp = Op->EoPreviousOp;
   while (editOp)
     {
-    if (editOp->EoParent)
-      if (ElemIsWithinSubtree(editOp->EoParent, pTree))
-	editOp->EoParent = editOp->EoParent->ElCopy;
-    if (editOp->EoPreviousSibling)
-      if (ElemIsWithinSubtree(editOp->EoPreviousSibling, pTree))
-	editOp->EoPreviousSibling = editOp->EoPreviousSibling->ElCopy;
-    if (editOp->EoCreatedElement)
-      if (ElemIsWithinSubtree(editOp->EoCreatedElement, pTree))
-	editOp->EoCreatedElement = editOp->EoCreatedElement->ElCopy;
-    if (editOp->EoFirstSelectedEl)
-      if (ElemIsWithinSubtree(editOp->EoFirstSelectedEl, pTree))
-	editOp->EoFirstSelectedEl = editOp->EoFirstSelectedEl->ElCopy;
-    if (editOp->EoLastSelectedEl)
-      if (ElemIsWithinSubtree(editOp->EoLastSelectedEl, pTree))
-	editOp->EoLastSelectedEl = editOp->EoLastSelectedEl->ElCopy;
+    if (editOp->EoType == EtElement)
+       {
+       if (editOp->EoParent)
+         if (ElemIsWithinSubtree(editOp->EoParent, pTree))
+	   editOp->EoParent = editOp->EoParent->ElCopy;
+       if (editOp->EoPreviousSibling)
+         if (ElemIsWithinSubtree(editOp->EoPreviousSibling, pTree))
+	   editOp->EoPreviousSibling = editOp->EoPreviousSibling->ElCopy;
+       if (editOp->EoCreatedElement)
+         if (ElemIsWithinSubtree(editOp->EoCreatedElement, pTree))
+	   editOp->EoCreatedElement = editOp->EoCreatedElement->ElCopy;
+       }
+    if (editOp->EoType == EtDelimiter)
+       {
+       if (editOp->EoFirstSelectedEl)
+         if (ElemIsWithinSubtree(editOp->EoFirstSelectedEl, pTree))
+	   editOp->EoFirstSelectedEl = editOp->EoFirstSelectedEl->ElCopy;
+       if (editOp->EoLastSelectedEl)
+         if (ElemIsWithinSubtree(editOp->EoLastSelectedEl, pTree))
+	   editOp->EoLastSelectedEl = editOp->EoLastSelectedEl->ElCopy;
+       }
+    if (editOp->EoType == EtAttribute)
+       {
+       /**********/;
+       }
     editOp = editOp->EoPreviousOp;
     }
-  /* if the current selection is in the copied element, set the saved
-     selection to the equivalent elements in the copy */
-  if (Op->EoFirstSelectedEl)
-     if (ElemIsWithinSubtree (Op->EoFirstSelectedEl, pTree))
-	Op->EoFirstSelectedEl = Op->EoFirstSelectedEl->ElCopy;
-  if (Op->EoLastSelectedEl)
-     if (ElemIsWithinSubtree (Op->EoLastSelectedEl, pTree))
-	Op->EoLastSelectedEl = Op->EoLastSelectedEl->ElCopy;
+
+  if (Op->EoType == EtElement)
+    {
+    /* if the current selection is in the copied element, set the saved
+    selection to the equivalent elements in the copy */
+    /* first, get the delimiter that contains the selection */
+    prevOp = Op;
+    do
+	prevOp = prevOp->EoPreviousOp;
+    while (prevOp && prevOp->EoType != EtDelimiter);
+    /* then check that selection */
+    if (prevOp)
+       {
+       if (prevOp->EoFirstSelectedEl)
+          if (ElemIsWithinSubtree (prevOp->EoFirstSelectedEl, pTree))
+	     prevOp->EoFirstSelectedEl = prevOp->EoFirstSelectedEl->ElCopy;
+       if (prevOp->EoLastSelectedEl)
+          if (ElemIsWithinSubtree (prevOp->EoLastSelectedEl, pTree))
+	     prevOp->EoLastSelectedEl = prevOp->EoLastSelectedEl->ElCopy;
+       }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -280,24 +329,16 @@ PtrElement pTree;
 	 restored when the operation will be undone.
    removeWhenUndoing: element pEl to must be deleted when the operation will
 	 be undone.
-   firstSel, lastSel, firstSelChar, lastSelChar: indicate the selection
-	 that must be set when the operation will be undone.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, boolean save,
-			 boolean removeWhenUndoing, PtrElement firstSel,
-		         PtrElement lastSel, int firstSelChar, int lastSelChar)
+			 boolean removeWhenUndoing)
 #else  /* __STDC__ */
-void AddEditOpInHistory (pEl, pDoc, save, removeWhenUndoing,
-			 firstSel, lastSel, firstSelChar, lastSelChar)
+void AddEditOpInHistory (pEl, pDoc, save, removeWhenUndoing)
 PtrElement pEl;
 PtrDocument pDoc;
 boolean save;
 boolean removeWhenUndoing;
-PtrElement firstSel;
-PtrElement lastSel;
-int firstSelChar;
-int lastSelChar;
 
 #endif /* __STDC__ */
 {
@@ -306,17 +347,18 @@ int lastSelChar;
 
    if (!pEl)
       return;
-   /* if an editing sequence is open, changing document is not allowed */
-   if (EditSequence && HistoryDoc != pDoc)
-      {
+  /* error if no sequence open */
+   if (!EditSequence)
+     {
       HistError (2);
       return;
+     }
+   /* if an editing sequence is open, changing document is not allowed */
+   if (HistoryDoc != pDoc)
+      {
+      HistError (3);
+      return;
       }
-   /* if this operation does not concern the same document as the previous
-      ones, clear the current editing history and start a new one */
-   if (HistoryDoc && HistoryDoc != pDoc)
-      ClearHistory (pDoc);
-   HistoryDoc = pDoc;
    /* create a new operation descriptor in the history */
    editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
    /* link the new operation descriptor in the history */
@@ -325,10 +367,7 @@ int lastSelChar;
       LastEdit->EoNextOp = editOp;
    LastEdit = editOp;
    editOp->EoNextOp = NULL;
-   if (EditSequence && !FirstInSequence)
-      editOp->EoToBeContinued = TRUE;
-   else
-      editOp->EoToBeContinued = FALSE;
+   editOp->EoType = EtElement;
    /* record the location in the abstract tree concerned by the operation */
    editOp->EoParent = pEl->ElParent;
    editOp->EoPreviousSibling = pEl->ElPrevious;
@@ -337,11 +376,6 @@ int lastSelChar;
    else
       editOp->EoCreatedElement = NULL;
    editOp->EoSavedElement = NULL;
-   editOp->EoFirstSelectedEl = firstSel;
-   editOp->EoFirstSelectedChar = firstSelChar;
-   editOp->EoLastSelectedEl = lastSel;
-   editOp->EoLastSelectedChar = lastSelChar;
-   UpdateHistoryLength (1, pDoc);
 
    if (save)
      /* copy the elements concerned by the operation and attach them to the
@@ -356,19 +390,6 @@ int lastSelChar;
 	  have been copied, change these reference to the copies */
        ChangePointersOlderEdits (editOp, pEl);
      }
-
-   /* if a sequence of operations is open, there is now at least one element
-      in the sequence */
-   if (EditSequence)
-      FirstInSequence = FALSE;
-
-   /* If the history is too long, cancel the oldest operation in the history */
-   if (NbEditsInHistory > MAX_EDIT_HISTORY_LENGTH)
-      {
-      while (editOp->EoPreviousOp)
-	editOp = editOp->EoPreviousOp;
-      CancelAnEdit (editOp, pDoc);
-      }
 }
 
 /*----------------------------------------------------------------------
@@ -395,36 +416,44 @@ PtrDocument pDoc;
       HistError (6);
       return;
      }
+   if (LastEdit->EoType != EtElement)
+     /* Not an operation on elements. Error */
+     {
+      HistError (7);
+      return;
+     }
    /* change the pointers in older edits that refer to the saved elements
       that will be released */
    if (LastEdit->EoSavedElement)
       ChangePointersOlderEdits (LastEdit, LastEdit->EoSavedElement);
-   if (EditSequence && !LastEdit->EoToBeContinued)
-     /* the latest operation was the first in a sequence. The next one
-	will again be the first */
-     FirstInSequence = TRUE;
    /* Remove the latest operation descriptor */
    CancelAnEdit (LastEdit, pDoc);
 }
 
-
 /*----------------------------------------------------------------------
    OpenHistorySequence
    Open a sequence of editing operations in the history.
+   firstSel, lastSel, firstSelChar, lastSelChar: indicate the selection
+	 that must be set when the operation will be undone.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void OpenHistorySequence (PtrDocument pDoc)
-#else  /* __STDC__ */
-void OpenHistorySequence (pDoc)
-PtrDocument pDoc;
+void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstSelChar, int lastSelChar)
 
+#else  /* __STDC__ */
+void OpenHistorySequence (pDoc, firstSel, lastSel, firstSelChar, lastSelChar)
+PtrDocument pDoc;
+PtrElement firstSel;
+PtrElement lastSel;
+int firstSelChar;
+int lastSelChar;
 #endif /* __STDC__ */
 {
+   PtrEditOperation	editOp, nextOp;
 
   /* can not open a sequence if a sequence is already open */
   if (EditSequence)
     {
-      HistError (7);
+      HistError (8);
       return;
     }
   /* if it's for a different document, clear the current history and start
@@ -433,7 +462,44 @@ PtrDocument pDoc;
      ClearHistory (pDoc);
   HistoryDoc = pDoc;
   EditSequence = TRUE;
-  FirstInSequence = TRUE;
+
+  /* create a new operation descriptor in the history */
+  editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
+  /* link the new operation descriptor in the history */
+  editOp->EoPreviousOp = LastEdit;
+  if (LastEdit)
+     LastEdit->EoNextOp = editOp;
+  LastEdit = editOp;
+  editOp->EoNextOp = NULL;
+  editOp->EoType = EtDelimiter;
+  editOp->EoFirstSelectedEl = firstSel;
+  editOp->EoFirstSelectedChar = firstSelChar;
+  editOp->EoLastSelectedEl = lastSel;
+  editOp->EoLastSelectedChar = lastSelChar;
+
+  /* update the number of editing commands remaining in the history */
+  UpdateHistoryLength (1, pDoc);
+
+  /* If the history is too long, cancel the oldest sequence in the history */
+  if (NbEditsInHistory > MAX_EDIT_HISTORY_LENGTH)
+      {
+      /* get the last descriptor */
+      while (editOp->EoPreviousOp)
+	 editOp = editOp->EoPreviousOp;
+      /* delete all descriptors up to the first Delimiter */
+      do
+	 {
+	 if (editOp->EoType == EtDelimiter)
+	    editOp = NULL;
+	 else
+	    {
+	    nextOp = editOp->EoNextOp;
+            CancelAnEdit (editOp, pDoc);
+	    editOp = nextOp;
+	    }
+	 }
+      while (editOp);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -452,15 +518,18 @@ PtrDocument pDoc;
   /* error if no sequence open */
    if (!EditSequence)
      {
-      HistError (8);
+      HistError (9);
       return;
      }
    /* error if changing document */
    if (!HistoryDoc || HistoryDoc != pDoc)
      {
-      HistError (9);
+      HistError (10);
       return;
      }
+   if (LastEdit->EoType == EtDelimiter)
+     /* empty sequence, remove it */
+     CancelAnEdit (LastEdit, pDoc);
    /* sequence closed */
    EditSequence = FALSE;
 }
@@ -501,72 +570,79 @@ View                view;
    doit = TRUE;
    while (doit)
       {
-      /* delete the element that have to be removed from the abstract tree */
-      if (LastEdit->EoCreatedElement)
-         {
-	 pEl = LastEdit->EoCreatedElement;
-	 /* tell the application that an element will be removed from the
-	    abstract tree */
-	 SendEventSubTree (TteElemDelete, pDoc, pEl, TTE_STANDARD_DELETE_LAST_ITEM);
-	 /* prepare event TteElemDelete to be sent to the application */
-	 notifyEl.event = TteElemDelete;
-	 notifyEl.document = doc;
-	 notifyEl.element = (Element) (pEl->ElParent);
-	 notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	 notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	 nSiblings = 0;
-	 pSibling = pEl;
-	 while (pSibling->ElPrevious != NULL)
-	    {
-	    nSiblings++;
-	    pSibling = pSibling->ElPrevious;
-	    }
-	 notifyEl.position = nSiblings;
-	 /* remove an element */
-         TtaDeleteTree ((Element)pEl, doc);
-	 /* tell the application that an element has been removed */
-	 CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+      if (LastEdit->EoType == EtDelimiter)
+	 {
+         /* set the selection that is recorded */
+         if (LastEdit->EoFirstSelectedEl && LastEdit->EoLastSelectedEl)
+	   {
+           if (LastEdit->EoFirstSelectedChar > 0)
+             {
+             if (LastEdit->EoFirstSelectedEl == LastEdit->EoLastSelectedEl)
+   	        i = LastEdit->EoLastSelectedChar;
+             else
+   	        i = TtaGetTextLength (LastEdit->EoFirstSelectedEl);
+             TtaSelectString (doc, LastEdit->EoFirstSelectedEl,
+			      LastEdit->EoFirstSelectedChar, i);
+             }
+           else
+             TtaSelectElement (doc, LastEdit->EoFirstSelectedEl);
+           if (LastEdit->EoFirstSelectedEl != LastEdit->EoLastSelectedEl)
+             TtaExtendSelection (doc, LastEdit->EoLastSelectedEl,
+			         LastEdit->EoLastSelectedChar);
+	   }
+         doit = FALSE;
 	 }
+      if (LastEdit->EoType == EtAttribute)
+	 {
+	 /************/;
+	 }
+      if (LastEdit->EoType == EtElement)
+	 {
+         /* delete the element that have to be removed from the abstract tree*/
+         if (LastEdit->EoCreatedElement)
+            {
+	    pEl = LastEdit->EoCreatedElement;
+	    /* tell the application that an element will be removed from the
+	    abstract tree */
+	    SendEventSubTree (TteElemDelete, pDoc, pEl, TTE_STANDARD_DELETE_LAST_ITEM);
+	    /* prepare event TteElemDelete to be sent to the application */
+	    notifyEl.event = TteElemDelete;
+	    notifyEl.document = doc;
+	    notifyEl.element = (Element) (pEl->ElParent);
+	    notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+	    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+	    nSiblings = 0;
+	    pSibling = pEl;
+	    while (pSibling->ElPrevious != NULL)
+	       {
+	       nSiblings++;
+	       pSibling = pSibling->ElPrevious;
+	       }
+	    notifyEl.position = nSiblings;
+	    /* remove an element */
+            TtaDeleteTree ((Element)pEl, doc);
+	    /* tell the application that an element has been removed */
+	    CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+	    }
+	 LastEdit->EoCreatedElement;
 
-      /* insert the saved element in the abstract tree */
-      if (LastEdit->EoSavedElement)
-         {
-         if (LastEdit->EoPreviousSibling)
-            TtaInsertSibling ((Element)(LastEdit->EoSavedElement),
+         /* insert the saved element in the abstract tree */
+         if (LastEdit->EoSavedElement)
+            {
+            if (LastEdit->EoPreviousSibling)
+               TtaInsertSibling ((Element)(LastEdit->EoSavedElement),
 			  (Element)(LastEdit->EoPreviousSibling), FALSE, doc);
-         else
-            TtaInsertFirstChild (&(LastEdit->EoSavedElement),
-				 (Element)(LastEdit->EoParent), doc);
-         /* send event ElemPaste.Post to the application */
-         NotifySubTree (TteElemPaste, pDoc, LastEdit->EoSavedElement, 0);
-         }
-      LastEdit->EoSavedElement = NULL;
-
-      /* set the selection that is recorded */
-      if (LastEdit->EoFirstSelectedEl && LastEdit->EoLastSelectedEl)
-	{
-        if (LastEdit->EoFirstSelectedChar > 0)
-          {
-          if (LastEdit->EoFirstSelectedEl == LastEdit->EoLastSelectedEl)
-   	     i = LastEdit->EoLastSelectedChar;
-          else
-   	     i = TtaGetTextLength (LastEdit->EoFirstSelectedEl);
-          TtaSelectString (doc, LastEdit->EoFirstSelectedEl,
-			   LastEdit->EoFirstSelectedChar, i);
-          }
-        else
-          TtaSelectElement (doc, LastEdit->EoFirstSelectedEl);
-        if (LastEdit->EoFirstSelectedEl != LastEdit->EoLastSelectedEl)
-          TtaExtendSelection (doc, LastEdit->EoLastSelectedEl,
-			      LastEdit->EoLastSelectedChar);
-	}
-   
-      doit = LastEdit->EoToBeContinued;
+            else
+               TtaInsertFirstChild (&(LastEdit->EoSavedElement),
+				    (Element)(LastEdit->EoParent), doc);
+            /* send event ElemPaste.Post to the application */
+            NotifySubTree (TteElemPaste, pDoc, LastEdit->EoSavedElement, 0);
+            }
+         LastEdit->EoSavedElement = NULL;
+	 }
    
       /* the most recent editing operation in the history has been undone.
          Remove it from the history */
       CancelAnEdit (LastEdit, pDoc);
-      if (!LastEdit)
-         doit = FALSE;
       }
 }

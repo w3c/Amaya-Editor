@@ -9,13 +9,13 @@
 extern void AddEditOpInHistory ( PtrElement pEl,
                                  PtrDocument pDoc,
                                  boolean save,
-                                 boolean removeWhenUndoing,
-                                 PtrElement firstSel,
-                                 PtrElement lastSel,
-                                 int firstSelChar,
-                                 int lastSelChar );
+                                 boolean removeWhenUndoing );
 extern void CancelLastEditFromHistory ( PtrDocument pDoc );
-extern void OpenHistorySequence ( PtrDocument pDoc );
+extern void OpenHistorySequence ( PtrDocument pDoc,
+                                  PtrElement firstSel,
+                                  PtrElement lastSel,
+                                  int firstSelChar,
+                                  int lastSelChar );
 extern void CloseHistorySequence ( PtrDocument pDoc );
 extern void TtcUndo ( Document doc,
                       View view );
@@ -25,13 +25,13 @@ extern void TtcUndo ( Document doc,
 extern void AddEditOpInHistory (/* PtrElement pEl,
                                    PtrDocument pDoc,
                                    boolean save,
-                                   boolean removeWhenUndoing,
-                                   PtrElement firstSel,
-                                   PtrElement lastSel,
-                                   int firstSelChar,
-                                   int lastSelChar */);
+                                   boolean removeWhenUndoing */);
 extern void CancelLastEditFromHistory (/* PtrDocument pDoc */);
-extern void OpenHistorySequence (/* PtrDocument pDoc */);
+extern void OpenHistorySequence (/* PtrDocument pDoc
+                                    PtrElement firstSel,
+                                    PtrElement lastSel,
+                                    int firstSelChar,
+                                    int lastSelChar */);
 extern void CloseHistorySequence (/* PtrDocument pDoc */);
 extern void TtcUndo (/* Document doc,
                         View view */);
