@@ -118,7 +118,6 @@ SSchema             nature;
 
 {
    PtrHandlePSchema    pHd;
-   PtrPSchema          pSchP;
    PtrSSchema	       pSchS;
 
    if (!LoadedDocument[document - 1])
