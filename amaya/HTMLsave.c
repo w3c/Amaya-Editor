@@ -26,6 +26,7 @@
 #endif
 
 #include "HTMLhistory_f.h"
+#include "css_f.h"
 #ifdef ANNOTATIONS
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
@@ -1138,12 +1139,19 @@ static void RestartParser (Document doc, char *localFile,
       !TtaGetDocumentAccessMode (doc))
     ChangeToEditorMode (doc);
   
+  /* Removes all CSS informations linked with the document */
+  TtaSetDisplayMode (doc, DeferredDisplay);
+  RemoveDocCSSs (doc);  
+
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
     StartXmlParser (doc, localFile, documentname, tempdir,
 		    localFile, xmlDec, withDoctype);
   else
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
+
+  /* Restore the Display Mode */
+  TtaSetDisplayMode (doc, DisplayImmediately);
 
   /* Activate the section numbering */
   if (DocumentTypes[doc] == docHTML && SNumbering[doc])
