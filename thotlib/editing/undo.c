@@ -412,9 +412,9 @@ void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl,
 			     ThotBool removeWhenUndoing)
 {
    PtrEditOperation	editOp = NULL;
-   PtrAttribute		pCopy, pOldAttr, pElAttr;
+   PtrAttribute		pCopy, pElAttr;
    int                  rank;
-   ThotBool		merge;
+   ThotBool		done;
 
    if (!pEl && !pAttr)
       return;
@@ -424,27 +424,79 @@ void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl,
 
    /* if the previous operation recorded is about the same attribute for the
       same element, just modify the previous operation */
-   merge = FALSE;
-   if (!save || !removeWhenUndoing)
-     if (pDoc->DocLastEdit)
-       {
+   done = FALSE;
+   if (pDoc->DocLastEdit)
+     {
        editOp = pDoc->DocLastEdit;
-       if (editOp->EoType == EtAttribute)
-	  if (editOp->EoElement == pEl)
+       if (editOp->EoType == EtAttribute && editOp->EoElement == pEl)
+	 /* the operation previously recorded is related to an attribute for
+	    the same element */
+	 {
+	   if (editOp->EoCreatedAttribute && !editOp->EoSavedAttribute &&
+	       editOp->EoCreatedAttribute->AeAttrSSchema == pAttr->AeAttrSSchema &&
+	       editOp->EoCreatedAttribute->AeAttrNum == pAttr->AeAttrNum)
+	     /* the previous operation was the creation of this attribute */
 	     {
-	     pOldAttr = NULL;
-	     if (save && editOp->EoSavedAttribute == NULL)
-		pOldAttr = editOp->EoCreatedAttribute;
-	     else if (removeWhenUndoing && editOp->EoCreatedAttribute == NULL)
-		pOldAttr = editOp->EoSavedAttribute;
-	     if (pOldAttr)
-		if (pAttr->AeAttrSSchema == pOldAttr->AeAttrSSchema)
-		   if (pAttr->AeAttrNum == pOldAttr->AeAttrNum)
-		      merge = TRUE;
+	       if (!save)
+		 /* creating the same attribute again? Ignore */
+		 done = TRUE;
+	       else if (removeWhenUndoing)
+		 /* replacing the attribute. No need to record it */
+		 done = TRUE;
+	       else
+		 /* deleting the same attribute. Remove the previous record
+		    about creating the attribute */
+		 {
+		   pDoc->DocLastEdit = editOp->EoPreviousOp;
+		   editOp->EoPreviousOp->EoNextOp = NULL;
+		   editOp->EoElement = NULL;
+		   editOp->EoCreatedAttribute = NULL;
+		   TtaFreeMemory (editOp);
+		   done = TRUE;
+		 }
 	     }
-       }
+	   else if (editOp->EoSavedAttribute && !editOp->EoCreatedAttribute &&
+		    editOp->EoSavedAttribute->AeAttrSSchema == pAttr->AeAttrSSchema &&
+		    editOp->EoSavedAttribute->AeAttrNum == pAttr->AeAttrNum)
+	     /* the previous operation was the deletion of this attribute */
+	     {
+	       if (!removeWhenUndoing)
+		 /* deleting the same attribute again? Ignore */
+		 done = TRUE;
+	       else if (save)
+		 /* replacing a deleted attribute? Ignore */
+		 done = TRUE;
+	       else
+		 /* creating the same attribute */
+		 {
+		   editOp->EoCreatedAttribute = pAttr;
+		   done = TRUE;
+		 }
+	     }
+	   else if (editOp->EoSavedAttribute->AeAttrSSchema == pAttr->AeAttrSSchema &&
+		    editOp->EoSavedAttribute->AeAttrNum == pAttr->AeAttrNum)
+	     /* the previous operation was a replacement of this attribute */
+	     {
+	       if (!save)
+		 /* creating the same attribute? Ignore */
+		 done = TRUE;
+	       else if (removeWhenUndoing)
+		 /* replacing this attribute again */
+		 {
+		   editOp->EoCreatedAttribute = pAttr;
+		   done = TRUE;
+		 }
+	       else
+		 /* deleting this attribute. It's like a creation */
+		 {
+		   editOp->EoCreatedAttribute = NULL;
+		   done = TRUE;
+		 }
+	     }
+	 }
+     }
 
-   if (!merge)
+   if (!done)
      {
        /* create a new operation descriptor in the history */
        editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
@@ -468,20 +520,18 @@ void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl,
 	   rank++;
 	 }
        editOp->EoAttrRank = rank;
-     }
-
-   if (removeWhenUndoing)
-     editOp->EoCreatedAttribute = pAttr;
-
-   if (save)
-     /* copy the attribute concerned by the operation and attach it to the
-        operation descriptor */
-     {
-       pCopy = AddAttrToElem (NULL, pAttr, NULL);
-       editOp->EoSavedAttribute = pCopy;
-       /* if older editing operations in the history refer to attribute that
-	  has been copied, change these references to the copy */
-       ChangeAttrPointersOlderEdits (editOp, pAttr, pCopy);
+       if (removeWhenUndoing)
+	 editOp->EoCreatedAttribute = pAttr;
+       if (save)
+	 /* copy the attribute concerned by the operation and attach it to the
+	    operation descriptor */
+	 {
+	   pCopy = AddAttrToElem (NULL, pAttr, NULL);
+	   editOp->EoSavedAttribute = pCopy;
+	   /* if older editing operations in the history refer to attribute
+	      that has been copied, change these references to the copy */
+	   ChangeAttrPointersOlderEdits (editOp, pAttr, pCopy);
+	 }
      }
 }
 
