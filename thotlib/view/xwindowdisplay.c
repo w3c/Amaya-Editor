@@ -126,10 +126,10 @@ static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 
 
 /*----------------------------------------------------------------------
-  SpaceToChar substitute in text the space chars to their visual
-  equivalents.
+  TranslateChars replaces in the text space chars to their visual
+  equivalents and the character 128 by '&'.
   ----------------------------------------------------------------------*/
-static void SpaceToChar (USTRING text)
+static void TranslateChars (USTRING text)
 {
   int                 i;
 
@@ -141,20 +141,27 @@ static void SpaceToChar (USTRING text)
       switch (text[i])
 	{
 	case BREAK_LINE:
-	  text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
 	  break;
 	case THIN_SPACE:
-	  text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
 	  break;
 	case HALF_EM:
-	  text[i] = (UCHAR_T) SHOWN_HALF_EM;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_HALF_EM;
 	  break;
 	case UNBREAKABLE_SPACE:
-	  text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
 	  break;
 	case SPACE:
-	  text[i] = (UCHAR_T) SHOWN_SPACE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_SPACE;
 	  break;
+	case START_ENTITY:
+	  text[i] = '&';
 	}
       i++;
     }
@@ -212,6 +219,8 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin + FontBase (font);
+  /* compute the width of the string */
+  width = 0;
   if (lg > 0 && w != None)
     {
       /* Dealing with BR tag for windows */
@@ -219,72 +228,51 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
       if (fg >= 0)
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* _GTK */
-      ptcar = &buff[i - 1];
-      /* compute the width of the string */
-      width = 0;
-      j = 0;
-      while (j < lg)
-	width += CharacterWidth (ptcar[j++], font);
+      ptcar = TtaAllocString (lg + 1);
+      if (shadow)
+	{
+	  /* replace each character by a star */
+	  j = 0;
+	  while (j < lg)
+	    {
+	      ptcar[j] = TEXT('*');
+	      width += CharacterWidth (ptcar[j++], font);
+	    }
+	  ptcar[lg] = EOS;
+	}
+      else
+	{
+	  if (buff[i - 1] == '\212' || buff[i - 1] == '\12')
+	    {
+	      /* skip the Control return char */
+	      i++;
+	      lg--;
+	    }
+	  ustrncpy (ptcar, &buff[i - 1], lg);
+	  ptcar[lg] = EOS;
+	  TranslateChars (ptcar);
+	  j = 0;
+	  while (j < lg)
+	    width += CharacterWidth (ptcar[j++], font);
+	}
 
       if (fg >= 0)
 	{
 	  LoadColor (fg);
-	  if (!ShowSpace || shadow)
-	    {
-	      /* draw the spaces */
-	      ptcar = TtaAllocString (lg + 1);
-	      if (shadow)
-		{
-		  /* replace each character by a star */
-		  j = 0;
-		  while (j < lg)
-		    ptcar[j++] = TEXT('*');
-		  ptcar[lg] = EOS;
-		}
-	      else
-		{
-		  ustrncpy (ptcar, &buff[i - 1], lg);
-		  ptcar[lg] = EOS;
-		  SpaceToChar (ptcar);	/* substitute spaces */
-		}
 #ifdef _GTK
-	      gdk_draw_string (w, font,TtLineGC, x, y, ptcar);
+	  gdk_draw_string (w, font,TtLineGC, x, y, ptcar);
 #else /* _GTK */
-	      XDrawString (TtDisplay, w, TtLineGC, x, y, ptcar, lg);
+	  XDrawString (TtDisplay, w, TtLineGC, x, y, ptcar, lg);
 #endif /* _GTK */
-	      TtaFreeMemory (ptcar);
-	    }
-	  else
-	    {
-	      if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12'))
-		{
-		  /* skip the Control return char */
-		  ptcar++;
-		  lg--;
-		}
-	      if (lg != 0)
-		{
-#ifdef _GTK
-		  car = ptcar[lg];
-		  ptcar[lg] = EOS;
-		  gdk_draw_string ( w, font,TtLineGC, x, y, ptcar);
-		  ptcar[lg] = car;
-#else /* _GTK */
-		  XDrawString (TtDisplay, w, TtLineGC, x, y, ptcar, lg);
-#endif /* _GTK */
-		}
-	    }
-	  
 	  if (hyphen)
-	    {
-	      /* draw the hyphen */
+	    /* draw the hyphen */
 #ifdef _GTK
-	      gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
+	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
 #else /* _GTK */
-	      XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
+	    XDrawString (TtDisplay, w, TtLineGC, x + width, y, "\255", 1);
 #endif /* _GTK */
-	    }
 	}
+      TtaFreeMemory (ptcar);
       return (width);
     }
   else

@@ -65,8 +65,8 @@ void         SetMainWindowBackgroundColor (int frame, int color)
 
 
 /*----------------------------------------------------------------------
-  TranslateChars substitute in text the space chars to their visual
-  equivalents.
+  TranslateChars replaces in the text space chars to their visual
+  equivalents and the character 128 by '&'.
   ----------------------------------------------------------------------*/
 static void         TranslateChars (USTRING text)
 {
@@ -302,7 +302,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 	}
       ustrncpy (ptcar, &buff[i - 1], lg);
       ptcar[lg] = EOS;
-	  TranslateChars (ptcar);	/* substitute spaces */
+      TranslateChars (ptcar);
     }
   /* get the string size */
   GetTextExtentPoint (display, ptcar, lg, &size);
