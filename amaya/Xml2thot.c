@@ -4755,7 +4755,7 @@ void ParseExternalDocument (char     *fileName,
 {
   char         *schemaName = NULL, *tempName = NULL, *ptr = NULL;
   ElementType   elType;
-  Element       parent, oldel, child;
+  Element       parent, oldel;
   Element       copy = NULL;
   Element       idEl = NULL, extEl = NULL;
   AttributeType extAttrType;
