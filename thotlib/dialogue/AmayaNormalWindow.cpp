@@ -66,7 +66,6 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
                       		            wxDefaultPosition, wxDefaultSize,
                      		            wxSP_3DBORDER | wxSP_PERMIT_UNSPLIT );
-  m_pSplitterWindow->SetBackgroundColour( wxColour(_T("red")) );
   m_pSplitterWindow->SetMinimumPaneSize( 50 );
   
   // Create a background panel to contains the notebook
