@@ -208,6 +208,7 @@ NotifyElement      *event;
 	length++;
 	url = TtaGetMemory (length);
 	targetDocument = 0;
+	PseudoAttr = NULL;
 	if (url != NULL)
 	  {
 	     elType = TtaGetElementType (anchor);
