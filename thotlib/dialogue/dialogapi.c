@@ -1018,7 +1018,7 @@ static void CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_
 #ifdef _WINDOWS
 		  if (IsMenu ((ThotMenu) (adbloc->E_ThotWidget[i])))
 		    {
-		      MenuItem = GetMenuItemCount ((ThotMenu) (adbloc->E_ThotWidget[i]));
+		      nbMenuItem = GetMenuItemCount ((ThotMenu) (adbloc->E_ThotWidget[i]));
 		      for (ndx = 0; ndx < nbMenuItem; ndx++)
 			{
 			  menuEntry = GetMenuItemID ((ThotMenu) (adbloc->E_ThotWidget[i]), ndx);
