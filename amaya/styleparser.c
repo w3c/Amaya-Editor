@@ -1228,6 +1228,7 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 
   pval.typed_data.value = 0;
   pval.typed_data.unit = UNIT_BOX;
+  pval.typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "inherit", 7))
     {
       cssRule = SkipWord (cssRule);
