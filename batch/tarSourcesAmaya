@@ -88,6 +88,9 @@ ${AMAYADIR}/amaya/*.png \
 ${AMAYADIR}/amaya/*.rc \
 ${AMAYADIR}/amaya/*.ico \
 ${AMAYADIR}/amaya/*.cur \
+${AMAYADIR}/amaya/wxdialog/*.h \
+${AMAYADIR}/amaya/wxdialog/*.c \
+${AMAYADIR}/amaya/wxdialog/*.cpp \
 ${AMAYADIR}/amaya/f/*.h \
 ${AMAYADIR}/amaya/xpm/*.xpm \
 ${AMAYADIR}/annotlib/Makefile.* \
@@ -335,6 +338,7 @@ ${AMAYADIR}/tools/cextract-1.7/parse.c \
 ${AMAYADIR}/tools/cextract-1.7/patchlevel.h \
 ${AMAYADIR}/tools/cextract-1.7/proto.h \
 ${AMAYADIR}/tools/cextract-1.7/xtract.h \
+${AMAYADIR}/resources/xrc/*.xrc \
 ${AMAYADIR}/Windows/*.mak \
 ${AMAYADIR}/Windows/*.dsp \
 ${AMAYADIR}/Windows/*.dsw \

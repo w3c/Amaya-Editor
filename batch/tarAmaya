@@ -64,6 +64,7 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/amaya/*.gif \
    ${AMAYADIR}/amaya/*.png \
    ${AMAYADIR}/amaya/*.trans* \
+   ${AMAYADIR}/resources/xrc/*.xrc \
    ${AMAYADIR}/annotlib/*.STR \
    ${AMAYADIR}/annotlib/*P.PRS \
    ${AMAYADIR}/annotlib/*T.TRA \
