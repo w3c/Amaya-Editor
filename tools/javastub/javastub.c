@@ -138,6 +138,18 @@ int main_argc;
 char **main_argv;
 char pwd[MAX_PATH_LENGHT];
 
+#ifndef HAVE_STRDUP
+char *strdup(const char *s)
+{
+    char *str;
+
+    if (s == NULL) return(NULL);
+    str = malloc(strlen(s) + 1);
+    if (str == NULL) return(NULL);
+    strcpy(str, s);
+    return(str);
+}
+#endif
 
 #if defined(__alpha__) || defined(__i386__)
 #define LE_MACHINE

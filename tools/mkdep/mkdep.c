@@ -22,8 +22,21 @@
 
 #define MAX_PATH	100
 #define MAX_PATH_LENGHT	256
-#define MAX_INCLUDE	200
-#define MAX_SUB_INCLUDE 30
+#define MAX_INCLUDE	500
+#define MAX_SUB_INCLUDE 50
+
+#ifndef HAVE_STRDUP
+char *strdup(const char *s)
+{
+    char *str;
+
+    if (s == NULL) return(NULL);
+    str = malloc(strlen(s) + 1);
+    if (str == NULL) return(NULL);
+    strcpy(str, s);
+    return(str);
+}
+#endif
 
 int use_relative_pathnames = 0;
 
