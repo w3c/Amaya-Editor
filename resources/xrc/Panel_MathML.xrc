@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="wxID_PANEL_MATHML">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxPanel" name="wxID_PANEL_TOP">
+          <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxPanel" name="wxID_PANEL_TITLE">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
+                          <bitmap>../icons/expand_on.png</bitmap>
+                          <style>wxNO_BORDER</style>
+                        </object>
+                        <flag>wxALIGN_CENTRE</flag>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="wxID_LABEL_TITLE">
+                          <label>*Maths*</label>
+                          <style>wxALIGN_CENTRE</style>
+                        </object>
+                        <option>1</option>
+                        <flag>wxALIGN_CENTRE</flag>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
+                          <bitmap>../icons/detach.png</bitmap>
+                          <style>wxNO_BORDER</style>
+                        </object>
+                        <flag>wxALIGN_CENTRE</flag>
+                      </object>
+                    </object>
+                    <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                  </object>
+                  <flag>wxEXPAND</flag>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxPanel" name="wxID_PANEL_CONTENT">
+                        <object class="wxBoxSizer">
+                          <orient>wxVERTICAL</orient>
+                          <object class="spacer">
+                            <size>0,5</size>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxPanel" name="wxID_PANEL_CONTENT_DETACH">
+                              <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_BMATH">
+                                        <bitmap>../icons/MATHML_Bmath.png</bitmap>
+                                        <focused>1</focused>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_FENCE">
+                                        <bitmap>../icons/MATHML_fence.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_FRAC">
+                                        <bitmap>../icons/MATHML_frac.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_GREEK">
+                                        <bitmap>../icons/MATHML_greek.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_MATRIX">
+                                        <bitmap>../icons/MATHML_matrix.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_MSCRIPT">
+                                        <bitmap>../icons/MATHML_mscript.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_OVER">
+                                        <bitmap>../icons/MATHML_over.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_OVERUNDER">
+                                        <bitmap>../icons/MATHML_overunder.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_ROOT">
+                                        <bitmap>../icons/MATHML_root.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_SQRT">
+                                        <bitmap>../icons/MATHML_sqrt.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_SUB">
+                                        <bitmap>../icons/MATHML_sub.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_SUBSUP">
+                                        <bitmap>../icons/MATHML_subsup.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_SUP">
+                                        <bitmap>../icons/MATHML_sup.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton" name="wxID_PANEL_MATH_UNDER">
+                                        <bitmap>../icons/MATHML_under.png</bitmap>
+                                      </object>
+                                      <flag>wxALL</flag>
+                                      <border>2</border>
+                                    </object>
+                                  </object>
+                                  <option>1</option>
+                                  <flag>wxALL|wxALIGN_CENTRE</flag>
+                                </object>
+      <object class="sizeritem">
+        <object class="wxComboBox" name="wxID_PANEL_MATH_LIST">
+          <content/>
+          <style>wxCB_READONLY</style>
+        </object>
+        <option>0</option>
+        <flag>wxEXPAND</flag>
+      </object>
+
+                              </object>
+                              <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                            </object>
+                            <option>1</option>
+                            <flag>wxEXPAND</flag>
+                          </object>
+                          <object class="spacer">
+                            <size>0,2</size>
+                          </object>
+                        </object>
+                        <style>wxTAB_TRAVERSAL</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>1</option>
+                  <flag>wxEXPAND</flag>
+                </object>
+              </object>
+              <option>1</option>
+              <flag>wxALL|wxEXPAND</flag>
+            </object>
+          </object>
+          <style>wxTAB_TRAVERSAL</style>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+      </object>
+    </object>
+    <style>wxTAB_TRAVERSAL</style>
+  </object>
+</resource>
