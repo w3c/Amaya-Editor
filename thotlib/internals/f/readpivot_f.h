@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
-extern ThotBool OpenDocument ( Name docName,
+extern ThotBool OpenDocument ( CharUnit* docName,
                                PtrDocument pDoc,
                                ThotBool loadIncludedDoc,
                                ThotBool skeleton,
@@ -37,7 +37,7 @@ extern void SendEventAttrRead ( PtrElement pEl,
 extern PtrElement ReadTreePiv ( BinFile pivFile,
                                 PtrSSchema pSSchema,
                                 PtrDocument pDoc,
-                                STRING tag,
+                                char* tag,
                                 int assocNum,
                                 ThotBool createParam,
                                 ThotBool createAll,
@@ -56,8 +56,8 @@ extern void ReadSchemaNamesPiv ( BinFile file,
                                  char* tag,
                                  PtrSSchema pLoadedSS,
                                  void (*withThisPSchema) (Document document,
-                                 STRING natSchema,
-                                 STRING presentSchema) );
+                                 char* natSchema,
+                                 char* presentSchema) );
 extern void ReadLanguageTablePiv ( BinFile file,
                                    PtrDocument pDoc,
                                    char* tag );
@@ -77,7 +77,7 @@ extern void LoadDocumentPiv ( BinFile file,
 #else /* __STDC__ */
 
 extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
-extern ThotBool OpenDocument (/* Name docName,
+extern ThotBool OpenDocument (/* CharUnit* docName,
                                  PtrDocument pDoc,
                                  ThotBool loadIncludedDoc,
                                  ThotBool skeleton,
@@ -107,7 +107,7 @@ extern void SendEventAttrRead (/* PtrElement pEl,
 extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrSSchema pSSchema,
                                   PtrDocument pDoc,
-                                  STRING tag,
+                                  char* tag,
                                   int assocNum,
                                   ThotBool createParam,
                                   ThotBool createAll,
@@ -126,8 +126,8 @@ extern void ReadSchemaNamesPiv (/* BinFile file,
                                    char* tag,
                                    PtrSSchema pLoadedSS,
                                    void (*withThisPSchema) (Document document,
-                                   STRING natSchema,
-                                   STRING presentSchema) */);
+                                   char* natSchema,
+                                   char* presentSchema) */);
 extern void ReadLanguageTablePiv (/* BinFile file,
                                      PtrDocument pDoc,
                                      char* tag */);

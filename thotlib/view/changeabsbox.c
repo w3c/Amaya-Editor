@@ -2805,7 +2805,7 @@ PtrDocument         pDocRef;
 				{
 				   pAbbox1 = pAb;
 				   if (pRe1->PrNPresBoxes == 0)
-				      found = (strcmp (pRe1->PrPresBoxName, pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
+				      found = (ustrcmp (pRe1->PrPresBoxName, pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
 				   else
 				      found = pRe1->PrPresBox[0] == pAbbox1->AbTypeNum;
 				}
@@ -3527,14 +3527,14 @@ ThotBool            redisp;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         AttachCounterValue (PtrElement pEl, PtrElement pElIncluded, PtrDocument pDocIncluded, Name NmAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
+static void         AttachCounterValue (PtrElement pEl, PtrElement pElIncluded, PtrDocument pDocIncluded, WCName NmAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
 
 #else  /* __STDC__ */
 static void         AttachCounterValue (pEl, pElIncluded, pDocIncluded, NmAttr, counter, pSchP, pSchS)
 PtrElement          pEl;
 PtrElement          pElIncluded;
 PtrDocument         pDocIncluded;
-Name                NmAttr;
+WCName              NmAttr;
 int                 counter;
 PtrPSchema          pSchP;
 PtrSSchema          pSchS;
@@ -3559,7 +3559,7 @@ PtrSSchema          pSchS;
 	     pTtAttr = &(pElIncluded->ElStructSchema->SsAttribute[att - 1]);
 	     if (pTtAttr->AttrType == AtNumAttr)
 		/* c'est un attribut numerique */
-		if (strncmp (pTtAttr->AttrOrigName, NmAttr, sizeof (Name)) == 0)
+		if (ustrncmp (pTtAttr->AttrOrigName, NmAttr, sizeof (WCName)) == 0)
 		   /* il a le nom cherche' */
 		   found = TRUE;
 	  }
@@ -3588,12 +3588,12 @@ PtrSSchema          pSchS;
    au schema de structure pSchS.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
+void                TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, WCName nameAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
 #else  /* __STDC__ */
 void                TransmitCounterVal (pEl, pDoc, nameAttr, counter, pSchP, pSchS)
 PtrElement          pEl;
 PtrDocument         pDoc;
-Name                nameAttr;
+WCName              nameAttr;
 int                 counter;
 PtrPSchema          pSchP;
 PtrSSchema          pSchS;

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void TtaSetTextContent ( Element element,
-                                char* content,
+                                CHAR_T* content,
                                 Language language,
                                 Document document );
 extern void InsertText ( PtrElement pEl,
@@ -15,7 +15,7 @@ extern void InsertText ( PtrElement pEl,
                          STRING content,
                          Document document );
 extern void TtaAppendTextContent ( Element element,
-                                   char* content,
+                                   CHAR_T* content,
                                    Document document );
 extern void TtaInsertTextContent ( Element element,
                                    int position,
@@ -31,7 +31,7 @@ extern void TtaSplitText ( Element element,
 extern ThotBool TtaMergeText ( Element element,
                                Document document );
 extern void TtaSetGraphicsShape ( Element element,
-                                  CHAR_T shape,
+                                  char shape,
                                   Document document );
 extern void TtaAddPointInPolyline ( Element element,
                                     int rank,
@@ -61,7 +61,7 @@ extern void TtaGiveSubString ( Element element,
                                STRING buffer,
                                int position,
                                int length );
-extern CHAR_T TtaGetGraphicsShape ( Element element );
+extern char TtaGetGraphicsShape ( Element element );
 extern int TtaGetPolylineLength ( Element element );
 extern void TtaGivePolylinePoint ( Element element,
                                    int rank,
@@ -74,7 +74,7 @@ extern int TtaGetPageView ( Element pageElement );
 #else /* __STDC__ */
 
 extern void TtaSetTextContent (/* Element element,
-                                  char* content,
+                                  CHAR_T* content,
                                   Language language,
                                   Document document */);
 extern void InsertText (/* PtrElement pEl,
@@ -82,7 +82,7 @@ extern void InsertText (/* PtrElement pEl,
                            STRING content,
                            Document document */);
 extern void TtaAppendTextContent (/* Element element,
-                                     char* content,
+                                     CHAR_T* content,
                                      Document document */);
 extern void TtaInsertTextContent (/* Element element,
                                      int position,
@@ -128,7 +128,7 @@ extern void TtaGiveSubString (/* Element element,
                                  STRING buffer,
                                  int position,
                                  int length */);
-extern CHAR_T TtaGetGraphicsShape (/* Element element */);
+extern char TtaGetGraphicsShape (/* Element element */);
 extern int TtaGetPolylineLength (/* Element element */);
 extern void TtaGivePolylinePoint (/* Element element,
                                      int rank,

@@ -13,8 +13,8 @@ extern void LoadDocument ( PtrDocument * pDoc,
 extern void LoadXmlDocument ( PtrDocument * pDoc,
                               STRING fileName );
 extern void NewDocument ( PtrDocument * pDoc,
-                          char* SSchemaName,
-                          char* docName,
+                          CharUnit* SSchemaName,
+                          CharUnit* docName,
                           PathBuffer directory );
 extern void PaginateDocument ( PtrDocument pDoc );
 extern void UpdateIncludedElement ( PtrElement pEl,

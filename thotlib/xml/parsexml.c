@@ -45,7 +45,7 @@
 #include "appdialogue_tv.h"
 #include "edit_tv.h"
 /* an entity name */
-typedef CHAR_T entName[10];
+typedef char entName[10];
 
 /* an entity representing an ISO-Latin-1 character */
 typedef struct _EntityDictEntry
@@ -59,13 +59,12 @@ EntityDictEntry;
 static EntityDictEntry XmlPredefinedEntities[] =
 {
    /* This table MUST be in alphabetical order */
-   {AMP_ENTITY, '&'},
+   {AMP_ENTITY,   '&'},
    {APOS_ENTITY, '\''},
-   {GT_ENTITY, '>'},
-   {LT_ENTITY, '<'},
-   {QUOT_ENTITY, '"'},
-
-   {TEXT("zzzz"), 0}			/* this last entry is required */
+   {GT_ENTITY,    '>'},
+   {LT_ENTITY,    '<'},
+   {QUOT_ENTITY,  '"'},
+   {"zzzz",         0} /* this last entry is required */
 };
 
 typedef int         state;	/* a state of the parser automaton */
@@ -78,7 +77,7 @@ static ThotBool     immAfterTag = FALSE;  /* A tag has just been read */
 /* input buffer */
 #define MAX_BUFFER_LENGTH 1000
 #define ALMOST_FULL_BUFFER 700
-static CHAR_T      inputBuffer[MAX_BUFFER_LENGTH];
+static char         inputBuffer[MAX_BUFFER_LENGTH];
 static CHAR_T       msgBuffer  [MAX_BUFFER_LENGTH];
 static int          bufferLength = 0;	  /* actual length of text in input
 					     buffer */
@@ -98,7 +97,7 @@ static ThotBool	    ReadingThotElement = FALSE;   /* Thot schema flag */
 static Element	    createdElement = NULL;        /* new created element */
 static ThotBool	    currentElementClosed = FALSE; /* structure flag */
 static Attribute    currentAttribute = NULL;      /* current attribute */
-static CHAR_T      currentAttributeName[30];     /* current attribute name */
+static char         currentAttributeName[30];     /* current attribute name */
 static ThotBool	    ReadingXmlNSAttribute = FALSE;/* namespace attr flag */
 static ThotBool	    ReadingXmlAttribute = FALSE;  /* xml attr flag */
 static ThotBool	    ReadingThotAttribute = FALSE; /* thot attr flag */
@@ -112,7 +111,7 @@ static char         currentGI[64];               /* the GI of the last elem read
 static int          nbAssocRoot = 0;              /* number of assoc trees read */
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */
-static STRING       GIStack[MAX_STACK_HEIGHT]; /* Xml element name */
+static char*        GIStack[MAX_STACK_HEIGHT]; /* Xml element name */
 static Element      elementStack[MAX_STACK_HEIGHT];  /* element in the Thot abstract tree */
 static Language     languageStack[MAX_STACK_HEIGHT]; /* element language */
 static int          stackLevel = 0;       /* first free element on the stack */
@@ -160,10 +159,10 @@ STRING text;
                           launched after the first xmlns attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element XmlSetCurrentDocument (STRING schemaName)
+Element XmlSetCurrentDocument (char* schemaName)
 #else
-Element XmlSetCurrentDocument (STRING schemaName)
-STRING schemaName;
+Element XmlSetCurrentDocument (schemaName)
+char*  schemaName;
 #endif
 {
   Element root,el;
@@ -192,7 +191,7 @@ STRING schemaName;
 	TtaRemoveAttribute (root, attr, currentDocument);
       TtaNextAttribute (root, &attr);
    }
-  ustrcpy (currentGI, inputBuffer);
+  strcpy (currentGI, inputBuffer);
   currentElementClosed = FALSE;
 
   return root;
@@ -222,11 +221,11 @@ static void EndOfPrefix (c)
 CHAR_T c;
 #endif
 {
-  inputBuffer[bufferLength]=EOS;
-  if (!ustrcmp (inputBuffer, TEXT("xml")))
+  inputBuffer[bufferLength] = EOS;
+  if (!strcmp (inputBuffer, "xml"))
     /* Reading an xml element or attribute */
     ReadingXmlElement = TRUE;
-  else if (!ustrcmp (inputBuffer, TEXT("thot")))
+  else if (!strcmp (inputBuffer, "thot"))
     /* Reading a thot element or attribute */
     ReadingThotElement = TRUE;
   else
@@ -666,10 +665,10 @@ CHAR_T                c;
       if (ReadingThotElement)
 	/* the Thot special elements: do not create them */
 	{
-	  if (!ustrcmp (inputBuffer, BR_TAG))
+	  if (!strcmp (inputBuffer, BR_TAG))
 	    {
 	      /* Warning: not the good string for linebreak */
-	      ustrncpy(inputBuffer, TEXT("\212"), 5);
+	      strncpy (inputBuffer, "\212", 5);
 	      bufferLength = 5;
 	      XmlTextToDocument ();
 	      createdElement = NULL;
@@ -680,8 +679,7 @@ CHAR_T                c;
 	/* normal element */
 	{
 	  elType.ElSSchema = currentSSchema;
-	  elType.ElTypeNum =  NameXmlToThot (elType.ElSSchema, 
-					     inputBuffer, 0, 0);
+	  elType.ElTypeNum =  NameXmlToThot (elType.ElSSchema, inputBuffer, 0, 0);
 	  if (elType.ElTypeNum == 0)
 	    {
 	      usprintf (msgBuffer, TEXT ("Unknown Xml or Thot  element %s"), inputBuffer);
@@ -711,7 +709,7 @@ CHAR_T                c;
 	    }
 	}
     }
-  ustrcpy (currentGI, inputBuffer);
+  strcpy (currentGI, inputBuffer);
   currentAttrSSchema = currentDocSSchema;
   bufferLength = 0;
 }
@@ -754,12 +752,11 @@ CHAR_T                c;
 #endif 
   if (GIStack[stackLevel - 1] != NULL)
     /* the corresponding opening tag was a known tag */
-    if (ustrcmp(inputBuffer, GIStack[stackLevel - 1]) != 0)
+    if (strcmp (inputBuffer, GIStack[stackLevel - 1]) != 0)
       /* the end tag does not close the current element */
       {
 	/* print an error message */
-	usprintf (msgBuffer, TEXT("Unexpected Xml end tag </%s> instead of </%s>"),
-		 inputBuffer, GIStack[stackLevel - 1]);
+	usprintf (msgBuffer, TEXT("Unexpected Xml end tag </%s> instead of </%s>"), inputBuffer, GIStack[stackLevel - 1]);
 	XmlError (currentDocument, msgBuffer);
       }
   /* the input buffer is now empty */
@@ -794,18 +791,18 @@ CHAR_T                c;
 
 #endif
 { 
-  inputBuffer[bufferLength]=EOS;
+  inputBuffer[bufferLength] = EOS;
 
 #ifdef XML_DEBUG
    printf ("  EndOfAttrPrefix                  ---         %s\n",inputBuffer);
 #endif 
-  if (!ustrcmp(inputBuffer, TEXT("xml")))
+  if (!strcmp (inputBuffer, "xml"))
     /* Reading an xml element or attribute */
     ReadingXmlAttribute = TRUE; 
-  else if (!ustrcmp(inputBuffer, TEXT("thot")))
+  else if (!strcmp (inputBuffer, "thot"))
     /* Reading a thot element or attribute */
     ReadingThotAttribute = TRUE;
-  else if (!ustrcmp(inputBuffer, TEXT("xmlns")))
+  else if (!strcmp (inputBuffer, "xmlns"))
     /* Reading the xmlns attribute (prefix/attr inversed */
     ReadingXmlNSAttribute = TRUE;
   else
@@ -838,12 +835,12 @@ CHAR_T                c;
    printf ("  EndOfAttrName                  ---         %s\n",inputBuffer);
 #endif   
   currentAttribute = NULL;
-  ustrcpy (currentAttributeName, inputBuffer);
+  strcpy (currentAttributeName, inputBuffer);
   if (ReadingXmlAttribute)
     ;
   else if (ReadingThotAttribute)
     {
-      if (!ustrcmp (inputBuffer, ASSOC_TREE_ATTR))
+      if (!strcmp (inputBuffer, ASSOC_TREE_ATTR))
 	{
 	  ReadingAssocRoot = TRUE; 
 	}
@@ -854,10 +851,7 @@ CHAR_T                c;
     {
       elType = TtaGetElementType (createdElement);
       attrType.AttrSSchema = currentAttrSSchema;
-      attrType.AttrTypeNum = NameXmlToThot(currentAttrSSchema,
-					   inputBuffer,
-					   elType.ElTypeNum,
-					   0);
+      attrType.AttrTypeNum = NameXmlToThot(currentAttrSSchema, inputBuffer, elType.ElTypeNum, 0);
      
       if (attrType.AttrTypeNum == 0 )
 	{
@@ -960,15 +954,13 @@ CHAR_T                c;
    else if (ReadingXmlAttribute)
      {
        /* xml module will treat the attribute */
-       ParseXmlAttribute (currentDocument, createdElement,
-			  currentAttributeName, inputBuffer);
+       ParseXmlAttribute (currentDocument, createdElement, currentAttributeName, inputBuffer);
        ReadingXmlAttribute = FALSE;
      }
    else if (ReadingThotAttribute)
      {
        /* thotmodule will treat the attribute */
-       ParseThotAttribute (currentDocument, createdElement,
-			   currentAttributeName, inputBuffer);
+       ParseThotAttribute (currentDocument, createdElement, currentAttributeName, inputBuffer);
         ReadingThotAttribute = FALSE;
      }
    else if (currentAttribute != NULL)
@@ -981,11 +973,11 @@ CHAR_T                c;
 	   case 0:       /* enumerate */
 	     /* Warning: it reads only the integer value */
 	     /* To improve */
-	     usscanf (inputBuffer, TEXT("%d"), &val);
+	     sscanf (inputBuffer, "%d", &val);
 	     TtaSetAttributeValue (currentAttribute, val, createdElement, currentDocument);
 	     break;
 	   case 1:       /* integer */
-	     usscanf (inputBuffer, TEXT("%d"), &val);
+	     sscanf (inputBuffer, "%d", &val);
 	     TtaSetAttributeValue (currentAttribute, val, createdElement, currentDocument);
 	     break;
 	   case 2:       /* text */
@@ -1050,9 +1042,7 @@ CHAR_T                c;
    entityName[entityNameLength] = EOS;
 
    /* First, look in the predifined entities table */
-   for (i = 0; XmlPredefinedEntities[i].charCode > 0 &&
-	       ustrcmp (XmlPredefinedEntities[i].charName, entityName);
-	       i++);
+   for (i = 0; XmlPredefinedEntities[i].charCode > 0 && ustrcmp (XmlPredefinedEntities[i].charName, entityName); i++);
    if (!ustrcmp (XmlPredefinedEntities[i].charName, entityName))
       /* entity found in the predifined table */
       PutInBuffer ((CHAR_T) (XmlPredefinedEntities[i].charCode));

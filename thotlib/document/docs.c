@@ -202,9 +202,9 @@ CharUnit*           documentName;
 	TtaError (ERR_too_many_documents);
       else
 	{
-	  Name sschemaName;
+	  CUSName sschemaName;
 	  
-	  strncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
+	  iso2cus_strncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
 	  /* charge le schema de structure */
 	  GetSchStruct (&pDoc->DocSSchema);
 	  pDoc->DocSSchema->SsExtension = FALSE;
@@ -312,11 +312,11 @@ STRING              fileName;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {
 	       if (fileName != DefaultDocumentName)
-		 ustrncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
+		 StringNCopy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
 	       /* nom de document relatif */
-	       ustrncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       StringNCopy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	       ustrncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       StringNCopy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       if ((*pDoc)->DocDirectory[0] == EOS)
 		 ustrncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
@@ -341,10 +341,10 @@ STRING              fileName;
 		   i++;
 		   j++;
 		 }
-	       DefaultDocumentName[i] = EOS;
-	       ustrncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       DefaultDocumentName[i] = CUS_EOS;
+	       StringNCopy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	       ustrncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       StringNCopy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       /* sauve le path des documents avant de l'ecraser */
 	       ustrncpy (directoryBuffer, DocumentPath, MAX_PATH);
@@ -384,59 +384,6 @@ STRING              fileName;
 }
 
 /*----------------------------------------------------------------------
-   LoadXmlDocument charge le document que contient le fichier nomme'
-   fileName dans le descripteur pointe par pDoc. Au
-   retour pDoc est NIL si le document n'a pas pu etre
-   charge.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LoadXmlDocument (PtrDocument * pDoc, STRING fileName)
-#else  /* __STDC__ */
-void                LoadXmlDocument (pDoc, fileName)
-PtrDocument        *pDoc;
-STRING              fileName;
-
-#endif  /* __STDC__ */
-{
-  DisplayMode          dispMode;
-  Document             doc = 0;
-  
-  *pDoc = NULL;
-  if (ThotLocalActions[T_xmlparsedoc] != NULL)
-    {
-      doc = (int)((*(Func)ThotLocalActions [T_xmlparsedoc]) (fileName));
-      *pDoc = LoadedDocument[doc - 1];
-    }
-  if (*pDoc != NULL)
-     {
-       /* Set the pivot version to -1 (xml) */
-       (*pDoc)->DocPivotVersion = -1;
-       
-       /* conserve le path actuel des schemas dans le contexte du document */
-       ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
-       /* ouvre les vues a ouvrir */
-       OpenDefaultViews (*pDoc);
-       dispMode = TtaGetDisplayMode (doc);
-       TtaSetDisplayMode (doc, NoComputedDisplay);
-       XmlSetPresentation((Document) IdentDocument (*pDoc)); 
-       XmlSetRef((Document) IdentDocument (*pDoc)); 
-       TtaSetDisplayMode (doc, dispMode);
-       
-       if ((*pDoc)->DocRootElement != NULL)
-         /* Pour tous les elements du document que l'on vient de */
-         /* charger qui sont designe's par des references, cherche */
-         /* toutes les references appartenant a d'autres documents */
-         /* charges et fait reafficher ces references si elles sont */
-         /* deja affichees */
-         RedisplayExternalRefs (*pDoc);
-       /* Set the doc unmodified */
-       SetDocumentModified (*pDoc, FALSE, 0);
-     }
-
-}
-
-
-/*----------------------------------------------------------------------
    NewDocument cree un document vide, conforme au schema de nom    
    SSchemaName, dans le descripteur pointe' par pDoc.      
    docName est le nom a donner au document                 
@@ -444,19 +391,21 @@ STRING              fileName;
    Au retour pDoc est NIL si le document n'a pas ete cree. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewDocument (PtrDocument * pDoc, char* SSchemaName, char* docName, PathBuffer directory)
+void                NewDocument (PtrDocument * pDoc, CharUnit* SSchemaName, CharUnit* docName, PathBuffer directory)
 #else  /* __STDC__ */
 void                NewDocument (pDoc, SSchemaName, docName, directory)
 PtrDocument        *pDoc;
-char*               SSchemaName;
-char*               docName;
+CharUnit*           SSchemaName;
+CharUnit*           docName;
 PathBuffer          directory;
 
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
    NotifyDialog        notifyDoc;
-   Name                PSchemaName, docNameBuffer, docType;
+   CharUnit            PSchemaName[MAX_NAME_LENGTH]; 
+   CharUnit            docNameBuffer[MAX_NAME_LENGTH]; 
+   CharUnit            docType[MAX_NAME_LENGTH];
    PathBuffer          directoryBuffer;
    PathBuffer          fileNameBuffer;
 
@@ -466,7 +415,7 @@ PathBuffer          directory;
    int                 i;
 
    if (*pDoc != NULL)
-      if (SSchemaName == NULL || SSchemaName[0] == EOS)
+      if (SSchemaName == NULL || SSchemaName[0] == CUS_EOS)
 	 /* L'utilisateur n'a pas fourni de nom de schema */
 	 UnloadDocument (pDoc);
       else
@@ -481,10 +430,10 @@ PathBuffer          directory;
 	   /* on suppose que le mon de schema est dans la langue de */
 	   /* l'utilisateur: on le traduit en nom interne */
 	   ConfigSSchemaInternalName (SSchemaName, docType, TRUE);
-	   if (docType[0] == EOS)
+	   if (docType[0] == CUS_EOS)
 	      /* ce nom n'est pas dans le fichier langue, on le prend */
 	      /* tel quel */
-	      ustrncpy (docType, SSchemaName, MAX_NAME_LENGTH);
+	      StringNCopy (docType, SSchemaName, MAX_NAME_LENGTH);
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
 	   ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
@@ -493,7 +442,7 @@ PathBuffer          directory;
 
 	   if (TtaFileExist (fileNameBuffer) == 0)
 	     {
-		ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
+		StringNCopy (fileNameBuffer, docType, MAX_NAME_LENGTH);
 		ustrcat (fileNameBuffer, CUSTEXT(".STR"));
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
 	     }
@@ -504,11 +453,11 @@ PathBuffer          directory;
 		/* pas de preference pour un schema de */
 		/* presentation particulier */
 		LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL, FALSE);
-		if (docName[0] != EOS)
-		   ustrncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
+		if (docName[0] != CUS_EOS)
+		   StringNCopy (docNameBuffer, docName, MAX_NAME_LENGTH);
 		else
 		  {
-		     ustrncpy (docNameBuffer, (STRING) SSchemaName, MAX_NAME_LENGTH);
+		     StringNCopy (docNameBuffer, SSchemaName, MAX_NAME_LENGTH);
 		     ustrcat (docNameBuffer, TEXT("X"));
 		  }
 		if ((*pDoc)->DocSSchema != NULL)
@@ -559,9 +508,9 @@ PathBuffer          directory;
 		     directoryBuffer[i] = EOS;
 		  }
 		FindCompleteName (docNameBuffer, CUSTEXT("PIV"), directoryBuffer, fileNameBuffer, &i);
-		ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
+		StringNCopy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 		(*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		ustrncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
+		StringNCopy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
 		(*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		/* le document appartient au directory courant */
 		ustrncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);

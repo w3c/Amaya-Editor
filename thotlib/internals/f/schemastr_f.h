@@ -8,18 +8,18 @@
 
 extern void InitNatures ( void );
 extern void LoadNatureSchema ( PtrSSchema pSS,
-                               USTRING PSchName,
+                               unsigned char* PSchName,
                                int rule );
-extern int CreateNature ( USTRING SSchName,
-                          USTRING PSchName,
+extern int CreateNature ( unsigned char* SSchName,
+                          unsigned char* PSchName,
                           PtrSSchema pSS );
-extern void LoadSchemas ( USTRING SSchName,
-                          USTRING PSchName,
+extern void LoadSchemas ( CharUnit* SSchName,
+                          CharUnit* PSchName,
                           PtrSSchema * pSS,
                           PtrSSchema pLoadedSS,
                           ThotBool Extension );
-extern PtrSSchema LoadExtension ( USTRING SSchName,
-                                  USTRING PSchName,
+extern PtrSSchema LoadExtension ( char* SSchName,
+                                  char* PSchName,
                                   PtrDocument pDoc );
 extern ThotBool FreeNature ( PtrSSchema pSS,
                              PtrSSchema pNatureSS );
@@ -29,18 +29,18 @@ extern void FreeDocumentSchemas ( PtrDocument pDoc );
 
 extern void InitNatures (/* void */);
 extern void LoadNatureSchema (/* PtrSSchema pSS,
-                                 USTRING PSchName,
+                                 unsigned char* PSchName,
                                  int rule */);
-extern int CreateNature (/* USTRING SSchName,
-                            USTRING PSchName,
+extern int CreateNature (/* unsigned char* SSchName,
+                            unsigned char* PSchName,
                             PtrSSchema pSS */);
-extern void LoadSchemas (/* USTRING SSchName,
-                            USTRING PSchName,
+extern void LoadSchemas (/* CharUnit* SSchName,
+                            CharUnit* PSchName,
                             PtrSSchema * pSS,
                             PtrSSchema pLoadedSS,
                             ThotBool Extension */);
-extern PtrSSchema LoadExtension (/* USTRING SSchName,
-                                    USTRING PSchName,
+extern PtrSSchema LoadExtension (/* char* SSchName,
+                                    char* PSchName,
                                     PtrDocument pDoc */);
 extern ThotBool FreeNature (/* PtrSSchema pSS,
                                PtrSSchema pNatureSS */);

@@ -272,7 +272,7 @@ HBITMAP hBmp;
     /* Retrieve the bitmap's color format, width, and height. */ 
  
     if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp))
-       WinErrorBox (hwnd, "CreateBitmapInfoStruct (1)"); 
+       WinErrorBox (hwnd, TEXT("CreateBitmapInfoStruct (1)")); 
  
 
     /* Convert the color format to a count of bits. */ 
@@ -437,10 +437,10 @@ LPBITMAPINFO* lpBmpInfo;
 
    lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, (*lpBmpInfo)->bmiHeader.biSizeImage);
    if (!lpBits)
-      WinErrorBox (NULL, "GetTransparentDIBits (1)");
+      WinErrorBox (NULL, TEXT("GetTransparentDIBits (1)"));
 
    if (!GetDIBits (hDC, (HBITMAP) bitmapDest, 0, (WORD)(*lpBmpInfo)->bmiHeader.biHeight, lpBits, *lpBmpInfo, DIB_RGB_COLORS))
-      WinErrorBox (NULL, "GetTransparentDIBits (2)");        
+      WinErrorBox (NULL, TEXT("GetTransparentDIBits (2)")); 
 
    SelectObject (hDestDC, pOldBitmapDest);
    SelectObject (hInvAndDC, pOldBitmapInvAnd);
@@ -449,49 +449,49 @@ LPBITMAPINFO* lpBmpInfo;
    SelectObject (hImageDC, bitmap);
 
    if (hDestDC && !DeleteDC (hDestDC))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (3)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (3)"));
    hDestDC = (HDC) 0;
    if (hInvAndDC && !DeleteDC (hInvAndDC))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (4)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (4)"));
    hInvAndDC = (HDC) 0;
    if (hAndDC && !DeleteDC (hAndDC))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (5)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (5)"));
    hAndDC = (HDC) 0;
    if (hOrDC && !DeleteDC (hOrDC))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (6)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (6)"));
    hOrDC = (HDC) 0;
    if (hImageDC && !DeleteDC (hImageDC))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (7)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (7)"));
    hImageDC = (HDC) 0;
    if (hDC && !DeleteDC (hDC))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (8)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (8)"));
    hDC = (HDC) 0;
    if (bitmap && !DeleteObject (bitmap))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (9)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (9)"));
    bitmap = (HBITMAP) 0;
    if (bitmapOr && !DeleteObject (bitmapOr))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (10)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (10)"));
    bitmapOr = (HBITMAP) 0;
    if (pOldBitmapOr && !DeleteObject (pOldBitmapOr))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (11)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (11)"));
    pOldBitmapOr = (HBITMAP) 0;
    if (bitmapAnd && !DeleteObject (bitmapAnd))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (12)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (12)"));
    bitmapAnd = (HBITMAP) 0;
    if (pOldBitmapAnd && !DeleteObject (pOldBitmapAnd))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (13)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (13)"));
    pOldBitmapAnd = (HBITMAP) 0;
    if (bitmapInvAnd && !DeleteObject (bitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (14)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (14)"));
    bitmapInvAnd = (HBITMAP) 0;
    if (pOldBitmapInvAnd && !DeleteObject (pOldBitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (15)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (15)"));
    pOldBitmapInvAnd = (HBITMAP) 0;
    if (bitmapDest && !DeleteObject (bitmapDest))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (16)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (16)"));
    bitmapDest = (HBITMAP) 0;
    if (pOldBitmapDest && !DeleteObject (pOldBitmapDest))
-      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (17)");
+      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (17)"));
    pOldBitmapDest = (HBITMAP) 0;
 
    return lpBits;
@@ -1649,21 +1649,21 @@ int                 frame;
 
         LoadPicture (frame, box, imageDesc);
 	if (imageDesc->PicPixmap == None) 
-	  WinErrorBox (NULL, "DrawPicture (1)");
+	  WinErrorBox (NULL, TEXT("DrawPicture (1)"));
 	else
 	  {
 	    lpBmpInfo = CreateBitmapInfoStruct(FrRef[frame], imageDesc->PicPixmap);
 
 	    lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
 	    if (!lpBits) 
-	      WinErrorBox (NULL, "DrawPicture (2)");
+	      WinErrorBox (NULL, TEXT("DrawPicture (2)"));
 
 	    if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0, (UINT)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
-	      WinErrorBox (NULL, "DrawPicture (3)");
+	      WinErrorBox (NULL, TEXT("DrawPicture (3)"));
 			    
 	    PrintDIB (lpBmpInfo, lpBits, FrRef[frame], TtPrinterDC, x, y, w, h);
                if (GlobalFree (lpBits) != NULL)
-                  WinErrorBox (NULL, "DrawPicture (4)");
+                  WinErrorBox (NULL, TEXT("DrawPicture (4)"));
 	  }
       }
     else

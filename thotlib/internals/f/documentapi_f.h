@@ -25,15 +25,15 @@ extern ThotBool TtaIsInDocumentPath ( CharUnit* directory );
 extern void TtaAppendDocumentPath ( CharUnit* directory );
 extern void TtaSetSchemaPath ( STRING path );
 extern SSchema TtaNewNature ( SSchema schema,
-                              STRING natureName,
-                              STRING presentationName );
+                              char* natureName,
+                              char* presentationName );
 extern SSchema TtaNewSchemaExtension ( Document document,
-                                       STRING extensionName,
-                                       STRING presentationName );
+                                       char* extensionName,
+                                       char* presentationName );
 extern void TtaSetPSchema ( Document document,
                             char* presentationName );
 extern void TtaSetDocumentDirectory ( Document document,
-                                      STRING directory );
+                                      CharUnit* directory );
 extern void TtaSetDocumentAccessMode ( Document document,
                                        int accessMode );
 extern void TtaSetDocumentBackUpInterval ( Document document,
@@ -45,15 +45,15 @@ extern void SetDocumentModified ( PtrDocument pDoc,
                                   int length );
 extern void TtaSetDocumentModified ( Document document );
 extern void TtaSetDocumentUnmodified ( Document document );
-extern STRING TtaGetDocumentName ( Document document );
+extern CharUnit* TtaGetDocumentName ( Document document );
 extern Document TtaGetDocumentFromName ( STRING documentName );
 extern void TtaGetDocumentDirectory ( Document document,
                                       STRING buffer,
                                       int bufferLength );
 extern SSchema TtaGetDocumentSSchema ( Document document );
-extern STRING TtaGetSSchemaName ( SSchema schema );
-extern STRING TtaGetPSchemaName ( SSchema schema );
-extern SSchema TtaGetSSchema ( STRING name,
+extern char* TtaGetSSchemaName ( SSchema schema );
+extern char* TtaGetPSchemaName ( SSchema schema );
+extern SSchema TtaGetSSchema ( char* name,
                                Document document );
 extern int TtaSameSSchemas ( SSchema schema1,
                              SSchema schema2 );
@@ -116,14 +116,14 @@ extern void SetDocumentModified (/* PtrDocument pDoc,
                                     int length */);
 extern void TtaSetDocumentModified (/* Document document */);
 extern void TtaSetDocumentUnmodified (/* Document document */);
-extern STRING TtaGetDocumentName (/* Document document */);
+extern CharUnit* TtaGetDocumentName (/* Document document */);
 extern Document TtaGetDocumentFromName (/* STRING documentName */);
 extern void TtaGetDocumentDirectory (/* Document document,
                                         STRING buffer,
                                         int bufferLength */);
 extern SSchema TtaGetDocumentSSchema (/* Document document */);
-extern STRING TtaGetSSchemaName (/* SSchema schema */);
-extern STRING TtaGetPSchemaName (/* SSchema schema */);
+extern char* TtaGetSSchemaName (/* SSchema schema */);
+extern char* TtaGetPSchemaName (/* SSchema schema */);
 extern SSchema TtaGetSSchema (/* STRING name,
                                  Document document */);
 extern int TtaSameSSchemas (/* SSchema schema1,

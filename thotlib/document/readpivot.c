@@ -239,10 +239,10 @@ PtrDocument         pDoc;
    schema de structure et utiliser pSS si pSS <> NULL.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            OpenDocument (Name docName, PtrDocument pDoc, ThotBool loadIncludedDoc, ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent, ThotBool removeExclusions)
+ThotBool            OpenDocument (CharUnit* docName, PtrDocument pDoc, ThotBool loadIncludedDoc, ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent, ThotBool removeExclusions)
 #else  /* __STDC__ */
 ThotBool            OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions)
-Name                docName;
+CharUnit*           docName;
 PtrDocument         pDoc;
 ThotBool            loadIncludedDoc;
 ThotBool            skeleton;
@@ -273,11 +273,11 @@ ThotBool		    removeExclusions
 	else
 	   /* le document n'a pas d'identificateur, on l'accede par son nom */
 	  {
-	     ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+	     StringNCopy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* on n'a pas d'autre outil de stockage des documents que le SGF UNIX */
 	     /* On confond identificateur et nom de document */
-	     ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+	     StringNCopy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
 	     pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDoc->DocDName[0] > SPACE)
@@ -1064,7 +1064,7 @@ PtrDocument         pDoc;
 	if (pRefD == NULL)
 	   /* fin de la chaine */
 	   stop = TRUE;
-	else if (ustrcmp (pRefD->ReReferredLabel, label) == 0)
+	else if (strcmp (pRefD->ReReferredLabel, label) == 0)
 	   /* le label correspond */
 	   if (DocIdentIsNull (docIdent) && !pRefD->ReExternalRef)
 	      /* on cherche une reference interne et c'en est une */
@@ -1081,7 +1081,7 @@ PtrDocument         pDoc;
      {
 	pRefD = NewReferredElDescr (pDoc);
 	/* on initialise le descripteur de reference cree'. */
-	ustrncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
+	strncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
 	pRefD->ReExternalRef = !DocIdentIsNull (docIdent);
 	if (pRefD->ReExternalRef)
 	   CopyDocIdent (&pRefD->ReExtDocument, docIdent);
@@ -1170,7 +1170,7 @@ char*               tag;
    ThotBool            Extension;
 
    rule = 0;
-   if (*tag == (CHAR_T) C_PIV_NATURE)
+   if (*tag == C_PIV_NATURE)
      {
 	/* lit le numero de nature */
 	TtaReadShort (pivFile, &nat);
@@ -1213,7 +1213,7 @@ char*               tag;
 	     }
      }
    if (!error)
-      if (*tag == (CHAR_T) C_PIV_TYPE)
+      if (*tag == C_PIV_TYPE)
 	{
 	   /* lit le numero de type de l'element */
 	   TtaReadShort (pivFile, &rule);
@@ -1504,14 +1504,14 @@ PtrAttribute       *pAttr;
 			  }
 		     while (!error && c != EOS) ;
 		  else
-		    {
+		    { 
 		       /* acquiert un premier buffer de texte */
 		       GetTextBuffer (&pPremBuff);
 		       pBT = pPremBuff;
 		       /* lit tout le texte de l'attribut */
 		       stop = FALSE;
 		       do
-			  if (!TtaReadByte (pivFile, &pBT->BuContent[pBT->BuLength++]))
+			  if (!TtaReadWideChar (pivFile, &pBT->BuContent[pBT->BuLength++]))
 			     /* erreur de lecture */
 			    {
 			       PivotError (pivFile);
@@ -1541,8 +1541,9 @@ PtrAttribute       *pAttr;
 			      pPremBuff->BuContent[2] != TEXT('-'))
 			    /* it's not a valid language code. Convert it */
 			    {
-			    ustrcpy (pPremBuff->BuContent,
-				    TtaGetLanguageCodeFromName (pPremBuff->BuContent));
+                CharUnit langName [MAX_LENGTH];
+                wc2cus_strcpy (langName, pPremBuff->BuContent);
+			    iso2wc_strcpy (pPremBuff->BuContent, TtaGetLanguageCodeFromName (langName));
 			    pBT->BuLength = ustrlen (pPremBuff->BuContent);
 			    }
 		    }
@@ -1556,9 +1557,9 @@ PtrAttribute       *pAttr;
 	   /* ignore les attributs definis dans les anciennes extensions */
 	   /* ExtCorr et ExtMot */
 	   if (pSchAttr->SsExtension)
-	      if (ustrcmp (pSchAttr->SsName, TEXT("ExtCorr")) == 0)
+	      if (strcmp (pSchAttr->SsName, "ExtCorr") == 0)
 		 create = FALSE;
-	      else if (ustrcmp (pSchAttr->SsName, TEXT("ExtMot")) == 0)
+	      else if (strcmp (pSchAttr->SsName, "ExtMot") == 0)
 		 create = FALSE;
 	if (!create)
 	   *pAttr = NULL;
@@ -2128,13 +2129,13 @@ PtrDocument         pDoc;
    l'element lu ni sa descendance. Prioritaire sur createAll
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, STRING tag, int assocNum, ThotBool createParam, ThotBool createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, ThotBool createPage, PtrElement pParent, ThotBool createDesc)
+PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char* tag, int assocNum, ThotBool createParam, ThotBool createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, ThotBool createPage, PtrElement pParent, ThotBool createDesc)
 #else  /* __STDC__ */
 PtrElement          ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createParam, createAll, contentType, pContSS, typeRead, pSSRead, createPage, pParent, createDesc)
 BinFile             pivFile;
 PtrSSchema          pSSchema;
 PtrDocument         pDoc;
-STRING              tag;
+char*               tag;
 int                 assocNum;
 ThotBool            createParam;
 ThotBool            createAll;
@@ -2173,7 +2174,7 @@ ThotBool            createDesc;
   pEl = NULL;
   withReferences = FALSE;
   create = FALSE;
-  if (*tag != (CHAR_T) C_PIV_TYPE && *tag != (CHAR_T) C_PIV_NATURE)
+  if (*tag != C_PIV_TYPE && *tag != C_PIV_NATURE)
     {
       i = 1;
       while (!error && i < 200)
@@ -2309,7 +2310,7 @@ ThotBool            createDesc;
 	    PivotError (pivFile);
 	}
       inclusion = FALSE;	/* est-ce une reference a un element inclus? */
-      if (!error && *tag == (CHAR_T) C_PIV_INCLUDED)
+      if (!error && *tag == C_PIV_INCLUDED)
 	/* oui, lit la reference */
 	{
 	  inclusion = TRUE;
@@ -2327,7 +2328,7 @@ ThotBool            createDesc;
       
       /* lit le tag "Element-reference'" si elle est presente */
       if (!error)
-	if (*tag == (CHAR_T) C_PIV_REFERRED)
+	if (*tag == C_PIV_REFERRED)
 	  {
 	    withReferences = TRUE;
 	    if (!TtaReadByte (pivFile, tag))
@@ -2339,8 +2340,7 @@ ThotBool            createDesc;
       /* traite le label s'il est present */
       label[0] = EOS;
       if (!error)
-	if (*tag == (CHAR_T) C_PIV_SHORT_LABEL || *tag == (CHAR_T) C_PIV_LONG_LABEL ||
-	    *tag == (CHAR_T) C_PIV_LABEL)
+	if (*tag == C_PIV_SHORT_LABEL || *tag == C_PIV_LONG_LABEL || *tag == C_PIV_LABEL)
 	  {
 	    ReadLabel (*tag, label, pivFile);
 	    /* lit le tag qui suit le label */
@@ -2350,14 +2350,14 @@ ThotBool            createDesc;
       if (!error && label[0] != EOS && create)
 	/* l'element porte un label */
 	{
-	  ustrncpy (pEl->ElLabel, label, MAX_LABEL_LEN);
+	  strncpy (pEl->ElLabel, label, MAX_LABEL_LEN);
 	  if (!withReferences)
 	    /* on verifie si cet element (ou plutot son label) est dans la */
 	    /* chaine des elements reference's de l'exterieur */
 	    {
 	      pRefD = pDoc->DocLabels;
 	      while (pRefD != NULL && !withReferences)
-		if (ustrcmp (pRefD->ReReferredLabel, label) == 0)
+		if (strcmp (pRefD->ReReferredLabel, label) == 0)
 		  withReferences = TRUE;
 		else
 		  pRefD = pRefD->ReNext;
@@ -2383,7 +2383,7 @@ ThotBool            createDesc;
       /* lit le tag d'holophraste si elle est presente */
       if (!error && create)
 	pEl->ElHolophrast = FALSE;
-      if (*tag == (CHAR_T) C_PIV_HOLOPHRAST && !error)
+      if (*tag == C_PIV_HOLOPHRAST && !error)
 	{
 	  if (create)
 	    pEl->ElHolophrast = TRUE;
@@ -2392,7 +2392,7 @@ ThotBool            createDesc;
 	    PivotError (pivFile);
 	}
       /* lit les attributs de l'element s'il y en a */
-      while (*tag == (CHAR_T) C_PIV_ATTR && !error)
+      while (*tag == C_PIV_ATTR && !error)
 	{
 	  ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
 	  if (!error)
@@ -2410,7 +2410,7 @@ ThotBool            createDesc;
       /* regles de presentation heritees des attributs des ascendants */
       if (pEl != NULL)
 	pEl->ElParent = pParent;
-      while (*tag == (CHAR_T) C_PIV_PRESENT && !error)
+      while (*tag == C_PIV_PRESENT && !error)
 	{
 	  ReadPRulePiv (pDoc, pivFile, pEl, create, &pPRule, TRUE);
 	  if (!error)
@@ -2420,9 +2420,9 @@ ThotBool            createDesc;
 	}
       /* lit le commentaire qui accompagne eventuellement l'element */
       if (!error)
-	if (*tag == (CHAR_T) C_PIV_COMMENT || *tag == (CHAR_T) C_PIV_OLD_COMMENT)
+	if (*tag == C_PIV_COMMENT || *tag == C_PIV_OLD_COMMENT)
 	  {
-	    pBufComment = ReadComment (pivFile, create, (ThotBool) (*tag == (CHAR_T) C_PIV_OLD_COMMENT));	/*  */
+	    pBufComment = ReadComment (pivFile, create, (ThotBool) (*tag == C_PIV_OLD_COMMENT));	/*  */
 	    if (create)
 	      pEl->ElComment = pBufComment;
 	    /* lit l'octet suivant le commentaire */
@@ -2437,7 +2437,7 @@ ThotBool            createDesc;
 	  switch (pSSchema->SsRule[elType - 1].SrConstruct)
 	    {
 	    case CsReference:
-	      if (*tag != (CHAR_T) C_PIV_REFERENCE)
+	      if (*tag != C_PIV_REFERENCE)
 		{
 		  PivotError (pivFile);
 		  DisplayPivotMessage (TEXT("R"));	/* erreur */
@@ -2453,7 +2453,7 @@ ThotBool            createDesc;
 		}
 	      break;
 	    case CsPairedElement:
-	      if (*tag != (CHAR_T) C_PIV_BEGIN)
+	      if (*tag != C_PIV_BEGIN)
 		{
 		  PivotError (pivFile);
 		  DisplayPivotMessage (TEXT("M"));	/* erreur, pas de tag debut */
@@ -2468,7 +2468,7 @@ ThotBool            createDesc;
 		    pDoc->DocMaxPairIdent = i;
 		  if (!TtaReadByte (pivFile, tag))
 		    PivotError (pivFile);
-		  if (*tag != (CHAR_T) C_PIV_END)
+		  if (*tag != C_PIV_END)
 		    /* erreur, pas de tag de fin */
 		    {
 		      PivotError (pivFile);
@@ -2483,7 +2483,7 @@ ThotBool            createDesc;
 	      if (leafType == CharString)
 		if (pDoc->DocPivotVersion >= 4)
 		  {
-		    if (*tag != (CHAR_T) C_PIV_LANG)
+		    if (*tag != C_PIV_LANG)
 		      /* pas de tag de langue, c'est la premiere langue de la */
 		      /* table des langues du document */
 		      i = 0;
@@ -2520,10 +2520,7 @@ ThotBool            createDesc;
 		    /* n'y a pas d'alphabet. */
 		    /* dans les versions pivot anciennes, il peut y avoir une */
 		    /* tag d'alphabet. On la saute */
-		    if (*tag != (CHAR_T) C_PIV_BEGIN &&
-			*tag != (CHAR_T) C_PIV_END &&
-			*tag != (CHAR_T) C_PIV_TYPE &&
-			*tag != (CHAR_T) C_PIV_NATURE)
+		    if (*tag != C_PIV_BEGIN && *tag != C_PIV_END && *tag != C_PIV_TYPE && *tag != C_PIV_NATURE)
 		      /* on a lu l'alphabet */
 		      {
 			alphabet = *tag;
@@ -2549,12 +2546,12 @@ ThotBool            createDesc;
 		      }
 		  }
 	      
-	      if (*tag == (CHAR_T) C_PIV_BEGIN && !error)
+	      if (*tag == C_PIV_BEGIN && !error)
 		{
 		  if (leafType != PageBreak)
 		    if (!TtaReadByte (pivFile, tag))
 		      PivotError (pivFile);
-		  if (*tag != (CHAR_T) C_PIV_END)	/* il y a un contenu */
+		  if (*tag != C_PIV_END)	/* il y a un contenu */
 		    {
 		      switch (leafType)
 			{
@@ -2591,31 +2588,31 @@ ThotBool            createDesc;
 				      if (((int) ch) >= 1 && ch < SPACE)
 					switch (ch)
 					  {
-					  case TEXT('\021'):
-					    ch = TEXT('\040');
+					  case '\021':
+					    ch = '\040';
 					    break;	/*space */
-					  case TEXT('\030'):
-					    ch = TEXT('\230');
+					  case '\030':
+					    ch = '\230';
 					    break;	/*oe */
-					  case TEXT('\036'):
-					    ch = TEXT('\377');
+					  case '\036':
+					    ch = '\377';
 					    break;	/*ydiaresis */
-					  case TEXT('\037'):
-					    ch = TEXT('\351');
+					  case '\037':
+					    ch = '\351';
 					    break;	/*eacute */
 					  default:
-					    ch = (CHAR_T) (((int) ch) + 223);
+					    ch = (((int) ch) + 223);
 					  }
 				    /* changement des oe et OE */
 				    if (pDoc->DocPivotVersion < 4)
-				      if (ch == TEXT('\230'))
-					ch = TEXT('\367');
-				      else if (ch == TEXT('\367'))
-					ch = TEXT('\230');
-				      else if (ch == TEXT('\231'))
-					ch = TEXT('\327');
-				      else if (ch == TEXT('\327'))
-					ch = TEXT('\231');
+				      if (ch == '\230')
+                         ch = '\367';
+				      else if (ch == '\367')
+                           ch = '\230';
+                      else if (ch == '\231')
+                           ch = '\327';
+                      else if (ch == '\327')
+                           ch = '\231';
 				    /* range le caractere et lit le suivant */
 				    pBuf->BuContent[n - 1] = ch;
 				    if (!TtaReadByte (pivFile, &ch))
@@ -2692,7 +2689,7 @@ ThotBool            createDesc;
 			  /* lit l'octet qui suit */
 			  if (!TtaReadByte (pivFile, tag))
 			    PivotError (pivFile);
-			  else if (*tag != (CHAR_T) C_PIV_POLYLINE)
+			  else if (*tag != C_PIV_POLYLINE)
 			    /* c'est un element graphique simple */
 			    {
 			      if (create)
@@ -2700,10 +2697,10 @@ ThotBool            createDesc;
 				  pEl->ElGraph = ch;
 				  /* remplace les anciens rectangles trame's par */
 				  /* de simple rectangles */
-				  if (pEl->ElGraph >= TEXT('0') && pEl->ElGraph <= TEXT('9'))
-				    pEl->ElGraph = TEXT('R');
-				  else if (pEl->ElGraph >= TEXT('\260') && pEl->ElGraph <= TEXT('\270'))
-				    pEl->ElGraph = TEXT('R');
+				  if (pEl->ElGraph >= '0' && pEl->ElGraph <= '9')
+				    pEl->ElGraph = 'R';
+				  else if (pEl->ElGraph >= '\260' && pEl->ElGraph <= '\270')
+				    pEl->ElGraph = 'R';
 				  if (ch == EOS)
 				    pEl->ElVolume = 0;
 				  else
@@ -2771,7 +2768,7 @@ ThotBool            createDesc;
 			}
 		      
 		    }
-		  if (*tag != (CHAR_T) C_PIV_END)
+		  if (*tag != C_PIV_END)
 		    {
 		      PivotError (pivFile);
 		      DisplayPivotMessage (TEXT("F"));
@@ -2783,7 +2780,7 @@ ThotBool            createDesc;
 	      break;
 	    default:
 	      /* traite le contenu s'il y en a un */
-	      if (*tag == (CHAR_T) C_PIV_BEGIN)
+	      if (*tag == C_PIV_BEGIN)
 		{
 		  if (pEl != NULL)
 		    if (pEl->ElTerminal)
@@ -2797,7 +2794,7 @@ ThotBool            createDesc;
 		      if (!TtaReadByte (pivFile, tag))
 			PivotError (pivFile);
 		      pPrevEl = NULL;
-		      while (*tag != (CHAR_T) C_PIV_END && !error)
+		      while (*tag != C_PIV_END && !error)
 			/* ce n'est pas un element vide, */
 			/* on lit son contenu */
 			{
@@ -2807,9 +2804,7 @@ ThotBool            createDesc;
 			    pfutParent = pEl;
 			  else
 			    pfutParent = pParent;
-			  p = ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum,
-					   createParam, createAll, contentType, pContSS, &rule,
-					   &pSS, createPage, pfutParent, createDesc);
+			  p = ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createParam, createAll, contentType, pContSS, &rule, &pSS, createPage, pfutParent, createDesc);
 			  pElRead = p;
 			  if (!error)
 			    if (p != NULL)
@@ -3063,7 +3058,7 @@ int                 rank;
    i = 1;
    found = FALSE;
    while (i <= pDoc->DocNNatures && !found)
-      if (ustrncmp (SSName, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
+      if (strncmp (SSName, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
 	 found = TRUE;
       else
 	 i++;
@@ -3076,14 +3071,14 @@ int                 rank;
 	   /* y est */
 	  {
 	     pSS = pDoc->DocNatureSSchema[rank - 1];
-	     ustrncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     ustrncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     strncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
+	     strncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[rank - 1] = pDoc->DocNatureSSchema[i - 1];
-	     ustrncpy (pDoc->DocNatureName[rank - 1], pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[rank - 1], pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNatureName[rank - 1], pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNaturePresName[rank - 1], pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[i - 1] = pSS;
-	     ustrncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
 	  }
      }
    else
@@ -3096,12 +3091,12 @@ int                 rank;
 	else
 	  {
 	     pDoc->DocNatureSSchema[pDoc->DocNNatures] = pDoc->DocNatureSSchema[rank - 1];
-	     ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures], pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures], pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures], pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNNatures++;
 	  }
 	pDoc->DocNatureSSchema[rank - 1] = NULL;
-	ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+	strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
      }
 }
 
@@ -3112,7 +3107,7 @@ int                 rank;
    	schemas								
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char* tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, STRING natSchema, STRING presentSchema))
+void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char* tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, char* natSchema, char* presentSchema))
 #else  /* __STDC__ */
 void                ReadSchemaNamesPiv (file, pDoc, tag, pLoadedSS, withThisPSchema)
 BinFile             file;
@@ -3125,6 +3120,7 @@ void (*withThisPSchema) ();
 
 {
    Name                SSName, PSchemaName;
+   CUSName             cusSSName, cusPSchemaName;
    PtrSSchema          pSS;
    int                 i, rank;
    ThotBool            ExtensionSch;
@@ -3135,59 +3131,60 @@ void (*withThisPSchema) ();
    /* lit le type du document */
    do
       if (!TtaReadByte (file, &SSName[i++]))
-	 PivotError (file);
+         PivotError (file);
    while (!error && SSName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
-   if (SSName[i - 1] != EOS)
+   if (SSName[i - 1] != CUS_EOS)
      {
-	PivotError (file);
-	DisplayPivotMessage (TEXT("Z"));
+        PivotError (file);
+        DisplayPivotMessage (TEXT("Z"));
      }
    else
      {
-	if (pDoc->DocPivotVersion >= 4)
-	   /* Lit le code du schema de structure */
-	   if (!error)
-	      if (!TtaReadShort (file, &versionSchema))
-		 PivotError (file);
-	/* Lit le nom du schema de presentation associe' */
-	i = 0;
-	do
-	   if (!TtaReadByte (file, &PSchemaName[i++]))
-	      PivotError (file);
-	while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+         if (pDoc->DocPivotVersion >= 4)
+            /* Lit le code du schema de structure */
+            if (!error)
+               if (!TtaReadShort (file, &versionSchema))
+                  PivotError (file);
+            /* Lit le nom du schema de presentation associe' */
+            i = 0;
+            do
+              if (!TtaReadByte (file, &PSchemaName[i++]))
+                 PivotError (file);
+            while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
 
-	if (!TtaReadByte (file, tag))
-	   PivotError (file);
-        if (withThisPSchema != NULL)
-           (*withThisPSchema) ((Document) IdentDocument (pDoc),
-                               SSName,
-                               PSchemaName);
-	PutNatureInTable (pDoc, SSName, rank);
-	/* charge les schemas de structure et de presentation du document */
-	if (pDoc->DocSSchema == NULL)
-	   LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pLoadedSS, FALSE);
-	if (pDoc->DocSSchema == NULL)
-	   PivotError (file);
-	else if (pDoc->DocPivotVersion >= 4)
-	   /* on verifie que la version du schema charge' est la meme */
-	   /* que celle du document */
-	   if (pDoc->DocSSchema->SsCode != versionSchema)
-	     {
-		pDoc->DocCheckingMode |= PIV_CHECK_MASK;
-		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pDoc->DocSSchema->SsName);
-	     }
+         if (!TtaReadByte (file, tag))
+            PivotError (file);
+         if (withThisPSchema != NULL)
+            (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName, PSchemaName);
+         PutNatureInTable (pDoc, SSName, rank);
+         /* charge les schemas de structure et de presentation du document */
+		 if (pDoc->DocSSchema == NULL) {
+            iso2cus_strcpy (cusSSName, SSName);
+            iso2cus_strcpy (cusPSchemaName, PSchemaName);
+           LoadSchemas (cusSSName, cusPSchemaName, &pDoc->DocSSchema, pLoadedSS, FALSE);
+		 }
+        if (pDoc->DocSSchema == NULL)
+           PivotError (file);
+        else if (pDoc->DocPivotVersion >= 4)
+             /* on verifie que la version du schema charge' est la meme */
+             /* que celle du document */
+        if (pDoc->DocSSchema->SsCode != versionSchema)
+           {
+              pDoc->DocCheckingMode |= PIV_CHECK_MASK;
+              TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pDoc->DocSSchema->SsName);
+           }
      }
    if (pDoc->DocNatureSSchema[rank - 1] == NULL)
      {
-	pDoc->DocNatureSSchema[rank - 1] = pDoc->DocSSchema;
-	ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
-	ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
-	if (pDoc->DocSSchema != NULL)
-	   if (pDoc->DocSSchema->SsPSchema == NULL)
-	      /* le schema de presentation n'a pas ete charge' (librairie  */
-	      /* Kernel, par exemple). On memorise dans le schema de */
-	      /* structure charge' le nom du schema P associe' */
-	      ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+        pDoc->DocNatureSSchema[rank - 1] = pDoc->DocSSchema;
+        strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+        strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
+        if (pDoc->DocSSchema != NULL)
+           if (pDoc->DocSSchema->SsPSchema == NULL)
+              /* le schema de presentation n'a pas ete charge' (librairie  */
+              /* Kernel, par exemple). On memorise dans le schema de */
+              /* structure charge' le nom du schema P associe' */
+              strncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
      }
    /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
@@ -3231,15 +3228,13 @@ void (*withThisPSchema) ();
 	if (!error)
 	  {
              if (withThisPSchema != NULL)
-                (*withThisPSchema) ((Document) IdentDocument (pDoc),
-                                    SSName,
-                                    PSchemaName);
+                (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName, PSchemaName);
 	     PutNatureInTable (pDoc, SSName, rank);
 	     if (pDoc->DocNatureSSchema[rank - 1] == NULL)
 		if (ExtensionSch)
 		   /* charge l'extension de schema */
 		   pSS = LoadExtension (SSName, PSchemaName, pDoc);
-		else
+		else 
 		  {
 		     i = CreateNature (SSName, PSchemaName, pDoc->DocSSchema);
 		     if (i == 0)
@@ -3259,12 +3254,12 @@ void (*withThisPSchema) ();
 		    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rank - 1] = pSS;
-	     ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
+	     strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
 	     if (pSS->SsPSchema == NULL)
 		/* le schema de presentation n'a pas ete charge' (librairie
 		   Kernel, par exemple). On memorise dans le schema de structure
 		   charge' le nom du schema P associe' */
-		ustrncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+		strncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
 	  }
      }
 }
@@ -3284,8 +3279,8 @@ char*               tag;
 #endif /* __STDC__ */
 
 {
-   Name                languageName;
-   int                 i;
+   WCName           languageName;
+   int              i;
 
    /* lit la table des langues utilisees par le document */
    pDoc->DocNLanguages = 0;
@@ -3294,20 +3289,19 @@ char*               tag;
 	{
 	   i = 0;
 	   do
-	      if (!TtaReadByte (file, &languageName[i++]))
+	      if (!TtaReadWideChar (file, &languageName[i++]))
 		 PivotError (file);
-	   while (!error && languageName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
-	   if (languageName[i - 1] != EOS)
+	   while (!error && languageName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
+	   if (languageName[i - 1] != WC_EOS)
 	     {
 		PivotError (file);
 		DisplayPivotMessage (TEXT("Z"));
 	     }
 	   else
 	     {
-		if (languageName[0] != EOS)
+		if (languageName[0] != WC_EOS)
 		   if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
-		      pDoc->DocLanguages[pDoc->DocNLanguages++] =
-			 TtaGetLanguageIdFromName (languageName);
+		      pDoc->DocLanguages[pDoc->DocNLanguages++] = TtaGetLanguageIdFromName (languageName);
 		/* lit l'octet suivant le nom de langue */
 		if (!TtaReadByte (file, tag))
 		   PivotError (file);
@@ -3538,9 +3532,7 @@ ThotBool		    removeExclusions
 		   PivotError (file);
 		rule = 0;
 		pNat = NULL;
-		p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0, TRUE,
-				 (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
-				 &typeRead, &pSS, createPages, NULL, TRUE);
+		p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0, TRUE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat, &typeRead, &pSS, createPages, NULL, TRUE);
 		if (withEvent && pDoc->DocSSchema != NULL && !error)
 		   SendEventAttrRead (p, pDoc);
 		if (!error)
@@ -3794,8 +3786,8 @@ ThotBool		    removeExclusions
 	     previousSSchema = pDoc->DocSSchema;
 	     curExtension = previousSSchema->SsNextExtens;
 	     while (curExtension != NULL)
-		if (ustrcmp (curExtension->SsName, TEXT("ExtCorr")) == 0 ||
-		    ustrcmp (curExtension->SsName, TEXT("ExtMot")) == 0)
+		if (strcmp (curExtension->SsName, "ExtCorr") == 0 ||
+		    strcmp (curExtension->SsName, "ExtMot") == 0)
 		  {
 		     previousSSchema->SsNextExtens = curExtension->SsNextExtens;
 		     if (curExtension->SsNextExtens != NULL)

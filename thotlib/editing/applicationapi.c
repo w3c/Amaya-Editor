@@ -317,7 +317,7 @@ CharUnit*           applicationName;
    int                 i;
 
    UserErrorCode = 0;
-   ustrcpy (DefaultDocumentName, _EMPTYSTR_);
+   StringCopy (DefaultDocumentName, CUSTEXT(""));
    InitEditorMemory ();		/* Initializes the memory managment of the editor */
    InitNatures ();		/* Initializes the table of Natures */
 

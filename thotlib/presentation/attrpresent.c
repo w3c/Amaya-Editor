@@ -211,13 +211,13 @@ PtrAttribute        pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TransmitElementContent (PtrElement pEl, PtrDocument pDoc, Name attrName, int inclRule, PtrSSchema pSS)
+void                TransmitElementContent (PtrElement pEl, PtrDocument pDoc, CHAR_T* attrName, int inclRule, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 void                TransmitElementContent (pEl, pDoc, attrName, inclRule, pSS)
 PtrElement          pEl;
 PtrDocument         pDoc;
-Name                attrName;
+CHAR_T*             attrName;
 int                 inclRule;
 PtrSSchema          pSS;
 
@@ -269,7 +269,7 @@ PtrSSchema          pSS;
 				 AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
 				 if (AttrDef->AttrType == AtTextAttr)
 				    /* that's a text attribute */
-				    if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
+				    if (ustrcmp (AttrDef->AttrOrigName, attrName) == 0)
 				       /* that's the rigth attribute */
 				       found = TRUE;
 			      }
@@ -373,9 +373,7 @@ PtrDocument         pDoc;
 						       srcNumType + 1, pSS);
 			  if (pSrcEl != NULL)
 			     /* apply the Transmit rule to the element found */
-			     TransmitElementContent (pSrcEl, pDoc,
-						    pTransR->TeTargetAttr,
-						    pTransR->TeTargetDoc, pSS);
+			     TransmitElementContent (pSrcEl, pDoc, pTransR->TeTargetAttr, pTransR->TeTargetDoc, pSS);
 		       }
 		  }
 	     }
@@ -392,8 +390,7 @@ PtrDocument         pDoc;
 			/* this Transmit rule transmit the counter value to */
 			/* a document of the type of the included document */
 			/* apply the Transmit rule */
-			TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[rule],
-					    counter + 1, pPSch, pSS);
+			TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[rule], counter + 1, pPSch, pSS);
 		     }
 	     }
 	}

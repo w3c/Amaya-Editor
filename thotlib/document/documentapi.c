@@ -63,7 +63,8 @@
 #include "views_f.h"
 #include "writepivot_f.h"
 
-static Name         nameBuffer;
+static CharUnit nameBuffer[MAX_NATURES_DOC];
+static char     ISObuffer[MAX_NATURES_DOC];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -126,7 +127,7 @@ int                 accessMode;
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
-		if (ustrcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
+		if (StringCompare (&(pDoc->DocDName[lg - 4]), CUSTEXT(".PIV")) == 0)
 		   pDoc->DocDName[lg - 4] = EOS;
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	     ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
@@ -574,13 +575,13 @@ STRING              path;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-SSchema             TtaNewNature (SSchema schema, STRING natureName, STRING presentationName)
+SSchema             TtaNewNature (SSchema schema, char* natureName, char* presentationName)
 
 #else  /* __STDC__ */
 SSchema             TtaNewNature (schema, natureName, presentationName)
 SSchema             schema;
-STRING              natureName;
-STRING              presentationName;
+char*               natureName;
+char*               presentationName;
 
 #endif /* __STDC__ */
 
@@ -596,8 +597,7 @@ STRING              presentationName;
      }
    else
      {
-	natureRule = CreateNature (natureName, presentationName,
-				   (PtrSSchema) schema);
+	natureRule = CreateNature (natureName, presentationName, (PtrSSchema) schema);
 	if (natureRule == 0)
 	  {
 	     TtaError (ERR_invalid_parameter);
@@ -628,13 +628,13 @@ STRING              presentationName;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-SSchema             TtaNewSchemaExtension (Document document, STRING extensionName, STRING presentationName)
+SSchema             TtaNewSchemaExtension (Document document, char* extensionName, char* presentationName)
 
 #else  /* __STDC__ */
 SSchema             TtaNewSchemaExtension (document, extensionName, presentationName)
 Document            document;
-STRING              extensionName;
-STRING              presentationName;
+char*               extensionName;
+char*               presentationName;
 
 #endif /* __STDC__ */
 
@@ -757,11 +757,11 @@ char*               presentationName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetDocumentDirectory (Document document, STRING directory)
+void                TtaSetDocumentDirectory (Document document, CharUnit* directory)
 #else  /* __STDC__ */
 void                TtaSetDocumentDirectory (document, directory)
 Document            document;
-STRING              directory;
+CharUnit*           directory;
 #endif /* __STDC__ */
 
 {
@@ -774,9 +774,9 @@ STRING              directory;
    else
       /* parameter document is correct */
      {
-	if (ustrlen (directory) >= MAX_PATH)
+	if (StringLength (directory) >= MAX_PATH)
 	   TtaError (ERR_buffer_too_small);
-	ustrcpy (LoadedDocument[document - 1]->DocDirectory, directory);
+	StringCopy (LoadedDocument[document - 1]->DocDirectory, directory);
      }
 }
 
@@ -1024,10 +1024,10 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-STRING              TtaGetDocumentName (Document document)
+CharUnit*           TtaGetDocumentName (Document document)
 
 #else  /* __STDC__ */
-STRING              TtaGetDocumentName (document)
+CharUnit*           TtaGetDocumentName (document)
 Document            document;
 
 #endif /* __STDC__ */
@@ -1047,7 +1047,7 @@ Document            document;
    else
       /* parameter document is correct */
      {
-	ustrcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
+	StringCopy (nameBuffer, LoadedDocument[document - 1]->DocDName);
      }
    return nameBuffer;
 }
@@ -1201,10 +1201,10 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-STRING              TtaGetSSchemaName (SSchema schema)
+char*              TtaGetSSchemaName (SSchema schema)
 
 #else  /* __STDC__ */
-STRING              TtaGetSSchemaName (schema)
+char*              TtaGetSSchemaName (schema)
 SSchema             schema;
 
 #endif /* __STDC__ */
@@ -1213,14 +1213,14 @@ SSchema             schema;
    UserErrorCode = 0;
    if (schema == NULL)
      {
-	nameBuffer[0] = EOS;
+	ISObuffer[0] = EOS;
 	TtaError (ERR_invalid_parameter);
      }
    else
      {
-	ustrcpy (nameBuffer, ((PtrSSchema) schema)->SsName);
+	strcpy (ISObuffer, ((PtrSSchema) schema)->SsName);
      }
-   return nameBuffer;
+   return ISObuffer;
 }
 
 /*----------------------------------------------------------------------
@@ -1238,10 +1238,10 @@ SSchema             schema;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-STRING              TtaGetPSchemaName (SSchema schema)
+char*               TtaGetPSchemaName (SSchema schema)
 
 #else  /* __STDC__ */
-STRING              TtaGetPSchemaName (schema)
+char*               TtaGetPSchemaName (schema)
 SSchema             schema;
 
 #endif /* __STDC__ */
@@ -1250,26 +1250,26 @@ SSchema             schema;
    UserErrorCode = 0;
    if (schema == NULL)
      {
-	nameBuffer[0] = EOS;
+	ISObuffer[0] = EOS;
 	TtaError (ERR_invalid_parameter);
      }
    else
      {
-	ustrcpy (nameBuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
+	strcpy (ISObuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
      }
-   return nameBuffer;
+   return ISObuffer;
 }
 
 /* ChSchStruct recursively searches the schema which name is "name" within
    nature schema and extension schema used by pSS. It returns a pointer
    which references this schema or NULL if not found. */
 #ifdef __STDC__
-static SSchema      ChSchStruct (PtrSSchema pSS, CharUnit* name)
+static SSchema      ChSchStruct (PtrSSchema pSS, char* name)
 
 #else  /* __STDC__ */
 static SSchema      ChSchStruct (pSS, name)
 PtrSSchema          pSS;
-CharUnit*           name;
+char*               name;
 
 #endif /* __STDC__ */
 
@@ -1279,7 +1279,7 @@ CharUnit*           name;
 
    retour = NULL;
    if (pSS != NULL)
-      if (StringCompare (name, pSS->SsName) == 0)
+      if (strcmp (name, pSS->SsName) == 0)
 	 /* The schema itself */
 	 retour = (SSchema) pSS;
       else
@@ -1311,10 +1311,10 @@ CharUnit*           name;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-SSchema             TtaGetSSchema (STRING name, Document document)
+SSchema             TtaGetSSchema (char* name, Document document)
 #else  /* __STDC__ */
 SSchema             TtaGetSSchema (name, document)
-STRING              name;
+char*               name;
 Document            document;
 #endif /* __STDC__ */
 

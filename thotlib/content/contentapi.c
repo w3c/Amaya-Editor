@@ -68,12 +68,12 @@
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetTextContent (Element element, char* content, Language language, Document document)
+void                TtaSetTextContent (Element element, CHAR_T* content, Language language, Document document)
 
 #else  /* __STDC__ */
 void                TtaSetTextContent (element, content, language, document)
 Element             element;
-char*               content;
+CHAR_T*             content;
 Language            language;
 Document            document;
 
@@ -81,7 +81,7 @@ Document            document;
 
 {
    PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
-   STRING              ptr;
+   CHAR_T*             ptr;
    int                 length, l, delta = 0;
    PtrElement          pEl;
 
@@ -147,7 +147,7 @@ Document            document;
 	     if (content != NULL)
 	       {
 	       ptr = content;
-	       length = strlen (content);
+	       length = ustrlen (content);
 	       delta = length - ((PtrElement) element)->ElTextLength;
 	       ((PtrElement) element)->ElTextLength = length;
 	       ((PtrElement) element)->ElVolume = length;
@@ -401,12 +401,12 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaAppendTextContent (Element element, char* content, Document document)
+void                TtaAppendTextContent (Element element, CHAR_T* content, Document document)
 
 #else  /* __STDC__ */
 void                TtaAppendTextContent (element, content, document)
 Element             element;
-char*               content;
+CHAR_T*             content;
 Document            document;
 
 #endif /* __STDC__ */
@@ -428,9 +428,7 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter document is correct */
-      InsertText ((PtrElement) element,
-		  ((PtrElement) element)->ElTextLength,
-		  content, document);
+      InsertText ((PtrElement) element, ((PtrElement) element)->ElTextLength, content, document);
 }
 
 
@@ -841,11 +839,11 @@ Document            document;
    document: the document containing that element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetGraphicsShape (Element element, CHAR_T shape, Document document)
+void                TtaSetGraphicsShape (Element element, char shape, Document document)
 #else  /* __STDC__ */
 void                TtaSetGraphicsShape (element, shape, document)
 Element             element;
-CHAR_T                shape;
+char                shape;
 Document            document;
 #endif /* __STDC__ */
 {
@@ -884,11 +882,11 @@ Document            document;
 	       }
 	     else
 	       {
-		  polyline = (shape == TEXT('S') || shape == TEXT('U') || shape == TEXT('N') ||
-			      shape == TEXT('M') || shape == TEXT('B') || shape == TEXT('A') ||
-			      shape == TEXT('F') || shape == TEXT('D') || shape == TEXT('p') ||
-			      shape == TEXT('s') || shape == TEXT('w') || shape == TEXT('x') ||
-			      shape == TEXT('y') || shape == TEXT('z'));
+		  polyline = (shape == 'S' || shape == 'U' || shape == 'N' ||
+			      shape == 'M' || shape == 'B' || shape == 'A' ||
+			      shape == 'F' || shape == 'D' || shape == 'p' ||
+			      shape == 's' || shape == 'w' || shape == 'x' ||
+			      shape == 'y' || shape == 'z');
 		  if (polyline && ((PtrElement) element)->ElLeafType == LtGraphics)
 		     /* changing simple graphic --> polyline */
 		    {
@@ -1477,13 +1475,13 @@ int                 length;
    symbol contained in the element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T                TtaGetGraphicsShape (Element element)
+char                TtaGetGraphicsShape (Element element)
 #else  /* __STDC__ */
-CHAR_T                TtaGetGraphicsShape (element)
+char                TtaGetGraphicsShape (element)
 Element             element;
 #endif /* __STDC__ */
 {
-   CHAR_T                content;
+   char                content;
 
    UserErrorCode = 0;
    content = EOS;

@@ -109,14 +109,13 @@ void                BuildSaveDocMenu ()
    NotifyDialog        notifyDoc;
 
    /* Name du fichier a sauver */
-   ustrcpy (outputFileName, SaveDirectoryName);
-   ustrcat (outputFileName, DIR_STR);
-   ustrcat (outputFileName, SaveFileName);
-   if (TraductionSchemaName[0] == EOS)
+   StringCopy (outputFileName, SaveDirectoryName);
+   StringConcat (outputFileName, CUS_DIR_STR);
+   StringConcat (outputFileName, SaveFileName);
+   if (TraductionSchemaName[0] == CUS_EOS)
       /* sauver en format Thot */
      {
-       if (ThotLocalActions[T_setwritedirectory] != NULL &&
-	   ThotLocalActions[T_writedocument] != NULL)
+       if (ThotLocalActions[T_setwritedirectory] != NULL && ThotLocalActions[T_writedocument] != NULL)
 	 {
 	   if (DocumentToSave->DocPivotVersion == -1)
 	     {
@@ -129,31 +128,22 @@ void                BuildSaveDocMenu ()
 	     }
 	   else
 	     {
-	       ustrcat (outputFileName, ".PIV"); 
+	       StringConcat (outputFileName, CUSTEXT(".PIV")); 
 	       (void) StoreDocument (DocumentToSave,
 				     SaveFileName, SaveDirectoryName,
 				     SaveDocWithCopy, SaveDocWithMove);
 	     }
 	 }
      }
-   else if (!ustrcmp (TraductionSchemaName, TEXT("_ThotOther_")))
+   else if (!StringCompare (TraductionSchemaName, CUSTEXT("_ThotOther_")))
      {
        if (DocumentToSave->DocPivotVersion == -1)
          {
-	   ustrcat (outputFileName, ".PIV"); 
+	   StringConcat (outputFileName, CUSTEXT(".PIV")); 
 	   (void) StoreDocument (DocumentToSave,
 				 SaveFileName, SaveDirectoryName,
 				 SaveDocWithCopy, SaveDocWithMove);
 	 }
-       else if (ThotLocalActions[T_xmlparsedoc] != NULL)
-	 {
-	   (*ThotLocalActions [T_setwritedirectory]) (DocumentToSave,
-						      SaveFileName, 
-						      SaveDirectoryName, 
-						      SaveDocWithCopy, 
-						      SaveDocWithMove);
-	   (*ThotLocalActions[T_writedocument]) (DocumentToSave, 0);
-	 } 
      }
    else
       /* exporter le document */
@@ -166,7 +156,7 @@ void                BuildSaveDocMenu ()
 	   /* l'application accepte que Thot exporte le document */
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EXPORTING), DocumentToSave->DocDName);
-	     FindCompleteName (SaveFileName, _EMPTYSTR_, SaveDirectoryName, outputFileName, &i);
+	     FindCompleteName (SaveFileName, CUSTEXT(""), SaveDirectoryName, outputFileName, &i);
 	     ExportDocument (DocumentToSave, outputFileName, TraductionSchemaName, FALSE);
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), outputFileName);
 	     /* envoie le message DocExport.Post a l'application */
@@ -213,7 +203,7 @@ STRING              txt;
 	       /* zone de saisie du nom du document a creer */
 	       if (TtaCheckDirectory (txt) && txt[ustrlen (txt) - 1] != URL_DIR_SEP)
 		 {
-		    ustrcpy (SaveDirectoryName, txt);
+		    StringCopy (SaveDirectoryName, txt);
 		    SaveFileName[0] = EOS;
 		 }
 	       else
@@ -233,7 +223,7 @@ STRING              txt;
 			 ustrcpy (ptTranslatedName, SaveDirectoryName);
 			 ustrcat (ptTranslatedName, DIR_STR);
 			 ustrcat (ptTranslatedName, BufDir);
-			 if (TraductionSchemaName[0] == EOS)
+			 if (TraductionSchemaName[0] == CUS_EOS)
 			   ustrcat (ptTranslatedName, DefaultFileSuffix);
 			 /* reinitialise la zone du nom de document */
 #            ifndef _WINDOWS
@@ -270,7 +260,7 @@ STRING              txt;
 	       ustrcpy (ptTranslatedName, SaveDirectoryName);
 	       ustrcat (ptTranslatedName, DIR_STR);
 	       ustrcat (ptTranslatedName, SaveFileName);
-	       if (TraductionSchemaName[0] == EOS)
+	       if (TraductionSchemaName[0] == CUS_EOS)
 		  ustrcat (ptTranslatedName, DefaultFileSuffix);
 	       /* reinitialise la zone du nom de document */
 	       TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
@@ -283,14 +273,14 @@ STRING              txt;
 	       if (val == 0)
 		 {
 		    /* premiere entree du menu format: format Thot */
-		    TraductionSchemaName[0] = EOS;
+		    TraductionSchemaName[0] = CUS_EOS;
 		    ustrcat (ptTranslatedName, DefaultFileSuffix);
 		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 0, NULL, -1, 1);
 		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 1, NULL, -1, 1);
 		 }
 	       else if (val == PivotEntryNum)
 		 {
-		   ustrcpy (TraductionSchemaName, TEXT("_ThotOther_"));
+		   StringCopy (TraductionSchemaName, CUSTEXT("_ThotOther_"));
 		   UnsetEntryMenu (NumMenuCopyOrRename, 0);
 		   UnsetEntryMenu (NumMenuCopyOrRename, 1);
 		 }
@@ -338,7 +328,7 @@ STRING              txt;
 			    }
 			  else if (!ustrcmp (SaveDirectoryName, DocumentToSave->DocDirectory)
 				   && !ustrcmp (SaveFileName, DocumentToSave->DocDName)
-				   && TraductionSchemaName[0] == EOS)
+				   && TraductionSchemaName[0] == CUS_EOS)
 			    {	/* traite la confirmation */
 			       if (ThotLocalActions[T_confirmcreate] != NULL)
 				  (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1, (STRING) 1);
@@ -348,7 +338,7 @@ STRING              txt;
 			       ustrcpy (ptTranslatedName, SaveDirectoryName);
 			       ustrcat (ptTranslatedName, DIR_STR);
 			       ustrcat (ptTranslatedName, SaveFileName);
-			       if (TraductionSchemaName[0] == EOS)
+			       if (TraductionSchemaName[0] == CUS_EOS)
 				 ustrcat (ptTranslatedName, DefaultFileSuffix);
 			       if (TtaFileExist (ptTranslatedName))
 				 {
@@ -387,9 +377,10 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 nbitem;
-   CHAR_T                BufMenu[MAX_TXT_LEN];
-   CHAR_T                BufMenuB[MAX_TXT_LEN];
-   CHAR_T                BufDir[MAX_PATH];
+   CharUnit            cusSsName[MAX_LENGTH];
+   CHAR_T              BufMenu[MAX_TXT_LEN];
+   CHAR_T              BufMenuB[MAX_TXT_LEN];   
+   CHAR_T              BufDir[MAX_PATH];
    STRING              src;
    STRING              dest;
    int                 i, k, l, Indx,entry;
@@ -419,7 +410,8 @@ PtrDocument         pDoc;
 	      ustrcpy (SaveDirectoryName, pDoc->DocDirectory);
 	      /* compose le menu des formats de sauvegarde applicables */
 	      /* a ce document, d'apres sa classe */
-	      nbitem = ConfigMakeMenuExport (pDoc->DocSSchema->SsName, BufMenu);
+          iso2cus_strcpy (cusSsName, pDoc->DocSSchema->SsName);
+	      nbitem = ConfigMakeMenuExport (cusSsName, BufMenu);
 	      /* met le format Thot en tete */
 	      BufMenuB[0] = TEXT('B');
 	      ustrcpy (&BufMenuB[1], TtaGetMessage (LIB, TMSG_THOT_APP));
@@ -445,15 +437,6 @@ PtrDocument         pDoc;
 		  PivotEntryNum = nbitem;
 		  nbitem++;
 		}
-	      else if (ThotLocalActions[T_xmlparsedoc] != NULL)
-		/* XML extensions are loaded add xml item */
-		{
-		  ustrcpy (dest, TEXT("B"));
-		  dest++;
-		  ustrcpy (dest, CUSTEXT("XML"));
-		  PivotEntryNum = nbitem;
-		  nbitem++;
-		}
 	      TtaNewSubmenu (NumMenuFormatDocToSave, NumFormSaveAs, 0,
 			     TtaGetMessage (LIB, TMSG_DOC_FORMAT), nbitem, BufMenuB, NULL, TRUE);
 	      TtaSetMenuForm (NumMenuFormatDocToSave, 0);
@@ -471,12 +454,12 @@ PtrDocument         pDoc;
 	      ustrcat (BufMenu, pDoc->DocDName);
 	      TtaChangeFormTitle (NumFormSaveAs, BufMenu);
 	      ustrcpy (BufMenu, SaveDirectoryName);
-	      ustrcat (BufMenu, DIR_STR);
+	      ustrcat (BufMenu, WC_DIR_STR);
 	      ustrcat (BufMenu, SaveFileName);
 	      if (pDoc->DocPivotVersion == -1)
-		ustrcat (BufMenu, CUSTEXT(".xml"));
+             ustrcat (BufMenu, CUSTEXT(".xml"));
 	      else
-		ustrcat (BufMenu, ".PIV");
+               ustrcat (BufMenu, CUSTEXT(".PIV"));
 	      /* nom de document propose' */
 #         ifndef _WINDOWS
 	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs, TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
@@ -487,7 +470,7 @@ PtrDocument         pDoc;
 /*        ActiveEntree(NumMenuCopyOrRename, 1); */
 /*        TtaSetMenuForm(NumMenuCopyOrRename, 0); */
 	      /* premiere entree du menu format: format Thot */
-	      TraductionSchemaName[0] = EOS;
+	      TraductionSchemaName[0] = CUS_EOS;
 	      SaveDocWithCopy = TRUE;
 	      SaveDocWithMove = FALSE;
 	      /* Formulaire Confirmation creation */

@@ -122,7 +122,7 @@ static ThotBool     StdLineStyle;  /* user asks to reset the line style */
 static ThotBool     StdLineWeight; /* user asks to reset the line weight */
 static ThotBool     StdTrame;	/* user asks to reset the pattern */
 
-static CHAR_T       FontFamily;	/* font family requested by the user */
+static char         FontFamily;	/* font family requested by the user */
 static int          FontStyle;	/* font style requested by the user */
 static int          FontWeight;	/* font weight requested by the user */
 static int          UnderlineStyle; /* underline style requested by the user */
@@ -133,7 +133,7 @@ static ThotBool     Justif;	/* with or without justification */
 static ThotBool     Hyphenate;	/* with or without hyphenation */
 static int          IndentValue;/* value in points for the 1st line indent */
 static int          IndentSign;	/* the indentation sign */
-static CHAR_T       LineStyle;	/* requested line style */
+static char         LineStyle;	/* requested line style */
 static int          LineWeight;	/* requested line weight in points */
 static int          PaintWithPattern;	/* number of the requested trame */
 
@@ -189,7 +189,7 @@ PtrDocument	    pDoc;
   les graphiques demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifLineStyle, CHAR_T LineStyle, ThotBool modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, ThotBool modifFillPattern, int FillPattern, ThotBool modifColorBackground, int ColorBackground, ThotBool modifLineColor, int LineColor)
+static void         ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifLineStyle, char LineStyle, ThotBool modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, ThotBool modifFillPattern, int FillPattern, ThotBool modifColorBackground, int ColorBackground, ThotBool modifLineColor, int LineColor)
 
 #else  /* __STDC__ */
 static void         ModifyGraphics (pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
@@ -197,7 +197,7 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
 ThotBool            modifLineStyle;
-CHAR_T                LineStyle;
+char                LineStyle;
 ThotBool            modifLineWeight;
 int                 LineWeight;
 TypeUnit            LineWeightUnit;
@@ -239,7 +239,7 @@ int                 LineColor;
 	}
       else if (!isNew)
 	/* reset the previous value */
-	pPRule->PrChrValue = (CHAR_T) value;
+	pPRule->PrChrValue = value;
     }
 
   /* epaisseur des traits dans le graphique */
@@ -536,7 +536,7 @@ ThotBool     Background;
   les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifFamily, CHAR_T family, ThotBool modifStyle, int charStyle, ThotBool modifWeight, int charWeight, ThotBool modifsize, int size, ThotBool modifUnderline, int underline, ThotBool modifUlWeight, int weightUnderline)
+static void         ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifFamily, char family, ThotBool modifStyle, int charStyle, ThotBool modifWeight, int charWeight, ThotBool modifsize, int size, ThotBool modifUnderline, int underline, ThotBool modifUlWeight, int weightUnderline)
 
 #else  /* __STDC__ */
 static void         ModifyChar (pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifWeight, charWeight, modifsize, size, modifUnderline, underline, modifUlWeight, weightUnderline)
@@ -544,7 +544,7 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
 ThotBool            modifFamily;
-CHAR_T              family;
+char                family;
 ThotBool            modifStyle;
 int                 charStyle;
 ThotBool	    modifWeight;
@@ -563,7 +563,7 @@ int                 weightUnderline;
    PtrPRule            pPRule;
    int                 viewSch;
    int                 intValue;
-   CHAR_T                value;
+   char                value;
 
    /* numero de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
@@ -1660,7 +1660,7 @@ int                 val;
 STRING              txt;
 #endif /* __STDC__ */
 {
-  CHAR_T                c;
+  char                c;
   int                 i;
 
   switch (ref)
@@ -1669,19 +1669,19 @@ STRING              txt;
       switch (val)
 	{
 	case 0:
-	  c = TEXT('T');	/* Times */
+	  c = 'T';	/* Times */
 	  break;
 	case 1:
-	  c = TEXT('H');	/* Helvetica */
+	  c = 'H';	/* Helvetica */
 	  break;
 	case 2:
-	  c = TEXT('C');	/* Courier */
+	  c = 'C';	/* Courier */
 	  break;
 	case 3:
 	  c = EOS;	/* standard */
 	  break;
 	default:
-	  c = TEXT('T');
+	  c = 'T';
 	  break;
 	}
       if (c == EOS)	/* standard */
@@ -1928,18 +1928,18 @@ STRING              txt;
       switch (val)
 	{
 	case 0:
-	  c = TEXT('S');	/* trait continu */
+	  c = 'S';	/* trait continu */
 	  break;
 	case 1:
-	  c = TEXT('-');	/* tirets longs */
+	  c = '-';	/* tirets longs */
 	  break;
 	case 2:
-	  c = TEXT('.');	/* tirets courts */
+	  c = '.';	/* tirets courts */
 	  break;
 	case 3:
 	  c = EOS;	/* standard */
 	default:
-	  c = TEXT('S');	/* trait continu */
+	  c = 'S';	/* trait continu */
 	  break;
 	}
       if (c == EOS)	/* standard */
@@ -2162,20 +2162,20 @@ View                view;
 	     FontFamily = pAb->AbFont;
 	     switch (FontFamily)
 	       {
-	       case TEXT('t'):
-	       case TEXT('T'):
+	       case 't':
+	       case 'T':
 		 i = 1;	/* Times */
 		 break;
-	       case TEXT('h'):
-	       case TEXT('H'):
+	       case 'h':
+	       case 'H':
 		 i = 2;	/* Helvetica */
 		 break;
-	       case TEXT('c'):
-	       case TEXT('C'):
+	       case 'c':
+	       case 'C':
 		 i = 3;	/* Courier */
 		 break;
 	       default:
-		 FontFamily = TEXT('T');
+		 FontFamily = 'T';
 		 i = 0;
 		 break;
 	       }

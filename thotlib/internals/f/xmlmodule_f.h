@@ -12,7 +12,7 @@ extern void XmlAddNSPresentation ( Document doc,
 extern void XmlAddNSSchema ( Document doc,
                              STRING prefixName,
                              STRING schemaName );
-extern SSchema XmlGetNSSchema ( STRING prefix );
+extern SSchema XmlGetNSSchema ( char* prefix );
 extern void XmlAddRef ( Document doc,
                         Element el,
                         Attribute attr );

@@ -246,7 +246,7 @@ extern void         TtaSetSchemaPath (STRING path);
    has not been loaded.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaNewNature (SSchema schema, STRING natureName, STRING presentationName);
+extern SSchema      TtaNewNature (SSchema schema, char* natureName, char* presentationName);
 
 /*----------------------------------------------------------------------
    TtaNewSchemaExtension
@@ -265,7 +265,7 @@ extern SSchema      TtaNewNature (SSchema schema, STRING natureName, STRING pres
    the extension schema, NULL if the extension schema has not been loaded.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaNewSchemaExtension (Document document, STRING extensionName, STRING presentationName);
+extern SSchema      TtaNewSchemaExtension (Document document, char* extensionName, char* presentationName);
 
 /*----------------------------------------------------------------------
    TtaGetSchemaExtension
@@ -325,7 +325,7 @@ extern void         TtaSetPSchema (Document document, char* presentationName);
    directory: new document directory.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentDirectory (Document document, STRING directory);
+extern void         TtaSetDocumentDirectory (Document document, CharUnit* directory);
 
 /*----------------------------------------------------------------------
    TtaRemoveSchemaExtension
@@ -423,7 +423,7 @@ extern void         TtaSetDocumentUnmodified (Document document);
    name of that document.
 
   ----------------------------------------------------------------------*/
-extern STRING       TtaGetDocumentName (Document document);
+extern CharUnit*       TtaGetDocumentName (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentFromName
@@ -481,7 +481,7 @@ extern SSchema      TtaGetDocumentSSchema (Document document);
    name of that structure schema.
 
   ----------------------------------------------------------------------*/
-extern STRING        TtaGetSSchemaName (SSchema schema);
+extern char*        TtaGetSSchemaName (SSchema schema);
 
 /*----------------------------------------------------------------------
    TtaGetPSchemaName
@@ -496,7 +496,7 @@ extern STRING        TtaGetSSchemaName (SSchema schema);
    name of the associated presentation schema.
 
   ----------------------------------------------------------------------*/
-extern STRING       TtaGetPSchemaName (SSchema schema);
+extern char*       TtaGetPSchemaName (SSchema schema);
 
 /*----------------------------------------------------------------------
    TtaGetSSchema
@@ -513,7 +513,7 @@ extern STRING       TtaGetPSchemaName (SSchema schema);
    schema is not loaded or not used by the document.
 
   ----------------------------------------------------------------------*/
-extern SSchema      TtaGetSSchema (STRING name, Document document);
+extern SSchema      TtaGetSSchema (char* name, Document document);
 
 /*----------------------------------------------------------------------
    TtaSameSSchemas
@@ -729,19 +729,19 @@ extern SSchema      TtaNewSchemaExtension ( /* Document document, char *extensio
 extern SSchema      TtaGetSchemaExtension ( /*Document document, char *NomExtension */ );
 extern void         TtaRemoveSchemaExtension ( /* Document document, SSchema extension, int *removedElements, int *removedAttributes */ );
 extern void         TtaSetPSchema ( /* Document document, char *presentationName */ );
-extern void         TtaSetDocumentDirectory ( /* Document document, char *directory */ );
+extern void         TtaSetDocumentDirectory ( /* Document document, CharUnit* directory */ );
 extern void         TtaSetDocumentName ( /* Document document, char *documentName */ );
 extern void         TtaSetDocumentAccessMode ( /* Document document, int accessMode */ );
 extern void         TtaSetDocumentBackUpInterval ( /* Document document, int interval */ );
 extern void         TtaSetNotificationMode ( /* Document document, int notificationMode */ );
 extern void         TtaSetDocumentModified ( /* Document document */ );
 extern void         TtaSetDocumentUnmodified ( /* Document document */ );
-extern STRING       TtaGetDocumentName ( /* Document document */ );
+extern CharUnit*    TtaGetDocumentName ( /* Document document */ );
 extern Document     TtaGetDocumentFromName ( /* char *documentName */ );
 extern void         TtaGetDocumentDirectory ( /* Document document, char *buffer, int bufferLength */ );
 extern SSchema      TtaGetDocumentSSchema ( /* Document document */ );
-extern STRING       TtaGetSSchemaName ( /* SSchema schema */ );
-extern STRING       TtaGetPSchemaName ( /* SSchema schema */ );
+extern char*        TtaGetSSchemaName ( /* SSchema schema */ );
+extern char*        TtaGetPSchemaName ( /* SSchema schema */ );
 extern SSchema      TtaGetSSchema ( /* char *name, Document document */ );
 extern int          TtaSameSSchemas ( /* SSchema schema1, SSchema schema2 */ );
 extern void         TtaGiveSchemasOfDocument ( /* char *documentName, char *structureName, char *presentationName */ );

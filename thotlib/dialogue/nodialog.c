@@ -185,11 +185,11 @@ STRING              presNature;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ConfigDefaultPSchema (CharUnit* schema, STRING schpres)
+ThotBool            ConfigDefaultPSchema (char* schema, char* schpres)
 #else  /* __STDC__ */
 ThotBool            ConfigDefaultPSchema (schema, schpres)
-CharUnit*           schema;
-STRING              schpres;
+char*               schema;
+char*               schpres;
 #endif /* __STDC__ */
 {
    return FALSE;

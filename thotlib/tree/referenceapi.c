@@ -771,13 +771,13 @@ Element             element2;
 		   /* Internal references */
 		  {
 		     if (pRef1->ReReferredElem != NULL && pRef2->ReReferredElem != NULL)
-			if (ustrcmp (pRef1->ReReferredElem->ElLabel, pRef2->ReReferredElem->ElLabel) == 0)
+			if (strcmp (pRef1->ReReferredElem->ElLabel, pRef2->ReReferredElem->ElLabel) == 0)
 			   result = 1;
 		  }
 		else
 		   /* external references */
-		if (ustrcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
-		   if (ustrcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
+		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
+		   if (StringCompare (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
 	     }
      }
@@ -940,13 +940,13 @@ Attribute           attribute2;
 		   /* Internal references */
 		  {
 		     if (pRef1->ReReferredElem != NULL && pRef2->ReReferredElem != NULL)
-			if (ustrcmp (pRef1->ReReferredElem->ElLabel, pRef1->ReReferredElem->ElLabel) == 0)
+			if (strcmp (pRef1->ReReferredElem->ElLabel, pRef1->ReReferredElem->ElLabel) == 0)
 			   result = 1;
 		  }
 		else
 		   /* External references */
-		if (ustrcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
-		   if (ustrcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
+		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
+		   if (StringCompare (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
 	     }
      }

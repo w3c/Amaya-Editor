@@ -56,6 +56,7 @@ typedef struct FontCharacteristics {
 typedef FontCharacteristics* ptrFC;
 
 static ptrFC LastUsedFont = (ptrFC)0;
+static HFONT OldFont;
 #endif /* _WINDOWS */
 
 #include "buildlines_f.h"
@@ -201,7 +202,8 @@ ptrfont font;
               (LastUsedFont->alphabet  != font->alphabet)  ||
               (LastUsedFont->family    != font->family)) {
           if (currentActiveFont != (HFONT)0) {
-             if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
+             SelectObject (hdc, GetStockObject (SYSTEM_FONT));
+             if (!DeleteObject (currentActiveFont))
                 WinErrorBox (NULL, TEXT("WinLoadFont (2)"));
              currentActiveFont = (HFONT)0;
 
@@ -216,8 +218,9 @@ ptrfont font;
       currentActiveFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, 0);
       if (currentActiveFont == (HFONT)0)
          WinErrorBox (NULL, TEXT("WinLoadFont (3)"));
+      return (OldFont = SelectObject (hdc, currentActiveFont));
    }
-   return (SelectObject (hdc, currentActiveFont));
+   return OldFont;
 }
 #endif /* _WINDOWS */
 

@@ -35,7 +35,7 @@ typedef struct struct_GenericContext
      int                   name[MAX_ANCESTORS]; /* ancestors type */
      int                   names_nb[MAX_ANCESTORS]; /* number of occurences */
      int                   attrType[MAX_ANCESTORS]; /* type of the attribute */
-     STRING                attrText[MAX_ANCESTORS]; /* attr. or box name */
+     char*                 attrText[MAX_ANCESTORS]; /* attr. or box name */
   }
 GenericContextBlock, *GenericContext;
 

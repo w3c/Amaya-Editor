@@ -563,39 +563,39 @@ ThotFileInfo       *pInfo;
    TtaFileCopy copies a source file into a target file.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaFileCopy (CONST STRING sourceFileName, CONST STRING targetFileName)
+void                TtaFileCopy (CONST CharUnit* sourceFileName, CONST CharUnit* targetFileName)
 #else
 void                TtaFileCopy (sourceFileName, targetFileName)
-CONST STRING        sourceFileName;
-CONST STRING        targetFileName;
+CONST CharUnit*     sourceFileName;
+CONST CharUnit*     targetFileName;
 
 #endif
 {
    FILE               *targetf;
    FILE               *sourcef;
    int                 size;
-   CHAR_T                buffer[8192];
+   char                buffer[8192];
 
-   if (ustrcmp (sourceFileName, targetFileName) != 0)
+   if (StringCompare (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = ufopen (targetFileName, TEXT("wb"))) == NULL)
+	if ((targetf = cus_fopen (targetFileName, CUSTEXT("wb"))) == NULL)
 #else
-	if ((targetf = ufopen (targetFileName, "w")) == NULL)
+	if ((targetf = cus_fopen (targetFileName, CUSTEXT("w"))) == NULL)
 #endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = ufopen (sourceFileName, TEXT("rb"))) == NULL)
+	     if ((sourcef = cus_fopen (sourceFileName, CUSTEXT("rb"))) == NULL)
 #else
-	     if ((sourcef = ufopen (sourceFileName, "r")) == NULL)
+	     if ((sourcef = cus_fopen (sourceFileName, CUSTEXT("r"))) == NULL)
 #endif
 	       {
 		  /* cannot read the source file */
 		  fclose (targetf);
-		  uunlink (targetFileName);
+		  cus_unlink (targetFileName);
 		  return;
 	       }
 	     else

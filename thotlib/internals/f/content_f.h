@@ -28,11 +28,11 @@ extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                              PtrTextBuffer pCopyBuf,
                              int *len );
-extern void CopyStringToText ( STRING srceStrn,
+extern void CopyStringToText ( CHAR_T* srceStrn,
                                PtrTextBuffer pCopyBuf,
                                int *LgCopiee );
 extern void CopyTextToString ( PtrTextBuffer pSrceBuf,
-                               STRING pStrCpy,
+                               CHAR_T* pStrCpy,
                                int *len );
 extern void ClearText ( PtrTextBuffer pBuf );
 extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
@@ -75,7 +75,7 @@ extern ThotBool TextsEqual (/* PtrTextBuffer pBuf1,
 extern void CopyTextToText (/* PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,
                                int *len */);
-extern void CopyStringToText (/* STRING srceStrn,
+extern void CopyStringToText (/* CHAR_T* srceStrn,
                                  PtrTextBuffer pCopyBuf,
                                  int *LgCopiee */);
 extern void CopyTextToString (/* PtrTextBuffer pSrceBuf,

@@ -80,11 +80,13 @@ extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                     ThotFileOrigin origin );
 extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
-extern void TtaFileCopy ( CONST STRING sourceFileName,
-                          CONST STRING targetFileName );
+extern void TtaFileCopy ( CONST CharUnit* sourceFileName,
+                          CONST CharUnit* targetFileName );
 
 extern ThotBool TtaReadByte ( BinFile file,
                              char* bval );
+extern ThotBool TtaReadWideChar (BinFile file, CHAR_T* bval);
+
 extern ThotBool TtaReadBool ( BinFile file,
                              ThotBool * bval );
 extern ThotBool TtaReadShort ( BinFile file,
@@ -95,11 +97,13 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                              char* name );
+extern ThotBool TtaReadWCName (BinFile file, CHAR_T* name);
 extern BinFile TtaReadOpen (CONST CharUnit* filename);
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                               char bval );
+extern ThotBool TtaWriteWideChar (BinFile, CHAR_T);
 extern ThotBool TtaWriteShort ( BinFile file,
                                int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
@@ -127,11 +131,12 @@ extern ThotFileOffset TtaFileSeek (/* ThotFileHandle handle,
                                       ThotFileOrigin origin */);
 extern int TtaFileStat (/* ThotFileHandle handle,
                            ThotFileInfo * pInfo */);
-extern void TtaFileCopy (/* CONST char *sourceFileName,
-                            CONST char *targetFileName */);
+extern void TtaFileCopy (/* CONST CharUnit* sourceFileName,
+                            CONST CharUnit* targetFileName */);
 
 extern ThotBool TtaReadByte (/* BinFile file,
                                char *bval */);
+extern ThotBool TtaReadWideChar (/* BinFile file, CHAR_T* bval */);
 extern ThotBool TtaReadBool (/* BinFile file,
                                ThotBool * bval */);
 extern ThotBool TtaReadShort (/* BinFile file,
@@ -142,11 +147,13 @@ extern ThotBool TtaReadInteger (/* BinFile file,
                                   int *sval */);
 extern ThotBool TtaReadName (/* BinFile file,
                                char *name */);
+extern ThotBool TtaReadWCName (/* BinFile file, CHAR_T* name */);
 extern BinFile TtaReadOpen (/* CONST CharUnit* filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
                                 char bval */);
+extern ThotBool TtaWriteWideChar (/* BinFile, CHAR_T */);
 extern ThotBool TtaWriteShort (/* BinFile file,
                                  int sval */);
 extern ThotBool TtaWriteInteger (/* BinFile file,

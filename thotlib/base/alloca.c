@@ -199,7 +199,7 @@ unsigned            size;
 
       /* User storage begins just after header. */
 
-      return (pointer) ((STRING) pNew + sizeof (header));
+      return (pointer) (pNew + sizeof (header));
    }
 }
 #else

@@ -33,6 +33,7 @@
  
 typedef char      Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
 typedef CharUnit  CUSName[MAX_NAME_LENGTH];
+typedef CHAR_T    WCName[MAX_NAME_LENGTH];
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1
@@ -83,20 +84,17 @@ typedef enum
  
 typedef struct _TtAttribute
 {
-        Name             AttrName;      /* name of the attribute, may be
+        WCName           AttrName;      /* name of the attribute, may be
                                            translated in the user's language */
-        Name             AttrOrigName;  /* real name of the attribute */
-        ThotBool        AttrGlobal;     /* the attribute can apply to all
-                                           the elements defined in the schema 
-*/
+        WCName           AttrOrigName;  /* real name of the attribute */
+        ThotBool         AttrGlobal;    /* the attribute can apply to all
+                                           the elements defined in the schema */
         int       AttrFirstExcept;      /* index in SsException of the first
-                                           exception number associated with 
-this
+                                           exception number associated with this
                                            attribute, 0 if no exception is
                                            associated */
         int       AttrLastExcept;       /* index in SsException of the last
-                                           exception number associated with 
-this
+                                           exception number associated with this
                                            attribute */
         AttribType      AttrType;       /* attribute type */
         union
@@ -115,8 +113,8 @@ this
 	    /* number of possible values (effective size of the table
 	       AttrEnumValue) */
 	    int   _AttrNEnumValues_;
-	    Name             _AttrEnumValue_[MAX_ATTR_VAL]; /* names of those values (may be translated */
-	    Name             _AttrEnumOrigValue_[MAX_ATTR_VAL]; /* original nameS */
+	    WCName           _AttrEnumValue_[MAX_ATTR_VAL]; /* names of those values (may be translated */
+	    WCName           _AttrEnumOrigValue_[MAX_ATTR_VAL]; /* original nameS */
 	    
 	  } s3;
 	} u;
@@ -134,8 +132,8 @@ typedef struct _StructSchema *PtrSSchema;
 /* A rule defining a type in a structure schema */
 typedef struct _SRule
 {
-	Name            SrName;	/* left-hand symbol of the rule = type defined by the rule */
-    Name            SrOrigName;      /* real name of the rule */
+	WCName      SrName;	/* left-hand symbol of the rule = type defined by the rule */
+    WCName      SrOrigName;      /* real name of the rule */
 	int 		SrNDefAttrs; 	/* 0..MAX_DEFAULT_ATTR, number of
 					   attributes with a default value */
         /* numbers of default value attributes */

@@ -462,9 +462,9 @@ typedef struct _AbstractBox
     } s1;
     struct /* AbLeafType = LtGraphics or LtSymbol */
     {
-      CHAR_T     _AbShape_;         /* Drawing code */
-      CHAR_T     _AbGraphAlphabet_; /* Alphabet used*/
-      CHAR_T     _AbRealShape_;     /* Effective drawing code */
+      char     _AbShape_;         /* Drawing code */
+      char     _AbGraphAlphabet_; /* Alphabet used*/
+      char     _AbRealShape_;     /* Effective drawing code */
     } s2;
     struct /* AbLeafType = LtPicture */
     {
@@ -473,7 +473,7 @@ typedef struct _AbstractBox
     struct /* AbLeafType = LtPolyline  */
     {
       PtrTextBuffer _AbPolyLineBuffer_; /* First buffer */
-      CHAR_T        _AbPolyLineShape_;  /* Drawing type */
+      char          _AbPolyLineShape_;  /* Drawing type */
     } s4;
   } u;
 } AbstractBox;

@@ -813,7 +813,7 @@ int                *nChars;
 	     target = NULL;
 	  }
 	else
-	   target = (STRING) &((*pTargetBuffer)->BuContent);
+	   target = (*pTargetBuffer)->BuContent;
 
 	if (pBuffer == pEndBuffer)
 	  {
@@ -1296,10 +1296,10 @@ int                 frame;
    insere dans la boite pBox.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadSymbol (CHAR_T c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadSymbol (char c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadSymbol (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-CHAR_T                c;
+char                c;
 PtrLine             pLine;
 ThotBool            defaultHeight;
 ThotBool            defaultWidth;
@@ -1342,10 +1342,10 @@ int                 frame;
    Charge un graphique ou une polyline.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadShape (CHAR_T c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadShape (char c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadShape (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-CHAR_T                c;
+char                c;
 PtrLine             pLine;
 ThotBool            defaultHeight;
 ThotBool            defaultWidth;
@@ -1368,20 +1368,20 @@ int                 frame;
       /* efface la selection precedente */
       switch (c)
 	{
-	case TEXT('S'):	/* Segments */
-	case TEXT('U'):	/* Segments vers avant */
-	case TEXT('N'):	/* Segments fleches vers arriere */
-	case TEXT('M'):	/* Segments fleches dans les deux sens */
-	case TEXT('w'):	/* Segments (2 points) */
-	case TEXT('x'):	/* Segments (2 points) forward arrow */
-	case TEXT('y'):	/* Segments (2 points) backward arrow */
-	case TEXT('z'):	/* Segments (2 points) arrows on both directions */
-	case TEXT('B'):	/* Beziers (ouvertes) */
-	case TEXT('A'):	/* Beziers (ouvertes) flechees vers avant */
-	case TEXT('F'):	/* Beziers (ouvertes) flechees vers arriere */
-	case TEXT('D'):	/* Beziers (ouvertes) flechees dns les deux sens */
-	case TEXT('p'):	/* polygone */
-	case TEXT('s'):	/* spline fermee */
+	case 'S':	/* Segments */
+	case 'U':	/* Segments vers avant */
+	case 'N':	/* Segments fleches vers arriere */
+	case 'M':	/* Segments fleches dans les deux sens */
+	case 'w':	/* Segments (2 points) */
+	case 'x':	/* Segments (2 points) forward arrow */
+	case 'y':	/* Segments (2 points) backward arrow */
+	case 'z':	/* Segments (2 points) arrows on both directions */
+	case 'B':	/* Beziers (ouvertes) */
+	case 'A':	/* Beziers (ouvertes) flechees vers avant */
+	case 'F':	/* Beziers (ouvertes) flechees vers arriere */
+	case 'D':	/* Beziers (ouvertes) flechees dns les deux sens */
+	case 'p':	/* polygone */
+	case 's':	/* spline fermee */
 	  pAb->AbPolyLineShape = c;
 	  width = pBox->BxWidth;
 	  height = pBox->BxHeight;
@@ -1409,7 +1409,7 @@ int                 frame;
 	      x = pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
 	      y = pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
 	      draw = GetParentDraw (pBox);
-	      if (c == TEXT('w') || c == TEXT('x') || c == TEXT('y') || c == TEXT('z'))
+	      if (c == 'w' || c == 'x' || c == 'y' || c == 'z')
 		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, draw, 2);
 	      else
 		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, draw, 0);
@@ -2241,13 +2241,13 @@ int                 editType;
 	     {
 		if (pAb->AbLeafType == LtPolyLine)
 		  {
-		    if (pAb->AbPolyLineShape != TEXT('w') &&
-			pAb->AbPolyLineShape != TEXT('x') &&
-			pAb->AbPolyLineShape != TEXT('y') &&
-			pAb->AbPolyLineShape != TEXT('z'))
+		    if (pAb->AbPolyLineShape != 'w' &&
+                pAb->AbPolyLineShape != 'x' &&
+                pAb->AbPolyLineShape != 'y' &&
+                pAb->AbPolyLineShape != 'z')
 		      {
 			/* Ajout de points dans une polyline */
-			still = (pAb->AbPolyLineShape == TEXT('p') || pAb->AbPolyLineShape == TEXT('s'));
+			still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
 			x = pBox->BxXOrg - pFrame->FrXOrg;
 			y = pBox->BxYOrg - pFrame->FrYOrg;
 			i = pViewSel->VsIndBox;
@@ -2399,10 +2399,10 @@ int                 editType;
 		  {
 		    if (pBox->BxNChars <= 3)
 		      TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
-		    else if (pAb->AbPolyLineShape != TEXT('w') &&
-			     pAb->AbPolyLineShape != TEXT('x') &&
-			     pAb->AbPolyLineShape != TEXT('y') &&
-			     pAb->AbPolyLineShape != TEXT('z'))
+		    else if (pAb->AbPolyLineShape != 'w' &&
+			     pAb->AbPolyLineShape != 'x' &&
+			     pAb->AbPolyLineShape != 'y' &&
+			     pAb->AbPolyLineShape != 'z')
 		      {
 			/* Destruction du point courant de la polyline */
 			charsDelta = pViewSel->VsIndBox;

@@ -440,20 +440,19 @@ AvailableView       viewList;
 			     while (!assocPres && a < MAX_ASSOC_DOC);
 
 			     if (present)
-				viewList[nViews].VdView = a;
+                    viewList[nViews].VdView = a;
 			     else
-				viewList[nViews].VdView = 0;
-			     viewList[nViews].VdAssocNum = rule + 1;
-			     ustrncpy (viewList[nViews].VdViewName,
-				 pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
-			     viewList[nViews].VdSSchema = pSS;
-			     viewList[nViews].VdOpen = present;
-			     viewList[nViews].VdAssoc = TRUE;
-			     viewList[nViews].VdExist = assocPres;
-			     viewList[nViews].VdNature = FALSE;
-			     viewList[nViews].VdPaginated =
-				pSS->SsPSchema->PsAssocPaginated[rule + 1];
-			     nViews++;
+                     viewList[nViews].VdView = 0;
+                 viewList[nViews].VdAssocNum = rule + 1;
+                 ustrncpy (viewList[nViews].VdViewName, pSS->SsRule[rule].SrName, MAX_NAME_LENGTH);
+                 viewList[nViews].VdSSchema = pSS;
+                 viewList[nViews].VdOpen = present;
+                 viewList[nViews].VdAssoc = TRUE;
+                 viewList[nViews].VdExist = assocPres;
+                 viewList[nViews].VdNature = FALSE;
+                 viewList[nViews].VdPaginated =
+                 pSS->SsPSchema->PsAssocPaginated[rule + 1];
+                 nViews++;
 			  }
 	       }
 	     while (rule > 1);
@@ -977,10 +976,10 @@ int                 height;
       if (assoc) {
          schView = 1;
          pEl = pDoc->DocAssocRoot[view - 1];
-         ustrncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+         strncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
 	  } else {
              schView = pDoc->DocView[view - 1].DvPSchemaView;
-             ustrncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->PsView[schView - 1], MAX_NAME_LENGTH);
+             strncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->PsView[schView - 1], MAX_NAME_LENGTH);
 	  } 
       /* creation d'une fenetre pour la vue */
       frame = CreateWindowWithTitle (pDoc, schView, viewName, &volume, X, Y, width, height);

@@ -1655,7 +1655,7 @@ STRING              menuBuf;
 {
    int                 len;
 
-   len = ustrlen (item) + 1;
+   len = ustrlen (item) + 1; 
    if (len + *menuInd < MAX_TXT_LEN)
      {
 	ustrcpy (menuBuf + *menuInd, item);
@@ -1825,8 +1825,7 @@ PtrDocument         pDoc;
 		  if (!ExcludedType (pEl, typeNum, NULL))
 		     if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertWithin))
 		       {
-			  AddChoiceMenuItem (TtaGetMessage (LIB, TMSG_TEXT),
-					     &menuInd, menuBuf);
+			  AddChoiceMenuItem (TtaGetMessage (LIB, TMSG_TEXT), &menuInd, menuBuf);
 			  ChoiceMenuSSchema[nItems] = pSS;
 			  ChoiceMenuTypeNum[nItems] = typeNum;
 			  nItems++;

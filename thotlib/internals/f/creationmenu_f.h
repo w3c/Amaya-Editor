@@ -10,7 +10,7 @@ extern ThotBool AskForNew_RemplRefer ( ThotBool * generate,
                                        Name typeName );
 extern void CallbackAskForNew ( int Val );
 extern void BuildChoiceMenu ( STRING bufMenu,
-                              Name menuTitle,
+                              WCName menuTitle,
                               int nbEntries,
                               ThotBool natureChoice );
 extern void InsertSeparatorInMenu ( int *prevMenuInd,
@@ -19,7 +19,7 @@ extern void InsertSeparatorInMenu ( int *prevMenuInd,
                                     STRING bufMenu );
 extern void BuildPasteMenu ( int RefMenu,
                              STRING bufMenu,
-                             Name title,
+                             WCName title,
                              int nbEntries,
                              char button );
 
@@ -29,7 +29,7 @@ extern ThotBool AskForNew_RemplRefer (/* ThotBool * generate,
                                          Name typeName */);
 extern void CallbackAskForNew (/* int Val */);
 extern void BuildChoiceMenu (/* STRING bufMenu,
-                                Name menuTitle,
+                                WCName menuTitle,
                                 int nbEntries,
                                 ThotBool natureChoice */);
 extern void InsertSeparatorInMenu (/* int *prevMenuInd,
@@ -38,7 +38,7 @@ extern void InsertSeparatorInMenu (/* int *prevMenuInd,
                                       STRING bufMenu */);
 extern void BuildPasteMenu (/* int RefMenu,
                                STRING bufMenu,
-                               Name title,
+                               WCName title,
                                int nbEntries,
                                CHAR_T button */);
 

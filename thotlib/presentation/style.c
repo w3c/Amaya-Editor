@@ -67,7 +67,7 @@ Name               *boxname;
     usprintf (&buffer[len], TEXT("%d.%s,"), ctxt->attrType[0], ctxt->attrText[0]);
   len = ustrlen (buffer);
 
-  ustrncpy ((STRING) boxname, buffer, sizeof (Name));
+  ustrncpy (*boxname, buffer, sizeof (Name));
 }
 
 /*----------------------------------------------------------------------

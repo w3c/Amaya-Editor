@@ -120,7 +120,7 @@ static int          ReturnValueSelectReferMenu;
 
 #ifdef _WINDOWS
 static CHAR_T   msgCaption [200];
-static ThotBool searchEnd;
+ThotBool        searchEnd;
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -995,7 +995,7 @@ View                view;
    PtrElement          pLastSel;
    int                 firstChar;
    int                 lastChar, i;
-   CHAR_T                bufTitle[200], string[200];
+   CHAR_T              bufTitle[200], string[200];
    PtrDocument         pDoc;
 
 #  ifdef _WINDOWS
@@ -1025,7 +1025,7 @@ View                view;
    ustrcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    ustrcat (bufTitle, pDoc->DocDName);
 #  ifdef _WINDOWS
-   strcpy (msgCaption, bufTitle);
+   ustrcpy (msgCaption, bufTitle);
 #  endif /* _WINDOWS */
    /* feuille de dialogue Rechercher texte et structure */
    ustrcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));

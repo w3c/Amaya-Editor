@@ -53,10 +53,10 @@
    pave pointe' par pAb.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*               AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
+CHAR_T*             AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
 
 #else  /* __STDC__ */
-char*               AbsBoxType (pAb, origName)
+CHAR_T*             AbsBoxType (pAb, origName)
 PtrAbstractBox      pAb;
 ThotBool		    origName;
 
@@ -64,25 +64,25 @@ ThotBool		    origName;
 
 {
    PtrElement       pEl;
-   char*            text;
+   CHAR_T*          text;
 
-   text = TtaGetMemory (MAX_TXT_LEN);
+   text = TtaAllocString (MAX_TXT_LEN);
 
    if (pAb == NULL)
-      strcpy (text, " ");
+      ustrcpy (text, TEXT(" "));
    else
      {
 	pEl = pAb->AbElement;
 	/* copie le nom du type d'element structure auquel appartient la boite */
 	if (origName)
-	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
+	   ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
 	else
-	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	   ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	if (pAb->AbPresentationBox)
 	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     strcat (text, ".");
-	     strcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
+	     ustrcat (text, TEXT("."));
+	     ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }
    return (text);

@@ -75,10 +75,10 @@ STRING              s1, s2;
 #include "platform_tv.h"
 
 static PathBuffer   DirectoryName;
-static Name         SchStrImport;
+static CUSName      SchStrImport;
 static int          NbDocSuffix = 1;
 static CharUnit     tabDocSuffix [10][10] = {CUSTEXT(".PIV"), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT("")};
-static CHAR_T       docSuffix [5];
+static CharUnit     docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
 
@@ -135,27 +135,27 @@ int                *nbItems;
    Returns the rank of s in buffer or -1 if s doesn't occur.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int SearchStringInBuffer(char* buffer, PathBuffer s,int nbStr)
+int SearchStringInBuffer(CharUnit* buffer, PathBuffer s,int nbStr)
 #else  /* __STDC__ */
 int  SearchStringInBuffer(buffer, s, nbStr)
-char*      buffer;
+CharUnit*  buffer;
 PathBuffer s;
 int        nbStr;
 #endif /* __STDC__ */
 {
-  int      occ;
-  char*    pBuf;
-  ThotBool found = FALSE;
+  int       occ;
+  CharUnit* pBuf;
+  ThotBool  found = FALSE;
 
   occ=0;
   pBuf = buffer;
   while (!found && occ < nbStr)
     {
-      if(!strcmp (pBuf, s))
+      if(!StringCompare (pBuf, s))
 	found = TRUE;
       else
 	{
-	  pBuf = pBuf + strlen(pBuf) + 1;
+	  pBuf = pBuf + StringLength (pBuf) + 1;
 	  occ++;
 	}
     }
@@ -186,6 +186,8 @@ Name                name;
 #endif /* __STDC__ */
 
 {
+   CHAR_T wcName[MAX_LENGTH];
+   iso2wc_strcpy (wcName, name);
 #  ifndef _WINDOWS
    /* Formulaire du schema de presentation */
    TtaNewForm (NumFormPresentationSchema, 0, TtaGetMessage (LIB, TMSG_PRES), TRUE, 1, 'L', D_DONE);
@@ -202,14 +204,13 @@ Name                name;
       /* on prend le nom de la regle racine, qui est traduit dans la */
       /* langue de l'utilisateur, plutot que le nom du schema, qui n'est */
       /* pas traduit */
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ENTER_PRS_SCH),
-			 pSchStr->SsRule[pSchStr->SsRootElem - 1].SrName);
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ENTER_PRS_SCH), pSchStr->SsRule[pSchStr->SsRootElem - 1].SrName);
    /* demande un autre nom de fichier a l'utilisateur */
-   TtaSetTextForm (NumZonePresentationSchema, name);
+   TtaSetTextForm (NumZonePresentationSchema, wcName);
    TtaShowDialogue (NumFormPresentationSchema, FALSE);
    /* attend la reponse de l'utilisateur */
    TtaWaitShowDialogue ();
-   ustrncpy (name, NewSchemaName, MAX_NAME_LENGTH);
+   strncpy (name, NewSchemaName, MAX_NAME_LENGTH);
    /* efface le message */
 
    /* detruit le formulaire */
@@ -240,7 +241,7 @@ STRING              data;
 	       break;
 	    case NumZonePresentationSchema:
 	       /* zone de saisie du nom du schema de presentation */
-	       ustrncpy (NewSchemaName, data, MAX_NAME_LENGTH);
+	       wc2iso_strncpy (NewSchemaName, data, MAX_NAME_LENGTH);
 	       break;
 	 }
 }
@@ -303,11 +304,11 @@ STRING              data;
 	    case NumSelectImportClass:
 	       /* conserve le nom interne du schema de structure d'importation */
 	       ConfigSSchemaInternalName (data, SchStrImport, TRUE);
-	       if (SchStrImport[0] == EOS)
+	       if (SchStrImport[0] == CUS_EOS)
 		  /* pas de fichier .langue, on prend le nom tel quel */
 		 {
 		    ustrncpy (SchStrImport, data, MAX_NAME_LENGTH - 1);
-		    SchStrImport[MAX_NAME_LENGTH - 1] = EOS;
+		    SchStrImport[MAX_NAME_LENGTH - 1] = CUS_EOS;
 		 }
 	       break;
 	    case NumFormImportClass:
@@ -353,7 +354,7 @@ STRING              data;
 	 {
 	    case NumToggleDocTypeToOpen:
                {
-                  ustrcpy (docSuffix, tabDocSuffix[(int)data]);
+                  StringCopy (docSuffix, tabDocSuffix[(int)data]);
 		  if (TtaCheckDirectory (DirectoryName))
                      TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1,
                                        docSuffix, TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
@@ -376,7 +377,7 @@ STRING              data;
 			 i = MAX_NAME_LENGTH;	/*Longueur du nom limitee */
 			 docName[i] = EOS;
 		      }
-		    ustrcpy (DefaultDocumentName, docName);
+		    StringCopy (DefaultDocumentName, docName);
 		 }
 
 	       if (TtaCheckDirectory (DirectoryName))
@@ -418,18 +419,18 @@ STRING              data;
 		 }
 	       else
 		 {
-		    ustrcpy (docName, DirectoryName);
-		    ustrcat (docName, DIR_STR);
+		    StringCopy (docName, DirectoryName);
+		    StringConcat (docName, CUS_DIR_STR);
 		    i = ustrlen (data);
 		    if (i >= MAX_NAME_LENGTH)
 		      {
 			 /* RemoveElement le suffixe du nom de fichier */
-			 if (!ustrcmp (&data[i - 4], docSuffix))
+			 if (!StringCompare (&data[i - 4], docSuffix))
 			    data[i - 4] = EOS;
 		      }
-		    ustrncpy (DefaultDocumentName, data, MAX_NAME_LENGTH);
-		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = EOS;
-		    ustrcat (docName, DefaultDocumentName);
+		    StringNCopy (DefaultDocumentName, data, MAX_NAME_LENGTH);
+		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = CUS_EOS;
+		    StringConcat (docName, DefaultDocumentName);
 		 }
 	       TtaSetTextForm (NumZoneDocNameToOpen, docName);
 	       break;
@@ -451,8 +452,8 @@ STRING              data;
 		       i = ustrlen (DocumentPath);
 		       if (i + ustrlen (DirectoryName) + 2 < MAX_PATH)
 			 {
-			    ustrcat (DocumentPath, PATH_STR);
-			    ustrcat (DocumentPath, DirectoryName);
+			    StringConcat (DocumentPath, CUS_PATH_STR);
+			    StringConcat (DocumentPath, DirectoryName);
 			 }
 		    }
 
@@ -462,13 +463,9 @@ STRING              data;
 		  /* le fichier existe, on ouvre le document */
 		 {
 		   /* charge le document */
-		   if ((!ustrcmp (docSuffix, CUSTEXT(".xml"))) && 
-		       ThotLocalActions[T_xmlparsedoc] != NULL)
-                      LoadXmlDocument (&pDoc, docName);
-                   else
-		      LoadDocument (&pDoc, docName);
-		   if (pDoc != NULL)
-		     ustrcpy (pDoc->DocDirectory, DirectoryName);
+            LoadDocument (&pDoc, docName);
+            if (pDoc != NULL)
+                ustrcpy (pDoc->DocDirectory, DirectoryName);
 		 }
 	       else
 		  /* Le fichier n'existe pas */
@@ -510,10 +507,10 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                bufDir[MAX_PATH];
+   CharUnit            bufDir[MAX_PATH];
    PathBuffer          docName;
    int                 length, nbItems, entry;
-   CHAR_T                URL_DIR_SEP;
+   CharUnit            URL_DIR_SEP;
    ThotWidget	       parentWidget;
    if (ThotLocalActions[T_opendoc] == NULL)
      {
@@ -524,10 +521,6 @@ View                view;
 	TteConnectAction (T_presentchoice, (Proc) BuildSchPresNameMenu);
 	TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
      }
-   if (ThotLocalActions[T_xmlparsedoc] != NULL && NbDocSuffix <= 1)
-    {
-      ustrcpy (tabDocSuffix[NbDocSuffix++], CUSTEXT(".xml"));
-    }
 
    /* Creation du Formulaire Ouvrir */
    parentWidget = TtaGetViewFrame (document, view);
@@ -539,35 +532,35 @@ View                view;
 #  ifndef _WINDOWS
    TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), nbItems, bufDir, 6, NULL, FALSE, TRUE);
 #  endif /* !_WINDOWS */
-   if (DirectoryName[0] == EOS && nbItems >= 1)
+   if (DirectoryName[0] == CUS_EOS && nbItems >= 1)
       /* si pas de dossier courant, on initialise avec le premier de bufDir */
      {
-	ustrcpy (DirectoryName, bufDir);
-	ustrcpy (DefaultDocumentName, bufDir);
+	StringCopy (DirectoryName, bufDir);
+	StringCopy (DefaultDocumentName, bufDir);
 #   ifndef _WINDOWS
 	TtaSetSelector (NumZoneDirOpenDoc, 0, NULL);
 #   endif /* !_WINDOWS */
      }
-   else if (DirectoryName[0] != EOS)
+   else if (DirectoryName[0] != CUS_EOS)
      {
-       if (ustrchr (DirectoryName, TEXT('/')))
-	 URL_DIR_SEP = TEXT('/');
+       if (StrChr (DirectoryName, CUSTEXT('/')))
+	 URL_DIR_SEP = CUSTEXT('/');
        else 
-	 URL_DIR_SEP = DIR_SEP;
+	 URL_DIR_SEP = CUS_DIR_SEP;
 
        entry = SearchStringInBuffer(bufDir, DirectoryName, nbItems);
 #      ifndef _WINDOWS
        if (entry != -1)
           TtaSetSelector (NumZoneDirOpenDoc, entry, NULL);
 #      endif /* !_WINDOWS */
-       ustrcpy (docName, DirectoryName);
-       length = ustrlen (docName);
+       StringCopy (docName, DirectoryName);
+       length = StringLength (docName);
        docName[length] = URL_DIR_SEP;
-       docName[length + 1] = EOS;
-       ustrcpy (DefaultDocumentName, docName);
+       docName[length + 1] = CUS_EOS;
+       StringCopy (DefaultDocumentName, docName);
      }
    /* liste des fichiers existants */
-   ustrcpy (docSuffix, tabDocSuffix[0]);
+   StringCopy (docSuffix, tabDocSuffix[0]);
    TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1, docSuffix,
                      TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
 
@@ -587,8 +580,8 @@ View                view;
    	length = 0;
    	for (entry=0; entry<NbDocSuffix; entry++)
      	  {
-            usprintf (&bufDir[length], TEXT("T%s"), tabDocSuffix[entry]+1);
-            length += ustrlen (&bufDir[length])+1;
+            cus_sprintf (&bufDir[length], CUSTEXT("T%s"), tabDocSuffix[entry]+1);
+            length += StringLength (&bufDir[length])+1;
           }
         TtaNewSubmenu (NumToggleDocTypeToOpen, NumFormOpenDoc, 0, TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT),
                           NbDocSuffix, bufDir, NULL, TRUE);

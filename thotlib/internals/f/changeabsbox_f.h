@@ -72,7 +72,7 @@ extern void ComputePageNum ( PtrElement pEl,
                              int view );
 extern void TransmitCounterVal ( PtrElement pEl,
                                  PtrDocument pDoc,
-                                 Name nameAttr,
+                                 WCName nameAttr,
                                  int counter,
                                  PtrPSchema pSchP,
                                  PtrSSchema pSchS );
@@ -168,7 +168,7 @@ extern void ComputePageNum (/* PtrElement pEl,
                                int view */);
 extern void TransmitCounterVal (/* PtrElement pEl,
                                    PtrDocument pDoc,
-                                   Name nameAttr,
+                                   WCName nameAttr,
                                    int counter,
                                    PtrPSchema pSchP,
                                    PtrSSchema pSchS */);

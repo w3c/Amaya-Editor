@@ -314,7 +314,7 @@ ThotBool            inAbtractBox;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pChildAb;
-  CHAR_T              shape;
+  char                shape;
 
   if (pAb->AbLeafType == LtCompound && !inAbtractBox)
     {

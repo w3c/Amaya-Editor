@@ -80,7 +80,7 @@ struct Cat_Context
   {
      int                 Cat_Ref;	         /* CsReference appli du catalogue    */
      UCHAR_T       Cat_Type;	         /* Type du catalogue                 */
-     UCHAR_T       Cat_Button;	         /* Le bouton qui active              */
+     unsigned char Cat_Button;	         /* Le bouton qui active              */
      union {
 	 int             Catu_Data;	         /* Valeur de retour                  */
 	 ThotWidget	 Catu_XtWParent;
@@ -2681,7 +2681,7 @@ char*               equiv;
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = CAT_PULL;
 #ifndef _GTK
-	catalogue->Cat_Button = TEXT('L');
+	catalogue->Cat_Button = 'L';
 	catalogue->Cat_Data = -1;
 #endif /* _GTK */
 
@@ -3190,7 +3190,7 @@ char                button;
    ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-   CHAR_T                heading[200];
+   CHAR_T              heading[200];
 
 #  ifdef _WINDOWS
    HMENU               menu;
@@ -3295,7 +3295,7 @@ char                button;
 	     menu = catalogue->Cat_Widget;
 	     adbloc = catalogue->Cat_Entries;
 	     /* Si on a change de bouton on met a jour le widget avec args[0] */
-	     if (catalogue->Cat_Button != (UCHAR_T) button)
+	     if (catalogue->Cat_Button != button)
 	       {
 #                 ifndef _WINDOWS
 		  XtSetValues (menu, args, 1);
@@ -3873,7 +3873,7 @@ ThotBool            react;
 
    ThotWidget          w;
    ThotWidget          row;
-   CHAR_T              button;
+   char                button;
 
 #  ifdef _WINDOWS
    HMENU               menu;
@@ -4113,9 +4113,9 @@ ThotBool            react;
                          XtSetArg (args[n], XmNbackground, BgMenu_Color);
                          n++;
                          button = parentCatalogue->Cat_Button;
-                         if (button == TEXT('R'))
+                         if (button == 'R')
                             XtSetArg (args[n], XmNwhichButton, Button3);
-                         else if (button == TEXT('M'))
+                         else if (button == 'M')
                               XtSetArg (args[n], XmNwhichButton, Button2);
                          else 
                               XtSetArg (args[n], XmNwhichButton, Button1);
@@ -5546,7 +5546,7 @@ STRING              title;
   NewSheet
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button, int dbutton, int cattype)
+static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, char button, int dbutton, int cattype)
 #else  /* __STDC__ */
 static void         NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, cattype)
 int                 ref;
@@ -5556,7 +5556,7 @@ int                 number;
 STRING              text;
 ThotBool            horizontal;
 int                 package;
-CHAR_T                button;
+char                button;
 int                 dbutton;
 int                 cattype;
 
@@ -5925,7 +5925,7 @@ LPARAM lParam;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int package, CHAR_T button, int dbutton)
+void                TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int package, char button, int dbutton)
 #else  /* __STDC__ */
 void                TtaNewForm (ref, parent, title, horizontal, package, button, dbutton)
 int                 ref;
@@ -5933,7 +5933,7 @@ ThotWidget          parent;
 STRING              title;
 ThotBool            horizontal;
 int                 package;
-CHAR_T                button;
+char                button;
 int                 dbutton;
 
 #endif /* __STDC__ */

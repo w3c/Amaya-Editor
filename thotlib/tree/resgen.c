@@ -126,7 +126,7 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem, Document 
   ElementType newType, oldType;
   Language lang;
   STRING   buffer;
-  CHAR_T   shape;
+  char     shape;
   int      len, rank, x, y;
   ThotBool result = FALSE;
 #ifdef DEBUG

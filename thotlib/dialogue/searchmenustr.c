@@ -490,8 +490,7 @@ PtrDocument         pDoc;
 	     ustrcpy (ListeTypes + lgmenu, TEXT("B"));
 	     if (TableNaturesDoc[nat]->SsExtension)
 	       {
-		  ustrncpy (ListeTypes + lgmenu + 1, TableNaturesDoc[nat]->SsName,
-			   MAX_NAME_LENGTH);
+		  ustrncpy (ListeTypes + lgmenu + 1, TableNaturesDoc[nat]->SsName, MAX_NAME_LENGTH);
 		  lgmenu += ustrlen (TableNaturesDoc[nat]->SsName) + 2;
 	       }
 	     else

@@ -1526,9 +1526,7 @@ ThotBool            createView;
 		    pRoot = pRoot->ElParent;
 		  /* search in the config file the position and the */
 		  /* size of the corresponding window */
-		  ConfigGetViewGeometry (SelectedDocument,
-					 pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1].SrName,
-					 &X, &Y, &width, &height);
+		  ConfigGetViewGeometry (SelectedDocument, pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1].SrName, &X, &Y, &width, &height);
 		  /* send qan event to the application before opening */
 		  /* the view */
 		  notifyDoc.event = TteViewOpen;

@@ -1440,11 +1440,11 @@ Attribute           attribute;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaGiveTextAttributeValue (Attribute attribute, STRING buffer, int *length)
+void                TtaGiveTextAttributeValue (Attribute attribute, CHAR_T* buffer, int *length)
 #else  /* __STDC__ */
 void                TtaGiveTextAttributeValue (attribute, buffer, length)
 Attribute           attribute;
-STRING              buffer;
+CHAR_T*             buffer;
 int                *length;
 #endif /* __STDC__ */
 

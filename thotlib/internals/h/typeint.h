@@ -332,7 +332,7 @@ typedef struct _ElementDescr
 		} s0;
 		struct			/*ElLeafType = LtGraphics or LtSymbol*/
 		{
-		    CHAR_T          _ElGraph_;	/* code of element */
+		    char          _ElGraph_;	/* code of element */
 		} s1;
 		struct			/* ElLeafType = LtPageColBreak */
 		{
@@ -361,7 +361,7 @@ typedef struct _ElementDescr
 		    PtrTextBuffer _ElPolyLineBuffer_; /* buffer containing the
 						     points defining the line*/
 		    int		  _ElNPoints_;	     /* number of points */
-		    CHAR_T	  _ElPolyLineType_;  /* type of line */
+		    char 	  _ElPolyLineType_;  /* type of line */
 		} s5;
 		struct			/* TypeImage = LtPicture */
 		{

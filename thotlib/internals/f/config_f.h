@@ -18,16 +18,16 @@ extern void ConfigSSchemaInternalName ( CharUnit* nameUser,
                                         CharUnit* nameSchema,
                                         ThotBool Doc );
 extern int ConfigMakeMenuPres ( CharUnit* schema,
-                                char* BufMenu );
+                                CHAR_T* BufMenu );
 extern void ConfigGetPSchemaName ( int choix,
                                    char* schpres );
 extern int ConfigMakeImportMenu ( CharUnit* BufMenu );
 extern int ConfigMakeMenuExport ( CharUnit* schema,
-                                  char* BufMenu );
+                                  CHAR_T* BufMenu );
 extern void ConfigGetExportSchemaName ( int choix,
                                         char* schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern ThotBool ConfigDefaultPSchema ( CharUnit* schstr,
+extern ThotBool ConfigDefaultPSchema ( char* schstr,
                                        char* schpres );
 extern void ConfigKeyboard ( int *x,
                              int *y );
@@ -91,16 +91,16 @@ extern void ConfigSSchemaInternalName (/* CharUnit* nameUser,
                                           CharUnit* nameSchema,
                                           ThotBool Doc */);
 extern int ConfigMakeMenuPres (/* CharUnit* schema,
-                                  char* BufMenu */);
+                                  CHAR_T* BufMenu */);
 extern void ConfigGetPSchemaName (/* int choix,
                                      char* schpres */);
 extern int ConfigMakeImportMenu (/* CharUnit* BufMenu */);
 extern int ConfigMakeMenuExport (/* CharUnit* schema,
-                                    char* BufMenu */);
+                                    CHAR_T* BufMenu */);
 extern void ConfigGetExportSchemaName (/* int choix,
                                           char* schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern ThotBool ConfigDefaultPSchema (/* CharUnit* schstr,
+extern ThotBool ConfigDefaultPSchema (/* char* schstr,
                                          char* schpres */);
 extern void ConfigKeyboard (/* int *x,
                                int *y */);

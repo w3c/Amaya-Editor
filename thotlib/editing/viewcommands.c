@@ -108,21 +108,20 @@ int                 height;
 
 #endif /* __STDC__ */
 {
-   int                 createdFrame;
-   CHAR_T                buf[MAX_TXT_LEN];
+   int      createdFrame;
+   CharUnit buf[MAX_TXT_LEN];
 
    /* met dans le buffer le nom du document... */
-   ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
-   ustrcat (buf, TEXT("  "));
+   StringNCopy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
+   StringConcat (buf, CUSTEXT("  "));
    /* ...suivi eventuellement de la mention 'Read only' */
    if (pDoc->DocReadOnly)
      {
-	ustrcat (buf, TEXT(" "));
-	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
+	StringConcat (buf, CUSTEXT(" "));
+	StringConcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
-   createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width,
-			     height, vol, IdentDocument (pDoc));
+   createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width, height, vol, IdentDocument (pDoc));
    return createdFrame;
    return -1;
 }
@@ -404,12 +403,12 @@ PtrDocument         pDoc;
    fileName: nom du fichier a importer.                        	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ImportDocument (Name SSchemaName, PathBuffer directory, Name fileName)
+void                ImportDocument (CUSName SSchemaName, PathBuffer directory, CharUnit* fileName)
 #else  /* __STDC__ */
 void                ImportDocument (SSchemaName, directory, fileName)
-Name                SSchemaName;
+CUSName             SSchemaName;
 PathBuffer          directory;
-Name                fileName;
+CharUnit*           fileName;
 #endif /* __STDC__ */
 {
    FILE               *file;
@@ -420,17 +419,17 @@ Name                fileName;
    int                 i;
    ThotBool            ok;
 
-   if (fileName[0] != EOS && SSchemaName[0] != EOS)
+   if (fileName[0] != CUS_EOS && SSchemaName[0] != CUS_EOS)
       /* les parametres d'entree sont valides */
      {
 	if (directory[0] == EOS)
 	   /* pas de directory precise'. On prend le path des documents */
 	   ustrncpy (directory, DocumentPath, MAX_PATH);
 	/* construit le nom complet du fichier a importer */
-	MakeCompleteName (fileName, _EMPTYSTR_, directory, fullName, &i);
+	MakeCompleteName (fileName, CUSTEXT(""), directory, fullName, &i);
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
 	/* ouvre le fichier a importer */
-	file = fopen (fullName, "r");
+	file = cus_fopen (fullName, CUSTEXT("r"));
 	if (file != NULL)
 	   /* le fichier a importer est ouvert */
 	  {
@@ -465,9 +464,9 @@ Name                fileName;
 		       /* complete le descripteur du document */
 		       pDoc->DocRootElement->ElAccess = AccessReadWrite;
 		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-		       ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
+		       StringNCopy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
 		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		       ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
+		       StringNCopy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
 		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		       ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
 		       /* conserve le path actuel des schemas dans le contexte du doc. */
@@ -519,8 +518,7 @@ PtrDocument         pDoc;
    ThotBool            complete;
 
    /* demande la creation d'une fenetre pour la 1ere vue du document */
-   ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[0],
-			  &X, &Y, &width, &height);
+   ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[0], &X, &Y, &width, &height);
    notifyDoc.event = TteViewOpen;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
@@ -528,8 +526,7 @@ PtrDocument         pDoc;
      {
 	pDoc->DocViewFrame[0] =
 	   CreateWindowWithTitle (pDoc, 1,
-				  pDoc->DocSSchema->SsPSchema->PsView[0],
-			      &pDoc->DocViewVolume[0], X, Y, width, height);
+				  pDoc->DocSSchema->SsPSchema->PsView[0], &pDoc->DocViewVolume[0], X, Y, width, height);
 	if (pDoc->DocViewFrame[0] != 0)
 	  {
 	    /* Update Paste entry in menu */
@@ -685,7 +682,7 @@ ThotBool            withEvent;
 		     }
 		}
 	/* ouvre les vues definies pour le nouveau schema du document */
-	DisplayDoc (pDoc);
+	DisplayDoc (pDoc); 
 
         if (withEvent) {
 NotifyNaturePresent notifyDoc;
@@ -1085,8 +1082,7 @@ View                view;
                {
                   /* demande le nom reel du schema de presentation */
                   ConfigGetPSchemaName (k, NomPres);
-                  if (ustrcmp (TableNatures[nat]->SsPSchema->PsPresentName,
-                              NomPres) == 0)
+                  if (ustrcmp (TableNatures[nat]->SsPSchema->PsPresentName, NomPres) == 0)
                      /* c'est le nom du schema de presentation actuel */
                      /* on desactivera l'entree correspondante dans le sous-menu */
                      /* des schemas de presentation de cette nature */
@@ -1112,9 +1108,7 @@ View                view;
                      i = CONFIG_EXTENSION_STRUCT; /* schema d'extension */
                   else
                      i = CONFIG_NATURE_STRUCT; /* schema de nature */
-                  TtaConfigSSchemaExternalName (NomUtilisateur,
-                                           TableNatures[nat]->SsName,
-                                                i);
+                  TtaConfigSSchemaExternalName (NomUtilisateur, TableNatures[nat]->SsName, i);
                   if (NomUtilisateur[0] == EOS)
                      ustrcpy (ptrBufNat, TableNatures[nat]->SsName);
                   else
@@ -1144,8 +1138,7 @@ View                view;
              {
                 /* demande la liste des presentations prevues dans la */
                 /* configuration de l'utilisateur */
-                nbPres = ConfigMakeMenuPres (TableNatures[nat]->SsName,
-                                             BufMenu);
+                nbPres = ConfigMakeMenuPres (TableNatures[nat]->SsName, BufMenu);
                 /* compose un sous-menu a partir de cette liste */
                 if (nbPres > 0)
                   {
@@ -1171,9 +1164,7 @@ View                view;
                         i = CONFIG_EXTENSION_STRUCT; /* schema d'extension */
                      else
                         i = CONFIG_NATURE_STRUCT; /* schema de nature */
-                     TtaConfigSSchemaExternalName (NomUtilisateur,
-                                           TableNatures[nat]->SsName,
-                                                   i);
+                     TtaConfigSSchemaExternalName (NomUtilisateur, TableNatures[nat]->SsName, i);
                      if (NomUtilisateur[0] == EOS)
                         ustrcpy (NomUtilisateur, TableNatures[nat]->SsName);
                      if (nbNatures == 1)

@@ -134,7 +134,8 @@ Pixmap              pix;
     if (pix == 0) return;
 
     if (name[0] == EOS) return;
-    if (!ImageBaseHashInitialized) InitImageBase();
+    if (!ImageBaseHashInitialized) 
+       InitImageBase();
 
     hash = GetHash(name);
     cour = ImageBaseHash[hash];
@@ -144,8 +145,9 @@ Pixmap              pix;
      * place to insert it.
      */
     while (cour != NULL) {
-        res = ustrcmp(cour->name, name);
-        if (res <= 0) break;
+        res = ustrcmp (cour->name, name);
+        if (res <= 0) 
+           break;
         prev = cour;
         cour = cour->next;
     }
@@ -155,7 +157,7 @@ Pixmap              pix;
      */
     NbImageEntry++;
     cour = (ImageBaseEntryPtr) TtaGetMemory (sizeof(struct ImageBaseEntry));
-    cour->name = TtaStrdup (name);
+    cour->name = TtaWCSdup (name);
     cour->pix = pix;
 
     /*

@@ -428,10 +428,10 @@ int                 NumberOfColors ()
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CharUnit*          ColorName (int num)
+CHAR_T*          ColorName (int num)
 #else  /* __STDC__ */
-CharUnit*          ColorName (num)
-int                num;
+CHAR_T*          ColorName (num)
+int              num;
 
 #endif /* __STDC__ */
 {

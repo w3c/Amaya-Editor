@@ -337,7 +337,7 @@ PtrTextBuffer       pBuf;
 	i = 1;
 	while (i <= pBuf->BuLength)
 	  {
-	     TtaWriteByte (pivFile, pBuf->BuContent[i - 1]);
+	     TtaWriteWideChar (pivFile, pBuf->BuContent[i - 1]);
 	     i++;
 	  }
 	pBuf = pBuf->BuNext;
@@ -367,7 +367,7 @@ PtrDocument         pDoc;
    n = 0;
    stop = FALSE;
    do
-      if (ustrcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
+      if (strcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
 	 stop = TRUE;
       else if (n < pDoc->DocNNatures - 1)
 	 n++;
@@ -454,7 +454,7 @@ PtrReference        pRef;
 		label[0] = EOS;
 	     else
 		/* label: label de l'element designe' */
-		ustrncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
+		strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
 	     /* ecrit le label de l'objet designe' */
 	     PutLabel (pivFile, label);
 	  }
@@ -509,7 +509,7 @@ PtrDocument         pDoc;
 	n = 0;
 	stop = FALSE;
 	do
-	   if (ustrcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
+	   if (strcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
 	      stop = TRUE;
 	   else if (n < pDoc->DocNNatures - 1)
 	      n++;
@@ -543,7 +543,7 @@ PtrDocument         pDoc;
 		      {
 			 i = 0;
 			 while (pBuf->BuContent[i] != EOS)
-			    TtaWriteByte (pivFile, pBuf->BuContent[i++]);
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
 			 pBuf = pBuf->BuNext;
 		      }
 		    TtaWriteByte (pivFile, EOS);
@@ -878,8 +878,8 @@ ThotBool            subTree;
 		    i++;
 		  if (i > 0)
 		    {
-		      TtaWriteByte (pivFile, (CHAR_T) C_PIV_LANG);
-		      TtaWriteByte (pivFile, (CHAR_T) i);
+		      TtaWriteByte (pivFile, C_PIV_LANG);
+		      TtaWriteWideChar (pivFile, (CHAR_T) i);
 		    }
 		}
 	      if (pEl1->ElLeafType != LtReference)
@@ -898,7 +898,7 @@ ThotBool            subTree;
 			{
 			  i = 0;
 			  while (pBuf->BuContent[i] != EOS && i < pBuf->BuLength)
-			    TtaWriteByte (pivFile, pBuf->BuContent[i++]);
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
 			  c = c + i;
 			  /* buffer suivant du meme element */
 			  pBuf = pBuf->BuNext;
@@ -1650,7 +1650,7 @@ PtrDocument         pDoc;
 		  pRefD = pFirstRefD;
 		  found = FALSE;
 		  while (!found && pRefD != NULL)
-		     if (ustrcmp (pOutRef->OrLabel, pRefD->ReReferredLabel) == 0)
+		     if (strcmp (pOutRef->OrLabel, pRefD->ReReferredLabel) == 0)
 			found = TRUE;
 		     else
 			pRefD = pRefD->ReNext;
@@ -1663,7 +1663,7 @@ PtrDocument         pDoc;
 			  /* descripteur d'element reference' */
 			 {
 			    GetReferredDescr (&pRefD);
-			    ustrncpy (pRefD->ReReferredLabel, pOutRef->OrLabel, MAX_LABEL_LEN);
+			    strncpy (pRefD->ReReferredLabel, pOutRef->OrLabel, MAX_LABEL_LEN);
 			    /* chaine le descripteur en tete */
 			    pRefD->ReNext = pFirstRefD;
 			    pRefD->RePrevious = NULL;
@@ -1849,7 +1849,7 @@ PtrDocument         pDoc;
 		  /* cherche le descripteur */
 		  pRefD = pExtFileD->ErFirstReferredEl;
 		  while (pRefD != NULL)
-		     if (ustrcmp (pChnRef->CrOldLabel, pRefD->ReReferredLabel) == 0)
+		     if (strcmp (pChnRef->CrOldLabel, pRefD->ReReferredLabel) == 0)
 			/* supprime ce descripteur */
 		       {
 			  /* on le retire d'abord de sa chaine */
@@ -1882,7 +1882,7 @@ PtrDocument         pDoc;
 	       {
 
 		  GetReferredDescr (&pRefD);
-		  ustrncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+		  strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 		  /* chaine le descripteur en tete */
 		  pRefD->ReNext = pExtFileD->ErFirstReferredEl;
 		  pRefD->RePrevious = NULL;
@@ -1953,7 +1953,7 @@ PtrDocument         pDoc;
 		       found = FALSE;
 		       while (pChnRefRead != NULL && !found)
 			 {
-			    if (ustrcmp (pChnRefRead->CrOldLabel, pChnRef->CrOldLabel) == 0)
+			    if (strcmp (pChnRefRead->CrOldLabel, pChnRef->CrOldLabel) == 0)
 			       if (SameDocIdent (pChnRefRead->CrOldDocument, pChnRef->CrOldDocument))
 				  /* il s'agit du meme ancien element */
 				  if (pChnRefRead->CrNewLabel[0] == EOS)
@@ -1964,8 +1964,7 @@ PtrDocument         pDoc;
 					  /* c'est un deplacement, on transforme la */
 					  /* destruction en deplacement */
 					 {
-					    ustrncpy (pChnRefRead->CrNewLabel,
-						     pChnRef->CrNewLabel, MAX_LABEL_LEN);
+					    strncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 					    CopyDocIdent (&pChnRefRead->CrNewDocument,
 						    pChnRef->CrNewDocument);
 					 }
@@ -1983,13 +1982,13 @@ PtrDocument         pDoc;
 			       if (pChnRefRead->CrNewLabel[0] != EOS &&
 				   pChnRef->CrNewLabel[0] != EOS)
 				  /* ce sont deux deplacements d'element */
-				  if (ustrcmp (pChnRefRead->CrNewLabel, pChnRef->CrOldLabel) == 0)
+				  if (strcmp (pChnRefRead->CrNewLabel, pChnRef->CrOldLabel) == 0)
 				     if (SameDocIdent (pChnRefRead->CrNewDocument, pChnRef->CrOldDocument))
 					/* deux deplacements successifs du meme element */
 					/* on reduit a un seul deplacement */
 				       {
 					  found = TRUE;
-					  ustrncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+					  strncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 					  CopyDocIdent (&pChnRefRead->CrNewDocument,
 						    pChnRef->CrNewDocument);
 				       }
@@ -2002,8 +2001,8 @@ PtrDocument         pDoc;
 			    GetChangedReferredEl (&pNewChnRef);
 			    pNewChnRef->CrNext = pFile->RcFirstChange;
 			    pFile->RcFirstChange = pNewChnRef;
-			    ustrncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel, MAX_LABEL_LEN);
-			    ustrncpy (pNewChnRef->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+			    strncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel, MAX_LABEL_LEN);
+			    strncpy (pNewChnRef->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 			    CopyDocIdent (&pNewChnRef->CrOldDocument, pChnRef->CrOldDocument);
 			    CopyDocIdent (&pNewChnRef->CrNewDocument, pChnRef->CrNewDocument);
 			 }
@@ -2177,7 +2176,7 @@ ThotBool            copyDoc;
 			  /* il s'agit d'un element reference' appartenant au */
 			  /* document */
 			  if (pElemRefD->ReReferredElem != NULL)
-			     if (ustrcmp (pElemRefD->ReReferredElem->ElLabel, pRefD->ReReferredLabel) == 0)
+			     if (strcmp (pElemRefD->ReReferredElem->ElLabel, pRefD->ReReferredLabel) == 0)
 				/* c'est le descripteur de notre element */
 				found = TRUE;
 		       if (!found)

@@ -1079,7 +1079,7 @@ PtrDocument         pDoc;
 				     pAb->AbCreatorAttr = pAttr;
 				     break;
 				  case AtReferenceAttr:
-				     CopyStringToText (CUSTEXT("REF"), pAb->AbText, &l);
+				     CopyStringToText (TEXT("REF"), pAb->AbText, &l);
 				     pAb->AbVolume += l;
 				     break;
 				  case AtEnumAttr:

@@ -303,7 +303,7 @@ SSchema sSchema;
     }
   pts->FirstAttr = 0;
   pts->FirstAttrValue = 0;
-  pts->SchemaName=TtaStrdup(TtaGetSSchemaName(sSchema));
+  pts->SchemaName = TtaStrdup (TtaGetSSchemaName (sSchema));
   pts->Next = TranslationSchemas;
   TranslationSchemas = pts;
 

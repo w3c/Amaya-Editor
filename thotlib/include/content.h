@@ -44,7 +44,7 @@ PicType;
    document: the document containing that element.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetTextContent (Element element, char* content, Language language, Document document);
+extern void         TtaSetTextContent (Element element, CHAR_T* content, Language language, Document document);
 
 /*----------------------------------------------------------------------
    TtaAppendTextContent
@@ -57,7 +57,7 @@ extern void         TtaSetTextContent (Element element, char* content, Language 
    document: the document containing that element.
 
   ----------------------------------------------------------------------*/
-extern void         TtaAppendTextContent (Element element, char* content, Document document);
+extern void         TtaAppendTextContent (Element element, CHAR_T* content, Document document);
 
 /*----------------------------------------------------------------------
    TtaInsertTextContent
@@ -130,7 +130,7 @@ extern ThotBool     TtaMergeText (Element element, Document document);
    document: the document containing that element.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetGraphicsShape (Element element, CHAR_T shape, Document document);
+extern void         TtaSetGraphicsShape (Element element, char shape, Document document);
 
 /*----------------------------------------------------------------------
    TtaAddPointInPolyline
@@ -316,7 +316,7 @@ extern void         TtaGiveSubString (Element element, /*OUT*/ STRING buffer, in
    symbol contained in the element.
 
   ----------------------------------------------------------------------*/
-extern CHAR_T         TtaGetGraphicsShape (Element element);
+extern char         TtaGetGraphicsShape (Element element);
 
 /*----------------------------------------------------------------------
    TtaGetPolylineLength
@@ -380,8 +380,8 @@ extern int          TtaGetPageView (Element pageElement);
 
 #else  /* __STDC__ */
 
-extern void         TtaSetTextContent ( /* Element element, char *content, Language language, Document document */ );
-extern void         TtaAppendTextContent ( /* Element element, char *content, Document document */ );
+extern void         TtaSetTextContent ( /* Element element, CHAR_T *content, Language language, Document document */ );
+extern void         TtaAppendTextContent ( /* Element element, CHAR_T *content, Document document */ );
 extern void         TtaInsertTextContent ( /* Element element, int position, char *content, Document document */ );
 extern void         TtaDeleteTextContent ( /* Element element, int position, int length, Document document */ );
 extern void         TtaSplitText ( /* Element element, int position, Document document */ );
@@ -397,7 +397,7 @@ extern int          TtaGetVolume (/* Element element */);
 extern int          TtaGetTextLength ( /* Element element */ );
 extern void         TtaGiveTextContent ( /* Element element, char *buffer, int *length, Language *language */ );
 extern void         TtaGiveSubString ( /* Element element, char *buffer, int position, int length */ );
-extern CHAR_T       TtaGetGraphicsShape ( /* Element element */ );
+extern char       TtaGetGraphicsShape ( /* Element element */ );
 extern int          TtaGetPolylineLength ( /* Element element */ );
 extern void         TtaGivePolylinePoint ( /* Element element, int rank, TypeUnit unit, int *x, int *y */ );
 extern int          TtaGetPageNumber ( /* Element pageElement */ );

@@ -160,13 +160,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadPivotHeader (BinFile pivotFile, Document document, PCHAR_T nextChar)
+void                TtaReadPivotHeader (BinFile pivotFile, Document document, char* nextChar)
 
 #else  /* __STDC__ */
 void                TtaReadPivotHeader (pivotFile, document, nextChar)
 BinFile             pivotFile;
 Document            document;
-PCHAR_T               nextChar;
+char*               nextChar;
 
 #endif /* __STDC__ */
 
@@ -235,13 +235,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadLanguageTable (BinFile pivotFile, Document document, PCHAR_T nextChar)
+void                TtaReadLanguageTable (BinFile pivotFile, Document document, char* nextChar)
 
 #else  /* __STDC__ */
 void                TtaReadLanguageTable (pivotFile, document, nextChar)
 BinFile             pivotFile;
 Document            document;
-PCHAR_T               nextChar;
+char*               nextChar;
 
 #endif /* __STDC__ */
 
@@ -311,13 +311,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadSchemaNames (BinFile pivotFile, Document document, PCHAR_T nextChar, void (*withThisPSchema) (Document document, STRING natSchema, STRING presentSchema))
+void                TtaReadSchemaNames (BinFile pivotFile, Document document, char* nextChar, void (*withThisPSchema) (Document document, char* natSchema, char* presentSchema))
 
 #else  /* __STDC__ */
 void                TtaReadSchemaNames (pivotFile, document, nextChar, withThisPSchema)
 BinFile             pivotFile;
 Document            document;
-PCHAR_T               nextChar;
+char*               nextChar;
 void (*withThisPSchema) ();
 
 #endif /* __STDC__ */
@@ -453,16 +453,16 @@ PRule              *pRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element, Document document, PCHAR_T byte, Element * elementRead)
+void                TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element, Document document, char* byte, Element * elementRead)
 
 #else  /* __STDC__ */
 void                TtaReadTree (pivotFile, pSchema, element, document, byte, elementRead)
 BinFile             pivotFile;
-SSchema          pSchema;
+SSchema             pSchema;
 Element             element;
 Document            document;
-PCHAR_T               byte;
-Element            *elementRead;
+char*               byte;
+Element*            elementRead;
 
 #endif /* __STDC__ */
 
@@ -500,10 +500,9 @@ Element            *elementRead;
 	     NumAssoc = ((PtrElement) element)->ElAssocNum;
 	     pSS = ((PtrElement) element)->ElStructSchema;
 	  }
-	*elementRead = (Element) ReadTreePiv (pivotFile, pSS,
-			       LoadedDocument[document - 1], byte, NumAssoc,
-			      FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu,
-			       &SchStrLu, TRUE, (PtrElement) element, TRUE);
+	*elementRead = (Element) ReadTreePiv (pivotFile, pSS, LoadedDocument[document - 1], 
+                                          byte, NumAssoc, FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu, 
+                                          &SchStrLu, TRUE, (PtrElement) element, TRUE);
 	if (*elementRead != NULL)
          SendEventAttrRead ((PtrElement)(*elementRead), 
                             LoadedDocument[document - 1]);
@@ -749,13 +748,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadLabel (BinFile pivotFile, CHAR_T byte, STRING labelRead)
+void                TtaReadLabel (BinFile pivotFile, char byte, char* labelRead)
 
 #else  /* __STDC__ */
 void                TtaReadLabel (pivotFile, byte, labelRead)
 BinFile             pivotFile;
-CHAR_T                byte;
-STRING              labelRead;
+char                byte;
+char*               labelRead;
 
 #endif /* __STDC__ */
 
@@ -778,12 +777,12 @@ STRING              labelRead;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaWriteLabel (BinFile pivotFile, STRING label)
+void                TtaWriteLabel (BinFile pivotFile, char* label)
 
 #else  /* __STDC__ */
 void                TtaWriteLabel (pivotFile, label)
 BinFile             pivotFile;
-STRING              label;
+char*               label;
 
 #endif /* __STDC__ */
 
@@ -810,13 +809,13 @@ STRING              label;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-Element             TtaNewElementWithLabel (Document document, ElementType elemType, STRING label)
+Element             TtaNewElementWithLabel (Document document, ElementType elemType, char* label)
 
 #else  /* __STDC__ */
 Element             TtaNewElementWithLabel (document, elemType, label)
 Document            document;
 ElementType         elemType;
-STRING              label;
+char*               label;
 
 #endif /* __STDC__ */
 
@@ -843,7 +842,7 @@ STRING              label;
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
 					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (ThotBool)(*label == EOS));
 	if (*label != EOS)
-	   ustrncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
+	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }
    return element;
 }

@@ -1665,11 +1665,11 @@ PtrDocument         pDoc;
 	pAb->AbLeafType = LtText;
 	GetConstantBuffer (pAb);
 	pBu1 = pAb->AbText;
-	CopyStringToText ("<", pBu1, &lg);
+	CopyStringToText (TEXT("<"), pBu1, &lg);
 	CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 			  pBu1, &i);
 	lg += i;
-	CopyStringToText (">", pBu1, &i);
+	CopyStringToText (TEXT(">"), pBu1, &i);
 	lg += i;
 	pAb->AbVolume = lg;
 	pAb->AbCanBeModified = FALSE;
@@ -2644,13 +2644,13 @@ FunctionType        pageType;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static ThotBool     FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName, PtrAbstractBox * pAb)
+static ThotBool     FindAbsBox (int Ntype, PtrPSchema pSchP, WCName presBoxName, PtrAbstractBox * pAb)
 
 #else  /* __STDC__ */
 static ThotBool     FindAbsBox (Ntype, pSchP, presBoxName, pAb)
 int                 Ntype;
 PtrPSchema          pSchP;
-Name                presBoxName;
+WCName              presBoxName;
 PtrAbstractBox     *pAb;
 
 #endif /* __STDC__ */
@@ -2663,11 +2663,9 @@ PtrAbstractBox     *pAb;
    if ((*pAb)->AbPresentationBox)
       if ((*pAb)->AbLeafType == LtText)
 	 if (Ntype != 0)
-	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName,
-			     pSchP->PsPresentBox[Ntype - 1].PbName) == 0;
+	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, pSchP->PsPresentBox[Ntype - 1].PbName) == 0;
 	 else
-	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName,
-			     presBoxName) == 0;
+	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, presBoxName) == 0;
    if (!result)
       if ((*pAb)->AbFirstEnclosed == NULL)
 	 result = FALSE;
@@ -2701,13 +2699,13 @@ PtrAbstractBox     *pAb;
    		pEl pointe sur l'element trouve'.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, Name presBoxName, PtrElement * pEl)
+static ThotBool     SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, WCName presBoxName, PtrElement * pEl)
 #else  /* __STDC__ */
 static ThotBool     SearchElCrPresBoxCopy (presBoxType, pSchP, pSchS, presBoxName, pEl)
 int                *presBoxType;
 PtrPSchema         *pSchP;
 PtrSSchema         *pSchS;
-Name                presBoxName;
+WCName              presBoxName;
 PtrElement         *pEl;
 #endif /* __STDC__ */
 
@@ -2745,7 +2743,7 @@ PtrElement         *pEl;
 		{
 		   result = pPRule->PrPresBox[0] == *presBoxType;
 		   if (result)
-		      result = ustrcmp (pSS->SsName, (*pSchS)->SsName) == 0;
+		      result = strcmp (pSS->SsName, (*pSchS)->SsName) == 0;
 		   /* on supprime le test sur l'egalite des schemas P et on teste uniquement */
 		   /* les schemas de structure : cela permet a des chapitres de se referencer */
 		   /* mutuellement meme si leur schema de presentation different legerement */
@@ -2870,14 +2868,14 @@ PtrTextBuffer      *pBuffPrec;
 
 
 #ifdef __STDC__
-static PtrElement   SearchElInSubTree (PtrElement pElRoot, int elType, PtrSSchema pSS, Name typeName)
+static PtrElement   SearchElInSubTree (PtrElement pElRoot, int elType, PtrSSchema pSS, WCName typeName)
 
 #else  /* __STDC__ */
 static PtrElement   SearchElInSubTree (pElRoot, elType, pSS, typeName)
 PtrElement          pElRoot;
 int                 elType;
 PtrSSchema          pSS;
-Name                typeName;
+WCName              typeName;
 
 #endif /* __STDC__ */
 
@@ -2885,7 +2883,7 @@ Name                typeName;
    PtrElement          pEC, pElChild;
 
    pEC = NULL;			/* a priori on n'a pas trouve' */
-   if (typeName[0] != EOS)
+   if (typeName[0] != WC_EOS)
       /* on compare les noms de type */
      {
 	if (ustrcmp (typeName, pElRoot->ElStructSchema->SsRule[pElRoot->ElTypeNumber - 1].SrName) == 0)
@@ -2966,7 +2964,7 @@ ThotBool            withDescCopy;
    PtrSSchema          pSchS;
    PtrTextBuffer       pBuffPrec;
    int                 boxType;
-   Name                boxName;
+   WCName              boxName;
    DocumentIdentifier  IDoc;
    PtrDocument         pDocRef;
    PtrElement          pEl1;
@@ -3005,8 +3003,7 @@ ThotBool            withDescCopy;
 	   if (pPRule->PrElement)
 	      /* il faut copier le contenu d'un element structure' contenu */
 	      /* dans l'element reference'. On cherche cet element */
-	      pE = SearchElInSubTree (pE, pPRule->PrPresBox[0], pEl1->ElStructSchema,
-				      pPRule->PrPresBoxName);
+	      pE = SearchElInSubTree (pE, pPRule->PrPresBox[0], pEl1->ElStructSchema, pPRule->PrPresBoxName);
 	   else
 	      /* il faut copier une boite de presentation */
 	      /* prend le schema de presentation qui s'applique a la reference */
@@ -3111,8 +3108,7 @@ ThotBool            withDescCopy;
    if (pPRule->PrElement)
      {
 	/*cherche d'abord l'element a copier a l'interieur de l'element copieur */
-	pE = SearchElInSubTree (pAb->AbElement, pPRule->PrPresBox[0],
-				pEl1->ElStructSchema, pPRule->PrPresBoxName);
+	pE = SearchElInSubTree (pAb->AbElement, pPRule->PrPresBox[0], pEl1->ElStructSchema, pPRule->PrPresBoxName);
 
 	if (pE == NULL)
 	   /* on n'a pas trouve' l'element a copier */
@@ -3120,8 +3116,7 @@ ThotBool            withDescCopy;
 	      if (pEl1->ElPageType == PgBegin)
 		 /* on travaille pour une marque de page qui est engendree par */
 		 /* le debut d'un element. On cherche dans cet element */
-		 pE = SearchElInSubTree (pEl1->ElParent, pPRule->PrPresBox[0],
-			       pEl1->ElStructSchema, pPRule->PrPresBoxName);
+		 pE = SearchElInSubTree (pEl1->ElParent, pPRule->PrPresBox[0], pEl1->ElStructSchema, pPRule->PrPresBoxName);
 	/* si on n'a pas trouve', on cherche en arriere l'element a copier */
 	if (pE == NULL)
 	   if (pPRule->PrNPresBoxes > 0)

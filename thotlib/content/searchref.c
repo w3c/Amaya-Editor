@@ -438,8 +438,8 @@ LabelString         oldLabel;
 	{
 	   /* acquiert un descripteur et le remplit */
 	   GetChangedReferredEl (&pChnRef);
-	   ustrncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
-	   ustrncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
+	   strncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
+	   strncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
 	   CopyDocIdent (&pChnRef->CrOldDocument, DocOfSavedElements->DocIdent);
 	   CopyDocIdent (&pChnRef->CrNewDocument, pDoc->DocIdent);
 	   pChnRef->CrReferringDoc = NULL;
@@ -563,7 +563,7 @@ PtrDocument         pDoc;
    PtrReference        pRefClipboard;
 
    /* on se souvient du label de l'original */
-   ustrncpy (oldLabel, pRoot->ElLabel, MAX_LABEL_LEN);
+   strncpy (oldLabel, pRoot->ElLabel, MAX_LABEL_LEN);
    if (ChangeLabel || pDoc != DocOfSavedElements)
      {
 	/* on affecte un nouveau label a l'element */
@@ -592,7 +592,7 @@ PtrDocument         pDoc;
 	pRoot->ElReferredDescr->ReReferredElem = pRoot;
 	if (!ChangeLabel && pSource != NULL && pDoc == DocOfSavedElements)
 	   /* l'element prend le meme label que l'element original */
-	   ustrncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+	   strncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 	if (!ChangeLabel && pSource != NULL)
 	  {
 	     /* l'element prend les memes descripteurs de documents */

@@ -778,11 +778,11 @@ int                *len;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CopyStringToText (char* srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
+void                CopyStringToText (CHAR_T* srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
 
 #else  /* __STDC__ */
 void                CopyStringToText (srceStrn, pCopyBuf, LgCopiee)
-char*               srceStrn;
+CHAR_T*             srceStrn;
 PtrTextBuffer       pCopyBuf;
 int                *LgCopiee;
 
@@ -790,7 +790,7 @@ int                *LgCopiee;
 
 {
    PtrTextBuffer       pTBDest;
-   char*               pSrce;
+   CHAR_T*             pSrce;
    int                 lenRest, len;
 
    *LgCopiee = 0;
@@ -798,7 +798,7 @@ int                *LgCopiee;
      {
 	pTBDest = pCopyBuf;
 	/* longueur restant a copier */
-	lenRest = strlen (srceStrn);
+	lenRest = ustrlen (srceStrn);
 	*LgCopiee = lenRest;
 	pSrce = srceStrn;
 	/* cherche le dernier buffer de la chaine de destination */
@@ -824,10 +824,10 @@ int                *LgCopiee;
 	     if (len > 0)
 		/* on fait la copie */
 	       {
-		  strncpy (pTBDest->BuContent + pTBDest->BuLength, pSrce, len);
+		  ustrncpy (pTBDest->BuContent + pTBDest->BuLength, pSrce, len);
 		  pSrce += len;
 		  pTBDest->BuLength += len;
-		  pTBDest->BuContent[pTBDest->BuLength] = EOS;
+		  pTBDest->BuContent[pTBDest->BuLength] = WC_EOS;
 		  lenRest -= len;
 	       }
 	  }
@@ -842,12 +842,12 @@ int                *LgCopiee;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CopyTextToString (PtrTextBuffer pSrceBuf, STRING pStrCpy, int *len)
+void                CopyTextToString (PtrTextBuffer pSrceBuf, CHAR_T* pStrCpy, int *len)
 
 #else  /* __STDC__ */
 void                CopyTextToString (pSrceBuf, pStrCpy, len)
 PtrTextBuffer       pSrceBuf;
-STRING              pStrCpy;
+CHAR_T*             pStrCpy;
 int                *len;
 
 #endif /* __STDC__ */

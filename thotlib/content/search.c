@@ -954,7 +954,7 @@ PtrDocument         pDoc;
 	     while (pAb != NULL)
 		/* recherche du filet */
 		if (pAb->AbLeafType == LtGraphics
-		    && pAb->AbShape == TEXT('h')
+		    && pAb->AbShape == 'h'
 		    && pAb->AbHorizPos.PosAbRef == NULL)
 		  {
 		     pAbGraph = pAb;

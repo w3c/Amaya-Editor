@@ -1723,7 +1723,7 @@ LPARAM lParam;
             case WM_CHAR:
                  /* TtaAbortShowDialogue (); */
 				 key = (int) wParam;
-                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (STRING) &key))
+                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T*)&key))
                     /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
                     WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam);
                  if (wParam == VK_MENU)

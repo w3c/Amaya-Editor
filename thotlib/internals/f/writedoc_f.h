@@ -9,7 +9,7 @@
 extern void TtaSaveDocument ( Document document,
                               STRING documentName );
 extern ThotBool StoreDocument ( PtrDocument pDoc,
-                                Name docName,
+                                PathBuffer docName,
                                 PathBuffer dirName,
                                 ThotBool copy,
                                 ThotBool move );
@@ -27,7 +27,7 @@ extern void PivotLoadResources ( void );
 extern void TtaSaveDocument (/* Document document,
                                 STRING documentName */);
 extern ThotBool StoreDocument (/* PtrDocument pDoc,
-                                  Name docName,
+                                  PathBuffer docName,
                                   PathBuffer dirName,
                                   ThotBool copy,
                                   ThotBool move */);

@@ -191,7 +191,6 @@ typedef struct _SchemaMenu_Ctl
 #define T_redisplay			104
 #define T_writedocument                 105
 #define T_setwritedirectory             106
-#define T_xmlparsedoc			107
 #define T_transformintotype		108
 #define T_docmodified                   109
 #define T_switchsel                     110

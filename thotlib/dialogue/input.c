@@ -1330,7 +1330,7 @@ CharUnit*             appliname;
                if (!strcmp (ch, "TtcInsertChar"))
 		 {
                   strcat (text, "insert-string(");
-                  strcat (text, AsciiTranslate (&adr[1]));
+                  strcat (text, ISOAsciiTranslate (&adr[1]));
 		 }
 	       else if (!strcmp (ch, "TtcDeleteSelection"))
                 strcat (text, "delete-selection()");
@@ -1356,10 +1356,10 @@ CharUnit*             appliname;
 		/* C'est l'action insert-string */
 		/* FnCopy la ligne dans le source de la table de translations */
 		strcat (text, line);
-		strcat (text, AsciiTranslate (transText));
+		strcat (text, ISOAsciiTranslate (transText));
 		strcat (text, "\n");
 		/* C'est un encodage de caractere */
-		adr = AsciiTranslate (&transText[len]);
+		adr = ISOAsciiTranslate (&transText[len]);
 		MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
 	      }
 	    else if (i < max)

@@ -159,7 +159,7 @@ STRING              documentName;
 		  pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 #ifndef NODISPLAY
 		  /* changes the title of frames */
-		  ChangeDocumentName (pDoc, documentName);
+		  ChangeDocumentName (pDoc, documentName); 
 #endif
 		}
 	    }
@@ -261,11 +261,11 @@ STRING              extension;
    StoreDocument       sauve le document pDoc dans un fichier
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            StoreDocument (PtrDocument pDoc, Name docName, PathBuffer dirName, ThotBool copy, ThotBool move)
+ThotBool            StoreDocument (PtrDocument pDoc, PathBuffer docName, PathBuffer dirName, ThotBool copy, ThotBool move)
 #else  /* __STDC__ */
 ThotBool            StoreDocument (pDoc, docName, dirName, copy, move)
 PtrDocument         pDoc;
-Name                docName;
+PathBuffer          docName;
 PathBuffer          dirName;
 ThotBool            copy;
 ThotBool            move;
@@ -289,14 +289,14 @@ ThotBool            move;
      {
 	status = TRUE;
 	sameFile = TRUE;
-	if (ustrcmp (docName, pDoc->DocDName) != 0)
+	if (StringCompare (docName, pDoc->DocDName) != 0)
 	   sameFile = FALSE;
-	if (ustrcmp (dirName, pDoc->DocDirectory) != 0)
+	if (StringCompare (dirName, pDoc->DocDirectory) != 0)
 	   sameFile = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
 	FindCompleteName (pDoc->DocDName, CUSTEXT("BAK"), pDoc->DocDirectory, bakName, &i);
-	ustrncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
+	StringNCopy (oldDir, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
@@ -321,8 +321,7 @@ ThotBool            move;
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
 	     FindCompleteName (docName, CUSTEXT("PIV"), dirName, buf, &i);
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP),
-				buf);
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP), buf);
 	     status = FALSE;
 	  }
 	else
@@ -365,8 +364,7 @@ ThotBool            move;
 		  TtaFileUnlink (buf);
 		  if (!sameFile)
 		    {
-		       if (ustrcmp (dirName, oldDir) != 0 &&
-			   ustrcmp (docName, pDoc->DocDName) == 0)
+		       if (StringCompare (dirName, oldDir) != 0 && StringCompare (docName, pDoc->DocDName) == 0)
 			  /* changement de directory sans changement de nom */
 			  if (move)
 			    {
@@ -379,7 +377,7 @@ ThotBool            move;
 			       TtaFileUnlink (buf);
 			    }
 
-		       if (ustrcmp (docName, pDoc->DocDName) != 0)
+		       if (StringCompare (docName, pDoc->DocDName) != 0)
 			 {
 			    /* il y a effectivement changement de nom */
 			    if (copy)
@@ -398,20 +396,17 @@ ThotBool            move;
 				 ChangeNomRef (pDoc, docName);
 				 /* renomme le fichier .EXT du document qui change */
 				 /* de nom */
-				 FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), oldDir, buf,
-						   &i);
-				 FindCompleteName (docName, CUSTEXT("EXT"), dirName,
-						   pivName, &i);
+				 FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), oldDir, buf, &i);
+				 FindCompleteName (docName, CUSTEXT("EXT"), dirName, pivName, &i);
 				 urename (buf, pivName);
 				 /* detruit l'ancien fichier .PIV */
-				 FindCompleteName (pDoc->DocDName, CUSTEXT("PIV"), oldDir, buf,
-						   &i);
+				 FindCompleteName (pDoc->DocDName, CUSTEXT("PIV"), oldDir, buf, &i);
 				 TtaFileUnlink (buf);
 			      }
 			 }
-		       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-		       ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
-		       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+		       StringNCopy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		       StringNCopy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+		       StringNCopy (pDoc->DocDirectory, dirName, MAX_PATH);
 		       ChangeDocumentName (pDoc, docName);
 		    }
 	       }

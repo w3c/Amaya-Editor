@@ -765,9 +765,9 @@ CHAR_T                word[MAX_WORD_LEN];
 PtrDict            *pDict;
 #endif /* __STDC__ */
 {
-   CHAR_T                word1[MAX_WORD_LEN];
+   CHAR_T              word1[MAX_WORD_LEN];
    int                 ret;
-   Name                DiNom;
+   CUSName             DiNom;
    ThotBool            OKinsere = TRUE;
    PtrDict             docDict;
 
@@ -802,7 +802,7 @@ PtrDict            *pDict;
 		    /* dictionnaire plein */
 		    SaveDictFile (docDict);
 		    /* rechargement du dictionnaire avec plus de memoire */
-		    ustrcpy (DiNom, docDict->DictName);
+		    StringCopy (DiNom, docDict->DictName); 
 		    if (ReloadDictionary (pDict) == TRUE)
 		      {
 			 docDict = *pDict;
@@ -1027,10 +1027,10 @@ int                 ParametrizeChecker ()
 {
    int                 ret;
    FILE               *fparam;
-   Buffer              paramnom;
+   CharUnit            paramnom[MAX_LENGTH];
    FILE               *ftsub;
-   Buffer              clavnom;
-   STRING              corrpath;
+   CharUnit            clavnom[MAX_LENGTH];
+   CharUnit*           corrpath;
 
    ret = 1;
    /* initialisations des parametres du correcteur */
@@ -1047,9 +1047,10 @@ int                 ParametrizeChecker ()
 	else
 	  {
 	     /* Lecture du fichier parametres */
-	     ustrcpy (paramnom, corrpath);
-	     ustrcat (paramnom, TEXT("/param"));
-	     if ((fparam = fopen (paramnom, "r")) != NULL)
+	     StringCopy (paramnom, corrpath);
+         StringConcat (paramnom, CUS_DIR_STR);
+	     StringConcat (paramnom, CUSTEXT("param"));
+	     if ((fparam = cus_fopen (paramnom, CUSTEXT("r"))) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -1059,9 +1060,10 @@ int                 ParametrizeChecker ()
 	       }
 
 	     /* Lecture du  fichier clavier */
-	     ustrcpy (clavnom, corrpath);
-	     ustrcat (clavnom, TEXT("/clavier"));
-	     if ((ftsub = fopen (clavnom, "r")) != NULL)
+	     StringCopy (clavnom, corrpath);
+         StringConcat (clavnom, CUS_DIR_STR);
+	     StringConcat (clavnom, CUSTEXT("clavier"));
+	     if ((ftsub = cus_fopen (clavnom, CUSTEXT("r"))) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);

@@ -206,8 +206,8 @@ TtAttribute        *pAttr;
    AttribType          attrType;
    int                 j;
 
-   TtaReadName (file, pAttr->AttrName);
-   strcpy (pAttr->AttrOrigName, pAttr->AttrName);
+   TtaReadWCName (file, pAttr->AttrName);
+   ustrcpy (pAttr->AttrOrigName, pAttr->AttrName);
    TtaReadBool (file, &pAttr->AttrGlobal);
    TtaReadShort (file, &pAttr->AttrFirstExcept);
    TtaReadShort (file, &pAttr->AttrLastExcept);
@@ -227,8 +227,8 @@ TtAttribute        *pAttr;
 		    TtaReadShort (file, &pAttr->AttrNEnumValues);
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		      {
-			TtaReadName (file, pAttr->AttrEnumValue[j]);
-			strcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
+			TtaReadWCName (file, pAttr->AttrEnumValue[j]);
+			ustrcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
 		      }
 		    break;
 	      }
@@ -257,8 +257,8 @@ SRule              *pSRule;
    RConstruct          constr;
    int                 j;
 
-   TtaReadName (file, pSRule->SrName);
-   strcpy (pSRule->SrOrigName, pSRule->SrName);
+   TtaReadWCName (file, pSRule->SrName);
+   ustrcpy (pSRule->SrOrigName, pSRule->SrName);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
       TtaReadShort (file, &pSRule->SrDefAttr[j]);
@@ -304,7 +304,7 @@ SRule              *pSRule;
    switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-	       strcpy (pSRule->SrOrigNat, pSRule->SrName);
+	       wc2iso_strcpy (pSRule->SrOrigNat, pSRule->SrName);
 	       pSRule->SrSSchemaNat = NULL;
 	       break;
 	    case CsBasicElement:
@@ -397,7 +397,7 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
+ThotBool            ReadStructureSchema (CUSName fileName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 ThotBool            ReadStructureSchema (fileName, pSS)
@@ -410,7 +410,6 @@ PtrSSchema          pSS;
    BinFile             file;
    PathBuffer          buf;
    PathBuffer          dirBuffer;
-   CharUnit            file_name[MAX_LENGTH];
    int                 i;
 
    /* compose le nom du fichier a ouvrir */
@@ -420,15 +419,14 @@ PtrSSchema          pSS;
 #  endif  /* !_WINDOWS_COMPILERS */
    StringNCopy (dirBuffer, SchemaPath, MAX_PATH);
 /* #  endif * _WINDOWS_COMPILERS */
-   iso2cus_strcpy (file_name, fileName);
-   MakeCompleteName (file_name, CUSTEXT("STR"), dirBuffer, buf, &i);
+   MakeCompleteName (fileName, CUSTEXT("STR"), dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
       /* echec */
      {
-	StringNCopy (buf, file_name, MAX_PATH);
+	StringNCopy (buf, fileName, MAX_PATH);
 	StringConcat (buf, CUSTEXT(".STR"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
 	return FALSE;

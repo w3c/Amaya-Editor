@@ -46,7 +46,8 @@ TabMsg;
  /* Identification des messages Thot */
 static PtrTabMsg    FirstTableMsg = NULL;
 static CHAR_T       EmptyMsg [1];
-static char         result[MAX_TXT_LEN];
+static CHAR_T       result[MAX_TXT_LEN];
+static char         ISOresult[MAX_TXT_LEN];
 
 #include "dialogapi_f.h"
 #include "memory_f.h"
@@ -63,9 +64,9 @@ static char         result[MAX_TXT_LEN];
    en accents.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char  *             AsciiTranslate (char* pBuffer)
+CHAR_T*             AsciiTranslate (char* pBuffer)
 #else  /* __STDC__ */
-char*               AsciiTranslate (pBuffer)
+CHAR_T*               AsciiTranslate (pBuffer)
 char*               pBuffer;
 
 #endif /* __STDC__ */
@@ -78,7 +79,7 @@ char*               pBuffer;
      {
 	/* On lit jusqu'au premier backslash rencontre */
 	while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
-	   result[j++] = pBuffer[i++];
+	   result[j++] = (CHAR_T)pBuffer[i++];
 
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
@@ -86,14 +87,14 @@ char*               pBuffer;
 	   if (pBuffer[i + 1] == '\\')
 	     {
 		/* On est dans le cas de deux backslashs consecutifs; on les prend */
-		result[j++] = pBuffer[i++];
-		result[j++] = pBuffer[i++];
+		result[j++] = (CHAR_T)pBuffer[i++];
+		result[j++] = (CHAR_T)pBuffer[i++];
 	     }
 	   else if (pBuffer[i + 1] == 'n')
 	     {
 		/* On est dans le cas d'un \n */
 		i += 2;
-		result[j++] = '\n';
+		result[j++] = TEXT('\n');
 	     }
 	   else
 	     {
@@ -111,7 +112,7 @@ char*               pBuffer;
 		switch (strlen (nombre))
 		      {
 			 case 0:
-			    result[j++] = pBuffer[i++];
+			    result[j++] = (CHAR_T)pBuffer[i++];
 			    break;
 			 case 1:
 			    uniteid = nombre[0] - '0';
@@ -131,8 +132,85 @@ char*               pBuffer;
 		      }
 	     }
      }
-   result[j] = EOS;
+   result[j] = WC_EOS;
    return (result);
+}
+
+/*----------------------------------------------------------------------
+   AsciiTranslate convertit les code d'accents du fichier de message 
+   en accents.                                             
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char*               ISOAsciiTranslate (char* pBuffer)
+#else  /* __STDC__ */
+char*               ISOAsciiTranslate (pBuffer)
+char*               pBuffer;
+
+#endif /* __STDC__ */
+{
+   char                nombre[4];
+   int                 uniteid, dixid, centid;
+   int                 i = 0, j = 0, k;
+
+   while (pBuffer[i] != EOS)
+     {
+	/* On lit jusqu'au premier backslash rencontre */
+	while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
+	   ISOresult[j++] = pBuffer[i++];
+
+	/* Teste si on est en presence de deux backslashs ou */
+	/* si on se trouve devant un caractere special */
+	if (pBuffer[i] != EOS)
+	   if (pBuffer[i + 1] == '\\')
+	     {
+		/* On est dans le cas de deux backslashs consecutifs; on les prend */
+		ISOresult[j++] = pBuffer[i++];
+		ISOresult[j++] = pBuffer[i++];
+	     }
+	   else if (pBuffer[i + 1] == 'n')
+	     {
+		/* On est dans le cas d'un \n */
+		i += 2;
+		ISOresult[j++] = '\n';
+	     }
+	   else
+	     {
+		/* on saute le backslash */
+		i++;
+		/* on construit le nombre correspondant au caractere */
+		k = 0;
+		while ((pBuffer[i] >= '0')
+		       && (pBuffer[i] <= '9')
+		       && (pBuffer[i] != EOS)
+		       && (k <= 2))
+		   nombre[k++] = pBuffer[i++];
+		nombre[k] = EOS;
+
+		switch (strlen (nombre))
+		      {
+			 case 0:
+			    ISOresult[j++] = pBuffer[i++];
+			    break;
+			 case 1:
+			    uniteid = nombre[0] - '0';
+			    ISOresult[j++] = uniteid;
+			    break;
+			 case 2:
+			    uniteid = nombre[1] - '0';
+			    dixid = nombre[0] - '0';
+			    ISOresult[j++] = uniteid + 8 * dixid;
+			    break;
+			 case 3:
+			    uniteid = nombre[2] - '0';
+			    dixid = nombre[1] - '0';
+			    centid = nombre[0] - '0';
+			    ISOresult[j++] = uniteid + 8 * dixid + 64 * centid;
+			    break;
+		      }
+	     }
+     }
+   ISOresult[j] = EOS;
+   return (ISOresult);
 }
 
 
@@ -153,7 +231,6 @@ int                 msgNumber;
 #endif /* __STDC__ */
 {
    CHAR_T*             s;
-   char*               langVar;
    FILE*               file;
    int                 origineid;
    int                 num;
@@ -166,8 +243,7 @@ int                 msgNumber;
    char                pBuff[MAX_TXT_LEN];
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
-   langVar = TtaGetVarLANG ();
-   iso2cus_strcpy (fileName, langVar);
+   StringCopy (fileName, TtaGetVarLANG ());
    fileName[2] = CUSTEXT('-');
    StringCopy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
@@ -219,7 +295,7 @@ int                 msgNumber;
          string = pBuff;
 #        endif /* !_I18N_ */
 	     s = TtaAllocString (strlen (pBuff) + 1);
-	     iso2wc_strcpy (s, AsciiTranslate (pBuff));
+	     iso2wc_strcpy (s, ISOAsciiTranslate (pBuff));
 	     currenttable->TabMessages[num] = s;
 	  }
 	fclose (file);

@@ -1250,7 +1250,7 @@ PtrSSchema          pSS;
 				       equal = ((pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
 						(pAsc->ElStructSchema->SsCode == pSS->SsCode));
 				    else
-				       equal = (strcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
+				       equal = (ustrcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
 						strcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0);
 				    if (equal)
 				      {
@@ -1269,7 +1269,7 @@ PtrSSchema          pSS;
 				       equal = ((pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
 						(pAsc->ElStructSchema->SsCode == pSS->SsCode));
 				    else
-				       equal = (strcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
+				       equal = (ustrcmp (pCond->CoAncestorName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0 &&
 						strcmp (pCond->CoSSchemaName, pAsc->ElStructSchema->SsName) == 0); 
 				    if (equal)
 				       i++;

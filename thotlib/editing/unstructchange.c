@@ -299,7 +299,7 @@ PtrDocument         pDoc;
 		   /* Look for the Structure schema of the element to be created */
 		   pSS = pSavedEl->PeAscendSSchema[asc];
 		   if (pDoc != DocOfSavedElements)
-		     if (ustrcmp (pDoc->DocSSchema->SsName, pSS->SsName) == 0)
+		     if (strcmp (pDoc->DocSSchema->SsName, pSS->SsName) == 0)
 		       pSS = pDoc->DocSSchema;
 		     else
 		       {
@@ -346,7 +346,7 @@ PtrDocument         pDoc;
 			       asc--;
 			       pSS = pSavedEl->PeAscendSSchema[asc];
 			       if (pDoc != DocOfSavedElements)
-				 if (ustrcmp (pDoc->DocSSchema->SsName, pSS->SsName) == 0)
+				 if (strcmp (pDoc->DocSSchema->SsName, pSS->SsName) == 0)
 				   pSS = pDoc->DocSSchema;
 				 else
 				   {

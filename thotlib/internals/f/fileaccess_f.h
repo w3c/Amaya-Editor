@@ -8,6 +8,7 @@
 
 extern ThotBool TtaReadByte ( BinFile file,
                               char* bval );
+extern ThotBool TtaReadWideChar (BinFile file, CHAR_T* bval);
 extern ThotBool TtaReadBool ( BinFile file,
                               ThotBool * bval );
 extern ThotBool TtaReadShort ( BinFile file,
@@ -18,12 +19,14 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                  int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                               char* name );
+extern ThotBool TtaReadWCName (BinFile file, CHAR_T* name);
 extern BinFile TtaReadOpen ( CONST CharUnit* filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST STRING filename );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                                char bval );
+extern ThotBool TtaWriteWideChar (BinFile, CHAR_T);
 extern ThotBool TtaWriteShort ( BinFile file,
                                 int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
@@ -56,7 +59,7 @@ extern void FindCompleteName ( CharUnit* fileName,
 extern void GetDocIdent ( DocumentIdentifier *Ident,
                           CharUnit* docName );
 extern void GetDocName ( DocumentIdentifier Ident,
-                         Name docName );
+                         CUSName docName );
 extern int FileWriteAccess ( STRING fileName );
 extern void GetCounterValue ( int number,
                               CounterStyle style,
@@ -69,6 +72,7 @@ extern ThotBool TtaCheckDirectory ( CharUnit* directory );
 
 extern ThotBool TtaReadByte (/* BinFile file,
                                 char* bval */);
+extern ThotBool TtaReadWideChar (/* BinFile file, CHAR_T* bval */);
 extern ThotBool TtaReadBool (/* BinFile file,
                                 ThotBool * bval */);
 extern ThotBool TtaReadShort (/* BinFile file,
@@ -79,12 +83,14 @@ extern ThotBool TtaReadInteger (/* BinFile file,
                                    int *sval */);
 extern ThotBool TtaReadName (/* BinFile file,
                                 char* name */);
+extern ThotBool TtaReadWCName (/* BinFile file, CHAR_T* name */);
 extern BinFile TtaReadOpen (/* CONST CharUnit* filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern BinFile TtaWriteOpen (/* CONST STRING filename */);
 extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
                                  char bval */);
+extern ThotBool TtaWriteWideChar (/* BinFile, CHAR_T */);
 extern ThotBool TtaWriteShort (/* BinFile file,
                                   int sval */);
 extern ThotBool TtaWriteInteger (/* BinFile file,
@@ -117,7 +123,7 @@ extern void FindCompleteName (/* CharUnit* fileName,
 extern void GetDocIdent (/* DocumentIdentifier *Ident,
                             Name docName */);
 extern void GetDocName (/* DocumentIdentifier Ident,
-                           Name docName */);
+                           CUSName docName */);
 extern int FileWriteAccess (/* STRING fileName */);
 extern void GetCounterValue (/* int number,
                                 CounterStyle style,

@@ -8,6 +8,10 @@
 #include <wchar.h>
 #endif /* _WINDOWS */
 
+#ifdef _WINDOWS
+#define strncasecmp _strnicmp
+#endif /* _WINDOWS */
+
 #ifdef _I18N_
 
 typedef unsigned short  CHAR_T;
@@ -69,10 +73,20 @@ extern CharUnit*    StrRChr            (const CharUnit*, CharUnit);
 extern CharUnit*    StringToken        (CharUnit*, const CharUnit*);
 extern CharUnit*    StringSubstring    (const CharUnit*, const CharUnit*);
 extern CharUnit*    iso2cus_strcpy     (CharUnit*, const char*);
-extern int          isocus_strcmp      (const char*, const CharUnit*);
+extern int          iso2cus_strcmp     (const char*, const CharUnit*);
 extern char*        cus2iso_strcpy     (char*, const CharUnit*);
 extern char*        cus2iso_strncpy    (char*, const CharUnit*, unsigned int);
 extern CharUnit*    iso2cus_strncpy    (CharUnit*, const char*, unsigned int);
+extern char*        wc2iso_strncpy     (char*, const STRING, int);
+extern int          wc2iso_strcasecmp  (const CHAR_T*, const char*);
+extern int          iso2wc_strcasecmp  (const char*, const CHAR_T*);
+extern int          wc2iso_strcmp      (CHAR_T*, const char*);
+extern STRING       iso2wc_strcpy      (STRING dest, const char* src);
+extern CHAR_T*      wc2cus_strcpy      (CharUnit*, const CHAR_T*);
+extern CharUnit*    cus2wc_strcpy      (CHAR_T*, const CharUnit*);
+extern char*        wc2iso_strcpy      (char* dest, const STRING src);
+extern STRING       iso2wc_strncpy     (STRING dest, const char* src, unsigned int count);
+
 #else  /* __STDC__ */
 extern int          ustrcasecmp        ();
 extern int          cus2iso_strcasecmp ();
@@ -107,10 +121,19 @@ extern CharUnit*    StrRChr            ();
 extern CharUnit*    StringToken        ();
 extern CharUnit*    StringSubstring    ();
 extern CharUnit*    iso2cus_strcpy     ();
-extern int          isocus_strcmp      ();
+extern int          iso2cus_strcmp     ();
 extern char*        cus2iso_strcpy     ();
 extern char*        cus2iso_strncpy    ();
 extern CharUnit*    iso2cus_strncpy    ();
+extern char*        wc2iso_strncpy     ();
+extern int          wc2iso_strcasecmp  ();
+extern int          iso2wc_strcasecmp  ();
+extern int          wc2iso_strcmp      ();
+extern STRING       iso2wc_strcpy      ();
+extern CHAR_T*      wc2cus_strcpy      ();
+extern CharUnit*    cus2wc_strcpy      ();
+extern char*        wc2iso_strcpy      ();
+extern STRING       iso2wc_strncpy     ();
 #endif /* __STDC__ */
 
 #endif /* _USTRING_H */

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char* AbsBoxType ( PtrAbstractBox pAb,
+extern CHAR_T* AbsBoxType ( PtrAbstractBox pAb,
                           ThotBool origName );
 extern void FreeAbView ( PtrAbstractBox pAb,
                          int frame );
@@ -42,7 +42,7 @@ extern void JumpIntoView ( int frame,
 
 #else /* __STDC__ */
 
-extern char* AbsBoxType (/* PtrAbstractBox pAb,
+extern CHAR_T* AbsBoxType (/* PtrAbstractBox pAb,
                             ThotBool origName */);
 extern void FreeAbView (/* PtrAbstractBox pAb,
                            int frame */);

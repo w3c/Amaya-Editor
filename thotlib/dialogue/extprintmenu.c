@@ -31,6 +31,7 @@
 #include "printmenu_f.h"
 #include "views_f.h"
 #include "actions_f.h"
+#include "ustring_f.h"
 
 static int NewFirstPage;
 static int NewLastPage;
@@ -48,11 +49,11 @@ static Document		docPrint;
 /* |                    document pDoc.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ComposePrintMenu (PtrDocument pDoc, STRING buffer, int *nbEntry)
+static void         ComposePrintMenu (PtrDocument pDoc, CHAR_T* buffer, int *nbEntry)
 #else  /* __STDC__ */
 static void         ComposePrintMenu (pDoc, buffer, nbEntry)
 PtrDocument         pDoc;
-STRING              buffer;
+CHAR_T*             buffer;
 int                *nbEntry;
 
 #endif /* __STDC__ */
@@ -72,7 +73,7 @@ int                *nbEntry;
       LesVuesImprimables[i].VdOpen = False;
    /* initialise le menu (vide) */
    nbentrees = 0;
-   buffer[0] = EOS;
+   buffer[0] = WC_EOS;
    lgmenu = 0;
    /* met en tete du menu les vues indiquees dans l'instruction */
    /* PRINT du schema de presentation du document */
@@ -97,18 +98,18 @@ int                *nbEntry;
 	if (trouve)
 	  {
 	     /* met le nom de la vue dans le menu */
-	     lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+	     lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
 	     if (lgmenu + lgentree < MAX_TXT_LEN)
 	       {
 		  buffer[lgmenu] = TEXT('B');
 		  lgmenu++;
-		  ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		  iso2wc_strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
 		  lgmenu += lgentree;
 		  if (!LesVuesImprimables[i - 1].VdPaginated)
 		     /* vue sans pages, on met une etoile a la fin du nom */
 		    {
 		       buffer[lgmenu - 1] = TEXT('*');
-		       buffer[lgmenu] = EOS;
+		       buffer[lgmenu] = TEXT(EOS);
 		       lgmenu++;
 		    }
 		  EntreesMenuVuesAImprimer[nbentrees] = i;
@@ -127,18 +128,18 @@ int                *nbEntry;
 	   /* (pas encore) imprimer les vues de natures */
 	   if (!LesVuesImprimables[i - 1].VdNature)
 	     {
-		lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+		lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
 		if (lgmenu + lgentree < MAX_TXT_LEN)
 		  {
 		     buffer[lgmenu] = TEXT('B');
 		     lgmenu++;
-		     ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		     iso2wc_strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
 		     lgmenu += lgentree;
 		     if (!LesVuesImprimables[i - 1].VdPaginated)
 			/* vue sans pages, on met une etoile a la fin du nom */
 		       {
 			  buffer[lgmenu - 1] = TEXT('*');
-			  buffer[lgmenu] = EOS;
+			  buffer[lgmenu] = WC_EOS;
 			  lgmenu++;
 		       }
 		     EntreesMenuVuesAImprimer[nbentrees] = i;
@@ -147,7 +148,7 @@ int                *nbEntry;
 	     }
      }
    if((nbentrees > 0) && !LesVuesImprimables[0].VdOpen)
-     LesVuesImprimables[0].VdOpen=TRUE;
+     LesVuesImprimables[0].VdOpen = TRUE;
    *nbEntry = nbentrees;
 }
 
@@ -166,7 +167,7 @@ STRING              txt;
 {
   int i;
   ThotBool okprint;
-  CHAR_T BufMenu[MAX_TXT_LEN];
+  char     BufMenu[MAX_TXT_LEN];
 
   switch (ref)
     {
@@ -207,20 +208,20 @@ STRING              txt;
       Reduction = NewReduction;
       PagesPerSheet = NewPagesPerSheet;
       okprint = FALSE;
-      BufMenu[0]=EOS;
+      BufMenu[0] = EOS;
       for (i=0;i<NbPrintViews;i++)
 	{ 
 	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )
 	    {
 	      okprint=TRUE;
-	      ustrcat (BufMenu,LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
-	      ustrcat (BufMenu,TEXT(" "));
+	      strcat (BufMenu, LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
+	      strcat (BufMenu, " ");
 	    }
 	}
       if(okprint)
 	{
-	  i=ustrlen (BufMenu);
-	  BufMenu[i-1]=EOS;
+	  i = strlen (BufMenu);
+	  BufMenu[i - 1] = EOS;
 	  TtaPrint (docPrint, BufMenu, NULL);
 	}
       break;
@@ -228,9 +229,9 @@ STRING              txt;
     default:
       break;
 
-    }
+    } 
 }
-
+ 
 /*----------------------------------------------------------------------
    TtcSetupAndPrint Complete dialogue sheet for print setup with option to print.
   ----------------------------------------------------------------------*/
@@ -370,7 +371,7 @@ View                view;
    usprintf (&BufMenu[i], TEXT("%s"), TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, BufMenu, NULL, FALSE);
-   if (!ustrcmp (PageSize, TEXT("US")))
+   if (!strcmp (PageSize, "US"))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);

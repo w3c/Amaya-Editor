@@ -14,9 +14,9 @@
 
 typedef CHAR_T    FileName[MAX_NAME_LENGTH];    /* filename */
 
-typedef  char*  PtrString;   /* pointer to the word list                     */
-typedef  char*  PtrCommons;  /* pointer to the list of shared prefix length  */
-typedef int*    PtrWords;    /* pointer to the list of pointers to the words */
+typedef  CHAR_T* PtrString;   /* pointer to the word list                     */
+typedef  char*   PtrCommons;  /* pointer to the list of shared prefix length  */
+typedef  int*    PtrWords;    /* pointer to the list of pointers to the words */
 
 typedef struct _WordDict *PtrDict;
 
@@ -25,8 +25,8 @@ typedef struct _WordDict
 {
       PtrDict     DictNext;             /* for linking to free blocks */
       PtrDocument DictDoc;              /* document which uses this dictionary */
-      Name        DictName;             /* name of the dictionary */
-      Buffer      DictDirectory;        /* directory of the dictionary */
+      CUSName     DictName;             /* name of the dictionary */
+      CUSName     DictDirectory;        /* directory of the dictionary */
       ThotBool    DictReadOnly;         /* dictionary is read only  */
       ThotBool    DictLoaded;           /* dictionary is loaded */
       ThotBool    DictModified;         /* dictionnary has been modified */

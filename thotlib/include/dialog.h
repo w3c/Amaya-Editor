@@ -179,7 +179,7 @@ extern void         TtaDestroyDialogue (int ref);
    Le parame'tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int packet, CHAR_T button, int dbutton);
+extern void         TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int packet, char button, int dbutton);
 
 /*----------------------------------------------------------------------
    TtaNewSheet cre'e un feuillet de commande :                        
@@ -354,9 +354,9 @@ extern void         TtaSetToggleMenu ( /* int ref, int val, ThotBool on */ );
 extern void         TtaChangeMenuEntry ( /* int ref, int entry, char *texte */ );
 extern void         TtaRedrawMenuEntry ( /* int ref, int entry, char *fontname, Pixel color, int activate */ );
 extern void         TtaDestroyDialogue ( /* int ref */ );
-extern void         TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int packet, CHAR_T button, int dbutton);
-extern void         TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button, int dbutton);
-void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button);
+extern void         TtaNewForm (/* int ref, ThotWidget parent, STRING title, ThotBool horizontal, int packet, char button, int dbutton */);
+extern void         TtaNewSheet (/* int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button, int dbutton */);
+void                TtaNewDialogSheet (/* int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button */);
 extern void         TtaChangeFormTitle ( /* int ref, char *title */ );
 extern void         TtaAttachForm ( /* int ref */ );
 extern void         TtaDetachForm ( /* int ref */ );

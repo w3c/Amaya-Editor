@@ -15,7 +15,7 @@ THOT_EXPORT ThotBool     ManualFeed;
 THOT_EXPORT ThotBool     NewPaperPrint;
 THOT_EXPORT CHAR_T       pPrinter[MAX_PATH];
 THOT_EXPORT Document     PrintingDoc;
-THOT_EXPORT CHAR_T       PageSize[MAX_NAME_LENGTH];
+THOT_EXPORT char         PageSize[MAX_NAME_LENGTH];
 THOT_EXPORT int	         FirstPage;
 THOT_EXPORT int          LastPage;
 THOT_EXPORT int	         NbCopies;

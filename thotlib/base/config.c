@@ -63,9 +63,9 @@ static CharUnit*    nat_items_menu[MAX_ITEM_CONF];
 static CharUnit*    ext_items[MAX_ITEM_CONF];
 static CharUnit*    ext_items_menu[MAX_ITEM_CONF];
 static char*        pres_items[MAX_ITEM_CONF];
-static char*        pres_items_menu[MAX_ITEM_CONF];
+static CHAR_T*      pres_items_menu[MAX_ITEM_CONF];
 static char*        export_items[MAX_ITEM_CONF];
-static char*        export_items_menu[MAX_ITEM_CONF];
+static CHAR_T*      export_items_menu[MAX_ITEM_CONF];
 
 /*----------------------------------------------------------------------
    ConfigInit initializes the configuration module
@@ -415,7 +415,7 @@ ThotBool*           import;
 	   else
 	     {
 		getFirstWord (line, word);
-		if (isocus_strcmp (word, *doctypeOrig) == 0)
+		if (iso2cus_strcmp (word, *doctypeOrig) == 0)
 		   stop = TRUE;
 	     }
 	while (!stop);
@@ -434,7 +434,7 @@ ThotBool*           import;
 	     else
 	       {
 		  *doctypeTrans = TtaAllocCUString (strlen (text) + 1);
-		  iso2cus_strcpy (*doctypeTrans, AsciiTranslate (text));
+		  wc2cus_strcpy (*doctypeTrans, AsciiTranslate (text));
 	       }
 	  }
      }
@@ -473,21 +473,19 @@ CharUnit*           aSchemaPath;
 #define NAME_LENGTH     100
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
-   char*               varLang;
+   CharUnit*           suffix;
    PathBuffer          fname;
-   CharUnit            suffix[MAX_LENGTH];
    CharUnit*           nameOrig;
    CharUnit*           nameTrans;
    ThotBool            stop;
 
-   varLang = TtaGetVarLANG ();
-   iso2cus_strcpy (suffix, varLang);
+   suffix = TtaGetVarLANG ();
 #  ifdef _WINDOWS
-   if (!_strnicmp (varLang, "fr", 2))
+   if (!StringNCaseCompare (suffix, CUSTEXT("fr"), 2))
       app_lang = FR_LANG;
-   else if (!_strnicmp (varLang, "en", 2))
+   else if (!StringNCaseCompare (suffix, CUSTEXT("en"), 2))
       app_lang = EN_LANG;
-   else if (!_strnicmp (varLang, "de", 2))
+   else if (!StringNCaseCompare (suffix, CUSTEXT("de"), 2))
       app_lang = DE_LANG;
 #  endif /* _WINDOWS */
 
@@ -811,20 +809,16 @@ ThotBool            lang;
 
 {
  
-   CharUnit            suffix[MAX_EXT];
-   char*               ptr;
+   CharUnit*           suffix;
    int                 i;
    PathBuffer          DirBuffer, filename;
    FILE               *file;
    CharUnit*           app_home;
 
    if (lang)
-     {
-        ptr = TtaGetVarLANG ();
-        iso2cus_strcpy (suffix, ptr);
-     }
+        suffix = TtaGetVarLANG ();
    else
-      StringCopy (suffix, CUSTEXT("conf"));
+      suffix = CUSTEXT("conf");
 
    /* Search in HOME directory */
    app_home = TtaGetEnvString ("APP_HOME");
@@ -848,12 +842,12 @@ ThotBool            lang;
    nom schema.                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeMenuPres (CharUnit* schema, char* BufMenu)
+int                 ConfigMakeMenuPres (CharUnit* schema, CHAR_T* BufMenu)
 
 #else  /* __STDC__ */
 int                 ConfigMakeMenuPres (schema, BufMenu)
 CharUnit*           schema;
-char*               BufMenu;
+CHAR_T*             BufMenu;
 
 #endif /* __STDC__ */
 
@@ -863,13 +857,13 @@ char*               BufMenu;
    ThotBool            stop;
    char                line[MAX_TXT_LEN];
    char                text[MAX_TXT_LEN];
-   char                textISO[MAX_TXT_LEN];
+   CHAR_T              textISO[MAX_TXT_LEN];
    char                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
    if (BufMenu != NULL)
-      BufMenu[0] = EOS;
+      BufMenu[0] = WC_EOS;
    file = openConfigFile (schema, TRUE);
    if (file == NULL)
       return 0;
@@ -901,19 +895,19 @@ char*               BufMenu;
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       strcpy (textISO, AsciiTranslate (text));
+			       ustrcpy (textISO, AsciiTranslate (text));
 			       if (pres_items[nbitem] != NULL)
 				  TtaFreeMemory (pres_items[nbitem]);
 			       pres_items[nbitem] = TtaGetMemory (strlen (word) + 1);
 			       strcpy (pres_items[nbitem], word);
 			       if (pres_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (pres_items_menu[nbitem]);
-			       len = strlen (textISO) + 1;
-			       pres_items_menu[nbitem] = TtaGetMemory (len);
-			       strcpy (pres_items_menu[nbitem], textISO);
+			       len = ustrlen (textISO) + 1;
+			       pres_items_menu[nbitem] = TtaAllocString (len);
+			       ustrcpy (pres_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
-				    strcpy (&BufMenu[indmenu], textISO);
+				    ustrcpy (&BufMenu[indmenu], textISO);
 				    indmenu += len;
 				 }
 			       nbitem++;
@@ -1000,12 +994,12 @@ CharUnit*           BufMenu;
    nom schema.                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeMenuExport (CharUnit* schema, char* BufMenu)
+int                 ConfigMakeMenuExport (CharUnit* schema, CHAR_T* BufMenu)
 
 #else  /* __STDC__ */
 int                 ConfigMakeMenuExport (schema, BufMenu)
 CharUnit*           schema;
-char*               BufMenu;
+CHAR_T*             BufMenu;
 
 #endif /* __STDC__ */
 
@@ -1016,13 +1010,13 @@ char*               BufMenu;
    ThotBool            stop;
    char                line[MAX_TXT_LEN];
    char                text[MAX_TXT_LEN];
-   char                textISO[MAX_TXT_LEN];
+   CHAR_T              textISO[MAX_TXT_LEN];
    char                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
    if (BufMenu != NULL)
-      BufMenu[0] = EOS;
+      BufMenu[0] = WC_EOS;
    file = openConfigFile (schema, TRUE);
    if (file == NULL)
       return 0;
@@ -1054,19 +1048,19 @@ char*               BufMenu;
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       strcpy (textISO, AsciiTranslate (text));
+			       ustrcpy (textISO, AsciiTranslate (text));
 			       if (export_items[nbitem] != NULL)
 				  TtaFreeMemory (export_items[nbitem]);
 			       export_items[nbitem] = TtaGetMemory (strlen (word) + 10);
 			       strcpy (export_items[nbitem], word);
 			       if (export_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (export_items_menu[nbitem]);
-			       len = strlen (textISO) + 1;
-			       export_items_menu[nbitem] = TtaGetMemory (len);
-			       strcpy (export_items_menu[nbitem], textISO);
+			       len = ustrlen (textISO) + 1;
+			       export_items_menu[nbitem] = TtaAllocString (len);
+			       ustrcpy (export_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
-				    strcpy (&BufMenu[indmenu], textISO);
+				    ustrcpy (&BufMenu[indmenu], textISO);
 				    indmenu += len;
 				 }
 			       nbitem++;
@@ -1119,31 +1113,31 @@ char*               trans;
    ThotBool            found;
    int                 i, j;
    TtAttribute        *pAttr;
-   char                terme[MAX_NAME_LENGTH];
+   CHAR_T              terme[MAX_NAME_LENGTH];
 
    found = FALSE;
-   strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
+   ustrncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
+      if (ustrcmp (terme, pSS->SsRule[i].SrName) == 0)
 	{
-	   strncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+	   ustrncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 	   found = TRUE;
 	}
    /* cherche ensuite parmi les noms d'attributs et de valeurs d'attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
 	{
 	   pAttr = &pSS->SsAttribute[i];
-	   if (strcmp (terme, pAttr->AttrName) == 0)
+	   if (ustrcmp (terme, pAttr->AttrName) == 0)
 	     {
-		strncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		ustrncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues; j++)
-		 if (strcmp (terme, pAttr->AttrEnumValue[j]) == 0)
+		 if (ustrcmp (terme, pAttr->AttrEnumValue[j]) == 0)
 		   {
-		      strncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		      ustrncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		      found = TRUE;
 		   }
 	}
@@ -1151,9 +1145,9 @@ char*               trans;
    if (pSS->SsExtension)
       if (pSS->SsNExtensRules > 0 && pSS->SsExtensBlock != NULL)
 	 for (i = 0; i < pSS->SsNExtensRules; i++)
-	    if (strcmp (terme, pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
+	    if (ustrcmp (terme, pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
 	      {
-		 strncpy (pSS->SsExtensBlock->EbExtensRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		 ustrncpy (pSS->SsExtensBlock->EbExtensRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		 found = TRUE;
 	      }
    return found;
@@ -2182,8 +2176,8 @@ int                 LgMax;
    int                 lgmenu;
    int                 lgname;
    int                 max;
-   char                name[80];
-   char*               ptr;
+   CHAR_T              name[80];
+   CHAR_T*             ptr;
 
    nbentree = 0;
    if (BufMenu != NULL)
@@ -2197,8 +2191,8 @@ int                 LgMax;
 	     /* Recupere le nom de la couleur */
 	     if (nbentree < max)
 	       {
-		  strcpy (name, ColorName (nbentree));
-		  lgname = strlen (name) + 1;
+		  ustrcpy (name, ColorName (nbentree));
+		  lgname = ustrlen (name) + 1;
 	       }
 	     else
 		lgname = 1;
@@ -2208,7 +2202,7 @@ int                 LgMax;
 	     else if (lgname > 1)
 	       {
 		  nbentree++;
-		  strcpy (ptr, name);
+		  ustrcpy (ptr, name);
 		  ptr += lgname;
 		  lgmenu += lgname;
 	       }

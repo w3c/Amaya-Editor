@@ -1193,8 +1193,7 @@ ThotBool            Check;
 		    {
 		       pAsc = pEl2;
 		       do
-			  if (ustrcmp (pAsc->ElStructSchema->SsName, pAttr2->
-				      AeAttrSSchema->SsName) == 0)
+			  if (strcmp (pAsc->ElStructSchema->SsName, pAttr2->AeAttrSSchema->SsName) == 0)
 			    {
 			       pAttr2->AeAttrSSchema = pAsc->ElStructSchema;
 			       found = TRUE;
@@ -1633,8 +1632,7 @@ PtrSSchema          pSS;
 		if (pEl1->ElTypeNumber == pEl1->ElStructSchema->SsRootElem)
 		   /* the current element is the root of a nature, the current element
 		      is appropriate if we have the same structure schemes */
-		   found = (ustrcmp (pEl1->ElStructSchema->SsName,
-				  pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
+		   found = (ustrcmp (pEl1->ElStructSchema->SsName, pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
 	     }
 	   else
 	      found = EquivalentSRules (typeNum, pSS, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl);

@@ -54,14 +54,15 @@ extern STRING       FileExtension[];
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
 static ThotBool     RedisplayPicture;
-static CHAR_T         ImageName[100];
-static CHAR_T         DirectoryImage[MAX_PATH];
+static CHAR_T       ImageName[100];
+static CharUnit     DirectoryImage[MAX_PATH];
 
 #include "browser_f.h"
 #include "fileaccess_f.h"
 #include "picture_f.h"
 #include "actions_f.h"
 #include "savedoc_f.h"
+#include "ustring_f.h"
 
 /*----------------------------------------------------------------------
    CheckPresImage
@@ -220,8 +221,8 @@ STRING              txt;
 		 i = ustrlen (DocumentPath);
 		 if (i + ustrlen (DirectoryImage) + 2 < MAX_PATH)
 		   {
-		     ustrcat (DocumentPath, PATH_STR);
-		     ustrcat (DocumentPath, DirectoryImage);
+		     StringConcat (DocumentPath, CUS_PATH_STR);
+		     StringConcat (DocumentPath, DirectoryImage);
 		     InitPathImage ();
 		     TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
 				       FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
@@ -318,8 +319,8 @@ PtrBox              pBox;
 #endif /* __STDC__ */
 {
    int                 i, indx;
-   CHAR_T              bufTypeImage[MAX_TXT_LEN];
-   STRING              source;
+   char                bufTypeImage[MAX_TXT_LEN];
+   char*               source;
    int                 imageTypeCount, length;
    CHAR_T              bufMenu[MAX_TXT_LEN];
    PictInfo           *image;
@@ -345,16 +346,15 @@ PtrBox              pBox;
      {
 	bufMenu[indx] = TEXT('B');
 	indx++;
-	length = ustrlen (source) + 1;
+	length = strlen (source) + 1;
 	if (indx + length < MAX_TXT_LEN)
 	  {
-	     ustrcpy ((bufMenu) + indx, source);
+	     iso2wc_strcpy ((bufMenu) + indx, source);
 	     indx += length;
 	  }
 	source += length;
      }
-   TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_TYPE, BaseDlgImage + _IMAGE_FORM, 0, TtaGetMessage (LIB, TMSG_PICT_TYPE),
-		  imageTypeCount, bufMenu, NULL, TRUE);
+   TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_TYPE, BaseDlgImage + _IMAGE_FORM, 0, TtaGetMessage (LIB, TMSG_PICT_TYPE), imageTypeCount, bufMenu, NULL, TRUE);
 
    /* sous-menu cadrage du formulaire Picture */
    indx = 0;
@@ -367,12 +367,10 @@ PtrBox              pBox;
    usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_XREPEAT));
    indx += ustrlen (&bufMenu[indx]) + 1;
    usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_YREPEAT));
-   TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_FRAME, BaseDlgImage + _IMAGE_FORM, 0,
-		  TtaGetMessage (LIB, TMSG_PICT_PRES), 5, bufMenu, NULL, FALSE);
+   TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_FRAME, BaseDlgImage + _IMAGE_FORM, 0, TtaGetMessage (LIB, TMSG_PICT_PRES), 5, bufMenu, NULL, FALSE);
 
    /* zone de saisie du nom du fichier image */
-   TtaNewTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, BaseDlgImage + _IMAGE_FORM,
-		   TtaGetMessage (LIB, TMSG_PICT_FILE), 50, 1, TRUE);
+   TtaNewTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, BaseDlgImage + _IMAGE_FORM, TtaGetMessage (LIB, TMSG_PICT_FILE), 50, 1, TRUE);
 
    TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, _EMPTYSTR_);
    TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, name);

@@ -2542,7 +2542,7 @@ PtrDict            *pDict;
 
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
-	pdict->DictName[0] = EOS;
+	pdict->DictName[0] = CUS_EOS;
 	pdict->DictDirectory[0] = EOS;
 	/* readonly */
 	pdict->DictReadOnly = TRUE;

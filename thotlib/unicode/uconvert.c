@@ -86,37 +86,6 @@ const STRING str;
 
 #ifdef _I18N_
 #ifdef __STDC__
-void TranslateCharToUnicode(PCHAR_T pwc) 
-#else  /* !__STDC__ */
-void TranslateCharToUnicode(pwc)
-PCHAR_T pwc;
-#endif /* __STDC__ */
-{
-#   ifdef _WINDOWS 
-    int  iCP;
-    char   c;
-
-    switch (TtaGetVarLANG ()) {
-#          if 0
-           case LANG_ARABIC:   iCP = 1256;   break;
-           case LANG_HEBREW:   iCP = 1255;   break;
-           case LANG_THAI:     iCP =  874;   break;
-           case LANG_HINDI:    return;  // Hindi we don't touch
-#          endif /* 000000 */
-           default:            iCP = 1256;   break;
-                               /* For the moment, we always suppose that it is Arabic */
-           /* default:            iCP = 1252;   break; */
-	} 
-
-    c = (char) *pwc;
-    MultiByteToWideChar(iCP, 0, &c, 1, pwc, 1);
-#   else  /* !_WINDOWS */
-#   endif /* _WINDOWS */
-}
-#endif /* _I18N_ */
-
-#ifdef _I18N_
-#ifdef __STDC__
 int uctoi (const STRING string )
 #else  /* !__STDC__ */
 int uctoi (string )

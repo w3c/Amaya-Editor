@@ -1186,7 +1186,7 @@ int                 delta;
 	       pAbbox1->AbShape = element->ElGraph;
 	       pAbbox1->AbGraphAlphabet = TEXT('G');
 	       if (element->ElLeafType == LtGraphics &&
-		   element->ElGraph == TEXT('a') &&
+		   element->ElGraph == 'a' &&
 		   pAbbox1->AbHeight.DimAbRef == NULL)
 		 {
 		   /* force the circle height to be equal to its width */

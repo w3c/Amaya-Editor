@@ -218,7 +218,7 @@ PtrDocument         document;
    a pointer (pDictionary) referencing its descriptor or NULL    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SearchDictName (PtrDict * pDictionary, STRING dictName, STRING dictDirectory)
+static void         SearchDictName (PtrDict * pDictionary, CharUnit* dictName, CharUnit* dictDirectory)
 #else  /* __STDC__ */
 static void         SearchDictName (pDictionary, dictName, dictDirectory)
 PtrDict            *pDictionary;
@@ -233,8 +233,8 @@ STRING              dictDirectory;
    d = 0;
    while (d < MaxDictionaries && (dictTable[d] != NULL) && (!found))
      {
-	found = (ustrcmp (dictTable[d]->DictName, dictName) == 0
-	       && ustrcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
+	found = (StringCompare (dictTable[d]->DictName, dictName) == 0
+	       && StringCompare (dictTable[d]->DictDirectory, dictDirectory) == 0);
 	d++;
      }
    if (found)
@@ -308,7 +308,11 @@ PtrDict             dict;
       i = 0;
       while (i < dict->DictNbChars)
 	{
+#     ifdef _I18N_
+      TtaReadWideChar (dictFile, &(dict->DictString[i]));
+#     else  /* !_I18N_ */
 	  TtaReadByte (dictFile, &(dict->DictString[i]));
+#     endif /* !_I18N_ */
 	  i++;
 	}
       
@@ -386,8 +390,7 @@ PtrDict             dict;
 	  /* not the end of the dictionary */
 	  {
 	     /* impossible to load the dictionary */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO),
-				dict->DictName);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO), dict->DictName);
 	     /* Release the dictionary */
 	     ReleaseDictionary (&dict);	/* => dict = nil */
 	     return (0);
@@ -414,11 +417,11 @@ PtrDict             dict;
    retourne dans pDictionary le pointeur sur son descripteur ou NULL        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PrepareDictionary (PtrDict * pDictionary, STRING dictName, PtrDocument document, STRING dictDirectory, Language lang, ThotBool readonly, ThotBool treated, ThotBool toTreat)
+static void         PrepareDictionary (PtrDict * pDictionary, CharUnit* dictName, PtrDocument document, STRING dictDirectory, Language lang, ThotBool readonly, ThotBool treated, ThotBool toTreat)
 #else  /* __STDC__ */
 static void         PrepareDictionary (pDictionary, dictName, document, dictDirectory, lang, readonly, treated, toTreat)
 PtrDict            *pDictionary;
-STRING              dictName;
+CharUnit*           dictName;
 PtrDocument         document;
 STRING              dictDirectory;
 Language            lang;
@@ -491,7 +494,7 @@ ThotBool            toTreat;
   pdict->DictDoc = document;
   pdict->DictLanguage = lang;
   ustrcpy (pdict->DictDirectory, dictDirectory);
-  ustrcpy (pdict->DictName, dictName);
+  StringCopy (pdict->DictName, dictName);
   pdict->DictReadOnly = readonly;
   
   /* calculation of the memory size needed by the dictionary */
@@ -675,7 +678,7 @@ PtrDict            *pDictionary;
    PtrDict             pdict;
    PtrDocument         document;
    int                 d;
-   Name                dictName;
+   CharUnit            dictName[MAX_NAME_LENGTH];
 
    document = NULL;
    if (*pDictionary == NULL)
@@ -691,7 +694,7 @@ PtrDict            *pDictionary;
 	if (dictTable[d] == pdict)
 	  {
 	     /* Getting information about the dictionary */
-	     ustrcpy (dictName, pdict->DictName);
+	     StringCopy (dictName, pdict->DictName);
 	     document = pdict->DictDoc;
 	     /* Release the string and the list of words ... */
 	     FreeStringInDict (pdict);

@@ -42,6 +42,8 @@
 
 #define SIGNED_SHORT_MASK	0xffff0000L
 
+#define MAX_BYTES 3 /* We suppose that a multibyte character is encoded on maximum 2 bytes */
+
 /*----------------------------------------------------------------------
    TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
@@ -62,6 +64,44 @@ char*               bval;
    *bval = (char) v;
    return (TRUE);
 }
+
+/*----------------------------------------------------------------------
+   TtaReadWideChar reads a wide character value.                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            TtaReadWideChar (BinFile file, CHAR_T* bval)
+#else  /* __STDC__ */
+ThotBool            TtaReadWideChar (file, bval)
+BinFile             file;
+CHAR_T*             bval;
+
+#endif /* __STDC__ */
+{
+#  ifdef _I18N_
+   char     mbcstr[MAX_BYTES] = "\0";
+   int      nbBytes;
+   char     car;
+   if (TtaReadByte (file, &car) == 0) {
+      *bval = (CHAR_T) 0;
+      return (FALSE);
+   } 
+   mbcstr[0] = car;
+   nbBytes = 1;
+   if (car >= 0x80) {
+      if (TtaReadByte (file, &car) == 0) {
+         *bval = (CHAR_T)0;
+         return FALSE;
+      }
+      mbcstr [1] = car;
+      nbBytes = 2;
+   }
+   mbtowc (bval, mbcstr, nbBytes);
+   return (TRUE);
+#  else  /* !_I18N_ */
+   return TtaReadByte (file, bval);
+#  endif /* !_I18N_ */ 
+}
+
 
 /*----------------------------------------------------------------------
    TtaReadBool reads a ThotBool value.                              
@@ -228,20 +268,57 @@ char*               name;
 
    for (i = 0; i < MAX_NAME_LENGTH; i++)
      {
-	if (!TtaReadByte (file, &name[i]))
-	  {
-	     name[i] = EOS;
-	     return FALSE;
-	  }
-	if (name[i] == EOS)
-	   break;
+        if (!TtaReadByte (file, &name[i]))
+           {
+              name[i] = EOS;
+              return FALSE;
+           }
+        if (name[i] == EOS)
+           break;
      }
    if (i >= MAX_NAME_LENGTH)
-     {
-	name[0] = EOS;
-	return FALSE;
-     }
+      {
+         name[0] = EOS;
+         return FALSE;
+      }
+
    return TRUE;
+}
+
+/*----------------------------------------------------------------------
+   TtaReadWCName reads a Wide Character string value.                               
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            TtaReadWCName (BinFile file, CHAR_T* name)
+#else  /* __STDC__ */
+ThotBool            TtaReadWCName (file, name)
+BinFile             file;
+CHAR_T*             name;
+
+#endif /* __STDC__ */
+{
+#  ifdef _I18N_
+   int                 i;
+
+   for (i = 0; i < MAX_NAME_LENGTH; i++)
+     {
+        if (!TtaReadWideChar (file, &name[i]))
+           {
+              name[i] = WC_EOS;
+              return FALSE;
+           }
+        if (name[i] == WC_EOS)
+           break;
+     }
+   if (i >= MAX_NAME_LENGTH)
+      {
+         name[0] = WC_EOS;
+         return FALSE;
+      }
+   return TRUE;
+#  else  /* !_I18N_ */
+   return TtaReadName (file, name);
+#  endif /* !_I18N_ */
 }
 
 
@@ -335,6 +412,37 @@ char                bval;
    return TRUE;
 }
 
+/*----------------------------------------------------------------------
+   TtaWriteWideChar writes a wide character value.                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            TtaWriteWideChar (BinFile file, CHAR_T val)
+#else  /* __STDC__ */
+ThotBool            TtaWriteWideChar (file, bval)
+BinFile             file;
+CHAR_T              val;
+
+#endif /* __STDC__ */
+{
+#  ifdef _I18N_
+   char     mbcstr[MAX_BYTES];
+   int      nbBytes;
+   int      i;
+
+   nbBytes = wctomb (mbcstr, val);
+   if (nbBytes == -1)
+      return FALSE;
+   for (i = 0; i < nbBytes; i++)
+       if (fwrite ((char*) &mbcstr[i], sizeof (char), 1, file) == 0)
+          return FALSE;
+   return TRUE;
+   
+#  else  /* !_I18N_ */
+   if (fwrite ((char*) &val, sizeof (char), 1, file) == 0)
+      return FALSE;
+   return TRUE;
+#  endif /* !_I18N_ */
+}
 
 /*----------------------------------------------------------------------
    TtaWriteShort reads an unsigned short value.
@@ -404,13 +512,31 @@ DocumentIdentifier  Ident;
 #endif /* __STDC__ */
 {
    int                 j;
+#  if defined(_I18N_) && defined(_WINDOWS)
+   char   mbcstr[3] = "\0";
+   int    nbBytes;
+   CHAR_T WCcar;
+#  endif /* defined(_I18N_) && defined(_WINDOWS) */
 
    j = 1;
    while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != EOS)
-     {
-	TtaWriteByte (file, Ident[j - 1]);
-	j++;
-     }
+         {
+#            if defined(_I18N_) && defined(_WINDOWS)
+             WCcar = Ident[j - 1];
+             nbBytes = wctomb (mbcstr, WCcar);
+             switch (nbBytes) {
+                    case 1: TtaWriteByte (file, mbcstr[0]);
+                            break;
+                    case 2: TtaWriteByte (file, mbcstr[0]);
+                            TtaWriteByte (file, mbcstr[1]);
+                            break;
+                    default: break;
+             }
+#            else  /* !(defined(_I18N_) && defined(_WINDOWS)) */
+             TtaWriteByte (file, Ident[j - 1]);
+#            endif /* !(defined(_I18N_) && defined(_WINDOWS)) */
+             j++;
+         }
    /* termine le nom par un octet nul */
    TtaWriteByte (file, EOS);
 }
@@ -427,13 +553,17 @@ DocumentIdentifier *Ident;
 
 #endif /* __STDC__ */
 {
-   int                 j;
-
-   j = 0;
+   int j = 0;
+   
    do
+#     if defined(_I18N_) && defined(_WINDOWS)
+      if (!TtaReadWideChar (file, &((*Ident)[j++])))
+         (*Ident)[j - 1] = WC_EOS;
+#     else /* !(defined(_I18N_) && defined(_WINDOWS)) */
       if (!TtaReadByte (file, &((*Ident)[j++])))
-	 (*Ident)[j - 1] = EOS;
-   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == EOS)) ;
+         (*Ident)[j - 1] = EOS;
+#     endif /* !(defined(_I18N_) && defined(_WINDOWS)) */
+   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == CUS_EOS)) ;
 }
 
 /*----------------------------------------------------------------------
@@ -838,16 +968,16 @@ CharUnit*           docName;
    GetDocName                                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocName (DocumentIdentifier Ident, Name docName)
+void                GetDocName (DocumentIdentifier Ident, CUSName docName)
 #else  /* __STDC__ */
 void                GetDocName (Ident, docName)
 DocumentIdentifier  Ident;
-Name                docName;
+CUSName             docName;
 
 #endif /* __STDC__ */
 {
-   ustrncpy (docName, Ident, MAX_NAME_LENGTH);
-   docName[MAX_NAME_LENGTH - 1] = EOS;
+   StringNCopy (docName, Ident, MAX_NAME_LENGTH);
+   docName[MAX_NAME_LENGTH - 1] = CUS_EOS;
 }
 
 

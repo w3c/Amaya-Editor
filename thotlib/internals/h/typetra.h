@@ -124,7 +124,7 @@ typedef struct _TranslCondition
 	  {
 	  struct	/* TcCondition = TcondAlphabet */
 	    {
-	    CHAR_T      _TcAlphabet_; /* the alphabet on which the condition
+	    char      _TcAlphabet_; /* the alphabet on which the condition
 						   applies */ 
 	    } s0;
 	  struct	/* TcCondition = TcondWithin, TcondFirstWithin */
@@ -164,7 +164,7 @@ typedef struct _TranslCondition
 	        } s2;
 	      struct	/* in the case TcondPRule only */
 	        {
-	        CHAR_T  _TcPresValue_;    /* value of the presentation for which
+	        char  _TcPresValue_;    /* value of the presentation for which
 							   the block's rules are applied, 0 if
 							   applied for any value */
 	        } s3;
@@ -460,7 +460,7 @@ typedef struct _PRuleTransl
 	} s0;
       struct	/* other presentations */
 	{
-	  CHAR_T        _RtPRuleValue_[MAX_TRANSL_PRES_VAL + 1]; 
+	  char        _RtPRuleValue_[MAX_TRANSL_PRES_VAL + 1]; 
 					/* possible values of the presentation */
 	  PtrTRuleBlock	_RtPRuleValueBlock_[MAX_TRANSL_PRES_VAL + 1]; 
 					/* address of the first translation rules block
@@ -489,7 +489,7 @@ typedef struct _StringTransl
 /* indices of the text translation rules for an alphabet */
 typedef struct _AlphabetTransl
 {
-	CHAR_T  AlAlphabet;
+	char    AlAlphabet;
 	int     AlBegin; 	/* index of the first characters translation
 				   rule in the table TsCharTransl */
 	int	AlEnd;	/* index of the last characters translation

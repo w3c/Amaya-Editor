@@ -52,7 +52,7 @@ static CHAR_T       WIN_title[MAX_NAME_LENGTH + 2];
 
 extern WNDPROC      lpfnTextZoneWndProc ;
 
-char                WIN_buffMenu[MAX_TXT_LEN];
+CHAR_T              WIN_buffMenu[MAX_TXT_LEN];
 
 #ifdef __STDC__
 extern LRESULT CALLBACK textZoneProc (HWND, UINT, WPARAM, LPARAM);
@@ -68,7 +68,7 @@ static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
 static ThotBool     AttrOblig[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU* 2];
-static char         TextAttrValue[LgMaxAttrText];
+static CHAR_T       TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
@@ -146,6 +146,8 @@ LRESULT CALLBACK InitNumAttrDialogWndProc ();
 #include "structselect_f.h"
 #include "structschema_f.h"
 #include "tree_f.h"
+#include "ustring_f.h"
+
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -170,17 +172,17 @@ PtrAttribute        currAttr;
    CHAR_T              bufMenu[MAX_TXT_LEN];
    int                 i;
 #endif /* _WINDOWS */
-   char                string[MAX_TXT_LEN];
-   char*               ptr;
+   CHAR_T              string[MAX_TXT_LEN];
+   CHAR_T*             ptr;
    Language            language;
-   Name                languageValue;
+   CHAR_T              languageValue[MAX_TXT_LEN];
    CHAR_T              Lab[200];
    PtrAttribute        pHeritAttr;
    PtrElement          pElAttr;
    int                 defItem, nbItem, nbLanguages, firstLanguage, length;
 
    /* c'est l'attribut Langue, on initialise le formulaire Langue */
-   languageValue[0] = EOS;
+   languageValue[0] = WC_EOS;
    if (currAttr != NULL && currAttr->AeAttrText != NULL)
      ustrncpy (languageValue, currAttr->AeAttrText->BuContent, MAX_NAME_LENGTH);
 
@@ -204,18 +206,18 @@ PtrAttribute        currAttr;
    firstLanguage = TtaGetFirstUserLanguage ();
    for (language = firstLanguage; language < nbLanguages; language++)
      {
-       strcpy (string, TtaGetLanguageName (language));
-       length = strlen (string);
+       ustrcpy (string, TtaGetLanguageName (language));
+       length = ustrlen (string);
        if (length > 0)
 	 {
-	   if (defItem < 0 && languageValue[0] != EOS)
-	     if (strcasecmp (TtaGetLanguageCode (language), languageValue) == 0)
+	   if (defItem < 0 && languageValue[0] != WC_EOS)
+	     if (ustrcasecmp (TtaGetLanguageCode (language), languageValue) == 0)
 	       {
 		 defItem = nbItem;
-		 strcpy (languageValue, string);
+		 ustrcpy (languageValue, string);
 	       }
 	   nbItem++;
-	   strcpy (ptr, string);
+	   ustrcpy (ptr, string);
 	   ptr += length + 1;
 	 }
      }
@@ -870,7 +872,7 @@ int                 view;
                /* boucle sur les valeurs possibles de l'attribut */
                while (val < pAttr1->AttrNEnumValues) {
 #                    ifdef _WINDOWS 
-                     i = strlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
+                     i = ustrlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
 #                    else  /* !_WINDOWS */
                      i = ustrlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
 #                    endif /* _WINDOWS */
@@ -879,7 +881,7 @@ int                 view;
                         bufMenu[lgmenu] = 'B';
                         ustrcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
 #                       else  /* _WINDOWS */
-                        strcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+                        ustrcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
 #                       endif /* _WINDOWS */
                         val++;
 					 } 
@@ -1517,7 +1519,7 @@ STRING              valtext;
       break;
     case NumMenuAttrText:
       /* valeur d'un attribut textuel */
-      strncpy (TextAttrValue, valtext, LgMaxAttrText);
+      ustrncpy (TextAttrValue, valtext, LgMaxAttrText);
       act = 0;
       break;
     case NumMenuAttrEnum:
@@ -1586,8 +1588,7 @@ STRING              valtext;
 			GetTextBuffer (&(pAttrNew->AeAttrText));
 		      else
 			ClearText (pAttrNew->AeAttrText);
-		      CopyStringToText (TextAttrValue,
-					pAttrNew->AeAttrText, &lg);
+		      CopyStringToText (TextAttrValue, pAttrNew->AeAttrText, &lg);
 		    }
 		  /* applique les attributs a la partie selectionnee */
 		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
@@ -1799,7 +1800,7 @@ STRING              txt;
     case NumSelectLanguage:
       /* retour de la langue choisie par l'utilisateur */
       if (txt == NULL)
-	TextAttrValue[0] = EOS;
+	TextAttrValue[0] = WC_EOS;
       else
 	{
 	  i = TtaGetLanguageIdFromName (txt);

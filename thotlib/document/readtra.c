@@ -677,19 +677,19 @@ PtrTRule           *pNextTRule;
 		       case TWrite:
 			  pTRule->TrObject = ReadCreatedObject (file);
 			  TtaReadShort (file, &pTRule->TrObjectNum);
-			  TtaReadName (file, (STRING) &pTRule->TrObjectNature);
+			  TtaReadName (file, pTRule->TrObjectNature);
 			  TtaReadBool (file, &pTRule->TrReferredObj);
 			  TtaReadShort (file, &pTRule->TrFileNameVar);
 			  break;
 		       case TGet:
 		       case TCopy:
 			  TtaReadShort (file, &pTRule->TrElemType);
-			  TtaReadName (file, (STRING) &pTRule->TrElemNature);
+			  TtaReadName (file, pTRule->TrElemNature);
 			  pTRule->TrRelPosition = ReadTRelatPosition (file);
 			  break;
 		       case TUse:
-			  TtaReadName (file, (STRING) &pTRule->TrNature);
-			  TtaReadName (file, (STRING) &pTRule->TrTranslSchemaName);
+			  TtaReadName (file, pTRule->TrNature);
+			  TtaReadName (file, pTRule->TrTranslSchemaName);
 			  break;
 		       case TRemove:
 		       case TNoTranslation:
@@ -791,7 +791,7 @@ PtrTRuleBlock      *pNextBlock;
 		  TtaReadBool (file, &pCond->TcNegativeCond);
 		  TtaReadBool (file, &pCond->TcTarget);
 		  TtaReadShort (file, &pCond->TcAscendType);
-		  TtaReadName (file, (STRING) &pCond->TcAscendNature);
+		  TtaReadName (file, pCond->TcAscendNature);
 		  TtaReadSignedShort (file, &pCond->TcAscendRelLevel);
 		  switch (pCond->TcCondition)
 			{
@@ -801,7 +801,7 @@ PtrTRuleBlock      *pNextBlock;
 			   case TcondWithin:
 			   case TcondFirstWithin:
 			      TtaReadShort (file, &pCond->TcElemType);
-			      TtaReadName (file, (STRING) &pCond->TcElemNature);
+			      TtaReadName (file, pCond->TcElemNature);
 			      TtaReadBool (file, &pCond->TcImmediatelyWithin);
 			      pCond->TcAscendRel = ReadRelatNAscend (file);
 			      TtaReadShort (file, &pCond->TcAscendLevel);
@@ -816,7 +816,7 @@ PtrTRuleBlock      *pNextBlock;
 					     TtaReadSignedShort (file, &pCond->TcUpperBound);
 					     break;
 					  case AtTextAttr:
-					     TtaReadName (file, (STRING) &pCond->TcTextValue);
+					     TtaReadName (file, pCond->TcTextValue);
 					     break;
 					  case AtReferenceAttr:
 
@@ -933,7 +933,7 @@ PtrTSchema         *pTSch;
 			 }
 		    break;
 		 case AtTextAttr:
-		    TtaReadName (file, (STRING) &pAttrT->AtrTextValue);
+		    TtaReadName (file, pAttrT->AtrTextValue);
 		    ReadBlocks (file, &pAttrT->AtrTxtTRuleBlock, pNextTRule,
 				pSS, pNextBlock);
 		    break;
@@ -1076,10 +1076,10 @@ PRuleTransl        *pPruleTr;
    - pSS: schema de structure correspondant, deja rempli.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrTSchema          ReadTranslationSchema (Name fileName, PtrSSchema pSS)
+PtrTSchema          ReadTranslationSchema (CUSName fileName, PtrSSchema pSS)
 #else  /* __STDC__ */
 PtrTSchema          ReadTranslationSchema (fileName, pSS)
-Name                fileName;
+CUSName             fileName;
 PtrSSchema          pSS;
 #endif /* __STDC__ */
 {
@@ -1135,11 +1135,11 @@ PtrSSchema          pSS;
 	  memset (pNextBlock, 0, sizeof (TRuleBlock));
 
 	/* lit la partie fixe du schema de traduction */
-	TtaReadName (file, (STRING) &pTSch->TsStructName);
+	TtaReadName (file, pTSch->TsStructName);
 	TtaReadShort (file, &pTSch->TsStructCode);
 	TtaReadShort (file, &pTSch->TsLineLength);
-	TtaReadName (file, (STRING) &pTSch->TsEOL);
-	TtaReadName (file, (STRING) &pTSch->TsTranslEOL);
+	TtaReadName (file, pTSch->TsEOL);
+	TtaReadName (file, pTSch->TsTranslEOL);
 	TtaReadShort (file, &pTSch->TsNConstants);
 	TtaReadShort (file, &pTSch->TsNCounters);
 	TtaReadShort (file, &pTSch->TsNVariables);
@@ -1277,13 +1277,13 @@ PtrSSchema          pSS;
 		/* lit la chaine source */
 		j = 0;
 		do
-		   TtaReadByte (file, &pStringTr->StSource[j++]);
-		while (pStringTr->StSource[j - 1] != EOS);
+		   TtaReadWideChar (file, &pStringTr->StSource[j++]);
+		while (pStringTr->StSource[j - 1] != WC_EOS);
 		/* lit la chaine cible */
 		j = 0;
 		do
-		   TtaReadByte (file, &pStringTr->StTarget[j++]);
-		while (pStringTr->StTarget[j - 1] != EOS);
+		   TtaReadWideChar (file, &pStringTr->StTarget[j++]);
+		while (pStringTr->StTarget[j - 1] != WC_EOS);
 	     }
 	if (!error)
 	   /* lit les constantes */
@@ -1291,8 +1291,8 @@ PtrSSchema          pSS;
 	     {
 		j = pTSch->TsConstBegin[i] - 1;
 		do
-		   TtaReadByte (file, &pTSch->TsConstant[j++]);
-		while (pTSch->TsConstant[j - 1] != EOS);
+		   TtaReadWideChar (file, &pTSch->TsConstant[j++]);
+		while (pTSch->TsConstant[j - 1] != WC_EOS);
 	     }
 	/* lit les blocs de regles des elements */
 	if (!error)

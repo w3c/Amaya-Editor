@@ -10,7 +10,7 @@ extern void CreateInheritedAttrTable ( PtrElement pEl );
 extern void CreateComparAttrTable ( PtrAttribute pAttr );
 extern void TransmitElementContent ( PtrElement pEl,
                                      PtrDocument pDoc,
-                                     Name attrName,
+                                     CHAR_T* attrName,
                                      int inclRule,
                                      PtrSSchema pSS );
 extern void ApplyTransmitRules ( PtrElement pEl,
@@ -25,7 +25,7 @@ extern void CreateInheritedAttrTable (/* PtrElement pEl */);
 extern void CreateComparAttrTable (/* PtrAttribute pAttr */);
 extern void TransmitElementContent (/* PtrElement pEl,
                                        PtrDocument pDoc,
-                                       Name attrName,
+                                       CHAR_T* attrName,
                                        int inclRule,
                                        PtrSSchema pSS */);
 extern void ApplyTransmitRules (/* PtrElement pEl,

@@ -1204,7 +1204,7 @@ PtrPRule           *pNextPRule;
 			      TtaReadSignedShort (file, &pCond->CoTypeAncestor);
 			      if (pCond->CoTypeAncestor == 0)
 				{
-				   TtaReadName (file, pCond->CoAncestorName);
+				   TtaReadWCName (file, pCond->CoAncestorName);
 				   TtaReadName (file, pCond->CoSSchemaName);
 				}
 			      else
@@ -1249,12 +1249,12 @@ PtrPRule           *pNextPRule;
 				 error = !TtaReadShort (file, &pPR->PrNPresBoxes);
 				 if (!error)
 				    if (pPR->PrNPresBoxes == 0)
-				       TtaReadName (file, pPR->PrPresBoxName);
+				       TtaReadWCName (file, pPR->PrPresBoxName);
 				    else
 				      {
 					 for (i = 0; i < pPR->PrNPresBoxes; i++)
 					    TtaReadShort (file, &pPR->PrPresBox[i]);
-					 pPR->PrPresBoxName[0] = EOS;
+					 pPR->PrPresBoxName[0] = WC_EOS;
 				      }
 			      }
 			    break;
@@ -1395,6 +1395,7 @@ PtrSSchema          pSS;
    int                 InitialNElems, i, j, l;
    ThotBool            ret;
    CharUnit            file_name[MAX_LENGTH];
+   CharUnit            PsStructName[MAX_LENGTH];
 
    error = FALSE;
    pPSch = NULL;
@@ -1429,7 +1430,7 @@ PtrSSchema          pSS;
 	error = !TtaReadShort (file, &pPSch->PsNViews);
 	if (!error)
 	   for (i = 0; i < pPSch->PsNViews; i++)
-	      TtaReadName (file, pPSch->PsView[i]);
+	      TtaReadWCName (file, pPSch->PsView[i]);
 	if (!error)
 	   for (i = 0; i < pPSch->PsNViews; i++)
 	      TtaReadBool (file, &pPSch->PsPaginatedView[i]);
@@ -1453,8 +1454,10 @@ PtrSSchema          pSS;
 	TtaReadShort (file, &pPSch->PsNPresentBoxes);
 	pPSch->PsFirstDefaultPRule = ReadPRulePtr (file, &pNextPRule);
 	ret = !error;
-	if (pSS->SsRootElem == 0)
-	   ret = ReadStructureSchema (pPSch->PsStructName, pSS);
+	if (pSS->SsRootElem == 0) {
+       iso2cus_strcpy (PsStructName, pPSch->PsStructName);
+	   ret = ReadStructureSchema (PsStructName, pSS);
+	} 
 	if (!ret || pPSch->PsStructCode != pSS->SsCode)
 	  {
 	     FreeSchPres (pPSch);
@@ -1498,7 +1501,7 @@ PtrSSchema          pSS;
 		     if (!error)
 			for (j = 0; j < pCntr->CnNTransmAttrs; j++)
 			  {
-			     TtaReadName (file, pCntr->CnTransmAttr[j]);
+			     TtaReadWCName (file, pCntr->CnTransmAttr[j]);
 			     TtaReadShort (file, &pCntr->CnTransmSSchemaAttr[j]);
 			  }
 		     error = !TtaReadShort (file, &pCntr->CnNCreators);
@@ -1531,7 +1534,7 @@ PtrSSchema          pSS;
 		     j = 0;
 		     if (!error)
 			do
-			   if (!TtaReadByte (file, &pConst->PdString[j++]))
+			   if (!TtaReadWideChar (file, &pConst->PdString[j++]))
 			      error = True;
 			while (pConst->PdString[j - 1] != EOS && !error) ;
 		  }
@@ -1576,7 +1579,7 @@ PtrSSchema          pSS;
 		for (i = 0; i < pPSch->PsNPresentBoxes; i++)
 		  {
 		     pBox = &pPSch->PsPresentBox[i];
-		     TtaReadName (file, pBox->PbName);
+		     TtaReadWCName (file, pBox->PbName);
 		     pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
 		     TtaReadBool (file, &pBox->PbAcceptPageBreak);
 		     TtaReadBool (file, &pBox->PbAcceptLineBreak);
@@ -1662,7 +1665,7 @@ PtrSSchema          pSS;
 						pAttrP->ApRefFirstPRule = ReadPRulePtr (file, &pNextPRule);
 						break;
 					     case AtTextAttr:
-						TtaReadName (file, pAttrP->ApString);
+						TtaReadWCName (file, pAttrP->ApString);
 						pAttrP->ApTextFirstPRule = ReadPRulePtr (file, &pNextPRule);
 						break;
 					     case AtEnumAttr:
@@ -1778,7 +1781,7 @@ PtrSSchema          pSS;
 		for (i = 0; i < pPSch->PsNTransmElems; i++)
 		  {
 		     TtaReadShort (file, &pPSch->PsTransmElem[i].TeTargetDoc);
-		     TtaReadName (file, pPSch->PsTransmElem[i].TeTargetAttr);
+		     TtaReadWCName (file, pPSch->PsTransmElem[i].TeTargetAttr);
 		  }
 	     FreePresentRule (pNextPRule);
 	  }

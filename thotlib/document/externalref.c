@@ -63,11 +63,11 @@ LabelString         strng;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReadLabel (CHAR_T labelType, LabelString label, BinFile file)
+void                ReadLabel (char labelType, LabelString label, BinFile file)
 
 #else  /* __STDC__ */
 void                ReadLabel (labelType, label, file)
-CHAR_T              labelType;
+char                labelType;
 LabelString         label;
 BinFile             file;
 
@@ -156,7 +156,7 @@ ThotBool            labelsOnly;
 	     /* acquiert un descripteur d'element reference' */
 	     GetReferredDescr (&pRefD);
 	     /* met le label lu dans le descripteur */
-	     ustrncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
+	     strncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
 	     /* chaine le descripteur */
 	     if (pPrevRefD == NULL)
 		/* premier descripteur de la chaine */
@@ -183,7 +183,7 @@ ThotBool            labelsOnly;
 		     stop = TRUE;	/* dernier descripteur du document */
 		  else if (!pRefD->ReExternalRef)
 		     if (pRefD->ReReferredElem != NULL)
-			if (ustrcmp (pRefD->ReReferredElem->ElLabel, label) == 0)
+			if (strcmp (pRefD->ReReferredElem->ElLabel, label) == 0)
 			   /* trouve' */
 			   stop = TRUE;
 		  if (!stop)
@@ -278,14 +278,14 @@ PtrChangedReferredEl *Anchor;
 	   pPrevChnRef->CrNext = pChnRef;
 	pPrevChnRef = pChnRef;
 	/* lit l'ancien label */
-	ustrncpy (pChnRef->CrOldLabel, label, MAX_LABEL_LEN);
+	strncpy (pChnRef->CrOldLabel, label, MAX_LABEL_LEN);
 	/* lit le nouveau label */
 	if (!TtaReadByte (file, &c))
 	   error = TRUE;
 	ReadLabel (c, label, file);
 	if (!error)
 	  {
-	     ustrncpy (pChnRef->CrNewLabel, label, MAX_LABEL_LEN);
+	     strncpy (pChnRef->CrNewLabel, label, MAX_LABEL_LEN);
 	     /* lit le nom de l'ancien document */
 	     /* lit la marque de nom de document */
 	     if (!TtaReadByte (file, &c))
@@ -382,7 +382,7 @@ PtrDocument         pDoc;
 	     while (pRefD != NULL && !found)
 	       {
 		  if (pRefD->ReExternalRef)
-		     if (ustrcmp (pRefD->ReReferredLabel, pChnRef->CrOldLabel) == 0)
+		     if (strcmp (pRefD->ReReferredLabel, pChnRef->CrOldLabel) == 0)
 			if (SameDocIdent (pRefD->ReExtDocument, pChnRef->CrOldDocument))
 			   found = TRUE;
 		  if (!found)
@@ -394,7 +394,7 @@ PtrDocument         pDoc;
 		  if (pChnRef->CrNewLabel[0] != EOS)
 		     /* l'element reference' a change' de document */
 		    {
-		       ustrncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+		       strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 		       CopyDocIdent (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
 		    }
 		  else

@@ -26,16 +26,17 @@ struct Langue_Ctl   TypoLangTable[MAX_LANGUAGES];
 int                 FreeEntry;
 int                 FreeTypoEntry;
 int                 FirstUserLang;
-static char         Langbuffer[2 * MAX_NAME_LENGTH];
+static CHAR_T       Langbuffer[2 * MAX_NAME_LENGTH];
+static char         CodeBuffer[2 * MAX_NAME_LENGTH];
 static int          breakPoints[MAX_POINT_COUP];
-static char         StandardLANG[3];
+static CharUnit     StandardLANG[3];
 
 #include "thotmsg_f.h"
 #include "ustring_f.h"
 
 /*	ISO 639 CODES ALPHABETIC BY LANGUAGE NAME (ENGLISH SPELLING) */
 
-typedef unsigned char aLangName[16];
+typedef unsigned char aLangName[MAX_LENGTH];
 typedef struct _ISO639entry
   {
      aLangName	fullName;
@@ -211,28 +212,28 @@ static ISO639entry	OldLangTable[] =
    Returns the full name of a language whose RFC-1766 code is known
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*          TtaGetLanguageNameFromCode (char* code)
+CHAR_T*        TtaGetLanguageNameFromCode (char* code)
 #else  /* __STDC__ */
-char*          TtaGetLanguageNameFromCode (code)
+CHAR_T*        TtaGetLanguageNameFromCode (code)
 char*          code;
 #endif /* __STDC__ */
 
 {
    int                 i;
 
-   Langbuffer[0] = EOS;
+   Langbuffer[0] = WC_EOS;
    for (i = 0; Langbuffer[0] == EOS; i++)
       if (ISO639table[i].code[0] == EOS)
 	    break;
       else if (strcasecmp (code, ISO639table[i].code) == 0)
-           strcpy (Langbuffer, ISO639table[i].fullName);
-   if (Langbuffer[0] == EOS)
-      for (i = 0; Langbuffer[0] == EOS; i++)
+           iso2wc_strcpy (Langbuffer, ISO639table[i].fullName);
+   if (Langbuffer[0] == WC_EOS)
+      for (i = 0; Langbuffer[0] == WC_EOS; i++)
          if (OldLangTable[i].code[0] == EOS)
 	    break;
          else
             if (strcasecmp (code, OldLangTable[i].code) == 0)
-               strcpy (Langbuffer, OldLangTable[i].fullName);
+               iso2wc_strcpy (Langbuffer, OldLangTable[i].fullName);
    return Langbuffer;
 }
 
@@ -242,30 +243,32 @@ char*          code;
    Returns the RFC-1766 code for a language whose name is known
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*          TtaGetLanguageCodeFromName (char* name)
+char*          TtaGetLanguageCodeFromName (CharUnit* name)
 #else  /* __STDC__ */
 char*          TtaGetLanguageCodeFromName (name)
-char*          name;
+CharUnit*      name;
 #endif /* __STDC__ */
 
 {
    int                 i;
+   char                langName[MAX_LENGTH];
 
-   Langbuffer[0] = EOS;
-   for (i = 0; Langbuffer[0] == EOS; i++)
+   cus2iso_strcpy (langName, name);
+   CodeBuffer[0] = EOS;
+   for (i = 0; CodeBuffer[0] == EOS; i++)
       if (ISO639table[i].fullName[0] == EOS)
 	 break;
       else
-         if (strcasecmp (name, ISO639table[i].fullName) == 0)
-            strcpy (Langbuffer, ISO639table[i].code);
-   if (Langbuffer[0] == EOS)
-      for (i = 0; Langbuffer[0] == EOS; i++)
+         if (strcasecmp (langName, ISO639table[i].fullName) == 0)
+            strcpy (CodeBuffer, ISO639table[i].code);
+   if (CodeBuffer[0] == EOS)
+      for (i = 0; CodeBuffer[0] == EOS; i++)
          if (OldLangTable[i].fullName[0] == EOS)
-	    break;
+ 	    break;
          else
-            if (strcasecmp (name, OldLangTable[i].fullName) == 0)
-               strcpy (Langbuffer, OldLangTable[i].code);
-   return Langbuffer;
+            if (strcasecmp (langName, OldLangTable[i].fullName) == 0)
+               strcpy (CodeBuffer, OldLangTable[i].code);
+   return CodeBuffer;
 }
 
 /*----------------------------------------------------------------------
@@ -529,39 +532,40 @@ STRING              secondDictionary;
 
 {
    int                 i;
+   CharUnit            langName[MAX_LENGTH];
 
+   iso2cus_strcpy (langName, languageName);
    i = 0;
    /* Avoids error cases */
    if (languageName == NULL)
       TtaError (ERR_invalid_parameter);
-   else if (languageName[0] == EOS)
+   else if (langName[0] == CUS_EOS)
       TtaError (ERR_invalid_parameter);
-   else if (strlen (languageName) >= MAX_NAME_LENGTH)
+   else if (StringLength (langName) >= MAX_NAME_LENGTH)
       TtaError (ERR_string_too_long);
    else if (FreeEntry == MAX_LANGUAGES)
       TtaError (ERR_too_many_languages);
    else
      {
-	if (strlen(languageName) == 2 ||
-	    languageName[1] == '-' || languageName[2] == '-')
+	if (StringLength(langName) == 2 || langName[1] == CUSTEXT('-') || langName[2] == CUSTEXT('-'))
 	   /* it's an ISO-639 code */
 	  {
 	  for (i = 0; i < FreeEntry; i++)
-	    if (!strcasecmp (languageName, LangTable[i].LangCode))
+	    if (!cus2iso_strcasecmp (langName, LangTable[i].LangCode))
 	      /* The language is already defined */
 	      return i;
-	  strcpy (LangTable[FreeEntry].LangName, languageName);
-	  strcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
+	  cus2iso_strcpy (LangTable[FreeEntry].LangName, langName);
+	  strcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (langName));
 	  }
 	else
 	  {
 	  /* Consults the languages table to see if the language exists. */
 	  for (i = 0; i < FreeEntry; i++)
-	    if (!strcasecmp (languageName, LangTable[i].LangName))
+	    if (!cus2iso_strcasecmp (langName, LangTable[i].LangName))
 	      /* The language is already defined */
 	      return i;
-	  strcpy (LangTable[FreeEntry].LangName, languageName);
-	  strcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
+	  cus2iso_strcpy (LangTable[FreeEntry].LangName, langName);
+	  strcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (langName));
 	  }
 
 	/* Saves the new language */
@@ -633,77 +637,75 @@ void                TtaRemoveLanguage (language)
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Language            TtaGetLanguageIdFromName (char* languageName)
+Language            TtaGetLanguageIdFromName (CHAR_T* languageName)
 #else  /* __STDC__ */
 Language            TtaGetLanguageIdFromName (languageName)
-char*               languageName;
+CHAR_T*             languageName;
 #endif /* __STDC__ */
 
 { 
    int                 i;
    ThotBool            again;
-   aLangName	       code;
+   CharUnit            code[MAX_LENGTH];
 
    i = 0;
    /* Avoids error cases */
    if (languageName == NULL)
       TtaError (ERR_invalid_parameter);
-   else if (languageName[0] == CUS_EOS)
-      TtaError (ERR_invalid_parameter);
-   else if (strlen (languageName) >= MAX_NAME_LENGTH)
-      TtaError (ERR_string_too_long);
+   else if (languageName[0] == WC_EOS)
+        TtaError (ERR_invalid_parameter);
+   else if (ustrlen (languageName) >= MAX_NAME_LENGTH)
+        TtaError (ERR_string_too_long);
    else
-     {
-	/* Consults the languages table to see if the language exists. */
-	again = TRUE;
-	while (again && i < FreeEntry)
-	  {
-	     if (!strcasecmp (languageName, LangTable[i].LangCode))
-		/* The language is already defined */
-		again = FALSE;
-	     else
-		if (!strcasecmp (languageName, LangTable[i].LangName))
-		   again = FALSE;
-		else
-		   i++;
-	  }
-	if (again)
-	  {
-	     /* The language dose not exist, search in TYPO languages */
-	     i = 0;
-	     while (again && i < FreeTypoEntry)
-	       {
-		  if (!strcmp (languageName, TypoLangTable[i].LangName))
-		     /* The TYPO language is already defined */
-		     again = FALSE;
-		  else
-		     i++;
-	       }
-	  }
-	if (again)
-	  {
-	  strcpy (code, TtaGetLanguageCodeFromName (languageName));
-	  if (code[0] != EOS)
-	    {
-	    i = 0;
-	    while (again && i < FreeEntry)
-	      if (!strcasecmp (code, LangTable[i].LangCode))
-		 /* The language is already defined */
-		 again = FALSE;
-	      else
-		 i++;
-	    }
-	  }
-
-	if (again)
-	  {
-	     /* The language does not exist */
-	     i = 0;
-	     TtaError (ERR_language_not_found);
-	  }
-     }
-   /* returned value */
-   return (Language) i;
+      {
+          /* Consults the languages table to see if the language exists. */
+          again = TRUE;
+          while (again && i < FreeEntry)
+               {
+                   if (!wc2iso_strcasecmp (languageName, LangTable[i].LangCode))
+                      /* The language is already defined */
+                      again = FALSE;
+                   else if (!wc2iso_strcasecmp (languageName, LangTable[i].LangName))
+                        again = FALSE;
+                   else
+                        i++;
+               }
+          if (again)
+             {
+                /* The language dose not exist, search in TYPO languages */
+                i = 0;
+                while (again && i < FreeTypoEntry)
+                      {
+                          if (!wc2iso_strcmp (languageName, TypoLangTable[i].LangName))
+                             /* The TYPO language is already defined */
+                             again = FALSE;
+                          else
+                              i++;
+                      }
+             }
+          if (again)
+             {
+                 iso2cus_strcpy (code, TtaGetLanguageCodeFromName (languageName));
+                 if (code[0] != CUS_EOS)
+                    {
+                       i = 0;
+                       while (again && i < FreeEntry)
+                             if (!cus2iso_strcasecmp (code, LangTable[i].LangCode))
+                                /* The language is already defined */
+                                again = FALSE;
+                             else
+                                  i++;
+                    }
+             }
+          if (again)
+             {
+                /* The language does not exist */
+                i = 0;
+                TtaError (ERR_language_not_found);
+             }
+      }
+      /* returned value */
+      return (Language) i;
 }
 
 /*----------------------------------------------------------------------
@@ -714,22 +716,20 @@ char*               languageName;
    Return value:
    a string of 2 chars.
   ----------------------------------------------------------------------*/
-char*               TtaGetVarLANG ()
+CharUnit* TtaGetVarLANG ()
 { 
    CharUnit* langEVar;
-   char      name[MAX_LENGTH];
 
    langEVar = TtaGetEnvString ("LANG");
-   cus2iso_strcpy (name, langEVar);
 
-   if (name == NULL)
-      strcpy (StandardLANG, "en");
-   else if (!strcmp (name, "C") || !strcasecmp (name, "iso_8859_1"))
-        strcpy (StandardLANG, "fr");
+   if (langEVar == NULL)
+      StringCopy (StandardLANG, CUSTEXT("en"));
+   else if (!StringCompare (langEVar, CUSTEXT("C")) || !StringCaseCompare (langEVar, CUSTEXT("iso_8859_1")))
+        StringCopy (StandardLANG, CUSTEXT("fr"));
    else
      {
-         strncpy (StandardLANG, name, 2);
-         StandardLANG[2] = EOS;
+         StringNCopy (StandardLANG, langEVar, 2);
+         StandardLANG[2] = CUS_EOS;
      }
    return (StandardLANG);
 }
@@ -744,10 +744,7 @@ char*               TtaGetVarLANG ()
   ----------------------------------------------------------------------*/
 Language            TtaGetDefaultLanguage ()
 {
-   char*  name;
-
-   name = TtaGetVarLANG ();
-   return TtaGetLanguageIdFromName (name);
+   return TtaGetLanguageIdFromName (TtaGetVarLANG ());
 }
 
 /*----------------------------------------------------------------------
@@ -838,10 +835,10 @@ Language          languageId;
    the name of the language.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*              TtaGetLanguageName (Language languageId)
+CHAR_T*            TtaGetLanguageName (Language languageId)
 #else  /* __STDC__ */
-char*              TtaGetLanguageName (languageId)
-Language            languageId;
+CHAR_T*            TtaGetLanguageName (languageId)
+Language           languageId;
 #endif /* __STDC__ */
 {
    int                 i;
@@ -850,10 +847,10 @@ Language            languageId;
    if (i >= FreeEntry || i < 0)
      {
 	TtaError (ERR_language_not_found);
-	Langbuffer[0] = EOS;
+	Langbuffer[0] = WC_EOS;
      }
    else
-      strcpy (Langbuffer, LangTable[i].LangName);
+      iso2wc_strcpy (Langbuffer, LangTable[i].LangName);
    return Langbuffer;
 }
 
@@ -872,9 +869,9 @@ Language            languageId;
    the code of the language.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*              TtaGetLanguageCode (Language languageId)
+CHAR_T*            TtaGetLanguageCode (Language languageId)
 #else  /* __STDC__ */
-char*              TtaGetLanguageCode (languageId)
+CHAR_T*            TtaGetLanguageCode (languageId)
 Language           languageId;
 #endif /* __STDC__ */
 
@@ -885,10 +882,10 @@ Language           languageId;
    if (i >= FreeEntry || i < 0)
      {
 	TtaError (ERR_language_not_found);
-	Langbuffer[0] = EOS;
+	Langbuffer[0] = WC_EOS;
      }
    else
-      strcpy (Langbuffer, LangTable[i].LangCode);
+      iso2wc_strcpy (Langbuffer, LangTable[i].LangCode);
    return Langbuffer;
 }
 

@@ -313,7 +313,7 @@ ThotBool isSource;
 #ifdef DEBUG
 		  fprintf (stderr, "Charge nature %s\n", strRule->SrOrigNat);
 #endif
-		  childType.ElSSchema = TtaNewNature (elemType.ElSSchema, strRule->SrOrigNat, _EMPTYSTR_);
+		  childType.ElSSchema = TtaNewNature (elemType.ElSSchema, strRule->SrOrigNat, "");
 		}
 	      childType.ElTypeNum  = ((PtrSSchema)(childType.ElSSchema))->SsRootElem;
 	      theTree = RecBuildTypeTree (childType, isSource);

@@ -242,7 +242,7 @@ STRING              label;
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
 	if (*label != EOS)
-	   ustrncpy (element->ElLabel, label, MAX_LABEL_LEN);
+	   strncpy (element->ElLabel, label, MAX_LABEL_LEN);
      }
    return ((Element) element);
 }
@@ -300,7 +300,7 @@ PtrDocument         pDoc;
 		       if (!pElem->ElReferredDescr->ReExternalRef)
 			  pElem->ElReferredDescr->ReReferredElem = pElem;
 		    }
-		  ustrncpy (pElem->ElReferredDescr->ReReferredLabel, pElem->ElLabel, MAX_LABEL_LEN);
+		  strncpy (pElem->ElReferredDescr->ReReferredLabel, pElem->ElLabel, MAX_LABEL_LEN);
 		  /* bind the reference descriptor and the referenced element 
 		     descriptor of the treated element */
 		  pPR1 = pRef;

@@ -35,12 +35,12 @@ void                InitNatures ()
    du schema de structure pointe par pSS.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadNatureSchema (PtrSSchema pSS, USTRING PSchName, int rule)
+void                LoadNatureSchema (PtrSSchema pSS, unsigned char* PSchName, int rule)
 
 #else  /* __STDC__ */
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
-USTRING              PSchName;
+unsigned char*      PSchName;
 int                 rule;
 #endif /* __STDC__ */
 
@@ -204,12 +204,12 @@ PtrSSchema         pSS;
    schema de structure complet.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadSchemas (USTRING SSchName, USTRING PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool Extension)
+void                LoadSchemas (CharUnit* SSchName, CharUnit* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool Extension)
 
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, Extension)
-USTRING              SSchName;
-USTRING              PSchName;
+CharUnit*           SSchName;
+CharUnit*           PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
 ThotBool            Extension;
@@ -217,9 +217,9 @@ ThotBool            Extension;
 #endif /* __STDC__ */
 
 {
-   Name                schName;
+   CUSName          schName;
 
-   ustrncpy (schName, SSchName, MAX_NAME_LENGTH);
+   StringNCopy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
    if (pLoadedSS == NULL)
      {
@@ -248,12 +248,12 @@ ThotBool            Extension;
    d'extension de nom SSchName.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrSSchema          LoadExtension (USTRING SSchName, USTRING PSchName, PtrDocument pDoc)
+PtrSSchema          LoadExtension (char* SSchName, char* PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
-USTRING              SSchName;
-USTRING              PSchName;
+char*               SSchName;
+char*               PSchName;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */

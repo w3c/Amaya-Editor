@@ -290,7 +290,7 @@ int                 typeNum2;
 		       break;
 		    case CsReference:
 		       ret = (pSRule1->SrReferredType == pSRule2->SrReferredType &&
-			      ustrcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
+			      strcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
 		       break;
 		    case CsIdentity:
 		       ret = (pSRule1->SrIdentRule == pSRule2->SrIdentRule);
@@ -3282,7 +3282,7 @@ int                *NItems;
    int                 typeNum, i, NChoiceItems, firstChar, lastChar, menuInd,
                        len;
    Name                menuTitle, typeName;
-   CHAR_T                choiceMenuBuf[MAX_TXT_LEN];
+   CHAR_T              choiceMenuBuf[MAX_TXT_LEN];
 
    if (ThotLocalActions[T_rsurround] == NULL)
      TteConnectAction (T_rsurround, SurroundMenuInput);
@@ -3399,9 +3399,8 @@ int                *NItems;
 	menuInd = 0;
 	for (i = 0; i < NElSurround; i++)
 	  {
-	     GetExternalTypeName (pSSSurround[i], typeNumSurround[i],
-				  typeName);
-	     len = ustrlen (typeName) + 2;
+	     GetExternalTypeName (pSSSurround[i], typeNumSurround[i], typeName);
+	     len = strlen (typeName) + 2;
 	     if (len + menuInd + 1 < MAX_TXT_LEN)
 	       {
 		  /* indique une nouvelle entree */
@@ -3429,8 +3428,8 @@ View                view;
    PtrElement          firstSel, lastSel;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
-   Name                title;
-   CHAR_T                menuBuffer[MAX_TXT_LEN];
+   WCName              title;
+   CHAR_T              menuBuffer[MAX_TXT_LEN];
    ThotBool            protected;
 
    /* terminer une insertion eventuelle */
@@ -3468,7 +3467,7 @@ View                view;
 	       {
 		  ustrncpy (title, TtaGetMessage (LIB, TMSG_SURROUND), MAX_NAME_LENGTH);
 		  /* cree le pop-up menu Surround */
-		  TtaNewPopup (NumMenuSurround, 0, title, NItems, menuBuffer, NULL, 'L');
+		  TtaNewPopup (NumMenuSurround, 0, title, NItems, menuBuffer, NULL, 'L'); 
 		  /* affiche le pop-up menu */
 #         ifndef _WINDOWS
 		  TtaShowDialogue (NumMenuSurround, FALSE);
@@ -3552,11 +3551,11 @@ PtrElement   pEl;
    for (i = 0; i < NChangeTypeItems; i++)
      {
        GetExternalTypeName (ChangeTypeSSchema[i], ChangeTypeTypeNum[i], typeName);
-       len = ustrlen (typeName) + 2;
+       len = strlen (typeName) + 2;
        if (len + menuInd + 1 < MAX_TXT_LEN)
 	 {
 	   menuBuffer[menuInd] = TEXT('B');
-	   ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
+	   iso2wc_strcpy (&(menuBuffer[menuInd + 1]), typeName);
 	   menuInd += len;
 	   (*NItems)++;
 	 }
@@ -3578,8 +3577,8 @@ View                view;
    PtrElement          firstSel, lastSel;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
-   CHAR_T                menuBuffer[MAX_TXT_LEN];
-   Name                title;
+   CHAR_T              menuBuffer[MAX_TXT_LEN];
+   WCName              title;
 
    if (ThotLocalActions[T_rchangetype] == NULL)
      TteConnectAction (T_rchangetype, (Proc) ChangeTypeMenuInput);
@@ -3605,8 +3604,7 @@ View                view;
 	      if (NItems > 0)
 		 /* le menu n'est pas vide */
 		{
-		   ustrncpy (title, TtaGetMessage (LIB, TMSG_CHANGE_TYPE),
-			    MAX_NAME_LENGTH);
+		   ustrncpy (title, TtaGetMessage (LIB, TMSG_CHANGE_TYPE), MAX_NAME_LENGTH);
 		   /* cree le pop-up menu Change Type */
 		   TtaNewPopup (NumMenuChangeType, 0, title, NItems, menuBuffer, NULL, 'L');
 		   /* affiche le pop-up menu */

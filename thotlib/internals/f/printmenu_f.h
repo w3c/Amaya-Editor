@@ -20,7 +20,7 @@ extern void TtaSetPrintParameter ( PrintParameter parameter,
 extern int TtaGetPrintParameter ( PrintParameter parameter );
 extern void TtaSetPrintCommand ( STRING command );
 extern void TtaGetPrintCommand ( STRING command );
-extern void TtaSetPrintSchema ( STRING name );
+extern void TtaSetPrintSchema ( char* name );
 extern void TtaSetPsFile ( STRING path );
 extern void TtaGetPsFile ( STRING path );
 extern void CallbackPrintmenu ( int ref,
@@ -45,7 +45,7 @@ extern void TtaSetPrintParameter (/* PrintParameter parameter,
 extern int TtaGetPrintParameter (/* PrintParameter parameter */);
 extern void TtaSetPrintCommand (/* STRING command */);
 extern void TtaGetPrintCommand (/* STRING command */);
-extern void TtaSetPrintSchema (/* STRING name */);
+extern void TtaSetPrintSchema (/* char* name */);
 extern void TtaSetPsFile (/* STRING path */);
 extern void TtaGetPsFile (/* STRING path */);
 extern void CallbackPrintmenu (/* int ref,
