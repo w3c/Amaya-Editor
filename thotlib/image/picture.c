@@ -2101,7 +2101,6 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 		            filename, strlen (filename));
      }
 #endif /* _MOTIF */
-
 #endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 }
 
@@ -2666,7 +2665,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 yBox = 0;
   int                 wBox =0;
   int                 hBox = 0;
-  int                 w, h;
+  int                 w, h, zoom;
   int                 width, height;
   int                 left, right, top, bottom;
   ThotBool            redo = FALSE;
@@ -2838,6 +2837,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      if(box->BxH)
 		yBox = h;
 	    }
+	  zoom = ViewFrameTable[frame - 1].FrMagnification;
+	  /* intrinsic width and height */
 	  imageDesc->PicPixmap = (ThotPixmap) 
 	    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			 (void *)fileName,
@@ -2853,8 +2854,19 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif /* #ifdef _WX */		   
 			 (void *)&width,
 			 (void *)&height,
-			 (void *)ViewFrameTable[frame - 1].FrMagnification );
-	  /* intrinsic width and height */
+			 (void *)zoom);
+#ifdef _GL
+	  if (w == 0 && h == 0 && zoom)
+	    {
+	      /* GL version doesn't take into account the zoom
+		 when returning image dimensions */
+	      w = PixelValue (width, UnPixel, NULL, zoom);
+	      imageDesc->PicWArea = w;
+	      h = PixelValue (height, UnPixel, NULL, zoom);
+	      imageDesc->PicHArea = h;
+	    }
+#endif /*_GL*/
+
 	  redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
 	}
     }

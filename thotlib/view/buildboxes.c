@@ -2147,7 +2147,11 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		pCurrentBox->BxH = 0;
 	    }
 	  
+#ifdef _GL
+	  if (!glIsTexture (picture->TextureBind))	    
+#else /*_GL*/
 	  if (picture->PicPixmap == None)
+#endif /*_GL*/
 	    LoadPicture (frame, pCurrentBox, picture);
 	  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
 			   &width, &height);
