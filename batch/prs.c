@@ -6197,11 +6197,11 @@ char              **argv;
 	    /* provide the real source file */
 	    TtaFileUnlink (fname);
 	    pwd = TtaGetEnvString ("PWD");
-	    nb = strlen (cmd);
+	    i = strlen (cmd);
 	    if (pwd != NULL)
-	      sprintf (&cmd[nb], "-I%s -C %s > %s", pwd, srceFileName, fname);
+	      sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 	    else
-	      sprintf (&cmd[nb], "-C %s > %s", srceFileName, fname);
+	      sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
 	    i = system (cmd);
 	    if (i == -1)
 	      {
