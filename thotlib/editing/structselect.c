@@ -3647,25 +3647,25 @@ void SelectAround (int val)
 		}
 	      }
 	    else
-	      /* we are not in column selection mode */
-	      /* selection is not always "normalized". Select the */
-	      /* parent only if the selection is "normalized", */
-	      /* normalize it otherwise. */
+	      /* we are not in column selection mode: selection is not always
+		 "normalized". Select the parent only if the selection is
+		 "normalized", normalize it otherwise. */
 	      {
 	      if (FirstSelectedElement && LastSelectedElement)
 		{
-		  if (FirstSelectedElement->ElParent == LastSelectedElement->ElParent)
-		    /* selection is normalized */
+		  if (FirstSelectedElement->ElParent ==
+		                                 LastSelectedElement->ElParent)
+		    /* selection is normalized. Select the parent */
 		    {
-		      /* do not go up to the Document element */
 		      if (FirstSelectedElement->ElParent)
+			/* do not go up to the Document element */
 			if (FirstSelectedElement->ElParent->ElParent)
 		          pEl = FirstSelectedElement->ElParent;
 		    }
 		  else
-		    /* The first and last selected elements are */
-		    /* not siblings. Change the selection so that */
-		    /* first and last selected elements be siblings*/
+		    /* The first and last selected elements are not siblings.
+		       Change the selection so that the first and last selected
+		       elements be siblings */
 		    {
 		      pFirst = FirstSelectedElement;
 		      pLast = LastSelectedElement;
@@ -3675,14 +3675,12 @@ void SelectAround (int val)
 		      while (pParent)
 			{
 			  if (ElemIsAnAncestor (pParent, pLast))
-			    /* this ancestor (pParent) of first */
-			    /* selected element is also an ancestor*/
-			    /* of the last selected element */
+			    /* this ancestor (pParent) of the first selected
+			       element is also an ancestor of the last selected
+			       element */
 			    {
-			      /* replace the last selected element*/
-			      /* by its ancestor whose parent is */
-			      /* pParent */
-			      pFirst = pParent;
+			      /* replace the last selected element by its
+				 ancestor whose parent is pParent */
 			      while (pLast->ElParent != pParent)
 				{
 				  pLast = pLast->ElParent;
@@ -3691,23 +3689,26 @@ void SelectAround (int val)
 				    lastParent = pLast;
 				}
 			      /* finished */
-			      pLast = pParent;
+			      if (firstParent && firstParent != pFirst)
+				pFirst = pParent;
+			      if (lastParent && lastParent != pLast)
+				pLast = pParent;
 			      pParent = NULL;
 			    }
 			  else
-			    /* this ancestor (pParent) of the first*/
-			    /* selected element is not an ancestor */
-			    /* of the last selected element */
+			    /* this ancestor (pParent) of the first selected
+			       element is not an ancestor of the last selected
+			       element */
 			    {
-			      /* replace priovisionally the first */
-			      /* selected element by pParent and */
-			      /* whether its parent is an ancestor */
-			      /* of the last selected element */
+			      /* replace provisionally the first selected
+				 element by pParent and check whether its
+				 parent is an ancestor of the last selected
+				 element */
 			      pFirst = pParent;
 			      if (!TypeHasException (ExcHidden, pFirst->ElTypeNumber,
 						     pFirst->ElStructSchema))
 				    firstParent = pFirst;
-			      pParent = pParent->ElParent;
+			      pParent = pFirst->ElParent;
 			    }
 			}
 		    }
