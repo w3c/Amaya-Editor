@@ -940,7 +940,7 @@ DBG(fprintf(stderr, "SaveDocument : %d to %s\n", document, tempname);)
 
 DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
 
-       if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE) == 0)
+       if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE))
 	 {
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
 	   ok = TRUE;
@@ -1759,7 +1759,7 @@ void                DoSaveObjectAs ()
    if (!dst_is_local)
      {
 	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
-	                    unknown_type, AMAYA_SYNC, NULL, NULL);
+	                    unknown_type, AMAYA_SYNC | AMAYA_NOCACHE, NULL, NULL);
 
 	if (res)
 	  {
@@ -1790,3 +1790,12 @@ void                DoSaveObjectAs ()
    SavingObject = 0;
    SavingDocument = 0;
 }
+
+
+
+
+
+
+
+
+
