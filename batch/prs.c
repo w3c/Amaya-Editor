@@ -3713,6 +3713,9 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	  /* in a ElemCondition */
 	  Conditions->CoCondition = PcRoot;
 	break;
+      case KWD_LastSibling :
+	SetLevel (RlLastSibling, wi);
+	break;
       case KWD_Refered /* Refered */ :
       case KWD_Referred /* Referred */ :
 	if (gCode == RULE_ElemCondition)

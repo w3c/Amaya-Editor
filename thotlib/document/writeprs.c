@@ -697,6 +697,9 @@ static void         WriteLevel (Level level)
 	    case RlCreator:
 	       TtaWriteByte (outfile, C_CREATOR);
 	       break;
+	    case RlLastSibling:
+	       TtaWriteByte (outfile, C_LAST_SIBLING);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid level %X\n", level);
 	       break;

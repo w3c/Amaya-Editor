@@ -1151,11 +1151,6 @@ RULES
 	Create 'th>\12' after;
 	END;
 
- Table_foot:
-	BEGIN
-	Remove;
-	END;
-
  Division: BEGIN
 	Create '\12';
 	create SOT;

@@ -1469,6 +1469,29 @@ static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType,
 	    while (pAb != NULL && !found);
 	  break;
 	  
+	case RlLastSibling:
+	  pAb = pAb->AbNext;
+	  if (pAb != NULL)
+	    {
+	      do
+		if (pAb->AbNext)
+		  pAb = pAb->AbNext;
+		else
+		  found = TRUE;
+	      while (pAb && !found);
+	      found = FALSE;
+	      if (pAb)
+		do
+		  if (pAb == pAbb)
+		    pAb = NULL;
+		  else if (pAb->AbDead)
+		    pAb = pAb->AbPrevious;
+		  else
+		    found = TRUE;
+		while (pAb != NULL && !found);
+	    }
+	  break;
+	  
 	case RlSelf:
 	case RlContainsRef:
 	  break;
@@ -2139,6 +2162,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	 /* on n'a pas trouve' le pave' de reference */
 	 if (pAbb1->AbLeafType != LtCompound &&
 	     pPosRule->PoRelation != RlNext &&
+	     pPosRule->PoRelation != RlLastSibling &&
 	     pPosRule->PoRelation != RlPrevious &&
 	     pPosRule->PoRelation != RlSameLevel &&
 	     pPosRule->PoRelation != RlCreator &&
@@ -2197,13 +2221,15 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 		    pPosRule->PoRelation == RlPrevious &&
 		    pPosRule->PoPosDef == Top && pPosRule->PoPosRef == Bottom) ||
 		   (pPRule->PrType == PtVertPos &&
-		    pPosRule->PoRelation == RlNext &&
+		    (pPosRule->PoRelation == RlNext ||
+		     pPosRule->PoRelation == RlLastSibling) &&
 		    pPosRule->PoPosDef == Bottom && pPosRule->PoPosRef == Top) ||
 		   (pPRule->PrType == PtHorizPos &&
 		    pPosRule->PoRelation == RlPrevious &&
 		    pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right) ||
 		   (pPRule->PrType == PtHorizPos &&
-		    pPosRule->PoRelation == RlNext &&
+		    (pPosRule->PoRelation == RlNext ||
+		     pPosRule->PoRelation == RlLastSibling) &&
 		    pPosRule->PoPosDef == Right && pPosRule->PoPosRef == Left)))
 	   /* the referred next or previous abstract box is not found
 	      change the rule to refer the enclosing abstract box */

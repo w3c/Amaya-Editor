@@ -230,6 +230,7 @@ Reference =	  'Enclosing' [ NBoxType ] /
 		  'Referred' [ NBoxType ] /
 		  'Creator' /
 		  'Root' /
+	          'LastSibling' /
 		  '*' /
 		  BoxType .
 NBoxType =	  [ 'NOT' ] BoxType .

@@ -1235,14 +1235,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		elType = TtaGetElementType (group);
 	    }
 	  if (group)
-	    {
-	      elType = TtaGetElementType (group);
-	      if (elType.ElTypeNum == HTML_EL_Table_foot)
-		/* don't look for rows in the Table_foot! */
-		row = NULL;
-	      else
-		row = TtaGetFirstChild (group);
-	    }
+	    row = TtaGetFirstChild (group);
 	  else
 	    row = NULL;
 	  }
@@ -1480,24 +1473,6 @@ void CheckTable (Element table, Document doc)
 		}
 	    }
 
-	  /* create a Table_foot element at the end */
-	  if (!inMath)
-	    {
-	      elType.ElTypeNum = HTML_EL_Table_foot;
-	      foot = TtaNewTree (doc, elType, "");
-	      if (foot)
-		{
-		  if (tfoot)
-		    {
-		      /* move element tfoot at the end */
-		      TtaRemoveTree (tfoot, doc);
-		      TtaInsertSibling (tfoot, Tablebody, FALSE, doc);
-		      TtaInsertSibling (foot, tfoot, FALSE, doc);
-		    }
-		  else
-		    TtaInsertSibling (foot, Tablebody, FALSE, doc);
-		}
-	    }
 	  /* associate each cell with a column */
 	  CheckAllRows (table, doc, FALSE, FALSE);
 	}

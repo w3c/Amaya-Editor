@@ -236,6 +236,7 @@ number
 			  'Referred' [ NBoxType ] /
 			  'Creator' /
 			  'Root' /
+		          'LastSibling' /
 			  '*' /
 			  BoxType .
   108	NBoxType =	  [ 'NOT' ] BoxType .
@@ -587,75 +588,76 @@ code  key-word      numbers of rules using the key-word
 1276  Refered            107
 1277  Referred           107 159
 1278  Root               107 159
-1279  NOT                108 158
-1280  AnyElem            109
-1281  AnyBox             109
-1282  ElemWithAttr       109
-1283  VMiddle            103 132
-1284  VRef               103
-1285  Top                101
-1286  HMiddle            101
-1287  HRef               101
-1288  Bottom             101
-1289  Min                 58  58 120 134
-1290  CM                 116
-1291  MM                 116
-1292  PT                 116  64 134 134
-1293  PC                 116
-1294  PX                 116
-1295  EM                 116
-1296  EX                 116
-1297  GrandFather         99
-1298  Max                120 134
-1299  Yes                 61
-1300  No                  61
-1301  LeftWithDots       132
-1302  Justify            132
-1303  Roman               69
-1304  Italics             69
-1305  Oblique             69
-1306  Bold                69  70
-1307  BoldItalics         69
-1308  BoldOblique         69
-1309  NoUnderline         67
-1310  Underlined          67
-1311  Overlined           67
-1312  CrossedOut          67
-1313  GREATER            148
-1314  LESS               148
-1315  EQUAL              148
-1316  Repeated            74
-1317  AND                 50
-1318  Target             158
-1319  Last               159
-1320  FirstRef           159
-1321  LastRef            159
-1322  ExternalRef        159
-1323  InternalRef        159
-1324  CopyRef            159
-1325  AnyAttributes      159
-1326  FirstAttr          159
-1327  LastAttr           159
-1328  UserPage           159
-1329  StartPage          159
-1330  ComputedPage       159
-1331  Empty              159
-1332  Immediately        159
-1333  Within             159
-1334  Inherited          159
-1335  MaxRangeVal         40
-1336  MinRangeVal         40
-1337  Even               161
-1338  Odd                161
-1339  One                161
-1340  Create             157
-1341  CreateBefore       157
-1342  CreateAfter        157
-1343  CreateLast         157
-1344  CreateFirst        157
-1345  CreateWith         157
-1346  CreateEnclosing    157
-1347  To                 170
+1279  LastSibling        107
+1280  NOT                108 158
+1281  AnyElem            109
+1282  AnyBox             109
+1283  ElemWithAttr       109
+1284  VMiddle            103 132
+1285  VRef               103
+1286  Top                101
+1287  HMiddle            101
+1288  HRef               101
+1289  Bottom             101
+1290  Min                 58  58 120 134
+1291  CM                 116
+1292  MM                 116
+1293  PT                 116  64 134 134
+1294  PC                 116
+1295  PX                 116
+1296  EM                 116
+1297  EX                 116
+1298  GrandFather         99
+1299  Max                120 134
+1300  Yes                 61
+1301  No                  61
+1302  LeftWithDots       132
+1303  Justify            132
+1304  Roman               69
+1305  Italics             69
+1306  Oblique             69
+1307  Bold                69  70
+1308  BoldItalics         69
+1309  BoldOblique         69
+1310  NoUnderline         67
+1311  Underlined          67
+1312  Overlined           67
+1313  CrossedOut          67
+1314  GREATER            148
+1315  LESS               148
+1316  EQUAL              148
+1317  Repeated            74
+1318  AND                 50
+1319  Target             158
+1320  Last               159
+1321  FirstRef           159
+1322  LastRef            159
+1323  ExternalRef        159
+1324  InternalRef        159
+1325  CopyRef            159
+1326  AnyAttributes      159
+1327  FirstAttr          159
+1328  LastAttr           159
+1329  UserPage           159
+1330  StartPage          159
+1331  ComputedPage       159
+1332  Empty              159
+1333  Immediately        159
+1334  Within             159
+1335  Inherited          159
+1336  MaxRangeVal         40
+1337  MinRangeVal         40
+1338  Even               161
+1339  Odd                161
+1340  One                161
+1341  Create             157
+1342  CreateBefore       157
+1343  CreateAfter        157
+1344  CreateLast         157
+1345  CreateFirst        157
+1346  CreateWith         157
+1347  CreateEnclosing    157
+1348  To                 170
 
 
 

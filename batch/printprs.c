@@ -107,6 +107,9 @@ static void         wrlevel (Level n)
 	    case RlCreator:
 	       printf ("Creator");
 	       break;
+	    case RlLastSibling:
+	       printf ("LastSibling");
+	       break;
 	 }
 }
 

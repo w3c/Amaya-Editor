@@ -709,6 +709,9 @@ static Level        ReadLevel (BinFile file)
 	    case C_CREATOR:
 	       level = RlCreator;
 	       break;
+	    case C_LAST_SIBLING:
+	       level = RlLastSibling;
+	       break;
 	    default:
 	       error = True;
 	       level = RlSameLevel;

@@ -79,6 +79,7 @@
 #define C_ROOT                'r'
 #define C_REFERRED            'D'
 #define C_CREATOR             'C'
+#define C_LAST_SIBLING        'L'
 
 /* Kind of object used as a reference in a relative position */
 #define C_KIND_ELEMENT_TYPE   'E'

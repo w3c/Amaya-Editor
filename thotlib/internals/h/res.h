@@ -39,11 +39,11 @@ typedef struct StrTreeSch
     int TypeNum;    /* numero de la regle */
     int TypeCanon;
     SSchema Schema;
-    SRule *pRegle;          /* pointeur sur la regle */
-    pTreeSch Pere;         /* pointeur sur le pere */
-    pTreeSch Fils;         /* pointeur sur le premier fils */
-    pTreeSch RlNext;      /* pointeur sur le frere */
-    ThotBool DebutRecursion;  /* indique si le type est recursif */
+    SRule *pRegle;           /* pointeur sur la regle */
+    pTreeSch Pere;           /* pointeur sur le pere */
+    pTreeSch Fils;           /* pointeur sur le premier fils */
+    pTreeSch NextSibling;    /* pointeur sur le frere */
+    ThotBool DebutRecursion; /* indique si le type est recursif */
     ThotBool Recursif;       /* indique si le type est recursif terminal*/
     } TreeSch;
 
@@ -65,7 +65,7 @@ typedef struct StrFlatTree *pFlatTree;
     pFlatTree PreCouplage;
     ThotBool Utilise;
     ThotBool Recursif;
-    pFlatTree RlNext;
+    pFlatTree NextSibling;
     pFlatTree RlPrevious;
     } FlatTree;
 
@@ -77,13 +77,13 @@ typedef struct StrTreeTyp
     int TypeCanon;
     SSchema Schema;         /* schema du type */
     SRule *pRegle;          /* pointeur sur la regle */
-    ThotBool ffective;      /* type utilise par l'instance*/
+    ThotBool effective;     /* type utilise par l'instance */
     FlatTree *DebutFT;      /* debut dans l'arbre a plat */
     FlatTree *FinFT;        /* fin dans l'arbre a plat */
     pTreeTyp Couplage;      /* pointeur sur l'autre element constituant le couplage */
     pTreeTyp Pere;          /* pointeur sur le pere */
     pTreeTyp Fils;          /* pointeur sur le premier fils */
-    pTreeTyp RlNext;       /* pointeur sur le frere */
+    pTreeTyp NextSibling;   /* pointeur sur le frere */
     ThotBool DebutRecursion;  /* indique si le type est recursif */
     ThotBool Recursif;       /* indique si le type est recursif */
     } TreeTyp;

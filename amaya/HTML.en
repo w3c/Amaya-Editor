@@ -20,7 +20,6 @@ PICTURE_UNIT: img
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
-C_Foot: \0
 HTML: html
 BODY: body
 Invalid_element: invalid element
@@ -120,7 +119,6 @@ Table_: table
 Cols: cols
 Table_head: table head
 Table_body: table body
-Table_foot: table foot
 CAPTION: caption
 Column_head: column head
 thead: thead

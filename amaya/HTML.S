@@ -39,7 +39,6 @@ ATTR
 CONST
 
    C_Empty = ' ';
-   C_Foot = ' ';
    C_Head = ' ';
    C_BR   = '\12';
 
@@ -683,7 +682,6 @@ STRUCT
       ? thead;							{ THEAD }
 	Table_body = LIST OF (tbody);
       ? tfoot;							{ TFOOT }
-	Table_foot = CONSTANT C_Foot;
 	END;
 
   CAPTION							{ CAPTION }
@@ -956,8 +954,6 @@ EXCEPT
 	Column_head:	IsColHead, NoCut, Hidden, NoBreakByReturn;
 	Table_head:	NoCut, Hidden, NoSelect, NoBreakByReturn;
 	C_Head:		Hidden, NoSelect;
-	Table_foot:	NoCut, Hidden, NoSelect, PageBreakRepBefore;
-	C_Foot:		Hidden, NoSelect;
 	Cols:		Hidden, NoSelect, NoCreate;
 	Table_body:	PageBreakAllowed, Hidden, NoBreakByReturn;
         thead:		NoBreakByReturn; 

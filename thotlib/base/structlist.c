@@ -2250,6 +2250,9 @@ static void wrlevel (Level n, FILE *fileDescriptor)
 	    case RlCreator:
 	       fprintf (fileDescriptor, "Creator");
 	       break;
+	    case RlLastSibling:
+	       fprintf (fileDescriptor, "LastSibling");
+	       break;
 	 }
 }
 

@@ -722,7 +722,8 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 	  if (pRe1->PoRelation == levelPos ||
 	      pRe1->PoRelation == RlReferred ||
 	      (pRe1->PoRelation == RlSameLevel &&
-	       (levelPos == RlPrevious || levelPos == RlNext)) ||
+	       (levelPos == RlPrevious || levelPos == RlNext ||
+		levelPos == RlLastSibling)) ||
 	      nextToPage ||
 	      (pR->PrType == PtVertPos && pAb->AbHeight.DimIsPosition) ||
 	      (pR->PrType == PtHorizPos && pAb->AbWidth.DimIsPosition))
@@ -907,7 +908,8 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 		   /* ce n'est pas une dimension absolue */
 		   (pRelD1->DrRelation == levelPos ||
 		    (pRelD1->DrRelation == RlSameLevel &&
-		     (levelPos == RlPrevious || levelPos == RlNext))))
+		     (levelPos == RlPrevious || levelPos == RlNext ||
+		      levelPos == RlLastSibling))))
 	    {
 	      /* regle de dimension non elastique */
 	      if (pR->PrType == PtHeight)

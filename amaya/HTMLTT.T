@@ -535,9 +535,6 @@ RULES
 	If Empty
 	   Remove;
  
- Table_foot:
-	Remove;
-
  Division: 
 	If Empty
 	   Remove;

@@ -4475,23 +4475,6 @@ RULES
 		END;
 	END;
 
- Table_foot:
-	BEGIN
-	Width: Previous . Width;
-	VertPos: Bottom = Previous . Bottom;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view BEGIN
-		Visibility: 0;
-		END;
-	END;
-
- C_Foot:
-	BEGIN
-	Height: 0;
-	FillPattern: nopattern;
-	END;
-
  Division:
 	BEGIN
 	CreateBefore(ElementName);
@@ -6643,7 +6626,7 @@ ATTRIBUTES
  Position = Position_bottom :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	VertPos: Top = Table_foot . Bottom + cellspacing px;
+	VertPos: Top = LastSibling . Bottom + cellspacing px;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		END;
@@ -7692,10 +7675,6 @@ ATTRIBUTES
   dir (Heading_cell*) = rtl_:
 	IN Alternate_view
 	   HorizPos: Right = Previous Table_cell . Right - STRUCT_INDENT;
-  dir (Table_foot*) = ltr_:
-	HorizPos: Left = Enclosing . Left;
-  dir (Table_foot*) = rtl_:
-	HorizPos: Right = Enclosing . Right;
 
   onclick:
 	BEGIN

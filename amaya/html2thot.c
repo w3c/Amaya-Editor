@@ -5454,7 +5454,6 @@ static void EncloseCharLevelElem (Element el, Element charEl,
       return;
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == HTML_EL_Table_head ||
-       elType.ElTypeNum == HTML_EL_C_Foot ||
        elType.ElTypeNum == HTML_EL_C_Head ||
        elType.ElTypeNum == HTML_EL_Horizontal_Rule)
      /* cannot insert any element into a Table_head or Horizontal_Rule */

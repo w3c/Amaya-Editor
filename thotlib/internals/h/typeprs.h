@@ -55,7 +55,7 @@ typedef struct _PresRule *PtrPRule;
 typedef enum
 {
   RlEnclosing, RlSameLevel, RlEnclosed, RlPrevious, RlNext, RlSelf, 
-  RlContainsRef, RlRoot, RlReferred, RlCreator
+  RlContainsRef, RlRoot, RlReferred, RlCreator, RlLastSibling
 } Level;
 
 /* Kind of object used as a reference in a relative position */
