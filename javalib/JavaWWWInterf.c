@@ -458,7 +458,9 @@ void                StopRequest (doc)
 int                 doc;
 #endif
 {
+    JavaThotlibRelease();
     do_execute_java_class_method("amaya/HTTPRequest", "Stop", "(I)V",
                                  (jint) doc);
+    JavaThotlibLock();
 }
 
