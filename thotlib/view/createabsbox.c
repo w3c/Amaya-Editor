@@ -1270,6 +1270,11 @@ PtrSSchema          pSS;
 		 currentCond = pElem->ElFirstChild == NULL;
 	       break;
 	       
+	     case PcRoot:
+	       /* la condition est satisfaite si l'element n'a pas de parent */
+	       currentCond = (pElem->ElParent == NULL);
+	       break;
+
 	     case PcEven:
 	       currentCond = !(valcompt & 1);
 	       break;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -681,7 +681,8 @@ ThotBool            premierfils;
 		    case LtSymbol:
 		       fprintf (fileDescriptor, " \'%c\'", pNode->ElGraph);
 		       if (pNode->ElGraph == '?')
-			 fprintf (fileDescriptor, " wc=%d",pNode->ElWideChar);
+			 fprintf (fileDescriptor, " wc=%d",
+				  (int)pNode->ElWideChar);
 		       fprintf (fileDescriptor, "\n");
                        break;
 		    case LtGraphics:
@@ -2809,7 +2810,7 @@ FILE               *fileDescriptor;
 	       fprintf (fileDescriptor, "InternalRef ");
 	       break;
 	    case PcCopyRef:
-	       fprintf (fileDescriptor, "PcCopyRef ");
+	       fprintf (fileDescriptor, "CopyRef ");
 	       break;
 	    case PcAnyAttributes:
 	       fprintf (fileDescriptor, "AnyAttributes ");
@@ -2830,7 +2831,10 @@ FILE               *fileDescriptor;
 	       fprintf (fileDescriptor, "ComputedPage ");
 	       break;
 	    case PcEmpty:
-	       fprintf (fileDescriptor, "PcEmpty ");
+	       fprintf (fileDescriptor, "Empty ");
+	       break;
+	    case PcRoot:
+	       fprintf (fileDescriptor, "Root ");
 	       break;
 	    case PcEven:
 	       fprintf (fileDescriptor, "Even");

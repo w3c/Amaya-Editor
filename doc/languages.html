@@ -3797,8 +3797,9 @@ block concerning the same view.</p>
 certain presentation rules to apply only in certain cases.  These conditions
 can be based on the structural position of the element.  They can be based on
 whether the element has references, and what type of references, whether the
-element has attributes, whether the element is empty or not.  They can also be
-based on the value of a counter.</p>
+element has attributes, whether the element is empty or not, whether the
+element is the root of its document or not. They can also be based on the
+value of a counter.</p>
 
 <p>It is possible to specify several conditions which must all be true for the
 rules to apply.</p>
@@ -3828,7 +3829,7 @@ condition type.</p>
                     'ExternalRef' / 'InternalRef' / 'CopyRef' /
                     'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
                     'UserPage' / 'StartPage' / 'ComputedPage' /
-                    'Empty' /
+                    'Empty' / 'Root' /
                     '(' [ MinMax ] CounterName CounterCond ')' /
                      CondPage '(' CounterID ')' .
      NumParent     = [ GreaterLess ] NParent .
@@ -3856,6 +3857,9 @@ first (<tt>First</tt>) or last (<tt>Last</tt>) among its siblings or if it is
 not the first (<tt>NOT First</tt>) or not the last (<tt>NOT Last</tt>). These
 conditions can be associated only with <a href="#sectc4232">creation
 rules</a>.</p>
+
+<p>It is possible to test if the element is the root of its document (keyword
+<code>Root</code>).</p>
 
 <p>It is also possible to test if the element is contained in an element of a
 given type (<tt>Within</tt>) or if it is not (<tt>NOT Within</tt>). The type
@@ -8124,7 +8128,7 @@ ConditionElem   = 'First' / 'Last' /
                   'ExternalRef' / 'InternalRef' / 'CopyRef' /
                   'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
                   'UserPage' / 'StartPage' / 'ComputedPage' /
-                  'Empty' /
+                  'Empty' / 'Root' /
                   '(' [ MinMax ] CounterName CounterCond ')' /
                   CondPage '(' CounterID ')' .
 NumParent       = [ GreaterLess ] NParent .

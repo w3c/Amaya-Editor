@@ -788,7 +788,7 @@ char*               label;
    Parameters:
    document: the document for which the element is created.
    elemType: type of the element to be created.
-   label: label of the element to be created. PcEmpty string if the value
+   label: label of the element to be created. Empty string if the value
    of the label is undefined.
 
    Return value:

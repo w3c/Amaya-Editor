@@ -563,6 +563,9 @@ PresCondition       cond;
 	    case PcEmpty:
 	       TtaWriteByte (outfile, C_COND_EMPTY);
 	       break;
+	    case PcRoot:
+	       TtaWriteByte (outfile, C_COND_ROOT);
+	       break;
 	    case PcEven:
 	       TtaWriteByte (outfile, C_COND_EVEN);
 	       break;

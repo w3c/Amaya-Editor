@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1143,11 +1143,11 @@ Document           *referenceDocument;
    Parameters:
    target: the target element.
    targetDocument: the document to which the target element belongs.
-   referringDocumentName: name of the previous document found. PcEmpty string
+   referringDocumentName: name of the previous document found. Empty string
    if the first referring document is searched.
 
    Return parameter:
-   referringDocumentName: name of the document found. PcEmpty string if no
+   referringDocumentName: name of the document found. Empty string if no
    referring document has been found.
 
   ----------------------------------------------------------------------*/

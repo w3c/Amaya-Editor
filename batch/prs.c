@@ -286,7 +286,7 @@ indLine             wl;
 
 /*----------------------------------------------------------------------
    CheckConditions verifie qu'il n'y a aucune condition courante   
-   ou qu'il n'y a que des conditions Within.                       
+   ou qu'il n'y a que des conditions Within ou Root.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckConditions (indLine wi)
@@ -304,6 +304,7 @@ indLine             wi;
    while (pCond != NULL)
       if (pCond->CoCondition != PcWithin &&
 	  pCond->CoCondition != PcDefaultCond &&
+	  pCond->CoCondition != PcRoot &&
 	  pCond->CoCondition != PcElemType)
 	{
 	   CompilerMessage (wi, PRS, FATAL, ONLY_CONDITION_WITHIN, inputLine,
@@ -3455,7 +3456,12 @@ indLine             wi;
 	break;
       case KWD_Root:
 	/* Root */
-	SetLevel (RlRoot, wi);
+	if (gCode == RULE_Reference)
+	  /* in a Reference */
+	  SetLevel (RlRoot, wi);
+	else
+	  /* in a ElemCondition */
+	  Conditions->CoCondition = PcRoot;
 	break;
       case KWD_Refered /* Refered */ :
       case KWD_Referred /* Referred */ :

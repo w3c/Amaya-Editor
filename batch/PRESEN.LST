@@ -310,7 +310,7 @@ number
 			  'ExternalRef' / 'InternalRef' / 'CopyRef' /
 			  'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
 			  'UserPage' / 'StartPage' / 'ComputedPage' /
-			  'Empty' /
+			  'Empty' / 'Root' /
 			  '(' [ MaxMinValue ] CounterName CounterCond ')' /
 			  CondPage '(' CounterName ')' /
 			  [ 'Immediately' ] 'Within' [ ParentLevel ] TypeName
@@ -516,7 +516,7 @@ code  key-word      numbers of rules using the key-word
 1239  Next               97
 1240  Refered            97
 1241  Referred           97 148
-1242  Root               97
+1242  Root               97 148
 1243  NOT                98 147
 1244  AnyElem            99
 1245  AnyBox             99

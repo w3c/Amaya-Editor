@@ -304,7 +304,7 @@ ElemCondition =	  'First' / 'Last' /
 		  'ExternalRef' / 'InternalRef' / 'CopyRef' /
 		  'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
 		  'UserPage' / 'StartPage' / 'ComputedPage' /
-		  'Empty' /
+		  'Empty' / 'Root' /
 		  '(' [ MaxMinValue ] CounterName CounterCond ')' /
 		  CondPage '(' CounterName ')' /
 		  [ 'Immediately' ] 'Within' [ ParentLevel ] TypeName

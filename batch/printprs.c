@@ -877,6 +877,9 @@ PtrCondition        pCond;
 	    case PcEmpty:
 	       printf ("PcEmpty ");
 	       break;
+	    case PcRoot:
+	       printf ("PcRoot ");
+	       break;
 	    case PcEven:
 	       printf ("Even");
 	       break;

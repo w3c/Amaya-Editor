@@ -550,6 +550,9 @@ BinFile             file;
 	    case C_COND_EMPTY:
 	       condtype = PcEmpty;
 	       break;
+	    case C_COND_ROOT:
+	       condtype = PcRoot;
+	       break;
 	    case C_COND_EVEN:
 	       condtype = PcEven;
 	       break;

@@ -315,8 +315,9 @@ typedef enum
 {
   PcFirst, PcLast, PcReferred, PcFirstRef, PcLastRef, PcExternalRef,
   PcInternalRef, PcCopyRef, PcAnyAttributes, PcFirstAttr, PcLastAttr,
-  PcUserPage, PcStartPage, PcComputedPage, PcEmpty, PcEven, PcOdd, PcOne,
-  PcInterval, PcWithin, PcElemType, PcAttribute, PcNoCondition, PcDefaultCond
+  PcUserPage, PcStartPage, PcComputedPage, PcEmpty, PcRoot, PcEven,
+  PcOdd, PcOne, PcInterval, PcWithin, PcElemType, PcAttribute,
+  PcNoCondition, PcDefaultCond
 } PresCondition;
 
 /* To interpret the field CoRelation */

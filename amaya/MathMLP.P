@@ -2901,8 +2901,18 @@ RULES
 	PageBreak: No;
 	LineBreak: No;
 	LineWeight: 1 pt;
-	VertPos: Top = Previous . Bottom;
-	HorizPos: Left = Enclosing . Left;
+	if Root
+		BEGIN
+		Width: Enclosing . Width - 0.5 cm;
+		HorizPos: Left = Enclosing . Left + 0.5 cm;
+		VertPos: Top = Enclosing . Top + 0.5 cm;
+		END;
+	if not Root
+		BEGIN
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
+		END;
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: Enclosing =;
