@@ -1252,7 +1252,8 @@ void SetNamespacesAndDTD (Document doc)
   ----------------------------------------------------------------------*/
 ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
 			      char *documentname, int new_doctype,
-			      ThotBool *error, ThotBool xml_doctype)
+			      ThotBool *error, ThotBool xml_doctype,
+			      ThotBool useMathML, ThotBool useSVG)
 {
   SSchema       schema;
   CHARSET       charset;
@@ -1350,11 +1351,11 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   else
     ok = TRUE;
 
-  /* Update the xml indicator for the document */
+  /* Update the original document */
   if (ok)
     {
       /* Remove the previous doctype if it exists */
-      docEl = TtaGetMainRoot (ext_doc);
+      docEl = TtaGetMainRoot (doc);
       elType = TtaGetElementType (docEl);
       /* Search the doctype declaration according to the main schema */
       if (new_doctype == L_Basic || new_doctype == L_Strict ||
@@ -1366,18 +1367,18 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
 	elType.ElTypeNum = SVG_EL_DOCTYPE;
       eltype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* Add the new doctype */
-      CreateDoctype (ext_doc, eltype, new_doctype, FALSE, FALSE);
+      CreateDoctype (doc, eltype, new_doctype, useMathML, useSVG);
       /* link the source view to this new document */
       DocumentMeta[doc]->xmlformat = xml_doctype;
-      DocumentSource[ext_doc] = DocumentSource[doc];
-      DocumentSource[doc] = 0;
-      /* Notify the document as modified */
-      TtaSetDocumentModified (ext_doc);
-      /* Synchronize the document */
-      Synchronize (ext_doc, 1);
-      TtaFileCopy (tempdoc2, localFile);
-      DocumentSource[doc] = DocumentSource[ext_doc];
+      /*DocumentSource[ext_doc] = DocumentSource[doc];*/
       DocumentSource[ext_doc] = 0;
+      /* Notify the document as modified */
+      TtaSetDocumentModified (doc);
+      TtaFileCopy (tempdoc2, localFile);
+     /* Synchronize the document */
+      Synchronize (doc, 1);
+      /*DocumentSource[doc] = DocumentSource[ext_doc];
+	DocumentSource[ext_doc] = 0;*/
     }
 
   /* Delete the external document */

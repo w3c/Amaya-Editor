@@ -591,7 +591,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   Create or change the doctype of a document
   --------------------------------------------------------------------------*/
 static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
-				   ThotBool xmlDoctype)
+				   ThotBool xmlDoctype,
+				   ThotBool useMathML, ThotBool useSVG)
 {
   char           *tempdoc = NULL; 
   char            documentname[MAX_LENGTH];
@@ -626,7 +627,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype,
   /* change the document profile */
   oldprofile = TtaGetDocumentProfile (doc);
   ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype,
-			    &error, xmlDoctype);
+			    &error, xmlDoctype, useMathML, useSVG);
 
   if (ok)
     {
@@ -687,22 +688,18 @@ void RemoveDoctype (Document document, View view)
 }
 
 /*--------------------------------------------------------------------------
-  AddDoctype
-  Add the doctype declaration
+  HasNatures
+  Check if there are MathML and/or SVG natures
   --------------------------------------------------------------------------*/
-void AddDoctype (Document document, View view)
+void HasNatures (Document document, ThotBool *useMathML, ThotBool *useSVG)
 {
-
-  DocumentType    docType;
   SSchema         nature;
   char           *ptr;
-  ThotBool	  useMathML, useSVG;
-  int             profile;
- 
+
   /* look for a MathML or SVG nature within the document */
   nature = NULL;
-  useMathML = FALSE;
-  useSVG = FALSE;
+  *useMathML = FALSE;
+  *useSVG = FALSE;
   do
     {
       TtaNextNature (document, &nature);
@@ -710,13 +707,26 @@ void AddDoctype (Document document, View view)
 	{
 	  ptr = TtaGetSSchemaName (nature);
 	  if (!strcmp (ptr, "MathML"))
-	    useMathML = TRUE;
+	    *useMathML = TRUE;
 	  if (!strcmp (ptr, "SVG"))
-	    useSVG = TRUE;
+	    *useSVG = TRUE;
 	}
     }
   while (nature);
+}
 
+/*--------------------------------------------------------------------------
+  AddDoctype
+  Add the doctype declaration
+  --------------------------------------------------------------------------*/
+void AddDoctype (Document document, View view)
+{
+
+  DocumentType    docType;
+  int             profile;
+  ThotBool	  useMathML, useSVG;
+ 
+  HasNatures (document, &useMathML, &useSVG);
   profile =  L_Other;
   docType = DocumentTypes[document];
   if (docType == docHTML)
@@ -731,7 +741,8 @@ void AddDoctype (Document document, View view)
   else if (docType == docSVG)
     profile = L_SVG;
 
-  CreateOrChangeDoctype (document, view, profile, DocumentMeta[document]->xmlformat);
+  CreateOrChangeDoctype (document, view, profile, DocumentMeta[document]->xmlformat,
+			 useMathML, useSVG);
   UpdateEditorMenus (document);
 }
 
@@ -741,7 +752,10 @@ void AddDoctype (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtml11 (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_Xhtml11, TRUE);
+  ThotBool	  useMathML, useSVG;
+ 
+  HasNatures (document, &useMathML, &useSVG);
+  CreateOrChangeDoctype (document, view, L_Xhtml11, TRUE, useMathML, useSVG);
   UpdateEditorMenus (document);
 }
 
@@ -751,7 +765,10 @@ void CreateDoctypeXhtml11 (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtmlTransitional (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_Transitional, TRUE);
+  ThotBool	  useMathML, useSVG;
+ 
+  HasNatures (document, &useMathML, &useSVG);
+  CreateOrChangeDoctype (document, view, L_Transitional, TRUE, useMathML, useSVG);
   UpdateEditorMenus (document);
 }
 
@@ -761,7 +778,10 @@ void CreateDoctypeXhtmlTransitional (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtmlStrict (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_Strict, TRUE);
+  ThotBool	  useMathML, useSVG;
+ 
+  HasNatures (document, &useMathML, &useSVG);
+  CreateOrChangeDoctype (document, view, L_Strict, TRUE, useMathML, useSVG);
   UpdateEditorMenus (document);
 }
 
@@ -771,7 +791,10 @@ void CreateDoctypeXhtmlStrict (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeXhtmlBasic (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_Basic, TRUE);
+  ThotBool	  useMathML, useSVG;
+ 
+  HasNatures (document, &useMathML, &useSVG);
+  CreateOrChangeDoctype (document, view, L_Basic, TRUE, useMathML, useSVG);
   UpdateEditorMenus (document);
 }
 
@@ -781,7 +804,7 @@ void CreateDoctypeXhtmlBasic (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeHtmlTransitional (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_Transitional, FALSE);
+  CreateOrChangeDoctype (document, view, L_Transitional, FALSE, FALSE, FALSE);
   UpdateEditorMenus (document);
 }
 
@@ -791,7 +814,7 @@ void CreateDoctypeHtmlTransitional (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeHtmlStrict (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_Strict, FALSE);
+  CreateOrChangeDoctype (document, view, L_Strict, FALSE, FALSE, FALSE);
   UpdateEditorMenus (document);
 }
 
@@ -801,7 +824,7 @@ void CreateDoctypeHtmlStrict (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeMathML (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_MathML, TRUE);
+  CreateOrChangeDoctype (document, view, L_MathML, TRUE, FALSE, FALSE);
 }
 
 /*--------------------------------------------------------------------------
@@ -810,7 +833,10 @@ void CreateDoctypeMathML (Document document, View view)
   --------------------------------------------------------------------------*/
 void CreateDoctypeSVG (Document document, View view)
 {
-  CreateOrChangeDoctype (document, view, L_SVG, TRUE);
+  ThotBool	  useMathML, useSVG;
+ 
+  HasNatures (document, &useMathML, &useSVG);
+  CreateOrChangeDoctype (document, view, L_SVG, TRUE, useMathML, useSVG);
 }
 
 /*----------------------------------------------------------------------

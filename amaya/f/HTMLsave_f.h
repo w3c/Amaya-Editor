@@ -27,7 +27,9 @@ extern ThotBool ParseWithNewDoctype ( Document doc,
                                       char *documentname,
                                       int new_doctype,
                                       ThotBool *error,
-                                      ThotBool xml_doctype );
+                                      ThotBool xml_doctype,
+                                      ThotBool useMathML,
+                                      ThotBool useSVG );
 extern void RestartParser ( Document doc,
                             char *localFile,
                             char *tempdir,
@@ -76,7 +78,9 @@ extern ThotBool ParseWithNewDoctype ( Document doc,
                                         char *documentname,
                                         int new_doctype,
                                         ThotBool *error,
-                                        ThotBool xml_doctype );
+                                        ThotBool xml_doctype,
+                                        ThotBool useMathML,
+                                        ThotBool useSVG );
 extern void RestartParser ( Document doc,
                               char *localFile,
                               char *tempdir,
