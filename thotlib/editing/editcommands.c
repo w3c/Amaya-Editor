@@ -2573,7 +2573,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      if (ind < pBuffer->BuLength && pBuffer->BuPrevious)
 			{
 			  pBuffer = pBuffer->BuPrevious;
-			  ind = pBuffer->BuLength + 1;
+			  ind = pBuffer->BuLength;
 			}
 		      
 		      /* prepare le reaffichage */
@@ -2929,7 +2929,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
 			      
 			      /* Reevaluation du debut de la boite coupee ? */
-			      if (previousChars == 0 && pSelBox->BxFirstChar == 0)
+			      if (previousChars == 0 && pSelBox->BxFirstChar == 1)
 				pSelBox = pAb->AbBox;
 			      else if (previousChars == 0)
 				{

@@ -181,7 +181,7 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 	       }
 	     /* longueur +1 du texte qui restera dans le dernier buffer (pBuf)
 	        de la premiere partie */
-	     len = rank - i;
+	     len = rank - i - 1;
 	     pBuf1 = pEl2->ElText;
 	     pBuf1->BuNext = pBuf->BuNext;
 	     if (pBuf1->BuNext != NULL)
@@ -190,38 +190,36 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 	     i = 0;
 	     do
 	       {
-		  pBuf1->BuContent[i] = pBuf->BuContent[len + i - 1];
+		  pBuf1->BuContent[i] = pBuf->BuContent[len + i];
 		  i++;
 	       }
 	     while (pBuf1->BuContent[i - 1] != EOS);
 	     pBuf1->BuLength = i - 1;
-	     pBuf1 = pBuf;
 	     /* met a jour le dernier buffer de la premiere partie */
-	     pBuf1->BuNext = NULL;
-	     pBuf1->BuContent[len - 1] = EOS;
-	     pBuf1->BuLength = len - 1;
+	     pBuf->BuNext = NULL;
+	     pBuf->BuContent[len] = EOS;
+	     pBuf->BuLength = len;
 	     /* essaie de vider ce dernier buffer dans le precedent */
-	     if (pBuf1->BuPrevious)
-		/* il y a un buffer precedent */
-		if (pBuf1->BuPrevious->BuLength + pBuf1->BuLength <= FULL_BUFFER)
-		   /* ca peut tenir */
-		  {
-		     i = 0;
-		     while (i <= pBuf1->BuLength)
-		       {
-			  pBuf1->BuPrevious->BuContent[pBuf1->BuPrevious->BuLength + i] =
-			     pBuf1->BuContent[i];
-			  i++;
-		       }
-		     pBuf1->BuPrevious->BuLength += pBuf1->BuLength;
-		     /* supprime le dernier buffer de la premiere partie : il est */
-		     /* vide */
-		     pBuf1->BuPrevious->BuNext = NULL;
-		     FreeTextBuffer (pBuf);
-		  }
+	     pBuf1 = pBuf->BuPrevious;
+	     if (pBuf1 &&
+		 pBuf1->BuLength + pBuf->BuLength <= FULL_BUFFER)
+	       /* il y a un buffer precedent et ca peut tenir */
+	       {
+		 i = 0;
+		 while (i <= pBuf->BuLength)
+		   {
+		     pBuf1->BuContent[pBuf1->BuLength + i] = pBuf->BuContent[i];
+		     i++;
+		   }
+		 pBuf1->BuLength += pBuf->BuLength;
+		 /* supprime le dernier buffer de la premiere partie : il est */
+		 /* vide */
+		 pBuf1->BuNext = NULL;
+		 FreeTextBuffer (pBuf);
+	       }
 	     /* accroche les buffers de la deuxieme partie a leur element */
 	     pBuf = pEl2->ElText;
-	     while (pBuf != NULL)
+	     while (pBuf)
 		pBuf = pBuf->BuNext;
 	     if (withAppEvent)
 	       {

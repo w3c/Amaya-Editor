@@ -2061,7 +2061,7 @@ void RemoveFromSelection (PtrElement pEl, PtrDocument pDoc)
   However, if the element is hidden, but has specified a callback for event
   Select, it is accepted.
   ----------------------------------------------------------------------*/
-static void    SelectableAncestor (PtrElement *pEl, int *position)
+static void SelectableAncestor (PtrElement *pEl, int *position)
 {
   ThotBool    graph, stop;
 
@@ -2139,7 +2139,7 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
    Same function as MoveCaret, but send  events TteElemSelect.Pre and
    TteElemSelect.Post to the application.
   ----------------------------------------------------------------------*/
-void    SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
+void SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
 {
    NotifyElement       notifyEl;
    Document            doc;
@@ -2174,7 +2174,8 @@ void    SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
    Same function as SelectString, but send events TteElemSelect.Pre and
    TteElemSelect.Post to the application
   ----------------------------------------------------------------------*/
-void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
+void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar,
+			    int lastChar)
 {
    NotifyElement       notifyEl;
    Document            doc;
