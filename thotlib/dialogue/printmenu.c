@@ -1032,7 +1032,7 @@ int value;
       if (ManualFeed)
 	return (PP_ON);
       else
-	return (PP_ON);
+	return (PP_OFF);
       break;
     case PP_PagesPerSheet:
       return (PagesPerSheet);
@@ -1045,9 +1045,9 @@ int value;
       break;
     case PP_Destination:
       if (PaperPrint)
-	return (PP_ON);
+	return (PP_PRINTER);
       else
-	return (PP_ON);
+	return (PP_PS);
       break;
     default:
       TtaError(ERR_invalid_parameter);

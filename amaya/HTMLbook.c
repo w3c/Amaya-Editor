@@ -49,7 +49,7 @@ static CHAR_T           PSdir[MAX_PATH];
 static CHAR_T           PPrinter[MAX_PATH];
 static Document		DocPrint;
 static int              PaperPrint;
-static int              ManualFeed;
+static int              ManualFeed = PP_OFF;
 static int              Orientation;
 static int              PageSize;
 static int              PagePerSheet;
