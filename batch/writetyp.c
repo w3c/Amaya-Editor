@@ -1,13 +1,14 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |    Ce module sauve un schema de typographie compile'.              | */
-/* |                                                                    | */
-/* ======================================================================= */
+/*----------------------------------------------------------------------
+   
+   Projet THOT                              
+   
+   Ce module sauve un schema de typographie compile'.              
+   
+  ----------------------------------------------------------------------*/
 
 
 #include "thot_sys.h"
@@ -21,21 +22,15 @@
 
 static BinFile      outfile;
 
+/*----------------------------------------------------------------------
+   WriteShort ecrit un entier court sur deux octets dans le fichier   
+   de sortie.                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-/* ---------------------------------------------------------------------- */
-/* |    WriteShort ecrit un entier court sur deux octets dans le fichier   | */
-/* |            de sortie.                                              | */
-/* ---------------------------------------------------------------------- */
 void                WriteShort (int n)
-
 #else  /* __STDC__ */
-/* ---------------------------------------------------------------------- */
-/* |    WriteShort ecrit un entier court sur deux octets dans le fichier   | */
-/* |            de sortie.                                              | */
-/* ---------------------------------------------------------------------- */
 void                WriteShort (n)
 int                 n;
-
 #endif /* __STDC__ */
 
 {
@@ -43,10 +38,10 @@ int                 n;
    BIOwriteByte (outfile, (char) (n % 256));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  WriteSignedShort  ecrit dans le fichier de sortie un entier signe' sur | */
-/* |                2 octets                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteSignedShort  ecrit dans le fichier de sortie un entier signe' sur 
+   2 octets                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteSignedShort (int n)
@@ -66,9 +61,9 @@ int             n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnom   ecrit un nom dans le fichier de sortie                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnom   ecrit un nom dans le fichier de sortie                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrnom (Name N)
@@ -92,10 +87,10 @@ Name                 N;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnomproc  ecrit un nom de procedure dans le fichier de sortie  | */
-/* | c.a.d. ajoute _ devant le nom de la fonction avant d'ecrire le nom | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnomproc  ecrit un nom de procedure dans le fichier de sortie  
+   c.a.d. ajoute _ devant le nom de la fonction avant d'ecrire le nom 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrnomproc (Name N)
@@ -121,9 +116,9 @@ Name                 N;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* wrptrregle      ecrit 1 si le pointeur existe existe,  0 sinon         */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrptrregle      ecrit 1 si le pointeur existe existe,  0 sinon         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrptrregle (PtrRegleTypo b)
@@ -143,9 +138,9 @@ PtrRegleTypo        b;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* wrptrfonction      ecrit 1 si le pointeur existe existe,  0 sinon         */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrptrfonction      ecrit 1 si le pointeur existe existe,  0 sinon         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrptrfonction (PtrTypoFunction b)
@@ -165,9 +160,9 @@ PtrTypoFunction     b;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | wrTypeRegleTypo    ecrit un type de regle de typographie           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrTypeRegleTypo    ecrit un type de regle de typographie           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrTypeRegleTypo (TypeFunct T)
@@ -213,10 +208,10 @@ TypeFunct           T;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrptrtypofunction       ecrit la liste des noms de fonctions    | */
-/* |                            dans le fichier de sortie               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrptrtypofunction       ecrit la liste des noms de fonctions    
+   dans le fichier de sortie               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrlistfunction (PtrTypoFunction pFunc)
@@ -241,9 +236,9 @@ PtrTypoFunction     pFunc;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* wrbool       ecrit un booleen dans le fichier de sortie                */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrbool       ecrit un booleen dans le fichier de sortie                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrbool (boolean b)
@@ -262,9 +257,9 @@ boolean             b;
       BIOwriteByte (outfile, '\0');
 }
 
-/* ---------------------------------------------------------------------- */
-/* wrptrbloctypo       ecrit 1 si le pointeur bloc regle existe,  0 sinon */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrptrbloctypo       ecrit 1 si le pointeur bloc regle existe,  0 sinon 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrptrbloctypo (PtrRegleTypo b)
@@ -284,9 +279,9 @@ PtrRegleTypo        b;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* wrptrattrtypo      ecrit 1 si le pointeur attribut existe,  0 sinon    */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrptrattrtypo      ecrit 1 si le pointeur attribut existe,  0 sinon    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrptrattrtypo (PtrRTypoAttribut b)
@@ -306,10 +301,10 @@ PtrRTypoAttribut    b;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | wrTypeCond  ecrit un type de condition d'application de regle de   | */
-/* |             typographie                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrTypeCond  ecrit un type de condition d'application de regle de   
+   typographie                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                wrTypeCondTypo (TypeCondTypo T)
@@ -349,9 +344,9 @@ TypeCondTypo        T;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/*|  WriteReglesTypo    ecrit une suite de regles de typographie        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteReglesTypo    ecrit une suite de regles de typographie        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteReglesTypo (PtrRegleTypo pR)
@@ -405,10 +400,10 @@ PtrRegleTypo        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | WriteReglesAttr    ecrit les regles de typo de l'attribut de numero | */
-/* |          att appartenant au schema de structure pointe' par pSchStr | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteReglesAttr    ecrit les regles de typo de l'attribut de numero 
+   att appartenant au schema de structure pointe' par pSchStr 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteReglesAttr (int att, PtrRTypoAttribut pA, PtrSSchema pSchStr)
@@ -467,10 +462,10 @@ PtrSSchema        pSchStr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WrSchTyp        cree le fichier de sortie et y ecrit le schema  | */
-/* |                    de typographie                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WrSchTyp        cree le fichier de sortie et y ecrit le schema  
+   de typographie                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WrSchTyp (Name fname, PtrSchTypo pSchTypo, PtrSSchema pSchStr)

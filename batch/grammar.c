@@ -1,11 +1,15 @@
-/*
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
+/*----------------------------------------------------------------------
    Le programme GRM cree un fichier contenant la representation
    codee d'une grammaire, a` partir d'un fichier contenant la   
    description de cette grammaire sous la forme BNF.
    La grammaire codee est destinee aux programmes STR, PRS, TRA ou APP
    qui compilent, selon cette grammaire, un schema de structure,
    de presentation, de traduction ou d'application.
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "grmmsg.h"
@@ -80,9 +84,9 @@ extern void         TtaSaveAppRegistry ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    InitRefTables initialise les tables des references.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitRefTables initialise les tables des references.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitRefTables ()
 
@@ -103,10 +107,10 @@ static void         InitRefTables ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AddRefToTable ajoute le numero de la regle courante dans la     | */
-/* |            liste des references passee en parametre.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddRefToTable ajoute le numero de la regle courante dans la     
+   liste des references passee en parametre.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         AddRefToTable (RefList * ref, indLine wi)
@@ -126,9 +130,9 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PutToken	Put a token in the current rule.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PutToken	Put a token in the current rule.                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PutToken (SyntacticCode code, indLine wi)
@@ -148,12 +152,12 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessToken traite le mot commencant a` la position wi dans la | */
-/* |            ligne courante, de longueur wl et code grammatical code,   | */
-/* |            apparaissant dans la regl r. Si c'est un identif, rank    | */
-/* |            contient son rang dans la table des identificateurs.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessToken traite le mot commencant a` la position wi dans la 
+   ligne courante, de longueur wl et code grammatical code,   
+   apparaissant dans la regl r. Si c'est un identif, rank    
+   contient son rang dans la table des identificateurs.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode code, int r, int rank)
@@ -304,10 +308,10 @@ int                 rank;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitGrammar initialise la table des mots-cles et la table des   | */
-/* |            regles.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitGrammar initialise la table des mots-cles et la table des   
+   regles.                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         InitGrammar ()
@@ -412,11 +416,11 @@ static void         InitGrammar ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteFiles ecrit les mots-cles et regles dans le fichier de     | */
-/* |            sortie de type .GRM, produit le fichier .LST et le      | */
-/* |            fichier .h                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteFiles ecrit les mots-cles et regles dans le fichier de     
+   sortie de type .GRM, produit le fichier .LST et le      
+   fichier .h                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteFiles ()
@@ -651,11 +655,11 @@ static void         WriteFiles ()
    fclose (GRMfile);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckKeyword teste si la chaine de longueur wl commencant a` la | */
-/* |            position wi de la ligne courante est un mot-cle bien    | */
-/* |            forme'.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckKeyword teste si la chaine de longueur wl commencant a` la 
+   position wi de la ligne courante est un mot-cle bien    
+   forme'.                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CheckKeyword (indLine wi, indLine wl)
@@ -712,10 +716,10 @@ indLine               wl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckDefAndRef verifie que tous les symboles intermediaires     | */
-/* |            sont bien definis et reference's.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckDefAndRef verifie que tous les symboles intermediaires     
+   sont bien definis et reference's.                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      CheckDefAndRef ()
@@ -747,9 +751,9 @@ static boolean      CheckDefAndRef ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    main program                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   main program                                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 main (int argc, char **argv)

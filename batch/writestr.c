@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /*
    Ce module sauve dans un fichier un schema de structure qui a ete compile'
    en memoire.
@@ -14,10 +18,10 @@ static BinFile      outfile;
 #include "fileaccess_f.h"
 #include "writestr_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |	UniqueIdent	retourne un nombre entier qui sera utilise	| */
-/* |	comme un identificateur unique du schema compile'.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UniqueIdent	retourne un nombre entier qui sera utilise	
+   comme un identificateur unique du schema compile'.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 UniqueIdent ()
@@ -35,9 +39,9 @@ int                 UniqueIdent ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteShort      ecrit l'entier n				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteShort      ecrit l'entier n				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteShort (int n)
 
@@ -53,9 +57,9 @@ int                 n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteSignedShort  ecrit l'entier signe' n			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteSignedShort  ecrit l'entier signe' n			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteSignedShort (int n)
 
@@ -73,9 +77,9 @@ int                 n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteName       ecrit le nom name				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteName       ecrit le nom name				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteName (Name name)
 
@@ -95,9 +99,9 @@ Name                 name;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBoolean       ecrit le booleen b dans le fichier		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBoolean       ecrit le booleen b dans le fichier		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteBoolean (boolean b)
 
@@ -115,9 +119,9 @@ boolean             b;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteAttributeType   ecrit un type d'attribut			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteAttributeType   ecrit un type d'attribut			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteAttributeType (AttribType typ)
 
@@ -147,9 +151,9 @@ AttribType        typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteConstructor       ecrit un constructeur			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteConstructor       ecrit un constructeur			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteConstructor (RConstruct constr)
 
@@ -199,9 +203,9 @@ RConstruct        constr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBasicType   ecrit un type de base				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBasicType   ecrit un type de base				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteBasicType (BasicType typ)
 
@@ -239,9 +243,9 @@ BasicType          typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteRule     ecrit une regle de structure			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteRule     ecrit une regle de structure			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteRule (SRule * pSRule)
 
@@ -333,13 +337,13 @@ SRule              *pSRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteStructureSchema						| */
-/* |	ecrit le schema de structure pointe' par pSS dans le fichier	| */
-/* |	de nom fileName.						| */
-/* |	Si code est nul, ecrit le schema avec un nouveau code		| */
-/* |	d'identification, sinon avec code comme code d'identification.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteStructureSchema						
+   ecrit le schema de structure pointe' par pSS dans le fichier	
+   de nom fileName.						
+   Si code est nul, ecrit le schema avec un nouveau code		
+   d'identification, sinon avec code comme code d'identification.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             WriteStructureSchema (Name fileName, PtrSSchema pSS,
 					  int code)

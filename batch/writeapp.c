@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -29,9 +33,9 @@ static FILE        *AppFile;
 #include "platform_f.h"
 #include "memory_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |   WriteIncludes writes include files 	     		        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteIncludes writes include files 	     		        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteIncludes (char *fname, FILE * file)
 #else  /* __STDC__ */
@@ -63,9 +67,9 @@ FILE               *file;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteAnEvent generates event/action a specific event.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteAnEvent generates event/action a specific event.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteAnEvent (char *eventName, PtrActionEvent pactevent)
 #else  /* __STDC__ */
@@ -86,9 +90,9 @@ PtrActionEvent pactevent;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteEventsList generates list of event/action.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteEventsList generates list of event/action.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteEventsList (PtrEventsSet pAppli)
 #else  /* __STDC__ */
@@ -109,9 +113,9 @@ PtrEventsSet  pAppli;
   fprintf (AppFile, "\n");
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PrintSubMenu                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PrintSubMenu                                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PrintSubMenu (PtrAppMenuItem item, WindowType winType, char *schemaName, char *menuName)
 
@@ -185,9 +189,9 @@ char               *menuName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PrintMenus                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PrintMenus                                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *schemaName)
 
@@ -310,9 +314,9 @@ char               *schemaName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteAppliInit                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteAppliInit                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteAppliInit (char *fname, PtrEventsSet pAppli)
 
@@ -344,9 +348,9 @@ PtrEventsSet  pAppli;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteActionList                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteActionList                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteActionList (char *fname)
 #else  /* __STDC__ */
@@ -777,9 +781,9 @@ char               *fname;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteIncludeFile                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteIncludeFile                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteIncludeFile (FILE * dotHFile, FILE * dialogueFile)
 #else  /* __STDC__ */
@@ -824,9 +828,9 @@ FILE               *dialogueFile;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GenerateApplication generates the application prototype.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GenerateApplication generates the application prototype.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               GenerateApplication (char *fname, PtrEventsSet pAppli)
 #else  /* __STDC__ */

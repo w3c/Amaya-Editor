@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /*
     Ce module sauve dans un fichier un schema de presentation qui a
     ete compile' en memoire
@@ -14,9 +18,9 @@ static BinFile      outfile;
 #include "fileaccess_f.h"
 #include "writeprs_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteShort							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteShort							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteShort (int n)
 #else  /* __STDC__ */
@@ -29,9 +33,9 @@ int                 n;
    BIOwriteByte (outfile, (char) (n % 256));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteSignedShort						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteSignedShort						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteSignedShort (int n)
 #else  /* __STDC__ */
@@ -46,9 +50,9 @@ int             n;
       WriteShort (n + 65536);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteName							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteName							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteName (Name n)
 #else  /* __STDC__ */
@@ -66,9 +70,9 @@ Name                 n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteRulePtr							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteRulePtr							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteRulePtr (PtrPRule p)
 #else  /* __STDC__ */
@@ -84,9 +88,9 @@ PtrPRule        p;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBoolean							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBoolean							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteBoolean (boolean b)
 #else  /* __STDC__ */
@@ -101,9 +105,9 @@ boolean             b;
       BIOwriteByte (outfile, '\0');
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteUnit ecrit une unite dans le fichier sur un octet          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteUnit ecrit une unite dans le fichier sur un octet          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteUnit (TypeUnit unit)
 #else  /* __STDC__ */
@@ -137,9 +141,9 @@ TypeUnit            unit;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WritePRuleType  ecrit un type de regle de presentation		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePRuleType  ecrit un type de regle de presentation		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WritePRuleType (PRuleType ruleType)
 #else  /* __STDC__ */
@@ -235,9 +239,9 @@ PRuleType           ruleType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WritePresMode ecrit un mode de calcul dans le fichier		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePresMode ecrit un mode de calcul dans le fichier		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WritePresMode (PresMode mode)
 
@@ -265,9 +269,9 @@ PresMode          mode;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteInheritMode       ecrit un type d'heritage dans le fichier	|*/
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteInheritMode       ecrit un type d'heritage dans le fichier	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteInheritMode (InheritMode mode)
 #else  /* __STDC__ */
@@ -300,9 +304,9 @@ InheritMode        mode;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteFunctionType  ecrit un type de fonction de presentation	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteFunctionType  ecrit un type de fonction de presentation	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteFunctionType (FunctionType functType, boolean rep)
 
@@ -376,9 +380,9 @@ boolean             rep;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteAlignment    ecrit un mode d'alignement de lignes		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteAlignment    ecrit un mode d'alignement de lignes		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteAlignment (BAlignment align)
 #else  /* __STDC__ */
@@ -408,9 +412,9 @@ BAlignment          align;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WritePresCondition      ecrit un type de condition		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePresCondition      ecrit un type de condition		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WritePresCondition (PresCondition cond)
 #else  /* __STDC__ */
@@ -500,9 +504,9 @@ PresCondition       cond;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteCounterValue ecrit la nature de la condition sur un compteur | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteCounterValue ecrit la nature de la condition sur un compteur 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteCounterValue (CounterValue val)
 #else  /* __STDC__ */
@@ -529,9 +533,9 @@ CounterValue      val;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteArithRel     ecrit la relation de la condition Within	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteArithRel     ecrit la relation de la condition Within	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteArithRel (ArithRel rel)
 #else  /* __STDC__ */
@@ -557,9 +561,9 @@ ArithRel          rel;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBoxEdge      ecrit un repere de boite			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBoxEdge      ecrit un repere de boite			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteBoxEdge (BoxEdge edge)
 #else  /* __STDC__ */
@@ -604,9 +608,9 @@ BoxEdge         edge;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteLevel     ecrit un niveau relatif de boite			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteLevel     ecrit un niveau relatif de boite			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteLevel (Level level)
 #else  /* __STDC__ */
@@ -654,9 +658,9 @@ Level              level;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteCounterOp  ecrit un type d'operation sur compteur		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteCounterOp  ecrit un type d'operation sur compteur		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteCounterOp (CounterOp op)
 #else  /* __STDC__ */
@@ -686,9 +690,9 @@ CounterOp           op;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBasicType ecrit un type de base				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBasicType ecrit un type de base				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteBasicType (BasicType typ)
 #else  /* __STDC__ */
@@ -724,9 +728,9 @@ BasicType          typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteVariableType    ecrit un type de variable			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteVariableType    ecrit un type de variable			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteVariableType (VariableType typ)
 #else  /* __STDC__ */
@@ -774,9 +778,9 @@ VariableType             typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteCounterStyle ecrit un style de compteur			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteCounterStyle ecrit un style de compteur			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteCounterStyle (CounterStyle style)
 #else  /* __STDC__ */
@@ -809,9 +813,9 @@ CounterStyle          style;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteContentType   ecrit un type de contenu			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteContentType   ecrit un type de contenu			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteContentType (ContentType typ)
 #else  /* __STDC__ */
@@ -841,9 +845,9 @@ ContentType         typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteAttrComparType						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteAttrComparType						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteAttrComparType (AttrComparType typ)
 #else  /* __STDC__ */
@@ -866,9 +870,9 @@ AttrComparType      typ;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WritePosRule   ecrit un positionnement relatif			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePosRule   ecrit un positionnement relatif			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WritePosRule (PosRule posRule)
 #else  /* __STDC__ */
@@ -893,10 +897,10 @@ PosRule            posRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WritePRules   ecrit la chaine de regle de presentation qui	| */
-/* |	commence par la regle pointee par pPRule.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePRules   ecrit la chaine de regle de presentation qui	
+   commence par la regle pointee par pPRule.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WritePRules (PtrPRule pPRule)
 #else  /* __STDC__ */
@@ -1063,10 +1067,10 @@ PtrPRule        pPRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WritePresentationSchema    cree le fichier de sortie et y ecrit	| */
-/* |	le schema de presentation					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePresentationSchema    cree le fichier de sortie et y ecrit	
+   le schema de presentation					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pSS)

@@ -1,9 +1,13 @@
-/*
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
+/*----------------------------------------------------------------------
    Ce module effectue l'analyse syntaxique d'un texte source dont il
    recoit les mots un par un.
    Il est parametre' par une grammaire qui lui est fournie dans la table
    GramRule ou dans un fichier de type .GRM
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "constgrm.h"
@@ -44,9 +48,9 @@ static ParserStackItem    Stack[STACKSIZE];	/* pile d'analyse */
 #include "fileaccess_f.h"
 #include "parser_f.h"
 #include "registry_f.h"
-/* ---------------------------------------------------------------------- */
-/* |    InitParser initialise les donnees de l'analyseur syntaxique.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitParser initialise les donnees de l'analyseur syntaxique.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InitParser ()
@@ -63,12 +67,12 @@ void                InitParser ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckShortKeyword teste si le caractere qui est a` la position  | */
-/* |            index dans la ligne courante est un mot-cle court.	| */
-/* |            Retourne dans ret le code de ce mot-cle ou 0 si ce	| */
-/* |		n'est pas un mot-cle court.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckShortKeyword teste si le caractere qui est a` la position  
+   index dans la ligne courante est un mot-cle court.	
+   Retourne dans ret le code de ce mot-cle ou 0 si ce	
+   n'est pas un mot-cle court.				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CheckShortKeyword (indLine index, SyntacticCode * ret)
@@ -95,12 +99,12 @@ SyntacticCode            *ret;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckLongKeyword teste si le mot de longueur len qui commence a` | */
-/* |            la position index dans la ligne courante est un mot-cle | */
-/* |            long. Rend dans ret le code de ce mot-cle' ou 0 si ce   | */
-/* |            n'est pas un mot cle long.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckLongKeyword teste si le mot de longueur len qui commence a` 
+   la position index dans la ligne courante est un mot-cle 
+   long. Rend dans ret le code de ce mot-cle' ou 0 si ce   
+   n'est pas un mot cle long.                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CheckLongKeyword (indLine index, indLine len, SyntacticCode * ret)
@@ -121,7 +125,7 @@ SyntacticCode            *ret;
    do
      {
 	if (Keywords[i].SrcKeywordLen == len)
-	   if (strncasecmp ((char*)(&inputLine[index - 1]), Keywords[i].SrcKeyword, len) == 0)
+	   if (strncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
 	      *ret = Keywords[i].SrcKeywordCode;
 	i++;
      }
@@ -129,14 +133,14 @@ SyntacticCode            *ret;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckIdent teste si le mot de longueur len qui commence a` la   | */
-/* |            position index dans la ligne courante est dans la table | */
-/* |            des identificateurs. Rend dans ret le code du type      | */
-/* |            grammatical de cet identificateur ou 0 s'il n'est       | */
-/* |            pas dans la table. Rend dans rank le rang de              | */
-/* |            l'identificateur dans la table Identifier.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckIdent teste si le mot de longueur len qui commence a` la   
+   position index dans la ligne courante est dans la table 
+   des identificateurs. Rend dans ret le code du type      
+   grammatical de cet identificateur ou 0 s'il n'est       
+   pas dans la table. Rend dans rank le rang de              
+   l'identificateur dans la table Identifier.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret, int *rank)
@@ -159,7 +163,7 @@ int                  *rank;
    do
      {
 	if (Identifier[i].SrcIdentLen == len)
-	   if (strncmp ((char*)(&inputLine[index - 1]), Identifier[i].SrcIdentifier, len) == 0)
+	   if (strncmp (&inputLine[index - 1], Identifier[i].SrcIdentifier, len) == 0)
 	     {
 		*rank = i + 1;
 		*ret = Identifier[i].SrcIdentCode;
@@ -170,13 +174,13 @@ int                  *rank;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewIdent ajoute a` la table des identificateurs le mot de       | */
-/* |            longueur len qui commence a` la position index dans la  | */
-/* |            ligne courante et qui est de type syntaxique code.      | */
-/* |            Rend dans rank le rang de cet identificateur dans la    | */
-/* |            table Identifier.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewIdent ajoute a` la table des identificateurs le mot de       
+   longueur len qui commence a` la position index dans la  
+   ligne courante et qui est de type syntaxique code.      
+   Rend dans rank le rang de cet identificateur dans la    
+   table Identifier.                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         NewIdent (indLine index, indLine len, SyntacticCode code, int *rank)
@@ -213,11 +217,11 @@ int                *rank;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AsciiToInt traduit le nombre qui est sous sa forme ASCII a` la  | */
-/* |            position index de la ligne courante et qui est de       | */
-/* |            longueur len.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AsciiToInt traduit le nombre qui est sous sa forme ASCII a` la  
+   position index de la ligne courante et qui est de       
+   longueur len.                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 AsciiToInt (indLine index, indLine len)
@@ -232,7 +236,7 @@ indLine               len;
 {
    int                 num;
 
-   sscanf ((char*)(&inputLine[index - 1]), "%d", &num);
+   sscanf (&inputLine[index - 1], "%d", &num);
    if (num > 65535)
      {
 	CompilerError (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine, LineNum);
@@ -241,11 +245,11 @@ indLine               len;
    return num;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    OctalToChar remplace dans le buffer d'entree inputLine les      | */
-/* |            sequences \nn par le caractere dont le code octal est   | */
-/* |            nn. Remplace aussi \\ par \.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   OctalToChar remplace dans le buffer d'entree inputLine les      
+   sequences \nn par le caractere dont le code octal est   
+   nn. Remplace aussi \\ par \.                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                OctalToChar ()
@@ -260,10 +264,10 @@ void                OctalToChar ()
    i = 0;
    while (inputLine[i] != '\0')
      {
-	if (inputLine[i] == '\\')
+	if (inputLine[i] == '\\')      
 	  {
 	     shift = 0;
-	     if (inputLine[i + 1] == '\\')
+	     if (inputLine[i + 1] == '\\')  
 		shift = 1;
 	     else if (inputLine[i + 1] >= '0' && inputLine[i + 1] <= '7')
 	       {
@@ -300,15 +304,15 @@ void                OctalToChar ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetNextToken cherche le prochain mot a` partir de la position   | */
-/* |            start dans la ligne courante. Au retour:                | */
-/* |            - wi: position dans la ligne du debut du mot trouve, ou | */
-/* |            si pas trouve, 0.                                       | */
-/* |            - wl: longueur du mot trouve, ou 0 si pas trouve. (len+1| */
-/* |            si wn=SynString).                                           | */
-/* |            - wn: SyntacticType du mot trouve, ou SynError si pas trouve.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetNextToken cherche le prochain mot a` partir de la position   
+   start dans la ligne courante. Au retour:                
+   - wi: position dans la ligne du debut du mot trouve, ou 
+   si pas trouve, 0.                                       
+   - wl: longueur du mot trouve, ou 0 si pas trouve. (len+1
+   si wn=SynString).                                           
+   - wn: SyntacticType du mot trouve, ou SynError si pas trouve.       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                GetNextToken (indLine start, indLine * wi, indLine * wl, SyntacticType * wn)
@@ -485,13 +489,13 @@ SyntacticType             *wn;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TokenMatch retourne vrai si dans la ligne courante le mot       | */
-/* |            commencant a` l'index wi de longueur wl et de SyntacticType wn | */
-/* |            correspond a` l'element de code c qui apparait dans la  | */
-/* |            regle r de la grammaire. Rend dans rank le rang du mot  | */
-/* |            dans la table Identifier si c'est un identificateur.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TokenMatch retourne vrai si dans la ligne courante le mot       
+   commencant a` l'index wi de longueur wl et de SyntacticType wn 
+   correspond a` l'element de code c qui apparait dans la  
+   regle r de la grammaire. Rend dans rank le rang du mot  
+   dans la table Identifier si c'est un identificateur.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      TokenMatch (indLine wi, indLine wl, SyntacticType wn, SyntacticCode c, SyntacticCode r, int *rank)
@@ -584,15 +588,15 @@ int                *rank;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AnalyzeToken procede a` l'analyse du mot commencant a la postion| */
-/* |            wi de la ligne courante (inputLine), de longueur wl et de| */
-/* |            SyntacticType wn. Rend dans c le code grammatical du mot, dans | */
-/* |            r le numero de la derniere regle ou` il a ete trouve et | */
-/* |            dans rank son rang dans Identifier, si c'est un         | */
-/* |            identificateur. Dans pr se trouve le numero de l'avant  | */
-/* |            derniere regle appliquee.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AnalyzeToken procede a` l'analyse du mot commencant a la postion
+   wi de la ligne courante (inputLine), de longueur wl et de
+   SyntacticType wn. Rend dans c le code grammatical du mot, dans 
+   r le numero de la derniere regle ou` il a ete trouve et 
+   dans rank son rang dans Identifier, si c'est un         
+   identificateur. Dans pr se trouve le numero de l'avant  
+   derniere regle appliquee.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AnalyzeToken (indLine wi, indLine wl, SyntacticType wn, SyntacticCode * c, SyntRuleNum * r, int *rank, SyntRuleNum * pr)
@@ -874,10 +878,10 @@ SyntRuleNum                *pr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ParserEnd verifie, en fin de fichier source, que tout est correct| */
-/* |            du point de vue syntaxique.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ParserEnd verifie, en fin de fichier source, que tout est correct
+   du point de vue syntaxique.                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ParserEnd ()
@@ -900,11 +904,11 @@ void                ParserEnd ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitSyntax initialise la table des mots-cles et la table des	| */
-/* |    regles a` partir d'un fichier grammaire de type GRM.		| */
-/* |    fileName est le nom du fichier grammaire, avec le suffixe .GRM.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitSyntax initialise la table des mots-cles et la table des	
+   regles a` partir d'un fichier grammaire de type GRM.		
+   fileName est le nom du fichier grammaire, avec le suffixe .GRM.	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InitSyntax (char *fileName)

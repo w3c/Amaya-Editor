@@ -1,11 +1,15 @@
-/*
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
+/*----------------------------------------------------------------------
    Ce programme compile un schema de traduction contenu dans un fichier
    de type .T
    Il est dirige' par la grammaire du langage de 
    contenue, sous forme codee, dans le fichier TRANS.GRM.
    Il produit un fichier de type .TRA qui sera ensuite utilise'
    par le traducteur, pour guider sa traduction.
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "tradef.h"
@@ -81,7 +85,7 @@ static int          BeginAncestorName;	/* indice du debut de ce TypeIdent dans l
 
 				/* ligne en cours de traitement */
 static boolean      Immediately;	/* condition Immediately Within */
-static boolean      Asterisk;	/* on a rencontre' "*" dans une condition */
+static boolean      Asterisk;	/* on a rencontre' "" dans une condition */
 static boolean      GreaterOrLessSign;	/* On a rencontre' un signe > ou < apres */
 				/* Within ou FirstWithin dans la condition  */
 				/* courante */
@@ -114,9 +118,9 @@ extern void         TtaSaveAppRegistry ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    Initialize	initialise le schema de traduction en memoire   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Initialize	initialise le schema de traduction en memoire   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         Initialize ()
@@ -190,9 +194,9 @@ static void         Initialize ()
 				   caracteres */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    initialise les regles de traduction des attributs               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   initialise les regles de traduction des attributs               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         InitAttrTransl ()
@@ -240,10 +244,10 @@ static void         InitAttrTransl ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    traite le type d'element indique' dans une condition Within ou  | */
-/* |    FirstWithin Le nom du type se trouve dans la variable TypeWithin | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   traite le type d'element indique' dans une condition Within ou  
+   FirstWithin Le nom du type se trouve dans la variable TypeWithin 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         EndOfContdition (PtrSSchema pSS)
@@ -275,10 +279,10 @@ PtrSSchema        pSS;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    traite le type d'element indique' dans une clause Ancestor      | */
-/* |    Le nom du type se trouve dans la variable AncestorName.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   traite le type d'element indique' dans une clause Ancestor      
+   Le nom du type se trouve dans la variable AncestorName.         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ProcessAncestorName (PtrSSchema pSS)
@@ -310,9 +314,9 @@ PtrSSchema        pSS;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    traite un nom de regle de presentation passee en parametre      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   traite un nom de regle de presentation passee en parametre      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
@@ -405,9 +409,9 @@ int                 wi;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    traite le mot-cle' representant une valeur d'une presentation.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   traite le mot-cle' representant une valeur d'une presentation.  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PresentValue (char value, int wi)
@@ -452,9 +456,9 @@ int                 wi;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SrceStringGreater                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SrceStringGreater                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          SrceStringGreater (int framet, int lent, int rank, boolean * equal,
@@ -498,12 +502,12 @@ SourceString            source;
    return s;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewSourceString   traite la chaine source d'une nouvelle regle  | */
-/* |    de traduction de caracteres.                                    | */
-/* |    indx : index dans inputLine du premier caractere de la chaine,  | */
-/* |    len est la longueur de la chaine.                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewSourceString   traite la chaine source d'une nouvelle regle  
+   de traduction de caracteres.                                    
+   indx : index dans inputLine du premier caractere de la chaine,  
+   len est la longueur de la chaine.                                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         NewSourceString (int indx, int len)
@@ -583,12 +587,12 @@ int                 len;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessTargetString traite la chaine cible de la regle de       | */
-/* |    traduction de caracteres en cours de construction.              | */
-/* |    indx: index dans inputLine du premier caractere de la chaine,   | */
-/* |    len est la longueur de la chaine.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessTargetString traite la chaine cible de la regle de       
+   traduction de caracteres en cours de construction.              
+   indx: index dans inputLine du premier caractere de la chaine,   
+   len est la longueur de la chaine.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ProcessTargetString (int indx, int len)
@@ -612,9 +616,9 @@ int                 len;
 	    MAX_TARGET_LEN + 1);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Cree et initialise un nouveau bloc de regles                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Cree et initialise un nouveau bloc de regles                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         NewRuleBlock ()
@@ -687,9 +691,9 @@ static void         NewRuleBlock ()
    CurBlock->TbNConditions = 0;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    cree une nouvelle regle, la chaine et l'initialise              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   cree une nouvelle regle, la chaine et l'initialise              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         NewTransRule ()
@@ -722,10 +726,10 @@ static void         NewTransRule ()
    CurTRule->TrOrder = TBefore;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    traite le type d'element indique' dans une regle Get.           | */
-/* |    Le nom du type se trouve dans la variable TypeInGetRule.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   traite le type d'element indique' dans une regle Get.           
+   Le nom du type se trouve dans la variable TypeInGetRule.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ProcessTypeName (PtrSSchema pSS)
@@ -792,9 +796,9 @@ PtrSSchema        pSS;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    copie le mot traite dans n                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   copie le mot traite dans n                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CopyWord (Name n, indLine wi, indLine wl)
@@ -817,9 +821,9 @@ indLine               wl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    cree une nouvelle constante                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   cree une nouvelle constante                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         NewConstant (indLine wl, indLine wi)
@@ -855,9 +859,9 @@ indLine               wi;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    cree un attribut dans une regle Create ou Write                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   cree un attribut dans une regle Create ou Write                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
@@ -930,10 +934,10 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PatternNum   retourne le rang du nom n dans le fichier          | */
-/* |            des patterns de Thot.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PatternNum   retourne le rang du nom n dans le fichier          
+   des patterns de Thot.                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          PatternNum (Name n, indLine wi)
@@ -969,10 +973,10 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ColorNum   retourne le rang du nom n dans le fichier            | */
-/* |            des couleurs de Thot.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ColorNum   retourne le rang du nom n dans le fichier            
+   des couleurs de Thot.                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          ColorNum (Name n, indLine wi)
@@ -996,11 +1000,11 @@ indLine               wi;
    return i;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ElementTypeNum si le mot de longueyr wl qui commence a l'indice | */
-/* |    wi du buffer de lecture est un nom de type d'element, retourne  | */
-/* |    le numero de type correspondant, sinon retourne 0.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ElementTypeNum si le mot de longueyr wl qui commence a l'indice 
+   wi du buffer de lecture est un nom de type d'element, retourne  
+   le numero de type correspondant, sinon retourne 0.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          ElementTypeNum (indLine wi, indLine wl)
@@ -1032,12 +1036,12 @@ indLine               wl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    traite le mot commencant a la position wi dans la ligne courante| */
-/* |    de longueur wl et de code grammatical c. Si c'est un identif, nb| */
-/* |    contient son rang dans la table des identificateurs. r est le   | */
-/* |    numero de la regle dans laquelle apparait ce mot.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   traite le mot commencant a la position wi dans la ligne courante
+   de longueur wl et de code grammatical c. Si c'est un identif, nb
+   contient son rang dans la table des identificateurs. r est le   
+   numero de la regle dans laquelle apparait ce mot.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
@@ -3055,9 +3059,9 @@ SyntRuleNum                 pr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    main                                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   main                                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 main (int argc, char **argv)

@@ -1,7 +1,10 @@
-/*
- Compilateur du langage A.
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
 
-*/
+/*----------------------------------------------------------------------
+   Compilateur du langage A.
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "compilmsg.h"
@@ -127,13 +130,13 @@ char               *RegisteredAppEvents[] =
    "Exit"
 };
 
-/* ---------------------------------------------------------------------- */
-/* |    MenuActionList met dans la liste ActionsUsed les actions        | */
-/* |    utilisees par les menus de la liste commencant par firstMenu,   | */
-/* |    si elles ne sont pas deja dans la liste ActionsUsed.            | */
-/* |    Fait de meme pour les noms de menus dans la liste MenusUsed     | */
-/* |    et pour les noms d'items dans la liste ItemsUsed.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MenuActionList met dans la liste ActionsUsed les actions        
+   utilisees par les menus de la liste commencant par firstMenu,   
+   si elles ne sont pas deja dans la liste ActionsUsed.            
+   Fait de meme pour les noms de menus dans la liste MenusUsed     
+   et pour les noms d'items dans la liste ItemsUsed.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MenuActionList (PtrAppMenu firstMenu)
 
@@ -281,11 +284,11 @@ PtrAppMenu          firstMenu;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    MakeMenusAndActionList construit la liste des noms de toutes    | */
-/* |    les actions effectivement utiles, la liste de tous les noms de  | */
-/* |    menus effectivement utiles et de tous les noms d'item utiles.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MakeMenusAndActionList construit la liste des noms de toutes    
+   les actions effectivement utiles, la liste de tous les noms de  
+   menus effectivement utiles et de tous les noms d'item utiles.   
+  ----------------------------------------------------------------------*/
 static void         MakeMenusAndActionList ()
 {
    PtrAppDocType       menusDoc;
@@ -305,11 +308,11 @@ static void         MakeMenusAndActionList ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RegisteredEvent checks whether eventName is in the list of      | */
-/* |    registered events and returns True if yes, and the rank of the  | */
-/* |    event in the list (rank).                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RegisteredEvent checks whether eventName is in the list of      
+   registered events and returns True if yes, and the rank of the  
+   event in the list (rank).                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      RegisteredEvent (char *eventName, int *rank)
 #else  /* __STDC__ */
@@ -335,9 +338,9 @@ int                *rank;
    return found;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConstructAbstractSchStruct                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConstructAbstractSchStruct                                      
+  ----------------------------------------------------------------------*/
 static PtrSSchema ConstructAbstractSchStruct ()
 {
    PtrSSchema        pSS;
@@ -357,9 +360,9 @@ static PtrSSchema ConstructAbstractSchStruct ()
    return pSS;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewMenuComplete                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewMenuComplete                                                 
+  ----------------------------------------------------------------------*/
 static void         NewMenuComplete ()
 {
    PtrAppMenu          Menu, NewMenu, CurMenu;
@@ -513,9 +516,9 @@ static void         NewMenuComplete ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitMenu                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitMenu                                                        
+  ----------------------------------------------------------------------*/
 static void         InitMenu ()
 {
    ViewNumber = 0;
@@ -527,9 +530,9 @@ static void         InitMenu ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessShortKeyWord traite un mot-cle court.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessShortKeyWord traite un mot-cle court.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
 
@@ -592,9 +595,9 @@ SyntacticCode             pr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessLongKeyWord traite un mot-cle long.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessLongKeyWord traite un mot-cle long.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
 
@@ -720,9 +723,9 @@ indLine               wi;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |     ProcessName trite un nom.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessName trite un nom.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
 #else  /* __STDC__ */
@@ -984,9 +987,9 @@ indLine               wi;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |     ProcessInteger genere un nombre.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessInteger genere un nombre.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
 #else  /* __STDC__ */
@@ -1012,13 +1015,13 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessToken traite le mot commencant a` la position wi dans la | */
-/* |            ligne courante, de longueur wl et de code grammatical c.| */
-/* |            Si c'est un identif. r est le numero de la regle dans   | */
-/* |            laquelle apparait ce mot, pr est le numero de la regle  | */
-/* |            precedente, celle qui a appele la regle r.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessToken traite le mot commencant a` la position wi dans la 
+   ligne courante, de longueur wl et de code grammatical c.
+   Si c'est un identif. r est le numero de la regle dans   
+   laquelle apparait ce mot, pr est le numero de la regle  
+   precedente, celle qui a appele la regle r.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, SyntacticCode pr)
 #else  /* __STDC__ */
@@ -1059,9 +1062,9 @@ SyntacticCode             pr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteChar write a single character.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteChar write a single character.                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteChar (FILE * Hfile, unsigned char ch)
@@ -1144,9 +1147,9 @@ unsigned char       ch;
       fprintf (Hfile, "%c", ch);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteName                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteName                                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteName (FILE * Hfile, Name n)
@@ -1169,9 +1172,9 @@ Name                 n;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteRuleName                                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteRuleName                                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteRuleName (FILE * Hfile, int r)
@@ -1190,9 +1193,9 @@ int         r;
       WriteName (Hfile, pSSchema->SsRule[r - 1].SrName);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteAttribute                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteAttribute                                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteAttribute (FILE * Hfile, int a)
@@ -1230,9 +1233,9 @@ int      a;
    pAttr->AttrGlobal = True;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteBasicElements                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBasicElements                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteBasicElements (FILE * Hfile)
@@ -1282,10 +1285,10 @@ FILE               *Hfile;
    fprintf (Hfile, " %d\n", r);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteRule                                                       | */
-/* |    si pExtensRule est non nul, il s'agit d'une regle d'extension  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteRule                                                       
+   si pExtensRule est non nul, il s'agit d'une regle d'extension  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
@@ -1332,9 +1335,9 @@ SRule              *pExtensRule;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteDefineFile                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteDefineFile                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteDefineFile (char *fname)
 
@@ -1491,9 +1494,9 @@ char               *fname;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Main pour le compilateur A.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Main pour le compilateur A.                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                main (int argc, char **argv)
 #else  /* __STDC__ */

@@ -1,21 +1,22 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |    Le programme TYP compile un schema de typographie,              | */
-/* |    contenu dans un fichier de type .SCH.                           | */
-/* |    TYP est dirige' par la grammaire du langage de typographie      | */
-/* |    contenue, sous forme codee, dans le fichier TYP.GRM.            | */
-/* |    Ce fichier .GRM est produit par le programme GRM.               | */
-/* |    TYP produit un fichier de type .TYP qui sera ensuite utilise    | */
-/* |    par l'editeur, pour guider la correction typographique.         | */
-/* |    Ce programme utilise le module ANALSYNT pour l'analyse          | */
-/* |    syntaxique du schema a compiler.                                | */
-/* |                                                                    | */
-/* ======================================================================= */
+/*----------------------------------------------------------------------
+   
+   Projet THOT                              
+   
+   Le programme TYP compile un schema de typographie,              
+   contenu dans un fichier de type .SCH.                           
+   TYP est dirige' par la grammaire du langage de typographie      
+   contenue, sous forme codee, dans le fichier TYP.GRM.            
+   Ce fichier .GRM est produit par le programme GRM.               
+   TYP produit un fichier de type .TYP qui sera ensuite utilise    
+   par l'editeur, pour guider la correction typographique.         
+   Ce programme utilise le module ANALSYNT pour l'analyse          
+   syntaxique du schema a compiler.                                
+   
+  ----------------------------------------------------------------------*/
 
 
 #include "thot_sys.h"
@@ -114,10 +115,10 @@ extern void         TtaSaveAppRegistry ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    prepare la generation : initialise le schema de typographie     | */
-/* |    en memoire                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   prepare la generation : initialise le schema de typographie     
+   en memoire                                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                initgener ()
 #else  /* __STDC__ */
@@ -173,10 +174,10 @@ void                initgener ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewFunction     ajoute une nouvelle fonction dans la chaine des | */
-/* |                    fonctions typographiques.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewFunction     ajoute une nouvelle fonction dans la chaine des 
+   fonctions typographiques.                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                NewFunction (TypeFunct TypeF)
@@ -212,11 +213,11 @@ TypeFunct           TypeF;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChercheFonction cherche la fonction de nom NomFonct dans la     | */
-/* |    chaine des fonctions et retourne un pointeur sur le descripteur | */
-/* |    de cette fonction typographique, ou NULL si pas trouve'         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChercheFonction cherche la fonction de nom NomFonct dans la     
+   chaine des fonctions et retourne un pointeur sur le descripteur 
+   de cette fonction typographique, ou NULL si pas trouve'         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrTypoFunction     ChercheFonction (Name NomFonct)
@@ -240,10 +241,10 @@ Name                 NomFonct;
    return Retour;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewModele       ajoute un nouveau modele dans la chaine des     | */
-/* |                    modeles de composition.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewModele       ajoute un nouveau modele dans la chaine des     
+   modeles de composition.                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                NewModele (Name NomModele)
@@ -276,11 +277,11 @@ Name                 NomModele;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChercheModele   cherche le modele de composition de nom         | */
-/* |    NomModele dans la chaine des modeles et retourne un pointeur    | */
-/* |    sur le descripteur de ce modele, ou NULL si pas trouve'         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChercheModele   cherche le modele de composition de nom         
+   NomModele dans la chaine des modeles et retourne un pointeur    
+   sur le descripteur de ce modele, ou NULL si pas trouve'         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrModeleCompo      ChercheModele (Name NomModele)
@@ -304,9 +305,9 @@ Name                 NomModele;
    return Retour;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    cree une nouvelle regle , la chaine et l'initialise             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   cree une nouvelle regle , la chaine et l'initialise             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                nouvregle ()
@@ -365,9 +366,9 @@ void                nouvregle ()
    CourRegle->RTyRegleSuiv = NULL;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    initialise la description d'un attribut                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   initialise la description d'un attribut                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                initAttr (PtrRTypoAttribut pRAtt, int att)
@@ -414,9 +415,9 @@ int                 att;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewAttr         ajoute un nouvel attribut                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewAttr         ajoute un nouvel attribut                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                NewAttr (int att)
@@ -442,9 +443,9 @@ int                 att;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    rempli la regle courante                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   rempli la regle courante                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                copierregle (PtrRegleTypo pRegle)
@@ -487,12 +488,12 @@ PtrRegleTypo        pRegle;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChercheRegle cherche la premiere fonction de type TypeF         | */
-/* |    dans le bloc de regle courant a partir de la regle PremRegle    | */
-/* |    et retourne un pointeur sur le descripteur de cette             | */
-/* |    regle typographique,      ou NULL si pas trouve'                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChercheRegle cherche la premiere fonction de type TypeF         
+   dans le bloc de regle courant a partir de la regle PremRegle    
+   et retourne un pointeur sur le descripteur de cette             
+   regle typographique,      ou NULL si pas trouve'                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrRegleTypo        ChercheRegle (TypeFunct TypeF, PtrRegleTypo PremRegle)
@@ -517,10 +518,10 @@ PtrRegleTypo        PremRegle;
    return Retour;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    add_condition   ajoute dans la regle pRegle                     | */
-/* |                    la table des conditions courante                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   add_condition   ajoute dans la regle pRegle                     
+   la table des conditions courante                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                add_condition (PtrRegleTypo pRegle)
@@ -568,10 +569,10 @@ PtrRegleTypo        pRegle;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    copy_condition  recopie dans la regle courante                  | */
-/* |                    la table des conditions courante                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   copy_condition  recopie dans la regle courante                  
+   la table des conditions courante                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                copy_condition ()
@@ -609,10 +610,10 @@ void                copy_condition ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewRule         ajoute une nouvelle regle dans la chaine des    | */
-/* |                    regles typographiques apres verification        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewRule         ajoute une nouvelle regle dans la chaine des    
+   regles typographiques apres verification        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                NewRule (TypeFunct TypeF, Name NomF)
@@ -653,12 +654,12 @@ Name                 NomF;
       CourRegle->RTyNbCond = 0;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    InsererRegle    insere la regle pointee par pReg                | */
-/* |                    dans la chaine des                              | */
-/* |                    regles typographiques du bloc courant           | */
-/* |                    apres verification                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InsererRegle    insere la regle pointee par pReg                
+   dans la chaine des                              
+   regles typographiques du bloc courant           
+   apres verification                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InsererRegle (PtrRegleTypo pReg)
@@ -715,10 +716,10 @@ PtrRegleTypo        pReg;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InsererModele   insere les regles du modele dans la chaine des  | */
-/* |                    regles typographiques du bloc courant           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InsererModele   insere les regles du modele dans la chaine des  
+   regles typographiques du bloc courant           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                InsererModele (PtrModeleCompo pMod)
@@ -741,9 +742,9 @@ PtrModeleCompo      pMod;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    copie le mot traite dans n                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   copie le mot traite dans n                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                copy_generate (Name n, indLine * wi, indLine * wl)
@@ -770,11 +771,11 @@ indLine              *wl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NumType si le mot de longueyr wl qui commence a l'indice wi du  | */
-/* |    buffer de lecture est un nom de type d'element, retourne le     | */
-/* |    numero de type correspondant, sinon retourne 0.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NumType si le mot de longueyr wl qui commence a l'indice wi du  
+   buffer de lecture est un nom de type d'element, retourne le     
+   numero de type correspondant, sinon retourne 0.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          NumType (indLine wi, indLine wl)
@@ -805,12 +806,12 @@ indLine               wl;
    return i;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    traite le mot commencant a la position wi dans la ligne courante| */
-/* |    de longueur wl et de code grammatical c. Si c'est un identif, nb| */
-/* |    contient son rang dans la table des identificateurs. r est le   | */
-/* |    numero de la regle dans laquelle apparait ce mot.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   traite le mot commencant a la position wi dans la ligne courante
+   de longueur wl et de code grammatical c. Si c'est un identif, nb
+   contient son rang dans la table des identificateurs. r est le   
+   numero de la regle dans laquelle apparait ce mot.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
@@ -1478,9 +1479,9 @@ SyntRuleNum                 pr;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Main                                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Main                                                            
+  ----------------------------------------------------------------------*/
 /* Main Program */
 
 #ifdef __STDC__

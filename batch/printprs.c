@@ -1,11 +1,12 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/*
+/*----------------------------------------------------------------------
    Ce programme effectue le chargement d'un schema de presentation et
    du schema de structure associe' et liste le contenu du schema de
    presentation.        
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -40,9 +41,9 @@ NumAttrCase         *pCa1;
 boolean             Transm;
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadEnv lit la variable THOTSCH dans SchemaPath.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadEnv lit la variable THOTSCH dans SchemaPath.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ReadEnv ()
 #else  /* __STDC__ */
@@ -62,9 +63,9 @@ static void         ReadEnv ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnb ecrit au terminal l'entier nb.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnb ecrit au terminal l'entier nb.                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnb (int nb)
@@ -96,9 +97,9 @@ int                 nb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrniveau ecrit au terminal le niveau relatif n.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrniveau ecrit au terminal le niveau relatif n.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrniveau (Level n)
@@ -145,9 +146,9 @@ Level              n;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrdistunit ecrit le nom d'une unite' de distance.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrdistunit ecrit le nom d'une unite' de distance.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrdistunit (TypeUnit u)
@@ -180,9 +181,9 @@ TypeUnit            u;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrrepere ecrit au terminal le repere de boite r.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrrepere ecrit au terminal le repere de boite r.                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrrepere (BoxEdge r)
@@ -227,9 +228,9 @@ BoxEdge         r;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnom ecrit au terminal le nom n.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnom ecrit au terminal le nom n.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnom (Name n)
@@ -261,9 +262,9 @@ Name                 n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnomregle ecrit au terminal le nom de la regle de numero r.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnomregle ecrit au terminal le nom de la regle de numero r.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnomregle (int r)
@@ -280,9 +281,9 @@ int         r;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnomattr ecrit au terminal le nom de l'attribut de numero a.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnomattr ecrit au terminal le nom de l'attribut de numero a.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnomattr (int a)
@@ -299,10 +300,10 @@ int      a;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnomboite ecrit au terminal le nom de la boite de presentation | */
-/* |            de numero b.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnomboite ecrit au terminal le nom de la boite de presentation 
+   de numero b.                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnomboite (int b)
@@ -319,9 +320,9 @@ int        b;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrModeHerit ecrit au terminal un mode d'heritage.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrModeHerit ecrit au terminal un mode d'heritage.               
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -355,9 +356,9 @@ InheritMode        M;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrsize ecrit au terminal la regle de taille pointee par pR.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrsize ecrit au terminal la regle de taille pointee par pR.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrsize (PtrPRule pR)
@@ -413,10 +414,10 @@ PtrPRule        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrfontstyle ecrit au terminal la regle d'heritage ou la valeur  | */
-/* |            entiere de la regle pointee par pR.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrfontstyle ecrit au terminal la regle d'heritage ou la valeur  
+   entiere de la regle pointee par pR.                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrfontstyle (PtrPRule pR)
@@ -544,10 +545,10 @@ PtrPRule        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnbherit ecrit au terminal la regle d'heritage ou la valeur    | */
-/* |            entiere de la regle pointee par pR.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnbherit ecrit au terminal la regle d'heritage ou la valeur    
+   entiere de la regle pointee par pR.                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnbherit (PtrPRule pR)
@@ -600,10 +601,10 @@ PtrPRule        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrminind ecrit au terminal la regle 'NoBreak1, NoBreak2 ou      | */
-/* |            Indent pointee par pR.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrminind ecrit au terminal la regle 'NoBreak1, NoBreak2 ou      
+   Indent pointee par pR.                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrminind (PtrPRule pR)
@@ -637,9 +638,9 @@ PtrPRule        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrpos ecrit au terminal la position pos.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrpos ecrit au terminal la position pos.                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrpos (PosRule pos, boolean Def)
@@ -694,9 +695,9 @@ boolean             Def;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrdimens ecrit au terminal la dimension Dim.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrdimens ecrit au terminal la dimension Dim.                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrdimens (DimensionRule Dim, boolean Hauteur)
@@ -778,9 +779,9 @@ boolean             Hauteur;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrCondition                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrCondition                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrCondition (PtrCondition pCond)
@@ -908,10 +909,10 @@ PtrCondition        pCond;
 	}
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrFonctPres ecrit au terminal la fonction de presentation       | */
-/* |            contenue dans la regle pointee par pR.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrFonctPres ecrit au terminal la fonction de presentation       
+   contenue dans la regle pointee par pR.                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrFonctPres (PtrPRule pR)
@@ -996,9 +997,9 @@ PtrPRule        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrajust ecrit au terminal la regle d'ajustement des lignes.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrajust ecrit au terminal la regle d'ajustement des lignes.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrajust (PtrPRule pR)
@@ -1034,10 +1035,10 @@ PtrPRule        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrjustif ecrit la regle de justification ou hyphenation pointee | */
-/* |            par pR.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrjustif ecrit la regle de justification ou hyphenation pointee 
+   par pR.                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrjustif (PtrPRule pR)
@@ -1062,9 +1063,9 @@ PtrPRule        pR;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteCounterStyle ecrit au terminal un style de compteur.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteCounterStyle ecrit au terminal un style de compteur.            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         WriteCounterStyle (CounterStyle St)
@@ -1097,10 +1098,10 @@ CounterStyle          St;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrsuiteregles ecrit au terminal la suite de regles chainees dont | */
-/* |            RP pointe sur la regle de tete.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrsuiteregles ecrit au terminal la suite de regles chainees dont 
+   RP pointe sur la regle de tete.                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrsuiteregles (PtrPRule RP)
@@ -1258,9 +1259,9 @@ PtrPRule        RP;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    main                                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   main                                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 main (int argc, char **argv)

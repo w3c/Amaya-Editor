@@ -1,10 +1,14 @@
-/*
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
+/*----------------------------------------------------------------------
    Ce programme compile un schema de presentation contenu dans un fichier
    de type .P
    Il est dirige par la grammaire du langage de presentation
    contenue, sous forme codee, dans le fichier PRESEN.GRM.
    Il produit un fichier de type .PRS qui sera ensuite utilise par Thot
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "constgrm.h"
@@ -152,9 +156,9 @@ static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definiti
 #include "fileaccess_f.h"
 #include "writeprs_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    Initialize							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Initialize							
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         Initialize ()
@@ -268,10 +272,10 @@ static void         Initialize ()
    SecondInPair = False;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CopyName        copy the word of length wl startig at position	| */
-/* |			wi in buffer inputLine into string n.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyName        copy the word of length wl startig at position	
+   wi in buffer inputLine into string n.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CopyName (Name n, indLine wi, indLine wl)
@@ -294,10 +298,10 @@ indLine               wl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckConditions verifie qu'il n'y a aucune condition courante   | */
-/* |    ou qu'il n'y a que des conditions Within.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckConditions verifie qu'il n'y a aucune condition courante   
+   ou qu'il n'y a que des conditions Within.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckConditions (indLine wi)
 
@@ -322,9 +326,9 @@ indLine               wi;
 	 pCond = pCond->CoNextCondition;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ConditionEnd                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConditionEnd                                                    
+  ----------------------------------------------------------------------*/
 static void         ConditionEnd ()
 {
    InWithinCond = False;
@@ -339,9 +343,9 @@ static void         ConditionEnd ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreatePRule cree une nouvelle regle de type t                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreatePRule cree une nouvelle regle de type t                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreatePRule (PRuleType t, indLine wi)
 
@@ -458,9 +462,9 @@ indLine               wi;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetLevel                                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetLevel                                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         SetLevel (Level lev, indLine wi)
@@ -500,9 +504,9 @@ indLine               wi;
 	    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckBoxEnd                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckBoxEnd                                                      
+  ----------------------------------------------------------------------*/
 static void         CheckBoxEnd ()
 {
    if (PresBoxDef)
@@ -517,12 +521,12 @@ static void         CheckBoxEnd ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    EndOfRulesForType   fin des regles de presentation associees	| */
-/* |                    a un type d'element structure' ou a une valeur	| */
-/* |                    d'attribut. On verifie si au moins une regle a  | */
-/* |                    ete definie pour ce type ou cet attribut.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EndOfRulesForType   fin des regles de presentation associees	
+   a un type d'element structure' ou a une valeur	
+   d'attribut. On verifie si au moins une regle a  
+   ete definie pour ce type ou cet attribut.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfRulesForType ()
 
@@ -575,10 +579,10 @@ static void         EndOfRulesForType ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewVarListItem alloue une nouvelle entree dans la table des     | */
-/* |            items constituant une variable de presentation.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewVarListItem alloue une nouvelle entree dans la table des     
+   items constituant une variable de presentation.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewVarListItem (PresVariable * pVar, indLine wi)
 #else  /* __STDC__ */
@@ -601,9 +605,9 @@ indLine               wi;
       pVar->PvNItems++;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewCondition alloue une nouvelle condition                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewCondition alloue une nouvelle condition                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewCondition (indLine wi)
 #else  /* __STDC__ */
@@ -633,10 +637,10 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewConst        alloue une nouvelle entree dans la table des    | */
-/* |                    constantes du schema de presentation            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewConst        alloue une nouvelle entree dans la table des    
+   constantes du schema de presentation            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewConst (indLine wi)
 
@@ -654,10 +658,10 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewVar  alloue une nouvelle entree dans la table des variables  | */
-/* |            variables du schema de presentation                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewVar  alloue une nouvelle entree dans la table des variables  
+   variables du schema de presentation                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         NewVar (indLine wi)
@@ -676,9 +680,9 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Round arrondit un float en un int.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Round arrondit un float en un int.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          Round (float e)
 #else  /* __STDC__ */
@@ -696,9 +700,9 @@ float               e;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    EndOfNumber                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EndOfNumber                                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfNumber ()
 #else  /* __STDC__ */
@@ -847,10 +851,10 @@ static void         EndOfNumber ()
    CurUnit = FontHeight;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewAttrPRule    allocation et initialisation d'une structure    | */
-/* |            AttributePres en fonction de l'attribut de numero att   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewAttrPRule    allocation et initialisation d'une structure    
+   AttributePres en fonction de l'attribut de numero att   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static AttributePres *NewAttrPRule (int att)
 #else  /* __STDC__ */
@@ -903,10 +907,10 @@ int                 att;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GenerateRPresAttribut	alloue eventuellement une nouvelle	| */
-/* |           structure AttributePres et initialise la regle concernee	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GenerateRPresAttribut	alloue eventuellement une nouvelle	
+   structure AttributePres et initialise la regle concernee	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GenerateRPresAttribut (indLine wi)
 
@@ -1044,11 +1048,11 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PageCounterChangeBox Cherche les compteurs de page pour la vue  | */
-/* |    pageView et indique dans ces compteurs que la boite de numero   | */
-/* |    boxNum peut etre modifiee par ces compteurs.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageCounterChangeBox Cherche les compteurs de page pour la vue  
+   pageView et indique dans ces compteurs que la boite de numero   
+   boxNum peut etre modifiee par ces compteurs.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PageCounterChangeBox (int boxNum, int pageView)
 
@@ -1081,9 +1085,9 @@ int                 pageView;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessShortKeyWord                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessShortKeyWord                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 
@@ -1305,9 +1309,9 @@ SyntacticCode             gCode;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessAxis                                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessAxis                                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessAxis (BoxEdge axis, indLine wi)
 
@@ -1365,9 +1369,9 @@ indLine               wi;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateConstant                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateConstant                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateConstant (BasicType constType, indLine wi)
 
@@ -1411,9 +1415,9 @@ indLine               wi;
    pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdType = constType;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewCounterOper                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewCounterOper                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewCounterOper (CounterOp oper, indLine wi)
 
@@ -1443,10 +1447,10 @@ indLine               wi;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChercheTRegle   cherche la regle de type ruleType dans la liste de     | */
-/* |    regles qui commence par la regle firstR.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChercheTRegle   cherche la regle de type ruleType dans la liste de     
+   regles qui commence par la regle firstR.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule ChercheTRegle (PRuleType ruleType, PtrPRule firstR)
 
@@ -1474,10 +1478,10 @@ PtrPRule        firstR;
    return pRule;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateDefaultRule cree une nouvelle regle de presentation par	| */
-/* |		defaut.							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateDefaultRule cree une nouvelle regle de presentation par	
+   defaut.							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateDefaultRule ()
 
@@ -1500,10 +1504,10 @@ static void         CreateDefaultRule ()
    CurRule->PrPresMode = PresImmediate;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    InheritRule transforme la regle de presentation courante en     | */
-/* |    une regle d'heritage de type inheritType.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InheritRule transforme la regle de presentation courante en     
+   une regle d'heritage de type inheritType.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InheritRule (InheritMode inheritType)
 
@@ -1524,11 +1528,11 @@ InheritMode        inheritType;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckDefaultRules   verifie que toutes les regles par defaut    | */
-/* |    sont presentes pour la vue 1 et si certaines sont absentes, on  | */
-/* |    les ajoute.                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckDefaultRules   verifie que toutes les regles par defaut    
+   sont presentes pour la vue 1 et si certaines sont absentes, on  
+   les ajoute.                                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckDefaultRules ()
 
@@ -1788,10 +1792,10 @@ indLine               wi;
    CurRule->PrNextPRule = NULL;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckForwardRef    verifie que toutes les references de boites  | */
-/* |    en avant sont resolues.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckForwardRef    verifie que toutes les references de boites  
+   en avant sont resolues.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckForwardRef (indLine wi)
 
@@ -1835,12 +1839,12 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BooleanValue affecte la valeur bool au parametre de		| */
-/* |	presentation courant (indique' par InBreakRule,			| */
-/* |	InLineBreakRule, InPageBreakRule, InGatherRule ou InInLineRule)	| */
-/* |	 de la boite courante ou des regles par defaut.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BooleanValue affecte la valeur bool au parametre de		
+   presentation courant (indique' par InBreakRule,			
+   InLineBreakRule, InPageBreakRule, InGatherRule ou InInLineRule)	
+   de la boite courante ou des regles par defaut.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BooleanValue (boolean bool)
 
@@ -1949,9 +1953,9 @@ boolean             bool;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CreationRule                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreationRule                                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreationRule (FunctionType creatFonct, indLine wi)
 
@@ -1987,9 +1991,9 @@ indLine               wi;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    LayoutRule                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LayoutRule                                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         LayoutRule (FunctionType layoutFonct, indLine wi)
 
@@ -2056,9 +2060,9 @@ indLine               wi;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GenerateCopyRule                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GenerateCopyRule                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GenerateCopyRule (FunctionType fonctType, indLine wi)
 
@@ -2101,10 +2105,10 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SameConditions compare deux chaines de conditions et retourne   | */
-/* |    True si elles sont egales.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SameConditions compare deux chaines de conditions et retourne   
+   True si elles sont egales.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
 
@@ -2199,9 +2203,9 @@ PtrCondition        pCond2;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessLongKeyWord                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessLongKeyWord                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 
@@ -3258,10 +3262,10 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetTypeNumber        retourne le numero du type d'element dont	| */
-/* |    le nom est typeName.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetTypeNumber        retourne le numero du type d'element dont	
+   le nom est typeName.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          GetTypeNumber (indLine wl, indLine wi, Name typeName)
 
@@ -3304,9 +3308,9 @@ Name                 typeName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessTypeName    traite un nom de type d'element		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessTypeName    traite un nom de type d'element		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessTypeName (SyntacticCode prevRule, Name typeName, indLine wi, indLine wl)
 
@@ -3517,9 +3521,9 @@ indLine               wl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewBoxName      traite un nouveau nom de boite de presentation  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewBoxName      traite un nouveau nom de boite de presentation  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewBoxName (indLine wl, indLine wi, int identnum)
 
@@ -3553,10 +3557,10 @@ int                 identnum;
    pPresBox->PbContent = FreeContent;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    IntAttribute  traite un nom d'attribut qui apparait a la place d'une | */
-/* |    valeur numerique entiere.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IntAttribute  traite un nom d'attribut qui apparait a la place d'une 
+   valeur numerique entiere.                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         IntAttribute (int attr, SyntacticCode prevRule, indLine wi)
 
@@ -3649,9 +3653,9 @@ indLine               wi;
 	    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessName         traite un nom.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessName         traite un nom.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRule, indLine wl, indLine wi)
 
@@ -4551,9 +4555,9 @@ indLine               wi;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessInteger	traite un nombre.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessInteger	traite un nombre.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 
@@ -4817,9 +4821,9 @@ indLine               wi;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessString       traitee une chaine de caracteres.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessString       traitee une chaine de caracteres.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 
@@ -4862,14 +4866,14 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessToken    traite le token commencant a la position wi dans| */
-/* |    la ligne courante, de longueur wl et de code grammatical c.     | */
-/* |    Si c'est un identificateur, nb contient son rang dans la table  | */
-/* |    des identificateurs. r est le numero de la regle dans laquelle  | */
-/* |    apparait ce mot, pr est le numero de la regle precedente, celle | */
-/* |    qui a appele la regle r.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessToken    traite le token commencant a la position wi dans
+   la ligne courante, de longueur wl et de code grammatical c.     
+   Si c'est un identificateur, nb contient son rang dans la table  
+   des identificateurs. r est le numero de la regle dans laquelle  
+   apparait ce mot, pr est le numero de la regle precedente, celle 
+   qui a appele la regle r.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int identnum, SyntacticCode pr)
 
@@ -4913,9 +4917,9 @@ SyntacticCode             pr;
 	    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RuleBefore                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RuleBefore                                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
 
@@ -4967,9 +4971,9 @@ PtrPRule        pPRule2;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SortPresRules                                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SortPresRules                                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         SortPresRules (PtrPRule * firstPRule)
@@ -5046,11 +5050,11 @@ PtrPRule       *firstPRule;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SortAllPRules  met les regles de presentation dans le bon ordre | */
-/* |    pour l'application des regles lors de la production des images  | */
-/* |    abstraites.                                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SortAllPRules  met les regles de presentation dans le bon ordre 
+   pour l'application des regles lors de la production des images  
+   abstraites.                                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SortAllPRules ()
 
@@ -5105,11 +5109,11 @@ void                SortAllPRules ()
       SortPresRules (&pPSchema->PsElemPRule[j]);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PageCounter    determine si le compteur de numero counter est   | */
-/* |    un compteur de page. Retourne Vrai si c'est un compteur de	| */
-/* |    pages, Faux sinon.                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageCounter    determine si le compteur de numero counter est   
+   un compteur de page. Retourne Vrai si c'est un compteur de	
+   pages, Faux sinon.                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      PageCounter (int counter)
@@ -5132,13 +5136,13 @@ int                 counter;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchPRule  cherche pour la vue view une regle de type ruleType| */
-/* |    dans la chaine de regles dont l'ancre est firstRule. Retourne   | */
-/* |    un pointeur sur cette regle si elle existe ou insere une regle  | */
-/* |    de ce type dans la chaine et retourne un pointeur sur la        | */
-/* |    regle creee.                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchPRule  cherche pour la vue view une regle de type ruleType
+   dans la chaine de regles dont l'ancre est firstRule. Retourne   
+   un pointeur sur cette regle si elle existe ou insere une regle  
+   de ce type dans la chaine et retourne un pointeur sur la        
+   regle creee.                                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrPRule SearchPRule (PtrPRule * firstRule, PRuleType ruleType, int view)
@@ -5217,11 +5221,11 @@ int                 view;
    return pR;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckPageBoxes    verifie que toutes les boites de presentation | */
-/* |    declarees pour les pages sont bien utilisees et adapte les      | */
-/* |    regles des boites pages.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckPageBoxes    verifie que toutes les boites de presentation 
+   declarees pour les pages sont bien utilisees et adapte les      
+   regles des boites pages.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckPageBoxes ()
 
@@ -5965,12 +5969,12 @@ static void         CheckPageBoxes ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckUsedBoxes    parcourt la chaine de regles de presentation  | */
-/* |    commencant par la regle pointee par pRule et cherche toutes les | */
-/* |    regles de creation ou de mise en page. Marque utilisee la       | */
-/* |    boite de presentation utilisee dans ces regles                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckUsedBoxes    parcourt la chaine de regles de presentation  
+   commencant par la regle pointee par pRule et cherche toutes les 
+   regles de creation ou de mise en page. Marque utilisee la       
+   boite de presentation utilisee dans ces regles                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckUsedBoxes (PtrPRule pRule, boolean usedBox[MAX_PRES_BOX])
 
@@ -6019,11 +6023,11 @@ boolean             usedBox[MAX_PRES_BOX];
    while (!stop);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckAllBoxesUsed verifie que toutes les boites de presentation | */
-/* |    declarees dans le schema sont bien utilisees dans une regle de  | */
-/* |    creation ou une regle Page                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckAllBoxesUsed verifie que toutes les boites de presentation 
+   declarees dans le schema sont bien utilisees dans une regle de  
+   creation ou une regle Page                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CheckAllBoxesUsed ()
@@ -6091,9 +6095,9 @@ static void         CheckAllBoxesUsed ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    main                                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   main                                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                main (int argc, char **argv)

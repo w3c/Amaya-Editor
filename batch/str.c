@@ -1,11 +1,15 @@
-/*
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
+/*----------------------------------------------------------------------
    Ce programme compile un schema de structure contenu dans un fichier
    de type .S.
    Il est dirige' par la grammaire du langage de structure
    contenue, sous forme codee, dans le fichier STRUCT.GRM.
    Il produit un fichier de type .STR qui sera ensuite utilise'
    par l'editeur Thot.
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "strdef.h"
@@ -141,9 +145,9 @@ extern void         TtaSaveAppRegistry ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    InitBasicType                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitBasicType                                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         InitBasicType (SRule * pRule, char *name, BasicType typ)
@@ -175,10 +179,10 @@ BasicType          typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Initialize       prepare la generation : initialise le schema	| */
-/* |    de structure en memoire.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Initialize       prepare la generation : initialise le schema	
+   de structure en memoire.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Initialize ()
 
@@ -282,11 +286,11 @@ static void         Initialize ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RuleNameExist  verifie si le nom de la derniere regle de la	| */
-/* |    table des regles est deja utilise' dans une autre regle de	| */
-/* |    la meme table des regles. Retourne Vrai si oui.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RuleNameExist  verifie si le nom de la derniere regle de la	
+   table des regles est deja utilise' dans une autre regle de	
+   la meme table des regles. Retourne Vrai si oui.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      RuleNameExist ()
@@ -316,9 +320,9 @@ static boolean      RuleNameExist ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Undefined                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Undefined                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Undefined (int n)
 
@@ -371,13 +375,13 @@ int                 n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangeOneRule met dans une regle les vrais numeros de regles a	| */
-/* |    la place des numeros d'identificateur. Les elements non definis	| */
-/* |    sont considere's comme des structures externes (natures);       | */
-/* |    les elements non reference's sont signale's comme des erreurs   | */
-/* |    s'ils ne sont pas des elements associes.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeOneRule met dans une regle les vrais numeros de regles a	
+   la place des numeros d'identificateur. Les elements non definis	
+   sont considere's comme des structures externes (natures);       
+   les elements non reference's sont signale's comme des erreurs   
+   s'ils ne sont pas des elements associes.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeOneRule (SRule * pRule)
 
@@ -503,13 +507,13 @@ SRule              *pRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangeRules    met dans les regles les vrais numeros de regles  | */
-/* |    a la place des numeros d'identificateur. Les elements non       | */
-/* |    definis sont considere's comme des structures externes(natures);| */
-/* |    les elements non reference's sont signale's comme des erreurs   | */
-/* |    s'ils ne sont pas des elements associes.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeRules    met dans les regles les vrais numeros de regles  
+   a la place des numeros d'identificateur. Les elements non       
+   definis sont considere's comme des structures externes(natures);
+   les elements non reference's sont signale's comme des erreurs   
+   s'ils ne sont pas des elements associes.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeRules ()
 
@@ -551,9 +555,9 @@ static void         ChangeRules ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CopyWord    copie dans n le mot traite'.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyWord    copie dans n le mot traite'.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CopyWord (Name name, indLine wi, indLine wl)
 
@@ -576,9 +580,9 @@ indLine               wl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Push                                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Push                                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Push (indLine wi)
 
@@ -600,9 +604,9 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RightIdentifier                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RightIdentifier                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RightIdentifier (int n, indLine wi)
 
@@ -663,9 +667,9 @@ indLine               wi;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    NewRule                                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewRule                                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewRule (indLine wi)
 
@@ -750,11 +754,11 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RuleNumber      retourne le numero de la regle definissant le   | */
-/* |    mot courant comme un type d'element, ou 0 si le mot n'est pas   | */
-/* |    un type d'element deja defini.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RuleNumber      retourne le numero de la regle definissant le   
+   mot courant comme un type d'element, ou 0 si le mot n'est pas   
+   un type d'element deja defini.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          RuleNumber (indLine wl, indLine wi)
 
@@ -781,11 +785,11 @@ indLine              wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AttributeNumber retourne le numero de l'attribut ayant pour     | */
-/* |    nom le mot courant, ou 0 si le mot n'est pas un attribut        | */
-/* |    deja defini.                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttributeNumber retourne le numero de l'attribut ayant pour     
+   nom le mot courant, ou 0 si le mot n'est pas un attribut        
+   deja defini.                                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          AttributeNumber (indLine wl, indLine wi)
@@ -813,14 +817,14 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ExceptionNum    traite le numero d'exception Num. Si checkType  | */
-/* |    est vrai, verifie que l'exception porte sur un type d'element.  | */
-/* |    Si checkAttr est vrai, verifie que l'exception porte sur un     | */
-/* |    attribut.                                                       | */
-/* |    SiCheckIntAttr est vrai, verifie que l'exception porte sur un   | */
-/* |    attribut numerique.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ExceptionNum    traite le numero d'exception Num. Si checkType  
+   est vrai, verifie que l'exception porte sur un type d'element.  
+   Si checkAttr est vrai, verifie que l'exception porte sur un     
+   attribut.                                                       
+   SiCheckIntAttr est vrai, verifie que l'exception porte sur un   
+   attribut numerique.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ExceptionNum (int Num, boolean checkType, boolean checkAttr, boolean CheckIntAttr, indLine wi)
@@ -883,9 +887,9 @@ indLine               wi;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BasicEl                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BasicEl                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
 
@@ -956,9 +960,9 @@ SyntRuleNum                 pr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Stocke le texte d'une constante chaine                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Stocke le texte d'une constante chaine                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          StoreConstText (int wi, int wl)
@@ -990,9 +994,9 @@ int                 wl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitRule       initialise une regle de structure                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitRule       initialise une regle de structure                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         InitRule (SRule * pRule)
@@ -1020,10 +1024,10 @@ SRule              *pRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DupliqueReglePaire      Si la derniere regle traitee est une    | */
-/* |            CsPairedElement, duplique cette regle CsPairedElement.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DupliqueReglePaire      Si la derniere regle traitee est une    
+   CsPairedElement, duplique cette regle CsPairedElement.                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         DupliqueReglePaire ()
@@ -1050,10 +1054,10 @@ static void         DupliqueReglePaire ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetExtensionRule      recherche une regle d'extension ayant le  | */
-/* |                   nom (wi, wl)                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetExtensionRule      recherche une regle d'extension ayant le  
+   nom (wi, wl)                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static SRule       *GetExtensionRule (indLine wi, indLine wl)
@@ -1092,10 +1096,10 @@ indLine               wl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewExtensionRule alloue et initialise une nouvelle regle         | */
-/* |                    d'extension                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewExtensionRule alloue et initialise une nouvelle regle         
+   d'extension                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static SRule       *NewExtensionRule (indLine wi, indLine wl)
 
@@ -1130,13 +1134,13 @@ indLine               wl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ProcessToken    traite le mot commencant a la position wi dans  | */
-/* |    la ligne courante, de longueur wl et de code grammatical c.     | */
-/* |    Si c'est un identificateur, nb contient son rang dans la table  | */
-/* |    des identificateurs. r est le numero de la regle dans laquelle  | */
-/* |    apparait ce mot.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ProcessToken    traite le mot commencant a la position wi dans  
+   la ligne courante, de longueur wl et de code grammatical c.     
+   Si c'est un identificateur, nb contient son rang dans la table  
+   des identificateurs. r est le numero de la regle dans laquelle  
+   apparait ce mot.                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
 
@@ -2459,11 +2463,11 @@ SyntRuleNum                 pr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ExternalTypes     marque comme externe dans le schema de        | */
-/* |    structure tous les elements qui sont dans la table des types    | */
-/* |    externes.                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ExternalTypes     marque comme externe dans le schema de        
+   structure tous les elements qui sont dans la table des types    
+   externes.                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ExternalTypes ()
 
@@ -2512,9 +2516,9 @@ static void         ExternalTypes ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckRecursivity                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckRecursivity                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckRecursivity (int r, int path[], int level, boolean busy[], boolean done[])
 
@@ -2587,9 +2591,9 @@ boolean             done[];
    done[r] = True;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChkRecurs                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChkRecurs                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChkRecurs ()
 
@@ -2617,10 +2621,10 @@ static void         ChkRecurs ()
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ListAssocElem       liste les elements consideres comme		| */
-/* |            parametres et elements associes                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ListAssocElem       liste les elements consideres comme		
+   parametres et elements associes                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ListAssocElem ()
 
@@ -2706,11 +2710,11 @@ static void         ListAssocElem ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ListNotCreated       liste les types d'elements qui ne seront	| */
-/* |    pas crees lors de l'edition d'un document ou d'un objet de	| */
-/* |    ce type.                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ListNotCreated       liste les types d'elements qui ne seront	
+   pas crees lors de l'edition d'un document ou d'un objet de	
+   ce type.                                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ListNotCreated ()
 
@@ -2854,9 +2858,9 @@ static void         ListNotCreated ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    main                                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   main                                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 main (int argc, char **argv)
 

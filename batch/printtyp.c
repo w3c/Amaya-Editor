@@ -1,12 +1,13 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/*
+/*----------------------------------------------------------------------
    printtyp.c :
    Ce programme effectue le chargement d'un schema de typographie et
    du schema de structure associe' et liste le contenu de ce schema de
    typographie. 
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -31,9 +32,9 @@ RTypoAttribut      *pRT1;
 TyCasAttrNum       *pCa1;
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReadEnv lit la variable THOTSCH dans SchemaPath.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadEnv lit la variable THOTSCH dans SchemaPath.          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ReadEnv ()
@@ -56,9 +57,9 @@ static void         ReadEnv ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnb ecrit au terminal l'entier nb.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnb ecrit au terminal l'entier nb.                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnb (int nb)
@@ -90,9 +91,9 @@ int                 nb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnom ecrit au terminal le nom n.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnom ecrit au terminal le nom n.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnom (Name n)
@@ -124,9 +125,9 @@ Name                 n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnomregle ecrit au terminal le nom de la regle de numero r.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnomregle ecrit au terminal le nom de la regle de numero r.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnomregle (int r)
@@ -143,9 +144,9 @@ int         r;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    wrnomattr ecrit au terminal le nom de l'attribut de numero a.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrnomattr ecrit au terminal le nom de l'attribut de numero a.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrnomattr (int a)
@@ -161,9 +162,9 @@ int      a;
       wrnom (pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    wrcondtypo                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrcondtypo                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrcondtypo (int n, PtrRegleTypo * pR)
@@ -220,10 +221,10 @@ PtrRegleTypo       *pR;
 	 }
 }
 
-/* ------------------------------------------------------------------------ */
-/* |    wrsuitefunctions ecrit au terminal la suite de fonctions chainees | */
-/* |       dont RP pointe sur la fonction de tete.                        | */
-/* ------------------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+   wrsuitefunctions ecrit au terminal la suite de fonctions chainees 
+   dont RP pointe sur la fonction de tete.                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrsuitefunctions (PtrTypoFunction PT)
@@ -280,10 +281,10 @@ PtrTypoFunction     PT;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   wrsuiteregles ecrit au terminal la suite de regles chainees dont | */
-/* |            RP pointe sur la regle de tete.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   wrsuiteregles ecrit au terminal la suite de regles chainees dont 
+   RP pointe sur la regle de tete.                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         wrsuiteregles (PtrRegleTypo RT)
@@ -349,9 +350,9 @@ PtrRegleTypo        RT;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    main                                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   main                                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 main (int argc, char **argv)

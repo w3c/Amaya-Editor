@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /*
     Ce module sauve dans un fichier un schema de traduction qui a ete
     compile' en memoire.
@@ -16,9 +20,9 @@ static BinFile      outfile;
 #include "fileaccess_f.h"
 #include "writetra_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteShort      ecrit un entier sur 2 octets			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteShort      ecrit un entier sur 2 octets			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteShort (int n)
 #else  /* __STDC__ */
@@ -31,9 +35,9 @@ int                 n;
    BIOwriteByte (outfile, (char) (n % 256));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteSignedShort  ecrit un entier signe' sur 2 octets		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteSignedShort  ecrit un entier signe' sur 2 octets		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteSignedShort (int n)
 
@@ -50,9 +54,9 @@ int             n;
       WriteShort (n + 65536);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteName                ecrit un nom				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteName                ecrit un nom				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteName (Name n)
@@ -73,9 +77,9 @@ Name                 n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBoolean       ecrit un booleen				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBoolean       ecrit un booleen				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteBoolean (boolean b)
@@ -95,10 +99,10 @@ boolean             b;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTransCondition  ecrit un type de condition d'application	| */
-/* |	de regle de traduction						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTransCondition  ecrit un type de condition d'application	
+   de regle de traduction						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteTransCondition (TransCondition cond)
@@ -184,9 +188,9 @@ TransCondition        cond;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteRelatNAscend						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteRelatNAscend						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteRelatNAscend (RelatNAscend rel)
@@ -213,9 +217,9 @@ RelatNAscend         rel;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTRuleType      ecrit un type de regle de traduction	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTRuleType      ecrit un type de regle de traduction	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteTRuleType (TRuleType typ)
@@ -274,10 +278,10 @@ TRuleType       typ;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTOrder ecrit la position ou il faut creer les chaines	| */
-/* |	produites par le traducteur					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTOrder ecrit la position ou il faut creer les chaines	
+   produites par le traducteur					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteTOrder (TOrder order)
@@ -303,9 +307,9 @@ TOrder          order;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteCreatedObject   ecrit le type de chose a creer		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteCreatedObject   ecrit le type de chose a creer		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteCreatedObject (CreatedObject obj)
@@ -385,9 +389,9 @@ CreatedObject            obj;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteRelativePosition   ecrit une position relative		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteRelativePosition   ecrit une position relative		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteRelativePosition (TRelatPosition pos)
@@ -419,9 +423,9 @@ TRelatPosition            pos;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTCounterOp   ecrit le type d'une operation sur un compteur	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTCounterOp   ecrit le type d'une operation sur un compteur	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteTCounterOp (TCounterOp op)
@@ -453,9 +457,9 @@ TCounterOp         op;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTVarType ecrit le type des elements de variables de traduction | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTVarType ecrit le type des elements de variables de traduction 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteTVarType (TranslVarType typ)
@@ -499,9 +503,9 @@ TranslVarType         typ;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteCounterStyle ecrit un style de compteur dans le fichier	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteCounterStyle ecrit un style de compteur dans le fichier	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteCounterStyle (CounterStyle style)
@@ -535,9 +539,9 @@ CounterStyle          style;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTRulePtr	ecrit un pointeur de regle de traduction	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTRulePtr	ecrit un pointeur de regle de traduction	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteTRulePtr (PtrTRule ptr)
 
@@ -555,9 +559,9 @@ PtrTRule        ptr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTRules  ecrit une suite de regles de traduction		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTRules  ecrit une suite de regles de traduction		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteTRules (PtrTRule pTRule)
@@ -627,9 +631,9 @@ PtrTRule        pTRule;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBlockPtr							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBlockPtr							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WriteBlockPtr (PtrTRuleBlock pBlock)
 
@@ -648,9 +652,9 @@ PtrTRuleBlock       pBlock;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteBlocks   ecrit une suite de blocs de regles		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteBlocks   ecrit une suite de blocs de regles		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
@@ -745,10 +749,10 @@ PtrSSchema          pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTRulesAttr  ecrit les regles de traduction de l'attribut	| */
-/* |	de numero att appartenant au schema de structure pSS		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTRulesAttr  ecrit les regles de traduction de l'attribut	
+   de numero att appartenant au schema de structure pSS		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
@@ -795,10 +799,10 @@ PtrTSchema          pTSch;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	WritePRuleTrans ecrit les regles de traduction de la presentation | */
-/* |	de numero pres							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WritePRuleTrans ecrit les regles de traduction de la presentation 
+   de numero pres							
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WritePRuleTrans (int pres, PtrSSchema pSS, PtrTSchema pTSch)
@@ -842,10 +846,10 @@ PtrTSchema          pTSch;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	WriteTranslationSchema cree le fichier de sortie et y ecrit le	| */
-/* |	schema de traduction						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WriteTranslationSchema cree le fichier de sortie et y ecrit le	
+   schema de traduction						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS)
 
