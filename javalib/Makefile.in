@@ -12,7 +12,8 @@ THOTDIR = @top_srcdir@
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f \
-          -I$(THOTDIR)/amaya -I../amaya -I../include/kaffe \
+          -I$(THOTDIR)/amaya/f -I$(THOTDIR)/amaya -I../amaya \
+          -I../include/kaffe \
 	  @THOTINCLUDES@ $(X_FLAGS)
 
 COMPILERS= $(JAVASTUB) ../bin/kaffeh ../bin/kaffe
@@ -117,7 +118,9 @@ AMAYA_JAVA_OBJ = \
 	JavaWWWInterf.o \
 	org_w3c_amaya_APIHtml_stubs.o \
 	org_w3c_amaya_APIJavaAmaya_stubs.o \
-	org_w3c_amaya_APIAmayaMsg_stubs.o
+	org_w3c_amaya_APIAmayaMsg_stubs.o \
+	org_w3c_amaya_html2thot_stubs.o \
+	org_w3c_amaya_html2thotExtra_stubs.o
 
 libAmayaJava : $(THOTDIR)/classes/org/w3c/amaya stubs libAmayaJava.a
 
@@ -400,10 +403,11 @@ org_w3c_amaya_stubs = \
     org_w3c_amaya_APIJavaAmaya.h \
     org_w3c_amaya_APIAmayaMsg.h \
     org_w3c_amaya_APIHtml.h \
-    org_w3c_amaya_HTTPRequest.h 
+    org_w3c_amaya_HTTPRequest.h \
+    org_w3c_amaya_html2thot.h
 
 #
-# Warning : org_w3c_amaya_APIHtml stubs needs HTML.h which it the result
+# Warning : org_w3c_amaya_APIHtml stubs needs HTML.h which is the result
 #           of amaya schema compilation, and the header is looked for
 #           in the amaya object directory, not $(THOTDIR)/javalib
 #
@@ -454,6 +458,22 @@ org_w3c_amaya_APIAmayaMsg_stubs.c : $(THOTDIR)/amaya/amayamsg.h \
 	@echo
 	@echo "Producing header for class APIAmayaMsg"
 	$(KAFFEH) org.w3c.amaya.APIAmayaMsg
+
+org_w3c_amaya_html2thot.h org_w3c_amaya_html2thot_stubs.h \
+org_w3c_amaya_html2thot_stubs.c : $(THOTDIR)/amaya/f/html2thot_f.h \
+   $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
+	@echo
+	@echo "Producing new Java class html2thot"
+	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
+	            -M org_w3c_amaya_html2thot \
+		    -J $(THOTDIR)/classes/org/w3c/amaya/html2thot.java \
+		    $(THOTDIR)/amaya/f/html2thot_f.h 2>> javastub.log
+	@echo
+	@echo "Compiling new Java class html2thot"
+	$(JAVAC) org/w3c/amaya/html2thot.java
+	@echo
+	@echo "Producing header for class html2thot"
+	$(KAFFEH) org.w3c.amaya.html2thot
 
 java_stubs = \
     java_lang_StringBuffer.h

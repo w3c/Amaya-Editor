@@ -88,3 +88,7 @@ org_w3c_amaya_HTTPRequest.h :
 	@echo "Producing header for class HTTPRequest"
 	$(KAFFEH) org.w3c.amaya.HTTPRequest
 
+org_w3c_amaya_html2thotExtra.h :
+	@echo
+	@echo "Producing header for class html2thotExtra"
+	$(KAFFEH) org.w3c.amaya.html2thotExtra

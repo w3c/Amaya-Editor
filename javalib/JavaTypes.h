@@ -98,6 +98,8 @@ extern void JavaThotlibRelease();
 #define org_w3c_thotlib_APIView_LOCK() JavaThotlibLock()
 #define org_w3c_amaya_APIJavaAmaya_LOCK() JavaThotlibLock()
 #define org_w3c_amaya_APIAmayaMsg_LOCK() JavaThotlibLock()
+#define org_w3c_amaya_html2thot_LOCK() JavaThotlibLock()
+#define org_w3c_amaya_html2thotExtra_LOCK() JavaThotlibLock()
 
 #define org_w3c_thotlib_APIApplication_UNLOCK() JavaThotlibRelease()
 #define org_w3c_thotlib_APIAttribute_UNLOCK() JavaThotlibRelease()
@@ -114,5 +116,7 @@ extern void JavaThotlibRelease();
 #define org_w3c_thotlib_APIView_UNLOCK() JavaThotlibRelease()
 #define org_w3c_amaya_APIJavaAmaya_UNLOCK() JavaThotlibRelease()
 #define org_w3c_amaya_APIAmayaMsg_UNLOCK() JavaThotlibRelease()
+#define org_w3c_amaya_html2thot_UNLOCK() JavaThotlibRelease()
+#define org_w3c_amaya_html2thotExtra_UNLOCK() JavaThotlibRelease()
 
 #endif /* _Included_Java_Type_H_ */

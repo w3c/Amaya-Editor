@@ -135,3 +135,11 @@ org_w3c_amaya_HTTPRequest.h : $(THOTDIR)/classes/org/w3c/amaya/HTTPRequest.java 
 	@echo "Producing header for class HTTPRequest"
 	$(KAFFEH) org.w3c.amaya.HTTPRequest
 
+org_w3c_amaya_html2thotExtra.h : $(THOTDIR)/classes/org/w3c/amaya/html2thotExtra.java $(COMPILERS)
+	@echo
+	@echo "Compiling Amaya class html2thotExtra"
+	$(JAVAC) org/w3c/amaya/html2thotExtra.java
+	@echo
+	@echo "Producing header for class html2thotExtra"
+	$(KAFFEH) org.w3c.amaya.html2thotExtra
+

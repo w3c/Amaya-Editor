@@ -32,6 +32,8 @@
 #include "org_w3c_thotlib_APIExtra_stubs.h"
 #include "org_w3c_amaya_APIAmayaMsg_stubs.h"
 #include "org_w3c_amaya_APIJavaAmaya_stubs.h"
+#include "org_w3c_amaya_html2thot_stubs.h"
+#include "org_w3c_amaya_html2thotExtra_stubs.h"
 #include "debug_stubs.h"
 
 #include "debug_stubs_f.h"
@@ -742,6 +744,8 @@ static void register_stubs(void)
    register_org_w3c_thotlib_APIRegistry_stubs();
    register_org_w3c_amaya_APIAmayaMsg_stubs();
    register_org_w3c_amaya_APIJavaAmaya_stubs();
+   register_org_w3c_amaya_html2thot_stubs();
+   register_org_w3c_amaya_html2thotExtra_stubs();
    register_debug_stubs();
 }
 
