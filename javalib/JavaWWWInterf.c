@@ -16,94 +16,6 @@
 
 extern char TempFileDirectory[];
 
-/************************************************************************
- *									*
- *   HTTP Requests Allocator. Since freeing Java allocated class	*
- *       instances is not a good thing, keep them in a pool		*
- *									*
- ************************************************************************/
-
-/*
- * CreateHTTPRequest : Create an CreateHTTPRequest instance.
- */
-
-#ifdef __STDC__
-struct Hamaya_HTTPRequest* CreateHTTPRequest ()
-#else
-struct Hamaya_HTTPRequest* CreateHTTPRequest ()
-#endif
-{
-    Hjava_lang_Object *obj;
-    struct Hamaya_HTTPRequest* request;
-
-    obj = AllocObject("amaya/HTTPRequest");
-    request = (struct Hamaya_HTTPRequest*) obj;
-
-    return(request);
-}
-
-/*
- * AllocHTTPRequest : Get an CreateHTTPRequest instance and preinitialize it.
- */
-
-#ifdef __STDC__
-struct Hamaya_HTTPRequest*
-AllocHTTPRequest (int doc, char *url, char *postString, char *outputfile)
-#else
-struct Hamaya_HTTPRequest*
-AllocHTTPRequest (doc, url, postString, outputfile)
-int                 doc;
-char               *urlName;
-char               *postString;
-char               *outputfile;
-#endif
-{
-    static int req_nr = 0;
-    struct Hamaya_HTTPRequest* request;
-    struct Hjava_lang_String* urlName = NULL;
-    struct Hjava_lang_String* postCmd = NULL;
-    struct Hjava_lang_String* filename = NULL;
-
-    if (outputfile[0] == '\0') {
-        sprintf(outputfile,"%s/amaya_req%d",&TempFileDirectory[0],req_nr++);
-    }
-
-    if (url != NULL) {
-        urlName = makeJavaString(url, strlen(url));
-    }
-    if (postString != NULL) {
-        postCmd = makeJavaString(postString, strlen(postString));
-    }
-    if (outputfile != NULL) {
-        filename = makeJavaString(outputfile, strlen(outputfile));
-    }
-
-    request = CreateHTTPRequest();
-
-    if (doc == 0) doc = 1;
-    unhand(request)->doc = doc;
-    unhand(request)->urlName = urlName;
-    unhand(request)->filename = filename;
-    unhand(request)->postCmd = postCmd;
-    unhand(request)->callback = 0;
-    unhand(request)->callback_f = 0;
-    unhand(request)->callback_arg = 0;
-
-    return(request);
-}
-
-/*
- * FreeHTTPRequest : Take it back to the pool.
- */
-
-#ifdef __STDC__
-void FreeHTTPRequest (struct Hamaya_HTTPRequest* request)
-#else
-void FreeHTTPRequest (struct Hamaya_HTTPRequest* request)
-#endif
-{
-}
-
 /*----------------------------------------------------------------------
    GetObjectWWWCallback
    this function is called when an asynchronous Get is finished.
@@ -143,7 +55,6 @@ void *arg;
 
     if (callback != NULL)
         callback(doc, status, &urlName[0], &outputfile[0], context);
-    FreeHTTPRequest(request);
     return(0);
 }
 
@@ -314,7 +225,6 @@ boolean             error_html;
 	    break;
 	default:
 	    /* Some kind of error or strange behaviour occured */
-	    FreeHTTPRequest(request);
 	    fprintf(stderr,"GetObjectWWW : Protocol error %d\n", result);
 	    return(-1);
     }
@@ -465,11 +375,9 @@ void               *context_tcbf;
 	    break;
 	default:
 	    /* Some kind of error or strange behaviour occured */
-	    FreeHTTPRequest(request);
 	    fprintf(stderr,"PutObjectWWW : Protocol error %d\n", result);
 	    return(-1);
     }
-    FreeHTTPRequest(request);
 
     return(0);
 }

@@ -18,9 +18,6 @@ typedef struct Classamaya_HTTPRequest {
 #define amaya_HTTPRequest_AGET_REQUEST 4
 #define amaya_HTTPRequest_FAILED_REQUEST 400
   struct Hamaya_HTTPRequest* next;
-  jlong callback;
-  jlong callback_f;
-  jlong callback_arg;
   jint type;
   jint doc;
   jint contentLenght;
@@ -32,6 +29,9 @@ typedef struct Classamaya_HTTPRequest {
   struct Hjava_lang_String* postCmd;
   struct Hjava_lang_String* filename;
   struct Hjava_lang_Thread* thread;
+  jlong callback;
+  jlong callback_f;
+  jlong callback_arg;
   struct Hamaya_HTTPConnection* conn;
 } Classamaya_HTTPRequest;
 HandleTo(amaya_HTTPRequest);

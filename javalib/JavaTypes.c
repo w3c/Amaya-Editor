@@ -116,9 +116,7 @@ int *JavaLongPtr2CIntPtr(jlong *in)
 {
     int *res = (int *) in;
 
-    if (int_ptr_need_shift < 0) do_ptr_need_shift();
-
-    if (int_ptr_need_shift) res++;
+    if (int_ptr_need_shift == 1) res++;
 #ifdef DEBUG_ARCH
     fprintf(stderr, "JavaLongPtr2CIntPtr(0x%X%08X) = 0x%X%08X\n",
             (unsigned int) (((jlong) in) >> 32),
