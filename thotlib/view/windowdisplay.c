@@ -1036,6 +1036,8 @@ int         active;
 int         fg;
 #endif /* __STDC__ */
 {
+  HPEN        hPen;
+  HPEN        hOldPen;
   int         arc, fh;
 
   if (fg < 0)
@@ -1059,18 +1061,17 @@ int         fg;
       DrawOneLine (frame, 2, 5, x + l - 2, y + arc, x + l - 2, y + h, fg);
 
       /* Upper part */
-      pen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
+      hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
 #ifdef _WIN_PRINT
-      hOldPen = SelectObject (TtDisplay, pen);
+      hOldPen = SelectObject (TtDisplay, hPen);
       Arc (TtDisplay, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
       SelectObject (TtDisplay, hOldPen);
 #else  /* _WIN_PRINT */
-      hOldPen = SelectObject (TtPrinterDC, pen);
+      hOldPen = SelectObject (TtPrinterDC, hPen);
       Arc (TtPrinterDC, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
       SelectObject (TtPrinterDC, hOldPen);
 #endif /* _WIN_PRINT */
-      if (!DeleteObject (pen))
-	WinErrorBox (WIN_Main_Wd, TEXT("DrawIntersection"));
+      DeleteObject (hPen);
      }
 }
 
@@ -1095,6 +1096,8 @@ int         active;
 int         fg;
 #endif /* __STDC__ */
 {
+  HPEN        hPen;
+  HPEN        hOldPen;
   int         arc, fh;
 
   if (fg < 0)
@@ -1117,19 +1120,18 @@ int         fg;
        DrawOneLine (frame, 2, 5, x + 1, y, x + 1, y + h - arc, fg);
        DrawOneLine (frame, 2, 5, x + l - 2, y, x + l - 2, y + h - arc, fg);
        /* Lower part */
-       pen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
+       hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
        y += h;
 #ifdef _WIN_PRINT
-       hOldPen = SelectObject (TtPrinterDC, pen);
+       hOldPen = SelectObject (TtPrinterDC, hPen);
        Arc (TtPrinterDC, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
        SelectObject (TtPrinterDC, hOldPen);
 #else /* _WIN_PRINT */
-       hOldPen = SelectObject (TtDisplay, pen);
+       hOldPen = SelectObject (TtDisplay, hPen);
        Arc (TtDisplay, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
        SelectObject (TtDisplay, hOldPen);
 #endif /* _WIN_PRINT */
-       if (!DeleteObject (pen))
-	 WinErrorBox (WIN_Main_Wd, TEXT("DrawUnion"));
+       DeleteObject (hPen);
      }
 }
 
@@ -3212,7 +3214,7 @@ int         y;
 	PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	SelectObject (TtDisplay, hOldBrush);
         WIN_ReleaseDeviceContext ();
-	DeleteObject (hBrush));
+	DeleteObject (hBrush);
      }
 }
 
