@@ -1119,8 +1119,8 @@ void GeneratePoscriptFont (char r_name[10], char script, int family,
 /*----------------------------------------------------------------------
   FontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
-void FontIdentifier (char script, int family, int highlight, int size,
-		     TypeUnit unit, char r_name[10], char r_nameX[100])
+static void FontIdentifier (char script, int family, int highlight, int size,
+			    TypeUnit unit, char r_name[10], char r_nameX[100])
 {
   char        *wght, *slant, *ffamily;
   char         encoding[3];
@@ -1304,6 +1304,64 @@ void FontIdentifier (char script, int family, int highlight, int size,
     }
   GeneratePoscriptFont (r_name, script, family, highlight, size);
 }
+
+/*----------------------------------------------------------------------
+  GetFontIdentifier computes the name of a Thot font.
+  ----------------------------------------------------------------------*/
+void GetFontIdentifier (char script, int family, int highlight, int size,
+			TypeUnit unit, char text[10], char textX[100])
+{
+  char *result = NULL;
+#ifndef _WINDOWS
+  int i, j, k;
+
+  result = FontLoadFromConfig (script, family, highlight);
+  if (result)
+    {
+      /*size*/
+      if (unit == UnRelative)
+	{
+	  /* La size est relative */
+	  if (size > MaxNumberOfSizes)
+	    size = LogicalPointsSizes[MaxNumberOfSizes];
+	  else if (size >= 0)
+	    size = LogicalPointsSizes[size];
+	}
+      else if (unit == UnPixel)
+	size = PixelToPoint (size);
+      i = k = 0;
+      j = strlen (result);  
+      while (i < j)
+	{
+	  if (result[i] == '-') 
+	    {
+	      k++;	  
+	      if (k == 7)
+		{
+		  i++;
+		  break;	  
+		}
+	    }      
+	  i++;      
+	}
+      if (i == j)
+	result = NULL;
+      else
+	{
+	  strncpy  (textX, result, i);
+	  strcpy  (&textX[i], "%d\0");
+	  sprintf (textX, textX, size);  
+	  while (i < j && result[i] != '-')
+	    i++;
+	  strcat (textX, result + i);  
+	  GeneratePoscriptFont (text, script, family, highlight, size);
+	}
+    }
+#endif /*_WINDOWS*/
+  if (result == NULL)
+    FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
+}
+
 /*----------------------------------------------------------------------
   ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
@@ -1312,66 +1370,14 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
 {
   char             name[10], nameX[100];
 
-  FontIdentifier (script, family, highlight, size, unit, name, nameX);
+  GetFontIdentifier (script, family, highlight, size, unit, name, nameX);
 #ifndef _WINDOWS
   return LoadFont (nameX);
 #else  /* _WINDOWS */
   return NULL;
 #endif /* _WINDOWS */
 }
-/*----------------------------------------------------------------------
-  GetFontIdentifierFromConfig computes the name of a Thot font.
-  ----------------------------------------------------------------------*/
-static int GetFontIdentifierFromConfig (char script, int family, int highlight,
-					int size, TypeUnit unit, char r_name[10],
-					char r_nameX[100])
-{
- int i, j, k;
-  char *result = NULL;
 
-  result = FontLoadFromConfig (script, family, highlight);
-  if (result == NULL)
-    return 0;
-  /*size*/
-  if (unit == UnRelative)
-    {
-      /* La size est relative */
-      if (size > MaxNumberOfSizes)
-	size = LogicalPointsSizes[MaxNumberOfSizes];
-      else if (size >= 0)
-	size = LogicalPointsSizes[size];
-    }
-  else if (unit == UnPixel)
-	  size = PixelToPoint (size);
-  i = k = 0;
-  j = strlen (result);  
-  while (i < j)
-    {
-      if (result[i] == '-') 
-	{
-	  k++;	  
-	  if (k == 7)
-	    {
-	      i++;
-	      break;	  
-	    }
-	}      
-      i++;      
-    }
-  if (i == j)
-     return 0;
-     
-  strncpy  (r_nameX, result, i);
-  strcpy  (&r_nameX[i], "%d\0");
-  sprintf (r_nameX, r_nameX, size);  
-  while (i < j && result[i] != '-')
-    i++;  
-  
-  strcat (r_nameX, result + i);  
-  GeneratePoscriptFont (r_name, script, 
-			family, highlight, size);
-  return 1;
-}
 /*----------------------------------------------------------------------
   LoadNearestFont load the nearest possible font given a set of attributes
   like script, family, the size and for a given frame.
@@ -1395,14 +1401,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 #endif /* _WINDOWS */
   PtrFont             ptfont;
 
-#ifndef _WINDOWS
-  if (GetFontIdentifierFromConfig (script, family, highlight, 
-				   size, UnRelative, text, textX) == 0)
-    FontIdentifier (script, family, highlight, 
-		    size, UnRelative, text, textX);   
-#else /*_WINDOWS*/
-  FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
-#endif /*_WINDOWS*/  /* initialize the PostScript font name */
+  GetFontIdentifier (script, family, highlight, size, UnRelative, text, textX);
+  /* initialize the PostScript font name */
   strcpy (PsName, text);   
   /* Font cache lookup */
   i = 0;

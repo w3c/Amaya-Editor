@@ -383,7 +383,7 @@ void UnsetEntryMenu (int ref, int ent)
       TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
    else
      {
-	FontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
+	GetFontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
 }

@@ -361,8 +361,8 @@ void TteInitMenus (char *name, int number)
    InitClue(RootShell);
 #endif /* _WINDOWS */
    script = TtaGetScript (TtaGetDefaultLanguage ());
-   FontIdentifier (script, 2, 0, MenuSize, UnPoint, text, namef1);
-   FontIdentifier (script, 2, 1, MenuSize, UnPoint, text, namef2);
+   GetFontIdentifier (script, 2, 0, MenuSize, UnPoint, text, namef1);
+   GetFontIdentifier (script, 2, 1, MenuSize, UnPoint, text, namef2);
 #ifndef _WINDOWS
    TtaChangeDialogueFonts (namef1, namef2);
 #endif /* _WINDOWS */
