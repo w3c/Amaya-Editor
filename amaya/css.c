@@ -1322,14 +1322,15 @@ void                LoadUserStyleSheet (doc)
 Document            doc;
 #endif
 {
-  char                tempfile[MAX_LENGTH];
+  CSSInfoPtr          css;
   struct stat         buf;
+  FILE               *res;
+  PSchema             pSchema, prev;
+  char                tempfile[MAX_LENGTH];
   char               *buffer = NULL;
   char               *home;
   char               *thotdir;
-  FILE               *res;
   int                 len;
-  CSSInfoPtr          css;
 
   if (User_CSS != NULL)
     ApplyExtraPresentation (doc);
@@ -1412,6 +1413,15 @@ Document            doc;
       css->name = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
       css->category = CSS_USER_STYLE;
       css->pschema = TtaNewPSchema ();
+      css->mschema = NULL;
+      pSchema = TtaGetFirstPSchema (doc, NULL);
+      prev = NULL;
+      while (pSchema != NULL)
+	{
+	  prev = pSchema;
+	  TtaNextPSchema (&pSchema, doc, NULL);
+	}
+      TtaAddPSchema (css->pschema, prev, TRUE, doc, NULL);
       css->state = CSS_STATE_Unmodified;
       css->url = TtaStrdup (tempfile);
       css->css_rule = buffer;

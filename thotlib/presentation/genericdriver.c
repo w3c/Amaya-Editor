@@ -1236,7 +1236,7 @@ int                 extra;
 
    /* update the rendering */
    doc = ctxt->doc;
-   pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
+   pSS = (PtrSSchema) ctxt->schema;
    ApplyPRules (doc, pSS, elType, attrType, presBox, cur, TRUE);
 
 
