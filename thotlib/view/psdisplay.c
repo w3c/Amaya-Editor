@@ -181,9 +181,14 @@ int                 num;
     {
       /* Ask for the RedGreenBlue values */
       TtaGiveThotRGB (num, &red, &green, &blue);
-      /* Emit the Poscript command */
-      fact = 255;
-      fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
+      if (red == 0 && green == 0 && blue == 0)
+	fprintf (fout, "0 setgray\n");
+      else
+	{
+	  /* write the Poscript command */
+	  fact = 255;
+	  fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
+	}
       ColorPs = num;
     }
 }

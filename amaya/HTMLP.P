@@ -54,7 +54,7 @@ PRINT
 #define INVALID_Font Helvetica
 #define TableHSpace 0.2
 #define TableVSpace 0.3
-#define VSpaceBeforeH1 1
+#define VSpaceBeforeH1 0.5
 #define VSpaceBeforeH2 0.5
 #define VSpaceBeforeH3 0.5
 #define VSpaceBeforeH4 0.5
@@ -5900,7 +5900,7 @@ RULES
  BODY:	BEGIN
 	CreateBefore(BODY_S);
 	IF NOT within NOFRAMES BEGIN
-		MarginTop: 0.5 cm;
+		MarginTop: 0.2;
 		VertPos: Top = Previous AnyElem . Bottom;
 		END;
 	IF within NOFRAMES BEGIN
@@ -6091,7 +6091,7 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom;
 	Width: Enclosing . Width;
 	MarginTop: VSpaceBeforeH1;
-	MarginBottom: 0.5;
+	MarginBottom: 0.2;
 	Size: Enclosing + 6;
 	Weight: Bold;
 	Hyphenate: No;
@@ -9362,7 +9362,8 @@ ATTRIBUTES
  cellspacing (Table_head) > 0:
 	BEGIN
 	PaddingLeft: cellspacing px;	
-	PaddingRight: cellspacing px;	
+	PaddingRight: cellspacing px;
+	BorderRightWidth: Border px;
 	END;
  cellspacing (Column_head):
 	BEGIN
@@ -9371,7 +9372,7 @@ ATTRIBUTES
 	   VertPos: Top = Previous . Bottom;
 	END;
  cellspacing (Column_head) > 0:
-	MarginRight: Border px;
+	BorderRightWidth: Border px;
  cellspacing (thead):
 	BEGIN
 	VertPos: Top = Previous . Bottom + cellspacing px;

@@ -962,7 +962,9 @@ int                *volume;
 	  fprintf (PSfile, "   newpath\n");
 	  fprintf (PSfile, "   moveto\n");
 	  fprintf (PSfile, "   2 1 nb {pop lineto} for\n");
-	  fprintf (PSfile, "   0 setlinejoin ep 0.8 mul setlinewidth \n");
+	  fprintf (PSfile, "   0 setlinejoin 0 setlinecap\n");
+	  fprintf (PSfile, "   ep 1 gt {ep 0.8 mul} {ep 0.4 mul} ifelse\n");
+	  fprintf (PSfile, "   setlinewidth \n");
 	  fprintf (PSfile, "   style setstyle\n");
 	  fprintf (PSfile, "   ep 0 gt {stroke} if\n");
 	  fprintf (PSfile, "} bind def\n");
@@ -1578,9 +1580,6 @@ int                 frame;
    FILE               *PSfile;
 
    PSfile = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
-   /*DrawPage (PSfile);*/
-
    /* Est-ce la fenetre principale ? */
    if (frame == 1)
      {

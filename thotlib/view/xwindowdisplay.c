@@ -2423,7 +2423,7 @@ int                 fg;
   else if (align == 2)
     Y = y + h - (thick + 1) / 2;
   else
-    Y = y + (thick) / 2;
+    Y = y + thick / 2;
   if (thick > 0)
     {
       InitDrawing (0, style, thick, RO, active, fg);
@@ -2466,7 +2466,7 @@ int                 fg;
   else if (align == 2)
     X = x + l - (thick + 1) / 2;
   else
-    X = x + (thick) / 2;
+    X = x + thick / 2;
 
   y += FrameTable[frame].FrTopMargin;
   if (thick > 0)
