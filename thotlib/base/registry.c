@@ -46,7 +46,7 @@
 STRING WIN_Home;
 
 #else /* !_WINDOWS */
-#define THOT_INI_FILENAME       "unix-thot.ini"
+#define THOT_INI_FILENAME       "unix-thot.rc"
 #endif /* ! _WINDOWS */
 #define THOT_RC_FILENAME	"thot.rc"
 
