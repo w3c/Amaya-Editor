@@ -1250,8 +1250,12 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 	    done = FALSE;
 	  /* Call action if it's active */
 	  if (!done &&
+#ifdef _WX
+	      MenuActionList[command].ActionActive[document])
+#else /* _WX */
 	      (MenuActionList[command].ActionActive[frame] ||
 	       MenuActionList[command].ActionActive[mainframe]))
+#endif /* _WX */
 	    {
 	      /* available action for this frame or the main frame */
 	      if (MenuActionList[command].Call_Action)
