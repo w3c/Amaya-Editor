@@ -583,7 +583,7 @@ gboolean  GL_Destroy (ThotWidget widget,
 {
   int      frame;
  
-  frame = (int) data; 
+  frame = (int) data;
   return TRUE ;
 }
 
@@ -992,6 +992,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
   FrameToView (frame, &doc, &view);
+/***** printf ("FrameVScrolled\n"); ****/
 #ifndef _GTK
   infos = (XmScrollBarCallbackStruct *) param;
   if (infos->reason == XmCR_DECREMENT)
@@ -1037,7 +1038,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* _GTK */      
 	  /* Regarde ou se situe l'image abstraite dans le document */
 	  n = PositionAbsBox (frame, &start, &end, &total);
-	  /* au retour n = 0 si l'Picture est complete */
+	  /* au retour n = 0 si l'image est complete */
 	  /* Calcule le nombre de caracteres represente par un pixel */
 	  carparpix = (float) total / (float) FrameTable[frame].FrHeight;
 #ifndef _GTK
@@ -1045,11 +1046,11 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #else /* _GTK */
 	  y = (int) ((float) w->value * carparpix);
 #endif /* _GTK */
-      
+/******* printf ("  n=%d, y=%d, start=%d, end=%d, total=%d\n", n, y, start, end, total); ****/
 	  if (n == 0 || (y >= start && y <= total - end))
 	    {
-	      /* On se deplace a l'interieur de l'Picture Concrete */
-	      /* Calcule la portion de scroll qui represente l'Picture Concrete */
+	      /* On se deplace a l'interieur de l'image Concrete */
+	      /* Calcule la portion de scroll qui represente l'image Concrete */
 	      start = (int) ((float) start / carparpix);
 	      end = (int) ((float) end / carparpix);
 	      delta = FrameTable[frame].FrHeight - start - end;
@@ -1066,6 +1067,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	      else
 	        y = w->value - start;
 #endif /* _GTK */
+/***** printf ("  ShowYPosition %d %d\n", y, delta); *****/
 	      ShowYPosition (frame, y, delta);
 	    }
 	  else if (!JumpInProgress)
@@ -1080,6 +1082,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	      else
 		delta = 0;
 	      delta = (delta * 100) / FrameTable[frame].FrHeight;
+/***** printf ("  JumpIntoView %d\n", delta); ****/
 	      JumpIntoView (frame, delta);
 	      /* recompute the scroll bars */
 	      UpdateScrollbars (frame);
