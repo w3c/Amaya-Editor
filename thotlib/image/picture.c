@@ -395,7 +395,9 @@ char               *fileName;
 
    /* i = MAX_PICT_FORMATS - 1; */
    i = HandlersCounter - 1 ;
+#ifdef AMAYA_PLUGIN
    currentPlugin = HandlersCounter - InlineHandlers - 1;
+#endif
    l = strlen (fileName);
    if (l > 4)
      {
