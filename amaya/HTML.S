@@ -784,9 +784,9 @@ STRUCT
 	   tabindex; accesskey; onfocus; onblur;
 	 { tabindex  accesskey  onfocus  onblur }
 	   x_coord = Integer; y_coord = Integer; IntWidthPxl;
-           IntWidthPxl; AreaRef_IMG = REFERENCE(Any)) =
+           IntHeightPxl; AreaRef_IMG = REFERENCE(Any)) =
 	GRAPHICS with x_coord ?= 0, y_coord ?= 0,
-		      IntWidthPxl ?= 25, IntWidthPxl ?= 10;
+		      IntWidthPxl ?= 25, IntHeightPxl ?= 10;
 
   FRAMESET							{ FRAMESET }
      (ATTR RowHeight = Text; ColWidth = Text;
