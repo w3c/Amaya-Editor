@@ -186,7 +186,8 @@ static void         ApplyPresentMod (applyDomain)
 int                 applyDomain;
 #endif /* __STDC__ */
 {
-  PtrElement          pEl, pFirstSel, pLastSel, pElem, pBlock, pPrevBlock;
+  PtrElement          pEl, pFirstSel, pLastSel, pElem, pBlock, pPrevBlock,
+                      pElNext;
   PtrDocument         pSelDoc;
   PtrAbstractBox      pAb;
   TypeUnit            LocLineWeightUnit;
@@ -588,6 +589,9 @@ int                 applyDomain;
 	    while (pEl != NULL)
 	      /* Traite l'element courant */
 	      {
+		/* cherche l'element a traiter ensuite */
+		pElNext = NextInSelection (pEl, pLastSel);
+
 		pElem = pEl;
 		if (chngFormat)
 		  /* Format properties apply to block elements only. If the
@@ -654,8 +658,8 @@ int                 applyDomain;
 		/* si on est dans un element copie' par inclusion,   */
 		/* on met a jour les copies de cet element.          */
 		RedisplayCopies (pEl, pSelDoc, TRUE);
-		/* cherche l'element a traiter ensuite */
-		pEl = NextInSelection (pEl, pLastSel);
+		/* passe a l'element a traiter ensuite */
+		pEl = pElNext;
 	      }
 	    /* fin de la boucle de parcours et traitement des */
 	    /* elements selectionnes */
