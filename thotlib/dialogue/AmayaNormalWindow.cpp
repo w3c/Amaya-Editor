@@ -854,31 +854,23 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
   wxLogDebug( _T("AmayaNormalWindow::RefreshShowPanelToggleMenu") );
 
   // update menu items of each window's frames
-  int         page_id = 0;
-  AmayaPage * p_page  = NULL;
   int         frame_id = 0;
   Document document;
   View view;
   int menuID;
   int itemID;
   ThotBool on;
-  while ( page_id < GetPageCount() )
+  while ( frame_id < MAX_FRAME )
     {
-      p_page = GetPage( page_id );
-      frame_id = p_page->GetFrame(1)->GetFrameId();
-      if (frame_id <=0)
+      if (FrameTable[frame_id].FrWindowId == GetWindowId())
 	{
-	  wxASSERT_MSG(false,_T("this page exists without a frame ?"));
-	  continue;
+	  FrameToView (frame_id, &document, &view);
+	  menuID = FrameTable[frame_id].MenuShowPanelID;
+	  itemID = FrameTable[frame_id].MenuItemShowPanelID;
+	  on = IsPanelOpened();
+	  TtaSetToggleItem( document, view, menuID, itemID, on );
 	}
-
-      FrameToView (frame_id, &document, &view);
-      menuID = FrameTable[frame_id].MenuShowPanelID;
-      itemID = FrameTable[frame_id].MenuItemShowPanelID;
-      on = IsPanelOpened();
-      TtaSetToggleItem( document, view, menuID, itemID, on );
-
-      page_id++;
+      frame_id++;
     }
 }
 
@@ -895,31 +887,23 @@ void AmayaNormalWindow::RefreshFullScreenToggleMenu()
   wxLogDebug( _T("AmayaNormalWindow::RefreshFullScreenToggleMenu") );
 
   // update menu items of each window's frames
-  int         page_id = 0;
-  AmayaPage * p_page  = NULL;
   int         frame_id = 0;
   Document document;
   View view;
   int menuID;
   int itemID;
   ThotBool on;
-  while ( page_id < GetPageCount() )
+  while ( frame_id < MAX_FRAME )
     {
-      p_page = GetPage( page_id );
-      frame_id = p_page->GetFrame(1)->GetFrameId();
-      if (frame_id <=0)
+      if (FrameTable[frame_id].FrWindowId == GetWindowId())
 	{
-	  wxASSERT_MSG(false,_T("this page exists without a frame ?"));
-	  continue;
+	  FrameToView (frame_id, &document, &view);
+	  menuID = FrameTable[frame_id].MenuFullScreenID;
+	  itemID = FrameTable[frame_id].MenuItemFullScreenID;
+	  on = IsFullScreen();
+	  TtaSetToggleItem( document, view, menuID, itemID, on );
 	}
-
-      FrameToView (frame_id, &document, &view);
-      menuID = FrameTable[frame_id].MenuFullScreenID;
-      itemID = FrameTable[frame_id].MenuItemFullScreenID;
-      on = IsFullScreen();
-      TtaSetToggleItem( document, view, menuID, itemID, on );
-
-      page_id++;
+      frame_id++;
     }
 }
 
