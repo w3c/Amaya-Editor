@@ -89,7 +89,6 @@ CLEAN :
 	-@erase "$(INTDIR)\SVGAPP.obj"
 	-@erase "$(INTDIR)\SVGbuilder.obj"
 	-@erase "$(INTDIR)\SVGedit.obj"
-	-@erase "$(INTDIR)\tableH.obj"
 	-@erase "$(INTDIR)\templates.obj"
 	-@erase "$(INTDIR)\TextFileAPP.obj"
 	-@erase "$(INTDIR)\TimelineAPP.obj"
@@ -98,7 +97,6 @@ CLEAN :
 	-@erase "$(INTDIR)\UIcss.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\windialogapi.obj"
-	-@erase "$(INTDIR)\windowdisplay.obj"
 	-@erase "$(INTDIR)\XHTMLbuilder.obj"
 	-@erase "$(INTDIR)\XLinkAPP.obj"
 	-@erase "$(INTDIR)\XLinkbuilder.obj"
@@ -116,7 +114,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\davlib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I ".\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\davlib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -162,7 +160,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\SVGAPP.obj" \
 	"$(INTDIR)\SVGbuilder.obj" \
 	"$(INTDIR)\SVGedit.obj" \
-	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\templates.obj" \
 	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\TimelineAPP.obj" \
@@ -170,7 +167,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\transparse.obj" \
 	"$(INTDIR)\UIcss.obj" \
 	"$(INTDIR)\windialogapi.obj" \
-	"$(INTDIR)\windowdisplay.obj" \
 	"$(INTDIR)\XHTMLbuilder.obj" \
 	"$(INTDIR)\XLinkAPP.obj" \
 	"$(INTDIR)\XLinkbuilder.obj" \
@@ -291,8 +287,6 @@ CLEAN :
 	-@erase "$(INTDIR)\SVGbuilder.sbr"
 	-@erase "$(INTDIR)\SVGedit.obj"
 	-@erase "$(INTDIR)\SVGedit.sbr"
-	-@erase "$(INTDIR)\tableH.obj"
-	-@erase "$(INTDIR)\tableH.sbr"
 	-@erase "$(INTDIR)\templates.obj"
 	-@erase "$(INTDIR)\templates.sbr"
 	-@erase "$(INTDIR)\TextFileAPP.obj"
@@ -309,8 +303,6 @@ CLEAN :
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\windialogapi.obj"
 	-@erase "$(INTDIR)\windialogapi.sbr"
-	-@erase "$(INTDIR)\windowdisplay.obj"
-	-@erase "$(INTDIR)\windowdisplay.sbr"
 	-@erase "$(INTDIR)\XHTMLbuilder.obj"
 	-@erase "$(INTDIR)\XHTMLbuilder.sbr"
 	-@erase "$(INTDIR)\XLinkAPP.obj"
@@ -340,7 +332,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\lib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I ".\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "ANNOT_ON_ANNOT" /D "_SVGLIB" /D "_SVGANIM" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\lib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "_STIX" /D "_DEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL" 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -382,7 +374,6 @@ BSC32_SBRS= \
 	"$(INTDIR)\SVGAPP.sbr" \
 	"$(INTDIR)\SVGbuilder.sbr" \
 	"$(INTDIR)\SVGedit.sbr" \
-	"$(INTDIR)\tableH.sbr" \
 	"$(INTDIR)\templates.sbr" \
 	"$(INTDIR)\TextFileAPP.sbr" \
 	"$(INTDIR)\TimelineAPP.sbr" \
@@ -390,7 +381,6 @@ BSC32_SBRS= \
 	"$(INTDIR)\transparse.sbr" \
 	"$(INTDIR)\UIcss.sbr" \
 	"$(INTDIR)\windialogapi.sbr" \
-	"$(INTDIR)\windowdisplay.sbr" \
 	"$(INTDIR)\XHTMLbuilder.sbr" \
 	"$(INTDIR)\XLinkAPP.sbr" \
 	"$(INTDIR)\XLinkbuilder.sbr" \
@@ -445,7 +435,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\SVGAPP.obj" \
 	"$(INTDIR)\SVGbuilder.obj" \
 	"$(INTDIR)\SVGedit.obj" \
-	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\templates.obj" \
 	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\TimelineAPP.obj" \
@@ -453,7 +442,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\transparse.obj" \
 	"$(INTDIR)\UIcss.obj" \
 	"$(INTDIR)\windialogapi.obj" \
-	"$(INTDIR)\windowdisplay.obj" \
 	"$(INTDIR)\XHTMLbuilder.obj" \
 	"$(INTDIR)\XLinkAPP.obj" \
 	"$(INTDIR)\XLinkbuilder.obj" \
@@ -834,14 +822,14 @@ SOURCE=..\amaya\amaya.rc
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "NDEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\src\Amaya\amaya" /d "NDEBUG" $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "_DEBUG" $(SOURCE)
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\src\Amaya\amaya" /d "_DEBUG" $(SOURCE)
 
 
 !ENDIF 
@@ -1422,24 +1410,6 @@ SOURCE=..\amaya\SVGedit.c
 
 !ENDIF 
 
-SOURCE=..\tablelib\tableH.c
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-
-"$(INTDIR)\tableH.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-
-"$(INTDIR)\tableH.obj"	"$(INTDIR)\tableH.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
 SOURCE=..\amaya\templates.c
 
 !IF  "$(CFG)" == "amaya - Win32 Release"
@@ -1561,24 +1531,6 @@ SOURCE=..\amaya\windialogapi.c
 
 
 "$(INTDIR)\windialogapi.obj"	"$(INTDIR)\windialogapi.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\thotlib\view\windowdisplay.c
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-
-"$(INTDIR)\windowdisplay.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-
-"$(INTDIR)\windowdisplay.obj"	"$(INTDIR)\windowdisplay.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
