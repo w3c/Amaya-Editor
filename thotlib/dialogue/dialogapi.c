@@ -793,14 +793,11 @@ static ThotBool CallToggleGTK (ThotWidget w, struct Cat_Context *catalogue)
   return TRUE;  
 }
 
+#ifndef _GTK
 /*----------------------------------------------------------------------
   Callback for entry menus
   ----------------------------------------------------------------------*/
-#ifndef _GTK
 static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else /* _GTK */
-static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
-#endif /* _GTK */
 {
   register int        i;
   register int        index;
@@ -808,6 +805,56 @@ static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
   struct E_List      *adbloc;
 
 
+  /* Enregistre la selection d'un toggle button */
+  if (catalogue->Cat_Widget)
+    {
+      adbloc = catalogue->Cat_Entries;
+      entry = -1;
+      index = 0;
+      i = 2;  /* shift of 2 positions for the title widget */
+      while (entry == -1 && adbloc)
+	{
+	  while (i < C_NUMBER && adbloc->E_ThotWidget[i])
+	    {
+	      if (adbloc->E_ThotWidget[i] == w)
+		entry = index;
+	      i++;
+	      index++;
+	    }
+	  /* Passe au bloc suivant */
+	  adbloc = adbloc->E_Next;
+	  i = 0;
+	}
+      /*** Sauve la valeur de la derniere selection ***/
+      catalogue->Cat_Data = entry;
+      /* retourne la valeur si le menu est reactif */
+      if (catalogue->Cat_React)
+	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+    }
+  return TRUE;  
+}
+#else /* _GTK */
+/*----------------------------------------------------------------------
+  Callback for radio buttons
+  ----------------------------------------------------------------------*/
+static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
+{
+  register int        i;
+  register int        index;
+  register int        entry;
+  struct E_List      *adbloc;
+
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)) == FALSE)
+    {
+      /* Prevent to unselect an element directly...
+	 you must select another one to unselect others  */
+      index = (guint) gtk_object_get_data (GTK_OBJECT (w), "toggled");
+      gtk_signal_handler_block (GTK_OBJECT(w), index);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+      gtk_signal_handler_unblock (GTK_OBJECT(w), index); 
+      return TRUE;
+    }
+  
   /* Enregistre la selection d'un toggle button */
   if (catalogue->Cat_Widget)
     {
@@ -828,6 +875,29 @@ static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  adbloc = adbloc->E_Next;
 	  i = 0;
 	}
+      /*Deactivate All other Radio Button*/
+      adbloc = catalogue->Cat_Entries;
+      i = 2;
+      while (adbloc)
+	{
+	  while (i < C_NUMBER &&  adbloc->E_ThotWidget[i])
+	    {
+	      if (adbloc->E_ThotWidget[i] != w) 
+		{
+		  index = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]), "toggled");
+		  gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), index);
+		  
+		  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), FALSE);
+		  
+		  gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), index); 
+		}
+	      i++;	       
+	    }
+	  /* Go to next block */
+	  adbloc = adbloc->E_Next;
+	  i = 0;
+	}
+      
       /*** Sauve la valeur de la derniere selection ***/
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
@@ -836,6 +906,7 @@ static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
     }
   return TRUE;  
 }
+#endif /* _GTK */
 
 #ifdef _WINDOWS
 /*-----------------------------------------------------------------------
