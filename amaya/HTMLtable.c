@@ -1546,7 +1546,8 @@ Document            doc;
    ElementType         elType, groupType;
    Element             el, columnHeads, colhead, thead, tfoot, firstcolhead,
                        tbody, Tablebody, firstgroup, group, row, prevrow,
-                       spannedrow, foot, cell, spannedcell, prevEl, nextEl;
+                       spannedrow, foot, cell, spannedcell, prevEl, nextEl,
+		       enclosingTable;
    AttributeType       attrType;
    Attribute           attr;
    boolean             before;
@@ -1582,6 +1583,27 @@ Document            doc;
 	if (columnHeads != NULL)
 	   /* this table has already been checked */
 	   return;
+	/* if this table is within another table and if it has no border
+	   attribute, create an attribute border=0 to avoid inheritance
+	   of the the border attribute from the enclosing table */
+	elType = TtaGetElementType (table);
+	enclosingTable = TtaGetTypedAncestor (table, elType);
+	if (enclosingTable != NULL)
+	   /* there is an enclosing table */
+	   {
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Border;
+	   if (TtaGetAttribute (enclosingTable, attrType) != NULL)
+	      /* the enclosing table has a Border attribute */
+	      if (TtaGetAttribute (table, attrType) == NULL)
+		/* the current table has no Border attribute */
+	        {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (table, attr, doc);
+		TtaSetAttributeValue (attr, 0, table, doc);
+	        }
+	   }
+
 	/* disable document structure checking */
 	PreviousStuctureChecking = TtaGetStructureChecking (doc);
 	TtaSetStructureChecking (0, doc);

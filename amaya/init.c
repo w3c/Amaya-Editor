@@ -1536,6 +1536,7 @@ NotifyEvent        *event;
    SelectionInI = FALSE;
    SelectionInB = FALSE;
    SelectionInTT = FALSE;
+   SelectionInU = FALSE;
    SelectionInSTRIKE = FALSE;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;

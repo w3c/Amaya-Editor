@@ -122,12 +122,13 @@
 #define TItalic  108
 #define TBold  109
 #define TTeletype  110
-#define TStrikeOut  111
-#define TBig  112
-#define TSmall  113
-#define BSub  114
-#define BSup  115
-#define BFont  116
-#define BInformation  117
+#define TUnderline  111
+#define TStrikeOut  112
+#define TBig  113
+#define TSmall  114
+#define BSub  115
+#define BSup  116
+#define BFont  117
+#define BInformation  118
 
-#define MAX_EDITOR_LABEL       119
+#define MAX_EDITOR_LABEL       120

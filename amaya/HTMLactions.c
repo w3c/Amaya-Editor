@@ -641,6 +641,23 @@ Document            doc
       NewSelInElem = FALSE;
    else
      {
+	elType.ElTypeNum = HTML_EL_Underlined_text;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+     }
+   if (SelectionInU != NewSelInElem)
+     {
+	SelectionInU = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TUnderline, NewSelInElem);
+     }
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
 	elType.ElTypeNum = HTML_EL_Struck_text;
 	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
 	    elTypeSel.ElSSchema == elType.ElSSchema)
@@ -774,6 +791,7 @@ boolean             createLink;
 		      elType.ElTypeNum != HTML_EL_Teletype_text &&
 		      elType.ElTypeNum != HTML_EL_Italic_text &&
 		      elType.ElTypeNum != HTML_EL_Bold_text &&
+		      elType.ElTypeNum != HTML_EL_Underlined_text &&
 		      elType.ElTypeNum != HTML_EL_Struck_text &&
 		      elType.ElTypeNum != HTML_EL_Small_text &&
 		      elType.ElTypeNum != HTML_EL_Big_text &&
@@ -1082,6 +1100,9 @@ int                 eltype;
 	       break;
 	    case HTML_EL_Teletype_text:
 	       SelectionInTT = !remove;
+	       break;
+	    case HTML_EL_Underlined_text:
+	       SelectionInU = !remove;
 	       break;
 	    case HTML_EL_Struck_text:
 	       SelectionInSTRIKE = !remove;

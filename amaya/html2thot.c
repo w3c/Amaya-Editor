@@ -44,7 +44,7 @@
 
 typedef unsigned char entityName[10];
 typedef struct _ISOlat1entry
-  {				/* a SGML entity defining a ISO-Latin1 char */
+  {			 /* a SGML entity representing an ISO-Latin1 char */
      entityName          charName;	/* entity name */
      int                 charCode;	/* decimal code of ISO-Latin1 char */
   }
@@ -161,9 +161,10 @@ typedef struct _ClosedElement *PtrClosedElement;
 
 typedef struct _ClosedElement
   {				/* an element closed by a start tag */
-     int                 tagNum;	/* rank (in GIMappingTable) of closed element */
-     PtrClosedElement    nextClosedElem;	/* next element closed by the same
-						   start tag */
+     int                 tagNum;	 /* rank (in GIMappingTable) of closed
+					    element */
+     PtrClosedElement    nextClosedElem; /* next element closed by the same
+					    start tag */
   }
 ClosedElement;
 
@@ -175,8 +176,7 @@ typedef struct _GIMapping
      GI                  htmlGI;	/* name of the HTML element */
      char                htmlContents;	/* info about the contents of the HTML element:
 					   'E'=empty,  space=any contents */
-     int                 ThotType;	/* type of the Thot element or attribute or
-					   decimal code of the Thot character */
+     int                 ThotType;	/* type of the Thot element or attribute */
      PtrClosedElement    firstClosedElem;	/* first element closed by the start
 						   tag htmlGI */
   }
@@ -259,6 +259,7 @@ static GIMapping    GIMappingTable[] =
    {"TITLE", SPACE, HTML_EL_TITLE, NULL},
    {"TR", SPACE, HTML_EL_Table_row, NULL},
    {"TT", SPACE, HTML_EL_Teletype_text, NULL},
+   {"U", SPACE, HTML_EL_Underlined_text, NULL},
    {"UL", SPACE, HTML_EL_Unnumbered_List, NULL},
    {"VAR", SPACE, HTML_EL_Variable, NULL},
    {"XMP", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
@@ -289,7 +290,8 @@ static int          CharLevelElement[] =
    HTML_EL_TEXT_UNIT, HTML_EL_PICTURE_UNIT,
    HTML_EL_Anchor,
    HTML_EL_Italic_text, HTML_EL_Bold_text, HTML_EL_Teletype_text,
-   HTML_EL_Struck_text, HTML_EL_Big_text, HTML_EL_Small_text,
+   HTML_EL_Underlined_text, HTML_EL_Struck_text, HTML_EL_Big_text,
+   HTML_EL_Small_text,
    HTML_EL_Font_,
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
@@ -313,9 +315,12 @@ typedef char        oneLine[100];
 static oneLine      EquivEndingElem[] =
 {
    "DT DD LI OPTION",
-   "HR H1 H2 H3 H4 H5 H6",
+   "H1 H2 H3 H4 H5 H6",
    "UL OL MENU DIR ADDRESS PRE LISTING XMP",
    ""};
+/* acording the HTML DTD, HR should be added to the 2nd line above, as it */
+/* is not allowed within a H1, H2, H3, etc. But we should tolerate that case */
+/* because many documents contain rules in headings... */
 
 /* start tags that imply the end of current element */
 static oneLine      StartTagEndingElem[] =
@@ -436,7 +441,6 @@ static AttributeMapping AttributeMappingTable[] =
    {"LINK", "", 'A', HTML_ATTR_LinkColor},
    {"MAXLENGTH", "", 'A', HTML_ATTR_MaxLength},
    {"METHOD", "", 'A', HTML_ATTR_METHOD},
-   {"METHODS", "", 'A', HTML_ATTR_METHODS},
    {"MULTIPLE", "", 'A', HTML_ATTR_Multiple},
    {"N", "", 'C', 0},
    {"NAME", "APPLET", 'A', HTML_ATTR_applet_name},
@@ -561,7 +565,6 @@ static AttrValueMapping AttrValueMappingTable[] =
    {HTML_ATTR_Cell_valign, "TOP", HTML_ATTR_Cell_valign_VAL_Cell_top},
    {HTML_ATTR_Cell_valign, "MIDDLE", HTML_ATTR_Cell_valign_VAL_Cell_middle},
    {HTML_ATTR_Cell_valign, "BOTTOM", HTML_ATTR_Cell_valign_VAL_Cell_bottom},
-{HTML_ATTR_Cell_valign, "BASELINE", HTML_ATTR_Cell_valign_VAL_Cell_baseline},
 
    {HTML_ATTR_shape, "RECT", HTML_ATTR_shape_VAL_rectangle},
    {HTML_ATTR_shape, "CIRCLE", HTML_ATTR_shape_VAL_circle},
@@ -1939,8 +1942,8 @@ boolean             parsing;
 }
 
 /*----------------------------------------------------------------------
-   ElementComplete Element el is complete. Check its attributes
-   and its contents.
+   ElementComplete
+   Element el is complete. Check its attributes and its contents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ElementComplete (Element el)
@@ -2206,8 +2209,8 @@ Element             el;
 
 
 /*----------------------------------------------------------------------
-   CloseElement    End of HTML element defined in entry entry of
-   GIMappingTable.
+   CloseElement
+   End of HTML element defined in entry entry of GIMappingTable.
    Terminate all corresponding Thot elements.
    If start <0, an explicit end tag has been
    encountered in the HTML file, else the end
@@ -2772,19 +2775,24 @@ int                 entry;
 }
 
 /*----------------------------------------------------------------------
-   InsertInvalidEl create an element Invalid_element with the
-   indicated content.
+   InsertInvalidEl
+   create an element Invalid_element with the indicated content.
+   position indicate whether the element type is unknown (FALSE) or the
+   tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InsertInvalidEl (char *content)
+static void         InsertInvalidEl (char *content, boolean position)
 #else
-static void         InsertInvalidEl (content)
+static void         InsertInvalidEl (content, position)
 char               *content;
+boolean		    position;
 
 #endif
 {
    ElementType         elType;
+   AttributeType       attrType;
    Element             elInv, elText;
+   Attribute	       attr;
 
    elType.ElSSchema = structSchema;
    elType.ElTypeNum = HTML_EL_Invalid_element;
@@ -2798,6 +2806,16 @@ char               *content;
 	TtaInsertFirstChild (&elText, elInv, theDocument);
 	TtaSetTextContent (elText, content, documentLanguage, theDocument);
 	TtaSetAccessRight (elText, ReadOnly, theDocument);
+	attrType.AttrSSchema = structSchema;
+	attrType.AttrTypeNum = HTML_ATTR_Error_type;
+        attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (elInv, attr, theDocument);
+	if (position)
+	   TtaSetAttributeValue (attr, HTML_ATTR_Error_type_VAL_BadPosition,
+				 elInv, theDocument);
+	else
+	   TtaSetAttributeValue (attr, HTML_ATTR_Error_type_VAL_UnknownTag,
+				 elInv, theDocument);
      }
 }
 
@@ -2872,7 +2890,7 @@ char               *GIname;
       UnknownTag = TRUE;
       /* create an Invalid_element */
       sprintf (msgBuffer, "<%s", GIname);
-      InsertInvalidEl (msgBuffer);
+      InsertInvalidEl (msgBuffer, FALSE);
     }
   else
     {
@@ -2893,7 +2911,7 @@ char               *GIname;
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
 	  sprintf (msgBuffer, "<%s", GIname);
-	  InsertInvalidEl (msgBuffer);
+	  InsertInvalidEl (msgBuffer, TRUE);
 	}
       else
 	  {
@@ -3017,7 +3035,7 @@ char                c;
 	ParseHTMLError (theDocument, msgBuffer);
 	/* create an Invalid_element */
 	sprintf (msgBuffer, "</%s", inputBuffer);
-	InsertInvalidEl (msgBuffer);
+	InsertInvalidEl (msgBuffer, FALSE);
      }
    else if (!CloseElement (entry, -1))
       /* the end tag does not close any current element */
@@ -3064,7 +3082,7 @@ char                c;
 	   /* unrecoverable error. Create an Invalid_element */
 	  {
 	     sprintf (msgBuffer, "</%s", inputBuffer);
-	     InsertInvalidEl (msgBuffer);
+	     InsertInvalidEl (msgBuffer, TRUE);
 	  }
      }
    InitBuffer ();
@@ -3970,7 +3988,7 @@ sourceTransition;
 static sourceTransition sourceAutomaton[] =
 {
 /*
-   state        trigger     action              new state
+   state, trigger, action, new state
  */
 /* state 0: reading character data */
    {0, '<', (Proc) StartOfTag, 1},

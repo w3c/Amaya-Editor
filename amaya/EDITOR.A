@@ -128,6 +128,7 @@ MENUS
         view:1 Style.Font toggle:TItalic -> CreateElemItalic;
         view:1 Style.Font toggle:TBold -> CreateElemBold;
         view:1 Style.Font toggle:TTeletype -> CreateElemTeletype;
+        view:1 Style.Font toggle:TUnderline -> CreateElemUnderline;
         view:1 Style.Font toggle:TStrikeOut -> CreateElemStrikeOut;
         view:1 Style.Font toggle:TBig -> CreateElemBig;
         view:1 Style.Font toggle:TSmall -> CreateElemSmall;

@@ -22,11 +22,13 @@ PRINT
 #define ATTR_Color Black
 #define ATTRVALUE_Color Black
 #define INVALID_Color Black
+#define UNKNOWNTAG_Color Black
 #else
 #define TAG_Color Blue
 #define ATTR_Color Blue
 #define ATTRVALUE_Color Black
 #define INVALID_Color Red
+#define UNKNOWNTAG_Color Orange
 #define LINK_Color DarkIndigo1
 #endif
 
@@ -152,30 +154,6 @@ BOXES
 	Visibility: 0;
 	IN Anchors_view
 		Visibility: 5;
-	END;
-
- ATTR_METHODS: BEGIN
-	Content: Text ' methods=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_METHODS: BEGIN
-	Content: (METHODS);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
 	END;
 
  ATTR_REL: BEGIN
@@ -917,7 +895,7 @@ BOXES
 #ifdef BLACK_WHITE
 		Underline: CrossedOut;
 #else
-		Foreground: INVALID_Color;
+		Foreground: Creator =;
 #endif
 		END;
 	END;
@@ -1548,6 +1526,16 @@ BOXES
 
  TT_S: BEGIN
 	Content: Text 'TT';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ U_S: BEGIN
+	Content: Text 'U';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3847,6 +3835,20 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		END;
 	END;
+ Underlined_text:
+	BEGIN
+	CreateBefore(U_S);
+	CreateWith(VerticalLine);
+	Underline: Underlined;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Underline: NoUnderline;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
  Struck_text:
 	BEGIN
 	CreateBefore(STRIKE_S);
@@ -5245,12 +5247,6 @@ ATTRIBUTES
 	CreateBefore(ATTR_COMPACT);
 	END;
 
- METHODS:
-	BEGIN
-	CreateBefore(ATTR_METHODS);
-	CreateBefore(VALUE_METHODS);
-	END;
-
  REL:
 	BEGIN
 	CreateBefore(ATTR_REL);
@@ -6032,15 +6028,6 @@ dans des paragraphes s affichent a cote de leur cadre...
 		VertPos: Top = Previous . Bottom;
 	END;
 
- Cell_valign = Cell_baseline :
-	BEGIN
-	CreateBefore(VALIGN_BASELINE);
-	VertPos : Bottom = Enclosing . Bottom - TableSimpleVSpace;
-	CreateBefore (CellHeader);
-	IN Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-
  Cell_width:
 	BEGIN
 	CreateBefore(ATTR_WIDTH);
@@ -6202,6 +6189,21 @@ dans des paragraphes s affichent a cote de leur cadre...
 	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element and NOT Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
 	END;
+
+  Error_type = UnknownTag:
+	BEGIN
+#ifdef BLACK_WHITE
+	Underline: CrossedOut;
+#else
+	Foreground: UNKNOWNTAG_Color;
+#endif
+	if LastAttr
+	   CreateAfter(INVALID_E);
+	END;
+
+  Error_type = BadPosition:
+	if LastAttr
+	   CreateAfter(INVALID_E);
 
   Langue: BEGIN
 	END;

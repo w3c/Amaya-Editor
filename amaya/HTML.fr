@@ -126,7 +126,6 @@ HREF_: href
 REL: rel
 REV: rev
 Title: title
-METHODS: methods
 Selector: selector
 Align: align
 NoShade: noshade
@@ -231,7 +230,6 @@ Cell_right: rigth
 Cell_top: top
 Cell_middle: middle
 Cell_bottom: bottom
-Cell_baseline: baseline
 Wrap: wrap
 No_wrap: nowrap
 rectangle: rect

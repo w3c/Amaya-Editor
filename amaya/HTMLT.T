@@ -11,7 +11,7 @@ CONST
 RULES
 
  HTML : BEGIN
-	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\12';
+	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\12';
 	Create '<HTML>\12';
 	Create '</HTML>\12' After;
 	END;
@@ -176,6 +176,13 @@ RULES
 	Create Attributes;
 	Create '>';
 	Create '</TT>' After;
+	END;
+ Underlined_text:
+	BEGIN
+	Create '<U';
+	Create Attributes;
+	Create '>';
+	Create '</U>' After;
 	END;
  Struck_text:
 	BEGIN
@@ -654,12 +661,18 @@ RULES
 	Create '</CENTER>\12' After;
 	END;
 
- Invalid_element: BEGIN
-	NoTranslation;
-	Create Content;
-	Remove;
-	Create Attributes;
-	Create '>';
+ Invalid_element:
+	BEGIN
+	if Error_type = BadPosition
+	   Remove;
+	if not Error_type = BadPosition
+           BEGIN
+	   NoTranslation;
+	   Create Content;
+	   Remove;
+	   Create Attributes;
+	   Create '>';
+	   END;
 	END;
 
  Comment\240: BEGIN
@@ -952,12 +965,6 @@ ATTRIBUTES
 	Create QuoteF;
 	END;
 
- METHODS: BEGIN
-	Create ' methods="' After;
-	Create METHODS After;
-	Create QuoteF After;
-	END;
-
  WidthElement: BEGIN
 	Create ' width="';
 	Create WidthElement;
@@ -1173,8 +1180,6 @@ ATTRIBUTES
 	Create ' valign=middle';
  Cell_valign = Cell_bottom:
 	Create ' valign=bottom';
- Cell_valign = Cell_baseline:
-	Create ' valign=baseline';
 
  Cell_width: BEGIN
 	Create ' width=';

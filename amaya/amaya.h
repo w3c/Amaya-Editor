@@ -259,6 +259,7 @@ THOT_EXPORT boolean      SelectionInKBD;
 THOT_EXPORT boolean      SelectionInI;
 THOT_EXPORT boolean      SelectionInB;
 THOT_EXPORT boolean      SelectionInTT;
+THOT_EXPORT boolean      SelectionInU;
 THOT_EXPORT boolean      SelectionInSTRIKE;
 THOT_EXPORT boolean      SelectionInBIG;
 THOT_EXPORT boolean      SelectionInSMALL;

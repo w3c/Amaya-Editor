@@ -1105,6 +1105,21 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                CreateElemUnderline (Document document, View view)
+#else  /* __STDC__ */
+void                CreateElemUnderline (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   SetCharFontOrPhrase (document, HTML_EL_Underlined_text);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                CreateElemStrikeOut (Document document, View view)
 #else  /* __STDC__ */
 void                CreateElemStrikeOut (document, view)

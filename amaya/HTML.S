@@ -26,7 +26,7 @@ STRUCT
 	LinkColor = Text; VisitedLinkColor = Text; ActiveLinkColor = Text)
 	= LIST OF (Element);
 
-  Invalid_element = TEXT;
+  Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
   Comment\240 = LIST OF (Comment_line = TEXT);
 
   HEAD = AGGREGATE
@@ -41,8 +41,7 @@ STRUCT
 	END;
   META (ATTR http_equiv = Text; !meta_name = Text; !meta_content = Text)
 	 = CONSTANT C_Empty;
-  LINK (ATTR !HREF_ = Text; REL = Text; REV = Text; Title = Text;
-	     METHODS = Text)
+  LINK (ATTR !HREF_ = Text; REL = Text; REV = Text; Title = Text)
 	 = CONSTANT C_Empty;
 
   StyleRule (ATTR Selector = TEXT) = TEXT;
@@ -98,7 +97,7 @@ STRUCT
 	     {* add Font_ to the exclusion list *}
   Pre_Line = Basic_Set;
 
-  Anchor (ATTR HREF_; NAME = Text; REL; REV; Title; METHODS)
+  Anchor (ATTR HREF_; NAME = Text; REL; REV; Title)
 	= Basic_Set;
 
   Basic_Elem = CASE OF
@@ -127,6 +126,7 @@ STRUCT
 	Italic_text = Basic_Set;
 	Bold_text = Basic_Set;
 	Teletype_text = Basic_Set;
+	Underlined_text = Basic_Set;
 	Struck_text = Basic_Set;
 	Big_text = Basic_Set;
 	Small_text = Basic_Set;
@@ -305,7 +305,7 @@ STRUCT
                  colspan = INTEGER;
                  rowspan = INTEGER;
                  Cell_align = Cell_left, Cell_center, Cell_right;
-                 Cell_valign = Cell_top, Cell_middle, Cell_bottom, Cell_baseline;
+                 Cell_valign = Cell_top, Cell_middle, Cell_bottom;
 		 Cell_width = Text;
 		 Cell_height = Integer;
                  Word_wrap = Wrap, No_wrap) = LIST OF (Element);
