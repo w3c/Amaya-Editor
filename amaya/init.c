@@ -2591,19 +2591,22 @@ View                view;
      {
        TtaGetViewGeometryRegistry (document, "Structure_view", &x, &y, &w, &h);
        structView = TtaOpenView (document, "Structure_view", x, y, w, h);
-       TtcSwitchButtonBar (document, structView);
-       TtcSwitchCommands (document, structView);
-       if (DocumentTypes[document] == docReadOnly ||
-	   DocumentTypes[document] == docImageRO)
+       if (structView != 0)
 	 {
-	   TtaSetItemOff (document, structView, Edit_, BCut);
-	   TtaSetItemOff (document, structView, Edit_, BPaste);
-	   TtaSetItemOff (document, structView, Edit_, BClear);
-	   TtaSetItemOff (document, structView, Edit_, BSpellCheck);
-	   TtaSetItemOff (document, structView, Edit_, BTransform);
-	   TtaSetMenuOff (document, structView, StructTypes);
-	   TtaSetMenuOff (document, structView, Types);
-	   TtaSetMenuOff (document, structView, Attributes_);
+	   TtcSwitchButtonBar (document, structView);
+	   TtcSwitchCommands (document, structView);
+	   if (DocumentTypes[document] == docReadOnly ||
+	       DocumentTypes[document] == docImageRO)
+	     {
+	       TtaSetItemOff (document, structView, Edit_, BCut);
+	       TtaSetItemOff (document, structView, Edit_, BPaste);
+	       TtaSetItemOff (document, structView, Edit_, BClear);
+	       TtaSetItemOff (document, structView, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, structView, Edit_, BTransform);
+	       TtaSetMenuOff (document, structView, StructTypes);
+	       TtaSetMenuOff (document, structView, Types);
+	       TtaSetMenuOff (document, structView, Attributes_);
+	     }
 	 }
      }
 #ifdef MATHML
@@ -2688,18 +2691,21 @@ View                view;
 	TtaGetViewGeometryRegistry (document, "Alternate_view", &x, &y, &w,
 				    &h);
 	altView = TtaOpenView (document, "Alternate_view", x, y, w, h);
-	TtcSwitchButtonBar (document, altView);
-	TtcSwitchCommands (document, altView);
-	if (DocumentTypes[document] == docReadOnly ||
-	    DocumentTypes[document] == docImageRO)
+	if (altView != 0)
 	  {
-	    TtaSetItemOff (document, altView, Edit_, BCut);
-	    TtaSetItemOff (document, altView, Edit_, BPaste);
-	    TtaSetItemOff (document, altView, Edit_, BClear);
-	    TtaSetItemOff (document, altView, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, altView, Edit_, BTransform);
-	    TtaSetMenuOff (document, altView, Types);
-	    TtaSetMenuOff (document, altView, Attributes_);
+	    TtcSwitchButtonBar (document, altView);
+	    TtcSwitchCommands (document, altView);
+	    if (DocumentTypes[document] == docReadOnly ||
+		DocumentTypes[document] == docImageRO)
+	      {
+		TtaSetItemOff (document, altView, Edit_, BCut);
+		TtaSetItemOff (document, altView, Edit_, BPaste);
+		TtaSetItemOff (document, altView, Edit_, BClear);
+		TtaSetItemOff (document, altView, Edit_, BSpellCheck);
+		TtaSetItemOff (document, altView, Edit_, BTransform);
+		TtaSetMenuOff (document, altView, Types);
+		TtaSetMenuOff (document, altView, Attributes_);
+	      }
 	  }
      }
 }
@@ -2728,18 +2734,21 @@ View                view;
      {
 	TtaGetViewGeometryRegistry (document, "Links_view", &x, &y, &w, &h);
 	linksView = TtaOpenView (document, "Links_view", x, y, w, h);
-	TtcSwitchButtonBar (document, linksView);
-	TtcSwitchCommands (document, linksView);
-	if (DocumentTypes[document] == docReadOnly ||
-	    DocumentTypes[document] == docImageRO)
+	if (linksView != 0)
 	  {
-	    TtaSetItemOff (document, linksView, Edit_, BCut);
-	    TtaSetItemOff (document, linksView, Edit_, BPaste);
-	    TtaSetItemOff (document, linksView, Edit_, BClear);
-	    TtaSetItemOff (document, linksView, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, linksView, Edit_, BTransform);
-	    TtaSetMenuOff (document, linksView, Types);
-	    TtaSetMenuOff (document, linksView, Attributes_);
+	    TtcSwitchButtonBar (document, linksView);
+	    TtcSwitchCommands (document, linksView);
+	    if (DocumentTypes[document] == docReadOnly ||
+		DocumentTypes[document] == docImageRO)
+	      {
+		TtaSetItemOff (document, linksView, Edit_, BCut);
+		TtaSetItemOff (document, linksView, Edit_, BPaste);
+		TtaSetItemOff (document, linksView, Edit_, BClear);
+		TtaSetItemOff (document, linksView, Edit_, BSpellCheck);
+		TtaSetItemOff (document, linksView, Edit_, BTransform);
+		TtaSetMenuOff (document, linksView, Types);
+		TtaSetMenuOff (document, linksView, Attributes_);
+	      }
 	  }
      }
 }
@@ -2769,18 +2778,21 @@ View                view;
 	TtaGetViewGeometryRegistry (document, "Table_of_contents", &x, &y, 
 				    &w, &h);
 	tocView = TtaOpenView (document, "Table_of_contents", x, y, w, h);
-	TtcSwitchButtonBar (document, tocView);
-	TtcSwitchCommands (document, tocView);
-	if (DocumentTypes[document] == docReadOnly ||
-	    DocumentTypes[document] == docImageRO)
+	if (tocView != 0)
 	  {
-	    TtaSetItemOff (document, tocView, Edit_, BCut);
-	    TtaSetItemOff (document, tocView, Edit_, BPaste);
-	    TtaSetItemOff (document, tocView, Edit_, BClear);
-	    TtaSetItemOff (document, tocView, Edit_, BSpellCheck);
-	    TtaSetItemOff (document, tocView, Edit_, BTransform);
-	    TtaSetMenuOff (document, tocView, Types);
-	    TtaSetMenuOff (document, tocView, Attributes_);
+	    TtcSwitchButtonBar (document, tocView);
+	    TtcSwitchCommands (document, tocView);
+	    if (DocumentTypes[document] == docReadOnly ||
+		DocumentTypes[document] == docImageRO)
+	      {
+		TtaSetItemOff (document, tocView, Edit_, BCut);
+		TtaSetItemOff (document, tocView, Edit_, BPaste);
+		TtaSetItemOff (document, tocView, Edit_, BClear);
+		TtaSetItemOff (document, tocView, Edit_, BSpellCheck);
+		TtaSetItemOff (document, tocView, Edit_, BTransform);
+		TtaSetMenuOff (document, tocView, Types);
+		TtaSetMenuOff (document, tocView, Attributes_);
+	      }
 	  }
      }
 }
