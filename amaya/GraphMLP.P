@@ -1390,6 +1390,7 @@ RULES
 
    TEXT_UNIT:
 	BEGIN
+	HorizRef: Enclosed . HRef;
 	HorizPos: Left = Previous . Right;
         VertPos: HRef = Previous . HRef;
 	Width: Enclosed . Width;
@@ -1432,9 +1433,6 @@ RULES
 	IN Graph_Alternate_view
 		Visibility: 0;
 	END;
-
-   TEXT_UNIT:
-	HorizRef: Enclosed . HRef;
 
 ATTRIBUTES
 
