@@ -3831,8 +3831,6 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
       pDoc = LoadedDocument[document - 1];
       TtaGiveFirstSelectedElement (document, &El, &f, &l);
       pEl = (PtrElement) El;
-      if (pEl && pEl->ElTerminal)
-	pEl = pEl->ElParent;
       while (pEl && TypeHasException (ExcHidden, pEl->ElTypeNumber,
 				      pEl->ElStructSchema))
 	pEl = pEl->ElParent;
