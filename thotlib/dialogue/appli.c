@@ -18,6 +18,7 @@
  * Handle application frames
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
  *
  */
 
@@ -68,16 +69,18 @@ static XmString     null_string;
     (BOOL)SendMessage((hwnd), TB_GETITEMRECT, (WPARAM)idButton, (LPARAM)(LPRECT)lprc)
 
 extern HWND        hwndClient ;
-extern HWND        ToolBar ;
-extern HWND        StatusBar ;
-extern HINSTANCE   hInstance ;
+extern HWND        ToolBar    ;
+extern HWND        StatusBar  ;
+extern HINSTANCE   hInstance  ;
+
+static int         cyTxtZone  ;
 
 int    cyToolBar ;
-BOOL   bComboBox = FALSE ;
 HWND   hwndTB ;
-HWND   hwndCombo ;
 DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER /*| TBSTYLE_TOOLTIPS */ ;
 DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP ;
+
+LRESULT CALLBACK TextZoneWndProc (HWND, UINT, WPARAM, LPARAM) ;
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -857,7 +860,11 @@ View                view;
 	return (0);
      }
    else
+#ifndef _WINDOWS
       return (FrameTable[frame].WdFrame);
+#else  /* _WINDOWS */
+      return (FrMainRef[frame]);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1014,19 +1021,8 @@ HWND hwndParent;
 
      hwndTB = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
                             0, 0, 0, 0, hwndParent, (HMENU) 1, hInstance, 0) ;
-     /*
-     hwndTB = CreateToolbarEx (hwndParent, dwToolBarStyles, 1, 15,
-                               HINST_COMMCTRL, IDB_STD_SMALL_COLOR, ptbb, iNumButtons,
-                               0, 0, 0, 0, sizeof (TBBUTTON)) ;
-     */
-     /* If requested, add to string list */
-     /*     if (bStrings)
-        ToolBar_AddString (hwndTB, 0, szTbStrings) ;*/
 
-     /* Store handle to tooltip control */
-     /*hwndToolTip = ToolBar_GetToolTips (hwndTB) ;*/
-
-     /* Insert combo box into toolbar */
+#ifdef RAMZI
      if (bComboBox) {
          /* Calculate coordinates for combo box */
          ToolBar_GetItemRect (hwndTB, 0, &r) ;
@@ -1055,7 +1051,7 @@ HWND hwndParent;
          ToolBar_GetItemRect (hwndTB, 0, &r) ;
          cyToolBar = max (cyToolBar, r.bottom+5) ;
      }
-
+#endif /* RAMZI */
      return hwndTB ;
 }
 
@@ -1090,9 +1086,7 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-     int frame;
-
-     frame = GetMainFen (hwnd);
+     int frame = GetMainFen (hwnd);
 
      switch (mMsg) {
             case WM_CREATE: {
@@ -1111,12 +1105,10 @@ LPARAM      lParam;
                                               WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_BORDER | 
                                               WS_VSCROLL, 0, 0, 0, 0,
                                               hwnd, (HMENU) 1, hInstance, NULL) ;
-
                  ShowWindow (hwndClient, SW_SHOWNORMAL);
                  UpdateWindow (hwndClient);
                  return 0 ;
 	    }
-
 	    case WM_KEYDOWN:
                  SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
                  return 0;
@@ -1124,7 +1116,6 @@ LPARAM      lParam;
 	    case WM_CHAR:
                  SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
                  return 0;
-
             case WM_COMMAND:
 	         WinThotCallBack (hwnd, wParam, lParam);
 	         return (0);
@@ -1139,6 +1130,7 @@ LPARAM      lParam;
                  int   cyStatus ;
                  int   cyTB ;
                  int   x, y ;
+                 int   index = 0;
                  DWORD dwStyle ;
                  RECT  rWindow ;
 
@@ -1158,6 +1150,8 @@ LPARAM      lParam;
 	         } else 
                       cyTB = 0 ;
 
+                 cyTxtZone = cyTB ;
+
                  /* Adjust status bar size. */
                  if (IsWindowVisible (FrameTable[frame].WdStatus)) {
                     GetWindowRect (FrameTable[frame].WdStatus, &rWindow) ;
@@ -1168,7 +1162,7 @@ LPARAM      lParam;
 
                 /* Adjust client window size. */
                  x = 0 ;
-                 y = cyTB ;
+                 y = cyTxtZone ;
                  cy = cy - (cyStatus + cyTB) ;
                  MoveWindow (FrRef [frame], x, y, cx, cy, TRUE) ;
                  return 0;
@@ -1178,7 +1172,6 @@ LPARAM      lParam;
                   return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
-
 
 /* -------------------------------------------------------------------
    ClientWndProc

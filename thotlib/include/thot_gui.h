@@ -98,58 +98,6 @@ typedef void       *ThotTranslations;
  * (i.e. WINDOWS) environment.						*
  *									*
  ************************************************************************/
-#ifdef RAMZI
-#include <windows.h>
-
-/*
- * The current HDC : the current Device context in use.
- */
-extern HDC          WIN_curHdc;
-
-/*
- * Emulation of a X-Windows Graphic Context in MS-Windows
- */
-#define THOT_GC_FOREGROUND	0x01
-#define THOT_GC_BACKGROUND	0x02
-#define THOT_GC_BRUSH		0x04
-#define THOT_GC_FUNCTION	0x08
-#define THOT_GC_FONT		0x10
-#define THOT_GC_PEN		0x20
-
-typedef struct struct_ThotGC
-  {
-     int                 capabilities;
-     COLORREF            foreground;
-     COLORREF            background;
-     HBRUSH              brush;
-     DWORD               mode;
-     HFONT               font;
-     HPEN                pen;
-  }
-WIN_GC_BLK         , *WIN_GC, *ThotGC;
-
-typedef HWND        ThotWidget;
-typedef HWND        ThotWindow;
-typedef HBITMAP     ThotBitmap;
-typedef COLORREF    Pixel;
-typedef COLORREF    ThotColor;
-typedef COLORREF    ThotColorStruct;
-typedef HFONT       ptrfont;
-typedef char       *Pixmap;
-typedef HCURSOR     ThotCursor;
-typedef HBITMAP     Drawable;
-typedef POINT       ThotPoint;
-typedef MSG         ThotEvent;
-typedef MSG         ThotKeyEvent;
-typedef UINT        ThotComposeStatus;
-typedef void       *ThotAppContext;
-typedef void       *ThotTranslations;
-
-#define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
-#define ThotBitmapNone ((ThotBitmap)NULL)
-
-#define FOR_MSW			/* for XPM stuff ! */
-#endif /* RAMZI */
 #else  /* _WINDOWS */
 
 /************************************************************************

@@ -15,6 +15,7 @@
  * Handle windows and menu bars of Thot applications
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
  *
  */
 
@@ -1463,39 +1464,6 @@ XmTextVerifyCallbackStruct *call_d;
 }
 #endif /* _WINDOWS */
 
-#ifdef _WINDOWS
-#ifdef __STDC__
-HWND InitTextZone (HWND hwndParent, UINT x, char* label) 
-#else  /* !__STDC__ */
-HWND InitTextZone (hwndParent, x, label) 
-HWND  hwndParent; 
-UINT  x; 
-char* label;
-#endif /* __STDC__ */
-{
-     static HWND winLabel ;
-     static HWND txtZone  ;
-     RECT        rect     ;
-
-     hwndTB = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
-                            0, x, 0, 0, hwndParent, (HMENU) 1, hInstance, 0) ;
-
-     GetWindowRect (hwndTB, &rect) ;                     
-
-
-     winLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-                              rect.left + 5, rect.top + 5, 100, rect.bottom - rect.top - 5, 
-                              hwndParent, (HMENU) 101, hInstance, NULL) ;
-     SetParent (winLabel, hwndTB);
-
-     txtZone  = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-                              rect.left + 105, rect.top + 5, rect.right - rect.left - 110, rect.bottom - rect.top - 5, 
-                              hwndParent, (HMENU) 102, hInstance, NULL) ;
-     SetParent (txtZone, hwndTB);
-     return hwndTB;
-}
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
    TtaAddTextZone
 
@@ -1546,7 +1514,11 @@ void                (*procedure) ();
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
 	     i = 0;
+#ifndef _WINDOWS
 	     while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
+#else  /* _WINDOWS */
+	     while (i < MAX_TEXTZONE && FrameTable[frame].TxtZoneCreated[i])
+#endif /* _WINDOWS */
 		i++;
 	     if (i < MAX_TEXTZONE)
 	       {
@@ -1661,13 +1633,17 @@ void                (*procedure) ();
 		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
 #else  /* _WINDOWS */
+#ifdef RAMZI
                   if (i == 0) /* There no text zone created    */
                      GetWindowRect (WinToolBar[frame], &rect) ;                     
-		  else      /* At least one text zone exists */
-                      GetWindowRect (FrameTable[frame].Text_Zone[i], &rect) ;                     
-		  
-                  w = InitTextZone (FrRef[frame], rect.bottom, label) ;
+		  else       /* At least one text zone exists */
+                      GetWindowRect (FrameTable[frame].Text_Zone[i-1], &rect) ;   
+                  
+		  FrameTable[frame].Text_Zone[i] = 0 ;
+                  /* w = InitTextZone (FrMainRef[frame], rect.bottom, label) ;*/
+                  w = InitTextZone (FrMainRef[frame], label) ;
                   FrameTable[frame].Text_Zone[i] = w;
+#endif /* RAMZI */
 #endif /* _WINDOWS */
 	       }
 	     else
@@ -1864,10 +1840,11 @@ int                 doc;
    ThotWidget          shell;
 
 #ifdef _WINDOWS
+   int                 indexTxtZone ;
    HMENU               menu_bar, w;
    MSG                 msg;
+   RECT                rect;
    struct Cat_Context *catalogue;
-
 #else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
@@ -1920,6 +1897,10 @@ int                 doc;
 	   frame = 0;
 	else if (FrameTable[frame].WdFrame == 0)
 	  {
+#ifdef _WINDOWS
+             for (indexTxtZone = 0; indexTxtZone < MAX_TEXTZONE; indexTxtZone++)
+                 FrameTable[frame].TxtZoneCreated[indexTxtZone] = FALSE ;
+#endif /* _WINDOWS */
 	     /* il faut creer effectivement la fenetre */
 	     FrameTable[frame].FrLeftMargin = 0;
 	     FrameTable[frame].FrTopMargin = 0;
@@ -1952,24 +1933,24 @@ int                 doc;
 		Y = mmtopixel (Y, 0);
 
 #ifdef _WINDOWS
-	     Main_Wd = CreateWindowEx (0L, tszAppName,	/* window class name */
-				       tszAppName,	/* window caption */
-				       WS_OVERLAPPEDWINDOW,	/* window style */
-				       CW_USEDEFAULT,	/* initial x pos */
-				       CW_USEDEFAULT,	/* initial y pos */
-				       large,	/* initial x size */
-				       haut,	/* initial y size */
-				       NULL,		/* parent window handle */
-				       NULL,		/* window menu handle */
-				       hInstance,		/* program instance handle */
-				       NULL);	/* creation parameters */
+	     Main_Wd = CreateWindowEx (0L, tszAppName,	    /* window class name       */
+				       tszAppName,	    /* window caption          */
+				       WS_OVERLAPPEDWINDOW, /* window style            */
+				       CW_USEDEFAULT,	    /* initial x pos           */
+				       CW_USEDEFAULT,	    /* initial y pos           */
+				       large,	            /* initial x size          */
+				       haut,	            /* initial y size          */
+				       NULL,		    /* parent window handle    */
+				       NULL,		    /* window menu handle      */
+				       hInstance,	    /* program instance handle */
+				       NULL);	            /* creation parameters     */
 	     if (Main_Wd == 0)
 		WinErrorBox ();
 	     else
 	       {
 		  fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
 		  /* store everything. */
-                  FrMainRef[frame]           = Main_Wd; 
+                  FrMainRef[frame]           = Main_Wd;
                   FrRef[frame]               = hwndClient ;
                   WinToolBar[frame]          = ToolBar ;
                   FrameTable[frame].WdStatus = StatusBar ;
@@ -2369,7 +2350,7 @@ int                 doc;
 	     XtSetArg (args[n], XmNheight, &dy);
 	     n++;
 	     XtGetValues ((Widget) w, args, n);
-	     FrameTable[frame].FrWidth = (int) dx;
+	     FrameTable[frame].FrWidth  = (int) dx;
 	     FrameTable[frame].FrHeight = (int) dy;
 #else /* _WINDOWS */
 	     FrameTable[frame].FrWidth = (int) large;

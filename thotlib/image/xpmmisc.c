@@ -58,35 +58,26 @@ LFUNC (CreateOldColorTable, int, (XpmColor * ct, int ncolors,
 
 LFUNC (FreeOldColorTable, void, (XpmColor ** colorTable, int ncolors));
 
+/*
+ * Create a colortable compatible with the old style colortable
+ */
 #ifdef __STDC__
-/*
- * Create a colortable compatible with the old style colortable
- */
-static int
-                    CreateOldColorTable (XpmColor * ct, int ncolors, XpmColor *** oldct)
-
+static int CreateOldColorTable (XpmColor * ct, int ncolors, XpmColor *** oldct)
 #else  /* __STDC__ */
-/*
- * Create a colortable compatible with the old style colortable
- */
-static int
-                    CreateOldColorTable (ct, ncolors, oldct)
+static int CreateOldColorTable (ct, ncolors, oldct)
 XpmColor           *ct;
 int                 ncolors;
 XpmColor         ***oldct;
-
 #endif /* __STDC__ */
-
 {
    XpmColor          **colorTable, **color;
    int                 a;
 
    colorTable = (XpmColor **) XpmMalloc (ncolors * sizeof (XpmColor *));
-   if (!colorTable)
-     {
-	*oldct = NULL;
-	return (XpmNoMemory);
-     }
+   if (!colorTable) {
+      *oldct = NULL;
+      return (XpmNoMemory);
+   }
    for (a = 0, color = colorTable; a < ncolors; a++, color++, ct++)
       *color = ct;
    *oldct = colorTable;
@@ -94,17 +85,12 @@ XpmColor         ***oldct;
 }
 
 #ifdef __STDC__
-static void
-                    FreeOldColorTable (XpmColor ** colorTable, int ncolors)
-
+static void FreeOldColorTable (XpmColor ** colorTable, int ncolors)
 #else  /* __STDC__ */
-static void
-                    FreeOldColorTable (colorTable, ncolors)
+static void FreeOldColorTable (colorTable, ncolors)
 XpmColor          **colorTable;
 int                 ncolors;
-
 #endif /* __STDC__ */
-
 {
    int                 a, b;
    XpmColor          **color;
@@ -131,17 +117,12 @@ int                 ncolors;
  */
 
 #ifdef __STDC__
-void
-                    xpmFreeColorTable (XpmColor * colorTable, int ncolors)
-
+void xpmFreeColorTable (XpmColor * colorTable, int ncolors)
 #else  /* __STDC__ */
-void
-                    xpmFreeColorTable (colorTable, ncolors)
+void xpmFreeColorTable (colorTable, ncolors)
 XpmColor           *colorTable;
 int                 ncolors;
-
 #endif /* __STDC__ */
-
 {
    int                 a, b;
    XpmColor           *color;
@@ -164,17 +145,12 @@ int                 ncolors;
  */
 
 #ifdef __STDC__
-void
-                    XpmFreeExtensions (XpmExtension * extensions, int nextensions)
-
+void XpmFreeExtensions (XpmExtension * extensions, int nextensions)
 #else  /* __STDC__ */
-void
-                    XpmFreeExtensions (extensions, nextensions)
+void XpmFreeExtensions (extensions, nextensions)
 XpmExtension       *extensions;
 int                 nextensions;
-
 #endif /* __STDC__ */
-
 {
    unsigned int        i, j, nlines;
    XpmExtension       *ext;
@@ -203,14 +179,10 @@ int                 nextensions;
  */
 
 #ifdef __STDC__
-int
-                    XpmAttributesSize ()
-
+int XpmAttributesSize (void)
 #else  /* __STDC__ */
-int
-                    XpmAttributesSize ()
+int XpmAttributesSize ()
 #endif				/* __STDC__ */
-
 {
    return sizeof (XpmAttributes);
 }
@@ -220,16 +192,11 @@ int
  */
 
 #ifdef __STDC__
-void
-                    xpmInitAttributes (XpmAttributes * attributes)
-
+void xpmInitAttributes (XpmAttributes * attributes)
 #else  /* __STDC__ */
-void
-                    xpmInitAttributes (attributes)
+void xpmInitAttributes (attributes)
 XpmAttributes      *attributes;
-
 #endif /* __STDC__ */
-
 {
    if (attributes)
      {
@@ -252,18 +219,13 @@ XpmAttributes      *attributes;
  */
 
 #ifdef __STDC__
-void
-                    xpmSetAttributes (XpmAttributes * attributes, XpmImage * image, XpmInfo * info)
-
+void xpmSetAttributes (XpmAttributes * attributes, XpmImage * image, XpmInfo * info)
 #else  /* __STDC__ */
-void
-                    xpmSetAttributes (attributes, image, info)
+void xpmSetAttributes (attributes, image, info)
 XpmAttributes      *attributes;
 XpmImage           *image;
 XpmInfo            *info;
-
 #endif /* __STDC__ */
-
 {
    if (attributes->valuemask & XpmReturnColorTable)
      {
@@ -339,16 +301,11 @@ XpmInfo            *info;
  */
 
 #ifdef __STDC__
-void
-                    XpmFreeAttributes (XpmAttributes * attributes)
-
+void XpmFreeAttributes (XpmAttributes * attributes)
 #else  /* __STDC__ */
-void
-                    XpmFreeAttributes (attributes)
+void XpmFreeAttributes (attributes)
 XpmAttributes      *attributes;
-
 #endif /* __STDC__ */
-
 {
    if (attributes->valuemask & XpmReturnPixels && attributes->npixels)
      {
@@ -410,16 +367,11 @@ XpmAttributes      *attributes;
  */
 
 #ifdef __STDC__
-void
-                    xpmInitXpmImage (XpmImage * image)
-
+void xpmInitXpmImage (XpmImage * image)
 #else  /* __STDC__ */
-void
-                    xpmInitXpmImage (image)
+void xpmInitXpmImage (image)
 XpmImage           *image;
-
 #endif /* __STDC__ */
-
 {
    image->ncolors = 0;
    image->colorTable = NULL;
@@ -431,14 +383,10 @@ XpmImage           *image;
  */
 
 #ifdef __STDC__
-void
-                    XpmFreeXpmImage (XpmImage * image)
-
+void XpmFreeXpmImage (XpmImage * image)
 #else  /* __STDC__ */
-void
-                    XpmFreeXpmImage (image)
+void XpmFreeXpmImage (image)
 XpmImage           *image;
-
 #endif /* __STDC__ */
 
 {
@@ -453,16 +401,11 @@ XpmImage           *image;
  */
 
 #ifdef __STDC__
-void
-                    xpmInitXpmInfo (XpmInfo * info)
-
+void xpmInitXpmInfo (XpmInfo * info)
 #else  /* __STDC__ */
-void
-                    xpmInitXpmInfo (info)
+void xpmInitXpmInfo (info)
 XpmInfo            *info;
-
 #endif /* __STDC__ */
-
 {
    if (info)
      {
@@ -479,16 +422,11 @@ XpmInfo            *info;
  */
 
 #ifdef __STDC__
-void
-                    XpmFreeXpmInfo (XpmInfo * info)
-
+void XpmFreeXpmInfo (XpmInfo * info)
 #else  /* __STDC__ */
-void
-                    XpmFreeXpmInfo (info)
+void XpmFreeXpmInfo (info)
 XpmInfo            *info;
-
 #endif /* __STDC__ */
-
 {
    if (info)
      {
@@ -525,17 +463,12 @@ XpmInfo            *info;
  */
 
 #ifdef __STDC__
-void
-                    xpmSetInfoMask (XpmInfo * info, XpmAttributes * attributes)
-
+void xpmSetInfoMask (XpmInfo * info, XpmAttributes * attributes)
 #else  /* __STDC__ */
-void
-                    xpmSetInfoMask (info, attributes)
+void xpmSetInfoMask (info, attributes)
 XpmInfo            *info;
 XpmAttributes      *attributes;
-
 #endif /* __STDC__ */
-
 {
    info->valuemask = 0;
    if (attributes->valuemask & XpmReturnInfos)
@@ -549,17 +482,12 @@ XpmAttributes      *attributes;
  */
 
 #ifdef __STDC__
-void
-                    xpmSetInfo (XpmInfo * info, XpmAttributes * attributes)
-
+void xpmSetInfo (XpmInfo * info, XpmAttributes * attributes)
 #else  /* __STDC__ */
-void
-                    xpmSetInfo (info, attributes)
+void xpmSetInfo (info, attributes)
 XpmInfo            *info;
 XpmAttributes      *attributes;
-
 #endif /* __STDC__ */
-
 {
    info->valuemask = 0;
    if (attributes->valuemask & XpmInfos)
@@ -583,7 +511,6 @@ XpmAttributes      *attributes;
      }
 }
 
-
 #ifdef NEED_STRDUP
 /*
  * in case strdup is not provided by the system here is one
@@ -591,16 +518,11 @@ XpmAttributes      *attributes;
  */
 
 #ifdef __STDC__
-char               *
-                    strdup (char *s1)
-
+char* strdup (char *s1)
 #else  /* __STDC__ */
-char               *
-                    strdup (s1)
+char* strdup (s1)
 char               *s1;
-
 #endif /* __STDC__ */
-
 {
    char               *s2;
    int                 l = strlen (s1) + 1;
@@ -612,20 +534,13 @@ char               *s1;
 #endif
 
 #ifdef __STDC__
-
-unsigned int
-                    atoui (register char *p, unsigned int l, unsigned int *ui_return)
-
+unsigned int atoui (register char *p, unsigned int l, unsigned int *ui_return)
 #else  /* __STDC__ */
-
-unsigned int
-                    atoui (p, l, ui_return)
+unsigned int atoui (p, l, ui_return)
 register char      *p;
 unsigned int        l;
 unsigned int       *ui_return;
-
 #endif /* __STDC__ */
-
 {
    register unsigned int n, i;
 
@@ -651,17 +566,12 @@ unsigned int       *ui_return;
  */
 
 #ifdef __STDC__
-int
-                    XpmReadFileToBuffer (char *filename, char **buffer_return)
-
+int XpmReadFileToBuffer (char *filename, char **buffer_return)
 #else  /* __STDC__ */
-int
-                    XpmReadFileToBuffer (filename, buffer_return)
+int XpmReadFileToBuffer (filename, buffer_return)
 char               *filename;
 char              **buffer_return;
-
 #endif /* __STDC__ */
-
 {
    int                 fd, fcheck, len;
    char               *ptr;
@@ -709,17 +619,12 @@ char              **buffer_return;
 }
 
 #ifdef __STDC__
-int
-                    XpmWriteFileFromBuffer (char *filename, char *buffer)
-
+int XpmWriteFileFromBuffer (char *filename, char *buffer)
 #else  /* __STDC__ */
-int
-                    XpmWriteFileFromBuffer (filename, buffer)
+int XpmWriteFileFromBuffer (filename, buffer)
 char               *filename;
 char               *buffer;
-
 #endif /* __STDC__ */
-
 {
    int                 fcheck, len;
    FILE               *fp = fopen (filename, "w");
@@ -742,16 +647,11 @@ char               *buffer;
  */
 
 #ifdef __STDC__
-char               *
-                    XpmGetErrorString (int errcode)
-
+char* XpmGetErrorString (int errcode)
 #else  /* __STDC__ */
-char               *
-                    XpmGetErrorString (errcode)
+char* XpmGetErrorString (errcode)
 int                 errcode;
-
 #endif /* __STDC__ */
-
 {
    switch (errcode)
 	 {
@@ -778,14 +678,10 @@ int                 errcode;
  */
 
 #ifdef __STDC__
-int
-                    XpmLibraryVersion ()
-
+int XpmLibraryVersion (void)
 #else  /* __STDC__ */
-int
-                    XpmLibraryVersion ()
+int XpmLibraryVersion ()
 #endif				/* __STDC__ */
-
 {
    return XpmIncludeVersion;
 }
@@ -793,59 +689,45 @@ int
 #ifndef FOR_MSW
 
 #ifdef __STDC__
-
-void
-                    xpmCreatePixmapFromImage (Display * display, Drawable d, XImage * ximage, Pixmap * pixmap_return)
-
+void xpmCreatePixmapFromImage (Display* display, Drawable d, XImage* ximage, Pixmap* pixmap_return)
 #else  /* __STDC__ */
-void
-                    xpmCreatePixmapFromImage (display, d, ximage, pixmap_return)
+void xpmCreatePixmapFromImage (display, d, ximage, pixmap_return)
 Display            *display;
 Drawable            d;
 XImage             *ximage;
 Pixmap             *pixmap_return;
-
 #endif /* __STDC__ */
 
 {
    ThotGC              gc;
 
-   *pixmap_return = XCreatePixmap (display, d, ximage->width,
-				   ximage->height, ximage->depth);
+   *pixmap_return = XCreatePixmap (display, d, ximage->width, ximage->height, ximage->depth);
    gc = XCreateGC (display, *pixmap_return, 0, NULL);
 
-   XPutImage (display, *pixmap_return, gc, ximage, 0, 0, 0, 0,
-	      ximage->width, ximage->height);
+   XPutImage (display, *pixmap_return, gc, ximage, 0, 0, 0, 0, ximage->width, ximage->height);
 
    XFreeGC (display, gc);
 }
 
 #ifdef __STDC__
-void
-                    xpmCreateImageFromPixmap (Display * display, Pixmap pixmap, XImage ** ximage_return, unsigned int *width, unsigned int *height)
-
+void xpmCreateImageFromPixmap (Display * display, Pixmap pixmap, XImage ** ximage_return, unsigned int *width, unsigned int *height)
 #else  /* __STDC__ */
-void
-                    xpmCreateImageFromPixmap (display, pixmap, ximage_return, width, height)
+void xpmCreateImageFromPixmap (display, pixmap, ximage_return, width, height)
 Display            *display;
 Pixmap              pixmap;
 XImage            **ximage_return;
 unsigned int       *width;
 unsigned int       *height;
-
 #endif /* __STDC__ */
-
 {
    unsigned int        dum;
    int                 dummy;
    ThotWindow          win;
 
    if (*width == 0 && *height == 0)
-      XGetGeometry (display, pixmap, &win, &dummy, &dummy,
-		    width, height, &dum, &dum);
+      XGetGeometry (display, pixmap, &win, &dummy, &dummy, width, height, &dum, &dum);
 
-   *ximage_return = XGetImage (display, pixmap, 0, 0, *width, *height,
-			       AllPlanes, ZPixmap);
+   *ximage_return = XGetImage (display, pixmap, 0, 0, *width, *height, AllPlanes, ZPixmap);
 }
 
 #endif /* FOR_MSW */

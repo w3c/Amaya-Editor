@@ -18,6 +18,7 @@
  * User interface for attributes
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
  *
  */ 
 #include "thot_gui.h"
@@ -607,6 +608,10 @@ PtrDocument         pDoc;
 	       }
 	     else
 	       {
+                   int nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
+		   for (i = 0; i < nbOldItems; i ++) {
+                       RemoveMenu (FrameTable[frame].WdMenus[menu], ref + i, MF_BYCOMMAND) ;
+		   }
 		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
 				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */

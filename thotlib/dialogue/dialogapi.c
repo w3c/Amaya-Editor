@@ -18,6 +18,7 @@
  * Dialogue API routines
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
  *
  */
 
@@ -178,10 +179,11 @@ int                 thotargc = 1;
 
 LRESULT CALLBACK WndProc       (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK ClientWndProc (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK ThotDlgProc   (HWND, UINT, WPARAM, LPARAM) ;
 
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
-char               *tszAppName;
+char*               tszAppName;
 int                 nAmayaShow;
 DWORD               WinLastError;
 ThotWindow          WinToolBar[MAX_FRAME + 2];
@@ -209,12 +211,19 @@ int                 WIN_DesFen;	/* selected ViewFrame               */
 int                 WIN_DesX;	/* Position X of the selection      */
 int                 WIN_DesY;	/* Position Y of the selection      */
 int                 WIN_DesReturn;	/* Selection indicator              */
-unsigned char      *WIN_buffer;	/* Buffer for exchanges with Window */
+unsigned char*      WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
 
-void                terminate__Fv (void)
-{
+void terminate__Fv (void) {
 }
+
+typedef struct WIN_Form {
+        char* BLabels [10]; /* Button labels            */
+} WIN_Form ;
+
+static int      bIndex   = 0;
+static int      bAbsBase = 60 ;
+static WIN_Form formulary ;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1295,6 +1304,20 @@ Display           **Dp;
    RootShell.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
    RootShell.lpszMenuName  = NULL ;
    RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
+   RootShell.style         = 0 ;
+   RootShell.cbClsExtra    = 0 ;
+   RootShell.cbWndExtra    = 0 ;
+   RootShell.hIconSm       = LoadIcon (NULL, IDI_APPLICATION) ;
+
+   RegisterClassEx (&RootShell) ;
+
+   RootShell.lpszClassName = "WNDIALOGBOX" ;
+   RootShell.hInstance     = hInstance ;
+   RootShell.lpfnWndProc   = ThotDlgProc ;
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+   RootShell.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+   RootShell.lpszMenuName  = NULL ;
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
    RootShell.style         = 0 ;
    RootShell.cbClsExtra    = 0 ;
    RootShell.cbWndExtra    = 0 ;
@@ -4923,14 +4946,7 @@ int                 cattype;
 	else
 	   w = MainShell;
 	n = 0;
-#ifdef _WINDOWS
-	form = CreateWindow ("COMBOBOX", title, WS_POPUP | WS_VISIBLE,
-			     CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
-			     w, 0, hInstance, 0);
-	fprintf (stderr, "Created ComboBox %X\n", form);
-	ShowWindow (form, SW_SHOWNORMAL);
-	UpdateWindow (form);
-#else  /* _WINDOWS */
+#ifndef _WINDOWS
 	XtSetArg (args[n], XmNfontList, DefaultFont);
 	n++;
 	/*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
@@ -4954,13 +4970,13 @@ int                 cattype;
 	form = XmCreateBulletinBoard (form, "", args, n);
 	XtAddCallback (XtParent (form), XmNpopdownCallback, (XtCallbackProc) CallSheet, catalogue);
 
+	XmStringFree (title_string);
+#endif /* !_WINDOWS */
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = cattype;
 	catalogue->Cat_Button = button;
 	catalogue->Cat_FormPack = package + 1;
 	catalogue->Cat_Widget = form;
-	XmStringFree (title_string);
-#endif /* !_WINDOWS */
 
 	/* Cree le contenu initial du feuillet */
 	adbloc = NewEList ();	/* Un bloc supplementaire pour les boutons */
@@ -5060,6 +5076,7 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNforeground, Black_Color);
 	n++;
+#endif /* !_WINDOWS */
 	adbloc = catalogue->Cat_Entries;
 
 	if (cattype == CAT_SHEET)
@@ -5067,6 +5084,7 @@ int                 cattype;
 	else if (cattype == CAT_FORM)
 	  {
 	    /*** Cree le bouton de confirmation du formulaire ***/
+#ifndef _WINDOWS 
 	     w = XmCreatePushButton (row, Confirm_string, args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
@@ -5078,6 +5096,10 @@ int                 cattype;
 	     XtSetArg (argform[0], XmNdefaultButton, w);
 	     XtSetValues (form, argform, 1);
 	     ent = 1;
+#else  /* _WINDOWS */
+             formulary.BLabels[bIndex] = strdup (Confirm_string);
+             bIndex++ ;
+#endif /* _WINDOWS */
 	  }
 	else
 	   ent = 0;
@@ -5097,17 +5119,23 @@ int                 cattype;
 		     ptr = &text[index];
 		  else
 		    {
+#ifndef _WINDOWS
 		       w = XmCreatePushButton (row, &text[index], args, n);
 		       XtManageChild (w);
 		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
 		       adbloc->E_ThotWidget[ent] = w;
+#else  /* _WINDOWS */
+                       formulary.BLabels[bIndex] = strdup (&text[index]) ;
+                       bIndex++ ;
+#endif /* _WINDOWS */
 		    }
+#ifndef _WINDOWS
 		  /* Definit le bouton de confirmation comme bouton par defaut */
 		  if (index == 0)
 		     XtSetArg (argform[0], XmNdefaultButton, w);
 		  XtSetValues (form, argform, 1);
+#endif  /* !_WINDOWS */
 	       }		/*else */
-
 	     index += count + 1;
 	     ent++;
 	  }			/*while */
@@ -5117,23 +5145,95 @@ int                 cattype;
 	   switch (dbutton)
 		 {
 		    case D_CANCEL:
+#ifndef _WINDOWS
 		       w = XmCreatePushButton (row, Cancel_string, args, n);
+#else  /* _WINDOWS */
+                       formulary.BLabels[bIndex] = strdup (Cancel_string) ;
+#endif /* _WINDOWS */
 		       break;
 		    case D_DONE:
+#ifndef _WINDOWS
 		       w = XmCreatePushButton (row, Done_string, args, n);
+#else  /* _WINDOWS */
+                       formulary.BLabels[bIndex] = strdup (Done_string) ;
+#endif /* _WINDOWS */
 		       break;
 		 }
 	else
+#ifndef _WINDOWS
 	   w = XmCreatePushButton (row, ptr, args, n);
+#else  /* _WINDOWS */
+	  {
+             formulary.BLabels[bIndex] = strdup (ptr) ;
+	  } 
+          bIndex++ ;
+#endif /* _WINDOWS */
 
+#ifndef _WINDOWS
 	XtManageChild (w);
 	XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
-#endif /* _WINDOWS */
 	/* Range le bouton dans le 1er bloc de widgets */
 	adbloc->E_ThotWidget[0] = w;
+#else  /* _WINDOWS */
+        form = CreateWindow ("WNDIALOGBOX", title, DS_MODALFRAME | WS_POPUP | 
+                             WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+	  		     CW_USEDEFAULT, CW_USEDEFAULT, 500, 400,
+			     w, 0, hInstance, 0); 
 
+	fprintf (stderr, "Created ComboBox %X\n", form);
+	ShowWindow (form, SW_SHOWNORMAL);
+	UpdateWindow (form);
+        bIndex   = 0;
+#endif /* _WINDOWS */
      }
 }
+
+/*-----------------------------------------------------------------------
+ ThotDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+LRESULT CALLBACK ThotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK ThotDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    int        ndx ;
+    int        charWidth;
+    HDC        hdc;
+    TEXTMETRIC tm;
+    
+    switch (msg) {
+           case WM_CREATE: {
+                hdc = GetDC (hwnDlg);
+                GetTextMetrics (hdc, &tm);
+                charWidth = tm.tmAveCharWidth;
+	        for (ndx = 0; ndx < bIndex; ndx ++) {
+                    int strSize = strlen (formulary.BLabels[ndx]) * charWidth + 10;
+                    HWND hButton = CreateWindow ("BUTTON", formulary.BLabels[ndx], WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                             bAbsBase, 300, strSize, 20, hwnDlg, (HMENU) IDCANCEL, hInstance, NULL) ;
+                    ShowWindow (hButton, SW_SHOW);
+                    bAbsBase += (strSize + 10);
+		}
+                ReleaseDC (hwnDlg, hdc);
+                bAbsBase = 60 ;
+                return 0;
+	   }
+           case WM_COMMAND:
+	        switch (LOWORD (wParam)) {
+                       case IDCANCEL: DestroyWindow (hwnDlg);
+                                      return 0;
+		       default:       WinThotCallBack (hwnDlg, wParam, lParam);
+                                      return 0;
+		}
+           default: return (DefWindowProc (hwnDlg, msg, wParam, lParam)) ;
+    }
+}
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------

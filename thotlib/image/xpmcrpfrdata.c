@@ -44,27 +44,19 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
+#include "xpmP.h"
 
 #ifdef __STDC__
-#include "xpmP.h"
-
-int
-                    XpmCreatePixmapFromData (Display * display, Drawable d, char **data, Pixmap * pixmap_return, Pixmap * shapemask_return, XpmAttributes * attributes)
-
+int XpmCreatePixmapFromData (Display* display, Drawable d, char** data, Pixmap* pixmap_return, Pixmap* shapemask_return, XpmAttributes* attributes)
 #else  /* __STDC__ */
-#include "xpmP.h"
-
-int
-                    XpmCreatePixmapFromData (display, d, data, pixmap_return, shapemask_return, attributes)
-Display            *display;
-Drawable            d;
-char              **data;
-Pixmap             *pixmap_return;
-Pixmap             *shapemask_return;
-XpmAttributes      *attributes;
-
+int XpmCreatePixmapFromData (display, d, data, pixmap_return, shapemask_return, attributes)
+Display*       display;
+Drawable       d;
+char**         data;
+Pixmap*        pixmap_return;
+Pixmap*        shapemask_return;
+XpmAttributes* attributes;
 #endif /* __STDC__ */
-
 {
    XImage             *ximage, *shapeimage;
    int                 ErrorStatus;
@@ -89,15 +81,13 @@ XpmAttributes      *attributes;
       return (ErrorStatus);
 
    /* create the pixmaps and destroy images */
-   if (pixmap_return && ximage)
-     {
-	xpmCreatePixmapFromImage (display, d, ximage, pixmap_return);
-	XDestroyImage (ximage);
-     }
-   if (shapemask_return && shapeimage)
-     {
-	xpmCreatePixmapFromImage (display, d, shapeimage, shapemask_return);
-	XDestroyImage (shapeimage);
-     }
+   if (pixmap_return && ximage) {
+      xpmCreatePixmapFromImage (display, d, ximage, pixmap_return);
+      XDestroyImage (ximage);
+   }
+   if (shapemask_return && shapeimage) {
+      xpmCreatePixmapFromImage (display, d, shapeimage, shapemask_return);
+      XDestroyImage (shapeimage);
+   }
    return (ErrorStatus);
 }

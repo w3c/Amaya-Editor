@@ -48,7 +48,6 @@
 #endif
 #endif
 
-
 #ifdef WITH_SOCKS
 char                __res = 0;
 #endif
