@@ -2415,7 +2415,6 @@ char *GetTempName (const char *dir, const char *prefix)
 
   static char tmpbufmem[FILENAME_MAX];
   int len;
-  int count;
   int i;
 
   if (!dir || *dir == EOS || !TtaDirExists (dir))
@@ -2423,37 +2422,38 @@ char *GetTempName (const char *dir, const char *prefix)
 
   /* make sure that the name is no bigger than FILENAME_MAX */
 
-  len = strlen (dir) + 8;
-  if (len > FILENAME_MAX)
+  len = strlen (dir);
+  if (len + L_tmpnam > FILENAME_MAX)
     return NULL;
 
   /* copy the dir name, and add a DIR_SEP if it's missing */
   if (dir[strlen (dir) - 1] == DIR_SEP)
     strcpy (tmpbufmem, dir);
   else
+  {
     sprintf (tmpbufmem, "%s%c", dir, DIR_SEP);
+	len++;
+  }
 
-  /* copy the prefix (no more than L_tmpnam chars, to respect posix) */
-  if (prefix && (len + strlen (prefix) > FILENAME_MAX))
-    return NULL;
+  /* copy the prefix (no more than L_tmpnam chars, to respect posix). Save
+     space for the 6 X and EOS chars that will become the random bits */
+  if (prefix)
+  { 
+      i = 0;
+	  while (prefix[i] != EOL && i < L_tmpnam - 8)
+	    tmpbufmem[len++] = prefix[i++];
+	  tmpbufmem[len] = EOS;
+  }
 
-  snprintf (&tmpbufmem[strlen (tmpbufmem)], L_tmpnam, "%s", prefix);
-
-  /* make sure that the prefix has at least 6 chars for the temporary name */
-  
-  len = strlen (prefix);
-  if (len < L_tmpnam)
-    {
-      i = strlen (tmpbufmem);
-      count = 0;
-      while (len < L_tmpnam && count < 6)
-	{
-	  tmpbufmem[i++] = 'X';
-	  len++;
-	  count++;
-	}
-    }
-  tmpbufmem[i] = EOS;
+  /* Add the 6 X chars */
+  len = strlen (tmpbufmem);
+  i = 0;
+  while (i < 6)
+  {
+	tmpbufmem[len++] = 'X';
+	i++;
+  }	 
+  tmpbufmem[len] = EOS;
 
   AM_gen_tempname (tmpbufmem);
 
