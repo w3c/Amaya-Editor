@@ -130,16 +130,8 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
    COLORREF       crOldBkColor;
    unsigned short red, green, blue;
 
-   if (TtIsTrueColor)
-     /* give the background color pixel */
-     crColor = ColorPixel (bg);
-   else
-     {
-       /* give the RGB of the background color */
-       TtaGiveThotRGB (bg, &red, &green, &blue);
-       /* give the system color index */
-       crColor = GetSystemColorIndex (red, green, blue);
-     }
+   /* give the background color pixel */
+   crColor = ColorPixel (bg);
    hMemDC = CreateCompatibleDC (TtDisplay);
    bitmap = SelectObject (hMemDC, pixmap);
    SetMapMode (hMemDC, GetMapMode (TtDisplay));

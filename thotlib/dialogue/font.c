@@ -1054,7 +1054,7 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 	  size = LogicalValue (size, UnPoint, NULL, 0);
 #else /* _WIN_PRINT */
 	  /* adjust the font size to the printer definition */
-	  size = (size * 83 + DOT_PER_INCH / 2) / DOT_PER_INCH;
+	  size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
 	}
       else

@@ -248,7 +248,7 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   if (data == NULL)
     return ((Drawable) NULL);
 
-  pixmap = DataToPixmap (data, w, h, 100, colrs, -1);
+  pixmap = DataToPixmap (data, w, h, 100, colrs, FALSE);
   TtaFreeMemory (data);  
   if (pixmap == None)
     {
@@ -282,7 +282,7 @@ void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   data = ReadJpegToData (fn, &picW, &picH, colrs);
   if (!data)
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, 100, -1,
-		 bgColor, colrs);
+		 bgColor, colrs, FALSE);
   TtaFreeMemory (data);
 #endif /* _WINDOWS */
 }

@@ -125,8 +125,9 @@ static void PWarning (png_struct *png_ptr, char *message)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolors,
-			       int *cpp, ThotColorStruct **colrs, int *bg)
+static unsigned char *ReadPng (FILE *infile, int *width, int *height,
+			       int *ncolors, int *cpp, ThotColorStruct **colrs,
+			       int *bg, ThotBool *withAlpha)
 {
   png_byte        *pp;
   png_byte         buf[8];
@@ -150,6 +151,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
   int              cr, cg, cb, cgr;
   int              row, col;
 
+  *withAlpha = FALSE;
   ret = fread (buf, 1, 8, infile);
   if (ret != 8)
     return NULL;
@@ -367,6 +369,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 	  png_pixels = NULL;
 	  TtaFreeMemory (colors);
 	  colors = NULL;
+	  *withAlpha = (alpha != 0);
 	  break;
 	}
     case  PNG_COLOR_TYPE_GRAY:
@@ -492,8 +495,9 @@ void InitPngColors ()
   ReadPngToData decompresses and return the main picture info     
   ----------------------------------------------------------------------*/
 static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
-				      int *ncolors, int *cpp,
-				      ThotColorStruct **colrs, int *bg)
+				     int *ncolors, int *cpp,
+				     ThotColorStruct **colrs, int *bg,
+				     ThotBool *withAlpha)
 {
   unsigned char *bit_data;
   FILE           *fp;
@@ -505,7 +509,7 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 #endif /* _WINDOWS */
   if (fp != NULL)
     {
-      bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg);
+      bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg, withAlpha);
       if (bit_data != NULL)
 	{
 	  if (fp != stdin) 
@@ -527,17 +531,26 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 {
   Pixmap           pixmap = (Pixmap) 0;
   ThotColorStruct *colrs;
+#ifdef _WINDOWS
+  unsigned short   red, green, blue;
+#endif /* _WINDOWS */
   unsigned char   *buffer = NULL; 
   unsigned char   *buffer2 = NULL;
   int              ncolors, cpp, bg = -1;
   int              w, h, bperpix;
+  ThotBool         withAlpha;
 
-  buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, &colrs, &bg);
+  buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, &colrs, &bg, &withAlpha);
   if (ncolors == 0)
-    /* one byte per component RGB */ 
-    bperpix = sizeof (char) * 3;
+    {
+      /* one byte per component RGB */
+      bperpix = 3;
+      if (withAlpha)
+      /* one more byte */
+      bperpix += 1;
+    }
   else
-    bperpix = sizeof (char);
+    bperpix = 1;
   /* return image dimensions */
   *width = w;
   *height = h;
@@ -582,9 +595,19 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   if (bg >= 0 && colrs)
     {
 #ifdef _WINDOWS
-      /* register the transparent color index */
-      bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green,
-			   colrs[bg].blue);
+      if (Printing)
+	{
+	  i = bgColor;
+	  TtaGiveThotRGB (bgColor, &red, &green, &blue);
+	  colrs[bg].red   = red;
+	  colrs[bg].green = green;
+	  colrs[bg].blue  = blue;
+	  colrs[bg].pixel = PixelColor (bgColor);
+	}
+      else
+	/* register the transparent color index */
+	bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green,
+			      colrs[bg].blue);
       imageDesc->PicMask = bg;
 #else  /* _WINDOWS */
       /* register the transparent mask */
@@ -592,7 +615,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WINDOWS */
     }
 
-  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, bg);
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha);
   TtaFreeMemory (buffer);
   /* free the table of colors */
   TtaFreeMemory (colrs);
@@ -624,12 +647,14 @@ void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   unsigned char   *data;
   int              picW, picH;
   int              ncolors, cpp, transparent;
+  ThotBool         withAlpha;
 
   transparent = -1;
-  data = ReadPngToData (fn, &picW, &picH, &ncolors, &cpp, &colrs, &transparent);
+  data = ReadPngToData (fn, &picW, &picH, &ncolors, &cpp, &colrs, &transparent,
+			&withAlpha);
   if (data)
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
-		 transparent, bgColor, colrs);
+		 transparent, bgColor, colrs, withAlpha);
   TtaFreeMemory (data);
   /* free the table of colors */
   TtaFreeMemory (colrs);
