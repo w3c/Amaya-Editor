@@ -409,12 +409,12 @@ PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
 
+  ViewFrame*        pFrame;
+  int               delta;
 # ifndef _WINDOWS
-  ViewFrame          *pFrame;
   XRectangle        rect;
   XGCValues         values;
   unsigned int      valuemask;
-  int               delta;
 # endif /* _WINDOWS */
 
 # ifdef _WINDOWS
@@ -422,8 +422,9 @@ PictInfo           *imageDesc;
   HBRUSH  hBrush;
   BITMAP  bm;
   POINT   ptOrg, ptSize;
-  int     x, y;
+  int     x, y, clipWidth, clipHeight;
   int     nbPalColors ;
+  HRGN    hrgn, fillRgn;
 # endif /* _WINDOWS */
 
 
@@ -467,6 +468,7 @@ PictInfo           *imageDesc;
 	        /* BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY); */
 	        BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
 	        DeleteDC (hMemDC);
+
          } else {
                WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
          }
@@ -480,8 +482,8 @@ PictInfo           *imageDesc;
 	case FillFrame:
 	case XRepeat:
 	case YRepeat:
-#         ifndef _WINDOWS
           pFrame = &ViewFrameTable[frame - 1];
+#         ifndef _WINDOWS
           valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
           values.fill_style = FillTiled;
           values.tile = pixmap;
@@ -540,7 +542,48 @@ PictInfo           *imageDesc;
           rect.height = MAX_SIZE;
           XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
 #         else  /* _WINDOWS */
-		  /*
+          x          = pFrame->FrClipXBegin;
+          y          = pFrame->FrClipYBegin;
+          clipWidth  = pFrame->FrClipXEnd - x;
+          clipHeight = pFrame->FrClipYEnd - y;
+          x          -= pFrame->FrXOrg;
+          y          -= pFrame->FrYOrg;
+          if (imageDesc->PicPresent != XRepeat) {
+            /* clipping height is done by the box height */
+            if (y < yFrame) {
+               /* reduce the height in delta value */
+               clipHeight = clipHeight + y - yFrame;
+               y = yFrame;
+            }
+            if (clipHeight > h)
+               clipHeight = h;
+          } else {
+               /* clipping height is done by the image height */
+               delta = yFrame + imageDesc->PicHArea - y;
+               if (delta <= 0)
+                  clipHeight = 0;
+               else
+                  clipHeight = delta;
+          }
+	  
+          if (imageDesc->PicPresent != YRepeat) {
+             /* clipping width is done by the box width */
+             if (x < xFrame) {
+                /* reduce the width in delta value */
+                clipWidth = clipWidth + x - xFrame;
+                x = xFrame;
+             }
+             if (clipWidth > w)
+                clipWidth = w;
+          } else {
+               /* clipping width is done by the image width */
+               delta = xFrame + imageDesc->PicWArea - x;
+               if (delta <= 0)
+                  clipWidth = 0;
+               else
+                  clipWidth = delta;
+          }
+
           if (IS_WIN95) {
              HBITMAP hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
 			 int     x, y;
@@ -552,13 +595,15 @@ PictInfo           *imageDesc;
                      BitBlt (TtDisplay, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hMemDC, 0, 0, SRCCOPY);
 			 DeleteDC (hMemDC);
           } else {
+                hrgn = CreateRectRgn (x, y, x + clipWidth, y + clipHeight);
+                SelectClipRgn(TtDisplay, hrgn); 
                 hBrush = CreatePatternBrush (pixmap);
                 hBrush = SelectObject (TtDisplay, hBrush);
-                PatBlt (TtDisplay, xFrame, yFrame, w, h, PATCOPY);
+                if (!PatBlt (TtDisplay, xFrame, yFrame, w, h, PATCOPY))
+				   WinErrorBox (NULL);
                 hBrush = SelectObject (TtDisplay, hBrush);
                 DeleteObject (hBrush);
           }
-		  */
 #         endif /* _WINDOWS */
 	  break;
 	}
