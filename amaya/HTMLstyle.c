@@ -2984,7 +2984,7 @@ PresentationValue  *val;
 	  }
 	goto found_RGB;
      }
-   else if (!strncasecmp (cssRule, "url", 4))
+   else if (!strncasecmp (cssRule, "url", 3))
      {
 	char               *url;
 
@@ -3234,7 +3234,7 @@ char               *cssRule;
 
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
    setColor = TRUE;
-   if (!strncasecmp (cssRule, "transparent", strlen("")))
+   if (!strncasecmp (cssRule, "transparent", strlen("transparent")))
      {
        best.typed_data.value = DRIVERP_PATTERN_NONE;
        best.typed_data.unit = DRIVERP_UNIT_REL;
@@ -3409,7 +3409,7 @@ char               *cssRule;
    char                 *no_bg_image;
 
    url = NULL;
-   if (strncasecmp (cssRule, "url", 4))
+   if (strncasecmp (cssRule, "url", 3))
      return (cssRule);
        
    cssRule = ParseHTMLURL (cssRule, &url);
@@ -3508,17 +3508,17 @@ char               *cssRule;
    repeat.typed_data.value = 0;
    repeat.typed_data.unit = 1;
    cssRule = SkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "no-repeat", strlen ("repeat")))
+   if (!strncasecmp (cssRule, "no-repeat", strlen ("no-repeat")))
      {
 	repeat.typed_data.value = DRIVERP_SCALE;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "repeat-y", strlen ("repeat")))
+   else if (!strncasecmp (cssRule, "repeat-y", strlen ("repeat-y")))
      {
 	repeat.typed_data.value = DRIVERP_VREPEAT;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "repeat-x", strlen ("repeat")))
+   else if (!strncasecmp (cssRule, "repeat-x", strlen ("repeat-x")))
      {
 	repeat.typed_data.value = DRIVERP_HREPEAT;
 	cssRule = SkipWord (cssRule);
@@ -3607,7 +3607,7 @@ char               *cssRule;
    url = NULL;
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
    setColor = TRUE;
-   if (!strncasecmp (cssRule, "url", 4))
+   if (!strncasecmp (cssRule, "url", 3))
      /*
       * we don't currently support URL just parse it to skip it.
       */
