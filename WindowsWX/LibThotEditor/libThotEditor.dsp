@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\..\wxWidgets\contrib\include" /I "..\..\..\wxWidgets\lib\vc_dll\mswu" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\freetype-2.1.0\include" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "STDC_HEADERS" /D "XMD_H" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D WINVER=0x400 /D wxUSE_GUI=1 /D "_WX" /D "WXUSINGDLL" /FD /TP /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\\" /I "..\..\..\wxWidgets\include" /I "..\..\..\wxWidgets\contrib\include" /I "..\..\..\wxWidgets\lib\vc_dll\mswu" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\freetype-2.1.0\include" /D "WWW_WIN_DLL" /D "SOCKS" /D "__WXMSW__" /D "UNICODE" /D "_UNICODE" /D "STDC_HEADERS" /D "XMD_H" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "THOT_TOOLTIPS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D WINVER=0x400 /D wxUSE_GUI=1 /D "_WX" /D "WXUSINGDLL" /FD /TP /c
 # ADD BASE RSC /l 0x40c
 # ADD RSC /l 0x40c
 BSC32=bscmake.exe
@@ -104,13 +104,6 @@ SOURCE=..\..\thotlib\base\actions.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\AmayaApp.cpp
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -691,35 +684,14 @@ SOURCE=..\..\thotlib\document\writepivot.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\wxAmayaSocketEvent.cpp
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\wxAmayaSocketEventLoop.cpp
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\wxAmayaTimer.cpp
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
