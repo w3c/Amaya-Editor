@@ -58,6 +58,23 @@ thotlib_Extra_JavaStopPoll(struct Hthotlib_Extra* none)
 }
 
 /*
+ * Call a Java Applet entry point.
+ */
+int
+thotlib_Extra_JavaStartApplet(struct Hthotlib_Extra* none, 
+                              struct Hjava_lang_String* class, arg jint doc)
+{
+    jword res;
+    char classname[300];
+
+    javaString2CString(class, classname, sizeof(classname));
+
+    res = do_execute_java_class_method(classname, "main", "(I)I", doc);
+
+    return(res);
+}
+
+/*
  * Flush the X-Windows stream.
  */
 void
@@ -94,6 +111,8 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_JavaStopPoll);
 	addNativeMethod("thotlib_Extra_JavaXFlush",
 	                thotlib_Extra_JavaXFlush);
+	addNativeMethod("thotlib_Extra_JavaStartApplet",
+	                thotlib_Extra_JavaStartApplet);
 /*
 	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
  */
