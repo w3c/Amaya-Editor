@@ -2279,12 +2279,12 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
+      SetWindowText (hwnDlg, Message);
       ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
-      SetWindowText (hwnDlg, ptr);
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), WndTitle);
-	if (strcmp (WndTitle, ptr))
-		/* generate a button show */
-      SetWindowText (GetDlgItem (hwnDlg, ID_SHOW), TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), Message2);
+	if (strcmp (Message, ptr))
+	  /* generate a button show */
+      SetWindowText (GetDlgItem (hwnDlg, ID_MIDDLE), Message3);
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       messageWnd = CreateWindow ("STATIC", Message,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT,
@@ -3898,19 +3898,25 @@ void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_lis
 /*-----------------------------------------------------------------------
  CreateInitConfirmDlgWindow
  ------------------------------------------------------------------------*/
-void CreateInitConfirmDlgWindow (ThotWindow parent, char *title, char *label)
-{  
+void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
+								 char *confirmbutton, char *label)
+{
   strcpy (Message, label);
-  if (title && title[0] != EOS)
+  if (extrabutton && extrabutton[0] != EOS)
   {
 	/* a meesage with 3 buttons */
-    strcpy (WndTitle, title);
+    strcpy (Message2, extrabutton);
+	if (confirmbutton && confirmbutton[0] != EOS)
+      strcpy (Message3, confirmbutton);
+	else
+      strcpy (Message3, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+
     DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG1), parent,
                (DLGPROC) InitConfirmDlgProc);
   }
   else
   {
-    strcpy (WndTitle, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+    strcpy (Message, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
     DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
                (DLGPROC) InitConfirmDlgProc);
   }

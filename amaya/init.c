@@ -1809,7 +1809,7 @@ void ConfirmError (Document document, View view, char *label,
    
 #ifdef _WINGUI
    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
-			       extrabutton, label);
+			       extrabutton, confirmbutton, label);
 #endif /* _WINGUI */
 }
 
@@ -1888,7 +1888,7 @@ void InitConfirm (Document document, View view, char *label)
   CriticConfirm = FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */   
 #ifdef _WINGUI
-  CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, label);
+  CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, NULL, label);
 #endif /* _WINGUI */
 #ifdef _WX
   CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, label);

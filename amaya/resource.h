@@ -735,6 +735,7 @@
 #define IDC_UTF8                        1568
 #define IDC_ISOL1                       1569
 #define ID_SHOW                         1570
+#define ID_MIDDLE                       1570
 #define IDC_LOADIMG                     1572
 #define IDC_SHOWBUTTONS                 1573
 #define IDC_LOADCSS                     1573
