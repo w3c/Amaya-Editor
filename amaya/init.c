@@ -4357,14 +4357,22 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 {
 	   LastURLName[0] = EOS;
 	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
-	   
-	   if (TtaCheckDirectory (tempfile))
-	     {
-	       strcpy (DirectoryName, tempfile);
+	   if (!IsW3Path (tempfile))
+	    {
+		if (TtaCheckDirectory (tempfile))
+		{
+		    strcpy (DirectoryName, tempfile);
+		    DocumentName[0] = EOS;
+		}
+		else
+		    TtaExtractName (tempfile, DirectoryName, DocumentName);
+	    }
+	   else 
+	   {
+	       /* save the URL name */
+	       strcpy (LastURLName, tempfile);
 	       DocumentName[0] = EOS;
-	     }
-	   else
-	     TtaExtractName (tempfile, DirectoryName, DocumentName);
+	   }
 	 }       
        break;
 
