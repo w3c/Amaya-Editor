@@ -377,7 +377,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      RedrawFrameBottom (frame, 0, NULL);
      /* glMatroxBUG (frame, x, y, width, height);	*/
      GL_Swap (frame);
-	 GL_MakeCurrent (ActiveFrame);
+     GL_MakeCurrent (ActiveFrame);
      EndPaint (w, &ps);
 #endif /*_GL*/
    }
@@ -3402,8 +3402,7 @@ void UpdateScrollbars (int frame)
       XtSetValues (vscroll, args, n);
     }
 #else /*_GTK*/
-  
-  if (width == l && x == 0 && width > 60)
+  if ((width+7) >= l && x == 0 && width > 60)
     gtk_widget_hide (GTK_WIDGET (hscroll));
   else if (width + x <= l)
     {
@@ -3420,7 +3419,7 @@ void UpdateScrollbars (int frame)
   else
     gtk_widget_show (GTK_WIDGET (hscroll));
 
-  if (height == h && y == 0)
+  if (height >= h && y == 0)
     gtk_widget_hide (GTK_WIDGET (vscroll));
   else if (height + y <= h)
     {
@@ -3436,9 +3435,9 @@ void UpdateScrollbars (int frame)
     }
   else
     gtk_widget_show (GTK_WIDGET (vscroll));
-#ifdef _GL
-  /*For multiview synchonization*/
-  GL_DrawAll (NULL, frame);
+#ifdef _GL 
+  /*For multiview synchonization*/  
+  GL_DrawAll (NULL, frame);  
 #endif /*_GL*/
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
@@ -3448,7 +3447,7 @@ void UpdateScrollbars (int frame)
   scrollInfo.cbSize = sizeof (SCROLLINFO);
   scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
   scrollInfo.nMin   = 0;
-  if (width == l && x == 0 && width > 60)
+  if (width >= l && x == 0 && width > 60)
     /*hide*/
     ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
   else if (width + x <= l)
@@ -3464,7 +3463,7 @@ void UpdateScrollbars (int frame)
     /*show*/
     ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
    
-  if (height == h && y == 0)
+  if (height >= h && y == 0)
     /*hide*/
     ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
   else if (height + y <= h)
