@@ -117,6 +117,20 @@ remove subsup: MSUBSUP{base:*,?sub:*,?sup:*};
 	sup /;
 	}
 
+!removes a superscript
+remove superscript: MSUBSUP{base:*,?sub:*,?sup:*};
+	{
+	MSUBSUP > MSUB;
+	sup /;
+	}
+
+!removes a subscript
+remove subscript: MSUBSUP{base:*,?sub:*,?sup:*};
+	{
+	MSUBSUP > MSUP;
+	sub /;
+	}
+
 !surroud element with a sub
 add subscript:*;
 	{
@@ -161,10 +175,10 @@ subscript:MSUP;
 subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
 	{
 	base > MSUBSUP:*;
-	sup > MSUBSUP:NONE;
+	sup > MSUBSUP:NONE %;
 	sup > MSUBSUP:*;
 	sub > MSUBSUP:*;
-	sub > MSUBSUP:NONE;
+	sub > MSUBSUP:NONE %;
 	}
 
 !!! Under and Over transformations

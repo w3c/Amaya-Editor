@@ -1730,19 +1730,19 @@ strMatchChildren   *smc;
 	     found = FALSE;
 	     while (!found && sm != NULL)
 	       {
-		  found = (sm->MatchSymb == smc2->MatchSymb);
+		  found = (sm->MatchSymb == smc2->MatchSymb && sm->MatchChildren != NULL);
 		  if (!found)
 		     sm = sm->Next;
 	       }
 	     if (found)
 	       {
-		 /* at least one child has been matched, applying the transformation */
-		 /* to the children */
+		 /* at least one child has been matched,        */
+		 /* applying the transformation to the children */
 		  result = result && ApplyTransChild (sm->MatchChildren);
 	       }
 	     else
 	       { /* there is no matching: transferring the node to destination instance */
-		  result = result && TransfertNode (sm->MatchNode, FALSE);
+		  result = result && TransfertNode (smc2->MatchNode, FALSE);
 	       }
 	  }
 	else
@@ -1791,81 +1791,85 @@ strMatchChildren   *sm;
      {
        if (currentRule->DeleteRule)
 	 transChildDone = TRUE;
-       courNode = 1;
-       RNodeCour = currentRule->OptionNodes;
-       stop = (RNodeCour == NULL || courNode > topGenerStack);
-       while (!stop)
-	 { /* for each optional tag in the rule */
-	   if (!strcmp (generationStack[courNode]->Tag, RNodeCour->Tag))
-	     {  /* does nothing if the tag is already present in the destination instance */
-	       RNodeCour = RNodeCour->Next;
-	       courNode++;
-	       stop = (RNodeCour == NULL || courNode > topGenerStack);
-	     }
-	   else
-	     {
-	       /* a new branch have to be created in the destination */
-	       stop = TRUE;
-	     }
-	 }
-
-       while (topGenerStack >= courNode)
-	 { /* closes the opened tags (on generation stack) */
-	   result = result && PutEndTag (generationStack[topGenerStack]);
-	   TtaFreeMemory (generationStack[topGenerStack]->Tag);
-	   TtaFreeMemory ((char *) generationStack[topGenerStack]);
-	   topGenerStack--;
-	 }
-
-       while (RNodeCour != NULL)
-	 {/* generates optional nodes not already present */
-	   result = result && PutBeginTag (RNodeCour, sm->MatchNode);
-	   courNode++;
-	   RNodeCour = RNodeCour->Next;
-	 }
-
-       lastRulePlace = courNode;
-       RNodeCour = currentRule->NewNodes;
-
-       while (RNodeCour != NULL && 
-	      RNodeCour->Tag[0] != '"' &&
-	      strcmp (RNodeCour->Tag, "*") != 0 &&
-	      strcmp (RNodeCour->Tag, "#") != 0)
-	 { /* generates the new nodes */
-	   result = result && PutBeginTag (RNodeCour, sm->MatchNode);
-	   courNode++;
-	   RNodeCour = RNodeCour->Next;
-	 }
-       /* traite le dernier noeud de la regle */
-       if (RNodeCour != NULL && RNodeCour->Tag[0] == '"')
+       else
 	 {
-	   l = strlen (RNodeCour->Tag) - 2;
-	   strncpy (&bufHTML[szHTML], &RNodeCour->Tag[1], l);
-	   szHTML += l;
-	   bufHTML[szHTML]='\0';
-	 }
-       if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
-	 { /* copie du noeud source */
-	   result = result && TransfertNode (sm->MatchNode, TRUE);
-	   transChildDone = TRUE;
-	 }
-       if ((RNodeCour != NULL && RNodeCour->Tag[0] == '#') ||
-	   (currentRule->NextRule == NULL))
-	 {
-	   /* it is the last rule of the node or the explicit children */
-	   /* transformation place */
-	   /* process the children */
-	   if ((currentRule->NextRule != NULL) || transChildDone == FALSE)
-	     {
-	       if (sonsMatch)
-		 {
-		   result = result && ApplyTransChild (sm2->MatchChildren);
+	   courNode = 1;
+	   RNodeCour = currentRule->OptionNodes;
+	   stop = (RNodeCour == NULL || courNode > topGenerStack);
+	   while (!stop)
+	     { /* for each optional tag in the rule */
+	       if (!strcmp (generationStack[courNode]->Tag, RNodeCour->Tag))
+		 {  /* does nothing if the tag is already present in the destination instance */
+		   RNodeCour = RNodeCour->Next;
+		   courNode++;
+		   stop = (RNodeCour == NULL || courNode > topGenerStack);
 		 }
 	       else
-		 {			
-		   result = result && TransfertChildren (sm->MatchNode);
+		 {
+		   /* a new branch have to be created in the destination */
+		   stop = TRUE;
 		 }
+	     }
+	   
+	   while (topGenerStack >= courNode)
+	     { /* closes the opened tags (on generation stack) */
+	       result = result && PutEndTag (generationStack[topGenerStack]);
+	       TtaFreeMemory (generationStack[topGenerStack]->Tag);
+	       TtaFreeMemory ((char *) generationStack[topGenerStack]);
+	       topGenerStack--;
+	     }
+	   
+	   while (RNodeCour != NULL)
+	     {/* generates optional nodes not already present */
+	       result = result && PutBeginTag (RNodeCour, sm->MatchNode);
+	       courNode++;
+	       RNodeCour = RNodeCour->Next;
+	     }
+	   
+	   lastRulePlace = courNode;
+	   RNodeCour = currentRule->NewNodes;
+	   
+	   while (RNodeCour != NULL && 
+		  RNodeCour->Tag[0] != '"' &&
+		  strcmp (RNodeCour->Tag, "*") != 0 &&
+		  strcmp (RNodeCour->Tag, "#") != 0)
+	     { /* generates the new nodes */
+	       result = result && PutBeginTag (RNodeCour, sm->MatchNode);
+	       courNode++;
+	       RNodeCour = RNodeCour->Next;
+	     }
+
+	   /* traite le dernier noeud de la regle */
+	   if (RNodeCour != NULL && RNodeCour->Tag[0] == '"')
+	     {
+	       l = strlen (RNodeCour->Tag) - 2;
+	       strncpy (&bufHTML[szHTML], &RNodeCour->Tag[1], l);
+	       szHTML += l;
+	       bufHTML[szHTML]='\0';
+	     }
+	   if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
+	     { /* copie du noeud source */
+	       result = result && TransfertNode (sm->MatchNode, TRUE);
 	       transChildDone = TRUE;
+	     }
+	   if ((RNodeCour != NULL && RNodeCour->Tag[0] == '#') ||
+	       (currentRule->NextRule == NULL))
+	     {
+	       /* it is the last rule of the node or the explicit children */
+	       /* transformation place */
+	       /* process the children */
+	       if ((currentRule->NextRule != NULL) || transChildDone == FALSE)
+		 {
+		   if (sonsMatch)
+		     {
+		       result = result && ApplyTransChild (sm2->MatchChildren);
+		     }
+		   else
+		     {			
+		       result = result && TransfertChildren (sm->MatchNode);
+		     }
+		   transChildDone = TRUE;
+		 }
 	     }
 	 }
        currentRule = currentRule->NextRule;
