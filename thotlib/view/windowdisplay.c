@@ -2431,8 +2431,8 @@ int                 fg;
 
    x += FrameTable[frame].FrLeftMargin;
    y += FrameTable[frame].FrTopMargin;
-   xf = x + l - 1 - thick;
-   yf = y + h - 1 - thick;
+   xf = x + l - thick;
+   yf = y + h - thick;
 
    InitDrawing (0, style, thick, RO, active, fg);
    switch (corner)

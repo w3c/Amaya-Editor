@@ -2272,21 +2272,6 @@ BOXES
 		END;
 	END;
 
- HR_Graph1: BEGIN
-	Content: Graphics 'b';
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
-	Width: Enclosing . Width;
-	Height: 0.5;
-	Foreground: Black;
-	LineWeight: Creator =;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		LineWeight: 1 pt;
-	END;
-
  ISINDEX_Graph1: BEGIN
 	Content: Graphics 'b';
 	HorizPos: Left = Enclosing . Left;
@@ -2300,12 +2285,56 @@ BOXES
 		END;
 	END;
 
-#ifndef PAGE
- HR_Graph2: BEGIN
-	Content: Graphics 't';
+#ifdef PAGE
+ HR_Print: BEGIN
+	Content: Graphics 'b';
 	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
 	Height: 0.5;
+	Foreground: Black;
+	LineWeight: Creator =;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		LineWeight: 1 pt;
+	END;
+#else
+ HR_Alt: BEGIN
+	Content: Graphics 'h';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: Enclosing . Width;
+	Height: Enclosed . Height;
+	Foreground: Black;
+	LineWeight: 1 pt;
+	Visibility: 0;
+	IN Alternate_view
+	      Visibility: Creator =;
+	END;
+
+ HR_Graph1: BEGIN
+	Content: Graphics 'Z';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	Foreground: Black;
+	LineWeight: 1 pt;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+ HR_Graph2: BEGIN
+	Content: Graphics 'X';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
 	Foreground: White;
 	LineWeight: 1 pt;
 	Visibility: Creator =;
@@ -4831,16 +4860,26 @@ RULES
 
  Horizontal_Rule: BEGIN
 	CreateBefore(HR_S);
+#ifdef PAGE
+	CreateLast(HR_Print);
+#else
+	CreateLast(HR_Alt);
 	CreateLast(HR_Graph1);
-#ifndef PAGE
 	if not within Preformatted
 	   CreateLast(HR_Graph2);
 #endif
 	Width: Enclosing . Width;
+	Height: 2 pt;
 	HorizPos: VMiddle = Enclosing . VMiddle;
+	VertPos: Top = Previous . Bottom + 0.2;
 	LineWeight: 1 pt;
+	IN Alternate_view
+		BEGIN
+		Height: 1;
+		VertPos: Top = Previous . Bottom;
+		END;
 	IN Structure_view
-	    Height: 1 pt;
+		Height: 1 pt;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -5997,11 +6036,38 @@ dans des paragraphes s affichent a cote de leur cadre...
  NoShade:
 	CreateBefore(ATTR_NOSHADE);
 
- Size_:
+ Size_ < 2:
 	BEGIN
 	CreateBefore(ATTR_SIZE);
 	CreateBefore(VALUE_SIZE);
+	Height: 2 pt;
+#ifdef PAGE
 	LineWeight: Size_ pt;
+#endif
+	IN Alternate_view
+		BEGIN
+		Height: 1;
+		LineWeight: 1 pt;
+		END;
+	IN Structure_view
+		Height: 1 pt;
+	END;
+
+ Size_ > 1:
+	BEGIN
+	CreateBefore(ATTR_SIZE);
+	CreateBefore(VALUE_SIZE);
+	Height: Size_ pt;
+#ifdef PAGE
+	LineWeight: Size_ pt;
+#endif
+	IN Alternate_view
+		BEGIN
+		Height: 1;
+		LineWeight: 1 pt;
+		END;
+	IN Structure_view
+		Height: 1 pt;
 	END;
 
  NumberStyle = Arabic_ :
