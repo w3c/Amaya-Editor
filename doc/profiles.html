@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Profiles in Amaya</title>
+  <meta name="GENERATOR" content="amaya V2.1a">
+</head>
+
+<body style="text-align: left;">
+<p style="text-align: center"><span style="font-size: 24pt"><strong>Profiles
+in Amaya</strong></span></p>
+
+<p style="text-align: left"></p>
+
+<p></p>
+
+<p style="text-align: left"><span style="font-size: 14pt"><strong>How to use
+it :</strong></span></p>
+
+<p>The definition file thot.rc contains two new fields :</p>
+<ul>
+  <li>Profiles_File :
+    <p>This field contains the location of the file which defines the
+    available profiles.</p>
+    <p>e.g : Profiles_File=/home/bonameau/.amaya/Profiles</p>
+    <p>You have to create this file and fill it in before using profiles.</p>
+    <p>This file looks like this :</p>
+    <p></p>
+    <p><em><span style="color: #0071FF">[EditorNovice] </span>              /*
+    Profile's name */</em></p>
+    <p><em>OpenDoc                                         /* List of
+    functions added in the profile */</em></p>
+    <p><em>OpenDocInNewWindow</em></p>
+    <p><em>New</em></p>
+    <p><em>NewTemplate</em></p>
+    <p><em>NewCss</em></p>
+    <p><em>SaveDocument</em></p>
+    <p><em>SaveDocumentAs</em></p>
+    <p><em>.....</em></p>
+    <p><em><span style="color: #0071FF">[EditorMaster]               <span
+    style="color: #000000">/* Profile's name */</span></span></em></p>
+    <p><em><span style="color: #000000">OpenDoc /* List of functions added in
+    the profile */</span></em></p>
+    <p><em>....</em></p>
+    <p><em>New</em></p>
+    <p><em>NewTemplate</em></p>
+    <p><em>NewCss</em></p>
+    <p><em>....</em></p>
+    <p><em><span style="color: #0071FF">[Browser]                      <span
+    style="color: #000000">/* Profile's name */</span></span></em></p>
+    <p><em>OpenDoc                                  /* List of functions added
+    in the profile */</em></p>
+    <p><em>OpenDocInNewWindow</em></p>
+    <p><em>Reload</em></p>
+    <p><em>GotoPreviousHTML</em></p>
+    <p><em>GotoNextHTML</em></p>
+    <p><em>SetupAndPrint</em></p>
+    <p><em>PrintAs</em></p>
+    <p><em>TtcCloseDocument</em></p>
+    <p><em>AmayaClose</em></p>
+    <p><em>TtcCloseView</em></p>
+    <p><em>....</em></p>
+    <p><em>HelpBrowsing</em></p>
+    <p>[...........]</p>
+    <p>.....</p>
+  </li>
+</ul>
+
+<p></p>
+<ul>
+  <li>Profile :
+    <p>This field contains the current profile to use.</p>
+    <p>e.g :  Profile=<span style="color: #0071FF">[Browser]</span></p>
+  </li>
+</ul>
+
+<p></p>
+
+<p>After having done these modifications, just restart Amaya with the new
+profile.</p>
+
+<p>Obviously, if theses fields are empty, Amaya will start with the full
+interface.</p>
+
+<p></p>
+
+<p></p>
+
+<p>Notice : The definition profile will later use a list of modules instead of
+a list of functions.</p>
+
+<p></p>
+
+<p>--</p>
+
+<p>Luc Bonameau</p>
+</body>
+</html>
