@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -57,261 +57,261 @@ CharEntityEntry;
 CharEntityEntry        CharEntityTable[] =
 {
    /* This table MUST be in alphabetical order */
-{TEXT("AElig"), 198},		/* latin capital letter AE = latin capital ligature AE, U+00C6 ISOlat1 */
+{TEXT("AElig"), 198},	/* latin capital letter AE = latin capital ligature AE, U+00C6 ISOlat1 */
 {TEXT("Aacute"), 193},	/* latin capital letter A with acute, U+00C1 ISOlat1 */
-{TEXT("Acirc"), 194},		/* latin capital letter A with circumflex, U+00C2 ISOlat1 */
+{TEXT("Acirc"), 194},	/* latin capital letter A with circumflex, U+00C2 ISOlat1 */
 {TEXT("Agrave"), 192},	/* latin capital letter A with grave = latin capital letter A grave, U+00C0 ISOlat1 */
-{TEXT("Alpha"), 913},		/* greek capital letter alpha, U+0391 */
-{TEXT("Aring"), 197},		/* latin capital letter A with ring above = latin capital letter A ring, U+00C5 ISOlat1 */
+{TEXT("Alpha"), 913},	/* greek capital letter alpha, U+0391 */
+{TEXT("Aring"), 197},	/* latin capital letter A with ring above = latin capital letter A ring, U+00C5 ISOlat1 */
 {TEXT("Atilde"), 195},	/* latin capital letter A with tilde, U+00C3 ISOlat1 */
-{TEXT("Auml"), 196},		/* latin capital letter A with diaeresis, U+00C4 ISOlat1 */
-{TEXT("Beta"), 914},		/* greek capital letter beta, U+0392 */
+{TEXT("Auml"), 196},	/* latin capital letter A with diaeresis, U+00C4 ISOlat1 */
+{TEXT("Beta"), 914},	/* greek capital letter beta, U+0392 */
 {TEXT("Ccedil"), 199},	/* latin capital letter C with cedilla, U+00C7 ISOlat1 */
-{TEXT("Chi"), 935},		/* greek capital letter chi, U+03A7 */
+{TEXT("Chi"), 935},	/* greek capital letter chi, U+03A7 */
 {TEXT("Dagger"), 8225},	/* double dagger, U+2021 ISOpub */
-{TEXT("Delta"), 916},		/* greek capital letter delta, U+0394 ISOgrk3 */
-{TEXT("ETH"), 208},		/* latin capital letter ETH, U+00D0 ISOlat1 */
+{TEXT("Delta"), 916},	/* greek capital letter delta, U+0394 ISOgrk3 */
+{TEXT("ETH"), 208},	/* latin capital letter ETH, U+00D0 ISOlat1 */
 {TEXT("Eacute"), 201},	/* latin capital letter E with acute, U+00C9 ISOlat1 */
-{TEXT("Ecirc"), 202},		/* latin capital letter E with circumflex, U+00CA ISOlat1 */
+{TEXT("Ecirc"), 202},	/* latin capital letter E with circumflex, U+00CA ISOlat1 */
 {TEXT("Egrave"), 200},	/* latin capital letter E with grave, U+00C8 ISOlat1 */
 {TEXT("Epsilon"), 917},	/* greek capital letter epsilon, U+0395 */
-{TEXT("Eta"), 919},		/* greek capital letter eta, U+0397 */
-{TEXT("Euml"), 203},		/* latin capital letter E with diaeresis, U+00CB ISOlat1 */
-{TEXT("Gamma"), 915},		/* greek capital letter gamma, U+0393 ISOgrk3 */
+{TEXT("Eta"), 919},	/* greek capital letter eta, U+0397 */
+{TEXT("Euml"), 203},	/* latin capital letter E with diaeresis, U+00CB ISOlat1 */
+{TEXT("Gamma"), 915},	/* greek capital letter gamma, U+0393 ISOgrk3 */
 {TEXT("Iacute"), 205},	/* latin capital letter I with acute, U+00CD ISOlat1 */
-{TEXT("Icirc"), 206},		/* latin capital letter I with circumflex, U+00CE ISOlat1 */
+{TEXT("Icirc"), 206},	/* latin capital letter I with circumflex, U+00CE ISOlat1 */
 {TEXT("Igrave"), 204},	/* latin capital letter I with grave, U+00CC ISOlat1 */
-{TEXT("Iota"), 921},		/* greek capital letter iota, U+0399 */
-{TEXT("Iuml"), 207},		/* latin capital letter I with diaeresis, U+00CF ISOlat1 */
-{TEXT("Kappa"), 922},		/* greek capital letter kappa, U+039A */
+{TEXT("Iota"), 921},	/* greek capital letter iota, U+0399 */
+{TEXT("Iuml"), 207},	/* latin capital letter I with diaeresis, U+00CF ISOlat1 */
+{TEXT("Kappa"), 922},	/* greek capital letter kappa, U+039A */
 {TEXT("Lambda"), 923},	/* greek capital letter lambda, U+039B ISOgrk3 */
-{TEXT("Mu"), 924},		/* greek capital letter mu, U+039C */
+{TEXT("Mu"), 924},	/* greek capital letter mu, U+039C */
 {TEXT("Ntilde"), 209},	/* latin capital letter N with tilde, U+00D1 ISOlat1 */
-{TEXT("Nu"), 925},		/* greek capital letter nu, U+039D */
-{TEXT("OElig"), 338},		/* latin capital ligature OE, U+0152 ISOlat2 */
+{TEXT("Nu"), 925},	/* greek capital letter nu, U+039D */
+{TEXT("OElig"), 338},	/* latin capital ligature OE, U+0152 ISOlat2 */
 {TEXT("Oacute"), 211},	/* latin capital letter O with acute, U+00D3 ISOlat1 */
-{TEXT("Ocirc"), 212},		/* latin capital letter O with circumflex, U+00D4 ISOlat1 */
+{TEXT("Ocirc"), 212},	/* latin capital letter O with circumflex, U+00D4 ISOlat1 */
 {TEXT("Ograve"), 210},	/* latin capital letter O with grave, U+00D2 ISOlat1 */
-{TEXT("Omega"), 937},		/* greek capital letter omega, U+03A9 ISOgrk3 */
+{TEXT("Omega"), 937},	/* greek capital letter omega, U+03A9 ISOgrk3 */
 {TEXT("Omicron"), 927},	/* greek capital letter omicron, U+039F */
 {TEXT("Oslash"), 216},	/* latin capital letter O with stroke = latin capital letter O slash, U+00D8 ISOlat1 */
 {TEXT("Otilde"), 213},	/* latin capital letter O with tilde, U+00D5 ISOlat1 */
-{TEXT("Ouml"), 214},		/* latin capital letter O with diaeresis, U+00D6 ISOlat1 */
-{TEXT("Phi"), 934},		/* greek capital letter phi, U+03A6 ISOgrk3 */
-{TEXT("Pi"), 928},		/* greek capital letter pi, U+03A0 ISOgrk3 */
+{TEXT("Ouml"), 214},	/* latin capital letter O with diaeresis, U+00D6 ISOlat1 */
+{TEXT("Phi"), 934},	/* greek capital letter phi, U+03A6 ISOgrk3 */
+{TEXT("Pi"), 928},	/* greek capital letter pi, U+03A0 ISOgrk3 */
 {TEXT("Prime"), 8243},	/* double prime = seconds = inches, U+2033 ISOtech */
-{TEXT("Psi"), 936},		/* greek capital letter psi, U+03A8 ISOgrk3 */
-{TEXT("Rho"), 929},		/* greek capital letter rho, U+03A1 */
+{TEXT("Psi"), 936},	/* greek capital letter psi, U+03A8 ISOgrk3 */
+{TEXT("Rho"), 929},	/* greek capital letter rho, U+03A1 */
 {TEXT("Scaron"), 352},	/* latin capital letter S with caron, U+0160 ISOlat2 */
-{TEXT("Sigma"), 931},		/* greek capital letter sigma, U+03A3 ISOgrk3 */
-{TEXT("THORN"), 222},		/* latin capital letter THORN, U+00DE ISOlat1 */
-{TEXT("Tau"), 932},		/* greek capital letter tau, U+03A4 */
-{TEXT("Theta"), 920},		/* greek capital letter theta, U+0398 ISOgrk3 */
+{TEXT("Sigma"), 931},	/* greek capital letter sigma, U+03A3 ISOgrk3 */
+{TEXT("THORN"), 222},	/* latin capital letter THORN, U+00DE ISOlat1 */
+{TEXT("Tau"), 932},	/* greek capital letter tau, U+03A4 */
+{TEXT("Theta"), 920},	/* greek capital letter theta, U+0398 ISOgrk3 */
 {TEXT("Uacute"), 218},	/* latin capital letter U with acute, U+00DA ISOlat1 */
-{TEXT("Ucirc"), 219},		/* latin capital letter U with circumflex, U+00DB ISOlat1 */
+{TEXT("Ucirc"), 219},	/* latin capital letter U with circumflex, U+00DB ISOlat1 */
 {TEXT("Ugrave"), 217},	/* latin capital letter U with grave, U+00D9 ISOlat1 */
 {TEXT("Upsilon"), 933},	/* greek capital letter upsilon, U+03A5 ISOgrk3 */
-{TEXT("Uuml"), 220},		/* latin capital letter U with diaeresis, U+00DC ISOlat1 */
-{TEXT("Xi"), 926},		/* greek capital letter xi, U+039E ISOgrk3 */
+{TEXT("Uuml"), 220},	/* latin capital letter U with diaeresis, U+00DC ISOlat1 */
+{TEXT("Xi"), 926},	/* greek capital letter xi, U+039E ISOgrk3 */
 {TEXT("Yacute"), 221},	/* latin capital letter Y with acute, U+00DD ISOlat1 */
-{TEXT("Yuml"), 376},		/* latin capital letter Y with diaeresis, U+0178 ISOlat2 */
-{TEXT("Zeta"), 918},		/* greek capital letter zeta, U+0396 */
+{TEXT("Yuml"), 376},	/* latin capital letter Y with diaeresis, U+0178 ISOlat2 */
+{TEXT("Zeta"), 918},	/* greek capital letter zeta, U+0396 */
 {TEXT("aacute"), 225},	/* latin small letter a with acute, U+00E1 ISOlat1 */
-{TEXT("acirc"), 226},		/* latin small letter a with circumflex, U+00E2 ISOlat1 */
-{TEXT("acute"), 180},		/* acute accent = spacing acute, U+00B4 ISOdia */
-{TEXT("aelig"), 230},		/* latin small letter ae = latin small ligature ae, U+00E6 ISOlat1 */
+{TEXT("acirc"), 226},	/* latin small letter a with circumflex, U+00E2 ISOlat1 */
+{TEXT("acute"), 180},	/* acute accent = spacing acute, U+00B4 ISOdia */
+{TEXT("aelig"), 230},	/* latin small letter ae = latin small ligature ae, U+00E6 ISOlat1 */
 {TEXT("agrave"), 224},	/* latin small letter a with grave = latin small letter a grave, U+00E0 ISOlat1 */
-{TEXT("alefsym"), 8501},	/* alef symbol = first transfinite cardinal, U+2135 NEW */
-{TEXT("alpha"), 945},		/* greek small letter alpha, U+03B1 ISOgrk3 */
-{TEXT("amp"), 38},		/* ampersand, U+0026 ISOnum */
-{TEXT("and"), 8743},		/* logical and = wedge, U+2227 ISOtech */
-{TEXT("ang"), 8736},		/* angle, U+2220 ISOamso */
-{TEXT("aring"), 229},		/* latin small letter a with ring above = latin small letter a ring, U+00E5 ISOlat1 */
+{TEXT("alefsym"), 8501}, /* alef symbol = first transfinite cardinal, U+2135 NEW */
+{TEXT("alpha"), 945},   /* greek small letter alpha, U+03B1 ISOgrk3 */
+{TEXT("amp"), 38},	/* ampersand, U+0026 ISOnum */
+{TEXT("and"), 8743},	/* logical and = wedge, U+2227 ISOtech */
+{TEXT("ang"), 8736},	/* angle, U+2220 ISOamso */
+{TEXT("aring"), 229},	/* latin small letter a with ring above = latin small letter a ring, U+00E5 ISOlat1 */
 {TEXT("asymp"), 8776},	/* almost equal to = asymptotic to, U+2248 ISOamsr */
 {TEXT("atilde"), 227},	/* latin small letter a with tilde, U+00E3 ISOlat1 */
-{TEXT("auml"), 228},		/* latin small letter a with diaeresis, U+00E4 ISOlat1 */
+{TEXT("auml"), 228},	/* latin small letter a with diaeresis, U+00E4 ISOlat1 */
 {TEXT("bdquo"), 8222},	/* double low-9 quotation mark, U+201E NEW */
-{TEXT("beta"), 946},		/* greek small letter beta, U+03B2 ISOgrk3 */
+{TEXT("beta"), 946},	/* greek small letter beta, U+03B2 ISOgrk3 */
 {TEXT("brvbar"), 166},	/* broken bar = broken vertical bar, U+00A6 ISOnum */
-{TEXT("bull"), 8226},		/* bullet = black small circle, U+2022 ISOpub */
-{TEXT("cap"), 8745},		/* intersection = cap, U+2229 ISOtech */
+{TEXT("bull"), 8226},	/* bullet = black small circle, U+2022 ISOpub */
+{TEXT("cap"), 8745},	/* intersection = cap, U+2229 ISOtech */
 {TEXT("ccedil"), 231},	/* latin small letter c with cedilla, U+00E7 ISOlat1 */
-{TEXT("cedil"), 184},		/* cedilla = spacing cedilla, U+00B8 ISOdia */
-{TEXT("cent"), 162},		/* cent sign, U+00A2 ISOnum */
-{TEXT("chi"), 967},		/* greek small letter chi, U+03C7 ISOgrk3 */
-{TEXT("circ"), 710},		/* modifier letter circumflex accent, U+02C6 ISOpub */
+{TEXT("cedil"), 184},	/* cedilla = spacing cedilla, U+00B8 ISOdia */
+{TEXT("cent"), 162},	/* cent sign, U+00A2 ISOnum */
+{TEXT("chi"), 967},	/* greek small letter chi, U+03C7 ISOgrk3 */
+{TEXT("circ"), 710},	/* modifier letter circumflex accent, U+02C6 ISOpub */
 {TEXT("clubs"), 9827},	/* black club suit = shamrock, U+2663 ISOpub */
-{TEXT("cong"), 8773},		/* approximately equal to, U+2245 ISOtech */
-{TEXT("copy"), 169},		/* copyright sign, U+00A9 ISOnum */
+{TEXT("cong"), 8773},	/* approximately equal to, U+2245 ISOtech */
+{TEXT("copy"), 169},	/* copyright sign, U+00A9 ISOnum */
 {TEXT("crarr"), 8629},	/* downwards arrow with corner leftwards = carriage return, U+21B5 NEW */
-{TEXT("cup"), 8746},		/* union = cup, U+222A ISOtech */
+{TEXT("cup"), 8746},	/* union = cup, U+222A ISOtech */
 {TEXT("curren"), 164},	/* currency sign, U+00A4 ISOnum */
-{TEXT("dArr"), 8659},		/* downwards double arrow, U+21D3 ISOamsa */
+{TEXT("dArr"), 8659},	/* downwards double arrow, U+21D3 ISOamsa */
 {TEXT("dagger"), 8224},	/* dagger, U+2020 ISOpub */
-{TEXT("darr"), 8595},		/* downwards arrow, U+2193 ISOnum */
-{TEXT("deg"), 176},		/* degree sign, U+00B0 ISOnum */
-{TEXT("delta"), 948},		/* greek small letter delta, U+03B4 ISOgrk3 */
+{TEXT("darr"), 8595},	/* downwards arrow, U+2193 ISOnum */
+{TEXT("deg"), 176},	/* degree sign, U+00B0 ISOnum */
+{TEXT("delta"), 948},	/* greek small letter delta, U+03B4 ISOgrk3 */
 {TEXT("diams"), 9830},	/* black diamond suit, U+2666 ISOpub */
 {TEXT("divide"), 247},	/* division sign, U+00F7 ISOnum */
 {TEXT("eacute"), 233},	/* latin small letter e with acute, U+00E9 ISOlat1 */
-{TEXT("ecirc"), 234},		/* latin small letter e with circumflex, U+00EA ISOlat1 */
+{TEXT("ecirc"), 234},	/* latin small letter e with circumflex, U+00EA ISOlat1 */
 {TEXT("egrave"), 232},	/* latin small letter e with grave, U+00E8 ISOlat1 */
 {TEXT("empty"), 8709},	/* empty set = null set = diameter, U+2205 ISOamso */
-{TEXT("emsp"), 8195},		/* em space, U+2003 ISOpub */
-{TEXT("ensp"), 8194},		/* en space, U+2002 ISOpub */
+{TEXT("emsp"), 8195},	/* em space, U+2003 ISOpub */
+{TEXT("ensp"), 8194},	/* en space, U+2002 ISOpub */
 {TEXT("epsilon"), 949},	/* greek small letter epsilon, U+03B5 ISOgrk3 */
 {TEXT("equiv"), 8801},	/* identical to, U+2261 ISOtech */
-{TEXT("eta"), 951},		/* greek small letter eta, U+03B7 ISOgrk3 */
-{TEXT("eth"), 240},		/* latin small letter eth, U+00F0 ISOlat1 */
-{TEXT("euml"), 235},		/* latin small letter e with diaeresis, U+00EB ISOlat1 */
-{TEXT("euro"), 8364},		/* euro sign, U+20AC NEW */
+{TEXT("eta"), 951},	/* greek small letter eta, U+03B7 ISOgrk3 */
+{TEXT("eth"), 240},	/* latin small letter eth, U+00F0 ISOlat1 */
+{TEXT("euml"), 235},	/* latin small letter e with diaeresis, U+00EB ISOlat1 */
+{TEXT("euro"), 8364},	/* euro sign, U+20AC NEW */
 {TEXT("exist"), 8707},	/* there exists, U+2203 ISOtech */
-{TEXT("fnof"), 402},		/* latin small f with hook = function = florin, U+0192 ISOtech */
+{TEXT("fnof"), 402},	/* latin small f with hook = function = florin, U+0192 ISOtech */
 {TEXT("forall"), 8704},	/* for all, U+2200 ISOtech */
 {TEXT("frac12"), 189},	/* vulgar fraction one half = fraction one half, U+00BD ISOnum */
 {TEXT("frac14"), 188},	/* vulgar fraction one quarter = fraction one quarter, U+00BC ISOnum */
 {TEXT("frac34"), 190},	/* vulgar fraction three quarters = fraction three quarters, U+00BE ISOnum */
 {TEXT("frasl"), 8260},	/* fraction slash, U+2044 NEW */
-{TEXT("gamma"), 947},		/* greek small letter gamma, U+03B3 ISOgrk3 */
-{TEXT("ge"), 8805},		/* greater-than or equal to, U+2265 ISOtech */
-{TEXT("gt"), 62},		/* greater-than sign, U+003E ISOnum */
-{TEXT("hArr"), 8660},		/* left right double arrow, U+21D4 ISOamsa */
-{TEXT("harr"), 8596},		/* left right arrow, U+2194 ISOamsa */
+{TEXT("gamma"), 947},	/* greek small letter gamma, U+03B3 ISOgrk3 */
+{TEXT("ge"), 8805},	/* greater-than or equal to, U+2265 ISOtech */
+{TEXT("gt"), 62},	/* greater-than sign, U+003E ISOnum */
+{TEXT("hArr"), 8660},	/* left right double arrow, U+21D4 ISOamsa */
+{TEXT("harr"), 8596},	/* left right arrow, U+2194 ISOamsa */
 {TEXT("hearts"), 9829},	/* black heart suit = valentine, U+2665 ISOpub */
 {TEXT("hellip"), 8230},	/* horizontal ellipsis = three dot leader, U+2026 ISOpub */
 {TEXT("hyphen"), 173},	/* hyphen = discretionary hyphen, U+00AD ISOnum */
 {TEXT("iacute"), 237},	/* latin small letter i with acute, U+00ED ISOlat1 */
-{TEXT("icirc"), 238},		/* latin small letter i with circumflex, U+00EE ISOlat1 */
-{TEXT("iexcl"), 161},		/* inverted exclamation mark, U+00A1 ISOnum */
+{TEXT("icirc"), 238},	/* latin small letter i with circumflex, U+00EE ISOlat1 */
+{TEXT("iexcl"), 161},	/* inverted exclamation mark, U+00A1 ISOnum */
 {TEXT("igrave"), 236},	/* latin small letter i with grave, U+00EC ISOlat1 */
 {TEXT("image"), 8465},	/* blackletter capital I = imaginary part, U+2111 ISOamso */
 {TEXT("infin"), 8734},	/* infinity, U+221E ISOtech */
-{TEXT("int"), 8747},		/* integral, U+222B ISOtech */
-{TEXT("iota"), 953},		/* greek small letter iota, U+03B9 ISOgrk3 */
+{TEXT("int"), 8747},	/* integral, U+222B ISOtech */
+{TEXT("iota"), 953},	/* greek small letter iota, U+03B9 ISOgrk3 */
 {TEXT("iquest"), 191},	/* inverted question mark = turned question mark, U+00BF ISOnum */
-{TEXT("isin"), 8712},		/* element of, U+2208 ISOtech */
-{TEXT("iuml"), 239},		/* latin small letter i with diaeresis, U+00EF ISOlat1 */
-{TEXT("kappa"), 954},		/* greek small letter kappa, U+03BA ISOgrk3 */
-{TEXT("lArr"), 8656},		/* leftwards double arrow, U+21D0 ISOtech */
+{TEXT("isin"), 8712},	/* element of, U+2208 ISOtech */
+{TEXT("iuml"), 239},	/* latin small letter i with diaeresis, U+00EF ISOlat1 */
+{TEXT("kappa"), 954},	/* greek small letter kappa, U+03BA ISOgrk3 */
+{TEXT("lArr"), 8656},	/* leftwards double arrow, U+21D0 ISOtech */
 {TEXT("lambda"), 955},	/* greek small letter lambda, U+03BB ISOgrk3 */
-{TEXT("lang"), 9001},		/* left-pointing angle bracket = bra, U+2329 ISOtech */
-{TEXT("laquo"), 171},		/* left-pointing double angle quotation mark = left pointing guillemet, U+00AB ISOnum */
-{TEXT("larr"), 8592},		/* leftwards arrow, U+2190 ISOnum */
+{TEXT("lang"), 9001},	/* left-pointing angle bracket = bra, U+2329 ISOtech */
+{TEXT("laquo"), 171},	/* left-pointing double angle quotation mark = left pointing guillemet, U+00AB ISOnum */
+{TEXT("larr"), 8592},	/* leftwards arrow, U+2190 ISOnum */
 {TEXT("lceil"), 8968},	/* left ceiling = apl upstile, U+2308 ISOamsc */
 {TEXT("ldquo"), 8220},	/* left double quotation mark, U+201C ISOnum */
-{TEXT("le"), 8804},		/* less-than or equal to, U+2264 ISOtech */
+{TEXT("le"), 8804},	/* less-than or equal to, U+2264 ISOtech */
 {TEXT("lfloor"), 8970},	/* left floor = apl downstile, U+230A ISOamsc */
 {TEXT("lowast"), 8727},	/* asterisk operator, U+2217 ISOtech */
-{TEXT("loz"), 9674},		/* lozenge, U+25CA ISOpub */
-{TEXT("lrm"), 8206},		/* left-to-right mark, U+200E NEW RFC 2070 */
+{TEXT("loz"), 9674},	/* lozenge, U+25CA ISOpub */
+{TEXT("lrm"), 8206},	/* left-to-right mark, U+200E NEW RFC 2070 */
 {TEXT("lsaquo"), 8249},	/* single left-pointing angle quotation mark, U+2039 ISO proposed */
 {TEXT("lsquo"), 8216},	/* left single quotation mark, U+2018 ISOnum */
-{TEXT("lt"), 60},		/* less-than sign, U+003C ISOnum */
-{TEXT("macr"), 175},		/* macron = spacing macron = overline = APL overbar, U+00AF ISOdia */
+{TEXT("lt"), 60},	/* less-than sign, U+003C ISOnum */
+{TEXT("macr"), 175},	/* macron = spacing macron = overline = APL overbar, U+00AF ISOdia */
 {TEXT("mdash"), 8212},	/* em dash, U+2014 ISOpub */
-{TEXT("micro"), 181},		/* micro sign, U+00B5 ISOnum */
+{TEXT("micro"), 181},	/* micro sign, U+00B5 ISOnum */
 {TEXT("middot"), 183},	/* middle dot = Georgian comma = Greek middle dot, U+00B7 ISOnum */
 {TEXT("minus"), 8722},	/* minus sign, U+2212 ISOtech */
-{TEXT("mu"), 956},		/* greek small letter mu, U+03BC ISOgrk3 */
+{TEXT("mu"), 956},	/* greek small letter mu, U+03BC ISOgrk3 */
 {TEXT("nabla"), 8711},	/* nabla = backward difference, U+2207 ISOtech */
-{TEXT("nbsp"), 160},		/* no-break space = non-breaking space, U+00A0 ISOnum */
+{TEXT("nbsp"), 160},	/* no-break space = non-breaking space, U+00A0 ISOnum */
 {TEXT("ndash"), 8211},	/* en dash, U+2013 ISOpub */
-{TEXT("ne"), 8800},		/* not equal to, U+2260 ISOtech */
-{TEXT("ni"), 8715},		/* contains as member, U+220B ISOtech */
-{TEXT("not"), 172},		/* not sign, U+00AC ISOnum */
+{TEXT("ne"), 8800},	/* not equal to, U+2260 ISOtech */
+{TEXT("ni"), 8715},	/* contains as member, U+220B ISOtech */
+{TEXT("not"), 172},	/* not sign, U+00AC ISOnum */
 {TEXT("notin"), 8713},	/* not an element of, U+2209 ISOtech */
-{TEXT("nsub"), 8836},		/* not a subset of, U+2284 ISOamsn */
+{TEXT("nsub"), 8836},	/* not a subset of, U+2284 ISOamsn */
 {TEXT("ntilde"), 241},	/* latin small letter n with tilde, U+00F1 ISOlat1 */
-{TEXT("nu"), 957},		/* greek small letter nu, U+03BD ISOgrk3 */
+{TEXT("nu"), 957},	/* greek small letter nu, U+03BD ISOgrk3 */
 {TEXT("oacute"), 243},	/* latin small letter o with acute, U+00F3 ISOlat1 */
-{TEXT("ocirc"), 244},		/* latin small letter o with circumflex, U+00F4 ISOlat1 */
-{TEXT("oelig"), 339},		/* latin small ligature oe, U+0153 ISOlat2 */
+{TEXT("ocirc"), 244},	/* latin small letter o with circumflex, U+00F4 ISOlat1 */
+{TEXT("oelig"), 339},	/* latin small ligature oe, U+0153 ISOlat2 */
 {TEXT("ograve"), 242},	/* latin small letter o with grave, U+00F2 ISOlat1 */
 {TEXT("oline"), 8254},	/* overline = spacing overscore, U+203E NEW */
-{TEXT("omega"), 969},		/* greek small letter omega, U+03C9 ISOgrk3 */
+{TEXT("omega"), 969},	/* greek small letter omega, U+03C9 ISOgrk3 */
 {TEXT("omicron"), 959},	/* greek small letter omicron, U+03BF NEW */
 {TEXT("oplus"), 8853},	/* circled plus = direct sum, U+2295 ISOamsb */
-{TEXT("or"), 8744},		/* logical or = vee, U+2228 ISOtech */
-{TEXT("ordf"), 170},		/* feminine ordinal indicator, U+00AA ISOnum */
-{TEXT("ordm"), 186},		/* masculine ordinal indicator, U+00BA ISOnum */
+{TEXT("or"), 8744},	/* logical or = vee, U+2228 ISOtech */
+{TEXT("ordf"), 170},	/* feminine ordinal indicator, U+00AA ISOnum */
+{TEXT("ordm"), 186},	/* masculine ordinal indicator, U+00BA ISOnum */
 {TEXT("oslash"), 248},	/* latin small letter o with stroke, = latin small letter o slash, U+00F8 ISOlat1 */
 {TEXT("otilde"), 245},	/* latin small letter o with tilde, U+00F5 ISOlat1 */
 {TEXT("otimes"), 8855},	/* circled times = vector product, U+2297 ISOamsb */
-{TEXT("ouml"), 246},		/* latin small letter o with diaeresis, U+00F6 ISOlat1 */
-{TEXT("para"), 182},		/* pilcrow sign = paragraph sign, U+00B6 ISOnum */
-{TEXT("part"), 8706},		/* partial differential, U+2202 ISOtech */
+{TEXT("ouml"), 246},	/* latin small letter o with diaeresis, U+00F6 ISOlat1 */
+{TEXT("para"), 182},	/* pilcrow sign = paragraph sign, U+00B6 ISOnum */
+{TEXT("part"), 8706},	/* partial differential, U+2202 ISOtech */
 {TEXT("permil"), 8240},	/* per mille sign, U+2030 ISOtech */
-{TEXT("perp"), 8869},		/* up tack = orthogonal to = perpendicular, U+22A5 ISOtech */
-{TEXT("phi"), 966},		/* greek small letter phi, U+03C6 ISOgrk3 */
-{TEXT("pi"), 960},		/* greek small letter pi, U+03C0 ISOgrk3 */
-{TEXT("piv"), 982},		/* greek pi symbol, U+03D6 ISOgrk3 */
+{TEXT("perp"), 8869},	/* up tack = orthogonal to = perpendicular, U+22A5 ISOtech */
+{TEXT("phi"), 966},	/* greek small letter phi, U+03C6 ISOgrk3 */
+{TEXT("pi"), 960},	/* greek small letter pi, U+03C0 ISOgrk3 */
+{TEXT("piv"), 982},	/* greek pi symbol, U+03D6 ISOgrk3 */
 {TEXT("plusmn"), 177},	/* plus-minus sign = plus-or-minus sign, U+00B1 ISOnum */
-{TEXT("pound"), 163},		/* pound sign, U+00A3 ISOnum */
+{TEXT("pound"), 163},	/* pound sign, U+00A3 ISOnum */
 {TEXT("prime"), 8242},	/* prime = minutes = feet, U+2032 ISOtech */
-{TEXT("prod"), 8719},		/* n-ary product = product sign, U+220F ISOamsb */
-{TEXT("prop"), 8733},		/* proportional to, U+221D ISOtech */
-{TEXT("psi"), 968},		/* greek small letter psi, U+03C8 ISOgrk3 */
-{TEXT("quot"), 34},		/* quotation mark = APL quote, U+0022 ISOnum */
-{TEXT("rArr"), 8658},		/* rightwards double arrow, U+21D2 ISOtech */
+{TEXT("prod"), 8719},	/* n-ary product = product sign, U+220F ISOamsb */
+{TEXT("prop"), 8733},	/* proportional to, U+221D ISOtech */
+{TEXT("psi"), 968},	/* greek small letter psi, U+03C8 ISOgrk3 */
+{TEXT("quot"), 34},	/* quotation mark = APL quote, U+0022 ISOnum */
+{TEXT("rArr"), 8658},	/* rightwards double arrow, U+21D2 ISOtech */
 {TEXT("radic"), 8730},	/* square root = radical sign, U+221A ISOtech */
-{TEXT("rang"), 9002},		/* right-pointing angle bracket = ket, U+232A ISOtech */
-{TEXT("raquo"), 187},		/* right-pointing double angle quotation mark = right pointing guillemet, U+00BB ISOnum */
-{TEXT("rarr"), 8594},		/* rightwards arrow, U+2192 ISOnum */
+{TEXT("rang"), 9002},	/* right-pointing angle bracket = ket, U+232A ISOtech */
+{TEXT("raquo"), 187},	/* right-pointing double angle quotation mark = right pointing guillemet, U+00BB ISOnum */
+{TEXT("rarr"), 8594},	/* rightwards arrow, U+2192 ISOnum */
 {TEXT("rceil"), 8969},	/* right ceiling, U+2309 ISOamsc */
 {TEXT("rdquo"), 8221},	/* right double quotation mark, U+201D ISOnum */
-{TEXT("real"), 8476},		/* blackletter capital R = real part symbol, U+211C ISOamso */
-{TEXT("reg"), 174},		/* registered sign = registered trade mark sign, U+00AE ISOnum */
+{TEXT("real"), 8476},	/* blackletter capital R = real part symbol, U+211C ISOamso */
+{TEXT("reg"), 174},	/* registered sign = registered trade mark sign, U+00AE ISOnum */
 {TEXT("rfloor"), 8971},	/* right floor, U+230B ISOamsc */
-{TEXT("rho"), 961},		/* greek small letter rho, U+03C1 ISOgrk3 */
-{TEXT("rlm"), 8207},		/* right-to-left mark, U+200F NEW RFC 2070 */
+{TEXT("rho"), 961},	/* greek small letter rho, U+03C1 ISOgrk3 */
+{TEXT("rlm"), 8207},	/* right-to-left mark, U+200F NEW RFC 2070 */
 {TEXT("rsaquo"), 8250},	/* single right-pointing angle quotation mark, U+203A ISO proposed */
 {TEXT("rsquo"), 8217},	/* right single quotation mark, U+2019 ISOnum */
 {TEXT("sbquo"), 8218},	/* single low-9 quotation mark, U+201A NEW */
 {TEXT("scaron"), 353},	/* latin small letter s with caron, U+0161 ISOlat2 */
-{TEXT("sdot"), 8901},		/* dot operator, U+22C5 ISOamsb */
-{TEXT("sect"), 167},		/* section sign, U+00A7 ISOnum */
-{TEXT("shy"), 173},		/* soft hyphen = discretionary hyphen, U+00AD ISOnum */
-{TEXT("sigma"), 963},		/* greek small letter sigma, U+03C3 ISOgrk3 */
+{TEXT("sdot"), 8901},	/* dot operator, U+22C5 ISOamsb */
+{TEXT("sect"), 167},	/* section sign, U+00A7 ISOnum */
+{TEXT("shy"), 173},	/* soft hyphen = discretionary hyphen, U+00AD ISOnum */
+{TEXT("sigma"), 963},	/* greek small letter sigma, U+03C3 ISOgrk3 */
 {TEXT("sigmaf"), 962},	/* greek small letter final sigma, U+03C2 ISOgrk3 */
-{TEXT("sim"), 8764},		/* tilde operator = varies with = similar to, U+223C ISOtech */
+{TEXT("sim"), 8764},	/* tilde operator = varies with = similar to, U+223C ISOtech */
 {TEXT("spades"), 9824},	/* black spade suit, U+2660 ISOpub */
-{TEXT("sub"), 8834},		/* subset of, U+2282 ISOtech */
-{TEXT("sube"), 8838},		/* subset of or equal to, U+2286 ISOtech */
-{TEXT("sum"), 8721},		/* n-ary sumation, U+2211 ISOamsb */
-{TEXT("sup"), 8835},		/* superset of, U+2283 ISOtech */
-{TEXT("sup1"), 185},		/* superscript one = superscript digit one, U+00B9 ISOnum */
-{TEXT("sup2"), 178},		/* superscript two = superscript digit two = squared, U+00B2 ISOnum */
-{TEXT("sup3"), 179},		/* superscript three = superscript digit three = cubed, U+00B3 ISOnum */
-{TEXT("supe"), 8839},		/* superset of or equal to, U+2287 ISOtech */
-{TEXT("szlig"), 223},		/* latin small letter sharp s = ess-zed, U+00DF ISOlat1 */
-{TEXT("tau"), 964},		/* greek small letter tau, U+03C4 ISOgrk3 */
+{TEXT("sub"), 8834},	/* subset of, U+2282 ISOtech */
+{TEXT("sube"), 8838},	/* subset of or equal to, U+2286 ISOtech */
+{TEXT("sum"), 8721},	/* n-ary sumation, U+2211 ISOamsb */
+{TEXT("sup"), 8835},	/* superset of, U+2283 ISOtech */
+{TEXT("sup1"), 185},	/* superscript one = superscript digit one, U+00B9 ISOnum */
+{TEXT("sup2"), 178},	/* superscript two = superscript digit two = squared, U+00B2 ISOnum */
+{TEXT("sup3"), 179},	/* superscript three = superscript digit three = cubed, U+00B3 ISOnum */
+{TEXT("supe"), 8839},  	/* superset of or equal to, U+2287 ISOtech */
+{TEXT("szlig"), 223},  	/* latin small letter sharp s = ess-zed, U+00DF ISOlat1 */
+{TEXT("tau"), 964},    	/* greek small letter tau, U+03C4 ISOgrk3 */
 {TEXT("there4"), 8756},	/* therefore, U+2234 ISOtech */
-{TEXT("theta"), 952},		/* greek small letter theta, U+03B8 ISOgrk3 */
-{TEXT("thetasym"), 977},	/* greek small letter theta symbol, U+03D1 NEW */
+{TEXT("theta"), 952},  	/* greek small letter theta, U+03B8 ISOgrk3 */
+{TEXT("thetasym"), 977}, /* greek small letter theta symbol, U+03D1 NEW */
 {TEXT("thinsp"), 8201},	/* thin space, U+2009 ISOpub */
-{TEXT("thorn"), 254},		/* latin small letter thorn with, U+00FE ISOlat1 */
-{TEXT("tilde"), 732},		/* small tilde, U+02DC ISOdia */
-{TEXT("times"), 215},		/* multiplication sign, U+00D7 ISOnum */
+{TEXT("thorn"), 254},  	/* latin small letter thorn with, U+00FE ISOlat1 */
+{TEXT("tilde"), 732},  	/* small tilde, U+02DC ISOdia */
+{TEXT("times"), 215},  	/* multiplication sign, U+00D7 ISOnum */
 {TEXT("trade"), 8482},	/* trade mark sign, U+2122 ISOnum */
-{TEXT("uArr"), 8657},		/* upwards double arrow, U+21D1 ISOamsa */
+{TEXT("uArr"), 8657},  	/* upwards double arrow, U+21D1 ISOamsa */
 {TEXT("uacute"), 250},	/* latin small letter u with acute, U+00FA ISOlat1 */
-{TEXT("uarr"), 8593},		/* upwards arrow, U+2191 ISOnum*/
-{TEXT("ucirc"), 251},		/* latin small letter u with circumflex, U+00FB ISOlat1 */
+{TEXT("uarr"), 8593},  	/* upwards arrow, U+2191 ISOnum*/
+{TEXT("ucirc"), 251},  	/* latin small letter u with circumflex, U+00FB ISOlat1 */
 {TEXT("ugrave"), 249},	/* latin small letter u with grave, U+00F9 ISOlat1 */
-{TEXT("uml"), 168},		/* diaeresis = spacing diaeresis, U+00A8 ISOdia */
-{TEXT("upsih"), 978},		/* greek upsilon with hook symbol, U+03D2 NEW */
+{TEXT("uml"), 168},    	/* diaeresis = spacing diaeresis, U+00A8 ISOdia */
+{TEXT("upsih"), 978},  	/* greek upsilon with hook symbol, U+03D2 NEW */
 {TEXT("upsilon"), 965},	/* greek small letter upsilon, U+03C5 ISOgrk3 */
-{TEXT("uuml"), 252},		/* latin small letter u with diaeresis, U+00FC ISOlat1 */
+{TEXT("uuml"), 252},   	/* latin small letter u with diaeresis, U+00FC ISOlat1 */
 {TEXT("weierp"), 8472},	/* script capital P = power set = Weierstrass p, U+2118 ISOamso */
-{TEXT("xi"), 958},		/* greek small letter xi, U+03BE ISOgrk3 */
+{TEXT("xi"), 958},     	/* greek small letter xi, U+03BE ISOgrk3 */
 {TEXT("yacute"), 253},	/* latin small letter y with acute, U+00FD ISOlat1 */
-{TEXT("yen"), 165},		/* yen sign = yuan sign, U+00A5 ISOnum */
-{TEXT("yuml"), 255},		/* latin small letter y with diaeresis, U+00FF ISOlat1 */
-{TEXT("zeta"), 950},		/* greek small letter zeta, U+03B6 ISOgrk3 */
-{TEXT("zwj"), 8205},		/* zero width joiner, U+200D NEW RFC 2070 */
-{TEXT("zwnj"), 8204},		/* zero width non-joiner, U+200C NEW RFC 2070 */
+{TEXT("yen"), 165},    	/* yen sign = yuan sign, U+00A5 ISOnum */
+{TEXT("yuml"), 255},   	/* latin small letter y with diaeresis, U+00FF ISOlat1 */
+{TEXT("zeta"), 950},   	/* greek small letter zeta, U+03B6 ISOgrk3 */
+{TEXT("zwj"), 8205},   	/* zero width joiner, U+200D NEW RFC 2070 */
+{TEXT("zwnj"), 8204},  	/* zero width non-joiner, U+200C NEW RFC 2070 */
 
-{TEXT("zzzz"), 0}			/* this last entry is required */
+{TEXT("zzzz"), 0}      	/* this last entry is required */
 };
 
 typedef struct _UnicodeFallbackEntry
@@ -337,7 +337,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* Scaron   */ {352, 1083}, /* latin capital letter S with caron, U+0160 ISOlat2 */
 /* scaron   */ {353, 1115}, /* latin small letter s with caron, U+0161 ISOlat2 */
 /* Yuml     */ {376, 1089}, /* latin capital letter Y with diaeresis, U+0178 ISOlat2 */
-/* fnof     */ {402, 166}, /* latin small f with hook = function = florin, U+0192 ISOtech */
+/* fnof     */ {402, 166},  /* latin small f with hook = function = florin, U+0192 ISOtech */
 /* circ     */ {710, 2217}, /* modifier letter circumflex accent, U+02C6 ISOpub */
 /* tilde    */ {732, 1126}, /* small tilde, U+02DC ISOdia */
 /* Alpha    */ {913, 65}, /* greek capital letter alpha, U+0391 */
@@ -381,15 +381,15 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* omicron  */ {959, 111}, /* greek small letter omicron, U+03BF NEW */
 /* pi       */ {960, 112}, /* greek small letter pi, U+03C0 ISOgrk3 */
 /* rho      */ {961, 114}, /* greek small letter rho, U+03C1 ISOgrk3 */
-/* sigmaf   */ {962, 86}, /* greek small letter final sigma, U+03C2 ISOgrk3 */
+/* sigmaf   */ {962, 86},  /* greek small letter final sigma, U+03C2 ISOgrk3 */
 /* sigma    */ {963, 115}, /* greek small letter sigma, U+03C3 ISOgrk3 */
 /* tau      */ {964, 116}, /* greek small letter tau, U+03C4 ISOgrk3 */
 /* upsilon  */ {965, 117}, /* greek small letter upsilon, U+03C5 ISOgrk3 */
 /* phi      */ {966, 102}, /* greek small letter phi, U+03C6 ISOgrk3 */
-/* chi      */ {967, 99}, /* greek small letter chi, U+03C7 ISOgrk3 */
+/* chi      */ {967, 99},  /* greek small letter chi, U+03C7 ISOgrk3 */
 /* psi      */ {968, 121}, /* greek small letter psi, U+03C8 ISOgrk3 */
 /* omega    */ {969, 119}, /* greek small letter omega, U+03C9 ISOgrk3 */
-/* thetasym */ {977, 74}, /* greek small letter theta symbol, U+03D1 NEW */
+/* thetasym */ {977, 74},  /* greek small letter theta symbol, U+03D1 NEW */
 /* upsih    */ {978, 161}, /* greek upsilon with hook symbol, U+03D2 NEW */
 /* piv      */ {982, 118}, /* greek pi symbol, U+03D6 ISOgrk3 */
 /* ensp     */ {8194, 1130}, /* en space, U+2002 ISOpub */
@@ -409,17 +409,17 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* bdquo    */ {8222, 1044}, /* double low-9 quotation mark, U+201E NEW */
 /* dagger   */ {8224, 2042}, /* dagger, U+2020 ISOpub */
 /* Dagger   */ {8225, 2042}, /* double dagger, U+2021 ISOpub */
-/* bull     */ {8226, 183}, /* bullet = black small circle,  U+2022 ISOpub  */
-/* hellip   */ {8230, 188}, /* horizontal ellipsis = three dot leader,  U+2026 ISOpub  */
+/* bull     */ {8226, 183},  /* bullet = black small circle,  U+2022 ISOpub  */
+/* hellip   */ {8230, 188},  /* horizontal ellipsis = three dot leader,  U+2026 ISOpub  */
 /* permil   */ {8240, 2037}, /* per mille sign, U+2030 ISOtech */
-/* prime    */ {8242, 162}, /* prime = minutes = feet, U+2032 ISOtech */
-/* Prime    */ {8243, 178}, /* double prime = seconds = inches,  U+2033 ISOtech */
+/* prime    */ {8242, 162},  /* prime = minutes = feet, U+2032 ISOtech */
+/* Prime    */ {8243, 178},  /* double prime = seconds = inches,  U+2033 ISOtech */
 /* lsaquo   */ {8249, 1060}, /* single left-pointing angle quotation mark, U+2039 ISO proposed */
 /* rsaquo   */ {8250, 1062}, /* single right-pointing angle quotation mark, U+203A ISO proposed */
 /* oline    */ {8254, 1175}, /* overline = spacing overscore,  U+203E NEW */
-/* frasl    */ {8260, 164}, /* fraction slash, U+2044 NEW */
+/* frasl    */ {8260, 164},  /* fraction slash, U+2044 NEW */
 /* euro     */ {8364, 2206}, /* euro sign, U+20AC NEW */
-/* image    */ {8465, 193}, /* blackletter capital I = imaginary part,  U+2111 ISOamso */
+/* image    */ {8465, 193},  /* blackletter capital I = imaginary part,  U+2111 ISOamso */
 /* weierp   */ {8472, 195}, /* script capital P = power set  = Weierstrass p, U+2118 ISOamso */
 /* real     */ {8476, 194}, /* blackletter capital R = real part symbol,  U+211C ISOamso */
 /* trade    */ {8482, 212}, /* trade mark sign, U+2122 ISOnum */
@@ -435,18 +435,18 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* rArr     */ {8658, 222}, /* rightwards double arrow,  U+21D2 ISOtech */
 /* dArr     */ {8659, 223}, /* downwards double arrow, U+21D3 ISOamsa */
 /* hArr     */ {8660, 219}, /* left right double arrow,  U+21D4 ISOamsa */
-/* forall   */ {8704, 34}, /* for all, U+2200 ISOtech */
+/* forall   */ {8704, 34},  /* for all, U+2200 ISOtech */
 /* part     */ {8706, 182}, /* partial differential, U+2202 ISOtech  */
-/* exist    */ {8707, 36}, /* there exists, U+2203 ISOtech */
+/* exist    */ {8707, 36},  /* there exists, U+2203 ISOtech */
 /* empty    */ {8709, 198}, /* empty set = null set = diameter,  U+2205 ISOamso */
 /* nabla    */ {8711, 209}, /* nabla = backward difference,  U+2207 ISOtech */
 /* isin     */ {8712, 206}, /* element of, U+2208 ISOtech */
 /* notin    */ {8713, 207}, /* not an element of, U+2209 ISOtech */
-/* ni       */ {8715, 39}, /* contains as member, U+220B ISOtech */
+/* ni       */ {8715, 39},  /* contains as member, U+220B ISOtech */
 /* prod     */ {8719, 213}, /* n-ary product = product sign,  U+220F ISOamsb */
 /* sum      */ {8721, 229}, /* n-ary sumation, U+2211 ISOamsb */
-/* minus    */ {8722, 45}, /* minus sign, U+2212 ISOtech */
-/* lowast   */ {8727, 42}, /* asterisk operator, U+2217 ISOtech */
+/* minus    */ {8722, 45},  /* minus sign, U+2212 ISOtech */
+/* lowast   */ {8727, 42},  /* asterisk operator, U+2217 ISOtech */
 /* radic    */ {8730, 214}, /* square root = radical sign,  U+221A ISOtech */
 /* prop     */ {8733, 181}, /* proportional to, U+221D ISOtech */
 /* infin    */ {8734, 165}, /* infinity, U+221E ISOtech */
@@ -456,9 +456,9 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* cap      */ {8745, 199}, /* intersection = cap, U+2229 ISOtech */
 /* cup      */ {8746, 200}, /* union = cup, U+222A ISOtech */
 /* int      */ {8747, 242}, /* integral, U+222B ISOtech */
-/* there4   */ {8756, 92}, /* therefore, U+2234 ISOtech */
+/* there4   */ {8756, 92},  /* therefore, U+2234 ISOtech */
 /* sim      */ {8764, 126}, /* tilde operator = varies with = similar to,  U+223C ISOtech */
-/* cong     */ {8773, 64}, /* approximately equal to, U+2245 ISOtech */
+/* cong     */ {8773, 64},  /* approximately equal to, U+2245 ISOtech */
 /* asymp    */ {8776, 187}, /* almost equal to = asymptotic to,  U+2248 ISOamsr */
 /* ne       */ {8800, 185}, /* not equal to, U+2260 ISOtech */
 /* equiv    */ {8801, 186}, /* identical to, U+2261 ISOtech */
@@ -471,7 +471,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* supe     */ {8839, 202}, /* superset of or equal to,  U+2287 ISOtech */
 /* oplus    */ {8853, 197}, /* circled plus = direct sum,  U+2295 ISOamsb */
 /* otimes   */ {8855, 196}, /* circled times = vector product,  U+2297 ISOamsb */
-/* perp     */ {8869, 94}, /* up tack = orthogonal to = perpendicular,  U+22A5 ISOtech */
+/* perp     */ {8869, 94},  /* up tack = orthogonal to = perpendicular,  U+22A5 ISOtech */
 /* sdot     */ {8901, 215}, /* dot operator, U+22C5 ISOamsb */
 /* lceil    */ {8968, 233}, /* left ceiling = apl upstile,  U+2308 ISOamsc  */
 /* rceil    */ {8969, 249}, /* right ceiling, U+2309 ISOamsc  */
@@ -485,7 +485,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* hearts   */ {9829, 169}, /* black heart suit = valentine,  U+2665 ISOpub */
 /* diams    */ {9830, 168}, /* black diamond suit, U+2666 ISOpub */
 
-/* THE END  */ {0, 0}		/* last entry (required) */
+/* THE END  */ {0, 0}	    /* last entry (required) */
 };
 
 typedef struct _ElemToBeChecked *PtrElemToBeChecked;
@@ -815,8 +815,8 @@ static CHAR_T*      docURL = NULL;	  /* path or URL of the document */
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
-static  UCHAR_T      inputBuffer[MaxBufferLength];
-static int           LgBuffer = 0;	  /* actual length of text in input
+static  UCHAR_T     inputBuffer[MaxBufferLength];
+static int          LgBuffer = 0;	  /* actual length of text in input
 					     buffer */
 static int	    BufferLineNumber = 0; /* line number in the source file of
 					     the beginning of the text
@@ -874,11 +874,11 @@ static void         ProcessStartGI (CHAR_T* GIname);
 static void         ProcessStartGI ();
 #endif
 
-static FILE*   ErrFile = (FILE*) 0;
-static CHAR_T    ErrFileName [80];
+static FILE*        ErrFile = (FILE*) 0;
+static CHAR_T       ErrFileName [80];
 
-extern CHARSET  CharEncoding;
-extern ThotBool charset_undefined;
+extern CHARSET      CharEncoding;
+extern ThotBool     charset_undefined;
 
 /*----------------------------------------------------------------------
   ParseCharset: Parses the element HTTP-EQUIV and looks for the charset 
@@ -901,66 +901,73 @@ Element el;
    Element root;
 
    if (!charset_undefined)
- 	  return;
+      return;
 
   attrType.AttrSSchema = DocumentSSchema;
   attrType.AttrTypeNum = HTML_ATTR_http_equiv;
   attr = TtaGetAttribute (el, attrType);
-  if (attr != NULL) {
+  if (attr != NULL)
+     {
      /* There is a HTTP-EQUIV attribute */
      length = TtaGetTextAttributeLength (attr);
-     if (length > 0) {
+     if (length > 0)
+        {
         text = TtaAllocString (length + 1);
         TtaGiveTextAttributeValue (attr, text, &length);
-        if (!ustrcasecmp (text, TEXT("content-type"))) {
+        if (!ustrcasecmp (text, TEXT("content-type")))
+	   {
            attrType.AttrTypeNum = HTML_ATTR_meta_content;
            attr = TtaGetAttribute (el, attrType);
-           if (attr != NULL) {
+           if (attr != NULL)
+	      {
               length = TtaGetTextAttributeLength (attr);
-              if (length > 0) {
+              if (length > 0)
+		 {
                  text2 = TtaAllocString (length + 1);
                  TtaGiveTextAttributeValue (attr, text2, &length);
                  ptrText = text2;
-                 while (*ptrText) {
-                       *ptrText = utolower (*ptrText);
-                       ptrText++;
-				 }
-
+                 while (*ptrText)
+		    {
+                    *ptrText = utolower (*ptrText);
+		    ptrText++;
+		    }
                  str = ustrstr (text2, TEXT("charset="));
-    
-                 if (str) {
- 			       pos = str - text2 + 8;
+                 if (str)
+		    {
+ 		    pos = str - text2 + 8;
+		    while (text2[pos] != WC_SPACE && text2[pos] != WC_TAB &&
+			   text2[pos] != WC_EOS)
+		       charsetname[index++] = text2[pos++];
+		    charsetname[index] = WC_EOS;
+		    CharEncoding = TtaGetCharset (charsetname);
 
-                   while (text2[pos] != WC_SPACE && text2[pos] != WC_TAB && text2[pos] != WC_EOS)
-                         charsetname[index++] = text2[pos++];
-                   charsetname[index] = WC_EOS;
-                   CharEncoding = TtaGetCharset (charsetname);
-
-                   if (CharEncoding == UNDEFINED_CHARSET)
-                      CharEncoding = UTF_8;
-                   else {
-                        /* copy the charset to the document's metadata info */
-                        root = TtaGetMainRoot (theDocument);
-                        attrType.AttrTypeNum = HTML_ATTR_Charset;
-                        attr = TtaGetAttribute (root, attrType);
-                        if (!attr)
-                           /* the root element does not have a Charset attribute.
-                           Create one */
-						{
+		    if (CharEncoding == UNDEFINED_CHARSET)
+                       CharEncoding = UTF_8;
+		    else
+		       {
+		       /* copy the charset to the document's metadata info */
+                       root = TtaGetMainRoot (theDocument);
+		       attrType.AttrTypeNum = HTML_ATTR_Charset;
+		       attr = TtaGetAttribute (root, attrType);
+		       if (!attr)
+			  /* the root element does not have a Charset
+			     attribute. Create one */
+			  {
                           attr = TtaNewAttribute (attrType);
                           TtaAttachAttribute (root, attr, theDocument);
-						}
-                        TtaSetAttributeText (attr, charsetname, root, theDocument);
-				   }
-                   charset_undefined = FALSE;
-				 }
+			  }
+		       TtaSetAttributeText (attr, charsetname, root,
+					    theDocument);
+		       }
+		    charset_undefined = FALSE;
+		    }
                  TtaFreeMemory (text2);
-			  }       
-		   } 
-		}
+		 }       
+	      } 
+	   }
         TtaFreeMemory (text);
-	 }
-  }
+	}
+     }
 #endif /* STANDALONE */
 }
 
@@ -1145,7 +1152,7 @@ Document            document;
 	       usscanf (ptr3, TEXT("%d"), &y1);
 	     ptr3 = SkipInt (ptr3);
 	     ptr3 = SkipSep (ptr3);
-	     TtaAddPointInPolyline (element, length, UnPixel, x1, y1, document);
+	     TtaAddPointInPolyline (element, length, UnPixel, x1, y1,document);
 	     length++;
 	  }
      }
@@ -1172,7 +1179,9 @@ ElementType elType;
       if (ustrcmp (TEXT("HTML"), TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	do
 	  {
-	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum && ustrcmp (pHTMLGIMapping[i].htmlGI, TEXT("listing")))	/* use PRE */
+	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum &&
+		ustrcmp (pHTMLGIMapping[i].htmlGI, TEXT("listing")))
+	      /* use PRE */
 	      return  pHTMLGIMapping[i].htmlGI;
 	    i++;
 	  }
@@ -1301,7 +1310,8 @@ void                InitMapping ()
 	  {
 	     /* read one GI */
 	     i = 0;
-	     while (EquivEndingElem[line][ptr] != SPACE && EquivEndingElem[line][ptr] != EOS)
+	     while (EquivEndingElem[line][ptr] != SPACE &&
+		    EquivEndingElem[line][ptr] != EOS)
 		name[i++] = EquivEndingElem[line][ptr++];
 	     name[i] = EOS;
 	     ptr++;
@@ -1361,7 +1371,8 @@ void                InitMapping ()
 	ptr = 0;
 	i = 0;
 	/* read the first tag name of the line */
-	while (StartTagEndingElem[line][ptr] != SPACE && StartTagEndingElem[line][ptr] != EOS)
+	while (StartTagEndingElem[line][ptr] != SPACE &&
+	       StartTagEndingElem[line][ptr] != EOS)
 	   name[i++] = StartTagEndingElem[line][ptr++];
 	name[i] = EOS;
 	i = 0;
@@ -1373,7 +1384,8 @@ void                InitMapping ()
 	   fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
 	/* read the keyword "closes" */
-	while (StartTagEndingElem[line][ptr] != SPACE && StartTagEndingElem[line][ptr] != EOS)
+	while (StartTagEndingElem[line][ptr] != SPACE &&
+	       StartTagEndingElem[line][ptr] != EOS)
 	   name[i++] = StartTagEndingElem[line][ptr++];
 	name[i] = EOS;
 	i = 0;
@@ -1388,7 +1400,8 @@ void                InitMapping ()
 	      lastCE = lastCE->nextClosedElem;
 	do
 	  {
-	     while (StartTagEndingElem[line][ptr] != SPACE && StartTagEndingElem[line][ptr] != EOS)
+	     while (StartTagEndingElem[line][ptr] != SPACE &&
+		    StartTagEndingElem[line][ptr] != EOS)
 		name[i++] = StartTagEndingElem[line][ptr++];
 	     name[i] = EOS;
 	     ptr++;
@@ -1475,7 +1488,8 @@ CHAR_T*             msg;
    HTMLErrorsFound = TRUE;
    if (!ErrFile)
      {
-      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory,
+		DIR_SEP, doc, DIR_SEP);
       if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
          return;
      }
@@ -1492,7 +1506,8 @@ CHAR_T*             msg;
          docURL = NULL;
 	}
       /* print the line number and character number before the message */
-      fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead, NumberOfCharRead, mbcsMsg);
+      fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead,
+	       NumberOfCharRead, mbcsMsg);
    }
    else
      /* print only the error message */
@@ -4349,14 +4364,14 @@ CHAR_T              c;
       /* Invalid_attribute. */
       if (c == TEXT('\'') || c == TEXT('\"'))
          PutInBuffer (c);
-
    CloseBuffer ();
-  /* inputBuffer contains the attribute value */
+   /* inputBuffer contains the attribute value */
 
-   if (lastAttrEntry == NULL) {
+   if (lastAttrEntry == NULL)
+      {
       InitBuffer ();
       return;
-   }
+      }
 
    done = FALSE;
    if (lastElementClosed && (lastElement == rootElement))
@@ -4364,195 +4379,235 @@ CHAR_T              c;
       done = TRUE;
 
    /* treatments of some particular HTML attributes */
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style"))) {
-#       ifndef STANDALONE
-        TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement, theDocument);
-        ParseHTMLSpecificStyle (lastElement, inputBuffer, theDocument, FALSE);
-#       endif
-        done = TRUE;
-   }
-#  ifndef STANDALONE
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style")))
+      {
+#ifndef STANDALONE
+      TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
+			   theDocument);
+      ParseHTMLSpecificStyle (lastElement, inputBuffer, theDocument, FALSE);
+#endif
+      done = TRUE;
+      }
+#ifndef STANDALONE
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
-        HTMLSetAlinkColor (theDocument, inputBuffer);
+      HTMLSetAlinkColor (theDocument, inputBuffer);
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("alink")))
-        HTMLSetAactiveColor (theDocument, inputBuffer);
+      HTMLSetAactiveColor (theDocument, inputBuffer);
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("vlink")))
-        HTMLSetAvisitedColor (theDocument, inputBuffer);
-#  endif
+      HTMLSetAvisitedColor (theDocument, inputBuffer);
+#endif
 
-   if (!done) {
+   if (!done)
+      {
       val = 0;
       translation = lastAttrEntry->AttrOrContent;
-      switch (translation) {
-             case 'C':	/* Content */
-                  child = PutInContent (inputBuffer);
-                  if (child != NULL)
-                     TtaAppendTextContent (child, TEXT("\" "), theDocument);
-                  break;
-             case 'A':
-                  if (lastAttribute != NULL) {
-                     TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
-                     switch (attrKind) {
-                            case 0:	/* enumerate */
-                                 val = MapAttrValue (lastAttrEntry->ThotAttribute, inputBuffer);
-                                 if (val < 0) {
-                                    TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
-                                    attrName = TtaGetAttributeName (attrType);
-                                    if (ustrlen (inputBuffer) > MaxMsgLength - 30)
-                                       inputBuffer[MaxMsgLength - 30] = WC_EOS;
-                                    usprintf (msgBuffer, TEXT("Unknown attribute value \"%s = %s\""), attrName, inputBuffer);
-                                    ParseHTMLError (theDocument, msgBuffer);
-                                    /* remove the attribute and replace it by an */
-                                    /* Invalid_attribute */
-                                    TtaRemoveAttribute (lastAttrElement, lastAttribute, theDocument);
-                                    attrType.AttrSSchema = DocumentSSchema;
-                                    attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-                                    usprintf (msgBuffer, TEXT("%s=%s"), attrName, inputBuffer);
-                                    CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
-								 } else
-                                       TtaSetAttributeValue (lastAttribute, val, lastAttrElement, theDocument);
-                                 break;
-                            case 1:	/* integer */
-								if (attrType.AttrTypeNum == HTML_ATTR_Border && !ustrcasecmp (inputBuffer, TEXT("border"))) {
-                                   /* border="border" for a table */
-                                   val = 1;
-                                   TtaSetAttributeValue (lastAttribute, val, lastAttrElement, theDocument);
-								} else if (usscanf (inputBuffer, TEXT("%d"), &val))
-                                       TtaSetAttributeValue (lastAttribute, val, lastAttrElement, theDocument);
-                                else {
-                                     TtaRemoveAttribute (lastAttrElement, lastAttribute, theDocument);
-                                     usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), inputBuffer);
-                                     ParseHTMLError (theDocument, msgBuffer);
-								}
-                                break;
-                           case 2:	/* text */
-                                if (!UnknownAttr) {
-                                   TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement, theDocument);
-                                   if (attrType.AttrTypeNum == HTML_ATTR_Langue) {
-                                      /* it's a LANG attribute value */
-                                      lang = TtaGetLanguageIdFromName (inputBuffer);
-			   if (lang == 0)
-			      {
-			      usprintf (msgBuffer, TEXT("Unknown language: %s"), inputBuffer);
-			      ParseHTMLError (theDocument, msgBuffer);
-			      }
-			   else
-			      {
-			      /* change current language */
-			      currentLanguage = lang;
-			      LanguageStack[StackLevel - 1] = currentLanguage;
-			      }
-			   if (!TtaGetParent (lastAttrElement))
-			      /* it's a LANG attribute on the root element */
-			      /* set the RealLang attribute */
-			      {
-			      attrType1.AttrSSchema = DocumentSSchema;
-			      attrType1.AttrTypeNum = HTML_ATTR_RealLang;
-			      attr = TtaNewAttribute (attrType1);
-			      TtaAttachAttribute (lastAttrElement, attr, theDocument);
-			      TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, lastAttrElement, theDocument);
-			      }
-			   }
-			 }
-		     else
-			 /* this is the content of an invalid attribute */
-			 /* append it to the current Invalid_attribute */
-		         {
-			 length = ustrlen (inputBuffer) + 2;
-			 length += TtaGetTextAttributeLength (lastAttribute);
-			 buffer = TtaAllocString (length + 1);
-			 TtaGiveTextAttributeValue (lastAttribute, buffer,
-						    &length);
-			 ustrcat (buffer, TEXT("="));
-			 ustrcat (buffer, inputBuffer);
-			 TtaSetAttributeText (lastAttribute, buffer,
-					      lastAttrElement, theDocument);
-			 TtaFreeMemory (buffer);
-		         }
-		     break;
-		  case 3:	/* reference */
-		     break;
-	          }
-	      }
+      switch (translation)
+	 {
+	 case 'C':	/* Content */
+	    child = PutInContent (inputBuffer);
+	    if (child != NULL)
+	       TtaAppendTextContent (child, TEXT("\" "), theDocument);
 	    break;
+	 case 'A':
+	    if (lastAttribute != NULL)
+	       {
+	       TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+	       switch (attrKind)
+		  {
+		  case 0:	/* enumerate */
+		     val = MapAttrValue (lastAttrEntry->ThotAttribute,
+					 inputBuffer);
+		     if (val < 0)
+		        {
+			TtaGiveAttributeType (lastAttribute, &attrType,
+					      &attrKind);
+			attrName = TtaGetAttributeName (attrType);
+			if (ustrlen (inputBuffer) > MaxMsgLength - 30)
+			   inputBuffer[MaxMsgLength - 30] = WC_EOS;
+			usprintf (msgBuffer,
+				  TEXT("Unknown attribute value \"%s = %s\""),
+				  attrName, inputBuffer);
+			ParseHTMLError (theDocument, msgBuffer);
+			/* remove the attribute and replace it by an */
+			/* Invalid_attribute */
+			TtaRemoveAttribute (lastAttrElement, lastAttribute,
+					    theDocument);
+			attrType.AttrSSchema = DocumentSSchema;
+			attrType.AttrTypeNum =
+			            pHTMLAttributeMapping[0].ThotAttribute;
+			usprintf (msgBuffer, TEXT("%s=%s"), attrName,
+				  inputBuffer);
+			CreateAttr (lastAttrElement, attrType, msgBuffer,TRUE);
+			}
+		     else
+		        TtaSetAttributeValue (lastAttribute, val,
+					      lastAttrElement, theDocument);
+		     break;
+
+		  case 1:	/* integer */
+		     if (attrType.AttrTypeNum == HTML_ATTR_Border &&
+			 !ustrcasecmp (inputBuffer, TEXT("border")))
+		        {
+		        /* border="border" for a table */
+		        val = 1;
+			TtaSetAttributeValue (lastAttribute, val,
+					      lastAttrElement, theDocument);
+		        }
+		     else if (usscanf (inputBuffer, TEXT("%d"), &val))
+		        TtaSetAttributeValue (lastAttribute, val,
+					      lastAttrElement, theDocument);
+		     else
+		        {
+			TtaRemoveAttribute (lastAttrElement, lastAttribute,
+					    theDocument);
+			usprintf (msgBuffer,
+				  TEXT("Invalid attribute value \"%s\""),
+				  inputBuffer);
+			ParseHTMLError (theDocument, msgBuffer);
+			}
+		     break;
+
+		  case 2:	/* text */
+		    if (!UnknownAttr)
+		       {
+		       TtaSetAttributeText (lastAttribute, inputBuffer,
+					    lastAttrElement, theDocument);
+		       if (attrType.AttrTypeNum == HTML_ATTR_Langue)
+			  {
+			  /* it's a LANG attribute value */
+			  lang = TtaGetLanguageIdFromName (inputBuffer);
+			  if (lang == 0)
+			     {
+			     usprintf (msgBuffer, TEXT("Unknown language: %s"),
+				       inputBuffer);
+			     ParseHTMLError (theDocument, msgBuffer);
+			     }
+			  else
+			     {
+			     /* change current language */
+			     currentLanguage = lang;
+			     LanguageStack[StackLevel - 1] = currentLanguage;
+			     }
+			  if (!TtaGetParent (lastAttrElement))
+			     /* it's a LANG attribute on the root element */
+			     /* set the RealLang attribute */
+			     {
+			     attrType1.AttrSSchema = DocumentSSchema;
+			     attrType1.AttrTypeNum = HTML_ATTR_RealLang;
+			     attr = TtaNewAttribute (attrType1);
+			     TtaAttachAttribute (lastAttrElement, attr,
+						 theDocument);
+			     TtaSetAttributeValue (attr,
+						   HTML_ATTR_RealLang_VAL_Yes_,
+						   lastAttrElement,
+						   theDocument);
+			     }
+			  }
+		       }
+		    else
+		       /* this is the content of an invalid attribute */
+		       /* append it to the current Invalid_attribute */
+		       {
+		       length = ustrlen (inputBuffer) + 2;
+		       length += TtaGetTextAttributeLength (lastAttribute);
+		       buffer = TtaAllocString (length + 1);
+		       TtaGiveTextAttributeValue (lastAttribute, buffer,
+						  &length);
+		       ustrcat (buffer, TEXT("="));
+		       ustrcat (buffer, inputBuffer);
+		       TtaSetAttributeText (lastAttribute, buffer,
+					    lastAttrElement, theDocument);
+		       TtaFreeMemory (buffer);
+		       }
+		    break;
+
+		  case 3:	/* reference */
+		    break;
+	          }
+	       }
+	    break;
+
 	 case SPACE:
 	    TypeAttrValue (inputBuffer);
 	    break;
+
 	 default:
 	    break;
-	}
+	 }
 
-     if (lastAttrEntry->ThotAttribute == HTML_ATTR_Width__)
-        /* HTML attribute "width" for a table or a hr */
-        /* create the corresponding attribute IntWidthPercent or */
-        /* IntWidthPxl */
-        CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument, -1);
+      if (lastAttrEntry->ThotAttribute == HTML_ATTR_Width__)
+         /* HTML attribute "width" for a table or a hr */
+         /* create the corresponding attribute IntWidthPercent or */
+         /* IntWidthPxl */
+         CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument,
+				    -1);
 
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("size")))
-       {
-       TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
-       if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
-	  CreateAttrIntSize (inputBuffer, lastAttrElement, theDocument);
-       }
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("shape")))
-       {
-       child = TtaGetFirstChild (lastAttrElement);
-       if (child != NULL)
-          {
-	  switch (val)
-		{
-		case HTML_ATTR_shape_VAL_rectangle:
-		     shape = 'R';
-		     break;
-		case HTML_ATTR_shape_VAL_circle:
-		     shape = 'a';
-		     break;
-		case HTML_ATTR_shape_VAL_polygon:
-		     shape = 'p';
-		     break;
-		default:
-		     shape = SPACE;
-		     break;
-		}
-     	  TtaSetGraphicsShape (child, shape, theDocument);
-          }
-       }
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("value")))
-       {
-       elType = TtaGetElementType (lastAttrElement);
-       if (elType.ElTypeNum == HTML_EL_Text_Input ||
-     	   elType.ElTypeNum == HTML_EL_Password_Input ||
-     	   elType.ElTypeNum == HTML_EL_File_Input ||
-     	   elType.ElTypeNum == HTML_EL_Input)
-     	  /* create a Default_Value attribute with the same content */
-     	 {
-     	 attrType1.AttrSSchema = attrType.AttrSSchema;
-     	 attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
-     	 attr = TtaNewAttribute (attrType1);
-     	 TtaAttachAttribute (lastAttrElement, attr, theDocument);
-     	 TtaSetAttributeText (attr, inputBuffer, lastAttrElement, theDocument);
-     	 }
+      else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("size")))
+	 {
+	 TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+	 if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
+	    CreateAttrIntSize (inputBuffer, lastAttrElement, theDocument);
+	 }
+      else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("shape")))
+	 {
+         child = TtaGetFirstChild (lastAttrElement);
+	 if (child != NULL)
+	    {
+	    switch (val)
+	      {
+	      case HTML_ATTR_shape_VAL_rectangle:
+		 shape = 'R';
+		 break;
+	      case HTML_ATTR_shape_VAL_circle:
+		 shape = 'a';
+		 break;
+	      case HTML_ATTR_shape_VAL_polygon:
+		 shape = 'p';
+		 break;
+	      default:
+		 shape = SPACE;
+		 break;
+	      }
+	    TtaSetGraphicsShape (child, shape, theDocument);
+	    }
+	 }
+      else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("value")))
+         {
+	 elType = TtaGetElementType (lastAttrElement);
+	 if (elType.ElTypeNum == HTML_EL_Text_Input ||
+	     elType.ElTypeNum == HTML_EL_Password_Input ||
+	     elType.ElTypeNum == HTML_EL_File_Input ||
+	     elType.ElTypeNum == HTML_EL_Input)
+	    /* create a Default_Value attribute with the same content */
+     	    {
+	    attrType1.AttrSSchema = attrType.AttrSSchema;
+	    attrType1.AttrTypeNum = HTML_ATTR_Default_Value;
+	    attr = TtaNewAttribute (attrType1);
+	    TtaAttachAttribute (lastAttrElement, attr, theDocument);
+	    TtaSetAttributeText (attr, inputBuffer, lastAttrElement,
+				 theDocument);
+	    }
 	 }
 #ifndef STANDALONE
-     /* Some HTML attributes are equivalent to a CSS property:      */
-     /*      background     ->                   background         */
-     /*      bgcolor        ->                   background         */
-     /*      text           ->                   color              */
-     /*      color          ->                   color              */
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("background")))
-        {
-        if (ustrlen (inputBuffer) > MaxMsgLength - 30)
-            inputBuffer[MaxMsgLength - 30] = WC_EOS;
-        usprintf (msgBuffer, TEXT("background: url(%s)"), inputBuffer);
-        ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
-        }
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("bgcolor")))
-        HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
-     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("text")) ||
-              !ustrcmp (lastAttrEntry->XMLattribute, TEXT("color")))
-        HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
+      /* Some HTML attributes are equivalent to a CSS property:      */
+      /*      background     ->                   background         */
+      /*      bgcolor        ->                   background         */
+      /*      text           ->                   color              */
+      /*      color          ->                   color              */
+      else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("background")))
+         {
+         if (ustrlen (inputBuffer) > MaxMsgLength - 30)
+	    inputBuffer[MaxMsgLength - 30] = WC_EOS;
+	 usprintf (msgBuffer, TEXT("background: url(%s)"), inputBuffer);
+	 ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
+	 }
+      else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("bgcolor")))
+         HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
+      else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("text")) ||
+	       !ustrcmp (lastAttrEntry->XMLattribute, TEXT("color")))
+         HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
 #endif /* !STANDALONE */
-     }
+      }
    InitBuffer ();
 }
 
@@ -5463,6 +5518,7 @@ static sourceTransition sourceAutomaton[] =
    {21, '*', (Proc) PutInBuffer, 21},
 /* state 22: a question mark has been read in a Processing Instruction */
    {22, '>', (Proc) EndOfPI, 0},
+   {22, '?', (Proc) PutInBuffer, 22},
    {22, '*', (Proc) PutQuestionMark, 21},
 
 /* sub automaton for reading entities in various contexts */
@@ -5596,70 +5652,83 @@ ThotBool*       endOfFile;
     CHAR_T        charRead;
     int           res;
 
-#   ifdef _I18N_
+#ifdef _I18N_
     unsigned char mbcstr[MAX_BYTES + 1] = "\0";
     int           nbBytes;
-#   endif /* _I18N_ */
-
+#endif /* _I18N_ */
     charRead = WC_EOS;
     *endOfFile = FALSE;
 
-#   ifdef _I18N_
-    if (buffer != NULL) {
+#ifdef _I18N_
+    if (buffer != NULL)
+       {
        mbcstr[0] = buffer[(*index)++];
        nbBytes   = 1;
-       if (isleadbyte (mbcstr[0])) {
-          mbcstr[1] = buffer[(*index)++];
+       if (isleadbyte (mbcstr[0]))
+	  {
+	  mbcstr[1] = buffer[(*index)++];
           nbBytes = 2;
-       }
+	  }
        TtaMB2WC (mbcstr, &charRead, CharEncoding);
        *endOfFile = (charRead == WC_EOS);
-    } else if (infile == NULL)
-           *endOfFile = TRUE;
-    else {
-         if (*index == 0) {
-            res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-            if (res <= 0) {
-               /* error or end of file */
-               *endOfFile = TRUE;
-               charRead = WC_EOS;
-               LastCharInFileBuffer = 0;
-            } else {
-                   LastCharInFileBuffer = res - 1;
-            }
-         }
-         if (*endOfFile == FALSE) {
-            char* mbsBuff = &FileBuffer[(*index)];
-            (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, CharEncoding);
-            if (*index > LastCharInFileBuffer)
-               *index = 0;
-         }
-    }
-#   else  /* !_I18N_ */
-    if (buffer != NULL) {
+       }
+    else if (infile == NULL)
+       *endOfFile = TRUE;
+    else
+       {
+       if (*index == 0)
+	  {
+          res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  if (res <= 0)
+	     {
+	     /* error or end of file */
+	     *endOfFile = TRUE;
+	     charRead = WC_EOS;
+	     LastCharInFileBuffer = 0;
+	     }
+	  else
+	     LastCharInFileBuffer = res - 1;
+	  }
+       if (*endOfFile == FALSE)
+	  {
+          char* mbsBuff = &FileBuffer[(*index)];
+	  (*index) += TtaGetNextWideCharFromMultibyteString (&charRead,
+						      &mbsBuff, CharEncoding);
+	  if (*index > LastCharInFileBuffer)
+	     *index = 0;
+	  }
+       }
+#else  /* !_I18N_ */
+    if (buffer != NULL)
+       {
        charRead = buffer[(*index)++];
        *endOfFile = (charRead == WC_EOS);
-    } else if (infile == NULL)
-           *endOfFile = TRUE;
-    else {
-         if (*index == 0) {
-            res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-            if (res <= 0) {
-               /* error or end of file */
-               *endOfFile = TRUE;
-               charRead = WC_EOS;
-               LastCharInFileBuffer = 0;
-            } else {
-                   LastCharInFileBuffer = res - 1;
-            }
-         }
-         if (*endOfFile == FALSE) {
-            charRead = FileBuffer[(*index)++];
-            if (*index > LastCharInFileBuffer)
-               *index = 0;
-         }
-    }
-#   endif /* !_I18N_ */
+       }
+    else if (infile == NULL)
+       *endOfFile = TRUE;
+    else
+       {
+       if (*index == 0)
+	  {
+	  res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  if (res <= 0)
+	     {
+             /* error or end of file */
+             *endOfFile = TRUE;
+	     charRead = WC_EOS;
+	     LastCharInFileBuffer = 0;
+	     }
+	  else
+	     LastCharInFileBuffer = res - 1;
+	  }
+       if (*endOfFile == FALSE)
+	  {
+          charRead = FileBuffer[(*index)++];
+          if (*index > LastCharInFileBuffer)
+             *index = 0;
+	  }
+       }
+#endif /* !_I18N_ */
     return charRead;
 }
 
@@ -5854,22 +5923,22 @@ char*              HTMLbuf;
 		  if (charRead == WC_SPACE)
 		     /* space character */
 		    {
-		       if (currentState == 12 ||
-			   (currentState == 0 &&
-				!Within (HTML_EL_Preformatted, DocumentSSchema) &&
-				!Within (HTML_EL_STYLE_, DocumentSSchema) &&
-				!Within (HTML_EL_SCRIPT, DocumentSSchema)))
-			  /* reading text in a comment or in an element
-			     that is not preformatted text */
-			  /* ignore spaces at the beginning of an input line */
-			  if (EmptyLine)
-			     charRead = WC_EOS;
+		      if (currentState == 12 ||
+			  (currentState == 0 &&
+			   !Within (HTML_EL_Preformatted, DocumentSSchema) &&
+			   !Within (HTML_EL_STYLE_, DocumentSSchema) &&
+			   !Within (HTML_EL_SCRIPT, DocumentSSchema)))
+			/* reading text in a comment or in an element
+			   that is not preformatted text */
+			/* ignore spaces at the beginning of an input line */
+			if (EmptyLine)
+			  charRead = WC_EOS;
 		    }
 #ifndef _I18N_
 		  else if (((int)charRead < 32 ||
 			    ((int) charRead >= 127 && (int) charRead <= 143))
 			   && (int) charRead != WC_TAB)
-		     /* it's not a printable character, ignore it */
+		    /* it's not a printable character, ignore it */
 		    charRead = WC_EOS;
 #endif /* !_I18N_ */
 		  else
@@ -5899,10 +5968,11 @@ char*              HTMLbuf;
 			  match = TRUE;
 		       else if (trans->trigger == SPACE)
 			  /* any space is a trigger */
-			  if ((int) charRead == WC_TAB || (int) charRead == WC_EOL ||
+			  if ((int) charRead == WC_TAB ||
+			      (int) charRead == WC_EOL ||
 			      (int) charRead == 12)
-			     /* a delimiter has been read */
-			     match = TRUE;
+			    /* a delimiter has been read */
+			    match = TRUE;
 		       if (match)
 			  /* transition found. Activate the transition */
 			 {
@@ -5972,10 +6042,11 @@ char*              HTMLbuf;
       EndOfDocument ();
    HTMLrootClosingTag = NULL;
    HTMLrootClosed = FALSE;
-   if (ErrFile) {
+   if (ErrFile)
+      {
       fclose (ErrFile);
       ErrFile = (FILE*) 0;
-   } 
+      } 
 }
 
 
@@ -6112,17 +6183,17 @@ STRING              fileName;
   gzFile              stream;
   int                 res, i;
   ThotBool            endOfFile, isXHTML;
-# ifdef _I18N_
+#ifdef _I18N_
   char                fname[MAX_LENGTH];
-# else  /* !_I18N_ */
+#else  /* !_I18N_ */
   char*               fname = fileName ;
-# endif /* !_I18N_ */
+#endif /* !_I18N_ */
 
   isXHTML = FALSE;
 
-# ifdef _I18N_
+#ifdef _I18N_
   wcstombs (fname, fileName, MAX_LENGTH);
-# endif /* _I18N_ */
+#endif /* _I18N_ */
 
   stream = gzopen (fname, "r");
   if (stream != 0)
@@ -6850,8 +6921,8 @@ Document            doc;
 		  if (el != NULL)
 		     /* an element Term has been found */
 		    {
-		       /* search all immediate Term siblings, ignoring Comments */
-		       /* and Invalid_elements */
+		       /* search all immediate Term siblings, ignoring
+			  Comments and Invalid_elements */
 		       firstTerm = el;
 		       do
 			 {
@@ -6869,81 +6940,85 @@ Document            doc;
 		       elType = TtaGetElementType (termList);
 		       if (elType.ElTypeNum != HTML_EL_Term_List)
 			 {
-			    /* create a Term_List element before the first Term element */
+			    /* create a Term_List element before the first
+			       Term element */
 			    newElType.ElSSchema = docSSchema;
 			    newElType.ElTypeNum = HTML_EL_Term_List;
 			    termList = TtaNewElement (doc, newElType);
 			    TtaInsertSibling (termList, firstTerm, TRUE, doc);
-			    /* move the Term elements as children of the new Term_List */
+			    /* move the Term elements as children of the new
+			       Term_List */
 			    nextEl = firstTerm;
 			    TtaNextSibling (&nextEl);
 			    TtaRemoveTree (firstTerm, doc);
 			    TtaInsertFirstChild (&firstTerm, termList, doc);
 			    if (lastTerm != firstTerm)
-			      {
-				 prevEl = firstTerm;
-				 do
-				   {
-				      child = nextEl;
-				      TtaNextSibling (&nextEl);
-				      TtaRemoveTree (child, doc);
-				      TtaInsertSibling (child, prevEl, FALSE, doc);
-				      prevEl = child;
-				   }
-				 while (nextEl != NULL && child != lastTerm);
-			      }
+			       {
+			       prevEl = firstTerm;
+			       do
+				  {
+				  child = nextEl;
+				  TtaNextSibling (&nextEl);
+				  TtaRemoveTree (child, doc);
+				  TtaInsertSibling (child, prevEl, FALSE, doc);
+				  prevEl = child;
+				  }
+			       while (nextEl != NULL && child != lastTerm);
+			       }
 			 }
 		       parent = TtaGetParent (termList);
 		       elType = TtaGetElementType (parent);
 		       if (elType.ElTypeNum != HTML_EL_Definition_Item)
-			 {
-			    /* Create a Definition_Item element surrounding the */
-			    /* Term_List element */
-			    newElType.ElSSchema = docSSchema;
-			    newElType.ElTypeNum = HTML_EL_Definition_Item;
-			    newEl = TtaNewElement (doc, newElType);
-			    TtaInsertSibling (newEl, termList, TRUE, doc);
-			    TtaRemoveTree (termList, doc);
-			    TtaInsertFirstChild (&termList, newEl, doc);
-			 }
+			  {
+			  /* Create a Definition_Item element surrounding */
+			  /* the Term_List element */
+			  newElType.ElSSchema = docSSchema;
+			  newElType.ElTypeNum = HTML_EL_Definition_Item;
+			  newEl = TtaNewElement (doc, newElType);
+			  TtaInsertSibling (newEl, termList, TRUE, doc);
+			  TtaRemoveTree (termList, doc);
+			  TtaInsertFirstChild (&termList, newEl, doc);
+			  }
 		       if (el != NULL)
-			 {
-			    elType = TtaGetElementType (el);
-			    if (elType.ElTypeNum == HTML_EL_Definition)
-			       /* the element following the new Term_List element is */
-			       /* a Definition. Move it as a sibling of the Term_List */
-			      {
-				 TtaRemoveTree (el, doc);
-				 TtaInsertSibling (el, termList, FALSE, doc);
-			      }
-			    else
-			      {
-				 /* the element following the Term_List element is not */
-				 /* a Definition. Create a Definition element surrounding */
-				 /* that element */
-				 newElType.ElSSchema = docSSchema;
-				 newElType.ElTypeNum = HTML_EL_Definition;
-				 newEl = TtaNewElement (doc, newElType);
-				 TtaInsertSibling (newEl, termList, FALSE, doc);
-				 nextEl = el;
-				 TtaNextSibling (&nextEl);
-				 elType = TtaGetElementType (el);
-				 TtaRemoveTree (el, doc);
-				 TtaInsertFirstChild (&el, newEl, doc);
-				 while (nextEl != NULL &&
-					(elType.ElTypeNum == HTML_EL_Invalid_element ||
-				      elType.ElTypeNum == HTML_EL_Comment_))
-				   {
-				      previous = el;
-				      el = nextEl;
-				      TtaNextSibling (&nextEl);
-				      elType = TtaGetElementType (el);
-				      TtaRemoveTree (el, doc);
-				      TtaInsertSibling (el, previous, FALSE, doc);
-				   }
-			      }
-			 }
-		       /* starting element for the next search of a Term element */
+			  {
+			  elType = TtaGetElementType (el);
+			  if (elType.ElTypeNum == HTML_EL_Definition)
+			     /* the element following the new Term_List */
+			     /* element is a Definition. Move it as a sibling*/
+			     /* of the Term_List */
+			     {
+			     TtaRemoveTree (el, doc);
+			     TtaInsertSibling (el, termList, FALSE, doc);
+			     }
+			  else
+			     {
+			     /* the element following the Term_List element */
+			     /* is not a Definition. Create a Definition */
+			     /* element surrounding that element */
+			     newElType.ElSSchema = docSSchema;
+			     newElType.ElTypeNum = HTML_EL_Definition;
+			     newEl = TtaNewElement (doc, newElType);
+			     TtaInsertSibling (newEl, termList, FALSE, doc);
+			     nextEl = el;
+			     TtaNextSibling (&nextEl);
+			     elType = TtaGetElementType (el);
+			     TtaRemoveTree (el, doc);
+			     TtaInsertFirstChild (&el, newEl, doc);
+			     while (nextEl != NULL &&
+				    (elType.ElTypeNum == HTML_EL_Invalid_element ||
+				     elType.ElTypeNum == HTML_EL_Comment_))
+			        {
+				previous = el;
+				el = nextEl;
+				TtaNextSibling (&nextEl);
+				elType = TtaGetElementType (el);
+				TtaRemoveTree (el, doc);
+				TtaInsertSibling (el, previous, FALSE, doc);
+				}
+			     }
+			  }
+		       /* starting element for the next search of a Term
+			  element */
 		       el = lastTerm;
 		    }
 	       }
@@ -7102,7 +7177,8 @@ Document            doc;
 				      child = nextEl;
 				      TtaNextSibling (&nextEl);
 				      TtaRemoveTree (child, doc);
-				      TtaInsertSibling (child, prevEl, FALSE, doc);
+				      TtaInsertSibling (child, prevEl, FALSE,
+							doc);
 				      prevEl = child;
 				   }
 				 while (nextEl != NULL && child != lastEntry);
@@ -7311,12 +7387,12 @@ Document   doc;
 {
    ElementType  elType;
    CHAR_T*      schemaName;
-#  ifdef _I18N_
+#ifdef _I18N_
    char         html_buff [4 * MAX_TXT_LEN];
    char*        ptrHTMLbuf = html_buff;
-#  else  /* !_I18N_ */
+#else  /* !_I18N_ */
    char*        html_buff = HTMLbuf;
-#  endif /* !_I18N_ */
+#endif /* !_I18N_ */
 
 
    docURL = NULL;
@@ -7339,9 +7415,9 @@ Document   doc;
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
 #ifndef STANDALONE
-       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem, isclosed,
-		 TtaGetDefaultLanguage(), NULL))
-	 StopParsing ();
+       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem,
+		      isclosed, TtaGetDefaultLanguage(), NULL))
+	  StopParsing ();
 #endif
       }
 }
