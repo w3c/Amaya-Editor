@@ -1300,14 +1300,17 @@ void TtaSelectWord (Element element, int pos, Document doc, View view)
 	    }
 	  pBuffer = pBox->BxBuffer;
 	  index =  pBox->BxIndChar;
-	  while (i > pBuffer->BuLength - index)
+	  while (pBuffer && (i > pBuffer->BuLength - index))
 	    {
 	      i = i - pBuffer->BuLength + index;
 	      index = 0;
 	      pBuffer = pBuffer->BuNext;
 	    }
-	  frame = GetWindowNumber (doc, view);
-	  SelectCurrentWord (frame, pBox, pos, i, pBuffer, FALSE);
+	  if (pBuffer)
+	    {
+	      frame = GetWindowNumber (doc, view);
+	      SelectCurrentWord (frame, pBox, pos, i, pBuffer, FALSE);
+	    }
 	}
     }
 }
