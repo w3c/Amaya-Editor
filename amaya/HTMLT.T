@@ -800,7 +800,7 @@ RULES
 		Create '<input type=image';
 		Create Attributes;
 #ifdef XML
-		Create ' />\12';
+		Create ' />';
 #else
 		Create '>';
 #endif
@@ -811,12 +811,13 @@ RULES
 		Create '<img';
 		Create Attributes;
 #ifdef XML
-		Create ' />\12';
+		Create ' />';
 #else
 		Create '>';
 #endif
 		END;
 	if NOT within Paragraph AND NOT Immediately within Object
+           AND NOT within Pseudo_paragraph
 		Create '\12' After;
 	END;
 
