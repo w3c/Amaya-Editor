@@ -678,6 +678,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 {
      static BOOL fState[HORIZ_DIV][VERT_DIV] ;
      static int  cxBlock, cyBlock;
+	 static BOOL inColorArea = FALSE;
      HDC         hdc ;
      PAINTSTRUCT ps ;
      RECT        rect ;
@@ -721,7 +722,8 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 			   return 0;
 
           case WM_LBUTTONDOWN:
-			   ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
+			   if (HIWORD (lParam) >= 45 && HIWORD (lParam) <= 330) 
+			      ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
 			   return 0;
 
           case WM_MBUTTONDOWN:
@@ -739,11 +741,9 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 
                for (y = 0 ; y < VERT_DIV ; y++)
                    for (x = 0 ; x < HORIZ_DIV ; x++) {
-                       /*Rectangle (hdc, x * cxBlock, (y * cyBlock) + 60,(x + 1) * cxBlock, (y + 1) * cyBlock + 85) ;*/
 					   hBrush = CreateSolidBrush (PALETTEINDEX (x + y * HORIZ_DIV)) ;
 					   SelectObject (hdc, hBrush);
                        Rectangle (hdc, x * cxBlock, (y * cyBlock) + 45,(x + 1) * cxBlock, (y + 1) * cyBlock + 45) ;
-					   /*Rectangle (hdc, x * cxBlock + 1, y * cyBlock + 86, (x + 1) * cxBlock - 1, (y + 1) * cyBlock + 84);	*/
 					   SelectObject (hdc, GetStockObject (WHITE_BRUSH));
 					   DeleteObject (hBrush);
 			       }

@@ -84,8 +84,9 @@ static Menu_Ctl    *DocumentMenuList;
 static SchemaMenu_Ctl *SchemasMenuList;
 
 #ifdef _WINDOWS
-HWND hwndClient;
-HWND ToolBar;
+extern TBADDBITMAP AmayaTBBitmap;
+HWND hwndClient ;
+HWND ToolBar ;
 HWND StatusBar;
 
 static HWND hwndTB;
@@ -96,10 +97,6 @@ static HWND hwndTB;
     (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
-
-TBADDBITMAP tbStdLarge[] = {
-            HINST_COMMCTRL, IDB_STD_SMALL_COLOR,
-};
 
 #endif /* _WINDOWS */
 
@@ -1324,7 +1321,7 @@ char               *info;
                      FrameTable[frame].Button[i] = w;
                      FrameTable[frame].Call_Button[i] = (Proc) procedure;
                      ToolBar_ButtonStructSize (WinToolBar[frame]);
-                     ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
+                     ToolBar_AddBitmap (WinToolBar[frame], 1, &AmayaTBBitmap);
                      ToolBar_InsertButton (WinToolBar[frame], i, w);
                   } else {
                         w = (TBBUTTON*) malloc (sizeof (TBBUTTON));
@@ -1337,7 +1334,7 @@ char               *info;
                         FrameTable[frame].Button[i] = w;
                         FrameTable[frame].Call_Button[i] = (Proc) procedure;
                         ToolBar_ButtonStructSize (WinToolBar[frame]);
-                        ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
+                        ToolBar_AddBitmap (WinToolBar[frame], 1, &AmayaTBBitmap);
                         ToolBar_InsertButton (WinToolBar[frame], i, w);
                   }
 #                 endif /* _WINDOWS */
@@ -3217,7 +3214,7 @@ char               *data;
      }
    else if (ref < MAX_LocalMenu)
 
-/*** Action interne et optionnelle de l'editeur ***/
+/*** Action interne et optionnelle de l''eur ***/
       switch (ref)
 	    {
 	       case NumMenuInsert:

@@ -233,7 +233,7 @@ extern char         docToOpen [256];
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
 
-#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0All files (*.*)\0*.*\0"
+#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
 
 
 void terminate__Fv (void) {
@@ -579,9 +579,13 @@ int        ref;
          if (catalogue && FrameCatList[frame].Cat_Table [icat] &&
              (FrameCatList[frame].Cat_Table[icat]->Cat_Ref > ref) && (catalogue->Cat_Ref <= ref))
             return catalogue ;
-         catalogue = FrameCatList[frame].Cat_Table [icat];
+		 if (FrameCatList[frame].Cat_Table [icat] != NULL)
+            catalogue = FrameCatList[frame].Cat_Table [icat];
          icat++ ;
    }
+   if (catalogue->Cat_Ref <= ref)
+	  return catalogue ;
+
    return NULL ;
 }
 
@@ -697,7 +701,7 @@ int       nShow;
    tszAppName = "Amaya";
 
    argc = makeArgcArgv (hInst, &argv, lpCommand);
-   thotmain (argc, argv);
+   main (argc, argv);
    return (TRUE);
 }
 #endif /* _WINDOWS */
@@ -2329,8 +2333,6 @@ char* fileName;
     OpenFileName.nFilterIndex      = 1L; 
     OpenFileName.lpstrFile         = (LPSTR) szFileName; 
     OpenFileName.nMaxFile          = 256; 
-/*    OpenFileName.lpstrFileTitle    = szFileTitle; 	 
-    OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); */
     OpenFileName.lpstrInitialDir   = NULL; 
     OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
     OpenFileName.nFileOffset       = 0; 
@@ -2349,13 +2351,11 @@ char* fileName;
   WIN_ListSaveDirectory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WIN_ListSaveDirectory (int ref, int parentRef, char* directory, char* suffix)
+void WIN_ListSaveDirectory (int parentRef, char* fileName)
 #else  /* __STDC__ */
-void WIN_ListSaveDirectory (ref, parentRef, directory, suffix)
-int   ref; 
+void WIN_ListSaveDirectory (parentRef, fileName)
 int   parentRef; 
-char* directory; 
-char* suffix;
+char* fileName; 
 #endif /* __STDC__ */
 {
 	static OPENFILENAME OpenFileName;
@@ -2378,20 +2378,8 @@ char* suffix;
     OpenFileName.lpstrInitialDir   = NULL; 
     OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY ;
 
-	/*
-    OpenFileName.hInstance         = hInstance ; 
-    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
-    OpenFileName.nMaxCustFilter    = 0L; 
-    OpenFileName.nFilterIndex      = 1L; 
-
-    OpenFileName.nFileOffset       = 0; 
-    OpenFileName.nFileExtension    = 0; 
-    OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
-    OpenFileName.lCustData         = 0; 
-	*/
-
     if (GetSaveFileName (&OpenFileName)) { 
-          MessageBox (parentCatalogue->Cat_Widget, TEXT ("Save File as."), OpenFileName.lpstrFile, MB_OK ); 
+	   strcpy (fileName, OpenFileName.lpstrFile);
     } 
 }
 #endif /* _WINDOWS */
@@ -6475,7 +6463,9 @@ char               *text;
 	TtaError (ERR_invalid_reference);
 	return;
      }
+#  ifndef _WINDOWS
    title_string = 0;
+#  endif /* _WINDOWS */
    catalogue = CatEntry (ref);
    rebuilded = 0;
    if (catalogue == NULL)

@@ -277,7 +277,7 @@ const char         *filename;
 
 #endif /* __STDC__ */
 {
-#ifdef __CYGWIN32__
+#ifdef _WINDOWS
    return fopen (filename, "wb+");
 #else
    return fopen (filename, "w+");

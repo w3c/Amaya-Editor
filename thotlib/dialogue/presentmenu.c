@@ -1552,6 +1552,7 @@ View                view;
 	  {
 
 	     ResetMenus ();
+#            ifndef _WINDOWS
 	     /* formulaire Presentation Format */
 	     TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_FORMAT),
@@ -1666,6 +1667,9 @@ View                view;
 	     TtaSetMenuForm (NumMenuLineSpacing, i);
 	     DocModPresent = pDoc;
 	     TtaShowDialogue (NumFormPresFormat, TRUE);
+#            else  /* _WINDOWS */
+             CreateChangeFormatDlgWindow (TtaGetViewFrame (document, view));
+#            endif /* _WINDOWS */
 	  }
      }
 }

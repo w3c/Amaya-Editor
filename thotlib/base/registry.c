@@ -572,13 +572,19 @@ char               *name;
     * next time it will be saved.
     */
    value = getenv (name);
-   if (value == NULL)
+
+   if (value == NULL) {
       TtaSetEnvString (name, "", FALSE);
+
+   }
    else
       TtaSetEnvString (name, value, FALSE);
+
+
 #ifdef DEBUG_REGISTRY
    fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, value);
 #endif
+
    return (value);
 }
 
@@ -917,7 +923,6 @@ char               *appArgv0;
 #endif
 {
    char               *home_dir;
-   char               *thot_dir_env;
    char                filename[MAX_PATH];
    int                 execname_len;
    PathBuffer          execname;
@@ -925,6 +930,9 @@ char               *appArgv0;
    char               *my_path;
    char               *dir_end = NULL;
    char               *appName;
+#  ifndef _WINDOWS
+   char               *thot_dir_env;
+#  endif /* _WINDOWS */
 
 #ifdef _WINDOWS
 #ifndef __CYGWIN32__

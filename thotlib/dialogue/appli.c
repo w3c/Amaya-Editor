@@ -54,10 +54,7 @@ static XmString     null_string;
 #endif
 
 #ifdef _WINDOWS
-
-#define _MAX_PATH   500
-#define _MAX_FNAME  100
-#define _MAX_EXT     10
+#define ID_TOOLBAR  165
 
 #define MAX_MENUS 5
 #define ToolBar_AutoSize(hwnd) \
@@ -77,10 +74,11 @@ static HWND      hwndHead   ;
 static char*     txtZoneLabel;
 static boolean   paletteRealized = FALSE;
 
-int    cyToolBar ;
-HWND   hwndTB ;
-DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER | TBSTYLE_TOOLTIPS;
-DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
+int         cyToolBar ;
+HWND        hwndTB ;
+DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER | TBSTYLE_TOOLTIPS;
+DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
+TBADDBITMAP AmayaTBBitmap;
 #endif /* _WINDOWS */
 
 #include "absboxes_f.h"
@@ -263,7 +261,7 @@ int top_delta;
 int bottom_delta;
 #endif /* __STDC__ */
 {
-   int                 n, dx, dy, view;
+   int                 view;
    Document            doc;
 
    if ((width <= 0) || (height <= 0))
@@ -998,10 +996,14 @@ LPARAM      lParam;
      switch (mMsg) {
             case WM_CREATE:
 	         /* Create toolbar  */
+				 AmayaTBBitmap.hInst = hInstance;
+				 AmayaTBBitmap.nID   = ID_TOOLBAR;
                  ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
+				 /*
                  ShowWindow (ToolBar, SW_SHOWNORMAL);
                  UpdateWindow (ToolBar);
+				 */
 
                  /* Create status bar  */
                  StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
@@ -1140,12 +1142,9 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-     int          comm;
      HDC          saveHdc;	/* Used to save TtDisplay during current event processing */
      int          frame;
      int          status;
-     PAINTSTRUCT  ps;
-     RECT         rect;
 	 static POINT ptBegin;
 	 static POINT ptEnd;
 
@@ -1588,7 +1587,9 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 frame;
+#  ifndef _WINDOWS
    Drawable            drawable;
+#  endif  /* _WINDOWS */
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -1626,7 +1627,9 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 frame;
+#  ifndef _WINDOWS 
    Drawable            drawable;
+#  endif /* _WINDOWS */
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -1668,11 +1671,11 @@ int                *pave;
 {
 #  ifndef _WINDOWS
    ThotEvent              event;
+   Drawable            drawable;
 #  else  /* _WINDOWS */
    MSG                    event;
 #  endif /* _WINDOWS */
    int                 i;
-   Drawable            drawable;
 
    if (ClickIsDone == 1) {
        *frame = 0;
@@ -1966,10 +1969,10 @@ int                 frame;
    int                 width, height;
    int                 l, h;
    ThotWidget          hscroll, vscroll;
-   int                 n;
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
+   int                 n;
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
