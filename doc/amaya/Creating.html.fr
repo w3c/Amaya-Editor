@@ -258,7 +258,7 @@ Par exemple, le code source suivant:</p>
 &lt;/strong&gt;au chargement&lt;/p&gt;</code></p>
 
 <p>donnera à l'édition:</p>
-<pre>Amaya supprime les<strong> blancs non significatifs </strong>au chargement</pre>
+<pre><code>Amaya supprime les</code><strong><code> blancs non significatifs </code></strong><code>au chargement</code></pre>
 
 <p>et sera sauvegardé sous cette forme. Lors du prochain chargement de ce
 document, cette partie sera transformée en:</p>
