@@ -37,7 +37,7 @@ static PtrTabUpdate FirstColUpdate;
 #include "memory_f.h"
 #include "tree_f.h"
 #define MAX_COLROW 50
-/*#define TAB_DEBUG */
+#define TAB_DEBUG
 
 #ifdef __STDC__
 static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame);
@@ -525,9 +525,11 @@ int             frame;
 	      for (k = 0; k < rowSpans[i] && k < MAX_COLROW; k++)
 		{
 		  rowList[k] = row;
-		  HeightPack (row, NULL, frame);
 		  if (row != NULL && row->AbBox != NULL)
-		    sum += row->AbBox->BxHeight;
+		    {
+		      HeightPack (row, NULL, frame);
+		      sum += row->AbBox->BxHeight;
+		    }
 		  /* select nex row in the list */
 		  j++;
 		  if (pTabRel != NULL &&
@@ -541,6 +543,9 @@ int             frame;
 		  else
 		    row = NULL;
 		}
+#ifdef TAB_DEBUG
+printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], sum);
+#endif
 	   
 	      /* update rows' height if necessary */
 	      height -= sum;
@@ -1672,7 +1677,7 @@ int              frame;
 	BuildColOrRowList (pAb, BoRow);
       
       /* compute widths of each column within the table */
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately && table != NULL)
 	ComputeColWidth (col, pAb, frame);
       else
 	SaveColUpdate (col, pAb, frame);

@@ -3273,6 +3273,7 @@ PtrAbstractBox      pAb;
    PtrBox              pBox;
    PtrBox              pParentBox;
    PtrBox              pChildBox;
+   DisplayMode         saveMode;
    int                 savevisu = 0;
    int                 savezoom = 0;
    boolean             change;
@@ -3292,6 +3293,9 @@ PtrAbstractBox      pAb;
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_BAD_FRAME_NB);
    else
      {
+        saveMode = documentDisplayMode[FrameTable[frame].FrDoc - 1];
+	if (saveMode == DisplayImmediately)
+	  documentDisplayMode[FrameTable[frame].FrDoc - 1] = DeferredDisplay;
 	pFrame = &ViewFrameTable[frame - 1];
 	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL && (pAb->AbEnclosing != NULL
@@ -3462,6 +3466,11 @@ PtrAbstractBox      pAb;
 	       }
 	     pFrame->FrReady = TRUE;	/* La frame est affichable */
 	  }
+	/* restore the current mode */
+	documentDisplayMode[FrameTable[frame].FrDoc - 1] = saveMode;
+	/* update tables if necessary */
+	if (saveMode == DisplayImmediately && ThotLocalActions[T_colupdates])
+	  (*ThotLocalActions[T_colupdates]) (FrameTable[frame].FrDoc);
      }
    return result;
 }
