@@ -205,11 +205,12 @@ static void InitFormLanguage (Document doc, View view,
    ptr = GetListOfLanguages (bufMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
    AmayaPanelParams p;
    p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
-   p.param2 = (void*)ptr;
-   p.param3 = (void*)label;
-   p.param4 = (void*)bufMenu;
-   p.param5 = (void*)nbItem;
-   p.param6 = (void*)defItem;
+   p.param2 = (void*)FALSE;
+   p.param3 = (void*)ptr;
+   p.param4 = (void*)label;
+   p.param5 = (void*)bufMenu;
+   p.param6 = (void*)nbItem;
+   p.param7 = (void*)defItem;
    AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 
@@ -601,7 +602,8 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	 
 	 AmayaPanelParams p;
 	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
-	 p.param2 = (void*)i;
+	 p.param2 = (void*)required;
+	 p.param3 = (void*)i;
 	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
        }
@@ -629,7 +631,8 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 #ifdef _WX
 	 AmayaPanelParams p;
 	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
-	 p.param2 = (void*)TextAttrValue;
+	 p.param2 = (void*)required;
+	 p.param3 = (void*)TextAttrValue;
 	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 #ifdef _GTK
@@ -696,9 +699,10 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 #ifdef _WX
 	 AmayaPanelParams p;
 	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
-	 p.param2 = (void*)bufMenu;
-	 p.param3 = (void*)val;
-	 p.param4 = (void*)i;
+	 p.param2 = (void*)required;
+	 p.param3 = (void*)bufMenu;
+	 p.param4 = (void*)val;
+	 p.param5 = (void*)i;
 	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 #endif /* _WX */
 #ifdef _GTK

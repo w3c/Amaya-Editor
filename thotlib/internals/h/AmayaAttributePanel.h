@@ -43,10 +43,13 @@ public:
   void OnApply( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
   void OnAutoRefresh( wxCommandEvent& event );
+  void OnDelAttr( wxCommandEvent& event );
 
  protected:
   virtual void SendDataToPanel( AmayaPanelParams& params );
   virtual void DoUpdate();
+
+  void RemoveCurrentAttribut();
 
  public:
   typedef enum
@@ -81,13 +84,14 @@ public:
   void SetupEnumValue( const char * enums, int nb_enum, int selected );
   void SetupNumValue( int num );
 
+  void SetMandatoryState( bool is_mandatory );
 
  protected:
   wxPanel *           m_pVPanelParent;
   wxSizer *           m_pVPanelSizer;
   wxCheckListBox *    m_pAttrList;
   wxCheckBox *        m_pAutoRefresh;
-  wxButton *          m_pModifyButton;
+  wxPanel *           m_pPanel_ApplyArea;
   wxPanel *           m_pPanel_Lang;
   wxPanel *           m_pPanel_Num;
   wxPanel *           m_pPanel_Text;
@@ -99,6 +103,7 @@ public:
   int m_NbAttr_evt;
 
   wxATTR_TYPE m_CurrentAttType;
+  bool        m_CurrentAttMandatory;
 };
 
 #endif // __AMAYAATTRIBUTEPANEL_H__

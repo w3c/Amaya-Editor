@@ -64,10 +64,11 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
   m_pPanel_Text   = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_TEXT", wxPanel);
   m_pPanel_Enum   = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_ENUM", wxPanel);
   m_pPanel_Num    = XRCCTRL(*m_pVPanelParent, "wxID_ATTRIBUTE_NUM", wxPanel);
-  m_pModifyButton = XRCCTRL(*m_pPanel, "wxID_OK", wxButton);
+  m_pPanel_ApplyArea = XRCCTRL(*m_pVPanelParent, "wxID_PANEL_APPLY_AREA", wxPanel);
 
   // setup labels
-  m_pModifyButton->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pVPanelParent, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pVPanelParent, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DEL)));
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTR)));
   m_pAutoRefresh->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_AUTOREFRESH)));
   m_pPanel_Num->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_VALUE_OF_ATTR)));
@@ -136,19 +137,23 @@ void AmayaAttributePanel::SendDataToPanel( AmayaPanelParams& p )
       ShowAttributValue( wxATTR_TYPE_NONE );
       break;
     case wxATTR_ACTION_SETUPLANG:
+      SetMandatoryState( false );
       SetupLangValue( (const char *)p.param2,(const char *)p.param3, (const char *)p.param4, (int)p.param5, (int)p.param6 );
       ShowAttributValue( wxATTR_TYPE_LANG );
       break;
     case wxATTR_ACTION_SETUPTEXT:
-      SetupTextValue( (const char *)p.param2 );
+      SetMandatoryState( (bool)p.param2 );
+      SetupTextValue( (const char *)p.param3 );
       ShowAttributValue( wxATTR_TYPE_TEXT );
       break;
     case wxATTR_ACTION_SETUPENUM:
-      SetupEnumValue( (const char *)p.param2, (int)p.param3, (int)p.param4 );
+      SetMandatoryState( (bool)p.param2 );
+      SetupEnumValue( (const char *)p.param3, (int)p.param4, (int)p.param5 );
       ShowAttributValue( wxATTR_TYPE_ENUM );
       break;
     case wxATTR_ACTION_SETUPNUM:
-      SetupNumValue( (int)p.param2 );
+      SetMandatoryState( (bool)p.param2 );
+      SetupNumValue( (int)p.param3 );
       ShowAttributValue( wxATTR_TYPE_NUM );
       break;
     }
@@ -222,11 +227,17 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
       /* before to check an item force the selection */
       SelectAttribute( event.GetSelection() );
 
-      /* remove attribute */
-      if (m_CurrentAttType == wxATTR_TYPE_LANG)
-	CallbackLanguageMenu(NumFormLanguage, 2, NULL);
+      if (!m_CurrentAttMandatory)
+	{
+	  /* remove attribute */
+	  RemoveCurrentAttribut();
+	}
       else
-	CallbackValAttrMenu (NumMenuAttr, 2, NULL);
+	{
+	  /* this attribut is mandatory, user is not allowed to remove it ! */
+	  m_pAttrList->Check(event.GetSelection(), true);
+	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_ATTR_MANDATORY);
+	}
     }
   else
   {
@@ -236,6 +247,21 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
   }
   event.Skip();
 }
+
+/*----------------------------------------------------------------------
+  RemoveCurrentAttribut
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaAttributePanel::RemoveCurrentAttribut()
+{
+  /* remove attribute */
+  if (m_CurrentAttType == wxATTR_TYPE_LANG)
+    CallbackLanguageMenu(NumFormLanguage, 2, NULL);
+  else
+    CallbackValAttrMenu (NumMenuAttr, 2, NULL);
+}
+
 
 /*----------------------------------------------------------------------
   ShowAttributValue
@@ -251,30 +277,35 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
   m_pVPanelSizer->Show( m_pPanel_Lang, false );
   m_pVPanelSizer->Show( m_pPanel_Enum, false );
   m_pVPanelSizer->Show( m_pPanel_Num, false );
+  m_pVPanelSizer->Show( m_pPanel_ApplyArea, false );
 
   switch(type)
     {
     case wxATTR_TYPE_ENUM:
       {
 	m_pVPanelSizer->Show( m_pPanel_Enum, true );
+	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
 	m_pPanel_Enum->Refresh();
       }
       break;
     case wxATTR_TYPE_TEXT:
       {
 	m_pVPanelSizer->Show( m_pPanel_Text, true );
+	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
 	m_pPanel_Text->Refresh();
       }
       break;
     case wxATTR_TYPE_LANG:
       {
 	m_pVPanelSizer->Show( m_pPanel_Lang, true );
+	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
 	m_pPanel_Lang->Refresh();
       }
       break;
     case wxATTR_TYPE_NUM:
       {
 	m_pVPanelSizer->Show( m_pPanel_Num, true );
+	m_pVPanelSizer->Show( m_pPanel_ApplyArea, true );
 	m_pPanel_Num->Refresh();
       }
       break;
@@ -287,12 +318,6 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
   
   // remember the current attribut type, used to know what callback must be called
   m_CurrentAttType = type;
-
-  // refresh the apply enable state depending on selection
-  if (m_CurrentAttType == wxATTR_TYPE_NONE)
-    m_pModifyButton->Disable();
-  else
-    m_pModifyButton->Enable();
 }
 
 /*----------------------------------------------------------------------
@@ -440,7 +465,7 @@ void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum, int s
 			      choices, 0, wxRA_SPECIFY_COLS | wxNO_BORDER );
   if (selected != -1)
     m_pRBEnum->SetSelection(selected);
-  p_sizer->Add(m_pRBEnum, 0, wxALL|wxEXPAND, 0);
+  p_sizer->Prepend(m_pRBEnum, 0, wxALL|wxEXPAND, 0);
   p_sizer->Layout();
 
   m_pPanel_Enum->Refresh();
@@ -457,6 +482,17 @@ void AmayaAttributePanel::SetupNumValue( int num )
   wxSpinCtrl * p_spin_ctrl = XRCCTRL(*m_pPanel_Num, "wxID_ATTR_NUM_VALUE", wxSpinCtrl);
   p_spin_ctrl->SetValue( num );
   m_pPanel_Num->Refresh();
+}
+
+/*----------------------------------------------------------------------
+  OnDelAttr called when the user want to remove an existing attribut (the selected one)
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaAttributePanel::OnDelAttr( wxCommandEvent& event )
+{
+  wxLogDebug(_T("AmayaAttributePanel::OnDelAttr") );
+  RemoveCurrentAttribut();    
 }
 
 /*----------------------------------------------------------------------
@@ -581,6 +617,22 @@ bool AmayaAttributePanel::IsActive()
   return (AmayaSubPanel::IsActive() && !IsFreezed());
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaAttributePanel
+ *      Method:  SetMandatoryState
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaAttributePanel::SetMandatoryState( bool is_mandatory )
+{
+  m_CurrentAttMandatory = is_mandatory;
+  if (is_mandatory)
+    XRCCTRL(*m_pPanel, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->Disable();
+  else
+    XRCCTRL(*m_pPanel, "wxID_BUTTON_DEL_ATTR", wxBitmapButton)->Enable();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -588,7 +640,11 @@ bool AmayaAttributePanel::IsActive()
 BEGIN_EVENT_TABLE(AmayaAttributePanel, AmayaSubPanel)
   EVT_LISTBOX(      XRCID("wxID_CLIST_ATTR"),      AmayaAttributePanel::OnListSelectItem )
   EVT_CHECKLISTBOX( XRCID("wxID_CLIST_ATTR"),      AmayaAttributePanel::OnListCheckItem )
+  EVT_TEXT_ENTER(   XRCID("wxID_ATTR_COMBO_LANG_LIST"), AmayaAttributePanel::OnApply )
+  EVT_TEXT_ENTER(   XRCID("wxID_ATTR_TEXT_VALUE"),      AmayaAttributePanel::OnApply )
+  EVT_TEXT_ENTER(   XRCID("wxID_ATTR_NUM_VALUE"),       AmayaAttributePanel::OnApply )
   EVT_BUTTON(       XRCID("wxID_OK"),              AmayaAttributePanel::OnApply )
+  EVT_BUTTON(       XRCID("wxID_BUTTON_DEL_ATTR"), AmayaAttributePanel::OnDelAttr )
   EVT_CHECKBOX(     XRCID("wxID_CHECK_AUTOREF"),   AmayaAttributePanel::OnAutoRefresh )
 END_EVENT_TABLE()
 

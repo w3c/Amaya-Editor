@@ -1847,6 +1847,10 @@
 	<message xml:lang="en">Auto refresh</message>
 	<message xml:lang="fr">Auto mise à jour</message>
 </label>
+<label define="TMSG_ATTR_MANDATORY">
+	<message xml:lang="en">Mandatory attribute, it can't be removed</message>
+	<message xml:lang="fr">Cet attribut est obligatoire, il ne peut pas être supprimé</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
