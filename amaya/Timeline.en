@@ -1,0 +1,12 @@
+extension
+
+presentation
+
+ TimelineP:  Standard presentation
+
+translation
+
+Language: lang
+TEXT_UNIT: Text
+GRAPHICS_UNIT: shape
+PICTURE_UNIT: image
