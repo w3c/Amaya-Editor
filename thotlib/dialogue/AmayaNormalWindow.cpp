@@ -61,7 +61,7 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL ),
   m_pURLBar( NULL ),
   m_pDummyMenuBar( NULL ),
-  m_SlashPos( 135 )
+  m_SlashPos( 150 )
 {
   // Create a background panel to contain everything : better look on windows
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
