@@ -906,11 +906,10 @@ PtrBox       box;
 	  values.tile = pixmap;
 	  values.ts_x_origin = xFrame;
 	  values.ts_y_origin = yFrame;
-	  if (picPresent == RealSize
-	      /* || w <= imageDesc->PicWArea && h <= imageDesc->PicHArea */)
+	  values.fill_style = FillTiled;
+	  XChangeGC (TtDisplay, tiledGC, valuemask, &values);
+	  if (picPresent == RealSize)
 	    {
-	      values.fill_style = FillTiled;
-	      XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	      if (imageDesc->PicMask)
 		{
 		  XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg,
@@ -923,16 +922,17 @@ PtrBox       box;
 		w = imageDesc->PicWArea;
 	      if (h > imageDesc->PicHArea)
 		h = imageDesc->PicHArea;
-	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame,
-			      w, h);
 	    }
 	  else
 	    {
-	      values.fill_style = FillTiled;
-	      XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	      XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+	      if (picPresent == YRepeat && w > imageDesc->PicWArea)
+		w = imageDesc->PicWArea;
+	      if (picPresent == XRepeat && h > imageDesc->PicHArea)
+		h = imageDesc->PicHArea;
 	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
 	    }
+	  XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
 	  /* remove clipping */
           rect.x = 0;
           rect.y = 0;
