@@ -5520,10 +5520,10 @@ static void CheckBlocksInCharElem (Document doc)
 		  first = TtaGetFirstChild (el);
 		  child = first;
 		  last = NULL;
-		  /* move the pseudo paragrah as sibling of parent*/
+		  /* move the pseudo paragraph as sibling of parent*/
 		  TtaRemoveTree (el, doc);
 		  TtaInsertSibling (el, parent, TRUE, doc);
-		  /* move all children of element el as siblings of el */
+		  /* move all children of element el as children of parent */
 		  do
 		    {
 		      next = child;
@@ -5544,9 +5544,17 @@ static void CheckBlocksInCharElem (Document doc)
 		      child = next;
 		    }
 		  while (child != NULL);
-		  /* then move the parent as a child of the pseudo paragrah */
-		  TtaRemoveTree (parent, doc);
-		  TtaInsertFirstChild (&parent, el, doc);
+		  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		  if (TtaGetTypedAncestor (parent, elType))
+		    /* there is already an ancestor of type pseudo paragraph.
+		       Delete this one */
+		    TtaDeleteTree (el, doc);
+		  else
+		    /* move parent as a child of the pseudo paragraph */
+		    {
+		      TtaRemoveTree (parent, doc);
+		      TtaInsertFirstChild (&parent, el, doc);
+		    }
 		}
 	      else
 		{
@@ -5563,8 +5571,8 @@ static void CheckBlocksInCharElem (Document doc)
 		      child = next;
 		    }
 		  while (child != NULL);
-		  /* copy the character-level element for all elements that have been
-		     moved */
+		  /* copy the character-level element for all elements that
+		     have been moved */
 		  newparent = TtaGetParent (parent);
 		  elem = first;
 		  prev = NULL;
