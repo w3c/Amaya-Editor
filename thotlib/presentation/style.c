@@ -2434,6 +2434,9 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case UnPercent:
       unit = UNIT_PERCENT;
       break;
+    case UnAuto:
+      unit = VALUE_AUTO;
+      break;
     default:
       unit = UNIT_INVALID;
       break;
@@ -3166,28 +3169,36 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
     case PRVisibility:
       break;
     case PRHeight:
-      if (real)
+      if (unit == VALUE_AUTO)
+	strcpy (buffer, "height: ");
+      else if (real)
 	sprintf (buffer, "height: %g", fval);
       else
 	sprintf (buffer, "height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRWidth:
-      if (real)
+      if (unit == VALUE_AUTO)
+	strcpy (buffer, "width: ");
+      else if (real)
 	sprintf (buffer, "width: %g", fval);
       else
 	sprintf (buffer, "width: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginTop:
-      if (real)
+      if (unit == VALUE_AUTO)
+	strcpy (buffer, "margin-top: ");
+      else if (real)
 	sprintf (buffer, "margin-top: %g", fval);
       else
-	sprintf (buffer, "margin-top: %d",settings->value.typed_data.value);
+	sprintf (buffer, "margin-top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginBottom:
-      if (real)
+      if (unit == VALUE_AUTO)
+	strcpy (buffer, "margin-bottom: ");
+      else if (real)
 	sprintf (buffer, "margin-bottom: %g", fval);
       else
 	sprintf (buffer, "margin-bottom: %d",
@@ -3195,14 +3206,18 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
       add_unit = 1;
       break;
     case PRMarginLeft:
-      if (real)
+      if (unit == VALUE_AUTO)
+	strcpy (buffer, "margin-left: ");
+      else if (real)
 	sprintf (buffer, "margin-left: %g", fval);
       else
 	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginRight:
-      if (real)
+      if (unit == VALUE_AUTO)
+	strcpy (buffer, "margin-right: ");
+      else if (real)
 	sprintf (buffer, "margin-right: %g", fval);
       else
 	sprintf (buffer, "margin-right: %d", settings->value.typed_data.value);
@@ -3622,17 +3637,22 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 
   if (add_unit)
     {
-      /* add the unit string to the CSS string */
-      i = 0;
-      while (CSSUnitNames[i].sign)
+      if (unit == VALUE_AUTO)
+	strcat (buffer, "auto");
+      else
 	{
-	  if (CSSUnitNames[i].unit == unit)
+	  /* add the unit string to the CSS string */
+	  i = 0;
+	  while (CSSUnitNames[i].sign)
 	    {
-	      strcat (buffer, CSSUnitNames[i].sign);
-	      break;
+	      if (CSSUnitNames[i].unit == unit)
+		{
+		  strcat (buffer, CSSUnitNames[i].sign);
+		  break;
+		}
+	      else
+		i++;
 	    }
-	  else
-	    i++;
 	}
     }
 }

@@ -388,11 +388,11 @@ CHAR_T *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
 {
 #ifdef _I18N_ 
   /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
-#ifdef _WINDOWS
+#if defined(_WINDOWS) || defined(_AIX)
   return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
-#else  /* _WINDOWS */
+#else  /* defined(_WINDOWS) || defined(_AIX) */
   return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter, NULL);
-#endif /* _WINDOWS */
+#endif /* defined(_WINDOWS) || defined(_AIX) */
 #else  /* _I18N_ */
   return (CHAR_T*) strtok ((char*)str, (char*)delemiter);
 #endif /* _I18N_ */

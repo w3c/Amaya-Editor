@@ -1927,7 +1927,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 {
   PtrBox              box;
   PtrLine             pLine;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, pCell;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   PtrDimRelations     pDimRel;
@@ -2271,12 +2271,13 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			    /* next relationblock */
 			    pPosRel = pPosRel->PosRNext;
 			  }
-			if (pAb->AbLeftMarginUnit == UnAuto ||
-			    pAb->AbRightMarginUnit == UnAuto)
-			  {
-			    /* update auto margins */
-			    CheckMBP (pAb, box, frame, TRUE);
-			  }
+
+			pCell = GetParentCell (box);
+			if ((box->BxType != BoTable || pCell == NULL) &&
+			    (pAb->AbLeftMarginUnit == UnAuto ||
+			     pAb->AbRightMarginUnit == UnAuto))
+			  /* update auto margins */
+			  CheckMBP (pAb, box, frame, TRUE);
 		      }
 		    /* next child */
 		    pAb = pAb->AbNext;

@@ -1686,6 +1686,7 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
   else if (lt != 0 || rb != 0)
     {
       pAb->AbBox->BxVertRef += lt;
+      /* not already updated by the table formatter */
       if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef)
 	/* the outside width is constrained */
 	ResizeWidth (pBox, pBox, NULL, -lt -rb, lt, rb, 0, frame);
