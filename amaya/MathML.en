@@ -55,6 +55,9 @@ MALIGNGROUP: maligngroup
 MALIGNMARK: malignmark
 
 Langue: lang
+xml_space_default: default
+xml_space_preserve: preserve
+xml_space: xml:space
 inline_: inline
 scale_: scale
 normal_: normal
@@ -70,6 +73,8 @@ sans_serif_bold_italic: sans-serif-bold-italic
 linebreak_: linebreak
 auto_: auto
 nobreak_: nobreak
-xml_space_default: default
-xml_space_preserve: preserve
-xml_space: xml:space
+rowalign_mtr: rowalign
+columnalign_mtd: columnalign
+top_: top
+bottom_: bottom
+groupalign_malgr: groupalign

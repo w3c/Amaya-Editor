@@ -1194,6 +1194,32 @@ ATTRIBUTES
 	create '"';
 	end;
 
+   rowalign_mtr = top_:
+	begin
+	create SAN;
+	create 'rowalign="top"';
+	end;
+   rowalign_mtr = bottom_:
+	begin
+	create SAN;
+	create 'rowalign="bottom"';
+	end;
+   rowalign_mtr = center:
+	begin
+	create SAN;
+	create 'rowalign="center"';
+	end;
+   rowalign_mtr = baseline:
+	begin
+	create SAN;
+	create 'rowalign="baseline"';
+	end;
+   rowalign_mtr = axis:
+	begin
+	create SAN;
+	create 'rowalign="axis"';
+	end;
+
    columnalign:
 	begin
 	create SAN;
@@ -1202,12 +1228,49 @@ ATTRIBUTES
 	create '"';
 	end;
 
+   columnalign_mtd = left\240:
+	begin
+	create SAN;
+	create 'columnalign="left"';
+	end;
+   columnalign_mtd = center\240:
+	begin
+	create SAN;
+	create 'columnalign="center"';
+	end;
+   columnalign_mtd = right\240:
+	begin
+	create SAN;
+	create 'columnalign="right"';
+	end;
+
    groupalign:
 	begin
 	create SAN;
 	create 'groupalign="';
 	create groupalign;
 	create '"';
+	end;
+
+   groupalign_malgr = left\240:
+	begin
+	create SAN;
+	create 'groupalign="left"';
+	end;
+   groupalign_malgr = center\240:
+	begin
+	create SAN;
+	create 'groupalign="center"';
+	end;
+   groupalign_malgr = right\240:
+	begin
+	create SAN;
+	create 'groupalign="right"';
+	end;
+   groupalign_malgr = decimalpoint:
+	begin
+	create SAN;
+	create 'groupalign="decimalpoint"';
 	end;
 
    alignmentscope:
@@ -1282,20 +1345,26 @@ ATTRIBUTES
 	create '"';
 	end;
 
-   equalrows:
+   equalrows = true:
 	begin
 	create SAN;
-	create 'equalrows="';
-	create equalrows;
-	create '"';
+	create 'equalrows="true"';
+	end;
+   equalrows = false:
+	begin
+	create SAN;
+	create 'equalrows="false"';
 	end;
 
-   equalcolumns:
+   equalcolumns = true:
 	begin
 	create SAN;
-	create 'equalcolumns="';
-	create equalcolumns;
-	create '"';
+	create 'equalcolumns="true"';
+	end;
+   equalcolumns = false:
+	begin
+	create SAN;
+	create 'equalcolumns="false"';
 	end;
 
    rowspan\240:

@@ -285,6 +285,10 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_bevelled, TEXT("true"), MathML_ATTR_bevelled_VAL_true},
  {MathML_ATTR_bevelled, TEXT("false"), MathML_ATTR_bevelled_VAL_false},
 
+ {MathML_ATTR_columnalign_mtd, TEXT("center"), MathML_ATTR_columnalign_mtd_VAL_center_},
+ {MathML_ATTR_columnalign_mtd, TEXT("left"), MathML_ATTR_columnalign_mtd_VAL_left_},
+ {MathML_ATTR_columnalign_mtd, TEXT("right"), MathML_ATTR_columnalign_mtd_VAL_right_},
+
  {MathML_ATTR_denomalign, TEXT("center"), MathML_ATTR_denomalign_VAL_center_},
  {MathML_ATTR_denomalign, TEXT("left"), MathML_ATTR_denomalign_VAL_left_},
  {MathML_ATTR_denomalign, TEXT("right"), MathML_ATTR_denomalign_VAL_right_},
@@ -298,6 +302,12 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 
  {MathML_ATTR_edge, TEXT("left"), MathML_ATTR_edge_VAL_left_},
  {MathML_ATTR_edge, TEXT("right"), MathML_ATTR_edge_VAL_right_},
+
+ {MathML_ATTR_equalcolumns, TEXT("true"), MathML_ATTR_equalcolumns_VAL_true},
+ {MathML_ATTR_equalcolumns, TEXT("false"), MathML_ATTR_equalcolumns_VAL_false},
+
+ {MathML_ATTR_equalrows, TEXT("true"), MathML_ATTR_equalrows_VAL_true},
+ {MathML_ATTR_equalrows, TEXT("false"), MathML_ATTR_equalrows_VAL_false},
 
  {MathML_ATTR_fence, TEXT("true"), MathML_ATTR_fence_VAL_true},
  {MathML_ATTR_fence, TEXT("false"), MathML_ATTR_fence_VAL_false},
@@ -316,8 +326,20 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_frame, TEXT("solid"), MathML_ATTR_frame_VAL_solid_},
  {MathML_ATTR_frame, TEXT("dashed"), MathML_ATTR_frame_VAL_dashed_},
 
+ {MathML_ATTR_groupalign_malgr, TEXT("left"), MathML_ATTR_groupalign_malgr_VAL_left_},
+ {MathML_ATTR_groupalign_malgr, TEXT("center"), MathML_ATTR_groupalign_malgr_VAL_center_},
+ {MathML_ATTR_groupalign_malgr, TEXT("right"), MathML_ATTR_groupalign_malgr_VAL_right_},
+ {MathML_ATTR_groupalign_malgr, TEXT("decimalpoint"), MathML_ATTR_groupalign_malgr_VAL_decimalpoint},
+
  {MathML_ATTR_largeop, TEXT("true"), MathML_ATTR_largeop_VAL_true},
  {MathML_ATTR_largeop, TEXT("false"), MathML_ATTR_largeop_VAL_false},
+
+ {MathML_ATTR_linebreak_, TEXT("auto"), MathML_ATTR_linebreak__VAL_auto_},
+ {MathML_ATTR_linebreak_, TEXT("newline"), MathML_ATTR_linebreak__VAL_newline},
+ {MathML_ATTR_linebreak_, TEXT("indentingnewline"), MathML_ATTR_linebreak__VAL_indentingnewline},
+ {MathML_ATTR_linebreak_, TEXT("nobreak"), MathML_ATTR_linebreak__VAL_nobreak_},
+ {MathML_ATTR_linebreak_, TEXT("goodbreak"), MathML_ATTR_linebreak__VAL_goodbreak},
+ {MathML_ATTR_linebreak_, TEXT("badbreak"), MathML_ATTR_linebreak__VAL_badbreak},
 
  {MathML_ATTR_mathvariant, TEXT("normal"), MathML_ATTR_mathvariant_VAL_normal_},
  {MathML_ATTR_mathvariant, TEXT("bold"), MathML_ATTR_mathvariant_VAL_bold_},
@@ -337,13 +359,6 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
  {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},
 
- {MathML_ATTR_linebreak_, TEXT("auto"), MathML_ATTR_linebreak__VAL_auto_},
- {MathML_ATTR_linebreak_, TEXT("newline"), MathML_ATTR_linebreak__VAL_newline},
- {MathML_ATTR_linebreak_, TEXT("indentingnewline"), MathML_ATTR_linebreak__VAL_indentingnewline},
- {MathML_ATTR_linebreak_, TEXT("nobreak"), MathML_ATTR_linebreak__VAL_nobreak_},
- {MathML_ATTR_linebreak_, TEXT("goodbreak"), MathML_ATTR_linebreak__VAL_goodbreak},
- {MathML_ATTR_linebreak_, TEXT("badbreak"), MathML_ATTR_linebreak__VAL_badbreak},
-
  {MathML_ATTR_notation, TEXT("longdiv"), MathML_ATTR_notation_VAL_longdiv},
  {MathML_ATTR_notation, TEXT("actuarial"), MathML_ATTR_notation_VAL_actuarial},
  {MathML_ATTR_notation, TEXT("radical"), MathML_ATTR_notation_VAL_radical},
@@ -356,6 +371,12 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_overflow, TEXT("elide"), MathML_ATTR_overflow_VAL_elide},
  {MathML_ATTR_overflow, TEXT("truncate"), MathML_ATTR_overflow_VAL_truncate},
  {MathML_ATTR_overflow, TEXT("scale"), MathML_ATTR_overflow_VAL_scale_},
+
+ {MathML_ATTR_rowalign_mtr, TEXT("top"), MathML_ATTR_rowalign_mtr_VAL_top_},
+ {MathML_ATTR_rowalign_mtr, TEXT("bottom"), MathML_ATTR_rowalign_mtr_VAL_bottom_},
+ {MathML_ATTR_rowalign_mtr, TEXT("center"), MathML_ATTR_rowalign_mtr_VAL_center},
+ {MathML_ATTR_rowalign_mtr, TEXT("baseline"), MathML_ATTR_rowalign_mtr_VAL_baseline},
+ {MathML_ATTR_rowalign_mtr, TEXT("axis"), MathML_ATTR_rowalign_mtr_VAL_axis},
 
  {MathML_ATTR_separator, TEXT("true"), MathML_ATTR_separator_VAL_true},
  {MathML_ATTR_separator, TEXT("false"), MathML_ATTR_separator_VAL_false},
@@ -2678,7 +2699,8 @@ void MathMLSpacingAttr (doc, el, value, attr)
   /* provisionally, handles only mspace elements */
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != MathML_EL_MSPACE &&
-      elType.ElTypeNum != MathML_EL_MPADDED)
+      elType.ElTypeNum != MathML_EL_MPADDED &&
+      elType.ElTypeNum != MathML_EL_MTABLE)
      return;
   switch (attr)
     {
@@ -2695,7 +2717,7 @@ void MathMLSpacingAttr (doc, el, value, attr)
       return;
     }
   ctxt = TtaGetSpecificStyleContext (doc);
-  if (!value)
+  if (!value || (ustrcmp (value, TEXT("auto")) == 0))
     /* remove the presentation rule */
     {
       ctxt->destroy = TRUE;

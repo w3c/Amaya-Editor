@@ -189,8 +189,8 @@ STRUCT
 		equalrows = TEXT;
 		equalcolumns = TEXT;
 		displaystyle = true, false;
-		rowspan = TEXT;
-		columnspan = TEXT;
+		rowspan = INTEGER;	????
+		columnspan = INTEGER;   ????
 		edge = left\240, right\240;
 		actiontype = TEXT;
 	        selection = INTEGER;
@@ -317,17 +317,18 @@ STRUCT
 	  (ATTR align = TEXT;
 		rowalign = TEXT;
 		columnalign = TEXT;
-		columnwidth = TEXT;
 		groupalign = TEXT;
 		alignmentscope = TEXT;
+		columnwidth = TEXT;
+		width\240;
 		rowspacing = TEXT;
 		columnspacing = TEXT;
 		rowlines = TEXT	; 
 		columnlines = TEXT; 
 		frame = none\240, solid\240, dashed\240;
 		framespacing = TEXT;
-		equalrows = TEXT;
-		equalcolumns = TEXT;
+		equalrows = true, false;
+		equalcolumns = true, false;
 		displaystyle = true, false;
 	        side = left\240, right\240, leftoverlap, rightoverlap;
 		minlabelspacing = TEXT)
@@ -339,7 +340,7 @@ STRUCT
       MGLYPH
 	  (ATTR alt = TEXT;
 	        fontfamily;
-	        index = Integer)
+	        index = INTEGER)
 	  = CONSTANT C_Empty;
 
       { pactions }
@@ -356,13 +357,13 @@ STRUCT
 		MLABELEDTR;
 		END; 
    MTR
-	  (ATTR rowalign;
+	  (ATTR rowalign_mtr = top_, bottom_, center, baseline, axis;
 		columnalign;
 		groupalign)
 	  = LIST OF (MTD);
 
    MLABELEDTR
-	  (ATTR rowalign;
+	  (ATTR rowalign_mtr;
 		columnalign;
 		groupalign)
 	  = BEGIN
@@ -371,11 +372,11 @@ STRUCT
 	    END	;
 
    MTD
-	  (ATTR rowalign;
-		columnalign;
+	  (ATTR rowalign_mtr;
+		columnalign_mtd = left\240, center\240, right\240;
 		groupalign;
-		rowspan\240 = TEXT;
-		columnspan = TEXT;
+		rowspan\240 = INTEGER;
+		columnspan = INTEGER;
 		MRef_column = REFERENCE(MColumn_head))	{ for internal use }
 	  = BEGIN
 	    CellWrapper = LIST OF (Construct);
@@ -387,7 +388,8 @@ STRUCT
 	  = CONSTANT C_Empty;
 
    MALIGNGROUP
-	  (ATTR groupalign) 
+	  (ATTR groupalign_malgr = left\240, center\240, right\240,
+	                           decimalpoint)
 	  = CONSTANT C_Empty;
 
    { FencedSeparator is for internal use only. It contains a separator

@@ -2086,6 +2086,96 @@ BOXES
                 END;
         END;
 
+ ATTR_rowalign_top: BEGIN
+        Content: Text ' rowalign=top';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_rowalign_bottom: BEGIN
+        Content: Text ' rowalign=bottom';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_rowalign_center: BEGIN
+        Content: Text ' rowalign=center';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_rowalign_baseline: BEGIN
+        Content: Text ' rowalign=baseline';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_rowalign_axis: BEGIN
+        Content: Text ' rowalign=axis';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+
+ ATTR_columnalign_left: BEGIN
+        Content: Text ' columnalign=left';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_columnalign_center: BEGIN
+        Content: Text ' columnalign=center';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_columnalign_right: BEGIN
+        Content: Text ' columnalign=right';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+
  ATTR_columnalign: BEGIN
         Content: Text ' columnalign=';
         Visibility: 0;
@@ -2131,6 +2221,51 @@ BOXES
                 Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
                 END;
         END;
+
+ ATTR_groupalign_left: BEGIN
+        Content: Text ' groupalign=left';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_groupalign_center: BEGIN
+        Content: Text ' groupalign=center';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_groupalign_right: BEGIN
+        Content: Text ' groupalign=right';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_groupalign_decimalpoint: BEGIN
+        Content: Text ' groupalign=decimalpoint';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
 
  ATTR_alignmentscope: BEGIN
         Content: Text ' alignmentscope=';
@@ -2327,8 +2462,8 @@ BOXES
                 END;
         END;
 
- ATTR_equalrows: BEGIN
-        Content: Text ' equalrows=';
+ ATTR_equalrows_true: BEGIN
+        Content: Text ' equalrows=true';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -2338,8 +2473,8 @@ BOXES
                 Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
                 END;
         END; 
- VALUE_equalrows: BEGIN
-        Content: (equalrows);
+ ATTR_equalrows_false: BEGIN
+        Content: Text ' equalrows=true';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -2350,8 +2485,8 @@ BOXES
                 END;
         END;
 
- ATTR_equalcolumns: BEGIN
-        Content: Text ' equalcolumns=';
+ ATTR_equalcolumns_true: BEGIN
+        Content: Text ' equalcolumns=true';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -2361,8 +2496,8 @@ BOXES
                 Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
                 END;
         END; 
- VALUE_equalcolumns: BEGIN
-        Content: (equalcolumns);
+ ATTR_equalcolumns_false: BEGIN
+        Content: Text ' equalcolumns=true';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -3431,7 +3566,8 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
-		Font: Helvetica;
+		VertPos: Top =  Previous . Bottom;
+		Height: 1 pt;   {***** should be 0 }
 		END;		
 	END;
 
@@ -3442,7 +3578,8 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
-		Font: Helvetica;
+		VertPos: Top =  Previous . Bottom;
+		Height: 1 pt;   {***** should be 0 }
 		END;		
 	END;
 
@@ -4341,17 +4478,44 @@ ATTRIBUTES
 	CreateBefore(VALUE_rowalign);
 	END;
 
+  rowalign_mtr = top_:
+        CreateBefore(ATTR_rowalign_top);
+  rowalign_mtr = bottom_:
+        CreateBefore(ATTR_rowalign_bottom);
+  rowalign_mtr = center:
+        CreateBefore(ATTR_rowalign_center);
+  rowalign_mtr = baseline:
+        CreateBefore(ATTR_rowalign_baseline);
+  rowalign_mtr = axis:
+        CreateBefore(ATTR_rowalign_axis);
+
   columnalign:
 	BEGIN
 	CreateBefore(ATTR_columnalign);
 	CreateBefore(VALUE_columnalign);
 	END;
 
+  columnalign_mtd = left\240:
+	CreateBefore(ATTR_columnalign_left);
+  columnalign_mtd = center\240:
+	CreateBefore(ATTR_columnalign_center);
+  columnalign_mtd = right\240:
+	CreateBefore(ATTR_columnalign_right);
+
   groupalign:
 	BEGIN
 	CreateBefore(ATTR_groupalign);
 	CreateBefore(VALUE_groupalign);
 	END;
+
+  groupalign_malgr = left\240:
+	CreateBefore(ATTR_groupalign_left);
+  groupalign_malgr = center\240:
+	CreateBefore(ATTR_groupalign_center);
+  groupalign_malgr = right\240:
+	CreateBefore(ATTR_groupalign_right);
+  groupalign_malgr = decimalpoint:
+	CreateBefore(ATTR_groupalign_decimalpoint);
 
   alignmentscope:
 	BEGIN
@@ -4402,17 +4566,15 @@ ATTRIBUTES
 	CreateBefore(VALUE_framespacing);
 	END;
 
-  equalrows:
-	BEGIN
-	CreateBefore(ATTR_equalrows);
-	CreateBefore(VALUE_equalrows);
-	END;
+  equalrows = true:
+	CreateBefore(ATTR_equalrows_true);
+  equalrows = false:
+	CreateBefore(ATTR_equalrows_false);
 
-  equalcolumns:
-	BEGIN
-	CreateBefore(ATTR_equalcolumns);
-	CreateBefore(VALUE_equalcolumns);
-	END;
+  equalcolumns = true:
+	CreateBefore(ATTR_equalcolumns_true);
+  equalcolumns = false:
+	CreateBefore(ATTR_equalcolumns_false);
 
   displaystyle = true:
 	CreateBefore(ATTR_displaystyle_true);
