@@ -2,6 +2,21 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
+2.3
+=============================================================
+ 
+Extensions 2.3:
+---------------
+ 
+Fixed bugs 2.3:
+---------------
+
+* User Interface:
+  - when the backspace deleted a string, the final position of the cursor
+    was wrong.
+
+
+=============================================================
 2.2
 =============================================================
  

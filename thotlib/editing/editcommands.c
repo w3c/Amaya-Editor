@@ -1317,7 +1317,7 @@ View                view;
 {
    ViewSelection      *pViewSel;
    int                 frame;
-   ThotBool            delPrev;
+   ThotBool            delPrev, moveAfter;
 
    if (document != 0)
      {
@@ -1345,8 +1345,12 @@ View                view;
 	  {
 	    /* delete the current selection instead of the previous char */
 	    CloseInsertion ();
+	    /* by default doen't change the selection after the delete */
+	    moveAfter = FALSE;
 	    if (pViewSel->VsBox != NULL)
 	      {
+		moveAfter = (pViewSel->VsBox->BxAbstractBox->AbLeafType != LtText ||
+			     pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
 		if (MenuActionList[CMD_DeleteSelection].User_Action != NULL)
 		  {
 		    if (((*MenuActionList[CMD_DeleteSelection].User_Action)
@@ -1357,7 +1361,8 @@ View                view;
 		else if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
 		  (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 	      }
-	    TtcPreviousChar (document, view);
+	    if (moveAfter)
+	      TtcPreviousChar (document, view);
 	  }
 
      }
