@@ -1778,7 +1778,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	IF NOT within NOFRAMES BEGIN
-		MarginTop: 0.2;
+		PaddingTop: 0.2;
 		VertPos: Top = Previous AnyElem . Bottom;
 		END;
 	IF within NOFRAMES BEGIN
@@ -1793,15 +1793,15 @@ RULES
 	HorizPos: Left = Enclosing . Left;
 	Hyphenate: No;
 	Adjust: Left;
-	MarginLeft: 0.5 cm;
-	MarginRight: 0.5 cm;
+	PaddingLeft: 0.5 cm;
+	PaddingRight: 0.5 cm;
 #endif
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		PaddingRight: 0;
 #ifdef PAGE
 		Adjust: Left;
 #else
@@ -1812,9 +1812,9 @@ RULES
 #ifdef PAGE
 		Adjust: Left;
 #endif
-		MarginTop: 0;
-		MarginLeft: 0.5;
-		MarginRight: 0;
+		PaddingTop: 0;
+		PaddingLeft: 0.5;
+		PaddingRight: 0;
 		Visibility: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
