@@ -185,7 +185,7 @@ unsigned int        extra;
      {
        /* shortcut : rules are sorted by type and view number */
        if (cur->PrType > type ||
-	  (cur->PrType == type && type == PtFunction && cur->PrPresFunction > (int) extra))
+	  (cur->PrType == type && type == PtFunction && cur->PrPresFunction > extra))
 	 cur = NULL;
        else
 	 {
@@ -194,7 +194,7 @@ unsigned int        extra;
 	   if (cur->PrViewNum == 1 && cur->PrType == type &&
 	       (type != PRFunction ||
 	       /* check for extra specification in case of function rule */
-	       (type == PRFunction && cur->PrPresFunction == (int) extra)))
+	       (type == PRFunction && cur->PrPresFunction == extra)))
 	     {
 	       /* this specific rule already exists */
 	       pRule = cur;
@@ -265,14 +265,14 @@ unsigned int        extra;
 	if ((cur->PrType > type) ||
 	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
 	    (((cur->PrType == type) && (type == PRFunction) &&
-	     (cur->PrPresFunction > (int) extra))))
+	     (cur->PrPresFunction > extra))))
 	  {
 	     cur = NULL;
 	     break;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) && (cur->PrPresFunction != (int) extra)) {
+	if ((type == PRFunction) && (cur->PrPresFunction != extra)) {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;
@@ -329,14 +329,14 @@ unsigned int        extra;
 	if ((cur->PrType > type) ||
 	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
 	    ((cur->PrType == type) && (type == PRFunction) &&
-	     (cur->PrPresFunction > (int) extra)))
+	     (cur->PrPresFunction > extra)))
 	  {
 	     cur = NULL;
 	     break;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) && (cur->PrPresFunction != (int) extra))
+	if ((type == PRFunction) && (cur->PrPresFunction != extra))
 	  {
 	    cur = cur->PrNextPRule;
 	    continue;
