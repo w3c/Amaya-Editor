@@ -456,7 +456,7 @@ if test "$with_wx" = "yes" ; then
     # AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
     # --with-mac              use Mac OS X
       with_mac="yes"
-    WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode --with-libpng --with-libjpeg"
+    WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode --with-libpng=builtin --with-libjpeg=builtin"
   fi
   if test $with_wxdebug = yes ; then
     WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug"
@@ -506,6 +506,10 @@ if test "$with_wx" = "yes" ; then
       WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
+ if test "$with_mac" = "yes" ; then
+   WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},html"
+ fi
+
   WX_LIBRARIES="`$WXCONFIG --libs $WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
   AC_SUBST(WX_LIBRARIES)
   
