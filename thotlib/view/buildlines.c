@@ -379,7 +379,6 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
   PtrBox              boxes[200];
   int                 baseline, x, delta = 0;
   int                 i, j, k, max;
-  int                 t, b, l, r;
   ThotBool            rtl;
 
   if (pLine->LiFirstBox == NULL)
