@@ -53,7 +53,7 @@ LabelString         strng;
 #endif /* __STDC__ */
 
 {
-   usprintf (strng, TEXT("L%d"), num);
+   sprintf (strng, "L%d", num);
 }
 
 

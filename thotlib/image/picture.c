@@ -2010,7 +2010,7 @@ PictInfo           *imageDesc;
   FreePixmap (imageDesc->PicPixmap);
   imageDesc->PicPixmap = myDrawable;
 #ifdef _WINDOWS
-#ifndef /* _WIN_PRINT */
+#ifndef _WIN_PRINT
   if (DeviceToRelease)
     WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */

@@ -28,6 +28,7 @@
 #include "fileaccess_f.h"
 #include "platform_f.h"
 #include "registry_f.h"
+#include "ustring_f.h"
 
 /* ---------------------------------------------- */
 /* |  Constants for read and write operations   | */
@@ -256,9 +257,9 @@ CONST CharUnit*     filename;
 
 #endif /* __STDC__ */
 {
-   if (filename && filename [0] != EOS)
+   if (filename && filename [0] != CUS_EOS)
 #     ifdef _WINDOWS
-      return ufopen (filename, TEXT("rb"));
+      return cus_fopen (filename, CUSTEXT("rb"));
 #     else
       return fopen (filename, "r");
 #     endif
@@ -507,59 +508,60 @@ DocumentIdentifier  Ident;
    the file name.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaExtractName (char* text, char* aDirectory, char* aName)
+void                TtaExtractName (CharUnit* text, CharUnit* aDirectory, CharUnit* aName)
 
 #else  /* __STDC__ */
 void                TtaExtractName (text, aDirectory, aName)
-char*               text;
-char*               aDirectory;
-char*               aName;
+CharUnit*           text;
+CharUnit*           aDirectory;
+CharUnit*           aName;
 
 #endif /* __STDC__ */
 {
    int                 lg, i, j;
-   STRING              ptr, oldptr;
-   CHAR_T              URL_DIR_SEP;
+   CharUnit*           ptr;
+   CharUnit*           oldptr;
+   CharUnit            URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
-   if (text && ustrchr (text, TEXT('/')))
-     URL_DIR_SEP = TEXT('/');
+   if (text && StrChr (text, CUSTEXT('/')))
+     URL_DIR_SEP = CUSTEXT('/');
    else 
-     URL_DIR_SEP = DIR_SEP;
+     URL_DIR_SEP = CUS_DIR_SEP;
    
-   aDirectory[0] = EOS;
-   aName[0] = EOS;
-   lg = ustrlen (text);
+   aDirectory[0] = CUS_EOS;
+   aName[0] = CUS_EOS;
+   lg = StringLength (text);
    if (lg)
      {
        /* the text is not empty */
        ptr = oldptr = &text[0];
        do
 	 {
-	   ptr = ustrrchr (oldptr, URL_DIR_SEP);
+	   ptr = StrRChr (oldptr, URL_DIR_SEP);
 	   if (ptr != NULL)
 	     oldptr = &ptr[1];
 	 }
        while (ptr != NULL);
        
-       i = ((int) (oldptr) - (int) (text)) / sizeof (CHAR_T);	/* the length of the directory part */
+       i = ((int) (oldptr) - (int) (text)) / sizeof (CharUnit);	/* the length of the directory part */
        if (i > 1)
 	 {
-	   ustrncpy (aDirectory, text, i);
+	   StringNCopy (aDirectory, text, i);
 	   j = i - 1;
 	   /* Suppresses the / characters at the end of the path */
 	   while (aDirectory[j] == URL_DIR_SEP)
-	     aDirectory[j--] = EOS;
+	     aDirectory[j--] = CUS_EOS;
 	 }
        if (i != lg)
-	 ustrcpy (aName, oldptr);
+          StringCopy (aName, oldptr);
      }
 #    ifdef _WINDOWS
-     lg = ustrlen (aName);
-     if (!ustrcasecmp (&aName[lg - 4], CUSTEXT(".exe")))
-        aName[lg - 4] = EOS;
+     lg = StringLength (aName);
+     if (!StringCaseCompare (&aName[lg - 4], CUSTEXT(".exe")))
+        aName[lg - 4] = CUS_EOS;
 #    endif /* _WINDOWS */
 }
 
@@ -681,11 +683,11 @@ STRING              fileName;
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     IsExtended (STRING fileName, STRING extension)
+static ThotBool     IsExtended (CharUnit* fileName, CharUnit* extension)
 #else  /* __STDC__ */
 static ThotBool     IsExtended (fileName, extension)
-STRING              fileName;
-STRING              extension;
+CharUnit*           fileName;
+CharUnit*           extension;
 
 #endif /* __STDC__ */
 {
@@ -697,9 +699,9 @@ STRING              extension;
    extLength = 0;
 
    /* on mesure extension */
-   extLength = ustrlen (extension);
+   extLength = StringLength (extension);
    /* on mesure fileName */
-   nameLength = ustrlen (fileName);
+   nameLength = StringLength (fileName);
    if (nameLength >= THOT_MAX_CHAR)
       ok = FALSE;
    else if (extLength > 0 && nameLength > extLength)
@@ -711,7 +713,7 @@ STRING              extension;
 	     ok = (extension[i] == fileName[j]) && ok;
 	     j--;
 	  }
-	ok = ok && (fileName[j] == TEXT('.'));
+	ok = ok && (fileName[j] == CUSTEXT('.'));
      }
    else
       ok = FALSE;
@@ -729,26 +731,26 @@ STRING              extension;
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FindCompleteName (STRING fileName, STRING extension, PathBuffer directory, PathBuffer completeName, int *length)
+void                FindCompleteName (CharUnit* fileName, CharUnit* extension, PathBuffer directory, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                FindCompleteName (fileName, extension, directory, completeName, length)
-STRING              fileName;
-STRING              extension;
+CharUnit*           fileName;
+CharUnit*           extension;
 PathBuffer          directory;
 PathBuffer          completeName;
 int                *length;
 
 #endif /* __STDC__ */
 {
-   int                 i, j, k, h = 0;
-   STRING              home_dir = NULL;
+   int              i, j, k, h = 0;
+   CharUnit*        home_dir = NULL;
 
    /* on recopie le repertoire */
-   i = ustrlen (directory);
-   j = ustrlen (fileName);
+   i = StringLength (directory);
+   j = StringLength (fileName);
 
    /* check for tilde indicating the HOME directory */
-   if (directory[0] == TEXT('~'))
+   if (directory[0] == CUSTEXT('~'))
      {
 #   ifdef _WINDOWS
     home_dir = NULL;
@@ -760,7 +762,7 @@ int                *length;
 	  {
 	    /* tilde will not be copied */
 	    i--;
-	    h = ustrlen (home_dir);
+	    h = StringLength (home_dir);
 	  }
      }
    if (i > 1)
@@ -769,46 +771,46 @@ int                *length;
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (ustrcmp (extension, CUSTEXT("PIV")) == 0)
+   if (StringCompare (extension, CUSTEXT("PIV")) == 0)
      {
 	if (j > 4)
-	   if (fileName[j - 4] == TEXT('.'))
-	      if (fileName[j - 3] == TEXT('p'))
-		 if (fileName[j - 2] == TEXT('i'))
-		    if (fileName[j - 1] == TEXT('v'))
+	   if (fileName[j - 4] == CUSTEXT('.'))
+	      if (fileName[j - 3] == CUSTEXT('p'))
+		 if (fileName[j - 2] == CUSTEXT('i'))
+		    if (fileName[j - 1] == CUSTEXT('v'))
 		      {
-			 fileName[j - 3] = TEXT('P');
-			 fileName[j - 2] = TEXT('I');
-			 fileName[j - 1] = TEXT('V');
+			 fileName[j - 3] = CUSTEXT('P');
+			 fileName[j - 2] = CUSTEXT('I');
+			 fileName[j - 1] = CUSTEXT('V');
 		      }
      }
-   if (!IsExtended (fileName, extension) && extension[0] != EOS)
-      k = ustrlen (extension) + 1;	/* dont forget the '.' */
+   if (!IsExtended (fileName, extension) && extension[0] != CUS_EOS)
+      k = StringLength (extension) + 1;	/* dont forget the '.' */
    else
       k = 0;
    if (i + j + k + h >= MAX_PATH)
       return;
 
-   completeName[0] = EOS;
+   completeName[0] = CUS_EOS;
    if (home_dir)
      {
-       ustrcat (completeName, home_dir);
-       ustrcat (completeName, &directory[1]);
+       StringConcat (completeName, home_dir);
+       StringConcat (completeName, &directory[1]);
      }
    else
-     ustrcat (completeName, directory);
+     StringConcat (completeName, directory);
 
    /* on ajoute un DIR_STR */
    if (i >= 1)
-     ustrcat (completeName, DIR_STR);
+     StringConcat (completeName, CUS_DIR_STR);
 
    /* on recopie le nom */
-   ustrcat (completeName, fileName);
+   StringConcat (completeName, fileName);
    if (k != 0)
      {
 	/* on ajoute l'extension */
-	ustrcat (completeName, TEXT("."));
-	ustrcat (completeName, extension);
+	StringConcat (completeName, CUSTEXT("."));
+	StringConcat (completeName, extension);
      }
    /* on termine la chaine */
    *length = i + j + k + h;
@@ -1088,11 +1090,11 @@ int                *len;
    FALSE otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaMakeDirectory (STRING directory)
+ThotBool            TtaMakeDirectory (CharUnit* directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaMakeDirectory (directory)
-STRING              directory;
+CharUnit*           directory;
 
 #endif /* __STDC__ */
 

@@ -2240,7 +2240,7 @@ BinFile               infile;
 #endif
 #endif
 {
-   UCHAR_T       charRead, oldcharRead;
+   unsigned char       charRead, oldcharRead;
    ThotBool            match, readOk;
    PtrTransition       trans;
 

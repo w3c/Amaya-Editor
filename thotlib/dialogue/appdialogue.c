@@ -221,10 +221,10 @@ HWND GetCurrentWindow () {
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteInitMenus (char* name, int number)
+void                TteInitMenus (CharUnit* name, int number)
 #else  /* __STDC__ */
 void                TteInitMenus (name, number)
-char*               name;
+CharUnit*           name;
 int                 number;
 
 #endif /* __STDC__ */

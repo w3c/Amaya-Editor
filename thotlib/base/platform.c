@@ -27,6 +27,8 @@
 #include "thotdir.h"
 #include "fileaccess.h"
 
+#include "ustring_f.h"
+
 /*----------------------------------------------------------------------
    TtaFileExist teste l'existence d'un fichier.                       
    Rend 1 si le fichier a e't'e trouve' et 0 sinon.        
@@ -108,12 +110,12 @@ ThotDirBrowse      *me;
 
 #endif /* __STDC__ */
 {
-#if defined(_WINDOWS) && !defined(__GNUC__)
+#  if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               attr;
 
-   if (ustrlen (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
+   if (StringLength (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
       return -2;
-   ustrcpy (me->buf + me->dirLen, me->data.cFileName);
+   StringCopy (me->buf + me->dirLen, me->data.cFileName);
    if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
       return -1;
    if (attr & FILE_ATTRIBUTE_DIRECTORY && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
@@ -121,7 +123,7 @@ ThotDirBrowse      *me;
    if (attr & FILE_ATTRIBUTE_NORMAL && !(me->PicMask & ThotDirBrowse_FILES))
       return 0;
    return 1;
-#else  /* _WINDOWS && !__GNUC__ */
+#  else  /* _WINDOWS && !__GNUC__ */
    unsigned int        i;
    int                 ls_car;
    ThotBool            notEof;
@@ -165,7 +167,7 @@ ThotDirBrowse      *me;
 	   continue;
 	return 1;
      }
-#endif /* _WINDOWS && !__GNUC__ */
+#  endif /* _WINDOWS && !__GNUC__ */
 }
 
 /*----------------------------------------------------------------------
@@ -183,17 +185,16 @@ CharUnit*           ext;
 
 #endif /* __STDC__ */
 {
-   CHAR_T              space[MAX_PATH];
-   int                 ret;
+   CharUnit         space[MAX_PATH];
+   int              ret;
 
-   me->dirLen = ustrlen (dir);
-   ustrcpy (me->buf, dir);
-   ustrcpy (me->buf + (me->dirLen++), DIR_STR);
-#if defined(_WINDOWS) && !defined(__GNUC__)
-   usprintf (space, TEXT("%s\\%s%s"), dir ? dir : _EMPTYSTR_, name ? name : _EMPTYSTR_, ext ? ext : _EMPTYSTR_);
+   me->dirLen = StringLength (dir);
+   StringCopy (me->buf, dir);
+   StringCopy (me->buf + (me->dirLen++), CUS_DIR_STR);
+#  if defined(_WINDOWS) && !defined(__GNUC__)
+   cus_sprintf (space, CUSTEXT("%s\\%s%s"), dir ? dir : CUSTEXT(""), name ? name : CUSTEXT(""), ext ? ext : CUSTEXT(""));
    me->handle = INVALID_HANDLE_VALUE;
-   if ((me->handle = FindFirstFile (space, &me->data)) ==
-       INVALID_HANDLE_VALUE)
+   if ((me->handle = FindFirstFile (space, &me->data)) == INVALID_HANDLE_VALUE)
       return -1;
    if ((ret = ThotDirBrowse_copyFile (me)) == 1)
       return 1;
@@ -201,12 +202,11 @@ CharUnit*           ext;
    if (ret == -1)
       FindClose (me->handle);
    return ret;
-#else  /* _WINDOWS && !__GNUC__ */
+#  else  /* _WINDOWS && !__GNUC__ */
    /* sprintf (space, "/bin/ls%s %s/%s%s 2>/dev/null", 
       ext && *ext ? "" : " -d", dir ? dir : "", 
       name ? name : "", ext ? ext : ""); - EGP */
-   sprintf (space, "/bin/ls -d %s/%s%s 2>/dev/null", dir ? dir : "",
-	    name ? name : "", ext ? ext : "");
+   cus_sprintf (space, CUSTEXT("/bin/ls -d %s/%s%s 2>/dev/null"), dir ? dir : CUSTEXT(""), name ? name : CUSTEXT(""), ext ? ext : CUSTEXT(""));
    me->ls_stream = NULL;
    if ((me->ls_stream = popen (space, "r")) == NULL)
       return -1;
@@ -214,7 +214,7 @@ CharUnit*           ext;
       return 1;
    pclose (me->ls_stream);
    me->ls_stream = NULL;
-#endif /* _WINDOWS && !__GNUC__ */
+#  endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 

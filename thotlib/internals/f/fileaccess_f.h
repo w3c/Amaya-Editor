@@ -38,9 +38,9 @@ extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
                                DocumentIdentifier Ident2 );
 extern void ClearDocIdent ( DocumentIdentifier * Ident );
 extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
-extern void TtaExtractName ( char* text,
-                             char* aDirectory,
-                             char* aName );
+extern void TtaExtractName ( CharUnit* text,
+                             CharUnit* aDirectory,
+                             CharUnit* aName );
 extern void MakeCompleteName ( CharUnit* fname,
                                CharUnit* fext,
                                CharUnit* directory_list,
@@ -48,8 +48,8 @@ extern void MakeCompleteName ( CharUnit* fname,
                                int *length );
 extern void GetPictureFileName ( STRING name,
                                  STRING fileName );
-extern void FindCompleteName ( STRING fileName,
-                               STRING extension,
+extern void FindCompleteName ( CharUnit* fileName,
+                               CharUnit* extension,
                                PathBuffer directory,
                                PathBuffer completeName,
                                int *length );
@@ -62,7 +62,7 @@ extern void GetCounterValue ( int number,
                               CounterStyle style,
                               STRING string,
                               int *len );
-extern ThotBool TtaMakeDirectory ( STRING directory );
+extern ThotBool TtaMakeDirectory ( CharUnit* directory );
 extern ThotBool TtaCheckDirectory ( CharUnit* directory );
 
 #else /* __STDC__ */
@@ -99,9 +99,9 @@ extern ThotBool SameDocIdent (/* DocumentIdentifier Ident1,
                                  DocumentIdentifier Ident2 */);
 extern void ClearDocIdent (/* DocumentIdentifier * Ident */);
 extern ThotBool DocIdentIsNull (/* DocumentIdentifier Ident */);
-extern void TtaExtractName (/* char* text,
-                               char* aDirectory,
-                               char* aName */);
+extern void TtaExtractName (/* CharUnit* text,
+                               CharUnit* aDirectory,
+                               CharUnit* aName */);
 extern void MakeCompleteName (/* CharUnit* fname,
                                  CharUnit* fext,
                                  CharUnit* directory_list,
@@ -109,8 +109,8 @@ extern void MakeCompleteName (/* CharUnit* fname,
                                  int *length */);
 extern void GetPictureFileName (/* STRING name,
                                    STRING fileName */);
-extern void FindCompleteName (/* STRING fileName,
-                                 STRING extension,
+extern void FindCompleteName (/* CharUnit* fileName,
+                                 CharUnit* extension,
                                  PathBuffer directory,
                                  PathBuffer completeName,
                                  int *length */);
@@ -123,7 +123,7 @@ extern void GetCounterValue (/* int number,
                                 CounterStyle style,
                                 STRING string,
                                 int *len */);
-extern ThotBool TtaMakeDirectory (/* STRING directory */);
+extern ThotBool TtaMakeDirectory (/* CharUnit* directory */);
 extern ThotBool TtaCheckDirectory (/* CharUnit* directory */);
 
 #endif /* __STDC__ */

@@ -33,7 +33,7 @@ static int          breakPoints[MAX_POINT_COUP];
 static CharUnit     StandardLANG[3];
 
 #include "thotmsg_f.h"
-
+#include "ustring_f.h"
 
 /*	ISO 639 CODES ALPHABETIC BY LANGUAGE NAME (ENGLISH SPELLING) */
 
@@ -722,13 +722,13 @@ CharUnit*               TtaGetVarLANG ()
 
    name = TtaGetEnvString ("LANG");
    if (name == NULL)
-      ustrcpy (StandardLANG, "en");
-   else if (!ustrcmp (name, TEXT("C")) || !ustrcasecmp (name, TEXT("iso_8859_1")))
-      ustrcpy (StandardLANG, "fr");
+      StringCopy (StandardLANG, CUSTEXT("en"));
+   else if (!StringCompare (name, CUSTEXT("C")) || !StringCaseCompare (name, CUSTEXT("iso_8859_1")))
+        StringCopy (StandardLANG, CUSTEXT("fr"));
    else
      {
-	ustrncpy (StandardLANG, name, 2);
-	StandardLANG[2] = EOS;
+         StringNCopy (StandardLANG, name, 2);
+         StandardLANG[2] = CUS_EOS;
      }
    return (StandardLANG);
 }

@@ -35,9 +35,9 @@ extern CharUnit* TtaGetDefEnvString ( char* name );
 extern void TtaSaveAppRegistry ( void );
 extern void TtaInitializeAppRegistry ( CharUnit* appArgv0 );
 extern void TtaFreeAppRegistry ( void );
-extern int SearchFile ( STRING fileName,
+extern int SearchFile ( CharUnit* fileName,
                         int dir,
-                        STRING fullName );
+                        CharUnit* fullName );
 
 #else /* __STDC__ */
 
@@ -70,9 +70,9 @@ extern CharUnit* TtaGetDefEnvString (/* char* name */);
 extern void TtaSaveAppRegistry (/* void */);
 extern void TtaInitializeAppRegistry (/* CharUnit* appArgv0 */);
 extern void TtaFreeAppRegistry (/* void */);
-extern int SearchFile (/* STRING fileName,
+extern int SearchFile (/* CharUnit* fileName,
                           int dir,
-                          STRING fullName */);
+                          CharUnit* fullName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

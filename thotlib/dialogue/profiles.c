@@ -26,11 +26,13 @@
 #include "registry.h"
 #include "profiles.h"
 
+#include "ustring_f.h"
+
 #define MAX_ENTRIES 10
 typedef struct _Profile_Ctl *PtrProCtl;
 typedef struct _ProElement
 {
-  char                *ProName;      /* Name of the entry */
+  CharUnit*            ProName;      /* Name of the entry */
   PtrProCtl            ProSubModule; /* Pointer to a sub-module context */
   ThotBool             ProIsModule;    /* TRUE if it is a sub-module */
   ThotBool             ProEdit;      /* TRUE if it's a editing function */
@@ -55,7 +57,7 @@ static int                  NbModules = 0;
 /* Functions table contains current list of available functions */
 static PtrProCtl            FunctionTable = NULL;
 static int                  NbFunctions = 0;
-static char               **SortedFunctionTable = NULL;
+static CharUnit**           SortedFunctionTable = NULL;
 
 /* The first context of the current module or profile in progress */
 static PtrProCtl            CurrentModule;
@@ -63,9 +65,10 @@ static int                  CurrentEntries;
 /* Determine either a profile is defined or not */
 static ThotBool             CheckProfile = FALSE;
 /* User Profile (taken from the thot.rc) */
-static char                 UserProfile[MAX_PRO_LENGTH];
+static CharUnit             UserProfile[MAX_PRO_LENGTH];
 static PtrProCtl            UserProfContext = NULL;
-static char                 ProfileBuff[MAX_PRO_LENGTH];
+static CharUnit             ProfileBuff[MAX_PRO_LENGTH];
+static char                 ProfileBuffA[MAX_PRO_LENGTH];
 /* This boolean goes FALSE if the profile only contains browsing functions */
 static ThotBool             EnableEdit = TRUE;
 
@@ -78,10 +81,10 @@ static ThotBool             EnableEdit = TRUE;
   SkipNewLineSymbol : Remove the EOF ('end of line') character
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void   SkipNewLineSymbol (char *Astring)
+static void   SkipNewLineSymbol (CharUnit* Astring)
 #else  /* !__STDC__ */
 static void   SkipNewLineSymbol (Astring)
-char         *Astring;
+CharUnit*     Astring;
 #endif /* !__STDC__ */
 {
   int         c = 0;
@@ -98,10 +101,10 @@ char         *Astring;
   returns (CR) and "end of line" characters.
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void   SkipAllBlanks (char  *Astring)
+static void   SkipAllBlanks (CharUnit* Astring)
 #else  /* !__STDC__ */
 static void   SkipAllBlanks (Astring)
-char         *string;
+CharUnit*     string;
 #endif /* !__STDC__ */
 {
   int         c = 0;
@@ -109,11 +112,11 @@ char         *string;
   
   do
     {
-      while (Astring[c+nbsp] == SPACE || Astring[c+nbsp] == TAB || Astring[c+nbsp] == __CR__)
+      while (Astring[c+nbsp] == CUS_SPACE || Astring[c+nbsp] == CUS_TAB || Astring[c+nbsp] == CUS_CR)
 	nbsp++;
       Astring[c] = Astring[c+nbsp];
     } 
-  while (Astring[c++] != EOS);
+  while (Astring[c++] != CUS_EOS);
 
   SkipNewLineSymbol (Astring);
 }
@@ -131,10 +134,10 @@ char         *string;
   Return the first context of the new module.
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrProCtl   AddInTable (char *name, ThotBool isModule, ThotBool edit, PtrProCtl subModule, int number, PtrProCtl ctxt)
+static PtrProCtl   AddInTable (CharUnit* name, ThotBool isModule, ThotBool edit, PtrProCtl subModule, int number, PtrProCtl ctxt)
 #else  /* !__STDC__ */
 static PtrProCtl   AddInTable (name, isModule, edit, subModule, number, ctxt)
-char              *name;
+CharUnit*          name;
 ThotBool           isModule;
 ThotBool           edit;
 int                number;
@@ -169,7 +172,7 @@ PtrProCtl          table;
     {
       if (name)
 	{
-	  current->ProEntries[i].ProName = TtaStrdup (name);
+	  current->ProEntries[i].ProName = StringDuplicate (name);
 	  current->ProEntries[i].ProIsModule = isModule;
 	  current->ProEntries[i].ProEdit = edit;
 	  if (isModule && subModule == NULL)
@@ -191,10 +194,10 @@ PtrProCtl          table;
   Return the first context of the new module.
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrProCtl    AddModule (char *name)
+static PtrProCtl    AddModule (CharUnit* name)
 #else  /* !__STDC__ */
 static PtrProCtl    AddModule (name)
-char               *name;
+CharUnit*           name;
 #endif /* !__STDC__ */
 {
   PtrProCtl     new = NULL;
@@ -216,10 +219,10 @@ char               *name;
   Return the first context of the new profile.
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrProCtl    AddProfile (char *name)
+static PtrProCtl    AddProfile (CharUnit* name)
 #else  /* !__STDC__ */
 static PtrProCtl    AddProfile (name)
-char               *name;
+CharUnit*           name;
 #endif /* !__STDC__ */
 {
   PtrProCtl     new = NULL;
@@ -233,7 +236,7 @@ char               *name;
   new = AddInTable (name, TRUE, FALSE, NULL, NbProfiles, ProfileTable);
   NbProfiles++;
   /* store the context of the user profile */
-  if (UserProfContext == NULL && !strcmp (name, UserProfile))
+  if (UserProfContext == NULL && !StringCompare (name, UserProfile))
     UserProfContext = new;
   return new;
 }
@@ -278,10 +281,10 @@ ThotBool       recursive;
   pointer to current entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ProElement  *SearchModule (char *name)
+static ProElement  *SearchModule (CharUnit* name)
 #else  /* !__STDC__ */
 static ProElement  *SearchModule (name) 
-char            *name;
+CharUnit*           name;
 #endif /* !__STDC__ */
 {
   PtrProCtl        current;
@@ -298,7 +301,7 @@ char            *name;
     {
       i = 0;
       while (i < MAX_ENTRIES && current->ProEntries[i].ProName &&
-	     strcmp (name, current->ProEntries[i].ProName))
+	     StringCompare (name, current->ProEntries[i].ProName))
 	i++;
       found = (i < MAX_ENTRIES && current->ProEntries[i].ProName);
       if (!found)
@@ -316,10 +319,10 @@ char            *name;
   building the profile table
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    ProcessDefinition (char *element)
+static void    ProcessDefinition (CharUnit* element)
 #else  /* !__STDC__ */
 static void    ProcessDefinition (element)
-char          *element;
+CharUnit*      element;
 #endif /* !__STDC__ */ 
 {
   ProElement      *pEntry;
@@ -440,11 +443,11 @@ PtrProCtl   ctxt;
 static void SortFunctionTable ()
 {
   PtrProCtl     ctxt;
-  char         *ptr;
+  CharUnit*     ptr;
   int           i, j, index;
 
   /* copy the list of contexts in a large table */
-  SortedFunctionTable = (char **) TtaGetMemory (NbFunctions * sizeof (char *));
+  SortedFunctionTable = (CharUnit**) TtaGetMemory (NbFunctions * sizeof (CharUnit*));
   index = 0;
   ctxt = FunctionTable;
   EnableEdit = FALSE;
@@ -456,7 +459,7 @@ static void SortFunctionTable ()
 	  if (!EnableEdit && ctxt->ProEntries[i].ProEdit)
 	    /* there is almost one editing function */
 	    EnableEdit = TRUE;
-	  SortedFunctionTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
+	  SortedFunctionTable[index] = StringDuplicate (ctxt->ProEntries[i].ProName);
 	  index++;
 	  /* next entry */
 	  i++;
@@ -470,7 +473,7 @@ static void SortFunctionTable ()
     {
       index = i;
       for (j = i+1; j < NbFunctions; j++)
-        if (strcmp (SortedFunctionTable[j], SortedFunctionTable[index]) <= 0)
+        if (StringCompare (SortedFunctionTable[j], SortedFunctionTable[index]) <= 0)
 	  index = j;
       ptr = SortedFunctionTable[index];
       SortedFunctionTable[index] = SortedFunctionTable[i];
@@ -491,10 +494,10 @@ static void SortFunctionTable ()
   if the function exists.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool    Prof_BelongTable (char *name)
+ThotBool    Prof_BelongTable (CharUnit* name)
 #else  /* !__STDC__ */
 ThotBool    Prof_BelongTable (name) 
-char              *name;
+CharUnit*   name;
 #endif /* !__STDC__ */
 {
   int              left, right, middle, i;
@@ -511,7 +514,7 @@ char              *name;
   while (left <= right && !found)
     {
       middle = (right + left) / 2;
-      i = strcmp (SortedFunctionTable[middle], name);
+      i = StringCompare (SortedFunctionTable[middle], name);
       if (i == 0)
 	found = TRUE;
       else if (i < 0)
@@ -530,7 +533,7 @@ void Prof_InitTable ()
 {
   FILE*     profFile;
   CharUnit* ptr;
-  char      buffer[MAX_LENGTH];
+  CharUnit  buffer[MAX_LENGTH];
 
   /* TODO: use a ISO functions for TtaGetEnvString and TtaStrdup */
   /* Retreive thot.rc variables and open the profile file */
@@ -540,20 +543,21 @@ void Prof_InitTable ()
     {
       if (SearchFile (ptr, 2, buffer))
 	{
-	  profFile = fopen (buffer,"r");
+	  profFile = cus_fopen (buffer,CUSTEXT("r"));
 	  /* what is the current active profile */  
 	  ptr = TtaGetEnvString ("Profile");
 	  if (ptr && *ptr)
-	    strcpy (UserProfile, ptr);	
+	    StringCopy (UserProfile, ptr);	
 	  else
-	    UserProfile[0] = EOS;
+	    UserProfile[0] = CUS_EOS;
 
 	  /* Fill a profile and module tables */
-	  while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))
+	  while (fgets (ProfileBuffA, sizeof (ProfileBuffA), profFile))
 	    {
+          iso2wc_strcpy (ProfileBuff, ProfileBuffA);
 	      SkipAllBlanks (ProfileBuff);
 	      /* skip comments */
-	      if (strlen (ProfileBuff) >=2 && ProfileBuff[0] != '#')
+	      if (StringLength (ProfileBuff) >=2 && ProfileBuff[0] != CUSTEXT('#'))
 		ProcessDefinition (ProfileBuff);
 	    }
 	  fclose (profFile);
@@ -566,7 +570,7 @@ void Prof_InitTable ()
    * - or there is no specific user profile
    * - or the user profile is None
    */
-  if (NbProfiles > 0 && UserProfile[0] != EOS &&  strcmp (UserProfile, "None"))
+  if (NbProfiles > 0 && UserProfile[0] != CUS_EOS &&  StringCompare (UserProfile, CUSTEXT("None")))
     {
       CheckProfile = TRUE;
       /* Now build the list of current available functions */
@@ -635,22 +639,22 @@ ThotBool    TtaCanEdit ()
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void     TtaGetProfileFileName (STRING name, int length)
+void     TtaGetProfileFileName (CharUnit* name, int length)
 #else  /* !__STDC__ */
 void     TtaGetProfileFileName (name, length)
-STRING   name;
+CharUnit* name;
 #endif /* !__STDC__ */
 {
   CharUnit* ptr;
-  char      buffer[MAX_LENGTH];
+  CharUnit  buffer[MAX_LENGTH];
 
   name[0] = EOS;
   ptr = TtaGetEnvString ("Profiles_File");
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (strlen (buffer) < (size_t)length)
-	ustrcpy (name, ISO2WideChar (buffer));
+      if (StringLength (buffer) < (size_t)length)
+	StringCopy (name, buffer);
     }
 }
 
@@ -659,22 +663,22 @@ STRING   name;
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void     TtaGetDefProfileFileName (STRING name, int length)
+void     TtaGetDefProfileFileName (CharUnit* name, int length)
 #else  /* !__STDC__ */
 void     TtaGetDefProfileFileName (name, length)
-STRING   name;
+CharUnit* name;
 #endif /* !__STDC__ */
 {
-  char               *ptr;
-  char                buffer[200];
+  CharUnit* ptr;
+  CharUnit  buffer[200];
 
-  name[0] = EOS;
+  name[0] = CUS_EOS;
   ptr = TtaGetDefEnvString ("Profiles_File");
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (strlen (buffer) < (size_t)length)
-	ustrcpy (name, ISO2WideChar (buffer));
+      if (StringLength (buffer) < (size_t)length)
+	StringCopy (name, buffer);
     }
 }
 
@@ -685,10 +689,10 @@ STRING   name;
    Returns the number of items
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int      TtaGetProfilesItems (STRING *listEntries, int length)
+int      TtaGetProfilesItems (CharUnit** listEntries, int length)
 #else  /* !__STDC__ */
 int      TtaGetProfilesItems (listEntries, length)
-STRING  *listEntries;
+CharUnit**  listEntries;
 #endif /* !__STDC__ */
 {
   PtrProCtl     ctxt;
@@ -701,7 +705,7 @@ STRING  *listEntries;
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
 	{
-	  listEntries[nbelem] = ISO2WideChar (ctxt->ProEntries[i].ProName);
+	  listEntries[nbelem] = ctxt->ProEntries[i].ProName;
 	  i++;
 	  nbelem++;
 	}
@@ -733,10 +737,10 @@ char         LastItemType;
     belongs to the user profile
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool    Prof_ShowButton (char *FunctionName)
+ThotBool    Prof_ShowButton (CharUnit* FunctionName)
 #else  /* __STDC__ */
 ThotBool    Prof_ShowButton (FunctionName)
-char       *FunctionName;
+CharUnit*   FunctionName;
 #endif /* __STDC__ */
 {
   return (Prof_BelongTable (FunctionName));
@@ -788,9 +792,9 @@ Menu_Ctl  *ptrmenu;
     return FALSE;
   else if (ptrmenu->MenuAttr)
     /* check if the attr and select menu are in the profile */
-    return (Prof_BelongTable ("MenuAttribute"));
+    return (Prof_BelongTable (CUSTEXT("MenuAttribute")));
   else if (ptrmenu->MenuSelect)
-    return (Prof_BelongTable ("MenuSelection"));    
+    return (Prof_BelongTable (CUSTEXT("MenuSelection")));    
   else if (ptrmenu->ItemsNb == 0)
     /* an empty menu has to be removed */
     return FALSE;

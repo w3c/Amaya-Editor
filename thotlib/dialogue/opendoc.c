@@ -77,7 +77,7 @@ STRING              s1, s2;
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static CHAR_T       tabDocSuffix [10][10] = {".PIV", _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_};
+static CharUnit     tabDocSuffix [10][10] = {CUSTEXT(".PIV"), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT(""), CUSTEXT("")};
 static CHAR_T       docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
@@ -94,6 +94,7 @@ static Name         NewSchemaName;
 #include "structschema_f.h"
 #include "fileaccess_f.h"
 #include "docs_f.h"
+#include "ustring_f.h"
 
 /*----------------------------------------------------------------------
    BuildPathDocBuffer
@@ -388,8 +389,8 @@ STRING              data;
 			    i = ustrlen (DocumentPath);
 			    if (i + ustrlen (DirectoryName) + 2 < MAX_PATH)
 			      {
-				 ustrcat (DocumentPath, PATH_STR);
-				 ustrcat (DocumentPath, DirectoryName);
+				 StringConcat (DocumentPath, CUS_PATH_STR);
+				 StringConcat (DocumentPath, DirectoryName);
 				 BuildPathDocBuffer (bufDir, EOS, &i);
 #                ifndef _WINDOWS
 				 TtaNewSelector (NumZoneDirOpenDoc, NumFormOpenDoc, TtaGetMessage (LIB, TMSG_DOC_DIR), i, bufDir, 9, NULL, FALSE, TRUE);

@@ -130,7 +130,7 @@ extern STRING TtaGetStrError (int errorCode);
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-extern void TtaExtractName (char* text, /*OUT*/ char* aDirectory, /*OUT*/ char* aName);
+extern void TtaExtractName (CharUnit* text, /*OUT*/ CharUnit* aDirectory, /*OUT*/ CharUnit* aName);
 
 /*----------------------------------------------------------------------
    TtaIsPrinting returns TRUE is the application is printing.    
@@ -151,7 +151,7 @@ extern void      TtaSetErrorMessages ( /* int on */ );
 extern STRING    TtaGetVersion ( /* void */ );
 extern int       TtaGetErrorCode ( /* void */ );
 extern STRING    TtaGetStrError ( /* int errorCode */ );
-extern void      TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
+extern void      TtaExtractName ( /* CharUnit* text, CharUnit* aDirectory, CharUnit* aName */ );
 extern ThotBool  TtaIsPrinting ();
 extern void*     TtaGetMemory ( /* int size */ );
 extern void      TtaFreeMemory ( /* STRING buffer */ );

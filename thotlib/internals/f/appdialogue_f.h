@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TteInitMenus ( char* name,
+extern void TteInitMenus ( CharUnit* name,
                            int number );
 extern void FreeMenus ( void );
 extern void TteAddMenuAction ( char* actionName,
@@ -123,7 +123,7 @@ extern void ThotCallback ( int ref,
 
 #else /* __STDC__ */
 
-extern void TteInitMenus (/* char* name,
+extern void TteInitMenus (/* CharUnit* name,
                              int number */);
 extern void FreeMenus (/* void */);
 extern void TteAddMenuAction (/* char* actionName,

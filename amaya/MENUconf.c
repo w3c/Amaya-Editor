@@ -56,7 +56,7 @@ extern HINSTANCE hInstance;
 #endif /* _WINDOWS */
 
 /* this one should be exported from the thotlib */
-extern char* ColorName (int num);
+extern CharUnit* ColorName (int num);
 
 static int CacheStatus;
 static int ProxyStatus;

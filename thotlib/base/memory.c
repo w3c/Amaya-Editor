@@ -477,7 +477,7 @@ char*              str;
 
    if (str == NULL)
       return (NULL);
-   res = TtaGetMemory (ustrlen (str) + 1);
+   res = TtaGetMemory (strlen (str) + 1);
    if (res == NULL)
       return (res);
    strcpy (res, str);

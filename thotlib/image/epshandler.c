@@ -74,7 +74,7 @@ int                *hif;
    *yif = 0;
    *wif = 590;
    *hif = 840;
-   fin = fopen (fn, "r");
+   fin = cus_fopen (fn, CUSTEXT("r"));
    if (fin)
      {
 	pt = buff;

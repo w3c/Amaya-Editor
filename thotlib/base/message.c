@@ -63,26 +63,26 @@ static CHAR_T       result[MAX_TXT_LEN];
    en accents.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*               AsciiTranslate (char* pBuffer)
+CHAR_T*             AsciiTranslate (CHAR_T* pBuffer)
 #else  /* __STDC__ */
-char*               AsciiTranslate (pBuffer)
-char*               pBuffer;
+CHAR_T*             AsciiTranslate (pBuffer)
+CHAR_T*             pBuffer;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                nombre[4];
+   CHAR_T              nombre[4];
    int                 uniteid, dixid, centid;
    int                 i = 0, j = 0, k;
 
-   while (pBuffer[i] != EOS)
+   while (pBuffer[i] != WC_EOS)
      {
 	/* On lit jusqu'au premier backslash rencontre */
-	while ((pBuffer[i] != TEXT('\\')) && (pBuffer[i] != EOS))
+	while ((pBuffer[i] != TEXT('\\')) && (pBuffer[i] != WC_EOS))
 	   result[j++] = pBuffer[i++];
 
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
-	if (pBuffer[i] != EOS)
+	if (pBuffer[i] != WC_EOS)
 	   if (pBuffer[i + 1] == TEXT('\\'))
 	     {
 		/* On est dans le cas de deux backslashs consecutifs; on les prend */
@@ -103,10 +103,10 @@ char*               pBuffer;
 		k = 0;
 		while ((pBuffer[i] >= TEXT('0'))
 		       && (pBuffer[i] <= TEXT('9'))
-		       && (pBuffer[i] != EOS)
+		       && (pBuffer[i] != WC_EOS)
 		       && (k <= 2))
 		   nombre[k++] = pBuffer[i++];
-		nombre[k] = EOS;
+		nombre[k] = WC_EOS;
 
 		switch (ustrlen (nombre))
 		      {
@@ -114,24 +114,24 @@ char*               pBuffer;
 			    result[j++] = pBuffer[i++];
 			    break;
 			 case 1:
-			    uniteid = nombre[0] - '0';
+			    uniteid = nombre[0] - TEXT('0');
 			    result[j++] = (CHAR_T) uniteid;
 			    break;
 			 case 2:
-			    uniteid = nombre[1] - '0';
-			    dixid = nombre[0] - '0';
+			    uniteid = nombre[1] - TEXT('0');
+			    dixid = nombre[0] - TEXT('0');
 			    result[j++] = (CHAR_T) (uniteid + 8 * dixid);
 			    break;
 			 case 3:
-			    uniteid = nombre[2] - '0';
-			    dixid = nombre[1] - '0';
-			    centid = nombre[0] - '0';
+			    uniteid = nombre[2] - TEXT('0');
+			    dixid = nombre[1] - TEXT('0');
+			    centid = nombre[0] - TEXT('0');
 			    result[j++] = (CHAR_T) (uniteid + 8 * dixid + 64 * centid);
 			    break;
 		      }
 	     }
      }
-   result[j] = EOS;
+   result[j] = WC_EOS;
    return (result);
 }
 
@@ -166,11 +166,11 @@ int                 msgNumber;
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
    s = TtaGetVarLANG ();
-   ustrcpy (fileName, s);
+   StringCopy (fileName, s);
    fileName[2] = CUSTEXT('-');
    StringCopy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
-   file = fopen (pBuffer, "r");
+   file = cus_fopen (pBuffer, CUSTEXT("r")); 
    if (file == NULL)
      {
 	printf ("WARNING: cannot open file %s\n", pBuffer);
@@ -207,16 +207,16 @@ int                 msgNumber;
 	/* Charge les messages */
 	while (((fscanf (file, "%d %[^#\r\n]", &num, pBuff)) != EOF) && (num < msgNumber))
 	  {
-#        if defined(_I18N_) || defined(__JIS__)
+#        ifdef _I18N_
          string = TtaAllocString (MAX_TXT_LEN);
 #        ifdef _WINDOWS
          MultiByteToWideChar (CP_ACP, 0, pBuff, -1, string, sizeof (pBuff));
 #        else  /* !_WINDOWS */
          mbstowcs (string, pBuff, sizeof (pBuff));
 #        endif /* !_WINDOWS */
-#        else /* defined(_I18N_) || defined(__JIS__) */
+#        else /* !_I18N_ */
          string = pBuff;
-#        endif /* defined(_I18N_) || defined(__JIS__) */
+#        endif /* !_I18N_ */
 	     s = TtaAllocString (ustrlen (string) + 1);
 	     ustrcpy (s, AsciiTranslate (string));
 	     currenttable->TabMessages[num] = s;

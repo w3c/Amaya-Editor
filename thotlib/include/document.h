@@ -548,7 +548,7 @@ extern int          TtaSameSSchemas (SSchema schema1, SSchema schema2);
    presentationName: Name of the document presentation schema.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGiveSchemasOfDocument (STRING documentName, /*OUT*/ STRING structureName, /*OUT*/ STRING presentationName);
+extern void         TtaGiveSchemasOfDocument (STRING documentName, /*OUT*/ char* structureName, /*OUT*/ char* presentationName);
 
 /*----------------------------------------------------------------------
    TtaNextSchemaExtension

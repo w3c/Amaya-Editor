@@ -307,10 +307,10 @@ void                InitErrorHandler ()
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitialize (STRING applicationName)
+void                TtaInitialize (CharUnit* applicationName)
 #else  /* __STDC__ */
 void                TtaInitialize (applicationName)
-STRING              applicationName;
+CharUnit*           applicationName;
 
 #endif /* __STDC__ */
 {
@@ -360,7 +360,7 @@ STRING              applicationName;
    Patterns = Name_patterns;
 #endif /* NODISPLAY */
    /* load the message table of the Thot Library */
-   i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
+   i = TtaGetMessageTable (CUSTEXT("libdialogue"), TMSG_LIB_MSG_MAX);
    switch (i)
 	 {
 	    case 0:

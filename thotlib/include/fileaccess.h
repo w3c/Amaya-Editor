@@ -94,7 +94,7 @@ extern ThotBool TtaReadSignedShort ( BinFile file,
 extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
-                             STRING name );
+                             char* name );
 extern BinFile TtaReadOpen (CONST CharUnit* filename);
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
@@ -106,7 +106,7 @@ extern ThotBool TtaWriteInteger ( BinFile file,
                                  int lval );
 extern ThotBool TtaCompareFiles ( CONST STRING file1,
                                  CONST STRING file2 );
-extern ThotBool TtaMakeDirectory ( STRING directory );
+extern ThotBool TtaMakeDirectory ( CharUnit* directory );
 extern ThotBool TtaCheckDirectory ( CharUnit* directory );
 
 #else /* __STDC__ */
@@ -153,7 +153,7 @@ extern ThotBool TtaWriteInteger (/* BinFile file,
                                    int lval */);
 extern ThotBool TtaCompareFiles (/* CONST char *file1,
                                    CONST char *file2 */);
-extern ThotBool TtaMakeDirectory (/* char *directory */);
+extern ThotBool TtaMakeDirectory (/* CharUnit* directory */);
 extern ThotBool TtaCheckDirectory (/* CharUnit* directory */);
 
 #endif /* __STDC__ */

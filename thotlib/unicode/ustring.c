@@ -218,12 +218,17 @@ char* wc2iso_strdup (str)
 const char* str;
 #endif /* __STDC__ */
 {
+    char*  res;
+    char* tmp = (char*) malloc (ustrlen (str) + 1);
+    wc2iso_strcpy (tmp, str);
 #   ifdef _WINDOWS
-    return (char*) _strdup ((char*)str);
+    res = _strdup (tmp);
 #   else  /* !_WINDOWS */
-    return (char*) strdup ((char*)str);
 #   endif /* _WINDOWS */
+    free (tmp);
+    return res;
 }
+
 
 /*-------------------------------------------------------------
   ustrlen: get the length of a string.
@@ -580,15 +585,11 @@ char* wc2iso_strdup (str)
 const char* str;
 #endif /* __STDC__ */
 {
-    char*  res;
-    char* tmp = (char*) malloc (ustrlen (str) + 1);
-    wc2iso_strcpy (tmp, str);
 #   ifdef _WINDOWS
-    res = _strdup (tmp);
+    return (char*) _strdup ((char*)str);
 #   else  /* !_WINDOWS */
+    return (char*) strdup ((char*)str);
 #   endif /* _WINDOWS */
-    free (tmp);
-    return res;
 }
 
 /*-------------------------------------------------------------

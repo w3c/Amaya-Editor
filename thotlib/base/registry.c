@@ -56,7 +56,7 @@ STRING WIN_Home;
 #   define DEF_TMPDIR             "/tmp"
 #endif /* ! _WINDOWS */
 
-#define THOT_RC_FILENAME      TEXT("thot.rc")
+#define THOT_RC_FILENAME      CUSTEXT("thot.rc")
 #define THOT_CONFIG_FILENAME  CUSTEXT("config")
 #define THOT_BIN_FILENAME     TEXT("bin")
 #define THOT_LIB_DEFAULTNAME  "thot_lib"
@@ -85,7 +85,7 @@ RegistryEntryBlk   , *RegistryEntry;
 static int           AppRegistryInitialized = 0;
 static int           AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
-static char*         AppRegistryEntryAppli = NULL;
+static char*         AppRegistryEntryAppli = (char*) 0;
 static CharUnit      CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
 
@@ -147,8 +147,8 @@ char*               ptr;
 }
 
 /*----------------------------------------------------------------------
-   TtaIsCUSBlank returns True if the first character is a space, a tab, a
-   linefeed or a newline.
+   TtaIsCUSBlank returns True if the first character (CharUnit) is a 
+   space, a tab, a linefeed or a newline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            TtaIsCUSBlank (CharUnit* ptr)
@@ -159,6 +159,24 @@ CharUnit*           ptr;
 {
   if (*ptr == CUS_SPACE || *ptr == CUS_BSPACE || *ptr == CUS_EOL ||
       *ptr == CUS_TAB || *ptr == CUS_CR)
+    return (TRUE);
+  else
+    return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+   TtaIsWCBlank returns True if the first character (CHAR_T) is a space, 
+   a tab, a linefeed or a newline.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            TtaIsWCBlank (CharUnit* ptr)
+#else
+ThotBool            TtaIsWCBlank (ptr)
+CharUnit*           ptr;
+#endif
+{
+  if (*ptr == WC_SPACE || *ptr == WC_BSPACE || *ptr == WC_EOL ||
+      *ptr == WC_TAB || *ptr == WC_CR)
     return (TRUE);
   else
     return (FALSE);
@@ -300,7 +318,7 @@ RegistryLevel       level;
    /*
     * substitute the $(xxxx) with their values.
     */
-   DoVariableSubstitution (value, StringLength (value), resu, sizeof (resu));
+   DoVariableSubstitution (value, StringLength (value), resu, sizeof (resu) / sizeof (CharUnit));
 
    /*
     * allocate an entry, fill it and chain it.
@@ -656,14 +674,14 @@ char* name;
 
       /* appname allows to get the application name */
    if (!strcasecmp ("appname", name))
-#     ifdef _WINDOWS
+#     if defined(_WINDOWS) && defined(_I18N_)
       {
           CharUnit* AppRegistryEntryAppliW = iso2wc_strdup (AppRegistryEntryAppli);
           return AppRegistryEntryAppliW;
       }
-#     else  /* !_WINDOWS */
+#     else  /* !(defined(_WINDOWS) && defined(_I18N_)) */ 
       return(AppRegistryEntryAppli);
-#     endif /* !_WINDOWS */
+#     endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
 
    if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd")))
       return (cus_getcwd (&CurrentDir[0], sizeof(CurrentDir)));
@@ -1237,7 +1255,7 @@ RegistryLevel level;
 	string[sizeof (string) - 1] = EOS;
 
 	/* Comment starts with a semicolumn */
-	if (*str == ';')
+	if (*str == ';' || *str == '#')
 	   continue;
 
 	/* sections are indicated between brackets, e.g. [amaya] */
@@ -1409,7 +1427,7 @@ CharUnit*           appArgv0;
   CharUnit*   ptr;
 # ifdef _WINDOWS
   /* name in Windows NT 4 is 20 chars */
-  CharUnit    username[21];
+  CharUnit    username[MAX_LENGTH];
   CharUnit    windir[MAX_PATH+1];
   DWORD       dwSize;
 # ifndef __CYGWIN32__
@@ -1595,7 +1613,7 @@ CharUnit*           appArgv0;
        found = TRUE;
        *dir_end = CUS_EOS;
        /* save the binary directory in BinariesDirectory */
-       StringNCopy (BinariesDirectory, execname, sizeof (BinariesDirectory));
+       StringNCopy (BinariesDirectory, execname, sizeof (BinariesDirectory) / sizeof (CharUnit));
        /* remove the binary directory */
        found = FALSE;
        ok = FALSE;
@@ -1720,9 +1738,9 @@ CharUnit*           appArgv0;
 		     REGISTRY_SYSTEM, TRUE);
 #endif /* _WINDOWS */
    /* read the user's preferences (if they exist) */
-   if (app_home != NULL && *app_home != EOS)
+   if (app_home != NULL && *app_home != CUS_EOS)
      {
-       usprintf (filename, TEXT("%s%c%s"), app_home, DIR_SEP, THOT_RC_FILENAME);
+       cus_sprintf (filename, CUSTEXT("%s%c%s"), app_home, CUS_DIR_SEP, THOT_RC_FILENAME);
        if (TtaFileExist (&filename[0]))
 	 {
 #ifdef DEBUG_REGISTRY
@@ -1793,42 +1811,42 @@ void                TtaFreeAppRegistry ()
    - 3 : ThotDir/compil                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 SearchFile (STRING fileName, int dir, STRING fullName)
+int                 SearchFile (CharUnit* fileName, int dir, CharUnit* fullName)
 #else  /* __STDC__ */
 int                 SearchFile (fileName, dir, fullName)
-STRING fileName;
+CharUnit*           fileName;
 int                 dir;
-STRING fullName;
+CharUnit*           fullName;
 #endif /* __STDC__ */
 {
-   CHAR_T   tmpbuf[200];
-   STRING imagepath;
+   CharUnit  tmpbuf[200];
+   CharUnit* imagepath;
    int                 i, j;
    int                 ret;
 
    if (Thot_Dir != NULL)
-      ustrcpy (fullName, Thot_Dir);
+      StringCopy (fullName, Thot_Dir);
    else
-      *fullName = EOS;
+      *fullName = CUS_EOS;
    switch (dir)
 	 {
 	    case 1:
 	       /* Lookup in schema and documents path */
-	       ustrcat (fullName, fileName);
+	       StringConcat (fullName, fileName);
 	       ret = TtaFileExist (fullName);
 	       /* lookup in shemas path */
 	       i = 0;
 	       j = 0;
 	       imagepath = SchemaPath;
-	       while (ret == 0 && imagepath[i] != EOS)
+	       while (ret == 0 && imagepath[i] != CUS_EOS)
 		 {
-		    while (imagepath[i] != EOS && imagepath[i] != PATH_SEP && i < 200)
+		    while (imagepath[i] != CUS_EOS && imagepath[i] != CUS_PATH_SEP && i < 200)
 		       tmpbuf[j++] = imagepath[i++];
 
-		    tmpbuf[j] = EOS;
+		    tmpbuf[j] = CUS_EOS;
 		    i++;
 		    j = 0;
-		    usprintf (fullName, TEXT("%s%s%s"), tmpbuf, DIR_STR, fileName);
+		    cus_sprintf (fullName, CUSTEXT("%s%s%s"), tmpbuf, CUS_DIR_STR, fileName);
 		    ret = TtaFileExist (fullName);
 		 }
 
@@ -1836,46 +1854,46 @@ STRING fullName;
 	       i = 0;
 	       j = 0;
 	       imagepath = SchemaPath;
-	       while (ret == 0 && imagepath[i] != EOS)
+	       while (ret == 0 && imagepath[i] != CUS_EOS)
 		 {
-		    while (imagepath[i] != EOS && imagepath[i] != PATH_SEP && i < 200)
+		    while (imagepath[i] != CUS_EOS && imagepath[i] != CUS_PATH_SEP && i < 200)
 		       tmpbuf[j++] = imagepath[i++];
 
-		    tmpbuf[j] = EOS;
+		    tmpbuf[j] = CUS_EOS;
 		    i++;
 		    j = 0;
-		    usprintf (fullName, TEXT("%s%s%s"), tmpbuf, DIR_STR, fileName);
+		    cus_sprintf (fullName, CUSTEXT("%s%s%s"), tmpbuf, CUS_DIR_STR, fileName);
 		    ret = TtaFileExist (fullName);
 		 }
 	       break;
 
 	    case 2:
 	       /* lookup in config */
-	       ustrcat (fullName, WC_DIR_STR);
-	       ustrcat (fullName, TEXT("config"));
-	       ustrcat (fullName, WC_DIR_STR);
-	       ustrcat (fullName, fileName);
+	       StringConcat (fullName, CUS_DIR_STR);
+	       StringConcat (fullName, CUSTEXT("config"));
+	       StringConcat (fullName, CUS_DIR_STR);
+	       StringConcat (fullName, fileName);
 	       break;
 
 	    case 3:
 	       /* lookup in batch */
-	       ustrcat (fullName, WC_DIR_STR);
-	       ustrcat (fullName, TEXT("batch"));
-	       ustrcat (fullName, WC_DIR_STR);
-	       ustrcat (fullName, fileName);
+	       StringConcat (fullName, CUS_DIR_STR);
+	       StringConcat (fullName, CUSTEXT("batch"));
+	       StringConcat (fullName, CUS_DIR_STR);
+	       StringConcat (fullName, fileName);
 	       break;
 
 	    default:
-	       ustrcat (fullName, WC_DIR_STR);
-	       ustrcat (fullName, fileName);
+	       StringConcat (fullName, CUS_DIR_STR);
+	       StringConcat (fullName, fileName);
 	 }
 
    /* general search */
    ret = TtaFileExist (fullName);
    if (ret == 0)
      {
-	ustrcpy (fullName, fileName);
-	ret = TtaFileExist (fullName);
+        StringCopy (fullName, fileName);
+        ret = TtaFileExist (fullName);
      }
    return ret;
 }

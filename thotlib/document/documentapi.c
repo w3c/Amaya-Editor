@@ -462,16 +462,16 @@ char*               directory;
 
 {
    int                 i;
-   STRING              ptr;
+   CharUnit*           ptr;
 
    /* Verify if this directory is already in the list  */
-   ptr = ustrstr (DocumentPath, directory);
-   i = ustrlen (directory);
-   while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != EOS)
+   ptr = StringSubstring (DocumentPath, directory);
+   i = StringLength (directory);
+   while (ptr != NULL && ptr[i] != CUS_PATH_SEP && ptr[i] != CUS_EOS)
      {
-	ptr = ustrstr (ptr, PATH_STR);
-	if (ptr != NULL)
-	   ptr = ustrstr (ptr, directory);
+        ptr = StringSubstring (ptr, CUS_PATH_STR);
+        if (ptr != NULL)
+           ptr = StringSubstring (ptr, directory);
      }
    return (ptr != NULL);
 }
@@ -489,11 +489,11 @@ char*               directory;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaAppendDocumentPath (STRING directory)
+void                TtaAppendDocumentPath (CharUnit* directory)
 
 #else  /* __STDC__ */
 void                TtaAppendDocumentPath (directory)
-STRING              directory;
+CharUnit*           directory;
 
 #endif /* __STDC__ */
 
@@ -502,7 +502,7 @@ STRING              directory;
    int                 lg;
 
    UserErrorCode = 0;
-   lg = ustrlen (directory);
+   lg = StringLength (directory);
 
    if (lg >= MAX_PATH)
       TtaError (ERR_string_too_long);
@@ -517,8 +517,8 @@ STRING              directory;
 	else
 	  {
 	     if (i > 0)
-		ustrcat (DocumentPath, PATH_STR);
-	     ustrcat (DocumentPath, directory);
+            StringConcat (DocumentPath, CUS_PATH_STR);
+         StringConcat (DocumentPath, directory);
 	  }
      }
 }

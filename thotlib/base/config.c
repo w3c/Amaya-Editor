@@ -55,11 +55,11 @@
 #include "ustring_f.h"
 #include "views_f.h"
 
-static char*        doc_items[MAX_ITEM_CONF];
 static ThotBool     doc_import[MAX_ITEM_CONF];
-static char*        doc_items_menu[MAX_ITEM_CONF];
-static char*        nat_items[MAX_ITEM_CONF];
-static char*        nat_items_menu[MAX_ITEM_CONF];
+static CharUnit*    doc_items[MAX_ITEM_CONF];
+static CharUnit*    doc_items_menu[MAX_ITEM_CONF];
+static CharUnit*    nat_items[MAX_ITEM_CONF];
+static CharUnit*    nat_items_menu[MAX_ITEM_CONF];
 static char*        ext_items[MAX_ITEM_CONF];
 static char*        ext_items_menu[MAX_ITEM_CONF];
 static char*        pres_items[MAX_ITEM_CONF];
@@ -309,6 +309,10 @@ ThotBool*           import;
    ThotBool            stop;
    CharUnit            URL_DIR_SEP;
 
+#  if defined(_WINDOWS) && defined(_I18N_)
+   CharUnit            Word_[MAX_TXT_LEN];
+#  endif /* defined(_WINDOWS) && defined(_I18N_) */
+
    *doctypeOrig = NULL;
    *doctypeTrans = NULL;
    *typ = CONFIG_UNKNOWN_TYPE;
@@ -376,7 +380,7 @@ ThotBool*           import;
    l = StringLength (&fname[i]) + 1;
    *doctypeOrig =	(CharUnit*) TtaAllocCUString (l);
    if (point != 0)
-      fname[point] = EOS;
+      fname[point] = CUS_EOS;
    StringCopy (*doctypeOrig, &fname[i]);
    /* retablit le '.' du suffixe dans le nom de fichier */
    if (point != 0)
@@ -416,7 +420,12 @@ ThotBool*           import;
 	     }
 	while (!stop);
 
+#   if defined(_WINDOWS) && defined(_I18N_)
+    iso2wc_strcpy (Word_, word);
+    if (StringCompare (Word_, *doctypeOrig) == 0)
+#   else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
 	if (strcmp (word, *doctypeOrig) == 0)
+#   endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
 	   /* on a trouve' la ligne voulue */
 	  {
 	     getStringAfterColon (line, text);
@@ -425,7 +434,7 @@ ThotBool*           import;
 	     else
 	       {
 		  *doctypeTrans = TtaGetMemory (strlen (text) + 1);
-		  strcpy (*doctypeTrans, AsciiTranslate (text));
+		  iso2wc_strcpy (*doctypeTrans, AsciiTranslate (text));
 	       }
 	  }
      }
@@ -523,18 +532,18 @@ CharUnit*           aSchemaPath;
    nbitemnat = 0;
    nbitemext = 0;
    /* traite successivement tous les directories du path des schemas */
-   ustrncpy (DirBuffer, aSchemaPath, MAX_PATH);
+   StringNCopy (DirBuffer, aSchemaPath, MAX_PATH);
    stop = FALSE;
-   while (DirBuffer[i] != EOS && i < MAX_PATH && !stop)
+   while (DirBuffer[i] != CUS_EOS && i < MAX_PATH && !stop)
      {
-	while (DirBuffer[i] != PATH_SEP && DirBuffer[i] != EOS && i < MAX_PATH)
+	while (DirBuffer[i] != CUS_PATH_SEP && DirBuffer[i] != CUS_EOS && i < MAX_PATH)
 	   i++;
-	if (DirBuffer[i] == EOS)
+	if (DirBuffer[i] == CUS_EOS)
 	   /* dernier directory du path. Il faut s'arreter apres ce directory */
 	   stop = TRUE;
-	if (DirBuffer[i] == PATH_SEP)
-	   DirBuffer[i] = EOS;
-	if (DirBuffer[i] == EOS)
+	if (DirBuffer[i] == CUS_PATH_SEP)
+	   DirBuffer[i] = CUS_EOS;
+	if (DirBuffer[i] == CUS_EOS)
 	   /* un directory de schema a ete isole' */
 	  {
 	     Dir = &DirBuffer[beginning];
@@ -543,7 +552,7 @@ CharUnit*           aSchemaPath;
 	       {
 		  /* commande "ls" sur le directory */
 		  thotDir.buf = fname;
-		  thotDir.bufLen = sizeof (fname);
+		  thotDir.bufLen = sizeof (fname) / sizeof (CharUnit);
 		  thotDir.PicMask = ThotDirBrowse_FILES;
 		  if (ThotDirBrowse_first (&thotDir, Dir, CUSTEXT("*."), suffix) == 1)
 		     do
@@ -567,10 +576,10 @@ CharUnit*           aSchemaPath;
 				 }
 			       if (typ == CONFIG_EXCLUSION)
 				 {
-				    nat_items[nbitemnat] = TtaGetMemory (strlen (nameOrig) + 1);
-				    nat_items_menu[nbitemnat] = TtaGetMemory (strlen (nameTrans) + 1);
-				    strcpy (nat_items[nbitemnat], nameOrig);
-                    strcpy (nat_items_menu[nbitemnat], nameTrans);
+				    nat_items[nbitemnat] = TtaAllocCUString (StringLength (nameOrig) + 1);
+				    nat_items_menu[nbitemnat] = TtaAllocCUString (StringLength (nameTrans) + 1);
+				    StringCopy (nat_items[nbitemnat], nameOrig);
+                    StringCopy (nat_items_menu[nbitemnat], nameTrans);
 				    nbitemnat++;
 				 }
 			       if (typ == CONFIG_EXTENSION_STRUCT)
@@ -1770,9 +1779,10 @@ int                *height;
 #endif /* __STDC__ */
 {
   PtrDocument pDoc;
-  char     line[MAX_TXT_LEN];
-  char*    ptr;
-  ThotBool found;
+  char      line[MAX_TXT_LEN];
+  CharUnit* ptr;
+  ThotBool  found;
+
   UserErrorCode = 0;
   *x = 0;
   *y = 0;
@@ -1785,7 +1795,7 @@ int                *height;
     {
       pDoc = LoadedDocument[document - 1];
       ptr = TtaGetEnvString (name);
-      if (!ptr || ptr[0] == EOS)
+      if (!ptr || ptr[0] == CUS_EOS)
 	found = FALSE;
       else
 	found = TRUE;
