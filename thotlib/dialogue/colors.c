@@ -53,6 +53,8 @@ static ThotWindow   Color_Window = 0;
 static ThotWidget   Color_Palette;
 #ifdef _GTK
 static ThotWidget   Color_Palette_Extended = NULL;
+static ThotBool     ApplyFg = FALSE;
+static ThotBool     ApplyBg = FALSE;
 #endif /* _GTK */
 #ifndef _GTK
 static ThotGC       GCkey;
@@ -244,53 +246,33 @@ gboolean ColorsExposeFgBgGTK (GtkWidget *widget, GdkEventExpose *ev, gpointer da
 void ButtonFgToggledGTK (GtkToggleButton *button, gpointer data)
 {
   GtkToggleButton *bgbutton = (GtkToggleButton *)data;
-  /*  RemoveSignalGTK (GTK_OBJECT (button), "toggled");
-      RemoveSignalGTK (GTK_OBJECT (bgbutton), "toggled");*/
   if (gtk_toggle_button_get_active (button))
     {
       /* button est enfonce */
       gtk_toggle_button_set_active (bgbutton, FALSE);
+      ApplyFg = TRUE;
     }
   else
     {
       /* button n'est pas enfonce */
       gtk_toggle_button_set_active (bgbutton, TRUE);
-      /*      gtk_toggle_button_set_active (button, FALSE);*/
-      /* mettre ici la mise a jour de la couleur courante qui est celle de button*/
+      ApplyFg = FALSE;
     }
-  /*  ConnectSignalGTK (GTK_OBJECT (button),
-		    "toggled",
-		    GTK_SIGNAL_FUNC (ButtonFgToggledGTK),
-		    (gpointer)bgbutton);
-  ConnectSignalGTK (GTK_OBJECT (bgbutton),
-		    "toggled",
-		    GTK_SIGNAL_FUNC (ButtonBgToggledGTK),
-		    (gpointer)button);*/
 }
 
 void ButtonBgToggledGTK (GtkToggleButton *button, gpointer data)
 {
  GtkToggleButton *fgbutton = (GtkToggleButton *)data;
- /*  RemoveSignalGTK (GTK_OBJECT (button), "toggled");
-     RemoveSignalGTK (GTK_OBJECT (fgbutton), "toggled");*/
  if (gtk_toggle_button_get_active (button))
    {
      gtk_toggle_button_set_active (fgbutton, FALSE);
+     ApplyBg = TRUE;
    }
   else
    {
      gtk_toggle_button_set_active (fgbutton, TRUE);
-     /*     gtk_toggle_button_set_active (button, FALSE);*/
-     /* mettre ici la mise a jour de la couleur courante qui est celle de button*/
+     ApplyBg = FALSE;
    }
- /* ConnectSignalGTK (GTK_OBJECT (button),
-		    "toggled",
-		    GTK_SIGNAL_FUNC (ButtonBgToggledGTK),
-		    (gpointer)fgbutton);
-  ConnectSignalGTK (GTK_OBJECT (fgbutton),
-		    "toggled",
-		    GTK_SIGNAL_FUNC (ButtonFgToggledGTK),
-		    (gpointer)button);*/
 }
 
 /*----------------------------------------------------------------------
@@ -299,15 +281,14 @@ void ButtonBgToggledGTK (GtkToggleButton *button, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean ColorsPressGTK (GtkWidget *widget, gpointer data)
 {
-  /*int button = event->button;*/
   int color = (int)data;
-  GtkToggleButton * fgbutton;
+  /*  GtkToggleButton * fgbutton;
   GtkToggleButton * bgbutton;
 
   fgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(widget), "FgColor");
-  bgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(widget), "BgColor");
+  bgbutton = (GtkToggleButton *)gtk_object_get_data (GTK_OBJECT(widget), "BgColor");*/
   
-  if (gtk_toggle_button_get_active (fgbutton))
+  if (ApplyFg)
     {
       /* on assigne le foreground */
       FgColor = color;
@@ -318,7 +299,7 @@ gboolean ColorsPressGTK (GtkWidget *widget, gpointer data)
 	}
     }
 
-   if (gtk_toggle_button_get_active (bgbutton))
+   if (ApplyBg)
     {
       /* on assigne le background */
       BgColor = color;
@@ -339,13 +320,44 @@ gboolean ColorsPressGTK (GtkWidget *widget, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean ApplyColorToSelectedElementGTK (GtkWidget *widget, gpointer data)
 {
-  /* assign FgColor to fg element color */
-  /* TODO */
-
-  /* assign BgColor to fg element color */
-  /* TODO */
+  if (applyToSelection)
+    {
+      ModifyColor (FgColor, FALSE);
+      ModifyColor (BgColor, TRUE);
+    }
   return TRUE;
 }
+
+/*----------------------------------------------------------------------
+   Apply the selected color to the fg or bg widget
+   FgColor is the foreground id color
+   BgColor is the background id color
+   data is the color_selection reference
+  ----------------------------------------------------------------------*/
+gboolean ApplyExtendedColorGTK (GtkWidget *widget, gpointer data)
+{
+  gdouble couleur[4];
+  unsigned short red;
+  unsigned short green;
+  unsigned short blue;
+  int color_id;
+  gtk_color_selection_get_color (GTK_COLOR_SELECTION (data), couleur);
+  red = couleur[0]*255;
+  green = couleur[1]*255;
+  blue = couleur[2]*255;
+  
+  color_id = TtaGetThotColor (red, green, blue);
+  if (ApplyBg)
+    {
+      ThotSelectPalette (color_id, FgColor);
+    }
+  if (ApplyFg)
+    {
+      ThotSelectPalette (BgColor, color_id);
+    }
+  return TRUE;
+}
+
 
 /*----------------------------------------------------------------------
    Get the selected element bg and fg colors
@@ -354,10 +366,17 @@ gboolean ApplyColorToSelectedElementGTK (GtkWidget *widget, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean GetSelectedElementColorGTK (GtkWidget *widget, gpointer data)
 {
-  /* put fg element color into FgColor */
-  /* TODO */
-  /* put bg element color into BgColor */
-  /* TODO */
+  PtrDocument         pSelDoc;
+  PtrElement          pFirstSel, pLastSel;
+  int                 firstChar, lastChar;
+  ThotBool            selectionOK;
+  
+  selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+  if (!selectionOK) return TRUE;
+  
+  BgColor = pFirstSel->ElAbstractBox[0]->AbBackground;
+  FgColor = pFirstSel->ElAbstractBox[0]->AbForeground;
+  
   ThotSelectPalette (BgColor, FgColor);
   return TRUE;
 }
@@ -876,7 +895,6 @@ gboolean CreateExtendedColorSelectionGTK (GtkWidget *widget, gpointer data)
        "color_changed",
        GTK_SIGNAL_FUNC(callback_du_changement_de_couleur),
 	(gpointer)tmpw_colsel);*/
-
   gtk_container_add (GTK_CONTAINER (tmpw_frame), tmpw_colsel);
   
   /* create the hbox for buttons */
@@ -891,6 +909,15 @@ gboolean CreateExtendedColorSelectionGTK (GtkWidget *widget, gpointer data)
 		    "clicked",
 		    GTK_SIGNAL_FUNC (CloseExtendedColorSelectionGTK),
 		    (gpointer)NULL);
+  tmpw_button = gtk_button_new_with_label ("Apply");
+  GTK_WIDGET_SET_FLAGS (GTK_WIDGET(tmpw_button), GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (GTK_WIDGET(tmpw_button));
+  gtk_box_pack_start (GTK_BOX (tmpw_hbox), tmpw_button, FALSE, FALSE, 0);
+  ConnectSignalGTK (GTK_OBJECT (tmpw_button),
+		    "clicked",
+		    GTK_SIGNAL_FUNC (ApplyExtendedColorGTK),
+		    (gpointer)tmpw_colsel);
+
   /* show it */
   gtk_widget_show_all(GTK_WIDGET(Color_Palette_Extended));
   return TRUE;
@@ -1177,14 +1204,9 @@ ThotBool ThotCreatePalette (int x, int y)
 #else /* !_GTK */
    /* create the color selection in GTK, it's possible to add some elements by adding it into the tmpw_vbox container */
   GtkWidget *vbox1;
-
   GtkWidget *vbox2;
   GtkWidget *frame3;
-
-
-
   GtkWidget *togglebutton1;
- 
   GtkWidget *label2;
   GtkWidget *togglebutton2;
   GtkWidget *frame2;
@@ -1215,11 +1237,6 @@ ThotBool ThotCreatePalette (int x, int y)
   gtk_widget_show (vbox1);
   gtk_container_add (GTK_CONTAINER (Color_Palette), vbox1);
 
-  /*  frame1 = gtk_frame_new (NULL);
-  gtk_widget_show (frame1);
-  gtk_box_pack_start (GTK_BOX (vbox1), frame1, TRUE, TRUE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (frame1), 5);
-  */
   vbox2 = gtk_vbox_new (FALSE, 2);
   gtk_widget_show (vbox2);
   gtk_container_add (GTK_CONTAINER (vbox1), vbox2);
@@ -1229,12 +1246,6 @@ ThotBool ThotCreatePalette (int x, int y)
   gtk_box_pack_start (GTK_BOX (vbox2), frame3, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (frame3), 4);
  
- /*
-  vbox3 = gtk_vbox_new (FALSE, 5);
-  gtk_widget_show (vbox3);
-  gtk_container_add (GTK_CONTAINER (frame3), vbox3);
-  */
-
   fixed1 = gtk_fixed_new ();
   gtk_widget_show (fixed1);
   gtk_container_add (GTK_CONTAINER (frame3), fixed1);
@@ -1243,6 +1254,7 @@ ThotBool ThotCreatePalette (int x, int y)
   togglebutton2 = gtk_toggle_button_new();
   gtk_widget_show (togglebutton2);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(togglebutton2), FALSE);
+  ApplyBg = FALSE;
   gtk_container_set_border_width (GTK_CONTAINER (togglebutton2), 5);
   gtk_fixed_put (GTK_FIXED (fixed1), togglebutton2, 40, 40);
   color_draw = gtk_drawing_area_new ();
@@ -1260,6 +1272,7 @@ ThotBool ThotCreatePalette (int x, int y)
   togglebutton1 = gtk_toggle_button_new();
   gtk_widget_show (togglebutton1);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(togglebutton1), TRUE);
+  ApplyFg = TRUE;
   gtk_container_set_border_width (GTK_CONTAINER (togglebutton1), 5);
   gtk_fixed_put (GTK_FIXED (fixed1), togglebutton1, 10, 10);
   color_draw = gtk_drawing_area_new ();
@@ -1326,7 +1339,7 @@ ThotBool ThotCreatePalette (int x, int y)
   gtk_box_pack_start (GTK_BOX (hbox4), label2, FALSE, FALSE, 5);
 
 
-  /* hbox witch contain all the colors columns */
+  /****** hbox witch contain all the colors columns ******/
   hbox4 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox4);
   gtk_box_pack_start (GTK_BOX (vbox4), hbox4, TRUE, TRUE, 0);
