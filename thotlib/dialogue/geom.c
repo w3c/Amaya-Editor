@@ -762,7 +762,7 @@ int                 maxPoints;
 	      break;
 
 	    case ButtonRelease:
-	      if (event.xbutton.button != Button3)
+	      if (event.xbutton.button != Button3 || nbpoints > 0)
 		{
 		  /* left button keep the last segment built */
 		  /* keep the new segment first point coordinates */
@@ -1232,6 +1232,7 @@ boolean             close;
   POINT               ptBegin, ptEnd;
 # else  /* !_WINDOWS */
   int                 e;
+  boolean             start = TRUE;
 # endif /* _WINDOWS */
 
   if (pBox == NULL || pBox->BxAbstractBox == NULL)
@@ -1395,6 +1396,7 @@ boolean             close;
 	    case ButtonPress:
 	      lastx = newx;
 	      lasty = newy;
+	      start = FALSE;
 	      if (wrap)
 		{
 		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
@@ -1403,7 +1405,7 @@ boolean             close;
 	      break;
 	      
 	    case ButtonRelease:
-	      if (event.xbutton.button != Button3)
+	      if (event.xbutton.button != Button3 || !start)
 		{
 		  /* left button : keep the new point */
 		  /* write down the new segment start point */
@@ -1413,6 +1415,7 @@ boolean             close;
 		  y1 = lasty;
 		  nbpoints++;
 		  point++;
+		  start = FALSE;
 		  /* update the box buffer */
 		  newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
 		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
