@@ -1382,7 +1382,7 @@ boolean             error_html;
 		      urlName);
 
 	if (error_html)
-	  DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
 	return HT_ERROR;
 
      }
