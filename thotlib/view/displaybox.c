@@ -1918,7 +1918,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    }
 
 	  /* Draw previous chars in the buffer */
-	  charleft -= buffleft;
+	  if (buffleft > 0)
+	    charleft -= buffleft;
 	  if (charleft > 0)
 	    {
 	      /* number of characters to be displayed in the next buffer */
