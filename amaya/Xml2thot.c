@@ -187,6 +187,7 @@ static ThotBool     RemoveLineBreak = FALSE;
 static ThotBool     RemoveLeadingSpace = FALSE;   
 static ThotBool     RemoveTrailingSpace = FALSE;
 static ThotBool     RemoveContiguousSpace = FALSE;
+static ThotBool     CharsetErrorFound = FALSE;
 
 /* "Extra" counters for the characters and the lines read */
 static int          extraLineRead = 0;
@@ -482,50 +483,55 @@ int         line;
    unsigned char*  mbcsMsg = msg;
 #endif /* _I18N_ */
 
-   HTMLErrorsFound = TRUE;
    if (!ErrFile)
      {
-      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"),
-		TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-      if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
+       usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"),
+		 TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+       if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
          return;
      }
 
    if (line != 0)
      if (line == -1)
        {
+	 CharsetErrorFound = TRUE;
 	 if (docURL != NULL)
 	   {
 	     fprintf (ErrFile, "*** Errors in %s\n", docURL);
 	     TtaFreeMemory (docURL);
 	     docURL = NULL;
-	     fprintf (ErrFile, "  %s\n", mbcsMsg);
 	   }
+	 fprintf (ErrFile, "  %s\n", mbcsMsg);
        }
      else
        {
+	 HTMLErrorsFound = TRUE;
 	 fprintf (ErrFile, "  line %d, char %d: %s\n", line, 0, mbcsMsg);
 	 fclose (ErrFile);
 	 ErrFile = NULL;
        }
-   else if (doc == XMLcontext.doc)
-     {
-      /* the error message is related to the document being parsed */
-      if (docURL != NULL)
-	{
-	  fprintf (ErrFile, "*** Errors in %s\n", docURL);
-	  TtaFreeMemory (docURL);
-	  docURL = NULL;
-	}
-      /* print the line number and character number before the message */
-      fprintf (ErrFile, "  line %d, char %d: %s\n",
-	       XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
-	       XML_GetCurrentColumnNumber (parser),
-	       mbcsMsg);
-     }
    else
-     /* print only the error message */
-     fprintf (ErrFile, "%s\n", mbcsMsg);
+     {
+       HTMLErrorsFound = TRUE;
+       if (doc == XMLcontext.doc)
+	 {
+	   /* the error message is related to the document being parsed */
+	   if (docURL != NULL)
+	     {
+	       fprintf (ErrFile, "*** Errors in %s\n", docURL);
+	       TtaFreeMemory (docURL);
+	       docURL = NULL;
+	     }
+	   /* print the line number and character number before the message */
+	   fprintf (ErrFile, "  line %d, char %d: %s\n",
+		    XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
+		    XML_GetCurrentColumnNumber (parser),
+		    mbcsMsg);
+	 }
+       else
+	 /* print only the error message */
+	 fprintf (ErrFile, "%s\n", mbcsMsg);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -3012,14 +3018,14 @@ int              length;
 {
 #ifdef EXPAT_PARSER_DEBUG
   int  i;
-
   printf ("\n Hndl_Default - length = %d - ", length);
-
   for (i=0; i<length; i++)
-    {
       printf ("%c", data[i]);
-    }
 #endif /* EXPAT_PARSER_DEBUG */
+
+  /* Specefic treatment for the entities */
+  if (length > 1 && data[0] == '&')
+    CreateXmlEntity ((CHAR_T*) data, length);
 }
 
 /*----------------------------------------------------------------------
@@ -3610,10 +3616,10 @@ static void         InitializeExpatParser ()
   XML_SetCommentHandler (parser,
 			 Hndl_Comment);
   
-  /* Set default handler with  no expansion of internal entity references */
-  /* 
-     XML_SetDefaultHandler (parser,
-                            Hndl_Default);
+  /* Set default handler with no expansion of internal entity references */
+  /*
+  XML_SetDefaultHandler (parser,
+			 Hndl_Default);
   */
   
   /* Set a default handler with expansion of internal entity references */
@@ -3700,6 +3706,7 @@ ThotBool   isSubTree;
   UnknownTag = FALSE;
   XMLrootName[0] = WC_EOS;
   XMLrootClosed = FALSE;
+  CharsetErrorFound = FALSE;
 
   XMLabort = FALSE;
   htmlLineRead = 0;
@@ -4258,19 +4265,28 @@ ThotBool    xmlDoctype;
 
       /* Gets the document charset */
       charset = TtaGetDocumentCharset (doc);
-      if (charset != UNDEFINED_CHARSET && charset != US_ASCII &&
-	  charset != ISO_8859_1   && charset !=  ISO_8859_2   &&
-	  charset != ISO_8859_3   && charset !=  ISO_8859_4   &&
-	  charset != ISO_8859_5   && charset !=  ISO_8859_6   &&
-	  charset != ISO_8859_6_E && charset !=  ISO_8859_6_I &&
-	  charset != ISO_8859_7   && charset !=  ISO_8859_8   &&
-	  charset != ISO_8859_8_E && charset !=  ISO_8859_8_I &&
-	  charset != ISO_8859_9   && charset !=  ISO_8859_10  &&
-	  charset != ISO_8859_15  && charset !=  ISO_8859_supp)
+      if (charset == UNDEFINED_CHARSET)
 	{
 	  unknownCharset = TRUE;
 	  XmlParseError (XMLcontext.doc,
-			 TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
+			 TtaGetMessage (AMAYA, AM_UNDEFINED_ENCODING), -1);
+	}
+      else 
+	{
+	  if (charset != US_ASCII &&
+	      charset != ISO_8859_1   && charset !=  ISO_8859_2   &&
+	      charset != ISO_8859_3   && charset !=  ISO_8859_4   &&
+	      charset != ISO_8859_5   && charset !=  ISO_8859_6   &&
+	      charset != ISO_8859_6_E && charset !=  ISO_8859_6_I &&
+	      charset != ISO_8859_7   && charset !=  ISO_8859_8   &&
+	      charset != ISO_8859_8_E && charset !=  ISO_8859_8_I &&
+	      charset != ISO_8859_9   && charset !=  ISO_8859_10  &&
+	       charset != ISO_8859_15  && charset !=  ISO_8859_supp)
+	    {
+	      unknownCharset = TRUE;
+	      XmlParseError (XMLcontext.doc,
+			     TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
+	    }
 	}
       /* Specific initialization for expat */
       InitializeExpatParser ();
@@ -4313,7 +4329,7 @@ ThotBool    xmlDoctype;
 
    /* Display a warning if an error was found */
    /* and set the document in read-only access mode */
-   if (XMLabort || unknownCharset)
+   if (XMLabort)
      {
        SetBrowserEditor (doc);
        profile = TtaGetEnvString ("Profile");
@@ -4323,14 +4339,26 @@ ThotBool    xmlDoctype;
 		      profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
        HTMLErrorsFound = TRUE;
      }
-   else if (HTMLErrorsFound)
-     {
-       profile = TtaGetEnvString ("Profile");
-       if (!profile)
-	 profile = TEXT("");
-       InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-		      profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
-     }
+   else 
+     if (HTMLErrorsFound)
+       {
+	 if (unknownCharset)
+	   SetBrowserEditor (doc);
+	 {
+	   profile = TtaGetEnvString ("Profile");
+	   if (!profile)
+	     profile = TEXT("");
+	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
+			  profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
+	 }
+       }
+     else 
+       if (CharsetErrorFound)
+	 {
+	   SetBrowserEditor (doc);
+	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_ENCODING_WARNING));
+	   HTMLErrorsFound = TRUE;
+	 }
 }
 
 /* end of module */
