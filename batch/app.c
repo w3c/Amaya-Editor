@@ -1686,6 +1686,8 @@ char              **argv;
        ustrcat (msg, TEXT(" "));
    }
        
+   TtaDisplayMessage (INFO, msg);
+
    SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
    SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #  endif /* _WINDOWS */

@@ -55,8 +55,12 @@
 #define COMP_WARNING       1
 #define COMP_SUCCESS       0
 
+#define ID_TOOLBAR         1
+
 HWND  hWND = (HWND) 0;
 HWND  StatusBar;
+HWND  hWndToolBar;
+
 int   Y = 10;
 char* cmdLine;
 char* SrcPath;
@@ -66,8 +70,16 @@ char* ThotPath;
 char* currentFile;
 char* currentDestFile;
 char* BinFiles [100];
+char* TbStrings [2] = {"Open File", "Build"};
 
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
+
+TBBUTTON tbButtons[] = {
+	{0, OPEN,    TBSTATE_ENABLED, TBSTYLE_BUTTON, 0L, 0},
+	{1, COMPILE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0L, 0},
+};
+
+TOOLINFO tbToolInfo;
 
 #ifdef __STDC__
 LRESULT CALLBACK CompilersWndProc (HWND, UINT, WPARAM, LPARAM);
@@ -82,6 +94,20 @@ static char         fileToOpen [256];
 static int          iVscrollPos = 0, iVscrollMax, iVscrollInc; 
 static HINSTANCE    g_hInstance;
 
+#ifdef __STDC__
+static void   CopyToolTipText (LPTOOLTIPTEXT lpttt)
+#else  /* __STDC__ */
+static void   CopyToolTipText (lpttt)
+LPTOOLTIPTEXT lpttt;
+#endif /* __STDC__ */
+{
+   int        iButton = lpttt->hdr.idFrom;
+   char*      pString;
+   char*      pDest = lpttt->lpszText;
+
+   pString = TbStrings[iButton - OPEN];
+   ustrcpy (pDest, pString);
+}
 
 #ifdef __STDC__
 void MakeMessage (HWND hwnd, char* errorMsg, int msgType)
@@ -93,19 +119,18 @@ int   msgType;
 #endif /* __STDC__ */
 {
    if (hwnd) {
-		LPSTR pText = (LPSTR)malloc( strlen(errorMsg) + 3 );
-		if ( pText )
-		{
-			// Set caret to end of current text
-			int ndx = GetWindowTextLength (hwnd);
-			SetFocus (hwnd);   
-			SendMessage (hwnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-			// Append text
-			sprintf( pText, "%s\r\n", errorMsg );
-			SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
+      LPSTR pText = (LPSTR) malloc (strlen (errorMsg) + 3);
+      if ( pText ) {
+         // Set caret to end of current text
+         int ndx = GetWindowTextLength (hwnd);
+         SetFocus (hwnd);   
+         SendMessage (hwnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+         // Append text
+         sprintf( pText, "%s\r\n", errorMsg );
+         SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
-			free( pText );			
-		}
+         free( pText );			
+	  } 
    } 
 }
 
@@ -411,27 +436,26 @@ char* fileName;
 											 }  
 									  } 
 
-                                      Copy_File (hwnd, SrcFileName, WorkFileName);
-
-                                      /* result = APPmain (hwnd, index, args, &Y); */
-                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
-                                      FreeLibrary (hLib);
-                                      for (i = 0; i < index; i++) {
-                                          free (args [i]);
-                                          args [i] = (char*) 0;
-									  }
-                                      if (currentFile) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      if (SrcFileName) {
-                                         free (SrcFileName);
-                                         SrcFileName = (char*) 0;
-									  }
-                                      if (WorkFileName) {
-                                         _unlink (WorkFileName);
-                                         free (WorkFileName);
-                                         WorkFileName = (char*) 0;
+                                      if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+                                         result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
+                                         FreeLibrary (hLib);
+                                         for (i = 0; i < index; i++) {
+                                             free (args [i]);
+                                             args [i] = (char*) 0;
+										 }
+                                         if (currentFile) {
+                                            free (currentFile);
+                                            currentFile = (char*) 0;
+										 }
+                                         if (SrcFileName) {
+                                            free (SrcFileName);
+                                            SrcFileName = (char*) 0;
+										 }
+                                         if (WorkFileName) {
+                                            _unlink (WorkFileName);
+                                            free (WorkFileName);
+                                            WorkFileName = (char*) 0;
+										 }
 									  }
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
@@ -503,29 +527,27 @@ char* fileName;
                                              sprintf (BinFiles [indexBinFiles], "%s.PRS", currentFile);
 									  }
 
-                                      Copy_File (hwnd, SrcFileName, WorkFileName);
-
-                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
-                                      FreeLibrary (hLib);
-                                      /* result = PRSmain (hwnd, index, args, &Y); */
-                                      for (i = 0; i < index; i++) {
-                                          free (args [i]);
-                                          args [i] = (char*) 0;
+                                      if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+                                         result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
+                                         FreeLibrary (hLib);
+                                         for (i = 0; i < index; i++) {
+                                             free (args [i]);
+                                             args [i] = (char*) 0;
+										 }
+                                         if (currentFile) {
+                                            free (currentFile);
+                                            currentFile = (char*) 0;
+										 }
+                                         if (SrcFileName) {
+                                            free (SrcFileName);
+                                            SrcFileName = (char*) 0;
+										 }
+                                         if (WorkFileName) {
+                                            _unlink (WorkFileName);
+                                            free (WorkFileName);
+                                            WorkFileName = (char*) 0;
+										 }
 									  }
-                                      if (currentFile) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      if (SrcFileName) {
-                                         free (SrcFileName);
-                                         SrcFileName = (char*) 0;
-									  }
-                                      if (WorkFileName) {
-                                         _unlink (WorkFileName);
-                                         free (WorkFileName);
-                                         WorkFileName = (char*) 0;
-									  }
-
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = strlen (WorkPath);
@@ -614,28 +636,27 @@ char* fileName;
                                              sprintf (BinFiles [indexBinFiles], "%s.STR", currentFile);
 									  }
 
-                                      Copy_File (hwnd, SrcFileName, WorkFileName);
-
-                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
-                                      FreeLibrary (hLib);
-                                      /* result = STRmain (hwnd, index, args, &Y); */
-                                      for (i = 0; i < index; i++) {
-                                          free (args [i]);
-                                          args [i] = (char*) 0;
+                                      if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+                                         result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
+                                         FreeLibrary (hLib);
+                                         for (i = 0; i < index; i++) {
+                                             free (args [i]);
+                                             args [i] = (char*) 0;
+										 } 
+                                         if (currentFile) {
+                                            free (currentFile);
+                                            currentFile = (char*) 0;
+										 }
+                                         if (SrcFileName) {
+                                            free (currentFile);
+                                            currentFile = (char*) 0;
+										 }
+                                         if (WorkFileName) {
+                                            free (currentFile);
+                                            currentFile = (char*) 0;
+										 }
+                                         _unlink (WorkFileName);
 									  }
-                                      if (currentFile) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      if (SrcFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      if (WorkFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      _unlink (WorkFileName);
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = strlen (WorkPath);
@@ -687,105 +708,104 @@ char* fileName;
                                              sprintf (WorkFileName, "%s\\greek.sgml", WorkPath);
 									  }
 
-                                      Copy_File (hwnd, SrcFileName, WorkFileName);
-
-                                      len = strlen (SrcPath);
-                                      if (SrcPath [len - 1] == '\\') {
-                                         SrcFileName = (char*) malloc (len + 14);
-                                         sprintf (SrcFileName, "%sText_SGML.inc", SrcPath);
-									  } else {
-                                             SrcFileName = (char*) malloc (len + 15);
-                                             sprintf (SrcFileName, "%s\\Text_SGML.inc", SrcPath);
-									  }
-
-                                      len = strlen (WorkPath);
-                                      if (WorkPath [len - 1] == '\\') {
-                                         WorkFileName = (char*) malloc (len + 14);
-                                         sprintf (WorkFileName, "%sText_SGML.inc", WorkPath);
-									  } else {
-                                             WorkFileName = (char*) malloc (len + 15);
-                                             sprintf (WorkFileName, "%s\\Text_SGML.inc", WorkPath);
-									  }
-
-                                      Copy_File (hwnd, SrcFileName, WorkFileName);
-
-                                      ptr = strrchr(currentFile, '.');
-                                      if (ptr) {
+                                      if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
                                          len = strlen (SrcPath);
                                          if (SrcPath [len - 1] == '\\') {
-                                            SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
+                                            SrcFileName = (char*) malloc (len + 14);
+                                            sprintf (SrcFileName, "%sText_SGML.inc", SrcPath);
 										 } else {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
+                                                SrcFileName = (char*) malloc (len + 15);
+                                                sprintf (SrcFileName, "%s\\Text_SGML.inc", SrcPath);
 										 }
+
                                          len = strlen (WorkPath);
                                          if (WorkPath [len - 1] == '\\') {
-                                            WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
+                                            WorkFileName = (char*) malloc (len + 14);
+                                            sprintf (WorkFileName, "%sText_SGML.inc", WorkPath);
 										 } else {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
-										 } 
-									  } else {
-                                             if (SrcPath [len - 1] == '\\') {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (SrcFileName, "%s%s.T", SrcPath, currentFile);
-											 } else {
-                                                    SrcFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                    sprintf (SrcFileName, "%s\\%s.T", SrcPath, currentFile);
-											 }
-                                             len = strlen (WorkPath);
-                                             if (WorkPath [len - 1] == '\\') {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (WorkFileName, "%s%s.T", WorkPath, currentFile);
-											 } else {
-                                                    WorkFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                    sprintf (WorkFileName, "%s\\%s.T", WorkPath, currentFile);
-											 }  
-									  } 
-
-                                      if (currentDestFile) {
-                                         ptr = strrchr (currentDestFile, '.');
-                                         if (ptr) {
-                                            BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
-                                            strcpy (BinFiles [indexBinFiles], currentDestFile);
-										 } else {
-                                                BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 4);
-                                                sprintf (BinFiles [indexBinFiles], "%s.TRA", currentDestFile);
+                                                WorkFileName = (char*) malloc (len + 15);
+                                                sprintf (WorkFileName, "%s\\Text_SGML.inc", WorkPath);
 										 }
-									  } else {
-                                             currentFileName = (char*) malloc (strlen (currentFile) + 1);
-                                             strcpy (currentFileName, currentFile);
-                                             ptr = strrchr (currentFileName, '.');
-                                             if (ptr)
-                                                ptr [0] = 0;
-                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 4);
-                                             sprintf (BinFiles [indexBinFiles], "%s.TRA", currentFile);
-									  }
 
-                                      Copy_File (hwnd, SrcFileName, WorkFileName);
+                                         if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+                                            ptr = strrchr(currentFile, '.');
+                                            if (ptr) {
+                                               len = strlen (SrcPath);
+                                               if (SrcPath [len - 1] == '\\') {
+                                                  SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
+                                                  sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
+											   } else {
+                                                      SrcFileName = (char*) malloc (len + strlen (currentFile) + 2);
+                                                      sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
+											   } 
+                                               len = strlen (WorkPath);
+                                               if (WorkPath [len - 1] == '\\') {
+                                                  WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
+                                                  sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
+											   } else {
+                                                      WorkFileName = (char*) malloc (len + strlen (currentFile) + 2);
+                                                      sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
+											   } 
+											} else {
+                                                   if (SrcPath [len - 1] == '\\') {
+                                                      SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
+                                                      sprintf (SrcFileName, "%s%s.T", SrcPath, currentFile);
+												   } else {
+                                                          SrcFileName = (char*) malloc (len + strlen (currentFile) + 4);
+                                                          sprintf (SrcFileName, "%s\\%s.T", SrcPath, currentFile);
+												   }
+                                                   len = strlen (WorkPath);
+                                                   if (WorkPath [len - 1] == '\\') {
+                                                      WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
+                                                      sprintf (WorkFileName, "%s%s.T", WorkPath, currentFile);
+												   } else {
+                                                          WorkFileName = (char*) malloc (len + strlen (currentFile) + 4);
+                                                          sprintf (WorkFileName, "%s\\%s.T", WorkPath, currentFile);
+												   }  
+											} 
 
-                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
-                                      FreeLibrary (hLib);
-                                      /* result = TRAmain (hwnd, index, args, &Y); */
-                                      for (i = 0; i < index; i++) {
-                                          free (args [i]);
-                                          args [i] = (char*) 0;
+                                            if (currentDestFile) {
+                                               ptr = strrchr (currentDestFile, '.');
+                                               if (ptr) {
+                                                  BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
+                                                  strcpy (BinFiles [indexBinFiles], currentDestFile);
+											   } else {
+                                                      BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 4);
+                                                      sprintf (BinFiles [indexBinFiles], "%s.TRA", currentDestFile);
+											   }
+											} else {
+                                                   currentFileName = (char*) malloc (strlen (currentFile) + 1);
+                                                   strcpy (currentFileName, currentFile);
+                                                   ptr = strrchr (currentFileName, '.');
+                                                   if (ptr)
+                                                      ptr [0] = 0;
+                                                   BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 4);
+                                                   sprintf (BinFiles [indexBinFiles], "%s.TRA", currentFile);
+											}
+ 
+                                            if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+                                               result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
+                                               FreeLibrary (hLib);
+                                               for (i = 0; i < index; i++) {
+                                                   free (args [i]);
+                                                   args [i] = (char*) 0;
+											   }
+                                               if (currentFile) {
+                                                  free (currentFile);
+                                                  currentFile = (char*) 0;
+											   }
+                                               if (SrcFileName) {
+                                                  free (currentFile);
+                                                  currentFile = (char*) 0;
+											   }
+                                               if (WorkFileName) {
+                                                  free (currentFile);
+                                                  currentFile = (char*) 0;
+											   }
+                                               _unlink (WorkFileName);
+											}
+										 }
 									  }
-                                      if (currentFile) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      if (SrcFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      if (WorkFileName) {
-                                         free (currentFile);
-                                         currentFile = (char*) 0;
-									  }
-                                      _unlink (WorkFileName);
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = strlen (WorkPath);
@@ -838,7 +858,7 @@ char* fileName;
 	   }  
     }
     MakeMessage (hwnd, "\r\n\r\nBuild process success ...", COMP_SUCCESS);
-    MakeMessage (hwnd, "\r\n\r\nNow you can Build Amaya ...", COMP_SUCCESS);
+    /* MakeMessage (hwnd, "\r\n\r\nNow you can Build Amaya ...", COMP_SUCCESS); */
     SendMessage (StatusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) "Finished");
     SendMessage (StatusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
     return COMP_SUCCESS;
@@ -865,6 +885,8 @@ int       iCmdShow;
      char*       BinPath;
 
 	 g_hInstance = hInstance;
+
+     InitCommonControls ();
 
      argc = makeArgcArgv (hInstance, &argv, szCmdLine);
 	 cmdLine = (char*) malloc (strlen (argv[0]) + 1);
@@ -939,13 +961,17 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	 static HMENU menuBar, popupMenu;
-     static int   cxChar, cyChar, cyClient;
-     int          result = COMP_SUCCESS; 
-     int          status, cx, cy;
-     int          cyStatus;
-	 static HWND hEdit = NULL;
-	 RECT r ={0};
+	 static HMENU  menuBar, popupMenu;
+     static int    cxChar, cyChar, cyClient;
+     int           result = COMP_SUCCESS; 
+     int           status, cx, cy;
+     int           cyStatus, cyTB;
+	 static HWND   hEdit = NULL;
+     static CHAR   szBuf[128];
+     static HWND   hWndTT;
+     LPTOOLTIPTEXT lpttt;
+     TOOLINFO      lpToolInfo;
+	 RECT          r ={0};
      
      switch (iMsg) {
             case WM_CREATE:
@@ -959,7 +985,18 @@ LPARAM lParam;
 				 SetMenu (hwnd, menuBar);
                  EnableMenuItem (popupMenu, COMPILE, MFS_GRAYED);
 
-				 GetClientRect( hwnd, &r );
+                 hWndToolBar = CreateToolbarEx (hwnd, WS_CHILD | WS_BORDER | WS_VISIBLE | TBSTYLE_TOOLTIPS | CCS_ADJUSTABLE,
+                                                ID_TOOLBAR, 2, g_hInstance, COMP_TOOLBAR, (LPCTBBUTTON)&tbButtons,
+                                                2, 32, 32, 32, 32, sizeof(TBBUTTON)); 
+
+                 if (hWndToolBar == NULL ) {
+                    MessageBox (NULL, "Toolbar Bar not created!", NULL, MB_OK );
+                    break;
+				 } 
+
+                 SendMessage (hWndToolBar, TB_ENABLEBUTTON, (WPARAM) COMPILE, (LPARAM) MAKELONG (FALSE, 0));
+
+                 GetClientRect( hwnd, &r );
 				 hEdit = CreateWindow( "EDIT", 
 					                   "", 
 									   WS_CHILD|WS_BORDER|WS_HSCROLL|WS_VSCROLL|WS_VISIBLE|
@@ -975,6 +1012,21 @@ LPARAM lParam;
                                              -100, -100, 10, 10,  hwnd, (HMENU)100, g_hInstance, NULL);
                  ShowWindow (StatusBar, SW_SHOWNORMAL);
                  UpdateWindow (StatusBar);
+
+                 hWndTT = (HWND)SendMessage(hWndToolBar, TB_GETTOOLTIPS, 0, 0);
+
+                 if (hWndTT) {
+                    // Fill in the TOOLINFO structure.
+                    lpToolInfo.cbSize = sizeof(lpToolInfo);
+                    lpToolInfo.uFlags = TTF_IDISHWND | TTF_CENTERTIP;
+                    lpToolInfo.lpszText = (LPSTR)COMP_TOOLBAR;
+                    lpToolInfo.hwnd = hwnd;
+                    lpToolInfo.uId = (UINT)hWndToolBar;
+                    lpToolInfo.hinst = g_hInstance;
+                    // Set up tooltips for the combo box.
+                    SendMessage(hWndTT, TTM_ADDTOOL, 0, (LPARAM)(LPTOOLINFO)&lpToolInfo);
+				 } else
+                        MessageBox(NULL, "Could not get tooltip window handle.",NULL, MB_OK);
                  return 0;
 
             case WM_SIZE:
@@ -982,10 +1034,19 @@ LPARAM lParam;
                  cy = HIWORD (lParam);
                  GetWindowRect (StatusBar, &r);
                  cyStatus = r.bottom - r.top;
+
+                 SendMessage(hWndToolBar, TB_AUTOSIZE, 0L, 0L);
+
+                 InvalidateRect (hWndToolBar, NULL, TRUE);
+                 GetWindowRect (hWndToolBar, &r);
+                 ScreenToClient (hwnd, (LPPOINT) &r.left);
+                 ScreenToClient (hwnd, (LPPOINT) &r.right);
+                 cyTB = r.bottom - r.top;
+
                  MoveWindow (StatusBar, 0, cy - cyStatus, cx, cyStatus, TRUE);
 
                  GetClientRect( hwnd, &r );
-                 MoveWindow (hEdit, 0, 0, r.right, r.bottom - cyStatus + 2, TRUE);
+                 MoveWindow (hEdit, 0, cyTB - 2, r.right, r.bottom - cyStatus - cyTB + 4, TRUE);
                  return 0;
 
 			case WM_ERASEBKGND:
@@ -1002,16 +1063,44 @@ LPARAM lParam;
                     result = Makefile (hEdit, fileToOpen);
                     SetCursor(LoadCursor(NULL, IDC_ARROW));
                     if (result == FATAL_EXIT_CODE)
-                       MakeMessage (hwnd, "\r\n\r\nBuild process aborted because of errors", FATAL_EXIT_CODE);
+                       MakeMessage (hEdit, "\r\n\r\nBuild process aborted because of errors", FATAL_EXIT_CODE);
                     else 
-                         MakeMessage (hwnd, "\r\n\r\nYou can build Amaya", FATAL_EXIT_CODE);
+                         MakeMessage (hEdit, "\r\n\r\nYou can build Amaya", FATAL_EXIT_CODE);
 				 }
 		         break;
+
+            case WM_NOTIFY:
+                 switch (((LPNMHDR) lParam)->code) {
+                        case TTN_NEEDTEXT: /* Display tool tip text. */
+                             lpttt = (LPTOOLTIPTEXT) lParam;
+                             CopyToolTipText (lpttt);
+                             break;
+
+                        case TBN_QUERYDELETE: /* Toolbar customization -- can we delete this button? */
+                             return TRUE;
+
+                        case TBN_GETBUTTONINFO: /* The toolbar needs information about a button. */
+                             return FALSE;
+
+                        case TBN_QUERYINSERT: /* Can this button be inserted? Just say yo. */
+                             return TRUE;
+
+                        case TBN_CUSTHELP: /* Need to display custom help. */
+                             MessageBox(hwnd, "This help is custom.",NULL, MB_OK);
+                             break;
+
+                        case TBN_TOOLBARCHANGE: /* Done dragging a bitmap to the toolbar. */
+                             SendMessage(hWndToolBar, TB_AUTOSIZE, 0L, 0L);
+                             break;
+
+                        default: return TRUE;
+				 }
+                 return 0L;
 
             case WM_CHAR:
                     status = GetKeyState (VK_CONTROL);
                     if (HIBYTE (status)) {
-                       if (wParam == 15)
+                       if (wParam == CTRL_O)
                              OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                              OpenFileName.hwndOwner         = hwnd; 
                              OpenFileName.hInstance         = (HINSTANCE) GetWindowLong (hwnd, GWL_HINSTANCE); 
@@ -1032,6 +1121,7 @@ LPARAM lParam;
                              if (GetOpenFileName (&OpenFileName)) {
                                 strcpy (fileToOpen, OpenFileName.lpstrFile);
                                 EnableMenuItem (popupMenu, COMPILE, MFS_ENABLED);
+                                SendMessage (hWndToolBar, TB_ENABLEBUTTON, (WPARAM) COMPILE, (LPARAM) MAKELONG (TRUE, 0));
 							 }
 					}
                     break;
@@ -1059,6 +1149,7 @@ LPARAM lParam;
                              if (GetOpenFileName (&OpenFileName)) {
                                 strcpy (fileToOpen, OpenFileName.lpstrFile);
                                 EnableMenuItem (popupMenu, COMPILE, MFS_ENABLED);
+                                SendMessage (hWndToolBar, TB_ENABLEBUTTON, (WPARAM) COMPILE, (LPARAM) MAKELONG (TRUE, 0));
 							 }
                              break;
 
@@ -1066,12 +1157,11 @@ LPARAM lParam;
 							 SetCursor(LoadCursor(NULL, IDC_WAIT));
 							 SetWindowText( hEdit, "" );
                              result = Makefile (hEdit, fileToOpen);
-							 SetCursor(LoadCursor(NULL, IDC_ARROW));
+ 							 SetCursor(LoadCursor(NULL, IDC_ARROW));
                              if (result == FATAL_EXIT_CODE)
-                                MessageBox (hwnd, "Build process aborted because of errors", "Thot compilers", MB_OK | MB_ICONERROR);
-                
+                                MakeMessage (hEdit, "Build process aborted because of errors", FATAL_EXIT_CODE);
                              else 
-                                 MessageBox (hwnd, "You can now build the Amaya application", "Thot compilers", MB_OK | MB_ICONINFORMATION);
+                                 MakeMessage (hEdit, "\r\n\r\nYou can build Amaya", COMP_SUCCESS);
                              break;
 
                         case QUIT: SendMessage (hwnd, WM_CLOSE, 0, 0);
