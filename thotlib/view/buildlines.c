@@ -2814,8 +2814,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	else if (pChildAb->AbDead || pChildAb->AbNew)
 	  pChildAb = pChildAb->AbNext;
         else if  (pChildAb->AbNotInLine &&
-		  pChildAb->AbDisplay == 'U'/* &&
-		  pChildAb->AbFloat == 'N'*/)
+		  pChildAb->AbDisplay == 'U')
 		  pChildAb = pChildAb->AbNext;
 	else if (pChildAb->AbBox->BxType == BoGhost ||
 		 pChildAb->AbBox->BxType == BoFloatGhost)
@@ -3168,6 +3167,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  while (breakLine && pNextBox);
 
 	  FreeLine (pLine);
+	  pLine = NULL;
 	}
       /* restore the right width */
       pBox->BxW = width;
@@ -3524,6 +3524,9 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
    pBox = pAb->AbBox;
    if (pBox)
      {
+       if (pBox->BxCycles > 0)
+	 /* the block of lines is currently computed */
+	 return;
        if (pBox->BxFirstLine == NULL)
 	 pLine = NULL;
        else
@@ -3876,6 +3879,9 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   left = pParentBox->BxLMargin + pParentBox->BxLBorder + pParentBox->BxLPadding;
   linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
 			    pAb, ViewFrameTable[frame - 1].FrMagnification);
+  pNextLine = NULL;
+  h = 0;
+
   if (Propagate != ToSiblings || pParentBox->BxVertFlex)
     {
       if (pBox->BxAbstractBox->AbFloat != 'N')
@@ -3889,12 +3895,8 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		 pParentBox->BxXOrg + left + pLine->LiXOrg >= pBox->BxXOrg + pBox->BxWidth)
 	    pLine = pLine->LiNext;
 	  if (pLine)
-	    {
-	      /* rebuild adjacent lines of that floating box */
-	      RecomputeLines (pAb, pLine, NULL, frame);
-	      pNextLine = NULL;
-	      h = 0;
-	    }
+	    /* rebuild adjacent lines of that floating box */
+	    RecomputeLines (pAb, pLine, NULL, frame);
 	  else
 	    h = pParentBox->BxH;
 	}

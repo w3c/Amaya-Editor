@@ -247,11 +247,9 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   pg_counter = 0;         /* number of pages we have printed */
 
   if (!(GHwnAbort = CreateDialog (hInst, "Printinprogress", WIN_Main_Wd,
-				    (DLGPROC) AbortDlgProc)))
-  {
-	 
+				  (DLGPROC) AbortDlgProc)))
     WinErrorBox (WIN_Main_Wd, "InitPrinting: DE_LANG");
-  }
+
   SetAbortProc (TtPrinterDC, AbortProc);
   memset(&DocInfo, 0, sizeof(DOCINFO));
   DocInfo.cbSize      = sizeof(DOCINFO);
@@ -654,6 +652,24 @@ void GetDocAndView (int frame, PtrDocument *pDoc, int *view)
   *view = CurrentView;
 }
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void InitTable (int i, PtrDocument pDoc)
+{
+  ViewFrame          *pFrame;
+	
+	/* initialize visibility and zoom for the window */
+  /* cf. procedure InitializeFrameParams */
+  pFrame = &ViewFrameTable[i - 1];
+  pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
+  pFrame->FrMagnification = 0;	/* zoom a 0 */
+  
+  /* initialize frames tabe because it's used by display functions */
+  FrameTable[i].FrDoc = IdentDocument (pDoc);
+  FrameTable[i].FrView = i;
+  RemoveClipping(i);
+}
 
 /*----------------------------------------------------------------------
    OpenPSFile opens the printing file and write the PS prologue.
@@ -1430,7 +1446,6 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 #endif /* _WINDOWS */
 
   InitTable (i, pDoc);
-
   *volume = 16000;
   return (i);
 }

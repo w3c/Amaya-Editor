@@ -2392,7 +2392,8 @@ PtrLine SearchLine (PtrBox pBox)
    if (pBox)
      {
        pAb = pBox->BxAbstractBox;
-      if (pAb == NULL || pAb->AbNotInLine)
+      if (pAb == NULL ||
+	  (pAb->AbNotInLine && pAb->AbDisplay == 'U'))
 	pAb = NULL;
       else
        pAb = pAb->AbEnclosing;
@@ -3240,8 +3241,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 	    }
 	  if (inLine || inLineFloat)
-	    /* the parent becomes ghost */
-	    pParent->AbBox->BxType = BoGhost;
+	    {
+	      /* the parent becomes ghost */
+	      pParent->AbBox->BxType = BoGhost;
+	      /* the current box won't be displayed */
+	      if (pParent->AbFillBox)
+		TransmitFill (pParent->AbBox, TRUE);
+	    }
 	}
 
       if (pParent && pNextBox && pNextBox == pParent->AbBox)
@@ -4642,21 +4648,6 @@ void CheckScrollingWidth (int frame)
     }
 }
 
-void InitTable (int i, PtrDocument pDoc)
-{
-  ViewFrame          *pFrame;
-	
-	/* initialize visibility and zoom for the window */
-  /* cf. procedure InitializeFrameParams */
-  pFrame = &ViewFrameTable[i - 1];
-  pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
-  pFrame->FrMagnification = 0;	/* zoom a 0 */
-  
-  /* initialize frames tabe because it's used by display functions */
-  FrameTable[i].FrDoc = IdentDocument (pDoc);
-  FrameTable[i].FrView = i;
-  RemoveClipping(i);
-}
 /*----------------------------------------------------------------------
    ChangeConcreteImage traite la mise a jour d'une hierachie de paves 
    Pendant la creation d'une arborescence de boites on     
@@ -4682,7 +4673,6 @@ void InitTable (int i, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 {
-   int            documentnb;
    PtrAbstractBox      pParentAb;
    PtrAbstractBox      pChildAb;
    ViewFrame          *pFrame;
@@ -4691,6 +4681,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
    PtrBox              pParentBox;
    PtrBox              pChildBox;
    DisplayMode         saveMode;
+   int                 doc;
    int                 savevisu = 0;
    int                 savezoom = 0;
    ThotBool            change;
@@ -4701,8 +4692,8 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
      WIN_GetDeviceContext (frame);
 #endif /* _WINDOWS */
 
-   documentnb = FrameTable[frame].FrDoc;
-   if (documentnb == 0)
+   doc = FrameTable[frame].FrDoc;
+   if (doc == 0)
      return result;
 
    pLine = NULL;
@@ -4727,7 +4718,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
 	/* Dans les autres cas */
 	/* nothing to be done if in mode NoComputedDisplay */
-	else if (documentDisplayMode[documentnb - 1] != NoComputedDisplay)
+	else if (documentDisplayMode[doc - 1] != NoComputedDisplay)
 	  {
 	     /* Traitement de la premiere creation */
 	     if (pFrame->FrAbstractBox == NULL)
@@ -4743,9 +4734,9 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 		  pFrame->FrSelectShown = FALSE;
 	       }
 
-	     saveMode = documentDisplayMode[documentnb - 1];
+	     saveMode = documentDisplayMode[doc - 1];
 	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[documentnb - 1] = DeferredDisplay;
+	       documentDisplayMode[doc - 1] = DeferredDisplay;
 
 	     /* On prepare le traitement de l'englobement apres modification */
 	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
@@ -4885,7 +4876,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 
 	     /* restore the current mode and  update tables if necessary */
 	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[documentnb - 1] = saveMode;
+	       documentDisplayMode[doc - 1] = saveMode;
 	      if (!lock)
 		/* unlock table formatting */
 		(*ThotLocalActions[T_unlock]) ();

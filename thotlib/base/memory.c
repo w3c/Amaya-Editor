@@ -2073,7 +2073,6 @@ void GetLine (PtrLine *pLine)
   ----------------------------------------------------------------------*/
 void FreeLine (PtrLine pLine)
 {
-
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pLine);
 #else
