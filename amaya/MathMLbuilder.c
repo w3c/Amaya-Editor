@@ -24,261 +24,10 @@
 #include "style.h"
 #include "undo.h"
 
-XmlEntity  MathEntityTable[] =
-{
-   /* This table MUST be in alphabetical order */
-   /* This table contains characters from the Symbol font plus some
-      specific MathML entities */
-   {TEXT("Aacute"), 192, 'L'},
-   {TEXT("Acirc"), 194, 'L'},
-   {TEXT("Agr"), 65, 'G'},
-   {TEXT("And"), 217, 'G'},
-   {TEXT("ApplyFunction"), 129, 'L'},   /* rendered as a thin space */
-   {TEXT("Backslash"), 92, 'L'},
-   {TEXT("Bgr"), 66, 'G'},
-   {TEXT("Cap"), 199, 'G'},
-   {TEXT("CenterDot"), 215, 'G'},
-   {TEXT("CirclePlus"), 197, 'G'},
-   {TEXT("CircleTimes"), 196, 'G'},
-   {TEXT("Colon"), 58, 'G'},
-   {TEXT("Congruent"), 64, 'G'},
-   {TEXT("Cup"), 200, 'G'},
-   {TEXT("Del"), 209, 'G'},
-   {TEXT("Delta"), 68, 'G'},
-   {TEXT("Diamond"), 168, 'G'},
-   {TEXT("DifferentialD"), 100, 'L'},
-   {TEXT("DoubleDownArrow"), 223, 'G'},
-   {TEXT("DoubleLeftArrow"), 220, 'G'},
-   {TEXT("DoubleLeftRightArrow"), 219, 'G'},
-   {TEXT("DoubleRightArrow"), 222, 'G'},
-   {TEXT("DoubleUpArrow"), 221, 'G'},
-   {TEXT("DownArrow"), 175, 'G'},
-   {TEXT("DownTee"), 94, 'G'},
-   {TEXT("EEgr"), 72, 'G'},
-   {TEXT("Egr"), 69, 'G'},
-   {TEXT("Element"), 206, 'G'},
-   {TEXT("Equal"), 61, 'L'},
-   {TEXT("EqualTilde"), 64, 'G'},
-   {TEXT("Exists"), 36, 'G'},
-   {TEXT("ExponentialE"), 101, 'L'},
-   {TEXT("ForAll"), 34, 'G'},
-   {TEXT("Gamma"), 71, 'G'},
-   {TEXT("GreaterEqual"), 179, 'G'},
-   {TEXT("Hat"), 94, 'L'},
-   {TEXT("Igr"), 73, 'G'},
-   {TEXT("ImaginaryI"), 105, 'L'},
-   {TEXT("Integral"), 242, 'G'},
-   {TEXT("Intersection"), 199, 'G'},
-   {TEXT("InvisibleComma"), 129, 'L'},   /* thin space */
-   {TEXT("InvisibleTimes"), 129, 'L'},   /* thin space */
-   {TEXT("Kgr"), 75, 'G'},
-   {TEXT("KHgr"), 67, 'G'},
-   {TEXT("Lambda"), 76, 'G'},
-   {TEXT("LeftAngleBracket"), 225, 'G'},
-   {TEXT("LeftArrow"), 172, 'G'},
-   {TEXT("LeftCeiling"), 233, 'G'},
-   {TEXT("LeftFloor"), 235, 'G'},
-   {TEXT("LeftRightArrow"), 171, 'G'},
-   {TEXT("Mgr"), 77, 'G'},
-   {TEXT("Ngr"), 78, 'G'},
-   {TEXT("NonBreakingSpace"), 160, 'L'},
-   {TEXT("Not"), 216, 'G'},
-   {TEXT("NotElement"), 207, 'G'},
-   {TEXT("NotEqual"), 185, 'G'},
-   {TEXT("NotSubset"), 203, 'G'},
-   {TEXT("Ogr"), 79, 'G'},
-   {TEXT("Omega"), 87, 'G'},
-   {TEXT("Or"), 218, 'G'},
-   {TEXT("OverBar"), 45, 'G'},
-   {TEXT("OverBrace"), 132, 'G'},    /* 132?? */
-   {TEXT("PI"), 213, 'G'},
-   {TEXT("PartialD"), 182, 'G'},
-   {TEXT("Phi"), 70, 'G'},
-   {TEXT("Pi"), 80, 'G'},
-   {TEXT("PlusMinus"), 177, 'G'},
-   {TEXT("Prime"), 178, 'G'},
-   {TEXT("Product"), 213, 'G'},
-   {TEXT("Proportional"), 181, 'G'},
-   {TEXT("Psi"), 89, 'G'},
-   {TEXT("RightAngleBracket"), 241, 'G'},
-   {TEXT("RightCeiling"), 249, 'G'},
-   {TEXT("RightFloor"), 251, 'G'},
-   {TEXT("Rgr"), 82, 'G'},
-   {TEXT("RightArrow"), 174, 'G'},
-   {TEXT("Sigma"), 83, 'G'},
-   {TEXT("Sol"), 164, 'G'},
-   {TEXT("Star"), 42, 'L'},
-   {TEXT("Subset"), 204, 'G'},
-   {TEXT("SubsetEqual"), 205, 'G'},
-   {TEXT("SuchThat"), 39, 'G'},
-   {TEXT("Sum"), 229, 'G'},
-   {TEXT("Superset"), 201, 'G'},
-   {TEXT("SupersetEqual"), 202, 'G'},
-   {TEXT("Tgr"), 84, 'G'},
-   {TEXT("Therefore"), 92, 'G'},
-   {TEXT("Theta"), 81, 'G'},
-   {TEXT("ThickSpace"), 130, 'L'},
-   {TEXT("ThinSpace"), 129, 'L'},
-   {TEXT("Tilde"), 126, 'L'},
-   {TEXT("TripleDot"), 188, 'G'},
-   {TEXT("UnderBar"), 45, 'G'},
-   {TEXT("UnderBrace"), 133, 'G'},    /* 133?? */
-   {TEXT("Union"), 200, 'G'},
-   {TEXT("UpArrow"), 173, 'G'},
-   {TEXT("Upsi"), 85, 'G'},
-   {TEXT("Upsi1"), 161, 'G'},
-   {TEXT("Vee"), 218, 'G'},
-   {TEXT("Verbar"), 189, 'G'},
-   {TEXT("VerticalBar"), 124, 'L'},
-   {TEXT("Xi"), 88, 'G'},
-   {TEXT("Zgr"), 90, 'G'},
-   {TEXT("aacute"), 224, 'L'},
-   {TEXT("acirc"), 226, 'L'},
-   {TEXT("acute"), 180, 'L'},
-   {TEXT("af"), 129, 'L'},             /* rendered as thin space */
-   {TEXT("aleph"), 192, 'G'},
-   {TEXT("alpha"), 97, 'G'},
-   {TEXT("and"), 217, 'G'},
-   {TEXT("angle"), 208, 'G'},
-   {TEXT("ap"), 187, 'G'},
-   {TEXT("beta"), 98, 'G'},
-   {TEXT("bot"), 94, 'G'},
-   {TEXT("bottom"), 94, 'G'},
-   {TEXT("bull"), 183, 'G'},
-   {TEXT("cap"), 199, 'G'},
-   {TEXT("chi"), 99, 'G'},
-   {TEXT("circ"), 94, 'L'},
-   {TEXT("clubs"), 167, 'G'},
-   {TEXT("cong"), 64, 'G'},
-   {TEXT("copysf"), 211, 'G'},
-   {TEXT("copyssf"), 227, 'G'},
-   {TEXT("cr"), 191, 'G'},
-   {TEXT("cup"), 200, 'G'},
-   {TEXT("dArr"), 223, 'G'},
-   {TEXT("darr"), 175, 'G'},
-   {TEXT("dd"), 100, 'L'},
-   {TEXT("deg"), 176, 'G'},
-   {TEXT("delta"), 100, 'G'},
-   {TEXT("diams"), 168, 'G'},
-   {TEXT("divide"), 184, 'G'},
-   {TEXT("dtri"), 209, 'G'},
-   {TEXT("ee"), 101, 'L'},
-   {TEXT("empty"), 198, 'G'},
-   {TEXT("emptyset"), 198, 'G'},
-   {TEXT("emsp"), 32, 'G'},
-   {TEXT("epsiv"), 101, 'G'},
-   {TEXT("equiv"), 186, 'G'},
-   {TEXT("eta"), 104, 'G'},
-   {TEXT("exist"), 36, 'G'},
-   {TEXT("florin"), 166, 'G'},
-   {TEXT("forall"), 34, 'G'},
-   {TEXT("gamma"), 103, 'G'},
-   {TEXT("ge"), 179, 'G'},
-   {TEXT("geq"), 179, 'G'},
-   {TEXT("gt"), 62, 'L'},
-   {TEXT("hearts"), 169, 'G'},
-   {TEXT("horbar"), 190, 'G'},
-   {TEXT("iff"), 219, 'G'},
-   {TEXT("ifraktur"), 193, 'G'},
-   {TEXT("in"), 206, 'G'},
-   {TEXT("infin"), 165, 'G'},
-   {TEXT("int"), 242, 'G'},
-   {TEXT("iota"), 105, 'G'},
-   {TEXT("isin"), 206, 'G'},
-   {TEXT("it"), 129, 'L'},          /* rendered as a thin space */
-   {TEXT("kappa"), 107, 'G'},
-   {TEXT("lArr"), 220, 'G'},
-   {TEXT("lambda"), 108, 'G'},
-   {TEXT("lang"), 225, 'G'},
-   {TEXT("langle"), 225, 'G'},
-   {TEXT("larr"), 172, 'G'},
-   {TEXT("lbrace"), 123, 'L'},
-   {TEXT("lceil"), 233, 'G'},
-   {TEXT("lcub"), 123, 'L'},
-   {TEXT("le"), 163, 'G'},
-   {TEXT("leq"), 163, 'G'},
-   {TEXT("lfloor"), 235, 'G'},
-   {TEXT("lowbar"), 95, 'G'},
-   {TEXT("loz"), 224, 'G'},
-   {TEXT("lrArr"), 219, 'G'},
-   {TEXT("lrarr"), 171, 'G'},
-   {TEXT("lsqb"), 91, 'G'},
-   {TEXT("lt"), 60, 'L'},
-   {TEXT("middot"), 215, 'G'},
-   {TEXT("mldr"), 188, 'G'},
-   {TEXT("mu"), 109, 'G'},
-   {TEXT("nabla"), 209, 'G'},
-   {TEXT("nbsp"), 160, 'L'},
-   {TEXT("ne"), 185, 'G'},
-   {TEXT("neq"), 185, 'G'},
-   {TEXT("not"), 216, 'G'},
-   {TEXT("notin"), 207, 'G'},
-   {TEXT("nu"), 110, 'G'},
-   {TEXT("ogr"), 111, 'G'},
-   {TEXT("omega"), 119, 'G'},
-   {TEXT("oplus"), 197, 'G'},
-   {TEXT("or"), 218, 'G'},
-   {TEXT("otimes"), 196, 'G'},
-   {TEXT("part"), 182, 'G'},
-   {TEXT("perp"), 94, 'G'},
-   {TEXT("phi"), 102, 'G'},
-   {TEXT("phiv"), 106, 'G'},
-   {TEXT("pi"), 112, 'G'},
-   {TEXT("piv"), 118, 'G'},
-   {TEXT("prime"), 162, 'G'},
-   {TEXT("prop"), 181, 'G'},
-   {TEXT("psi"), 121, 'G'},
-   {TEXT("rArr"), 222, 'G'},
-   {TEXT("radic"), 214, 'G'},
-   {TEXT("rang"), 241, 'G'},
-   {TEXT("rangle"), 241, 'G'},
-   {TEXT("rarr"), 174, 'G'},
-   {TEXT("rbrace"), 125, 'L'},
-   {TEXT("rceil"), 249, 'G'},
-   {TEXT("rcub"), 125, 'L'},
-   {TEXT("rdquo"), 178, 'G'},
-   {TEXT("regsf"), 210, 'G'},
-   {TEXT("regssf"), 226, 'G'},
-   {TEXT("rfloor"), 251, 'G'},
-   {TEXT("rfraktur"), 194, 'G'},
-   {TEXT("rho"), 114, 'G'},
-   {TEXT("rsqb"), 93, 'G'},
-   {TEXT("sigma"), 115, 'G'},
-   {TEXT("sigmav"), 86, 'G'},
-   {TEXT("spades"), 170, 'G'},
-   {TEXT("sub"), 204, 'G'},
-   {TEXT("sube"), 205, 'G'},
-   {TEXT("subne"), 203, 'G'},
-   {TEXT("subset"), 204, 'G'},
-   {TEXT("sum"), 229, 'G'},
-   {TEXT("sup"), 201, 'G'},
-   {TEXT("supe"), 202, 'G'},
-   {TEXT("supset"), 201, 'G'},
-   {TEXT("supseteq"), 202, 'G'},
-   {TEXT("supseteqq"), 202, 'G'},
-   {TEXT("tau"), 116, 'G'},
-   {TEXT("there4"), 92, 'G'},
-   {TEXT("therefore"), 92, 'G'},
-   {TEXT("theta"), 113, 'G'},
-   {TEXT("thetav"), 74, 'G'},
-   {TEXT("thickspace"), 130, 'L'},
-   {TEXT("times"), 180, 'G'},
-   {TEXT("trade"), 212, 'G'},
-   {TEXT("tradesf"), 212, 'G'},
-   {TEXT("tradessf"), 228, 'G'},
-   {TEXT("uArr"), 221, 'G'},
-   {TEXT("uarr"), 173, 'G'},
-   {TEXT("upsi"), 117, 'G'},
-   {TEXT("vee"), 218, 'G'},
-   {TEXT("weierp"), 195, 'G'},
-   {TEXT("xi"), 120, 'G'},
-   {TEXT("zeta"), 122, 'G'},
-   {TEXT("zzzz"), -1, SPACE}		/* this last entry is required */
-
-};
+/* Define a pointer to let parser functions access the Math entity table */
+extern XmlEntity *pMathEntityTable;
 
 /* mapping table of attribute values */
-
 static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
  {MathML_ATTR_accent, TEXT("true"), MathML_ATTR_accent_VAL_true},
@@ -489,16 +238,16 @@ STRING  alphabet;
   ThotBool       found;
 
   found = FALSE;
-  for (i = 0; MathEntityTable[i].charCode >= 0 && !found; i++)
-    found = !ustrcmp (MathEntityTable[i].charName, entityName);
+  for (i = 0; pMathEntityTable[i].charCode >= 0 && !found; i++)
+    found = !ustrcmp (pMathEntityTable[i].charName, entityName);
 
   if (found)
     /* entity found */
     {
       i--;
-      entityValue[0] = (UCHAR_T) MathEntityTable[i].charCode;
+      entityValue[0] = (UCHAR_T) pMathEntityTable[i].charCode;
       entityValue[1] = EOS;
-      *alphabet = MathEntityTable[i].charAlphabet;
+      *alphabet = pMathEntityTable[i].charAlphabet;
     }
   else
     {
@@ -592,15 +341,15 @@ STRING  alphabet;
   ThotBool  found;
 
   found = FALSE;
-  for (i = 0; MathEntityTable[i].charCode >= 0 && !found; i++)
-    found = !ustrcmp (MathEntityTable[i].charName, entityName);
+  for (i = 0; pMathEntityTable[i].charCode >= 0 && !found; i++)
+    found = !ustrcmp (pMathEntityTable[i].charName, entityName);
 
   if (found)
     /* entity found */
     {
       i--;
-      *entityValue = MathEntityTable[i].charCode;
-      *alphabet = MathEntityTable[i].charAlphabet;
+      *entityValue = pMathEntityTable[i].charCode;
+      *alphabet = pMathEntityTable[i].charAlphabet;
     }
   else
     *alphabet = EOS;

@@ -21,11 +21,13 @@
 #include "GraphMLnames.h"
 #include "XLinknames.h"
 
-/* define a pointer to let other parser functions access the local table */
+/* define some pointers to let other parser functions access the local table */
 int               HTML_ENTRIES = (sizeof(XHTMLElemMappingTable) / sizeof(ElemMapping));
 ElemMapping      *pHTMLGIMapping = XHTMLElemMappingTable;
 AttributeMapping *pHTMLAttributeMapping = XHTMLAttributeMappingTable;
 
+XmlEntity        *pXhtmlEntityTable = XhtmlEntityTable;
+XmlEntity        *pMathEntityTable = MathEntityTable;
 
 #include "fetchXMLname_f.h"
 
