@@ -26,8 +26,9 @@
 #define ProxyMenu         1
 #define mHttpProxy        2
 #define mProxyDomain      3
-#define mToggleProxy      4
-#define MAX_PROXYMENU_DLG 5
+#define mProxyDomainInfo  4
+#define mToggleProxy      5
+#define MAX_PROXYMENU_DLG 6
 
 #define GeneralMenu          1
 #define mDoubleClickDelay    2

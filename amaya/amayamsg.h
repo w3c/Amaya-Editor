@@ -198,4 +198,5 @@ int                 AMAYA;
 #define AM_SAFE_PUT_REDIRECT          186
 #define AM_WITH_CSS                   187
 #define AM_TRANS		      188
+#define AM_PROXY_DOMAIN_INFO          189
 #define AMAYA_MSG_MAX                 190

@@ -1282,7 +1282,8 @@ View                view;
 		   20,
 		   1,
 		   TRUE);
-
+   TtaNewLabel (GeneralBase + mProxyDomainInfo, ProxyBase + ProxyMenu,
+		TtaGetMessage (AMAYA, AM_PROXY_DOMAIN_INFO));
    usprintf (s, "T%s%cT%s", 
 	     "No proxy on these domains", EOS,
 	     "Only proxy these domains");
