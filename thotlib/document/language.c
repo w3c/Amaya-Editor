@@ -563,7 +563,7 @@ STRING              secondDictionary;
 	      /* The language is already defined */
 	      return i;
 	  ustrcpy (LangTable[FreeEntry].LangName, languageName);
-	  ustrcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
+	  ustrcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageNameFromCode (languageName));
 	  }
 
 	/* Saves the new language */
