@@ -76,7 +76,7 @@ int     indexHandler;
 #ifdef NEW_WILLOWS
   return(0);
 #else  /* NEW_WILLOWS */
-  refNum = GetPictTypeIndex (HandlersCounter - 1);
+  refNum = GetPictTypeIndex (HandlersCounter);
   return refNum;
 #endif /* !NEW_WILLOWS */
 }/*FigOpenImageDrvr*/
@@ -132,7 +132,7 @@ int       yif;
        XtSetArg (arg[n], XmNy, yif ); n++;
        XtSetValues ((Widget) (imageDesc->wid), arg, n);
        XtManageChild ((Widget) (imageDesc->wid));
-       Ap_CreatePluginInstance (XtWindow ((Widget) (imageDesc->wid)), TtDisplay, fileName);
+       Ap_CreatePluginInstance (imageDesc->PicType, XtWindow ((Widget) (imageDesc->wid)), TtDisplay, fileName);
        imageDesc->mapped  = TRUE;
        imageDesc->created = TRUE;
     } else {
@@ -287,9 +287,10 @@ int     indexHandler;
    PictureIdType[HandlersCounter]                          = PLUGIN_FORMAT;
    PictureMenuType[HandlersCounter]                        = PLUGIN_FORMAT;
 
-   HandlersCounter++;
-
    Ap_OpenPluginDriver (printing, indexHandler) ;
+
+   HandlersCounter++;
+   printf ("HandlersCounter = %d\n", HandlersCounter) ;
 }
 
 #ifdef __STDC__

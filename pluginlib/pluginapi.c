@@ -41,6 +41,8 @@ extern XtAppContext     app_cont;
 extern PluginInfo*      pluginTable [100];
 extern Document         currentDocument;
 extern int              currentPlugin;
+extern int              pluginCounter;
+extern int              InlineHandlers;
 extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
 
 /* static NPP              pluginInstance; */
@@ -516,16 +518,16 @@ int indexHandler;
     int   ret ;
 
 
-    pluginTable [currentPlugin]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
+    pluginTable [indexHandler]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
     printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs));
-    pluginTable [currentPlugin]->pluginFunctionsTable->size         = ((uint16) (sizeof (NPPluginFuncs)));
+    pluginTable [indexHandler]->pluginFunctionsTable->size         = ((uint16) (sizeof (NPPluginFuncs)));
 
     ptr_NP_Initialize = (int (*) (NPNetscapeFuncs*, NPPluginFuncs*)) dlsym (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
     message = (char*) dlerror ();    
     if (message) 
 	printf ("ERROR at Initialization: %s\n", message);
 
-    ret = ptr_NP_Initialize (amayaFunctionsTable, pluginTable [currentPlugin]->pluginFunctionsTable);
+    ret = ptr_NP_Initialize (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
     printf ("result = %d\n", ret); 
 }
 
@@ -574,7 +576,7 @@ int   indexHandler;
     GUI_Name [index1++] = ')' ;
     GUI_Name [index1] = '\0';
 
-    printf (GUI_Name);
+    printf ("GUI_Name : %s\n", GUI_Name);
     
     strncpy (PictureHandlerTable[indexHandler].GUI_Name, GUI_Name, MAX_FORMAT_NAMELENGHT);
     /* Initializing the pointers to the netscape functions */
@@ -586,9 +588,10 @@ int   indexHandler;
   CreateInstance
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Ap_CreatePluginInstance (Window window, Display* display, char* filename) 
+void Ap_CreatePluginInstance (int indexPlug, Window window, Display* display, char* filename) 
 #else  /* __STDC__ */
-void Ap_CreatePluginInstance (window, display, filename) 
+void Ap_CreatePluginInstance (indexPlug, window, display, filename) 
+int      indexPlug ;
 Window   window;
 Display* display; 
 char*    filename;
@@ -626,17 +629,17 @@ char*    filename;
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->depth    = DefaultDepth(display, DefaultScreen (display));
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->type     = 0;
     
-    pluginTable [currentPlugin]->pluginInstance = (NPP) malloc (sizeof (NPP_t));
+    pluginTable [indexPlug - InlineHandlers]->pluginInstance = (NPP) malloc (sizeof (NPP_t));
 
-    (*(pluginTable [currentPlugin]->pluginFunctionsTable->newp)) (pluginTable [currentPlugin]->pluginType, pluginTable [currentPlugin]->pluginInstance, NP_EMBED, argc, argn, argv,  NULL);
+    (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->newp)) (pluginTable [indexPlug - InlineHandlers]->pluginType, pluginTable [indexPlug - InlineHandlers]->pluginInstance, NP_EMBED, argc, argn, argv,  NULL);
 
     stream      = (NPStream*) malloc (sizeof (NPStream));
     stream->url = filename;
     stream->end = 0;
        
-    (*(pluginTable [currentPlugin]->pluginFunctionsTable->setwindow)) (pluginTable [currentPlugin]->pluginInstance, pwindow); 
+    (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->setwindow)) (pluginTable [indexPlug - InlineHandlers]->pluginInstance, pwindow); 
     
-    ret = (*(pluginTable [currentPlugin]->pluginFunctionsTable->newstream)) (pluginTable [currentPlugin]->pluginInstance, pluginMimeType, stream, TRUE, &stype); 
+    ret = (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->newstream)) (pluginTable [indexPlug - InlineHandlers]->pluginInstance, pluginMimeType, stream, TRUE, &stype); 
 
     range.offset = 0; /*10; */
     range.length = 2000; /*20;*/
@@ -646,7 +649,7 @@ char*    filename;
     /*AM_requestread(stream, &range);*/
  
     printf ("Retrun from new stream = %d\n", ret);
-    (*(pluginTable [currentPlugin]->pluginFunctionsTable->asfile)) (pluginTable [currentPlugin]->pluginInstance, stream, filename);
+    (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->asfile)) (pluginTable [indexPlug - InlineHandlers]->pluginInstance, stream, filename);
     /*dlclose(fighandle);*/       
 }
 

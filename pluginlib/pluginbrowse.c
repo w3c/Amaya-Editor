@@ -59,6 +59,7 @@ void TtaBrowsePluginDirectory ()
             pluginTable [pluginCounter] = (PluginInfo*) malloc (sizeof (PluginInfo)) ;
             pluginTable [pluginCounter]->pluginDL = (char*) malloc (strlen (thotDir.buf) + 1);
             pluginTable [pluginCounter]->pluginHandle = (void*) NULL;
+            pluginTable [pluginCounter]->pluginFunctionsTable = (NPPluginFuncs*) NULL;
             strcpy (pluginTable [pluginCounter]->pluginDL, thotDir.buf);
             InitPluginHandlers (FALSE, pluginCounter);
             pluginCounter++;
