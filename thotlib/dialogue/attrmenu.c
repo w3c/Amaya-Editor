@@ -1158,10 +1158,8 @@ STRING        bufEventAttr;
 		/* prend les attributs locaux definis dans cette regle */
 		for (att = 0; att < pRe1->SrNLocalAttrs; att++)
 		  if (nbOfEntries - *nbEvent < MAX_MENU &&
-		      !AttrHasException (ExcInvisible, pRe1->SrLocalAttr[att],
-					 pSS) &&
-		      TteItemMenuAttr (pSS, pRe1->SrLocalAttr[att], firstSel,
-				       SelDoc))
+		      !AttrHasException (ExcInvisible, pRe1->SrLocalAttr[att], pSS) &&
+		      TteItemMenuAttr (pSS, pRe1->SrLocalAttr[att], firstSel, SelDoc))
 		    {
 		      /* conserve le schema de structure et le numero */
 		      /* d'attribut de cette nouvelle entree du menu */

@@ -2136,12 +2136,12 @@ NotifyAttribute    *event;
    SSchema	       HTMLSSchema;
    STRING              attr;
 
-   attr = GetXMLAttributeName (event->attributeType, event->document);
+   elType = TtaGetElementType (event->element);
+   attr = GetXMLAttributeName (event->attributeType, elType, event->document);
    if (attr[0] == WC_EOS)
       return TRUE;	/* don't put an invalid attribute in the menu */
 
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
-   elType = TtaGetElementType (event->element);
    if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
      {
       /* it's a HTML element */

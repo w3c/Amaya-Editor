@@ -26,6 +26,7 @@ extern int MapXMLAttribute ( int XMLtype,
                              Document doc,
                              int *thotType );
 extern CHAR_T* GetXMLAttributeName ( AttributeType attrType,
+                                     ElementType elType,
                                      Document doc );
 
 #else /* __STDC__ */
@@ -50,6 +51,7 @@ extern int MapXMLAttribute (/* int XMLtype,
                                Document doc,
                                int *thotType */);
 extern CHAR_T* GetXMLAttributeName (/* AttributeType attrType,
+                                       ElementType elType,
                                        Document doc */);
 
 #endif /* __STDC__ */

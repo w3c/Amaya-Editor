@@ -327,20 +327,27 @@ int              *thotType;
    a given Thot type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T*           GetXMLAttributeName (AttributeType attrType, Document doc)
+CHAR_T*           GetXMLAttributeName (AttributeType attrType, ElementType elType, Document doc)
 #else
-CHAR_T*           GetXMLAttributeName (attrType, doc)
+CHAR_T*           GetXMLAttributeName (attrType, elType, doc)
 AttributeType     attrType;
+ElementType       elType;
 Document          doc;
 #endif
 {
   AttributeMapping   *ptr;
-  STRING              name;
+  STRING              name, tag;
   int                 i;
   ThotBool            invalid = FALSE;
 
   if (attrType.AttrTypeNum > 0)
     {
+      /* get the specific element tag */
+      if (elType.ElTypeNum > 0)
+	tag = GetXMLElementName (elType, doc);
+      else
+	tag = TEXT("");
+
       i = 0;
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (attrType.AttrSSchema);
@@ -356,7 +363,9 @@ Document          doc;
       if (ptr)
 	do
 	  {
-	    if (ptr[i].ThotAttribute == attrType.AttrTypeNum)
+	    if (ptr[i].ThotAttribute == attrType.AttrTypeNum &&
+		(ptr[i].XMLelement[0] == WC_EOS ||
+		 !ustrcmp (ptr[i].XMLelement, tag)))
 	      {
 		if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
 		  return ptr[i].XMLattribute;

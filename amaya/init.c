@@ -2484,7 +2484,7 @@ ThotBool            history;
 	  if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
 	    ParsingLevel[newdoc] = L_Basic;
 	  else if (!ustrncmp (profile, TEXT("XHTML-strict"), 10))
-	    ParsingLevel[newdoc] = L_Basic;
+	    ParsingLevel[newdoc] = L_Strict;
 	  else
 	    ParsingLevel[newdoc] = L_Transitional;
 	}

@@ -91,6 +91,7 @@
 +print
 +source-view
 +spell
++strict-style
 +tables
 +templates
 +views
@@ -334,6 +335,7 @@ HelpImageMaps
 &CreateOptGroup
 
 [basic-table-module]
+&CreateCaption
 &CreateTable
 &CreateTBody
 &CreateRow
@@ -344,7 +346,6 @@ HelpTables
 
 [tables]
 +basic-table-module
-&CreateCaption
 &CreateColgroup
 &CreateCol
 &CreateTHead
@@ -381,18 +382,22 @@ HelpMath
 ShowGraphicsPalette
 
 ########### STYLE
-[html-style]
+[strict-style]
 &CreateHorizontalRule
-&SetOnOffINS
-&SetOnOffDEL
 &SetOnOffItalic
 &SetOnOffBold
 &SetOnOffTeletype
 &SetOnOffBig
 &SetOnOffSmall
-&CreateIFrame
 &SetOnOffSub
 &SetOnOffSup
+&SetOnOffBDO
+
+[html-style]
++strict-style
+&SetOnOffINS
+&SetOnOffDEL
+&CreateIFrame
 &SetOnOffBDO
 
 [css-browsing]

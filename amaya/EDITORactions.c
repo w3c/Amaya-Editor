@@ -965,6 +965,7 @@ View                view;
    Element             el, new, cell, row;
    AttributeType       attrType;
    Attribute           attr;
+   CHAR_T              stylebuff[50];
    int                 firstChar, i;
 
    if (!HTMLelementAllowed (document))
@@ -1016,23 +1017,41 @@ View                view;
          el = TtaGetTypedAncestor (el, elType);
        if (el != NULL)
 	 {
-	   /* take care of the Border attribute */
 	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_Border;
-	   attr = TtaGetAttribute (el, attrType);
-	   if (attr != NULL && TBorder == 0)
-	     /* the table has a Border attribute but the user don't want any
-		border. Remove the attribute */
-	     TtaRemoveAttribute (el, attr, document);
+	   if (ParsingLevel[document] == L_Basic)
+	     {
+	       /* remove the Border attribute */
+	       attrType.AttrTypeNum = HTML_ATTR_Border;
+	       attr = TtaGetAttribute (el, attrType);
+	       if (attr != NULL)
+		 TtaRemoveAttribute (el, attr, document);
+	       /* generate a border style */
+	       attrType.AttrTypeNum = HTML_ATTR_Style_;
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (el, attr, document);
+	       ustrcpy (stylebuff, TEXT("border:  "));
+	       usprintf (stylebuff, TEXT("border: solid %dpx"), TBorder);
+	       TtaSetAttributeText (attr, stylebuff, el, document);	       
+	     }
 	   else
 	     {
-	       if (attr == NULL)
-	         /* the Table has no Border attribute, create one */
+	       /* take care of the Border attribute */
+	       attrType.AttrTypeNum = HTML_ATTR_Border;
+	       attr = TtaGetAttribute (el, attrType);
+	       if (attr != NULL && TBorder == 0)
+		 /* the table has a Border attribute but the user don't want any
+		    border. Remove the attribute */
+		 TtaRemoveAttribute (el, attr, document);
+	       else
 		 {
-		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (el, attr, document);
+		   if (attr == NULL)
+		     /* the Table has no Border attribute, create one */
+		     {
+		       attr = TtaNewAttribute (attrType);
+		       TtaAttachAttribute (el, attr, document);
+		     }
+		   TtaSetAttributeValue (attr, TBorder, el, document);
 		 }
-	       TtaSetAttributeValue (attr, TBorder, el, document);
 	     }
 
 	   if (NumberCols > 1)
