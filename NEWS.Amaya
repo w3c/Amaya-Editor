@@ -8,15 +8,23 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
 Extensions 2.3:
 ---------------
 
-* As many search tools generate invalid forms, they are now suported in Amaya.
+* HTML:
+  - As many search tools generate invalid forms, they are now suported in
+    Amaya.
 
-* Shortcuts Control Up, Control Down, Control Left, Control Right allow one
-  to scroll smoothly the window in the four directions when the scroll is
-  possible.
+* User Interface:
+  - In the file amaya.profiles the function TtcCloseDocument must be replaced
+    by CloseDocument.
+  - Shortcuts Control Up, Control Down, Control Left, Control Right allow one
+    to scroll smoothly the window in the four directions when the scroll is
+    possible.
 
 * libwww:
-  It's now possible to say that the proxy should ONLY be used with
-  a given list of domains.
+  - It's now possible to say that the proxy should ONLY be used with a given
+    list of domains.
+
+* Building Amaya:
+  - There are new make files on Windows platforms.
 
 Fixed bugs 2.3:
 ---------------
@@ -34,7 +42,7 @@ Fixed bugs 2.3:
     to save unsaved document. So the cancel was ineffective.
 
 * HTML:
-  - the <input type=image> was not well supported.
+  - The <input type=image> was not well supported.
 
 
 * Cache:

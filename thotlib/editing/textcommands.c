@@ -172,7 +172,7 @@ ThotBool            extendSel;
    PtrAbstractBox      pAb;
    int                 index;
    int                 nbbl;
-   int                 nChars;
+   int                 nChars, org;
    int                 h, w, doc;
 
    pFrame = &ViewFrameTable[frame - 1];
@@ -193,13 +193,23 @@ ThotBool            extendSel;
    doc = FrameTable[frame].FrDoc;
    GetSizesFrame (frame, &w, &h);
    if (xDelta < 0 && pFrame->FrXOrg > 0 && x + xDelta < 0)
-     TtcScrollLeft (doc, 1);
+       TtcScrollLeft (doc, 1);
    else if (xDelta > 0 && x + xDelta > pFrame->FrXOrg + w)
-     TtcScrollRight (doc, 1);
+       TtcScrollRight (doc, 1);
    else if (yDelta < 0 && pFrame->FrYOrg > 0 && y + yDelta < 0)
-     TtcLineUp (doc, 1);
+     {
+       org = pLastBox->BxYOrg;
+       TtcLineUp (doc, 1);
+       /* update the new position */
+       y = y + org - pLastBox->BxYOrg;
+     }
    else if (yDelta > 0 && y + yDelta > pFrame->FrYOrg + h)
-     TtcLineDown (doc, 1);
+     {
+       org = pLastBox->BxYOrg;
+       TtcLineDown (doc, 1);
+       /* update the new position */
+       y = y + org - pLastBox->BxYOrg;
+     }
 
    pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
    nChars = 0;
@@ -248,6 +258,7 @@ ThotBool            extendSel;
    int                 xDelta, yDelta;
    int                 h, w, doc;
    int                 indpos, xpos;
+   ThotBool            top = TRUE;
 
    indpos = 0;
    xpos = 0;
@@ -298,13 +309,18 @@ ThotBool            extendSel;
        if (pBoxBegin != NULL &&
 	   (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
 	    pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
-	 /* the element is not displayed within the window */
-	 pBoxBegin = NULL;
+	 {
+	   /* the element is not displayed within the window */
+	   top = pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg;
+	   pBoxBegin = NULL;
+	 }
        if (pBoxEnd != NULL &&
 	   (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
 	    pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
-	 /* the element is not displayed within the window */
-	 pBoxEnd = NULL;
+	 {
+	   /* the element is not displayed within the window */
+	   pBoxEnd = NULL;
+	 }
        if (pBoxBegin == NULL && pBoxEnd != NULL)
 	 pBoxBegin = pBoxEnd;
        else if (pBoxBegin != NULL && pBoxEnd == NULL)
@@ -317,9 +333,12 @@ ThotBool            extendSel;
 	     {
 	       /* initialize a selection and retry */
 	       Retry = TRUE;
-	       LocateSelectionInView (frame, 0, 0, 2);
-	       ClickX = - pFrame->FrXOrg;
-	       ClickY = - pFrame->FrYOrg;
+	       ClickX = 0;
+	       if (top)
+		 ClickY = 0;
+	       else
+		 ClickY = h;
+	       LocateSelectionInView (frame, 0, ClickY, 2);
 	       Retry = FALSE;
 	       return;
 	     }

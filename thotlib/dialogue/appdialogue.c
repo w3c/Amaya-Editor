@@ -448,15 +448,98 @@ int                 number;
   ----------------------------------------------------------------------*/
 void    FreeMenus ()
 {
+  PtrAction           pAction, aNext;
+  Menu_Ctl           *ptrmenu, *mNext;
+  SchemaMenu_Ctl     *ptrschema, *sNext;
+  Item_Ctl           *ptrItem;
   int                 i;
 
+  /* free menu actions */
    for (i = MAX_INTERNAL_CMD; i < FreeMenuAction; i++)
      {
        TtaFreeMemory (MenuActionList[i].ActionName);
        TtaFreeMemory (MenuActionList[i].ActionEquiv);
      }
-     
   TtaFreeMemory (MenuActionList);
+
+  /* free menu contexts allocated for the main window */
+  ptrmenu = MainMenuList;
+  while (ptrmenu)
+    {
+      ptrItem = ptrmenu->ItemsList;
+      for (i = 0; i < ptrmenu->ItemsNb; i++)
+	if (ptrItem[i].ItemType == TEXT('M'))
+	  {
+	    /* free a submenu */
+	    TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
+	    TtaFreeMemory (ptrItem[i].SubMenu);
+	  }
+	  
+      /* free the items list */
+      TtaFreeMemory (ptrItem);
+      /* free the menu context */
+      mNext = ptrmenu->NextMenu;
+      TtaFreeMemory (ptrmenu);
+      ptrmenu = mNext;
+    }
+
+  /* free menu contexts allocated for standard documents*/
+  ptrmenu = DocumentMenuList;
+  while (ptrmenu)
+    {
+      ptrItem = ptrmenu->ItemsList;
+      for (i = 0; i < ptrmenu->ItemsNb; i++)
+	if (ptrItem[i].ItemType == TEXT('M'))
+	  {
+	    /* free a submenu */
+	    TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
+	    TtaFreeMemory (ptrItem[i].SubMenu);
+	  }
+	  
+      /* free the items list */
+      TtaFreeMemory (ptrItem);
+      /* free the menu context */
+      mNext = ptrmenu->NextMenu;
+      TtaFreeMemory (ptrmenu);
+      ptrmenu = mNext;
+    }
+
+  /* free menu contexts allocated for specific documents*/
+  ptrschema = SchemasMenuList;
+  while (ptrschema)
+    {
+      ptrmenu = ptrschema->SchemaMenu;
+      while (ptrmenu)
+	{
+	  ptrItem = ptrmenu->ItemsList;
+	  for (i = 0; i < ptrmenu->ItemsNb; i++)
+	    if (ptrItem[i].ItemType == TEXT('M'))
+	      {
+		/* free a submenu */
+		TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
+		TtaFreeMemory (ptrItem[i].SubMenu);
+	      }
+	  
+	  /* free the items list */
+	  TtaFreeMemory (ptrItem);
+	  /* free the menu context */
+	  mNext = ptrmenu->NextMenu;
+	  TtaFreeMemory (ptrmenu);
+	  ptrmenu = mNext;
+	}
+      sNext = ptrschema;
+      TtaFreeMemory (ptrschema);
+      ptrschema = sNext;
+    }
+    
+  /* free actions */
+   pAction = ActionList;
+   while (pAction != NULL)
+     {
+       aNext = pAction->ActNext;
+       TtaFreeMemory (pAction);
+       pAction = aNext;
+     }
 }
 
 

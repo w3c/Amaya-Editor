@@ -871,24 +871,28 @@ ThotBool            actif;
 	     ymin = pFrame->FrYOrg;
 	     ymax = ymin + dy;
 	     /* MilieuX de la fenetre */
-	     dx = dx / 2;
-	     dy = dy / 2;
+	     dx = pFrame->FrSelectionBegin.VsIndBox;
+	     dy = 13;
 
 	     if (pBo1->BxAbstractBox != NULL)
 	       {
 		 if (!pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
-		   /* Ce n'est pas une creation interactive de boite, la boite sera */
-		   /* automatiquement placee dans la fenetre au moment de sa creation */
-		   if (x + pBo1->BxWidth < xmin + 10 || x > xmax + 10)
-		     /* Deplacement du cadre le la fenetre */
-		     HorizontalScroll (frame, x - xmin - dx, 0);
+		   /* the box position is not given by the user */
+		   if (x + dx < xmin + 10)
+		     /* scroll the window */
+		     HorizontalScroll (frame, x + dx - xmin - 10, 0);
+		   else if (x + dx > xmax - 10)
+		     /* scroll the window */
+		     HorizontalScroll (frame, x + dx - xmax + 10, 0);
 
 		 if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
-		   /* C'est une creation interactive de boite, la boite sera */
-		   /* automatiquement placee dans la fenetre au moment de sa creation */
-		   if (y + pBo1->BxHeight < ymin + 10 || y > ymax + 10)
-		     /* Deplacement du cadre le la fenetre */
-		     VerticalScroll (frame, y - ymin - dy, 0);
+		   /* the box position is not given by the user */
+		   if (y + pBo1->BxHeight < ymin + dy)
+		     /* scroll the window */
+		     VerticalScroll (frame, y + pBo1->BxHeight - ymin - dy, 0);
+		   else if (y > ymax - dy)
+		     /* scroll the window */
+		     VerticalScroll (frame, y - ymax + dy, 0);
 	       }
 	  }
      }
