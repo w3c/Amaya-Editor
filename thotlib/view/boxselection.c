@@ -223,12 +223,14 @@ int                 frame;
 			    x2 = pBox1->BxXOrg + pBox1->BxWidth;
 			  }
 			DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
-			if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
+			if (pAb1->AbLeafType == LtGraphics ||
+			    pAb1->AbLeafType == LtPolyLine)
 			  /* need to redraw more thsn one box */
 			  RedrawFrameBottom (frame, 0, NULL);
 			else
 			  RedrawFrameBottom (frame, 0, pAb1);
-			if (pBox1->BxType == BoPiece)
+			if (pBox1->BxType == BoPiece ||
+			    pBox1->BxType == BoDotted)
 			  {
 			    /* unselect the end of the split text */
 			    pBox = pBox1->BxNexChild;
@@ -264,7 +266,8 @@ int                 frame;
 			  RedrawFrameBottom (frame, 0, NULL);
 			else
 			  RedrawFrameBottom (frame, 0, pAb2);
-			if (pBox2->BxType == BoPiece)
+			if (pBox2->BxType == BoPiece ||
+			    pBox1->BxType == BoDotted)
 			  {
 			    /* select the begin of the split text */
 			    pBox = pAb2->AbBox->BxNexChild;
@@ -568,10 +571,12 @@ ViewSelection      *selMark;
 	     selMark->VsNSpaces = spaceWidth;
 	     /* ajoute eventuellement les pixels repartis */
 	     if (pBox->BxSpaceWidth != 0)
+	       {
 		if (selMark->VsNSpaces < pBox->BxNPixels)
 		   selMark->VsXPos += selMark->VsNSpaces;
 		else
 		   selMark->VsXPos += pBox->BxNPixels;
+	       }
 	  }
 	selMark->VsBox = pBox;
      }
@@ -873,7 +878,8 @@ ThotBool            alone;
 			RedrawFrameBottom (frame, 0, NULL);
 		      else
 			RedrawFrameBottom (frame, 0, pAb);
-		      if (pBox->BxType == BoPiece)
+		      if (pBox->BxType == BoPiece ||
+			  pBox->BxType == BoDotted)
 			{
 			  /* select the begin of the split text */
 			  pBox = pAb->AbBox->BxNexChild;
@@ -907,7 +913,8 @@ ThotBool            alone;
 		      else
 			RedrawFrameBottom (frame, 0, pAb);
 		      
-		      if (pBox->BxType == BoPiece)
+		      if (pBox->BxType == BoPiece ||
+			  pBox->BxType == BoDotted)
 			{
 			  /* select the end of the split text */
 			  pBox = pBox->BxNexChild;
