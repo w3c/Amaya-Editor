@@ -208,6 +208,9 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_LINEBREAK:
 	       return PtLineBreak;
 	       break;
+	    case C_PR_DISPLAY:
+	       return PtDisplay;
+	       break;
 	    default:
 	       error = True;
 	       return PtVisibility;
@@ -1166,6 +1169,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 				     case PtDirection:
 				     case PtUnicodeBidi:
 				     case PtLineStyle:
+				     case PtDisplay:
 				     case PtBorderTopStyle:
 			             case PtBorderRightStyle:
 			             case PtBorderBottomStyle:

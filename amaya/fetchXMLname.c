@@ -337,7 +337,7 @@ ThotBool IsXMLElementInline (ElementType elType, Document doc)
 		 ptr[i].ThotType != elType.ElTypeNum)
 	    i++;
 	  if (ptr[i].ThotType == elType.ElTypeNum)
-	    ret = ptr[i].Inline;
+	    ret = ptr[i].InlineElem;
 	}
     }
   return ret;

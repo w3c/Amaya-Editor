@@ -204,6 +204,9 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtBorderLeftStyle:
       fprintf (fileDescriptor, "BorderLeftStyle");
       break;
+    case PtDisplay:
+      fprintf (fileDescriptor, "Display");
+      break;
     case PtSize:
       fprintf (fileDescriptor, "Size");
       break;
@@ -1565,6 +1568,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	  {
 	     fprintf (fileDescriptor, "Line:");
 	     wrThotBool (pAb->AbInLine, fileDescriptor);
+	     fprintf (fileDescriptor, " Display:%c", pAb->AbDisplay);
 	     /* display TruncatedHead and TruncatedTail */
 	     /* even if it's a lines block */
 	     fprintf (fileDescriptor, " TruncatedHead:");
@@ -2425,6 +2429,28 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 		     fprintf (fileDescriptor, "%c", pR->PrChrValue);
 		     break;
 	       }
+      else if (pR->PrType == PtDisplay)
+	 switch (pR->PrChrValue)
+	       {
+		  case 'I':
+		     fprintf (fileDescriptor, "inline");
+		     break;
+		  case 'B':
+		     fprintf (fileDescriptor, "block");
+		     break;
+		  case 'L':
+		     fprintf (fileDescriptor, "listItem");
+		     break;
+		  case 'R':
+		     fprintf (fileDescriptor, "runIn");
+		     break;
+		  case 'C':
+		     fprintf (fileDescriptor, "compact");
+		     break;
+		  case 'M':
+		     fprintf (fileDescriptor, "marker");
+		     break;
+	       }
       else if (pR->PrType == PtLineStyle ||
 	       pR->PrType == PtBorderTopStyle ||
 	       pR->PrType == PtBorderRightStyle ||
@@ -3151,6 +3177,10 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
                     fprintf (fileDescriptor, "BorderLeftStyle: ");
 		    wrfontstyle (RP, fileDescriptor);
                     break;
+	         case PtDisplay:
+		    fprintf (fileDescriptor, "Display: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
          	 case PtFont:
  		    fprintf (fileDescriptor, "Font: ");
      		    wrfontstyle (RP, fileDescriptor);

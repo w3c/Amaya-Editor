@@ -282,6 +282,9 @@ void                WritePRuleType (PRuleType ruleType)
 	    case PtLineBreak:
 	       TtaWriteByte (outfile, C_PR_LINEBREAK);
 	       break;
+	    case PtDisplay:
+	       TtaWriteByte (outfile, C_PR_DISPLAY);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid rule type %X\n", (int)ruleType);
 	       break;
@@ -1014,6 +1017,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 			     case PtDirection:
 			     case PtUnicodeBidi:
 			     case PtLineStyle:
+			     case PtDisplay:
 			     case PtBorderTopStyle:
 			     case PtBorderRightStyle:
 			     case PtBorderBottomStyle:

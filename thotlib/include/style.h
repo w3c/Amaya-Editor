@@ -161,8 +161,13 @@ typedef struct _PresentationSetting
 #define STYLE_INLINE			1
 #define STYLE_NOTINLINE			2
 
-#define STYLE_HIDE			0
-#define STYLE_DISPLAY			5
+#define STYLE_DISPLAYUNDEFINED          1
+#define STYLE_DISPLAYINLINE             2
+#define STYLE_DISPLAYBLOCK              3
+#define STYLE_DISPLAYLISTITEM           4
+#define STYLE_DISPLAYRUNIN              5
+#define STYLE_DISPLAYCOMPACT            6
+#define STYLE_DISPLAYMARKER             7
 
 #define STYLE_REALSIZE			1
 #define STYLE_SCALE			2

@@ -427,6 +427,9 @@ static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		 case PtLineStyle:
 		    val = pAbb->AbLineStyle;
 		    break;
+		 case PtDisplay:
+		    val = pAbb->AbDisplay;
+		    break;
 		 case PtBorderTopStyle:
 		    val = BorderStyleCharValue (pAbb->AbTopStyle);
 		    break;
@@ -3372,6 +3375,28 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      {
 		pAb->AbLineStyle = 'S';
+		appl = TRUE;
+	      }
+	    break;
+
+	  case PtDisplay:
+	    pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				       &appl);
+	    if (appl)
+	      {
+		if (pAb->AbDisplay == 'B')
+		  /* display: block */
+		  pAb->AbNotInLine = TRUE;
+		else if (pAb->AbDisplay == 'I')
+		  /* display: inline */
+		  {
+		    if (pAb->AbEnclosing)
+		      pAb->AbEnclosing->AbInLine = TRUE;
+		  }
+	      }
+	    else if (pAb->AbElement->ElParent == NULL)
+	      {
+		pAb->AbDisplay = 'U';
 		appl = TRUE;
 	      }
 	    break;

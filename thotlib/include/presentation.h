@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -65,20 +65,21 @@ typedef int        *PRule;
 /* PtPageBreak, PtLineBreak, PtGather */
 #define PRXRadius 51
 #define PRYRadius 52
-#define PRNoBreak1 53
-#define PRNoBreak2 54
+#define PRDisplay 53
+#define PRNoBreak1 54
+#define PRNoBreak2 55
 /* PtPictInfo */
-#define PRLine 56
-#define PRCreateEnclosing 57
-#define PRShowBox 58
-#define PRBackgroundPicture 59
-#define PRPictureMode 60
-#define PRNotInLine 61
-#define PRNone 62
-#define PRPageBefore 63
-#define PRPageAfter 64
-#define PRPageInside 65
-#define LAST_PRES_RULE_TYPE 65
+#define PRLine 57
+#define PRCreateEnclosing 58
+#define PRShowBox 59
+#define PRBackgroundPicture 60
+#define PRPictureMode 61
+#define PRNotInLine 62
+#define PRNone 63
+#define PRPageBefore 64
+#define PRPageAfter 65
+#define PRPageInside 66
+#define LAST_PRES_RULE_TYPE 66
 
 /* values for rules PRBorder*Style */
 #define BorderStyleNone 1
@@ -137,6 +138,14 @@ typedef int        *PRule;
 #define DashedLine 2
 #define DottedLine 3
 
+/* values for rule PRDisplay */
+#define Undefined 1
+#define Inline 2
+#define Block 3
+#define ListItem 4
+#define RunIn 5
+#define Compact 6
+#define Marker 7
 
 /* values for rule PRHyphenate */
 #define Hyphenation 1

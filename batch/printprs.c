@@ -455,6 +455,28 @@ static void         wrfontstyle (PtrPRule pR)
 		     putchar (pR->PrChrValue);
 		     break;
 	       }
+      else if (pR->PrType == PtDisplay)
+	 switch (pR->PrChrValue)
+	       {
+		  case 'I':
+		     printf ("inline");
+		     break;
+		  case 'B':
+		     printf ("block");
+		     break;
+		  case 'L':
+		     printf ("listItem");
+		     break;
+		  case 'R':
+		     printf ("runIn");
+		     break;
+		  case 'C':
+		     printf ("compact");
+		     break;
+		  case 'M':
+		     printf ("marker");
+		     break;
+	       }
       else if (pR->PrType == PtBorderTopStyle ||
 	       pR->PrType == PtBorderRightStyle ||
 	       pR->PrType == PtBorderBottomStyle ||
@@ -1300,6 +1322,10 @@ static void         wrsuiteregles (PtrPRule RP)
 	         case PtYRadius:
 		    printf ("YRadius: ");
 		    wrboolean (RP);
+		    break;
+	         case PtDisplay:
+		    printf ("Display: ");
+		    wrfontstyle (RP);
 		    break;
 	         case PtPageBreak:
 		    printf ("PageBreak: ");

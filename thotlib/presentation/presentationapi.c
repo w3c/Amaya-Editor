@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1325,6 +1325,7 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
    PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
+   PRDisplay: Undefined, Inline, Block, ListItem, RunIn, Compact, Marker.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
    PRSize: an integer between 6 and 72 (body size in points).
@@ -1562,6 +1563,40 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	       break;
 	     case DottedLine:
 	       ((PtrPRule) pRule)->PrChrValue = '.';
+	       break;
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+
+         case PtDisplay:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case Undefined:
+	       ((PtrPRule) pRule)->PrChrValue = 'U';
+	       break;
+	     case Inline:
+	       ((PtrPRule) pRule)->PrChrValue = 'I';
+	       break;
+	     case Block:
+	       ((PtrPRule) pRule)->PrChrValue = 'B';
+	       break;
+	     case ListItem:
+	       ((PtrPRule) pRule)->PrChrValue = 'L';
+	       break;
+	     case RunIn:
+	       ((PtrPRule) pRule)->PrChrValue = 'R';
+	       break;
+	     case Compact:
+	       ((PtrPRule) pRule)->PrChrValue = 'C';
+	       break;
+	     case Marker:
+	       ((PtrPRule) pRule)->PrChrValue = 'M';
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -2358,6 +2393,7 @@ int                 TtaGetPRuleType (PRule pRule)
    PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
+   PRDisplay: Undefined, Inline, Block, ListItem, RunIn, Compact, Marker.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
    PRSize: an integer between 6 and 72 (body size in points).
@@ -2534,6 +2570,35 @@ int                 TtaGetPRuleValue (PRule pRule)
 	  }
 	break;
 
+      case PtDisplay:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'U':
+	    value = Undefined;
+	    break;
+	  case 'I':
+	    value = Inline;
+	    break;
+	  case 'B':
+	    value = Block;
+	    break;
+	  case 'L':
+	    value = ListItem;
+	    break;
+	  case 'R':
+	    value = RunIn;
+	    break;
+	  case 'C':
+	    value = Compact;
+	    break;
+	  case 'M':
+	    value = Marker;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
       case PtBreak1:
       case PtBreak2:
       case PtIndent:
@@ -2750,6 +2815,7 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 			    case PtDirection:
 			    case PtUnicodeBidi:
 			    case PtLineStyle:
+			    case PtDisplay:
 			    case PtBorderTopStyle:
 			    case PtBorderRightStyle:
 			    case PtBorderBottomStyle:

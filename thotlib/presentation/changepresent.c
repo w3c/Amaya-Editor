@@ -427,6 +427,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
 	    case PtBorderLeftStyle:
                return PRBorderLeftStyle;
                break;
+	    case PtDisplay:
+	       return PRDisplay;
+	       break;
 	    case PtSize:
 	       return PRSize;
 	       break;

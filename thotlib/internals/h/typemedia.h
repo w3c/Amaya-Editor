@@ -448,6 +448,7 @@ typedef struct _AbstractBox
   char            AbDirection;        /* Writing direction */
   char            AbUnicodeBidi;      /* Unicode Bidi */
   char            AbLineStyle;        /* Line style */
+  char            AbDisplay;          /* Display mode */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
   TypeUnit        AbSizeUnit;         /* Unit for the size */
   TypeUnit        AbIndentUnit;       /* Indentation unit */

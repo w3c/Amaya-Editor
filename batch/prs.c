@@ -2232,6 +2232,15 @@ static void         CheckDefaultRules ()
 	CurRule->PrPresMode = PresImmediate;
         CurRule->PrBoolValue = True;
      }
+   if (GetTypedRule (PtDisplay, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Display par defaut, on en cree une : */
+      /* Display: undefined; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtDisplay;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrChrValue = 'U';       /* undefined */
+     }
    CurRule->PrNextPRule = NULL;
 }
 

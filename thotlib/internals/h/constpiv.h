@@ -81,6 +81,7 @@
 #define C_PR_WEIGHT 'w'
 #define C_PR_BORDERBOTTOMCOLOR 'x'
 #define C_PR_BORDERLEFTCOLOR 'y'
+#define C_PR_DISPLAY 'z'
 #define C_PR_BORDERTOPSTYLE '^'
 #define C_PR_BORDERRIGHTSTYLE '>'
 #define C_PR_BORDERBOTTOMSTYLE '_'

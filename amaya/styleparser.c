@@ -1174,7 +1174,7 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
      }
    else if (!strncasecmp (cssRule, "none", 4))
      {
-	pval.typed_data.value = STYLE_HIDE;
+	pval.typed_data.value = 0;
 	if (DoApply)
 	{
 	  if (tsch)

@@ -1,4 +1,4 @@
-/* 
+/*
  *
  *  (c) COPYRIGHT INRIA 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
@@ -363,9 +363,9 @@ static void      AllocateNewRule (PtrSSchema pSS)
 }
 
 /*----------------------------------------------------------------------
-   Undefined                                                       
+   UndefinedElem
   ----------------------------------------------------------------------*/
-static void         Undefined (int n)
+static void         UndefinedElem (int n)
 {
    int                 j;
    SrcIdentDesc       *pIdent;
@@ -419,7 +419,7 @@ static void         ChangeOneRule (PtrSRule pRule)
 	  {
 	     if (Identifier[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].
 		 SrcIdentDefRule == 0)
-	       Undefined (pRule->SrInclusion[j] - MAX_BASIC_TYPE);
+	       UndefinedElem (pRule->SrInclusion[j] - MAX_BASIC_TYPE);
 	     pRule->SrInclusion[j] =
 	       Identifier[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].
 	               SrcIdentDefRule;
@@ -436,7 +436,7 @@ static void         ChangeOneRule (PtrSRule pRule)
 	  {
 	     if (Identifier[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].
 		 SrcIdentDefRule == 0)
-	       Undefined (pRule->SrExclusion[j] - MAX_BASIC_TYPE);
+	       UndefinedElem (pRule->SrExclusion[j] - MAX_BASIC_TYPE);
 	     pRule->SrExclusion[j] =
 	       Identifier[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].
 	                      SrcIdentDefRule;
@@ -455,7 +455,7 @@ static void         ChangeOneRule (PtrSRule pRule)
 	   {
 	     if (Identifier[pRule->SrReferredType - MAX_BASIC_TYPE - 1].
 		 SrcIdentDefRule == 0)
-	       Undefined (pRule->SrReferredType - MAX_BASIC_TYPE);
+	       UndefinedElem (pRule->SrReferredType - MAX_BASIC_TYPE);
 	     pRule->SrReferredType =
 	       Identifier[pRule->SrReferredType - MAX_BASIC_TYPE - 1].
 	               SrcIdentDefRule;
@@ -469,7 +469,7 @@ static void         ChangeOneRule (PtrSRule pRule)
 	 {
 	   if (Identifier[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].
 	       SrcIdentDefRule == 0)
-	     Undefined (pRule->SrIdentRule - MAX_BASIC_TYPE);
+	     UndefinedElem (pRule->SrIdentRule - MAX_BASIC_TYPE);
 	   pRule->SrIdentRule =
 	     Identifier[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].
 	               SrcIdentDefRule;
@@ -483,7 +483,7 @@ static void         ChangeOneRule (PtrSRule pRule)
 	 {
 	   if (Identifier[pRule->SrListItem - MAX_BASIC_TYPE - 1].
 	       SrcIdentDefRule == 0)
-	     Undefined (pRule->SrListItem - MAX_BASIC_TYPE);
+	     UndefinedElem (pRule->SrListItem - MAX_BASIC_TYPE);
 	   pRule->SrListItem = Identifier[pRule->SrListItem-MAX_BASIC_TYPE-1].
 		       SrcIdentDefRule;
 	 }
@@ -499,7 +499,7 @@ static void         ChangeOneRule (PtrSRule pRule)
 	       {
 		 if (Identifier[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].
 		     SrcIdentDefRule == 0)
-		   Undefined (pRule->SrChoice[j] - MAX_BASIC_TYPE);
+		   UndefinedElem (pRule->SrChoice[j] - MAX_BASIC_TYPE);
 		 pRule->SrChoice[j] =
 		   Identifier[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].
 		              SrcIdentDefRule;
@@ -517,7 +517,7 @@ static void         ChangeOneRule (PtrSRule pRule)
 	     {
 	       if (Identifier[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].
 		   SrcIdentDefRule == 0)
-		 Undefined (pRule->SrComponent[j] - MAX_BASIC_TYPE);
+		 UndefinedElem (pRule->SrComponent[j] - MAX_BASIC_TYPE);
 	       pRule->SrComponent[j] =
 		 Identifier[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].
 		           SrcIdentDefRule;
@@ -571,7 +571,7 @@ static void         ChangeRules ()
 		{
 		   if (Identifier[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].
 		       SrcIdentDefRule == 0)
-		     Undefined (pAttr->AttrTypeRef - MAX_BASIC_TYPE);
+		     UndefinedElem (pAttr->AttrTypeRef - MAX_BASIC_TYPE);
 		   pAttr->AttrTypeRef =
 		     Identifier[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].
 		                  SrcIdentDefRule;

@@ -1211,8 +1211,8 @@ static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
 }
 
 /*----------------------------------------------------------------------
- PresentationValueToPRule : set up an internal Presentation Rule accordingly
- to a Presentation Value for a given type of presentation attribute.
+ PresentationValueToPRule : set up an internal Presentation Rule according
+ to a Presentation Value for a given type of presentation property.
  funcType is an extra parameter needed when using a Function rule.
  ----------------------------------------------------------------------*/
 static void PresentationValueToPRule (PresentationValue val, int type,
@@ -1413,10 +1413,38 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  break;
 	}
       break;
+    case PtDisplay:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case STYLE_DISPLAYUNDEFINED:
+	  rule->PrChrValue = 'U';
+	  break;
+	case STYLE_DISPLAYINLINE:
+	  rule->PrChrValue = 'I';
+	  break;
+	case STYLE_DISPLAYBLOCK:
+	  rule->PrChrValue = 'B';
+	  break;
+	case STYLE_DISPLAYLISTITEM:
+	  rule->PrChrValue = 'L';
+	  break;
+	case STYLE_DISPLAYRUNIN:
+	  rule->PrChrValue = 'R';
+	  break;
+	case STYLE_DISPLAYCOMPACT:
+	  rule->PrChrValue = 'C';
+	  break;
+	case STYLE_DISPLAYMARKER:
+	  rule->PrChrValue = 'M';
+	  break;
+	}
+      break;
     case PtBorderTopStyle:
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
     case PtBorderLeftStyle:
+      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case STYLE_BORDERNONE:
@@ -1904,6 +1932,33 @@ static PresentationValue   PRuleToPresentationValue (PtrPRule rule)
 	}
       break;
 
+    case PtDisplay:
+      switch (rule->PrChrValue)
+	{
+	case 'U':
+	  value = STYLE_DISPLAYUNDEFINED;
+	  break;
+	case 'I':
+	  value = STYLE_DISPLAYINLINE;
+	  break;
+	case 'B':
+	  value = STYLE_DISPLAYBLOCK;
+	  break;
+	case 'L':
+	  value = STYLE_DISPLAYLISTITEM;
+	  break;
+	case 'R':
+	  value = STYLE_DISPLAYRUNIN;
+	  break;
+	case 'C':
+	  value = STYLE_DISPLAYCOMPACT;
+	  break;
+	case 'M':
+	  value = STYLE_DISPLAYMARKER;
+	  break;
+	}
+      break;
+
     case PtBorderTopStyle:
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
@@ -2183,6 +2238,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       break;
     case PRUnderline:
       *intRule = PtUnderline;
+      break;
+    case PRDisplay:
+      *intRule = PtDisplay;
       break;
     case PRBorderTopStyle:
       *intRule = PtBorderTopStyle;
@@ -2484,6 +2542,9 @@ static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setti
       break;
     case PtUnderline:
       setting->type = PRUnderline;
+      break;
+    case PtDisplay:
+      setting->type = PRDisplay;
       break;
     case PtBorderTopStyle:
       setting->type = PRBorderTopStyle;

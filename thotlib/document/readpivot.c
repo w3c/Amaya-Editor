@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1439,6 +1439,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_PICTURE:
       TypeRP = PtPictInfo;
       break;
+    case C_PR_DISPLAY:
+      TypeRP = PtDisplay;
+      break;
     default:
       PivotError (pivFile, "PresRule1");
       break;
@@ -1544,6 +1547,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtDirection:
       case PtUnicodeBidi:
       case PtLineStyle:
+      case PtDisplay:
       case PtBorderTopStyle:
       case PtBorderRightStyle:
       case PtBorderBottomStyle:
@@ -1756,6 +1760,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtDirection:
 	  case PtUnicodeBidi:
 	  case PtLineStyle:
+	  case PtDisplay:
           case PtBorderTopStyle:
           case PtBorderRightStyle:
           case PtBorderBottomStyle:

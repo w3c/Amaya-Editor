@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -437,6 +437,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtBorderRightStyle ||
 	rType == PtBorderBottomStyle ||
 	rType == PtBorderLeftStyle ||
+	rType == PtDisplay ||
 	rType == PtSize || rType == PtStyle ||
 	rType == PtWeight || rType == PtFont ||
 	rType == PtUnderline || rType == PtThickness ||
@@ -524,6 +525,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  break;
 	case PtLineStyle:
 	  TtaWriteByte (pivFile, C_PR_LINESTYLE);
+	  break;
+	case PtDisplay:
+	  TtaWriteByte (pivFile, C_PR_DISPLAY);
 	  break;
         case PtBorderTopStyle:
 	  TtaWriteByte (pivFile, C_PR_BORDERTOPSTYLE);
@@ -732,6 +736,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	case PtDirection:
 	case PtUnicodeBidi:
 	case PtLineStyle:
+	case PtDisplay:
         case PtBorderTopStyle:
         case PtBorderRightStyle:
         case PtBorderBottomStyle:

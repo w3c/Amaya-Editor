@@ -214,7 +214,7 @@ typedef enum
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
   PtHyphenate, PtVertOverflow, PtHorizOverflow, PtPageBreak, PtLineBreak,
-  PtGather, PtXRadius, PtYRadius,
+  PtGather, PtXRadius, PtYRadius, PtDisplay,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
@@ -475,7 +475,7 @@ typedef struct _PresRule
 	}  s0;
 	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline,
 	        	       PtThickness, PtDirection, PtUnicodeBidi,
-                               PtLineStyle,
+                               PtLineStyle, PtDisplay,
 	                       PtBorderTopStyle, PtBorderRightStyle,
                                PtBorderBottomStyle, PtBorderLeftStyle */
 	{
