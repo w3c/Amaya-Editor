@@ -2129,10 +2129,7 @@ char               *data;
 	   if (SavingDocument != 0)
 	     DoSaveAs ();
 	   else if (SavingObject != 0)
-	     {
 	     DoSaveObjectAs ();
-	     /***** TODO delete the temporary file *****/
-	     }
 	 }
        else if (val == 2)
 	 /* "Clear" button */
@@ -2162,9 +2159,7 @@ char               *data;
 	   TtaDestroyDialogue (BaseDialog + SaveForm);
 	   if (SavingObject != 0)
 	      /* delete temporary file */
-	      {
-	      /******** TODO *******/;
-	      }
+	      DeleteTempObjectFile ();
 	   SavingDocument = 0;
 	   SavingObject = 0;
 	 }

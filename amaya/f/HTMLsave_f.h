@@ -18,6 +18,7 @@ extern void InitSaveObjectForm ( Document document,
                                  View view,
                                  char *object,
                                  char *pathname );
+extern void DeleteTempObjectFile ( void );
 extern void DoSaveObjectAs ( void );
 
 #else /* __STDC__ */
@@ -34,6 +35,7 @@ extern void InitSaveObjectForm (/* Document document,
                                    View view,
                                    char *object,
                                    char *pathname */);
+extern void DeleteTempObjectFile (/* void */);
 extern void DoSaveObjectAs (/* void */);
 
 #endif /* __STDC__ */

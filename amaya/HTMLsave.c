@@ -1167,6 +1167,19 @@ char               *pathname;
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 }
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DeleteTempObjectFile (void)
+#else
+void                DeleteTempObjectFile ()
+#endif
+{
+   TtaFileUnlink (tempSavedObject);
+}
+
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1216,6 +1229,8 @@ void                DoSaveObjectAs ()
 	  }
      }
    TtaFileCopy (tempSavedObject, tempfile);
+   /* delete the temporary file */
+   DeleteTempObjectFile ();
    SavingObject = 0;
    SavingDocument = 0;
 }
