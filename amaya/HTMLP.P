@@ -2091,13 +2091,24 @@ BOXES
 		Visibility: 0;
 	END;
 
- Annot_gif: BEGIN
+ Annot_gif1: BEGIN
 #ifndef PAGE
 	Content: Picture 'annot.gif';
 	HorizPos: Left = Enclosing . Left;
+        HorizRef: * . Bottom;	
 	VertPos: Top = Enclosing . Top;
 #endif
 	END;
+
+ Annot_gif2: BEGIN
+#ifndef PAGE
+	Content: Picture 'annot2.gif';
+	HorizPos: Left = Enclosing . Left;
+        HorizRef: * . Bottom;	
+	VertPos: Top = Enclosing . Top;
+#endif
+	END;	
+
 
  IMG_S: BEGIN
         Content: Text 'IMG';
@@ -8376,8 +8387,10 @@ ATTRIBUTES
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
 	   CreateLast(VALUE_HREF_LINKS_VIEW);
 	   END;
-	If Annotation and not AnnotationHide
-	   CreateFirst(Annot_gif);
+	If IsAnnotation and not AnnotationHide and AnnotationIcon1
+	   CreateFirst(Annot_gif1);
+	If IsAnnotation and not AnnotationHide and AnnotationIcon2
+	   CreateFirst(Annot_gif2);
 
 #ifdef LINK_NUMBER
         IF Anchor and not InternalLink and not AnnotationHide
@@ -8520,7 +8533,7 @@ ATTRIBUTES
 	END;
  PseudoClass = 'active':
 	BEGIN
-	Foreground: Red;
+        Foreground: Red;
 	IN Structure_view
 		Foreground: Enclosing =;
 	IN Alternate_view

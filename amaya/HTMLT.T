@@ -829,10 +829,10 @@ RULES
 	END;
 
  Anchor: BEGIN
-	if Annotation BEGIN
+	if IsAnnotation BEGIN
 		Remove;
 		END;
-	if NOT Annotation BEGIN
+	if NOT IsAnnotation BEGIN
 		Create '<a';
 		Create Attributes;
 		Create '>';
@@ -1173,10 +1173,10 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-	If Annotation BEGIN
+	If IsAnnotation BEGIN
 		Remove;
 		END;
-	If NOT Annotation BEGIN
+	If NOT IsAnnotation BEGIN
 		Create ' href="';
 		Create Translated HREF_;
 		Create DoubleQuote;
@@ -1676,16 +1676,16 @@ ATTRIBUTES
 	END;
 
  NAME: BEGIN
-	if Anchor and Annotation BEGIN
+	if Anchor and IsAnnotation BEGIN
 		Remove;
 		END;
-	if NOT Annotation BEGIN
+	if NOT IsAnnotation BEGIN
 		Create ' name="';
 		Create NAME;
 		Create DoubleQuote;
                 END;
 #ifdef XML
-	if Anchor and not ID and NOT Annotation BEGIN
+	if Anchor and not ID and NOT IsAnnotation BEGIN
        		Create ' id="';
     		Create NAME;
        		Create DoubleQuote;

@@ -665,7 +665,7 @@ Document         doc;
 
 #ifdef ANNOTATIONS
 		  /* see if it's a link to an annotation */
-		  attrType.AttrTypeNum = HTML_ATTR_Annotation;
+		  attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
 		  isAnnotLink = TtaGetAttribute (anchor, attrType);
 #endif /* ANNOTATIONS */
 	       }

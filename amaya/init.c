@@ -1441,6 +1441,7 @@ ThotBool     logFile;
   Document            old_doc;
   int                 x, y, w, h;
   ThotBool            opened, reinitialized;
+  CHAR_T             *tmp;
 #ifdef _WINDOWS
 
   Window_Curs = IDC_WINCURSOR;
@@ -1551,7 +1552,14 @@ ThotBool     logFile;
 	 }
 
        /* get the geometry of the main view */
-       TtaGetViewGeometryRegistry (doc, "Formatted_view", &x, &y, &w, &h);
+#ifdef ANNOTATIONS
+       if (docType == docAnnot || docType == docAnnotRO)
+	 tmp = "Annot_Formatted_view";
+       else
+#endif /* ANNOTATIONS */
+	 tmp = "Formatted_view";
+       TtaGetViewGeometryRegistry (doc, tmp, &x, &y, &w, &h);
+
        TtaSetNotificationMode (doc, 1);
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
@@ -1668,7 +1676,7 @@ ThotBool     logFile;
 			   TextURL);
 #ifdef ANNOTATIONS
 	   else
-	   /* @@ patch for not seeing the icon, while waiting for Irene */
+	     /* @@ patch for not seeing the icon, while waiting for Irene */
 	     TtcSwitchCommands (doc, 1);
 #endif /* ANNOTATIONS */
 
