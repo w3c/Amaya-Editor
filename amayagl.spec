@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.0
+%define version 8.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
