@@ -6098,8 +6098,12 @@ ATTRIBUTES
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
-	IN Alternate_view
-		Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: 10;
+		Width: Enclosing . Width;
+		VertPos: Top = Previous . Bottom;
+		Depth: 0;
+		END;
 	IN Links_view
 		 Visibility: 0;
 	END;

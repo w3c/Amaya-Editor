@@ -7,7 +7,8 @@ PRESENTATION GraphML;
 VIEWS
    Formatted_view,
    Structure_view merge with Structure_view,
-   Alternate_view merge with Alternate_view;
+   Alternate_view merge with Alternate_view,
+   Links_view merge with Links_view;
 
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 12 pt
@@ -805,7 +806,9 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
    	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Links_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
 
   y:
@@ -813,13 +816,15 @@ ATTRIBUTES
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	if not text_
-   	        VertPos:  Top = Enclosing . Top;
+   	   VertPos:  Top = Enclosing . Top;
 	if text_
-	        VertPos:  HRef = Enclosing . Top;
+	   VertPos:  HRef = Enclosing . Top;
    	IN Structure_view
-		VertPos: Top = Previous . Bottom;
+	   VertPos: Top = Previous . Bottom;
 	IN Alternate_view
-		VertPos: Top = Previous . Bottom;
+	   VertPos: Top = Previous . Bottom;
+	IN Links_view
+	   VertPos: Top = Previous . Bottom;
 	END;
 
   height_:
