@@ -1081,6 +1081,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   entries = 0;
   index = 0;
   ptritem = ptrmenu->ItemsList;
+  max_lg = 0;
   /*
     In the previous version hidden entries were removed,
     now all entries are generated and we just invalid
