@@ -1343,10 +1343,15 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 	  }
      }
 }
+
 /*----------------------------------------------------------------------
-   ButtonAction                                                    
-  ----------------------------------------------------------------------*/
+   ButtonAction
+   ----------------------------------------------------------------------*/
+#ifndef _GTK
 void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
+#else
+static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
+#endif /* !_GTK */
 {
   Document            document;
   View                view;
@@ -1360,19 +1365,26 @@ void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
       if (!FrameTable[frame].EnabledButton[i])
 	{
 	  /* the button is not active */
+#ifndef _GTK
 	  return;
+#else
+	  return FALSE;
+#endif /* _GTK */
 	}
       CloseInsertion ();
       FrameToView (frame, &document, &view);
       (*FrameTable[frame].Call_Button[i]) (document, view);
 #ifdef _WINDOWS
-	  /* check the button status */
-	  if (FrameTable[frame].EnabledButton[i])
+      /* check the button status */
+      if (FrameTable[frame].EnabledButton[i])
         SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
-			     (WPARAM) FrameTable[frame].ButtonId[i],
-			     (LPARAM) MAKELONG (FrameTable[frame].CheckedButton[i], 0));
+		     (WPARAM) FrameTable[frame].ButtonId[i],
+		     (LPARAM) MAKELONG (FrameTable[frame].CheckedButton[i], 0));
 #endif /* _WINDOWS */
     }
+#ifdef _GTK
+  return FALSE;
+#endif /* _GTK */
 }
 
 #ifndef _WINDOWS
@@ -1515,7 +1527,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      /* Connecte the clicked acton to the button */
 		      ConnectSignalGTK (GTK_OBJECT (row),
 					"clicked",
-					GTK_SIGNAL_FUNC(APP_ButtonCallback),
+					GTK_SIGNAL_FUNC(APP_ButtonCallbackGTK),
 					(gpointer)frame);
 		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)w);
 		      gtk_widget_show_all (row);
