@@ -248,7 +248,8 @@ RDFResourceP ANNOT_FindRDFResource( listP, name, create )
   resource = _ListSearchResource (*listP, name);
   if ((!resource || !resource->name) && create)
     {
-      resource = TtaGetMemory (sizeof(RDFResource));
+      if (!resource)
+        resource = TtaGetMemory (sizeof(RDFResource));
 
       resource->name = TtaStrdup (name);
       resource->statements = NULL;
@@ -511,6 +512,7 @@ void SCHEMA_InitSchemas (doc)
     {
       /* RRS @@ installation error */
       SetAnnotNS (FALLBACK_ANNOTATION_NS);
+      TtaFreeMemory (buffer);
       return;
     }
 
@@ -563,6 +565,7 @@ void SCHEMA_InitSchemas (doc)
 	       so copy the filename elsewhere before concatenating */
 	    {
 	      char *temp = TtaGetMemory(len);
+
 	      strcpy (temp, fname); /* copy */
 	      strcpy (buffer, thotdir);
 	      strcat (buffer, temp+8);
@@ -583,6 +586,7 @@ void SCHEMA_InitSchemas (doc)
 		 so copy the filename elsewhere before concatenating */
 	      {
 		char *temp = TtaGetMemory(len);
+
 		strcpy (temp, fname); /* copy */
 		strcpy (buffer, app_home);
 		strcat (buffer, temp+9);
