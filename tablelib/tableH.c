@@ -852,7 +852,6 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
       /* assign a specific width to each column */
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxWidth, 0, frame);
       useMax = FALSE;
-#ifdef IV
       if (max < width)
 	{
 	  var = max;
@@ -903,19 +902,6 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 	    }
 	  while (still && i > 0);
 	}
-#else /* IV */
-      if (min > width)
-	{
-	  var = min;
-	  i = j;
-	}
-      else
-	{
-	  var = max;
-	  i = j;
-	  useMax = TRUE;
-	}
-#endif /* IV */
       if (i > 0)
 	{
 	  j = width - var;
