@@ -66,6 +66,7 @@
 int                 UserErrorCode;
 boolean             PrintErrorMessages = TRUE;
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -95,7 +96,7 @@ void                CloseInsertion ()
    if (ThotLocalActions[T_stopinsert] != NULL)
       (*ThotLocalActions[T_stopinsert]) ();
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    TtaInitialize

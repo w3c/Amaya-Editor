@@ -34,6 +34,7 @@
 #include "message.h"
 #include "appdialogue.h"
 #include "dictionary.h"
+#include "thotcolor.h"
 
 #define MAX_VOLUME        10000	/* volume maximum d'une page, en octets */
 #define DEF_TOP_MARGIN    57	/* marge de haut de page par defaut, en points */
@@ -56,10 +57,12 @@
 #include "frame_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
-#include "thotpalette_tv.h"
+/* #include "thotpalette_tv.h" */
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
+
+extern RGBstruct RGB_colors[];
 
 int          PRINT;	/* Identification des messages */
 int          UserErrorCode;
@@ -340,7 +343,6 @@ char* server;
 {
    int                 i;
 
-#ifndef _WINDOWS
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
      {
@@ -348,6 +350,7 @@ char* server;
      }
    /* Ouverture du serveur X-ThotWindow */
       /*Connexion au serveur X impossible */
+#  ifndef _WINDOWS
    TtDisplay = XOpenDisplay (server);
    if (!TtDisplay)
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
@@ -359,10 +362,10 @@ char* server;
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
    Black_Color = BlackPixel (TtDisplay, TtScreen);
    White_Color = WhitePixel (TtDisplay, TtScreen);
+#  endif /* ! _WINDOWS */
    InitDocColors ("thot");
    /* Initialisation des polices de caracteres */
    InitDialogueFonts ("thot");
-#endif /* ! _WINDOWS */
 }
 
 /*----------------------------------------------------------------------------*/
@@ -2664,7 +2667,7 @@ PtrDocument         pDoc;
      }
 }
 
-
+		    
 /*----------------------------------------------------------------------
    Main program                                                           
   ----------------------------------------------------------------------*/
@@ -2677,14 +2680,15 @@ char              **argv;
 
 #endif /* __STDC__ */
 {
-  char               *server = (char*) NULL;
   char               *realName;
+  char                name [MAX_PATH];             
+
+  char               *server = (char*) NULL;
   char*               pChar;
   char                option [100];
   char               *destination = (char*) NULL;
   char                cmd[800];
-  char		       tempFile [MAX_PATH];
-  char                name [MAX_PATH];             
+  char		          tempFile [MAX_PATH];
   int                 i, l, result;
   int                 argCounter;
   int                 viewsCounter = 0;
@@ -2718,7 +2722,8 @@ char              **argv;
     usage (argv [0]);
 
   TtaInitializeAppRegistry (argv[0]);
-   ShowSpace = 1;  /* Restitution des espaces */
+
+  ShowSpace = 1;  /* Restitution des espaces */
 
    /* Initialise la table des messages d'erreurs */
    TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
@@ -2731,152 +2736,115 @@ char              **argv;
    InitEditorMemory ();
 
   argCounter = 1;
-  while (argCounter < argc)
-    {  /* Parsing the command line */
-      if (argv [argCounter][0] == '-')
-	{ /* the argument is a parameter */
-	  if (!strcmp (argv [argCounter], "-display"))
-	    {
-	      /* The display is distant */
-	      argCounter++;
-	      server = (char*)  TtaGetMemory (strlen (argv[argCounter]) + 1);
-	      strcpy (server, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv [argCounter], "-name"))
-	    {
-	      realNameFound = TRUE ;
-	      argCounter++;
-	      realName = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
-	      strcpy (realName, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv [argCounter], "-ps"))
-	    {
-	      /* The destination is postscript file */
-	      if (destination)
-		/* There is a problem, a destination is already given */
-		TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
-	      destination = "PSFILE";
-	      argCounter++;
-	      printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
-	      strcpy (printer, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv [argCounter], "-out"))
-	    {
-	      /* The destination is a printer */
-	      if (destination)
-		TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
-	      destination = "PRINTER";
-	      argCounter++;
-	      printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
-	      strcpy (printer, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv [argCounter], "-v"))
-	    {
-	      /* At least one view must be given in the command line */
-	      viewFound = TRUE;
-	      argCounter++;
-	      strcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
-	    }
-	  else if (!strcmp (argv [argCounter], "-npps"))
-	    {
-	      argCounter++;
-	      NPagesPerSheet = atoi (argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv [argCounter], "-bw"))
-	    {
-	      argCounter++;
-	      BlackAndWhite = 1;
-	    }
-	  else if (!strcmp (argv [argCounter], "-manualfeed"))
-	    {
-	      argCounter++;
-	      manualFeed = 1;
-	    }
-	  else if (!strcmp (argv [argCounter], "-emptybox"))
-	    {
-	      argCounter++;
-	      NoEmpyBox = 0;
-	    }
-	  else if (!strcmp (argv [argCounter], "-paginate"))
-	    {
-	      argCounter++;
-	      Repaginate = 1;
-	    }
-	  else if (!strcmp (argv [argCounter], "-landscape"))
-	    {
-	      Orientation = "Landscape";
-	      argCounter++;
-	    }
-	  else if (!strcmp (argv [argCounter], "-removedir"))
-	    {
-	      removeDirectory = TRUE;
-	      argCounter++;
-	    }
-	  else if (!strcmp (argv [argCounter], "-portrait")) 
-	    /* Orientation is already set to Portrait value */ 
-	    argCounter++;
-	  else if (!strcmp (argv [argCounter], "-sch"))
-	    {
-	      /* flag for schema directories */
-	      argCounter++;
-	      strcpy (SchemaPath, argv[argCounter++]);
-	    }
-	  else if (!strcmp (argv [argCounter], "-doc"))
-	    {
-	      /* flag for document directories */
-	      argCounter++;
-	      strcpy (DocumentDir, argv[argCounter++]);
-	    }
-	  else
-	    {
-	      index = 0;
-	      pChar = &argv [argCounter][2];
-	      while ((option[index++] = *pChar++));
-	      option [index] = '\0';
-	      switch (argv [argCounter] [1])
-		{
-		case 'F': firstPage = atoi (option);
-		  argCounter++;
-		  break;
-		case 'L': lastPage = atoi (option);
-		  argCounter++;
-		  break;
-		case 'P': strcpy (pageSize, option);
-		  argCounter++;
-		  break;
-		case '#': NCopies = atoi (option);
-		  argCounter++;
-		  break;
-		case 'H': HorizShift = atoi (option);
-		  argCounter++;
-		  break;
-		case 'V': VertShift = atoi (option);
-		  argCounter++;
-		  break;
-		case '%': Zoom = atoi (option);
-		  argCounter++;
-		  break;
-		case 'w': thotWindow = (ThotWindow) atoi (option);
-		  argCounter++;
-		  break;
-		default:
-		  TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_BAD_OPTION), argv [argCounter]);
-		}
-	    }
-	}
-      else
-	{
-	  /* the argument is the filename */
-	  if (TtaFileExist (argv [argCounter]))
-	    {
-	      /* does it exist ?? */
-	      ExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
-	      argCounter++;
-	    }
-	  else
-	    /* The file does not exist */
-	    TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_MISSING_FILE), argv [argCounter]);
-	}
+  while (argCounter < argc) {  /* Parsing the command line */
+        if (argv [argCounter][0] == '-') { /* the argument is a parameter */
+           if (!strcmp (argv [argCounter], "-display")) {
+              /* The display is distant */
+              argCounter++;
+              server = (char*)  TtaGetMemory (strlen (argv[argCounter]) + 1);
+              strcpy (server, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-name")) {
+                  realNameFound = TRUE ;
+                  argCounter++;
+                  realName = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (realName, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-ps")) {
+                  /* The destination is postscript file */
+                  if (destination)
+                     /* There is a problem, a destination is already given */
+                  TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
+                  destination = "PSFILE";
+                  argCounter++;
+                  printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (printer, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-out")) {
+                  /* The destination is a printer */
+                  if (destination)
+                     TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
+                  destination = "PRINTER";
+                  argCounter++;
+                  printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (printer, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-v")) {
+                  /* At least one view must be given in the command line */
+                  viewFound = TRUE;
+                  argCounter++;
+                  strcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-npps")) {
+                  argCounter++;
+                  NPagesPerSheet = atoi (argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-bw")) {
+                  argCounter++;
+                  BlackAndWhite = 1;
+           } else if (!strcmp (argv [argCounter], "-manualfeed")) {
+                  argCounter++;
+                  manualFeed = 1;
+           } else if (!strcmp (argv [argCounter], "-emptybox")) {
+                  argCounter++;
+                  NoEmpyBox = 0;
+           } else if (!strcmp (argv [argCounter], "-paginate")) {
+                  argCounter++;
+                  Repaginate = 1;
+           } else if (!strcmp (argv [argCounter], "-landscape")) {
+                  Orientation = "Landscape";
+                  argCounter++;
+           } else if (!strcmp (argv [argCounter], "-removedir")) {
+                  removeDirectory = TRUE;
+                  argCounter++;
+           } else if (!strcmp (argv [argCounter], "-portrait")) /* Orientation is already set to Portrait value */ 
+                  argCounter++;
+           else if (!strcmp (argv [argCounter], "-sch")) {
+                /* flag for schema directories */
+                argCounter++;
+                strcpy (SchemaPath, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-doc")) {
+                  /* flag for document directories */
+                  argCounter++;
+                  strcpy (DocumentDir, argv[argCounter++]);
+           } else {
+                index = 0;
+                pChar = &argv [argCounter][2];
+                while ((option[index++] = *pChar++));
+                option [index] = '\0';
+                switch (argv [argCounter] [1]) {
+                       case 'F': firstPage = atoi (option);
+                                 argCounter++;
+                                 break;
+                       case 'L': lastPage = atoi (option);
+                                 argCounter++;
+                                 break;
+                       case 'P': strcpy (pageSize, option);
+                                 argCounter++;
+                                 break;
+                       case '#': NCopies = atoi (option);
+                                 argCounter++;
+                                 break;
+                       case 'H': HorizShift = atoi (option);
+                                 argCounter++;
+                                 break;
+                       case 'V': VertShift = atoi (option);
+                                 argCounter++;
+                                 break;
+                       case '%': Zoom = atoi (option);
+                                 argCounter++;
+                                 break;
+                       case 'w': thotWindow = (ThotWindow) atoi (option);
+                                 argCounter++;
+                                 break;
+                       default:
+                                 TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_BAD_OPTION), argv [argCounter]);
+                }
+           }
+        } else {
+             /* the argument is the filename */
+             if (TtaFileExist (argv [argCounter])) {
+                /* does it exist ?? */
+                ExtractName (argv[argCounter], tempDir, name); /* Yes, it does, split the string into two parts: directory and filename */  
+                argCounter++;
+             } else
+                  /* The file does not exist */
+                   TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_MISSING_FILE), argv [argCounter]);
+        }
     }
   
   /* At least one view is mandatory */
@@ -2960,7 +2928,11 @@ char              **argv;
        {
          if (!strcmp (destination, "PSFILE"))
            {
+#            ifdef _WINDOWS 
+             sprintf (cmd, "copy %s\\%s.ps %s\n", tempDir, name, printer);
+#            else  /* !_WINDOWS */
              sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
+#            endif /* _WINDOWS */
              result = system (cmd);
              if (result != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);

@@ -91,7 +91,7 @@ void                InitSave ()
    DocOfSavedElements = NULL;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    IsASavedElement   retourne vrai si l'element pointe par pEl se  
    trouve dans le buffer de Couper-Copier-Coller.                  
@@ -127,7 +127,7 @@ PtrElement          pEl;
      }
    return ret;
 }
-
+#endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
    CopyLeaf                                                  
@@ -188,6 +188,7 @@ boolean             redisplay;
 }
 
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    RedisplayCopies 						
    	Si l'element pointe' par pEl est (ou est contenudans) un	
@@ -263,6 +264,7 @@ boolean             redisplay;
 	}
       while (pEl != NULL);
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    IsANewElement   retourne vrai si l'element pointe' par pEl est  
@@ -1450,7 +1452,7 @@ PtrDocument        *pDoc;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Tente de fusionner les elements pointes par firstSel et lastSel 
    avec leurs voisins, reaffiche toutes les vues, libere les       
@@ -1594,3 +1596,4 @@ int                 lastChar;
 	   ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
      }
 }
+#endif /* _WIN_PRINT */

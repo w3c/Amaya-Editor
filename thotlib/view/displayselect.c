@@ -271,7 +271,7 @@ int                 pointselect;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SetNewSelectionStatus parcourt l'arborescence pour basculer la    
    mise en evidence de la selection et forcer le nouvel    
@@ -317,6 +317,7 @@ boolean             status;
 	  }
      }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    DisplayStringSelection trace le contour de la boite de texte    

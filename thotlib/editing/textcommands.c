@@ -371,7 +371,7 @@ View                view;
    MovingCommands (3);
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CopyXClipboard insere le contenu de la selection courante dans   
    le Xbuffer pour transmettre la selection X.             
@@ -526,7 +526,7 @@ unsigned char     **buffer;
      }
    return i;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    TtcCopyToClipboard                                              

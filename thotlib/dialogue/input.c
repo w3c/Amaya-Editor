@@ -519,7 +519,6 @@ LPARAM lParam;
    } else if ((wParam == VK_CANCEL)  ||
 			  (wParam == VK_RETURN)  ||
 			  (wParam == VK_ESCAPE)  ||
-			  (wParam == VK_SPACE)   || 
 			  (wParam == VK_PRIOR)   ||
 			  (wParam == VK_NEXT)    ||
 			  (wParam == VK_END)     ||

@@ -690,6 +690,7 @@ RuleSet             RuleS1;
       *s1++ = 0;
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    	BothHaveNoSpecRules retourne Vrai si aucun des deux elements pointes par	
    		pEl1 et pEl2 possedent des regles de presentation	
@@ -712,8 +713,7 @@ PtrElement          pEl2;
       equal = TRUE;
    return equal;
 }
-
-
+#endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
    	AbsBoxOfEl retourne un pointeur sur le pave de l'element pEl	
@@ -750,9 +750,7 @@ int                 view;
    return pAb;
 }
 
-
-
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    	NewPosition est appele' par le Mediateur, lorsque		
    		l'utilisateur deplace une boite a l'ecran.		
@@ -1147,7 +1145,7 @@ boolean             display;
 	 }
      }
 }
-
+#endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
   NewDimension est appele par le Mediateur, lorsque l'utilisateur

@@ -23,7 +23,7 @@
 #include "frame.h"
 #include "picture.h"
 #include "message.h"
-#include "pattern.h"
+/* #include "pattern.h" */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -264,6 +264,7 @@ int                 pattern;
 	 }
 #endif
 #ifdef _WINDOWS
+#if 0
    if (WIN_LastBitmap != 0) {
       DeleteObject (WIN_LastBitmap);
       WIN_LastBitmap = 0;
@@ -479,6 +480,7 @@ int                 pattern;
 	       break;
    }
    WIN_LastBitmap = hBitmap;
+#  endif /* 0 */
 #endif
    return pat;
 }

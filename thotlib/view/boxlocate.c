@@ -2027,7 +2027,7 @@ int                 ym;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    DirectCreation re'alise les differents modes de cre'ation       
    interactive des boi^tes.                                
@@ -2162,7 +2162,7 @@ int                 frame;
    /* Traitement de la creation interactive termine */
    BoxCreating = FALSE;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    LocateClickedChar cherche le caractere affiche dans la boite pBox 

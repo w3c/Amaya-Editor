@@ -268,7 +268,7 @@ PtrElement          pEl;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetCurrentSelection
 
@@ -356,7 +356,7 @@ int                *lastChar;
       ret = FALSE;
    return ret;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    GetActiveView
@@ -401,7 +401,7 @@ boolean            *assoc;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CancelSelection
 
@@ -442,6 +442,7 @@ void                CancelSelection ()
    LastSelectedCharInAttr = 0;
    InitSelectedCharInAttr = 0;
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ResetSelection
@@ -468,6 +469,7 @@ PtrDocument         pDoc;
      }
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    NextInSelection
 
@@ -557,7 +559,7 @@ PtrElement          pLastEl;
 	}
    return pEl;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ReverseSelection
@@ -640,7 +642,7 @@ PtrElement          pEl;
    return ret;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    HighlightSelection
 
@@ -851,7 +853,7 @@ boolean             showBegin;
 	  }
      }
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    SetActiveView
@@ -1051,7 +1053,7 @@ int                 view;
    return pAbView;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ShowSelection
 
@@ -1237,6 +1239,7 @@ boolean             visible;
 	  }
      }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    DisplaySel
@@ -1960,7 +1963,7 @@ int                 lastChar;
    SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string);
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    SelectElement
 
@@ -2139,7 +2142,7 @@ boolean             check;
 	  }
      }
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ExtendSelection
@@ -2443,6 +2446,7 @@ boolean             highlight;
      }
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    AddInSelection
 
@@ -2513,6 +2517,7 @@ boolean             last;
 	  }
      }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    RemoveFromSelection

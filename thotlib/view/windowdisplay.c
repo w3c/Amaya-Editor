@@ -254,7 +254,7 @@ unsigned char      *text;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawChar draw a char at location (x, y) in frame and with font.
   RO indicates whether it's a read-only box active
@@ -525,7 +525,6 @@ int                 fg;
      }
 }
 
-
 /*----------------------------------------------------------------------
   DrawPoints draw a line of dot.
   RO indicates whether it's a read-only box active indicates if the box
@@ -624,7 +623,6 @@ int                 fg;
    FinishDrawing (0, RO, active);
 }
 
-
 /*----------------------------------------------------------------------
   DrawIntegral draw an integral. depending on type :
   - simple if type = 0
@@ -698,7 +696,7 @@ int                 fg;
 		y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
 		font, RO, active, fg);
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   DrawMonoSymb draw a one glyph symbol.
@@ -730,7 +728,7 @@ int                 fg;
    DrawChar (symb, frame, xm, yf, font, RO, active, fg);
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawSigma draw a Sigma symbol.
   active indicates if the box is active
@@ -866,7 +864,6 @@ int                 fg;
      }
 }
 
-
 /*----------------------------------------------------------------------
   DrawUnion draw an Union symbol.
   RO indicates whether it's a read-only box
@@ -912,6 +909,7 @@ int                 fg;
 #       endif /* _WINDOWS */
      }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   TraceFleche draw the end of an arrow.
@@ -972,6 +970,7 @@ int                 fg;
 #  endif /* _WINDOWS */
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawArrow draw an arrow following the indicated direction in degrees :
   0 (right arrow), 45, 90, 135, 180,
@@ -1238,7 +1237,6 @@ int                 fg;
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
   DrawBrace draw an opening of closing brace (depending on direction).
@@ -1721,7 +1719,7 @@ int                 pattern;
    /* free the table of points */
    free ((char *) points);
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
@@ -1862,7 +1860,7 @@ float               a1, b1, a2, b2, a3, b3, a4, b4;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   DrawCurb draw an open curb.
   Parameter buffer is a pointer to the list of control points.
@@ -2106,7 +2104,6 @@ C_points           *controls;
    /* free the table of points */
    free ((char *) points);
 }
-
 
 /*----------------------------------------------------------------------
   DrawOval draw a rectangle with smoothed corners.
@@ -2421,7 +2418,6 @@ int                 fg;
      }
 }
 
-
 /*----------------------------------------------------------------------
   DrawSlash draw a slash or backslash depending on direction.
   RO indicates whether it's a read-only box
@@ -2462,7 +2458,6 @@ int                 fg;
 	FinishDrawing (0, RO, active);
      }
 }
-
 
 /*----------------------------------------------------------------------
   DrawCorner draw a corner.
@@ -2815,7 +2810,6 @@ int                 height;
 {
 }
 
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2828,7 +2822,6 @@ int                 height;
 #endif /* __STDC__ */
 {
 }
-
 
 /*----------------------------------------------------------------------
    SetMainWindowBackgroundColor :                          
@@ -2849,7 +2842,6 @@ int          color;
    WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
@@ -2888,7 +2880,7 @@ int                 y;
 #       endif /* _WINDOWS */
      }
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
@@ -2985,7 +2977,7 @@ int yf;
    }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   EndOfString check wether string end by suffix.
   ----------------------------------------------------------------------*/
@@ -3007,7 +2999,7 @@ char               *suffix;
    else
       return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   XFlushOutput enforce updating of the calculated image for frame.
@@ -3025,7 +3017,7 @@ int                 frame;
 #  endif /* _WINDOWS */
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
   located on (x , y) and geometry width x height, using the
@@ -3069,3 +3061,4 @@ int                 pattern;
      }
 #  endif /* _WINDOWS */
 }
+#endif /* _WIN_PRINT */

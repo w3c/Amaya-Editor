@@ -1140,7 +1140,7 @@ char               *trans;
    return found;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ConfigTranslateSSchema                                          
   ----------------------------------------------------------------------*/
@@ -1282,7 +1282,7 @@ char               *schpres;
      }
    return ok;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    readUntilStyle  lit le fichier file (qui doit etre ouvert)      
@@ -1665,6 +1665,7 @@ int                *height;
       ConfigGetViewGeometry (LoadedDocument[document - 1], name, x, y, width, height);
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ConfigGetPSchemaNature retourne dans presNature le nom du       
    schema de presentation a appliquer a la nature de nom   
@@ -1722,7 +1723,7 @@ char               *presNature;
      }
    return ok;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ConfigGetPresentationOption cherche, dans le fichier .conf      

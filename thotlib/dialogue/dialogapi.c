@@ -350,40 +350,56 @@ char* accelerator;
                        *pw++ = *pc++;
                  *pw = EOS;
               }	
-              if (!strcmp (word, "F1"))
+              if (!strcmp (word, "F1")) {
+                 fVirt |= FVIRTKEY;
                  key = VK_F1;
-              else if (!strcmp (word, "F2"))
-                   key = VK_F2;
-              else if (!strcmp (word, "F3"))
-                   key = VK_F3;
-              else if (!strcmp (word, "F4"))
-                   key = VK_F4;
-              else if (!strcmp (word, "F5"))
-                   key = VK_F5;
-              else if (!strcmp (word, "F6"))
-                   key = VK_F6;
-              else if (!strcmp (word, "F7"))
-                   key = VK_F7;
-              else if (!strcmp (word, "F8"))
-                   key = VK_F8;
-              else if (!strcmp (word, "F9"))
-                   key = VK_F9;
-              else if (!strcmp (word, "F10"))
-                   key = VK_F10;
-              else if (!strcmp (word, "F11"))
-                   key = VK_F11;
-              else if (!strcmp (word, "F12"))
-                   key = VK_F12;
-              else if (!strcmp (word, "F13"))
-                   key = VK_F13;
-              else if (!strcmp (word, "F14"))
-                   key = VK_F14;
-              else if (!strcmp (word, "F15"))
-                   key = VK_F15;
-              else if (!strcmp (word, "F16"))
-                   key = VK_F16;
-              else if (strlen (word) == 1)
-                   key = word [0];
+              } else if (!strcmp (word, "F2")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F2;
+              } else if (!strcmp (word, "F3")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F3;
+              } else if (!strcmp (word, "F4")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F4;
+              } else if (!strcmp (word, "F5")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F5;
+              } else if (!strcmp (word, "F6")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F6;
+			  } else if (!strcmp (word, "F7")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F7;
+              } else if (!strcmp (word, "F8")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F8;
+              } else if (!strcmp (word, "F9")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F9;
+              } else if (!strcmp (word, "F10")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F10;
+              } else if (!strcmp (word, "F11")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F11;
+              } else if (!strcmp (word, "F12")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F12;
+              } else if (!strcmp (word, "F13")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F13;
+              } else if (!strcmp (word, "F14")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F14;
+              } else if (!strcmp (word, "F15")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F15;
+              } else if (!strcmp (word, "F16")) {
+                     fVirt |= FVIRTKEY;
+                     key = VK_F16;
+              } else if (strlen (word) == 1)
+                     key = word [0];
               else
                   return FALSE;
          }
@@ -436,14 +452,9 @@ int  cmd;
       pCurAccel = (ACCEL*) (pAccelData + nNumAccel - 1);
 
       /* Set up a new accelerator for the the new menu option. */
-      /* pCurAccel->fVirt = FNOINVERT | FVIRTKEY; */
       pCurAccel->fVirt = fVirt;
       pCurAccel->cmd   = cmd;
       pCurAccel->key   = (WORD) key;
-      /* pCurAccel->key   = ( nNum == 1 ? VK_F1 :
-                              nNum == 2 ? VK_F2 :
-                              nNum == 3 ? VK_F3 :
-                              VK_F4 ); */
 
       /* Create the new accelerator table. */
       hAccel [frame] = CreateAcceleratorTable (pAccelData, nNumAccel);
@@ -608,6 +619,10 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
+# ifdef _WIN_PRINT
+  WIN_curWin = NULL;
+  TtDisplay = GetDC (WIN_curWin);
+# else  /* !_WIN_PRINT */
   HWND win;
   if (frame == -1) {
       if (TtDisplay != 0)
@@ -651,6 +666,7 @@ int frame;
 #  endif/*  AMAYA_DEBUG */
    if (TtDisplay != 0)
       WIN_curWin = win;
+#  endif /* !_WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -896,6 +912,7 @@ char*     commandLine;
     }
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    WinMain
   ----------------------------------------------------------------------*/
@@ -920,6 +937,7 @@ int       nShow;
    main (argc, argv);
    return (TRUE);
 }
+#endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1734,7 +1752,7 @@ Display           **Dp;
 #  endif /* !_WINDOWS */
 
 #  ifdef _WINDOWS
-
+#  ifndef _WIN_PRINT
    RootShell.style         = 0;
    RootShell.lpfnWndProc   = WndProc ;
    RootShell.cbClsExtra    = 0 ;
@@ -1785,7 +1803,7 @@ Display           **Dp;
          return (FALSE);
    } else if (!RegisterClass (&RootShell))
           return (FALSE);
-
+#  endif /* !_WIN_PRINT */
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS
@@ -2171,7 +2189,7 @@ caddr_t             call_d;
 }
 #endif /* !_WINDOWS */
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
@@ -2304,7 +2322,6 @@ char               *text;
 #  endif /* _WINDOWS */
 }
 
-
 /*----------------------------------------------------------------------
    DisplayMessage display the given messge (text) in main window   
    according to is msgType.		                
@@ -2386,7 +2403,7 @@ int                 msgType;
      }
 #  endif /* _WINDOWS */
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    DefineCallbackDialog de'finit la proce'dure de traitement des      
@@ -2749,6 +2766,10 @@ char               *equiv;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
 #  endif
+
+#  ifdef _WINDOWS
+   equiv_item[0] = 0;
+#  endif /* _WINDOWS */
 
    if (ref == 0)
      {
@@ -3937,6 +3958,8 @@ boolean             react;
    char                equiv_item [255];
    char                menu_item [1024];
    struct Cat_Context *copyCat;
+
+   equiv_item[0] = 0;
 #  endif
 
    if (ref == 0)

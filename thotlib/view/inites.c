@@ -128,6 +128,7 @@ ThotColorStruct    *colr;
 }
 #endif /* !_WINDOWS */
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding
    to color number num.
@@ -157,6 +158,7 @@ unsigned short     *blue;
 	*blue  = RGB_Table[1].blue;
      }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    InstallColor try to install a color in the public colormap.
@@ -231,7 +233,7 @@ static void ApproximateColors ()
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    InitDocColors initialize the Thot internal color table.
    If ReduceColor environment setting is set, less color
@@ -330,7 +332,7 @@ char               *name;
 	   ApproximateColors ();
      }
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    NumberOfColors  returns the number of colors in Thot color table.
@@ -358,7 +360,7 @@ int                 num;
       return NULL;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ColorPixel      returns the value of a color in Thot color table.
   ----------------------------------------------------------------------*/
@@ -374,7 +376,7 @@ int                 num;
    else
       return (ThotColor) 0;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    ColorNumber     lookup in Thot color table for an entry given it's
@@ -466,7 +468,7 @@ char               *name;
       return -1;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CreatePattern loads and return a pixmap pattern.
    active parameter indicate if the box is active.
@@ -870,3 +872,4 @@ int                 motif;
 #endif
    return ((unsigned long) pixmap);
 }
+#endif /* _WIN_PRINT */

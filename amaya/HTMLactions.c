@@ -1138,12 +1138,10 @@ Element             el;
 	     buffer = TtaGetMemory (length + 1);
 	     /* copy the HREF attribute into the buffer */
 	     TtaGiveTextAttributeValue (attrHREF, buffer, &length);
+	     strcpy (AttrHREFvalue, buffer);
 #            ifndef _WINDOWS
 	     /* initialise the text field in the dialogue box */
-	     strcpy (AttrHREFvalue, buffer);
 	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
-#            else  /* _WINDOWS */
-             /* CreateLinkDlgWindow (currentWindow, BaseDialog + AttrHREFForm, buffer); */
 #            endif /* _WINDOWS */
 	     TtaFreeMemory (buffer);
 	  }

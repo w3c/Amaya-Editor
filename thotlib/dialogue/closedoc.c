@@ -144,7 +144,9 @@ boolean            *save;
    strcat (buftext, pDoc->DocDName);
    strcat (buftext, " ");
    strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
+#  ifndef _WIN_PRINT 
    CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), TtaGetMessage (LIB, TMSG_CLOSE_DOC), buftext, &save_befor, &close_dont_save);
+#  endif /* _WIN_PRINT */
    SaveBeforeClosing = save_befor ;
    CloseDontSave     = close_dont_save;
 #  endif /* _WINDOWS */

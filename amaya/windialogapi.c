@@ -55,7 +55,7 @@ static char   wndTitle [100];
 static char   currentLabel [100];
 static char   currentRejectedchars [100];
 static char   currentPathName [100];
-
+static char   currentFileToPrint [MAX_PATH];
 static int          currentDoc ;
 static int          currentView ;
 static int          currentRef;
@@ -80,6 +80,18 @@ static int          toggleSave;
 static int          confirmSave;
 static int          attrHRefForm;
 static int          attrHRefTxt;
+static int          numMenuSupport; 
+static int          numMenuOptions; 
+static int          numMenuPaperFormat; 
+static int          numZonePrinterName; 
+static int          numFormPrint;
+static BOOL         manualFeed      = FALSE;
+static BOOL         tableOfContents = FALSE;
+static BOOL         numberedLinks   = FALSE;
+static BOOL         A4Format        = TRUE;
+static BOOL	        USFormat        = FALSE;
+static BOOL	        toPrinter       = TRUE;
+static BOOL	        toPostscript    = FALSE;
 static char*        classList;
 static char*        langList;
 static char*        saveList;
@@ -169,7 +181,7 @@ int       attr_HREFText;
 }
 
 /*-----------------------------------------------------------------------
- CreateLinkDlgWindow
+ CreateHelpDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 void CreateHelpDlgWindow (HWND parent, char* localname, char* msg1, char* msg2)
@@ -188,7 +200,7 @@ char*     msg2;
 }
 
 /*-----------------------------------------------------------------------
- CreateLinkDlgWindow
+ CreateMathDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 void CreateMathDlgWindow (HWND parent, int mathRef, HWND frame)
@@ -208,12 +220,27 @@ HWND      frame;
  CreatePrintDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreatePrintDlgWindow (HWND parent)
+void CreatePrintDlgWindow (HWND parent, char* ps_dir, int printRef, int num_menu_support, int num_menu_options, int num_menu_paper_format, int num_zone_printer_name, int num_form_print)
 #else  /* !__STDC__ */
-void CreatePrintDlgWindow (parent)
+void CreatePrintDlgWindow (parent, ps_dir, printRef, num_menu_support, num_menu_options, num_menu_paper_format, num_zone_printer_name, num_form_print)
 HWND      parent;
+char*     ps_dir;
+int       printRef; 
+int       num_menu_support; 
+int       num_menu_options; 
+int       num_menu_paper_format; 
+int       num_zone_printer_name; 
+int       num_form_print;
 #endif /* __STDC__ */
 {  
+	baseDlg            = printRef;
+    numMenuSupport     = num_menu_support; 
+    numMenuOptions     = num_menu_options; 
+    numMenuPaperFormat = num_menu_paper_format; 
+    numZonePrinterName = num_zone_printer_name; 
+    numFormPrint       = num_form_print;
+	sprintf (currentFileToPrint, "%s", ps_dir);
+
 	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), parent, (DLGPROC) PrintDlgProc);
 }
 
@@ -712,15 +739,80 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
+                if (manualFeed)
+                   CheckDlgButton (hwnDlg, IDC_MANUALFEED, TRUE);
+
+                if (tableOfContents)
+                   CheckDlgButton (hwnDlg, IDC_TABOFCONTENTS, TRUE);
+
+                if (numberedLinks)
+                   CheckDlgButton (hwnDlg, IDC_LINKS, TRUE);
+
+                if (A4Format)
+                   CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_A4);
+                else if (USFormat)
+                     CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_US);
+
+                if (toPrinter)
+                    CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
+                else if (toPostscript)
+                     CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
+
 			    SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "lpr");
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
+                       case IDC_MANUALFEED:
+                            manualFeed = !manualFeed;
+							ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)0);
+                            break;
+
+                       case IDC_TABOFCONTENTS:
+						    tableOfContents = !tableOfContents;
+							ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)1);
+                            break;
+
+                       case IDC_LINKS:
+						    numberedLinks = !numberedLinks;
+							ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (char*)2);
+                            break;
+
+                       case IDC_A4:
+                            CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_A4);
+                            A4Format = TRUE;
+							USFormat = FALSE;
+                            break;
+
+                       case IDC_US:
+                            CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_US);
+                            A4Format = FALSE;
+							USFormat = TRUE;
+                            break;
+
+                       case IDC_PRINTER:
+						    toPrinter = TRUE;
+							toPostscript = FALSE;
+                            CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
+						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)0);
+                            break;
+
+                       case IDC_POSTSCRIPT:
+						    toPrinter = FALSE;
+							toPostscript = TRUE;
+                            CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
+                            SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
+						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)1);
+                            break;
+
 				       case ID_PRINT:
+						    ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (char*)0);
+							ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
+							ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)1);
 					        EndDialog (hwnDlg, ID_PRINT);
 			                MessageBox (hwnDlg, "Not yet supported", "Warning", MB_OK);
 							break;
 				       case IDCANCEL:
+							ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 				}

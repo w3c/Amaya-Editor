@@ -97,7 +97,8 @@ extern int bgRed ;
 extern int bgGreen;
 extern int bgBlue ;
 
-static PALETTEENTRY sysPalEntries[MAX_COLOR];
+/* static PALETTEENTRY sysPalEntries[MAX_COLOR]; */
+static PALETTEENTRY sysPalEntries[256];
 boolean             peInitialized = FALSE;
 static int          nbSysColors ;
 /* static int          mapIndex; */
@@ -152,7 +153,7 @@ int WIN_InitSystemColors ()
 #ifdef __STDC__
 unsigned int WIN_GetColorIndex (int r, int g, int b)
 #else /* __STDC__ */
-unsigned int WIN_GetColorIndex (red, green, blue)
+unsigned int WIN_GetColorIndex (r, g, b)
 int r; 
 int g; 
 int b;
@@ -164,7 +165,7 @@ int b;
     unsigned int        dsquare;
     unsigned int        best_dsquare = (unsigned int) -1;
 
-    for (i = 0; i < nbSysColors; i++) {
+    for (i = 0; i < MAX_COLOR; i++) {
         delred   = sysPalEntries[i].peRed;
         delgreen = sysPalEntries[i].peGreen;
 		delblue  = sysPalEntries[i].peBlue;
@@ -1399,7 +1400,6 @@ ThotColorStruct     colrs[256];
                  bmBits[i + j * (padding + width)] = mapIndex;
              }
          }
-
          ret = SetBitmapBits (bmp, width * height, bmBits);
 
          /* Cleanup */
@@ -1666,11 +1666,17 @@ unsigned long       BackGroundPixel;
 
 	for (x = 0; x < wif; x++)
 	  {
-
-	     fprintf (fd, "%02x%02x%02x",
+#       ifdef _WINDOWS
+		fprintf (fd, "%02x%02x%02x",
+		      (colrs[*pt].red),
+		      (colrs[*pt].green),
+		      (colrs[*pt].blue));
+#       else  /* !_WINDOWS */
+		fprintf (fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
+#       endif /* !_WINDOWS */
 
 	     pt++;
 	  }

@@ -378,7 +378,11 @@ Document            document;
 	 }
        strcpy (docName, TtaGetDocumentName (document));
        ExtractSuffix (docName, suffix);
+#      ifdef _WINDOWS
+       sprintf (&PSdir[lg], "\\%s.ps", docName);
+#      else /* !_WINDOWS */
        sprintf (&PSdir[lg], "/%s.ps", docName);
+#      endif /* !_WINDOWS */
        TtaSetPsFile (PSdir);
        /* define the new default PrintSchema */
        numberLinks = FALSE;
@@ -573,9 +577,12 @@ View                view;
 #  ifndef _WINDOWS
    char             bufMenu[MAX_LENGTH];
    int              i;
+#  endif /* !_WINDOWS */
 
    /* Print form */
    CheckPrintingDocument (document);
+
+#  ifndef _WINDOWS
    TtaNewSheet (basePrint+NumFormPrint, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 2, 'L', D_CANCEL);
@@ -631,7 +638,7 @@ View                view;
    /* activates the Print form */
     TtaShowDialogue (basePrint+NumFormPrint, FALSE);
 #   else  /* _WINDOWS */
-    CreatePrintDlgWindow (TtaGetViewFrame (document, view)); 
+    CreatePrintDlgWindow (TtaGetViewFrame (document, view), PSdir, basePrint, NumMenuSupport, NumMenuOptions, NumMenuPaperFormat, NumZonePrinterName, NumFormPrint); 
 #   endif /* _WINDOWS */
 }
 

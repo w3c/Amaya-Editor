@@ -1268,6 +1268,7 @@ void CloseTextInsertion ()
   withAppliControl = CloseTextInsertionWithControl ();
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    CloseParagraphInsertion teste s'il faut reformater un paragraphe  
    suite a` une insertion.                                 
@@ -1329,7 +1330,7 @@ int                 frame;
 		}
 	}
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    insere dans la boite pBox.                                      

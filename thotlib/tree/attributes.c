@@ -1017,7 +1017,7 @@ PtrAttribute        pNewAttr;
    return (pAttr);
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Met dans l'element pEl la valeur de l'attribut pNewAttr		
    Les regles de presentation de cette nouvelle valeur sont	
@@ -1258,6 +1258,7 @@ PtrAttribute        pNewAttr;
 	CallEventAttribute (&notifyAttr, FALSE);
      }
 }
+#endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
    AttachAttrToRange applique l'attribut pAttr a une partie de document

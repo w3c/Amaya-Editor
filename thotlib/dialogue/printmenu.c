@@ -76,6 +76,7 @@ static int          defPaginate;
 static int          defPageSize;
 static Name         PresSchema;
 
+
 /*----------------------------------------------------------------------
   Print: interface to the Print program.
   ----------------------------------------------------------------------*/
@@ -105,14 +106,17 @@ char               *viewsToPrint;
 Document            document;
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
    char             cmd[1024];
    int              i, j, res;
    int              frame;
 
    /* initialize the print command */
 
+#  ifdef _WINDOWS
+   sprintf (cmd, "%s\\print", BinariesDirectory);
+#  else  /* !_WINDOWS */
    sprintf (cmd, "%s/print", BinariesDirectory);
+#  endif /* !_WINDOWS */
 
    if ((thotSch != NULL) &&
        (thotSch[0] != '\0'))
@@ -235,14 +239,20 @@ Document            document;
 
    /* transmit the path or source file */
    i = strlen (cmd);
+#  ifdef _WINDOWS 
+   sprintf (&cmd[i], " -removedir %s\\%s.PIV", dir, name);
+#  else /* !_WINDOWS */
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
+#  endif /* _WINDOWS */
+   /* for debugging puropose:
+   fprintf (stderr, " %s", cmd);
+   end of debugging code */
    /***
    sprintf (&cmd[i], " %s/%s.PIV &", dir, name);
    ****/
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
-#endif /* _WINDOWS */
 }
 
 
@@ -412,8 +422,13 @@ char               *viewNames;
      }
    else
      {
+#      ifdef _WINDOWS
+       strcpy (tmpDirName,"C:\\TEMP");
+       lg = 7;
+#      else /* !_WINDOWS */
        strcpy (tmpDirName,"/tmp");
        lg = 4;
+#      endif /* _WINDOWS */
      }
 
    sprintf (tmpDocName, "Thot%ld", (long) pid + numOfJobs);
@@ -422,10 +437,14 @@ char               *viewNames;
 #ifdef DEBUG
    fprintf (stderr,"printmenu : temp dir %s \n",tmpDirName);
 #endif
+#  ifdef _WINDOWS
+   mkdir (tmpDirName);
+#  else /* !_WINDOWS */
    sprintf (cmd, "/bin/mkdir %s\n", tmpDirName);
    system (cmd);
    sprintf (cmd, "chmod +rwx '%s'\n", tmpDirName);
    system (cmd);
+#  endif /* _WINDOWS */
    numOfJobs++;
 
    strncpy (dirName, pDoc->DocDirectory, MAX_PATH);
@@ -476,7 +495,7 @@ char               *viewNames;
 		  viewNames,
 		  document);
 	else if (PSdir[0] != '\0')
-	   Print (tmpDocName,
+	     Print (tmpDocName,
 		  tmpDirName,
 		  pDoc->DocSchemasPath,
 		  DocumentPath,

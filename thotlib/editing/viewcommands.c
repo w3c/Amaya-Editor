@@ -167,8 +167,10 @@ int                 height;
 	strcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
+#  ifndef _WIN_PRINT */
    createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width,
 			     height, vol, IdentDocument (pDoc));
+#  endif /* !_WIN_PRINT */
    return createdFrame;
 }
 

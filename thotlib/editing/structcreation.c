@@ -211,6 +211,7 @@ PtrDocument         pDoc;
 	}
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    InsertOption  met l'element pOption a la place de l'element de	
    type Choice pEl, sauf si celui-ci est un element d'agregat ou la	
@@ -253,6 +254,7 @@ PtrDocument         pDoc;
 	  }
      }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    CreationExceptions						
@@ -1534,7 +1536,7 @@ PtrSSchema          pSS;
    return pEl;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    LinkReference remplit un element ou un attribut de type reference     
    en demandant a l'utilisateur quel est l'element qui est         
@@ -1699,6 +1701,7 @@ PtrElement         *pSelEl;
    *pSelEl = pCreatedElem;
    return ret;
 }
+#endif /* WIN_PRINT */
 
 typedef enum
 {

@@ -97,7 +97,9 @@ extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HINSTANCE hInstance  ;
 /* extern BOOL      WIN_UserGeometry;  */
+#ifndef _WIN_PRINT
 extern int       Window_Curs;
+#endif /* !_WIN_PRINT */
 
 static HWND      hwndHead   ;
 static char*     txtZoneLabel;
@@ -108,6 +110,7 @@ static char      doc_title [500];
 
 static int       oldXPos;
 static int       oldYPos;
+static int       oldSPos = 0;
 
 int         X_Pos;
 int         Y_Pos;
@@ -472,7 +475,10 @@ int                 reason;
 int                 value;
 #endif /* __STDC__ */
 {
-   int      delta;
+   int        delta;
+   int        sMin, sMax, sPos, total;
+   int        y, n, start, end, h;
+   float      carparpix;
 
    /* do not redraw it if in NoComputedDisplay mode */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -508,10 +514,35 @@ int                 value;
 	       break;
 
 	  case SB_THUMBPOSITION:
+           GetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, &sMin, &sMax);
+		   sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
+		   /*if (value >= oldSPos)
+              delta = oldSPos + (value - oldSPos);
+		   else */
+               delta = value - sPos;
+		   VerticalScroll (frame, delta, TRUE);
+		   oldSPos = value;
+		  /*
+		   sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
+           value = (value * 100) / (sMax - sMin);
 	       JumpIntoView (frame, value);
+		   */
 	       break;
+
 	  case SB_THUMBTRACK:
-	       JumpIntoView (frame, value);
+		  /*
+           PositionAbsBox (frame, &sMin, &sMax, &total);
+		   */
+           GetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, &sMin, &sMax);
+		   sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
+		   /*if (value >= oldSPos)
+              delta = oldSPos + (value - oldSPos);
+		   else*/ 
+               delta = value - sPos;
+		   VerticalScroll (frame, delta, TRUE);
+		   oldSPos = value;
+           /*value = (value * 100) / (sMax - sMin);
+	       JumpIntoView (frame, value);*/
 	       break;
    }
 
@@ -685,10 +716,8 @@ int                *param;
    notifyDoc.view = view;
    notifyDoc.verticalValue = delta;
    notifyDoc.horizontalValue = 0;
-   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-     {
-	if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
-	  {
+   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE)) {
+      if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG) {
 	     /* Deplacement absolu dans la vue du document */
 	     delta = infos->value;
 	     /* Recupere la hauteur de l'ascenseur */
@@ -704,37 +733,34 @@ int                *param;
 	     carparpix = (float) total / (float) FrameTable[frame].FrHeight;
 	     y = (int) ((float) infos->value * carparpix);
 
-	     if (n == 0 || (y >= start && y <= total - end))
-	       {
-		  /* On se deplace a l'interieur de l'Picture Concrete */
-		  /* Calcule la portion de scroll qui represente l'Picture Concrete */
-		  start = (int) ((float) start / carparpix);
-		  end = (int) ((float) end / carparpix);
-		  delta = FrameTable[frame].FrHeight - start - end;
-		  /* Calcule la position demandee dans cette portion de scroll */
-		  /* On detecte quand le deplacement bute en bas du document */
-		  if (infos->value + h >= FrameTable[frame].FrHeight)
-		     y = delta;
-		  else
-		     y = infos->value - start;
-		  ShowYPosition (frame, y, delta);
-	       }
-	     else
-	       {
-		  /* On regarde si le deplacement bute en bas du document */
-		  if (delta + h >= FrameTable[frame].FrHeight - 4)
-		     delta = FrameTable[frame].FrHeight;
-		  else if (delta >= 4)
-		     /* Ou plutot vers le milieu */
-		     delta += h / 2;
-		  else
-		     delta = 0;
+	     if (n == 0 || (y >= start && y <= total - end)) {
+		    /* On se deplace a l'interieur de l'Picture Concrete */
+		    /* Calcule la portion de scroll qui represente l'Picture Concrete */
+		    start = (int) ((float) start / carparpix);
+		    end = (int) ((float) end / carparpix);
+		    delta = FrameTable[frame].FrHeight - start - end;
+		    /* Calcule la position demandee dans cette portion de scroll */
+		    /* On detecte quand le deplacement bute en bas du document */
+		    if (infos->value + h >= FrameTable[frame].FrHeight)
+		       y = delta;
+		    else
+		       y = infos->value - start;
+		    ShowYPosition (frame, y, delta);
+	     } else {
+		      /* On regarde si le deplacement bute en bas du document */
+		      if (delta + h >= FrameTable[frame].FrHeight - 4)
+		         delta = FrameTable[frame].FrHeight;
+		      else if (delta >= 4)
+		           /* Ou plutot vers le milieu */
+		           delta += h / 2;
+		      else
+		         delta = 0;
 
-		  delta = (delta * 100) / FrameTable[frame].FrHeight;
-		  JumpIntoView (frame, delta);
-		  /* Mise a jour des bandes de scroll pour ajustement */
-		  UpdateScrollbars (frame);
-	       }
+    	      delta = (delta * 100) / FrameTable[frame].FrHeight;
+		      JumpIntoView (frame, delta);
+		      /* Mise a jour des bandes de scroll pour ajustement */
+		      UpdateScrollbars (frame);
+	     }
 	  }
 	else if (infos->reason == XmCR_TO_TOP)
 	  {
@@ -1094,6 +1120,7 @@ POINT ptEnd;
 }
 #endif /* 0 */
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   WndProc :  The main MS-Windows event handler for the Thot Library.                                                    
   ----------------------------------------------------------------------*/
@@ -1443,6 +1470,7 @@ LPARAM lParam;
                return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
+#endif /* !_WIN_PRINT */
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -1670,7 +1698,7 @@ void                ThotUngrab ()
 #endif /* _WINDOWS */
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaGetThotWindow recupere le numero de la fenetre.           
   ----------------------------------------------------------------------*/
@@ -1698,7 +1726,6 @@ int                 frame;
 }
 #endif /* _WINDOWS */
 
-
 /*----------------------------------------------------------------------
    SetCursorWatch affiche le curseur "montre".                  
   ----------------------------------------------------------------------*/
@@ -1721,7 +1748,6 @@ int                 thotThotWindowid;
 #  endif /* _WINDOWS */
 }
 
-
 /*----------------------------------------------------------------------
    ResetCursorWatch enleve le curseur "montre".                 
   ----------------------------------------------------------------------*/
@@ -1743,6 +1769,7 @@ int                 thotThotWindowid;
    SetCursor (LoadCursor (NULL, IDC_ARROW));
 #  endif /* _WINDOWS */
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1856,7 +1883,9 @@ PtrAbstractBox     *pave;
 
    /* Changement du curseur */
 #  ifdef _WINDOWS
+#  ifndef _WIN_PRINT 
    cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
+#  endif /* _WIN_PRINT */
 #  else  /* !_WINDOWS */
    for (i = 1; i <= MAX_FRAME; i++)
      {
@@ -1900,7 +1929,7 @@ PtrAbstractBox     *pave;
      *pave = NULL;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Modifie le titre de la fenetre d'indice frame.                     
   ----------------------------------------------------------------------*/
@@ -1932,7 +1961,7 @@ char               *text;
      }
 #endif /* _WINDOWS */
 }				/*ChangeFrameTitle */
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    La frame d'indice frame devient la fenetre active.               
@@ -2004,7 +2033,7 @@ ThotWindow w;
 }
 #endif /* _WINDOWS */
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
   ----------------------------------------------------------------------*/
@@ -2031,7 +2060,6 @@ int                *height;
    *width  = rWindow.right - rWindow.left ;
 #  endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
    DefineClipping limite la zone de reaffichage sur la fenetre frame et   
@@ -2107,7 +2135,6 @@ int                 raz;
      }
 }
 
-
 /*----------------------------------------------------------------------
    RemoveClipping annule le rectangle de clipping de la fenetre frame.  
   ----------------------------------------------------------------------*/
@@ -2134,7 +2161,6 @@ int                 frame;
    SelectClipRgn(TtDisplay, NULL); 
 #  endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
    UpdateScrollbars met a jour les bandes de defilement de la fenetretre    
@@ -2222,6 +2248,6 @@ int                 frame;
    }
 #  endif /* _WINDOWS */
 }				/*UpdateScrollbars */
-
+#endif /* _WIN_PRINT */
 
 /* End Of Module Thot */

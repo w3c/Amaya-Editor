@@ -177,7 +177,7 @@ boolean            *assoc;
      }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    GetDocAndView retourne le pointeur sur le document (pDoc) et le	
    numero de vue (viewNum) dans ce document, correspondant a	
@@ -215,7 +215,7 @@ boolean            *assoc;
    else
       *pDoc = pD;
 }
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    BuildSSchemaViewList						

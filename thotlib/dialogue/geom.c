@@ -621,7 +621,7 @@ PtrTextBuffer       Bbuffer;
          return nbpoints;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
  *      PolyLineModification interract with the user to move a point part
  * 		a polyline in a given frame.
@@ -785,7 +785,7 @@ boolean             close;
    XFlush (TtDisplay);
 #endif /* _WINDOWS */
 }				/*PolyModification */
-
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
  *      PolyLineExtension interract with the user to add points to
@@ -1012,6 +1012,7 @@ boolean             close;
 #endif /* _WINDOWS */
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
  *      UserGeometryCreate draw a box at a specific (x,y) location in
  *		frame and of size width x height when interracting with
@@ -1559,8 +1560,6 @@ int                 DimY;
    XFlush (TtDisplay);
 #  else  /* _WINDOWS */
    w = FrRef[frame];
-   /* WIN_UserGeometry = TRUE;
-   SetCursor (LoadCursor (NULL, IDC_CROSS)); */
 #  endif /* _WINDOWS */
 }
 
@@ -2044,3 +2043,4 @@ int                 ym;
    XFlush (TtDisplay);
 #endif /* _WINDOWS */
 }
+#endif /* _WIN_PRINT */

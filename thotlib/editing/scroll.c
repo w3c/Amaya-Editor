@@ -674,7 +674,7 @@ raint              *height;
       *height = 1;
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ShowBox force la position de la boi^te dans la fenetree^tre        
    affiche'e sur l'e'cran.                                 
@@ -748,7 +748,7 @@ int                 percent;
       UpdateScrollbars (frame);
       }
 }
-
+#endif /* WIN_PRINT */
 
 /*----------------------------------------------------------------------
    IsScrolled regarde si la marque d'insertion (de'but de se'lection) 

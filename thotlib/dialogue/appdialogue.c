@@ -51,8 +51,10 @@
 
 extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
+#ifndef _WIN_PRINT
 extern int          appArgc;
 extern char       **appArgv;
+#endif /* !_WIN_PRINT */
 extern ThotWidget   WIN_curWin;
 
 typedef void        (*Thot_ActionProc) ();
@@ -269,6 +271,7 @@ int                 number;
 
    /* Initialise le dialogue */
    servername = NULL;
+#  ifndef _WIN_PRINT
    if (appArgc > 2)
      {
 	i = 1;
@@ -282,6 +285,7 @@ int                 number;
 		i = appArgc;
 	     }
      }
+#  endif /* _WIN_PRINT */
 #  ifdef _WINDOWS
    WIN_TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 			   TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE));
@@ -1121,6 +1125,7 @@ int                 frame;
      }
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TteOpenMainWindow opens the application main window.
 
@@ -1230,7 +1235,7 @@ Pixmap              icon;
 	  }
      }
 }
-
+#endif /* _WIN_PRINT */
 /*----------------------------------------------------------------------
    ButtonAction                                                    
   ----------------------------------------------------------------------*/
@@ -2200,7 +2205,7 @@ int                *infos;
 {
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    Cree une frame a' la position X,Y et aux dimensions large et       
    haut (s'ils sont positifs).                                        
@@ -2799,7 +2804,7 @@ int                 doc;
 
    return (frame);
 }
-
+#endif /* !_WIN_PRINT */
 
 /*----------------------------------------------------------------------
    Si l'entree existe :                                             

@@ -838,16 +838,28 @@ boolean             increase;
 	   ptfont->alphabet  = alphabet;
 	   ptfont->family    = family;
 	   ptfont->highlight = highlight;
-	   ptfont->size      = size;
+       if (unit == UnRelative) {
+          char  fontSize [5];
+          char* pText = text ;
+		  char* pFontSize = &fontSize [0];
+		  while (!isdigit (*pText))
+                pText++;
+		  if (isdigit (*pText))
+             while (isdigit (*pText))
+                   *pFontSize++ = *pText++;
+          *pFontSize = 0;
+          ptfont->size = atoi (fontSize);
+       } else
+           ptfont->size = size;
 	   ptfont->unit      = unit;
-
+#      ifndef _WIN_PRINT
 	   currentFontCharacteristics = (ptrfont) TtaGetMemory (sizeof (winFont));
 	   currentFontCharacteristics->alphabet  = alphabet;
 	   currentFontCharacteristics->family    = family;
 	   currentFontCharacteristics->highlight = highlight;
 	   currentFontCharacteristics->size      = size;
 	   currentFontCharacteristics->unit      = unit;
-	   /* ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame); */
+#      endif /* !_WIN_PRINT */
 #          else  /* _WINDOWS */
 	   ptfont = LoadFont (textX);
 #          endif /* !_WINDOWS */

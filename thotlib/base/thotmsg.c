@@ -36,6 +36,7 @@ boolean             PrintErrorMessages;
 
 #include "viewcommands_f.h"
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtaError affiche les messsges d'erreur de l'API.                
   ----------------------------------------------------------------------*/
@@ -173,3 +174,4 @@ int                 errorCode;
 	fprintf (stderr, buffer);
      }
 }
+#endif /* _WIN_PRINT */
