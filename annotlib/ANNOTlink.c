@@ -200,7 +200,6 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   Element       el, first, anchor;
   AttributeType attrType;
   Attribute     attr;
-  char          s[MAX_LENGTH];
   char         *docSchemaName;
   int           c1, cN;
   int           check_mode;
