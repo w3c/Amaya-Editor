@@ -1020,7 +1020,9 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 
   box = cell->AbBox;
   /* take into account the left margin, border and padding */
-  mbp = box->BxLBorder + box->BxLPadding + box->BxLMargin;
+  mbp = box->BxLBorder + box->BxLPadding;
+  if (cell->AbLeftMarginUnit != UnAuto)
+    mbp += box->BxLMargin;
   /* process elements in this cell */
   pSS = cell->AbElement->ElStructSchema;
   *min = 1;
@@ -1061,9 +1063,15 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 		  parent = pParent->AbBox;
 		  if (parent->BxType != BoGhost &&
 		      parent->BxType != BoFloatGhost)
-		  delta += parent->BxLBorder + parent->BxLPadding + parent->BxLMargin
-		    + parent->BxRBorder + parent->BxRPadding + parent->BxRMargin;
-		pParent = pParent->AbEnclosing;
+		    {
+		      delta += parent->BxLBorder + parent->BxLPadding
+			+ parent->BxRBorder + parent->BxRPadding;
+		      if (pParent->AbLeftMarginUnit != UnAuto)
+			delta += parent->BxLMargin;
+		      if (pParent->AbRightMarginUnit != UnAuto)
+			delta += parent->BxRMargin;
+		    }
+		  pParent = pParent->AbEnclosing;
 		}
 	      if (*min < pAb->AbBox->BxMinWidth + delta)
 		*min = pAb->AbBox->BxMinWidth + delta;
@@ -1461,7 +1469,9 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 		delta += box->BxXOrg - pBox->BxXOrg;
 	      /* add the right cellspacing */
 	      box1 = colBox[cRef]->AbEnclosing->AbBox;
-	      delta += box1->BxRPadding + box1->BxRBorder + box1->BxRMargin;
+	      delta += box1->BxRPadding + box1->BxRBorder;
+	      if (colBox[cRef]->AbEnclosing->AbRightMarginUnit != UnAuto)
+		delta += box1->BxRMargin;
 	    }
 	  else if (box->BxXOrg - prevBox->BxXOrg - prevBox->BxWidth > 0)
 	    delta += box->BxXOrg - prevBox->BxXOrg - prevBox->BxWidth;

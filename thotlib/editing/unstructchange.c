@@ -561,7 +561,7 @@ void PasteCommand ()
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, cellChild;
-  PtrElement          pColHead, pNextCol, pRow, pNextRow;
+  PtrElement          pColHead, pNextCol, pRow, pNextRow, pTable;
   PtrPasteElem        pPasteD;
   DisplayMode         dispMode;
   Document            doc;
@@ -569,7 +569,7 @@ void PasteCommand ()
   ThotBool            ok, before, within, lock, cancelled, first, savebefore;
 
   before = FALSE;
-  pColHead = pRow = NULL;
+  pColHead = pRow = pTable = NULL;
   if (FirstSavedElement == NULL)
     return;
   if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -631,15 +631,23 @@ void PasteCommand ()
 		  /* look for the first row */
 		  pRow = firstSel->ElParent;
 		  if (pRow && pColHead)
-		    pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
-					       pRow->ElStructSchema);
+		    {
+		      pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
+						 pRow->ElStructSchema);
+		      pTable = pColHead;
+		      while (pTable &&
+			     !TypeHasException (ExcIsTable,
+						pTable->ElTypeNumber,
+						pTable->ElStructSchema))
+			pTable = pTable->ElParent;
+		    }
 		  else
 		    pRow = NULL;
 		}
 	      /* change the selection to paste a whole column */
 	      pEl = firstSel;
 	      within = FALSE;
-	      pNextEl = pEl;
+	      pNextEl = NULL;
 	    }
 	  else if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
 		   firstSel->ElVolume == 0 && !firstSel->ElTerminal)
@@ -720,22 +728,20 @@ void PasteCommand ()
 		{
 		  /* look for the cell in that row and that column */
 		  pEl = GetCellInRow (pRow, pColHead);
-		  if (pEl)
+		  if (pEl == NULL && pRow)
 		    {
+		      /* no cell in that row */
 		      pNextCol = pColHead;
 		      while (pEl == NULL && pNextCol)
 			{
-			  /* no cell in that row : paste before the next */
+			  /* paste before the next */
 			  before = TRUE;
-			  pNextCol = FwdSearchTypedElem (pNextCol,
-							 pColHead->ElTypeNumber,
-							 pColHead->ElStructSchema);
-			  pEl = GetCellInRow (pRow, pNextCol);
+			  pNextCol = NextColumnInTable (pNextCol, pTable);
+			  if (pNextCol)
+			    pEl = GetCellInRow (pRow, pNextCol);
 			}
-		      /* next row */
-		      pNextRow = FwdSearchTypedElem (pRow, pRow->ElTypeNumber,
-						     pRow->ElStructSchema);
 		    }
+		  pNextRow = NextRowInTable (pRow, pTable);
 		}
 	      if (pEl)
 		pPasted = PasteAnElement (pEl, pPasteD, within, before,

@@ -483,6 +483,67 @@ PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead)
 }
 
 /*----------------------------------------------------------------------
+  NextRowInTable
+  Return the row that follows the current row pRow in the table pTable.
+  ----------------------------------------------------------------------*/
+PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
+{
+  PtrElement pNextRow, pAsc;
+
+  if (pRow)
+    {
+      /* next row */
+      pNextRow = pRow->ElNext;
+      while (pNextRow &&
+	     !TypeHasException (ExcIsRow,
+				pNextRow->ElTypeNumber,
+				pNextRow->ElStructSchema))
+	/* skip comments */
+	pNextRow = pNextRow->ElNext;
+      if (pNextRow == NULL && pRow->ElParent &&
+	  pRow->ElParent  != pTable && pRow->ElParent->ElNext)
+	{
+	  pAsc = pRow->ElParent->ElNext;
+	  while (pNextRow == NULL && pAsc)
+	    {
+	      /* look for a row into another tbody */
+	      pNextRow = SearchTypedElementInSubtree (pAsc,
+						      pRow->ElTypeNumber,
+						      pRow->ElStructSchema);
+	      pAsc = pAsc->ElNext;
+	    }
+	}
+    }
+  else
+    pNextRow = NULL;
+  return (pNextRow);
+}
+
+/*----------------------------------------------------------------------
+  NextColumnInTable
+  Return the column that follows the current column pCol in the table pTable.
+  ----------------------------------------------------------------------*/
+PtrElement NextColumnInTable (PtrElement pCol, PtrElement pTable)
+{
+  PtrElement pNextCol, pAsc;
+
+  if (pCol)
+    {
+      /* next column */
+      pNextCol = pCol->ElNext;
+      while (pNextCol &&
+	     !TypeHasException (ExcIsColHead,
+				pNextCol->ElTypeNumber,
+				pNextCol->ElStructSchema))
+	/* skip comments */
+	pNextCol = pNextCol->ElNext;
+    }
+  else
+    pNextCol = NULL;
+  return (pNextCol);
+}
+
+/*----------------------------------------------------------------------
    PreviousLeafInSelection
    Returns the element that is before element pEl in the selection order.
   ----------------------------------------------------------------------*/

@@ -23,6 +23,10 @@ extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement GetColHeadOfCell ( PtrElement pCell );
 extern PtrElement GetCellInRow ( PtrElement pRow,
                                  PtrElement pColHead );
+extern PtrElement NextRowInTable ( PtrElement pRow,
+                                   PtrElement pTable );
+extern PtrElement NextColumnInTable ( PtrElement pCol,
+                                      PtrElement pTable );
 extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement pLastEl );
 extern ThotBool HiddenType ( PtrElement pEl );
@@ -118,6 +122,10 @@ extern void ResetSelection (/* PtrDocument pDoc */);
 extern PtrElement GetColHeadOfCell (/* PtrElement pCell */);
 extern PtrElement GetCellInRow (/* PtrElement pRow,
                                    PtrElement pColHead */);
+extern PtrElement NextRowInTable (/* PtrElement pRow,
+                                     PtrElement pTable */);
+extern PtrElement NextColumnInTable (/* PtrElement pCol,
+                                        PtrElement pTable */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement pLastEl */);
 extern ThotBool HiddenType (/* PtrElement pEl */);

@@ -1350,11 +1350,12 @@ PtrElement  GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pSS)
 
 
 /*----------------------------------------------------------------------
-   FwdSearch2TypesInSubtree                                        
+  FwdSearch2TypesInSubtree
+  The parameter test is TRUE when pEl should be tested too.
   ----------------------------------------------------------------------*/
-static PtrElement FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test,
-					    int typeNum2, int typeNum1,
-					    PtrSSchema pSS2, PtrSSchema pSS1)
+PtrElement FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test,
+				     int typeNum2, int typeNum1,
+				     PtrSSchema pSS2, PtrSSchema pSS1)
 {
   PtrElement          pRet, pChild;
 

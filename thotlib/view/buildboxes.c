@@ -3894,6 +3894,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		      RecomputeLines (pAb, NULL, NULL, frame);
 		      width = pBox->BxW;
 		    }
+		  else if (isCell && ThotLocalActions[T_checkcolumn])
+		    /* Check table consistency */
+		    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
+							       (void *)pAb,
+							       (void *)NULL,
+							       (void *)frame);
 		  else
 		    GiveEnclosureSize (pAb, frame, &width, &height);
 		  break;

@@ -47,6 +47,12 @@ extern PtrElement LastLeaf ( PtrElement pRoot );
 extern PtrElement GetTypedAncestor ( PtrElement pEl,
                                      int typeNum,
                                      PtrSSchema pSS );
+extern PtrElement FwdSearch2TypesInSubtree ( PtrElement pEl,
+                                             ThotBool test,
+                                             int typeNum2,
+                                             int typeNum1,
+                                             PtrSSchema pSS2,
+                                             PtrSSchema pSS1 );
 extern PtrElement FwdSearchElem2Types ( PtrElement pEl,
                                         int typeNum1,
                                         int typeNum2,
@@ -251,6 +257,12 @@ extern PtrElement LastLeaf (/* PtrElement pRoot */);
 extern PtrElement GetTypedAncestor (/* PtrElement pEl,
                                        int typeNum,
                                        PtrSSchema pSS */);
+extern PtrElement FwdSearch2TypesInSubtree (/* PtrElement pEl,
+                                               ThotBool test,
+                                               int typeNum2,
+                                               int typeNum1,
+                                               PtrSSchema pSS2,
+                                               PtrSSchema pSS1 */);
 extern PtrElement FwdSearchElem2Types (/* PtrElement pEl,
                                           int typeNum1,
                                           int typeNum2,
