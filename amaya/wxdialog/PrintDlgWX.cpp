@@ -99,7 +99,7 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   // Set focus to ...
-  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetFocus();
+  //  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetFocus();
 
   Layout();
   

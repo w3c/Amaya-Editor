@@ -45,6 +45,9 @@ CSSDlgWX::CSSDlgWX( int ref,
   XRCCTRL(*this, "wxID_CANCEL",       wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)) );
   XRCCTRL(*this, "wxID_LIST",         wxListBox)->Append( items );
 
+  // pre-select the first item
+  XRCCTRL(*this, "wxID_LIST", wxListBox)->SetSelection(0);
+
   SetAutoLayout( TRUE );
 }
 

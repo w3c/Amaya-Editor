@@ -21,8 +21,7 @@
             <object class="wxListBox" name="wxID_LIST">
               <content/>
               <size>300,100</size>
-              <style>wxNO_FULL_REPAINT_ON_RESIZE</style>
-              <focused>1</focused>
+              <style>wxLB_NEEDED_SB</style>
             </object>
             <option>1</option>
             <flag>wxALL|wxGROW</flag>
@@ -40,6 +39,7 @@
                 <object class="wxButton" name="wxID_OK">
                   <label>OK</label>
                   <default>1</default>
+                  <focused>1</focused>
                 </object>
               </object>
               <object class="spacer">
@@ -61,6 +61,6 @@
       </object>
     </object>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL</style>
   </object>
 </resource>

@@ -9,7 +9,7 @@
       <object class="sizeritem">
         <object class="wxNotebook" name="wxID_NOTEBOOK">
           <size>750,350</size>
-		  <style platform="win">wxNB_MULTILINE</style>
+          <style platform="win">wxNB_MULTILINE</style>
           <style platform="unix">wxNB_LEFT</style>
           <focused>1</focused>
           <object class="notebookpage">
@@ -797,6 +797,7 @@
                   <border>10</border>
                 </object>
               </object>
+              <focused>1</focused>
             </object>
           </object>
         </object>

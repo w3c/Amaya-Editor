@@ -63,7 +63,7 @@ HRefDlgWX::HRefDlgWX( int ref,
   XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetValue(wx_init_value);
 
   // give focus to ...
-  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetFocus();
+  //  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetFocus();
   
   SetAutoLayout( TRUE );
 }

@@ -52,7 +52,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
 
   // give focus to ...
-  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetFocus();
+  //  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetFocus();
 
 
   // TODO ? peutetre mettre un boutton CLEAR

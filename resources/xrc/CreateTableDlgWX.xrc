@@ -21,6 +21,7 @@
               <value>2</value>
               <min>1</min>
               <max>50</max>
+              <focused>1</focused>
             </object>
             <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
@@ -65,6 +66,7 @@
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CONFIRMBUTTON">
               <label>  Confirm    </label>
+              <default>1</default>
             </object>
             <flag>wxALL</flag>
             <border>5</border>

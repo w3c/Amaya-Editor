@@ -19,6 +19,7 @@
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_COMBOBOX">
               <content/>
+              <focused>1</focused>
             </object>
             <flag>wxEXPAND</flag>
           </object>

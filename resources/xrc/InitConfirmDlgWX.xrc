@@ -3,7 +3,7 @@
   <object class="wxDialog" name="InitConfirmDlgWX">
     <title></title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -12,40 +12,47 @@
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
               <label></label>
+              <style>wxALIGN_CENTRE</style>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+            <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxStaticLine"/>
             <flag>wxEXPAND</flag>
           </object>
         </object>
+        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
-        <border>5</border>
+        <border>10</border>
       </object>
       <object class="sizeritem">
+        <option>0</option>
         <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
-        <border>5</border>
+        <border>10</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_EXTRABUTTON">
               <label>EXTRABUTTON</label>
+              <default>1</default>
+              <focused>1</focused>
             </object>
+          </object>
+          <object class="spacer">
+            <size>5,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_CONFIRMBUTTON">
               <label>CONFIRMBUTTON</label>
             </object>
           </object>
+          <object class="spacer">
+            <size>5,0</size>
+          </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_CANCELBUTTON">
               <label>CANCELBUTTON</label>
             </object>

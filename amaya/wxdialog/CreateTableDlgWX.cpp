@@ -53,7 +53,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   // Gives the focus to the first spin control
-  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl )->SetFocus();
+  //  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl )->SetFocus();
 
   Layout();
   

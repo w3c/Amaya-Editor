@@ -49,7 +49,7 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
 	      _T("\textrabutton=")+m_ExtraButton+
 	      _T("\tconfirmbutton=")+m_ConfirmButton+
 	      _T("\tlabel=")+m_Label );
- 
+
   // update dialog labels with given ones
   SetTitle( m_Title );
   //  XRCCTRL(*this, "wxID_LABEL",         wxStaticText)->SetValidator( wxGenericValidator(&m_Label) );
@@ -67,7 +67,7 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
     XRCCTRL(*this, "wxID_CANCELBUTTON",    wxButton)->Destroy();
 
   // give default focus to ... 
-  XRCCTRL(*this, "wxID_EXTRABUTTON",     wxButton)->SetDefault();
+  //XRCCTRL(*this, "wxID_EXTRABUTTON",     wxButton)->SetDefault();
   
   // TODO : trouver une facon de redimensionner le dialogue pour qu'il prenne la taille du nouveau label
   //wxSize s1 = XRCCTRL(*this, "wxID_SIZER1",         wxSizer)->GetSize();
@@ -76,8 +76,11 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   //GetSizer()->Fit( this );
   //GetSizer()->SetSizeHints( this );  
 
-  Layout();
-  
+  //Layout();
+
+  Refresh();
+  Fit();
+
   SetAutoLayout( TRUE );
 }
 

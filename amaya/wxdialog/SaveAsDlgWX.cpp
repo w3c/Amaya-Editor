@@ -224,7 +224,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   XRCCTRL(*this, "wxID_CLEARBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
   
   // Set focus to ...
-  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();
+  //  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();
 
   Layout();
   

@@ -49,7 +49,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(doc_title);
 
   // Give focus to ...
-  XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetFocus();
+  //  XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetFocus();
 
   Layout();
   

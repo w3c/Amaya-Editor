@@ -74,7 +74,7 @@ END_EVENT_TABLE()
 
 
   // Give focus to first text control
-  XRCCTRL(*this, "wxID_SEARCH_FOR_TXT", wxTextCtrl)->SetFocus();
+  //  XRCCTRL(*this, "wxID_SEARCH_FOR_TXT", wxTextCtrl)->SetFocus();
 
   Layout();
   
