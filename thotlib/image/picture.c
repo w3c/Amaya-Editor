@@ -1331,15 +1331,15 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   int               delta, dx, dy;
   int               i, j, iw, jh;
 #if !defined(_GL) && defined(_WINGUI)
+  int               nbPalColors;
   HDC               hMemDC;
   BITMAP            bm;
   HBITMAP           bitmap;
   HBITMAP           bitmapTiled;
   HBITMAP           pBitmapTiled;
   HDC               hOrigDC;
-  int               nbPalColors;
   HRGN              hrgn;
-#endif /* !GL && _WINGUI */
+#endif /* !GL  && _WINGUI */
 #ifdef _MOTIF
   XRectangle        rect;
   XGCValues         values;
@@ -1365,13 +1365,13 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       picYOrg = 0;
     }
 
-#ifdef _WINGUI
+#if !defined(_GL) && defined(_WINGUI)
   if (!TtIsTrueColor)
     {
       SelectPalette (TtDisplay, TtCmap, FALSE);
       nbPalColors = RealizePalette (TtDisplay);
     }
-#endif /* _WINGUI */
+#endif /* !_GL && _WINGUI */
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
