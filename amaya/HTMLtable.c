@@ -59,7 +59,7 @@ Element GetSiblingRow (Element row, ThotBool before, ThotBool inMath)
 
 /*----------------------------------------------------------------------
   GetSiblingCell
-  returns the sibling cell before or after the cuttent cell.
+  returns the sibling cell before or after the current cell.
   ----------------------------------------------------------------------*/
 static Element GetSiblingCell (Element cell, ThotBool before, ThotBool inMath)
 {
@@ -106,7 +106,8 @@ static Element GetFirstCellOfRow (Element row, ThotBool inMath)
 	{
 	  elType = TtaGetElementType (el);
 	  if (elType.ElSSchema == rowType.ElSSchema &&
-	      ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
+	      ((inMath && (elType.ElTypeNum == MathML_EL_MTD ||
+			   elType.ElTypeNum == MathML_EL_RowLabel)) ||
 	       (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
 			    elType.ElTypeNum == HTML_EL_Heading_cell ||
 			    elType.ElTypeNum == HTML_EL_Table_cell))))
@@ -580,7 +581,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		       ThotBool last, Element row, Document doc,
 		       ThotBool inMath, ThotBool generateEmptyCells)
 {
-  Element             colhead, currentrow;
+  Element             colhead, currentrow, firstrow;
   Element             group, groupdone, block;
   Element             prevCol, nextCol;
   Element             table, child;
@@ -592,6 +593,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
     return NULL;
   select = (row == NULL);
   span = FALSE;
+  firstrow = NULL;
   /* create a new column head */
   elType = TtaGetElementType (lastcolhead);
   colhead = TtaNewTree (doc, elType, "");
@@ -605,7 +607,10 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 	TtaNextSibling (&nextCol);
       TtaInsertSibling (colhead, lastcolhead, before, doc);
       TtaRegisterElementCreate (colhead, doc);
-      elType.ElTypeNum = HTML_EL_Table;
+      if (inMath)
+	elType.ElTypeNum = MathML_EL_MTABLE;
+      else
+	elType.ElTypeNum = HTML_EL_Table;
       table = TtaGetTypedAncestor (lastcolhead, elType);
       if (generateEmptyCells)
 	/* add empty cells to all other rows */
@@ -623,6 +628,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 	  else
 	    /* get the first row of the table */
 	    currentrow = TtaSearchTypedElement (elType, SearchInTree, table);
+	  firstrow = currentrow;
 
 	  while (currentrow)
 	    {
@@ -722,6 +728,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		    TtaNextSibling (&block);
 		}
 	    }
+	  HandleColAndRowAlignAttributes (firstrow, doc);
 	}
     }
   if (select)
@@ -1958,7 +1965,6 @@ void CellCreated (NotifyElement * event)
      allow procedure CellPasted to regenerate only one
      column head when undoing the operation */
   TtaChangeInfoLastRegisteredElem (doc, 3);
-  HandleColAndRowAlignAttributes (row, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -2292,6 +2298,23 @@ ThotBool DeleteColumn (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+   ColumnDeleted
+   A column in a MathML table has been deleted
+  ----------------------------------------------------------------------*/
+void ColumnDeleted (NotifyElement *event)
+{
+  Element             colhead, table;
+  ElementType         elType;
+
+  colhead = event->element;
+  elType = TtaGetElementType (colhead);
+  elType.ElTypeNum = MathML_EL_MTABLE;
+  table = TtaGetTypedAncestor (colhead, elType);
+  if (table)
+    HandleColAndRowAlignAttributes (table, event->document);
+}
+
+/*----------------------------------------------------------------------
   ColumnPasted
   This function is called when pasting a column or undoing the creation of a
   column in a table.
@@ -2509,7 +2532,17 @@ void CopyRow (Element copyRow, Element origRow, Document doc)
 	  else
 	    /* we have not processed any cell in the copy row yet */
 	    /* get the first cell in the copy row */
-	    prevCopyCell = GetFirstCellOfRow (copyRow, inMath);
+	    {
+	      prevCopyCell = GetFirstCellOfRow (copyRow, inMath);
+	      if (prevCopyCell && inMath)
+		{
+		  elType = TtaGetElementType (prevCopyCell);
+		  if (elType.ElTypeNum == MathML_EL_RowLabel)
+		    /* we are copying a mlabeledtr element. Skip the first
+		       cell in the row: it's the label */
+		    prevCopyCell = GetSiblingCell(prevCopyCell, FALSE, inMath);
+		}
+	    }
 	  /* get the value of the colspan attribute for the current cell */
 	  attr = TtaGetAttribute (origCell, attrType);
 	  if (attr)
@@ -2805,7 +2838,12 @@ void RowCreated (NotifyElement *event)
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
   if (inMath)
-    elType.ElTypeNum = MathML_EL_MTABLE;
+    {
+      if (elType.ElTypeNum == MathML_EL_MLABELEDTR)
+	/* change a mlabeledtr into a mtr */
+	TtaChangeElementType (row, MathML_EL_MTR);
+      elType.ElTypeNum = MathML_EL_MTABLE;
+    }
   else
     elType.ElTypeNum = HTML_EL_Table;
   table = TtaGetTypedAncestor (row, elType);
@@ -2870,6 +2908,14 @@ void RowPasted (NotifyElement * event)
   /* get the first cell in the pasted row */
   prevCell = NULL;
   cell = GetFirstCellOfRow (row, inMath);
+  if (cell && inMath)
+    {
+      elType = TtaGetElementType (cell);
+      if (elType.ElTypeNum == MathML_EL_RowLabel)
+	/* we are pasting a mlabeledtr element. ignore the first element
+	   in the row: it's the label */
+	cell = GetSiblingCell (cell, FALSE, inMath);
+    }
   nextCell = NULL;
   cellLinked = FALSE;
 

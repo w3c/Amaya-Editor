@@ -582,6 +582,8 @@ static void	   CreateParentMROW (Element el, Document doc)
 	  elType.ElTypeNum != MathML_EL_TableRow &&
 	  elType.ElTypeNum != MathML_EL_MLABELEDTR &&
 	  elType.ElTypeNum != MathML_EL_MTR &&
+	  elType.ElTypeNum != MathML_EL_MTD &&
+	  elType.ElTypeNum != MathML_EL_RowLabel &&
 	  elType.ElTypeNum != MathML_EL_CellWrapper)
 	/* element is not an intermediate Thot element nor a text leaf */
 	{
@@ -708,14 +710,104 @@ static void         AddParen (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+   InitializeNewConstruct
+   A new MathML construct has just been created. Initilize it.
+  ----------------------------------------------------------------------*/
+static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
+				    ThotBool history, Document doc)
+{
+  ElementType      elType, newType;
+  Element          child, new_, row, parent, placeholderEl;
+  AttributeType    attrType;
+  Attribute        attr;
+  int              col;
+
+  CreateParentMROW (el, doc);
+
+  newType = TtaGetElementType (el);
+  elType.ElSSchema = newType.ElSSchema;
+  if (newType.ElTypeNum == MathML_EL_MTABLE &&
+      (NumberRows > 1 || NumberCols >= 1))
+    {
+      /* create the required number of columns and rows in the table */
+      if (NumberCols >= 1)
+	{
+	  elType.ElTypeNum = MathML_EL_TableRow;
+	  child = TtaSearchTypedElement (elType, SearchInTree, el);
+	  elType.ElTypeNum = MathML_EL_MTR;
+	  new_ = TtaNewTree (doc, elType, "");
+	  TtaInsertFirstChild (&new_, child, doc);
+	  elType.ElTypeNum = MathML_EL_MTD;
+	  child = TtaSearchTypedElement (elType, SearchInTree, el);
+	  col = NumberCols;
+	  while (col > 1)
+	    {
+	      new_ = TtaNewTree (doc, elType, "");
+	      TtaInsertSibling (new_, child, FALSE, doc);
+	      col--;
+	    }
+	}
+      if (NumberRows > 1)
+	{
+	  elType.ElTypeNum = MathML_EL_MTR;
+	  row = TtaSearchTypedElement (elType, SearchInTree, el);
+	  while (NumberRows > 1)
+	    {
+	      elType.ElTypeNum = MathML_EL_MTR;
+	      new_ = TtaNewTree (doc, elType, "");
+	      TtaInsertSibling (new_, row, FALSE, doc);
+	      NumberRows--;
+	      /* create cells within the row */
+	      elType.ElTypeNum = MathML_EL_MTD;
+	      child = TtaSearchTypedElement (elType, SearchInTree,new_);
+	      col = NumberCols;
+	      while (col > 1)
+		{
+		  new_ = TtaNewTree (doc, elType, "");
+		  TtaInsertSibling (new_, child, FALSE, doc);
+		  col--;
+		}
+	    }
+	}
+      CheckAllRows (el, doc, FALSE, FALSE);
+    }
+
+  /* if the new element is a mspace, create a width attribute  with a default
+     value */
+  if (newType.ElTypeNum == MathML_EL_MSPACE)
+    {
+#define DEFAULT_MSPACE_WIDTH ".2em"
+      attrType.AttrSSchema = newType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_width_;
+      attr =  TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, DEFAULT_MSPACE_WIDTH, el, doc);
+      MathMLSpacingAttr (doc, el, DEFAULT_MSPACE_WIDTH, attrType.AttrTypeNum);
+    }
+
+  /* if the new element is a child of a FencedExpression element,
+     create the associated FencedSeparator elements */
+  parent = TtaGetParent (el);
+  elType = TtaGetElementType (parent);
+  if (elType.ElTypeNum == MathML_EL_FencedExpression &&
+      elType.ElSSchema == newType.ElSSchema)
+    RegenerateFencedSeparators (parent, doc, TRUE);
+
+  /* insert placeholders before and/or after the new element if
+     they are needed */
+  placeholderEl = InsertPlaceholder (el, TRUE, doc, history);
+  placeholderEl = InsertPlaceholder (el, FALSE, doc, history);
+}
+
+/*----------------------------------------------------------------------
    CreateMathConstruct
    Create a MathML construct at the current position
   ----------------------------------------------------------------------*/
 static void         CreateMathConstruct (int construct)
 {
   Document           doc;
-  Element            sibling, el, row, child, leaf, placeholderEl,
-                     parent, new_, next, foreignObj, altText;
+  Element            sibling, el, row, child, leaf, new_, next, foreignObj,
+                     altText;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
@@ -723,7 +815,7 @@ static void         CreateMathConstruct (int construct)
   char              *name;
   Language           lang;
   DisplayMode        dispMode;
-  int                c1, i, len, oldStructureChecking, col;
+  int                c1, i, len, oldStructureChecking;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, registered;
 
@@ -1331,81 +1423,8 @@ static void         CreateMathConstruct (int construct)
 	/* create two MF elements, as the first and last child of the new
 	   MROW */
 	AddParen (el, doc);
-	  
-      CreateParentMROW (el, doc);
-      
-      if (newType.ElTypeNum == MathML_EL_MTABLE &&
-	  (NumberRows > 1 || NumberCols >= 1))
-	{
-	  /* create the required number of columns and rows in the table */
-	  if (NumberCols >= 1)
-	    {
-	      elType.ElTypeNum = MathML_EL_TableRow;
-	      child = TtaSearchTypedElement (elType, SearchInTree, el);
-	      elType.ElTypeNum = MathML_EL_MTR;
-	      new_ = TtaNewTree (doc, elType, "");
-	      TtaInsertFirstChild (&new_, child, doc);
-	      elType.ElTypeNum = MathML_EL_MTD;
-	      child = TtaSearchTypedElement (elType, SearchInTree, el);
-	      col = NumberCols;
-	      while (col > 1)
-		{
-		  new_ = TtaNewTree (doc, elType, "");
-		  TtaInsertSibling (new_, child, FALSE, doc);
-		  col--;
-		}
-	    }
-	  if (NumberRows > 1)
-	    {
-	      elType.ElTypeNum = MathML_EL_MTR;
-	      row = TtaSearchTypedElement (elType, SearchInTree, el);
-	      while (NumberRows > 1)
-		{
-		  elType.ElTypeNum = MathML_EL_MTR;
-		  new_ = TtaNewTree (doc, elType, "");
-		  TtaInsertSibling (new_, row, FALSE, doc);
-		  NumberRows--;
-		  /* create cells within the row */
-		  elType.ElTypeNum = MathML_EL_MTD;
-		  child = TtaSearchTypedElement (elType, SearchInTree,new_);
-		  col = NumberCols;
-		  while (col > 1)
-		    {
-		      new_ = TtaNewTree (doc, elType, "");
-		      TtaInsertSibling (new_, child, FALSE, doc);
-		      col--;
-		    }
-		}
-	    }
-	  CheckAllRows (el, doc, FALSE, FALSE);
-	}
 
-      /* if the new element is a mspace, create a width attribute
-	 with a default value */
-      if (newType.ElTypeNum == MathML_EL_MSPACE)
-	{
-#define DEFAULT_MSPACE_WIDTH ".2em"
-	  attrType.AttrSSchema = mathSchema;
-	  attrType.AttrTypeNum = MathML_ATTR_width_;
-	  attr =  TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, attr, doc);
-	  TtaSetAttributeText (attr, DEFAULT_MSPACE_WIDTH, el, doc);
-	  MathMLSpacingAttr (doc, el, DEFAULT_MSPACE_WIDTH,
-			     attrType.AttrTypeNum);
-	}
-
-      /* if the new element is a child of a FencedExpression element,
-	 create the associated FencedSeparator elements */
-      parent = TtaGetParent (el);
-      elType = TtaGetElementType (parent);
-      if (elType.ElTypeNum == MathML_EL_FencedExpression &&
-	  elType.ElSSchema == mathSchema)
-	RegenerateFencedSeparators (parent, doc, TRUE);
-
-      /* insert placeholders before and/or after the new element if
-	 they are needed */
-      placeholderEl = InsertPlaceholder (el, TRUE, doc, !registered);
-      placeholderEl = InsertPlaceholder (el, FALSE, doc, !registered);
+      InitializeNewConstruct (el, NumberRows, NumberCols, !registered, doc);
 
       TtaSetDisplayMode (doc, dispMode);
       /* check the Thot abstract tree against the structure schema. */
@@ -1437,6 +1456,16 @@ static void         CreateMathConstruct (int construct)
     }
 
   TtaCloseUndoSequence (doc);
+}
+
+/*----------------------------------------------------------------------
+   MathElementCreated
+   A new element has just been created by the user with a generic editing
+   command.
+ -----------------------------------------------------------------------*/
+void MathElementCreated (NotifyElement *event)
+{
+  InitializeNewConstruct (event->element, 2, 2, TRUE, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -4086,7 +4115,8 @@ ThotBool MathElementWillBeDeleted (NotifyElement *event)
  -----------------------------------------------------------------------*/
 void MathElementDeleted (NotifyElement *event)
 {
-   Element	 sibling, placeholderEl, parent, child, grandChild, next, prev;
+   Element	 sibling, placeholderEl, parent, child, grandChild, next, prev,
+                 el;
    ElementType	 parentType, elType;
    AttributeType attrType;
    Attribute     attr;
@@ -4252,6 +4282,22 @@ void MathElementDeleted (NotifyElement *event)
 	   newTypeNum = -1;
 	break;
 
+      case MathML_EL_LabelCell:
+	/* delete the RowLabel parent too */
+	el = parent;
+        parent = TtaGetParent (parent);
+	parentType = TtaGetElementType (parent);
+	TtaRegisterElementDelete (el, event->document);
+	TtaDeleteTree (el, event->document);
+	el = NULL;
+	/* NO BREAK: continue to change the type of the mlabeledtr element */
+      case MathML_EL_RowLabel:
+	/* a label in a mlabeledtr element has been deleted */
+	if (parentType.ElTypeNum == MathML_EL_MLABELEDTR &&
+	    strcmp (TtaGetSSchemaName (parentType.ElSSchema), "MathML") == 0)
+	  newTypeNum = MathML_EL_MTR;
+	break;
+	
       default:
 	break;
       }
@@ -4261,7 +4307,6 @@ void MathElementDeleted (NotifyElement *event)
    if (newTypeNum > 0)
      /* transform the parent element */
      {
-       /*TtaRegisterElementReplace (parent, event->document);*/
        TtaChangeTypeOfElement (parent, event->document, newTypeNum);
        TtaRegisterElementTypeChange (parent, parentType.ElTypeNum,
 				     event->document);
@@ -5425,8 +5470,9 @@ void HandleColAndRowAlignAttributes (Element row, Document doc)
      return;
    if (elType.ElTypeNum != MathML_EL_MTR &&
        elType.ElTypeNum != MathML_EL_MLABELEDTR &&
-       elType.ElTypeNum != MathML_EL_MTable_body)
-     /* it's not a table row nor a table body */
+       elType.ElTypeNum != MathML_EL_MTable_body &&
+       elType.ElTypeNum != MathML_EL_MTABLE)
+     /* it's not a table row nor a table body nor a table */
      return;
 
    attrType.AttrSSchema = elType.ElSSchema;
@@ -5443,8 +5489,13 @@ void HandleColAndRowAlignAttributes (Element row, Document doc)
      }
 
    /* get the enclosing mtable element */
-   elType.ElTypeNum = MathML_EL_MTABLE;
-   table = TtaGetTypedAncestor (row, elType);
+   if (elType.ElTypeNum == MathML_EL_MTABLE)
+     table = row;
+   else
+     {
+       elType.ElTypeNum = MathML_EL_MTABLE;
+       table = TtaGetTypedAncestor (row, elType);
+     }
 
    attrType.AttrTypeNum = MathML_ATTR_columnalign;
    attr = TtaGetAttribute (table, attrType);

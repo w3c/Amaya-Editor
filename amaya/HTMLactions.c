@@ -1808,6 +1808,12 @@ void UpdateContextSensitiveMenus (Document doc)
 	 {
 	   elType.ElTypeNum = MathML_EL_MTABLE;
 	   withinTable = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+	   if (withinTable)
+	     {
+	       elType.ElTypeNum = MathML_EL_RowLabel;
+	       if (TtaGetTypedAncestor (firstSel, elType) != NULL)
+		 withinTable = FALSE;
+	     }
 	   inMath = TRUE;
 	 }
        elType.ElSSchema = sch;

@@ -5,6 +5,7 @@ DEFAULT
 	ElemActivate.Pre -> DoubleClick;
 	ElemClick.Pre -> SimpleClick;
 	ElemRClick.Pre -> SimpleRClick;
+        ElemNew.Post -> MathElementCreated;
 	ElemPaste.Post -> MathElementPasted;
 	ElemDelete.Pre -> MathElementWillBeDeleted;
 	ElemDelete.Post -> MathElementDeleted;
@@ -46,8 +47,16 @@ ELEMENTS
 	BEGIN
 	ElemPaste.Post -> ColumnPasted;
 	ElemDelete.Pre -> DeleteColumn;
+	ElemDelete.Post -> ColumnDeleted;
 	END;
    MTR:
+	BEGIN
+	ElemNew.Post -> RowCreated;
+	ElemPaste.Post -> RowPasted;
+	ElemDelete.Pre -> DeleteRow;
+	ElemDelete.Post -> RowDeleted;
+	END;
+   MLABELEDTR:
 	BEGIN
 	ElemNew.Post -> RowCreated;
 	ElemPaste.Post -> RowPasted;

@@ -607,7 +607,7 @@ void PasteCommand ()
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i, nRowsTempCol, info = 0;
-  int                 colspan, rowspan, back;
+  int                 colspan, rowspan, back, rowType;
   ThotBool            ok, before, within, lock, cancelled, first, beginning;
   ThotBool            savebefore, withinTable;
 
@@ -735,13 +735,18 @@ void PasteCommand ()
 	      NCreatedElements++;
 
 	      /* current row */
-	      pRow = pCell->ElParent;
-	      if (pRow && pColHead)
+	      pRow = NULL;
+	      if (pCell && pColHead)
 		/* get the first row in the table */
-		pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
-					   pRow->ElStructSchema, NULL);
-	      else
-		pRow = NULL;
+		{
+		  /* Caution, there may be several types of rows, such as
+		     MTR and MLABELEDTR */
+		  rowType = GetElemWithException (ExcIsRow,
+						  pCell->ElStructSchema);
+		  if (rowType)
+		    pRow = FwdSearchTypedElem (pColHead, rowType,
+					       pCell->ElStructSchema, NULL);
+		}
 	      /* change the selection to paste a whole column */
 	      pEl = pCell;
 	      within = FALSE;

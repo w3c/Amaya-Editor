@@ -489,7 +489,8 @@ EXCEPT
    TableRow:	        IsRow;
    MTR:			IsRow, NoBreakByReturn;
    MLABELEDTR:          IsRow, NoBreakByReturn;
-   RowLabel:	        Hidden, NoMove, NoResize, NoBreakByReturn;
+   RowLabel:	        IsCell, Hidden, NoMove, NoResize, NoBreakByReturn,
+	                NoCreate;
    MTD:			IsCell, NoMove, NoResize, NoBreakByReturn;
    CellWrapper:		NoCut, Hidden, NoBreakByReturn;
    FencedSeparator:	Hidden, NoCut, NoCreate;
