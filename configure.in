@@ -689,7 +689,7 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test ! -f $srcdir/amaya/Makefile.annot ; then
+    if test ! -f $srcdir/annotlib/Makefile.in ; then
 	if test "$with_annot" = "yes" ; then
 	    AC_MSG_WARN(Annotation makefile not found !!)
 	    AC_MSG_WARN(Disabling Annotations build !)
@@ -712,7 +712,7 @@ AMAYA_OPTIONS=$MATH_OPTIONS $GRAPH_OPTIONS
 PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 dnl JAVA_OPTIONS="-DDEBUG_KAFFE -DDEBUG_LOCK -DDEBUG_SELECT -DDEBUG_SELECT_CHANNELS -DDEBUG_TIMING -DSYNC_DNS"
 JAVA_OPTIONS="$java_ilu_option $java_awt_option"
-ANNOTATIONS_OPTIONS=
+AMAYA_ANNOT_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
 
@@ -763,7 +763,7 @@ AC_SUBST(THOT_OPTIONS)
 AC_SUBST(AMAYA_OPTIONS)
 AC_SUBST(PLUGIN_OPTIONS)
 AC_SUBST(JAVA_OPTIONS)
-AC_SUBST(ANNOTATIONS_OPTIONS)
+AC_SUBST(AMAYA_ANNOT_OPTIONS)
 AC_SUBST(IMGLIBS)
 AC_SUBST(EXTRA_LIBS)
 
@@ -773,7 +773,7 @@ AC_SUBST(ILU_INCLUDES)
 AC_SUBST(ILU_LIBRARIES)
 
 dnl
-dnl Include the option Makefile.xxx fragment for plugin and or Java options
+dnl Include the option Makefile.xxx fragment according to the configure options
 dnl
 
 if test "$with_plugin" = "yes" ; then
@@ -834,7 +834,7 @@ fi
 
 if test "$with_annot" = "yes" ; then
     AC_SUBST_FILE(annot_frag)
-    annot_frag=$srcdir/amaya/Makefile.annot
+    annot_frag=$srcdir/annotlib/Makefile.annot
 else
     AC_SUBST_FILE(annot_frag)
     annot_frag=/dev/null
@@ -871,6 +871,11 @@ $srcdir/amaya/Makefile.libwww"
        make_output="$make_output pluginlib/Makefile"
        EXTRA_MAKEFILE_IN="$srcdir/pluginlib/Makefile.in \
 $srcdir/pluginlib/Makefile.plugin"
+    fi
+
+    if test "$with_annot" = "yes" ; then
+       make_output="$make_output annotlib/Makefile"
+       EXTRA_MAKEFILE_IN="$srcdir/annotlib/Makefile.in"
     fi
 
     if test "$with_java" = "yes" ; then
@@ -1038,4 +1043,7 @@ fi
 fi
 
 echo "Now start \"make all\" (GNU make preferably) to build the binaries"
+
+
+
 

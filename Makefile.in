@@ -16,7 +16,7 @@ LIBPNG	= libpng
 LIBZ	= libz
 
 SUBDIRS	= tools thotlib tablelib batch drawlib indexlib amaya thot misc/annotations
-EXTRA_SUBDIRS= misc classes javalib
+EXTRA_SUBDIRS= misc classes javalib pluginlib annotlib
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

@@ -6678,7 +6678,7 @@ fi
 	fi
     fi
 
-    if test ! -f $srcdir/amaya/Makefile.annot ; then
+    if test ! -f $srcdir/annotlib/Makefile.in ; then
 	if test "$with_annot" = "yes" ; then
 	    echo "configure: warning: Annotation makefile not found !!" 1>&2
 	    echo "configure: warning: Disabling Annotations build !" 1>&2
@@ -6697,7 +6697,7 @@ THOT_OPTIONS=
 AMAYA_OPTIONS=$MATH_OPTIONS $GRAPH_OPTIONS
 PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 JAVA_OPTIONS="$java_ilu_option $java_awt_option"
-ANNOTATIONS_OPTIONS=
+AMAYA_ANNOT_OPTIONS=
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
 
@@ -6805,7 +6805,7 @@ fi
 
 if test "$with_annot" = "yes" ; then
     
-    annot_frag=$srcdir/amaya/Makefile.annot
+    annot_frag=$srcdir/annotlib/Makefile.annot
 else
     
     annot_frag=/dev/null
@@ -6837,6 +6837,11 @@ $srcdir/amaya/Makefile.libwww"
        make_output="$make_output pluginlib/Makefile"
        EXTRA_MAKEFILE_IN="$srcdir/pluginlib/Makefile.in \
 $srcdir/pluginlib/Makefile.plugin"
+    fi
+
+    if test "$with_annot" = "yes" ; then
+       make_output="$make_output annotlib/Makefile"
+       EXTRA_MAKEFILE_IN="$srcdir/annotlib/Makefile.in"
     fi
 
     if test "$with_java" = "yes" ; then
@@ -7100,7 +7105,7 @@ s%@THOT_OPTIONS@%$THOT_OPTIONS%g
 s%@AMAYA_OPTIONS@%$AMAYA_OPTIONS%g
 s%@PLUGIN_OPTIONS@%$PLUGIN_OPTIONS%g
 s%@JAVA_OPTIONS@%$JAVA_OPTIONS%g
-s%@ANNOTATIONS_OPTIONS@%$ANNOTATIONS_OPTIONS%g
+s%@AMAYA_ANNOT_OPTIONS@%$AMAYA_ANNOT_OPTIONS%g
 s%@IMGLIBS@%$IMGLIBS%g
 s%@EXTRA_LIBS@%$EXTRA_LIBS%g
 s%@ILUHOME@%$ILUHOME%g
@@ -7432,4 +7437,7 @@ fi
 fi
 
 echo "Now start \"make all\" (GNU make preferably) to build the binaries"
+
+
+
 
