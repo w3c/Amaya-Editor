@@ -459,46 +459,50 @@ Document            document;
        sprintf (&cmd[j], " -v ");
        j = ustrlen (cmd);
 #endif /* _WINDOWS */
-     }
 
-   while (viewsToPrint[i] != EOS)
-     {
-       /* is it a space? */
-       if (viewsToPrint[i] == SPACE)
+       while (viewsToPrint[i] != EOS)
 	 {
-	   i++;
-	   /* skip multiple spaces */
-	   while (viewsToPrint[i] == SPACE)
-	     i++;
-	   if (viewsToPrint[i] != EOS)
+	   /* is it a space? */
+	   if (viewsToPrint[i] == SPACE)
 	     {
-	       /* insert the flag -v before each view name */
+	       i++;
+	       /* skip multiple spaces */
+	       while (viewsToPrint[i] == SPACE)
+		 i++;
+	       if (viewsToPrint[i] != EOS)
+		 {
+		   /* insert the flag -v before each view name */
 #ifdef _WINDOWS
-	       printArgv[printArgc][j++] = EOS;
-	       printArgc++;
-	       printArgv[printArgc] = TtaStrdup (TEXT("-v"));
-	       printArgc++;
-	       printArgv[printArgc] = TtaAllocString (50);
-	       j = 0;
+		   printArgv[printArgc][j++] = EOS;
+		   printArgc++;
+		   printArgv[printArgc] = TtaStrdup (TEXT("-v"));
+		   printArgc++;
+		   printArgv[printArgc] = TtaAllocString (50);
+		   j = 0;
 #else  /* _WINDOWS */
-               j = ustrlen (cmd);
-               sprintf (&cmd[j], " -v ");
-	       j = ustrlen (cmd);
+		   j = ustrlen (cmd);
+		   sprintf (&cmd[j], " -v ");
+		   j = ustrlen (cmd);
 #endif /* _WINDOWS */
+		 }
+	     }
+	   else
+	     {
+	       /* copy the character */
+#ifdef _WINDOWS
+	       printArgv[printArgc][j++] = viewsToPrint[i];
+#else /* _WINDOWS */
+	       cmd[j++] = viewsToPrint[i];
+	       cmd[j] = EOS;
+#endif /* _WINDOWS */
+	       /* process next char */
+	       i++;
 	     }
 	 }
-       else
-	 {
-	   /* copy the character */
 #ifdef _WINDOWS
-	   printArgv[printArgc][j++] = viewsToPrint[i];
-#else /* _WINDOWS */
-	   cmd[j++] = viewsToPrint[i];
-	   cmd[j] = EOS;
+       printArgv[printArgc][j] = EOS;
+       printArgc++;
 #endif /* _WINDOWS */
-	   /* process next char */
-	   i++;
-	 }
      }
 
    /* transmit css files */
@@ -522,52 +526,54 @@ Document            document;
            sprintf (&cmd[j], " -css ");
 	   j = ustrlen (cmd);
 #endif /* _WINDOWS */
-	 }
 
-       while (cssToPrint[i] != EOS)
-	 {
-	   /* is it a space? */
-	   if (cssToPrint[i] == SPACE)
+	   while (cssToPrint[i] != EOS)
 	     {
-	       i++;
-	       /* skip multiple spaces */
-	       while (cssToPrint[i] == SPACE)
-		 i++;
-	       if (cssToPrint[i] != EOS)
+	       /* is it a space? */
+	       if (cssToPrint[i] == SPACE)
 		 {
+		   i++;
+		   /* skip multiple spaces */
+		   while (cssToPrint[i] == SPACE)
+		     i++;
+		   if (cssToPrint[i] != EOS)
+		     {
 #ifdef _WINDOWS
-		   printArgv[printArgc][j++] = EOS;
-		   printArgc++;
-		   printArgv[printArgc] = TtaStrdup (TEXT("-css"));
-		   printArgc++;
-		   printArgv[printArgc] = TtaAllocString (50);
-		   j = 0;
+		       printArgv[printArgc][j++] = EOS;
+		       printArgc++;
+		       printArgv[printArgc] = TtaStrdup (TEXT("-css"));
+		       printArgc++;
+		       printArgv[printArgc] = TtaAllocString (50);
+		       j = 0;
 #else  /* _WINDOWS */
-		   j = ustrlen (cmd);
-	           sprintf (&cmd[j], " -css ");
-	           j = ustrlen (cmd);
+		       j = ustrlen (cmd);
+		       sprintf (&cmd[j], " -css ");
+		       j = ustrlen (cmd);
 #endif /* _WINDOWS */
+		     }
+		 }
+	       else
+		 {
+		   /* copy the character */
+#ifdef _WINDOWS
+		   printArgv[printArgc][j++] = cssToPrint[i];
+#else /* _WINDOWS */
+		   cmd[j++] = cssToPrint[i];
+		   cmd[j] = EOS;
+#endif /* _WINDOWS */
+		   /* process next char */
+		   i++;
 		 }
 	     }
-	   else
-	     {
-	       /* copy the character */
-#ifdef _WINDOWS
-	       printArgv[printArgc][j++] = cssToPrint[i];
-#else /* _WINDOWS */
-	       cmd[j++] = cssToPrint[i];
-	       cmd[j] = EOS;
-#endif /* _WINDOWS */
-	       /* process next char */
-	       i++;
-	     }
 	 }
-     }
-
+#ifdef _WINDOWS
+       printArgv[printArgc][j] = EOS;
+       printArgc++;
+#endif /* _WINDOWS */
+   }
    /* transmit the path or source file */
 #ifdef _WINDOWS 
-   printArgv[printArgc] = TtaAllocString (11);
-   ustrcpy (printArgv[printArgc], TEXT("-removedir"));
+   printArgv[printArgc] = TtaStrdup (TEXT("-removedir"));
    printArgc++;
    printArgv[printArgc] = TtaAllocString (ustrlen (dir) + ustrlen (name) + 6);
    usprintf  (printArgv[printArgc], TEXT("%s\\%s.PIV"), dir, name);
@@ -803,9 +809,6 @@ STRING              cssNames;
    int                 orientation;
    ThotBool	       docReadOnly;
    ThotBool            ok;
-#  ifndef _WINDOWS 
-   CHAR_T                cmd[100];
-#  endif /* _WINDOWS */
 
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
