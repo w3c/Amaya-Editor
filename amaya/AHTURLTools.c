@@ -11,6 +11,7 @@
  * URL parsing functions.
  *
  * Authors: J. Kahan, I. Vatton
+ *          R. Guetari (Stuff related to Windows).
  *
  */
  
@@ -633,10 +634,12 @@ char               *docName;
      {
        /* Calculate the absolute URL, using the base or document URL */
 #      ifdef _WINDOWS
-	   length = strlen (tempOrgName);
-	   for (ndx = 0; ndx < length; ndx++)
-		   if (tempOrgName [ndx] == '/')
-		      tempOrgName [ndx] = '\\';
+	   if (!IsW3Path (basename)) {
+	      length = strlen (tempOrgName);
+	      for (ndx = 0; ndx < length; ndx++)
+		      if (tempOrgName [ndx] == '/')
+		         tempOrgName [ndx] = '\\';
+	   }
 #      endif /* _WINDOWS */
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
        if (ptr)
