@@ -1688,7 +1688,7 @@ int               ym;
 {
   PtrBox              pBox;
   PtrAbstractBox      pAb;
-  PtrElement	       pEl;
+  PtrElement	      pEl;
   ViewFrame          *pFrame;
   int                 x, width;
   int                 y, height;
@@ -1876,8 +1876,8 @@ int               ym;
 	      UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
 	      
 	      /* get back changes */
-	      x = x + pFrame->FrXOrg;
-	      y = y + pFrame->FrYOrg;
+	      x += pFrame->FrXOrg;
+	      y += pFrame->FrYOrg;
 	      NewPosition (pAb, x, y, frame, TRUE);
 	    }
 	}
@@ -2196,6 +2196,7 @@ int                 frame;
 {
    ViewFrame          *pFrame;
    PtrAbstractBox      pAb;
+   PtrBox              box;
    int                 x, y;
    int                 width, height;
    int                 xr, yr;
@@ -2338,6 +2339,13 @@ int                 frame;
 	pAb->AbHeight.DimUserSpecified = FALSE;
 	x += pFrame->FrXOrg;
 	y += pFrame->FrYOrg;
+	if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+	  {
+	    box = pAb->AbEnclosing->AbBox;
+	    /* keep relative translations */
+	    x = x - box->BxXOrg + box->BxLMargin + box->BxLBorder + box->BxLPadding;
+	    y = y - box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding;
+	  }
 	NewPosition (pAb, x, y, frame, TRUE);
 	if (percentW)
 	  NewDimension (pAb, 0, height, frame, TRUE);

@@ -801,28 +801,30 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pAb;
-   int                 i;
+  PtrAbstractBox      pAb;
+  int                 i;
 
-   /* Look for and ancestor abstract boxe with PavGraphCreation flag set */
-   pAb = pBox->BxAbstractBox->AbEnclosing;
-   i = 0;
-   while (i == 0)
+  /* Look for and ancestor abstract boxe with PavGraphCreation flag set */
+  pAb = pBox->BxAbstractBox->AbEnclosing;
+  i = 0;
+  while (i == 0)
+    {
       if (pAb == NULL)
-	 i = 1;
-      else if (pAb->AbBox->BxHorizFlex
-	       || pAb->AbBox->BxVertFlex)
+	i = 1;
+      else if (pAb->AbBox->BxHorizFlex || pAb->AbBox->BxVertFlex)
 	{
-	   i = 1;
-	   pAb = NULL;
+	  i = 1;
+	  if (pAb->AbLeafType != LtGraphics || pAb->AbShape != 'g')
+	    pAb = NULL;
 	}
       else if ((pAb->AbHorizPos.PosUserSpecified)
 	       || (pAb->AbVertPos.PosUserSpecified)
 	       || (pAb->AbWidth.DimUserSpecified)
 	       || (pAb->AbHeight.DimUserSpecified))
-	 i = 1;
+	i = 1;
       else
-	 pAb = pAb->AbEnclosing;
+	pAb = pAb->AbEnclosing;
+    }
 
    /* There is an englobing abstract box */
    if (pAb != NULL)
