@@ -3831,9 +3831,9 @@ static void  InitializeXmlParsingContext (Document doc,
 /*----------------------------------------------------------------------
   ReplaceExternAttrType
   ----------------------------------------------------------------------*/
-static  ReplaceExternAttrType (Element elold, Element elnew, Document doc)
+static void ReplaceExternAttrType (Element elold, Element elnew, Document doc)
 {
-  AttributeType   attrType, attrType1;
+  AttributeType   attrType;
   Attribute       attrold, attrnew, nextattr;
   int             attrKind, val, length;
   char           *buffer;
