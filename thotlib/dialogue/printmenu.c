@@ -22,6 +22,8 @@
 #include "appdialogue.h"
 #include "frame.h"
 #include "fileaccess.h"
+#include "application.h"
+#include "print.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -45,7 +47,7 @@
 #include "views_f.h"
 #include "viewapi_f.h"
 #include "viewapi_f.h"
-
+#include "thotmsg_f.h"
 #include "viewcommands_f.h"
 #include "exceptions_f.h"
 #include "structmodif_f.h"
@@ -59,44 +61,15 @@
 #include "print_tv.h"
 
 static char         Orientation[MAX_NAME_LENGTH];
-static Func         pFuncExportPrintDoc;
-/*----------------------------------------------------------------------
-  PrintInit
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PrintInit (int userOrientation, char *tempDir, char *dir, char *name)
-#else  /* __STDC__ */
-static void         PrintInit (userOrientation, tempDir, dir, name)
-int                 userOrientation;
-char               *tempDir;
-char               *dir;
-char               *name;
-
-#endif /* __STDC__ */
-{
-   char                cmd[800];
-   char               *bakName;
-   char               *pivName;
-
-   if (userOrientation == 0)
-      strcpy (Orientation, "Portrait");
-   else
-      strcpy (Orientation, "Landscape");
-
-   sprintf (cmd, "/bin/mkdir %s\n", tempDir);
-   system (cmd);
-   sprintf (cmd, "chmod +rwx '%s'\n", tempDir);
-   system (cmd);
-
-   bakName = (char *) TtaGetMemory (strlen (name) + 5);
-   sprintf (bakName, "%s.BAK", name);
-   pivName = (char *) TtaGetMemory (strlen (name) + 5);
-   sprintf (pivName, "%s.PIV", name);
-   sprintf (cmd, "/bin/mv '%s'/'%s' '%s'/'%s'\n", dir, bakName, tempDir, pivName);
-   TtaFreeMemory (bakName);
-   TtaFreeMemory (pivName);
-   system (cmd);
-}
+static Func         pFuncExportPrintDoc = NULL;
+static int          defPaperPrint = TRUE;
+static int          defManualFeed = FALSE;
+static int          defFirstPage = 0;
+static int          defLastPage = 999;
+static int          defNbCopies = 1;
+static int          defReduction = 100;
+static int          defPagesPerSheet = 1;
+static int          defPageSize= PP_A4;
 
 /*----------------------------------------------------------------------
   Print
@@ -133,29 +106,23 @@ char               *viewsToPrint;
 
 {
 #ifndef _WINDOWS
-   ThotPid             pid = ThotPid_get ();
    char                cmd[800];
    int                 res;
-   char               *thotDir;
-   char               *tempDir;
 
-   thotDir = (char *) TtaGetEnvString ("THOTDIR");
-   if (!thotDir)
-      thotDir = ThotDir ();
-   tempDir = (char *) TtaGetMemory (40);
-   sprintf (tempDir, "/tmp/Thot%d", pid + numOfJobs);
+   if(userOrientation == 0)
+      strcpy (Orientation, "Portrait");
+   else
+      strcpy (Orientation, "Landscape");
 
-   PrintInit (userOrientation, tempDir, dir, name);
    if (printer[0] != '\0')
       sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
+	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
       sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
+	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
-   TtaFreeMemory (tempDir);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
@@ -199,30 +166,22 @@ char               *viewsToPrint;
 {
    char                cmd[800];
    int                 res;
-   char               *thotDir;
-
-   char               *tempDir;
-   ThotPid             pid = ThotPid_get ();
-
-   thotDir = TtaGetEnvString ("THOTDIR");
-   if (!thotDir)
-     {
-	thotDir = ThotDir ();
-     }
-   tempDir = (char *) TtaGetMemory (40);
-   sprintf (tempDir, "/tmp/Thot%d", pid + numOfJobs);
-   PrintInit (userOrientation, tempDir, dir, name);
+   
+   
+   if(userOrientation == 0)
+      strcpy (Orientation, "Portrait");
+   else
+      strcpy (Orientation, "Landscape");
 
    if (psName[0] != '\0')
       sprintf (cmd, "%s/print %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
+	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
       sprintf (cmd, "%s/print %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
-	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
+	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
-   TtaFreeMemory (tempDir);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
@@ -254,21 +213,31 @@ PtrDocument pDoc;
 	 strcpy (pPrinter, ptr);
        PSdir[0] = '\0';
        pDocPrint = NULL;
-       strcpy (PageSize, "A4");
+       defPaperPrint = TRUE;
+       defManualFeed = FALSE;
+       defFirstPage = 0;
+       defLastPage = 999;
+       defNbCopies = 1;
+       defReduction = 100;
+       defPagesPerSheet = 1;
+       defPageSize= PP_A4;
      }
 
    if (pDoc != pDocPrint)
      {
        /* we are changing the current printed document */
        pDocPrint = pDoc;
-       PaperPrint = TRUE;
-       ManualFeed = FALSE;
-       FirstPage = 0;
-       LastPage = 999;
-       NbCopies = 1;
-       Reduction = 100;
-       PagesPerSheet = 1;
-       pFuncExportPrintDoc = NULL;
+       PaperPrint = defPaperPrint;
+       ManualFeed = defManualFeed ;
+       FirstPage = defFirstPage ;
+       LastPage = defLastPage ;
+       NbCopies = defNbCopies ;
+       Reduction = defReduction ;
+       PagesPerSheet = defPagesPerSheet ;
+       if (defPageSize == PP_A4)
+         strcpy(PageSize,"A4");
+       else
+         strcpy(PageSize,"US");
        if (pDocPrint->DocDirectory[0] == DIR_SEP)
 	 sprintf (PSdir, "%s/%s.ps", pDocPrint->DocDirectory, pDocPrint->DocDName);
        else
@@ -317,6 +286,8 @@ char               *viewNames;
    boolean             ok;
    Name                savePres, newPres;
    int                 orientation;
+   ThotPid             pid = ThotPid_get ();
+   char                cmd[100];
 
    pDoc = LoadedDocument[document - 1];
    InitPrintParameters (pDoc);
@@ -330,7 +301,12 @@ char               *viewNames;
      {
        TtaDisplayMessage(INFO,TtaGetMessage(LIB,TMSG_CHANGE_PSCH),newPres);
      }
-   strcpy(tmpDirName,"/tmp");
+   sprintf (tmpDirName, "/tmp/Thot%d", pid + numOfJobs);
+   sprintf (cmd, "/bin/mkdir %s\n", tmpDirName);
+   system (cmd);
+   sprintf (cmd, "chmod +rwx '%s'\n", tmpDirName);
+   system (cmd);
+   numOfJobs++;
    strcpy(tmpDocName,"ThotXXXXXX");
 #ifdef WWW_MSWINDOWS
    _mktemp (tmpDocName);
@@ -339,7 +315,7 @@ char               *viewNames;
 #endif /* !WWW_MSWINDOWS */
    if (pFuncExportPrintDoc !=NULL)
      /* a export procedure is defined */
-     ok = (*pFuncExportPrintDoc)(document, tmpDocName, tmpDirName);
+       ok = (*pFuncExportPrintDoc)(document, tmpDocName, tmpDirName);
    else
      /* standard export */
      {
@@ -351,7 +327,7 @@ char               *viewNames;
        strcpy (pDoc->DocDName, tmpDocName);
        pDoc->DocReadOnly = FALSE;
 
-       ok = WriteDocument (pDoc, 2);
+       ok = WriteDocument (pDoc, 5);
 
        pDoc->DocReadOnly = docReadOnly;
        strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
@@ -400,7 +376,6 @@ char               *viewNames;
      }
    /* restores the presentation scheme */
    strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
-   numOfJobs++;
 }
 
 /*----------------------------------------------------------------------
@@ -409,12 +384,139 @@ char               *viewNames;
 #ifdef __STDC__
 void TtaSetPrintExportFunc (Func exportFunc)
 #else /* __STDC__ */
-void TtaSetPrintExportFunc (Func exportFunc)
+void TtaSetPrintExportFunc (exportFunc)
+Func exportFunc;
 #endif /*__STDC__ */
 {
   pFuncExportPrintDoc = exportFunc;
 }
 
+/*----------------------------------------------------------------------
+  TtaSetPrintParameter: Sets a print parameter
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void TtaSetPrintParameter (PrintParameter parameter, int value)
+#else /* __STDC__ */
+void TtaSetPrintParameter (parameter, value)
+PrintParameter parameter;
+int value;
+#endif /*__STDC__ */
+{
+   InitPrintParameters ((PtrDocument)NULL);
+   switch (parameter)
+     {
+     case PP_FirstPage:
+       if (value <0 || value >999)
+          TtaError(ERR_invalid_parameter);
+       else
+        { 
+          defFirstPage = value;
+          FirstPage = value;
+        }
+       break;
+     case PP_LastPage:
+       if (value <0 || value >999)
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          defLastPage = value;
+          LastPage = value;
+        }
+       break;
+     case PP_Scale:
+       if (value <0 || value >999)
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          defReduction = value;
+          Reduction = value;
+        }
+       break;
+     case PP_NumberCopies:
+       if (value <0 || value >999)
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          defNbCopies = value;
+          NbCopies = value;
+        }
+       break;
+     case PP_ManualFeed:
+       if (value != PP_ON || value!= PP_OFF )
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          if(value == PP_ON)
+            {
+              defManualFeed = TRUE;
+              ManualFeed = TRUE;
+            }
+          else
+            {
+              defManualFeed = FALSE;
+              ManualFeed = FALSE;
+            }
+        }
+       break;
+     case PP_PagesPerSheet:
+       if (value != 1 || value != 2 || value != 4)
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          defPagesPerSheet = value;
+          PagesPerSheet = value;
+        }
+       break;
+     case PP_PaperSize:
+       if (value != PP_A4 || value!= PP_US )
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          defPageSize = value;
+          if(value == PP_A4)
+            {
+              strcpy (PageSize, "A4");
+            }
+          else
+            {
+              strcpy (PageSize, "US");
+            }
+        }
+       break;
+     case PP_Destination:
+       if (value != PP_PRINTER || value!= PP_PS)
+          TtaError(ERR_invalid_parameter);
+       else
+        {
+          if(value == PP_PRINTER)
+            {
+              defPaperPrint = TRUE;
+              PaperPrint = TRUE;
+            }
+          else
+            {
+              defPaperPrint = FALSE;
+              PaperPrint = FALSE;
+            }
+        }
+       break;
+      default:
+       TtaError(ERR_invalid_parameter);
+     }
+  }
+/*----------------------------------------------------------------------
+  TtaSetPrintCommand
+  sets the print command.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetPrintCommand(char *command)
+#else  /* __STDC__ */
+void                TtaSetPrintCommand(/*char *command*/)
+char *command;
+#endif /* __STDC__ */
+{
+  strcpy (pPrinter, command);
+}
 /*----------------------------------------------------------------------
   CallbackPrintmenu
   callback associated to the PrintSetup form 

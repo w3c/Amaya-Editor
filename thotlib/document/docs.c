@@ -1090,6 +1090,7 @@ boolean             ask;
    - mode = 2 : fichier scratch (pas de message)           
    - mode = 3 : fichier de sauvegarde urgente (.SAV)       
    - mode = 4 : sauve sans demander de nom.                
+   - mode = 5 : sauve sans demander de nom et sans message.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             WriteDocument (PtrDocument pDoc, int mode)
@@ -1106,7 +1107,7 @@ int                 mode;
 
    ok = FALSE;
    if (pDoc != NULL)
-      if (mode >= 0 && mode <= 4)
+      if (mode >= 0 && mode <= 5)
 	 switch (mode)
 	       {
 		  case 0:
@@ -1125,6 +1126,9 @@ int                 mode;
 		     break;
 		  case 4:
 		     ok = interactiveSave (pDoc, FALSE);
+		     break;
+		  case 5:
+		     ok = saveWithExtension (pDoc, "PIV");
 		     break;
 	       }
    return ok;

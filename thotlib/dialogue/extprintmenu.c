@@ -203,6 +203,7 @@ char               *txt;
       Reduction = NewReduction;
       PagesPerSheet = NewPagesPerSheet;
       okprint = FALSE;
+      BufMenu[0]='\0';
       for (i=0;i<NbPrintViews;i++)
 	{ 
 	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )
