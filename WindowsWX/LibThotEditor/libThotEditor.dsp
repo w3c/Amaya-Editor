@@ -147,6 +147,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaFrame.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaMathMLPanel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaNormalWindow.cpp
 # End Source File
 # Begin Source File
