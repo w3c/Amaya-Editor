@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Thu Jul  8 12:41:01 CEST 2004" version="73">
+<base last_update="Thu Jul  8 16:23:34 CEST 2004" version="74">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -9,6 +9,7 @@
 	<language encoding="latin1">es</language>
 	<language encoding="latin1">pt</language>
 	<language encoding="latin1">fi</language>
+	<language encoding="utf8">ru</language>
 </control>
 <messages>
 <label define="AM_FILES">
@@ -20,6 +21,7 @@
 	<message xml:lang="es">Archivos</message>
 	<message xml:lang="pt">Arquivos</message>
 	<message xml:lang="fi">Tiedostot</message>
+	<message xml:lang="ru">Файлы</message>
 </label>
 <label define="AM_OPEN_URL">
 	<message xml:lang="en">Open</message>
@@ -30,6 +32,7 @@
 	<message xml:lang="es">Dirección:</message>
 	<message xml:lang="pt">Abrir</message>
 	<message xml:lang="fi">Avaa</message>
+	<message xml:lang="ru">Открыть</message>
 </label>
 <label define="AM_NEW_HTML11">
 	<message xml:lang="en">New XHTML 1.1 document</message>
@@ -40,6 +43,7 @@
 	<message xml:lang="pt">Novo documento XHTML 1.1</message>
 	<message xml:lang="fi">Uusi XHTML 1.1 dokumentti</message>
 	<message xml:lang="tr">Yeni XHTML 1.1 dosyası</message>
+	<message xml:lang="ru">Новый XHTML 1.1 документ...</message>
 </label>
 <label define="AM_NEW_HTML_TRANSITIONAL">
 	<message xml:lang="en">New XHTML 1.0 Transitional document</message>
@@ -50,6 +54,7 @@
 	<message xml:lang="pt">Novo documento XHTML 1.0 Transitional</message>
 	<message xml:lang="fi">Uusi XHTML 1.0 Transitional document</message>
 	<message xml:lang="tr">Yeni XHTML 1.0 Transitional dosyası</message>
+	<message xml:lang="ru">Новый XHTML 1.0 Transitional документ...</message>
 </label>
 <label define="AM_NEW_HTML_STRICT">
 	<message xml:lang="en">New XHTML 1.0 Strict document</message>
@@ -60,6 +65,7 @@
 	<message xml:lang="pt">Novo documento XHTML 1.0 Strict</message>
 	<message xml:lang="fi">Uusi XHTML 1.0 Strict document</message>
 	<message xml:lang="tr">Yeni XHTML 1.0 Strict dosyası</message>
+	<message xml:lang="ru">Новый XHTML 1.0 Strict документ...</message>
 </label>
 <label define="AM_NEW_HTML_BASIC">
 	<message xml:lang="en">New XHTML 1.0 Basic document</message>
@@ -70,6 +76,7 @@
 	<message xml:lang="pt">Novo documento XHTML 1.0 Basic</message>
 	<message xml:lang="fi">Uusi XHTML 1.0 Basic dokumentti</message>
 	<message xml:lang="tr">Yeni XHTML 1.0 Basic dosyası</message>
+	<message xml:lang="ru">Новый XHTML 1.0 Basic документ...</message>
 </label>
 <label define="AM_NEW_MATHML">
 	<message xml:lang="en">New MathML document</message>
@@ -80,6 +87,7 @@
 	<message xml:lang="pt">Novo documento MathML</message>
 	<message xml:lang="fi">Uusi MathML dokumentti</message>
 	<message xml:lang="tr">Yeni MathML dosyası</message>
+	<message xml:lang="ru">Новый MathML документ...</message>
 </label>
 <label define="AM_NEW_SVG">
 	<message xml:lang="en">New SVG document</message>
@@ -90,6 +98,7 @@
 	<message xml:lang="pt">Novo documento SVG</message>
 	<message xml:lang="fi">Uusi SVG dokumentti</message>
 	<message xml:lang="tr">Yeni SVG dosyası</message>
+	<message xml:lang="ru">Новый SVG документ...</message>
 </label>
 <label define="AM_NEW_CSS">
 	<message xml:lang="en">New CSS style sheet</message>
@@ -100,6 +109,7 @@
 	<message xml:lang="pt">Nova folha de estilo CSS</message>
 	<message xml:lang="fi">Uusi CSS tyylitiedosto</message>
 	<message xml:lang="tr">Yeni CSS düz dizayn</message>
+	<message xml:lang="ru">Новая CSS таблица стилей...</message>
 </label>
 <label define="AM_NEW_TEMPLATE">
 	<message xml:lang="en">From template</message>
@@ -110,6 +120,7 @@
 	<message xml:lang="pt">Do gabarito</message>
 	<message xml:lang="fi">Valmiista mallista</message>
 	<message xml:lang="tr">Model</message>
+	<message xml:lang="ru">Из шаблона</message>
 </label>
 <label define="AM_OPEN_DOCUMENT">
 	<message xml:lang="en">Open document</message>
@@ -120,6 +131,7 @@
 	<message xml:lang="es">Abrir documento</message>
 	<message xml:lang="pt">>Abrir documento</message>
 	<message xml:lang="fi">Avaa dokumentti</message>
+	<message xml:lang="ru">Открыть документ...</message>
 </label>
 <label define="AM_OPEN_IN_NEW_TAB">
 	<message xml:lang="en">Open in new tab</message>
@@ -137,6 +149,7 @@
 	<message xml:lang="es">Abrir en ventana nueva</message>
 	<message xml:lang="pt">>Abrir em nova janela</message>
 	<message xml:lang="fi">Avaa uudessa ikkunass</message>
+	<message xml:lang="ru">Открыть в новом окне...</message>
 </label>
 <label define="AM_CLEAR">
 	<message xml:lang="en">Clear</message>
@@ -147,6 +160,7 @@
 	<message xml:lang="es">Limpiar</message>
 	<message xml:lang="pt">Apagar</message>
 	<message xml:lang="fi">Tyhjennä</message>
+	<message xml:lang="ru">Очистить</message>
 </label>
 <label define="AM_CLICK">
 	<message xml:lang="en">Click</message>
@@ -155,6 +169,7 @@
 	<message xml:lang="it">Click</message>
 	<message xml:lang="es">Clic</message>
 	<message xml:lang="pt">Clique</message>
+	<message xml:lang="ru">Щёлкнуть</message>
 </label>
 <label define="AM_SAVED">
 	<message xml:lang="en">Document saved: %s</message>
@@ -165,6 +180,7 @@
 	<message xml:lang="es">Documento guardado: %s</message>
 	<message xml:lang="pt">Documento salvo: %s</message>
 	<message xml:lang="fi">Tallennetaan: %s</message>
+	<message xml:lang="ru">Документ %s сохранён</message>
 </label>
 <label define="AM_ATTRIBUTE">
 	<message xml:lang="en">Attribute</message>
@@ -175,6 +191,7 @@
 	<message xml:lang="es">Atributo</message>
 	<message xml:lang="pt">Atributo</message>
 	<message xml:lang="fi">Määrittely</message>
+	<message xml:lang="ru">Атрибут</message>
 </label>
 <label define="AM_HREF_VALUE">
 	<message xml:lang="en">URL</message>
@@ -185,6 +202,7 @@
 	<message xml:lang="es">URL</message>
 	<message xml:lang="pt">URL</message>
 	<message xml:lang="fi">URL</message>
+	<message xml:lang="ru">URL</message>
 </label>
 <label define="AM_TEXT">
 	<message xml:lang="en">Text</message>
@@ -195,6 +213,7 @@
 	<message xml:lang="es">Texto</message>
 	<message xml:lang="pt">Texto</message>
 	<message xml:lang="fi">Teksti</message>
+	<message xml:lang="ru">Текст</message>
 </label>
 <label define="AM_NAME">
 	<message xml:lang="en">Name</message>
@@ -205,6 +224,7 @@
 	<message xml:lang="es">Nombre</message>
 	<message xml:lang="pt">Nome</message>
 	<message xml:lang="fi">Nimi</message>
+	<message xml:lang="ru">Имя</message>
 </label>
 <label define="AM_PASSWORD">
 	<message xml:lang="en">Password</message>
@@ -215,6 +235,7 @@
 	<message xml:lang="es">Palabra clave</message>
 	<message xml:lang="pt">Senha</message>
 	<message xml:lang="fi">Salasana</message>
+	<message xml:lang="ru">Пароль</message>
 </label>
 <label define="AM_DEF_CLASS">
 	<message xml:lang="en">Use as class</message>
@@ -225,6 +246,7 @@
 	<message xml:lang="es">Usar como clase</message>
 	<message xml:lang="pt">Usar como classe</message>
 	<message xml:lang="fi">Käytä luokkana</message>
+	<message xml:lang="ru">Использовать как класс</message>
 </label>
 <label define="AM_APPLY_CLASS">
 	<message xml:lang="en">Apply class</message>
@@ -235,6 +257,7 @@
 	<message xml:lang="es">Aplicar clase</message>
 	<message xml:lang="pt">Applicar classe</message>
 	<message xml:lang="fi">Käytä luokkaa</message>
+	<message xml:lang="ru">Применить класс</message>
 </label>
 <label define="AM_SEL_CLASS">
 	<message xml:lang="en">Select a class or a pseudo-class</message>
@@ -245,6 +268,7 @@
 	<message xml:lang="es">Seleccionar una clase o seudo-clase</message>
 	<message xml:lang="pt">Selecionar uma classe ou pseudo-classe</message>
 	<message xml:lang="fi">Valitse luokka tai valeluokka</message>
+	<message xml:lang="ru">Выбрать класс или псевдо-класс</message>
 </label>
 <label define="AM_FETCHING">
 	<message xml:lang="en">Fetching %s</message>
@@ -255,6 +279,7 @@
 	<message xml:lang="es">Recogiendo %s</message>
 	<message xml:lang="pt">Buscando %s</message>
 	<message xml:lang="fi">Noudetaan %s</message>
+	<message xml:lang="ru">Выбран %s</message>
 </label>
 <label define="AM_CANNOT_LOAD">
 	<message xml:lang="en">Cannot load %s</message>
@@ -265,6 +290,7 @@
 	<message xml:lang="es">No puedo cargar %s</message>
 	<message xml:lang="pt">Não é possível carregar %s</message>
 	<message xml:lang="fi">Ei voida ladata %s</message>
+	<message xml:lang="ru">Невозможно загрузить %s</message>
 </label>
 <label define="AM_DOCUMENT_LOADED">
 	<message xml:lang="en">Finished!</message>
@@ -275,6 +301,7 @@
 	<message xml:lang="es">¡Terminado!</message>
 	<message xml:lang="pt">Terminado!</message>
 	<message xml:lang="fi">Valmis!</message>
+	<message xml:lang="ru">Завершено!</message>
 </label>
 <label define="AM_SEL_TARGET">
 	<message xml:lang="en">Select the target</message>
@@ -285,6 +312,7 @@
 	<message xml:lang="es">Seleccionar el destino</message>
 	<message xml:lang="pt">Selecionar o destino</message>
 	<message xml:lang="fi">Valitse kohde</message>
+	<message xml:lang="ru">Выбрать цель</message>
 </label>
 <label define="AM_INVALID_TARGET">
 	<message xml:lang="en">Invalid target</message>
@@ -295,6 +323,7 @@
 	<message xml:lang="es">Destino inválido</message>
 	<message xml:lang="pt">Destino inválido</message>
 	<message xml:lang="fi">Kelpaamaton kohde</message>
+	<message xml:lang="ru">Неправильная цель</message>
 </label>
 <label define="AM_LOCATION">
 	<message xml:lang="en">Insert the URI or browse</message>
@@ -305,6 +334,7 @@
 	<message xml:lang="es">Escriba el URI o pulse el botón Buscar:</message>
 	<message xml:lang="pt">Inserir a URI ou procurar</message>
 	<message xml:lang="fi">Syötä URL tai selaa</message>
+	<message xml:lang="ru">Введите URI или выполните просмотр</message>
 </label>
 <label define="AM_TITLE">
 	<message xml:lang="en">Title</message>
@@ -315,6 +345,7 @@
 	<message xml:lang="es">Título:</message>
 	<message xml:lang="pt">Título</message>
 	<message xml:lang="fi">Otsikko</message>
+	<message xml:lang="ru">Заголовок</message>
 </label>
 <label define="AM_CHANGE_TITLE">
 	<message xml:lang="en">Change Title</message>
@@ -325,6 +356,7 @@
 	<message xml:lang="pt">Mudar título</message>
 	<message xml:lang="fi">Muuta otsake</message>
 	<message xml:lang="tr">Başlığı değiştir</message>
+	<message xml:lang="ru">Изменить заголовок...</message>
 </label>
 <label define="AM_DOC_MODIFIED">
 	<message xml:lang="en">Document modified - Do you want to save it?</message>
@@ -332,6 +364,7 @@
 	<message xml:lang="it">Documento modificato - salvare?</message>
 	<message xml:lang="de">Möchten Sie die Änderungen speichern?</message>
 	<message xml:lang="es">Documento modificado. ¿Quiere guardarlo?</message>
+	<message xml:lang="ru">Документ изменён - Хотите сохранить его?</message>
 </label>
 <label define="AM_RED_FETCHING">
 	<message xml:lang="en">Redirection fetching of %s</message>
@@ -342,6 +375,7 @@
 	<message xml:lang="es">Redirección recuperación de %s</message>
 	<message xml:lang="pt">Redirecionando busca de %s</message>
 	<message xml:lang="fi">Noudetaan välitetysti %s</message>
+	<message xml:lang="ru">Переадресации выборки на %s</message>
 </label>
 <label define="AM_REDIRECTIONS_LIMIT">
 	<message xml:lang="en">Too many redirections detected</message>
@@ -352,6 +386,7 @@
 	<message xml:lang="es">Demasiadas redirecciones detectadas</message>
 	<message xml:lang="pt">Demasiados redirecionamentos detetados</message>
 	<message xml:lang="fi">Havaittu liian monta välitystä</message>
+	<message xml:lang="ru">Обнаружено слишком много перенаправлений</message>
 </label>
 <label define="AM_CANNOT_CREATE_FILE">
 	<message xml:lang="en">Cannot create local file %s</message>
@@ -362,6 +397,7 @@
 	<message xml:lang="es">No puedo crear archivo local %s</message>
 	<message xml:lang="pt">Não é possível criar arquivo local %s</message>
 	<message xml:lang="fi">Ei voida luoda paikallista tiedostoa %s</message>
+	<message xml:lang="ru">Невозможно создать локальный файл %s</message>
 </label>
 <label define="AM_CANNOT_CREATE_DIRECTORY">
 	<message xml:lang="en">Cannot create directory %s</message>
@@ -372,6 +408,7 @@
 	<message xml:lang="es">No puedo crear directorio %s</message>
 	<message xml:lang="pt">Não é possível criar diretorio %s</message>
 	<message xml:lang="fi">Ei voida luoda hakemistoa %s</message>
+	<message xml:lang="ru">Невозможно создать директорию %s</message>
 </label>
 <label define="AM_WAITING_FOR_SOCKET">
 	<message xml:lang="en">Waiting for a free socket</message>
@@ -382,6 +419,7 @@
 	<message xml:lang="es">Esperando un puerto libre</message>
 	<message xml:lang="pt">Esperando por soquete livre</message>
 	<message xml:lang="fi">Odotetaan vapaata rajapintaa</message>
+	<message xml:lang="ru">Ожидание свободного socket</message>
 </label>
 <label define="AM_PROG_READ">
 	<message xml:lang="en">Reading %s</message>
@@ -392,6 +430,7 @@
 	<message xml:lang="es">Leyendo %s</message>
 	<message xml:lang="pt">Lendo %s</message>
 	<message xml:lang="fi">Luetaan %s</message>
+	<message xml:lang="ru">Чтение %s</message>
 </label>
 <label define="AM_PROG_WRITE">
 	<message xml:lang="en">Writing %s</message>
@@ -402,6 +441,7 @@
 	<message xml:lang="es">Escribiendo %s</message>
 	<message xml:lang="pt">Gravando %s</message>
 	<message xml:lang="fi">Kirjoitetaan %s</message>
+	<message xml:lang="ru">Запись %s</message>
 </label>
 <label define="AM_WAITING_FOR_CONNECTION">
 	<message xml:lang="en">Waiting for connection</message>
@@ -412,6 +452,7 @@
 	<message xml:lang="es">Esperando conexión</message>
 	<message xml:lang="pt">Esperando por conexão</message>
 	<message xml:lang="fi">Odotetaan yhteyttä</message>
+	<message xml:lang="ru">Ожидание соединения</message>
 </label>
 <label define="AM_CONTACTING_HOST">
 	<message xml:lang="en">Contacting %s</message>
@@ -422,6 +463,7 @@
 	<message xml:lang="es">Contactando %s</message>
 	<message xml:lang="pt">Contactando %s</message>
 	<message xml:lang="fi">Yhdistetään %s</message>
+	<message xml:lang="ru">Контакт с %s</message>
 </label>
 <label define="AM_LOOKING_HOST">
 	<message xml:lang="en">Looking up %s</message>
@@ -432,6 +474,7 @@
 	<message xml:lang="es">Buscando %s</message>
 	<message xml:lang="pt">Pesquisando %s</message>
 	<message xml:lang="fi">Etsitään %s</message>
+	<message xml:lang="ru">Поиск %s</message>
 </label>
 <label define="AM_UNKNOWN_STATUS">
 	<message xml:lang="en">Unknown Status</message>
@@ -442,6 +485,7 @@
 	<message xml:lang="es">Estado desconocido</message>
 	<message xml:lang="pt">Estado desconhecido</message>
 	<message xml:lang="fi">Tuntematon tila</message>
+	<message xml:lang="ru">Неизвестное состояние</message>
 </label>
 <label define="AM_GET_AUTHENTICATION">
 	<message xml:lang="en">Authentication Dialogue</message>
@@ -452,6 +496,7 @@
 	<message xml:lang="es">Diálogo de autentificación</message>
 	<message xml:lang="pt">Diálogo de Autenticação</message>
 	<message xml:lang="fi">Tunnistus ikkuna</message>
+	<message xml:lang="ru">Диалоговое окно идентификации</message>
 </label>
 <label define="AM_GET_AUTHENTICATION_MSG">
 	<message xml:lang="en">Please authenticate for</message>
@@ -462,6 +507,7 @@
 	<message xml:lang="pt">Por favor autenticar para</message>
 	<message xml:lang="fi">Syöttäkää tunnistetiedot</message>
 	<message xml:lang="tr">Kendinizi tanıtın</message>
+	<message xml:lang="ru">Пройдите идентификацию для</message>
 </label>
 <label define="AM_AUTHENTICATION_FAILURE">
 	<message xml:lang="en">Authorization failure for %s</message>
@@ -472,6 +518,7 @@
 	<message xml:lang="es">Fallo de autorización para %s</message>
 	<message xml:lang="pt">Falha de autorização para %s</message>
 	<message xml:lang="fi">Tunnistus epäonnistui %s</message>
+	<message xml:lang="ru">Процесс авторизации для %s прерван</message>
 </label>
 <label define="AM_LOADED_NO_DATA">
 	<message xml:lang="en">%s loaded but no data is available</message>
@@ -482,6 +529,7 @@
 	<message xml:lang="es">%s cargado pero no hay datos disponibles</message>
 	<message xml:lang="pt">%s carregado mas não há dados disponíveis</message>
 	<message xml:lang="fi">%s ladattu, mutta ei luettavissa</message>
+	<message xml:lang="ru">%s загружен, но данные недоступны</message>
 </label>
 <label define="AM_LOAD_ABORT">
 	<message xml:lang="en">Transfer interrupted!</message>
@@ -492,6 +540,7 @@
 	<message xml:lang="es">¡Transferencia interrumpida!</message>
 	<message xml:lang="pt">Transferência interrompida!</message>
 	<message xml:lang="fi">Tiedonsiirto keskeytetty!</message>
+	<message xml:lang="ru">Передача данных прервана!</message>
 </label>
 <label define="AM_NOT_AVAILABLE_RETRY">
 	<message xml:lang="en">%s is not available at the moment. Please retry later</message>
@@ -502,6 +551,7 @@
 	<message xml:lang="es">%s no está disponible en este momento. Por favor, inténtelo en otro momento</message>
 	<message xml:lang="pt">%s Não está disponível no momento. Por favor tente novamente mais tarde.</message>
 	<message xml:lang="fi">%s yhteyttä ei voi muodostaa. Yrittäkää myöhemmin uudelleen.</message>
+	<message xml:lang="ru">%s на данный момент недоступен. Попробуйте позже.</message>
 </label>
 <label define="AM_ELEMENT_LOADED">
 	<message xml:lang="en">%s loaded</message>
@@ -512,6 +562,7 @@
 	<message xml:lang="es">%s cargado</message>
 	<message xml:lang="pt">%s carregado</message>
 	<message xml:lang="fi">%s ladattu</message>
+	<message xml:lang="ru">%s загружен</message>
 </label>
 <label define="AM_REMOTE_SAVING">
 	<message xml:lang="en">Saving %s</message>
@@ -522,6 +573,7 @@
 	<message xml:lang="es">Guardando %s</message>
 	<message xml:lang="pt">Salvando %s</message>
 	<message xml:lang="fi">Tallenetaan %s</message>
+	<message xml:lang="ru">Сохранение %s</message>
 </label>
 <label define="AM_CANNOT_SAVE">
 	<message xml:lang="en">Cannot save in: %s</message>
@@ -532,6 +584,7 @@
 	<message xml:lang="es">No puedo guardar en: %s</message>
 	<message xml:lang="pt">Não é possível salvar em: %s</message>
 	<message xml:lang="fi">Ei voida tallentaa: %s</message>
+	<message xml:lang="ru">Невозможно сохранить в: %s</message>
 </label>
 <label define="AM_SYSTEM_ERROR">
 	<message xml:lang="en">English system errors messages</message>
@@ -542,6 +595,7 @@
 	<message xml:lang="es">Mensajes de errores de sistema en castellano</message>
 	<message xml:lang="pt">Mensagens de erro do sistema em português</message>
 	<message xml:lang="fi">Englantilaisen järjestelmän virhesanomat.</message>
+	<message xml:lang="ru">Английские системные сообщения об ошибках</message>
 </label>
 <label define="AM_INVALID_ANCHOR1">
 	<message xml:lang="en">An anchor cannot contain these elements</message>
@@ -552,6 +606,7 @@
 	<message xml:lang="es">Un ancla no puede contener estos elementos</message>
 	<message xml:lang="pt">Uma âncora não pode conter esses elementos</message>
 	<message xml:lang="fi">Linkin kohde ei voi sisältää näitä elementtejä</message>
+	<message xml:lang="ru">Якорь не может содержать эти элементы</message>
 </label>
 <label define="AM_INVALID_ANCHOR2">
 	<message xml:lang="en">Cannot create an anchor within an anchor</message>
@@ -562,6 +617,7 @@
 	<message xml:lang="es">No puedo crear un ancla en un ancla</message>
 	<message xml:lang="pt">Não é possível criar uma âncora dentro de outra âncora</message>
 	<message xml:lang="fi">Ei voida luoda kohdetta kohteen sisälle</message>
+	<message xml:lang="ru">Невозможно создать якорь в пределах якоря</message>
 </label>
 <label define="AM_GET_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no GET support yet for URLs of this type: %s</message>
@@ -572,6 +628,7 @@
 	<message xml:lang="es">Lo siento, aún no hay soporte GET para URL de este tipo: %s</message>
 	<message xml:lang="pt">Sinto muito, não há ainda suporte GET para URLs deste tipo: %s</message>
 	<message xml:lang="fi">Tälle URL:lle ei ole vielä GET-tukea: %s</message>
+	<message xml:lang="ru">Для URLs типа: %s GET не поддерживается</message>
 </label>
 <label define="AM_PUT_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no PUT support yet for URLs of this type: %s</message>
@@ -582,6 +639,7 @@
 	<message xml:lang="es">Lo siento, aún no hay soporte PUT para URL de este tipo: %s</message>
 	<message xml:lang="pt">Sinto muito, não há ainda suporte PUT para URLs deste tipo: %s</message>
 	<message xml:lang="fi">Tälle URL:lle ei ole vielä PUT-tukea:: %s</message>
+	<message xml:lang="ru">Для URLs типа: %s PUT не поддерживается</message>
 </label>
 <label define="AM_UNSUPPORTED_FEATURE">
 	<message xml:lang="en">This version of Amaya does not support this feature</message>
@@ -592,6 +650,7 @@
 	<message xml:lang="es">Esta versión de Amaya no soporta esta característica</message>
 	<message xml:lang="pt">Esta versão de Amaya não suporta esta facilidade</message>
 	<message xml:lang="fi">Amayan tämä versio ei tue vielä tätä ominaisuutta</message>
+	<message xml:lang="ru">Текущая версия Amaya не поддерживает эту возможность</message>
 </label>
 <label define="AM_WROTE_OBJECT">
 	<message xml:lang="en">Finished writing %s</message>
@@ -602,6 +661,7 @@
 	<message xml:lang="es">Finalizada escritura de %s</message>
 	<message xml:lang="pt">Terminada a gravação de %s</message>
 	<message xml:lang="fi">Kirjoitus valmis %s</message>
+	<message xml:lang="ru">Запись %s завершена</message>
 </label>
 <label define="AM_BAD_URL">
 	<message xml:lang="en">Could not normalize %s</message>
@@ -612,6 +672,7 @@
 	<message xml:lang="es">No pude normalizar %s</message>
 	<message xml:lang="pt">Não foi possível normalizar %s</message>
 	<message xml:lang="fi">Ei voinut normalisoida %s</message>
+	<message xml:lang="ru">Невозможно нормализовать %s</message>
 </label>
 <label define="AM_CACHE_ERROR">
 	<message xml:lang="en">Could not create temporary file directory %s</message>
@@ -622,6 +683,7 @@
 	<message xml:lang="es">No pude crear directorio de archivos temporales %s</message>
 	<message xml:lang="pt">Não foi possível criar o diretório de arquivos temporários %s</message>
 	<message xml:lang="fi">Ei voinut luoda väliaikaista hakemistoa %s</message>
+	<message xml:lang="ru">Невозможно создать временную файловую директорию %s</message>
 </label>
 <label define="AM_NO_TRANS">
 	<message xml:lang="en">No transformation applicable to the selection</message>
@@ -632,6 +694,7 @@
 	<message xml:lang="es">No hay transformación aplicable a la selección</message>
 	<message xml:lang="pt">Não há transformação aplicável à seleção</message>
 	<message xml:lang="fi">Valintaa ei voi muuntaa</message>
+	<message xml:lang="ru">К выбранному не применимо никакое преобразование</message>
 </label>
 <label define="AM_TRANS_FAILED">
 	<message xml:lang="en">Transformation failed</message>
@@ -642,6 +705,7 @@
 	<message xml:lang="es">Falló la transformación</message>
 	<message xml:lang="pt">A transformação falhou</message>
 	<message xml:lang="fi">Muunto epäonnistui</message>
+	<message xml:lang="ru">Преобразование прервано</message>
 </label>
 <label define="AM_TRANS_PARSE_ERROR">
 	<message xml:lang="en">syntax error in file HTML.trans line %s</message>
@@ -652,6 +716,7 @@
 	<message xml:lang="es">error de sintaxis en archivo HTML.trans línea %s</message>
 	<message xml:lang="pt">Erro de sintaxe no arquivo HTML.trans linha %s</message>
 	<message xml:lang="fi">ohjelmavirhe HTML.trans rivillä %s</message>
+	<message xml:lang="ru">синтаксическая ошибка в файле HTML.trans линия %s</message>
 </label>
 <label define="AM_BUTTON_MATH">
 	<message xml:lang="en">Maths</message>
@@ -662,6 +727,7 @@
 	<message xml:lang="es">MathML</message>
 	<message xml:lang="pt">Matemática</message>
 	<message xml:lang="fi">Matematiikka</message>
+	<message xml:lang="ru">Математика</message>
 </label>
 <label define="AM_BUTTON_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
@@ -672,6 +738,7 @@
 	<message xml:lang="es">SVG</message>
 	<message xml:lang="pt">Gráficos</message>
 	<message xml:lang="fi">Grafiikka</message>
+	<message xml:lang="ru">Графика</message>
 </label>
 <label define="AM_SAVE_AS">
 	<message xml:lang="en">Save as</message>
@@ -682,6 +749,7 @@
 	<message xml:lang="es">Guardar como</message>
 	<message xml:lang="pt">Salvar como</message>
 	<message xml:lang="fi">Tallenna nimellä</message>
+	<message xml:lang="ru">Сохранить как</message>
 </label>
 <label define="AM_AUTHENTICATION_REALM_SERVER">
 	<message xml:lang="en">Please authenticate for realm \'%s\' at server \'%s\'</message>
@@ -692,6 +760,7 @@
 	<message xml:lang="pt">Por favor autenticar para o domínio \'%s\' no servidor \'%s\'</message>
 	<message xml:lang="fi">Anna tunnistetiedot alueelle \'%s\' palvelimella \'%s\'</message>
 	<message xml:lang="tr">Lütfen kendinizi \'%s\' alanı, \'%s\'servör için resmileştirin</message>
+	<message xml:lang="ru">Пройдите идентификацию для области \'%s\' на сервере \'%s\'</message>
 </label>
 <label define="AM_AUTHENTICATION_REALM">
 	<message xml:lang="en">Realm: %s</message>
@@ -702,6 +771,7 @@
 	<message xml:lang="pt">Domínio: %s</message>
 	<message xml:lang="fi">Alue: %s</message>
 	<message xml:lang="tr">Alan : %s</message>
+	<message xml:lang="ru">Область: %s</message>
 </label>
 <label define="AM_AUTHENTICATION_SERVER">
 	<message xml:lang="en">Server: %s</message>
@@ -712,6 +782,7 @@
 	<message xml:lang="pt">Servidor: %s</message>
 	<message xml:lang="fi">Palvelin: %s</message>
 	<message xml:lang="tr">Servör : %s</message>
+	<message xml:lang="ru">Сервер: %s</message>
 </label>
 <label define="AM_BUTTON_BrowseEdit">
 	<message xml:lang="en">Editor/Browser</message>
@@ -722,6 +793,7 @@
 	<message xml:lang="pt">Editor/Navegador</message>
 	<message xml:lang="fi">Muokkain/Selain</message>
 	<message xml:lang="tr">Editör/Tarayıcı</message>
+	<message xml:lang="ru">Редактор/Браузер</message>
 </label>
 <label define="AM_REQUEST_TIMEOUT">
 	<message xml:lang="en">Request timeout - server did not respond</message>
@@ -732,6 +804,7 @@
 	<message xml:lang="pt">Temporização de requisição expirou - o servidor não respondeu</message>
 	<message xml:lang="fi">Pyynnön aikakatkaisu - Palvelin ei vastaa.</message>
 	<message xml:lang="tr">Zaman dolmuştur - servör cevap vermedi</message>
+	<message xml:lang="ru">Время ожидания истекло - сервер не ответил</message>
 </label>
 <label define="AM_OVERWRITE_CHECK">
 	<message xml:lang="en">%s already exists. Overwrite it?</message>
@@ -742,6 +815,7 @@
 	<message xml:lang="pt">%s já existe. Gravar por cima?</message>
 	<message xml:lang="fi">%s on jo olemassa. Korvataanko?</message>
 	<message xml:lang="tr">%s mevcuttur. Yazıyı zorlayalımmı?</message>
+	<message xml:lang="ru">%s уже существует. Перезаписать его?</message>
 </label>
 <label define="AM_ETAG_CHANGED">
 	<message xml:lang="en">%s has changed. Overwrite it?</message>
@@ -752,6 +826,7 @@
 	<message xml:lang="pt">%s mudou. gravar por cima?</message>
 	<message xml:lang="fi">%s on muuttunut. Korvataanko?</message>
 	<message xml:lang="tr">%s değişti. Yazıyı zorlayalımmı?</message>
+	<message xml:lang="ru">%s был изменён. Перезаписать его?</message>
 </label>
 <label define="AM_BACKGROUND_IMAGE">
 	<message xml:lang="en">Background image</message>
@@ -762,6 +837,7 @@
 	<message xml:lang="pt">Imagem de fundo</message>
 	<message xml:lang="fi">Taustakuva</message>
 	<message xml:lang="tr">Arka plan</message>
+	<message xml:lang="ru">Фоновое изображение</message>
 </label>
 <label define="AM_BG_IMAGE_NOT_ALLOWED">
 	<message xml:lang="en">Background image not allowed here</message>
@@ -772,6 +848,7 @@
 	<message xml:lang="pt">Imagem de fundo não é permitida aqui</message>
 	<message xml:lang="fi">Taustakuvaa ei sallita tässä</message>
 	<message xml:lang="tr">Burda arka plan yasaktır</message>
+	<message xml:lang="ru">Здесь не разрешено использовать фоновое изображение</message>
 </label>
 <label define="AM_CSS">
 	<message xml:lang="en">CSS</message>
@@ -782,6 +859,7 @@
 	<message xml:lang="es">CSS</message>
 	<message xml:lang="pt">CSS</message>
 	<message xml:lang="fi">CSS</message>
+	<message xml:lang="ru">CSS</message>
 </label>
 <label define="AM_WARNING_SAVE_OVERWRITE">
 	<message xml:lang="en">Saving will save following images too?</message>
@@ -790,6 +868,7 @@
 	<message xml:lang="es">¿Guardar también las imágenes siguientes al guardar?</message>
 	<message xml:lang="de">Folgende Bilder ebenfalls speichern?</message>
 	<message xml:lang="tr">Bi sonraki görüntülerde kayıt edilecektir</message>
+	<message xml:lang="ru">Сохранять также следующие изображения при сохранении?</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
 	<message xml:lang="en">Failed to save to URL</message>
@@ -800,6 +879,7 @@
 	<message xml:lang="es">Fallo al guardar en URL</message>
 	<message xml:lang="pt">Falha ao salvar na URL</message>
 	<message xml:lang="fi">URL:n tallennus epäonnistui</message>
+	<message xml:lang="ru">Прервано сохранение на URL</message>
 </label>
 <label define="AM_SAVE_DISK">
 	<message xml:lang="en">Save to disk ?</message>
@@ -810,6 +890,7 @@
 	<message xml:lang="es">¿Guardar en disco?</message>
 	<message xml:lang="pt">Salvar no disco?</message>
 	<message xml:lang="fi">Tallennetaanko levylle ?</message>
+	<message xml:lang="ru">Сохранить на диск ?</message>
 </label>
 <label define="AM_BCOPY_IMAGES">
 	<message xml:lang="en">Copy Images</message>
@@ -820,6 +901,7 @@
 	<message xml:lang="es">Copiar imágenes</message>
 	<message xml:lang="pt">Copiar imagens</message>
 	<message xml:lang="fi">Kopioi kuvat</message>
+	<message xml:lang="ru">Копировать изображения</message>
 </label>
 <label define="AM_BTRANSFORM_URL">
 	<message xml:lang="en">Transform URLs</message>
@@ -830,6 +912,7 @@
 	<message xml:lang="es">Transformar URLs</message>
 	<message xml:lang="pt">Transformar URLs</message>
 	<message xml:lang="fi">Muuta URL:t</message>
+	<message xml:lang="ru">Преобразовать URLs</message>
 </label>
 <label define="AM_DOC_LOCATION">
 	<message xml:lang="en">Document location</message>
@@ -840,6 +923,7 @@
 	<message xml:lang="es">Ubicación de documento:</message>
 	<message xml:lang="pt">Localização do documento</message>
 	<message xml:lang="fi">Dokumentin sijainti</message>
+	<message xml:lang="ru">Местоположение документа</message>
 </label>
 <label define="AM_IMAGES_LOCATION">
 	<message xml:lang="en">Images directory</message>
@@ -850,6 +934,7 @@
 	<message xml:lang="es">Directorio de imágenes:</message>
 	<message xml:lang="pt">Diretório de imagens</message>
 	<message xml:lang="fi">Kuvahakemisto</message>
+	<message xml:lang="ru">Директория изображений</message>
 </label>
 <label define="AM_OBJECT_LOCATION">
 	<message xml:lang="en">Object location</message>
@@ -860,6 +945,7 @@
 	<message xml:lang="es">Ubicación de objeto</message>
 	<message xml:lang="pt">Localização do objeto</message>
 	<message xml:lang="fi">Elementin sijainti</message>
+	<message xml:lang="ru">Местоположение объекта</message>
 </label>
 <label define="AM_CSS_FILE">
 	<message xml:lang="en">CSS files</message>
@@ -870,6 +956,7 @@
 	<message xml:lang="es">Hojas de estilo enlazadas:</message>
 	<message xml:lang="pt">Arquivos CSS</message>
 	<message xml:lang="fi">CSS tyylitiedostot</message>
+	<message xml:lang="ru">CSS файлы</message>
 </label>
 <label define="AM_OPEN_CSS">
 	<message xml:lang="en">Open CSS</message>
@@ -880,6 +967,7 @@
 	<message xml:lang="pt">Abrir CSS</message>
 	<message xml:lang="fi">Avaa CSS</message>
 	<message xml:lang="tr">Aç CSS</message>
+	<message xml:lang="ru">Открыть CSS</message>
 </label>
 <label define="AM_DISABLE_CSS">
 	<message xml:lang="en">Disable CSS</message>
@@ -890,6 +978,7 @@
 	<message xml:lang="pt">Desabilitar CSS</message>
 	<message xml:lang="fi">Poista käytöstä CSS</message>
 	<message xml:lang="tr">Olumsuzla CSS</message>
+	<message xml:lang="ru">Отключить CSS</message>
 </label>
 <label define="AM_ENABLE_CSS">
 	<message xml:lang="en">Enable CSS</message>
@@ -900,6 +989,7 @@
 	<message xml:lang="pt">Habilitar CSS</message>
 	<message xml:lang="fi">Ota käyttöön CSS</message>
 	<message xml:lang="tr">Olumla CSS</message>
+	<message xml:lang="ru">Включить CSS</message>
 </label>
 <label define="AM_REMOVE_CSS">
 	<message xml:lang="en">Remove CSS</message>
@@ -910,6 +1000,7 @@
 	<message xml:lang="pt">Remover CSS</message>
 	<message xml:lang="fi">Poista CSS</message>
 	<message xml:lang="tr">Sil CSS</message>
+	<message xml:lang="ru">Удалить CSS</message>
 </label>
 <label define="AM_ABOUT1">
 	<message xml:lang="en">W3C's editor/browser for the Web</message>
@@ -920,6 +1011,7 @@
 	<message xml:lang="es">Editor/Navegador del W3C para la Web</message>
 	<message xml:lang="pt">Editor/navegador do W3C para a Web</message>
 	<message xml:lang="fi">W3C:n Internetin muokkain/selain</message>
+	<message xml:lang="ru">W3C's редактор/броузер для Web</message>
 </label>
 <label define="AM_ABOUT2">
 	<message xml:lang="en">(mail issues to www-amaya@w3.org)</message>
@@ -930,6 +1022,7 @@
 	<message xml:lang="pt">(envie questões para www-amaya@w3.org)</message>
 	<message xml:lang="fi">(ilmoita virheistä www-amaya@w3.org)</message>
 	<message xml:lang="tr">Sorularınızı www-amaya@w3.org adreine gönderin</message>
+	<message xml:lang="ru">(письма отправляйте на www-amaya@w3.org)</message>
 </label>
 <label define="AM_TOO_LONG_URL">
 	<message xml:lang="en">Can't handle URLs having more than %s chars</message>
@@ -940,6 +1033,7 @@
 	<message xml:lang="es">No puedo gestionar URL con más de %s caracteres</message>
 	<message xml:lang="pt">Não é possível tratar URLs com mais de %s caracteres</message>
 	<message xml:lang="fi">Ei voi käsitellä osoitteita joissa on enemmän kuin %s merkkiä</message>
+	<message xml:lang="ru">Невозможно обработать URLs имеющие более чем %s символов</message>
 </label>
 <label define="AM_INVALID_TYPE">
 	<message xml:lang="en">Only default type is allowed</message>
@@ -950,6 +1044,7 @@
 	<message xml:lang="es">Sólo se permite el tipo por omisión</message>
 	<message xml:lang="pt">Somente o tipo padrão é permitido</message>
 	<message xml:lang="fi">Vain oletus sallittu</message>
+	<message xml:lang="ru">Разрешён только тип принятый по умолчанию</message>
 </label>
 <label define="AM_UPDATED_LINK">
 	<message xml:lang="en">Links update: %s%% has been done</message>
@@ -960,6 +1055,7 @@
 	<message xml:lang="es">Actualización de enlace: %s%% realizada</message>
 	<message xml:lang="pt">Atualização de enlaces: %s%% foi tratado</message>
 	<message xml:lang="fi">Linkkien päivitys: %s%% onnistui</message>
+	<message xml:lang="ru">Обновление ссылок: было выполнено %s%%</message>
 </label>
 <label define="AM_NOTHING_TO_SAVE">
 	<message xml:lang="en">Nothing new to be saved</message>
@@ -970,6 +1066,7 @@
 	<message xml:lang="es">Nada nuevo que guardar</message>
 	<message xml:lang="pt">Nada novo a ser salvo</message>
 	<message xml:lang="fi">Ei mitään tallennettavaa</message>
+	<message xml:lang="ru">Ничего нет нового для сохранения</message>
 </label>
 <label define="AM_REPEAT_Y">
 	<message xml:lang="en">repeat-y</message>
@@ -980,6 +1077,7 @@
 	<message xml:lang="es">Repetir-y (repeat-y)</message>
 	<message xml:lang="pt">Repetir-y</message>
 	<message xml:lang="fi">toista-y</message>
+	<message xml:lang="ru">повторить по оси-y</message>
 </label>
 <label define="AM_GET_USER_NAME">
 	<message xml:lang="en">Please enter username:</message>
@@ -990,6 +1088,7 @@
 	<message xml:lang="es">Por favor, escriba un nombre de usuario:</message>
 	<message xml:lang="pt">Por favor insira nome de usuário:</message>
 	<message xml:lang="fi">Syöttäkää kayttäjätunnus:</message>
+	<message xml:lang="ru">Введите имя пользователя:</message>
 </label>
 <label define="AM_WAITING_REQUESTS">
 	<message xml:lang="en">%d outstanding requests</message>
@@ -1000,6 +1099,7 @@
 	<message xml:lang="es">%d solicitud pendiente</message>
 	<message xml:lang="pt">%d requisições pendentes</message>
 	<message xml:lang="fi">%d selvittämätön pyyntö</message>
+	<message xml:lang="ru">%d исходящих запроса</message>
 </label>
 <label define="AM_NO_CSS">
 	<message xml:lang="en">No CSS file available</message>
@@ -1010,6 +1110,7 @@
 	<message xml:lang="pt">Não há arquivo CSS disponível</message>
 	<message xml:lang="fi">Ei CSS-tiedostoa saatavilla</message>
 	<message xml:lang="tr">Olumlu CSS dosyası yoktur</message>
+	<message xml:lang="ru">Нет доступных файлов CSS</message>
 </label>
 <label define="AM_BUTTON_INTERRUPT">
 	<message xml:lang="en">Interrupt transfer</message>
@@ -1020,6 +1121,7 @@
 	<message xml:lang="es">Detener</message>
 	<message xml:lang="pt">Interromper transferência</message>
 	<message xml:lang="fi">Keskeytä tiedonsiirto</message>
+	<message xml:lang="ru">Прервать передачу</message>
 </label>
 <label define="AM_BUTTON_PREVIOUS">
 	<message xml:lang="en">Previous document</message>
@@ -1030,6 +1132,7 @@
 	<message xml:lang="es">Atrás</message>
 	<message xml:lang="pt">Documento precedente</message>
 	<message xml:lang="fi">Edellinen dokumentti</message>
+	<message xml:lang="ru">Предыдущий документ</message>
 </label>
 <label define="AM_BUTTON_NEXT">
 	<message xml:lang="en">Next document</message>
@@ -1040,6 +1143,7 @@
 	<message xml:lang="es">Adelante</message>
 	<message xml:lang="pt">Documento seguinte</message>
 	<message xml:lang="fi">Seuraava dokumentti</message>
+	<message xml:lang="ru">Следующий документ</message>
 </label>
 <label define="AM_BUTTON_RELOAD">
 	<message xml:lang="en">Reload</message>
@@ -1050,6 +1154,7 @@
 	<message xml:lang="es">Actualizar</message>
 	<message xml:lang="pt">Recarregar</message>
 	<message xml:lang="fi">Päivitä</message>
+	<message xml:lang="ru">Обновить</message>
 </label>
 <label define="AM_BUTTON_SAVE">
 	<message xml:lang="en">Save</message>
@@ -1060,6 +1165,7 @@
 	<message xml:lang="es">Guardar</message>
 	<message xml:lang="pt">Salvar</message>
 	<message xml:lang="fi">Tallenna</message>
+	<message xml:lang="ru">Сохранить</message>
 </label>
 <label define="AM_DONT_SAVE">
 	<message xml:lang="en">Don't save</message>
@@ -1067,6 +1173,7 @@
 	<message xml:lang="de">Speichern</message>
 	<message xml:lang="it">Non salvare</message>
 	<message xml:lang="es">No guardar</message>
+	<message xml:lang="ru">Не сохранять</message>
 </label>
 <label define="AM_BUTTON_PRINT">
 	<message xml:lang="en">Print</message>
@@ -1077,6 +1184,7 @@
 	<message xml:lang="es">Imprimir</message>
 	<message xml:lang="pt">Imprimir</message>
 	<message xml:lang="fi">Tulosta</message>
+	<message xml:lang="ru">Печать</message>
 </label>
 <label define="AM_BUTTON_SEARCH">
 	<message xml:lang="en">Search</message>
@@ -1087,6 +1195,7 @@
 	<message xml:lang="es">Buscar</message>
 	<message xml:lang="pt">Buscar</message>
 	<message xml:lang="fi">Etsi</message>
+	<message xml:lang="ru">Поиск</message>
 </label>
 <label define="AM_BUTTON_ITALICS">
 	<message xml:lang="en">Emphasis</message>
@@ -1097,6 +1206,7 @@
 	<message xml:lang="es">Énfasis (em)</message>
 	<message xml:lang="pt">Ênfase</message>
 	<message xml:lang="fi">Korosta</message>
+	<message xml:lang="ru">Акцент</message>
 </label>
 <label define="AM_BUTTON_BOLD">
 	<message xml:lang="en">Strong</message>
@@ -1107,6 +1217,7 @@
 	<message xml:lang="es">Enérgico (strong)</message>
 	<message xml:lang="pt">Forte</message>
 	<message xml:lang="fi">Lihavoi</message>
+	<message xml:lang="ru">Строго</message>
 </label>
 <label define="AM_BUTTON_CODE">
 	<message xml:lang="en">Fixed font</message>
@@ -1117,6 +1228,7 @@
 	<message xml:lang="es">Código (code)</message>
 	<message xml:lang="pt">Tipo (font) fixo</message>
 	<message xml:lang="fi">Vakio fontti</message>
+	<message xml:lang="ru">Код</message>
 </label>
 <label define="AM_NO_REPEAT">
 	<message xml:lang="en">no-repeat</message>
@@ -1127,6 +1239,7 @@
 	<message xml:lang="es">No repetir (no-repeat)</message>
 	<message xml:lang="pt">Não repetir</message>
 	<message xml:lang="fi">ei toistoa</message>
+	<message xml:lang="ru">не повторять</message>
 </label>
 <label define="AM_BUTTON_IMG">
 	<message xml:lang="en">Insert image</message>
@@ -1137,6 +1250,7 @@
 	<message xml:lang="es">Imagen:</message>
 	<message xml:lang="pt">Inserir imagem</message>
 	<message xml:lang="fi">Syötä kuva</message>
+	<message xml:lang="ru">Вставить изображение</message>
 </label>
 <label define="AM_BUTTON_H1">
 	<message xml:lang="en">Heading level 1</message>
@@ -1147,6 +1261,7 @@
 	<message xml:lang="es">Cabecera nivel 1 (h1)</message>
 	<message xml:lang="pt">Cabeçalho nível 1</message>
 	<message xml:lang="fi">Otsikkokoko 1</message>
+	<message xml:lang="ru">Заголовк уровень 1</message>
 </label>
 <label define="AM_BUTTON_H2">
 	<message xml:lang="en">Heading level 2</message>
@@ -1157,6 +1272,7 @@
 	<message xml:lang="es">Cabecera nivel 2 (h2)</message>
 	<message xml:lang="pt">Cabeçalho nível 2</message>
 	<message xml:lang="fi">Otsikkokoko 2</message>
+	<message xml:lang="ru">Заголовк уровень 2</message>
 </label>
 <label define="AM_BUTTON_H3">
 	<message xml:lang="en">Heading level 3</message>
@@ -1167,6 +1283,7 @@
 	<message xml:lang="es">Cabecera nivel 3 (h3)</message>
 	<message xml:lang="pt">Cabeçalho nível 3</message>
 	<message xml:lang="fi">Otsikkokoko 3</message>
+	<message xml:lang="ru">Заголовк уровень 3</message>
 </label>
 <label define="AM_BUTTON_UL">
 	<message xml:lang="en">Bulleted list</message>
@@ -1177,6 +1294,7 @@
 	<message xml:lang="es">Lista no numerada (ul)</message>
 	<message xml:lang="pt">Lista com bolinhas</message>
 	<message xml:lang="fi">Pisteellinen luettelo</message>
+	<message xml:lang="ru">Маркированный список</message>
 </label>
 <label define="AM_BUTTON_OL">
 	<message xml:lang="en">Numbered list</message>
@@ -1187,6 +1305,7 @@
 	<message xml:lang="es">Lista numerada (ol)</message>
 	<message xml:lang="pt">Lista numerada</message>
 	<message xml:lang="fi">Numeroituluettelo</message>
+	<message xml:lang="ru">Нумерованный список</message>
 </label>
 <label define="AM_BUTTON_DL">
 	<message xml:lang="en">Definition list</message>
@@ -1197,6 +1316,7 @@
 	<message xml:lang="es">Lista de definición (dl)</message>
 	<message xml:lang="pt">Lista de definição</message>
 	<message xml:lang="fi">Määrittelyluettelo</message>
+	<message xml:lang="ru">Список определений</message>
 </label>
 <label define="AM_BUTTON_LINK">
 	<message xml:lang="en">Link</message>
@@ -1207,6 +1327,7 @@
 	<message xml:lang="es">Enlace</message>
 	<message xml:lang="pt">Enlace</message>
 	<message xml:lang="fi">Linkki</message>
+	<message xml:lang="ru">Ссылка</message>
 </label>
 <label define="AM_BUTTON_TABLE">
 	<message xml:lang="en">Table</message>
@@ -1217,6 +1338,7 @@
 	<message xml:lang="es">Tabla</message>
 	<message xml:lang="pt">Tabela</message>
 	<message xml:lang="fi">Taulukko</message>
+	<message xml:lang="ru">Таблица</message>
 </label>
 <label define="AM_NO_NAME">
 	<message xml:lang="en">Document doesn't have a name. Saving to:</message>
@@ -1227,6 +1349,7 @@
 	<message xml:lang="es">El documento no tiene nombre. Guardar en:</message>
 	<message xml:lang="pt">O documento não tem nome. Salvando em:</message>
 	<message xml:lang="fi">Dokumentilla ei ole nimeä. Tallennetaan nimellä:</message>
+	<message xml:lang="ru">Документ не имеет имени. Сохранить в:</message>
 </label>
 <label define="AM_BUTTON_PLUGIN">
 	<message xml:lang="en">Plugins</message>
@@ -1237,6 +1360,7 @@
 	<message xml:lang="es">Plugins</message>
 	<message xml:lang="pt">Plugins</message>
 	<message xml:lang="fi">Pluginit</message>
+	<message xml:lang="ru">Доп. модули</message>
 </label>
 <label define="AM_UNKNOWN_SAVE_ERROR">
 	<message xml:lang="en">Unknown error while saving URL %s</message>
@@ -1247,6 +1371,7 @@
 	<message xml:lang="es">Error desconocido al guardar URL %s</message>
 	<message xml:lang="pt">Erro desconhecido ao salvar a URL %s</message>
 	<message xml:lang="fi">Tuntematon virhe tallennettaessa URL:ää %s</message>
+	<message xml:lang="ru">При сохранении URL произошла неизвестная ошибка %s</message>
 </label>
 <label define="AM_CANT_CONNECT_TO_HOST">
 	<message xml:lang="en">Cannot make a connection to the server</message>
@@ -1257,6 +1382,7 @@
 	<message xml:lang="es">No puedo establecer conexión con el servidor</message>
 	<message xml:lang="pt">Não é possível criar uma conexão ao servidor</message>
 	<message xml:lang="fi">Palvelinyhteyden muodostus epäonnistui</message>
+	<message xml:lang="ru">Невозможно создать соединение с сервером</message>
 </label>
 <label define="AM_FORBIDDEN_ACCESS">
 	<message xml:lang="en">Access to %s is forbidden by the server</message>
@@ -1267,6 +1393,7 @@
 	<message xml:lang="es">El acceso a %s está prohibido por el servidor</message>
 	<message xml:lang="pt">O acesso a %s é proibido pelo servidor</message>
 	<message xml:lang="fi">Pääsy tietoon %s on kielletty palvelimen toimesta</message>
+	<message xml:lang="ru">Доступ к %s запрещён сервером</message>
 </label>
 <label define="AM_REQUEST_SUCCEEDED">
 	<message xml:lang="en">Operation succeeded for %s</message>
@@ -1277,6 +1404,7 @@
 	<message xml:lang="es">Operación correcta para %s</message>
 	<message xml:lang="pt">Operação bem sucedida para %s</message>
 	<message xml:lang="fi">Toiminto onnistui %s</message>
+	<message xml:lang="ru">Выполнена операцию для %s</message>
 </label>
 <label define="AM_CREATED_NEW_REMOTE_RESSOURCE">
 	<message xml:lang="en">%s has been created</message>
@@ -1287,6 +1415,7 @@
 	<message xml:lang="es">%s se ha creado</message>
 	<message xml:lang="pt">%s foi criado</message>
 	<message xml:lang="fi">%s on luotu</message>
+	<message xml:lang="ru">Был создан %s</message>
 </label>
 <label define="AM_UPDATED_REMOTE_RESSOURCE">
 	<message xml:lang="en">%s has been updated</message>
@@ -1297,6 +1426,7 @@
 	<message xml:lang="es">%s se ha actualizado</message>
 	<message xml:lang="pt">%s foi atualizado</message>
 	<message xml:lang="fi">%s on päivitetty</message>
+	<message xml:lang="ru">Был обновлён %s</message>
 </label>
 <label define="AM_UNKNOWN_XXX_STATUS">
 	<message xml:lang="en">Operation completed with a %s status code</message>
@@ -1307,6 +1437,7 @@
 	<message xml:lang="es">Operación completada con un código de estado %s</message>
 	<message xml:lang="pt">Operação completada com código de estado %s</message>
 	<message xml:lang="fi">Toiminto suoritettu %s palautteella</message>
+	<message xml:lang="ru">Операция выполнена с кодом состояния %s</message>
 </label>
 <label define="AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX">
 	<message xml:lang="en">Server did not understand the request syntax</message>
@@ -1317,6 +1448,7 @@
 	<message xml:lang="es">El servidor no entendió la sintaxis de la petición</message>
 	<message xml:lang="pt">O servidor não entendeu a sintaxe da requisição</message>
 	<message xml:lang="fi">Palvelin ei ymmärrä pyyntöä</message>
+	<message xml:lang="ru">Сервер не понимает синтаксис запроса</message>
 </label>
 <label define="AM_NO_DATA">
 	<message xml:lang="en">Server has no new information to send back</message>
@@ -1327,6 +1459,7 @@
 	<message xml:lang="es">El servidor no tiene información nueva para devolver</message>
 	<message xml:lang="pt">O servidor não tem informação nova para devolver</message>
 	<message xml:lang="fi">Palvelimella ei ole uudempaa tietoa</message>
+	<message xml:lang="ru">Сервер не имеет никакой новой информации, для ответа</message>
 </label>
 <label define="AM_METHOD_NOT_ALLOWED">
 	<message xml:lang="en">This method is not allowed</message>
@@ -1337,6 +1470,7 @@
 	<message xml:lang="es">Ese método no está permitido</message>
 	<message xml:lang="pt">Este método não é permitido</message>
 	<message xml:lang="fi">Tämä menettely on kielletty</message>
+	<message xml:lang="ru">Этот метод не разрешён</message>
 </label>
 <label define="AM_PLEASE_AUTHENTICATE">
 	<message xml:lang="en">Please authenticate to access %s</message>
@@ -1347,6 +1481,7 @@
 	<message xml:lang="es">Por favor, identifíquese para acceder a %s</message>
 	<message xml:lang="pt">Por favor autenticar para acessar %s</message>
 	<message xml:lang="fi">Tunnistus vaaditaan %s käsittelyyn</message>
+	<message xml:lang="ru">Пройдите идентификацию для доступа к %s</message>
 </label>
 <label define="AM_VERIFYING">
 	<message xml:lang="en">Verifying ...</message>
@@ -1357,6 +1492,7 @@
 	<message xml:lang="es">Verificando ...</message>
 	<message xml:lang="pt">Verificando ...</message>
 	<message xml:lang="fi">Tarkistetaan ...</message>
+	<message xml:lang="ru">Проверка ...</message>
 </label>
 <label define="AM_SAVING_FAILED">
 	<message xml:lang="en">Saving to %s failed, Save to disk?</message>
@@ -1367,6 +1503,7 @@
 	<message xml:lang="es">El guardado en %s ha fallado, ¿guardar en disco?</message>
 	<message xml:lang="pt">A salvação em %s falhou. Salvar no disco?</message>
 	<message xml:lang="fi">Tallennus %s epäonnistui, Tallenetaanko levylle?</message>
+	<message xml:lang="ru">Сохранение в %s прервано, Сохранить на диск?</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
 	<message xml:lang="en">Saving to %s seems corrupted, ignore?</message>
@@ -1377,6 +1514,7 @@
 	<message xml:lang="es">Guardar en %s parece corrompido, ¿ignorar?</message>
 	<message xml:lang="pt">A salvação em %s parece corrompida. Ignorar?</message>
 	<message xml:lang="fi">Tallenne %s vaikuttaa virheelliseltä, ohita?</message>
+	<message xml:lang="ru">Сохранение в %s вероятно выполнено с повреждениями, игнорировать?</message>
 </label>
 <label define="AM_SAVE_REDIRECTED">
 	<message xml:lang="en">URL %s redirected to %s, ignore?</message>
@@ -1387,6 +1525,7 @@
 	<message xml:lang="es">URL %s redirigida a %s, ¿ignorar?</message>
 	<message xml:lang="pt">URL %s redirecionada para %s. Ignorar?</message>
 	<message xml:lang="fi">URL %s välitetään edelleen %s, ohita?</message>
+	<message xml:lang="ru">URL %s перенаправлен в %s, игнорировать?</message>
 </label>
 <label define="AM_SAVE_RELOAD_FAILED">
 	<message xml:lang="en">Reload of %s failed, ignore?</message>
@@ -1397,6 +1536,7 @@
 	<message xml:lang="es">La recarga de %s ha fallado, ¿ignorar?</message>
 	<message xml:lang="pt">A recarga de %s falhou. Ignorar?</message>
 	<message xml:lang="fi">%s päivitys epäonnistui, ohita?</message>
+	<message xml:lang="ru">Перезагрузка из %s прервана, игнорировать?</message>
 </label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
 	<message xml:lang="en">Server reports a 501 error: %s</message>
@@ -1407,6 +1547,7 @@
 	<message xml:lang="es">El servidor responde con un error 501: %s</message>
 	<message xml:lang="pt">O servidor responde com um erro 501: %s</message>
 	<message xml:lang="fi">Palvelinvirhe 501: %s</message>
+	<message xml:lang="ru">Сервер сообщает об ошибке 501: %s</message>
 </label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE">
 	<message xml:lang="en">Server reports a 501 error</message>
@@ -1417,6 +1558,7 @@
 	<message xml:lang="es">El servidor responde con un error 501</message>
 	<message xml:lang="pt">O servidor responde com um erro 501</message>
 	<message xml:lang="fi">Palvelinvirhe 501</message>
+	<message xml:lang="ru">Сервер сообщает об ошибке 501</message>
 </label>
 <label define="AM_SERVER_NOT_IMPLEMENTED_501_ERROR">
 	<message xml:lang="en">Server does not support this request method</message>
@@ -1427,6 +1569,7 @@
 	<message xml:lang="es">El servidor no soporta este método de petición</message>
 	<message xml:lang="pt">O servidor não suporta este método de requisição</message>
 	<message xml:lang="fi">Palvelin ei tue tätä pyyntöä</message>
+	<message xml:lang="ru">Сервер не поддерживает этот метод запроса</message>
 </label>
 <label define="AM_PARSE">
 	<message xml:lang="en">Filter</message>
@@ -1437,6 +1580,7 @@
 	<message xml:lang="es">Filtro</message>
 	<message xml:lang="pt">Filtro</message>
 	<message xml:lang="fi">Suodatin</message>
+	<message xml:lang="ru">Фильтр</message>
 </label>
 <label define="AM_ACTIVE_TRANSFERS">
 	<message xml:lang="en">active transfers</message>
@@ -1447,6 +1591,7 @@
 	<message xml:lang="es">transferencias activas</message>
 	<message xml:lang="pt">Transferências ativas</message>
 	<message xml:lang="fi">aktiiviset tiedonsiirrot</message>
+	<message xml:lang="ru">активных передач</message>
 </label>
 <label define="AM_WAITING_TRANSFERS">
 	<message xml:lang="en">queued transfers</message>
@@ -1457,6 +1602,7 @@
 	<message xml:lang="es">transferencias en cola</message>
 	<message xml:lang="pt">Transferências enfileiradas</message>
 	<message xml:lang="fi">jonottavat tiedonsiirrot</message>
+	<message xml:lang="ru">поставленных в очередь передач</message>
 </label>
 <label define="AM_PRINT_TOC">
 	<message xml:lang="en">Table of contents</message>
@@ -1467,6 +1613,7 @@
 	<message xml:lang="es">Tabla de contenidos</message>
 	<message xml:lang="pt">Índice dos conteúdos</message>
 	<message xml:lang="fi">Sisällysluettelo</message>
+	<message xml:lang="ru">Оглавление</message>
 </label>
 <label define="AM_NUMBERED_LINKS">
 	<message xml:lang="en">Table of links</message>
@@ -1477,6 +1624,7 @@
 	<message xml:lang="pt">Tabela de enlaces</message>
 	<message xml:lang="fi">Linkkiluettelo</message>
 	<message xml:lang="tr">Bağlantı tablosu</message>
+	<message xml:lang="ru">Таблица ссылок</message>
 </label>
 <label define="AM_REPEAT_MODE">
 	<message xml:lang="en">Repeat Mode</message>
@@ -1487,6 +1635,7 @@
 	<message xml:lang="es">Modo de repetición</message>
 	<message xml:lang="pt">Modo repetiçao</message>
 	<message xml:lang="fi">Toistotila</message>
+	<message xml:lang="ru">Режим повтора</message>
 </label>
 <label define="AM_REPEAT">
 	<message xml:lang="en">repeat</message>
@@ -1497,6 +1646,7 @@
 	<message xml:lang="es">Repetir (repeat)</message>
 	<message xml:lang="pt">repetir</message>
 	<message xml:lang="fi">toista</message>
+	<message xml:lang="ru">повторить</message>
 </label>
 <label define="AM_REPEAT_X">
 	<message xml:lang="en">repeat-x</message>
@@ -1507,6 +1657,7 @@
 	<message xml:lang="es">Repetir-x (repeat-x)</message>
 	<message xml:lang="pt">repetir-x</message>
 	<message xml:lang="fi">toista-x</message>
+	<message xml:lang="ru">повторить по оси-x</message>
 </label>
 <label define="AM_RELOAD_FILES">
 	<message xml:lang="en">Your previous Amaya session failed. Do you want to reload backup documents?</message>
@@ -1517,6 +1668,7 @@
 	<message xml:lang="pt">Sua sessão Amaya precedente falhou. Quer recarregar as cópias de segurança dos documentos?</message>
 	<message xml:lang="fi">Amayan sammuttaminen epäonnistui. Haluatko palauttaa varmuuskopioidut dokumentit?</message>
 	<message xml:lang="tr">Son Amaya oturumu kötü bitmiştir. Değiştirilen dosyaları yüklemek istiyormusunuz?</message>
+	<message xml:lang="ru">Ваша предыдущая сессия Amaya прервана. Хотите перезагрузить сохранённые копии документов?</message>
 </label>
 <label define="AM_AUTHENTICATION_CONFIRM">
 	<message xml:lang="en">Authentication failed. Retry?</message>
@@ -1527,6 +1679,7 @@
 	<message xml:lang="pt">A autenticação falhou. Tentar novamente?</message>
 	<message xml:lang="fi">Tunnistus epäonnistui, Yritä uudelleen?</message>
 	<message xml:lang="tr">Resmileştirme hatasi. Tekrar?</message>
+	<message xml:lang="ru">Идентификация прервана. Повторить?</message>
 </label>
 <label define="AM_REDIRECTION_CONFIRM">
 	<message xml:lang="en">Operation will be redirected. Continue?</message>
@@ -1537,6 +1690,7 @@
 	<message xml:lang="pt">A operação será redirecionada. Continuar?</message>
 	<message xml:lang="fi">Toiminto välitetään. Haluatko jatkaa?</message>
 	<message xml:lang="tr">Operasion yönlendirilecek. Devam?</message>
+	<message xml:lang="ru">Операция будет перенаправлена. Продолжить?</message>
 </label>
 <label define="AM_ROWS">
 	<message xml:lang="en">Number of Rows</message>
@@ -1547,6 +1701,7 @@
 	<message xml:lang="pt">Número de linhas</message>
 	<message xml:lang="fi">Rivien lukumäärä</message>
 	<message xml:lang="tr">Sıra sayısı</message>
+	<message xml:lang="ru">Количество строк</message>
 </label>
 <label define="AM_COLS">
 	<message xml:lang="en">Number of Columns</message>
@@ -1557,6 +1712,7 @@
 	<message xml:lang="pt">Número de colunas</message>
 	<message xml:lang="fi">Sarakkeiden lukumäärä</message>
 	<message xml:lang="tr">Sütün sayısı</message>
+	<message xml:lang="ru">Количество столбцов</message>
 </label>
 <label define="AM_BORDER">
 	<message xml:lang="en">Border</message>
@@ -1567,6 +1723,7 @@
 	<message xml:lang="pt">Borda</message>
 	<message xml:lang="fi">Reunus</message>
 	<message xml:lang="tr">çerçeve</message>
+	<message xml:lang="ru">Граница</message>
 </label>
 <label define="AM_ALT">
 	<message xml:lang="en">Alternate text</message>
@@ -1577,6 +1734,7 @@
 	<message xml:lang="pt">Texto alternativo</message>
 	<message xml:lang="fi">Vuorottainen teksti</message>
 	<message xml:lang="tr">Yeniden yerleştirme metini</message>
+	<message xml:lang="ru">Альтернативный текст</message>
 </label>
 <label define="AM_ALT_MISSING">
 	<message xml:lang="en">The Alternate text is mandatory</message>
@@ -1587,6 +1745,7 @@
 	<message xml:lang="pt">O texto alternativo é mandatório</message>
 	<message xml:lang="fi">Vuorottainen teksti on välttämätön</message>
 	<message xml:lang="tr">Yeniden yerleştirme metini mecburdur</message>
+	<message xml:lang="ru">Вы обязаны ввести альтернативный текст</message>
 </label>
 <label define="AM_PRINT_URL">
 	<message xml:lang="en">Print URL</message>
@@ -1597,6 +1756,7 @@
 	<message xml:lang="pt">Imprimir URL</message>
 	<message xml:lang="fi">Tulosta URL</message>
 	<message xml:lang="tr">URL\'i yazdır</message>
+	<message xml:lang="ru">Печатать URL</message>
 </label>
 <label define="AM_APPLY_BUTTON">
 	<message xml:lang="en">Apply</message>
@@ -1607,6 +1767,7 @@
 	<message xml:lang="pt">Aplicar</message>
 	<message xml:lang="fi">Käytä</message>
 	<message xml:lang="tr">Tatbik et</message>
+	<message xml:lang="ru">Применить</message>
 </label>
 <label define="AM_DEFAULT_BUTTON">
 	<message xml:lang="en">Defaults</message>
@@ -1617,6 +1778,7 @@
 	<message xml:lang="pt">Valores padrão</message>
 	<message xml:lang="fi">Oletus</message>
 	<message xml:lang="tr">Öntanımlar</message>
+	<message xml:lang="ru">По умолчанию</message>
 </label>
 <label define="AM_FLUSH_CACHE_BUTTON">
 	<message xml:lang="en">Flush cache</message>
@@ -1627,6 +1789,7 @@
 	<message xml:lang="pt">Esvaziar cache</message>
 	<message xml:lang="fi">Tyhjennä välimuisti</message>
 	<message xml:lang="tr">Gizli bölümü boşalt</message>
+	<message xml:lang="ru">Сбросить кэш</message>
 </label>
 <label define="AM_CACHE_MENU">
 	<message xml:lang="en">Cache Preferences</message>
@@ -1637,6 +1800,7 @@
 	<message xml:lang="pt">Preferências de cache</message>
 	<message xml:lang="fi">Välimuistin asetukset</message>
 	<message xml:lang="tr">Gizli bölümün ayaraları</message>
+	<message xml:lang="ru">Настройки кэша</message>
 </label>
 <label define="AM_ENABLE_CACHE">
 	<message xml:lang="en">Enable cache</message>
@@ -1647,6 +1811,7 @@
 	<message xml:lang="pt">Habilitar cache</message>
 	<message xml:lang="fi">Käytä välimuistia</message>
 	<message xml:lang="tr">Gizli bölümün hızlandırmak</message>
+	<message xml:lang="ru">Включить кэш</message>
 </label>
 <label define="AM_CACHE_PROT_DOCS">
 	<message xml:lang="en">Cache protected documents</message>
@@ -1657,6 +1822,7 @@
 	<message xml:lang="pt">Documentos protegidos em cache</message>
 	<message xml:lang="fi">Aseta suojatut tiedostot välimuistiin</message>
 	<message xml:lang="tr">Korunması gereken belgeleri gizli bölüme kayıt edin</message>
+	<message xml:lang="ru">Кэшировать защищённые документы</message>
 </label>
 <label define="AM_DISCONNECTED_MODE">
 	<message xml:lang="en">Disconnected mode</message>
@@ -1667,6 +1833,7 @@
 	<message xml:lang="pt">Modo desconectado</message>
 	<message xml:lang="fi">Katkaistu tila</message>
 	<message xml:lang="tr">Bağlantıda çıkma modu</message>
+	<message xml:lang="ru">Автономная работа</message>
 </label>
 <label define="AM_IGNORE_EXPIRES">
 	<message xml:lang="en">Ignore Expires: header</message>
@@ -1677,6 +1844,7 @@
 	<message xml:lang="pt">Ignorar fim de validade (Expires): cabeçalho</message>
 	<message xml:lang="fi">Ohita vanhentumiset: header</message>
 	<message xml:lang="tr">Expires yazıyı önemsemeyin</message>
+	<message xml:lang="ru">Игнорировать Expires: заголовок</message>
 </label>
 <label define="AM_CACHE_DIR">
 	<message xml:lang="en">Cache directory</message>
@@ -1687,6 +1855,7 @@
 	<message xml:lang="pt">Diretório cache</message>
 	<message xml:lang="fi">Välimuistin sijainti</message>
 	<message xml:lang="tr">Gizli bölümün repertuarı</message>
+	<message xml:lang="ru">Директория кэша</message>
 </label>
 <label define="AM_CACHE_SIZE">
 	<message xml:lang="en">Cache size (Mb)</message>
@@ -1697,6 +1866,7 @@
 	<message xml:lang="pt">Tamanho de cache (MB)</message>
 	<message xml:lang="fi">Välimuistin koko (Mb)</message>
 	<message xml:lang="tr">Gizli bölümün büyüklüğü (Mb)</message>
+	<message xml:lang="ru">Размер кэша (Мб)</message>
 </label>
 <label define="AM_CACHE_ENTRY_SIZE">
 	<message xml:lang="en">Cache entry size limit (Mb)</message>
@@ -1707,6 +1877,7 @@
 	<message xml:lang="pt">Tamanho limite de entrada de cache (MB)</message>
 	<message xml:lang="fi">Välimuistiin tallennettavan tiedoston kokorajoitus (Mb)</message>
 	<message xml:lang="tr">Gizli bölümün maksimum kapasitesi (Mb)</message>
+	<message xml:lang="ru">Лимит на элемент кэша (Мб)</message>
 </label>
 <label define="AM_PROXY_MENU">
 	<message xml:lang="en">Proxy Preferences</message>
@@ -1717,6 +1888,7 @@
 	<message xml:lang="pt">Preferências de proxy</message>
 	<message xml:lang="fi">Välityspalvelimen asetukset</message>
 	<message xml:lang="tr">Proxy ayarları</message>
+	<message xml:lang="ru">Настройки прокси сервера</message>
 </label>
 <label define="AM_HTTP_PROXY">
 	<message xml:lang="en">HTTP proxy (e.g., www.w3.org:1234)</message>
@@ -1727,6 +1899,7 @@
 	<message xml:lang="pt">Proxy HTTP (por exemplo www.w3.org:1234)</message>
 	<message xml:lang="fi">HTTP välityspalvelin (e.g., www.w3.org:1234)</message>
 	<message xml:lang="tr">HTTP proxy (e.g., www.w3.org:1234)</message>
+	<message xml:lang="ru">HTTP proxy (т.е., www.w3.org:1234)</message>
 </label>
 <label define="AM_PROXY_DOMAIN">
 	<message xml:lang="en">Proxy domain list (e.g., lists.w3.org)</message>
@@ -1737,6 +1910,7 @@
 	<message xml:lang="pt">Lista de domínios proxy (por exemplo lists.w3.org)</message>
 	<message xml:lang="fi">Välityspalvelimen domain luettelo (e.g., lists.w3.org)</message>
 	<message xml:lang="tr">Proxy\'nin alan listesi (e.g., lists.w3.org)</message>
+	<message xml:lang="ru">Доменный список proxy (т.е., lists.w3.org)</message>
 </label>
 <label define="AM_GENERAL_MENU">
 	<message xml:lang="en">General Preferences</message>
@@ -1747,6 +1921,7 @@
 	<message xml:lang="pt">Preferências gerais</message>
 	<message xml:lang="fi">Yleiset asetukset</message>
 	<message xml:lang="tr">Genel ayarlar</message>
+	<message xml:lang="ru">Основные настройки</message>
 </label>
 <label define="AM_HOME_PAGE">
 	<message xml:lang="en">Home Page</message>
@@ -1757,6 +1932,7 @@
 	<message xml:lang="pt">Página principal</message>
 	<message xml:lang="fi">Aloitussivu</message>
 	<message xml:lang="tr">başlangıç sayfası</message>
+	<message xml:lang="ru">Домашняя страница</message>
 </label>
 <label define="AM_TOOLTIP_DELAY">
 	<message xml:lang="en">ToolTip delay (ms)</message>
@@ -1767,6 +1943,7 @@
 	<message xml:lang="pt">Retardo de mensagens de apoio (ToolTip) (ms)</message>
 	<message xml:lang="fi">Painikevihjeen viive (ms)</message>
 	<message xml:lang="tr">Bigi süresi (ms)</message>
+	<message xml:lang="ru">Задержка подсказки (мс)</message>
 </label>
 <label define="AM_DOUBLECLICK_DELAY">
 	<message xml:lang="en">Double click delay (ms)</message>
@@ -1777,6 +1954,7 @@
 	<message xml:lang="pt">Retardo de duplo clique (ms)</message>
 	<message xml:lang="fi">Kaksoisnapautuksen viive (ms)</message>
 	<message xml:lang="tr">Iki kere tıklama süresi(ms)</message>
+	<message xml:lang="ru">Задержка двойного щелчка (мс)</message>
 </label>
 <label define="AM_MENU_FONT_SIZE">
 	<message xml:lang="en">Menu font size</message>
@@ -1787,6 +1965,7 @@
 	<message xml:lang="pt">Tamnho do tipo (font) do menu</message>
 	<message xml:lang="fi">Valikon fonttikoko</message>
 	<message xml:lang="tr">Yazıtipi ailesi büyüklüğü</message>
+	<message xml:lang="ru">Размер шрифта меню</message>
 </label>
 <label define="AM_ZOOM">
 	<message xml:lang="en">Font zoom</message>
@@ -1797,6 +1976,7 @@
 	<message xml:lang="pt">Zoom de tipo (font)</message>
 	<message xml:lang="fi">Fonttikoko</message>
 	<message xml:lang="tr">Karakterleri büyüt</message>
+	<message xml:lang="ru">Масштаб шрифта</message>
 </label>
 <label define="AM_DIALOGUE_LANGUAGE">
 	<message xml:lang="en">Dialogue language</message>
@@ -1807,6 +1987,7 @@
 	<message xml:lang="pt">Linguagem de diálogo</message>
 	<message xml:lang="fi">Kielikoodi</message>
 	<message xml:lang="tr">Yazıların dili</message>
+	<message xml:lang="ru">Язык интерфейса</message>
 </label>
 <label define="AM_PASTE_LINE_BY_LINE">
 	<message xml:lang="en">Enable line-by-line paste</message>
@@ -1814,6 +1995,7 @@
 	<message xml:lang="it">Incolla mantenendo le righe originali</message>
 	<message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
 	<message xml:lang="es">Activar pegado línea a línea</message>
+	<message xml:lang="ru">Включить построчную вставку</message>
 </label>
 <label define="AM_AUTO_SAVE">
 	<message xml:lang="en">Generate backup files</message>
@@ -1821,6 +2003,7 @@
 	<message xml:lang="it">Crea copie di salvataggio</message>
 	<message xml:lang="es">Generar copias de seguridad</message>
 	<message xml:lang="de">Backupdateien anlegen</message>
+	<message xml:lang="ru">Создавать резервные копии файлов</message>
 </label>
 <label define="AM_SAVE_GEOMETRY_ON_EXIT">
 	<message xml:lang="en">Save geometry on exit</message>
@@ -1828,6 +2011,7 @@
 	<message xml:lang="it">Salvare la geometria all'uscita</message>
 	<message xml:lang="de">Fenstereinstellungen beim Beenden speichern</message>
 	<message xml:lang="es">Guardar geometría al salir</message>
+	<message xml:lang="ru">Сохранять геометрию при выходе</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
@@ -1838,6 +2022,7 @@
 	<message xml:lang="pt">Exibir imagens de fundo</message>
 	<message xml:lang="fi">Näytä taustakuvat</message>
 	<message xml:lang="tr">Arka görüntülerini göster</message>
+	<message xml:lang="ru">Показывать изображения фона</message>
 </label>
 <label define="AM_SHOW_BUTTONBAR">
 	<message xml:lang="en">Show button bar</message>
@@ -1848,6 +2033,7 @@
 	<message xml:lang="es">Mostar barra de botones</message>
 	<message xml:lang="pt">Exibir barra de ferramentas</message>
 	<message xml:lang="fi">Näytä painikerivi</message>
+	<message xml:lang="ru">Показывать панель кнопок</message>
 </label>
 <label define="AM_SHOW_TEXTZONE">
 	<message xml:lang="en">Show address</message>
@@ -1858,6 +2044,7 @@
 	<message xml:lang="es">Mostrar barra de dirección</message>
 	<message xml:lang="pt">Exibir endereço</message>
 	<message xml:lang="fi">Näytä osoite</message>
+	<message xml:lang="ru">Показывать адреса</message>
 </label>
 <label define="AM_SHOW_TARGETS">
 	<message xml:lang="en">Show targets</message>
@@ -1868,6 +2055,7 @@
 	<message xml:lang="pt">Exibir destinos</message>
 	<message xml:lang="fi">Näytä kohteet</message>
 	<message xml:lang="tr">Hedefi göster</message>
+	<message xml:lang="ru">Показывать цели</message>
 </label>
 <label define="AM_SECTION_NUMBER">
 	<message xml:lang="en">Section numbering</message>
@@ -1878,6 +2066,7 @@
 	<message xml:lang="es">Numeración de sección</message>
 	<message xml:lang="pt">Numeração de seção</message>
 	<message xml:lang="fi">Osien numerointi</message>
+	<message xml:lang="ru">Нумеровать разделы</message>
 </label>
 <label define="AM_EXPORT_CRLF">
 	<message xml:lang="en">Export CR/LF</message>
@@ -1888,6 +2077,7 @@
 	<message xml:lang="fi">Vienti CR/LF</message>
 	<message xml:lang="it">Esprotare CR/LF</message>
 	<message xml:lang="tr">CR/LF ihraç et</message>
+	<message xml:lang="ru">Экспортировать CR/LF</message>
 </label>
 <label define="AM_BROWSE_MENU">
 	<message xml:lang="en">Browsing Preferences</message>
@@ -1897,6 +2087,7 @@
 	<message xml:lang="it">Preferenze per la visualizzazione</message>
 	<message xml:lang="es">Preferencias de navegación</message>
 	<message xml:lang="tr">Tarayıcı ayarları</message>
+	<message xml:lang="ru">Настройки просмотра</message>
 </label>
 <label define="AM_LOAD_IMAGES">
 	<message xml:lang="en">Load images (img)</message>
@@ -1906,6 +2097,7 @@
 	<message xml:lang="it">Caricare immagini (img)</message>
 	<message xml:lang="es">Cargar imágenes (img)</message>
 	<message xml:lang="tr">Görüntüyü yükle (img)</message>
+	<message xml:lang="ru">Загружать изображения (img)</message>
 </label>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>
@@ -1916,6 +2108,7 @@
 	<message xml:lang="pt">Duplo clique ativa enlace</message>
 	<message xml:lang="fi">Kaksoisklikkaus aktivoi linkin</message>
 	<message xml:lang="tr">Bağlantıyı izlemek için iki kere tuşlayın</message>
+	<message xml:lang="ru">Двойной щелчок активирует ссылку</message>
 </label>
 <label define="AM_PUBLISH_MENU">
 	<message xml:lang="en">Publishing Preferences</message>
@@ -1926,6 +2119,7 @@
 	<message xml:lang="pt">Preferências de publicação</message>
 	<message xml:lang="fi">Julkaisu asetukset</message>
 	<message xml:lang="tr">Dağıtım ayarları</message>
+	<message xml:lang="ru">Настройки публикации</message>
 </label>
 <label define="AM_USE_ETAGS">
 	<message xml:lang="en">Use ETAGS and preconditions</message>
@@ -1936,6 +2130,7 @@
 	<message xml:lang="pt">Usar ETAGS e pré-condições</message>
 	<message xml:lang="fi">Käytä ETAGS:ia ja ennakkoehtoja</message>
 	<message xml:lang="tr">ETAGS\'ları ve ön-şartları kullanının</message>
+	<message xml:lang="ru">Использовать ETAGS и предварительные условия</message>
 </label>
 <label define="AM_VERIFY_PUT">
 	<message xml:lang="en">Verify each PUT with a GET</message>
@@ -1946,6 +2141,7 @@
 	<message xml:lang="pt">Verificar cada PUT com um GET</message>
 	<message xml:lang="fi">Tarkista jokainen PUT suorittamalla GET</message>
 	<message xml:lang="tr">Her PUT ve GET\' leri kontrol edin</message>
+	<message xml:lang="ru">Проверять каждый PUT с GET</message>
 </label>
 <label define="AM_DEFAULT_NAME">
 	<message xml:lang="en">Default name for URLs finishing in '/'</message>
@@ -1956,6 +2152,7 @@
 	<message xml:lang="pt">Nome padrão para URLs terminadas em '/'</message>
 	<message xml:lang="fi">Oletus nimi URL:lle jotka päättyvät '/'</message>
 	<message xml:lang="tr">'/'\'le biten URL\'leri öntanımlı isim</message>
+	<message xml:lang="ru">Имя по умолчанию для URLs заканчивающихся на '/'</message>
 </label>
 <label define="AM_GEOMETRY_MENU">
 	<message xml:lang="en">Geometry Preferences</message>
@@ -1966,6 +2163,7 @@
 	<message xml:lang="pt">Preferências de geometria</message>
 	<message xml:lang="fi">Geometria asetukset</message>
 	<message xml:lang="tr">Geometri ayarları</message>
+	<message xml:lang="ru">Настройки геометрии</message>
 </label>
 <label define="AM_SAVE_GEOMETRY">
 	<message xml:lang="en">Save current geometry</message>
@@ -1976,6 +2174,7 @@
 	<message xml:lang="pt">Salvar geometria atual</message>
 	<message xml:lang="fi">Tallenna nykyinen geometria</message>
 	<message xml:lang="tr">Yakın geometriyi kaydet</message>
+	<message xml:lang="ru">Сохранить текущие размеры</message>
 </label>
 <label define="AM_RESTORE_GEOMETRY">
 	<message xml:lang="en">Restore default geometry</message>
@@ -1986,6 +2185,7 @@
 	<message xml:lang="pt">restaurar geometria padrão</message>
 	<message xml:lang="fi">Palauta oletus geometria</message>
 	<message xml:lang="tr">Öntanımlı geometriye yeniden biçim ver</message>
+	<message xml:lang="ru">Восстановить размеры по умолчанию</message>
 </label>
 <label define="AM_GEOMETRY_CHANGE">
 	<message xml:lang="en">The change will be effective when you open a new window.</message>
@@ -1996,6 +2196,7 @@
 	<message xml:lang="pt">As mudanças serão efetivadas quando uma nova janela abrir.</message>
 	<message xml:lang="fi">Muutos tulee voimaan avatessasi uuden ikkunan</message>
 	<message xml:lang="tr">Bu değişiklikler yeniden pencere açtığınızda gerçerli olurlar</message>
+	<message xml:lang="ru">Изменения вступят в силу после открытия нового окна.</message>
 </label>
 <label define="AM_COLOR_MENU">
 	<message xml:lang="en">Color Preferences</message>
@@ -2006,6 +2207,7 @@
 	<message xml:lang="pt">Preferências de cor</message>
 	<message xml:lang="fi">Väri asetukset</message>
 	<message xml:lang="tr">Renk ayarları</message>
+	<message xml:lang="ru">Настройки цвета</message>
 </label>
 <label define="AM_DOC_FG_COLOR">
 	<message xml:lang="en">Document foreground color</message>
@@ -2016,6 +2218,7 @@
 	<message xml:lang="pt">Cor do plano frontal do documento</message>
 	<message xml:lang="fi">Dokumentin piirtoväri</message>
 	<message xml:lang="tr">Belgenin ön-plan rengi</message>
+	<message xml:lang="ru">Цвет текста документа</message>
 </label>
 <label define="AM_DOC_BG_COLOR">
 	<message xml:lang="en">Document background color</message>
@@ -2026,6 +2229,7 @@
 	<message xml:lang="pt">Cor de fundo do documento</message>
 	<message xml:lang="fi">Dokumentin taustaväri</message>
 	<message xml:lang="tr">Belgenin arka-plan rengi</message>
+	<message xml:lang="ru">Цвет фона документа</message>
 </label>
 <label define="AM_MENU_FG_COLOR">
 	<message xml:lang="en">Menu foreground color</message>
@@ -2036,6 +2240,7 @@
 	<message xml:lang="pt">Cor do plano frontal do menu</message>
 	<message xml:lang="fi">Valikon piirtoväri</message>
 	<message xml:lang="tr">Menünün ön-plan rengi</message>
+	<message xml:lang="ru">Меню цвета главной части</message>
 </label>
 <label define="AM_MENU_BG_COLOR">
 	<message xml:lang="en">Menu background color</message>
@@ -2046,6 +2251,7 @@
 	<message xml:lang="pt">Cor de fundo do menu</message>
 	<message xml:lang="fi">Valikon taustaväri</message>
 	<message xml:lang="tr">Menünün arka-plan rengi</message>
+	<message xml:lang="ru">Меню цвет фона</message>
 </label>
 <label define="AM_CANT_CREATE_CACHE">
 	<message xml:lang="en">Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.</message>
@@ -2056,6 +2262,7 @@
 	<message xml:lang="pt">Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.</message>
 	<message xml:lang="fi">Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.</message>
 	<message xml:lang="tr">Gizli bölümü sıfırlama imkansızdır. Belkide geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya kullandınız</message>
+	<message xml:lang="ru">Невозможно запустить кэш. Вероятно неправильно задана директория кэша или другой Amaya использует кэш.</message>
 </label>
 <label define="AM_BUTTON_HOME">
 	<message xml:lang="en">Home</message>
@@ -2066,6 +2273,7 @@
 	<message xml:lang="pt">Home</message>
 	<message xml:lang="fi">Aloitussivu</message>
 	<message xml:lang="tr">Özel sayfa</message>
+	<message xml:lang="ru">Домашняя страница</message>
 </label>
 <label define="AM_LANG_NEGOTIATION">
 	<message xml:lang="en">List of preferred languages like "en, fr":</message>
@@ -2076,6 +2284,7 @@
 	<message xml:lang="pt">Lista de idiomas preferidos como "pt, en":</message>
 	<message xml:lang="fi">Luettelo valituista kielistä "fi, en":</message>
 	<message xml:lang="tr">Istenilen dillerin listesi (mesela "en, fr"):</message>
+	<message xml:lang="ru">Список предпочитаемых языков "ru, en, fr":</message>
 </label>
 <label define="AM_PROFILES_FILE">
 	<message xml:lang="en">Location of profiles definition file</message>
@@ -2086,6 +2295,7 @@
 	<message xml:lang="pt">Localização do arquivo de definição de perfís</message>
 	<message xml:lang="fi">Profiilien määrittelytiedoston sijainti</message>
 	<message xml:lang="tr">Profillerin tanımlama dosyanın yeri</message>
+	<message xml:lang="ru">Расположение файла определения профилей</message>
 </label>
 <label define="AM_PROFILE_SELECT">
 	<message xml:lang="en">Profile Selection</message>
@@ -2096,6 +2306,7 @@
 	<message xml:lang="pt">Seleção de perfil</message>
 	<message xml:lang="fi">Profiilin valinta</message>
 	<message xml:lang="tr">Profil seçimi</message>
+	<message xml:lang="ru">Выбор профиля</message>
 </label>
 <label define="AM_PROFILE_CHANGE">
 	<message xml:lang="en">These changes won't be effective until Amaya is restarted</message>
@@ -2106,6 +2317,7 @@
 	<message xml:lang="pt">Estas modificações não serão modificadas até que se reinicialize Amaya.</message>
 	<message xml:lang="fi">Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.</message>
 	<message xml:lang="tr">Bu değişiklikler yeniden Amaya\'yı açtığınız taktirde geçerli olurlar</message>
+	<message xml:lang="ru">Изменения вступят в силу только после перезапуска Amaya</message>
 </label>
 <label define="AM_PROFILE_MENU">
 	<message xml:lang="en">Profiles Preferences</message>
@@ -2116,6 +2328,7 @@
 	<message xml:lang="pt">Preferências de perfís</message>
 	<message xml:lang="fi">Profiilin asetukset</message>
 	<message xml:lang="tr">Profil ayarları</message>
+	<message xml:lang="ru">Настройки профилей</message>
 </label>
 <label define="AM_TEMPLATES_SERVER">
 	<message xml:lang="en">Enter the URL of the templates server</message>
@@ -2126,6 +2339,7 @@
 	<message xml:lang="pt">Introduzir a URL do servidor de gabaritos</message>
 	<message xml:lang="fi">Syötä mallipalvelimen osoite</message>
 	<message xml:lang="tr">Model servörün URL\'ini girin</message>
+	<message xml:lang="ru">Введите URL сервера шаблонов</message>
 </label>
 <label define="AM_TEMPLATES_MENU">
 	<message xml:lang="en">Templates Preferences</message>
@@ -2136,6 +2350,7 @@
 	<message xml:lang="pt">Preferências de gabaritos</message>
 	<message xml:lang="fi">Mallien asetukset</message>
 	<message xml:lang="tr">Sayfa modellerin ayarları</message>
+	<message xml:lang="ru">Настройки шаблонов</message>
 </label>
 <label define="AM_SAFE_PUT_REDIRECT">
 	<message xml:lang="en">Allow automatic PUT redirections to these domains</message>
@@ -2146,6 +2361,7 @@
 	<message xml:lang="pt">Permitir redirecionamentos PUT automáticos nestes domínios</message>
 	<message xml:lang="fi">Salli automaattinen PUT-komentojen välitys näissä domaineissa</message>
 	<message xml:lang="tr">Bu alanlarda PUT otomatik olarak yeniden yönlerdirmesini kabul edin</message>
+	<message xml:lang="ru">Разрешить автоматические PUT перенаправления на эти домены</message>
 </label>
 <label define="AM_WITH_CSS">
 	<message xml:lang="en">Ignore style sheets</message>
@@ -2156,6 +2372,7 @@
 	<message xml:lang="pt">Ignorar folhas de estilo</message>
 	<message xml:lang="fi">Ohita tyylitiedostot</message>
 	<message xml:lang="tr">Sayfasız</message>
+	<message xml:lang="ru">Игнорировать таблицы стилей</message>
 </label>
 <label define="AM_TRANS">
 	<message xml:lang="en">Transform type</message>
@@ -2166,6 +2383,7 @@
 	<message xml:lang="es">Tipo de transformación</message>
 	<message xml:lang="pt">Tipo de transformação</message>
 	<message xml:lang="fi">Muunnoksen tyyppi</message>
+	<message xml:lang="ru">Тип преобразования</message>
 </label>
 <label define="AM_PROXY_DOMAIN_INFO">
 	<message xml:lang="en">(separate each entry with a space)</message>
@@ -2176,6 +2394,7 @@
 	<message xml:lang="pt">(separar cada entrada com um espaço)</message>
 	<message xml:lang="fi">(erota syötteet välilyönnein)</message>
 	<message xml:lang="tr">Her Enter\'ü boşlukla değiştirin</message>
+	<message xml:lang="ru">(записи разделяются пробелом)</message>
 </label>
 <label define="AM_DONT_PROXY_DOMAIN">
 	<message xml:lang="en">No proxy on these domains</message>
@@ -2186,6 +2405,7 @@
 	<message xml:lang="pt">Não há proxy nestes domínios</message>
 	<message xml:lang="fi">Älä käytä välityspalvelinta näihin domaineihin</message>
 	<message xml:lang="tr">Bu alanlarda Proxy\'yi kullanmayın</message>
+	<message xml:lang="ru">Не использовать proxy для этих доменов</message>
 </label>
 <label define="AM_ONLY_PROXY_DOMAIN">
 	<message xml:lang="en">Only proxy these domains</message>
@@ -2196,6 +2416,7 @@
 	<message xml:lang="pt">Somente com proxy estes domínios</message>
 	<message xml:lang="fi">Käytä vain välityspalvelinta näihin domaineihin</message>
 	<message xml:lang="tr">Bu alanlarda sadece Proxy\'yi kullanın</message>
+	<message xml:lang="ru">Использовать proxy только для этих доменов</message>
 </label>
 <label define="AM_MATH_ENTITY_NAME">
 	<message xml:lang="en">Character name</message>
@@ -2206,6 +2427,7 @@
 	<message xml:lang="pt">Nome de carácter</message>
 	<message xml:lang="fi">Henkilön nimi</message>
 	<message xml:lang="tr">Karakterin ismi</message>
+	<message xml:lang="ru">Имя символа</message>
 </label>
 <label define="AM_USER_DIR">
 	<message xml:lang="en">Amaya user directory</message>
@@ -2216,6 +2438,7 @@
 	<message xml:lang="pt">Diretório de usuário Amaya</message>
 	<message xml:lang="fi">Amaya käyttäjän hakemisto</message>
 	<message xml:lang="tr">Kullanıyıcı repertuarı</message>
+	<message xml:lang="ru">Директория пользователя Amaya</message>
 </label>
 <label define="AM_TMP_DIR">
 	<message xml:lang="en">Temporary directory</message>
@@ -2226,6 +2449,7 @@
 	<message xml:lang="pt">Diretório temporário</message>
 	<message xml:lang="fi">Väliaikaisten tiedostojen hakemisto</message>
 	<message xml:lang="tr">Süreli repertuarı</message>
+	<message xml:lang="ru">Временная директория</message>
 </label>
 <label define="AM_COLOR_PALETTE">
 	<message xml:lang="en">Use palette</message>
@@ -2236,6 +2460,7 @@
 	<message xml:lang="pt">Usar paleta</message>
 	<message xml:lang="fi">Käytä palettia</message>
 	<message xml:lang="tr">Palet (palette)</message>
+	<message xml:lang="ru">Используемая палитра</message>
 </label>
 <label define="AM_LANNEG_MENU">
 	<message xml:lang="en">Language Negotiation</message>
@@ -2246,6 +2471,7 @@
 	<message xml:lang="pt">Negociação de idioma</message>
 	<message xml:lang="fi">Kieliasetukset</message>
 	<message xml:lang="tr">dil pazarlaması</message>
+	<message xml:lang="ru">Язык обсуждения</message>
 </label>
 <label define="AM_ANNOT_CONF_MENU">
 	<message xml:lang="en">Configuration for annotations</message>
@@ -2256,6 +2482,7 @@
 	<message xml:lang="pt">Configuração para anotações</message>
 	<message xml:lang="fi">Huomautuksien asetukset</message>
 	<message xml:lang="tr">Not ayarları</message>
+	<message xml:lang="ru">Конфигурация для аннотаций</message>
 </label>
 <label define="AM_ANNOT_USER">
 	<message xml:lang="en">Annotation and bookmark user</message>
@@ -2266,6 +2493,7 @@
 	<message xml:lang="pt">Usuário anotador</message>
 	<message xml:lang="fi">Käyttäjän huomautukset</message>
 	<message xml:lang="tr">Kullanıyıcı ismi</message>
+	<message xml:lang="ru">Автор аннотации и закладки</message>
 </label>
 <label define="AM_ANNOT_POST_SERVER">
 	<message xml:lang="en">Annotation post server</message>
@@ -2276,6 +2504,7 @@
 	<message xml:lang="pt">Servidor de publicação de anotações</message>
 	<message xml:lang="fi">Postipalvelimen huomautukset</message>
 	<message xml:lang="tr">Dağıtım servörü</message>
+	<message xml:lang="ru">Сервер публикации (post) аннотации</message>
 </label>
 <label define="AM_ANNOT_SERVERS">
 	<message xml:lang="en">Annotation servers</message>
@@ -2286,6 +2515,7 @@
 	<message xml:lang="pt">Servidores de anotações</message>
 	<message xml:lang="fi">Palvelimien merkinnät</message>
 	<message xml:lang="tr">Not servörü</message>
+	<message xml:lang="ru">Сервера аннотации</message>
 </label>
 <label define="AM_ANNOT_LAUTOLOAD">
 	<message xml:lang="en">Autoload local annotations</message>
@@ -2296,6 +2526,7 @@
 	<message xml:lang="pt">Autocarregar anotações locais</message>
 	<message xml:lang="fi">Lataa paikalliset merkinnät automaattisesti</message>
 	<message xml:lang="tr">Lokal notları otomatik olarak yükleyin</message>
+	<message xml:lang="ru">Автозагрузка локальных аннотаций</message>
 </label>
 <label define="AM_ANNOT_RAUTOLOAD">
 	<message xml:lang="en">Autoload remote annotations</message>
@@ -2306,6 +2537,7 @@
 	<message xml:lang="pt">Autocarregar anotações remotas</message>
 	<message xml:lang="fi">Lataa etämerkinnät automaattisesti</message>
 	<message xml:lang="tr">Dıştan notları otomatik olarak yükleyin</message>
+	<message xml:lang="ru">Автозагрузка удалённых аннотаций</message>
 </label>
 <label define="AM_ANNOT_RAUTOLOAD_RST">
 	<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
@@ -2316,6 +2548,7 @@
 	<message xml:lang="pt">Desabilitar autocarga remota em cada partida (para trabalho off-line)</message>
 	<message xml:lang="fi">Poista etälataus käytöstä käynnistyksen yhteydessä (etätyötä varten)</message>
 	<message xml:lang="tr">Amaya\'nın başlangıcında otomatik dıştan notları yüklemesini durdurun</message>
+	<message xml:lang="ru">Отключить удалённую автозагрузку при каждом запуске (для автономной работы)</message>
 </label>
 <label define="AM_FG_SEL_COLOR">
 	<message xml:lang="en">Selection color</message>
@@ -2326,6 +2559,7 @@
 	<message xml:lang="pt">Cor de seleção</message>
 	<message xml:lang="fi">Valintaväri</message>
 	<message xml:lang="tr">Renk seçimi</message>
+	<message xml:lang="ru">Цвет выделенного текста</message>
 </label>
 <label define="AM_BG_SEL_COLOR">
 	<message xml:lang="en">Selection background color</message>
@@ -2333,6 +2567,7 @@
 	<message xml:lang="it">Selezione colore di sfondo</message>
 	<message xml:lang="es">Color de fondo texto selecc.:</message>
 	<message xml:lang="de">Hintergrundfarbe für Markierungen</message>
+	<message xml:lang="ru">Цвет фона выделения</message>
 </label>
 <label define="AM_ORIENTATION">
 	<message xml:lang="en">Orientation</message>
@@ -2343,6 +2578,7 @@
 	<message xml:lang="pt">Orientação</message>
 	<message xml:lang="fi">Suunta</message>
 	<message xml:lang="tr">Yön</message>
+	<message xml:lang="ru">Ориентация</message>
 </label>
 <label define="AM_PORTRAIT">
 	<message xml:lang="en">Portrait</message>
@@ -2353,6 +2589,7 @@
 	<message xml:lang="pt">Vertical</message>
 	<message xml:lang="fi">Pysty</message>
 	<message xml:lang="tr">Portre</message>
+	<message xml:lang="ru">Портрет</message>
 </label>
 <label define="AM_LANDSCAPE">
 	<message xml:lang="en">Landscape</message>
@@ -2363,6 +2600,7 @@
 	<message xml:lang="pt">Horizontal</message>
 	<message xml:lang="fi">Vaaka</message>
 	<message xml:lang="tr">Peysaj</message>
+	<message xml:lang="ru">Пейзаж</message>
 </label>
 <label define="AM_ENABLE_FTP">
 	<message xml:lang="en">Enable FTP</message>
@@ -2373,6 +2611,7 @@
 	<message xml:lang="pt">Habilitar FTP</message>
 	<message xml:lang="fi">Ota FTP käyttöön</message>
 	<message xml:lang="tr">FTP desteği</message>
+	<message xml:lang="ru">Поддерживать FTP ссылки</message>
 </label>
 <label define="AM_XML_RETRY">
 	<message xml:lang="en">Not Well-Formed XML document - Reload as HTML or show parsing errors?</message>
@@ -2383,6 +2622,7 @@
 	<message xml:lang="pt">XML inválido - recarregar como HTML ou mostrar erros sintáticos?</message>
 	<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Ladataanko HTML:nä vai näytetään virheellisenä?</message>
 	<message xml:lang="tr">XML belgesinde hata - Hataları düzeltmek için yeniden yükle veya hataları göster?</message>
+	<message xml:lang="ru">Неправильно построенный XML документ - Перезагрузить как HTML или показать разбор ошибок?</message>
 </label>
 <label define="AM_XML_ERROR">
 	<message xml:lang="en">Not Well-Formed XML document - Show parsing errors?</message>
@@ -2393,6 +2633,7 @@
 	<message xml:lang="pt">XML inválido - mostrar erros na leitura?</message>
 	<message xml:lang="fi">Huonosti muotoiltu XML-dokumentti - Näytetäänkö virheet?</message>
 	<message xml:lang="tr">XML belgesinde hata - Hataları göster?</message>
+	<message xml:lang="ru">Неправильно построенный XML документ - Показать разбор ошибок?</message>
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
 	<message xml:lang="en">Try the 'File/Force a Character Coding' entry</message>
@@ -2400,6 +2641,7 @@
 	<message xml:lang="es">Utiliza el menú 'Archivo / Forzar codificación de caracteres'</message>
 	<message xml:lang="de">Verwenden Sie 'Datei/Zeichenkodierung erzwingen'</message>
 	<message xml:lang="it">Prova la voce 'File/Forza codifica caratteri'</message>
+	<message xml:lang="ru">Неправильные символы - Перезагрузить как HTML или показать разбор ошибок?</message>
 </label>
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Invalid characters</message>
@@ -2410,6 +2652,7 @@
 	<message xml:lang="pt">Caracteres inválidos</message>
 	<message xml:lang="fi">Virheellisiä merkkejä</message>
 	<message xml:lang="tr">Yanlış karakter</message>
+	<message xml:lang="ru">Неправильные символы</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">Document profile:</message>
@@ -2420,6 +2663,7 @@
 	<message xml:lang="pt">Perfil del documento:</message>
 	<message xml:lang="fi">Dokumentin profiili:</message>
 	<message xml:lang="tr">Belgenin profili:</message>
+	<message xml:lang="ru">Профиль документа:</message>
 </label>
 <label define="AM_XML_WARNING">
 	<message xml:lang="en">Some elements/attributes are ignored - see Views/Show parsing errors</message>
@@ -2430,6 +2674,7 @@
 	<message xml:lang="pt">Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet</message>
 	<message xml:lang="tr">Işaretler ve tarz tanımları bilinmiyor - Görünümler/Hataları göster bakın</message>
+	<message xml:lang="ru">Некоторые элементы/атрибуты проигнорированы - смотрите Вид/Показать разбор ошибок</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
 	<message xml:lang="en">The encoding of this document is not supported by Amaya</message>
@@ -2440,6 +2685,7 @@
 	<message xml:lang="pt">A codificação deste documento não é suportada por Amaya</message>
 	<message xml:lang="fi">Amaya ei tue dokumentin tyyppiä</message>
 	<message xml:lang="tr">Bu belgenin kodlaması Amaya tarafından yapılamıyor</message>
+	<message xml:lang="ru">Кодирование (сжатие) этого документа не поддерживается в Amaya</message>
 </label>
 <label define="AM_XML_MISMATCH_PROFILE">
 	<message xml:lang="en">Editing and saving this document will change its type</message>
@@ -2450,6 +2696,7 @@
 	<message xml:lang="pt">Editar ou salvar este documento vai mudar seu tipo</message>
 	<message xml:lang="fi">Muokkaus ja tallennus muuttavat dokumentin tyypin</message>
 	<message xml:lang="tr">Yazmak ve kaydetmek bu belgenin tipini değiştirir</message>
+	<message xml:lang="ru">Редактирование и сохранение этого документа изменит его тип</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>
@@ -2460,6 +2707,7 @@
 	<message xml:lang="pt">Indisponível</message>
 	<message xml:lang="fi">Ei saatavilla</message>
 	<message xml:lang="tr">Kullanıma hazır değil</message>
+	<message xml:lang="ru">Не доступно</message>
 </label>
 <label define="AM_BROWSE">
 	<message xml:lang="en">Browse</message>
@@ -2470,6 +2718,7 @@
 	<message xml:lang="pt">Navegar</message>
 	<message xml:lang="fi">Selaa</message>
 	<message xml:lang="tr">Tarayıcı</message>
+	<message xml:lang="ru">Просмотр</message>
 </label>
 <label define="AM_FILE_BROWSER">
 	<message xml:lang="en">File Browser</message>
@@ -2480,6 +2729,7 @@
 	<message xml:lang="pt">Navegador de arquivos</message>
 	<message xml:lang="fi">Selaa tiedostoja</message>
 	<message xml:lang="tr">Tarayıcı dosyası</message>
+	<message xml:lang="ru">Просмотр файла</message>
 </label>
 <label define="AM_SELECTION">
 	<message xml:lang="en">Selection</message>
@@ -2490,6 +2740,7 @@
 	<message xml:lang="pt">Seleção</message>
 	<message xml:lang="fi">Valinta</message>
 	<message xml:lang="tr">Seçim</message>
+	<message xml:lang="ru">Выбор</message>
 </label>
 <label define="AM_AFILTER">
 	<message xml:lang="en">Annotation Local Filter Menu</message>
@@ -2500,6 +2751,7 @@
 	<message xml:lang="pt">Menu filtro local de anotações</message>
 	<message xml:lang="fi">Merkintä paikallissuodatusvalikko</message>
 	<message xml:lang="tr">Notların lokal filtresi</message>
+	<message xml:lang="ru">Меню локального фильтра аннотации</message>
 </label>
 <label define="AM_AFILTER_SHOW">
 	<message xml:lang="en">Show</message>
@@ -2510,6 +2762,7 @@
 	<message xml:lang="pt">Exibir</message>
 	<message xml:lang="fi">Näytä</message>
 	<message xml:lang="tr">Göster</message>
+	<message xml:lang="ru">Показать</message>
 </label>
 <label define="AM_AFILTER_HIDE">
 	<message xml:lang="en">Hide</message>
@@ -2520,6 +2773,7 @@
 	<message xml:lang="pt">Esconder</message>
 	<message xml:lang="fi">Piilota</message>
 	<message xml:lang="tr">Gizle</message>
+	<message xml:lang="ru">Скрыть</message>
 </label>
 <label define="AM_AFILTER_SHOW_ALL">
 	<message xml:lang="en">Show all</message>
@@ -2530,6 +2784,7 @@
 	<message xml:lang="pt">Exibir tudo</message>
 	<message xml:lang="fi">Näytä kaikki</message>
 	<message xml:lang="tr">Hepsini göster</message>
+	<message xml:lang="ru">Показать все</message>
 </label>
 <label define="AM_AFILTER_HIDE_ALL">
 	<message xml:lang="en">Hide all</message>
@@ -2540,6 +2795,7 @@
 	<message xml:lang="pt">Esconder tudo</message>
 	<message xml:lang="fi">Piilota kaikki</message>
 	<message xml:lang="tr">Hepsini gizle</message>
+	<message xml:lang="ru">Скрыть все</message>
 </label>
 <label define="AM_AFILTER_HELP">
 	<message xml:lang="en">* means hidden, - means partially hidden</message>
@@ -2550,6 +2806,7 @@
 	<message xml:lang="pt">* significa escondido, - significa parcialmente escondido</message>
 	<message xml:lang="fi">* tarkoittaa piilotettua, - tarkoittaa osittain piilotettua</message>
 	<message xml:lang="tr">* gizlemek anlamında, - süreli gizlemek anlamında</message>
+	<message xml:lang="ru">* значит скрыты, - значит частично скрыты</message>
 </label>
 <label define="AM_AFILTER_OPTIONS">
 	<message xml:lang="en">Filter options</message>
@@ -2560,6 +2817,7 @@
 	<message xml:lang="pt">Opções de filtragem</message>
 	<message xml:lang="fi">Suodatusvalinnat</message>
 	<message xml:lang="tr">Filtrage opsionları</message>
+	<message xml:lang="ru">Опции фильтра</message>
 </label>
 <label define="AM_AFILTER_BYAUTHOR">
 	<message xml:lang="en">By author</message>
@@ -2570,6 +2828,7 @@
 	<message xml:lang="pt">Por autor</message>
 	<message xml:lang="fi">Tekijän mukaan</message>
 	<message xml:lang="tr">Sahip</message>
+	<message xml:lang="ru">По автору</message>
 </label>
 <label define="AM_AFILTER_BYTYPE">
 	<message xml:lang="en">By type</message>
@@ -2580,6 +2839,7 @@
 	<message xml:lang="pt">Por tipo</message>
 	<message xml:lang="fi">Tyypin mukaan</message>
 	<message xml:lang="tr">Tip</message>
+	<message xml:lang="ru">По типу</message>
 </label>
 <label define="AM_AFILTER_BYSERVER">
 	<message xml:lang="en">By server</message>
@@ -2590,6 +2850,7 @@
 	<message xml:lang="pt">Por servidor</message>
 	<message xml:lang="fi">Palvelimen mukaan</message>
 	<message xml:lang="tr">Servör</message>
+	<message xml:lang="ru">По серверу</message>
 </label>
 <label define="AM_ACCESSKEY">
 	<message xml:lang="en">Access keys</message>
@@ -2600,6 +2861,7 @@
 	<message xml:lang="pt">Teclas de acesso</message>
 	<message xml:lang="fi">Access näppäimet</message>
 	<message xml:lang="tr">Hızlı giriş</message>
+	<message xml:lang="ru">Ключи доступа</message>
 </label>
 <label define="AM_NONE">
 	<message xml:lang="en">Ignore</message>
@@ -2610,6 +2872,7 @@
 	<message xml:lang="pt">Ignorar</message>
 	<message xml:lang="fi">Ohita</message>
 	<message xml:lang="tr">Geç</message>
+	<message xml:lang="ru">Игнорировать</message>
 </label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
@@ -2620,6 +2883,7 @@
 	<message xml:lang="pt">Elemento de estilo</message>
 	<message xml:lang="fi">Tyyli elementti</message>
 	<message xml:lang="tr">Verilerin dizaynı</message>
+	<message xml:lang="ru">Элемент стиля</message>
 </label>
 <label define="AM_NO_XPOINTER">
 	<message xml:lang="en">Cannot create an XPointer</message>
@@ -2630,6 +2894,7 @@
 	<message xml:lang="pt">Não é possível criar um XPointer</message>
 	<message xml:lang="fi">Ei voi luoda XPointeria</message>
 	<message xml:lang="tr">XPointer yaratılamıyor</message>
+	<message xml:lang="ru">Невозможно создать XPointer</message>
 </label>
 <label define="AM_NO_SXPOINTER">
 	<message xml:lang="en">Impossible to attach a start XPointer on an internal added element</message>
@@ -2640,6 +2905,7 @@
 	<message xml:lang="pt">Impossível anexar um XPointer inicial a um elemento adicionado internamente</message>
 	<message xml:lang="fi">Mahdotonta liittää aloittavaa XPointeria sisäisesti lisättyyn elementtiin</message>
 	<message xml:lang="tr">Amaya tarafından eklenen XPointer başlanamıyor</message>
+	<message xml:lang="ru">Невозможно прикрепить начало XPointer на внутренний добавленный элемент</message>
 </label>
 <label define="AM_NO_EXPOINTER">
 	<message xml:lang="en">Impossible to attach an end XPointer on an internal added element</message>
@@ -2650,6 +2916,7 @@
 	<message xml:lang="pt">Impossível anexar um XPointer final a um elemento adicionado internamente</message>
 	<message xml:lang="fi">Mahdotonta liittää lopettavaa XPointeria sisäisesti lisättyyn elementtiin</message>
 	<message xml:lang="tr">Amaya tarafından eklenen XPointer bitiremiyor</message>
+	<message xml:lang="ru">Невозможно прикрепить конец XPointer на внутренний добавленный элемент</message>
 </label>
 <label define="AM_NO_ANNOT_MOVE">
 	<message xml:lang="en">Cannot find where to move the annotation</message>
@@ -2660,6 +2927,7 @@
 	<message xml:lang="pt">Não é possível achar para onde mover a anotação</message>
 	<message xml:lang="fi">Merkinnän kohdepaikkaa ei löydy</message>
 	<message xml:lang="tr">Eklemeler yerinden oynatılamıyor</message>
+	<message xml:lang="ru">Невозможно найти куда переместилась аннотация</message>
 </label>
 <label define="AM_NO_ANNOT_MOVE_OTHER">
 	<message xml:lang="en">Cannot move the annotation to a different document</message>
@@ -2670,6 +2938,7 @@
 	<message xml:lang="pt">Não é possível mover a anotação para outro documento</message>
 	<message xml:lang="fi">Merkintää ei voi siirtää toiseen dokumenttiin</message>
 	<message xml:lang="tr">Eklemeler başka bir belgeye konamıyor</message>
+	<message xml:lang="ru">Невозможно переместить аннотацию в другой документ</message>
 </label>
 <label define="AM_NO_ANNOT_MOD_DOC">
 	<message xml:lang="en">You cannot annotate a modified document. Please save it first.</message>
@@ -2680,6 +2949,7 @@
 	<message xml:lang="pt">Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.</message>
 	<message xml:lang="fi">Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.</message>
 	<message xml:lang="tr">Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.</message>
+	<message xml:lang="ru">Вы не можете аннотировать изменённый документ. Сначала сохраните его.</message>
 </label>
 <label define="AM_NO_ANNOT_USER">
 	<message xml:lang="en">No annotation user declared. Please open the Annotations/Configure menu.</message>
@@ -2690,6 +2960,7 @@
 	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar</message>
 	<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset</message>
 	<message xml:lang="tr">Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın</message>
+	<message xml:lang="ru">Не определён автор аннотации. Откройте меню Аннотации/Выбрать конфигурацию.</message>
 </label>
 <label define="AM_CANNOT_ANNOTATE">
 	<message xml:lang="en">Unable to build an XPointer for this annotation</message>
@@ -2700,6 +2971,7 @@
 	<message xml:lang="pt">Incapaz de construir um XPointer para esta anotação</message>
 	<message xml:lang="fi">XPointerin luonti merkintää varten epäonnistui</message>
 	<message xml:lang="tr">Bu not için XPointer yaratmak imkansızdır</message>
+	<message xml:lang="ru">Невозможно создать XPointer для этой аннотации</message>
 </label>
 <label define="AM_NEW_ANNOTATION">
 	<message xml:lang="en">Make a new annotation</message>
@@ -2710,6 +2982,7 @@
 	<message xml:lang="pt">Fazer uma nova anotação</message>
 	<message xml:lang="fi">Uusi merkintä</message>
 	<message xml:lang="tr">Yeni not yap</message>
+	<message xml:lang="ru">Создать новую аннотацию</message>
 </label>
 <label define="AM_ANNOT_POST_FAILURE">
 	<message xml:lang="en">Failed to post the annotation</message>
@@ -2720,6 +2993,7 @@
 	<message xml:lang="pt">A postagem da anotação falhou</message>
 	<message xml:lang="fi">Merkinnän lähetys epäonnistui</message>
 	<message xml:lang="tr">Notun yayın hatası</message>
+	<message xml:lang="ru">Публикация (post) аннотации не удалась</message>
 </label>
 <label define="AM_ANNOT_DELETE_FAILURE">
 	<message xml:lang="en">Failed to delete the annotation</message>
@@ -2730,6 +3004,7 @@
 	<message xml:lang="pt">A supressão da anotação falhou</message>
 	<message xml:lang="fi">Merkinnän poisto epäonnistui</message>
 	<message xml:lang="tr">Notun iptal hatası</message>
+	<message xml:lang="ru">Удаление аннотации не удалось</message>
 </label>
 <label define="AM_ANNOT_DELETED">
 	<message xml:lang="en">Annotation deleted!</message>
@@ -2740,6 +3015,7 @@
 	<message xml:lang="pt">Anotação suprimida!</message>
 	<message xml:lang="fi">Merkintä poistettu</message>
 	<message xml:lang="tr">Not iptal edildi!</message>
+	<message xml:lang="ru">Аннотация удалена!</message>
 </label>
 <label define="AM_ANNOT_INDEX_FAILURE">
 	<message xml:lang="en">Failed to load the annotation index</message>
@@ -2750,6 +3026,7 @@
 	<message xml:lang="pt">Carregamento do índice de anotação falhou</message>
 	<message xml:lang="fi">Merkintäluettelon lataus epäonnistui</message>
 	<message xml:lang="tr">Notların içeriğini yüklemek imkansızdır</message>
+	<message xml:lang="ru">Загрузка указателя аннотации не удалась</message>
 </label>
 <label define="AM_ERROR">
 	<message xml:lang="en">Error</message>
@@ -2760,6 +3037,7 @@
 	<message xml:lang="es">Error</message>
 	<message xml:lang="pt">Erro</message>
 	<message xml:lang="fi">Virhe</message>
+	<message xml:lang="ru">Ошибка</message>
 </label>
 <label define="AM_SELECT_CHARSET">
 	<message xml:lang="en">Select a Character Coding</message>
@@ -2770,6 +3048,7 @@
 	<message xml:lang="pt">Selecionar um conjunto de caracteres (charset)</message>
 	<message xml:lang="fi">Valitse Charset</message>
 	<message xml:lang="tr">Charset seçin</message>
+	<message xml:lang="ru">Выбрать кодировку символов</message>
 </label>
 <label define="AM_SELECT_MIMETYPE">
 	<message xml:lang="en">Select a MIME type</message>
@@ -2780,6 +3059,7 @@
 	<message xml:lang="pt">Selecionar o tipo MIME</message>
 	<message xml:lang="fi">Valitse MIME tyyppi</message>
 	<message xml:lang="tr">MIME tipi seçin</message>
+	<message xml:lang="ru">Выбрать тип MIME</message>
 </label>
 <label define="AM_CHANGE_CHARSET">
 	<message xml:lang="en">Change Character Coding</message>
@@ -2790,6 +3070,7 @@
 	<message xml:lang="pt">Mudar conjunto de caracteres (Charset)</message>
 	<message xml:lang="fi">Muuta Charset</message>
 	<message xml:lang="tr">Charset\'i değiştir</message>
+	<message xml:lang="ru">Изменить кодировку символов</message>
 </label>
 <label define="AM_CHANGE_MIME_TYPE">
 	<message xml:lang="en">Change MIME type</message>
@@ -2800,6 +3081,7 @@
 	<message xml:lang="pt">Mudar o tipo MIME</message>
 	<message xml:lang="fi">Muuta MIME tyypi</message>
 	<message xml:lang="tr">MIME tipini değiştir</message>
+	<message xml:lang="ru">Изменить тип MIME</message>
 </label>
 <label define="AM_CHANGE">
 	<message xml:lang="en">Change</message>
@@ -2810,6 +3092,7 @@
 	<message xml:lang="pt">Modificar</message>
 	<message xml:lang="fi">Muuta</message>
 	<message xml:lang="tr">Değiştir</message>
+	<message xml:lang="ru">Изменить</message>
 </label>
 <label define="AM_NOCHARSET_SUPPORT">
 	<message xml:lang="en">This type of document doesn't support charsets</message>
@@ -2820,6 +3103,7 @@
 	<message xml:lang="pt">este tipo de documento não suporta conjuntos de caracteres (charsets)</message>
 	<message xml:lang="fi">Tämä dokumenttityyppi ei tue charset:iä</message>
 	<message xml:lang="tr">Bu tip belgenin Charset\'i yoktur</message>
+	<message xml:lang="ru">Документы этого типа не поддерживают кодировку</message>
 </label>
 <label define="AM_NOMIMETYPE_SUPPORT">
 	<message xml:lang="en">The target must be an HTTP URL to use this option</message>
@@ -2830,6 +3114,7 @@
 	<message xml:lang="pt">O destino deve ser uma URL HTTP para usar esta opção</message>
 	<message xml:lang="fi">Kohteen täytyy olla HTTP URL tämän valinna kanssa</message>
 	<message xml:lang="tr">URL\'i kullanmak için HTTP tipten olması gerekiyor</message>
+	<message xml:lang="ru">Чтобы использовать эту опцию цель должна быть HTTP URL</message>
 </label>
 <label define="AM_INVALID_MIMETYPE">
 	<message xml:lang="en">Error: invalid MIME type</message>
@@ -2840,6 +3125,7 @@
 	<message xml:lang="pt">Erro: tipo MIME inválido</message>
 	<message xml:lang="fi">Virhe: epäkelpo MIME tyyppi</message>
 	<message xml:lang="tr">Hata: MIME tipi doğru değil</message>
+	<message xml:lang="ru">Ошибка: неправильный тип MIME</message>
 </label>
 <label define="AM_UNKNOWN">
 	<message xml:lang="en">Unknown</message>
@@ -2850,6 +3136,7 @@
 	<message xml:lang="pt">Desconhecido</message>
 	<message xml:lang="fi">Tuntematon</message>
 	<message xml:lang="tr">Yabancı</message>
+	<message xml:lang="ru">Неизвестно</message>
 </label>
 <label define="AM_CSS_ERROR">
 	<message xml:lang="en">Styles are ignored - see Views/Show parsing errors</message>
@@ -2860,6 +3147,7 @@
 	<message xml:lang="pt">Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet</message>
 	<message xml:lang="tr">Dizayn bilinmiyor - Görünümler/Hataları göster bakın</message>
+	<message xml:lang="ru">Стили проигнорированы - смотрите Вид/Показать разбор ошибок</message>
 </label>
 <label define="AM_DOUBLE_LOAD">
 	<message xml:lang="en">This document is already loaded in another Window</message>
@@ -2870,6 +3158,7 @@
 	<message xml:lang="pt">Este documento já está carregado em outra Janela</message>
 	<message xml:lang="fi">Tämä dokumentti on avattu jo toiseen ikkunaan</message>
 	<message xml:lang="tr">Bu belge başka bir pencerede açılmıştır</message>
+	<message xml:lang="ru">Этот документ всегда загружается в другом окне</message>
 </label>
 <label define="AM_UNSAVE">
 	<message xml:lang="en">Saving that instance may cause a lost update problem</message>
@@ -2880,6 +3169,7 @@
 	<message xml:lang="pt">Salvar esta instância pode causar um problema de perda de atualização</message>
 	<message xml:lang="fi">Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman</message>
 	<message xml:lang="tr">Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir</message>
+	<message xml:lang="ru">Сохранение этого примера может привести к проблеме потери обновления</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE1">
 	<message xml:lang="en">Adding or changing the doctype will remove some elements or attributes</message>
@@ -2887,6 +3177,7 @@
 	<message xml:lang="it">Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi</message>
 	<message xml:lang="de">Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren</message>
 	<message xml:lang="es">Al añadir o modificar el doctype se eliminarán algunos elementos o atributos</message>
+	<message xml:lang="ru">Добавление или удаление типа документа удалит некоторые элементы или атрибуты</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
 	<message xml:lang="en">Please confirm operation</message>
@@ -2894,6 +3185,7 @@
 	<message xml:lang="it">Confermi l'operazione?</message>
 	<message xml:lang="de">Soll die Operation ausgeführt werden ?</message>
 	<message xml:lang="es">Por favor, confirme la operación</message>
+	<message xml:lang="ru">Подтвердите операцию</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
@@ -2904,6 +3196,7 @@
 	<message xml:lang="pt">Utilise o tipo MIME application/xhtml+xml para documentos XHTML</message>
 	<message xml:lang="fi">Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä</message>
 	<message xml:lang="tr">XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın</message>
+	<message xml:lang="ru">Использовать application/xhtml+xml тип MIME для XHTML документов</message>
 </label>
 <label define="AM_DEFAULT_CHARSET">
 	<message xml:lang="en">Charset for new documents</message>
@@ -2911,6 +3204,7 @@
 	<message xml:lang="it">Charset per i nuovi documenti</message>
 	<message xml:lang="de">Standardzeichensatz für neue Dakumente</message>
 	<message xml:lang="es">Juego de caracteres para nuevos documentos:</message>
+	<message xml:lang="ru">Кодировка для новых документов</message>
 </label>
 <label define="AM_LOCK_SUCCEED">
 	<message xml:lang="en">Lock succeed!</message>
@@ -2921,6 +3215,7 @@
 	<message xml:lang="it">Lock riuscito!</message>
 	<message xml:lang="es">¡Bloqueo conseguido!</message>
 	<message xml:lang="tr">Kilitleme başarılı olmuştur!</message>
+	<message xml:lang="ru">Блокировка выполнена!</message>
 </label>
 <label define="AM_LOCK_FAILED">
 	<message xml:lang="en">Lock failed!</message>
@@ -2931,6 +3226,7 @@
 	<message xml:lang="it">Lock fallito!</message>
 	<message xml:lang="es">¡Bloqueo fallido!</message>
 	<message xml:lang="tr">Kilitleme başarısız olmuştur!</message>
+	<message xml:lang="ru">Блокировка не удалась!</message>
 </label>
 <label define="AM_LOCKING">
 	<message xml:lang="en">Locking %s...</message>
@@ -2941,6 +3237,7 @@
 	<message xml:lang="it">Metto il lock su %s...</message>
 	<message xml:lang="es">Bloqueando %s...</message>
 	<message xml:lang="tr">%s için kilit bekleniyor...</message>
+	<message xml:lang="ru">Блокировать %s...</message>
 </label>
 <label define="AM_LOCKED">
 	<message xml:lang="en">Document %s is locked!</message>
@@ -2951,6 +3248,7 @@
 	<message xml:lang="it">Il documento %s ha un lock!</message>
 	<message xml:lang="es">El documento %s bloqueado!</message>
 	<message xml:lang="tr">%s belgesi kilitlenmiştir!</message>
+	<message xml:lang="ru">Документ %s блокирован!</message>
 </label>
 <label define="AM_LOCKED_BY_OTHER">
 	<message xml:lang="en">Document %s is locked by %s (timeout %s)</message>
@@ -2961,6 +3259,7 @@
 	<message xml:lang="it">Il documento %s ha un lock da %s (timeout %s)</message>
 	<message xml:lang="es">El documento %s está bloqueado por % (timeout %s)</message>
 	<message xml:lang="tr">%s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)</message>
+	<message xml:lang="ru">Документ %s блокирован на %s (время ожидания %s)</message>
 </label>
 <label define="AM_LOCK_OVERWRITE">
 	<message xml:lang="en">Overwrite lock information?</message>
@@ -2971,6 +3270,7 @@
 	<message xml:lang="it">Sovrascrivere l'informazione di lock?</message>
 	<message xml:lang="es">¿Sobreescribir la información de bloqueo?</message>
 	<message xml:lang="tr">Kilidi geçin?</message>
+	<message xml:lang="ru">Перезаписать информацию блокировки?</message>
 </label>
 <label define="AM_COPY_LOCK">
 	<message xml:lang="en">Copy the lock information? </message>
@@ -2981,6 +3281,7 @@
 	<message xml:lang="it">Copiare l'informazione di lock?</message>
 	<message xml:lang="es">¿Copiar la información de bloqueo?</message>
 	<message xml:lang="tr">Kilit bilgilerini kaydet?</message>
+	<message xml:lang="ru">Копировать информацию блокировки?</message>
 </label>
 <label define="AM_UNLOCK_BEFORE">
 	<message xml:lang="en">Try to unlock the document before...</message>
@@ -2991,6 +3292,7 @@
 	<message xml:lang="it">Prova a togliere prima il lock dal documento..."</message>
 	<message xml:lang="es">Intenta desbloquear el documento antes...</message>
 	<message xml:lang="tr">Belgenin kilidini açmayı deneyin...</message>
+	<message xml:lang="ru">Сначала разблокируйте документ...</message>
 </label>
 <label define="AM_UNLOCK_SUCCEED">
 	<message xml:lang="en">Unlock succeed!</message>
@@ -3001,6 +3303,7 @@
 	<message xml:lang="it">Lock tolto!</message>
 	<message xml:lang="es">¡Desbloqueo conseguido!</message>
 	<message xml:lang="tr">Kilit açma başarılı olmuştur!</message>
+	<message xml:lang="ru">Разблокировка выполнена!</message>
 </label>
 <label define="AM_UNLOCK_FAILED">
 	<message xml:lang="en">Unlock failed!</message>
@@ -3011,6 +3314,7 @@
 	<message xml:lang="it">Lock non tolto!</message>
 	<message xml:lang="es">¡Desbloqueo fallido!</message>
 	<message xml:lang="tr">Kilit açma başarısız olmuştur!</message>
+	<message xml:lang="ru">Разблокировка не удалась!</message>
 </label>
 <label define="AM_UNLOCKING">
 	<message xml:lang="en">Unlocking %s...</message>
@@ -3021,6 +3325,7 @@
 	<message xml:lang="it">Tolgo il lock su %s...</message>
 	<message xml:lang="es">Desbloqueando %s...</message>
 	<message xml:lang="tr">%s kilidini aç...</message>
+	<message xml:lang="ru">Разблокировать %s...</message>
 </label>
 <label define="AM_UNLOCKED">
 	<message xml:lang="en">Document %s is unlocked!</message>
@@ -3031,6 +3336,7 @@
 	<message xml:lang="it">Tolto il lock al documento %s!</message>
 	<message xml:lang="es">El documento %s está desbloqueado!</message>
 	<message xml:lang="tr">%s belgenin kilidi açıldı!</message>
+	<message xml:lang="ru">Документ %s разблокирован!</message>
 </label>
 <label define="AM_UNLOCK_DOCUMENT">
 	<message xml:lang="en">Unlock the document? </message>
@@ -3041,6 +3347,7 @@
 	<message xml:lang="it">Tolgo il lock al documento?</message>
 	<message xml:lang="es">¿Desbloquear el documento?</message>
 	<message xml:lang="tr">Belgenin kilidini aç?</message>
+	<message xml:lang="ru">Разблокировать документ?</message>
 </label>
 <label define="AM_DAV_PROPERTIES">
 	<message xml:lang="en">Document properties</message>
@@ -3051,6 +3358,7 @@
 	<message xml:lang="it">Proprietà del documento</message>
 	<message xml:lang="es">Propiedades del documento</message>
 	<message xml:lang="tr">Belge özellikleri</message>
+	<message xml:lang="ru">Свойства документа</message>
 </label>
 <label define="AM_PROPFIND_FAILED">
 	<message xml:lang="en">Document properties are not available</message>
@@ -3061,6 +3369,7 @@
 	<message xml:lang="it">Le proprietà del documento non sono disponibili</message>
 	<message xml:lang="es">Las propiedades del documento no están disponibles</message>
 	<message xml:lang="tr">Belgenin özellikleri kullanamazsınız</message>
+	<message xml:lang="ru">Свойства документа недоступны</message>
 </label>
 <label define="AM_PROPFIND_FAILED_TEMP">
 	<message xml:lang="en">Document properties are temporarily unavailable. Try again later...</message>
@@ -3071,6 +3380,7 @@
 	<message xml:lang="it">Le proprietà del documento non sono al momento disponibili. Riprova più tardi...</message>
 	<message xml:lang="es">Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...</message>
 	<message xml:lang="tr">Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...</message>
+	<message xml:lang="ru">Свойства документа врменно недоступны. Попробуйте позже...</message>
 </label>
 <label define="AM_FINDING_PROPERTIES">
 	<message xml:lang="en">Looking for document properties...</message>
@@ -3081,6 +3391,7 @@
 	<message xml:lang="it">Cerco le proprietà del documento...</message>
 	<message xml:lang="es">Buscando las propiedades del documento...</message>
 	<message xml:lang="tr">Belgenin özellikleri bekleniyor...</message>
+	<message xml:lang="ru">Просмотр свойств документа...</message>
 </label>
 <label define="AM_DAV_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no WebDAV support for URLs of this type %s</message>
@@ -3091,6 +3402,7 @@
 	<message xml:lang="it">Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s</message>
 	<message xml:lang="es">Lo siento, WebDAV no soporta URLs de este tipo %s</message>
 	<message xml:lang="tr">Malesef, WebDav URL\'leri %s gibi desteklemiyor</message>
+	<message xml:lang="ru">Для URLs типа %s WebDAV не поддерживается</message>
 </label>
 <label define="AM_SAVE_LOCKBASE_FAILED">
 	<message xml:lang="en">Failed to save lock info in the local base</message>
@@ -3101,6 +3413,7 @@
 	<message xml:lang="it">Impossibile salvare le informazioni di lock sulla base locale</message>
 	<message xml:lang="es">Fallo al guardar la información de bloqueo en la base local</message>
 	<message xml:lang="tr">Kilidin lokal temelde kayıtı başarısız olmuştur</message>
+	<message xml:lang="ru">Не удалось сохранить информацию блокировки в локальную базу данных</message>
 </label>
 <label define="AM_REMOVE_LOCKBASE_FAILED">
 	<message xml:lang="en">Failed to remove lok info from local base</message>
@@ -3111,6 +3424,7 @@
 	<message xml:lang="it">Impossibile togliere le informazioni di lock dalla base locale</message>
 	<message xml:lang="es">Fallo al eliminar la información de bloqueo en la base local</message>
 	<message xml:lang="tr">Kilidin lokal temelde silinmesi imkansızdır</message>
+	<message xml:lang="ru">Не удалось удалить информацию блокировки из локальной базы данных</message>
 </label>
 <label define="AM_DAV_NOT_ALLOWED">
 	<message xml:lang="en">Sorry, this operation is not allowed for %s</message>
@@ -3121,6 +3435,7 @@
 	<message xml:lang="it">Mi spiace, questa operazione non è permessa per %s</message>
 	<message xml:lang="es">Lo siento, esta operación no está permitida para %s</message>
 	<message xml:lang="tr">Malesef bu operasion %s için yasaktır</message>
+	<message xml:lang="ru">Для %s операция не разрешена</message>
 </label>
 <label define="AM_FAILED_DEPENDENCY">
 	<message xml:lang="en">Request failed! Reason: Failed Dependency</message>
@@ -3131,6 +3446,7 @@
 	<message xml:lang="it">Richiesta fallita! Motivo: Dipendenza non riuscita</message>
 	<message xml:lang="es">¡Solicitud suspendida! Razón: Dependencia suspendida</message>
 	<message xml:lang="tr">Operasion başarısız olmuştur! Neden: bağımlılık hatası</message>
+	<message xml:lang="ru">Запрос не выполнен! Причина: Неудавшаяся зависимость (Failed Dependency)</message>
 </label>
 <label define="AM_MULTI_STATUS_FAIL">
 	<message xml:lang="en">Request failed! Reason: %s</message>
@@ -3141,6 +3457,7 @@
 	<message xml:lang="it">Richiesta fallita! Motivo: %s</message>
 	<message xml:lang="es">¡Solicitud suspendida! Razón: %s</message>
 	<message xml:lang="tr">Operasion başarısız olmuştur! Neden: %s</message>
+	<message xml:lang="ru">Запрос не выполнен! Причина: %s</message>
 </label>
 <label define="AM_DAV_TRY_AGAIN">
 	<message xml:lang="en">Try again? </message>
@@ -3151,6 +3468,7 @@
 	<message xml:lang="it">Riprovo?</message>
 	<message xml:lang="es">¿Intentar de nuevo?</message>
 	<message xml:lang="tr">Yeniden dene?</message>
+	<message xml:lang="ru">Попробовать снова?</message>
 </label>
 <label define="AM_DAV_PREFERENCES">
 	<message xml:lang="en">WebDAV Preferences</message>
@@ -3161,6 +3479,7 @@
 	<message xml:lang="it">Preferenze WebDAV</message>
 	<message xml:lang="es">Preferencias WebDAV</message>
 	<message xml:lang="tr">WebDAV ayarları</message>
+	<message xml:lang="ru">Настройки WebDAV</message>
 </label>
 <label define="AM_DAV_USER_URL">
 	<message xml:lang="en">User's Personal Reference (URL)</message>
@@ -3171,6 +3490,7 @@
 	<message xml:lang="it">Riferimento personale utente (URL)</message>
 	<message xml:lang="es">Referencia Personal del Usuario (URL)</message>
 	<message xml:lang="tr">Kullanıyıcının özel referansı (URL)</message>
+	<message xml:lang="ru">Персональная пользовательская ссылка (URL)</message>
 </label>
 <label define="AM_DAV_USER_RESOURCES">
 	<message xml:lang="en">User's WebDAV Resource List (URL URL)</message>
@@ -3181,6 +3501,7 @@
 	<message xml:lang="it">Resource List WebDAV per l'utente(URL URL)</message>
 	<message xml:lang="es">Lista de Recursos WebDAV del Usuario</message>
 	<message xml:lang="tr">Kullanıyıcının referans listesi (URL URL)</message>
+	<message xml:lang="ru">Пользовательский список ресурсов WebDAV (URL URL)</message>
 </label>
 <label define="AM_DAV_DEPTH">
 	<message xml:lang="en">Lock Depth</message>
@@ -3191,6 +3512,7 @@
 	<message xml:lang="it">Profondità lock</message>
 	<message xml:lang="es">Profundidad de bloqueo</message>
 	<message xml:lang="tr">Kilit derinliği</message>
+	<message xml:lang="ru">Глубина блокировки</message>
 </label>
 <label define="AM_DAV_DEPTH_INFINITY">
 	<message xml:lang="en">infinity</message>
@@ -3201,6 +3523,7 @@
 	<message xml:lang="it">infinito</message>
 	<message xml:lang="es">infinita</message>
 	<message xml:lang="tr">Sonsuz</message>
+	<message xml:lang="ru">бесконечно</message>
 </label>
 <label define="AM_DAV_TIMEOUT">
 	<message xml:lang="en">Lock Timeout</message>
@@ -3211,6 +3534,7 @@
 	<message xml:lang="it">Timeout per il lock</message>
 	<message xml:lang="es">Bloqueo terminado</message>
 	<message xml:lang="tr">Bitiş süresi</message>
+	<message xml:lang="ru">Время ожидания для блокировки</message>
 </label>
 <label define="AM_DAV_TIMEOUT_INFINITE">
 	<message xml:lang="en">Infinite</message>
@@ -3221,6 +3545,7 @@
 	<message xml:lang="it">Infinito</message>
 	<message xml:lang="es">Infinita</message>
 	<message xml:lang="tr">Sonsuz</message>
+	<message xml:lang="ru">Бесконечно</message>
 </label>
 <label define="AM_DAV_TIMEOUT_OTHER">
 	<message xml:lang="en">Other</message>
@@ -3231,6 +3556,7 @@
 	<message xml:lang="it">Altro</message>
 	<message xml:lang="es">Otro</message>
 	<message xml:lang="tr">Diyer</message>
+	<message xml:lang="ru">Другой</message>
 </label>
 <label define="AM_DAV_TIMEOUT_SECONDS">
 	<message xml:lang="en">Seconds</message>
@@ -3241,6 +3567,7 @@
 	<message xml:lang="it">Secondi</message>
 	<message xml:lang="es">Segundos</message>
 	<message xml:lang="tr">Saniye</message>
+	<message xml:lang="ru">Секунды</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE">
 	<message xml:lang="en">Lock Scope</message>
@@ -3251,6 +3578,7 @@
 	<message xml:lang="it">Scopo per il lock</message>
 	<message xml:lang="es">Alcance del bloqueo</message>
 	<message xml:lang="tr">Kilit tipi</message>
+	<message xml:lang="ru">Индикация блокировки</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE_EXCLUSIVE">
 	<message xml:lang="en">exclusive</message>
@@ -3261,6 +3589,7 @@
 	<message xml:lang="it">esclusivo</message>
 	<message xml:lang="es">exclusivo</message>
 	<message xml:lang="tr">Uyuşmaz</message>
+	<message xml:lang="ru">исключающий</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE_SHARED">
 	<message xml:lang="en">shared</message>
@@ -3271,6 +3600,7 @@
 	<message xml:lang="it">condiviso</message>
 	<message xml:lang="es">compartido</message>
 	<message xml:lang="tr">paylaş</message>
+	<message xml:lang="ru">общедоступный</message>
 </label>
 <label define="AM_DAV_AWARENESS">
 	<message xml:lang="en">Awarenees</message>
@@ -3281,6 +3611,7 @@
 	<message xml:lang="it">Awarenees</message>
 	<message xml:lang="es">Conocimiento</message>
 	<message xml:lang="tr">Bildiri</message>
+	<message xml:lang="ru">Оповещение</message>
 </label>
 <label define="AM_DAV_AWARENESS_GENERAL">
 	<message xml:lang="en">General awareness</message>
@@ -3291,6 +3622,7 @@
 	<message xml:lang="it">General awareness</message>
 	<message xml:lang="es">Conocimiento general</message>
 	<message xml:lang="tr">Genel bildiri</message>
+	<message xml:lang="ru">Общее оповещение</message>
 </label>
 <label define="AM_DAV_AWARENESS_ONEXIT">
 	<message xml:lang="en">Awareness on exit</message>
@@ -3301,6 +3633,7 @@
 	<message xml:lang="it">Awareness on exit</message>
 	<message xml:lang="es">Conocimiento al salir</message>
 	<message xml:lang="tr">çıkış bildirisi</message>
+	<message xml:lang="ru">Оповещать при выходе</message>
 </label>
 <label define="AM_BUTTON_ANIM">
 	<message xml:lang="en">Animation</message>
@@ -3310,6 +3643,7 @@
 	<message xml:lang="it">Animazione</message>
 	<message xml:lang="es">Animación</message>
 	<message xml:lang="tr">Hareket</message>
+	<message xml:lang="ru">Шкала времени</message>
 </label>
 <label define="AM_BUTTON_SVG_LIBRARY">
 	<message xml:lang="en">SVG Library</message>
@@ -3319,6 +3653,7 @@
 	<message xml:lang="it">Libreria SVG</message>
 	<message xml:lang="es">Biblioteca SVG</message>
 	<message xml:lang="tr">SVG kütüphanesi</message>
+	<message xml:lang="ru">Библиотека SVG</message>
 </label>
 <label define="AM_SVGLIB_DIALOG1">
 	<message xml:lang="en">Copy option</message>
@@ -3328,6 +3663,7 @@
 	<message xml:lang="it">Opzione di copia</message>
 	<message xml:lang="es">Copiar opción</message>
 	<message xml:lang="tr">Kopya opsionu</message>
+	<message xml:lang="ru">Опции копии</message>
 </label>
 <label define="AM_SVGLIB_COPY_SELECTION">
 	<message xml:lang="en">Copy selection</message>
@@ -3337,6 +3673,7 @@
 	<message xml:lang="it">Copia la selezione</message>
 	<message xml:lang="es">Copiar selección</message>
 	<message xml:lang="tr">Kopyala</message>
+	<message xml:lang="ru">Копировать</message>
 </label>
 <label define="AM_SVGLIB_REF_SELECTION">
 	<message xml:lang="en">Refer to selection</message>
@@ -3346,6 +3683,7 @@
 	<message xml:lang="it">Riferisciti alla selezione</message>
 	<message xml:lang="es">Remitir a selección</message>
 	<message xml:lang="tr">Referans et</message>
+	<message xml:lang="ru">Сослаться на него</message>
 </label>
 <label define="AM_SVGLIB_ADD_SVG_MODEL_DIALOG">
 	<message xml:lang="en">Add new model into library</message>
@@ -3355,6 +3693,7 @@
 	<message xml:lang="it">Aggiungi un nuovo modello alla libreria</message>
 	<message xml:lang="es">Añadir nuevo modelo a la bibloteca</message>
 	<message xml:lang="tr">Kütüphanede yeni model ekle</message>
+	<message xml:lang="ru">Добавить новую модель в библиотеку</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_SVG_FILE">
 	<message xml:lang="en">URL of the new SVG file ...</message>
@@ -3364,6 +3703,7 @@
 	<message xml:lang="it">URL del nuovo file SVG ...</message>
 	<message xml:lang="es">URL del nuevo archivo SVG...</message>
 	<message xml:lang="tr">Yeni SVG dosyasının URL\'i...</message>
+	<message xml:lang="ru">URL из нового SVG файла ...</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_TITLE">
 	<message xml:lang="en">Library title</message>
@@ -3373,6 +3713,7 @@
 	<message xml:lang="it">Titolo della libreria</message>
 	<message xml:lang="es">Título de la bibloteca</message>
 	<message xml:lang="tr">Kütüphane başlıgı</message>
+	<message xml:lang="ru">Заголовок библиотеки</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_URL">
 	<message xml:lang="en">Library URL</message>
@@ -3382,6 +3723,7 @@
 	<message xml:lang="it">URL per la libreria</message>
 	<message xml:lang="es">URL de la biblioteca</message>
 	<message xml:lang="tr">URL Kütüphanesi</message>
+	<message xml:lang="ru">URL библиотеки</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE">
 	<message xml:lang="en">Create library</message>
@@ -3391,6 +3733,7 @@
 	<message xml:lang="it">Crea libreria</message>
 	<message xml:lang="es">Crear biblioteca</message>
 	<message xml:lang="tr">Kütüphane yarat</message>
+	<message xml:lang="ru">Создать библиотеку</message>
 </label>
 <label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
 	<message xml:lang="en">Browse library</message>
@@ -3400,6 +3743,7 @@
 	<message xml:lang="it">Scorri la libreria</message>
 	<message xml:lang="es">Ojear la biblioteca</message>
 	<message xml:lang="tr">Kütüphane tara</message>
+	<message xml:lang="ru">Просмотреть библиотеку</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
 	<message xml:lang="en">Create or search library</message>
@@ -3409,6 +3753,7 @@
 	<message xml:lang="it">Crea o cerca libreria</message>
 	<message xml:lang="es">Crear o buscar en la biblioteca</message>
 	<message xml:lang="tr">Kütüphane yarat veya ara</message>
+	<message xml:lang="ru">Создать или найти библиотеку</message>
 </label>
 <label define="AM_SVGLIB_NO_SVG_SELECTION">
 	<message xml:lang="en">The selection includes no SVG elements. Please reselect</message>
@@ -3418,6 +3763,7 @@
 	<message xml:lang="it">La selezione non contiene solo elementi SVG. Per favore riseleziona.</message>
 	<message xml:lang="es">La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar</message>
 	<message xml:lang="tr">Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın</message>
+	<message xml:lang="ru">Выбранное вами включает в себя не SVG элементы. Выберите заново</message>
 </label>
 <label define="AM_SVGLIB_MISSING_TITLE">
 	<message xml:lang="en">The library title is mandatory</message>
@@ -3427,6 +3773,7 @@
 	<message xml:lang="it">Il titolo della libreria è obbligatorio</message>
 	<message xml:lang="es">El título de la biblioteca es obligatorio</message>
 	<message xml:lang="tr">Kütüphane başlıgı mecburdur</message>
+	<message xml:lang="ru">Обязательный заголовок библиотеки</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT1">
 	<message xml:lang="en">Move the position cursor in edited document to define a new key position...</message>
@@ -3436,6 +3783,7 @@
 	<message xml:lang="it">Muovi il cursore nel documento editato per definire la nuova posizione chiave...</message>
 	<message xml:lang="es">Desplace la posición del cursor en el documento editado para definir una nueva posición clave...</message>
 	<message xml:lang="tr">Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...</message>
+	<message xml:lang="ru">Переместите курсор в редактируемом документе в новую позицию для определения новой ключевой позиции...</message>
 </label>
 <label define="AM_SVGANIM_MOTION_HINT2">
 	<message xml:lang="en">Key position defined. Move the slider to define animation duration...</message>
@@ -3445,6 +3793,7 @@
 	<message xml:lang="it">Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...</message>
 	<message xml:lang="es">Posición clave definida. Desplace el marcador para definir la duración de la animación...</message>
 	<message xml:lang="tr">Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...</message>
+	<message xml:lang="ru">Ключевая позиция определена. Передвигайте бегунок для определения длительности анимации...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT1">
 	<message xml:lang="en">Select starting color of element...</message>
@@ -3454,6 +3803,7 @@
 	<message xml:lang="it">Scegli il colore iniziale dell'elemento...</message>
 	<message xml:lang="es">Seleccione el color inicial del elemento...</message>
 	<message xml:lang="tr">Elemanın başlangıç rengini seçin</message>
+	<message xml:lang="ru">Выберите начальный цвет элемента...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT2">
 	<message xml:lang="en">Starting color defined. Move the slider to define animation duration...</message>
@@ -3463,6 +3813,7 @@
 	<message xml:lang="it">Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...</message>
 	<message xml:lang="es">Color inicial definido. Desplace el marcador para definir la duración de la animación...</message>
 	<message xml:lang="tr">Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...</message>
+	<message xml:lang="ru">Начальный цвет определён. Передвигайте бегунок для определения длительности анимации...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT3">
 	<message xml:lang="en">Select ending color...</message>
@@ -3472,6 +3823,7 @@
 	<message xml:lang="it">Scegli il colore finale...</message>
 	<message xml:lang="es">Seleccione color final...</message>
 	<message xml:lang="tr">Bitiş rengini seçin...</message>
+	<message xml:lang="ru">Выберите конечный цвет...</message>
 </label>
 <label define="AM_SVGANIM_ANIM_DEFINED">
 	<message xml:lang="en">Animation defined.</message>
@@ -3481,6 +3833,7 @@
 	<message xml:lang="it">Animazione definita.</message>
 	<message xml:lang="es">Animación definida.</message>
 	<message xml:lang="tr">Hareket tanımlaştı</message>
+	<message xml:lang="ru">Анимация определена.</message>
 </label>
 <label define="AM_SVGANIM_ANIMATED_ATTR">
 	<message xml:lang="en">Animated attribute</message>
@@ -3490,6 +3843,7 @@
 	<message xml:lang="it">Attributo animato</message>
 	<message xml:lang="es">Atributo animado</message>
 	<message xml:lang="tr">Hareketli özellikler</message>
+	<message xml:lang="ru">Атрибут анимации</message>
 </label>
 <label define="AM_SVGANIM_NO_ID">
 	<message xml:lang="en">Element without ID</message>
@@ -3499,6 +3853,7 @@
 	<message xml:lang="it">Elemento senza ID</message>
 	<message xml:lang="es">Elemento sin atributo id</message>
 	<message xml:lang="tr">Tanımsız eleman</message>
+	<message xml:lang="ru">Элемент без ID</message>
 </label>
 <label define="ADD_ID">
 	<message xml:lang="en">Add ID</message>
@@ -3506,6 +3861,7 @@
 	<message xml:lang="it">Aggiungi ID</message>
 	<message xml:lang="es">Crear atributos id</message>
 	<message xml:lang="de">ID hinzufügen</message>
+	<message xml:lang="ru">Добавить ID</message>
 </label>
 <label define="REMOVE_ID">
 	<message xml:lang="en">Remove ID</message>
@@ -3513,6 +3869,7 @@
 	<message xml:lang="it">Elimina ID</message>
 	<message xml:lang="es">Borrar atributos id</message>
 	<message xml:lang="de">ID löschen</message>
+	<message xml:lang="ru">Удалить ID</message>
 </label>
 <label define="ADD_REMOVE_ID">
 	<message xml:lang="en">Add/Remove IDs</message>
@@ -3520,6 +3877,7 @@
 	<message xml:lang="it">Aggiungi/Elimina ID</message>
 	<message xml:lang="es">Crear/Borrar atributos id</message>
 	<message xml:lang="de">IDs hinzufügen/löschen</message>
+	<message xml:lang="ru">Добавить/Удалить IDs</message>
 </label>
 <label define="APPLY_OPERATION">
 	<message xml:lang="en">Apply operation</message>
@@ -3527,6 +3885,7 @@
 	<message xml:lang="it">Applica l'operazione</message>
 	<message xml:lang="es">Aplicar operación</message>
 	<message xml:lang="de">Operationen anwenden</message>
+	<message xml:lang="ru">Применить ориентацию</message>
 </label>
 <label define="ENTER_ELEMENT_NAME">
 	<message xml:lang="en">Enter an element name</message>
@@ -3534,6 +3893,7 @@
 	<message xml:lang="it">Inserisci un nome di elemento</message>
 	<message xml:lang="es">Escribe un nombre de elemento:</message>
 	<message xml:lang="de">Elementname eingeben</message>
+	<message xml:lang="ru">Ввести имя элемента</message>
 </label>
 <label define="AM_LOAD_CSS">
 	<message xml:lang="en">Apply CSS</message>
@@ -3541,6 +3901,7 @@
 	<message xml:lang="it">Applica il CSS</message>
 	<message xml:lang="es">Aplicar hojas de estilo</message>
 	<message xml:lang="de">CSS anwenden</message>
+	<message xml:lang="ru">Загружать и применять CSS</message>
 </label>
 <label define="AM_SCREEN_TYPE">
 	<message xml:lang="en">Current screen type</message>
@@ -3548,6 +3909,7 @@
 	<message xml:lang="it">Output corrente</message>
 	<message xml:lang="es">Tipo de pantalla actual:</message>
 	<message xml:lang="de">Aktueller Bildschirmtyp</message>
+	<message xml:lang="ru">Текущий тип экрана</message>
 </label>
 <label define="AM_NEW_TOPIC">
 	<message xml:lang="en">New Topic</message>
@@ -3555,6 +3917,7 @@
 	<message xml:lang="it">Nuova rubrica</message>
 	<message xml:lang="es">Nuevo Tema</message>
 	<message xml:lang="de">Neue Überschrift</message>
+	<message xml:lang="ru">Новая тема</message>
 </label>
 <label define="AM_BM_BPROPERTIES">
 	<message xml:lang="en">Bookmark Properties</message>
@@ -3562,6 +3925,7 @@
 	<message xml:lang="it">Proprietà del bookmark</message>
 	<message xml:lang="es">Propiedades de marcador</message>
 	<message xml:lang="de">Lesezeicheneigenschaften</message>
+	<message xml:lang="ru">Свойства закладок</message>
 </label>
 <label define="AM_BM_TPROPERTIES">
 	<message xml:lang="en">Topic Properties</message>
@@ -3569,6 +3933,7 @@
 	<message xml:lang="it">Proprietà della rubrica</message>
 	<message xml:lang="es">Propiedades de tema</message>
 	<message xml:lang="de">Eigenschaften der Überschriften</message>
+	<message xml:lang="ru">Свойства темы</message>
 </label>
 <label define="AM_BM_TOPIC_HIERARCHY">
 	<message xml:lang="en">Topic hierarchy:</message>
@@ -3576,6 +3941,7 @@
 	<message xml:lang="it">Gerarchia delle rubriche :</message>
 	<message xml:lang="es">Jerarquía de temas:</message>
 	<message xml:lang="de">Inhaltsverzeichnis:</message>
+	<message xml:lang="ru">Иерархия темы:</message>
 </label>
 <label define="AM_BM_TITLE">
 	<message xml:lang="en">Title:</message>
@@ -3586,6 +3952,7 @@
 	<message xml:lang="es">Título:</message>
 	<message xml:lang="pt">Título:</message>
 	<message xml:lang="fi">Otsikko:</message>
+	<message xml:lang="ru">Заголовок:</message>
 </label>
 <label define="AM_BM_RECALLS">
 	<message xml:lang="en">Recalls:</message>
@@ -3593,6 +3960,7 @@
 	<message xml:lang="it">Richiama :</message>
 	<message xml:lang="es">Enlace al recurso:</message>
 	<message xml:lang="de">Umbenennen:</message>
+	<message xml:lang="ru">Повторные вызовы:</message>
 </label>
 <label define="AM_BM_AUTHOR">
 	<message xml:lang="en">Author:</message>
@@ -3602,6 +3970,7 @@
 	<message xml:lang="it">Autore :</message>
 	<message xml:lang="pt">Autor:</message>
 	<message xml:lang="tr">Sahip:</message>
+	<message xml:lang="ru">Автор:</message>
 </label>
 <label define="AM_BM_CREATED">
 	<message xml:lang="en">Created:</message>
@@ -3609,6 +3978,7 @@
 	<message xml:lang="it">Creato :</message>
 	<message xml:lang="es">Creado:</message>
 	<message xml:lang="de">Erstellt am:</message>
+	<message xml:lang="ru">Создано:</message>
 </label>
 <label define="AM_BM_MODIFIED">
 	<message xml:lang="en">Last modified:</message>
@@ -3616,6 +3986,7 @@
 	<message xml:lang="it">Ultima modifica :</message>
 	<message xml:lang="es">Última modificación:</message>
 	<message xml:lang="de">Zuletzt geändert am:</message>
+	<message xml:lang="ru">Дата обновления:</message>
 </label>
 <label define="AM_BM_DESCRIPTION">
 	<message xml:lang="en">Description:</message>
@@ -3623,6 +3994,7 @@
 	<message xml:lang="it">Descrizione :</message>
 	<message xml:lang="es">Descripción:</message>
 	<message xml:lang="de">Beschreibung:</message>
+	<message xml:lang="ru">Описание:</message>
 </label>
 <label define="AM_NO_SELECTION">
 	<message xml:lang="en">Please select an element</message>
@@ -3630,6 +4002,7 @@
 	<message xml:lang="it">Selezionare un elemento</message>
 	<message xml:lang="es">Por favor, seleccione un elemento</message>
 	<message xml:lang="de">Wählen Sie bitte ein Element aus</message>
+	<message xml:lang="ru">Выберите элемент</message>
 </label>
 <label define="AM_ALL_CSS">
 	<message xml:lang="en">All CSS</message>
@@ -3637,6 +4010,7 @@
 	<message xml:lang="it">Tutti i CSS</message>
 	<message xml:lang="es">Todos las hojas de estilo</message>
 	<message xml:lang="de">CSS komplett</message>
+	<message xml:lang="ru">Все CSS</message>
 </label>
 <label define="AM_STYLE_APPLIED">
 	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
@@ -3644,6 +4018,7 @@
 	<message xml:lang="it">Regole di stile CSS applicate all'elemento &lt;%s>\n</message>
 	<message xml:lang="es">Reglas de estilo aplicadas al elemento &lt;%s>\n</message>
 	<message xml:lang="de">CSS-Regeln, die für &lt;%s> gelten\n</message>
+	<message xml:lang="ru">Правила стиля CSS применены к &lt;%s> элементу\n</message>
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
@@ -3651,6 +4026,7 @@
 	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
 	<message xml:lang="es">Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n</message>
 	<message xml:lang="de">Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n</message>
+	<message xml:lang="ru">Голубые линии являются ссылками и активируются при двойном (или одинарном) щелчке\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
 	<message xml:lang="en">Load objects (object, embed, iframe)</message>
@@ -3658,6 +4034,7 @@
 	<message xml:lang="it">Carica oggetti (object, embed, iframe)</message>
 	<message xml:lang="es">Cargar objetos (object, embed, iframe)</message>
 	<message xml:lang="de">Objekte laden (object, embed, iframe)</message>
+	<message xml:lang="ru">Загружать объекты (object, embed)</message>
 </label>
 <label define="AM_NO_STYLE_FOR_ELEM">
 	<message xml:lang="en">No style rule for this element</message>
@@ -3665,6 +4042,7 @@
 	<message xml:lang="it">Nessuna regola di stile per questo elemento</message>
 	<message xml:lang="es">No hay regla de estilo para este elemento</message>
 	<message xml:lang="de">Für dieses Element gibt es keine Formatvorlage</message>
+	<message xml:lang="ru">К этому элементу не применяются никакие правила стиля</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
