@@ -5,14 +5,14 @@
  *
  */
  
-#define CorrMenuOR			1
-#define CorrCaptureNC			2
-#define CorrLabelLanguage			3
-#define CorrMenuIgnore			4
-#define CorrSpecial			5
-#define CorrSelectProp			6
-#define CorrFormCorrect		7
-#define CorrFormNC			8
-#define CorrLabelDocument			9
-#define CorrLabelNotFound		10
-#define CorrMaxDialogue			11
+#define ChkrMenuOR			1
+#define ChkrCaptureNC			2
+#define ChkrLabelLanguage			3
+#define ChkrMenuIgnore			4
+#define ChkrSpecial			5
+#define ChkrSelectProp			6
+#define ChkrFormCorrect		7
+#define ChkrFormNC			8
+#define ChkrLabelDocument			9
+#define ChkrLabelNotFound		10
+#define ChkrMaxDialogue			11

@@ -82,7 +82,7 @@ static void         EnleveFormCorriger ()
    if (ChkrRange != NULL)
      {
 	FreeSearchContext (&ChkrRange);
-	TtaDestroyDialogue (BaseCorrector + CorrFormCorrect);
+	TtaDestroyDialogue (BaseCorrector + ChkrFormCorrect);
      }
 }
 
@@ -114,7 +114,7 @@ view                view;
    SpellCheckLoadResources ();
    if (ChkrRange != NULL)
       EnleveFormCorriger ();
-   TtaDestroyDialogue (BaseCorrector + CorrFormCorrect);
+   TtaDestroyDialogue (BaseCorrector + ChkrFormCorrect);
    /* creer la feuille de dialogue de CORRECTION */
    /* attache'e au bouton Confirmer du formulaire (1) CORRIGER */
    indx = 0;			/* tous les boutons du dialogue de correction */
@@ -130,12 +130,12 @@ view                view;
    strcpy(&BufMenu[indx], TtaGetMessage(CORR, Replace_With));
   ----------------------------------------------------------------------*/
    /* ne pas afficher cette feuille maintenant */
-   TtaNewSheet (BaseCorrector + CorrFormCorrect, TtaGetViewFrame (doc, view),
+   TtaNewSheet (BaseCorrector + ChkrFormCorrect, TtaGetViewFrame (doc, view),
 		0, 0, TtaGetMessage (CORR, Correct),
 		2, BufMenu, FALSE, 4, 'L', D_DONE);
 
    /* initialise le champ langue de correction courante */
-   TtaNewLabel (BaseCorrector + CorrLabelLanguage, BaseCorrector + CorrFormCorrect, " ");
+   TtaNewLabel (BaseCorrector + ChkrLabelLanguage, BaseCorrector + ChkrFormCorrect, " ");
 
    /* Afficher une liste de mots EMPTY */
    strcpy (ChkrCorrection[0], " ");
@@ -152,35 +152,35 @@ view                view;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_AFTER_SEL));
    indx += strlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-   TtaNewSubmenu (BaseCorrector + CorrMenuOR, BaseCorrector + CorrFormCorrect, 0,
+   TtaNewSubmenu (BaseCorrector + ChkrMenuOR, BaseCorrector + ChkrFormCorrect, 0,
 		  TtaGetMessage (CORR, What), 4, BufMenu, NULL, FALSE);
-   TtaSetMenuForm (BaseCorrector + CorrMenuOR, 2);	/* apres la selection */
+   TtaSetMenuForm (BaseCorrector + ChkrMenuOR, 2);	/* apres la selection */
    /* Initialiser le formulaire CORRIGER */
    /* Document selectionne */
    ok = GetCurrentSelection (&docsel, &pEl1, &pElN, &c1, &cN);
    if (!ok || docsel != document)
      {
 	/* pas de selection dans le document d'ou vient la commande */
-	UnsetEntryMenu (BaseCorrector + CorrMenuOR, 0);
-	UnsetEntryMenu (BaseCorrector + CorrMenuOR, 1);
-	UnsetEntryMenu (BaseCorrector + CorrMenuOR, 2);
-	TtaSetMenuForm (BaseCorrector + CorrMenuOR, 3);
+	UnsetEntryMenu (BaseCorrector + ChkrMenuOR, 0);
+	UnsetEntryMenu (BaseCorrector + ChkrMenuOR, 1);
+	UnsetEntryMenu (BaseCorrector + ChkrMenuOR, 2);
+	TtaSetMenuForm (BaseCorrector + ChkrMenuOR, 3);
      }
    else
      {
 
-	TtaRedrawMenuEntry (BaseCorrector + CorrMenuOR, 0, NULL, -1, 1);
-	TtaRedrawMenuEntry (BaseCorrector + CorrMenuOR, 1, NULL, -1, 1);
-	TtaRedrawMenuEntry (BaseCorrector + CorrMenuOR, 2, NULL, -1, 1);
+	TtaRedrawMenuEntry (BaseCorrector + ChkrMenuOR, 0, NULL, -1, 1);
+	TtaRedrawMenuEntry (BaseCorrector + ChkrMenuOR, 1, NULL, -1, 1);
+	TtaRedrawMenuEntry (BaseCorrector + ChkrMenuOR, 2, NULL, -1, 1);
      }
 
    /* initialise le champ termine de correction courante */
-   TtaNewLabel (BaseCorrector + CorrLabelNotFound, BaseCorrector + CorrFormCorrect, " ");
+   TtaNewLabel (BaseCorrector + ChkrLabelNotFound, BaseCorrector + ChkrFormCorrect, " ");
 
    /* creer la forme de modification d'un nombre NC 1-10 */
-   TtaNewNumberForm (BaseCorrector + CorrCaptureNC, BaseCorrector + CorrFormCorrect,
+   TtaNewNumberForm (BaseCorrector + ChkrCaptureNC, BaseCorrector + ChkrFormCorrect,
      TtaGetMessage (CORR, Number_Propositions), 1, MAX_PROPOSAL_CHKR, TRUE);
-   TtaSetNumberForm (BaseCorrector + CorrCaptureNC, 3);
+   TtaSetNumberForm (BaseCorrector + ChkrCaptureNC, 3);
 
    /* sous-menu Mots a ignorer */
    indx = 0;
@@ -191,14 +191,14 @@ view                view;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Romans));
    indx += strlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Specials));
-   TtaNewToggleMenu (BaseCorrector + CorrMenuIgnore,
-		     BaseCorrector + CorrFormCorrect,
+   TtaNewToggleMenu (BaseCorrector + ChkrMenuIgnore,
+		     BaseCorrector + ChkrFormCorrect,
 		     TtaGetMessage (CORR, Ignore),
 		     4, BufMenu, NULL, TRUE);
 
    /* liste des caracteres speciaux dans le formulaire OPTIONS */
-   TtaNewTextForm (BaseCorrector + CorrSpecial, BaseCorrector + CorrFormCorrect, NULL, 20, 1, TRUE);
-   TtaSetTextForm (BaseCorrector + CorrSpecial, CarSpeciaux);
+   TtaNewTextForm (BaseCorrector + ChkrSpecial, BaseCorrector + ChkrFormCorrect, NULL, 20, 1, TRUE);
+   TtaSetTextForm (BaseCorrector + ChkrSpecial, CarSpeciaux);
 
 /* ne pas ignorer les mots en capitale, chiffres romains */
    /* ou contenant des chiffres arabes,  certains car. speciaux */
@@ -208,16 +208,16 @@ view                view;
    IgnoreRoman = FALSE;
    IgnoreSpecial = FALSE;
    /* Selectionne les types de mots a ne ignorer par defaut */
-   TtaSetToggleMenu (BaseCorrector + CorrMenuIgnore, 0, IgnoreUppercase);
-   TtaSetToggleMenu (BaseCorrector + CorrMenuIgnore, 1, IgnoreArabic);
-   TtaSetToggleMenu (BaseCorrector + CorrMenuIgnore, 2, IgnoreRoman);
-   TtaSetToggleMenu (BaseCorrector + CorrMenuIgnore, 3, IgnoreSpecial);
+   TtaSetToggleMenu (BaseCorrector + ChkrMenuIgnore, 0, IgnoreUppercase);
+   TtaSetToggleMenu (BaseCorrector + ChkrMenuIgnore, 1, IgnoreArabic);
+   TtaSetToggleMenu (BaseCorrector + ChkrMenuIgnore, 2, IgnoreRoman);
+   TtaSetToggleMenu (BaseCorrector + ChkrMenuIgnore, 3, IgnoreSpecial);
 
    /* affiche une liste de car. speciaux */
-   TtaSetTextForm (BaseCorrector + CorrSpecial, RejectedChar);
+   TtaSetTextForm (BaseCorrector + ChkrSpecial, RejectedChar);
 
    /* Et enfin, afficher le formulaire de CORRECTION */
-   TtaShowDialogue (BaseCorrector + CorrFormCorrect, TRUE);
+   TtaShowDialogue (BaseCorrector + ChkrFormCorrect, TRUE);
 
    /* Indique que c'est une nouvelle correction qui debute */
    CorrPremiereFois = TRUE;
@@ -264,14 +264,14 @@ static void         Corr_affichermots ()
    entree = ChkrCorrection[0];
    /* remplir le formulaire CORRIGER */
    /* attention i = nbpropositions + 1 (le mot errone) */
-   TtaNewSelector (BaseCorrector + CorrSelectProp, BaseCorrector + CorrFormCorrect,
+   TtaNewSelector (BaseCorrector + ChkrSelectProp, BaseCorrector + ChkrFormCorrect,
 		   TtaGetMessage (CORR, Correct), i - 1,
 		   ((i < 2) ? "" : BufMenu), 3, entree, TRUE, FALSE);
    /* selectionner la proposition 0 dans le selecteur - si elle existe */
    if (ChkrCorrection[1] != "$")
-      TtaSetSelector (BaseCorrector + CorrSelectProp, -1, ChkrCorrection[1]);
+      TtaSetSelector (BaseCorrector + ChkrSelectProp, -1, ChkrCorrection[1]);
    else
-      TtaSetSelector (BaseCorrector + CorrSelectProp, -1, "");
+      TtaSetSelector (BaseCorrector + ChkrSelectProp, -1, "");
 
    /* le formulaire est maintenant pret a etre affiche' */
    OldNC = NC;
@@ -303,7 +303,7 @@ Language            langue;
 
    /* afficher la langue de correction courante */
    sprintf (Lab, "%s: %s", TtaGetMessage (LIB, TMSG_LANGUAGE), TtaGetLanguageName (ChkrLanguage));
-   TtaNewLabel (BaseCorrector + CorrLabelLanguage, BaseCorrector + CorrFormCorrect, Lab);
+   TtaNewLabel (BaseCorrector + ChkrLabelLanguage, BaseCorrector + ChkrFormCorrect, Lab);
 }				/*Corr_propositions */
 
 
@@ -335,9 +335,9 @@ static boolean      Corr_lancer ()
    else
      {
 	/* Correction TERMINEE */
-	TtaDisplaySimpleMessage (INFO, CORR, END_CORR);
+	TtaDisplaySimpleMessage (INFO, CORR, END_CHECK);
 	/* message 'Pas trouve' dans le formulaire */
-	TtaNewLabel (BaseCorrector + CorrLabelNotFound, BaseCorrector + CorrFormCorrect,
+	TtaNewLabel (BaseCorrector + ChkrLabelNotFound, BaseCorrector + ChkrFormCorrect,
 		     TtaGetMessage (LIB, TMSG_NOT_FOUND));
 	CorrPremiereFois = TRUE;
 	ok = FALSE;
@@ -461,7 +461,7 @@ char               *Data;
    else
       switch (Ref - BaseCorrector)
 	    {
-	       case CorrMenuIgnore:
+	       case ChkrMenuIgnore:
 		  switch ((int) Data)
 			{
 			   case 0:
@@ -482,17 +482,17 @@ char               *Data;
 			      break;
 			}	/* end of switch */
 		  break;
-	       case CorrSpecial:
+	       case ChkrSpecial:
 		  /* recopier la liste des car. speciaux dans RejectedChar[] */
 		  strncpy (RejectedChar, Data, MAX_REJECTED_CHARS);
 		  /* bascule automatiquement l'indicateur IgnoreSpecial */
 		  if (!IgnoreSpecial)
 		    {
 		       IgnoreSpecial = TRUE;
-		       TtaSetToggleMenu (BaseCorrector + CorrMenuIgnore, 3, IgnoreSpecial);
+		       TtaSetToggleMenu (BaseCorrector + ChkrMenuIgnore, 3, IgnoreSpecial);
 		    }
 		  break;
-	       case CorrCaptureNC:
+	       case ChkrCaptureNC:
 		  /* modification de Nb de corrections a proposer */
 		  NC = (int) Data;
 		  if (NC > OldNC && ChkrElement != NULL && MotCourant[0] != '\0')
@@ -500,7 +500,7 @@ char               *Data;
 		  else
 		     Corr_affichermots ();
 		  break;
-	       case CorrMenuOR:
+	       case ChkrMenuOR:
 		  /* definition du sens de correction OU? */
 		  switch ((int) Data)
 			{
@@ -523,9 +523,9 @@ char               *Data;
 		       InitSearchDomain ((int) Data, ChkrRange);
 		       /* On prepare la recheche suivante */
 		       if (ChkrRange->SStartToEnd)
-			  TtaSetMenuForm (BaseCorrector + CorrMenuOR, 2);
+			  TtaSetMenuForm (BaseCorrector + ChkrMenuOR, 2);
 		       else
-			  TtaSetMenuForm (BaseCorrector + CorrMenuOR, 0);
+			  TtaSetMenuForm (BaseCorrector + ChkrMenuOR, 0);
 		    }
 		  else if (ChkrRange != NULL)
 		     /* Est-ce que le document vient de recevoir la selection */
@@ -536,16 +536,16 @@ char               *Data;
 			  if (docsel == ChkrRange->SDocument)
 			    {
 			       /* Il faut reactiver les entree */
-			       TtaRedrawMenuEntry (BaseCorrector + CorrMenuOR, 0, NULL, -1, 1);
-			       TtaRedrawMenuEntry (BaseCorrector + CorrMenuOR, 1, NULL, -1, 1);
-			       TtaRedrawMenuEntry (BaseCorrector + CorrMenuOR, 2, NULL, -1, 1);
-/*          ActiveEntree(CorrMenuOR, 0); */
-/*             ActiveEntree(CorrMenuOR, 1); */
-/*             ActiveEntree(CorrMenuOR, 2); */
+			       TtaRedrawMenuEntry (BaseCorrector + ChkrMenuOR, 0, NULL, -1, 1);
+			       TtaRedrawMenuEntry (BaseCorrector + ChkrMenuOR, 1, NULL, -1, 1);
+			       TtaRedrawMenuEntry (BaseCorrector + ChkrMenuOR, 2, NULL, -1, 1);
+/*          ActiveEntree(ChkrMenuOR, 0); */
+/*             ActiveEntree(ChkrMenuOR, 1); */
+/*             ActiveEntree(ChkrMenuOR, 2); */
 			    }
 		       }
 		  break;
-	       case CorrSelectProp:
+	       case ChkrSelectProp:
 		  /* retour du selecteur de propositions */
 		  /* recopier le choix dans MotCorrige */
 		  strcpy (MotCorrige, Data);
@@ -554,7 +554,7 @@ char               *Data;
 		      && strcmp (MotCorrige, MotCourant) != 0)
 		     remplacer = TRUE;
 		  break;
-	       case CorrFormCorrect:
+	       case ChkrFormCorrect:
 		  /* retour de la feuille de dialogue CORRECTION */
 		  /* effectuer l'action demandee */
 		  Corr_commande ((int) Data);
@@ -573,8 +573,8 @@ void                SpellCheckLoadResources ()
      {
 	TteConnectAction (T_rscorrector, (Proc) CallbackCorrector);
 	TteConnectAction (T_corrector, (Proc) TtcSpellCheck);
-	CORR = TtaGetMessageTable ("corrdialogue", MSG_MAX_CORR);
-	BaseCorrector = TtaSetCallback (CallbackCorrector, CorrMaxDialogue);
+	CORR = TtaGetMessageTable ("corrdialogue", MSG_MAX_CHECK);
+	BaseCorrector = TtaSetCallback (CallbackCorrector, ChkrMaxDialogue);
 	/* Initialisation des variables globales */
 	Corr_Param ();
 	ChkrFileDict = NULL;

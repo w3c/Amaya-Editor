@@ -23,9 +23,9 @@
 #define NO_SAVE		15
 #define REFUSE_WORD		16
 #define ADD_WORD		17
-#define END_CORR		18
-#define STOP_CORR		19
+#define END_CHECK		18
+#define STOP_CHECK		19
 #define NO_SELECT		20
 #define OK_SAVE		21
 
-#define MSG_MAX_CORR		22
+#define MSG_MAX_CHECK		22
