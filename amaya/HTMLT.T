@@ -1662,22 +1662,22 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- Clear = Left_:
+ Clear_ = Left_:
 	BEGIN
         create SAN;
 	Create 'clear="left"';
 	END;
- Clear = Right_:
+ Clear_ = Right_:
 	BEGIN
         create SAN;
 	Create 'clear="right"';
 	END;
- Clear = All_:
+ Clear_ = All_:
 	BEGIN
         create SAN;
 	Create 'clear="all"';
 	END;
- Clear = None_:
+ Clear_ = None_:
 	BEGIN
         create SAN;
 	Create 'clear="none"';

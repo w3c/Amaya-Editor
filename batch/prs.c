@@ -395,6 +395,10 @@ static void         CreatePRule (PRuleType t, indLine wi)
      case PtUnicodeBidi:
        CurRule->PrChrValue = 'N';       /* Normal by default */
        break;
+     case PtFloat:
+     case PtClear:
+       CurRule->PrChrValue = 'N';       /* None by default */
+       break;
      case PtLineStyle:
      case PtBorderTopStyle:
      case PtBorderRightStyle:
@@ -1435,7 +1439,8 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	   gCode == RULE_BoolInherit      || gCode == RULE_InheritDist ||
 	   gCode == RULE_InheritSize      || gCode == RULE_AdjustInherit ||
 	   gCode == RULE_DirInherit       || gCode == RULE_BidiInherit ||
-	   gCode == RULE_LineStyleInherit ||gCode == RULE_StyleInherit ||
+	   gCode == RULE_LineStyleInherit || gCode == RULE_StyleInherit ||
+	   gCode == RULE_FloatInherit     || gCode == RULE_ClearInherit ||
 	   gCode == RULE_InheritParent)
 	 /* PresInherit */
 	 {
@@ -2162,6 +2167,24 @@ static void         CheckDefaultRules ()
 	CreateDefaultRule ();
 	CurRule->PrType = PtLineStyle;
 	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtFloat, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Float par defaut, on en cree une : */
+      /* Float: None; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtFloat;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrChrValue = 'N';
+     }
+   if (GetTypedRule (PtClear, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Clear par defaut, on en cree une : */
+      /* Clear: None; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtClear;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrChrValue = 'N';
      }
    if (GetTypedRule (PtLineWeight, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle LineWeight par defaut, on en cree une : */
@@ -3155,6 +3178,12 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       case KWD_LineWeight:
 	CreatePRule (PtLineWeight, wi);
 	break;
+      case KWD_Float:
+	CreatePRule (PtFloat, wi);
+	break;
+      case KWD_Clear:
+	CreatePRule (PtClear, wi);
+	break;
       case KWD_FillPattern:
 	CreatePRule (PtFillPattern, wi);
 	break;
@@ -3296,8 +3325,15 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	CurRule->PrIntValue = -2;   /* -2 means Transparent */
 	break;
       case KWD_None:
-	/* border style */
-	CurRule->PrChrValue = '0';
+	if (gCode == RULE_FloatInherit)
+	  /* floating side */
+	  CurRule->PrChrValue = 'N';
+	else if (gCode == RULE_ClearInherit)
+	  /* clear side */
+	  CurRule->PrChrValue = 'N';
+	else
+	  /* border style */
+	  CurRule->PrChrValue = '0';
 	break;
       case KWD_Hidden:
 	/* border style */
@@ -3371,6 +3407,36 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	break;
       case KWD_Override:
         CurRule->PrChrValue = 'O';
+	break;
+      case KWD_Left /* Left */ :
+	if (gCode == RULE_FloatInherit)
+	  /* floating side */
+	  CurRule->PrChrValue = 'L';
+	else if (gCode == RULE_ClearInherit)
+	  /* clear side */
+	  CurRule->PrChrValue = 'L';
+	else if (gCode == RULE_Adjustment)
+	  /* mode d'alignement des lignes */
+	  CurRule->PrAdjust = AlignLeft;
+	else
+	  ProcessAxis (Left, wi);
+	break;
+      case KWD_Right /* Right */ :
+	if (gCode == RULE_FloatInherit)
+	  /* floating side */
+	  CurRule->PrChrValue = 'R';
+	else if (gCode == RULE_ClearInherit)
+	  /* clear side */
+	  CurRule->PrChrValue = 'R';
+	else if (gCode == RULE_Adjustment)
+	  /* mode d'alignement des lignes */
+	  CurRule->PrAdjust = AlignRight;
+	else
+	  ProcessAxis (Right, wi);
+	break;
+      case KWD_Both:
+	/* clear side */
+	CurRule->PrChrValue = 'B';
 	break;
       case KWD_nil /* NULL */ :
 	if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
@@ -3504,13 +3570,6 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	      }
 	  }
 	break;
-      case KWD_Left /* Left */ :
-	if (gCode == RULE_Adjustment)
-	  /* mode d'alignement des lignes */
-	  CurRule->PrAdjust = AlignLeft;
-	else
-	  ProcessAxis (Left, wi);
-	break;
       case KWD_VMiddle /* VMiddle */ :
 	if (gCode == RULE_Adjustment)
 	  /* mode d'alignement des lignes */
@@ -3521,13 +3580,6 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       case KWD_VRef:
 	/* VRef */
 	ProcessAxis (VertRef, wi);
-	break;
-      case KWD_Right /* Right */ :
-	if (gCode == RULE_Adjustment)
-	  /* mode d'alignement des lignes */
-	  CurRule->PrAdjust = AlignRight;
-	else
-	  ProcessAxis (Right, wi);
 	break;
       case KWD_Top:
 	/* Top */

@@ -2849,7 +2849,7 @@ ATTRIBUTES
 	IN Structure_view
 		PaddingRight: 0;
 	END;
-  IntAddSpace = both:
+  IntAddSpace = both_:
 	BEGIN
 	PaddingLeft: OPERATOR_SPACE;
 	PaddingRight: OPERATOR_SPACE;

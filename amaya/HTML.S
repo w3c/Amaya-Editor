@@ -307,8 +307,8 @@ STRUCT
 	CONSTANT C_Empty;
 
   BR								{ BR }
-     (ATTR Clear = Left_, Right_, All_, None_) =
-	 { clear   left   right   all   none }
+     (ATTR Clear_ = Left_, Right_, All_, None_) =
+	 { clear    left   right   all   none }
 	CONSTANT C_BR;
 
   Quotation							{ Q }

@@ -105,7 +105,7 @@ STRUCT
 		accent = true, false;
 		IntFontstyle;				{ for internal use }
 		IntVertStretch = yes_;			{ for internal use }
-		IntAddSpace = nospace, spacebefore, spaceafter, both)
+		IntAddSpace = nospace, spacebefore, spaceafter, both_)
 	  = LIST OF (MathMLCharacters);
 
       MS

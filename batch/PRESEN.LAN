@@ -128,6 +128,8 @@ Rule3 =		  Creation '(' BoxName ')' /
                   'UnicodeBidi' ':' BidiInherit .
 Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'LineWeight' ':' DistInherit /
+                  'Float' ':' FloatInherit /
+                  'Clear' ':' ClearInherit /
 		  'FillPattern' ':' NameInherit /
 		  'Background' ':' Color /
 		  'Foreground' ':' Color /
@@ -177,6 +179,10 @@ DirInherit =      Link '=' / 'ltr' / 'rtl' .
 BidiInherit =     Link '=' / 'Normal' / 'Embed' / 'Override' .
 
 LineStyleInherit = Link '=' / 'Solid' / 'Dashed' / 'Dotted' .
+
+FloatInherit =    Link '=' / 'Left' / 'Right' / 'None' .
+
+ClearInherit =    Link '=' / 'None' / 'Left' / 'Right' / 'Both' .
 
 BoxTypeCopied =	  BoxName [ ExtStruct ] / TypeName [ ExtStruct ] .
 ExtStruct =	  '(' TypeName ')' .

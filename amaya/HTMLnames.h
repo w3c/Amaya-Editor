@@ -192,7 +192,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"cite", "", 'A', HTML_ATTR_cite, L_BasicValue},
    {"class", "", 'A', HTML_ATTR_Class, L_BasicValue},
    {"classid", "", 'A', HTML_ATTR_classid, L_BasicValue},
-   {"clear", "br", 'A', HTML_ATTR_Clear, L_TransitionalValue},
+   {"clear", "br", 'A', HTML_ATTR_Clear_, L_TransitionalValue},
    {"code", "", 'A', HTML_ATTR_code, L_BasicValue},
    {"codebase", "", 'A', HTML_ATTR_codebase, L_BasicValue},
    {"codetype", "", 'A', HTML_ATTR_codetype, L_BasicValue},
@@ -388,10 +388,10 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_LAlign, "left", HTML_ATTR_LAlign_VAL_Left_},
    {HTML_ATTR_LAlign, "right", HTML_ATTR_LAlign_VAL_Right_},
 
-   {HTML_ATTR_Clear, "left", HTML_ATTR_Clear_VAL_Left_},
-   {HTML_ATTR_Clear, "right", HTML_ATTR_Clear_VAL_Right_},
-   {HTML_ATTR_Clear, "all", HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, "none", HTML_ATTR_Clear_VAL_None_},
+   {HTML_ATTR_Clear_, "left", HTML_ATTR_Clear__VAL_Left_},
+   {HTML_ATTR_Clear_, "right", HTML_ATTR_Clear__VAL_Right_},
+   {HTML_ATTR_Clear_, "all", HTML_ATTR_Clear__VAL_All_},
+   {HTML_ATTR_Clear_, "none", HTML_ATTR_Clear__VAL_None_},
 
    {HTML_ATTR_NumberStyle, "1", HTML_ATTR_NumberStyle_VAL_Arabic_},
    {HTML_ATTR_NumberStyle, "a", HTML_ATTR_NumberStyle_VAL_LowerAlpha},

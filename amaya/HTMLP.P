@@ -5748,7 +5748,7 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
- Clear:
+ Clear_:
 	CreateBefore(AttrNameAndValue);
 
  Alignment = Top_:

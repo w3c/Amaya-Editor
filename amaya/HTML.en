@@ -190,7 +190,7 @@ ALT: alt
 BaseFontSize: size
 BaseFontColor: color
 BaseFontFace: face
-Clear: clear
+Clear_: clear
 Left_: left
 Right_: right
 All_: all

@@ -252,6 +252,12 @@ void                WritePRuleType (PRuleType ruleType)
     case PtLineStyle:
       TtaWriteByte (outfile, C_PR_LINESTYLE);
       break;
+    case PtFloat:
+      TtaWriteByte (outfile, C_PR_FLOAT);
+      break;
+    case PtClear:
+      TtaWriteByte (outfile, C_PR_CLEAR);
+      break;
     case PtLineWeight:
       TtaWriteByte (outfile, C_PR_LINEWEIGHT);
       break;

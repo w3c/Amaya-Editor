@@ -742,17 +742,17 @@ ATTRIBUTES
 	BEGIN
 	END;
 
- Clear = Left_:
+ Clear_ = Left_:
 	BEGIN
 	END;
 
- Clear = Right_: 
+ Clear_ = Right_: 
 	BEGIN
 	END;
- Clear = All_:
+ Clear_ = All_:
 	BEGIN
 	END;
- Clear = None_:
+ Clear_ = None_:
 	BEGIN
 	END;
 
