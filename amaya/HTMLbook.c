@@ -44,14 +44,16 @@ typedef struct _GetIncludedDocuments_context
   Document		document;
 } GetIncludedDocuments_context;
 
+/* shared with windialogapi.c */
+ThotBool         PrintURL;
+ThotBool	 NumberLinks;
+ThotBool	 WithToC;
+ThotBool         IgnoreCSS;
+
 static struct _SubDoc  *SubDocs;
 static CHAR_T           PSdir[MAX_PATH];
 static CHAR_T           PPrinter[MAX_PATH];
 static Document		DocPrint;
-static ThotBool		NumberLinks;
-static ThotBool		WithToC;
-static ThotBool         PrintURL;
-static ThotBool         IgnoreCSS;
 static int              PaperPrint;
 static int              ManualFeed;
 static int              PageSize;
@@ -666,6 +668,7 @@ void                InitPrint ()
    TtaGetEnvInt (_PAPERSIZE_EVAR_, &PageSize);
    PaperPrint = PP_PRINTER;
    PrintURL = TRUE;
+   IgnoreCSS = FALSE;
    TtaSetPrintParameter (PP_Destination, PaperPrint);
    TtaSetPrintParameter (PP_PaperSize, PageSize);
    TtaSetPrintCommand (PPrinter);
@@ -719,14 +722,12 @@ View                view;
 		TtaGetMessage (LIB, TMSG_OPTIONS), 5, bufMenu, NULL, FALSE);
    if (ManualFeed == PP_ON)
      TtaSetToggleMenu (BasePrint+NumMenuOptions, 0, TRUE);
-   if (WithToC)
-     TtaSetToggleMenu (BasePrint+NumMenuOptions, 1, TRUE);
-   if (NumberLinks)
-     TtaSetToggleMenu (BasePrint+NumMenuOptions, 2, TRUE);
-   if (PrintURL)
-     TtaSetToggleMenu (BasePrint+NumMenuOptions, 3, TRUE);
-   if (!IgnoreCSS)
-     TtaSetToggleMenu (BasePrint+NumMenuOptions, 4, TRUE);
+   else
+     TtaSetToggleMenu (BasePrint+NumMenuOptions, 0, FALSE);
+   TtaSetToggleMenu (BasePrint+NumMenuOptions, 1, WithToC);
+   TtaSetToggleMenu (BasePrint+NumMenuOptions, 2, NumberLinks);
+   TtaSetToggleMenu (BasePrint+NumMenuOptions, 3, PrintURL);
+   TtaSetToggleMenu (BasePrint+NumMenuOptions, 4, IgnoreCSS);
 
    /* Paper format submenu */
    i = 0;

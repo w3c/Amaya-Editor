@@ -131,8 +131,6 @@ extern void CreateOrChangeLink ( Document doc,
                                  View view );
 extern void DeleteAnchor ( Document doc,
                            View view );
-extern void ShowLogFile ( Document doc,
-                          View view );
 extern void FlushCache ( Document doc,
                          View view );
 extern void ConfigColor ( Document doc,
@@ -287,8 +285,6 @@ extern void CreateOrChangeLink (/* Document doc,
                                    View view */);
 extern void DeleteAnchor (/* Document doc,
                              View view */);
-extern void ShowLogFile (/* Document doc,
-                            View view */);
 extern void FlushCache (/* Document doc,
                            View view */);
 extern void ConfigColor (/* Document doc,

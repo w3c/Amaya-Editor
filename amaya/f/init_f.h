@@ -25,12 +25,6 @@ extern void ActiveMakeBook ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
-extern void SetCharEmphasis ( Document document,
-                              View view );
-extern void SetCharStrong ( Document document,
-                            View view );
-extern void SetCharCode ( Document document,
-                          View view );
 extern void InitFormAnswer ( Document document,
                              View view );
 extern void InitConfirm ( Document document,
@@ -137,8 +131,8 @@ extern void HelpMakeBook ( Document document,
                            View view );
 extern void HelpConfigure ( Document document,
                             View view );
-extern void HelpParseErrors ( Document doc,
-                              View view );
+extern void ShowLogFile ( Document doc,
+                          View view );
 extern void AmayaClose ( Document document,
                          View view );
 
@@ -163,12 +157,6 @@ extern void ActiveMakeBook (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);
-extern void SetCharEmphasis (/* Document document,
-                                View view */);
-extern void SetCharStrong (/* Document document,
-                              View view */);
-extern void SetCharCode (/* Document document,
-                            View view */);
 extern void InitFormAnswer (/* Document document,
                                View view */);
 extern void InitConfirm (/* Document document,
@@ -275,8 +263,8 @@ extern void HelpMakeBook (/* Document document,
                              View view */);
 extern void HelpConfigure (/* Document document,
                               View view */);
-extern void HelpParseErrors (/* Document doc,
-                                View view */);
+extern void ShowLogFile (/* Document doc,
+                            View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
 

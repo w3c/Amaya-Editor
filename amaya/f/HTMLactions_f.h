@@ -15,8 +15,10 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      STRING outputfile,
                                      STRING content_type,
                                      void * context );
-extern ThotBool DoubleClick ( NotifyElement * event );
-extern ThotBool SimpleClick ( NotifyElement * event );
+extern void ActivateFromKeyboard ( Document doc,
+                                   View view );
+extern ThotBool DoubleClick ( NotifyElement *event );
+extern ThotBool SimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
                           Document doc );
 extern void CheckAmayaClosed ( void );
@@ -40,8 +42,10 @@ extern void FollowTheLink_callback (/* int targetDocument,
                                        STRING outputfile,
                                        STRING content_type,
                                        void * context */);
-extern ThotBool DoubleClick (/* NotifyElement * event */);
-extern ThotBool SimpleClick (/* NotifyElement * event */);
+extern void ActivateFromKeyboard (/* Document doc,
+                                     View view */);
+extern ThotBool DoubleClick (/* NotifyElement *event */);
+extern ThotBool SimpleClick (/* NotifyElement *event */);
 extern void UpdateTitle (/* Element el,
                             Document doc */);
 extern void CheckAmayaClosed (/* void */);

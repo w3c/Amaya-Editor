@@ -9,7 +9,13 @@ Extensions 2.2:
 ---------------
 
 * CSS:
-  - Amaya is now able to print with CSS
+  - Amaya is now able to print with CSS. By default Amaya takes into account
+    style sheets when printing. The entry "Ignore style sheets" allows
+    one to print documents like in previous Amaya version.
+  - For a better mapping with CSS, language P has been extended.  Style and
+    Weight are now two separate properties.  This allows Amaya to handle
+    the corresponding CSS properties (font-style, font-weight) independently
+    and to display text both italic and bold.
 
 * A Source view is now available from the Views menu. When you select in
   the main view, an index points at the corresponding markup in the
@@ -18,7 +24,7 @@ Extensions 2.2:
   you press the "Apply Changes" button, the other views are updated to
   reflect the latest changes.
 
-* 4 different Amaya profiles are proposed: editor, mini-editor, browser,
+* Four different Amaya profiles are proposed: editor, mini-editor, browser,
   mini-browser. Amaya menus and buttons are displayed according to the
   current profile.
 
@@ -26,16 +32,17 @@ Extensions 2.2:
   of domains where a PUT may be redirected, and thus avoid having a popup
   asking a user to confirm each redirection.
 
-Fixed bugs 2.1a:
+* A mechanism of templates
+
+Fixed bugs 2.2:
 ---------------
 
-* Amaya could get stuck when creating an anchor.
-
-* UI:
+* User Interface:
   - It was impossible to cancel the creation of a link. Now the second
     button in the creation popup is 'Cancel' instead of 'Done', and when
     that button is pressed, the action is cancelled.
   - Improvement of attribute menus.
+  - There was a confusion in the button updates.
 
 * CSS:
   - When the color was invalid Amaya used the black. Now the CSS rule is
@@ -50,21 +57,6 @@ Fixed bugs 2.1a:
 * Relative URLs beginning with a "../../ " path were being simplifed into
   "../"
 
-=============================================================
-2.1a
-=============================================================
- 
-Extensions 2.1a:
----------------
-
-* For a better mapping with CSS, language P has been extended.  Style and
-  Weight are now two separate properties.  This allows Amaya to handle
-  the corresponding CSS properties (font-style, font-weight) independently
-  and to display text both italic and bold.
-
-Fixed bugs 2.1a:
----------------
-
 * When a unix user launched Amaya with a not existing local file, Amaya
   displayed a form to create a new document, but that form didn't worked
   well. If the user opened the document, the File menu was broken. If the
@@ -72,6 +64,10 @@ Fixed bugs 2.1a:
 
 * Hexadecimal entity references were not recognized by the HTML and XML
   parsers.
+
+* Amaya could get stuck when creating an anchor.
+
+* Some memory leaks in the Windows version are fixed.
 
 =============================================================
 2.1

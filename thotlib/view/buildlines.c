@@ -3084,9 +3084,12 @@ PtrAbstractBox      pAb;
 	      /* The box is out of lines (like page breaks) */
 	      pLine->LiHorizRef = pBox->BxHorizRef;
 	      pLine->LiHeight = pBox->BxHeight;
+	      descent = pLine->LiHeight - pLine->LiHorizRef;
 	      /* move the box */
 	      i = pParentBox->BxYOrg + pLine->LiYOrg - pBox->BxYOrg;
 	      YMove (pBox, NULL, i, frame);
+	      /* delta of the block height if it's the last line */
+	      h = pLine->LiYOrg + pLine->LiHeight - pParentBox->BxHeight;
 	    }
 	  else
 	    {
@@ -3175,17 +3178,18 @@ PtrAbstractBox      pAb;
 	      
 	      /* update the rest of the block */
 	      pLine->LiHeight = descent + ascent;
-	      /* baseline position of the following line */
-	      h = pLine->LiYOrg + pLine->LiHeight;
+	      /* delta of the block height if it's the last line */
+	      h = pLine->LiYOrg + pLine->LiHeight - pParentBox->BxHeight;
 	    }
 
 	  /* move next lines */
 	  if (pNextLine)
 	    {
 	      /* new position of the next line */
-	      if (linespacing < pLine->LiHorizRef + pNextLine->LiHorizRef)
-		/* we refuse to overlaps 2 lines */
-		i = pLine->LiHorizRef + pNextLine->LiHorizRef;
+	      if (!pBox->BxAbstractBox->AbHorizEnclosing ||
+		  linespacing < descent + pNextLine->LiHorizRef)
+		/* we set the next line under the previous one */
+		i = descent + pNextLine->LiHorizRef;
 	      else
 		i = linespacing;
 	      pos = pLine->LiYOrg + pLine->LiHorizRef + i - pNextLine->LiHorizRef;
@@ -3214,11 +3218,11 @@ PtrAbstractBox      pAb;
 		      pNextLine = pNextLine->LiNext;
 		    }
 	      
-		  /* update the block height */
-		  if (pParentBox->BxContentHeight)
-		    ChangeDefaultHeight (pParentBox, pParentBox, pParentBox->BxHeight + h, frame);
 		}
 	    }
+	  /* update the block height */
+	  if (pParentBox->BxContentHeight)
+	    ChangeDefaultHeight (pParentBox, pParentBox, pParentBox->BxHeight + h, frame);
 	}
     }
 }

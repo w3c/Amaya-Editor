@@ -67,7 +67,7 @@ static char                 UserProfile[MAX_PRO_LENGTH];
 static PtrProCtl            UserProfContext = NULL;
 static char                 ProfileBuff[MAX_PRO_LENGTH];
 /* This boolean goes FALSE if the profile only contains browsing functions */
-static ThotBool             ProfileReadOnly = TRUE;
+static ThotBool             EnableEdit = TRUE;
 
 #include "registry_f.h"
 
@@ -447,14 +447,15 @@ static void SortFunctionTable ()
   SortedFunctionTable = (char **) TtaGetMemory (NbFunctions * sizeof (char *));
   index = 0;
   ctxt = FunctionTable;
+  EnableEdit = FALSE;
   while (ctxt && index < NbFunctions)
     {
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
 	{
-	  if (!ProfileReadOnly && ctxt->ProEntries[i].ProEdit)
+	  if (!EnableEdit && ctxt->ProEntries[i].ProEdit)
 	    /* there is almost one editing function */
-	    ProfileReadOnly = FALSE;
+	    EnableEdit = TRUE;
 	  SortedFunctionTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
 	  index++;
 	  /* next entry */
@@ -603,8 +604,6 @@ void Prof_FreeTable ()
 
 /*----------------------------------------------------------------------
   TtaRebuildProTable: Rebuild the Profiles Table
-   Returns the number of elements if operation succeded or a 0 if 
-   the operation failed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void     TtaRebuildProTable (char *prof_file)
@@ -618,6 +617,14 @@ char    *prof_file;
   Prof_InitTable ();
 }
 
+
+/*----------------------------------------------------------------------
+  TtaCanEdit returns TRUE if there is almost one editing function active.
+  ----------------------------------------------------------------------*/
+ThotBool    TtaCanEdit ()
+{
+  return (EnableEdit);
+}
 
 /*----------------------------------------------------------------------
    TtaGetProfileFileName:  Get the text for the profile file name.

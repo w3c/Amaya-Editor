@@ -10,6 +10,7 @@ extern ThotBool Prof_BelongTable ( char *name );
 extern void Prof_InitTable ( void );
 extern void Prof_FreeTable ( void );
 extern void TtaRebuildProTable ( char *prof_file );
+extern ThotBool TtaCanEdit ( void );
 extern void TtaGetProfileFileName ( STRING name,
                                     int length );
 extern void TtaGetDefProfileFileName ( STRING name,
@@ -29,6 +30,7 @@ extern ThotBool Prof_BelongTable (/* char *name */);
 extern void Prof_InitTable (/* void */);
 extern void Prof_FreeTable (/* void */);
 extern void TtaRebuildProTable (/* char *prof_file */);
+extern ThotBool TtaCanEdit (/* void */);
 extern void TtaGetProfileFileName (/* STRING name,
                                       int length */);
 extern void TtaGetDefProfileFileName (/* STRING name,

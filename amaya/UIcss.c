@@ -137,7 +137,7 @@ STRING              printdir;
 	{
 	  if (css->documents[doc])
 	    if ( css->category == CSS_DOCUMENT_STYLE)
-	      /* that external CSS file concerns the document */
+	      /* there is an internal style in the document */
 	      length += ustrlen (printdir) + 5;
 	    else
 	      /* that external CSS file concerns the document */
@@ -146,7 +146,7 @@ STRING              printdir;
 	}
       if (length)
 	{
-	  ptr = TtaAllocString (length);
+	  ptr = TtaAllocString (length + 1);
 	  length = 0;
 
 	  /* Add first the list of external CSS files */

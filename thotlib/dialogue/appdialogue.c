@@ -3321,6 +3321,14 @@ int                *action;
 	       j = ptr[i].ItemAction;
 	       if (j == -1)
 		 i++;	/* separator */
+	       else if (ptr[i].ItemID == itemID)
+		 {
+		   /* the entry is found */
+		   found = TRUE;
+		   if (ptr[i].ItemType == TEXT('M'))
+		     /* it doesn't match an action */
+		     j = -1;
+		 }
 	       else if (ptr[i].ItemType == TEXT('M'))
 		 {
 		   /* search in that submenu */
@@ -3330,10 +3338,8 @@ int                *action;
 		   ptr = ptrsmenu->ItemsList;
 		   max = ptrsmenu->ItemsNb;
 		 }
-	       else if (ptr[i].ItemID != itemID)
-		 i++;	/* it's not that one */
 	       else
-		 found = TRUE;
+		 i++;	/* it's not that one */
 	     }
 	   
 	   /* do we close the search in a submenu? */
@@ -3856,28 +3862,28 @@ int                 itemID;
 
    /* Search the menu, submenu and item */
    FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
-   if (action > 0)
-     if (MenuActionList[action].ActionActive[frame])
-       {
-	 /* entry found and active */
-	 MenuActionList[action].ActionActive[frame] = FALSE;
-	 ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
-	 if (submenu != 0)
-	   ref += submenu * MAX_MENU * MAX_ITEM;
-	 /* enable the entry */
+   if (action > 0 && MenuActionList[action].ActionActive[frame])
+     /* the entry is found and is active */
+     MenuActionList[action].ActionActive[frame] = FALSE;
+   if (menu > 0)
+     {
+       ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
+       if (submenu != 0)
+	 ref += submenu * MAX_MENU * MAX_ITEM;
+       /* enable the entry */
 #ifdef _WINDOWS
-	 hMenu = GetMenu (TtaGetViewFrame (document, view));
-	 EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+       hMenu = GetMenu (TtaGetViewFrame (document, view));
+       EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
 #else  /* !_WINDOWS */
-	 if (TtWDepth > 1)
-	   TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	 else
-	   {
-	     FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
-	     TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
-	   }
+       if (TtWDepth > 1)
+	 TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+       else
+	 {
+	   FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+	   TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+	 }
 #endif /* _WINDOWS */
-       }
+     }
 }
 
 
@@ -3917,38 +3923,37 @@ int                 itemID;
       return;
    /* Recherche les bons indices de menu, sous-menu et item */
    FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
-   if (action > 0)
-      /* l'action existe et le menu est actif */
-      if (!MenuActionList[action].ActionActive[frame])
-	{
-	   /* reactive l'action pour la fenetre */
-	   MenuActionList[action].ActionActive[frame] = TRUE;
-	   /* reactive l'entree de menu */
-	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
-	   if (submenu != 0)
-	      ref += submenu * MAX_MENU * MAX_ITEM;
-
-	   pDoc = LoadedDocument [document - 1];
-	   if (ref == FrameTable[frame].MenuRedo &&
-	       item == FrameTable[frame].EntryRedo &&
-	       (pDoc->DocReadOnly || pDoc->DocNbUndone == 0))
-	     return;
-	   else if (ref == FrameTable[frame].MenuUndo &&
-	       item == FrameTable[frame].EntryUndo &&
-	       (pDoc->DocReadOnly || pDoc->DocNbEditsInHistory == 0))
-	     return;
-	   else if (ref == FrameTable[frame].MenuPaste &&
-	       item == FrameTable[frame].EntryPaste &&
-	       (pDoc->DocReadOnly ||
-		(FirstSavedElement == NULL && ClipboardThot.BuLength == 0)))
-	     return;
+   if (action > 0 && !MenuActionList[action].ActionActive[frame])
+     /* the entry is found and is not active */
+     MenuActionList[action].ActionActive[frame] = TRUE;
+   if (menu > 0)
+     {
+       /* enable the menu entry */
+       ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
+       if (submenu != 0)
+	 ref += submenu * MAX_MENU * MAX_ITEM;
+       
+       pDoc = LoadedDocument [document - 1];
+       if (ref == FrameTable[frame].MenuRedo &&
+	   item == FrameTable[frame].EntryRedo &&
+	   (pDoc->DocReadOnly || pDoc->DocNbUndone == 0))
+	 return;
+       else if (ref == FrameTable[frame].MenuUndo &&
+		item == FrameTable[frame].EntryUndo &&
+		(pDoc->DocReadOnly || pDoc->DocNbEditsInHistory == 0))
+	 return;
+       else if (ref == FrameTable[frame].MenuPaste &&
+		item == FrameTable[frame].EntryPaste &&
+		(pDoc->DocReadOnly ||
+		 (FirstSavedElement == NULL && ClipboardThot.BuLength == 0)))
+	 return;
 #ifdef _WINDOWS
-	   hMenu = GetMenu (TtaGetViewFrame (document, view));
-	   EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+       hMenu = GetMenu (TtaGetViewFrame (document, view));
+       EnableMenuItem (hMenu, ref + item, MF_ENABLED);
 #else  /* !_WINDOWS */
-	   TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+       TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
 #endif /* _WINDOWS */
-	}
+     }
 }
 
 

@@ -636,13 +636,13 @@ Document        doc;
 
 
 /*----------------------------------------------------------------------
-   SetHTMLReadOnly
+   SetDocumentReadOnly
    Set the whole document in ReadOnly mode except input elements
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	SetHTMLReadOnly (Document doc)
+static void	SetDocumentReadOnly (Document doc)
 #else
-static void	SetHTMLReadOnly (doc)
+static void	SetDocumentReadOnly (doc)
 Document        doc;
 #endif
 {
@@ -707,7 +707,7 @@ Document            doc;
      TtaUnselect (document);
    if (TtaGetDocumentAccessMode (document))
      {
-       /* the document is in ReadOnly mode */
+       /* =============> The document is in Read-Only mode now */
        TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
 #ifdef _WINDOWS 
        WIN_TtaSwitchButton (document, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
@@ -721,7 +721,11 @@ Document            doc;
 	 DocumentTypes[document] = docImageRO;
        else if (DocumentTypes[document] == docCSS)
 	 DocumentTypes[document] = docCSSRO;
-       SetHTMLReadOnly (document);
+       else if (DocumentTypes[document] == docText)
+	 DocumentTypes[document] = docTextRO;
+       else if (DocumentTypes[document] == docSource)
+	 DocumentTypes[document] = docSourceRO;
+       SetDocumentReadOnly (document);
 
        /* update windows menus */
        TtaSetItemOff (document, 1, File, BSave);
@@ -730,11 +734,10 @@ Document            doc;
        TtaSetItemOff (document, 1, Edit_, BCut);
        TtaSetItemOff (document, 1, Edit_, BPaste);
        TtaSetItemOff (document, 1, Edit_, BClear);
-       TtaSetItemOff (document, 1, Edit_, BSpellCheck);
-       TtaSetItemOff (document, 1, Edit_, BTransform);
 
        TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
-       if (DocumentTypes[document] != docCSSRO)
+       if (DocumentTypes[document] == docHTMLRO ||
+	   DocumentTypes[document] == docImageRO)
 	 {
 	   TtaChangeButton (document, 1, iI, iconINo, FALSE);
 	   TtaChangeButton (document, 1, iB, iconBNo, FALSE);
@@ -755,6 +758,10 @@ Document            doc;
 	   SwitchIconGraph (document, 1, FALSE);
 #endif /* GRAPHML */
 
+	   TtaSetItemOff (document, 1, Edit_, BSpellCheck);
+	   TtaSetItemOff (document, 1, Edit_, BTransform);
+	   TtaSetItemOff (document, 1, Edit_, BAnnotate);
+	   TtaSetItemOff (document, 1, Edit_, BLoadAnnots);
 	   TtaSetMenuOff (document, 1, Types);
 	   TtaSetMenuOff (document, 1, Links);
 	   TtaSetMenuOff (document, 1, Style);
@@ -829,7 +836,7 @@ Document            doc;
      }
    else
      {
-       /* the document is in ReadWrite mode */
+       /* =============> The document is in Read-Write mode now */
        TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
        if (TtaIsDocumentModified (document))
 	 {
@@ -849,6 +856,10 @@ Document            doc;
 	 DocumentTypes[document] = docImage;
        else if (DocumentTypes[document] == docCSSRO)
 	 DocumentTypes[document] = docCSS;
+       else if (DocumentTypes[document] == docTextRO)
+	 DocumentTypes[document] = docText;
+       else if (DocumentTypes[document] == docSourceRO)
+	 DocumentTypes[document] = docSource;
        TtaSetDocumentAccessMode (document, 1);
        /* update windows menus */
        TtaSetItemOn (document, 1, Edit_, BUndo);
@@ -856,10 +867,9 @@ Document            doc;
        TtaSetItemOn (document, 1, Edit_, BCut);
        TtaSetItemOn (document, 1, Edit_, BPaste);
        TtaSetItemOn (document, 1, Edit_, BClear);
-       TtaSetItemOn (document, 1, Edit_, BSpellCheck);
-       TtaSetItemOn (document, 1, Edit_, BTransform);
        
-       if (DocumentTypes[document] != docCSS)
+       if (DocumentTypes[document] == docHTML ||
+	   DocumentTypes[document] == docImage)
 	 {
 	   TtaChangeButton (document, 1, iI, iconI, TRUE);
 	   TtaChangeButton (document, 1, iB, iconB, TRUE);
@@ -879,6 +889,10 @@ Document            doc;
 #ifdef GRAPHML
 	   SwitchIconGraph (document, 1, TRUE);
 #endif /* GRAPHML */
+	   TtaSetItemOn (document, 1, Edit_, BSpellCheck);
+	   TtaSetItemOn (document, 1, Edit_, BTransform);
+	   TtaSetItemOn (document, 1, Edit_, BAnnotate);
+	   TtaSetItemOn (document, 1, Edit_, BLoadAnnots);
 	   TtaSetMenuOn (document, 1, Types);
 	   TtaSetMenuOn (document, 1, Links);
 	   TtaSetMenuOn (document, 1, Style);
@@ -1403,13 +1417,29 @@ ThotBool     logFile;
 {
   View                mainView, structView, altView, linksView, tocView;
   Document            old_doc;
-  ThotBool            opened, reinitialized;
   int                 x, y, w, h;
+  ThotBool            opened, reinitialized;
 #ifdef _WINDOWS
-  int                 indexButton = 0;
 
   Window_Curs = IDC_WINCURSOR;
 #endif /* _WINDOWS */
+
+  /* is there any editing function available */
+  if (!TtaCanEdit ())
+    {
+      /* change the document status */
+      if (docType == docHTML)
+	docType = docHTMLRO;
+      else if (docType == docImage)
+	docType = docImageRO;
+      else if (docType == docCSS)
+	docType = docCSSRO;
+      else if (docType == docText)
+	docType = docTextRO;
+      else if (docType == docSource)
+	docType = docSourceRO;
+    }
+
   old_doc = doc;		/* previous document */
   if (doc != 0 && !TtaIsDocumentModified (doc))
     /* the new document will replace another document in the same window */
@@ -1764,7 +1794,38 @@ ThotBool     logFile;
 	 DocumentTypes[doc] == docSource ||
 	 DocumentTypes[doc] == docSourceRO)
        {
-	 if (DocumentTypes[doc] != docText && DocumentTypes[doc] != docCSS &&
+	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
+	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
+	 TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
+	 TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
+	 TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
+	 TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
+	 TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
+	 TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
+	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
+	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
+	 TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
+	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
+#ifdef MATHML
+	 SwitchIconMath (doc, 1, FALSE);
+#endif /* MATHML */
+#ifdef GRAPHML
+	 SwitchIconGraph (doc, 1, FALSE);
+#endif /* GRAPHML */
+
+	 TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
+	 TtaSetItemOff (doc, 1, Edit_, BTransform);
+	 TtaSetItemOff (doc, 1, Edit_, BAnnotate);
+	 TtaSetItemOff (doc, 1, Edit_, BLoadAnnots);
+	 TtaSetMenuOff (doc, 1, Types);
+	 TtaSetMenuOff (doc, 1, Links);
+	 TtaSetMenuOff (doc, 1, Style);
+	 TtaSetItemOff (doc, 1, Special, TSectionNumber);
+	 TtaSetItemOff (doc, 1, Special, BMakeBook);
+	 TtaSetMenuOff (doc, 1, Attributes_);
+
+	 if (DocumentTypes[doc] != docText &&
+	     DocumentTypes[doc] != docCSS &&
 	     DocumentTypes[doc] != docSource)
 	   {
 	     /* the document is in ReadOnly mode */
@@ -1773,8 +1834,6 @@ ThotBool     logFile;
 	     TtaSetItemOff (doc, 1, Edit_, BCut);
 	     TtaSetItemOff (doc, 1, Edit_, BPaste);
 	     TtaSetItemOff (doc, 1, Edit_, BClear);
-	     TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
-	     TtaSetItemOff (doc, 1, Edit_, BTransform);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 #ifdef _WINDOWS 
 	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
@@ -1800,30 +1859,6 @@ ThotBool     logFile;
 	     TtaSetItemOff (doc, 1, Views, BShowToC);
 	     TtaSetItemOff (doc, 1, Views, BShowSource);
 	   }
-	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
-	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
-	 TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
-	 TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
-	 TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
-	 TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
-	 TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
-	 TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
-	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
-	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
-	 TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
-	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-#ifdef MATHML
-	 SwitchIconMath (doc, 1, FALSE);
-#endif /* MATHML */
-#ifdef GRAPHML
-	 SwitchIconGraph (doc, 1, FALSE);
-#endif /* GRAPHML */
-	 TtaSetMenuOff (doc, 1, Types);
-	 TtaSetMenuOff (doc, 1, Links);
-	 TtaSetMenuOff (doc, 1, Style);
-	 TtaSetItemOff (doc, 1, Special, TSectionNumber);
-	 TtaSetItemOff (doc, 1, Special, BMakeBook);
-	 TtaSetMenuOff (doc, 1, Attributes_);
        }
      else if (DocumentTypes[doc] == docHTML ||
 	      DocumentTypes[doc] == docImage)
@@ -2325,6 +2360,15 @@ ThotBool	    history;
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
       TtaFreeMemory (tempdir);
+
+      /* Set the document read-only when needed */
+      if (DocumentTypes[newdoc] == docHTMLRO ||
+	  DocumentTypes[newdoc] == docImageRO ||
+	  DocumentTypes[newdoc] == docCSSRO ||
+	  DocumentTypes[newdoc] == docTextRO ||
+	  DocumentTypes[newdoc] == docSourceRO)
+	SetDocumentReadOnly (newdoc);
+
       if (!plainText)
 	{
 	if (HTMLErrorsFound)
@@ -2398,8 +2442,6 @@ void *context;
        res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
 			       documentname, content_type, FALSE);
 	W3Loading = 0;		/* loading is complete now */
-	if (DocumentTypes[res] == docHTMLRO)
-	  SetHTMLReadOnly (res);
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
 	if (res != 0)
@@ -2747,21 +2789,38 @@ View                view;
      /* open a window for the source code */
      sourceDoc = InitDocView (0, documentname, docSource, FALSE);   
      if (sourceDoc > 0)
-        {
-        DocumentSource[document] = sourceDoc;
-        s = TtaStrdup (DocumentURLs[document]);
-        DocumentURLs[sourceDoc] = s;
-        DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
-        DocumentMeta[sourceDoc]->form_data = NULL;
-        DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
-        DocumentTypes[sourceDoc] = docSource;
-        DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
-        StartParser (sourceDoc, tempdocument, documentname, tempdir,
-		     tempdocument, TRUE);
-	event.document = document;
-	SynchronizeSourceView (&event);
-        TtaSetItemOff (sourceDoc, 1, File, BTemplate);
-        }
+       {
+	 DocumentSource[document] = sourceDoc;
+	 s = TtaStrdup (DocumentURLs[document]);
+	 DocumentURLs[sourceDoc] = s;
+	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+	 DocumentMeta[sourceDoc]->form_data = NULL;
+	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
+	 DocumentTypes[sourceDoc] = docSource;
+	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
+	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
+		      tempdocument, TRUE);
+	 event.document = document;
+
+	 /* Set the document read-only when needed */
+	 if (DocumentTypes[document] == docHTMLRO)
+	   {
+	     DocumentTypes[sourceDoc] = docSourceRO;
+	     SetDocumentReadOnly (sourceDoc);
+	   }
+	 TtcSwitchCommands (sourceDoc, 1); /* no command filed */	 
+	 TtaSetItemOff (sourceDoc, 1, File, New1);
+	 TtaSetItemOff (sourceDoc, 1, File, BSaveAs);
+	 TtaSetItemOff (sourceDoc, 1, File, BOpenDoc);
+	 TtaSetItemOff (sourceDoc, 1, File, BOpenInNewWindow);
+	 TtaSetItemOff (sourceDoc, 1, Edit_, BSpellCheck);
+	 TtaSetItemOff (sourceDoc, 1, Edit_, BTransform);
+	 TtaSetItemOff (sourceDoc, 1, Views, TShowTextZone);
+	 TtaSetMenuOff (sourceDoc, 1, Special);
+	 TtaSetMenuOff (sourceDoc, 1, Help_);
+
+	 SynchronizeSourceView (&event);
+       }
      TtaFreeMemory (tempdocument);
      }
 }
@@ -3221,8 +3280,6 @@ void *context;
    if (form_data)
      TtaFreeMemory (form_data);
    TtaFreeMemory (ctx);
-   if (DocumentTypes[newdoc] == docHTMLRO)
-     SetHTMLReadOnly (newdoc);
 }
 
 
@@ -3394,6 +3451,8 @@ void               *ctx_cbf;
 		       else
 			 {
 			   TtaSetItemOff (newdoc, 1, File, BReload);
+			   TtaSetItemOff (newdoc, 1, Edit_, TEditMode);
+			   TtaChangeButton (newdoc, 1, iEditor, iconEditor, FALSE);
 			   /* invalid the menu Views */
 			   TtaSetMenuOff (newdoc, 1, Views);
 			 }
@@ -4189,80 +4248,6 @@ DocumentType     docType;
 }
 
 
-#ifdef AMAYA_RESTART
-
-#ifdef __STDC__
-static int       RestoreOneAmayaDoc_restart (Document doc, STRING tempdoc, STRING docname, DocumentType docType, int modified)
-#else
-static int       RestoreOneAmayaDoc_restart (doc, tempdoc, docname, docType, modified)
-Document         doc;
-STRING           tempdoc;
-STRING           docname;
-DocumentType     docType;
-int              modified;
-#endif
-{
-  CHAR_T              tempfile[MAX_LENGTH];
-  int                 newdoc, len;
-  ThotBool            stopped_flag;
-
-
-  W3Loading = doc;
-  BackupDocument = doc;
-  TtaExtractName (tempdoc, DirectoryName, DocumentName);
-  newdoc = InitDocView (doc, DocumentName, docType, FALSE);
-  if (newdoc != 0)
-    {
-      /* load the saved file */
-      W3Loading = newdoc;
-      if (IsW3Path (docname))
-	{
-	  /* it's a remote file */
-	  if (docType == docHTML)
-	    ustrcpy (tempfile, TEXT("text/html"));
-	  else
-	    tempfile[0] = EOS;
-	  LoadHTMLDocument (newdoc, docname, NULL, CE_ABSOLUTE, 
-			    tempdoc, DocumentName, tempfile, FALSE);
-	}
-      else
-	{
-	  /* it's a local file */
-	  tempfile[0] = EOS;
-	  /* load the temporary file */
-	  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_ABSOLUTE,
-			    tempfile, DocumentName, NULL, FALSE);
-	  /* change its URL */
-	  TtaFreeMemory (DocumentURLs[newdoc]);
-	  len = ustrlen (docname) + 1;
-	  DocumentURLs[newdoc] = TtaAllocString (len);
-	  ustrcpy (DocumentURLs[newdoc], docname);
-	  DocumentSource[newdoc] = 0;
-	  TtaSetTextZone (newdoc, 1, 1, docname);
-	  /* change its directory name */
-	  TtaSetDocumentDirectory (newdoc, DirectoryName);
-	}
-      W3Loading = 0;		/* loading is complete now */
-      DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-      if (modified)
-	TtaSetDocumentModified (newdoc);	     
-      stopped_flag = FetchAndDisplayImages (newdoc, 0);
-      if (!stopped_flag)
-	{
-	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
-	  /* almost one file is restored */
-	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-	}
-      /* unlink this saved file */
-      TtaFileUnlink (tempdoc);
-    }
-  BackupDocument = 0;
-  return (newdoc);
-
-}
-#endif /* AMAYA_RESTART */	
-
-
 /*----------------------------------------------------------------------
   RestoreAmayaDocs checks if Amaya has previously crashed.
   The file Crash.amaya gives the list of saved files
@@ -4313,81 +4298,6 @@ static ThotBool       RestoreAmayaDocs ()
     }
   return (aDoc);
 }
-
-#ifdef AMAYA_RESTART
-
-/*----------------------------------------------------------------------
-  RestoreAmayaDocsAfterRestart checks if Amaya has previously been restarted.
-  The file Restore.amaya gives the list of saved files
-  ----------------------------------------------------------------------*/
-static ThotBool       RestoreAmayaDocsAfterRestart ()
-{
-  FILE               *f;
-  int                 docType;
-  CHAR_T              tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  CHAR_T              docname[MAX_LENGTH];  
-  ThotBool            aDoc;
-  int                 modified = 1;
-  int                 EntriesNb, i;
-  char              TempString[250];
-
-  /* check if Amaya has restarted */
-  usprintf (tempname, TEXT("%s%cRestart.amaya"), TempFileDirectory, DIR_SEP);
-  /* no document is opened */
-  aDoc = FALSE;
-  if (TtaFileExist (tempname))
-    {   
-      f = fopen (tempname, "r");
-    
-      if (f != NULL)
-	{
-
-	  
-	  /* how many files have to be reopened ?  */
-	  EntriesNb = 0;
-	  while ( ufgets (ISO2WideChar(TempString), sizeof(TempString), f))
-	    {
-	      EntriesNb ++;
-	    }
-	   fseek (f, 0, SEEK_SET);
-    
-	  InNewWindow = TRUE;
-	  tempdoc[0] = EOS;
-	  for (i=0; i < EntriesNb; i++)
-	    {
-	      fscanf (f, "%s %s %d %d\n", tempdoc, docname, &docType, &modified);
-	      
-	      if    ((tempdoc[0] != EOS) && TtaFileExist(tempdoc))
-		{
-		  if (RestoreOneAmayaDoc_restart (0, tempdoc, docname, (DocumentType) docType, modified))
-		    aDoc = TRUE;
-		}
-	    }
-	  InNewWindow = FALSE;	  
-	  fclose (f);
-	}
-      TtaFileUnlink (tempname);
-    }
-  return (aDoc);
-}
-
-
-/*-----------------------------------------------------------------
-  RestartAmaya 
--------------------------------------------------------------------*/
-void RestartAmaya ()
-{
-  BackupDocs4Restart();
-
-  /* close all windows */
-
-  /* free all allocated memory */
-
- // main(1,"/home/bonameau/src/Amaya/LINUX-ELF/bin/amaya");
-
-
-}
-#endif /* AMAYA_RESTART */
 
 
 /*----------------------------------------------------------------------
@@ -4722,10 +4632,6 @@ NotifyEvent        *event;
    TtaFreeMemory (tempname);
    restoredDoc = RestoreAmayaDocs ();
 
-#ifdef AMAYA_RESTART
-   restoredDoc = RestoreAmayaDocsAfterRestart ();
-#endif /*AMAYA_RESTART  */
-
    if (appArgc % 2 == 0)
       /* The last argument in the command line is the document to be opened */
       s = appArgv[appArgc - 1];
@@ -4848,11 +4754,11 @@ View                view;
         HMENU hmenu = WIN_GetMenu (currentFrame); 
         if (!itemChecked) {
           CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-          itemChecked = TRUE ;
+          itemChecked = TRUE;
        } else {
               hmenu = WIN_GetMenu (currentFrame); 
               CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-              itemChecked = FALSE ;
+              itemChecked = FALSE;
        }
    }
 #  endif /* _WINDOWS */
@@ -5240,11 +5146,13 @@ void HelpConfigure (document, view)
 }
 
 /*----------------------------------------------------------------------
+  ShowLogFile
+  Show error messages generated by the parser.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void HelpParseErrors (Document doc, View view)
+void ShowLogFile (Document doc, View view)
 #else  /* __STDC__ */
-void HelpParseErrors (doc, view)
+void ShowLogFile (doc, view)
 Document doc; 
 View     view;
 #endif /* __STDC__ */

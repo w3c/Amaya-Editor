@@ -21,10 +21,13 @@
 #ifdef __STDC__
 /*----------------------------------------------------------------------
   TtaRebuildProTable: Rebuild the Profiles Table
-   Returns the number of elements if operation succeded or a 0 if 
-   the operation failed.
   ----------------------------------------------------------------------*/
 extern void     TtaRebuildProTable (char *prof_file);
+
+/*----------------------------------------------------------------------
+  TtaCanEdit returns TRUE if there is almost one editing function active.
+  ----------------------------------------------------------------------*/
+extern ThotBool    TtaCanEdit ();
 
 /*----------------------------------------------------------------------
    TtaGetProfileFineName:  Get the text for the profile file name.
@@ -47,6 +50,7 @@ extern int      TtaGetProfilesItems (STRING *listEntries, int length);
 
 #else  /* !__STDC__ */
 extern void     TtaRebuildProTable (/*char *prof_file*/);
+extern ThotBool TtaCanEdit ();
 extern void     TtaGetProfileFileName (/*STRING name, int length*/);
 extern void     TtaGetDefProfileFileName (/*STRING name, int length*/);
 extern int      TtaGetProfilesItems (/*STRING *listEntries, int length*/);
