@@ -1440,8 +1440,8 @@ void MakeToc (Document doc, View view)
     {
       /* no selection */
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-    }
     return;
+    }
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp (s, "HTML"))
