@@ -11,6 +11,8 @@ extern char *TtaGiveRGB ( char *value,
                           unsigned short *red,
                           unsigned short *green,
                           unsigned short *blue );
+extern char *TtaGetStyledAttributeValues ( PSchema tsch,
+                                           int attrType );
 extern int TtaSetStylePresentation ( unsigned int type,
                                      Element el,
                                      PSchema tsch,
@@ -40,6 +42,8 @@ extern char *TtaGiveRGB (/* char *value,
                             unsigned short *red,
                             unsigned short *green,
                             unsigned short *blue */);
+extern char *TtaGetStyledAttributeValues (/* PSchema tsch,
+                                             int attrType */);
 extern int TtaSetStylePresentation (/* unsigned int type,
                                        Element el,
                                        PSchema tsch,

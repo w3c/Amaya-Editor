@@ -48,7 +48,7 @@ static Document	    ApplyClassDoc;
   RemoveElementStyle cleans all the presentation rules of a given element.
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
-static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
+static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 {
    ElementType		elType;
    Attribute            attr;
@@ -108,9 +108,8 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
    image url is obtained by concatenation of imgpath and the image name.
    Returns NULL or a new allocated styleString.
   ----------------------------------------------------------------------*/
-char * UpdateCSSBackgroundImage (char *oldpath, char *newpath,
-				 char *imgpath,
-				 char *styleString)
+char *UpdateCSSBackgroundImage (char *oldpath, char *newpath,
+				char *imgpath, char *styleString)
 {
   char               *b, *e, *ptr, *oldptr, *sString;
   char                old_url[MAX_LENGTH];
@@ -244,7 +243,7 @@ ThotBool UpdateStyleDelete (NotifyAttribute * event)
   ChangeStyle
   the STYLE element will be changed in the document HEAD.
   ----------------------------------------------------------------------*/
-ThotBool            ChangeStyle (NotifyElement * event)
+ThotBool ChangeStyle (NotifyElement * event)
 {
   OldBuffer = GetStyleContents (event->element);
   return FALSE;  /* let Thot perform normal operation */
@@ -255,7 +254,7 @@ ThotBool            ChangeStyle (NotifyElement * event)
   DeleteStyle
   the STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
-ThotBool            DeleteStyle (NotifyElement * event)
+ThotBool DeleteStyle (NotifyElement * event)
 {
   RemoveStyleSheet (NULL, event->document, TRUE, TRUE, event->element);
   return FALSE;  /* let Thot perform normal operation */
@@ -266,7 +265,7 @@ ThotBool            DeleteStyle (NotifyElement * event)
   EnableStyleElement
   the STYLE element must be reparsed.
   ----------------------------------------------------------------------*/
-void           EnableStyleElement (Document doc)
+void EnableStyleElement (Document doc)
 {
   Element               el;
   ElementType		elType;
@@ -296,7 +295,7 @@ void           EnableStyleElement (Document doc)
   DeleteStyleElement
   the STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
-void           DeleteStyleElement (Document doc)
+void DeleteStyleElement (Document doc)
 {
   Element               el;
   ElementType		elType;
@@ -329,7 +328,7 @@ void           DeleteStyleElement (Document doc)
    StyleChanged
    A STYLE element has been changed in the HEAD
   ----------------------------------------------------------------------*/
-void                StyleChanged (NotifyAttribute * event)
+void StyleChanged (NotifyAttribute * event)
 {
   char               *buffer, *ptr1, *ptr2;
   char               *pEnd, *nEnd;
@@ -787,11 +786,11 @@ static void DoApplyClass (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
-       enrich the CSS string.
+  SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
+  enrich the CSS string.
   ----------------------------------------------------------------------*/
-static void  SpecificSettingsToCSS (Element el, Document doc,
-				    PresentationSetting settings, void *param)
+static void SpecificSettingsToCSS (Element el, Document doc,
+				   PresentationSetting settings, void *param)
 {
   LoadedImageDesc    *imgInfo;
   char               *css_rules = param;
@@ -880,7 +879,7 @@ void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
    Change or create a class attribute to reflect the Style attribute
    of the selected element.
   ----------------------------------------------------------------------*/
-static void         UpdateClass (Document doc)
+static void UpdateClass (Document doc)
 {
   Attribute           attr;
   AttributeType       attrType;
@@ -1183,25 +1182,32 @@ static void         UpdateClass (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   PutClassName
-   Put the class names contained in attribute attr at the end of the buff
-   buffer if it's not there already.
+  PutClassName
+  Put class names at the end of the buffer buff if they are not there
+  already.
+  Class names are contained in attribute attr or in parameter className.
   ----------------------------------------------------------------------*/
-static void PutClassName (Attribute attr, char *buf, int* index, int* free,
-			  int* nb)
+static void PutClassName (Attribute attr, char *className, char *buf,
+			  int *index, int *free, int *nb)
 {
   int		len, cur, i;
   unsigned char selector[200];
   unsigned char *ptr, *name;
   ThotBool      found;
 
-  len = 198;
-  TtaGiveTextAttributeValue (attr, selector, &len);
-  selector[len+1] = EOS;
-  /* get the first name contained in the attribute */
-  ptr = selector;
-  ptr = TtaSkipBlanks (ptr);
-  while (*ptr != EOS)
+  if (attr)
+    {
+      len = 198;
+      TtaGiveTextAttributeValue (attr, selector, &len);
+      selector[len+1] = EOS;
+      /* get the first name contained in the attribute */
+      ptr = selector;
+      ptr = TtaSkipBlanks (ptr);
+    }
+  else
+    ptr = className;
+
+  while (ptr && *ptr != EOS)
     {
       name = ptr;
       /* look for the end of the current name */
@@ -1242,16 +1248,20 @@ static void PutClassName (Attribute attr, char *buf, int* index, int* free,
 
 /*----------------------------------------------------------------------
    BuildClassList
-   Build the whole list of class names in use after the first name.
+   Build the whole list of class names after the first name.
   ----------------------------------------------------------------------*/
 static int BuildClassList (Document doc, char *buf, int size, char *first)
 {
   Element             el;
   Attribute           attr;
   AttributeType       attrType;
+  CSSInfoPtr          css;
+  PInfoPtr            pInfo;
+  PISchemaPtr         pIS;
+  char               *ptr, *schName;
   int                 free;
-  int                 len;
-  int                 nb;
+  int                 len, nb;
+  int                 type;
   int                 index;
 
   /* add the first element if specified */
@@ -1268,20 +1278,18 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
       index += len;
       nb++;
     }
-
-  /* list all class values */
-  /* looks first for the Class attribute defined in the HTML DTD */
+  /* looks for the class attribute defined in the HTML DTD */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   if (attrType.AttrSSchema)
-    /* this document contains HTML elements */
     {
+      /* this document contains HTML elements */
       attrType.AttrTypeNum = HTML_ATTR_Class;
       el = TtaGetMainRoot (doc);
-      while (el != NULL)
+      while (el)
 	{
 	  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-	  if (attr != NULL)
-	    PutClassName (attr, buf, &index, &free, &nb);
+	  if (attr)
+	    PutClassName (attr, NULL, buf, &index, &free, &nb);
 	}
     }
   /* looks for the class attribute defined in the MathML DTD */
@@ -1289,34 +1297,67 @@ static int BuildClassList (Document doc, char *buf, int size, char *first)
   if (attrType.AttrSSchema)
      /* there are some MathML elements in this document */
      {
-     attrType.AttrTypeNum = MathML_ATTR_class;
-     el = TtaGetMainRoot (doc);
-     while (el != NULL)
-        {
-        TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-        if (attr != NULL)
-	   PutClassName (attr, buf, &index, &free, &nb);
-        }
+       attrType.AttrTypeNum = MathML_ATTR_class;
+       el = TtaGetMainRoot (doc);
+       while (el)
+	 {
+	   TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	   if (attr)
+	     PutClassName (attr, NULL, buf, &index, &free, &nb);
+	 }
      }
 #ifdef _SVG
   /* looks for the class attribute defined in the SVG DTD */
   attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
   if (attrType.AttrSSchema)
-     /* there are some SVG elements in this document */
-     {
-     attrType.AttrTypeNum = SVG_ATTR_class;
-     el = TtaGetMainRoot (doc);
-     while (el != NULL)
+    /* there are some SVG elements in this document */
+    {
+      attrType.AttrTypeNum = SVG_ATTR_class;
+      el = TtaGetMainRoot (doc);
+      while (el)
         {
-        TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-        if (attr != NULL)
-	   PutClassName (attr, buf, &index, &free, &nb);
+	  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	  if (attr)
+	    PutClassName (attr, NULL, buf, &index, &free, &nb);
         }
-     }
+    }
 #endif
   /* look for all class names that are used in the STYLE element and in
      all style sheets currently associated with the document */
-  /*** TODO ***/
+  css = CSSList;
+  while (css)
+    {
+      if (css->documents[doc])
+	{
+	  pInfo = css->infos;
+	  if (pInfo->PiDoc == doc)
+	    {
+	      pIS = pInfo->PiSchemas;
+	      while (pIS && pIS->PiSSchema)
+		{
+		  /* get the list of class names declared in that presentation schema */
+		  schName = TtaGetSSchemaName (pIS->PiSSchema);
+		  if (strcmp (schName, "MathML") == 0)
+		    type = MathML_ATTR_class;
+#ifdef _SVG
+		  else if (strcmp (schName, "SVG") == 0)
+		    type = SVG_ATTR_class;
+#endif
+		  else
+		    type = HTML_ATTR_Class;
+		  ptr = TtaGetStyledAttributeValues (pIS->PiPSchema, type);
+		  while (ptr && ptr[0] != EOS)
+		    {
+		      len = strlen (ptr) + 1;
+		      PutClassName (NULL, ptr, buf, &index, &free, &nb);
+		      ptr += len;
+		    }
+		  pIS = pIS->PiSNext;
+		}
+	    }
+	}
+      css = css->NextCSS;
+    }
   return (nb);
 }
 	    
@@ -1352,15 +1393,8 @@ void CreateClass (Document doc, View view)
     return;
   if (ClassReference == NULL)
     return;
-
   /* if the selected element is read-only, do nothing */
   if (TtaIsReadOnly (ClassReference))
-    return;
-
-  elType = TtaGetElementType (TtaGetMainRoot (doc));
-  schName = TtaGetSSchemaName (elType.ElSSchema);
-  if (strcmp (schName, "HTML") && strcmp (schName, "SVG"))
-    /* it's not a HTML document nor a SVG document. Do nothing */
     return;
 
   /* if only a part of an element is selected, select the parent instead */
@@ -1371,84 +1405,80 @@ void CreateClass (Document doc, View view)
       ClassReference = TtaGetParent (ClassReference);
       elType = TtaGetElementType (ClassReference);
     }
-
-  /* check if the element has a style attribute */
-  schName = TtaGetSSchemaName (elType.ElSSchema);
-  if (strcmp (schName, "MathML") == 0)
+  if (elType.ElSSchema)
     {
+      schName = TtaGetSSchemaName (elType.ElSSchema);
+      if (strcmp (schName, "HTML") &&
+	  strcmp (schName, "SVG") &&
+	  strcmp (schName, "MathML"))
+	/* no class attribute for that element. Do nothing */
+	return;
+      /* check if the element has a style attribute */
       attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = MathML_ATTR_style_;
-    }
-  else
+      if (strcmp (schName, "MathML") == 0)
+	attrType.AttrTypeNum = MathML_ATTR_style_;
 #ifdef _SVG
-  if (strcmp (schName, "SVG") == 0)
-    {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = SVG_ATTR_style_;
-    }
-  else
+      else if (strcmp (schName, "SVG") == 0)
+	attrType.AttrTypeNum = SVG_ATTR_style_;
 #endif
-    {
-      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-      attrType.AttrTypeNum = HTML_ATTR_Style_;
-    }
-  attr = TtaGetAttribute (ClassReference, attrType);
-  if (attr == NULL)
-    /* no attribute style */
-    return;
-
-  /* update the class name selector. */
-  elHtmlName =  GetXMLElementName (TtaGetElementType (ClassReference), doc);
-  if (elHtmlName[0] == '?')
-    InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
-  else
-    {
-#ifndef _WINDOWS
-      TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
-		  TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
-#endif /* !_WINDOWS */
-      NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
-#ifndef _WINDOWS
-      TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
-		      TtaGetMessage (AMAYA, AM_SEL_CLASS),
-		      NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
-#endif /* !_WINDOWS */
-      
-      /* preselect the entry corresponding to the class of the element. */
-      if (!strcmp (schName, "MathML"))
-	attrType.AttrTypeNum = MathML_ATTR_class;
       else
-#ifdef _SVG
-	if (!strcmp (schName, "SVG"))
-	  attrType.AttrTypeNum = SVG_ATTR_class;
-	else
-#endif
-	  attrType.AttrTypeNum = HTML_ATTR_Class;
-
+	attrType.AttrTypeNum = HTML_ATTR_Style_;
       attr = TtaGetAttribute (ClassReference, attrType);
-      if (attr)
-	{
-	  len = 50;
-	  TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifndef _WINDOWS
-	  TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
-#endif /* _WINDOWS */
-	  strcpy (CurrentClass, a_class);
-	}
+      if (attr == NULL)
+	/* no attribute style */
+	return;
+
+      /* update the class name selector. */
+      elHtmlName =  GetXMLElementName (elType, doc);
+      if (elHtmlName[0] == '?')
+	InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
       else
 	{
 #ifndef _WINDOWS
-	  TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
-#endif /* _WINDOWS */
-	  strcpy (CurrentClass, elHtmlName);
-	}
-  
-      /* pop-up the dialogue box. */
+	  TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
+		      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
+#endif /* !_WINDOWS */
+	  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
 #ifndef _WINDOWS
-      TtaShowDialogue (BaseDialog + ClassForm, TRUE);
-#else  /* _WINDOWS */
-      CreateRuleDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
+	  TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
+			  TtaGetMessage (AMAYA, AM_SEL_CLASS),
+			  NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
+#endif /* !_WINDOWS */
+	  
+	  /* preselect the entry corresponding to the class of the element. */
+	  if (!strcmp (schName, "MathML"))
+	    attrType.AttrTypeNum = MathML_ATTR_class;
+#ifdef _SVG
+	  else if (!strcmp (schName, "SVG"))
+	    attrType.AttrTypeNum = SVG_ATTR_class;
+#endif
+	  else
+	    attrType.AttrTypeNum = HTML_ATTR_Class;
+	  attr = TtaGetAttribute (ClassReference, attrType);
+	  if (attr)
+	    {
+	      len = 50;
+	      TtaGiveTextAttributeValue (attr, a_class, &len);
+#ifndef _WINDOWS
+	      TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
 #endif /* _WINDOWS */
+	      strcpy (CurrentClass, a_class);
+	    }
+	  else
+	    {
+#ifndef _WINDOWS
+	      TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
+#endif /* _WINDOWS */
+	      strcpy (CurrentClass, elHtmlName);
+	    }
+  
+	  /* pop-up the dialogue box. */
+#ifndef _WINDOWS
+	  TtaShowDialogue (BaseDialog + ClassForm, TRUE);
+#else  /* _WINDOWS */
+	  CreateRuleDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
+#endif /* _WINDOWS */
+	}
     }
 }
 
@@ -1474,16 +1504,15 @@ void ApplyClass (Document doc, View view)
     return;
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
 			       &firstSelectedChar, &lastSelectedChar);
-  if (!firstSelectedEl)
+  if (firstSelectedEl == NULL)
      return;
-
   /* if the selected element is read-only, do nothing */
   if (TtaIsReadOnly (firstSelectedEl))
     return;
 
+  elType = TtaGetElementType (firstSelectedEl);
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
-
   /* updating the class name selector. */
 #ifndef _WINDOWS
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
@@ -1500,26 +1529,23 @@ void ApplyClass (Document doc, View view)
 
   /* preselect the entry corresponding to the class of the first selected
      element. */
-  elType = TtaGetElementType (firstSelectedEl);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
-     {
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_class;
-     }
-  else
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_class;
+    }
 #ifdef _SVG
-  elType = TtaGetElementType (firstSelectedEl);
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-     {
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = SVG_ATTR_class;
-     }
-  else
+  else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_class;
+    }
 #endif
-     {
-     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-     attrType.AttrTypeNum = HTML_ATTR_Class;
-     }
+  else
+    {
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+      attrType.AttrTypeNum = HTML_ATTR_Class;
+    }
   attr = TtaGetAttribute (firstSelectedEl, attrType);
   if (attr)
     {

@@ -619,7 +619,7 @@ static void InitCSSDialog (Document doc, char *s)
 #endif /* !_WINDOWS */
   select = -1;
   i = 0;
-  while (css != NULL)
+  while (css)
     {
       if (css->documents[doc] &&
 	       /* it's impossible to remove the User style sheet */

@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char * UpdateCSSBackgroundImage ( char *oldpath,
-                                         char *newpath,
-                                         char *imgpath,
-                                         char *styleString );
+extern char *UpdateCSSBackgroundImage ( char *oldpath,
+                                        char *newpath,
+                                        char *imgpath,
+                                        char *styleString );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyElement * event );
 extern ThotBool DeleteStyle ( NotifyElement * event );
@@ -31,10 +31,10 @@ extern void StyleCallbackDialogue ( int ref,
 
 #else /* __STDC__ */
 
-extern char * UpdateCSSBackgroundImage (/* char *oldpath,
-                                           char *newpath,
-                                           char *imgpath,
-                                           char *styleString */);
+extern char *UpdateCSSBackgroundImage (/* char *oldpath,
+                                          char *newpath,
+                                          char *imgpath,
+                                          char *styleString */);
 extern ThotBool UpdateStyleDelete (/* NotifyAttribute * event */);
 extern ThotBool ChangeStyle (/* NotifyElement * event */);
 extern ThotBool DeleteStyle (/* NotifyElement * event */);

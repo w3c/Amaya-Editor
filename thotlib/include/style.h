@@ -272,6 +272,12 @@ extern void TtaApplyAllSpecificSettings (Element element, Document doc,
 extern void TtaCleanElementPresentation (Element el, Document doc);
 
 /*----------------------------------------------------------------------
+  TtaGetStyledAttributeValues returns the list of values of the attribute
+  attrType which have an entry in the presentation schema tsch.
+  ----------------------------------------------------------------------*/
+extern char *TtaGetStyledAttributeValues (PSchema tsch, int attrType);
+
+/*----------------------------------------------------------------------
   TtaCleanStylePresentation
   Remove all presentation for the extended presentation schema tsch associated
   with structure schema sSch in document doc

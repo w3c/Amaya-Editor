@@ -753,6 +753,34 @@ static void PresRuleAddAttrCond (PtrPRule rule, int type, int level,
    AddCond (&rule->PrCond, cond);
 }
 
+static char ListOfValues[MAX_LENGTH];
+/*----------------------------------------------------------------------
+  TtaGetStyledAttributeValues returns the list of values of the attribute
+  attrType which have an entry in the presentation schema tsch.
+  ----------------------------------------------------------------------*/
+char *TtaGetStyledAttributeValues (PSchema tsch, int attrType)
+{
+  AttributePres      *attrs;
+  int                 i, len;
+
+  i = 0;
+  ListOfValues[i] = EOS;
+  attrs = ((PtrPSchema) tsch)->PsAttrPRule->AttrPres[attrType - 1];
+  while (attrs)
+    {
+      if (attrs->ApString)
+	{
+	  /* add that new value */
+	  len = strlen (attrs->ApString) + 1;
+	  if (i + len <= MAX_LENGTH)
+	    strncpy (&ListOfValues[i], attrs->ApString, len);
+	  i += len;
+	}
+      attrs = attrs->ApNextAttrPres;
+    }
+  return ListOfValues;
+}
+
 /*----------------------------------------------------------------------
   FirstPresAttrRuleSearch: look in the array of Attribute presentation
   blocks, for a block and a rule corresponding to the current context.
