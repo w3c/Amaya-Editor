@@ -168,7 +168,6 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
   AttributeType	attrType;
   ElementType   elType;
   int		kind, len;
-#define ATTRLEN 64
   char	       *oldValue; /* [ATTRLEN]; */
 
   elType = TtaGetElementType (elem);
@@ -187,15 +186,15 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
 	span = parent;
       if (span != NULL)
         {
-          oldValue = TtaGetMemory (ATTRLEN);
           TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaGetAttribute (span, attrType);
 	  if (newAttr == NULL)
 	     {
-	     newAttr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (span, newAttr, doc);
+	       newAttr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (span, newAttr, doc);
 	     }
-          len = ATTRLEN - 1;
+	  len = TtaGetTextAttributeLength (attr);
+          oldValue = TtaGetMemory (len + 1);
           TtaGiveTextAttributeValue (attr, oldValue, &len);
 	  TtaSetAttributeText (newAttr, oldValue, span, doc);
 	  TtaRegisterAttributeCreate (newAttr, span, doc);
@@ -659,6 +658,7 @@ void AttrLangCreated (NotifyAttribute *event)
   int		len;
   AttributeType attrType;
   Attribute	attr;
+#define ATTRLEN 64
   char	       *value = TtaGetMemory (ATTRLEN); 
 
   elem = event->element;
