@@ -1319,7 +1319,7 @@ gboolean listeventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
 	    formKillGTK (w, NULL, (gpointer) data);
 	  }
       }
-      return FALSE;
+      return TRUE;
     case GDK_LEAVE_NOTIFY:
       /*We could hide the widget there ?*/
       return FALSE;
