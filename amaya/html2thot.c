@@ -4092,6 +4092,7 @@ static sourceTransition sourceAutomaton[] =
 /* state 3: reading an end tag */
    {3, '>', (Proc) EndOfEndTag, 0},
    {3, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {3, 'S', (Proc) Do_nothing, 3},
    {3, '*', (Proc) PutInBuffer, 3},
 /* state 4: reading an attribute name */
    {4, '=', (Proc) EndOfAttrName, 5},
