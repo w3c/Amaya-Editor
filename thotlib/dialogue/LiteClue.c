@@ -1,7 +1,7 @@
 /* 
 LiteClue.c - LiteClue widget
 	See LiteClue documentation
-	Version 1.2
+	Version 1.4
 
 Copyright 1996 COMPUTER GENERATION, INC.,
 
@@ -23,17 +23,50 @@ Author:
 Gary Aviv 
 Computer Generation, Inc.,
 gary@compgen.com
+www.compgen.com/widgets
 
-Contributers:
-J Satchell
-SATCHELL%CCF.dnet@hermes.dra.hmg.gb
-a) R4 back compatibility
-b) Delay 
+Thanks to Contributers:
+J Satchell, Eric Marttila 
 */
 /* Revision History:
 $Log$
-Revision 1.1  1997-01-02 14:06:04  cvs
-Added the tooltips for Amaya, Daniel.
+Revision 1.2  1998-06-08 07:12:49  cvs
+New version of LiteClue.
+Improvement of table formatting.
+Irene
+
+Revision 1.14  1998/01/06 15:30:33  gary
+If font specified by resource can not be converted, use fixed
+font as fallback. If no font at all can be converted, prevent
+crash, just disable widget entirely.
+
+Revision 1.13  1997/07/07 14:55:04  gary
+Cancel timeouts when XcgLiteClueDeleteWidget is called to prevent
+errant timeout event on deleted widget.
+
+Revision 1.12  1997/06/20 20:09:09  gary
+Add XcgLiteClueDispatchEvent to enable clues for insensitive widgets.
+
+Revision 1.11  1997/06/15 14:10:24  gary
+Add XcgLiteClueDispatchEvent to enable clues for insensitive widgets.
+
+Revision 1.10  1997/04/14 13:02:33  gary
+Attempt to fix problem when we get multiple enter events bu no leave event.
+
+Revision 1.9  1997/03/10 14:42:41  gary
+Attempt to fix problem when we get multiple enter events bu no leave event.
+Add C++ wrapper to allow linking with C++ programs. (In HView.h)
+
+Revision 1.8  1997/01/17 13:44:14  gary
+Support of cancelWaitPeriod resource: this is a period from the point
+a help popdown occurs in which the normal waitPeriod is suspended
+for the next popup
+
+Revision 1.7  1996/12/16 22:35:38  gary
+Fix double entry problem
+
+Revision 1.6  1996/11/18 14:52:21  gary
+remove some compile warnings pointed out by a user
 
 Revision 1.5  1996/11/12 20:56:43  gary
 remove some compile warnings
@@ -46,7 +79,7 @@ Compile warning removed with cast
 
 Revision 1.2  1996/10/19 16:07:38  gary
 a) R4 back compatibility
-b) Delay before pop up of help, waitperiod resource (def 500 ms).
+b) Delay before pop up of help, waitPeriod resource (def 500 ms).
 	Thanks to J Satchell for this.
 c) Button press in watched widget pops down help
 
@@ -55,7 +88,7 @@ Initial
 
 
 $log
-remove some compile warnings
+Add NO_FONT_SET to usr FontStruct rather than FontSet
 $log
 */
 
@@ -69,9 +102,10 @@ $log
 	if (XtClass(w) != xcgLiteClueWidgetClass) \
 		wrong_widget(routine)
 
-static Boolean setValues( Widget _current, Widget _request, Widget _new);
+/* extern _XmSelectColorDefault();	 cgi */
+static Boolean setValues( Widget _current, Widget _request, Widget _new, ArgList args, Cardinal * num_args);
 static void Initialize(Widget treq, Widget tnew, ArgList args, Cardinal *num_args);
-static struct liteClue_context_str * alloc_liteClue_context(void);
+struct liteClue_context_str * alloc_liteClue_context(void);
 
 /* keep information about each widget we are keeping track of */
 struct liteClue_context_str
@@ -85,27 +119,30 @@ struct liteClue_context_str
 	short text_size;	/* its size */
 };
 
-static void free_widget_context(XcgLiteClueWidget cw, struct liteClue_context_str * obj);
+void free_widget_context(XcgLiteClueWidget cw, struct liteClue_context_str * obj);
 /*
 Widget resources: eg to set LiteClue box background:
  *XcgLiteClue.background: yellow
        
 */
 #define offset(field) XtOffsetOf(LiteClueRec, field)
-static XtResource resources[] =
+static XtResource LC_resources[] =
 {
 	{XtNforeground, XtCForeground, XtRPixel, sizeof(Pixel),
 		offset(liteClue.foreground), XtRString, "black"},
-#if XtSpecificationRelease < 5
+#if XtSpecificationRelease < 5 || defined(NO_FONT_SET)
 	{XtNfont, XtCFont, XtRFontStruct, sizeof(XFontStruct *),
-		offset(liteClue.font), XtRString, 
+		offset(liteClue.fontset), XtRString, 
           "-adobe-new century schoolbook-bold-r-normal-*-14-*-*-*-*-*-*-*"},
 #else
 	{XtNfontSet, XtCFontSet, XtRFontSet, sizeof(XFontSet),
 		offset(liteClue.fontset), XtRString, "-adobe-new century schoolbook-bold-r-normal-*-12-*"},
 #endif
-	{XgcNwaitperiod, XgcCWaitperiod, XtRInt , sizeof(int),
-		offset(liteClue.waitperiod),XtRString, "500" },
+	{XgcNwaitPeriod, XgcCWaitPeriod, XtRInt , sizeof(int),
+		offset(liteClue.waitPeriod),XtRString, "500" },
+
+	{XgcNcancelWaitPeriod, XgcCCancelWaitPeriod, XtRInt , sizeof(int),
+		offset(liteClue.cancelWaitPeriod),XtRString, "2000" },
 };
 
 #undef offset
@@ -122,35 +159,35 @@ LiteClueClassRec xcgLiteClueClassRec =
 	(WidgetClass)&overrideShellClassRec,	/* superclass */
 	"XcgLiteClue",				/* class_name */
 	(Cardinal)sizeof(LiteClueRec),		/* widget size */
-	NULL,	/* classInit ,		   class_init */
-	(XtWidgetClassProc)NULL,	/* classPartInit, class_part_init */
+	NULL,	/* classInit*/			/* class_init */
+	(XtWidgetClassProc)NULL,	/* classPartInit*/	/* class_part_init */
 	(XtEnum)FALSE,				/* class_inited */
 	(XtInitProc)Initialize,			/* initialize */
 	(XtArgsProc)NULL,			/* init_hook */
 	XtInheritRealize,			/* realize */
 	(XtActionList)0,			/* actions */
-	(Cardinal)0,				/* num_actions */
-	(XtResourceList)resources,		/* resources */
-	(Cardinal)XtNumber(resources),		/* num_resources */
+	(Cardinal)0,			/* num_actions */
+	(XtResourceList)LC_resources,		/* resources */
+	(Cardinal)XtNumber(LC_resources),		/* num_resources */
 	NULLQUARK,				/* xrm_class */
 	TRUE,					/* compress_motion */
 	(XtEnum)FALSE,				/* compress_exposur */
 	TRUE,					/* compress enterleave */
 	FALSE,					/* visibility_interest */
-	(XtWidgetProc)NULL,	/* destroy,	   destroy */
+	(XtWidgetProc)NULL,	/* destroy */	/* destroy */
 	XtInheritResize,
-	XtInheritExpose,			/* expose, */
+	XtInheritExpose,	/* expose, */
 	(XtSetValuesFunc)setValues,		/* set_values */
 	(XtArgsFunc)NULL,			/* set_values_hook */
 	XtInheritSetValuesAlmost,		/* set_values_almost */
 	(XtArgsProc)NULL,			/* get_values_hook */
-	XtInheritAcceptFocus,			/* accept_focus */
+	XtInheritAcceptFocus,		/* accept_focus */
 	XtVersion,				/* version */
 	(XtPointer)NULL,			/* callback_private */
 	XtInheritTranslations,
 	XtInheritQueryGeometry,			/* query_geometry */
 	XtInheritDisplayAccelerator,		/* display_accelerator */
-	(XtPointer)0,				/* extension */
+	(XtPointer)0,			/* extension */
     },
     { /*** composite-Class ***/
 	XtInheritGeometryManager,	/* geometry_manager   	*/    	
@@ -224,33 +261,39 @@ static ListThread * xcgListRemove(ListThread *rembuf)
 The font_information is derived 
 */
 
-#if XtSpecificationRelease >= 5
-/* R5 and above code */
-static void compute_font_info(XcgLiteClueWidget cw)
+#if XtSpecificationRelease < 5 || defined(NO_FONT_SET)
+
+/* R4 and below code */
+/*
+Return XFontSet for passed font_string. 
+return status
+*/
+static int string_to_FontSet (XcgLiteClueWidget cw, char * font_string, XFontStruct ** out) 
 {
-	XRectangle ink;
-	XRectangle logical;
-
-	if (!cw->liteClue.fontset)
-		return;
-	XmbTextExtents(cw->liteClue.fontset, "1", 1,&ink, &logical);
-
-	cw->liteClue.font_baseline = -logical.y;	/* y offset from top to baseline, 
-			don't know why this is returned as negative */
-	cw->liteClue.font_width = logical.width;	/* the width and height of the object */
-	cw->liteClue.font_height = logical.height;
+	Boolean sts;
+	XrmValue from;
+	XrmValue to;
+	
+	to.size = sizeof(out);
+	to.addr = (void *) out;
+	from.size = strlen(from.addr = font_string );
+	sts = XtConvertAndStore((Widget) cw, XtRString, &from, XtRFontStruct, &to);
+	return sts;
 }
 
-#else
-/* R4 and below code */
 static void compute_font_info(XcgLiteClueWidget cw)
 {
 	int direction_return;
 	int font_ascent_return, font_descent_return; 
 	XCharStruct oret;
-	if ( cw->liteClue.font == NULL )
+	if (!cw->liteClue.fontset)
+		string_to_FontSet(cw, "fixed", &cw->liteClue.fontset) ;
+	if (!cw->liteClue.fontset)
+	{
+		fprintf(stderr,"LiteClue: can not find resource font nor fallback fixed font\n");
 		return;
-	XTextExtents( cw->liteClue.font, "1", 1,
+	}
+	XTextExtents( cw->liteClue.fontset, "1", 1,
 		&direction_return,
 		&font_ascent_return, &font_descent_return, &oret);
 
@@ -258,6 +301,45 @@ static void compute_font_info(XcgLiteClueWidget cw)
 			don't know why this is returned as negative */
 	cw->liteClue.font_width = oret.width;	/* the width and height of the object */
 	cw->liteClue.font_height = oret.ascent+oret.descent;
+}
+
+#else
+/*
+Return XFontSet for passed font_string. 
+return status
+*/
+static int string_to_FontSet (XcgLiteClueWidget cw, char * font_string, XFontSet * out) 
+{
+	Boolean sts;
+	XrmValue from;
+	XrmValue to;
+	
+	to.size = sizeof(out);
+	to.addr = (void *) out;
+	from.size = strlen(from.addr = font_string );
+	sts = XtConvertAndStore((Widget) cw, XtRString, &from, XtRFontSet, &to);
+	return sts;
+}
+
+/* R5 and above code */
+static void compute_font_info(XcgLiteClueWidget cw)
+{
+	XRectangle ink;
+	XRectangle logical;
+
+	if (!cw->liteClue.fontset)
+		string_to_FontSet(cw, "fixed", &cw->liteClue.fontset) ;
+	if (!cw->liteClue.fontset)
+	{
+		fprintf(stderr,"LiteClue: can not find resource font nor fallback fixed font\n");
+		return;
+	}
+	XmbTextExtents(cw->liteClue.fontset, "1", 1,&ink, &logical);
+
+	cw->liteClue.font_baseline = -logical.y;	/* y offset from top to baseline, 
+			don't know why this is returned as negative */
+	cw->liteClue.font_width = logical.width;	/* the width and height of the object */
+	cw->liteClue.font_height = logical.height;
 }
 #endif
 
@@ -275,8 +357,9 @@ static void create_GC(XcgLiteClueWidget cw )
 	myXGCV.background = cw->core.background_pixel;
 	myXGCV.fill_style = FillSolid; 
 
-#if XtSpecificationRelease < 5		/* R4 hack */
-	myXGCV.font = cw->liteClue.font->fid; 
+#if XtSpecificationRelease < 5	|| defined(NO_FONT_SET)
+	valuemask |= GCFont ;
+	myXGCV.font = cw->liteClue.fontset->fid; 
 #endif	/* end R4 hack */
 
 	if (cw->liteClue.text_GC )
@@ -319,7 +402,7 @@ static struct liteClue_context_str * find_watched_widget(XcgLiteClueWidget cw,
 /*
 	allocate and initialize a widget context
 */
-static struct liteClue_context_str * alloc_liteClue_context(void)
+struct liteClue_context_str * alloc_liteClue_context(void)
 {
 	struct liteClue_context_str * out;
 	out = (struct liteClue_context_str *) XtMalloc(sizeof(struct liteClue_context_str));
@@ -344,10 +427,11 @@ static struct liteClue_context_str * alloc_link_liteClue_context(XcgLiteClueWidg
 /*
 	free a widget context
 */
-static void free_widget_context(XcgLiteClueWidget cw, struct liteClue_context_str * obj)
+void free_widget_context(XcgLiteClueWidget cw, struct liteClue_context_str * obj)
 {
 	xcgListRemove((ListThread *)obj);
 	/* free up all things object points to */
+	obj->sensitive = False;
 	if (obj->text )
 		XtFree(obj->text);
 	XtFree((char *) obj);
@@ -363,13 +447,28 @@ Cardinal *num_args)
 
 
 	cw->liteClue.text_GC = NULL;
+	cw->liteClue.HelpIsUp = False;
+	cw->liteClue.HelpPopDownTime = 0;
+	cw->liteClue.interval_id = (XtIntervalId)0;
 	xcgListInit(&cw->liteClue.widget_list);	/* initialize empty list */
 	compute_font_info(cw);
 	create_GC(cw );
 }
 
-static Boolean setValues( Widget _current, Widget _request, Widget _new)
+static Boolean setValues( Widget _current, Widget _request, Widget _new, ArgList args, Cardinal * num_args)
 {
+	XcgLiteClueWidget cw_new = (XcgLiteClueWidget) _new;
+	XcgLiteClueWidget cw_cur = (XcgLiteClueWidget) _current;
+
+	/* values of cw_new->liteClue.cancelWaitPeriod and
+	   cw_new->liteClue.waitPeriod are accepted without checking */
+
+	if (cw_new->liteClue.foreground != cw_cur->liteClue.foreground 
+	||  cw_new->core.background_pixel != cw_cur->core.background_pixel )
+	{
+		create_GC(cw_new);
+	}
+
 	return FALSE;
 }
 
@@ -389,6 +488,9 @@ static void timeout_event( XtPointer client_data, XtIntervalId *id)
 	Position   w_height;	
 	Widget w;
 
+	if (cw->liteClue.interval_id == (XtIntervalId)0)
+		return;	/* timeout was removed but callback happened anyway */
+	cw->liteClue.interval_id = (XtIntervalId)0;
 	if (obj->sensitive == False)
 		return;
 
@@ -397,12 +499,12 @@ static void timeout_event( XtPointer client_data, XtIntervalId *id)
 	/* position just below the widget */
 	XtTranslateCoords(w, 0, w_height, &abs_x, &abs_y);
 
-#if XtSpecificationRelease < 5		/* R4 hack */
+#if XtSpecificationRelease < 5	|| defined(NO_FONT_SET)
 	{
 	int direction_return;
 	int font_ascent_return, font_descent_return; 
 	XCharStruct oret;
-	XTextExtents( cw->liteClue.font ,obj->text , obj->text_size,
+	XTextExtents( cw->liteClue.fontset ,obj->text , obj->text_size,
 		&direction_return,
 		&font_ascent_return, &font_descent_return, &oret); 
 	logical.width = oret.width;
@@ -415,8 +517,9 @@ static void timeout_event( XtPointer client_data, XtIntervalId *id)
 			2*BorderPix + cw->liteClue.font_height, cw->core.border_width );
 	XtMoveWidget((Widget) cw, abs_x +4, abs_y +4);
 	XtPopup((Widget) cw, XtGrabNone);
+	cw->liteClue.HelpIsUp = True;
 
-#if XtSpecificationRelease < 5		/* R4 hack */
+#if XtSpecificationRelease < 5	|| defined(NO_FONT_SET)
 	XDrawImageString(XtDisplay((Widget) cw), XtWindow((Widget) cw), 
 		cw->liteClue.text_GC , BorderPix, 
 		BorderPix + cw->liteClue.font_baseline, obj->text , obj->text_size);
@@ -432,24 +535,45 @@ static void timeout_event( XtPointer client_data, XtIntervalId *id)
 Pointer enters watched widget, set a timer at which time it will
 popup the help
 */
-static void Enter_event(Widget w, XtPointer client_data, XEvent * event, Boolean * continue_to_dispatch )
+static void Enter_event(Widget w, XtPointer client_data, XEvent * xevent, Boolean * continue_to_dispatch )
 {
 	struct liteClue_context_str * obj = (struct liteClue_context_str *) client_data;
 	XcgLiteClueWidget cw = obj->cw;
-	if (obj->sensitive == False)
+	XEnterWindowEvent * event = & xevent->xcrossing;
+	int current_waitPeriod ;
+
+	if (obj->sensitive == False || !cw->liteClue.fontset)
 		return;
+	/* check for two enters in a row - happens when widget is
+	   exposed under a pop-up */
+	if (cw->liteClue.interval_id != (XtIntervalId)0) 
+		return;
+	if(event->mode != NotifyNormal)
+		return;
+
+	/* if a help was recently popped down, don't delay in poping up
+	   help for next watched widget
+	*/
+	if ((event->time -  cw->liteClue.HelpPopDownTime) > 
+			cw->liteClue.cancelWaitPeriod ) 
+		current_waitPeriod = cw->liteClue.waitPeriod,timeout_event;
+	else
+		current_waitPeriod = 0;
+
 	cw->liteClue.interval_id = XtAppAddTimeOut(
 			XtWidgetToApplicationContext(w),
-			cw->liteClue.waitperiod,timeout_event, client_data);
+			current_waitPeriod, timeout_event, client_data);
 }
 
 /*
 Remove timer, if its pending. Then popdown help.
 */
-static void Leave_event(Widget w, XtPointer client_data, XEvent * event, Boolean * continue_to_dispatch )
+static void Leave_event(Widget w, XtPointer client_data, XEvent * xevent, Boolean * continue_to_dispatch )
 {
 	struct liteClue_context_str * obj = (struct liteClue_context_str *) client_data;
 	XcgLiteClueWidget cw = obj->cw;
+	XEnterWindowEvent * event = & xevent->xcrossing;
+
 	if (cw->liteClue.interval_id != (XtIntervalId)0) 
 	{
 		XtRemoveTimeOut(cw->liteClue.interval_id);
@@ -458,7 +582,12 @@ static void Leave_event(Widget w, XtPointer client_data, XEvent * event, Boolean
 
 	if (obj->sensitive == False)
 		return;
-	XtPopdown((Widget) cw);
+	if (cw->liteClue.HelpIsUp)
+	{
+		XtPopdown((Widget) cw);
+		cw->liteClue.HelpIsUp = False;
+		cw->liteClue.HelpPopDownTime = event->time;
+	}
 }
 
 /* ---------------- Widget API ---------------------------- */
@@ -493,7 +622,7 @@ Return:
 
 ;-
 */
-void XcgLiteClueAddWidget(ThotWidget w, ThotWidget watch,  char * text, int size, int option )
+void XcgLiteClueAddWidget(Widget w, Widget watch,  char * text, int size, int option )
 {
 #	define ROUTINE "XcgLiteClueAddWidget"
 	XcgLiteClueWidget cw = (XcgLiteClueWidget) w;
@@ -532,8 +661,7 @@ void XcgLiteClueAddWidget(ThotWidget w, ThotWidget watch,  char * text, int size
 		XtAddEventHandler(watch, EnterWindowMask, False, 
 			Enter_event, (XtPointer) obj);
 		XtAddEventHandler(watch, LeaveWindowMask|ButtonPressMask, 
-				False, 
-			Leave_event, (XtPointer) obj);
+			False, Leave_event, (XtPointer) obj);
 		obj->sensitive = True;
 	}
 
@@ -557,7 +685,7 @@ Return:
 
 ;-
 */
-void XcgLiteClueDeleteWidget(ThotWidget w, ThotWidget watch)
+void XcgLiteClueDeleteWidget(Widget w, Widget watch)
 {
 #	define ROUTINE "XcgLiteClueDeleteWidget"
 	XcgLiteClueWidget cw = (XcgLiteClueWidget) w;
@@ -569,8 +697,13 @@ void XcgLiteClueDeleteWidget(ThotWidget w, ThotWidget watch)
 	{
 		XtRemoveEventHandler(watch, EnterWindowMask, False, 
 			Enter_event, (XtPointer) obj);
-		XtRemoveEventHandler(watch, LeaveWindowMask, False, 
-			Leave_event, (XtPointer) obj);
+		XtRemoveEventHandler(watch, LeaveWindowMask|ButtonPressMask, 
+			False, Leave_event, (XtPointer) obj);
+		if (cw->liteClue.interval_id != (XtIntervalId)0) 
+		{
+			XtRemoveTimeOut(cw->liteClue.interval_id);
+			cw->liteClue.interval_id= (XtIntervalId)0;
+		}
 		free_widget_context(cw, obj);
 	}
 
@@ -598,7 +731,7 @@ Return:
 
 ;-
 */
-void XcgLiteClueSetSensitive(ThotWidget w, ThotWidget watch, Boolean sensitive)
+void XcgLiteClueSetSensitive(Widget w, Widget watch, Boolean sensitive)
 {
 #	define ROUTINE "XcgLiteClueSetSensitive"
 	XcgLiteClueWidget cw = (XcgLiteClueWidget) w;
@@ -648,7 +781,7 @@ Return:	sensitive - True or False
 
 ;-
 */
-Boolean XcgLiteClueGetSensitive(ThotWidget w, ThotWidget watch)
+Boolean XcgLiteClueGetSensitive(Widget w, Widget watch)
 {
 #	define ROUTINE "XcgLiteClueGetSensitive"
 
@@ -673,5 +806,73 @@ Boolean XcgLiteClueGetSensitive(ThotWidget w, ThotWidget watch)
 
 #	undef ROUTINE
 }
+
+
+/*
+;+
+XcgLiteClueDispatchEvent -- Dispatch event from main X event loop
+
+Func:	This function may be used to enable clues for insensitive
+	watched widgets. Normally, XtAppMainLoop (which calls
+	XtDispatchEvent) will not deliver EnterNotify and LeaveNotify
+	events to widgets that are not sensitive (XtSetSensitive). This
+	prevents clues from poping up for these widgets. To bypass this
+	limitation, you can break out XtAppMainLoop and add a call to
+	XcgLiteClueDispatchEvent ass follows:
+
+	MyXtAppMainLoop(XtAppContext app) 
+	{
+	    XEvent event;
+
+	    for (;;) {
+	        XtAppNextEvent(app, &event);
+		XcgLiteClueDispatchEvent(w, event) ;
+	        XtDispatchEvent(&event);
+	    }
+	} 
+
+Input:	w - LiteClue widget
+	event - received event, normally from call to XtAppNextEvent.
+
+Output: void
+
+Return:	True - event was dispatched to non-sensitive watched widget.
+	False - not a EnterNotify or LeaveNotify event or window in
+		event is not a non-sensitive watched widget.
+
+;-
+*/
+Boolean XcgLiteClueDispatchEvent(Widget w, XEvent  *event)
+{
+#	define ROUTINE "XcgLiteClueDispatchEvent"
+
+	XcgLiteClueWidget cw = (XcgLiteClueWidget) w;
+	struct liteClue_context_str * obj;
+	Boolean continue_to_dispatch;
+
+	if (event->type != EnterNotify && event->type != LeaveNotify)
+		return False;
+	CheckWidgetClass(ROUTINE);	/* make sure we are called with a LiteClue widget */
+
+	/* scan list */
+	for (obj = (struct liteClue_context_str *) cw->liteClue.widget_list.forw; 
+		obj != (struct liteClue_context_str *) & cw->liteClue.widget_list; 
+		obj = (struct liteClue_context_str *)obj->next.forw )
+	{
+		if ((XtWindow(obj->watched_w) != event->xany.window)
+		||  (XtIsSensitive(obj->watched_w)) )
+			continue;
+		/* found one */
+		if (event->type == EnterNotify )
+			Enter_event(obj->watched_w, (XtPointer)obj, event,  &continue_to_dispatch);
+		else
+			Leave_event(obj->watched_w, (XtPointer)obj, event,  &continue_to_dispatch);
+		return True;
+	}
+	return False;
+
+#	undef ROUTINE
+}
+
 
 #endif /* ! _WINDOWS */

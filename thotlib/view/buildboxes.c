@@ -2007,9 +2007,9 @@ boolean             horizRef;
    modification sur la boite du pave.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ComputeUpdates (PtrAbstractBox pAb, int frame)
+boolean      ComputeUpdates (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-static boolean      ComputeUpdates (pAb, frame)
+boolean      ComputeUpdates (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
 
@@ -3452,8 +3452,7 @@ PtrAbstractBox      pAb;
 		    }
 	       }
 
-	     /* restore the current mode */
-	     /* update tables if necessary */
+	     /* restore the current mode and  update tables if necessary */
 	     if (saveMode == DisplayImmediately)
 	       {
 		 documentDisplayMode[FrameTable[frame].FrDoc - 1] = saveMode;

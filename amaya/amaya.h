@@ -209,7 +209,7 @@ typedef enum
 {
   docHTML,
   docHelp,
-  docFile
+  docText
 } DocumentType;
 #define DocumentTableLength 10
 THOT_EXPORT char        *DocumentURLs[DocumentTableLength];

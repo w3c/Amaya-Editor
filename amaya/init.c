@@ -1339,7 +1339,7 @@ boolean		    history;
       
       tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
-      StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname,
+      StartParser (newdoc, tempdocument, documentname, tempdir, pathname,
 		       PlainText);
       TtaFreeMemory (tempdir);
       if (newdoc != doc)

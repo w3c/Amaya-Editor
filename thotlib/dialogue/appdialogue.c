@@ -1323,7 +1323,7 @@ ThotWidget          toplevel;
    n++;
    XtSetArg (args[n], XtNfont, DefaultFont);
    n++;
-   XtSetArg (args[n], XgcNwaitperiod, wait_ms);
+   XtSetArg (args[n], XgcNwaitPeriod, wait_ms);
    n++;
    XtSetValues (liteClue, args, n);
 }

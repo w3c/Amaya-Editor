@@ -25,8 +25,16 @@ gary@compgen.com
 */
 /* Revision History:
 $Log$
-Revision 1.1  1997-01-02 11:52:09  cvs
-Added support for clues (tooltips) on buttons, Daniel.
+Revision 1.2  1998-06-08 07:12:51  cvs
+New version of LiteClue.
+Improvement of table formatting.
+Irene
+
+Revision 1.4  1997/06/15 14:07:56  gary
+Added XcgLiteClueDispatchEvent
+
+Revision 1.3  1997/04/14 13:03:25  gary
+Added XgcNwaitperiod XgcNcancelWaitPeriod and c++ wrappers
 
 Revision 1.2  1996/10/20 13:39:25  gary
 Version 1.2 freeze
@@ -36,11 +44,11 @@ Initial
 
 
 $log
-Version 1.2 freeze
+Added XcgLiteClueDispatchEvent
 $log
 */
-
 #ifndef _WINDOWS
+
 #ifndef _DEF_LiteClue_h
 #define _DEF_LiteClue_h
 #include <X11/StringDefs.h>
@@ -49,11 +57,17 @@ $log
  * New resource names
  */
 
-#define XgcNwaitperiod	 "waitperiod"
+#define XgcNcancelWaitPeriod	 "cancelWaitPeriod"
+#define XgcNwaitPeriod	 "waitPeriod"
 /*
  * New resource classes
  */
-#define XgcCWaitperiod	"WaitPeriod"
+#define XgcCCancelWaitPeriod	"cancelWaitPeriod"
+#define XgcCWaitPeriod	"WaitPeriod"
+
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" { 
+#endif
 
 extern WidgetClass xcgLiteClueWidgetClass; 
 typedef struct _LiteClueClassRec *XcgLiteClueWidgetClass;
@@ -62,5 +76,13 @@ void XcgLiteClueAddWidget(Widget w, Widget watch,  char * text, int size, int op
 void XcgLiteClueDeleteWidget(Widget w, Widget watch);
 void XcgLiteClueSetSensitive(Widget w, Widget watch, Boolean sensitive);
 Boolean XcgLiteClueGetSensitive(Widget w, Widget watch);
+Boolean XcgLiteClueDispatchEvent(Widget w, XEvent  *event);
+
+#if defined(__cplusplus) || defined(c_plusplus)
+}
 #endif
+
+#endif
+
 #endif /* ! _WINDOWS */
+

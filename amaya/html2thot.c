@@ -15,8 +15,8 @@
 
 /* Compiling this module with -DSTANDALONE generates the main program of  */
 /* a converter which reads a HTML file and creates a Thot .PIV file.      */
-/* Without this option, it creates a function StartHTMLParser that parses */
-/* a HTML file and creates the internal representation of a Thot document. */
+/* Without this option, it creates a function StartParser that parses a   */
+/* file and creates the internal representation of a Thot document.       */
 
 /* Amaya includes  */
 
@@ -6255,15 +6255,15 @@ char              **argv;
 	       }
 #else  /* STANDALONE */
 /*----------------------------------------------------------------------
-   StartHTMLParser loads the file Directory/htmlFileName for
+   StartParser loads the file Directory/htmlFileName for
    displaying the document documentName.
    The parameter pathURL gives the original (local or
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StartHTMLParser (Document doc, char *htmlFileName, char *documentName, char *documentDirectory, char *pathURL, boolean PlainText)
+void                StartParser (Document doc, char *htmlFileName, char *documentName, char *documentDirectory, char *pathURL, boolean PlainText)
 #else
-void                StartHTMLParser (doc, htmlFileName, documentName, documentDirectory, pathURL, PlainText)
+void                StartParser (doc, htmlFileName, documentName, documentDirectory, pathURL, PlainText)
 Document            doc;
 char               *htmlFileName;
 char               *documentName;

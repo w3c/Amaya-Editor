@@ -26,26 +26,34 @@ gary@compgen.com
 */
 /* Revision History:
 $Log$
-Revision 1.1  1997-01-02 11:52:10  cvs
-Added support for clues (tooltips) on buttons, Daniel.
+Revision 1.2  1998-06-08 07:12:51  cvs
+New version of LiteClue.
+Improvement of table formatting.
+Irene
+
+Revision 1.2  1997/06/15 14:08:14  gary
+Support for cancel wait period
 
 Revision 1.1  1996/10/19 16:08:51  gary
 Initial
 
 
 $log
-Initial
+Support for cancel wait period
 $log
 */
 
-#ifndef _WINDOWS
 #ifndef _DEF_LiteClueP_h
 #define _DEF_LiteClueP_h
 
 #include <X11/ShellP.h>
 /* Include public header file for this widget. */
-#include <LiteClue.h>
-
+#ifndef __VMS
+# include <LiteClue.h>
+#else
+# include "LiteClue.h"
+#endif
+    
 /* Doubly Linked List Processing */
 struct list_thread_str
 {
@@ -75,12 +83,19 @@ typedef struct {
 	/* resources */
 	Pixel foreground;
 
-#if XtSpecificationRelease < 5
-	XFontStruct *font;	/* the font for text in box */
+#if XtSpecificationRelease < 5 || defined(NO_FONT_SET)
+	XFontStruct *fontset;	/* the font for text in box */
 #else
 	XFontSet fontset;	/* the font for text in box */
 #endif
-        int  waitperiod;	/* the delay resource */
+        int  waitPeriod;	/* the delay resource - pointer must be
+				   in watched widget this long before
+				   help is poped - in millisecs
+				*/
+        int  cancelWaitPeriod;	/* after help is popped-down - normal
+				   wait period is cancelled for this
+				   period - in millisecs
+				*/
 
 	/* -------- private state --------- */
 	ListThread widget_list; 	/* list of widgets we are liteClue-ing */
@@ -89,6 +104,8 @@ typedef struct {
 	Dimension font_baseline;	/* relative displacement to baseline from top */
 	GC text_GC;		/* for drawing text */
 	XtIntervalId interval_id;	/* New field, holds timer id */
+	Boolean	HelpIsUp;	/* the help is popup is up */
+	Time	HelpPopDownTime;	/* the time at which help popup was popped down */
 } LiteCluePart;
 
 
@@ -105,5 +122,4 @@ typedef struct _LiteClueRec {
 
 
 #endif /* _DEF_LiteClueP_h */
-#endif /* ! _WINDOWS */
 

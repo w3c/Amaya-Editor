@@ -1214,9 +1214,6 @@ boolean             horizRef;
    AbPosition         *pPosAb;
 
    pBox = pAb->AbBox;
-   /* a priori, la dimension ne depend pas de son contenu */
-   defaultDim = FALSE;
-
    /* On verifie que la boite est visible */
    if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
      {
@@ -1328,9 +1325,15 @@ boolean             horizRef;
 	  {
 	     /* Est-ce que la dimension est exprimee en points typo. ? */
 	     if (horizRef)
-		pDimAb = &pAb->AbWidth;
+	       {
+		 pDimAb = &pAb->AbWidth;
+		 pBox->BxContentWidth = FALSE;
+	       }
 	     else
-		pDimAb = &pAb->AbHeight;
+	       {
+		 pDimAb = &pAb->AbHeight;
+		 pBox->BxContentHeight = FALSE;
+	       }
 
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     if (pDimAb->DimAbRef != NULL && pDimAb->DimAbRef->AbDead)
@@ -1368,7 +1371,7 @@ boolean             horizRef;
 		if (horizRef)
 		  {
 		     if (pDimAb->DimValue == 0)
-			defaultDim = TRUE;
+		       pBox->BxContentWidth = TRUE;
 		     else
 		       {
 			  GetSizesFrame (frame, &val, &i);
@@ -1385,7 +1388,7 @@ boolean             horizRef;
 		else
 		  {
 		     if (pDimAb->DimValue == 0)
-			defaultDim = TRUE;
+		       pBox->BxContentHeight = TRUE;
 		     else
 		       {
 			  GetSizesFrame (frame, &i, &val);
@@ -1408,11 +1411,11 @@ boolean             horizRef;
 		     /* PcFirst cas de coherence */
 		     if (inLine && pAb->AbLeafType == LtText)
 		       /* Le texte mis en ligne DOIT prendre sa taille */
-		       defaultDim = TRUE;
+		       pBox->BxContentWidth = TRUE;
 		     else if (pAb->AbWidth.DimAbRef == NULL)
 		       /* Dimension fixee */
 			if (pAb->AbWidth.DimValue <= 0)
-			   defaultDim = TRUE;	/* A calculer */
+			   pBox->BxContentWidth = TRUE;	/* A calculer */
 			else
 			  {
 			     /* Convert the distance value */
@@ -1439,7 +1442,7 @@ boolean             horizRef;
 				  || pPosAb->PosRefEdge != Left || pPosAb->PosEdge != Left))
 			    {
 			       pDimAb = &pAb->AbWidth;
-			       defaultDim = TRUE;
+			       pBox->BxContentWidth = TRUE;
 			       pDimAb->DimAbRef = NULL;
 			       pDimAb->DimValue = 0;
 			       pDimAb->DimUnit = UnRelative;
@@ -1450,7 +1453,7 @@ boolean             horizRef;
 			       pDimAb = &pAb->AbWidth;
 			       if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
 				 {
-				    defaultDim = TRUE;
+				    pBox->BxContentWidth = TRUE;
 				    pDimAb->DimAbRef = NULL;
 				    pDimAb->DimValue = 0;
 				    pDimAb->DimUnit = UnRelative;
@@ -1510,11 +1513,11 @@ boolean             horizRef;
 		     /* PcFirst cas de coherence */
 		     /* / Le texte mis en ligne DOIT prendre sa taille */
 		  if (inLine && pAb->AbLeafType == LtText)
-		     defaultDim = TRUE;
+		     pBox->BxContentHeight = TRUE;
 		  /* Dimension fixee */
 		  else if (pAb->AbHeight.DimAbRef == NULL)
 		     if (pAb->AbHeight.DimValue == 0)
-			defaultDim = TRUE;	/* A calculer */
+			pBox->BxContentHeight = TRUE;	/* A calculer */
 		     else
 		       {
 			  /* Convert the distance value */
@@ -1531,7 +1534,7 @@ boolean             horizRef;
 			   && (pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtCompound))
 		    {
 		       pDimAb = &pAb->AbHeight;
-		       defaultDim = TRUE;
+		       pBox->BxContentHeight = TRUE;
 		       pDimAb->DimAbRef = NULL;
 		       pDimAb->DimValue = 0;
 		       pDimAb->DimUnit = UnRelative;
@@ -1550,7 +1553,7 @@ boolean             horizRef;
 			       || pPosAb->PosEdge != Top))
 			 {
 			    pDimAb = &pAb->AbHeight;
-			    defaultDim = TRUE;
+			    pBox->BxContentHeight = TRUE;
 			    pDimAb->DimAbRef = NULL;
 			    pDimAb->DimValue = 0;
 			    pDimAb->DimUnit = UnRelative;
@@ -1561,7 +1564,7 @@ boolean             horizRef;
 			    pDimAb = &pAb->AbHeight;
 			    if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
 			      {
-				 defaultDim = TRUE;
+				 pBox->BxContentHeight = TRUE;
 				 pDimAb->DimAbRef = NULL;
 				 pDimAb->DimValue = 0;
 				 pDimAb->DimUnit = UnRelative;
@@ -1850,20 +1853,14 @@ boolean             horizRef;
 	pAb->AbWidthChange = FALSE;
 	/* Marque dans la boite si la dimension depend du contenu ou non */
 	pBox->BxRuleWidth = 0;
-	if (defaultDim)
-	   pBox->BxContentWidth = TRUE;
-	else
-	   pBox->BxContentWidth = FALSE;
+	defaultDim = pBox->BxContentWidth;
      }
    else
      {
 	pAb->AbHeightChange = FALSE;
 	/* Marque dans la boite si la dimension depend du contenu ou non */
 	pBox->BxRuleHeigth = 0;
-	if (defaultDim)
-	   pBox->BxContentHeight = TRUE;
-	else
-	   pBox->BxContentHeight = FALSE;
+	defaultDim = pBox->BxContentHeight;
      }
 
    /* break down the temporary link of moved boxes */

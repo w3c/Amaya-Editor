@@ -459,7 +459,7 @@ int             frame;
   PtrAttribute        pAttr;
   PtrSSchema          pSS;
   PtrDocument         pDoc;
-  PtrAbstractBox      cell, row, pAb;
+  PtrAbstractBox      cell, row , firstRow, pAb;
   PtrAbstractBox      rowList[MAX_COLROW];
   PtrTabRelations     pTabRel;
   int                 i, j, k;
@@ -467,6 +467,10 @@ int             frame;
   int                 attrHeight, org;
   int                 remainder;
   boolean             found;
+
+  if (table->AbBox->BxCycles != 0)
+    /* the table formatting is currently in process */
+    return;
 
   /* manage spanned columns */
   pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
@@ -480,7 +484,8 @@ int             frame;
       cell = rowSpanCell[i];
       if (cell != NULL && cell->AbBox != NULL && rowSpans[i] > 1)
 	{
-	  row = SearchEnclosingType (cell, BoRow);
+	  firstRow = SearchEnclosingType (cell, BoRow);
+	  row = firstRow;
 	  /* search the current row in the rows list of the table */
 	  found = FALSE;
 	  pTabRel = table->AbBox->BxRows;
@@ -501,10 +506,7 @@ int             frame;
 	      /* get the real cell height */
 	      pAb = cell->AbFirstEnclosed;
 	      org = cell->AbBox->BxYOrg;
-	      if (row != NULL)
-		height = row->AbBox->BxYOrg - org;
-	      else
-		height = 0;
+	      height = 0;
 	      while (pAb != NULL)
 		{
 		  if (!pAb->AbDead && pAb->AbBox != NULL )
@@ -523,6 +525,9 @@ int             frame;
 		  else
 		    pAb = NextSiblingAbsBox (pAb, cell);
 		}
+	      /* add space between the the cell and the encluding row */
+	      if (firstRow != NULL)
+		height += org - firstRow->AbBox->BxYOrg;
 
 	      /* compare the cell height with rows heights */
 	      sum = 0;
@@ -561,25 +566,28 @@ printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], 
 	   
 	      /* update rows' height if necessary */
 	      height -= sum;
-	      {
-		height = height / rowSpans[i];
-		for (k = 0; k < rowSpans[i]; k++)
-		  if (rowList[k] != NULL &&
-		      rowList[k]->AbBox->BxHeight + height > 0)
-		    {
-		      /* create the attribute for this element */
-		      GetAttribute (&pAttr);
-		      pAttr->AeAttrSSchema = pSS;
-		      pAttr->AeAttrNum = attrHeight;
-		      pAttr->AeAttrType = AtNumAttr;
-		      pAttr->AeAttrValue = rowList[k]->AbBox->BxHeight + height;
-		      AttachAttrWithValue (rowList[k]->AbElement, pDoc, pAttr);
-		      DeleteAttribute (NULL, pAttr);
-		    }
-		/* Redisplay views */
-		if (ThotLocalActions[T_redisplay] != NULL)
-		  (*ThotLocalActions[T_redisplay]) (pDoc);
-	      }
+	      if (height > 0)
+		{
+		  height = height / rowSpans[i];
+		  for (k = 0; k < rowSpans[i]; k++)
+		    if (rowList[k] != NULL &&
+			rowList[k]->AbBox->BxHeight + height > 0)
+		      {
+			/* create the attribute for this element */
+			GetAttribute (&pAttr);
+			pAttr->AeAttrSSchema = pSS;
+			pAttr->AeAttrNum = attrHeight;
+			pAttr->AeAttrType = AtNumAttr;
+			pAttr->AeAttrValue = rowList[k]->AbBox->BxHeight + height;
+			AttachAttrWithValue (rowList[k]->AbElement, pDoc, pAttr);
+			DeleteAttribute (NULL, pAttr);
+			/* update the row box */
+			ComputeUpdates (rowList[k], frame);
+		      }
+		  /* Redisplay views */
+		  if (ThotLocalActions[T_redisplay] != NULL)
+		    (*ThotLocalActions[T_redisplay]) (pDoc);
+		}
 	    }
 	}
     }
@@ -619,6 +627,7 @@ boolean         force;
   if (cNumber == 0)
     return;
   else if (table->AbBox->BxCycles != 0)
+    /* the table formatting is currently in process */
     return;
 
   pCell = GetParentCell (table->AbBox);
@@ -1707,7 +1716,7 @@ int              frame;
 	BuildColOrRowList (pAb, BoRow);
       
       /* compute widths of each column within the table */
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately && table != NULL)
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately || table != NULL)
 	ComputeColWidth (col, pAb, frame);
       else
 	SaveColUpdate (col, pAb, frame);
