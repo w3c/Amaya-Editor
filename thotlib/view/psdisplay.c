@@ -64,17 +64,15 @@ static char        *Patterns_PS[] =
    "11b87c3a11a3c78b"		/*bottomket */
 };
 
-extern int          NumberOfPages;
-extern int          EndOfPage;
-int                 X, Y;
-static int          LastPageNumber, LastPageWidth, LastPageHeight;
-static int          SameBox = 0;	/* SameBox = 1 if the text is in the same box */
-static int          NbWhiteSp;
 
 /* Handling of loaded fonts */
-static ptrfont      PoscriptFont = NULL;
+extern ptrfont      PoscriptFont;
+extern int          ColorPs;
+extern int          LastPageNumber, LastPageWidth, LastPageHeight;
 static char        *Scale = NULL;
-static int          ColorPs = -1;
+int                 X, Y;
+static int          SameBox = 0; /* 1 if the text is in the same box */
+static int          NbWhiteSp;
 
 #include "buildlines_f.h"
 #include "font_f.h"
@@ -286,25 +284,6 @@ ptrfont             font;
       return (1);
    else
       return (0);
-}
-
-
-/*----------------------------------------------------------------------
-   DrawPage check whether a showpage is needed.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawPage (FILE * fout)
-#else  /* __STDC__ */
-void                DrawPage (fout)
-FILE               *fout;
-#endif /* __STDC__ */
-{
-  NumberOfPages++;
-  fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
-  fflush (fout);
-  /* Enforce loading the font when starting a new page */
-  PoscriptFont = NULL;
-  ColorPs = -1;
 }
 
 /*----------------------------------------------------------------------

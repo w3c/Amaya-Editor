@@ -53,17 +53,6 @@ static int          stack_deep;
 #include "inites_f.h"
 #include "buildlines_f.h"
 
-/*----------------------------------------------------------------------
-  Nothing to do at the end of page.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawPage (FILE * fout)
-#else  /* __STDC__ */
-void                DrawPage (fout)
-FILE               *fout;
-#endif /* __STDC__ */
-{
-}
 
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString

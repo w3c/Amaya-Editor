@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DrawPage ( FILE * fout );
 extern int DrawString ( char *buff,
                         int i,
                         int lg,
@@ -325,7 +324,6 @@ extern void PaintWithPattern ( int frame,
 
 #else /* __STDC__ */
 
-extern void DrawPage (/* FILE * fout */);
 extern int DrawString (/* char *buff,
                           int i,
                           int lg,

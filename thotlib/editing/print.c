@@ -60,13 +60,17 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
-int                 PRINT;	/* Identification des messages */
-int                 NumberOfPages;
-int                 UserErrorCode;
+
+int          PRINT;	/* Identification des messages */
+int          UserErrorCode;
+ptrfont      PoscriptFont;
+int          ColorPs;
+int          LastPageNumber, LastPageWidth, LastPageHeight;
 
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
-static PtrDocument  MainDocument;	/* le document principal a imprimer */
-static PathBuffer   DocumentDir;	/* le directory d'origine du document */
+static PtrDocument  MainDocument;  /* le document principal a imprimer */
+static PathBuffer   DocumentDir;   /* le directory d'origine du document */
+static int          NumberOfPages;
 
 /* table des vues a imprimer */
 #define MAX_PRINTED_VIEWS MAX_VIEW_DOC+MAX_ASSOC_DOC
@@ -81,23 +85,17 @@ static int          CurrentFrame;	/* No frame contenant la vue traitee */
 static char        *printer;
 static ThotWindow   thotWindow;
 
+#include "attrpresent_f.h"
 #include "buildboxes_f.h"
 #include "boxpositions_f.h"
 #include "tree_f.h"
-#include "attrpresent_f.h"
 #include "createabsbox_f.h"
 #include "config_f.h"
 #include "absboxes_f.h"
-#include "structlist_f.h"
 #include "memory_f.h"
 #include "changeabsbox_f.h"
 
-#include "search_f.h"
-#include "viewcommands_f.h"
-#include "structmodif_f.h"
-#include "structselect_f.h"
-#include "references_f.h"
-#include "windowdisplay_f.h"
+#include "psdisplay_f.h"
 #include "exceptions_f.h"
 #include "context_f.h"
 #include "font_f.h"
@@ -115,8 +113,6 @@ static ThotWindow   thotWindow;
 #include "registry_f.h"
 #include "dictionary_f.h"
 
-int                 UserErrorCode;
-
 static int          manualFeed;
 static char         pageSize [3];
 static int          BlackAndWhite;
@@ -129,6 +125,26 @@ static int          NoEmpyBox;
 static int          Repaginate;
 static int          firstPage;
 static int          lastPage;
+
+
+/*----------------------------------------------------------------------
+   DrawPage check whether a showpage is needed.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DrawPage (FILE * fout)
+#else  /* __STDC__ */
+static void         DrawPage (fout)
+FILE               *fout;
+#endif /* __STDC__ */
+{
+  NumberOfPages++;
+  fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
+  fflush (fout);
+  /* Enforce loading the font when starting a new page */
+  PoscriptFont = NULL;
+  ColorPs = -1;
+}
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
@@ -2622,7 +2638,9 @@ char              **argv;
    Zoom           = 100;
    strcpy (pageSize, "A4");
    Orientation    = "Portrait";
-   
+   PoscriptFont = NULL;
+   ColorPs = -1;
+
    if (argc < 4)
       usage (argv [0]);
 

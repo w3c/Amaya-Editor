@@ -24,11 +24,11 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-#include "windowdisplay_f.h"
 #include "font_f.h"
 #include "displaybox_f.h"
 #include "picture_f.h"
 #include "buildboxes_f.h"
+#include "windowdisplay_f.h"
 
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.

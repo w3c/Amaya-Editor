@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DrawPage ( FILE * fout );
 extern void FontOrig ( ptrfont font,
                        char firstchar,
                        int *pX,
@@ -361,7 +360,6 @@ extern void PaintWithPattern ( int frame,
 
 #else /* __STDC__ */
 
-extern void DrawPage (/* FILE * fout */);
 extern void FontOrig (/* ptrfont font,
                          char firstchar,
                          int *pX,
