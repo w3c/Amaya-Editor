@@ -28,6 +28,13 @@
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 
+/* the structure used for storing the context of the 
+   FetchAndDisplayImages_callback function */
+typedef struct _FetchImage_context {
+  char *base_url;
+  LoadedImageDesc    *desc;
+} FetchImage_context;
+
 
 /*----------------------------------------------------------------------
    AddLoadedImage adds a new image into image descriptor table.	
@@ -368,9 +375,31 @@ void *context;
 {
    char               *pathname;
    char*               tempfile;
-   LoadedImageDesc    *desc = (LoadedImageDesc *) context;
+   FetchImage_context  *FetchImage_ctx;
+   LoadedImageDesc    *desc;
+   char               *base_url;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
+
+   /* restore the context */
+   FetchImage_ctx = (FetchImage_context *) context;
+   if (FetchImage_ctx) 
+     {
+       desc = FetchImage_ctx->desc;   
+       base_url = FetchImage_ctx->base_url;
+       TtaFreeMemory (FetchImage_ctx);
+       
+       /* check if this request wasn't aborted */
+       if (strcmp (base_url, DocumentURLs[doc]))
+	 {
+	   /* it's not the same url, so let's just return */
+	   TtaFreeMemory (base_url);
+	   /* @@ remove desc, close file? */
+	   return;
+	 }
+       else
+	 TtaFreeMemory (base_url);
+     }
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    FilesLoading[doc]--;
@@ -521,11 +550,14 @@ void               *extra;
   int                 length, i;
   boolean             update;
   boolean             newImage;
+  FetchImage_context  *FetchImage_ctx;
 
   pathname[0] = EOS;
   tempfile[0] = EOS;
   imageName = NULL;
   attr = NULL;
+  FetchImage_ctx = NULL;
+
   if (el != NULL && DocumentURLs[doc] != NULL)
     {
       if (URL == NULL)
@@ -568,18 +600,23 @@ void               *extra;
 	      ctxEl->callback = callback;
 	      ctxEl->extra = extra;
 	      update = FALSE;	/* the image is not loaded yet */
+	      /* store the context before downloading the images */
+	      FetchImage_ctx = TtaGetMemory (sizeof (FetchImage_context));
+	      FetchImage_ctx->desc = desc;
+	      FetchImage_ctx->base_url =  TtaStrdup (DocumentURLs[doc]);
+
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 	      FilesLoading[doc]++;
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) libWWWImageLoaded,
-				(void *) desc, NO, NULL);
+				(void *) FetchImage_ctx, NO, NULL);
 #else /* !AMAYA_JAVA && !AMAYA_ILU */
 	      UpdateTransfer(doc);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) libWWWImageLoaded,
-				(void *) desc, NO, NULL);
+				(void *) FetchImage_ctx, NO, NULL);
 #endif /* !AMAYA_JAVA && !AMAYA_ILU */
 	      if (i != -1) 
 		desc->status = IMAGE_LOADED;
@@ -668,7 +705,7 @@ int                 flags;
      {
 #else 
    /* JK: verify if StopTransfer was previously called */
-   if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
      {
        /* transfer interrupted */
        TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
@@ -696,7 +733,7 @@ int                 flags;
 	TtaHandlePendingEvents ();
 	/* verify if StopTransfer is called */
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-	if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+	if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
 	  break;
 #endif
 	if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
@@ -714,8 +751,4 @@ int                 flags;
    /* Images fetching is now finished */
    TtaFreeMemory (currentURL);
 }
-
-
-
-
 
