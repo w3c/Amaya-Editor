@@ -549,7 +549,7 @@ DBG(fprintf(stderr, "SaveFileThroughNet :  export to %s \n", tempname);)
 		       NULL, nb, &msg[0], 6, NULL, FALSE, TRUE);
        
        TtaSetDialoguePosition ();
-       TtaShowDialogue (BaseDialog + ConfirmSave, TRUE);
+       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
        /* wait for an answer */
        TtaWaitShowDialogue ();
        if (!UserAnswer)
@@ -1157,7 +1157,6 @@ DBG(fprintf(stderr, "   Moving document locally : to %s\n", tempfile);)
 		  return;
 	       }
 	  }
-	TtaDestroyDialogue (BaseDialog + SaveForm);
 
 	/*
 	 * change all Picture SRC to the remote URL.
@@ -1201,7 +1200,6 @@ DBG(fprintf(stderr, "   Saving document locally from net to %s\n", tempfile);)
 		  return;
 	       }
 	  }
-	TtaDestroyDialogue (BaseDialog + SaveForm);
 
 	/*
 	 * Transform all URLs to absolute ones.
@@ -1258,7 +1256,6 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", tempfile);)
 	  }
 	else
 	  {
-	     TtaDestroyDialogue (BaseDialog + SaveForm);
 	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	     SavingDocument = (Document) None;
 	  }
@@ -1301,7 +1298,6 @@ DBG(fprintf(stderr, "   Copying remote document to remote URL %s\n", tempfile);)
 	  }
 	else
 	  {
-	     TtaDestroyDialogue (BaseDialog + SaveForm);
 	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	     SavingDocument = (Document) None;
 	  }
@@ -1379,7 +1375,6 @@ void                DoSaveObjectAs ()
 	     TtaShowDialogue (BaseDialog + SaveForm, TRUE);
 	     return;
 	  }
-	TtaDestroyDialogue (BaseDialog + SaveForm);
 	SavingObject = 0;
 	SavingDocument = 0;
 	return;
@@ -1399,6 +1394,6 @@ void                DoSaveObjectAs ()
      }
    TtaFileCopy (tempSavedObject, tempfile);
    SavingObject = 0;
-   TtaDestroyDialogue (BaseDialog + SaveForm);
+   SavingDocument = 0;
 }
 

@@ -6,7 +6,7 @@
 #
 # And the associated Librairies for supported versions.
 #
-EDITORVERSION=2.1a
+EDITORVERSION=2.1b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -21,6 +21,7 @@ NEWS.Thoteditor.2.1 \
 README.thoteditor \
 COPYRIGHT \
 AboutThot \
+thot/Makefile.in \
 config/XKeysymDB \
 config/thot.ini \
 config/thot.color \

@@ -5899,7 +5899,7 @@ ATTRIBUTES
 	   If Applet
 		Width: Enclosing . Width;
 	   If PICTURE_UNIT
-		Width: Enclosing . Width;
+		Width: 1 px;
 #ifdef COUGAR
 	   If Object
 		Width: Enclosing . Width;
@@ -5931,7 +5931,7 @@ ATTRIBUTES
 	   If Applet
 		Height: Enclosed . Height;
 	   If PICTURE_UNIT
-		Height: Enclosed . Height;
+	        Height: 1 px;
 #ifdef COUGAR
 	   If Object
 		Height: Enclosed . Height;

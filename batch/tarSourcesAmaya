@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.0a
+AMAYAVERSION=1.0b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4"
@@ -19,6 +19,14 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
+amaya/Makefile.in \
+javalib/Makefile.in \
+pluginlib/Makefile.in \
+tools/dns_daemon/Makefile.in \
+tools/javastub/Makefile.in \
+amaya/Makefile.libwww \
+pluginlib/Makefile.plugin \
+javalib/Makefile.java \
 amaya/README.amaya \
 amaya/COPYRIGHT \
 amaya/COPYRIGHT.html \

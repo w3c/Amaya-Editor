@@ -1711,12 +1711,11 @@ char               *data;
      case SaveForm:
        if (val == 1)
 	 {
+	   TtaDestroyDialogue (BaseDialog + SaveForm);
 	   if (SavingDocument != 0)
 	     DoSaveAs ();
 	   else if (SavingObject != 0)
 	     DoSaveObjectAs ();
-	   if ((SavingObject == 0) && (SavingDocument == 0))
-	     TtaDestroyDialogue (BaseDialog + SaveForm);
 	 }
        else if (val == 2)
 	 /* Clear */

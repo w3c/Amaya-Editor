@@ -13,7 +13,7 @@
 #       English.tar.gz
 # and   French.tar.gz
 #
-THOTVERSION=2.1a
+THOTVERSION=2.1b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
@@ -33,6 +33,30 @@ Thot/COPYRIGHT.html \
 Thot/NEWS.LibThot2.0 \
 Thot/AboutThot \
 Thot/AboutThot.html \
+Thot/INSTALL \
+Thot/config.guess \
+Thot/config.h.in \
+Thot/config.sub \
+Thot/configure \
+Thot/configure.in \
+Thot/install-sh \
+Thot/stamp-h.in \
+Thot/Options.in \
+Thot/batch/Makefile.in \
+Thot/drawlib/Makefile.in \
+Thot/indexlib/Makefile.in \
+Thot/libjpeg/Makefile.in \
+Thot/libpng/Makefile.in \
+Thot/tablelib/Makefile.in \
+Thot/thotlib/Makefile.in \
+Thot/tools/Makefile.in \
+Thot/libpng/zlib/Makefile.in \
+Thot/thotlib/include/Makefile.in \
+Thot/tools/cextract-1.7/Makefile.in \
+Thot/tools/mkdep/Makefile.in \
+Thot/configure \
+Thot/configure.in \
+Thot/Makefile.in \
 Thot/doc/Appman.html \
 Thot/doc/Appman.toc.html \
 Thot/doc/APIman.html \
@@ -84,6 +108,7 @@ Thot/batch/MachineType \
 Thot/batch/app.c \
 Thot/batch/grammar.c \
 Thot/batch/parser.c \
+Thot/batch/printstr.c \
 Thot/batch/prs.c \
 Thot/batch/str.c \
 Thot/batch/tra.c \
@@ -539,6 +564,7 @@ Thot/thotlib/internals/f/callback_f.h \
 Thot/thotlib/internals/f/callbackinit_f.h \
 Thot/thotlib/internals/f/changeabsbox_f.h \
 Thot/thotlib/internals/f/changepresent_f.h \
+Thot/thotlib/internals/f/checkaccess_f.h \
 Thot/thotlib/internals/f/checkermenu_f.h \
 Thot/thotlib/internals/f/closedoc_f.h \
 Thot/thotlib/internals/f/colors_f.h \
