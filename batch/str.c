@@ -2883,7 +2883,7 @@ char              **argv;
 	     else
 	       {
 		 /* provide the real source file */
-		 unlink (buffer);
+		 RemoveFile (buffer);
 		 pwd = TtaGetEnvString ("PWD");
 		 if (pwd != NULL)
 		   sprintf (cmd, "cpp -I%s -C %s > %s", pwd, srceFileName, buffer);
@@ -2891,8 +2891,11 @@ char              **argv;
 		   sprintf (cmd, "cpp -C %s > %s", srceFileName, buffer);
 		 i = system (cmd);
 		 if (i == -1)
-		   /* cpp is not available, copy directely the file */
-		   ThotCopyFile (srceFileName, buffer);
+		   {
+		     /* cpp is not available, copy directely the file */
+		     TtaDisplaySimpleMessage (FATAL, STR, STR_CPP_NOT_FOUND);
+		     ThotCopyFile (srceFileName, buffer);
+		   }
 		 /* open the resulting file */
 		  inputFile = BIOreadOpen (buffer);
 		  /* suppress the suffix ".SCH" */

@@ -2,7 +2,7 @@
 #define STR_FILE_NAME_AND_STRUCT_NAME_DIFFERENT	      1
 #define STR_WORD_TOO_LONG	                      2
 #define STR_GLOBAL_ATTR	                              3
-#define STR_ONLY_ONE_DEFAULT_VALUE	              4
+#define STR_CPP_NOT_FOUND			      4
 #define STR_TOO_MANY_VALUES	                      5
 #define STR_TOO_MAN_RULES	                      6
 #define STR_TOO_MANY_OPTIONS_IN_THE_CASE_STATEMENT    7
@@ -23,8 +23,8 @@
 #define STR_CONSTANT_NOT_DECLARED	             22
 #define STR_GIVE_A_NAME_TO_THAT_ELEM	             23
 #define STR_ATTR_WITHOUT_VALUE	                     24
-#define STR_INVALID_CHARACTER	                     25
-#define STR_STRING_VALUE_NOT_IMPLEMENTED	     26
+#define STR_CANNOT_WRITE	                     25
+#define STR_ONLY_ONE_IMPORT_EXCEPTION	             26
 #define STR_TYPE_UNKNOWN	                     27
 #define STR_CANNOT_READ_STRUCT_SCHEM	             28
 #define STR_TOO_MANY_EXTERNAL_DOCS	             29
@@ -42,16 +42,12 @@
 #define STR_THIS_ELEM_HAS_LOCAL_ATTRS	             41
 #define STR_NOT_ENOUGH_MEM	                     42
 #define STR_NO_SUCH_FILE	                     43
-
 #define STR_ONLY_FOR_REFERENCE_ATTRS	             44
-
 #define STR_ROOT_CANNOT_BE_A_PAIR	             45
 #define	STR_FIRST_SECOND_FORBIDDEN	             46
-
 #define STR_NOT_AN_EXTENSION	                     47
 #define STR_STRUCT_SECTION_MISSING	             48
 #define STR_NOT_ALLOWED_IN_AN_EXTENSION	             49
- 
 #define STR_EXTERNAL_STRUCT	                     50
 #define STR_RECURSIVE_ELEM	                     51
 #define STR_PARAMETER	                             52
@@ -62,12 +58,8 @@
 #define STR_WON_T_BE_CREATED	                     57
 #define STR_WON_T_BE_CREATED_AND_IS_REFD	     58
 #define STR_INVALID_FILE		             59
-
 #define STR_CANNOT_BE_INCLUDED	                     60
 #define STR_CANNOT_BE_EXTERN	                     61
 #define STR_EXTERNAL_STRUCT_NOT_FOUND	             62
 #define STR_THE_ASSOC_ELEM_IS_USED_IN_ANOTHER_RULE   63
-#define STR_CANNOT_WRITE	                     64
-#define STR_ONLY_ONE_IMPORT_EXCEPTION	             65
-
-#define STR_MSG_MAX		                     66
+#define STR_MSG_MAX		                     64

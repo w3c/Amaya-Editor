@@ -2,7 +2,7 @@
 1 Nom fichier et nom structure differents\n
 2 Mot trop long\n
 3 C\'est deja un attribut global\n
-4 Une seule valeur par defaut\n
+4 ccp non accessible\n
 5 Trop de valeurs\n
 6 Trop de regles\n
 7 Trop de possibilites dans le choix\n
@@ -23,8 +23,8 @@
 22 Constante non declaree\n
 23 Donnez un nom a cet element\n
 24 Attribut sans valeur\n
-25 Caractere invalide\n
-26 Valeur chaine non implementee\n
+25 %s : ecriture impossible\n
+26 Une seule exception Import autorisee\n
 27 Type non declare\n
 28 Echec lecture schema de structure\n
 29 Trop de documents externes\n
@@ -62,5 +62,3 @@
 61 %s ne peut pas etre defini comme extern\n
 62 %s : structure extern inconnue\n
 63 L\'element associe %s : est utilise par une autre regle!\n
-64 %s : ecriture impossible\n
-65 Une seule exception Import autorisee\n

@@ -2,7 +2,7 @@
 1 File name and structure name different\n
 2 Word too long\n
 3 Global attribute\n
-4 Only one default value\n
+4 cpp not found\n
 5 Too many values\n
 6 Too man rules\n
 7 Too many options in the CASE statement\n
@@ -23,8 +23,8 @@
 22 Constant not declared\n
 23 Give a name to this element\n
 24 Attribute without value\n
-25 Invalid character\n
-26 String value not implemented\n
+25 Cannot write %s\n
+26 Only one Import exception allowed\n
 27 Type unknown\n
 28 Cannot read structure schema\n
 29 Too many external documents\n
@@ -62,5 +62,3 @@
 61 %s cannot be extern\n
 62 %s : external structure not found\n
 63 The associated element %s is used in another rule!\n
-64 Cannot write %s\n
-65 Only one Import exception allowed\n
