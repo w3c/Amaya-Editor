@@ -530,7 +530,8 @@ PtrSearchContext    context;
 	/* Recherche le premier separateur apres le mot */
 	/* On verifie que l'on ne depasse pas la fin du domaine de recherche */
 	len = 0;
-	while (len < MAX_WORD_LEN && charact != 0 && !IsSeparatorChar (charact)
+	while (len < MAX_WORD_LEN-1 && charact != 0
+	       && !IsSeparatorChar (charact)
 	       && (pEl != endEl || iChar < endChar))
 	  {
 	     word[len++] = charact;
@@ -696,7 +697,8 @@ PtrSearchContext    context;
 
 	/* On se place au debut du mot et recupere le mot a l'envers */
 	len = 0;
-	while (len < MAX_WORD_LEN && charact != 0 && iChar >= 0 && !IsSeparatorChar (charact)
+	while (len < MAX_WORD_LEN-1 && charact != 0 && iChar >= 0
+	       && !IsSeparatorChar (charact)
 	       && (pEl != endEl || iChar >= endChar))
 	  {
 	     reverse[len++] = charact;

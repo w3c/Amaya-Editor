@@ -330,8 +330,8 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    encoding = 0;		/* BUG */
-  if (y < 0)
-    return;
+   if (y < 0)
+      return 0;
    /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
    /* and equal to 0 if a justified space is to be printed */
 

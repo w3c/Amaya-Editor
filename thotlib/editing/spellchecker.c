@@ -1093,7 +1093,7 @@ char                newWord[MAX_WORD_LEN];
 {
    int                 idx;
    int                 stringLength;	/* longueur de cette chaine */
-   char                pChaineRemplace[THOT_MAX_CHAR]; /* la chaine de remplacement */
+   char                pChaineRemplace[MAX_WORD_LEN]; /* la chaine de remplacement */
    int                 LgChaineRempl;	/* longueur de cette chaine */
 
    /* remplacer le mot errone par le mot corrige */
@@ -1212,10 +1212,10 @@ char               *listcar;
    contenu dans ListCar.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ACeCar (char word[THOT_MAX_CHAR])
+static boolean      ACeCar (char word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      ACeCar (word)
-char                word[THOT_MAX_CHAR];
+char                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1239,10 +1239,10 @@ char                word[THOT_MAX_CHAR];
    retourne TRUE si le mot contient au moins un chiffre arabe.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IncludeANumber (char word[THOT_MAX_CHAR])
+static boolean      IncludeANumber (char word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      IncludeANumber (word)
-char                word[THOT_MAX_CHAR];
+char                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1266,10 +1266,10 @@ char                word[THOT_MAX_CHAR];
    chiffres decimaux arabes.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsANumber (char word[THOT_MAX_CHAR])
+static boolean      IsANumber (char word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      IsANumber (word)
-char                word[THOT_MAX_CHAR];
+char                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1295,10 +1295,10 @@ char                word[THOT_MAX_CHAR];
    chiffres romains.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      InRoman (char word[THOT_MAX_CHAR])
+static boolean      InRoman (char word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      InRoman (word)
-char                word[THOT_MAX_CHAR];
+char                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
    /* description des chiffres romains (majuscule) */
@@ -1364,10 +1364,10 @@ char                word[THOT_MAX_CHAR];
    retourne FALSE sinon : le mot sera alors verifie par le correcteur 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IgnoreWord (char word[THOT_MAX_CHAR])
+static boolean      IgnoreWord (char word[MAX_WORD_LEN])
 #else  /* __STDC__ */
 static boolean      IgnoreWord (word)
-char                word[THOT_MAX_CHAR];
+char                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
@@ -1402,10 +1402,10 @@ char                word[THOT_MAX_CHAR];
    Le mot errone' est mis dans ChkrErrWord.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NextSpellingError (char word[THOT_MAX_CHAR], PtrDict docDict)
+void                NextSpellingError (char word[MAX_WORD_LEN], PtrDict docDict)
 #else  /* __STDC__ */
 void                NextSpellingError (word, docDict)
-char                word[THOT_MAX_CHAR];
+char                word[MAX_WORD_LEN];
 PtrDict             docDict;
 
 #endif /* __STDC__ */
