@@ -31,42 +31,41 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
-
-#include "appli_f.h"
-#include "actions_f.h"
-#include "applicationapi_f.h"
-#include "attrmenu_f.h"
-#include "tree_f.h"
-#include "browser_f.h"
-#include "search_f.h"
-#include "searchmenu_f.h"
-#include "textcommands_f.h"
-#include "config_f.h"
-#include "structcreation_f.h"
-#include "creationmenu_f.h"
-#include "dialogapi_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
-#include "viewapi_f.h"
-#include "thotmsg_f.h"
-#include "viewcommands_f.h"
-#include "exceptions_f.h"
-#include "structmodif_f.h"
-#include "presentmenu_f.h"
-#include "printmenu_f.h"
-#include "structselect_f.h"
-#include "selectmenu_f.h"
-#include "memory_f.h"
-#include "registry_f.h"
-#include "docs_f.h"
-#include "writedoc_f.h"
 #include "print_tv.h"
 
+#include "actions_f.h"
+#include "appli_f.h"
+#include "applicationapi_f.h"
+#include "attrmenu_f.h"
+#include "browser_f.h"
+#include "config_f.h"
+#include "creationmenu_f.h"
+#include "dialogapi_f.h"
+#include "docs_f.h"
+#include "exceptions_f.h"
+#include "memory_f.h"
+#include "presentmenu_f.h"
+#include "printmenu_f.h"
+#include "registry_f.h"
+#include "search_f.h"
+#include "searchmenu_f.h"
+#include "selectmenu_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "thotmsg_f.h"
+#include "tree_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
+#include "viewcommands_f.h"
+#include "writedoc_f.h"
 #ifdef _WINDOWS
 #include "thotprinter_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
-static CHAR_T         Orientation[MAX_NAME_LENGTH];
+static CHAR_T       Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
 static int          defManualFeed;
@@ -80,15 +79,7 @@ static int          defPageSize;
 static Name         PresSchema;
 
 #ifdef _WINDOWS
-#include "wininclude.h"
 
-#if 0
-#ifdef __STDC__
-extern void PrintDoc (HWND, int, STRING*, HDC, BOOL, int, STRING, STRING, HINSTANCE, BOOL);
-#else  /* __STDC__ */
-extern void PrintDoc ();
-#endif /* __STDC__ */
-#endif /* 0000 */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------

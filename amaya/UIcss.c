@@ -34,6 +34,7 @@ static Document    CSSdocument;
 #include "HTMLedit_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
+#include "query_f.h"
 #include "init_f.h"
 
 /*----------------------------------------------------------------------
@@ -84,10 +85,7 @@ CSSInfoPtr      css;
 	toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
 #endif /* ! AMAYA_JAVA */
 	      if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
-		{
-		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), completeURL);
-		  return;
-		}
+		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), completeURL);
 	      else
 		{
 		  /* we have to rename the temporary file */

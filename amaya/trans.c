@@ -19,12 +19,13 @@
 #include "tree.h"
 
 #include "HTMLimage_f.h"
-#include "html2thot_f.h"
-#include "transparse_f.h"
 #include "XMLparser_f.h"
 #ifdef MATHML
 #include "MathML.h"
 #endif
+#include "fetchHTMLname_f.h"
+#include "html2thot_f.h"
+#include "transparse_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"

@@ -36,6 +36,7 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
 #include "HTMLimage_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
+#include "fetchHTMLname_f.h"
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 

@@ -563,7 +563,7 @@ STRING processName;
        fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
        fprintf (stderr, "       [-portrait | -landscape]\n");
        fprintf (stderr, "       [-display <display>]\n");
-       fprintf (stderr, "       [-css <file name>]\n");
+       fprintf (stderr, "       [-css <file name> [...]]\n");
        fprintf (stderr, "       [-name <document name>]\n");
        fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
        fprintf (stderr, "       [-bw]\t\t /* for black & white output */\n");

@@ -83,9 +83,9 @@ typedef int         State;	/* a state of the automaton */
 static State        currentState;	/* current state of the automaton */
 static State        returnState;	/* return state from subautomaton */
 
+#include "fetchHTMLname_f.h"
 #include "html2thot_f.h"
 #include "transparse_f.h"
-
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
