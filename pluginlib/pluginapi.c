@@ -43,6 +43,7 @@ extern PluginInfo*      pluginTable [100];
 extern Document         currentDocument;
 extern int              pluginCounter;
 extern int              InlineHandlers;
+extern int              currentExtraHandler;
 extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
 
 static NPMIMEType       pluginMimeType;
@@ -229,9 +230,9 @@ void* ptr ;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void Ap_Normal (int indexPlug, NPP pluginInstance, NPStream* stream, char* url) 
+static void Ap_Normal (NPP pluginInstance, NPStream* stream, char* url) 
 #else  /* __STDC__ */
-static void Ap_Normal (indexPlug, pluginInstance, stream, url) 
+static void Ap_Normal (pluginInstance, stream, url) 
 NPP       pluginInstance; 
 NPStream* stream; 
 char*     url;
@@ -250,10 +251,10 @@ char*     url;
     fseek (fptr, offset, SEEK_SET);
      
     while (!feof (fptr)) { 
-	  ready_to_read = (*(pluginTable [indexPlug]->pluginFunctionsTable->writeready)) (pluginInstance, stream);
+	  ready_to_read = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->writeready)) (pluginInstance, stream);
 	  buffer = (char*) malloc (ready_to_read);
 	  count = fread (buffer, sizeof (char), ready_to_read, fptr);                
-	  ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
+	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
 	  printf ("%d WriteReady \n", ready_to_read);
 	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
 	  offset += count;
@@ -267,9 +268,9 @@ char*     url;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void Ap_AsFile (int indexPlug, NPP pluginInstance, NPStream* stream, char* url) 
+static void Ap_AsFile (NPP pluginInstance, NPStream* stream, char* url) 
 #else  /* __STDC__ */
-static void Ap_AsFile (indexPlug, pluginInstance, stream, url) 
+static void Ap_AsFile (pluginInstance, stream, url) 
 NPP       pluginInstance; 
 NPStream* stream; 
 char*     url;
@@ -289,7 +290,7 @@ char*     url;
      
     while (!feof (fptr)) { 
 	  count = fread (buffer, sizeof (char), BUFSIZE, fptr);
-	  ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
+	  ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->write)) (pluginInstance, stream, offset , count , buffer);
 	  printf ("\t%d bytes consumed by NPP_Write\n", ret);
 	  offset += count;
     }
@@ -729,7 +730,6 @@ Display* display;
     NPStream*   stream;
     NPByteRange range;
     NPWindow*   pwindow;
-    int         indexPlug;
     char        widthText[10], heightText[10];
     char*       argn[6], *argv[6];
     char*       url;
@@ -760,7 +760,7 @@ Display* display;
     argv[4] = "TRUE";
     argv[5] = "TRUE";
     
-    indexPlug = imageDesc->PicType - InlineHandlers;
+    currentExtraHandler  = imageDesc->PicType - InlineHandlers;
 
     /* Prepare window information and "instance" structure */
     pwindow                  = (NPWindow*) malloc (sizeof (NPWindow));
@@ -787,7 +787,7 @@ Display* display;
     strcpy (url, imageDesc->PicFileName);
     
     (NPP) (imageDesc->pluginInstance) = (NPP) malloc (sizeof (NPP_t)); 
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginMimeType, 
+    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newp)) (pluginTable [currentExtraHandler]->pluginMimeType, 
                                                              (NPP)(imageDesc->pluginInstance), 
                                                              NP_EMBED, 
                                                              argc, 
@@ -807,10 +807,10 @@ Display* display;
     stream->lastmodified = sbuf.st_mtime;
 
 
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) ((NPP)(imageDesc->pluginInstance), pwindow); 
+    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->setwindow)) ((NPP)(imageDesc->pluginInstance), pwindow); 
     
-    ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) ((NPP)(imageDesc->pluginInstance), 
-                                                                         pluginTable [indexPlug]->pluginMimeType,
+    ret = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newstream)) ((NPP)(imageDesc->pluginInstance), 
+                                                                         pluginTable [currentExtraHandler]->pluginMimeType,
                                                                          stream, 
                                                                          FALSE, 
                                                                          &stype); 
@@ -818,11 +818,11 @@ Display* display;
     printf ("Stype : %d\n", stype);
 
     switch (stype) {
-           case NP_NORMAL:     Ap_Normal (indexPlug, (NPP) (imageDesc->pluginInstance), stream, url); 
+           case NP_NORMAL:     Ap_Normal ((NPP) (imageDesc->pluginInstance), stream, url); 
                                break;
-           case NP_ASFILEONLY: (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
+           case NP_ASFILEONLY: (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
                                break;
-	   case NP_ASFILE:     Ap_AsFile (indexPlug, (NPP) (imageDesc->pluginInstance), stream, url);
+	   case NP_ASFILE:     Ap_AsFile ((NPP) (imageDesc->pluginInstance), stream, url);
 	       /*case NP_ASFILE:     Ap_Normal (indexPlug, (NPP) (imageDesc->pluginInstance), stream, url);  */
                                break;
            case NP_SEEK:       /* ?????????????????????????????
@@ -833,7 +833,7 @@ Display* display;
                                break;
     }
 
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
+    (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url);
     /* (*(pluginTable [indexPlug]->pluginFunctionsTable->destroystream)) ((NPP)(imageDesc->pluginInstance), stream, NPRES_DONE);*/
     range.offset = 0; /*10; */
     range.length = 2000; /*20;*/

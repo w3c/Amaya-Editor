@@ -405,13 +405,23 @@ char               *fileName;
 	return PNG_FORMAT;
     }
 
-   while (i < HandlersCounter)
+  i = HandlersCounter - 1;
+
+  /*   while (i < HandlersCounter)
      {
          if (i >= InlineHandlers)
             currentExtraHandler = i - InlineHandlers;
          if (Match_Format (i, fileName))
             return i ;
          ++i ;
+     }*/
+   while (i > UNKNOWN_FORMAT)
+     {
+         if (i >= InlineHandlers)
+            currentExtraHandler = i - InlineHandlers;
+         if (Match_Format (i, fileName))
+            return i ;
+         --i ;
      }
    return UNKNOWN_FORMAT;
 }
