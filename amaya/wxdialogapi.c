@@ -342,22 +342,9 @@ ThotBool CreateAuthentDlgWX ( int ref, ThotWindow parent,
 			     char *auth_realm, char *server)
 {
 #ifdef _WX
-  char *label;
-
-  label = (char *)TtaGetMemory (((server) ? strlen (server) : 0)
-				+ strlen (TtaGetMessage (AMAYA, 
-					      AM_AUTHENTICATION_REALM_SERVER))
-				+ ((auth_realm) ? strlen (auth_realm) : 0)
-				+ 20); /*a bit more than enough memory */
-  sprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM_SERVER),
-	   ((auth_realm) ? auth_realm : ""), 
-	   ((server) ? server : ""));
-  wxString wx_identification = TtaConvMessageToWX( label );
   AuthentDlgWX * p_dlg = new AuthentDlgWX( ref,
 					   parent,
-					   wx_identification);
-  TtaFreeMemory (label);
-
+					   auth_realm, server);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
       /* the dialog has been sucesfully registred */

@@ -30,14 +30,30 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 AuthentDlgWX::AuthentDlgWX( int ref,
 			    wxWindow* parent,
-			    const wxString & wx_identification) :
+			    char * auth_realm,
+			    char * server) :
   AmayaDialog( NULL, ref )
 {
+  char *ptr, *label;
+
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("AuthentDlgWX"));
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION) );
   SetTitle( wx_title );
 
-  XRCCTRL(*this, "wxID_LABEL_AUTHENT", wxStaticText)->SetLabel( wx_identification );
+  ptr = TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM);
+  label = (char *)TtaGetMemory (((auth_realm) ? strlen (auth_realm) : 0)
+			+ ((server) ? strlen (server) : 0)
+			+ strlen (ptr) + 20); /*a bit more than enough memory */
+  if (label)
+    {
+      sprintf (label, ptr, ((auth_realm) ? auth_realm : ""));
+      XRCCTRL(*this, "wxID_LABEL_AUTHENT", wxStaticText)->SetLabel(TtaConvMessageToWX( label ) );
+      ptr = TtaGetMessage (AMAYA, AM_AUTHENTICATION_SERVER);
+      sprintf (label, ptr, ((server) ? server : ""));
+      XRCCTRL(*this, "wxID_LABEL_SERVER", wxStaticText)->SetLabel(TtaConvMessageToWX( label ) );
+      TtaFreeMemory (label);
+    }
+
   XRCCTRL(*this, "wxID_LABEL_NAME", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NAME) ));
   XRCCTRL(*this, "wxID_LABEL_PASSWD", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PASSWORD) ));
 
@@ -62,7 +78,6 @@ AuthentDlgWX::AuthentDlgWX( int ref,
   ---------------------------------------------------------------------------*/
 AuthentDlgWX::~AuthentDlgWX()
 {
-  ThotCallback (BaseDialog + FormAnswer, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------

@@ -20,7 +20,8 @@ public:
   // Constructor.
   AuthentDlgWX( int ref,
 	       wxWindow* parent,
-		const wxString & wx_identification);
+	       char *realm,
+	       char *server);
   
   // Destructor.                  
   virtual ~AuthentDlgWX();
