@@ -833,8 +833,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 	  else
 	    delta = box->BxMaxWidth;
 	  /* update the new inside width */
-	  delta = delta - box->BxW - box->BxLMargin - box->BxLBorder - box->BxLPadding
-	    - box->BxLMargin  - box->BxRBorder - box->BxRPadding;
+	  delta = delta - box->BxWidth;
 	  ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, box->BxWidth);
@@ -870,8 +869,7 @@ printf ("Minimum Widths ...\n");
 	  else
 	    delta = box->BxMinWidth;
 	  /* update the new inside width */
-	  delta = delta - box->BxW - box->BxLMargin - box->BxLBorder - box->BxLPadding
-	    - box->BxLMargin  - box->BxRBorder - box->BxRPadding;
+	  delta = delta - box->BxWidth;
 	  ResizeWidth (box, box, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, box->BxWidth);
@@ -1012,8 +1010,7 @@ printf ("Specific Widths ...\n");
 		  pixels = 0;
 		}
 	    }
-	  i = i - box->BxW - box->BxLMargin - box->BxLBorder - box->BxLPadding
-	    - box->BxLMargin  - box->BxRBorder - box->BxRPadding;
+	  i = i - box->BxWidth;
 	  ResizeWidth (box, box, NULL, i, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 	  printf ("Width[%d]=%d\n", cRef, box->BxWidth);

@@ -712,46 +712,64 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 	    {
 	      bitmap = (FT_BitmapGlyph) Glyph;
 	      source = &bitmap->bitmap;	 
-	      if (source->width && source->rows)
+	      w = (unsigned int) source->width;     
+	      h = (unsigned int) source->rows;
+	      if (w && h)
 		{
-		  w = (unsigned int) source->width;     
-		  h = (unsigned int) source->rows;
 		  p = w * h;
-		  
 		  data = (unsigned char *)TtaGetMemory (p);
 		  if (data)
 		    {
 		      memset (data, 0, p);
 		      ptr = data;
-			  src = source->buffer;
-			  switch (source->pixel_mode) {
-				/* 1 bit per pixel, expand the bitmap */
-				case ft_pixel_mode_mono:
-				  for (y=0; y<h; y++) {
-					unsigned char *bptr = src;
-					unsigned char b;
-					for (i=0; i<w; i++) {
-					  if (i%8==0) b = *bptr++;
-					  *ptr++ = b&0x80 ? 0xFF : 0;
-					  b <<= 1;
-					}
-					src += source->pitch;
-				  }
-				break;
-				/* one byte per pixel, just copy the bitmap */
-				case ft_pixel_mode_grays:
-				  memcpy(ptr,src,p);
-				break;
-				default:
-				  ; /* currently unused by freetype */
+		      src = source->buffer;
+		      switch (source->pixel_mode) {
+			/* 1 bit per pixel, expand the bitmap */
+		      case ft_pixel_mode_mono:
+			for (y=0; y<h; y++) {
+			  unsigned char *bptr = src;
+			  unsigned char b;
+			  for (i=0; i<w; i++) {
+			    if (i%8==0) b = *bptr++;
+			    *ptr++ = b&0x80 ? 0xFF : 0;
+			    b <<= 1;
 			  }
-		    }	      
+			  src += source->pitch;
+			}
+			break;
+			/* one byte per pixel, just copy the bitmap */
+		      case ft_pixel_mode_grays:
+			memcpy (ptr, src, p);
+			break;
+		      default:
+			; /* currently unused by freetype */
+		      }
+		    }
 		}
 	      else
 		{
 #ifdef _TRACE_GLGLYPH
 		  printf("MakeBitmapGlyph(Warning): the bitmap glyph is empty (g = %d)\n", g);
 #endif /* #ifdef _TRACE_GLGLYPH */
+		  /* the bitmap glyph is empty -> generate a rectangle */
+		  w = 7;     
+		  h = font->height;
+		  p = w * h;		  
+		  data = (unsigned char *)TtaGetMemory (p);
+		  if (data)
+		    {
+		      ptr = data;
+		      memset (ptr, 0xFF, w);
+		      ptr += w;
+		      while (ptr < data + p - w)
+			{
+			memset (ptr++, 0xFF, 1);
+			memset (ptr, 0, w - 2);
+			ptr = ptr + w - 2;
+			memset (ptr++, 0xFF, 1);
+			}
+		      memset (ptr, 0xFF, w);
+		    }
 		}
 	      
 	      FT_Glyph_Get_CBox (Glyph, ft_glyph_bbox_subpixels, &(BitmapGlyph->bbox));
@@ -760,8 +778,8 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 	      BitmapGlyph->advance = (int) (Glyph->advance.x >> 16);
 	      BitmapGlyph->pos.x = bitmap->left;
 	      BitmapGlyph->pos.y = source->rows - bitmap->top;   
-	      BitmapGlyph->dimension.x = source->width;
-	      BitmapGlyph->dimension.y = source->rows;  	  
+	      BitmapGlyph->dimension.x = w;
+	      BitmapGlyph->dimension.y = h;  	  
 	      FT_Done_Glyph (Glyph);
 	      return;	      
 	    }
