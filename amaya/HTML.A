@@ -260,4 +260,10 @@ ATTRIBUTES
 	BEGIN
 	AttrDelete.Pre ->  DeleteAttrSelected;	
 	END;
+
+   ID:
+	BEGIN
+	AttrCreate.Post -> UpdateAttrID;
+	AttrModify.Post -> UpdateAttrID;	
+	END;
 END

@@ -137,7 +137,7 @@ Document            targetDoc;
 
 /*----------------------------------------------------------------------
    GetNameAttr return the NAME attribute of the enclosing Anchor   
-   element or NULL.                                        
+   element or the ID attribute of the selected element or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Attribute           GetNameAttr (Document doc, Element selectedElement)
@@ -149,27 +149,39 @@ Element             selectedElement;
 #endif /* __STDC__ */
 {
 
-   Element             elAnchor;
+   Element             el;
    ElementType         elType;
    AttributeType       attrType;
-   Attribute           attrNAME;
+   Attribute           attr;
 
-   attrNAME = NULL;		/* no NAME attribute yet */
+   attr = NULL;		/* no NAME attribute yet */
    if (selectedElement != NULL)
      {
 	elType = TtaGetElementType (selectedElement);
 	elType.ElTypeNum = HTML_EL_Anchor;
-	elAnchor = TtaGetTypedAncestor (selectedElement, elType);
-	if (elAnchor != NULL)
+	attrType.AttrSSchema = elType.ElSSchema;
+	el = TtaGetTypedAncestor (selectedElement, elType);
+	if (el != NULL)
 	  {
 	     /* the ascending Anchor element has been found */
 	     /* get the NAME attribute of element Anchor */
-	     attrType.AttrSSchema = elType.ElSSchema;
 	     attrType.AttrTypeNum = HTML_ATTR_NAME;
-	     attrNAME = TtaGetAttribute (elAnchor, attrType);
+	     attr = TtaGetAttribute (el, attrType);
+	  }
+	else
+	  {
+	     /* no ascending Anchor element */
+	     /* get the ID attribute of the selected element */
+	     attrType.AttrTypeNum = HTML_ATTR_ID;
+	     el = selectedElement;
+	     while (attr == NULL && el != NULL)
+	       {
+		 attr = TtaGetAttribute (el, attrType);
+		 el = TtaGetParent(el);
+	       }
 	  }
      }
-   return (attrNAME);
+   return (attr);
 }
 
 
@@ -533,9 +545,12 @@ Document     doc;
 	       TtaSetAttributeText (attr, value, el, doc);
 	       if (elType.ElTypeNum == HTML_EL_MAP)
 		 {
-		   /* Search the refered image */
+		   /* Search backward the refered image */
 		   attrType.AttrTypeNum = HTML_ATTR_USEMAP;
 		   TtaSearchAttribute (attrType, SearchBackward, el, &image, &attr);
+		   if (attr != NULL && image != NULL)
+		     /* Search forward the refered image */
+		     TtaSearchAttribute (attrType, SearchForward, el, &image, &attr);
 		   if (attr != NULL && image != NULL)
 		     {
 		       i = MAX_LENGTH;
@@ -656,131 +671,136 @@ NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-   Document            originDocument, doc;
-   Element             el;
-   AttributeType       attrType;
-   Attribute           attr;
-   ElementType         elType;
-   int                 length, i, iName;
-   char               *value;
-   char                documentURL[MAX_LENGTH];
-   char                tempURL[MAX_LENGTH];
-   char                path[MAX_LENGTH];
+  Document            originDocument, doc;
+  Element             el;
+  AttributeType       attrType;
+  Attribute           attr;
+  ElementType         elType;
+  int                 length, i, iName;
+  char               *value;
+  char                documentURL[MAX_LENGTH];
+  char                tempURL[MAX_LENGTH];
+  char                path[MAX_LENGTH];
 
-   el = event->element;
-   doc = event->document;
-   CheckPseudoParagraph (el, doc);
-   elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == HTML_EL_MAP)
-     /* Check attribute NAME in order to make sure that its value unique */
-     /* in the document */
-     MakeUniqueName (el, doc);
-   else if (elType.ElTypeNum == HTML_EL_Anchor)
-     {
-	/* Check attribute NAME in order to make sure that its value unique */
-	/* in the document */
-        MakeUniqueName (el, doc);
-	/* Change attributes HREF if the element comes from another */
-	/* document */
+  el = event->element;
+  doc = event->document;
+  CheckPseudoParagraph (el, doc);
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_Anchor)
+    {
+      /* Check attribute NAME in order to make sure that its value unique */
+      /* in the document */
+      MakeUniqueName (el, doc);
+      /* Change attributes HREF if the element comes from another */
+      /* document */
 	originDocument = (Document) event->position;
 	if (originDocument != 0)
-	   if (originDocument != doc)
-	     {
-		/* the anchor has moved from one document to another */
-		/* get the HREF attribute of element Anchor */
-		attrType.AttrSSchema = elType.ElSSchema;
-		attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		attr = TtaGetAttribute (el, attrType);
-		if (attr != NULL)
-		  {
-		     /* get a buffer for the URL */
-		     length = TtaGetTextAttributeLength (attr) + 1;
-		     value = TtaGetMemory (length);
-		     if (value != NULL)
-		       {
-			  /* get the URL itself */
-			  TtaGiveTextAttributeValue (attr, value, &length);
-			  if (value[0] == '#')
+	  if (originDocument != doc)
+	    {
+	      /* the anchor has moved from one document to another */
+	      /* get the HREF attribute of element Anchor */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr != NULL)
+		{
+		  /* get a buffer for the URL */
+		  length = TtaGetTextAttributeLength (attr) + 1;
+		  value = TtaGetMemory (length);
+		  if (value != NULL)
+		    {
+		      /* get the URL itself */
+		      TtaGiveTextAttributeValue (attr, value, &length);
+		      if (value[0] == '#')
+			{
+			  /* the target element is part of the origin document */
+			  /* convert internal link into external link */
+			  strcpy (tempURL, DocumentURLs[originDocument]);
+			  iName = 0;
+			}
+		      else
+			{
+			  /* the target element is in another document */
+			  strcpy (documentURL, value);
+			  /* looks for a '#' in the value */
+			  i = length;
+			  while (value[i] != '#' && i > 0)
+			    i--;
+			  if (i == 0)
 			    {
-			       /* the target element is part of the origin document */
-			       /* convert internal link into external link */
-			       strcpy (tempURL, DocumentURLs[originDocument]);
-			       iName = 0;
+			      /* there is no '#' in the URL */
+			      value[0] = EOS;
+			      iName = 0;
 			    }
 			  else
 			    {
-			       /* the target element is in another document */
-			       strcpy (documentURL, value);
-			       /* looks for a '#' in the value */
-			       i = length;
-			       while (value[i] != '#' && i > 0)
-				  i--;
-			       if (i == 0)
-				 {
-				    /* there is no '#' in the URL */
-				    value[0] = EOS;
-				    iName = 0;
-				 }
-			       else
-				 {
-				    /* there is a '#' character in the URL */
-				    /* separate document name and element name */
-				    documentURL[i] = EOS;
-				    iName = i;
-				 }
-			       /* get the complete URL of the referred document */
-			       /* Add the  base content if necessary */
-			       NormalizeURL (documentURL, originDocument, tempURL, path);
+			      /* there is a '#' character in the URL */
+			      /* separate document name and element name */
+			      documentURL[i] = EOS;
+			      iName = i;
 			    }
-			  if (value[iName] == '#')
-			    {
-			       if (!strcmp (tempURL, DocumentURLs[doc]))
-				  /* convert external link into internal link */
-				  strcpy (tempURL, &value[iName]);
-			       else
-				  strcat (tempURL, &value[iName]);
-			    }
-			  /* set the new value of attribute HREF */
-			  TtaSetAttributeText (attr, tempURL, el, doc);
-			  TtaFreeMemory (value);
-		       }
-		  }
-	     }
-     }
-   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-     {
-	/* Change attributes SRC if the element comes from another */
-	/* document */
-	originDocument = (Document) event->position;
-	if (originDocument != 0)
-	  {
-	     if (originDocument != doc)
-	       {
-		  /* the image has moved from one document to another */
-		  /* get the SRC attribute of element IMAGE */
-		  attrType.AttrSSchema = elType.ElSSchema;
-		  attrType.AttrTypeNum = HTML_ATTR_SRC;
-		  attr = TtaGetAttribute (el, attrType);
-		  if (attr != NULL)
-		    {
-		       /* get a buffer for the SRC */
-		       length = TtaGetTextAttributeLength (attr) + 1;
-		       if (length > 0)
-			 {
-			    value = TtaGetMemory (MAX_LENGTH);
-			    if (value != NULL)
-			      {
-				 /* get the SRC itself */
-				 TtaGiveTextAttributeValue (attr, value, &length);
-				 /* update value and SRCattribute */
-				 ComputeSRCattribute (el, doc, originDocument, attr, value);
-				 TtaFreeMemory (value);
-			      }
-			 }
+			  /* get the complete URL of the referred document */
+			  /* Add the  base content if necessary */
+			  NormalizeURL (documentURL, originDocument, tempURL, path);
+			}
+		      if (value[iName] == '#')
+			{
+			  if (!strcmp (tempURL, DocumentURLs[doc]))
+			    /* convert external link into internal link */
+			    strcpy (tempURL, &value[iName]);
+			  else
+			    strcat (tempURL, &value[iName]);
+			}
+		      /* set the new value of attribute HREF */
+		      TtaSetAttributeText (attr, tempURL, el, doc);
+		      TtaFreeMemory (value);
 		    }
-	       }
+		}
+	    }
+    }
+  else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    {
+      originDocument = (Document) event->position;
+      if (originDocument != 0)
+	{
+	  /* remove USEMAP attribute */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr != NULL)
+	    TtaRemoveAttribute (el, attr, doc);
+	  /* Change attributes SRC if the element comes from another */
+	  /* document */
+	  if (originDocument != doc)
+	    {
+	      /* the image has moved from one document to another */
+	      /* get the SRC attribute of element IMAGE */
+	      attrType.AttrTypeNum = HTML_ATTR_SRC;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr != NULL)
+		{
+		  /* get a buffer for the SRC */
+		  length = TtaGetTextAttributeLength (attr) + 1;
+		  if (length > 0)
+		    {
+		      value = TtaGetMemory (MAX_LENGTH);
+			if (value != NULL)
+			  {
+			    /* get the SRC itself */
+			    TtaGiveTextAttributeValue (attr, value, &length);
+			    /* update value and SRCattribute */
+			    ComputeSRCattribute (el, doc, originDocument, attr, value);
+			    TtaFreeMemory (value);
+			  }
+		      }
+		  }
+	      }
 	  }
      }
+  else
+    /* Check attribute NAME or ID in order to make sure that its value */
+    /* unique in the document */
+    MakeUniqueName (el, doc);
 }
 
 
@@ -813,6 +833,21 @@ View                view;
 #endif /* __STDC__ */
 {
    CreateAnchor (doc, view, FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+   UpdateAttrID:  check that the ID is a unique name in the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                UpdateAttrID (NotifyAttribute * event)
+#else  /* __STDC__ */
+void                UpdateAttrID (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+   MakeUniqueName (event->element, event->document);
 }
 
 
