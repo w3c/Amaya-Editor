@@ -14,10 +14,11 @@ include ../Options
 INCLUDES =-DHAVE_CONFIG_H -I.. \
 	  -I../amaya -I@srcdir@/f -I@top_srcdir@/amaya \
 	  -I@top_srcdir@/amaya/f -I../libwww \
+	  -I@top_srcdir@/thotlib/include \
 	  -I@top_srcdir@/../libwww/Library/src \
 	  -I@top_srcdir@/../libwww/modules/expat/lib \
 	  -I$(DAVLIB)/tree/h -I$(DAVLIB)/h \
-	  @THOTINCLUDES@
+	  $(GUI_INCLUDES)
 
 OPTIONS	= @AMAYA_OPTIONS@ $(AMAYA_DAV_OPTIONS)
 
