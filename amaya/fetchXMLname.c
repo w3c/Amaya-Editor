@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -39,7 +39,7 @@ static int        MathSup = 0;
 /*----------------------------------------------------------------------
    GetXHTMLSSchema returns the XHTML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema         GetXHTMLSSchema (Document doc)
+SSchema GetXHTMLSSchema (Document doc)
 {
   SSchema	XHTMLSSchema;
 
@@ -53,7 +53,7 @@ SSchema         GetXHTMLSSchema (Document doc)
 /*----------------------------------------------------------------------
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema         GetMathMLSSchema (Document doc)
+SSchema GetMathMLSSchema (Document doc)
 {
   SSchema	MathMLSSchema;
 
@@ -68,7 +68,7 @@ SSchema         GetMathMLSSchema (Document doc)
 /*----------------------------------------------------------------------
    GetSVGSSchema returns the SVG Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema         GetSVGSSchema (Document doc)
+SSchema GetSVGSSchema (Document doc)
 
 {
   SSchema	SVGSSchema;
@@ -84,7 +84,7 @@ SSchema         GetSVGSSchema (Document doc)
 /*----------------------------------------------------------------------
    GetXLinkSSchema returns the XLink Thot schema for document doc.
   ----------------------------------------------------------------------*/
-SSchema         GetXLinkSSchema (Document doc)
+SSchema GetXLinkSSchema (Document doc)
 
 {
   SSchema	XLinkSSchema;
@@ -99,7 +99,7 @@ SSchema         GetXLinkSSchema (Document doc)
 /*----------------------------------------------------------------------
    GetGenericXMLSSchema returns the XML Thot schema for the document doc.
   ----------------------------------------------------------------------*/
-SSchema         GetGenericXMLSSchema (Document doc)
+SSchema GetGenericXMLSSchema (Document doc)
 
 {
   SSchema	XMLSSchema;
@@ -114,7 +114,7 @@ SSchema         GetGenericXMLSSchema (Document doc)
 /*----------------------------------------------------------------------
    GetGenericXMLSSchemaByUri returns the XML Thot schema for the document doc.
   ----------------------------------------------------------------------*/
-SSchema         GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
+SSchema GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
 
 {
   SSchema	XMLSSchema;
@@ -152,24 +152,21 @@ SSchema GetXMLSSchema (int XMLtype, Document doc)
   Generic function which searchs in the Element Mapping table, selected
   by the parameter XMLtype, the entry XMLname and returns the corresponding
   Thot element type.
-   Returns:
+  Returns:
     - ElTypeNum and ElSSchema into elType  ElTypeNum = 0 if not found.
-    - content 
+    - content information about this entry
+    - checkProfile TRUE if the entry is valid for the current Doc profile.
   ----------------------------------------------------------------------*/
-void MapXMLElementType (int XMLtype,
-			char *XMLname,
-			ElementType *elType,
-			char **mappedName,
-			char *content,
-			ThotBool *highEnoughLevel,
-			Document doc)
+void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
+			char **mappedName, char *content,
+			ThotBool *checkProfile, Document doc)
 {
    int                 i;
    ElemMapping        *ptr;
 
    /* Initialize variables */
    *mappedName = NULL;
-   *highEnoughLevel = TRUE;
+   *checkProfile = TRUE;
    elType->ElTypeNum = 0;
 
    /* Select the right table */
@@ -182,7 +179,7 @@ void MapXMLElementType (int XMLtype,
 	 {
 	   /* Maths are not allowed in this document */
 	   ptr = NULL;
-	   *highEnoughLevel = FALSE;
+	   *checkProfile = FALSE;
 	 }
        else
 	 ptr = MathMLElemMappingTable;
@@ -194,7 +191,7 @@ void MapXMLElementType (int XMLtype,
 	 {
 	   /* Graphics are not allowed in this document */
 	   ptr = NULL;
-	   *highEnoughLevel = FALSE;
+	   *checkProfile = FALSE;
 	 }
        else
 	 ptr = SVGElemMappingTable;
@@ -218,7 +215,7 @@ void MapXMLElementType (int XMLtype,
 		  !(ptr[i].Level & TtaGetDocumentProfile(doc)))
 	   {
 	     /* this tag is not valid in the document profile */
-	     *highEnoughLevel = FALSE;
+	     *checkProfile = FALSE;
 	     i++;
 	   }
 	 else
@@ -239,7 +236,7 @@ void MapXMLElementType (int XMLtype,
    Generic function which searchs in the mapping tables the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
-char*           GetXMLElementName (ElementType elType, Document doc)
+char *GetXMLElementName (ElementType elType, Document doc)
 {
   ElemMapping  *ptr;
   char         *name;
@@ -287,7 +284,7 @@ char*           GetXMLElementName (ElementType elType, Document doc)
    Generic function which searchs in the mapping tables if a given
    Thot type is an inline character or not
   ----------------------------------------------------------------------*/
-ThotBool         IsXMLElementInline (ElementType elType, Document doc)
+ThotBool IsXMLElementInline (ElementType elType, Document doc)
 {
   int            i;
   ThotBool       ret = FALSE;
@@ -326,15 +323,14 @@ ThotBool         IsXMLElementInline (ElementType elType, Document doc)
    the entry attrName associated to the element elementName.
    Returns the corresponding entry or -1.
   ----------------------------------------------------------------------*/
-int       MapXMLAttribute (int XMLtype, char *attrName,
-			   char *elementName, ThotBool *highEnoughLevel,
-			   Document doc, int *thotType)
+int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
+		     ThotBool *checkProfile, Document doc, int *thotType)
 {
   int               i;
   AttributeMapping *ptr;
 
   /* Initialization */
-  *highEnoughLevel = TRUE;
+  *checkProfile = TRUE;
   i = 1;
   *thotType = 0;
   
@@ -373,7 +369,7 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
       else if (TtaGetDocumentProfile(doc) != L_Other &&
 	       !(ptr[i].Level & TtaGetDocumentProfile(doc)))
 	{
-	  *highEnoughLevel = FALSE;
+	  *checkProfile = FALSE;
 	  i++;
 	}
       else
@@ -391,9 +387,8 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
    Generic function which searchs in the mapping tables the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
-char*           GetXMLAttributeName (AttributeType attrType,
-				     ElementType elType,
-				     Document doc)
+char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
+			   Document doc)
 {
   AttributeMapping   *ptr;
   char               *name, *tag;

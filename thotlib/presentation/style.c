@@ -847,7 +847,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	}
 
       attrVal = ctxt->attrText[att];
-      switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
+      switch (pSS->SsAttribute->TtAttr[attrType - 1]->AttrType)
 	{
 	case AtNumAttr:
 	  new->ApNCases = 1;

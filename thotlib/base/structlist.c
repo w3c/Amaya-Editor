@@ -3282,7 +3282,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
    AttributePres      *pRP1;
    NumAttrCase        *pCa1;
    int                 i, j;
-   int                 El, Attr, Val;
+   int                 el, attr, val;
    
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
@@ -3363,21 +3363,21 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 
 		 /* les regles de presentation des elements structure's */
 		 fprintf (fileDescriptor, "\nRULES\n\n");
-		 for (El = 1; El <= pSchemaStr->SsNRules; El++)
+		 for (el = 0; el < pSchemaStr->SsNRules; el++)
 		   {
-		     if (pSc1->PsElemPRule->ElemPres[El - 1])
+		     if (pSc1->PsElemPRule->ElemPres[el])
 		       {
-			 if (pSchemaStr->SsRule->SrElem[El - 1]->SrConstruct == CsPairedElement)
+			 if (pSchemaStr->SsRule->SrElem[el]->SrConstruct == CsPairedElement)
 			   {
-			   if (pSchemaStr->SsRule->SrElem[El - 1]->SrFirstOfPair)
+			   if (pSchemaStr->SsRule->SrElem[el]->SrFirstOfPair)
 			     fprintf (fileDescriptor, "First ");
 			   else
 			     fprintf (fileDescriptor, "Second ");
 			   }
-			 wrnomregle (El, fileDescriptor);
+			 wrnomregle (el + 1, fileDescriptor);
 			 fprintf (fileDescriptor, ":\n");
 			 fprintf (fileDescriptor, "   BEGIN\n");
-			 wrsuiteregles (pSc1->PsElemPRule->ElemPres[El - 1], fileDescriptor);
+			 wrsuiteregles (pSc1->PsElemPRule->ElemPres[el], fileDescriptor);
 			 fprintf (fileDescriptor, "   END;\n");
 			 fprintf (fileDescriptor, "\n");
 		       }
@@ -3389,11 +3389,14 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		     fprintf (fileDescriptor, "\n");
 		     fprintf (fileDescriptor, "ATTRIBUTES\n");
 		     fprintf (fileDescriptor, "\n");
-		     for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
+		     for (attr = 0; attr < pSchemaStr->SsNAttributes; attr++)
 		       {
-			 pAt1 = pSchemaStr->SsAttribute->TtAttr[Attr - 1];
-			 pRP1 = pSc1->PsAttrPRule->AttrPres[Attr - 1];
-			 while (pRP1 != NULL)
+			 pAt1 = pSchemaStr->SsAttribute->TtAttr[attr];
+			 if (pSc1->PsNAttrPRule->Num[attr] == 0)
+			   pRP1 = NULL;
+			 else
+			   pRP1 = pSc1->PsAttrPRule->AttrPres[attr];
+			 while (pRP1)
 			   {
 			     /* si cet attribut a une presentation */
 			     switch (pAt1->AttrType)
@@ -3442,17 +3445,17 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       fprintf (fileDescriptor, "   BEGIN END;\n");
 				     else
 				       {
-					 if (pCa1->CaFirstPRule->PrNextPRule != NULL)
+					 if (pCa1->CaFirstPRule->PrNextPRule)
 					   fprintf (fileDescriptor, "   BEGIN\n");
 					 wrsuiteregles (pCa1->CaFirstPRule, fileDescriptor);
-					 if (pCa1->CaFirstPRule->PrNextPRule != NULL)
+					 if (pCa1->CaFirstPRule->PrNextPRule)
 					   fprintf (fileDescriptor, "   END;\n");
 				       }
 				     fprintf (fileDescriptor, "\n");
 				   }
 				 break;
 			       case AtTextAttr:
-				 if (pRP1->ApTextFirstPRule != NULL)
+				 if (pRP1->ApTextFirstPRule)
 				   {
 				     wrtext (pAt1->AttrName, fileDescriptor);
 				     if (pRP1->ApElemType > 0)
@@ -3468,16 +3471,16 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 					 fprintf (fileDescriptor, "\'");
 				       }
 				     fprintf (fileDescriptor, ":\n");
-				     if (pRP1->ApTextFirstPRule->PrNextPRule != NULL)
+				     if (pRP1->ApTextFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   BEGIN\n");
 				     wrsuiteregles (pRP1->ApTextFirstPRule, fileDescriptor);
-				     if (pRP1->ApTextFirstPRule->PrNextPRule != NULL)
+				     if (pRP1->ApTextFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   END;\n");
 				     fprintf (fileDescriptor, "\n");
 				   }
 				 break;
 			       case AtReferenceAttr:
-				 if (pRP1->ApRefFirstPRule != NULL)
+				 if (pRP1->ApRefFirstPRule)
 				   {
 				     wrtext (pAt1->AttrName, fileDescriptor);
 				     if (pRP1->ApElemType > 0)
@@ -3487,17 +3490,17 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 					 fprintf (fileDescriptor, ")");
 				       }
 				     fprintf (fileDescriptor, ":\n");
-				     if (pRP1->ApRefFirstPRule->PrNextPRule != NULL)
+				     if (pRP1->ApRefFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   BEGIN\n");
 				     wrsuiteregles (pRP1->ApRefFirstPRule, fileDescriptor);
-				     if (pRP1->ApRefFirstPRule->PrNextPRule != NULL)
+				     if (pRP1->ApRefFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   END;\n");
 				     fprintf (fileDescriptor, "\n");
 				   }
 				 break;
 			       case AtEnumAttr:
-				 for (Val = 0; Val <= pAt1->AttrNEnumValues; Val++)
-				   if (pRP1->ApEnumFirstPRule[Val] != NULL)
+				 for (val = 0; val < pAt1->AttrNEnumValues; val++)
+				   if (pRP1->ApEnumFirstPRule[val] != NULL)
 				     {
 				       wrtext (pAt1->AttrName, fileDescriptor);
 				       if (pRP1->ApElemType > 0)
@@ -3506,18 +3509,16 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 					   wrnomregle (pRP1->ApElemType, fileDescriptor);
 					   fprintf (fileDescriptor, ")");
 					 }
-				       if (Val > 0)
+				       if (pAt1->AttrEnumValue[val])
 					 {
 					   fprintf (fileDescriptor, "=");
-					   wrtext (pAt1->AttrEnumValue[Val - 1], fileDescriptor);
+					   wrtext (pAt1->AttrEnumValue[val], fileDescriptor);
 					 }
 				       fprintf (fileDescriptor, ":\n");
-				       if (pRP1->ApEnumFirstPRule[Val]->PrNextPRule
-					   != NULL)
+				       if (pRP1->ApEnumFirstPRule[val]->PrNextPRule)
 					 fprintf (fileDescriptor, "   BEGIN\n");
-				       wrsuiteregles (pRP1->ApEnumFirstPRule[Val], fileDescriptor);
-				       if (pRP1->ApEnumFirstPRule[Val]->PrNextPRule
-					   != NULL)
+				       wrsuiteregles (pRP1->ApEnumFirstPRule[val], fileDescriptor);
+				       if (pRP1->ApEnumFirstPRule[val]->PrNextPRule)
 					 fprintf (fileDescriptor, "   END;\n");
 				       fprintf (fileDescriptor, "\n");
 				     }

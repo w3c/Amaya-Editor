@@ -9,10 +9,10 @@
 #define PARSER_H
 
 #include "profiles.h"
-#define MATH_TYPE    1
-#define SVG_TYPE     2
-#define XLINK_TYPE   3
-#define XHTML_TYPE   4
+#define XHTML_TYPE   1
+#define MATH_TYPE    2
+#define SVG_TYPE     3
+#define XLINK_TYPE   4
 #define XML_TYPE     5
 
 #define MaxTypeNameLength 30

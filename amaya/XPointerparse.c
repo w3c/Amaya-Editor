@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 2000
+ *  (c) COPYRIGHT MIT and INRIA, 2000-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -677,7 +677,12 @@ static void InitSymtable (XPointerContextPtr ctx)
 
 /**************************************************
   PUBLIC API 
-**************************************************/						  
+**************************************************/
+
+/*----------------------------------------------------------------------
+  SelectNode
+  Initialize a selection
+  ----------------------------------------------------------------------*/
 static void SelectNode (Document doc, nodeInfo *node)
 {
   if (node->type & STRING_RANGE)
@@ -686,6 +691,10 @@ static void SelectNode (Document doc, nodeInfo *node)
     TtaSelectElement (doc, node->el);
 }
 
+/*----------------------------------------------------------------------
+  SelectToNode
+  Extend a selection
+  ----------------------------------------------------------------------*/
 static void SelectToNode (Document doc, nodeInfo *node)
 {
   TtaExtendSelection (doc, node->el, node->endC);
