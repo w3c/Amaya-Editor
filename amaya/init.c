@@ -100,12 +100,15 @@ static Pixmap       iconJava;
 #include "init_f.h"
 #ifndef AMAYA_JAVA
 #include "query_f.h"
-#endif
+#endif /* !AMAYA_JAVA */
 #include "trans_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
+#ifdef MATHML
+#include "Mathedit_f.h"
+#endif /* MATHML */
 #include "HTMLactions_f.h"
 #include "HTMLbook_f.h"
 #include "HTMLedit_f.h"
@@ -899,7 +902,6 @@ char               *documentname;
    int                 i;
    char               *s;
    Document            newdoc = 0;
-   FILE               *tmp_fp;
 
    if (!IsTextName (pathname) && tempfile[0] != EOS)
      {
@@ -941,16 +943,9 @@ char               *documentname;
 		 printf ("tempdir: %s\ntempdocument: %s\n", tempdir, tempdocument);
 	     if (doc != newdoc)
 	       {
-#                 ifndef _WINDOWS
-		  tmp_fp = fopen (tempdir, "r");
-#                 else  /* _WINDOWS */
-		  tmp_fp = fopen (tempdir, "rb");
-#                 endif /* _WINDOWS */
-		  if (tmp_fp == 0)
-		     /*directory did not exist */
-		     mkdir (tempdir, S_IRWXU);
-		  else
-		     fclose (tmp_fp);
+                 if (!TtaCheckDirectory (tempdir))
+		   /*directory did not exist */
+		   mkdir (tempdir, S_IRWXU);
 		  /* now we can rename the local name of a remote document */
 		  TtaFileCopy (tempfile, tempdocument);
 		  TtaFileUnlink (tempfile);
