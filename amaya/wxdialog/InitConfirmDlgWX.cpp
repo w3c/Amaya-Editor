@@ -42,7 +42,6 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   m_Title         = title;
   m_ExtraButton   = extrabutton;
   m_ConfirmButton = confirmbutton;
-  // TODO : aller chercher le label 'Cancel' dans une ressources thot
   m_CancelButton  = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
 
   wxLogDebug( _T("InitConfirmDlgWX::InitConfirmDlgWX - title=")+m_Title+
@@ -66,6 +65,9 @@ InitConfirmDlgWX::InitConfirmDlgWX( int ref,
   if (m_CancelButton.IsEmpty())
     XRCCTRL(*this, "wxID_CANCELBUTTON",    wxButton)->Destroy();
 
+  // give default focus to ... 
+  XRCCTRL(*this, "wxID_EXTRABUTTON",     wxButton)->SetDefault();
+  
   // TODO : trouver une facon de redimensionner le dialogue pour qu'il prenne la taille du nouveau label
   //wxSize s1 = XRCCTRL(*this, "wxID_SIZER1",         wxSizer)->GetSize();
   //wxSize s2 = XRCCTRL(*this, "wxID_SIZER2",         wxSizer)->GetSize();
