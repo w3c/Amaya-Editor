@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void GetCellSpans ( PtrElement cell,
+                           int *colspan,
+                           int *rowspan );
 extern void TtaLockTableFormatting ( void );
 extern void TtaUnlockTableFormatting ( void );
 extern void TtaGiveTableFormattingLock ( ThotBool *lock );
@@ -13,6 +16,9 @@ extern void TableHLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern void GetCellSpans (/* PtrElement cell,
+                             int *colspan,
+                             int *rowspan */);
 extern void TtaLockTableFormatting (/* void */);
 extern void TtaUnlockTableFormatting (/* void */);
 extern void TtaGiveTableFormattingLock (/* ThotBool *lock */);

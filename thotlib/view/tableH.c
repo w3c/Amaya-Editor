@@ -1124,6 +1124,46 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 }
 
 /*----------------------------------------------------------------------
+  GetCellSpans
+  Return the colspan (1 if no span) and rowspan (1 if no span) of a cell.
+  ----------------------------------------------------------------------*/
+void GetCellSpans (PtrElement cell, int *colspan, int *rowspan)
+{
+  PtrSSchema          pSS;
+  PtrAttribute        pAttr;
+  int                 attrVSpan, attrHSpan;
+
+  *colspan = 1; /* no col-spanned cell */
+  *rowspan = 1; /* no row-spanned cell */
+  if (cell)
+    {
+      pSS = cell->ElStructSchema;
+      attrVSpan = GetAttrWithException (ExcRowSpan, pSS);
+      attrHSpan = GetAttrWithException (ExcColSpan, pSS);
+      if (attrVSpan != 0 || attrHSpan != 0)
+	{
+	  /* is this attribute attached to the cell */
+	  pAttr = cell->ElFirstAttr;
+	  while (pAttr)
+	    {
+	      if (pAttr->AeAttrNum == attrVSpan && pAttr->AeAttrSSchema == pSS)
+		{
+		  /* rowspan on this cell */
+		  if (pAttr->AeAttrValue > 1)
+		    *rowspan = pAttr->AeAttrValue;
+		}
+	      else if (pAttr->AeAttrNum == attrHSpan && pAttr->AeAttrSSchema == pSS)
+		{
+		  if (pAttr->AeAttrValue > 1)
+		    *colspan = pAttr->AeAttrValue;
+		}
+	      pAttr = pAttr->AeNext;
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   SetTableWidths computes the minimum width and the maximum width of
   all cells, columns and the table itself.
   Store in cell, column, table boxes:

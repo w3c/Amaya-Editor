@@ -73,6 +73,7 @@
 #include "structmodif_f.h"
 #include "structschema_f.h"
 #include "structselect_f.h"
+#include "tableH_f.h"
 #include "textcommands_f.h"
 #include "thotmsg_f.h"
 #include "tree_f.h"
@@ -566,6 +567,7 @@ void PasteCommand ()
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i, info = 0;
+  int                 colspan, rowspan;
   ThotBool            ok, before, within, lock, cancelled, first, savebefore;
 
   before = FALSE;
@@ -624,10 +626,21 @@ void PasteCommand ()
 	      else
 		/* by default paste after the current column */
 		before = FALSE;
+
 	      if (firstSel)
 		{
 		  /* look for the current column position */
 		  pColHead = GetColHeadOfCell (firstSel);
+		  if (!before)
+		    {
+		      /* get the last column of the cell */
+		      GetCellSpans (firstSel, &colspan, &rowspan);
+		      while (colspan > 1 && pColHead)
+			{
+			  pColHead = NextColumnInTable (pColHead, pTable);
+			  colspan--;
+			}
+		    }
 		  /* look for the first row */
 		  pRow = firstSel->ElParent;
 		  if (pRow && pColHead)
