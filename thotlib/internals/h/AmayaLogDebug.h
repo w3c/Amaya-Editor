@@ -30,12 +30,14 @@ class AmayaLogDebug : public wxDialog
   DECLARE_EVENT_TABLE()
   void OnClose( wxCloseEvent& event );
   void OnCheckButton(wxCommandEvent& event);
+  void OnTestCaseButton(wxCommandEvent& event);
 
   void DoCheck(int id, bool checked);
 
  protected:
   wxSizer * m_pTopSizer;
   wxButton * m_pCancelButton;
+  wxButton * m_pTestCaseButton;
 };
 
 #endif /* #ifdef __WXDEBUG__ */

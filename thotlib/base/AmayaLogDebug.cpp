@@ -19,8 +19,16 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "logdebug.h"
+#include "displayview_f.h"
+#include "testcase_f.h"
 
 #include "AmayaLogDebug.h"
+
+enum
+{
+  wxID_LOGDEBUG_TESTCASE = 100,
+  wxID_LOGDEBUG_TESTCASE2
+};
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaLogDebug, wxDialog)
 
@@ -68,6 +76,9 @@ AmayaLogDebug::AmayaLogDebug( wxWindow * p_parent ) :
   // create the close button
   m_pCancelButton = new wxButton(this, wxID_CANCEL, _T("Close"));
   m_pTopSizer->Add( m_pCancelButton, 0, wxEXPAND | wxALL, 5 );
+
+  m_pTestCaseButton = new wxButton(this, wxID_LOGDEBUG_TESTCASE, _T("testcase"));
+  m_pTopSizer->Add( m_pTestCaseButton, 0, wxEXPAND | wxALL, 5 );
 
   SetSizer(m_pTopSizer);
   m_pTopSizer->Fit(this);
@@ -126,12 +137,38 @@ void AmayaLogDebug::DoCheck(int id, bool checked)
     }
 }
 
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaLogDebug
+ *      Method:  OnTestCaseButton
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaLogDebug::OnTestCaseButton(wxCommandEvent& event)
+{
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaLogDebug::OnTestCase") );
+
+  m_pTestCaseButton->Disable();
+
+  char *appHome;
+  char  filename[MAX_TXT_LEN];
+  appHome = TtaGetEnvString ("THOTDIR");
+  strcpy (filename, appHome);
+  strcat (filename, DIR_STR);
+  strcat (filename, "testcase");
+  TtaLaunchTestCase( filename );
+
+  m_pTestCaseButton->Enable();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaLogDebug, wxDialog)
   EVT_CHECKBOX( -1, AmayaLogDebug::OnCheckButton )
+  EVT_BUTTON( wxID_LOGDEBUG_TESTCASE, AmayaLogDebug::OnTestCaseButton )
 END_EVENT_TABLE()
 
 #endif /* #ifdef __WXDEBUG__ */

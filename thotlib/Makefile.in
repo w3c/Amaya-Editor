@@ -94,6 +94,7 @@ THOTK_OBJ = \
 	base/actions.o \
 	base/units.o \
 	base/logdebug.o \
+	base/testcase.o \
 	document/externalref.o \
 	document/language.o \
 	document/readprs.o \
@@ -202,27 +203,6 @@ EDITOR_OBJ = \
 	content/search.o \
 	content/searchref.o \
 	content/word.o \
-	dialogue/callback.o\
-	dialogue/callbackinit.o \
-	dialogue/appdialogue.o \
-	dialogue/appli.o \
-	dialogue/attrmenu.o \
-	dialogue/browser.o \
-	dialogue/closedoc.o \
-	dialogue/colors.o \
-	dialogue/context.o \
-	dialogue/creationmenu.o \
-	dialogue/dialogapi.o \
-	dialogue/geom.o \
-	dialogue/input.o \
-	dialogue/interface.o \
-	dialogue/keyboards.o \
-	dialogue/modiftype.o \
-	dialogue/profiles.o \
-	dialogue/presentmenu.o \
-	dialogue/printmenu.o \
-	dialogue/searchmenu.o \
-	dialogue/selectmenu.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaWindowIterator.o \
@@ -252,6 +232,27 @@ EDITOR_OBJ = \
 	dialogue/AmayaSpeCharPanel.o \
 	dialogue/AmayaStatsThread.o \
 	dialogue/appdialogue_wx.o \
+	dialogue/callback.o\
+	dialogue/callbackinit.o \
+	dialogue/appdialogue.o \
+	dialogue/appli.o \
+	dialogue/attrmenu.o \
+	dialogue/browser.o \
+	dialogue/closedoc.o \
+	dialogue/colors.o \
+	dialogue/context.o \
+	dialogue/creationmenu.o \
+	dialogue/dialogapi.o \
+	dialogue/geom.o \
+	dialogue/input.o \
+	dialogue/interface.o \
+	dialogue/keyboards.o \
+	dialogue/modiftype.o \
+	dialogue/profiles.o \
+	dialogue/presentmenu.o \
+	dialogue/printmenu.o \
+	dialogue/searchmenu.o \
+	dialogue/selectmenu.o \
 	document/docs.o \
 	document/views.o \
 	document/writedoc.o \

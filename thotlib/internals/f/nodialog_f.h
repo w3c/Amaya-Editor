@@ -156,6 +156,8 @@ extern PtrElement CreateSibling ( PtrDocument pDoc,
                                   ThotBool inclusion );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern ThotBool OpenParsingErrors ( Document document );
+extern int TtaGiveActiveFrame ( void );
+extern ThotBool GL_DrawAll ( void );
 
 #else /* __STDC__ */
 
@@ -309,6 +311,8 @@ extern PtrElement CreateSibling ( PtrDocument pDoc,
                                     ThotBool inclusion );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern ThotBool OpenParsingErrors ( Document document );
+extern int TtaGiveActiveFrame ( void );
+extern ThotBool GL_DrawAll ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

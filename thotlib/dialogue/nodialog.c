@@ -465,6 +465,15 @@ ThotBool OpenParsingErrors (Document document)
   return TRUE;
 }
 
+int TtaGiveActiveFrame()
+{
+  return -1;
+}
+
+ThotBool GL_DrawAll()
+{
+}
+
 #ifdef _WX
 ThotBool TtaIsSpecialKey( int wx_keycode )
 {
