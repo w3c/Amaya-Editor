@@ -1652,7 +1652,7 @@ BOXES
 #ifndef LANDSCAPE
 	CreateAfter (TitleHead);
 #endif { LANDSCAPE }
-	CreateAfter (URLhead);
+	if PrintURL CreateAfter (URLhead);
 	if NOT One(CptToCPage) CreateBefore (ToCPageNum);
 	IF Not One(CptToCPage) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
