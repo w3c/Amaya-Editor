@@ -1388,16 +1388,20 @@ int                 frame;
 		  /* Shall we free this family ? */
 		  if (j == MAX_FONT)
 #ifdef _WINDOWS
-		    DeleteObject (SelectObject (TtDisplay, currentActiveFont));
-		  TtaFreeMemory (TtFonts[i]);
+		    {
+		      DeleteObject (SelectObject (TtDisplay, currentActiveFont));
+		      TtaFreeMemory (TtFonts[i]);
+		    }
 #else  /* _WINDOWS */
 #ifdef _GTK
 		  gdk_font_unref (TtFonts[i]);
 #else /* _GTK */
-		  /* remove the indicator */
-		  if (TtPatchedFont[i])
-		    TtPatchedFont[i] = 0;
-		  XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
+		  {
+		    /* remove the indicator */
+		    if (TtPatchedFont[i])
+		      TtPatchedFont[i] = 0;
+		    XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
+		  }
 #endif /* _GTK */
 #endif /* _WINDOWS */
 		  TtFonts[i] = NULL;
