@@ -42,6 +42,7 @@
 /* for Marc.Baudoin@hsc.fr (Marc Baudoin) */
 #ifdef _WINDOWS
 #include <direct.h>
+#define  WIN_DEF_TMPDIR         "c:\\temp"
 #define THOT_INI_FILENAME       "win-thot.rc"
 STRING WIN_Home;
 
@@ -991,7 +992,7 @@ static int          IsThotDir (CONST STRING path)
   ----------------------------------------------------------------------*/
 static STRING          WINReg_get (CONST STRING env)
 {
-  static CONST CHAR   userBase[] = "Software\\Amaya";
+  static CONST CHAR   userBase[] = "Software";
   CHAR                textKey[MAX_PATH];
   HKEY                hKey;
   DWORD               type;
@@ -999,7 +1000,7 @@ static STRING          WINReg_get (CONST STRING env)
   static CHAR         ret[MAX_PATH];	/* thread unsafe! */
   DWORD               retLen = sizeof (ret);
   
-  sprintf (textKey, "%s\\%s", userBase, env);	                    
+  sprintf (textKey, "%s\\%s\\%s", userBase, AppRegistryEntryAppli, env);	                    
   success = RegOpenKeyEx (HKEY_CURRENT_USER, textKey, 0, KEY_ALL_ACCESS,
 			  &hKey);
   if (success == ERROR_SUCCESS)
@@ -1018,7 +1019,7 @@ static STRING          WINReg_get (CONST STRING env)
   ----------------------------------------------------------------------*/
 static boolean WINReg_set (CONST STRING key, CONST STRING value)
 {
-  static CONST CHAR    userBase[] = "Software\\Amaya";
+  static CONST CHAR    userBase[] = "Software";
    CHAR                textKey[MAX_PATH];
    HKEY                hKey;
    LONG                success;
@@ -1031,7 +1032,7 @@ static boolean WINReg_set (CONST STRING key, CONST STRING value)
    strncpy (protValue, value, protValueLen - 1);
    protValue[protValueLen-1] = EOS;
 
-   sprintf (textKey, "%s\\%s", userBase, key);	                    
+   sprintf (textKey, "%s\\%s\\%s", userBase, AppRegistryEntryAppli, key);	                    
    success = RegCreateKeyEx (HKEY_CURRENT_USER, textKey, 0, 
 	                         "", REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
 		                     NULL, &hKey, &dwDisposition);  
@@ -1071,6 +1072,9 @@ void                TtaSaveAppRegistry ()
    STRING              app_home;
    CHAR                filename[MAX_PATH];
    FILE               *output;
+#ifdef _WINDOWS
+   CHAR               *ptr;
+#endif /* _WINDOWS */
 
    if (!AppRegistryInitialized)
       return;
@@ -1098,9 +1102,20 @@ void                TtaSaveAppRegistry ()
    fclose (output);
 
 #ifdef _WINDOWS
-   /* APP_HOME and TMPDIR are also stored in the registry */
-   WINReg_set ("AppHome", TtaGetEnvString ("APP_HOME"));
-   WINReg_set ("TmpDir", TtaGetEnvString ("TMPDIR"));
+   /* store APP_HOME and TMPDIR in the registry only if they are not equal to
+      the default values */
+   ptr = TtaGetEnvString ("TMPDIR");
+   if (ptr && ustrcasecmp (ptr, WIN_DEF_TMPDIR))
+	  WINReg_set ("TmpDir", TtaGetEnvString ("TMPDIR"));
+   else
+	   WINReg_set ("TmpDir", "");
+
+   sprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
+   ptr = TtaGetEnvString ("APP_HOME");
+   if (ptr && ustrcasecmp (filename, ptr))
+      WINReg_set ("AppHome", TtaGetEnvString ("APP_HOME"));
+   else
+	   WINReg_set ("AppHome", "");
 #endif /* _WINDOWS */
 }
 
@@ -1264,13 +1279,10 @@ static void         InitEnviron ()
      }
 #else
    TtaSetDefEnvString ("BackgroundColor", "LightGrey1", FALSE);
-   /* get the tmpdir from the registry or create it if it doesn't exist */
+   /* get the tmpdir from the registry or use a default name if it doesn't exist */
    pT = WINReg_get ("TmpDir");
    if (!pT || *pT == EOS)
-     {
-       pT = "c:\\temp";
-       WINReg_set ("TmpDir", pT);
-     }
+       pT = WIN_DEF_TMPDIR;
    TtaSetDefEnvString ("TMPDIR", pT, TRUE);
 #endif /* _WINDOWS */
 
@@ -1577,16 +1589,11 @@ STRING appArgv0;
       $HOME/.appname or $HOME\appname */
    /* No this should NOT be a call to TtaGetEnvString */
 # ifdef _WINDOWS
-   /* get app home from the registry. If it doesn't exist, create it */
+   /* get app home from the registry. If it doesn't exist, use a default value
+      computed from the tmpdir and the appname */
    ptr = WINReg_get ("AppHome");
    if (!ptr || *ptr == EOS)
-     {
-       ptr = WINReg_get ("TmpDir");
-       if (!ptr || *ptr == EOS)
-	 ptr = "c:\\temp";
-       sprintf (app_home, "%s%c%s", ptr, DIR_SEP, AppRegistryEntryAppli);
-       WINReg_set ("AppHome", app_home);
-     }
+       sprintf (app_home, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
    else
      ustrcpy (app_home, ptr);
 # else /* !_WINDOWS */
