@@ -7,26 +7,26 @@
 #ifdef __STDC__
 
 extern void SVGGetDTDName ( char *DTDname,
-                                char *elementName );
+                            char *elementName );
 extern void MapSVGAttribute ( char *attrName,
-                                  AttributeType *attrType,
-                                  char* elementName,
-                                  ThotBool *level,
-                                  Document doc );
+                              AttributeType *attrType,
+                              char* elementName,
+                              ThotBool *level,
+                              Document doc );
 extern void MapSVGAttributeValue ( char* AttrVal,
-                                       AttributeType attrType,
-                                       int *value );
+                                   AttributeType attrType,
+                                   int *value );
 extern void MapSVGEntity ( char *entityName,
-                               char *entityValue,
-                               char *alphabet );
+                           char *entityValue,
+                           char *alphabet );
 extern void SVGEntityCreated ( unsigned char *entityValue,
-                                   Language lang,
-                                   char *entityName,
-                                   Document doc );
+                               Language lang,
+                               char *entityName,
+                               Document doc );
 extern void SVGEntityCreatedWithExpat ( int entityValue,
-                                            char * entityName,
-                                            ThotBool entityFound,
-                                            ParserData *XmlContext );
+                                        char * entityName,
+                                        ThotBool entityFound,
+                                        ParserData *XmlContext );
 extern void ParseFillStrokeAttributes ( int attrType,
                                         Attribute attr,
                                         Element el,
@@ -38,8 +38,8 @@ extern void CopyUseContent ( Element el,
                              Document doc,
                              char *href );
 extern void SVGElementComplete ( Element el,
-                                     Document doc,
-                                     int *error );
+                                 Document doc,
+                                 int *error );
 extern void UpdatePositionOfPoly ( Element el,
                                    Document doc,
                                    int minX,
@@ -64,32 +64,32 @@ extern void ParsePathDataAttribute ( Attribute attr,
                                      Element el,
                                      Document doc );
 extern void SVGAttributeComplete ( Attribute attr,
-                                       Element el,
-                                       Document doc );
+                                   Element el,
+                                   Document doc );
 
 #else /* __STDC__ */
 
 extern void SVGGetDTDName (/* char *DTDname,
-                                  char *elementName */);
+                              char *elementName */);
 extern void MapSVGAttribute (/* char *attrName,
-                                    AttributeType *attrType,
-                                    char* elementName,
-                                    ThotBool *level,
-                                    Document doc */);
+                                AttributeType *attrType,
+                                char* elementName,
+                                ThotBool *level,
+                                Document doc */);
 extern void MapSVGAttributeValue (/* char* AttrVal,
-                                         AttributeType attrType,
-                                         int *value */);
+                                     AttributeType attrType,
+                                     int *value */);
 extern void MapSVGEntity (/* char *entityName,
-                                 char *entityValue,
-                                 char *alphabet */);
+                             char *entityValue,
+                             char *alphabet */);
 extern void SVGEntityCreated (/* unsigned char *entityValue,
-                                     Language lang,
-                                     char *entityName,
-                                     Document doc */);
+                                 Language lang,
+                                 char *entityName,
+                                 Document doc */);
 extern void SVGEntityCreatedWithExpat (/* int entityValue,
-                                              char * entityName,
-                                              ThotBool entityFound,
-                                              ParserData *XmlContext */);
+                                          char * entityName,
+                                          ThotBool entityFound,
+                                          ParserData *XmlContext */);
 extern void ParseFillStrokeAttributes (/* int attrType,
                                           Attribute attr,
                                           Element el,
@@ -101,8 +101,8 @@ extern void CopyUseContent (/* Element el,
                                Document doc,
                                char *href */);
 extern void SVGElementComplete (/* Element el,
-                                       Document doc,
-                                       int *error */);
+                                   Document doc,
+                                   int *error */);
 extern void UpdatePositionOfPoly (/* Element el,
                                      Document doc,
                                      int minX,
@@ -127,8 +127,8 @@ extern void ParsePathDataAttribute (/* Attribute attr,
                                        Element el,
                                        Document doc */);
 extern void SVGAttributeComplete (/* Attribute attr,
-                                         Element el,
-                                         Document doc */);
+                                     Element el,
+                                     Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
