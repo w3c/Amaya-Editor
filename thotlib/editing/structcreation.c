@@ -661,22 +661,29 @@ ThotBool            before;
 			  /* si la selection commence a l'interieur d'une feuille */
 			  /* de texte, on coupe cette feuille en deux */
 			  if (pEl->ElTerminal && pEl->ElLeafType == LtText)
-			    {
-			      if (before && firstChar > 1)
-				{
-				  lastChar = 0;
-				  /* empeche la coupure apres le dernier */
-				  /* caractere selectionne' */
-				  IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
+			     {
+			     if (before)
+			        {
+				if (firstChar > 1)
+				   if (firstChar > pEl->ElTextLength)
+				      /* insert after the selected element */
+				      before = FALSE;
+				   else
+				      {
+				      lastChar = 0;
+				      /* empeche la coupure apres le dernier */
+				      /* caractere selectionne' */
+				      IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
+				      }
 				}
-			      if (!before && lastChar <= pEl->ElTextLength)
+			     else if (lastChar <= pEl->ElTextLength)
 				{
-				  firstChar = 0;
-				  /* empeche la coupure avant le premier */
-				  /* caractere selectionne' */
-				  IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
+				firstChar = 0;
+				/* empeche la coupure avant le premier */
+				/* caractere selectionne' */
+				IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
 				}
-			    }
+			     }
 			  nNew = 1;
 			  pLeaf = pE;
 			  if (!SameSRules (ruleNum, pSS, lType, pEl->ElStructSchema))

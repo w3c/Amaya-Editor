@@ -210,7 +210,10 @@ Element el;
   if (currentElementClosed)
      TtaInsertSibling (el, currentElement, FALSE, currentDocument);
   else
+    {
      TtaInsertFirstChild (&el, currentElement, currentDocument);
+     currentElementClosed = TRUE;
+    }
   currentElement = el;
 }
 

@@ -1786,6 +1786,7 @@ BOXES
         IN Math_Structure_view BEGIN
                 Visibility: ATTR_Visibility;	
 		Size: DOC_FONTSIZE;
+		Foreground: ATTR_Color;
 		if NOT within XMLcomment_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
