@@ -423,7 +423,6 @@ static void         Thread_deleteAll ()
 	{
 	  cur = Amaya->reqlist;
 	  
-	  HTNet_killAll ();
 	  /* erase the requests */
 	  while ((me = (AHTReqContext *) HTList_removeLastObject (cur)))
 	    {
@@ -441,6 +440,7 @@ static void         Thread_deleteAll ()
 	    TtaFreeMemory ((void *) docid_status);
 	  
 	}			/* if */
+	
     }
 }
 
@@ -1808,13 +1808,15 @@ int                 docid;
    AHTReqContext      *me;
    int                 open_requests;
 
+   HTNet              *reqNet;
+   HTHost             *reqHost;
+   int                *reqSock;
+
    if (Amaya)
      {
-
 	cur = Amaya->reqlist;
 	docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
 						       Amaya->docid_status);
-
 	/* verify if there are any requests at all associated with docid */
 
 	if (docid_status == (AHTDocId_Status *) NULL)
@@ -1844,12 +1846,23 @@ int                 docid;
 			      RequestKillAllXtevents (me);
 #                 endif _WINDOWS
 			      
+			      reqNet = HTRequest_net (me->request);
+			      reqSock = HTNet_socket (reqNet);
+			      reqHost = HTNet_host (reqNet);
+
                               HTRequest_kill (me->request);
+			      HTRequest_setNet (me->request, NULL);
 			      if ((me->mode & AMAYA_ASYNC) ||
 				  (me->mode & AMAYA_IASYNC))
 				{
 				   AHTReqContext_delete (me);
+				     
 				}
+
+			      if (HTHost_isIdle (reqHost) ) {
+				 HTHost_catchClose (reqSock, NULL, FD_READ);
+			      }
+				     
 				  
 			      cur = Amaya->reqlist;
 			      

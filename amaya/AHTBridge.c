@@ -131,7 +131,7 @@ XtInputId          *id;
        if (cbf)
 	 (*cbf) (socket, 0, FD_CLOSE);
        
-#if 0
+#if DEBUG_PERSISTENT
        v = HASH (socket);
        if (persSockets[v]) 
 	 {
@@ -140,7 +140,7 @@ XtInputId          *id;
 	     (*cbf) (socket, 0, FD_CLOSE);
 	 }
 
-#endif /* 0 */
+#endif /* DEBUG_PERSISTENT */
 
        return (0);
      }
@@ -286,6 +286,7 @@ AHTReqContext *me;
     {
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
+	  TtaFileUnlink (me->outputfile);
 	  TtaFileUnlink (me->outputfile);
 	  me->outputfile[0] = EOS;
 	}
@@ -511,7 +512,7 @@ HTPriority          p;
 	  fprintf(stderr, "HTEvent_register: ***** RQP is NULL @@@@@\n");
 #endif /* DEBUG_LIBWWW */
 
-#if 0
+#if DEBUG_PERSISTENT
 	  v = HASH (sock);
 	  if (persSockets[v] != 0) 
 	    {
@@ -523,7 +524,7 @@ HTPriority          p;
 					  (XtPointer) XtInputReadMask,
 					  (XtInputCallbackProc) AHTCallback_bridge,
 					  (XtPointer) XtInputReadMask);
-#endif /* 0 */
+#endif /* DEBUG_PERSISTENT */
 
 	  XtAppAddInput (app_cont, 
 			 sock,
@@ -540,7 +541,7 @@ HTPriority          p;
     {
       me = HTRequest_context (rqp);
 
-#if 0
+#if DEBUG_PERSISTENT
 
        
 #ifndef _WINDOWS
@@ -550,7 +551,7 @@ HTPriority          p;
 	persSockets[v] = 0;
       }	  
 
-#endif /* 0 */
+#endif /* DEBUG_PERSISTENT */
 
 #endif /* _WINDOWS */
 	  /* Erase any trailing events */
@@ -630,7 +631,7 @@ SockOps             ops;
    fprintf (stderr, "AHTEventUnregister: cbf = %d, sock = %d, rqp = %d, ops= %x", cbf, sock, rqp, ops);
 #endif /* DEBUG_LIBWWW */
 
-#if 0
+#if DEBUG_PERSISTENT
 
    v = HASH (sock);
    if (persSockets[v] != 0) {
@@ -638,7 +639,7 @@ SockOps             ops;
      persSockets[v] = 0;
    }
 
-#endif /* 0 */
+#endif /* DEBUG_PERSISTENT */
 
    if (cbf)
      {
