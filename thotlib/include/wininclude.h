@@ -35,7 +35,7 @@ extern void       AddMathButton (Document, View);
 extern int        TtaGetMessageTable (CONST CHAR_T*, int msgNumber);
 extern int        GetWindowNumber (Document, View view);
 extern void       TtaError (int);
-extern void       CreateMCHARDlgWindow (ThotWindow parent, int nb_class, STRING class_list);
+extern void       CreateMCHARDlgWindow (ThotWindow parent, STRING math_entity_name) ;
 extern void       CreateMathDlgWindow (ThotWindow parent);
 extern void       CreateTableDlgWindow (int num_cols, int num_rows, int t_border);
 extern void       CreateMatrixDlgWindow (int num_cols, int num_rows);
