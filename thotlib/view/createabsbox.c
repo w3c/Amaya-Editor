@@ -869,7 +869,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 
   /* a priori les conditions sont satisfaites */
   ok = TRUE;
-  ound = FALSE;
+  found = FALSE;
   /* on examine toutes les conditions de la chaine */
   while (pCond && ok)
     {
