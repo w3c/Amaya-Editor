@@ -648,11 +648,11 @@ dnl
 dnl Adjust the some variables depending on the host and compiler
 dnl Thotlib NEED signed chars !!!
 dnl The configure default is -g -O2 and we force -O2
-CFLAGS="-O2 "
-CXXFLAGS="-O2 "
+CFLAGS="-O2"
+CXXFLAGS="-O2"
 
 if test "${CC}" = "gcc" ; then
- CFLAGS="${CFLAGS} -W "
+ CFLAGS="${CFLAGS} -W"
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
