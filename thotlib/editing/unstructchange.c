@@ -322,6 +322,20 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 			   notifyEl.position = 0;
 			   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 			   ok = TRUE;
+			   /* si on vient de creer un element d'une nature
+			      differente de son pere et que l'element a coller
+			      est de cette nature, on essaie de coller comme
+			      fils de l'element qu'on vient de creer */
+			   if (pAncest->ElParent &&
+			       pAncest->ElStructSchema != pAncest->ElParent->ElStructSchema &&
+			       pAncest->ElStructSchema == pOrig->ElStructSchema)
+			     if (AllowedFirstChild (pAncest, pDoc,
+						    pOrig->ElTypeNumber,
+						    pOrig->ElStructSchema,
+						    TRUE, FALSE))
+			       /* ca marche. On ne cree pas les intermediaires */
+			       asc = 0;
+
 			   /* on cree les ascendants intermediaires */
 			   pParent = pAncest;
 			   while (asc > 0)
@@ -396,7 +410,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
      /* on essaie de couper en deux un element englobant la position ou on */
      /* essaie de coller */
      pElem = pEl;
-   
+
    if (ok)
      {
        if (pAncest != NULL)
