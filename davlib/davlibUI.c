@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.12  2004-07-21 14:33:02  cvs
+ ** Revision 1.13  2004-08-24 16:09:39  cvs
+ ** compilation fix
+ ** S. GULLY
+ **
+ ** Revision 1.12  2004/07/21 14:33:02  cvs
  ** New workspace to compile wxWidgets version.
  ** S. GULLY
  **
@@ -89,6 +93,7 @@
 
 #include "init_f.h"
 #include "query_f.h"
+#include "MENUconf.h"
 #include "MENUconf_f.h"
 
 

@@ -6,6 +6,7 @@
 #include "wx/wx.h"
 #include "wx/app.h"
 #include "wx/strconv.h"
+#include "wx/imaglist.h"
 
 #ifdef _GL
   #include "wx/glcanvas.h"

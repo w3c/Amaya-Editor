@@ -125,6 +125,10 @@ SOURCE=..\amaya\wxdialog\OpenDocDlgWX.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\wxdialog\PreferenceDlgWX.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\wxdialog\PrintDlgWX.cpp
 # End Source File
 # Begin Source File
