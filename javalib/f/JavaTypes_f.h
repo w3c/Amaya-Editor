@@ -6,10 +6,19 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern jlong FetchJLongFromJavaVM ( jlong *address );
+extern void StoreJLongInJavaVM ( jlong value,
+                                 jlong *address );
+extern void *FetchPtrFromJavaVM ( jlong *address );
+extern void StorePtrToJavaVM ( void *ptr,
+                               jlong *address );
+extern jint FetchIntFromJavaVM ( jint *address );
+extern void StoreIntToJavaVM ( jint value,
+                               jint *address );
+extern void *JavaLongPtr2CIntPtr ( jlong *in );
+extern void initJavaTypes ( void );
 extern void *JavaLong2CPtr ( jlong in );
 extern jlong CPtr2JavaLong ( void *in );
-extern void do_ptr_need_shift ( void );
-extern int *JavaLongPtr2CIntPtr ( jlong *in );
 extern void JavaElement2CElement ( struct Hthotlib_Element *in,
                                    Element *out );
 extern void JavaElement2CElementPtr ( struct Hthotlib_Element* in,
@@ -81,10 +90,19 @@ extern void Javalong2CThotWidget ( jlong in,
 
 #else /* __STDC__ */
 
+extern jlong FetchJLongFromJavaVM (/* jlong *address */);
+extern void StoreJLongInJavaVM (/* jlong value,
+                                   jlong *address */);
+extern void *FetchPtrFromJavaVM (/* jlong *address */);
+extern void StorePtrToJavaVM (/* void *ptr,
+                                 jlong *address */);
+extern jint FetchIntFromJavaVM (/* jint *address */);
+extern void StoreIntToJavaVM (/* jint value,
+                                 jint *address */);
+extern void *JavaLongPtr2CIntPtr (/* jlong *in */);
+extern void initJavaTypes (/* void */);
 extern void *JavaLong2CPtr (/* jlong in */);
 extern jlong CPtr2JavaLong (/* void *in */);
-extern void do_ptr_need_shift (/* void */);
-extern int *JavaLongPtr2CIntPtr (/* jlong *in */);
 extern void JavaElement2CElement (/* struct Hthotlib_Element *in,
                                      Element *out */);
 extern void JavaElement2CElementPtr (/* struct Hthotlib_Element* in,

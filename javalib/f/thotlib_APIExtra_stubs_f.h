@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void amaya_HTTPRequest_Callback ( struct Hamaya_HTTPRequest* none,
+                                         struct Hamaya_HTTPRequest* arg );
 extern void thotlib_Extra_Java2CCallback ( struct Hthotlib_Extra* none,
                                            struct Hjava_lang_Object* arg,
                                            jlong callback );
@@ -78,6 +80,8 @@ extern void register_thotlib_Extra_stubs ( void );
 
 #else /* __STDC__ */
 
+extern void amaya_HTTPRequest_Callback (/* struct Hamaya_HTTPRequest* none,
+                                           struct Hamaya_HTTPRequest* arg */);
 extern void thotlib_Extra_Java2CCallback (/* struct Hthotlib_Extra* none,
                                              struct Hjava_lang_Object* arg,
                                              jlong callback */);

@@ -31,6 +31,7 @@
 #include "thotlib_APIExtra_stubs.h"
 #include "amaya_APIAmayaMsg_stubs.h"
 #include "amaya_APIJavaAmaya_stubs.h"
+#include "debug_stubs.h"
 
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
@@ -814,11 +815,11 @@ void                InitJava ()
     initialiseKaffe();
     /* biss_awt_kernel_NativeLib_initialize(); */
 
-    /* Initialize the type conversion unit */
-    initJavaTypes();
-
     /* Register Thotlib stubs */
     register_stubs();
+
+    /* Initialize the type conversion unit */
+    initJavaTypes();
 
     /* fprintf(stderr, "Java Runtime Initialized\n"); */
 
@@ -1151,5 +1152,6 @@ static void register_stubs(void)
    register_thotlib_APIRegistry_stubs();
    register_amaya_APIAmayaMsg_stubs();
    register_amaya_APIJavaAmaya_stubs();
+   register_debug_stubs();
 }
 

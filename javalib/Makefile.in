@@ -73,7 +73,8 @@ THOT_JAVA_OBJ = \
 	thotlib_APISelection_stubs.o \
 	thotlib_APIInterface_stubs.o \
 	thotlib_APIRegistry_stubs.o \
-	thotlib_APIDialog_stubs.o
+	thotlib_APIDialog_stubs.o \
+	debug_stubs.o
 
 libThotJava : libThotJava.a
 

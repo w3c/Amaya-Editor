@@ -6,12 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern struct Hamaya_HTTPRequest* CreateHTTPRequest ( void );
-extern struct Hamaya_HTTPRequest* AllocHTTPRequest ( int doc,
-                                                     char *url,
-                                                     char *postString,
-                                                     char *outputfile );
-extern void FreeHTTPRequest ( struct Hamaya_HTTPRequest* request );
 extern int GetObjectWWWCallback ( void *arg );
 extern int GetObjectWWW ( int doc,
                           char *url,
@@ -34,12 +28,6 @@ extern void StopRequest ( int doc );
 
 #else /* __STDC__ */
 
-extern struct Hamaya_HTTPRequest* CreateHTTPRequest (/* void */);
-extern struct Hamaya_HTTPRequest* AllocHTTPRequest (/* int doc,
-                                                       char *url,
-                                                       char *postString,
-                                                       char *outputfile */);
-extern void FreeHTTPRequest (/* struct Hamaya_HTTPRequest* request */);
 extern int GetObjectWWWCallback (/* void *arg */);
 extern int GetObjectWWW (/* int doc,
                             char *url,

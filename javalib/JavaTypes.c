@@ -9,56 +9,153 @@
 #define DEBUG_ARCH
 
 /*
- * General conversion routines between java types and C types.
+ * Test how a pointer is stored internally in the Kaffe V.M. inside
+ * a jlong.
+ * On some architectures, the way jlong are stored is different from
+ * the native one as implemented by the compiler.
  */
 
-void *JavaLong2CPtr(jlong in)
+static int jlong_storage_swapped = -1;
+typedef union tst_jlong { struct ints { jint low; jint high; } ints;
+                          jlong val; } tst_jlong;
+
+static void check_jlong_storage(void)
 {
+    struct Hthotlib_Element *object;
+    jlong  test_value = CPtr2JavaLong((int *) 0xdeadbeef);
+    jlong  fetch_value;
+
     /*
-     * a Java long is a 64 bit entity by definition,
-     * a C pointer may be 32 or 64 bits.
+     * Initialize a Java Element object with test_value.
      */
-#if SIZEOF_INT == SIZEOF_VOIDP
-    unsigned int tmp = (unsigned int) in;
-#elif SIZEOF_LONG == SIZEOF_VOIDP
-    unsigned long tmp = (unsigned long) in;
-#elif SIZEOF_LONG_LONG == SIZEOF_VOIDP
-    unsigned long long tmp = (unsigned long long) in;
-#elif SIZEOF___INT64 == SIZEOF_VOIDP
-    unsigned int64 tmp = (unsigned int64) in;
-#else
-#error "couldn't find an appropriate type to hold pointers"
-#endif
+    object = (struct Hthotlib_Element *) execute_java_constructor(0,
+                "thotlib.Element", 0, "(J)V", test_value);
+    fetch_value = unhand(object)->element;
+
+    /*
+     * Check how the Java long is stored in the Java V.M.
+     */
+    if (fetch_value == test_value) {
+        jlong_storage_swapped = 0;
 #ifdef DEBUG_ARCH
-    fprintf(stderr, "JavaLong2CPtr(0x%X%08X) = 0x08%X\n",
-            (unsigned int) (in >> 32), (unsigned int) (in & 0xFFFFFFFFL), tmp);
+	fprintf(stderr,"jlong_storage_swapped : no\n");
 #endif
-    return ((void *) tmp);
+    } else {
+        union tst_jlong tst_orig;
+        union tst_jlong tst_val;
+
+	tst_orig.val = test_value;
+	tst_val.val = fetch_value;
+
+	if ((tst_orig.ints.low == tst_val.ints.high) &&
+	    (tst_orig.ints.high == tst_val.ints.low)) {
+#ifdef DEBUG_ARCH
+	    fprintf(stderr,"jlong_storage_swapped : yes\n");
+#endif
+	    jlong_storage_swapped = 1;
+	} else {
+	    fprintf(stderr,"jlong_storage_swapped : couldn't guess storage\n");
+	    exit(1);
+	}
+    }
 }
 
-jlong CPtr2JavaLong(void *in)
+jlong FetchJLongFromJavaVM(jlong *address)
 {
-    /*
-     * a Java long is a 64 bit entity by definition,
-     * a C pointer may be 32 or 64 bits.
-     */
-#if SIZEOF_INT == SIZEOF_VOIDP
-    unsigned int tmp = (unsigned int) in;
-#elif SIZEOF_LONG == SIZEOF_VOIDP
-    unsigned long tmp = (unsigned long) in;
-#elif SIZEOF_LONG_LONG == SIZEOF_VOIDP
-    unsigned long long tmp = (unsigned long long) in;
-#elif SIZEOF___INT64 == SIZEOF_VOIDP
-    unsigned int64 tmp = (unsigned int64) in;
-#else
-#error "couldn't find an appropriate type to hold pointers"
-#endif
+    jlong value = *address;
+
+    if (jlong_storage_swapped) {
+        /* Swap the upper and lower 32 bits parts of the java long */
+        union tst_jlong val;
+	jint tmp;
+
+	val.val = value;
+        tmp = val.ints.high;
+	val.ints.high = val.ints.low;
+	val.ints.low = tmp;
+	value = val.val;
 #ifdef DEBUG_ARCH
-    fprintf(stderr, "CPtr2JavaLong(0x%08X) = 0x%X%08X\n", in,
-            (unsigned int) (((jlong) tmp) >> 32),
-	    (unsigned int) (((jlong) tmp) & 0xFFFFFFFFL));
+	fprintf(stderr,"FetchJLongFromJavaVM : 0x%08X%08X swapped\n",
+	        val.ints.high, val.ints.low);
 #endif
-    return ((jlong) tmp);
+    }
+    return(value);
+}
+
+void StoreJLongInJavaVM(jlong value, jlong *address)
+{
+    if (jlong_storage_swapped) {
+        /* Swap the upper and lower 32 bits parts of the java long */
+        union tst_jlong val;
+	jint tmp;
+
+	val.val = value;
+        tmp = val.ints.high;
+	val.ints.high = val.ints.low;
+	val.ints.low = tmp;
+	value = val.val;
+#ifdef DEBUG_ARCH
+	fprintf(stderr,"StoreJLongInJavaVM : 0x%08X%08X swapped\n",
+	        val.ints.high, val.ints.low);
+#endif
+    }
+    *address = value;
+}
+
+void *FetchPtrFromJavaVM(jlong *address)
+{
+    jlong value = *address;
+
+    if (jlong_storage_swapped) {
+        /* Swap the upper and lower 32 bits parts of the java long */
+        union tst_jlong val;
+	jint tmp;
+
+	val.val = value;
+        tmp = val.ints.high;
+	val.ints.high = val.ints.low;
+	val.ints.low = tmp;
+	value = val.val;
+#ifdef DEBUG_ARCH
+	fprintf(stderr,"FetchPtrFromJavaVM : 0x%08X%08X swapped\n",
+	        val.ints.high, val.ints.low);
+#endif
+    }
+    return(JavaLong2CPtr(value));
+}
+
+void StorePtrToJavaVM(void *ptr, jlong *address)
+{
+    jlong value = CPtr2JavaLong(ptr);
+
+    if (jlong_storage_swapped) {
+        /* Swap the upper and lower 32 bits parts of the java long */
+	union tst_jlong val;
+	jint tmp;
+
+	val.val = value;
+        tmp = val.ints.high;
+	val.ints.high = val.ints.low;
+	val.ints.low = tmp;
+	value = val.val;
+#ifdef DEBUG_ARCH
+	fprintf(stderr,"StorePtrToJavaVM : 0x%08X%08X swapped\n",
+	        val.ints.high, val.ints.low);
+#endif
+    }
+    *address = value;
+}
+
+jint FetchIntFromJavaVM(jint *address)
+{
+    jint value = *address;
+
+    return(value);
+}
+
+void StoreIntToJavaVM(jint value, jint *address)
+{
+    *address = value;
 }
 
 /*
@@ -87,7 +184,7 @@ jlong CPtr2JavaLong(void *in)
  */
 static int int_ptr_need_shift = -1;
 
-void do_ptr_need_shift(void) {
+static void do_ptr_need_shift(void) {
     jlong value = 0xAABBCCDD;
     jlong *jptr = &value;
     int   *iptr;
@@ -112,18 +209,20 @@ void do_ptr_need_shift(void) {
     exit(1);
 }
 
-int *JavaLongPtr2CIntPtr(jlong *in)
+void *JavaLongPtr2CIntPtr(jlong *in)
 {
     int *res = (int *) in;
 
-    if (int_ptr_need_shift == 1) res++;
+    if (int_ptr_need_shift == 1) {
+        res++;
 #ifdef DEBUG_ARCH
-    fprintf(stderr, "JavaLongPtr2CIntPtr(0x%X%08X) = 0x%X%08X\n",
+	fprintf(stderr, "JavaLongPtr2CIntPtr(0x%X%08X) = 0x%X%08X\n",
             (unsigned int) (((jlong) in) >> 32),
 	    (unsigned int) (((jlong) in) & 0xFFFFFFFFL),
             (unsigned int) (((jlong) res) >> 32),
 	    (unsigned int) (((jlong) res) & 0xFFFFFFFFL));
 #endif
+    }
     return (res);
 }
 
@@ -139,8 +238,9 @@ int *JavaLongPtr2CIntPtr(jlong *in)
  */
 
 static int lsbf_architecture = -1;
-typedef union tst_lsbf { char str[2]; unsigned short int2; };
-void is_lsbf_architecture(void) {
+typedef union tst_lsbf { char str[2]; unsigned short int2; } tst_lsbf;
+
+static void is_lsbf_architecture(void) {
     static union tst_lsbf test;
 
     test.int2 = 32;
@@ -164,6 +264,51 @@ void is_lsbf_architecture(void) {
 void initJavaTypes() {
     is_lsbf_architecture();
     do_ptr_need_shift();
+    check_jlong_storage();
+}
+
+/*
+ * General conversion routines between java types and C types.
+ */
+
+void *JavaLong2CPtr(jlong in)
+{
+    /*
+     * a Java long is a 64 bit entity by definition,
+     * a C pointer may be 32 or 64 bits.
+     */
+#if SIZEOF_INT == SIZEOF_VOIDP
+    unsigned int tmp = (unsigned int) in;
+#elif SIZEOF_LONG == SIZEOF_VOIDP
+    unsigned long tmp = (unsigned long) in;
+#elif SIZEOF_LONG_LONG == SIZEOF_VOIDP
+    unsigned long long tmp = (unsigned long long) in;
+#elif SIZEOF___INT64 == SIZEOF_VOIDP
+    unsigned int64 tmp = (unsigned int64) in;
+#else
+#error "couldn't find an appropriate type to hold pointers"
+#endif
+    return ((void *) tmp);
+}
+
+jlong CPtr2JavaLong(void *in)
+{
+    /*
+     * a Java long is a 64 bit entity by definition,
+     * a C pointer may be 32 or 64 bits.
+     */
+#if SIZEOF_INT == SIZEOF_VOIDP
+    unsigned int tmp = (unsigned int) in;
+#elif SIZEOF_LONG == SIZEOF_VOIDP
+    unsigned long tmp = (unsigned long) in;
+#elif SIZEOF_LONG_LONG == SIZEOF_VOIDP
+    unsigned long long tmp = (unsigned long long) in;
+#elif SIZEOF___INT64 == SIZEOF_VOIDP
+    unsigned int64 tmp = (unsigned int64) in;
+#else
+#error "couldn't find an appropriate type to hold pointers"
+#endif
+    return ((jlong) tmp);
 }
 
 /*
@@ -171,7 +316,7 @@ void initJavaTypes() {
  */
 void JavaElement2CElement(struct Hthotlib_Element *in, Element *out)
 {
-    *out = (Element) JavaLong2CPtr(unhand(in)->element);
+    *out = (Element) FetchPtrFromJavaVM(&(unhand(in)->element));
 }
 
 /*
@@ -188,19 +333,19 @@ void CElementPtr2JavaElement(Element *in, struct Hthotlib_Element** out)
 void JavaElementType2CElementTypePtr(struct Hthotlib_ElementType* in, ElementType **out)
 {
     *out = (ElementType *) malloc(sizeof(ElementType));
-    (*out)->ElSSchema = (SSchema) JavaLong2CPtr(unhand(in)->sschema);
-    (*out)->ElTypeNum = (int) (unhand(in)->type);
+    (*out)->ElSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(in)->sschema));
+    (*out)->ElTypeNum = FetchIntFromJavaVM(&(unhand(in)->type));
 }
 void CElementTypePtr2JavaElementType(ElementType *in, struct Hthotlib_ElementType** out)
 {
-    unhand(*out)->sschema = CPtr2JavaLong(in->ElSSchema);
-    unhand(*out)->type = (jint) in->ElTypeNum;
+    StorePtrToJavaVM(in->ElSSchema, &(unhand(*out)->sschema));
+    StoreIntToJavaVM(in->ElTypeNum, &(unhand(*out)->type));
     free(in);
 }
 void CElementType2JavaElementType(ElementType in, struct Hthotlib_ElementType* out)
 {
-    unhand(out)->sschema = CPtr2JavaLong(in.ElSSchema);
-    unhand(out)->type = (jint) in.ElTypeNum;
+    StorePtrToJavaVM(in.ElSSchema, &(unhand(out)->sschema));
+    StoreIntToJavaVM(in.ElTypeNum, &(unhand(out)->type));
 }
 
 
@@ -239,13 +384,13 @@ void CPRulePtr2JavaPRule(PRule *in, struct Hthotlib_PRule** out)
 void JavaAttributeType2CAttributeTypePtr(struct Hthotlib_AttributeType* in, AttributeType **out)
 {
     *out = (AttributeType *) malloc(sizeof(AttributeType));
-    (*out)->AttrSSchema = (SSchema) JavaLong2CPtr(unhand(in)->sschema);
-    (*out)->AttrTypeNum = (int) (unhand(in)->type);
+    (*out)->AttrSSchema = (SSchema) FetchPtrFromJavaVM(&(unhand(in)->sschema));
+    (*out)->AttrTypeNum = FetchIntFromJavaVM(&(unhand(in)->type));
 }
 void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hthotlib_AttributeType** out)
 {
-    unhand(*out)->sschema = CPtr2JavaLong(in->AttrSSchema);
-    unhand(*out)->type = (jint) in->AttrTypeNum;
+    StorePtrToJavaVM(in->AttrSSchema, &(unhand(*out)->sschema));
+    StoreIntToJavaVM(in->AttrTypeNum, &(unhand(*out)->type));
     free(in);
 }
 

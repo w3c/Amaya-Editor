@@ -5,6 +5,7 @@
 #include "thot_sys.h"
 #include "content.h"
 #include "JavaTypes.h"
+#include "JavaTypes_f.h"
 #include "amaya_HTTPRequest.h"
 
 #define AMAYA_SYNC      1
@@ -44,10 +45,10 @@ void *arg;
     struct Hamaya_HTTPRequest* request = (struct Hamaya_HTTPRequest*) arg;
 
     callback = (GetObjectWWWCCallback) 
-               JavaLong2CPtr(unhand(request)->callback_f);
-    doc = unhand(request)->doc;
-    status = unhand(request)->status;
-    context = JavaLong2CPtr(unhand(request)->callback_arg);
+               FetchPtrFromJavaVM(&(unhand(request)->callback_f));
+    doc = FetchIntFromJavaVM(&(unhand(request)->doc));
+    status = FetchIntFromJavaVM(&(unhand(request)->status));
+    context = FetchPtrFromJavaVM(&(unhand(request)->callback_arg));
     javaString2CString(unhand(request)->urlName, urlName, sizeof(urlName));
     javaString2CString(unhand(request)->filename, outputfile, sizeof(outputfile));
 
@@ -204,7 +205,7 @@ boolean             error_html;
     /*
      * Check the result.
      */
-    result = unhand(request)->status;
+    result = FetchIntFromJavaVM(&(unhand(request)->status));
     switch (result) {
         case 0:
 	    /* not finished */
@@ -220,8 +221,8 @@ boolean             error_html;
 	    break;
 	case 404:
 	    /* Not found error */
-            javaString2CString(unhand(request)->urlName, url, MAX_PATH);
-            javaString2CString(unhand(request)->filename, outputfile, MAX_PATH);
+            javaString2CString(unhand(request)->urlName, &url[0], MAX_PATH);
+            javaString2CString(unhand(request)->filename, &outputfile[0], MAX_PATH);
 	    break;
 	default:
 	    /* Some kind of error or strange behaviour occured */
@@ -363,7 +364,7 @@ void               *context_tcbf;
     /*
      * Check the result.
      */
-    result = unhand(request)->status;
+    result = FetchIntFromJavaVM(&(unhand(request)->status));
     switch (result) {
         case 200:
         case 201:
