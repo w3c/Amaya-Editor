@@ -10,9 +10,9 @@
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
-            <object class="wxGridSizer">
+            <object class="wxFlexGridSizer">
               <cols>2</cols>
-              <rows>1</rows>
+              <rows>2</rows>
               <object class="sizeritem">
                 <object class="wxBoxSizer">
                   <orient>wxVERTICAL</orient>
@@ -20,10 +20,9 @@
                     <object class="wxRadioBox" name="wxID_DOC_FORMAT">
                       <label>Document Format </label>
                       <content>
-                        <item></item>
-                        <item></item>
-                        <item></item>
-                      </content>
+                        <item/>
+                        <item/>
+                        <item/></content>
                       <style>wxRA_SPECIFY_COLS</style>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
@@ -38,7 +37,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_DOC_LOCATION">
-                      <label>        .        </label>
+                      <label>'                                                               ' </label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>5</border>
@@ -55,14 +54,6 @@
                 <flag>wxALL|wxEXPAND</flag>
                 <border>5</border>
               </object>
-            </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxGridSizer">
-              <cols>2</cols>
-              <rows>1</rows>
               <object class="sizeritem">
                 <object class="wxBoxSizer">
                   <orient>wxVERTICAL</orient>
@@ -133,18 +124,37 @@
                 <border>0</border>
               </object>
               <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_CHARSET">
-                  <label>'                                                                          '</label>
+                <object class="wxFlexGridSizer">
+                  <cols>4</cols>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_CHARSET">
+                      <label>Charset :</label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>5</border>
+                  </object>
+                  <rows>1</rows>
+                  <object class="sizeritem">
+                    <object class="wxComboBox" name="wxID_CHARSET_CB">
+                      <content/>
+                      <size>150</size>
+                      <style>wxCB_READONLY</style>
+                    </object>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_MIME_TYPE">
+                      <label>     MIME Type : </label>
+                    </object>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>5</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
+                      <content/>
+                      <size>150</size>
+                    </object>
+                  </object>
                 </object>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
-              </object>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_MIME_TYPE">
-                  <label>'                                                                           '</label>
-                </object>
-                <flag>wxALL|wxEXPAND</flag>
-                <border>5</border>
               </object>
             </object>
           </object>
@@ -174,21 +184,6 @@
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CLEARBUTTON">
               <label>Clear</label>
-            </object>
-            <flag>wxALL</flag>
-            <border>5</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxButton" name="wxID_ENCODINGBUTTON">
-              <label>Change Character Coding</label>
-            </object>
-            <flag>wxALL</flag>
-            <border>5</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxButton" name="wxID_MIMETYPEBUTTON">
-              <label>Change Mime Type</label>
-              <size></size>
             </object>
             <flag>wxALL</flag>
             <border>5</border>

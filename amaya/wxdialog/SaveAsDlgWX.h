@@ -31,8 +31,8 @@ private:
   void OnCancelButton( wxCommandEvent& event );
   void OnBrowseButton( wxCommandEvent& event );
   void OnClearButton( wxCommandEvent& event );
-  void OnEncodingButton( wxCommandEvent& event );
-  void OnMimeTypeButton( wxCommandEvent& event );
+  void OnCharsetCbx( wxCommandEvent& event );
+  void OnMimeTypeCbx( wxCommandEvent& event );
   void OnDocFormatBox( wxCommandEvent& event );
   void OnImagesChkBox( wxCommandEvent& event );
   void OnUrlsChkBox( wxCommandEvent& event );

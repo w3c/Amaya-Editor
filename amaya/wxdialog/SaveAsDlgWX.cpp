@@ -28,13 +28,13 @@ BEGIN_EVENT_TABLE(SaveAsDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),        SaveAsDlgWX::OnCancelButton )
   EVT_BUTTON( XRCID("wxID_BROWSEBUTTON"),        SaveAsDlgWX::OnBrowseButton )
   EVT_BUTTON( XRCID("wxID_CLEARBUTTON"),         SaveAsDlgWX::OnClearButton )
-  EVT_BUTTON( XRCID("wxID_ENCODINGBUTTON"),      SaveAsDlgWX::OnEncodingButton )
-  EVT_BUTTON( XRCID("wxID_MIMETYPEBUTTON"),      SaveAsDlgWX::OnMimeTypeButton )
   EVT_RADIOBOX( XRCID("wxID_DOC_FORMAT"),        SaveAsDlgWX::OnDocFormatBox )
   EVT_CHECKBOX( XRCID("wxID_CPY_IMAGES_CHK"),    SaveAsDlgWX::OnImagesChkBox )
   EVT_CHECKBOX( XRCID("wxID_TRANSFORM_URLS_CHK"),SaveAsDlgWX::OnUrlsChkBox )
   EVT_TEXT( XRCID("wxID_DOC_LOCATION_CTRL"),     SaveAsDlgWX::OnDocLocation )
   EVT_TEXT( XRCID("wxID_IMG_LOCATION_CTRL"),     SaveAsDlgWX::OnImgLocation )
+  EVT_TEXT( XRCID("wxID_CHARSET_CB"),            SaveAsDlgWX::OnCharsetCbx )
+  EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),      SaveAsDlgWX::OnMimeTypeCbx )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -80,23 +80,84 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_IMAGES_LOCATION) ));
   XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
   
-  // Charset and Mime Type infos
-  strcpy (buf_charset, "Charset : ");
-  strcat (buf_charset, UserCharset);
-  wxString wx_charset = TtaConvMessageToWX( buf_charset );
-  strcpy (buf_mime_type, "Mime Type : ");
-  strcat (buf_mime_type, UserMimeType);
-  wxString wx_mime_type = TtaConvMessageToWX( buf_mime_type );
-  XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel(wx_charset);
-  XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_mime_type );
+  // Charset  
+  wxString wx_label = TtaConvMessageToWX( "Charset : " );
+  wxString wx_ascii = TtaConvMessageToWX( "us-ascii" );
+  wxString wx_iso_8859_1 = TtaConvMessageToWX( "iso-8859-1" );
+  wxString wx_utf8 = TtaConvMessageToWX( "UTF-8" );
+  XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel(wx_label);
+  XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->Append( wx_ascii );
+  XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->Append( wx_iso_8859_1 );
+  XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->Append( wx_utf8 );
+  if (!strcmp (UserCharset, "us-ascii"))
+    XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->SetValue( wx_ascii );
+  else if (!strcmp (UserCharset, "iso-8859-1"))
+    XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->SetValue( wx_iso_8859_1 );
+  else
+    XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->SetValue( wx_utf8 );
+
+  // Mime Type
+  /* UserMimeType */
+  wx_label = TtaConvMessageToWX( "   Mime Type : " );
+  wxString wx_mime_type = TtaConvMessageToWX( "UserMimeType" );
+  XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_label );
+    XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( wx_mime_type );
+
+  /*
+  char *mimetypes_list;
+  int nbmimetypes;
+
+  if (DocumentTypes[document] == docImage)
+    {
+      mimetypes_list = "image/png\0"
+	"image/jpeg\0"
+	"image/gif\0"
+	"image/x-bitmap\0"
+	"image/x-xpicmap\0";
+      nbmimetypes = 5;
+    }
+  else if (DocumentTypes[document] == docSVG)
+    {
+      mimetypes_list = 	AM_SVG_MIME_TYPE"\0"
+	"application/xml\0"
+	"text/xml\0";
+      nbmimetypes = 4;
+    }
+  else if (DocumentTypes[document] == docMath)
+    {
+      mimetypes_list = AM_MATHML_MIME_TYPE"\0"
+	"application/xml\0"
+	"text/xml\0";
+      nbmimetypes = 3;
+    }
+  else if (DocumentTypes[document] == docHTML && DocumentMeta[document] &&
+	   DocumentMeta[document]->xmlformat)
+    {
+      mimetypes_list = AM_XHTML_MIME_TYPE"\0"
+	"text/html\0"
+	"application/xml\0"
+	"text/xml\0";
+      nbmimetypes = 4;
+    }
+  else
+    {
+      mimetypes_list = "text/html\0"
+	AM_XHTML_MIME_TYPE"\0"
+	"application/xml\0"
+	"text/xml\0"
+	"text/plain\0"
+	"text/css\0"
+	"application/smil\0";
+      nbmimetypes = 7;
+    }
+
+   */
 
   // buttons
   XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CLEARBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
-  XRCCTRL(*this, "wxID_ENCODINGBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CHANGE_CHARSET) ));
-  XRCCTRL(*this, "wxID_MIMETYPEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CHANGE_MIME_TYPE) ));
   
   // Set focus to ...
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();
@@ -183,32 +244,29 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
   }
 
 /*----------------------------------------------------------------------
-  OnEncodingButton called when clicking on Encoding button
+  OnCharsetCbx called when clicking on Encoding button
   ----------------------------------------------------------------------*/
-void SaveAsDlgWX::OnEncodingButton( wxCommandEvent& event )
+void SaveAsDlgWX::OnCharsetCbx( wxCommandEvent& event )
 {
-  char buf_charset[100];
+  wxString wx_charset = XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->GetValue ();
+  wxLogDebug( _T("SaveAsDlgWX::OnCharsetCbx - wx_charset=")+wx_charset );
 
-  wxLogDebug( _T("SaveAsDlgWX::OnEncodingButton") );
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
-  
-  if (SaveFormTmp[0] != EOS)
-    {
-      strcpy (buf_charset, "Charset : ");
-      strcat (buf_charset, SaveFormTmp);
-      wxString wx_charset = TtaConvMessageToWX( buf_charset );
-      XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel( wx_charset );
-    }
+  // allocate a temporary buffer to copy the 'const char *' url buffer 
+  char buf_charset[50];
+  wxASSERT( wx_charset.Len() < 50 );
+  strcpy( buf_charset, wx_charset.ToAscii() );
+  strcpy (UserCharset, buf_charset);
 }
 
 /*----------------------------------------------------------------------
-  OnMimeTypeButton called when clicking on MimeType button
+  OnMimeTypeCbx called when clicking on MimeType button
   ----------------------------------------------------------------------*/
-void SaveAsDlgWX::OnMimeTypeButton( wxCommandEvent& event )
+void SaveAsDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 {
-  char buf_mime_type[100];
+  wxString wx_mimetype = XRCCTRL(*this, "wxID_MIME_TYPR_CB", wxComboBox)->GetValue ();
+  wxLogDebug( _T("SaveAsDlgWX::OnMimeTypeCbx - wx_mimetype=")+wx_mimetype );
 
-  wxLogDebug( _T("SaveAsDlgWX::OnMimeTypeButton") );
+  char buf_mime_type[100];
   ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 5);
   if (SaveFormTmp[0] != EOS)
     {
