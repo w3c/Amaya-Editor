@@ -474,7 +474,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
   Returns TRUE if the application refuses the delete operation       
   ----------------------------------------------------------------------*/
 ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
-			   int end)
+			   int end, int info)
 {
    NotifyElement       notifyEl;
    PtrElement          pChild;
@@ -485,7 +485,7 @@ ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
    notifyEl.event = AppEvent;
    notifyEl.document = (Document) IdentDocument (pDoc);
    notifyEl.element = (Element) pEl;
-   notifyEl.info = 0; /* not sent by undo */
+   notifyEl.info = info;
    notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
    if (AppEvent == TteElemDelete)
@@ -501,7 +501,7 @@ ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
 	   /* envoie recursivement un evenement a chaque fils de pEl */
 	   while (pChild != NULL)
 	     {
-		ret = SendEventSubTree (AppEvent, pDoc, pChild, 0);
+		ret = SendEventSubTree (AppEvent, pDoc, pChild, 0, info);
 		cancel = cancel | ret;
 		pChild = pChild->ElNext;
 	     }
@@ -849,7 +849,7 @@ void CopyCommand ()
 	      if (IsolatedPairedElem (pEl, firstSel, lastSel))
 		pCopy = NULL;
 	      /* send the ElemCopy.Pre event */
-	      else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0))
+	      else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0, 0))
 		/* l'application refuses the copy of this element */
 		pCopy = NULL;
 	      else
@@ -1463,7 +1463,8 @@ void CutCommand (ThotBool save)
 			      else
 				last = TTE_STANDARD_DELETE_FIRST_ITEMS;
 			    }
-			  if (!SendEventSubTree (TteElemDelete, pSelDoc, pE, last))
+			  if (!SendEventSubTree (TteElemDelete, pSelDoc, pE,
+						 last, 0))
 			    {
 			      /* delete abstract boxes of the element */
 			      DestroyAbsBoxes (pE, pSelDoc, TRUE);
@@ -1485,7 +1486,7 @@ void CutCommand (ThotBool save)
 				  pF = pF->ElPrevious;
 				}
 			      notifyEl.position = NSiblings;
-			      
+
 			      if (!recorded)
 				{
 				/* record that deletion in the history */
@@ -3051,7 +3052,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  /* envoie l'evenement ElemDelete.Pre a
 			     l'application */
 			  if (SendEventSubTree (TteElemDelete, pSelDoc, pEl,
-						TTE_STANDARD_DELETE_LAST_ITEM))
+					   TTE_STANDARD_DELETE_LAST_ITEM, 0))
 			    /* l'application refuse de detruire cet element */
 			    empty = FALSE;
 			}

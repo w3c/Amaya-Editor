@@ -1123,9 +1123,10 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	      editOp->EoSavedElement->ElLeafType == LtPolyLine)
 	    replacePoly = TRUE;
 	  /* tell the application that an element will be removed from the
-	     abstract tree */
+	     abstract tree. Last parameter indicates that this event comes
+	     from the undo/redo command. */
 	  SendEventSubTree (TteElemDelete, pDoc, pEl,
-			    TTE_STANDARD_DELETE_LAST_ITEM);
+			    TTE_STANDARD_DELETE_LAST_ITEM, 1);
 	  /* prepare event TteElemDelete to be sent to the application */
 	  notifyEl.event = TteElemDelete;
 	  notifyEl.document = doc;

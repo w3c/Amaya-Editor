@@ -15,7 +15,8 @@ extern void IsolateSelection ( PtrDocument pDoc,
 extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                    PtrDocument pDoc,
                                    PtrElement pEl,
-                                   int end );
+                                   int end,
+                                   int info );
 extern void FreeSavedElements ( void );
 extern void CopyCommand ( void );
 extern PtrElement NextNotPage ( PtrElement pEl );
@@ -47,7 +48,8 @@ extern void IsolateSelection (/* PtrDocument pDoc,
 extern ThotBool SendEventSubTree (/* APPevent AppEvent,
                                      PtrDocument pDoc,
                                      PtrElement pEl,
-                                     int end */);
+                                     int end,
+                                     int info */);
 extern void FreeSavedElements (/* void */);
 extern void CopyCommand (/* void */);
 extern PtrElement NextNotPage (/* PtrElement pEl */);
