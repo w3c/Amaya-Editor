@@ -3593,7 +3593,7 @@
 </label>
 <label define="AM_NO_SELECTION">
 	<message xml:lang="en">Please select an element</message>
-	<message xml:lang="fr">Sélectionnez un �l�ment</message>
+	<message xml:lang="fr">Sélectionnez un élément</message>
 	<message xml:lang="it">Selezionare un elemento</message>
 	<message xml:lang="es">Por favor, seleccione un elemento</message>
 </label>
