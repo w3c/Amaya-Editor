@@ -37,6 +37,9 @@
 #include "wx/log.h"
 
 
+IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
+
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
@@ -55,9 +58,12 @@ AmayaFrame::AmayaFrame(
      ,m_pPageParent( NULL )
      ,m_pMenuBar( NULL )
      ,m_IsActive( FALSE )
+     ,m_HOldPosition( 0 )
+     ,m_VOldPosition( 0 )
+     ,m_ToDestroy( FALSE )
 {
   // Create the empty menu bar
-  m_pMenuBar =  new wxMenuBar( wxMB_DOCKABLE );
+  m_pMenuBar =  new wxMenuBar( /*wxMB_DOCKABLE*/ );
 
   // Create the drawing area
   m_pCanvas = NULL;
@@ -121,6 +127,9 @@ AmayaFrame::~AmayaFrame()
 
   // destroy the menu bar
   m_pMenuBar->Destroy();
+  m_pMenuBar = NULL;
+
+  m_pCanvas = NULL;
 }
 
 /*
@@ -165,9 +174,6 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
 	 // do not remove the scrollbar if it doesnt exist
 	 if (!m_pScrollBarV) return;
 
-	 //         m_pHSizer->Detach(m_pScrollBarV);
-	 //m_pScrollBarV = NULL;
-	 //	 m_pScrollBarV->Hide();
 	 m_pHSizer->SetItemMinSize( m_pScrollBarV,
 				    wxSize( 0, m_pScrollBarV->GetSize().GetHeight() ) );
        }
@@ -177,49 +183,13 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
 	 // do not remove the scrollbar if it doesnt exist
 	 if (!m_pScrollBarH) return;
 
-	 //	 m_pVSizer->Detach(m_pScrollBarH);
-	 //	 m_pScrollBarH = NULL;
 	 m_pVSizer->SetItemMinSize( m_pScrollBarH,
 				    wxSize( m_pScrollBarV->GetSize().GetWidth(), 0 ) );
-	 // m_pScrollBarH->Hide();
        }
       break;
    }
   m_pHSizer->Layout();
   m_pVSizer->Layout();
-  //  GetSizer()->SetSizeHints(this);
-  //GetSizer()->Fit(this);
-
-#if 0
-  switch( scrollbar_id )
-   {
-    case 1:
-       {
-	 // do not remove the scrollbar if it doesnt exist
-	 if (!m_pScrollBarV) return;
-
-         m_pHSizer->Remove(m_pScrollBarV);
-	 m_pScrollBarV = NULL;
-//	 m_pScrollBarV->Hide();
-       }
-      break;
-    case 2:
-       {
-	 // do not remove the scrollbar if it doesnt exist
-	 if (!m_pScrollBarH) return;
-
-	 m_pVSizer->Remove(m_pScrollBarH);
-	 m_pScrollBarH = NULL;
-//	 m_pScrollBarH->Hide();
-       }
-      break;
-   }
-#endif /* 0 */
-
-/*  m_pHSizer->Layout();
-  m_pVSizer->Layout();
-  Layout();
-  SetAutoLayout(TRUE);*/
 }
 
 /*
@@ -277,60 +247,11 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 	   {
 	     m_pVSizer->SetItemMinSize( m_pScrollBarH,
 					wxSize( 15, m_pScrollBarV->GetSize().GetWidth() ) );
-	     //	     m_pVSizer->SetItemMinSize( m_pScrollBarH,
-	     //					wxSize( 15, m_pScrollBarV->GetSize().GetHeight() ) );
 	   }
 	 m_pScrollBarH->Show();
       }
       break;
    }
-  //  m_pHSizer->Layout();
-  //  m_pVSizer->Layout();
-  //  GetSizer()->SetSizeHints(this);
-  //GetSizer()->Fit(this);
-
-#if 0
-  switch( scrollbar_id )
-   {
-    case 1:
-       {
-	 // do not create the scrollbar if it always exist
-	 if (m_pScrollBarV) return;
-        
-	 // Create vertical scrollbar
-	 m_pScrollBarV = new wxScrollBar( this,
-				   -1,
-				   wxDefaultPosition,
-				   wxDefaultSize,
-				   wxSB_VERTICAL );
-  
-	 m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
-	 m_pScrollBarV->Show();
-       }
-      break;
-    case 2:
-       {
-	 // do not create the scrollbar if it always exist
-	 if (m_pScrollBarH) return;
-	 
-
-	 // Create vertical and horizontal scrollbars
-	 m_pScrollBarH = new wxScrollBar( this,
-				   -1,
-				   wxDefaultPosition,
-				   wxDefaultSize,
-				   wxSB_HORIZONTAL );
-  
-	 m_pVSizer->Add( m_pScrollBarH, 0, wxEXPAND );
-	 m_pScrollBarH->Show();
-       }
-      break;
-   }
-#endif /* 0 */
-
-/*  m_pVSizer->Fit(this);
-  m_pVSizer->Layout();
-  SetAutoLayout(TRUE);*/
 }
 
 
@@ -375,13 +296,20 @@ void AmayaFrame::SwapBuffers()
  */
 void AmayaFrame::OnScroll( wxScrollEvent& event )
 {
-  wxLogDebug( _T("FrameCanvas::OnScroll: frame=%d h/v=%s pos=%d"),
+  wxLogDebug( _T("AmayaFrame::OnScroll: frame=%d h/v=%s pos=%d"),
      m_FrameId,
      event.GetOrientation() == wxHORIZONTAL ? _T("h") : _T("v"),
      event.GetPosition() );
 
   if (m_pScrollBarH && event.GetOrientation() == wxHORIZONTAL)
    {
+     /*
+     if (m_HOldPosition < event.GetPosition())
+       m_HOldPosition = event.GetPosition()+13;
+     else if (m_HOldPosition > event.GetPosition())
+       m_HOldPosition = event.GetPosition()-13;
+     */
+
      FrameHScrolledCallback(
 	m_FrameId,
 	event.GetPosition(),
@@ -389,6 +317,12 @@ void AmayaFrame::OnScroll( wxScrollEvent& event )
    }
   else if (m_pScrollBarV && event.GetOrientation() == wxVERTICAL)
    {
+     /*
+     if (m_VOldPosition < event.GetPosition())
+       m_VOldPosition = event.GetPosition()+13;
+     else if (m_VOldPosition > event.GetPosition())
+       m_VOldPosition = event.GetPosition()-13;
+     */
      FrameVScrolledCallback(
 	m_FrameId,
 	event.GetPosition() );
@@ -397,40 +331,27 @@ void AmayaFrame::OnScroll( wxScrollEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  OnMouse
- * Description:  nothing is done for the moment (mouse event are not caught here -> see AmayaCanvas)
- *--------------------------------------------------------------------------------------
- */
-void AmayaFrame::OnMouse( wxMouseEvent& event )
-{
-  // MOUSE WHEEL  
-//if ( event.GetEventType() == wxEVT_MOUSEWHEEL )  
-  {
-    int direction = event.GetWheelRotation();
-    int delta     = event.GetWheelDelta();
 
-    wxLogDebug( _T("AmayaFrame::wxEVT_MOUSEWHEEL: frame=%d direction=%s delta=%d"),
-	m_FrameId,
-       	direction > 0 ? _T("up") : _T("down"),
-	delta );    
-/*
-    if ( !FrameMouseWheelCallback( 
-      frame,
-      thot_mod_mask,
-      direction,
-      delta,
-      event.GetX(), event.GetY() ) )
-    {
-      return;
-    }*/
-  }
-  
-  // forward current event to parent widgets
+void AmayaFrame::OnScrollLineUp( wxScrollEvent& event )
+{
+  wxLogDebug( _T("AmayaFrame::OnScrollLineUp: frame=%d h/v=%s pos=%d"),
+     m_FrameId,
+     event.GetOrientation() == wxHORIZONTAL ? _T("h") : _T("v"),
+     event.GetPosition() );
+
   event.Skip();
 }
+
+void AmayaFrame::OnScrollLineDown( wxScrollEvent& event )
+{
+  wxLogDebug( _T("AmayaFrame::OnScrollLineDown: frame=%d h/v=%s pos=%d"),
+     m_FrameId,
+     event.GetOrientation() == wxHORIZONTAL ? _T("h") : _T("v"),
+     event.GetPosition() );
+
+  event.Skip();
+}
+
 
 /*
  *--------------------------------------------------------------------------------------
@@ -515,15 +436,13 @@ void AmayaFrame::SetPageTitle(const wxString & page_name)
     if (p_notebook)
     {
       int page_id = p_notebook->GetPageId(p_page);
-      if (page_id != -1)
-      {
-	p_notebook->SetPageText(page_id, m_PageTitle);
-      }
+      if (page_id >= 0)
+	p_notebook->SetPageText(page_id, wxString(m_PageTitle).Truncate(10) + _T("...") );
     }
   }
 
   // update also the window title
-  SetWindowTitle( m_PageTitle + wxString(_T(" - Amaya 8.2")) );
+  SetWindowTitle( m_PageTitle );
 }
 
 /*
@@ -558,7 +477,9 @@ void AmayaFrame::SetWindowTitle(const wxString & window_name)
       // if the frame's page is active then update the window name
       AmayaWindow * p_window = p_page->GetWindowParent();
       if (p_window)
-	p_window->SetTitle( m_WindowTitle );
+	p_window->SetTitle( m_WindowTitle +
+			    _T(" - Amaya ") +
+			    wxString::FromAscii( HTAppVersion ) );
     }
   }
 }
@@ -695,15 +616,21 @@ void AmayaFrame::OnMenuItem( wxCommandEvent& event )
 void AmayaFrame::SetActive( bool active )
 {
   // Update the m_IsActive atribute
-  m_IsActive = active;  
-  if ( !IsActive() )
-    return;
-  
+  m_IsActive = active;
+
   // the window's menubar must be updated with the new active frame's one
   AmayaWindow * p_window = GetWindowParent();
   if ( !p_window )
     return;
 
+  if ( !IsActive() )
+    {
+      // the window menubar is removed if it's the same as current unactive frame
+      if (p_window->GetMenuBar() == GetMenuBar())
+	p_window->SetMenuBar( NULL );
+      return;
+    }
+  
   // the main menubar is replaced by the current frame one
   p_window->SetMenuBar( GetMenuBar() );
 
@@ -721,12 +648,6 @@ void AmayaFrame::SetActive( bool active )
   AmayaPage * p_page = GetPageParent();
   if (p_page)
     p_page->SetActiveFrame( this );
-  
-  // update internal amaya global variables
-  /* search the document and the view corresponding to the window */
-  //int view;
-  //GetDocAndView( GetFrameId(), &SelectedDocument, &view);
-  //  SetActiveView( view );
 }
 
 bool AmayaFrame::IsActive()
@@ -755,6 +676,35 @@ void AmayaFrame::SetStatusBarText( const wxString & text )
     }
 }
 
+void AmayaFrame::DestroyFrame()
+{
+  // Detach the window menu bar to avoid  probleme when
+  // AmayaWindow will be deleted.
+  // (because the menu bar is owned by AmayaFrame)
+  //  GetWindowParent()->DesactivateMenuBar();
+  
+  // close and destroy the frame
+  //  wxCloseEvent dummy;
+  //  OnClose( dummy );
+  
+  // Reparent( NULL );
+  //Close();
+  //  m_ToDestroy = TRUE;
+  //SetEventHandler( new wxEvtHandler() );
+  Destroy();
+
+  // Reactivate the menu bar (nothing is done if the window is goind to die)
+  //  GetWindowParent()->ActivateMenuBar();
+}
+
+void AmayaFrame::OnIdle( wxIdleEvent& event )
+{
+  //  if ( m_ToDestroy )
+  //    Destroy();
+  //  else
+    event.Skip();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -762,12 +712,16 @@ void AmayaFrame::SetStatusBarText( const wxString & text )
  *    + AmayaFrame::OnScroll is assigned to a scroll event 
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
+  //  EVT_SCROLL_THUMBTRACK(    AmayaFrame::OnScrollLineUp )
+  //  EVT_SCROLL_ENDSCROLL(     AmayaFrame::OnScrollLineDown )
   EVT_SCROLL( 		AmayaFrame::OnScroll ) // all scroll events
-  EVT_MOUSEWHEEL(	AmayaFrame::OnMouse) // Process a wxEVT_MOUSEWHEEL event.
   EVT_CLOSE( 		AmayaFrame::OnClose )
   EVT_MENU( -1,         AmayaFrame::OnMenuItem )
 
   EVT_SIZE( 		AmayaFrame::OnSize )
+
+  EVT_IDLE(             AmayaFrame::OnIdle) // Process a wxEVT_IDLE event
+
 END_EVENT_TABLE()
 
 #endif // #ifdef _WX
