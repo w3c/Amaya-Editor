@@ -1399,10 +1399,14 @@ SYMBTRANSLATE
 	'd'	-> '&Integral;&Integral;';
 	'h'	-> '&OverBar;';
 	'i'     -> '&Integral;';
+	'o'     -> '&OverBrace;';
 	'r'	-> '&Sqrt;';
 	't'	-> '&Integral;&Integral;&Integral;';
-	'>'	-> '&RightArrow;';
-	'<'	-> '&LeftArrow;';
+	'u'     -> '&UnderBrace;';
+	'R'	-> '&RightArrow;';
+	'L'	-> '&LeftArrow;';
+	'>'	-> '&RightAngleBracket;';
+	'<'	-> '&LeftAngleBracket;';
 	'^'	-> '&UpArrow;';
         END;
 

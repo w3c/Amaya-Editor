@@ -1971,30 +1971,46 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-   int                 xf, Y;
-   FILE               *fout;
+  int                 xf, xm, Y;
+  FILE               *fout;
 
-   if (y < 0)
-     return;
-   y += FrameTable[frame].FrTopMargin;
-   if (thick <= 0 || fg < 0)
-     return;
+  if (y < 0)
+    return;
+  y += FrameTable[frame].FrTopMargin;
+  if (thick <= 0 || fg < 0)
+    return;
 
-   fout = (FILE *) FrRef[frame];
-   /* Do we need to change the current color ? */
-   CurrentColor (fout, fg);
-
-   if (align == 1)
-     Y = y + (h - thick) / 2;
-   else if (align == 2)
-     Y = y + h - thick / 2;
-   else
-     Y = y + thick / 2;
-   xf = PixelToPoint (x + l);
-   x = PixelToPoint (x);
-   Y = PixelToPoint (Y);
-   thick = PixelToPoint (thick);
-   fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, Y, x, Y, style, thick, 2);
+  fout = (FILE *) FrRef[frame];
+  /* Do we need to change the current color ? */
+  CurrentColor (fout, fg);
+  Y = PixelToPoint (y + (h - thick) / 2);
+  xf = PixelToPoint (x + l);
+  xm = PixelToPoint (x + (l / 2));
+  x = PixelToPoint (x);
+  if (align == 0)
+    /* Over brace */
+    {
+      fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Seg\n",
+	       x, PixelToPoint (y + h),
+	       x, Y,
+	       xf, Y,
+	       xf, PixelToPoint (y + h), style, thick, 4);
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
+	       xm, PixelToPoint (y),
+	       xm, Y, style, thick, 2);
+    }
+  else
+    /* Underbrace */
+    {
+      fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Seg\n",
+	       x, PixelToPoint (y),
+	       x, Y,
+	       xf, Y,
+	       xf, PixelToPoint (y), style, thick, 4);
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
+		xm, PixelToPoint (y + h),
+	       xm, Y, style, thick, 2);
+    }
 }
 
 
