@@ -1039,6 +1039,9 @@ RULES
 	NoLineBreak;
  	Create '<?';
 	NoTranslation;
+        IF Within BODY
+	Create '?>' after;
+	IF not Within BODY
 	Create '?>\12' after;
 	END;
 
