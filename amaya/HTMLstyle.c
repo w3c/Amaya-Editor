@@ -3397,6 +3397,7 @@ void *extra;
 	   if (context->drv->SetPictureMode)
 	     {
 	       repeat.typed_data.value = DRIVERP_REPEAT;
+	       repeat.typed_data.unit = DRIVERP_UNIT_REL;
 	       context->drv->SetPictureMode (target, context, repeat);
 	     }
 	 }

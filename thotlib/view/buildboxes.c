@@ -1774,8 +1774,9 @@ int                 frame;
      {
        /* look at if the box or an enclosing box has a background */
        pCurrentAb = pAb;
-       while (pCurrentAb != NULL && pCurrentAb->AbPictBackground == NULL && !pCurrentAb->AbFillBox)
-	 pCurrentAb = pCurrentAb->AbEnclosing;
+       if (pAb->AbNew || pAb->AbDead || pAb->AbHorizPosChange || pAb->AbVertPosChange)
+	 while (pCurrentAb != NULL && pCurrentAb->AbPictBackground == NULL && !pCurrentAb->AbFillBox)
+	   pCurrentAb = pCurrentAb->AbEnclosing;
        if (pCurrentAb == NULL)
 	 /* no background found: clip the current box */
 	 pCurrentBox = pBox;
