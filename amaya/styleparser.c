@@ -209,9 +209,9 @@ static void  CSSParseError (char *msg, char *value)
 	}
       CSSErrorsFound = TRUE;
       if (LineNumber < 0)
-	fprintf (ErrFile, "  In Style attribute %s %s\"\n", msg, value);
+	fprintf (ErrFile, "  In Style attribute, %s \"%s\"\n", msg, value);
       else
-	fprintf (ErrFile, "  line %d: %s %s\"\n", LineNumber + NewLineSkipped,
+	fprintf (ErrFile, "  line %d: %s \"%s\"\n", LineNumber+NewLineSkipped,
 		 msg, value);
     }
 }
@@ -407,7 +407,7 @@ char *ParseClampedUnit (char *text,
 	}
       pval->typed_data.unit = STYLE_UNIT_REL;
       pval->typed_data.value = intopacity;
-      pval->typed_data.real = 0;
+      pval->typed_data.real = FALSE;
       pval->data = intopacity;
   return (SkipWord (text));
 }
@@ -1573,25 +1573,41 @@ static char *ParseCSSWordSpacing (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLineSpacing: parse a CSS font leading string 
-   we expect the input string describing the attribute to be     
-   value% or value                                               
+   ParseCSSLineHeight: parse a CSS line-height property
   ----------------------------------------------------------------------*/
-static char *ParseCSSLineSpacing (Element element, PSchema tsch,
+static char *ParseCSSLineHeight (Element element, PSchema tsch,
 				  PresentationContext context, char *cssRule,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
-   PresentationValue   lead;
+  PresentationValue   pval;
+  char                *ptr;
 
-   cssRule = ParseCSSUnit (cssRule, &lead);
-   if (lead.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
-     /* install the new presentation */
-     {
-       if (tsch)
-	 cssRule = CheckImportantRule (cssRule, context);
-       TtaSetStylePresentation (PRLineSpacing, element, tsch, context, lead);
-     }
-   return (cssRule);
+  ptr = cssRule;
+  if (!strncasecmp (cssRule, "normal", 6))
+    {
+      pval.typed_data.unit = STYLE_UNIT_REL;
+      pval.typed_data.real = TRUE;
+      pval.typed_data.value = 1100;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      cssRule = SkipWord (cssRule);
+      return (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &pval);
+
+  if (pval.typed_data.unit == STYLE_UNIT_INVALID)
+    CSSParseError ("Invalid line-height value", ptr);
+  else if (DoApply)
+    /* install the new presentation */
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PRLineSpacing, element, tsch, context, pval);
+    }
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1728,7 +1744,7 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
        TtaSetStylePresentation (PRSize, element, tsch, context, pval);
      }
    if (ptr)
-     cssRule = ParseCSSLineSpacing (element, tsch, context, ptr, css, isHTML);
+     cssRule = ParseCSSLineHeight (element, tsch, context, ptr, css, isHTML);
    return (cssRule);
 }
 
@@ -2672,8 +2688,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
   else
     {
       cssRule = ParseCSSColor (cssRule, &best);
-      if (best.typed_data.unit != STYLE_UNIT_INVALID &&
-	  DoApply)
+      if (best.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
 	{
 	  if (tsch)
 	    cssRule = CheckImportantRule (cssRule, context);
@@ -3386,7 +3401,7 @@ static CSSProperty CSSProperties[] =
    {"text-transform", ParseCSSTextTransform},
    {"text-align", ParseCSSTextAlign},
    {"text-indent", ParseCSSTextIndent},
-   {"line-height", ParseCSSLineSpacing},
+   {"line-height", ParseCSSLineHeight},
 
    {"direction", ParseCSSDirection},
    {"unicode-bidi", ParseCSSUnicodeBidi},
@@ -5112,7 +5127,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	      break;
 	    case ' ':
 	      if (!quoted && import != MAX_CSS_LENGTH && openRule == 0)
-		media = !strncmp (&CSSbuffer[import+1], "media", 5);
+		media = !strncasecmp (&CSSbuffer[import+1], "media", 5);
 	      break;
 	    case '{':
 	      if (!quoted)
