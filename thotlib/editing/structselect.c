@@ -1730,7 +1730,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 }
 
 /*----------------------------------------------------------------------
-  ExtendSelection
+  DoExtendSelection
   Extend current selection to element pEl.
   If rank = 0, element pEl is entirely selected.
   If rank > 0, extend selection to the character having that rank in the
@@ -1741,9 +1741,10 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
   If begin is FALSE, the end of the current selection is extended to
   element pEl.
   If drag is TRUE, only the minimum processing is done.
+  If checkSelection is TRUE the coherence of the selection is checked.
   ----------------------------------------------------------------------*/
-void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
-		      ThotBool drag)
+void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
+			ThotBool drag, ThotBool checkSelection)
 {
   PtrElement          oldFirstEl, oldLastEl, pElP;
   int                 oldFirstChar, oldLastChar;
@@ -1914,7 +1915,7 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		  FirstSelectedChar = 0;
 		}
 	    }
-	  if (StructSelectionMode)
+	  if (StructSelectionMode && checkSelection)
 	    /* selection is structured mode */
 	    /* normalize selection: the first and last selected elements */
 	    /* must be siblings in the abstract tree */
@@ -1949,10 +1950,11 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		    }
 	      }
 	  change = FALSE;
-	  if (oldFirstEl != FirstSelectedElement
-	      || oldLastEl != LastSelectedElement
-	      || oldFirstChar != FirstSelectedChar
-	      || oldLastChar != LastSelectedChar)
+	  if (checkSelection &&
+	      (oldFirstEl != FirstSelectedElement ||
+	       oldLastEl != LastSelectedElement ||
+	       oldFirstChar != FirstSelectedChar ||
+	       oldLastChar != LastSelectedChar))
 	    {
 	      change = TRUE;
 	      if (FirstSelectedChar == 0)
@@ -2008,6 +2010,24 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
     }
 }
 
+/*----------------------------------------------------------------------
+  ExtendSelection
+  Extend current selection to element pEl.
+  If rank = 0, element pEl is entirely selected.
+  If rank > 0, extend selection to the character having that rank in the
+  text element pEl.
+  If fixed is TRUE keeps the current fixed point and element.
+  If begin is TRUE, the beginning of the current selection is moved to
+  element pEl
+  If begin is FALSE, the end of the current selection is extended to
+  element pEl.
+  If drag is TRUE, only the minimum processing is done.
+  ----------------------------------------------------------------------*/
+void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
+		      ThotBool drag)
+{
+  DoExtendSelection (pEl, rank, fixed, begin, drag, TRUE);
+}
 
 /*----------------------------------------------------------------------
    ReverseSelect
@@ -2891,7 +2911,8 @@ ThotBool SelectPairInterval ()
   ----------------------------------------------------------------------*/
 void SelectAround (int val)
 {
-  PtrElement          pEl, pParent, pFirst, pLast;
+  PtrElement          pEl, pParent;
+  PtrElement          pFirst, pLast, firstParent, lastParent;
   int                 lg;
 
   pEl = NULL;
@@ -2926,7 +2947,7 @@ void SelectAround (int val)
 	    /* parent only if the selection is "normalized", */
 	    /* normalize it otherwise. */
 	    {
-	      if (FirstSelectedElement != NULL && LastSelectedElement != NULL)
+	      if (FirstSelectedElement && LastSelectedElement)
 		{
 		  if (FirstSelectedElement->ElParent == LastSelectedElement->ElParent)
 		    /* selection is normalized */
@@ -2938,39 +2959,73 @@ void SelectAround (int val)
 		    {
 		      pFirst = FirstSelectedElement;
 		      pLast = LastSelectedElement;
+		      firstParent = NULL;
+		      lastParent = NULL;
 		      /* get the ancestors of the first selected */
 		      /* element */
 		      pParent = pFirst->ElParent;
-		      while (pParent != NULL)
-			if (ElemIsAnAncestor (pParent, pLast))
-			  /* this ancestor (pParent) of first */
-			  /* selected element is also an ancestor*/
-			  /* of the last selected element */
-			  {
-			    /* replace the last selected element*/
-			    /* by its ancestor whose parent is */
-			    /* pParent */
-			    while (pLast->ElParent != pParent)
-			      pLast = pLast->ElParent;
-			    /* finished */
-			    pParent = NULL;
-			  }
-			else
-			  /* this ancestor (pParent) of the first*/
-			  /* selected element is not an ancestor */
-			  /* of the last selected element */
-			  {
-			    /* replace priovisionally the first */
-			    /* selected element by pParent and */
-			    /* whether its parent is an ancestor */
-					/* of the last selected element */
-			    pFirst = pParent;
-			    pParent = pParent->ElParent;
-			  }
-		      SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
-		      if (pFirst != pLast)
-			/* changee the selection */
-			ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
+		      while (pParent)
+			{
+			  if (ElemIsAnAncestor (pParent, pLast))
+			    /* this ancestor (pParent) of first */
+			    /* selected element is also an ancestor*/
+			    /* of the last selected element */
+			    {
+			      /* replace the last selected element*/
+			      /* by its ancestor whose parent is */
+			      /* pParent */
+			      pFirst = pParent;
+			      while (pLast->ElParent != pParent)
+				{
+				  pLast = pLast->ElParent;
+				  if (!TypeHasException (ExcHidden, pLast->ElTypeNumber,
+						     pLast->ElStructSchema))
+				    lastParent = pLast;
+				}
+			      /* finished */
+			      pLast = pParent;
+			      pParent = NULL;
+			    }
+			  else
+			    /* this ancestor (pParent) of the first*/
+			    /* selected element is not an ancestor */
+			    /* of the last selected element */
+			    {
+			      /* replace priovisionally the first */
+			      /* selected element by pParent and */
+			      /* whether its parent is an ancestor */
+			      /* of the last selected element */
+			      pFirst = pParent;
+			      if (!TypeHasException (ExcHidden, pFirst->ElTypeNumber,
+						     pFirst->ElStructSchema))
+				    firstParent = pFirst;
+			      pParent = pParent->ElParent;
+			    }
+			}
+		      if (pFirst == pLast)
+			{
+			  
+			  if (firstParent && lastParent &&
+			      firstParent != lastParent &&
+			      (TypeHasException (ExcHidden, pFirst->ElTypeNumber,
+						pFirst->ElStructSchema) ||
+			       firstParent->ElParent == lastParent->ElParent))
+			    {
+			      SelectElementWithEvent (SelectedDocument, firstParent,
+						      TRUE, FALSE);
+			      /* keep the selection as it is */
+			      DoExtendSelection (lastParent, 0, FALSE, TRUE, FALSE, FALSE);
+			    }
+			  else
+			    SelectElementWithEvent (SelectedDocument, pFirst,
+						    TRUE, FALSE);
+			}
+		      else
+			{
+			  SelectElementWithEvent (SelectedDocument, pFirst,
+						  TRUE, FALSE);
+			  ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
+			}
 		    }
 		}
 	    }
