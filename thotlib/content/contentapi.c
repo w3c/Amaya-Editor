@@ -199,7 +199,7 @@ static void SetContent (Element element, unsigned char *content,
   PtrTextBuffer       pBuf, pNextBuff;
   PtrElement          pEl;
   PictInfo           *image;
-  int                 length, delta = 0, i;
+  int                 length, delta = 0, i, view;
   int                 max;
 #ifndef NODISPLAY
   PtrDocument         selDoc;
@@ -290,6 +290,15 @@ static void SetContent (Element element, unsigned char *content,
 	  /* change the filename of the image */
 	  TtaFreeMemory (image->PicFileName);
 	  image->PicFileName = TtaStrdup (content);
+	  for (view = 1; view <= MAX_VIEW_DOC; view++)
+	    if (pEl->ElAbstractBox[view - 1] &&
+		pEl->ElAbstractBox[view - 1]->AbBox)
+	      {
+		pEl->ElAbstractBox[view - 1]->AbBox->BxWidth = 0;
+		  pEl->ElAbstractBox[view - 1]->AbBox->BxHeight = 0;
+		pEl->ElAbstractBox[view - 1]->AbBox->BxW = 0;
+		pEl->ElAbstractBox[view - 1]->AbBox->BxH = 0;
+	      }
 	}
 
 #ifndef NODISPLAY
