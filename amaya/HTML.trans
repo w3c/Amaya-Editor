@@ -194,6 +194,12 @@ Merge Items: LI,(LI2:LI)+;
 	LI > LI:;
 	LI2 > LI:;
 	}
+Remove Paragraph level: LI{P{(cont:*)+},?(next:*)+};
+	{
+	LI > LI:;
+	cont > *;
+	next > *;
+	}
 
 Split Items: (LI{a:*,(b:*)+})+;
 	{
