@@ -934,8 +934,11 @@ RULES
 		Create '>';
 #endif
 		END;
-	if NOT within Paragraph AND NOT Immediately within Object
-           AND NOT within Pseudo_paragraph
+	if NOT within Paragraph AND NOT within Pseudo_paragraph
+	   AND NOT within H1 AND NOT within H2
+	   AND NOT within H3 AND NOT within H4
+	   AND NOT within H5 AND NOT within H6
+           AND NOT Immediately within Object
 		Create '\12' After;
 	END;
 
