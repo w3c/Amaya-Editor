@@ -417,6 +417,5 @@ LoadAnnotations
 PostAnnotation
 DeleteAnnotation
 FilterAnnot
-CustomQuery
 ConfigAnnot
 HelpAnnotation
