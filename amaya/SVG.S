@@ -2503,12 +2503,12 @@ EXCEPT
    PICTURE:             NoMove, NoResize, SelectParent;
    TEXT:                NoMove, NoResize;
    Unknown_namespace:   NoCreate;
-   DOCTYPE:             NoCut;
+   DOCTYPE:             NoCut, NoSpellCheck;
    DOCTYPE_line:        Hidden, NoCut;
    XMLcomment_line:     Hidden;
    XMLPI_line:          Hidden;
    CDATA_line:          Hidden;
-   XMLPI:	        ReturnCreateNL, NoReplicate;
+   XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
    XMLcomment:	        ReturnCreateNL, NoReplicate;
 
    { exceptions for attributes }

@@ -442,10 +442,10 @@ EXCEPT
    MathML:		NoMove, NoResize;
    XMLcomment_line:	Hidden;
    XMLPI_line:  	Hidden;
-   DOCTYPE:		NoCut;
+   DOCTYPE:		NoCut, NoSpellCheck;
    DOCTYPE_line:  	Hidden, NoCut;
    CDATA_line:          Hidden;
-   XMLPI:	        ReturnCreateNL, NoReplicate;
+   XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
    XMLcomment:	        ReturnCreateNL, NoReplicate;	
    Unknown_namespace:   NoCreate;
    Construct:		Hidden;

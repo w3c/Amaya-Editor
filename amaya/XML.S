@@ -40,7 +40,7 @@ EXCEPT
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
    RealLang:	        Invisible;
-   xmlpi:	        ReturnCreateNL, NoReplicate;
+   xmlpi:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
    xmlcomment:	        ReturnCreateNL, NoReplicate;
    xmlcomment_line:     Hidden;
    xmlpi_line:          Hidden;

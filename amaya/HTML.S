@@ -880,11 +880,11 @@ EXCEPT
 	Definition_Item:Hidden;
 	Term_List:	Hidden;
 	Definitions:	Hidden;
-        XMLPI:	        ReturnCreateNL, NoReplicate;
+        XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
 	Comment\240:	ReturnCreateNL, NoReplicate;
 	Comment_line:	Hidden;
 	PI_line:	Hidden;
-	DOCTYPE:	NoCut;
+	DOCTYPE:	NoCut, NoSpellCheck;
 	DOCTYPE_line:	Hidden, NoCut;
         CDATA_line:     Hidden;
 	GRAPHICS:	NoMove, NoResize;
