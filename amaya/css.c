@@ -979,7 +979,8 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
-  if (!loadcss)
+  printing = TtaIsPrinting ();
+  if (!loadcss && !printing)
     return;
   import = (css != NULL);
   if (import)
@@ -988,7 +989,6 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
     category = CSS_USER_STYLE;
   else
     category = CSS_EXTERNAL_STYLE;
-  printing = TtaIsPrinting ();
   refcss = css;
   /* get the absolute URI */
   LoadRemoteStyleSheet (url, doc, link, css, tempURL, tempfile);

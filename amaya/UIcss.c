@@ -432,7 +432,7 @@ char *CssToPrint (Document doc, char *printdir)
   PInfoPtr            pInfo;
   char               *ptr, *text, *name;
   char                tempfile[MAX_LENGTH];
-  int                 length, i;
+  int                 length, i, index;
 
   css = CSSList;
   file = NULL;
@@ -452,7 +452,7 @@ char *CssToPrint (Document doc, char *printdir)
 		    {
 		      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
 			/* there is an internal style in the document */
-			length += strlen (printdir) + 7;
+			length += strlen (printdir) + 10;
 		      else
 			/* that external or user style sheet concerns the document */
 			length += strlen (css->localName) + 3;
@@ -523,6 +523,7 @@ char *CssToPrint (Document doc, char *printdir)
 	  el = TtaGetMainRoot (doc);
 	  elType = TtaGetElementType (el);
 	  name = TtaGetSSchemaName (elType.ElSSchema);
+	  index = 0;
 	  if (!strcmp (name, "HTML"))
 	    {
 	      elType.ElTypeNum = HTML_EL_HEAD;
@@ -554,6 +555,9 @@ char *CssToPrint (Document doc, char *printdir)
 		      strcpy (tempfile, printdir);
 		      tempfile[i++] = DIR_SEP;
 		      strcpy (&tempfile[i], "css");
+		      i += 3;
+		      sprintf (&tempfile[i], "%d", index);
+		      index++;
 		      file = fopen (tempfile, "w");
 		      if (file)
 			{

@@ -3403,7 +3403,9 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
   if (pLine &&
       (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
     {
-      if (pLine->LiFirstPiece && pLine->LiPrevious)
+      if (pLine->LiFirstPiece &&
+	  pLine->LiFirstBox->BxNexChild != pLine->LiFirstPiece)
+	/* start with a piece of box */
 	ibox1 = pLine->LiFirstPiece;
       else
 	ibox1 = pLine->LiFirstBox;
