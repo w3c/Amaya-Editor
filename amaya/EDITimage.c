@@ -1235,6 +1235,7 @@ void                RemoveDocumentImages (Document doc)
 {
    LoadedImageDesc    *pImage, *previous, *next;
    ElemImage          *ctxEl, *ctxPrev;
+   char               *ptr;
 
    pImage = ImageURLs;
    previous = NULL;
@@ -1250,6 +1251,14 @@ void                RemoveDocumentImages (Document doc)
 	     pImage->status = IMAGE_NOT_LOADED;
 	     /* remove the image */
 	     TtaFileUnlink (pImage->localName);
+	     if (!strncmp (pImage->originalName, "internal:", sizeof ("internal:") - 1)
+		 && IsHTTPPath (pImage->originalName + sizeof ("internal:") - 1))
+	       {
+		 /* erase the local copy of the image */
+		 ptr = GetLocalPath (doc, pImage->originalName);
+		 TtaFileUnlink (ptr);
+		 TtaFreeMemory (ptr);
+	       }
 	     /* free the descriptor */
 	     if (pImage->originalName != NULL)
 		TtaFreeMemory (pImage->originalName);
