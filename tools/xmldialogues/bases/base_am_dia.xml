@@ -415,12 +415,14 @@
 	<message xml:lang="tr">XHTML 1.0 Basic doctype</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
-	<message xml:lang="en">Change doctype to &amp;HTML 4.01 Transitional</message>
-	<message xml:lang="fr">Changer le doctype pour &amp;HTML 4.01 Transitional</message>
+	<message xml:lang="en">Change to &amp;HTML 4.01 Transitional</message>
+	<message xml:lang="fr">Changer pour &amp;HTML 4.01 Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Transitional</message>
-	<message xml:lang="de">Dokumenttyp HTML 4.01 Transitional zuweisen</message>
-	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Transicional</message>
-	<message xml:lang="pt">Modificar/Criar doctype HTML 4.01 Transitional</message>
+	<message xml:lang="de">HTML 4.01 Transitional</message>
+	<message xml:lang="es">Cambiar doctype a HTML 4.01 Transicional</message>
+	<message xml:lang="pt">Alterar doctype para HTML 4.01 Transitional</message>
+	<message xml:lang="fi">Aseta tyypiksi HTML 4.01 Transitional</message>
+	<message xml:lang="tr">HTML 4.01 Transitional doctype</message>
 </label>
 <label define="BDoctypeHtmlStrict">
 	<message xml:lang="en">Change to HTML 4.01 Str&amp;ict</message>
