@@ -107,6 +107,7 @@ char            DocToOpen[MAX_LENGTH];
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
+static int          NewDocProfile = 0;
 static ThotBool     ShowErrors;
 /* the open document is the Amaya default page */
 static ThotBool     WelcomePage = FALSE;
@@ -1833,15 +1834,25 @@ void OpenDocInNewWindow (Document document, View view)
 /*----------------------------------------------------------------------
   OpenNew: create a new document
   ----------------------------------------------------------------------*/
-void OpenNew (Document document, View view, int docType)
+void OpenNew (Document document, View view, int docType, int docProfile)
 {
   /* create a new document */
   InNewWindow = TRUE;
   NewFile = TRUE;
   NewDocType = docType;
+  NewDocProfile = docProfile;
 
   if (NewDocType == docHTML)
-    InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtml));
+    {
+      if (docProfile == L_Basic)
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlBasic));
+      else if (docProfile == L_Strict)
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlStrict));
+      else if (docProfile == L_Xhtml11)
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtml11));
+      else
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlTransitional));
+   }
   else if (NewDocType == docMath)
     InitOpenDocForm (document, view, "New.mml", TtaGetMessage (1, BMathml));
   else if (NewDocType == docSVG)
@@ -2049,7 +2060,10 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
        if (docType == docLog)
 	 {
-	   TtaSetItemOff (doc, 1, File, BHtml);
+	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
+	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
+	   TtaSetItemOff (doc, 1, File, BHtml11);
+	   TtaSetItemOff (doc, 1, File, BHtmlTransitional);
 	   TtaSetItemOff (doc, 1, File, BMathml);
 	   TtaSetItemOff (doc, 1, File, BSvg);
 	   TtaSetItemOff (doc, 1, File, BTemplate);
@@ -3458,7 +3472,10 @@ void ShowSource (Document document, View view)
 	 TtcSwitchButtonBar (sourceDoc, 1); /* no button bar */
 	 TtcSwitchCommands (sourceDoc, 1); /* no command open */
 	 TtaSetItemOff (sourceDoc, 1, File, New1);
-	 TtaSetItemOff (sourceDoc, 1, File, BHtml);
+	 TtaSetItemOff (sourceDoc, 1, File, BHtmlBasic);
+	 TtaSetItemOff (sourceDoc, 1, File, BHtmlStrict);
+	 TtaSetItemOff (sourceDoc, 1, File, BHtml11);
+	 TtaSetItemOff (sourceDoc, 1, File, BHtmlTransitional);
 	 TtaSetItemOff (sourceDoc, 1, File, BMathml);
 	 TtaSetItemOff (sourceDoc, 1, File, BSvg);
 	 TtaSetItemOff (sourceDoc, 1, File, BTemplate);
@@ -4292,7 +4309,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			   DocumentName);
 	
 	       if (NewFile)
-		 InitializeNewDoc (LastURLName, NewDocType, 0);
+		 InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
 	       /* load an URL */ 
 	       else if (InNewWindow)
 		 GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
@@ -4320,7 +4337,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 				      TRUE, NULL, NULL);
 		 }
 	       else if (NewFile)
-		 InitializeNewDoc (tempfile, NewDocType, 0);
+		 InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile);
 	       else
 		 {
 		   if (IsMathMLName (tempfile))
@@ -4335,7 +4352,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* XML_GENERIC */
 		   else
 		     NewDocType = docHTML;
-		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument);
+		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument, NewDocProfile);
 		 }
 	     }
 	   else if (DocumentName[0] != EOS){

@@ -43,12 +43,37 @@
 #include "styleparser_f.h"
 #include "UIcss_f.h"
 
+
 /*----------------------------------------------------------------------
-  NewXHTML: Create a new XHTML document
+  NewXHTMLBasic: Create a new Basic XHTML document
   ----------------------------------------------------------------------*/
-void NewXHTML (Document document, View view)
+void NewXHTMLBasic (Document document, View view)
 {
-  OpenNew (document, view, docHTML);
+  OpenNew (document, view, docHTML, L_Basic);
+}
+
+/*----------------------------------------------------------------------
+  NewXHTMLStrict: Create a new Strict XHTML document
+  ----------------------------------------------------------------------*/
+void NewXHTMLStrict (Document document, View view)
+{
+  OpenNew (document, view, docHTML, L_Strict);
+}
+
+/*----------------------------------------------------------------------
+  NewXHTML11: Create a new XHTML1.1 document
+  ----------------------------------------------------------------------*/
+void NewXHTML11 (Document document, View view)
+{
+  OpenNew (document, view, docHTML, L_Xhtml11);
+}
+
+/*----------------------------------------------------------------------
+  NewXHTMLTransitional: Create a new Transitional XHTML document
+  ----------------------------------------------------------------------*/
+void NewXHTMLTransitional (Document document, View view)
+{
+  OpenNew (document, view, docHTML, L_Transitional);
 }
 
 /*----------------------------------------------------------------------
@@ -56,7 +81,7 @@ void NewXHTML (Document document, View view)
   ----------------------------------------------------------------------*/
 void NewMathML (Document document, View view)
 {
-  OpenNew (document, view, docMath);
+  OpenNew (document, view, docMath, L_Other);
 }
 
 /*----------------------------------------------------------------------
@@ -64,7 +89,7 @@ void NewMathML (Document document, View view)
   ----------------------------------------------------------------------*/
 void NewSVG (Document document, View view)
 {
-  OpenNew (document, view, docSVG);
+  OpenNew (document, view, docSVG, L_Other);
 }
 
 /*----------------------------------------------------------------------
@@ -72,22 +97,23 @@ void NewSVG (Document document, View view)
   ----------------------------------------------------------------------*/
 void NewCss (Document document, View view)
 {
-  OpenNew (document, view, docCSS);
+  OpenNew (document, view, docCSS, L_Other);
 }
 
 /*----------------------------------------------------------------------
   InitializeNewDoc builds the initial contents of a new document
   When the parameter doc is 0 the function creates a new document window.
   ----------------------------------------------------------------------*/
-void InitializeNewDoc (char *url, int docType, Document doc)
+void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 {
   ElementType          elType;
   Element              docEl, root, title, text, el, head, child, meta, body;
+  Element              doctype, doctypeLine;
   AttributeType        attrType;
   Attribute            attr;
   Language             language;
   char                *pathname, *documentname;
-  char                *s, *profile;
+  char                *s;
   char                 tempfile[MAX_LENGTH];
 
   pathname = TtaGetMemory (MAX_LENGTH);
@@ -120,8 +146,9 @@ void InitializeNewDoc (char *url, int docType, Document doc)
   DocumentMeta[doc]->initial_url = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentSource[doc] = 0;
-  /* default parsing level */
-  TtaSetDocumentProfile(doc, L_Transitional);
+
+  /* default document profile */
+  TtaSetDocumentProfile(doc, L_Other);
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
@@ -139,16 +166,63 @@ void InitializeNewDoc (char *url, int docType, Document doc)
       /*-------------  New XHTML document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
-      /* check the current profile */
-      profile = TtaGetEnvString ("Profile");
-      if (!strncmp (profile, "XHTML Basic", 11))
-	TtaSetDocumentProfile(doc, L_Basic);
-      else if (!strncmp (profile, "XHTML 1.0 Strict", 16))
-	TtaSetDocumentProfile(doc, L_Strict);
-      else if (!strncmp (profile, "XHTML 1.1", 9))
-	TtaSetDocumentProfile(doc, L_Xhtml11);
+
+      /* create the DOCTYPE element that corresponds to the profile of the document */
+      elType.ElTypeNum = HTML_EL_DOCTYPE;
+      doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (doctype != NULL)
+	TtaDeleteTree (doctype, doc);
+      else
+	{
+	  if (profile != L_Other)
+	    {
+	      /* Check the Thot abstract tree against the structure schema. */
+	      TtaSetStructureChecking (0, doc);
+	      doctype = TtaNewElement (doc, elType);
+	      TtaInsertFirstChild (&doctype, docEl, doc);
+	      /* create the first DOCTYPE_line element */
+	      elType.ElTypeNum = HTML_EL_DOCTYPE_line;
+	      doctypeLine = TtaNewElement (doc, elType);
+	      TtaInsertFirstChild (&doctypeLine, doctype, doc);
+	      elType.ElTypeNum = 1;
+	      text = TtaNewElement (doc, elType);
+	      if (text != NULL)
+		{
+		  TtaInsertFirstChild (&text, doctypeLine, doc);
+		  if (profile == L_Basic)
+		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"", language, doc);
+		  else if (profile == L_Strict)
+		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"", language, doc);
+		  else if (profile == L_Xhtml11)
+		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"", language, doc);
+		  else
+		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"", language, doc);
+		}
+	      /* create the second DOCTYPE_line element */
+	      elType.ElTypeNum = HTML_EL_DOCTYPE_line;
+	      doctypeLine = TtaNewElement (doc, elType);
+	      child = TtaGetLastChild (doctype);
+	      TtaInsertSibling (doctypeLine, child, FALSE, doc);
+	      elType.ElTypeNum = 1;
+	      text = TtaNewElement (doc, elType);
+	      if (text != NULL)
+		{
+		  TtaInsertFirstChild (&text, doctypeLine, doc);
+		  if (profile == L_Basic)
+		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\"", language, doc);
+		  else if (profile == L_Strict)
+		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"", language, doc);
+		  else if (profile == L_Xhtml11)
+		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\"", language, doc);
+		  else
+		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"", language, doc);
+		}
+	      TtaSetStructureChecking (1, doc);
+	    }
+	}
       
       LoadUserStyleSheet (doc);
+
       /* attach an attribute PrintURL to the root element */
       elType.ElTypeNum = HTML_EL_HTML;
       root = TtaSearchTypedElement (elType, SearchInTree, docEl);

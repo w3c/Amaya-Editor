@@ -6,8 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void NewXHTML ( Document document,
-                       View view );
+extern void NewXHTMLBasic ( Document document,
+                            View view );
+extern void NewXHTMLStrict ( Document document,
+                             View view );
+extern void NewXHTML11 ( Document document,
+                         View view );
+extern void NewXHTMLTransitional ( Document document,
+                                   View view );
 extern void NewMathML ( Document document,
                         View view );
 extern void NewSVG ( Document document,
@@ -16,7 +22,8 @@ extern void NewCss ( Document document,
                      View view );
 extern void InitializeNewDoc ( char *url,
                                int docType,
-                               Document doc );
+                               Document doc,
+                               int profile );
 extern void SpellCheck ( Document document,
                          View view );
 extern void CreateBreak ( Document document,
@@ -187,8 +194,14 @@ extern void CustomQuery ( Document document,
 
 #else /* __STDC__ */
 
-extern void NewXHTML (/* Document document,
-                         View view */);
+extern void NewXHTMLBasic (/* Document document,
+                              View view */);
+extern void NewXHTMLStrict (/* Document document,
+                               View view */);
+extern void NewXHTML11 (/* Document document,
+                           View view */);
+extern void NewXHTMLTransitional (/* Document document,
+                                     View view */);
 extern void NewMathML (/* Document document,
                           View view */);
 extern void NewSVG (/* Document document,
@@ -197,7 +210,8 @@ extern void NewCss (/* Document document,
                        View view */);
 extern void InitializeNewDoc (/* char *url,
                                  int docType,
-                                 Document doc */);
+                                 Document doc,
+                                 int profile */);
 extern void SpellCheck (/* Document document,
                            View view */);
 extern void CreateBreak (/* Document document,

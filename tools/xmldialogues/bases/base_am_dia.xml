@@ -153,8 +153,32 @@
 	<message xml:lang="es">Nuevo</message>
 	<message xml:lang="pt">Novo</message>
 </label>
-<label define="BHtml">
-	<message xml:lang="en">New XHTML document...</message>
+<label define="BHtmlBasic">
+	<message xml:lang="en">New XHTML Basic document...</message>
+	<message xml:lang="fr">Nouveau document XHTML ...</message>
+	<message xml:lang="de">XHTML-Dokument...</message>
+	<message xml:lang="it">Nuovo documento XHTML...</message>
+	<message xml:lang="es">Documento XHTML nuevo...</message>
+	<message xml:lang="pt">Novo documento XHTML...</message>
+</label>
+<label define="BHtmlStrict">
+	<message xml:lang="en">New XHTML Strict document...</message>
+	<message xml:lang="fr">Nouveau document XHTML...</message>
+	<message xml:lang="de">XHTML-Dokument...</message>
+	<message xml:lang="it">Nuovo documento XHTML...</message>
+	<message xml:lang="es">Documento XHTML nuevo...</message>
+	<message xml:lang="pt">Novo documento XHTML...</message>
+</label>
+<label define="BHtml11">
+	<message xml:lang="en">New XHTML 1.1 document...</message>
+	<message xml:lang="fr">Nouveau document XHTML...</message>
+	<message xml:lang="de">XHTML-Dokument...</message>
+	<message xml:lang="it">Nuovo documento XHTML...</message>
+	<message xml:lang="es">Documento XHTML nuevo...</message>
+	<message xml:lang="pt">Novo documento XHTML...</message>
+</label>
+<label define="BHtmlTransitional">
+	<message xml:lang="en">New XHTML Transitional document...</message>
 	<message xml:lang="fr">Nouveau document XHTML...</message>
 	<message xml:lang="de">XHTML-Dokument...</message>
 	<message xml:lang="it">Nuovo documento XHTML...</message>

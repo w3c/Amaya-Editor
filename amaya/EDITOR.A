@@ -29,7 +29,10 @@ DEFAULT
 MENUS
    Document Windows:
 	BEGIN
-	view:1 File.New1 button:BHtml -> NewXHTML;
+	view:1 File.New1 button:BHtmlBasic -> NewXHTMLBasic;
+	view:1 File.New1 button:BHtmlStrict -> NewXHTMLStrict;
+	view:1 File.New1 button:BHtml11 -> NewXHTML11;
+	view:1 File.New1 button:BHtmlTransitional -> NewXHTMLTransitional;
 	view:1 File.New1 button:BMathml -> NewMathML;
 	view:1 File.New1 button:BSvg -> NewSVG;
 	view:1 File.New1 button:BTemplate -> NewTemplate;
