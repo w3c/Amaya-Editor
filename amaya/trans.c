@@ -842,7 +842,8 @@ Document doc;
   int		      status;
 
   len = BUFFER_LEN - szHTML;
-  if (TtaGetElementType (subTree).ElTypeNum == HTML_EL_TEXT_UNIT)
+  /*****
+    if (TtaGetElementType (subTree).ElTypeNum == HTML_EL_TEXT_UNIT)
     {
       if (len > TtaGetTextLength (subTree))
 	{
@@ -854,6 +855,7 @@ Document doc;
     }
   else
     {
+    *****/
 # ifndef _WINDOWS  
       strcpy (tmpfilename, "/tmp/amayatrans.tmp");
 # else  /* _WINDOWS */
@@ -876,8 +878,8 @@ Document doc;
 	  TtaReadClose (inputFile);  
 	  if (charRead == EOF)
 	    result = TRUE;
+	  /*}*/
 	}
-    }
   bufHTML[szHTML] = EOS;
   return result;
 }
@@ -1061,8 +1063,8 @@ Document            doc;
 		       courEl = TtaGetFirstChild (myFirstSelect);
 		       while (courEl != NULL && courEl != myLastSelect)
 			 {
-			    TtaDeleteTree (courEl, doc);
-			    courEl = TtaGetFirstChild (lastEl);
+			   TtaDeleteTree (courEl, doc);
+			   courEl = TtaGetFirstChild (myFirstSelect);
 			 }
 		       /* restoring the source elements */
 		       DMatch = sMatch;
@@ -2437,10 +2439,10 @@ char               *data;
 	  else
 	    {
 	      /* checking the HTML thot tree */
-	      InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
+	      /***InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
 	      TtaSetStructureChecking (0, TransDoc);
 	      CheckAbstractTree (NULL);
-	      TtaSetStructureChecking (1, TransDoc);
+	      TtaSetStructureChecking (1, TransDoc);****/
 	    }
 		   
 	  if (myLastSelect == NULL)
