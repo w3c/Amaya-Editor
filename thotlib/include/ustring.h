@@ -41,6 +41,7 @@ typedef enum {
    WINDOWS_1258,
    ISO_SYMBOL,
    KOI8_R,
+   MAC_OS_ROMAN,
    ISO_2022_JP,
    EUC_JP,
    SHIFT_JIS,

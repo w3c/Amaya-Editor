@@ -204,7 +204,7 @@ static void CSSPrintError (char *msg, char *value)
 	}
       CSSErrorsFound = TRUE;
       if (LineNumber < 0)
-	fprintf (ErrFile, "  In Style attribute, %s \"%s\"\n", msg, value);
+	fprintf (ErrFile, "  In style attribute, %s \"%s\"\n", msg, value);
       else
 	fprintf (ErrFile, "  line %d: %s \"%s\"\n", LineNumber+NewLineSkipped,
 		 msg, value);
@@ -258,7 +258,7 @@ static char *SkipProperty (char *ptr)
   *ptr = EOS;
 #ifdef CSS_WARNING
   if (*deb != EOS)
-    CSSPrintError ("CSS property ignored", deb);
+    CSSPrintError ("CSS property ignored:", deb);
 #endif /* CSS_WARNING */
   *ptr = c;
   return (ptr);
@@ -4670,7 +4670,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
 	      *cur++ = *selector++;
 	    /* close the word */
 	    *cur++ = EOS;
-	    CSSPrintError ("Not supported selector", deb);
+	    CSSPrintError ("Selector not supported:", deb);
 	    DoApply = FALSE;	    
 	  }
       }

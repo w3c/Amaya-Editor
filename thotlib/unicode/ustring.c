@@ -88,6 +88,7 @@ static CharsetCode CharsetCodeTable[] =
     {"windows-1258",     WINDOWS_1258},
 
     {"koi8-r",           KOI8_R},
+    {"macintosh",        MAC_OS_ROMAN},
     {"iso-2022-jp",      ISO_2022_JP},
     {"euc-jp",           EUC_JP},
     {"shift_jis",        SHIFT_JIS},
