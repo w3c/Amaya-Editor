@@ -1171,7 +1171,7 @@ void ANNOT_Post_callback (int doc, int status,
 	     }
 	   TtaSetDocumentUnmodified (doc); 
 	   /* switch Amaya buttons and menus */
-	   DocStatusUpdate (doc, TRUE);
+	   DocStatusUpdate (doc, FALSE);
 	 }
        TtaFileUnlink (ctx->remoteAnnotIndex);
      }
