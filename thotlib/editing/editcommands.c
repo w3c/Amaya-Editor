@@ -635,8 +635,8 @@ ThotBool            del;
 	    {
 	      pSelAb = pSelAb->AbPrevious;
 	      *pAb = NULL;
-	      if (pSelAb != NULL && pSelAb->AbCanBeModified
-		       && pSelAb->AbLeafType == natureToCreate)
+	      if (pSelAb != NULL && pSelAb->AbCanBeModified &&
+		  !pSelAb->AbReadOnly && pSelAb->AbLeafType == natureToCreate)
 		{
 		  moveSelection = TRUE;
 		  notified = CloseTextInsertionWithControl ();
@@ -654,7 +654,7 @@ ThotBool            del;
 	      moveSelection = TRUE;
 	    }
 	  /* deplace l'insertion avant ou apres le pave selectionne */
-	  else if (!pSelAb->AbCanBeModified ||
+	  else if (!pSelAb->AbCanBeModified || pSelAb->AbReadOnly ||
 		   pSelAb->AbLeafType == LtCompound ||
 		   (pSelAb->AbLeafType != nat && nat != LtReference &&
 		    !(pSelAb->AbLeafType == LtSymbol && nat == LtText)))
@@ -675,7 +675,9 @@ ThotBool            del;
 	      notified = CloseTextInsertionWithControl ();
 	      if (pSelAb == NULL)
 		*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
-	      else if (!pSelAb->AbCanBeModified || natureToCreate != LtText || pSelAb->AbLeafType != natureToCreate)
+	      else if (!pSelAb->AbCanBeModified || pSelAb->AbReadOnly ||
+		        natureToCreate != LtText ||
+		        pSelAb->AbLeafType != natureToCreate)
 		*pAb = CreateALeaf (*pAb, frame, natureToCreate, !before);
 	      else
 		{
@@ -885,8 +887,9 @@ int                 prev;
 	/* boite entiere */
 	pBox = pSelBox->BxAbstractBox->AbBox;
 
-	/* Note que le texte de l'e'le'ment va changer */
-	if (pSelBox->BxAbstractBox->AbPresentationBox && pSelBox->BxAbstractBox->AbCanBeModified)
+	/* Note que le texte de l'element va changer */
+	if (pSelBox->BxAbstractBox->AbPresentationBox &&
+	    pSelBox->BxAbstractBox->AbCanBeModified)
 	   /* c'est un pave de presentation affichant la valeur d'un attribut */
 	  {
 	     if (LastInsertAttr != pBox->BxAbstractBox->AbCreatorAttr)
@@ -1063,10 +1066,13 @@ int                 keyboard;
 		  {
 		    pSelAb = pSelAb->AbPrevious;
 		    if (pSelAb != NULL)
-		      if (pSelAb->AbLeafType == LtText && pSelAb->AbLanguage == language && pSelAb->AbCanBeModified)
+		      if (pSelAb->AbLeafType == LtText &&
+			  pSelAb->AbLanguage == language &&
+			  pSelAb->AbCanBeModified && !pSelAb->AbReadOnly)
 			{
 			  cut = FALSE;
-			  ChangeSelection (frame, pSelAb, pSelAb->AbVolume + 1, FALSE, TRUE, FALSE, FALSE);
+			  ChangeSelection (frame, pSelAb, pSelAb->AbVolume + 1,
+					   FALSE, TRUE, FALSE, FALSE);
 			}
 		  }
 		
