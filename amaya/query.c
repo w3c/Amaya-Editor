@@ -653,7 +653,7 @@ int                 status;
      }
 
    /*
-      ** Only do redirect on GET and HEAD
+   ** Only do redirect on GET and HEAD
     */
    if (!HTMethod_isSafe (method))
      {
@@ -686,13 +686,14 @@ int                 status;
     **  allows us in an easy way to keep track of the number of redirections
     **  so that we can detect endless loops.
     */
-   
+
    if (HTRequest_doRetry (request))
      {
-	/* do we need to normalize the URL? */
-	if (strncmp (new_anchor->parent->address, "http:", 5))
+       /* only do a redirect using a network protocol understood by Amaya */
+   	if (IsValidProtocol (new_anchor->parent->address))
 	  {
-	     /* Yes, so we use the pre-redirection anchor as a base name */
+	    /* if it's a valid URL, we try to normalize it */
+	     /* We use the pre-redirection anchor as a base name */
 	     ref = AmayaParseUrl (new_anchor->parent->address, 
 				  me->urlName, AMAYA_PARSE_ALL);
 	     if (ref)
@@ -704,8 +705,10 @@ int                 status;
 		 TtaFreeMemory (ref);
 	       }
 	     else
-	       return HT_ERROR; /* We can't redirect anymore */
+	       return HT_OK; /* We can't redirect anymore */
 	  }
+	else
+	  return HT_OK; /* We can't redirect anymore */
 
 	/* update the current file name */
 	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) 
