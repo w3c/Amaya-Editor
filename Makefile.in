@@ -161,14 +161,14 @@ schemas : rebuild bin/str
 #
 
 libwww libwww.a :
-	@(if [ ! -d $(THOTDIR)/$(LIBWWW) ] ; \
+	@(if [ ! -d $(THOTDIR)/../$(LIBWWW) ] ; \
 	  then \
-	      cd $(THOTDIR) ; cvs update -d $(LIBWWW) ; \
+	      cd $(THOTDIR)/.. ; cvs update -d $(LIBWWW) ; \
 	  fi)
 	@(if test ! -d $(LIBWWW) ; then $(MKDIR) $(LIBWWW) ;  fi)
-	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/$(LIBWWW)" ; cd $(LIBWWW) ; \
+	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; cd $(LIBWWW) ; \
 	  unset LANG; \
-	  if [ ! -x Makefile ] ; then \
+	  if [ ! -f Makefile ] ; then \
 	  	../$$libwwwdir/configure --disable-shared \
 			-with-zlib="$$localdir/libz.a"; \
 	  fi)

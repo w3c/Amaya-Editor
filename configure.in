@@ -649,7 +649,7 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test ! -f $srcdir/libwww/Makefile.in ; then
+    if test ! -f $srcdir/../libwww/Makefile.in ; then
 	if test "$with_java" = "no" -a "$with_ilu" = "no" ; then
 	    AC_MSG_WARN(libwww sources not found !!)
 	    AC_MSG_WARN(Disabling Amaya build !)
