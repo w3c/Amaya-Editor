@@ -354,34 +354,41 @@ int img_label;
  CreateCSSDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCSSDlgWindow (int base_dlg, int css_select, int form_css, STRING msg, int nb_item, STRING buffer)
+void CreateCSSDlgWindow (HWND parent, int base_dlg, int css_select, int form_css, STRING msg, int nb_item, STRING buffer, STRING title)
 #else  /* __STDC__ */
-void CreateCSSDlgWindow (base_dlg, css_select, form_css, msg, nb_item, buffer)
-int   base_dlg; 
-int   css_select; 
-int   from_css; 
+void CreateCSSDlgWindow (parent, base_dlg, css_select, form_css, msg, nb_item, buffer, title)
+HWND   parent;
+int    base_dlg; 
+int    css_select; 
+int    from_css; 
 STRING msg; 
-int   nb; 
+int    nb; 
 STRING buffer;
+STRING title;
 #endif /* __STDC__ */
 {
-    nbItem    = (UINT)nb_item;
-    baseDlg   = base_dlg;
-    cssSelect = css_select;
-	formCss   = form_css;
-	cssList   = buffer;
+    nbItem     = (UINT)nb_item;
+    baseDlg    = base_dlg;
+    cssSelect  = css_select;
+	formCss    = form_css;
+	cssList    = buffer;
+    currentWnd = parent;
 	sprintf (message, "%s", msg);
+    sprintf (wndTitle, title);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
-				break;
-		   case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
-				break;
-		   case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
-				break;
+    if (nbItem == 0)
+       MessageBox (parent, "No CSS file available", wndTitle, MB_OK | MB_ICONWARNING);
+    else 
+        switch (app_lang) {
+               case FR_LANG:
+                    DialogBox (hInstance, MAKEINTRESOURCE (FR_CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
+				    break;
+               case EN_LANG:
+                    DialogBox (hInstance, MAKEINTRESOURCE (EN_CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
+                    break;
+               case DE_LANG:
+                    DialogBox (hInstance, MAKEINTRESOURCE (DE_CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
+				    break;
 	}
 }
 
@@ -1329,7 +1336,6 @@ LPARAM lParam;
 	int  index = 0;
 	UINT  i = 0;
 
-	HWND wndCSSEdit;
 	HWND wndMessage;
 
 	static HWND wndCSSList;
@@ -1338,12 +1344,14 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, wndTitle);
+
                 wndMessage = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                            10, 10, 200, 20, hwnDlg, (HMENU) 99, 
                                            (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 				wndCSSList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-					                         10, 35, 400, 105, hwnDlg, (HMENU) 1, 
+					                         10, 35, 400, 120, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 	            SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
@@ -1353,9 +1361,8 @@ LPARAM lParam;
 					  i++;
 				}
 
-				wndCSSEdit = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					                         10, 150, 400, 30, hwnDlg, (HMENU) IDC_CSSEDIT, 
-											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                itemIndex = SendMessage (wndCSSList, LB_SETCURSEL, (WPARAM)0, (LPARAM)0);
+                SetDlgItemText (hwnDlg, IDC_CSSEDIT, szBuffer);
 				break;
 
 		   case WM_COMMAND:

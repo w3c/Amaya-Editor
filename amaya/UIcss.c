@@ -219,7 +219,7 @@ STRING              s;
 
   /* display the form */
 #  ifdef _WINDOWS
-  CreateCSSDlgWindow (BaseCSS, CSSSelect, CSSForm, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf);
+  CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), BaseCSS, CSSSelect, CSSForm, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf, s);
 #  else  /* !_WINDOWS */
   if (nb > 0)
     TtaNewSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,

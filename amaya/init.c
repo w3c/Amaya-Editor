@@ -225,11 +225,11 @@ static ThotIcon       iconJava;
 extern int       currentFrame;
 extern int       menu_item;
 extern CHAR_T    LostPicturePath [512];
-int              tipIndex;
-ThotBool         tbStringsInitialized = FALSE;
 
 static ThotBool  itemChecked = FALSE;
-static int       iString;
+ThotBool         tbStringsInitialized = FALSE;
+int              tipIndex;
+int              iString;
 
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -864,7 +864,6 @@ Document            doc;
        else if (DocumentTypes[document] == docCSSRO)
 	 DocumentTypes[document] = docCSS;
        TtaSetDocumentAccessMode (document, 1);
-	   
        /* update windows menus */
        TtaSetItemOn (document, 1, Edit_, BUndo);
        TtaSetItemOn (document, 1, Edit_, BRedo);
