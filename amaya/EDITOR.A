@@ -164,6 +164,7 @@ MENUS
 	view:1 Help_ button:BHelpLinks -> HelpLinks;
 	view:1 Help_ button:BHelpChanging -> HelpChanging;
 	view:1 Help_ button:BHelpTables -> HelpTables;
+	view:1 Help_ button:BHelpMath -> HelpMath;
 	view:1 Help_ button:BHelpImageMaps -> HelpImageMaps;
 	view:1 Help_ button:BHelpStyleSheets -> HelpStyleSheets;
 	view:1 Help_ button:BHelpAttributes -> HelpAttributes;

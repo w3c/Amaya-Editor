@@ -2450,6 +2450,24 @@ void HelpTables (document, view)
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
+void HelpMath (Document document, View view)
+#else /* __STDC__*/
+void HelpMath (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   char    localname[MAX_LENGTH];
+
+   strcpy (localname, AMAYA_PAGE_DOC);
+   strcat (localname, "Math.html");
+   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
 void HelpImageMaps (Document document, View view)
 #else /* __STDC__*/
 void HelpImageMaps (document, view)
