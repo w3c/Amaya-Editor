@@ -39,31 +39,31 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
-#include "structcreation_f.h"
-#include "references_f.h"
-#include "structmodif_f.h"
-#include "viewcommands_f.h"
-
 #include "absboxes_f.h"
 #include "actions_f.h"
-#include "changeabsbox_f.h"
-#include "schemas_f.h"
-#include "createabsbox_f.h"
-#include "search_f.h"
-#include "exceptions_f.h"
-#include "word_f.h"
 #include "appli_f.h"
-#include "searchmenu_f.h"
-#include "structschema_f.h"
+#include "changeabsbox_f.h"
+#include "content_f.h"
+#include "createabsbox_f.h"
+#include "docs_f.h"
+#include "exceptions_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"
+#include "references_f.h"
 #include "regexp_f.h"
-#include "views_f.h"
-#include "structselect_f.h"
-#include "content_f.h"
+#include "search_f.h"
+#include "searchmenu_f.h"
 #include "searchref_f.h"
-#include "docs_f.h"
+#include "schemas_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structschema_f.h"
+#include "structselect_f.h"
+#include "tree_f.h"
+#include "undo_f.h"
+#include "viewcommands_f.h"
+#include "views_f.h"
+#include "word_f.h"
 
 static boolean      CaseEquivalent;	/* flag indicating whether there's a character */
                                         /* Upper/lower case distinction */
@@ -1203,7 +1203,11 @@ STRING              txt;
 
        selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
 					  &pLastSel, &firstChar, &lastChar);
-       if (selectionOK)
+       if (!selectionOK)
+	 {
+	 pFirstSel = NULL; pLastSel = NULL; firstChar = 0; lastChar = 0;
+	 }
+       else
 	 if (pDocSel != searchDomain->SDocument)
 	   selectionOK = FALSE;
        if (!selectionOK && StartSearch)
@@ -1246,6 +1250,9 @@ STRING              txt;
 	     /* eventuellement, avec remplacement */
 	     {
 	       pFirstSel = pCurrEl;
+	       if (AutoReplace)
+		  OpenHistorySequence (searchDomain->SDocument, pFirstSel,
+				       pLastSel, firstChar, lastChar);
 	       do
 		 {
 		   stop = TRUE;
@@ -1274,6 +1281,15 @@ STRING              txt;
 			   (*ThotLocalActions[T_strsearcheletattr]) (pFirstSel, &found);
 			 if (found)
 			   {
+			     /* register the editing operation for Undo command) */
+			     if (!AutoReplace)
+				OpenHistorySequence (searchDomain->SDocument,
+					pFirstSel, pFirstSel, firstChar,
+					firstChar+SearchedStringLen-1);
+			     AddEditOpInHistory (pFirstSel,
+					searchDomain->SDocument, TRUE, TRUE);
+			     if (!AutoReplace)
+				CloseHistorySequence (searchDomain->SDocument);
 			     /* effectue le remplacement du texte */
 			     ReplaceString (searchDomain->SDocument,
 					    pFirstSel, firstChar, SearchedStringLen,
@@ -1389,6 +1405,8 @@ STRING              txt;
 		   StartSearch = FALSE;
 		 }
 	       while (!stop);
+	       if (AutoReplace)
+		  CloseHistorySequence (searchDomain->SDocument);
 	     }
 	   if (found)
 	     {
@@ -1409,10 +1427,13 @@ STRING              txt;
 	     /* on n'a pas trouve' */
 	     {
 	       if (WithReplace && ReplaceDone)
-		 /* message "Plus de remplacement" */
-		 TtaNewLabel (NumLabelAttributeValue,
-			      NumFormSearchText,
-			      TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE));
+		 {
+		 if (!AutoReplace)
+		    /* message "Plus de remplacement" */
+		    TtaNewLabel (NumLabelAttributeValue,
+			         NumFormSearchText,
+			         TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE));
+		 }
 	       else
 		 /* message "Pas trouve'" */
 		 TtaNewLabel (NumLabelAttributeValue,

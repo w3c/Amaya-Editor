@@ -68,6 +68,7 @@ static int           type_err;	/* Type du mot errone (majuscule, SmallLettering)
 #include "search_f.h"
 #include "spellchecker_f.h"
 #include "structselect_f.h"
+#include "undo_f.h"
 #include "word_f.h"
 
 
@@ -1120,6 +1121,10 @@ CHAR                newWord[MAX_WORD_LEN];
    if (ChkrRange->SStartToEnd)
      {
 	idx = ChkrIndChar - stringLength + 1;
+	OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
+			     idx, idx+stringLength-1);
+	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
+	CloseHistorySequence (ChkrRange->SDocument);
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
 		       stringLength, pChaineRemplace, LgChaineRempl, TRUE);
 	/* met a jour ChkrIndChar */
@@ -1135,6 +1140,10 @@ CHAR                newWord[MAX_WORD_LEN];
    else
      {
 	idx = ChkrIndChar + 1;
+	OpenHistorySequence (ChkrRange->SDocument, ChkrElement, ChkrElement,
+			     idx, idx+stringLength-1);
+	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
+	CloseHistorySequence (ChkrRange->SDocument);
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
 		       stringLength, pChaineRemplace, LgChaineRempl, TRUE);
      }

@@ -52,7 +52,6 @@
 #include "structschema_f.h"
 #include "structselect_f.h"
 #include "tree_f.h"
-#include "undo_f.h"
 #include "viewcommands_f.h"
 #include "views_f.h"
 
@@ -105,11 +104,6 @@ boolean             select;
      }
    if (DontReplace)
       return;
-
-   /* register the editing operation (for Undo command) */
-   OpenHistorySequence (pDoc, pEl, pEl, firstChar, firstChar+stringLen-1);
-   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
-   CloseHistorySequence (pDoc);
 
    /* cherche le buffer du premier caractere a remplacer: pBuf1 */
    pBuf1 = pEl->ElText;
