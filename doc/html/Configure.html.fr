@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -66,11 +66,11 @@ stocké dans les différentes architectures :</p>
       <td>$HOME/.amaya</td>
     </tr>
     <tr>
-      <td>Windows 95/ 
+      <td>Windows 95/
 
         <p>Windows 98</p>
       </td>
-      <td>AMAYA-INSTALL-DIR\users\username 
+      <td>AMAYA-INSTALL-DIR\users\username
 
         <p>ou, si l'utilisateur ne se loge pas sur Windows,</p>
 
@@ -78,7 +78,7 @@ stocké dans les différentes architectures :</p>
       </td>
     </tr>
     <tr>
-      <td>Windows NT/ Windows 2000/ 
+      <td>Windows NT/ Windows 2000/
 
         <p>Windows XP</p>
       </td>
@@ -213,16 +213,12 @@ alt="General Preferences Menu" /></p>
       <code>http://www.w3.org</code>.<br />
       <strong>Note :</strong> Un URI complet doit être utilisé.<br />
     </dd>
-  <dt><strong><a name="Enable">Activer le multi-key</a></strong></dt>
-    <dd>Activer ou désactiver la méthode optionnelle d'entrée multi-touches. 
-      <p>La méthode optionnelle d'entrée (Multi-Key) est basée sur une
-      séquence de deux touches commençant avec "l'accent" suivi de la
-      "lettre". Par exemple pour obtenir un 'ã' tapez d'abord '~' puis tapez
-      'a'. Pour obtenir un '~' vous devez tapez '~' deux fois.</p>
-      <p>Les séquences de caractères utilisées par les méthodes d'entrée
-      multi-touches standard et optionnelle sont résumées dans <a
-      href="EditChar.html.fr#Keyboard">deux tables différentes</a>.</p>
-    </dd>
+  <dt><strong><a name="Enable">Activer le coller ligne à
+  ligne</a></strong></dt>
+    <dd>Cette option concerne le coller depuis une autre application. Quand
+      cette option est activée, les lignes de l'application source sont
+      conservées. Sinon les caractères «&nbsp;fin de ligne&nbsp;» sont
+      remplacés par des espaces.</dd>
   <dt>&nbsp;<strong>Montrer les images de fond</strong></dt>
     <dd>Contrôle si les images en arrière plan doivent être montrées ou non.
       Cette option est effective uniquement quand on charge un nouveau
@@ -282,7 +278,7 @@ alt="General Preferences Menu" /></p>
       Allemand (<code>de</code>). Au démarrage, Amaya charge les fichiers de
       dialogue selon la langue de dialogue courante : les fichiers en-, fr-,
       ou de- . Ces fichiers de dialogue se trouvent dans le répertoire
-      <strong>Amaya/config</strong>. 
+      <strong>Amaya/config</strong>.
       <p>Il est possible d'adapter Amaya aux nouvelles langues ISO-Latin-1 en
       écrivant les fichiers de dialogue correspondants. Ces fichiers de
       dialogue doivent se trouver dans le même répertoire (c'est à dire
@@ -357,7 +353,7 @@ alt="Publish Preferences Menu" /></p>
       Allemand (<code>de</code>). Au démarrage, Amaya charge les fichiers de
       dialogue selon la langue de dialogue courante : les fichiers en-, fr-,
       ou de- . Ces fichiers de dialogue se trouvent dans le répertoire
-      <strong>Amaya/config</strong>. 
+      <strong>Amaya/config</strong>.
       <p>Il est possible d'adapter Amaya aux nouvelles langues ISO-Latin-1 en
       écrivant les fichiers de dialogue correspondants. Ces fichiers de
       dialogue doivent se trouver dans le même répertoire (c'est à dire
@@ -474,7 +470,7 @@ devrait ou ne devrait pas être utilisé par le biais de ce menu.</p>
       devez spécifier le nom du serveur en entier. Si le serveur est en train
       de fonctionner sur un port autre que 80, alors, comme un URL, vous
       devez ajouter un caractère ":" au nom du proxy, suivi par le numéro du
-      port. 
+      port.
       <p>Par exemple :</p>
       <pre>  groucho.marx.edu
          </pre>
@@ -489,7 +485,7 @@ devrait ou ne devrait pas être utilisé par le biais de ce menu.</p>
 <dl>
   <dt><strong>Liste du domaine proxy</strong></dt>
     <dd>Donne une liste des domaines séparés par des espaces pour lesquels
-      vous utilisez votre proxy. Par exemple : 
+      vous utilisez votre proxy. Par exemple :
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
               ^--------------^----&gt; entrées séparées par des espaces
            </pre>
