@@ -769,12 +769,12 @@ View                view;
 
 /*----------------------------------------------------------------------
    SetNamespacesAndDTD
-   Set the content of the Namespaces attribute (on the root element)
-   according to the SSchemas used in the document.
-   Set the HtmlDTD attribute to Frameset if the document uses Frames.
-   Create a META element to specify Content-Type and Charset.
-   Set the content of the Charset attribute (on the root element)
-   according to the encoding used in the document.
+   Whatever the document type, set the content of the Charset attribute
+   (on the root element) according to the encoding used in the document.
+   For (X)HTML documents, set the content of the Namespaces attribute
+   (on the root element) according to the SSchemas used in the document;
+   set the HtmlDTD attribute to Frameset if the document uses Frames;
+   create a META element to specify Content-Type and Charset.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         SetNamespacesAndDTD (Document doc)
@@ -795,32 +795,34 @@ Document     doc;
    CHAR_T		buffer[200];
    ThotBool		useMathML, useGraphML, useFrames;
 
-   useMathML = FALSE;
-   useGraphML = FALSE;
-   if (TtaGetSSchema (TEXT("MathML"), doc) != NULL)
-      useMathML = TRUE;
-   if (TtaGetSSchema (TEXT("GraphML"), doc) != NULL)
-      useGraphML = TRUE;
-
    root = TtaGetMainRoot (doc);
-   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-   /* looks for a FRAMESET element and set attribute HtmlDTD */
-   useFrames = FALSE;
-   el = TtaGetFirstChild (root);
-   while (el && !useFrames)
-      {
-      elType = TtaGetElementType (el);
-      if (elType.ElSSchema == attrType.AttrSSchema &&
-	  elType.ElTypeNum == HTML_EL_FRAMESET)
-	 useFrames = TRUE;
-      else
-         TtaNextSibling (&el);
-      }
-
-   attrType.AttrTypeNum = HTML_ATTR_Namespaces;
-   attr = TtaGetAttribute (root, attrType);
-   if (!useMathML && !useGraphML)
+   if (DocumentTypes[doc] == docHTML)
      {
+     useMathML = FALSE;
+     useGraphML = FALSE;
+     if (TtaGetSSchema (TEXT("MathML"), doc) != NULL)
+       useMathML = TRUE;
+     if (TtaGetSSchema (TEXT("GraphML"), doc) != NULL)
+       useGraphML = TRUE;
+     
+     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+     /* looks for a FRAMESET element and set attribute HtmlDTD */
+     useFrames = FALSE;
+     el = TtaGetFirstChild (root);
+     while (el && !useFrames)
+       {
+       elType = TtaGetElementType (el);
+       if (elType.ElSSchema == attrType.AttrSSchema &&
+	   elType.ElTypeNum == HTML_EL_FRAMESET)
+	 useFrames = TRUE;
+       else
+         TtaNextSibling (&el);
+       }
+
+     attrType.AttrTypeNum = HTML_ATTR_Namespaces;
+     attr = TtaGetAttribute (root, attrType);
+     if (!useMathML && !useGraphML)
+       {
        /* delete the Namespaces attribute */
        if (attr)
 	 TtaRemoveAttribute (root, attr, doc);
@@ -886,39 +888,54 @@ Document     doc;
 	      }
 	  }
 	TtaSetAttributeText (attr, buffer, root, doc);
+       }
+     else if (useMathML || useGraphML)
+       {
+       /* prepare the value of attribute Namespaces */
+       buffer[0] = EOS;
+       if (useMathML)
+	 ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
+       if (useGraphML)
+	 ustrcat (buffer, TEXT("\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\""));
+       /* set the value of attribute Namespaces */
+       if (attr == NULL)
+	 {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (root, attr, doc);
+	 }
+       TtaSetAttributeText (attr, buffer, root, doc);
+       
+       /* delete the DOCTYPE attribute */
+       attrType.AttrTypeNum = HTML_ATTR_HtmlDTD;
+       attr = TtaGetAttribute (root, attrType);
+       if (attr)
+	 TtaRemoveAttribute (root, attr, doc);
+       }
      }
-   else if (useMathML || useGraphML)
-      {
-	/* prepare the value of attribute Namespaces */
-	buffer[0] = EOS;
-	if (useMathML)
-	  ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
-	if (useGraphML)
-	  ustrcat (buffer, TEXT("\n      xmlns:g=\"http://www.w3.org/Graphics/SVG/Amaya2D\""));
-	/* set the value of attribute Namespaces */
-	if (attr == NULL)
-	  {
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (root, attr, doc);
-	  }
-	TtaSetAttributeText (attr, buffer, root, doc);
-
-	/* delete the DOCTYPE attribute */
-	attrType.AttrTypeNum = HTML_ATTR_HtmlDTD;
-	attr = TtaGetAttribute (root, attrType);
-	if (attr)
-	  TtaRemoveAttribute (root, attr, doc);
-      }
-
+   
    /* get the document charset */
    Charset[0] = EOS;
    charset = TtaGetDocumentCharset (doc);
-   if (charset != UNDEFINED_CHARSET)
+   if (charset != UNDEFINED_CHARSET ||
+       DocumentTypes[doc] == docMath ||
+       DocumentTypes[doc] == docSVG)
      {
-       ptr = TtaGetCharsetName (charset);
-       ustrcat (Charset, ptr);
+       if (charset == UNDEFINED_CHARSET)
+	 ustrcat (Charset, TEXT("unknown"));
+       else
+         {
+           ptr = TtaGetCharsetName (charset);
+           ustrcat (Charset, ptr);
+         }
        /* set the Charset attribute of the root element*/
-       attrType.AttrTypeNum = HTML_ATTR_Charset;
+       elType = TtaGetElementType (root);
+       attrType.AttrSSchema = elType.ElSSchema;
+       if (DocumentTypes[doc] == docHTML)
+	 attrType.AttrTypeNum = HTML_ATTR_Charset;
+       else if (DocumentTypes[doc] == docMath)
+	 attrType.AttrTypeNum = MathML_ATTR_Charset;
+       else if (DocumentTypes[doc] == docSVG)
+	 attrType.AttrTypeNum = GraphML_ATTR_Charset;
        charsetAttr = TtaGetAttribute (root, attrType);
        if (!charsetAttr)
 	 {
@@ -928,31 +945,33 @@ Document     doc;
 	 }
      }
 
-   /* Create (or update) a META element to specify Content-type and Charset */
-   /* Get the HEAD element first */
-   el = TtaGetFirstChild (root);
-   head = NULL;
-   while (el && !head)
-      {
-      elType = TtaGetElementType (el);
-      if (elType.ElSSchema == attrType.AttrSSchema &&
-	  elType.ElTypeNum == HTML_EL_HEAD)
+   if (DocumentTypes[doc] == docHTML)
+     {
+     /* Create (or update) a META element to specify Content-type and Charset*/
+     /* Get the HEAD element first */
+     el = TtaGetFirstChild (root);
+     head = NULL;
+     while (el && !head)
+       {
+       elType = TtaGetElementType (el);
+       if (elType.ElSSchema == attrType.AttrSSchema &&
+	   elType.ElTypeNum == HTML_EL_HEAD)
 	 head = el;
-      else
+       else
          TtaNextSibling (&el);
-      }
-   if (head)
-      {
-      /* indicate the MIME type and the charset in a meta element with
-	 an http-equiv attr */
-      /* look for a meta/http-equiv element */
-      el = TtaGetFirstChild (head);
-      meta = NULL;
-      lastmeta = NULL;
-      lastel = NULL;
-      attrType.AttrTypeNum = HTML_ATTR_http_equiv;
-      attr = NULL;
-      while (el && !meta)
+       }
+     if (head)
+       {
+       /* indicate the MIME type and the charset in a meta element with
+	  an http-equiv attr */
+       /* look for a meta/http-equiv element */
+       el = TtaGetFirstChild (head);
+       meta = NULL;
+       lastmeta = NULL;
+       lastel = NULL;
+       attrType.AttrTypeNum = HTML_ATTR_http_equiv;
+       attr = NULL;
+       while (el && !meta)
 	 {
 	 elType = TtaGetElementType (el);
          if (elType.ElSSchema == attrType.AttrSSchema &&
@@ -969,7 +988,7 @@ Document     doc;
 	    TtaNextSibling (&el);
 	    }
 	 }
-      if (!meta)
+       if (!meta)
 	 /* there is no meta element with a http-equiv attribute */
 	 /* create one */
 	 {
@@ -983,28 +1002,29 @@ Document     doc;
 	 else
 	    TtaInsertFirstChild (&meta, head, doc);
 	 }
-      if (!attr)
+       if (!attr)
 	 {
 	 attr = TtaNewAttribute (attrType);
 	 TtaAttachAttribute (meta, attr, doc);
 	 }
-      TtaSetAttributeText (attr, TEXT("Content-Type"), meta, doc);
-      attrType.AttrTypeNum = HTML_ATTR_meta_content;
-      attr = TtaGetAttribute (meta, attrType);
-      if (!attr)
+       TtaSetAttributeText (attr, TEXT("Content-Type"), meta, doc);
+       attrType.AttrTypeNum = HTML_ATTR_meta_content;
+       attr = TtaGetAttribute (meta, attrType);
+       if (!attr)
 	 {
 	 attr = TtaNewAttribute (attrType);
 	 TtaAttachAttribute (meta, attr, doc);
 	 }
-      if (Charset[0] == EOS)
+       if (Charset[0] == EOS)
 	 TtaSetAttributeText (attr, TEXT("text/html"), meta, doc);
-      else
+       else
 	 {
 	 ustrcpy (buffer, TEXT("text/html; charset="));
 	 ustrcat (buffer, Charset);
 	 TtaSetAttributeText (attr, buffer, meta, doc);
 	 }
-      } 
+       } 
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1069,7 +1089,7 @@ CHAR_T           *documentname;
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE);
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
 }
- 
+
 /*----------------------------------------------------------------------
    RedisplaySourceFile
    If doc is a HTML document and the source view is open, redisplay the
@@ -1150,16 +1170,15 @@ STRING            documentName;
   else
     {
       if (DocumentTypes[doc] == docHTML)
-	{
 	DocumentMeta[doc]->xmlformat = SaveAsXML;
-	SetNamespacesAndDTD (doc);
+      SetNamespacesAndDTD (doc);
+      if (DocumentTypes[doc] == docHTML)
         if (SaveAsXML)
 	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						    TEXT("HTMLTX"));
         else
 	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						    TEXT("HTMLT"));
-	}
       else if (DocumentTypes[doc] == docSVG)
 	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						  TEXT("GraphMLT"));
@@ -1439,9 +1458,8 @@ ThotBool         use_preconditions;
   tempname = GetLocalPath (doc, url);
 
   /* First step : generate the output file and ask for confirmation */
+  SetNamespacesAndDTD (doc);
   if (DocumentTypes[doc] == docHTML)
-    {
-    SetNamespacesAndDTD (doc);
     if (SaveAsXML)
       {
       TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
@@ -1452,7 +1470,6 @@ ThotBool         use_preconditions;
       TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
       DocumentMeta[doc]->xmlformat = FALSE;
       }
-    }
   else if (DocumentTypes[doc] == docSVG)
       TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("GraphMLT"));
   else if (DocumentTypes[doc] == docMath)
@@ -1687,16 +1704,14 @@ View                view;
      {
        /* save the current state of the document into the temporary file */
        tempdocument = GetLocalPath (document, DocumentURLs[document]);
+       SetNamespacesAndDTD (document);
        if (DocumentTypes[document] == docHTML)
-	 {
-         SetNamespacesAndDTD (document);
 	 if (DocumentMeta[document]->xmlformat)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						TEXT("HTMLTX"));
 	 else
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						TEXT("HTMLT"));
-	 }
        else if (DocumentTypes[document] == docSVG)
 	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 					      TEXT("GraphMLT"));
@@ -1909,9 +1924,8 @@ View                view;
 	  ok = TtaExportDocument (doc, tempname, TEXT("TextFileT"));
       else
 	{
+	SetNamespacesAndDTD (doc);
 	if (DocumentTypes[doc] == docHTML)
-	  {
-	  SetNamespacesAndDTD (doc);
 	  if (SaveAsXML)
 	    {
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
@@ -1924,7 +1938,6 @@ View                view;
 						      TEXT("HTMLT"));
 	    DocumentMeta[doc]->xmlformat = FALSE;
 	    }
-	  }
 	else if (DocumentTypes[doc] == docSVG)
 	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						    TEXT("GraphMLT"));

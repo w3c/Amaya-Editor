@@ -3398,7 +3398,12 @@ SyntRuleNum         pr;
 		 break;
 
 	       case RULE_TextEqual:	/* TextEqual */
-		 if (pSSchema->SsAttribute[CurAttr - 1].AttrType != AtTextAttr)
+		 if (InCondition)
+		   i = CurBlock->TbCondition[CurBlock->TbNConditions - 1].
+		     TcAttr;
+		 else
+		   i = CurAttr;
+		 if (pSSchema->SsAttribute[i - 1].AttrType != AtTextAttr)
 		   /* ce n'est pas un attribut textuel */
 		   CompilerMessage (wi, TRA, FATAL, NOT_A_TEXTUAL_ATTR,
 				    inputLine, LineNum);

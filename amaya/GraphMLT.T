@@ -25,6 +25,16 @@ RULES
 	Use HTMLTX for HTML;
         Use MathMLT for MathML;
         Use XLinkT for XLink;
+        if Charset
+           Create '<?xml version="1.0"';
+        if not Charset = 'unknown'
+           BEGIN
+           Create ' encoding="';
+	   Create Charset;
+	   Create '"';
+           END;
+        if Charset
+           Create '?>\12';
 	Create '<svg xmlns="http://www.w3.org/2000/svg"';
 	Create Attributes;
 	Create '>\12';

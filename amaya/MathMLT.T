@@ -23,6 +23,16 @@ RULES
 
    MathML:
 	begin
+        if Charset
+           Create '<?xml version="1.0"';
+        if not Charset = 'unknown'
+           BEGIN
+           Create ' encoding="';
+	   Create Charset;
+	   Create '"';
+           END;
+        if Charset
+           Create '?>\12';
 	Create '\12<math xmlns="http://www.w3.org/1998/Math/MathML"';
 	Create Attributes;
 	Create '>\12';

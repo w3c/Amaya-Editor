@@ -3051,16 +3051,14 @@ View                view;
      tempdocument = GetLocalPath (document, DocumentURLs[document]);
      if (TtaIsDocumentModified (document))
        {
+	 SetNamespacesAndDTD (document);
 	 if (DocumentTypes[document] == docHTML)
-	   {
-	     SetNamespacesAndDTD (document);
-	     if (DocumentMeta[document]->xmlformat)
-	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						    TEXT("HTMLTX"));
-	     else
-	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						    TEXT("HTMLT"));
-	   }
+	   if (DocumentMeta[document]->xmlformat)
+	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						  TEXT("HTMLTX"));
+	   else
+	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						  TEXT("HTMLT"));
 	 else if (DocumentTypes[document] == docSVG)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						TEXT("GraphMLT"));
