@@ -20,7 +20,7 @@
 #include "css.h"
 #include "SVG.h"
 
-static Document   BgDocument;
+static Document   ImgDocument;
 static int        RepeatValue;
 static ThotBool   CreateNewImage;
 
@@ -90,6 +90,7 @@ void CallbackImage (int ref, int typedata, char *data)
   LoadedImageDesc    *desc;
   char               tempfile[MAX_LENGTH];
   char               tempname[MAX_LENGTH];
+  char             *localname;
   int                i, c1, cN;
   int                val;
   ThotBool           change, isHTML;
@@ -126,23 +127,24 @@ void CallbackImage (int ref, int typedata, char *data)
 	{ 
 	  LastURLImage[0] = EOS;
 	  TtaDestroyDialogue (ref);
-	  BgDocument = 0;
+	  ImgDocument = 0;
 	}
-      else 
-	/* Confirm button */
-	if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
-	  {
-	    /* IMG element without ALT attribute: error message */
+      else if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
+	{
+	  /* IMG element without ALT attribute: error message */
 #ifndef _WINGUI
-	    TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage,
-			 TtaGetMessage (AMAYA, AM_ALT_MISSING));
+	  TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage,
+		       TtaGetMessage (AMAYA, AM_ALT_MISSING));
 #endif /* !_WINGUI */
-	  }
-	else if (ref == BaseImage + FormBackground && BgDocument != 0)
+	}
+	else
 	  {
-	    TtaDestroyDialogue (ref);
-	    /* save BgDocument because operation can be too long */
-	    document = BgDocument;
+	  TtaDestroyDialogue (ref);
+	  /* inclusion of an image is managed by ComputeSRCattribute */
+	  if (ref == BaseImage + FormBackground && ImgDocument != 0)
+	    {
+	    /* save ImgDocument because operation can be too long */
+	    document = ImgDocument;
 	    /* get the first and last selected element */
 	    TtaGiveFirstSelectedElement (document, &first, &c1, &i);
 	    TtaGiveLastSelectedElement (document, &last, &i, &cN);
@@ -214,6 +216,7 @@ void CallbackImage (int ref, int typedata, char *data)
 		  i = VREPEAT;
 		else
 		  i = SCALE;
+
 		if (IsHTTPPath (DocumentURLs[document]) &&
 		    !IsHTTPPath (LastURLImage) &&
 		    TtaFileExist (LastURLImage))
@@ -229,7 +232,8 @@ void CallbackImage (int ref, int typedata, char *data)
 			TtaFileCopy (LastURLImage, desc->localName);
 			desc->tempfile = TtaStrdup (desc->localName);
 		      }
-		  } 
+		  }
+
 		do
 		  {
 		    elType = TtaGetElementType (el);
@@ -267,9 +271,8 @@ void CallbackImage (int ref, int typedata, char *data)
 	      } 
 	    TtaCloseUndoSequence (document);
 	    TtaSetDocumentModified (document);
+	    }
 	  }
-	else
-	  TtaDestroyDialogue (ref);
       break;
     case RepeatImage:
       RepeatValue = val;
@@ -793,7 +796,7 @@ void ChangeBackgroundImage (Document document, View view)
 		  TtaGetMessage (AMAYA, AM_REPEAT_MODE), 4, s, NULL, FALSE);
    TtaSetMenuForm (BaseImage + RepeatImage, RepeatValue);
    /* save the document concerned */
-   BgDocument = document;
+   ImgDocument = document;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormBackground, TRUE);
    TtaFreeMemory (s);
@@ -805,7 +808,7 @@ void ChangeBackgroundImage (Document document, View view)
       strcat (s, DIR_STR);
       strcat (s, ImageName);
    }
-   BgDocument = document;
+   ImgDocument = document;
    CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), s);
 #endif /* _WINGUI */
 }
@@ -855,13 +858,19 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
       /* remote target document */
       if (!IsHTTPPath (pathimage))
 	{
-	  /* load a local image into a remote document */
+	  /* loading a local image into a remote document */
 	  /* copy image file into the temporary directory of the document */
 	  TtaExtractName (pathimage, localname, imagename);
 	  NormalizeURL (imagename, doc, localname, imagename, NULL);
 	  AddLoadedImage (imagename, localname, doc, &desc);
 	  desc->status = IMAGE_MODIFIED;
-	  TtaFileCopy (pathimage, desc->localName);
+	  if (TtaFileExist (pathimage))
+	    /* it's a paste command */
+	    TtaFileCopy (pathimage, desc->localName);
+	  else if (LastURLImage && TtaFileExist (LastURLImage) &&
+	      desc->localName && !TtaFileExist (desc->localName))
+	    /* it's a new inserted image */
+	    TtaFileCopy (LastURLImage, desc->localName);
 	  desc->tempfile = TtaStrdup (desc->localName);
 	  /* suppose that the image will be stored in the same directory */
 	  TtaSetAttributeText (attr, imagename, el, doc);
@@ -1130,7 +1139,7 @@ void  SRCattrModified (NotifyAttribute *event)
 	   if (IsHTTPPath (DocumentURLs[doc]))
 	     {
 	       NormalizeURL (imageName, doc, value, imageName, NULL);
-	       /* load a local image into a remote document */
+	       /* loading a local image into a remote document */
 	       AddLoadedImage (imageName, value, doc, &desc);
 	       desc->status = IMAGE_MODIFIED;
 	       TtaFileCopy (buf2, desc->localName);
@@ -1163,7 +1172,8 @@ void CreateImage (Document doc, View view)
   if (firstSelEl)
     /* some element is selected */
     {
-	  ImgAlt[0] = EOS;
+      ImgAlt[0] = EOS;
+      ImgDocument = doc;
       TtaGiveLastSelectedElement (doc, &lastSelEl, &j, &cN);
       /* Get the type of the first selected element */
       elType = TtaGetElementType (firstSelEl);
@@ -1268,6 +1278,7 @@ void CreateImage (Document doc, View view)
 	      TtaCreateElement (elType, doc);
 	    }
 	}
+      ImgDocument = 0;
     }
 }
 

@@ -651,7 +651,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	}
  
       /* If image load failed show the alt text*/
-      if ( desc && desc->status == IMAGE_NOT_LOADED )
+      if ((desc && desc->status == IMAGE_NOT_LOADED) ||
+	  (desc == NULL && !TtaFileExist (originalName)))
        {
 	  parent = TtaGetParent (el);
 	  parentType = TtaGetElementType (parent);

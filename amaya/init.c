@@ -7214,11 +7214,18 @@ void InitAmaya (NotifyEvent * event)
    s = getenv ("HOMEDRIVE");
    ptr = getenv ("HOMEPATH");
    if (s && *s && ptr)
-   {
-     sprintf (DirectoryName, "%s%s", s, ptr);
-     s = NULL;
-	 ptr = NULL;
-   }
+     {
+       sprintf (DirectoryName, "%s%s", s, ptr);
+       s = NULL;
+       ptr = NULL;
+     }
+#else /* _WINDOWS */
+   s = getenv ("HOME");
+   if (s && *s)
+     {
+       strcpy (DirectoryName, s);
+       s = NULL;
+     }
 #endif /* _WINDOWS */
    if (DirectoryName[0] == EOS || !TtaDirExists (DirectoryName))
      getcwd (DirectoryName, MAX_LENGTH);

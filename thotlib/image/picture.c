@@ -2745,6 +2745,48 @@ static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box,
 
 #ifdef _GL
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rgba)
+{
+  PictInfo *imageDesc = NULL;
+
+  if (GL_prepare (frame))
+    {
+      imageDesc = (PictInfo *)malloc (sizeof (PictInfo));  
+      imageDesc->PicFileName = "testing";
+      imageDesc->RGBA = TRUE;
+      imageDesc->PicWidth = width;
+      imageDesc->PicHeight = height;
+      imageDesc->PicXArea = 0;
+      imageDesc->PicYArea = 0;
+      imageDesc->PicWArea = width;
+      imageDesc->PicHArea = height; 
+      imageDesc->TextureBind = 0; 
+      imageDesc->PicPixmap = NULL;
+      glFlush ();
+      /* glFinish (); */
+      glReadBuffer (GL_BACK);   
+
+      if (1  /* && glhard () */)
+	{
+	  GL_TextureBind (imageDesc, FALSE);
+	  glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, x, y, width, height);
+	}
+      else
+	{
+	  imageDesc->PicPixmap = (ThotPixmap)TtaGetMemory (sizeof (unsigned char) * 
+					       width * height * 4);
+	  glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
+			imageDesc->PicPixmap);
+	  GL_TextureBind (imageDesc, TRUE);
+	}
+      return imageDesc;
+    }
+  else
+    return NULL;
+}
+
+/*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding RGB or RGBA buffer
    and make a Texture or it (aka load into video card memory)   
   ----------------------------------------------------------------------*/
@@ -2783,6 +2825,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicYArea = 0;
       imageDesc->PicWArea = 0;
       imageDesc->PicHArea = 0;
+      /* ignore explicit height amd width */
+      box->BxContentWidth = TRUE;
+      box->BxContentHeight = TRUE;
       return;
     }
 
@@ -3100,52 +3145,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif /* _NOSHARELIST */
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rgba)
-{
-  PictInfo *imageDesc = NULL;
-
-  if (GL_prepare (frame))
-    {
-      imageDesc = (PictInfo *)malloc (sizeof (PictInfo));  
-      imageDesc->PicFileName = "testing";
-      imageDesc->RGBA = TRUE;
-      imageDesc->PicWidth = width;
-      imageDesc->PicHeight = height;
-      imageDesc->PicXArea = 0;
-      imageDesc->PicYArea = 0;
-      imageDesc->PicWArea = width;
-      imageDesc->PicHArea = height; 
-      imageDesc->TextureBind = 0; 
-      imageDesc->PicPixmap = NULL;
-      glFlush ();
-      /* glFinish (); */
-      glReadBuffer (GL_BACK);   
-
-      if (1  /* && glhard () */)
-	{
-	  GL_TextureBind (imageDesc, FALSE);
-	  glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, x, y, width, height);
-	}
-      else
-	{
-	  imageDesc->PicPixmap = (ThotPixmap)TtaGetMemory (sizeof (unsigned char) * 
-					       width * height * 4);
-	  glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
-			imageDesc->PicPixmap);
-	  GL_TextureBind (imageDesc, TRUE);
-	}
-      return imageDesc;
-    }
-  else
-    return NULL;
-}
-
-
-#else /* _GL */    
-
-
+#else /* _GL */
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
   ----------------------------------------------------------------------*/
@@ -3190,8 +3190,19 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   bottom = box->BxBMargin + box->BxBBorder + box->BxBPadding;
   pAb = box->BxAbstractBox;
   if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
-    /* the picture is not visible */
-    return;
+    {
+      /* the picture is not visible */
+      imageDesc->PicWidth = 0;
+      imageDesc->PicHeight = 0;      
+      imageDesc->PicXArea = 0;
+      imageDesc->PicYArea = 0;
+      imageDesc->PicWArea = 0;
+      imageDesc->PicHArea = 0;
+      /* ignore explicit height amd width */
+      box->BxContentWidth = TRUE;
+      box->BxContentHeight = TRUE;
+      return;
+    }
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
     return;
 
