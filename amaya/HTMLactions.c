@@ -277,7 +277,12 @@ NotifyElement      *event;
 		  }
 
 		  /* get the referred document */
-		  targetDocument = GetHTMLDocument (documentURL, NULL, event->document, event->document, DC_TRUE);
+		  targetDocument = GetHTMLDocument (documentURL, NULL,
+				   event->document, event->document, DC_TRUE);
+		  /* if the referred document has replaced the clicked
+		     document, pseudo attribute "visited" should not be set */
+		  if (targetDocument == event->document)
+		     PseudoAttr = NULL;
 	       }
 
 	     TtaSetSelectionMode (TRUE);
