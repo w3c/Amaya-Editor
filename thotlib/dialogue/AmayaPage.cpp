@@ -65,6 +65,7 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
      ,m_pWindowParent( NULL )
      ,m_PageId(-1)
      ,m_ActiveFrame(1) // by default, frame 1 is selected
+	 ,m_IsSelected(false)
 {
   // Insert a forground sizer
   m_pSizerTop = new wxBoxSizer ( wxVERTICAL );
@@ -629,6 +630,7 @@ bool AmayaPage::IsClosed()
  */
 bool AmayaPage::IsSelected()
 {
+#if 0
   if (m_pNoteBookParent)
   {
     int page_id = m_pNoteBookParent->GetPageId( this );
@@ -636,7 +638,8 @@ bool AmayaPage::IsSelected()
   }
   else
     return FALSE;
-//  return m_IsSelected;
+#endif /* 0 */
+  return m_IsSelected;
 }
 
 /*
@@ -649,6 +652,7 @@ bool AmayaPage::IsSelected()
  */
 void AmayaPage::SetSelected( bool isSelected )
 {
+  m_IsSelected = isSelected;
   if (isSelected)
     {
       for ( int frame_pos = 1; frame_pos<=2; frame_pos++ )
@@ -687,10 +691,7 @@ void AmayaPage::SetSelected( bool isSelected )
  */
 void AmayaPage::SetWindowURL(const wxString & window_url)
 {  
-  // do not check if this frame's page is active or not
-  // because on windows, the OnPageChanged event do not update the page stats
-  // (this in not the case on linux)
-  // if ( IsSelected() )
+   if ( IsSelected() )
     {
       // update the window url bar
       AmayaWindow * p_window = GetWindowParent();

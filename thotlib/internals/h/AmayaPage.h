@@ -137,7 +137,7 @@ public:
   wxString           m_FirstViewType;
   wxString           m_SecondViewType;
 
-//  bool               m_IsSelected;
+  bool               m_IsSelected;
 };
 
 #endif // __AMAYAPAGE_H__
