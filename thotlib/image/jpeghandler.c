@@ -1,8 +1,7 @@
 
 /* +-------------------------------------------------------------------+ */
-/* |  Driver Jpeg: LAYAIDA Nabil 19-12-95                                                                             | */
-/* |               Copyright INRIA Rhone-Alpes                                                                             | */
-/* |               Jpeg format.                                                                                                       | */
+/* |  Driver Jpeg: LAYAIDA Nabil                                       | */
+/* |               Jpeg format.                                        | */
 /* +-------------------------------------------------------------------+ */
 
 #include "thot_gui.h"
@@ -22,6 +21,7 @@
 #include "picture_tv.h"
 #include "frame_tv.h"
 #include "picture_f.h"
+#include "font_f.h"
 
 
 struct my_error_mgr
