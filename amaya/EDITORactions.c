@@ -320,7 +320,7 @@ void SpellCheck (Document document, View view)
 	 return;
        /* if there is no Language attribute on the BODY, create one */
        attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_Langue;
+       attrType.AttrTypeNum = HTML_ATTR_Language;
        attr = TtaGetAttribute (body, attrType);
        if (attr == NULL)
 	 {

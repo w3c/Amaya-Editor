@@ -2304,7 +2304,7 @@ ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
 	 }
        /* i18n */
        if (event->attributeType.AttrTypeNum == HTML_ATTR_dir ||
-	   event->attributeType.AttrTypeNum == HTML_ATTR_Langue)
+	   event->attributeType.AttrTypeNum == HTML_ATTR_Language)
 	 {
 	 if (elType.ElTypeNum == HTML_EL_BR ||
 	     elType.ElTypeNum == HTML_EL_Applet ||

@@ -1258,12 +1258,12 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 
    /* ecrit les presentations des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
-      WriteShort (pPSch->PsNAttrPRule[i]);
+      WriteShort (pPSch->PsNAttrPRule->Num[i]);
 
    for (i = 0; i < pSS->SsNAttributes; i++)
      {
-	pAttPres = pPSch->PsAttrPRule[i];
-	for (k = pPSch->PsNAttrPRule[i]; k-- > 0;
+	pAttPres = pPSch->PsAttrPRule->AttrPres[i];
+	for (k = pPSch->PsNAttrPRule->Num[i]; k-- > 0;
 	     pAttPres = pAttPres->ApNextAttrPres)
 	  {
 	     WriteShort (pAttPres->ApElemType);
@@ -1311,8 +1311,8 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
    /* ecrit les regles des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
      {
-	pAttPres = pPSch->PsAttrPRule[i];
-	for (k = pPSch->PsNAttrPRule[i]; k-- > 0;
+	pAttPres = pPSch->PsAttrPRule->AttrPres[i];
+	for (k = pPSch->PsNAttrPRule->Num[i]; k-- > 0;
 	     pAttPres = pAttPres->ApNextAttrPres)
 	  {
 	     switch (pSS->SsAttribute->TtAttr[i]->AttrType)
@@ -1340,13 +1340,13 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
       WritePRules (pPSch->PsElemPRule[i]);
 
    for (i = 0; i < pSS->SsNAttributes; i++)
-      WriteShort (pPSch->PsNHeirElems[i]);
+      WriteShort (pPSch->PsNHeirElems->Num[i]);
 
    for (i = 0; i < pSS->SsNRules; i++)
       WriteShort (pPSch->PsNInheritedAttrs[i]);
 
    for (i = 0; i < pSS->SsNAttributes; i++)
-      WriteShort (pPSch->PsNComparAttrs[i]);
+      WriteShort (pPSch->PsNComparAttrs->Num[i]);
 
    for (i = 0; i < pSS->SsNRules; i++)
       WriteShort (pPSch->PsElemTransmit[i]);

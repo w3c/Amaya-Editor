@@ -280,7 +280,7 @@ void                FreeAll ()
     {
       pSS = PtFree_SchStruct;
       PtFree_SchStruct = PtFree_SchStruct->SsNextExtens;
-      for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+      for (i = 0; i < pSS->SsNAttributes; i++)
 	free (pSS->SsAttribute->TtAttr[i]);
       free (pSS->SsAttribute);
       TtaFreeMemory ((void *) pSS);
@@ -1032,7 +1032,6 @@ void FreeAttributePres (AttributePres *pAP)
     }
 }
 
-
 /*----------------------------------------------------------------------
    GetSchPres alloue un schema de presentation.                    
   ----------------------------------------------------------------------*/
@@ -1059,7 +1058,7 @@ void GetSchPres (PtrPSchema * pSP)
 /*----------------------------------------------------------------------
    FreeSchPres libere un schemas de presentation.                  
   ----------------------------------------------------------------------*/
-void FreeSchPres (PtrPSchema pSP)
+void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
 {
   AttributePres      *pAP, *pNextAP;
   int                 i;
@@ -1071,24 +1070,43 @@ void FreeSchPres (PtrPSchema pSP)
     {
       pSP->PsPresentBox[i].PbFirstPRule = NULL;
     }
-  for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+  if (pSP->PsAttrPRule)
+    for (i = 0; i < pSS->SsNAttributes; i++)
+      {
+	pAP = pSP->PsAttrPRule->AttrPres[i];
+	while (pAP != NULL)
+	  {
+	    /* free all allocated blocks */
+	    pNextAP = pAP->ApNextAttrPres;
+	    FreeAttributePres (pAP);
+	    pAP = pNextAP;
+	  }
+	pSP->PsAttrPRule->AttrPres[i] = NULL;
+      }
+  if (pSP->PsAttrPRule)
+    free (pSP->PsAttrPRule);
+  if (pSP->PsNAttrPRule)
+    free (pSP->PsNAttrPRule);
+  if (pSP->PsNHeirElems)
+    free (pSP->PsNHeirElems);
+  if (pSP->PsNComparAttrs)
+    free (pSP->PsNComparAttrs);
+  if (pSP->PsComparAttr)
     {
-      pAP = pSP->PsAttrPRule[i];
-      while (pAP != NULL)
+      for (i = 0; i < pSS->SsNAttributes; i++)
 	{
-	  /* free all allocated blocks */
-	  pNextAP = pAP->ApNextAttrPres;
-	  FreeAttributePres (pAP);
-	  pAP = pNextAP;
+	  if (pSP->PsComparAttr->CATable[i])
+	    TtaFreeMemory (pSP->PsComparAttr->CATable[i]);
+	  pSP->PsComparAttr->CATable[i] = NULL;
 	}
-      pSP->PsAttrPRule[i] = NULL;
-      pSP->PsComparAttr[i] = NULL;
+      free (pSP->PsComparAttr);
     }
+
   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
     {
       pSP->PsElemPRule[i] = NULL;
       if (pSP->PsInheritedAttr[i] != NULL)
-          TtaFreeMemory (pSP->PsInheritedAttr[i]);
+	TtaFreeMemory (pSP->PsInheritedAttr[i]);
       pSP->PsInheritedAttr[i] = NULL;
     }
   for (i = 0; i < MAX_VIEW; i++)
@@ -1214,7 +1232,6 @@ void GetTRule (PtrTRule *pR)
     memset (pNewR, 0, sizeof (TranslRule));
 }
 
-
 /*----------------------------------------------------------------------
    FreeTRule frees a translation rule
   ----------------------------------------------------------------------*/
@@ -1224,6 +1241,31 @@ void FreeTRule (PtrTRule pR)
     TtaFreeMemory (pR);
 }
 
+/*----------------------------------------------------------------------
+   GetAttributeTransl allocates a block representing translation rules for
+   an attribute
+  ----------------------------------------------------------------------*/
+void GetAttributeTransl (PtrAttributeTransl *pB)
+{
+  PtrAttributeTransl    pNewB;
+  int                   size;
+
+  size = sizeof (AttributeTransl);
+  pNewB = (PtrAttributeTransl) TtaGetMemory (size);
+  *pB = pNewB;
+  if (pNewB)
+    memset (pNewB, 0, size);
+}
+
+/*----------------------------------------------------------------------
+   FreeAttributeTransl frees a block representing translation rules for
+   an attribute
+  ----------------------------------------------------------------------*/
+void FreeAttributeTransl (PtrAttributeTransl pB)
+{
+  if (pB)
+    TtaFreeMemory (pB);
+}
 
 /*----------------------------------------------------------------------
    GetSchTra allocates a translation schema
@@ -1238,9 +1280,8 @@ void GetSchTra (PtrTSchema *pST)
     memset (pNewST, 0, sizeof (TranslSchema));
 }
 
-
 /*----------------------------------------------------------------------
-   FreeTRule frees a translation schema
+   FreeSchTra frees a translation schema
   ----------------------------------------------------------------------*/
 void FreeSchTra (PtrTSchema pST)
 {
@@ -1250,10 +1291,11 @@ void FreeSchTra (PtrTSchema pST)
     {
       for (i = 0; i < MAX_RULES_SSCHEMA; i++)
 	pST->TsElemTRule[i] = NULL;
+      if (pST->TsAttrTRule)
+	TtaFreeMemory (pST->TsAttrTRule);
       TtaFreeMemory (pST);
     }
 }
-
 
 /*----------------------------------------------------------------------
    GetExternalBlock alloue un bloc d'extension pour un schema de   
@@ -1302,30 +1344,20 @@ void GetSchStruct (PtrSSchema * pSS)
 {
   PtrSSchema    pNewSS;
   TtAttrTable   *pAtt;
-  int           size, i;
+  int           i;
 
   if (PtFree_SchStruct == NULL)
-    {
       pNewSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
-      size = MAX_ATTR_SSCHEMA * sizeof (PtrTtAttribute);
-      pAtt = (TtAttrTable*) malloc (size);
-      for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
-	 pAtt->TtAttr[i] = (PtrTtAttribute) malloc (sizeof (TtAttribute));
-    }
   else
     {
       pNewSS = PtFree_SchStruct;
       PtFree_SchStruct = pNewSS->SsNextExtens;
       NbFree_SchStruct--;
-      pAtt = pNewSS->SsAttribute;
     }
   *pSS = pNewSS;
   if (pNewSS)
     {
       memset (pNewSS, 0, sizeof (StructSchema));
-      pNewSS->SsAttribute = pAtt;
-      for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
-	 memset (pAtt->TtAttr[i], 0, sizeof (TtAttribute));
       NbUsed_SchStruct++;
     }
 }
@@ -1352,7 +1384,7 @@ void FreeSchStruc (PtrSSchema pSS)
   pSS->SsExtensBlock = NULL;
 #ifdef DEBUG_MEMORY
   int i;
-  for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+  for (i = 0; i < SsNAttributes; i++)
     free (pSS->SsAttribute->TtAttr[i]);
   free (pSS->SsAttribute);
   TtaFreeMemory (pSS);

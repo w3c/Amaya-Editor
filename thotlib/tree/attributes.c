@@ -463,7 +463,7 @@ void ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc,
 
 
 /*----------------------------------------------------------------------
-   Applique au sous arbre nte' par pEl du document pDoc les     
+   Applique au sous arbre pEl du document pDoc les     
    regles de presentation heritees de l'attribut pAttr		
    On arrete la recursion quand on rencontre un fils portant       
    lui-meme un attribut de meme type que pAttr			
@@ -537,11 +537,11 @@ void ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
    pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
    if (pPS != NULL)
      {
-	if ((attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
+	if ((attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
 	     CreateComparAttrTable (pAttr, pDoc);
-	     attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1];
+	     attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)
 	   for (i = pEl->ElStructSchema->SsNAttributes; i > 0; i--)
@@ -782,11 +782,11 @@ void RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAt
    pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
    if (pPS != NULL)
      {
-	if ((attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
+	if ((attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
 	     CreateComparAttrTable (pAttr, pDoc);
-	     attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1];
+	     attrValComp = pPS->PsComparAttr->CATable[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)
 	   for (i = pEl->ElStructSchema->SsNAttributes; i > 0; i--)
@@ -955,8 +955,8 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAtt
    pPS = PresentationSchema (pNewAttr->AeAttrSSchema, pDoc);
    if (pPS != NULL)
      {
-       inherit = (pPS->PsNHeirElems[pNewAttr->AeAttrNum - 1] != 0);
-       compare = (pPS->PsNComparAttrs[pNewAttr->AeAttrNum - 1] != 0);
+       inherit = (pPS->PsNHeirElems->Num[pNewAttr->AeAttrNum - 1] != 0);
+       compare = (pPS->PsNComparAttrs->Num[pNewAttr->AeAttrNum - 1] != 0);
      }
    if (inherit || compare)
       /* cherche le premier attribut de meme type sur un ascendant de pEl */

@@ -1223,7 +1223,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 		    {
 		      TtaSetAttributeText (currentAttribute, attrValue,
 					   lastAttrElement, context->doc);
-		      if (attrType.AttrTypeNum == HTML_ATTR_Langue)
+		      if (attrType.AttrTypeNum == HTML_ATTR_Language)
 			{
 			  /* it's a LANG attribute value */
 			  lang = TtaGetLanguageIdFromName (attrValue);

@@ -20,7 +20,6 @@
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 
-
 #include "fileaccess_f.h"
 #include "readstr_f.h"
 #include "memory_f.h"
@@ -335,7 +334,7 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
    BinFile             file;
    PathBuffer          buf;
    PathBuffer          dirBuffer;
-   int                 i;
+   int                 i, num;
 
    /* compose le nom du fichier a ouvrir */
    strncpy (dirBuffer, SchemaPath, MAX_PATH);
@@ -385,14 +384,28 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
 	/* il n'y a pas encore de nature chargee dynamiquement */
 	pSS->SsFirstDynNature = 0;
 
+	/* allocate the attribute table */
+	if (!pSS->SsAttribute)
+	  {
+	    num = pSS->SsNAttributes;         /* table size */
+	    pSS->SsAttribute = (TtAttrTable*) malloc (num * sizeof (PtrTtAttribute));
+	    pSS->SsAttrTableSize = num;
+	    for (i = 0; i < num; i++)
+	      pSS->SsAttribute->TtAttr[i] = NULL;
+	  }
+
 	/* lit les attributs */
 	for (i = 0; i < pSS->SsNAttributes; i++)
-	   if (!ReadAttribute (file, pSS->SsAttribute->TtAttr[i]))
-	     {
+	  {
+	    pSS->SsAttribute->TtAttr[i] = (PtrTtAttribute) malloc (sizeof (TtAttribute));
+	    if (!ReadAttribute (file, pSS->SsAttribute->TtAttr[i]))
+	      {
 		/* message 'Fichier .STR incorrect ' */
-		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE), fileName);
+		TtaDisplayMessage (INFO, TtaGetMessage (LIB,
+					   TMSG_INCORRECT_STR_FILE), fileName);
 		return FALSE;
-	     }
+	      }
+	  }
 
 	/* lit les elements */
 	for (i = 0; i < pSS->SsNRules; i++)

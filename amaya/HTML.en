@@ -143,7 +143,7 @@ simple_ruby: ruby
 complex_ruby: ruby
 rtc1: rtc
 rtc2: rtc
-Langue: lang
+Language: lang
 ID: id
 Class: class
 PseudoClass: pseudo class

@@ -18,7 +18,7 @@ ATTRIBUTES
 
    { This is just to make the APP compiler happy: it would not compile an empty
      file. This should be deleted when more useful statements are added }
-   Langue:
+   Language:
 	AttrMenu.Pre ->    GlobalAttrInMenu;
 
 END

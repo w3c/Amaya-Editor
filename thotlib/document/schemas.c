@@ -23,7 +23,7 @@ typedef struct _AStructure
   {
      PtrSSchema      pStructSchema;    /* pointeur sur le schema */
      int             UsageCount;       /* nombre d'utilisations de ce schema */
-     Name            StructSchemaName; /* nom du schema de presentation */
+     Name            StructSchemaName; /* nom du schema de structure */
   }
 AStructure;
 
@@ -341,7 +341,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
       /* libere les regles de presentation des attributs */
       for (i = 0; i < pSS->SsNAttributes; i++)
 	{
-	  pAttrPres = pPSchema->PsAttrPRule[i];
+	  pAttrPres = pPSchema->PsAttrPRule->AttrPres[i];
 	  while (pAttrPres != NULL)
 	    {
 	      switch (pSS->SsAttribute->TtAttr[i]->AttrType)
@@ -383,7 +383,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 	      pHostView = pNextHostView;
 	    }
 	}
-      FreeSchPres (pPSchema);
+      FreeSchPres (pPSchema, pSS);
     }
 }
 
@@ -1389,9 +1389,9 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
   pAtPres->ApElemType = 0;
   pAtPres->ApNextAttrPres = NULL;
   pAtPres->ApString[0] = EOS;
-  
-  pPS->PsAttrPRule[nAtRules] = pAtPres;
-  pPS->PsNAttrPRule[nAtRules] +=1;
+
+  pPS->PsAttrPRule->AttrPres[nAtRules] = pAtPres;
+  pPS->PsNAttrPRule->Num[nAtRules] +=1;
 
   /* Create the pRules associated with this attribute */
    pRule = NULL;
@@ -1456,55 +1456,95 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 			       Document document)
 {
   PtrSSchema      pSS;
-  PtrPSchema      pPS;
-  int             i;
+  PtrPSchema      pPSch;
+  int             i, size;
 
   PtrDocument         pDoc;
   PtrDocSchemasDescr  pPfS;
 
-  pSS = NULL;
-  pPS = NULL;
+  attrType->AttrTypeNum = -1;           /* -1 means failure */
+  pSS = (PtrSSchema) attrType->AttrSSchema;
+  if (pSS == NULL)
+    return;
   pDoc = LoadedDocument[document - 1];
   pPfS = pDoc->DocFirstSchDescr;
-  pSS = (PtrSSchema) attrType->AttrSSchema;
 
   /* Search the associated presentation schema */
-  while (pSS && pPfS && !pPS)
+  pPSch = NULL;
+  while (pPfS && !pPSch)
     {
-      if (pPfS->PfSSchema &&
-	  (pPfS->PfSSchema == pSS))
-	pPS = pPfS->PfPSchema;
+      if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
+	pPSch = pPfS->PfPSchema;
       pPfS = pPfS->PfNext;
     }
-  if (pSS == NULL || pPS == NULL)
+  if (pPSch == NULL)
+    /* no presentation schema, failure */
     return;
 
-  /* Apend a new attribute type */
-  if (pSS->SsNAttributes >= MAX_ATTR_SSCHEMA)
+  /* extend the attribute table if it's full */
+  if (pSS->SsNAttributes >= pSS->SsAttrTableSize)
+    {
+      /* add 10 new entries */
+      size = pSS->SsNAttributes + 10;
+      i = size * sizeof (PtrTtAttribute);
+      pSS->SsAttribute = (TtAttrTable*) realloc (pSS->SsAttribute, i);
+      /* extend all tables that map attributes */
+      i = size * sizeof (PtrAttributePres);
+      pPSch->PsAttrPRule = (AttrPresTable*) realloc (pPSch->PsAttrPRule, i);
+      i = size * sizeof (int);
+      pPSch->PsNAttrPRule = (NumberTable*) realloc (pPSch->PsNAttrPRule, i);
+      i = size * sizeof (int);
+      pPSch->PsNHeirElems = (NumberTable*) realloc (pPSch->PsNHeirElems, i);
+      if (!pSS->SsAttribute || !pPSch->PsAttrPRule || pPSch->PsNAttrPRule ||
+	  !pPSch->PsNHeirElems)
+	{
+	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+	  return;
+	}
+      else
+	{
+	  pSS->SsAttrTableSize = size;
+	  for (i = pSS->SsNAttributes; i < size; i++)
+	    pSS->SsAttribute->TtAttr[i] = NULL;
+	}
+    }
+
+  /* free all element and attribute inherit tables */
+  for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+    if (pPSch->PsInheritedAttr[i])
+      {
+	TtaFreeMemory (pPSch->PsInheritedAttr[i]);
+	pPSch->PsInheritedAttr[i] = NULL;
+      }
+  for (i = 0; i < pSS->SsNAttributes; i++)
+    if (pPSch->PsComparAttr->CATable[i])
+      {
+	TtaFreeMemory (pPSch->PsComparAttr->CATable[i]);
+	pPSch->PsComparAttr->CATable[i] = NULL;
+      }
+
+  /* Append a new attribute type */
+  i = pSS->SsNAttributes;
+  pSS->SsAttribute->TtAttr[i] = (PtrTtAttribute) malloc (sizeof (TtAttribute));
+  if (pSS->SsAttribute->TtAttr[i] == NULL)
     {
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-      attrType->AttrTypeNum = -1;
+      return;
     }
-  else
-    {
-      i = pSS->SsNAttributes;
-      strncpy (pSS->SsAttribute->TtAttr[i]->AttrName, XMLName,
-	       MAX_NAME_LENGTH);
-      strncpy (pSS->SsAttribute->TtAttr[i]->AttrOrigName, XMLName,
-	       MAX_NAME_LENGTH);
-      pSS->SsAttribute->TtAttr[i]->AttrGlobal = TRUE;
-      pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
-      pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
-      pSS->SsAttribute->TtAttr[i]->AttrType = AtTextAttr;
+  strncpy (pSS->SsAttribute->TtAttr[i]->AttrName, XMLName, MAX_NAME_LENGTH);
+  strncpy (pSS->SsAttribute->TtAttr[i]->AttrOrigName, XMLName, MAX_NAME_LENGTH);
+  pSS->SsAttribute->TtAttr[i]->AttrGlobal = TRUE;
+  pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
+  pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
+  pSS->SsAttribute->TtAttr[i]->AttrType = AtTextAttr;
 
-      /* Initialize and insert the presentation rules */
-      /* associed to this new attribute */
-      InsertXmlAtRules (pPS, pSS->SsNAttributes);
+  /* Initialize and insert the presentation rules */
+  /* associed to this new attribute */
+  InsertXmlAtRules (pPSch, pSS->SsNAttributes);
 
-      /* Update the type number */
-      pSS->SsNAttributes++;
-      attrType->AttrTypeNum = pSS->SsNAttributes;
-    }
+  /* Update the type number */
+  pSS->SsNAttributes++;
+  attrType->AttrTypeNum = pSS->SsNAttributes;
 }
 
 /*----------------------------------------------------------------------
@@ -1534,7 +1574,7 @@ void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
    Add a specific presentation rule.
   ----------------------------------------------------------------------*/
 static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
-				 PtrPRule prevPRule, PtrPSchema pPS, int nSRule)
+				 PtrPRule prevPRule, PtrPSchema pPSch, int nSRule)
 {
    PtrAttribute pAttr;
    PtrPRule     pRule         ;
@@ -1554,7 +1594,7 @@ static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
    
        /* Add the new rule into the chain */
        if (prevPRule == NULL)
-	 pPS->PsElemPRule[nSRule] = pRule;
+	 pPSch->PsElemPRule[nSRule] = pRule;
        else
 	 prevPRule->PrNextPRule = pRule;
      }
@@ -1565,18 +1605,18 @@ static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
    InsertXmlElementPRules
    Add the presentation rules associated to the new element type
   ----------------------------------------------------------------------*/
-static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
+static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 {
 
   PtrPRule     prevPRule, pRule;
   PtrPRule     nextPRule;
 
   /* First specific rule associated with this element type */
-  prevPRule = pPS->PsElemPRule[nSRules];
+  prevPRule = pPSch->PsElemPRule[nSRules];
 
  /* Rule 'CreateBefore(ElementName)' */
   pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrPresFunction = FnCreateBefore;
@@ -1591,7 +1631,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
   
   /* Rule 'CreateWith(VerticalLine)' */
   pRule = InsertAXmlPRule (PtFunction, FORMATTED_VIEW, PresFunction,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrPresFunction = FnCreateWith;
@@ -1606,7 +1646,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'Width' view 1 */
   pRule = InsertAXmlPRule (PtWidth, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrDimRule.DrPosition = FALSE;
@@ -1626,7 +1666,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'Width' view 2 */
   pRule = InsertAXmlPRule (PtWidth, STRUCTURE_VIEW, PresImmediate,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrDimRule.DrPosition = FALSE;
@@ -1646,7 +1686,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'VertPos' view 1 */
   pRule = InsertAXmlPRule (PtVertPos, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrPosRule.PoPosDef = Top;
@@ -1664,7 +1704,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'VertPos' view 2 */
   pRule = InsertAXmlPRule (PtVertPos, STRUCTURE_VIEW, PresImmediate,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrPosRule.PoPosDef = Top;
@@ -1682,7 +1722,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'HorizPos' view 1 */
   pRule = InsertAXmlPRule (PtHorizPos, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrPosRule.PoPosDef = Left;
@@ -1700,7 +1740,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'HorizPos' view 2 */
   pRule = InsertAXmlPRule (PtHorizPos, STRUCTURE_VIEW, PresImmediate,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrPosRule.PoPosDef = Left;
@@ -1718,7 +1758,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'Size' view 2 */
   pRule = InsertAXmlPRule (PtSize, STRUCTURE_VIEW, PresInherit,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrInheritMode = InheritParent;
@@ -1733,7 +1773,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
 
   /* Rule 'LineBreak' view 1  */
   pRule = InsertAXmlPRule (PtLineBreak, FORMATTED_VIEW, PresImmediate,
-			   prevPRule, pPS, nSRules);
+			   prevPRule, pPSch, nSRules);
   if (pRule != NULL)
     {
       pRule->PrBoolValue = TRUE;
@@ -1741,7 +1781,7 @@ static void    InsertXmlPRules (PtrPSchema pPS, int nSRules)
     }
 
   printf ("\nRule %d \n", nSRules);
-  nextPRule = pPS->PsElemPRule[nSRules];
+  nextPRule = pPSch->PsElemPRule[nSRules];
   while (nextPRule != NULL)
     {
       printf ("\n  PrType : %d\n", nextPRule->PrType);
@@ -1784,27 +1824,27 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
 			     char **mappedName, Document document)
 {
   PtrSSchema          pSS;
-  PtrPSchema          pPS;
+  PtrPSchema          pPSch;
   PtrDocument         pDoc;
   PtrDocSchemasDescr  pPfS;
 
   pSS = NULL;
-  pPS = NULL;
+  pPSch = NULL;
   pDoc = LoadedDocument[document - 1];
   pPfS = pDoc->DocFirstSchDescr;
 
   pSS = (PtrSSchema) elType->ElSSchema;
 
   /* Search the associated presentation schema */
-  while (pSS && pPfS && !pPS)
+  while (pSS && pPfS && !pPSch)
     {
       if (pPfS->PfSSchema &&
 	  (pPfS->PfSSchema == pSS))
-	pPS = pPfS->PfPSchema;
+	pPSch = pPfS->PfPSchema;
       pPfS = pPfS->PfNext;
     }
 
-  if (pSS == NULL || pPS == NULL)
+  if (pSS == NULL || pPSch == NULL)
     return;
 
   if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
@@ -1834,7 +1874,7 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
 
       /* Initialize and insert the presentation rules */
       /* associed to this new element type */
-      InsertXmlPRules (pPS, pSS->SsNRules);
+      InsertXmlPRules (pPSch, pSS->SsNRules);
 
       /* Update the type number */
       pSS->SsNRules++;
@@ -1874,14 +1914,14 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 {
   PtrDocument         pDoc;
   PtrSSchema          pSS;
-  PtrPSchema          pPS;
+  PtrPSchema          pPSch;
   PtrDocSchemasDescr  pPfS;
   PtrPRule            nextPRule;
   int                 i;
 
   pDoc = LoadedDocument[document - 1];
   pSS = NULL;
-  pPS = NULL;
+  pPSch = NULL;
   pPfS = pDoc->DocFirstSchDescr;
 
   /* Search the appropriate schemas */
@@ -1891,7 +1931,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	  (strcmp ("XML", pPfS->PfSSchema->SsName) == 0))
 	{
 	  pSS = pPfS->PfSSchema;
-	  pPS = pPfS->PfPSchema;
+	  pPSch = pPfS->PfPSchema;
 	}
       pPfS = pPfS->PfNext;
     }
@@ -1939,12 +1979,12 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	  printf ("AttrType : %d\n", pSS->SsAttribute->TtAttr[i]->AttrType);
 	}
      
-      if (pPS != NULL)
+      if (pPSch != NULL)
 	{
 	  printf ("\n Boites de presentation\n");
-	  for (i = 0; i < pPS->PsNPresentBoxes; i++)
-	    printf ("PbName : %s\n", pPS->PsPresentBox[i].PbName);
-	  nextPRule = pPS->PsFirstDefaultPRule;
+	  for (i = 0; i < pPSch->PsNPresentBoxes; i++)
+	    printf ("PbName : %s\n", pPSch->PsPresentBox[i].PbName);
+	  nextPRule = pPSch->PsFirstDefaultPRule;
 	  while (nextPRule != NULL)	
 	    {
 	      printf ("  PrType : %d\n", nextPRule->PrType);
@@ -1965,7 +2005,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	      printf ("\nRule %d Element : %s\n", i, pSS->SsRule[i].SrName);
 	      printf ("  SrNDefAttrs : %d\n", pSS->SsRule[i].SrNDefAttrs);
 	      printf ("  SrNLocalAttrs : %d\n", pSS->SsRule[i].SrNLocalAttrs);
-	      nextPRule = pPS->PsElemPRule[i];
+	      nextPRule = pPSch->PsElemPRule[i];
 	      while (nextPRule != NULL)
 		{
 		  printf ("\n  PrType : %d\n", nextPRule->PrType);
@@ -2049,14 +2089,14 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	      AttributePres *nextAtRule;
 	      printf ("\nAttribut %d Nom : %s\n", i, pSS->SsAttribute->TtAttr[i]->AttrName);
 	      printf ("  PsAttrType : %d\n", pSS->SsAttribute->TtAttr[i]->AttrType);
-	      nextAtRule = pPS->PsAttrPRule[i];
+	      nextAtRule = pPSch->PsAttrPRule->AttrPres[i];
 	      while (nextAtRule != NULL)
 		{
 		  printf ("  ApElemType : %d\n", nextAtRule->ApElemType);
 		  if (pSS->SsAttribute->TtAttr[i]->AttrType == AtTextAttr)
 		    {
 		      printf ("  ApString : %s\n", nextAtRule->ApString);
-		      nextPRule = (pPS->PsAttrPRule[i])->ApTextFirstPRule;
+		      nextPRule = (pPSch->PsAttrPRule->AttrPres[i])->ApTextFirstPRule;
 		      while (nextPRule != NULL)
 			{
 			  printf ("  PrType : %d\n", nextPRule->PrType);

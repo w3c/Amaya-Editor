@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -291,19 +291,19 @@ typedef struct _TranslRule
 	} s5;
       struct	/* TrType = TChangeMainFile, TRemoveFile */
 	{
-	  int	_TrNewFileVar_;	    /* variable defining the new filename */ 
+	  int	_TrNewFileVar_;	         /* variable defining the new filename*/ 
 	} s6;
      struct	/* TrType = TSetCounter, TAddCounter */
 	{
-	  int	_TrCounterNum_;     /* number of the counter to update */ 
-	  int	_TrCounterParam_;   /* update value */ 
+	  int	_TrCounterNum_;          /* number of the counter to update */ 
+	  int	_TrCounterParam_;        /* update value */ 
 	} s7;
      struct	/* TrType = TIndent */
 	{
-	  int	_TrIndentFileNameVar_;  /* variable defining the name of the
-					   output file */
-	  int   _TrIndentVal_;	        /* indent value */
-	  TIndentType _TrIndentType_;	/* Indent value is relative to parent*/
+	  int	_TrIndentFileNameVar_;   /* variable defining the name of the
+					    output file */
+	  int   _TrIndentVal_;	         /* indent value */
+	  TIndentType _TrIndentType_;	 /* Indent value is relative to parent*/
 	} s8;
     } u;
 } TranslRule;
@@ -449,6 +449,13 @@ typedef struct _AttributeTransl
 #define AtrTxtTRuleBlock u.s2._AtrTxtTRuleBlock_
 #define AtrEnuTRuleBlock u.s3._AtrEnuTRuleBlock_
 
+typedef AttributeTransl *PtrAttributeTransl;
+
+typedef struct _AttrTransTable
+{
+       PtrAttributeTransl TsAttrTransl[1];
+} AttrTransTable;
+
 /* translation of a specific presentation */
 typedef struct _PRuleTransl
 {
@@ -482,8 +489,8 @@ typedef struct _PRuleTransl
 #define RtPRuleValueBlock u.s1._RtPRuleValueBlock_
 
 /* strings for a characters translation rule */
-typedef unsigned char  SourceString[MAX_SRCE_LEN + 1];	/* source string */
-typedef unsigned char  TargetString[MAX_TARGET_LEN + 1];	/* target string */
+typedef unsigned char  SourceString[MAX_SRCE_LEN + 1];	 /* source string */
+typedef unsigned char  TargetString[MAX_TARGET_LEN + 1]; /* target string */
 
 /* an entry of the translation table */
 typedef struct _StringTransl
@@ -508,62 +515,57 @@ typedef struct _TranslSchema *PtrTSchema;
 /* translation schema associated with a document or object class */
 typedef struct _TranslSchema
 {
-  PtrTSchema     TsNext;	     /* to link free blocks */
+  PtrTSchema     TsNext;       /* to link free blocks */
   Name           TsStructName; /* name of the structure schema */
   int            TsStructCode; /* code identifying the version of this
 				  structure schema */
   int            TsLineLength; /* max length of translated lines */
-  Name	       TsEOL; 	     /* end of line character */
+  Name	         TsEOL;        /* end of line character */
   Name           TsTranslEOL;  /* character string to insert at the end
 				  of translated lines */
-  int 	       TsNConstants; /* number of constants */
-  int 	       TsNCounters;  /* number of counters */
-  int 	       TsNVariables; /* number of translation variables */
-  int 	       TsNBuffers;   /* number of buffers */
-  int            TsConstBegin[MAX_TRANSL_CONST]; 
-  /* index of the first character of each
-     constant in the buffer TsConstant */
+  int 	         TsNConstants; /* number of constants */
+  int 	         TsNCounters;  /* number of counters */
+  int 	         TsNVariables; /* number of translation variables */
+  int 	         TsNBuffers;   /* number of buffers */
+  int            TsConstBegin[MAX_TRANSL_CONST]; /* index of the first
+				  character of each constant in the buffer
+				  TsConstant */
   TCounter       TsCounter[MAX_TRANSL_COUNTER];	/* the counters */
-  TranslVariable TsVariable[MAX_TRANSL_VARIABLE];	/* the variables */
-  int 	       TsPictureBuffer;	/* number of the image buffer */  
+  TranslVariable TsVariable[MAX_TRANSL_VARIABLE];/* the variables */
+  int 	         TsPictureBuffer;	        /* number of the image buffer*/
   TranslBuffer   TsBuffer[MAX_TRANSL_BUFFER];  	/* the buffers */
-  PtrTRuleBlock  TsElemTRule[MAX_RULES_SSCHEMA];/* pointers on the
-						   beginning of the string of translation
-						   rules associated with each element
-						   type, in the same order than in the
-						   table StructSchema.SsRule */ 
+  PtrTRuleBlock  TsElemTRule[MAX_RULES_SSCHEMA];/* pointers on the beginning of
+				  the string of translation rules associated
+				  with each element type, in the same order
+				  than in the table StructSchema.SsRule */ 
   ThotBool       TsInheritAttr[MAX_RULES_SSCHEMA];/* indicates for each
-						     element type, in the same order than
-						     in the table StructSchema.SsRule, if
-						     the element inherits from an ascendent
-						     element attribute */ 
-  AttributeTransl TsAttrTRule[MAX_ATTR_SSCHEMA];   /* translation rules
-						      of the logical attributes, in the same
-						      order as in the table
-						      StructSchema.SsAttribute */ 
-  PRuleTransl    TsPresTRule[MAX_TRANSL_PRULE];	/* translation rules of
-						   the specific presentation, in the
-						   order of the present. rules types */
+				  element type, in the same order than in the
+				  table StructSchema.SsRule, if the element
+				  inherits from an attribute on an ancestor */
+  AttrTransTable *TsAttrTRule; /* translation rules of the logical attributes,
+				  in the same order as in the table
+				  StructSchema.SsAttribute */ 
+  PRuleTransl    TsPresTRule[MAX_TRANSL_PRULE];	/* translation rules of the
+				  specific presentation, in the order of the
+				  present. rules types */
   int 	       TsNTranslAlphabets; /* number of element in the array
 				      TsTranslAlphabet */
-  AlphabetTransl TsTranslAlphabet[MAX_TRANSL_ALPHABET];/* translation
-							  of character strings for the different
-							  alphabets */
-  int 	       TsSymbolFirst; /* index of the first symbols translation
-				 rule in the table TsCharTransl */
-  int 	       TsSymbolLast;  /* index of the last symbols translation
-					 rule in the same table */  
+  AlphabetTransl TsTranslAlphabet[MAX_TRANSL_ALPHABET];/* translation of
+				  character strings for the alphabets */
+  int 	       TsSymbolFirst;  /* index of the first symbols translation
+				  rule in the table TsCharTransl */
+  int 	       TsSymbolLast;   /* index of the last symbols translation
+				  rule in the same table */  
   int 	       TsGraphicsFirst;/* index of the first graphics
 				  translation rule in the table
 				  TsCharTransl */
-  int 	       TsGraphicsLast;/* index of the last graphics translation
-				 rule in the same table */
-  int 	       TsNCharTransls;/* total number of characters translation
-				 rules */
-  StringTransl   TsCharTransl[MAX_TRANSL_CHAR];	/* the characters
+  int 	       TsGraphicsLast; /* index of the last graphics translation
+				  rule in the same table */
+  int 	       TsNCharTransls; /* total number of characters translation
+				  rules */
+  StringTransl TsCharTransl[MAX_TRANSL_CHAR];	/* the characters
 						   translation table */
-  unsigned char  TsConstant[MAX_TRANSL_CONST_LEN]; /* string of all the
-						      translation constants, separated
-						      by NULL */
+  unsigned char TsConstant[MAX_TRANSL_CONST_LEN]; /* string of all the
+				  translation constants, separated by NULL */
 } TranslSchema;
 #endif

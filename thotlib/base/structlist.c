@@ -3280,7 +3280,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		     for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
 		       {
 			 pAt1 = pSchemaStr->SsAttribute->TtAttr[Attr - 1];
-			 pRP1 = pSc1->PsAttrPRule[Attr - 1];
+			 pRP1 = pSc1->PsAttrPRule->AttrPres[Attr - 1];
 			 while (pRP1 != NULL)
 			   {
 			     /* si cet attribut a une presentation */

@@ -161,7 +161,7 @@ static void InitBasicType (SRule *pRule, char *name, BasicType typ)
   ----------------------------------------------------------------------*/
 static void         Initialize ()
 {
-   int                 i;
+   int                 i, size;
    PtrTtAttribute      pAttr;
    SRule              *pRule;
 
@@ -172,23 +172,29 @@ static void         Initialize ()
    pSSchema->SsRootElem = 0;
    CurExtensRule = NULL;
    pSSchema->SsNAttributes = 0;
-   for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
+
+   /* allocate memory for 10 attributes initially */
+   size = 10;
+   pSSchema->SsAttribute = (TtAttrTable*) malloc (size * sizeof (PtrTtAttribute));
+   if (!pSSchema->SsAttribute)
      {
-	pAttr = pSSchema->SsAttribute->TtAttr[i];
-	pAttr->AttrOrigName[0] = '\0';
-	pAttr->AttrGlobal = True;
-	/* all attributes are global */
-	pAttr->AttrFirstExcept = 0;
-	/* no exception for the attribute */
-	pAttr->AttrLastExcept = 0;
-	pAttr->AttrType = AtEnumAttr;
-	pAttr->AttrNEnumValues = 0;
+       TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+       return;
+     }
+   else
+     {
+       pSSchema->SsAttrTableSize = size;
+       for (i = 0; i < size; i++)
+	 pSSchema->SsAttribute->TtAttr[i] = NULL;
      }
    /* create the language attribute */
-   pAttr = pSSchema->SsAttribute->TtAttr[0];
-   strncpy (pAttr->AttrName, "Langue", MAX_NAME_LENGTH);
+   pAttr = (PtrTtAttribute) malloc (sizeof (TtAttribute));
+   pSSchema->SsAttribute->TtAttr[0] = pAttr;
+   strncpy (pAttr->AttrName, "Language", MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
    pAttr->AttrGlobal = True;
+   pAttr->AttrFirstExcept = 0;
+   pAttr->AttrLastExcept = 0;
    pAttr->AttrType = AtTextAttr;
    pSSchema->SsNAttributes++;
 
@@ -1001,7 +1007,7 @@ static SRule       *NewExtensionRule (indLine wi, indLine wl)
 static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 				  SyntacticCode r, int nb, SyntRuleNum pr)
 {
-   int                 SynInteger, i, j;
+   int                 SynInteger, i, j, size;
    Name                N;
    PtrTtAttribute      pAttr;
    SRule              *pRule;
@@ -2132,24 +2138,43 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		     }
 		   else
 		     /* new attribute */
-		     if (pSSchema->SsNAttributes >= MAX_ATTR_SSCHEMA)
-		       CompilerMessage (wi, STR, FATAL, STR_TOO_MANY_ATTRS,
-					inputLine, LineNum);
-		   /* table of attributes is full */
+		     {
+		     if (pSSchema->SsNAttributes >= pSSchema->SsAttrTableSize)
+		       /* the attribute table is full. Extend it */
+		       {
+			 /* add 10 new entries */
+			 size = pSSchema->SsNAttributes + 10;
+			 i = size * sizeof (PtrTtAttribute);
+			 pSSchema->SsAttribute = (TtAttrTable*) realloc (pSSchema->SsAttribute, i);
+			 if (!pSSchema->SsAttribute)
+			     TtaDisplaySimpleMessage (FATAL, STR,
+						      STR_NOT_ENOUGH_MEM);
+			 else
+			   {
+			     pSSchema->SsAttrTableSize = size;
+			     for (i = pSSchema->SsNAttributes; i < size; i++)
+			       pSSchema->SsAttribute->TtAttr[i] = NULL;
+			   }
+		       }
+		     /* create a new attribute descriptor */
+		     pAttr = (PtrTtAttribute) malloc (sizeof (TtAttribute));
+		     if (pAttr == NULL)
+		       TtaDisplaySimpleMessage (FATAL, STR,STR_NOT_ENOUGH_MEM);
 		     else
 		       {
+			 pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes] = pAttr;
+			 CopyWord (pAttr->AttrName, wi, wl);
+			 pAttr->AttrOrigName[0] = '\0';
+			 pAttr->AttrGlobal = !CompilLocAttr;
+			 pAttr->AttrFirstExcept = 0;
+			 pAttr->AttrLastExcept = 0;
+			 pAttr->AttrType = AtEnumAttr;
+			 pAttr->AttrNEnumValues = 0;
 			 pSSchema->SsNAttributes++;
 			 Identifier[nb - 1].SrcIdentDefRule =
 			   pSSchema->SsNAttributes;
-			 pAttr = pSSchema->SsAttribute->TtAttr[pSSchema->
-						       SsNAttributes - 1];
-			 if (CompilLocAttr)
-			   /* local attribute */
-			   pAttr->AttrGlobal = False;
-			 CopyWord (pAttr->AttrName, wi, wl);
-			 pAttr->AttrType = AtEnumAttr;
-			 pAttr->AttrNEnumValues = 0;
 		       }
+		     }
 		   if (CompilLocAttr)
 		     /* local attribute */
 		     {

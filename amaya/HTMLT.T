@@ -1144,18 +1144,18 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- Langue:
+ Language:
 	BEGIN
 	IF not HTML
 	    BEGIN
 #ifdef XML
 	    Create ' xml:lang="';
-	    Create Langue;
+	    Create Language;
 	    Create DoubleQuote;
 #endif
 #ifndef XHTML11
 	    Create ' lang="';
-	    Create Langue;
+	    Create Language;
 	    Create DoubleQuote;
 #endif
 	    END;
@@ -1163,12 +1163,12 @@ ATTRIBUTES
 	    BEGIN
 #ifdef XML
 	    Create ' xml:lang="';
-	    Create Langue;
+	    Create Language;
 	    Create DoubleQuote;
 #endif
 #ifndef XHTML11
 	    Create ' lang="';
-	    Create Langue;
+	    Create Language;
 	    Create DoubleQuote;
 #endif
 	    END;

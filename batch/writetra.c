@@ -638,11 +638,11 @@ void WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
   ----------------------------------------------------------------------*/
 void WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
 {
-   AttributeTransl    *pAttrT;
+   PtrAttributeTransl  pAttrT;
    TranslNumAttrCase  *pCase;
    int                 i;
 
-   pAttrT = &pTSch->TsAttrTRule[att - 1];
+   pAttrT = pTSch->TsAttrTRule->TsAttrTransl[att - 1];
    WriteShort (pAttrT->AtrElemType);
    switch (pSS->SsAttribute->TtAttr[att - 1]->AttrType)
 	 {
@@ -719,7 +719,7 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
    TCounter           *pCntr;
    TranslVariable     *pVar;
    TranslVarItem      *pVarItem;
-   AttributeTransl    *pAttrTr;
+   PtrAttributeTransl  pAttrTr;
    AlphabetTransl     *pAlphTr;
    StringTransl       *pStrnTr;
    PRuleTransl        *pPruleTr;
@@ -782,28 +782,27 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
       WriteBoolean (pTSch->TsInheritAttr[i]);
    for (i = 0; i < pSS->SsNAttributes; i++)
      {
-	pAttrTr = &pTSch->TsAttrTRule[i];
-	switch (pSS->SsAttribute->TtAttr[i]->AttrType)
-	      {
-		 case AtNumAttr:
-		    WriteShort (pAttrTr->AtrNCases);
-		    for (j = 0; j < pAttrTr->AtrNCases; j++)
-		       WriteBlockPtr (pAttrTr->AtrCase[j].TaTRuleBlock);
-		    break;
-		 case AtTextAttr:
-		    WriteBlockPtr (pAttrTr->AtrTxtTRuleBlock);
-		    break;
-		 case AtReferenceAttr:
-		    WriteBlockPtr (pAttrTr->AtrRefTRuleBlock);
-		    break;
-		 case AtEnumAttr:
-		    for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-		       WriteBlockPtr (pAttrTr->AtrEnuTRuleBlock[j]);
-		    break;
-		 default:
-		    break;
-	      }
-
+       pAttrTr = pTSch->TsAttrTRule->TsAttrTransl[i];
+       switch (pSS->SsAttribute->TtAttr[i]->AttrType)
+	 {
+	 case AtNumAttr:
+	   WriteShort (pAttrTr->AtrNCases);
+	   for (j = 0; j < pAttrTr->AtrNCases; j++)
+	     WriteBlockPtr (pAttrTr->AtrCase[j].TaTRuleBlock);
+	   break;
+	 case AtTextAttr:
+	   WriteBlockPtr (pAttrTr->AtrTxtTRuleBlock);
+	   break;
+	 case AtReferenceAttr:
+	   WriteBlockPtr (pAttrTr->AtrRefTRuleBlock);
+	   break;
+	 case AtEnumAttr:
+	   for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
+	     WriteBlockPtr (pAttrTr->AtrEnuTRuleBlock[j]);
+	   break;
+	 default:
+	   break;
+	 }
      }
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
      {

@@ -8,7 +8,7 @@ DEFAULT
 
 ATTRIBUTES
 
-   Langue:
+   Language:
 	BEGIN
 	AttrMenu.Pre ->    GlobalAttrInMenu;
 	END;

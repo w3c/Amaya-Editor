@@ -797,8 +797,8 @@ void UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    if (pPS == NULL)
       return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
-   comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
+   inheritance = (pPS->PsNHeirElems->Num[pAttr->AeAttrNum - 1] > 0);
+   comparaison = (pPS->PsNComparAttrs->Num[pAttr->AeAttrNum - 1] > 0);
    if (inheritance || comparaison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
@@ -854,8 +854,8 @@ void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    if (pPS == NULL)
      return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
-   comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
+   inheritance = (pPS->PsNHeirElems->Num[pAttr->AeAttrNum - 1] > 0);
+   comparaison = (pPS->PsNComparAttrs->Num[pAttr->AeAttrNum - 1] > 0);
    reDisp = (documentDisplayMode[document - 1] == DisplayImmediately);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */

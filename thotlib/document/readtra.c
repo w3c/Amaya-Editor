@@ -789,13 +789,13 @@ static void ReadAttrTRules (BinFile file, int att, PtrTRuleBlock *pNextBlock,
 			    PtrTRule *pNextTRule, PtrSSchema *pSS,
 			    PtrTSchema *pTSch)
 {
-   AttributeTransl    *pAttrT;
+   PtrAttributeTransl  pAttrT;
    TranslNumAttrCase  *pCase;
    int                 i;
 
    if (!error)
      {
-	pAttrT = &(*pTSch)->TsAttrTRule[att];
+	pAttrT = (*pTSch)->TsAttrTRule->TsAttrTransl[att];
 	TtaReadShort (file, &pAttrT->AtrElemType);
 	switch ((*pSS)->SsAttribute->TtAttr[att]->AttrType)
 	      {
@@ -834,7 +834,7 @@ static void ReadAttrTRules (BinFile file, int att, PtrTRuleBlock *pNextBlock,
 /*----------------------------------------------------------------------
    FreeTRulesAttr libere les regles de traduction d'un attribut.   
   ----------------------------------------------------------------------*/
-static void FreeTRulesAttr (AttributeTransl *pAttrT, PtrTtAttribute pAttr)
+static void FreeTRulesAttr (PtrAttributeTransl pAttrT, PtrTtAttribute pAttr)
 {
    int                 i;
 
@@ -947,13 +947,13 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
    TCounter           *pCntr;
    TranslVariable     *pVar;
    TranslVarItem      *pVarItem;
-   AttributeTransl    *pAttrTr;
+   PtrAttributeTransl  pAttrTr;
    AlphabetTransl     *pAlphTr;
    StringTransl       *pStringTr;
    PRuleTransl        *pPRuleTr;
    PathBuffer          dirBuffer;
    char                buf[MAX_TXT_LEN];
-   int                 InitialNElems, i, j;
+   int                 InitialNElems, i, j, size;
 
    error = FALSE;
    pTSch = NULL;
@@ -965,9 +965,10 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
    file = TtaReadOpen (buf);
    if (file == 0)
      {
-	strncpy (buf, fileName, MAX_PATH);
-	strcat (buf, ".TRA");
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_TRA_FILE_INCORRECT), buf);
+       strncpy (buf, fileName, MAX_PATH);
+       strcat (buf, ".TRA");
+       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_TRA_FILE_INCORRECT),
+			  buf);
      }
    else
      {
@@ -977,6 +978,11 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	     TSchemaError (20);
 	     return NULL;
 	  }
+	size = pSS->SsNAttributes * sizeof (PtrAttributeTransl);
+	pTSch->TsAttrTRule = (AttrTransTable*) TtaGetMemory (size);
+	if (pTSch->TsAttrTRule)
+	  memset (pTSch->TsAttrTRule, 0, size);
+
 	GetTRule (&pNextTRule);
 	if (pNextTRule == NULL)
 	  {
@@ -1053,42 +1059,47 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 		pTSch->TsElemTRule[j] = NULL;
 	  }
 	if (!error)
-	   for (i = 0; i < InitialNElems; i++)
-	      pTSch->TsElemTRule[i] = ReadPtrTRuleBlock (file, &pNextBlock);
+	  for (i = 0; i < InitialNElems; i++)
+	    pTSch->TsElemTRule[i] = ReadPtrTRuleBlock (file, &pNextBlock);
 	if (!error)
-	   for (i = 0; i < InitialNElems; i++)
-	      TtaReadBool (file, &pTSch->TsInheritAttr[i]);
+	  for (i = 0; i < InitialNElems; i++)
+	    TtaReadBool (file, &pTSch->TsInheritAttr[i]);
 	if (!error)
-	   for (i = 0; i < pSS->SsNAttributes; i++)
-	      if (!error)
+	  for (i = 0; i < pSS->SsNAttributes && !error; i++)
+	    {
+	      GetAttributeTransl (&pAttrTr);
+	      if (!pAttrTr)
+		TSchemaError (25);
+	      else
 		{
-		   pAttrTr = &pTSch->TsAttrTRule[i];
-		   switch (pSS->SsAttribute->TtAttr[i]->AttrType)
-			 {
-			    case AtNumAttr:
-			       TtaReadShort (file, &pAttrTr->AtrNCases);
-			       if (!error)
-				  for (j = 0; j < pAttrTr->AtrNCases; j++)
-				     pAttrTr->AtrCase[j].TaTRuleBlock =
-					ReadPtrTRuleBlock (file, &pNextBlock);
-			       break;
-			    case AtTextAttr:
-			       pAttrTr->AtrTxtTRuleBlock =
-				  ReadPtrTRuleBlock (file, &pNextBlock);
-			       break;
-			    case AtReferenceAttr:
-			       pAttrTr->AtrRefTRuleBlock =
-				  ReadPtrTRuleBlock (file, &pNextBlock);
-			       break;
-			    case AtEnumAttr:
-			       for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-				  pAttrTr->AtrEnuTRuleBlock[j] =
-				     ReadPtrTRuleBlock (file, &pNextBlock);
-			       break;
-			    default:
-			       break;
-			 }
+		  pTSch->TsAttrTRule->TsAttrTransl[i] = pAttrTr;
+		  switch (pSS->SsAttribute->TtAttr[i]->AttrType)
+		    {
+		    case AtNumAttr:
+		      TtaReadShort (file, &pAttrTr->AtrNCases);
+		      if (!error)
+			for (j = 0; j < pAttrTr->AtrNCases; j++)
+			  pAttrTr->AtrCase[j].TaTRuleBlock =
+			    ReadPtrTRuleBlock (file, &pNextBlock);
+		      break;
+		    case AtTextAttr:
+		      pAttrTr->AtrTxtTRuleBlock =
+			ReadPtrTRuleBlock (file, &pNextBlock);
+		      break;
+		    case AtReferenceAttr:
+		      pAttrTr->AtrRefTRuleBlock =
+			ReadPtrTRuleBlock (file, &pNextBlock);
+		      break;
+		    case AtEnumAttr:
+		      for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
+			pAttrTr->AtrEnuTRuleBlock[j] =
+			  ReadPtrTRuleBlock (file, &pNextBlock);
+		      break;
+		    default:
+		      break;
+		    }
 		}
+	    }
 	if (!error)
 	   for (i = 0; i < MAX_TRANSL_PRULE; i++)
 	      if (!error)
@@ -1203,10 +1214,19 @@ void FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
       FreeBlocks (pTSch->TsElemTRule[i]);
    /* libere les blocs de regles des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
-      FreeTRulesAttr (&pTSch->TsAttrTRule[i], pSS->SsAttribute->TtAttr[i]);
+     {
+      FreeTRulesAttr (pTSch->TsAttrTRule->TsAttrTransl[i],
+		      pSS->SsAttribute->TtAttr[i]);
+      FreeAttributeTransl (pTSch->TsAttrTRule->TsAttrTransl[i]);
+     }
    /* libere les blocs de regles des presentations */
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       FreeTRulesPres (i + 1, &pTSch->TsPresTRule[i]);
+   if (pTSch->TsAttrTRule)
+     {
+       TtaFreeMemory (pTSch->TsAttrTRule);
+       pTSch->TsAttrTRule = NULL;
+     }
    /* libere le schema de traduction lui-meme */
-   TtaFreeMemory ( pTSch);
+   FreeSchTra (pTSch);
 }

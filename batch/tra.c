@@ -204,13 +204,18 @@ static void         Initialize ()
   ----------------------------------------------------------------------*/
 static void         InitAttrTransl ()
 {
-   int                 i, j;
-   AttributeTransl    *pAttTr;
+   int                 i, j, size;
+   PtrAttributeTransl  pAttTr;
    TranslNumAttrCase  *pCase;
 
+   size = pSSchema->SsNAttributes * sizeof (PtrAttributeTransl);
+   pTSchema->TsAttrTRule =  (AttrTransTable*) malloc (size);
+   if (pTSchema->TsAttrTRule)
+     memset (pTSchema->TsAttrTRule, 0, size);
    for (i = 0; i < pSSchema->SsNAttributes; i++)
      {
-       pAttTr = &pTSchema->TsAttrTRule[i];
+       pAttTr = (PtrAttributeTransl) malloc (sizeof (AttributeTransl));
+       pTSchema->TsAttrTRule->TsAttrTransl[i] = pAttTr;
        pAttTr->AtrElemType = 0;
        /* selon le type de l'attribut */
        switch (pSSchema->SsAttribute->TtAttr[i]->AttrType)
@@ -555,7 +560,7 @@ static void ProcessTargetString (int indx, int len)
 static void NewRuleBlock ()
 {
    PtrTRuleBlock       pBlock;
-   AttributeTransl    *pAttrTrans;
+   PtrAttributeTransl  pAttrTrans;
    PRuleTransl        *pPresTrans;
 
    ChangeRuleBlock = False;
@@ -572,7 +577,7 @@ static void NewRuleBlock ()
      else if (InAttrRules)
        /* bloc de regles associe' a un attribut */
        {
-	 pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+	 pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 	 switch (pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType)
 	   {
 	   case AtNumAttr:
@@ -934,7 +939,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
    AlphabetTransl     *pAlphTrans;
    TranslVariable     *pTransVar;
    TCounter           *pCntr;
-   AttributeTransl    *pAttrTrans;
+   PtrAttributeTransl  pAttrTrans;
    PtrTtAttribute      pAttr;
    TranslNumAttrCase  *pCase;
    PRuleTransl        *pPresTrans;
@@ -2361,8 +2366,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			       /* apres un nom d'attribut */
 			       {
 				 pTSchema->TsInheritAttr[i - 1] = True;
-				 pTSchema->TsAttrTRule[CurAttr - 1].
-				   AtrElemType = i;
+				 pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1]->AtrElemType = i;
 			       }
 			   }
 		       }
@@ -2648,7 +2652,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		       CurValAttr = 0;	 /* pas encore rencontre' de valeur */
 		       CurBlock = NULL;
 		       CurTRule = NULL;
-		       pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+		       pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 		       switch (pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType)
 			 {
 			 case AtNumAttr:     /* attribut a valeur numerique */
@@ -2762,7 +2766,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		       /* la valeur est correcte, elle a le numero i */
 		       if (!InCondition)
 			 /* debut des regles de traduction d'un attribut */
-			 if (pTSchema->TsAttrTRule[CurAttr - 1].
+			 if (pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1]->
 			     AtrEnuTRuleBlock[i] != NULL)
 			   /* deja des regles pour cette valeur */
 			   CompilerMessage (wi, TRA, FATAL,
@@ -2913,7 +2917,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			 TcLowerBound = k;
 		     else
 		       {
-			 pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+			 pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 			 pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].
 			   TaLowerBound = k;
 		       }
@@ -2942,7 +2946,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			 TcUpperBound = k;
 		     else
 		       {
-			 pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+			 pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 			 pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].
 			   TaUpperBound = k;
 		       }
@@ -2971,7 +2975,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			 TcLowerBound = k;
 		     else
 		       {
-			 pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+			 pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 			 pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].
 			   TaLowerBound = k;
 		       }
@@ -3005,7 +3009,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			   TcUpperBound = k;
 		     else
 		       {
-			 pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+			 pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 			 if (pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].
 			     TaLowerBound > k)
 			   CompilerMessage (wi, TRA, FATAL, BAD_LIMITS,
@@ -3043,7 +3047,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		       }
 		     else
 		       {
-			 pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+			 pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 			 pCase = &pAttrTrans->AtrCase[pAttrTrans->AtrNCases-1];
 			 pCase->TaUpperBound = k;
 			 pCase->TaLowerBound = pCase->TaUpperBound;
@@ -3230,7 +3234,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		   }
 		 else
 		   {
-		     pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
+		     pAttrTrans = pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1];
 		     for (i = 0; i < wl - 1; i++)
 		       pAttrTrans->AtrTextValue[i] = inputLine[wi + i - 1];
 		     pAttrTrans->AtrTextValue[wl - 1] = '\0';
@@ -3486,10 +3490,6 @@ int main (int argc, char **argv)
 	     strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
 	   /* le fichier a compiler est ouvert */
 
-	   /* acquiert la memoire pour le schema de traduction */
-	   GetSchTra (&pTSchema);
-	   if (pTSchema == NULL)
-	     TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
 	   NIdentifiers = 0;	/* table des identificateurs vide */
 	   LineNum = 0;
 	   Initialize ();	/* prepare la generation */
@@ -3561,9 +3561,11 @@ int main (int argc, char **argv)
 		  TtaDisplayMessage (FATAL, TtaGetMessage (TRA, CANT_WRITE),
 				     srceFileName);
 	      }
-	    free (pTSchema);
-	    free (pSSchema);
-	    free (pExtSSchema);
+	    for (i = 0; i < pSSchema->SsNAttributes; i++)
+	      free (pTSchema->TsAttrTRule->TsAttrTransl[i]);
+	    FreeSchTra (pTSchema);
+	    FreeSchStruc (pSSchema);
+	    FreeSchStruc (pExtSSchema);
 	 }
      }
    TtaSaveAppRegistry ();

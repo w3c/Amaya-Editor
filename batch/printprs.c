@@ -1638,8 +1638,8 @@ int                 main (int argc, char **argv)
 	     for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
 	       {
 	       pAt1 = &pSchemaStr->SsAttribute[Attr - 1];
-	       pRP1 = pSc1->PsAttrPRule[Attr - 1];
-	       for (k = pSc1->PsNAttrPRule[Attr - 1]; k-- > 0;
+	       pRP1 = pSc1->PsAttrPRule->AttrPres[Attr - 1];
+	       for (k = pSc1->PsNAttrPRule->Num[Attr - 1]; k-- > 0;
 		    pRP1 = pRP1->ApNextAttrPres)
 		  if (pRP1 != NULL)
 		    {

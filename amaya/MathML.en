@@ -56,7 +56,7 @@ MALIGNMARK: malignmark
 MathMLCharacters: \0
 Construct: \0
 
-Langue: lang
+Language: lang
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space

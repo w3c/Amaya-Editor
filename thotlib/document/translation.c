@@ -1777,7 +1777,7 @@ static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
    PtrTRuleBlock       pBlock;
    PtrTRule            pTRule;
    PtrTSchema          pTSchAttr;
-   AttributeTransl    *pAttrTrans;
+   PtrAttributeTransl  pAttrTrans;
    TranslNumAttrCase  *pTCase;
    NotifyAttribute     notifyAttr;
    int                 i;
@@ -1799,7 +1799,7 @@ static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
    pBlock = NULL;
    if (pTSchAttr != NULL)
      {
-     pAttrTrans = &pTSchAttr->TsAttrTRule[pAttr->AeAttrNum - 1];
+     pAttrTrans = pTSchAttr->TsAttrTRule->TsAttrTransl[pAttr->AeAttrNum - 1];
      switch (pAttr->AeAttrType)
        {
        case AtNumAttr:
@@ -1932,7 +1932,7 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
      /* process the current attribute */
      pTSch = GetTranslationSchema (pAttr->AeAttrSSchema);
      if (pTSch != NULL)
-       if (pTSch->TsAttrTRule[pAttr->AeAttrNum - 1].AtrElemType == 0)
+       if (pTSch->TsAttrTRule->TsAttrTransl[pAttr->AeAttrNum - 1]->AtrElemType == 0)
 	 /* les regles de traduction de l'attribut s'appliquent a */
 	 /* n'importe quel type d'element, on les applique */
 	 ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
@@ -1950,7 +1950,8 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
        /* cherche tous les attributs dont ce type d'element peut heriter. */
        /* balaie la table des attributs */
        for (att = 1; att <= pEl->ElStructSchema->SsNAttributes; att++)
-	 if (pTSch->TsAttrTRule[att - 1].AtrElemType == pEl->ElTypeNumber)
+	 if (pTSch->TsAttrTRule->TsAttrTransl[att - 1]->AtrElemType ==
+	     pEl->ElTypeNumber)
 	   /* cet attribut s'applique a ce type d'element */
 	   {
 	   /* Y a-t-il un element ascendant qui porte cet attribut? */

@@ -690,9 +690,9 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   int                 i, j, val;
 
   /* select the right attribute */
-  attrs = tsch->PsAttrPRule[attrType - 1];
+  attrs = tsch->PsAttrPRule->AttrPres[attrType - 1];
   *attrblock = NULL;
-  nbrules = tsch->PsNAttrPRule[attrType - 1];
+  nbrules = tsch->PsNAttrPRule->Num[attrType - 1];
   pSS = (PtrSSchema) ctxt->schema;
   ppRule = NULL;
   attrVal = ctxt->attrText[att];
@@ -783,16 +783,16 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
   if (!ppRule)
     {
       /* select the last entry */
-      nbrules = tsch->PsNAttrPRule[attrType - 1] + 1;
+      nbrules = tsch->PsNAttrPRule->Num[attrType - 1] + 1;
 
       /* add the new entry */
       GetAttributePres (&new);
-      tsch->PsNAttrPRule[attrType - 1] = nbrules;
+      tsch->PsNAttrPRule->Num[attrType - 1] = nbrules;
       if (att > 0 && ctxt->type)
 	{
 	new->ApElemType = ctxt->type;
 	pPS = PresentationSchema (pSS, LoadedDocument[ctxt->doc - 1]);
-	pPS->PsNHeirElems[attrType - 1] += 1;
+	pPS->PsNHeirElems->Num[attrType - 1] += 1;
 	}
       if (attrs)
 	{
@@ -801,8 +801,8 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	}
       else
 	{
-	  new->ApNextAttrPres = tsch->PsAttrPRule[attrType - 1];
-	  tsch->PsAttrPRule[attrType - 1] = new;
+	  new->ApNextAttrPres = tsch->PsAttrPRule->AttrPres[attrType - 1];
+	  tsch->PsAttrPRule->AttrPres[attrType - 1] = new;
 	}
 
       attrVal = ctxt->attrText[att];
@@ -2504,8 +2504,8 @@ void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
       max = (unsigned int) pSS->SsNAttributes;
       for (attrType = 0; attrType < max; attrType++)
 	{
-	  attrs = ((PtrPSchema) tsch)->PsAttrPRule[attrType];
-	  nbrules = ((PtrPSchema) tsch)->PsNAttrPRule[attrType];
+	  attrs = ((PtrPSchema) tsch)->PsAttrPRule->AttrPres[attrType];
+	  nbrules = ((PtrPSchema) tsch)->PsNAttrPRule->Num[attrType];
 	  for (i = 0; i < nbrules; i++)
 	    {
 	      switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)

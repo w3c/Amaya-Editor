@@ -52,24 +52,23 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
   if (pSP != NULL)
     {
       /* table allocation and initialization */
-      if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
+      if ((table = (InheritAttrTable *) TtaGetMemory (pEl->ElStructSchema->SsNAttributes * sizeof (ThotBool))) == NULL)
         /* memory exhausted */
         return;
-      for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
-
       pSP->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
       /* for all attributes defined in the structure schema */
       for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
 	{
+	  (*table)[attr] = FALSE;
 	  /* check the main presentation schema and all its extensions */
 	  pSchP = pSP;
 	  pHd = NULL;
 	  while (pSchP)
 	    {
-	      pAttrPR = pSchP->PsAttrPRule[attr];
+	      pAttrPR = pSchP->PsAttrPRule->AttrPres[attr];
 	      if (pAttrPR != NULL)
 		/* check all presentation rules associated with that attr. */
-		for (rule = 0; rule < pSchP->PsNAttrPRule[attr]; rule++)
+		for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
 		  {
 		    if (pAttrPR->ApElemType == pEl->ElTypeNumber)
 		      (*table)[attr] = TRUE;
@@ -125,14 +124,15 @@ void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc)
   pPS = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
   if (!pPS)
     return;
-  if ((table = (ComparAttrTable *) TtaGetMemory (sizeof (ComparAttrTable))) == NULL)
+  if ((table = (ComparAttrTable *) TtaGetMemory (pAttr->AeAttrSSchema->SsNAttributes * sizeof (ThotBool))) == NULL)
     /* memory exhausted */
     return;
-  for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
   attNum = pAttr->AeAttrNum;
-  pPS->PsComparAttr[attNum - 1] = table;
+  pPS->PsComparAttr->CATable[attNum - 1] = table;
   /* scan all attributes defined in the structure schema */
   for (attr = 0; attr < pAttr->AeAttrSSchema->SsNAttributes; attr++)
+    {
+    (*table)[attr] = FALSE;
     /* check only integer attributes */
     if (pAttr->AeAttrSSchema->SsAttribute->TtAttr[attr]->AttrType == AtNumAttr)
       {
@@ -141,11 +141,11 @@ void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc)
 	pHd = NULL;
 	while (pSchP)
 	  {
-	    if (pSchP->PsNAttrPRule[attr] > 0)
+	    if (pSchP->PsNAttrPRule->Num[attr] > 0)
 	      {
-		pAttrPR = pSchP->PsAttrPRule[attr];
+		pAttrPR = pSchP->PsAttrPRule->AttrPres[attr];
 		/* check presentation rules associated with attribute attr */
-		for (rule = 0; rule < pSchP->PsNAttrPRule[attr]; rule++)
+		for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
 		  {
 		    if (pAttrPR->ApElemType == 0)
 		      /* no inheritance */
@@ -180,6 +180,7 @@ void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc)
 	      pSchP = pHd->HdPSchema;
 	  }
       }
+    }
 }
 
 /*----------------------------------------------------------------------

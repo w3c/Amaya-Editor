@@ -1230,408 +1230,422 @@ void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
   ----------------------------------------------------------------------*/
 PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 {
-   PtrPRule            pNextPRule;
-   PtrPSchema          pPSch;
-   Counter*            pCntr;
-   CntrItem*           pCntrItem;
-   PresConstant*       pConst;
-   PresVariable*       pVar;
-   PresVarItem*        pVarItem;
-   PresentationBox*    pBox;
-   AttributePres*      pAttrP, *pAttrOld;
-   NumAttrCase*        pCase;
-   PathBuffer          dirBuffer;
-   BinFile             file;
-   char                buf[MAX_TXT_LEN];
-   int                 InitialNElems, i, j, k, l;
-   PtrHostView         pHostView, prevHostView;
-   ThotBool            ret;
+  PtrPRule            pNextPRule;
+  PtrPSchema          pPSch;
+  Counter*            pCntr;
+  CntrItem*           pCntrItem;
+  PresConstant*       pConst;
+  PresVariable*       pVar;
+  PresVarItem*        pVarItem;
+  PresentationBox*    pBox;
+  AttributePres*      pAttrP, *pAttrOld;
+  NumAttrCase*        pCase;
+  PathBuffer          dirBuffer;
+  BinFile             file;
+  char                buf[MAX_TXT_LEN];
+  int                 InitialNElems, i, j, k, l;
+  PtrHostView         pHostView, prevHostView;
+  ThotBool            ret;
 
-   error = FALSE;
-   pPSch = NULL;
-   /* compose le nom du fichier a ouvrir */
-   strncpy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, "PRS", dirBuffer, buf, &i);
+  error = FALSE;
+  pPSch = NULL;
+  /* compose le nom du fichier a ouvrir */
+  strncpy (dirBuffer, SchemaPath, MAX_PATH);
+  MakeCompleteName (fileName, "PRS", dirBuffer, buf, &i);
 
-   /* teste si le fichier existe */
-   file = TtaReadOpen (buf);
-   if (file == 0)
-     {
-	/* message 'Fichier inaccessible' */
-	strncpy (buf, fileName, MAX_NAME_LENGTH);
-	strcat (buf, ".PRS");
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB,TMSG_INCORRECT_PRS_FILE ), buf);
-     }
-   else
-     {
-	/* supprime le suffixe .PRS a la fin du nom de fichier */
-	buf[i - 4] = EOS;
-	GetSchPres (&pPSch);
-	/* acquiert un bloc pour la prochaine regle lue */
-	GetPresentRule (&pNextPRule);
-	pNextPRule->PrCond = NULL;
-	/* met son nom dans le schema de presentation */
-	strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
-	/* lit la partie fixe du schema de presentation */
-	/* lit le nom du schema de structure correspondant */
-	TtaReadName (file, pPSch->PsStructName);
-	TtaReadShort (file, &pPSch->PsStructCode);
-	/* read the name of all declared views */
-	error = !TtaReadShort (file, &pPSch->PsNViews);
-	if (!error)
-	   for (i = 0; i < pPSch->PsNViews; i++)
-	      TtaReadName (file, pPSch->PsView[i]);
-        /* read the name of all host view for each declared view */
-	if (!error)
-	   for (i = 0; i < pPSch->PsNViews; i++)
+  /* teste si le fichier existe */
+  file = TtaReadOpen (buf);
+  if (file == 0)
+    {
+      /* message 'Fichier inaccessible' */
+      strncpy (buf, fileName, MAX_NAME_LENGTH);
+      strcat (buf, ".PRS");
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB,TMSG_INCORRECT_PRS_FILE ),
+			 buf);
+    }
+  else
+    {
+      /* supprime le suffixe .PRS a la fin du nom de fichier */
+      buf[i - 4] = EOS;
+      GetSchPres (&pPSch);
+      /* acquiert un bloc pour la prochaine regle lue */
+      GetPresentRule (&pNextPRule);
+      pNextPRule->PrCond = NULL;
+      /* met son nom dans le schema de presentation */
+      strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
+      /* lit la partie fixe du schema de presentation */
+      /* lit le nom du schema de structure correspondant */
+      TtaReadName (file, pPSch->PsStructName);
+      TtaReadShort (file, &pPSch->PsStructCode);
+      /* read the name of all declared views */
+      error = !TtaReadShort (file, &pPSch->PsNViews);
+      if (!error)
+	for (i = 0; i < pPSch->PsNViews; i++)
+	  TtaReadName (file, pPSch->PsView[i]);
+      /* read the name of all host view for each declared view */
+      if (!error)
+	for (i = 0; i < pPSch->PsNViews; i++)
+	  {
+	    TtaReadShort (file, &j);
+	    prevHostView = NULL;
+	    if (!error)
+	      for (k = 0; k < j; k++)
+		{
+		  pHostView = TtaGetMemory (sizeof(HostView));
+		  TtaReadName (file, pHostView->HostViewName);
+		  pHostView->NextHostView = NULL;
+		  if (prevHostView)
+		    prevHostView->NextHostView = pHostView;
+		  else
+		    pPSch->PsHostViewList[i] = pHostView;
+		  prevHostView = pHostView;
+		}
+	  }
+      if (!error)
+	for (i = 0; i < pPSch->PsNViews; i++)
+	  TtaReadBool (file, &pPSch->PsPaginatedView[i]);
+      /* significatif uniquement dans la V4 */
+      if (!error)
+	for (i = 0; i < pPSch->PsNViews; i++)
+	  TtaReadBool (file, &pPSch->PsColumnView[i]);
+      error = !TtaReadShort (file, &pPSch->PsNPrintedViews);
+      if (!error)
+	for (i = 0; i < pPSch->PsNPrintedViews; i++)
+	  error = !TtaReadShort (file, &pPSch->PsPrintedView[i].VpNumber);
+      if (!error)
+	for (i = 0; i < pPSch->PsNViews; i++)
+	  TtaReadBool (file, &pPSch->PsExportView[i]);
+      TtaReadShort (file, &pPSch->PsNCounters);
+      TtaReadShort (file, &pPSch->PsNConstants);
+      TtaReadShort (file, &pPSch->PsNVariables);
+      TtaReadShort (file, &pPSch->PsNPresentBoxes);
+      pPSch->PsFirstDefaultPRule = ReadPRulePtr (file, &pNextPRule);
+      ret = !error;
+      if (pSS->SsRootElem == 0) 
+	ret = FALSE;
+
+      if (!ret || pPSch->PsStructCode != pSS->SsCode)
+	{
+	  FreeSchPres (pPSch, pSS);
+	  FreePresentRule (pNextPRule);
+	  pNextPRule = NULL;
+	  pPSch = NULL;
+	}
+      else
+	{
+	  /* lit les compteurs */
+	  if (!error)
+	    for (i = 0; i < pPSch->PsNCounters; i++)
 	      {
-	      TtaReadShort (file, &j);
-	      prevHostView = NULL;
-	      if (!error)
-	         for (k = 0; k < j; k++)
+		pCntr = &pPSch->PsCounter[i];
+		error = !TtaReadShort (file, &pCntr->CnNItems);
+		if (!error)
+		  for (j = 0; j < pCntr->CnNItems; j++)
 		    {
-		    pHostView = TtaGetMemory (sizeof(HostView));
-		    TtaReadName (file, pHostView->HostViewName);
-		    pHostView->NextHostView = NULL;
-		    if (prevHostView)
-		      prevHostView->NextHostView = pHostView;
-		    else
-		      pPSch->PsHostViewList[i] = pHostView;
-		    prevHostView = pHostView;
+		      pCntrItem = &pCntr->CnItem[j];
+		      pCntrItem->CiCntrOp = ReadCounterOp (file);
+		      TtaReadShort (file, &pCntrItem->CiElemType);
+		      TtaReadSignedShort (file, &pCntrItem->CiAscendLevel);
+		      TtaReadShort (file, &pCntrItem->CiViewNum);
+		      TtaReadSignedShort (file, &pCntrItem->CiParamValue);
+		      TtaReadShort (file, &pCntrItem->CiInitAttr);
+		      TtaReadShort (file, &pCntrItem->CiReinitAttr);
+		      TtaReadShort (file, &pCntrItem->CiCondAttr);
+		      TtaReadBool (file, &pCntrItem->CiCondAttrPresent);
+		    }
+		error = !TtaReadShort (file, &pCntr->CnNPresBoxes);
+		if (!error)
+		  for (j = 0; j < pCntr->CnNPresBoxes; j++)
+		    {
+		      TtaReadShort (file, &pCntr->CnPresBox[j]);
+		      error = !TtaReadBool (file, &pCntr->CnMinMaxPresBox[j]);
+		    }
+		error = !TtaReadShort (file, &pCntr->CnNTransmAttrs);
+		if (!error)
+		  for (j = 0; j < pCntr->CnNTransmAttrs; j++)
+		    {
+		      TtaReadName (file, pCntr->CnTransmAttr[j]);
+		      TtaReadShort (file, &pCntr->CnTransmSSchemaAttr[j]);
+		    }
+		error = !TtaReadShort (file, &pCntr->CnNCreators);
+		if (!error)
+		  for (j = 0; j < pCntr->CnNCreators; j++)
+		    {
+		      error = !TtaReadShort (file, &pCntr->CnCreator[j]);
+		      error = !TtaReadBool (file, &pCntr->CnMinMaxCreator[j]);
+		    }
+		if (!error)
+		  for (j = 0; j < pCntr->CnNCreators; j++)
+		    TtaReadBool (file, &pCntr->CnPresBoxCreator[j]);
+		error = !TtaReadShort (file, &pCntr->CnNCreatedBoxes);
+		if (!error)
+		  for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
+		    {
+		    TtaReadShort (file, &pCntr->CnCreatedBox[j]);
+		    error = !TtaReadBool (file, &pCntr->CnMinMaxCreatedBox[j]);
+		    }
+		error = !TtaReadBool (file, &pCntr->CnPageFooter);
+	      }
+	  /* lit les constantes de presentation */
+	  if (!error)
+	    for (i = 0; i < pPSch->PsNConstants; i++)
+	      {
+		pConst = &pPSch->PsConstant[i];
+		pConst->PdType = ReadBasicType (file);
+		if (!TtaReadByte (file, &pConst->PdAlphabet))
+		  error = True;
+		j = 0;
+		if (!error)
+		  do
+		    if (!TtaReadByte (file, &pConst->PdString[j++]))
+		      error = True;
+		  while (pConst->PdString[j - 1] != EOS && !error) ;
+	      }
+
+	  /* lit les variables de presentation */
+	  if (!error)
+	    for (i = 0; i < pPSch->PsNVariables; i++)
+	      {
+		pVar = &pPSch->PsVariable[i];
+		error = !TtaReadShort (file, &pVar->PvNItems);
+		if (!error)
+		  for (j = 0; j < pVar->PvNItems; j++)
+		    {
+		      pVarItem = &pVar->PvItem[j];
+		      pVarItem->ViType = ReadVariableType (file);
+		      switch (pVarItem->ViType)
+			{
+			case VarText:
+			  TtaReadShort (file, &pVarItem->ViConstant);
+			  break;
+			case VarCounter:
+			  TtaReadShort (file, &pVarItem->ViCounter);
+			  pVarItem->ViStyle = ReadCounterStyle (file);
+			  pVarItem->ViCounterVal = ReadCounterValue (file);
+			  break;
+			case VarAttrValue:
+			  TtaReadShort (file, &pVarItem->ViAttr);
+			  pVarItem->ViStyle = ReadCounterStyle (file);
+			  break;
+			case VarPageNumber:
+			  TtaReadShort (file, &pVarItem->ViView);
+			  pVarItem->ViStyle = ReadCounterStyle (file);
+			  break;
+			default:
+			  break;
+			}
 		    }
 	      }
-	if (!error)
-	   for (i = 0; i < pPSch->PsNViews; i++)
-	      TtaReadBool (file, &pPSch->PsPaginatedView[i]);
-	/* significatif uniquement dans la V4 */
-	if (!error)
-	   for (i = 0; i < pPSch->PsNViews; i++)
-	      TtaReadBool (file, &pPSch->PsColumnView[i]);
-	error = !TtaReadShort (file, &pPSch->PsNPrintedViews);
-	if (!error)
-	   for (i = 0; i < pPSch->PsNPrintedViews; i++)
-	     error = !TtaReadShort (file, &pPSch->PsPrintedView[i].VpNumber);
-	if (!error)
-	   for (i = 0; i < pPSch->PsNViews; i++)
-	      TtaReadBool (file, &pPSch->PsExportView[i]);
-	TtaReadShort (file, &pPSch->PsNCounters);
-	TtaReadShort (file, &pPSch->PsNConstants);
-	TtaReadShort (file, &pPSch->PsNVariables);
-	TtaReadShort (file, &pPSch->PsNPresentBoxes);
-	pPSch->PsFirstDefaultPRule = ReadPRulePtr (file, &pNextPRule);
-	ret = !error;
-	if (pSS->SsRootElem == 0) 
-	  ret = FALSE;
-
-	if (!ret || pPSch->PsStructCode != pSS->SsCode)
-	  {
-	     FreeSchPres (pPSch);
-	     FreePresentRule (pNextPRule);
-	     pNextPRule = NULL;
-	     pPSch = NULL;
-	  }
-	else
-	  {
-	     /* lit les compteurs */
-	     if (!error)
-		for (i = 0; i < pPSch->PsNCounters; i++)
-		  {
-		     pCntr = &pPSch->PsCounter[i];
-		     error = !TtaReadShort (file, &pCntr->CnNItems);
-		     if (!error)
-			for (j = 0; j < pCntr->CnNItems; j++)
-			  {
-			     pCntrItem = &pCntr->CnItem[j];
-			     pCntrItem->CiCntrOp = ReadCounterOp (file);
-			     TtaReadShort (file, &pCntrItem->CiElemType);
-			     TtaReadSignedShort (file, &pCntrItem->CiAscendLevel);
-			     TtaReadShort (file, &pCntrItem->CiViewNum);
-			     TtaReadSignedShort (file, &pCntrItem->CiParamValue);
-			     TtaReadShort (file, &pCntrItem->CiInitAttr);
-			     TtaReadShort (file, &pCntrItem->CiReinitAttr);
-			     TtaReadShort (file, &pCntrItem->CiCondAttr);
-			     TtaReadBool (file, &pCntrItem->CiCondAttrPresent);
-			  }
-		     error = !TtaReadShort (file, &pCntr->CnNPresBoxes);
-		     if (!error)
-			for (j = 0; j < pCntr->CnNPresBoxes; j++)
-			  {
-			     TtaReadShort (file, &pCntr->CnPresBox[j]);
-			     error = !TtaReadBool (file, &pCntr->CnMinMaxPresBox[j]);
-			  }
-		     error = !TtaReadShort (file, &pCntr->CnNTransmAttrs);
-		     if (!error)
-			for (j = 0; j < pCntr->CnNTransmAttrs; j++)
-			  {
-			     TtaReadName (file, pCntr->CnTransmAttr[j]);
-			     TtaReadShort (file, &pCntr->CnTransmSSchemaAttr[j]);
-			  }
-		     error = !TtaReadShort (file, &pCntr->CnNCreators);
-		     if (!error)
-			for (j = 0; j < pCntr->CnNCreators; j++)
-			  {
-			     error = !TtaReadShort (file, &pCntr->CnCreator[j]);
-			     error = !TtaReadBool (file, &pCntr->CnMinMaxCreator[j]);
-			  }
-		     if (!error)
-			for (j = 0; j < pCntr->CnNCreators; j++)
-			   TtaReadBool (file, &pCntr->CnPresBoxCreator[j]);
-		     error = !TtaReadShort (file, &pCntr->CnNCreatedBoxes);
-		     if (!error)
-			for (j = 0; j < pCntr->CnNCreatedBoxes; j++)
-			  {
-			     TtaReadShort (file, &pCntr->CnCreatedBox[j]);
-			     error = !TtaReadBool (file, &pCntr->CnMinMaxCreatedBox[j]);
-			  }
-		     error = !TtaReadBool (file, &pCntr->CnPageFooter);
-		  }
-	     /* lit les constantes de presentation */
-	     if (!error)
-		for (i = 0; i < pPSch->PsNConstants; i++)
-		  {
-		     pConst = &pPSch->PsConstant[i];
-		     pConst->PdType = ReadBasicType (file);
-		     if (!TtaReadByte (file, &pConst->PdAlphabet))
-			error = True;
-		     j = 0;
-		     if (!error)
-			do
-			   if (!TtaReadByte (file, &pConst->PdString[j++]))
-			      error = True;
-			while (pConst->PdString[j - 1] != EOS && !error) ;
-		  }
-
-	     /* lit les variables de presentation */
-	     if (!error)
-		for (i = 0; i < pPSch->PsNVariables; i++)
-		  {
-		     pVar = &pPSch->PsVariable[i];
-		     error = !TtaReadShort (file, &pVar->PvNItems);
-		     if (!error)
-			for (j = 0; j < pVar->PvNItems; j++)
-			  {
-			     pVarItem = &pVar->PvItem[j];
-			     pVarItem->ViType = ReadVariableType (file);
-			     switch (pVarItem->ViType)
-				   {
-				      case VarText:
-					 TtaReadShort (file, &pVarItem->ViConstant);
-					 break;
-				      case VarCounter:
-					 TtaReadShort (file, &pVarItem->ViCounter);
-					 pVarItem->ViStyle = ReadCounterStyle (file);
-					 pVarItem->ViCounterVal = ReadCounterValue (file);
-					 break;
-				      case VarAttrValue:
-					 TtaReadShort (file, &pVarItem->ViAttr);
-					 pVarItem->ViStyle = ReadCounterStyle (file);
-
-					 break;
-				      case VarPageNumber:
-					 TtaReadShort (file, &pVarItem->ViView);
-					 pVarItem->ViStyle = ReadCounterStyle (file);
-					 break;
-				      default:
-					 break;
-				   }
-			  }
-		  }
-	     /* lit les boites de presentation et de mise en page */
-	     if (!error)
-		for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-		  {
-		     pBox = &pPSch->PsPresentBox[i];
-		     TtaReadName (file, pBox->PbName);
-		     pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
-		     TtaReadBool (file, &pBox->PbPageFooter);
-		     TtaReadBool (file, &pBox->PbPageHeader);
-		     TtaReadBool (file, &pBox->PbPageBox);
-		     TtaReadShort (file, &pBox->PbFooterHeight);
-		     TtaReadShort (file, &pBox->PbHeaderHeight);
-		     TtaReadShort (file, &pBox->PbPageCounter);
-		     pBox->PbContent = ReadContentType (file);
-		     if (!error)
-			switch (pBox->PbContent)
+	  /* lit les boites de presentation et de mise en page */
+	  if (!error)
+	    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
+	      {
+		pBox = &pPSch->PsPresentBox[i];
+		TtaReadName (file, pBox->PbName);
+		pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
+		TtaReadBool (file, &pBox->PbPageFooter);
+		TtaReadBool (file, &pBox->PbPageHeader);
+		TtaReadBool (file, &pBox->PbPageBox);
+		TtaReadShort (file, &pBox->PbFooterHeight);
+		TtaReadShort (file, &pBox->PbHeaderHeight);
+		TtaReadShort (file, &pBox->PbPageCounter);
+		pBox->PbContent = ReadContentType (file);
+		if (!error)
+		  switch (pBox->PbContent)
+		    {
+		    case ContVariable:
+		      TtaReadShort (file, &pBox->PbContVariable);
+		      break;
+		    case ContConst:
+		      TtaReadShort (file, &pBox->PbContConstant);
+		      break;
+		    default:
+		      break;
+		    }
+	      }
+	  /* lit les presentations des attributs */
+	  if (!error)
+	    {
+	      pPSch->PsAttrPRule = (AttrPresTable*) malloc (pSS->SsNAttributes * sizeof (PtrAttributePres));
+	      pPSch->PsNAttrPRule = (NumberTable*) malloc (pSS->SsNAttributes * sizeof (int));
+	      for (i = 0; i < pSS->SsNAttributes && !error; i++)
+		{
+		  /* lecture du nombre de paquet de regles differentes */
+		  TtaReadShort (file, &l);
+		  pPSch->PsAttrPRule->AttrPres[i] = NULL;
+		  pPSch->PsNAttrPRule->Num[i] = l;
+		  if (l > 0)
+		    {
+		      pAttrOld = NULL;
+		      while (l > 0)
+			{
+			  /* allocate attribute blocks */
+			  GetAttributePres (&pAttrP);
+			  if (pPSch->PsAttrPRule->AttrPres[i] == NULL)
+			    pPSch->PsAttrPRule->AttrPres[i] = pAttrP;
+			  else if (pAttrOld != NULL)
+			    pAttrOld->ApNextAttrPres = pAttrP;
+			  else
+			    error = TRUE;
+			  pAttrOld = pAttrP;
+			  l--;
+			}
+		    }
+		}
+	      for (i = 0; i < pSS->SsNAttributes && !error; i++)
+		{
+		  pAttrP = pPSch->PsAttrPRule->AttrPres[i];
+		  for (l = pPSch->PsNAttrPRule->Num[i]; l-- > 0 && !error;
+		       pAttrP = pAttrP->ApNextAttrPres)
+		    {
+		      error = !TtaReadShort (file, &pAttrP->ApElemType);
+		      switch (pSS->SsAttribute->TtAttr[i]->AttrType)
+			{
+			case AtNumAttr:
+			  for (j = 0; j < MAX_PRES_ATTR_CASE; j++)
+			    pAttrP->ApCase[j].CaFirstPRule = NULL;
+			  error = !TtaReadShort (file,&pAttrP->ApNCases);
+			  if (!error)
+			    for (j = 0; j < pAttrP->ApNCases; j++)
 			      {
-				 case ContVariable:
-				    TtaReadShort (file, &pBox->PbContVariable);
-				    break;
-				 case ContConst:
-				    TtaReadShort (file, &pBox->PbContConstant);
-				    break;
-				 default:
-				    break;
+			       pCase = &pAttrP->ApCase[j];
+			       pCase->CaComparType = ReadAttrCompar (file);
+			       TtaReadSignedShort (file, &pCase->CaLowerBound);
+			       TtaReadSignedShort (file, &pCase->CaUpperBound);
+			       pCase->CaFirstPRule = ReadPRulePtr (file,
+								  &pNextPRule);
 			      }
-		  }
-	     /* lit les presentations des attributs */
-	     if (!error)
-	       {
-		  for (i = 0; i < pSS->SsNAttributes; i++)
-		     if (!error)
-		       {
-			  /* lecture du nombre de paquet de regles differentes */
-			  TtaReadShort (file, &l);
-			  pPSch->PsNAttrPRule[i] = l;
-			  pPSch->PsAttrPRule[i] = NULL;
-			  if (l > 0)
-			    {
-			      pAttrOld = NULL;
-			      while (l > 0)
-				{
-				  /* allocate attribute blocks */
-				  GetAttributePres (&pAttrP);
-				  if (pPSch->PsAttrPRule[i] == NULL)
-				    pPSch->PsAttrPRule[i] = pAttrP;
-				  else if (pAttrOld != NULL)
-				    pAttrOld->ApNextAttrPres = pAttrP;
-				  else
-				    error = TRUE;
-				  pAttrOld = pAttrP;
-				  l--;
-				}
-			    }
-		       }
-		  for (i = 0; i < pSS->SsNAttributes; i++)
-		     if (!error)
-		       {
-			  pAttrP = pPSch->PsAttrPRule[i];
-			  for (l = pPSch->PsNAttrPRule[i]; l-- > 0; pAttrP = pAttrP->ApNextAttrPres)
-			    {
-			       if (!error)
-				 {
-				    error = !TtaReadShort (file, &pAttrP->ApElemType);
-				    switch (pSS->SsAttribute->TtAttr[i]->AttrType)
-					  {
-					     case AtNumAttr:
-						for (j = 0; j < MAX_PRES_ATTR_CASE; j++)
-						   pAttrP->ApCase[j].CaFirstPRule = NULL;
-						error = !TtaReadShort (file, &pAttrP->ApNCases);
-						if (!error)
-						   for (j = 0; j < pAttrP->ApNCases; j++)
-						     {
-							pCase = &pAttrP->ApCase[j];
-							pCase->CaComparType = ReadAttrCompar (file);
-							TtaReadSignedShort (file, &pCase->CaLowerBound);
-							TtaReadSignedShort (file, &pCase->CaUpperBound);
-							pCase->CaFirstPRule = ReadPRulePtr (file, &pNextPRule);
-						     }
-						break;
-					     case AtReferenceAttr:
-						pAttrP->ApRefFirstPRule = ReadPRulePtr (file, &pNextPRule);
-						break;
-					     case AtTextAttr:
-						TtaReadName (file, pAttrP->ApString);
-						pAttrP->ApTextFirstPRule = ReadPRulePtr (file, &pNextPRule);
-						break;
-					     case AtEnumAttr:
-						for (j = 0; j <= MAX_ATTR_VAL; j++)
-						   pAttrP->ApEnumFirstPRule[j] = NULL;
-						for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-						   pAttrP->ApEnumFirstPRule[j] = ReadPRulePtr (file, &pNextPRule);
-						break;
-					  }
-				 }
-			    }
-		       }
-	       }
+			  break;
+			case AtReferenceAttr:
+			  pAttrP->ApRefFirstPRule = ReadPRulePtr (file,
+								  &pNextPRule);
+			  break;
+			case AtTextAttr:
+			  TtaReadName (file, pAttrP->ApString);
+			  pAttrP->ApTextFirstPRule = ReadPRulePtr (file,
+								  &pNextPRule);
+			  break;
+			case AtEnumAttr:
+			  for (j = 0; j <= MAX_ATTR_VAL; j++)
+			    pAttrP->ApEnumFirstPRule[j] = NULL;
+			  for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
+			    pAttrP->ApEnumFirstPRule[j] = ReadPRulePtr (file, &pNextPRule);
+			  break;
+			}
+		    }
+		}
+	    }
 
-	     if (pSS->SsFirstDynNature == 0)
-		InitialNElems = pSS->SsNRules;
-	     else
-		InitialNElems = pSS->SsFirstDynNature - 1;
+	  if (pSS->SsFirstDynNature == 0)
+	    InitialNElems = pSS->SsNRules;
+	  else
+	    InitialNElems = pSS->SsFirstDynNature - 1;
 
-	     /* lit la table des pointeurs de regle de chaque type du */
-	     /* schema de structure */
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   pPSch->PsElemPRule[i] = ReadPRulePtr (file, &pNextPRule);
+	  /* lit la table des pointeurs de regle de chaque type du */
+	  /* schema de structure */
+	  if (!error)
+	    for (i = 0; i < InitialNElems; i++)
+	      pPSch->PsElemPRule[i] = ReadPRulePtr (file, &pNextPRule);
 
-	     /* lit toutes les regles de presentation */
-	     /* lit les regles standard */
-	     if (!error)
-		ReadPRules (file, &pPSch->PsFirstDefaultPRule, &pNextPRule);
+	  /* lit toutes les regles de presentation */
+	  /* lit les regles standard */
+	  if (!error)
+	    ReadPRules (file, &pPSch->PsFirstDefaultPRule, &pNextPRule);
 
-	     /* les regles des boites */
-	     if (!error)
-		for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-		   ReadPRules (file, &pPSch->PsPresentBox[i].PbFirstPRule, &pNextPRule);
+	  /* les regles des boites */
+	  if (!error)
+	    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
+	      ReadPRules (file, &pPSch->PsPresentBox[i].PbFirstPRule,
+			  &pNextPRule);
 
-	     /* lit les regles des attributs */
-	     if (!error)
-		for (i = 0; i < pSS->SsNAttributes; i++)
-		   if (!error)
-		     {
-			pAttrP = pPSch->PsAttrPRule[i];
-			for (l = pPSch->PsNAttrPRule[i]; l-- > 0; pAttrP = pAttrP->ApNextAttrPres)
+	  /* lit les regles des attributs */
+	  if (!error)
+	    for (i = 0; i < pSS->SsNAttributes; i++)
+	      if (!error)
+		{
+		  pAttrP = pPSch->PsAttrPRule->AttrPres[i];
+		  for (l = pPSch->PsNAttrPRule->Num[i]; l-- > 0;
+		       pAttrP = pAttrP->ApNextAttrPres)
+		    {
+		      if (!error)
+			switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 			  {
-			     if (!error)
-				switch (pSS->SsAttribute->TtAttr[i]->AttrType)
-				      {
-					 case AtNumAttr:
-					    for (j = 0; j < pAttrP->ApNCases; j++)
-					       ReadPRules (file, &pAttrP->ApCase[j].CaFirstPRule, &pNextPRule);
-					    break;
-					 case AtReferenceAttr:
-					    ReadPRules (file, &pAttrP->ApRefFirstPRule, &pNextPRule);
-					    break;
-					 case AtTextAttr:
-					    ReadPRules (file, &pAttrP->ApTextFirstPRule, &pNextPRule);
-					    break;
-					 case AtEnumAttr:
-					    for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-					       ReadPRules (file, &pAttrP->ApEnumFirstPRule[j], &pNextPRule);
-					    break;
-				      }
+			  case AtNumAttr:
+			    for (j = 0; j < pAttrP->ApNCases; j++)
+			      ReadPRules (file,&pAttrP->ApCase[j].CaFirstPRule,
+					  &pNextPRule);
+			    break;
+			  case AtReferenceAttr:
+			    ReadPRules (file, &pAttrP->ApRefFirstPRule,
+					&pNextPRule);
+			    break;
+			  case AtTextAttr:
+			    ReadPRules (file, &pAttrP->ApTextFirstPRule,
+					&pNextPRule);
+			    break;
+			  case AtEnumAttr:
+			    for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
+			      ReadPRules (file, &pAttrP->ApEnumFirstPRule[j],
+					  &pNextPRule);
+			    break;
 			  }
-		     }
+		    }
+		}
 
-	     /* lit les regles des elements structures */
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   ReadPRules (file, &pPSch->PsElemPRule[i], &pNextPRule);
+	  /* lit les regles des elements structures */
+	  if (!error)
+	    for (i = 0; i < InitialNElems; i++)
+	      ReadPRules (file, &pPSch->PsElemPRule[i], &pNextPRule);
 
-	     if (!error)
-		for (i = 0; i < pSS->SsNAttributes; i++)
-		   TtaReadShort (file, &pPSch->PsNHeirElems[i]);
+	  if (!error)
+	    {
+	      pPSch->PsNHeirElems = (NumberTable*) malloc (pSS->SsNAttributes * sizeof (int));
+	      for (i = 0; i < pSS->SsNAttributes; i++)
+		TtaReadShort (file, &pPSch->PsNHeirElems->Num[i]);
+	    }
 
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		  {
-		     TtaReadShort (file, &pPSch->PsNInheritedAttrs[i]);
-		     pPSch->PsInheritedAttr[i] = NULL;
-		  }
+	  if (!error)
+	    for (i = 0; i < InitialNElems; i++)
+	      {
+		TtaReadShort (file, &pPSch->PsNInheritedAttrs[i]);
+		pPSch->PsInheritedAttr[i] = NULL;
+	      }
 
-	     if (!error)
-		for (i = 0; i < pSS->SsNAttributes; i++)
-		  {
-		     TtaReadShort (file, &pPSch->PsNComparAttrs[i]);
-		     pPSch->PsComparAttr[i] = NULL;
-		  }
+	  if (!error)
+	    {
+	      pPSch->PsNComparAttrs = (NumberTable*) malloc (pSS->SsNAttributes * sizeof (int));
+	      pPSch->PsComparAttr = (CompAttrTbTb*) malloc (pSS->SsNAttributes * sizeof (PtrAttributePres));
+	      for (i = 0; i < pSS->SsNAttributes; i++)
+		{
+		  TtaReadShort (file, &pPSch->PsNComparAttrs->Num[i]);
+		  pPSch->PsComparAttr->CATable[i] = NULL;
+		}
+	    }
 
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   TtaReadShort (file, &pPSch->PsElemTransmit[i]);
-	     if (!error)
-		TtaReadShort (file, &pPSch->PsNTransmElems);
-	     if (!error)
-		for (i = 0; i < pPSch->PsNTransmElems; i++)
-		  {
-		     TtaReadShort (file, &pPSch->PsTransmElem[i].TeTargetDoc);
-		     TtaReadName (file, pPSch->PsTransmElem[i].TeTargetAttr);
-		  }
-	     FreePresentRule (pNextPRule);
-	  }
-	/* ferme le fichier */
-	TtaReadClose (file);
-     }
-   if (error)
-     {
-	/* message 'Schema incorrect' */
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
-			   fileName);
-	FreeSchPres (pPSch);
-	return NULL;
-     }
-   else
-      return pPSch;
+	  if (!error)
+	    for (i = 0; i < InitialNElems; i++)
+	      TtaReadShort (file, &pPSch->PsElemTransmit[i]);
+	  if (!error)
+	    TtaReadShort (file, &pPSch->PsNTransmElems);
+	  if (!error)
+	    for (i = 0; i < pPSch->PsNTransmElems; i++)
+	      {
+		TtaReadShort (file, &pPSch->PsTransmElem[i].TeTargetDoc);
+		TtaReadName (file, pPSch->PsTransmElem[i].TeTargetAttr);
+	      }
+	  FreePresentRule (pNextPRule);
+	}
+      /* ferme le fichier */
+      TtaReadClose (file);
+    }
+  if (error)
+    {
+      /* message 'Schema incorrect' */
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
+			 fileName);
+      FreeSchPres (pPSch, pSS);
+      return NULL;
+    }
+  else
+    return pPSch;
 }

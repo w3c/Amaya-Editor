@@ -67,20 +67,53 @@ static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc,
 /*----------------------------------------------------------------------
    TtaNewPSchema
 
-   Creates a new (empty) presentation schema.
+   Creates a new (empty) presentation schema for structure schema nature
 
    Parameters:
-   No parameter
+   nature: the structure schema for which a presentation schema is created
 
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-PSchema             TtaNewPSchema ()
+PSchema             TtaNewPSchema (SSchema nature)
 {
    PtrPSchema          pSchPres;
+   PtrSSchema          pSS;
+   int                 size;
 
    pSchPres = NULL;
-   GetSchPres (&pSchPres);
+   if (nature)
+     {
+       GetSchPres (&pSchPres);
+       if (pSchPres)
+	 {
+	   pSS = (PtrSSchema) nature;
+	   size = pSS->SsNAttributes * sizeof (PtrAttributePres);
+	   pSchPres->PsAttrPRule =  (AttrPresTable*) malloc (size);
+	   if (pSchPres->PsAttrPRule)
+	     memset (pSchPres->PsAttrPRule, 0, size);
+
+	   size = pSS->SsNAttributes * sizeof (int);
+	   pSchPres->PsNAttrPRule = (NumberTable*) malloc (size);
+	   if (pSchPres->PsNAttrPRule)
+	     memset (pSchPres->PsNAttrPRule, 0, size);
+
+	   size = pSS->SsNAttributes * sizeof (int);
+	   pSchPres->PsNHeirElems = (NumberTable*) malloc (size);
+	   if (pSchPres->PsNHeirElems)
+	     memset (pSchPres->PsNHeirElems, 0, size);
+
+	   size = pSS->SsNAttributes * sizeof (int);
+	   pSchPres->PsNComparAttrs = (NumberTable*) malloc (size);
+	   if (pSchPres->PsNComparAttrs)
+	     memset (pSchPres->PsNComparAttrs, 0, size);
+
+	   size = pSS->SsNAttributes * sizeof (PtrAttributePres);
+	   pSchPres->PsComparAttr = (CompAttrTbTb*) malloc (size);
+	   if (pSchPres->PsComparAttr)
+	     memset (pSchPres->PsComparAttr, 0, size);
+	 }
+     }
    return ((PSchema) pSchPres);
 }
 

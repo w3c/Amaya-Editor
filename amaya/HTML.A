@@ -281,7 +281,7 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrItemStyle;
 	END;
 
-   Langue:
+   Language:
 	BEGIN
 	AttrCreate.Post -> AttrLangCreated;
 	AttrDelete.Pre  -> AttrLangShouldBeDeleted;

@@ -303,6 +303,7 @@ typedef struct _StructSchema
    int              SsRootElem;          /* number of the root rule */
    int              SsNAttributes;       /* number of attributes in the
 					    schema */
+   int              SsAttrTableSize;     /* actual size of table SsAttribute */
    int              SsNRules;            /* current number of rules defining
 					    the elements, including the nature
 					    rules */

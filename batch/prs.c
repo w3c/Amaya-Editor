@@ -170,6 +170,8 @@ static ThotBool      AttrInitCounter;	/* on a rencontre' "Init" dans une definit
   ----------------------------------------------------------------------*/
 static void         Initialize ()
 {
+  int      size;
+
    /* acquiert un schema de presentation */
    GetSchPres (&pPSchema);
    if (pPSchema == NULL)
@@ -183,6 +185,31 @@ static void         Initialize ()
 	 TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
        else
 	 {
+	   size = pSSchema->SsNAttributes * sizeof (PtrAttributePres);
+	   pPSchema->PsAttrPRule =  (AttrPresTable*) malloc (size);
+	   if (pPSchema->PsAttrPRule)
+	     memset (pPSchema->PsAttrPRule, 0, size);
+
+	   size = pSSchema->SsNAttributes * sizeof (int);
+	   pPSchema->PsNAttrPRule = (NumberTable*) malloc (size);
+	   if (pPSchema->PsNAttrPRule)
+	     memset (pPSchema->PsNAttrPRule, 0, size);
+
+	   size = pSSchema->SsNAttributes * sizeof (int);
+	   pPSchema->PsNHeirElems = (NumberTable*) malloc (size);
+	   if (pPSchema->PsNHeirElems)
+	     memset (pPSchema->PsNHeirElems, 0, size);
+
+	   size = pSSchema->SsNAttributes * sizeof (int);
+	   pPSchema->PsNComparAttrs = (NumberTable*) malloc (size);
+	   if (pPSchema->PsNComparAttrs)
+	     memset (pPSchema->PsNComparAttrs, 0, size);
+
+	   size = pSSchema->SsNAttributes * sizeof (PtrAttributePres);
+	   pPSchema->PsComparAttr = (CompAttrTbTb*) malloc (size);
+	   if (pPSchema->PsComparAttr)
+	     memset (pPSchema->PsComparAttr, 0, size);
+
 	   CurMinMax = CntCurVal;
 	   /* initialise les indicateurs du compilateur */
 	   ViewDef = False;
@@ -489,8 +516,8 @@ static void         EndOfRulesForType ()
      }
    else if (AttributeDef)
      {
-	pPRuleA = pPSchema->PsAttrPRule[CurAttrNum - 1];
-	for (l = pPSchema->PsNAttrPRule[CurAttrNum - 1]; --l > 0;
+	pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1];
+	for (l = pPSchema->PsNAttrPRule->Num[CurAttrNum - 1]; --l > 0;
 	     pPRuleA = pPRuleA->ApNextAttrPres)
 	   if (pPRuleA->ApElemType == CurElemHeritAttr)
 	      break;
@@ -825,7 +852,7 @@ static AttributePres *NewAttrPRule (int att)
    else
       /* memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
-   pPSchema->PsNAttrPRule[att - 1] += 1;
+   pPSchema->PsNAttrPRule->Num[att - 1] += 1;
    return (pPRuleA);
 }
 
@@ -841,14 +868,14 @@ static void         GenerateRPresAttribut (indLine wi)
    int                 l;
 
    /* s'il n'y a pas de structure AttributePres, on en alloue une */
-   if (pPSchema->PsNAttrPRule[CurAttrNum - 1] == 0)
+   if (pPSchema->PsNAttrPRule->Num[CurAttrNum - 1] == 0)
      {
-	pPRuleA = pPSchema->PsAttrPRule[CurAttrNum - 1]
+	pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1]
 	   = NewAttrPRule (CurAttrNum);
 	if (CurElemHeritAttr)
 	  {
 	     pPSchema->PsNInheritedAttrs[CurElemHeritAttr - 1] += 1;
-	     pPSchema->PsNHeirElems[CurAttrNum - 1] += 1;
+	     pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
 	  }
      }
 
@@ -856,8 +883,8 @@ static void         GenerateRPresAttribut (indLine wi)
       /* sinon on cherche s'il y en a une qui traite deja certaines regles
          de l'element CurElemHeritAttr */
      {
-	pPRuleA = pPSchema->PsAttrPRule[CurAttrNum - 1];
-	for (l = pPSchema->PsNAttrPRule[CurAttrNum - 1]; --l > 0;
+	pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1];
+	for (l = pPSchema->PsNAttrPRule->Num[CurAttrNum - 1]; --l > 0;
 	     pPRuleA = pPRuleA->ApNextAttrPres)
 	   if (CurTextEqual[0] == '\0')
 	      if (pPRuleA->ApElemType == CurElemHeritAttr)
@@ -870,7 +897,7 @@ static void         GenerateRPresAttribut (indLine wi)
 	     if (CurElemHeritAttr)
 	       {
 		  pPSchema->PsNInheritedAttrs[CurElemHeritAttr - 1] += 1;
-		  pPSchema->PsNHeirElems[CurAttrNum - 1] += 1;
+		  pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
 	       }
 	  }
      }
@@ -900,7 +927,7 @@ static void         GenerateRPresAttribut (indLine wi)
 		       /* on utilise un numero d'attribut */
 		      {
 			 if (CurElemHeritAttr == 0)
-			    pPSchema->PsNComparAttrs[CurComparAttr - 1] += 1;
+			    pPSchema->PsNComparAttrs->Num[CurComparAttr - 1] += 1;
 			 /* ATTENTION ce n'est donc pas le vrai nombre
 			    d'attributs se comparant a CurComparAttr
 			    puisqu'on fait +1 a chaque fois */
@@ -5206,8 +5233,8 @@ void                SortAllPRules ()
    for (j = 0; j < pSSchema->SsNAttributes; j++)
      {
        /* pour chaque paquet de regles */
-       pPRuleA = pPSchema->PsAttrPRule[j];
-       for (l = pPSchema->PsNAttrPRule[j]; l-- > 0;
+       pPRuleA = pPSchema->PsAttrPRule->AttrPres[j];
+       for (l = pPSchema->PsNAttrPRule->Num[j]; l-- > 0;
 	    pPRuleA = pPRuleA->ApNextAttrPres)
 	 {
 	   /* selon le type de l'attribut */
@@ -6057,8 +6084,8 @@ static void         CheckAllBoxesUsed ()
    for (att = 0; att < pSSchema->SsNAttributes; att++)
       /* cherche dans les regles de presentation des attributs */
      {
-	pPRuleA = pPSchema->PsAttrPRule[att];
-	for (l = pPSchema->PsNAttrPRule[att]; l-- > 0; pPRuleA = pPRuleA->ApNextAttrPres)
+	pPRuleA = pPSchema->PsAttrPRule->AttrPres[att];
+	for (l = pPSchema->PsNAttrPRule->Num[att]; l-- > 0; pPRuleA = pPRuleA->ApNextAttrPres)
 	  {
 	     /* selon le type de l'attribut */
 	     switch (pSSchema->SsAttribute->TtAttr[att]->AttrType)

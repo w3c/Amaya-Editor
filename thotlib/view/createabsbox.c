@@ -1884,7 +1884,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   pRule = NULL;
   if (pSchP == NULL)
     return (NULL);
-  pAPRule = pSchP->PsAttrPRule[pAttr->AeAttrNum - 1];
+  pAPRule = pSchP->PsAttrPRule->AttrPres[pAttr->AeAttrNum - 1];
 
   /* on cherche quel est le paquet de regles qui s'applique */
   /* pPRdef designera le paquet de regles s'appliquant a tous les elements */
@@ -1954,7 +1954,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       }
     }
     
-  for (i = pSchP->PsNAttrPRule[pAttr->AeAttrNum - 1]; i-- > 0;
+  for (i = pSchP->PsNAttrPRule->Num[pAttr->AeAttrNum - 1]; i-- > 0;
        pAPRule = pAPRule->ApNextAttrPres)
     {
       if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == pEl->ElTypeNumber)

@@ -4553,7 +4553,7 @@ RULES
 
 ATTRIBUTES
 
- Langue:
+ Language:
 	BEGIN
         CreateBefore(AttrName);
 	CreateBefore(AttrValue);

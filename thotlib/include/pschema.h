@@ -19,15 +19,15 @@ typedef int        *PSchema;
 /*----------------------------------------------------------------------
    TtaNewPSchema
 
-   Creates a new (empty) presentation schema.
+   Creates a new (empty) presentation schema for structure schema nature
 
    Parameters:
-   No parameter
+   nature: the structure schema for which a presentation schema is created
 
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-extern PSchema      TtaNewPSchema ();
+extern PSchema      TtaNewPSchema (SSchema nature);
 /*----------------------------------------------------------------------
    TtaUnlinkPSchema
 
