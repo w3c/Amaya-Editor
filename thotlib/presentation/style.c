@@ -1051,8 +1051,8 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 		   cond->CoTypeAttr != ctxt->attrType[i] ||
 		   cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
 		   (cond->CoTestAttrValue &&
-		    cond->CoTextMatch != ctxt->attrMatch[i] &&
-		    strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i]))))
+		    (cond->CoTextMatch != ctxt->attrMatch[i] ||
+		    strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i])))))
 	     cond = cond->CoNextCondition;
 	   if (cond == NULL)
 	     /* conditions are different */
