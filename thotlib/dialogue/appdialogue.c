@@ -2107,6 +2107,7 @@ gboolean APP_PopWinSelect (GtkWidget *w)
 			 &y, 
 			 &mask);
   entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
+				 "entry");	     
 
   if (x > 0 && x < w->allocation.width &&
       y > 0 && y < w->allocation.height)
