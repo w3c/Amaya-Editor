@@ -162,14 +162,14 @@ libwww libwww.a :
 	@(if test ! -d $(LIBWWW) ; then $(MKDIR) $(LIBWWW) ;  fi)
 	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/$(LIBWWW)" ; cd $(LIBWWW) ; \
 	  unset LANG; if [ -x $$libwwwdir/configure ] ; then \
-	      $$libwwwdir/configure ; \
+	      $$libwwwdir/configure --disable-shared; \
 	  else \
-	      ../$$libwwwdir/configure ; \
+	      ../$$libwwwdir/configure --disable-shared; \
 	  fi)
 	-@(cd $(THOTDIR)/$(LIBWWW)/Library/src ; \
 	   touch *.html ; touch *.h ; touch *.c)
-	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC=$(CC) CFLAGS="-O" libwww.a)
-	@($(CP) $(LIBWWW)/Library/src/libwww.a libwww.a)
+	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC=$(CC) CFLAGS="-O")
+	@($(CP) $(LIBWWW)/Library/src/.libs/libwww.a libwww.a)
 	@echo libwww.a reinstalled
 
 #

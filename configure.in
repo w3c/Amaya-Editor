@@ -319,7 +319,7 @@ dnl  ***************************************************************
 THOT_VER="2.2"
 AMAYA_VER="1.3"
 KAFFE_VER="snap"
-LIBWWW_VER="5.0a"
+LIBWWW_VER="5.1m"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
