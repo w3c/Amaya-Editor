@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2002
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -38,13 +38,7 @@
    Ajoute le repertoire du document d'annotations a la liste des
    repertoires de documents
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_SetPath (Document document)
-#else /* __STDC__*/
-void ANNOT_SetPath (document)
-     Document document;
-#endif /* __STDC__*/
 {
   char  *dirList = TtaGetMemory (2000);
 
@@ -89,7 +83,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   else
     tmp = "annotation";
 
-  annotDoc = InitDocAndView (0, tmp, docAnnot, 0, FALSE, L_OtherValue);
+  annotDoc = InitDocAndView (0, tmp, docAnnot, 0, FALSE, L_OtherValue, CE_ABSOLUTE);
 
   if (annotDoc == 0) 
     {
@@ -261,7 +255,8 @@ void ANNOT_ReloadAnnotMeta (Document annotDoc)
   Initializes an annotation document by adding a BODY part
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot, char *source_doc_title)
+void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
+			      char *source_doc_title)
 {
   ElementType    elType;
   Element        root, head, el;
@@ -548,7 +543,8 @@ static Element ANNOT_ThreadItem_new (Document doc)
   If useSource == TRUE, we're initializing the thread, so the first
   item points to the root of thread.
   -----------------------------------------------------------------------*/
-static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta *annot_doc, ThotBool useSource)
+static void ANNOT_ThreadItem_init (Element thread_item, Document doc,
+				   AnnotMeta *annot_doc, ThotBool useSource)
 {
   Element             el;
   ElementType         elType;
