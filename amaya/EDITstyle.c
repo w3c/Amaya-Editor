@@ -101,7 +101,7 @@ Document            doc;
 #endif
 {
   SetHTMLStyleParserDestructiveMode (TRUE);
-  ParseCSSGenericStyle (selector, "color : white", doc, GetDocumentGenericPresentation (doc));
+  ParseCSSGenericStyle (selector, "color : white", doc, GetDocumentStyle (doc));
   SetHTMLStyleParserDestructiveMode (FALSE);
 }
 

@@ -6,27 +6,22 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void PrintCSS ( CSSInfoPtr css,
-                       FILE * output );
 extern int DumpCSSToFile ( Document doc,
                            CSSInfoPtr css,
                            char *filename );
-extern void PrintListCSS ( FILE * output );
 extern void AddCSS ( CSSInfoPtr css );
 extern void FreeCSS ( CSSInfoPtr css );
 extern void InitDocumentCSS ( Document doc );
 extern void CleanDocumentCSS ( Document doc );
-extern void CleanListCSS ( void );
 extern CSSInfoPtr NewCSS ( void );
-extern int CmpCSS ( CSSInfoPtr css,
-                    CSSInfoPtr cour );
 extern CSSInfoPtr SearchCSS ( Document doc,
                               CSSCategory category,
                               char *url );
 extern void ClearCSS ( CSSInfoPtr css );
 extern void RebuildCSS ( CSSInfoPtr css );
 extern CSSInfoPtr GetDocumentStyle ( Document doc );
-extern PSchema GetDocumentGenericPresentation ( Document doc );
+extern PSchema GetDocumentGenericPresentation ( Document doc,
+						char *structName);
 extern CSSInfoPtr GetUserGenericPresentation ( void );
 extern void RebuildHTMLStyleHeader ( Document doc );
 extern void ParseHTMLStyleHeader ( Element elem,
@@ -46,9 +41,6 @@ extern void CSSSetMagnification ( Document doc,
                                   PSchema gpres,
                                   int zoom );
 extern void ApplyFinalStyle ( Document doc );
-extern void MergeNewCSS ( char *attrstr,
-                          Document doc,
-                          PSchema gPres );
 extern void RemoveCSS ( char *name,
                         Document doc );
 extern PRuleInfoPtr SearchRPISel ( char *selector,
@@ -77,27 +69,22 @@ extern void CloseCSS ( void );
 
 #else /* __STDC__ */
 
-extern void PrintCSS (/* CSSInfoPtr css,
-                         FILE * output */);
 extern int DumpCSSToFile (/* Document doc,
                              CSSInfoPtr css,
                              char *filename */);
-extern void PrintListCSS (/* FILE * output */);
 extern void AddCSS (/* CSSInfoPtr css */);
 extern void FreeCSS (/* CSSInfoPtr css */);
 extern void InitDocumentCSS (/* Document doc */);
 extern void CleanDocumentCSS (/* Document doc */);
-extern void CleanListCSS (/* void */);
 extern CSSInfoPtr NewCSS (/* void */);
-extern int CmpCSS (/* CSSInfoPtr css,
-                      CSSInfoPtr cour */);
 extern CSSInfoPtr SearchCSS (/* Document doc,
                                 CSSCategory category,
                                 char *url */);
 extern void ClearCSS (/* CSSInfoPtr css */);
 extern void RebuildCSS (/* CSSInfoPtr css */);
 extern CSSInfoPtr GetDocumentStyle (/* Document doc */);
-extern PSchema GetDocumentGenericPresentation (/* Document doc */);
+extern PSchema GetDocumentGenericPresentation (/* Document doc,
+						  char *structName */);
 extern CSSInfoPtr GetUserGenericPresentation (/* void */);
 extern void RebuildHTMLStyleHeader (/* Document doc */);
 extern void ParseHTMLStyleHeader (/* Element elem,
@@ -117,9 +104,6 @@ extern void CSSSetMagnification (/* Document doc,
                                     PSchema gpres,
                                     int zoom */);
 extern void ApplyFinalStyle (/* Document doc */);
-extern void MergeNewCSS (/* char *attrstr,
-                            Document doc,
-                            PSchema gPres */);
 extern void RemoveCSS (/* char *name,
                           Document doc */);
 extern PRuleInfoPtr SearchRPISel (/* char *selector,

@@ -37,37 +37,29 @@
  *  of teh same kind. The function TstRuleContext rely on this order.	  *
  *
  * Author: D. Veillard (INRIA)
+           I. Vatton (INRIA) extensions
  *
  */
 
 #include "thot_sys.h"
-#include "application.h"
 #include "libmsg.h"
 #include "message.h"
-#include "conststr.h"
-#include "constprs.h"
-#include "constint.h"
 #include "constmedia.h"
 #include "typeint.h"
-#include "typeprs.h"
 #include "typemedia.h"
 #include "application.h"
+#include "document.h"
+#include "pschema.h"
 
-#include "genericdriver.h"
+#undef THOT_EXPORT
+#define THOT_EXPORT
+#include "edit_tv.h"
+
 #include "changepresent_f.h"
+#include "genericdriver.h"
+#include "memory_f.h"
 #include "presentdriver_f.h"
 
-#ifdef __STDC__
-extern void         GetPresentRule (PtrPRule * pRP);
-extern void         GetPresentRuleCond (PtrCondition *);
-extern void         FreePresentRule (PtrPRule);
-
-#else  /* __STDC__ */
-extern void         GetPresentRule ();
-extern void         GetPresentRuleCond ();
-extern void         FreePresentRule ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    *									*
@@ -78,13 +70,11 @@ extern void         FreePresentRule ();
 /*
  * CleanGenericContext : clean up Generic context by removing all context.
  */
-
 #ifdef __STDC__
 static void         CleanGenericContext (GenericContext ctxt)
 #else  /* __STDC__ */
 static void         CleanGenericContext (ctxt)
 GenericContext      ctxt;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -135,17 +125,15 @@ Document            doc;
    return (ctxt);
 }
 
-/*
- * FreeGenericContext : user level function needed to deallocate
- *        a GenericContext.
- */
-
+/*----------------------------------------------------------------------
+  FreeGenericContext : user level function needed to deallocate
+  a GenericContext.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreeGenericContext (GenericContext ctxt)
 #else  /* __STDC__ */
 void                FreeGenericContext (ctxt)
 GenericContext      ctxt;
-
 #endif /* __STDC__ */
 {
    if (ctxt == NULL)
@@ -155,25 +143,17 @@ GenericContext      ctxt;
    TtaFreeMemory ((char *) ctxt);
 }
 
+
 /*----------------------------------------------------------------------
-   *									*
-   * a few functions needed to help insert new rules in the presentation  *
-   * structures                                                           *
-   *									*
+  BuildBoxName : generate an unique name encoding for the given context.
+  Assume the ancestor list has been sorted.
   ----------------------------------------------------------------------*/
-
-/*
- * BuildBoxName : generate an unique name encoding for the given context.
- *                Assume the ancestor list has been sorted.
- */
-
 #ifdef __STDC__
 static void         BuildBoxName (GenericContext ctxt, Name * boxname)
 #else  /* __STDC__ */
 static void         BuildBoxName (ctxt, boxname)
 GenericContext      ctxt;
 Name               *boxname;
-
 #endif /* !__STDC__ */
 {
    int                 i;
@@ -1567,8 +1547,8 @@ PresentationValue   v;
    int presBox = 0;
    PtrPRule pRule;
 
-   if ((tsch == NULL) || (ctxt == NULL)) return(-1);
-
+   if ((tsch == NULL) || (ctxt == NULL))
+     return(-1);
    doc = ctxt->doc;
 /*    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc); */
    pSS = (PtrSSchema) ctxt->schema;
@@ -1634,55 +1614,46 @@ int                 specific;
    }
 }
 
-/*----------------------------------------------------------------------
-   *									*
-   * Browsing functions.							*
-   *									*
-  ----------------------------------------------------------------------*/
-
 #define DRIVERG_CTXT_MAGIC1	((unsigned long) 0x23F45dA9L)
 
-/*
+/*----------------------------------------------------------------------
  * StoreConds : store a condition list in a generic context.
- */
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         StoreConds (GenericContext ctxt, PtrCondition cond)
 #else  /* __STDC__ */
 static void         StoreConds (ctxt, cond)
 GenericContext      ctxt;
 PtrCondition        cond;
-
 #endif /* __STDC__ */
 {
-   int                 i = 0;
+  int                 i = 0;
 
-   while (cond != NULL)
-     {
-	switch (cond->CoCondition)
-	      {
-		 case PcElemType:
-		    ctxt->attrelem = cond->CoTypeElAttr;
-		    break;
-		 case PcWithin:
-		    ctxt->ancestors[i] = cond->CoTypeAncestor;
-		    ctxt->ancestors_nb[i] = cond->CoRelation;
-		    i++;
-		    break;
-		    /* We are far from supporting all the range of the P language */
-		 default:
-		    break;
-	      }
-	cond = cond->CoNextCondition;
-     }
+  while (cond != NULL)
+    {
+      switch (cond->CoCondition)
+	{
+	case PcElemType:
+	  ctxt->attrelem = cond->CoTypeElAttr;
+	  break;
+	case PcWithin:
+	  ctxt->ancestors[i] = cond->CoTypeAncestor;
+	  ctxt->ancestors_nb[i] = cond->CoRelation;
+	  i++;
+	  break;
+	  /* We are far from supporting all the range of the P language */
+	default:
+	  break;
+	}
+      cond = cond->CoNextCondition;
+    }
 }
 
-/*
- * ApplyAllGenericContext : browse all the PSchema structure,
- *      creating for each PRules list the corresponding GenericContext 
- *      structure, and call the given handler for each one.
- */
-
+/*----------------------------------------------------------------------
+  ApplyAllGenericContext : browse all the PSchema structure,
+  creating for each PRules list the corresponding GenericContext 
+  structure, and call the given handler for each one.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyAllGenericContext (Document doc, GenericTarget target,
 			    GenericContextApplyHandler handler, void *param)
@@ -1692,195 +1663,194 @@ Document            doc;
 GenericTarget       target;
 GenericSettingsApplyHandler handler;
 void               *param;
-
 #endif /* __STDC__ */
 {
-   GenericContext      ctxt;
-   PtrSSchema          pSchemaStr;
-   PtrPSchema          pSc1;
-   PtrPRule            rule;
-   PtrCondition        prevcond, cond;
-   TtAttribute        *pAt1;
-   AttributePres      *pRP1;
-   int                 El;
-   int                 GetAttributeOfElement;
-   int                 Val;
+  GenericContext      ctxt;
+  PtrSSchema          pSchemaStr;
+  PtrPSchema          pSchemaP, currentP;
+  PtrPRule            rule;
+  PtrCondition        prevcond, cond;
+  TtAttribute        *pAt1;
+  AttributePres      *pRP1;
+  int                 El;
+  int                 GetAttributeOfElement;
+  int                 Val;
+  boolean             found;
 
-   /* set up and check the environment */
-   prevcond = 0;
-   pSchemaStr = (PtrSSchema) TtaGetDocumentSSchema (doc);
-   pSc1 = (PtrPSchema) target;
-   if (pSchemaStr == NULL)
-      return;
-   if (pSc1 == NULL)
-      return;
-   if (handler == NULL)
-      return;
+  /* set up and check the environment */
+  prevcond = 0;
+  pSchemaP = (PtrPSchema) target;
+  
+   if (doc == 0 || LoadedDocument[doc - 1] == NULL)
+     return;
+   else if (pSchemaP == NULL)
+     return;
+   else if (handler == NULL)
+     return;
    ctxt = GetGenericContext (doc);
    if (ctxt == NULL)
-      return;
+     return;
 
-   /*
-    * Browse all rules applying directly to a given kind of element.
-    */
+   /* Locate the structure schema concerned (main structure or nature) */
+   pSchemaStr = NULL;
+   found = FALSE;
+   do
+     {
+       currentP = (PtrPSchema) TtaGetFirstPSchema (doc, (SSchema) pSchemaStr);
+       while (currentP != NULL && currentP != pSchemaP)
+	 TtaNextPSchema ((PSchema *) &currentP, doc, (SSchema) pSchemaStr);
+       if (currentP == NULL)
+	 TtaNextNature (doc,  (SSchema *)&pSchemaStr);
+       else
+	 found = TRUE;
+     }
+   while (!found && pSchemaStr != NULL);
+   
+   if (pSchemaStr == NULL)
+     pSchemaStr = (PtrSSchema) TtaGetDocumentSSchema (doc);
+   
+   /* Browse all rules applying directly to a given kind of element */
    for (El = 1; El <= pSchemaStr->SsNRules; El++)
      {
-	rule = pSc1->PsElemPRule[El - 1];
-	if (rule == NULL)
-	   continue;
-
-	/*
-	 * Ok, there is a list of PRules attached to this Element type.
-	 * From this list we can derive at least one Generic context.
-	 * We differentiate rules to be on differents contexts if they
-	 * don't have equivalent conditions.
-	 */
-	SortRulesForAccess (&pSc1->PsElemPRule[El - 1]);
-	rule = pSc1->PsElemPRule[El - 1];
-	while (rule != NULL)
+	rule = pSchemaP->PsElemPRule[El - 1];
+	if (rule != NULL)
 	  {
-	     cond = rule->PrCond;
-	     if ((rule == pSc1->PsElemPRule[El - 1]) ||
-		 (CompareCondLists (prevcond, rule->PrCond)))
-	       {
-
-		  /*
-		   * this is a new context.
-		   */
-		  prevcond = cond;
-		  CleanGenericContext (ctxt);
-		  StoreConds (ctxt, cond);
-		  ctxt->type = El;
-
-		  /*
-		   * call the handler provided by the user.
-		   */
-		  ctxt->magic1 = DRIVERG_CTXT_MAGIC1;
-		  ctxt->magic2 = (unsigned long) rule;
-		  handler (target, ctxt, param);
-	       }
-	     rule = rule->PrNextPRule;
+	    /*
+	     * Ok, there is a list of PRules attached to this Element type.
+	     * From this list we can derive at least one Generic context.
+	     * We differentiate rules to be on differents contexts if they
+	     * don't have equivalent conditions.
+	     */
+	    SortRulesForAccess (&pSchemaP->PsElemPRule[El - 1]);
+	    rule = pSchemaP->PsElemPRule[El - 1];
+	    while (rule != NULL)
+	      {
+		cond = rule->PrCond;
+		if ((rule == pSchemaP->PsElemPRule[El - 1]) ||
+		    (CompareCondLists (prevcond, rule->PrCond)))
+		  {
+		    /* this is a new context */
+		    prevcond = cond;
+		    CleanGenericContext (ctxt);
+		    StoreConds (ctxt, cond);
+		    ctxt->type = El;
+		    ctxt->schema = (SSchema) pSchemaStr;
+		    
+		    /* call the handler provided by the user */
+		    ctxt->magic1 = DRIVERG_CTXT_MAGIC1;
+		    ctxt->magic2 = (unsigned long) rule;
+		    handler (target, ctxt, param);
+		  }
+		rule = rule->PrNextPRule;
+	      }
+	    SortRulesForDisplay (&pSchemaP->PsElemPRule[El - 1]);
 	  }
-	SortRulesForDisplay (&pSc1->PsElemPRule[El - 1]);
      }
 
-   /*
-    * browse all rules applied to element having attributes.
-    */
+   /* browse all rules applied to element having attributes */
    if (pSchemaStr->SsNAttributes > 0)
      {
-	for (GetAttributeOfElement = 1; GetAttributeOfElement <= pSchemaStr->SsNAttributes; GetAttributeOfElement++)
-	  {
-	     pAt1 = &pSchemaStr->SsAttribute[GetAttributeOfElement - 1];
-	     pRP1 = pSc1->PsAttrPRule[GetAttributeOfElement - 1];
-	     if (pAt1 == NULL)
-		continue;
-	     if (pRP1 == NULL)
-		continue;
-	     if (pAt1->AttrType == AtTextAttr)
-	       {
-		  while (pRP1 != NULL)
-		    {
-		       rule = pRP1->ApTextFirstPRule;
-		       if (rule == NULL)
-			 {
-			    pRP1 = pRP1->ApNextAttrPres;
-			    continue;
-			 }
-
-		       /*
-		        * Ok, there is a list of PRules attached to this
-		        * text attribute.
-		        */
-		       SortRulesForAccess (&pRP1->ApTextFirstPRule);
-		       rule = pRP1->ApTextFirstPRule;
-		       while (rule != NULL)
-			 {
-			    cond = rule->PrCond;
-			    if ((rule == pRP1->ApTextFirstPRule) ||
-				(CompareCondLists (prevcond, cond)))
-			      {
-
-				 /*
-				  * this is a new context.
-				  */
-				 prevcond = cond;
-				 CleanGenericContext (ctxt);
-				 StoreConds (ctxt, cond);
-				 ctxt->class = pRP1->ApString;
-				 ctxt->classattr = GetAttributeOfElement;
-
-				 /*
-				  * call the handler provided by the user.
-				  */
-				 ctxt->magic1 = DRIVERG_CTXT_MAGIC1;
-				 ctxt->magic2 = (unsigned long) rule;
-				 handler (target, ctxt, param);
-			      }
-			    rule = rule->PrNextPRule;
-			 }
-		       SortRulesForDisplay (&pRP1->ApTextFirstPRule);
+       for (GetAttributeOfElement = 1; GetAttributeOfElement <= pSchemaStr->SsNAttributes; GetAttributeOfElement++)
+	 {
+	   pAt1 = &pSchemaStr->SsAttribute[GetAttributeOfElement - 1];
+	   pRP1 = pSchemaP->PsAttrPRule[GetAttributeOfElement - 1];
+	   if (pAt1 == NULL)
+	     continue;
+	   if (pRP1 == NULL)
+	     continue;
+	   if (pAt1->AttrType == AtTextAttr)
+	     {
+	       while (pRP1 != NULL)
+		 {
+		   rule = pRP1->ApTextFirstPRule;
+		   if (rule == NULL)
+		     {
 		       pRP1 = pRP1->ApNextAttrPres;
-		    }
-	       }
-	     else if (pAt1->AttrType == AtEnumAttr)
-	       {
-		  for (Val = 1; Val <= pAt1->AttrNEnumValues; Val++)
-		    {
-		       rule = pRP1->ApEnumFirstPRule[Val];
-		       if (rule == NULL)
-			  continue;
+		       continue;
+		     }
+		   
+		   /*
+		    * Ok, there is a list of PRules attached to this
+		    * text attribute.
+		    */
+		   SortRulesForAccess (&pRP1->ApTextFirstPRule);
+		   rule = pRP1->ApTextFirstPRule;
+		   while (rule != NULL)
+		     {
+		       cond = rule->PrCond;
+		       if ((rule == pRP1->ApTextFirstPRule) ||
+			   (CompareCondLists (prevcond, cond)))
+			 {			   
+			   /* this is a new context */
+			   prevcond = cond;
+			   CleanGenericContext (ctxt);
+			   StoreConds (ctxt, cond);
+			   ctxt->class = pRP1->ApString;
+			   ctxt->classattr = GetAttributeOfElement;
+			   ctxt->schema = (SSchema) pSchemaStr;
 
-		       /*
-		        * Ok, there is a list of PRules attached to this
-		        * value attribute.
-		        */
-		       SortRulesForAccess (&pRP1->ApEnumFirstPRule[Val]);
-		       rule = pRP1->ApEnumFirstPRule[Val];
-		       while (rule != NULL)
-			 {
-			    cond = rule->PrCond;
-			    if ((rule == pRP1->ApEnumFirstPRule[Val]) ||
-				(CompareCondLists (prevcond, cond)))
-			      {
-
-				 /*
-				  * this is a new context.
-				  */
-				 prevcond = cond;
-				 CleanGenericContext (ctxt);
-				 StoreConds (ctxt, cond);
-				 ctxt->attr = GetAttributeOfElement;
-				 ctxt->attrval = Val;
-
-				 /*
-				  * call the handler provided by the user.
-				  */
-				 ctxt->magic1 = DRIVERG_CTXT_MAGIC1;
-				 ctxt->magic2 = (unsigned long) rule;
-				 handler (target, ctxt, param);
-			      }
-			    rule = rule->PrNextPRule;
+			   /* call the handler provided by the user */
+			   ctxt->magic1 = DRIVERG_CTXT_MAGIC1;
+			   ctxt->magic2 = (unsigned long) rule;
+			   handler (target, ctxt, param);
 			 }
-		       SortRulesForDisplay (&pRP1->ApEnumFirstPRule[Val]);
-		       pRP1 = pRP1->ApNextAttrPres;
-		    }
-	       }
-	  }
+		       rule = rule->PrNextPRule;
+		     }
+		   SortRulesForDisplay (&pRP1->ApTextFirstPRule);
+		   pRP1 = pRP1->ApNextAttrPres;
+		 }
+	     }
+	   else if (pAt1->AttrType == AtEnumAttr)
+	     {
+	       for (Val = 1; Val <= pAt1->AttrNEnumValues; Val++)
+		 {
+		   rule = pRP1->ApEnumFirstPRule[Val];
+		   if (rule == NULL)
+		     continue;
+
+		   /*
+		    * Ok, there is a list of PRules attached to this
+		    * value attribute.
+		    */
+		   SortRulesForAccess (&pRP1->ApEnumFirstPRule[Val]);
+		   rule = pRP1->ApEnumFirstPRule[Val];
+		   while (rule != NULL)
+		     {
+		       cond = rule->PrCond;
+		       if ((rule == pRP1->ApEnumFirstPRule[Val]) ||
+			   (CompareCondLists (prevcond, cond)))
+			 {
+			   /* this is a new context */
+			   prevcond = cond;
+			   CleanGenericContext (ctxt);
+			   StoreConds (ctxt, cond);
+			   ctxt->attr = GetAttributeOfElement;
+			   ctxt->attrval = Val;
+			   ctxt->schema = (SSchema) pSchemaStr;
+			   
+			   /* call the handler provided by the user. */
+			   ctxt->magic1 = DRIVERG_CTXT_MAGIC1;
+			   ctxt->magic2 = (unsigned long) rule;
+			   handler (target, ctxt, param);
+			 }
+		       rule = rule->PrNextPRule;
+		     }
+		   SortRulesForDisplay (&pRP1->ApEnumFirstPRule[Val]);
+		   pRP1 = pRP1->ApNextAttrPres;
+		 }
+	     }
+	 }
      }
 
-   /*
-    * Clean up things.
-    */
+   /* Clean up things */
    FreeGenericContext (ctxt);
 }
 
-/*
- * ApplyAllGenericSettings : browse all the PRules structures,
- *      associated to the corresponding GenericContext 
- *      structure, and call the given handler for each one.
- */
-
+/*----------------------------------------------------------------------
+  ApplyAllGenericSettings : browse all the PRules structures,
+  associated to the corresponding GenericContext 
+  structure, and call the given handler for each one.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyAllGenericSettings (GenericTarget target,
 		   GenericContext ctxt, GenericSettingsApplyHandler handler,
@@ -1891,18 +1861,17 @@ GenericTarget       target;
 GenericContext      ctxt;
 GenericSettingsApplyHandler handler;
 void               *param;
-
 #endif /* __STDC__ */
 {
-   PtrPSchema          pSc1;
+   PtrPSchema          pSchemaP;
    PtrPRule            rule = NULL;
    PtrCondition        prevcond, cond;
    PresentationSettingBlock setting;
 
    /* set up and check the environment */
    prevcond = 0;
-   pSc1 = (PtrPSchema) target;
-   if (pSc1 == NULL)
+   pSchemaP = (PtrPSchema) target;
+   if (pSchemaP == NULL)
       return;
    if (ctxt == NULL)
       return;
@@ -1958,7 +1927,7 @@ void               *param;
 	if (setting.type == DRIVERP_BGIMAGE) {
             int cst = setting.value.typed_data.value;
 
-            setting.value.pointer = &pSc1->PsConstant[cst-1].PdString[0];
+            setting.value.pointer = &pSchemaP->PsConstant[cst-1].PdString[0];
 	}
 
 	handler (target, ctxt, &setting, param);
@@ -2165,6 +2134,8 @@ GENERIC_FUNCS2 (Function, FnPictureMode, PictureMode)
    *									*
   ----------------------------------------------------------------------*/
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GenericSetBox (PresentationTarget t, PresentationContext c,
 				   PresentationValue v)
@@ -2173,7 +2144,6 @@ int                 GenericSetBox (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue   v;
-
 #endif
 {
    GenericTarget       tsch = (GenericTarget) t;
@@ -2195,6 +2165,8 @@ PresentationValue   v;
    return (0);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GenericGetBox (PresentationTarget t, PresentationContext c,
 				   PresentationValue * v)
@@ -2203,7 +2175,6 @@ int                 GenericGetBox (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue  *v;
-
 #endif
 {
    /******************
@@ -2217,6 +2188,8 @@ PresentationValue  *v;
    return (0);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GenericSetBgImage (PresentationTarget t, PresentationContext c,
 				   PresentationValue v)
@@ -2225,7 +2198,6 @@ int                 GenericSetBgImage (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue   v;
-
 #endif
 {
    GenericTarget       tsch = (GenericTarget) t;
@@ -2247,6 +2219,8 @@ PresentationValue   v;
    return (0);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GenericGetBgImage (PresentationTarget t, PresentationContext c,
 				   PresentationValue * v)
@@ -2255,7 +2229,6 @@ int                 GenericGetBgImage (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue  *v;
-
 #endif
 {
    GenericTarget       tsch = (GenericTarget) t;
@@ -2274,6 +2247,8 @@ PresentationValue  *v;
    return (0);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GenericSetWidth (PresentationTarget t, PresentationContext c,
 				     PresentationValue v)
@@ -2282,7 +2257,6 @@ int                 GenericSetWidth (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue   v;
-
 #endif
 {
    return (0);

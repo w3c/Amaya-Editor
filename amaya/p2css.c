@@ -354,152 +354,152 @@ GenericContext      ctxt;
 void               *param;
 #endif
 {
-   PRuleInfo           local;
-   char                string[5000];
-   PRuleInfoPtr        new;
-   PRuleInfoPtr       *list = (PRuleInfoPtr *) param;
-   char               *css_rule;
-   int                 i, j;
+  ElementType	       elType;
+  PRuleInfo           local;
+  PRuleInfoPtr        new;
+  PRuleInfoPtr       *list = (PRuleInfoPtr *) param;
+  char               *css_rule;
+  char                string[5000];
+  int                 i, j;
+  int                 exist;
+  boolean             withinHTML;
 
-   /*int                 new_rule = 0; */
-   int                 exist;
-   ElementType	       elType;
+  string[0] = EOS;
+  /*
+   * this will transform all the Generic Settings associated to
+   * the context to one CSS string.
+   */
+  ApplyAllGenericSettings (target, ctxt, GenericSettingsToCSS, &string[0]);
+  /* if we were unable to translate this rule in CSS, return */
+  if (string[0] == 0)
+    return;
 
-   local.pschema = target;
-   local.ctxt = ctxt;
-   string[0] = EOS;
-   /*
-    * this will transform all the Generic Settings associated to
-    * the context to one CSS string.
-    */
-   ApplyAllGenericSettings (target, ctxt, GenericSettingsToCSS, &string[0]);
-   /*
-    * if we were unable to translate this rule in CSS, return
-    */
-   if (string[0] == 0)
-      return;
-   /* search if such an RPI is already registered */
-   exist = TRUE;
-   new = SearchRPI (&local, *list);
-   if (new == NULL)
-     {
-	exist = FALSE;
-	new = NewRPI (ctxt->doc);
-	new->pschema = target;
-	new->state = NormalRPI;
-	new->ctxt->type = local.ctxt->type;
-	if (new->ctxt->type == HTML_EL_HTML)
-	    new->ctxt->type = HTML_EL_BODY;
-	new->ctxt->attr = local.ctxt->attr;
-	new->ctxt->attrval = local.ctxt->attrval;
-	new->ctxt->attrelem = local.ctxt->attrelem;
-        if (new->ctxt->attrelem == HTML_EL_HTML)
-	    new->ctxt->attrelem = HTML_EL_BODY;
-	new->ctxt->class = local.ctxt->class;
-	new->ctxt->classattr = local.ctxt->classattr;
-	for (i = 0; i < MAX_ANCESTORS; i++) {
-	   new->ctxt->ancestors[i] = local.ctxt->ancestors[i];
-	   if (new->ctxt->ancestors[i] == HTML_EL_HTML)
-	       new->ctxt->ancestors[i] = HTML_EL_BODY;
+  /* search if such an RPI is already registered */
+  exist = TRUE;
+  local.pschema = target;
+  local.ctxt = ctxt;
+  new = SearchRPI (&local, *list);
+  if (new == NULL)
+    {
+      exist = FALSE;
+      withinHTML = (strcmp(TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
+      new = NewRPI (ctxt->doc);
+      new->pschema = target;
+      new->state = NormalRPI;
+      if (withinHTML && ctxt->type == HTML_EL_HTML)
+	new->ctxt->type = HTML_EL_BODY;
+      else
+	new->ctxt->type = ctxt->type;
+      new->ctxt->attr = ctxt->attr;
+      new->ctxt->attrval = ctxt->attrval;
+      if (withinHTML && ctxt->attrelem == HTML_EL_HTML)
+	new->ctxt->attrelem = HTML_EL_BODY;
+      else
+	new->ctxt->attrelem = ctxt->attrelem;
+      new->ctxt->class = ctxt->class;
+      new->ctxt->classattr = ctxt->classattr;
+      for (i = 0; i < MAX_ANCESTORS; i++)
+	{
+	new->ctxt->ancestors[i] = ctxt->ancestors[i];
+	if (withinHTML && new->ctxt->ancestors[i] == HTML_EL_HTML)
+	  new->ctxt->ancestors[i] = HTML_EL_BODY;
 	}
-	for (i = 0; i < MAX_ANCESTORS; i++)
-	   new->ctxt->ancestors_nb[i] = local.ctxt->ancestors_nb[i];
-	/*new_rule = 1; */
-     }
 
-   /* append this CSS rule to the RPI description */
-   if (new->css_rule == NULL)
-     {
-	css_rule = TtaGetMemory (strlen (string) + 4);
-	strcpy (css_rule, string);
-     }
-   else
-     {
-	css_rule = TtaGetMemory (strlen (string) + strlen (new->css_rule) + 8);
-	strcpy (css_rule, new->css_rule);
-	strcat (css_rule, "; ");
-	strcat (css_rule, string);
-	TtaFreeMemory (new->css_rule);
-     }
-   new->css_rule = css_rule;
+      for (i = 0; i < MAX_ANCESTORS; i++)
+	new->ctxt->ancestors_nb[i] = ctxt->ancestors_nb[i];
+    }
 
-   /*
-    * create the selector for the element if it doesn t exist yet
-    */
-   if (new->selector == NULL)
-     {
-	elType.ElSSchema = TtaGetDocumentSSchema (ctxt->doc); /*** should get the right SSchema ***/
-	string[0] = 0;
-	i = 0;
-	for (; i < MAX_ANCESTORS; i++)
-	   if (new->ctxt->ancestors[i])
-	     {
-		for (j = 0; j <= new->ctxt->ancestors_nb[i]; j++)
-		  {
-		     if (string[0] != 0)
-			strcat (string, " ");
-		     elType.ElTypeNum = new->ctxt->ancestors[i];
-		     strcat (string, GITagNameByType (elType));
-		  }
-	     }
-	if (new->ctxt->attr)
+  /* append this CSS rule to the RPI description */
+  if (new->css_rule == NULL)
+    {
+      css_rule = TtaGetMemory (strlen (string) + 4);
+      strcpy (css_rule, string);
+    }
+  else
+    {
+      css_rule = TtaGetMemory (strlen (string) + strlen (new->css_rule) + 8);
+      strcpy (css_rule, new->css_rule);
+      strcat (css_rule, "; ");
+      strcat (css_rule, string);
+      TtaFreeMemory (new->css_rule);
+    }
+  new->css_rule = css_rule;
+
+  /* create the selector for the element if it doesn t exist yet */
+  if (new->selector == NULL)
+    {
+      elType.ElSSchema = ctxt->schema;
+      string[0] = 0;
+      i = 0;
+      for (; i < MAX_ANCESTORS; i++)
+	if (new->ctxt->ancestors[i])
 	  {
-	     if (string[0] != 0)
-		strcat (string, " ");
-	     strcat (string, "???");
+	    for (j = 0; j <= new->ctxt->ancestors_nb[i]; j++)
+	      {
+		if (string[0] != 0)
+		  strcat (string, " ");
+		elType.ElTypeNum = new->ctxt->ancestors[i];
+		strcat (string, GITagNameByType (elType));
+	      }
 	  }
-	if (new->ctxt->type)
-	  {
-	     if (string[0] != 0)
-		strcat (string, " ");
-	     elType.ElTypeNum = new->ctxt->type;
-	     strcat (string, GITagNameByType (elType));
-	  }
-	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class))
-	  {
-	     if (string[0] != 0)
-		strcat (string, " ");
-	     if (new->ctxt->attrelem)
-	       {
-		  elType.ElTypeNum = new->ctxt->attrelem;
-		  strcat (string, GITagNameByType (elType));
-	       }
-	     strcat (string, ".");
-	     strcat (string, new->ctxt->class);
-	  }
-	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_PseudoClass))
-	  {
-	     if (string[0] != 0)
-		strcat (string, " ");
-	     if (new->ctxt->attrelem)
-	       {
-		  elType.ElTypeNum = new->ctxt->attrelem;
-		  strcat (string, GITagNameByType (elType));
-	       }
-	     strcat (string, ":");
-	     strcat (string, new->ctxt->class);
-	  }
-	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_ID))
-	  {
-	     if (string[0] != 0)
-		strcat (string, " ");
-	     if (new->ctxt->attrelem)
-	       {
-		  elType.ElTypeNum = new->ctxt->attrelem;
-		  strcat (string, GITagNameByType (elType));
-	       }
-	     strcat (string, "#");
-	     strcat (string, new->ctxt->class);
-	  }
-	new->selector = TtaGetMemory (strlen (string) + 4);
-	strcpy (new->selector, string);
-     }
-   if (!exist)
-      AddRPI (new, list);
+      if (new->ctxt->attr)
+	{
+	  if (string[0] != 0)
+	    strcat (string, " ");
+	  strcat (string, "???");
+	}
+      if (new->ctxt->type)
+	{
+	  if (string[0] != 0)
+	    strcat (string, " ");
+	  elType.ElTypeNum = new->ctxt->type;
+	  strcat (string, GITagNameByType (elType));
+	}
+      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class))
+	{
+	  if (string[0] != 0)
+	    strcat (string, " ");
+	  if (new->ctxt->attrelem)
+	    {
+	      elType.ElTypeNum = new->ctxt->attrelem;
+	      strcat (string, GITagNameByType (elType));
+	    }
+	  strcat (string, ".");
+	  strcat (string, new->ctxt->class);
+	}
+      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_PseudoClass))
+	{
+	  if (string[0] != 0)
+	    strcat (string, " ");
+	  if (new->ctxt->attrelem)
+	    {
+	      elType.ElTypeNum = new->ctxt->attrelem;
+	      strcat (string, GITagNameByType (elType));
+	    }
+	  strcat (string, ":");
+	  strcat (string, new->ctxt->class);
+	}
+      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_ID))
+	{
+	  if (string[0] != 0)
+	    strcat (string, " ");
+	  if (new->ctxt->attrelem)
+	    {
+	      elType.ElTypeNum = new->ctxt->attrelem;
+	      strcat (string, GITagNameByType (elType));
+	    }
+	  strcat (string, "#");
+	  strcat (string, new->ctxt->class);
+	}
+      new->selector = TtaGetMemory (strlen (string) + 4);
+      strcpy (new->selector, string);
+    }
+  if (!exist)
+    AddRPI (new, list);
 
 #ifdef DEBUG_RPI
-   fprintf (output, "GenericContextToRPI result : \n");
-   PrintRPI (new);
+  fprintf (output, "GenericContextToRPI result : \n");
+  PrintRPI (new);
 #endif
 }
 
@@ -514,125 +514,74 @@ void               *param;
    PSchema2RPI : return the list of all RPI associated to a PSchema  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PRuleInfoPtr        PSchema2RPI (Document doc, PSchema pSchema, int zoom, int background)
+PRuleInfoPtr        PSchema2RPI (Document doc, CSSInfoPtr css)
 #else
-PRuleInfoPtr        PSchema2RPI (doc, pSchema, zoom, background)
+PRuleInfoPtr        PSchema2RPI (doc, css)
 Document            doc;
-PSchema             pSchema;
-int                 zoom;
-int                 background;
-
+CSSInfoPtr          css;
 #endif
 {
-   PRuleInfoPtr        lrpi = NULL;
+  PRuleInfoPtr        lrpi = NULL;
+  PRuleInfoPtr        rpi;
+  unsigned short      red, green, blue;
+  char                rule[150];
+  int                 zoom;
+  int                 background;
 
-   /* clean local structures */
-   CleanListRPI (NULL);
+  /* clean local structures */
+  CleanListRPI (NULL);
+  zoom = css->magnification;
+  background = css->view_background_color;
+  /*
+   * Hack to support presentation rules not contained in the P structures.
+   * Add a first rule on BODY if zoom or background are sets
+   */
+  if ((zoom >= -10 && zoom <= 10 && zoom != 0) || background >= 0)
+    {
+      rpi = NewRPI (doc);
+      if (rpi == NULL)
+	return (NULL);
+      rpi->state = NormalRPI;
+      rpi->pschema = css->pschema;
+      rpi->ctxt->type = HTML_EL_BODY;
+      rpi->selector = TtaStrdup ("BODY");
+      
+      if (((zoom >= -10) && (zoom <= 10) && (zoom != 0)) &&
+	  (background >= 0))
+	{
+	  TtaGiveThotRGB (background, &red, &green, &blue);
+	  sprintf (rule, "magnification : %d; background : #%02X%02X%02X",
+		   zoom, red, green, blue);
+	}
+      else if ((zoom >= -10) && (zoom <= 10) && (zoom != 0))
+	sprintf (rule, "magnification : %d", zoom);
+      else if (background >= 0)
+	{
+	  TtaGiveThotRGB (background, &red, &green, &blue);
+	  sprintf (rule, "background : #%02X%02X%02X", red, green, blue);
+	}
+      rpi->css_rule = TtaStrdup (rule);
+      rpi->NextRPI = lrpi;
+      lrpi = rpi;
+    }
 
-   /*
-    * Hack to support presentation rules not contained in the P structures.
-    * Add a first rule on BODY if zoom or background are sets
-    */
-   if (((zoom >= -10) && (zoom <= 10) && (zoom != 0)) ||
-       (background >= 0))
-     {
-	char                rule[150];
-	PRuleInfoPtr        rpi = NewRPI (doc);
-	unsigned short      red, green, blue;
-
-	if (rpi == NULL)
-	   return (NULL);
-	rpi->state = NormalRPI;
-	rpi->pschema = pSchema;
-	rpi->ctxt->type = HTML_EL_BODY;
-	rpi->selector = TtaStrdup ("BODY");
-
-	if (((zoom >= -10) && (zoom <= 10) && (zoom != 0)) &&
-	    (background >= 0))
-	  {
-	     TtaGiveThotRGB (background, &red, &green, &blue);
-	     sprintf (rule, "magnification : %d; background : #%02X%02X%02X",
-		      zoom, red, green, blue);
-	  }
-	else if ((zoom >= -10) && (zoom <= 10) && (zoom != 0))
-	  {
-	     sprintf (rule, "magnification : %d", zoom);
-	  }
-	else if (background >= 0)
-	  {
-	     TtaGiveThotRGB (background, &red, &green, &blue);
-	     sprintf (rule, "background : #%02X%02X%02X", red, green, blue);
-	  }
-	rpi->css_rule = TtaStrdup (rule);
-	rpi->NextRPI = lrpi;
-	lrpi = rpi;
-     }
-   /*
-    * build the RPI list using the presentation driver browsing functions.
-    */
-   ApplyAllGenericContext (doc, pSchema, GenericContextToRPI, &lrpi);
-
-   /*
-    * transmit the result to the uper layer.
-    */
-   return (lrpi);
-}
-
-/*----------------------------------------------------------------------
-   PSchema2CSS                                                     
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 PSchema2CSS (Document doc, PSchema pSchema, int zoom, int background,
-				 char *output_file)
-#else
-int                 PSchema2CSS (doc, pSchema, output_file, zoom, background)
-Document            doc;
-PSchema             pSchema;
-char               *output_file;
-int                 zoom;
-int                 background;
-#endif
-{
-   PRuleInfoPtr        rpi, list;
-
-   if (output_file != NULL)
-     {
-	output = fopen (output_file, "w");
-	if (output == NULL)
-	   output = stderr;
-	else
-	   fprintf (output, "/**********************************\n");
-     }
-   else if (output == NULL)
-      output = stderr;
-   list = rpi = PSchema2RPI (doc, pSchema, zoom, background);
-
-   if (output != stderr)
-     {
-	fprintf (output, " **********************************/\n");
-	while (rpi != NULL)
-	  {
-	     fprintf (output, "%s { %s }\n", rpi->selector, rpi->css_rule);
-	     rpi = rpi->NextRPI;
-	  }
-	fclose (output);
-     }
-   CleanListRPI (&list);
-   return (0);
+  /* build the RPI list using the presentation driver browsing functions */
+  ApplyAllGenericContext (doc, css->pschema, GenericContextToRPI, &lrpi);
+  ApplyAllGenericContext (doc, css->mschema, GenericContextToRPI, &lrpi);
+  /* transmit the result to the uper layer */
+  return (lrpi);
 }
 
 /*----------------------------------------------------------------------
    BuildRPIList : Build the whole list of CSS in use by a document   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 BuildRPIList (Document doc, PSchema pSchema, int zoom, int background,
+int                 BuildRPIList (Document doc, CSSInfoPtr css,
 				  char *buf, int size, char *first)
 #else
-int                 BuildRPIList (doc, pSchema, zoom, background, buf, size, first)
+int                 BuildRPIList (doc, css, buf, size, first)
 Document            doc;
-PSchema             pSchema;
-int                 zoom;
-int                 background;
+CSSInfoPtr          css;
 char               *buf;
 int                 size;
 char               *first;
@@ -658,7 +607,7 @@ char               *first;
 	index += len;
 	nb++;
      }
-   list = rpi = PSchema2RPI (doc, pSchema, zoom, background);
+   list = rpi = PSchema2RPI (doc, css);
    while (rpi != NULL)
      {
 	len = strlen (rpi->selector);

@@ -20,18 +20,9 @@ extern PRuleInfoPtr SearchRPI ( PRuleInfoPtr cour,
 extern void RemoveRPI ( Document doc,
                         PRuleInfoPtr cour );
 extern PRuleInfoPtr PSchema2RPI ( Document doc,
-                                  PSchema gPres,
-                                  int zoom,
-                                  int background );
-extern int PSchema2CSS ( Document doc,
-                         PSchema gPres,
-                         int zoom,
-                         int background,
-                         char *output_file );
+                                  CSSInfoPtr css);
 extern int BuildRPIList ( Document doc,
-                          PSchema gPres,
-                          int zoom,
-                          int background,
+                          CSSInfoPtr css,
                           char *buf,
                           int size,
                           char *first );
@@ -52,18 +43,9 @@ extern PRuleInfoPtr SearchRPI (/* PRuleInfoPtr cour,
 extern void RemoveRPI (/* Document doc,
                           PRuleInfoPtr cour */);
 extern PRuleInfoPtr PSchema2RPI (/* Document doc,
-                                    PSchema gPres,
-                                    int zoom,
-                                    int background */);
-extern int PSchema2CSS (/* Document doc,
-                           PSchema gPres,
-                           int zoom,
-                           int background,
-                           char *output_file */);
+                                    CSSInfoPtr css */);
 extern int BuildRPIList (/* Document doc,
-                            PSchema gPres,
-                            int zoom,
-                            int background,
+			    CSSInfoPtr css,
                             char *buf,
                             int size,
                             char *first */);

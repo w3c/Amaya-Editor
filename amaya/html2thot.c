@@ -1183,7 +1183,7 @@ Document	    doc;
 	if (!strcasecmp (MathMLGIMappingTable[i].htmlGI, gi))
 	  {
 
-	    if (MathMLSSchema == NULL && ! (doc == (Document) 0))
+	    if (MathMLSSchema == NULL && doc != 0)
 	       elType->ElSSchema = TtaGetSSchema ("MathML", doc);
 	    else
 
@@ -7451,6 +7451,7 @@ char               *pathURL;
 #endif /* AMAYA_JAVA */
 	   ApplyFinalStyle (theDocument);
 #ifndef INCR_DISPLAY
+	   TtaSetDisplayMode (theDocument, DeferredDisplay);
 	   TtaSetDisplayMode (theDocument, DisplayImmediately);
 #endif /* INCR_DISPLAY */
 #endif /* STANDALONE */

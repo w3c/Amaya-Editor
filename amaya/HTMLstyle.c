@@ -1116,32 +1116,35 @@ int                *len;
    * BODY / HTML elements specific handling.
    */
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == HTML_EL_HTML)
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
     {
-      elType.ElTypeNum = HTML_EL_BODY;
-      el = TtaSearchTypedElement(elType, SearchForward, el);
-      if (!el)
-	return;
-      if (*len > 0)
-	strcat(buf,";");
-      *len = strlen (buf);
-      ctxt = GetSpecificContext (doc);
-      ApplyAllSpecificSettings (el, ctxt, SpecificSettingsToCSS, &buf[*len]);
-      FreeSpecificContext (ctxt);
-      *len = strlen (buf);
-    }
-  else if (elType.ElTypeNum == HTML_EL_BODY)
-    {
-      el = TtaGetParent (el);
-      if (!el)
-	return;
-      if (*len > 0)
-	strcat(buf,";");
-      *len = strlen (buf);
-      ctxt = GetSpecificContext (doc);
-      ApplyAllSpecificSettings (el, ctxt, SpecificSettingsToCSS, &buf[*len]);
-      FreeSpecificContext (ctxt);
-      *len = strlen (buf);
+      if (elType.ElTypeNum == HTML_EL_HTML)
+	{
+	  elType.ElTypeNum = HTML_EL_BODY;
+	  el = TtaSearchTypedElement(elType, SearchForward, el);
+	  if (!el)
+	    return;
+	  if (*len > 0)
+	    strcat(buf,";");
+	  *len = strlen (buf);
+	  ctxt = GetSpecificContext (doc);
+	  ApplyAllSpecificSettings (el, ctxt, SpecificSettingsToCSS, &buf[*len]);
+	  FreeSpecificContext (ctxt);
+	  *len = strlen (buf);
+	}
+      else if (elType.ElTypeNum == HTML_EL_BODY)
+	{
+	  el = TtaGetParent (el);
+	  if (!el)
+	    return;
+	  if (*len > 0)
+	    strcat(buf,";");
+	  *len = strlen (buf);
+	  ctxt = GetSpecificContext (doc);
+	  ApplyAllSpecificSettings (el, ctxt, SpecificSettingsToCSS, &buf[*len]);
+	  FreeSpecificContext (ctxt);
+	  *len = strlen (buf);
+	}
     }
 }
 
@@ -1252,15 +1255,16 @@ Document            doc;
     * A rule applying to BODY is really meant to address HTML.
     */
    elType = TtaGetElementType(elem);
-   if (elType.ElTypeNum == HTML_EL_BODY || elType.ElTypeNum == HTML_EL_HEAD)
-     {
-       elType.ElTypeNum = HTML_EL_HTML;
-
-       el = TtaGetMainRoot (doc);
-       /*el = TtaSearchTypedElement (elType, SearchInTree, el);*/
-       if (el != NULL)
-	 elem = el;
-     }
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+      (elType.ElTypeNum == HTML_EL_BODY || elType.ElTypeNum == HTML_EL_HEAD))
+      {
+	elType.ElTypeNum = HTML_EL_HTML;
+	
+	el = TtaGetMainRoot (doc);
+	/*el = TtaSearchTypedElement (elType, SearchInTree, el);*/
+	if (el != NULL)
+	  elem = el;
+      }
 	   
    /*
     * create the context of the Specific presentation driver.
@@ -1288,21 +1292,20 @@ Document            doc;
    Need to add multi-DTD support here !!!!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTMLGenericSelector (char *selector, char *cssRule,
-			   GenericContext ctxt, Document doc, PSchema pSchema)
+static char    *ParseHTMLGenericSelector (char *selector, char *cssRule,
+			   GenericContext ctxt, Document doc, CSSInfoPtr css)
 #else
-static char        *ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, pSchema)
-char               *selector;
-char               *cssRule;
-GenericContext      ctxt;
-Document            doc;
-PSchema             pSchema;
+static char    *ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, css)
+char           *selector;
+char           *cssRule;
+GenericContext  ctxt;
+Document        doc;
+CSSInfoPtr      css;
 #endif
 {
   ElementType         elType;
-  /*PresentationValue   unused;*/
-  SSchema	      HTMLschema;
-  PresentationTarget  target = (PresentationTarget) pSchema;
+  PresentationTarget  target;
+  PSchema             pSchema, prev;
   char                sel[150];
   char                class[150];
   char                pseudoclass[150];
@@ -1314,7 +1317,7 @@ PSchema             pSchema;
   char               *ancestors[MAX_ANCESTORS];
   int                 i, j;
 
-  /*unused.data = 0;*/
+  target = (PresentationTarget) css->pschema;
   sel[0] = EOS;
   class[0] = EOS;
   pseudoclass[0] = EOS;
@@ -1453,24 +1456,43 @@ PSchema             pSchema;
       ctxt->classattr = 0;
     }
 
-  HTMLschema = TtaGetDocumentSSchema (doc);
   ctxt->type = ctxt->attr = ctxt->attrval = ctxt->attrelem = 0;
   if (attrelemname[0] != EOS)
     {
       GIType (attrelemname, &elType, doc);
       ctxt->attrelem = elType.ElTypeNum;
-      /*** what about elType.ElSSchema ?  ***/
-      if (ctxt->attrelem == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
+      if (ctxt->attrelem == HTML_EL_BODY && strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	ctxt->attrelem = HTML_EL_HTML;
     }
   
   GIType (elem, &elType, doc);
   ctxt->type = elType.ElTypeNum;
-  /*** what about elType.ElSSchema ?  ***/
-  if (ctxt->type == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
+  ctxt->schema = elType.ElSSchema;
+  if (elType.ElSSchema == NULL)
+    ctxt->schema = TtaGetDocumentSSchema (doc);
+  else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    {
+      /* it's not an HTML element */
+      if (css->mschema == NULL)
+	{
+	  /* create a new extension schema for MathML elements */
+	  css->mschema = TtaNewPSchema ();
+	  pSchema = TtaGetFirstPSchema (doc, elType.ElSSchema);
+	  prev = NULL;
+	  while (pSchema != NULL)
+	    {
+	      prev = pSchema;
+	      TtaNextPSchema (&pSchema, doc, NULL);
+	    }
+	  TtaAddPSchema (css->mschema, prev, TRUE, doc, elType.ElSSchema);
+	}
+      target = (PresentationTarget) css->mschema;
+    }
+  else if (ctxt->type == HTML_EL_BODY)
      ctxt->type = HTML_EL_HTML;
-  if ((ctxt->type == 0) && (ctxt->attr == 0) &&
-      (ctxt->attrval == 0) && (ctxt->classattr == 0))
+
+  if (ctxt->type == 0 && ctxt->attr == 0 &&
+      ctxt->attrval == 0 && ctxt->classattr == 0)
     {
       ctxt->class = elem;
       ctxt->classattr = HTML_ATTR_Class;
@@ -1485,7 +1507,7 @@ PSchema             pSchema;
       if (ancestors[i] == NULL)
 	break;
       GIType (ancestors[i], &elType, doc);
-      if (elType.ElTypeNum == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
+      if (elType.ElTypeNum == HTML_EL_BODY && !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	elType.ElTypeNum = HTML_EL_HTML;
       if (elType.ElTypeNum == 0)
 	continue;
@@ -1517,13 +1539,13 @@ PSchema             pSchema;
    presentation driver is used to reflect the new presentation.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         ParseCSSGenericStyle (char *selector, char *cssRule, Document doc, PSchema pSchema)
+void         ParseCSSGenericStyle (char *selector, char *cssRule, Document doc, CSSInfoPtr css)
 #else
-void         ParseCSSGenericStyle (selector, cssRule, doc, pSchema)
+void         ParseCSSGenericStyle (selector, cssRule, doc, css)
 char        *selector;
 char        *cssRule;
 Document     doc;
-PSchema      pSchema;
+CSSInfoPtr   css;
 #endif
 {
   GenericContext      ctxt;
@@ -1539,7 +1561,7 @@ PSchema      pSchema;
     ctxt->destroy = 1;
 
   while ((selector != NULL) && (*selector != EOS))
-    selector = ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, pSchema);
+    selector = ParseHTMLGenericSelector (selector, cssRule, ctxt, doc, css);
   FreeGenericContext (ctxt);
 
 #ifdef DEBUG_STYLES
@@ -1997,31 +2019,29 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   PresentationValue   pval;
+  PresentationValue   pval;
+  GenericContext      block;
 
-   cssRule = SkipBlanks (cssRule);
-   cssRule = ParseCSSUnit (cssRule, &pval);
-   if ((pval.typed_data.unit == DRIVERP_UNIT_REL) && (pval.typed_data.value >= -10) &&
-       (pval.typed_data.value <= 10))
-     {
-	if (context->drv == &GenericStrategy)
-	  {
-	     GenericContext      block = (GenericContext) context;
-
-	     if ((block->type == HTML_EL_HTML) ||
-		 (block->type == HTML_EL_BODY) ||
-		 (block->type == HTML_EL_HEAD))
-	       {
-		  CSSSetMagnification (block->doc, (PSchema) target, pval.typed_data.value);
-		  return (cssRule);
-	       }
-	  }
-     }
-   else
-     {
-	MSG ("invalid magnification value\n");
-     }
-   return (cssRule);
+  cssRule = SkipBlanks (cssRule);
+  cssRule = ParseCSSUnit (cssRule, &pval);
+  if ((pval.typed_data.unit == DRIVERP_UNIT_REL) && (pval.typed_data.value >= -10) &&
+      (pval.typed_data.value <= 10))
+    {
+      if (context->drv == &GenericStrategy)
+	{
+	  block = (GenericContext) context;
+	  if ((block->type == HTML_EL_HTML) ||
+	      (block->type == HTML_EL_BODY) ||
+	      (block->type == HTML_EL_HEAD))
+	    {
+	      CSSSetMagnification (block->doc, (PSchema) target, pval.typed_data.value);
+	      return (cssRule);
+	    }
+	}
+    }
+  else
+    MSG ("invalid magnification value\n");
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3246,7 +3266,6 @@ char               *cssRule;
    cssRule = ParseCSSColor (cssRule, &best);
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      setColor = FALSE;
-
    if (setColor)
      {
        /*
@@ -3256,9 +3275,9 @@ char               *cssRule;
        if (context->drv == &GenericStrategy)
 	 {
 	   gblock = (GenericContext) context;
-	   if ((gblock->type == HTML_EL_HTML)
-	       || (gblock->type == HTML_EL_BODY)
-	       || (gblock->type == HTML_EL_HEAD))
+	   if (gblock->type == HTML_EL_HTML
+	       || gblock->type == HTML_EL_BODY
+	       || gblock->type == HTML_EL_HEAD)
 	     {
 	       if (setColor)
 		 {
@@ -3272,9 +3291,10 @@ char               *cssRule;
 	   sblock = (SpecificContextBlock *) context;
 	   elem = (SpecificTarget) target;
 	   elType = TtaGetElementType (elem);
-	   if ((elType.ElTypeNum == HTML_EL_HTML)
-	       || (elType.ElTypeNum == HTML_EL_BODY)
-	       || (elType.ElTypeNum == HTML_EL_HEAD))
+	   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	       (elType.ElTypeNum == HTML_EL_HTML
+		|| elType.ElTypeNum == HTML_EL_BODY
+		|| elType.ElTypeNum == HTML_EL_HEAD))
 	     {
 	       if (setColor)
 		 {
@@ -3635,9 +3655,9 @@ char               *cssRule;
        if (context->drv == &GenericStrategy)
 	 {
 	   gblock = (GenericContext) context;
-	   if ((gblock->type == HTML_EL_HTML)
-	       || (gblock->type == HTML_EL_BODY)
-	       || (gblock->type == HTML_EL_HEAD))
+	   if (gblock->type == HTML_EL_HTML
+	       || gblock->type == HTML_EL_BODY
+	       || gblock->type == HTML_EL_HEAD)
 	     {
 	       if (setColor)
 		 {
@@ -3669,9 +3689,10 @@ char               *cssRule;
 	   sblock = (SpecificContextBlock *) context;
 	   elem = (SpecificTarget) target;
 	   elType = TtaGetElementType (elem);
-	   if ((elType.ElTypeNum == HTML_EL_HTML)
-	       || (elType.ElTypeNum == HTML_EL_BODY)
-	       || (elType.ElTypeNum == HTML_EL_HEAD))
+	   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	       (elType.ElTypeNum == HTML_EL_HTML
+	       || elType.ElTypeNum == HTML_EL_BODY
+	       || elType.ElTypeNum == HTML_EL_HEAD))
 	     {
 	       if (setColor)
 		 {
@@ -3735,13 +3756,13 @@ char               *cssRule;
    e.g: pinky, awful { color: pink, font-family: helvetica }        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseStyleDeclaration (Element el, char *cssRule, Document doc, PSchema pSchema)
+void                ParseStyleDeclaration (Element el, char *cssRule, Document doc, CSSInfoPtr css)
 #else
-void                ParseStyleDeclaration (el, cssRule, doc, pSchema)
+void                ParseStyleDeclaration (el, cssRule, doc, css)
 Element             el;
 char               *cssRule;
 Document            doc;
-PSchema             pSchema;
+CSSInfoPtr          css;
 #endif
 {
    char               *decl_end;
@@ -3792,7 +3813,7 @@ PSchema             pSchema;
     * parse the style attribute string and install the corresponding
     * presentation attributes on the new element
     */
-   ParseCSSGenericStyle (sel, cssRule, doc, pSchema);
+   ParseCSSGenericStyle (sel, cssRule, doc, css);
 
    /* restore the string to its original form ! */
    *sel_end = sauve1;
@@ -3872,132 +3893,6 @@ Document            doc;
 	 }
      }
    while (rule != NULL);
-}
-
-/*----------------------------------------------------------------------
-   ParseHTMLStyleSheet : Parse an HTML Style Sheet fragment        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ParseHTMLStyleSheet (char *fragment, Document doc, PSchema pSchema)
-#else
-void                ParseHTMLStyleSheet (fragment, doc, pSchema)
-char               *fragment;
-Document            doc;
-PSchema             pSchema;
-#endif
-{
-   /* these static variables should pertain to a context block */
-   static int          SelecIndex = 0;
-   static char         SelecBuffer[1000];
-   static int          StyleIndex = 0;
-   static char         StyleBuffer[3000];
-   static char         in_comment = 0;
-   static char         in_selec = 1;
-   static char         in_style = 0;
-   static char         last;
-
-   if (fragment == NULL)
-     {
-	/* force the interpetation of the end of the Buffers */
-	StyleBuffer[StyleIndex++] = 0;
-	SelecBuffer[SelecIndex++] = 0;
-	ParseCSSGenericStyle (SelecBuffer, StyleBuffer,
-			       doc, pSchema);
-
-	StyleIndex = 0;
-	SelecIndex = 0;
-	in_selec = 1;
-	in_style = 0;
-	return;
-     }
-   while ((*fragment != 0) && (SelecIndex < 1000) && (StyleIndex < 3000))
-     {
-       /* comments in external CSS are coded the C way */
-       if (in_comment != 0)
-	 {
-	   if ((last == '*') && (*fragment == '/'))
-	     {
-	       in_comment = 0;
-	       fragment++;
-	       continue;
-	     }
-	   last = *fragment++;
-	   continue;
-	 }
-       if (last == '/')
-	 {
-	   if (*fragment == '*')
-	     {
-	       /* start of a comment */
-	       in_comment = 1;
-	       fragment++;
-	       continue;
-	     }
-	   else
-	     {
-	       /* No comment here, put the slash at the correct location */
-	       if (in_selec)
-		 SelecBuffer[SelecIndex++] = '/';
-	       else if (in_style)
-		 StyleBuffer[StyleIndex++] = '/';
-	     }
-	 }
-       last = *fragment++;
-       switch (last)
-	 {
-	 case '/':
-	   /* treated on next char to deal with comments */
-	   break;
-	 case EOL:
-	 case TAB:
-	 case '\r':
-	   if (in_selec)
-	     SelecBuffer[SelecIndex++] = SPACE;
-	   else if (in_style)
-	     StyleBuffer[StyleIndex++] = SPACE;
-	   break;
-	 case '{':
-	   if (in_selec)
-	     {
-	       SelecBuffer[SelecIndex++] = 0;
-	       in_selec = 0;
-	       in_style = 1;
-	     }
-	   break;
-	 case '}':
-	   /* this is an end one element style specification, parse it */
-	   if (in_style)
-	     {
-	       StyleBuffer[StyleIndex++] = 0;
-	       ParseCSSGenericStyle (SelecBuffer, StyleBuffer, doc, pSchema);
-	       
-	       StyleIndex = 0;
-	       SelecIndex = 0;
-	       in_selec = 1;
-	       in_style = 0;
-	     }
-	   break;
-	 default:
-	   if (in_selec)
-	     SelecBuffer[SelecIndex++] = last;
-	   else if (in_style)
-	     StyleBuffer[StyleIndex++] = last;
-	   break;
-	 }
-     }
-   if ((SelecIndex >= 1000) || (StyleIndex >= 3000))
-     {
-       /* something went havoc, reset the parser */
-       MSG ("ParseHTMLStyleSheet : parser error, resetting\n");
-       StyleIndex = 0;
-       SelecIndex = 0;
-       in_selec = 1;
-       in_style = 0;
-       in_comment = 0;
-     }
-
-   if (NonPPresentChanged)
-     ApplyExtraPresentation (doc);
 }
 
 /************************************************************************
@@ -4257,25 +4152,6 @@ int                 type;
        break;
      }
    TtaInsertFirstChild (&el, father, doc);
-   /*
-    * post processing : eg create child ...
-    */
-   switch (type)
-     {
-       /******
-	 case HTML_EL_StyleRule: {
-	 Element         contenu;
-	 
-	 elType.ElSSchema = TtaGetDocumentSSchema(doc);
-	 elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	 contenu = TtaNewElement(doc, elType);
-	 TtaInsertFirstChild(&contenu, el, doc);
-	 break;
-	 }
-	 *****/
-     default:
-       break;
-     }
    return (el);
 }
 

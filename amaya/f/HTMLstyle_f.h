@@ -31,17 +31,14 @@ extern void ParseCSSBackgroundImageCallback ( Document doc,
 extern void ParseStyleDeclaration ( Element elem,
 				    char *attrstr,
 				    Document doc,
-				    PSchema gPres );
+				    CSSInfoPtr css);
 extern void ParseHTMLClass ( Element elem,
                              char *attrstr,
                              Document doc );
-extern void ParseHTMLStyleSheet ( char *fragment,
-                                  Document doc,
-                                  PSchema gPres );
 extern void ParseCSSGenericStyle (char *selector,
 				  char *cssRule,
 				  Document doc,
-				  PSchema pSchema);
+				  CSSInfoPtr css);
 extern int EvaluateClassContext ( Element elem,
                                   char *class,
                                   char *selector,
@@ -110,17 +107,14 @@ extern void ParseCSSBackgroundImageCallback (/* Document doc,
 extern void ParseStyleDeclaration (/* Element elem,
 				      char *attrstr,
 				      Document doc,
-				      PSchema gPres */);
+				      CSSInfoPtr css */);
 extern void ParseHTMLClass (/* Element elem,
                                char *attrstr,
                                Document doc */);
-extern void ParseHTMLStyleSheet (/* char *fragment,
-                                    Document doc,
-                                    PSchema gPres */);
 extern void ParseCSSGenericStyle (/* char *selector,
 				     char *cssRule,
 				     Document doc,
-				     PSchema pSchema */);
+				     CSSInfoPtr css */);
 extern int EvaluateClassContext (/* Element elem,
                                     char *class,
                                     char *selector,

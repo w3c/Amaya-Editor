@@ -22,14 +22,10 @@ RPIstate;
  
 typedef struct PRuleInfo
   {
-     struct PRuleInfo   *NextRPI;
- 
-     RPIstate            state;
- 
+     struct PRuleInfo   *NextRPI; 
+     RPIstate            state; 
      PSchema             pschema;
- 
      GenericContext      ctxt;
- 
      /* the CSS rule */
      char               *selector;
      char               *css_rule;
@@ -66,23 +62,17 @@ CSSBrowseStatus;
 typedef struct CSSInfo
   {
      struct CSSInfo     *NextCSS;
-
-     /* the CSS name */
-     char               *name;
+     char               *name;   /* the CSS name */
      char               *url;
      char               *tempfile;
      CSSCategory         category;
      CSSState            state;
-
-     /* the associated pSchema */
-     PSchema             pschema;
-
+     PSchema             pschema; /* the document Presentation Schema */
+     PSchema             mschema;  /* the Math Presentation Schema */
      /* documents using this CSS */
      boolean                documents[DocumentTableLength + 1];
-
      /* The original CSS text. Needed for the Dismiss function */
      char               *css_rule;
-
      /*
       * Extra informations needed to support presentation not
       * currently available at the P level.
@@ -118,17 +108,14 @@ CSSInfo            , *CSSInfoPtr;
 #define CSSTextConfirm	17
 #define FormDeleteCSS	18
 #define ListDeleteCSS 19
-
 #define NB_CSS_DIALOGS	20
 
 /*
  * Parameters for the CSS History, size and filename (UNIX) !
  * First string is home directory, second is the application name
  */
-
 #define CSS_HISTORY_FILE "%s/.%s/history.css"
 #define CSS_HISTORY_SIZE 50
-
 #define HTML_HISTORY_FILE "%s/.%s/history.html"
 #define HTML_HISTORY_SIZE 50
 
