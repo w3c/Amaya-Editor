@@ -148,6 +148,7 @@ Thot/pluginlib/*.c \
 Thot/pluginlib/*.h \
 Thot/pluginlib/f/*.h \
 Thot/libwww/COPYRIGH \
+Thot/libwww/README.Amaya \
 Thot/libwww/Makefile.am \
 Thot/libwww/Makefile.in \
 Thot/libwww/acconfig.h \
