@@ -472,8 +472,6 @@ void               *param;
 			   break;
 		     }
 	       break;
-	    case DRIVERP_ALIGNMENT:
-	       break;
 	    case DRIVERP_LINE_SPACING:
 	       if (real)
 		  sprintf (string, "line-height : %g", fval);
@@ -481,16 +479,33 @@ void               *param;
 		  sprintf (string, "line-height : %d", settings->value.value);
 	       add_unit = 1;
 	       break;
+	    case DRIVERP_ALIGNMENT:
+	       switch (settings->value.value)
+		     {
+                        case DRIVERP_ADJUSTLEFT:
+                           strcpy (string, "text-align : left");
+                           break;
+                        case DRIVERP_ADJUSTRIGHT:
+                           strcpy (string, "text-align : right");
+                           break;
+                        case DRIVERP_ADJUSTCENTERED:
+                           strcpy (string, "text-align : center");
+                           break;
+                        case DRIVERP_ADJUSTLEFTWITHDOTS:
+                           strcpy (string, "text-align : left");
+                           break;
+		     }
+	       break;
+	    case DRIVERP_JUSTIFICATION:
+	       if (settings->value.value == DRIVERP_JUSTIFIED)
+		  sprintf (string, "text-align: justify");
+	       break;
 	    case DRIVERP_INDENT:
 	       if (real)
 		  sprintf (string, "text-indent : %g", fval);
 	       else
 		  sprintf (string, "text-indent : %d", settings->value.value);
 	       add_unit = 1;
-	       break;
-	    case DRIVERP_JUSTIFICATION:
-	       if (settings->value.value == DRIVERP_JUSTIFIED)
-		  sprintf (string, "text-align: justify");
 	       break;
 #if 0
 	       /* not yet in CSS */
