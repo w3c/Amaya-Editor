@@ -63,8 +63,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "..\"
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ  /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "..\..\libwww\modules\r" /I "..\..\libraptor" /I "..\..\..\libwww\modules\expat\xmlparse" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_WINDOWS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /YX /FD /GZ  /c
+# ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "..\..\libwww\modules\r" /I "..\..\libraptor" /I "..\..\..\libwww\modules\expat\xmlparse" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
 # ADD RSC /l 0x40c /d "_DEBUG"
 BSC32=bscmake.exe
