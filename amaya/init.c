@@ -4140,7 +4140,7 @@ void ShowSource (Document document, View view)
      {
      /* save the current state of the document into the temporary file */
      tempdocument = GetLocalPath (document, DocumentURLs[document]);
-     if (TtaIsDocumentModified (document))
+     if (TtaIsDocumentModified (document) || !TtaFileExist (tempdocument))
        {
 	 SetNamespacesAndDTD (document);
 	 if (DocumentTypes[document] == docLibrary ||
