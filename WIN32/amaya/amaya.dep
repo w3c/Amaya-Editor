@@ -1,2 +1,694 @@
 # Microsoft Developer Studio Generated Dependency File, included by amaya.mak
 
+..\..\amaya\AHTBridge.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\AHTFWrite.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\AHTMemConv.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\AHTURLTools.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\amaya.rc : \
+	"..\..\amaya\amaya.bmp"\
+	"..\..\amaya\appicon.ico"\
+	"..\..\amaya\bcenter.bmp"\
+	"..\..\amaya\bindent1.bmp"\
+	"..\..\amaya\bindent2.bmp"\
+	"..\..\amaya\bleft.bmp"\
+	"..\..\amaya\bright.bmp"\
+	"..\..\amaya\bslarge.bmp"\
+	"..\..\amaya\bsmedium.bmp"\
+	"..\..\amaya\bssmall.bmp"\
+	"..\..\amaya\div.bmp"\
+	"..\..\amaya\down.bmp"\
+	"..\..\amaya\galpha1.bmp"\
+	"..\..\amaya\galpha2.bmp"\
+	"..\..\amaya\gccurve.bmp"\
+	"..\..\amaya\gcircle.bmp"\
+	"..\..\amaya\gcpolyli.bmp"\
+	"..\..\amaya\gcurve.bmp"\
+	"..\..\amaya\gellipse.bmp"\
+	"..\..\amaya\ggroup.bmp"\
+	"..\..\amaya\gkey001.bmp"\
+	"..\..\amaya\gkey002.bmp"\
+	"..\..\amaya\gkey003.bmp"\
+	"..\..\amaya\gkey004.bmp"\
+	"..\..\amaya\gkey005.bmp"\
+	"..\..\amaya\gkey006.bmp"\
+	"..\..\amaya\gkey007.bmp"\
+	"..\..\amaya\gkey008.bmp"\
+	"..\..\amaya\gkey009.bmp"\
+	"..\..\amaya\gkey010.bmp"\
+	"..\..\amaya\gkey011.bmp"\
+	"..\..\amaya\gkey012.bmp"\
+	"..\..\amaya\gkey013.bmp"\
+	"..\..\amaya\gkey014.bmp"\
+	"..\..\amaya\gkey015.bmp"\
+	"..\..\amaya\gkey016.bmp"\
+	"..\..\amaya\gkey017.bmp"\
+	"..\..\amaya\gkey018.bmp"\
+	"..\..\amaya\gkey019.bmp"\
+	"..\..\amaya\gkey020.bmp"\
+	"..\..\amaya\gkey021.bmp"\
+	"..\..\amaya\gkey022.bmp"\
+	"..\..\amaya\gkey023.bmp"\
+	"..\..\amaya\gkey024.bmp"\
+	"..\..\amaya\gkey025.bmp"\
+	"..\..\amaya\gkey026.bmp"\
+	"..\..\amaya\gkey027.bmp"\
+	"..\..\amaya\gkey028.bmp"\
+	"..\..\amaya\gkey029.bmp"\
+	"..\..\amaya\gkey030.bmp"\
+	"..\..\amaya\gkey031.bmp"\
+	"..\..\amaya\gkey032.bmp"\
+	"..\..\amaya\gkey033.bmp"\
+	"..\..\amaya\gkey034.bmp"\
+	"..\..\amaya\gkey035.bmp"\
+	"..\..\amaya\gkey036.bmp"\
+	"..\..\amaya\gkey037.bmp"\
+	"..\..\amaya\gkey038.bmp"\
+	"..\..\amaya\gkey039.bmp"\
+	"..\..\amaya\gkey040.bmp"\
+	"..\..\amaya\gkey041.bmp"\
+	"..\..\amaya\gkey042.bmp"\
+	"..\..\amaya\gkey043.bmp"\
+	"..\..\amaya\gkey044.bmp"\
+	"..\..\amaya\gkey045.bmp"\
+	"..\..\amaya\gkey046.bmp"\
+	"..\..\amaya\gkey047.bmp"\
+	"..\..\amaya\gkey048.bmp"\
+	"..\..\amaya\gkey049.bmp"\
+	"..\..\amaya\gkey050.bmp"\
+	"..\..\amaya\gkey051.bmp"\
+	"..\..\amaya\gkey052.bmp"\
+	"..\..\amaya\gkey053.bmp"\
+	"..\..\amaya\gkey054.bmp"\
+	"..\..\amaya\gkey055.bmp"\
+	"..\..\amaya\gkey056.bmp"\
+	"..\..\amaya\gkey057.bmp"\
+	"..\..\amaya\gkey058.bmp"\
+	"..\..\amaya\gkey059.bmp"\
+	"..\..\amaya\gkey060.bmp"\
+	"..\..\amaya\gkey061.bmp"\
+	"..\..\amaya\gkey062.bmp"\
+	"..\..\amaya\gkey063.bmp"\
+	"..\..\amaya\gkey064.bmp"\
+	"..\..\amaya\gkey065.bmp"\
+	"..\..\amaya\gkey066.bmp"\
+	"..\..\amaya\gkey067.bmp"\
+	"..\..\amaya\gkey068.bmp"\
+	"..\..\amaya\gkey069.bmp"\
+	"..\..\amaya\gkey070.bmp"\
+	"..\..\amaya\gkey071.bmp"\
+	"..\..\amaya\gkey072.bmp"\
+	"..\..\amaya\gkey073.bmp"\
+	"..\..\amaya\gkey074.bmp"\
+	"..\..\amaya\gkey075.bmp"\
+	"..\..\amaya\gkey076.bmp"\
+	"..\..\amaya\gkey077.bmp"\
+	"..\..\amaya\gkey078.bmp"\
+	"..\..\amaya\gkey079.bmp"\
+	"..\..\amaya\gkey080.bmp"\
+	"..\..\amaya\gkey081.bmp"\
+	"..\..\amaya\gkey082.bmp"\
+	"..\..\amaya\gkey083.bmp"\
+	"..\..\amaya\gkey084.bmp"\
+	"..\..\amaya\gkey085.bmp"\
+	"..\..\amaya\gkey086.bmp"\
+	"..\..\amaya\gkey087.bmp"\
+	"..\..\amaya\gkey088.bmp"\
+	"..\..\amaya\gkey089.bmp"\
+	"..\..\amaya\gkey090.bmp"\
+	"..\..\amaya\gkey091.bmp"\
+	"..\..\amaya\gkey092.bmp"\
+	"..\..\amaya\gkey093.bmp"\
+	"..\..\amaya\gkey094.bmp"\
+	"..\..\amaya\gkey095.bmp"\
+	"..\..\amaya\gkey096.bmp"\
+	"..\..\amaya\gkey097.bmp"\
+	"..\..\amaya\gkey098.bmp"\
+	"..\..\amaya\gkey099.bmp"\
+	"..\..\amaya\gkey100.bmp"\
+	"..\..\amaya\gkey101.bmp"\
+	"..\..\amaya\gkey102.bmp"\
+	"..\..\amaya\gkey103.bmp"\
+	"..\..\amaya\gkey104.bmp"\
+	"..\..\amaya\gkey105.bmp"\
+	"..\..\amaya\gkey106.bmp"\
+	"..\..\amaya\gkey107.bmp"\
+	"..\..\amaya\gkey108.bmp"\
+	"..\..\amaya\gkey109.bmp"\
+	"..\..\amaya\gkey110.bmp"\
+	"..\..\amaya\gkey111.bmp"\
+	"..\..\amaya\gkey112.bmp"\
+	"..\..\amaya\gkey113.bmp"\
+	"..\..\amaya\gkey114.bmp"\
+	"..\..\amaya\gkey115.bmp"\
+	"..\..\amaya\gkey116.bmp"\
+	"..\..\amaya\gkey117.bmp"\
+	"..\..\amaya\gkey118.bmp"\
+	"..\..\amaya\gkey119.bmp"\
+	"..\..\amaya\gkey120.bmp"\
+	"..\..\amaya\gkey121.bmp"\
+	"..\..\amaya\gkey122.bmp"\
+	"..\..\amaya\gkey123.bmp"\
+	"..\..\amaya\gkey124.bmp"\
+	"..\..\amaya\gkey125.bmp"\
+	"..\..\amaya\gkey126.bmp"\
+	"..\..\amaya\gkey127.bmp"\
+	"..\..\amaya\gkey128.bmp"\
+	"..\..\amaya\gkey129.bmp"\
+	"..\..\amaya\gkey130.bmp"\
+	"..\..\amaya\gkey131.bmp"\
+	"..\..\amaya\gkey132.bmp"\
+	"..\..\amaya\gkey133.bmp"\
+	"..\..\amaya\gkey134.bmp"\
+	"..\..\amaya\gkey135.bmp"\
+	"..\..\amaya\gkey136.bmp"\
+	"..\..\amaya\gkey137.bmp"\
+	"..\..\amaya\gkey138.bmp"\
+	"..\..\amaya\gkey139.bmp"\
+	"..\..\amaya\gkey140.bmp"\
+	"..\..\amaya\gkey141.bmp"\
+	"..\..\amaya\gkey142.bmp"\
+	"..\..\amaya\gkey143.bmp"\
+	"..\..\amaya\gkey144.bmp"\
+	"..\..\amaya\gkey145.bmp"\
+	"..\..\amaya\gkey146.bmp"\
+	"..\..\amaya\gkey147.bmp"\
+	"..\..\amaya\gkey148.bmp"\
+	"..\..\amaya\gkey149.bmp"\
+	"..\..\amaya\gkey150.bmp"\
+	"..\..\amaya\gkey151.bmp"\
+	"..\..\amaya\gkey152.bmp"\
+	"..\..\amaya\gkey153.bmp"\
+	"..\..\amaya\gkey154.bmp"\
+	"..\..\amaya\gkey155.bmp"\
+	"..\..\amaya\gkey156.bmp"\
+	"..\..\amaya\gkey157.bmp"\
+	"..\..\amaya\gkey158.bmp"\
+	"..\..\amaya\gkey159.bmp"\
+	"..\..\amaya\gkey160.bmp"\
+	"..\..\amaya\gline.bmp"\
+	"..\..\amaya\gpolylin.bmp"\
+	"..\..\amaya\grect.bmp"\
+	"..\..\amaya\grrect.bmp"\
+	"..\..\amaya\ind.bmp"\
+	"..\..\amaya\math.bmp"\
+	"..\..\amaya\mathd.bmp"\
+	"..\..\amaya\matrix.bmp"\
+	"..\..\amaya\parexp.bmp"\
+	"..\..\amaya\pow.bmp"\
+	"..\..\amaya\powind.bmp"\
+	"..\..\amaya\root.bmp"\
+	"..\..\amaya\sroot.bmp"\
+	"..\..\amaya\sym.bmp"\
+	"..\..\amaya\toolbar1.bmp"\
+	"..\..\amaya\udlr.bmp"\
+	"..\..\amaya\up.bmp"\
+	"..\..\amaya\updn.bmp"\
+	"..\..\amaya\wincurso.cur"\
+	
+
+..\..\amaya\answer.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\css.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\EDITimage.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\EDITORactions.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+.\EDITORAPP.c : \
+	".\EDITOR.h"\
+	
+
+..\..\amaya\EDITstyle.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\fetchHTMLname.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\fetchHTMLname.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\fetchHTMLname.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\fetchXMLname.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\Graphedit.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	"..\..\amaya\trans.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+.\GraphMLAPP.c : \
+	".\GraphML.h"\
+	
+
+..\..\amaya\GraphMLbuilder.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\html2thot.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\fetchHTMLname.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLactions.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+.\HTMLAPP.c : \
+	".\HTML.h"\
+	
+
+..\..\amaya\HTMLbook.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLedit.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	"..\..\amaya\windialogapi_f.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLform.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLhistory.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLimage.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLpresentation.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLsave.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\HTMLtable.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\init.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\gtkdialogue_box.h"\
+	"..\..\amaya\helpmenu.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	"..\..\amaya\trans.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\Mathedit.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	"..\..\amaya\trans.h"\
+	".\EDITOR.h"\
+	".\GraphML.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+.\MathMLAPP.c : \
+	".\MathML.h"\
+	
+
+..\..\amaya\MathMLbuilder.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\MENUconf.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	"..\..\amaya\MENUconf.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\query.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\styleparser.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\fetchHTMLname.h"\
+	"..\..\amaya\HTMLstyleColor.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\templates.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+.\TextFileAPP.c : \
+	".\TextFile.h"\
+	
+
+..\..\amaya\trans.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\fetchHTMLname.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	"..\..\amaya\trans.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\MathML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\transparse.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\fetchHTMLname.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	"..\..\amaya\trans.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\UIcss.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\windialogapi.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	
+
+..\..\amaya\XMLparser.c : \
+	"..\..\amaya\AHTInit.h"\
+	"..\..\amaya\amaya.h"\
+	"..\..\amaya\amayamsg.h"\
+	"..\..\amaya\css.h"\
+	"..\..\amaya\libilu.h"\
+	"..\..\amaya\libjava.h"\
+	"..\..\amaya\libwww.h"\
+	".\EDITOR.h"\
+	".\HTML.h"\
+	".\TextFile.h"\
+	

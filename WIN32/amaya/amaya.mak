@@ -241,7 +241,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\include" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /I "..\..\thotlib\internals\f" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /D "GRAPHML" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I ".\\" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\include" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /I "..\..\thotlib\internals\f" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "MATHML" /D "THOT_TOOLTIPS" /D "GRAPHML" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe

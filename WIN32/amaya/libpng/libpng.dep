@@ -1,2 +1,106 @@
 # Microsoft Developer Studio Generated Dependency File, included by libpng.mak
 
+..\..\..\libpng\png.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngerror.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngget.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngmem.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngpread.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngread.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngrio.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngrtran.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngrutil.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngset.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngtrans.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngwio.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngwrite.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngwtran.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\pngwutil.c : \
+	"..\..\..\libpng\png.h"\
+	"..\..\..\libpng\pngconf.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	

@@ -71,7 +71,7 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\zlib.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\zutil.obj" \
+	"$(INTDIR)\adler32.obj" \
 	"$(INTDIR)\compress.obj" \
 	"$(INTDIR)\crc32.obj" \
 	"$(INTDIR)\deflate.obj" \
@@ -84,7 +84,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\infutil.obj" \
 	"$(INTDIR)\trees.obj" \
 	"$(INTDIR)\uncompr.obj" \
-	"$(INTDIR)\adler32.obj"
+	"$(INTDIR)\zutil.obj"
 
 "$(OUTDIR)\zlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -127,7 +127,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "__STDC__" /Fp"$(INTDIR)\zlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ  /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "__STDC__" /Fp"$(INTDIR)\zlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\zlib.bsc" 
 BSC32_SBRS= \
@@ -135,7 +135,7 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\zlib.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\zutil.obj" \
+	"$(INTDIR)\adler32.obj" \
 	"$(INTDIR)\compress.obj" \
 	"$(INTDIR)\crc32.obj" \
 	"$(INTDIR)\deflate.obj" \
@@ -148,7 +148,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\infutil.obj" \
 	"$(INTDIR)\trees.obj" \
 	"$(INTDIR)\uncompr.obj" \
-	"$(INTDIR)\adler32.obj"
+	"$(INTDIR)\zutil.obj"
 
 "$(OUTDIR)\zlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<

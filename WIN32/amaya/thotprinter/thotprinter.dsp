@@ -22,7 +22,7 @@ CFG=thotprinter - Win32 Debug
 !MESSAGE 
 
 # Begin Project
-# PROP AllowPerConfigDependencies 0
+# PROP AllowPerConfigDependencies 1
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
@@ -129,6 +129,10 @@ SOURCE=..\..\..\amaya\styleparser.c
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
+# Begin Source File
+
+SOURCE=.\thotprinter.dep
+# End Source File
 # Begin Source File
 
 SOURCE=.\thotprinter.mak

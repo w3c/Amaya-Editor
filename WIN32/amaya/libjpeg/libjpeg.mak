@@ -103,7 +103,7 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libjpeg.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\jutils.obj" \
+	"$(INTDIR)\jcapimin.obj" \
 	"$(INTDIR)\jcapistd.obj" \
 	"$(INTDIR)\jccoefct.obj" \
 	"$(INTDIR)\jccolor.obj" \
@@ -148,7 +148,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\jmemnobs.obj" \
 	"$(INTDIR)\jquant1.obj" \
 	"$(INTDIR)\jquant2.obj" \
-	"$(INTDIR)\jcapimin.obj"
+	"$(INTDIR)\jutils.obj"
 
 "$(OUTDIR)\libjpeg.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -223,7 +223,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\..\..\libjpeg" /I "..\..\..\thotlib\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ  /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\..\..\libjpeg" /I "..\..\..\thotlib\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -231,7 +231,7 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libjpeg.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\jutils.obj" \
+	"$(INTDIR)\jcapimin.obj" \
 	"$(INTDIR)\jcapistd.obj" \
 	"$(INTDIR)\jccoefct.obj" \
 	"$(INTDIR)\jccolor.obj" \
@@ -276,7 +276,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\jmemnobs.obj" \
 	"$(INTDIR)\jquant1.obj" \
 	"$(INTDIR)\jquant2.obj" \
-	"$(INTDIR)\jcapimin.obj"
+	"$(INTDIR)\jutils.obj"
 
 "$(OUTDIR)\libjpeg.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<

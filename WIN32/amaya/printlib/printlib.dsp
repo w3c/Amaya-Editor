@@ -22,7 +22,7 @@ CFG=printlib - Win32 Debug
 !MESSAGE 
 
 # Begin Project
-# PROP AllowPerConfigDependencies 0
+# PROP AllowPerConfigDependencies 1
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
@@ -348,6 +348,10 @@ SOURCE=..\..\..\thotlib\image\xpmhandler.c
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # End Group
+# Begin Source File
+
+SOURCE=.\printlib.dep
+# End Source File
 # Begin Source File
 
 SOURCE=.\printlib.mak

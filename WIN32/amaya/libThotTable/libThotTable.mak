@@ -60,9 +60,9 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotTable.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\tableH.obj" \
+	"$(INTDIR)\table.obj" \
 	"$(INTDIR)\table2.obj" \
-	"$(INTDIR)\table.obj"
+	"$(INTDIR)\tableH.obj"
 
 "$(OUTDIR)\libThotTable.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -94,7 +94,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\..\..\thotlib\include" /I "..\..\..\thotlib\internals\h" /I "..\..\..\thotlib\internals\f" /I "..\..\..\thotlib\internals\var" /I "..\..\..\tablelib\f" /I "..\..\..\schemas" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "__STDC__" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "_WINDOWS" /Fp"$(INTDIR)\libThotTable.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ  /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /I "..\..\..\thotlib\include" /I "..\..\..\thotlib\internals\h" /I "..\..\..\thotlib\internals\f" /I "..\..\..\thotlib\internals\var" /I "..\..\..\tablelib\f" /I "..\..\..\schemas" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "__STDC__" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "_WINDOWS" /Fp"$(INTDIR)\libThotTable.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotTable.bsc" 
 BSC32_SBRS= \
@@ -102,9 +102,9 @@ BSC32_SBRS= \
 LIB32=link.exe -lib
 LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotTable.lib" 
 LIB32_OBJS= \
-	"$(INTDIR)\tableH.obj" \
+	"$(INTDIR)\table.obj" \
 	"$(INTDIR)\table2.obj" \
-	"$(INTDIR)\table.obj"
+	"$(INTDIR)\tableH.obj"
 
 "$(OUTDIR)\libThotTable.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<

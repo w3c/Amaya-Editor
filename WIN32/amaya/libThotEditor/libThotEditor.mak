@@ -135,6 +135,7 @@ CLEAN :
 	-@erase "$(INTDIR)\presvariables.obj"
 	-@erase "$(INTDIR)\printmenu.obj"
 	-@erase "$(INTDIR)\profiles.obj"
+	-@erase "$(INTDIR)\pschemaapi.obj"
 	-@erase "$(INTDIR)\quit.obj"
 	-@erase "$(INTDIR)\readpivot.obj"
 	-@erase "$(INTDIR)\readprs.obj"
@@ -168,6 +169,7 @@ CLEAN :
 	-@erase "$(INTDIR)\style.obj"
 	-@erase "$(INTDIR)\textcommands.obj"
 	-@erase "$(INTDIR)\thotmodule.obj"
+	-@erase "$(INTDIR)\thotmsg.obj"
 	-@erase "$(INTDIR)\translatexml.obj"
 	-@erase "$(INTDIR)\translation.obj"
 	-@erase "$(INTDIR)\tree.obj"
@@ -295,6 +297,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\presvariables.obj" \
 	"$(INTDIR)\printmenu.obj" \
 	"$(INTDIR)\profiles.obj" \
+	"$(INTDIR)\pschemaapi.obj" \
 	"$(INTDIR)\quit.obj" \
 	"$(INTDIR)\readpivot.obj" \
 	"$(INTDIR)\readprs.obj" \
@@ -328,6 +331,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\style.obj" \
 	"$(INTDIR)\textcommands.obj" \
 	"$(INTDIR)\thotmodule.obj" \
+	"$(INTDIR)\thotmsg.obj" \
 	"$(INTDIR)\translatexml.obj" \
 	"$(INTDIR)\translation.obj" \
 	"$(INTDIR)\tree.obj" \
@@ -469,6 +473,7 @@ CLEAN :
 	-@erase "$(INTDIR)\presvariables.obj"
 	-@erase "$(INTDIR)\printmenu.obj"
 	-@erase "$(INTDIR)\profiles.obj"
+	-@erase "$(INTDIR)\pschemaapi.obj"
 	-@erase "$(INTDIR)\quit.obj"
 	-@erase "$(INTDIR)\readpivot.obj"
 	-@erase "$(INTDIR)\readprs.obj"
@@ -502,6 +507,7 @@ CLEAN :
 	-@erase "$(INTDIR)\style.obj"
 	-@erase "$(INTDIR)\textcommands.obj"
 	-@erase "$(INTDIR)\thotmodule.obj"
+	-@erase "$(INTDIR)\thotmsg.obj"
 	-@erase "$(INTDIR)\translatexml.obj"
 	-@erase "$(INTDIR)\translation.obj"
 	-@erase "$(INTDIR)\tree.obj"
@@ -630,6 +636,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\presvariables.obj" \
 	"$(INTDIR)\printmenu.obj" \
 	"$(INTDIR)\profiles.obj" \
+	"$(INTDIR)\pschemaapi.obj" \
 	"$(INTDIR)\quit.obj" \
 	"$(INTDIR)\readpivot.obj" \
 	"$(INTDIR)\readprs.obj" \
@@ -663,6 +670,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\style.obj" \
 	"$(INTDIR)\textcommands.obj" \
 	"$(INTDIR)\thotmodule.obj" \
+	"$(INTDIR)\thotmsg.obj" \
 	"$(INTDIR)\translatexml.obj" \
 	"$(INTDIR)\translation.obj" \
 	"$(INTDIR)\tree.obj" \
@@ -1244,6 +1252,12 @@ SOURCE=..\..\..\thotlib\dialogue\profiles.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\thotlib\presentation\pschemaapi.c
+
+"$(INTDIR)\pschemaapi.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\thotlib\dialogue\quit.c
 
 "$(INTDIR)\quit.obj" : $(SOURCE) "$(INTDIR)"
@@ -1439,6 +1453,12 @@ SOURCE=..\..\..\thotlib\editing\textcommands.c
 SOURCE=..\..\..\thotlib\xml\thotmodule.c
 
 "$(INTDIR)\thotmodule.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\thotlib\base\thotmsg.c
+
+"$(INTDIR)\thotmsg.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

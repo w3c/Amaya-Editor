@@ -22,7 +22,7 @@ CFG=libwww - Win32 Debug
 !MESSAGE 
 
 # Begin Project
-# PROP AllowPerConfigDependencies 0
+# PROP AllowPerConfigDependencies 1
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
@@ -528,6 +528,10 @@ SOURCE=..\..\..\..\libwww\Library\src\SGML.c
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # End Group
+# Begin Source File
+
+SOURCE=.\libwww.dep
+# End Source File
 # Begin Source File
 
 SOURCE=.\libwww.mak

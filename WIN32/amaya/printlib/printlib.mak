@@ -154,6 +154,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\dictionary.obj" \
 	"$(INTDIR)\displaybox.obj" \
 	"$(INTDIR)\displayview.obj" \
+	"$(INTDIR)\documentapi.obj" \
 	"$(INTDIR)\epshandler.obj" \
 	"$(INTDIR)\exceptions.obj" \
 	"$(INTDIR)\externalref.obj" \
@@ -198,8 +199,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
 	"$(OUTDIR)\libpng.lib" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(INTDIR)\documentapi.obj"
+	"$(OUTDIR)\libjpeg.lib"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -333,6 +333,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\dictionary.obj" \
 	"$(INTDIR)\displaybox.obj" \
 	"$(INTDIR)\displayview.obj" \
+	"$(INTDIR)\documentapi.obj" \
 	"$(INTDIR)\epshandler.obj" \
 	"$(INTDIR)\exceptions.obj" \
 	"$(INTDIR)\externalref.obj" \
@@ -377,8 +378,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
 	"$(OUTDIR)\libpng.lib" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(INTDIR)\documentapi.obj"
+	"$(OUTDIR)\libjpeg.lib"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
