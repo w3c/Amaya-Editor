@@ -931,8 +931,8 @@ AmayaFrame * AmayaPage::GetActiveFrame() const
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  
- * Description:  
+ *      Method:  RaisePage
+ * Description:  raise the page and the window if necessary
  *--------------------------------------------------------------------------------------
  */
 void AmayaPage::RaisePage()
@@ -940,38 +940,14 @@ void AmayaPage::RaisePage()
   AmayaNotebook * p_notebook = GetNotebookParent();
   if (p_notebook)
     {
+      // raise the notebook page
       p_notebook->SetSelection(GetPageId());
+      
       SetSelected( TRUE );
     }
   // force the window's parent to raises to the top of the window hierarchy if it is a managed window (dialog or frame).
   if ( GetWindowParent() )
     GetWindowParent()->Raise();
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  
- * Description:  
- *--------------------------------------------------------------------------------------
- */
-void AmayaPage::OnSetFocus( wxFocusEvent & event )
-{
-  AmayaFrame * p_frame = GetActiveFrame();
-  if (!p_frame)
-    {
-      event.Skip();
-      return;
-    }
-
-  wxLogDebug( _T("AmayaPage::OnSetFocus : frame=%d"),
-	      p_frame->GetFrameId() );
-
-  // the focus should never be on page because of unicode characteres and shortcuts managment.
-  // the frame will give focuse to the right widget
-  p_frame->DistributeFocus();
-
-  event.Skip();
 }
 
 /*
@@ -1062,7 +1038,6 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
 
   EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
 
-  //  EVT_SET_FOCUS(                        AmayaPage::OnSetFocus )
   //  EVT_CONTEXT_MENU(                     AmayaPage::OnContextMenu )
 
 END_EVENT_TABLE()

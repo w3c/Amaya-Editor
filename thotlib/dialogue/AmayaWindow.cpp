@@ -458,6 +458,15 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
     {
       wxLogDebug( _T("AmayaWindow::OnActivate - window_id=%d"), m_WindowId );
       m_ActiveWindowId = GetWindowId();
+
+      // update internal thotlib global var : ActiveFrame
+      AmayaFrame * p_frame = GetActiveFrame();
+      if (p_frame)
+	ChangeSelFrame(p_frame->GetFrameId());
+      
+      // force the focus to be back on active frame because sometime (wxWidgets bug ?)
+      // the focus disapears => big acessibility problemes.
+      TtaRedirectFocus();
     }
 
   event.Skip();

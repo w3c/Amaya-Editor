@@ -3929,7 +3929,7 @@ void TtaDestroyDialogue (int ref)
 	      catalogue->Cat_Widget->Destroy();
 
 	      /* then give focus to canvas */
-	      TtaRedirectFocus();
+	      //	      TtaRedirectFocus();
 	    }
 #endif /* #ifdef _WX */
 

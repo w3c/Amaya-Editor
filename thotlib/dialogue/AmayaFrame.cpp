@@ -768,18 +768,6 @@ void AmayaFrame::SetActive( bool active )
 
   // update internal thotlib global var : ActiveFrame
   ChangeSelFrame(GetFrameId());
-
-  // give focuse to this frame
-  //  DistributeFocus();
-}
-
-void AmayaFrame::DistributeFocus()
-{
-  wxLogDebug( _T("AmayaFrame::DistributeFocus - frame=%d"), GetFrameId() );
-  /*
-  if (m_pTextGraber)
-    m_pTextGraber->SetFocus();
-  */
 }
 
 bool AmayaFrame::IsActive()

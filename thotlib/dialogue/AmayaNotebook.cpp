@@ -40,7 +40,6 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 
 			   wxNB_MULTILINE /* only windows */ )
 	   ,m_pAmayaWindow( p_amaya_window )
-	   ,m_ShouldLostFocus( FALSE )
 {
   SetImageList( AmayaApp::GetDocumentIconList() );
 }
@@ -92,7 +91,6 @@ void AmayaNotebook::OnClose(wxCloseEvent& event)
   /* there is still open pages ? */
   if (close_window)
     {
-      m_ShouldLostFocus = FALSE;
       event.Skip(); /* everything is closed => close the window */
     }
   else
@@ -211,39 +209,6 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
     return -1;
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNotebook
- *      Method:  OnSetFocus
- * Description:  this callback is called when a the notebook get focus.
- *               notebook sould never get focus so when this callback is called,
- *               amaya ask active frame to distribute focus to corresponding active canvas
- *--------------------------------------------------------------------------------------
- */
-void AmayaNotebook::OnSetFocus( wxFocusEvent & event )
-{
-  wxLogDebug( _T("AmayaNotebook::OnSetFocus") );
-
-  m_ShouldLostFocus = TRUE;
-
-  event.Skip();
-}
-
-void AmayaNotebook::OnIdle( wxIdleEvent& event )
-{
-  if ( m_ShouldLostFocus )
-    {
-      m_ShouldLostFocus = FALSE;
-      // when notebook receive focus, the page is warned and can redistribute focus to the right widgets
-      // in order to handle characteres.
-      AmayaPage * p_selected_page = (AmayaPage *)GetPage(GetSelection());
-      if (p_selected_page)
-	p_selected_page->SetSelected( TRUE );	
-    }
-  
-  event.Skip();
-}
-
 void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 {
   wxLogDebug( _T("AmayaNotebook::OnContextMenu - (x,y)=(%d,%d)"),
@@ -274,14 +239,11 @@ void AmayaNotebook::OnChar(wxKeyEvent& event)
 }
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
-  EVT_CLOSE(	                 AmayaNotebook::OnClose )
+  EVT_CLOSE(	                  AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
-
-  //  EVT_SET_FOCUS(        AmayaNotebook::OnSetFocus )
-  EVT_IDLE(             AmayaNotebook::OnIdle) // Process a wxEVT_IDLE event
-
-  EVT_CONTEXT_MENU(              AmayaNotebook::OnContextMenu )
+  EVT_IDLE(                       AmayaNotebook::OnIdle) // Process a wxEVT_IDLE event
+  EVT_CONTEXT_MENU(               AmayaNotebook::OnContextMenu )
 
   //  EVT_CHAR( AmayaNotebook::OnChar )
 END_EVENT_TABLE()

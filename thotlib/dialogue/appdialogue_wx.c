@@ -1632,7 +1632,7 @@ void TtaDoPostFrameCreation( int frame_id )
    * this function waits for complete widgets initialisation */
   wxSafeYield();
   /* fix accessibility problem : force the created frame to get the focus */
-  FrameTable[frame_id].WdFrame->SetFocus();
+  TtaRedirectFocus();
 
   /* get the parent window */
   AmayaWindow * p_window = TtaGetWindowFromId(TtaGetFrameWindowParentId(frame_id));
@@ -1720,7 +1720,6 @@ void TtaRedirectFocus()
     }
 #endif /* _WX */
 }
-
 
 /*----------------------------------------------------------------------
   TtaHandleUnicodeKey

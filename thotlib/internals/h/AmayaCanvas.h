@@ -83,7 +83,6 @@ protected:
   DECLARE_EVENT_TABLE()
   void OnSize( wxSizeEvent& event );
   void OnPaint( wxPaintEvent& event );
-  void OnSetFocus( wxFocusEvent & event );
   void OnMouseMove( wxMouseEvent& event );
   void OnMouseWheel( wxMouseEvent& event );
   void OnMouseDbClick( wxMouseEvent& event );

@@ -76,14 +76,11 @@ class AmayaNotebook : public wxNotebook
   void OnPageChanged(wxNotebookEvent& event);
   void OnPageChanging(wxNotebookEvent& event);
   void OnChar( wxKeyEvent& event );
-  void OnSetFocus( wxFocusEvent & event );
-  void OnIdle( wxIdleEvent& event );
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
 
  protected:
   AmayaWindow *  m_pAmayaWindow; // amaya parent window
-  bool           m_ShouldLostFocus;
 };
 
 #endif // __AMAYANOTEBOOK_H__

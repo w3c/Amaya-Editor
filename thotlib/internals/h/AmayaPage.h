@@ -123,7 +123,6 @@ public:
   void OnSize( wxSizeEvent& event );
   void OnPaint( wxPaintEvent& event );
 
-  void OnSetFocus( wxFocusEvent & event );
   void OnContextMenu( wxContextMenuEvent & event );
   
   wxBoxSizer *       m_pSizerTop;

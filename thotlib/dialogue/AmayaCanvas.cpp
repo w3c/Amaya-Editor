@@ -315,7 +315,7 @@ void AmayaCanvas::OnMouseMove( wxMouseEvent& event )
  */
 void AmayaCanvas::OnTimerMouseMove( wxTimerEvent& event )
 {
-  wxLogDebug( _T("AmayaCanvas::OnTimerMouseMove") );
+  wxLogDebug( _T("AmayaCanvas::OnTimerMouseMove: x=%d y=%d"), m_LastMouseMoveX, m_LastMouseMoveY );
 
   int frame = m_pAmayaFrame->GetFrameId();
   FrameMotionCallback( frame,
@@ -575,18 +575,6 @@ bool AmayaCanvas::IsInit()
   return m_Init;
 }
 
-void AmayaCanvas::OnSetFocus( wxFocusEvent & event )
-{
-  wxLogDebug( _T("AmayaCanvas::OnSetFocus : frame=%d"),
-	      m_pAmayaFrame->GetFrameId() );
-
-  // the focus should never be on canvas because of unicode characteres and shortcuts managment.
-  // the frame will give focuse to the right widget
-  m_pAmayaFrame->DistributeFocus();
-
-  event.Skip();
-}
-
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCanvas
@@ -611,7 +599,6 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 #endif // #ifdef _GL
   EVT_SIZE( 		AmayaCanvas::OnSize )
   EVT_PAINT( 		AmayaCanvas::OnPaint )
-  //  EVT_SET_FOCUS(        AmayaCanvas::OnSetFocus )
 
   // what mouse event type is managed ? comment what is not managed
   EVT_LEFT_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 
