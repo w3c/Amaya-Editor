@@ -29,8 +29,7 @@
 
 
 #define	MAXCOLORMAPSIZE		256
-#define	TRUE	1
-#define	FALSE	0
+#define scale 65536 / MAXCOLORMAPSIZE;
 #define CM_RED		0
 #define CM_GREEN	1
 #define CM_BLUE		2
@@ -38,16 +37,11 @@
 #define INTERLACE		0x40
 #define LOCALCOLORMAP	0x80
 #define BitSet(byte, bit)	(((byte) & (bit)) == (bit))
-
 #define	ReadOK(file,buffer,len)	(fread(buffer, len, 1, file) > 0)
-
-#define LM_to_uint(a,b)			(((b)<<8)|(a))
-#define DEF_BLACK       BlackPixel(GDp(0), DefaultScreen(GDp(0)))
-#define DEF_WHITE       WhitePixel(GDp(0), DefaultScreen(GDp(0)))
-#define	MAX_LINE	81
+#define LM_to_uint(a,b)		(((b)<<8)|(a))
 
 struct
-  {
+{
      unsigned int        Width;
      unsigned int        Height;
      unsigned char       ColorMap[3][MAXCOLORMAPSIZE];
@@ -55,41 +49,20 @@ struct
      unsigned int        ColorResolution;
      unsigned int        Background;
      unsigned int        AspectRatio;
-  }
-GifScreen;
+} GifScreen;
 
 struct
-  {
+{
      int                 transparent;
      int                 delayTime;
      int                 inputFlag;
      int                 disposal;
-  }
-Gif89 =
-{
-   -1, -1, -1, 0
-};
+} Gif89 ={-1, -1, -1, 0};
 
 int                 verbose;
 int                 showComment;
-
-unsigned char       nibMask[8] =
-{
-   1, 2, 4, 8, 16, 32, 64, 128
-};
-
-#ifdef IV
-static struct color_rec
-  {
-     int                 pixel[3];
-     int                 pixelval;
-     struct color_rec   *hash_next;
-  }
-                   *Hash[256];
-
-#endif
-
-static unsigned char *ReadGifImage ();
+unsigned char       nibMask[8] = {1, 2, 4, 8, 16, 32, 64, 128 };
+int                 ZeroDataBlock = FALSE;
 
 #ifdef __STDC__
 extern void         FindOutColor (Display *, Colormap, ThotColorStruct *);
@@ -99,9 +72,110 @@ extern void         FindOutColor ();
 
 #endif /* __STDC__ */
 
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static unsigned char *ReadGifImage (FILE * fd, int len, int height, unsigned char clmap[3][MAXCOLORMAPSIZE], int interlace, int ignore)
+#else  /* __STDC__ */
+static unsigned char *ReadGifImage (fd, len, height, clmap, interlace, ignore)
+FILE               *fd;
+int                 len;
+int                 height;
+unsigned char       clmap[3][MAXCOLORMAPSIZE];
+int                 interlace;
+int                 ignore;
+#endif /* __STDC__ */
+{
+   unsigned char       c;
+   int                 v;
+   int                 xpos = 0, ypos = 0, pass = 0;
+   unsigned char      *data;
+   unsigned char      *dptr;
+
+   /*
+      **  Initialize the Compression routines
+    */
+   if (!ReadOK (fd, &c, 1))
+	return (NULL);
+
+   if (LWZReadByte (fd, TRUE, c) < 0)
+	return (NULL);
+
+   /*
+      **  If this is an "uninteresting picture" ignore it.
+    */
+   if (ignore)
+     {
+	while (LWZReadByte (fd, FALSE, c) >= 0)
+	   ;
+	return (NULL);
+     }
+
+   data = (unsigned char *) TtaGetMemory (sizeof (unsigned char) * len * height);
+   if (data == NULL)
+	return (NULL);
+
+   while ((v = LWZReadByte (fd, FALSE, c)) >= 0)
+     {
+	dptr = (unsigned char *) (data + (ypos * len) + xpos);
+	*dptr = (unsigned char) v;
+
+	++xpos;
+	if (xpos == len)
+	  {
+	     xpos = 0;
+	     if (interlace)
+	       {
+		  switch (pass)
+			{
+			   case 0:
+			   case 1:
+			      ypos += 8;
+			      break;
+			   case 2:
+			      ypos += 4;
+			      break;
+			   case 3:
+			      ypos += 2;
+			      break;
+			}
+
+		  if (ypos >= height)
+		    {
+		       ++pass;
+		       switch (pass)
+			     {
+				case 1:
+				   ypos = 4;
+				   break;
+				case 2:
+				   ypos = 2;
+				   break;
+				case 3:
+				   ypos = 1;
+				   break;
+				default:
+				   goto fini;
+			     }
+		    }
+	       }
+	     else
+		  ++ypos;
+	  }
+	if (ypos >= height)
+	   break;
+     }
+
+ fini:
+   if (LWZReadByte (fd, FALSE, c) >= 0)
+      fprintf (stderr, "too much input data, ignoring extra...\n");
+   return (data);
+}
+
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 unsigned char      *ReadGIF (FILE * fd, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
-
 #else  /* __STDC__ */
 unsigned char      *ReadGIF (fd, w, h, ncolors, cpp, colrs)
 FILE               *fd;
@@ -110,9 +184,7 @@ int                *h;
 int                *ncolors;
 int                *cpp;
 ThotColorStruct     colrs[256];
-
 #endif /* __STDC__ */
-
 {
    unsigned char       buf[16];
    unsigned char      *data;
@@ -175,15 +247,9 @@ ThotColorStruct     colrs[256];
    if (BitSet (buf[4], LOCALCOLORMAP))
      {				/* Global Colormap */
 	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
-	  {
-#if 0
-	     fprintf (stderr, "error reading global colormap\n");
-#endif
-	     return (NULL);
-	  }
+	  return (NULL);
 	for (i = 0; i < GifScreen.BitPixel; i++)
 	  {
-	     int                 scale = 65536 / MAXCOLORMAPSIZE;
 
 #ifdef NEW_WILLOWS
 	     colrs[i] = RGB (GifScreen.ColorMap[0][i],
@@ -212,66 +278,33 @@ ThotColorStruct     colrs[256];
 
      }
 
-   if (GifScreen.AspectRatio != 0 && GifScreen.AspectRatio != 49)
-     {
-#if 0
-	fprintf (stderr, "Warning:  non-square pixels!\n");
-#endif
-     }
-
    for (;;)
      {
 	if (!ReadOK (fd, &c, 1))
-	  {
-#if 0
-	     fprintf (stderr, "EOF / read error on image data\n");
-#endif
-	     return (NULL);
-	  }
+	  return (NULL);
 
 	if (c == ';')
 	  {			/* GIF terminator */
 	     if (imageCount < imageNumber)
-	       {
-#if 0
-		  fprintf (stderr, "No images found in file\n");
-#endif
-		  return (NULL);
-	       }
+	       return (NULL);
 	     break;
 	  }
 
 	if (c == '!')
 	  {			/* Extension */
 	     if (!ReadOK (fd, &c, 1))
-	       {
-#if 0
-		  fprintf (stderr, "EOF / read error on extention function code\n");
-#endif
-		  return (NULL);
-	       }
+	       return (NULL);
 	     DoExtension (fd, c);
 	     continue;
 	  }
 
 	if (c != ',')
-	  {			/* Not a valid start character */
-#if 0
-	     fprintf (stderr, "bogus character 0x%02x, ignoring\n",
-		      (int) c);
-#endif
-	     continue;
-	  }
+	  continue;
 
 	++imageCount;
 
 	if (!ReadOK (fd, buf, 9))
-	  {
-#if 0
-	     fprintf (stderr, "couldn't read left/top/width/height\n");
-#endif
-	     return (NULL);
-	  }
+	  return (NULL);
 
 	useGlobalColormap = !BitSet (buf[8], LOCALCOLORMAP);
 
@@ -282,15 +315,9 @@ ThotColorStruct     colrs[256];
 	if (!useGlobalColormap)
 	  {
 	     if (ReadColorMap (fd, bitPixel, localColorMap))
-	       {
-#if 0
-		  fprintf (stderr, "error reading local colormap\n");
-#endif
-		  return (NULL);
-	       }
+	       return (NULL);
 	     for (i = 0; i < bitPixel; i++)
 	       {
-		  int                 scale = 65536 / MAXCOLORMAPSIZE;
 
 #ifdef NEW_WILLOWS
 		  colrs[i] = RGB (
@@ -334,6 +361,8 @@ ThotColorStruct     colrs[256];
    return (data);
 }
 
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 ReadColorMap (FILE * fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
 
@@ -366,60 +395,27 @@ unsigned char       buffer[3][MAXCOLORMAPSIZE];
    return FALSE;
 }
 
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 DoExtension (FILE * fd, int label)
-
 #else  /* __STDC__ */
 int                 DoExtension (fd, label)
 FILE               *fd;
 int                 label;
-
 #endif /* __STDC__ */
-
 {
    char                buf[256];
 
    switch (label)
 	 {
 	    case 0x01:		/* Plain Text Extension */
-#ifdef notdef
-	       if (GetDataBlock (fd, (unsigned char *) buf) == 0)
-		  ;
-
-	       lpos = LM_to_uint (buf[0], buf[1]);
-	       tpos = LM_to_uint (buf[2], buf[3]);
-	       width = LM_to_uint (buf[4], buf[5]);
-	       height = LM_to_uint (buf[6], buf[7]);
-	       cellw = buf[8];
-	       cellh = buf[9];
-	       foreground = buf[10];
-	       background = buf[11];
-
-	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
-		 {
-		    PPM_ASSIGN (image[ypos][xpos],
-				cmap[CM_RED][v],
-				cmap[CM_GREEN][v],
-				cmap[CM_BLUE][v]);
-		    ++index;
-		 }
-
-	       return FALSE;
-#else
 	       break;
-#endif
 	    case 0xff:		/* Application Extension */
 	       break;
 	    case 0xfe:		/* Comment Extension */
 	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
-		 {
-		    if (showComment)
-		      {
-#if 0
-			 fprintf (stderr, "gif comment: %s\n", buf);
-#endif
-		      }
-		 }
+		 ;
 	       return FALSE;
 	    case 0xf9:		/* Graphic Control Extension */
 	       (void) GetDataBlock (fd, (unsigned char *) buf);
@@ -437,14 +433,13 @@ int                 label;
 	       break;
 	 }
 
-
    while (GetDataBlock (fd, (unsigned char *) buf) != 0)
       ;
-
    return FALSE;
 }
-int                 ZeroDataBlock = FALSE;
 
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 GetDataBlock (FILE * fd, unsigned char *buf)
 
@@ -460,36 +455,27 @@ unsigned char      *buf;
 
    if (!ReadOK (fd, &count, 1))
      {
-#if 0
 	fprintf (stderr, "error in getting DataBlock size\n");
-#endif
 	return -1;
      }
 
-   ZeroDataBlock = count == 0;
-
+   ZeroDataBlock = (count == 0);
    if ((count != 0) && (!ReadOK (fd, buf, count)))
-     {
-#if 0
-	fprintf (stderr, "error in reading DataBlock\n");
-#endif
 	return -1;
-     }
-
-   return count;
+   else
+     return count;
 }
 
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 GetCode (FILE * fd, int code_size, int flag)
-
 #else  /* __STDC__ */
 int                 GetCode (fd, code_size, flag)
 FILE               *fd;
 int                 code_size;
 int                 flag;
-
 #endif /* __STDC__ */
-
 {
    static unsigned char buf[280];
    static int          curbit, lastbit, done, last_byte;
@@ -508,15 +494,7 @@ int                 flag;
    if ((curbit + code_size) >= lastbit)
      {
 	if (done)
-	  {
-	     if (curbit >= lastbit)
-	       {
-#if 0
-		  fprintf (stderr, "ran off the end of my bits\n");
-#endif
-	       }
 	     return -1;
-	  }
 	buf[0] = buf[last_byte - 2];
 	buf[1] = buf[last_byte - 1];
 
@@ -537,17 +515,16 @@ int                 flag;
    return ret;
 }
 
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 LWZReadByte (FILE * fd, int flag, int input_code_size)
-
 #else  /* __STDC__ */
 int                 LWZReadByte (fd, flag, input_code_size)
 FILE               *fd;
 int                 flag;
 int                 input_code_size;
-
 #endif /* __STDC__ */
-
 {
    static int          fresh = FALSE;
    int                 code, incode;
@@ -625,19 +602,12 @@ int                 input_code_size;
 
 	     if (ZeroDataBlock)
 		return -2;
-
 	     while ((count = GetDataBlock (fd, buf)) > 0)
 		;
-
-#if 0
-	     if (count != 0)
-		fprintf (stderr, "missing EOD in data stream (common occurence)\n");
-#endif
 	     return -2;
 	  }
 
 	incode = code;
-
 	if (code >= max_code)
 	  {
 	     *sp++ = firstcode;
@@ -650,17 +620,10 @@ int                 input_code_size;
 		return -2;	/* stop a code dump */
 	     *sp++ = table[1][code];
 	     if (code == table[0][code])
-	       {
-#if 0
-		  fprintf (stderr, "circular table entry BIG ERROR\n");
-#endif
-		  return (code);
-	       }
+	       return (code);
 	     code = table[0][code];
 	  }
-
 	*sp++ = firstcode = table[1][code];
-
 	if ((code = max_code) < (1 << MAX_LWZ_BITS))
 	  {
 	     table[0][code] = oldcode;
@@ -673,168 +636,23 @@ int                 input_code_size;
 		  ++code_size;
 	       }
 	  }
-
 	oldcode = incode;
-
 	if (sp > stack)
 	   return *--sp;
      }
    return code;
 }
 
-#ifdef __STDC__
-static unsigned char *ReadGifImage (FILE * fd, int len, int height, unsigned char clmap[3][MAXCOLORMAPSIZE], int interlace, int ignore)
 
-#else  /* __STDC__ */
-static unsigned char *ReadGifImage (fd, len, height, clmap, interlace, ignore)
-FILE               *fd;
-int                 len;
-int                 height;
-unsigned char       clmap[3][MAXCOLORMAPSIZE];
-int                 interlace;
-int                 ignore;
-
-#endif /* __STDC__ */
-
-{
-   unsigned char       c;
-   int                 v;
-   int                 xpos = 0, ypos = 0, pass = 0;
-
-/*
-   pixel                **image;
- */
-   unsigned char      *data;
-   unsigned char      *dptr;
-
-   /*
-      **  Initialize the Compression routines
-    */
-   if (!ReadOK (fd, &c, 1))
-     {
-#if 0
-	fprintf (stderr, "EOF / read error on image data\n");
-#endif
-	return (NULL);
-     }
-
-   if (LWZReadByte (fd, TRUE, c) < 0)
-     {
-#if 0
-	fprintf (stderr, "error reading image\n");
-#endif
-	return (NULL);
-     }
-
-   /*
-      **  If this is an "uninteresting picture" ignore it.
-    */
-   if (ignore)
-     {
-#if 0
-	if (verbose)
-	   fprintf (stderr, "skipping image...\n");
-#endif
-
-	while (LWZReadByte (fd, FALSE, c) >= 0)
-	   ;
-	return (NULL);
-     }
-
-/*
-   if ((image = ppm_allocarray(len, height)) == NULL)
-   {
-   fprintf(stderr, "couldn't alloc space for image\n");
-   return(NULL);
-   }
- */
-
-   data = (unsigned char *) TtaGetMemory (sizeof (unsigned char) * len * height);
-
-   if (data == NULL)
-     {
-#if 0
-	fprintf (stderr, "Cannot allocate space for image data\n");
-#endif
-	return (NULL);
-     }
-
-#if 0
-   if (verbose)
-      fprintf (stderr, "reading %d by %d%s GIF image\n",
-	       len, height, interlace ? " interlaced" : "");
-#endif
-
-   while ((v = LWZReadByte (fd, FALSE, c)) >= 0)
-     {
-	dptr = (unsigned char *) (data + (ypos * len) + xpos);
-	*dptr = (unsigned char) v;
-/*
-   PPM_ASSIGN(image[ypos][xpos], clmap[CM_RED][v],
-   clmap[CM_GREEN][v], clmap[CM_BLUE][v]);
- */
-
-	++xpos;
-	if (xpos == len)
-	  {
-	     xpos = 0;
-	     if (interlace)
-	       {
-		  switch (pass)
-			{
-			   case 0:
-			   case 1:
-			      ypos += 8;
-			      break;
-			   case 2:
-			      ypos += 4;
-			      break;
-			   case 3:
-			      ypos += 2;
-			      break;
-			}
-
-		  if (ypos >= height)
-		    {
-		       ++pass;
-		       switch (pass)
-			     {
-				case 1:
-				   ypos = 4;
-				   break;
-				case 2:
-				   ypos = 2;
-				   break;
-				case 3:
-				   ypos = 1;
-				   break;
-				default:
-				   goto fini;
-			     }
-		    }
-	       }
-	     else
-	       {
-		  ++ypos;
-	       }
-	  }
-	if (ypos >= height)
-	   break;
-     }
-
- fini:
-   if (LWZReadByte (fd, FALSE, c) >= 0)
-      fprintf (stderr, "too much input data, ignoring extra...\n");
-   return (data);
-}
-
-
+/* ---------------------------------------------------------------------- */
+/* returns position of highest set bit in 'ul' as an integer (0-31),
+   or -1 if none. */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static int          highbit (unsigned long ul)
 #else  /* __STDC__ */
 static int          highbit (ul)
 unsigned long       ul;
-
 #endif /* __STDC__ */
 {
    /*
@@ -848,25 +666,25 @@ unsigned long       ul;
    return i;
 }
 
+/* ---------------------------------------------------------------------- */
+/* returns position of highest set bit in 'ul' as an integer (0-31),
+ * or -1 if none.*/
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 highbit16 (unsigned long ul)
 #else  /* __STDC__ */
 int                 highbit16 (ul)
 unsigned long       ul;
-
 #endif /* __STDC__ */
 {
-   /*
-    * returns position of highest set bit in 'ul' as an integer (0-31),
-    * or -1 if none.
-    */
-
    int                 i;
 
    for (i = 15; ((ul & 0x8000) == 0) && i >= 0; i--, ul <<= 1) ;
    return i;
 }
 
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static int          nbbits (unsigned long ul)
 #else  /* __STDC__ */
@@ -1258,23 +1076,14 @@ ThotColorStruct     colrs[256];
    unsigned char      *ptr;
    unsigned char      *ptr2;
    Boolean             need_to_dither;
-   unsigned long       black_pixel = 0;
-   unsigned long       white_pixel = 0;
-
+   
    /* find the visual class. */
    if (THOT_vInfo.depth == 1)
-     {
-	need_to_dither = True;
-	black_pixel = BlackPixel (GDp (0), ThotScreen (0));
-	white_pixel = WhitePixel (GDp (0), ThotScreen (0));
-     }
+     need_to_dither = True;
    else
-     {
-	need_to_dither = False;
-     }
+     need_to_dither = False;
 
    Mapping = (int *) TtaGetMemory (num_colors * sizeof (int));
-
 #ifndef NEW_WILLOWS
    for (i = 0; i < num_colors; i++)
      {
@@ -1284,21 +1093,17 @@ ThotColorStruct     colrs[256];
 	tmpcolr.flags = DoRed | DoGreen | DoBlue;
 	if ((THOT_vInfo.class == THOT_TrueColor) ||
 	    (THOT_vInfo.class == THOT_DirectColor))
-	  {
-	     Mapping[i] = i;
-	  }
+	  Mapping[i] = i;
 	else if (need_to_dither == True)
 	  {
-	     Mapping[i] = ((tmpcolr.red >> 5) * 11 +
-			   (tmpcolr.green >> 5) * 16 +
-			   (tmpcolr.blue >> 5) * 5) / (65504 / 64);
+	    Mapping[i] = ((tmpcolr.red >> 5) * 11 +
+			  (tmpcolr.green >> 5) * 16 +
+			  (tmpcolr.blue >> 5) * 5) / (65504 / 64);
 	  }
 	else
 	  {
-	     FindOutColor (GDp (0),
-			   cmap (0),
-			   &tmpcolr);
-	     Mapping[i] = tmpcolr.pixel;
+	    FindOutColor (GDp (0), cmap (0), &tmpcolr);
+	    Mapping[i] = tmpcolr.pixel;
 	  }
      }
 #endif /* NEW_WILLOWS */
@@ -1312,140 +1117,107 @@ ThotColorStruct     colrs[256];
      {
 	if (Mapping[0] < Mapping[1])
 	  {
-	     Mapping[0] = 0;
-	     Mapping[1] = 64;
+	    Mapping[0] = 0;
+	    Mapping[1] = 64;
 	  }
 	else
 	  {
-	     Mapping[0] = 64;
-	     Mapping[1] = 0;
+	    Mapping[0] = 64;
+	    Mapping[1] = 0;
 	  }
      }
 
    size = width * height;
    if (size == 0)
-     {
-	tmpdata = NULL;
-     }
+     tmpdata = NULL;
    else
-     {
-	tmpdata = (unsigned char *) TtaGetMemory (size);
-     }
+     tmpdata = (unsigned char *) TtaGetMemory (size);
    if (tmpdata == NULL)
      {
-	tmpimage = None;
-	Img = (Pixmap) None;
+       tmpimage = None;
+       Img = (Pixmap) None;
      }
    else
      {
-	ptr = image_data;
-	ptr2 = tmpdata;
-
-	if (need_to_dither == True)
-	  {
-	     int                 cx, cy;
-
-	     for (ptr2 = tmpdata, ptr = image_data;
-		  ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
-	       {
-		  *ptr2 = Mapping[(int) *ptr];
-	       }
-
-	     ptr2 = tmpdata;
-	     for (cy = 0; cy < height; cy++)
-	       {
-		  for (cx = 0; cx < width; cx++)
-		    {
-		       /*
-		        * Assume high numbers are
-		        * really negative.
-		        */
-		       if (*ptr2 > 128)
-			 {
-			    *ptr2 = 0;
-			 }
-		       if (*ptr2 > 64)
-			 {
-			    *ptr2 = 64;
-			 }
-
-		       /*
-		        * Traditional Floyd-Steinberg
-		        */
-		       if (*ptr2 < 32)
-			 {
-			    delta = *ptr2;
-			    *ptr2 = black_pixel;
-			 }
-		       else
-			 {
-			    delta = *ptr2 - 64;
-			    *ptr2 = white_pixel;
-			 }
-		       if ((not_right_col = (cx < (width - 1))))
-			 {
-			    *(ptr2 + 1) += delta * 7 >> 4;
-			 }
-
-		       if ((not_last_row = (cy < (height - 1))))
-			 {
-			    (*(ptr2 + width)) += delta * 5 >> 4;
-			 }
-
-		       if (not_right_col && not_last_row)
-			 {
-			    (*(ptr2 + width + 1)) += delta >> 4;
-			 }
-
-		       if (cx && not_last_row)
-			 {
-			    (*(ptr2 + width - 1)) += delta * 3 >> 4;
-			 }
-		       ptr2++;
-		    }
-	       }
-	  }			/* end if (need_to_dither==True) */
-	else
-	  {
-
-	     for (i = 0; i < size; i++)
-	       {
-		  *ptr2++ = (unsigned char) Mapping[(int) *ptr];
-		  ptr++;
-	       }
-	  }
-	tmpimage = MakeImage (GDp (0), tmpdata,
-			      width, height,
-			      Gdepth (0), colrs);
-	TtaFreeMemory (tmpdata);
-
-	Img = XCreatePixmap (GDp (0),
-			     GRootW (0),
-			     width, height,
-			     Gdepth (0));
+       ptr = image_data;
+       ptr2 = tmpdata;
+       
+       if (need_to_dither == True)
+	 {
+	   int                 cx, cy;
+	   
+	   for (ptr2 = tmpdata, ptr = image_data;
+		ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
+	     {
+	       *ptr2 = Mapping[(int) *ptr];
+	     }
+	   
+	   ptr2 = tmpdata;
+	   for (cy = 0; cy < height; cy++)
+	     {
+	       for (cx = 0; cx < width; cx++)
+		 {
+		   /* Assume high numbers are really negative. */
+		   if (*ptr2 > 128)
+		     *ptr2 = 0;
+		   else if (*ptr2 > 64)
+		     *ptr2 = 64;
+		   
+		   /* Traditional Floyd-Steinberg */
+		   if (*ptr2 < 32)
+		     {
+		       delta = *ptr2;
+		       *ptr2 = Black_Color;
+		     }
+		   else
+		     {
+		       delta = *ptr2 - 64;
+		       *ptr2 = White_Color;
+		     }
+		   if ((not_right_col = (cx < (width - 1))))
+		     *(ptr2 + 1) += delta * 7 >> 4;
+		   
+		   if ((not_last_row = (cy < (height - 1))))
+		     (*(ptr2 + width)) += delta * 5 >> 4;
+		   
+		   if (not_right_col && not_last_row)
+		     (*(ptr2 + width + 1)) += delta >> 4;
+		   
+		   if (cx && not_last_row)
+		     (*(ptr2 + width - 1)) += delta * 3 >> 4;
+		   ptr2++;
+		 }
+	     }
+	 }
+       else
+	 {
+	   for (i = 0; i < size; i++)
+	     {
+	       *ptr2++ = (unsigned char) Mapping[(int) *ptr];
+	       ptr++;
+	     }
+	 }
+       tmpimage = MakeImage (GDp (0), tmpdata, width, height, Gdepth (0), colrs);
+       TtaFreeMemory (tmpdata);
+       Img = XCreatePixmap (GDp (0), GRootW (0), width, height, Gdepth (0));
      }
-
+   
    if ((tmpimage == None) || (Img == (Pixmap) None))
      {
-	if (tmpimage != None)
-	  {
-	     XDestroyImage (tmpimage);
-	  }
-	if (Img != (Pixmap) None)
-	  {
-	     XFreePixmap (GDp (0), Img);
-	  }
-	Img = None;
+       if (tmpimage != None)
+	 XDestroyImage (tmpimage);
+       if (Img != (Pixmap) None)
+	 XFreePixmap (GDp (0), Img);
+       Img = None;
      }
    else
      {
-	XPutImage (GDp (0), Img, graphicGC (0), tmpimage, 0, 0,
-		   0, 0, width, height);
-	XDestroyImage (tmpimage);
+       XPutImage (GDp (0), Img, graphicGC (0), tmpimage, 0, 0, 0, 0, width, height);
+       XDestroyImage (tmpimage);
      }
-
+   
    TtaFreeMemory ((char *) Mapping);
-
+   
    return (Img);
 #endif /* NEW_WILLOWS */
 }
@@ -1666,86 +1438,80 @@ unsigned long       BackGroundPixel;
      }
 
    if (!buffer)
-     {
-	/* PixmapPrintErrorMsg (XpmFileInvalid); */
-	return;
-     }
-
+     return;
    wcf = w;
    hcf = h;
-
    xtmp = 0;
    ytmp = 0;
-
    switch (pres)
+     {
+     case RealSize:
+       
+       /* on centre l'image en x */
+       /* quelle place a-t-on de chaque cote ? */
+       delta = (wif - wcf) / 2;
+       if (delta > 0)
 	 {
-	    case RealSize:
-
-	       /* on centre l'image en x */
-	       /* quelle place a-t-on de chaque cote ? */
-	       delta = (wif - wcf) / 2;
-	       if (delta > 0)
-		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
-		    xif += delta;
-		    /* la largeur de la boite est celle du cf */
-		    wif = wcf;
-		 }
-	       else
-		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
-		    xtmp = -delta;
-		    /* on met a jour wcf pour etre coherent */
-		    wcf = wif;
-		 }
-	       /* on centre l'image en y */
-	       delta = (hif - hcf) / 2;
-	       if (delta > 0)
-		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
-		    yif += delta;
-		    /* la hauteur de la boite est celle du cf */
-		    hif = hcf;
-		 }
-	       else
-		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
-
-		    ytmp = -delta;
-		    /* on met a jour hcf pour etre coherent */
-		    hcf = hif;
-		 }
-	       break;
-	    case ReScale:
-	       if ((float) hcf / (float) wcf <= (float) hif / (float) wif)
-		 {
-		    Scx = (float) wif / (float) wcf;
-		    yif += (hif - (hcf * Scx)) / 2;
-		    hif = hcf * Scx;
-		 }
-	       else
-		 {
-		    Scy = (float) hif / (float) hcf;
-		    xif += (wif - (wcf * Scy)) / 2;
-		    wif = wcf * Scy;
-		 }
-	       break;
-	    case FillFrame:
-	       /* DumpImage fait du plein cadre avec wif et hif */
-	       break;
-	    default:
-	       break;
+	   /* on a de la place entre l'if et le cf */
+	   /* on a pas besoin de retailler dans le pixmap */
+	   /* on va afficher le pixmap dans une boite plus petite */
+	   /* decale'e de delta vers le centre */
+	   xif += delta;
+	   /* la largeur de la boite est celle du cf */
+	   wif = wcf;
 	 }
+       else
+	 {
+	   /* on a pas de place entre l'if et le cf */
+	   /* on va retailler dans le pixmap pour que ca rentre */
+	   /* on sauve delta pour savoir ou couper */
+	   xtmp = -delta;
+	   /* on met a jour wcf pour etre coherent */
+	   wcf = wif;
+	 }
+       /* on centre l'image en y */
+       delta = (hif - hcf) / 2;
+       if (delta > 0)
+	 {
+	   /* on a de la place entre l'if et le cf */
+	   /* on a pas besoin de retailler dans le pixmap */
+	   /* on va afficher le pixmap dans une boite plus petite */
+	   /* decale'e de delta vers le centre */
+	   yif += delta;
+	   /* la hauteur de la boite est celle du cf */
+	   hif = hcf;
+	 }
+       else
+	 {
+	   /* on a pas de place entre l'if et le cf */
+	   /* on va retailler dans le pixmap pour que ca rentre */
+	   /* on sauve delta pour savoir ou couper */
+	   
+	   ytmp = -delta;
+	   /* on met a jour hcf pour etre coherent */
+	   hcf = hif;
+	 }
+       break;
+     case ReScale:
+       if ((float) hcf / (float) wcf <= (float) hif / (float) wif)
+	 {
+	   Scx = (float) wif / (float) wcf;
+	   yif += (hif - (hcf * Scx)) / 2;
+	   hif = hcf * Scx;
+	 }
+       else
+	 {
+	   Scy = (float) hif / (float) hcf;
+	   xif += (wif - (wcf * Scy)) / 2;
+	   wif = wcf * Scy;
+	 }
+       break;
+     case FillFrame:
+       /* DumpImage fait du plein cadre avec wif et hif */
+       break;
+     default:
+       break;
+     }
 
    /* NL plus besoin de faire des transformations */
    /* on transforme le pixmap en Ximage */
@@ -1753,7 +1519,7 @@ unsigned long       BackGroundPixel;
    /* dans le pixmap (cas RealSize) */
    wim = w;
    /*m = h; */
-
+   
    /* generation du poscript , header Dumpimage2 + dimensions + deplacement dans la page */
    /* chaque pt = RRGGBB en hexa */
    fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelEnPt (xif, 1), PixelEnPt (yif + hif, 0));

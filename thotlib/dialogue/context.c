@@ -668,8 +668,6 @@ int                 dy;
    HDC                 hdc;
 
    hdc = GetDC (WIN_Main_Wd);
-   Larg_Ecran (0) = GetSystemMetrics (SM_CXSCREEN);
-   Haut_Ecran (0) = GetSystemMetrics (SM_CYSCREEN);
    Gdepth (0) = GetDeviceCaps (hdc, PLANES);
    if (Gdepth (0) == 1)
       Gdepth (0) = GetDeviceCaps (hdc, BITSPIXEL);
@@ -679,8 +677,6 @@ int                 dy;
 
    /* En pixel */
 #ifndef NEW_WILLOWS
-   Larg_Ecran (0) = DisplayWidth (GDp (0), ThotScreen (0));
-   Haut_Ecran (0) = DisplayHeight (GDp (0), ThotScreen (0));
    XSetErrorHandler (X_Erreur);
    XSetIOErrorHandler (X_ErreurFatale);
    ThotScreen (0) = DefaultScreen (GDp (0));

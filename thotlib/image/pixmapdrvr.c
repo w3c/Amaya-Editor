@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    pixmapdrvr.c : Auteur NabilLayaida Juin 1994.
    pixmapdrvr.c -- Implementation of X11 Pixmap Driver
@@ -23,70 +20,18 @@
 #include "imagedrvr.var"
 #include "frame.var"
 
-#include "imagedrvr.f"
 #include "xpmP.h"
 #include "xpm.h"
 
-/*extern Pixel bgCOLOR; */
-
+#include "imagedrvr.f"
+#include "font.f"
 #ifdef __STDC__
 extern void         ColorRGB (int, unsigned short *, unsigned short *, unsigned short *);
-extern int          PixelEnPt (int, int);
 
 #else  /* __STDC__ */
 extern void         ColorRGB ();
-extern int          PixelEnPt ();
 
 #endif /* __STDC__ */
-
-
-/* ---------------------------------------------------------------------- */
-/* |    Messages d'erreur : On recupere les erreurs de Xpm et on envoi  | */
-/* |            vers le frame Thot Dialogue                             | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                PixmapPrintErrorMsg (int ErrorNumber)
-
-#else  /* __STDC__ */
-void                PixmapPrintErrorMsg (ErrorNumber)
-int                 ErrorNumber;
-
-#endif /* __STDC__ */
-
-{
-   switch (ErrorNumber)
-	 {
-
-	    case XpmColorError:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_ERROR);
-		  break;
-	       }
-	    case XpmOpenFailed:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_OPEN_FAILED);
-		  break;
-	       }
-	    case XpmFileInvalid:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_FILE_INVALID);
-		  break;
-	       }
-	    case XpmNoMemory:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_NO_MEMORY);
-		  break;
-	       }
-	    case XpmColorFailed:
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_FAILED);
-		  break;
-	       }
-
-	 }
-}
-
 
 
 /* ---------------------------------------------------------------------- */
@@ -115,10 +60,7 @@ Drawable           *mask1;
    XpmAttributes       att;
    unsigned long       valuemask = 0;
 
-   /*int     xHot, yHot; */
-
    /* parametres de chargement de l'image pixmap - repli couleurs */
-
    att.valuemask = valuemask;
    att.valuemask |= XpmRGBCloseness;
    att.valuemask |= XpmReturnPixels;
@@ -128,43 +70,45 @@ Drawable           *mask1;
    att.numsymbols = 1;
    att.mask_pixel = BackGroundPixel;
 
-   /* chargement effectif de limage par la bibliotheque Xpm rel 3.4c */
-
+   /* chargement effectif de l'image par la bibliotheque Xpm rel 3.4c */
    status = XpmReadFileToPixmap (GDp (0), GRootW (0), fn, &pixmap, mask1, &att);
-
    if (status != XpmSuccess)
-      PixmapPrintErrorMsg (status);
-
-   if (status < XpmSuccess)
      {
-	/* cas d'echec de lecture prevoir les mess d'erreur (5) */
-
-	return (Drawable) None;
+       switch (status)
+	 {   
+	 case XpmColorError:
+	   TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_ERROR);
+	   break;
+	 case XpmOpenFailed:
+	   TtaDisplaySimpleMessage (INFO, LIB, XPM_OPEN_FAILED);
+	   break;
+	 case XpmFileInvalid:
+	   TtaDisplaySimpleMessage (INFO, LIB, XPM_FILE_INVALID);
+	   break;
+	 case XpmNoMemory:
+	   TtaDisplaySimpleMessage (INFO, LIB, XPM_NO_MEMORY);
+	   break;
+	 case XpmColorFailed:
+	   TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_FAILED);
+	   break;
+	 }
+       return (Drawable) None;
      }
    else
-     {				/* succes ou succes partiel => initialisation de la tailles de l'image */
-
+     {
+       /* succes ou succes partiel => initialise la tailles de l'image */
 	*wif = att.width;
 	*hif = att.height;
-	/*xHot = att.x_hotspot; */
-	/*yHot = att.y_hotspot; */
-
 	*xif = 0;
 	*yif = 0;
 
-	/* liberation de la structure temporaire attribut et sortie en beaute ! */
-
+	/* libere la structure temporaire attribut et sortie en beaute ! */
 	XpmFreeAttributes (&att);
-	att.valuemask = valuemask;	/* reinitialisation de valuemask avec 0 */
-
+	att.valuemask = valuemask;/* reinitialise de valuemask avec 0 */
 	return (Drawable) pixmap;
-
      }
 #endif /* !NEW_WILLOWS */
-}				/*PixmapCreateImage */
-
-
-
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -207,16 +151,9 @@ unsigned long       BackGroundPixel;
    XpmImage            image;
    XpmInfo             info;
    unsigned int        NbCharPerLine;
-   Colormap            defmap;
    unsigned short      red, green, blue;
 
-   /*unsigned short NoneColor; */
-   /*int MaskSet = 0; */
-
-
-
    /* initialisation des parametres de chargement de l'image pour le print */
-
    valuemask |= XpmExactColors;
    valuemask |= XpmColorTable;
    valuemask |= XpmReturnColorTable;
@@ -224,26 +161,21 @@ unsigned long       BackGroundPixel;
    valuemask |= XpmHotspot;
    valuemask |= XpmCharsPerPixel;
 
-
-   /* lecture de la pixmap sous forme de donnees et une table de couleurs      */
-   /* cela nous evite d'allouer les couleurs a l'ecran mais de les transformer */
-   /* directement en ps, fonction de bas niveau de la bibliotheque      pixmap */
+   /* lire la pixmap sous forme de donnees et une table de couleurs   */
+   /* nous evite d'allouer les couleurs a l'ecran mais de les transformer */
+   /* directement en ps, fonction de bas niveau de la bibliotheque pixmap */
 
    status = XpmReadFileToXpmImage (fn, &image, &info);
 
    if (status < XpmSuccess)
-     {
-	PixmapPrintErrorMsg (status);
-	return;
-     }
+     return;
 
    wcf = image.width;
    hcf = image.height;
    xtmp = 0;
    ytmp = 0;
 
-   /* en fonction de la presentation definition des dimensions en sorties ps */
-
+   /* en fonction de la presentation definit les dimensions en sorties ps */
    switch (pres)
 	 {
 	    case RealSize:
@@ -327,7 +259,6 @@ unsigned long       BackGroundPixel;
    /* chargement de la colortab et remplacement  de la couleur transparente par celle */
    /* du BackgoundColor defini par l'editeur Thot */
 
-   defmap = XDefaultColormap (GDp (0), ThotScreen (0));
    for (i = 0; i < image.ncolors; i++)
      {
 	if (strncmp (image.colorTable[i].c_color, "None", 4) == 0)
@@ -344,7 +275,7 @@ unsigned long       BackGroundPixel;
 	  }
 	else
 	  {
-	     XParseColor (GDp (0), defmap, image.colorTable[i].c_color, &exactcolor);
+	     XParseColor (GDp (0), cmap (0), image.colorTable[i].c_color, &exactcolor);
 	     colorTab[i].pixel = i;
 	     colorTab[i].red = exactcolor.red;
 	     colorTab[i].green = exactcolor.green;

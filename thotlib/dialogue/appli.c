@@ -1701,8 +1701,8 @@ int                 frame;
 
    rect.x = 0;
    rect.y = 0;
-   rect.width = Larg_Ecran (0);
-   rect.height = Haut_Ecran (0);
+   rect.width = MAX_SIZE;
+   rect.height = MAX_SIZE;
    XSetClipRectangles (GDp (0), GCtrait (0), 0, 0, &rect, 1, Unsorted);
    XSetClipRectangles (GDp (0), graphicGC (0), 0, 0, &rect, 1, Unsorted);
    XSetClipRectangles (GDp (0), GCgrey (0), 0, 0, &rect, 1, Unsorted);

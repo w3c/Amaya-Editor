@@ -572,8 +572,6 @@ boolean    printing;
 
    Printing = printing;
    i = 0;
-#ifdef Bitmap_CONFIG
-   /* i=0 */
    strncpy (PictureHandlerTable[i].menuName, BitmapName, MAXFORMATNAMELENGHT);
    PictureHandlerTable[i].CreateImage = BitmapCreateImage;
    PictureHandlerTable[i].PrintImage = BitmapPrintImage;
@@ -582,10 +580,7 @@ boolean    printing;
    ImageIDType[i] = Bitmap_drvr;
    ImageMenuType[i] = Bitmap_drvr;
    i++;
-#endif
 
-#ifdef EPSF_CONFIG
-   /* i=1 */
    strncpy (PictureHandlerTable[i].menuName, EPSFName, MAXFORMATNAMELENGHT);
    PictureHandlerTable[i].CreateImage = EPSFCreateImage;
    PictureHandlerTable[i].PrintImage = EPSFPrintImage;
@@ -594,10 +589,7 @@ boolean    printing;
    ImageIDType[i] = EPSF_drvr;
    ImageMenuType[i] = EPSF_drvr;
    i++;
-#endif
 
-#ifdef Pixmap_CONFIG
-   /* i=2 */
    strncpy (PictureHandlerTable[i].menuName, PixmapName, MAXFORMATNAMELENGHT);
    PictureHandlerTable[i].CreateImage = PixmapCreateImage;
    PictureHandlerTable[i].PrintImage = PixmapPrintImage;
@@ -606,10 +598,7 @@ boolean    printing;
    ImageIDType[i] = Pixmap_drvr;
    ImageMenuType[i] = Pixmap_drvr;
    i++;
-#endif
 
-#ifdef Gif_CONFIG
-   /* i=3 */
    strncpy (PictureHandlerTable[i].menuName, GifName, MAXFORMATNAMELENGHT);
    PictureHandlerTable[i].CreateImage = GifCreateImage;
    PictureHandlerTable[i].PrintImage = GifPrintImage;
@@ -618,10 +607,7 @@ boolean    printing;
    ImageIDType[i] = Gif_drvr;
    ImageMenuType[i] = Gif_drvr;
    i++;
-#endif
 
-#ifdef Jpeg_CONFIG
-   /* i=4 */
    strncpy (PictureHandlerTable[i].menuName, JpegName, MAXFORMATNAMELENGHT);
    PictureHandlerTable[i].CreateImage = JpegCreateImage;
    PictureHandlerTable[i].PrintImage = JpegPrintImage;
@@ -630,10 +616,7 @@ boolean    printing;
    ImageIDType[i] = Jpeg_drvr;
    ImageMenuType[i] = Jpeg_drvr;
    i++;
-#endif
 
-#ifdef Png_CONFIG
-   /* i=5 */
    strncpy (PictureHandlerTable[i].menuName, PngName, MAXFORMATNAMELENGHT);
    PictureHandlerTable[i].CreateImage = PngCreateImage;
    PictureHandlerTable[i].PrintImage = PngPrintImage;
@@ -642,9 +625,6 @@ boolean    printing;
    ImageIDType[i] = Png_drvr;
    ImageMenuType[i] = Png_drvr;
    i++;
-#endif
-
-
    ImageDrvrCount = i;
 }
 
