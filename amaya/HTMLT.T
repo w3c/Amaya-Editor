@@ -130,7 +130,7 @@ RULES
 	   Create DoubleQuote;
 	   END;
 	Create Attributes;
-	Create '>';
+	Create '>\12';
 	NoLineBreak;
 	NoTranslation;
 	Indent Suspend;
