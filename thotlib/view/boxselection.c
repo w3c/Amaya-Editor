@@ -35,6 +35,7 @@
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "displayselect_f.h"
+#include "displayview_f.h"
 #include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
@@ -257,6 +258,7 @@ void TtaClearViewSelections ()
    int                 frame;
 
    /* manage all frames */
+   NewSelection (1, NULL, NULL, 0, 0);
    for (frame = 1; frame <= MAX_FRAME; frame++)
       if (ViewFrameTable[frame - 1].FrAbstractBox != NULL)
 	{

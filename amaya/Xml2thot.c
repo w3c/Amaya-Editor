@@ -3280,7 +3280,7 @@ static void ParseDoctypeContent (char *data, int length)
    CreateDoctypeElement
    Create a Doctype element into the Thot tree.
   ----------------------------------------------------------------------*/
-static void       CreateDoctypeElement (char *name, char *sysid, char *pubid)
+static void CreateDoctypeElement (char *name, char *sysid, char *pubid)
 {
   ElementType     elType, lineType;
   Element  	  doctype, doctypeLine, doctypeLeaf, doctypeLineNew, lastChild;
@@ -3312,12 +3312,13 @@ static void       CreateDoctypeElement (char *name, char *sysid, char *pubid)
       doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
       if (doctypeLeaf != NULL)
 	{
-	      XmlSetElemLineNumber (doctypeLeaf);
-	      TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
-	      /* We use the Latin_Script language to avoid */
-	      /* the spell_chekcer to check this element */
-	      TtaSetTextContent (doctypeLeaf, (unsigned char *)"<!DOCTYPE ",
-				 Latin_Script, XMLcontext.doc);
+	  XmlSetElemLineNumber (doctypeLeaf);
+	  TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+	  /* We use the Latin_Script language to avoid */
+	  /* the spell_chekcer to check this element */
+	  TtaSetTextContent (doctypeLeaf, (unsigned char *)"<!DOCTYPE ",
+			     Latin_Script, XMLcontext.doc);
+	  TtaClearViewSelections (); /* TtaSetTextContent added a selection */
 	}
      
       if (name != NULL)
@@ -3335,6 +3336,7 @@ static void       CreateDoctypeElement (char *name, char *sysid, char *pubid)
 		TtaInsertSibling (doctypeLeaf, lastChild,
 				  FALSE, XMLcontext.doc);
 	      TtaSetTextContent (doctypeLeaf, (unsigned char *)name, Latin_Script, XMLcontext.doc);
+	      TtaClearViewSelections (); /* TtaSetTextContent added a selection */
 	    }
 	}
       /* Is there any external DTD ? */
@@ -3357,6 +3359,7 @@ static void       CreateDoctypeElement (char *name, char *sysid, char *pubid)
 		TtaInsertSibling (doctypeLeaf, lastChild,
 				  FALSE, XMLcontext.doc);
 	      TtaSetTextContent (doctypeLeaf, (unsigned char *)buffer, Latin_Script, XMLcontext.doc);
+	      TtaClearViewSelections (); /* TtaSetTextContent added a selection */
 	      TtaFreeMemory (buffer);
 	    }
 	}
@@ -3394,6 +3397,7 @@ static void       CreateDoctypeElement (char *name, char *sysid, char *pubid)
 	      strcat (buffer, sysid);
 	      strcat (buffer, "\"");
 	      TtaSetTextContent (doctypeLeaf, (unsigned char *)buffer, Latin_Script, XMLcontext.doc);
+	      TtaClearViewSelections (); /* TtaSetTextContent added a selection */
 	      TtaFreeMemory (buffer);
 	    }
 	}
@@ -5707,7 +5711,6 @@ void StartXmlParser (Document doc, char *fileName,
       /* Set the notification mode for the new document */
       TtaSetNotificationMode (doc, 1);
       TtaSetDisplayMode (doc, NoComputedDisplay);
-
       /* Delete all element except the root element */
       el = TtaGetFirstChild (RootElement);
       while (el != NULL)
