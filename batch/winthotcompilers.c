@@ -266,8 +266,8 @@ char* fileName;
 	char* token;
     char* pChar;
     char* ptr;
-    char* SrcFileName;
-    char* WorkFileName;
+    char* SrcFileName = NULL;
+    char* WorkFileName = NULL;
     char* currentFileName;
 	int   command;
     int   index, i;
@@ -349,6 +349,14 @@ char* fileName;
                                 /* Get next token: */
                                 /* token = strtok (NULL, seps); */
 						  }
+                          if (SrcFileName) {
+							  free (SrcFileName);
+							  SrcFileName = NULL;
+						  }
+						  if (WorkFileName) {
+                              free (WorkFileName);
+							  WorkFileName = NULL;
+						  } 
                           switch (command) {
                                  case SRC_DIR: 
                                       if (SrcPath) {
@@ -405,7 +413,7 @@ char* fileName;
                                       ptr = strrchr(currentFile, '.');
                                       if (ptr) {
                                          len = strlen (SrcPath);
-                                         if (SrcPath [len - 1] == '\\') {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                             sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 										 } else {
@@ -413,7 +421,7 @@ char* fileName;
                                                 sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 										 }
                                          len = strlen (WorkPath);
-                                         if (WorkPath [len - 1] == '\\') {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                             sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 										 } else {
@@ -422,7 +430,7 @@ char* fileName;
 										 } 
 									  } else {
                                              len = strlen (SrcPath);
-                                             if (SrcPath [len - 1] == '\\') {
+                                             if (len > 0 && SrcPath [len - 1] == '\\') {
                                                 SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                 sprintf (SrcFileName, "%s%s.A", SrcPath, currentFile);
 											 } else {
@@ -430,7 +438,7 @@ char* fileName;
                                                     sprintf (SrcFileName, "%s\\%s.A", SrcPath, currentFile);
 											 }
                                              len = strlen (WorkPath);
-                                             if (WorkPath [len - 1] == '\\') {
+                                             if (len > 0 && WorkPath [len - 1] == '\\') {
                                                 WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                 sprintf (WorkFileName, "%s%s.A", WorkPath, currentFile);
 											 } else {
@@ -477,7 +485,7 @@ char* fileName;
                                       ptr = strrchr(currentFile, '.');
                                       if (ptr) {
                                          len = strlen (SrcPath);
-                                         if (SrcPath [len - 1] == '\\') {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                             sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 										 } else {
@@ -485,7 +493,7 @@ char* fileName;
                                                 sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 										 }
                                          len = strlen (WorkPath);
-                                         if (WorkPath [len - 1] == '\\') {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                             sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 										 } else {
@@ -494,7 +502,7 @@ char* fileName;
 										 } 
 									  } else {
                                              len = strlen (SrcPath);
-                                             if (SrcPath [len - 1] == '\\') {
+                                             if (len > 0 && SrcPath [len - 1] == '\\') {
                                                 SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                 sprintf (SrcFileName, "%s%s.P", SrcPath, currentFile);
 											 } else {
@@ -502,7 +510,7 @@ char* fileName;
                                                     sprintf (SrcFileName, "%s\\%s.P", SrcPath, currentFile);
 											 }
                                              len = strlen (WorkPath);
-                                             if (WorkPath [len - 1] == '\\') {
+                                             if (len > 0 && WorkPath [len - 1] == '\\') {
                                                 WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                 sprintf (WorkFileName, "%s%s.P", WorkPath, currentFile);
 											 } else {
@@ -517,7 +525,7 @@ char* fileName;
                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
                                             strcpy (BinFiles [indexBinFiles], currentDestFile);
 										 } else {
-                                                BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 4);
+                                                BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 5);
                                                 sprintf (BinFiles [indexBinFiles], "%s.PRS", currentDestFile);
 										 }
 									  } else {
@@ -526,7 +534,7 @@ char* fileName;
                                              ptr = strrchr (currentFileName, '.');
                                              if (ptr)
                                                 ptr [0] = 0;
-                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 4);
+                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 5);
                                              sprintf (BinFiles [indexBinFiles], "%s.PRS", currentFile);
 									  }
 
@@ -554,7 +562,7 @@ char* fileName;
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = strlen (WorkPath);
-                                      if (WorkPath [len - 1] == '\\') {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
                                          sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 									  } else {
@@ -562,7 +570,7 @@ char* fileName;
                                              sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 									  }  
                                       len = strlen (SrcPath);
-                                      if (SrcPath [len - 1] == '\\') {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                           WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
                                           sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
@@ -586,7 +594,7 @@ char* fileName;
                                       ptr = strrchr(currentFile, '.');
                                       if (ptr) {
                                          len = strlen (SrcPath);
-                                         if (SrcPath [len - 1] == '\\') {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                             sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 										 } else {
@@ -594,7 +602,7 @@ char* fileName;
                                                 sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 										 }
                                          len = strlen (WorkPath);
-                                         if (WorkPath [len - 1] == '\\') {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                             sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 										 } else {
@@ -603,7 +611,7 @@ char* fileName;
 										 } 
 									  } else {
                                              len = strlen (SrcPath);
-                                             if (SrcPath [len - 1] == '\\') {
+                                             if (len > 0 && SrcPath [len - 1] == '\\') {
                                                 SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                 sprintf (SrcFileName, "%s%s.S", SrcPath, currentFile);
 											 } else {
@@ -611,7 +619,7 @@ char* fileName;
                                                     sprintf (SrcFileName, "%s\\%s.S", SrcPath, currentFile);
 											 }
                                              len = strlen (WorkPath);
-                                             if (WorkPath [len - 1] == '\\') {
+                                             if (len > 0 && WorkPath [len - 1] == '\\') {
                                                 WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                 sprintf (WorkFileName, "%s%s.S", WorkPath, currentFile);
 											 } else {
@@ -626,7 +634,7 @@ char* fileName;
                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
                                             strcpy (BinFiles [indexBinFiles], currentDestFile);
 										 } else {
-                                                BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 4);
+                                                BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 5);
                                                 sprintf (BinFiles [indexBinFiles], "%s.STR", currentDestFile);
 										 }
 									  } else {
@@ -635,35 +643,36 @@ char* fileName;
                                              ptr = strrchr (currentFileName, '.');
                                              if (ptr)
                                                 ptr [0] = 0;
-                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 4);
+                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 5);
                                              sprintf (BinFiles [indexBinFiles], "%s.STR", currentFile);
 									  }
 
                                       if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
                                          result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
                                          FreeLibrary (hLib);
+
                                          for (i = 0; i < index; i++) {
                                              free (args [i]);
-                                             args [i] = (char*) 0;
+                                             args [i] = NULL;
 										 } 
                                          if (currentFile) {
                                             free (currentFile);
-                                            currentFile = (char*) 0;
+                                            currentFile = NULL;
 										 }
                                          if (SrcFileName) {
-                                            free (currentFile);
-                                            currentFile = (char*) 0;
+                                            free (SrcFileName);
+                                            SrcFileName = NULL;
 										 }
                                          if (WorkFileName) {
-                                            free (currentFile);
-                                            currentFile = (char*) 0;
+											 _unlink (WorkFileName);
+                                            free (WorkFileName);
+                                            WorkFileName = NULL;
 										 }
-                                         _unlink (WorkFileName);
 									  }
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = strlen (WorkPath);
-                                      if (WorkPath [len - 1] == '\\') {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
                                          sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 									  } else {
@@ -671,7 +680,7 @@ char* fileName;
                                              sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 									  }  
                                       len = strlen (SrcPath);
-                                      if (SrcPath [len - 1] == '\\') {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                           WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
                                           sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
@@ -694,7 +703,7 @@ char* fileName;
 									  }
 
                                       len = strlen (SrcPath);
-                                      if (SrcPath [len - 1] == '\\') {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                          SrcFileName = (char*) malloc (len + 12);
                                          sprintf (SrcFileName, "%sgreek.sgml", SrcPath);
 									  } else {
@@ -703,17 +712,25 @@ char* fileName;
 									  }
 
                                       len = strlen (WorkPath);
-                                      if (WorkPath [len - 1] == '\\') {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          WorkFileName = (char*) malloc (len + 12);
                                          sprintf (WorkFileName, "%sgreek.sgml", WorkPath);
 									  } else {
                                              WorkFileName = (char*) malloc (len + 13);
                                              sprintf (WorkFileName, "%s\\greek.sgml", WorkPath);
 									  }
-
+                
                                       if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+                                         if (SrcFileName) {
+										     free (SrcFileName);
+										     SrcFileName = NULL;
+										 }
+										 if (WorkFileName) {
+										      free (WorkFileName);
+										      WorkFileName = NULL;
+										 }
                                          len = strlen (SrcPath);
-                                         if (SrcPath [len - 1] == '\\') {
+                                         if (len > 0 && SrcPath [len - 1] == '\\') {
                                             SrcFileName = (char*) malloc (len + 14);
                                             sprintf (SrcFileName, "%sText_SGML.inc", SrcPath);
 										 } else {
@@ -722,7 +739,7 @@ char* fileName;
 										 }
 
                                          len = strlen (WorkPath);
-                                         if (WorkPath [len - 1] == '\\') {
+                                         if (len > 0 && WorkPath [len - 1] == '\\') {
                                             WorkFileName = (char*) malloc (len + 14);
                                             sprintf (WorkFileName, "%sText_SGML.inc", WorkPath);
 										 } else {
@@ -731,10 +748,18 @@ char* fileName;
 										 }
 
                                          if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+										    if (SrcFileName) {
+										        free (SrcFileName);
+										        SrcFileName = NULL;
+											}
+										    if (WorkFileName) {
+										        free (WorkFileName);
+										        WorkFileName = NULL;
+											}
                                             ptr = strrchr(currentFile, '.');
                                             if (ptr) {
                                                len = strlen (SrcPath);
-                                               if (SrcPath [len - 1] == '\\') {
+                                               if (len > 0 && SrcPath [len - 1] == '\\') {
                                                   SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                                   sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 											   } else {
@@ -742,7 +767,7 @@ char* fileName;
                                                       sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 											   } 
                                                len = strlen (WorkPath);
-                                               if (WorkPath [len - 1] == '\\') {
+                                               if (len > 0 && WorkPath [len - 1] == '\\') {
                                                   WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
                                                   sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 											   } else {
@@ -750,7 +775,8 @@ char* fileName;
                                                       sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 											   } 
 											} else {
-                                                   if (SrcPath [len - 1] == '\\') {
+												   len = strlen (SrcPath);
+                                                   if (len > 0 && SrcPath [len - 1] == '\\') {
                                                       SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                       sprintf (SrcFileName, "%s%s.T", SrcPath, currentFile);
 												   } else {
@@ -758,7 +784,7 @@ char* fileName;
                                                           sprintf (SrcFileName, "%s\\%s.T", SrcPath, currentFile);
 												   }
                                                    len = strlen (WorkPath);
-                                                   if (WorkPath [len - 1] == '\\') {
+                                                   if (len > 0 && WorkPath [len - 1] == '\\') {
                                                       WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
                                                       sprintf (WorkFileName, "%s%s.T", WorkPath, currentFile);
 												   } else {
@@ -773,7 +799,7 @@ char* fileName;
                                                   BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
                                                   strcpy (BinFiles [indexBinFiles], currentDestFile);
 											   } else {
-                                                      BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 4);
+                                                      BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 5);
                                                       sprintf (BinFiles [indexBinFiles], "%s.TRA", currentDestFile);
 											   }
 											} else {
@@ -782,7 +808,7 @@ char* fileName;
                                                    ptr = strrchr (currentFileName, '.');
                                                    if (ptr)
                                                       ptr [0] = 0;
-                                                   BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 4);
+                                                   BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 5);
                                                    sprintf (BinFiles [indexBinFiles], "%s.TRA", currentFile);
 											}
  
@@ -791,28 +817,30 @@ char* fileName;
                                                FreeLibrary (hLib);
                                                for (i = 0; i < index; i++) {
                                                    free (args [i]);
-                                                   args [i] = (char*) 0;
+                                                   args [i] = NULL;
 											   }
                                                if (currentFile) {
                                                   free (currentFile);
-                                                  currentFile = (char*) 0;
+                                                  currentFile = NULL;
 											   }
-                                               if (SrcFileName) {
-                                                  free (currentFile);
-                                                  currentFile = (char*) 0;
-											   }
-                                               if (WorkFileName) {
-                                                  free (currentFile);
-                                                  currentFile = (char*) 0;
-											   }
-                                               _unlink (WorkFileName);
+                                               if (WorkFileName)
+												  _unlink (WorkFileName);
 											}
 										 }
 									  }
+                                      if (SrcFileName) {
+                                          free (SrcFileName);
+                                          SrcFileName = NULL;
+									  }
+                                      if (WorkFileName) {
+                                          free (WorkFileName);
+                                          WorkFileName = NULL;
+									  }
+
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
                                       len = strlen (WorkPath);
-                                      if (WorkPath [len - 1] == '\\') {
+                                      if (len > 0 && WorkPath [len - 1] == '\\') {
                                          SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
                                          sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 									  } else {
@@ -820,7 +848,7 @@ char* fileName;
                                              sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 									  }  
                                       len = strlen (SrcPath);
-                                      if (SrcPath [len - 1] == '\\') {
+                                      if (len > 0 && SrcPath [len - 1] == '\\') {
                                           WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
                                           sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
@@ -834,21 +862,22 @@ char* fileName;
                                  default:
                                       for (i = 0; i < index; i++) {
                                           free (args [i]);
-                                          args [i] = (char*) 0;
+                                          args [i] = NULL;
 									  }
                                       break;
 						  } 
 					   /* @@@@@ }  @@@@@ */
 					}   
                     line++;
-			  } 
+			  }
+
+			  if (SrcFileName) {
+			     free (SrcFileName);
+				 SrcFileName = NULL;
+			  }
 			  for (i = 0; i < indexBinFiles; i++) {
-                  /* if (SrcFileName) {
-                     free (SrcFileName);
-                     SrcFileName = (char*) 0;
-				  }*/
                   len = strlen (WorkPath);
-                  if (WorkPath [len - 1] == '\\') {
+                  if (len > 0 && WorkPath [len - 1] == '\\') {
                       SrcFileName = (char*) malloc (len + strlen (BinFiles[i]) + 1);
                       sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [i]);
 				  } else {
@@ -856,6 +885,8 @@ char* fileName;
                          sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [i]);
 				  }
                   _unlink (SrcFileName);
+                  free (SrcFileName);
+                  SrcFileName = NULL;
 			  }
               fclose (f);
 	   }  
