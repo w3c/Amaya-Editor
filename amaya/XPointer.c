@@ -181,11 +181,21 @@ static int CountInlineChars (Element *mark, int firstCh, selMode *mode)
 static ThotBool ElIsHidden (Element el)
 {
   ElementType elType;
+  ThotBool result;
 
   if (!el)
     return FALSE;
+
   elType = TtaGetElementType (el);
-  return (TtaHasHiddenException (elType));
+
+  result = TtaHasHiddenException (elType);
+
+  /* ignore all elements that were added by Amaya (they don't have
+     a linue number */
+  if (!result)
+    result = (TtaGetElementLineNumber (el) == 0);
+  
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -840,6 +850,14 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       if (firstEl == NULL)
 	return NULL; /* ERROR, there is no selection */
 
+      if  (TtaGetElementLineNumber (firstEl) == 0)
+	{
+	  /* ERROR, don't annotate end elements that Amaya added
+	     internally, but that don't exist in the document */
+	  InitInfo ("XPointer", "Impossilble to put a start XPointer in an internal added element");
+	  return NULL;
+	}
+
       /* is it a caret or an extension selection? */
       if (TtaIsSelectionEmpty ())
 	lastEl = NULL;
@@ -850,7 +868,17 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	  printf ("last Ch is %d, i is %d\n", lastCh, i);
 #endif 
 	  AdjustSelMode (&lastEl, &lastCh, i, &mode, SEL_LAST_EL);
+
+	  if  (TtaGetElementLineNumber (lastEl) == 0)
+	    {
+	      /* ERROR, don't annotate end elements that Amaya added
+		 internally, but that don't exist in the document */
+	      InitInfo ("XPointer", "Impossilble to put an end XPointer in an internal added element");
+	      return NULL;
+	    }
+
 	}
+
       /* if the selection is in the same element, adjust the first element's
 	 length */
       if (firstEl == lastEl)
@@ -866,7 +894,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	}
     }
 
-  /* @@ JK: W e don't know yet how to handle annotations on symbols, so we just
+  /* @@ JK: We don't know yet how to handle annotations on symbols, so we just
      forbid making XPointers on them, for the moment @@ */
   elType = TtaGetElementType (firstEl);
   if (elType.ElTypeNum == THOT_SYMBOL_UNIT)
