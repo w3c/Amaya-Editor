@@ -804,7 +804,6 @@ int                 view;
 				   }
 		           lgmenu += i;
 			 }
-			 nbDlgItems = val;
 
 #            ifndef _WINDOWS
 	         /* cree le menu des valeurs de l'attribut */
@@ -816,9 +815,10 @@ int                 view;
 		        val = currAttr->AeAttrValue - 1;
 	         TtaSetMenuForm (subform, val);
 #            else  /* _WINDOWS */
-		     WIN_AtNumAttr  = FALSE;
-		     WIN_AtTextAttr = FALSE;
-		     WIN_AtEnumAttr = TRUE;
+		 nbDlgItems = val;
+		 WIN_AtNumAttr  = FALSE;
+		 WIN_AtTextAttr = FALSE;
+		 WIN_AtEnumAttr = TRUE;
 #            endif /* _WINDOWS */
 	         break;
 

@@ -174,9 +174,7 @@ struct struct_winerror win_errtab[] = {
 /*****************************
  * MS-Windows Specific part. *
  *****************************/
-
 #define MAX_FRAMECAT 500
-
 typedef struct FrCatalogue {
         struct Cat_Context*  Cat_Table[MAX_FRAMECAT] ;
 } FrCatalogue ;
