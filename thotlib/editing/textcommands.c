@@ -73,6 +73,7 @@ static Func     MathMoveBackwardCursorFunction = NULL;
 #include "callback_f.h"
 #include "content_f.h"
 #include "editcommands_f.h"
+#include "exceptions_f.h"
 #include "font_f.h"
 #include "geom_f.h"
 #include "hyphen_f.h"
@@ -574,7 +575,10 @@ static void MovingCommands (int code, Document doc, View view,
 		      /* a new box before will be selected */
 		      ibox = pBox->BxPrevious;
 		      while (ibox &&
-			     ibox->BxAbstractBox->AbPresentationBox)
+			     (ibox->BxAbstractBox->AbPresentationBox ||
+			      TypeHasException (ExcNoSelect,
+					ibox->BxAbstractBox->AbElement->ElTypeNumber,
+					ibox->BxAbstractBox->AbElement->ElStructSchema)))
 			ibox = ibox->BxPrevious;
 		      if (ibox)
 			{
@@ -709,7 +713,10 @@ static void MovingCommands (int code, Document doc, View view,
 		      /* a new box after will be selected */
 		      ibox = pBox->BxNext;
 		      while (ibox &&
-			     ibox->BxAbstractBox->AbPresentationBox)
+			     (ibox->BxAbstractBox->AbPresentationBox ||
+			      TypeHasException (ExcNoSelect,
+					ibox->BxAbstractBox->AbElement->ElTypeNumber,
+					ibox->BxAbstractBox->AbElement->ElStructSchema)))
 			ibox = ibox->BxNext;
 		      if (ibox)
 			{
