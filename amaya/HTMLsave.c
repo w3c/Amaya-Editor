@@ -1733,7 +1733,7 @@ View                view;
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot) 
     {
-      ANNOT_SaveDocument (doc);
+      ANNOT_SaveDocument (doc, view);
       return;
     }
   else
