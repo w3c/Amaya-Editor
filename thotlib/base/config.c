@@ -1427,6 +1427,47 @@ char               *line;
 }
 
 /*----------------------------------------------------------------------
+   ConfigKeyboard.                                                     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             ConfigKeyboard (int *x, int *y)
+#else  /* __STDC__ */
+void             ConfigKeyboard (x, y)
+int             *x;
+int             *y;
+#endif /* __STDC__ */
+{
+   FILE         *file;
+   char          seqLine[MAX_TXT_LEN];
+   char          line[MAX_TXT_LEN];
+   int           nbIntegers;
+
+   *x = 0;
+   *y = 0;
+   file = openConfigFile ("keyboard", FALSE);
+   if (file == NULL)
+      return;
+
+   getNextLineInSection (file, line);
+
+   /* extrait la partie de la ligne qui suit les deux-points */
+   getStringAfterColon (line, seqLine);
+   if (seqLine[0] != '\0')
+     {
+       /* extrait les 4 entiers */
+       nbIntegers = sscanf (seqLine, "%d %d", x, y);
+       if (nbIntegers == 2)
+         if (DOT_PER_INCHE != 83)
+	   {
+	     /* convertit si necessaire en fonction de la resolution de l'ecran */
+	     *x = (int) ((float) (*x * 83) / (float) DOT_PER_INCHE);
+	     *y = (int) ((float) (*y * 83) / (float) DOT_PER_INCHE);
+	   }
+     }
+   TtaReadClose (file);
+}
+
+/*----------------------------------------------------------------------
    getXYWidthHeight        lit les 4 entiers x, y, width, height   
    suivent les deux-points dans une ligne de la section    
    open ou geometry d'un fichier .conf                     
