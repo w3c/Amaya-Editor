@@ -10,7 +10,7 @@
 #
 
 # default parameters
-AMAYAVERSION="8.6"
+AMAYAVERSION="8.7"
 DEST=$HOME
 PLATFORMS="GTK WX"
 
@@ -45,19 +45,83 @@ AMAYADIR=${AMAYADIR#$TARDIR}
 TAR="tar cvzfh "
 
 echo "Generating binary tar files from " $AMAYADIR
-
-for MACH in $PLATFORMS
-do
-echo "Platform ------->" $MACH
- $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tgz \
+echo "Platform -------> GTK"
+ $TAR $DEST/amaya-GTK-$AMAYAVERSION.tgz \
    ${AMAYADIR}/README.amaya \
-   ${AMAYADIR}/README.gl \
    ${AMAYADIR}/amaya/COPYRIGHT* \
    ${AMAYADIR}/amaya/AmayaPage.html* \
    ${AMAYADIR}/amaya/Amaya.svg \
    ${AMAYADIR}/amaya/*.PRS \
    ${AMAYADIR}/amaya/*.STR \
    ${AMAYADIR}/amaya/*.TRA \
+   ${AMAYADIR}/amaya/amaya.css \
+   ${AMAYADIR}/amaya/*.conf \
+   ${AMAYADIR}/amaya/*.en \
+   ${AMAYADIR}/amaya/*.gif \
+   ${AMAYADIR}/amaya/*.png \
+   ${AMAYADIR}/amaya/*.trans* \
+   ${AMAYADIR}/annotlib/*.STR \
+   ${AMAYADIR}/annotlib/*P.PRS \
+   ${AMAYADIR}/annotlib/*T.TRA \
+   ${AMAYADIR}/annotlib/*.en \
+   ${AMAYADIR}/annotlib/closed.png \
+   ${AMAYADIR}/annotlib/open.png \
+   ${AMAYADIR}/annotlib/selected.gif \
+   ${AMAYADIR}/batch/MachineType \
+   ${AMAYADIR}/config/XKeysymDB \
+   ${AMAYADIR}/config/en-amayadialogue \
+   ${AMAYADIR}/config/en-amayamsg \
+   ${AMAYADIR}/config/en-libdialogue \
+   ${AMAYADIR}/config/de-* \
+   ${AMAYADIR}/config/es-* \
+   ${AMAYADIR}/config/fi-* \
+   ${AMAYADIR}/config/fr-* \
+   ${AMAYADIR}/config/it-* \
+   ${AMAYADIR}/config/pt-* \
+   ${AMAYADIR}/config/tr-* \
+   ${AMAYADIR}/config/ru-* \
+   ${AMAYADIR}/config/*.rdf \
+   ${AMAYADIR}/config/*thot.rc \
+   ${AMAYADIR}/config/amaya.emacs \
+   ${AMAYADIR}/config/amaya.kb \
+   ${AMAYADIR}/config/amaya.keyboard \
+   ${AMAYADIR}/config/amaya.profiles \
+   ${AMAYADIR}/config/annot.schemas \
+   ${AMAYADIR}/config/gtkrc \
+   ${AMAYADIR}/config/fonts.* \
+   ${AMAYADIR}/config/lib_files.dat \
+   ${AMAYADIR}/config/libconfig/*.css \
+   ${AMAYADIR}/config/libconfig/*.png \
+   ${AMAYADIR}/config/libconfig/*.lhtml \
+   ${AMAYADIR}/config/libconfig/*.svg \
+   ${AMAYADIR}/dicopar/E*.dic \
+   ${AMAYADIR}/dicopar/F*.dic \
+   ${AMAYADIR}/dicopar/*.ptn \
+   ${AMAYADIR}/dicopar/alphabet \
+   ${AMAYADIR}/dicopar/clavier \
+   ${AMAYADIR}/doc/html/*.html* \
+   ${AMAYADIR}/doc/html/*/*.html* \
+   ${AMAYADIR}/doc/html/*.css \
+   ${AMAYADIR}/doc/images/*.gif \
+   ${AMAYADIR}/doc/images/*.png \
+   ${AMAYADIR}/doc/images/*.jpg \
+   ${AMAYADIR}/doc/images/w3c_home \
+   ${AMAYADIR}/fonts/Families.list \
+   ${AMAYADIR}/fonts/fonts.dir \
+   ${AMAYADIR}/fonts/icones* \
+   ${AMAYADIR}/GTK/bin/amaya \
+   ${AMAYADIR}/GTK/bin/print
+
+echo "Platform -------> WX"
+ $TAR $DEST/amaya-WX-$AMAYAVERSION.tgz \
+   ${AMAYADIR}/README.amaya \
+   ${AMAYADIR}/amaya/COPYRIGHT* \
+   ${AMAYADIR}/amaya/AmayaPage.html* \
+   ${AMAYADIR}/amaya/Amaya.svg \
+   ${AMAYADIR}/amaya/*.PRS \
+   ${AMAYADIR}/amaya/*.STR \
+   ${AMAYADIR}/amaya/*.TRA \
+   ${AMAYADIR}/amaya/amaya.css \
    ${AMAYADIR}/amaya/*.conf \
    ${AMAYADIR}/amaya/*.en \
    ${AMAYADIR}/amaya/*.gif \
@@ -114,6 +178,5 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/fonts/icones* \
    ${AMAYADIR}/resources/xrc/*.xrc \
    ${AMAYADIR}/resources/icons/*.gif \
-   ${AMAYADIR}/$MACH/bin/amaya \
-   ${AMAYADIR}/$MACH/bin/print
-done
+   ${AMAYADIR}/WX/bin/amaya \
+   ${AMAYADIR}/WX/bin/print
