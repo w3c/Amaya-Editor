@@ -445,25 +445,27 @@ if test "$with_wx" = "yes" ; then
   rm -f configarg.cache
 
   # setup configure options
+  
+  # disable unused wx features
+  #   --disable-htmlhelp
+  #   --disable-html
+  #   --disable-docview
+  #   --disable-mdi
+  #   --disable-mdidoc
+  #   --disable-protocols
+  #   --disable-ftp
+  #   --disable-http
+  #   --disable-sound
+  WXCONFIGURE_TUNNING_OPTION="--disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-protocols --disable-ftp --disable-http --disable-sound"
+  
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
     # LINUX
     #   --enable-gtk2           use GTK+ 2.0 if available (EXPERIMENTAL)
-    #   --enable-shared         create shared library code
+    #   --disable-shared        create only static library (.a)
     #   --enable-unicode        compile wxString with Unicode support
     #   --with-gtk              use GTK+
     #   --with-opengl           use OpenGL (or Mesa)
-    #   --with-xrc              use XRC resources system
-	#   --disable-htmlhelp
-	#   --disable-html
-	#   --disable-docview
-	#   --disable-mdi
-	#   --disable-mdidoc
-	#   --disable-protocols
-	#   --disable-ftp
-	#   --disable-http
-	#   --disable-sound
-	WXCONFIGURE_TUNNING_OPTION="--disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-protocols --disable-ftp --disable-http --disable-sound"
-    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --with-xrc --enable-shared=no $WXCONFIGURE_TUNNING_OPTION"
+    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
   fi
   if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
     # MACOSX
@@ -484,7 +486,8 @@ if test "$with_wx" = "yes" ; then
   # launch the configure
   if test "$with_mesa" = "yes" ; then
     # use internal OpenGL (mesa) libraries
-    ../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
+    ../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" $WXCONFIGURE_OPTION
+    #../$WX_SRCDIR/configure CFLAGS="-I${GL_BUILDDIR}/include" CXXFLAGS="-I${GL_BUILDDIR}/include" CPPFLAGS="-I${GL_BUILDDIR}/include" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
     if test $? != 0 ; then
       AC_MSG_ERROR(A problem occurs durring wxWidgets library configuration. Please fix the problem and try again.)
     fi
@@ -537,64 +540,67 @@ dnl    SPECIFIC STUFF : CONFIGURATION OPTIONS FOR AMAYA
 dnl
 dnl  ***************************************************************
 
-# We don't use our graphic libraries for the pure GTK version (without GL)
+# Do not care with libpng or libjpeg with wx version because we use the wxwidgets one.
+if test "$with_wx" = "no" ; then
+  # We don't use our graphic libraries for the pure GTK version (without GL)
 
-# if configure has option --with-graphiclibs then dont check for system graphic libs
-# force amaya static graphic libs to be used
-AC_ARG_WITH(graphiclibs, [  --with-graphiclibs      use static libjpeg, libpng.])
-if test "$with_graphiclibs" = "yes" -o "$enable_graphiclibs" = "yes" ; then
-  no_graphic="no"
-else
-  no_graphic="yes"
-fi
+  # if configure has option --with-graphiclibs then dont check for system graphic libs
+  # force amaya static graphic libs to be used
+  AC_ARG_WITH(graphiclibs, [  --with-graphiclibs      use static libjpeg, libpng.])
+  if test "$with_graphiclibs" = "yes" -o "$enable_graphiclibs" = "yes" ; then
+    no_graphic="no"
+  else
+    no_graphic="yes"
+  fi
 		  
-if test "$no_graphic" = yes; then
-dnl
-    AC_MSG_CHECKING([for libjpeg version = 6b])
-    AC_EGREP_CPP([x 62 *x],
-        [#include <jpeglib.h>
-         x JPEG_LIB_VERSION x],
-dnl
-        AC_MSG_RESULT([yes])
-	JPEGINCL=''
+  if test "$no_graphic" = yes; then
+  dnl
+      AC_MSG_CHECKING([for libjpeg version = 6b])
+      AC_EGREP_CPP([x 62 *x],
+          [#include <jpeglib.h>
+           x JPEG_LIB_VERSION x],
+  dnl
+      AC_MSG_RESULT([yes])
+        JPEGINCL=''
         LIBJPEG='-ljpeg'
         MAKEJPEG=['#'],
-dnl
+  dnl
         AC_MSG_RESULT([no])
-	JPEGINCL='-I$(THOTDIR)/libjpeg'
+        JPEGINCL='-I$(THOTDIR)/libjpeg'
         LIBJPEG='../libjpeg.a'      dnl LIBJPEG goes into amaya/Makefile.in
         )
-dnl    
-dnl
+  dnl    
+  dnl
     AC_MSG_CHECKING([for libpng version = 1.0.x or 1.2.x])
     AC_EGREP_CPP([x \"1.[02]\..*\" *x],
         [#include <png.h>
 	x PNG_LIBPNG_VER_STRING x],
-dnl
-        AC_MSG_RESULT([yes])
-	PNGINCL=''
+  dnl
+    AC_MSG_RESULT([yes])
+        PNGINCL=''
         LIBPNG='-lpng'
         LIBZ=''
 	MAKEPNG=['#'],
 dnl
-        AC_MSG_RESULT([no])
-  	PNGINCL='-I$(THOTDIR)/libpng -I$(THOTDIR)/libpng/zlib'
+    AC_MSG_RESULT([no])
+  	    PNGINCL='-I$(THOTDIR)/libpng -I$(THOTDIR)/libpng/zlib'
         LIBPNG='../libpng.a'
         LIBZ='../libz.a'
         )
-else
+  else
     JPEGINCL='-I$(THOTDIR)/libjpeg'
     LIBJPEG='../libjpeg.a'
     PNGINCL='-I$(THOTDIR)/libpng -I$(THOTDIR)/libpng/zlib'
     LIBPNG='../libpng.a'
     LIBZ='../libz.a'
-fi
-dnl
-AC_SUBST(LIBJPEG)
-AC_SUBST(LIBPNG)
-AC_SUBST(LIBZ)
-AC_SUBST(MAKEJPEG)
-AC_SUBST(MAKEPNG)
+  fi
+  dnl
+  AC_SUBST(LIBJPEG)
+  AC_SUBST(LIBPNG)
+  AC_SUBST(LIBZ)
+  AC_SUBST(MAKEJPEG)
+  AC_SUBST(MAKEPNG)
+fi # with_wx = no
 
 AMAYA_VER="8.2"
 
@@ -1182,7 +1188,11 @@ AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
 
-IMGLIBS="-ljpeg -lpng -lz"
+if test "$with_wx" = "yes" ; then
+  IMGLIBS=""
+else
+  IMGLIBS="-ljpeg -lpng -lz"
+fi
 
 EXTRA_LIBS=
 EXTRA_INCLUDES=
@@ -1408,14 +1418,16 @@ if test "$build_amaya" = "yes" ; then
     fi
 fi
 
-if test "$no_graphic" = "yes" ; then
-    echo "Amaya configured with system graphic libraries (libjpeg, libpng, zlib)"
-else
-    echo "Amaya configured with static graphic libraries (libjpeg, libpng, zlib)"
-    if test "$with_gtk" = "yes" -o "$with_gl" = "yes" ; then
-      echo "  N.B. This option may not work in your platform. If Amaya crashes"
-      echo "  when opening a PNG file. Recompile it using the system libraries."
-    fi
+if test "$with_wx" = "no" ; then
+  if test "$no_graphic" = "yes" ; then
+      echo "Amaya configured with system graphic libraries (libjpeg, libpng, zlib)"
+  else
+      echo "Amaya configured with static graphic libraries (libjpeg, libpng, zlib)"
+      if test "$with_gtk" = "yes" -o "$with_gl" = "yes" ; then
+        echo "  N.B. This option may not work in your platform. If Amaya crashes"
+        echo "  when opening a PNG file. Recompile it using the system libraries."
+      fi
+  fi
 fi
 
 if test "$with_gtk" = "yes" ; then
