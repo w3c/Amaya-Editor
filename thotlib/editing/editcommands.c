@@ -3250,7 +3250,7 @@ void                TtcInsertChar (Document document, View view, CHAR_T c)
 
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
-      if (pDoc)
+      if (pDoc && LoadedDocument[document - 1] == pDoc)
 	{
 	  /* avoid to redisplay step by step */
 	  dispMode = TtaGetDisplayMode (document);
