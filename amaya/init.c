@@ -51,7 +51,7 @@
   #include "wxdialogapi_f.h"
 #endif /* _WX */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 #include "stopN.xpm"
 #include "stopR.xpm"
 #include "save.xpm"
@@ -90,7 +90,7 @@
 #include "Table.xpm"
 #include "TableNo.xpm"
 #include "home.xpm"
-#endif /* #if defined(_MOTIF) || defned(_GTK) || defined(_WX) */
+#endif /* #if defned(_GTK) || defined(_WX) */
 
 #include "XPointer_f.h"
 #include "anim_f.h"
@@ -170,7 +170,7 @@ static ThotIcon       iconEditor;
 static ThotIcon       iconHome;
 #endif /* #ifdef _NOGUI */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 static ThotIcon       stopR;
 static ThotIcon       stopN;
 static ThotIcon       iconSave;
@@ -209,7 +209,7 @@ static ThotIcon       iconTableNo;
 static ThotIcon       iconBrowser;
 static ThotIcon       iconEditor;
 static ThotIcon       iconHome;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
 #ifdef _WINGUI
 #define stopR          0
@@ -480,7 +480,7 @@ char * DocumentTypeString (Document document)
   ----------------------------------------------------------------------*/
 void DocumentInfo (Document document, View view)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   char         *content;
 
   /* Main form */
@@ -586,7 +586,7 @@ void DocumentInfo (Document document, View view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + DocInfoForm, TRUE);
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
    
 #ifdef _WINGUI
    CreateDocumentInfoDlgWindow (TtaGetViewFrame (document, view),
@@ -1796,7 +1796,7 @@ void SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
 void InitFormAnswer (Document document, View view, const char *auth_realm,
 		     char *server)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    char *label;
 
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
@@ -1817,11 +1817,6 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
    
    TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
-
-#ifdef _MOTIF
-   TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
-		   TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
-#endif /* _MOTIF */
    
 #ifdef _GTK
    TtaNewPwdForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
@@ -1843,7 +1838,7 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
        TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
        TtaWaitShowDialogue ();
      }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 
 #ifdef _WINGUI
    CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view),
@@ -1865,9 +1860,9 @@ void InitInfo (char *label, char *info)
   MessageBox (NULL, info, label, MB_OK);
 #endif /* !_WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
   TtaDisplayMessage (CONFIRM, info, NULL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1875,7 +1870,7 @@ void InitInfo (char *label, char *info)
 void ConfirmError (Document document, View view, char *label,
 		   char *extrabutton, char *confirmbutton)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    char      s[MAX_LENGTH];
    int       i, n;
 
@@ -1899,7 +1894,7 @@ void ConfirmError (Document document, View view, char *label,
    TtaWaitShowDialogue ();
    /* remove the critic section */
    CriticConfirm = FALSE;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
    
 #ifdef _WINGUI
    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
@@ -1915,7 +1910,7 @@ void ConfirmError (Document document, View view, char *label,
 void InitConfirm3L (Document document, View view, char *label1, char *label2,
 		    char *label3, ThotBool withCancel)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   /* IV: This widget can't be called twice, but it happens when downloading a
      document with protected images. This is a quick silution to avoid the
      sigsev, although it doesn't fix the problem */
@@ -1952,7 +1947,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   /* wait for an answer */
   TtaWaitShowDialogue ();
   CriticConfirm = FALSE;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 #ifdef _WINGUI
   CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
 				TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
@@ -1964,7 +1959,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   ----------------------------------------------------------------------*/
 void InitConfirm (Document document, View view, char *label)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if  defined(_GTK)
   /* Confirm form */
   /* JK: This widget can't be called twice, but it happens when downloading a
      document with protected images. This is a quick silution to avoid the
@@ -1983,7 +1978,7 @@ void InitConfirm (Document document, View view, char *label)
   TtaWaitShowDialogue ();
   /* remove the critic section */
   CriticConfirm = FALSE;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */   
+#endif /* #if defined(_GTK) */   
 #ifdef _WINGUI
   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, NULL, label);
 #endif /* _WINGUI */
@@ -1999,7 +1994,7 @@ void InitConfirm (Document document, View view, char *label)
   ----------------------------------------------------------------------*/
 void InitCharset (Document document, View view, char *url)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   char   s[MAX_LENGTH]; /* general purpose buffer */
   int    i;
 
@@ -2028,7 +2023,7 @@ void InitCharset (Document document, View view, char *url)
   TtaShowDialogue (BaseDialog + CharsetForm, FALSE);
   /* wait for an answer */
   TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* defined(_GTK) */
 
 #ifdef _WINGUI
   CreateCharsetDlgWindow (TtaGetViewFrame (document, view));
@@ -2090,7 +2085,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
       nbmimetypes = 7;
     }
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    TtaNewForm (BaseDialog + MimeTypeForm, TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE),  TRUE, 1, 'L', D_CANCEL);
    /* selector */
@@ -2108,7 +2103,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
    TtaShowDialogue (BaseDialog + MimeTypeForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 
 #ifdef _WINGUI
    CreateMimeTypeDlgWindow (TtaGetViewFrame (document, view), nbmimetypes,
@@ -2122,7 +2117,7 @@ void InitMimeType (Document document, View view, char *url, char *status)
   -------------------------------------------------------------------------*/
 static void BrowserForm (Document doc, View view, char *urlname)
 {
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
    char      s[MAX_LENGTH];
    int       i;
    char      tempfile[MAX_LENGTH];
@@ -2182,7 +2177,7 @@ static void BrowserForm (Document doc, View view, char *urlname)
    TtaSetTextForm (BaseDialog + FileBrowserFilter, ScanFilter);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FileBrowserForm, FALSE);
-#endif /* #if defined(_MOTIF) || defined(_GTK)*/
+#endif /* #if defined(_GTK)*/
 }
 
 /*----------------------------------------------------------------------
@@ -2196,7 +2191,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 {
   char              s[MAX_LENGTH];
   ThotBool          remote;
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
   int               i;
 
   /* Dialogue form for open URL or local */
@@ -2212,7 +2207,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
   TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		  TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
   TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_GTK) */
 
   CurrentDocument = doc;
   /* generate the right name and URI */
@@ -2253,13 +2248,19 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 #ifdef  _WINGUI
   CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name,
 			  DocSelect, DirSelect, docType);
-#endif /* WINDOWS */
+#endif /* _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _WX
+  /* !! be carfull: here we pass 'URL_list', not 's' as above because we want generate a combobox choice list */
+  CreateOpenDocDlgWX( TtaGetViewFrame (doc, view), title, URL_list, name,
+		      DocSelect, DirSelect, docType );
+#endif /* _WX */
+
+#if defined(_GTK)
   TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + OpenForm, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* defined(_GTK) */
   
 }
 
@@ -3006,12 +3007,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_GTK)
 	   iEditor = TtaAddButton (doc, 1, iconEditor, (Proc)SetBrowserEditor,
 				   "SetBrowserEditor",
 				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
 				   TBSTYLE_BUTTON, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* defined(_GTK) */
      
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
@@ -5497,7 +5498,7 @@ static void ChangeDoctype (ThotBool isXml)
   ----------------------------------------------------------------------*/
 static void UpdateSaveAsButtons ()
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
   int	active;
 
   if (SaveAsHTML || SaveAsXML)
@@ -5506,7 +5507,7 @@ static void UpdateSaveAsButtons ()
     active = 0;
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, (ThotColor)-1, active);
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 1, NULL, (ThotColor)-1, active);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -5573,9 +5574,9 @@ static void SetFileSuffix ()
 	 sprintf (DocToOpen, filename);
 #endif /* _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
 	 TtaSetTextForm (BaseDialog + NameSave, filename);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
    
 	 TtaFreeMemory (filename);
        }
@@ -5591,9 +5592,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempname[MAX_LENGTH];
   char              sep, *utf8value, *ptr;
   int               val;
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) 
+#if defined(_WINGUI) || defined(_WX) 
   int               i;
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
+#endif /* defined(_WINGUI) || defined(_WX) */
   ThotBool          change, updated;
 
   utf8value = NULL;
@@ -5703,10 +5704,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else if (val == 2)
 	{
 	  /* Browse button */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  WidgetParent = OpenDocBrowser;
 	  BrowserForm (CurrentDocument, 1, &LastURLName[0]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 	}
       else if (val == 3)
 	{
@@ -5714,9 +5715,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  LastURLName[0] = EOS;
 	  DirectoryName[0] = EOS;
 	  DocumentName[0] = EOS;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  TtaSetTextForm (BaseDialog + URLName, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 	}
       else if (NewFile)
 	{
@@ -5765,7 +5766,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifdef _WINGUI
       sprintf (DirectoryName, "%s", data);
 #endif /* _WINGUI */      
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
 	{
 	  if (!strcmp (data, ".."))
@@ -5787,7 +5788,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			    BaseDialog + DocSelect);
 	  DocumentName[0] = EOS;
 	}
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case DocSelect:
@@ -5801,9 +5802,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
       strcpy (tempfile, DirectoryName);
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
       TtaSetTextForm (BaseDialog + URLName, tempfile);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case ConfirmForm:
@@ -5817,10 +5818,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* Filter value */
       if (strlen (data) <= NAME_LENGTH)
 	strcpy (ScanFilter, data);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
       else
 	TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case FormAnswer:
@@ -5849,7 +5850,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
 
     case PasswordText:
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) 
+#if defined(_WINGUI) || defined(_WX) 
       i = strlen (data);
       if (i < NAME_LENGTH - 1)
 	{
@@ -5871,11 +5872,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	}
       else
 	Answer_password[NAME_LENGTH - 1] = EOS;
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
-#ifdef _MOTIF
-      if (i > 0)
-	TtaSetTextForm (BaseDialog + PasswordText, Display_password);
-#endif /* _MOTIF */
+#endif /*  defined(_WINGUI) || defined(_WX) */
 #ifdef _GTK
       strncpy (Answer_password, data, NAME_LENGTH);
       Answer_password[NAME_LENGTH - 1] = EOS;
@@ -5908,11 +5905,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  SaveAsText = TRUE;
 	  SaveAsHTML = FALSE;
 	  SaveAsXML = FALSE;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
 	  TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	  UpdateSaveAsButtons ();
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
     
 	  SetFileSuffix ();
 	  break;
@@ -5954,11 +5951,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  && (UserMimeType[0] == EOS))
 		{
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI      
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _WINGUI */
@@ -5988,13 +5985,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else if (val == 2)
 	/* "Browse" button */
 	{
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  WidgetParent = DocSaveBrowser;
 	  strcpy (LastURLName, SavePath);
 	  strcat (LastURLName, DIR_STR);
 	  strcat (LastURLName, SaveName);
 	  BrowserForm (SavingDocument, 1, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 	}
       else if (val == 3)
 	/* "Clear" button */
@@ -6004,10 +6001,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      SavePath[0] = EOS;
 	      SaveImgsURL[0] = EOS;
 	      SaveName[0] = EOS;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	      TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	      TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 	    }
 	}
       else if (val == 4)
@@ -6018,10 +6015,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      if (DocumentTypes[SavingDocument] != docImage)
 		{
 		  /* clear the status message */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm, " ");
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI      
 		  SaveAsDlgStatus ("");
 #endif /* _WINGUI */
@@ -6029,19 +6026,19 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  if (SaveFormTmp[0] != EOS)
 		    {
 		      strcpy (UserCharset, SaveFormTmp);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		      TtaNewLabel (BaseDialog + CharsetSave,  
 				   BaseDialog + SaveForm, UserCharset);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 		    }
 		}
 	      else
 		{
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
 #endif /* _WINGUI */
@@ -6057,11 +6054,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		{
 		  /* clear the status message */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       " ");
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI      
 		  SaveAsDlgStatus ("");
 #endif /* _WINGUI */
@@ -6069,19 +6066,19 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  if (SaveFormTmp[0] != EOS)
 		    {
 		      strcpy (UserMimeType, SaveFormTmp);   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		      TtaNewLabel (BaseDialog + MimeTypeSave,  
 				   BaseDialog + SaveForm, UserMimeType);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 		    }
 		}
 	      else
 		{
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm,
 			       TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI      
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
 #endif /* _WINGUI */
@@ -6161,14 +6158,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
       else if (val == 2)
 	/* Browse button */
 	{
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  if (LinkAsXmlCSS || LinkAsCSS)
 	    strcpy (ScanFilter, "*.css");
 	  else if (!strcmp (ScanFilter, "*.css"))
 	    strcpy (ScanFilter, "*");
 	  WidgetParent = HrefAttrBrowser;
 	  BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	}
       else if (val == 3)
 	/* allow one to click the target */
@@ -6177,9 +6174,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	{
 	  /* Clear button */
 	  AttrHREFvalue[0] = EOS;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	}
       else 
 	/* Cancel button */
@@ -6224,7 +6221,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  /* Confirm button */
 	  /* it's no longer the default Welcome page */
 	  WelcomePage = FALSE;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  /* this code is only valid under Unix. */
 	  /* In Windows, we're using a system widget */
 	  strcpy (tempfile, DirectoryName);
@@ -6248,7 +6245,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	    }
 	  /* remove the browsing dialogue */
 	  TtaDestroyDialogue (ref);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 	}
       else if (val == 2)
 	/* Clear button */
@@ -6256,17 +6253,17 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  if (WidgetParent == OpenDocBrowser)
 	    {
 	      LastURLName[0] = EOS;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	      TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
         
 	    }
 	  else if (WidgetParent == HrefAttrBrowser)
 	    {
 	      tempname[0] = EOS; 	       
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	      TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	    }
 	}
       else if (val == 3)
@@ -6306,7 +6303,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifdef _WINGUI
       sprintf (DirectoryName, "%s", data);
 #endif /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
 	{
 	  if (!strcmp (data, ".."))
@@ -6334,7 +6331,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			    BaseDialog + BrowserDocSelect);
 	  DocumentName[0] = EOS;
 	}
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
       /* *********Browser DocSelect*********** */
@@ -6350,9 +6347,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
       strcpy (tempfile, DirectoryName);
       strcat (tempfile, DIR_STR);
       strcat (tempfile, DocumentName);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
       TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
       /* *********Browser Filter*********** */
@@ -6360,10 +6357,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
 	strcpy (ScanFilter, data);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
       else
 	TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
     case TitleForm:
@@ -6416,22 +6413,22 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	case 1:
 	  CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, 
 				   (IdApplyToSelection) ? TRUE: FALSE);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  /* and show the status */
 	  TtaNewLabel (BaseDialog + mIdStatus,
 		       BaseDialog + MakeIdMenu,
 		       IdStatus);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	  break;
 	case 2:
 	  CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, 
 				   (IdApplyToSelection) ? TRUE: FALSE);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	  /* and show the status */
 	  TtaNewLabel (BaseDialog + mIdStatus,
 		       BaseDialog + MakeIdMenu,
 		       IdStatus);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	  break;
 	}
       break;
@@ -6513,10 +6510,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
 		{
 		  SaveFormTmp[0] = EOS;
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 		  InitMimeType (SavingDocument, 1, SavePath,
 				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI
       /* the Window dialog won't be closed */
 		  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
@@ -7218,47 +7215,6 @@ void InitAmaya (NotifyEvent * event)
    iconTableNo = (ThotIcon) TtaCreatePixmapLogo (TableNo_xpm);
 #endif /* _GTK */
 
-#ifdef _MOTIF   
-   stopR = TtaCreatePixmapLogo (stopR_xpm);
-   stopN = TtaCreatePixmapLogo (stopN_xpm);
-   iconSave = TtaCreatePixmapLogo (save_xpm);
-   iconSaveNo = TtaCreatePixmapLogo (saveNo_xpm);
-   iconFind = TtaCreatePixmapLogo (find_xpm);
-   iconReload = TtaCreatePixmapLogo (Reload_xpm);
-   iconHome = TtaCreatePixmapLogo (home_xpm);
-   iconI = TtaCreatePixmapLogo (I_xpm);
-   iconINo = TtaCreatePixmapLogo (INo_xpm);
-   iconB = TtaCreatePixmapLogo (B_xpm);
-   iconBNo = TtaCreatePixmapLogo (BNo_xpm);
-   iconT = TtaCreatePixmapLogo (T_xpm);
-   iconTNo = TtaCreatePixmapLogo (TNo_xpm);
-   iconBack = TtaCreatePixmapLogo (Back_xpm);
-   iconBackNo = TtaCreatePixmapLogo (BackNo_xpm);
-   iconForward = TtaCreatePixmapLogo (Forward_xpm);
-   iconForwardNo = TtaCreatePixmapLogo (ForwardNo_xpm);
-   iconBrowser = TtaCreatePixmapLogo (Browser_xpm);
-   iconEditor = TtaCreatePixmapLogo (Editor_xpm);
-   iconH1 = TtaCreatePixmapLogo (H1_xpm);
-   iconH1No = TtaCreatePixmapLogo (H1No_xpm);
-   iconH2 = TtaCreatePixmapLogo (H2_xpm);
-   iconH2No = TtaCreatePixmapLogo (H2No_xpm);
-   iconH3 = TtaCreatePixmapLogo (H3_xpm);
-   iconH3No = TtaCreatePixmapLogo (H3No_xpm);
-   iconPrint = TtaCreatePixmapLogo (Print_xpm);
-   iconBullet = TtaCreatePixmapLogo (Bullet_xpm);
-   iconBulletNo = TtaCreatePixmapLogo (BulletNo_xpm);
-   iconNum = TtaCreatePixmapLogo (Num_xpm);
-   iconNumNo = TtaCreatePixmapLogo (NumNo_xpm);
-   iconImage = TtaCreatePixmapLogo (Image_xpm);
-   iconImageNo = TtaCreatePixmapLogo (ImageNo_xpm);
-   iconDL = TtaCreatePixmapLogo (DL_xpm);
-   iconDLNo = TtaCreatePixmapLogo (DLNo_xpm);
-   iconLink = TtaCreatePixmapLogo (Link_xpm);
-   iconLinkNo = TtaCreatePixmapLogo (LinkNo_xpm);
-   iconTable = TtaCreatePixmapLogo (Table_xpm);
-   iconTableNo = TtaCreatePixmapLogo (TableNo_xpm);
-#endif /* !_MOTIF */
-    
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);
    TargetName = NULL;
@@ -7285,9 +7241,9 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _WINGUI
 	   MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
 #endif /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
 	   fprintf (stderr, TempFileDirectory);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) || defined(_WX) */
 	   exit (1);
 	 }
      }
@@ -7625,9 +7581,9 @@ void ShowMapAreas (Document doc, View view)
    }
 #endif /* _WINGUI */
   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
   MapAreas[doc] = !MapAreas[doc];
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if  defined(_GTK) || defined(_WX) */
   
   ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
 }
@@ -7661,9 +7617,9 @@ void ShowButtons (Document doc, View view)
    }
 #endif /* _WINGUI */
   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
   SButtons[doc] = !SButtons[doc];
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
   
   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);
   TtcSwitchButtonBar (doc, view);
@@ -7698,9 +7654,9 @@ void ShowAddress (Document doc, View view)
    }
 #endif /* _WINGUI */
   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
   SAddress[doc] = !SAddress[doc];
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
   
   TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
   TtcSwitchCommands (doc, view);
@@ -7735,10 +7691,10 @@ void SectionNumbering (Document doc, View view)
    }
 #endif /* _WINGUI */
   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_GTK) || defined(_WX)  
   SNumbering[doc] = !SNumbering[doc];
   TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
   
   ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }
@@ -7749,17 +7705,17 @@ void SectionNumbering (Document doc, View view)
   ----------------------------------------------------------------------*/
 void MakeIDMenu (Document doc, View view)
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
   int i;
   char    s[MAX_LENGTH];
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
   /* initialize the global variables */
   IdStatus[0] = EOS;
   IdDoc = doc;
 
   /* Create the dialogue form */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+#if defined(_GTK) || defined(_WX) 
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, ADD_ID));
   i += strlen (&s[i]) + 1;
@@ -7791,7 +7747,7 @@ void MakeIDMenu (Document doc, View view)
   TtaSetMenuForm (BaseDialog + mIdUseSelection, IdApplyToSelection);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
 #ifdef _WINGUI  
   CreateMakeIDDlgWindow (TtaGetViewFrame (doc, view));
