@@ -1120,6 +1120,8 @@ void  TtcInsertGraph (Document document, View view, unsigned char c)
 	if (!lock)
 	  /* unlock table formatting */
 	  (*ThotLocalActions[T_unlock]) ();
+	/* just manage differed enclosing rules */
+	ComputeEnclosing (frame);
 	if (dispMode == DisplayImmediately)
 	  TtaSetDisplayMode (document, dispMode);
      }
@@ -3664,9 +3666,8 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	    /* unlock table formatting */
 	    (*ThotLocalActions[T_unlock]) ();
 
-	  /* close the undo sequence */
-	  /* CloseHistorySequence (pDoc);*/
-
+	  /* just manage differed enclosing rules */
+	  ComputeEnclosing (frame);
 	  /* compare the document encoding and the character value */
 	  if (pDoc->DocCharset == US_ASCII && c > 127)
 	    {
@@ -3750,6 +3751,8 @@ void TtcCutSelection (Document doc, View view)
    if (!lock)
      /* unlock table formatting */
      (*ThotLocalActions[T_unlock]) ();
+   /* just manage differed enclosing rules */
+   ComputeEnclosing (frame);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, dispMode);
 }
@@ -3837,6 +3840,9 @@ void TtcDeletePreviousChar (Document doc, View view)
       if (!lock)
 	/* unlock table formatting */
 	(*ThotLocalActions[T_unlock]) ();
+      /* just manage differed enclosing rules */
+      ComputeEnclosing (frame);
+
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, dispMode);
     }
@@ -3849,6 +3855,7 @@ void TtcDeletePreviousChar (Document doc, View view)
 void TtcDeleteSelection (Document doc, View view)
 {
    DisplayMode         dispMode;
+   int                 frame;
    ThotBool            lock = TRUE;
 
    if (doc == 0)
@@ -3871,26 +3878,31 @@ void TtcDeleteSelection (Document doc, View view)
    if (!lock)
      /* unlock table formatting */
      (*ThotLocalActions[T_unlock]) ();
+   /* just manage differed enclosing rules */
+   frame = GetWindowNumber (doc, view);
+   ComputeEnclosing (frame);
+
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, dispMode);
 }
 
 
 /*----------------------------------------------------------------------
-   TtcInclude                                                         
+   TtcInclude
   ----------------------------------------------------------------------*/
-void TtcInclude (Document document, View view)
+void TtcInclude (Document doc, View view)
 {
    DisplayMode         dispMode;
+   int                 frame;
    ThotBool            lock = TRUE;
    ThotBool            ok;
 
-   if (ThotLocalActions[T_insertpaste] != NULL && document != 0)
+   if (ThotLocalActions[T_insertpaste] != NULL && doc != 0)
      {
 	/* avoid to redisplay step by step */
-	dispMode = TtaGetDisplayMode (document);
+	dispMode = TtaGetDisplayMode (doc);
 	if (dispMode == DisplayImmediately)
-	  TtaSetDisplayMode (document, DeferredDisplay);
+	  TtaSetDisplayMode (doc, DeferredDisplay);
 	/* lock tables formatting */
 	if (ThotLocalActions[T_islock])
 	  {
@@ -3904,8 +3916,12 @@ void TtcInclude (Document document, View view)
 	if (!lock)
 	  /* unlock table formatting */
 	  (*ThotLocalActions[T_unlock]) ();
+	/* just manage differed enclosing rules */
+	frame = GetWindowNumber (doc, view);
+	ComputeEnclosing (frame);
+
 	if (dispMode == DisplayImmediately)
-	  TtaSetDisplayMode (document, dispMode);
+	  TtaSetDisplayMode (doc, dispMode);
      }
 }
 
@@ -3963,6 +3979,8 @@ void TtcPasteFromClipboard (Document doc, View view)
       XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0,
 			 wind, CurrentTime);
 #endif /* _GTK*/
+   /* just manage differed enclosing rules */
+   ComputeEnclosing (frame);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, dispMode);
 #endif /* _WINDOWS */
@@ -4145,6 +4163,8 @@ void TtcPaste (Document doc, View view)
 	  if (!lock)
 	    /* unlock table formatting */
 	    (*ThotLocalActions[T_unlock]) ();
+	  /* just manage differed enclosing rules */
+	  ComputeEnclosing (frame);
 
 	  /* close the undo sequence */
 	  CloseHistorySequence (pDoc);
