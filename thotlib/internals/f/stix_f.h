@@ -61,6 +61,14 @@ extern void DrawStixBrace ( int frame,
                             int direction,
                             int size,
                             int fg );
+extern void DrawStixHorizontalBrace ( int frame,
+				      int x,
+				      int y,
+				      int l,
+				      int h,
+				      int direction,
+				      int size,
+				      int fg );
 extern int GetMathFontWidth ( char shape,
                               int size,
                               int height );
@@ -72,7 +80,7 @@ extern void GiveStixSize ( ThotFont pfont,
 extern void GetMathFontFromChar ( char typesymb,
                                   SpecFont fontset,
                                   void **font,
-                                  int height );
+                                  int size );
 extern int GetStixFontAndIndex ( int c,
                                  SpecFont fontset,
                                  ThotFont **font );
@@ -134,6 +142,14 @@ extern void DrawStixBrace ( int frame,
                               int direction,
                               int size,
                               int fg );
+extern void DrawStixHorizontalBrace ( int frame,
+				      int x,
+				      int y,
+				      int l,
+				      int h,
+				      int direction,
+				      int size,
+				      int fg );
 extern int GetMathFontWidth ( char shape,
                                 int size,
                                 int height );
@@ -145,7 +161,7 @@ extern void GiveStixSize ( ThotFont pfont,
 extern void GetMathFontFromChar ( char typesymb,
                                     SpecFont fontset,
                                     void **font,
-                                    int height );
+                                    int size );
 extern int GetStixFontAndIndex ( int c,
                                    SpecFont fontset,
                                    ThotFont **font );

@@ -2899,6 +2899,10 @@ ATTRIBUTES
 	BEGIN
         Width: Enclosing . Width;
 	HorizPos: Left = Enclosing . Left;
+	if Overscript
+	   Size: Enclosing =;
+	if Underscript
+	   Size: Enclosing =;
 	END;
   IntHorizStretch (SYMBOL_UNIT):
 	BEGIN

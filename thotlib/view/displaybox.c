@@ -412,13 +412,21 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 		DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case 'o':
-	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0, fg);
+	      if (useStix)
+		DrawStixHorizontalBrace (frame, xd, yd, width, height, 0, size,
+					 fg);
+	      else
+		DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0,fg);
 	      break;
 	    case 'r':
 	      DrawRadical (frame, i, xd, yd, width, height, font, fg);
 	      break;
 	    case 'u':
-	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1, fg);
+	      if (useStix)
+		DrawStixHorizontalBrace (frame, xd, yd, width, height, 1, size,
+					 fg);
+	      else
+	        DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1,fg);
 	      break;
 	    case 'v':
 	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);

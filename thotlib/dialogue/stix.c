@@ -752,7 +752,7 @@ void DrawStixBrace (int frame, int x, int y, int l, int h,
       /* draw an opening brace */
       DrawCompoundBraceStix (frame, x, y, l, h, size, fg, 0x4f, 0x51, 0x52);
     else
-      /* draw a closing parenthesis */
+      /* draw a closing brace */
       DrawCompoundBraceStix (frame, x, y, l, h, size, fg, 0x53, 0x54, 0x55);
 }
 
@@ -772,6 +772,109 @@ static int StixBraceWidth (int height)
   else 
     i = CharacterWidth (52, font);
   return i;
+}
+
+/*----------------------------------------------------------------------
+  DrawCompoundHorizBraceStix
+  Draw a wide horizontal brace with several characters from the Esstix-eight
+  font.
+  ----------------------------------------------------------------------*/
+static void DrawCompoundHorizBraceStix (int frame, int x, int y, int l, int h,
+				   int size, int fg,
+				   int leftChar, int middleChar, int rightChar)
+{
+  int             fillChar, baseline, lWidth, mWidth, rWidth, fWidth,
+                  xMiddleChar, gap, xf1, xf2;
+  ThotFont        font;
+
+  fillChar = 0x43;
+  font = (ThotFont)LoadStixFont (8, size);
+  /* in this Esstix font, the base line is the bottom of the straight part
+     of the brace */
+  if (leftChar == 0x3f)
+    /* underbrace */
+    baseline = y + CharacterAscent (leftChar, font);
+  else
+    /* overbrace */
+    baseline = y + CharacterAscent (middleChar, font);
+
+  lWidth = CharacterWidth (leftChar, font);
+  mWidth = CharacterWidth (middleChar, font);
+  rWidth = CharacterWidth (rightChar, font);
+  fWidth = CharacterWidth (fillChar, font);
+  DrawChar (leftChar, frame, x, baseline, font, fg);
+  xMiddleChar = x + (l - mWidth) / 2;
+  DrawChar (middleChar, frame, xMiddleChar, baseline, font, fg);
+  DrawChar (rightChar, frame, x + l - rWidth, baseline, font, fg);
+
+  gap = l - lWidth - mWidth - rWidth;
+  if (gap > 0 && fWidth > 0)
+    /* there are gaps between components. Draw fill characters between
+       components */
+    {
+      gap = gap / 2;
+      if (gap <= fWidth)
+        /* the gap is less than onefill character. Draw a single fill
+	   character centered in each gap */
+	{
+	  DrawChar (fillChar, frame, x+lWidth-((fWidth-gap)*3/4), baseline,
+		    font, fg);
+	  DrawChar (fillChar, frame, xMiddleChar+mWidth-(fWidth-gap)/4,
+		    baseline, font, fg);
+	}
+      else
+	/* draw several fill characters in each gap, starting from the
+	   middle character */
+	{
+	  xf1 = xMiddleChar - fWidth;
+	  xf2 = xMiddleChar + mWidth;
+	  do
+	    {
+	      DrawChar (fillChar, frame, xf1, baseline, font, fg);
+	      DrawChar (fillChar, frame, xf2, baseline, font, fg);
+	      gap -= fWidth;
+	      if (gap > 0)
+		{
+		  xf1 -= fWidth;
+		  xf2 += fWidth;
+		}
+	    }
+	  while (gap > 0);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawStixHorizontalBrace draw an overbrace or an underbrace (depending on
+  direction).
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixHorizontalBrace (int frame, int x, int y, int l, int h,
+			      int direction, int size, int fg)
+{
+  unsigned char   symb;
+  ThotFont        font;
+
+  size = size + (size * ViewFrameTable[frame-1].FrMagnification / 10);
+  font = (ThotFont)LoadStixFont (7, size);
+  if (l < 2 * CharacterWidth (0x54, font))
+    /*  write a single Esstix 7 character */
+    {
+      if (direction == 0)
+	symb = 0x55;
+      else
+	symb = 0x54;
+      DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
+    }
+  else
+    /* wide horizontal brace. Display it from several components */
+    if (direction == 0)
+      /* draw an overbrace */
+      DrawCompoundHorizBraceStix (frame, x, y, l, h, size, fg, 0x44, 0x45, 0x46);
+    else
+      /* draw an underbrace */
+      DrawCompoundHorizBraceStix (frame, x, y, l, h, size, fg, 0x3f, 0x40, 0x41);
+
 }
 
 /*----------------------------------------------------------------------
@@ -862,26 +965,28 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
       *width = StixPointyBracketWidth (*width);	
       *width = *width + *width/2;
       break;
-#ifdef o
     case 'o':       /* overbrace */
     case 'u':       /* underbrace */
-      *width = *height;
-      *height = hfont / 2;
+      *width = CharacterWidth  (0x43, pfont);
+      *height = CharacterHeight (0x40, pfont) - CharacterAscent (0x40, pfont) +
+	        CharacterAscent (0x41, pfont);
       break;
-    case 'I':	/*intersection */
-    case 'U':	/*union */
-      *width = BoxCharacterWidth (229, pfont);
+#ifdef o
+    case 'I':	/* intersection */
+    case 'U':	/* union */
+      *width = BoxCharacterWidth (0xe5, pfont);
       *height = hfont;
       break;
-#endif /**/
+#endif
     }
 }
 
 
 /*----------------------------------------------------------------------
+  GetMathFontFromChar
   ----------------------------------------------------------------------*/
 void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
-			  int height)
+			  int size)
 {
   switch (typesymb)
     {
@@ -891,9 +996,7 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
     case 'd':	  
     case 'I':
     case 'U':
-    case 'o':
-    case 'u':
-      *font =  LoadStixFont (6, height);
+      *font =  LoadStixFont (6, size);
       break;
     case '(':
     case ')':
@@ -901,12 +1004,16 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
     case '}':
     case '[':
     case ']':
-      if (height > 2)
-	*font = LoadStixFont (7, height);
+      if (size > 2)
+	*font = LoadStixFont (7, size);
       break;
     case '<':
     case '>':
-      *font = LoadStixFont (7, height);
+      *font = LoadStixFont (7, size);
+      break;
+    case 'o':
+    case 'u':
+      *font = LoadStixFont (8, size);
       break;
     default:
       *font = NULL;	  
