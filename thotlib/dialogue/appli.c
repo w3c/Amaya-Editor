@@ -314,7 +314,6 @@ LPARAM     lParam;
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay) {
          WIN_curWin = w;
          BeginPaint (w, &ps);
-         /* @@@@@ TtDisplay = BeginPaint (WIN_curWin, &ps); @@@@@ */
          GetClientRect (w, &rect);
          DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
          EndPaint (w, &ps);
@@ -325,7 +324,6 @@ LPARAM     lParam;
          DisplayFrame (frame);
          if (ThotLocalActions[T_switchsel])
             (*ThotLocalActions[T_switchsel]) (frame, TRUE);
-         /* @@@@@ EndPaint (WIN_curWin, &ps); @@@@@ */
          WIN_ReleaseDeviceContext ();
       }
    }
@@ -1544,11 +1542,7 @@ LPARAM lParam;
 
             case WM_PAINT: 
 	             /* Some part of the Client Area has to be repaint. */
-                 /** @@@@@ saveHdc = TtDisplay;
-				 saveCurWin = WIN_curWin; @@@@@ **/
                  WIN_HandleExpose (hwnd, frame, wParam, lParam);
-                 /** @@@@@ TtDisplay = saveHdc;
-				 WIN_curWin = saveCurWin; @@@@@ **/
 				 if (TtDisplay)
                     WIN_ReleaseDeviceContext ();
                  return 0;

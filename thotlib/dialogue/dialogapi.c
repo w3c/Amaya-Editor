@@ -349,8 +349,10 @@ int frame;
 
    /* load the new Context. */
    TtDisplay = GetDC (FrRef[frame]);
-   if (TtDisplay != 0)
+   if (TtDisplay != 0) {
       WIN_curWin = FrRef[frame];
+      SetICMMode (TtDisplay, ICM_ON);
+   }
 }
 
 /*----------------------------------------------------------------------
@@ -364,9 +366,11 @@ void WIN_ReleaseDeviceContext ()
 {
    /* release the previous Device Context. */
    /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
-   if (TtDisplay != 0)
-      if (!ReleaseDC (WIN_curWin, TtDisplay))
-         WinErrorBox (NULL);
+	if (TtDisplay != 0) {     
+       SetICMMode (TtDisplay, ICM_OFF);
+       if (!ReleaseDC (WIN_curWin, TtDisplay))
+          WinErrorBox (NULL);
+	}
 
    WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;

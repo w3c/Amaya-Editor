@@ -119,7 +119,8 @@ static int          ReturnValueSelectReferMenu;
 #include "word_f.h"
 
 #ifdef _WINDOWS
-static CHAR_T msgCaption [200];
+static CHAR_T   msgCaption [200];
+static ThotBool searchEnd;
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -997,6 +998,10 @@ View                view;
    CHAR_T                bufTitle[200], string[200];
    PtrDocument         pDoc;
 
+#  ifdef _WINDOWS
+   searchEnd = FALSE;
+#  endif /* _WINDOWS */
+
    pDoc = LoadedDocument[document - 1];
    ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
    if (ok)
@@ -1428,18 +1433,24 @@ STRING              txt;
 	      if (WithReplace && ReplaceDone)
 		{
 		  if (!AutoReplace)
-		    /* message "Plus de remplacement" */
-#           ifdef _WINDOWS
-            MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE), msgCaption, MB_OK | MB_ICONEXCLAMATION);
-#           else
-		    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE))
-#           endif /* !_WINDOWS */
+		     /* message "Plus de remplacement" */
+#            ifdef _WINDOWS
+             if (!searchEnd) {
+                searchEnd = TRUE;
+                MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE), msgCaption, MB_OK | MB_ICONEXCLAMATION);
+			 }
+#            else
+		     TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE))
+#            endif /* !_WINDOWS */
 			;
 		}
 	      else
 		/* message "Pas trouve'" */
 #       ifdef _WINDOWS
-        MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), msgCaption, MB_OK | MB_ICONEXCLAMATION);
+        if (!searchEnd) {
+           searchEnd = TRUE;
+           MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), msgCaption, MB_OK | MB_ICONEXCLAMATION);
+		}
 #       else  /* !_WINDOWS */
 		TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_NOT_FOUND));
 #       endif /* !_WINDOWS */

@@ -3724,19 +3724,7 @@ View                view;
          WinErrorBox (FrRef [frame]);
       else {
            EmptyClipboard ();
-
            SendMessage (activeWnd, WM_COPY, 0, 0);
-           /*
-           hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-           lpData = (LPSTR) GlobalLock (hMem);
-           pBuff  = (LPSTR) Xbuffer;
-           for (ndx = 0; ndx < ClipboardLength; ndx++)
-               *lpData++ = *pBuff++;
-
-           GlobalUnlock (hMem);
-
-           SetClipboardData (CF_TEXT, hMem);
-		   */
            CloseClipboard ();
            SwitchPaste (NULL, TRUE);
 	  } 
@@ -3760,24 +3748,6 @@ View                view;
                CloseClipboard ();
 		  } 
    }
-   /* @@@@@ OLD OLD
-   if (!OpenClipboard (FrRef[frame]))
-      WinErrorBox (FrRef [frame]);
-   else {
-      EmptyClipboard ();
-
-      hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-      lpData = (LPSTR) GlobalLock (hMem);
-	  pBuff  = (LPSTR) Xbuffer;
-      for (ndx = 0; ndx < ClipboardLength; ndx++)
-          *lpData++ = *pBuff++;
-
-      GlobalUnlock (hMem);
-
-      SetClipboardData (CF_TEXT, hMem);
-      CloseClipboard ();
-   }
-   @@@@@ OLD OLD */
 #  endif /* _WINDOWS */
    ContentEditing (TEXT_COPY);
 }

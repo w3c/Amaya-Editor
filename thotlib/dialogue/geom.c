@@ -640,13 +640,17 @@ int                 maxPoints;
 	  
 	              case WM_LBUTTONUP:
 	              case WM_MBUTTONUP:
-                       if (input) {
+                  case WM_RBUTTONUP:
+					   if (event.message == WM_RBUTTONUP && maxPoints == 0)
+                          ret = 1;
+
+					   if (input) {
                           input = FALSE;
 	                      /* left button keep the last segment built */
 	                      /* keep the new segment first point coordinates */
 	                      x1 = lastx;
 	                      y1 = lasty;
-                          nbpoints++;
+                          /* nbpoints++; */
 	  
                           /* update the box buffer */
                           newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x - rect.left) * 1000;
@@ -665,7 +669,7 @@ int                 maxPoints;
                           newx = (int) ((float) newx * ratioX);
                           newy = (int) ((float) newy * ratioY);
                           AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
-
+                          nbpoints++;
                           if (nbpoints > maxPoints && maxPoints != 0)
                              /* we have the right number of points */
                              ret = 1;
@@ -675,10 +679,10 @@ int                 maxPoints;
 					   }
                        break;
 	  
-                  case WM_RBUTTONUP:
+                  /*case WM_RBUTTONUP:
                        if (maxPoints == 0)
                           ret = 1;
-                       break;
+                       break;*/
 	  
                   default: break;
 		   }
