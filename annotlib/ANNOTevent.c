@@ -28,7 +28,8 @@ static CHAR_T *annotMainIndex; /* index file where we give the correspondance
 				between URLs and annotations */
 static ThotBool annotAutoLoad; /* should annotations be downloaded
 				  automatically? */
-
+static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
+static CHAR_T annotAlgaeText[MAX_LENGTH];    /* the custom algae query text */
 
 /* the structure used for storing the context of the 
    RemoteLoad_callback function */
@@ -41,6 +42,61 @@ typedef struct _REMOTELOAD_context {
 typedef struct _REMOTESAVE_context {
   char *remoteAnnotIndex;
 } REMOTESAVE_context;
+
+/*-----------------------------------------------------------------------
+   GetAnnotCustomQuery
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+ThotBool GetAnnotCustomQuery (void)
+#else /* __STDC__*/
+ThotBool GetAnnotCustomQuery (void)
+#endif /* __STDC__*/
+{
+  return annotCustomQuery;
+}
+
+/*-----------------------------------------------------------------------
+   SetAnnotCustomQuery
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetAnnotCustomQuery (ThotBool value)
+#else /* __STDC__*/
+void SetAnnotCustomQuery (value)
+ThotBool value
+#endif /* __STDC__*/
+{
+  annotCustomQuery = value;
+}
+
+/*-----------------------------------------------------------------------
+   GetAnnotAlgaeText
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+CHAR_T *GetAnnotAlgaeText (void)
+#else /* __STDC__*/
+CHAR_T *GetAnnotAlgaeText (void)
+#endif /* __STDC__*/
+{
+  return annotAlgaeText;
+}
+
+/*-----------------------------------------------------------------------
+   SetAnnotAlgaeText
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetAnnotAlgaeText (CHAR_T *value)
+#else /* __STDC__*/
+void SetAnnotAlgaeText (CHAR_T *value)
+ThotBool value
+#endif /* __STDC__*/
+{
+  if (!value)
+    annotAlgaeText[0] = WC_EOS;
+  else
+    ustrcpy (annotAlgaeText, value);
+}
 
 /*-----------------------------------------------------------------------
    GetAnnotUser
@@ -153,7 +209,50 @@ List *CopyAnnotServers (CHAR_T *server_list)
   TtaFreeMemory (scratch);
   return me;
 }
+/*-----------------------------------------------------------------------
+   CopyAlgaeTemplateURL
+   Prepares a query URL using the algae text template. Any %u will be
+   substituted with the url given in the parameter.
+  -----------------------------------------------------------------------*/
 
+#ifdef __STDC__
+static void CopyAlgaeTemplateURL (CHAR_T *dest, CHAR_T *proto, CHAR_T *url)
+#else /* __STDC__*/
+static void CopyAlgaeTemplateURL (dest, proto, url)
+CHAR_T *dest;
+CHAR_T *proto;
+CHAR_T *url;
+#endif /* __STDC__*/
+{
+  CHAR_T *in;
+  CHAR_T *out;
+  int proto_len;
+  int url_len;
+  
+  proto_len = ustrlen (proto);
+  url_len = ustrlen (url);
+
+  in = annotAlgaeText;
+  out = dest;
+  while (*in != WC_EOS)
+    {
+      if (*in == TEXT('%') && *(in + 1) == TEXT('u'))
+	{
+	  /* copy the proto and the URL */
+	  usprintf (out, "%s%s", proto, url);
+	  /* and update the pointers */
+	  out = out + proto_len + url_len;
+	  in = in + 2;
+	}
+      else
+	{
+	  *out = *in;
+	  *in++;
+	  *out++;
+	}
+    }
+  *out = WC_EOS;
+}
 
 /*-----------------------------------------------------------------------
    Procedure ANNOT_Init
@@ -193,6 +292,11 @@ void ANNOT_Init ()
     annotPostServer = TtaWCSdup (tmp);
   else
     annotPostServer = TtaWCSdup (TEXT("localhost"));
+
+  /* @@@ temporary custom query, as we could use the configuration menu  ***/
+  annotCustomQuery = FALSE;
+  annotAlgaeText[0] = WC_EOS;
+
   /* create the directory where we'll store the annotations if it
      doesn't exist ** how to check that with the thotlib? */
   /* @@ should be a nice mode! */
@@ -346,7 +450,14 @@ View view;
 	    proto = "file://";
 	  else
 	    proto = "";
-	  sprintf (annotURL, "w3c_annotates=%s%s", proto, DocumentURLs[doc]);
+	  if (!annotCustomQuery || annotAlgaeText[0] == WC_EOS)
+	    sprintf (annotURL, "w3c_annotates=%s%s", proto, DocumentURLs[doc]);
+	  else
+	    /* substitute the %u for DocumentURLs[doc] and go for it! */
+	    /* @@ we have a potential mem bug here as I'm not computing
+	       the exact size */
+	    CopyAlgaeTemplateURL (annotURL, proto, DocumentURLs[doc]);
+
 	  /* launch the request */
 	  res = GetObjectWWW (doc,
 			      server,

@@ -31,9 +31,20 @@ typedef enum _SelType {
 } SelType;
   
 /* common local variables */
-CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
+static CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
-static int      CustomQueryBase;
+/************************************************************
+ ** Local custom query variables
+ ************************************************************/
+
+static int     CustomQueryBase;
+static ThotBool CustomQueryFlag;
+static CHAR_T  AlgaeText[MAX_LENGTH];
+
+/************************************************************
+ ** Local annotation filter variables
+ ************************************************************/
+
 static int      AnnotFilterBase;
 /* copies of the doc and view from which the menu was invoked */
 static Document AnnotFilterDoc;
@@ -78,11 +89,18 @@ CHAR_T              *data;
 	      break;
 	    case 1:
 	      /* apply */
+	      SetAnnotCustomQuery (CustomQueryFlag);
+	      SetAnnotAlgaeText (AlgaeText);
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      /* get default */
+	      CustomQueryFlag = FALSE;
+	      AlgaeText[0] = WC_EOS;
+	      TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
+	      TtaSetMenuForm (CustomQueryBase + mExpertMode, 0);
 	      break;
+
 	    default:
 	      break;
 	    }
@@ -100,7 +118,18 @@ CHAR_T              *data;
 	case mEtime :
 	  break;
 
+	case mExpertMode :
+	  if (val == 0)
+	    CustomQueryFlag = FALSE;
+	  else
+	    CustomQueryFlag = TRUE;
+	  break;
+
 	case mFreeText :
+	  if (data)
+	    ustrcpy (AlgaeText, data);
+	  else
+	    AlgaeText[0] = WC_EOS;
 	  break;
 
 	default:
@@ -124,6 +153,7 @@ View         view;
 {
 #ifndef _WINDOWS
    int              i;
+   CHAR_T          *ptr;
 
    /* initialize the base if it hasn't yet been done */
    if (!CustomQueryBase)
@@ -141,6 +171,9 @@ View         view;
 		TEXT("Query Customization Menu"),
 		2, s, FALSE, 10, 'L', D_DONE);
 
+   /* @@ JK: removed the following menus as they're not ready for the
+      demo, and added a temporary checkbox */
+#if 0
    TtaNewLabel (CustomQueryBase + mUsersGroups, 
 		CustomQueryBase + CustomQueryMenu,
 	       TEXT("Users and groups"));
@@ -175,18 +208,44 @@ View         view;
 		   TEXT("End"),
 		   20,
 		   1,
-		   TRUE);
 
    TtaNewLabel (CustomQueryBase + mExpertMode,
 		CustomQueryBase + CustomQueryMenu,
 		TEXT("Expert mode"));
+		   TRUE);
+#else
+  /* create the radio buttons for choosing a selector */
+  i = 0;
+  strcpy (&s[i], TEXT("BUse standard query"));
+  i += ustrlen (&s[i]) + 1;
+  strcpy (&s[i], TEXT("BUse free algae query with the following text"));
+
+  TtaNewSubmenu (CustomQueryBase + mExpertMode,
+		 CustomQueryBase + CustomQueryMenu,
+		 0,
+		 TEXT("Query type"),
+		 2,
+		 s,
+		 NULL,
+		 TRUE);
+#endif
 
    TtaNewTextForm (CustomQueryBase + mFreeText,
 		   CustomQueryBase + CustomQueryMenu,
-		   TEXT("Free Alguea query"),
-		   40,
-		   1,
+		   TEXT("(%u stands for the URL of the document that's being browsed)"),
+		   90,
+		   5,
 		   TRUE);
+
+   /* initialize the menu */
+   ptr = GetAnnotAlgaeText ();
+   if (ptr)
+     ustrcpy (AlgaeText, ptr);
+   else
+     AlgaeText[0] = WC_EOS;
+   TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
+   CustomQueryFlag = GetAnnotCustomQuery ();
+   TtaSetMenuForm (CustomQueryBase + mExpertMode, (CustomQueryFlag) ? 1 : 0);
 
    /* display the menu */
    TtaSetDialoguePosition ();

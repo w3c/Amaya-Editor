@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool GetAnnotCustomQuery ( void );
+extern void SetAnnotCustomQuery ( ThotBool value );
+extern CHAR_T *GetAnnotAlgaeText ( void );
+extern void SetAnnotAlgaeText ( CHAR_T *value );
 extern CHAR_T *GetAnnotUser ( void );
 extern List *GetAnnotServers ( void );
 extern CHAR_T *GetAnnotPostServer ( void );
@@ -41,6 +45,10 @@ extern void ANNOT_Save ( Document docAnnot,
 
 #else /* __STDC__ */
 
+extern ThotBool GetAnnotCustomQuery (/* void */);
+extern void SetAnnotCustomQuery (/* ThotBool value */);
+extern CHAR_T *GetAnnotAlgaeText (/* void */);
+extern void SetAnnotAlgaeText (/* CHAR_T *value */);
 extern CHAR_T *GetAnnotUser (/* void */);
 extern List *GetAnnotServers (/* void */);
 extern CHAR_T *GetAnnotPostServer (/* void */);
