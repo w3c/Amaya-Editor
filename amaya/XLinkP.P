@@ -24,8 +24,8 @@ VIEWS
 #define ATTRVALUE_Color Black
 #define INVALID_Color Black
 #else
-#define ATTR_Color Blue
-#define ATTRVALUE_Color Black
+#define ATTR_Color DarkIndigo1
+#define ATTRVALUE_Color DarkMagenta2
 #define INVALID_Color Red
 #endif
 

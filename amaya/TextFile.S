@@ -1,4 +1,4 @@
-	  { I. Vatton	February 1999	}
+	  { I. Vatton	1999 - 2003	}
 
 STRUCTURE TextFile;
 
@@ -8,6 +8,7 @@ ATTR
    Highlight = Yes_;
    IsLink = Yes_;
    IsTag = Yes_;
+   IsMarkup = Yes_;
    IsString = Yes_;
 
 STRUCT
@@ -28,6 +29,7 @@ EXCEPT
 	Highlight:	Invisible;
 	IsLink:		Invisible;
 	IsTag:		Invisible;
+	IsMarkup:	Invisible;
 	IsString:       Invisible;
         PrintURL:       Invisible;
 	Source:	        Invisible;

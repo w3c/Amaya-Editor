@@ -4857,7 +4857,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   Attribute	      attr;
   unsigned char       charRead;
   int		      val;
-  ThotBool            endOfTextFile;
+  ThotBool            endOfTextFile, withinMarkup = FALSE;
   ThotBool            withinTag = FALSE, withinString = FALSE;
 
   InputText = textbuf;
@@ -4979,6 +4979,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		withinString = !withinString;
 	      if (withinString)
 		{
+		  /* generate a new IsString element */
 		  el = GetANewText (el, elType, doc);
 		  attrType.AttrTypeNum = TextFile_ATTR_IsString;
 		  attr = TtaGetAttribute (el, attrType);
@@ -4996,19 +4997,27 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		{
 		  /* add the current character */
 		  inputBuffer[LgBuffer++] = charRead;
+		  /* close the IsString element */
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
-	  else if (!withinString &&
-		   DocumentTypes[doc] != docLog &&
-		   (charRead == '<' || charRead == '>') ||
-		   (LgBuffer == 0 && withinTag))
+	  else if (withinTag && LgBuffer == 1 && inputBuffer[0] == '<')
 	    {
-	      if (charRead == '<' || charRead == '>')
-		withinTag = !withinTag;
-	      if (withinTag)
+	      /* set the IsMarkup element */
+	      attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr == NULL)
 		{
+		  attr = TtaNewAttribute (attrType);
+		  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
+		  TtaAttachAttribute (el, attr, doc);
+		  TtaSetAttributeValue (attr, val, el, doc);
+		}
+	      if (isalpha (charRead) || charRead == '/')
+		{
+		  /* generate a new IsTag element */
 		  el = GetANewText (el, elType, doc);
+		  /* set the IsTag element */
 		  attrType.AttrTypeNum = TextFile_ATTR_IsTag;
 		  attr = TtaGetAttribute (el, attrType);
 		  if (attr == NULL)
@@ -5018,6 +5027,49 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		      TtaAttachAttribute (el, attr, doc);
 		      TtaSetAttributeValue (attr, val, el, doc);
 		    }
+		}
+	      else
+		withinTag = FALSE;
+	      /* add the current character */
+	      inputBuffer[LgBuffer++] = charRead;
+	    }
+	  else if (withinTag && (charRead == SPACE || charRead == '>'))
+	    {
+	      withinTag = FALSE;
+	      /* generate a new IsMarkup element */
+	      el = GetANewText (el, elType, doc);
+	      attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr == NULL)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
+		  TtaAttachAttribute (el, attr, doc);
+		  TtaSetAttributeValue (attr, val, el, doc);
+		  }
+	      /* add the current character */
+	      inputBuffer[LgBuffer++] = charRead;
+	      if (charRead == '>')
+		{
+		  withinMarkup = FALSE;
+		  /* close the IsMarkup element */
+		  el = GetANewText (el, elType, doc);
+		}
+	    }
+	  else if (!withinString &&
+		   DocumentTypes[doc] != docCSS &&
+		   DocumentTypes[doc] != docLog &&
+		   (charRead == '<' || charRead == '>') ||
+		   (LgBuffer == 0 && withinMarkup))
+	    {
+	      if (charRead == '<' || charRead == '>')
+		withinMarkup = !withinMarkup;
+	      if (charRead == '<')
+		{
+		  /* close the previous element */
+		  el = GetANewText (el, elType, doc);
+		  /* it should start a tag element */
+		  withinTag = TRUE;
 		  /* add the current character */
 		  inputBuffer[LgBuffer++] = charRead;
 		}
@@ -5025,18 +5077,16 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		{
 		  /* add the current character */
 		  inputBuffer[LgBuffer++] = charRead;
-		  if (LgBuffer == 1)
+		  attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr == NULL)
 		    {
-		      attrType.AttrTypeNum = TextFile_ATTR_IsTag;
-		      attr = TtaGetAttribute (el, attrType);
-		      if (attr == NULL)
-			{
-			  attr = TtaNewAttribute (attrType);
-			  val = TextFile_ATTR_IsTag_VAL_Yes_;
-			  TtaAttachAttribute (el, attr, doc);
-			  TtaSetAttributeValue (attr, val, el, doc);
-			}
+		      attr = TtaNewAttribute (attrType);
+		      val = TextFile_ATTR_IsMarkup_VAL_Yes_;
+		      TtaAttachAttribute (el, attr, doc);
+		      TtaSetAttributeValue (attr, val, el, doc);
 		    }
+		  /* close the IsMarkup element */
 		  el = GetANewText (el, elType, doc);
 		}
 	    }

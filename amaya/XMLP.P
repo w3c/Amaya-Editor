@@ -27,9 +27,9 @@ VIEWS
 #define ATTR_Color Black
 #define ATTRVALUE_Color Black
 #else
-#define TAG_Color Blue
-#define ATTR_Color Blue
-#define ATTRVALUE_Color Black
+#define TAG_Color DarkIndigo1
+#define ATTR_Color DarkIndigo1
+#define ATTRVALUE_Color DarkMagenta2
 #endif
  
 #define TAG_Font Helvetica

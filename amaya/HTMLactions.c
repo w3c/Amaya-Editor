@@ -2495,7 +2495,7 @@ void GotoLine (Document doc, int line, int index)
   Element             el, child;
   ElementType         elType;
   char                message[50];
-  int                 i;
+  int                 i, len;
 
   if (line)
     {
@@ -2521,7 +2521,18 @@ void GotoLine (Document doc, int line, int index)
 	  if (child)
 	    {
 	      if (index >= 0)
-		TtaSelectString (doc, child, index, index);
+		{
+		  i = index;
+		  len = TtaGetElementVolume (child);
+		  while (len < i)
+		    {
+		      /* skip previous elements in the same line */
+		      i -= len;
+		      TtaNextSibling (&child);
+		      len = TtaGetElementVolume (child);
+		    }
+		  TtaSelectString (doc, child, i, i);
+		}
 	      else
 		TtaSelectElement (doc, child);
 	      sprintf (message, "line %d char %d", line, index);
@@ -2534,51 +2545,22 @@ void GotoLine (Document doc, int line, int index)
 }
 
 /*----------------------------------------------------------------------
-  ShowError points the corresponding error in the souce file.
+  ShowLogLine points the corresponding line.
  -----------------------------------------------------------------------*/
-static ThotBool ShowError (Element el, Document doc)
+static ThotBool ShowLogLine (Element el, Document doc)
 {
   Document	      otherDoc;
   Element             otherEl;
   Language            lang;
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
-  char               *buffer, *ptr;
+  char               *buffer = NULL, *ptr = NULL;
   int                 len, line = 0, index = 0;
 
   if (DocumentTypes[doc] == docLog)
     {
-      /* get the document concerned */
-      otherDoc = DocumentSource[doc];
-      otherEl = TtaSearchText (doc, el, FALSE, "***", ISO_8859_1);
-      len = TtaGetTextLength (otherEl);
-      buffer = TtaGetMemory (len + 1);
-      TtaGiveTextContent (otherEl, buffer, &len, &lang);
-      ptr = strstr (buffer, " in ");
-      if (ptr && DocumentURLs[otherDoc])
-	{
-	  ptr += 4;
-	  if (strcmp (ptr, DocumentURLs[otherDoc]))
-	    {
-	      /* it doesn't concern the source document itself */
-	      for (otherDoc = 1; otherDoc < MAX_DOCUMENTS; otherDoc++)
-		if (DocumentURLs[otherDoc] &&
-		    !strcmp (ptr, DocumentURLs[otherDoc]))
-		  break;
-	      if (otherDoc == MAX_DOCUMENTS)
-		{
-		  /* not found: do we have to open a CSS file */
-		  css = SearchCSS (0, ptr, NULL, &pInfo);
-		  if (css)
-		      otherDoc = GetAmayaDoc (ptr, NULL, 0, 0, CE_CSS,
-					      FALSE, NULL, NULL, UTF_8);
-		}
-	    }
-	}
-
-      TtaFreeMemory (buffer);
-      /* get the error string */
-      if (el && otherDoc && otherDoc < MAX_DOCUMENTS)
+      /* get the target line and index from current string */
+      if (el)
 	 {
 	   len = TtaGetTextLength (el);
 	   if (len > 0)
@@ -2593,10 +2575,49 @@ static ThotBool ShowError (Element el, Document doc)
 		 ptr = strstr (ptr, "char");
 	       if (ptr)
 		 sscanf (&ptr[4], "%d", &index);
-	       TtaFreeMemory (buffer);
+	       /* Is there a file name in the current line */
+	       ptr = strstr (buffer, ", File ");
+	       if (ptr)
+		 ptr += 7;
 	     }
-	   GotoLine (otherDoc, line, index);
+      
+	   /* get the target document */
+	   otherDoc = DocumentSource[doc];
+	   if (ptr == NULL)
+	     {
+	       TtaFreeMemory (buffer);
+	       otherEl = TtaSearchText (doc, el, FALSE, "***", ISO_8859_1);
+	       len = TtaGetTextLength (otherEl);
+	       buffer = TtaGetMemory (len + 1);
+	       TtaGiveTextContent (otherEl, buffer, &len, &lang);
+	       ptr = strstr (buffer, " in ");
+	       if (ptr)
+		 ptr += 4;
+	     }
+	   if (DocumentURLs[otherDoc] &&
+	       ptr && strcmp (ptr, DocumentURLs[otherDoc]))
+	     {
+	       /* it doesn't concern the source document itself
+		look or the target file */
+	       for (otherDoc = 1; otherDoc < MAX_DOCUMENTS; otherDoc++)
+		 if (DocumentURLs[otherDoc] &&
+		     !strcmp (ptr, DocumentURLs[otherDoc]))
+		   break;
+	       if (otherDoc == MAX_DOCUMENTS)
+		 {
+		   /* not found: do we have to open a CSS file */
+		   css = SearchCSS (0, ptr, NULL, &pInfo);
+		   if (css)
+		     otherDoc = GetAmayaDoc (ptr, NULL, 0, 0, CE_CSS,
+					     FALSE, NULL, NULL, UTF_8);
+		 }
+	     }
 	 }
+      TtaFreeMemory (buffer);
+
+      /* skip to the line */
+      if (line && otherDoc && otherDoc < MAX_DOCUMENTS)
+	GotoLine (otherDoc, line, index);
       return TRUE; /* don't let Thot perform normal operation */
     }
   else
@@ -2615,7 +2636,7 @@ ThotBool SimpleClickInLog (NotifyElement *event)
     return TRUE;
   else
     /* don't let Thot perform normal operation if there is an activation */
-    return (ShowError (event->element, event->document));
+    return (ShowLogLine (event->element, event->document));
 }
 
 /*----------------------------------------------------------------------
@@ -2628,7 +2649,7 @@ ThotBool DoubleClickInLog (NotifyElement *event)
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
     /* don't let Thot perform normal operation */
-    return (ShowError (event->element, event->document));
+    return (ShowLogLine (event->element, event->document));
   else
     return FALSE;
 }

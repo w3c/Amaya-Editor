@@ -1,4 +1,4 @@
-	{ I. Vatton 	 February 1999  }
+	{ I. Vatton 	 1999 - 2003  }
 
 { Variables used in ifdefs: PAGE, US_PAPER }
 PRESENTATION TextFile;
@@ -14,6 +14,11 @@ VIEWS
 PRINT
    Formatted_view;
 #endif  { PAGE }
+
+#define LINE_NUMBER_Color Grey
+#define MARKUP_Color DarkIndigo1
+#define LINK_Color DarkIndigo1
+#define ATTRVALUE_Color DarkMagenta2
 
 COUNTERS
 #ifdef PAGE
@@ -171,7 +176,7 @@ BOXES
 
   LineNum:
 	BEGIN
-	Foreground: Blue;
+	Foreground: LINE_NUMBER_Color;
 	Content: (Value (LineCounter, Arabic));
 	END;
 
@@ -261,11 +266,16 @@ ATTRIBUTES
 	CreateFirst (IndexBox);
 
   IsLink:
-	Foreground: DarkIndigo1;
+	Foreground: LINK_Color;
+  IsMarkup:
+	Foreground: MARKUP_Color;
   IsTag:
-	Foreground: DarkMagenta2;
+	BEGIN
+	Style: Bold;
+	Foreground: MARKUP_Color;
+	END;
   IsString:
-	Foreground: Red;
+	Foreground: ATTRVALUE_Color;
 #endif
 
 END
