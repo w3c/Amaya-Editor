@@ -555,35 +555,24 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    unsigned char       string[2];
    ThotComposeStatus   ComS;
    KeySym              KS;
-   GtkWidget *drawing_area;
-
-   /*   printf("GDK_KEY_PRESS\n");*/
+   GtkWidget          *drawing_area;
+   GtkEntry           *textzone;
 
   frame = (int) data;
    if (frame > MAX_FRAME)
       frame = 0;
-   drawing_area = FrameTable[frame].WdFrame;
-
-   if(gtk_object_get_data (GTK_OBJECT(drawing_area), "Active"))
-     {
-       /*       printf("ok on traite\n");*/
-     }
-   else
-     {
-       /*       printf("on ne traite pas\n");*/
-       return FALSE;
-     }
    
-#if 0
-   /* here the tab key dont change the focus */
-   if (event->keyval == GDK_Tab)
-     {
-       /*       printf("TABBBBBBBBBbb\n");*/
-       gtk_widget_grab_focus (drawing_area);
-       gtk_widget_grab_focus (drawing_area);
-     }
-#endif
+   printf("KEY event\n");
+   /* the drawing area is the main zone where keypress event must be active */
+   drawing_area = FrameTable[frame].WdFrame;
+   textzone = FrameTable[frame].Text_Zone[1];
 
+   if (textzone)
+     {
+       /* if the mouse is into the text zone then event must be ignored */
+       if (w == textzone || gtk_object_get_data (GTK_OBJECT(textzone), "MouseIn"))
+	 return FALSE;
+     }
    status = 0;
    /* control, alt and mouse status bits of the state are ignored */
    state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);

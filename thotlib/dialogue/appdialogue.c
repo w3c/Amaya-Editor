@@ -2018,8 +2018,26 @@ int TtaAddTextZone (Document document, View view, char *label,
 	      w->style->font=DefaultFont;
 	      gtk_box_pack_start (GTK_BOX(row), w, TRUE, TRUE, 0);
  	      FrameTable[frame].Text_Zone[i] = w;
+	      gtk_signal_connect_after (GTK_OBJECT (w), "key_press_event",
+					GTK_SIGNAL_FUNC (CharTranslationGTK), (gpointer) frame);
+	      gtk_object_set_data (GTK_OBJECT(w), "Active", (gpointer)FALSE);
+	      gtk_signal_connect (GTK_OBJECT (w), "focus_in_event",
+				  GTK_SIGNAL_FUNC (FocusInCallbackGTK),
+				  (gpointer)frame);
+	      gtk_signal_connect (GTK_OBJECT (w), "focus_out_event",
+				  GTK_SIGNAL_FUNC (FocusOutCallbackGTK),
+				  (gpointer)frame);
+
+	      gtk_signal_connect (GTK_OBJECT (w), "enter-notify-event",
+				  GTK_SIGNAL_FUNC (EnterCallbackGTK),
+				  (gpointer)frame);
+	      gtk_signal_connect (GTK_OBJECT (w), "leave-notify-event",
+				  GTK_SIGNAL_FUNC (LeaveCallbackGTK),
+				  (gpointer)frame);
+	      
 	      if (procedure != NULL)
 		{
+		  /* execute APP_TextCallbackGTK when pressing enter */
 		  gtk_signal_connect (GTK_OBJECT(w), "activate", GTK_SIGNAL_FUNC(APP_TextCallbackGTK), frame);
 		  FrameTable[frame].Call_Text[i] = (Proc) procedure;
 		}
@@ -2610,28 +2628,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (vbox1);
 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
 
-	   /* for the menu */
-#if 0
-	   handlebox1 = gtk_handle_box_new ();
-	   gtk_widget_show (handlebox1);
-	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox1", handlebox1,
-		   (GtkDestroyNotify) gtk_widget_unref);*/
-	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox1, FALSE, TRUE, 0);
-
-	   /* for the toolbar */
-	   handlebox2 = gtk_handle_box_new ();
-	   gtk_widget_show (handlebox2);
-	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox2", handlebox2,
-		   (GtkDestroyNotify) gtk_widget_unref);*/
-	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox2, FALSE, TRUE, 0);
-	   
-	   /* for URL */
-	   handlebox3 = gtk_handle_box_new ();
-	   gtk_widget_show (handlebox3);
-	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox3", handlebox3,
-		   (GtkDestroyNotify) gtk_widget_unref);*/
-	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox3, FALSE, TRUE, 0);
-#endif
 	   /* RAJOUTER L'ICONE DE L APPLICATION */
 
 
@@ -2861,10 +2857,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (drawing_area);
            gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
 	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_FOCUS);
-	   /*	   GTK_WIDGET_CAN_FOCUS(drawing_area);
-		   gtk_widget_grab_focus (drawing_area);*/
-	   gtk_object_set_data (GTK_OBJECT(drawing_area), "Active", (gpointer)FALSE);
+	   /*	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_DEFAULT);*/
+	   /*	   gtk_widget_grab_default (drawing_area);*/
 	   
+	   /*	   gtk_widget_grab_focus (drawing_area);*/
+	   /*gtk_grab_add (GTK_WIDGET (drawing_area));*/
 	   /* GDK_BUTTON_PRESS_MASK used to detect if a mouse button is pressed */
 	   /* GDK_BUTTON_RELEASE_MASK used to detect if a mouse button is relesed */
 	   /* GDK_BUTTON_MOTION_MASK used to detect if the mouse is moving and a button is pressed, it's for the text selection on the document */
@@ -2873,14 +2870,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				  GDK_BUTTON_PRESS_MASK
 				  | GDK_BUTTON_RELEASE_MASK
 				  | GDK_BUTTON_MOTION_MASK
-				  /*| GDK_KEY_PRESS_MASK*/
-				  /*| GDK_KEY_RELEASE_MASK*/
+				  | GDK_KEY_PRESS_MASK
+				  | GDK_KEY_RELEASE_MASK
 				  /*| GDK_POINTER_MOTION_HINT_MASK*/
 				  /*| GDK_POINTER_MOTION_MASK*/
 				  /*| GDK_ENTER_NOTIFY*/
 				  /*| GDK_LEAVE_NOTIFY*/
 				  | GDK_EXPOSURE_MASK
-				  /*				  | GDK_FOCUS_CHANGE_MASK*/
+				  | GDK_FOCUS_CHANGE_MASK
 				  );
 	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
 			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
@@ -2889,16 +2886,30 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_release_event",
 			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
 
+	   /* To notice if the drawing area has mouse in or not */
+	   gtk_object_set_data (GTK_OBJECT(drawing_area), "MouseIn", (gpointer)TRUE);
 
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "focus_in_event",
-			       GTK_SIGNAL_FUNC (DrawingAreaFocusInCallbackGTK),
+	   /*	   gtk_signal_connect (GTK_OBJECT (drawing_area), "enter-notify-event",
+			       GTK_SIGNAL_FUNC (EnterCallbackGTK),
+			       (gpointer)frame);
+	   gtk_signal_connect (GTK_OBJECT (drawing_area), "leave-notify-event",
+			       GTK_SIGNAL_FUNC (LeaveCallbackGTK),
+			       (gpointer)frame);
+	   */
+
+	   /* To notice if the drawing area has focus or not */
+	   gtk_object_set_data (GTK_OBJECT(drawing_area), "Active", (gpointer)FALSE);
+	   /*	   gtk_signal_connect (GTK_OBJECT (drawing_area), "focus_in_event",
+		 	       GTK_SIGNAL_FUNC (FocusInCallbackGTK),
 			       (gpointer)frame);
 	   gtk_signal_connect (GTK_OBJECT (drawing_area), "focus_out_event",
-			       GTK_SIGNAL_FUNC (DrawingAreaFocusOutCallbackGTK),
+			       GTK_SIGNAL_FUNC (FocusOutCallbackGTK),
 			       (gpointer)frame);
-
-	   gtk_signal_connect (GTK_OBJECT (Main_Wd), "key_press_event",
-			       GTK_SIGNAL_FUNC (CharTranslationGTK), (gpointer) frame);
+	   */
+ 	   /* the key press event is intercepted by the main frame and not by the drawing area.
+              the result is analised into the callback */
+	   gtk_signal_connect_after (GTK_OBJECT (Main_Wd), "key_press_event",
+				     GTK_SIGNAL_FUNC (CharTranslationGTK), (gpointer) frame);
 
 	   gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
 			       GTK_SIGNAL_FUNC (ExposeCB), (gpointer) frame);

@@ -106,10 +106,16 @@ gboolean KillFrameGTK (GtkWidget *widget,
 		       GdkEvent *event,
 		       gpointer frame);
 
-gboolean DrawingAreaFocusInCallbackGTK (GtkWidget *widget,
-					GdkEventFocus *event,
-					gpointer user_data);
+gboolean FocusInCallbackGTK (GtkWidget *widget,
+			     GdkEventFocus *event,
+			     gpointer user_data);
 
-gboolean DrawingAreaFocusOutCallbackGTK (GtkWidget *widget,
-					GdkEventFocus *event,
-					 gpointer user_data);
+gboolean FocusOutCallbackGTK (GtkWidget *widget,
+			      GdkEventFocus *event,
+			      gpointer user_data);
+gboolean LeaveCallbackGTK (GtkWidget *widget,
+			   GdkEventCrossing *event,
+			   gpointer user_data);
+gboolean EnterCallbackGTK (GtkWidget *widget,
+			   GdkEventCrossing *event,
+			   gpointer user_data);
