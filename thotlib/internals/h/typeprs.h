@@ -604,36 +604,35 @@ typedef struct _AttributePres
   int     ApElemType;	/* type of element to which the presentation rules
 			   apply, 0 if the rules apply whatever the element
 			   type is */
-  struct _AttributePres *ApNextAttrPres; 	/* the packet of presentation rules
-						   for the next element */
+  struct _AttributePres *ApNextAttrPres; /* the packet of presentation rules
+			   for the next element */
   union
   {
     struct
     {
-      int	  _ApNCases_;	/* number of application cases for the presentation
-				   rules */
-      NumAttrCase  _ApCase_[MAX_PRES_ATTR_CASE]; 	/* the cases of application
-				   of the presentation rules */
+      int	  _ApNCases_; /* number of application cases for the presentation
+			   rules */
+      NumAttrCase  _ApCase_[MAX_PRES_ATTR_CASE]; /* the cases of application
+			   of the presentation rules */
     } s0;
     struct
     {
-      PtrPRule _ApRefFirstPRule_;     /* first rule in the string of rules
-					 to apply for the attribute */
+      PtrPRule _ApRefFirstPRule_; /* first rule in the string of rules
+			   to apply for the attribute */
     } s1;
     struct
     {
       Name	   _ApString_;	/* the value triggering the application of the
-				   presentation rules */
+			   presentation rules */
       PtrPRule _ApTextFirstPRule_;    /* first rule in the string of rules
-					 to apply for this value */
+			   to apply for this value */
     } s2;
     struct
     {
       PtrPRule _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each value of the
-					   attribute, in the order of the table
-					   AttrEnumValue, address of the first
-					   presentation rule associated with
-					   this value */
+			   attribute, in the order of the table AttrEnumValue,
+			   address of the first presentation rule associated
+			   with this value */
     } s3;
   } u;
 } AttributePres;

@@ -9,9 +9,6 @@
 extern STRING SkipProperty ( STRING ptr );
 extern STRING GetCSSName ( Element el,
                            Document doc );
-extern void PresentationSettingsToCSS ( PresentationSetting settings,
-                                        STRING buffer,
-                                        int len );
 extern void GetHTMLStyleString ( Element el,
                                  Document doc,
                                  STRING buf,
@@ -79,9 +76,6 @@ extern CHAR ReadCSSRules ( Document doc,
 extern STRING SkipProperty (/* STRING ptr */);
 extern STRING GetCSSName (/* Element el,
                              Document doc */);
-extern void PresentationSettingsToCSS (/* PresentationSetting settings,
-                                          STRING buffer,
-                                          int len */);
 extern void GetHTMLStyleString (/* Element el,
                                    Document doc,
                                    STRING buf,

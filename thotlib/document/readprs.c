@@ -1300,7 +1300,7 @@ PtrSSchema          pSS;
    PresVariable       *pVar;
    PresVarItem        *pVarItem;
    PresentationBox    *pBox;
-   AttributePres      *pAttrP;
+   AttributePres      *pAttrP, *pAttrOld;
    NumAttrCase        *pCase;
    PathBuffer          dirBuffer;
    BinFile             file;
@@ -1525,28 +1525,24 @@ PtrSSchema          pSS;
 			  /* lecture du nombre de paquet de regles differentes */
 			  TtaReadShort (file, &l);
 			  pPSch->PsNAttrPRule[i] = l;
+			  pPSch->PsAttrPRule[i] = NULL;
 			  if (l > 0)
 			    {
-			       /* allocation des regles */
-			       GetAttributePres (&pAttrP, l);
-			       pPSch->PsAttrPRule[i] = pAttrP;
-			       if (pAttrP != NULL)
-				 {
-				    /* chainage des regles */
-				    while (l > 1)
-				      {
-					pAttrP->ApNextAttrPres = pAttrP + 1;
-					pAttrP = pAttrP->ApNextAttrPres;
-					l--;
-				      }
-				    /* la derniere pointe sur NULL */
-				    pAttrP->ApNextAttrPres = NULL;
-				 }
-			       else	/* l'allocation a echouee */
-				  error = TRUE;
+			      pAttrOld = NULL;
+			      while (l > 0)
+				{
+				  /* allocate attribute blocks */
+				  GetAttributePres (&pAttrP);
+				  if (pPSch->PsAttrPRule[i] == NULL)
+				    pPSch->PsAttrPRule[i] = pAttrP;
+				  else if (pAttrOld != NULL)
+				    pAttrOld->ApNextAttrPres = pAttrP;
+				  else
+				    error = TRUE;
+				  pAttrOld = pAttrP;
+				  l--;
+				}
 			    }
-			  else
-			     pPSch->PsAttrPRule[i] = NULL;
 		       }
 		  for (i = 0; i < pSS->SsNAttributes; i++)
 		     if (!error)

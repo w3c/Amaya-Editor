@@ -272,7 +272,7 @@ Document            doc;
 	      i++;
 	    }
 	}
-      /* TtaCleanStylePresentation (Null, css->pschemas, doc); */
+      TtaCleanStylePresentation (NULL, css->pschemas, doc);
       if (!used)
 	{
 	  /* remove this css file */

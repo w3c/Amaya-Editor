@@ -1359,16 +1359,17 @@ PtrDocument         pDoc;
    GetAttributePres allocates a attribute presentation.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetAttributePres (AttributePres **pAP, int n)
+void                GetAttributePres (AttributePres **pAP)
 #else  /* __STDC__ */
-void                GetAttributePres (pAP, n)
+void                GetAttributePres (pAP)
 AttributePres     **pAP;
 int                 n;
 #endif /* __STDC__ */
 
 {
   AttributePres          *pNewAP;
-  pNewAP = (AttributePres *) TtaGetMemory (n * sizeof (AttributePres));
+
+  pNewAP = (AttributePres *) TtaGetMemory (sizeof (AttributePres));
   if (pNewAP)
     memset (pNewAP, 0, sizeof (AttributePres));
   *pAP = pNewAP;
@@ -1439,6 +1440,7 @@ PtrPSchema          pSP;
 #endif /* __STDC__ */
 
 {
+  AttributePres      *pAP, *pNextAP;
   int                 i;
 
   pSP->PsNext = NULL;
@@ -1449,7 +1451,14 @@ PtrPSchema          pSP;
     }
   for (i = 0; i < MAX_ATTR_SSCHEMA; i++)
     {
-      FreeAttributePres ( pSP->PsAttrPRule[i]);
+      pAP = pSP->PsAttrPRule[i];
+      while (pAP != NULL)
+	{
+	  /* free all allocated blocks */
+	  pNextAP = pAP->ApNextAttrPres;
+	  FreeAttributePres ( pSP->PsAttrPRule[i]);
+	  pAP = pNextAP;
+	}
       pSP->PsAttrPRule[i] = NULL;
       pSP->PsComparAttr[i] = NULL;
     }

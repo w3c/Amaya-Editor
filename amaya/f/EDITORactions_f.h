@@ -140,12 +140,18 @@ extern void ShowLogFile ( Document doc,
                           View view );
 extern void FlushCache ( Document doc,
                          View view );
-extern void ConfigAppearance ( Document doc,
-                               View view );
-extern void ConfigBrEd ( Document doc,
-                         View view );
-extern void ConfigNetwork ( Document doc,
+extern void ConfigColor ( Document doc,
+                          View view );
+extern void ConfigGeometry ( Document doc,
+                             View view );
+extern void ConfigGeneral ( Document doc,
                             View view );
+extern void ConfigPublish ( Document doc,
+                            View view );
+extern void ConfigCache ( Document doc,
+                          View view );
+extern void ConfigProxy ( Document doc,
+                          View view );
 extern void SaveOptions ( Document doc,
                           View view );
 
@@ -285,12 +291,18 @@ extern void ShowLogFile (/* Document doc,
                             View view */);
 extern void FlushCache (/* Document doc,
                            View view */);
-extern void ConfigAppearance (/* Document doc,
-                                 View view */);
-extern void ConfigBrEd (/* Document doc,
-                           View view */);
-extern void ConfigNetwork (/* Document doc,
+extern void ConfigColor (/* Document doc,
+                            View view */);
+extern void ConfigGeometry (/* Document doc,
+                               View view */);
+extern void ConfigGeneral (/* Document doc,
                               View view */);
+extern void ConfigPublish (/* Document doc,
+                              View view */);
+extern void ConfigCache (/* Document doc,
+                            View view */);
+extern void ConfigProxy (/* Document doc,
+                            View view */);
 extern void SaveOptions (/* Document doc,
                             View view */);
 

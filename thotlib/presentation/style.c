@@ -673,74 +673,70 @@ int                 type;
 }
 
 /*----------------------------------------------------------------------
-  PresAttrsRuleSearch : look in the array of Attribute presentation
-  blocks, for a block corresponding to the current context.
+  PresAttrsRuleSearch: look in the array of Attribute presentation
+  blocks, for a block and a rule corresponding to the current context.
+  When the rule is not found, attrblock points to the last block.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule     PresAttrRuleSearch (PtrPSchema tsch, GenericContext ctxt)
+static PtrPRule     PresAttrRuleSearch (PtrPSchema tsch, int attrType, GenericContext ctxt, AttributePres **attrblock)
 #else  /* __STDC__ */
-static PtrPRule     PresAttrRuleSearch (tsch, ctxt)
+static PtrPRule     PresAttrRuleSearch (tsch, attrType, ctxt, attrblock)
 PtrPSchema          tsch;
+int                 attrType;
 GenericContext      ctxt;
+AttributePres     **attrblock;
 #endif /* !__STDC__ */
 {
-   AttributePres      *attrs = NULL;
-   AttributePres      *found = NULL;
-   int                 nbrules = 0;
-   int                 i;
+  PtrPRule            found;
+  PtrSSchema          pSS;
+  AttributePres      *attrs;
+  int                 nbrules;
+  int                 i, j;
 
-   /*
-    * select the right attribute.
-    */
-   if (ctxt->class != NULL)
-     {
-	attrs = tsch->PsAttrPRule[ctxt->classattr - 1];
-	nbrules = tsch->PsNAttrPRule[ctxt->classattr - 1];
-     }
-   else if (ctxt->attr != 0)
-     {
-	attrs = tsch->PsAttrPRule[ctxt->attr - 1];
-	nbrules = tsch->PsNAttrPRule[ctxt->attr - 1];
-     }
-   else
-     {
-	fprintf (stderr, "Internal : PresAttrRuleSearch invalid context\n");
-	return (NULL);
-     }
-
-   /*
-    * first locate the attribute presentation rule block concerning this
-    * attribute.
-    */
-   for (i = 0; i < nbrules; i++)
-     {
-	if (ctxt->class != NULL)
-	  {
-	     if (!ustrcmp (attrs[i].ApString, ctxt->class))
-	       {
-		  found = &attrs[i];
-		  break;
-	       }
-	  }
-	else if (ctxt->attr)
-	  {
-	     if (1)
-	       {		/* Test sur attrval !!!!!!!!!!!!!!! */
-		  found = &attrs[i];
-		  break;
-	       }
-	  }
-     }
-
-   if (found == NULL)
-      return (NULL);
-
-   if (ctxt->class)
-     return (found->ApTextFirstPRule);
-   else if (ctxt->attr)
-     return (found->ApEnumFirstPRule[ctxt->attrval]);
-   else
-     return (NULL);
+  /* select the right attribute */
+  attrs = tsch->PsAttrPRule[attrType - 1];
+  *attrblock = NULL;
+  nbrules = tsch->PsNAttrPRule[attrType - 1];
+  pSS = (PtrSSchema) ctxt->schema;
+  found = NULL;
+  for (i = 0; i < nbrules && !found; i++)
+    {
+      *attrblock = attrs;
+      switch (pSS->SsAttribute[attrType].AttrType)
+	{
+	case AtNumAttr:
+	  if (ctxt->attrval)
+	    for (j = 0; j < attrs->ApNCases && !found ; j++)
+	      if (attrs->ApCase[j].CaComparType == ComparConstant &&
+		  attrs->ApCase[j].CaLowerBound == ctxt->attrval &&
+		  attrs->ApCase[j].CaUpperBound == ctxt->attrval)
+		found = attrs->ApCase[j].CaFirstPRule;
+	  else	    
+	    for (j = 0; j < attrs->ApNCases && !found ; j++)
+	      if (attrs->ApCase[j].CaComparType == ComparConstant &&
+		  attrs->ApCase[j].CaLowerBound < -MAX_INT_ATTR_VAL &&
+		  attrs->ApCase[j].CaUpperBound > MAX_INT_ATTR_VAL)
+		found = attrs->ApCase[j].CaFirstPRule;
+	  break;
+	case AtTextAttr:
+	  if (ctxt->class && !ustrcmp (attrs->ApString, ctxt->class))
+	    found = attrs->ApTextFirstPRule;
+	  else if (!ctxt->class && attrs->ApString[0] == EOS)
+	    found = attrs->ApTextFirstPRule;
+	  break;
+	case AtReferenceAttr:
+	  found = attrs->ApRefFirstPRule;
+	  break;
+	case AtEnumAttr:
+	  if (ctxt->attrval)
+	    found = attrs->ApEnumFirstPRule[ctxt->attrval - 1];
+	  else
+	    found = attrs->ApEnumFirstPRule[0];
+	  break;
+	}
+      attrs = attrs->ApNextAttrPres;
+    }
+  return (found);
 }
 
 /*----------------------------------------------------------------------
@@ -749,103 +745,101 @@ GenericContext      ctxt;
   if not found we add a new one to the array.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule    *PresAttrRuleInsert (PtrPSchema tsch, GenericContext ctxt)
+static PtrPRule    *PresAttrRuleInsert (PtrPSchema tsch, int attrType, GenericContext ctxt)
 #else  /* __STDC__ */
-static PtrPRule    *PresAttrRuleInsert (tsch, ctxt)
+static PtrPRule    *PresAttrRuleInsert (tsch, attrType, ctxt)
 PtrPSchema          tsch;
+int                 attrType;
 GenericContext      ctxt;
 #endif /* !__STDC__ */
 {
-   AttributePres      *attrs = NULL;
-   AttributePres      *found = NULL;
-   int                 nbrules = 0;
-   int                 i;
+  AttributePres      *attrs, *new;
+  PtrSSchema          pSS;
+  PtrPRule            found;
+  int                 nbrules;
+  int                 i;
 
-   /* select the right attribute */
-   if (ctxt->class != NULL)
-     {
-	attrs = tsch->PsAttrPRule[ctxt->classattr - 1];
-	nbrules = tsch->PsNAttrPRule[ctxt->classattr - 1];
-     }
-   else if (ctxt->attr != 0)
-     {
-	attrs = tsch->PsAttrPRule[ctxt->attr - 1];
-	nbrules = tsch->PsNAttrPRule[ctxt->attr - 1];
-     }
-   else
-     {
-	fprintf (stderr, "Internal : PresAttrRuleInsert invalid context\n");
-	return (NULL);
-     }
+  pSS = (PtrSSchema) ctxt->schema;
+  found = PresAttrRuleSearch (tsch, attrType, ctxt, &attrs);
+  /* If no attribute presentation rule is found, create and initialize it */
+  if (found == NULL)
+    {
+      /* select the last entry */
+      nbrules = tsch->PsNAttrPRule[attrType - 1] + 1;
+      /* add the new entry */
+      GetAttributePres (&new);
+      tsch->PsNAttrPRule[attrType - 1] = nbrules;
+      if (attrs)
+	attrs->ApNextAttrPres = new;
+      else
+	tsch->PsAttrPRule[attrType - 1] = new;
 
-   /*locate the attribute presentation rule block concerning this attribute */
-   for (i = 0; i < nbrules; i++)
-     {
-	if (ctxt->class)
-	  {
-	     if (!ustrcmp (attrs[i].ApString, ctxt->class))
-	       {
-		  found = &attrs[i];
-		  break;
-	       }
-	  }
-	else if (ctxt->attr)
-	  {
-	     if (1)
-	       {		/* Test sur attrval !!!!!!!!!!!!!!! */
-		  found = &attrs[i];
-		  break;
-	       }
-	  }
-     }
-
-   /*
-    * If no attribute presentation rule if found for the class, create a
-    * new one and initialize it !
-    * For the moment this means reallocating a complete new block of rules,
-    * copying the old ones, freeing them, initializing the last one and
-    * rebuilding the whole chain :-(
-    */
-   if (found == NULL)
-     {
-	nbrules++;
-
-	found = (AttributePres *) TtaGetMemory (nbrules * sizeof (AttributePres));
-	memcpy (found, attrs, (size_t) (sizeof (AttributePres) * (nbrules - 1)));
-
-	if (ctxt->class)
-	  {
-	     TtaFreeMemory ( tsch->PsAttrPRule[ctxt->classattr - 1]);
-	     attrs = tsch->PsAttrPRule[ctxt->classattr - 1] = found;
-	     tsch->PsNAttrPRule[ctxt->classattr - 1] = nbrules;
-	  }
-	else if (ctxt->attr)
-	  {
-	     TtaFreeMemory ( tsch->PsAttrPRule[ctxt->attr - 1]);
-	     attrs = tsch->PsAttrPRule[ctxt->attr - 1] = found;
-	     tsch->PsNAttrPRule[ctxt->attr - 1] = nbrules;
-	  }
-
-	found = &found[nbrules - 1];
-	memset (found, 0, sizeof (AttributePres));
-	if (ctxt->class != NULL)
-	   ustrcpy (&found->ApString[0], ctxt->class);
+      switch (pSS->SsAttribute[attrType].AttrType)
+	{
+	case AtNumAttr:
+	  new->ApNCases = 1;
+	  if (ctxt->attrval)
+	    {
+	      new->ApCase[0].CaComparType = ComparConstant;
+	      new->ApCase[0].CaLowerBound = ctxt->attrval;
+	      new->ApCase[0].CaUpperBound = ctxt->attrval;
+	      new->ApCase[0].CaFirstPRule = NULL;
+	    }
+	  else
+	    {   
+	      new->ApCase[0].CaComparType = ComparConstant;
+	      new->ApCase[0].CaLowerBound = -MAX_INT_ATTR_VAL - 1;
+	      new->ApCase[0].CaUpperBound = MAX_INT_ATTR_VAL + 1;
+	      new->ApCase[0].CaFirstPRule = NULL;
+	    }
+	  return (&new->ApCase[0].CaFirstPRule);
+	  break;
+	case AtTextAttr:
+	  if (ctxt->class)
+	    ustrcpy (new->ApString, ctxt->class);
+	  else
+	    attrs->ApString[0] = EOS;
+	  new->ApTextFirstPRule = NULL;
+	  return (&new->ApTextFirstPRule);
+	  break;
+	case AtReferenceAttr:
+	  new->ApRefFirstPRule = NULL;
+	  return (&new->ApRefFirstPRule);
+	  break;
+	case AtEnumAttr:
+	  if (ctxt->attrval)
+	    {
+	      new->ApEnumFirstPRule[ctxt->attrval - 1] = NULL;
+	      return (&new->ApEnumFirstPRule[ctxt->attrval - 1]);
+	    }
+	  else
+	    {
+	      new->ApEnumFirstPRule[0] = NULL;
+	      return (&new->ApEnumFirstPRule[0]);
+	    }
+	  break;
+	}
+    }
+  else
+    switch (pSS->SsAttribute[attrType].AttrType)
+      {
+      case AtNumAttr:
+	return (&attrs->ApCase[0].CaFirstPRule);
+	break;
+      case AtTextAttr:
+	return (&attrs->ApTextFirstPRule);
+	break;
+      case AtReferenceAttr:
+	return (&attrs->ApRefFirstPRule);
+	break;
+      case AtEnumAttr:
+	if (ctxt->attrval)
+	  return (&attrs->ApEnumFirstPRule[ctxt->attrval - 1]);
 	else
-	   found->ApString[0] = 0;
-	found->ApTextFirstPRule = NULL;
-	found->ApElemType = 0;
-	found->ApNextAttrPres = NULL;
-
-	for (i = 1; i < nbrules; i++)
-	   attrs[i - 1].ApNextAttrPres = &attrs[i];
-     }
-
-   if (ctxt->class)
-     return (&found->ApTextFirstPRule);
-   else if (ctxt->attr)
-     return (&found->ApEnumFirstPRule[ctxt->attrval]);
-   else
-     return (NULL);
+	  return (&attrs->ApEnumFirstPRule[0]);
+	break;
+      }
+  return (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -957,8 +951,10 @@ PtrPRule          **chain;
   /* select the good starting point depending on the context */
   if (ctxt->box != 0)
     *chain = BoxRuleInsert (tsch, ctxt);
-  else if (ctxt->attr || ctxt->class)
-    *chain = PresAttrRuleInsert (tsch, ctxt);
+  else if (ctxt->class)
+    *chain = PresAttrRuleInsert (tsch, ctxt->classattr, ctxt);
+  else if (ctxt->attr)
+    *chain = PresAttrRuleInsert (tsch, ctxt->attr, ctxt);
   else if (ctxt->type != 0)
     *chain = &tsch->PsElemPRule[ctxt->type - 1];
   else
@@ -1713,12 +1709,6 @@ PtrPRule                   rule;
     case UnXHeight:
       value /= 10;
       unit = STYLE_UNIT_XHEIGHT;
-      if (value % 10)
-	{
-	  real = TRUE;
-	  value *= 1000;
-	}
-      else
       break;
     case UnPoint:
       unit = STYLE_UNIT_PT;
@@ -2124,7 +2114,14 @@ Document            doc;
 #endif
 {
   PRule               rule;
+  PtrPRule            pRule;
+  PtrSSchema	      pSS;
+  AttributePres      *attrs;
+  int                 nbrules, i, j;
+  unsigned int        elType, attrType, max;
 
+  if (doc == 0)
+    return;
   if (el != NULL)
     {
       do
@@ -2135,6 +2132,70 @@ Document            doc;
 	    TtaRemovePRule (el, rule, doc);
 	}
       while (rule != NULL);
+    }
+  else
+    {
+      pSS = LoadedDocument[doc - 1]->DocSSchema;
+      /* remove all element rules */
+      max = (unsigned int) pSS->SsNRules;
+      for (elType = 0; elType < max; elType++)
+	{
+	  pRule = ((PtrPSchema) tsch)->PsElemPRule[elType];
+	  while (pRule != NULL)
+	    {
+	      ApplyPRules (doc, pSS, elType, 0, 0, pRule, TRUE);
+	      pRule = pRule->PrNextPRule;
+	    }
+	}
+
+      /* remove all attribute rules */
+      max = (unsigned int) pSS->SsNAttributes;
+      for (attrType = 0; attrType < max; attrType++)
+	{
+	  attrs = ((PtrPSchema) tsch)->PsAttrPRule[attrType];
+	  nbrules = ((PtrPSchema) tsch)->PsNAttrPRule[attrType];
+	  for (i = 0; i < nbrules; i++)
+	    {
+	      switch (pSS->SsAttribute[attrType].AttrType)
+		{
+		case AtNumAttr:
+		  for (j = 0; j < attrs->ApNCases; j++)
+		    {
+		      pRule = attrs->ApCase[j].CaFirstPRule;
+		      while (pRule != NULL)
+			{
+			  ApplyPRules (doc, pSS, 0, attrType, 0, pRule, TRUE);
+			  pRule = pRule->PrNextPRule;
+			}
+		    }
+		  break;
+		case AtTextAttr:
+		  pRule = attrs->ApTextFirstPRule;
+		  break;
+		case AtReferenceAttr:
+		  pRule = attrs->ApRefFirstPRule;
+		  break;
+		case AtEnumAttr:
+		  for (j = 0; j < pSS->SsAttribute[attrType].AttrNEnumValues; j++)
+		    {
+		      pRule = attrs->ApEnumFirstPRule[j];
+		      while (pRule != NULL)
+			{
+			  ApplyPRules (doc, pSS, 0, attrType, 0, pRule, TRUE);
+			  pRule = pRule->PrNextPRule;
+			}
+		    }
+		    break;
+		}
+	  
+	      while (pRule != NULL)
+		{
+		  ApplyPRules (doc, pSS, 0, attrType, 0, pRule, TRUE);
+		  pRule = pRule->PrNextPRule;
+		}
+	      attrs = attrs->ApNextAttrPres;
+	    }
+	}
     }
 }
 
@@ -2154,10 +2215,11 @@ PresentationContext c;
    GenericContext ctxt = (GenericContext) c;
    Document       doc;
    PtrSSchema     pSS;
+   PtrPRule       pRule;
+   AttributePres *attrs;
    int            elType = 0;
    int            attrType = 0;
    int            presBox = 0;
-   PtrPRule       pRule;
 
    if (c == NULL || (el == NULL && tsch == NULL))
      return;
@@ -2191,7 +2253,7 @@ PresentationContext c;
 	     attrType = ctxt->attr;
 	   else
 	     attrType = ctxt->classattr;
-	   pRule = PresAttrRuleSearch ((PtrPSchema) tsch, ctxt);
+	   pRule = PresAttrRuleSearch ((PtrPSchema) tsch, attrType, ctxt, &attrs);
 	 }
        else
 	 return;

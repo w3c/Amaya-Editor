@@ -9,35 +9,34 @@
 extern void InitAmayaDefEnv ( void );
 extern void InitConfMenu ( void );
 extern void CacheConfMenu ( Document document,
-                              View view );
+                            View view );
 extern void ProxyConfMenu ( Document document,
-                              View view );
+                            View view );
 extern void GeneralConfMenu ( Document document,
-                           View view );
+                              View view );
 extern void PublishConfMenu ( Document document,
-                           View view );
+                              View view );
 extern void ColorConfMenu ( Document document,
-                                 View view );
+                            View view );
 extern void GeometryConfMenu ( Document document,
-                                 View view );
+                               View view );
 
 #else /* __STDC__ */
 
 extern void InitAmayaDefEnv (/* void */);
 extern void InitConfMenu (/* void */);
 extern void CacheConfMenu (/* Document document,
-                                View view */);
+                              View view */);
 extern void ProxyConfMenu (/* Document document,
-                                View view */);
+                              View view */);
 extern void GeneralConfMenu (/* Document document,
-                             View view */);
+                                View view */);
 extern void PublishConfMenu (/* Document document,
-                             View view */);
+                                View view */);
 extern void ColorConfMenu (/* Document document,
-                                   View view */);
+                              View view */);
 extern void GeometryConfMenu (/* Document document,
-                                   View view */);
+                                 View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
-

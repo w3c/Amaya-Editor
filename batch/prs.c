@@ -862,7 +862,7 @@ int                 att;
    NumAttrCase        *pAttrCase;
    int                 j;
 
-   GetAttributePres (&pPRuleA, 1);
+   GetAttributePres (&pPRuleA);
    if (pPRuleA)
      {
 	/* selon le type de l'attribut */

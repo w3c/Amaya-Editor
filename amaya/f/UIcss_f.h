@@ -6,11 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InitCSS ( void );
 extern void InitCSSDialog ( Document doc,
                             View view );
 
 #else /* __STDC__ */
 
+extern void InitCSS (/* void */);
 extern void InitCSSDialog (/* Document doc,
                               View view */);
 

@@ -46,8 +46,8 @@ Document            document;
 View                view;
 #endif /* __STDC__ */
 {
-   STRING               tempfile = (STRING) TtaGetMemory (MAX_LENGTH);
-   STRING               suffix = (STRING) TtaGetMemory (MAX_LENGTH);
+   STRING              tempfile = (STRING) TtaGetMemory (MAX_LENGTH);
+   STRING              suffix = (STRING) TtaGetMemory (MAX_LENGTH);
    int                 val, i, j;
    Document            doc;
    boolean             exist;
@@ -95,13 +95,21 @@ View                view;
    doc = GetHTMLDocument (tempfile, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
    ResetStop (doc);
    root = TtaGetMainRoot (doc);
+   LoadUserStyleSheet (doc);
    elType = TtaGetElementType (root);
+   /* default ATTR_PrintURL */
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+   attr = TtaNewAttribute (attrType);
+   TtaAttachAttribute (root, attr, doc);
+
    /* create a default title if there is no content in the TITLE element */
    elType.ElTypeNum = HTML_EL_TITLE;
    title = TtaSearchTypedElement (elType, SearchInTree, root);
    text = TtaGetFirstChild (title);
    if (TtaGetTextLength (text) == 0)
       TtaSetTextContent (text, "No title", TtaGetDefaultLanguage (), doc);
+
    /* create a META element in the HEAD with attributes name="GENERATOR" */
    /* and content="Amaya" */
    elType.ElTypeNum = HTML_EL_HEAD;
@@ -109,7 +117,6 @@ View                view;
    child = TtaGetLastChild (head);
    elType.ElTypeNum = HTML_EL_META;
    meta = TtaNewElement (doc, elType);
-   attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_meta_name;
    attr = TtaNewAttribute (attrType);
    TtaAttachAttribute (meta, attr, doc);

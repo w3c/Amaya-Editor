@@ -29,6 +29,8 @@ static STRING      CSSpath;
 static Document    DocCSS;
 
 #include "AHTURLTools_f.h"
+#include "EDITORactions_f.h"
+#include "HTMLedit_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
 #include "init_f.h"
@@ -45,8 +47,13 @@ int                 typedata;
 STRING              data;
 #endif
 {
-  int                 val;
-  int                 length;
+  Element             el;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  CHAR                s[MAX_LENGTH];
+  int                 val, length;
+  boolean             found;
 
   val = (int) data;
   switch (ref - BaseCSS)
@@ -62,7 +69,27 @@ STRING              data;
       else if (val == 3)
 	{
 	  /* remove the link to this file */
-	  ;
+	  el = TtaGetMainRoot (docCSS);
+	  elType = TtaGetElementType (el);
+	  elType.ElTypeNum = HTML_EL_LINK;
+	  /* look for the Link element */
+	  el = TtaSearchTypedElement (elType, SearchInTree, el);
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  found = FALSE;
+	  while (el != NULL && !found)
+	    {
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr != 0)
+		{
+		  length = MAX_LENGTH;
+		  TtaGiveTextAttributeValue (attr, s, &length);
+		}
+	      if (!found)
+		el = TtaSearchTypedElement (elType, SearchForward, el);
+	    }
+	  if (el)
+	    RemoveLink (el, docCSS);
 	}
       else if (val == 4)
 	/* add a new link to a CSS file */
@@ -120,25 +147,22 @@ View                view;
   index = 0;
   nb = 0;
   size = 400;
+#  ifndef _WINDOWS
+  /* create the form */
+  i = 0;
+  ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_OPEN));
+  i += ustrlen (&s[i]) + 1;
+  ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
+  i += ustrlen (&s[i]) + 1;
+  ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_REMOVE));
+  i += ustrlen (&s[i]) + 1;
+  ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_ADD));
+  TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), TtaGetMessage (AMAYA, AM_CSS), 4, s, TRUE, 2, 'L', D_DONE);
+#  endif /* !_WINDOWS */
   while (css != NULL)
     {
       if (css->category != CSS_DOCUMENT_STYLE && css->documents[doc])
 	{
-	  if (nb == 0)
-	    {
-#  ifndef _WINDOWS
-	      /* create the form */
-	      i = 0;
-	      ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_OPEN));
-	      i += ustrlen (&s[i]) + 1;
-	      ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
-	      i += ustrlen (&s[i]) + 1;
-	      ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_REMOVE));
-	      i += ustrlen (&s[i]) + 1;
-	      ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_ADD));
-	      TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), TtaGetMessage (AMAYA, AM_CSS), 4, s, TRUE, 2, 'L', D_DONE);
-#  endif /* !_WINDOWS */
-	    }
 	  /* build the CSS list */
 	  if (css->url == NULL)
 	    ptr = css->localName;
@@ -157,15 +181,13 @@ View                view;
     }
 
   /* display the form */
-  if (nb > 0)
-    {
 #  ifdef _WINDOWS
-	  CreateCSSDlgWindow (BaseCSS, CSSSelect, CSSForm, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf);
+  CreateCSSDlgWindow (BaseCSS, CSSSelect, CSSForm, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf);
 #  else  /* !_WINDOWS */
-      TtaNewSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
-		      TtaGetMessage (AMAYA, AM_CSS_FILE),
-		      nb, buf, 5, NULL, FALSE, TRUE);
-      TtaShowDialogue (BaseCSS + CSSForm, TRUE);
+  if (nb > 0)
+    TtaNewSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
+		    TtaGetMessage (AMAYA, AM_CSS_FILE),
+		    nb, buf, 5, NULL, FALSE, TRUE);
+  TtaShowDialogue (BaseCSS + CSSForm, TRUE);
 #  endif /* !_WINDOWS */
-    }
 }

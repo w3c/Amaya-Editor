@@ -206,7 +206,27 @@ STRING              targetName;
 
        /* is it a link toward a CSS file */
        if (elType.ElTypeNum == HTML_EL_LINK && IsCSSName (targetURL))
-	 LoadStyleSheet (targetURL, doc, NULL);
+	 {
+	   LoadStyleSheet (targetURL, doc, NULL);
+	   attrType.AttrTypeNum = HTML_ATTR_REL;
+	   attr = TtaGetAttribute (element, attrType);
+	   if (attr == 0)
+	     {
+	       /* create an attribute HREF for the element */
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (element, attr, doc);
+	     }
+	   TtaSetAttributeText (attr, "stylesheet", element, doc);
+	   attrType.AttrTypeNum = HTML_ATTR_Link_type;
+	   attr = TtaGetAttribute (element, attrType);
+	   if (attr == 0)
+	     {
+	       /* create an attribute HREF for the element */
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (element, attr, doc);
+	     }
+	   TtaSetAttributeText (attr, "text/css", element, doc);	   
+	 }
      }
    TtaSetDocumentModified (doc);
    TtaSetStatus (doc, 1, " ", NULL);

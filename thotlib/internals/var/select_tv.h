@@ -47,6 +47,8 @@ THOT_EXPORT boolean SelectionUpdatesMenus;
 LastSelectedElement, FirstSelectedChar, LastSelectedChar */
 /* If FALSE the selection is represented by table SelElement */
 THOT_EXPORT boolean SelContinue;
+/* Current selection mode */
+THOT_EXPORT boolean 	StructSelectionMode;
 
 /* elements corresponding to the items of Selection menu */
 THOT_EXPORT PtrElement SelMenuParentEl;

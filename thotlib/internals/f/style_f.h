@@ -6,19 +6,18 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaSetPresentation ( unsigned int type,
-                                Element el,
-                                PSchema tsch,
-                                PresentationContext c,
-                                PresentationValue v );
-extern int TtaGetPresentation ( unsigned int type,
-                                Element el,
-                                PSchema tsch,
-                                PresentationContext c,
-                                PresentationValue *v );
-extern GenericContext TtaGetGenericContext ( Document doc );
-extern PresentationContext TtaGetSpecificContext ( Document doc );
-extern void TtaFreeContext ( PresentationContext ctxt );
+extern int TtaSetStylePresentation ( unsigned int type,
+                                     Element el,
+                                     PSchema tsch,
+                                     PresentationContext c,
+                                     PresentationValue v );
+extern int TtaGetStylePresentation ( unsigned int type,
+                                     Element el,
+                                     PSchema tsch,
+                                     PresentationContext c,
+                                     PresentationValue *v );
+extern GenericContext TtaGetGenericStyleContext ( Document doc );
+extern PresentationContext TtaGetSpecificStyleContext ( Document doc );
 extern void TtaCleanStylePresentation ( Element el,
                                         PSchema tsch,
                                         Document doc );
@@ -32,19 +31,18 @@ extern void TtaApplyAllSpecificSettings ( Element el,
 
 #else /* __STDC__ */
 
-extern int TtaSetPresentation (/* unsigned int type,
-                                  Element el,
-                                  PSchema tsch,
-                                  PresentationContext c,
-                                  PresentationValue v */);
-extern int TtaGetPresentation (/* unsigned int type,
-                                  Element el,
-                                  PSchema tsch,
-                                  PresentationContext c,
-                                  PresentationValue *v */);
-extern GenericContext TtaGetGenericContext (/* Document doc */);
-extern PresentationContext TtaGetSpecificContext (/* Document doc */);
-extern void TtaFreeContext (/* PresentationContext ctxt */);
+extern int TtaSetStylePresentation (/* unsigned int type,
+                                       Element el,
+                                       PSchema tsch,
+                                       PresentationContext c,
+                                       PresentationValue v */);
+extern int TtaGetStylePresentation (/* unsigned int type,
+                                       Element el,
+                                       PSchema tsch,
+                                       PresentationContext c,
+                                       PresentationValue *v */);
+extern GenericContext TtaGetGenericStyleContext (/* Document doc */);
+extern PresentationContext TtaGetSpecificStyleContext (/* Document doc */);
 extern void TtaCleanStylePresentation (/* Element el,
                                           PSchema tsch,
                                           Document doc */);

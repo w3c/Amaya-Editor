@@ -8,6 +8,8 @@
 
 extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
+extern void RemoveLink ( Element el,
+                         Document doc );
 extern boolean DeleteLink ( NotifyElement * event );
 extern void SetREFattribute ( Element element,
                               Document doc,
@@ -99,6 +101,8 @@ extern void TitleModified ( NotifyOnTarget * event );
 
 extern void SetTargetContent (/* Document doc,
                                  Attribute attrNAME */);
+extern void RemoveLink (/* Element el,
+                           Document doc */);
 extern boolean DeleteLink (/* NotifyElement * event */);
 extern void SetREFattribute (/* Element element,
                                 Document doc,

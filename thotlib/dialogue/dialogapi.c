@@ -1938,9 +1938,15 @@ STRING              formfont;
 #  endif
 #  ifndef _WINDOWS
    if (menufont != NULL)
-      DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, menufont), XmSTRING_DEFAULT_CHARSET);
+     {
+       XmFontListFree (DefaultFont);
+       DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, menufont), XmSTRING_DEFAULT_CHARSET);
+     }
    if (menufont != NULL)
-      formFONT = XmFontListCreate (XLoadQueryFont (GDp, formfont), XmSTRING_DEFAULT_CHARSET);
+     {
+       XmFontListFree (formFONT);
+       formFONT = XmFontListCreate (XLoadQueryFont (GDp, formfont), XmSTRING_DEFAULT_CHARSET);
+     }
 #  endif /* _WINDOWS */
 }
 
