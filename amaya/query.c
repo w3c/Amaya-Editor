@@ -2272,6 +2272,17 @@ static void         AHTProfile_delete ()
   HTCacheTerminate ();
 #endif /* AMAYA_WWW_CACHE */
   
+  /* call remove functions that are not called automatically by libwww */
+  HTNetCall_deleteBeforeAll (HTNet_before ());
+  HTNetCall_deleteAfterAll (HTNet_after ());
+  HTAA_deleteAllModules ();
+  HTAlertCall_deleteAll (HTAlert_global () );
+  HTAlert_setGlobal ((HTList *) NULL);
+  /* these two functions are broken, so we can't call them right now 
+  HTHeader_deleteAll ();
+  HTTimer_deleteAll ();
+  */
+  HTTransport_deleteAll ();
   /* remove bindings between suffixes, media types*/
   HTBind_deleteAll ();
   /* Terminate libwww */
@@ -2478,12 +2489,6 @@ void QueryClose ()
 
   /* remove all the handlers and callbacks that may output a message to
      a non-existent Amaya window */
-#ifndef _WINDOWS
-  HTNet_deleteAfter (AHTLoadTerminate_handler);
-#endif /* _WINDOWS */
-  HTNet_deleteAfter (redirection_handler);
-  HTAlertCall_deleteAll (HTAlert_global () );
-  HTAlert_setGlobal ((HTList *) NULL);
   HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
   HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
 #ifndef _WINDOWS
