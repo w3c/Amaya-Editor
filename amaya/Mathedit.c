@@ -1525,7 +1525,7 @@ void CreateCharStringElement (typeNum, doc)
 {
    ElementType    elType;
    Element        firstSel, lastSel, first, last, el, newEl, nextEl,
-                  leaf, lastLeaf, nextLeaf, parent, selEl, sibling;
+                  leaf, lastLeaf, nextLeaf, parent, selEl;
    int            firstChar, lastChar, i, j, oldStructureChecking;
    ThotBool       nonEmptySel, done, mrowCreated, same;
 
@@ -2808,7 +2808,7 @@ static void SetElementCharFont (el, attrType, val, doc)
      if (newAttr)
        {
 	 TtaRegisterAttributeCreate (attr, el, doc);
-	 if (attrType.AttrTypeNum = MathML_ATTR_fontstyle)
+	 if (attrType.AttrTypeNum == MathML_ATTR_fontstyle)
 	   /* remove attribute IntFontstyle if any */
 	   {
 	   intAttrType.AttrSSchema = elType.ElSSchema;
