@@ -30,6 +30,7 @@
 #define GLOBALS_HERE
 #endif /* _WINDOWS */
 #ifdef _GTK
+#include <locale.h>
 #include <gdk/gdkx.h>
 #endif /* _GTK */
 
@@ -2010,6 +2011,11 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    /* ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
       if (ptr && !strcasecmp (ptr, "yes"))*/
    gtk_set_locale ();
+
+   /* In order to get a "." even in a localised unix
+      (ie : french becomes ",")*/
+   setlocale (LC_NUMERIC, "C");
+
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
    if (!gtk_init_check (&appArgc, &appArgv))
      printf ("GUI can't be initialized\n");
