@@ -4532,6 +4532,7 @@ void SetElemLineNumber (Element el)
 char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 {
   char    charRead;
+  static  ThotBool beg_pair;
 
   charRead = EOS;
   *endOfFile = FALSE;
@@ -4568,13 +4569,29 @@ char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 	    }
 	}
       /* update the counters of characters and lines read */
-      if ((int) charRead == EOL || (int) charRead == CR)
-	/* new line in HTML file */
-	{
-	  if (InputText == NULL)
-	    NumberOfLinesRead++;
-	  NumberOfCharRead = 0;
-	}
+	  if ((int) charRead == EOL || (int) charRead == CR)
+	  {
+		 if ((int) charRead == CR)
+		 {
+          beg_pair = TRUE;
+    	  if (InputText == NULL)
+	          NumberOfLinesRead++;
+	      NumberOfCharRead = 0;
+		 }
+		 else
+		 {
+	      if (!beg_pair)
+		  {
+    	  if (InputText == NULL)
+	          NumberOfLinesRead++;
+	      NumberOfCharRead = 0;
+		  }
+		  else
+		    beg_pair = FALSE;
+		 }
+	  }
+	  else
+		  beg_pair = FALSE;
     }
   return charRead;
 }
