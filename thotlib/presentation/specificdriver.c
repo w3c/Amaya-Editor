@@ -144,7 +144,6 @@ PresentationValue   v;
 {
    PtrElement elem = (PtrElement) t;
    SpecificContext ctxt = (SpecificContext) c;
-   ElementType type;
    Document doc;
    PtrPRule pRule;
 
