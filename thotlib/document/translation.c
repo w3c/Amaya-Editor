@@ -96,17 +96,19 @@ static char         fileExtension[MAX_PATH];
 #include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
-   GetSecondaryFile  retourne le fichier secondaire de nom fName.	
-   Si ce fichier n'est pas ouvert, il est cree' et ouvert.         
+   GetSecondaryFile  retourne le fichier secondaire de nom fName.
+   If open is True, the file is opened if it not open yet.
+   Otherwise, the function returns 0 when the file is not open.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int          GetSecondaryFile (char *fName, PtrDocument pDoc)
+static int          GetSecondaryFile (char *fName, PtrDocument pDoc, boolean open)
 
 #else  /* __STDC__ */
-static int          GetSecondaryFile (fName, pDoc)
+static int          GetSecondaryFile (fName, pDoc, open)
 char               *fName;
 PtrDocument         pDoc;
+boolean		    open;
 
 #endif /* __STDC__ */
 {
@@ -121,6 +123,8 @@ PtrDocument         pDoc;
        strcmp (fName, OutputFile[i].OfFileName) == 0)
       /* le fichier est dans la table, on retourne son rang */
       return i;
+   else if (!open)
+      return 0;
    else if (NOutputFiles >= MAX_OUTPUT_FILES)
       /* table saturee */
      {
@@ -2383,7 +2387,7 @@ boolean            *removeEl;
 		       /* construit le nom du fichier secondaire */
 		       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrFileNameVar,
 			      FALSE, secondaryFileName, 0, pDoc, lineBreak);
-		       fileNum = GetSecondaryFile (secondaryFileName, pDoc);
+		       fileNum = GetSecondaryFile (secondaryFileName, pDoc, TRUE);
 		    }
 	       else		/* TWrite */
 		  fileNum = 0;	/* on ecrit sur stdout */
@@ -2854,7 +2858,7 @@ boolean            *removeEl;
 		    /* construit le nom du fichier secondaire */
 		    PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrIndentFileNameVar,
 			         FALSE, secondaryFileName, 0, pDoc, lineBreak);
-		    fileNum = GetSecondaryFile (secondaryFileName, pDoc);
+		    fileNum = GetSecondaryFile (secondaryFileName, pDoc, TRUE);
 		 }
 	       if (pTRule->TrRelativeIndent)
 		  OutputFile[fileNum].OfIndent += pTRule->TrIndentVal;
@@ -3003,6 +3007,11 @@ boolean            *removeEl;
 		    strncpy (directoryName, SchemaPath, MAX_PATH);
 		    MakeCompleteName (fname, "", directoryName, fullName, &i);
 		 }
+	       /* si le fichier a inclure est deja ouvert en ecriture, on
+		  le flush.  */
+	       i = GetSecondaryFile (fullName, pDoc, FALSE);
+	       if (i != 0)
+		  fflush (OutputFile[i].OfFileDesc);
 	       /* ouvre le fichier a inclure */
 	       includedFile = TtaReadOpen (fullName);
 	       if (includedFile == 0)
