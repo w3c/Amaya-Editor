@@ -260,6 +260,13 @@ extern int TtaGetScreenDepth (void);
   ----------------------------------------------------------------------*/
 extern void TtaFetchOneEvent (ThotEvent *ev);
 /*----------------------------------------------------------------------
+   TtaFetchOneAvailableEvent
+
+   retrieve one X-Windows Event from the queue if one is immediately
+   available.
+  ----------------------------------------------------------------------*/
+ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev);
+/*----------------------------------------------------------------------
    TtaHandleOneEvent
    process an X-Windows Event.
   ----------------------------------------------------------------------*/

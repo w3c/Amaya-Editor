@@ -48,6 +48,7 @@
 #include "HTEvtLst.h"
 #include "HTAABrow.h"
 #include "string.h"
+#include "interface.h"
 
 #if defined(__svr4__) || defined (_AIX)
 #define CATCH_SIG
