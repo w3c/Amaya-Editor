@@ -17,6 +17,7 @@
 #include "message.h"
 #include "typecorr.h"
 #include "appdialogue.h"
+#include "labelAllocator.h"
 
 #define EXPORT extern
 #include "platform_tv.h"
@@ -39,6 +40,7 @@
 #include "memory_f.h"
 #include "structmodif_f.h"
 #include "changeabsbox_f.h"
+#include "labelalloc_f.h"
 
 #include "references_f.h"
 #include "externalref_f.h"

@@ -6,10 +6,6 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern int NewLabel ( PtrDocument pDoc );
-extern int GetCurrentLabel ( PtrDocument pDoc );
-extern void SetCurrentLabel ( PtrDocument pDoc,
-                              int label );
 extern PtrDocument DocumentOfElement ( PtrElement pEl );
 extern void ProtectElement ( PtrElement pEl );
 extern PtrElement GetOtherPairedElement ( PtrElement pEl );
@@ -132,10 +128,6 @@ extern void CheckLanguageAttr ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern int NewLabel (/* PtrDocument pDoc */);
-extern int GetCurrentLabel (/* PtrDocument pDoc */);
-extern void SetCurrentLabel (/* PtrDocument pDoc,
-                                int label */);
 extern PtrDocument DocumentOfElement (/* PtrElement pEl */);
 extern void ProtectElement (/* PtrElement pEl */);
 extern PtrElement GetOtherPairedElement (/* PtrElement pEl */);

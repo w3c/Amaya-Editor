@@ -18,6 +18,7 @@
 #include "attribute.h"
 #include "presentation.h"
 #include "constpiv.h"
+#include "labelAllocator.h"
 
 #include "tree_f.h"
 #include "thotmsg_f.h"
@@ -28,6 +29,7 @@
 #include "fileaccess_f.h"
 #include "callback_f.h"
 #include "externalref_f.h"
+#include "labelalloc_f.h"
 
 #undef EXPORT
 #define EXPORT

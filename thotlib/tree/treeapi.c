@@ -11,6 +11,7 @@
 #include "storage.h"
 #include "typecorr.h"
 #include "appdialogue.h"
+#include "labelAllocator.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -31,6 +32,7 @@
 #include "viewapi_f.h"
 #include "documentapi_f.h"
 #include "applicationapi_f.h"
+#include "labelalloc_f.h"
 
 extern int          UserErrorCode;
 static Name         nameBuffer;

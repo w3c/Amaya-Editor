@@ -22,6 +22,7 @@
 #include "typecorr.h"
 #include "thotdir.h"
 #include "thotfile.h"
+#include "labelAllocator.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -50,6 +51,7 @@
 #include "applicationapi_f.h"
 #include "platform_f.h"
 #include "readpivot_f.h"
+#include "labelalloc_f.h"
 
 /*----------------------------------------------------------------------
    Retourne Vrai si les deux elements pointes par pEl1 et pEl2     

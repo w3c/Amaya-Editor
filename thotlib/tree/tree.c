@@ -14,6 +14,7 @@
 #include "typemedia.h"
 #include "storage.h"
 #include "res.h"
+#include "labelAllocator.h"
 
 #define EXPORT extern
 #include "select_tv.h"
@@ -27,67 +28,12 @@
 #include "references_f.h"
 #include "fileaccess_f.h"
 #include "structschema_f.h"
+#include "labelalloc_f.h"
 
 #include "tree_f.h"
 #include "exceptions_f.h"
 #include "abspictures_f.h"
 #include "externalref_f.h"
-
-/*----------------------------------------------------------------------
-   NewLabel retourne la valeur entiere du prochain label a         
-   affecter a un element du document pDoc.                 
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 NewLabel (PtrDocument pDoc)
-
-#else  /* __STDC__ */
-int                 NewLabel (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
-{
-   pDoc->DocLabelExpMax++;
-   return pDoc->DocLabelExpMax;
-}
-
-/*----------------------------------------------------------------------
-   GetCurrentLabel retourne la valeur entiere du plus grand label  
-   affecte' a un element du document pDoc.                 
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 GetCurrentLabel (PtrDocument pDoc)
-
-#else  /* __STDC__ */
-int                 GetCurrentLabel (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
-{
-   return pDoc->DocLabelExpMax;
-}
-
-/*----------------------------------------------------------------------
-   SetCurrentLabel change la valeur entiere du plus grand label    
-   affecte' a un element du document pDoc.                 
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                SetCurrentLabel (PtrDocument pDoc, int label)
-
-#else  /* __STDC__ */
-void                SetCurrentLabel (pDoc, label)
-PtrDocument         pDoc;
-int                 label;
-
-#endif /* __STDC__ */
-
-{
-   pDoc->DocLabelExpMax = label;
-}
 
 /*----------------------------------------------------------------------
    DocumentOfElement

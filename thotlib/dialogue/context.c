@@ -713,10 +713,10 @@ void                InitDocContexts ()
  *      SelectionEvents handle the X-Windows selection events.
  **/
 #ifdef __STDC__
-void                SelectionEvents (XSelectionEvent * event)
+void                SelectionEvents (void * ev)
 #else  /* __STDC__ */
-void                SelectionEvents (event)
-XSelectionEvent    *event;
+void                SelectionEvents (ev)
+void               *ev;
 
 #endif /* __STDC__ */
 {
@@ -727,6 +727,7 @@ XSelectionEvent    *event;
    int                 format, r, frame;
    unsigned long       nbitems, bytes_after;
    unsigned char      *buffer;
+   XSelectionEvent    *event = (XSelectionEvent *) ev;
 
    switch (event->type)
 	 {

@@ -21,6 +21,7 @@
 #include "storage.h"
 #include "typecorr.h"
 #include "appdialogue.h"
+#include "labelAllocator.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -67,6 +68,7 @@ static int          newColor[] =
 #include "structschema_f.h"
 #include "content_f.h"
 #include "applicationapi_f.h"
+#include "labelalloc_f.h"
 
 /*----------------------------------------------------------------------
    	PivotError							
