@@ -792,6 +792,18 @@ extern CHARSET TtaGetDocumentCharset (Document document);
 extern void  TtaSetDocumentCharset (Document document,
 				    CHARSET charSet);
 
+/*----------------------------------------------------------------------
+  TtaGetDocumentProfile
+  Gets the document profile
+ ----------------------------------------------------------------------*/
+extern int TtaGetDocumentProfile (Document document);
+
+/*----------------------------------------------------------------------
+  TtaSetDocumentProfile
+  Sets the document profile
+ ----------------------------------------------------------------------*/
+extern void TtaSetDocumentProfile (Document document, int profile);
+
 #endif /* __CEXTRACT__ */
 
 #endif

@@ -73,6 +73,50 @@ void CreateWithException (PtrElement pEl, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  TtaGetDocumentProfile
+  Gets the document profile
+ ----------------------------------------------------------------------*/
+int TtaGetDocumentProfile (Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS || LoadedDocument[document - 1] == NULL)
+    {
+      TtaError (ERR_invalid_document_parameter);
+      return (UNDEFINED_CHARSET);
+    }
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      return (pDoc->DocProfile);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaSetDocumentProfile
+  Sets the document profile
+ ----------------------------------------------------------------------*/
+void TtaSetDocumentProfile (Document document, int profile)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      pDoc = LoadedDocument[document - 1];
+      pDoc->DocProfile = profile;
+    }
+}
+
+
+/*----------------------------------------------------------------------
   TtaGetDocumentCharset gets the document charset
   Returns UNDEFINED_CHARSET when the document uses the default charset.
  ----------------------------------------------------------------------*/

@@ -8,6 +8,9 @@
 
 extern void CreateWithException ( PtrElement pEl,
                                   PtrDocument pDoc );
+extern int TtaGetDocumentProfile ( Document document );
+extern void TtaSetDocumentProfile ( Document document,
+                                    int profile );
 extern CHARSET TtaGetDocumentCharset ( Document document );
 extern void TtaSetDocumentCharset ( Document document,
                                     CHARSET charSet );
@@ -81,6 +84,9 @@ extern PtrDocument DocToPtr ( Document document );
 
 extern void CreateWithException (/* PtrElement pEl,
                                     PtrDocument pDoc */);
+extern int TtaGetDocumentProfile (/* Document document */);
+extern void TtaSetDocumentProfile (/* Document document,
+                                      int profile */);
 extern CHARSET TtaGetDocumentCharset (/* Document document */);
 extern void TtaSetDocumentCharset (/* Document document,
                                       CHARSET charSet */);

@@ -657,6 +657,7 @@ typedef struct _DocumentDescr
   int		  DocNbUndone;	  /* number of undone editing commands */
   CHARSET         DocCharset;     /* charset of the document */
   ThotBool	  DocDefaultCharset;/* TRUE if the charset is set by default */
+  int		  DocProfile;	  /* profile of the document */
 } DocumentDescr;
 
 #endif /* __TYPE_INT_H__ */
