@@ -430,6 +430,7 @@ THOT_EXPORT ThotBool   XMLErrorsFoundInProfile;
 THOT_EXPORT ThotBool   XMLNotWellFormed;
 THOT_EXPORT ThotBool   XMLCharacterNotSupported;
 THOT_EXPORT ThotBool   XMLUnknownEncoding;
+THOT_EXPORT ThotBool   UseDotForFloat;
 /*  enabling/disabling DAVLib */
 THOT_EXPORT ThotBool   DAVLibEnable;
 THOT_EXPORT ThotBool   Synchronizing;

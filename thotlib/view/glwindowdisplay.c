@@ -522,7 +522,6 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
 		 int sweepAngle, ThotBool filled)
 {
   GLint     i, slices;
-
   PRECISION angleOffset;
   PRECISION sinCache[SLICES_SIZE];
   PRECISION cosCache[SLICES_SIZE];
@@ -531,13 +530,10 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
   PRECISION angle;
   PRECISION fastx, fasty, width, height;
 
-
   width  = ((PRECISION)w) / 2;
   height = ((PRECISION)h) / 2;
   fastx  = ((PRECISION)x) + width; 
   fasty  = ((PRECISION)y) + height;
-
-
   if (w < 10 && h < 10)
     {
       glPointSize ((float)0.1);
@@ -564,7 +560,6 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
       cosCache[slices] = cosCache[0];
     }
 
-  
   for (i = 0; i <= slices; i++)
     {	
       x_cache[i] = fastx + (width * cosCache[i]);
@@ -577,10 +572,7 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
       /* The center */
       glVertex2d (fastx, fasty);
       for (i = 0; i <= slices; i++)
-	{
-	  glVertex2d (x_cache[i], 
-		      y_cache[i]);
-	}
+	glVertex2d (x_cache[i], y_cache[i]);
       glEnd();
     }
 
@@ -593,13 +585,9 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
 
       slices--;
       for (i = 0; i <= slices; i++)
-	{
-	  glVertex2d (x_cache[i], 
-		      y_cache[i]);
-	}
+	  glVertex2d (x_cache[i], y_cache[i]);
       glEnd();
     }
-  
 }
 
 
@@ -610,24 +598,19 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
   ----------------------------------------------------------------------*/
 void GL_DrawLines (ThotPoint *point, int npoints)
 {
-  int i, k;
+  int i;
   
   if (S_thick > 1)
     {
       /* Joinning if a certain thickness ?*/
       glBegin (GL_POINTS); 
-      for (i=0; i<npoints; i++)
-	{	  
-	  glVertex2fv ((GLfloat *) (point+i));
-	}
+      for (i = 0; i<npoints; i++)
+	glVertex2dv (&point[i]);
       glEnd (); 
     }
-  k = 0;
   glBegin (GL_LINE_STRIP);
   for (i = 0; i < npoints; i++)
-    { 
-      glVertex2fv ((GLfloat *) (point+i));
-    }
+    glVertex2dv (&point[i]);
   glEnd ();
   
 }

@@ -1180,7 +1180,7 @@ void               UnknownSVGNameSpace (ParserData *context,
    Return the value of that number in number and moves ptr to the next
    token to be parsed.
   ----------------------------------------------------------------------*/
-static char* GetFloat (char *ptr, float* number)
+static char *GetFloat (char *ptr, float* number)
 {
   int      i;
   char     *start, c;
@@ -1205,6 +1205,8 @@ static char* GetFloat (char *ptr, float* number)
   if (*ptr == '.')
     /* there is a decimal part */
     {
+      if (!UseDotForFloat)
+	*ptr = ',';
       ptr++;
       decimal = TRUE;
       while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
