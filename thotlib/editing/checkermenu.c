@@ -74,7 +74,6 @@ static ThotWindow   hwndCurrentWord;
 static ThotWindow   hwndLanguage;
 static CHAR_T       currentWord [MAX_WORD_LEN];
 static ThotWindow   wordButton;
-static CHAR_T       currentLabel [100];
 static CHAR_T       currentRejectedchars [100];
 static UINT         itemIndex;
 #endif /* _WINDOWS */
@@ -198,7 +197,8 @@ LPARAM lParam;
       SpellChecker = hwnDlg;
       hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
       wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), currentLabel);
+	  SetWindowText (hwnDlg, TtaGetMessage (CORR, Correct));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), TtaGetMessage (CORR, Correct));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
@@ -379,51 +379,6 @@ LPARAM lParam;
     }
   return TRUE;
 }
-
-/*-----------------------------------------------------------------------
- CreateSpellCheckDlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-static void CreateSpellCheckDlgWindow (ThotWindow parent, STRING label, STRING rejectedChars,
-								int spellingBase, int chkrSelectProp, int chkrMenuOR, 
-							    int chkrFormCorrect, int chkrMenuIgnore, int chkrCaptureNC, int chkrSpecial)
-#else  /* !__STDC__ */
-static void CreateSpellCheckDlgWindow (parent, label, rejectedChars, spellingBase, 
-								chkrSelectProp, chkrMenuOR, chkrFormCorrect, chkrMenuIgnore, chkrCaptureNC, chkrSpecial)
-ThotWindow  parent;
-STRING label;
-STRING rejectedChars;
-int   spellingBase;
-int   chkrSelectProp;
-int   chkrMenuOR;
-int   chkrFormCorrect;
-int   chkrMenuIgnore;
-int   chkrCaptureNC;
-int   chkrSpecial;
-#endif /* __STDC__ */
-{  
-#if 0
-  SpellingBase    = spellingBase;
-  ChkrSelectProp  = chkrSelectProp;
-  ChkrMenuOR      = chkrMenuOR;
-  ChkrFormCorrect = chkrFormCorrect;
-  ChkrMenuIgnore  = chkrMenuIgnore;
-  ChkrCaptureNC   = chkrCaptureNC;
-  ChkrSpecial     = chkrSpecial;
-#endif
-
-  ustrcpy (currentLabel, label);
-  ustrcpy (currentRejectedchars, rejectedChars); 
-  /* to have the same behavior as under Unix, we need to destroy the
-     dialog if it already existed */
-  if (SpellChecker) 
-    {
-      EndDialog (SpellChecker, ID_DONE);
-      SpellChecker = NULL;
-      hwndLanguage = NULL;
-    }
-  DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
-}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -581,12 +536,16 @@ view                view;
    TtaLoadDocumentDictionary (document, (int*) &ChkrFileDict, FALSE);
 
 #ifdef _WINDOWS 
-   CreateSpellCheckDlgWindow (TtaGetViewFrame (doc, view),
-			      TtaGetMessage (CORR, Correct), RejectedChar,
-			      SpellingBase, ChkrSelectProp, ChkrMenuOR, 
-			      ChkrFormCorrect, ChkrMenuIgnore, ChkrCaptureNC,
-			      ChkrSpecial);
-
+  ustrcpy (currentRejectedchars, RejectedChar); 
+  /* to have the same behavior as under Unix, we need to destroy the
+     dialog if it already existed */
+  if (SpellChecker) 
+    {
+      EndDialog (SpellChecker, ID_DONE);
+      SpellChecker = NULL;
+      hwndLanguage = NULL;
+    }
+  DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 #endif /* _WINDOWS */
 }
 
