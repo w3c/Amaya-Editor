@@ -791,7 +791,7 @@ void FontIdentifier (char alphabet, int family, int highlight, int size,
 	      ffamily = "-*-helvetica";
 	      break;
 	    case 3:
-	      ffamily = "-*-courier";
+	      ffamily = "-adobe-courier";
 	      break;
 	    default:
 	      ffamily = "-*-*";
@@ -838,7 +838,7 @@ void FontIdentifier (char alphabet, int family, int highlight, int size,
 	    }
 	  break;
 	}
-      sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-p-*-iso8859-1",
+      sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
 	       ffamily, wght, slant, size);
     }
   /* generate the Postscript name */
