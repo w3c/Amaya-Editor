@@ -1070,7 +1070,7 @@ Document            doc;
 	if (parent == NULL)
 	   parent = TtaGetParent (elCour);
 	elLast = TtaCreateDescent (doc, parent, elemTypeNew);
-	if (!TtaGetErrorCode ())
+	if (elLast != NULL && !TtaGetErrorCode ())
 	  {
 	     /* A descendance has been created */
 	     elFirst = TtaGetFirstChild (parent);
