@@ -2025,8 +2025,8 @@ void GL_window_copy_area (int frame,
 void GLResize (int width, int height, int x, int y)
 {
 #ifdef _GTK
-  /* gdk_gl_wait_gdk (); */
-/*   gdk_gl_wait_gl (); */
+  gdk_gl_wait_gdk ();
+  gdk_gl_wait_gl ();
 #endif /*_GTK*/ 
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
