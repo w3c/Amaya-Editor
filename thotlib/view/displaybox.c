@@ -2244,8 +2244,9 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
       GL_SetOpacity (1000);
       GL_SetStrokeOpacity (1000);
     
-      GL_TextureMap (pAb->AbBox->Pre_computed_Pic, 
-		     x, y, width, height);
+      GL_TextureMap (pAb->AbBox->Pre_computed_Pic,  
+      		     x, y, width, height); 
+
 
       GL_SetFillOpacity (pAb->AbOpacity);
       GL_SetOpacity (pAb->AbOpacity);
@@ -2298,7 +2299,9 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame,
       GL_GetCurrentClipping (&xprevclip, &yprevclip, 
 			     &widthprevclip, &heightprevclip);
       GL_SetClipping (x, y, width, height);  
-      /* glClearColor (1, 1, 1, 0); */
+
+     /* glClearColor (0, 0, 0, 0);  */
+
       glClear (GL_COLOR_BUFFER_BIT); 
       GL_UnsetClipping (xprevclip, yprevclip, 
 			widthprevclip, heightprevclip);

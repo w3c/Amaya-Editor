@@ -273,7 +273,7 @@ void ResetMainWindowBackgroundColor (int frame)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 1.0);
+  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
 }
 /*----------------------------------------------------------------------
   SetMainWindowBackgroundColor :                          
@@ -287,7 +287,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 1.0);
+  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
 }
 
 /*----------------------------------------------------------------------
