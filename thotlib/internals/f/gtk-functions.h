@@ -133,7 +133,10 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
 				   GdkEventButton *event,
 				   gpointer user_data);
 
-gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev);
-gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpointer data);
-void CreateColorSelectionGTK (int x, int y);
-
+gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev, gpointer data);
+gboolean ColorsExposeFgBgGTK (GtkWidget *widget, GdkEventExpose *ev, gpointer data);
+void ButtonFgToggledGTK (GtkToggleButton *button, gpointer data);
+void ButtonBgToggledGTK (GtkToggleButton *button, gpointer data);
+gboolean ColorsPressGTK (GtkWidget *widget, gpointer data);
+gboolean CreateExtendedColorSelectionGTK (GtkWidget *widget, gpointer data);
+gboolean CloseExtendedColorSelectionGTK (GtkWidget *widget, gpointer data);
