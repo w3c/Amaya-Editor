@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "BOOKMARKS" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\freetype-2.1.9\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "BOOKMARKS" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 ..\freetype-2.1.0\objs\freetype.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt"
+# ADD LINK32 freetype219MT.lib librdf.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt" /libpath:".\librdf\Release\\" /libpath:"..\..\freetype-2.1.9\objs"
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
 
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "_DEBUG" /D "BOOKMARKS" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\..\freetype-2.1.9\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "_DEBUG" /D "BOOKMARKS" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /FR /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\freetype-2.1.0\objs\freetype.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libcmtd" /pdbtype:sept
+# ADD LINK32 freetype219_D.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libcmtd" /pdbtype:sept /libpath:"..\..\..\freetype-2.1.9\objs"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -319,10 +319,6 @@ SOURCE=.\libThotEditor.lib
 # Begin Source File
 
 SOURCE=.\libwww.lib
-# End Source File
-# Begin Source File
-
-SOURCE=.\librdf\Debug\librdf.lib
 # End Source File
 # Begin Source File
 

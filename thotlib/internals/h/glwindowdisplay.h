@@ -89,7 +89,7 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
 void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
 
 /*Text rendering*/
-void TranslateChars (CHAR_T *text);
+/*void TranslateChars (CHAR_T *text);*/
 int UnicodeCharacterWidth (CHAR_T c, ThotFont font);
 int GL_DrawString (int fg, 
 		   CHAR_T *str, 

@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\freetype-2.1.0\include" /D "NDEBUG" /D "__STDC__" /D "_WINDOWS" /D "_STIX" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_GL" /D "WIN32" /D "_WINGUI" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\..\freetype-2.1.9\include" /D "NDEBUG" /D "__STDC__" /D "_WINDOWS" /D "_STIX" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_GL" /D "WIN32" /D "_WINGUI" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x40c
 # ADD RSC /l 0x40c
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\freetype-2.1.0\include" /D "_DEBUG" /D "_WINDOWS" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_GL" /D "WIN32" /D "_WINGUI" /FR /FD /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /I "..\..\..\freetype-2.1.9\include" /D "_DEBUG" /D "_WINDOWS" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_GL" /D "WIN32" /D "_WINGUI" /FR /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x40c
 # ADD RSC /l 0x40c

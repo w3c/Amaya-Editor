@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\libwww\modules\r" /I "..\..\libraptor" /I "..\..\..\libwww\modules\expat\lib" /D "NDEBUG" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "WIN32" /D "_WINDOWS" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\libwww\modules\r" /I "..\..\..\redland\librdf" /I "..\..\..\redland\raptor" /I "..\..\..\libwww\modules\expat\lib" /D "NDEBUG" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "WIN32" /D "_WINDOWS" /D "RAPTOR_INTERNAL" /D "LIBRDF_INTERNAL" /YX /FD /c
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
 # ADD RSC /l 0x40c /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\libwww\modules\r" /I "..\..\..\redland\librdf" /I "..\..\..\redland\raptor" /I "..\..\..\libwww\modules\expat\lib" /D "_DEBUG" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "WIN32" /D "_WINDOWS" /D "RAPTOR_INTERNAL" /D "LIBRDF_INTERNAL" /FD /I /GZ /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\libwww\modules\r" /I "..\..\..\redland\librdf" /I "..\..\..\redland\raptor" /I "..\..\..\libwww\modules\expat\lib" /D "_DEBUG" /D "RAPTOR_INTERNAL" /D "LIBRDF_INTERNAL" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "WIN32" /D "_WINDOWS" /FD /I /GZ /c
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
 # ADD RSC /l 0x40c /d "_DEBUG"
 BSC32=bscmake.exe

@@ -119,7 +119,7 @@ and must be removed at the end of the debug */
 typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
 /* added functions */
 void bzero (void *s, size_t n);
-#ifndef _WX /* SG there is warnings if I define this function */
+#if !defined(_WX) && !defined(_GL) /* SG there is warnings if I define this function */
 int _getpid (void);
 #endif /* _WX */
 #ifdef __STDC__ // allready defined if __STDC__ is not defined
