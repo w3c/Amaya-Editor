@@ -165,21 +165,22 @@
       </object>
       <object class="sizeritem">
         <option>0</option>
-        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
         <border>7</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_PRINTBUTTON">
               <label>CONFIRMBUTTON</label>
               <default>1</default>
             </object>
           </object>
+          <object class="spacer">
+            <size>10,0</size>
+          </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_CANCELBUTTON">
               <label>CANCELBUTTON</label>
             </object>

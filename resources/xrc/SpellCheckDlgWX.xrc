@@ -157,7 +157,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE1_CHK">
-	             <size>250,-1</size>
+                      <size>250,-1</size>
                       <label>words that are all caps         </label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>
@@ -165,7 +165,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE2_CHK">
-	             <size>250,-1</size>
+                      <size>250,-1</size>
                       <label>words with digits</label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>
@@ -173,7 +173,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE3_CHK">
-	             <size>250,-1</size>
+                      <size>250,-1</size>
                       <label>Roman numerals</label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>
@@ -181,7 +181,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_IGNORE4_CHK">
-	             <size>250,-1</size>
+                      <size>250,-1</size>
                       <label>words containing:     </label>
                     </object>
                     <flag>wxLEFT|wxRIGHT</flag>
@@ -210,42 +210,49 @@
       </object>
       <object class="sizeritem">
         <option>0</option>
-        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
         <border>7</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_SEARCH_SKIP_BUTTON">
               <label>  Search / Skip  </label>
               <default>1</default>
             </object>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_SKIP_DIC_BUTTON">
               <label>  Skip (+dic)  </label>
             </object>
             <flag>wxALL</flag>
-            <border>5</border>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_REPLACE_NEXT_BUTTON">
               <label>  Replace and Next  </label>
             </object>
             <flag>wxALL</flag>
-            <border>5</border>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_REPLACE_DIC_BUTTON">
               <label>  Replace (+dic)  </label>
             </object>
             <flag>wxALL</flag>
-            <border>5</border>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <border>5</border>
             <object class="wxButton" name="wxID_CANCEL_BUTTON">
               <label>  Cancel  </label>
             </object>
