@@ -138,7 +138,7 @@ void AnnotFilter_add (List **me, CHAR_T *object)
     return;
 
   /* initialize the filter */
-  filter = TtaGetMemory (sizeof (AnnotFilter));
+  filter = TtaGetMemory (sizeof (AnnotFilterData));
   filter->object = TtaStrdup (object);
   filter->show = TRUE;
 
@@ -153,7 +153,7 @@ void AnnotFilter_add (List **me, CHAR_T *object)
 }
 
 /*------------------------------------------------------------
-   AnnotList_search
+   AnnotFilter_search
    Returns list item that contains the object
    ------------------------------------------------------------*/
 List *AnnotFilter_search (List *list, CHAR_T *object)
@@ -172,6 +172,27 @@ List *AnnotFilter_search (List *list, CHAR_T *object)
 }
 
 /*------------------------------------------------------------
+   AnnotFilter_show
+   Returns a boolean saying if a filter element containing
+   a given object should be shown. If no filter element is
+   found, it returns TRUE.
+   ------------------------------------------------------------*/
+ThotBool AnnotFilter_show (List *list, CHAR_T *object)
+{
+  List *list_item = list;
+  AnnotFilterData *filter;
+
+  list_item = AnnotFilter_search (list, object);
+  if (!list_item)
+    return TRUE;
+  filter = (AnnotFilterData *) list_item->object;
+  if (filter)
+    return filter->show;
+  else
+    return TRUE;
+}
+
+/*------------------------------------------------------------
    AnnotList_search
    Returns list item that contains the object
    ------------------------------------------------------------*/
@@ -185,6 +206,30 @@ List *AnnotList_search (List *list, CHAR_T *object)
     }
 
   return (item);
+}
+
+/*------------------------------------------------------------
+   AnnotList_searchAnnot
+   Returns the annot item that points to the same url
+   ------------------------------------------------------------*/
+AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url)
+{
+  List *item = list;
+  AnnotMeta *annot;
+  ThotBool found = FALSE;
+
+  while (item)
+    {
+      annot = (AnnotMeta *) item->object;
+      if (!ustrcasecmp (annot->annot_url, url))
+	{
+	  found = TRUE;
+	  break;
+	}
+      item = item->next;
+    }
+
+  return (found) ? annot : NULL;
 }
 
 /* ------------------------------------------------------------

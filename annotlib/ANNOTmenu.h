@@ -27,9 +27,11 @@
 #define MAX_QUERYCONFMENU_DLG  10
 
 #define AnnotFilterMenu      1
-#define mSelectFilter          2
-#define mFilterSelector      3
-#define MAX_ANNOTFILTER_DLG  4
+#define mAnnotFilterEmpty1   2
+#define mAnnotFilterLabelStars 3
+#define mSelectFilter        4
+#define mFilterSelector      5
+#define MAX_ANNOTFILTER_DLG  6
 
 #endif /*_ANNOTquery.h */
 

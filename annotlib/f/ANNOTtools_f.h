@@ -17,8 +17,12 @@ extern void AnnotFilter_add ( List **me,
                               CHAR_T *object );
 extern List *AnnotFilter_search ( List *list,
                                   CHAR_T *object );
+extern ThotBool AnnotFilter_show ( List *list,
+                                   CHAR_T *object );
 extern List *AnnotList_search ( List *list,
                                 CHAR_T *object );
+extern AnnotMeta *AnnotList_searchAnnot ( List *list,
+                                          CHAR_T *url );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
@@ -59,8 +63,12 @@ extern void AnnotFilter_add (/* List **me,
                                 CHAR_T *object */);
 extern List *AnnotFilter_search (/* List *list,
                                     CHAR_T *object */);
+extern ThotBool AnnotFilter_show (/* List *list,
+                                     CHAR_T *object */);
 extern List *AnnotList_search (/* List *list,
                                   CHAR_T *object */);
+extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
+                                            CHAR_T *url */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);

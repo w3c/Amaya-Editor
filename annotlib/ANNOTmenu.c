@@ -39,8 +39,9 @@ static int      AnnotFilterBase;
 static Document AnnotFilterDoc;
 static View     AnnotFilterView;
 static CHAR_T   AnnotSelItem[MAX_LENGTH];
+static int      AnnotSelIndex;
 static SelType  AnnotSelType;
- 
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   CustomQueryCallbackDialog
@@ -256,8 +257,6 @@ Document doc;
 		   TRUE,
 		   TRUE);
 
-   /* remove the selector */
-   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
 }
 
 /*---------------------------------------------------------------
@@ -276,6 +275,17 @@ ThotBool show;
 {
   List *list_item;
   AnnotFilterData *filter;
+  CHAR_T *annot_url;
+  AnnotMeta *annot;
+  int length;
+
+  ElementType elType;
+  Element     el;
+  Attribute           attr;
+  AttributeType       attrType;
+
+  if (AnnotSelItem[0] == WC_EOS)
+    return;
 
   /* change the filter metadata first */
   switch (selector)
@@ -294,7 +304,7 @@ ThotBool show;
   while (list_item)
     {
       filter = (AnnotFilterData *) list_item->object;
-      if (filter && !ustrcasecmp (filter->object, object))
+      if (filter && !ustrcasecmp (filter->object, object + 1))
 	{
 	  filter->show = show;
 	  break;
@@ -304,12 +314,82 @@ ThotBool show;
 
   /* then redraw the selector */
   BuildAnnotFilterSelector (doc, selector);
+  /* update the selector text */
+  if (show)
+    AnnotSelItem[0] = TEXT(' ');
+  else
+    AnnotSelItem[0] = TEXT('*');
+  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, AnnotSelItem);
 
-  /* @@ and show/hide it on the document :) */
+  /* and show/hide it on the document :) */
+
+  /* avoid refreshing the document while we're constructing it */
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+  /* initialize */
+  el = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el);
+
+  attrType.AttrSSchema = elType.ElSSchema;
+  elType.ElTypeNum = HTML_EL_Anchor;
+  while ((el = TtaSearchTypedElement (elType, SearchForward, el)))
+    {
+      attrType.AttrTypeNum = HTML_ATTR_Annotation;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+	/* it's not an annotation link */
+	continue;
+
+      /* get the HREF (we will use it to search in the filters */
+      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      attr = TtaGetAttribute (el, attrType);
+      if (!attr)
+	/* this looks like an error! */
+	continue;
+      length = TtaGetTextAttributeLength (attr) + 1;
+      annot_url = TtaAllocString (length);
+      TtaGiveTextAttributeValue (attr, annot_url, &length);
+      
+      /* now look in the filters to see if we need to hide it or not */
+      annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations, 
+				     annot_url);
+      TtaFreeMemory (annot_url);
+      if (!annot)
+	continue;
+      
+      if (( !AnnotFilter_show (AnnotMetaData[doc].authors, annot->author)
+	  || !AnnotFilter_show (AnnotMetaData[doc].types, annot->type)
+	      /*** here, I need to extract the server from annot->url? 
+	  || !AnnotFilter_show (AnnotMetaData[doc].servers, annot->servers)))
+	      ***/
+	   ))
+	show = FALSE;
+      else
+	show = TRUE;
+
+      attrType.AttrTypeNum = HTML_ATTR_AnnotationHide;
+      attr = TtaGetAttribute (el, attrType);
+      if (show)
+	{
+	  /* erase the attribute */
+	  if (attr)
+	    TtaRemoveAttribute (el, attr, doc);  
+	}
+      else
+	{
+	  /* add the attribute if it doesn't exist */
+	  if (!attr)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);  
+	    }
+	}
+    }
+  /* show the document */
+  TtaSetDisplayMode (doc, DisplayImmediately);
 }
 
 /*---------------------------------------------------------------
-  ChangeAnnotVisibility
+  ChangeAllAnnotVisibility
 ------------------------------------------------------------------*/
 #ifdef __STDC__
 static void ChangeAllAnnotVisibility (Document doc, SelType selector, ThotBool show)
@@ -373,6 +453,9 @@ ThotBool show;
 
   /* and redisplay the current selector */
   BuildAnnotFilterSelector (document, AnnotSelType);
+  /* and clear the selector text */
+  AnnotSelItem[0] = WC_EOS;
+  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
 
   /*
    * Do the visible change on the document
@@ -485,8 +568,13 @@ CHAR_T             *data;
 	  /* @@ here I need to have a pointer in memory to the
 	     annotation document... means I'll only be able to have
 	     one such annotation dialogue at the time */
-	  AnnotSelType = val;
-	  BuildAnnotFilterSelector (AnnotFilterDoc, val);
+	  if (AnnotSelType != val)
+	    {
+	      AnnotSelType = val;
+	      AnnotSelItem[0] = WC_EOS;
+	      BuildAnnotFilterSelector (AnnotFilterDoc, val);
+	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
+	    }
 	  break;
 
 	default:
@@ -519,8 +607,9 @@ View                view;
   AnnotFilterDoc = document;
   AnnotFilterView = view;
   AnnotSelItem[0] = WC_EOS;
+  AnnotSelIndex = -1;
   AnnotSelType = 0;
-
+  
   /* Create the dialogue form */
   i = 0;
   strcpy (&s[i], TEXT("Show"));
@@ -533,9 +622,19 @@ View                view;
 
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
 	       TtaGetViewFrame (document, view),
-	       TEXT("Annotation filter"), 4, s, TRUE, 2, 'L', 
+	       TEXT("Annotation filter  "), 4, s, TRUE, 2, 'L', 
 	       D_DONE);
   
+  /* an empty text */
+  TtaNewLabel (AnnotFilterBase + mAnnotFilterEmpty1,
+	       AnnotFilterBase + AnnotFilterMenu,
+	       TEXT("                 "));
+
+  /* the * = filter message */
+  TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
+	       AnnotFilterBase + AnnotFilterMenu,
+	       TEXT("     a '*' prefix means hidden"));
+	       
   /* create the radio buttons for choosing a selector */
   i = 0;
   strcpy (&s[i], TEXT("BBy author"));
@@ -553,9 +652,11 @@ View                view;
 		 NULL,
 		 TRUE);
 
-  /* @@ we should save the last selector type */
+  /* display the selectors */
   BuildAnnotFilterSelector (document, BY_AUTHOR);
-
+  /* choose the BY_AUTHOR radio button */
+  TtaSetMenuForm (AnnotFilterBase + mSelectFilter, 0);
+  
   /* display the menu */
   TtaSetDialoguePosition ();
   TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE);
