@@ -42,9 +42,6 @@ void CleanPictInfo (PictInfo *imageDesc)
 	{
 #ifndef _GL
 #ifndef _GTK
-#ifdef _WINDOWS
-	  imageDesc->PicBgMask = -1;
-#endif /* _WINDOWS */
 	  FreePixmap (imageDesc->PicMask);
 	  FreePixmap (imageDesc->PicPixmap);
 #else /*_GTK*/
@@ -57,13 +54,16 @@ void CleanPictInfo (PictInfo *imageDesc)
 #else /*_GL*/
 	  FreeGlTexture (imageDesc);
 #endif /*_GL*/
-	  imageDesc->PicXArea = 0;
-	  imageDesc->PicYArea = 0;
-	  imageDesc->PicWArea = 0;
-	  imageDesc->PicHArea = 0;
-	  imageDesc->PicWidth = 0;
-	  imageDesc->PicHeight = 0;
 	}
+#ifdef _WINDOWS
+	imageDesc->PicBgMask = -1;
+#endif /* _WINDOWS */
+	imageDesc->PicXArea = 0;
+	imageDesc->PicYArea = 0;
+	imageDesc->PicWArea = 0;
+	imageDesc->PicHArea = 0;
+	imageDesc->PicWidth = 0;
+	imageDesc->PicHeight = 0;
       if (imageDesc->PicType >= InlineHandlers &&
 	  PictureHandlerTable[imageDesc->PicType].FreePicture)
 	(*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
@@ -164,7 +164,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
   else
     return;
 
-  if (imageDesc && imageDesc->PicFileName != ptr)
+  if (imageDesc && (imageDesc->PicFileName != ptr || ptr == NULL))
     {
       /* reinitialize the image descriptor */
       CleanPictInfo (imageDesc);

@@ -39,13 +39,12 @@
 #endif /* _WINDOWS */
 #include "application.h"
 
-
 #define	MAXCOLORMAPSIZE		256
-
 #ifndef _WINDOWS
 #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
 #else/*_WINDOWS*/
 #define COLORMAPSCALE 1;
+int     PngTransparentColor;
 #endif /*_WINDOWS*/
 
 #define CM_RED		0
@@ -1172,15 +1171,19 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp;
-  unsigned char       r, g, b;
+  unsigned char       r, g, b, tr, tg, tb, alpha;
   unsigned int        col;
   int                 temp, w, h, ind;
   int                 linepad;
   int                 bytesperline;
   int                 rshift, gshift, bshift;
-  unsigned short      rmask, gmask, bmask;
+  unsigned short      rmask, gmask, bmask, tcolor;
 
   bit_data = NULL;
+  /* this is an approximation for alpha channel support (please use OpenGL)
+  by default there is no transparent color */
+  PngTransparentColor = -1;
+  tcolor = FALSE;
   switch (depth)
     {
     case 1:
@@ -1246,8 +1249,28 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
 		  b = data[ind++];
 		}
 	      if (withAlpha)
-		/* skip the alpha channel */
-		ind++;
+		  {
+			/* skip the alpha channel */
+			alpha = data[ind++];
+			if (alpha < 127)
+			{
+			  if (tcolor)
+			  {
+				/* use the transparent color */
+				b = tb;
+				g = tg;
+				r = tr;
+			  }
+			  else
+			  {
+				/* define the transparent color */
+				tb = b;
+				tg = g;
+				tr = r;
+				tcolor = TRUE;
+			  }
+			}
+		  }
 	    }
 	  else
 	    {
@@ -1285,8 +1308,28 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
 		      b = data[ind++];
 		    }
 		  if (withAlpha)
+		  {
 		    /* skip the alpha channel */
-		    ind++;
+			alpha = data[ind++];
+			if (alpha < 127)
+			{
+			  if (tcolor)
+			  {
+				/* use the transparent color */
+				b = tb;
+				g = tg;
+				r = tr;
+			  }
+			  else
+			  {
+				/* define the transparent color */
+				tb = b;
+				tg = g;
+				tr = r;
+				tcolor = TRUE;
+			  }
+			}
+		  }
 		  *bitp++ = b;
 		  *bitp++ = g;
 		  *bitp++ = r;
@@ -1325,8 +1368,28 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
 		      b = data[ind++];
 		    }
 		  if (withAlpha)
+		  {
 		    /* skip the alpha channel */
-		    ind++;
+			alpha = data[ind++];
+			if (alpha < 127)
+			{
+			  if (tcolor)
+			  {
+				/* use the transparent color */
+				b = tb;
+				g = tg;
+				r = tr;
+			  }
+			  else
+			  {
+				/* define the transparent color */
+				tb = b;
+				tg = g;
+				tr = r;
+				tcolor = TRUE;
+			  }
+			}
+		  }
 		  *bitp++ = b;
 		  *bitp++ = g;
 		  *bitp++ = r;
@@ -1345,6 +1408,9 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
       break;
     }
 
+  if (tcolor)
+	/* get the pseudo transparent color */
+    PngTransparentColor = TtaGetThotColor (tr, tg, tb);
   newimage = CreateCompatibleBitmap (hDC, width, height);
   if (depth < 8)
     SetBitmapBits (newimage, width * height, bit_data);

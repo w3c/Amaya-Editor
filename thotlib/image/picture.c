@@ -1200,17 +1200,20 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
 	       gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
 	     }
-#endif /* !_GTK */
+#endif /* _GTK */
 #else /* _WINDOWS */
 	case RealSize:
-	  if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)
+	  if (imageDesc->PicBgMask != -1 && imageDesc->PicType != -1)
 	    {
-	      /* No transparence */
+	      TransparentPicture (pixmap, xFrame, yFrame,
+				  imageDesc->PicWArea, imageDesc->PicHArea,
+				  imageDesc->PicBgMask);
+	    }
+	  else
+	    {
+	      /* No color transparence */
 	      hMemDC = CreateCompatibleDC (TtDisplay);
-	      bitmap = SelectObject (hMemDC, pixmap);
 	      SetMapMode (hMemDC, GetMapMode (TtDisplay));
-
-	      GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
 	      /*DPtoLP (TtDisplay, &ptSize, 1);*/
 		  /* shift in the source image */
 	      ptOrg.x = pFrame->FrClipXBegin - (box->BxXOrg + box->BxTMargin + box->BxLBorder +
@@ -1224,23 +1227,17 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 			ptOrg.x = 0;
 		  if (ptOrg.y < 0)
 			ptOrg.y = 0;
+	      GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
 		  if (ptSize.x > bm.bmWidth - ptOrg.x)
 	        ptSize.x = bm.bmWidth - ptOrg.x;
 		  if (ptSize.y > bm.bmHeight - ptOrg.y)
 	        ptSize.y = bm.bmHeight - ptOrg.y;
-	      /*DPtoLP (hMemDC, &ptOrg, 1);*/
-	    
+	      bitmap = SelectObject (hMemDC, pixmap);
 	      BitBlt (TtDisplay, xFrame + ptOrg.x, yFrame + ptOrg.y,
-		      ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
+		          ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
 	      SelectObject (hMemDC, bitmap);
-	      if (hMemDC )
-		DeleteDC (hMemDC);
-	    }
-	  else
-	    {
-	      TransparentPicture (pixmap, xFrame, yFrame,
-				  imageDesc->PicWArea, imageDesc->PicHArea,
-				  imageDesc->PicBgMask);
+	      if (hMemDC)
+		      DeleteDC (hMemDC);
 	    }
 #endif /* _WINDOWS */
 	  break;
@@ -1445,15 +1442,11 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      j += jh;
 		  jy = 0;
 	    } while (j < h);
-#ifndef IV
-          BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
-#else /* IV */
 	  if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)
 	    BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 	  else
 	    TransparentPicture (bitmapTiled, xFrame, yFrame, w, h,
 				imageDesc->PicBgMask);
-#endif /* IV */
 	  SelectObject (hOrigDC, bitmap);
 	  SelectObject (hMemDC, pBitmapTiled);
           SelectClipRgn(TtDisplay, NULL);

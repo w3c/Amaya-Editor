@@ -103,6 +103,7 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 static png_color        Std_color_cube[128];
 #ifdef _WINDOWS     
 extern ThotBool         pic2print;
+extern int              PngTransparentColor;
 #endif /* _WINDOWS */
 
 char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
@@ -753,13 +754,12 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WINDOWS */
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
+  TtaFreeMemory (buffer);
 #ifdef _WINDOWS
-  if (withAlpha)
-    imageDesc->PicMask = buffer;
-  else
+  if (withAlpha && bg == -1 && PngTransparentColor != -1)
+    imageDesc->PicBgMask = PngTransparentColor;
 #endif /* _WINDOWS */
-    TtaFreeMemory (buffer);
-#else /*_GL*/
+#else /* _GL */
   /* GL buffer are display independant, 
   and already in the good format RGB, or RGBA*/
   pixmap = (Pixmap) buffer;
