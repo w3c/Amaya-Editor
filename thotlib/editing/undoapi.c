@@ -28,12 +28,12 @@
 #undef THOT_EXPORT
 
 /* ----------------------------------------------------------------------
-   TtaWithinUndoSequence returns TRUE if a undo sequence is opened
+   TtaPrepareUndo returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool      TtaWithinUndoSequence (Document document)
+ThotBool      TtaPrepareUndo (Document document)
 #else  /* __STDC__ */
-ThotBool      TtaWithinUndoSequence (document)
+ThotBool      TtaPrepareUndo (document)
 Document document;
 #endif /* __STDC__ */
 {

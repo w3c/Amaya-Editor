@@ -1512,6 +1512,9 @@ void                TtcCreateElement (doc, view)
 		       SetDocumentModified (pDoc, TRUE, 30);
 		       /* envoie un evenement ElemNew.Post a l'application */
 		       NotifySubTree (TteElemNew, pDoc, pNew, 0);
+		       if (!lock)
+			 /* unlock table formatting */
+			 (*ThotLocalActions[T_unlock]) ();
 		       /* Replace la selection */
 		       SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
 		    }
@@ -1519,9 +1522,6 @@ void                TtcCreateElement (doc, view)
 	  }
 	if (histSeq)
 	   CloseHistorySequence (pDoc);
-	if (!lock)
-	  /* unlock table formatting */
-	  (*ThotLocalActions[T_unlock]) ();
      }
 }
 

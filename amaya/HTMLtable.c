@@ -458,10 +458,11 @@ Document            doc;
   Element            *colElement;
   Element             row, nextRow, firstrow, colhead;
   Element             cell, nextCell, group, new;
+  Element             differredHSpan[MAX_COLS];
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
-  int                *colVSpan;
+  int                *colVSpan, hspan, differredRef[MAX_COLS];
   int                 span, cRef, cNumber;
   int                 i, rowType;
   ThotBool            inMath;
@@ -471,8 +472,8 @@ Document            doc;
 
   colElement = TtaGetMemory (sizeof (Element) * MAX_COLS);
   colVSpan = TtaGetMemory (sizeof (int) * MAX_COLS);
-
-  /* store list of colheads */
+  
+  /* store the list of colheads */
   elType = TtaGetElementType (table);
   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), doc));
   if (inMath)
@@ -496,7 +497,8 @@ Document            doc;
       cNumber++;
     }
   cell = NULL;
-  
+  /* number of differed colspan rules */
+  hspan = 0;
   attrType.AttrSSchema = elType.ElSSchema;
   attrTypeHSpan.AttrSSchema = elType.ElSSchema;
   attrTypeHSpan.AttrTypeNum = HTML_ATTR_colspan_;
@@ -582,29 +584,48 @@ Document            doc;
 			      span = TtaGetAttributeValue (attr);
 			      if (span > 1)
 				{
-				  for (i = 1; i < span; i++)
+				  i = 1;
+				  while (i < span && cRef + i < cNumber)
 				    {
 				      cRef++;
-				      if (cRef == cNumber && cRef < MAX_COLS)
-					{
-					  /* there is no Column_head for that cell */
-					  /* Create an additional Column_head */
-					  colElement[cRef] = NewColumnHead (colElement[cRef-1], FALSE, TRUE, row, doc, inMath);
-					  cNumber++;
-					}
 				      colVSpan[cRef] = colVSpan[cRef-1];
+				      i++;
 				    }
+				  if (nextCell)
+				    /* Create additional Column_heads */
+				    while (i < span)
+				      {
+					cRef++;
+					if (cRef < MAX_COLS)
+					  {
 
-				  /* set the attribute ColExt */
-				  attrType.AttrTypeNum = HTML_ATTR_ColExt;
-				  attr = TtaGetAttribute (cell, attrType);
-				  if (attr == NULL)
+					    colElement[cRef] = NewColumnHead (colElement[cRef-1], FALSE, TRUE, row, doc, inMath);
+					    cNumber++;
+					  }
+					colVSpan[cRef] = colVSpan[cRef-1];
+					i++;
+				      }
+				  else if (i < span && hspan < MAX_COLS)
 				    {
-				      attr = TtaNewAttribute (attrType);
-				      TtaAttachAttribute (cell, attr, doc);
+				      /* differs the management of the colspan */
+				      differredHSpan[hspan] = cell;
+				      differredRef[hspan] = cRef - i + 1;
+				      hspan++;
+				      span = 1;
 				    }
-				  if (attr != NULL)
-				    TtaSetAttributeReference (attr, cell, doc, colElement[cRef], doc);
+				  if (span > 1)
+				    {
+				      /* set the attribute ColExt */
+				      attrType.AttrTypeNum = HTML_ATTR_ColExt;
+				      attr = TtaGetAttribute (cell, attrType);
+				      if (attr == NULL)
+					{
+					  attr = TtaNewAttribute (attrType);
+					  TtaAttachAttribute (cell, attr, doc);
+					}
+				      if (attr != NULL)
+					TtaSetAttributeReference (attr, cell, doc, colElement[cRef], doc);
+				    }
 				}
 			    }
 			}
@@ -683,6 +704,35 @@ Document            doc;
 	    else
 	      row = NULL;
 	  }
+	}
+    }
+  /* now manage differed colspan rules */
+  for (i = 0; i < hspan; i++)
+    {
+      /* if there an attribute colspan for that cell,
+	 update attribute ColExt */
+      cell = differredHSpan[i];
+      attr = TtaGetAttribute (cell, attrTypeHSpan);
+      span = TtaGetAttributeValue (attr);
+      cRef = differredRef[i];
+      if (span + cRef >= cNumber)
+	{
+	  span = cNumber - cRef;
+	  /* the span value is not correct, set the right value */
+	  TtaSetAttributeValue (attr, span, cell, doc);
+	}
+      if (span > 1)
+	{
+	  /* set the attribute ColExt */
+	  attrType.AttrTypeNum = HTML_ATTR_ColExt;
+	  attr = TtaGetAttribute (cell, attrType);
+	  if (attr == NULL)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (cell, attr, doc);
+	    }
+	  if (attr != NULL)
+	    TtaSetAttributeReference (attr, cell, doc, colElement[cRef + span - 1], doc);
 	}
     }
   TtaFreeMemory (colElement);
@@ -1345,7 +1395,7 @@ ThotBool     inMath;
 		      if (attr != NULL && TtaGetAttributeValue (attr) > 1)
 			span = TRUE;
 		    }
-		  if (TtaWithinUndoSequence (doc))
+		  if (TtaPrepareUndo (doc))
 		     TtaRegisterElementDelete (cell, doc);
 		  TtaDeleteTree (cell, doc);
 		}
@@ -1380,7 +1430,7 @@ ThotBool     inMath;
 		    row = NULL;
 		}
 	    }
-	  if (TtaWithinUndoSequence (doc))
+	  if (TtaPrepareUndo (doc))
 	      TtaDeleteTree (colhead, doc);
 	  if (span)
 	     CheckAllRows (table, doc);
@@ -1504,7 +1554,7 @@ NotifyElement      *event;
     }
   if (empty)
     {
-      if (TtaWithinUndoSequence (doc))
+      if (TtaPrepareUndo (doc))
 	  /* register that the table is deleted */
 	  TtaRegisterElementDelete (table, doc);
       TtaDeleteTree (table, doc);

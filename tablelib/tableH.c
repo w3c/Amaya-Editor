@@ -704,7 +704,7 @@ ThotBool         force;
 #endif
 {
   PtrAbstractBox      pBlock, pCell;
-  PtrBox              pBox, pOldBox;
+  PtrBox              pBox, pOldBox, box;
   Propagation         savePropagate;
   int                 j, var, delta, px;
   int                 width, i, cRef, minsize;
@@ -764,7 +764,7 @@ ThotBool         force;
   minWithPercent = 0;
   maxWithPercent = 0;
   /* additional space */ 
-    remainder = 0;
+  remainder = 0;
   /* no previous column */
   pOldBox = NULL;
 #ifdef TAB_DEBUG
@@ -778,8 +778,12 @@ printf("<<<<<<<<<<<<<<<%d\n", pBox->BxWidth);
       /* take the spacing into account */
       if (pOldBox == NULL)
 	{
+	  /* add the left cellspacing */
 	  if (pBox->BxXOrg - table->AbBox->BxXOrg > 0)
 	    remainder += pBox->BxXOrg - table->AbBox->BxXOrg;
+	  /* add the right cellspacing */
+	  box = colBox[cRef]->AbEnclosing->AbBox;
+	  remainder += box->BxRMargin + box->BxRPadding + box->BxRBorder;
 	}
       else if (pBox->BxXOrg - pOldBox->BxXOrg - pOldBox->BxWidth > 0)
 	remainder += pBox->BxXOrg - pOldBox->BxXOrg - pOldBox->BxWidth;
@@ -2055,11 +2059,10 @@ void    TtaLockTableFormatting ()
   Lock = TRUE;
 }
 
-
 /*----------------------------------------------------------------------
-  TtaUnlockTableFormatting reformats all locked tables
+  UnlockTableFormatting reformats all locked tables
   ----------------------------------------------------------------------*/
-void    TtaUnlockTableFormatting ()
+static void    UnlockTableFormatting ()
 {
   PtrLockRelations    pLockRel;
   Propagation         savpropage;
@@ -2105,6 +2108,15 @@ void    TtaUnlockTableFormatting ()
     }
 }
 
+/*----------------------------------------------------------------------
+  TtaUnlockTableFormatting reformats all locked tables
+  Redisplay the selection and update scrolling bars
+  ----------------------------------------------------------------------*/
+void    TtaUnlockTableFormatting ()
+{
+  UnlockTableFormatting ();
+}
+
 
 /*----------------------------------------------------------------------
   TtaGiveTableFormattingLock gives the status of the table formatting lock.
@@ -2135,7 +2147,7 @@ void                TableHLoadResources ()
         FirstColUpdate = NULL;
 	/* connecting resources */
 	TteConnectAction (T_lock, (Proc) TtaLockTableFormatting);
-	TteConnectAction (T_unlock, (Proc) TtaUnlockTableFormatting);
+	TteConnectAction (T_unlock, (Proc) UnlockTableFormatting);
 	TteConnectAction (T_islock, (Proc) TtaGiveTableFormattingLock);
 	TteConnectAction (T_checktable, (Proc) UpdateTable);
 	TteConnectAction (T_checkcolumn, (Proc) UpdateColumnWidth);
