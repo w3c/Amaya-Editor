@@ -15,6 +15,9 @@ Fixed bugs 2.3:
   - when the backspace deleted a string, the final position of the cursor
     was wrong.
 
+* HTML:
+  - the <input type=image> was not well supported
+
 
 =============================================================
 2.2

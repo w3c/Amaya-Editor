@@ -1189,8 +1189,8 @@ caddr_t             call_d;
       || (catalogue->Cat_Type == CAT_DIALOG))
     TtaDestroyDialogue (catalogue->Cat_Ref);
 }
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
 /*----------------------------------------------------------------------
    Callback de saisie de valeur.                                      
   ----------------------------------------------------------------------*/

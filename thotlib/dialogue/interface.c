@@ -491,7 +491,7 @@ static Multi_Key    mk_tab[] =
    {0, 0, 0},
 };
 
-#define NB_MK (sizeof(mk_tab) / sizeof(Multi_Key))
+#define NB_MK (int)((sizeof(mk_tab) / sizeof(Multi_Key)))
 
 #ifndef _WINDOWS
 static Display     *TtaDisplay = NULL;
@@ -531,7 +531,7 @@ ThotComposeStatus  *status;	/* not implemented */
 
   if (event == NULL)
     return (0);
-  if (event->keycode < TtaMinKeyCode || event->keycode > TtaMaxKeyCode)
+  if ((int)(event->keycode) < TtaMinKeyCode || (int)(event->keycode) > TtaMaxKeyCode)
     {
       if (keysym != NULL)
 	*keysym = 0;
@@ -540,6 +540,8 @@ ThotComposeStatus  *status;	/* not implemented */
 
   keycode = event->keycode - TtaMinKeyCode;
   state = event->state;
+  state= state & (ShiftMask | LockMask | Mod1Mask | Mod3Mask);
+
   /* search for the keysym depending on the state flags */
   if (state == 0)
     {
