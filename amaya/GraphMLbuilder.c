@@ -913,72 +913,6 @@ ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, 
 }
 
 /*----------------------------------------------------------------------
-   ParseTransformAttribute
-   Parse the value of a transform attribute
-  ----------------------------------------------------------------------*/
-void      ParseTransformAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
-{
-   int                  length, x, y;
-   STRING               text, ptr;
-   PresentationValue    pval;
-   PresentationContext  ctxt;
-
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
-   if (text)
-      {
-      /* get the content of the translate attribute */
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute content */
-      /* look only for the "translate" part */
-      ptr = strstr (text, "translate");
-      if (ptr)
-	{
-        x = 0;  y = 0;
-        ptr += 9;
-        ptr = TtaSkipWCBlanks (ptr);
-        if (*ptr == TEXT('('))
-	  {
-          ctxt = TtaGetSpecificStyleContext (doc);
-	  ptr++;
-          ptr = ParseCSSUnit (ptr, &pval);
-	  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
-	    {
-	    /* the specific presentation is not a CSS rule */
-	    ctxt->cssLevel = 0;
-            ctxt->destroy = delete;
-	    TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
-	    }	    
-	  ptr = TtaSkipWCBlanks (ptr);
-          if (*ptr == TEXT(','))
-	    {
-	    ptr++;
-	    ptr = ParseCSSUnit (ptr, &pval);
-	    if (pval.typed_data.unit != STYLE_UNIT_INVALID)
-	      {
-	      ctxt->cssLevel = 0;
-              ctxt->destroy = delete;
-	      TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
-	      }
-	    ptr = TtaSkipWCBlanks (ptr);
-	    }
-	  else if (*ptr == TEXT(')'))
-	    {
-	    ptr++;
-	    pval.typed_data.unit = STYLE_UNIT_PX;
-	    pval.typed_data.value = 0;
-	    ctxt->cssLevel = 0;
-	    ctxt->destroy = delete;
-	    TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
-	    }
-          TtaFreeMemory (ctxt);
-	  }
-	}
-      TtaFreeMemory (text);
-      }
-}
-
-/*----------------------------------------------------------------------
    GetNumber
    Parse a coordinate value in a path expression and skip to next token
   ----------------------------------------------------------------------*/
@@ -1021,6 +955,64 @@ static STRING      GetNumber (STRING ptr, int* coord)
 	  *ptr == WC_EOL    || *ptr == WC_TAB   || *ptr == WC_CR))
     ptr++;
   return (ptr);
+}
+
+/*----------------------------------------------------------------------
+   ParseTransformAttribute
+   Parse the value of a transform attribute
+  ----------------------------------------------------------------------*/
+void      ParseTransformAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
+{
+   int                  length, x, y;
+   STRING               text, ptr;
+   PresentationValue    pval;
+   PresentationContext  ctxt;
+
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaAllocString (length);
+   if (text)
+     {
+       /* get the content of the transform attribute */
+       TtaGiveTextAttributeValue (attr, text, &length);
+       /* parse the attribute content */
+       /* look only for the "translate" part */
+       ptr = strstr (text, "translate");
+       if (ptr)
+	 {
+	   x = 0;  y = 0;
+	   pval.typed_data.value = 0;
+	   pval.typed_data.unit = STYLE_UNIT_PX;
+	   pval.typed_data.real = FALSE;
+	   ptr += 9;
+	   ptr = TtaSkipWCBlanks (ptr);
+	   if (*ptr == TEXT('('))
+	     {
+	       ptr++;
+	       ctxt = TtaGetSpecificStyleContext (doc);
+	       ptr = TtaSkipWCBlanks (ptr);
+	       ptr = GetNumber (ptr, &x);
+	       pval.typed_data.value = x;
+	       /* the specific presentation is not a CSS rule */
+	       ctxt->cssLevel = 0;
+	       ctxt->destroy = delete;
+	       TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
+	       ptr = TtaSkipWCBlanks (ptr);
+	       if (*ptr == TEXT(')'))
+		 pval.typed_data.value = 0;
+	       else
+		 {
+		   ptr = TtaSkipWCBlanks (ptr);
+		   ptr = GetNumber (ptr, &y);
+		   pval.typed_data.value = y;
+		 }
+	       TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
+	       if (*ptr == TEXT(')'))
+		 ptr++;
+	       TtaFreeMemory (ctxt);
+	     }
+	 }
+       TtaFreeMemory (text);
+     }
 }
 
 /*----------------------------------------------------------------------
