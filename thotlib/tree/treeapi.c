@@ -11,7 +11,6 @@
  *
  */ 
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -371,7 +370,7 @@ Element            TtaCopyTree (Element sourceElement, Document sourceDocument,
 	   pSS = NULL;
 	   ancestor = (PtrElement) parent;
 	   while (pSS == NULL && ancestor != NULL)
-	     if (!ustrcmp (ancestor->ElStructSchema->SsName,
+	     if (!strcmp (ancestor->ElStructSchema->SsName,
 			   ((PtrElement) sourceElement)->ElStructSchema->SsName))
 	       pSS = ancestor->ElStructSchema;
 	     else
@@ -383,7 +382,7 @@ Element            TtaCopyTree (Element sourceElement, Document sourceDocument,
 		   nextExtension = LoadedDocument[destinationDocument - 1]->DocSSchema->SsNextExtens;
 		   while (nextExtension != NULL)
 		     {
-		       if (!ustrcmp (nextExtension->SsName,
+		       if (!strcmp (nextExtension->SsName,
 				     ((PtrElement) sourceElement)->ElStructSchema->SsName))
 			 break;
 		       nextExtension = nextExtension->SsNextExtens;
@@ -392,7 +391,7 @@ Element            TtaCopyTree (Element sourceElement, Document sourceDocument,
 		     TtaError (ERR_invalid_parameter);
 		   pSS = nextExtension;
 		 }
-	       else if (!ustrcmp (LoadedDocument[destinationDocument - 1]->DocSSchema->SsName,
+	       else if (!strcmp (LoadedDocument[destinationDocument - 1]->DocSSchema->SsName,
 			((PtrElement) sourceElement)->ElStructSchema->SsName))
 		 pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
 	       else if (((PtrElement) sourceElement)->ElTerminal)
@@ -742,7 +741,7 @@ void                TtaAttachNewTree (Element tree, Document document)
        /* verifies that the tree type is defined into the document schema 
 	  or into one of its extensions */
        found = FALSE;
-       if (!ustrcmp (pDoc->DocSSchema->SsName, pRoot->ElStructSchema->SsName))
+       if (!strcmp (pDoc->DocSSchema->SsName, pRoot->ElStructSchema->SsName))
 	 /* document schema */
 	 found = TRUE;
        else if (pRoot->ElStructSchema->SsExtension)
@@ -751,7 +750,7 @@ void                TtaAttachNewTree (Element tree, Document document)
 	 {
 	   curExtension = pDoc->DocSSchema->SsNextExtens;
 	   while (!found && curExtension != NULL)
-	     if (!ustrcmp (pRoot->ElStructSchema->SsName, curExtension->SsName))
+	     if (!strcmp (pRoot->ElStructSchema->SsName, curExtension->SsName))
 	       found = TRUE;
 	     else
 	       curExtension = curExtension->SsNextExtens;
@@ -818,8 +817,8 @@ void                TtaAttachNewTree (Element tree, Document document)
    name must not be specified in parameter TSchemaName. See
    function TtaSetSchemaPath.
   ----------------------------------------------------------------------*/
-void                TtaExportTree (Element element, Document document,
-				   STRING fileName, STRING TSchemaName)
+void TtaExportTree (Element element, Document document,
+		    char *fileName, char *TSchemaName)
 {
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -847,8 +846,8 @@ void                TtaExportTree (Element element, Document document,
    if FALSE, inserts newElement as next sibling of sibling.
    document: the document to which both elements belong.
    ---------------------------------------------------------------------- */
-void                TtaInsertSibling (Element newElement, Element sibling,
-				      ThotBool before, Document document)
+void TtaInsertSibling (Element newElement, Element sibling,
+		       ThotBool before, Document document)
 {
 #ifndef NODISPLAY
    PtrElement          pNeighbour;
@@ -956,7 +955,7 @@ void TtaAskFirstCreation ()
    If newElement is an option that replaces the choice, newElement takes
    the value of parent.
    ---------------------------------------------------------------------- */
-void TtaInsertFirstChild (Element * newElement, Element parent,
+void TtaInsertFirstChild (Element *newElement, Element parent,
 			  Document document)
 {
 #ifndef NODISPLAY
@@ -1733,16 +1732,13 @@ ThotBool            TtaIsExtensionElement (Element element)
    TtaIsTranscludedElement
 
    Returns true if the element is a transcluded element
-
    Parameter:
    element: the element.
-
    Return value:
    true or false.
    ---------------------------------------------------------------------- */
-ThotBool            TtaIsTranscludedElement (Element element)
+ThotBool TtaIsTranscludedElement (Element element)
 {
-
    UserErrorCode = 0;
    if (element == NULL)
      {
@@ -1760,26 +1756,23 @@ ThotBool            TtaIsTranscludedElement (Element element)
    TtaGetElementTypeName
 
    Returns the name of an element type.
-
    Parameter:
    elementType: element type.
-
    Return value:
    name of that type.
    ---------------------------------------------------------------------- */
-STRING              TtaGetElementTypeName (ElementType elementType)
+char *TtaGetElementTypeName (ElementType elementType)
 {
-
-   UserErrorCode = 0;
-   nameBuffer[0] = WC_EOS;
-   if (elementType.ElSSchema == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
-	    elementType.ElTypeNum < 1)
-	TtaError (ERR_invalid_element_type);
-   else
-	ustrncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrName, MAX_NAME_LENGTH);
-   return nameBuffer;
+  UserErrorCode = 0;
+  nameBuffer[0] = EOS;
+  if (elementType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	   elementType.ElTypeNum < 1)
+    TtaError (ERR_invalid_element_type);
+  else
+    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrName, MAX_NAME_LENGTH);
+  return nameBuffer;
 }
 
 /* ----------------------------------------------------------------------
@@ -1787,26 +1780,23 @@ STRING              TtaGetElementTypeName (ElementType elementType)
 
    Returns the name of an element type in the language it is defined in
    the structure schema.
-
    Parameter:
    elementType: element type.
-
    Return value:
    original name of that type.
    ---------------------------------------------------------------------- */
-STRING              TtaGetElementTypeOriginalName (ElementType elementType)
+char *TtaGetElementTypeOriginalName (ElementType elementType)
 {
-
-   UserErrorCode = 0;
-   nameBuffer[0] = WC_EOS;
-   if (elementType.ElSSchema == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
-	    elementType.ElTypeNum < 1)
-	TtaError (ERR_invalid_element_type);
-   else
-	ustrncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
-   return nameBuffer;
+  UserErrorCode = 0;
+  nameBuffer[0] = EOS;
+  if (elementType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	   elementType.ElTypeNum < 1)
+    TtaError (ERR_invalid_element_type);
+  else
+    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
+  return nameBuffer;
 }
 
 /* ----------------------------------------------------------------------
@@ -1826,17 +1816,18 @@ STRING              TtaGetElementTypeOriginalName (ElementType elementType)
    elementType: the type having this name, or elementType.ElTypeNum = 0
    if the type is not found.
    ---------------------------------------------------------------------- */
-void               TtaGiveTypeFromName (ElementType * elementType, STRING name)
+void TtaGiveTypeFromName (ElementType * elementType, char *name)
 {
-   UserErrorCode = 0;
-   (*elementType).ElTypeNum = 0;
-   if (name == NULL || name[0] == EOS || (*elementType).ElSSchema == NULL)
-     {
-	(*elementType).ElSSchema = NULL;
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-	GetSRuleFromName (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name, USER_NAME);
+  UserErrorCode = 0;
+  (*elementType).ElTypeNum = 0;
+  if (name == NULL || name[0] == EOS || (*elementType).ElSSchema == NULL)
+    {
+      (*elementType).ElSSchema = NULL;
+      TtaError (ERR_invalid_parameter);
+    }
+  else
+    GetSRuleFromName (&((*elementType).ElTypeNum),
+		      (PtrSSchema *) (&((*elementType).ElSSchema)), name, USER_NAME);
 }
 
 /* ----------------------------------------------------------------------
@@ -1855,8 +1846,7 @@ void               TtaGiveTypeFromName (ElementType * elementType, STRING name)
    elementType: the type having this name, or elementType.ElTypeNum = 0
    if the type is not found.
    ---------------------------------------------------------------------- */
-void                TtaGiveTypeFromOriginalName (ElementType * elementType,
-						 STRING name)
+void TtaGiveTypeFromOriginalName (ElementType * elementType, char *name)
 {
    UserErrorCode = 0;
    (*elementType).ElTypeNum = 0;
@@ -1879,7 +1869,7 @@ void                TtaGiveTypeFromOriginalName (ElementType * elementType,
    Return value:
    0 if both types are different, 1 if they are identical.
    ---------------------------------------------------------------------- */
-int                 TtaSameTypes (ElementType type1, ElementType type2)
+int TtaSameTypes (ElementType type1, ElementType type2)
 {
    int                 result;
 
@@ -1905,7 +1895,7 @@ int                 TtaSameTypes (ElementType type1, ElementType type2)
 	 result = 1;
    else if (type2.ElTypeNum > ((PtrSSchema) (type2.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
-   else if (!ustrcmp (((PtrSSchema) (type1.ElSSchema))->SsName,
+   else if (!strcmp (((PtrSSchema) (type1.ElSSchema))->SsName,
 		      ((PtrSSchema) (type2.ElSSchema))->SsName))
       result = 1;
    else
@@ -1922,23 +1912,14 @@ int                 TtaSameTypes (ElementType type1, ElementType type2)
    Return value:
    label of the element.
    ---------------------------------------------------------------------- */
-STRING              TtaGetElementLabel (Element element)
+char *TtaGetElementLabel (Element element)
 {
-
    UserErrorCode = 0;
-   nameBuffer[0] = WC_EOS;
+   nameBuffer[0] = EOS;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
    else 
-#ifdef _I18N_
-   {
-    CHAR_T wcsTmpStr [MAX_NAME_LENGTH];
-    mbstowcs (wcsTmpStr, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
-	ustrncpy (nameBuffer, wcsTmpStr, MAX_NAME_LENGTH);
-   }
-#else  /* !_I18N_ */
-	ustrncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
-#endif /* !_I18N_ */
+     strncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
    return nameBuffer;
 }
 
@@ -1951,17 +1932,17 @@ STRING              TtaGetElementLabel (Element element)
    Return value:
    line number of the element.
    ---------------------------------------------------------------------- */
-int                 TtaGetElementLineNumber (Element element)
+int TtaGetElementLineNumber (Element element)
 {
-   int	lineNb;
+  int	lineNb;
 
-   UserErrorCode = 0;
-   lineNb = 0;
-   if (element == NULL)
-	TtaError (ERR_invalid_parameter);
-   else
-	lineNb = ((PtrElement) element)->ElLineNb;
-   return lineNb;
+  UserErrorCode = 0;
+  lineNb = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    lineNb = ((PtrElement) element)->ElLineNb;
+  return lineNb;
 }
 
 /* ----------------------------------------------------------------------
@@ -1973,23 +1954,23 @@ int                 TtaGetElementLineNumber (Element element)
    Return value:
    1 = the type is a constant, 0 = the type is not a constant.
    ---------------------------------------------------------------------- */
-int                 TtaIsConstant (ElementType elementType)
+int TtaIsConstant (ElementType elementType)
 {
-   int                 result;
-
-   UserErrorCode = 0;
-   result = 0;
-   if (elementType.ElSSchema == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
-	    elementType.ElTypeNum < 1)
-	TtaError (ERR_invalid_element_type);
-   else
-     {
-	if (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant)
-	   result = 1;
-     }
-   return result;
+  int                 result;
+  
+  UserErrorCode = 0;
+  result = 0;
+  if (elementType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	   elementType.ElTypeNum < 1)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      if (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant)
+	result = 1;
+    }
+  return result;
 }
 
 /* ----------------------------------------------------------------------
@@ -2001,26 +1982,26 @@ int                 TtaIsConstant (ElementType elementType)
    Return value:
    1 if the type is a leaf, 0 if the type is not a leaf.
    ---------------------------------------------------------------------- */
-int                 TtaIsLeaf (ElementType elementType)
+int TtaIsLeaf (ElementType elementType)
 {
-   int                 result;
+  int                 result;
 
-   UserErrorCode = 0;
-   result = 0;
-   if (elementType.ElSSchema == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
-	    elementType.ElTypeNum < 1)
-	TtaError (ERR_invalid_element_type);
-   else
-     {
-	if ((((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant) ||
-	    (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsReference) ||
-	    (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsPairedElement) ||
-	    (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsBasicElement))
-	   result = 1;
-     }
-   return result;
+  UserErrorCode = 0;
+  result = 0;
+  if (elementType.ElSSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	   elementType.ElTypeNum < 1)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      if ((((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant) ||
+	  (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsReference) ||
+	  (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsPairedElement) ||
+	  (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsBasicElement))
+	result = 1;
+    }
+  return result;
 }
 
 /* ----------------------------------------------------------------------
@@ -2033,7 +2014,7 @@ int                 TtaIsLeaf (ElementType elementType)
    Return value:
    the construct that defines the structure of that element type.
    ---------------------------------------------------------------------- */
-Construct           TtaGetConstructOfType (ElementType elementType)
+Construct TtaGetConstructOfType (ElementType elementType)
 {
   Construct           result;
 
@@ -2765,14 +2746,11 @@ void                TtaNextCopiedElement (Element * element)
    Returns the document from which the current content of the clipboard
    has been copied or cut. (This function is available only in the ThotEditor
    library).
-
    Parameters:
    No parameter.
-
    Return value:
    the document from which the current content of the clipboard has been
    copied or cut; 0 if the clipboard is empty.
-
    ---------------------------------------------------------------------- */
 Document            TtaGetCopiedDocument ()
 {
@@ -2786,21 +2764,12 @@ Document            TtaGetCopiedDocument ()
 
 /* ----------------------------------------------------------------------
    ---------------------------------------------------------------------- */
-static PtrElement   SearchLabel (STRING label, PtrElement pEl)
+static PtrElement   SearchLabel (char *label, PtrElement pEl)
 {
    PtrElement          pE, pFound;
-#ifdef _I18N_
-   char                mbsLabel[MAX_LENGTH];
-#else  /* !_I18N_ */
-   char*               mbsLabel = label;
-#endif /* !_I18N_ */
-   
-#ifdef _I18N_
-   wcstombs (mbsLabel, label, MAX_LENGTH);
-#endif /* _I18N_ */
 
    pFound = NULL;
-   if (strcmp (mbsLabel, pEl->ElLabel) == 0)
+   if (strcmp (label, pEl->ElLabel) == 0)
       pFound = pEl;
    else if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
      {
@@ -2823,17 +2792,14 @@ static PtrElement   SearchLabel (STRING label, PtrElement pEl)
 
    Searches the element that has a given label. The search is done in
    a given tree.
-
    Parameters:
    searchedLabel: label of element to be searched.
    element: the element that is the root of the tree in which the search
    is done.
-
    Return value:
    the element found, or NULL if no element has been found.
-
    ---------------------------------------------------------------------- */
-Element         TtaSearchElementByLabel (STRING searchedLabel, Element element)
+Element TtaSearchElementByLabel (char *searchedLabel, Element element)
 {
    PtrElement          elementFound;
 
@@ -2855,18 +2821,15 @@ Element         TtaSearchElementByLabel (STRING searchedLabel, Element element)
    element without child or a leaf without content.
    Searching can be done in a tree or starting from a given element towards
    the beginning or the end of the abstract tree.
-
    Parameters:
    scope: SearchForward, SearchBackward or SearchInTree.
    element: the element that is the root of the tree
    (if scope = SearchInTree) or the starting element
    (if scope = SearchForward or SearchBackward).
-
    Return values:
    the element found, or NULL if not found.
-
    ---------------------------------------------------------------------- */
-Element             TtaSearchEmptyElement (SearchDomain scope, Element element)
+Element  TtaSearchEmptyElement (SearchDomain scope, Element element)
 {
    PtrElement          pEl;
    PtrElement          elementFound;
@@ -2899,13 +2862,10 @@ Element             TtaSearchEmptyElement (SearchDomain scope, Element element)
    TtaSearchOtherPairedElement
 
    Returns the element that is part of the same pair as a given element.
-
    Parameter:
    element: the element whose paired element is searched.
-
    Return value:
    the paired element.
-
    ---------------------------------------------------------------------- */
 Element             TtaSearchOtherPairedElement (Element element)
 {
@@ -2926,16 +2886,13 @@ Element             TtaSearchOtherPairedElement (Element element)
    TtaSearchNoPageBreak
 
    Returns the first sibling element that is not a page break.
-
    Parameter:
    element: the element.
    forward: TRUE for skipping the next page breaks, FALSE for skipping
    the previous ones.
-
    Return value:
    the first sibling element, or NULL if there are
    only page breaks.
-
    ---------------------------------------------------------------------- */
 Element             TtaSearchNoPageBreak (Element element, ThotBool forward)
 {

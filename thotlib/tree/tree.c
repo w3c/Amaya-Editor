@@ -12,7 +12,6 @@
  *
  */
 
-#include "ustring.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -215,7 +214,7 @@ ThotBool            ElementIsReadOnly (PtrElement pEl)
    Rules to authorize or not such insertion depends of the
    application criteria.
   ----------------------------------------------------------------------*/
-ThotBool            CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
+ThotBool CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
 {
 register Proc InsertNearFunction;
 
@@ -235,26 +234,26 @@ ThotBool isForbidden;
    FwdSearchTypeNameInSubtree					
   ----------------------------------------------------------------------*/
 static PtrElement FwdSearchTypeNameInSubtree (PtrElement pEl, ThotBool test,
-					      STRING typeName)
+					      char *typeName)
 {
-   PtrElement          pRet, pChild;
+  PtrElement          pRet, pChild;
 
-   pRet = NULL;
-   if (test)
-      if (ustrcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
-	 /* got a hit on the element */
-	 pRet = pEl;
-   if (pRet == NULL && !pEl->ElTerminal)
-      /* a recursive search among the children of the element */
-     {
-	pChild = pEl->ElFirstChild;
-	while (pChild != NULL && pRet == NULL)
-	  {
-	     pRet = FwdSearchTypeNameInSubtree (pChild, TRUE, typeName);
-	     pChild = pChild->ElNext;
-	  }
-     }
-   return pRet;
+  pRet = NULL;
+  if (test &&
+      strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+    /* got a hit on the element */
+    pRet = pEl;
+  if (pRet == NULL && !pEl->ElTerminal)
+    /* a recursive search among the children of the element */
+    {
+      pChild = pEl->ElFirstChild;
+      while (pChild != NULL && pRet == NULL)
+	{
+	  pRet = FwdSearchTypeNameInSubtree (pChild, TRUE, typeName);
+	  pChild = pChild->ElNext;
+	}
+    }
+  return pRet;
 }
 
 /*----------------------------------------------------------------------
@@ -263,7 +262,7 @@ static PtrElement FwdSearchTypeNameInSubtree (PtrElement pEl, ThotBool test,
    Pel,  of an element having the name typeName. The function returns a
    pointer to the element if there's a hit, NULL otherwise.
   ----------------------------------------------------------------------*/
-PtrElement          FwdSearchElemByTypeName (PtrElement pEl, STRING typeName)
+PtrElement FwdSearchElemByTypeName (PtrElement pEl, char *typeName)
 {
    PtrElement          pRet, pCur, pAsc;
    ThotBool            stop;
@@ -305,7 +304,7 @@ PtrElement          FwdSearchElemByTypeName (PtrElement pEl, STRING typeName)
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
 			 {
-			  if (ustrcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
+			  if (strcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
 			     /* found */
 			     pRet = pAsc;
 			  else
@@ -321,7 +320,7 @@ PtrElement          FwdSearchElemByTypeName (PtrElement pEl, STRING typeName)
 /*----------------------------------------------------------------------
    BackSearchTypeNameInSubtree				       
   ----------------------------------------------------------------------*/
-static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, STRING typeName)
+static PtrElement BackSearchTypeNameInSubtree (PtrElement pEl, char *typeName)
 {
    PtrElement          pRet, pChild;
 
@@ -342,7 +341,7 @@ static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, STRING typeName
      }
    if (pRet == NULL)
      {
-	if (ustrcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 	   pRet = pEl;		/* found ! it's the element itself */
      }
    return pRet;
@@ -354,7 +353,7 @@ static PtrElement   BackSearchTypeNameInSubtree (PtrElement pEl, STRING typeName
    If it finds the  element, it returns a pointer to it. Otherwise, it
    NULL.
   ----------------------------------------------------------------------*/
-PtrElement          BackSearchElemByTypeName (PtrElement pEl, STRING typeName)
+PtrElement BackSearchElemByTypeName (PtrElement pEl, char *typeName)
 {
    PtrElement          pRet, pCur;
 
@@ -374,7 +373,7 @@ PtrElement          BackSearchElemByTypeName (PtrElement pEl, STRING typeName)
 	   if (pEl->ElParent != NULL)
 	     {
 		pEl = pEl->ElParent;
-		if (ustrcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 		   pRet = pEl;	/* found, it's the parent */
 		else
 		   pRet = BackSearchElemByTypeName (pEl, typeName);
@@ -386,7 +385,7 @@ PtrElement          BackSearchElemByTypeName (PtrElement pEl, STRING typeName)
 /*----------------------------------------------------------------------
    BackSearchVisibleSubtree                                        
   ----------------------------------------------------------------------*/
-static PtrElement   BackSearchVisibleSubtree (PtrElement pEl, int *view)
+static PtrElement BackSearchVisibleSubtree (PtrElement pEl, int *view)
 {
    PtrElement          pRet, pChild;
 
@@ -418,7 +417,7 @@ static PtrElement   BackSearchVisibleSubtree (PtrElement pEl, int *view)
    Returns TRUE if the element pointed by pEL is the one we are looking
    for, FALSE otherwise.
   ----------------------------------------------------------------------*/
-static ThotBool AttrFound (PtrElement pEl, STRING textVal, int val,
+static ThotBool AttrFound (PtrElement pEl, char *textVal, int val,
 			   int attrNum, PtrSSchema pSS)
 {
    PtrAttribute        pAttr;
@@ -438,7 +437,7 @@ static ThotBool AttrFound (PtrElement pEl, STRING textVal, int val,
 	   while (pAttr != NULL && pAttr->AeAttrSSchema != NULL && !ret)
 	     {
 	       if ((pSS == NULL ||
-		    !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+		    !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 		   && pAttr->AeAttrNum == attrNum)
 		 {
 		 /* it's the attribute we are searching */
@@ -474,7 +473,7 @@ static ThotBool AttrFound (PtrElement pEl, STRING textVal, int val,
   ----------------------------------------------------------------------*/
 static PtrElement FwdSearchAttrInSubtree (PtrElement pEl, ThotBool test,
 					  PtrSSchema pSS, int attrNum,
-					  int val, STRING textVal)
+					  int val, char *textVal)
 {
    PtrElement          pRet, pChild;
 
@@ -499,7 +498,7 @@ static PtrElement FwdSearchAttrInSubtree (PtrElement pEl, ThotBool test,
 /*----------------------------------------------------------------------
    BackSearchAttrInSubtree                                         
   ----------------------------------------------------------------------*/
-static PtrElement BackSearchAttrInSubtree (PtrElement pEl, STRING textVal,
+static PtrElement BackSearchAttrInSubtree (PtrElement pEl, char *textVal,
 					   int val, int attrNum, PtrSSchema pSS)
 {
    PtrElement          pRet, pChild;
@@ -520,7 +519,7 @@ static PtrElement BackSearchAttrInSubtree (PtrElement pEl, STRING textVal,
 	     {
 		if (pAttr->AeAttrNum == attrNum &&
 		    (pSS == NULL ||
-		     !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
+		     !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
 		  {
 		    /* it's the attribute we are looking for */
 		    if (val == 0)
@@ -748,7 +747,7 @@ static PtrElement   BackSearchEmptyInSubtree (PtrElement pEl, int Kind)
    If it finds an element, it returns a pointer to it. Otherwise, it
    returns NULL.
   ----------------------------------------------------------------------*/
-PtrElement          BackSearchRefOrEmptyElem (PtrElement pEl, ThotBool Kind)
+PtrElement BackSearchRefOrEmptyElem (PtrElement pEl, ThotBool Kind)
 {
    PtrElement          pRet, pCur;
 
@@ -851,7 +850,7 @@ static void         LeavesInheritLanguage (PtrElement pEl)
    Inserts the element pointed by pNew (and his next siblings), after
    the last element following the one pointed by pOld.
   ----------------------------------------------------------------------*/
-void                InsertElemAfterLastSibling (PtrElement pOld, PtrElement pNew)
+void InsertElemAfterLastSibling (PtrElement pOld, PtrElement pNew)
 {
    PtrElement          pEl;
    PtrElement          pAsc;
@@ -895,7 +894,9 @@ void                InsertElemAfterLastSibling (PtrElement pOld, PtrElement pNew
    If Check is TRUE, check that the target document uses the structure
    schemas that define the attributes to be copied.
   ----------------------------------------------------------------------*/
-static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocument pSourceDoc, PtrDocument pTargetDoc, ThotBool Check)
+static void CopyAttributes (PtrElement pEl1, PtrElement pEl2,
+			    PtrDocument pSourceDoc, PtrDocument pTargetDoc,
+			    ThotBool Check)
 {
    PtrAttribute        pAttr1, pAttr2, pPrevAttr;
    PtrReference        rf;
@@ -1073,7 +1074,7 @@ ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
     SSok = TRUE;		/* use any struct. scheme */
   else
     /* compares the identifier of the structure scheme */
-    SSok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
+    SSok = !strcmp (pEl->ElStructSchema->SsName, pSS->SsName);
   if (SSok && pEl->ElTypeNumber == typeNum)
     ok = TRUE;
   else if (pSS != NULL)
@@ -1092,7 +1093,7 @@ ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 		/* compares the element type with the options of the choice */
 		{
 		  if (pEl->ElTypeNumber == pRe1->SrChoice[i])
-		    ok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
+		    ok = !strcmp (pEl->ElStructSchema->SsName, pSS->SsName);
 		  else
 		    {
 		      pRe2 = &pSS->SsRule[pRe1->SrChoice[i] - 1];
@@ -1299,7 +1300,7 @@ PtrElement  GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pSS)
 		if (pEl1->ElTypeNumber == pEl1->ElStructSchema->SsRootElem)
 		   /* the current element is the root of a nature, the current element
 		      is appropriate if we have the same structure schemes */
-		   found = (ustrcmp (pEl1->ElStructSchema->SsName, pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
+		   found = (strcmp (pEl1->ElStructSchema->SsName, pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
 	     }
 	   else
 	      found = EquivalentSRules (typeNum, pSS, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl);
@@ -1315,7 +1316,7 @@ PtrElement  GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pSS)
 	if (typeNum != pEl->ElTypeNumber &&
 	    pEl->ElParent != NULL &&
 	    pEl->ElParent->ElTypeNumber == typeNum &&
-	    !ustrcmp (pEl->ElParent->ElStructSchema->SsName, pSS->SsName))
+	    !strcmp (pEl->ElParent->ElStructSchema->SsName, pSS->SsName))
 	  pEl = pEl->ElParent;
 	pAsc = pEl;
      }
@@ -1372,53 +1373,53 @@ static PtrElement FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test,
 PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
 				PtrSSchema pSS1, PtrSSchema pSS2)
 {
-   PtrElement          pRet, pCur, pAsc;
-   ThotBool            stop;
+  PtrElement          pRet, pCur, pAsc;
+  ThotBool            stop;
 
-   pRet = NULL;
-   if (pEl != NULL)
-      /* searches the subtree of the element */
-     {
-	pRet = FwdSearch2TypesInSubtree (pEl, FALSE, typeNum2, typeNum1, pSS2, pSS1);
-	if (pRet == NULL)
-	   /* if failure, searches the subtrees of the next siblings of the element */
-	  {
-	     pCur = pEl->ElNext;
-	     while (pCur && pCur->ElStructSchema && pRet == NULL)
-	       {
-		  pRet = FwdSearch2TypesInSubtree (pCur, TRUE, typeNum2, typeNum1, pSS2, pSS1);
-		  pCur = pCur->ElNext;
-	       }
-	     /* if failure, searches the first ancestor with a next sibling */
-	     if (pRet == NULL)
-	       {
-		  stop = FALSE;
-		  pAsc = pEl;
-		  do
-		    {
-		       pAsc = pAsc->ElParent;
-		       if (pAsc == NULL)
-			  stop = TRUE;
-		       else if (pAsc->ElNext != NULL)
-			  stop = TRUE;
-		    }
-		  while (!stop);
+  pRet = NULL;
+  if (pEl != NULL)
+    /* searches the subtree of the element */
+    {
+      pRet = FwdSearch2TypesInSubtree (pEl, FALSE, typeNum2, typeNum1, pSS2, pSS1);
+      if (pRet == NULL)
+	/* if failure, searches the subtrees of the next siblings of the element */
+	{
+	  pCur = pEl->ElNext;
+	  while (pCur && pCur->ElStructSchema && pRet == NULL)
+	    {
+	      pRet = FwdSearch2TypesInSubtree (pCur, TRUE, typeNum2, typeNum1, pSS2, pSS1);
+	      pCur = pCur->ElNext;
+	    }
+	  /* if failure, searches the first ancestor with a next sibling */
+	  if (pRet == NULL)
+	    {
+	      stop = FALSE;
+	      pAsc = pEl;
+	      do
+		{
+		  pAsc = pAsc->ElParent;
+		  if (pAsc == NULL)
+		    stop = TRUE;
+		  else if (pAsc->ElNext != NULL)
+		    stop = TRUE;
+		}
+	      while (!stop);
+	      if (pAsc != NULL)
+		/* verifies if this element is the one we're looking for */
+		{
+		  pAsc = pAsc->ElNext;
 		  if (pAsc != NULL)
-		     /* verifies if this element is the one we're looking for */
 		    {
-		       pAsc = pAsc->ElNext;
-		       if (pAsc != NULL)
-			 {
-			    if (EquivalentType (pAsc, typeNum1, pSS1) || EquivalentType (pAsc, typeNum2, pSS2) || typeNum1 == 0)
-			       pRet = pAsc;	/* found */
-			    else
-			       pRet = FwdSearchElem2Types (pAsc, typeNum1, typeNum2, pSS1, pSS2);
-			 }
+		      if (EquivalentType (pAsc, typeNum1, pSS1) || EquivalentType (pAsc, typeNum2, pSS2) || typeNum1 == 0)
+			pRet = pAsc;	/* found */
+		      else
+			pRet = FwdSearchElem2Types (pAsc, typeNum1, typeNum2, pSS1, pSS2);
 		    }
-	       }
-	  }
-     }
-   return pRet;
+		}
+	    }
+	}
+    }
+  return pRet;
 }
 
 
@@ -1440,32 +1441,34 @@ PtrElement FwdSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
 /*----------------------------------------------------------------------
    BackSearch2TypesInSubtree                                      
   ----------------------------------------------------------------------*/
-static PtrElement   BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2, int typeNum1, PtrSSchema pSS2, PtrSSchema pSS1)
+static PtrElement BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2,
+					     int typeNum1, PtrSSchema pSS2,
+					     PtrSSchema pSS1)
 {
-   PtrElement          pRet, pChild;
+  PtrElement          pRet, pChild;
 
-   pRet = NULL;
-   /* searches the last child */
-   if (!pEl->ElTerminal)
-     {
-	pChild = pEl->ElFirstChild;
-	if (pChild != NULL)
-
-	   while (pChild->ElNext != NULL)
-	      pChild = pChild->ElNext;
-	/* searches from the precedent siblings */
-	while (pChild != NULL && pRet == NULL)
-	  {
-	     pRet = BackSearch2TypesInSubtree (pChild, typeNum2, typeNum1, pSS2, pSS1);
-	     pChild = pChild->ElPrevious;
-	  }
-     }
-   if (pRet == NULL)
-     {
-	if (EquivalentType (pEl, typeNum1, pSS1) || EquivalentType (pEl, typeNum2, pSS2) || typeNum1 == 0)
-	   pRet = pEl;		/* found */
-     }
-   return pRet;
+  pRet = NULL;
+  /* searches the last child */
+  if (!pEl->ElTerminal)
+    {
+      pChild = pEl->ElFirstChild;
+      if (pChild != NULL)
+	
+	while (pChild->ElNext != NULL)
+	  pChild = pChild->ElNext;
+      /* searches from the precedent siblings */
+      while (pChild != NULL && pRet == NULL)
+	{
+	  pRet = BackSearch2TypesInSubtree (pChild, typeNum2, typeNum1, pSS2, pSS1);
+	  pChild = pChild->ElPrevious;
+	}
+    }
+  if (pRet == NULL)
+    {
+      if (EquivalentType (pEl, typeNum1, pSS1) || EquivalentType (pEl, typeNum2, pSS2) || typeNum1 == 0)
+	pRet = pEl;		/* found */
+    }
+  return pRet;
 }
 
 /*----------------------------------------------------------------------
@@ -1566,7 +1569,7 @@ PtrElement BackSearchVisibleElem (PtrElement pRoot, PtrElement pEl, int view)
    The function returns a pointer to the found element or NULL.
   ----------------------------------------------------------------------*/
 PtrElement FwdSearchAttribute (PtrElement pEl, int attrNum, int val,
-			       STRING textVal, PtrSSchema pSS)
+			       char *textVal, PtrSSchema pSS)
 {
    PtrElement          pRet, pCur, pAsc;
    ThotBool            stop;
@@ -1629,7 +1632,7 @@ PtrElement FwdSearchAttribute (PtrElement pEl, int attrNum, int val,
    The function returns a pointer to the found element or NULL.   
   ----------------------------------------------------------------------*/
 PtrElement BackSearchAttribute (PtrElement pEl, int attNum, int val,
-				STRING textVal, PtrSSchema pSS)
+				char *textVal, PtrSSchema pSS)
 {
    PtrElement          pRet, pCur;
 
@@ -1701,7 +1704,7 @@ void                FwdSkipPageBreakAndExtension (PtrElement * pEl)
      {
      if (*pEl == NULL)
        stop = TRUE;
-     else if (!ustrcmp ((*pEl)->ElStructSchema->SsName,
+     else if (!strcmp ((*pEl)->ElStructSchema->SsName,
 			(*pEl)->ElParent->ElStructSchema->SsName))
        {
           if (!(*pEl)->ElTerminal)
@@ -2022,7 +2025,7 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
     replace = FALSE;
   if (!replace &&
       pEl->ElTypeNumber == (*pNew)->ElTypeNumber &&
-      !ustrcmp (pEl->ElStructSchema->SsName, (*pNew)->ElStructSchema->SsName))
+      !strcmp (pEl->ElStructSchema->SsName, (*pNew)->ElStructSchema->SsName))
     /* the two elements are of the same type; one will replace the other */
     replace = TRUE;
   if (del)
@@ -2575,7 +2578,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 			     if ((*pEl)->ElTypeNumber <= MAX_BASIC_TYPE)
 				/* it's a base type, it's excluded */
 			       excluded = TRUE;
-			     else if (!ustrcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
+			     else if (!strcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
 				/* compares the identifiers of the structure schemes */
 				/* same structure schemes, excluded type */
 			       excluded = TRUE;
@@ -2590,7 +2593,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 				  if (pRuleExcl->SrConstruct == CsNatureSchema)
 				     /* the exclusion is a nature, the exclusion can be applied */
 				     /* if the nature names are the same */
-				     excluded = (ustrcmp ((*pEl)->ElStructSchema->SsName,
+				     excluded = (strcmp ((*pEl)->ElStructSchema->SsName,
 						   pRuleExcl->SrName) == 0);
 			       }
 			  /* the 2nd element of a pair is excluded if the first one is excluded */
@@ -2598,7 +2601,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 			     /* we still haven't excluded our element */
 			     if (pRule->SrExclusion[i - 1] + 1 == (*pEl)->ElTypeNumber)
 				/* the precedent type is excluded */
-				if (!ustrcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
+				if (!strcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
 				   /* we are in the correct structure scheme */
 				   if ((*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 				      /* the element is member of a pair */
@@ -2998,7 +3001,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
       if (doCopy)
 	{
 	  copyType = pSource->ElTypeNumber;
-	  if (ustrcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
+	  if (strcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
 	    {
 	    /* change the generic structure */
 	    if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1]. SrUnitElem ||
@@ -3024,7 +3027,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		    if (pAsc != NULL && !sameSSchema)
 		      do
 		        {
-			  if (!ustrcmp (pSource->ElStructSchema->SsName,
+			  if (!strcmp (pSource->ElStructSchema->SsName,
 					pAsc->ElStructSchema->SsName))
 			    {
 			      /* the copy will inherit the structure scheme of
@@ -3373,7 +3376,7 @@ void                CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 	       else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
 			                            SrConstruct == CsChoice &&
 			(pEl->ElTypeNumber != pSource->ElTypeNumber ||
-			 ustrcmp (pEl->ElStructSchema->SsName,
+			 strcmp (pEl->ElStructSchema->SsName,
 				  pSource->ElStructSchema->SsName)))
 		 {
 		   pC1 = CopyTree (pSource, pDocSource, pEl->ElStructSchema,
@@ -3476,7 +3479,7 @@ PtrAttribute GetTypedAttrForElem (PtrElement pEl, int attrNum, PtrSSchema pSSatt
 	   if (attrNum == 1)
 	      /* it's the language attribute, no use to compare the schemes */
 	      found = TRUE;
-	   else if (!ustrcmp (pAttr->AeAttrSSchema->SsName, pSSattr->SsName))
+	   else if (!strcmp (pAttr->AeAttrSSchema->SsName, pSSattr->SsName))
 	      /* same schemes : it's the attribute we are looking for */
 	      found = TRUE;
 	  }
