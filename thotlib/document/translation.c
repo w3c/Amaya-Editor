@@ -474,12 +474,16 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 
 /*----------------------------------------------------------------------
   GetTime returns the current date in a formatted string.
-  Taken from the hypermail source code: hypermail/src/date.c
+  Inspired from the hypermail source code: hypermail/src/date.c
   ----------------------------------------------------------------------*/
-static void GetTime (char *s)
+static void GetTime (unsigned char *s, PtrDocument pDoc)
 {
-  time_t     tp;
-  struct tm *tmptr;
+  time_t         tp;
+  struct tm     *tmptr;
+#ifdef _WINDOWS
+  wchar_t        ws[DATESTRLEN];
+  unsigned char *ptr;
+#endif /* _WINDOWS */
   ThotBool   set_gmtime, set_isodate;
 
   time (&tp);
@@ -496,7 +500,16 @@ static void GetTime (char *s)
     {
       tmptr =  localtime (&tp);
       if (set_isodate)
-	strftime(s, DATESTRLEN, "%a %d %b %Y - %H:%M:%S", tmptr);
+	  {
+#ifdef _WINDOWS
+    wcsftime(ws, DATESTRLEN, L"%A %d %B %Y - %H:%M:%S", tmptr);
+	ptr = TtaConvertWCToByte (ws, pDoc->DocCharset);
+	strncpy (s, ptr, DATESTRLEN);
+ 	TtaFreeMemory (ptr);
+#else /* _WINDOWS */
+	strftime(s, DATESTRLEN, "%A %d %B %Y - %H:%M:%S", tmptr);
+#endif /* _WINDOWS */
+	  }
       else
 	strftime(s, DATESTRLEN, "%Y-%m-%d %H:%M:%S", tmptr);
     }
@@ -534,7 +547,7 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 	      ExportChar ((wchar_t) SPACE, fnum, outBuf, pDoc,
 			    FALSE, FALSE, FALSE);
 	      /* generate the current date */
-	      GetTime (tm);
+	      GetTime (tm, pDoc);
 	      for (index = 0; tm[index] != EOS; index++)
 		ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
 			    FALSE, FALSE, FALSE);
