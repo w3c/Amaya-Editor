@@ -642,7 +642,8 @@ wchar_t TtaConvertSjisToWC (unsigned char b1, unsigned char b2)
   if (b1 >= 0xe0) b1 -= 0x40;
   c1 = (b1 - 0x80) * 2 - ((b2 >= 0x9f)? 0x8 * 2 : 0x9 *2 - 1) + 0x30;
   c2 = (b2 >= 0x9f) ? (b2 - 0x7e): b2 - ((b2>=0x7f)? 1: 0) - 0x1f;
-  return TtaConvertJisToWC (c1 & 0x7f, c2 & 0x7f, JIS_X_0208);
+  return TtaConvertJisToWC ((unsigned char)(c1 & 0x7f),
+                            (unsigned char)(c2 & 0x7f), JIS_X_0208);
 }
 
 /*----------------------------------------------------------------------
@@ -695,7 +696,8 @@ wchar_t TtaGetWCFromJisChar (unsigned char c, CHARSET encoding)
       if (n >= 2)
 	{
 	  if (encoding == EUC_JP)
-	    wc = TtaConvertJisToWC(b[0] & 0x7f, b[1] & 0x7f, JIS_X_0208);
+	    wc = TtaConvertJisToWC((unsigned char)(b[0] & 0x7f),
+                               (unsigned char)(b[1] & 0x7f), JIS_X_0208);
 	  else if (encoding == SHIFT_JIS)
 	    wc = TtaConvertSjisToWC(b[0], b[1]);
 	  n = 0;

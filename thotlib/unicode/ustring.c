@@ -371,9 +371,9 @@ CHAR_T *ustrrchr (const CHAR_T *str, CHAR_T c)
 {
 #ifdef _I18N_
   /* Compatibility of wcsrchr: ANSI, WIN NT and WIN 9x */
-  return (CHAR_T*) (wcsrchr ((wchar_t*)str, (int)c));
+  return (CHAR_T*) (wcsrchr ((wchar_t*)str, (wchar_t)c));
 #else  /* _I18N_ */
-  return (CHAR_T*) strrchr ((char*)str, (int)c);
+  return (CHAR_T*) strrchr ((char*)str, (char)c);
 #endif /* _I18N_ */
 }
 
