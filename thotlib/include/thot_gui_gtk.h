@@ -44,6 +44,7 @@ typedef ThotWidget     ThotToolBar;
 typedef GdkBitmap     *ThotBitmap;
 typedef GdkGC         *ThotGC;
 typedef unsigned long  ThotColor;
+typedef XColor         ThotColorStruct;
 typedef GdkFont       *ThotFont;
 typedef GdkCursor     *ThotCursor;
 typedef Display        ThotDisplay; /* X11 dependancy :( */
@@ -60,13 +61,6 @@ typedef unsigned long  ThotAppContext; /* NOT USED ! */
 typedef unsigned long  ThotPixel;    /* replace Pixel */
 typedef unsigned long  ThotKeySym;   /* replace KeySym */
 typedef unsigned long  ThotDrawable; /* replace Drawable */
-
-typedef struct {
-	unsigned long pixel;
-	unsigned short red, green, blue;
-	char flags;  /* do_red, do_green, do_blue */
-	char pad;
-} ThotColorStruct;
 
 typedef struct {
     short x1, y1, x2, y2;

@@ -456,15 +456,17 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	{
 	  /* Use the standard palette */
 	  colors = (ThotColorStruct *)TtaGetMemory (16 * sizeof (ThotColorStruct));
+	  *grayScale = TRUE;
 	  *ncolors = 16; 
-	  for (i = 0; i < 15; i++)
+	  for (i = 0; i <= 15; i++)
 	    {
 #if defined(_WINGUI)
 	      colors[i].red = colors[i].green = colors[i].blue = i;
 #endif /* _WINGUI */
         
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
-	      colors[i].red = colors[i].green = colors[i].blue = i << 8;
+	      colors[i].red = colors[i].green = colors[i].blue = i << 4; 
+              /* this is 4 and not 8 because the palette should be between 0 and 255 */
 #ifdef _MOTIF
 	      colors[i].flags = DoRed|DoGreen|DoBlue;
 #endif /* _MOTIF */
@@ -560,7 +562,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 		      if (cgr - gr > Magic16[(row << 4) + col])
 			gr += 16;
 		      gr = min(gr, 0xF0);
-		      pixels[ind++] = gr >> 4;
+		      pixels[ind++] = gr >> 4; /* this is the color index in the palette (16 colors) */
 		    }
 		  else
 		    {

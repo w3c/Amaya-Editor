@@ -1802,12 +1802,24 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 	    }
 	  else
 	    {
-	      /* use one byte per pixel */
-	      col = data[ind++];
-	      fprintf (fd, "%02x%02x%02x",
-		       colrs[col].red >> 8,
-		       colrs[col].green >> 8,
-		       colrs[col].blue >> 8);
+	      if (grayScale)
+		{
+		  /* use one byte per pixel */
+		  col = data[ind++];
+		  fprintf (fd, "%02x%02x%02x",
+			   colrs[col].red,
+			   colrs[col].green,
+			   colrs[col].blue);
+		}
+	      else
+		{
+		  /* use one byte per pixel */
+		  col = data[ind++];
+		  fprintf (fd, "%02x%02x%02x",
+			   colrs[col].red >> 8,
+			   colrs[col].green >> 8,
+			   colrs[col].blue >> 8);
+		}
 	    }
 	}
       fprintf(fd, "\n");
