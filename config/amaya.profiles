@@ -420,7 +420,7 @@ HelpXml
 
 ########### EDITING WX
 [edit_WX]
-+attr-style
++attr-style_WX
 +bdi-text-module
 +clientside-module
 +css-style
@@ -438,7 +438,7 @@ HelpXml
 +meta-module
 +presentation-module
 +makebook
-+makeid
+#+makeid
 +maths
 +object-module
 +ruby
@@ -701,6 +701,10 @@ HelpSVG
 &TtcChangeCharacters
 &TtcChangeColors
 &TtcChangeFormat
+
+[attr-style_WX]
+&CreateStyle
+&ChangeBackgroundImage
 
 [css-browsing]
 OpenCSS
