@@ -110,7 +110,6 @@ KERNEL_OBJ = \
 	editing/applicationapiND.o \
 	presentation/presentationapiND.o \
 	tree/attributeapiND.o \
-	tree/draw.o \
 	tree/references.o \
 	tree/referenceapiND.o \
 	tree/structschema.o \
@@ -225,7 +224,6 @@ EDITOR_OBJ = \
 	image/pictureapi.o \
 	presentation/presentationapi.o \
 	tree/attributeapi.o \
-	tree/draw.o \
 	tree/paginate.o \
 	tree/referenceapi.o \
 	tree/res.o \

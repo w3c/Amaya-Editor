@@ -56,7 +56,6 @@
 #include "displayview_f.h"
 #include "documentapi_f.h"
 #include "docs_f.h"
-#include "draw_f.h"
 #include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "frame_f.h"

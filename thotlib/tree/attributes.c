@@ -44,7 +44,6 @@
 #include "docs_f.h"
 #include "displayview_f.h"
 #include "documentapi_f.h"
-#include "draw_f.h"
 #include "exceptions_f.h"
 #include "frame_f.h"
 #include "memory_f.h"
@@ -1047,17 +1046,11 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAtt
 	    /* indique que le document a ete modifie' */
 	    /* un changement d'attribut vaut dix caracteres saisis */
 	    SetDocumentModified (pDoc, TRUE, 10);
-	    /* traitement special a l'ajout d'un attribut a un element d'un
-	       objet Draw */
-	    DrawAddAttr (&pAttr, pEl);
 	  }
 
 	else
 	   /* suppression */
 	  {
-	     /* traitement special a la suppression d'un attribut a un element
-	        d'un objet Draw */
-	     DrawSupprAttr (pNewAttr, pEl);
 	     /* valide les modifications */
 	     AbstractImageUpdated (pDoc);
 	     /* la suppression est maintenant prise en compte dans les

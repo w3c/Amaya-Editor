@@ -33,7 +33,6 @@
 #include "abspictures_f.h"
 #include "applicationapi_f.h"
 #include "content_f.h"
-#include "draw_f.h"
 #include "exceptions_f.h"
 #include "externalref_f.h"
 #include "fileaccess_f.h"
@@ -2758,10 +2757,6 @@ void                DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
 	 }
       pAttr->AeAttrText = NULL;
       }
-   /* specific processing for deleting the attributes of a Draw */
-   if (pEl)
-      DrawSupprAttr (pAttr, pEl);
-
    /* frees the attribute block */
    if (pAttr != NULL)
      FreeAttribute (pAttr);

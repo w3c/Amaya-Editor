@@ -39,7 +39,6 @@
 #include "createabsbox_f.h"
 #include "displayselect_f.h"
 #include "displayview_f.h"
-#include "draw_f.h"
 #include "exceptions_f.h"
 #include "frame_f.h"
 #include "keyboards_f.h"
@@ -1681,10 +1680,20 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
   if (sel)
     {
       done = FALSE;
-      if ((!SelContinue || pEl != FirstSelectedElement) &&
-	  /* call the procedure handling selection in drawing */
-	  DrawEtendSelection (pEl, SelectedDocument))
-	done = TRUE;
+      if (!SelContinue || pEl != FirstSelectedElement)
+	 /* call the procedure handling selection in drawing */
+	{
+	  if (pEl->ElParent != NULL)
+	    if (TypeHasException (ExcExtendedSelection,
+				  pEl->ElParent->ElTypeNumber,
+				  pEl->ElParent->ElStructSchema))
+	      /* l'element est le fils d'un element qui a l'exception
+		 ExtendedSelection */
+	      {
+		AddInSelection (pEl, TRUE);
+		done = TRUE;
+	      }
+	}
       if (!done)
 	{
 	  oldFirstEl = FirstSelectedElement;

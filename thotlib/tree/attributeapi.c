@@ -35,7 +35,6 @@
 #include "content_f.h"
 #include "displayview_f.h"
 #include "documentapi_f.h"
-#include "draw_f.h"
 #include "memory_f.h"
 #include "references_f.h"
 #include "structcreation_f.h"
@@ -388,9 +387,6 @@ void TtaAttachAttribute (Element element, Attribute attribute, Document document
 	  if (pAttr->AeAttrType == AtReferenceAttr)
 	    if (pAttr->AeAttrReference != NULL)
 	      pAttr->AeAttrReference->RdElement = (PtrElement) element;
-	  /* Special processing when adding an attribute to an element of a
-	     Draw object */
-	  DrawAddAttr (&pAttr, (PtrElement) element);
 #ifndef NODISPLAY
 	  DisplayAttribute ((PtrElement) element, pAttr, document);
 #endif
@@ -482,11 +478,6 @@ void TtaRemoveAttribute (Element element, Attribute attribute, Document document
 #ifndef NODISPLAY
 	      UndisplayInheritedAttributes ((PtrElement) element, pAttr,
 					    document, TRUE);
-#endif
-	      /* Special processig to suppress an attribute of an element of
-		 type object Draw */
-	      DrawSupprAttr (pAttr, (PtrElement) element);
-#ifndef NODISPLAY
 	      UndisplayAttribute ((PtrElement) element, 
 				  (PtrAttribute) attribute, document);
 #endif
