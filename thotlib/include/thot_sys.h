@@ -187,6 +187,7 @@ typedef BOOL        ThotBool;
 /* Unix definitions */
 #define None	    0L	/* X11/X.h */
 typedef unsigned char   ThotBool;
+typedef ThotBool BOOL;
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t
 

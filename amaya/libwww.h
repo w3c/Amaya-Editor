@@ -23,18 +23,6 @@ Things to put in sysdep.h???
 typedef unsigned long ms_t;
 /************/
 
-#if defined(_GTK)
-  #if !defined(BOOL)
-    typedef char BOOL;
-  #endif
-#endif
-
-#ifdef _NOGUI
-  #if !defined(BOOL)
-    typedef char BOOL;
-  #endif
-#endif /* #ifdef _NOGUI */
-
 /* For windows plataforms, to guarantee that 
  * HT_DAV option for the libwww WebDAV module
  * will be defined.  */

@@ -15,6 +15,10 @@
 
 #ifdef _GL
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "application.h"

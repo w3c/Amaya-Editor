@@ -22,6 +22,10 @@
  * Extensions: J. KAHAN (INRIA/W3C)
  *
  */
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thotkey.h"
 #include "thot_sys.h"
@@ -1580,14 +1584,16 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	 /* win95: apphome is  thotdir\users\username */
 	 sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
 #else /* _WINGUI */
+#ifdef _UNIX
+       ptr = getenv ("HOME");
+       sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
+#else /* _UNIX */
 #if defined(_WX) /* SG TODO : a valider */
 	   wxString homedir = wxGetHomeDir();
 	   wxCSConv conv_ascii(_T("ISO-8859-1"));
 	   sprintf (app_home, "%s%c.%s", homedir.mb_str(conv_ascii) , DIR_SEP, AppNameW);
-#else /* _WX */
-       ptr = getenv ("HOME");
-       sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
 #endif /* _WX */
+#endif /* _UNIX */
 #endif /*_WINGUI */
      }
    /* store the value of APP_HOME in the registry */
