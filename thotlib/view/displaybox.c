@@ -11,6 +11,11 @@
  * Authors: I. Vatton (INRIA)
  *          P. Cheyrou-lagreze (INRIA)
  */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "ustring.h"
 #include "thot_sys.h"
@@ -2282,10 +2287,11 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
       if ((pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath) &&
 	  !selected)
 	{
-#ifdef _TRACE_GL_BUGS_GLISLIST
-  if (box->DisplayList)
-    printf ( "GLBUG - DisplayBox : glIsList=%s\n", glIsList (box->DisplayList) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISLIST */
+#ifdef _WX
+	  wxASSERT_MSG( !box->DisplayList ||
+			glIsList(box->DisplayList),
+			_T("GLBUG - DisplayBox : glIsList returns false"));
+#endif /* _WX */
 	  if (!(box->VisibleModification) && 
 	      box->DisplayList && glIsList (box->DisplayList))
 	    {

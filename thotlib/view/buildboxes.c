@@ -11,6 +11,10 @@
  * Author: I. Vatton (INRIA)
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "math.h"
 #include "thot_sys.h"
@@ -1109,10 +1113,11 @@ static void UnsplitBox (PtrBox pBox)
   while (box && (box->BxType == BoScript || box->BxType == BoPiece))
     {
 #ifdef _GL
-#ifdef _TRACE_GL_BUGS_GLISLIST
-      if (box->DisplayList)
-	printf ( "GLBUG - RemoveBoxes : glIsList=%s\n", glIsList (pPieceBox->DisplayList) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISLIST */
+#ifdef _WX
+      wxASSERT_MSG( !box->DisplayList ||
+		    glIsList(box->DisplayList),
+		    _T("GLBUG - UnsplitBox : glIsList returns false"));
+#endif /* _WX */
       if (glIsList (box->DisplayList))
 	{
 	  glDeleteLists (box->DisplayList, 1);
@@ -2766,10 +2771,11 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  if (pBox->BxType == BoTable)
 	    ClearTable (pAb);
 #ifdef _GL
-#ifdef _TRACE_GL_BUGS_GLISLIST
-  if (pAb->AbBox->DisplayList)
-    printf ( "GLBUG - RemoveBoxes : glIsList=%s\n", glIsList (pAb->AbBox->DisplayList) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISLIST */
+#ifdef _WX
+	  wxASSERT_MSG( !pAb->AbBox->DisplayList ||
+			glIsList (pAb->AbBox->DisplayList),
+			_T("GLBUG - RemoveBoxes : glIsList returns false"));
+#endif /* _WX */
 	  if (glIsList (pAb->AbBox->DisplayList))
 	    {
 	      glDeleteLists (pAb->AbBox->DisplayList, 1);
