@@ -11,24 +11,6 @@
 #include "thot_sys.h"
 int                 UserErrorCode;
 
-/* ---------------------------------------------------------------------- */
-/* |    ThotFin termine l'application Thot.                             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                ThotFin (int result)
-
-#else  /* __STDC__ */
-void                ThotFin (result)
-int                 result;
-
-#endif /* __STDC__ */
-
-{
-   fflush (stderr);
-   fflush (stdout);
-   exit (result);
-}
-
 
 /* ---------------------------------------------------------------------- */
 /* |    DisplayConfirmMessage displays the given message (text).        | */

@@ -24,16 +24,13 @@
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 BaseName (char *filename, char *basename, char delim, char ext)
-
 #else  /* __STDC__ */
 int                 BaseName (filename, basename, delim, ext)
 char               *filename;
 char               *basename;
 char                delim;
 char                ext;
-
 #endif /* __STDC__ */
-
 {
    register char      *from, *to;
 
@@ -74,18 +71,14 @@ char                ext;
 /* |            exemple d'appel:                                        | */
 /* |            - Dirname("/users/rascar/thot", "", 0) -> /users/rascar | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 DirName (char *filename, char *dirname, char delim)
-
 #else  /* __STDC__ */
 int                 DirName (filename, dirname, delim)
 char               *filename;
 char               *dirname;
 char                delim;
-
 #endif /* __STDC__ */
-
 {
    register char      *from, *to, *mark;
 
@@ -117,16 +110,12 @@ char                delim;
 /* |            Rend 1 si le fichier a e't'e trouve' et 0 sinon.        | */
 /* |            Si filename est un repertoire, on retourne 0.           | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 FileExist (char *filename)
-
 #else  /* __STDC__ */
 int                 FileExist (filename)
 char               *filename;
-
 #endif /* __STDC__ */
-
 {
    int                 ret = 0;
 
@@ -166,16 +155,12 @@ char               *filename;
 /* ---------------------------------------------------------------------- */
 /* |    RemoveFile : remove a file.                                     | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 RemoveFile (char *filename)
-
 #else  /* __STDC__ */
 int                 RemoveFile (filename)
 char               *filename;
-
 #endif /* __STDC__ */
-
 {
 #ifdef WWW_MSWINDOWS
    return (remove (filename));
@@ -260,7 +245,6 @@ ThotDirBrowse      *me;
 /* |    ThotDirBrowse_first - get first dir/name.ext and setup            */
 /* |            platform dependent ThotDirBrowse structure                */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 ThotDirBrowse_first (ThotDirBrowse * me, char *dir, char *name, char *ext)
 #else  /* __STDC__ */
@@ -269,9 +253,7 @@ ThotDirBrowse      *me;
 char               *dir;
 char               *name;
 char               *ext;
-
 #endif /* __STDC__ */
-
 {
    char                space[MAX_PATH];
    int                 ret;
@@ -312,15 +294,12 @@ char               *ext;
 /* ---------------------------------------------------------------------- */
 /* |    ThotDirBrowse_next - get next file                                */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 ThotDirBrowse_next (ThotDirBrowse * me)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_next (me)
 ThotDirBrowse      *me;
-
 #endif /* __STDC__ */
-
 {
 #ifdef WWW_MSWINDOWS
    int                 ret;
@@ -340,15 +319,12 @@ ThotDirBrowse      *me;
 /* ---------------------------------------------------------------------- */
 /* |    ThotDirBrowse_close - recover system resources                    */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 ThotDirBrowse_close (ThotDirBrowse * me)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_close (me)
 ThotDirBrowse      *me;
-
 #endif /* __STDC__ */
-
 {
    int                 ret;
 
@@ -462,17 +438,106 @@ void                ThotFile_test (char *name)
 }
 #endif /* INCLUDE_TESTING_CODE */
 
-/* ThotFile_open
- * returns: ThotFile_BADHANDLE: error
- handle:
- */
+/* ---------------------------------------------------------------------- */
+/* |    QuitQuitHandler est un handler de quit sur quit.                | */
+/* ---------------------------------------------------------------------- */
+static void         QuitQuitHandler ()
+{
+   exit (1);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    CoreHandler est un handler d'erreur fatale.                     | */
+/* ---------------------------------------------------------------------- */
+static void         CoreHandler ()
+{
+   /* si on recoit signal sur signal, tant pis. */
+#ifndef NEW_WILLOWS
+   signal (SIGBUS, SIG_DFL);	/* bus error    */
+   signal (SIGSEGV, SIG_DFL);	/* memory fault */
+   signal (SIGPIPE, SIG_IGN);	/* broken pipe  */
+#ifdef SIGABRT
+   signal (SIGABRT, SIG_DFL);	/* ? abort */
+#else
+   signal (SIGIOT, SIG_DFL);	/* ? abort */
+#endif
+#endif /* NEW_WILLOWS */
+   /*BackupAll ();*/
+   QuitQuitHandler ();
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    ThotFin termine l'application Thot.                             | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                ThotFin (int result)
+#else  /* __STDC__ */
+void                ThotFin (result)
+int                 result;
+
+#endif /* __STDC__ */
+{
+   fflush (stderr);
+   fflush (stdout);
+   if (result)
+      CoreHandler ();
+   else
+      exit (result);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    QuitHandler est un handler pour Interrupt.                      | */
+/* ---------------------------------------------------------------------- */
+static void         QuitHandler ()
+{
+#ifndef NEW_WILLOWS
+   signal (SIGINT, QuitQuitHandler);	/* si jamais on fait encore SIGINT */
+   signal (SIGQUIT, SIG_DFL);	/* si jamais on fait encore SIGQUIT */
+   signal (SIGTERM, QuitQuitHandler);	/* si jamais on fait encore SIGTERM */
+#endif /* NEW_WILLOWS */
+   /*BackupAll ();*/
+   QuitQuitHandler ();
+#ifndef NEW_WILLOWS
+   signal (SIGINT, QuitHandler);	/* rearmer */
+   signal (SIGQUIT, QuitHandler);	/* rearmer */
+   signal (SIGTERM, QuitHandler);	/* rearmer */
+#endif /* NEW_WILLOWS */
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    InitCoreHandler initialise le handler de core dump.             | */
+/* ---------------------------------------------------------------------- */
+void                InitCoreHandler ()
+{
+#ifndef NEW_WILLOWS
+   signal (SIGBUS, CoreHandler);	/* bus error */
+   signal (SIGSEGV, CoreHandler);	/* memory fault */
+#ifdef SIGABRT
+   signal (SIGABRT, CoreHandler);	/* ? abort */
+#else
+   signal (SIGIOT, CoreHandler);	/* ? abort */
+#endif
+
+   signal (SIGHUP, QuitQuitHandler);	/* kill -1 */
+   signal (SIGINT, QuitHandler);	/* ^C */
+   signal (SIGQUIT, QuitHandler);	/* ^\ */
+   signal (SIGTERM, QuitHandler);	/* kill */
+#endif /* NEW_WILLOWS */
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* | ThotFile_open returns: ThotFile_BADHANDLE: error handle:		| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 ThotFileHandle      ThotFile_open (char *name, ThotFileMode mode)
 #else  /* __STDC__ */
 ThotFileHandle      ThotFile_open (name, mode)
 char               *name;
 ThotFileMode        mode;
-
 #endif /* __STDC__ */
 {
    ThotFileHandle      ret;
@@ -507,10 +572,9 @@ ThotFileMode        mode;
    return ret;
 }
 
-/* ThotFile_close
- * returns: 0: error
- 1: OK
- */
+/* ---------------------------------------------------------------------- */
+/* | ThotFile_close returns, 0: error, 1: OK.				| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 ThotFile_close (ThotFileHandle handle)
 #else  /* __STDC__ */
@@ -529,11 +593,9 @@ ThotFileHandle      handle;
    return ret;
 }
 
-/* ThotFile_read
- * returns: +n: number of bytes read
- 0: at EOF
- -1: error
- */
+/* ---------------------------------------------------------------------- */
+/* | ThotFile_read returns +n: number of bytes read, 0: at EOF, -1: error */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 ThotFile_read (ThotFileHandle handle, void *buffer, unsigned int count)
 #else  /* __STDC__ */
@@ -545,7 +607,6 @@ unsigned int        count;
 #endif /* __STDC__ */
 {
    int                 ret;
-
 #ifdef WWW_MSWINDOWS
    DWORD               red;
 
@@ -560,10 +621,9 @@ unsigned int        count;
    return ret;
 }
 
-/* ThotFile_write
- * returns:  n: number of bytes written
- -1: error
- */
+/* ---------------------------------------------------------------------- */
+/* | ThotFile_write returns:  n: number of bytes written, -1: error	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 ThotFile_write (ThotFileHandle handle, void *buffer, unsigned int count)
 #else  /* __STDC__ */
@@ -571,7 +631,6 @@ int                 ThotFile_write (handle, buffer, count)
 ThotFileHandle      handle;
 void               *buffer;
 unsigned int        count;
-
 #endif /* __STDC__ */
 {
    int                 ret;
@@ -590,10 +649,9 @@ unsigned int        count;
    return ret;
 }
 
-/* ThotFile_seek
- * returns: ThotFile_BADOFFSET: error
- ThotFileOffset
- */
+/* ---------------------------------------------------------------------- */
+/* ThotFile_seek returns: ThotFile_BADOFFSET: error, ThotFileOffset	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 ThotFileOffset      ThotFile_seek (ThotFileHandle handle, ThotFileOffset offset, ThotFileOrigin origin)
 #else  /* __STDC__ */
@@ -614,17 +672,15 @@ ThotFileOrigin      origin;
    return ret;
 }
 
-/* ThotFile_seek
- * returns: 1: your data is all there, sir
- 0: error
- */
+/* ---------------------------------------------------------------------- */
+/* ThotFile_seek returns: 1: your data is all there, sir, 0: error	| */
+/* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 ThotFile_stat (ThotFileHandle handle, ThotFileInfo * pInfo)
 #else  /* __STDC__ */
 int                 ThotFile_stat (handle, pInfo)
 ThotFileHandle      handle;
 ThotFileInfo       *pInfo;
-
 #endif /* __STDC__ */
 {
    ThotFileOffset      ret;
