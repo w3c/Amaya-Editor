@@ -577,18 +577,10 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
   rdfxml_parser=raptor_new();
 #endif /* AM_REDLAND */
 
-  if(!rdfxml_parser) {
+  if (!rdfxml_parser) {
      AnnotList_free (annot_list);
      /* do not free rdf_model here; it may not have been empty to start */
      annot_list = NULL;
-     if (rdfxml_parser) 
-       {
-#ifdef AM_REDLAND
-	 raptor_free_parser(rdfxml_parser);
-#else
-	 raptor_free(rdfxml_parser);
-#endif /* AM_REDLAND */
-       }
      return NULL;
   }  
 
@@ -601,11 +593,10 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
    that we can use it */
   full_file_name = (char *)TtaGetMemory (strlen (file_name) + sizeof ("file:"));
   sprintf (full_file_name, "file:%s", file_name);
-
-  raptor_set_statement_handler(rdfxml_parser, (void *) &ctx, triple_handler);
-
    /* remember the base name for anoynmous subjects */
   ctx.base_uri = full_file_name;
+  raptor_set_statement_handler(rdfxml_parser, (void *) &ctx, triple_handler);
+
 #ifdef AM_REDLAND
   {
     unsigned char *tmp;
@@ -617,7 +608,7 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
 #else
   uri = full_file_name;
 #endif /* AM_REDLAND */
-  if (raptor_parse_file(rdfxml_parser, uri, uri))
+  if (raptor_parse_file (rdfxml_parser, uri, NULL))
 #else
   if (HTRDF_parseFile(file_name, triple_handler, &ctx) != YES)
 #endif
