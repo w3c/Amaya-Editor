@@ -1,10 +1,10 @@
 PKG=W3Camaya
 NAME=amaya
-VERSION=5.1
+VERSION=6.2
 ARCH=sparc
 CLASSES=none
 CATEGORY=Application
 VENDOR=W3C
-PSTAMP=11July2001
+PSTAMP=8July2002
 EMAIL=irene.vatton@inrialpes.fr
 BASEDIR=/usr/local
