@@ -33,7 +33,7 @@ public:
       const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt  );*/
 
   bool IsFreezed();
-  void SelectAttribute( int position );
+  void SelectAttribute( int position, bool force_checked = false );
 
  protected:
   // Any class wishing to process wxWindows events must use this macro

@@ -175,14 +175,16 @@ void AmayaAttributePanel::OnListSelectItem( wxCommandEvent& event )
   SelectAttribute
   selecte an attribut to the given position
   params:
+  bool force_checked : true if this function must ignore the checked item state
+                       (default is false)
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SelectAttribute( int position )
+void AmayaAttributePanel::SelectAttribute( int position, bool force_checked )
 {
   // force the selection in the attribute list
   m_pAttrList->SetSelection(position);
 
-  if (m_pAttrList->IsChecked(position))
+  if (m_pAttrList->IsChecked(position) || force_checked)
     {
       // call the callback to show the right attribute value panel
       // there is two case because of old "event" attributs menu (GTK version)
@@ -214,7 +216,7 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
 {
   if (!m_pAttrList->IsChecked(event.GetSelection()))
     {
-      SelectAttribute( event.GetSelection() );
+      SelectAttribute( event.GetSelection(), true );
 
       if (!m_CurrentAttMandatory)
 	{
