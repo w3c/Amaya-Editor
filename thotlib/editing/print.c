@@ -59,7 +59,7 @@
 #include "thotpalette_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
-
+#include "platform_tv.h"
 int                 PRINT;	/* Identification des messages */
 int                 NumberOfPages;
 int                 UserErrorCode;
@@ -129,6 +129,81 @@ static int          NoEmpyBox;
 static int          Repaginate;
 static int          firstPage;
 static int          lastPage;
+
+#ifdef __STDC__
+static void usage (char* processName) 
+#else  /* __STDC__ */
+static void usage (processName)
+char* processName;
+#endif /* __STDC__ */ 
+{
+       fprintf (stderr, "\n\nusage: %s <file name>\n", processName);
+       fprintf (stderr, "       -v <view name> [-v <view name> [...]]\n");
+       fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
+       fprintf (stderr, "       [-display <display>]\n");
+       fprintf (stderr, "       [-name <real name>]\n");
+       fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
+       fprintf (stderr, "       [-bw]\t\t /* for black & white output */\n");
+       fprintf (stderr, "       [-paginate]\t /* to repaginate */\n");
+       fprintf (stderr, "       [-manualfeed]\t /* for manualfeed */\n");
+       fprintf (stderr, "       [-Fn1]\t\t /* n1: number of first page to print */\n");
+       fprintf (stderr, "       [-Ln2]\t\t /* n2: number of last page to print */\n");
+       fprintf (stderr, "       [-#n]\t\t /* n: number of copies to print */\n");
+       fprintf (stderr, "       [-Hn]\t\t /* n: Horizental shift */\n");
+       fprintf (stderr, "       [-Vn]\t\t /* n: Vertical shift */\n");
+       fprintf (stderr, "       [-%%n]\t\t /* n: zoom in percent */\n");
+       fprintf (stderr, "       [-emptybox]\t /* to print empty boxes */\n");
+       fprintf (stderr, "       [-wn]\t\t /* n: window number */\n\n\n");
+       exit (1);
+}
+
+#ifdef __STDC__
+static void         ExtractName (char *text, char *aDirectory, char *aName)
+
+#else  /* __STDC__ */
+static void         ExtractName (text, aDirectory, aName)
+char               *text;
+char               *aDirectory;
+char               *aName;
+
+#endif /* __STDC__ */
+{
+   int                 lg, i, j;
+   char               *ptr, *oldptr;
+
+   if (text == NULL || aDirectory == NULL || aName == NULL)
+      return;			/* No input text or error in input parameters */
+
+   aDirectory[0] = '\0';
+   aName[0] = '\0';
+
+   lg = strlen (text);
+   if (lg)
+     {
+	/* the text is not empty */
+	ptr = oldptr = &text[0];
+	do
+	  {
+	     ptr = strrchr (oldptr, DIR_SEP);
+	     if (ptr != NULL)
+		oldptr = &ptr[1];
+	  }
+	while (ptr != NULL);
+
+	i = (int) (oldptr) - (int) (text);	/* the length of the directory part */
+	if (i > 1)
+	  {
+	     strncpy (aDirectory, text, i);
+	     j = i - 1;
+	     /* Suppresses the / characters at the end of the path */
+	     while (aDirectory[j] == DIR_SEP)
+		aDirectory[j--] = '\0';
+	  }
+	if (i != lg)
+	   strcpy (aName, oldptr);
+     }
+}
+
 
 /*----------------------------------------------------------------------
    NextReferenceToEl                                               
@@ -2612,17 +2687,40 @@ char              **argv;
    char               *server = (char*) NULL;
    char               *name;
    char               *realName;
-   char               *tempDir;
    char*               pChar ;
    char                option [100];
-   int                 NCopies;
-   char               *destination;
+   int                 NCopies = 1;
+   char               *destination = (char*) NULL;
    char                cmd[800];
    char                temp[MAX_PATH];
    int                 i, l, result;
    int                 argCounter;
    int                 viewsCounter = 0;
    int                 index;
+   boolean             realNameFound = FALSE;
+   char                tempDir [MAX_PATH];
+   char                tempName [MAX_PATH];             
+   int                 length;
+
+   Repaginate     = 0;
+   NPagesPerSheet = 1;
+   BlackAndWhite  = 0;
+   manualFeed     = 0;
+   thotWindow     = (ThotWindow) 0;
+   NoEmpyBox      = 1;
+   Repaginate     = 0;
+   firstPage      = 0;
+   lastPage       = 999;
+   NCopies        = 1;
+   HorizShift     = 0;
+   VertShift      = 0;
+   Zoom           = 100;
+   pageSize       = (char*) TtaGetMemory (3);
+   strcpy (pageSize, "A4");
+   Orientation    = "Portrait";
+   
+   if (argc < 4)
+      usage (argv [0]);
 
    TtaInitializeAppRegistry (argv[0]);
 
@@ -2633,40 +2731,65 @@ char              **argv;
               argCounter++;
               server = (char*)  TtaGetMemory (strlen (argv[argCounter]) + 1);
               strcpy (server, argv[argCounter++]);
-           } else if (!strcmp (argv [argCounter], "-pivot")) {
+           } else if (!strcmp (argv [argCounter], "-name")) {
+                  realNameFound = TRUE ;
                   argCounter++;
-                  name = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
-                  strcpy (name, argv[argCounter++]);
-           } else if (!strcmp (argv [argCounter], "-dir")) {
-                  argCounter++;
-                  tempDir = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-                  strcpy (tempDir, argv[argCounter++]);
-           } else if (!strcmp (argv [argCounter], "-rn")) {
-                  argCounter++;
-                  realName = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  realName = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
                   strcpy (realName, argv[argCounter++]);
            } else if (!strcmp (argv [argCounter], "-ps")) {
+	          if (destination) {
+                     fprintf (stderr, "error: destination is already given\n");
+                     exit (1);
+                  }
+                  destination = "PSFILE";
                   argCounter++;
-                  printer = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
+                  strcpy (printer, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-out")) {
+	          if (destination) {
+                     fprintf (stderr, "error: destination is already given\n");
+                     exit (1);
+                  }
+                  destination = "PRINTER";
+                  argCounter++;
+                  printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
                   strcpy (printer, argv[argCounter++]);
            } else if (!strcmp (argv [argCounter], "-v")) {
                   argCounter++;
-                  strcpy (PrintViewName[viewsCounter++], argv [argCounter++]);
+                  strcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
            } else if (!strcmp (argv [argCounter], "-npps")) {
                   argCounter++;
                   NPagesPerSheet = atoi (argv[argCounter++]);
            } else if (!strcmp (argv [argCounter], "-bw")) {
                   argCounter++;
-                  BlackAndWhite = atoi (argv[argCounter++]);
+                  BlackAndWhite = 1;
+           } else if (!strcmp (argv [argCounter], "-manualfeed")) {
+                  argCounter++;
+                  manualFeed = 1;
+           } else if (!strcmp (argv [argCounter], "-emptybox")) {
+                  argCounter++;
+                  NoEmpyBox = 0;
+           } else if (!strcmp (argv [argCounter], "-paginate")) {
+                  argCounter++;
+                  Repaginate = 1;
+           } else if (!strcmp (argv [argCounter], "-landscape")) {
+                  Orientation = "Landscape";
+                  argCounter++;
+           } else if (!strcmp (argv [argCounter], "-portrait")) 
+	         /* Orientation is already set to Portrait value */ 
+                  argCounter++;
+           else if (!strcmp (argv [argCounter], "-sch")) {
+                  argCounter++;
+                  strcpy (SchemaPath, argv[argCounter++]);
+           } else if (!strcmp (argv [argCounter], "-doc")) {
+                  argCounter++;
+                  strcpy (DocumentPath, argv[argCounter++]);
            } else {
                   index = 0;
                   pChar = &argv [argCounter][2];
                   while (option[index++] = *pChar++);
                   option [index] = '\0';
 	          switch (argv [argCounter] [1]) {
-		         case 'R': Repaginate = atoi (option);
-                                   argCounter++;
-                                   break;
                          case 'F': firstPage = atoi (option);
                                    argCounter++;
                                    break;
@@ -2689,12 +2812,6 @@ char              **argv;
                          case '%': Zoom = atoi (option);
                                    argCounter++;
                                    break;
-                         case 'f': NoEmpyBox = atoi (option);
-                                   argCounter++;
-                                   break;
-                         case 'M': manualFeed = atoi (option);
-                                   argCounter++;
-                                   break;
                          case 'w': thotWindow = (ThotWindow) atoi (option);
                                    argCounter++;
                                    break;
@@ -2702,17 +2819,28 @@ char              **argv;
                                    exit (1);
                   }
            }
-       } else if ((!strcmp (argv [argCounter], "Portrait")) || (!strcmp (argv [argCounter], "Landscape"))) {
-              Orientation = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
-              strcpy (Orientation, argv[argCounter++]);
-       } else if ((!strcmp (argv [argCounter], "PRINTER")) || (!strcmp (argv [argCounter], "PSFILE"))) {
-              destination = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
-              strcpy (destination, argv[argCounter++]);
        } else {
-              fprintf (stderr, "Error: bad option (%s)\nProgram aborted\n", argv [argCounter]);
-              exit (1);
+	    if (TtaFileExist (argv [argCounter])) {
+               name = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
+               strcpy (name, argv[argCounter++]);
+            } else {
+                   fprintf (stderr, "File %s not found\n", argv [argCounter]);
+                   exit (1);
+            }
        }
    }
+
+   ExtractName (name, tempDir, tempName);   
+
+   if (!realNameFound) {
+      realName = (char*) TtaGetMemory (strlen (tempName) + 1);
+      strcpy (realName, tempName);
+   }
+   
+   length = strlen (realName);
+   for (index = 0; index < length; index++)
+       if (realName [index] == '.')
+          realName [index] = '\0';
 
    ShowSpace = 1;  /* Restitution des espaces */
 
@@ -2761,7 +2889,7 @@ char              **argv;
 		strcpy (temp, DocumentPath);
 	     sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, temp);
 	  }
-	if (!OpenDocument (name, MainDocument, TRUE, FALSE, NULL, FALSE))
+	if (!OpenDocument (tempName, MainDocument, TRUE, FALSE, NULL, FALSE))
 	   MainDocument = NULL;
      }
    if (MainDocument != NULL)
@@ -2781,7 +2909,7 @@ char              **argv;
 
    if (!strcmp (destination, "PSFILE"))
      {
-	sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
+	sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, tempName, printer);
 	result = system (cmd);
 	if (result != 0)
 	   ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
@@ -2790,7 +2918,7 @@ char              **argv;
      }
    else
      {
-	sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
+	sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, tempName);
 	result = system (cmd);
 	if (result != 0)
 	   ClientSend (thotWindow, printer, TMSG_UNKNOWN_PRINTER);
