@@ -550,7 +550,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 		  || !strcmp (mime_type, AM_SVG_MIME_TYPE))
 		is_svg = TRUE;
 	      if (!strncmp (mime_type, "text/mathml", 11)
-		  || !strncmp (mime_type, AM_MATHML_MIME_TYPE, 11))
+		  || !strcmp (mime_type, AM_MATHML_MIME_TYPE))
 		is_mml = TRUE;
 	    }
 	  else
