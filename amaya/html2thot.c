@@ -2672,7 +2672,6 @@ Document       doc;
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
-  XMLNotWellFormed = TRUE;
   CurrentBufChar = 0;
 }
 
