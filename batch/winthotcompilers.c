@@ -238,8 +238,10 @@ int Makefile (HWND hwnd, char *fileName)
 {
     FILE      *f; 
     HINSTANCE  hLib;
-    FARPROC    ptrMainProc;
-    char       msg [1024];
+	/* FARPROC ptrMainProc; */
+    typedef    int (*MYPROC) (HWND, HWND, int, char **, int *);
+    MYPROC     ptrMainProc;    
+	char       msg [1024];
     char       seps[]   = " \t=$(\n\r)";
     char       string [1024];
     char      *args [100];
@@ -402,7 +404,7 @@ int Makefile (HWND hwnd, char *fileName)
 		       hLib = LoadLibrary ("app");
 		       if (!hLib)
 			 return FATAL_EXIT_CODE;
-		       ptrMainProc = GetProcAddress (hLib, "APPmain");
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "APPmain");
 		       if (!ptrMainProc)
 			 {
 			   FreeLibrary (hLib);
@@ -494,7 +496,7 @@ int Makefile (HWND hwnd, char *fileName)
 		       hLib = LoadLibrary ("prs");
 		       if (!hLib)
 			 return FATAL_EXIT_CODE;
-		       ptrMainProc = GetProcAddress (hLib, "PRSmain");
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "PRSmain");
 		       if (!ptrMainProc)
 			 {
 			   FreeLibrary (hLib);
@@ -636,7 +638,7 @@ int Makefile (HWND hwnd, char *fileName)
 		       hLib = LoadLibrary ("str");
 		       if (!hLib)
 			 return FATAL_EXIT_CODE;
-		       ptrMainProc = GetProcAddress (hLib, "STRmain");
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "STRmain");
 		       if (!ptrMainProc)
 			 {
 			   FreeLibrary (hLib);
@@ -779,7 +781,7 @@ int Makefile (HWND hwnd, char *fileName)
 		       if (!hLib)
 			 return FATAL_EXIT_CODE;
 		       
-		       ptrMainProc = GetProcAddress (hLib, "TRAmain");
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "TRAmain");
 		       if (!ptrMainProc)
 			 {
 			   FreeLibrary (hLib);

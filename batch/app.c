@@ -1447,7 +1447,9 @@ int       main (int argc, char **argv)
    int                 ndx, pIndex = 0;
    char                msg [800];
    HANDLE              cppLib;
-   FARPROC             ptrMainProc;
+   /* FARPROC             ptrMainProc; */
+   typedef int (*MYPROC) (HWND, int, char **, int *);
+   MYPROC              ptrMainProc; 
 #else  /* !_WINDOWS */
    char                cmd[800];
 #endif /* _WINDOWS */
@@ -1584,7 +1586,7 @@ int       main (int argc, char **argv)
 		}
 #ifdef _WINDOWS
 	      cppLib = LoadLibrary ("cpp");
-	      ptrMainProc = GetProcAddress (cppLib, "CPPmain");
+	      ptrMainProc = (MYPROC) GetProcAddress (cppLib, "CPPmain");
 	      i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
 	      FreeLibrary (cppLib);
 	      for (ndx = 0; ndx < pIndex; ndx++)
