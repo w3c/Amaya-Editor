@@ -498,8 +498,10 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
   else
 #endif /* ANNOT_ON ANNOT */
     {
+#ifdef ANNOT_ON_ANNOT
       /* the threads that have a root of thread on source_doc */
       thread = &AnnotThread[source_doc];
+#endif /* ANNOT_ON ANNOT */
       /* the annotations on this URL */
       annot_list = AnnotMetaData[source_doc].annotations;  
       doc_url = DocumentURLs[source_doc];
