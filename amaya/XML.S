@@ -20,7 +20,7 @@ STRUCT
    XML =
        BEGIN
 	LIST OF (XML_Gen); 
-       END + (XMLcomment, XMLPI, CDATA);
+       END + (xmlcomment, xmlpi, cdata);
 	
    XML_Gen = LIST OF (XML_Elements);
 
