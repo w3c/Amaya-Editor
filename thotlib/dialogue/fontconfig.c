@@ -61,7 +61,8 @@ typedef struct FontScript
 
 #undef MAX_TXT_LEN
 #define MAX_TXT_LEN 8144 
-
+#define MAX_FONT_FACE 6
+#define MAX_FONT_STYLE 6
 static FontScript **Fonttab = NULL;
 
 
@@ -319,7 +320,7 @@ static FontScript **FontConfigLoad ()
 		   if ( fontsscript_tab[script] == NULL)
 		   {
 		     fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
-		     for (font_face_index = 0; font_face_index < 6; font_face_index++)
+		     for (font_face_index = 0; font_face_index < MAX_FONT_FACE; font_face_index++)
 		      fontsscript_tab[script]->family[font_face_index] = NULL;
 		     font_face_index = 0;
 		     /*reads all family for a script*/
@@ -330,14 +331,14 @@ static FontScript **FontConfigLoad ()
 			 if (word[0] == EOS)
 			   break;
 			 font_face_index = atoi (word);	
-			 if (font_face_index < 6 && 
+			 if (font_face_index < MAX_FONT_FACE && 
 			     font_face_index >= 0)
 			   if (fontsscript_tab[script]->family[font_face_index] == NULL)
 			   {
 			     fontsscript_tab[script]->family[font_face_index] = 
 			       TtaGetMemory (sizeof (FontFamilyConfig));
 			     /*reads all highlights*/
-			     for (font_style = 0;font_style < 6; font_style++)
+			     for (font_style = 0; font_style < MAX_FONT_STYLE; font_style++)
 			       fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = NULL;
 			     font_style = 0;
 			     while (indline != 0 &&
@@ -347,7 +348,7 @@ static FontScript **FontConfigLoad ()
 				 if (word[0] == EOS)
 				   break;
 				 font_style = atoi (word);
-				 if (font_style < 6 && 
+				 if (font_style < MAX_FONT_STYLE && 
 				     font_style >= 0)
 				   if (fontsscript_tab[script]->family[font_face_index]->highlight[font_style] == NULL)
 				   {
@@ -462,7 +463,7 @@ char *FontLoadFromConfig (char script,
 	}
     }
   
-    if (font_face_index < 0 || font_face_index > 5)
+    if (font_face_index < 0 || font_face_index >= MAX_FONT_FACE)
     font_face_index = 1;
 
   if (Fonttab[intscript] &&
@@ -503,12 +504,12 @@ void FreeFontConfig ()
       if (Fonttab[script])
 	{
 	  font_face_index = 0;
-	  while (font_face_index < 5)
+	  while (font_face_index < MAX_FONT_FACE)
 	    {
 	      if (Fonttab[script]->family[font_face_index])
 		{
 		  font_style = 0;
-		  while (font_style < 5)
+		  while (font_style < MAX_FONT_STYLE)
 		    {
 		      if (Fonttab[script]->family[font_face_index]->highlight[font_style])
 			TtaFreeMemory (Fonttab[script]->family[font_face_index]->highlight[font_style]);
