@@ -3396,7 +3396,18 @@ void  CreateObject (Document document, View view)
 
       /* get the first selected element, i.e. the Object element */
       TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
- 
+      
+      elType = TtaGetElementType (el);
+      while (el != NULL &&
+	     elType.ElTypeNum != HTML_EL_Object)
+	{
+	  el = TtaGetParent (el);
+	  elType = TtaGetElementType (el);
+	}
+      
+      if (el == NULL)
+	return;
+
       /* copy SRC attribute of Object_Image into data attribute of Object */
       image = TtaGetFirstChild (el);
       attrType.AttrSSchema = elType.ElSSchema;
