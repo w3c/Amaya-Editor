@@ -60,6 +60,13 @@ décrits.</p>
           <li><a href="Browsing.html.fr#Keyboard">Contrôle du clavier</a></li>
         </ul>
       </li>
+      <li><a href="Views.html.fr#Views">Afficher des vues</a> 
+        <ul>
+          <li><a href="Views.html.fr#Opening">Ouvrir une vue</a></li>
+          <li><a href="Views.html.fr#Closing">Fermer une vue</a></li>
+          <li><a href="Views.html.fr#Using">Utiliser les vues</a></li>
+        </ul>
+      </li>
       <li><a href="Selecting.html.fr#Selecting">Sélectionner</a> 
         <ul>
           <li><a href="Selecting.html.fr#Selecting1">Sélectionner par la
@@ -68,31 +75,17 @@ décrits.</p>
             images</a></li>
         </ul>
       </li>
-      <li><a href="Searching.html.fr#Searching">Rechercher et remplacer du
-        texte</a></li>
-      <li><a href="Views.html.fr#Views">Afficher des vues</a> 
-        <ul>
-          <li><a href="Views.html.fr#Opening">Ouvrir une vue</a></li>
-          <li><a href="Views.html.fr#Closing">Fermer une vue</a></li>
-          <li><a href="Views.html.fr#Using">Utiliser les vues</a></li>
-        </ul>
-      </li>
     </ul>
   </li>
   <li><a href="#L932">Éditer des pages Web avec Amaya</a> 
     <ul>
-      <li><a href="EditChar.html.fr#Keyboard">Entrer des caractères ISO-Latin
-        et Unicode</a> 
+      <li><a href="Document.html.fr">Éditer des documents</a> 
         <ul>
-          <li><a href="EditChar.html.fr#Standard">Le support multi-touches
-            standard des versions Motif et GTK</a></li>
-          <li><a href="EditChar.html.fr#Optional">Le support multi-touches
-            optionnel pour les versions Motif et Windows</a></li>
+          <li><a href="Document.html.fr#L653">Nouveaux documents</a></li>
         </ul>
       </li>
       <li><a href="Creating.html.fr#Creating">Créer de nouveaux éléments</a> 
         <ul>
-          <li><a href="Creating.html.fr#New">Nouveaux documents</a></li>
           <li><a href="Creating.html.fr#Types">Boutons et menu
           Eléments</a></li>
           <li><a href="Creating.html.fr#Structure">menu Structure</a></li>
@@ -104,15 +97,23 @@ décrits.</p>
           blancs</a></li>
         </ul>
       </li>
-      <li><a href="Links.html.fr#Creating">Créer et modifier des liens et des
-        ancres</a> 
+      <li><a href="Attributes.html.fr#Attributes">Éditer des attributs</a> 
         <ul>
-          <li><a href="Links.html.fr#L557">Créer une ancre cible</a></li>
-          <li><a href="Links.html.fr#target1">Créer un élément cible</a></li>
-          <li><a href="Links.html.fr#L245">Créer un lien</a></li>
-          <li><a href="Links.html.fr#Removing">Supprimer un lien ou une ancre
-            cible</a></li>
-          <li><a href="Links.html.fr#Changing">Changer un lien</a></li>
+          <li><a href="Attributes.html.fr#L1073">Éditer des attributs par le
+            biais du menu Attributs</a></li>
+          <li><a href="Attributes.html.fr#Copying">Copier des
+          attributs</a></li>
+          <li><a href="Attributes.html.fr#Editing">Éditer des attributs dans
+            la Vue structure</a></li>
+        </ul>
+      </li>
+      <li><a href="EditChar.html.fr#Keyboard">Entrer des caractères ISO-Latin
+        et Unicode</a> 
+        <ul>
+          <li><a href="EditChar.html.fr#Standard">Le support multi-touches
+            standard des versions Motif et GTK</a></li>
+          <li><a href="EditChar.html.fr#Optional">Le support multi-touches
+            optionnel pour les versions Motif et Windows</a></li>
         </ul>
       </li>
       <li><a href="Changing.html.fr#Changing">Éditer la structure du
@@ -129,8 +130,19 @@ décrits.</p>
             Delete fusionnées</a></li>
         </ul>
       </li>
+      <li><a href="Links.html.fr#Creating">Créer et modifier des liens et des
+        ancres</a> 
+        <ul>
+          <li><a href="Links.html.fr#L557">Créer une ancre cible</a></li>
+          <li><a href="Links.html.fr#target1">Créer un élément cible</a></li>
+          <li><a href="Links.html.fr#L245">Créer un lien</a></li>
+          <li><a href="Links.html.fr#Removing">Supprimer un lien ou une ancre
+            cible</a></li>
+          <li><a href="Links.html.fr#Changing">Changer un lien</a></li>
+        </ul>
+      </li>
       <li><a
-        href="/local_home/diffusion/Amaya/doc/amaya/Tables.html#Editing">Éditer
+        href="../../../../../diffusion/Amaya/doc/amaya/Tables.html#Editing">Éditer
         des tables</a> 
         <ul>
           <li><a href="Tables.html.fr#Creating">Créer une nouvelle
@@ -142,6 +154,22 @@ décrits.</p>
           <li><a href="Tables.html.fr#Removing">Détruire une colonne</a></li>
           <li><a href="Tables.html.fr#Adding2">Ajouter quelque chose après
             une table</a></li>
+        </ul>
+      </li>
+      <li><a href="ImageMaps.html.fr#Client-sid">Créer et utiliser des zones
+        actives</a> 
+        <ul>
+          <li><a href="ImageMaps.html.fr#Adding">Ajouter une image</a></li>
+          <li><a href="ImageMaps.html.fr#Using">Texte de remplacement et
+            Descriptions longues</a></li>
+          <li><a href="ImageMaps.html.fr#Using">Utiliser des zones
+          actives</a></li>
+          <li><a href="ImageMaps.html.fr#Creating">Créer des zones
+          actives</a></li>
+          <li><a href="ImageMaps.html.fr#L11711">Déplacer des zones
+            actives</a></li>
+          <li><a href="ImageMaps.html.fr#L1171">Redimensionner des zones
+            actives</a></li>
         </ul>
       </li>
       <li><a href="Math.html.fr#Math">Éditer des mathématiques</a> 
@@ -165,22 +193,7 @@ décrits.</p>
           <li><a href="SVG.html.fr#Peindre">Peindre les graphiques</a></li>
         </ul>
       </li>
-      <li><a href="ImageMaps.html.fr#Client-sid">Créer et utiliser des zones
-        actives</a> 
-        <ul>
-          <li><a href="ImageMaps.html.fr#Adding">Ajouter une image</a></li>
-          <li><a href="ImageMaps.html.fr#Using">Texte de remplacement et
-            Descriptions longues</a></li>
-          <li><a href="ImageMaps.html.fr#Using">Utiliser des zones
-          actives</a></li>
-          <li><a href="ImageMaps.html.fr#Creating">Créer des zones
-          actives</a></li>
-          <li><a href="ImageMaps.html.fr#L11711">Déplacer des zones
-            actives</a></li>
-          <li><a href="ImageMaps.html.fr#L1171">Redimensionner des zones
-            actives</a></li>
-        </ul>
-      </li>
+      <li><a href="Xml.html.fr">Support Xml générique</a></li>
       <li><a href="StyleSheets.html.fr#Style">Les feuilles de style</a> 
         <ul>
           <li><a href="StyleSheets.html.fr#Creating">Créer et mettre à jour
@@ -195,16 +208,8 @@ décrits.</p>
             utilisant des éléments HTML</a></li>
         </ul>
       </li>
-      <li><a href="Attributes.html.fr#Attributes">Éditer des attributs</a> 
-        <ul>
-          <li><a href="Attributes.html.fr#L1073">Éditer des attributs par le
-            biais du menu Attributs</a></li>
-          <li><a href="Attributes.html.fr#Copying">Copier des
-          attributs</a></li>
-          <li><a href="Attributes.html.fr#Editing">Éditer des attributs dans
-            la Vue structure</a></li>
-        </ul>
-      </li>
+      <li><a href="Searching.html.fr#Searching">Rechercher et remplacer du
+        texte</a></li>
       <li><a href="SpellChecking.html.fr#Spell">Vérifier
       l'orthographe</a></li>
       <li><a href="Publishing.html.fr#Saving">Sauver et publier des
@@ -326,28 +331,30 @@ fichiers de sauvegarde est automatiquement proposée.</p>
 <p>Chaque section suivante décrit brièvement comment utiliser une fonction
 spécifique d'Amaya :</p>
 <ul>
-  <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
-    remplacer du texte</a></li>
-  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Entrer des caractères
-    ISO-Latin-1</a></li>
+  <li><a href="Document.html.fr">Éditer des documents</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
-  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
-    liens et des ancres</a></li>
+  <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
+    attributs</a></li>
+  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Entrer des caractères
+    ISO-Latin-1</a></li>
   <li><a rel="Chapter" href="Changing.html.fr#Changing">Éditer la structure
     du document</a></li>
+  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
+    liens et des ancres</a></li>
   <li><a rel="Chapter" href="Tables.html.fr#Editing">Éditer des
   tables</a></li>
+  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser
+    des zones actives</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
   mathématiques</a></li>
   <li><a href="SVG.html.fr#Edition" rel="Chapter">Édition des
   graphiques</a></li>
-  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser
-    des zones actives</a></li>
+  <li><a href="Xml.html.fr">Support Xml générique</a></li>
   <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Les feuilles de
     style</a></li>
-  <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
-    attributs</a></li>
+  <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
+    remplacer du texte</a></li>
   <li><a rel="Chapter" href="SpellChecking.html.fr#Spell">Vérifier
     l'orthographe</a></li>
   <li><a rel="Chapter" href="Publishing.html.fr#Saving">Sauver et publier des

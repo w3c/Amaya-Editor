@@ -231,24 +231,25 @@
 229 Navigazione
 230 Viste
 231 Selezione
-232 Creazione elementi
-233 Attributi
-234 **Characters
-235 Ristrutturazione
-236 Collegamenti
-237 Tabelle
-238 Zone attive
-239 Matematica
-240 Graphics
-241 **Xml support
-242 Fogli di stile
-243 Ricerca
-244 Controllo ortografico
-245 Pubblicazione
-246 Stampa
-247 Numerazione
-248 Creare un libro
-249 Annotazioni
-250 Configurazione di Amaya
-251 Scelte rapide
-252 Accessibilità in Amaya
+232 **Document
+233 Creazione elementi
+234 Attributi
+235 **Characters
+236 Ristrutturazione
+237 Collegamenti
+238 Tabelle
+239 Zone attive
+240 Matematica
+241 Graphics
+242 **Xml support
+243 Fogli di stile
+244 Ricerca
+245 Controllo ortografico
+246 Pubblicazione
+247 Stampa
+248 Numerazione
+249 Creare un libro
+250 Annotazioni
+251 Configurazione di Amaya
+252 Scelte rapide
+253 Accessibilità in Amaya

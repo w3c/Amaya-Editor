@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vérifier l'orthographe</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,15 +13,14 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Attributes.html.fr" accesskey="p"><img
+      <td><p><a href="Searching.html.fr#Searching" accesskey="p"><img
         alt="previous" src="../images/left.gif" /></a> <a
         href="Manual.html.fr" accesskey="t"><img alt="top"
         src="../images/up.gif" /></a> <a href="Publishing.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -30,8 +29,8 @@
 <div id="Spell">
 <h2><a name="L1063">Vérifier l'orthographe</a></h2>
 
-<p>Amaya est pourvu d'un vérificateur d'orthographe multilingue. Cet outil est
-invoqué par la commande <strong>Vérifier orthographe</strong>du menu
+<p>Amaya est pourvu d'un vérificateur d'orthographe multilingue. Cet outil
+est invoqué par la commande <strong>Vérifier orthographe</strong>du menu
 <strong>Edition</strong>. L'attribut <code>LANG</code> permet de sélectionner
 le bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel
 élément dans un document, même à un seul mot. Utilisez pour cela la commande
@@ -64,8 +63,9 @@ vérificateur :</p>
     liste peut être modifiée par l'utilisateur.</li>
   <li>Le sous-menu <strong>Vérifier l'orthographe</strong>, similaire en cela
     à la boîte de dialogue <strong><a
-    href="Searching.html.fr">Rechercher</a></strong>, vous permet de spécifier
-    la partie du document sur laquelle le vérificateur va travailler.</li>
+    href="Searching.html.fr">Rechercher</a></strong>, vous permet de
+    spécifier la partie du document sur laquelle le vérificateur va
+    travailler.</li>
   <li>Le mot erroné est affiché dans la zone <strong>Vérifier
     l'orthographe.</strong> La liste des propositions est affichée dans le
     sélecteur localisé en-dessous du mot incorrect. Par défaut, la première
@@ -75,10 +75,10 @@ vérificateur :</p>
     modifiée dans la boîte de dialogue. La correction se fait une fois que
     vous avez cliqué sur un des boutons <strong>Remplacer et
     suivant</strong>ou <strong>Remplacer (+dic)</strong>.</li>
-  <li>La langue dans laquelle se fait la correction est spécifiée dans le coin
-    en haut à gauche de la boîte de dialogue. Pour modifier la langue, il
-    suffit d'appliquer un attribut "Langue" au texte concerné en utilisant le
-    menu <a
+  <li>La langue dans laquelle se fait la correction est spécifiée dans le
+    coin en haut à gauche de la boîte de dialogue. Pour modifier la langue,
+    il suffit d'appliquer un attribut "Langue" au texte concerné en utilisant
+    le menu <a
     href="Attributes.html.fr#Attributes"><strong>Attributs</strong></a>, puis
     de redémarrer la procédure de correction.</li>
 </ul>
@@ -103,12 +103,12 @@ dialogue afin d'exécuter l'une des opérations suivantes :</p>
     d'orthographe du document. Ainsi, le vérificateur ignorera toute future
     occurrence à ce mot.</li>
   <li><strong>Remplacer et suivant</strong> : le mot considéré comme erroné
-    est remplacé par le mot correct (changé ou modifié par l'utilisateur, voir
-    plus loin) et le vérificateur cherche l'erreur suivante.</li>
+    est remplacé par le mot correct (changé ou modifié par l'utilisateur,
+    voir plus loin) et le vérificateur cherche l'erreur suivante.</li>
   <li><p><strong>Remplacer (+dic)</strong> : c'est le même que "Remplacer et
     suivant", à la différence que le mot de remplacement est ajouté au
     dictionnaire du document.</p>
-    <p><a href="Attributes.html.fr"><img alt="previous" 
+    <p><a href="Searching.html.fr#Searching"><img alt="previous"
     src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
     src="../images/up.gif" /></a> <a href="Publishing.html.fr"><img
     alt="next" src="../images/right.gif" /></a></p>

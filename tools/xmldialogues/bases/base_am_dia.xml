@@ -1966,6 +1966,10 @@
 	<message xml:lang="es">Seleccionar</message>
 	<message xml:lang="pt">Selecionar</message>
 </label>
+<label define="BHelpDocument">
+	<message xml:lang="en">Document</message>
+	<message xml:lang="fr">Document</message>
+</label>
 <label define="BHelpCreating">
 	<message xml:lang="en">Creating elements</message>
 	<message xml:lang="fr">Création</message>
@@ -2043,7 +2047,7 @@
 </label>
 <label define="BHelpXml">
 	<message xml:lang="en">Xml support</message>
-	<message xml:lang="fr">support Xml</message>
+	<message xml:lang="fr">Support Xml</message>
 </label>
 <label define="BHelpStyleSheets">
 	<message xml:lang="en">Style sheets</message>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vues</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,15 +13,14 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Searching.html.fr" accesskey="p"><img
-        alt="previous"  src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" 
-        src="../images/up.gif" /></a> <a href="Creating.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+      <td><p><a href="Browsing.html.fr#Browsing" accesskey="p"><img
+        alt="previous" src="../images/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top"
+        src="../images/up.gif" /></a> <a href="Selecting.html.fr#Selecting"
+        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -31,8 +30,8 @@
 <h2>Vues</h2>
 
 <p><strong>Amaya</strong> peut présenter différentes <em>vues</em> d'un
-document simultanément. Chaque vue est exposée dans une fenêtre différente, ce
-qui vous permet de voir clairement ce qui se passe quand vous rédigez des
+document simultanément. Chaque vue est exposée dans une fenêtre différente,
+ce qui vous permet de voir clairement ce qui se passe quand vous rédigez des
 documents complexes. C'est également une aide pour se déplacer à travers un
 document.</p>
 
@@ -41,19 +40,19 @@ document.</p>
   <dt>Vue formatée</dt>
     <dd>Ici vous voyez le document comme présenté dans les navigateurs
       graphiques classiques. C'est une vue dynamique à manipulation directe,
-      dans le sens que, à n'importe quel moment, il montre les changements que
-      vous êtes en train d'effectuer sur le document. Cette propriété diffère
-      des autres éditeurs qui eux fournissent seulement des séries de photos
-      instantannées du document.</dd>
+      dans le sens que, à n'importe quel moment, il montre les changements
+      que vous êtes en train d'effectuer sur le document. Cette propriété
+      diffère des autres éditeurs qui eux fournissent seulement des séries de
+      photos instantannées du document.</dd>
   <dt><a name="Structure">Vue structure</a></dt>
     <dd>Cette vue montre la structure actuelle du document qui est en train
       d'être rédigé. Chaque élément est représenté par son nom d'étiquette,
       suivi de ses attributs, sur la même ligne. Les éléments qu'il contient
-      sont représentés dessous, le long d'une ligne verticale bleue qui montre
-      l'étendue de l'élément. Les parties visualisées en noir peuvent être
-      éditées directement , en cliquant et en tapant. Les parties visualisées
-      en bleu peuvent être modifiées uniquement par l'intermédiaire des
-      commandes d'édition.</dd>
+      sont représentés dessous, le long d'une ligne verticale bleue qui
+      montre l'étendue de l'élément. Les parties visualisées en noir peuvent
+      être éditées directement , en cliquant et en tapant. Les parties
+      visualisées en bleu peuvent être modifiées uniquement par
+      l'intermédiaire des commandes d'édition.</dd>
   <dt><a name="Alternate">Vue alternée</a></dt>
     <dd>Cette vue vous permet de voir à quoi ressemble le document quand il
       est visualisé par un navigateur en mode texte. Elle est utile pour
@@ -93,9 +92,10 @@ toutes les vues visualisant le même document.</p>
 <h3><a name="Using">Utiliser les vues</a></h3>
 
 <p>Toutes les vues (exceptée la vue source) sont automatiquement
-<em>synchronisées</em> : chaque fois que vous sélectionnez quelques caractères
-ou éléments dans une vue, les autres vues du même document défilent
-automatiquement de telle sorte qu'on voit la même partie du document.</p>
+<em>synchronisées</em> : chaque fois que vous sélectionnez quelques
+caractères ou éléments dans une vue, les autres vues du même document
+défilent automatiquement de telle sorte qu'on voit la même partie du
+document.</p>
 
 <p>Vous pouvez rédiger le document dans n'importe quelle vue. Pour une
 sensibilité optimum quand vous tapez, les caractères entrés sont visualisés
@@ -125,11 +125,10 @@ formatée, une synchronisation s'effectue automatiquement : toutes les vues
 reflètent l'état du document au moment où il est sauvé.</p>
 </div>
 
-<p><a href="Searching.html.fr" xml:lang="fr" lang="fr"><img
-alt="previous" src="../images/left.gif" /></a><span xml:lang="fr"
-lang="fr"></span><a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Creating.html.fr"><img alt="next"
-src="../images/right.gif" /></a></p>
+<p><a href="Searching.html.fr" xml:lang="fr" lang="fr"><img alt="previous"
+src="../images/left.gif" /></a><span xml:lang="fr" lang="fr"></span><a
+href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a> <a
+href="Creating.html.fr"><img alt="next" src="../images/right.gif" /></a></p>
 <hr />
 </body>
 </html>

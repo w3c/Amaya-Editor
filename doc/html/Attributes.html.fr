@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des Attributs</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,15 +13,14 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="StyleSheets.html.fr" accesskey="p"><img
+      <td><p><a href="Creating.html.fr#Creating" accesskey="p"><img
         alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" 
-        src="../images/up.gif" /></a> <a href="SpellChecking.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+        href="Manual.html.fr" accesskey="t"><img alt="top"
+        src="../images/up.gif" /></a> <a href="EditChar.html.fr#Keyboard"
+        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -69,35 +68,36 @@ sélectionné, choisissez dans le menu <strong>Attributs</strong>l'attribut à
         <strong>Delete</strong>.</li>
     </ul>
   </li>
-  <li>Si c'est un attribut avec une valeur libre (comme <code>href</code> pour
-    une ancre), une boîte de dialogue apparaît. Dans cette boîte de dialogue,
-    vous pouvez éditer la valeur de l'attribut. Achevez la commande avec le
-    bouton <strong>Application.</strong> Pour supprimer l'attribut, cliquez
-    sur le bouton <strong>Delete</strong>.</li>
+  <li>Si c'est un attribut avec une valeur libre (comme <code>href</code>
+    pour une ancre), une boîte de dialogue apparaît. Dans cette boîte de
+    dialogue, vous pouvez éditer la valeur de l'attribut. Achevez la commande
+    avec le bouton <strong>Application.</strong> Pour supprimer l'attribut,
+    cliquez sur le bouton <strong>Delete</strong>.</li>
 </ul>
 
 <h3><a name="Copying">Copier des attributs</a></h3>
 
 <p>Un attribut n'est pas un élément. Il ne peut pas être copié à l'aide des
 commandes Copier/Coller. Pour copier un attribut, vous devez utiliser le menu
-Attribut.Vous devez d'abord sélectionner l'élément qui contient l'attribut que
-vous voulez copier. Sélectionnez l'entrée de l'attribut approprié dans le menu
-Attributs. Puis sélectionnez le nouvel élément auquel vous voulez associer
-l'attribut en cours et cliquez sur le bouton <strong>Application.</strong></p>
+Attribut.Vous devez d'abord sélectionner l'élément qui contient l'attribut
+que vous voulez copier. Sélectionnez l'entrée de l'attribut approprié dans le
+menu Attributs. Puis sélectionnez le nouvel élément auquel vous voulez
+associer l'attribut en cours et cliquez sur le bouton
+<strong>Application.</strong></p>
 
 <h3><a name="Editing">Editer des attributs dans la Vue structure</a></h3>
 
 <p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
 la valeur peut être choisie librement sont affichés en noir et vous pouvez
-éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand la
-valeur de l'attribut est affichée en bleu, vous pouvez seulement la changer à
-l'aide du menu <strong>Attributs</strong>. Ceci assure que seules des valeurs
-correctes soient choisies.</p>
+éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand
+la valeur de l'attribut est affichée en bleu, vous pouvez seulement la
+changer à l'aide du menu <strong>Attributs</strong>. Ceci assure que seules
+des valeurs correctes soient choisies.</p>
 </div>
 
-<p><a href="StyleSheets.html.fr"><img alt="previous" 
+<p><a href="Creating.html.fr#Creating"><img alt="previous"
 src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="SpellChecking.html.fr"><img
+src="../images/up.gif" /></a> <a href="EditChar.html.fr#Keyboard"><img
 alt="next" src="../images/right.gif" /></a></p>
 <hr />
 </body>

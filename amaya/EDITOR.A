@@ -288,6 +288,7 @@ MENUS
 	view:1 Help_ button:BHelpBrowsing -> HelpBrowsing;
 	view:1 Help_ button:BHelpViews -> HelpViews;
 	view:1 Help_ button:BHelpSelecting -> HelpSelecting;
+	view:1 Help_ button:BHelpDocument -> HelpDocument;
 	view:1 Help_ button:BHelpCreating -> HelpCreating;
 	view:1 Help_ button:BHelpAttributes -> HelpAttributes;
 	view:1 Help_ button:BHelpText -> HelpEditChar;

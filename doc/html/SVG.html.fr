@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Edition des graphiques</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -11,14 +11,13 @@
 <table summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../images/w3c_home" /><img
-        alt="Amaya" src="../images/amaya.gif" /></td>
-      <td><p><a href="Math.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html" accesskey="t"><img alt="top" 
-        src="../images/up.gif" /></a> <a href="ImageMaps.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+      <td><img alt="W3C" src="../images/w3c_home" /><img alt="Amaya"
+        src="../images/amaya.gif" /></td>
+      <td><p><a href="Math.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Xml.html.fr#page_body" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -53,8 +52,8 @@ sont :</p>
             stroke="1"/>
     </svg>
   </li>
-  <li>Un rectangle, <code>rect</code> en SVG sans attributs <code>rx</code> ou
-    <code>ry</code>, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
+  <li>Un rectangle, <code>rect</code> en SVG sans attributs <code>rx</code>
+    ou <code>ry</code>, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
     height="0.6cm">
       <rect x="6px" width="22px" height="18px"
             style="fill: #FFCB69; stroke: #0071FF" stroke="1"/>
@@ -112,8 +111,8 @@ sont :</p>
   <li>Un texte SVG, <code>text</code> en SVG<svg
     xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm">
       <text y="32px" x="14px"
-      style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A simple
-        text in SVG
+            style="font-family: helvetica; font-size: 14pt; fill: #FFAA00">A
+        simple text in SVG
       </text>
     </svg>
   </li>
@@ -123,26 +122,26 @@ sont :</p>
 
 <p>Quand vous sélectionnez une forme dans la palette et que la sélection est
 dans la structure HTMLdu document, Amaya crée un nouvel élément SVG juste au
-début de la sélection courante et la forme choisie dans ce nouvel élément SVG.
-Amaya crée les dessins SVG comme des blocs, entre deux paragraphes. Si vous
-souhaitez afficher un dessin en ligne, vous devez aujourd'hui laisser Amaya le
-créer entre deux paragraphes, et éditer le source ensuite pour le
+début de la sélection courante et la forme choisie dans ce nouvel élément
+SVG. Amaya crée les dessins SVG comme des blocs, entre deux paragraphes. Si
+vous souhaitez afficher un dessin en ligne, vous devez aujourd'hui laisser
+Amaya le créer entre deux paragraphes, et éditer le source ensuite pour le
 déplacer.</p>
 
 <p>Quand l'élément sélectionné est un élément SVG, la nouvelle forme est
-ajoutée au dessin SVG. La nouvelle forme est ajoutée après et peut couvrir les
-éléments précédents.</p>
+ajoutée au dessin SVG. La nouvelle forme est ajoutée après et peut couvrir
+les éléments précédents.</p>
 
 <p>La création d'une forme nécessite quelques interactions directes avec
 l'utilisateur:</p>
 <ul>
   <li>Pour créer un rectangle, vous devez tout d'abord sélectionner la
     position du coin gauche en cliquant avec le bouton gauche de la souris.
-    Laissez le bouton appuyé et déplacez la souris jusqu'à la position du coin
-    opposé, puis lâchez le bouton. La forme est maintenant définie.</li>
+    Laissez le bouton appuyé et déplacez la souris jusqu'à la position du
+    coin opposé, puis lâchez le bouton. La forme est maintenant définie.</li>
   <li>Pour créer un cercle ou une ellipse, vous devez tout d'abord
-    sélectionner la position du centre en cliquant avec le bouton gauche de la
-    souris. Laissez le bouton appuyé et déplacez la souris vers la droite
+    sélectionner la position du centre en cliquant avec le bouton gauche de
+    la souris. Laissez le bouton appuyé et déplacez la souris vers la droite
     et/ou vers le bas, puis lâchez le bouton. La forme est maintenant
   définie.</li>
   <li>Pour une polyligne ou un polygone, entrez chaque point en cliquant la
@@ -152,8 +151,8 @@ l'utilisateur:</p>
 
 <p>Vous pouvez insérer une image dans un graphique. Choisissez l'entrée
 <strong>Image</strong> du menu <strong>Éléments</strong> ou cliquez sur le
-bouton <img alt="Image " src="../images/Image.gif" 
-longdesc="longdesc.htm" /> de la barre de boutons, puis procédez <a
+bouton <img alt="Image " src="../images/Image.gif" longdesc="longdesc.htm" />
+de la barre de boutons, puis procédez <a
 href="ImageMaps.html.fr#Adding">comme dans une page HTML</a>.</p>
 
 <p>Pour insérer des expressions mathématiques dans un dessin SVG, vous devez
@@ -163,8 +162,8 @@ SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
 <h3><a name="L292">Déplacer les graphiques</a></h3>
 <ul>
   <li>Par manipulation directe - en combinant la <strong>touche
-    Control</strong> et le <strong>bouton gauche</strong> de la souris dans la
-    forme, vous pourrez déplacer cette forme.</li>
+    Control</strong> et le <strong>bouton gauche</strong> de la souris dans
+    la forme, vous pourrez déplacer cette forme.</li>
   <li>En éditant les attributs.</li>
 </ul>
 
@@ -172,17 +171,17 @@ SVG. Amaya engendrera un foreingObject pour embarquer les balises MathML.</p>
 <ul>
   <li>Par manipulation directe - en combinant la <strong>touche
     Control</strong> et le <strong>bouton du milieu</strong> ou le
-    <strong>bouton droit</strong> de la souris à l'intérieur de la forme, vous
-    pourrez redimensionner cette forme.</li>
+    <strong>bouton droit</strong> de la souris à l'intérieur de la forme,
+    vous pourrez redimensionner cette forme.</li>
   <li>En éditant les attributs.</li>
 </ul>
 
 <h3><a name="Peindre">Peindre les graphiques</a></h3>
 
 <p>Avec Amaya, vous pouvez peindre (c.a.d., remplir ou tracer le contour) des
-éléments SVG avec une couleur simple. La couleur de remplissage par défaut est
-<code>black</code>, et le contour est par défaut <code>transparent</code>.
-Mais vous pouvez changer ces valeurs :</p>
+éléments SVG avec une couleur simple. La couleur de remplissage par défaut
+est <code>black</code>, et le contour est par défaut
+<code>transparent</code>. Mais vous pouvez changer ces valeurs :</p>
 <ul type="square">
   <li>Soit en éditant les attributs SVG <code>fill</code> et
     <code>stroke</code> (<span style="color: #E55500">exemple,</span><span
@@ -195,8 +194,8 @@ Mais vous pouvez changer ces valeurs :</p>
 
 <p>La palette affichée par l'entrée de menu <strong>Style/Couleurs</strong>
 vous permet d'engendrer l'attribut SVG <code>style</code>. Dans la palette
-Amaya, un clic avec le bouton gauche de la souris engendre la propriété stroke
-et un clic avec le bouton du milieu ou droit de la souris engendre la
+Amaya, un clic avec le bouton gauche de la souris engendre la propriété
+stroke et un clic avec le bouton du milieu ou droit de la souris engendre la
 propriété fill.</p>
 
 <p>Un élément <code>text</code> SVG est considéré comme une forme graphique,
@@ -210,10 +209,10 @@ clic avec le bouton du milieu ou droit de la souris peint l'élément
 <p></p>
 </div>
 
-<p><a href="Math.html.fr"><img alt="previous"
-src="../images/left.gif" /></a><a href="Manual.html"><img alt="top"
-src="../images/up.gif" /></a><a href="ImageMaps.html.fr"><img alt="next"
-src="../images/right.gif" /></a></p>
+<p><a href="Math.html.fr"><img alt="previous" src="../images/left.gif"
+/></a><a href="Manual.html"><img alt="top" src="../images/up.gif" /></a><a
+href="Xml.html.fr#page_body"><img alt="next" src="../images/right.gif"
+/></a></p>
 <hr />
 </body>
 </html>

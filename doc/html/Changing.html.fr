@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,15 +13,14 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Links.html.fr" accesskey="p"><img
+      <td><p><a href="EditChar.html.fr#Keyboard" accesskey="p"><img
         alt="previous" src="../images/left.gif" /></a> <a
         href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Tables.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+        src="../images/up.gif" /></a> <a href="Links.html.fr#Creating"
+        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -62,8 +61,8 @@ l'aide d'autres moyens.</p>
 <p>La commande <strong>Transformer _</strong>dans le menu
 <strong>Edition</strong>_ accomplit des transformations de structure
 complexes. Cette commande est basée sur un langage de transformation de
-structure qui spécifie comment un modèle structural donné peut être transformé
-en différentes structures.</p>
+structure qui spécifie comment un modèle structural donné peut être
+transformé en différentes structures.</p>
 
 <p>La commande <strong>Transformer</strong>sort un menu qui donne la liste de
 toutes les transformations qui peuvent être appliquées à la sélection
@@ -75,32 +74,33 @@ href="Transform.html.fr">Utilisation du fichier HTML.trans</a> pour une
 description du langage dans lequel les règles de transformation sont
 écrites.</p>
 
-<p>Des transformations supplémentaires peuvent être spécifiées dans le fichier
-HTML.trans. Certaines sont fournies en tant qu'exemples. Ainsi, il est
-possible de transformer des listes emboîtées en table et inversement.</p>
+<p>Des transformations supplémentaires peuvent être spécifiées dans le
+fichier HTML.trans. Certaines sont fournies en tant qu'exemples. Ainsi, il
+est possible de transformer des listes emboîtées en table et inversement.</p>
 
 <h3><a name="Inserting">Insérer une division</a></h3>
 
 <p>Il est possible de grouper une série de paragraphes, en-têtes, listes,
-tables (...) à l'intérieur d'une division. Pour cela, il faut sélectionner les
-éléments à grouper ainsi que l'entrée DIV dans le menu Eléments.</p>
+tables (...) à l'intérieur d'une division. Pour cela, il faut sélectionner
+les éléments à grouper ainsi que l'entrée DIV dans le menu Eléments.</p>
 
 <h3><a name="Back">Les touches Back Space et Delete fusionnées</a></h3>
 
-<p>Des éléments consécutifs peuvent être fusionnées, même s'ils ne sont pas au
-même niveau dans la structure du document. La fusion s'effectue à l'aide des
-touches Back Space et Delete. Quand le point d'insertion est à la fin d'un
-élément, utilisez la touche Delete. Quand il est au début, utilisez la touche
-Back Space. Dans les deux cas, ces touches n'effacent aucun caractère. Elles
-fusionnent des éléments séparés par une limite de structure.</p>
+<p>Des éléments consécutifs peuvent être fusionnées, même s'ils ne sont pas
+au même niveau dans la structure du document. La fusion s'effectue à l'aide
+des touches Back Space et Delete. Quand le point d'insertion est à la fin
+d'un élément, utilisez la touche Delete. Quand il est au début, utilisez la
+touche Back Space. Dans les deux cas, ces touches n'effacent aucun caractère.
+Elles fusionnent des éléments séparés par une limite de structure.</p>
 
-<p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux touches
-effacent comme d'habitude le caractère suivant ou le caractère précédent.</p>
+<p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux
+touches effacent comme d'habitude le caractère suivant ou le caractère
+précédent.</p>
 </div>
 
-<p><a href="Links.html.fr"><img alt="previous" 
+<p><a href="EditChar.html.fr#Keyboard"><img alt="previous"
 src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Tables.html.fr"><img
+src="../images/up.gif" /></a> <a href="Links.html.fr#Creating"><img
 alt="next" src="../images/right.gif" /></a></p>
 <hr />
 </body>

@@ -218,6 +218,7 @@ TtcSearchText
 +list-module
 +struct-module
 +text-module
+HelpDocument
 HelpAttributes
 HelpChanging
 HelpPublishing

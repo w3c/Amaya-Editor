@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 5.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -17,7 +17,7 @@
         src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="Manual.html.fr" accesskey="t"><img alt=""
-        src="../images/up.gif" /></a> <a href="Selecting.html.fr"
+        src="../images/up.gif" /></a> <a href="Views.html.fr#Views"
         accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -39,7 +39,7 @@ alt="editor-mode" /> indique que la fenêtre est en mode éditeur : vous pouvez
 bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
 ainsi cette représentation <img src="../images/Browser.gif"
 alt="browser-mode" /> et vous pouvez seulement naviguer et remplir les
-formulaires. cette option est également disponible à partir de l'option
+formulaires. cette option est également disponible à&nbsp;partir de l'option
 <strong>Mode Editeur</strong> du menu d'Édition, ou bien par le raccourci
 clavier (<strong>Shift-Control-*</strong> par défaut).</p>
 
@@ -130,7 +130,7 @@ elle est assignée à un élément de formulaire, la commande
 le cas de LABEL et LEGEND).</p>
 
 <p>Les accès rapides supplantent les raccourcis clavier de Amaya. Par exemple
-les pages d'Aide déclarent des accès rapides : "n" pour aller à la page
+les pages d'Aide déclarent des accès rapides&nbsp;: "n" pour aller à la page
 suivante, "p" pour aller à la page précédente, "t" pour la table des
 matières. Si l'utilisateur a associé un raccourci clavier Alt-p à une
 commande d'édition de Amaya, ce raccourci clavier ne sera pas accessible
@@ -234,7 +234,7 @@ créer un lien depuis son espace privé
 <code>$HOME/.amaya/amaya.keyboard</code> vers ce fichier s'il veut disposer
 des raccourcis clavier à la Emacs.</p>
 
-<p>Quelques touche du clavier sont pré-affectée, comme :</p>
+<p>Quelques touche du clavier sont pré-affectée, comme&nbsp;:</p>
 <ul>
   <li>La touche <strong>Enter</strong> dans un élément de formulaire
     <code>input</code> (de type <code>text</code> ou <code>password</code>)

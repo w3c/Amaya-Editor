@@ -10,9 +10,22 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p><a href="../../"><img border="0" alt="W3C" src="../images/w3c_home" /></a>
-<a href="../"><img border="0" src="../images/amaya.gif" alt="Amaya" /></a> <a
-href="Manual.html.fr"></a></p>
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
+      </td>
+      <td><p><a href="Attributes.html.fr#Attributes" accesskey="p"><img
+        alt="previous" src="../images/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top"
+        src="../images/up.gif" /></a> <a href="Changing.html.fr#Changing"
+        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <div id="Keyboard">
 <h3>Entrer des caractères ISO-Latin et Unicode dans Amaya</h3>
@@ -1109,6 +1122,7 @@ disponibles :</p>
 </table>
 <hr />
 </div>
+
 <p></p>
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br />

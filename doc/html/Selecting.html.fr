@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Sélectionner</title>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,10 +16,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Browsing.html.fr" accesskey="p"><img alt="previous"
+      <td><p><a href="Views.html.fr#Views" accesskey="p"><img alt="previous"
         src="../images/left.gif" /></a> <a href="Manual.html.fr"
         accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Searching.html.fr" accesskey="n"><img alt="next"
+        href="Document.html.fr#Changing" accesskey="n"><img alt="next"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -33,9 +33,9 @@
 courante. La sélection courante peut être changée de différentes manières.</p>
 
 <p>Quelque soit la manière dont vous effectuez la sélection courante, le type
-du premier élément sélectionné est affiché en bas de la fenêtre. Il est suivi
-par les types des éléments qui l'englobent. Cela peut être utile quand la
-structure du document est complexe.</p>
+du premier élément sélectionné est affiché en bas de la fenêtre.&nbsp;Il est
+suivi par les types des éléments qui l'englobent. Cela peut être utile quand
+la structure du document est complexe.</p>
 
 <p>Par exemple, la sélection d'un mot dans cette phrase visualise la
 sélection :</p>
@@ -51,7 +51,7 @@ donne :</p>
 
 <p><samp style="color: #B20000">strong \ p \ body \ html \ Document</samp></p>
 <ul>
-  <li>Sélectionner avec la souris
+  <li>Sélectionner avec la souris 
     <ul>
       <li>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
         souris pour déplacer le point d'insertion.</li>
@@ -73,7 +73,7 @@ donne :</p>
     </ul>
     <p></p>
   </li>
-  <li>Sélectionner depuis le clavier
+  <li>Sélectionner depuis le clavier 
     <ul>
       <li>Pour sélectionner un élément de structure avec le clavier 
         <ul>
