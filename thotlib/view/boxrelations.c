@@ -2236,7 +2236,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
       x = pRefBox->BxXOrg;
       y = pRefBox->BxYOrg;
     }
-  
+
   switch (refEdge)
     {
     case Left:
@@ -2249,10 +2249,12 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
       x += pRefBox->BxW;
       break;
     case HorizRef:
-      y += pRefBox->BxHorizRef;
+      if (pRefBox != pBox)
+	y += pRefBox->BxHorizRef;
       break;
     case VertRef:
-      x += pRefBox->BxVertRef;
+      if (pRefBox != pBox)
+	x += pRefBox->BxVertRef;
       break;
     case HorizMiddle:
       y += pRefBox->BxHeight / 2;
