@@ -130,4 +130,5 @@
 129 tekrar
 130 x\'te tekrar
 131 **Your previous Amaya session failed. Do you want to reload backup documents?
-132 Authentication failed. Retry?
+132 **Authentication failed. Retry?
+133 **Operation will be redirected. Continue?
