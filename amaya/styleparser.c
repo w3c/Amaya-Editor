@@ -1904,11 +1904,7 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID)
-    {
-      TtaSetStylePresentation (PRMarginTop, element, tsch, context, margin);
-      if (margin.typed_data.value < 0)
-	TtaSetStylePresentation (PRVertOverflow, element, tsch, context, margin);
-    }
+    TtaSetStylePresentation (PRMarginTop, element, tsch, context, margin);
   return (cssRule);
 }
 
@@ -1944,11 +1940,7 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID)
-    {
-      TtaSetStylePresentation (PRMarginLeft, element, tsch, context, margin);
-      if (margin.typed_data.value < 0)
-	TtaSetStylePresentation (PRHorizOverflow, element, tsch, context, margin);
-    }
+    TtaSetStylePresentation (PRMarginLeft, element, tsch, context, margin);
   return (cssRule);
 }
 
