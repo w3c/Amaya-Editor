@@ -1080,21 +1080,6 @@ static void         CreateMathConstruct (int construct)
       if (!TransformIntoType (newType, doc))
 	/* it failed. Try to insert a new element */
 	emptySel = TRUE;
-      else
-	if (ParBlock)
-	  /* the user wants to create a parenthesized block */
-	  /* create two MF elements, as the first and last child of the new
-	     MROW */
-	  {
-	    /* do not check the Thot abstract tree against the structure */
-	    /* schema while changing the structure */
-	    oldStructureChecking = TtaGetStructureChecking (doc);
-	    TtaSetStructureChecking (0, doc);
-	    TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
-	    AddParen (el, doc);
-	    /* check the Thot abstract tree against the structure schema. */
-	    TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
-	  }
     }
 
   if (emptySel)
