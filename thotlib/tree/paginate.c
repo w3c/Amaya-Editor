@@ -3000,7 +3000,8 @@ boolean             Assoc;
 	 pP = previousPageAbBox;
        else
 	 pP = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
-       do
+       if (pP)
+	 do
 	 /* cherche les marques de page correspondant au debut d'un element */
 	 /* portant une regle Page ou les marques mises par l'utilisateur */
 	 {
