@@ -1538,14 +1538,6 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
   int                 view, lastView, frame, run;
   ThotBool            abExist, done;
   NotifyDialog        notifyDoc;
-#ifdef VQ   /* 13 DEC 2001 */
-  DocViewNumber       docView, freeView;
-  AvailableView       viewTable;
-  int                 nViews, i;
-  int                 X, Y, width, height;
-  int                 createdView;
-  ThotBool            deleteView;
-#endif /* VQ */
 
   /* there is not any abstract box yet */
   abExist = FALSE;
@@ -1581,8 +1573,8 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 			    abExist = TRUE;
 			  }
 			else
-			  /* create the abstract boxes for view view if */
-			  /* this view is synchronized */
+			  /* create the abstract boxes for view */
+			  /* if this view is synchronized */
 			  if (SelectedDocument->DocView[view].DvSync &&
 			    /* if pEl is a page break, don't call CheckAbsBox*/
 			    /* if this break is not for the right view */
@@ -1600,7 +1592,7 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 		  }
 	      }
 
-	  if (!abExist && createView)
+	  if (!abExist && createView&& pEl->ElTerminal)
 	    {
 	      /* send an event to the application to open another view*/
 	      notifyDoc.event = TteViewOpen;
@@ -1608,92 +1600,10 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 	      notifyDoc.view = createView;
 	      if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 		{
-		  /* application created another view */
+		  /* application has created another view */
 		  abExist = SelectAbsBoxes (pEl, FALSE);
 		}
 	    }
-#ifdef VQ   /* 13 DEC 2001 */
-	  if (!abExist && createView)
-	    /* there is no existing abstract box for this element */
-	    /* try to create a view where this element has an abstract box */
-	    {
-	      /* try to open all views defined in the presentation */
-	      /* schema that are not open yet, until the element may */
-	      /* have an abstract box in a view */
-	      /* first, search a free view in the document descriptor */
-	      docView = 1;
-	      freeView = 0;
-	      while (freeView == 0 && docView <= MAX_VIEW_DOC)
-		{
-		  if (SelectedDocument->DocView[docView - 1].DvPSchemaView == 0)
-		    freeView = docView;
-		  else
-		    docView++;
-		}
-	      
-	      if (freeView != 0)
-		/* there is room for a new view */
-		{
-		  /* build the list of all possible views for the */
-		  /* document */
-		  nViews = BuildDocumentViewList (SelectedDocument, viewTable);
-		  for (i = 0; i < nViews && !abExist; i++)
-		    {
-		      if (!viewTable[i].VdOpen)
-			/* it's not open yet */
-			{
-			  /* create that view */
-			  createdView = CreateAbstractImage (SelectedDocument,
-							     viewTable[i].VdView,
-							     viewTable[i].VdSSchema, 1,
-							     FALSE, NULL);
-			  /* now, try to select the element */
-			  abExist = SelectAbsBoxes (pEl, FALSE);
-			  deleteView = TRUE;
-			  if (pEl->ElAbstractBox[createdView - 1] != NULL)
-			    /* there is an abstract box for */
-			    /* the element! */
-			    {
-			      deleteView = FALSE;
-			      abExist = TRUE;
-				/* search in the config file the */
-				/* position and size of the view */
-				/* to be open */
-			      ConfigGetViewGeometry (SelectedDocument,
-						     viewTable[i].VdViewName,
-						     &X, &Y, &width, &height); 
-				/* send an event to the application*/
-			      notifyDoc.event = TteViewOpen;
-			      notifyDoc.document = doc;
-			      notifyDoc.view = createdView;
-			      if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-				/* application does not want Thot to create a view */
-				deleteView = TRUE;
-			      else
-				{
-				  /* open the new view */
-				  OpenCreatedView (SelectedDocument,
-						   createdView,
-						   X, Y, width, height, TRUE, TRUE);
-				  /* tell the application that */
-				  /* the view has been opened */
-				  notifyDoc.event = TteViewOpen;
-				  notifyDoc.document = doc;
-				  notifyDoc.view = createdView;
-				  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-				}
-			    }
-			  if (deleteView)
-			    /* the element is not visible in this view */
-			    /* or the application does not want */
-			    /* the view to be opened */
-			    /* delete the created abstract image */
-			    FreeView (SelectedDocument, createdView);
-			}
-		    }
-		}
-	    }
-#endif  /* VQ - 13 DEC 2001 */
 	}
     }
   return abExist;
