@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -893,7 +893,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 		  elType.ElTypeNum != HTML_EL_Applet &&
 		  elType.ElTypeNum != HTML_EL_Object &&
 		  elType.ElTypeNum != HTML_EL_Font_ &&
-		  elType.ElTypeNum != HTML_EL_SCRIPT &&
+		  elType.ElTypeNum != HTML_EL_SCRIPT_ &&
 		  elType.ElTypeNum != HTML_EL_MAP &&
 		  elType.ElTypeNum != HTML_EL_Quotation &&
 		  elType.ElTypeNum != HTML_EL_Subscript &&
@@ -1335,7 +1335,7 @@ void         CreateRemoveIDAttribute (char *elName, Document doc, ThotBool creat
 	    || elType.ElTypeNum == HTML_EL_TITLE
 	    || elType.ElTypeNum == HTML_EL_BASE
 	    || elType.ElTypeNum == HTML_EL_META
-	    || elType.ElTypeNum == HTML_EL_SCRIPT
+	    || elType.ElTypeNum == HTML_EL_SCRIPT_
 	    || elType.ElTypeNum == HTML_EL_STYLE_))
 	attrType.AttrTypeNum = HTML_ATTR_ID;
     }
@@ -1986,7 +1986,7 @@ void CheckNewLines (NotifyOnTarget *event)
     elType = TtaGetElementType (ancestor);
     if ((strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
         (elType.ElTypeNum == HTML_EL_STYLE_ ||
-         elType.ElTypeNum == HTML_EL_SCRIPT ||
+         elType.ElTypeNum == HTML_EL_SCRIPT_ ||
 	 elType.ElTypeNum == HTML_EL_Preformatted))
        pre = TRUE;
     else
@@ -2511,7 +2511,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
      {
        /* BASE and SCRIPT do not accept any global attribute */
        if (elType.ElTypeNum == HTML_EL_BASE ||
-	   elType.ElTypeNum == HTML_EL_SCRIPT ||
+	   elType.ElTypeNum == HTML_EL_SCRIPT_ ||
 	   elType.ElTypeNum == HTML_EL_Element)
 	 return TRUE;
 

@@ -19,6 +19,7 @@ extern void DisplayPath ( PtrBox pBox,
                           int frame,
                           ThotBool selected );
 extern void LocateFirstChar ( PtrBox pBox,
+                              ThotBool rtl,
                               PtrTextBuffer *adbuff,
                               int *ind );
 extern ThotBool LocateNextChar ( PtrTextBuffer *adbuff,
@@ -52,6 +53,7 @@ extern void DisplayPath (/* PtrBox pBox,
                             int frame,
                             ThotBool selected */);
 extern void LocateFirstChar (/* PtrBox pBox,
+                                ThotBool rtl,
                                 PtrTextBuffer *adbuff,
                                 int *ind */);
 extern ThotBool LocateNextChar (/* PtrTextBuffer *adbuff,

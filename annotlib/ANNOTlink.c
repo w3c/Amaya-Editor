@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999.
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -436,7 +436,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	    || elType.ElTypeNum == HTML_EL_TITLE
 	    || elType.ElTypeNum == HTML_EL_BASE
 	    || elType.ElTypeNum == HTML_EL_META
-	    || elType.ElTypeNum == HTML_EL_SCRIPT
+	    || elType.ElTypeNum == HTML_EL_SCRIPT_
 	    || elType.ElTypeNum == HTML_EL_STYLE_
 	    || elType.ElTypeNum == HTML_EL_BODY)
 	{

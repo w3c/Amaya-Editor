@@ -1956,7 +1956,7 @@ RULES
 		END;
 	END;
 
- SCRIPT: BEGIN
+ SCRIPT_: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Visibility: 0;

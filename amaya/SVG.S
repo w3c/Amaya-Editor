@@ -311,7 +311,7 @@ STRUCT
 
 { Scripting }
 
-   script  { not in SVG Tiny }
+   script_  { not in SVG Tiny }
 	(ATTR externalResourcesRequired;
 	      type)
 	= TEXT;
@@ -403,7 +403,7 @@ STRUCT
 	      defs;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
 	      use_; image; SVG; g; switch; a;
-	      script; style__; symbol_;
+	      script_; style__; symbol_;
 	      XLink;
 	      END;
 
@@ -448,7 +448,7 @@ EXCEPT
                         NoCreate;
    a:	                NoMove, NoResize, HighlightChildren, NoShowBox,
                         NoCreate;
-   script:	        NoMove, NoResize, NoShowBox, NoCreate;
+   script_:	        NoMove, NoResize, NoShowBox, NoCreate;
    style__:             NoMove, NoResize, NoShowBox, NoCreate;
    switch:              NoMove, NoResize, NoShowBox, NoCreate;
    foreignObject:       MoveResize, HighlightChildren, NoCreate;

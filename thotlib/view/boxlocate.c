@@ -2721,6 +2721,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   int                 charWidth;
   SpecFont            font;
   CHAR_T              c;
+  unsigned char       car;
   ThotBool            notfound, rtl;
 
   /* Nombre de caracteres qui precedent */
@@ -2729,9 +2730,11 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   ind = *index;
   c = EOS;
   charWidth = 0;
-  rtl = (pBox->BxAbstractBox->AbDirection == 'R');
+  /* rtl = (pBox->BxAbstractBox->AbDirection == 'R'); */
+  car = TtaGetScript (pBox->BxAbstractBox->AbLang);
+  rtl = (car == 'A' || car == 'H');
   /* locate the first character */
-  LocateFirstChar (pBox, pBuffer, &ind);
+  LocateFirstChar (pBox, rtl, pBuffer, &ind);
   if (pBox->BxNChars == 0 || *x <= 0)
       *x = 0;
   else

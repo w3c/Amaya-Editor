@@ -18,7 +18,7 @@ extern void MapSVGAttributeValue ( char* AttrVal,
                                    int *value );
 extern void MapSVGEntity ( char *entityName,
                            char *entityValue,
-                           char *alphabet );
+                           char *script );
 extern void SVGEntityCreated ( unsigned char *entityValue,
                                Language lang,
                                char *entityName,
@@ -81,7 +81,7 @@ extern void MapSVGAttributeValue (/* char* AttrVal,
                                      int *value */);
 extern void MapSVGEntity (/* char *entityName,
                              char *entityValue,
-                             char *alphabet */);
+                             char *script */);
 extern void SVGEntityCreated (/* unsigned char *entityValue,
                                  Language lang,
                                  char *entityName,

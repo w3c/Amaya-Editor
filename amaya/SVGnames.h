@@ -26,7 +26,7 @@ static ElemMapping    SVGElemMappingTable[] =
    {"polygon", SPACE, SVG_EL_polygon, L_OtherValue, FALSE},
    {"polyline", SPACE, SVG_EL_polyline, L_OtherValue, FALSE},
    {"rect", SPACE, SVG_EL_rect, L_OtherValue, FALSE},
-   {"script", SPACE, SVG_EL_script, L_OtherValue, FALSE},
+   {"script", SPACE, SVG_EL_script_, L_OtherValue, FALSE},
    {"style", SPACE, SVG_EL_style__, L_OtherValue, FALSE},
    {"svg", SPACE, SVG_EL_SVG, L_OtherValue, FALSE},
    {"switch", SPACE, SVG_EL_switch, L_OtherValue, FALSE},

@@ -68,7 +68,7 @@ typedef struct _FontInfo {
         int   PFiWidths[256];
         int   highlight; 
         int   size;
-        char  alphabet; 
+        char  script; 
         char  family; 
         /* HFONT FiFont; */
 } FontInfo;

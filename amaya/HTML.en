@@ -28,7 +28,7 @@ HEAD: head
 TITLE: title
 ISINDEX: isindex
 STYLE_: style
-SCRIPT: script
+SCRIPT_: script
 META: meta
 LINK: link
 BASE: base

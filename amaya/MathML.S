@@ -62,7 +62,7 @@ STRUCT
 		fontfamily = TEXT;                      { deprecated }
 		color = TEXT;                           { deprecated }
 	        mathvariant = normal_, bold_, italic, bold_italic, 
-	                      double_struck, bold_fraktur, script,
+	                      double_struck, bold_fraktur, script_,
 	                      bold_script, fraktur, sans_serif,
 	                      bold_sans_serif, sans_serif_italic,
 	                      sans_serif_bold_italic, monospace;

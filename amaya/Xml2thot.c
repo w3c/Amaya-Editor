@@ -2336,9 +2336,6 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
     {
       if (j > 0)
 	PutInXmlElement (buffer, j);
-      /*XMLcontext.lastElementClosed = TRUE;
-      XMLcontext.mergeText = FALSE;
-      ImmediatelyAfterTag = FALSE;*/
     }  
   return buffer;
 }

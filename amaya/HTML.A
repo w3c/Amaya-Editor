@@ -69,7 +69,7 @@ ELEMENTS
 	ElemTab.Pre -> AcceptTab;
 	END;
 
-   SCRIPT:
+   SCRIPT_:
 	BEGIN
 	ElemTab.Pre -> AcceptTab;
 	END;

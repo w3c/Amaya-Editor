@@ -77,7 +77,7 @@ STRUCT
   Head_misc =
 	CASE OF
 	STYLE_;
-	SCRIPT;
+	SCRIPT_;
 	META;
 	LINK;
 	END;
@@ -96,7 +96,7 @@ STRUCT
 	 { type             media }
 	 TEXT;
 
-  SCRIPT							{ SCRIPT }
+  SCRIPT_							{ SCRIPT }
      (ATTR charset = Text; !content_type = Text;
 	 { charset          type }
 	   script_language = Text; script_src = Text;
@@ -277,7 +277,7 @@ STRUCT
 	Font_;							{ FONT }
 	BaseFont;						{ BASEFONT }
 	BR;							{ BR }
-	SCRIPT;							{ SCRIPT }
+	SCRIPT_;						{ SCRIPT }
 	Quotation;						{ Q }
 	Subscript = Basic_Set;					{ SUB }
 	Superscript = Basic_Set;				{ SUP }
@@ -903,7 +903,7 @@ EXCEPT
 	Password_Input: Shadow;
 	Preformatted:	ReturnCreateNL;
 	STYLE_:		ReturnCreateNL;
-	SCRIPT:		ReturnCreateNL;
+	SCRIPT_:	ReturnCreateNL;
 	Text_Area:	ReturnCreateNL;
 	HTMLfragment:	NoMove, NoResize, Hidden;
 

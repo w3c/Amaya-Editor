@@ -865,7 +865,7 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
   first character of the box according to the writing orientation
   (left-to-right or right-to-left).
   ----------------------------------------------------------------------*/
-void LocateFirstChar (PtrBox pBox, PtrTextBuffer *adbuff, int *ind)
+void LocateFirstChar (PtrBox pBox, ThotBool rtl, PtrTextBuffer *adbuff, int *ind)
 {
   int                 indmax;
   int                 buffleft;
@@ -873,7 +873,7 @@ void LocateFirstChar (PtrBox pBox, PtrTextBuffer *adbuff, int *ind)
   
   *ind = pBox->BxFirstChar;
   *adbuff = pBox->BxBuffer;
-  if (pBox->BxAbstractBox->AbDirection == 'R' && *adbuff)
+  if (rtl && *adbuff)
     {
       /* writing right-to-left */
       nbcar = pBox->BxNChars;
@@ -973,9 +973,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   restbl = 0;
   pAb = pBox->BxAbstractBox;
   /* is it a box with a right-to-left writing? */
+  /* rtl = (pAb->AbDirection == 'R'); */
   car = TtaGetScript (pAb->AbLang);
   rtl = (car == 'A' || car == 'H');
-  /* rtl = (pAb->AbDirection == 'R'); */
   font = pBox->BxFont;
   /* do we have to display stars instead of characters? */
   if (pAb->AbBox->BxShadow)
@@ -1041,7 +1041,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	lgspace = whitespace;
       
       /* locate the first character */
-      LocateFirstChar (pBox, &adbuff, &indbuff);
+      LocateFirstChar (pBox, rtl, &adbuff, &indbuff);
       /* Search the first displayable char */
       if (charleft > 0 && adbuff)
 	{

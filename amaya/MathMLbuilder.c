@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -107,7 +107,7 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_mathvariant, "bold-italic", MathML_ATTR_mathvariant_VAL_bold_italic},
  {MathML_ATTR_mathvariant, "double-struck", MathML_ATTR_mathvariant_VAL_double_struck},
  {MathML_ATTR_mathvariant, "bold-fraktur", MathML_ATTR_mathvariant_VAL_bold_fraktur},
- {MathML_ATTR_mathvariant, "script", MathML_ATTR_mathvariant_VAL_script},
+ {MathML_ATTR_mathvariant, "script", MathML_ATTR_mathvariant_VAL_script_},
  {MathML_ATTR_mathvariant, "bold-script", MathML_ATTR_mathvariant_VAL_bold_script},
  {MathML_ATTR_mathvariant, "fraktur", MathML_ATTR_mathvariant_VAL_fraktur},
  {MathML_ATTR_mathvariant, "sans-serif", MathML_ATTR_mathvariant_VAL_sans_serif},

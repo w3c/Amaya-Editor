@@ -16,7 +16,7 @@ extern void MapMathMLAttributeValue ( char *AttrVal,
                                       int *value );
 extern void MapMathMLEntity ( char *entityName,
                               char *entityValue,
-                              char *alphabet );
+                              char *script );
 extern void MathMLEntityCreated ( unsigned char *entityValue,
                                   Language lang,
                                   char *entityName,
@@ -86,7 +86,7 @@ extern void MapMathMLAttributeValue (/* char *AttrVal,
                                         int *value */);
 extern void MapMathMLEntity (/* char *entityName,
                                 char *entityValue,
-                                char *alphabet */);
+                                char *script */);
 extern void MathMLEntityCreated (/* unsigned char *entityValue,
                                     Language lang,
                                     char *entityName,

@@ -540,7 +540,7 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
        break;
 
      case HTML_EL_STYLE_:	/* it's a STYLE element */
-     case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
+     case HTML_EL_SCRIPT_:	/* it's a SCRIPT element */
      case HTML_EL_Preformatted:	/* it's a PRE */
        /* if the last line of the Preformatted is empty, remove it */
        leaf = XmlLastLeafInElement (el);

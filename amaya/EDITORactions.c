@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -674,7 +674,7 @@ void                CreateScript (Document document, View view)
 
    if (el == NULL || el == head  || TtaIsAncestor (el, head))
      /* insert within the head */
-     InsertWithinHead (document, view, HTML_EL_SCRIPT);
+     InsertWithinHead (document, view, HTML_EL_SCRIPT_);
    else
      {
        /* create Script in the body if we are within an HTML document
@@ -683,7 +683,7 @@ void                CreateScript (Document document, View view)
        if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
            !strcmp(TtaGetSSchemaName (docSchema), "HTML"))
 	 {
-	   elType.ElTypeNum = HTML_EL_SCRIPT;
+	   elType.ElTypeNum = HTML_EL_SCRIPT_;
 	   TtaCreateElement (elType, document);
 	 }
      }

@@ -1734,7 +1734,7 @@ ATTRIBUTES
 		Weight: Enclosing =;
 		END;
 	END;
-  mathvariant = script:
+  mathvariant = script_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
 	Font: times;    {*** script ***}

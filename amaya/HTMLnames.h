@@ -102,7 +102,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"ruby", SPACE, HTML_EL_simple_ruby, L_RubyValue, TRUE},
    {"s", SPACE, HTML_EL_Struck_text, L_StrictValue, TRUE},
    {"samp", SPACE, HTML_EL_Sample, L_BasicValue, TRUE},
-   {"script", SPACE, HTML_EL_SCRIPT, L_StrictValue, FALSE},
+   {"script", SPACE, HTML_EL_SCRIPT_, L_StrictValue, FALSE},
    {"select", SPACE, HTML_EL_Option_Menu, L_BasicValue, TRUE},
    {"small", SPACE, HTML_EL_Small_text, L_StrictValue, TRUE},
    {"span", SPACE, HTML_EL_Span, L_BasicValue, TRUE},

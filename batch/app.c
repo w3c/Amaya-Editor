@@ -804,8 +804,8 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
 	  if (pr == RULE_ElemActions)
 	    {
 	      i = 0;
-	      while (strcmp (name, pSSchema->SsRule->SrElem[i]->SrName) != 0 &&
-		     i < pSSchema->SsNRules)
+	      while (i < pSSchema->SsNRules &&
+		     strcmp (name, pSSchema->SsRule->SrElem[i]->SrName) != 0)
 		i++;
 	      if (i < pSSchema->SsNRules)
 		{

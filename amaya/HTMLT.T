@@ -125,7 +125,7 @@ RULES
 	Create '</style>\12' After;
 	END;
 
- SCRIPT: BEGIN
+ SCRIPT_: BEGIN
 #ifdef XML
 	{ elements TITLE and BASE must be generated as the first chidren
 	  of the HEAD element }

@@ -62,7 +62,7 @@ RULES
 	Remove;
 	END;
 
- SCRIPT: BEGIN
+ SCRIPT_: BEGIN
 	Remove;
 	END;
 

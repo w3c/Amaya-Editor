@@ -1090,7 +1090,7 @@ static void         TextToDocument ()
        if (ignoreLeadingSpaces &&
 	   !Within (HTML_EL_Preformatted, DocumentSSchema) &&
 	   !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-	   !Within (HTML_EL_SCRIPT, DocumentSSchema))
+	   !Within (HTML_EL_SCRIPT_, DocumentSSchema))
 	 /* suppress leading spaces */
 	 while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
 	   i++;
@@ -1825,7 +1825,7 @@ static void            ElementComplete (Element el)
 
     case HTML_EL_STYLE_:	/* it's a STYLE element */
     case HTML_EL_Preformatted:	/* it's a PRE */
-    case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
+    case HTML_EL_SCRIPT_:	/* it's a SCRIPT element */
        /* if the last line of the Preformatted is empty, remove it */
        leaf = LastLeafInElement (el);
        if (leaf != NULL)
@@ -4765,7 +4765,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 		    else if ((Within (HTML_EL_Preformatted, DocumentSSchema) &&
 			      !Within (HTML_EL_Option_Menu, DocumentSSchema)) ||
 			     Within (HTML_EL_Text_Area, DocumentSSchema) ||
-			     Within (HTML_EL_SCRIPT, DocumentSSchema) ||
+			     Within (HTML_EL_SCRIPT_, DocumentSSchema) ||
 			     Within (HTML_EL_STYLE_, DocumentSSchema))
 		      /* new line in a text element */
 		      {
@@ -4807,7 +4807,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 			  /* preformatted text */
 		          if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
 			      !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-			      !Within (HTML_EL_SCRIPT, DocumentSSchema))
+			      !Within (HTML_EL_SCRIPT_, DocumentSSchema))
 			     charRead = SPACE;
 		    }
 		  if (charRead == SPACE)
@@ -4817,7 +4817,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 			  (currentState == 0 &&
 			   !Within (HTML_EL_Preformatted, DocumentSSchema) &&
 			   !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-			   !Within (HTML_EL_SCRIPT, DocumentSSchema)))
+			   !Within (HTML_EL_SCRIPT_, DocumentSSchema)))
 			/* reading text in a comment or in an element
 			   that is not preformatted text */
 			/* ignore spaces at the beginning of an input line */
@@ -4874,7 +4874,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 			       if (trans->newState == 2)
 				  /* the current character is not '/', '!', '<'
 				     or space */
-				  if (Within (HTML_EL_SCRIPT, DocumentSSchema))
+				  if (Within (HTML_EL_SCRIPT_, DocumentSSchema))
 				     /* we are within a SCRIPT element */
 				     {
 				     /* put '<' and the character read in the

@@ -650,7 +650,7 @@ RULES
 		Visibility: 0;
 	END;
 
-   script:
+   script_:
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);

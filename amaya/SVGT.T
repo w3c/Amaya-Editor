@@ -322,7 +322,7 @@ RULES
 	create 'a>\12' after;
 	END;
 
-   script:
+   script_:
 	BEGIN
 	create SOT;
 	create 'script';
