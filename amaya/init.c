@@ -208,6 +208,7 @@ static ThotBool  itemChecked = FALSE;
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
+#include "fetchXMLname_f.h"
 #include "Mathedit_f.h"
 #ifdef GRAPHML
 #include "Graphedit_f.h"
@@ -4895,6 +4896,7 @@ void                InitAmaya (NotifyEvent * event)
    TtaSetTransformCallback ((Func) TransformIntoType);
    TargetName = NULL;
    TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
+   TtaSetEntityFunction ((Proc) MapEntityByCode);
    /* Initialize the Amaya user and tmp directories */
    s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))
