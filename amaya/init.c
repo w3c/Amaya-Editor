@@ -80,6 +80,7 @@ int  Window_Curs;
 CHAR docToOpen [256];
 extern boolean viewClosed;
 /* extern bmpID;  */
+#endif _WINDOWS
 
 static int          AmayaInitialized = 0;
 static STRING       Manual[] = {
