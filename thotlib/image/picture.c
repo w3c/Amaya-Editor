@@ -1800,11 +1800,11 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 {
 #ifndef _GTK
    Pixmap              pixmap;
-   Drawable            drawable;
    float               scaleX, scaleY;
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
    int                 XOrg, YOrg, picXOrg, picYOrg;
-#ifdef _WINDOWS
+#ifdef _WINDOWS   
+   struct HWND__ *     drawable;
    HDC                 hDc, hMemDc;
    POINT               lPt[2];
    HBITMAP             hOldBitmap;
@@ -1938,9 +1938,10 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
      h = hFrame;
    x += xFrame;
    y += yFrame;
-
+#ifndef _GL
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame,
 	              imageDesc, box);
+#endif /*_GL*/
 #ifdef _WINDOWS
    if (pixmap)
 	   DeleteObject (pixmap);

@@ -813,7 +813,7 @@ static void CALLBACK myCombine (GLdouble coords[3], void *vertex_data[4],
     ptr = ptr->next;
   ptr->next = TtaGetMemory (sizeof (ListMem));
   ptr = ptr->next;
-  ptr->next = 0;
+  ptr->next = NULL;
   ptr->data = TtaGetMemory (sizeof (ThotPoint));
   ptr->data->x = (GLfloat) coords[0];
   ptr->data->y = (GLfloat) coords[1];
@@ -834,13 +834,24 @@ static void CALLBACK my_error (GLenum err)
 }
 /* To be malloc'ed !!!!!!!!!! 
    just don't when and how many... */
-static int tab[1000];
+static int tab[100000];
 /* Number of contour in the 
    polygon that must be tesselated
    also used in draw path 
    (ORDER and place of new countour 
    are the key of tesselation)*/ 
 static int n_polygon;
+
+static void FreeAddedVertexes (ListMem  *tmp)
+{
+ if (tmp)
+	{
+	 if (tmp->next)
+		FreeAddedVertexes (tmp->next);
+	 TtaFreeMemory (tmp->data);
+	 TtaFreeMemory (tmp);
+	}
+}
 
 /*----------------------------------------------------------------------
   tesse :  Tesselation that use GLU library tesselation 
@@ -854,12 +865,15 @@ static int n_polygon;
   ----------------------------------------------------------------------*/
 static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 { 
-  int i;
-  GLdouble data[3];
-  int n_poly_count = 0;
-  GLUtesselator *tobj = NULL;
+  int                i;
+  GLdouble           data[3];
+  int                n_poly_count = 0;
+  GLUtesselator      *tobj = NULL;
 
   tobj = gluNewTess();
+  if (tobj == NULL)
+	  return;
+
   /* Winding possibilities are :
      GLU_TESS_WINDING_ODD = Classique
      GLU_TESS_WINDING_NONZERO
@@ -914,17 +928,7 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 	} 
       gluTessEndContour (tobj);
       gluTessEndPolygon (tobj);
-      {
-	ListMem *fptr = SAddedVertex.next;
-	ListMem *tmp;
-	while (fptr) 
-	  {
-	    tmp = fptr->next;
-	    free(fptr->data);
-	    free(fptr);
-	    fptr = tmp;
-	  }
-      }
+	  FreeAddedVertexes (SAddedVertex.next);
       gluDeleteTess(tobj);
     }
 }

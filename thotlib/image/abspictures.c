@@ -55,9 +55,11 @@ void CleanPictInfo (PictInfo *imageDesc)
 	  FreeGlTexture (imageDesc);
 #endif /*_GL*/
 	}
+#ifndef _GL
 #ifdef _WINDOWS
 	imageDesc->PicBgMask = -1;
 #endif /* _WINDOWS */
+#endif /*_GL*/
 	imageDesc->PicXArea = 0;
 	imageDesc->PicYArea = 0;
 	imageDesc->PicWArea = 0;
