@@ -2513,10 +2513,10 @@ char **value;
   PrepareFormdata
   ---------------------------------------------------------------------*/
 #ifdef __STDC__
-static HTAssocList * PrepareFormdata (char* string)
+static   HTAssocList * PrepareFormdata (CHAR_T* string)
 #else
-static HTAssocList * PrepareFormdata (string)
-char*  string;
+static   HTAssocList * PrepareFormdata (string)
+CHAR_T*  string;
 #endif /* __STDC__ */
 {
   char*        tmp_string, *tmp_string_ptr;
@@ -2530,8 +2530,10 @@ char*  string;
   /* store the ptr in another variable, as the original address will
      change
      */
-
-  tmp_string_ptr = tmp_string = TtaStrdup (string);
+  
+  tmp_string_ptr = TtaGetMemory (ustrlen (string) + 1);
+  tmp_string = tmp_string_ptr;
+  wc2iso_strcpy (tmp_string_ptr, string);
   formdata = HTAssocList_new();
   
   while (*tmp_string)
@@ -2545,6 +2547,8 @@ char*  string;
   return formdata;
 }
 
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------*/
 #ifdef __STDC__
 void AHTRequest_setCustomAcceptHeader (HTRequest *request, char *value)
 #else
@@ -2720,7 +2724,6 @@ CHAR_T*       content_type;
    int                 status, l;
    int                 tempsubdir;
    ThotBool            bool_tmp;
-   char                frm_data[MAX_LENGTH];
 
    if (urlName == NULL || docid == 0 || outputfile == NULL) 
      {
@@ -2921,10 +2924,8 @@ CHAR_T*       content_type;
      } 
 
    /* create the formdata element for libwww */
-   if (formdata && ! (mode & AMAYA_FILE_POST)) {
-      wc2iso_strcpy (frm_data, formdata);  
-      me->formdata = PrepareFormdata (frm_data);
-   }
+   if (formdata && ! (mode & AMAYA_FILE_POST))
+      me->formdata = PrepareFormdata (formdata);
 
    /* do the request */
    if (mode & AMAYA_FORM_POST)
