@@ -189,8 +189,8 @@ STRUCT
 		equalrows = TEXT;
 		equalcolumns = TEXT;
 		displaystyle = true, false;
-		rowspan = INTEGER;	????
-		columnspan = INTEGER;   ????
+		rowspan = INTEGER; 
+		columnspan = INTEGER;
 		edge = left\240, right\240;
 		actiontype = TEXT;
 	        selection = INTEGER;

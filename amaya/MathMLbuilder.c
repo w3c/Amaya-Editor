@@ -1022,7 +1022,23 @@ void SetSingleIntHorizStretchAttr (el, doc, selEl)
   if (child)
      {
      elType = TtaGetElementType (child);
-     if (elType.ElTypeNum == MathML_EL_MO)
+     while (elType.ElTypeNum == MathML_EL_MROW && child)
+        /* the first child is a mrow. Look whether it contains a single
+           child of type mo */
+        {
+        child = TtaGetFirstChild (child);
+	if (child)
+	  {
+	    sibling = child;
+	    TtaNextSibling (&sibling);
+	    if (sibling == NULL)
+	      /* the mrow element has a single child. Get its type */
+	      elType = TtaGetElementType (child);
+	    else
+	      child = NULL;
+	  }
+	}
+     if (elType.ElTypeNum == MathML_EL_MO && child)
 	/* the first child is a MO */
         {
         sibling = child;
@@ -1051,7 +1067,7 @@ void SetSingleIntHorizStretchAttr (el, doc, selEl)
 		      /* horizontal arrow, horizontal bar, horizontal brace */
 		      {
 		      c = EOS;
-		      /* attach a IntHorizStretch attribute */
+		      /* attach a IntHorizStretch attribute to the mo */
 		      attrType.AttrSSchema = elType.ElSSchema;
 		      attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
 		      attr = TtaNewAttribute (attrType);

@@ -4853,6 +4853,11 @@ ATTRIBUTES
         Width: Enclosing . Width ;
 	HorizPos: Left = Enclosing . Left;
 	END;
+  IntHorizStretch (MROW):
+	BEGIN
+        Width: Enclosing . Width ;
+	HorizPos: Left = Enclosing . Left;
+	END;
   IntHorizStretch (MO):
 	BEGIN
         Width: Enclosing . Width ;
