@@ -46,6 +46,41 @@ THOT_EXPORT ThotWidget          MainShell, PopShell;
       = 10
     #endif 
   ;
+
+THOT_EXPORT FrCatalogue FrameCatList [MAX_FRAME + 1];
+
+THOT_EXPORT int          nAmayaShow;
+/* following variables are declared as extern in frame_tv.h */
+THOT_EXPORT HINSTANCE     hInstance
+  #ifdef THOT_INITGLOBALVAR
+      = 0
+  #endif 
+  ;
+
+THOT_EXPORT HBITMAP       WIN_LastBitmap
+  #ifdef THOT_INITGLOBALVAR
+      = 0
+    #endif 
+  ;
+
+THOT_EXPORT int      bIndex
+  #ifdef THOT_INITGLOBALVAR
+      = 0
+    #endif 
+  ;
+
+THOT_EXPORT int      bAbsBase
+  #ifdef THOT_INITGLOBALVAR
+      = 60
+    #endif 
+  ;
+
+THOT_EXPORT WIN_Form formulary;
+THOT_EXPORT BYTE     fVirt;
+THOT_EXPORT char     key;
+
+THOT_EXPORT UINT subMenuID [MAX_FRAME];
+
 #endif  /* _WINGUI */
   
 #ifdef _MOTIF

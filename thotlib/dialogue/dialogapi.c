@@ -103,40 +103,12 @@ static int GetMenuParentNumber (ThotMenu menu)
   
 #ifdef _WINGUI
 
-#define MAX_FRAMECAT 50
-typedef struct FrCatalogue {
-  struct Cat_Context * Cat_Table[MAX_FRAMECAT];
-} FrCatalogue;
-
-
-FrCatalogue FrameCatList [MAX_FRAME + 1];
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM);
 
-static int          nAmayaShow;
-/* following variables are declared as extern in frame_tv.h */
-HINSTANCE           hInstance = 0;
-
-HBITMAP             WIN_LastBitmap = 0;
-
-typedef struct WIN_Form
-{
-  HWND Buttons [10]; /* Dialog Button      */
-  int  x  [10];      /* Initial x position */
-  int  cx [10];      /* Button width       */
-} WIN_Form;
-
-static int      bIndex = 0;
-static int      bAbsBase = 60;
-static WIN_Form formulary;
-static BYTE     fVirt;
-static char     key;
-
-UINT subMenuID [MAX_FRAME];
 extern int main (int, char**);
-static struct Cat_Context *CatEntry (int ref);
 
 
 

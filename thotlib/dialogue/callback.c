@@ -29,6 +29,9 @@
   #include "gtk-functions.h" /* GTK prototype */
 #endif /*_GTK */
 
+#ifdef _WINGUI
+  #include "wininclude.h"
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -463,6 +466,8 @@ ThotBool CallMenuWX (ThotWidget w, void * catalogue)
 {
 #ifdef _WX
   CallMenu( w, (struct Cat_Context *)catalogue, 0 );
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 
@@ -473,6 +478,8 @@ ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
 #ifdef _GTK
   CallMenu( w, (struct Cat_Context *)catalogue, 0 );
+#else /* _GTK */
+  return FALSE;
 #endif /* _GTK */
 }
 

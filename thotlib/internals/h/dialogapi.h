@@ -83,4 +83,23 @@ struct Cat_List
      struct Cat_Context  Cat_Table[MAX_CAT];
   };
 
+#ifdef _WINGUI
+
+#define MAX_FRAMECAT 50
+typedef struct FrCatalogue {
+  struct Cat_Context * Cat_Table[MAX_FRAMECAT];
+} FrCatalogue;
+
+typedef struct WIN_Form
+{
+  HWND Buttons [10]; /* Dialog Button      */
+  int  x  [10];      /* Initial x position */
+  int  cx [10];      /* Button width       */
+} WIN_Form;
+
+extern LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam);
+extern struct Cat_Context *CatEntry (int ref);
+
+#endif /* _WINGUI */
+
 #endif /* #define THOT_DIALOGAPI_H */
