@@ -681,9 +681,9 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		      c = 'h'; 
 		 else 
 #ifdef _I18N_
-		   if (text[0] == 0x2192)
+		   if (text[0] == 0x2190)
 		     c = 'L';  /* arrow left */
-		   else if (text[0] == 0x2190)
+		   else if (text[0] == 0x2192)
 		     c = 'R';  /* arrow right */
 		   else if (text[0] == 45)    /* - (minus) */
 		     /* a horizontal line in the middle of the box */
