@@ -2114,7 +2114,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			    }
 			  else if (pAPRule->ApMatch == CoMatch)
 			    /* the whole attribute value must be equal */
-			    ok = attrValue[j + k] == EOS;
+			    ok = (attrValue[j + k] == EOS && j == 0 && k != 0);
 			}
 		      /* prepare next search */
 		      j++;
@@ -2128,11 +2128,10 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		    }
 		}
 	    }
+	  else if (pAPRule->ApElemType == 0)
+	    pPRdef = pAPRule;
 	  else
-	    if (pAPRule->ApElemType == 0)
-	      pPRdef = pAPRule;
-	    else
-	      pPRinherit = pAPRule;
+	    pPRinherit = pAPRule;
 	}
     }
 
@@ -2158,7 +2157,6 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   if (pAPRule)
     switch (pAttr->AeAttrType)
       {
-
       case AtNumAttr:
 	i = 1;
 	found = FALSE;
@@ -2227,15 +2225,12 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	    i++;
 	  }
 	break;
-
       case AtTextAttr:
 	pRule = pAPRule->ApTextFirstPRule;
 	break;
-
       case AtReferenceAttr:
 	pRule = pAPRule->ApRefFirstPRule;
 	break;
-
       case AtEnumAttr:
 	/* on verifie que la valeur est correcte */
 	if (pAttr->AeAttrValue < 0 ||
@@ -2251,12 +2246,10 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	  /* on prend les regles qui s'appliquent a cette valeur */
 	  pRule = pAPRule->ApEnumFirstPRule[pAttr->AeAttrValue];
 	break;
-
       default:
 	pRule = NULL;
 	break;
       }
-
   return pRule;
 }
 
@@ -3617,6 +3610,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  do
 		    {
 		      /* first rule for this value of the attribute */
+		      /***if (pAttr->AeAttrNum == 3 && pAttr->AeAttrText && pAttr->AeAttrText->BuLength == 2 &&
+    pEl->ElTypeNumber == 147)
+    printf ("match\n");***/
 		      pR = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchPattr, &valNum);
 		      /* look for all rules associated with this value */
 		      while (pR != NULL)
