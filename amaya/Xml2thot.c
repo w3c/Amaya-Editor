@@ -2221,13 +2221,13 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 		    {
 		      /* get the UTF-8 string of the unicode character */
 		      ptr = &buffer[j];
-		      j += TtaWCToMBstring (entityValue, &ptr);
+		      j += TtaWCToMBstring ((wchar_t) entityValue, &ptr);
 		    }
 #else /* _I18N_ */
 		  if (found && entityValue <= 255)
 		    /* store the ISO latin1 character */
 		    buffer[j++] = entityValue;
-#endif /* _I18N_ */
+#endif /* _I18N_ */s
 		  else if (found && element)
 		    {
 		      if (stdText)
