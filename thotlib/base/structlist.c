@@ -2105,7 +2105,7 @@ FILE               *fileDescriptor;
 	     wrnomattr (pRe1->PrInhDelta, fileDescriptor);
 	  else
 	     wrnumber (pRe1->PrInhDelta, fileDescriptor);
-	  fprintf (fileDescriptor, " %");
+	  fprintf (fileDescriptor, " \%");
 	  }
 	else
 	   if (pRe1->PrInhDelta == 0)
