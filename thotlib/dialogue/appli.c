@@ -1564,7 +1564,17 @@ LPARAM lParam;
                      wParam != VK_LEFT   &&
                      wParam != VK_RIGHT  &&
                      wParam != VK_UP     &&
-                     wParam != VK_DOWN)
+                     wParam != VK_DOWN   &&
+                     wParam != 0x30      &&
+                     wParam != 0x31      &&
+                     wParam != 0x32      &&
+                     wParam != 0x33      &&
+                     wParam != 0x34      &&
+                     wParam != 0x35      &&
+                     wParam != 0x36      &&
+                     wParam != 0x37      &&
+                     wParam != 0x38      &&
+					 wParam != 0x39)
 				 return 0;
 
             case WM_SYSCHAR:

@@ -309,6 +309,8 @@ int                 command;
 #          ifdef _WINDOWS
            if (key1 >= 'a' && key1 <= 'z')
               key1 = key1 - 'a' + 1;
+           else if (key1 >= 'A' && key1 <= 'Z')
+                key1 = key1 - 'A' + 1;
 #          endif /* _WINDOWS */
 	       break;
 	    case THOT_MOD_ALT:
@@ -316,6 +318,12 @@ int                 command;
 	       break;
 	    case THOT_MOD_S_CTRL:
 	       addFirst = &Automata_CTRL;
+#          ifdef _WINDOWS
+           if (key1 >= 'a' && key1 <= 'z')
+              key1 = key1 - 'a' + 1;
+           else if (key1 >= 'A' && key1 <= 'Z')
+                key1 = key1 - 'A' + 1;
+#          endif /* _WINDOWS */
 	       break;
 	    case THOT_MOD_S_ALT:
 	       addFirst = &Automata_ALT;

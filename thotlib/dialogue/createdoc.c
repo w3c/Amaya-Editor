@@ -178,7 +178,7 @@ char*               data;
 	       break;
 	    case NumZoneDocNameToCreate:
 	       /* zone de saisie du nom du document a creer */
-	       if (TtaCheckDirectory (data) && data[ustrlen (data) - 1] != URL_DIR_SEP)
+	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (DirectoryDocToCreate, data);
 		    NameDocToCreate[0] = EOS;
@@ -217,7 +217,9 @@ char*               data;
 	       strcat (docName, NameDocToCreate);
            /* docName has to be encoded in Wide Character */
            /* We have to use Multbyte to Wide Character String conversion */
-	       TtaSetTextForm (NumZoneDocNameToCreate, docName);
+		   /* @@@@@@@@@@@@@@@@@@@@ */
+	       TtaSetTextForm (NumZoneDocNameToCreate, ISO2WideChar (docName));
+		   /* @@@@@@@@@@@@@@@@@@@@ */
 	       break;
 	    case NumSelDocClassToCreate:
 	       /* selecteur classe du document a creer */

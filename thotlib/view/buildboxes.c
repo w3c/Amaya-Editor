@@ -3497,7 +3497,7 @@ PtrAbstractBox      pAb;
 
 	     /* On traite toutes les modifications signalees */
 	     change = IsAbstractBoxUpdated (pAb, frame);
-
+       
 	     /* Les modifications sont traitees */
 	     Propagate = ToAll;	/* On passe en mode normal de propagation */
 

@@ -840,6 +840,10 @@ ThotBool            increase;
   ptrfont             ptfont;
 
   /* use only standard sizes */
+# ifdef _WINDOWS
+  WIN_GetDeviceContext (frame);
+# endif /* _WINDOWS */
+
   index = 0;
   if (unit == UnRelative)
     index = size;

@@ -250,18 +250,18 @@ STRING              dictDirectory;
    returns  1 if the file .DCT exists (treated)                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          TestDictionary (STRING dictName, STRING dictDirectory)
+static int          TestDictionary (char* dictName, char* dictDirectory)
 #else  /* __STDC__ */
 static int          TestDictionary (dictName, dictDirectory)
-STRING              dictName;
-STRING              dictDirectory;
+char*               dictName;
+char*               dictDirectory;
 
 #endif /* __STDC__ */
 {
   int                 ret, i;
-  CHAR_T                tempbuffer[THOT_MAX_CHAR];
+  char                tempbuffer[THOT_MAX_CHAR];
 
-  FindCompleteName (dictName, TEXT("dic"), dictDirectory, tempbuffer, &i);
+  FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
     {
       /* Looks for not pre-treated dictionary */
