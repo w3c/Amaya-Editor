@@ -2220,14 +2220,8 @@ indLine             wi;
 			    || pPRule->PrPresFunction == FnPage
 			    || pPRule->PrPresFunction == FnColumn
 			    || pPRule->PrPresFunction == FnSubColumn)
-#ifdef __COLPAGE__
-			   /* on autorise quand meme Page suivi de Column */
-			   if (!((layoutFonct == FnColumn && pPRule->PrPresFunction == FnPage) ||
-				 (layoutFonct == FnSubColumn && pPRule->PrPresFunction == FnColumn)))
-#endif /* __COLPAGE__ */
-			     CompilerMessage (wi, PRS, FATAL,
-					      ONLY_ONE_PAGE_RULE, inputLine,
-					      LineNum);
+			  CompilerMessage (wi, PRS, FATAL, ONLY_ONE_PAGE_RULE,
+					   inputLine, LineNum);
 		  pPRule = pPRule->PrNextPRule;
 	       }
 	  }
@@ -3161,21 +3155,6 @@ indLine             wi;
 	else
 	  LayoutRule (FnColumn, wi);
 	IncludedColumn = False;
-#ifdef __COLPAGE__
-	/* la regle Colonne s'applique-t-elle a une vue d'elements associes? */
-	assoc = False;
-	if (pSSchema->SsRule[CurType - 1].SrConstruct == CsList)
-	  /* la regle s'applique a un element liste */
-	  {
-	    i = pSSchema->SsRule[CurType - 1].SrListItem;
-	    /* les elements de la liste sont-ils des elements associes ? */
-	    assoc = pSSchema->SsRule[i - 1].SrAssocElem;
-	  }
-	if (assoc)
-	  ;	    /*  pPSchema->SPVueAssocAvecCol[CurType - 1] = True; */
-	else
-	  pPSchema->PsColumnView[CurView - 1] = True;
-#endif /* __COLPAGE__ */
 	break;
       case KWD_Copy /* Copy */ :
 	if (DefaultRuleDef)
@@ -5687,28 +5666,12 @@ PtrPRule            pPRule2;
 	 /* both rules are presentation functions, next criterion is */
 	 /* the function code. */
 	 if (pPRule1->PrPresFunction != pPRule2->PrPresFunction)
-	    {
-#ifdef __COLPAGE__
-	     if (((pPRule1->PrPresFunction == FnPage) ||
-		  (pPRule1->PrPresFunction == FnColumn) ||
-		  (pPRule1->PrPresFunction == FnSubColumn)) &&
-		 ((pPRule2->PrPresFunction == FnPage) ||
-		  (pPRule2->PrPresFunction == FnColumn) ||
-		  (pPRule2->PrPresFunction == FnSubColumn)))
-		/* equivalent functions (Page, Column, Included Column), */
-		/* the next criterion is the view number */
-		ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
-	     else
-#endif /* __COLPAGE__ */
-	        /* same presentation function */
-		ret = pPRule1->PrPresFunction < pPRule2->PrPresFunction;
-	    }
+	   /* same presentation function */
+	   ret = pPRule1->PrPresFunction < pPRule2->PrPresFunction;
 	 else
-	    {
-	    /* same presentation function, the next criterion is the view
-	       number */
-	    ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
-	    }
+	   /* same presentation function, the next criterion is the view
+	      number */
+	   ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
          }
       else
          {
@@ -5992,15 +5955,7 @@ static void         CheckPageBoxes ()
    PresVariable       *pPresVar;
    PtrCondition        pCond;
    int                 viewOfBox[MAX_PRES_BOX];
-
-#ifdef __COLPAGE__
-   int                 bc;
-   PtrPRule            pRC;
-
-#else  /* __COLPAGE__ */
    PtrPRule            pRLarg;
-
-#endif /* __COLPAGE__ */
 
    /* a priori les boites de presentation ne sont pas des boites pages */
    for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
@@ -6103,14 +6058,12 @@ static void         CheckPageBoxes ()
 		       /* cherche la regle de largeur de la boite qui porte la */
 		       /* regle Page, ou cree une regle s'il n'y a pas de regle de */
 		       /* largeur */
-#ifndef __COLPAGE__
 		       /* supprime pour les colonnes */
 		       pRLarg = SearchPRule (&pPSchema->PsElemPRule[el], PtWidth,
 					     pR->PrViewNum);
 		       /* modifie la regle de largeur: meme regle que la boite page */
 		       pRLarg->PrPresMode = PresImmediate;
 		       pRLarg->PrDimRule = pRule->PrDimRule;
-#endif /* __COLPAGE__ */
 		       /* cherche la regle de position verticale */
 		       /* de la boite page */
 		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
@@ -6136,15 +6089,6 @@ static void         CheckPageBoxes ()
 			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else
 			 {
-#ifdef __COLPAGE__
-			    if (pRule->PrPosRule.PoPosDef != Top
-			    /* position du cote superieur */
-				|| pRule->PrPosRule.PoPosRef != Bottom
-			    /* par rapport au cote inf. */
-				|| pRule->PrPosRule.PoRelation != RlPrevious
-			    /* du precedent */
-				|| (pRule->PrPosRule.PoDistUnit == UnRelative && pRule->PrPosRule.PoDistance != 0))
-#else  /* __COLPAGE__ */
 			    if (pRule->PrPosRule.PoPosDef != Top
 			    /* position du cote superieur */
 				|| pRule->PrPosRule.PoPosRef != Top
@@ -6152,7 +6096,6 @@ static void         CheckPageBoxes ()
 				|| pRule->PrPosRule.PoRelation != RlEnclosing
 			    /* de l'englobant */
 				|| (pRule->PrPosRule.PoDistUnit == UnRelative && pRule->PrPosRule.PoDistance != 0))
-#endif /* __COLPAGE__ */
 			       /* et distance absolue */
 			       /* ce n'est pas un positionnement correct, erreur */
 			       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
@@ -6246,14 +6189,6 @@ static void         CheckPageBoxes ()
 	      /* la boite de haut ou de bas de page appartient */
 	      /* la meme vue que la boite page qui la cree */
 	      viewOfBox[hfB] = viewOfBox[b];
-#ifdef __COLPAGE__
-	      /* type de boite : haut (CreateBefore) ou bas */
-	      /*(CreateAfter) */
-	      if (pR->PrPresFunction == FnCreateBefore)
-		pPSchema->PsPresentBox[hfB].PbPageHeader = True;
-	      else
-		pPSchema->PsPresentBox[hfB].PbPageFooter = True;
-#endif /* __COLPAGE__ */
 	      /* cherche la regle de positionnement vertical de */
 	      /* la boite creee par la boite page */
 	      pPRule = pPSchema->PsPresentBox[hfB].PbFirstPRule;
@@ -6281,20 +6216,12 @@ static void         CheckPageBoxes ()
                           pPSchema->PsPresentBox[hfB].PbName);
 	      else
 		{
-#ifdef __COLPAGE__
-		if (!(pPRule->PrPosRule.PoPosDef == Top ||
-		      pPRule->PrPosRule.PoPosDef == Bottom ||
-		      pPRule->PrPosRule.PoPosDef == HorizMiddle))
-		  /* on ne teste plus PoPosDef,PoNotRel,PoRefKind */
-		  /* suppression test elt ref. != marque de page */
-#else  /* __COLPAGE__ */
 		if (!(pPRule->PrPosRule.PoPosDef == Top ||
 		      pPRule->PrPosRule.PoPosDef == Bottom ||
 		      pPRule->PrPosRule.PoPosDef == HorizMiddle) ||
 		    pPRule->PrPosRule.PoNotRel ||
 		    pPRule->PrPosRule.PoRefKind != RkElType ||
 		    pPRule->PrPosRule.PoRefIdent != PageBreak + 1)
-#endif /* __COLPAGE__ */
 		  TtaDisplayMessage (FATAL,
 			       TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE),
 			       pPSchema->PsPresentBox[hfB].PbName);
@@ -6303,16 +6230,6 @@ static void         CheckPageBoxes ()
 		    TtaDisplayMessage (FATAL,
                              TtaGetMessage (PRS, VERTIC_DIST_ISNT_CONSTANT),
                              pPSchema->PsPresentBox[hfB].PbName);
-#ifdef __COLPAGE__
-		if (pPRule->PrPosRule.PoRelation != RlPrevious)
-		  TtaDisplayMessage (FATAL,
-                             TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE),
-                             pPSchema->PsPresentBox[hfB].PbName);
-		else
-		  /* la boite creee est positionnee par rapport */
-		  /* a la boite precedente : seul cas autorise */
-		  {
-#else  /* __COLPAGE__ */
 		if (pPRule->PrPosRule.PoRelation == RlPrevious)
 		  /* la boite creee est positionnee par rapport */
 		  /* au haut de la page */
@@ -6402,7 +6319,6 @@ static void         CheckPageBoxes ()
 		  /* au bas de la page, c'est une boite de bas de page */
 		  {
 		  pPSchema->PsPresentBox[hfB].PbPageFooter = True;
-#endif /* __COLPAGE__ */
 		  /* cherche la regle de hauteur de la boite de */
 		  /* bas de page */
 		  pHeadR = pPSchema->PsPresentBox[hfB].PbFirstPRule;
@@ -6423,17 +6339,12 @@ static void         CheckPageBoxes ()
 		      pHeadR = pHeadR->PrNextPRule;
 		    }
 		  while (!stop1);
-#ifdef __COLPAGE__
-		  /* si pas de regle de hauteur, pas d'erreur */
-		  if (exist)
-#else  /* __COLPAGE__ */
 		  if (!exist)
 		    /* il n'y a pas de regle de hauteur, erreur */
 		    TtaDisplayMessage (FATAL,
 				       TtaGetMessage (PRS, BAD_HEIGHT_RULE),
 				       pPSchema->PsPresentBox[hfB].PbName);
 		  else
-#endif /* __COLPAGE__ */
 		    if (pHeadR->PrDimRule.DrPosition)
 		      /* c'est une hauteur elastique, erreur */
 		      TtaDisplayMessage (FATAL,
@@ -6489,14 +6400,12 @@ static void         CheckPageBoxes ()
 			  footHeight = h;
 			}
 		  }
-#ifndef __COLPAGE__
 		else
 		  /* la boite creee n'est pas positionnee par */
 		  /* rapport a la page, erreur */
 		  TtaDisplayMessage (FATAL,
 			      TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE),
                               pPSchema->PsPresentBox[hfB].PbName);
-#endif /* __COLPAGE__ */
 		/* examine les conditions de creation de la boite de */
 		/* haut ou de bas de page, a la recherche d'un */
 		/* compteur de page qui determine la creation de la */
@@ -6564,86 +6473,6 @@ static void         CheckPageBoxes ()
 			}
 		      }
 		  }
-#ifdef __COLPAGE__
-		/* le numero de page peut etre fils de la boite */
-		/* haut ou bas de page, il faut donc chercher */
-		/* a un niveau plus bas (boites creees par hfB */
-		else
-		  {
-		  pRC = pPSchema->PsPresentBox[hfB].PbFirstPRule;
-		  /* 1ere regle de presentation */
-		  /* parcourt les premieres regles de la boite hfB */
-		  stop1 = False;
-		  do
-		    {
-		    if (pRC == NULL)
-		      stop1 = True;
-		    else if (pRC->PrType > PtFunction)
-		      stop1 = True;
-		    if (!stop1)
-		      {
-		      if (pRC->PrType == PtFunction
-			  && (pRC->PrPresFunction == FnCreateBefore
-			      || pRC->PrPresFunction == FnCreateFirst
-			      || pRC->PrPresFunction == FnCreateLast
-			      || pRC->PrPresFunction == FnCreateAfter))
-			/* c'est une regle de creation */
-			if (pRC->PrPresFunction == FnCreateBefore ||
-			    pRC->PrPresFunction == FnCreateAfter)
-			  /* ce n'est pas une regle de creation autorisee */
-			  TtaDisplayMessage (FATAL,
-				      TtaGetMessage (PRS, FORBIDDEN_CREA_RULE),
-                                      pPSchema->PsPresentBox[hfB].PbName);
-			else
-			  /* la regle pRC est une regle CreatePremFils ou */
-			  /* CreateDerFils */
-			  {
-			  bc = pRC->PrPresBox[0];
-			  /* numero de la boite fille.
-			     Contient-elle un compteur ? */
-			  /* cette boite appartient a la meme vue que la */
-			  /* boite qui la cree */
-			  viewOfBox[bc - 1] = viewOfBox[hfB];
-			  /* contient-elle le numero de page ? */
-			  if (pPSchema->PsPresentBox[bc - 1].PbContent ==
-                                                                  ContVariable)
-			    /* la boite contient une variable */
-			    {
-			    pPresVar = &pPSchema->PsVariable[pPSchema->PsPresentBox[bc - 1].PbContVariable - 1];
-			    for (i = 0; i < pPresVar->PvNItems; i++)
-			      if (pPresVar->PvItem[i].ViType == VarCounter)
-				/* la variable contient une valeur de */
-				/* compteur, on examine ce compteur */
-				{
-				counter = pPresVar->PvItem[i].ViCounter;
-				if (PageCounter (counter))
-				  /* c'est un compteur de pages */
-				  {
-				  if (pPSchema->PsPresentBox[b].PbPageCounter > 0)
-				    /* il y a deja un compteur de page */
-				    {
-				    if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
-				      /* ce n'est pas le meme compteur */
-				      TtaDisplayMessage (FATAL,
-                                         TtaGetMessage (PRS, TWO_DIFFERENT_PAGE_NUMBERS),
-                                         pPSchema->PsPresentBox[hfB].PbName);
-				    }
-				  else
-				    /* on a trouve' le compteur de pages */
-				    pPSchema->PsPresentBox[b].PbPageCounter = counter;
-				  pPSchema->PsCounter[counter - 1].CnPageFooter =
-				    pPSchema->PsPresentBox[hfB].PbPageFooter;
-				  }
-				}
-			    }
-			  }		/* fin regle creation fille */
-		      }		/* fin parcours regle creation de hfB */
-		    /* passe a la regle suivante de hfB */
-		    pRC = pRC->PrNextPRule;
-		    }	/* fin parcours regle creation de hfB */
-		  while (!stop1);
-		  }	/* fin recherche compteur chez les filles */
-#endif /* __COLPAGE__ */
 		}	/* fin regle de position verticale OK  */
 	      }
 	    }
