@@ -1354,6 +1354,7 @@ int                *carIndex;
 	     pCurrentBox->BxVertInverted = FALSE;
 	  }
 	/* New values of margins, paddings and borders */
+	pAb->AbMBPChange = FALSE;
 	ComputeMPB (pAb, frame, TRUE);
 	ComputeMPB (pAb, frame, FALSE);
 	pCurrentBox->BxXToCompute = FALSE;
