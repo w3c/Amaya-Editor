@@ -137,6 +137,7 @@ number
 			 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
 			 'NoShowBox' / 'SetWindowBackground' /
 			 'Shadow' / 'EventAttr' / 'SpacePreserve' /
+			 'IsPlaceholder' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
@@ -265,7 +266,8 @@ code  key-word      numbers of rules using the key-word
 1188  Shadow               51
 1189  EventAttr            51
 1190  SpacePreserve        51
-1191  Root                 54
+1191  IsPlaceholder        51
+1192  Root                 54
 
 
 

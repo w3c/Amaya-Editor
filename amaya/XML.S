@@ -19,14 +19,9 @@ STRUCT
 
    XML
 	  (ATTR RealLang = Yes_;)
-	= BEGIN
-	  LIST OF (XML_Elements); 
-          END + (xmlcomment, xmlpi, cdata);
+	= LIST OF (XML_Element) + (xmlcomment, xmlpi, cdata);
 
-   XML_Elements = CASE OF
-		TEXT; 
-		XML_Embed = NATURE;
-	      END;
+   XML_Element = ANY;
            
    xmlcomment = LIST OF (xmlcomment_line = TEXT) - (xmlcomment);
 
@@ -52,7 +47,6 @@ EXCEPT
    doctype_line:        Hidden, NoSpellCheck, NoCut;
    doctype:             NoCut;
    cdata_line:          Hidden;
-   XML_Embed:           Hidden, NoSelect;
-   XML_Elements:        Hidden, NoSpellCheck;
+   XML_Element:         Hidden, NoSpellCheck, IsPlaceholder;
    xml_space:           SpacePreserve;
 END

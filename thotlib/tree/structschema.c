@@ -326,6 +326,9 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 		       if (pSRule->SrIdentRule > MAX_BASIC_TYPE)
 			  ret = EquivalentSRules (pSRule->SrIdentRule, pSS1, typeNum2, pSS2, pEl);
 		       break;
+		    case CsAny:
+		       ret = TRUE;
+		       break;
 		    case CsNatureSchema:
 		       if (pSRule->SrSSchemaNat == NULL)
 			 /* structure schema is not loaded. Compare names */
@@ -718,6 +721,7 @@ void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
 		       ListOrAggregateRule (pDoc, pEl, typeNum, pSS);
 		       break;
 		    case CsAny:
+		       *typeNum = 0;
 		       break;
 		    default:
 		       *typeNum = 0;
@@ -923,15 +927,28 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
 	     }
 	   if (*typeNum <= 0)
 	     /* l'element parent n'est ni une liste ni un agregat */
-	     /* s'il est de la forme X = TEXT, on accepte de creer une
-		autre feuille de texte */
 	     {
+	       /* s'il est de la forme X = TEXT, on accepte de creer une
+		  autre feuille de texte */
 	       if ((pEl->ElParent->ElStructSchema)->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsIdentity)
-	          if (pEl->ElTypeNumber == CharString + 1)
-		    {
-		      *pSS = pEl->ElParent->ElStructSchema;
-		      *typeNum = pEl->ElTypeNumber;
-		    }
+		 {
+		   if (pEl->ElTypeNumber == CharString + 1)
+		     {
+		       *pSS = pEl->ElParent->ElStructSchema;
+		       *typeNum = pEl->ElTypeNumber;
+		     }
+		 }
+	       else if ((pEl->ElParent->ElStructSchema)->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsAny)
+		 /* It is defined as X = ANY.  Look in the structure schema
+		    the first rule of the form X = ANY with exception
+		    IsPlaceholder */
+		 {
+		   *pSS = pEl->ElParent->ElStructSchema;
+		   for (i = 1; i < (*pSS)->SsNRules && *typeNum <= 0; i++)
+		     if ((*pSS)->SsRule->SrElem[i - 1]->SrConstruct == CsAny &&
+			 TypeHasException (ExcIsPlaceholder, i, *pSS))
+		       *typeNum = i;
+		 }
 	     }
 	   else
 	      /* c'est un element de liste ou d'agregat */
@@ -998,7 +1015,7 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
 				i++;
 			  }
 		     }
-		   else
+		   else if (pRule->SrConstruct == CsAggregate)
 		      /* agregat ordonne' */
 		     {
 			/* cherche dans cet agregat le type de l'element */
@@ -1420,21 +1437,22 @@ ThotBool AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 	      }
 	    if (pEl != NULL)
 	      {
-		/* Teste si l'element pointe par pEl est un element de */
-		/* liste ou d'agregat */
-		ascTypeNum = pEl->ElParent->ElTypeNumber;
-		pAscSS = pEl->ElParent->ElStructSchema;
+	      /* Teste si l'element pointe par pEl est un element de */
+	      /* liste ou d'agregat */
+	      ascTypeNum = pEl->ElParent->ElTypeNumber;
+	      pAscSS = pEl->ElParent->ElStructSchema;
+	      if (pAscSS->SsRule->SrElem[ascTypeNum - 1]->SrConstruct == CsAny)
+		/* the parent element does not put any constraint on its
+		   content */
+		ok = TRUE;
+	      else
+		{
 		ListOrAggregateRule (pDoc, pEl, &ascTypeNum, &pAscSS);
 		if (ascTypeNum > 0)
 		  /* c'est un element de liste ou d'agregat */
 		  {
 		    pRule = pAscSS->SsRule->SrElem[ascTypeNum - 1];
-		    if (pRule->SrConstruct == CsAny)
-		      /* It's a generic xml element */
-		      {
-			ok = TRUE;
-		      }
-		    else if (pRule->SrConstruct == CsList)
+		    if (pRule->SrConstruct == CsList)
 		      /* c'est un element de liste */
 		      {
 			ok = TRUE;
@@ -1576,6 +1594,7 @@ ThotBool AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 		  /* on veut inserer un element Texte a cote' d'un autre */
 		  /* element texte, OK */
 		  ok = TRUE;
+		}
 	      }
 	  }
 	if (!ok)
@@ -1816,6 +1835,9 @@ ThotBool AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum,
 			     }
 			 }
 		       break;
+		     case CsAny:
+		       ok = TRUE;
+		       break;
 		     case CsAggregate:
 		     case CsUnorderedAggregate:
 		       ok = AllowedFirstComponent (pEl->ElTypeNumber, pEl->ElStructSchema,
@@ -2043,6 +2065,12 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 			 }
 		     }
 		 }
+	       break;
+	     case CsAny:
+	       pEl = NewSubtree (descTypeNum, pSS, pDoc, TRUE, TRUE, TRUE,
+				 TRUE);
+	       if (descTypeNum <= MAX_BASIC_TYPE)
+		 *pLeaf = pEl;
 	       break;
 	     case CsChoice:
 	       if (pRule1->SrNChoices == 0)
@@ -2431,6 +2459,7 @@ ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
    PtrElement          pE;
    int		       nComp;
    ThotBool            exctab;
+   RConstruct          constr;
 
    *pList = NULL;
    *pEl = NULL;
@@ -2466,31 +2495,30 @@ ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
 			   }
 			 if (*pList == NULL)
 			   {
-			   if (GetElementConstruct (firstEl->ElParent, &nComp)
-			       == CsList)
+			   constr = GetElementConstruct (firstEl->ElParent,
+							 &nComp);
+			   if (constr == CsList)
 			     *pList = AncestorList (firstEl->ElParent);
+			   else if (constr == CsAny)
+			     {
+			       if (firstEl->ElParent->ElParent != NULL)
+				 {
+				   constr = GetElementConstruct	(firstEl->ElParent->ElParent, &nComp);
+				   if (constr == CsAny || constr == CsList)
+				     *pList = firstEl->ElParent->ElParent;
+			         }
+			     }
 			   else
 			     {
 			       pE = firstEl;
-			       if (GetElementConstruct (firstEl->ElParent,&nComp)
-				   == CsChoice)
+			       if (constr == CsChoice)
 				 if (firstEl->ElParent->ElParent != NULL)
 				   if (GetElementConstruct (firstEl->ElParent->ElParent, &nComp) == CsList)
 				     pE = firstEl->ElParent->ElParent;
 			       *pList = AncestorList (pE);
 			       if (*pList == NULL)
-				 {
-				   /* Search if the type of the parent is Any */
-				   *pList = ParentAny (firstEl->ElParent);
-				   /* old test 
-				   if ((firstEl->ElParent->ElParent != NULL) && 
-				       (GetElementConstruct
-					(firstEl->ElParent, &nComp) == CsAny) &&
-				       (GetElementConstruct
-					(firstEl->ElParent->ElParent, &nComp) == CsAny))
-				     *pList = firstEl->ElParent->ElParent;
-				   */
-				 }
+				 /* Search if the type of the parent is Any */
+				 *pList = ParentAny (firstEl->ElParent);
 			     }
 			   }
 		       }

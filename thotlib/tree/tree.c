@@ -2096,7 +2096,9 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
   
   /* the new element will replace the CHOICE element */
   replace = TRUE;
-  if (pEl->ElParent != NULL)
+  if (!TypeHasException (ExcIsPlaceholder, pEl->ElTypeNumber,
+			 pEl->ElStructSchema) &&
+      pEl->ElParent != NULL)
     /* ...except if the choice is a composite element */
     if (pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsAggregate ||
 	pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsUnorderedAggregate)
@@ -2416,7 +2418,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		       ThotBool withLabel)
 {  
   PtrElement          pEl, t1, t2;
-  int                 i;
+  int                 i, r;
   ThotBool            gener, create, error;
   PtrReference        ref;
   Name                PSchName;
@@ -2662,11 +2664,28 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	    }
 	break;
       case CsAny:
-	t1 = NewSubtree (1, pSS, pDoc, Desc, TRUE, withAttr, withLabel);
-	if (pEl == NULL)
-	  pEl = t1;
-	else
-	  InsertFirstChild (pEl, t1);
+	if (!TypeHasException (ExcIsPlaceholder, typeNum, pSS))
+	  /* it's an element Any, but not a placeholder. Try to create
+	     a child placeholder */
+	  {
+	    /* is there an element Any defined as a placeholder in the
+	       structure schema ? */
+	    r = 0;
+	    for (i = 1; i < pSS->SsNRules && r == 0; i++)
+	      if (pSS->SsRule->SrElem[i - 1]->SrConstruct == CsAny &&
+		  TypeHasException (ExcIsPlaceholder, i, pSS))
+		/* this is a placeholder */
+		r = i;
+	    if (r > 0)
+	      /* create a child placeholder */
+	      {
+		t1 = NewSubtree (r, pSS, pDoc, Desc, TRUE, withAttr,withLabel);
+		if (pEl == NULL)
+		  pEl = t1;
+		else
+		  InsertFirstChild (pEl, t1);
+	      }
+	  }
 	break;
       default:
 	break;

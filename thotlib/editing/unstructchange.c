@@ -799,15 +799,22 @@ void PasteCommand ()
 	      pNextEl = firstSel;
 	    }
 	  else
-	    /* the user wants to paste in the middle of a text leaf. Split it*/
+	    /* the user wants to paste in the middle of a text leaf */
 	    {
 	      /* if the element to be split is the last child of its parent,
 		 it will change status after the split */
 	      pClose = firstSel->ElNext;
 	      FwdSkipPageBreak (&pClose); /* skip page breaks */
 	      pSplitText = firstSel;
+	      /* record the text leaf before it is split, to be able to restore
+		 it when undoing the operation */
+	      AddEditOpInHistory (firstSel, pDoc, TRUE, TRUE);
+	      /* split the text leaf */
 	      SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollowing,
 				FALSE);
+	      /* record the new text leaf that has been created by split. It
+		 has to be deleted when undoing the command */
+	      AddEditOpInHistory (firstSel->ElNext, pDoc, FALSE, TRUE);
 	      /* update the current selection */
 	      if (firstSel == lastSel)
 		{
@@ -1281,33 +1288,57 @@ static void ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
 				 PtrSSchema *pSS)
 {
    int              TypeListe, TypeElListe, TypeEl;
-   int	            nComp;
+   int	            nComp, i;
    PtrSSchema       pSSList;
    PtrSRule         pRegle;
 
    pSSList = pListEl->ElStructSchema;
    *pSS = pEl->ElStructSchema;
-   *typeNum = pEl->ElTypeNumber;
    if (GetElementConstruct (pListEl, &nComp) == CsAny)
      /* Don't check further for xml elements (CsAny) */
-     return;
-   TypeListe = GetTypeNumIdentity (pListEl->ElTypeNumber, pSSList);
-   /* le type des elements qui constituent la liste */
-   TypeElListe = pSSList->SsRule->SrElem[TypeListe - 1]->SrListItem;
-   /* on traverse les regles d'Identite' */
-   TypeEl = GetTypeNumIdentity (TypeElListe, pSSList);
-   /* la regle qui definit les elements de la liste */
-   pRegle = pSSList->SsRule->SrElem[TypeEl - 1];
-   if (pRegle->SrConstruct == CsChoice)
-      if (pRegle->SrNChoices > 0)
-	 /* c'est une liste de choix, on retient la 1ere option de ce choix */
-	 if (AllowedSibling (pEl, pDoc, pRegle->SrChoice[0], pSSList, begin,
-			     TRUE,
-			     FALSE))
-	   {
-	      *typeNum = pRegle->SrChoice[0];
-	      *pSS = pSSList;
-	   }
+     {
+       *typeNum = 0;
+       for (i = 1; i < pSSList->SsNRules && *typeNum <= 0; i++)
+	 if (pSSList->SsRule->SrElem[i - 1]->SrConstruct == CsAny &&
+	     TypeHasException (ExcIsPlaceholder, i, pSSList))
+	   *typeNum = i;
+       if (*typeNum == 0)
+	 *typeNum = pEl->ElTypeNumber;
+     }
+   else
+     /* it's really a List */
+     {
+       *typeNum = pEl->ElTypeNumber;
+       TypeListe = GetTypeNumIdentity (pListEl->ElTypeNumber, pSSList);
+       /* le type des elements qui constituent la liste */
+       TypeElListe = pSSList->SsRule->SrElem[TypeListe - 1]->SrListItem;
+       /* on traverse les regles d'Identite' */
+       TypeEl = GetTypeNumIdentity (TypeElListe, pSSList);
+       /* la regle qui definit les elements de la liste */
+       pRegle = pSSList->SsRule->SrElem[TypeEl - 1];
+       if (pRegle->SrConstruct == CsChoice)
+	 {
+	 if (pRegle->SrNChoices > 0)
+	   /* c'est une liste de choix, on retient la 1ere option de ce choix*/
+	   if (AllowedSibling (pEl, pDoc, pRegle->SrChoice[0], pSSList, begin,
+			       TRUE, FALSE))
+	     {
+	       *typeNum = pRegle->SrChoice[0];
+	       *pSS = pSSList;
+	     }
+	 }
+       else if (pRegle->SrConstruct == CsAny)
+	 /* it's a list of Any */
+	 {
+	   *typeNum = 0;
+	   for (i = 1; i < pSSList->SsNRules && *typeNum <= 0; i++)
+	     if (pSSList->SsRule->SrElem[i - 1]->SrConstruct == CsAny &&
+		 TypeHasException (ExcIsPlaceholder, i, pSSList))
+	       *typeNum = i;
+	   if (*typeNum == 0)
+	     *typeNum = pEl->ElTypeNumber;
+	 }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1481,7 +1512,11 @@ void TtcCreateElement (Document doc, View view)
 	    if (pElem->ElParent != NULL)
 	      {
 		pParent = pElem->ElParent;
-		pListEl = AncestorList (pParent);
+		if (pParent->ElParent &&
+		    GetElementConstruct (pParent->ElParent, &nComp) == CsAny)
+		  pListEl = pParent->ElParent;
+		else
+		  pListEl = AncestorList (pParent);
 		if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
 				      pParent->ElStructSchema))
 		  /* the parent element can't be split with the Return key.
@@ -1776,13 +1811,18 @@ void TtcCreateElement (Document doc, View view)
 	    pListEl = NULL;
 	  else
 	    {
-	      pListEl = AncestorList (lastSel);
+	      if (lastSel->ElParent &&
+		  GetElementConstruct (lastSel->ElParent, &nComp) == CsAny)
+		pListEl = lastSel->ElParent;
+	      else
+		pListEl = AncestorList (lastSel);
 	      /* si c'est la fin d'une liste de Textes on remonte */
 	      if (pListEl != NULL)
 		{
 		  if (lastSel->ElTerminal &&
 		      pListEl == lastSel->ElParent &&
 		      (lastSel->ElNext == NULL || selBegin) &&
+		      GetElementConstruct (lastSel->ElParent, &nComp) != CsAny &&
 		      !TypeHasException (ExcReturnCreateWithin,
 					 pListEl->ElTypeNumber,
 					 pListEl->ElStructSchema))
@@ -2318,7 +2358,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		 {
 		   /* record the element to be deleted in the history */
 		   OpenHistorySequence (pDoc, pEl, pEl, NULL, firstChar, lastChar);
-		   AddEditOpInHistory (pSibling, pDoc, TRUE,FALSE);
+		   AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
 		   TtaDeleteTree ((Element)pSibling, doc);
 		   CloseHistorySequence (pDoc);
 		 }

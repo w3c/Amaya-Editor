@@ -3003,31 +3003,28 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	    /* it's a caret */
 	    lastSelectedChar = firstSelectedChar;
 	  length = TtaGetElementVolume (lastEl);
-	  if (lastSelectedChar != 0 && lastSelectedChar <= length)
+	  /* exclude trailing spaces from the selection */
+	  if (length > 0)
 	    {
-	      /* exclude trailing spaces from the selection */
-	      if (length > 0)
-		{
-		  length++;
-		  buffer = (CHAR_T *)TtaGetMemory (length * sizeof(CHAR_T));
-		  TtaGiveBufferContent (lastEl, buffer, length, &lang);
-		  if (lastEl == firstSelectedElem)
-		    min = firstSelectedChar;
-		  else
-		    min = 1;
-		  while (lastSelectedChar > min &&
-			 buffer[lastSelectedChar - 2] == SPACE)
-		    lastSelectedChar--;
-		  TtaFreeMemory (buffer);
-		}
-	      if (lastSelectedChar > 1)
-		{
-		  TtaRegisterElementReplace (lastEl, document);	     
-		  TtaSplitText (lastEl, lastSelectedChar, document);
-		  elem = lastEl;
-		  TtaNextSibling (&elem);
-		  TtaRegisterElementCreate (elem, document);
-		}
+	      length++;
+	      buffer = (CHAR_T *)TtaGetMemory(length * sizeof(CHAR_T));
+	      TtaGiveBufferContent (lastEl, buffer, length, &lang);
+	      if (lastEl == firstSelectedElem)
+		min = firstSelectedChar;
+	      else
+		min = 1;
+	      while (lastSelectedChar > min &&
+		     buffer[lastSelectedChar - 2] == SPACE)
+		lastSelectedChar--;
+	      TtaFreeMemory (buffer);
+	    }
+	  if (lastSelectedChar > 1 && lastSelectedChar <= length)
+	    {
+	      TtaRegisterElementReplace (lastEl, document);	     
+	      TtaSplitText (lastEl, lastSelectedChar, document);
+	      elem = lastEl;
+	      TtaNextSibling (&elem);
+	      TtaRegisterElementCreate (elem, document);
 	    }
 	}
     }
@@ -3061,17 +3058,34 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	done = (elFont != NULL);
       if (!done)
 	{
+	  elem = selectedEl;
 	  /* split that text leaf if it is not entirely selected */
-	  if (firstSelectedChar > 1)
+	  if (firstSelectedChar <= 1 && firstSelectedChar == lastSelectedChar)
 	    {
-	      elem = selectedEl;
+	      /* insert an empty box */
+	      child = TtaNewTree (document, selType, "");
+	      TtaInsertSibling (child, selectedEl, TRUE, document);
+	      TtaRegisterElementCreate (child, document);
+	      selectedEl = child;
+	      firstSelectedElem = child;
+	      lastSelectedElem = child;
+	      if (elem == lastEl)
+		lastEl = child;
+	      lastSelectedChar = 0;
+	    }
+	  else
+	    {
 	      length = TtaGetElementVolume (selectedEl);
 	      if (firstSelectedChar > length)
 		{
-		  /* insert an empty box */
+		  /* append an empty box */
 		  child = TtaNewTree (document, selType, "");
 		  TtaInsertSibling (child, selectedEl, FALSE, document);
+		  TtaRegisterElementCreate (child, document);
 		  lastSelectedChar = 0;
+		  selectedEl = child;
+		  if (lastSelectedElem == firstSelectedElem)
+		    lastSelectedElem = selectedEl;
 		}
 	      else
 		{
@@ -3090,21 +3104,29 @@ void SetCharFontOrPhrase (int document, int elemtype)
 			firstSelectedChar++;
 		      TtaFreeMemory (buffer);
 		    }
-		  if (firstSelectedChar <= length)
+		  if (firstSelectedChar <= length && firstSelectedChar > 1)
 		    /* split the first string */
 		    {
-		      TtaRegisterElementReplace (selectedEl, document);
-		      TtaSplitText (selectedEl, firstSelectedChar, document);
+		      if (firstSelectedChar < length)
+			{
+			  TtaRegisterElementReplace (selectedEl, document);
+			  TtaSplitText (selectedEl, firstSelectedChar,
+					document);
+			}
+		      else
+			{
+			  /* append an empty box */
+			  child = TtaNewTree (document, selType, "");
+			  TtaInsertSibling (child, selectedEl, FALSE,document);
+			}
+		      TtaNextSibling (&selectedEl);
+		      TtaRegisterElementCreate (selectedEl, document);
+		      if (lastSelectedElem == firstSelectedElem)
+			{
+			  lastSelectedElem = selectedEl;
+			  lastSelectedChar = lastSelectedChar - firstSelectedChar + 1;
+			}
 		    }
-		}
-	      TtaNextSibling (&selectedEl);
-	      TtaRegisterElementCreate (selectedEl, document);
-	      if (lastSelectedElem == firstSelectedElem)
-		{
-		  lastSelectedElem = selectedEl;
-		  if (firstSelectedChar <= length)
-		    /* a substring is selected */
-		    lastSelectedChar = lastSelectedChar - firstSelectedChar + 1;
 		}
 	      firstSelectedElem = selectedEl;
 	      firstSelectedChar = 1;

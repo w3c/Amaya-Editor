@@ -65,6 +65,7 @@
 #define ExcReturnCreateWithin 39
 #define ExcNoBreakByReturn 40
 #define ExcNoReplicate 41
+#define ExcIsPlaceholder 42
 
 /* Draw exceptions */
 #define ExcSelectParent 310

@@ -109,7 +109,8 @@
 #define KWD_Shadow 	1188
 #define KWD_EventAttr 	1189
 #define KWD_SpacePreserve 	1190
-#define KWD_Root 	1191
+#define KWD_IsPlaceholder 	1191
+#define KWD_Root 	1192
 
 /*  RULES  */
 

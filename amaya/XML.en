@@ -25,4 +25,4 @@ xmlpi: PI
 xmlpi_line: \240
 doctype_line: \240
 cdata_line: \240
-XML_Elements: \240
+XML_Element: \240

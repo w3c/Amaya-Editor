@@ -683,7 +683,9 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 			CancelSelection ();
 			nNew = 1;
 			/* chaine l'element cree', suivant son constructeur */
-			if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
+			if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice ||
+			    (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsAny &&
+			     TypeHasException (ExcIsPlaceholder, pEl->ElTypeNumber, pEl->ElStructSchema)))
 			  {
 			    if (pLeaf == pE)
 			      ident = TRUE;
