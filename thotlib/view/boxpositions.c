@@ -213,7 +213,7 @@ boolean            *isPageBreakChanged;
 	    if (!pParentAb->AbOnPageBreak)
 	      OutOfPage (pParentAb, height, isPageBreakChanged);
 	  }
-	else if (pParentAb->AbBox->BxType == BoRow)
+	else if (!pAb->AbPresentationBox && pParentAb->AbBox->BxType == BoRow)
 	  OutOfPage (pParentAb, height, isPageBreakChanged);
 	else if (!pParentAb->AbAfterPageBreak)
 	  {
