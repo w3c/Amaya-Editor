@@ -545,7 +545,7 @@ void GraphMLElementComplete (Element el, Document doc, int *error)
 
        case GraphML_EL_style__:
 	 /* it's a style element, parse its contents as a style sheet */
-	 /* Search the type attribute */
+	 /* Search the  type attribute */
 	 attrType.AttrSSchema = elType.ElSSchema;
 	 attrType.AttrTypeNum = GraphML_ATTR_type;
 	 attr = TtaGetAttribute (el, attrType);
