@@ -91,6 +91,16 @@ Numbered list:(dl{(dt|dd{(*)+})+})+;
 	* > ol.li.ol:li.*;
 	}
 
+Bulleted list:(ol{(li{(*)+})+})+;
+        {
+        * > ul:li.*;
+        }
+
+Numbered list:(ul{(li{(*)+})+})+;
+        {
+	* > ol:li.*;
+        }
+
 Remove dl: (dl{(dt{(dtc:*)+}|dd{(ddc:*)+})+})+;
 	{
 	 dtc > :<* style="font-weight:bold">;
