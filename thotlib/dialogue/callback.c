@@ -280,11 +280,14 @@ boolean             pre;
 	    case TteElemCopy:
 	    case TteElemChange:
 	    case TteElemMove:
+	    case TteElemMouseOver:
+	    case TteElemMouseOut:
 	       element = ((NotifyElement *) notifyEvent)->element;
 	       elType = ((PtrElement) element)->ElTypeNumber;
 	       schStruct = ((PtrElement) element)->ElStructSchema;
 	       break;
 	    case TteElemSetReference:
+	    case TteElemFetchInclude:
 	    case TteElemTextModify:
 	       element = ((NotifyOnTarget *) notifyEvent)->element;
 	       elType = ((PtrElement) element)->ElTypeNumber;
@@ -317,6 +320,7 @@ boolean             pre;
 	       schStruct = ((PtrElement) element)->ElStructSchema;
 	       break;
 	    case TteDocOpen:
+	    case TteDocTmpOpen:
 	    case TteDocCreate:
 	    case TteDocClose:
 	    case TteDocSave:

@@ -29,7 +29,7 @@
 /* La constante NUMBER_OF_APP_EVENTS indique le nombre de valeurs de */
 /* l'enum APPevent */
 
-#define NUMBER_OF_APP_EVENTS 40
+#define NUMBER_OF_APP_EVENTS 44
 typedef enum
   {
      TteAttrMenu,
@@ -50,6 +50,7 @@ typedef enum
      TteElemActivate,
      TteElemSetReference,
      TteElemInclude,
+     TteElemFetchInclude,
      TteElemCopy,
      TteElemPaste,
      TteElemChange,
@@ -57,10 +58,13 @@ typedef enum
      TteElemTextModify,
      TteElemGraphModify,
      TteElemTransform,
+     TteElemMouseOver,
+     TteElemMouseOut,
      TtePRuleCreate,
      TtePRuleModify,
      TtePRuleDelete,
      TteDocOpen,
+     TteDocTmpOpen,
      TteDocCreate,
      TteDocClose,
      TteDocSave,

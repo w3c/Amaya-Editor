@@ -467,6 +467,8 @@ char               *fname;
 		      case TteElemCopy:
 		      case TteElemChange:
 		      case TteElemMove:
+		      case TteElemMouseOver:
+		      case TteElemMouseOut:
 			 fprintf (AppFile, "NotifyElement *event);\n");
 			 fprintf (actionFile, "NotifyElement *event)\n");
 			 strcat (s, "event)\n     NotifyElement *event;\n");
@@ -477,6 +479,7 @@ char               *fname;
 			 strcat (s, "event)\n     NotifyOnElementType *event;\n");
 			 break;
 		      case TteElemSetReference:
+		      case TteElemFetchInclude:
 		      case TteElemTextModify:
 			 fprintf (AppFile, "NotifyOnTarget *event);\n");
 			 fprintf (actionFile, "NotifyOnTarget *event)\n");
@@ -509,6 +512,7 @@ char               *fname;
 			 strcat (s, "event)\n     NotifyPresentation *event;\n");
 			 break;
 		      case TteDocOpen:
+		      case TteDocTmpOpen:
 		      case TteDocCreate:
 		      case TteDocClose:
 		      case TteDocSave:
@@ -582,12 +586,15 @@ char               *fname;
 		      case TteElemCopy:
 		      case TteElemChange:
 		      case TteElemMove:
+		      case TteElemMouseOver:
+		      case TteElemMouseOut:
 			 fprintf (AppFile, "/* NotifyElement *event */);\n");
 			 break;
 		      case TteElemTransform:
 			 fprintf (AppFile, "/* NotifyOnElementType *event */);\n");
 			 break;
 		      case TteElemSetReference:
+		      case TteElemFetchInclude:
 		      case TteElemTextModify:
 			 fprintf (AppFile, "/* NotifyOnTarget *event */);\n");
 			 break;
@@ -608,6 +615,7 @@ char               *fname;
 			 fprintf (AppFile, "/* NotifyPresentation *event */);\n");
 			 break;
 		      case TteDocOpen:
+		      case TteDocTmpOpen:
 		      case TteDocCreate:
 		      case TteDocClose:
 		      case TteDocSave:
