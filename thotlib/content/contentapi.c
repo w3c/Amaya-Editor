@@ -72,7 +72,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer       pBuf, pPreviousBuff,pNextBuff;
+   PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
    char               *ptr;
    int                 length, l, delta;
    PtrElement          pEl;
@@ -140,7 +140,7 @@ Document            document;
 			  }
 			else if (pEl == lastSelection)
 			   /* The element is at the end of the selection 
-                            * one select until the end of the element */
+			    * one select until the end of the element */
 			   lastChar = 0;
 		     }
 #endif
@@ -184,13 +184,13 @@ Document            document;
 	     while (pBuf != NULL)
 		/* Release the remaining buffers */
 	       {
-		 pNextBuff = pBuf->BuNext;
+		  pNextBuff = pBuf->BuNext;
 #ifdef NODISPLAY
 		  FreeTextBuffer (pBuf);
 #else
 		  DeleteBuffer (pBuf, ActiveFrame);
 #endif
-		  pBuf =pNextBuff;
+		  pBuf = pNextBuff;
 	       }
 	     /* Updates the volumes of the ancestors */
 	     pEl = ((PtrElement) element)->ElParent;
@@ -505,7 +505,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBufFirst, pBufLast, pBufNext;
+   PtrTextBuffer       pBufFirst, pBufLast, pBufNext;
    char               *dest, *source;
    int                 delta, lengthBefore, firstDeleted, lastDeleted,
                        l;
@@ -594,8 +594,8 @@ Document            document;
 	/* Length of the buffer containing the begenning of the string to suppress */
 	firstDeleted = position - lengthBefore;
 	/* Looks for the buffer pBufLast containing the end of the string to suppress 
-           and releases the intermediate buffers. The buffers containing the begenning 
-           of the string to suppress and its end are not released */
+	   and releases the intermediate buffers. The buffers containing the begenning 
+	   of the string to suppress and its end are not released */
 	pBufLast = pBufFirst;
 	lastDeleted = firstDeleted + length - 1;
 	while (pBufLast->BuNext != NULL &&
@@ -621,18 +621,18 @@ Document            document;
 	  }
 	/* The text following the string to suppress is moved on the right */
 	if (pBufFirst == pBufLast)
-	   /* The whole string to suppress is in the same buffer*/
+	   /* The whole string to suppress is in the same buffer */
 	   /* The text following the string to be suppressed is moved at 
-              the position of the begenning of the string to suppress */
+	      the position of the begenning of the string to suppress */
 	  {
 	     dest = pBufFirst->BuContent + firstDeleted - 1;
 	     l = length;
 	  }
 	else
 	   /* The begenning and the and of the string to be suppressed are
-              in different buffers. The text of the first buffer is troncated
-              and the text remaining in the other buffer is moved at the
-              begenning of the buffer */
+	      in different buffers. The text of the first buffer is troncated
+	      and the text remaining in the other buffer is moved at the
+	      begenning of the buffer */
 	  {
 	     pBufFirst->BuContent[firstDeleted - 1] = '\0';
 	     pBufFirst->BuLength = firstDeleted - 1;
@@ -650,7 +650,7 @@ Document            document;
 	while (*source != '\0');
 	pBufLast->BuLength -= l;
 	/* If the buffers of the begening and the end of the suppresses string
-           are empty, they are released. A buffer is kept for the element */
+	   are empty, they are released. A buffer is kept for the element */
 	if (pBufFirst->BuLength == 0 &&
 	    (pBufFirst->BuPrevious != NULL || pBufFirst->BuNext != NULL))
 	   /* If the buffer of the begenning is empty, it is released */
@@ -770,7 +770,7 @@ Document            document;
    else
      {
 	SplitTextElement ((PtrElement) element, position + 1,
-		    LoadedDocument[document - 1], FALSE);
+			  LoadedDocument[document - 1], FALSE);
 #ifndef NODISPLAY
 	RedispSplittedText ((PtrElement) element, position, document);
 #endif
@@ -850,7 +850,7 @@ Document            document;
 				  DestroyAbsBoxes (pEl2, LoadedDocument[document - 1], FALSE);
 #endif
 				  MergeTextElements ((PtrElement) element, &FreeElement,
-					 LoadedDocument[document - 1], FALSE);
+				       LoadedDocument[document - 1], FALSE);
 #ifndef NODISPLAY
 				  RedispMergedText ((PtrElement) element, document);
 #endif
@@ -949,7 +949,7 @@ Document            document;
 		       ((PtrElement) element)->ElText->BuPoints[0].YCoord = 0;
 		    }
 		  else if (!polyline && ((PtrElement) element)->ElLeafType == LtPlyLine)
-		     /* changing polyline --> simple graphic*/
+		     /* changing polyline --> simple graphic */
 		    {
 		       delta = -((PtrElement) element)->ElNPoints;
 		       if (shape != '\0')
@@ -1053,7 +1053,7 @@ Document            document;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      firstBuffer;
+   PtrTextBuffer       firstBuffer;
    PtrElement          pEl;
 
    if (PolylineOK (element, document))
@@ -1224,9 +1224,9 @@ Document            document;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      firstBuffer;
-   PtrTextBuffer      pBuff;
-   int                rank;
+   PtrTextBuffer       firstBuffer;
+   PtrTextBuffer       pBuff;
+   int                 rank;
 
    if (PolylineOK (element, document))
       if (x < 0 || y < 0)
@@ -1245,7 +1245,7 @@ Document            document;
 	     }
 	   firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
 	   /* verifies that the new point coordinates are greatest than all the coordinates of
-              the other points of the polyline */
+	      the other points of the polyline */
 	   rank = 1;
 	   pBuff = firstBuffer;
 	   while (pBuff != NULL)
@@ -1395,7 +1395,7 @@ Language           *language;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      pBuf;
+   PtrTextBuffer       pBuf;
    char               *ptr;
    int                 len, l;
 
@@ -1471,7 +1471,7 @@ int                 length;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf;
+   PtrTextBuffer       pBuf;
    char               *ptr;
    int                 len, l;
 
@@ -1637,7 +1637,7 @@ int                *y;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      pBuff;
+   PtrTextBuffer       pBuff;
 
    UserErrorCode = 0;
    *x = 0;

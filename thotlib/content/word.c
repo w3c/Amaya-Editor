@@ -5,7 +5,7 @@
 
 /*
 
- This module locates words in Thot documents.
+   This module locates words in Thot documents.
 
  */
 
@@ -36,7 +36,7 @@ unsigned char       NextCharacter (PtrTextBuffer * buffer, int *rank)
 
 #else  /* __STDC__ */
 unsigned char       NextCharacter (buffer, rank)
-PtrTextBuffer     *buffer;
+PtrTextBuffer      *buffer;
 int                *rank;
 
 #endif /* __STDC__ */
@@ -76,8 +76,8 @@ unsigned char       PreviousCharacter (PtrTextBuffer * buffer, int *rank)
 
 #else  /* __STDC__ */
 unsigned char       PreviousCharacter (buffer, rank)
-PtrTextBuffer     *buffer;
-int               *rank;
+PtrTextBuffer      *buffer;
+int                *rank;
 
 #endif /* __STDC__ */
 
@@ -157,7 +157,7 @@ boolean             InitSearchDomain (int domain, PtrSearchContext context)
 #else  /* __STDC__ */
 boolean             InitSearchDomain (domain, context)
 int                 domain;
-PtrSearchContext           context;
+PtrSearchContext    context;
 
 #endif /* __STDC__ */
 
@@ -174,11 +174,11 @@ PtrSearchContext           context;
 
    /* get curreent selection */
    ok = GetCurrentSelection (&DocInitialSelection,
-		    &firstElInitialSelection, &lastElInitialSelection,
-		    &firstCharInitialSelection, &lastCharInitialSelection);
+			  &firstElInitialSelection, &lastElInitialSelection,
+		     &firstCharInitialSelection, &lastCharInitialSelection);
    /* store the word search domain */
    if (domain == 3)
-     /* the whole document */
+      /* the whole document */
      {
 	context->SStartElement = NULL;
 	context->STree = 0;
@@ -198,7 +198,7 @@ PtrSearchContext           context;
      {
 	context->SWholeDocument = FALSE;
 	if (domain == 0)
-	  /* Search before selection */
+	   /* Search before selection */
 	  {
 	     context->SStartElement = NULL;
 	     context->SStartChar = 0;
@@ -207,7 +207,7 @@ PtrSearchContext           context;
 	     context->SStartToEnd = FALSE;
 	  }
 	else if (domain == 1)
-	  /* search within selection */
+	   /* search within selection */
 	  {
 	     context->SStartElement = firstElInitialSelection;
 	     context->SStartChar = firstCharInitialSelection - 1;
@@ -216,7 +216,7 @@ PtrSearchContext           context;
 	     context->SStartToEnd = TRUE;
 	  }
 	else if (domain == 2)
-	  /* search after selection */
+	   /* search after selection */
 	  {
 	     context->SStartElement = lastElInitialSelection;
 	     context->SStartChar = lastCharInitialSelection - 1;
@@ -292,17 +292,17 @@ void                RestoreAfterSearch ()
    endChar = lastCharInitialSelection;
    if (endChar > 0)
 
-   if (firstCharInitialSelection > 0)
-     {
-	if (firstElInitialSelection == lastElInitialSelection)
-	   prevLen = endChar;
-	else
-	   prevLen = 0;
-	SelectString (DocInitialSelection, firstElInitialSelection,
-		      firstCharInitialSelection, prevLen);
-     }
-   else
-      SelectElement (DocInitialSelection, firstElInitialSelection, TRUE, TRUE);
+      if (firstCharInitialSelection > 0)
+	{
+	   if (firstElInitialSelection == lastElInitialSelection)
+	      prevLen = endChar;
+	   else
+	      prevLen = 0;
+	   SelectString (DocInitialSelection, firstElInitialSelection,
+			 firstCharInitialSelection, prevLen);
+	}
+      else
+	 SelectElement (DocInitialSelection, firstElInitialSelection, TRUE, TRUE);
 
    if (lastElInitialSelection != firstElInitialSelection &&
        lastElInitialSelection != NULL)
@@ -327,7 +327,7 @@ boolean             NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext 
 boolean             NextTree (pEl, charIndx, context)
 PtrElement         *pEl;
 int                *charIndx;
-PtrSearchContext           context;
+PtrSearchContext    context;
 
 #endif /* __STDC__ */
 

@@ -210,7 +210,7 @@ boolean             select;
 		pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
 	     else
 		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+		   Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	     dvol = pAb->AbVolume - pEl->ElTextLength;
 	     do
 	       {
@@ -324,14 +324,13 @@ int                 strngLen;
 	     equal = ind2 > strngLen;
 	     stop = True;
 	  }
+	else if (!EquivalentChar (pBuf->BuContent[ind], strng[ind2 - 1], caseEquiv))
+	   stop = True;
 	else
-	  if (!EquivalentChar (pBuf->BuContent[ind], strng[ind2 - 1], caseEquiv))
-	     stop = True;
-	  else
-	     {
+	  {
 	     ind++;
 	     ind2++;
-	     }
+	  }
      }
    return equal;
 }
@@ -355,7 +354,7 @@ int                 strngLen;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      pBuf;
+   PtrTextBuffer       pBuf;
    boolean             ok;
 
    ok = FALSE;
@@ -421,7 +420,7 @@ char                strng[MAX_CHAR];
 		  ind = 0;
 		  do
 		     if (pBuf->BuLength > 0)
-		        /* buffer non vide */
+			/* buffer non vide */
 			ind = 1;
 		     else
 			/* buffer vide */
@@ -483,7 +482,7 @@ static void         BackSearchString (PtrTextBuffer pBuf, int ind, boolean * fou
 
 #else  /* __STDC__ */
 static void         BackSearchString (pBuf, ind, found, firstChar, caseEquiv, strng, strngLen)
-PtrTextBuffer      pBuf;
+PtrTextBuffer       pBuf;
 int                 ind;
 boolean            *found;
 int                *firstChar;
@@ -639,7 +638,7 @@ int                 strngLen;
 			    {
 			       ichar = 1;
 			       FwdSearchString (pEl->ElText, 1, &found, &ichar, caseEquiv,
-					   strng);
+						strng);
 			    }
 		    }
 	       }
@@ -664,7 +663,7 @@ int                 strngLen;
 		     /* pointe par pBuf du 1er caractere a tester */
 		     ichar = *firstChar - 1;
 		     BackSearchString (pBuf, ibuf, &found, &ichar, caseEquiv,
-				 strng, strngLen);
+				       strng, strngLen);
 		  }
 	     while (!found && pEl != NULL)
 	       {
@@ -688,7 +687,7 @@ int                 strngLen;
 				  pBuf = pBuf->BuNext;
 			       ichar = pEl->ElTextLength;
 			       BackSearchString (pBuf, pBuf->BuLength, &found, &ichar, caseEquiv,
-					   strng, strngLen);
+						 strng, strngLen);
 			    }
 		    }
 	       }
@@ -755,8 +754,8 @@ static void         AddNatureToTable (PtrSSchema pSS, PtrSSchema natureTable[MAX
 
 #else  /* __STDC__ */
 static void         AddNatureToTable (pSS, natureTable, natureTableLen, onlyOne)
-PtrSSchema        pSS;
-PtrSSchema        natureTable[MAX_NAT_TABLE];
+PtrSSchema          pSS;
+PtrSSchema          natureTable[MAX_NAT_TABLE];
 int                *natureTableLen;
 boolean             onlyOne;
 
@@ -772,15 +771,15 @@ boolean             onlyOne;
 	/* verifie que ce schema n'est pas deja dans la table */
 	n = 0;
 	while (n < *natureTableLen && !present)
-	     if (natureTable[n++]->SsCode == pSS->SsCode)
-		present = TRUE;
+	   if (natureTable[n++]->SsCode == pSS->SsCode)
+	      present = TRUE;
      }
    if (!present)
       /* le schema n'est pas dans la table */
      {
 	/* met le schema dans la table si elle n'est pas pleine */
 	if (*natureTableLen < MAX_NAT_TABLE)
-	     natureTable[(*natureTableLen)++] = pSS;
+	   natureTable[(*natureTableLen)++] = pSS;
 	/* cherche les natures utilisees par ce schema */
 	SearchNatures (pSS, natureTable, natureTableLen, onlyOne);
      }
@@ -803,8 +802,8 @@ void                SearchNatures (PtrSSchema pSS, PtrSSchema natureTable[MAX_NA
 
 #else  /* __STDC__ */
 void                SearchNatures (pSS, natureTable, natureTableLen, onlyOne)
-PtrSSchema        pSS;
-PtrSSchema        natureTable[MAX_NAT_TABLE];
+PtrSSchema          pSS;
+PtrSSchema          natureTable[MAX_NAT_TABLE];
 int                *natureTableLen;
 boolean             onlyOne;
 
@@ -878,12 +877,12 @@ boolean             relative;
 		       }
 		     else
 			/* on cherche la page de numero pageNum */
-		        if (pElP->ElPageNumber == pageNum)
-			   /* c'est la page cherchee */
-		          {
-			     result = pElP;
-			     pageNum = 0;
-		          }
+		     if (pElP->ElPageNumber == pageNum)
+			/* c'est la page cherchee */
+		       {
+			  result = pElP;
+			  pageNum = 0;
+		       }
 		  pEl = pElP;
 	       }
 	  }
@@ -922,8 +921,8 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAbGraph;
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAbGraph;
+   PtrAbstractBox      pAb;
    int                 frame;
 
    /* le code qui suit etait precedemment dans MoveToPage */

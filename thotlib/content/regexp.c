@@ -3,7 +3,7 @@
  */
 
 /*
-  This module processes regular expressions.
+   This module processes regular expressions.
 
  */
 
@@ -1157,7 +1157,7 @@ int                 charNb;
 
 {
    int                 skipChar;
-   PtrTextBuffer      textBuffer, PtrTmp;
+   PtrTextBuffer       textBuffer, PtrTmp;
 
    *textChar = -1;
    if (pEl != NULL)
@@ -1378,7 +1378,7 @@ boolean             forw;
 		  else
 		     /* start searching */
 		    {
-			pEl1 = *pEl2;
+		       pEl1 = *pEl2;
 		       *pos2 = forw ? 0 : (*pEl2)->ElTextLength + 1;
 		       textchar = 32;	/* space */
 		    }
@@ -1412,8 +1412,7 @@ boolean             forw;
 				    /* no text found */
 				    *pos2 = -1;
 			      }
-			    else
-			      if (pos1 > pEl1->ElTextLength && forw)
+			    else if (pos1 > pEl1->ElTextLength && forw)
 			      {
 				 /* go to next text */
 				 *pEl2 = FwdSearchTypedElem (*pEl2, CharString + 1, NULL);
@@ -1908,7 +1907,7 @@ char               *expression;
 
 {
 
-   PtrElement	       pEl1, pEl1old;
+   PtrElement          pEl1, pEl1old;
    PtrElement         *pEl2;
    PtrElement          pElTmp1;
    PtrElement          pElTmp2;
@@ -2018,7 +2017,7 @@ char               *expression;
 				      pEl1 = forward ?
 					 FwdSearchTypedElem (pEl1, CharString + 1, NULL) :
 					 BackSearchTypedElem (NextElement (pEl1), CharString + 1,
-						    NULL);
+							      NULL);
 				      if (pEl1 == NULL)
 					{
 					   stop = TRUE;
@@ -2047,8 +2046,8 @@ char               *expression;
 		  val = ReMatch (&buf, pEl1, inx1, pEl2, &inx2,
 				 *lastEl, *lastChar, forward);
 		  if (inx1 < 0)
-		       /* go to the beginning of the text element */
-		       inx1 = 0;
+		     /* go to the beginning of the text element */
+		     inx1 = 0;
 	       }
 	     /* Propagate error indication if worse than mere failure.  */
 	     if (val == -2)
@@ -2066,7 +2065,7 @@ char               *expression;
 		       break;
 		    }
 		  else
-		    /* search a larger expression backwards */
+		     /* search a larger expression backwards */
 		    {
 		       if (inx2 == 0)
 			 {
@@ -2101,10 +2100,10 @@ char               *expression;
 			    NextChar (forward, textchar, &pEl1, &inx1);
 			    if (*textchar == -1)
 			      {
-				    pEl1 = forward ?
+				 pEl1 = forward ?
 				    FwdSearchTypedElem (pEl1old, CharString + 1, NULL) :
 				    BackSearchTypedElem (pEl1old, CharString + 1,
-					       NULL);
+							 NULL);
 				 if (pEl1 == NULL)
 				    goto Lstop;
 				 else

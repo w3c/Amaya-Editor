@@ -5,7 +5,7 @@
 /*
    This module handles document contents: text and graphics
 
-*/
+ */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -30,16 +30,16 @@
    	Retourne un pointeur sur le nouveau buffer.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrTextBuffer      NewTextBuffer (PtrTextBuffer pBuf)
+PtrTextBuffer       NewTextBuffer (PtrTextBuffer pBuf)
 
 #else  /* __STDC__ */
-PtrTextBuffer      NewTextBuffer (pBuf)
-PtrTextBuffer      pBuf;
+PtrTextBuffer       NewTextBuffer (pBuf)
+PtrTextBuffer       pBuf;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pNewBuf;
+   PtrTextBuffer       pNewBuf;
 
    GetTextBuffer (&pNewBuf);
    pNewBuf->BuNext = pBuf->BuNext;
@@ -66,7 +66,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf;
+   PtrTextBuffer       pBuf;
 
    pEl->ElLeafType = LtText;
    pEl->ElTextLength = 0;
@@ -84,7 +84,7 @@ void                DeleteTextBuffer (PtrTextBuffer * pBuf)
 
 #else  /* __STDC__ */
 void                DeleteTextBuffer (pBuf)
-PtrTextBuffer     *pBuf;
+PtrTextBuffer      *pBuf;
 
 #endif /* __STDC__ */
 
@@ -121,10 +121,10 @@ boolean             withAppEvent;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf;
+   PtrTextBuffer       pBuf;
    int                 i, len;
    PtrElement          pEl2;
-   PtrTextBuffer      pBuf1;
+   PtrTextBuffer       pBuf1;
    NotifyElement       notifyEl;
    NotifyOnTarget      notifyTxt;
    PtrElement          pSibling;
@@ -196,7 +196,7 @@ boolean             withAppEvent;
 		  pBuf = pBuf->BuNext;
 	       }
 	     /* longueur +1 du texte qui restera dans le dernier buffer (pBuf)
-		de la premiere partie */
+	        de la premiere partie */
 	     len = rank - i;
 	     pBuf1 = pEl2->ElText;
 	     pBuf1->BuNext = pBuf->BuNext;
@@ -226,7 +226,7 @@ boolean             withAppEvent;
 		     while (i <= pBuf1->BuLength)
 		       {
 			  pBuf1->BuPrevious->BuContent[pBuf1->BuPrevious->BuLength + i] =
-				pBuf1->BuContent[i];
+			     pBuf1->BuContent[i];
 			  i++;
 		       }
 		     pBuf1->BuPrevious->BuLength += pBuf1->BuLength;
@@ -280,7 +280,7 @@ boolean             withAppEvent;
 
 #ifdef __STDC__
 void                MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
-			       boolean withAppEvent)
+				       boolean withAppEvent)
 
 #else  /* __STDC__ */
 void                MergeTextElements (pEl, pFreeEl, pDoc, withAppEvent)
@@ -295,7 +295,7 @@ boolean             withAppEvent;
    PtrElement          pEl1, pEl2;
    PtrElement          pSibling;
    PtrElement          pAsc;
-   PtrTextBuffer      pBuf1, pBuf2;
+   PtrTextBuffer       pBuf1, pBuf2;
    PtrReference        pRef1, pRef2;
    NotifyElement       notifyEl;
    NotifyOnTarget      notifyTxt;
@@ -485,17 +485,18 @@ boolean             withAppEvent;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrTextBuffer      CopyText (PtrTextBuffer pBuf, PtrElement pEl)
+PtrTextBuffer       CopyText (PtrTextBuffer pBuf, PtrElement pEl)
 
 #else  /* __STDC__ */
-PtrTextBuffer      CopyText (pBuf, pEl)
-PtrTextBuffer      pBuf;
+PtrTextBuffer       CopyText (pBuf, pEl)
+PtrTextBuffer       pBuf;
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBufSource1, pBufSource2, pBufCopy1, pBufCopy2, ret;
+   PtrTextBuffer       pBufSource1, pBufSource2, pBufCopy1, pBufCopy2,
+                       ret;
 
    /* acquiert un premier buffer de texte */
    GetTextBuffer (&pBufCopy1);
@@ -532,7 +533,7 @@ boolean             StringAndTextEqual (char *String, PtrTextBuffer pBuf)
 #else  /* __STDC__ */
 boolean             StringAndTextEqual (String, pBuf)
 char               *String;
-PtrTextBuffer      pBuf;
+PtrTextBuffer       pBuf;
 
 #endif /* __STDC__ */
 
@@ -590,14 +591,14 @@ boolean             TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
 
 #else  /* __STDC__ */
 boolean             TextsEqual (pBuf1, pBuf2)
-PtrTextBuffer      pBuf1;
-PtrTextBuffer      pBuf2;
+PtrTextBuffer       pBuf1;
+PtrTextBuffer       pBuf2;
 
 #endif /* __STDC__ */
 
 {
    boolean             equal;
-   PtrTextBuffer      pTB1, pTB2;
+   PtrTextBuffer       pTB1, pTB2;
    char               *pChar1;
    char               *pChar2;
    int                 len, lenRest1, lenRest2;
@@ -669,14 +670,14 @@ void                CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyB
 
 #else  /* __STDC__ */
 void                CopyTextToText (pSrceBuf, pCopyBuf, len)
-PtrTextBuffer      pSrceBuf;
-PtrTextBuffer      pCopyBuf;
+PtrTextBuffer       pSrceBuf;
+PtrTextBuffer       pCopyBuf;
 int                *len;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pTBSrce, pTBDest;
+   PtrTextBuffer       pTBSrce, pTBDest;
 
    *len = 0;
    if (pSrceBuf != NULL && pCopyBuf != NULL)
@@ -722,13 +723,13 @@ void                CopyStringToText (char *srceStrn, PtrTextBuffer pCopyBuf, in
 #else  /* __STDC__ */
 void                CopyStringToText (srceStrn, pCopyBuf, LgCopiee)
 char               *srceStrn;
-PtrTextBuffer      pCopyBuf;
+PtrTextBuffer       pCopyBuf;
 int                *LgCopiee;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pTBDest;
+   PtrTextBuffer       pTBDest;
    char               *pSrce;
    int                 lenRest, len;
 
@@ -785,7 +786,7 @@ void                CopyTextToString (PtrTextBuffer pSrceBuf, char *pStrCpy, int
 
 #else  /* __STDC__ */
 void                CopyTextToString (pSrceBuf, pStrCpy, len)
-PtrTextBuffer      pSrceBuf;
+PtrTextBuffer       pSrceBuf;
 char               *pStrCpy;
 int                *len;
 
@@ -794,7 +795,7 @@ int                *len;
 {
    int                 LgMax;
    int                 l;
-   PtrTextBuffer      pTBSrce;
+   PtrTextBuffer       pTBSrce;
    char               *pDest;
 
    if (pSrceBuf == NULL || pStrCpy == NULL || *len <= 0)
@@ -835,12 +836,12 @@ void                ClearText (PtrTextBuffer pBuf)
 
 #else  /* __STDC__ */
 void                ClearText (pBuf)
-PtrTextBuffer      pBuf;
+PtrTextBuffer       pBuf;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer    pNextBuf;
+   PtrTextBuffer       pNextBuf;
 
    if (pBuf != NULL)
      {
@@ -870,7 +871,7 @@ void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int
 
 #else  /* __STDC__ */
 void                AddPointInPolyline (firstBuffer, rank, x, y)
-PtrTextBuffer      firstBuffer;
+PtrTextBuffer       firstBuffer;
 int                 rank;
 int                 x;
 int                 y;
@@ -878,9 +879,9 @@ int                 y;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf, pNextBuf;
+   PtrTextBuffer       pBuf, pNextBuf;
    int                 i, j;
-   PolyLinePoint           savePoint, oldSavePoint;
+   PolyLinePoint       savePoint, oldSavePoint;
    boolean             stop;
 
    /* cherche le buffer contenant le point de rang rank */
@@ -978,13 +979,13 @@ void                DeletePointInPolyline (PtrTextBuffer * firstBuffer, int rank
 
 #else  /* __STDC__ */
 void                DeletePointInPolyline (firstBuffer, rank)
-PtrTextBuffer     *firstBuffer;
+PtrTextBuffer      *firstBuffer;
 int                 rank;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf;
+   PtrTextBuffer       pBuf;
    int                 j;
 
    pBuf = *firstBuffer;
@@ -1028,7 +1029,7 @@ void                ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, 
 
 #else  /* __STDC__ */
 void                ModifyPointInPolyline (firstBuffer, rank, x, y)
-PtrTextBuffer      firstBuffer;
+PtrTextBuffer       firstBuffer;
 int                 rank;
 int                 x;
 int                 y;
@@ -1036,7 +1037,7 @@ int                 y;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuf;
+   PtrTextBuffer       pBuf;
 
    /* on saute le point 0 (coordonnees du point limite) */
    rank++;

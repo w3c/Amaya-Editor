@@ -192,7 +192,7 @@ boolean             nextExtDoc;
    if (*pPrevRef != NULL || *pExtDoc != NULL)
       /* on a deja une reference courante */
       *pPrevRef = NextReferenceToEl (*pReferredEl, *pDocReferredEl, TRUE,
-		    *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
+			       *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
    else
       /* pas de reference courante */
      {
@@ -229,7 +229,7 @@ boolean             nextExtDoc;
 		  *pDocReferredEl = pSelDoc;
 		  /* cherche la premiere reference a cet element */
 		  *pPrevRef = NextReferenceToEl (*pReferredEl, *pDocReferredEl,
-			TRUE, *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
+			 TRUE, *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
 	       }
 	  }
      }
@@ -259,7 +259,7 @@ boolean             nextExtDoc;
 	if (!ok)
 	   /* cherche la reference suivante au meme element */
 	   FindReference (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl,
-		     pExtDoc, TRUE);
+			  pExtDoc, TRUE);
 	else
 	   /* selectionne la reference trouvee */
 	   SelectElementWithEvent (*pDocPrevRef, (*pPrevRef)->RdElement, FALSE, FALSE);
@@ -421,7 +421,7 @@ LabelString         oldLabel;
 
 #endif /* __STDC__ */
 {
-   PtrChangedReferredEl      pChnRef;
+   PtrChangedReferredEl pChnRef;
 
    if (pEl->ElReferredDescr != NULL)
       if (pEl->ElReferredDescr->ReExtDocRef != NULL)
@@ -544,9 +544,9 @@ PtrDocument         pDoc;
 		  /* validite de l'attribut dans le cas des extensions de */
 		  /* cellule des tableaux */
 		  if (pRef->RdAttribute != NULL)
-		    if (ThotLocalActions[T_checkextens]!=NULL)
-		      (*ThotLocalActions[T_checkextens])
-			(pRef->RdAttribute, pRef->RdElement, pRef->RdElement, TRUE);
+		     if (ThotLocalActions[T_checkextens] != NULL)
+			(*ThotLocalActions[T_checkextens])
+			   (pRef->RdAttribute, pRef->RdElement, pRef->RdElement, TRUE);
 	       }
 	     pRef = pNextRef;	/* passe a la reference suivante */
 	     pDocRef = pNextDocRef;
@@ -578,21 +578,21 @@ PtrDocument         pDoc;
 		     {
 			/* verifie la validite de l'attribut dans le cas des */
 			/* extensions de cellule des tableaux */
-		        if (ThotLocalActions[T_checkextens]!=NULL)
-			  (*ThotLocalActions[T_checkextens])
-			   (pAttr, pRoot, pRoot, TRUE);
+			if (ThotLocalActions[T_checkextens] != NULL)
+			   (*ThotLocalActions[T_checkextens])
+			      (pAttr, pRoot, pRoot, TRUE);
 			if (DocOfSavedElements != pDoc)
 			   /* reference et objet reference' sont */
 			   /* dans des documents differents, on */
 			   /* supprime l'attribut, sauf dans le */
 			   /* cas particulier des tableaux. */
 			  {
-			    attrRef = TRUE;
-			    if (ThotLocalActions[T_refattr]!=NULL)
-			      (*ThotLocalActions[T_refattr])
-				(pAttr, &attrRef);
-			    if (!attrRef)
-			      DeleteAttribute (pRoot, pAttr);
+			     attrRef = TRUE;
+			     if (ThotLocalActions[T_refattr] != NULL)
+				(*ThotLocalActions[T_refattr])
+				   (pAttr, &attrRef);
+			     if (!attrRef)
+				DeleteAttribute (pRoot, pAttr);
 			  }
 		     }
 	  }

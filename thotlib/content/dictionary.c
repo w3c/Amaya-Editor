@@ -22,17 +22,17 @@
 #include "thotfile.h"
 #include "thotdir.h"
 
-#define MAX_DICTS        2  /* Maximum number of dictionaries related to a given language */
-#define MAXLIGNE        80  /* Length of a line in the dictionary                         */
-#define MaxDictionaries 15  /* Maximum number of simultaneous dictionaries                */
+#define MAX_DICTS        2	/* Maximum number of dictionaries related to a given language */
+#define MAXLIGNE        80	/* Length of a line in the dictionary                         */
+#define MaxDictionaries 15	/* Maximum number of simultaneous dictionaries                */
 
 extern struct Langue_Ctl LangTable[MAX_LANGUAGES];
 extern struct Langue_Ctl TypoLangTable[MAX_LANGUAGES];
 extern int          FreeEntry;
 
-static char        *dictPath;	        /* environment variable DICOPAR */
+static char        *dictPath;	/* environment variable DICOPAR */
 static boolean      alphabetLoaded;
-static unsigned     reverseCode[NbLtr];    
+static unsigned     reverseCode[NbLtr];
 static PtrDict      dictTable[MaxDictionaries];
 
 unsigned char       Code[256];	/* Alphabet characters */
@@ -158,7 +158,7 @@ PtrDict             dict;
 	       }
 	  }
 	for (i = word; i < dict->MAXmots; i++)
-	   dict->commun[i] = 1;	
+	   dict->commun[i] = 1;
      }
 }				/*Corr_pretraitement */
 
@@ -209,45 +209,45 @@ PtrDocument         document;
 
 #endif /* __STDC__ */
 {
-  int                 d;
+   int                 d;
 
-  /* Looks for a pointer to the descriptor of a free dictionary */
-  d = 0;
-  while (d < MaxDictionaries && dictTable[d] != NULL)
-    d++;
+   /* Looks for a pointer to the descriptor of a free dictionary */
+   d = 0;
+   while (d < MaxDictionaries && dictTable[d] != NULL)
+      d++;
 
-  if (d < MaxDictionaries && dictTable[d] != NULL)
-    {
-      /* If a dictionary FILE is loaded but not used, one release it */
-      d = 0;
-      while (d < MaxDictionaries && dictTable[d]->DictDoc == document)
-	d++;
-      
-      if (d == MaxDictionaries || dictTable[d]->DictReadOnly == TRUE)
-	{
-	  /* Looking for a dictionary FILE */
-	  d = 0;
-	  while (d < MaxDictionaries && dictTable[d]->DictReadOnly == TRUE)
-	    d++;
-	}
+   if (d < MaxDictionaries && dictTable[d] != NULL)
+     {
+	/* If a dictionary FILE is loaded but not used, one release it */
+	d = 0;
+	while (d < MaxDictionaries && dictTable[d]->DictDoc == document)
+	   d++;
+
+	if (d == MaxDictionaries || dictTable[d]->DictReadOnly == TRUE)
+	  {
+	     /* Looking for a dictionary FILE */
+	     d = 0;
+	     while (d < MaxDictionaries && dictTable[d]->DictReadOnly == TRUE)
+		d++;
+	  }
 	/* Flushing the dictionary FILE  */
-      if (d < MaxDictionaries)	
-	{
-	  TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_LOADING_DICO),
-			     dictTable[d]->DictNom);
-	  ReleaseDictionary (&dictTable[d]);
-	  
-	}
+	if (d < MaxDictionaries)
+	  {
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO),
+				dictTable[d]->DictNom);
+	     ReleaseDictionary (&dictTable[d]);
+
+	  }
      }				/* end of if (dictTable[d] != NULL) */
-  
-  if (d < MaxDictionaries)
-    
-    {
-      /* Getting a descriptor of a dictionary */
-      GetDictionary (&dictTable[d]);
-      *pDictionary = dictTable[d];
-      (*pDictionary)->DictDoc = document;
-    }
+
+   if (d < MaxDictionaries)
+
+     {
+	/* Getting a descriptor of a dictionary */
+	GetDictionary (&dictTable[d]);
+	*pDictionary = dictTable[d];
+	(*pDictionary)->DictDoc = document;
+     }
 }				/*CreateDictionary */
 
 
@@ -273,7 +273,7 @@ char               *dictDirectory;
    while (d < MaxDictionaries && (dictTable[d] != NULL) && (!found))
      {
 	found = (strcmp (dictTable[d]->DictNom, dictName) == 0
-		  && strcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
+	       && strcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
 	d++;
      }
    if (found)
@@ -419,14 +419,14 @@ PtrDict             dict;
 	     plineGotten = &lineGotten[0];	/* pointer on the first character read */
 	  }
 	else if (nbGotten != -1)	/* not the end of the dictionary */
-	      {
-		/* impossible to load the dictionary */
-		TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_LOADING_DICO),
-				   dict->DictNom);
-		/* Release the dictionary */
-		ReleaseDictionary (&dict);	/* => dict = nil */
-		return (0);
-	      }
+	  {
+	     /* impossible to load the dictionary */
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO),
+				dict->DictNom);
+	     /* Release the dictionary */
+	     ReleaseDictionary (&dict);		/* => dict = nil */
+	     return (0);
+	  }
      }
 
    /* Adding an empty word at the end of the dictionary */
@@ -466,7 +466,7 @@ boolean             toTreat;
    char                tempbuffer[MAX_CHAR];
    boolean             new = FALSE;
    boolean             ret;
-   FILE               *dictFile; 
+   FILE               *dictFile;
    PtrDict             pdict;
    int                 i, im, ic;
 
@@ -486,13 +486,13 @@ boolean             toTreat;
 	if (ThotFile_exist (tempbuffer) != 0)
 	  {
 	     dictFile = fopen (tempbuffer, "rw");	/* updating the dictionary */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_DICO), dictName);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
 	  }
 	else
 	  {
 	     new = TRUE;
-	     dictFile = fopen (tempbuffer, "w+");	/* new dictionary*/
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_NEW_DICO), dictName);
+	     dictFile = fopen (tempbuffer, "w+");	/* new dictionary */
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NEW_DICO), dictName);
 	  }
      }
    else
@@ -502,7 +502,7 @@ boolean             toTreat;
 	   dictFile = BIOreadOpen (tempbuffer);
 	else
 	   dictFile = fopen (tempbuffer, "r");
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_DICO), dictName);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
      }
 
    if (dictFile == NULL)
@@ -529,7 +529,7 @@ boolean             toTreat;
    if (new == FALSE)
      {
 	if (treated)		/* dictionary already treated */
-	  {			
+	  {
 	     ret = BIOreadInteger (dictFile, &i);
 	     if (ret == FALSE)
 	       {
@@ -560,7 +560,7 @@ boolean             toTreat;
 		       /* -> one go to the begenning of the file */
 		       /* fseek(dictFile, 0L, 0); */
 		       /* impossible to load this dictionary */
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_LOADING_DICO), dictName);
+		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO), dictName);
 		       /* Release the dictionary */
 		       ReleaseDictionary (pDictionary);
 		       *pDictionary = NULL;
@@ -584,7 +584,7 @@ boolean             toTreat;
    if (GetStringInDict (pDictionary, readonly) == -1)
      {
 	/* Not enough memory to open this dictionary */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_NO_LOAD), dictName);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_NO_LOAD), dictName);
 	/* Release the allocated dictionary */
 	ReleaseDictionary (pDictionary);
 	*pDictionary = NULL;
@@ -669,19 +669,19 @@ boolean             toCreate;
 		 case (0):
 		    /* file .DIC */
 		    PrepareDictionary (&pdict, dictName, document,
-				      dictDirectory, lang, readonly, FALSE, TRUE);
+				dictDirectory, lang, readonly, FALSE, TRUE);
 		    ret = (pdict == NULL) ? -1 : 1;
 		    break;
 		 case (1):
 		    /* file .dic */
 		    PrepareDictionary (&pdict, dictName, document,
-				      dictDirectory, lang, readonly, TRUE, FALSE);
+				dictDirectory, lang, readonly, TRUE, FALSE);
 		    ret = (pdict == NULL) ? -1 : 1;
 		    break;
 		 case (2):
 		    /* file .LEX */
 		    PrepareDictionary (&pdict, dictName, document,
-				      dictDirectory, lang, readonly, FALSE, FALSE);
+			       dictDirectory, lang, readonly, FALSE, FALSE);
 		    ret = (pdict == NULL) ? -1 : 1;
 		    break;
 	      }			/* end of switch */
@@ -761,12 +761,12 @@ void                Dict_Init ()
    for (i = 0; i < MaxDictionaries; i++)
       dictTable[i] = NULL;
 
-   /* Inititializing of environments needed by dictionarires*/
+   /* Inititializing of environments needed by dictionarires */
    dictPath = TtaGetEnvString ("DICOPAR");
    if (dictPath == NULL)
      {
 	/* The environment variable DICOPAR does not exist */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
      }
    alphabetLoaded = Corr_alphabet ();
    if (alphabetLoaded == FALSE)
@@ -798,7 +798,7 @@ boolean             ToCreate;
    dicodoc = (char *) TtaGetEnvString ("DICODOC");
    if (dicodoc != NULL)
       (void) LoadDict ((PtrDict *) pDictionary, 0, document, dicodoc,
-                        document->DocDirectory, FALSE, ToCreate);
+		       document->DocDirectory, FALSE, ToCreate);
    else
       (void) LoadDict ((PtrDict *) pDictionary, 0, document, document->DocDName, document->DocDirectory, FALSE, ToCreate);
    return (*pDictionary != '\0');
