@@ -23,6 +23,7 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
+#include "picture_tv.h"
 
 #include "font_f.h"
 #include "units_f.h"
@@ -399,11 +400,32 @@ int                 frame;
 	else
 	  RO = 0;
 
-	/* box sizes have to be positive */
 	width = pBox->BxWidth;
+	height = pBox->BxHeight;
+	if (Printing)
+	  {
+	    /* clipping sur l'origine */
+	    if (xd < 0)
+	      {
+		width += xd;
+		xd = 0;
+	      }
+	    if (yd < 0)
+	      {
+		/* print vertical lines of tables */
+		height += yd;
+		yd = 0;
+	      }
+	    /* limite la largeur a la valeur du clipping */
+	    if (xd + width > ViewFrameTable[frame -1].FrClipXEnd - pFrame->FrXOrg)
+	      width = ViewFrameTable[frame -1].FrClipXEnd - pFrame->FrXOrg - xd;
+	    /* limite la hauteur a la valeur du clipping */
+	    if (yd + height > ViewFrameTable[frame -1].FrClipYEnd - pFrame->FrYOrg)
+	      height = ViewFrameTable[frame -1].FrClipYEnd - pFrame->FrYOrg - yd;
+	  }
+	/* box sizes have to be positive */
 	if (width < 0)
 	  width = 0;
-	height = pBox->BxHeight;
 	if (height < 0)
 	  height = 0;
 
@@ -1098,7 +1120,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
   if (pBox->BxAbstractBox->AbVolume == 0 ||
-      (pBox->BxAbstractBox->AbLeafType == LtPolyLine) && pBox->BxNChars == 1)
+      (pBox->BxAbstractBox->AbLeafType == LtPolyLine && pBox->BxNChars == 1))
     {
       /* Empty */
       if (pBox->BxAbstractBox->AbLeafType == LtSymbol)

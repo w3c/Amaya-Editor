@@ -2108,8 +2108,7 @@ char               *cssRule;
 	while (*cssRule != ';' && *cssRule != EOS)
 	  {
 	    /* now skip remainding info */
-	    cssRule = SkipWord (cssRule);
-	    cssRule = SkipBlanks (cssRule);
+	    cssRule++;
 	  }
       }
    return (cssRule);

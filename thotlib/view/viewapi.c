@@ -222,11 +222,9 @@ int                 h;
 	      TtaError (ERR_no_presentation_schema);
 	   else
 	     {
-#ifndef __COLPAGE__
 		/* Add a pagebreak probably missed at the end of the document */
 		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
 		   AddLastPageBreak (pDoc->DocRootElement, 1, pDoc, FALSE);
-#endif /* __COLPAGE__ */
 		nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1, TRUE, NULL);
 		OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
 		view = nView;
@@ -310,12 +308,10 @@ Element             subtree;
 	     /* Open the view */
 	     if (allViews[v].VdAssoc)
 	       {
-#ifndef __COLPAGE__
 		  /* Add a page break probably missed at the end */
 		  if (allViews[v].VdView > 0)
 		     if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
 			AddLastPageBreak (pDoc->DocAssocRoot[allViews[v].VdView - 1], 1, pDoc, FALSE);
-#endif /* __COLPAGE__ */
 		  nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
 		      allViews[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
                   if (pDoc->DocAssocRoot[nView - 1] == NULL)
@@ -325,11 +321,9 @@ Element             subtree;
 	       }
 	     else
 	       {
-#ifndef __COLPAGE__
 		  /* Add a page break probably missed at the end */
 		  if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[allViews[v].VdView])
 		     AddLastPageBreak (pDoc->DocRootElement, allViews[v].VdView, pDoc, FALSE);
-#endif /* __COLPAGE__ */
 		  nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
 		     allViews[v].VdSSchema, 1, FALSE, (PtrElement) subtree);
 		  assoc = FALSE;
@@ -534,14 +528,7 @@ boolean             complete;
 	     SetDeadAbsBox (pAb);
 	     pAb = pAb->AbNext;
 	  }
-#ifdef __COLPAGE__
-	/* Flush the deferred rules on the root */
-	ApplDelayedRule (pAbbRoot->AbFirstEnclosed->AbElement, pDoc);
-	/* Realease all dead abstract boxes */
-	h = -1;			/* Changing the meaning of h */
-#else  /* __COLPAGE__ */
 	h = 0;
-#endif /* __COLPAGE__ */
 	ChangeConcreteImage (frame, &h, pAbbRoot);
 	/* Releases all dead abstract boxes of the view */
 	FreeDeadAbstractBoxes (pAbbRoot);
@@ -549,9 +536,6 @@ boolean             complete;
 	/* Shows that one must apply presentation rules of the root abstract box, for example
 	   to rebuild presentaion boxes, created by the root and destroyed */
 	pAbbRoot->AbSize = -1;
-#ifdef __COLPAGE__
-	pAbbRoot->AbTruncatedTail = TRUE;
-#endif /* __COLPAGE__ */
 	/* The complete root abstract box is marked. This allows  AbsBoxesCreate */
 	/* to generate presentation abstract boxes created at the begenning */
 	if (pAbbRoot->AbLeafType == LtCompound)
@@ -1356,12 +1340,7 @@ PtrDocument         pDoc;
 
    if (Assoc)
      {
-#ifdef __COLPAGE__
-	pDoc->DocAssocFreeVolume[view - 1] = THOT_MAXINT;
-	pDoc->DocAssocNPages[view - 1] = 0;
-#else  /* __COLPAGE__ */
 	pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
-#endif /* __COLPAGE__ */
 	pElRoot = pDoc->DocAssocRoot[view - 1];
 	pAbbRoot = pElRoot->ElAbstractBox[0];
 	frame = pDoc->DocAssocFrame[view - 1];
@@ -1374,12 +1353,7 @@ PtrDocument         pDoc;
    else
      {
 	pElRoot = pDoc->DocRootElement;
-#ifdef __COLPAGE__
-	pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
-	pDoc->DocViewNPages[view - 1] = 0;
-#else  /* __COLPAGE__ */
 	pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
-#endif /* __COLPAGE__ */
 	pAbbRoot = pDoc->DocViewRootAb[view - 1];
 	frame = pDoc->DocViewFrame[view - 1];
 	AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
@@ -1880,25 +1854,15 @@ Document            document;
 	/* il ne faut pas reafficher les numeros mis a jour si on est */
 	/* en mode d'affichage differe'. Or, lorsque PageHeight != 0, */
 	/* UpdateNumbers ne reaffiche pas les numeros qui changent. */
-#ifdef __COLPAGE__
-	savePageHeight = BreakPageHeight;
-	if (documentDisplayMode[document - 1] == DeferredDisplay)
-	   BreakPageHeight = 1;
-#else  /* __COLPAGE__ */
 	savePageHeight = PageHeight;
 	if (documentDisplayMode[document - 1] == DeferredDisplay)
 	   PageHeight = 1;
-#endif /* __COLPAGE__ */
 	while (pE != NULL)
 	  {
 	     UpdateNumbers (pNext, pE, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
 	     pE = pE->ElNext;
 	  }
-#ifdef __COLPAGE__
-	BreakPageHeight = savePageHeight;
-#else  /* __COLPAGE__ */
 	PageHeight = savePageHeight;
-#endif /* __COLPAGE__ */
      }
    if (pNext != NULL)
      {

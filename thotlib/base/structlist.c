@@ -1467,6 +1467,10 @@ FILE               *fileDescriptor;
 	     else
 		fprintf (fileDescriptor, " Content-Height:");
 	     wrnumber (pBox->BxRuleHeigth, fileDescriptor);
+	     if (pAb->AbOnPageBreak)
+	       fprintf (fileDescriptor, " ON PAGE BOUNDARY");
+	     if (pAb->AbAfterPageBreak)
+	       fprintf (fileDescriptor, " OUT OF PAGE");
 
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent; j++)

@@ -79,7 +79,6 @@ int             PictureMenuType[MAX_PICT_FORMATS];
 int             InlineHandlers;
 int             HandlersCounter;
 int             currentExtraHandler;
-boolean         Printing;
 ThotGC          GCpicture;
 THOT_VInfo      THOT_vInfo;
 Pixmap          EpsfPictureLogo ;

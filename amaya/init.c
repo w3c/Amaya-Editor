@@ -3004,6 +3004,7 @@ static boolean        RestoreAmayaDocs ()
 			  len = strlen (docname) + 1;
 			  DocumentURLs[newdoc] = TtaGetMemory (len);
 			  strcpy (DocumentURLs[newdoc], docname);
+			  TtaSetTextZone (newdoc, 1, 1, docname);
 			  /* change its directory name */
 			  TtaExtractName (docname, DirectoryName, DocumentName);
 			  TtaSetDocumentDirectory (newdoc, DirectoryName);

@@ -136,64 +136,6 @@ PtrPSchema          pSchP;
       return NULL;
 }
 
-#ifdef __COLPAGE__
-/*----------------------------------------------------------------------
-   ReglePageDebut     recherche la regle page qui a cree la Marque de 
-   Page Debut pElPage.                             
-   La recherche parcourt les elements qui sont     
-   apres pElPage dans l'arbre abstrait.            
-   retourne dans pSchP le schema de presentation   
-   procedure utilisee dans print et page           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPRule            ReglePageDebut (PtrElement pElPage, PtrPSchema * pSchP)
-
-#else  /* __STDC__ */
-PtrPRule            ReglePageDebut (pElPage, pSchP)
-PtrElement          pElPage;
-PtrPSchema         *pSchP;
-
-#endif /* __STDC__ */
-
-{
-   PtrPRule            pR;
-   PtrElement          pNext;
-
-   pR = NULL;
-
-   if (pElPage->ElPageType == PgBegin)
-     {
-	/* Nouveau type de page, on determine la hauteur des pages */
-	/* il faut rechercher la regle sur l'element suivant */
-	/* car les elements marque page debut sont places AVANT les elements */
-	/* qui portent la regle page */
-	if (pElPage->ElNext != NULL)
-	  {
-	     pNext = pElPage->ElNext;
-	     /* on saute les eventuelles marques de colonnes */
-	     /* ou de page (pour d'autres vues par exemple ?) */
-	     while (pNext != NULL
-		    && pNext->ElTypeNumber == PageBreak + 1)
-		pNext = pNext->ElNext;
-	     /* on cherche uniquement sur pPsuiv car normalement l'element */
-	     /* marque page debut a ete place juste devant l'element qui */
-	     /* portait la regle page correspondante */
-	     if (pNext != NULL)
-		pR = GetPageRule (pNext, pElPage->ElViewPSchema, pSchP);
-	  }
-	if (pR == NULL && pElPage->ElParent != NULL)
-	   /* si pSuiv ne portait pas de regle, */
-	   /* l'element englobant porte-t-il une regle page ? */
-	   pR = GetPageRule (pElPage->ElParent,
-			     pElPage->ElViewPSchema, pSchP);
-     }
-   return pR;
-}
-
-#endif /* __COLPAGE */
-
-
-#ifndef __COLPAGE__
 
 /*----------------------------------------------------------------------
     PageHeaderFooter met a jour les variables PageHeight et PageFooterHeight 
@@ -245,31 +187,19 @@ PtrPSchema         *pSchP;
      }
 }
 
-#endif /* __COLPAGE__ */
-
-
-#ifdef __COLPAGE__
- /* V4 : procedure TagAbsBoxInPage supprimee */
- /* V4 : procedure KillAbsBoxAboveLimit supprimee */
-#else  /* __COLPAGE__ */
 
 /*----------------------------------------------------------------------
    TagAbsBoxInPage marque tous les paves du sous arbre de racine pAb     
    comme faisant partie de la page courante                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TagAbsBoxInPage (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 void                TagAbsBoxInPage (pAb)
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pPa1;
-
 
    pPa1 = pAb;
    pPa1->AbAfterPageBreak = FALSE;
@@ -327,83 +257,6 @@ PtrAbstractBox     *RedispAbsBox;
       pP = pP->AbNext;
     }
 }
-#endif /* __COLPAGE__ */
-
-
-#ifdef __COLPAGE__
- /* V4 : la procedure KillAbsBoxBeforePage est completement changee */
-/*----------------------------------------------------------------------
-  KillAbsBoxBeforePage detruit tous les paves qui precedent la page pPage
-  sauf ceux de l'element BoTable englobant pPage.
-  On detruit les paves haut, corps, bas de page et filet des pages
-  precedentes.
-  Retourne vrai si l'image restante est plus petite qu'une page.       
-  On garde la page courante pour savoir ou continuer.    
-  Destruction page par page (y compris le filet) .         
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb, int *clipOrg)
-#else  /* __STDC__ */
-boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb, clipOrg)
-PtrAbstractBox      pPage;
-int                 frame;
-PtrDocument         pDoc;
-int                 viewNb;
-int                *clipOrg;
-#endif /* __STDC__ */
-{
-  PtrAbstractBox      pAb, RAbsBox, rootAbsBox;
-  PtrAbstractBox      pPageTable;
-  boolean             ret, det;
-
-  ret = TRUE; /* initialisation de ret, est-ce bon ? */
-  *clipOrg = 0;
-  /* is there an enclosing table? */
-  pPageTable = SearchEnclosingType (pPage, BoTable);
-  /* on detruit les paves haut, corps, bas de page et filet */
-  /* des pages precedentes */
-  /* cette procedure est plus simple qu'avant */
-  /* Test pour verifier que les paves sont bien des marques */
-  /* de page et non de colonnes */
-  if (pPage->AbElement->ElTypeNumber == PageBreak + 1
-      && (pPage->AbElement->ElPageType == PgBegin
-	  || pPage->AbElement->ElPageType == PgComputed
-	  || pPage->AbElement->ElPageType == PgUser))
-    {
-      pAb = pPage->AbElement->ElAbstractBox[viewNb - 1];
-      /* premier pave de la page */
-      rootAbsBox = pAb->AbEnclosing;	/* racine */
-      if (rootAbsBox == NULL || rootAbsBox->AbEnclosing != NULL)
-	/* erreur image abstraite */
-	AffPaveDebug (pPage);
-      /* on detruit les paves precedents */
-      /* mais on laisse le pave racine non coupe en tete pour */
-      /* que les paves detruits ne soient pas recrees dans l'appel */
-      /* de AfFinFenetre (pour le print) */
-      pAb = pAb->AbPrevious;
-      det = FALSE;		/* a priori pas de paves detruits */
-      while (pAb != NULL)
-	{
-	  SetDeadAbsBox (pAb);
-	  ApplyRefAbsBoxSupp (pAb, &RedispAbsBox, pDoc);
-	  pAb = pAb->AbPrevious;
-	  det = TRUE;	/* des paves ont ete detruits */
-	}
-      /* signale les paves morts au Mediateur */
-      /* si pas de destruction, on appelle ChangeConcreteImage pour positionner ret */
-      /* et refait evaluer la coupure de page */
-      RealPageHeight = BreakPageHeight;
-      ChangeRHPage (rootAbsBox, pDoc, viewNb);
-      ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
-      if (det)
-	/* libere tous les paves morts de la vue */
-	FreeDeadAbstractBoxes (rootAbsBox);
-      /* cherche le rappel suivant de ce saut de page */
-      /* supprime */
-    } /* fin cas ou pPage est bien une marque de page */
-  return ret;
-}
-#else  /* __COLPAGE__ */
 
 /*----------------------------------------------------------------------
    KillAbsBoxBeforePage detruit tous les paves qui precedent le filet  
@@ -428,29 +281,36 @@ int                *clipOrg;
   int               h, yTop, NbCar, yThread;
   boolean           stop, ret;
 
-  /* cherche d'abord le pave racine de la vue */
-  rootAbsBox = pPage;
   *clipOrg = 0;
   /* is there an enclosing table? */
-  pPageTable = SearchEnclosingType (pPage, BoTable);
+  pPageTable = NULL;
+  pTable = SearchEnclosingType (pPage, BoTable);
+  while (pTable != NULL)
+    {
+      /* get the most enclosing table */
+      pPageTable = pTable;
+      pTable = SearchEnclosingType (pPageTable->AbEnclosing, BoTable);
+    }
+
+  /* look for the root abstract box in the view */
+  rootAbsBox = pPage;
   while (rootAbsBox->AbEnclosing != NULL)
     rootAbsBox = rootAbsBox->AbEnclosing;
-  /* marque tous les paves comme faisant partie de la page */
+
+  /* remove all AbAfterPageBreak and AbOnPageBreak indicators in the view */
   TagAbsBoxInPage (rootAbsBox);
-  /* detruit, dans le pave Marque Page, les boites de bas de page qui */
-  /* precedent le filet marquant le saut de page. */
+  /* remove page footer boxes (above the page break line) within this page element */
   pAb = pPage->AbFirstEnclosed;
   stop = FALSE;
   do
     if (pAb == NULL)
       stop = TRUE;
     else if (!pAb->AbPresentationBox)
-      /* Note: le filet n'est pas un pave de presentation, alors que */
-      /* toutes les autres boites de bas de page sont des paves de */
-      /* presentation */
+      /* the page break line is not a presentation box, all others are
+      /* presentation boxes */
       {
 	stop = TRUE;
-	/* demande au Mediateur la position verticale du filet */
+	/* get the new page break line position */
 	pPageLine = pAb;
 	SetPageHeight (pAb, TRUE, &h, &yThread, &NbCar);
       }
@@ -459,11 +319,14 @@ int                *clipOrg;
 	SetDeadAbsBox (pAb);
 	pAb = pAb->AbNext;
       }
-  while (!(stop));
+  while (!stop);
 
-  /* detruit tous les paves qui precedent le pave Marque Page et ses */
-  /* paves englobants, mais pas ceux qui contiennent un saut de page */
-  pAb = pPage;
+  /* remove all abstract boxes above the page element or the table element
+     that includes the page element */
+  if (pPageTable == NULL)
+    pAb = pPage;
+  else
+    pAb = pPageTable;
   while (pAb != NULL)
     {
       while (pAb->AbPrevious != NULL)
@@ -473,15 +336,15 @@ int                *clipOrg;
 	    pTable = SearchEnclosingType (pAb, BoTable);
 	  else
 	    pTable = NULL;
-	  if (!pAb->AbOnPageBreak &&
-	      (pAb->AbElement->ElTypeNumber == PageBreak + 1 ||
-	       pPageTable == NULL || pPageTable != pTable))
+
+	  /* avoid to kill abstract boxes linked to the current table */
+	  if (pPageTable == NULL || pPageTable != pTable)
 	    {
 	      if (pTable != NULL)
 		DestroyAbsBoxesView (pTable->AbElement, pDoc, FALSE, viewNb);
 	      else if (pAb->AbPresentationBox)
 		{
-		  /* Tue les paves de presentation */
+		  /* Kill all presentation abstract boxes */
 		  SetDeadAbsBox (pAb);
 		  ApplyRefAbsBoxSupp (pAb, &RedispAbsBox, pDoc);
 		}
@@ -490,13 +353,17 @@ int                *clipOrg;
 	    }
 	}
       pAb = pAb->AbEnclosing;
-      /* marque les paves englobant la marque de page */
+      /* set AbOnPageBreak to all enclosing abstract boxes of the page element */
       if (pAb != NULL)
 	pAb->AbOnPageBreak = TRUE;
     }
 
-  /* Verifie les paves suivant la marque de page aux niveaux superieurs */
-  pAb = pPage;
+  /* check whether abstract boxes after the page element or the table element
+     are displayed above the page break line */
+  if (pPageTable == NULL)
+    pAb = pPage;
+  else
+    pAb = pPageTable;
   while (pAb != NULL)
     {
       pNext = pAb->AbNext;
@@ -506,19 +373,21 @@ int                *clipOrg;
 	    pTable = SearchEnclosingType (pNext, BoTable);
 	  else
 	    pTable = NULL;
+
+	  /* avoid to kill abstract boxes linked to the current table */
 	  if (pPageTable == NULL || pPageTable != pTable)
 	    {
 	      if (!pNext->AbDead)
 		{
-		  /* demande au Mediateur la position et la hauteur du pave */
+		  /* get the new page break line position */
 		  SetPageHeight (pNext, TRUE, &h, &yTop, &NbCar);
 		  if (yTop < yThread)
-		    /* le haut du pave est au-dessus du saut de page */
 		    if (yTop + h <= yThread && !pNext->AbOnPageBreak)
 		      {
+			/* the top of that box is above the page break */
 			if (pNext->AbPresentationBox)
-			  /* Tue les paves de presentation */
 			  {
+			    /* Kill all presentation abstract boxes */
 			    SetDeadAbsBox (pNext);
 			    ApplyRefAbsBoxSupp (pNext, &RedispAbsBox, pDoc);
 			  }
@@ -526,7 +395,7 @@ int                *clipOrg;
 			  DestroyAbsBoxesView (pNext->AbElement, pDoc, FALSE, viewNb);
 		      }
 		    else
-		      /* le pave est traverse par le saut de page */
+		      /* the page break line crosses that box */
 		      KillAbsBoxAboveLimit (pNext, yThread, viewNb, pDoc, &RedispAbsBox);
 		}
 	    }
@@ -534,14 +403,14 @@ int                *clipOrg;
 	}
       pAb = pAb->AbEnclosing;
     }
-  /* signale les paves morts au Mediateur */
+  /* take killed abstract boxes into account in the Concrete Image */
   RealPageHeight = 0;
   ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
-  /* libere tous les paves morts de la vue */
+  /* free killed abstract boxes */
   FreeDeadAbstractBoxes (rootAbsBox);
   SetPageHeight (pPage, TRUE, &h, clipOrg, &NbCar);
+  /* compute AbOnPageBreak and AbAfterPageBreak according to the new situation */
   RealPageHeight = PageHeight + *clipOrg;
   ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
   return ret;
 }
-#endif /* __COLPAGE__ */

@@ -38,9 +38,8 @@ extern void GetDocAndView ( int frame,
 extern void PrintOnePage ( PtrDocument pDoc,
                            PtrAbstractBox pPageAb,
                            PtrAbstractBox pNextPageAb,
-                           int view,
-                           int clipOrg,
-                           boolean assoc );
+                           PtrAbstractBox rootAbsBox,
+                           int clipOrg );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
@@ -83,9 +82,8 @@ extern void GetDocAndView (/* int frame,
 extern void PrintOnePage (/* PtrDocument pDoc,
                              PtrAbstractBox pPageAb,
                              PtrAbstractBox pNextPageAb,
-                             int view,
-                             int clipOrg,
-                             boolean assoc */);
+                             PtrAbstractBox rootAbsBox,
+                             int clipOrg */);
 extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,
                                int msgType */);

@@ -582,29 +582,25 @@ PtrDocument         pDoc;
 
    nViews = BuildDocumentViewList (pDoc, viewList);
    for (i = 0; i < nViews; i++)
-      if (viewList[i].VdOpen)
-	 if (viewList[i].VdPaginated)
-	    if (!viewList[i].VdNature)
-	       /* c'est une vue a paginer */
-	      {
-		 if (viewList[i].VdAssoc)
-		    /* c'est une vue d'elements associes, */
-		    /* utilise le numero d'element assoc. */
-		    docView = viewList[i].VdView;
-		 else
-		   {
-		      /* cherche le numero de vue dans le document */
-		      found = FALSE;
-		      for (docView = 0; docView < MAX_VIEW_DOC && !found; docView++)
-			 if (pDoc->DocView[docView].DvPSchemaView ==
-			     viewList[i].VdView
-			     && pDoc->DocView[docView].DvSSchema ==
-			     viewList[i].VdSSchema)
-			    found = TRUE;
-		   }
-		 /* pagine la vue */
-		 PaginateView (pDoc, docView , viewList[i].VdAssoc);
-	      }
+      if (viewList[i].VdOpen && viewList[i].VdPaginated && !viewList[i].VdNature)
+	/* c'est une vue a paginer */
+	{
+	  if (viewList[i].VdAssoc)
+	    /* c'est une vue d'elements associes, */
+	    /* utilise le numero d'element assoc. */
+	    docView = viewList[i].VdView;
+	  else
+	    {
+	      /* cherche le numero de vue dans le document */
+	      found = FALSE;
+	      for (docView = 0; docView < MAX_VIEW_DOC && !found; docView++)
+		if (pDoc->DocView[docView].DvPSchemaView == viewList[i].VdView
+		    && pDoc->DocView[docView].DvSSchema == viewList[i].VdSSchema)
+		  found = TRUE;
+	    }
+	  /* pagine la vue */
+	  PaginateView (pDoc, docView , viewList[i].VdAssoc);
+	}
 }
 
 /*----------------------------------------------------------------------

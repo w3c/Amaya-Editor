@@ -246,7 +246,7 @@ int                 fg;
    HFONT hOldFont;
 
    CurrentColor (NULL, fg);
-
+   y += FrameTable[frame].FrTopMargin;
    WinLoadGC (TtPrinterDC, fg, RO);
    SetMapperFlags (TtPrinterDC, 1);
    hOldFont = WinLoadFont (TtPrinterDC, font);
@@ -278,6 +278,7 @@ int                 fg;
 {
    int                 xm, yf;
 
+   y += FrameTable[frame].FrTopMargin;
    xm = x + ((l - CharacterWidth (symb, font)) / 2);
    yf = y + ((h - CharacterHeight (symb, font)) / 2) - FontAscent (font) + CharacterAscent (symb, font);
 
@@ -448,6 +449,7 @@ int                 shadow;
    encoding = 0;
    if (y < 0)
       return 0;
+   y += FrameTable[frame].FrTopMargin;
    /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
    /* and equal to 0 if a justified space is to be printed */
 
@@ -509,7 +511,7 @@ int                 shadow;
        SetMapperFlags (TtPrinterDC, 1);
        GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
        width = size.cx;
-       if (ptcar[0] == '\212')
+       if (ptcar[0] == '\212' || ptcar[0] == '\12')
 	 {
 	   /* skip the Control return char */
 	   ptcar++;
@@ -620,6 +622,9 @@ int                 fg;
    int                 shift;	/* shifting of drawing   */
    FILE               *fout;
 
+   if (y < 0)
+     return;
+   y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
    if (TtPrinterDC)
      {
@@ -663,8 +668,6 @@ int                 fg;
      {
 #  endif  /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
-       if (y < 0)
-	 return;
        /* The last box must be finished */
        if (SameBox == 0)
 	 {
@@ -739,6 +742,7 @@ int                 fg;
 
    if (y < 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
    if (thick < 0)
       return;
 #  ifdef _WINDOWS
@@ -812,12 +816,13 @@ int                 fg;
    FILE               *fout;
    int                 ey, ym, yf;
 #  ifdef _WINDOWS
-   int                 xm, yf, yend, exnum, delta;
+   int                 xm, yend, exnum, delta;
    int                 wd, asc, hd;
 #  endif  /* _WINDOWS */
 
    if (y < 0)
      return;
+   y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
    if (TtPrinterDC)
      {
@@ -942,6 +947,7 @@ int                 fg;
 
    if (y < 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
    if (TtPrinterDC)
      {
@@ -1006,6 +1012,7 @@ int                 fg;
 
    if (y < 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
    if (TtPrinterDC)
      {
@@ -1064,6 +1071,7 @@ int                 fg;
 
    if (y < 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS 
    if (TtPrinterDC)
      {
@@ -1111,6 +1119,7 @@ int                 fg;
 
    if (y < 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
 
 #  ifdef _WINDOWS
    if (TtPrinterDC)
@@ -1167,6 +1176,7 @@ int                 fg;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
 
    if (thick <= 0)
       return;
@@ -1257,6 +1267,7 @@ int                 fg;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1312,12 +1323,16 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
+   int                 ey, yf;
+   FILE               *fout;
+
    if (y < 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
    if (thick < 0)
       return;
 
+#  ifdef _WINDOWS
    if (TtPrinterDC) {
       int xm, yf, yend, exnum, delta;
 
@@ -1379,9 +1394,6 @@ int                 fg;
 		   }
       }
    } else {
-         int   ey, yf;
-         FILE* fout;
-
          fout = (FILE *) FrRef[frame];
 
          /* Do we need to change the current color ? */
@@ -1412,13 +1424,8 @@ int                 fg;
 		 }
 	}
 #   else  /* !_WINDOWS */
-   int                 ey, yf;
-   FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
-
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
@@ -1480,6 +1487,7 @@ int                 fg;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1541,15 +1549,19 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
    int    xf, yf;
+   FILE               *fout;
+#  ifdef _WINDOWS
    Pixmap pat;  
    HPEN   hPen = 0, hOldPen;
    HBRUSH hBrush, hOldBrush;
+#endif /* _WINDOWS */
 
    if (y < 0)   
-      return ;
+      return;
+   y += FrameTable[frame].FrTopMargin;
 
+#ifdef _WINDOWS
    if (TtPrinterDC == (HDC) 0) {
       xf = PixelToPoint (x + larg);
       yf = PixelToPoint (y + height);
@@ -1591,7 +1603,6 @@ int                 pattern;
          DeleteObject (hPen);
 	  }
    } else {
-         FILE               *fout;
          fout = (FILE *) FrRef[frame];
 
          /* Do we need to change the current color ? */
@@ -1602,11 +1613,7 @@ int                 pattern;
          fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
    }
 #  else  /* !_WINDOWS */
-   int                 xf, yf;
-   FILE               *fout;
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
 
    /* Do we need to change the current color ? */
    if (thick > 0)
@@ -1662,8 +1669,10 @@ int                 arrow;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
+
+   if (y < 0)   
+      return;
+   y += FrameTable[frame].FrTopMargin;
    xp = yp = 0;
    prevx = prevy = 0;
    if (thick == 0)
@@ -1756,6 +1765,7 @@ int                 pattern;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1828,6 +1838,7 @@ C_points           *controls;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
    if (thick == 0)
       return;
 
@@ -1939,6 +1950,7 @@ C_points           *controls;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -2012,6 +2024,7 @@ int                 pattern;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -2056,6 +2069,7 @@ int                 pattern;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
    if (thick > 0)
@@ -2098,15 +2112,19 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+   int                 xm, ym;
+   FILE               *fout;
 #  ifdef _WINDOWS 
-   int    xm, ym;
    Pixmap pat;  
    HPEN   hPen = 0, hOldPen;
    HBRUSH hBrush, hOldBrush;
+#endif /* _WINDOWS */
 
    if (y < 0)   
-      return ;
+      return;
+   y += FrameTable[frame].FrTopMargin;
 
+#  ifdef _WINDOWS 
    larg = larg / 2;
    height = height / 2;
    if (TtPrinterDC == (HDC) 0) {
@@ -2144,7 +2162,6 @@ int                 pattern;
             WinErrorBox (WIN_Main_Wd);
 	  }
    } else {
-         FILE               *fout;
          fout = (FILE *) FrRef[frame];
 
          if (y < 0)
@@ -2166,8 +2183,6 @@ int                 pattern;
              fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick, xm, -ym, larg, height);
    }
 #  else /* !_WINDOWS */
-   int                 xm, ym;
-   FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
    if (y < 0)
@@ -2217,18 +2232,21 @@ int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
-   int xf, yf;
+   int                 xf, yf;
+   FILE               *fout;
 
+   fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+      return;
+
+#  ifdef _WINDOWS
    if (TtPrinterDC) {
       HPEN      pen;
       HPEN      hOldPen;
       ThotPoint point[3];
-
-      if (y < 0)
-         return;
-      if (thick <= 0)
-         return;
 
       xf = PixelToPoint (x + l);
       yf = PixelToPoint (y + h);
@@ -2274,13 +2292,8 @@ int                 fg;
       Polyline (TtPrinterDC, point, 3);
       SelectObject (TtPrinterDC, hOldPen);
    } else {
-         FILE* fout;
 
          fout = (FILE *) FrRef[frame];
-         if (y < 0)
-            return;
-         if (thick <= 0)
-            return;
 
          /* Do we need to change the current color ? */
          CurrentColor (fout, fg);
@@ -2305,14 +2318,6 @@ int                 fg;
 		 }
    }
 #  else  /* !_WINDOWS */
-   int                 xf, yf;
-   FILE               *fout;
-
-   fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
-   if (thick <= 0)
-      return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -2370,6 +2375,7 @@ int                 pattern;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -2420,6 +2426,7 @@ int                 pattern;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -2479,7 +2486,15 @@ int                 fg;
    FILE               *fout;
 #  ifdef _WINDOWS 
    register int        Y;
+#  endif /* _WINDOWS */
 
+   if (y < 0)
+     return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+     return;
+
+#  ifdef _WINDOWS 
    if (TtPrinterDC)
      {
        if (align == 1)
@@ -2496,10 +2511,6 @@ int                 fg;
      {
 #  endif /* _WINDOWS */
        fout = (FILE *) FrRef[frame];
-       if (y < 0)
-	 return;
-       if (thick <= 0)
-	 return;
 
        /* Do we need to change the current color ? */
        CurrentColor (fout, fg);
@@ -2547,10 +2558,17 @@ int                 fg;
 {
    int                 xm, yf, xf;
    FILE               *fout;
-
 #  ifdef _WINDOWS
    register int        X;
+#  endif /*_WINDOWS */
 
+   if (y < 0)
+     return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+     return;
+
+#  ifdef _WINDOWS
    if (TtPrinterDC)
      {
        if (align == 1)
@@ -2566,12 +2584,8 @@ int                 fg;
    else
      {
 #  endif  /* _WINDOWS */
-       if (thick <= 0)
-	 return;
 
        fout = (FILE *) FrRef[frame];
-       if (y < 0)
-	 return;
        /* Do we need to change the current color ? */
        CurrentColor (fout, fg);
 
@@ -2619,10 +2633,11 @@ int                 fg;
    int   r, g, b;
 #  endif /* _WINDOWS */
 
-   /* Do we need to change the current color ? */
-   CurrentColor (fout, fg);
    if (y < 0)
       return;
+   y += FrameTable[frame].FrTopMargin;
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
    if (lgboite > 0) {
 #     ifdef _WINDOWS 
@@ -2684,6 +2699,7 @@ int                 fg;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
    if (thick <= 0)
       return;
 
@@ -2802,6 +2818,7 @@ int                 pattern;
    fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
+   y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
