@@ -33,7 +33,6 @@ extern void       TtaHandleOneWindowEvent (MSG*);
 extern void       CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select, int dir_select, int doc_type);
 extern void       WIN_ListSaveDirectory (int ref, char *s, char *url);
 extern void       ThotCallback (int, int, char *data);
-extern void       WIN_TtaSwitchButton (Document, View, int, int, int, BOOL);
 extern void       SwitchIconMath (Document, View, ThotBool);
 extern void       AddMathButton (Document, View);
 extern int        TtaGetMessageTable (CONST char *, int msgNumber);

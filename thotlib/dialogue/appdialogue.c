@@ -1680,10 +1680,10 @@ void TtaChangeButton (Document doc, View view, int index,
 		  FrameTable[frame].Button[index]->iBitmap = picture;
 		  TtaSwitchButton (doc, view, index);
 		}
-	      else if (state = FALSE &&
-		       FrameTable[frame].CheckedButton[index] == FALSE)
+	      else if (state == FALSE &&
+		       FrameTable[frame].CheckedButton[index] == TRUE)
 		{
-		  FrameTable[frame].CheckedButton[index] = TRUE;
+		  FrameTable[frame].CheckedButton[index] = FALSE;
 		  SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
 			       (WPARAM) FrameTable[frame].ButtonId[index],
 			       (LPARAM) MAKELONG (TRUE, 0));
@@ -1718,38 +1718,6 @@ void TtaChangeButton (Document doc, View view, int index,
 }
 
 
-#ifdef _WINDOWS
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void WIN_TtaSwitchButton (Document doc, View view, int index,
-			  int picture, int bState, BOOL state)
-{
-  int                 frame;
-
-  UserErrorCode = 0;
-  /* verifie le parametre document */
-  if (doc == 0 && view == 0)
-    TtaError (ERR_invalid_parameter);
-  else
-    {
-      frame = GetWindowNumber (doc, view);
-      if (frame == 0 || frame > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
-      else if (FrameTable[frame].WdFrame != 0)
-	{
-	  if (index >= MAX_BUTTON || index <= 0
-	      || FrameTable[frame].Button[index] == 0)
-	    TtaError (ERR_invalid_parameter);
-	  else
-	    /* Insere le nouvel icone */
-	    SendMessage (WinToolBar[frame], bState,
-			 (WPARAM) FrameTable[frame].ButtonId[index],
-			 (LPARAM) MAKELONG (state, 0));
-	}
-    }
-}
-
-#endif /* _WINDOWS */
 /*----------------------------------------------------------------------
    TtcSwitchButtonBar
 
