@@ -55,22 +55,22 @@ PtrAbstractBox      pAb;
   DisplayImage displays a empty box in the frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, int ymin, int ymax)
+static void         DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, int ymin, int ymax, ThotBool selected)
 #else  /* __STDC__ */
-static void         DisplayImage (pBox, frame, xmin, xmax, ymin, ymax)
+static void         DisplayImage (pBox, frame, xmin, xmax, ymin, ymax, selected)
 PtrBox              pBox;
 int                 frame;
 int                 xmin;
 int                 xmax;
 int                 ymin;
 int                 ymax;
+Thotbool            selected;
 #endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
   int                 xd, yd, x, y;
   int                 width, height;
   int                 op, RO;
-  ThotBool            selected;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
@@ -105,9 +105,6 @@ int                 ymax;
 	}
 
       /* show the selection on the whole image */
-      selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
-		  pFrame->FrSelectionEnd.VsBox == pBox);
-
       if (selected)
 	if (pFrame->FrSelectOnePosition)
 	  /* show the selection on the beginning or the end of the image */
@@ -126,11 +123,12 @@ int                 ymax;
   a frame. The glyphs are drawn with the Greek font and lines.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplaySymbol (PtrBox pBox, int frame)
+static void         DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 #else  /* __STDC__ */
-static void         DisplaySymbol (pBox, frame)
+static void         DisplaySymbol (pBox, frame selected)
 PtrBox              pBox;
 int                 frame;
+ThotBool            selected;
 #endif /* __STDC__ */
 {
   ptrfont             font;
@@ -141,7 +139,6 @@ int                 frame;
   int                 bg;
   int                 op, RO;
   int                 width, height;
-  ThotBool            selected;
 
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
@@ -253,8 +250,6 @@ int                 frame;
 	    }
 
 	  /* show the selection on the beginning or the end of the image */
-	  selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
-		      pFrame->FrSelectionEnd.VsBox == pBox);
 	  if (selected)
 	    {
 	      if (pFrame->FrSelectOnePosition ||
@@ -280,12 +275,13 @@ int                 frame;
   A specific background is drawn in the box area.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayEmptyBox (PtrBox pBox, int frame, CHAR_T modele)
+void                DisplayEmptyBox (PtrBox pBox, int frame, CHAR_T modele, ThotBool selected)
 #else  /* __STDC__ */
-void                DisplayEmptyBox (pBox, frame, modele)
+void                DisplayEmptyBox (pBox, frame, modele, selected)
 PtrBox              pBox;
 int                 frame;
-CHAR_T                modele;
+CHAR_T              modele;
+ThotBool            selected;
 #endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
@@ -318,8 +314,7 @@ CHAR_T                modele;
 	height = 0;
 
        /* show the selection on the current symbol */
-      if (pFrame->FrSelectionBegin.VsBox == pBox ||
-	  pFrame->FrSelectionEnd.VsBox == pBox)
+      if (selected)
 	{
 	  bg = SelColor;
 	  if (pAb->AbLeafType == LtGraphics)
@@ -355,11 +350,12 @@ CHAR_T                modele;
   DisplayGraph display a graphic box enclosed in frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplayGraph (PtrBox pBox, int frame)
+static void         DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
 #else  /* __STDC__ */
-static void         DisplayGraph (pBox, frame)
+static void         DisplayGraph (pBox, frame, selected)
 PtrBox              pBox;
 int                 frame;
+ThotBool            selected;
 #endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
@@ -370,7 +366,6 @@ int                 frame;
   int                 bg;
   int                 style;
   int                 width, height;
-  ThotBool            selected;
 
   pAb = pBox->BxAbstractBox;
   fg = pAb->AbForeground;
@@ -572,9 +567,7 @@ int                 frame;
 	  }
 
 	/* show the selection on the whole image */
-	selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
-		    pFrame->FrSelectionEnd.VsBox == pBox);
-	if (selected && !pFrame->FrSelectOnePosition)
+	if (selected)
 	  DisplayPointSelection (frame, pBox, 0);
      }
 }
@@ -666,12 +659,12 @@ PtrBox              pBox;
   DrawPolyLine display a polyline constraint in frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DrawPolyLine (PtrBox pBox, int frame)
+static void         DrawPolyLine (PtrBox pBox, int frame, ThotBool selected)
 #else  /* __STDC__ */
-static void         DrawPolyLine (pBox, frame)
+static void         DrawPolyLine (pBox, frame, selected)
 PtrBox              pBox;
 int                 frame;
-
+ThotBool            selected;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pAb;
@@ -682,7 +675,6 @@ int                 frame;
   int                 bg;
   int                 style, arrow;
   int                 width;
-  ThotBool            selected;
 
   /* If no point is defined, no need to draw it */
   if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
@@ -791,10 +783,8 @@ int                 frame;
 	}
       
       /* show the selection on the whole image */
-      selected = (pFrame->FrSelectionBegin.VsBox == pBox ||
-		  pFrame->FrSelectionEnd.VsBox == pBox);
       if (selected)
-	if (pFrame->FrSelectionBegin.VsBox == pBox)
+	if (pFrame->FrSelectOnePosition)
 	  DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
 	else
 	  DisplayPointSelection (frame, pBox, 0);
@@ -809,17 +799,19 @@ int                 frame;
   on all spaces in the line.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplayJustifiedText (PtrBox pBox, int frame)
+static void         DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame, ThotBool selected)
 #else  /* __STDC__ */
-static void         DisplayJustifiedText (pBox, frame)
+static void         DisplayJustifiedText (pBox, mbox, frame, selected)
 PtrBox              pBox;
+PtrBox              mbox;
 int                 frame;
+ThotBool            selected;
 #endif /* __STDC__ */
 {
   PtrTextBuffer       adbuff;
   PtrTextBuffer       newbuff;
   ViewFrame          *pFrame;
-  PtrBox              mbox, nbox;
+  PtrBox              nbox;
   PtrAbstractBox      pAb;
   UCHAR_T             car;
   int                 indbuff;
@@ -838,7 +830,7 @@ int                 frame;
   int                 left, right;
   ThotBool            blockbegin;
   ThotBool            withbackground;
-  ThotBool            withline, selected;
+  ThotBool            withline;
 
   indmax = 0;
   buffleft = 0;
@@ -846,24 +838,6 @@ int                 frame;
   indbuff = 0;
   restbl = 0;
   pAb = pBox->BxAbstractBox;
-  selected = pAb->AbSelected;
-  /* Search for the enclosing box */
-  if (pAb->AbEnclosing == NULL)
-    mbox = pBox;
-  else
-    {
-      mbox = pAb->AbEnclosing->AbBox;
-      if (mbox->BxType == BoGhost)
-	{
-	  selected = selected || mbox->BxAbstractBox->AbSelected;
-	  while (mbox->BxType == BoGhost &&
-		 mbox->BxAbstractBox->AbEnclosing != NULL)
-	    {
-	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-	      selected = selected || mbox->BxAbstractBox->AbSelected;
-	    }
-	}
-    } 
   
   /* do we have to display stars instead of characters? */
   if (pAb->AbBox->BxShadow)
@@ -998,7 +972,7 @@ int                 frame;
 		}
 	      else
 		{
-		  /* almost one character is sleected */
+		  /* almost one character is selected */
 		  if (pBox == pFrame->FrSelectionBegin.VsBox)
 		    left = pFrame->FrSelectionBegin.VsXPos;
 		  if (pBox == pFrame->FrSelectionEnd.VsBox)
@@ -1379,11 +1353,15 @@ int                 ymin;
 int                 ymax;
 #endif /* __STDC__ */
 {
-  ViewFrame          *pFrame;
+  ViewFrame         *pFrame;
+  PtrBox             mbox;
+  PtrAbstractBox     pAb;
   int                x, y;
   int                xd, yd, width, height;
+  ThotBool           selected;
 
   pFrame = &ViewFrameTable[frame - 1];
+  pAb = box->BxAbstractBox;
   x = ViewFrameTable[frame - 1].FrXOrg;
   y = ViewFrameTable[frame - 1].FrYOrg;
   xd = box->BxXOrg + box->BxLMargin;
@@ -1410,43 +1388,64 @@ int                 ymax;
       if (yd + height > ymax)
 	height = ymax - yd;
     }
-
-  if (box->BxAbstractBox->AbVolume == 0 ||
-      (box->BxAbstractBox->AbLeafType == LtPolyLine && box->BxNChars == 1))
+  else
     {
-      /* Empty */
-      if (box->BxAbstractBox->AbLeafType == LtSymbol)
-	DisplayEmptyBox (box, frame, '2');
+      /* is the box selected? */
+       selected = pAb->AbSelected;
+      /* Search for the enclosing box */
+      if (pAb->AbEnclosing == NULL)
+	mbox = box;
       else
 	{
-	   if (ThotLocalActions[T_emptybox] != NULL)
-	     (*ThotLocalActions[T_emptybox]) (box, frame, '2');
-	   if (pFrame->FrSelectionBegin.VsBox == box ||
-	       pFrame->FrSelectionEnd.VsBox == box)
+	  mbox = pAb->AbEnclosing->AbBox;
+	  if (mbox->BxType == BoGhost)
+	    {
+	      selected = selected || mbox->BxAbstractBox->AbSelected;
+	      while (mbox->BxType == BoGhost &&
+		     mbox->BxAbstractBox->AbEnclosing != NULL)
+		{
+		  mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
+		  selected = selected || mbox->BxAbstractBox->AbSelected;
+		}
+	    }
+	} 
+    }
+
+  if (pAb->AbVolume == 0 ||
+      (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
+    {
+      /* Empty */
+      if (pAb->AbLeafType == LtSymbol)
+	DisplayEmptyBox (box, frame, '2', selected);
+      else
+	{
+	   if (selected)
 	     DisplayStringSelection (frame, 0, box->BxWidth, box);
+	   else if (ThotLocalActions[T_emptybox] != NULL)
+	     (*ThotLocalActions[T_emptybox]) (box, frame, '2', selected);
 	}
     }
-  else if (box->BxAbstractBox->AbLeafType == LtText)
+  else if (pAb->AbLeafType == LtText)
     /* Display a Text box */
-    DisplayJustifiedText (box, frame);
+    DisplayJustifiedText (box, mbox, frame, selected);
   else if (box->BxType == BoPicture)
     /* Picture */
-    DisplayImage (box, frame, xmin, xmax, ymin, ymax);
-  else if (box->BxAbstractBox->AbLeafType == LtSymbol)
+    DisplayImage (box, frame, xmin, xmax, ymin, ymax, selected);
+  else if (pAb->AbLeafType == LtSymbol)
     /* Symbol */
-    if (box->BxAbstractBox->AbShape == EOS)
-      DisplayEmptyBox (box, frame, '2');
+    if (pAb->AbShape == EOS)
+      DisplayEmptyBox (box, frame, '2', selected);
     else
-      DisplaySymbol (box, frame);
-  else if (box->BxAbstractBox->AbLeafType == LtGraphics)
+      DisplaySymbol (box, frame, selected);
+  else if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
-    if (box->BxAbstractBox->AbShape == EOS)
-      DisplayEmptyBox (box, frame, '2');
+    if (pAb->AbShape == EOS)
+      DisplayEmptyBox (box, frame, '2', selected);
     else
-      DisplayGraph (box, frame);
-  else if (box->BxAbstractBox->AbLeafType == LtPolyLine)
+      DisplayGraph (box, frame, selected);
+  else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
-    DrawPolyLine (box, frame);
+    DrawPolyLine (box, frame, selected);
 
   /* then display borders */
   if (yd + height >= ymin

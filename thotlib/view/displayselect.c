@@ -389,17 +389,16 @@ PtrAbstractBox      pAb;
 
    if (pAb != NULL)
      {
-	/* Le pave est selectionne */
+	/* The abstract box is selected */
 	if (pAb->AbSelected)
 	  {
 	     pFrame = &ViewFrameTable[frame - 1];
-	     /* On ne visualise pas les bornes de la selection */
 	     if (pFrame->FrSelectionBegin.VsBox == NULL ||
 		 pFrame->FrSelectionEnd.VsBox == NULL ||
 		 pAb->AbLeafType == LtCompound ||
 		 (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
 		  pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
-		 /* it's not an extremity of the selection */
+		 /* it's not a terminal extremity of the selection */
 	       DisplayBgBoxSelection (frame, pAb->AbBox);
 	  }
 	else if (pAb->AbLeafType == LtCompound)
@@ -462,12 +461,10 @@ PtrBox       pBox;
 	      pChildBox = pChildBox->BxNexChild;
 	    }
 	}
-      else if (pAb->AbLeafType != LtPicture &&
-	       pAb->AbLeafType != LtGraphics &&
-	       pAb->AbLeafType != LtPolyLine)
+      else
 	{
+	  /* display other elements */
 	  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-	  /* display now */
 	  RedrawFrameBottom (frame, 0, pAb);
 	}
     }

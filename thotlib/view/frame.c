@@ -910,6 +910,8 @@ PtrAbstractBox      subtree;
 	    pParent = GetParentCell (subtree->AbBox);
 	    if (pParent)
 	      subtree = pParent->AbEnclosing;
+	    else if (TypeHasException (ExcIsCell, subtree->AbElement->ElTypeNumber, subtree->AbElement->ElStructSchema))
+	      subtree = subtree->AbEnclosing;
 	    /* if the box is enclosed by a draw the whole contents of
 	       that draw should be redisplayed */ 
 	    pParent = GetParentDraw (subtree->AbBox);
