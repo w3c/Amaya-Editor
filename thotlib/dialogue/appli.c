@@ -970,6 +970,11 @@ Document            document;
 View                view;
 
 #endif /* __STDC__ */
+
+
+
+
+
 {
    int                 frame;
 

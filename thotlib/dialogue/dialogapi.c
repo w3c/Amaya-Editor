@@ -3076,10 +3076,12 @@ char                button;
 	  {
 	     /* Creation du Popup Shell pour contenir le menu */
 #            ifdef _WINDOWS
-	     menu = parent;
+         menu = parent;
+		 /*
          if (menu == 0) {
             menu = CreatePopupMenu ();
          }
+		 */
 #            else  /* _WINDOWS */
 	     n = 0;
 	     /*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
@@ -3122,6 +3124,8 @@ char                button;
 	     n++;
 	     menu = XmCreateRowColumn (menu, "Dialogue", args, n);
 	     XtAddCallback (XtParent (menu), XmNpopdownCallback, (XtCallbackProc) UnmapMenu, catalogue);
+#            else  /* _WINDOWS */
+		 menu = CreatePopupMenu ();
 #            endif /* !_WINDOWS */
 	     catalogue->Cat_Widget = menu;
 	     catalogue->Cat_Ref = ref;
