@@ -5664,12 +5664,25 @@ CHARSET        *charset;
 			  i += 12;
 			  /* by default all HTML tags are accepted */
 			  *parsingLevel = L_Transitional;
-			  if (strstr (&FileBuffer[i], "DTD XHTML"))
+			  end = strstr (&FileBuffer[i], ">");
+			  ptr = strstr (&FileBuffer[i], "XHTML");
+			  if (!ptr)
+			  ptr = strstr (&FileBuffer[i], "xhtml");
+			  if (ptr && ptr < end)
 			    *isXML = TRUE;
-			  if (strstr (&FileBuffer[i], "Basic"))
+			  ptr = strstr (&FileBuffer[i], "Basic");
+			  if (!ptr)
+			    ptr = strstr (&FileBuffer[i], "basic");
+			  if (ptr && ptr < end)
 			    *parsingLevel = L_Basic;
-			  else if (strstr (&FileBuffer[i], "Strict"))
-			    *parsingLevel = L_Strict;
+			  else
+			    {
+			      ptr = strstr (&FileBuffer[i], "Strict");
+			      if (!ptr)
+				ptr = strstr (&FileBuffer[i], "strict");
+			      if (ptr && ptr < end)
+				*parsingLevel = L_Strict;
+			    }
 			}
 		    }
 		  else if (!strncasecmp (&FileBuffer[i], "<html ", 6))
@@ -5681,11 +5694,16 @@ CHARSET        *charset;
 		      endOfFile = TRUE;
 		      /* by default all HTML tags are accepted */
 		      *parsingLevel = L_Transitional;
-		      if (strstr (&FileBuffer[i], "xhtml"))
+		      end = strstr (&FileBuffer[i], ">");
+		      ptr = strstr (&FileBuffer[i], "XHTML");
+		      if (!ptr)
+			ptr = strstr (&FileBuffer[i], "xhtml");
+		      if (ptr && ptr < end)
 			*isXML = TRUE;
-		      if (strstr (&FileBuffer[i], "Basic"))
-			*parsingLevel = L_Basic;
-		      else if (strstr (&FileBuffer[i], "Strict"))
+		      ptr = strstr (&FileBuffer[i], "Strict");
+		      if (!ptr)
+			ptr = strstr (&FileBuffer[i], "strict");
+		      if (ptr && ptr < end)
 			*parsingLevel = L_Strict;
 		    }
 		  else if (strncmp (&FileBuffer[i], "<!-- ", 10))

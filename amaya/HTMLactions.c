@@ -1152,7 +1152,12 @@ Document       doc;
 	      {
 		DocumentSource[i] = 0;
 		if (DocumentTypes[i] == docLog)
-		  TtaCloseDocument (i);
+		  {
+		    TtaCloseDocument (i);
+		    TtaFreeMemory (DocumentURLs[i]);
+		    DocumentURLs[i] = NULL;
+		  }
+
 	      }
       RemoveDocCSSs (doc);
       /* avoid to free images of backup documents */
