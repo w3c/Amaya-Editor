@@ -1477,7 +1477,6 @@ void InitCharset (Document document, View view, char *url)
   ----------------------------------------------------------------------*/
 void InitMimeType (Document document, View view, char *url)
 {
-#ifndef _WINDOWS
    char *mimetypes_list;
    int nbmimetypes;
    if (DocumentTypes[document] == docImage)
@@ -1504,6 +1503,7 @@ void InitMimeType (Document document, View view, char *url)
        nbmimetypes = 5;
      }
 
+#ifndef _WINDOWS
    TtaNewForm (BaseDialog + MimeTypeForm, TtaGetViewFrame (document, view),
 	       "MIME type query", FALSE, 4, 'L', D_CANCEL);
    TtaNewLabel (BaseDialog + MimeTypeFormL1, BaseDialog + MimeTypeForm,
@@ -1523,6 +1523,9 @@ void InitMimeType (Document document, View view, char *url)
    TtaShowDialogue (BaseDialog + MimeTypeForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
+#else
+   CreateMimeTypeDlgWindow (TtaGetViewFrame (document, view), nbmimetypes,
+	                        mimetypes_list);
 #endif /* _WINDOWS */
 }
 

@@ -449,6 +449,53 @@ END
 
 
 /////////////////////////////////////////////////////////////////////////////
+// Neutral (Default) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+MIMETYPEDIALOG DIALOG DISCARDABLE  100, 100, 222, 151
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "",ID_APPLY,46,129,55,14
+    PUSHBUTTON      "",IDCANCEL,112,129,58,14
+    LTEXT           "",IDC_LANGELEM,8,1,206,15
+    LTEXT           "",IDC_INHERITEDLANG,9,108,206,14
+    EDITTEXT        IDC_MTEDIT,8,87,206,15,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    MIMETYPEDIALOG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 176
+        VERTGUIDE, 8
+        VERTGUIDE, 214
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Neutral (Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
 // English (U.S.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
@@ -707,26 +754,32 @@ BEGIN
     PUSHBUTTON      "",ID_DONE,181,98,59,15
 END
 
-SAVEASDIALOG DIALOG DISCARDABLE  100, 100, 328, 116
+SAVEASDIALOG DIALOG DISCARDABLE  100, 100, 342, 156
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "",ID_CONFIRM,9,96,71,14
-    PUSHBUTTON      "",ID_CLEAR,86,96,74,14
-    PUSHBUTTON      "",IDC_BROWSE,165,97,76,13
-    PUSHBUTTON      "",IDCANCEL,248,96,72,14
-    GROUPBOX        "",IDC_OUTPUTGROUP,7,3,79,51,WS_GROUP
-    CONTROL         "",IDC_HTML,"Button",BS_AUTORADIOBUTTON,10,10,73,13
-    CONTROL         "",IDC_XML,"Button",BS_AUTORADIOBUTTON,10,26,72,8
-    CONTROL         "",IDC_TEXT,"Button",BS_AUTORADIOBUTTON,10,38,69,11
-    CONTROL         "",IDC_COPYIMG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,
-                    67,310,12
+    DEFPUSHBUTTON   "",ID_CONFIRM,11,137,71,14
+    PUSHBUTTON      "",ID_CLEAR,92,137,74,14
+    PUSHBUTTON      "",IDC_BROWSE,176,137,76,13
+    PUSHBUTTON      "",IDCANCEL,262,137,72,14
+    GROUPBOX        "",IDC_OUTPUTGROUP,7,64,328,51,WS_GROUP
+    CONTROL         "",IDC_HTML,"Button",BS_AUTORADIOBUTTON,10,71,73,13
+    CONTROL         "",IDC_XML,"Button",BS_AUTORADIOBUTTON,10,87,72,8
+    CONTROL         "",IDC_TEXT,"Button",BS_AUTORADIOBUTTON,10,99,69,11
+    RTEXT           "Charset: ",IDC_CHARSET,129,76,125,15,SS_CENTERIMAGE
+    RTEXT           "Mime Type: ",IDC_MIMETYPE,129,93,125,15,SS_CENTERIMAGE
+    DEFPUSHBUTTON   "Change",ID_CHANGEMIMETYPE,267,95,61,14
+    DEFPUSHBUTTON   "Change",ID_CHANGECHARSET,267,76,61,14
+    CONTROL         "",IDC_COPYIMG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,247,
+                    18,82,12
     CONTROL         "",IDC_TRANSFORMURL,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,78,310,16
-    LTEXT           "",IDC_DOCLOCATION,91,3,226,13
-    EDITTEXT        IDC_EDITDOCSAVE,91,14,226,16,ES_AUTOHSCROLL
-    LTEXT           "",IDC_IMGLOCATION,91,35,227,12
-    EDITTEXT        IDC_EDITIMGSAVE,91,46,228,16,ES_AUTOHSCROLL
+                    WS_TABSTOP,247,33,82,16
+    LTEXT           "",IDC_DOCLOCATION,7,2,226,13
+    EDITTEXT        IDC_EDITDOCSAVE,7,13,226,16,ES_AUTOHSCROLL
+    LTEXT           "",IDC_IMGLOCATION,7,34,227,12
+    EDITTEXT        IDC_EDITIMGSAVE,7,45,228,16,ES_AUTOHSCROLL
+    GROUPBOX        "",IDC_OUTPUTGROUP,240,0,95,60
+    LTEXT           "",IDC_OUTPUTGROUP,10,120,325,15,SS_CENTERIMAGE
 END
 
 AUTHENTIFICATIONDIALOG DIALOG DISCARDABLE  100, 100, 150, 135
@@ -1625,11 +1678,11 @@ BEGIN
 
     SAVEASDIALOG, DIALOG
     BEGIN
-        RIGHTMARGIN, 294
+        RIGHTMARGIN, 308
         VERTGUIDE, 10
         VERTGUIDE, 320
         TOPMARGIN, 3
-        BOTTOMMARGIN, 97
+        BOTTOMMARGIN, 137
         HORZGUIDE, 110
     END
 

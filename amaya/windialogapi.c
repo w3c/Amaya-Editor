@@ -99,6 +99,8 @@ static char*      classList;
 static char*      langList;
 static char*      saveList;
 static char*      cssList;
+static char*      mimeType;
+static char*      charSet;
 static int          currentDoc;
 static int          currentView;
 static int          currentRef;
@@ -1015,14 +1017,108 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 }
 
 /*-----------------------------------------------------------------------
+ MimeTypeDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+								  LPARAM lParam)
+{
+  HFONT           newFont;
+  int             index = 0;
+  UINT            i = 0; 
+  static ThotWindow   wndMTlist;
+
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
+      SetWindowText (hwnDlg, "MIME type query");
+	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      
+      wndMTlist = CreateWindow ("listbox", NULL,
+		  WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | WS_TABSTOP,
+				  10, 20, 310, 100, hwnDlg, (HMENU) 1, 
+				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+       /* set the font of the window */
+      if (newFont)
+         SendMessage (wndMTlist, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      SendMessage (wndMTlist, LB_RESETCONTENT, 0, 0);
+      while (i < nbItem && mimeType[index] != '\0')
+	  {
+	  SendMessage (wndMTlist, LB_INSERTSTRING, i, (LPARAM) &mimeType[index]); 
+	  index += strlen (&mimeType[index]) + 1;/* Longueur de l'intitule */
+	  i++;
+      }
+	  i = 0;
+	  index = 0;
+      while (i < nbItem && mimeType[index] != '\0')
+	  {
+	  SendMessage (wndMTlist, LB_INSERTSTRING, i, (LPARAM) &mimeType[index]); 
+	  index += strlen (&mimeType[index]) + 1;/* Longueur de l'intitule */
+	  i++;
+      }
+
+      SetWindowText (GetDlgItem (hwnDlg, IDC_MTEDIT), UserMimeType);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      if (LOWORD (wParam) == 1)
+	{
+	  if (HIWORD (wParam) == LBN_SELCHANGE)
+	    {
+	      itemIndex = SendMessage (wndMTlist, LB_GETCURSEL, 0, 0);
+	      itemIndex = SendMessage (wndMTlist, LB_GETTEXT, itemIndex,
+			  (LPARAM) szBuffer);
+	    }
+	  else if (HIWORD (wParam) == LBN_DBLCLK)
+	    {
+	      if (LB_ERR == (itemIndex = SendMessage (wndMTlist, LB_GETCURSEL, 0, 0L)))
+		break;
+	      itemIndex = SendMessage (wndMTlist, LB_GETTEXT, itemIndex,
+			  (LPARAM) szBuffer);
+	    }
+	  SetDlgItemText (hwnDlg, IDC_MTEDIT, szBuffer);
+	  if (HIWORD (wParam) == LBN_DBLCLK)
+	    {
+          GetDlgItemText (hwnDlg, IDC_MTEDIT, UserMimeType, sizeof (UserMimeType) - 1);
+		  EndDialog (hwnDlg, ID_DONE);
+	      break;
+	    }
+	}
+      
+      switch (LOWORD (wParam))
+	{	  	  
+	case ID_APPLY:
+      GetDlgItemText (hwnDlg, IDC_MTEDIT, UserMimeType, sizeof (UserMimeType) - 1);
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	  
+	case IDCANCEL:
+	case WM_CLOSE:
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+      break;
+    default: return FALSE;
+    }
+  return TRUE;
+}
+
+/*-----------------------------------------------------------------------
  SaveAsDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				LPARAM lParam)
 {
-  char      txt [500];
+  char *ptr;
+  char buff[200];
 
-  txt [0] = 0;
   switch (msg)
     {
     case WM_INITDIALOG:
@@ -1077,6 +1173,26 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	  if (UpdateURLs)
 	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
+
+	  /* mime type */
+      if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->content_type)
+          ptr = DocumentMeta[SavingDocument]->content_type;
+      else if (UserMimeType[0] != EOS)
+          ptr = UserMimeType;
+      else
+          ptr = "UNKNOWN";
+      _snprintf (buff, 500, "MIME type: %s", ptr);
+  	  SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
+      SetDlgItemText (hwnDlg, ID_CHANGEMIMETYPE, "Change");
+	  
+      /* charset */
+      if (DocumentMeta[SavingDocument] && DocumentMeta[SavingDocument]->charset)
+        ptr = DocumentMeta[SavingDocument]->charset;
+      else
+        ptr = "UNKNOWN";
+      _snprintf (buff, 500, "Charset: %s", ptr);
+  	  SetDlgItemText (hwnDlg, IDC_CHARSET, buff);
+      SetDlgItemText (hwnDlg, ID_CHANGECHARSET, "Change");
 	}
 	  /* set the default focus and return FALSE to validate it */
 	  SetFocus (GetDlgItem (hwnDlg, IDC_EDITDOCSAVE));
@@ -1128,6 +1244,24 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case IDC_TRANSFORMURL:
 	  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 5);
+	  break;
+
+  	case ID_CHANGECHARSET:
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
+      if (UserCharset[0] != EOS)
+	  {
+        _snprintf (buff, 500, "Charset: %s", UserCharset);	  
+  	    SetDlgItemText (hwnDlg, IDC_CHARSET, buff);
+	  }
+	  break;
+
+	case ID_CHANGEMIMETYPE:
+	  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
+      if (UserMimeType[0] != EOS)
+	  {
+        _snprintf (buff, 500, "MIME type: %s", UserMimeType);	  
+  	    SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
+	  }	  
 	  break;
 	  
 	case ID_CLEAR:
@@ -3395,6 +3529,16 @@ void  CreateMatrixDlgWindow (int num_cols, int num_rows)
 }
 
 /*-----------------------------------------------------------------------
+ CreateMimeTypeDlgWindow
+ ------------------------------------------------------------------------*/
+void CreateMimeTypeDlgWindow (ThotWindow parent, int nb_item, char *mimetype_list)
+{
+   mimeType                = mimetype_list;
+   nbItem                  = (UINT)nb_item;
+   DialogBox (hInstance, MAKEINTRESOURCE (MIMETYPEDIALOG), NULL, (DLGPROC) MimeTypeDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  CreateSaveAsDlgWindow
  ------------------------------------------------------------------------*/
 void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
@@ -3413,7 +3557,7 @@ void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
 }
 
 /*-----------------------------------------------------------------------
- CreateOPenDocDlgWindow
+ CreateOpenDocDlgWindow
  ------------------------------------------------------------------------*/
 void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *docName,
 			      int doc_select, int dir_select, int doc_type)
