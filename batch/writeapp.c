@@ -548,8 +548,11 @@ static void         WriteActionList (char *fname)
       fprintf (AppFile, "  char appName[MAX_PATH]; /* name of the application */\n");
       fprintf (AppFile, "  char workName[MAX_PATH]; /* path of the application */\n");
       
+      fprintf (AppFile, "#ifndef _WX /* this init is done earlier on WX, see AmayaApp::OnInit */\n");
       fprintf (AppFile, "  /* initialize the Registry */\n");
       fprintf (AppFile, "  TtaInitializeAppRegistry (argv[0]);\n");
+      fprintf (AppFile, "#endif /* _WX */\n");
+
       fprintf (AppFile, "  /* save argc and argv */\n");
       fprintf (AppFile, "  appArgc = argc;\n  appArgv = argv;\n");
       fprintf (AppFile, "  /* extract the name of the application */\n");
