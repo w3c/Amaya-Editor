@@ -150,11 +150,7 @@ static void RegisterInHistory (PtrElement pEl, PtrAttribute pAttr, int frame,
   if (!open)
     OpenHistorySequence (pDoc, pEl, pEl, pAttr, firstCharIndex, lastCharIndex);
   if (pAttr == NULL)
-    {
-      AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
-      if (!open)
-	CloseHistorySequence (pDoc);
-    }
+    AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
 }
 
 /*----------------------------------------------------------------------

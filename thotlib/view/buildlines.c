@@ -1228,7 +1228,7 @@ static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
   pNextBox = pBox->BxNext;
   oldlg = pBox->BxNChars;
   font = pBox->BxFont;
-  oldWidth = pBox->BxWidth;
+  oldWidth = pBox->BxW;
   oldnSpaces = pBox->BxNSpaces;
 
   /* search a break */
@@ -1270,7 +1270,7 @@ static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
 
       /* transmit widths, margins, borders, and paddings */
       pBox->BxW = width;
-      pBox->BxWidth = width - pBox->BxRMargin - r - pBox->BxRBorder - pBox->BxRPadding;
+      pBox->BxWidth = width - r - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
       pBox->BxRMargin = 0;
       pBox->BxRBorder = 0;
       pBox->BxRPadding = 0;
@@ -1312,7 +1312,7 @@ static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
 	}
       else
 	ibox2->BxW = oldWidth - width - lostPixels * spaceWidth;
-      ibox2->BxWidth = ibox2->BxW + pBox->BxRMargin + r + pBox->BxRBorder + pBox->BxRPadding;
+      ibox2->BxWidth = ibox2->BxW + r + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
       ibox2->BxTMargin = pBox->BxTMargin;
       ibox2->BxTBorder = pBox->BxTBorder;
       ibox2->BxTPadding = pBox->BxTPadding;
@@ -1423,7 +1423,7 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
 
       /* transmit widths, margins, borders, and paddings */
       ibox1->BxW = width;
-      ibox1->BxWidth = width + pBox->BxLMargin + l + pBox->BxLBorder + pBox->BxLPadding;
+      ibox1->BxWidth = width + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       ibox1->BxTMargin = pBox->BxTMargin;
       ibox1->BxTBorder = pBox->BxTBorder;
       ibox1->BxTPadding = pBox->BxTPadding;
@@ -1473,8 +1473,8 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
 	  ibox2->BxNSpaces = 0;
 	}
       else
-	ibox2->BxW = pBox->BxWidth - width - lostPixels * spaceWidth;      
-      ibox2->BxWidth = ibox2->BxW + pBox->BxRMargin + r + pBox->BxRBorder + pBox->BxRPadding;
+	ibox2->BxW = pBox->BxW - width - lostPixels * spaceWidth;      
+      ibox2->BxWidth = ibox2->BxW + r + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
       ibox2->BxTMargin = pBox->BxTMargin;
       ibox2->BxTBorder = pBox->BxTBorder;
       ibox2->BxTPadding = pBox->BxTPadding;
