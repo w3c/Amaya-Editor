@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue May 28 14:10:58 CEST 2002" version="43">
+<base last_update="Mon Jun  3 14:02:32 CEST 2002" version="44">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -2271,7 +2271,7 @@
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xthml+xml MIME type for XHTML documents</message>
 	<message xml:lang="fr">Utiliser le type MIME application/xthml+xml pour	les documents XHTML</message>
-	<message xml:lang="de">Benutzen Sie für XHTML Dokumente den MIME Typ application/xhtml+xml</message>
+	<message xml:lang="de">MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden</message>
 	<message xml:lang="it">Per un documento XHTML, usa il MIME type application/xhtml+xml</message>
 	<message xml:lang="es">Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml</message>
 	<message xml:lang="pt">Utilise o tipo MIME application/xhtml+xml para documentos XHTML</message>
@@ -2323,7 +2323,7 @@
 </label>
 <label define="AM_UNLOCKING">
 	<message xml:lang="en">Unlocking %s...</message>
-	<message xml:lang="fr">En attente d'une libération du verrou...</message> 
+	<message xml:lang="fr">En attente d'une libération du verrou...</message>
 	<message xml:lang="pt">Destravando %s...</message>
 </label>
 <label define="AM_UNLOCKED">
