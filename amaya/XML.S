@@ -1,5 +1,5 @@
 
-      { Thot structure schema for Scalable Vector Graphics }
+      { Thot structure schema for generic XML documents }
 
 STRUCTURE XML;
 
