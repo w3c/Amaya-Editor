@@ -106,10 +106,6 @@ SOURCE=..\..\annotlib\ANNOTmenu.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\annotlib\ANNOTnotif.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\annotlib\ANNOTschemas.c
 # End Source File
 # Begin Source File
