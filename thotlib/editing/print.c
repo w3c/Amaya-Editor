@@ -2851,10 +2851,10 @@ char              **argv;
          if (!ustrcmp (destination, TEXT("PSFILE")))
            {
 #            ifdef _WINDOWS 
-             usprintf (cmd, TEXT("%s%c%s.ps"), tempDir, PATH_SEP, name);
+             usprintf (cmd, TEXT("%s%c%s.ps"), tempDir, DIR_SEP, name);
              CopyFile (cmd, printer, FALSE);
 #            else  /* !_WINDOWS */
-             sprintf (cmd, "/bin/mv %s%c%s.ps %s\n", tempDir, PATH_SEP, name, printer);
+             sprintf (cmd, "/bin/mv %s%c%s.ps %s\n", tempDir, DIR_SEP, name, printer);
              result = system (cmd);
              if (result != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
