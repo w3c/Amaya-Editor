@@ -2697,8 +2697,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifdef _WX
        /* the document needs to have a window parent and a page id
 	* (identified by window_id and page_id) */
-       TtaSetWindowId( doc, window_id );
-       TtaSetPageId( doc, page_id );
+       TtaSetWindowId (doc, window_id);
+       TtaSetPageId (doc, page_id);
 #endif /* _WX */
        
        /* get the geometry of the main view */

@@ -1283,7 +1283,7 @@ void FrameHScrolledCallback( int frame, int position, int page_size )
 #if defined(_GTK)
 void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 {
-  FrameHScrolledCallback( frame, w->value, w->page_size );
+  FrameHScrolledCallback (frame, (int)w->value, (int)w->page_size);
 }
 #endif /* #if defined(_GTK) */ 
 
@@ -1515,7 +1515,7 @@ void FrameVScrolled (int *w, int frame, int *param)
 #ifdef _GTK
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 {
-  FrameVScrolledCallback (frame, w->value);
+  FrameVScrolledCallback (frame, (int)w->value);
 }
 #endif /*_GTK*/
 
@@ -3899,6 +3899,11 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 {
   unsigned char      *title;
+  CHAR_T             *ptr;
+#ifdef _WX
+  AmayaFrame         *p_frame;
+#else /* _WX */
+  unsigned char      *s;
 #if defined(_GTK) || defined(_MOTIF)  
   ThotWidget          w;
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
@@ -3906,7 +3911,7 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   int                 n;
   Arg                 args[MAX_ARGS];
 #endif /* _MOTIF */
-  CHAR_T             *ptr;
+#endif /* _WX */
 
   if (encoding == TtaGetDefaultCharset ())
     title = text;
@@ -3919,9 +3924,17 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
       TtaFreeMemory (ptr);
     }
 
+#ifdef _WX
+  p_frame = FrameTable[frame].WdFrame;
+  if ( p_frame )
+    p_frame->SetPageTitle( wxString((const char *)title, AmayaWindow::conv_ascii) );
+#else /* _WX */
+  /* Add the Amaya version */
+  s = (unsigned char *)TtaGetMemory (strlen ((const char *)title) + strlen (HTAppVersion) + 10);
+  sprintf ((char *)s, "%s - Amaya %s", text, HTAppVersion);
 #ifdef _WINGUI
   if (FrMainRef [frame])
-    SetWindowText (FrMainRef[frame], title);
+    SetWindowText (FrMainRef[frame], s);
 #endif /* _WINGUI */
 #if defined(_GTK) || defined(_MOTIF)  
   w = FrameTable[frame].WdFrame;
@@ -3929,12 +3942,12 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
     {
 #ifdef _GTK
       w = gtk_widget_get_toplevel (w);
-      gtk_window_set_title (GTK_WINDOW(w), (gchar *)title);
+      gtk_window_set_title (GTK_WINDOW(w), (gchar *)s);
 #endif /* _GTK */
 #ifdef _MOTIF
       w = XtParent (XtParent (XtParent (w)));
       n = 0;
-      XtSetArg (args[n], XmNtitle, title);
+      XtSetArg (args[n], XmNtitle, s);
       n++;
       XtSetArg (args[n], XmNiconName, title);
       n++;
@@ -3942,15 +3955,9 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #endif /* _MOTIF */
     }
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
+  TtaFreeMemory (s);
+#endif /* _WX */
 
-#if defined(_WX)
-  AmayaFrame * p_frame = FrameTable[frame].WdFrame;
-  if ( p_frame )
-    {
-      p_frame->SetPageTitle( wxString((const char *)title, AmayaWindow::conv_ascii) );
-    }
-#endif /* #if defined(_WX) */
-  
   if (title != text)
     TtaFreeMemory (title);
 }

@@ -3174,7 +3174,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    GtkAccelGroup      *accel_group;
    GtkWidget          *wrap_text;
 #endif /* _GTK */
-   
 #ifdef _MOTIF 
    ThotWidget          drawing_frame; 
    ThotWidget          table1;
@@ -3184,7 +3183,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    char                string[700];
    int                 n;
 #endif /* _MOTIF */
-
    ThotWidget          Main_Wd = 0;
    ThotWidget          hscrl;
    ThotWidget          vscrl;
@@ -3198,7 +3196,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotBool            found;
 #define MIN_HEIGHT 100
 #define MIN_WIDTH 200
-   
 #ifdef _WINGUI
    hwndClient = 0;
    ToolBar = 0;
@@ -4134,8 +4131,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* Initialise la couleur de fond */
 	   BackgroundColor[frame] = DefaultBColor;
 	 }
-       else
-	 ChangeFrameTitle (frame, (unsigned char*)name, TtaGetDefaultCharset ());
+       /* Update the frame title in any case */
+       ChangeFrameTitle (frame, (unsigned char*)name, TtaGetDefaultCharset ());
 
        /* Window volume in characters */
        *volume = GetCharsCapacity (width * height * 5);

@@ -1608,15 +1608,10 @@ void UpdateTitle (Element el, Document doc)
 	 }
 	UpdateAtom (doc, DocumentURLs[doc], text);
 	if (DocumentTypes[doc] != docSource)
-	  {
-	    src = (char *)TtaGetMemory (length + strlen (HTAppVersion) + 9);
-	    sprintf (src, "%s - Amaya %s", text, HTAppVersion);
-	    TtaChangeWindowTitle (doc, 0, src, UTF_8);
-	    TtaFreeMemory (src);
-	  }
+	  TtaChangeWindowTitle (doc, 0, text, UTF_8);
     	if (DocumentTypes[doc] == docSource || DocumentSource[doc])
 	  {
-	    src = (char *)TtaGetMemory (length + 8);
+	    src = (char *)TtaGetMemory (length + 9);
 	    sprintf (src, "Source: %s", text);
 	    if (DocumentTypes[doc] == docSource)
 	      TtaChangeWindowTitle (doc, 1, src, UTF_8);
