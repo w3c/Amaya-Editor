@@ -2247,7 +2247,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
            /* wheel mice down */
 	   TtcPageDown(document, view); 
 	   FrameToView (frame, &document, &view); 
-	   break;	  
+	   break;
 	default:
 	  break;
 	}
@@ -2864,6 +2864,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
        WinErrorBox (NULL, "DefineClipping");
 #else  /* _WINDOWS */ 
 #ifdef _GTK 
+#ifndef _GL
 	rect.x = clipx;
 	rect.y = clipy;
 	rect.width = clipwidth;
@@ -2872,6 +2873,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
 	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
 	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
+#endif/*  _GL */
 #else /* _GTK */
 	rect.x = 0;
 	rect.y = 0;
@@ -2897,7 +2899,8 @@ void RemoveClipping (int frame)
 {
 #ifndef _WINDOWS
 #ifdef _GTK
-  GdkRectangle         rect;
+#ifndef _GL
+ GdkRectangle         rect;
 
  rect.x = 0;
  rect.y = 0;
@@ -2907,6 +2910,7 @@ void RemoveClipping (int frame)
  gdk_gc_set_clip_rectangle (TtLineGC, &rect);
  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
  gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
+#endif/*  _GL */
 #else /* _GTK */
    XRectangle          rect;
 
@@ -2971,7 +2975,7 @@ void UpdateScrollbars (int frame)
        tmpw->upper = l;
        tmpw->page_size = width;
        tmpw->page_increment = width-13;
-       tmpw->step_increment = 13;
+       tmpw->step_increment = 8;
        tmpw->value = Xpos;
        gtk_adjustment_changed (tmpw);
 #endif /* !_GTK */
@@ -2991,7 +2995,7 @@ void UpdateScrollbars (int frame)
        tmpw->upper = h;
        tmpw->page_size = height;
        tmpw->page_increment = height-13;
-       tmpw->step_increment = 13;
+       tmpw->step_increment = 6;
        tmpw->value = Ypos;
        gtk_adjustment_changed (tmpw);
 #endif /* !_GTK */
