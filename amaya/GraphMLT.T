@@ -215,7 +215,7 @@ RULES
 	indent +2;
 	indent -2 after;
 	create SCT after;
-	create 'tspan>' after;
+	create 'tspan>\12' after;
 	END;
 
    image:
@@ -302,6 +302,10 @@ RULES
    MathML:
 	Use MathMLT;
 
+   TEXT_UNIT:
+        if immediately within text_
+	    create '\12' after;
+
    GRAPHICS_UNIT:
 	Remove;
 
@@ -341,6 +345,30 @@ ATTRIBUTES
         create Namespace;
         create DoubleQuote;
 	end;
+
+   viewBox:
+	BEGIN
+	create SAN;
+	create 'viewBox="';
+	create viewBox;
+	create DoubleQuote;
+	END;
+
+   x:
+	BEGIN
+	create SAN;
+	create 'x="';
+	create x;
+	create DoubleQuote;
+	END;
+
+   y:
+	BEGIN
+	create SAN;
+	create 'y="';
+	create y;
+	create DoubleQuote;
+	END;
 
    height_:
 	BEGIN
@@ -406,14 +434,6 @@ ATTRIBUTES
 	create 'linestyle="dotted"';
 	END;
 
-   depth_:
-	BEGIN
-	create SAN;
-	create 'depth="';
-	create depth_;
-	create DoubleQuote;
-	END;
-
    points:
 	BEGIN
 	create SAN;
@@ -441,22 +461,6 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'arrowhead="both"';
-	END;
-
-   x:
-	BEGIN
-	create SAN;
-	create 'x="';
-	create x;
-	create DoubleQuote;
-	END;
-
-   y:
-	BEGIN
-	create SAN;
-	create 'y="';
-	create y;
-	create DoubleQuote;
 	END;
 
    cx:

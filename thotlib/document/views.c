@@ -873,7 +873,7 @@ PtrElement          viewRoot;
 	 sel = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
 				    &lastChar);
 	 selInMainTree = FALSE;
-	 if (sel)
+	 if (firstSel)
 	   if (pSelDoc == pDoc && firstSel->ElAssocNum == 0)
 	      selInMainTree = TRUE;
 	 if (selInMainTree)

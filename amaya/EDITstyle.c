@@ -750,6 +750,7 @@ void                *param;
   CHAR_T*             css_rules = param;
   CHAR_T              string[150];
   CHAR_T*             ptr;
+  ThotBool            svg;
 
   string[0] = WC_EOS;
   if (settings->type == PRBackgroundPicture)
@@ -761,11 +762,11 @@ void                *param;
       else
 	ptr = MakeRelativeURL (settings->value.pointer, DocumentURLs[doc]);
       settings->value.pointer = ptr;
-      PToCss (settings, string, sizeof(string));
+      PToCss (settings, string, sizeof(string), el);
       TtaFreeMemory (ptr);
     }
   else
-    PToCss (settings, string, sizeof(string));
+    PToCss (settings, string, sizeof(string), el);
 
   if (string[0] != WC_EOS && *css_rules != WC_EOS)
     ustrcat (css_rules, TEXT("; "));

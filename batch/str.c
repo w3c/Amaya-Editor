@@ -1881,6 +1881,9 @@ SyntRuleNum         pr;
        case KWD_ReturnCreateNL:
 	 ExceptionNum (ExcReturnCreateNL, True, False, False, wi);
 	 break;
+       case KWD_ReturnCreateWithin:
+	 ExceptionNum (ExcReturnCreateWithin, True, False, False, wi);
+	 break;
        case KWD_ParagraphBreak:
 	 ExceptionNum (ExcParagraphBreak, True, False, False, wi);
 	 break;

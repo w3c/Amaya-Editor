@@ -364,7 +364,7 @@ ThotBool    horiz;
 	    }
 	  else
 	    GetAttributeValueAndUnit (attr, &x, &unit);
-	  usprintf (buffer, TEXT("%d px"), x);
+	  usprintf (buffer, TEXT("%dpx"), x);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	  /* update the last point */
 	  attrType.AttrTypeNum = GraphML_ATTR_x2;
@@ -381,7 +381,7 @@ ThotBool    horiz;
 	    {
 	      x = 0;
 	    }
-	  usprintf (buffer, TEXT("%d px"), x);
+	  usprintf (buffer, TEXT("%dpx"), x);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	}
       else
@@ -402,7 +402,7 @@ ThotBool    horiz;
 	    {
 	      y = 0;
 	    }
-	  usprintf (buffer, TEXT("%d px"), y);
+	  usprintf (buffer, TEXT("%dpx"), y);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	  /* update the last point */
 	  attrType.AttrTypeNum = GraphML_ATTR_y2;
@@ -419,7 +419,7 @@ ThotBool    horiz;
 	    {
 	      y = 0;
 	    }
-	  usprintf (buffer, TEXT("%d px"), y);
+	  usprintf (buffer, TEXT("%dpx"), y);
 	  TtaSetAttributeText (attr, buffer, el, doc);
 	}
 #endif /* IV */
@@ -528,15 +528,21 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-     /* element el has no position attribute */
-     {
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (el, attr, doc);
-     }
-   usprintf (buffer, TEXT("%d px"), org);
-   TtaSetAttributeText (attr, buffer, el, doc);
+  usprintf (buffer, TEXT("%dpx"), org);  
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    /* element el has no position attribute */
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      TtaRegisterAttributeCreate (attr, el, doc);
+    }
+  else
+    {
+      TtaRegisterAttributeReplace (attr, el, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -592,20 +598,20 @@ ThotBool    horiz;
   if (elType.ElTypeNum == GraphML_EL_line_)
     /*UpdatePointsAttribute (el, doc, &minX, &minY, &maxX, &maxY)*/;
   else if (elType.ElTypeNum == GraphML_EL_circle)
-     {
-       /* transform into a radius */
-       dim /= 2;
-       attrType.AttrTypeNum = GraphML_ATTR_r;
-     }
-   else if (elType.ElTypeNum == GraphML_EL_ellipse)
-     {
-       /* transform into a radius */
-       dim /= 2;
+    {
+      /* transform into a radius */
+      dim /= 2;
+      attrType.AttrTypeNum = GraphML_ATTR_r;
+    }
+  else if (elType.ElTypeNum == GraphML_EL_ellipse)
+    {
+      /* transform into a radius */
+      dim /= 2;
       if (horiz)
 	attrType.AttrTypeNum = GraphML_ATTR_rx;
       else
 	attrType.AttrTypeNum = GraphML_ATTR_ry;
-     }
+    }
   else if (elType.ElTypeNum == GraphML_EL_rect ||
 	   elType.ElTypeNum == GraphML_EL_text_ ||
 	   elType.ElTypeNum == GraphML_EL_tspan ||
@@ -621,15 +627,21 @@ ThotBool    horiz;
       else
 	attrType.AttrTypeNum = GraphML_ATTR_height_;
     }
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-     /* element el has no position attribute */
-     {
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (el, attr, doc);
-     }
-   usprintf (buffer, TEXT("%d px"), dim);
-   TtaSetAttributeText (attr, buffer, el, doc);
+  usprintf (buffer, TEXT("%dpx"), dim);
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    /* element el has no position attribute */
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      TtaRegisterAttributeCreate (attr, el, doc);
+    }
+  else
+    {
+      TtaRegisterAttributeReplace (attr, el, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -738,89 +750,112 @@ ThotBool            GraphicsPRuleChange (event)
 NotifyPresentation *event;
 #endif /* __STDC__*/
 {
-  Element       el;
+  Element       el, span;
   PRule         presRule;
   Document      doc;
   ElementType   elType;
-  DisplayMode   dispMode;
   int           presType;
   int           mainView, unit;
   int           x, y, width, height;
   ThotBool      ret;
  
   ret = FALSE; /* let Thot perform normal operation */
-  presType = event->pRuleType;
-  if (presType != PRVertPos && presType != PRHorizPos &&
-      presType != PRHeight && presType != PRWidth)
-    {
-      ret = ChangePRule (event);
-      return (ret); /* let Thot perform or not normal operation */
-    }
- 
   el = event->element;
-  doc = event->document;
-  presRule = event->pRule;
- 
-  mainView = TtaGetViewFromName (doc, "Formatted_view");
   elType = TtaGetElementType (el);
+  doc = event->document;
   if (elType.ElSSchema != GetGraphMLSSchema (doc))
     return (ret); /* let Thot perform normal operation */
-#ifdef IV
-  dispMode = TtaGetDisplayMode (doc);
-  /* ask Thot to stop displaying changes made in the document */
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
-#endif
-  ret = FALSE; /* let Thot perform normal operation */
-  unit = TtaGetPRuleUnit (presRule);
-  TtaGiveBoxPosition (el, doc, mainView, unit, &x, &y);
-  TtaGiveBoxSize (el, doc, 1, unit, &width, &height);
-  if (presType == PRVertPos)
+
+  presType = event->pRuleType;
+  if (presType != PRHeight      &&  presType != PRWidth      &&
+      presType != PRVertPos     &&  presType != PRHorizPos   &&
+      presType != PRSize        &&  presType != PRStyle      &&
+      presType != PRWeight      &&  presType != PRFont       &&
+      presType != PRLineStyle   &&  presType != PRLineWeight &&
+      presType != PRBackground  &&  presType != PRForeground &&
+      presType != PRFillPattern)
+     return (TRUE);   /* don't let Thot do it */
+
+  presRule = event->pRule;
+ 
+  if (TtaGetConstruct (el) == ConstructBasicType)
+    /* it's a basic type. Move the PRule to the parent element */
     {
-      if (elType.ElTypeNum == GraphML_EL_Spline ||
-	  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	  elType.ElTypeNum == GraphML_EL_polyline ||
-	  elType.ElTypeNum == GraphML_EL_polygon ||
-	  elType.ElTypeNum == GraphML_EL_line_)
-	TranslatePointsAttribute (el, doc, y, FALSE);
+      if (MakeASpan (el, &span, doc))
+	{
+	MovePRule (presRule, el, span, doc, FALSE);
+        el = span;
+	}
       else
 	{
-	  /* the new value is the old one plus the difference */
-	  y = TtaGetPRuleValue (presRule);
-	  UpdatePositionAttribute (el, doc, y, height, FALSE);
+        el = TtaGetParent (el);
+        MovePRule (presRule, event->element, el, doc, FALSE);
 	}
     }
-  else if (presType == PRHorizPos)
+
+  if (presType == PRSize        ||  presType == PRStyle      ||
+      presType == PRWeight      ||  presType == PRFont       ||
+      presType == PRLineStyle   ||  presType == PRLineWeight ||
+      presType == PRBackground  ||  presType == PRForeground ||
+      presType == PRFillPattern)
     {
-      if (elType.ElTypeNum == GraphML_EL_Spline ||
-	  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	  elType.ElTypeNum == GraphML_EL_polyline ||
-	  elType.ElTypeNum == GraphML_EL_polygon ||
-	  elType.ElTypeNum == GraphML_EL_line_)
-	TranslatePointsAttribute (el, doc, y, FALSE);
-      else
-	{
+      SetStyleAttribute (doc, el);
+      TtaSetDocumentModified (doc);
+    }
+
+  else if (presType == PRVertPos || presType == PRHorizPos ||
+           presType == PRHeight ||  presType == PRWidth)
+    {
+    unit = TtaGetPRuleUnit (presRule);
+    mainView = TtaGetViewFromName (doc, "Formatted_view");
+    TtaGiveBoxPosition (el, doc, mainView, unit, &x, &y);
+    TtaGiveBoxSize (el, doc, 1, unit, &width, &height);
+    if (presType == PRVertPos)
+      {
+	if (elType.ElTypeNum == GraphML_EL_Spline ||
+	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	    elType.ElTypeNum == GraphML_EL_polyline ||
+	    elType.ElTypeNum == GraphML_EL_polygon ||
+	    elType.ElTypeNum == GraphML_EL_line_)
+	  TranslatePointsAttribute (el, doc, y, FALSE);
+	else
+	  {
 	  /* the new value is the old one plus the difference */
-	  x = TtaGetPRuleValue (presRule);
-	  UpdatePositionAttribute (el, doc, x, width, TRUE);
+	    y = TtaGetPRuleValue (presRule);
+	    UpdatePositionAttribute (el, doc, y, height, FALSE);
+	  }
+      }
+    else if (presType == PRHorizPos)
+      {
+	if (elType.ElTypeNum == GraphML_EL_Spline ||
+	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	    elType.ElTypeNum == GraphML_EL_polyline ||
+	    elType.ElTypeNum == GraphML_EL_polygon ||
+	    elType.ElTypeNum == GraphML_EL_line_)
+	  TranslatePointsAttribute (el, doc, x, FALSE);
+	else
+	  {
+	    /* the new value is the old one plus the difference */
+	    x = TtaGetPRuleValue (presRule);
+	    UpdatePositionAttribute (el, doc, x, width, TRUE);
 	}
-    }
-  else if (presType == PRHeight)
-    {
-      if (elType.ElTypeNum == GraphML_EL_Spline ||
-          elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	  elType.ElTypeNum == GraphML_EL_rect ||
-          elType.ElTypeNum == GraphML_EL_ellipse ||
-          elType.ElTypeNum == GraphML_EL_polyline ||
-          elType.ElTypeNum == GraphML_EL_polygon)
-        {
-	  /* the new value is the old one plus the delta */
-	  height = TtaGetPRuleValue (presRule);
-          UpdateWidthHeightAttribute (el, doc, height, FALSE);
-        }
-    }
-  else if (presType == PRWidth)
-    {
+      }
+    else if (presType == PRHeight)
+      {
+	if (elType.ElTypeNum == GraphML_EL_Spline ||
+	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	    elType.ElTypeNum == GraphML_EL_rect ||
+	    elType.ElTypeNum == GraphML_EL_ellipse ||
+	    elType.ElTypeNum == GraphML_EL_polyline ||
+	    elType.ElTypeNum == GraphML_EL_polygon)
+	  {
+	    /* the new value is the old one plus the delta */
+	    height = TtaGetPRuleValue (presRule);
+	    UpdateWidthHeightAttribute (el, doc, height, FALSE);
+	  }
+      }
+    else if (presType == PRWidth)
+      {
       if (elType.ElTypeNum == GraphML_EL_Spline ||
           elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	  elType.ElTypeNum == GraphML_EL_rect ||
@@ -833,11 +868,10 @@ NotifyPresentation *event;
 	  width = TtaGetPRuleValue (presRule);
           UpdateWidthHeightAttribute (el, doc, width, TRUE);
         }
+      }
     }
-  /*TtaSetDisplayMode (doc, dispMode);*/
   return ret; /* let Thot perform normal operation */
 }
-
 /*----------------------------------------------------------------------
    ControlPointChanged
    A control point has been changed in a polyline, a polygon,
@@ -1459,11 +1493,9 @@ NotifyElement      *event;
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
-  SSchema	GraphMLSchema;
 
   elType = TtaGetElementType (event->element);
-  GraphMLSchema = elType.ElSSchema;
-  attrType.AttrSSchema = GraphMLSchema;
+  attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = GraphML_ATTR_width_;
   attr = TtaGetAttribute (event->element, attrType);
   if (attr)
@@ -1472,4 +1504,45 @@ NotifyElement      *event;
   attr = TtaGetAttribute (event->element, attrType);
   if (attr)
      ParseWidthHeightAttribute (attr, event->element, event->document, FALSE);
+}
+
+/*----------------------------------------------------------------------
+   TspanCreated
+   A tspan element has been created by the user hitting a Enter key
+   witihn a text element. Create attributes x and dy.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TspanCreated (NotifyElement * event)
+#else  /* __STDC__ */
+void                TspanCreated (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+
+  elType = TtaGetElementType (event->element);
+  attrType.AttrSSchema = elType.ElSSchema;
+
+  attrType.AttrTypeNum = GraphML_ATTR_x;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (!attr)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (event->element, attr, event->document);
+    }
+  TtaSetAttributeText (attr, TEXT("0"), event->element, event->document);
+  ParseCoordAttribute (attr, event->element, event->document);
+
+  attrType.AttrTypeNum = GraphML_ATTR_dy;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (!attr)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (event->element, attr, event->document);
+    }
+  TtaSetAttributeText (attr, TEXT("1em"), event->element, event->document);
+  ParseCoordAttribute (attr, event->element, event->document);
 }

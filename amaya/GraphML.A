@@ -25,6 +25,11 @@ ELEMENTS
 	ElemGraphModify.Post -> ControlPointChanged;
    polygon:
 	ElemGraphModify.Post -> ControlPointChanged;
+   tspan:
+	BEGIN
+	ElemNew.Post ->         TspanCreated;
+	ElemPaste.Post ->       TspanCreated;
+	END;
    foreignObject:
 	ElemExport.Pre ->       ExportForeignObject;
    GRAPHICS_UNIT:

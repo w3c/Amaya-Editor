@@ -127,7 +127,8 @@ ExceptVal =	 'NoCut' / 'NoCreate' / 'NoHMove' / 'NoVMove' /
                  'ImportLine' / 'ImportParagraph' /
 		 'ParagraphBreak' /
                  'HighlightChildren' / 'ExtendedSelection' /
-		 'ReturnCreateNL' / 'IsTable' / 'IsRow' /
+		 'ReturnCreateNL' / 'ReturnCreateWithin' /
+		 'IsTable' / 'IsRow' /
 		 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
 		 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
 		 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /

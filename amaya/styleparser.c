@@ -3601,19 +3601,21 @@ ThotBool            isHTML;
 /*----------------------------------------------------------------------
  PToCss:  translate a PresentationSetting to the
      equivalent CSS string, and add it to the buffer given as the
-      argument. It is used when extracting the CSS string from actual
-      presentation.
+     argument. It is used when extracting the CSS string from actual
+     presentation.
+     el is the element for which the style rule is generated
  
   All the possible values returned by the presentation drivers are
   described in thotlib/include/presentation.h
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                 PToCss (PresentationSetting settings, CHAR_T* buffer, int len)
+void                 PToCss (PresentationSetting settings, CHAR_T* buffer, int len, Element el)
 #else
-void                 PToCss (settings, buffer, len)
+void                 PToCss (settings, buffer, len, el)
 PresentationSetting  settings;
-CHAR_T*                param;
-int                  len
+CHAR_T*              param;
+int                  len;
+Element              el;
 #endif
 {
   float               fval = 0;
@@ -3721,7 +3723,8 @@ int                  len
 	  if (real)
 	    usprintf (buffer, TEXT("font-size: %g"), fval);
 	  else
-	    usprintf (buffer, TEXT("font-size: %d"), settings->value.typed_data.value);
+	    usprintf (buffer, TEXT("font-size: %d"),
+		      settings->value.typed_data.value);
 	  add_unit = 1;
 	}
       break;
@@ -3743,14 +3746,16 @@ int                  len
       if (real)
 	usprintf (buffer, TEXT("text-indent: %g"), fval);
       else
-	usprintf (buffer, TEXT("text-indent: %d"), settings->value.typed_data.value);
+	usprintf (buffer, TEXT("text-indent: %d"),
+		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLineSpacing:
       if (real)
 	usprintf (buffer, TEXT("line-height: %g"), fval);
       else
-	usprintf (buffer, TEXT("line-height: %d"), settings->value.typed_data.value);
+	usprintf (buffer, TEXT("line-height: %d"),
+		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRJustify:
@@ -3780,24 +3785,46 @@ int                  len
       break;
     case PRBackground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green, blue);
+      if (ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema),
+		 TEXT("GraphML")) == 0)
+         usprintf (buffer, TEXT("fill: #%02X%02X%02X"), red, green, blue);
+      else
+         usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green,
+		   blue);
       break;
     case PRForeground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
+      if (ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema),
+		  TEXT("GraphML")) == 0)
+	usprintf (buffer, TEXT("stroke: #%02X%02X%02X"), red, green, blue);
+      else
+	usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
       break;
+    case PRLineWeight:
+      if (ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema),
+		  TEXT("GraphML")) == 0)
+	if (real)
+	  usprintf (buffer, TEXT("stroke-width: %g"), fval);
+	else
+	  usprintf (buffer, TEXT("stroke-width: %d"),
+		    settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+
     case PRMarginTop:
       if (real)
 	usprintf (buffer, TEXT("marging-top: %g"), fval);
       else
-	usprintf (buffer, TEXT("marging-top: %d"), settings->value.typed_data.value);
+	usprintf (buffer, TEXT("marging-top: %d"),
+		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginLeft:
       if (real)
 	usprintf (buffer, TEXT("margin-left: %g"), fval);
       else
-	usprintf (buffer, TEXT("margin-left: %d"), settings->value.typed_data.value);
+	usprintf (buffer, TEXT("margin-left: %d"),
+		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRHeight:
@@ -3822,7 +3849,8 @@ int                  len
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	usprintf (buffer, TEXT("background-image: url(%s)"), (char*)(settings->value.pointer));
+	usprintf (buffer, TEXT("background-image: url(%s)"),
+		  (char*)(settings->value.pointer));
       else
 	usprintf (buffer, TEXT("background-image: none"));
       break;

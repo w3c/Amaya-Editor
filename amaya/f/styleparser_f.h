@@ -20,7 +20,8 @@ extern void ParseCSSBackgroundImageCallback ( Document doc,
 extern CHAR_T* GetCSSBackgroundURL ( CHAR_T* styleString );
 extern void PToCss ( PresentationSetting settings,
                      CHAR_T* buffer,
-                     int len );
+                     int len,
+                     Element el );
 extern void ParseHTMLSpecificStyle ( Element el,
                                      CHAR_T* cssRule,
                                      Document doc,
@@ -77,7 +78,8 @@ extern void ParseCSSBackgroundImageCallback (/* Document doc,
 extern CHAR_T* GetCSSBackgroundURL (/* CHAR_T* styleString */);
 extern void PToCss (/* PresentationSetting settings,
                        CHAR_T* buffer,
-                       int len */);
+                       int len,
+                       Element el */);
 extern void ParseHTMLSpecificStyle (/* Element el,
                                        CHAR_T* cssRule,
                                        Document doc,

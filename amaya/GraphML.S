@@ -21,7 +21,10 @@ ATTR
 STRUCT
 
    GraphML
-	(ATTR !height_ = Text;
+	(ATTR viewBox = text;
+	      x = text;
+              y = text;
+	      !height_ = Text;
 	      !width_ = Text)
         = LIST OF (GraphicsElement) + (XMLcomment)
           with height_ ?= '6cm', width_ ?= '10cm';
@@ -31,9 +34,7 @@ STRUCT
 	      stroke = text;
 	      stroke_width = text;
 	      transform = TEXT;
-              linestyle_ = solid_, dashed_, dotted_;
-              depth_ = integer;
-              ShowGroup = Yes_)
+              linestyle_ = solid_, dashed_, dotted_)
         = LIST OF (GraphicsElement);
 
    { defs }
@@ -45,8 +46,7 @@ STRUCT
 	      transform;
               points = text;
               arrowhead = none_, start, end_, both;
-              linestyle_;
-              depth_)
+              linestyle_)
         = GRAPHICS;
 	
    ClosedSpline
@@ -54,14 +54,13 @@ STRUCT
               height_;
 	      transform;
               points;
-              linestyle_;
-              depth_)
+              linestyle_)
         = GRAPHICS;
 
    rect
         (ATTR transform;
-	      x = text;
-              y = text;
+	      x;
+              y;
               width_;
               height_;
 	      rx = text;
@@ -69,8 +68,7 @@ STRUCT
 	      fill;
               stroke;
 	      stroke_width;
-              linestyle_;
-              depth_)
+              linestyle_)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -81,8 +79,7 @@ STRUCT
 	      cx = text;
 	      cy = text;
               r = text;
-              linestyle_;
-              depth_)
+              linestyle_)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -94,8 +91,7 @@ STRUCT
 	      cy;
 	      rx;
 	      ry;
-              linestyle_;
-              depth_)
+              linestyle_)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -108,8 +104,7 @@ STRUCT
               x2 = text;
 	      y2 = text;
               linestyle_;
-              arrowhead;
-              depth_)
+              arrowhead)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -121,8 +116,7 @@ STRUCT
 	      transform;
               points;
               arrowhead;
-              linestyle_;
-              depth_)
+              linestyle_)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -133,8 +127,7 @@ STRUCT
               height_;
 	      transform;
               points;
-              linestyle_;
-              depth_)
+              linestyle_)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -143,9 +136,7 @@ STRUCT
    text_
         (ATTR transform;
 	      x;
-	      y;
-              width_;
-              depth_)
+	      y)
          = LIST OF (TextComponent);
 
    tspan
@@ -231,14 +222,16 @@ STRUCT
 
    GraphicsElement
 	= CASE OF
-	      desc; title; metadata; g; Spline; ClosedSpline; rect; circle;
-	      ellipse; line_; polyline; polygon; text_; foreignObject; image;
+	      GraphML; g; Spline; ClosedSpline; rect; circle; ellipse; line_;
+	      polyline; polygon; text_; image; desc; title;
+	      foreignObject; metadata;
 	      END;
 	
    TextComponent
 	= CASE OF
+	      tspan;	{ must be the first option, to allow the Return key
+			  to create tspan elements }
 	      TEXT; 
-	      tspan;
 	      desc;
 	      title;
 	      metadata;
@@ -257,19 +250,19 @@ STRUCT
 
 EXCEPT
 
-   GraphML:             IsDraw;
-   g:                   NoMove, NoResize;
-   Spline:              MoveResize, HighlightChildren, NoShowBox;
-   ClosedSpline:        MoveResize, HighlightChildren, NoShowBox;
-   rect:                MoveResize, HighlightChildren, NoShowBox;
-   circle:              MoveResize, HighlightChildren, NoShowBox;
-   ellipse:             MoveResize, HighlightChildren, NoShowBox;
-   line_:               MoveResize, HighlightChildren, NoShowBox;
-   polyline:            MoveResize, HighlightChildren, NoShowBox;
-   polygon:             MoveResize, HighlightChildren, NoShowBox;
-   image:	        MoveResize, HighlightChildren, NoShowBox;
-   text_:               MoveResize, NoResize;
-   foreignObject:       MoveResize;
+   GraphML:             IsDraw, NoCreate;
+   g:                   NoMove, NoResize, NoCreate;
+   Spline:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   ClosedSpline:        MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   circle:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   ellipse:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   line_:               MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   polygon:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   image:	        MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   text_:               MoveResize, NoResize, ReturnCreateWithin, NoCreate;
+   foreignObject:       MoveResize, NoCreate;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
 

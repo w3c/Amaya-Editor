@@ -51,16 +51,22 @@ ThotBool MakeASpan (elem, span, doc)
   ret = FALSE;
   *span = NULL;
   elType = TtaGetElementType (elem);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-    /* it's an HTML element */
+  if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) ||
+      !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+    /* it's an HTML or GraphML element */
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-     {
-     parent = TtaGetParent (elem);
-     if (parent != NULL)
+      /* it's a text leaf */
+      {
+      parent = TtaGetParent (elem);
+      if (parent != NULL)
 	{
 	doit = TRUE;
 	elType = TtaGetElementType (parent);
-	if (elType.ElTypeNum == HTML_EL_Span)
+	if ((elType.ElTypeNum == HTML_EL_Span &&
+	     !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML"))) ||
+	    (elType.ElTypeNum == GraphML_EL_tspan &&
+	     !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML"))))
+	   /* element parent is a span element */
 	   {
 	   sibling = elem;
 	   TtaNextSibling (&sibling);
@@ -69,6 +75,8 @@ ThotBool MakeASpan (elem, span, doc)
 	      sibling = elem;
 	      TtaPreviousSibling (&sibling);
 	      if (sibling == NULL)
+		/* the text leaf is the only child of its span parent.
+		   No need to create a new span element */
 		{
 	         doit = FALSE;
 		 *span = parent;
@@ -77,8 +85,12 @@ ThotBool MakeASpan (elem, span, doc)
 	      }
 	   }
 	if (doit)
+	   /* enclose the text leaf within a span element */
 	   {
-	   elType.ElTypeNum = HTML_EL_Span;
+	   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	      elType.ElTypeNum = HTML_EL_Span;
+	   else
+	      elType.ElTypeNum = GraphML_EL_tspan;
 	   *span = TtaNewElement (doc, elType);
 	   TtaInsertSibling (*span, elem, FALSE, doc);
 	   TtaRemoveTree (elem, doc);
@@ -88,7 +100,7 @@ ThotBool MakeASpan (elem, span, doc)
 	   ret = TRUE;
 	   }
 	}
-     }
+      }
   return ret;
 }
 
@@ -260,7 +272,8 @@ NotifyAttribute    *event;
    if (event->event == TteAttrDelete)
       /* if the element is a SPAN without any other attribute, remove the SPAN
          element */
-      DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
+      DeleteSpanIfNoAttr (event->element, event->document, &firstChild,
+			  &lastChild);
    else if (event->event == TteAttrCreate)
       /* if the Class attribute is on a text string, create a SPAN element that
          encloses this text string and move the Class attribute to that SPAN
@@ -276,9 +289,9 @@ NotifyAttribute    *event;
   showBoxAllowed is TRUE if the ShowBox rule could be generated
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc, ThotBool showBoxAllowed)
+void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc, ThotBool showBoxAllowed)
 #else  /* __STDC__ */
-static void MovePRule (presRule, fromEl, toEl, doc, showBoxAllowed)
+void MovePRule (presRule, fromEl, toEl, doc, showBoxAllowed)
 PRule       presRule;
 Element     fromEl;
 Element     toEl;
@@ -485,9 +498,9 @@ NotifyPresentation *event;
 
 	    if (parent != NULL)
 	      {
-		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
+		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET),
+			      NULL);
 		return (TRUE); /* don't let Thot perform normal operation */
-;
 	      }
 	    else
 	      {
@@ -566,7 +579,6 @@ NotifyPresentation *event;
 		        TtaRegisterAttributeReplace (attr, el, doc);
 		        TtaSetAttributeText (attr, buffer, el, doc);
 		      }
-		    TtaSetAttributeText (attr, buffer, el, doc);
 		    CreateAttrWidthPercentPxl (buffer, el, doc, w);
 		  }
 		else
@@ -598,30 +610,32 @@ NotifyPresentation *event;
 		&& (presType == PRIndent || presType == PRLineSpacing
 		    || presType == PRAdjust || presType == PRJustify
 		    || presType == PRHyphenate))
-	      /* if the rule is a Format rule applied to a character-level element,
-		 move it to the first enclosing non character-level element */
+	      /* if the rule is a Format rule applied to a character-level
+		 element, move it to the first enclosing non character-level
+		 element */
 	      {
 		do
 		  el = TtaGetParent (el);
 		while (el != NULL && IsCharacterLevelElement (el));
-		/* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
-		   element */
+		/* if the PRule is on a Pseudo-Paragraph, move it to the
+		   enclosing element */
 		if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 		  el = TtaGetParent (el);
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }	  
 	    else if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-	      /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
-		 element */
+	      /* if the PRule is on a Pseudo-Paragraph, move it to the
+		 enclosing element */
 	      {
 		el = TtaGetParent (el);
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }
 	    else if (MakeASpan (el, &span, doc))
-	      /* if it is a new PRule on a text string, create a SPAN element that
-		 encloses this text string and move the PRule to that SPAN element */
+	      /* if it is a new PRule on a text string, create a SPAN element
+		 that encloses this text string and move the PRule to that
+		 SPAN element */
 	      {
 		MovePRule (presRule, el, span, doc, TRUE);
 		el = span;

@@ -19,6 +19,11 @@ extern void AttrToSpan ( Element elem,
 extern void GlobalAttrCreated ( NotifyAttribute * event );
 extern void GlobalAttrDeleted ( NotifyAttribute * event );
 extern void AttrClassChanged ( NotifyAttribute * event );
+extern void MovePRule ( PRule presRule,
+                        Element fromEl,
+                        Element toEl,
+                        Document doc,
+                        ThotBool showBoxAllowed );
 extern void SetStyleAttribute ( Document doc,
                                 Element elem );
 extern ThotBool ChangePRule ( NotifyPresentation * event );
@@ -43,6 +48,11 @@ extern void AttrToSpan (/* Element elem,
 extern void GlobalAttrCreated (/* NotifyAttribute * event */);
 extern void GlobalAttrDeleted (/* NotifyAttribute * event */);
 extern void AttrClassChanged (/* NotifyAttribute * event */);
+extern void MovePRule (/* PRule presRule,
+                          Element fromEl,
+                          Element toEl,
+                          Document doc,
+                          ThotBool showBoxAllowed */);
 extern void SetStyleAttribute (/* Document doc,
                                   Element elem */);
 extern ThotBool ChangePRule (/* NotifyPresentation * event */);

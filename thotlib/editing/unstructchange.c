@@ -1078,6 +1078,7 @@ void                TtcCreateElement (doc, view)
 	empty = FALSE;
 	list = TRUE;
 	pElDelete = NULL;
+        pElReplicate = NULL;
 	typeNum = 0;
 	pSS = NULL;
 	deleteEmpty = FALSE;
@@ -1151,22 +1152,27 @@ void                TtcCreateElement (doc, view)
 				 }
 			       }
 			    else if (!list)
-			       {
-			       pAggregEl = pParent->ElParent;
-			       ready = TRUE;
-			       pElDelete = pElem;
-			       pElReplicate = pParent;
-			       replicate = FALSE;
-			       if (pElem->ElPrevious != NULL && pElem->ElNext == NUL)
+			      if (!TypeHasException (ExcNoCreate,
+						     pParent->ElTypeNumber,
+						     pParent->ElStructSchema))
+			        {
+			        pAggregEl = pParent->ElParent;
+				ready = TRUE;
+				pElDelete = pElem;
+				pElReplicate = pParent;
+				replicate = FALSE;
+				if (pElem->ElPrevious != NULL &&
+				    pElem->ElNext == NUL)
 			          createAfter = TRUE;
-			       else if (pElem->ElNext != NULL && pElem->ElPrevious == NULL)
+				else if (pElem->ElNext != NULL &&
+					 pElem->ElPrevious == NULL)
 				  createAfter = FALSE;
-			       else
+				else
 				  {
-				  list = TRUE;
-				  pAggregEl = NULL;
+				    list = TRUE;
+				    pAggregEl = NULL;
 				  }
-			       }
+				}
 			    }
 			  if (pAggregEl == NULL)
 			    {
@@ -1180,28 +1186,43 @@ void                TtcCreateElement (doc, view)
 			  if (pElem->ElPrevious != NULL &&
 			      NoSignificantSibling (pElem, FALSE))
 			    {
-			       /* detruire pElem et creer un frere suivant a pParent */
+			    if (!TypeHasException (ExcNoCreate,
+						   pParent->ElTypeNumber,
+						   pParent->ElStructSchema))
+			       {
+			       /* detruire pElem et creer un frere suivant
+				  a pParent */
 			       ready = TRUE;
 			       pElDelete = pElem;
 			       createAfter = TRUE;
 			       pElReplicate = pParent;
 			       while (pElReplicate->ElParent != pListEl)
 				  pElReplicate = pElReplicate->ElParent;
+			       }
 			    }
 			  else if (pElem->ElNext != NULL &&
 				   NoSignificantSibling (pElem, TRUE))
-			    /* detruire pElem et creer un frere precedent a pParent */
 			    {
+			    if (!TypeHasException (ExcNoCreate,
+						   pParent->ElTypeNumber,
+						   pParent->ElStructSchema))
+			       {
+			       /* detruire pElem et creer un frere precedent
+				  a pParent */
 			       ready = TRUE;
 			       pElDelete = pElem;
 			       createAfter = FALSE;
 			       pElReplicate = pParent;
 			       while (pElReplicate->ElParent != pListEl)
 				  pElReplicate = pElReplicate->ElParent;
+			       }
 			    }
 			  else
 			    /* try to split element pParent before element pElem */
-			    {
+			    if (!TypeHasException (ExcNoCreate,
+						   pParent->ElTypeNumber,
+						   pParent->ElStructSchema))
+			       {
 			       /* store the editing operation in the history */
                                if (!histSeq)
                                   {
@@ -1230,18 +1251,21 @@ void                TtcCreateElement (doc, view)
 				  CancelLastEditFromHistory (pDoc);
 				  pListEl = NULL;
 				 }
-			    }
+			       }
 		       }
 		     if (list && pListEl == NULL)
 		       {
 			  pListEl = AncestorList (pElem);
 			  if (pListEl != NULL)
-			    {
+			     if (!TypeHasException (ExcNoCreate,
+				 		   pElem->ElTypeNumber,
+					 	   pElem->ElStructSchema))
+			       {
 			       ready = TRUE;
 			       pElDelete = NULL;
 			       createAfter = TRUE;
 			       pElReplicate = pElem;
-			    }
+			       }
 		       }
 		  }
 	     if (ready && list)
@@ -1337,10 +1361,14 @@ void                TtcCreateElement (doc, view)
 		  /* si c'est la fin d'une liste de Textes on remonte */
 		  if (pListEl != NULL)
 		     if (lastSel->ElTerminal &&
-			 (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture))
+			 (lastSel->ElLeafType == LtText ||
+			  lastSel->ElLeafType == LtPicture))
 			if (pListEl == lastSel->ElParent)
 			   if (lastSel->ElNext == NULL || selBegin)
-			      pListEl = AncestorList (pListEl);
+			     if (!TypeHasException (ExcReturnCreateWithin,
+						    pListEl->ElTypeNumber,
+						    pListEl->ElStructSchema))
+			        pListEl = AncestorList (pListEl);
 	       }
 	     /* verifie si les elements a doubler portent l'exception NoCreate */
 	     if (pListEl != NULL)
@@ -1360,8 +1388,11 @@ void                TtcCreateElement (doc, view)
 		    }
 		  while (pE != pListEl && pListEl != NULL);
 		  /* a priori, on creera le meme type d'element */
-		  typeNum = pElReplicate->ElTypeNumber;
-		  pSS = pElReplicate->ElStructSchema;
+		  if (pElReplicate)
+		    {
+		      typeNum = pElReplicate->ElTypeNumber;
+		      pSS = pElReplicate->ElStructSchema;
+		    }
 	       }
 	     if (pListEl != NULL)
 	       {
@@ -1522,35 +1553,35 @@ void                TtcCreateElement (doc, view)
 		  /* traite les attributs requis des elements crees */
 		  AttachMandatoryAttributes (pNew, pDoc);
 		  if (pDoc->DocSSchema != NULL)
-		     /* le document n'a pas ete ferme' entre temps */
+		    /* le document n'a pas ete ferme' entre temps */
 		    {
-		       /* traitement des exceptions */
-		       CreationExceptions (pNew, pDoc);
-		       /* Mise a jour des images abstraites */
-		       CreateAllAbsBoxesOfEl (pNew, pDoc);
-		       /* cree les paves du nouvel element et */
-		       /* met a jour ses voisins */
-		       AbstractImageUpdated (pDoc);
-		       /* indique au Mediateur les modifications */
-		       RedisplayDocViews (pDoc);
-		       /* si on est dans un element copie' par inclusion, */
-		       /* on met a jour les copies de cet element. */
-		       RedisplayCopies (pNew, pDoc, TRUE);
-		       UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
-		       /* Indiquer que le document est modifie' */
-		       SetDocumentModified (pDoc, TRUE, 30);
-		       /* envoie un evenement ElemNew.Post a l'application */
-		       NotifySubTree (TteElemNew, pDoc, pNew, 0);
-		       if (!lock)
-			 /* unlock table formatting */
-			 (*ThotLocalActions[T_unlock]) ();
-		       /* Replace la selection */
-		       SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
+		      /* traitement des exceptions */
+		      CreationExceptions (pNew, pDoc);
+		      /* Mise a jour des images abstraites */
+		      CreateAllAbsBoxesOfEl (pNew, pDoc);
+		      /* cree les paves du nouvel element et */
+		      /* met a jour ses voisins */
+		      AbstractImageUpdated (pDoc);
+		      /* indique au Mediateur les modifications */
+		      RedisplayDocViews (pDoc);
+		      /* si on est dans un element copie' par inclusion, */
+		      /* on met a jour les copies de cet element. */
+		      RedisplayCopies (pNew, pDoc, TRUE);
+		      UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
+		      /* Indiquer que le document est modifie' */
+		      SetDocumentModified (pDoc, TRUE, 30);
+		      /* envoie un evenement ElemNew.Post a l'application */
+		      NotifySubTree (TteElemNew, pDoc, pNew, 0);
+		      if (!lock)
+			/* unlock table formatting */
+			(*ThotLocalActions[T_unlock]) ();
+		      /* Replace la selection */
+		      SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
 		    }
 	       }
 	  }
 	if (histSeq)
-	   CloseHistorySequence (pDoc);
+	  CloseHistorySequence (pDoc);
      }
 }
 

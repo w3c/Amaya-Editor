@@ -14,9 +14,9 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of January 14, 2000</h4>
+<h4>Version of September 15, 2000</h4>
 <p>
-&copy; 1996 INRIA</p>
+&copy; 1996-2000 INRIA</p>
 <hr>
 
 </div>
@@ -2299,7 +2299,8 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
                     'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
                     'PageBreakRepetition' / 'PageBreakRepBefore' /
                     'HighlightChildren' / 'ExtendedSelection' /
-                    'ReturnCreateNL' / 'IsDraw' / 'IsTable' /
+                    'ReturnCreateNL' / 'ReturnCreateWithin' /
+                    'IsDraw' / 'IsTable' /
                     'IsRow' / 'IsColHead' / 'IsCell' /
                     'NewPercentWidth' / 'ColRef' / 'ColSpan' /
                     'RowSpan' / 'SaveDocument' / 'Shadow' .</pre>
@@ -2456,6 +2457,12 @@ an element of a type to which this exception is applied, the Return key simply
 inserts a New line character (code \212) at the current position. The Return
 key does not create a new element; it does not split the current element
 either.
+</dd>
+<dt><tt>ReturnCreateWithin</tt></dt>
+<dd>
+This exception can only be applied to element types.  When the caret is within
+an element of a type to which this exception is applied, the Return key will
+create a new element within that element, not a sibling after that element.
 </dd>
 <dt><tt>HighlightChildren</tt></dt>
 <dd>
@@ -8727,7 +8734,7 @@ ExcValue       = 'NoCut' / 'NoCreate' /
                  'ImportLine' / 'ImportParagraph' /
                  'NoPaginate' / 'ParagraphBreak' /
                  'HighlightChildren' / 'ExtendedSelection' /
-                 'ReturnCreateNL' .
+                 'ReturnCreateNL' / 'ReturnCreateWithin' .
 
 ExtensRuleSeq  = ExtensRule ';' &lt; ExtensRule ';' > .
 ExtensRule     = RootOrElem [ LocAttrSeq ]

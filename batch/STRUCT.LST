@@ -133,7 +133,8 @@ number
 	                 'ImportLine' / 'ImportParagraph' /
 			 'ParagraphBreak' /
 	                 'HighlightChildren' / 'ExtendedSelection' /
-			 'ReturnCreateNL' / 'IsTable' / 'IsRow' /
+			 'ReturnCreateNL' / 'ReturnCreateWithin' /
+			 'IsTable' / 'IsRow' /
 			 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
 			 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
 			 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
@@ -243,22 +244,23 @@ code  key-word      numbers of rules using the key-word
 1165  HighlightChildren    51
 1166  ExtendedSelection    51
 1167  ReturnCreateNL       51
-1168  IsTable              51
-1169  IsRow                51
-1170  IsColHead            51
-1171  IsCell               51
-1172  NewPercentWidth      51
-1173  ColRef               51
-1174  ColSpan              51
-1175  RowSpan              51
-1176  Shadow               51
-1177  CssBackground        51
-1178  CssClass             51
-1179  CssId                51
-1180  CssPseudoClass       51
-1181  EventAttr            51
-1182  NoShowBox            51
-1183  Root                 54
+1168  ReturnCreateWithin   51
+1169  IsTable              51
+1170  IsRow                51
+1171  IsColHead            51
+1172  IsCell               51
+1173  NewPercentWidth      51
+1174  ColRef               51
+1175  ColSpan              51
+1176  RowSpan              51
+1177  Shadow               51
+1178  CssBackground        51
+1179  CssClass             51
+1180  CssId                51
+1181  CssPseudoClass       51
+1182  EventAttr            51
+1183  NoShowBox            51
+1184  Root                 54
 
 
 

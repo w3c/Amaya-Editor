@@ -71,6 +71,7 @@
 #define ExcImportParagraph 35
 #define ExcParagraphBreak 36
 #define ExcReturnCreateNL 37
+#define ExcReturnCreateWithin 38
 
 /* Draw exceptions */
 #define ExcHighlightChildren 311
