@@ -84,21 +84,7 @@ différentes architectures :</p>
       </td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Windows NT</p>
-      </td>
-      <td valign="top"><p
-        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top"><p class="TableText">Windows 2000</p>
-      </td>
-      <td valign="top"><p
-        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top"><p class="TableText">Windows XP</p>
+      <td valign="top"><p class="TableText">Windows NT/XP</p>
       </td>
       <td valign="top"><p
         class="TableText"><code>$HOMEDRIVE\$HOMEPATH\amaya<br />

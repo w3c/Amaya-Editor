@@ -75,24 +75,10 @@ diferentes sistemas operativos:</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">Windows NT</p>
+      <td><p class="TableText">Windows NT/XP</p>
       </td>
-      <td><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td><p class="TableText">Windows 2000</p>
-      </td>
-      <td><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td><p class="TableText">Windows XP</p>
-      </td>
-      <td><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
+      <td><p class="TableText"><code>$HOMEDRIVE\$HOMEPATH\amaya<br />
+        by default c:\Documents and Settings\$user_name\amaya</code></p>
       </td>
     </tr>
   </tbody>

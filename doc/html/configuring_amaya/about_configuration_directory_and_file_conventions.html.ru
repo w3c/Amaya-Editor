@@ -7,7 +7,7 @@
   <title>О директории конфигурации и файле соглашений</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -91,27 +91,7 @@
     <tr>
       <td valign="top"
       style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows NT</p>
-      </td>
-      <td valign="top"
-      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top"
-      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows 2000</p>
-      </td>
-      <td valign="top"
-      style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>$HOMEDRIVE\$HOMEPATH\Amaya\config</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top"
-      style="border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows XP</p>
+        class="TableText">Windows NT/XP</p>
       </td>
       <td valign="top"
       style="border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
