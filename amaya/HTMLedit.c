@@ -680,12 +680,19 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	   targetDoc = doc;
 	   SetTargetContent (0, NULL);
 	 }
+
+       if (clickFirst)
+	 {
+	   TtaDestroyDialogue (BaseDialog + AttrHREFForm);
+	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+	 }
+     
      }
    
    AttrHREFelement = el;
    AttrHREFdocument = doc;
    AttrHREFundoable = withUndo;
-   if (fromButton && (doc != targetDoc || TargetName != NULL))
+   if ((fromButton || clickFirst) && (doc != targetDoc || TargetName != NULL))
      /* the user has clicked another document or a target element */
      /* create the attribute HREF or CITE */
      SetREFattribute (el, doc, TargetDocumentURL, TargetName);
