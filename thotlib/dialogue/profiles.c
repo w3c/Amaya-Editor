@@ -592,11 +592,15 @@ void Prof_InitTable ()
   ----------------------------------------------------------------------*/
 void Prof_FreeTable ()
 {
+  int i;
+
   /* delete the profiles table */
   DeleteTable (ProfileTable, TRUE);
   NbProfiles = 0;
   UserProfContext = NULL;
-   TtaFreeMemory (SortedFunctionTable);
+  for (i = 0; i < NbFunctions; i++)
+    TtaFreeMemory (SortedFunctionTable[i]);
+  TtaFreeMemory (SortedFunctionTable);
   SortedFunctionTable = NULL;
   NbFunctions = 0;
 }

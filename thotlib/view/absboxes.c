@@ -108,6 +108,9 @@ int                 frame;
 
   if (pAb != NULL)
     {
+      /* reformat the last edited paragraph if needed */
+      if (ThotLocalActions[T_updateparagraph] != NULL)
+	(*ThotLocalActions[T_updateparagraph]) (pAb, frame);
       pAbb = pAb->AbFirstEnclosed;
       /* libere tous les paves englobes */
       while (pAbb != NULL)

@@ -3843,8 +3843,7 @@ ThotBool     on;
   frame = 1;
   while (frame <= MAX_FRAME)
     {
-      if (FrameTable[frame].WdFrame != 0 && FrameTable[frame].FrDoc != 0 &&
-	  !LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
+      if (FrameTable[frame].WdFrame != 0 && FrameTable[frame].FrDoc != 0)
 	{
 	  if (pDoc == NULL ||
 	      pDoc == LoadedDocument[FrameTable[frame].FrDoc - 1])
@@ -3855,19 +3854,24 @@ ThotBool     on;
 		{
 #ifdef _WINDOWS
 		  hMenu = WIN_GetMenu (frame);
-		  if (on)
+		  if (!LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
+		    /* active the paste command as soon as the document is editable */
 		    EnableMenuItem (hMenu, ref + item, MF_ENABLED);
-		  else
+		  else if (!on)
 		    EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
 #else  /* !_WINDOWS */
-		  if (on)
+		  if (on && !LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
 		    TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
-		  else if (TtWDepth > 1)
-		    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-		  else
+		  else if (!on)
 		    {
-		      FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
-		      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+		      /* active the paste command */
+		      if (TtWDepth > 1)
+			TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+		      else
+			{
+			  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
+			  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
+			}
 		    }
 #endif /* _WINDOWS */
 		}

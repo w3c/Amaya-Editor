@@ -1789,7 +1789,8 @@ void               *event;
    ThotBool            ok;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+   if (FrameTable[frame].FrDoc == 0 ||
+       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
    /*_______> S'il n'y a pas d'evenement associe */
    else if (ev == NULL)

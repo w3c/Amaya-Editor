@@ -129,6 +129,7 @@ structureTree       t;
 	     c = n;
 	  }
 	TtaFreeMemory (t->Tag);
+	TtaFreeMemory (t->Candidates);
 	TtaFreeMemory ( t);
      }
 }
@@ -850,88 +851,34 @@ Document doc;
   int		      status;
 
   len = BUFFER_LEN - szHTML;
-  /*****
-    if (TtaGetElementType (subTree).ElTypeNum == HTML_EL_TEXT_UNIT)
+  ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
+  ustrcat (tmpfilename, DIR_STR);
+  ustrcat (tmpfilename, TEXT("amayatrans.tmp"));
+  TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
+  StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
+  status = ustat (tmpfilename, StatBuffer);
+  if (status != -1)
+    if (StatBuffer->st_size < len)
+      inputFile = TtaReadOpen (tmpfilename);
+  charRead = EOS;
+  if (inputFile != NULL)
     {
-      if (len > TtaGetTextLength (subTree))
+      charRead = getc (inputFile);
+      while (charRead != EOF && szHTML < BUFFER_LEN - 1)
 	{
-	  lang = TtaGetDefaultLanguage ();
-	  TtaGiveTextContent (subTree, &(bufHTML[szHTML]), &len , &lang);
-	  szHTML += len;
-	  result = TRUE;
+	  bufHTML[szHTML++] = charRead;
+	  charRead = getc (inputFile);
 	}
     }
-  else
-  *****/
-    {
-      ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
-      ustrcat (tmpfilename, DIR_STR);
-      ustrcat (tmpfilename, TEXT("amayatrans.tmp"));
-      TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
-      StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
-      status = ustat (tmpfilename, StatBuffer);
-      if (status != -1)
-	if (StatBuffer->st_size < len)
-	  inputFile = TtaReadOpen (tmpfilename);
-      charRead = EOS;
-      if (inputFile != NULL)
-	{
-	  charRead = getc (inputFile);
-          while (charRead != EOF && szHTML < BUFFER_LEN - 1)
-            {
-              bufHTML[szHTML++] = charRead;
-              charRead = getc (inputFile);
-            }
- 	}
-      TtaReadClose (inputFile);  
-      TtaFileUnlink (tmpfilename);  
-      if (charRead == EOF)
-	result = TRUE;
-    }
+  TtaReadClose (inputFile);  
+  TtaFileUnlink (tmpfilename);
+  TtaFreeMemory (StatBuffer);
+  if (charRead == EOF)
+    result = TRUE;
   bufHTML[szHTML] = EOS;
   return result;
 }
       
-#if 0
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-  
-static void PreviousHTMLSibling (Element *elem)
-#else
-static void PreviousHTMLSibling (elem)
-Element *elem;
-#endif
-{
-  Element prev, p;
-  ThotBool found;
-
-  prev = *elem;
-  found = FALSE;
-  while (prev != NULL && !found)
-    {
-      p = prev;
-      TtaPreviousSibling (&prev);
-      if (prev == NULL)
-	{
-	  prev = TtaGetParent (p);
-	  if (prev != NULL && ((ustrcmp (GITagName (prev), "???") == 0)
-			       ||
-			       (ustrcmp (GITagName (prev), "none") == 0)))
-	    TtaPreviousSibling (&prev);
-	  else
-	    prev = NULL;
-	  if (prev != NULL && ustrcmp (GITagName (prev), "???") == 0)
-	    prev = TtaGetLastChild (prev);
-	  else
-	    prev = NULL;
-	}
-      if (ustrcmp (GITagName (prev), "???") != 0)
-	found = TRUE;
-    }
-  *elem = prev;
-}
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

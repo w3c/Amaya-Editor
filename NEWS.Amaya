@@ -20,10 +20,13 @@ Fixed bugs 2.3:
     impossible to merge two paragraphs with the Delete command.
   - when the selection was moved down with the arrow key, it was shifted one
     position to the right.
+  - on Windows platform each return inserted two empty paragraphs instead of
+    one.
+  - the Windows kill command ([X]) closed the document window before proposing
+    to save unsaved document. So the cancel was ineffective.
 
 * HTML:
   - the <input type=image> was not well supported.
-
 
 
 

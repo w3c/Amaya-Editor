@@ -17,3 +17,18 @@ THOT_EXPORT ThotBool 	TextInserting;		/* Text is currently inserted */
 THOT_EXPORT ThotBool	BoxCreating;	/* Boxes are currently created */
 THOT_EXPORT PtrBox 	PackBoxRoot;	/* Root box to repack */
 THOT_EXPORT PtrDimRelations DifferedPackBlocks;/* Differed packing */
+
+
+/* paragraphe to be reformatted after insertion */
+THOT_EXPORT PtrAbstractBox LastInsertParagraph;
+THOT_EXPORT PtrAbstractBox LastInsertCell;
+
+/* text element where the last insertion is done */
+THOT_EXPORT PtrElement   LastInsertElText;
+THOT_EXPORT PtrElement   LastInsertElement;
+THOT_EXPORT int          LastInsertThotWindow;
+
+/* attribute for which a presentation abstract box has been modified */
+THOT_EXPORT PtrAttribute LastInsertAttr;
+THOT_EXPORT PtrElement   LastInsertAttrElem;
+THOT_EXPORT ThotBool     FromKeyboard;
