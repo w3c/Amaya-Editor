@@ -12,6 +12,7 @@
  * requests.
  *
  * Author: J Kahan
+ *         R. Guetari Windows NT/95 routines
  *
  */
 #ifndef AMAYA_JAVA
@@ -28,6 +29,7 @@
 extern ThotAppContext app_cont;
 #endif
 
+#if 0
 #ifdef _WINDOWS
 static HWND HTSocketWin;
 static unsigned long HTwinMsg;
@@ -51,6 +53,7 @@ typedef struct WSAData {
 typedef WSADATA FAR *LPWSADATA;
 #endif /* __GNUC__ */
 #endif /* _WINDOWS */
+#endif /* 0 */
 
 /*
  * Private functions
@@ -76,8 +79,10 @@ static void         RequestKillExceptXtevent ();
 #ifdef _WINDOWS
 static void         WIN_ResetMaxSock (void);
 static int          WIN_ProcessFds (fd_set * fdsp, SockOps ops);
+#if 0
 static int          VerifySocketState (AHTReqContext *me, SOCKET sock);
 PUBLIC LRESULT CALLBACK ASYNCWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+#endif /* 0 */
 #endif /* _WINDOWS */
 
 /*
@@ -98,7 +103,7 @@ static const SockOps ExceptBits = FD_OOB;
 
 #ifdef _WINDOWS
 static fd_set read_fds, write_fds, except_fds, all_fds;
-static int maxfds;
+static int maxfds = 0;
 #endif /* _WINDOWS */
 
 /*
@@ -122,11 +127,17 @@ static int maxfds;
   the memory allocated to it.
   -------------------------------------------------------------------*/
 #ifdef _WINDOWS
-static void *WIN_AHTCallback_bridge (SockOps _ops, int *s)
-#else
+#ifdef __STDC__
+static void* WIN_AHTCallback_bridge (SockOps _ops, int *s)
+#else  /* __STDC__ */
+static void* WIN_AHTCallback_bridge (_ops, s)
+SockOps _ops; 
+int*    s;
+#endif /* __STDC__ */
+#else  /* _WINDOWS */
 #ifdef __STDC__
 void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
-#else
+#else  /* __STDC__ */
 void *AHTCallback_bridge (cd, s, id)
 caddr_t             cd;
 int                *s;
@@ -170,9 +181,9 @@ XtInputId          *id;
 	return (0);
      }
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    ops = _ops;
-#else
+#  else
    switch ((XtInputId) cd)
 	 {
 	    case XtInputReadMask:
@@ -190,7 +201,7 @@ XtInputId          *id;
 	 default:
 	   break;
 	 }			/* switch */
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
      /* Invokes the callback associated to the requests */
      
@@ -250,10 +261,10 @@ XtInputId          *id;
    if ((me->request->net == (HTNet *) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR))
      /* request has ended */
      {
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	if (THD_TRACE)
 	  fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
-#endif
+#       endif
 	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
 	  /* free the memory allocated for async requests */
 	  {
@@ -501,22 +512,19 @@ SOCKET sock;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-    /*
-    FD_SET (sock, &read_fds);
-    FD_SET (sock, &all_fds);
-    */
-    
-    me->read_sock = sock;
-    me->read_fd_state |= FD_READ;
-
-    WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->read_fd_state);
-
-    /*
-      if (sock > maxfds) 
+#  ifdef _WINDOWS
+   FD_SET (sock, &read_fds);
+   FD_SET (sock, &all_fds);
+   me->read_sock = sock;
+   if (sock > maxfds) 
       maxfds = sock;
-      */
-#else
+   
+   /*
+   me->read_sock = sock;
+   me->read_fd_state |= FD_READ;
+   WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->read_fd_state);
+   */
+# else
   if (me->read_xtinput_id)
     {
       if (THD_TRACE)
@@ -531,10 +539,10 @@ SOCKET sock;
 		   (XtInputCallbackProc) AHTCallback_bridge,
 		   (XtPointer) XtInputReadMask);
 
-  if (THD_TRACE)
+   if (THD_TRACE)
     fprintf (stderr, "(BT) adding Xtinput %lu Socket %d R\n",
 	     me->read_xtinput_id, sock);
-#endif /* !_WINDOWS */
+# endif /* !_WINDOWS */
 
 }
 
@@ -550,28 +558,25 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-int new_fd;
+#  ifdef _WINDOWS
+   int new_fd;
 
-    if(me->read_sock != INVSOC) 
-	{
-	    /*
-	      FD_CLR (me->read_sock, &read_fds);
-	      FD_CLR (me->read_sock, &all_fds);
-	      */
-	    me->read_fd_state &= ~FD_READ;
-	    
-	    new_fd = VerifySocketState (me, me->read_sock);
-
-	    if (new_fd)
-		WSAAsyncSelect (me->read_sock, HTSocketWin, HTwinMsg, new_fd);
-	    else 
-		WSAAsyncSelect (me->read_sock, HTSocketWin, 0, 0);
-	    me->read_sock = INVSOC;
-	    /* WIN_ResetMaxSock();
-	     */
-	}
-#else
+   if (me->read_sock != INVSOC) {
+      FD_CLR (me->read_sock, &read_fds);
+      FD_CLR (me->read_sock, &all_fds);
+      me->read_sock = INVSOC;
+      WIN_ResetMaxSock();
+      /*
+      me->read_fd_state &= ~FD_READ;
+      new_fd = VerifySocketState (me, me->read_sock);
+      if (new_fd)
+         WSAAsyncSelect (me->read_sock, HTSocketWin, HTwinMsg, new_fd);
+      else 
+          WSAAsyncSelect (me->read_sock, HTSocketWin, 0, 0);
+      me->read_sock = INVSOC;
+      */
+   }
+#  else
    if (me->read_xtinput_id)
      {
 	if (THD_TRACE)
@@ -579,7 +584,7 @@ int new_fd;
 	XtRemoveInput (me->read_xtinput_id);
 	me->read_xtinput_id = (XtInputId) NULL;
      }
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -595,20 +600,19 @@ SOCKET              sock;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-    /*
-    FD_SET (sock, &write_fds);
-    FD_SET (sock, &all_fds);
-    me->write_sock = sock;
-
-    if (sock > maxfds) 
-        maxfds = sock ;
-    */
-    me->write_sock = sock;
-    me->write_fd_state |= FD_WRITE;
-
-    WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->write_fd_state);
-#else
+#  ifdef _WINDOWS
+   FD_SET (sock, &write_fds);
+   FD_SET (sock, &all_fds);
+   me->write_sock = sock;
+   
+   if (sock > maxfds) 
+      maxfds = sock ;
+   /*
+   me->write_sock = sock;
+   me->write_fd_state |= FD_WRITE;
+   WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->write_fd_state);
+   */
+#  else
    if (me->write_xtinput_id)
     {
       if (THD_TRACE)
@@ -626,7 +630,7 @@ SOCKET              sock;
   if (THD_TRACE)
     fprintf (stderr, "(BT) adding Xtinput %lu Socket %d W\n",
 	     me->write_xtinput_id, sock);
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -642,27 +646,25 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-int new_fd;
+#  ifdef _WINDOWS
+   int new_fd;
 
-    if(me->write_sock != INVSOC) 
-	{
-	    /*
-	    FD_CLR (me->write_sock, &write_fds);
-	    FD_CLR (me->write_sock, &all_fds);
-	    */
-	    me->write_fd_state &= ~FD_WRITE;
-	    
-	    new_fd = VerifySocketState (me, me->write_sock);
-
-	    if (new_fd)
-		WSAAsyncSelect (me->write_sock, HTSocketWin, HTwinMsg, new_fd);
-	    else 
-		WSAAsyncSelect (me->write_sock, HTSocketWin, 0, 0);
-	    me->write_sock = INVSOC;
-	    /* WIN_ResetMaxSock(); */
-	}
-#else
+   if (me->write_sock != INVSOC) {
+      FD_CLR (me->write_sock, &write_fds);
+      FD_CLR (me->write_sock, &all_fds);
+      me->write_sock = INVSOC;
+      WIN_ResetMaxSock();
+      /*
+      me->write_fd_state &= ~FD_WRITE;
+      new_fd = VerifySocketState (me, me->write_sock);
+      if (new_fd)
+         WSAAsyncSelect (me->write_sock, HTSocketWin, HTwinMsg, new_fd);
+      else 
+         WSAAsyncSelect (me->write_sock, HTSocketWin, 0, 0);
+      me->write_sock = INVSOC;
+      */
+   }
+#  else
    if (me->write_xtinput_id)
      {
 	if (THD_TRACE)
@@ -670,7 +672,7 @@ int new_fd;
 	XtRemoveInput (me->write_xtinput_id);
 	me->write_xtinput_id = (XtInputId) NULL;
      }
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -686,21 +688,18 @@ SOCKET              sock;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-    /*
-    FD_SET (sock, &except_fds);
-    FD_SET (sock, &all_fds);
-    me->except_sock = sock;
-
-    if (sock > maxfds) 
-        maxfds = sock ;
-    */
-    me->except_sock = sock;
-    me->except_fd_state |= FD_OOB;
-
-    WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->except_fd_state);
-
-#else
+#  ifdef _WINDOWS
+   FD_SET (sock, &except_fds);
+   FD_SET (sock, &all_fds);
+   me->except_sock = sock;
+   if (sock > maxfds) 
+      maxfds = sock ;
+   /*
+   me->except_sock = sock;
+   me->except_fd_state |= FD_OOB;
+   WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->except_fd_state);
+   */
+#  else
    if (me->except_xtinput_id)
      {
        if (THD_TRACE)
@@ -719,7 +718,7 @@ SOCKET              sock;
     fprintf (stderr, "(BT) adding Xtinput %lu Socket %d E\n",
 	     me->write_xtinput_id, sock);
 
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -735,27 +734,24 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-int new_fd;
-    if(me->except_sock != INVSOC) 
-	{
-	    /*
-	    FD_CLR (me->except_sock, &except_fds);
-	    FD_CLR (me->except_sock, &all_fds);
-	    */
-
-	    me->except_fd_state &= ~FD_WRITE;
-	    
-	    new_fd = VerifySocketState (me, me->except_sock);
-
-	    if (new_fd)
-		WSAAsyncSelect (me->except_sock, HTSocketWin, HTwinMsg, new_fd);
-	    else 
-		WSAAsyncSelect (me->except_sock, HTSocketWin, 0, 0);
-	    me->except_sock = INVSOC;
-	    /* WIN_ResetMaxSock(); */
-	}
-#else
+#  ifdef _WINDOWS
+   int new_fd;
+   if (me->except_sock != INVSOC) {
+      FD_CLR (me->except_sock, &except_fds);
+      FD_CLR (me->except_sock, &all_fds);
+      me->except_sock = INVSOC;
+      WIN_ResetMaxSock();
+      /*
+      me->except_fd_state &= ~FD_WRITE;
+      new_fd = VerifySocketState (me, me->except_sock);
+      if (new_fd)
+         WSAAsyncSelect (me->except_sock, HTSocketWin, HTwinMsg, new_fd);
+      else 
+         WSAAsyncSelect (me->except_sock, HTSocketWin, 0, 0);
+      me->except_sock = INVSOC;
+      */
+   }
+#  else
    if (me->except_xtinput_id)
      {
 	if (THD_TRACE)
@@ -763,28 +759,34 @@ int new_fd;
 	XtRemoveInput (me->except_xtinput_id);
 	me->except_xtinput_id = (XtInputId) NULL;
      }
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 #ifdef _WINDOWS
-
-static void WIN_ResetMaxSock(void)
+#ifdef __STDC__
+static void WIN_ResetMaxSock (void)
+#else /* __STDC__ */
+static void WIN_ResetMaxSock ()
+#endif /* __STDC__ */
 {
     SOCKET s ;
     SOCKET t_max = 0;
     
     for (s = 0 ; s <= maxfds; s++) { 
-        if (FD_ISSET(s, &all_fds))
-	    {
-		if (s > t_max)
-		    t_max = s ;
-	    } /* scope */
+        if (FD_ISSET(s, &all_fds)) {
+	   if (s > t_max)
+	      t_max = s ;
+	} /* scope */
     } /* for */
 
     maxfds = t_max ;
 }
 
-void         WIN_ProcessSocketActivity (void)
+#ifdef __STDC__
+void WIN_ProcessSocketActivity (void)
+#else /* __STDC__ */
+void WIN_ProcessSocketActivity ()
+#endif /* __STDC__ */
 {
     int active_sockets;
     SOCKET s;
@@ -801,52 +803,46 @@ void         WIN_ProcessSocketActivity (void)
     tv.tv_usec = 0;
 
     if (maxfds == 0)
-	return; /* there are no active connections */
+       return; /* there are no active connections */
 
-    active_sockets = select(maxfds+1, &treadset, &twriteset, &texceptset, 
-				(struct timeval *) &tv);
+    active_sockets = select(maxfds+1, &treadset, &twriteset, &texceptset, (struct timeval *) &tv);
 
-    switch(active_sockets)  {
-    case 0:         /* no activity - timeout - allowed */
-	return;
-	break;
-            
-    case -1:        /* error has occurred */
-	return;
-	break;
-
-    default:
-	break;
+    switch (active_sockets)  {
+           case  0: /* no activity - timeout - allowed */
+           case -1: /* error has occurred */
+	        return;
+           default:
+	        break;
     } /* switch */
 
     exceptions = 0;
-    readings = 0;
-    writings = 0;
+    readings   = 0;
+    writings   = 0;
 
-    for (s = 0 ; s <= maxfds ; s++) 
-	{ 
-	    if (FD_ISSET(s, &texceptset))
-		exceptions++;
-	    if (FD_ISSET(s, &treadset))
-		readings++;
-	    if (FD_ISSET(s, &twriteset))
-		writings++;
-	} /* for */
+    for (s = 0 ; s <= maxfds ; s++) { 
+	if (FD_ISSET(s, &texceptset))
+	   exceptions++;
+	if (FD_ISSET(s, &treadset))
+	   readings++;
+	if (FD_ISSET(s, &twriteset))
+	   writings++;
+    } /* for */
+    
+    if (exceptions)
+       WIN_ProcessFds (&texceptset, FD_OOB);
 
-        if (exceptions) {
-            WIN_ProcessFds (&texceptset, FD_OOB);
-        }
+    if (readings) 
+       WIN_ProcessFds (&treadset, FD_READ);
 
-        if (readings) {
-            WIN_ProcessFds (&treadset, FD_READ);
-        }
-
-        if (writings) { 
-            WIN_ProcessFds (&twriteset, FD_WRITE);
-	}
+    if (writings) 
+       WIN_ProcessFds (&twriteset, FD_WRITE);
 }
 
-void         WIN_InitializeSockets (void)
+#ifdef __STDC__
+void WIN_InitializeSockets (void)
+#else  /* __STDC__ */
+void WIN_InitializeSockets ()
+#endif /* __STDC__ */
 {
     maxfds = 0 ;
 
@@ -854,41 +850,48 @@ void         WIN_InitializeSockets (void)
     FD_ZERO(&write_fds);
     FD_ZERO(&except_fds) ;
     FD_ZERO(&all_fds);
+    /*
     AHTEventInit ();
+    */
 }
 
+#if 0
+#ifdef __STDC__
 static BOOL AHTEventInit (void)
+#else  /* __STDC__ */
+static BOOL AHTEventInit ()
+#endif /* __STDC__ */
 {
     /*
     **	We are here starting a hidden window to take care of events from
     **  the async select() call in the async version of the event loop in
     **	the Internal event manager (HTEvntrg.c)
     */
-    static char className[] = "AsyncWindowClass";
-    WNDCLASS wc;
+    static char   className[] = "AsyncWindowClass";
+    WNDCLASS      wc;
     OSVERSIONINFO osInfo;
     WSADATA       wsadata;
     
-    wc.style=0;
-    wc.lpfnWndProc=(WNDPROC)ASYNCWindowProc;
-    wc.cbClsExtra=0;
-    wc.cbWndExtra=0;
-    wc.hIcon=0;
-    wc.hCursor=0;
-    wc.hbrBackground=0;
-    wc.lpszMenuName=(LPSTR)0;
-    wc.lpszClassName=className;
+    wc.style         = 0;
+    wc.lpfnWndProc   = (WNDPROC) ASYNCWindowProc;
+    wc.cbClsExtra    = 0;
+    wc.cbWndExtra    = 0;
+    wc.hIcon         = 0;
+    wc.hCursor       = 0;
+    wc.hbrBackground = 0;
+    wc.lpszMenuName  = (LPSTR) 0;
+    wc.lpszClassName = className;
 
-    osInfo.dwOSVersionInfoSize = sizeof(osInfo);
-    GetVersionEx(&osInfo);
-    if (osInfo.dwPlatformId == VER_PLATFORM_WIN32s /*|| osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS*/)
-	wc.hInstance=GetModuleHandle(NULL); /* 95 and non threaded platforms */
+    osInfo.dwOSVersionInfoSize = sizeof (osInfo);
+    GetVersionEx (&osInfo);
+    if (osInfo.dwPlatformId == VER_PLATFORM_WIN32s || osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
+	wc.hInstance = GetModuleHandle (NULL); /* 95 and non threaded platforms */
     else
-	wc.hInstance=GetCurrentProcess(); /* NT and hopefully everything following */
+	wc.hInstance = GetCurrentProcess (); /* NT and hopefully everything following */
 
-    RegisterClass(&wc);
-    if (!(HTSocketWin = CreateWindow(className, "WWW_WIN_ASYNC", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
-                                     CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, wc.hInstance,0))) {
+    RegisterClass (&wc);
+    if (!(HTSocketWin = CreateWindow (className, "WWW_WIN_ASYNC", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
+                                      CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, wc.hInstance,0))) {
     	return NO;
     }
     HTwinMsg = WM_USER;  /* use first available message since app uses none */
@@ -896,77 +899,92 @@ static BOOL AHTEventInit (void)
     /*
     ** Initialise WinSock DLL. This must also be shut down! PMH
     */
-    if (WSAStartup(DESIRED_WINSOCK_VERSION, &wsadata)) {
-	WSACleanup();
+    if (WSAStartup (DESIRED_WINSOCK_VERSION, &wsadata)) {
+	WSACleanup ();
 	return NO;
     }
+
     if (wsadata.wVersion < MINIMUM_WINSOCK_VERSION) {
-	WSACleanup();
+	WSACleanup ();
 	return NO;
     }
     
     return YES;
 }
 
-PUBLIC LRESULT CALLBACK ASYNCWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+#ifdef __STDC__
+PUBLIC LRESULT CALLBACK ASYNCWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+#else  /* __STDC__ */
+PUBLIC LRESULT CALLBACK ASYNCWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+HWND   hwnd; 
+UINT   uMsg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
 {
     WORD event;
     SOCKET sock;
 
     if (uMsg != HTwinMsg)	/* not our async message */
-    	return (DefWindowProc(hwnd, uMsg, wParam, lParam));
+    	return (DefWindowProc (hwnd, uMsg, wParam, lParam));
 
-    event = LOWORD(lParam);
-    sock = (SOCKET)wParam;
+    event = LOWORD (lParam);
+    sock  = (SOCKET) wParam;
 
     if (event & (FD_READ | FD_ACCEPT | FD_CLOSE))
-    	WIN_AHTCallback_bridge (FD_READ, &sock);
+       WIN_AHTCallback_bridge (FD_READ, &sock);
 
     if (event & (FD_WRITE | FD_CONNECT))
-    	WIN_AHTCallback_bridge (FD_WRITE, &sock);
+       WIN_AHTCallback_bridge (FD_WRITE, &sock);
 
     if (event & FD_OOB)
-    	WIN_AHTCallback_bridge (FD_OOB, &sock);
+       WIN_AHTCallback_bridge (FD_OOB, &sock);
 
     return (0);
 }
 
-static int WIN_ProcessFds( fd_set * fdsp, SockOps ops)
+#ifdef __STDC__
+static int VerifySocketState (AHTReqContext *me, SOCKET sock)
+#else  /* __STDC__ */
+static int VerifySocketState (me, sock)
+AHTReqContext* me; 
+SOCKET         sock;
+#endif /* __STDC__ */
+{
+    int fd_state = 0;
+
+    if (sock == me->read_sock)
+       fd_state |= me->read_fd_state;
+
+    if (sock == me->write_sock)
+       fd_state |= me->write_fd_state;
+
+    if (sock == me->except_sock)
+       fd_state |= me->except_fd_state;
+
+    return (fd_state);
+}
+#endif /* 0 */
+
+#ifdef __STDC__
+static int WIN_ProcessFds (fd_set* fdsp, SockOps ops)
+#else  /* __STDC__ */
+static int WIN_ProcessFds (fdsp, ops)
+fd_set* fdsp; 
+SockOps ops;
+#endif /* __STDC__ */
 {
     SOCKET s ;
 
     for (s = 0 ; s <= maxfds; s++) {
-        if (FD_ISSET( s, fdsp)) 
-	    {
-		WIN_AHTCallback_bridge (ops, &s);
-		return;
-	    }
+        if (FD_ISSET( s, fdsp)) {
+	   WIN_AHTCallback_bridge (ops, &s);
+	   return;
+	}
     }
     return HT_OK;
 }
-
-static int VerifySocketState (AHTReqContext *me, SOCKET sock)
-{
- int fd_state = 0;
-
- if (sock == me->read_sock)
-     fd_state |= me->read_fd_state;
-
- if (sock == me->write_sock)
-     fd_state |= me->write_fd_state;
-
- if (sock == me->except_sock)
-     fd_state |= me->except_fd_state;
-
- return (fd_state);
-}
-
-
 #endif /* _WINDOWS */
-/*
-  End of Module AHTBridge.c
-*/
-
 #endif /* !AMAYA_JAVA */
 
 
