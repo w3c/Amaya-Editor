@@ -566,14 +566,14 @@ if test "$with_generic_xml" = "" ; then
 fi
 
 dnl
-dnl Annotation thread support disabled by default
+dnl Annotation thread support enabled by default
 dnl
 if test "$with_annot_threads" = "" ; then
-    if test "$enable_annot_threads" = "yes" ; then
-	with_annot_threads="yes"
+    if test "$enable_annot_threads" = "no" ; then
+	with_annot_threads="no"
 	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT
     else
-	with_annot_threads="no"
+	with_annot_threads="yes"
 	ANNOT_THREAD_OPTIONS=
     fi
 fi
