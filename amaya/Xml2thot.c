@@ -1595,7 +1595,7 @@ static void       StartOfXmlStartElement (char *name)
 #else /* XML_GENERIC */
       /* We stop parsing if the context is null */
       sprintf (msgBuffer, 
-	       "Namespace not supported for the element :\"%s\"", name);
+	       "Namespace not supported for the element <%s>", name);
       XmlParseError (errorNotWellFormed, msgBuffer, 0);
       DisableExpatParser ();
 #endif /* XML_GENERIC */
@@ -1618,7 +1618,7 @@ static void       StartOfXmlStartElement (char *name)
 	{
 	  /* The element belongs to a no-supported namespace */
 	  sprintf (msgBuffer, 
-		   "Namespace not supported for the element :\"%s\"", name);
+		   "Namespace not supported for the element <%s>", name);
 	  XmlParseError (errorParsing, msgBuffer, 0);
 	  if (tmpnslevel != nslevel)
 	    /* TODO compare with its parent namespace */
@@ -1656,7 +1656,7 @@ static void       StartOfXmlStartElement (char *name)
 		{
 		  /* element not found in the corresponding DTD */
 		  /* don't process that element */
-		  sprintf (msgBuffer, "Unknown %s element %s",
+		  sprintf (msgBuffer, "Invalid %s element <%s>",
 			   schemaName , elementName);
 		  XmlParseError (errorParsing, msgBuffer, 0);
 		  UnknownElement = TRUE;
@@ -1666,7 +1666,7 @@ static void       StartOfXmlStartElement (char *name)
 		  /* invalid element for the document profile */
 		  /* don't process that element */
 		  sprintf (msgBuffer,
-			   "Invalid %s element %s for the document profile",
+			   "Invalid %s element <%s> for the document profile",
 			   schemaName, elementName);
 		  XmlParseError (errorParsingProfile, msgBuffer, 0);
 		  UnknownElement = TRUE;
@@ -1685,7 +1685,7 @@ static void       StartOfXmlStartElement (char *name)
 	    /* Element not allowed in the current structural context */
 	    {
 	      sprintf (msgBuffer,
-		       "The XML element %s is not allowed here", elementName);
+		       "The XML element <%s> is not allowed here", elementName);
 	      XmlParseError (errorParsing, msgBuffer, 0);
 	      UnknownElement = TRUE;
 	      elInStack = FALSE;
@@ -1886,7 +1886,7 @@ static void       EndOfXmlElement (char *name)
 #else /* XML_GENERIC */
        /* We stop parsing if the context is null */ 
        sprintf (msgBuffer, 
-		"Namespace not supported for the element :\"%s\"", name);
+		"Namespace not supported for the element <%s>", name);
        XmlParseError (errorNotWellFormed, msgBuffer, 0);
        DisableExpatParser ();
 #endif /* XML_GENERIC */
@@ -1917,7 +1917,7 @@ static void       EndOfXmlElement (char *name)
 	       if (!XmlCloseElement (mappedName))
 		 {
 		   /* the end tag does not close any current element */
-		   sprintf (msgBuffer, "Unexpected end tag %s", elementName);
+		   sprintf (msgBuffer, "Unexpected end tag </%s>", elementName);
 		   XmlParseError (errorParsing, msgBuffer, 0);
 		 }
 	     }
@@ -2435,13 +2435,13 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
 	 {
 	   if (highEnoughLevel)
 	     {
-	       sprintf (msgBuffer, "Unknown XHTML attribute %s", attrName);
+	       sprintf (msgBuffer, "Invalid XHTML attribute \"%s\"", attrName);
 	       XmlParseError (errorParsing, msgBuffer, 0);
 	     }
 	   else
 	     {
 	       sprintf (msgBuffer,
-			 "Unknown XHTML attribute %s for the document profile",
+			 "Invalid XHTML attribute \"%s\" for the document profile",
 			 attrName);
 	       XmlParseError (errorParsingProfile, msgBuffer, 0);
 	     }
@@ -2560,7 +2560,7 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
      {
        /* This attribute is not in the corresponding mapping table */
        strcpy (schemaName, currentParserCtxt->SSchemaName);
-       sprintf (msgBuffer, "Unknown %s attribute %s",
+       sprintf (msgBuffer, "Invalid %s attribute \"%s\"",
 		schemaName, attrName);
        XmlParseError (errorParsing, msgBuffer, 0);
        /* Attach an Invalid_attribute to the current element */
@@ -2648,7 +2648,7 @@ static void      EndOfAttributeName (char *xmlName)
 		 {
 		   currentParserCtxt = savParserCtxt;
 		   sprintf (msgBuffer, 
-			    "Namespace not supported for the attribute :\"%s\"",
+			    "Namespace not supported for the attribute \"%s\"",
 			    xmlName);
 		   XmlParseError (errorParsing, msgBuffer, 0);
 		   /* Create an unknown attribute  */
@@ -2668,7 +2668,7 @@ static void      EndOfAttributeName (char *xmlName)
 #else /* XML_GENERIC */
 	       currentParserCtxt = savParserCtxt;
 	       sprintf (msgBuffer, 
-			"Namespace not supported for the attribute :\"%s\"",
+			"Namespace not supported for the attribute \"%s\"",
 			xmlName);
 	       XmlParseError (errorParsing, msgBuffer, 0);
 	       /* Create an unknown attribute  */
@@ -2697,7 +2697,7 @@ static void      EndOfAttributeName (char *xmlName)
 	 /* The corresponding element belongs to a no-supported namespace */ 
 	 {
 	   sprintf (msgBuffer, 
-		    "Namespace not supported for the attribute :\"%s\"", xmlName);
+		    "Namespace not supported for the attribute \"%s\"", xmlName);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	   /* Create an unknown attribute  */
 	   UnknownXmlAttribute (attrName);
@@ -2749,7 +2749,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
        (*(currentParserCtxt->MapAttributeValue)) (attrValue, attrType, &val);
        if (val <= 0)
 	 {
-	   sprintf (msgBuffer, "Unknown attribute value %s", attrValue);
+	   sprintf (msgBuffer, "Unknown attribute value \"%s\"", attrValue);
 	   XmlParseError (errorParsing, msgBuffer, 0);	
 	 }
        else
