@@ -1320,9 +1320,8 @@ void *context;
   Document newdoc;
   char *pathname;
   char *tempfile;
-  char               *documentname;
-  char               *my_content_type;
-  Document            res;
+  char *documentname;
+  Document res;
 
 
   documentname = (char *) context;
@@ -1332,9 +1331,6 @@ void *context;
 
   pathname = TtaGetMemory (MAX_LENGTH);
   strcpy (pathname, urlName);
-
-  my_content_type = TtaGetMemory (MAX_LENGTH);
-  strcpy (my_content_type, content_type);
 
   if (status == 0)
      {
@@ -1421,8 +1417,15 @@ View                view;
 			       (void *) documentname, YES, (char *) content_type);
 #endif /* AMAYA_JAVA */
      }
-   else
-     Reload_callback (newdoc, 0, pathname, tempfile, content_type, (void *)documentname);
+   else if (TtaFileExist (pathname))
+     {
+       Reload_callback (newdoc, 0,
+			pathname,
+			tempfile, 
+			NULL,
+			(void *) documentname);
+     }
+
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
    
@@ -1728,13 +1731,13 @@ void *context;
    strncpy (tempfile, outputfile, MAX_LENGTH);
    tempfile[MAX_LENGTH] = EOS;
    
-   if (ok && (IsW3Path (pathname) || TtaFileExist (pathname)))
+   if (ok)
      {
        /* memorize the initial newdoc value in doc because LoadHTMLDocument */
-       /* will opem a new document if newdoc is a modified document */
+       /* will open a new document if newdoc is a modified document */
        if (status == 0)
 	 {
-	   if (!strcmp (documentname, "noname.html"))
+	   if (IsW3Path (pathname) && !strcmp (documentname, "noname.html"))
 	     /* keep the real name */
 	     NormalizeURL (pathname, 0, tempdocument, documentname);
 
@@ -2060,7 +2063,6 @@ boolean		    history;
 			       tempfile, 
 			       NULL,
 			       (void *) ctx);
-
    /* so if we got here, we need to free the memory */
 
    TtaFreeMemory (parameters);
