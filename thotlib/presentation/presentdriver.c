@@ -78,6 +78,12 @@ int                 specific;
 	 {
 	    case DRIVERP_UNIT_REL:
 	       int_unit = UnRelative;
+	       if (type == PtBreak1 ||
+		   type == PtBreak2 ||
+		   type == PtIndent ||
+		   type == PtLineSpacing ||
+		   type == PtLineWeight)
+		  value *= 10;
 	       break;
 	    case DRIVERP_UNIT_EM:
 	       int_unit = UnRelative;

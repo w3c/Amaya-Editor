@@ -614,10 +614,21 @@ PresentationValue  *pval;
     * not in the list of predefined units.
     */
    pval->typed_data.unit = DRIVERP_UNIT_REL;
-   if (minus)
-     pval->typed_data.value = -val;
+   if (real)
+     {
+	DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
+	if (minus)
+	   pval->typed_data.value = -(f * 1000 + val);
+	else
+	   pval->typed_data.value = f * 1000 + val;
+     }
    else
-     pval->typed_data.value = val;
+     {
+	if (minus)
+	   pval->typed_data.value = -val;
+	else
+	   pval->typed_data.value = val;
+     }
    return (cssRule);
 }
 
