@@ -741,7 +741,15 @@ void SaveDocumentAs (Document doc, View view)
        if (IsW3Path (tempname))
 	 {
 	     TtaExtractName (tempname, SavePath, SaveName);
-	     if (SaveName[0] == EOS)
+	     if (DocumentMeta[doc] && DocumentMeta[doc]->content_location)
+	       {
+		 /* use content-location instead of the loading name */
+		 strcpy (SaveName, DocumentMeta[doc]->content_location);
+		 strcpy (tempname, SavePath);
+		 strcat (tempname, URL_STR);
+		 strcat (tempname, SaveName);
+	       }
+	     else if (SaveName[0] == EOS)
 	       {
 		 DefaultName = TtaGetEnvString ("DEFAULTNAME");
 		 if (DefaultName == NULL || *DefaultName == EOS)
