@@ -8,7 +8,7 @@
 /*
  * Windows Dialogue API routines for Amaya
  *
- * Authors:  I. Vatton (INRIA), R. Guetari (W3C/INRIA)
+ * Authors:  I. Vatton (INRIA), R. Guetari (W3C/INRIA), J. Kahan (W3C/INRIA)
  *
  */
 #ifdef _WINDOWS
@@ -157,6 +157,7 @@ static ThotBool     WithEdit;
 static ThotBool     WithCancel;
 static ThotBool     WithBorder;
 static ThotBool     upper_lower = FALSE;
+static ThotBool     IdApplyToSel;
 
 static OPENFILENAME OpenFileName;
 static CHAR_T*      szFilter;
@@ -3401,6 +3402,78 @@ LPARAM lParam;
     return TRUE;
 }
 
+/*-----------------------------------------------------------------------
+ MakeIDDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK MakeIDDlgProc (hwnDlg, msg, wParam, lParam)
+ThotWindow   hwndParent;
+UINT   msg;
+WPARAM wParam;
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg)
+      {
+      case WM_INITDIALOG:
+	MakeIDHwnd = hwnDlg;
+	IdElemName[0] = EOS;
+	SetWindowText (hwnDlg, TEXT("ID Handler menu"));
+	SetDlgItemText (hwnDlg, IDC_IDELEMNAME, TEXT(""));
+	SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
+		       TtaGetMessage (LIB, TMSG_DONE));
+	CheckDlgButton (hwnDlg, IDC_IDAPPLYTOSEL, 
+			 (IdApplyToSel) ? BST_CHECKED : BST_UNCHECKED);
+	break;
+
+      case WM_CLOSE:
+      case WM_DESTROY:
+	MakeIDHwnd = NULL;
+	EndDialog (hwnDlg, ID_DONE);
+	break;
+
+      case WM_COMMAND:
+	if (HIWORD (wParam) == EN_UPDATE)
+	  {
+	    switch (LOWORD (wParam))
+	      {
+	      case IDC_IDELEMNAME:
+		GetDlgItemText (hwnDlg, IDC_IDELEMNAME, IdElemeName, 
+				sizeof (ElemName) - 1);
+		IdElemName[MAX_LENGTH -1] = EOS;
+		break;
+	      }
+	  }
+
+	switch (LOWORD (wParam))
+	  {
+	    /* toggle buttons */
+	  case IDC_IDAPPLYTOSELECTION:
+	    IdApplyToSel = !IdApplyToSel;
+	    break;
+
+	    /* action buttons */
+	  case ID_ADDID:
+	    ChangeIDAttribute (IdElemName, 1, TRUE);
+	    break;
+	    
+	  case ID_REMOVEID:
+	    ChangeIDAttribute (IdElemName, 1, TRUE);
+	    break;
+	    
+	  case ID_DONE:
+	    MakeIDHwnd = NULL;
+	    EndDialog (hwnDlg, ID_DONE);
+	    break;
+	  }
+	break;
+	
+      default: return FALSE;
+      }
+    return TRUE;
+}
 
 /*-----------------------------------------------------------------------
  CreateAltDlgWindow
@@ -4030,5 +4103,18 @@ STRING image_location;
   szFilter         = APPIMAGENAMEFILTER;
   ustrcpy (currentPathName, image_location);
   DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateBackgroundImageDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMakeIDDlgWindow (ThotWindow parent)
+#else /* !__STDC__ */
+void CreateMakeIDDlgWindow (parent)
+ThotWindow  parent;
+#endif /* __STDC__ */
+{
+  DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENUDIALOG), parent, (DLGPROC) MakeIDDlgProc);
 }
 #endif /* _WINDOWS */
