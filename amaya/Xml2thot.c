@@ -1551,10 +1551,10 @@ static void   GetXmlElType (char *uriName, char *elementName,
 	      elType->ElSSchema = GetGenericXMLSSchema (XMLcontext.doc);
 	      /* We instanciate the XML schema with the element name */
 	      /* (except for the elements 'Comments' and 'PI') */
-	      if (strcmp (elementName, "XMLcomment") &&
-		  strcmp (elementName, "XMLcomment_line") &&
-		  strcmp (elementName, "XMLPI") &&
-		  strcmp (elementName, "XMLPI_line"))
+	      if (strcmp (elementName, "xmlcomment") &&
+		  strcmp (elementName, "xmlcomment_line") &&
+		  strcmp (elementName, "xmlpi") &&
+		  strcmp (elementName, "xmlpi_line"))
 		TtaChangeGenericSchemaNames (uriName, elementName, XMLcontext.doc);
 	    }
 	  else
@@ -3017,10 +3017,10 @@ static void       ParseDoctypeElement (char *data, int length)
 	  j++;
 	}
       else if (data[i] == __CR__ && i < length-1 && data[i+1] == EOL)
-	  {
-        /* ignoring CR in a CR/LF sequence */
-	  }
-	  else
+	{
+	  /* ignoring CR in a CR/LF sequence */
+	}
+      else
 	{
 	  buffer[j] = EOS;
 	  j = 0;
@@ -3044,7 +3044,7 @@ static void       ParseDoctypeElement (char *data, int length)
 	  /* Create a new DOCTYPE_line element */
 	  elType.ElSSchema = NULL;
 	  elType.ElTypeNum = 0;
-	  GetXmlElType (NULL, "DOCTYPE_line", &elType, &mappedName, &cont, &level);
+	  GetXmlElType (NULL, "doctype_line", &elType, &mappedName, &cont, &level);
 	  doctypeLineNew = TtaNewElement (XMLcontext.doc, elType);
 	  if (doctypeLineNew != NULL)
 	    {
@@ -3095,7 +3095,7 @@ static void       CreateDoctypeElement ()
   /* Create a DOCTYPE element */
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
-  GetXmlElType (NULL, "DOCTYPE", &elType, &mappedName, &cont, &level);
+  GetXmlElType (NULL, "doctype", &elType, &mappedName, &cont, &level);
   if (elType.ElTypeNum > 0)
     {
       doctypeEl = TtaNewElement (XMLcontext.doc, elType);
@@ -3106,7 +3106,7 @@ static void       CreateDoctypeElement ()
       /* Create a DOCTYPE_line element as first child */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
-      GetXmlElType (NULL, "DOCTYPE_line", &elType, &mappedName, &cont, &level);
+      GetXmlElType (NULL, "doctype_line", &elType, &mappedName, &cont, &level);
       doctypeLineEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (doctypeLineEl);
       TtaInsertFirstChild (&doctypeLineEl, doctypeEl, XMLcontext.doc);
@@ -3177,7 +3177,7 @@ static void       ParseCdataElement (char *data, int length)
 	  /* Create a new CDATA_line element */
 	  elType.ElSSchema = NULL;
 	  elType.ElTypeNum = 0;
-	  GetXmlElType (NULL, "CDATA_line", &elType, &mappedName, &cont, &level);
+	  GetXmlElType (NULL, "cdata_line", &elType, &mappedName, &cont, &level);
 	  cdataLineNew = TtaNewElement (XMLcontext.doc, elType);
 	  if (cdataLineNew != NULL)
 	    {
@@ -3228,7 +3228,7 @@ static void       CreateCdataElement ()
   /* Create a CDATA element */
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
-  GetXmlElType (NULL, "CDATA", &elType, &mappedName, &cont, &level);
+  GetXmlElType (NULL, "cdata", &elType, &mappedName, &cont, &level);
   if (elType.ElTypeNum > 0)
     {
       cdataEl = TtaNewElement (XMLcontext.doc, elType);
@@ -3237,7 +3237,7 @@ static void       CreateCdataElement ()
       /* Create a CDATA_line element as first child */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
-      GetXmlElType (NULL, "CDATA_line", &elType, &mappedName, &cont, &level);
+      GetXmlElType (NULL, "cdata_line", &elType, &mappedName, &cont, &level);
       cdataLineEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (cdataLineEl);
       TtaInsertFirstChild (&cdataLineEl, cdataEl, XMLcontext.doc);
@@ -3277,7 +3277,7 @@ static void      CreateXmlComment (char *commentValue)
   /* Create a Thot element for the comment */
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
-  GetXmlElType (NULL, "XMLcomment", &elType, &mappedName, &cont, &level);
+  GetXmlElType (NULL, "xmlcomment", &elType, &mappedName, &cont, &level);
   if (elType.ElTypeNum > 0)
     {
       commentEl = TtaNewElement (XMLcontext.doc, elType);
@@ -3287,7 +3287,7 @@ static void      CreateXmlComment (char *commentValue)
       /* Element XMLcomment */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
-      GetXmlElType (NULL, "XMLcomment_line", &elType, &mappedName, &cont, &level);
+      GetXmlElType (NULL, "xmlcomment_line", &elType, &mappedName, &cont, &level);
       commentLineEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (commentLineEl);
       TtaInsertFirstChild (&commentLineEl, commentEl, XMLcontext.doc);
@@ -3505,7 +3505,7 @@ static void       CreateXmlPi (char *piTarget, char *piData)
    /* Create a Thot element for the PI */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXmlElType (NULL, "XMLPI", &elType, &mappedName, &cont, &level);
+   GetXmlElType (NULL, "xmlpi", &elType, &mappedName, &cont, &level);
    if (elType.ElTypeNum > 0)
      {
        piEl = TtaNewElement (XMLcontext.doc, elType);
@@ -3514,7 +3514,7 @@ static void       CreateXmlPi (char *piTarget, char *piData)
        /* Create a XMLPI_line element as the first child of element XMLPI */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       GetXmlElType (NULL, "XMLPI_line", &elType, &mappedName, &cont, &level);
+       GetXmlElType (NULL, "xmlpi_line", &elType, &mappedName, &cont, &level);
        piLineEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (piLineEl);
        TtaInsertFirstChild (&piLineEl, piEl, XMLcontext.doc);

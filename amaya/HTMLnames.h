@@ -2,16 +2,8 @@
 #include "HTML.h"
 static ElemMapping    XHTMLElemMappingTable[] =
 {
-   /* This table MUST be in alphabetical order */
+   /* This table MUST be in alphabetical order and in lower case */
  
-   {"CDATA", SPACE, HTML_EL_CDATA, L_OtherValue, FALSE},
-   {"CDATA_line", SPACE, HTML_EL_CDATA_line, L_OtherValue, FALSE},
-   {"DOCTYPE", SPACE, HTML_EL_DOCTYPE, L_OtherValue, FALSE},
-   {"DOCTYPE_line", SPACE, HTML_EL_DOCTYPE_line, L_OtherValue, FALSE},
-   {"XMLPI", SPACE, HTML_EL_XMLPI, L_OtherValue, FALSE},
-   {"XMLPI_line", SPACE, HTML_EL_PI_line, L_OtherValue, FALSE},
-   {"XMLcomment", SPACE, HTML_EL_Comment_, L_OtherValue, FALSE},
-   {"XMLcomment_line", SPACE, HTML_EL_Comment_line, L_OtherValue, FALSE},
    {"a", SPACE, HTML_EL_Anchor, L_BasicValue, TRUE},
    {"abbr", SPACE, HTML_EL_ABBR, L_BasicValue, TRUE},
    {"acronym", SPACE, HTML_EL_ACRONYM, L_BasicValue, TRUE},
@@ -29,6 +21,8 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"button", SPACE, HTML_EL_BUTTON_, L_StrictValue, TRUE},
    {"c", SPACE, HTML_EL_TEXT_UNIT, L_OtherValue, TRUE}, /* used by the trans.c */
    {"caption", SPACE, HTML_EL_CAPTION, L_BasicValue, FALSE},
+   {"cdata", SPACE, HTML_EL_CDATA, L_OtherValue, FALSE},
+   {"cdata_line", SPACE, HTML_EL_CDATA_line, L_OtherValue, FALSE},
    {"center", SPACE, HTML_EL_Center, L_TransitionalValue, FALSE},
    {"cite", SPACE, HTML_EL_Cite, L_BasicValue, TRUE},
    {"code", SPACE, HTML_EL_Code, L_BasicValue, TRUE},
@@ -40,6 +34,8 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"dir", SPACE, HTML_EL_Directory, L_StrictValue, FALSE},
    {"div", SPACE, HTML_EL_Division, L_BasicValue, FALSE},
    {"dl", SPACE, HTML_EL_Definition_List, L_BasicValue, FALSE},
+   {"doctype", SPACE, HTML_EL_DOCTYPE, L_OtherValue, FALSE},
+   {"doctype_line", SPACE, HTML_EL_DOCTYPE_line, L_OtherValue, FALSE},
    {"dt", SPACE, HTML_EL_Term, L_BasicValue, FALSE},
    {"em", SPACE, HTML_EL_Emphasis, L_BasicValue, TRUE},
    {"embed",  'E', HTML_EL_Embed_, L_TransitionalValue, TRUE},
@@ -127,6 +123,10 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"u", SPACE, HTML_EL_Underlined_text, L_StrictValue, TRUE},
    {"ul", SPACE, HTML_EL_Unnumbered_List, L_BasicValue, FALSE},
    {"var", SPACE, HTML_EL_Variable, L_BasicValue, TRUE},
+   {"xmlcomment", SPACE, HTML_EL_Comment_, L_OtherValue, FALSE},
+   {"xmlcomment_line", SPACE, HTML_EL_Comment_line, L_OtherValue, FALSE},
+   {"xmlpi", SPACE, HTML_EL_XMLPI, L_OtherValue, FALSE},
+   {"xmlpi_line", SPACE, HTML_EL_PI_line, L_OtherValue, FALSE},
    {"xmp", SPACE, HTML_EL_Preformatted, L_TransitionalValue, FALSE},  /* converted to PRE */
    {"", SPACE, 0, L_BasicValue, FALSE}	  /* Last entry. Mandatory */
 };

@@ -3710,7 +3710,7 @@ static void         EndOfDoctypeDecl (char c)
    buffer = TtaGetMemory (strlen (inputBuffer) + 1);
 
    /* process the Doctype declaration available in inputBuffer */
-   if (!strncasecmp (inputBuffer, "DOCTYPE", 7))
+   if (!strncasecmp (inputBuffer, "doctype", 7))
      {
        for (i = 7; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
        if (!strncasecmp (&inputBuffer[i], "HTML", 4))
