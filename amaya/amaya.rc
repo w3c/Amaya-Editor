@@ -303,7 +303,7 @@ BEGIN
     PUSHBUTTON      "",IDCANCEL,89,59,58,14
 END
 
-BROWSEMENU DIALOG DISCARDABLE  100, 100, 188, 140
+BROWSEMENU DIALOG DISCARDABLE  100, 100, 188, 154
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Browsing Preferences"
 FONT 8, "MS Sans Serif"
@@ -311,19 +311,21 @@ BEGIN
     CONTROL         "Load images",IDC_LOADIMG,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,4,173,8
     CONTROL         "Load CSS",IDC_LOADCSS,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,30,173,8
+                    WS_TABSTOP,7,41,173,8
     CONTROL         "Use double-click",IDC_DOUBLECLICK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,43,173,8
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,54,173,8
     CONTROL         "Enable FTP",IDC_ENABLEFTP,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,55,173,8
-    LTEXT           "Screen type ",IDC_SCREEN,7,70,169,11
-    LISTBOX         IDC_SCREENLIST,7,81,163,29,LBS_SORT | 
+                    WS_TABSTOP,7,66,173,8
+    LTEXT           "Screen type ",IDC_SCREEN,7,80,169,11
+    LISTBOX         IDC_SCREENLIST,7,91,163,29,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "Apply",ID_APPLY,8,118,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,68,118,50,14
-    PUSHBUTTON      "Done",ID_DONE,128,118,50,14
+    DEFPUSHBUTTON   "Apply",ID_APPLY,8,128,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,68,128,50,14
+    PUSHBUTTON      "Done",ID_DONE,128,128,50,14
     CONTROL         "Load objects",IDC_LOADOBJ,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,17,173,8
+    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,29,173,8
 END
 
 
@@ -459,7 +461,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 181
         TOPMARGIN, 7
-        BOTTOMMARGIN, 133
+        BOTTOMMARGIN, 147
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -607,9 +609,9 @@ BEGIN
     EDITTEXT        IDC_ZOOM,7,108,28,12,ES_AUTOHSCROLL
     LTEXT           "Dialogue language",IDC_TDIALOGUELANG,97,98,105,8
     EDITTEXT        IDC_DIALOGUELANG,97,108,33,12,ES_AUTOHSCROLL
-    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Lines by lines",IDC_LINES,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,128,138,8
-    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
+    CONTROL         "Generate backup files",IDC_AUTOSAVE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,140,138,10
     CONTROL         "Show button bar",IDC_SHOWBUTTONS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,153,138,10

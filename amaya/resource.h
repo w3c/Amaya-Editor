@@ -588,7 +588,9 @@
 #define IDC_ZOOM                        1421
 #define IDC_DIALOGUELANG                1422
 #define IDC_MULTIKEY                    1423
+#define IDC_LINES                       1423
 #define IDC_BGIMAGES                    1424
+#define IDC_AUTOSAVE                    1424
 #define IDC_DOUBLECLICK                 1425
 #define IDC_ENABLEFTP                   1426
 #define IDC_SHOWADDRESS                 1427
