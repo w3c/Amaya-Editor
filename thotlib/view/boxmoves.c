@@ -3513,7 +3513,8 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   else if (!pDimAb->DimIsPosition && pDimAb->DimAbRef == pAb->AbEnclosing &&
 	   pAb->AbEnclosing != NULL &&
 	   !pAb->AbEnclosing->AbHeight.DimIsPosition &&
-	   pAb->AbEnclosing->AbHeight.DimMinimum)
+	   pAb->AbEnclosing->AbHeight.DimMinimum &&
+	   pAb->AbEnclosing->AbBox != pSourceBox)
     {
       /*
        * the box height depends on the parent box for which the minimum rule
