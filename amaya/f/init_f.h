@@ -25,6 +25,9 @@ extern void ActiveMakeBook ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
+extern void SetWindowTitle ( Document sourceDoc,
+                             Document targetDoc,
+                             View view );
 extern void InitFormAnswer ( Document document,
                              View view,
                              STRING auth_realm,
@@ -91,6 +94,7 @@ extern void CallbackDialogue ( int ref,
                                STRING data );
 extern ThotBool CheckMakeDirectory ( STRING name,
                                      ThotBool recursive );
+extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document document,
                                int attrNum );
@@ -140,6 +144,7 @@ extern void HelpAccess ( Document document,
                          View view );
 extern void ShowLogFile ( Document doc,
                           View view );
+extern void CheckAmayaClosed ( void );
 extern void CloseDocument ( Document doc,
                             View view );
 extern void AmayaClose ( Document document,
@@ -166,6 +171,9 @@ extern void ActiveMakeBook (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);
+extern void SetWindowTitle (/* Document sourceDoc,
+                               Document targetDoc,
+                               View view */);
 extern void InitFormAnswer (/* Document document,
                                View view,
                                STRING auth_realm,
@@ -232,6 +240,7 @@ extern void CallbackDialogue (/* int ref,
                                  STRING data */);
 extern ThotBool CheckMakeDirectory (/* STRING name,
                                        ThotBool recursive */);
+extern void FreeAmayaStructures (/* void */);
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void ChangeAttrOnRoot (/* Document document,
                                  int attrNum */);
@@ -281,6 +290,7 @@ extern void HelpAccess (/* Document document,
                            View view */);
 extern void ShowLogFile (/* Document doc,
                             View view */);
+extern void CheckAmayaClosed (/* void */);
 extern void CloseDocument (/* Document doc,
                               View view */);
 extern void AmayaClose (/* Document document,

@@ -21,7 +21,6 @@ extern ThotBool DoubleClick ( NotifyElement *event );
 extern ThotBool SimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
                           Document doc );
-extern void CheckAmayaClosed ( void );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
@@ -48,7 +47,6 @@ extern ThotBool DoubleClick (/* NotifyElement *event */);
 extern ThotBool SimpleClick (/* NotifyElement *event */);
 extern void UpdateTitle (/* Element el,
                             Document doc */);
-extern void CheckAmayaClosed (/* void */);
 extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);

@@ -2198,6 +2198,7 @@ Element             el;
 #ifdef STANDALONE
    STRING              imageName;
 #endif
+   CSSmedia            media;
    int                 length;
 
    elType = TtaGetElementType (el);
@@ -2541,8 +2542,26 @@ Element             el;
 	    TtaGiveTextAttributeValue (attr, name1, &length);
 	    if (!ustrcasecmp (name1, TEXT("stylesheet")) || !ustrcasecmp (name1, TEXT("style")))
 	      {
-		 /* it's a link to a style sheet. Load that style sheet */
-		 attrType.AttrSSchema = DocumentSSchema;
+		 /* it's a link to a style sheet */
+		 /* get the media specification */
+		 attrType.AttrTypeNum = HTML_ATTR_media;
+		 attr = TtaGetAttribute (el, attrType);
+		 if (attr != NULL)
+		   {
+		      length = TtaGetTextAttributeLength (attr);
+		      name2 = TtaAllocString (length + 1);
+		      TtaGiveTextAttributeValue (attr, name2, &length);
+		      if (!ustrcasecmp (name2, TEXT ("screen")))
+			media = CSS_SCREEN;
+		      else if (!ustrcasecmp (name2, TEXT ("print")))
+			media = CSS_PRINT;
+		      else
+			media = CSS_ALL;
+		      TtaFreeMemory (name2);
+		   }
+		 else
+		   media = CSS_ALL;
+		 /* Load that style sheet */
 		 attrType.AttrTypeNum = HTML_ATTR_HREF_;
 		 attr = TtaGetAttribute (el, attrType);
 		 if (attr != NULL)
@@ -2551,7 +2570,7 @@ Element             el;
 		      name2 = TtaAllocString (length + 1);
 		      TtaGiveTextAttributeValue (attr, name2, &length);
 		      /* load the stylesheet file found here ! */
-		      LoadStyleSheet (name2, theDocument, el, NULL);
+		      LoadStyleSheet (name2, theDocument, el, NULL, media);
 		      TtaFreeMemory (name2);
 		   }
 	      }		/* other kind of Links ... */

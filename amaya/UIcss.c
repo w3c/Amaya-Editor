@@ -164,7 +164,7 @@ Document            doc;
       css->enabled[doc] = TRUE;
     }
 
-  if (ptr[0] != EOS  && TtaFileExist (ptr))
+  if (css->enabled[doc] && ptr[0] != EOS  && TtaFileExist (ptr))
     {
       /* read User preferences */
       res = fopen (ptr, "r");
@@ -206,6 +206,83 @@ Document            doc;
 	  TtaFreeMemory (buffer);
 	}
     }
+}
+
+/*----------------------------------------------------------------------
+  AttrMediaChanged: the user has created removed or modified a Media
+  attribute
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                AttrMediaChanged (NotifyAttribute * event)
+#else
+void                AttrMediaChanged (event)
+NotifyAttribute    *event;
+#endif
+{
+   ElementType         elType;
+   Element             el;
+   Document            doc;
+   Attribute           attr;
+   AttributeType       attrType;
+   CSSInfoPtr          css;
+   CSSmedia            media;
+   DisplayMode         dispMode;
+   CHAR_T              completeURL[MAX_LENGTH];
+   CHAR_T              tempname[MAX_LENGTH];
+   STRING              name2;
+   int                 length;
+
+   el = event->element;
+   doc = event->document;
+   attr = event->attribute;
+   /* avoid too many redisplay */
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+
+   elType = TtaGetElementType (el);
+   /* get the new media value */
+   length = TtaGetTextAttributeLength (attr);
+   name2 = TtaAllocString (length + 1);
+   TtaGiveTextAttributeValue (attr, name2, &length);
+   if (!ustrcasecmp (name2, TEXT ("screen")))
+     media = CSS_SCREEN;
+   else if (!ustrcasecmp (name2, TEXT ("print")))
+     media = CSS_PRINT;
+   else
+     media = CSS_ALL;
+   TtaFreeMemory (name2);
+   /* get the CSS URI */
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+   attr = TtaGetAttribute (el, attrType);
+   if (attr != NULL)
+     {
+       length = TtaGetTextAttributeLength (attr);
+       name2 = TtaAllocString (length + 1);
+       TtaGiveTextAttributeValue (attr, name2, &length);
+       /* load the stylesheet file found here ! */
+       NormalizeURL (name2, doc, completeURL, tempname, NULL);
+       TtaFreeMemory (name2);
+       css = SearchCSS (0, completeURL);
+       if (css->media[doc] != media)
+	 {
+	   /* something changed and we are not printing */
+	   if (media != CSS_PRINT && css->media[doc] == CSS_PRINT)
+	     LoadStyleSheet (completeURL, doc, el, NULL, media);
+	   else
+	     {
+	       if (media == CSS_PRINT && css->media[doc] != CSS_PRINT)
+		 RemoveStyleSheet (completeURL, doc, FALSE, FALSE);
+	       /* only update the CSS media info */
+	       css->media[doc] = media;
+	     }
+	 }
+     }
+
+   /* restore the display mode */
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, dispMode);
 }
 
 
@@ -372,16 +449,17 @@ STRING              data;
 	      break;
 	    case 2:
 	      /* disable the CSS file, but not remove */
-	      RemoveStyleSheet (CSSpath, CSSdocument, FALSE);
+	      RemoveStyleSheet (CSSpath, CSSdocument, TRUE, FALSE);
       	      break;
 	    case 3:
-	      /* disable the CSS file in case it was applied yet */
-	      RemoveStyleSheet (CSSpath, CSSdocument, FALSE);
 	      /* enable the CSS file */
+	      css = SearchCSS (0, CSSpath);
+	      css ->enabled[CSSdocument] = TRUE;
+	      /* apply CSS rules */
 	      if (!strcmp (CSSpath, UserCSS))
 		LoadUserStyleSheet (CSSdocument);
 	      else
-		LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL);
+		LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL, css->media[CSSdocument]);
       	      break;
 	    case 4:
 	      /* remove the link to this file */
@@ -484,42 +562,50 @@ STRING              s;
     {
       if (css->category != CSS_DOCUMENT_STYLE &&
 	  css->documents[doc] &&
+	  /* it's impossible to remove the User style sheet */
 	  (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
 	{
-	  /* build the CSS list */
-	  if (css->url == NULL)
-	    ptr = css->localName;
-	  else
-	    ptr = css->url;
-	  len = ustrlen (ptr);
-	  len++;
-	  if (size < len)
-	    break;
-	  ustrcpy (&buf[index], ptr);
-	  index += len;
-	  nb++;
-	  size -= len;
-	  if (select == -1 &&
-	      (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
+	  if ((CSScase == 3 && !css->enabled[doc]) ||
+	      (CSScase == 2 && css->enabled[doc]) ||
+	      CSScase == 1 || CSScase == 4)
 	    {
-	      if (CSSpath != NULL)
-		TtaFreeMemory (CSSpath);
-	      if (css->url)
-		{
-		  len = ustrlen (css->url);
-		  CSSpath = TtaAllocString (len + 1);
-		  ustrcpy (CSSpath, css->url);
-		}
+	      /* filter enabled and disabled entries */
+	      /* build the CSS list */
+	      if (css->url == NULL)
+		ptr = css->localName;
 	      else
+		ptr = css->url;
+
+	      len = ustrlen (ptr);
+	      len++;
+	      if (size < len)
+		break;
+	      ustrcpy (&buf[index], ptr);
+	      index += len;
+	      nb++;
+	      size -= len;
+	      if (select == -1 &&
+		  (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
 		{
-		  len = ustrlen (css->localName);
-		  CSSpath = TtaAllocString (len + 1);
-		  ustrcpy (CSSpath, css->localName);
+		  if (CSSpath != NULL)
+		    TtaFreeMemory (CSSpath);
+		  if (css->url)
+		    {
+		      len = ustrlen (css->url);
+		      CSSpath = TtaAllocString (len + 1);
+		      ustrcpy (CSSpath, css->url);
+		    }
+		  else
+		    {
+		      len = ustrlen (css->localName);
+		      CSSpath = TtaAllocString (len + 1);
+		      ustrcpy (CSSpath, css->localName);
+		    }
+		  select = i;
 		}
-	      select = i;
+	      i++;
 	    }
-	  i++;
-	}	
+	}
       css = css->NextCSS;
     }
 

@@ -22,9 +22,9 @@ typedef enum
 
 typedef enum
 {
+  CSS_ALL,	/* screen and print */
   CSS_SCREEN,	/* screen only */
   CSS_PRINT,	/* print only */
-  CSS_ALL,	/* screen and print */
 } CSSmedia;
 
 typedef struct _PISchema

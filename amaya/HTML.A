@@ -289,6 +289,12 @@ ATTRIBUTES
 	AttrDelete.Pre ->  UpdateStyleDelete;
 	AttrDelete.Post -> GlobalAttrDeleted;
 	END;
+   media:
+	BEGIN
+	AttrCreate.Post -> AttrMediaChanged;
+	AttrModify.Post -> AttrMediaChanged;
+	AttrDelete.Post -> AttrMediaChanged;
+	END;
 
    Title:
 	BEGIN

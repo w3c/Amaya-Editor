@@ -407,11 +407,12 @@ STRING               url;
    are freed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool removed)
+static void     UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled, ThotBool removed)
 #else
-static void     UnlinkCSS (css, doc, removed)
+static void     UnlinkCSS (css, doc, disabled, removed)
 CSSInfoPtr      css;
 Document        doc;
+ThotBool        disabled;
 ThotBool        removed;
 #endif
 {
@@ -467,7 +468,8 @@ ThotBool        removed;
 	}
 
       /* the CSS is no longer applied */
-      css->enabled[doc] = FALSE;
+      if (disabled)
+	css->enabled[doc] = FALSE;
       /* look at if this css is alway used */
       used = (css->doc != 0);
       i = 0;
@@ -518,10 +520,10 @@ Document            doc;
 	{
 	  /* the document displays the CSS file itself */
 	  css->doc = 0;
-	  UnlinkCSS (css, doc, TRUE);
+	  UnlinkCSS (css, doc, TRUE, TRUE);
 	}
       else if (css->documents[doc])
-	UnlinkCSS (css, doc, TRUE);
+	UnlinkCSS (css, doc, TRUE, TRUE);
       /* look at the next CSS context */
       css = next;
     }
@@ -533,11 +535,12 @@ Document            doc;
    or the document Style element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void            RemoveStyleSheet (STRING url, Document doc, ThotBool removed)
+void            RemoveStyleSheet (STRING url, Document doc, ThotBool disabled, ThotBool removed)
 #else
-void            RemoveStyleSheet (url, doc, removed)
+void            RemoveStyleSheet (url, doc, disabled, removed)
 STRING          url;
 Document        doc;
+ThotBool        disabled;
 ThotBool        removed;
 #endif
 {
@@ -559,7 +562,7 @@ ThotBool        removed;
     }
 
   if (css != NULL)
-    UnlinkCSS (css, doc, removed);
+    UnlinkCSS (css, doc, disabled, removed);
 }
 
 
@@ -606,19 +609,20 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   LoadStyleSheet loads the external Style Sheet found at the given
-   url.
-   The parameter el gives the element which links the CSS or NULL.
-   The parameter CSS gives the CSS context which imports this CSS file.
+  LoadStyleSheet loads the external Style Sheet found at the given url.
+  The parameter el gives the element which links the CSS or NULL.
+  The parameter css gives the CSS context which imports this CSS file.
+  The parameter media gives the application limits of the CSS.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css)
+void        LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css, CSSmedia media)
 #else
-void                LoadStyleSheet (url, doc, el, css)
-STRING              url;
-Document            doc;
-Element             el;
-CSSInfoPtr          css;
+void        LoadStyleSheet (url, doc, el, css, media)
+STRING      url;
+Document    doc;
+Element     el;
+CSSInfoPtr  css;
+CSSmedia    media;
 #endif
 {
   CSSInfoPtr          oldcss;
@@ -629,8 +633,10 @@ CSSInfoPtr          css;
   CHAR_T              tempURL[MAX_LENGTH];
   STRING              buffer = NULL;
   int                 len;
-  ThotBool            import = (css != NULL);
+  ThotBool            import, printing;
 
+  import = (css != NULL);
+  printing = TtaIsPrinting ();
   if (TtaGetViewFrame (doc, 1) != 0 || TtaIsPrinting ())
     {
       LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
@@ -642,15 +648,31 @@ CSSInfoPtr          css;
 	    /* It's a new CSS file: allocate a new Presentation structure */
 	    css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
 	  oldcss = css;
+	  oldcss->media[doc] = media;
 	}
-      else
+      else if (!oldcss->documents[doc])
 	{
+	  /* we have to apply the style sheet to this document */
 	  oldcss->documents[doc] = TRUE;
 	  oldcss->enabled[doc] = TRUE;
+	  /* update the current media value */
+	  if (media == CSS_ALL)
+	    oldcss->media[doc] = media;
+	  else if (oldcss->media[doc] != media || oldcss->media[doc] != CSS_ALL)
+	    if ((printing && media == CSS_PRINT) ||
+		(!printing && media == CSS_SCREEN))
+		oldcss->media[doc] = media;
 	}
 
       if (tempfile[0] == EOS)
+	/* cannot do more */
 	return;
+      else if ((!printing && media == CSS_PRINT) ||
+	       (printing && media == CSS_SCREEN) ||
+	       !oldcss->enabled[doc])
+	/* nothing more to do */
+	return;
+
       /* store the element which links the CSS */
       pInfo = oldcss->infos;
       while (pInfo != NULL && pInfo->PiDoc != doc)

@@ -19,12 +19,14 @@ extern CSSInfoPtr SearchCSS ( Document doc,
 extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( STRING url,
                                Document doc,
+                               ThotBool disabled,
                                ThotBool removed );
 extern STRING GetStyleContents ( Element el );
 extern void LoadStyleSheet ( STRING url,
                              Document doc,
                              Element el,
-                             CSSInfoPtr css );
+                             CSSInfoPtr css,
+                             CSSmedia media );
 
 #else /* __STDC__ */
 
@@ -41,12 +43,14 @@ extern CSSInfoPtr SearchCSS (/* Document doc,
 extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* STRING url,
                                  Document doc,
+                                 ThotBool disabled,
                                  ThotBool removed */);
 extern STRING GetStyleContents (/* Element el */);
 extern void LoadStyleSheet (/* STRING url,
                                Document doc,
                                Element el,
-                               CSSInfoPtr css */);
+                               CSSInfoPtr css,
+                               CSSmedia media */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

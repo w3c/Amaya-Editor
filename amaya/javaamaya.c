@@ -3,7 +3,7 @@
  *
  * Daniel Veillard, 1997
  */
-
+#ifdef AMAYA_JAVA
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -223,7 +223,7 @@ int document;
     char URL[MAX_LENGTH];
 
     strcpy (URL, url);
-    LoadStyleSheet (&URL[0], document, NULL, NULL);
+    LoadStyleSheet (&URL[0], document, NULL, NULL, CSS_ALL);
 }
 
 /*----------------------------------------------------------------------
@@ -317,4 +317,4 @@ int document;
 
     return((int) res);
 }
-
+#endif /* AMAYA_JAVA */

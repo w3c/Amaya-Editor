@@ -3978,7 +3978,7 @@ ThotBool            withUndo;
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;
 			  *cssRule = EOS;
-			  LoadStyleSheet (base, docRef, NULL, css);
+			  LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
 			}
 		    }
 		  /*** Caution: Strings can either be written with double quotes or
@@ -3991,7 +3991,7 @@ ThotBool            withUndo;
 		      while (*cssRule != EOS && *cssRule != '"')
 			cssRule++;
 		      *cssRule = EOS;
-		      LoadStyleSheet (base, docRef, NULL, css);
+		      LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
 		    }
 		  import = MAX_CSS_LENGTH;
 		}

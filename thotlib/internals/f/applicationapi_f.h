@@ -19,6 +19,7 @@ extern ThotWidget TtaGetViewFrame ( Document document,
                                     View view );
 extern void InitErrorHandler ( void );
 extern void TtaInitialize ( STRING applicationName );
+extern void TtaSetApplicationQuit ( Proc procedure );
 extern void TtaQuit ( void );
 extern void TtaSetErrorMessages ( int on );
 extern STRING TtaGetVersion ( void );
@@ -41,6 +42,7 @@ extern ThotWidget TtaGetViewFrame (/* Document document,
                                       View view */);
 extern void InitErrorHandler (/* void */);
 extern void TtaInitialize (/* STRING applicationName */);
+extern void TtaSetApplicationQuit (/* Proc procedure */);
 extern void TtaQuit (/* void */);
 extern void TtaSetErrorMessages (/* int on */);
 extern STRING TtaGetVersion (/* void */);

@@ -2689,8 +2689,37 @@ char              **argv;
 	      /* The destination is a printer */
 	      destination = TEXT("PRINTER");
 	      argCounter++;
-	      printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
-	      ustrcpy (printer, argv[argCounter++]);
+	      l = ustrlen (argv[argCounter]);
+	      if (argv[argCounter][0] == '"' &&
+		  argv[argCounter][l - 1] != '"')
+		{
+		  /* the printer name includes spaces */
+		  i = 0;
+		  length = -1; /* skip the first '"' */
+		  /* get the printer name length */
+		  while (argv[argCounter + i][l - 1] != '"')
+		    {
+		      i++;
+		      length = length + l + 1; /* +1 for the space */
+		      l = ustrlen (argv[argCounter+1]);
+		    }
+		  /* store the printer name */
+		  length += l;
+		  printer = TtaAllocString (length + 1);
+		  ustrcpy (printer, &argv[argCounter++][1]);
+		  for (l = 1; l <= i; l++)
+		    {
+		      ustrcat (printer, TEXT (" "));
+		      ustrcat (printer, argv[argCounter++]);
+		    }
+		  /* remove the last '"' */
+		  printer[length-1] = EOS;
+		}
+	      else
+		{
+		  printer = TtaAllocString (l + 1);
+		  ustrcpy (printer, argv[argCounter++]);
+		}
 	    }
 	  else if (!ustrcmp (argv[argCounter], TEXT("-v")))
 	    {
@@ -2877,7 +2906,7 @@ char              **argv;
        /* the document is loaded */
        /* load CSS files and apply CSS rules */
        for (i = 0; i < cssCounter; i++)
-	 LoadStyleSheet (CSSName[i], 1, NULL, NULL);
+	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, 0/*CSS_ALL*/);
        
        /* load all referred document before printing */
        LoadReferedDocuments (TheDoc);
@@ -2896,7 +2925,7 @@ char              **argv;
 	       usprintf (cmd, TEXT("%s%c%s.ps"), tempDir, DIR_SEP, name);
 	       CopyFile (cmd, printer, FALSE);
 #else  /* !_WINDOWS */
-	       sprintf (cmd, "/bin/mv %s%c%s.ps %s\n", tempDir, DIR_SEP, name, printer);
+	       sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
 	       result = system (cmd);
 	       if (result != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
@@ -2908,9 +2937,9 @@ char              **argv;
 	     {
 #ifndef _WINDOWS
 	       if (NCopies > 1)
-		 sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
+		 sprintf (cmd, "%s -#%d -T%s %s/%s.ps", printer, NCopies, realName, tempDir, name);
 	       else
-		 sprintf (cmd, "%s %s/%s.ps\n", printer, tempDir, name);
+		 sprintf (cmd, "%s %s/%s.ps", printer, tempDir, name);
 	       
 	       result = system (cmd);
 	       if (result != 0)

@@ -188,7 +188,7 @@ Document            doc;
 	       length = MAX_LENGTH;
 	       TtaGiveTextAttributeValue (attr, buffer, &length);
 	       NormalizeURL (buffer, doc, pathname, documentname, NULL);
-	       RemoveStyleSheet (pathname, doc, TRUE);
+	       RemoveStyleSheet (pathname, doc, TRUE, TRUE);
 	     }
 	 }
      }
@@ -370,7 +370,7 @@ STRING              targetName;
 	   (LinkAsCSS || IsCSSName (targetURL)))
 	 {
 	   LinkAsCSS = FALSE;
-	   LoadStyleSheet (targetURL, doc, element, NULL);
+	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL);
 	   attrType.AttrTypeNum = HTML_ATTR_REL;
 	   attr = TtaGetAttribute (element, attrType);
 	   if (attr == 0)

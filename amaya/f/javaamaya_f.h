@@ -6,63 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *GetUserAgentName ( void );
-extern char *GetDocumentURL ( Document doc );
-extern STRING AmayaGetMessage ( int msg );
-extern int PopUpAuthDialog ( int doc );
-extern char *GetUserString ( void );
-extern char *GetPasswdString ( void );
-extern char *GetAnswerString ( void );
-extern char *GetTempDirectory ( void );
-extern int GetHTMLtypeNo ( char *tag );
-extern char *GetHTMLTag ( ElementType elType );
-extern int GetHTMLAttrNo ( char *tag,
-                           char *elem );
-extern char *GetHTMLAttr ( int type );
-extern void AddStyleSheet ( char *url,
-                            int document );
-extern void AddAlternateStyleSheet ( char *url,
-                                     int document );
-extern char *GetElementStyle ( Element el,
-                               int document );
-extern void SetElementStyle ( char *style,
-                              Element el,
-                              int document );
-extern void AddElementStyle ( char *style,
-                              Element el,
-                              int document );
-extern int AmayaLoadHTMLDocument ( char *URL,
-                                   int document );
-
 #else /* __STDC__ */
-
-extern char *GetUserAgentName (/* void */);
-extern char *GetDocumentURL (/* Document doc */);
-extern STRING AmayaGetMessage (/* int msg */);
-extern int PopUpAuthDialog (/* int doc */);
-extern char *GetUserString (/* void */);
-extern char *GetPasswdString (/* void */);
-extern char *GetAnswerString (/* void */);
-extern char *GetTempDirectory (/* void */);
-extern int GetHTMLtypeNo (/* char *tag */);
-extern char *GetHTMLTag (/* ElementType elType */);
-extern int GetHTMLAttrNo (/* char *tag,
-                             char *elem */);
-extern char *GetHTMLAttr (/* int type */);
-extern void AddStyleSheet (/* char *url,
-                              int document */);
-extern void AddAlternateStyleSheet (/* char *url,
-                                       int document */);
-extern char *GetElementStyle (/* Element el,
-                                 int document */);
-extern void SetElementStyle (/* char *style,
-                                Element el,
-                                int document */);
-extern void AddElementStyle (/* char *style,
-                                Element el,
-                                int document */);
-extern int AmayaLoadHTMLDocument (/* char *URL,
-                                     int document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -18,12 +18,12 @@ extern void RedisplayAttribute ( PtrAttribute pAttr,
 extern void ApplyAttrPRulesToElem ( PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pAttr,
-				    PtrElement pElAttr,
+                                    PtrElement pElAttr,
                                     ThotBool inherit );
 extern void ApplyAttrPRulesToSubtree ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrAttribute pAttr,
-				       PtrElement pElAttr );
+                                       PtrElement pElAttr );
 extern void ApplyAttrPRules ( PtrElement pEl,
                               PtrDocument pDoc,
                               PtrAttribute pAttr );
@@ -39,13 +39,13 @@ extern void UpdateCountersByAttr ( PtrElement pEl,
 extern void RemoveAttrPresentation ( PtrElement pEl,
                                      PtrDocument pDoc,
                                      PtrAttribute pAttr,
-				     PtrElement pElAttr,
+                                     PtrElement pElAttr,
                                      ThotBool inherit,
                                      PtrAttribute pCompAttr );
 extern void RemoveInheritedAttrPresent ( PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrAttribute pAttr,
-					 PtrElement pElAttr );
+                                         PtrElement pElAttr );
 extern void RemoveComparAttrPresent ( PtrElement pEl,
                                       PtrDocument pDoc,
                                       PtrAttribute pAttr );
@@ -78,12 +78,12 @@ extern void RedisplayAttribute (/* PtrAttribute pAttr,
 extern void ApplyAttrPRulesToElem (/* PtrElement pEl,
                                       PtrDocument pDoc,
                                       PtrAttribute pAttr,
-				      PtrElement pElAttr,
+                                      PtrElement pElAttr,
                                       ThotBool inherit */);
 extern void ApplyAttrPRulesToSubtree (/* PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrAttribute pAttr,
-				         PtrElement pElAttr */);
+                                         PtrElement pElAttr */);
 extern void ApplyAttrPRules (/* PtrElement pEl,
                                 PtrDocument pDoc,
                                 PtrAttribute pAttr */);
@@ -99,13 +99,13 @@ extern void UpdateCountersByAttr (/* PtrElement pEl,
 extern void RemoveAttrPresentation (/* PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrAttribute pAttr,
-				       PtrElement pElAttr,
+                                       PtrElement pElAttr,
                                        ThotBool inherit,
                                        PtrAttribute pCompAttr */);
 extern void RemoveInheritedAttrPresent (/* PtrElement pEl,
                                            PtrDocument pDoc,
                                            PtrAttribute pAttr,
-					   PtrElement pElAttr */);
+                                           PtrElement pElAttr */);
 extern void RemoveComparAttrPresent (/* PtrElement pEl,
                                         PtrDocument pDoc,
                                         PtrAttribute pAttr */);
