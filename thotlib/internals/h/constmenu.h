@@ -188,8 +188,8 @@
 
 /* References des catalogues variables du dialogue de l'application	*/
 /* (menu * MAX_FRAME + fenetre + MAX_LocalMenu	*/
-#define MAX_MENU		20
-#define MAX_ITEM		20
+#define MAX_MENU		30
+#define MAX_ITEM		30
 /* 1eres references produites par l'application				*/
 /* MAX_MENU doit etre superieur a MAX_FRAME				*/
 #define MAX_ThotMenu	((MAX_MENU + 1) * MAX_ITEM * MAX_FRAME) + MAX_LocalMenu
