@@ -127,7 +127,8 @@ PtrTabRelations   pBlock;
 }
 
 /*----------------------------------------------------------------------
-  BuildOrColRowList builds the list of columns or rows included within a table
+  BuildColOrRowList builds the list of columns or rows included within
+  a table
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void      BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
@@ -163,60 +164,71 @@ BoxType          colrow;
   pAb = table;
   while (pAb != NULL)
     {
-      pAb = SearchNextAbsBox (pAb, table);
+      if (pAb->AbBox->BxType == BoRow || pAb->AbBox->BxType == BoColumn)
+	/* skip over the element contents */
+	pAb = NextSiblingAbsBox (pAb, table);
+      else
+	pAb = SearchNextAbsBox (pAb, table);
+
       if (pAb != NULL && !pAb->AbDead && pAb->AbBox != NULL &&
 	  pAb->AbBox->BxType == BoTable && !pAb->AbPresentationBox)
 	/* it's an included table, skip over this table */
 	pAb = NextSiblingAbsBox (pAb, table);
 
-      if (pAb != NULL && pAb->AbBox != NULL && table->AbBox->BxColumns != NULL &&
-	  pAb->AbElement->ElTypeNumber == PageBreak + 1 && colrow == BoColumn)
-	/* stop the process */
-	pAb = NULL;
-      else if (pAb != NULL && !pAb->AbDead && pAb->AbBox != NULL && pAb->AbBox->BxType == colrow)
+      if (pAb != NULL && pAb->AbBox != NULL)
 	{
-	  /* link the column or row to the table element */
-	  pAb->AbBox->BxTable = (PtrTabRelations) table;
-	  /* add a new item into the list */
-	  loop = TRUE;
-	  if (colrow == BoColumn)
-	    pTabRel = table->AbBox->BxColumns;
-	  else
-	    pTabRel = table->AbBox->BxRows;
-	  while (loop && pTabRel != NULL)
+	  if (pAb->AbBox->BxType == BoRow && colrow == BoColumn)
+	    /* stop the process */
+	    pAb = NULL;	    
+	  else if (table->AbBox->BxColumns != NULL && colrow == BoColumn &&
+	      pAb->AbElement->ElTypeNumber == PageBreak + 1)
+	    /* stop the process */
+	    pAb = NULL;
+	  else if (!pAb->AbDead && pAb->AbBox->BxType == colrow)
 	    {
-	      i = 0;
-	      pPreviousTabRel = pTabRel;
-	      do
-		{
-		  empty = (pTabRel->TaRTable[i] == NULL);
-		  i++;
-		}
-	      while (i != MAX_RELAT_DIM && !empty);
-	      
-	      if (empty)
-		{
-		  loop = FALSE;
-		  i--;
-		}
+	      /* link the column or row to the table element */
+	      pAb->AbBox->BxTable = (PtrTabRelations) table;
+	      /* add a new item into the list */
+	      loop = TRUE;
+	      if (colrow == BoColumn)
+		pTabRel = table->AbBox->BxColumns;
 	      else
-		pTabRel = pTabRel->TaRNext;
-	    }
+		pTabRel = table->AbBox->BxRows;
+	      while (loop && pTabRel != NULL)
+		{
+		  i = 0;
+		  pPreviousTabRel = pTabRel;
+		  do
+		    {
+		      empty = (pTabRel->TaRTable[i] == NULL);
+		      i++;
+		    }
+		  while (i != MAX_RELAT_DIM && !empty);
+		  
+		  if (empty)
+		    {
+		      loop = FALSE;
+		      i--;
+		    }
+		  else
+		    pTabRel = pTabRel->TaRNext;
+		}
 	  
-	  /* do we need to create a block ? */
-	  if (loop)
-	    {
-	      GetTaRBlock (&pTabRel);
-	      if (pPreviousTabRel == NULL)
-		if (colrow == BoColumn)
-		  table->AbBox->BxColumns = pTabRel;
-		else
-		  table->AbBox->BxRows = pTabRel;
-	      else
-		pPreviousTabRel->TaRNext = pTabRel;
-	      i = 0;
+	      /* do we need to create a block ? */
+	      if (loop)
+		{
+		  GetTaRBlock (&pTabRel);
+		  if (pPreviousTabRel == NULL)
+		    if (colrow == BoColumn)
+		      table->AbBox->BxColumns = pTabRel;
+		    else
+		      table->AbBox->BxRows = pTabRel;
+		  else
+		    pPreviousTabRel->TaRNext = pTabRel;
+		  i = 0;
+		}
+	      pTabRel->TaRTable[i] = pAb;
 	    }
-	  pTabRel->TaRTable[i] = pAb;
 	}
     }
 
