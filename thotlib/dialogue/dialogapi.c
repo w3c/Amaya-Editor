@@ -55,6 +55,7 @@
 #define CAT_ICON      12
 #define CAT_SCRPOPUP  13
 #define CAT_TREE      14
+#define CAT_COMBOBOX  15
 
 #define MAX_CAT       20
 #define C_NUMBER      15
@@ -2524,7 +2525,8 @@ static void ClearChildren (struct Cat_Context *parentCatalogue)
 	      if ((catalogue->Cat_Type != CAT_TEXT)
 		  && (catalogue->Cat_Type != CAT_SELECT)
 		  && (catalogue->Cat_Type != CAT_LABEL)
-		  && (catalogue->Cat_Type != CAT_TREE))
+		  && (catalogue->Cat_Type != CAT_TREE)
+		  && (catalogue->Cat_Type != CAT_COMBOBOX))
 		{
 		  FreeEList (catalogue->Cat_Entries);
 		  catalogue->Cat_Entries = NULL;
@@ -6385,7 +6387,8 @@ void TtaDestroyDialogue (int ref)
 		 && catalogue->Cat_Type != CAT_SCRPOPUP
 		 && catalogue->Cat_Type != CAT_PULL
 		 && catalogue->Cat_Type != CAT_LABEL
-		 && catalogue->Cat_Type != CAT_TREE)
+		 && catalogue->Cat_Type != CAT_TREE
+		 && catalogue->Cat_Type != CAT_COMBOBOX)
 	  {
 	     /* C'est surement une destruction de formulaire */
 	     if (DestForm (ref))
@@ -7023,6 +7026,7 @@ void TtaAttachForm (int ref)
 	    && catalogue->Cat_Type != CAT_TEXT
 	    && catalogue->Cat_Type != CAT_LABEL
 	    && catalogue->Cat_Type != CAT_TREE
+	    && catalogue->Cat_Type != CAT_COMBOBOX
 	    && catalogue->Cat_Type != CAT_INT
 	    && catalogue->Cat_Type != CAT_SELECT)
       TtaError (ERR_invalid_reference);
@@ -7099,6 +7103,7 @@ void TtaDetachForm (int ref)
 	    && catalogue->Cat_Type != CAT_TEXT
 	    && catalogue->Cat_Type != CAT_LABEL
 	    && catalogue->Cat_Type != CAT_TREE
+	    && catalogue->Cat_Type != CAT_COMBOBOX
 	    && catalogue->Cat_Type != CAT_INT
 	    && catalogue->Cat_Type != CAT_SELECT)
       TtaError (ERR_invalid_reference);
@@ -9122,6 +9127,194 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label,
      }
 #endif /* GTK */
    return tree;
+}
+
+#ifdef _GTK
+/*----------------------------------------------------------------------
+  ComboBoxGTK
+  Callback function for the combo box
+  ----------------------------------------------------------------------*/
+static ThotBool ComboBoxGTK (ThotWidget w, struct Cat_Context *catalogue, 
+			     caddr_t call_d)
+{
+  char *val;
+
+  if (!GTK_IS_ENTRY (w))
+    return FALSE;
+
+  val = gtk_entry_get_text (GTK_ENTRY (w));
+  
+  if (catalogue->Cat_React)
+    (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, val);
+  return FALSE;
+}
+#endif /* _GTK */
+
+/*----------------------------------------------------------------------
+   TtaInitComboBox
+   Initializes the labels in a combo box.
+   The parameter w points to a combo box widget.
+   The parameter nb_items says how many items are in the list
+   The parametes item_labels gives the list of labels.
+  ----------------------------------------------------------------------*/
+void TtaInitComboBox (ThotWidget w, int nb_items, char *item_labels[])
+{
+#ifdef _GTK
+  int i;
+  GtkCombo  *combo;
+  GtkWidget *item;
+
+  if (!w || !GTK_IS_COMBO (w) || nb_items == 0 || !item_labels)
+    return;
+  
+  combo = GTK_COMBO (w);
+
+  /* clear the precedent list */
+  gtk_list_clear_items (GTK_LIST (combo->list), 0, -1);
+  /* make a new one */
+  /* initialize it */
+  for (i=0; i < nb_items; i++)
+    {
+      item = gtk_list_item_new_with_label (item_labels[i]);
+      gtk_widget_show (item);
+      gtk_container_add (GTK_CONTAINER (combo->list), item);
+    }
+#endif /* _GTK */
+}
+
+/*----------------------------------------------------------------------
+   TtaNewComboBox
+   The parameter ref gives the catalog reference
+   The parameter ref_parent gives the parents reference
+   The parameter label gives the form's label
+   The Parameter callback gives the callback function.
+   Returns the pointer of the widget that was created or NULL.
+  ----------------------------------------------------------------------*/
+ThotWidget TtaNewComboBox (int ref, int ref_parent, char *label,
+			   ThotBool react)
+{
+  ThotWidget          w = NULL;
+
+#ifdef _GTK
+  /* general stuff, move it up when adding win32 */
+  int                 i;
+  int                 ent;
+  int                 rebuilded;
+  struct E_List      *adbloc;
+  ThotWidget          tmpw;
+  struct Cat_Context *catalogue;
+  struct Cat_Context *parentCatalogue;
+  /* end of general info */
+
+   if (ref == 0)
+     {
+       TtaError (ERR_invalid_reference);
+       return NULL;
+     }
+
+   catalogue = CatEntry (ref);
+   rebuilded = 0;
+   if (catalogue == NULL)
+     {
+       TtaError (ERR_cannot_create_dialogue);
+       return NULL;
+     }
+   else if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_COMBOBOX)
+     {
+       /* Modification du catalogue */
+       w = catalogue->Cat_Widget;
+       gtk_widget_show_all (w);
+       if (label)
+	 gtk_label_set_text (GTK_LABEL (w), label);	
+     }
+   else
+     {
+       if (catalogue->Cat_Widget)
+	 /* Le catalogue est a reconstruire completement */
+	 TtaDestroyDialogue (ref);
+       /*======================================> Recherche le catalogue parent */
+       parentCatalogue = CatEntry (ref_parent);
+       /*__________________________________ Le catalogue parent n'existe pas __*/
+       if (parentCatalogue == NULL)
+	 {
+	   TtaError (ERR_invalid_parent_dialogue);
+	   return NULL;
+	 }
+       else if (parentCatalogue->Cat_Widget == 0)
+	 {
+	   TtaError (ERR_invalid_parent_dialogue);
+	   return NULL;
+	 }
+       /*_________________________________________ Sous-menu d'un formulaire __*/
+       else if (parentCatalogue->Cat_Type != CAT_FORM
+		&& parentCatalogue->Cat_Type != CAT_SHEET
+		&& parentCatalogue->Cat_Type != CAT_DIALOG)
+	 {
+	   TtaError (ERR_invalid_parent_dialogue);
+	   return NULL;
+	 }
+       /* Recupere le widget parent */
+       w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
+       /* this is necessary for getting the key release anywhere on the widget,
+	even if the pointer is elsewhere */
+       if (parentCatalogue && parentCatalogue->Cat_Widget)
+	 gtk_widget_add_events (GTK_WIDGET(parentCatalogue->Cat_Widget), 
+				GDK_KEY_RELEASE_MASK);
+       if (label)
+	 {
+	   tmpw = gtk_label_new (label);
+	   gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
+	   tmpw->style->font=DefaultFont;
+	   gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
+	   gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
+	   gtk_widget_set_name (tmpw, "Dialogue");
+	 }
+       
+       {
+	 GtkCombo *combo;
+	 combo = GTK_COMBO (gtk_combo_new ());
+
+	 gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(combo),
+			     TRUE, TRUE, 0);
+
+	 /* 
+	 ** set up the behavior for the combo box 
+	 */
+
+	 /* use arrows to select entries */
+	 gtk_combo_set_use_arrows (combo, TRUE);
+	 gtk_combo_set_use_arrows_always (combo, TRUE);
+
+	 /* use arrows to select entries */
+	 gtk_combo_set_case_sensitive (combo, TRUE);
+	 gtk_combo_set_value_in_list (combo, TRUE, FALSE);
+	 
+	 gtk_widget_show (GTK_WIDGET (combo));
+
+	 /* connect the signals we're interested in */
+	 ConnectSignalGTK (GTK_OBJECT(combo->entry), "changed",
+			   GTK_SIGNAL_FUNC(ComboBoxGTK), (gpointer) catalogue);
+	 w = GTK_WIDGET (combo);
+       }	 
+       if (!parentCatalogue->Cat_Focus)
+	 {
+	   /* first entry in the form */
+	   gtk_widget_grab_focus (GTK_WIDGET(GTK_COMBO(w)->entry));
+	   parentCatalogue->Cat_Focus = TRUE;
+	 }
+       catalogue->Cat_Widget = w;
+       catalogue->Cat_Ref = ref;
+       catalogue->Cat_Type = CAT_COMBOBOX;
+       catalogue->Cat_PtParent = parentCatalogue;
+       catalogue->Cat_React = react;
+       adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
+       adbloc->E_Free[ent] = 'N';
+       catalogue->Cat_EntryParent = i;
+       catalogue->Cat_Entries = NULL;
+     }
+#endif /* GTK */
+
+   return w;
 }
 
 /*----------------------------------------------------------------------

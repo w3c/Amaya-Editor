@@ -397,6 +397,28 @@ extern ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label,
 				  ThotBool multiple, void *callback);
 
 /*----------------------------------------------------------------------
+   TtaInitComboBox
+   Initializes the labels in a combo box.
+   The parameter w points to a combo box widget.
+   The parameter nb_items says how many items are in the list
+   The parametes item_labels gives the list of labels.
+  ----------------------------------------------------------------------*/
+extern void TtaInitComboBox (ThotWidget w, int nb_items, char *item_labels[]);
+
+/*----------------------------------------------------------------------
+   TtaNewComboBox
+   The parameter ref gives the catalog reference
+   The parameter ref_parent gives the parents reference
+   The parameter label gives the form's label
+   The parameter callback gives the callback function.
+   The parameter react says if the widget is reactive.
+   Returns the pointer of the widget that was created or NULL.
+  ----------------------------------------------------------------------*/
+extern ThotWidget TtaNewComboBox (int ref, int ref_parent, char *label, 
+				  ThotBool react);
+
+
+/*----------------------------------------------------------------------
    TtaSetDialoguePosition me'morise la position actuelle de la souris 
    comme position d'affichage des TtaShowDialogue().               
   ----------------------------------------------------------------------*/

@@ -9,11 +9,6 @@
 extern ThotWidget CatWidget ( int ref );
 extern ThotWidget TtaCatWidget ( int ref );
 extern void MyWarningHandler ( void );
-extern void ThotXmColorProc ( ThotColorStruct *bg,
-                              ThotColorStruct *fg,
-                              ThotColorStruct *sel,
-                              ThotColorStruct *top,
-                              ThotColorStruct *bottom );
 extern void TtaInitDialogue ( char *server,
                               ThotAppContext *app_context );
 extern void InitDialogueFont ( void );
@@ -28,10 +23,6 @@ extern void TtaNewPulldown ( int ref,
                              int number,
                              char *text,
                              char* equiv );
-extern void TtaSetPulldownOff ( int ref,
-                                ThotWidget parent );
-extern void TtaSetPulldownOn ( int ref,
-                               ThotWidget parent );
 extern void TtaNewPopup ( int ref,
                           ThotWidget parent,
                           char *title,
@@ -71,9 +62,6 @@ extern void TtaNewToggleMenu ( int ref,
                                char *text,
                                char *equiv,
                                ThotBool react );
-extern void TtaSetToggleMenu ( int ref,
-                               int val,
-                               ThotBool on );
 extern void TtaChangeMenuEntry ( int ref,
                                  int entry,
                                  char *text );
@@ -183,6 +171,13 @@ extern ThotWidget TtaNewTreeForm ( int ref,
                                    char *label,
                                    ThotBool multiple,
                                    void *callback );
+extern void TtaInitComboBox ( ThotWidget w,
+                              int nb_items,
+                              char *item_labels[] );
+extern ThotWidget TtaNewComboBox ( int ref,
+                                   int ref_parent,
+                                   char *label,
+                                   ThotBool react );
 extern void TtaAbortShowDialogue ( void );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
@@ -197,11 +192,6 @@ extern void TtaFreeAllCatalogs ( void );
 extern ThotWidget CatWidget (/* int ref */);
 extern ThotWidget TtaCatWidget (/* int ref */);
 extern void MyWarningHandler (/* void */);
-extern void ThotXmColorProc (/* ThotColorStruct *bg,
-                                ThotColorStruct *fg,
-                                ThotColorStruct *sel,
-                                ThotColorStruct *top,
-                                ThotColorStruct *bottom */);
 extern void TtaInitDialogue (/* char *server,
                                 ThotAppContext *app_context */);
 extern void InitDialogueFont (/* void */);
@@ -216,10 +206,6 @@ extern void TtaNewPulldown (/* int ref,
                                int number,
                                char *text,
                                char* equiv */);
-extern void TtaSetPulldownOff (/* int ref,
-                                  ThotWidget parent */);
-extern void TtaSetPulldownOn (/* int ref,
-                                 ThotWidget parent */);
 extern void TtaNewPopup (/* int ref,
                             ThotWidget parent,
                             char *title,
@@ -259,9 +245,6 @@ extern void TtaNewToggleMenu (/* int ref,
                                  char *text,
                                  char *equiv,
                                  ThotBool react */);
-extern void TtaSetToggleMenu (/* int ref,
-                                 int val,
-                                 ThotBool on */);
 extern void TtaChangeMenuEntry (/* int ref,
                                    int entry,
                                    char *text */);
@@ -371,6 +354,13 @@ extern ThotWidget TtaNewTreeForm (/* int ref,
                                      char *label,
                                      ThotBool multiple,
                                      void *callback */);
+extern void TtaInitComboBox (/* ThotWidget w,
+                                int nb_items,
+                                char *item_labels[] */);
+extern ThotWidget TtaNewComboBox (/* int ref,
+                                     int ref_parent,
+                                     char *label,
+                                     ThotBool react */);
 extern void TtaAbortShowDialogue (/* void */);
 extern void TtaSetDialoguePosition (/* void */);
 extern void TtaShowDialogue (/* int ref,
