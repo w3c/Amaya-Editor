@@ -751,6 +751,11 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
         done
 	LDFLAGS=$LDFLAGS_OLD
 	LIBS=$LIBS_OLD
+  if test "$with_mac" = "yes" ; then
+      GL_OPTIONS=""	
+      GL_INCLUDES="-I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/"	
+      GL_LIBRARIES=""
+  else
     if test "$gl_inc" = "" ; then	        
       AC_MSG_WARN(Opengl headers (gl.h) not found !!)
       AC_MSG_WARN(Disabling opengl build !)
@@ -770,6 +775,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
       GL_INCLUDES=	
       GL_LIBRARIES=
       exit 1;
+    fi
     fi
     
     GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lGL -lGLU"
@@ -816,13 +822,19 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
   fi
 
   # checking for freetype lib (fonts library)
-  if test ! -f $(which freetype-config) ; then
-    AC_MSG_ERROR(Cannot find freetype library (font load/display routines). Please install it.)
-  fi
-  FREETYPE_INCLUDES=`freetype-config --cflags`
-  FREETYPE_LIBRARIES=`freetype-config --libs`
-  AC_SUBST(FREETYPE_INCLUDES)
-  AC_SUBST(FREETYPE_LIBRARIES)
+  if test "$with_mac" = "yes" ; then
+     # we use a static version of freetype lib for mac osx
+     FREETYPE_INCLUDES=""
+     FREETYPE_LIBRARIES=""
+  else
+     if test ! -f $(which freetype-config) ; then
+       AC_MSG_ERROR(Cannot find freetype library (font load/display routines). Please install it.)
+     fi
+     FREETYPE_INCLUDES=`freetype-config --cflags`
+     FREETYPE_LIBRARIES=`freetype-config --libs`
+   fi
+    AC_SUBST(FREETYPE_INCLUDES)
+    AC_SUBST(FREETYPE_LIBRARIES)
 
 
   # checking for xft lib
@@ -837,6 +849,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
 
   # START CHECKING XFT #
   # checking for Xft (old way)
+if test "$with_mac" = "no" ; then
   AC_MSG_CHECKING([Xft])
   for ac_dir in               		\
 		/usr/include 			\
@@ -869,26 +882,6 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
 
   AC_MSG_CHECKING([Xft-library])
  
-if test "$with_mac" = "yes" ; then
-  for ac_dir in               		\
-		/usr/lib 			\
-		/usr/X11R6/lib	 		\
-		/opt/local/lib	 		\
-		; \
-  do  if test -r "$ac_dir/libXft.2.dylib" ; then
-    xft_lib="yes"
-    XFT_LIBRARIES="-L$ac_dir -lXft"
-    AC_MSG_RESULT([yes])
-    break	
-  fi
-  done	
-  if test "$xft_lib" = "" ; then
-    AC_MSG_WARN(Xft.2 library (libXft.2.dylib) not found !!)
-    AC_MSG_WARN(Disabling opengl build !)
-      with_gl="no"
-      exit 1;
-  fi
-else
   for ac_dir in               		\
 		/usr/lib 			\
 		/usr/X11R6/lib	 		\
@@ -907,11 +900,11 @@ else
       with_gl="no"
       exit 1;
   fi
-fi
 
   AC_SUBST(XFT_INCLUDES)
   AC_SUBST(XFT_LIBRARIES)
   # END CHECKING XFT #
+fi
 
 
   AC_MSG_CHECKING([gcc3])	
@@ -1235,6 +1228,23 @@ EXTRA_INCLUDES=
 
 # check for malloc.h
 # on macosx, this file is not at the right place
+if test "$with_mac" = "yes" ; then
+for ac_dir in               \
+  /Developer/SDKs/MacOSX10.1.5.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.1.5.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.2.8.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.2.8.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.3.0.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.3.0.sdk/usr/include/sys/    \
+  ; \
+do
+  if test -r "$ac_dir/malloc.h"; then
+    echo "found malloc.h"
+    EXTRA_INCLUDES="${EXTRA_INCLUDES} -I$ac_dir"
+    break
+  fi
+done
+else
 for ac_dir in               \
   /usr/include/malloc/      \
   /sw/include/malloc/       \
@@ -1246,6 +1256,7 @@ do
     break
   fi
 done
+fi
 
 dnl
 dnl Set up the PATHs needed
