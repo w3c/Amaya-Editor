@@ -35,7 +35,7 @@ ANNOTFILES=*.STR *.PRS *.TRA *.en *.gif *.png
 DICOFILES= *.ptn *.dic alphabet clavier
 
 AMAYAFILES= *.STR *.conf *.trans* *.en *.gif *.png \
-           *.PRS *.TRA AmayaPage.html AmayaPage.html.* Amaya.svg
+           *.PRS *.TRA AmayaPage.html AmayaPage.html.* *.css Amaya.svg
 
 RESOURCE_XRC_FILES= *.xrc
 RESOURCE_ICONS_FILES= *.gif
@@ -536,6 +536,7 @@ install : all @NOPRINT@../bin/print
 @NOPRINT@	$(INSTALL_BIN) ../bin/print $(prefix)/Amaya/$(AMAYAGUI)/bin
 	$(RM) $(bindir)/amaya-$(AMAYAGUI)
 	$(LN_S) $(prefix)/Amaya/$(AMAYAGUI)/bin/amaya $(bindir)/amaya-$(AMAYAGUI)
+	$(RM) $(bindir)/amaya
 	$(LN_S) $(bindir)/amaya-$(AMAYAGUI) $(bindir)/amaya
 	(for i in $(AMAYAFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
