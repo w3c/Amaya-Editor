@@ -1923,6 +1923,7 @@ static sourceTransition ppsourceAutomaton[] =
    {1, '*', (Proc) ppPutInBuffer, 2},
 
 /* state 2:  */
+   {2, 'S', (Proc) Do_nothing, 2},
    {2, '|', (Proc) EndChoice, 1},
    {2, ',', (Proc) EndPatNode, 1},
    {2, ':', (Proc) SymbolName, 1},

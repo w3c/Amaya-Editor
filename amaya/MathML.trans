@@ -125,7 +125,17 @@ remove row: MROW{*+};
 !surround element with parenthesis
 parenthesise:*;
         {
-        * > :MF."(";
-        * > :*;
-        * > :MF.")";
+        * > MROW:MF."(";
+        * > MROW:*;
+        * > MROW:MF.")";
+        }
+
+!surround several elements with parenthesis
+parenthesise: first:*,?*, last:* ;
+        {
+        first > MROW:MF."(";
+        first > MROW:*;
+        * > MROW:*;
+        last > MROW:*;
+        last > MROW:MF.")";
         }

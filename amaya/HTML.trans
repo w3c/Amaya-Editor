@@ -73,9 +73,9 @@ Numbered list:(DL{(DT|DD{(*)+})+})+;
 	* > OL.LI.OL:LI.*;
 	}
 
-Remove DL:(DL{(DT|DD{(*)+})+})+;
+Remove DL: (DL{(DT|DD{*+})+})+;
 	{
-	 DT > :P.STRONG;
+	 DT > :P;
 	 * > :*;
 	}
 
@@ -319,47 +319,18 @@ Multi level Definition list:(H4,?HR,?(level1:*)+,(H5,?(level2:*)+,((H6)+,(level3
 	level3 > DL.DD.DL.DD.DL.DD:*;
 	}
 
-Definition list:(H1,?HR,?(level1:*)+,?((H2|H3|H4|H5|H6),(level2:*)+)+)+;
+Definition list:((H1|H2|H3|H4|H5|H6),*+)+;
 	{
 	H1 > DL:DT;
-	level1 > DL.DD:*;
-	H2 > DL.DD:DL.DT ;
-	H3 > DL.DD:DL.DT ;
-	H4 > DL.DD:DL.DT ;
-	H5 > DL.DD:DL.DT ;
-	H6 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
-	}
-
-Definition list:(H2,?HR,?(level1:*)+,?((H3|H4|H5|H6),(level2:*)+)+)+;
-	{
 	H2 > DL:DT;
-	level1>DL.DD:*;
-	H3 > DL.DD:DL.DT ;
-	H4 > DL.DD:DL.DT ;
-	H5 > DL.DD:DL.DT ;
-	H6 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
-	}
-
-Definition list:(H3,?HR,?(level1:*)+,?((H4|H5|H6),(level2:*)+)+)+;
-	{
+	H2 > DL:DT;
 	H3 > DL:DT;
-	level1>DL.DD:*;
-	H4 > DL.DD:DL.DT ;
-	H5 > DL.DD:DL.DT ;
-	H6 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
+	H4 > DL:DT;
+	H5 > DL:DT;
+	H6 > DL:DT;
+	* > DL.DD:*;
 	}
 
-Definition list:(H4,?HR,?(level1:*)+,?((H5|H6),(level2:*)+)+)+;
-	{
-	H4 > DL:DT;
-	level1>DL.DD:*;
-	H5 > DL.DD:DL.DT ;
-	H6 > DL.DD:DL.DT ;
-	level2 > DL.DD.DL.DD:*;
-	}
 
 
 
@@ -388,12 +359,53 @@ Headings H3:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*
 	content > :*;
 	}
 
-Definition list: P{STRONG|B},(DL{DD+}|p2:P+);
+Definition list: P,*+;
 	{
-	STRONG > DL:DT;
-	B > DL:DT;
-	DD > DL:*;
-	p2 > DL.DD:*;
+	P > DL:DT;
+	* > DL.DD:*;
+	}
+
+Remove Div: (DIV{*+})+;
+	{
+	H3 >
+	H4 > 
+	H5 > 
+	H6 > 
+	level2 > DL.DD.DL.DD:*;
+	}
+
+
+
+
+Headings H1:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
+	{
+	dt1 > :H1;
+	dt2 > :H2;
+	dt3 > :H3;
+	content > :*;
+	}
+
+Headings H2:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
+	{
+	dt1 > :H2;
+	dt2 > :H3;
+	dt3 > :H4;
+	content > :*;
+	}
+
+
+Headings H3:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
+	{
+	dt1 > :H3;
+	dt2 > :H4;
+	dt3 > :H5;
+	content > :*;
+	}
+
+Definition list: P,*+;
+	{
+	P > DL:DT;
+	* > DL.DD:*;
 	}
 
 Remove Div: (DIV{*+})+;
