@@ -1072,10 +1072,10 @@ static int          OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "/questiondown/Agrave/Aacute/Acircumflex/Atilde/Adieresis/Aring/AE\n");
 	  fprintf (PSfile, "/Ccedilla/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute/Icircumflex\n");
 	  fprintf (PSfile, "/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis\n");
-	  fprintf (PSfile, "/OE/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute/Thorn\n");
+	  fprintf (PSfile, "/multiply/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute/Thorn\n");
 	  fprintf (PSfile, "/germandbls/agrave/aacute/acircumflex/atilde/adieresis/aring/ae\n");
 	  fprintf (PSfile, "/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave/iacute/icircumflex\n");
-	  fprintf (PSfile, "/idieresis/eth/ntilde/ograve/oacute/ocircumflex/otilde/odieresis/oe\n");
+	  fprintf (PSfile, "/idieresis/eth/ntilde/ograve/oacute/ocircumflex/otilde/odieresis/divide\n");
 	  fprintf (PSfile, "/oslash/ugrave/uacute/ucircumflex/udieresis/yacute/thorn/ydieresis]\n");
 	  fprintf (PSfile, "def %%ISOLatin1Encoding\n");
 	  fprintf (PSfile, "} ifelse\n\n");
@@ -1094,11 +1094,6 @@ static int          OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "    /FontMatrix get 6 array copy newfont /FontMatrix 3 -1 roll put\n\n");
 	  
 	  fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
-	  fprintf (PSfile, "    newfont /Encoding get dup dup dup				%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#230 /divide put			%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#231 /multiply put			%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#367 /oe put				%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#327 /OE put				%%add /**OE*/\n\n");
 	  
 	  fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
 	  fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
@@ -1120,11 +1115,6 @@ static int          OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "    newfont /FontMatrix 3 -1 roll put\n\n");
 	  
 	  fprintf (PSfile, "    newfont /Encoding ISOLatin1Encoding 256 array copy put	%%put new encoding vector\n");
-	  fprintf (PSfile, "    newfont /Encoding get dup dup dup				%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#230 /divide put			%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#231 /multiply put			%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#367 /oe put				%%add /**OE*/\n");
-	  fprintf (PSfile, "			 8#327 /OE put				%%add /**OE*/\n\n");
 	  
 	  fprintf (PSfile, "    dup newfont /FontName 3 -1 roll put	%%put a new Fontname\n");
 	  fprintf (PSfile, "    newfont definefont pop	%%define a new font\n");
