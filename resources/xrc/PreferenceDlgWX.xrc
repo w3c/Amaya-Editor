@@ -609,7 +609,6 @@
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_TEXTCOLOR">
                         <bitmap>../icons/colorize.gif</bitmap>
-                        <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                     </object>
@@ -634,7 +633,6 @@
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_BACKCOLOR">
                         <bitmap>../icons/colorize.gif</bitmap>
-                        <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                     </object>
@@ -659,7 +657,6 @@
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_SELCOLOR">
                         <bitmap>../icons/colorize.gif</bitmap>
-                        <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                     </object>
@@ -684,7 +681,6 @@
                     <object class="sizeritem">
                       <object class="wxBitmapButton" name="wxID_BUTTON_SELBACKCOLOR">
                         <bitmap>../icons/colorize.gif</bitmap>
-                        <style>wxNO_BORDER</style>
                       </object>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
                     </object>

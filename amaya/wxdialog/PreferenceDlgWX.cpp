@@ -601,13 +601,14 @@ void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
   unsigned short      green;
   unsigned short      blue;
   TtaGiveRGB ((char *)prop.BgSelColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+  // Color tab callbacks
+  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR",  wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
   TtaGiveRGB ((char *)prop.FgSelColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR",      wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
   TtaGiveRGB ((char *)prop.BgColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR",     wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
   TtaGiveRGB ((char *)prop.FgColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->SetBackgroundColour( wxColour(red, green, blue) );
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR",     wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
 }
 
 /*----------------------------------------------------------------------
@@ -678,21 +679,33 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
 
     char color_string[7];
     sprintf( color_string, "#%02x%02x%02x", col.Red(), col.Green(), col.Blue() );
-    wxComboBox * p_combo = NULL;
+    wxComboBox *     p_combo  = NULL;
+    wxBitmapButton * p_button = NULL;
     if (event.GetId() == textcolor_id)
-      p_combo = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox);
-    else if (event.GetId() == backcolor_id)
-      p_combo = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox);
-    else if (event.GetId() == selcolor_id)
-      p_combo = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox);
-    else if (event.GetId() == selbackcolor_id)
-      p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);
-
-    if (p_combo)
       {
-	p_combo->SetValue( TtaConvMessageToWX(color_string) );
-	p_combo->SetBackgroundColour( col );
+	p_combo = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox);
+	p_button = XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton);
       }
+    else if (event.GetId() == backcolor_id)
+      {
+	p_combo = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox);
+	p_button = XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton);
+      }
+    else if (event.GetId() == selcolor_id)
+      {
+	p_combo = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox);
+	p_button = XRCCTRL(*this, "wxID_BUTTON_SELCOLOR", wxBitmapButton);
+      }
+    else if (event.GetId() == selbackcolor_id)
+      {
+	p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);
+	p_button = XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR", wxBitmapButton);
+      }
+    
+    if (p_combo)
+      p_combo->SetValue( TtaConvMessageToWX(color_string) );
+    if (p_button)
+      p_button->SetBackgroundColour( col );
   }
 }
 
