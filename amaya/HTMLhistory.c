@@ -227,10 +227,6 @@ ClickEvent  CE_event;
   else
     NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
-  /* if it's a file: url, we remove the protocol, as it
-     is a local file */
-  ConvertFileURL (pathname);
-  
   loaded = IsDocumentLoaded (pathname, form_data);
 
   TtaFreeMemory (pathname);
