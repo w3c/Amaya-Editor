@@ -800,18 +800,7 @@ ThotBool            alone;
 		    DrawBoxSelection (frame, pBox);
 		  else
 		    {
-		      if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
-			  pAb->AbLeafType == LtPolyLine)
-			{
-			  /* the whole box is selected */
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-			  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
-			    /* need to redraw more than one box */
-			    RedrawFrameBottom (frame, 0, NULL);
-			  else
-			    RedrawFrameBottom (frame, 0, pAb);
-			}
-		      else if (pBox != pFrame->FrSelectionBegin.VsBox)
+		      if (pBox != pFrame->FrSelectionBegin.VsBox)
 			{
 			  /* several pieces of a split box are selected */
 			  /* the last one */
@@ -829,6 +818,17 @@ ThotBool            alone;
 			      RedrawFrameBottom (frame, 0, pAb);
 			      pBox = pBox->BxNexChild;
 			    }
+			}
+		      else if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
+			  pAb->AbLeafType == LtPolyLine)
+			{
+			  /* the whole box is selected */
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			    /* need to redraw more than one box */
+			    RedrawFrameBottom (frame, 0, NULL);
+			  else
+			    RedrawFrameBottom (frame, 0, pAb);
 			}
 		      else
 			{

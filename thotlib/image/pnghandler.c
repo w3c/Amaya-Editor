@@ -648,11 +648,11 @@ int *bg;
       {
 	*ncolors = 128; 
 	for (i=0; i < *ncolors ; i++) {
-#          ifdef _WINDOWS 
+#ifdef _WINDOWS 
 	  colrs[i].red   = std_color_cube[i].red;
 	  colrs[i].green = std_color_cube[i].green;
 	  colrs[i].blue  = std_color_cube[i].blue;
-#          else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 	  colrs[i].red   = std_color_cube[i].red << 8;
 	  colrs[i].green = std_color_cube[i].green << 8;
 	  colrs[i].blue  = std_color_cube[i].blue << 8;
@@ -660,8 +660,7 @@ int *bg;
 #ifndef _GTK
 	  colrs[i].flags = DoRed|DoGreen|DoBlue;
 #endif /* ! _GTK */
-
-#              endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	}       
       }
     else if (color_type == PNG_COLOR_TYPE_GRAY)
@@ -672,9 +671,9 @@ int *bg;
 	  {
 	    colrs[i].red   = colrs[i].green = colrs[i].blue = i * 65535/15;
 #ifndef _GTK
-#              ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	    colrs[i].flags = DoRed|DoGreen|DoBlue;
-#              endif /* _WINDOWS */ 
+#endif /* _WINDOWS */ 
 #endif /* ! _GTK */
 
 	  }
@@ -686,7 +685,7 @@ int *bg;
 	colrs[15].flags = DoRed|DoGreen|DoBlue;
 #endif /* ! _GTK */
 
-#          endif /* _WINDOWS */
+#endif /* _WINDOWS */
       }
     else
       {
@@ -863,11 +862,11 @@ int*            bg;
      unsigned char* bit_data;
      FILE*          fp;
       
-#    ifndef _WINDOWS  
+#ifndef _WINDOWS  
      fp = ufopen (datafile, "r");
-#    else  /* _WINDOWS */
+#else  /* _WINDOWS */
      fp = ufopen (datafile, TEXT("rb"));
-#    endif /* _WINDOWS */
+#endif /* _WINDOWS */
      if (fp != NULL) {
 	bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg);
 	if (bit_data != NULL) {
@@ -880,7 +879,6 @@ int*            bg;
 	   fclose(fp);
      }
      return ((unsigned char*) NULL);
-
 }
 
 

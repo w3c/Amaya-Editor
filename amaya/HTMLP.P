@@ -9043,8 +9043,10 @@ ATTRIBUTES
 
  Start:
 	BEGIN
-	CreateBefore(ATTR_START);
-	CreateBefore(VALUE_START);
+	if NOT within XMLGraphics BEGIN
+	   CreateBefore(ATTR_START);
+	   CreateBefore(VALUE_START);
+	   END;
 	END;
 
  Clear = Left_:

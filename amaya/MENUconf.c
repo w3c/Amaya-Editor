@@ -179,6 +179,8 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 	{AM_INIT_ALL, AM_COLOR_MENU},
 	{IDC_TFGCOLOR, AM_DOC_FG_COLOR},
 	{IDC_TBGCOLOR, AM_DOC_BG_COLOR},
+	{IDC_TSECOLOR, AM_DOC_SEL_COLOR},
+	{IDC_TINCOLOR, AM_DOC_INS_COLOR},
  	{IDC_CHANGCOLOR, AM_COLOR_PALETTE},
 	{0, 0}
 };
@@ -2563,11 +2565,11 @@ LPARAM lParam;
 			      sizeof (BgColor) - 1);
 	      break;
 	    case IDC_SECOLOR:
-	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, SelColor,
+	      GetDlgItemText (hwnDlg, IDC_SECOLOR, SelColor,
 			      sizeof (SelColor) - 1);
 	      break;
 	    case IDC_INCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, InsColor,
+	      GetDlgItemText (hwnDlg, IDC_INCOLOR, InsColor,
 			      sizeof (InsColor) - 1);
 	      break;
 	    }
