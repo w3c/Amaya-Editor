@@ -461,7 +461,7 @@ HelpXml
 &NewXHTMLStrict
 &NewXHTMLBasic
 &NewMathML
-&NewSVG
+#&NewSVG
 &NewCss
 &RemoveDoctype
 &AddDoctype
