@@ -2955,7 +2955,17 @@ CHAR_T*       content_type;
      }
    else 
      {
-       me->method = METHOD_GET;
+#ifdef ANNOTATIONS
+       /* we support the DELETE method for deleting annotations.
+	  the rest of the request is similar to the GET */
+       if (mode & AMAYA_DELETE)
+	 {
+	   me->method = METHOD_GET;
+	   HTRequest_setMethod (me->request, METHOD_DELETE);
+	 }
+	 else
+#endif /* ANNOTATIONS */
+	   me->method = METHOD_GET;
        if (!HasKnownFileSuffix (ref))
 	 {
 	   /* try to adjust the Accept header in an netwise economical way */

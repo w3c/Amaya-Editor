@@ -208,14 +208,16 @@ typedef enum _ClickEvent {
 #define AMAYA_NOCACHE	64
 /* don't follow redirections */
 #define AMAYA_NOREDIR	128
-/* post an annonation */
-#define AMAYA_FILE_POST 256
 /* Prevents a stop race condition in ASYNC transfers */
 #define AMAYA_ASYNC_SAFE_STOP  256
 #define AMAYA_LOAD_CSS   512
 #define AMAYA_FLUSH_REQUEST 1024
 #define AMAYA_USE_PRECONDITIONS 2048
 #define AMAYA_LOAD_IMAGE 4096
+/* post an annonation */
+#define AMAYA_FILE_POST 8192
+/* delete an annotation */
+#define AMAYA_DELETE    16384
 
 /*
  * Flags to indicate the action to take when the network options
