@@ -45,7 +45,6 @@
 #define DEF_SAVE_INTVL 500	/* number of typed characters triggering 
 				   automatic saving */
 #define MAX_LABEL_LEN 12       	/* max. length of labels */
-#define MAX_DOC_NAME_LEN 32	/* max. length of a document name */
 #define MAX_DOC_IDENT_LEN 32	/* max. length of a document identifier */
 
 /* document structure checking modes */
