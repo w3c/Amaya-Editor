@@ -739,6 +739,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	      }
 	  }
 
+    TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
 #ifndef _WINDOWS
 	/* Dialogue form for open URL or local */
 	i = 0;
@@ -759,9 +760,9 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 		     BaseDialog + AttrHREFForm, " ");
 	/* initialise the text field in the dialogue box */
 	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-	strcpy (s, DirectoryName);
+	/*strcpy (s, DirectoryName);
 	strcat (s, DIR_STR);
-	strcat (s, DocumentName);
+	strcat (s, DocumentName);*/
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
 #else  /* _WINDOWS */

@@ -105,7 +105,7 @@ static AttSearch    SRC_attr_tab[] = {
 /*-----------------------------------------------------------------------
  SaveAsDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				 LPARAM lParam)
 {
   static char txt [500];
@@ -133,12 +133,11 @@ LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	case IDC_BROWSE:
       /* by default keep the same document name */
-	  TtaExtractName (currentDocToSave, SavePath, ObjectName);
-	  strcpy (currentDocToSave, ObjectName);
-	  WIN_ListSaveDirectory (BaseDialog + SaveForm,
+	  WIN_ListSaveDirectory (hwnDlg,
 				 TtaGetMessage (AMAYA, AM_SAVE_AS),
 				 currentDocToSave);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave);
+	  TtaExtractName (currentDocToSave, SavePath, ObjectName);
 	  ThotCallback (BaseDialog + NameSave, STRING_DATA, currentDocToSave);
 	  break;
 
@@ -158,7 +157,7 @@ LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       
     default: return FALSE;
     }
-  return TRUE ;
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------

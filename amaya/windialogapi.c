@@ -90,7 +90,7 @@ static char       WinCurLang[100];
 static char       CurFileToPrint[MAX_PATH];
 static char       AttDlgTitle[100];
 static char       MathEntName[MAX_TXT_LEN];
-static char       szBuffer[MAX_BUFF];
+static char       SzBuffer[MAX_BUFF];
 static char      *ClassList;
 static char      *ItemList;
 static char      *SavList;
@@ -147,9 +147,8 @@ static ThotBool     WithBorder;
 static ThotBool     HTMLFormat;
 
 static OPENFILENAME OpenFileName;
-static char        *szFilter;
-static char         szFileName[256];
-static char         szBuffer[MAX_BUFF];
+static char        *SzFilter;
+static char         SzBuffer[MAX_BUFF];
 static ThotWindow   wndCSSList;
 static ThotWindow   wndLangList;
 static ThotWindow   wndListRule;
@@ -298,7 +297,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	}
 
       itemIndex = SendMessage (wndCSSList, LB_SETCURSEL, (WPARAM)0, (LPARAM)0);
-      SetDlgItemText (hwnDlg, IDC_CSSEDIT, szBuffer);
+      SetDlgItemText (hwnDlg, IDC_CSSEDIT, SzBuffer);
       break;
 
     case WM_CLOSE:
@@ -310,9 +309,9 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE)
 	{
 	itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
-	itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-	SetDlgItemText (hwnDlg, IDC_CSSEDIT, szBuffer);
-	ThotCallback (BaseCSS + CSSSelect, STRING_DATA, szBuffer);
+	itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) SzBuffer);
+	SetDlgItemText (hwnDlg, IDC_CSSEDIT, SzBuffer);
+	ThotCallback (BaseCSS + CSSSelect, STRING_DATA, SzBuffer);
 	}
 
       switch (LOWORD (wParam))
@@ -454,13 +453,13 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  OpenFileName.lStructSize       = sizeof (OPENFILENAME);
 	  OpenFileName.hwndOwner         = hwnDlg;
 	  OpenFileName.hInstance         = hInstance;
-	  OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	  OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	  OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	  OpenFileName.nMaxCustFilter    = 0L;
 	  OpenFileName.nFilterIndex      = 1L;
-	  OpenFileName.lpstrFile         = (LPTSTR) szFileName;
-	  OpenFileName.nMaxFile          = 256;
-	  OpenFileName.lpstrInitialDir   = NULL;
+	  OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
+	  OpenFileName.nMaxFile          = MAX_LENGTH;
+	  OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
 	  OpenFileName.lpstrTitle        = "Select";
 	  OpenFileName.nFileOffset       = 0;
 	  OpenFileName.nFileExtension    = 0;
@@ -472,7 +471,7 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    strcpy (HrefUrl, OpenFileName.lpstrFile);
 	  
 	  SetDlgItemText (hwnDlg, IDC_GETURL, HrefUrl);
-	  if (HrefUrl[0] != 0)
+	  if (HrefUrl[0] != EOS)
 	    {
 	      ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, HrefUrl);
 	      EndDialog (hwnDlg, ID_CONFIRM);
@@ -487,13 +486,13 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case IDC_CLEAR:
 	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (char*) 4);
-	  TmpDocName[0] = 0;
+	  TmpDocName[0] = EOS;
 	  SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	  break;
 	  
 	case IDCANCEL:
 	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (char*) 0);
-	  HrefUrl[0] = 0;
+	  HrefUrl[0] = EOS;
 	  EndDialog (hwnDlg, IDCANCEL);
 	  break;      
 	}
@@ -1149,16 +1148,16 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    {
 	      itemIndex = SendMessage (wndMTlist, LB_GETCURSEL, 0, 0);
 	      itemIndex = SendMessage (wndMTlist, LB_GETTEXT, itemIndex,
-				       (LPARAM) szBuffer);
+				       (LPARAM) SzBuffer);
 	    }
 	  else if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      if (LB_ERR == (itemIndex = SendMessage (wndMTlist, LB_GETCURSEL, 0, 0L)))
 		break;
 	      itemIndex = SendMessage (wndMTlist, LB_GETTEXT, itemIndex,
-				       (LPARAM) szBuffer);
+				       (LPARAM) SzBuffer);
 	    }
-	  SetDlgItemText (hwnDlg, IDC_MTEDIT, szBuffer);
+	  SetDlgItemText (hwnDlg, IDC_MTEDIT, SzBuffer);
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      GetDlgItemText (hwnDlg, IDC_MTEDIT, SaveFormTmp, sizeof (SaveFormTmp) - 1);
@@ -1204,6 +1203,31 @@ void SaveAsDlgStatus (char *msg)
 {
   if (SaveAsForm && msg)
     SetWindowText (GetDlgItem (SaveAsForm, IDC_STATUS), msg);
+}
+
+
+/*----------------------------------------------------------------------
+  WIN_ListSaveDirectory
+  ----------------------------------------------------------------------*/
+void WIN_ListSaveDirectory (ThotWindow hwnDlg, char *title, char *fileName)
+{
+  char               *szFilter;
+  char                szFileTitle[256];
+
+  szFilter = APPFILENAMEFILTER;
+  TtaExtractName (fileName, SavePath, DocumentName);
+  OpenFileName.lStructSize = sizeof (OPENFILENAME); 
+  OpenFileName.hwndOwner = hwnDlg; 
+  OpenFileName.lpstrFilter = szFilter;
+  OpenFileName.lpstrFile = DocumentName; 
+  OpenFileName.nMaxFile = MAX_LENGTH; 
+  OpenFileName.lpstrFileTitle = szFileTitle; 
+  OpenFileName.lpstrTitle = title; 
+  OpenFileName.nMaxFileTitle = sizeof (szFileTitle); 
+  OpenFileName.lpstrInitialDir = SavePath; 
+  OpenFileName.Flags = OFN_SHOWHELP | OFN_HIDEREADONLY;
+  if (GetSaveFileName (&OpenFileName))
+    strcpy (fileName, OpenFileName.lpstrFile);
 }
 
 /*-----------------------------------------------------------------------
@@ -1368,9 +1392,7 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case IDC_BROWSE:
       /* by default keep the same document name */
-      TtaExtractName (UrlToOpen, SavePath, DocumentName);
-	  strcpy (UrlToOpen, DocumentName);
-	  WIN_ListSaveDirectory (BaseDialog + SaveForm, TtaGetMessage (AMAYA, AM_SAVE_AS), UrlToOpen);
+	  WIN_ListSaveDirectory (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS), UrlToOpen);
 	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, UrlToOpen);
 	  ThotCallback (BaseDialog + NameSave, STRING_DATA, UrlToOpen);
 	  break;
@@ -1426,7 +1448,7 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  if (LOWORD (wParam) == IDC_GETURL)
 	    {
 	      GetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen, sizeof (UrlToOpen) - 1);
-	      if (UrlToOpen[0] != 0)
+	      if (UrlToOpen[0] != EOS)
 		ThotCallback (BaseDialog + URLName, STRING_DATA, UrlToOpen);
 	    }
 	}
@@ -1439,17 +1461,16 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	break;
 
       case IDC_BROWSE:
-		  strncpy (szFileName, TmpDocName, 256);
 	OpenFileName.lStructSize       = sizeof (OPENFILENAME);
 	OpenFileName.hwndOwner         = hwnDlg;
 	OpenFileName.hInstance         = hInstance;
-	OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	OpenFileName.nMaxCustFilter    = 0L;
 	OpenFileName.nFilterIndex      = 1L;
-	OpenFileName.lpstrFile         = (LPTSTR) szFileName;
-	OpenFileName.nMaxFile          = 256;
-	OpenFileName.lpstrInitialDir   = NULL;
+	OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
+	OpenFileName.nMaxFile          = MAX_LENGTH;
+	OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
 	OpenFileName.lpstrTitle        = "Select";
 	OpenFileName.nFileOffset       = 0;
 	OpenFileName.nFileExtension    = 0;
@@ -1462,7 +1483,7 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  strcpy (UrlToOpen, OpenFileName.lpstrFile);
       
 	SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
-	if (UrlToOpen[0] != 0)
+	if (UrlToOpen[0] != EOS)
 	  {
 	    ThotCallback (BaseDialog + URLName, STRING_DATA, UrlToOpen);
 	    EndDialog (hwnDlg, ID_CONFIRM);
@@ -1473,13 +1494,13 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 
       case IDC_CLEAR:
 	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*) 3);
-	TmpDocName[0] = 0;
+	TmpDocName[0] = EOS;
 	SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	break;
       
       case IDCANCEL:
 	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*) 0);
-	UrlToOpen[0] = 0;
+	UrlToOpen[0] = EOS;
 	EndDialog (hwnDlg, IDCANCEL);
 	break;      
       }
@@ -1543,13 +1564,13 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    OpenFileName.lStructSize       = sizeof (OPENFILENAME);
 	    OpenFileName.hwndOwner         = hwnDlg;
 	    OpenFileName.hInstance         = hInstance;
-	    OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	    OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	    OpenFileName.nMaxCustFilter    = 0L;
 	    OpenFileName.nFilterIndex      = 1L;
-	    OpenFileName.lpstrFile         = (LPTSTR) szFileName;
-	    OpenFileName.nMaxFile          = 256;
-	    OpenFileName.lpstrInitialDir   = NULL;
+	    OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
+	    OpenFileName.nMaxFile          = MAX_LENGTH;
+	    OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
 	    OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_FILES);
 	    OpenFileName.nFileOffset       = 0;
 	    OpenFileName.nFileExtension    = 0;
@@ -1707,8 +1728,8 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE)
 	{
 	  itemIndex = SendMessage (wndSavList, LB_GETCURSEL, 0, 0);
-	  itemIndex = SendMessage (wndSavList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
+	  itemIndex = SendMessage (wndSavList, LB_GETTEXT, itemIndex, (LPARAM) SzBuffer);
+	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, SzBuffer);
 	}
       switch (LOWORD (wParam))
 	{
@@ -1835,17 +1856,17 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    {
 	      itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
 	      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex,
-			  (LPARAM) szBuffer);
+			  (LPARAM) SzBuffer);
 	    }
 	  else if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      if (LB_ERR == (itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
 		break;
 	      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex,
-			  (LPARAM) szBuffer);
+			  (LPARAM) SzBuffer);
 	    }
-	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
-	  ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
+	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, SzBuffer);
+	  ThotCallback (NumSelectLanguage, STRING_DATA, SzBuffer);
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 1);
@@ -2226,27 +2247,27 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE)
 	{
 	  itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0);
-	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-	  SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
+	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) SzBuffer);
+	  SetDlgItemText (hwnDlg, IDC_EDITRULE, SzBuffer);
 	  if (WithEdit)
-	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
+	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, SzBuffer);
 	  else
-	  ThotCallback (BaseDialog + AClassSelect, STRING_DATA, szBuffer);
+	  ThotCallback (BaseDialog + AClassSelect, STRING_DATA, SzBuffer);
 	}
       else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK)
 	{
 	  if (LB_ERR == (itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0L)))
 	    break;
-	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-	  SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
+	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) SzBuffer);
+	  SetDlgItemText (hwnDlg, IDC_EDITRULE, SzBuffer);
 	  if (WithEdit)
 	  {
-	    ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
+	    ThotCallback (BaseDialog + ClassSelect, STRING_DATA, SzBuffer);
 	    ThotCallback (BaseDialog + ClassForm, INTEGER_DATA, (char*) 1);
 	  }
 	  else
 	  {
-	    ThotCallback (BaseDialog + AClassSelect, STRING_DATA, szBuffer);
+	    ThotCallback (BaseDialog + AClassSelect, STRING_DATA, SzBuffer);
 	    ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (char*) 1);
 	  }
 	  EndDialog (hwnDlg, ID_CONFIRM);
@@ -2254,8 +2275,8 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	}
       else if (WithEdit && HIWORD (wParam) == EN_UPDATE)
 	{
-	  GetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer, sizeof (szBuffer) - 1);
-	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
+	  GetDlgItemText (hwnDlg, IDC_EDITRULE, SzBuffer, sizeof (SzBuffer) - 1);
+	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, SzBuffer);
 	}
 
       switch (LOWORD (wParam))
@@ -3293,13 +3314,13 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 	    OpenFileName.lStructSize       = sizeof (OPENFILENAME);
 	    OpenFileName.hwndOwner         = hwnDlg;
 	    OpenFileName.hInstance         = hInstance;
-	    OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	    OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	    OpenFileName.nMaxCustFilter    = 0L;
 	    OpenFileName.nFilterIndex      = 1L;
-	    OpenFileName.lpstrFile         = (LPTSTR) szFileName;
-	    OpenFileName.nMaxFile          = 256;
-	    OpenFileName.lpstrInitialDir   = NULL;
+	    OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
+	    OpenFileName.nMaxFile          = MAX_LENGTH;
+	    OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
 	    OpenFileName.lpstrTitle        = "Open a File";
 	    OpenFileName.nFileOffset       = 0;
 	    OpenFileName.nFileExtension    = 0;
@@ -3368,10 +3389,10 @@ LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  switch (LOWORD (wParam))
 	    {
 	    case IDC_IDELEMNAME:
-	      GetDlgItemText (hwnDlg, IDC_IDELEMNAME, szBuffer,
+	      GetDlgItemText (hwnDlg, IDC_IDELEMNAME, SzBuffer,
 			      MAX_LENGTH - 1);
-	      szBuffer[MAX_LENGTH - 1] = EOS;
-	      ThotCallback (BaseDialog + mElemName, STRING_DATA, szBuffer);
+	      SzBuffer[MAX_LENGTH - 1] = EOS;
+	      ThotCallback (BaseDialog + mElemName, STRING_DATA, SzBuffer);
 	      break;
 	    }
 	}
@@ -3575,9 +3596,9 @@ void CreateHRefDlgWindow (ThotWindow parent, char *HRefValue,
   strcpy (TmpDocName, HRefValue);
     
   if (doc_type == docCSS)
-    szFilter = APPCSSNAMEFILTER;
+    SzFilter = APPCSSNAMEFILTER;
   else 
-    szFilter = APPALLFILESFILTER;
+    SzFilter = APPALLFILESFILTER;
 
   DialogBox (hInstance, MAKEINTRESOURCE (CREATEHREF), parent,
 	     (DLGPROC) HRefDlgProc);
@@ -3708,21 +3729,21 @@ void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *url,
   strcpy ( UrlToOpen, url);
   
   if (doc_type == docHTML)
-    szFilter = APPHTMLNAMEFILTER;
+    SzFilter = APPHTMLNAMEFILTER;
   else if (doc_type == docMath)
-    szFilter = APPMATHNAMEFILTER;
+    SzFilter = APPMATHNAMEFILTER;
   else if (doc_type == docSVG)
-    szFilter = APPSVGNAMEFILTER;
+    SzFilter = APPSVGNAMEFILTER;
   else if (doc_type == docCSS)
-    szFilter = APPCSSNAMEFILTER;
+    SzFilter = APPCSSNAMEFILTER;
   else if (doc_type == docImage)
-    szFilter = APPIMAGENAMEFILTER;
+    SzFilter = APPIMAGENAMEFILTER;
   else if (doc_type == docImage)
-    szFilter = APPIMAGENAMEFILTER;
+    SzFilter = APPIMAGENAMEFILTER;
   else if (doc_type == docLibrary)
-	szFilter = APPLIBRARYNAMEFILTER;
+	SzFilter = APPLIBRARYNAMEFILTER;
   else 
-    szFilter = APPFILENAMEFILTER;
+    SzFilter = APPFILENAMEFILTER;
 
   DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent,
 	  (DLGPROC) OpenDocDlgProc);
@@ -3738,9 +3759,9 @@ void CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
   dirSelect = dir_select;
   strcpy ( UrlToOpen, imgName);    
   if (doc_type == docImage)
-    szFilter = APPIMAGENAMEFILTER;
+    SzFilter = APPIMAGENAMEFILTER;
   else 
-    szFilter = APPALLFILESFILTER;
+    SzFilter = APPALLFILESFILTER;
   
   DialogBox (hInstance, MAKEINTRESOURCE (OPENIMAGEDIALOG), parent,
 	  (DLGPROC) OpenImgDlgProc);
@@ -4010,7 +4031,7 @@ void CreateAuthenticationDlgWindow (ThotWindow parent, const char *realm,
  ------------------------------------------------------------------------*/
 void CreateBackgroundImageDlgWindow (ThotWindow parent, char *image_location)
 {
-  szFilter         = APPIMAGENAMEFILTER;
+  SzFilter         = APPIMAGENAMEFILTER;
   strcpy (CurrentPathName, image_location);
   DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
 }
