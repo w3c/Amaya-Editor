@@ -14,5 +14,5 @@ HTTP_PROXY=
 # ex: NO_PROXY=harpo.marx.edu)
 NO_PROXY=
 ENABLE_PIPELINING=
-Profiles_File=amaya.profiles
+Profiles_File=$(THOTDIR)\config\amaya.profiles
 Profile=editor
