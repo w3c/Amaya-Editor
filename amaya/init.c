@@ -3454,7 +3454,9 @@ void               *ctx_cbf;
    CHAR_T*             documentname;
    CHAR_T*             content_type = NULL;
    int                 toparse;
+#if 0
    int                 slash;
+#endif
    int                 mode;
    int                 docType;
    ThotBool            ok;
@@ -3663,6 +3665,10 @@ void               *ctx_cbf;
 
 	   if (IsW3Path (pathname))
 	     {
+	       /* @@ JK: stop concatenating the / systematically.
+		if there are no side effects, I'll remove this bit of code 
+	       */
+#if 0
 	       if (CE_event != CE_FORM_POST
 		   && !ustrcmp (documentname, TEXT("noname.html")))
 		 {
@@ -3670,6 +3676,7 @@ void               *ctx_cbf;
 		   if (slash && pathname[slash - 1] != TEXT('/'))
 		     ustrcat (pathname, TEXT("/"));
 		 }
+#endif
 	       css = SearchCSS (0, pathname);
 	       if (css == NULL)
 		 toparse =  GetObjectWWW (newdoc, pathname, form_data,
