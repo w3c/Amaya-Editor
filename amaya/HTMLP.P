@@ -4106,12 +4106,41 @@ RULES
 	CreateBefore(OBJECT_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
+	Height: 100;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	LineBreak: No;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;	
+	IN Alternate_view
+		Height: Enclosed . Height;
+	END;
+ Object_Image: BEGIN
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	VertPos: Top = Enclosing . Top;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+ Object_Content: BEGIN
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width;
+		VertPos: Top = Enclosing . Top;
+		HorizPos: Left = Enclosing . Left;
+		END:
 	END;
 #endif
 
@@ -4624,14 +4653,16 @@ RULES
 	IN Structure_view BEGIN
 		Height: 1 px;
 		Width: 1 px;
-		Visibility: 1;
+		if NOT Immediately within Object
+		   Visibility: 1;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Alternate_view BEGIN
 		Height: 1 pt;
 		Width: 1 pt;
-		Visibility: 1;
+		if NOT Immediately within Object
+		   Visibility: 1;
 		END;
 	IN Anchors_view BEGIN
 		Visibility: 0;
@@ -5263,6 +5294,13 @@ ATTRIBUTES
 		Width: Enclosing . Width;
 	   If PICTURE_UNIT
 		Width: Enclosing . Width;
+	   If Object
+		Width: Enclosing . Width;
+	   END;
+	IN Alternate_view
+	   BEGIN
+	   If Object
+		Width: Enclosing . Width;
 	   END;
 	END;
 
@@ -5279,6 +5317,13 @@ ATTRIBUTES
 	   If Applet
 		Height: Enclosed . Height;
 	   If PICTURE_UNIT
+		Height: Enclosed . Height;
+	   If Object
+		Height: Enclosed . Height;
+	   END;
+	IN Alternate_view
+	   BEGIN
+	   If Object
 		Height: Enclosed . Height;
 	   END;
 	END;

@@ -159,7 +159,10 @@ STRUCT
 #ifdef COUGAR
   Object (ATTR classid = TEXT; codebase; data = TEXT; Object_type = TEXT;
 	  codetype = TEXT; Alignment; Height_; Width_; hspace; vspace) =
-	LIST OF (CASE OF BEGIN Element; Parameter; END);
+	BEGIN
+	Object_Image = PICTURE;
+	Object_Content = LIST OF (CASE OF Element; Parameter; END);
+	END;
 #endif
 
   Block = CASE OF
@@ -390,5 +393,9 @@ EXCEPT
 	RowExt:		Invisible;
 	Ref_column:	Invisible;
 	Table_cell_ghost: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
+#ifdef COUGAR
+	Object_Image: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
+	Object_Content: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
+#endif
 	Ghost_restruct:	Invisible;
 END

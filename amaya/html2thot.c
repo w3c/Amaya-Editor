@@ -175,8 +175,6 @@ typedef struct _GIMapping
      GI                  htmlGI;	/* name of the HTML element */
      char                htmlContents;	/* info about the contents of the HTML element:
 					   'E'=empty,  space=any contents */
-     char                CharOrElem;	/* info about the corresponding Thot thing:
-					   'E'=Element, 'C'=Char */
      int                 ThotType;	/* type of the Thot element or attribute or
 					   decimal code of the Thot character */
      PtrClosedElement    firstClosedElem;	/* first element closed by the start
@@ -188,83 +186,83 @@ GIMapping;
 
 static GIMapping    GIMappingTable[] =
 {
-   {"A", SPACE, 'E', HTML_EL_Anchor, NULL},
-   {"ADDRESS", SPACE, 'E', HTML_EL_Address, NULL},
-   {"APPLET", SPACE, 'E', HTML_EL_Applet, NULL},
-   {"AREA", 'E', 'E', HTML_EL_AREA, NULL},
-   {"B", SPACE, 'E', HTML_EL_Bold_text, NULL},
-   {"BASE", 'E', 'E', HTML_EL_BASE, NULL},
-   {"BASEFONT", 'E', 'E', HTML_EL_BaseFont, NULL},
-   {"BIG", SPACE, 'E', HTML_EL_Big_text, NULL},
-   {"BLOCKQUOTE", SPACE, 'E', HTML_EL_Block_Quote, NULL},
-   {"BODY", SPACE, 'E', HTML_EL_BODY, NULL},
-   {"BR", 'E', 'E', HTML_EL_BR, NULL},
-   {"C", SPACE, 'E', HTML_EL_TEXT_UNIT, NULL},
-   {"CAPTION", SPACE, 'E', HTML_EL_CAPTION, NULL},
-   {"CENTER", SPACE, 'E', HTML_EL_Center, NULL},
-   {"CITE", SPACE, 'E', HTML_EL_Cite, NULL},
-   {"CODE", SPACE, 'E', HTML_EL_Code, NULL},
-   {"DD", SPACE, 'E', HTML_EL_Definition, NULL},
-   {"DFN", SPACE, 'E', HTML_EL_Def, NULL},
-   {"DIR", SPACE, 'E', HTML_EL_Directory, NULL},
-   {"DIV", SPACE, 'E', HTML_EL_Division, NULL},
-   {"DL", SPACE, 'E', HTML_EL_Definition_List, NULL},
-   {"DT", SPACE, 'E', HTML_EL_Term, NULL},
-   {"EM", SPACE, 'E', HTML_EL_Emphasis, NULL},
-   {"FONT", SPACE, 'E', HTML_EL_Font_, NULL},
-   {"FORM", SPACE, 'E', HTML_EL_Form, NULL},
-   {"H1", SPACE, 'E', HTML_EL_H1, NULL},
-   {"H2", SPACE, 'E', HTML_EL_H2, NULL},
-   {"H3", SPACE, 'E', HTML_EL_H3, NULL},
-   {"H4", SPACE, 'E', HTML_EL_H4, NULL},
-   {"H5", SPACE, 'E', HTML_EL_H5, NULL},
-   {"H6", SPACE, 'E', HTML_EL_H6, NULL},
-   {"HEAD", SPACE, 'E', HTML_EL_HEAD, NULL},
-   {"HR", 'E', 'E', HTML_EL_Horizontal_Rule, NULL},
-   {"HTML", SPACE, 'E', HTML_EL_HTML, NULL},
-   {"I", SPACE, 'E', HTML_EL_Italic_text, NULL},
-   {"IMG", 'E', 'E', HTML_EL_PICTURE_UNIT, NULL},
-   {"INPUT", 'E', 'E', HTML_EL_Input, NULL},
-   {"ISINDEX", 'E', 'E', HTML_EL_ISINDEX, NULL},
-   {"KBD", SPACE, 'E', HTML_EL_Keyboard, NULL},
-   {"LI", SPACE, 'E', HTML_EL_List_Item, NULL},
-   {"LINK", 'E', 'E', HTML_EL_LINK, NULL},
-   {"LISTING", SPACE, 'E', HTML_EL_Preformatted, NULL},		/*converted to PRE */
-   {"MAP", SPACE, 'E', HTML_EL_MAP, NULL},
-   {"MENU", SPACE, 'E', HTML_EL_Menu, NULL},
-   {"META", 'E', 'E', HTML_EL_META, NULL},
+   {"A", SPACE, HTML_EL_Anchor, NULL},
+   {"ADDRESS", SPACE, HTML_EL_Address, NULL},
+   {"APPLET", SPACE, HTML_EL_Applet, NULL},
+   {"AREA", 'E', HTML_EL_AREA, NULL},
+   {"B", SPACE, HTML_EL_Bold_text, NULL},
+   {"BASE", 'E', HTML_EL_BASE, NULL},
+   {"BASEFONT", 'E', HTML_EL_BaseFont, NULL},
+   {"BIG", SPACE, HTML_EL_Big_text, NULL},
+   {"BLOCKQUOTE", SPACE, HTML_EL_Block_Quote, NULL},
+   {"BODY", SPACE, HTML_EL_BODY, NULL},
+   {"BR", 'E', HTML_EL_BR, NULL},
+   {"C", SPACE, HTML_EL_TEXT_UNIT, NULL},
+   {"CAPTION", SPACE, HTML_EL_CAPTION, NULL},
+   {"CENTER", SPACE, HTML_EL_Center, NULL},
+   {"CITE", SPACE, HTML_EL_Cite, NULL},
+   {"CODE", SPACE, HTML_EL_Code, NULL},
+   {"DD", SPACE, HTML_EL_Definition, NULL},
+   {"DFN", SPACE, HTML_EL_Def, NULL},
+   {"DIR", SPACE, HTML_EL_Directory, NULL},
+   {"DIV", SPACE, HTML_EL_Division, NULL},
+   {"DL", SPACE, HTML_EL_Definition_List, NULL},
+   {"DT", SPACE, HTML_EL_Term, NULL},
+   {"EM", SPACE, HTML_EL_Emphasis, NULL},
+   {"FONT", SPACE, HTML_EL_Font_, NULL},
+   {"FORM", SPACE, HTML_EL_Form, NULL},
+   {"H1", SPACE, HTML_EL_H1, NULL},
+   {"H2", SPACE, HTML_EL_H2, NULL},
+   {"H3", SPACE, HTML_EL_H3, NULL},
+   {"H4", SPACE, HTML_EL_H4, NULL},
+   {"H5", SPACE, HTML_EL_H5, NULL},
+   {"H6", SPACE, HTML_EL_H6, NULL},
+   {"HEAD", SPACE, HTML_EL_HEAD, NULL},
+   {"HR", 'E', HTML_EL_Horizontal_Rule, NULL},
+   {"HTML", SPACE, HTML_EL_HTML, NULL},
+   {"I", SPACE, HTML_EL_Italic_text, NULL},
+   {"IMG", 'E', HTML_EL_PICTURE_UNIT, NULL},
+   {"INPUT", 'E', HTML_EL_Input, NULL},
+   {"ISINDEX", 'E', HTML_EL_ISINDEX, NULL},
+   {"KBD", SPACE, HTML_EL_Keyboard, NULL},
+   {"LI", SPACE, HTML_EL_List_Item, NULL},
+   {"LINK", 'E', HTML_EL_LINK, NULL},
+   {"LISTING", SPACE, HTML_EL_Preformatted, NULL},		/*converted to PRE */
+   {"MAP", SPACE, HTML_EL_MAP, NULL},
+   {"MENU", SPACE, HTML_EL_Menu, NULL},
+   {"META", 'E', HTML_EL_META, NULL},
 #ifdef COUGAR
-   {"OBJECT", SPACE, 'E', HTML_EL_Object, NULL},
+   {"OBJECT", SPACE, HTML_EL_Object, NULL},
 #endif
-   {"OL", SPACE, 'E', HTML_EL_Numbered_List, NULL},
-   {"OPTION", SPACE, 'E', HTML_EL_Option, NULL},
-   {"P", SPACE, 'E', HTML_EL_Paragraph, NULL},
-   {"PARAM", 'E', 'E', HTML_EL_Parameter, NULL},
-   {"PRE", SPACE, 'E', HTML_EL_Preformatted, NULL},
-   {"SAMP", SPACE, 'E', HTML_EL_Sample, NULL},
-   {"SCRIPT", SPACE, 'E', HTML_EL_SCRIPT, NULL},
-   {"SELECT", SPACE, 'E', HTML_EL_Option_Menu, NULL},
-   {"SMALL", SPACE, 'E', HTML_EL_Small_text, NULL},
-   {"SPAN", SPACE, 'E', HTML_EL_TEXT_UNIT, NULL},
-   {"STRIKE", SPACE, 'E', HTML_EL_Struck_text, NULL},
-   {"STRONG", SPACE, 'E', HTML_EL_Strong, NULL},
-   {"STYLE", SPACE, 'E', HTML_EL_Styles, NULL},
-   {"SUB", SPACE, 'E', HTML_EL_Subscript, NULL},
-   {"SUP", SPACE, 'E', HTML_EL_Superscript, NULL},
-   {"TABLE", SPACE, 'E', HTML_EL_Table, NULL},
-   {"TBODY", SPACE, 'E', HTML_EL_tbody, NULL},
-   {"TD", SPACE, 'E', HTML_EL_Data_cell, NULL},
-   {"TEXTAREA", SPACE, 'E', HTML_EL_Text_Area, NULL},
-   {"TFOOT", SPACE, 'E', HTML_EL_tfoot, NULL},
-   {"TH", SPACE, 'E', HTML_EL_Heading_cell, NULL},
-   {"THEAD", SPACE, 'E', HTML_EL_thead, NULL},
-   {"TITLE", SPACE, 'E', HTML_EL_TITLE, NULL},
-   {"TR", SPACE, 'E', HTML_EL_Table_row, NULL},
-   {"TT", SPACE, 'E', HTML_EL_Teletype_text, NULL},
-   {"UL", SPACE, 'E', HTML_EL_Unnumbered_List, NULL},
-   {"VAR", SPACE, 'E', HTML_EL_Variable, NULL},
-   {"XMP", SPACE, 'E', HTML_EL_Preformatted, NULL},	/* converted to PRE */
-   {"", SPACE, EOS, 0, NULL}	/* Last entry. Mandatory */
+   {"OL", SPACE, HTML_EL_Numbered_List, NULL},
+   {"OPTION", SPACE, HTML_EL_Option, NULL},
+   {"P", SPACE, HTML_EL_Paragraph, NULL},
+   {"PARAM", 'E', HTML_EL_Parameter, NULL},
+   {"PRE", SPACE, HTML_EL_Preformatted, NULL},
+   {"SAMP", SPACE, HTML_EL_Sample, NULL},
+   {"SCRIPT", SPACE, HTML_EL_SCRIPT, NULL},
+   {"SELECT", SPACE, HTML_EL_Option_Menu, NULL},
+   {"SMALL", SPACE, HTML_EL_Small_text, NULL},
+   {"SPAN", SPACE, HTML_EL_TEXT_UNIT, NULL},
+   {"STRIKE", SPACE, HTML_EL_Struck_text, NULL},
+   {"STRONG", SPACE, HTML_EL_Strong, NULL},
+   {"STYLE", SPACE, HTML_EL_Styles, NULL},
+   {"SUB", SPACE, HTML_EL_Subscript, NULL},
+   {"SUP", SPACE, HTML_EL_Superscript, NULL},
+   {"TABLE", SPACE, HTML_EL_Table, NULL},
+   {"TBODY", SPACE, HTML_EL_tbody, NULL},
+   {"TD", SPACE, HTML_EL_Data_cell, NULL},
+   {"TEXTAREA", SPACE, HTML_EL_Text_Area, NULL},
+   {"TFOOT", SPACE, HTML_EL_tfoot, NULL},
+   {"TH", SPACE, HTML_EL_Heading_cell, NULL},
+   {"THEAD", SPACE, HTML_EL_thead, NULL},
+   {"TITLE", SPACE, HTML_EL_TITLE, NULL},
+   {"TR", SPACE, HTML_EL_Table_row, NULL},
+   {"TT", SPACE, HTML_EL_Teletype_text, NULL},
+   {"UL", SPACE, HTML_EL_Unnumbered_List, NULL},
+   {"VAR", SPACE, HTML_EL_Variable, NULL},
+   {"XMP", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
+   {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
 
 /* elements that cannot contain text elements as children.
@@ -425,6 +423,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"ENCTYPE", "", 'A', HTML_ATTR_ENCTYPE},
    {"HEIGHT", "APPLET", 'A', HTML_ATTR_Height_},
    {"HEIGHT", "IMG", 'A', HTML_ATTR_Height_},
+#ifdef COUGAR
+   {"HEIGHT", "OBJECT", 'A', HTML_ATTR_Height_},
+#endif
    {"HEIGHT", "TD", 'A', HTML_ATTR_Cell_height},
    {"HEIGHT", "TH", 'A', HTML_ATTR_Cell_height},
    {"HREF", "", 'A', HTML_ATTR_HREF_},
@@ -482,6 +483,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"WIDTH", "APPLET", 'A', HTML_ATTR_Width_},
    {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
    {"WIDTH", "IMG", 'A', HTML_ATTR_Width_},
+#ifdef COUGAR
+   {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width_},
+#endif
    {"WIDTH", "PRE", 'A', HTML_ATTR_WidthElement},
    {"WIDTH", "TABLE", 'A', HTML_ATTR_Width__},
    {"WIDTH", "TD", 'A', HTML_ATTR_Cell_width},
@@ -845,7 +849,7 @@ char               *gi;
 	 entry = i;
       else
 	 i++;
-   while (entry < 0 && GIMappingTable[i].CharOrElem != EOS);
+   while (entry < 0 && GIMappingTable[i].htmlGI[0] != EOS);
    return entry;
 }
 
@@ -853,7 +857,6 @@ char               *gi;
    GIType  search in GIMappingTable the Element type associated to
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GIType (char *gi, int *elem)
 #else
@@ -871,15 +874,12 @@ int                *elem;
      {
 	if (!strcasecmp (GIMappingTable[i].htmlGI, gi))
 	  {
-	     if (GIMappingTable[i].CharOrElem == 'E')
-	       {
-		  *elem = GIMappingTable[i].ThotType;
-		  return;
-	       }
+	    *elem = GIMappingTable[i].ThotType;
+	    return;
 	  }
 	i++;
      }
-   while (GIMappingTable[i].CharOrElem != EOS);
+   while (GIMappingTable[i].htmlGI[0] != EOS);
 }
 
 /*----------------------------------------------------------------------
@@ -900,13 +900,12 @@ Element             elem;
    i = 0;
    do
      {
-	if ((GIMappingTable[i].ThotType == elType.ElTypeNum) &&
-	    (GIMappingTable[i].CharOrElem == 'E') &&
-	    (strcmp (GIMappingTable[i].htmlGI, "LISTING")))
+	if (GIMappingTable[i].ThotType == elType.ElTypeNum &&
+	    strcmp (GIMappingTable[i].htmlGI, "LISTING"))
 	   return (char *) GIMappingTable[i].htmlGI;
 	i++;
      }
-   while (GIMappingTable[i].CharOrElem != EOS);
+   while (GIMappingTable[i].htmlGI[0] != EOS);
    return NULL;
 }
 
@@ -928,13 +927,12 @@ int                 type;
 	i = 0;
 	do
 	  {
-	     if ((GIMappingTable[i].ThotType == type) &&
-		 (GIMappingTable[i].CharOrElem == 'E') &&
-		 (strcmp (GIMappingTable[i].htmlGI, "LISTING")))	/* use PRE */
+	     if (GIMappingTable[i].ThotType == type &&
+		 strcmp (GIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
 		return (char *) GIMappingTable[i].htmlGI;
 	     i++;
 	  }
-	while (GIMappingTable[i].CharOrElem != EOS);
+	while (GIMappingTable[i].htmlGI[0] != EOS);
      }
    return "???";
 }
@@ -1964,17 +1962,52 @@ Element             el;
 #ifdef STANDALONE
    char               *name1, *name2;
    char               *imageName;
-
-#endif
-#ifndef STANDALONE
+#else
    char               *name1, *name2;
-
 #endif
 
    elType = TtaGetElementType (el);
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
 	 {
+#ifdef COUGAR
+	    case HTML_EL_Object:	/*  it's an object */
+	       /* create Object_Content */
+	       elType.ElTypeNum = HTML_EL_Object_Content;
+	       desc = TtaNewTree (theDocument, elType, "");
+	       TtaInsertFirstChild (&desc, el, theDocument);
+	       /* move previous existing children into Object_Content */
+	       child = TtaGetLastChild(el);
+	       while (child != desc)
+		 {
+		   TtaRemoveTree (child, theDocument);
+		   TtaInsertFirstChild (&child, desc, theDocument);
+		   child = TtaGetLastChild(el);
+		 }
+	       /* create Object_Image */
+	       elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	       child = TtaNewTree (theDocument, elType, "");
+	       TtaInsertSibling (child, desc, TRUE, theDocument);
+	       /* copy attribute data into SRC attribute of Object_Image */
+	       attrType.AttrSSchema = structSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_data;
+	       attr = TtaGetAttribute (el, attrType);
+	       if (attr != NULL)
+		 {
+		    length = TtaGetTextAttributeLength (attr);
+		    if (length > 0)
+		      {
+			name1 = TtaGetMemory (length + 1);
+			TtaGiveTextAttributeValue (attr, name1, &length);
+			attrType.AttrTypeNum = HTML_ATTR_SRC;
+			attr = TtaNewAttribute (attrType);
+			TtaAttachAttribute (child, attr, theDocument);
+			TtaSetAttributeText (attr, name1, child, theDocument);
+			TtaFreeMemory (name1);
+		      }
+		 }
+		break;
+#endif /*COUGAR */
 	    case HTML_EL_Input:	/*  it's an INPUT without TYPE attribute */
 		/* Create a child of type Text_Input */
 		elType.ElTypeNum = HTML_EL_Text_Input;
@@ -2095,11 +2128,7 @@ Element             el;
 	       OnlyOneOptionSelected (el, theDocument, TRUE);
 	       break;
 	    case HTML_EL_PICTURE_UNIT:
-#ifndef STANDALONE
-#ifdef IV
-	       FetchImage (theDocument, el);
-#endif
-#else
+#ifdef STANDALONE
 	       /* copy value of attribute SRC into the content of the element */
 	       attrType.AttrSSchema = structSchema;
 	       attrType.AttrTypeNum = HTML_ATTR_SRC;
@@ -2201,190 +2230,179 @@ int                 start;
    boolean             ret, stop, lastSpacesDeleted;
 
    ret = FALSE;
-   switch (GIMappingTable[entry].CharOrElem)
+   /* the closed HTML element corresponds to a Thot element. */
+   stop = FALSE;
+   /* type of the element to be closed */
+   elType.ElSSchema = structSchema;
+   elType.ElTypeNum = GIMappingTable[entry].ThotType;
+   if (StackLevel > 0)
+     {
+       el = lastElement;
+       i = StackLevel - 1;
+       if (start < 0)
+	 /* Explicit close */
 	 {
-	    case 'E':
-	       /* the closed HTML element corresponds to a Thot element. */
-	       stop = FALSE;
-	       /* type of the element to be closed */
-	       elType.ElSSchema = structSchema;
-	       elType.ElTypeNum = GIMappingTable[entry].ThotType;
-	       if (StackLevel > 0)
-		 {
-		    el = lastElement;
-		    i = StackLevel - 1;
-		    if (start < 0)
-		       /* Explicit close */
-		      {
-			 /* looks in the stack for the element to be closed */
-			 while (i >= 0 && entry != GINumberStack[i])
-			    i--;
-		      }
-		    else
-		       /* Implicit close */
-		      {
-			 /* If the element to be closed is a list item (or
-			    equivalent), looks for that element in the
-			    stack, but not at a higher level as the list (or
-			    equivalent) element */
-			 if (!strcmp (GIMappingTable[start].htmlGI, "LI"))
-			    while (i > 0 && entry != GINumberStack[i] && !stop)
-			       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "OL") ||
-				   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "UL") ||
-				   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "DIR") ||
-				   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "MENU"))
-				  stop = TRUE;
-			       else
-				  i--;
-			 else if (!strcmp (GIMappingTable[start].htmlGI, "OPTION"))
-			    while (i > 0 && entry != GINumberStack[i] && !stop)
-			       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "SELECT"))
-				  stop = TRUE;
-			       else
-				  i--;
-			 else if (!strcmp (GIMappingTable[start].htmlGI, "DD") ||
-			       !strcmp (GIMappingTable[start].htmlGI, "DT"))
-			    while (i > 0 && entry != GINumberStack[i] && !stop)
-			       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "DL"))
-				  stop = TRUE;
-			       else
-				  i--;
-			 else if (!strcmp (GIMappingTable[start].htmlGI, "TR") ||
-			     !strcmp (GIMappingTable[start].htmlGI, "TD") ||
-			       !strcmp (GIMappingTable[start].htmlGI, "TH"))
-			    while (i > 0 && entry != GINumberStack[i] && !stop)
-			       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "TABLE"))
-				  stop = TRUE;
-			       else
-				  i--;
-		      }
-		    if (i >= 0 && entry == GINumberStack[i])
-		       /* element found in the stack */
-		      {
-			 /* This element and its whole subtree are closed */
-			 StackLevel = i;
-			 lastElement = ElementStack[i];
-			 lastElementClosed = TRUE;
-			 ret = TRUE;
-		      }
-		    else if (!stop)
-		       /* element not found in the stack */
-		       if (start >= 0 && lastElement != NULL)
-			 {
-			    /* implicit close. Check the parent of current element */
-			    if (InsertSibling ())
-			       parent = TtaGetParent (lastElement);
-			    else
-			       parent = lastElement;
-			    if (parent != NULL)
-			      {
-				 parentType = TtaGetElementType (parent);
-				 if (elType.ElTypeNum == parentType.ElTypeNum)
-				   {
-				      lastElement = parent;
-				      lastElementClosed = TRUE;
-				      ret = TRUE;
-				   }
-				 else if (TtaIsLeaf (TtaGetElementType (lastElement)))
-				   {
-				      parent = TtaGetParent (parent);
-				      if (parent != NULL)
-					{
-					   parentType = TtaGetElementType (parent);
-					   if (elType.ElTypeNum == parentType.ElTypeNum)
-					     {
-						lastElement = parent;
-						lastElementClosed = TRUE;
-						ret = TRUE;
-					     }
-					}
-				   }
-			      }
-			 }
-		    if (ret)
-		       /* successful close */
-		      {
-			 /* remove closed elements from the stack */
-			 while (i > 0)
-			    if (ElementStack[i] == lastElement)
-			      {
-				 StackLevel = i;
-				 i = 0;
-			      }
-			    else
-			       i--;
-			 /* complete all closed elements */
-			 if (el != lastElement)
-			   if (!TtaIsAncestor(el, lastElement))
-			     el = NULL;
-			 lastSpacesDeleted = FALSE;
-			 while (el != NULL)
-			   {
-			      ElementComplete (el);
-			      /* If the element closed is a block-element, remove */
-			      /* spaces contained at the end of that element */
-			      if (!lastSpacesDeleted && IsBlockElement (el))
-				{
-				   /* it's a block element. Search its last leaf */
-				   child = el;
-				   lastLeaf = NULL;
-				   while (child != NULL)
-				     {
-					child = TtaGetLastChild (child);
-					if (child != NULL)
-					   lastLeaf = child;
-				     }
-				   if (lastLeaf != NULL)
-				     {
-					elType = TtaGetElementType (lastLeaf);
-					if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-					   /* the las leaf is a TEXT element */
-					   /* count its ending spaces */
-					  {
-					     length = TtaGetTextLength (lastLeaf);
-					     if (length > 0)
-					       {
-						  nbspaces = 0;
-						  do
-						    {
-						       TtaGiveSubString (lastLeaf, lastChar, length,
-									 1);
-						       if (lastChar[0] == SPACE)
-							 {
-							    length--;
-							    nbspaces++;
-							 }
-						    }
-						  while (lastChar[0] == SPACE && length > 0);
-						  if (nbspaces > 0)
-						     if (length == 0)
-							/* empty TEXT element */
-							TtaDeleteTree (lastLeaf, theDocument);
-						     else
-							/* remove the last spaces */
-							TtaDeleteTextContent (lastLeaf, length + 1,
-									      nbspaces, theDocument);
-					       }
-					  }
-				     }
-				   lastSpacesDeleted = TRUE;
-				}
-			      if (el == lastElement)
-				 el = NULL;
-			      else
-				 el = TtaGetParent (el);
-			   }
-		      }
-		 }
-	       break;
-
-	    case 'C':
-	       /* the closed element corresponds to a Thot character */
-	       break;
-
-	    default:
-	       break;
+	   /* looks in the stack for the element to be closed */
+	   while (i >= 0 && entry != GINumberStack[i])
+	     i--;
 	 }
+       else
+	 /* Implicit close */
+	 {
+	   /* If the element to be closed is a list item (or
+	      equivalent), looks for that element in the
+	      stack, but not at a higher level as the list (or
+	      equivalent) element */
+	   if (!strcmp (GIMappingTable[start].htmlGI, "LI"))
+	     while (i > 0 && entry != GINumberStack[i] && !stop)
+	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "OL") ||
+		   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "UL") ||
+		   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "DIR") ||
+		   !strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "MENU"))
+		 stop = TRUE;
+	       else
+		 i--;
+	   else if (!strcmp (GIMappingTable[start].htmlGI, "OPTION"))
+	     while (i > 0 && entry != GINumberStack[i] && !stop)
+	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "SELECT"))
+		 stop = TRUE;
+	       else
+		 i--;
+	   else if (!strcmp (GIMappingTable[start].htmlGI, "DD") ||
+		    !strcmp (GIMappingTable[start].htmlGI, "DT"))
+	     while (i > 0 && entry != GINumberStack[i] && !stop)
+	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "DL"))
+		 stop = TRUE;
+	       else
+		 i--;
+	   else if (!strcmp (GIMappingTable[start].htmlGI, "TR") ||
+		    !strcmp (GIMappingTable[start].htmlGI, "TD") ||
+		    !strcmp (GIMappingTable[start].htmlGI, "TH"))
+	     while (i > 0 && entry != GINumberStack[i] && !stop)
+	       if (!strcmp (GIMappingTable[GINumberStack[i]].htmlGI, "TABLE"))
+		 stop = TRUE;
+	       else
+		 i--;
+	 }
+       if (i >= 0 && entry == GINumberStack[i])
+	 /* element found in the stack */
+	 {
+	   /* This element and its whole subtree are closed */
+	   StackLevel = i;
+	   lastElement = ElementStack[i];
+	   lastElementClosed = TRUE;
+	   ret = TRUE;
+	 }
+       else if (!stop)
+	 /* element not found in the stack */
+	 if (start >= 0 && lastElement != NULL)
+	   {
+	     /* implicit close. Check the parent of current element */
+	     if (InsertSibling ())
+	       parent = TtaGetParent (lastElement);
+	     else
+	       parent = lastElement;
+	     if (parent != NULL)
+	       {
+		 parentType = TtaGetElementType (parent);
+		 if (elType.ElTypeNum == parentType.ElTypeNum)
+		   {
+		     lastElement = parent;
+		     lastElementClosed = TRUE;
+		     ret = TRUE;
+		   }
+		 else if (TtaIsLeaf (TtaGetElementType (lastElement)))
+		   {
+		     parent = TtaGetParent (parent);
+		     if (parent != NULL)
+		       {
+			 parentType = TtaGetElementType (parent);
+			 if (elType.ElTypeNum == parentType.ElTypeNum)
+			   {
+			     lastElement = parent;
+			     lastElementClosed = TRUE;
+			     ret = TRUE;
+			   }
+		       }
+		   }
+	       }
+	   }
+       if (ret)
+	 /* successful close */
+	 {
+	   /* remove closed elements from the stack */
+	   while (i > 0)
+	     if (ElementStack[i] == lastElement)
+	       {
+		 StackLevel = i;
+		 i = 0;
+	       }
+	     else
+	       i--;
+	   /* complete all closed elements */
+	   if (el != lastElement)
+	     if (!TtaIsAncestor(el, lastElement))
+	       el = NULL;
+	   lastSpacesDeleted = FALSE;
+	   while (el != NULL)
+	     {
+	       ElementComplete (el);
+	       /* If the element closed is a block-element, remove */
+	       /* spaces contained at the end of that element */
+	       if (!lastSpacesDeleted && IsBlockElement (el))
+		 {
+		   /* it's a block element. Search its last leaf */
+		   child = el;
+		   lastLeaf = NULL;
+		   while (child != NULL)
+		     {
+		       child = TtaGetLastChild (child);
+		       if (child != NULL)
+			 lastLeaf = child;
+		     }
+		   if (lastLeaf != NULL)
+		     {
+		       elType = TtaGetElementType (lastLeaf);
+		       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			 /* the las leaf is a TEXT element */
+			 /* count its ending spaces */
+			 {
+			   length = TtaGetTextLength (lastLeaf);
+			   if (length > 0)
+			     {
+			       nbspaces = 0;
+			       do
+				 {
+				   TtaGiveSubString (lastLeaf, lastChar, length,
+						     1);
+				   if (lastChar[0] == SPACE)
+				     {
+				       length--;
+				       nbspaces++;
+				     }
+				 }
+			       while (lastChar[0] == SPACE && length > 0);
+			       if (nbspaces > 0)
+				 if (length == 0)
+				   /* empty TEXT element */
+				   TtaDeleteTree (lastLeaf, theDocument);
+				 else
+				   /* remove the last spaces */
+				   TtaDeleteTextContent (lastLeaf, length + 1,
+							 nbspaces, theDocument);
+			     }
+			 }
+		     }
+		   lastSpacesDeleted = TRUE;
+		 }
+	       if (el == lastElement)
+		 el = NULL;
+	       else
+		 el = TtaGetParent (el);
+	     }
+	 }
+     }
+   
    return ret;
 }
 
@@ -2833,6 +2851,9 @@ char               *GIname;
 {
   ElementType         elType;
   Element             el;
+#ifdef COUGAR
+  Element             child;
+#endif
   int                 entry;
   char                msgBuffer[MaxBufferLength];
   PtrClosedElement    pClose;
@@ -2877,9 +2898,7 @@ char               *GIname;
 	  InsertInvalidEl (msgBuffer);
 	}
       else
-	switch (GIMappingTable[entry].CharOrElem)
 	  {
-	  case 'E':	/* create a Thot element */
 	    el = NULL;
 	    sameLevel = TRUE;
 	    if (GIMappingTable[entry].ThotType > 0)
@@ -2933,10 +2952,6 @@ char               *GIname;
 		  CreatePreLine();
 		LastTagIsBR = TRUE;
 	      }
-	    break;
-	    
-	  default:
-	    break;
 	  }
      }
 }

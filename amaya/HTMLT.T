@@ -298,6 +298,9 @@ RULES
 	Create '>\12';
 	Create '</OBJECT>\12' After;	
 	END;
+ Object_Image: BEGIN
+	Remove;
+	END;
 #endif
  Paragraph: BEGIN
 	if not firstwithin List_Item and not firstwithin Definition
