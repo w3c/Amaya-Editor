@@ -6,13 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int BaseName ( char *filename,
-                      char *basename,
-                      char delim,
-                      char ext );
-extern int DirName ( char *filename,
-                     char *dirname,
-                     char delim );
 extern int TtaFileExist ( char *filename );
 extern int TtaFileUnlink ( char *filename );
 extern int ThotDirBrowse_first ( ThotDirBrowse * me,
@@ -42,13 +35,6 @@ extern void TtaFileCopy ( char *sourceFileName,
 
 #else /* __STDC__ */
 
-extern int BaseName (/* char *filename,
-                        char *basename,
-                        char delim,
-                        char ext */);
-extern int DirName (/* char *filename,
-                       char *dirname,
-                       char delim */);
 extern int TtaFileExist (/* char *filename */);
 extern int TtaFileUnlink (/* char *filename */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse * me,

@@ -3392,7 +3392,7 @@ PtrAttribute        pAttr;
    char                c;
    int                 viewSch;
    PtrAbstractBox      pAbb1;
-   PictInfo           *myImageDescriptor;
+   PictInfo           *myPictInfo;
 
 #ifdef __COLPAGE__
    *destroyedAb = FALSE;
@@ -3834,8 +3834,8 @@ PtrAttribute        pAttr;
 		       break;
 		    case PtPictInfo:
 		       UpdateImageDescriptor (pAbb1->AbPictInfo, (int *) &(pPRule->PrPictInfo));
-		       myImageDescriptor = (PictInfo *) pAbb1->AbPictInfo;
-		       myImageDescriptor->PicFileName = pAbb1->AbElement->ElText->BuContent;
+		       myPictInfo = (PictInfo *) pAbb1->AbPictInfo;
+		       myPictInfo->PicFileName = pAbb1->AbElement->ElText->BuContent;
 		       break;
 		    default:
 		       break;

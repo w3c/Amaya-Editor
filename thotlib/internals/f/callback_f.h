@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void NoOp ( PtrElement pEl );
 extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                     boolean pre );
 extern boolean CallEventType ( NotifyEvent * notifyEvent,
@@ -14,7 +13,6 @@ extern boolean CallEventType ( NotifyEvent * notifyEvent,
 
 #else /* __STDC__ */
 
-extern void NoOp (/* PtrElement pEl */);
 extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                       boolean pre */);
 extern boolean CallEventType (/* NotifyEvent * notifyEvent,

@@ -17,18 +17,6 @@
 #include "readstr_f.h"
 #include "callbackinit_f.h"
 
-/* FUNCTIONS FOR GENERATING THE ACTION-LISTS */
-#ifdef __STDC__
-void                NoOp (PtrElement pEl)
-#else  /* __STDC__ */
-void                NoOp (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-{
-}
-
-
 /*----------------------------------------------------------------------
    CallAction looks for the concerned action in event list.
    It returns TRUE if the event action takes place of the editor action

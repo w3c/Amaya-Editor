@@ -611,6 +611,42 @@ char               *buffer;
 
 }
 
+/*----------------------------------------------------------------------
+   SimpleName
+
+   Si filename est un nom de fichier absolu, retourne dans simplename le nom
+   simple du fichier.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SimpleName (char *filename, char *simplename)
+#else  /* __STDC__ */
+static void         SimpleName (filename, simplename)
+char               *filename;
+char               *simplename;
+
+#endif /* __STDC__ */
+{
+   register char      *from, *to;
+ 
+   to = simplename;
+   *to = '\0';
+   for (from = filename; *from++;) ;
+   for (--from; --from > filename;)
+     {
+        if (*from == DIR_SEP)
+          {
+             ++from;
+             break;
+          }
+     }
+   if (*from == DIR_SEP)
+      ++from;
+ 
+   for (; *from;)
+      *to++ = *from++;
+   *to = '\0';
+}
+
 
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
@@ -739,8 +775,8 @@ int                 hlogo;
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
    XDrawRectangle (TtDisplay, drawable, TtLineGC, xif, yif, wif - 1, hif - 1);
 
-   /* Draw the filename in the bottom of the Picture Box */
-   BaseName (imageDesc->PicFileName, filename, 0, 0);
+   /* Display the filename in the bottom of the Picture Box */
+   SimpleName (imageDesc->PicFileName, filename);
    fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename, strlen (filename));
    if ((fileNameWidth + wlogo <= wif) && (FontHeight (FontDialogue) + hlogo <= hif))
      {

@@ -20,10 +20,10 @@
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrPRule     FindImageDescriptor (PtrElement pEl)
+static PtrPRule     FindPictInfo (PtrElement pEl)
 
 #else  /* __STDC__ */
-static PtrPRule     FindImageDescriptor (pEl)
+static PtrPRule     FindPictInfo (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -83,7 +83,7 @@ PtrElement          pEl;
      }
    return pRegle;
 
-}				/*FindImageDescriptor */
+}				/*FindPictInfo */
 
 
 /*----------------------------------------------------------------------
@@ -108,7 +108,7 @@ int                 typeimage;
 {
    PtrPRule            pRegle;
 
-   pRegle = FindImageDescriptor (pEl);
+   pRegle = FindPictInfo (pEl);
    if (pRegle != NULL)
      {
 	pRegle->PrPictInfo.PicXArea = x;
