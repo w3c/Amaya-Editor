@@ -890,7 +890,8 @@ void PasteCommand ()
 		      TtaChangeInfoLastRegisteredElem (doc, info);
 		    }
 		  NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
-				 IdentDocument (DocOfSavedElements), info);
+				 IdentDocument (DocOfSavedElements), info,
+				 FALSE, FALSE);
 		  if (CreatedElement[i]->ElStructSchema == NULL)
 		    /* application has deleted that element */
 		    CreatedElement[i] = NULL;
@@ -1753,7 +1754,8 @@ void TtcCreateElement (Document doc, View view)
 	    /* on va detruire un sous arbre vide. */
 	    /* envoie l'evenement ElemDelete.Pre */
 	    ok = !SendEventSubTree (TteElemDelete, pDoc, pElDelete,
-				    TTE_STANDARD_DELETE_LAST_ITEM, 0);
+				    TTE_STANDARD_DELETE_LAST_ITEM, 0,
+				    FALSE, FALSE);
 	  if (ok)
 	    {
 	      /* annule d'abord la selection */
@@ -1876,7 +1878,7 @@ void TtcCreateElement (Document doc, View view)
 		  if (dispMode == DisplayImmediately)
 		    TtaSetDisplayMode (doc, DeferredDisplay);
 		  /* envoie un evenement ElemNew.Post a l'application */
-		  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0);
+		  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0, FALSE, FALSE);
 		  /* Mise a jour des images abstraites */
 		  CreateAllAbsBoxesOfEl (pNew, pDoc);
 		  /* generate abstract boxes */
@@ -2261,7 +2263,8 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 	     pNext = NULL;
 	   /* Send event ElemDelete.Pre to application for existing elements */
 	   if (isRow || !SendEventSubTree (TteElemDelete, pDoc, pElem,
-					   TTE_STANDARD_DELETE_LAST_ITEM, 0))
+					   TTE_STANDARD_DELETE_LAST_ITEM,
+					   0, FALSE, FALSE))
 	     {
 	       /* detruit les paves de l'element qui va etre deplace' */
 	       DestroyAbsBoxes (pElem, pDoc, TRUE);
@@ -2325,7 +2328,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		   /* record the inserted element in the history */
 		   AddEditOpInHistory (pElem, pDoc, FALSE, TRUE);
 		   if (!isRow)
-		     NotifySubTree (TteElemPaste, pDoc, pElem, 0, 0);
+		     NotifySubTree (TteElemPaste, pDoc, pElem, 0, 0, FALSE, FALSE);
 		 }
 	     }
 	   if (pElem != NULL)
@@ -2352,7 +2355,8 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 	   /* envoie l'evenement ElemDelete.Pre et demande a */
 	   /* l'application si elle est d'accord pour detruire l'elem. */
 	   if (!SendEventSubTree (TteElemDelete, pDoc, pE,
-				  TTE_STANDARD_DELETE_LAST_ITEM, 0))
+				  TTE_STANDARD_DELETE_LAST_ITEM, 0,
+				  FALSE, FALSE))
 	     {
 	     /* cherche l'element qui precede l'element a detruire */
 	     pPrev = PreviousNotPage (pE);

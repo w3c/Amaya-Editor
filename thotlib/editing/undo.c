@@ -1125,7 +1125,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	     abstract tree. Last parameter indicates that this event comes
 	     from the undo/redo command. */
 	  SendEventSubTree (TteElemDelete, pDoc, pEl,
-			    TTE_STANDARD_DELETE_LAST_ITEM, 1);
+			    TTE_STANDARD_DELETE_LAST_ITEM, 1, FALSE, FALSE);
 	  /* prepare event TteElemDelete to be sent to the application */
 	  notifyEl.event = TteElemDelete;
 	  notifyEl.document = doc;
@@ -1168,9 +1168,9 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	  /* send event ElemPaste.Post to the application. 1 means that this
 	     is not really a Paste operation but an Undo operation. */
 	  if (editOp->EoInfo == 0)
-	    NotifySubTree (TteElemPaste, pDoc, pEl, 0, 1);
+	    NotifySubTree (TteElemPaste, pDoc, pEl, 0, 1, FALSE, FALSE);
 	  else
-	    NotifySubTree (TteElemPaste, pDoc, pEl, 0, editOp->EoInfo);
+	    NotifySubTree (TteElemPaste, pDoc, pEl, 0, editOp->EoInfo, FALSE, FALSE);
 	  /******/
 	  if (replacePoly)
 	    {

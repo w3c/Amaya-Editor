@@ -1637,8 +1637,6 @@ void CellPasted (NotifyElement * event)
    Document            doc;
    ThotBool            inMath;
 
-   if (event->info == 0)
-    return;
    cell = event->element;
    doc = event->document;
    row = TtaGetParent (cell);
@@ -1660,7 +1658,7 @@ void CellPasted (NotifyElement * event)
        inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
        LinkCellToColumnHead (cell, CurrentColumn, doc, inMath);
      }
-   else if (event->info == 1)
+   else
      /* undoing/redoing. Link the cell with ColumnHead elements, but do not
 	generate empty cells in other rows */
      NewCell (cell, doc, FALSE, FALSE);

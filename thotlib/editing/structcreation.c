@@ -103,12 +103,15 @@ static ThotBool     createPasteMenuOK;
   of the document pDoc and if necessary all its children.
   Parameters origDoc (document from which comes pEl) and info (used
   by columns management) are given.
+  When inTable is TRUE row elements are not notified.
+  When inRow is TRUE cell elements are not notified.
   ----------------------------------------------------------------------*/
 void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
-		    int origDoc, int info)
+		    int origDoc, int info, ThotBool inTable,  ThotBool inRow)
 {
   NotifyElement       notifyEl;
   PtrElement          pChild, pNext;
+  ThotBool            notify;
 
   if (pEl == NULL || pEl->ElStructSchema == NULL)
     return;
@@ -120,27 +123,38 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
   notifyEl.position = origDoc;
   notifyEl.info = info; /* not sent by undo */
-  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-  if (pDoc->DocNotifyAll &&
-      !TypeHasException (ExcIsTable,
-			 pEl->ElTypeNumber,
-			 pEl->ElStructSchema))
-    /* the document needs an event for each element in the subtree */
 
-    if (pEl->ElStructSchema != NULL)
+  /* by default notify the application */
+  notify = TRUE;
+  if (TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema))
+    inTable = TRUE;
+  else if (TypeHasException (ExcIsRow, pEl->ElTypeNumber, pEl->ElStructSchema))
+    {
+      inRow = TRUE;
+      if (inTable)
+	notify = FALSE;
+    }
+  else if (inRow &&
+	   TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema))
+    notify = FALSE;
+  if (notify)
+  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+  if (pDoc->DocNotifyAll)
+    /* the document needs an event for each element in the subtree */
+    if (pEl->ElStructSchema && !pEl->ElTerminal)
       /* the element has not been deleted by the callback */
-      if (!pEl->ElTerminal)
-	{
-	  pChild = pEl->ElFirstChild;
-	  while (pChild != NULL)
-	    {
-	      /* save pointer on next child, in case the current child
-		 is deleted by the application */
-	      pNext = pChild->ElNext;
-	      NotifySubTree (appEvent, pDoc, pChild, origDoc, info);
-	      pChild = pNext;
-	    }
-	}
+      {
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL)
+	  {
+	    /* save pointer on next child, in case the current child
+	       is deleted by the application */
+	    pNext = pChild->ElNext;
+	    NotifySubTree (appEvent, pDoc, pChild, origDoc, info,
+			   inTable, inRow);
+	    pChild = pNext;
+	  }
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -722,7 +736,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		    for (i = 1; i <= nNew; i++)
 		      {
 			/* envoie un evenement ElemNew pour tous les elements crees */
-			NotifySubTree (TteElemNew, pDoc, pE, 0, 0);
+			NotifySubTree (TteElemNew, pDoc, pE, 0, 0, FALSE, FALSE);
 			CreateAllAbsBoxesOfEl (pE, pDoc);
 			if (i < nNew)
 			  pE = pE->ElNext;
@@ -1599,7 +1613,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
      }
    if (pRet != NULL)
       /* envoie l'evenement ElemNew.Post */
-      NotifySubTree (TteElemNew, pDoc, pRet, 0, 0);
+      NotifySubTree (TteElemNew, pDoc, pRet, 0, 0, FALSE, FALSE);
    *pEl = pRet;
    return ret;
 }
@@ -1833,7 +1847,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 				    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 				 }
 			       else
-				  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0);
+				  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0, FALSE, FALSE);
 			      }
 			    if (createAbsBox)
 			       /* cree les paves du nouvel element et les affiche */
@@ -2096,7 +2110,8 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 				  pPrevEl = p1;
 				  /* traitement des exceptions */
 				  CreationExceptions (p1, pDoc);
-				  NotifySubTree (TteElemNew, pDoc, p1, 0, 0);
+				  NotifySubTree (TteElemNew, pDoc, p1, 0, 0,
+						 FALSE, FALSE);
 				  if (createAbsBox)
 				    /* cree les paves du nouvel element */
 				    CreateAllAbsBoxesOfEl (p1, pDoc);
@@ -2217,7 +2232,8 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 			      {
 				/* traitement des exceptions */
 				CreationExceptions (p, pDoc);
-				NotifySubTree (TteElemNew, pDoc, p, 0, 0);
+				NotifySubTree (TteElemNew, pDoc, p, 0, 0,
+					       FALSE, FALSE);
 				if (createAbsBox)
 				  /* cree les paves du nouvel element */
 				  CreateAllAbsBoxesOfEl (p, pDoc);
@@ -2307,7 +2323,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 		    {
 		      /* traitement des exceptions */
 		      CreationExceptions (p, pDoc);
-		      NotifySubTree (TteElemNew, pDoc, p, 0, 0);
+		      NotifySubTree (TteElemNew, pDoc, p, 0, 0, FALSE, FALSE);
 		      if (createAbsBox)
 			/* cree les paves du nouvel element et de sa descendance */
 			CreateAllAbsBoxesOfEl (pEl, pDoc);
@@ -3584,7 +3600,7 @@ static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
 	pSecondEl->ElOtherPairedEl = pEl;
 	pEl->ElOtherPairedEl = pSecondEl;
 	/* envoie l'evenement ElemNew.Post pour la marque de fin */
-	NotifySubTree (TteElemNew, pDoc, pSecondEl, 0, 0);
+	NotifySubTree (TteElemNew, pDoc, pSecondEl, 0, 0, FALSE, FALSE);
 	/* cree les paves de la nouvelle marque */
 	CreateAllAbsBoxesOfEl (pSecondEl, pDoc);
      }

@@ -998,7 +998,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 				       pElPage, schView);
    /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
-   NotifySubTree (TteElemNew, pDoc, pElPage, 0, 0);
+   NotifySubTree (TteElemNew, pDoc, pElPage, 0, 0, FALSE, FALSE);
 #endif /* PAGINEETIMPRIME */
 
    if (NbBoxesPageHeaderToCreate > 0)
@@ -1794,7 +1794,7 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 	     pElPage = NewSubtree (PageBreak + 1, pRootEl->ElStructSchema,
 				   pDoc, TRUE, TRUE, TRUE, TRUE);
 	     /* insere la nouvelle marque de page apres le dernier fils */
-	     InsertElementAfter (pEl, pElPage);		/* remplit cette marque de page */
+	     InsertElementAfter (pEl, pElPage);	/* remplit cette marque de page */
 	     pElPage->ElPageType = PgComputed;
 	     pElPage->ElViewPSchema = schView;
 	     /* cherche le compteur de page a appliquer */
@@ -1804,12 +1804,12 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 		pElPage->ElPageNumber = 1;
 	     else
 		/* calcule le numero de page */
-		pElPage->ElPageNumber = CounterVal (cpt, pElPage->ElStructSchema, pSchP,
-						    pElPage, schView);
+		pElPage->ElPageNumber = CounterVal (cpt, pElPage->ElStructSchema,
+						    pSchP, pElPage, schView);
 #ifndef PAGINEETIMPRIME
 	     /* envoie l'evenement ElemNew.Post */
 	     if (withAPP)
-		NotifySubTree (TteElemNew, pDoc, pElPage, 0, 0);
+		NotifySubTree (TteElemNew, pDoc, pElPage, 0, 0, FALSE, FALSE);
 #endif /* PAGINEETIMPRIME */
 	  }
      }

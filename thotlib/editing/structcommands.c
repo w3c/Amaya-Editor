@@ -472,45 +472,59 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
 /*----------------------------------------------------------------------
   SendEventSubTree sends the AppEvent.Pre event for the element pEl
   of the document pDoc and all enclosed elements.
-  Returns TRUE if the application refuses the delete operation       
+  When inTable is TRUE row elements are not notified.
+  When inRow is TRUE cell elements are not notified.
+  Returns TRUE if the application refuses the delete operation  
   ----------------------------------------------------------------------*/
 ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
-			   int end, int info)
+			   int end, int info, ThotBool inTable,  ThotBool inRow)
 {
-   NotifyElement       notifyEl;
-   PtrElement          pChild;
-   ThotBool            ret;
-   ThotBool            cancel;
+  NotifyElement       notifyEl;
+  PtrElement          pChild;
+  ThotBool            ret;
+  ThotBool            cancel, notify;
 
-   /* envoie l'evenement appEvent.Pre a l'element pEl */
-   notifyEl.event = AppEvent;
-   notifyEl.document = (Document) IdentDocument (pDoc);
-   notifyEl.element = (Element) pEl;
-   notifyEl.info = info;
-   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-   if (AppEvent == TteElemDelete)
-      notifyEl.position = end;
-   else
-      notifyEl.position = 0;
-   cancel = CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
-   if (pDoc->DocNotifyAll && !cancel &&
-       !TypeHasException (ExcIsTable,
-			  pEl->ElTypeNumber,
-			  pEl->ElStructSchema))
+  /* envoie l'evenement appEvent.Pre a l'element pEl */
+  notifyEl.event = AppEvent;
+  notifyEl.document = (Document) IdentDocument (pDoc);
+  notifyEl.element = (Element) pEl;
+  notifyEl.info = info;
+  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+  if (AppEvent == TteElemDelete)
+    notifyEl.position = end;
+  else
+    notifyEl.position = 0;
+
+  /* by default notify the application */
+  notify = TRUE;
+  if (TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema))
+    inTable = TRUE;
+  else if (TypeHasException (ExcIsRow, pEl->ElTypeNumber, pEl->ElStructSchema))
+    {
+      inRow = TRUE;
+      if (inTable)
+	notify = FALSE;
+    }
+  else if (inRow &&
+	   TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema))
+    notify = FALSE;
+  if (notify)
+    cancel = CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
+  if (pDoc->DocNotifyAll && !cancel && !pEl->ElTerminal)
+    {
       /* le document demande un evenement pour chaque element du sous-arbre */
-      if (!pEl->ElTerminal)
+      pChild = pEl->ElFirstChild;
+      /* envoie recursivement un evenement a chaque fils de pEl */
+      while (pChild != NULL)
 	{
-	   pChild = pEl->ElFirstChild;
-	   /* envoie recursivement un evenement a chaque fils de pEl */
-	   while (pChild != NULL)
-	     {
-		ret = SendEventSubTree (AppEvent, pDoc, pChild, 0, info);
-		cancel = cancel | ret;
-		pChild = pChild->ElNext;
-	     }
+	  ret = SendEventSubTree (AppEvent, pDoc, pChild, 0, info,
+				  inTable, inRow);
+	  cancel = cancel | ret;
+	  pChild = pChild->ElNext;
 	}
-   return (cancel);
+    }
+  return (cancel);
 }
 
 
@@ -893,7 +907,8 @@ void CopyCommand ()
 	      if (IsolatedPairedElem (pEl, firstSel, lastSel))
 		pCopy = NULL;
 	      /* send the ElemCopy.Pre event */
-	      else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0, 0))
+	      else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0, 0,
+					 FALSE, FALSE))
 		/* l'application refuses the copy of this element */
 		pCopy = NULL;
 	      else
@@ -981,7 +996,8 @@ void CopyCommand ()
       pSave = FirstSavedElement;
       while (pSave != NULL)
 	{
-	  NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0, 0);
+	  NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0, 0,
+			 FALSE, FALSE);
 	  /* passe au sous-arbre suivant */
 	  pSave = pSave->PeNext;
 	}
@@ -1508,7 +1524,7 @@ void CutCommand (ThotBool save)
 				last = TTE_STANDARD_DELETE_FIRST_ITEMS;
 			    }
 			  if (!SendEventSubTree (TteElemDelete, pSelDoc, pE,
-						 last, 0))
+						 last, 0, FALSE, FALSE))
 			    {
 			      /* delete abstract boxes of the element */
 			      DestroyAbsBoxes (pE, pSelDoc, TRUE);
@@ -3107,7 +3123,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  /* envoie l'evenement ElemDelete.Pre a
 			     l'application */
 			  if (SendEventSubTree (TteElemDelete, pSelDoc, pEl,
-					   TTE_STANDARD_DELETE_LAST_ITEM, 0))
+						TTE_STANDARD_DELETE_LAST_ITEM,
+						0, FALSE, FALSE))
 			    /* l'application refuse de detruire cet element */
 			    empty = FALSE;
 			}
@@ -3171,7 +3188,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc,
 					 TRUE);
 			  /* envoie un evenement ElemNew.Post a l'application*/
-			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0);
+			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0,
+					 FALSE, FALSE);
 			  if (pNew && pNew->ElParent)
 			    {
 			      /* Indiquer que le document est modifie' */

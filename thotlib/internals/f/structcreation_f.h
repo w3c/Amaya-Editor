@@ -10,7 +10,9 @@ extern void NotifySubTree ( APPevent appEvent,
                             PtrDocument pDoc,
                             PtrElement pEl,
                             int origDoc,
-                            int info );
+                            int info,
+                            ThotBool inTable,
+                            ThotBool inRow );
 extern void InsertOption ( PtrElement pEl,
                            PtrElement *pOption,
                            PtrDocument pDoc );
@@ -81,7 +83,9 @@ extern void NotifySubTree ( APPevent appEvent,
                               PtrDocument pDoc,
                               PtrElement pEl,
                               int origDoc,
-                              int info );
+                              int info,
+                              ThotBool inTable,
+                              ThotBool inRow );
 extern void InsertOption ( PtrElement pEl,
                              PtrElement *pOption,
                              PtrDocument pDoc );
