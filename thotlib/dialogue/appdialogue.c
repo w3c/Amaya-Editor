@@ -2380,9 +2380,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    strcpy (wTitle, name);
 #  endif /* _WINDOWS */
 
-#ifdef _GTK
    menu_bar = NULL;
-#endif /* _GTK */
    frame = 0;
    if (schema != NULL)
      {
@@ -2581,9 +2579,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].MenuUndo = -1;
 	   FrameTable[frame].MenuRedo = -1;
 
-	   menu_bar = 0;
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_GTK) && !defined(_WINDOWS)
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	   n++;
@@ -2595,8 +2591,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n++;
 	   XtSetArg (args[n], XmNborderWidth, 0);
 	   n++;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _GTK  && _WINDOWS*/
 
 	   while (ptrmenu != NULL)
 	     {
@@ -2604,10 +2599,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view)
 		 if (Prof_ShowMenu (ptrmenu))
 		   {
-		     if (menu_bar == 0)
+#ifndef _WINDOWS
+		     if (menu_bar == NULL)
 		       {
 			 /*** The menu bar ***/
-#ifndef _WINDOWS
 #ifdef _GTK
 			 menu_bar = gtk_menu_bar_new ();
 			 /*			 gtk_widget_ref (menu_bar);
@@ -2621,8 +2616,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			 menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
 			 XtManageChild (menu_bar);
 #endif /* _GTK */
-#endif /* !_WINDOWS */
 		       }
+#endif /* !_WINDOWS */
 		   
 #ifdef _WINDOWS
 		     w = CreateMenu ();
