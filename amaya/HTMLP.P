@@ -5574,7 +5574,7 @@ RULES
 	CreateBefore(TR_S);
 	CreateWith(VerticalLine);
 #ifdef PAGE
-	PageBreak: No;
+	{PageBreak: No;}
 #endif
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;

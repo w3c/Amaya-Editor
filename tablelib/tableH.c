@@ -608,7 +608,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
   pBox = table->AbBox;
   pBox->BxCycles = 1;
   RecordEnclosing (pBox, FALSE);
-  if (force && min <= width)
+  if (force && min <= width && pCell != NULL)
     /* it's not possible to change the table width */
     constraint = TRUE;
 
@@ -1068,6 +1068,7 @@ int             frame;
 				    }
 				  else if (!pAb->AbWidth.DimIsPosition &&
 					   pAb->AbWidth.DimAbRef != NULL &&
+					   pAb->AbHorizEnclosing &&
 					   !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox))
 				    {
 				      /* the box width doesn't depend on cell width */
@@ -1138,98 +1139,102 @@ int             frame;
       tabWidth = table->AbEnclosing->AbBox->BxWidth * tabPercent / 100;
     }
   minsize = (int)((float) tabWidth /(float) cNumber) /2.;
-  for (i = 0; i < spanNumber; i++)
+  if (col == NULL)
     {
-      min = 0;
-      max = 0;
-      percent = 0;
-      span = 0;
-      width = 0;
-      j = 0;
-      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+      /* manage spanned columns */
+      for (i = 0; i < spanNumber; i++)
 	{
-	  if (colPercent[cRef] != 0)
-	    percent += colPercent[cRef];
-	  else if (colWidth[cRef] != 0)
-	    width += colWidth[cRef];
-	  else if (colMaxWidth[cRef] < minsize)
-	    {
-	      width += colMaxWidth[cRef];
-	      j++;
-	    }
-	  else
-	    {
-	      min += colMinWidth[cRef];
-	      max += colMaxWidth[cRef];
-	      span++;
-	      j++;
-	    }
-	}
-
-      /* compare percent values */
-      if (colSpan_Percent[i] > percent)
-	{
-	  delta = colSpan_Percent[i] - percent;
-	  if (j > 0)
-	    {
-	      delta = delta / j;
-	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
-		  colPercent[cRef] = delta;
-	    }
-	  percent = colSpan_Percent[i];
-	}
-      /* compare width values */
-      if (colSpan_Width[i] > width + min)
-	{
-	  delta = colSpan_Width[i] - width - min;
-	  if (j > 0)
-	    {
-	      delta = delta / j;
-	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
-		  if (delta > colMinWidth[cRef])
-		    colWidth[cRef] = delta;
-	          else
-		    colWidth[cRef] = colMinWidth[cRef];
-	    }
-	  width = colSpan_Width[i] - min;
-	}
-
-      /* compare min and max values */
-      percent = percent * tabWidth / 100;
-      min = min + width + percent;
-      max = max + width + percent;
-      if (colSpan_MinWidth[i] > min)
-	{
-	  /* change width of included columns */
-	  width = colSpan_MinWidth[i] - min;
-	  if (span > 0)
-	    width = (delta + span - 1) / span;
-	  else
-	    {
-	      delta = colSpan_Last[i] - colSpan_First[i] + 1;
-	      width = (width + delta - 1) / delta;
-	    }
+	  min = 0;
+	  max = 0;
+	  percent = 0;
+	  span = 0;
+	  width = 0;
+	  j = 0;
 	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-	    if (colPercent[cRef] == 0 && colWidth[cRef] == 0 && colMaxWidth[cRef] > minsize)
-	      colMinWidth[cRef] += width;
-	}
-      if (colSpan_MaxWidth[i] > max)
-	{
-	  /* change width of included columns */
-	  width = colSpan_MaxWidth[i] - max;
-	  if (span > 0)
-	    width = (width + span - 1) / span;
-	  else
 	    {
-	      delta = colSpan_Last[i] - colSpan_First[i] + 1;
-	      width = (width + delta - 1) / delta;
+	      if (colPercent[cRef] != 0)
+		percent += colPercent[cRef];
+	      else if (colWidth[cRef] != 0)
+		width += colWidth[cRef];
+	      else if (colMaxWidth[cRef] < minsize)
+		{
+		  width += colMaxWidth[cRef];
+		  j++;
+		}
+	      else
+		{
+		  min += colMinWidth[cRef];
+		  max += colMaxWidth[cRef];
+		  span++;
+		  j++;
+		}
 	    }
-	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-	    if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
-		(colMaxWidth[cRef] > minsize || span == 0))
-	      colMaxWidth[cRef] += width;
+	  
+	  /* compare percent values */
+	  if (colSpan_Percent[i] > percent)
+	    {
+	      delta = colSpan_Percent[i] - percent;
+	      if (j > 0)
+		{
+		  delta = delta / j;
+		  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		    if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+		      colPercent[cRef] = delta;
+		}
+	      percent = colSpan_Percent[i];
+	    }
+	  /* compare width values */
+	  if (colSpan_Width[i] > width + min)
+	    {
+	      delta = colSpan_Width[i] - width - min;
+	      if (j > 0)
+		{
+		  delta = delta / j;
+		  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		    if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+		      if (delta > colMinWidth[cRef])
+			colWidth[cRef] = delta;
+		      else
+			colWidth[cRef] = colMinWidth[cRef];
+		}
+	      width = colSpan_Width[i] - min;
+	    }
+	  
+	  /* compare min and max values */
+	  percent = percent * tabWidth / 100;
+	  min = min + width + percent;
+	  max = max + width + percent;
+	  if (colSpan_MinWidth[i] > min)
+	    {
+	      /* change width of included columns */
+	      width = colSpan_MinWidth[i] - min;
+	      if (span > 0)
+		width = (delta + span - 1) / span;
+	      else
+		{
+		  delta = colSpan_Last[i] - colSpan_First[i] + 1;
+		  width = (width + delta - 1) / delta;
+		}
+	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		if (colPercent[cRef] == 0 && colWidth[cRef] == 0 && colMaxWidth[cRef] > minsize)
+		  colMinWidth[cRef] += width;
+	    }
+	  if (colSpan_MaxWidth[i] > max)
+	    {
+	      /* change width of included columns */
+	      width = colSpan_MaxWidth[i] - max;
+	      if (span > 0)
+		width = (width + span - 1) / span;
+	      else
+		{
+		  delta = colSpan_Last[i] - colSpan_First[i] + 1;
+		  width = (width + delta - 1) / delta;
+		}
+	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+		    (colMaxWidth[cRef] > minsize || span == 0))
+		  colMaxWidth[cRef] += width;
+	    }
 	}
     }
 

@@ -236,9 +236,9 @@ Document            document;
    /* transmit the path or source file */
    i = strlen (cmd);
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
-   /* for debugging puropose:
-   fprintf (stderr, " %s", cmd);
-   end of debugging code */
+   /***
+   sprintf (&cmd[i], " %s/%s.PIV &", dir, name);
+   ****/
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
