@@ -859,15 +859,48 @@ static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
      }
 }
 
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------                        
+   Destruction de feuillet.                                                                     
+  ----------------------------------------------------------------------*/
+#ifndef _GTK
+static void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+#else /* _GTK */
+static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
+#endif /* _GTK */
+{
+#ifdef _GTK
+  struct Cat_Context *catalogue;
 
+  catalogue = (struct Cat_Context *) data;
+#endif /* _GTK */
+
+   /* Le widget est detruit */
+  if (catalogue->Cat_Type == CAT_FORM ||
+      catalogue->Cat_Type == CAT_SHEET ||
+      catalogue->Cat_Type == CAT_DIALOG ||
+      catalogue->Cat_Type == CAT_POPUP ||
+      catalogue->Cat_Type == CAT_SCRPOPUP)
+    TtaDestroyDialogue (catalogue->Cat_Ref);
+}
+#endif /* !_WINDOWS */
+
+#ifdef _GTK
 /*----------------------------------------------------------------------
   Callback for a scrolled window (click) @JK
   ----------------------------------------------------------------------*/
-#ifdef _GTK
 static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
 {
   struct Cat_Context *catalogue;
   GtkWidget *window;
+
+#if 0
+  char *item;
+  item = (char *) gtk_object_get_data (GTK_OBJECT (widget), "item");
+  if (item)
+    printf ("callback item is %s\n", item);
+#endif
+
   catalogue = (struct Cat_Context *) data;
 
   window = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (widget), "window");
@@ -885,6 +918,40 @@ static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
 
   CallMenuGTK ((ThotWidget) widget, catalogue);
   return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+  Callback for a scrolled window (button press)
+  ----------------------------------------------------------------------*/
+static gboolean scr_popup_button_press (GtkWidget *widget,  GdkEventButton *event, gpointer data)
+{
+  return CallPopGTK (widget, data);
+}
+
+/*----------------------------------------------------------------------
+  Callback for a scrolled window (keypress)
+  ----------------------------------------------------------------------*/
+static gboolean scr_popup_key_press (GtkWidget * widget, GdkEventKey * event, gpointer data)
+{
+  if (event->keyval == GDK_Escape) 
+    {
+      formKillGTK (widget, NULL, data);
+      return TRUE;
+    }
+  else if (event->keyval == GDK_Return
+	   || event->keyval == GDK_space)
+    return (CallPopGTK (widget, data));
+  else
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  Callback for a scrolled window (keypress)
+  ----------------------------------------------------------------------*/
+static gboolean scr_popup_focus_out (GtkWidget * widget, GdkEventKey * event, gpointer data)
+{
+  printf ("focus out on widget %p\n");
+  return FALSE;
 }
 #endif /* _GTK */
 
@@ -1093,52 +1160,7 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 #endif /* _GTK */
      }
 }
-
-
-/*----------------------------------------------------------------------
-   Destruction de feuillet.                                           
-  ----------------------------------------------------------------------*/
-#ifndef _GTK
-static void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else /* _GTK */
-static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
-#endif /* _GTK */
-{
-#ifdef _GTK
-  struct Cat_Context *catalogue;
-
-  catalogue = (struct Cat_Context *) data;
-#endif /* _GTK */
-
-   /* Le widget est detruit */
-  if (catalogue->Cat_Type == CAT_FORM ||
-      catalogue->Cat_Type == CAT_SHEET ||
-      catalogue->Cat_Type == CAT_DIALOG ||
-      catalogue->Cat_Type == CAT_POPUP ||
-      catalogue->Cat_Type == CAT_SCRPOPUP)
-    TtaDestroyDialogue (catalogue->Cat_Ref);
-}
-#endif /* _GTK */
-
-/*----------------------------------------------------------------------
-  Callback for a scrolled window (keypress)
-  ----------------------------------------------------------------------*/
-#ifdef _GTK
-static gboolean scr_popup_key_press (GtkWidget *widget, GdkEventKey *event,
-				     gpointer data)
-{
-  if (event->keyval == GDK_Escape) 
-    {
-      formKillGTK (widget, NULL, data);
-      return TRUE;
-    }
-  else if (event->keyval == GDK_Return
-	   || event->keyval == GDK_space)
-    return (CallPopGTK (widget, data));
-  else
-    return FALSE;
-}
-#endif /* _GTK */
+#endif /* !WINDOWS */
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -4033,6 +4055,7 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
   GtkWidget          *gtklist;
   GtkWidget          *scr_window;
   GtkWidget          *event_box;
+  GtkWidget          *first = NULL;
   GList              *glist = NULL;
   ThotWidget          w;
 
@@ -4221,8 +4244,15 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 		    else
 		      w = gtk_list_item_new_with_label (menu_item);
 
+		    if (!first)
+		      first = w;
+
 		    /* memorize the parent window */
 		    gtk_object_set_data (GTK_OBJECT (w), "window", (gpointer) menu);
+
+		    /* for debugging, memorize the widget name */
+		    gtk_object_set_data (GTK_OBJECT (w), "item", (gpointer) 
+					 (TtaStrdup (menu_item)));
 
 		    /* get the key press */
 		    gtk_signal_connect (GTK_OBJECT (w), "key_press_event",
@@ -4230,13 +4260,9 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 					(gpointer ) catalogue);
 		    /* get the click */
 		    ConnectSignalGTK (GTK_OBJECT (w), 
-					"select",
-					GTK_SIGNAL_FUNC (CallPopGTK),
-					(gpointer) catalogue);
-		    ConnectSignalGTK (GTK_OBJECT (w), 
-					"toggle",
-					GTK_SIGNAL_FUNC (CallPopGTK),
-					(gpointer) catalogue);
+				      "button-press-event",
+				      GTK_SIGNAL_FUNC (scr_popup_button_press),
+				      (gpointer) catalogue);
 #if 0
 		    /* get the click */
 		    gtk_signal_connect (GTK_OBJECT (w), 
@@ -4317,6 +4343,12 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 	  gtk_object_set_data (GTK_OBJECT (menu), "window", (gpointer) menu);
 	  gtk_object_set_data (GTK_OBJECT (menu), "gtklist", (gpointer) gtklist);
 
+#if 0
+	  /* give the focus to the first item */
+	  if (first)
+	      gtk_window_set_focus (GTK_WINDOW (gtklist), NULL);
+#endif
+
 	  /* We'll use enter notify events to figure out when to transfer
 	   * the grab to the list
 	   */
@@ -4334,17 +4366,6 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 					       (GTK_SCROLLED_WINDOW (scr_window)));
 
 
-#if 0
-	  /* get the click */
-	  ConnectSignalGTK (GTK_OBJECT (gtklist), "button_clicked",
-			    (GtkSignalFunc) GTK_SIGNAL_FUNC (CallPopGTK), 
-			    (gpointer) catalogue);
-
-	  ConnectSignalGTK (GTK_OBJECT (gtklist), "selection_changed",
-			    (GtkSignalFunc) GTK_SIGNAL_FUNC (CallPopGTK), 
-			    (gpointer) catalogue);
-#endif
-
 	      
 	  /* give the focus to the gtklist */
 	  /* gtk_window_set_focus (GTK_WINDOW (menu), GTK_WIDGET (first)); */
@@ -4353,19 +4374,23 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 	  gtk_grab_add (menu);
 
 	  GTK_LIST (gtklist)->drag_selection = TRUE;
-
 	  gdk_pointer_grab (menu->window, TRUE,
 			    GDK_BUTTON_PRESS_MASK |
 			    GDK_BUTTON_RELEASE_MASK |
 			    GDK_POINTER_MOTION_MASK,
 			    NULL, NULL, GDK_CURRENT_TIME);
 	  
-	  gtk_widget_grab_focus (menu);
+ 	  gtk_widget_grab_focus (menu);
 	  gdk_keyboard_grab (menu->window, TRUE, GDK_CURRENT_TIME);
+
+#if 0
+	  ConnectSignalGTK (GTK_OBJECT (first), "focus_out_event",
+			    GTK_SIGNAL_FUNC (scr_popup_focus_out), NULL);
+#endif
 	}
     }
 #endif
-}
+}     
 
 /*----------------------------------------------------------------------
    AddInFormulary recherche une entree libre dans le formulaire  
@@ -7921,7 +7946,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	      {
 	      ConnectSignalGTK (GTK_OBJECT(w), "selection_changed",
 				GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
-	      ConnectSignalGTK (GTK_OBJECT(w), "button_press_event",
+	      ConnectSignalGTK (GTK_OBJECT(w), "button_release_event",
 				GTK_SIGNAL_FUNC (CallTextEnterGTK),  (gpointer)catalogue);
 	      }
 	    }
