@@ -1913,6 +1913,8 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
       wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
       wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
       wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+      wxSplitterWindow * p_splitter        = wxDynamicCast(p_win_focus, wxSplitterWindow);
+      wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
       
 #if 0
       /* allow other widgets to handel special keys only when the key is not F2 */
@@ -1924,23 +1926,27 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 #endif /* 0 */
       
       /* do not allow special key outside the canvas */
-      if (!p_gl_canvas && proceed_key )
+      if (!p_gl_canvas && !p_splitter && !p_notebook && proceed_key )
 	{
 	  event.Skip();
 	  return true;      
 	}
       
+#if 0
+	  /* j'ai supprime cette partir du code car qd le notebook a le focus (c'est assez aleatoire...),
+	   * tous les caracteres speciaux ne peuvent pas etre entres car il sont captures par le notbook
+	   * en commentant cette partie du code, je laisse passer touts les caracteres qd le notebook a le focus. */
 #ifdef _WINDOWS
       /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
 	 we must ignore it */
-      wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
       if ( p_notebook && proceed_key )
 	{
 	  event.Skip();
 	  return true;
 	}
 #endif /* _WINDOWS */
-      
+#endif /* 0 */
+
       if ( proceed_key )
 	{
 	  int thotMask = 0;
