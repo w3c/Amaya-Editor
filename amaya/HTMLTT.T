@@ -5,7 +5,7 @@ LINELENGTH 78;
 COUNTERS
   ItemCounter : Rank of List_Item;
   LOG_AnchorCounter : Set 1 on BODY Add 1 on Anchor;
-
+ 
 CONST
   TmpFileExt = '.tmp';
   TmpFileName = 'test';
@@ -66,40 +66,46 @@ RULES
 	END;
 
  BODY:	BEGIN
+	Indent +3;
+	Indent -3 After;
 	Create '\12\12' After;
 	Create '-------------------------\12' After;
-	Create 'Document URL: http://www.w3.org/...\12\12';
-	Include '/tmp/test.tmp' After;
+	Create 'Document URL: http://www.w3.org/...\12\12' After;
+	Include '/home/kahan/tmp/t' After;
 	END;
 
  H1:	BEGIN
-	if not within Preformatted Create '\12';
-	Create '\12' After;
+	Indent -3;
+	Indent +3 After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H2:	BEGIN
-	if not within Preformatted Create '\12';
-	Create '\12' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H3:	BEGIN
-	if not within Preformatted Create '\12';
-	Create '\12' After;
+	Indent +3;
+	Indent -3 After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H4:	BEGIN
-	if not within Preformatted Create '\12';
-	Create '\12' After;
+	Indent +6;
+	Indent -6 After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H5:	BEGIN
-	if not within Preformatted Create '\12';
-	Create '\12' After;
+	Indent +9;
+	Indent -9 After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H6:	BEGIN
-	if not within Preformatted Create '\12';
-	Create '\12' After;
+	Indent +12;
+	Indent -12 After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  BaseFont:
@@ -216,7 +222,7 @@ Object: BEGIN
 	END;
 
  Term:	BEGIN
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  Definition: BEGIN
@@ -273,23 +279,18 @@ Object: BEGIN
 	END;
 
  Form: BEGIN
-	Create '<form';
-	Create Attributes;
-	Create '>\12';
-	Create '</form>\12' After;
+	Create '\12\12' After;
 	END;
 
  Option_Menu: BEGIN
-	Create '\12<select';
+	Create '\12';
 	Create Attributes;
-	Create '>';
-	Create '\12</select>\12' After;
+	Create '\12' After;
 	END;
 
  Option: BEGIN
-	Create '\12<option';
 	Create Attributes;
-	Create '>';
+	Create '\12' After;
 	END;
 
  Toggle_Menu: BEGIN
@@ -342,9 +343,6 @@ Object: BEGIN
 	END;
 
  Text_Input: BEGIN
-	Create '<input type=text';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
@@ -363,24 +361,18 @@ Object: BEGIN
 	END;
 
  File_Input: BEGIN
-	Create '<input type=file';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  Reset_Input: BEGIN
-	Create '\12<input type=reset';
 	Create Attributes;
-	Create '>';
+	Create '\12' After;
 	Remove;
 	END;
 
  Submit_Input: BEGIN
-	Create '\12<input type=submit';
 	Create Attributes;
-	Create '>';
-	Remove;
+	Create '\12' After;
 	END;
 
  Block_Quote: BEGIN
@@ -395,8 +387,6 @@ Object: BEGIN
 	if Immediately within Object
 		Remove;
 	if NOT Immediately within Object BEGIN
-		Create '[';
-		Create ']' After;
 		END;
 	if NOT within Paragraph AND NOT Immediately within Object
 		Create '\12' After;
@@ -413,9 +403,9 @@ Object: BEGIN
 	Create IN TmpFile  '] ' After;
 	Create IN TmpFile  OUT_URL After;
 	Create IN TmpFile '\12' After;
-	Create '[';
-	Create OUT_AnchorCounter;
-	Create ']';
+	Create '[' After;
+	Create OUT_AnchorCounter After;
+	Create ']' After;
 	END;
 
  MAP:
@@ -457,7 +447,6 @@ Object: BEGIN
 
  tfoot:
 	BEGIN
-	Create '\12';
 	Create '\12' After;
 	END;
  tbody:
@@ -481,6 +470,7 @@ Object: BEGIN
 
  Heading_cell:
 	BEGIN
+	CREATE '\12' After;
 	END;
 
  Table_foot:
@@ -493,10 +483,9 @@ Object: BEGIN
 	END;
 
  Center: BEGIN
-	Create '\12<center';
-	Create Attributes;
-	Create '>\12';
-	Create '</center>\12' After;
+	Create '\12';
+# Center text?
+	Create '\12' After;
 	END;
 
  Invalid_element:
@@ -505,13 +494,11 @@ Object: BEGIN
 	END;
 
  Comment\240: BEGIN
-	NoLineBreak;
- 	Create '@@@ ';
-	Create '\12' after;
+	Remove;
 	END;
 
  Comment_line: BEGIN
-	if not last create '\12' after;
+	Remove;
 	END;
 
 ATTRIBUTES
@@ -533,7 +520,8 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-	Create HREF_;
+	Remove;
+#	Create HREF_;
 	END;
 
  background_ :
@@ -574,42 +562,37 @@ ATTRIBUTES
 
  Clear = Left_:
 	BEGIN
-	Create '\12';	
 	END;
 
  Clear = Right_:
 	BEGIN
-	Create '\12';	
 	END;
+
  Clear = All_:
 	BEGIN
-	Remove;
 	END;
+
  Clear = None:
 	BEGIN
-	Remove;
 	END;
 
  Align = left_:
 	BEGIN
-	Remove;
 	END;
+
  Align = center_:
 	BEGIN
-	Remove;
 	END;
+
  Align = right_:
 	BEGIN
-	Remove;
 	END;
 
  NoShade:
 	BEGIN	
-	Remove;
 	END;
 
  Size_: BEGIN
-	Remove;
 	END;
 
  Width__: BEGIN
