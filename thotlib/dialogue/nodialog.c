@@ -75,6 +75,12 @@ ThotBool             IsW3Path (const char* path)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void CloseTextInsertion ()
+{
+}
+
+/*----------------------------------------------------------------------
    NormalizeURL
    The function returns the new complete and normalized URL 
    or file name path (newName) and the name of the document (docName).        

@@ -52,6 +52,7 @@ static int             BiwIndex = 0;
 #include "buildlines_f.h"
 #include "content_f.h"
 #include "displayselect_f.h"
+#include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
@@ -3662,6 +3663,8 @@ void RebuildConcreteImage (int frame)
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox)
      {
+       /* close any text editing in progress */
+       CloseTextInsertion ();
        /* Box widths may change and the scroll must be recomputed */
        AnyWidthUpdate = TRUE;
        pAb = pFrame->FrAbstractBox;
