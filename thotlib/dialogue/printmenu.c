@@ -456,10 +456,8 @@ static LPPRINTER_INFO_5 pInfo5;
        j = 0;
 #else  /* _WINDOWS */
        j = ustrlen (cmd);
-       cmd[j++] = SPACE;
-       cmd[j++] = TEXT('-');
-       cmd[j++] = TEXT('v');
-       cmd[j++] = SPACE;
+       sprintf (&cmd[j], " -v ");
+       j = ustrlen (cmd);
 #endif /* _WINDOWS */
      }
 
@@ -483,10 +481,9 @@ static LPPRINTER_INFO_5 pInfo5;
 	       printArgv[printArgc] = TtaAllocString (50);
 	       j = 0;
 #else  /* _WINDOWS */
-	       cmd[j++] = SPACE;
-	       cmd[j++] = TEXT('-');
-	       cmd[j++] = TEXT('v');
-	       cmd[j++] = SPACE;
+               j = ustrlen (cmd);
+               sprintf (&cmd[j], " -v ");
+	       j = ustrlen (cmd);
 #endif /* _WINDOWS */
 	     }
 	 }
@@ -497,6 +494,7 @@ static LPPRINTER_INFO_5 pInfo5;
 	   printArgv[printArgc][j++] = viewsToPrint[i];
 #else /* _WINDOWS */
 	   cmd[j++] = viewsToPrint[i];
+	   cmd[j] = EOS;
 #endif /* _WINDOWS */
 	   /* process next char */
 	   i++;
@@ -521,12 +519,8 @@ static LPPRINTER_INFO_5 pInfo5;
 	   j = 0;
 #else  /* _WINDOWS */
 	   j = ustrlen (cmd);
-	   cmd[j++] = SPACE;
-	   cmd[j++] = TEXT('-');
-	   cmd[j++] = TEXT('c');
-	   cmd[j++] = TEXT('s');
-	   cmd[j++] = TEXT('s');
-	   cmd[j++] = SPACE;
+           sprintf (&cmd[j], " -css ");
+	   j = ustrlen (cmd);
 #endif /* _WINDOWS */
 	 }
 
@@ -549,12 +543,9 @@ static LPPRINTER_INFO_5 pInfo5;
 		   printArgv[printArgc] = TtaAllocString (50);
 		   j = 0;
 #else  /* _WINDOWS */
-		   cmd[j++] = SPACE;
-		   cmd[j++] = TEXT('-');
-		   cmd[j++] = TEXT('c');
-		   cmd[j++] = TEXT('s');
-		   cmd[j++] = TEXT('s');
-		   cmd[j++] = SPACE;
+		   j = ustrlen (cmd);
+	           sprintf (&cmd[j], " -css ");
+	           j = ustrlen (cmd);
 #endif /* _WINDOWS */
 		 }
 	     }
@@ -565,6 +556,7 @@ static LPPRINTER_INFO_5 pInfo5;
 	       printArgv[printArgc][j++] = cssToPrint[i];
 #else /* _WINDOWS */
 	       cmd[j++] = cssToPrint[i];
+	       cmd[j] = EOS;
 #endif /* _WINDOWS */
 	       /* process next char */
 	       i++;
