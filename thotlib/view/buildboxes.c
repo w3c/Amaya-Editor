@@ -2222,6 +2222,8 @@ int                 frame;
 			   case LtPicture:
 			      if (pAb->AbChange)
 				{
+				   /* the picture change */
+				   FreePicture ((PictInfo *) pBox->BxPictInfo);
 				   SetCursorWatch (frame);
 				   LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 				   ResetCursorWatch (frame);

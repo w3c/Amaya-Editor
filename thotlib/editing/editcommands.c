@@ -1436,7 +1436,13 @@ int                 frame;
 	   strcpy (buffer, pictInfo->PicFileName);
 	   type = pictInfo->PicType;
 	   pres = pictInfo->PicPresent;
-	 }
+	   /* Is it an empty picture ? */
+	   if (type == -1)
+	     {
+	       type = GIF_FORMAT;
+	       pres = (int) ReScale;
+	     }
+ 	 }
        else
 	 {
 	   type = GIF_FORMAT;
@@ -1450,13 +1456,16 @@ int                 frame;
 	     (*ThotLocalActions[T_imagemenu]) (buffer, &ok, &type, &pres, pBox);
 	   else
 	     ok = FALSE;
+
 	   if (ok)
 	     {
+	       /* something change */
 	       i = strlen (buffer);
 	       /* longueur de la chaine a copier */
 	       if (i != 0)
 		 {
 		   pictInfo = (PictInfo *) pBox->BxPictInfo;
+		   FreePicture (pictInfo);
 		   strcpy (pictInfo->PicFileName, buffer);
 		   pictInfo->PicPresent = (PictureScaling) pres;
 		   pictInfo->PicType = type;

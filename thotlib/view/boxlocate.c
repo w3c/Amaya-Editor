@@ -1357,6 +1357,12 @@ int                *max;
    else if (!horizRef && pAb->AbHeight.DimIsPosition)
       /* stretchable box */
       ok = FALSE;
+   else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
+     /* box width linked with its parent */
+      ok = FALSE;
+   else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
+     /* box height linked with its parent */
+      ok = FALSE;
    else if (horizRef && pAb->AbHorizPos.PosAbRef == NULL)
       /* no position rule */
       ok = FALSE;
@@ -1712,14 +1718,22 @@ int                *max;
    /* Il est impossible de modifier si la dimension du contenu */
    /* d'une boite construite ou de type texte                  */
    else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
-      if (horizRef
-	  && (pBox->BxContentWidth
-	      || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
+     {
+       if (horizRef
+	   && (pBox->BxContentWidth
+	       || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
 	 ok = FALSE;
-      else if (!horizRef
-	       && (pBox->BxContentHeight
-		   || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
+       else if (!horizRef
+		&& (pBox->BxContentHeight
+		    || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
 	 ok = FALSE;
+     }
+   else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
+     /* box width linked with its parent */
+      ok = FALSE;
+   else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
+     /* box height linked with its parent */
+      ok = FALSE;
    else
      {
        /* search the first rule Move or NoMove */

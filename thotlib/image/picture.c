@@ -328,8 +328,8 @@ PictInfo           *imageDesc;
 	 valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	 values.fill_style = FillTiled;
 	 values.tile = pixmap;
-	 values.ts_x_origin = 0;
-	 values.ts_y_origin = 0;
+	 values.ts_x_origin = xFrame;
+	 values.ts_y_origin = yFrame;
 	 XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	 if (imageDesc->PicPresent != XRepeat)
 	     {
@@ -357,7 +357,7 @@ PictInfo           *imageDesc;
 	       rect.width = imageDesc->PicWArea - picXOrg;
 	     }
 
-	   XSetClipRectangles (TtDisplay, tiledGC, 0, 0,&rect, 1, Unsorted);
+	   XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
 	   XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
 	   /* remove clipping */
 	   rect.x = 0;
@@ -1151,11 +1151,12 @@ PictInfo           *imageDesc;
 	 {
 	   if (box != NULL)
 	     {
-	       if (wFrame == 0 && hFrame == 0)
-		 /* empty size ???? */
-		 NewDimPicture (box->BxAbstractBox);
-	       w = box->BxWidth;
-	       h = box->BxHeight;
+	       if (w == 0 && h == 0)
+		 {
+		 /* no size for the box, take the image size */
+		   w = wFrame;
+		   h = hFrame;
+		 }
 	     }
 	 }
      }
@@ -1197,10 +1198,14 @@ PictInfo           *imageDesc;
    if (imageDesc->PicPixmap != None)
      {
 
-	FreePixmap (imageDesc->PicPixmap);
-	FreePixmap (imageDesc->PicMask);
-	imageDesc->PicPixmap = None;
-	imageDesc->PicMask = None;
+       FreePixmap (imageDesc->PicPixmap);
+       FreePixmap (imageDesc->PicMask);
+       imageDesc->PicPixmap = None;
+       imageDesc->PicMask = None;
+       imageDesc->PicXArea = 0;
+       imageDesc->PicYArea = 0;
+       imageDesc->PicWArea = 0;
+       imageDesc->PicHArea = 0;
      }
 
      if ((imageDesc->PicType >= InlineHandlers) && (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
