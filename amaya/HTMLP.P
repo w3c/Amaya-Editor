@@ -3204,7 +3204,6 @@ RULES
 	VertPos: Top = Previous . Bottom;
 	MarginTop: 0.5;
 	MarginBottom: 0.5;
-	Clear: Both;
 	LineWeight: 1 px;
 	Foreground: Black;
 	LineBreak: No;

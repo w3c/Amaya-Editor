@@ -1597,6 +1597,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   int                 orgX, orgY, width;
   int                 t, b, l, r, lbmp, rbmp;
   ThotBool            variable, newFloat;
+#define MIN_SPACE 50
 
   if (pLine == NULL)
     return;
@@ -1679,14 +1680,14 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     {
       width = pBox->BxMinWidth;
       if (width == 0)
-	width = 20 + lbmp + rbmp;
+	width = lbmp + rbmp + MIN_SPACE;
     }
   else if (!variable && pBox)
     width = pBox->BxW + lbmp + rbmp;
   else if (pBox)
-    width = 20 + lbmp + rbmp;
+    width = lbmp + rbmp + MIN_SPACE;
   else
-    width = 20;
+    width = MIN_SPACE;
 
   if (floatL)
     {
@@ -2750,7 +2751,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
-      if (box->BxWidth < w + 20 &&
+      if (box->BxWidth < w + MIN_SPACE &&
 	  (pBlock->BxType == BoBlock ||
 	   (boxPrevL && y == boxPrevL->BxYOrg) ||
 	   (boxPrevR && y == boxPrevR->BxYOrg)))
