@@ -25,6 +25,10 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+MTL=midl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 OUTDIR=.\bin
@@ -101,6 +105,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XLinkbuilder.obj"
 	-@erase "$(INTDIR)\XLinkedit.obj"
 	-@erase "$(INTDIR)\Xml2thot.obj"
+	-@erase "$(INTDIR)\XMLAPP.obj"
 	-@erase "$(INTDIR)\Xmlbuilder.obj"
 	-@erase "$(INTDIR)\XMLparser.obj"
 	-@erase "$(INTDIR)\XPointer.obj"
@@ -113,7 +118,6 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
@@ -123,40 +127,7 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -215,6 +186,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XLinkbuilder.obj" \
 	"$(INTDIR)\XLinkedit.obj" \
 	"$(INTDIR)\Xml2thot.obj" \
+	"$(INTDIR)\XMLAPP.obj" \
 	"$(INTDIR)\Xmlbuilder.obj" \
 	"$(INTDIR)\XMLparser.obj" \
 	"$(INTDIR)\XPointer.obj" \
@@ -307,6 +279,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XLinkbuilder.obj"
 	-@erase "$(INTDIR)\XLinkedit.obj"
 	-@erase "$(INTDIR)\Xml2thot.obj"
+	-@erase "$(INTDIR)\XMLAPP.obj"
 	-@erase "$(INTDIR)\Xmlbuilder.obj"
 	-@erase "$(INTDIR)\XMLparser.obj"
 	-@erase "$(INTDIR)\XPointer.obj"
@@ -321,7 +294,6 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Od /I "..\..\..\libwww\modules\expat\xmlparse"\
  /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
@@ -329,44 +301,11 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Od /I "..\..\..\libwww\modules\expat\xmlparse"\
  "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "_DEBUG" /D\
  "_AMAYA_RELEASE_" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D\
  "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D\
- "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /Fp"$(INTDIR)\amaya.pch" /YX\
- /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
+ "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC"\
+ /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL" 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -424,6 +363,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XLinkbuilder.obj" \
 	"$(INTDIR)\XLinkedit.obj" \
 	"$(INTDIR)\Xml2thot.obj" \
+	"$(INTDIR)\XMLAPP.obj" \
 	"$(INTDIR)\Xmlbuilder.obj" \
 	"$(INTDIR)\XMLparser.obj" \
 	"$(INTDIR)\XPointer.obj" \
@@ -442,6 +382,36 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(CFG)" == "amaya - Win32 Release" || "$(CFG)" == "amaya - Win32 Debug"
@@ -5564,6 +5534,7 @@ DEP_CPP_HTMLA=\
 	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	".\amaya\xml.h"\
 	
 
 "$(INTDIR)\HTMLactions.obj" : $(SOURCE) $(DEP_CPP_HTMLA) "$(INTDIR)"
@@ -14966,6 +14937,7 @@ DEP_CPP_XML2T=\
 	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\f\xlinkbuilder_f.h"\
 	"..\amaya\f\xml2thot_f.h"\
+	"..\amaya\f\xmlbuilder_f.h"\
 	"..\amaya\fetchhtmlname.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -15011,6 +14983,73 @@ DEP_CPP_XML2T=\
 	
 
 "$(INTDIR)\Xml2thot.obj" : $(SOURCE) $(DEP_CPP_XML2T) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=.\amaya\XMLAPP.c
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+DEP_CPP_XMLAP=\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\xml.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_XMLAP=\
+	"..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\XMLAPP.obj" : $(SOURCE) $(DEP_CPP_XMLAP) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+DEP_CPP_XMLAP=\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\xml.h"\
+	
+
+"$(INTDIR)\XMLAPP.obj" : $(SOURCE) $(DEP_CPP_XMLAP) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
