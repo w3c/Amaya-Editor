@@ -195,6 +195,7 @@ sub start_hndl {
 	elsif ($element eq "messages") { #warning: messageS != message
 		open ( HEADFILE, ">$head_name") || die "can't create $head_name because: $! \n";
 		push (@list_of_dialogues_files ,"$head_name");
+		print "$comment_for_begining_of_h_file\n";
 	}
 	elsif ( $element eq "") {
 		print "empty element at line " .  $expat->current_line . "\n";
