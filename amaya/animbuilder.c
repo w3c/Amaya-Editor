@@ -172,7 +172,8 @@ void register_animated_element (Element animated)
   void *anim_info;
   ElementType elType;
   double start, duration;
-  int fill, repeatcount;  
+  int repeatcount;  
+
   anim_info = TtaNewAnimInfo ();
   Read_time_info (animated, &start, &duration);
   TtaSetAnimationTime (anim_info, start, duration);
