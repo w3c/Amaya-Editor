@@ -1468,7 +1468,7 @@ int                 frame;
    int                 boxLength;
    int                 nSpaces;
    int                 newIndex, wordWidth;
-   int                 xi, maxX, val;
+   int                 xi, maxX;
    int                 maxLength, minWidth;
    ThotBool            still;
    ThotBool            toCut;
@@ -1560,13 +1560,6 @@ int                 frame;
 	 }
        else
 	 {
-	   if (pNextBox->BxAbstractBox->AbWidth.DimAbRef == pNextBox->BxAbstractBox->AbEnclosing && pNextBox->BxAbstractBox->AbWidth.DimValue == 0)
-	     {
-	       /* the width of the enclosed depends of the block */
-	       val = pLine->LiXMax - pNextBox->BxLMargin - pNextBox->BxLBorder - pNextBox->BxLPadding - pNextBox->BxRMargin - pNextBox->BxRBorder - pNextBox->BxRPadding - pNextBox->BxW;
-	       if (val)
-		 ResizeWidth (pNextBox, pBox, NULL, val, 0, 0, 0, frame);
-	     }
 	   /* look for a break element */
 	   if (pNextBox->BxAbstractBox->AbAcceptLineBreak)
 	     found = FindBreakLine (pNextBox, &width, &breakWidth, &boxLength, &nSpaces, &newIndex, &pNewBuff, &wordWidth);
