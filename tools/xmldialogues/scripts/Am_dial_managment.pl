@@ -14,12 +14,12 @@ my $dir_obj = ""; #name of the object direcitriy for Amaya
 
 #### 	for all the bases
 # directory for bases 
-my $BASE_directory = "$home$path_amaya/Amaya/tools/xmldialogues/bases/";
+my $BASE_directory = "$path_amaya/Amaya/tools/xmldialogues/bases/";
 # directory  translated NEW  files
-my $OUT_MSG_directory = "$home$path_amaya/Amaya/config/";
+my $OUT_MSG_directory = "$path_amaya/Amaya/config/";
 
 
-my $directory_for_file_to_translate = "$home$path_amaya/Amaya/tools/xmldialogues/docs/";
+my $directory_for_file_to_translate = "$path_amaya/Amaya/tools/xmldialogues/docs/";
 #	sufix for the generated file created into /docs to help translation
 my $specific_sufix = ".amaya.trans"; #used to indicate those specific files
 # commentary for begining of the ".h" file
@@ -56,21 +56,21 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
 								corrd MSG_MAX_CHECK);
 
 #### 	for Amaya dialogue => dia or $index {1}
-  $head_dir{'dia'} = "$home$path_amaya/Amaya/$dir_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
+  $head_dir{'dia'} = "$path_amaya/Amaya/$dir_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
   $head_name {'dia'}= 'EDITOR.h';
   $lang_dir{'dia'} = $OUT_MSG_directory;
   $lang_sufix {'dia'} = '-amayadialogue';
   $base_name {'dia'} = 'base_am_dia.xml';
 
 ####	for Amayamsg => msg or $index {2}
- $head_dir {'msg'} = "$home$path_amaya/Amaya/amaya/";
+ $head_dir {'msg'} = "$path_amaya/Amaya/amaya/";
  $head_name {'msg'} = 'amayamsg.h' ;
  $lang_dir {'msg'} = $OUT_MSG_directory;
  $lang_sufix {'msg'} = '-amayamsg' ;
  $base_name {'msg'} = 'base_am_msg.xml';
 
 ####	for libdialogue => lib or $index {3}
- $head_dir {'lib'} = "$home$path_amaya/Amaya/thotlib/include/" ;
+ $head_dir {'lib'} = "$path_amaya/Amaya/thotlib/include/" ;
  $head_name {'lib'} = 'libmsg.h' ;
  $lang_dir {'lib'} = $OUT_MSG_directory;
  $lang_sufix {'lib'} = '-libdialogue' ;
@@ -78,7 +78,7 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
 
 
 ####	for corrdialogue => corrd or $index {4}
- $head_dir {'corrd'} = "$home$path_amaya/Amaya/thotlib/internals/h/" ;
+ $head_dir {'corrd'} = "$path_amaya/Amaya/thotlib/internals/h/" ;
  $head_name {'corrd'} = 'corrmsg.h' ;
  $lang_dir {'corrd'} = $OUT_MSG_directory;
  $lang_sufix {'corrd'} = '-corrdialogue' ;
@@ -247,9 +247,9 @@ do { # to continue to treat the same type of dialogue
 			}
 		else #if (/1/)
 			{
-		$Import_am_msg::in_labelfile = "$home$path_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $of_what};
+		$Import_am_msg::in_labelfile = "$path_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $of_what};
 		$Import_am_msg::basefile = $BASE_directory  . $base_name { $of_what};
-		$Import_am_msg::in_textdirectory = "$home$path_amaya/Amaya/tools/xmldialogues/in/";
+		$Import_am_msg::in_textdirectory = "$path_amaya/Amaya/tools/xmldialogues/in/";
 		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};				
 			}
 		Import_am_msg::import_a_language ($lang, $ending_label{ $of_what} ) ;		
