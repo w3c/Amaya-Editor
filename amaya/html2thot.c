@@ -1483,7 +1483,7 @@ static void         TextToDocument ()
 	     InitBuffer ();
 	     return;
 	  }
-	if (ignoreLeadingSpaces || CannotContainText (elType))
+	if (ignoreLeadingSpaces)
 	   if (!Within (HTML_EL_Preformatted))
 	      /* suppress leading spaces */
 	      while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
@@ -1525,7 +1525,8 @@ char                c;
 
 #endif
 {
-   TextToDocument ();
+   if (LgBuffer > 0)
+      TextToDocument ();
    MergeText = FALSE;
 }
 
@@ -1629,7 +1630,8 @@ Element             parent;
       return(FALSE);
    ret = FALSE;
    elType = TtaGetElementType (*el);
-   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_BR)
+   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_BR
+       || elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
 	/* the element to be inserted is a character string */
 	/* Search the ancestor that is not a character level element */
@@ -3719,7 +3721,8 @@ char                c;
   ----------------------------------------------------------------------*/
 static void         EndOfDocument ()
 {
-   TextToDocument ();
+   if (LgBuffer > 0)
+      TextToDocument ();
 }
 
 /*----------------------------------------------------------------------
@@ -4291,7 +4294,8 @@ char               *HTMLbuf;
 			    {
 			       /* new line is equivalent to space */
 			       charRead = SPACE;
-			       TextToDocument ();
+			       if (LgBuffer > 0)
+			          TextToDocument ();
 			    }
 		        }
 		/* beginning of a new input line */
