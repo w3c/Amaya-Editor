@@ -839,7 +839,7 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
 char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding)
 {
   char             *dest;
-  int               i, len;
+  int               i;
 
   dest = NULL;
   if (src)
@@ -903,7 +903,7 @@ unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
       /* generate the WC string */
       tmp = TtaConvertIsoToWC(src, encoding);
       /* now generate the Multi Byte string */
-      dest = TtaGetMemory (strlen (src) + 1);
+      dest = TtaGetMemory (6*strlen (src) + 1);
       i = 0;
       l = 0;
       while (tmp[i] != 0)
@@ -912,6 +912,7 @@ unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
 	  l += TtaWCToMBstring (tmp[i], &ptr);
 	  i++;
 	}
+	  dest[l] = EOS;
       TtaFreeMemory (tmp);
     }
   return dest;
@@ -941,6 +942,7 @@ unsigned char *TtaConverMbsToIso (unsigned char *src, CHARSET encoding)
 	  l += TtaMBstringToWC (&ptr, &tmp[i]);
 	  i++;
 	}
+	  tmp[i] = 0;
       /* now generate the ISO string */
       dest = TtaConvertWCToIso (tmp, encoding);
       TtaFreeMemory (tmp);

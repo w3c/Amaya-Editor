@@ -15,13 +15,13 @@ extern CHAR_T utolower (CHAR_T c);
   TtaGetCharFromWC returns the ISO or Windows character code
   of the Unicode value wc.
   ----------------------------------------------------------------------*/
-extern unsigned char TtaGetCharFromWC (const wchar_t wc, CHARSET encoding);
+extern unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding);
 
 /*----------------------------------------------------------------------
   TtaGetWCFromChar returns the Unicode value of the corresponding
   ISO or Windows character code c.
   ----------------------------------------------------------------------*/
-extern wchar_t TtaGetWCFromChar (const unsigned char c, CHARSET encoding);
+extern wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding);
 
 /*----------------------------------------------------------------------
   TtaMBstringT0WC converts a multibyte string into a wide character.
