@@ -119,15 +119,16 @@ how to specify environment variables.</p>
 Starting from version 1.3b, you can customize different network timeouts
 by means of the following registry file directives:</p>
 <dl>
-<dt><strong>DNS_Timeout</strong> [in seconds, default 60 s]</dt>
+<dt><strong>DNS_TIMEOUT</strong> [in seconds, default 60 s]</dt>
 <dd>
 Timeout while consulting a domain name server
 </dd>
-<dt><strong>PersistCx_Timeout</strong> [in seconds, default 60 s]</dt>
+<dt><strong>PERSIST_CX_TIMEOUT</strong> [in seconds, default 60 s]</dt>
 <dd>
 Timeout before closing an idle persistent connection (keep-alive)
 </dd>
-<dt><strong>Net_Event_Timeout</strong> [in milliseconds, default 20s]</dt>
+<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 20000 ms]
+</dt>
 <dd>
 Timeout while waiting for a network event (e.g., while opening a connection)
 </dd>
@@ -141,18 +142,24 @@ by default and is stored in a directory which is called
 <p>
 Three registry files entries allow you to control the cache:</p>
 <dl>
-<dt><strong>Enable_Cache</strong> [YES/NO, default YES]</dt>
+<dt><strong>USE_CACHE</strong> [YES/NO, default YES]</dt>
 <dd>
 Activates or desactivates the cache
 </dd>
-<dt><strong>Cache_Size</strong> [size in megabytes, default 5 megabytes]</dt>
+<dt><strong>CACHE_SIZE</strong> [size in megabytes, default 5 megabytes]</dt>
 <dd>
 Gives the size of the cache repository
 </dd>
-<dt><strong>Cache_Dir</strong> [path, the default is the .amaya temporary
+<dt><strong>CACHE_DIR</strong> [path, the default is the .amaya temporary
 directory]</dt>
 <dd>
 The directory path where you want to create the libwww-cache directory
+</dd>
+<dt><strong>CACHE_PROTECTED_DOCS</strong> [yes/no, default no]</dt>
+<dd>
+By default, documents which are protected by a password aren't stored in
+the cache. You can change the behavior by setting the value of this keyword
+to yes.
 </dd>
 </dl>
 <p>
