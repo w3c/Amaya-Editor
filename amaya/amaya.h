@@ -376,10 +376,12 @@ typedef enum
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
-  CHAR_T*    initial_url;      /* if the server returns a different URL name
+  CHAR_T    *initial_url;      /* if the server returns a different URL name
 				  after a redirection, we store here the one
 				  that the browser first asked */
-  CHAR_T*    form_data;        /* form data associated with a URL */
+  CHAR_T    *form_data;        /* form data associated with a URL */
+  CHAR_T    *content_type;     /* content type returned by the server */
+  CHAR_T    *charset;          /* charset returned by the server */
   ClickEvent method;           /* method used to send this data */
   ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME*/
   ThotBool   xmlformat;        /* the document should be exported in xml format */

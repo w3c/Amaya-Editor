@@ -294,6 +294,16 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
       TtaFreeMemory (me->initial_url);
       me->initial_url = NULL;
     }
+  if (me->content_type)
+    {
+      TtaFreeMemory (me->content_type);
+      me->content_type = NULL;
+    }
+  if (me->charset)
+    {
+      TtaFreeMemory (me->charset);
+      me->charset = NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -302,7 +312,6 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
   ----------------------------------------------------------------------*/
 void                DocumentInfo (Document document, View view)
 {
-
 #ifndef _WINDOWS
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
 		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE)*/
@@ -317,14 +326,17 @@ void                DocumentInfo (Document document, View view)
 		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE)*/
 		"DocInfoMimeTypeTitle : ");
    TtaNewLabel (BaseDialog + DocInfoMimeType,
-		BaseDialog + DocInfoForm, "  ");
+		BaseDialog + DocInfoForm,  
+		DocumentMeta[document]->content_type);
 
    TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
 		BaseDialog + DocInfoForm,
 		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE)*/
 		"DocInfoCharsetTitle : ");
    TtaNewLabel (BaseDialog + DocInfoCharset,
-		BaseDialog + DocInfoForm, "  ");
+		BaseDialog + DocInfoForm, 
+		DocumentMeta[document]->charset);
+
 
    TtaNewLabel (BaseDialog + DocInfoContentTitle,
 		BaseDialog + DocInfoForm,
@@ -2093,6 +2105,7 @@ static Document  LoadDocument (Document doc, char *pathname,
   char               *tempdir;
   char               *s;
   char               *content_type;
+  char               *http_content_type;
   char               *profile;
   int                 i, j;
   int                 parsingLevel;
@@ -2104,7 +2117,13 @@ static Document  LoadDocument (Document doc, char *pathname,
   docType = docText;
   unknown = TRUE;
   tempdir = tempdocument = NULL;
-  content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
+  http_content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
+  /* make a copy we can modify */
+  if (http_content_type)
+    content_type = TtaStrdup (http_content_type);
+  else
+    content_type = NULL;
+
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != EOS)
     CheckDocHeader (tempfile, &xmlDec, &withDoctype,
@@ -2378,6 +2397,7 @@ static Document  LoadDocument (Document doc, char *pathname,
 	    {
 	      /* Nothing is loaded */
 	      ResetStop (doc);
+	      TtaFreeMemory (content_type);
 	      return (0);
 	    }
 	  /* we have to rename the temporary file */
@@ -2464,6 +2484,17 @@ static Document  LoadDocument (Document doc, char *pathname,
 	TtaSetDocumentCharset (newdoc, httpcharset);
       else if (metacharset != UNDEFINED_CHARSET)
 	TtaSetDocumentCharset (newdoc, metacharset);
+      /* @@@ JK: Test do we need to copy the charset? @@@ */
+      /* copy some headers to the metadata */
+      if (http_content_type)
+	DocumentMeta[newdoc]->content_type = TtaWCSdup (http_content_type);
+      else
+	DocumentMeta[newdoc]->content_type = NULL;
+      if (charEncoding)
+	DocumentMeta[newdoc]->charset = TtaWCSdup (charEncoding);
+      else
+	DocumentMeta[newdoc]->charset = NULL;
+      /* @@@ JK: Test @@@ */
       
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
@@ -2555,6 +2586,7 @@ static Document  LoadDocument (Document doc, char *pathname,
 	ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
     }
+  TtaFreeMemory (content_type);
   TtaFreeMemory (tempdocument);
   return (newdoc);
 }
