@@ -1263,7 +1263,7 @@ void SelectOneOption (Document doc, Element el)
 #ifdef _WINDOWS
   int                 nbOldEntries = 20;
 #endif /* _WINDOWS */
-#define MAX_OPTIONS 500
+#define MAX_OPTIONS MAX_SUBMENUS
 #define MAX_SUBOPTIONS 20
 #define MAX_LABEL_LENGTH 50
   ElementType         elType, childType;
@@ -1513,6 +1513,9 @@ void SelectOneOption (Document doc, Element el)
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
 	       TtaWaitShowDialogue ();
+	       /* destroy the dialogue */
+	       TtaDestroyDialogue (BaseDialog + OptionMenu);
+
 	       if (ReturnOption >= 0 && ReturnOptionMenu >= 0)
 		 {
 		   /* make the returned option selected */
