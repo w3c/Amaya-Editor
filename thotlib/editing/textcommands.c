@@ -689,7 +689,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		 i = first + 1;
 	       else
 		 i = last;
-	       ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
+	       if (pEl->ElAbstractBox[view - 1])
+		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
 	     }
 	   else
 	     {
@@ -732,7 +733,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		 i = first + 1;
 	       else
 		 i = last;
-	       ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
+	       if (pEl->ElAbstractBox[view - 1])
+		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
 	     }
 	   else
 	     {
