@@ -4133,6 +4133,7 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
    int                 menu, submenu;
    int                 item;
    int                 action;
+   int                 ref;
 
    /* Si les parametres sont invalides */
    if (document == 0 || view == 0)
