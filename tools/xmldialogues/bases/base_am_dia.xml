@@ -1269,15 +1269,15 @@
 </label>
 <label define="BCellVExtend">
 	<message xml:lang="en">Join with the cell below</message>
-	<message xml:lang="fr">Joindre la cellule au-dessous</message>
+	<message xml:lang="fr">Joindre avecla cellule au-dessous</message>
 </label>
 <label define="BCellHShrink">
-	<message xml:lang="en">Horizontal shrink</message>
-	<message xml:lang="fr">Réduire horizontalement</message>
+	<message xml:lang="en">Shrink horizontal extend</message>
+	<message xml:lang="fr">Réduire extension horizontale</message>
 </label>
 <label define="BCellHShrink">
-	<message xml:lang="en">Vertical shrink</message>
-	<message xml:lang="fr">Réduire verticalement</message>
+	<message xml:lang="en">Shrink vertical extend</message>
+	<message xml:lang="fr">Réduire extension verticale</message>
 </label>
 <label define="BSelectRow">
 	<message xml:lang="en">Select the row</message>

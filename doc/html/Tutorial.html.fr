@@ -9,7 +9,7 @@
 
 .xml {color: #E50000}
 .exercice {color: #A9B200}</style>
-  <meta name="generator" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr">
@@ -246,7 +246,7 @@ final du document tel qu'il est vu par un navigateur Web</p>
 
 <p>Les barres d'outils</p>
 
-<p>Contient quelques boutons d'accès aux fonctions les plus utilisées</p>
+<p>Contient quelques boutons d'accès aux fonctions les plus utilis</p>
 <ul>
   <li>Stop <img alt="(Stop)" src="../images/stop.gif" />&nbsp;: arrête le
     transfert d'information depuis un serveur Web</li>
@@ -496,7 +496,7 @@ tous les caractères&nbsp;: espace, fin de ligne. Quand la sélection se trouve
 
 <p>Pour transformer un paragraphe en préformaté, on sélectionne le paragraphe
 en entier et on active l'entrée de menu <strong>XHTML/Préformaté</strong> (ou
-<code>Ctrl t Ctrl w</code>).</p>
+<code>Ctrl t Ctrl x</code>).</p>
 
 <p>Pour transformer un préformaté en paragraphe, on sélectionne le préformaté
 en entier et on active l'entrée de menu <strong>XHTML/Paragraphe</strong>.</p>
@@ -556,7 +556,7 @@ disponibles au clavier comme&nbsp;:</p>
 <h3>Insérer une image</h3>
 
 <p>Pour insérer une image, on choisit l'entrée <strong>Image</strong> dans le
-menu <strong>XHTML</strong> (raccourci <code>Ctrl t Ctrl i</code>) ou on
+menu <strong>XHTML</strong> (raccourci <code>Ctrl h Ctrl i</code>) ou on
 clique sur le bouton <img alt="Image " src="../images/Image.gif"
 longdesc="longdesc.htm" />. Une boîte de dialogue s'affiche qui permet de
 rentrer le nom du fichier et le <a href="ImageMaps.html.fr#Alternative">texte
@@ -595,7 +595,7 @@ des paragraphes, des en-têtes, des divisions.</p>
 <h4>Première méthode</h4>
 
 <p>En cliquant sur <img alt="(Liste)" src="../images/OList.gif" /> (ou
-<code>Ctrl l Ctrl u</code>) on crée une liste à puces et un premier item de
+<code>Ctrl h Ctrl l</code>) on crée une liste à puces et un premier item de
 liste à l'intérieur.</p>
 <ul>
   <li>Il ne reste plus qu'à taper le texte de l'item.
@@ -606,7 +606,7 @@ liste à l'intérieur.</p>
   <li>Si on ne veut pas insérer de paragraphe mais passer à l'item suivant,
     on double la touche <code>Enter</code>.
     <p>Attention en cliquant sur <img alt="(Liste)" src="../images/OList.gif"
-    /> (ou <code>Ctrl l Ctrl u</code>) on crée une nouvelle liste à puces à
+    /> (ou <code>Ctrl h Ctrl l</code>) on crée une nouvelle liste à puces à
     l'intérieur de l'item courant.</p>
   </li>
   <li>Si on veut terminer la liste, on triple la touche
@@ -614,7 +614,7 @@ liste à l'intérieur.</p>
 </ul>
 
 <p>En cliquant sur <img alt="(Liste numérotée)" src="../images/NumList.gif"
-/> (ou <code>Ctrl l Ctrl o</code>) on crée une liste numérotée et un item de
+/> (ou <code>Ctrl h Ctrl n</code>) on crée une liste numérotée et un item de
 liste à l'intérieur.</p>
 
 <h4>Deuxième méthode</h4>
@@ -623,7 +623,7 @@ liste à l'intérieur.</p>
 défaut, Amaya crée un nouveau paragraphe chaque fois que l'on active la
 touche <code>Enter</code>. On peut ensuite sélectionner plusieurs paragraphes
 et cliquer sur <img alt="(Liste)" src="../images/OList.gif" /> (ou <code>Ctrl
-l Ctrl u</code>) pour créer une liste à puces.</p>
+h Ctrl l</code>) pour créer une liste à puces.</p>
 
 <p>Pour sélectionner tout le contenu d'une suite de paragraphes, on utilise
 la touche <code>F2</code> sous Windows (<code>Esc</code> sous Linux).</p>
@@ -633,14 +633,14 @@ la touche <code>F2</code> sous Windows (<code>Esc</code> sous Linux).</p>
 <p>On pose la sélection dans un item de liste, puis en doublant la touche
 <code>F2</code> sous Windows (<code>Esc</code> sous Linux) on sélectionne la
 liste complète. En cliquant sur <img alt="(Liste numérotée)"
-src="../images/NumList.gif" /> (ou <code>Ctrl l Ctrl o</code>) on crée une
+src="../images/NumList.gif" /> (ou <code>Ctrl h Ctrl n</code>) on crée une
 liste numérotée à la place. On peut bien sûr passer de la même façon d'une
 liste numérotée à une liste à puces.</p>
 
 <h3 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h3>
 
 <p>En cliquant sur <img alt="(Liste de définitions)" src="../images/DL.gif"
-/> (ou <code>Ctrl l Ctrl u</code>) on crée une liste de définitions.</p>
+/> (ou <code>Ctrl h Ctrl d</code>) on crée une liste de définitions.</p>
 
 <p>La touche <code>Enter</code> est également utile pour éditer des listes de
 définitions. Considérez l'exemple suivant :</p>
@@ -697,9 +697,10 @@ entre-elles ou des documents entre-eux.</p>
 
 <p>Pour créer une cible dans un document, il suffit de sélectionner le
 passage désiré et d'activer l'entrée de menu <strong>Créer cible</strong>
-(Shift Ctrl T)dans le menu <strong>Liens</strong>. Si la sélection porte sur
-un élément HTML entier, Amaya va lui associer un identificateur unique.
-Sinon, Amaya va englober le contenu de la sélection dans une ancre cible.</p>
+(<code>Ctrl l Ctrl t</code>)dans le menu <strong>Liens</strong>. Si la
+sélection porte sur un élément HTML entier, Amaya va lui associer un
+identificateur unique. Sinon, Amaya va englober le contenu de la sélection
+dans une ancre cible.</p>
 
 <p>On peut demander à Amaya d'associer un identificateur à tous les éléments
 d'un certain type dans le document. Pour cela on active l'entrée
@@ -725,7 +726,7 @@ de la même façon pour un lien vers un document local, une cible</p>
   <li>On sélectionne le passage choisi.</li>
   <li>On choisit <strong>Créer/changer lien</strong> du <a
     href="Browsing.html.fr"></a>menu <strong>Liens</strong> (raccourci
-    <code>Shift Ctrl L</code>) pour afficher le formulaire de création de
+    <code>Ctrl l Ctrl l</code>) pour afficher le formulaire de création de
     lien.
     <p><img alt="(Création de lien)" src="../images/create_link-fr.png" /></p>
   </li>
@@ -770,7 +771,7 @@ Amaya:</p>
 <ol>
   <li>On sélectionne le passage choisi.</li>
   <li>On choisit <strong>Créer/changer lien</strong> du menu
-    <strong>Liens</strong> (raccourci <code>Shift Ctrl L</code>)</li>
+    <strong>Liens</strong> (raccourci <code>Ctrl l Ctrl l</code>)</li>
   <li>Soit on saisit l'URL du document cible et on confirme. Soit on décide
     de choisir la cible avec la souris (bouton Clic).</li>
 </ol>
@@ -864,18 +865,35 @@ d'entre elles au hasard et y insérer du texte, des images et autre. On peut
 également déplacer le point d'insertion de cellule en cellule par
 l'intermédiaire des flèches du clavier.</p>
 
-<h3><a id="Adding">Ajouter une nouvelle colonne</a></h3>
+<h3><a id="Adding">Ajouter une colonne</a></h3>
 
-<p>Pour ajouter un nouvelle colonne à une table&nbsp;:</p>
+<p>Il n'existe deux commandes spécifiques pour créer une nouvelle
+colonne&nbsp;:</p>
+<ul>
+  <li><strong>Insérer une colonne avant</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
+    colonne avant la colonne sélectionnée.</li>
+  <li><strong>Insérer une colonne après</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
+    colonne après la colonne sélectionnée.</li>
+</ul>
+
+<p>Si on a sélectionné une cellule complète par <code>F2</code> (Windows) ou
+<code>Esc</code> (Unix) la touche Enter crée une nouvelle cellule après et la
+colonne correspondante.</p>
+
+<h3>Détruire une colonne</h3>
+
+<p>Pour détruire une colonne de table, il faut sélectionner la colonne et
+utilser la commande <code>Delete</code>. Il y a deux méthodes pour
+sélectionner une colonne :</p>
 <ol>
-  <li>Pour créer une nouvelle colonne à droite d'une cellule existante, il
-    faut placer le curseur à la fin de la cellule et sélectionner l'entrée
-    <strong>Cellule</strong> ou <strong>Cellule titre</strong> dans le
-    sous-menu <strong>Table</strong>.</li>
-  <li>Pour créer une nouvelle colonne à gauche d'une cellule existante, il
-    faut placer le curseur au début de la cellule et sélectionner l'entrée
-    <strong>Cellule</strong> ou <strong>Cellule titre</strong> dans le
-    sous-menu <strong>Table</strong>.</li>
+  <li>Soit l'entrée <strong>Sélectionner la colonne</strong> dans le
+    sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl c</code>).</li>
+  <li>Soit étendre la sélection sur au moins deux cellules dans la même
+    colonne (Cell 1.1 à Cell 2.1 dans l'exemple ci-dessous) puis deux fois
+    <code>F2</code> (Windows) ou <code>Esc</code> (Unix) pour sélectionner la
+    colonne.</li>
 </ol>
 
 <table border="1" summary="table">
@@ -896,30 +914,111 @@ l'intermédiaire des flèches du clavier.</p>
   </tbody>
 </table>
 
-<p>Il n'existe pas de commande spécifique pour créer une nouvelle colonne.
-Quand vous créez une nouvelle cellule, Amaya engendre la nouvelle colonne
-correspondante. Mais il existe une commande spécifique (Détruire colonne de
-table) pour détruire une colonne, même si elle n'est pas vide. Cette commande
-se trouve à la fin du sous-menu <strong>Table</strong> du menu
-<strong>Xhtml</strong>.</p>
+<h3>Copier/Coller ou Déplacer une colonne</h3>
 
-<h3><a id="Adding1">Ajouter une nouvelle ligne</a></h3>
+<p>Pour déplacer ou copier/coller une colonne de table&nbsp;:</p>
 <ol>
-  <li>Pour créer une nouvelle ligne en dessous d'une ligne existante, il faut
-    placer le curseur à la fin de la dernière cellule de la ligne et
-    sélectionner l'entrée <strong>Ligne</strong> dans le sous-menu
-    <strong>Table</strong>.</li>
-  <li>Pour créer une nouvelle ligne au-dessus d'une ligne existante, il faut
-    placer le curseur au début de la première cellule de la ligne et
-    sélectionner l'entrée <strong>Ligne</strong> dans le sous-menu
-    <strong>Table</strong>.</li>
+  <li>Il faut sélectionner la colonne comme dans le cas de <strong>Détruire
+    une colonne</strong> et copier (<code>Ctrl c</code>) ou couper
+    (<code>Ctrl x</code> pour Windows, <code>Ctrl w</code> pour Unix) son
+    contenu.</li>
+  <li>Pour coller la colonne avant une autre colonne
+    <ul>
+      <li>soit on sélectionne le début d'une cellule de colonne et on active
+        la commande coller (<code>Ctrl v</code> pour Window, <code>Ctrl
+        y</code> pour Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller avant</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl p</code>).</li>
+    </ul>
+  </li>
+  <li>Pour coller la colonne après une autre colonne
+    <ul>
+      <li>soit on sélectionne la fin d'une cellule de colonne et on active la
+        commande coller (<code>Ctrl v</code> pour Window, <code>Ctrl y</code>
+        pour Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller après</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl v</code>).</li>
+    </ul>
+  </li>
 </ol>
 
-<p>De nouvelles lignes peuvent être créées efficacement avec la touche <a
-href="Creating.html.fr#L906">Enter</a>. Quand la ligne entière est
-sélectionnée (il faut utiliser la touche <code>F2</code> sous Windows et
-<code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
-vous créez une nouvelle ligne après la ligne sélectionnée.</p>
+<h3><a id="Adding1">Ajouter une ligne</a></h3>
+
+<p>Il n'existe deux commandes spécifiques pour créer une nouvelle
+ligne&nbsp;:</p>
+<ul>
+  <li><strong>Insérer une ligne avant</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
+    ligne avant la ligne sélectionnée.</li>
+  <li><strong>Insérer une ligne après</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
+    ligne après la ligne sélectionnée.</li>
+</ul>
+
+<p>Si on a sélectionné une ligne complète par <code>F2</code> (Windows) ou
+<code>Esc</code> (Unix) la touche Enter crée une nouvelle ligne après.</p>
+
+<h3>Détruire une ligne</h3>
+
+<p>Pour détruire une ligne de table, il faut sélectionner la ligne et utilser
+la commande <code>Delete</code>. Il y a deux méthodes pour sélectionner une
+ligne :</p>
+<ol>
+  <li>Soit l'entrée <strong>Sélectionner la ligne</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl r</code>).</li>
+  <li>Soit poser la sélection sur une cellule de la ligne (Cell 1.1 dans
+    l'exemple ci-dessous) puis deux fois <code>F2</code> (Windows) ou
+    <code>Esc</code> (Unix) pour sélectionner la ligne.</li>
+</ol>
+
+<h3>Copier/Coller ou Déplacer une ligne</h3>
+
+<p>Pour déplacer ou copier/coller une ligne de table&nbsp;:</p>
+<ol>
+  <li>Il faut sélectionner la ligne comme dans le cas de <strong>Détruire une
+    ligne</strong> et copier (<code>Ctrl c</code>) ou couper (<code>Ctrl
+    x</code> pour Windows, <code>Ctrl w</code> pour Unix) son contenu.</li>
+  <li>Pour coller la ligne avant une autre ligne
+    <ul>
+      <li>soit on sélectionne le début d'une ligne et on active la commande
+        coller (<code>Ctrl v</code> pour Window, <code>Ctrl y</code> pour
+        Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller avant</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl p</code>).</li>
+    </ul>
+  </li>
+  <li>Pour coller la colonne après une autre colonne
+    <ul>
+      <li>soit on sélectionne la fin d'une ligne et on active la commande
+        coller (<code>Ctrl v</code> pour Window, <code>Ctrl y</code> pour
+        Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller après</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl v</code>).</li>
+    </ul>
+  </li>
+</ol>
+
+<h3>Cellules étendues</h3>
+
+<p>Il n'existe quatre commandes spécifiques pour étendre ou réduire
+l'extension de cellules&nbsp;:</p>
+<ul>
+  <li><strong>Joindre avec la cellule à droite</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl =</code>) étend la cellule
+    d'une position à droite et colle le contenu des deux cellules.</li>
+  <li><strong>Joindre avec la cellule au-dessous</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl j</code>)étend la cellule d'une
+    position vers le bas et colle le contenu des deux cellules.</li>
+  <li><strong>Réduire extension horizontale</strong> (<code>Ctrl t Ctrl
+    -</code>) réduit l'extension horizontale de la cellule d'une position et
+    engendre une cellule vide.</li>
+  <li><strong>Réduire extension verticale</strong> (<code>Ctrl t Ctrl
+    s</code>) réduit l'extension verticale de la cellule d'une position et
+    engendre une cellule vide.</li>
+</ul>
+
+<p>On peut aussi éditer directement les attributs colspan et rowspan de la
+cellule.</p>
 
 <h3>Ajouter un nouveau corps de table (tbody)</h3>
 <ol>
@@ -938,57 +1037,6 @@ vous créez une nouvelle ligne après la ligne sélectionnée.</p>
 sélectionné (il faut utiliser la touche <code>F2</code> sous Windows et
 <code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
 vous créez une nouveau corps de table après le corps de table sélectionné.</p>
-
-<h3>Supprimer/Copier/Coller une colonne</h3>
-
-<p>Pour supprimer une colonne de table&nbsp;:</p>
-<ol>
-  <li>Il faut placer le curseur dans une cellule de la colonne et
-    sélectionner l'entrée <strong>Détruire colonne de table</strong> dans le
-    sous-menu <strong>Table</strong>.</li>
-  <li>Vous pouvez aussi initialiser la sélection dans une cellule et étendre
-    la sélection jusqu'à une autre cellule de la même colonne (par exemple
-    débuter la sélection dans la cellule Cell 1.2 et la terminer dans la
-    cellule Cell 3.2). Amaya passe en mode sélection de colonne. La touche
-    <code>F2</code> sous Windows (<code>Esc</code> sous Linux) étend la
-    sélection entre les deux cellules dans la colonne, limites incluses (Cell
-    1.2, Cell 2.2, Cell 3.2). La touche <code>Delete</code> détruira le
-    contenu de toutes les cellules sélectionnées. En activant une autre fois
-    la touche <code>F2</code> ou <code>Esc</code>, la sélection est étendue à
-    toute la colonne. La touche <code>Delete</code> détruira le contenu de la
-    colonne sélectionnée.</li>
-</ol>
-
-<table border="1" summary="table">
-  <tbody>
-    <tr>
-      <td>Cell 1.1</td>
-      <td>Cell 1.2</td>
-      <td>Cell 1.3</td>
-    </tr>
-    <tr>
-      <td>Cell 2.1</td>
-      <td>Cell 2.2</td>
-      <td>Cell 2.3</td>
-    </tr>
-    <tr>
-      <td>Cell 3.1</td>
-      <td>Cell 3.2</td>
-      <td>Cell 3.3</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Quand une colonne entière est sélectionnée, il est possible de la copier
-(ou couper) et de la coller avant ou après une autre colonne.</p>
-<ol>
-  <li>Pour coller une nouvelle colonne avant une colonne existante, il faut
-    placer le curseur au début d'une cellule de la colonne existante et
-    coller la colonne copiée ou coupée.</li>
-  <li>Pour coller une nouvelle colonne après une colonne existante, il faut
-    placer le curseur à la fin d'une cellule de la colonne existante et
-    coller la colonne copiée ou coupée.</li>
-</ol>
 
 <h3><a id="Adding2">Ajouter quelque chose après une table</a></h3>
 
@@ -1010,6 +1058,8 @@ table, il faut sélectionner la table entière en utilisant la touche
 <code>Esc</code> (Unix) ou <code>F2</code> (Windows) puis
 <code>Enter</code>.</p>
 
+<p></p>
+
 <p class="exercice"><em>Exercice 4&nbsp;:</em> Créer une table, créer une
 ligne avant/après, déplacer une ligne, créer une colonne avant/après,
 déplacer une colonne.</p>
@@ -1023,9 +1073,9 @@ src="../images/find.gif" alt="find " />, soit par l'entrée de
 menu<strong>Edition/Rechercher</strong>. Un boite de dialogue apparait. vous
 avez deux zones de saisie la première sera pour le texte à rechercher la
 deuxième zone de saisie sera pour le texte à remplacer. Pour chacune des
-actions vous avez des choix d'options.<code>Ctrl f</code> en Windows,
-<code>Shift Ctrl %</code> sur Unix) . Un boite de dialogue apparait pour
-saisir le texte à rechercher, et éventuellement le texte de remplacement.</p>
+actions vous avez des choix d'options <code>Ctrl f</code> (Windows), ou
+<code>Shift Alt %</code> (Unix) . Un boite de dialogue apparait pour saisir
+le texte à rechercher, et éventuellement le texte de remplacement.</p>
 
 <p style="text-align: center"><img alt="(Rechercher/Remplacer)"
 src="../images/search_and_replace-fr.png" /></p>
@@ -1142,18 +1192,18 @@ deuxième <code>Delete</code> supprimera l'attribut.</p>
 
 <h1 id="L1242">13. Documents erronés</h1>
 
-<p>Au chargement d'un document existant éditée manuellement ou avec un
-éditeur qui ne traite pas correc (édité manuellement ou avec un éditeur qui
-ne traite pas correctement les familles XHTML), Amaya peut détecter certaines
+<p>Au chargement d'un document, Amaya peut détecter certaines erreurs ou
 incompatibilités avec la famille XHTML choisie. S'il n'a pas pu charger
-correctement la totalité du fichier, un dialogue d'avertissement va être
-affiché. On peut voir le détail des erreurs détectées dans l'entrée
-<strong>Vue/Montrer les erreurs</strong>. Le seul moyen de corriger ces
-erreurs est de suivre le lien vers la vue source du document</p>
+correctement la totalité du fichier, un dialogue d'avertissement est affiché.
+On peut voir le détail des erreurs détectées dans l'entrée
+<strong>Vue/Montrer les erreurs</strong>. Pour corriger ces erreurs, il faut
+suivre le lien vers la vue source du document, puis synchroniser après
+correction. On peut aussi choisir de ne pas corriger les erreurs et de
+charger le document comme un document HTML au lieu de XHTML.</p>
 
 <p>Erreur d'encodage</p>
 <address>
-  <p>Irène Vatton $date: Monday 22 December 2003 - 16:22:14$</p>
+  <p>Irène Vatton $date: Wednesday 31 December 2003 - 15:38:46$</p>
 
 </address>
 

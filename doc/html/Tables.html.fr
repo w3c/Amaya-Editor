@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Editer des tables</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -31,9 +31,8 @@
 
 <p>Il n'existe pas d'éditeur de tables indépendant dans
 <strong>Amaya</strong>. Une table est une simple structure décrite par la DTD
-HTML et elle est éditée comme telle. Les commandes pour les tables sont les
-mêmes que pour les autres structures HTML, avec quelques fonctions
-supplémentaires.</p>
+HTML et elle est éditée comme telle. Les commandes standard s'appliquent aux
+tables, auxquelles s'ajoute quelques commandes supplémentaires.</p>
 
 <h3><a name="Creating">Créer une nouvelle table</a></h3>
 
@@ -73,18 +72,35 @@ l'une d'entre elles au hasard et y insérer du texte, des images et autre.
 Vous pouvez également faire glisser le point d'insertion de cellule en
 cellule par l'intermédiaire des flèches du clavier.</p>
 
-<h3><a name="Adding">Ajouter une nouvelle colonne</a></h3>
+<h3><a id="Adding">Ajouter une colonne</a></h3>
 
-<p>Pour ajouter un nouvelle colonne à une table&nbsp;:</p>
+<p>Il n'existe deux commandes spécifiques pour créer une nouvelle
+colonne&nbsp;:</p>
+<ul>
+  <li><strong>Insérer une colonne avant</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
+    colonne avant la colonne sélectionnée.</li>
+  <li><strong>Insérer une colonne après</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
+    colonne après la colonne sélectionnée.</li>
+</ul>
+
+<p>Si on a sélectionné une cellule complète par <code>F2</code> (Windows) ou
+<code>Esc</code> (Unix) la touche Enter crée une nouvelle cellule après et la
+colonne correspondante.</p>
+
+<h3>Détruire une colonne</h3>
+
+<p>Pour détruire une colonne de table, il faut sélectionner la colonne et
+utilser la commande <code>Delete</code>. Il y a deux méthodes pour
+sélectionner une colonne :</p>
 <ol>
-  <li>Pour créer une nouvelle colonne à droite d'une cellule existante, il
-    faut placer le curseur à la fin de la cellule et sélectionner l'entrée
-    <strong>Cellule</strong> ou <strong>Cellule titre</strong> dans le
-    sous-menu <strong>Table</strong>.</li>
-  <li>Pour créer une nouvelle colonne à gauche d'une cellule existante, il
-    faut placer le curseur au début de la cellule et sélectionner l'entrée
-    <strong>Cellule</strong> ou <strong>Cellule titre</strong> dans le
-    sous-menu <strong>Table</strong>.</li>
+  <li>Soit l'entrée <strong>Sélectionner la colonne</strong> dans le
+    sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl c</code>).</li>
+  <li>Soit étendre la sélection sur au moins deux cellules dans la même
+    colonne (Cell 1.1 à Cell 2.1 dans l'exemple ci-dessous) puis deux fois
+    <code>F2</code> (Windows) ou <code>Esc</code> (Unix) pour sélectionner la
+    colonne.</li>
 </ol>
 
 <table border="1" summary="table">
@@ -105,30 +121,111 @@ cellule par l'intermédiaire des flèches du clavier.</p>
   </tbody>
 </table>
 
-<p>Il n'existe pas de commande spécifique pour créer une nouvelle colonne.
-Quand vous créez une nouvelle cellule, Amaya engendre la nouvelle colonne
-correspondante. Mais il existe une commande spécifique (Détruire colonne de
-table) pour détruire une colonne, même si elle n'est pas vide. Cette commande
-se trouve à la fin du sous-menu <strong>Table</strong> du menu
-<strong>Xhtml</strong>.</p>
+<h3>Copier/Coller ou Déplacer une colonne</h3>
 
-<h3><a name="Adding1">Ajouter une nouvelle ligne</a></h3>
+<p>Pour déplacer ou copier/coller une colonne de table&nbsp;:</p>
 <ol>
-  <li>Pour créer une nouvelle ligne en dessous d'une ligne existante, il faut
-    placer le curseur à la fin de la dernière cellule de la ligne et
-    sélectionner l'entrée <strong>Ligne</strong> dans le sous-menu
-    <strong>Table</strong>.</li>
-  <li>Pour créer une nouvelle ligne au-dessus d'une ligne existante, il faut
-    placer le curseur au début de la première cellule de la ligne et
-    sélectionner l'entrée <strong>Ligne</strong> dans le sous-menu
-    <strong>Table</strong>.</li>
+  <li>Il faut sélectionner la colonne comme dans le cas de <strong>Détruire
+    une colonne</strong> et copier (<code>Ctrl c</code>) ou couper
+    (<code>Ctrl x</code> pour Windows, <code>Ctrl w</code> pour Unix) son
+    contenu.</li>
+  <li>Pour coller la colonne avant une autre colonne
+    <ul>
+      <li>soit on sélectionne le début d'une cellule de colonne et on active
+        la commande coller (<code>Ctrl v</code> pour Window, <code>Ctrl
+        y</code> pour Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller avant</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl p</code>).</li>
+    </ul>
+  </li>
+  <li>Pour coller la colonne après une autre colonne
+    <ul>
+      <li>soit on sélectionne la fin d'une cellule de colonne et on active la
+        commande coller (<code>Ctrl v</code> pour Window, <code>Ctrl y</code>
+        pour Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller après</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl v</code>).</li>
+    </ul>
+  </li>
 </ol>
 
-<p>De nouvelles lignes peuvent être créées efficacement avec la touche <a
-href="Creating.html.fr#L906">Enter</a>. Quand la ligne entière est
-sélectionnée (il faut utiliser la touche <code>F2</code> sous Windows et
-<code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
-vous créez une nouvelle ligne après la ligne sélectionnée.</p>
+<h3><a id="Adding1">Ajouter une ligne</a></h3>
+
+<p>Il n'existe deux commandes spécifiques pour créer une nouvelle
+ligne&nbsp;:</p>
+<ul>
+  <li><strong>Insérer une ligne avant</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl b</code>) ajoute une nouvelle
+    ligne avant la ligne sélectionnée.</li>
+  <li><strong>Insérer une ligne après</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl a</code>)ajoute une nouvelle
+    ligne après la ligne sélectionnée.</li>
+</ul>
+
+<p>Si on a sélectionné une ligne complète par <code>F2</code> (Windows) ou
+<code>Esc</code> (Unix) la touche Enter crée une nouvelle ligne après.</p>
+
+<h3>Détruire une ligne</h3>
+
+<p>Pour détruire une ligne de table, il faut sélectionner la ligne et utilser
+la commande <code>Delete</code>. Il y a deux méthodes pour sélectionner une
+ligne :</p>
+<ol>
+  <li>Soit l'entrée <strong>Sélectionner la ligne</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl r</code>).</li>
+  <li>Soit poser la sélection sur une cellule de la ligne (Cell 1.1 dans
+    l'exemple ci-dessous) puis deux fois <code>F2</code> (Windows) ou
+    <code>Esc</code> (Unix) pour sélectionner la ligne.</li>
+</ol>
+
+<h3>Copier/Coller ou Déplacer une ligne</h3>
+
+<p>Pour déplacer ou copier/coller une ligne de table&nbsp;:</p>
+<ol>
+  <li>Il faut sélectionner la ligne comme dans le cas de <strong>Détruire une
+    ligne</strong> et copier (<code>Ctrl c</code>) ou couper (<code>Ctrl
+    x</code> pour Windows, <code>Ctrl w</code> pour Unix) son contenu.</li>
+  <li>Pour coller la ligne avant une autre ligne
+    <ul>
+      <li>soit on sélectionne le début d'une ligne et on active la commande
+        coller (<code>Ctrl v</code> pour Window, <code>Ctrl y</code> pour
+        Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller avant</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl p</code>).</li>
+    </ul>
+  </li>
+  <li>Pour coller la colonne après une autre colonne
+    <ul>
+      <li>soit on sélectionne la fin d'une ligne et on active la commande
+        coller (<code>Ctrl v</code> pour Window, <code>Ctrl y</code> pour
+        Unix),</li>
+      <li>soit on utilise l'entrée de menu <strong>Coller après</strong> dans
+        le sous-menu <strong>Table</strong> (<code>Ctrl t Ctrl v</code>).</li>
+    </ul>
+  </li>
+</ol>
+
+<h3>Cellules étendues</h3>
+
+<p>Il n'existe quatre commandes spécifiques pour étendre ou réduire
+l'extension de cellules&nbsp;:</p>
+<ul>
+  <li><strong>Joindre avec la cellule à droite</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl =</code>) étend la cellule
+    d'une position à droite et colle le contenu des deux cellules.</li>
+  <li><strong>Joindre avec la cellule au-dessous</strong> dans le sous-menu
+    <strong>Table</strong> (<code>Ctrl t Ctrl j</code>)étend la cellule d'une
+    position vers le bas et colle le contenu des deux cellules.</li>
+  <li><strong>Réduire extension horizontale</strong> (<code>Ctrl t Ctrl
+    -</code>) réduit l'extension horizontale de la cellule d'une position et
+    engendre une cellule vide.</li>
+  <li><strong>Réduire extension verticale</strong> (<code>Ctrl t Ctrl
+    s</code>) réduit l'extension verticale de la cellule d'une position et
+    engendre une cellule vide.</li>
+</ul>
+
+<p>On peut aussi éditer directement les attributs colspan et rowspan de la
+cellule.</p>
 
 <h3>Ajouter un nouveau corps de table (tbody)</h3>
 <ol>
@@ -147,57 +244,6 @@ vous créez une nouvelle ligne après la ligne sélectionnée.</p>
 sélectionné (il faut utiliser la touche <code>F2</code> sous Windows et
 <code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
 vous créez une nouveau corps de table après le corps de table sélectionné.</p>
-
-<h3>Supprimer/Copier/Coller une colonne</h3>
-
-<p>Pour supprimer une colonne de table&nbsp;:</p>
-<ol>
-  <li>Il faut placer le curseur dans une cellule de la colonne et
-    sélectionner l'entrée <strong>Détruire colonne de table</strong> dans le
-    sous-menu <strong>Table</strong>.</li>
-  <li>Vous pouvez aussi initialiser la sélection dans une cellule et étendre
-    la sélection jusqu'à une autre cellule de la même colonne (par exemple
-    débuter la sélection dans la cellule Cell 1.2 et la terminer dans la
-    cellule Cell 3.2). Amaya passe en mode sélection de colonne. La touche
-    <code>F2</code> sous Windows (<code>Esc</code> sous Linux) étend la
-    sélection entre les deux cellules dans la colonne, limites incluses (Cell
-    1.2, Cell 2.2, Cell 3.2). La touche <code>Delete</code> détruira le
-    contenu de toutes les cellules sélectionnées. En activant une autre fois
-    la touche <code>F2</code> ou <code>Esc</code>, la sélection est étendue à
-    toute la colonne. La touche <code>Delete</code> détruira le contenu de la
-    colonne sélectionnée.</li>
-</ol>
-
-<table border="1" summary="table">
-  <tbody>
-    <tr>
-      <td>Cell 1.1</td>
-      <td>Cell 1.2</td>
-      <td>Cell 1.3</td>
-    </tr>
-    <tr>
-      <td>Cell 2.1</td>
-      <td>Cell 2.2</td>
-      <td>Cell 2.3</td>
-    </tr>
-    <tr>
-      <td>Cell 3.1</td>
-      <td>Cell 3.2</td>
-      <td>Cell 3.3</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Quand une colonne entière est sélectionnée, il est possible de la copier
-(ou couper) et de la coller avant ou après une autre colonne.</p>
-<ol>
-  <li>Pour coller une nouvelle colonne avant une colonne existante, il faut
-    placer le curseur au début d'une cellule de la colonne existante et
-    coller la colonne copiée ou coupée.</li>
-  <li>Pour coller une nouvelle colonne après une colonne existante, il faut
-    placer le curseur à la fin d'une cellule de la colonne existante et
-    coller la colonne copiée ou coupée.</li>
-</ol>
 
 <h3><a name="Adding2">Ajouter quelque chose après une table</a></h3>
 
