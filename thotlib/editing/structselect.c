@@ -3296,7 +3296,7 @@ void PrepareSelectionMenu ()
   ----------------------------------------------------------------------*/
 void BuildSelectionMessage ()
 {
-  PtrElement          pEl;
+  PtrElement          pEl, pTable;
   PtrDocument         pDoc;
   char                msgBuf[MAX_TXT_LEN];
   int                 nbasc;
@@ -3318,14 +3318,23 @@ void BuildSelectionMessage ()
   /* add the types of the ancestors */
   nbasc = 0;
   msgBuf[0] = EOS;
+  pTable = NULL;
   while (pEl != NULL)
     {
       /* skip that ancestor if it is hidden */
       if (!HiddenType (pEl))
 	{
 	  if (nbasc == 0 && WholeColumnSelected)
+	    {
 	    strcat (msgBuf, "column");
-	  else
+	    pTable = pEl;
+	    while (pTable &&
+		   !TypeHasException (ExcIsTable,
+				      pTable->ElTypeNumber,
+				      pTable->ElStructSchema))
+	      pTable = pTable->ElParent;
+	    }
+	  else if (pTable == NULL || pEl == pTable)
 	    {
 	      /* put a separator if it's not the first element name */
 	      if (nbasc > 0)
@@ -3333,6 +3342,8 @@ void BuildSelectionMessage ()
 	      /* put the name of the element */
 	      strcat (msgBuf,
 		      pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
+	      /* display parent elements of the table */
+	      pTable = NULL;
 	    }
 	  nbasc++;
 	}
