@@ -2843,7 +2843,11 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		charWidth = BoxCharacterWidth (c, font);
 	    }
 	  if (extend)
+	    {
 	    notfound = (dx + (charWidth / 2) < *x);
+if (!notfound)
+  printf ("x=%d dx=%d\n", *x, dx);
+	    }
 	  else
 	    {
 	      notfound = (dx + (charWidth / 2) < *x);

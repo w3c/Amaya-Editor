@@ -517,6 +517,8 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 	      /* end of text insertion */
 	      pEl = LastInsertElText;
 	      LastInsertElText = NULL;
+	      LastInsertAttr = NULL;
+	      LastInsertAttrElem = NULL;
 	      if (toNotify)
 		{
 		  /* notify the change */
