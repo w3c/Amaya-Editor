@@ -24,6 +24,9 @@
 #include "css.h"
 #include "init_f.h"
 
+#include "appdialogue_wx.h"
+#include "message_wx.h"
+
 /* structure to register sub-documents in MakeBook function*/
 typedef struct _SubDoc
   {
@@ -409,6 +412,14 @@ static void CheckPrintingDocument (Document document)
    ----------------------------------------------------------------------*/  
 static void PrintDocument (Document doc, View view)
 {
+#if defined(_WINDOWS) && defined(_WX)
+  /* On windows and with wxWidgets, disable printing for the moment */
+  wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX("Not implemented yet"), 
+				 _T("Warning"),
+				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+#else /* defined(_WINDOWS) && defined(_WX) */
   AttributeType      attrType;
   ElementType        elType;
   Attribute          attr;
@@ -536,6 +547,7 @@ static void PrintDocument (Document doc, View view)
     TtaFreeMemory (files);
   if (!status)
     TtaSetDocumentUnmodified (doc);
+#endif /* defined(_WINDOWS) && defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
