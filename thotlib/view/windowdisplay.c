@@ -349,9 +349,6 @@ int                 fg;
 	ptcar = &buff[i - 1];
 	/* Dealing with BR tag for windows */
 #       ifdef _WINDOWS
-	/*
-	    if ((int) (*ptcar) == -118)
-		   ptcar [0] = ' ';*/
         WIN_GetDeviceContext (frame);
 	WinLoadFont (TtDisplay, font);
 	/* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
