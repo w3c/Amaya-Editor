@@ -16,7 +16,6 @@
 
 /* A few constants */
 #define MAXFORMATNAMELENGHT 32       /* */
-#define MAXERRORTEXTLENGHT 255       /* */
 /* image driver manager */
 #define NULLIMAGEDRVR 255
 #define NOERROR 1
