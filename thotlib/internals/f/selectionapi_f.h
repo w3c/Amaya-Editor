@@ -12,6 +12,8 @@ extern void TtaSelectElement ( Document document,
 extern void TtaSelectView ( Document document,
                             View view );
 extern Document TtaGetSelectedDocument ( void );
+extern void TtaGetActiveView ( Document *doc,
+                               View *view );
 extern void TtaSelectString ( Document document,
                               Element textElement,
                               int firstCharacter,
@@ -49,6 +51,8 @@ extern void TtaSelectElement (/* Document document,
 extern void TtaSelectView (/* Document document,
                               View view */);
 extern Document TtaGetSelectedDocument (/* void */);
+extern void TtaGetActiveView (/* Document *doc,
+                                 View *view */);
 extern void TtaSelectString (/* Document document,
                                 Element textElement,
                                 int firstCharacter,

@@ -1304,6 +1304,7 @@ void TtaSelectWord (Element element, int pos, Document doc, View view)
 	    {
 	      i = i - pBuffer->BuLength + index;
 	      index = 0;
+
 	      pBuffer = pBuffer->BuNext;
 	    }
 	  if (pBuffer)

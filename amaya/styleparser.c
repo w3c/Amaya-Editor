@@ -4094,7 +4094,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  {
 	    selector++;
 	    while (*selector != EOS && *selector != ']' &&
-		   *selector != '=' && *selector != '~')
+		   *selector != '=' && *selector != '~' &&
+		   *selector != '^')
 	      *cur++ = *selector++;
 	    /* close the word */
 	    *cur++ = EOS;
@@ -4145,7 +4146,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    /* end of the attribute */
 	    if (*selector != ']')
 	      {
-		CSSParseError ("Invalid attribute", attrs[0]);
+		if (*selector == '^')
+		  CSSParseError ("Not supported selector", "^");
+		else
+		  CSSParseError ("Invalid attribute", attrs[0]);
 		DoApply = FALSE;
 	      }
 	    else

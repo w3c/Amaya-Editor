@@ -152,11 +152,11 @@ static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
   PutChar writes the character c on the terminal or into the file buffer
   if fnum is not null.
   The file buffer is written when the line limit is reatched.
-  If the parameter translate is FALSE the charter is written as it is.
-  In other case it will be translated according to the document encoding.
+  If the parameter translate is FALSE the character is written as this,
+  in other case it will be translated according to the document encoding.
   ----------------------------------------------------------------------*/
-void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
-	      ThotBool lineBreak, ThotBool translate)
+static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
+		     ThotBool lineBreak, ThotBool translate)
 {
   PtrTSchema          pTSch;
   FILE               *fileDesc;
@@ -399,8 +399,7 @@ void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 
 
 /*----------------------------------------------------------------------
-   PutColor        sort dans fichier le nom de la couleur qui se	
-   trouve au rang n dans la table des couleurs.                   
+  PutColor generates the color name at the position n in the color table.
   ----------------------------------------------------------------------*/
 static void PutColor (int n, int fnum, PtrDocument pDoc, ThotBool lineBreak)
 {
@@ -532,12 +531,14 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
 }
 
 /*----------------------------------------------------------------------
-   TranslateText
-   effectue les traductions de caracteres selon la table
+  TranslateText translate the text according to the current translation
+  table.
+  When the parameter attrVal is TRUE doublequotes are translated into
+  the entity &#34;.
   ----------------------------------------------------------------------*/
 static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   ScriptTransl *pTransAlph, ThotBool lineBreak,
-			   int fnum, PtrDocument pDoc)
+			   int fnum, PtrDocument pDoc, ThotBool attrVal)
 {
   PtrTextBuffer        pNextBufT, pPrevBufT;
   CHAR_T              c, cs;
@@ -650,6 +651,18 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	      while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
 		{
 		  cs = pTSch->TsCharTransl[ft - 1].StTarget[j];
+		  if (attrVal && cs == 34)
+		    {
+		      /* write a numeric entity */
+		      PutChar ((wchar_t) '&', fnum, NULL, pDoc,
+			       FALSE, FALSE);
+		      PutChar ((wchar_t) '#', fnum, NULL, pDoc,
+			       FALSE, FALSE);
+		      PutInt (34, fnum, NULL, pDoc, FALSE);
+		      PutChar ((wchar_t) ';', fnum, NULL, pDoc,
+			       FALSE, FALSE);
+		    }
+		  else
 		  PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak,
 			   TRUE);
 		  j++;
@@ -685,7 +698,18 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	/* la table de traduction, on ne le traduit donc pas */
 	{
 	  ft = textTransBegin;
-	  if (c != EOS)
+	  if (attrVal && c == 34)
+	    {
+	      /* write a numeric entity */
+	      PutChar ((wchar_t) '&', fnum, NULL, pDoc,
+		       FALSE, FALSE);
+	      PutChar ((wchar_t) '#', fnum, NULL, pDoc,
+		       FALSE, FALSE);
+	      PutInt (34, fnum, NULL, pDoc, FALSE);
+	      PutChar ((wchar_t) ';', fnum, NULL, pDoc,
+		       FALSE, FALSE);
+	    }
+	  else if (c != EOS)
 	    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
 	}
       else
@@ -705,10 +729,23 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	      pBufT = pPrevBufT;
 	      i = pBufT->BuLength + i - b;
 	    }
+
 	  if (c != EOS)
 	    {
 	      cs = (CHAR_T) pBufT->BuContent[i - 1];
-	      PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE);
+	      if (attrVal && cs == 34)
+		{
+		  /* write a numeric entity */
+		  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
+			   FALSE, FALSE);
+		  PutChar ((wchar_t) '#', fnum, NULL, pDoc,
+			   FALSE, FALSE);
+		  PutInt (34, fnum, NULL, pDoc, FALSE);
+		  PutChar ((wchar_t) ';', fnum, NULL, pDoc,
+			   FALSE, FALSE);
+		}
+	      else
+		PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE);
 	    }
 	  b = 0;
 	  ft = textTransBegin;
@@ -734,7 +771,16 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
    for (i = 0; i <= b - 1; i++)
      {
        c = (CHAR_T) pTSch->TsCharTransl[ft - 1].StSource[i];
-       PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
+       if (attrVal && c == 34)
+	 {
+	   /* write a numeric entity */
+	   PutChar ((wchar_t) '&', fnum, NULL, pDoc, FALSE, FALSE);
+	   PutChar ((wchar_t) '#', fnum, NULL, pDoc, FALSE, FALSE);
+	   PutInt (34, fnum, NULL, pDoc, FALSE);
+	   PutChar ((wchar_t) ';', fnum, NULL, pDoc, FALSE, FALSE);
+	 }
+       else
+	 PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
      }
 }
 
@@ -786,7 +832,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	      }
 	  else if (pTSch != NULL)
 	    /* effectue les traductions de caracteres selon la table */
-	    TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum, pDoc);
+	    TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum, pDoc, FALSE);
 	}
       break;
 
@@ -1811,8 +1857,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
 
 
 /*----------------------------------------------------------------------
-   ApplyAttrRulesToElem    applique a l'element pEl les regles de	
-   traduction associees a l'attribut pAttr.			
+  ApplyAttrRulesToElem applique a l'element pEl les regles de
+  traduction associees a l'attribut pAttr.
   ----------------------------------------------------------------------*/
 static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
 				  PtrAttribute pAttr, ThotBool *removeEl,
@@ -2540,8 +2586,20 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			  while (i < pBuf->BuLength)
 			    {
 			      c = pBuf->BuContent[i++];
-			      PutChar ((wchar_t) c, fnum, NULL,
-				       pDoc, FALSE, TRUE);
+			      if (c == 34)
+				{
+				  /* write a numeric entity */
+				  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
+					   FALSE, FALSE);
+				  PutChar ((wchar_t) '#', fnum, NULL, pDoc,
+					   FALSE, FALSE);
+				  PutInt (34, fnum, NULL, pDoc, FALSE);
+				  PutChar ((wchar_t) ';', fnum, NULL, pDoc,
+					   FALSE, FALSE);
+				}
+			      else
+				PutChar ((wchar_t) c, fnum, NULL, pDoc,
+					 FALSE, TRUE);
 			    }
 			  pBuf = pBuf->BuNext;
 			}
@@ -2549,7 +2607,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		      /* translate the attribute value, but don't insert
 			 line breaks. */
 		      TranslateText (pBuf, pTransTextSch, pTransAlph, FALSE,
-				     fnum, pDoc);
+				     fnum, pDoc, TRUE);
 		  }
 		break;
 	      case AtReferenceAttr:

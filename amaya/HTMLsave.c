@@ -253,53 +253,6 @@ ThotBool CheckGenerator (NotifyElement *event)
 
 
 /*----------------------------------------------------------------------
-  GenerateQuoteBefore                                                  
-  ----------------------------------------------------------------------*/
-ThotBool GenerateQuoteBefore (NotifyAttribute *event)
-{
-  char             *ptr;
-  int               length;
-
-  length = TtaGetTextAttributeLength (event->attribute);
-  QuotedText = TtaGetMemory (length + 3);
-  QuotedText[length+1]= EOS;
-  QuotedText[length+2]= EOS;
-  TtaGiveTextAttributeValue (event->attribute, &QuotedText[1], &length);
-  ptr = &QuotedText[1];
-  while (*ptr != '"' && *ptr != '\'' && *ptr != EOS)
-    ptr++;
-  if (*ptr == '\'' || *ptr == EOS)
-    {
-      /* add double quotes before and after the text */
-      QuotedText[0] = '"';
-      QuotedText[length+1] = '"';
-    }
-  else
-    {
-      /* add simple quotes before and after the text */
-      QuotedText[0] = '\'';
-      QuotedText[length+1] = '\'';
-    }
-  TtaSetAttributeText (event->attribute, QuotedText, event->element,
-		       event->document);
-  /* do NOT free the QuotedText string because it's used by
-     GenerateQuoteAfter */
-  return FALSE;  /* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
-  GenerateQuoteAfter                                                 
-  ----------------------------------------------------------------------*/
-void GenerateQuoteAfter (NotifyAttribute *event)
-{
-  /* remove quotes before and after the text */
-  QuotedText[strlen (QuotedText) - 1] = EOS;
-  TtaSetAttributeText (event->attribute, &QuotedText[1], event->element,
-		       event->document);
-  TtaFreeMemory (QuotedText);
-}
-
-/*----------------------------------------------------------------------
   CheckValidID
   A NAME attribute is about to be saved. If the output format is XML
   and the current element does not have an ID attribute, check if
