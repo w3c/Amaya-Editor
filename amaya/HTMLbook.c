@@ -1567,6 +1567,7 @@ void SectionNumbering (Document doc, View view)
 	      TtaRegisterElementReplace (child, doc);
 	      TtaSetTextContent (child, (unsigned char *)s, Latin_Script, doc);
 	      TtaAppendTextContent (child, (unsigned char *)&text[i], doc);
+	      TtaFreeMemory (text);
 	    }
 	  else
 	    {
