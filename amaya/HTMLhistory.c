@@ -708,13 +708,13 @@ void HelpAmaya (Document document, View view)
    strcat (localname, DIR_STR);
    strcat (localname, "view.debug");
    list = TtaWriteOpen (localname);
-   TtaListView (document, view, list);
+   TtaListView (document, 1, list);
    TtaWriteClose (list);
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "boxes.debug");
    list = TtaWriteOpen (localname);
-   TtaListBoxes (document, view, list);
+   TtaListBoxes (document, 1, list);
    TtaWriteClose (list);
    structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpen (document, structView))

@@ -984,7 +984,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
   source structure tree to the result HTML instance.
   ----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------
-  FlattenAndInsertElement: tries to fllaten the structure sub-tree rooted
+  FlattenAndInsertElement: tries to flatten the structure sub-tree rooted
   elSource in order to insert it as the first child of elDest (if sibling
   is false) or as its immediate right sibling (if sibling is true) returns
   the number of higer-level nodes created in nbCreated and the rightmost

@@ -6591,7 +6591,7 @@ void ParseIncludedHTML (Element elem, char *closingTag)
 
 
 /*----------------------------------------------------------------------
-   ParseSubTree
+   ParseSubTree called by tranformation.
   ----------------------------------------------------------------------*/
 void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
 		   ThotBool isclosed, Document doc)
@@ -6608,6 +6608,8 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
        InitializeHTMLParser (lastelem, isclosed, doc);
        /* Initialize the language context with the 'lastelem' language*/
        HTMLcontext.language = language;
+       /* transformation files are alway encoded in UTF_8 */
+       HTMLcontext.encoding = UTF_8;
        /* We set number line with 0 when we are parsing a sub-tree */
        NumberOfLinesRead = 0;
        HTMLparse (NULL, HTMLbuf);
