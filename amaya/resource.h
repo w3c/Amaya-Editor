@@ -244,6 +244,7 @@
 #define ATTR8ITEMSDIALOG                540
 #define ATTR9ITEMSDIALOG                541
 #define ANNOTMENU                       542
+#define INITCONFIRM3LDIALOG1            543
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -693,7 +694,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        543
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1520
+#define _APS_NEXT_CONTROL_VALUE         1521
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

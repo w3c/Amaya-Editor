@@ -4083,7 +4083,10 @@ ThotBool    withCancel;
   
   /* register if the cancel button has to be generated */
   WithCancel = withCancel;
-  DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG), parent, (DLGPROC) InitConfirm3LDlgProc);
+  if (withCancel)
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG), parent, (DLGPROC) InitConfirm3LDlgProc);
+  else
+	DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG1), parent, (DLGPROC) InitConfirm3LDlgProc);
 }
 
 /*-----------------------------------------------------------------------
