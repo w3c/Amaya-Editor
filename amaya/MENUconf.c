@@ -202,6 +202,7 @@ static char    *ScreensTxt[]={
 /* Publish menu options */
 #ifdef _WINGUI
 static HWND     PublishHwnd =  NULL;
+static HWND     CharsetList;
 static AM_WIN_MenuText WIN_PublishMenuText[] = 
 {
 	{AM_INIT_ALL, AM_PUBLISH_MENU},
@@ -1897,7 +1898,7 @@ static void SetGeneralConf (void)
   if (old != S_Numbers)
     UpdateSectionNumbering ();
 
-  /* Save view geometry */
+  /* Save view geometry on exit */
   TtaSetEnvBoolean ("SAVE_GEOMETRY", S_Geometry, TRUE);
 
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
@@ -1973,6 +1974,8 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_AUTOSAVE, (S_AutoSave) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_SAVE_GEOMETRY_EXIT, (S_Geometry) 
+		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_SHOWBUTTONS, (S_Buttons) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_SHOWADDRESS, (S_Address) 
@@ -1980,8 +1983,6 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_SHOWTARGET, (S_Targets) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_NUMBER, (S_Numbers) 
-		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_AUTOSAVE, (S_AutoSave) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   switch (AccesskeyMod)
@@ -2016,6 +2017,8 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
       SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOSAVE),
 		     TtaGetMessage (AMAYA, AM_AUTO_SAVE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_SAVE_GEOMETRY_EXIT),
+		     TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY_ON_EXIT));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWBUTTONS),
 		     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWADDRESS),
@@ -2081,6 +2084,9 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	    AutoSave_Interval = DEF_SAVE_INTVL;
 	  else
 	    AutoSave_Interval = 0;
+	  break;
+	case IDC_SAVE_GEOMETRY_EXIT:
+	  S_Geometry = !S_Geometry;
 	  break;
 	case IDC_SHOWBUTTONS:
 	  S_Buttons = !S_Buttons;
@@ -2396,6 +2402,34 @@ static void GetDefaultPublishConf ()
 
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
+  BuildCharsetList builds the list allowing to select a charset
+  (for windows)
+  ----------------------------------------------------------------------*/
+static void BuildCharsetList (void)
+{
+  int         nbcharset = sizeof(CharsetTxt) / sizeof(char *);
+  int         i = 0;
+  int         i_default = -1;
+
+  CurrentCharset = -1;
+  /* Get the propositions of the list */ 
+  SendMessage (CharsetList, LB_RESETCONTENT, 0, 0);
+  while (i < nbscreens && CharsetTxt[i] != EOS)
+    {
+      /* keep in mind the current selected entry */
+      if (*CharsetType && !strcmp (CharsetType, CharsetTxt[i]))
+	CurrentCharset = i;
+      if (!strcasecmp (entry, "iso-8859-1"))
+	i_default = i;
+      SendMessage (CharsetList, LB_INSERTSTRING, i, (LPARAM) CharsetTxt[i]);
+      i++;
+    }
+  if (CurrentCharset == -1)
+    CurrentCharset = i_default;
+  SendMessage (CharsetList, LB_SETCURSEL, (WPARAM)CurrentCharset, (LPARAM)0);
+}
+
+/*----------------------------------------------------------------------
   WIN_RefreshPublishMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
@@ -2411,23 +2445,9 @@ void WIN_RefreshPublishMenu (HWND hwnDlg)
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName);
   SetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, SafePutRedirect);
+  BuildCharsetList ();
 }
-#else /* WINDOWS */
-/*----------------------------------------------------------------------
-  RefreshPublishMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshPublishMenu ()
-{
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 0, UseXHTMLMimeType);
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 1, LostUpdateCheck);
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 2, VerifyPublish);
-  TtaSetTextForm (PublishBase + mDefaultName, DefaultName);
-  TtaSetTextForm (PublishBase + mSafePutRedirect, SafePutRedirect);
-}
-#endif /* !_WINGUI */
 
-#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_PublishDlgProc
   Windows callback for the publish menu
@@ -2443,6 +2463,7 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       WIN_SetMenuText (hwnDlg, WIN_PublishMenuText);
       /* write the current values in the dialog entries */
       WIN_RefreshPublishMenu (hwnDlg);
+      CharsetList = GetDlgItem (hwnDlg, IDC_CHARSET_LIST);
       break;
 
     case WM_CLOSE:
@@ -2483,9 +2504,15 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_CRLF:
 	  ExportCRLF = !ExportCRLF;
 	  break;
+	case IDC_CHARSET_LIST:
+	  CurrentCharset = SendMessage (CharsetList, LB_GETCURSEL, 0, 0);
+	  CurrentCharset = SendMessage (CharsetList, LB_GETTEXT, CurrentCharset,
+				   (LPARAM) NewScreen);
 
 	  /* action buttons */
 	case ID_APPLY:
+	  if (strcmp (CharsetType, NewCharset))
+	    strcpy (CharsetType, NewCharset);
 	  SetPublishConf ();	  
 	  libwww_updateNetworkConf (SafePutStatus);
 	  /* reset the status flag */
@@ -2511,7 +2538,21 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
+
 #else /* _WINGUI */
+/*----------------------------------------------------------------------
+  RefreshPublishMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+static void RefreshPublishMenu ()
+{
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 0, UseXHTMLMimeType);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 1, LostUpdateCheck);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 2, VerifyPublish);
+  TtaSetTextForm (PublishBase + mDefaultName, DefaultName);
+  TtaSetTextForm (PublishBase + mSafePutRedirect, SafePutRedirect);
+}
+
 /*----------------------------------------------------------------------
   BuildCharsetSelector
   builds the list allowing to select a default charset (for unix)
