@@ -104,6 +104,16 @@ Bookmark_point_box: BEGIN
         HorizPos: Left = Enclosing . Left - 0.7;
 	END;
 
+ HR_Graph1: BEGIN
+	Content: Graphics 'h';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	Foreground: Creator =;
+	LineWeight: Creator =;
+	Visibility: Creator =;
+	END;
 RULES
 
   Document:
@@ -171,6 +181,23 @@ RULES
 	HorizPos: Left = Previous . left;
 	Width: Enclosing . width;
         END;
+
+ { Separator }
+
+ Separator_item:
+        BEGIN
+	CreateLast(HR_Graph1);
+	Width: Enclosing . Width;
+	Height: 2 px;
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	VertPos: Top = Previous . Bottom;
+	MarginTop: 0.2;
+	MarginBottom: 0.2;
+	Clear: Both;
+	LineWeight: 1 px;
+	Foreground: Black;
+	LineBreak: No;
+	END;
 
 ATTRIBUTES
 

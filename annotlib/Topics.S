@@ -1,10 +1,12 @@
-		{ Author: J. Kahan 	 2003  }
+		{ Author: J. Kahan @W3C 2003-2004  }
 
 STRUCTURE Topics;
 
 DEFPRES TopicsP;
 
+CONST
 
+   C_Empty = ' ';
 
 STRUCT
 
@@ -25,10 +27,11 @@ STRUCT
 		? Topic_content = LIST OF (Item);
 	        END;
 
-  { an Item can be either a Topic_item or a Bookmark_item }
+  { an Item can be either a Topic_item a Bookmark_item, or a Separator_item }
   Item =        CASE OF
 		Topic_item;
 		Bookmark_item;
+		Separator_item;
 	        END;
 
   { a Bookmark has a pointer to the bookmarked document and a title}
@@ -36,6 +39,9 @@ STRUCT
                 BEGIN
 		Bookmark_title = Text;
 		END;
+
+  { a Separator is an empty element}
+  Separator_item (ATTR  Model_HREF_; ) = CONSTANT C_Empty;
 
 EXCEPT 
 	Topics:		NoResize, NoMove, NoResize, NoCut;
@@ -48,4 +54,7 @@ EXCEPT
 	Bookmark_item:  Nocut;
 	Bookmark_title: NoCut, NoSelect, Hidden;
 	Selected_:	Invisible;
+
+       { Separator }
+       Separator_item: NoCut;
 END
