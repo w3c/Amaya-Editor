@@ -2064,6 +2064,13 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		    pNextBox->BxWidth + xi > pLine->LiXMax)))
 		/* accept to cut the line here */ 
 		still = FALSE;
+	      else if (pBox->BxAbstractBox->AbLeafType == LtCompound &&
+		       pBlock->BxType == BoFloatBlock)
+		{
+		  /* one compound box by line */
+		  *full = TRUE;
+		  still = FALSE;
+		}
 	    }
 	  else
 	    {
