@@ -258,6 +258,7 @@ void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
   p_panel->UnExpand();
   p_panel->DoUpdate();
   p_panel->GetParent()->FitInside();
+  p_panel->Refresh();
 
   SaveSubPanelState(p_panel);
 }
@@ -281,6 +282,7 @@ void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
   p_panel->Expand();
   p_panel->DoUpdate();
   p_panel->GetParent()->FitInside();
+  p_panel->Refresh();
 
   SaveSubPanelState(p_panel);
 }
@@ -319,6 +321,7 @@ void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
   p_panel->DoFloat();
   p_panel->DoUpdate();
   p_panel->GetParent()->FitInside();
+  p_panel->Refresh();
 }
 
 /*
@@ -360,6 +363,7 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
     }  
   p_panel->DoUpdate();
   p_panel->GetParent()->FitInside();
+  p_panel->Refresh();
 }
 
 /*
