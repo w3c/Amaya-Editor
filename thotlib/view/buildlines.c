@@ -2416,7 +2416,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	      ThotBool *breakLine, int frame, int indent, PtrBox *floatL,
 	      PtrBox *floatR)
 {
-  Propagation         savpropage;
   PtrBox              boxPrev;
   int                 x, y;
 
@@ -2453,12 +2452,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	    y += pBlock->BxYOrg;
 	  boxPrev = NULL;
 	}
-      /* limit the propagation */
-      savpropage = Propagate;
-      /*Propagate = ToSiblings;*/
       XMove (box, NULL, x - box->BxXOrg, frame);
       YMove (box, NULL, y - box->BxYOrg, frame);
-      Propagate = savpropage;
       *floatL = box;
     }
   else
@@ -2493,12 +2488,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	  if (yAbs && !boxPrev)
 	    y += pBlock->BxYOrg;
 	}
-      /* limit the propagation */
-      savpropage = Propagate;
-      /*Propagate = ToSiblings;*/
       XMove (box, NULL, x - box->BxXOrg, frame);
       YMove (box, NULL, y - box->BxYOrg, frame);
-      Propagate = savpropage;
       *floatR = box;
     }
   return FillLine (pLine, pBlock, pRootAb, xAbs, yAbs, notComplete, full,
@@ -3412,7 +3403,7 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
   if (pLine &&
       (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
     {
-      if (pLine->LiFirstPiece)
+      if (pLine->LiFirstPiece && pLine->LiPrevious)
 	ibox1 = pLine->LiFirstPiece;
       else
 	ibox1 = pLine->LiFirstBox;
