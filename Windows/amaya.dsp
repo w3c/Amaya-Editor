@@ -271,6 +271,10 @@ SOURCE=..\amaya\init.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\libmanag.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\math.bmp
 # End Source File
 # Begin Source File

@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "ANNOT_ON_ANNOT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_GL" /FR /YX /FD /c
+# ADD CPP /nologo /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "ANNOT_ON_ANNOT" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_GL" /D "_I18N_" /D "_SVGANIM" /FR /YX /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -111,6 +111,10 @@ SOURCE=..\amaya\amaya.bmp
 # Begin Source File
 
 SOURCE=..\amaya\amaya.rc
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\anim.c
 # End Source File
 # Begin Source File
 
@@ -266,6 +270,10 @@ SOURCE=..\amaya\init.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\libmanag.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\math.bmp
 # End Source File
 # Begin Source File
@@ -347,6 +355,10 @@ SOURCE=..\amaya\templates.c
 # Begin Source File
 
 SOURCE=.\amaya\TextFileAPP.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\amaya\TimelineAPP.c
 # End Source File
 # Begin Source File
 
