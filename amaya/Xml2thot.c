@@ -3889,7 +3889,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
  
   /* general initialization */
   RootElement = NULL;
-  if (strcmp (DTDname, "SVG") == 0)
+  if (DTDname && strcmp (DTDname, "SVG") == 0)
     /* We are parsing an external SVG image */
     {
       svgEl = ChangeSvgImageType (el, doc);
