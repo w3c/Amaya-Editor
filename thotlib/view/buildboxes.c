@@ -349,7 +349,7 @@ C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom
    width contient initialement l'index du premier          
    caractere du texte.                                     
   ----------------------------------------------------------------------*/
-void                GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font, int *width, int *nSpaces)
+void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font, int *width, int *nSpaces)
 {
    int                 i, j;
    int                 charWidth;
@@ -1058,7 +1058,7 @@ static int          FontStyleAndWeight (PtrAbstractBox pAb)
   ----------------------------------------------------------------------*/
 static void  TransmitFill (PtrBox pBox, ThotBool state)
 {
-  PtrAbstractBox  pAb, child;
+  PtrAbstractBox  pAb;
 
   /* when it's a dummy box report changes to the children */
   pAb = pBox->BxAbstractBox;

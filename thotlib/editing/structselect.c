@@ -1987,6 +1987,7 @@ static void ReverseSelect (PtrElement pEl, PtrDocument pDoc, ThotBool highlight)
 	frame = 0;
       /* scan all abstract boxes of the element in the view */
       pAb = pEl->ElAbstractBox[view];
+      depth = 0;
       while (pAb != NULL)
 	{
 	  /*

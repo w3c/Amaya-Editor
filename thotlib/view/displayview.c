@@ -100,18 +100,13 @@ void                RedisplayDocViews (PtrDocument pDoc)
   int                 i;
 
   displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
-  if (displayMode != DisplayImmediately)
-    return;
-  /* reaffiche les vues des elements associes du document */
-  for (i = 0; i < MAX_ASSOC_DOC; i++)
-    if (pDoc->DocAssocFrame[i] > 0)
-      DisplayFrame (pDoc->DocAssocFrame[i]);
-  
-  /* reaffiche les vues de l'arbre principal du document */
-  for (i = 0; i < MAX_VIEW_DOC; i++)
-    if (pDoc->DocView[i].DvPSchemaView > 0)
-      /* vue ouverte */
-      DisplayFrame (pDoc->DocViewFrame[i]);
+  if (displayMode == DisplayImmediately)
+    {
+      for (i = 0; i < MAX_VIEW_DOC; i++)
+	if (pDoc->DocView[i].DvPSchemaView > 0)
+	  /* open view */
+	  DisplayFrame (pDoc->DocViewFrame[i]);
+    }
 }
 
 
@@ -352,10 +347,10 @@ void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
    RedisplayNewElement affiche un element qui vient d'etre ajoute'    
    dans un arbre abstrait.                                         
   ----------------------------------------------------------------------*/
-void                RedisplayNewElement (Document document,
-					 PtrElement newElement,
-					 PtrElement sibling, ThotBool first,
-					 ThotBool creation)
+void   RedisplayNewElement (Document document,
+			    PtrElement newElement,
+			    PtrElement sibling, ThotBool first,
+			    ThotBool creation)
 {
    PtrDocument         pDoc;
 
@@ -489,8 +484,8 @@ void                FreeView (PtrDocument pDoc, DocViewNumber view)
    Si assoc est vrai, detruit la vue des elements associes de numero view
    du document.	
   ----------------------------------------------------------------------*/
-void                CloseDocumentView (PtrDocument pDoc, int view,
-				       ThotBool assoc, ThotBool closeDoc)
+void  CloseDocumentView (PtrDocument pDoc, int view,
+			 ThotBool assoc, ThotBool closeDoc)
 {
   if (pDoc != NULL)
     /* on detruit la vue */
@@ -547,8 +542,8 @@ void                CloseAllViewsDoc (PtrDocument pDoc)
    View = view number or assoc. elem. number if assoc. view.      
    complete = TRUE if the window is completely cleaned.           
   ----------------------------------------------------------------------*/
-static void         CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
-				    ThotBool complete)
+static void CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
+			    ThotBool complete)
 {
    PtrAbstractBox      pAb;
    int                 h;
@@ -646,8 +641,7 @@ static void         DestroyImage (PtrDocument pDoc)
    Vue = numero d'elt assoc si vue associee sinon                 
    Vue = numero de vue si vue d'arbre principal                   
   ----------------------------------------------------------------------*/
-static void         RebuildViewImage (int view, ThotBool Assoc,
-				      PtrDocument pDoc)
+static void RebuildViewImage (int view, ThotBool Assoc, PtrDocument pDoc)
 {
    PtrElement          pElRoot;
    PtrAbstractBox      pAbbRoot;
@@ -711,9 +705,9 @@ static void         RebuildImage (PtrDocument pDoc)
    vue. newAbsModif donne la nouvelle valeur de AbCanBeModified,          
    reaffiche indique si on veut reafficher.                        
   ----------------------------------------------------------------------*/
-static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view,
-						   ThotBool newAbsModif,
-						   ThotBool redisplay)
+static void  ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view,
+					    ThotBool newAbsModif,
+					    ThotBool redisplay)
 {
    PtrAbstractBox      pAb, pAbbChild;
    ThotBool            stop;
@@ -822,11 +816,9 @@ void                ChangeAbsBoxModif (PtrElement pEl, Document document,
 /*----------------------------------------------------------------------
    RedisplayDefaultPresentation                                              
   ----------------------------------------------------------------------*/
-void                RedisplayDefaultPresentation (Document document,
-						  PtrElement pEl,
-						  PRuleType typeRuleP,
-						  FunctionType funcType,
-						  int view)
+void  RedisplayDefaultPresentation (Document document, PtrElement pEl,
+				    PRuleType typeRuleP, FunctionType funcType,
+				    int view)
 {
 
    if (LoadedDocument[document - 1] == NULL)
@@ -897,8 +889,7 @@ void                HideElement (PtrElement pEl, Document document)
 /*----------------------------------------------------------------------
    RedisplayNewPRule                                               
   ----------------------------------------------------------------------*/
-void                RedisplayNewPRule (Document document, PtrElement pEl,
-				       PtrPRule pRule)
+void RedisplayNewPRule (Document document, PtrElement pEl, PtrPRule pRule)
 {
    if (LoadedDocument[document - 1] == NULL)
       return;
@@ -920,8 +911,7 @@ void                RedisplayNewPRule (Document document, PtrElement pEl,
 /*----------------------------------------------------------------------
    UndisplayAttribute                                              
   ----------------------------------------------------------------------*/
-void                UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr,
-					Document document)
+void UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
 {
    ThotBool            inheritance, comparaison;
    PtrAttribute        pAttrAsc;
@@ -973,8 +963,7 @@ void                UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr,
 /*----------------------------------------------------------------------
    DisplayAttribute                                                
   ----------------------------------------------------------------------*/
-void                DisplayAttribute (PtrElement pEl, PtrAttribute pAttr,
-				      Document document)
+void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
 {
    PtrElement          pElChild;
    ThotBool            inheritance, comparaison, reDisp;
@@ -1036,8 +1025,8 @@ void         RedisplayCommand (Document document)
 /*----------------------------------------------------------------------
   NewSelection
   ----------------------------------------------------------------------*/
-void                NewSelection (Document document, Element element,
-				  int firstCharacter, int lastCharacter)
+void    NewSelection (Document document, Element element,
+		      int firstCharacter, int lastCharacter)
 {
 
    /* annule l'extension precedente */
@@ -1053,12 +1042,11 @@ void                NewSelection (Document document, Element element,
 /*----------------------------------------------------------------------
   NewSelectionExtension
   ----------------------------------------------------------------------*/
-void                NewSelectionExtension (Document document, Element element,
-					   int lastCharacter)
+void  NewSelectionExtension (Document doc, Element element, int lastCharacter)
 {
    /* enregistre cette nouvelle extension de selection */
-   documentNewSelection[document - 1].SDElemExt = element;
-   documentNewSelection[document - 1].SDCarExt = lastCharacter;
+   documentNewSelection[doc - 1].SDElemExt = element;
+   documentNewSelection[doc - 1].SDCarExt = lastCharacter;
 }
 
 /*----------------------------------------------------------------------
@@ -1108,7 +1096,7 @@ void                TtaFreeView (Document document, View view)
 /*----------------------------------------------------------------------
   IsSelectionRegistered
   ----------------------------------------------------------------------*/
-ThotBool            IsSelectionRegistered (Document document, ThotBool * abort)
+ThotBool     IsSelectionRegistered (Document document, ThotBool * abort)
 {
    ThotBool            ret;
 
@@ -1149,7 +1137,7 @@ ThotBool            IsSelectionRegistered (Document document, ThotBool * abort)
    document: the document.
    NewDisplayMode: new display mode for that document.
   ----------------------------------------------------------------------*/
-void                TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
+void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 {
   DisplayMode       oldDisplayMode;
   PtrDocument       pDoc;

@@ -471,7 +471,7 @@ void                ComputeViewSelMarks (ViewSelection * selMark)
 		dummy = i - max + beginInd;
 		/* Position dans les blancs de fin de ligne */
 		selMark->VsIndBox = pBox->BxNChars + dummy;
-		selMark->VsXPos = pBox->BxWidth;
+		selMark->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
 		selMark->VsNSpaces = pBox->BxNSpaces + dummy;
 	      }
 	    /* Sinon on passe a la boite suivante */
@@ -515,7 +515,7 @@ void                ComputeViewSelMarks (ViewSelection * selMark)
 	  x = pBox->BxFirstChar;
 	  GiveTextParams (pBox->BxBuffer, selMark->VsIndBox, pBox->BxFont,
 			  &x, &spaceWidth);
-	  selMark->VsXPos = x;
+	  selMark->VsXPos = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
 	  selMark->VsNSpaces = spaceWidth;
 	  /* ajoute eventuellement les pixels repartis */
 	  if (pBox->BxSpaceWidth != 0)
@@ -620,7 +620,7 @@ void   InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int las
 		  pViewSel->VsBuffer = pBuffer;
 		  pViewSel->VsLine = adline;
 		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
-		    pViewSel->VsXPos = pBox->BxWidth;
+		    pViewSel->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
 		  else
 		    pViewSel->VsXPos = 0;
 		  pViewSel->VsNSpaces = 0;
@@ -633,10 +633,9 @@ void   InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int las
 		  pViewSel->VsIndBuf = ind;
 		  pViewSel->VsBuffer = pBuffer;
 		  pViewSel->VsLine = adline;
-		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
-		    pViewSel->VsXPos = pBox->BxWidth;
-		  else if (pAb->AbLeafType == LtSymbol && firstChar == 0)
-		    pViewSel->VsXPos = pBox->BxWidth;
+		  if ((pAb->AbLeafType == LtPicture && firstChar > 0) ||
+		      (pAb->AbLeafType == LtSymbol && firstChar == 0))
+		    pViewSel->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
 		  else
 		    pViewSel->VsXPos = 0;
 		  pViewSel->VsNSpaces = 0;
@@ -726,7 +725,7 @@ void   InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int las
 		  /* recherche la position limite du caractere */
 		  pBox = pViewSel->VsBox;
 		  if (pBox->BxNChars == 0 && pBox->BxType == BoComplete)
-		    pViewSel->VsXPos += pBox->BxWidth;
+		    pViewSel->VsXPos += pBox->BxW;
 		  else if (pViewSel->VsIndBox == pBox->BxNChars)
 		    pViewSel->VsXPos += 2;
 		  else

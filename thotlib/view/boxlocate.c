@@ -69,95 +69,90 @@
   ----------------------------------------------------------------------*/
 void                LocateSelectionInView (int frame, int x, int y, int button)
 {
-   PtrBox              pBox;
-   PtrTextBuffer       pBuffer;
-   PtrAbstractBox      pAb;
-   NotifyElement       notifyEl;
-   PtrElement          el;
-   ViewFrame          *pFrame;
-   int                 charsNumber;
-   int                 spacesNumber;
-   int                 index, pos;
-   int                 xOrg, yOrg;
+  PtrBox              pBox;
+  PtrTextBuffer       pBuffer;
+  PtrAbstractBox      pAb;
+  NotifyElement       notifyEl;
+  PtrElement          el;
+  ViewFrame          *pFrame;
+  int                 charsNumber;
+  int                 spacesNumber;
+  int                 index, pos;
+  int                 xOrg, yOrg;
 
-   if (frame >= 1)
-     {
-       /* check if a leaf box is selected */
-       pFrame = &ViewFrameTable[frame - 1];
-       x += pFrame->FrXOrg;
-       y += pFrame->FrYOrg;
-       pAb = pFrame->FrAbstractBox;
-       charsNumber = 0;
-       /* get the selected box */
-       if (ThotLocalActions[T_selecbox] != NULL)
-	 (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y,
-					  &charsNumber);
-       /* When it's an extended selection, avoid to extend to the
-	  enclosing box */
-       if (button == 0 || button == 1)
-	 {
-	   if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
-	     pBox = GetClickedLeafBox (frame, x, y);
-	 }
-       if (pBox != NULL)
-	 {
-	   pAb = pBox->BxAbstractBox;
-	   if (pAb->AbLeafType == LtText &&
-	       (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-	     {
-	       pos = x - pBox->BxXOrg;
-	       LocateClickedChar (pBox, &pBuffer, &pos, &index, &charsNumber,
-				  &spacesNumber);
-	       charsNumber = pBox->BxIndChar + charsNumber + 1;
-	     }
-	 }
-       else
-	 pAb = NULL;
+  if (frame >= 1)
+    {
+      /* check if a leaf box is selected */
+      pFrame = &ViewFrameTable[frame - 1];
+      x += pFrame->FrXOrg;
+      y += pFrame->FrYOrg;
+      pAb = pFrame->FrAbstractBox;
+      charsNumber = 0;
+      /* get the selected box */
+      if (ThotLocalActions[T_selecbox] != NULL)
+	(*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
+      /* When it's an extended selection, avoid to extend to the
+	 enclosing box */
+      if (button == 0 || button == 1)
+	{
+	  if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
+	    pBox = GetClickedLeafBox (frame, x, y);
+	}
+      if (pBox != NULL)
+	{
+	  pAb = pBox->BxAbstractBox;
+	  if (pAb->AbLeafType == LtText &&
+	      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
+	    {
+	      pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding;
+	      LocateClickedChar (pBox, &pBuffer, &pos, &index, &charsNumber,
+				 &spacesNumber);
+	      charsNumber = pBox->BxIndChar + charsNumber + 1;
+	    }
+	}
+      else
+	pAb = NULL;
        
-       CloseInsertion ();
-       if (pAb != NULL)
-	 {
-	   /* Initialization of the selection */
-	   if (button == 3)
-	     ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE,
-			      FALSE);
-	   else if (button == 2)
-	     ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE,
-			      FALSE);
-	   /* Extension of selection */
-	   else if (button == 0)
-	     ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE,
-			      FALSE);
-	   else if (button == 1)
-	     ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE,
-			      TRUE);
-	   else /* button == 4 */
-	     {
-	       /* check if the curseur is within the box */
-	       xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		       pBox->BxLPadding;
-	       yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		       pBox->BxTPadding;
-	       if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		   y >= yOrg && y <= yOrg + pBox->BxH)
-		 {
-		   /* send event TteElemActivate.Pre to the application */
-		   el = pAb->AbElement;
-		   notifyEl.event = TteElemClick;
-		   notifyEl.document = FrameTable[frame].FrDoc;
-		   notifyEl.element = (Element) el;
-		   notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		   notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
-		   notifyEl.position = 0;
-		   if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		     /* the application asks Thot to do nothing */
-		     return;
-		   /* send event TteElemActivate.Pre to the application */
-		   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		 }
-	     }
-	 }
-     }
+      CloseInsertion ();
+      if (pAb != NULL)
+	{
+	  /* Initialization of the selection */
+	  if (button == 3)
+	    ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
+	  else if (button == 2)
+	    ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
+	  /* Extension of selection */
+	  else if (button == 0)
+	    ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
+	  else if (button == 1)
+	    ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
+	  else /* button == 4 */
+	    {
+	      /* check if the curseur is within the box */
+	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+		pBox->BxLPadding;
+	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+		pBox->BxTPadding;
+	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		  y >= yOrg && y <= yOrg + pBox->BxH)
+		{
+		  /* send event TteElemActivate.Pre to the application */
+		  el = pAb->AbElement;
+		  notifyEl.event = TteElemClick;
+		  notifyEl.document = FrameTable[frame].FrDoc;
+		  notifyEl.element = (Element) el;
+		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		  notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
+		  notifyEl.position = 0;
+		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		    /* the application asks Thot to do nothing */
+		    return;
+		  /* send event TteElemActivate.Pre to the application */
+		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		}
+	    }
+	}
+    }
 }
 
 

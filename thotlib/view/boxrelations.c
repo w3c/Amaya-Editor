@@ -1381,8 +1381,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   ThotBool            defaultDim;
 
   pBox = pAb->AbBox;
-  if (pAb->AbElement->ElTypeNumber == 135 && horizRef)
-    printf("Resize a cell\n");
   /* On verifie que la boite est visible */
   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {

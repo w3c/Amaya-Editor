@@ -31,13 +31,7 @@
 /*----------------------------------------------------------------------
    TtaIsDocumentSelected answers TRUE if the document is selected.  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaIsDocumentSelected (Document document)
-#else  /* __STDC__ */
-ThotBool            TtaIsDocumentSelected (document)
-Document            document;
-
-#endif /* __STDC__ */
 {
    PtrDocument         docsel;
    PtrElement          firstSelection, lastSelection;
@@ -57,22 +51,13 @@ Document            document;
    Selects a single element. This element is highlighted in all views
    where it can be displayed. If it cannot be displayed in any existing
    view, a new view is eventually open for displaying it.
-
    Parameters:
    document: the document containing the element to be
    selected.
    selectedElement: the element to be selected. NULL for cancelling the
    selection in the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSelectElement (Document document, Element selectedElement)
-#else  /* __STDC__ */
-void                TtaSelectElement (document, selectedElement)
-Document            document;
-Element             selectedElement;
-
-#endif /* __STDC__ */
+void   TtaSelectElement (Document document, Element selectedElement)
 {
    DisplayMode         dispMode;
 
@@ -101,14 +86,7 @@ Element             selectedElement;
 /*----------------------------------------------------------------------
    TtaSelectView posts the selected view in the document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSelectView (Document document, View view)
-#else  /* __STDC__ */
-void                TtaSelectView (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   PtrDocument       pDoc;
   int               oldView;
@@ -152,16 +130,8 @@ Document   TtaGetSelectedDocument ()
    to be selected.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSelectString (Document document, Element textElement, int firstCharacter, int lastCharacter)
-#else  /* __STDC__ */
-void                TtaSelectString (document, textElement, firstCharacter, lastCharacter)
-Document            document;
-Element             textElement;
-int                 firstCharacter;
-int                 lastCharacter;
-
-#endif /* __STDC__ */
+void  TtaSelectString (Document document, Element textElement,
+		       int firstCharacter, int lastCharacter)
 {
    DisplayMode         dispMode;
 
@@ -194,23 +164,13 @@ int                 lastCharacter;
    TtaExtendSelection
 
    Extends the current selection to a given element.
-
    Parameters:
    document: the document for which the selection must be extended.
    element: the element to which the selection must be extended.
    lastCharacter: position within this element of the last character
    to be selected. 0 if the whole element must be selected.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaExtendSelection (Document document, Element element, int lastCharacter)
-#else  /* __STDC__ */
-void                TtaExtendSelection (document, element, lastCharacter)
-Document            document;
-Element             element;
-int                 lastCharacter;
-
-#endif /* __STDC__ */
+void TtaExtendSelection (Document document, Element element, int lastCharacter)
 {
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
@@ -266,21 +226,13 @@ int                 lastCharacter;
 
    Add a new element to the current selection.  The new selection
    may then contain separate elements.
-
    Parameters:
    document: the document to which the element belongs.  This element must
 	belong to the same document as the elements selected by previous calls
 	to TtaAddElementToSelection and by the last call to TtaSelectElement.
    element: the element to be added to the current selection
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaAddElementToSelection (Document document, Element element)
-#else  /* __STDC__ */
-void                TtaAddElementToSelection (document, element)
-Document            document;
-Element             element;
-#endif /* __STDC__ */
+void      TtaAddElementToSelection (Document document, Element element)
 {
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
@@ -328,10 +280,8 @@ Element             element;
    If a pair of paired elements is selected, select also all elements
    between the two paired elements. Nothing is done if the current
    selection is not a pair.
-
    Parameters:
    No parameter
-
    Return value:
    No return value
   ----------------------------------------------------------------------*/
@@ -345,19 +295,12 @@ void                TtaSelectInterval ()
    TtaUnselect
 
    Turns the selection off for a document.
-
    Parameters:
    document: the document for which the selection must be turned off
-
    Return value:
    No return value
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaUnselect (Document document)
-#else  /* __STDC__ */
-void                TtaUnselect (document)
-Document            document;
-#endif /* __STDC__ */
 {
    if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -376,17 +319,10 @@ Document            document;
    functions TtaSelectElement, TtaSelectString, TtaExtendSelection and
    TtaUnselect do not update the menus that depend on the selection
    and do not display the selection message. Default mode is withMenu = TRUE.
-
    Parameter:
    withMenu: the new selection mode.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetSelectionMode (ThotBool withMenu)
-#else  /* __STDC__ */
-void                TtaSetSelectionMode (withMenu)
-ThotBool            withMenu;
-
-#endif /* __STDC__ */
 {
    SelectionUpdatesMenus = withMenu;
 }
@@ -397,11 +333,7 @@ ThotBool            withMenu;
    Returns TRUE if there is a current selection and this selection is
    empty (a caret).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaIsSelectionEmpty ()
-#else  /* __STDC__ */
-void                TtaIsSelectionEmpty ()
-#endif /* __STDC__ */
 {
   if (SelectedDocument == NULL)
     return (FALSE);
@@ -419,10 +351,8 @@ void                TtaIsSelectionEmpty ()
    Returns the first element in the current selection in a given document.
    If this element is a Text element and if only a substring is selected,
    return also the rank of the first and last characters in the selection.
-
    Parameter:
    document: the document for which the selection is asked.
-
    Return values:
    selectedElement: the first selected element, NULL if no element is
    selected in the document.
@@ -431,16 +361,8 @@ void                TtaIsSelectionEmpty ()
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveFirstSelectedElement (Document document, Element * selectedElement, int *firstCharacter, int *lastCharacter)
-#else  /* __STDC__ */
-void                TtaGiveFirstSelectedElement (document, selectedElement, firstCharacter, lastCharacter)
-Document            document;
-Element            *selectedElement;
-int                *firstCharacter;
-int                *lastCharacter;
-#endif /* __STDC__ */
-
+void  TtaGiveFirstSelectedElement (Document document, Element *selectedElement,
+				   int *firstCharacter, int *lastCharacter)
 {
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
@@ -482,11 +404,9 @@ int                *lastCharacter;
    in a given document. If this element is a Text element and if only a
    substring is selected, return also the rank of the first and last
    characters in the selection.
-
    Parameters:
    document: the document for which the selection is asked.
    selectedElement: the current element.
-
    Return parameters:
    selectedElement: the next selected element, NULL if
    this was the last selected element in the document.
@@ -495,18 +415,8 @@ int                *lastCharacter;
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveNextSelectedElement (Document document, Element * selectedElement, int *firstCharacter, int *lastCharacter)
-
-#else  /* __STDC__ */
-void                TtaGiveNextSelectedElement (document, selectedElement, firstCharacter, lastCharacter)
-Document            document;
-Element            *selectedElement;
-int                *firstCharacter;
-int                *lastCharacter;
-
-#endif /* __STDC__ */
-
+void  TtaGiveNextSelectedElement (Document document, Element *selectedElement,
+				  int *firstCharacter, int *lastCharacter)
 {
    PtrDocument         pDoc;
    PtrElement          pEl;
@@ -548,26 +458,14 @@ int                *lastCharacter;
    TtaGiveNextElement
 
    Returns the element that follows a given element in the selection order
-
    Parameters:
    document: the document for which the selection is asked.
    element: the current element.
    last: end of the range to be searched, usually last selected element.
-
    Return parameters:
    element: the next element in the selection order. NULL if not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveNextElement (Document document, Element * element, Element last)
-
-#else  /* __STDC__ */
-void                TtaGiveNextElement (document, element, last)
-Document            document;
-Element            *element;
-Element		    last;
-
-#endif /* __STDC__ */
-
+void  TtaGiveNextElement (Document document, Element *element, Element last)
 {
    PtrElement          pEl;
 
@@ -594,10 +492,8 @@ Element		    last;
    Returns the last element in the current selection in a given document.
    If this element is a Text element and if only a substring is selected,
    return also the rank of the first and last characters in the selection.
-
    Parameter:
    document: the document for which the selection is asked.
-
    Return values:
    selectedElement: the last selected element, NULL if no element is
    selected in the document.
@@ -606,18 +502,8 @@ Element		    last;
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveLastSelectedElement (Document document, Element * selectedElement, int *firstCharacter, int *lastCharacter)
-
-#else  /* __STDC__ */
-void                TtaGiveLastSelectedElement (document, selectedElement, firstCharacter, lastCharacter)
-Document            document;
-Element            *selectedElement;
-int                *firstCharacter;
-int                *lastCharacter;
-
-#endif /* __STDC__ */
-
+void   TtaGiveLastSelectedElement (Document document, Element *selectedElement,
+				   int *firstCharacter, int *lastCharacter)
 {
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;

@@ -7,7 +7,6 @@
 
 /*
    Module de gestion des documents
-
  */
 
 #include "thot_gui.h"
@@ -84,12 +83,7 @@
    fait reafficher ces references si elles sont deja       
    affichees.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RedisplayExternalRefs (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         RedisplayExternalRefs (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    PtrReferredDescr    pDescElRef;
    PtrReference        pRef;
@@ -163,14 +157,7 @@ PtrDocument         pDoc;
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Document    TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentName, Document document)
-#else  /* __STDC__ */
-Document    TtaInitDocument (structureSchema, documentName, document)
-CHAR_T     *structureSchema;
-CHAR_T     *documentName;
-Document    document;
-#endif /* __STDC__ */
 { 
   PtrDocument         pDoc;
   int                 i;
@@ -276,13 +263,7 @@ Document    document;
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Document            TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentName)
-#else  /* __STDC__ */
-Document            TtaNewDocument (structureSchema, documentName)
-CHAR_T*             structureSchema;
-CHAR_T*             documentName;
-#endif /* __STDC__ */
+Document TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentName)
 {
   return TtaInitDocument (structureSchema, documentName, 0);
 }
@@ -294,14 +275,7 @@ CHAR_T*             documentName;
    retour pDoc est NIL si le document n'a pas pu etre      
    charge.                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LoadDocument (PtrDocument * pDoc, STRING fileName)
-#else  /* __STDC__ */
-void                LoadDocument (pDoc, fileName)
-PtrDocument        *pDoc;
-STRING              fileName;
-
-#endif /* __STDC__ */
 {
    PathBuffer          directoryBuffer;
    CHAR_T              URL_DIR_SEP;
@@ -405,16 +379,7 @@ STRING              fileName;
    directory est le directory ou il faut creer le document 
    Au retour pDoc est NIL si le document n'a pas ete cree. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T* docName, PathBuffer directory)
-#else  /* __STDC__ */
-void                NewDocument (pDoc, SSchemaName, docName, directory)
-PtrDocument        *pDoc;
-CHAR_T*             SSchemaName;
-CHAR_T*             docName;
-PathBuffer          directory;
-
-#endif /* __STDC__ */
 {
    PtrElement          pEl;
    NotifyDialog        notifyDoc;
@@ -565,12 +530,7 @@ PathBuffer          directory;
 /*----------------------------------------------------------------------
    PaginateDocument	pagine toutes les vues du document pDoc		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                PaginateDocument (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                PaginateDocument (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    AvailableView       viewList;
    int                 i, nViews, docView;
@@ -603,14 +563,7 @@ PtrDocument         pDoc;
    UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  
    le document pDoc.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                UpdateIncludedElement (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    PtrElement          pChild, pNext;
    PtrTextBuffer       pBuf, pNextBuf;
@@ -722,91 +675,63 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   UpdateAllInclusions met a` jour tous les elements inclus d'un	
-   		document.						
+   UpdateAllInclusions updates all inclusion elements of a document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         UpdateAllInclusions (PtrDocument pDoc)
-#else  /* __STDC__ */
-void         UpdateAllInclusions (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
-   PtrReference        pRef;
-   PtrReferredDescr    pRefD;
-   PtrDocument         pRefDoc;
-   PtrExternalDoc      pExtDoc;
-   ThotBool            setSelect;
+  PtrReference        pRef;
+  PtrReferredDescr    pRefD;
+  PtrDocument         pRefDoc;
+  PtrExternalDoc      pExtDoc;
+  ThotBool            updated = FALSE;
 
-   setSelect = FALSE;
-   /* parcourt la chaine des descripteurs d'elements reference's */
-   pRefD = pDoc->DocReferredEl;
-   if (pRefD != NULL)
-      /* saute le premier descripteur bidon */
-      pRefD = pRefD->ReNext;
-   while (pRefD != NULL)
-      /* on ne considere que les elements reference's internes au document */
-     {
-	if (!pRefD->ReExternalRef)
-	  {
-	     pRefDoc = NULL;
-	     pRef = NULL;
-	     pExtDoc = NULL;
-	     /* cherche toutes les references a cet element qui se trouvent
-	        dans un document charge' dans l'editeur */
-	     do
-	       {
+  /* check all reference descriptors */
+  pRefD = pDoc->DocReferredEl;
+  if (pRefD != NULL)
+    /* skip the first empty descriptor */
+    pRefD = pRefD->ReNext;
+  while (pRefD)
+    /* referred element are within the document */
+    {
+      if (!pRefD->ReExternalRef)
+	{
+	  pRefDoc = NULL;
+	  pRef = NULL;
+	  pExtDoc = NULL;
+	  /* look for referred elements from external documents */
+	  do
+	    {
+	      pRef = NextReferenceToEl (pRefD->ReReferredElem, pDoc,
+					FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+	      if (pRef && pRef->RdTypeRef == RefInclusion &&
+		  pRef->RdElement && pRef->RdElement->ElSource &&
+		/* inclusion with expansion */
+		  pRefDoc != pDoc)
+		{
+		  /* located in another document: switch off the selection */
+		  /* get a new copy */
+		  updated = TRUE;
+		  UpdateIncludedElement (pRef->RdElement, pRefDoc);
+		}
+	    }
+	  while (pRef != NULL);
+	}
+      /* next descriptor */
+      if (pRefD != NULL)
+	pRefD = pRefD->ReNext;
+    }
 
-		  pRef = NextReferenceToEl (pRefD->ReReferredElem, pDoc,
-				     FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
-		  if (pRef != NULL)
-		     if (pRef->RdTypeRef == RefInclusion)
-			/* c'est une inclusion */
-			if (pRef->RdElement != NULL)
-			   if (pRef->RdElement->ElSource != NULL)
-			      /* c'est une inclusion avec expansion */
-			      if (pRefDoc != pDoc)
-				 /* l'element inclus est dans un autre doc */
-				 /* on traite cette inclusion */
-				{
-				   /* eteint la selection si ca n'a pas deja */
-				   /* ete fait */
-				   if (!setSelect)
-				     {
-					TtaClearViewSelections ();
-					setSelect = TRUE;
-				     }
-				   /* refait la copie de l'element inclus */
-				   UpdateIncludedElement (pRef->RdElement, pRefDoc);
-				}
-	       }
-	     while (pRef != NULL);
-	  }
-	/* passe au descripteur d'element reference' suivant */
-	if (pRefD != NULL)
-	   pRefD = pRefD->ReNext;
-     }
-   if (setSelect)
-      /* rallume la selection */
-      HighlightSelection (FALSE, TRUE);
+  if (updated && pDoc == SelectedDocument)
+    /* switch on the selection */
+    HighlightSelection (FALSE, TRUE);
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RemoveExtensionFromTree (PtrElement * pEl, Document document, PtrSSchema pSSExt, int *removedElements, int *removedAttributes)
-
-#else  /* __STDC__ */
-static void         RemoveExtensionFromTree (pEl, document, pSSExt, removedElements, removedAttributes)
-PtrElement         *pEl;
-Document            document;
-PtrSSchema          pSSExt;
-int                *removedElements;
-int                *removedAttributes;
-#endif /* __STDC__ */
-
+static void RemoveExtensionFromTree (PtrElement * pEl, Document document,
+				     PtrSSchema pSSExt, int *removedElements,
+				     int *removedAttributes)
 {
    PtrDocument         pDoc;
    PtrElement          child, nextChild;
@@ -867,29 +792,15 @@ int                *removedAttributes;
    Removes a structure schema extension from a given document. Removes also from
    the document all attributes and elements defined in that structure schema
    extension.
-
    Parameters:
    document: the document.
    extension: the structure schema extension to be removed.
-
    Return parameters:
    removedElements: number of elements actually removed.
    removedAttributes: number of attributes actually removed.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaRemoveSchemaExtension (Document document, SSchema extension, int *removedElements, int *removedAttributes)
-
-#else  /* __STDC__ */
-void                TtaRemoveSchemaExtension (document, extension, removedElements, removedAttributes)
-Document            document;
-SSchema             extension;
-int                *removedElements;
-int                *removedAttributes;
-
-#endif /* __STDC__ */
-
+void TtaRemoveSchemaExtension (Document document, SSchema extension,
+			       int *removedElements, int *removedAttributes)
 {
    PtrSSchema          curExtension, previousSSchema;
    PtrElement          root;
