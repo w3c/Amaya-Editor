@@ -6486,6 +6486,8 @@ static ThotBool RestoreAmayaDocs ()
   sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
   if (TtaFileExist (tempname))
     iscrash = TRUE;
+  else if (!AmayaUniqueInstance)
+    return FALSE;
   else
     sprintf (tempname, "%s%cAutoSave.dat", TempFileDirectory, DIR_SEP);
   
@@ -7089,6 +7091,7 @@ void InitAmaya (NotifyEvent * event)
    QueryInit ();
    /* initialize the Amaya cache */
    InitAmayaCache ();
+  /* now we know if it's a unique instance */
 #ifdef BOOKMARKS
    BM_Init ();
 #endif /* BOOKMARKS */
@@ -7102,8 +7105,6 @@ void InitAmaya (NotifyEvent * event)
    sprintf (LostPicturePath, "%s/amaya/lost.gif",
 	     TtaGetEnvString ("THOTDIR"));   
 #endif /* _GTK */
-
-
 
    InitMathML ();
 #ifdef _SVG

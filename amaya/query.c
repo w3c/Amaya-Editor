@@ -3986,7 +3986,9 @@ void InitAmayaCache (void)
       ptr++;
     }
 
-  if (can_erase && CheckSingleInstance (str))
+  /* Detect if it's a unique instance */
+  AmayaUniqueInstance = CheckSingleInstance (str);
+  if (can_erase && AmayaUniqueInstance)
     {
       /* Erase the previous directories */
       for (i = 0; i < DocumentTableLength; i++)

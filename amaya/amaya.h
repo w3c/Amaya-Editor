@@ -41,7 +41,7 @@
 #define NAME_LENGTH     32
 
 #define HTAppName     "amaya"
-#define HTAppVersion  "8.1c"
+#define HTAppVersion  "8.2"
 #define HTAppDate     __DATE__ 
 
 #define URL_STR       "/"
@@ -434,7 +434,7 @@ THOT_EXPORT ThotBool   UseDotForFloat;
 /*  enabling/disabling DAVLib */
 THOT_EXPORT ThotBool   DAVLibEnable;
 THOT_EXPORT ThotBool   Synchronizing;
-
+THOT_EXPORT ThotBool   AmayaUniqueInstance;
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE      *ErrFile;
 typedef enum
