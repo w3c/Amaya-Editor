@@ -29,6 +29,9 @@ extern ThotBool CreateSearchDlgWX ( int ref,
 extern ThotBool CreatePrintDlgWX ( int ref,
                                    ThotWindow parent,
                                    char* ps_file );
+extern ThotBool CreateSaveAsDlgWX ( int ref,
+                                    ThotWindow parent,
+                                    char* pathname );
 
 #else /* __STDC__ */
 
@@ -55,6 +58,9 @@ extern ThotBool CreateSearchDlgWX ( int ref,
 extern ThotBool CreatePrintDlgWX ( int ref,
                                      ThotWindow parent,
                                      char* ps_file );
+extern ThotBool CreateSaveAsDlgWX ( int ref,
+                                      ThotWindow parent,
+                                      char* pathname );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -14,6 +14,11 @@
 
 /* DEBUG_AMAYA_SAVE Print out debug information when saving */
 
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "AmayaApp.h"
+#endif /* _WX */
+
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -53,6 +58,11 @@ static char       currentDocToSave[MAX_LENGTH];
 static char       currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
 #endif /* _WINGUI */
+
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+  #include "appdialogue_wx.h"
+#endif /* _WX */
 
 #define StdDefaultName "Overview.html"
 static char        *DefaultName;
@@ -455,7 +465,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
       SaveAsText = FALSE;
     }
   
-#ifndef _WINGUI
+#ifdef _GTK
    /* destroy any previous instance of the Save as form */
    TtaDestroyDialogue (BaseDialog + SaveForm);
    
@@ -546,9 +556,17 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		" ");
 
    TtaShowDialogue (BaseDialog + SaveForm, TRUE);
-#else /* _WINGUI */
+#endif /* _GTK */
+#ifdef _WINGUI
    CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname);
 #endif /* _WINGUI */
+#ifdef _WX
+   ThotBool created;
+   created = CreateSaveAsDlgWX (BaseDialog + SaveForm,
+				TtaGetViewFrame (document, view), pathname);
+   if (created)
+       TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+#endif /* _WX */
 }
 
 

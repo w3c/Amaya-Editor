@@ -230,6 +230,7 @@ AMAYA_OBJ = \
 	wxdialog/OpenDocDlgWX.o \
 	wxdialog/SearchDlgWX.o \
 	wxdialog/PrintDlgWX.o \
+	wxdialog/SaveAsDlgWX.o \
 	wxdialog/AmayaDialog.o \
 	wxdialogapi.o \
 	AmayaApp.o \

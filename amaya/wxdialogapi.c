@@ -9,6 +9,7 @@
   #include "wxdialog/TitleDlgWX.h"
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/PrintDlgWX.h"
+  #include "wxdialog/SaveAsDlgWX.h"
   #include "AmayaApp.h"
 #endif /* _WX */
 
@@ -264,6 +265,37 @@ ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,  char* ps_file)
   PrintDlgWX * p_dlg = new PrintDlgWX( ref,
 				       parent,
 				       wx_ps_file );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateSaveAsDlgWX create the SaveAs dialog
+  params:
+    + pathname : file location
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,  char* pathname)
+{
+#ifdef _WX
+  wxString wx_pathname = TtaConvMessageToWX( pathname );
+
+  wxLogDebug( _T("SaveAsDlgWX - pathname=")+wx_pathname );
+
+  SaveAsDlgWX * p_dlg = new SaveAsDlgWX( ref,
+					 parent,
+					 wx_pathname );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
