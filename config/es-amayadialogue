@@ -14,7 +14,7 @@
 12 Es&pecial
 13 At&ributos
 14 A&notaciones
-15 &Favoritos
+15 &Marcadores
 16 &Cooperación
 17 A&yuda
 18 &Nuevo
@@ -74,7 +74,7 @@
 72 Polígono
 73 Rectángulo
 74 blockquote
-75 Salto línea (br)
+75 Salto de línea (br)
 76 División (div)
 77 Formulario
 78 Formulario (form)
@@ -188,7 +188,7 @@
 186 Mostrar d&irección
 187 Mostrar áreas de ma&pas
 188 Mostrar &destinos
-189 Zoom &mas
+189 Zoom &más
 190 Zoom me&nos
 191 Mostrar errores &sintácticos
 192 Mostrar es&tructura
@@ -202,7 +202,7 @@
 200 &Imagen de fondo...
 201 Crear &regla...
 202 A&plicar clase...
-203 **Show applied style...
+203 Mostrar estilo aplicado...
 204 &Enlazar...
 205 &Abrir...
 206 &Desactivar...
@@ -233,10 +233,10 @@
 231 &Personalizar consulta...
 232 &Filtro local...
 233 Configurar...
-234 **New Bookmark
-235 **New Topic
-236 Ver Favoritos
-237 **Import a topic hierarchy
+234 Nuevo marcador
+235 Nuevo tema
+236 Ver marcadores
+237 Importar una jerarquía de temas
 238 Bloquear recurso
 239 Desbloquear recurso...
 240 Ver propiedades del recurso...
@@ -269,7 +269,7 @@
 267 Numerar
 268 Hacer libros
 269 Anotaciones
-270 &Favoritos
+270 &Marcadores
 271 Configurar
 272 Atajos de teclado
 273 Accesibilidad

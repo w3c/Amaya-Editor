@@ -179,7 +179,7 @@
 177 Zoom de fuente:
 178 Idioma de diálogo:
 179 Activar pegado línea a línea
-180 **Generate backup files
+180 Generar copias de seguridad
 181 Mostrar imágenes de fondo
 182 Mostar barra de botones
 183 Mostrar dirección
@@ -230,7 +230,7 @@
 228 Autocargar anotaciones remotas
 229 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
 230 Color de selección:
-231 **Selection background color
+231 Color de fondo de selección
 232 Orientación
 233 Vertical
 234 Apaisado
@@ -265,14 +265,14 @@
 263 Imposible adjuntar un XPointer final sobre un elemento interno agregado
 264 No sé a dónde mover la anotación
 265 No puedo mover la anotación a otro documento
-266 No puede comentar un documento modificado. Por favor, guárdelo primero.
-267 No hay comentarios de usuario declarados. Por favor, abra el menú de configuración de Comentarios
-268 No puedo construir un XPointer para este comentario
-269 Crear un nuevo comentario
-270 Fallo al enviar el comentario
-271 Fallo al borrar el comentario
-272 ¡Comentario borrado!
-273 Fallo al cargar el índice de comentarios
+266 No puede anotar un documento modificado. Por favor, guárdelo primero.
+267 No hay anotaciones de usuario declarados. Por favor, abra el menú de configuración de Anotaciones
+268 No puedo construir un XPointer para esta anotación
+269 Crear una nueva anotación
+270 Fallo al enviar la anotación
+271 Fallo al borrar la anotación
+272 ¡Anotación borrada!
+273 Fallo al cargar el índice de anotaciones
 274 Error
 275 Seleccionar un juego de caracteres
 276 Seleccionar un tipo MIME
@@ -350,26 +350,26 @@
 348 Animación definida.
 349 Atributo animado
 350 Elemento sin ID
-351 **Add ID
-352 **Remove ID
-353 **Add/Remove IDs
-354 **Apply operation
-355 **Enter an element name
-356 **Apply CSS
-357 **Current screen type
-358 **New Topic
-359 **Bookmark Properties
-360 **Topic Properties
-361 **Topic hierarchy:
+351 Añadir ID
+352 Eliminar ID
+353 Añadir/Eliminar IDs
+354 Aplicar operación
+355 Escribe un nombre de elemento
+356 Aplicar CSS
+357 Tipo de pantalla actual:
+358 Nuevo Tema
+359 Propiedades de marcador
+360 Propiedades de tema
+361 Jerarquía de temas:
 362 Título:
-363 **Recalls:
+363 Llamada:
 364 Autor:
-365 **Created:
-366 **Last modified:
-367 **Description:
-368 **Please select an element
-369 **All CSS
-370 **CSS style rules applied to the <%s> element\n
-371 **Blue lines are links activated by a double (or a single) click\n
-372 **Load objects (object, embed)
-373 **No style rule for this element
+365 Creado:
+366 Última modificación:
+367 Descripción:
+368 Por favor, seleccione un elemento
+369 Todas las CSS
+370 Reglas de estilo CSS aplicadas al elemento <%s>\n
+371 Las líneas azules son enlaces activados por un doble clic (o un único clic)\n
+372 Cargar objetos (object, embed)
+373 No hay regla de estilo para este elemento

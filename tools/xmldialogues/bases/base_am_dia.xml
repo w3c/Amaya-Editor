@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Oct 28 17:22:22 CET 2003" version="60">
+<base last_update="Mon Nov  3 14:40:24 CET 2003" version="62">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -167,7 +167,7 @@
 	<message xml:lang="de">&amp;Lesezeichen</message>
 	<message xml:lang="it">F&amp;avorites</message>
 	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
-	<message xml:lang="es">&amp;Favoritos</message>
+	<message xml:lang="es">&amp;Marcadores</message>
 </label>
 <label define="Cooperation_">
 	<message xml:lang="en">C&amp;ooperation</message>
@@ -761,7 +761,7 @@
 	<message xml:lang="de">Zeilenumbruch (br)</message>
 	<message xml:lang="it">A capo (br)</message>
 	<message xml:lang="tr">Kesme (br)</message>
-	<message xml:lang="es">Salto línea (br)</message>
+	<message xml:lang="es">Salto de línea (br)</message>
 	<message xml:lang="pt">Quebra de linha (br)</message>
 	<message xml:lang="fi">Rivinvaihto (br)</message>
 </label>
@@ -1895,7 +1895,7 @@
 	<message xml:lang="de">Schrift vergrößern</message>
 	<message xml:lang="it">Ingrandisci</message>
 	<message xml:lang="tr">Uzaklaştır</message>
-	<message xml:lang="es">Zoom &amp;mas</message>
+	<message xml:lang="es">Zoom &amp;más</message>
 	<message xml:lang="pt">Ampliar (Zoom in)</message>
 	<message xml:lang="fi">Lähennä</message>
 </label>
@@ -2033,6 +2033,7 @@
 	<message xml:lang="en">Show applied style...</message>
 	<message xml:lang="fr">Montrer le style appliqué...</message>
 	<message xml:lang="it">Mostra lo stile applicato...</message>
+	<message xml:lang="es">Mostrar estilo aplicado...</message>
 </label>
 <label define="BLinkCSS">
 	<message xml:lang="en">Lin&amp;k...</message>
@@ -2335,11 +2336,13 @@
 	<message xml:lang="en">New Bookmark</message>
 	<message xml:lang="fr">Nouveau signet</message>
 	<message xml:lang="it">Nuovo bookmark</message>
+	<message xml:lang="es">Nuevo marcador</message>
 </label>
 <label define="BEditTopics">
 	<message xml:lang="en">New Topic</message>
 	<message xml:lang="fr">Nouvelle rubrique</message>
 	<message xml:lang="it">Nuova rubrica</message>
+	<message xml:lang="es">Nuevo tema</message>
 </label>
 <label define="BViewBookmarks">
 	<message xml:lang="en">View Bookmarks</message>
@@ -2347,11 +2350,12 @@
 	<message xml:lang="it">Visualizza favorites</message>
 	<message xml:lang="de">Lesezeichen ansehen</message>
 	<message xml:lang="tr">kilitli bilgileri kopyala</message>
-	<message xml:lang="es">Ver Favoritos</message>
+	<message xml:lang="es">Ver marcadores</message>
 </label>
 <label define="BImportTopics">
 	<message xml:lang="en">Import a topic hierarchy</message>
 	<message xml:lang="it">Importa una gerarchia di rubriche</message>
+	<message xml:lang="es">Importar una jerarquía de temas</message>
 </label>
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>
@@ -2679,7 +2683,7 @@
 	<message xml:lang="de">&amp;Lesezeichen</message>
 	<message xml:lang="it">F&amp;avorites</message>
 	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
-	<message xml:lang="es">&amp;Favoritos</message>
+	<message xml:lang="es">&amp;Marcadores</message>
 </label>
 <label define="BHelpConfigure">
 	<message xml:lang="en">Configuring Amaya</message>

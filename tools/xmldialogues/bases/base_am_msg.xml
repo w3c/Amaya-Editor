@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue Oct 28 17:22:22 CET 2003" version="58">
+<base last_update="Mon Nov  3 14:40:24 CET 2003" version="60">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1808,6 +1808,7 @@
 	<message xml:lang="en">Generate backup files</message>
 	<message xml:lang="fr">Produire des fichiers de sauvegarde</message>
 	<message xml:lang="it">Crea copie di salvataggio</message>
+	<message xml:lang="es">Generar copias de seguridad</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
@@ -2219,7 +2220,7 @@
 </label>
 <label define="AM_LANNEG_MENU">
 	<message xml:lang="en">Language Negotiation</message>
-	<message xml:lang="fr">Négotiation de langues</message>
+	<message xml:lang="fr">Négociation de langues</message>
 	<message xml:lang="de">Sprachen</message>
 	<message xml:lang="it">Negoziazione della lingua</message>
 	<message xml:lang="es">Negociación de idioma</message>
@@ -2311,6 +2312,7 @@
 	<message xml:lang="en">Selection background color</message>
 	<message xml:lang="fr">Couleur de fond de sélection</message>
 	<message xml:lang="it">Selezione colore di sfondo</message>
+	<message xml:lang="es">Color de fondo de selección</message>
 </label>
 <label define="AM_ORIENTATION">
 	<message xml:lang="en">Orientation</message>
@@ -2657,7 +2659,7 @@
 	<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.</message>
 	<message xml:lang="it">Non puoi annotare un documento modificato. Prima salvalo.</message>
 	<message xml:lang="de">Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern</message>
-	<message xml:lang="es">No puede comentar un documento modificado. Por favor, guárdelo primero.</message>
+	<message xml:lang="es">No puede anotar un documento modificado. Por favor, guárdelo primero.</message>
 	<message xml:lang="pt">Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.</message>
 	<message xml:lang="fi">Et voi merkitä muutettua dokumenttia. Tallenna dokumentti ensin.</message>
 	<message xml:lang="tr">Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.</message>
@@ -2667,7 +2669,7 @@
 	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.</message>
 	<message xml:lang="it">Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.</message>
 	<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen</message>
-	<message xml:lang="es">No hay comentarios de usuario declarados. Por favor, abra el menú de configuración de Comentarios</message>
+	<message xml:lang="es">No hay anotaciones de usuario declarados. Por favor, abra el menú de configuración de Anotaciones</message>
 	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar</message>
 	<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset</message>
 	<message xml:lang="tr">Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın</message>
@@ -2677,7 +2679,7 @@
 	<message xml:lang="fr">Impossible de construire un XPointer pour cette annotation</message>
 	<message xml:lang="it">Non posso creare un XPointer per questa annotazione</message>
 	<message xml:lang="de">Für diese Anmerkung kann kein XPointer erzeugt werden</message>
-	<message xml:lang="es">No puedo construir un XPointer para este comentario</message>
+	<message xml:lang="es">No puedo construir un XPointer para esta anotación</message>
 	<message xml:lang="pt">Incapaz de construir um XPointer para esta anotação</message>
 	<message xml:lang="fi">XPointerin luonti merkintää varten epäonnistui</message>
 	<message xml:lang="tr">Bu not için XPointer yaratmak imkansızdır</message>
@@ -2687,7 +2689,7 @@
 	<message xml:lang="fr">Faire une nouvelle annotation</message>
 	<message xml:lang="it">Aggiungi una nuova annotazione</message>
 	<message xml:lang="de">Neue Anmerkung erzeugen</message>
-	<message xml:lang="es">Crear un nuevo comentario</message>
+	<message xml:lang="es">Crear una nueva anotación</message>
 	<message xml:lang="pt">Fazer uma nova anotação</message>
 	<message xml:lang="fi">Uusi merkintä</message>
 	<message xml:lang="tr">Yeni not yap</message>
@@ -2697,7 +2699,7 @@
 	<message xml:lang="fr">La publication de l'annotation a échoué</message>
 	<message xml:lang="it">Non posso postare l'annotazione</message>
 	<message xml:lang="de">Absenden der Anmerkung gescheitert</message>
-	<message xml:lang="es">Fallo al enviar el comentario</message>
+	<message xml:lang="es">Fallo al enviar la anotación</message>
 	<message xml:lang="pt">A postagem da anotação falhou</message>
 	<message xml:lang="fi">Merkinnän lähetys epäonnistui</message>
 	<message xml:lang="tr">Notun yayın hatası</message>
@@ -2707,7 +2709,7 @@
 	<message xml:lang="fr">La destruction de l'annotation a échoué</message>
 	<message xml:lang="it">Non posso cancellare l'annotazione</message>
 	<message xml:lang="de">Löschen der Anmerkung gescheitert</message>
-	<message xml:lang="es">Fallo al borrar el comentario</message>
+	<message xml:lang="es">Fallo al borrar la anotación</message>
 	<message xml:lang="pt">A supressão da anotação falhou</message>
 	<message xml:lang="fi">Merkinnän poisto epäonnistui</message>
 	<message xml:lang="tr">Notun iptal hatası</message>
@@ -2717,7 +2719,7 @@
 	<message xml:lang="fr">Annotation détruite!</message>
 	<message xml:lang="it">Annotazione cancellata!</message>
 	<message xml:lang="de">Anmerkung gelöscht</message>
-	<message xml:lang="es">¡Comentario borrado!</message>
+	<message xml:lang="es">¡Anotación borrada!</message>
 	<message xml:lang="pt">Anotação suprimida!</message>
 	<message xml:lang="fi">Merkintä poistettu</message>
 	<message xml:lang="tr">Not iptal edildi!</message>
@@ -2727,7 +2729,7 @@
 	<message xml:lang="fr">Impossible de charger l'index des annotations</message>
 	<message xml:lang="it">Non posso caricare l'indice delle annotazioni</message>
 	<message xml:lang="de">Laden des Anmerkungsindex gescheitert</message>
-	<message xml:lang="es">Fallo al cargar el índice de comentarios</message>
+	<message xml:lang="es">Fallo al cargar el índice de anotaciones</message>
 	<message xml:lang="pt">Carregamento do índice de anotação falhou</message>
 	<message xml:lang="fi">Merkintäluettelon lataus epäonnistui</message>
 	<message xml:lang="tr">Notların içeriğini yüklemek imkansızdır</message>
@@ -3484,56 +3486,67 @@
 	<message xml:lang="en">Add ID</message>
 	<message xml:lang="fr">Ajouter ID</message>
 	<message xml:lang="it">Aggiungi ID</message>
+	<message xml:lang="es">Añadir ID</message>
 </label>
 <label define="REMOVE_ID">
 	<message xml:lang="en">Remove ID</message>
 	<message xml:lang="fr">Supprimer ID</message>
 	<message xml:lang="it">Elimina ID</message>
+	<message xml:lang="es">Eliminar ID</message>
 </label>
 <label define="ADD_REMOVE_ID">
 	<message xml:lang="en">Add/Remove IDs</message>
 	<message xml:lang="fr">Ajouter/Supprimer IDs</message>
 	<message xml:lang="it">Aggiungi/Elimina ID</message>
+	<message xml:lang="es">Añadir/Eliminar IDs</message>
 </label>
 <label define="APPLY_OPERATION">
 	<message xml:lang="en">Apply operation</message>
 	<message xml:lang="fr">Appliquer opération</message>
 	<message xml:lang="it">Applica l'operazione</message>
+	<message xml:lang="es">Aplicar operación</message>
 </label>
 <label define="ENTER_ELEMENT_NAME">
 	<message xml:lang="en">Enter an element name</message>
 	<message xml:lang="fr">Entrer le nom d'un élément</message>
 	<message xml:lang="it">Inserisci un nome di elemento</message>
+	<message xml:lang="es">Escribe un nombre de elemento</message>
 </label>
 <label define="AM_LOAD_CSS">
 	<message xml:lang="en">Apply CSS</message>
 	<message xml:lang="fr">Appliquer CSS</message>
 	<message xml:lang="it">Applica il CSS</message>
+	<message xml:lang="es">Aplicar CSS</message>
 </label>
 <label define="AM_SCREEN_TYPE">
 	<message xml:lang="en">Current screen type</message>
 	<message xml:lang="fr">Type d'écran courant</message>
 	<message xml:lang="it">Output corrente</message>
+	<message xml:lang="es">Tipo de pantalla actual:</message>
 </label>
 <label define="AM_NEW_TOPIC">
 	<message xml:lang="en">New Topic</message>
 	<message xml:lang="fr">Nouvelle Rubrique</message>
 	<message xml:lang="it">Nuova rubrica</message>
+	<message xml:lang="es">Nuevo Tema</message>
 </label>
 <label define="AM_BM_BPROPERTIES">
 	<message xml:lang="en">Bookmark Properties</message>
 	<message xml:lang="fr">Propriétés du signet</message>
 	<message xml:lang="it">Proprietà del bookmark</message>
+	<message xml:lang="es">Propiedades de marcador</message>
 </label>
 <label define="AM_BM_TPROPERTIES">
 	<message xml:lang="en">Topic Properties</message>
 	<message xml:lang="fr">Propriétés de la rubrique</message>
 	<message xml:lang="it">Proprietà della rubrica</message>
+	<message xml:lang="es">Propiedades de tema</message>
 </label>
 <label define="AM_BM_TOPIC_HIERARCHY">
 	<message xml:lang="en">Topic hierarchy:</message>
 	<message xml:lang="fr">Hiérarchie des rubriques:</message>
 	<message xml:lang="it">Gerarchia delle rubriche :</message>
+	<message xml:lang="es">Jerarquía de temas:</message>
 </label>
 <label define="AM_BM_TITLE">
 	<message xml:lang="en">Title:</message>
@@ -3549,6 +3562,7 @@
 	<message xml:lang="en">Recalls:</message>
 	<message xml:lang="fr">Rappele:</message>
 	<message xml:lang="it">Richiama :</message>
+	<message xml:lang="es">Llamada:</message>
 </label>
 <label define="AM_BM_AUTHOR">
 	<message xml:lang="en">Author:</message>
@@ -3563,46 +3577,55 @@
 	<message xml:lang="en">Created:</message>
 	<message xml:lang="fr">Crée:</message>
 	<message xml:lang="it">Creato :</message>
+	<message xml:lang="es">Creado:</message>
 </label>
 <label define="AM_BM_MODIFIED">
 	<message xml:lang="en">Last modified:</message>
 	<message xml:lang="fr">Dernière modification:</message>
 	<message xml:lang="it">Ultima modifica :</message>
+	<message xml:lang="es">Última modificación:</message>
 </label>
 <label define="AM_BM_DESCRIPTION">
 	<message xml:lang="en">Description:</message>
 	<message xml:lang="fr">Description:</message>
 	<message xml:lang="it">Descrizione :</message>
+	<message xml:lang="es">Descripción:</message>
 </label>
 <label define="AM_NO_SELECTION">
 	<message xml:lang="en">Please select an element</message>
 	<message xml:lang="fr">Sélectionnez un �l�ment</message>
 	<message xml:lang="it">Selezionare un elemento</message>
+	<message xml:lang="es">Por favor, seleccione un elemento</message>
 </label>
 <label define="AM_ALL_CSS">
 	<message xml:lang="en">All CSS</message>
 	<message xml:lang="fr">Toutes les CSS</message>
 	<message xml:lang="it">Tutti i CSS</message>
+	<message xml:lang="es">Todas las CSS</message>
 </label>
 <label define="AM_STYLE_APPLIED">
 	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
 	<message xml:lang="fr">Règles de style CSS appliqué �  l'élément &lt;%s> \n</message>
 	<message xml:lang="it">Regole di stile CSS applicate all'elemento &lt;%s>\n</message>
+	<message xml:lang="es">Reglas de estilo CSS aplicadas al elemento &lt;%s>\n</message>
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click</message>
 	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
+	<message xml:lang="es">Las líneas azules son enlaces activados por un doble clic (o un único clic)\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
 	<message xml:lang="en">Load objects (object, embed)</message>
 	<message xml:lang="fr">Charger les objets (object, embed)</message>
 	<message xml:lang="it">Carica oggetti (object, embed)</message>
+	<message xml:lang="es">Cargar objetos (object, embed)</message>
 </label>
 <label define="AM_NO_STYLE_FOR_ELEM">
 	<message xml:lang="en">No style rule for this element</message>
 	<message xml:lang="fr">Pas de règle de style pour cet élément</message>
 	<message xml:lang="it">Nessuna regola di stile per questo elemento</message>
+	<message xml:lang="es">No hay regla de estilo para este elemento</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Apr 23 09:57:58 CEST 2003" version="14">
+<base last_update="Mon Nov  3 14:40:24 CET 2003" version="15">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">de</language>
@@ -127,7 +127,7 @@
 	<message xml:lang="fr">en lettres capitales</message>
 	<message xml:lang="it">parole tutte maiuscole</message>
 	<message xml:lang="tr">Hepsi büyük harf olan sözcükler</message>
-	<message xml:lang="es">palabras mayúsculas</message>
+	<message xml:lang="es">palabras en mayúsculas</message>
 	<message xml:lang="pt">palavras todas maíusculas</message>
 	<message xml:lang="fi">sanat, joissa kaikki isolla</message>
 </label>
@@ -197,7 +197,7 @@
 	<message xml:lang="fr">Correction terminée</message>
 	<message xml:lang="it">Fine controllo ortografico</message>
 	<message xml:lang="tr">Yazım hataları arama sonu</message>
-	<message xml:lang="es">Final de la corrección ortográfica</message>
+	<message xml:lang="es">Fin de la corrección ortográfica</message>
 	<message xml:lang="pt">Fim da verificação ortográfica</message>
 	<message xml:lang="fi">Oikeinkirjoitustarkistus valmis!</message>
 </label>

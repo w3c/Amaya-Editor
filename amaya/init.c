@@ -6565,6 +6565,7 @@ static ThotBool RestoreAmayaDocs ()
 	  InNewWindow = FALSE;	  
 	  fclose (f);
 	}
+
       if (iscrash)
 	{
 	  TtaFileUnlink (tempname);
