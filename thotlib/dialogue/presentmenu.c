@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -194,8 +194,8 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* get user choices */
       pPRule->PrType = PtLineStyle;
       pPRule->PrViewNum = viewSch;
-      /* by default it should be translated into a CSS rule */
-      pPRule->PrLevel = 1;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       value = (int) pPRule->PrChrValue;
       pPRule->PrChrValue = LineStyle;
@@ -220,8 +220,8 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtLineWeight;
       pPRule->PrViewNum = viewSch;
-      /* by default it should be translated into a CSS rule */
-      pPRule->PrLevel = 1;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       unit = pPRule->PrMinUnit;
       pPRule->PrMinUnit = LineWeightUnit;
@@ -252,8 +252,8 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtFillPattern;
       pPRule->PrViewNum = viewSch;
-      /* by default it should be translated into a CSS rule */
-      pPRule->PrLevel = 1;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = FillPattern;
@@ -299,8 +299,8 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
       pPRule->PrType = PtBackground;
       pPRule->PrViewNum = viewSch;
-      /* by default it should be translated into a CSS rule */
-      pPRule->PrLevel = 1;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = ColorBackground;
@@ -348,8 +348,8 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtForeground;
       pPRule->PrViewNum = viewSch;
-      /* by default it should be translated into a CSS rule */
-      pPRule->PrLevel = 1;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = LineColor;
@@ -519,42 +519,42 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
    /* family de polices de caracteres */
    if (modifFamily)
      {
-	/* cherche la regle de presentation specifique 'Fonte' de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtFont, 0, &isNew, pDoc, viewToApply);
-	/* met les choix de l'utilisateur dans cette regle */
-	pPRule->PrType = PtFont;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	value = pPRule->PrChrValue;
-	pPRule->PrChrValue = family;
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrChrValue = value;
+       /* cherche la regle de presentation specifique 'Fonte' de l'element */
+       /* ou en cree une nouvelle */
+       pPRule = SearchPresRule (pEl, PtFont, 0, &isNew, pDoc, viewToApply);
+       /* met les choix de l'utilisateur dans cette regle */
+       pPRule->PrType = PtFont;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       value = pPRule->PrChrValue;
+       pPRule->PrChrValue = family;
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   /* si le pave existe, applique la nouvelle regle au pave */
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrChrValue = value;
      }
    /* Style de caracteres */
    if (modifStyle)
      {
-	/* cherche la regle de presentation specifique 'Style' de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtStyle, 0, &isNew, pDoc, viewToApply);
-	/* met les choix de l'utilisateur dans cette regle */
-	pPRule->PrType = PtStyle;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	value = pPRule->PrChrValue;
-	switch (charStyle)
+       /* cherche la regle de presentation specifique 'Style' de l'element */
+       /* ou en cree une nouvelle */
+       pPRule = SearchPresRule (pEl, PtStyle, 0, &isNew, pDoc, viewToApply);
+       /* met les choix de l'utilisateur dans cette regle */
+       pPRule->PrType = PtStyle;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       value = pPRule->PrChrValue;
+       switch (charStyle)
 	  {
 	  case 0:
 	    pPRule->PrChrValue = 'R';	/* roman */
@@ -569,161 +569,160 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	    pPRule->PrChrValue = 'R';
 	    break;
 	  }
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrChrValue = value;
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   /* si le pave existe, applique la nouvelle regle au pave */
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrChrValue = value;
      }
    /* Graisse des caracteres */
    if (modifWeight)
      {
-	/* cherche la regle de presentation specifique 'Weight' de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtWeight, 0, &isNew, pDoc, viewToApply);
-	/* met les choix de l'utilisateur dans cette regle */
-	pPRule->PrType = PtWeight;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	value = pPRule->PrChrValue;
-	switch (charWeight)
-	  {
-	  case 0:
-	    pPRule->PrChrValue = 'N';	/* normal */
-	    break;
-	  case 1:
-	    pPRule->PrChrValue = 'B';	/* bold */
-	    break;
-	  default:
-	    pPRule->PrChrValue = 'N';
-	    break;
-	  }
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrChrValue = value;
+       /* cherche la regle de presentation specifique 'Weight' de l'element */
+       /* ou en cree une nouvelle */
+       pPRule = SearchPresRule (pEl, PtWeight, 0, &isNew, pDoc, viewToApply);
+       /* met les choix de l'utilisateur dans cette regle */
+       pPRule->PrType = PtWeight;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       value = pPRule->PrChrValue;
+       switch (charWeight)
+	 {
+	 case 0:
+	   pPRule->PrChrValue = 'N';	/* normal */
+	   break;
+	 case 1:
+	   pPRule->PrChrValue = 'B';	/* bold */
+	   break;
+	 default:
+	   pPRule->PrChrValue = 'N';
+	   break;
+	 }
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   /* si le pave existe, applique la nouvelle regle au pave */
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrChrValue = value;
      }
    /* Taille des caracteres */
    if (modifsize)
      {
-	/* cherche la regle de presentation specifique 'Corps' de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtSize, 0, &isNew, pDoc, viewToApply);
-	/* met les choix de l'utilisateur dans cette regle */
-	pPRule->PrType = PtSize;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	pPRule->PrMinUnit = UnPoint;
-	pPRule->PrMinAttr = FALSE;
-	intValue = pPRule->PrMinValue;
-	pPRule->PrMinValue = size;
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrMinValue = intValue;
+       /* cherche la regle de presentation specifique 'Corps' de l'element */
+       /* ou en cree une nouvelle */
+       pPRule = SearchPresRule (pEl, PtSize, 0, &isNew, pDoc, viewToApply);
+       /* met les choix de l'utilisateur dans cette regle */
+       pPRule->PrType = PtSize;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       pPRule->PrMinUnit = UnPoint;
+       pPRule->PrMinAttr = FALSE;
+       intValue = pPRule->PrMinValue;
+       pPRule->PrMinValue = size;
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   /* si le pave existe, applique la nouvelle regle au pave */
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrMinValue = intValue;
      }
 
    /* Souligne' */
    if (modifUnderline)
      {
-	/* cherche la regle de presentation specifique 'Souligne' de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtUnderline, 0, &isNew, pDoc, viewToApply);
-	/* met les choix de l'utilisateur dans cette regle */
-	pPRule->PrType = PtUnderline;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	value = pPRule->PrChrValue;
-	switch (underline)
-	  {
-	  case 0:
-	    pPRule->PrChrValue = 'N';	/* sans souligne */
-	    break;
-	  case 1:
-	    pPRule->PrChrValue = 'U';	/* souligne continu */
-	    break;
-	  case 2:
-	    pPRule->PrChrValue = 'O';	/* surligne */
-	    break;
-	  case 3:
-	    pPRule->PrChrValue = 'C';	/* biffer */
-	    break;
-	  default:
-	    pPRule->PrChrValue = 'N';
-	    break;
-	  }
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrChrValue = value;
+       /* cherche la regle de presentation specifique 'Souligne' de l'element*/
+       /* ou en cree une nouvelle */
+       pPRule = SearchPresRule (pEl, PtUnderline, 0, &isNew, pDoc, viewToApply);
+       /* met les choix de l'utilisateur dans cette regle */
+       pPRule->PrType = PtUnderline;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       value = pPRule->PrChrValue;
+       switch (underline)
+	 {
+	 case 0:
+	   pPRule->PrChrValue = 'N';	/* sans souligne */
+	   break;
+	 case 1:
+	   pPRule->PrChrValue = 'U';	/* souligne continu */
+	   break;
+	 case 2:
+	   pPRule->PrChrValue = 'O';	/* surligne */
+	   break;
+	 case 3:
+	   pPRule->PrChrValue = 'C';	/* biffer */
+	   break;
+	 default:
+	   pPRule->PrChrValue = 'N';
+	   break;
+	 }
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   /* si le pave existe, applique la nouvelle regle au pave */
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrChrValue = value;
      }
    /* Epaisseur du souligne */
    if (modifUlWeight)
      {
-	/* cherche la regle de presentation specifique weightUnderline de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtThickness, 0, &isNew, pDoc, viewToApply);
-	/* met les choix de l'utilisateur dans cette regle */
-	pPRule->PrType = PtThickness;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	value = pPRule->PrChrValue;
-	switch (weightUnderline)
-	  {
-	  case 0:
-	    pPRule->PrChrValue = 'N';	/* souligne mince */
-	    break;
-	  case 1:
-	    pPRule->PrChrValue = 'T';	/* souligne epais */
-	    break;
-	  default:
-	    pPRule->PrChrValue = 'N';
-	    break;
-	  }
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     /* si le pave existe, applique la nouvelle regle au pave */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrChrValue = value;
+       /* cherche la regle de presentation specifique weightUnderline de */
+       /* l'element ou en cree une nouvelle */
+       pPRule = SearchPresRule (pEl, PtThickness, 0, &isNew, pDoc, viewToApply);
+       /* met les choix de l'utilisateur dans cette regle */
+       pPRule->PrType = PtThickness;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       value = pPRule->PrChrValue;
+       switch (weightUnderline)
+	 {
+	 case 0:
+	   pPRule->PrChrValue = 'N';	/* souligne mince */
+	   break;
+	 case 1:
+	   pPRule->PrChrValue = 'T';	/* souligne epais */
+	   break;
+	 default:
+	   pPRule->PrChrValue = 'N';
+	   break;
+	 }
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   /* si le pave existe, applique la nouvelle regle au pave */
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrChrValue = value;
      }
 }
-
 
 /*----------------------------------------------------------------------
    	ModifyLining applique a l'element pEl les modifications		
@@ -741,18 +740,18 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
    int                 viewSch;
    int                 intValue;
    ThotBool            bValue;
-   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);	/* Le type de cette view */
+   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply); /* type de cette vue*/
    /* applique les choix de l'utilisateur */
    if (modifAdjust && Adjust > 0)
      {
-	pPRule = SearchPresRule (pEl, PtAdjust, 0, &isNew, pDoc, viewToApply);
-	pPRule->PrType = PtAdjust;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	value = pPRule->PrAdjust;
-	switch (Adjust)
+       pPRule = SearchPresRule (pEl, PtAdjust, 0, &isNew, pDoc, viewToApply);
+       pPRule->PrType = PtAdjust;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       value = pPRule->PrAdjust;
+       switch (Adjust)
 	  {
 	  case 1:
 	    pPRule->PrAdjust = AlignLeft;
@@ -786,70 +785,70 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
    /* Coupure des mots */
    if (modifHyphen)
      {
-	pPRule = SearchPresRule (pEl, PtHyphenate, 0, &isNew, pDoc, viewToApply);
-	pPRule->PrType = PtHyphenate;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	bValue = pPRule->PrBoolValue;
-	pPRule->PrBoolValue = Hyphenate;
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrBoolValue = bValue;
+       pPRule = SearchPresRule (pEl, PtHyphenate, 0, &isNew, pDoc, viewToApply);
+       pPRule->PrType = PtHyphenate;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       bValue = pPRule->PrBoolValue;
+       pPRule->PrBoolValue = Hyphenate;
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrBoolValue = bValue;
      }
    /* Renfoncement de la 1ere ligne */
    if (modifIndent)
      {
-	pPRule = SearchPresRule (pEl, PtIndent, 0, &isNew, pDoc, viewToApply);
-	pPRule->PrType = PtIndent;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	pPRule->PrMinUnit = UnPoint;
-	pPRule->PrMinAttr = FALSE;
-	intValue = pPRule->PrMinValue;
-	pPRule->PrMinValue = ValIndent;
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     /* le document est modifie' */
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrMinValue = intValue;
+       pPRule = SearchPresRule (pEl, PtIndent, 0, &isNew, pDoc, viewToApply);
+       pPRule->PrType = PtIndent;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       pPRule->PrMinUnit = UnPoint;
+       pPRule->PrMinAttr = FALSE;
+       intValue = pPRule->PrMinValue;
+       pPRule->PrMinValue = ValIndent;
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   /* le document est modifie' */
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrMinValue = intValue;
      }
    /* Interligne */
    if (modifLineSpacing)
      {
-	pPRule = SearchPresRule (pEl, PtLineSpacing, 0, &isNew, pDoc, viewToApply);
-	pPRule->PrType = PtLineSpacing;
-	pPRule->PrViewNum = viewSch;
-	/* by default it should be translated into a CSS rule */
-	pPRule->PrLevel = 1;
-	pPRule->PrPresMode = PresImmediate;
-	pPRule->PrMinUnit = UnPoint;
-	pPRule->PrMinAttr = FALSE;
-	intValue = pPRule->PrMinValue;
-	pPRule->PrMinValue = LineSpacing;
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrMinValue = intValue;
+       pPRule = SearchPresRule (pEl, PtLineSpacing, 0, &isNew, pDoc, viewToApply);
+       pPRule->PrType = PtLineSpacing;
+       pPRule->PrViewNum = viewSch;
+       /* this rule will be translated into style attribute for the element */
+       pPRule->PrSpecificity = 100;
+       pPRule->PrPresMode = PresImmediate;
+       pPRule->PrMinUnit = UnPoint;
+       pPRule->PrMinAttr = FALSE;
+       intValue = pPRule->PrMinValue;
+       pPRule->PrMinValue = LineSpacing;
+       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	 {
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (!isNew)
+	 /* reset the previous value */
+	 pPRule->PrMinValue = intValue;
      }
 }
 

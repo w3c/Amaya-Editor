@@ -1404,6 +1404,7 @@ void GetPresentRule (PtrPRule * pRP)
   if (pNewRP)
     {
       memset (pNewRP, 0, sizeof (PresRule));
+      pNewRP->PrImportant = FALSE;
       pNewRP->PrDuplicate = FALSE;
       pNewRP->PrNextPRule = NULL;
       pNewRP->PrSpecifAttr = 0;

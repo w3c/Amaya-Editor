@@ -3639,12 +3639,11 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
    ParseHTMLSpecificStyle: parse and apply a CSS Style string.
    This function must be called when a specific style is applied to an
    element.
-   The parameter isCSS is 1 when the specific presentation should be
-   translated into a CSS rule, 0 if it should be translated into a
-   presentation attribute.
+   The parameter specificity is the specificity of the style, 0 if it is
+   not really a CSS rule.
   ----------------------------------------------------------------------*/
 void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
-			      int isCSS, ThotBool destroy)
+			      int specificity, ThotBool destroy)
 {
    PresentationContext context;
    ElementType         elType;
@@ -3670,7 +3669,7 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
    if (context == NULL)
      return;
    context->type = elType.ElTypeNum;
-   context->cssLevel = isCSS;
+   context->cssSpecificity = specificity;
    context->destroy = destroy;
    /* Call the parser */
    ParseCSSRule (el, NULL, (PresentationContext) context, cssRule, NULL, isHTML);
@@ -3724,8 +3723,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
     }
   ctxt->box = 0;
   ctxt->type = 0;
-  /* the priority level of the rule depends on the selector */
-  ctxt->cssLevel = 0;
+  /* the specificity of the rule depends on the selector */
+  ctxt->cssSpecificity = 0;
   
   selector = SkipBlanksAndComments (selector);
   cur = &sel[0];
@@ -4159,7 +4158,7 @@ int         IsImplicitClassName (char *class, Document doc)
 
 /************************************************************************
  *									*  
- *  Functions Needed for support of HTML 3.2: translate to CSS equiv   *
+ *  Functions needed for support of HTML: translate to CSS equivalent   *
  *									*  
  ************************************************************************/
 
@@ -4171,7 +4170,7 @@ void    HTMLSetBackgroundColor (Document doc, Element el, char *color)
    char             css_command[100];
 
    sprintf (css_command, "background-color: %s", color);
-   ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4193,7 +4192,7 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat, char *image)
      strcat (css_command, "repeat-y");
    else
      strcat (css_command, "no-repeat");
-   ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4204,7 +4203,7 @@ void HTMLSetForegroundColor (Document doc, Element el, char *color)
    char           css_command[100];
 
    sprintf (css_command, "color: %s", color);
-   ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4215,7 +4214,7 @@ void HTMLResetBackgroundColor (Document doc, Element el)
    char           css_command[100];
 
    sprintf (css_command, "background: red");
-   ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 0, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4226,7 +4225,7 @@ void HTMLResetBackgroundImage (Document doc, Element el)
    char           css_command[1000];
 
    sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
-   ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 0, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4238,7 +4237,7 @@ void HTMLResetForegroundColor (Document doc, Element el)
 
    /* it's not necessary to well know the current color but it must be valid */
    sprintf (css_command, "color: red");
-   ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 0, TRUE);
 }
 
 /*----------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -43,7 +43,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
   ElementType	      elType;
   AttributeType       attrType;
   Attribute           attr;
-  char              buffer[MAX_LENGTH];
+  char                buffer[MAX_LENGTH];
   int                 length;
   ThotBool            found, before;
 
@@ -97,7 +97,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
     }
 
   /* create the presentation schema for this structure */
-  nSchema = TtaNewPSchema (sSchema);
+  nSchema = TtaNewPSchema (sSchema, css->category == CSS_USER_STYLE);
   pSchema = TtaGetFirstPSchema (doc, sSchema);
   pIS->PiPSchema = nSchema;
   /* chain the presentation schema at the right position */

@@ -522,7 +522,7 @@ void PrintAs (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-   CallbackImage manage returns of Picture form.                   
+   CallbackImage handle return of Print form.                   
   ----------------------------------------------------------------------*/
 void CallbackPrint (int ref, int typedata, char *data)
 {

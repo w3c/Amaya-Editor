@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -23,11 +23,15 @@ typedef int        *PSchema;
 
    Parameters:
    nature: the structure schema for which a presentation schema is created
+   userStyleSheet: indicates whether the presentation schema is created
+                   for a user stylesheet (TRUE) of for an author stylesheet
+                   (FALSE).
 
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-extern PSchema      TtaNewPSchema (SSchema nature);
+extern PSchema      TtaNewPSchema (SSchema nature, ThotBool userStyleSheet);
+
 /*----------------------------------------------------------------------
    TtaUnlinkPSchema
 

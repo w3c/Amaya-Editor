@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -71,11 +71,14 @@ static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc,
 
    Parameters:
    nature: the structure schema for which a presentation schema is created
+   userStyleSheet: indicates whether the presentation schema is created
+                   for a user stylesheet (TRUE) of for an author stylesheet
+                   (FALSE).
 
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-PSchema             TtaNewPSchema (SSchema nature)
+PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
 {
    PtrPSchema          pSchPres;
    PtrSSchema          pSS;
@@ -87,6 +90,10 @@ PSchema             TtaNewPSchema (SSchema nature)
        GetSchPres (&pSchPres);
        if (pSchPres)
 	 {
+	   if (userStyleSheet)
+	     pSchPres->PsOrigin = User;
+	   else
+	     pSchPres->PsOrigin = Author;
 	   pSS = (PtrSSchema) nature;
 	   size = pSS->SsAttrTableSize * sizeof (PtrAttributePres);
 	   pSchPres->PsAttrPRule =  (AttrPresTable*) malloc (size);

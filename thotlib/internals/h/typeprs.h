@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,7 +14,6 @@
  * Author V. Quint (INRIA)
  *
  */
-
 
 /* DEFINITIONS
 
@@ -415,9 +414,11 @@ typedef struct _PresRule
 				   number of the attribute to which the
 				   rule corresponds, 0 if the rule is not
 				   derived from an attribute rule */
-  int           PrLevel;        /* CSS priority level for generic rules
-				   For specific rules: > 0 when the rule
-				   translates a CSS style rule */
+  int           PrSpecificity;  /* Specificity of the corresponding CSS rule.
+				   0 if the rule belongs to the default
+				   P Schema */
+  ThotBool      PrImportant;    /* the corresponding CSS rule has flag
+                                   !important */
   ThotBool      PrDuplicate;    /* duplicate of a conditional rule for an
 				   inherited attribute */
   PtrSSchema    PrSpecifAttrSSchema; /* pointer on the structure schema
@@ -749,6 +750,12 @@ typedef struct _NumberTable
   int           Num[1];
 } NumberTable;
 
+/* origin of a style sheet */
+typedef enum
+{
+  Agent, User, Author
+} StyleSheetOrigin;
+
 typedef struct _PresentSchema *PtrPSchema;
 
 /* a presentation schema loaded in memory */
@@ -759,6 +766,7 @@ typedef struct _PresentSchema
   Name		PsPresentName;		/* name of this presentation schema */
   int	 	PsStructCode;    	/* code identifying the version of this
 					   structure schema */
+  StyleSheetOrigin PsOrigin;            /* origin of this structure schema */
   int		PsNViews;	    	/* number of views */
   ViewTable     PsView;    		/* definition of the views */
   PtrHostView   PsHostViewList[MAX_VIEW]; /* for each view defined in ViewTable

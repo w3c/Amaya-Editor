@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1612,10 +1612,10 @@ static void      LinkNewPRule (PtrPRule pRule, PtrPRule *anchor)
 }
 
 /*----------------------------------------------------------------------
-   InsertXmlAtRules
+   InsertXmlAttrRules
    Add the presentation rules associated to the new attribute
   ----------------------------------------------------------------------*/
-static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
+static void      InsertXmlAttrRules (PtrPSchema pPS, int nAtRules)
 {
   AttributePres *pAtPres;
   PtrPRule       pRule;
@@ -1641,7 +1641,8 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
       pRule->PrCond = NULL;
       pRule->PrViewNum = FORMATTED_VIEW;
       pRule->PrSpecifAttr = 0;
-      pRule->PrLevel = 0;
+      pRule->PrSpecificity = 0;
+      pRule->PrImportant = FALSE;
       pRule->PrSpecifAttrSSchema = NULL;
       pRule->PrPresMode = PresFunction;
       pRule->PrPresFunction = FnCreateBefore;
@@ -1664,7 +1665,8 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
       pRule->PrCond = NULL;
       pRule->PrViewNum = FORMATTED_VIEW;
       pRule->PrSpecifAttr = 0;
-      pRule->PrLevel = 0;
+      pRule->PrSpecificity = 0;
+      pRule->PrImportant = FALSE;
       pRule->PrSpecifAttrSSchema = NULL;
       pRule->PrPresMode = PresFunction;
       pRule->PrPresFunction = FnCreateBefore;
@@ -1855,7 +1857,7 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 
   /* Initialize and insert the presentation rules */
   /* associated with this new attribute */
-  InsertXmlAtRules (pPSch, pSS->SsNAttributes);
+  InsertXmlAttrRules (pPSch, pSS->SsNAttributes);
 #endif
 
   /* Update the type number */
@@ -1888,7 +1890,7 @@ void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
 #ifndef NODISPLAY
 /*----------------------------------------------------------------------
    InsertAXmlPRule
-   Add a specific presentation rule.
+   Add a presentation rule for element type nSRule to Pres schema pPSch
   ----------------------------------------------------------------------*/
 static PtrPRule InsertAXmlPRule (PRuleType type, int view, PresMode mode,
 				 PtrPSchema pPSch, int nSRule)
@@ -1903,7 +1905,8 @@ static PtrPRule InsertAXmlPRule (PRuleType type, int view, PresMode mode,
       pRule->PrCond = NULL;
       pRule->PrViewNum = view;
       pRule->PrSpecifAttr = 0;
-      pRule->PrLevel = 0;
+      pRule->PrSpecificity = 0;
+      pRule->PrImportant = FALSE;
       pRule->PrSpecifAttrSSchema = NULL;
       pRule->PrPresMode = mode;
       /* Add the new rule into the chain */
@@ -2017,7 +2020,7 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 
 /*----------------------------------------------------------------------
    TtaAddEmptyBox
-   Add a specific rule to an empty element
+   Add a specific presentation rule Createlast(EmptyBox) to an empty element
   ----------------------------------------------------------------------*/
 void    TtaAddEmptyBox (Element el, Document document)
 
@@ -2033,7 +2036,8 @@ void    TtaAddEmptyBox (Element el, Document document)
       pRule->PrCond = NULL;
       pRule->PrViewNum = FORMATTED_VIEW;
       pRule->PrSpecifAttr = 0;
-      pRule->PrLevel = 0;
+      pRule->PrSpecificity = 100;
+      pRule->PrImportant = FALSE;
       pRule->PrSpecifAttrSSchema = NULL;
       pRule->PrPresMode = PresFunction;
       pRule->PrPresFunction = FnCreateLast;
@@ -2167,7 +2171,8 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
       pRule->PrCond = NULL;
       pRule->PrViewNum = FORMATTED_VIEW;
       pRule->PrSpecifAttr = 0;
-      pRule->PrLevel = 0;
+      pRule->PrSpecificity = 0;
+      pRule->PrImportant = FALSE;
       pRule->PrSpecifAttrSSchema = NULL;
       pRule->PrPresMode = PresFunction;
       pRule->PrPresFunction = FnLine;
@@ -2187,7 +2192,8 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
       pRule->PrCond = NULL;
       pRule->PrViewNum = FORMATTED_VIEW;
       pRule->PrSpecifAttr = 0;
-      pRule->PrLevel = 0;
+      pRule->PrSpecificity = 0;
+      pRule->PrImportant = FALSE;
       pRule->PrSpecifAttrSSchema = NULL;
       pRule->PrPresMode = PresImmediate;
       pRule->PrMinUnit = UnRelative;

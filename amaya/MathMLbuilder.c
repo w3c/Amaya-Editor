@@ -1732,7 +1732,7 @@ void      CheckFence (Element el, Document doc)
 	     ctxt = TtaGetSpecificStyleContext (doc);
 	     ctxt->destroy = FALSE;
 	     /* the specific presentation to be created is not a CSS rule */
-	     ctxt->cssLevel = 0;
+	     ctxt->cssSpecificity = 0;
 	     pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	     pval.typed_data.real = FALSE;
 	     pval.typed_data.value = 180;
@@ -2096,7 +2096,7 @@ void MathMLScriptShift (Document doc, Element el, char *value, int attr)
        if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	  {
 	  /* the specific presentation to be created is not a CSS rule */
-	  ctxt->cssLevel = 0;
+	  ctxt->cssSpecificity = 0;
           if (attr == MathML_ATTR_superscriptshift)
 	    pval.typed_data.value = - pval.typed_data.value;
 	  TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
@@ -2522,7 +2522,7 @@ void MathMLSetScriptLevel (Document doc, Element el, char *value)
 	 pval.typed_data.value = percentage;
 	 pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	 /* the specific presentation to be created is not a CSS rule */
-	 ctxt->cssLevel = 0;
+	 ctxt->cssSpecificity = 0;
 	 TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);       
 	 }
        else
@@ -2588,7 +2588,7 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	{
 	  /* the specific presentation to be created is not a CSS rule */
-	  ctxt->cssLevel = 0;
+	  ctxt->cssSpecificity = 0;
 	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
 	}
     }

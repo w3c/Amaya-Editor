@@ -277,8 +277,8 @@ void                AttrMediaChanged (NotifyAttribute *event)
   directory.
   Return the list of temporary file names. That list includes:
   - first the User style sheet
-  - after expternal style sheets
-  - the the Document style sheet
+  - after external style sheets
+  - the Document style sheet
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
 char *CssToPrint (Document doc, char *printdir)
@@ -326,10 +326,8 @@ char *CssToPrint (Document doc, char *printdir)
 		  strcpy (&ptr[length], css->localName);
 		  length += strlen (css->localName);
 		  ptr[length++] = SPACE;
-		  css = NULL;
 		}
-	      else
-		css = css->NextCSS;
+	      css = css->NextCSS;
 	    }
 
 	  /* Add after the list of external CSS files */
@@ -361,8 +359,8 @@ char *CssToPrint (Document doc, char *printdir)
 #ifdef _SVG
 	  else if (!strcmp (name, "SVG"))
 	    {
-	    elType.ElTypeNum = SVG_EL_style__;
-	    head = el;
+	      elType.ElTypeNum = SVG_EL_style__;
+	      head = el;
 	    }
 #endif /* _SVG */
 	  else

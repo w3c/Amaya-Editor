@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -234,7 +234,7 @@ ThotBool UpdateStyleDelete (NotifyAttribute * event)
 	   return FALSE;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
 	style[len] = EOS;
-	ParseHTMLSpecificStyle (el, style, event->document, 1, TRUE);
+	ParseHTMLSpecificStyle (el, style, event->document, 100, TRUE);
 	TtaFreeMemory (style);
      }
   return FALSE;  /* let Thot perform normal operation */
@@ -555,7 +555,7 @@ void UpdateStylePost (NotifyAttribute * event)
 	    el = newParent;
 	    TtaSetElementLineNumber (el, TtaGetElementLineNumber (oldParent));
 	  }
-	ParseHTMLSpecificStyle (el, style, doc, 1, FALSE);
+	ParseHTMLSpecificStyle (el, style, doc, 100, FALSE);
 	if (CSSErrorsFound)
 	  {
 	    /* the CSS parser detected an error */

@@ -2459,10 +2459,10 @@ int main (int argc, char **argv)
 	    }
 	  else if (!strcmp (argv[argCounter], "-css"))
 	    {
-                  /* CSS files given in the command line */
-                  argCounter++;
-                  strcpy (CSSName [cssCounter++], argv[argCounter++]);
-           }
+	      /* CSS files given in the command line */
+	      argCounter++;
+	      strcpy (CSSName [cssCounter++], argv[argCounter++]);
+	    }
 	  else if (!strcmp (argv[argCounter], "-npps"))
 	    {
 	      argCounter++;

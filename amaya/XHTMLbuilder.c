@@ -1214,7 +1214,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
       TtaSetAttributeText (currentAttribute, attrValue,
 			   lastAttrElement, context->doc);
       ParseHTMLSpecificStyle (context->lastElement, attrValue,
-			      context->doc, 1, FALSE);
+			      context->doc, 100, FALSE);
       done = TRUE;
     }
   else

@@ -295,11 +295,11 @@ static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int 
 /*----------------------------------------------------------------------
    Function used to to add a specific presentation rule
    for a given type of rule associated to an element.
-   The parameter isCSS is 1 when the specific rule translates a CSS rule.
+   Parameter specificity is the specificity od the corresponding CSS rule.
   ----------------------------------------------------------------------*/
 static PtrPRule  InsertElementPRule (PtrElement el, PtrDocument pDoc,
 				     PRuleType type, unsigned int extra,
-				     int isCSS)
+				     int specificity)
 {
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -354,7 +354,7 @@ static PtrPRule  InsertElementPRule (PtrElement el, PtrDocument pDoc,
 		pRule->PrType = type;
 	    pRule->PrCond = NULL;
 	    pRule->PrSpecifAttr = 0;
-	    pRule->PrLevel = isCSS;
+	    pRule->PrSpecificity = specificity;
 	    pRule->PrSpecifAttrSSchema = NULL;
 	    /* set it specific to view 1 */
 	    pRule->PrViewNum = 1;
@@ -1094,7 +1094,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	  pRule->PrViewNum = 1;
 	  pRule->PrSpecifAttr = 0;
 	  /* store the rule priority */
-	  pRule->PrLevel = ctxt->cssLevel;
+	  pRule->PrSpecificity = ctxt->cssSpecificity;
 	  pRule->PrSpecifAttrSSchema = NULL;
       
 	  /* In case of an attribute rule, add the Attr condition */
@@ -2321,7 +2321,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
       else
 	pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc - 1],
-				    intRule, func, c->cssLevel);
+				    intRule, func, c->cssSpecificity);
 
       if (pRule)
 	{
@@ -2589,7 +2589,7 @@ PresentationContext TtaGetSpecificStyleContext (Document doc)
    ctxt->doc = doc;
    ctxt->schema = TtaGetDocumentSSchema (doc);
    ctxt->destroy = 0;
-   ctxt->cssLevel = 0;
+   ctxt->cssSpecificity = 0;
    return (ctxt);
 }
 
@@ -2741,9 +2741,9 @@ void TtaApplyAllSpecificSettings (Element el, Document doc,
    */
   while (rule != NULL)
     {
-      if (rule->PrLevel != 0)
+      if (rule->PrSpecificity >= 100)
 	{
-	  /* the rule translates a CSS rule */
+	  /* the rule is the translation of a style attribute */
 	  /* fill in the PresentationSetting and call the handler */
 	  if (rule->PrType == PtFunction)
 	    PRuleToPresentationSetting (rule, &setting, rule->PrPresFunction);

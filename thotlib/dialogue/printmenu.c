@@ -499,7 +499,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        /* insert the first flag */
        if (cssToPrint[i] != EOS)
 	 {
-	   /* insert the flag -v before each view name */
+	   /* insert the flag -css before each stylesheet name */
 #ifdef _WINDOWS
 	   printArgv[printArgc] = TtaStrdup ("-css");
 	   printArgc++;

@@ -23,7 +23,7 @@ extern void PToCss ( PresentationSetting settings,
 extern void ParseHTMLSpecificStyle ( Element el,
                                      char *cssRule,
                                      Document doc,
-                                     int isCSS,
+                                     int specificity,
                                      ThotBool destroy );
 extern int IsImplicitClassName ( char *class,
                                  Document doc );
@@ -81,7 +81,7 @@ extern void PToCss (/* PresentationSetting settings,
 extern void ParseHTMLSpecificStyle (/* Element el,
                                        char *cssRule,
                                        Document doc,
-                                       int isCSS,
+                                       int specificity,
                                        ThotBool destroy */);
 extern int IsImplicitClassName (/* char *class,
                                    Document doc */);

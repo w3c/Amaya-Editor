@@ -2874,7 +2874,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
 				XMLcontext.lastElement, XMLcontext.doc);
 	   if (HTMLStyleAttribute)
 	     ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
-				     XMLcontext.doc, 1, FALSE);
+				     XMLcontext.doc, 100, FALSE);
 	 }
        break;
      case 3:       /* reference */

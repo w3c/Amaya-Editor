@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1998-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1998-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -421,7 +421,7 @@ void             SetGraphicDepths (Document doc, Element el)
   /* set depth to all SVG elements */
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation is not a CSS rule */
-  ctxt->cssLevel = 0;
+  ctxt->cssSpecificity = 0;
   ctxt->destroy = FALSE;
   pval.typed_data.value = 0; /*TtaGetDepth (el, doc, 1)*/
   pval.typed_data.unit = STYLE_UNIT_REL;
@@ -698,7 +698,7 @@ void EvaluateTestAttrs (Element el, Document doc)
   renderedChild = NULL;
   attrType.AttrSSchema = TtaGetElementType (el).ElSSchema;
   ctxt = TtaGetSpecificStyleContext (doc);
-  ctxt->cssLevel = 0;   /* the presentation rule to be set is not a CSS rule */
+  ctxt->cssSpecificity = 0;   /* the presentation rule to be set is not a CSS rule */
   pval.typed_data.unit = STYLE_UNIT_PX;
   pval.typed_data.value = 0;
   pval.typed_data.real = FALSE;
@@ -963,7 +963,7 @@ void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int m
    leaf = TtaGetFirstChild (el);
    ctxt = TtaGetSpecificStyleContext (doc);
    /* the specific presentation is not a CSS rule */
-   ctxt->cssLevel = 0;
+   ctxt->cssSpecificity = 0;
    ctxt->destroy = FALSE;
    pval.typed_data.unit = STYLE_UNIT_PX;
 
@@ -1064,7 +1064,7 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 	    return;
 	  ctxt = TtaGetSpecificStyleContext (doc);
 	  /* the specific presentation is not a CSS rule */
-	  ctxt->cssLevel = 0;
+	  ctxt->cssSpecificity = 0;
 	  ctxt->destroy = FALSE;
 	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
 	  TtaFreeMemory (ctxt);
@@ -1102,7 +1102,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
      }
    ctxt = TtaGetSpecificStyleContext (doc);
    /* the specific presentation is not a CSS rule */
-   ctxt->cssLevel = 0;
+   ctxt->cssSpecificity = 0;
    ctxt->destroy = FALSE;
    /* decide of the presentation rule to be created or updated */
    TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -1452,7 +1452,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		       pval.typed_data.unit = STYLE_UNIT_PX;
 		       pval.typed_data.real = FALSE;
 		       ctxt = TtaGetSpecificStyleContext (doc);
-		       ctxt->cssLevel = 0; /* this is not a CSS rule */
+		       ctxt->cssSpecificity = 0; /* this is not a CSS rule */
 		       ctxt->destroy = delete;
 		       /****** process values a, b, c, d *****/
 		       /* value e specifies an horizontal translation */
@@ -1490,7 +1490,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   ptr = GetNumber (ptr, &x);
 		   pval.typed_data.value = x;
 		   ctxt = TtaGetSpecificStyleContext (doc);
-		   ctxt->cssLevel = 0;     /* this is not a CSS rule */
+		   ctxt->cssSpecificity = 0;     /* this is not a CSS rule */
 		   ctxt->destroy = delete;
 		   TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
 		   if (*ptr == ')')

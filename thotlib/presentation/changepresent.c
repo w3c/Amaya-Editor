@@ -1139,7 +1139,7 @@ ThotBool            TtaIsCSSPRule (PRule pRule)
      TtaError (ERR_invalid_parameter);
    else
      /* parameter pRule is correct */
-     ret = (((PtrPRule) pRule)->PrLevel != 0);
+     ret = (((PtrPRule) pRule)->PrSpecificity > 0);
    return ret;
 }
 

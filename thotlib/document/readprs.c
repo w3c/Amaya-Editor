@@ -1299,6 +1299,8 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
       /* supprime le suffixe .PRS a la fin du nom de fichier */
       buf[i - 4] = EOS;
       GetSchPres (&pPSch);
+      /* this schema is considered as the User Agent default stylesheet */
+      pPSch->PsOrigin = Agent;
       /* acquiert un bloc pour la prochaine regle lue */
       GetPresentRule (&pNextPRule);
       pNextPRule->PrCond = NULL;
