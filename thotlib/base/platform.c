@@ -61,9 +61,18 @@ CONST CHAR_T*       filename;
 
    int         filedes;
    struct stat statinfo;
-   char        mbs_filename[2 * MAX_TXT_LEN];
 
+#  ifdef _I18N_
+   char        mbs_filename[2 * MAX_TXT_LEN];
+#  else  /* !_I18N_ */
+   char*       mbs_filename;
+#  endif /* !_I18N_ */
+
+#  ifdef _I18N_
    wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
+#  else  /* !_I18N_ */
+   mbs_filename = filename;
+#  endif /* !_I18N_ */
 
 #  ifdef _WINDOWS
    filedes = open (mbs_filename, _O_RDONLY | O_BINARY);
