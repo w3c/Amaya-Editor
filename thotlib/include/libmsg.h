@@ -282,6 +282,14 @@
 #define TMSG_UNKNOWN_PRINTER                                  274
 #define TMSG_CANNOT_CREATE_PS				275
 #define TMSG_DOC_PRINTED                                276
-#define TMSG_LIB_MSG_MAX				     277
+#define TMSG_FIRST_PAGE					277
+#define TMSG_LAST_PAGE					278
+#define TMSG_NB_COPIES					279
+#define TMSG_REDUCTION					280
+#define TMSG_1_PAGE_SHEET					281
+#define TMSG_2_PAGE_SHEET					282
+#define TMSG_4_PAGE_SHEET					283
+#define TMSG_NB_PAGE_SHEET					284
+#define TMSG_LIB_MSG_MAX				     285
 
 #endif

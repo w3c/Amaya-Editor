@@ -108,45 +108,46 @@ typedef struct _SchemaMenu_Ctl
 #define T_indexschema	49
 #define T_rsindex	50
 #define T_rprint	51
+#define T_rextprint	52
 
-#define T_cancopyorcut	52
-#define T_selectsiblings 53
-#define T_selecbox	54
-#define T_pastesibling	55
-#define T_pastewithin	56
-#define T_enter	57
-#define T_cmdpaste	58
-#define T_deletenextchar 59
+#define T_cancopyorcut	53
+#define T_selectsiblings 54
+#define T_selecbox	55
+#define T_pastesibling	56
+#define T_pastewithin	57
+#define T_enter	58
+#define T_cmdpaste	59
+#define T_deletenextchar 60
 
-#define T_strsearchconstmenu	60
-#define T_strsearchgetparams	61
-#define T_strsearchonly		62
-#define T_strsearcheletattr	63
-#define T_strsearchshowvalattr	64
-#define T_strsearchretmenu	65
+#define T_strsearchconstmenu	61
+#define T_strsearchgetparams	62
+#define T_strsearchonly		63
+#define T_strsearcheletattr	64
+#define T_strsearchshowvalattr	65
+#define T_strsearchretmenu	66
 
-#define T_createtable 66
-#define T_selecttable 67
-#define T_singlecell 68
-#define T_attrtable 69
-#define T_lastsaved 70
-#define T_condlast 71
-#define T_pastesiblingtable 72
-#define T_refattr 73
-#define T_ruleattr 74
-#define T_createhairline 75
-#define T_holotable 76
-#define T_checkextens 77
-#define T_abref 78
-#define T_vertspan 79
-#define T_excepttable 80 
-#define T_entertable 81
-#define T_insertpage 82
-#define T_cutpage 83
-#define T_deletepage 84
-#define T_deletepageab 85
+#define T_createtable 67
+#define T_selecttable 68
+#define T_singlecell 69
+#define T_attrtable 70
+#define T_lastsaved 71
+#define T_condlast 72
+#define T_pastesiblingtable 73
+#define T_refattr 74
+#define T_ruleattr 75
+#define T_createhairline 76
+#define T_holotable 77
+#define T_checkextens 78
+#define T_abref 79
+#define T_vertspan 80
+#define T_excepttable 81 
+#define T_entertable 82
+#define T_insertpage 83
+#define T_cutpage 84
+#define T_deletepage 85
+#define T_deletepageab 86
 
-#define MAX_LOCAL_ACTIONS 86
+#define MAX_LOCAL_ACTIONS 87
 
 /* Indices des actions internes accessibles au clavier et
    non presentees dans les menus */

@@ -56,13 +56,6 @@
 #include "docs_f.h"
 #include "print_tv.h"
 
-static PathBuffer   PSdir;
-static boolean      PaperPrint;
-static boolean      ManualFeed;
-static boolean      NewPaperPrint;
-static char         pPrinter[MAX_NAME_LENGTH];
-static PtrDocument  pDocPrint;
-static char         PageSize[MAX_NAME_LENGTH];
 static char         Orientation[MAX_NAME_LENGTH];
 
 /*----------------------------------------------------------------------
@@ -234,7 +227,7 @@ char               *viewsToPrint;
 /*----------------------------------------------------------------------
    ConnectPrint:  Initializes printing parameters.
   ----------------------------------------------------------------------*/
-static void         ConnectPrint ()
+void ConnectPrint ()
 {
    char               *ptr;
 
@@ -254,6 +247,11 @@ static void         ConnectPrint ()
 	/*PSdir[0] = '\0';*/
 	PaperPrint = TRUE;
 	ManualFeed = FALSE;
+	FirstPage = 0;
+	LastPage = 999;
+	NbCopies = 1;
+	Reduction = 100;
+	PagesPerSheet = 1;
 	strcpy (PageSize, "A4");
      }
 }
@@ -330,8 +328,9 @@ char               *viewNames;
 		  DocumentPath,
 		  pDocPrint->DocSSchema->SsDefaultPSchema,
 		  docName, dirName, pPrinter,
-		  1, 999, 1, 0, 0, 0,
-		  100, 1, TRUE,
+		  FirstPage, LastPage, NbCopies, 
+		  0, 0, 0,
+		  Reduction, PagesPerSheet, TRUE,
 		  (int) ManualFeed, 0,
 		  1,
 		  viewNames);
@@ -342,8 +341,9 @@ char               *viewNames;
 			   DocumentPath,
 			   pDocPrint->DocSSchema->SsDefaultPSchema,
 			   docName, dirName, PSdir,
-			   1, 999, 1, 0, 0, 0,
-			   100, 1, TRUE,
+			   FirstPage, LastPage, NbCopies,
+			   0, 0, 0,
+			   Reduction, PagesPerSheet, TRUE,
 			   (int) ManualFeed, 0,
 			   1,
 			   viewNames);
@@ -426,12 +426,16 @@ char               *txt;
 				 /* confirme l'option Imprimer papier */
 				 /* les autres options ne sont prises en compte que sur confirmation */
 				 PaperPrint = NewPaperPrint;
+				 if(ThotLocalActions[T_rextprint]!=NULL)
+				   (*ThotLocalActions[T_rextprint])(ref, val, txt);
 				 break;
 			      default:
 				 break;
 			   }
 		     break;
 		  default:
+		    if(ThotLocalActions[T_rextprint]!=NULL)
+		      (*ThotLocalActions[T_rextprint])(ref, val, txt);
 		     break;
 	       }
 }

@@ -1271,7 +1271,8 @@ boolean             display;
 			      }
 			 }
 		       pPRule->PrDimRule.DrAttr = FALSE;
-		       /* change la regle specifique */
+		       /* change la regle specifique  ***** mettre dimension absolue !! */
+		       pPRule->PrDimRule.DrAbsolute = TRUE;
 		       pPRule->PrDimRule.DrValue = x;
 		    }
 	       }		/* regle specifique */
