@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -59,8 +59,8 @@ static int          NoTextChild[] =
 /* Mapping table of HTML attribute values */
 AttrValueMapping XhtmlAttrValueMappingTable[] =
 {
-   {HTML_ATTR_dir, "ltr", HTML_ATTR_dir_VAL_ltr},
-   {HTML_ATTR_dir, "rtl", HTML_ATTR_dir_VAL_rtl},
+   {HTML_ATTR_dir, "ltr", HTML_ATTR_dir_VAL_ltr_},
+   {HTML_ATTR_dir, "rtl", HTML_ATTR_dir_VAL_rtl_},
 
    {HTML_ATTR_TextAlign, "left", HTML_ATTR_TextAlign_VAL_left_},
    {HTML_ATTR_TextAlign, "center", HTML_ATTR_TextAlign_VAL_center_},
