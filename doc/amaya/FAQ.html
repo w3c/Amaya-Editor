@@ -1,12 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-   "http://www.w3.org/TR/REC-html40/loose.dtd">
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>Amaya FAQ</title>
+  <title>Amaya FAQ</title>
 </head>
+
 <body style="color: #000000;background-color: #FFFBF0" lang="en"
 text="#000000" bgcolor="#FFFBF0">
-
 <p><a href="../../"><img border="0" alt="W3C"
 src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
 src="../Icons/amaya.gif" alt="Amaya"></a></p>
@@ -15,69 +15,33 @@ src="../Icons/amaya.gif" alt="Amaya"></a></p>
 
 <h2>I. Global issues</h2>
 <ol>
-<li>
-<a href="#L125">Is Amaya an editor or a browser?</a>
-</li>
-<li>
-<a href="#Where">Where can I get Amaya?</a>
-</li>
-<li>
-<a href="#Amaya1">Is Amaya available for MacOS ?</a>
-</li>
-<li>
-<a href="#release">Can I release Amaya on a CD-ROM?</a>
-</li>
-<li>
-<a href="#make">Can I make some changes and re-release it?</a>
-</li>
-<li>
-<a href="#L147">Why is Amaya written in C?</a>
-</li>
-<li>
-<a href="#I.7.">Is Amaya Y2K compliant?</a>
-</li>
+  <li><a href="#L125">Is Amaya an editor or a browser?</a></li>
+  <li><a href="#Where">Where can I get Amaya?</a></li>
+  <li><a href="#Amaya1">Is Amaya available for MacOS ?</a></li>
+  <li><a href="#release">Can I release Amaya on a CD-ROM?</a></li>
+  <li><a href="#make">Can I make some changes and re-release it?</a></li>
+  <li><a href="#L147">Why is Amaya written in C?</a></li>
+  <li><a href="#I.7.">Is Amaya Y2K compliant?</a></li>
 </ol>
 
 <h2>II. Using Amaya</h2>
 <ol>
-<li>
-<a href="#Amaya">Is Amaya compliant with MathML?</a>
-</li>
-<li>
-<a href="#edit">Can I edit tags directly?</a>
-</li>
-<li>
-<a href="#Displayed">Fonts are too small. What can I do?</a>
-</li>
-<li>
-<a href="#want">How can I change the default window size?</a>
-</li>
-<li>
-<a href="#parsing">Can I see parsing errors detected by Amaya?</a>
-</li>
-<li>
-<a href="#What">What is the reason for a very liberal structure
-enforcement?</a>
-</li>
-<li>
-<a href="#II.7.">How can I update the document title?</a>
-</li>
+  <li><a href="#Amaya">Is Amaya compliant with MathML?</a></li>
+  <li><a href="#edit">Can I edit tags directly?</a></li>
+  <li><a href="#Displayed">Fonts are too small. What can I do?</a></li>
+  <li><a href="#want">How can I change the default window size?</a></li>
+  <li><a href="#parsing">Can I see parsing errors detected by Amaya?</a></li>
+  <li><a href="#What">What is the reason for a very liberal structure
+    enforcement?</a></li>
+  <li><a href="#II.7.">How can I update the document title?</a></li>
 </ol>
 
 <h2>III. Compiling Amaya</h2>
 <ol>
-<li>
-<a href="#Where3">Where can I get the developers documentation?</a>
-</li>
-<li>
-<a href="#Make">Make complains with missing files</a>
-</li>
-<li>
-<a href="#Make1">Make fails when compiling the HTML schema</a>
-</li>
-<li>
-<a href="#don't">I don't have Motif</a>
-</li>
+  <li><a href="#Where3">Where can I get the developers documentation?</a></li>
+  <li><a href="#Make">Make complains with missing files</a></li>
+  <li><a href="#Make1">Make fails when compiling the HTML schema</a></li>
+  <li><a href="#don't">I don't have Motif</a></li>
 </ol>
 
 <p></p>
@@ -99,16 +63,14 @@ and these features require seamless integration with browsing features.</p>
 <p>You can download the <b>Amaya</b> distribution in various formats, and you
 can use either ftp or http:</p>
 <ul>
-<li>
-<p>The page at <a
-href="http://www.w3.org/Amaya/User/BinDist.html">http://www.w3.org/Amaya/User/BinDist.html</a>
-gives access to a ready to use application for various platforms.</p>
-</li>
-<li>
-<p>The page at <a
-href="http://www.w3.org/Amaya/User/SourceDist.html">http://www.w3.org/Amaya/User/SourceDist.html</a>
-gives access to the source code.</p>
-</li>
+  <li><p>The page at <a
+    href="http://www.w3.org/Amaya/User/BinDist.html">http://www.w3.org/Amaya/User/BinDist.html</a>
+    gives access to a ready to use application for various platforms.</p>
+  </li>
+  <li><p>The page at <a
+    href="http://www.w3.org/Amaya/User/SourceDist.html">http://www.w3.org/Amaya/User/SourceDist.html</a>
+    gives access to the source code.</p>
+  </li>
 </ul>
 
 <p></p>
@@ -200,9 +162,7 @@ Views menu allows you to change the zoom factor for a single window.</p>
 
 <p>You can also change the zoom factor permanently. By default the zoom factor
 is 0 (documents are displayed with their own size). This default value can be
-modified in the registry file ($HOME/.thotrc (Unix) or Amaya/config/thot.rc
-(Windows)). For example, you can add the following line in your registry:
-ZOOM=3.</p>
+modified by means of the Special/Preferences/General menu.</p>
 
 <p></p>
 <hr>
@@ -210,25 +170,10 @@ ZOOM=3.</p>
 
 <h2><a name="want">II.4. How can I change the default window size</a></h2>
 
-<p>Parameters related to the windows displaying HTML documents are stored in
-the <code>Amaya/amaya/HTML.conf</code> file. In that file there are different
-sections, one for each possible presentation. Normally you only act on the
-first section:</p>
-<pre>style HTMLP
-open
-  Formatted_view:        1 1 182 250
-geometry
-  Structure_view:        190 100 160 170
-  Alternate_view:        190 1 156 99
-  Links_view:            192 3 156 120
-  Table_of_contents:     194 5 156 120
-  Math_Structure_view:   195 6 156 80
-  Graph_Structure_view:  197 8 156 80  </pre>
-
-<p>For each view there are four parameters: x, y, width and height. You can
-change these default values. For Unix users we suggest you copy this file in
-your home directory (<code>$HOME/HTML.conf</code>)  and you edit it.. So
-modifications won't be lost next time Amaya is updated.</p>
+<p>Resize your window to the value you'd like, then use the
+Special/Preference/Geometry menu to save the current geometry of the displayed
+windows. Your modifications won' be lost the next time that Amaya is
+updated.</p>
 
 <p></p>
 <hr>
@@ -256,14 +201,10 @@ enforcement?</h2>
 against the HTML DTD. When designing Amaya, we were faced with a difficult
 choice:</p>
 <ol>
-<li>
-Adopt a strict position and reject all invalid pages. Most users would be very
-disapointed not to be able to see many pages that     other Web clients can
-display;
-</li>
-<li>
-Accept invalid pages and let Amaya fix the most common bugs.
-</li>
+  <li>Adopt a strict position and reject all invalid pages. Most users would
+    be very disapointed not to be able to see many pages that     other Web
+    clients can display;</li>
+  <li>Accept invalid pages and let Amaya fix the most common bugs.</li>
 </ol>
 
 <p>We took the latest position and decided that Amaya should try to fix bugs,
@@ -307,21 +248,15 @@ documentation</a></h2>
 <p>Those who want to extend or change the Amaya application need to read the
 following documentation:</p>
 <ul>
-<li>
-Overview of the <a href="http://www.w3.org/Amaya/User/AmayaArchi.html">Amaya
-architecture.</a>
-</li>
-<li>
-The <a href="http://www.w3.org/Amaya/User/APIman.toc.html">Thot API manual</a>
-</li>
-<li>
-The <a href="http://www.w3.org/Amaya/User/Appman.toc.html">Thot Application
-generation manual</a>
-</li>
-<li>
-The <a href="http://www.w3.org/Amaya/User/languages.toc.html">Thot language
-manual</a>
-</li>
+  <li>Overview of the <a
+    href="http://www.w3.org/Amaya/User/AmayaArchi.html">Amaya
+    architecture.</a></li>
+  <li>The <a href="http://www.w3.org/Amaya/User/APIman.toc.html">Thot API
+    manual</a></li>
+  <li>The <a href="http://www.w3.org/Amaya/User/Appman.toc.html">Thot
+    Application generation manual</a></li>
+  <li>The <a href="http://www.w3.org/Amaya/User/languages.toc.html">Thot
+    language manual</a></li>
 </ul>
 
 <p></p>
@@ -348,16 +283,13 @@ and launch configure to create the Makefile(s):</p>
 
 <p>Thot compilers need a <strong>cpp</strong> preprocessor:</p>
 <ul>
-<li>
-If you use GNU tools, configure should invoke the gcc compiler with the right
-options. You can check that file <em>Options</em> contains the following
-definition:
-<pre>CPP     = gcc -E -x c</pre>
-</li>
-<li>
-In other cases you have to make sure that the <strong>cpp</strong>
-preprocessor is in your PATH.
-</li>
+  <li>If you use GNU tools, configure should invoke the gcc compiler with the
+    right options. You can check that file <em>Options</em> contains the
+    following definition:
+    <pre>CPP     = gcc -E -x c</pre>
+  </li>
+  <li>In other cases you have to make sure that the <strong>cpp</strong>
+    preprocessor is in your PATH.</li>
 </ul>
 
 <p></p>
@@ -379,29 +311,30 @@ and later) of <a href="http://www.lesstif.org/">Lesstif</a>.</p>
 src="http://validator.w3.org/images/vh40.gif" alt="Valid HTML 4.0!"
 height="31" width="88"></a></p>
 <address>
-<a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
-$Date$</address>
+  <a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+  $Date$
+</address>
 <address>
+  <p class="policyfooter"><small><a
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
+  &nbsp;&copy;&nbsp; 1997 <a href="http://www.w3.org/">W3C</a> (<a
+  href="http://www.lcs.mit.edu/">MIT</a>, <a
+  href="http://www.inria.fr/">INRIA</a>, <a
+  href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
+  Disclaimer">liability,</a> <a
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
+  Trademarks">trademark</a>, <a
+  href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
+  use </a>and <a
+  href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
+  licensing </a>rules apply. Your interactions with this site are in
+  accordance with our <a
+  href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
+  and <a
+  href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
+  privacy statements.</small></p>
 
-<p class="policyfooter"><small><a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
-&nbsp;&copy;&nbsp; 1997 <a href="http://www.w3.org/">W3C</a> (<a
-href="http://www.lcs.mit.edu/">MIT</a>, <a
-href="http://www.inria.fr/">INRIA</a>, <a
-href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
-Disclaimer">liability,</a> <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
-Trademarks">trademark</a>, <a
-href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
-use </a>and <a
-href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
-licensing </a>rules apply. Your interactions with this site are in accordance
-with our <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
-and <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
-privacy statements.</small></p>
 </address>
 
 <p></p>
