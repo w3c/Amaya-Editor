@@ -52,6 +52,7 @@
 #include "checkaccess_f.h"
 #include "config_f.h"
 #include "dialogapi_f.h"
+#include "documentapi_f.h"
 #include "inites_f.h"
 #include "input_f.h"
 #include "language_f.h"
@@ -413,8 +414,8 @@ Proc                procedure;
   ----------------------------------------------------------------------*/
 void                TtaQuit ()
 {
-  PtrDocument        *pDoc;
-  int                 d;
+  PtrDocument       pDoc;
+  int               d;
 
 #ifndef NODISPLAY
   FreeDocColors ();
@@ -432,8 +433,8 @@ void                TtaQuit ()
 	UnloadTree (d + 1);
 	pDoc = LoadedDocument[d];
 	/* free document schemas */
-	FreeDocumentSchemas (*pDoc);
-	FreeDocument (LoadedDocument[d]);
+	FreeDocumentSchemas (pDoc);
+	FreeDocument (pDoc);
 	LoadedDocument[d] = NULL;
       }
   FreeAll ();
