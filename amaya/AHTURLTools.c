@@ -511,7 +511,7 @@ Document   doc;
 char      *url;
 #endif /* __STDC__ */
 {
-  char    *ptr;
+  char    *ptr, *n;
   char    *documentname;
   char     url_sep;
   int      len;
@@ -535,6 +535,10 @@ char      *url;
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */
 	mkdir (ptr, S_IRWXU);
+      /* don't include ':' within document name */
+      n = strchr (documentname, ':');
+      if (n != NULL)
+	*n = EOS;
       strcat (ptr, documentname);
       TtaFreeMemory (documentname);
       /* restore the url */

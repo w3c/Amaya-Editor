@@ -698,8 +698,6 @@ View                view;
 # else  /* _WINDOWS */
   WIN_TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 # endif /* _WINDOWS */
-  MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
-  KeyboardsLoadResources ();
 }
 
 /*----------------------------------------------------------------------
@@ -920,6 +918,8 @@ void                InitMathML ()
    mIcons[12] = TtaCreatePixmapLogo (mscript_xpm);
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
 #  endif /* _WINDOWS */
+  MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
+  KeyboardsLoadResources ();
 }
 
 /*----------------------------------------------------------------------
