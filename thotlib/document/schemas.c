@@ -1686,7 +1686,8 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
 void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 			       Document document)
 {
-  PtrSSchema           pSS, pPSch;
+  PtrSSchema           pSS;
+  PtrPSchema           pPSch;
   PtrDocument          pDoc;
   PtrDocSchemasDescr   pPfS;
 #ifndef NODISPLAY
