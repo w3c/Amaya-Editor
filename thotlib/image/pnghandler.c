@@ -353,7 +353,9 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 		*pp = *pp + 1;
 	    }
 	}
-      if (info_ptr->valid & PNG_INFO_tRNS)
+      if (info_ptr->valid & PNG_INFO_tRNS &&
+	  /* degree of transparency */
+	  info_ptr->trans[info_ptr->background.index] < 127)
 	*bg = (info_ptr->background.index);
       break;
 
@@ -553,9 +555,9 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
   FILE           *fp;
       
 #ifndef _WINDOWS  
-  fp = ufopen (datafile, "r");
+  fp = fopen (datafile, "r");
 #else  /* _WINDOWS */
-  fp = ufopen (datafile, "rb");
+  fp = fopen (datafile, "rb");
 #endif /* _WINDOWS */
   if (fp != NULL)
     {
