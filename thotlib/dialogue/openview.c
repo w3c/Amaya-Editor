@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-/* I. Vatton    Mai 1994 */
-
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -19,10 +15,10 @@
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
 
-static PtrDocument  DocVueAOuvrir;
-static int          NumeroVueAOuvrir;
-static PtrElement   SousArbreVueAOuvrir;
-static DocViewNumber    VueDeReference;
+static PtrDocument  ViewToOpenDoc;
+static int          ViewToOpenNumber;
+static PtrElement   ViewToOpenSubTree;
+static DocViewNumber    ReferenceView;
 
 #include "views_f.h"
 #include "appdialogue_f.h"
@@ -32,22 +28,22 @@ static DocViewNumber    VueDeReference;
 /* | CallbackOpenView met a jour le formulaire de openview.               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                CallbackOpenView (int ref, int typedata, char *data)
+void                CallbackOpenView (int ref, int dataType, char *data)
 #else  /* __STDC__ */
-void                CallbackOpenView (ref, typedata, data)
+void                CallbackOpenView (ref, dataType, data)
 int                 ref;
-int                 typedata;
+int                 dataType;
 char               *data;
 
 #endif /* __STDC__ */
 {
    if ((int) data > 0)
-      if (DocVueAOuvrir != NULL)
-	 if (DocVueAOuvrir->DocSSchema != NULL)
+      if (ViewToOpenDoc != NULL)
+	 if (ViewToOpenDoc->DocSSchema != NULL)
 	   {
-	      NumeroVueAOuvrir = (int) data;
-	      OpenViewByMenu (DocVueAOuvrir, NumeroVueAOuvrir,
-				 SousArbreVueAOuvrir, VueDeReference);
+	      ViewToOpenNumber = (int) data;
+	      OpenViewByMenu (ViewToOpenDoc, ViewToOpenNumber,
+				 ViewToOpenSubTree, ReferenceView);
 	   }
 }
 
@@ -56,19 +52,19 @@ char               *data;
 /* | TtcOpenView initialise le menu de openview.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtcOpenView (Document document, View vue)
+void                TtcOpenView (Document document, View view)
 #else  /* __STDC__ */
-void                TtcOpenView (document, vue)
+void                TtcOpenView (document, view)
 Document            document;
-View                vue;
+View                view;
 
 #endif /* __STDC__ */
 {
-   int                 k, l, nbitem;
+   int                 k, l, nbItems;
    char               *src;
    char               *dest;
-   char                Buf[MAX_TXT_LEN];
-   char                BufMenu[MAX_TXT_LEN];
+   char                buf[MAX_TXT_LEN];
+   char                bufMenu[MAX_TXT_LEN];
 
    PtrDocument         pDoc;
 
@@ -80,22 +76,22 @@ View                vue;
      }
 
    pDoc = LoadedDocument[document - 1];
-   DocVueAOuvrir = pDoc;
-   VueDeReference = vue;
+   ViewToOpenDoc = pDoc;
+   ReferenceView = view;
 
-   if (DocVueAOuvrir != NULL)
+   if (ViewToOpenDoc != NULL)
      {
 	/* construit le menus des vues que l'on peut ouvrir */
-	BuildViewList (pDoc, Buf, &nbitem);
-	if (nbitem == 0)
+	BuildViewList (pDoc, buf, &nbItems);
+	if (nbItems == 0)
 	   TtaDisplaySimpleMessage (INFO, LIB, ALL_VIEWS_ALREADY_CREATED);
 	else
 	  {
-	     NumeroVueAOuvrir = -1;
+	     ViewToOpenNumber = -1;
 	     /* ajoute un 'B' au debut de chaque entree du menu */
-	     dest = &BufMenu[0];
-	     src = &Buf[0];
-	     for (k = 1; k <= nbitem; k++)
+	     dest = &bufMenu[0];
+	     src = &buf[0];
+	     for (k = 1; k <= nbItems; k++)
 	       {
 		  strcpy (dest, "B");
 		  dest++;
@@ -104,8 +100,8 @@ View                vue;
 		  dest += l + 1;
 		  src += l + 1;
 	       }
-	     TtaNewPopup (NumMenuViewsToOpen, 0, TtaGetMessage (LIB, VIEWS), nbitem,
-			  BufMenu, NULL, 'L');
+	     TtaNewPopup (NumMenuViewsToOpen, 0, TtaGetMessage (LIB, VIEWS), nbItems,
+			  bufMenu, NULL, 'L');
 	     TtaShowDialogue (NumMenuViewsToOpen, FALSE);
 	  }
      }
@@ -116,23 +112,23 @@ View                vue;
 /* | TtcCloseView ferme une frame de document.                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtcCloseView (Document document, View view)
+void                TtcCloseView (Document document, View viewIn)
 #else  /* __STDC__ */
-void                TtcCloseView (document, view)
+void                TtcCloseView (document, viewIn)
 Document            document;
-View                view;
+View                viewIn;
 
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   int                 vue;
+   int                 view;
    boolean             assoc;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc != NULL)
      {
-	GetViewInfo (document, view, &vue, &assoc);
-	CloseView (pDoc, vue, assoc);
+	GetViewInfo (document, viewIn, &view, &assoc);
+	CloseView (pDoc, view, assoc);
      }
 }
 
