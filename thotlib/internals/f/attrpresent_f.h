@@ -6,8 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CreateInheritedAttrTable ( PtrElement pEl );
-extern void CreateComparAttrTable ( PtrAttribute pAttr );
+extern void CreateInheritedAttrTable ( PtrElement pEl,
+                                       PtrDocument pDoc );
+extern void CreateComparAttrTable ( PtrAttribute pAttr,
+                                    PtrDocument pDoc );
 extern void TransmitElementContent ( PtrElement pEl,
                                      PtrDocument pDoc,
                                      CHAR_T* attrName,
@@ -21,8 +23,10 @@ extern void RepApplyTransmitRules ( PtrElement pTransmEl,
 
 #else /* __STDC__ */
 
-extern void CreateInheritedAttrTable (/* PtrElement pEl */);
-extern void CreateComparAttrTable (/* PtrAttribute pAttr */);
+extern void CreateInheritedAttrTable (/* PtrElement pEl,
+                                         PtrDocument pDoc */);
+extern void CreateComparAttrTable (/* PtrAttribute pAttr,
+                                      PtrDocument pDoc */);
 extern void TransmitElementContent (/* PtrElement pEl,
                                        PtrDocument pDoc,
                                        CHAR_T* attrName,

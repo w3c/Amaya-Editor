@@ -28,7 +28,6 @@ static ThotBool     error;
 #include "readstr_f.h"
 #include "readprs_f.h"
 
-
 /*----------------------------------------------------------------------
    	ReadrdTypeRegle  lit un type de regle de presentation et	
    	retourne sa valeur.						
@@ -307,7 +306,6 @@ static InheritMode  ReadInheritMode (BinFile file)
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    	ReadFunctionType  lit un type de fonction de presentation et	
    	retourne sa valeur.						
@@ -404,7 +402,6 @@ static FunctionType ReadFunctionType (BinFile file, ThotBool * repeat)
    return functType;
 }
 
-
 /*----------------------------------------------------------------------
    	ReadAlignment   lit un mode d'alignement des lignes et retourne	
    	sa valeur.							
@@ -444,7 +441,6 @@ static BAlignment   ReadAlignment (BinFile file)
 
    return align;
 }
-
 
 /*----------------------------------------------------------------------
    	ReadPresCondition      lit un type de condition et retourne	
@@ -545,7 +541,6 @@ static PresCondition ReadPresCondition (BinFile file)
    return condtype;
 }
 
-
 /*----------------------------------------------------------------------
    	ReadArithRel     lit la relation d'une condition Within		
   ----------------------------------------------------------------------*/
@@ -572,7 +567,6 @@ static ArithRel     ReadArithRel (BinFile file)
      }
    return (rel);
 }
-
 
 /*----------------------------------------------------------------------
    	ReadBoxEdge   lit un repere de boite et retourne sa valeur.	
@@ -623,7 +617,6 @@ static BoxEdge      ReadBoxEdge (BinFile file)
 	 }
    return edge;
 }
-
 
 /*----------------------------------------------------------------------
    	ReadLevel     lit un niveau relatif de boite et retourn		
@@ -715,7 +708,6 @@ static CounterOp    ReadCounterOp (BinFile file)
    return optype;
 }
 
-
 /*----------------------------------------------------------------------
    	ReadBasicType lit un type de base dans le fichier et retourne	
    	sa valeur.							
@@ -757,7 +749,6 @@ static BasicType    ReadBasicType (BinFile file)
 	 }
    return basictyp;
 }
-
 
 /*----------------------------------------------------------------------
    	ReadVariableType  lit un type de variable et retourne sa valeur	
@@ -813,7 +804,6 @@ static VariableType ReadVariableType (BinFile file)
    return vartyp;
 }
 
-
 /*----------------------------------------------------------------------
    	ReadCounterStyle lit un style de compteur et retourne sa valeur	
   ----------------------------------------------------------------------*/
@@ -852,7 +842,6 @@ static CounterStyle ReadCounterStyle (BinFile file)
    return countstyle;
 }
 
-
 /*----------------------------------------------------------------------
    	ReadCounterValue    lit la nature du compteur inclus dans une	
    	variable et retourne sa valeur.					
@@ -885,7 +874,6 @@ static CounterValue ReadCounterValue (BinFile file)
 	 }
    return value;
 }
-
 
 /*----------------------------------------------------------------------
    	ReadContentType	lit un type de contenu retourne sa valeur.	
@@ -922,12 +910,11 @@ ContentType         ReadContentType (BinFile file)
    return conttype;
 }
 
-
 /*----------------------------------------------------------------------
    	ReadPRulePtr	retourne un pointeur sur la regle suivante ou	
    	s'il n'y a pas de regle suivante.				
   ----------------------------------------------------------------------*/
-PtrPRule ReadPRulePtr (BinFile file, PtrPRule *pNextPRule)
+PtrPRule     ReadPRulePtr (BinFile file, PtrPRule * pNextPRule)
 {
    char                c;
 
@@ -938,7 +925,6 @@ PtrPRule ReadPRulePtr (BinFile file, PtrPRule *pNextPRule)
    else
       return *pNextPRule;
 }
-
 
 /*----------------------------------------------------------------------
    	ReadRefKind
@@ -967,11 +953,10 @@ static RefKind      ReadRefKind (BinFile file)
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    	ReadPosRule   lit un positionnement relatif			
   ----------------------------------------------------------------------*/
-void ReadPosRule (BinFile file, PosRule *pPosRule)
+void       ReadPosRule (BinFile file, PosRule *pPosRule)
 {
    pPosRule->PoPosDef = ReadBoxEdge (file);
    pPosRule->PoPosRef = ReadBoxEdge (file);
@@ -984,7 +969,6 @@ void ReadPosRule (BinFile file, PosRule *pPosRule)
    pPosRule->PoRefKind = ReadRefKind (file);
    TtaReadShort (file, &pPosRule->PoRefIdent);
 }
-
 
 /*----------------------------------------------------------------------
    	ReadAttrCompar lit un type de comparaison pour les valeurs	
@@ -1011,12 +995,11 @@ AttrComparType      ReadAttrCompar (BinFile file)
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    	ReadPRules    lit une suite de regles chainees et fait pointer	
    	le pointeur pPRule sur la premiere regle de la suite de regles lues	
   ----------------------------------------------------------------------*/
-void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
+void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
 {
    PtrPRule            pPR;
    PtrCondition        pCond;
@@ -1225,7 +1208,6 @@ void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
      }
 }
 
-
 /*----------------------------------------------------------------------
    	ReadPresentationSchema 						
    	lit un fichier contenant un schema de presentation et le charge	
@@ -1237,7 +1219,7 @@ void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
    	Retourne un pointeur sur le schema de presentation en memoire	
    	chargement reussi, NULL si echec.				
   ----------------------------------------------------------------------*/
-PtrPSchema ReadPresentationSchema (Name fileName, PtrSSchema pSS)
+PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 {
    PtrPRule            pNextPRule;
    PtrPSchema          pPSch;
@@ -1333,7 +1315,7 @@ PtrPSchema ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	pPSch->PsFirstDefaultPRule = ReadPRulePtr (file, &pNextPRule);
 	ret = !error;
 	if (pSS->SsRootElem == 0) 
-	   ret = ReadStructureSchema (pPSch->PsStructName, pSS);
+	  ret = FALSE;
 
 	if (!ret || pPSch->PsStructCode != pSS->SsCode)
 	  {
@@ -1667,6 +1649,7 @@ PtrPSchema ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	/* message 'Schema incorrect' */
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
 			   fileName);
+	FreeSchPres (pPSch);
 	return NULL;
      }
    else

@@ -39,6 +39,7 @@
 #include "presrules_f.h"
 #include "presvariables_f.h"
 #include "references_f.h"
+#include "schemas_f.h"
 #include "search_f.h"
 #include "searchref_f.h"
 #include "structlist_f.h"
@@ -47,18 +48,11 @@
 
 static PtrAbstractBox pAbbBegin[MAX_VIEW_DOC];
 
-
 /*----------------------------------------------------------------------
    IsEnclosing retourne vrai si le pave pAbb1 englobe le pave pAbb2   
    ou si les deux pointeurs pointent le meme pave.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IsEnclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
-#else  /* __STDC__ */
-static ThotBool     IsEnclosing (pAbb1, pAbb2)
-PtrAbstractBox      pAbb1;
-PtrAbstractBox      pAbb2;
-#endif /* __STDC__ */
 {
    ThotBool            ret;
    PtrAbstractBox      pAbb;
@@ -79,19 +73,11 @@ PtrAbstractBox      pAbb2;
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    Enclosing retourne un pointeur sur le pave de plus bas niveau   
    qui englobe a la fois les deux paves pAbb1 et pAbb2.    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrAbstractBox      Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
-#else  /* __STDC__ */
-PtrAbstractBox      Enclosing (pAbb1, pAbb2)
-PtrAbstractBox      pAbb1;
-PtrAbstractBox      pAbb2;
-#endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAbb;
    ThotBool            found;
@@ -116,23 +102,14 @@ PtrAbstractBox      pAbb2;
    return pAbb;
 }
 
-
 /*----------------------------------------------------------------------
    UpdateAbsBoxVolume
    update the volume of the abstract box of element pEl in view view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
-#else
-void                UpdateAbsBoxVolume (pEl, view, pDoc)
-   PtrElement pEl;
-   int view;
-   PtrDocument pDoc;
-
-#endif /* __STDC__ */
+void         UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
 {
-  int		       dVol;
-  PtrAbstractBox      pAb;
+  int	          dVol;
+  PtrAbstractBox  pAb;
 
   pAb = pEl->ElAbstractBox[view];
   if (pAb != NULL)
@@ -153,27 +130,16 @@ void                UpdateAbsBoxVolume (pEl, view, pDoc)
     }
 }
 
-
 /*----------------------------------------------------------------------
    SimpleSearchRulepEl cherche dans la chaine pRule la regle du       
    type typeRule a appliquer pour la vue view.                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
-					 int view, PRuleType typeRule,
-					 FunctionType typeFunc, PtrPRule *pRule)
-#else  /* __STDC__ */
-static void         SimpleSearchRulepEl (pRuleView1, pEl, view, typeRule,
-					 typeFunc, pRule)
-PtrPRule           *pRuleView1;
-PtrElement          pEl;
-int                 view;
-PRuleType           typeRule;
-FunctionType        typeFunc;
-PtrPRule           *pRule;
-#endif /* __STDC__ */
+static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
+				 int view, PRuleType typeRule,
+				 FunctionType typeFunc, PtrPRule *pRule,
+				 PtrDocument pDoc)
 {
-  PtrPRule            pR;
+  PtrPRule   pR;
 
   pR = *pRule;
   *pRule = NULL;
@@ -186,7 +152,8 @@ PtrPRule           *pRule;
 	  /* regle du type cherche' */
 	  if (pR->PrViewNum == view &&	    /* pour la vue voulue */
 	      (pR->PrCond == NULL ||
-	       CondPresentation (pR->PrCond, pEl, NULL, NULL, view, pEl->ElStructSchema)))
+	       CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
+				 pEl->ElStructSchema, pDoc)))
 	    /* les conditions d'application de la regle sont satisfaites */
 	    /* cette regle convient, a moins qu'on en trouve une autre */
 	    /* plus specifique dans les regles qui suivent */
@@ -196,7 +163,8 @@ PtrPRule           *pRule;
 	      if (pR->PrViewNum == 1 && *pRuleView1 == NULL &&
 		  /* regle du type cherche' pour la vue 1 */
 		  (pR->PrCond == NULL ||
-		   CondPresentation (pR->PrCond, pEl, NULL, NULL, view, pEl->ElStructSchema)))
+		   CondPresentation (pR->PrCond, pEl, NULL, NULL, view,
+				     pEl->ElStructSchema, pDoc)))
 		/* les conditions d'application de la regle sont satisfaites*/
 		/* on la garde pour le cas ou on ne trouve pas mieux */
 		*pRuleView1 = pR;
@@ -214,7 +182,6 @@ PtrPRule           *pRule;
     }
 }
 
-
 /*----------------------------------------------------------------------
    GlobalSearchRulepEl returns the presentation rule of type (typeRule or
   typeFunc) that applies to the element pEl in the view.
@@ -231,22 +198,11 @@ PtrPRule           *pRule;
   If the returned rule is associated to an attribute, pAttr points this
   attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema *pSPR, PtrSSchema *pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, FunctionType typeFunc, ThotBool isElPage, ThotBool attr, PtrAttribute * pAttr)
-#else  /* __STDC__ */
-PtrPRule            GlobalSearchRulepEl (pEl, pSPR, pSSR, presNum, pSchP, view, typeRule, typeFunc, isElPage, attr, pAttr)
-PtrElement          pEl;
-PtrPSchema         *pSPR;
-PtrSSchema         *pSSR;
-int                 presNum;
-PtrPSchema          pSchP;
-int                 view;
-PRuleType           typeRule;
-FunctionType        typeFunc;
-ThotBool            isElPage;
-ThotBool            attr;
-PtrAttribute       *pAttr;
-#endif /* __STDC__ */
+PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR,
+			      PtrSSchema *pSSR, int presNum, PtrPSchema pSchP,
+			      int view, PRuleType typeRule,
+			      FunctionType typeFunc, ThotBool isElPage,
+			      ThotBool attr, PtrAttribute * pAttr)
 {
   int                 index;
   PtrPRule            pRule, pRuleSpecView1, pRuleView1;
@@ -263,7 +219,7 @@ PtrAttribute       *pAttr;
   pRule = NULL;
   *pAttr = NULL;
   *pSPR = NULL;
-  if (pEl != NULL && pEl->ElStructSchema->SsPSchema != NULL)
+  if (pEl != NULL && PresentationSchema (pEl->ElStructSchema, pDoc) != NULL)
     {
       /* cherche d'abord parmi les regles de presentation specifique */
       /* associees a l'element, sauf s'il s'agit d'un pave de presentation */
@@ -317,12 +273,12 @@ PtrAttribute       *pAttr;
 	      /* schemas de presentation additionnels les plus prioritaires, */
 	      /* sinon on ignore les schemas additionnels. */
 	      if (view == 1)
-		pHd = pA->AeAttrSSchema->SsFirstPSchemaExtens;
+		pHd = FirstPSchemaExtension (pA->AeAttrSSchema, pDoc);
 	      else
 		pHd = NULL;
 	      if (pHd == NULL)
 		/* pas de schema additionnel. On prend le schema principal */
-		pSP = pA->AeAttrSSchema->SsPSchema;
+		pSP = PresentationSchema (pA->AeAttrSSchema, pDoc);
 	      else
 		/* on prend le schema additionnel le plus prioritaire */
 		{
@@ -344,7 +300,7 @@ PtrAttribute       *pAttr;
 			/* regle du type cherche' pour la vue voulue */
 			if (pR->PrCond == NULL ||
 			    CondPresentation (pR->PrCond, pEl, pA, pEl, view,
-					      pA->AeAttrSSchema))
+					      pA->AeAttrSSchema, pDoc))
 			  /* les conditions d'application de la regle sont */
 			  /* satisfaites. On garde cette regle et on continue */
 			  /* pour voir s'il y en a une plus specifique */
@@ -376,7 +332,7 @@ PtrAttribute       *pAttr;
 			  if (pHd == NULL)
 			    /* plus de schemas additionnels, on prend le schema
 			       principal */
-			    pSP = pA->AeAttrSSchema->SsPSchema;
+			    pSP = PresentationSchema (pA->AeAttrSSchema, pDoc);
 			  else
 			    pSP = pHd->HdPSchema;
 			}
@@ -394,17 +350,15 @@ PtrAttribute       *pAttr;
 	/* presentation des attributs herites */
 	if (presNum == 0)
 	  {
-	    if (pEl->ElStructSchema->SsPSchema->
-		PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	    pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
+	    if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 	      {
 		/* il y a heritage possible */
-		if ((inheritTable = pEl->ElStructSchema->SsPSchema->
-		     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		if ((inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 		  {
 		    /* cette table n'existe pas on la genere */
-		    CreateInheritedAttrTable (pEl);
-		    inheritTable = pEl->ElStructSchema->SsPSchema->
-		      PsInheritedAttr[pEl->ElTypeNumber - 1];
+		    CreateInheritedAttrTable (pEl, pDoc);
+		    inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
 		  }
 		for (l = 1; l <= pEl->ElStructSchema->SsNAttributes &&
 		       *pSPR == NULL; l++)
@@ -420,13 +374,15 @@ PtrAttribute       *pAttr;
 		      /* pour la vue principale. Sinon, on ignore les */
 		      /* schemas additionnels */
 		      if (view == 1)
-			pHd = (*pAttr)->AeAttrSSchema->SsFirstPSchemaExtens;
+			pHd = FirstPSchemaExtension ((*pAttr)->AeAttrSSchema,
+						     pDoc);
 		      else
 			pHd = NULL;
 		      if (pHd == NULL)
 			/* pas de schema additionnel. Prend le schema
 			   principal */
-			pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
+			pSP = PresentationSchema ((*pAttr)->AeAttrSSchema,
+						  pDoc);
 		      else
 			/* on cherche le schema additionnel le plus
 			   proritaire */
@@ -452,7 +408,8 @@ PtrAttribute       *pAttr;
 				if (pR->PrCond == NULL ||
 				    CondPresentation (pR->PrCond, pEl,
 						      *pAttr, pElAttr, view,
-						      (*pAttr)->AeAttrSSchema))
+						      (*pAttr)->AeAttrSSchema,
+						      pDoc))
 				  /*les conditions d'application de la regle
 				    sont satisfaites. On garde cette regle et
 				    on continue pour trouver les regles plus
@@ -485,7 +442,7 @@ PtrAttribute       *pAttr;
 				  if (pHd == NULL)
 				    /* plus de schemas additionnels, on
 				       prend le schema principal */
-				    pSP = (*pAttr)->AeAttrSSchema->SsPSchema;
+				    pSP = PresentationSchema ((*pAttr)->AeAttrSSchema, pDoc);
 				  else
 				    pSP = pHd->HdPSchema;
 				}
@@ -500,17 +457,18 @@ PtrAttribute       *pAttr;
 	  /* on n'a pas encore trouve' */
 	  *pAttr = NULL;
 	  pSchS = pEl->ElStructSchema;
-	  if (presNum == 0 && pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak && isElPage)
+	  if (presNum == 0 && pEl->ElTerminal &&
+	      pEl->ElLeafType == LtPageColBreak && isElPage)
 	    {
 	      /* on cherche le type de la boite page */
-	      presNum = GetPageBoxType (pEl, view, &pSchP);
+	      presNum = GetPageBoxType (pEl, pDoc, view, &pSchP);
 	      pSchS = pEl->ElStructSchema;
 	      index = pEl->ElTypeNumber;
 	    }
 	  else if (presNum == 0 || pSchP == NULL)
 	    /* cherche le schema de presentation de l'element */
 	    {
-	      SearchPresSchema (pEl, &pSchP, &index, &pSchS);
+	      SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
 	      /***** s'il s'agit de l'element racine d'un objet d'une nature
 		     differente de son pere, pSchP est le schema de presentation
 		     de la nature englobante et view (numero de vue dans le
@@ -518,7 +476,7 @@ PtrAttribute       *pAttr;
 	    }
 	  /* on traite d'abord les schemas de presentation additionnels les */
 	  /* plus prioritaires */
-	  pHd = pSchS->SsFirstPSchemaExtens;
+	  pHd = FirstPSchemaExtension (pSchS, pDoc);
 	  if (pHd == NULL)
 	    pSP = pSchP;
 	  else
@@ -541,7 +499,8 @@ PtrAttribute       *pAttr;
 	      /* cherche une regle du type voulu, pour la vue voulue, parmi */
 	      /* les regles du type d'element */
 	      pRuleView1 = NULL;
-	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc, &pRule);
+	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc,
+				   &pRule, pDoc);
 	      if (pRule == NULL)
 		/* on n'a pas encore trouve'. On continue de chercher dans les */
 		/* schemas de presentation de moindre priorite' */
@@ -570,7 +529,8 @@ PtrAttribute       *pAttr;
 	      pRuleSpecView1 = pRuleView1;
 	      /* premiere regle de presentation par defaut */
 	      pRule = pSchP->PsFirstDefaultPRule;
-	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc, &pRule);
+	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc,
+				   &pRule, pDoc);
 	      if (pRule == NULL)
 		{
 		  if (pRuleSpecView1 != NULL)
@@ -589,7 +549,6 @@ PtrAttribute       *pAttr;
   return pRule;
 }
 
-
 /*----------------------------------------------------------------------
   SearchRulepAb returns the presentation rule of type (typeRule or
   typeFunc) that applies to the abstract box pAb.
@@ -599,18 +558,10 @@ PtrAttribute       *pAttr;
   If the returned rule is associated to an attribute, pAttr points this
   attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPRule            SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, FunctionType typeFunc, ThotBool attr, PtrAttribute * pAttr)
-#else  /* __STDC__ */
-PtrPRule            SearchRulepAb (pDoc, pAb, pSPR, typeRule, typeFunc, attr, pAttr)
-PtrDocument         pDoc;
-PtrAbstractBox      pAb;
-PtrPSchema         *pSPR;
-PRuleType           typeRule;
-FunctionType        typeFunc;
-ThotBool            attr;
-PtrAttribute       *pAttr;
-#endif /* __STDC__ */
+PtrPRule SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb,
+			PtrPSchema * pSPR, PRuleType typeRule,
+			FunctionType typeFunc, ThotBool attr,
+			PtrAttribute * pAttr)
 {
   PtrSSchema          pSSR;
   PtrPRule            pRuleFound;
@@ -624,28 +575,19 @@ PtrAttribute       *pAttr;
 	presNum = pAb->AbTypeNum;
       else
 	presNum = 0;
-      pRuleFound = GlobalSearchRulepEl (pAb->AbElement, pSPR, &pSSR, presNum,
+      pRuleFound = GlobalSearchRulepEl (pAb->AbElement, pDoc, pSPR, &pSSR, presNum,
 					pAb->AbPSchema, pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
 					typeRule, typeFunc, FALSE, attr, pAttr);
     }
   return pRuleFound;
 }
 
-
-
 /*----------------------------------------------------------------------
    IsDiffPosition retourne vrai si la position abPos est differente de 
    la position Posit (variable de la fonction NouvRef).    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     IsDiffPosition (AbPosition abPos, AbPosition * abPosit, ThotBool isInverted)
-#else  /* __STDC__ */
-static ThotBool     IsDiffPosition (abPos, abPosit, isInverted)
-AbPosition          abPos;
-AbPosition         *abPosit;
-ThotBool            isInverted;
-
-#endif /* __STDC__ */
+static ThotBool IsDiffPosition (AbPosition abPos, AbPosition * abPosit,
+				ThotBool isInverted)
 {
   AbPosition         *pAbbox1;
   ThotBool            different;
@@ -679,24 +621,12 @@ ThotBool            isInverted;
   return different;
 }
 
-
-
 /*----------------------------------------------------------------------
    IsDiffDimension retourne vrai si la dimension abDim est differente  
    de la dimension abDimens (variable de la fonction         
    NouvRef).                                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     IsDiffDimension (AbDimension abDim, AbDimension * abDimens)
-
-#else  /* __STDC__ */
-static ThotBool     IsDiffDimension (abDim, abDimens)
-AbDimension         abDim;
-AbDimension        *abDimens;
-
-#endif /* __STDC__ */
-
 {
    AbDimension        *pAbbox1;
    ThotBool            different;
@@ -715,8 +645,6 @@ AbDimension        *abDimens;
    return different;
 }
 
-
-
 /*----------------------------------------------------------------------
    IsNewPosOrDim cherche si la regle pointee par pR (qui appartient au   
    schema de presentation pointe' par pSPR) en s'appliquant
@@ -728,18 +656,9 @@ AbDimension        *abDimens;
    pAttr pointe le bloc attribut auquel correspond la regle
    pR (NULL si la regle n'est pas une regle d'attribut).  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR, PtrPSchema pSPR, Level levelPos, PtrDocument pDoc, PtrAttribute pAttr)
-
-#else  /* __STDC__ */
-static ThotBool     IsNewPosOrDim (pAb, pR, pSPR, levelPos, pDoc, pAttr)
-PtrAbstractBox      pAb;
-PtrPRule            pR;
-PtrPSchema          pSPR;
-Level               levelPos;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
+static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
+			       PtrPSchema pSPR, Level levelPos,
+			       PtrDocument pDoc, PtrAttribute pAttr)
 {
   ThotBool            ret;
   AbPosition          abPosit;
@@ -981,24 +900,13 @@ PtrAttribute        pAttr;
   return (ret);
 }
 
-
 /*----------------------------------------------------------------------
    ReapplRef reapplique toutes les regles appliquees au pave pAb  
    et qui font reference au pave pRef.                     
    Retourne vrai si au moins une regle a ete reappliquee.  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static ThotBool     ReapplRef (pRef, pAb, pDoc)
-PtrAbstractBox      pRef;
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
+			   PtrDocument pDoc)
 {
    ThotBool            ret;
    PtrPSchema          pSPR;
@@ -1143,8 +1051,6 @@ PtrDocument         pDoc;
    return ret;
 }
 
-
-
 /*----------------------------------------------------------------------
    FunctionRule retourne le pointeur sur la premiere regle        
    de fonction de presentation associee a l'element pEl.   
@@ -1153,24 +1059,14 @@ PtrDocument         pDoc;
    Retourne NULL s'il n'y a pas de regle de creation pour  
    cet element                                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrPRule            FunctionRule (PtrElement pEl, PtrPSchema * pSchP)
-
-#else  /* __STDC__ */
-PtrPRule            FunctionRule (pEl, pSchP)
-PtrElement          pEl;
-PtrPSchema         *pSchP;
-
-#endif /* __STDC__ */
-
+PtrPRule FunctionRule (PtrElement pEl, PtrPSchema * pSchP, PtrDocument pDoc)
 {
    PtrPRule            pRule;
    int                 index;
    PtrSSchema          pSchS;
 
    pRule = NULL;
-   SearchPresSchema (pEl, pSchP, &index, &pSchS);
+   SearchPresSchema (pEl, pSchP, &index, &pSchS, pDoc);
    if (*pSchP != NULL)
      {
 	/* pRule : premiere regle de presentation specifique a ce type */
@@ -1187,23 +1083,13 @@ PtrPSchema         *pSchP;
    return pRule;
 }
 
-
 /*----------------------------------------------------------------------
    SetDeadAbsBox marque Mort le pave pointe par pAb et met a jour       
    le volume des paves englobants. Le pave mort sera       
    detruit par la procedure AbstractImageUpdated, apres traitement     
    par le Mediateur.                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                SetDeadAbsBox (PtrAbstractBox pAb)
-
-#else  /* __STDC__ */
-void                SetDeadAbsBox (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-
 {
    int                 vol;
    PtrAbstractBox      pAbb;
@@ -1225,7 +1111,6 @@ PtrAbstractBox      pAb;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ApplyRefAbsBoxSupp cherche tous les paves qui font reference a un pave a
    detruire pointe par pAb, et pour ces paves reapplique  
@@ -1233,18 +1118,8 @@ PtrAbstractBox      pAb;
    Retourne dans pAbbReDisp un pointeur sur le pave a        
    reafficher.                                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ApplyRefAbsBoxSupp (PtrAbstractBox pAb, PtrAbstractBox * pAbbReDisp, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                ApplyRefAbsBoxSupp (pAb, pAbbReDisp, pDoc)
-PtrAbstractBox      pAb;
-PtrAbstractBox     *pAbbReDisp;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void ApplyRefAbsBoxSupp (PtrAbstractBox pAb, PtrAbstractBox * pAbbReDisp,
+			 PtrDocument pDoc)
 {
    PtrAbstractBox      pAbb;
 
@@ -1274,8 +1149,6 @@ PtrDocument         pDoc;
      }
 }
 
-
-
 /*----------------------------------------------------------------------
    ApplyRefAbsBoxNew La suite de paves comprise entre pAbbFirst et pAbbLast   
    vient d'etre creee, modifie les paves environnants qui  
@@ -1284,19 +1157,8 @@ PtrDocument         pDoc;
    englobe tous les paves modifies, y compris les nouveaux 
    paves.                                                  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, PtrAbstractBox * pAbbReDisp, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                ApplyRefAbsBoxNew (pAbbFirst, pAbbLast, pAbbReDisp, pDoc)
-PtrAbstractBox      pAbbFirst;
-PtrAbstractBox      pAbbLast;
-PtrAbstractBox     *pAbbReDisp;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
+			PtrAbstractBox * pAbbReDisp, PtrDocument pDoc)
 {
    PtrAbstractBox      pAbb;
    PtrPRule            pRule;
@@ -1420,9 +1282,6 @@ PtrDocument         pDoc;
      }
 }
 
-
-
-
 /*----------------------------------------------------------------------
    AbsBoxPresType     cherche le pave de presentation de type         
    BoxType (defini dans le schema de presentation pSchP) 
@@ -1432,14 +1291,8 @@ PtrDocument         pDoc;
    de la chaine des paves dupliques de l'element           
    Retourne un pointeur sur ce pave ou NULL si pas trouve'.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrAbstractBox AbsBoxPresType (PtrAbstractBox pAbb, PtrPRule pRPres, PtrPSchema pSchP)
-#else  /* __STDC__ */
-static PtrAbstractBox AbsBoxPresType (pAbb, pRPres, pSchP)
-PtrAbstractBox      pAbb;
-PtrPRule            pRPres;
-PtrPSchema          pSchP;
-#endif /* __STDC__ */
+static PtrAbstractBox AbsBoxPresType (PtrAbstractBox pAbb, PtrPRule pRPres,
+				      PtrPSchema pSchP)
 {
    PtrAbstractBox      pAb, pAbbMain;
    ThotBool            found, stop;	/* 1er pave de l'element dans la vue */
@@ -1515,23 +1368,13 @@ PtrPSchema          pSchP;
    return pAbbPres;
 }
 
-
-
 /*----------------------------------------------------------------------
    ApplFunctionPresRules                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP, PtrAttribute pAttr, PtrDocument pDoc, PtrElement pEl, ThotBool change, ThotBool first)
-#else  /* __STDC__ */
-static void         ApplFunctionPresRules (pRule, pSchP, pAttr, pDoc, pEl, change, first)
-PtrPRule            pRule;
-PtrPSchema          pSchP;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            change;
-ThotBool            first;
-#endif /* __STDC__ */
+static void ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP,
+				   PtrAttribute pAttr, PtrDocument pDoc,
+				   PtrElement pEl, ThotBool change,
+				   ThotBool first)
 {
    int                 view;
    PtrAbstractBox      pAb, pAbbReDisp;
@@ -1632,7 +1475,6 @@ ThotBool            first;
 	 while (!stop);
 }
 
-
 /*----------------------------------------------------------------------
    ChangeFirstLast cree ou detruit les paves de presentation de        
    l'element pEl qui sont conditionnes au fait qu'il soit  
@@ -1643,18 +1485,11 @@ ThotBool            first;
    pDoc pointe sur le descripteur du document ou on        
    travaille.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first, ThotBool change)
-#else  /* __STDC__ */
-void                ChangeFirstLast (pEl, pDoc, first, change)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            first;
-ThotBool            change;
-#endif /* __STDC__ */
+void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
+		      ThotBool change)
 {
    PtrPRule            pRPres;
-   PtrPSchema          pSchP;
+   PtrPSchema          pSchP, pSP;
    PtrAttribute        pAttr;
    PtrElement          pElAttr;
    int                 l;
@@ -1664,7 +1499,7 @@ ThotBool            change;
      {
 	/* cherche la 1ere fonction de presentation associee au type de */
 	/* l'element */
-	pRPres = FunctionRule (pEl, &pSchP);
+	pRPres = FunctionRule (pEl, &pSchP, pDoc);
 	if (pSchP != NULL)
 	  {
 	     /* traite les regles de creation associees au type de l'element */
@@ -1672,15 +1507,16 @@ ThotBool            change;
 	     ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
 	     /* l'element herite-t-il d'attributs qui ont des fonctions de */
 	     /* presentation */
-	     if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	     pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
+	     if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 	       {
 		  /* il y a heritage possible */
 		  if ((inheritTable =
-		       pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		       pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 		    {
 		       /* cette table n'existe pas on la genere */
-		       CreateInheritedAttrTable (pEl);
-		       inheritTable = pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		       CreateInheritedAttrTable (pEl, pDoc);
+		       inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
 		    }
 		  for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		     if ((*inheritTable)[l - 1])	/* pEl herite de l'attribut l */
@@ -1688,7 +1524,8 @@ ThotBool            change;
 			if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
 							 &pElAttr)) != NULL)
 			  {
-			     pSchP = pAttr->AeAttrSSchema->SsPSchema;
+			     pSchP = PresentationSchema (pAttr->AeAttrSSchema,
+							 pDoc);
 			     pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL, pSchP);
 			     /* traite les regles de creation associees a l'attribut */
 			     ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl, change, first);
@@ -1701,7 +1538,7 @@ ThotBool            change;
 	     /* boucle sur les attributs de l'element */
 	     while (pAttr != NULL)
 	       {
-		  pSchP = pAttr->AeAttrSSchema->SsPSchema;
+		  pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
 		  /* cherche le debut des regles de presentation associees a */
 		  /* l'attribut */
 		  pRPres = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchP);
@@ -1714,7 +1551,6 @@ ThotBool            change;
      }
 }
 
-
 /*----------------------------------------------------------------------
    GetPageBreakForAssoc  cherche si l'element associe pEl doit etre affiche 
    dans une boite de haut ou de bas de page, pour la vue   
@@ -1725,18 +1561,8 @@ ThotBool            change;
    bas de page qui doit contenir l'element associe.        
    Sinon, retourne Nil.                                    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrElement          GetPageBreakForAssoc (PtrElement pEl, int viewNb, int *boxType)
-
-#else  /* __STDC__ */
-PtrElement          GetPageBreakForAssoc (pEl, viewNb, boxType)
-PtrElement          pEl;
-int                 viewNb;
-int                *boxType;
-
-#endif /* __STDC__ */
-
+PtrElement GetPageBreakForAssoc (PtrElement pEl, int viewNb, int *boxType,
+				 PtrDocument pDoc)
 {
    PtrPSchema          pSchP;
    int                 index, b;
@@ -1751,7 +1577,7 @@ int                *boxType;
    pElPage = NULL;
    *boxType = 0;
    /* cherche le schema de presentation a appliquer a l'element */
-   SearchPresSchema (pEl, &pSchP, &index, &pSchS);
+   SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
    if (pSchP != NULL)
       if (!AssocView (pEl))
 	 /* il s'agit d'un element associe' a afficher dans une boite de */
@@ -1822,7 +1648,7 @@ int                *boxType;
 		   if (pAsc != NULL)
 		      /* cherche le schema de presentation de l'element */
 		     {
-			SearchPresSchema (pAsc, &pSchP, &index, &pSchS);
+			SearchPresSchema (pAsc, &pSchP, &index, &pSchS, pDoc);
 			if (pSchP == NULL)
 			   pR = NULL;
 			else
@@ -1906,7 +1732,8 @@ int                *boxType;
 			else
 			   /* cherche la marque de page ou s'affiche cet element */
 			   /* *associe' qui contient la reference a pEl. */
-			   pElPage = GetPageBreakForAssoc (pAsc, viewNb, boxType);
+			   pElPage = GetPageBreakForAssoc (pAsc, viewNb,
+							   boxType, pDoc);
 		     }
 		   else
 		      pElPage = NULL;
@@ -1935,7 +1762,6 @@ int                *boxType;
    return pElPage;
 }
 
-
 /*----------------------------------------------------------------------
    CreateHeaderFooterForAssocEl
    verifie si l'element associe' pointe' par pEl doit
@@ -1945,15 +1771,9 @@ int                *boxType;
    n'existe pas et en cas de creation retourne l'adresse
    de son pave dans pAbbReDisp.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CreateHeaderFooterForAssocEl (PtrElement pEl, int viewNb, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp)
-#else  /* __STDC__ */
-static void         CreateHeaderFooterForAssocEl (pEl, viewNb, pDoc, pAbbReDisp)
-PtrElement          pEl;
-int                 viewNb;
-PtrDocument         pDoc;
-PtrAbstractBox     *pAbbReDisp;
-#endif /* __STDC__ */
+static void CreateHeaderFooterForAssocEl (PtrElement pEl, int viewNb,
+					  PtrDocument pDoc,
+					  PtrAbstractBox * pAbbReDisp)
 {
    PtrPSchema          pSchP;
    int                 index, boxType, TypeP;
@@ -1967,12 +1787,12 @@ PtrAbstractBox     *pAbbReDisp;
    *pAbbReDisp = NULL;
    pAbbPageThread = NULL;
    viewSch = pDoc->DocView[viewNb - 1].DvPSchemaView;
-   pElPage = GetPageBreakForAssoc (pEl, viewSch, &boxType);
+   pElPage = GetPageBreakForAssoc (pEl, viewSch, &boxType, pDoc);
    if (pElPage != NULL)
      {
 	/* L'element doit etre affiche' dans une boite de haut ou de bas de */
 	/* page et pElPage pointe sur la marque de page dans l'arbre abstrait */
-	SearchPresSchema (pEl, &pSchP, &index, &pSchS);
+	SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
 	if (pElPage->ElAbstractBox[viewNb - 1] == NULL)
 	   /* cette marque de page n'a pas de pave, il faut les creer */
 	   CheckAbsBox (pElPage, viewNb, pDoc, TRUE, TRUE);
@@ -1998,7 +1818,7 @@ PtrAbstractBox     *pAbbReDisp;
 		/* cette boite de haut ou bas de page n'existe pas, on la cree */
 		/* cherche le type de boite page */
 	       {
-		  TypeP = GetPageBoxType (pElPage, viewSch, &pSchP);
+		  TypeP = GetPageBoxType (pElPage, pDoc, viewSch, &pSchP);
 		  if (TypeP > 0)
 		     /* cherche parmi les regles de la boite page celle qui */
 		     /* engendre ce type de boite */
@@ -2041,7 +1861,6 @@ PtrAbstractBox     *pAbbReDisp;
      }
 }
 
-
 /*----------------------------------------------------------------------
    DestroyNewAbsBox dechaine et libere la suite des paves comprise entre
    pAbbFirst et pAbbLast, ainsi que tous les paves englobes.
@@ -2050,17 +1869,9 @@ PtrAbstractBox     *pAbbReDisp;
    pages, on parcours la chaine des dupliques.
    Le parametre v donne le numero de vue sassocies - 1.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DestroyNewAbsBox (PtrAbstractBox * pAbbFirst, PtrAbstractBox * pAbbLast, int frame, PtrDocument pDoc, ThotBool assoc, int v)
-#else  /* __STDC__ */
-static void         DestroyNewAbsBox (pAbbFirst, pAbbLast, frame, pDoc, assoc, v)
-PtrAbstractBox     *pAbbFirst;
-PtrAbstractBox     *pAbbLast;
-int                 frame;
-PtrDocument         pDoc;
-ThotBool            assoc;
-int                 v;
-#endif /* __STDC__ */
+static void DestroyNewAbsBox (PtrAbstractBox * pAbbFirst,
+			      PtrAbstractBox * pAbbLast, int frame,
+			      PtrDocument pDoc, ThotBool assoc, int v)
 {
    int                 vol;
    PtrAbstractBox      pAb, pAbb;
@@ -2102,19 +1913,12 @@ int                 v;
    *pAbbLast = NULL;
 }
 
-
 /*----------------------------------------------------------------------
    CreateAllAbsBoxesOfEl     Cree pour toutes les vues existantes tous les 
    paves de l'element pointe par pE appartenant au document pointe 
    par pDoc.                                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CreateAllAbsBoxesOfEl (pE, pDoc)
-PtrElement          pE;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+void  CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
 {
    int                 view;
 
@@ -2139,8 +1943,6 @@ PtrDocument         pDoc;
    ApplDelayedRule (pE, pDoc);
 }
 
-
-
 /*----------------------------------------------------------------------
    CreateNewAbsBoxes   cree les paves du sous-arbre dont la racine est    
    pointe par pEl, dans le document dont le contexte du    
@@ -2152,14 +1954,7 @@ PtrDocument         pDoc;
    nouveaux paves sont modifies. Les pointeurs sur les     
    paves a reafficher du document sont mis a jour.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
-#else  /* __STDC__ */
-void                CreateNewAbsBoxes (pEl, pDoc, viewNb)
-PtrElement          pEl;
-PtrDocument         pDoc;
-int                 viewNb;
-#endif /* __STDC__ */
+void CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
 {
    PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
    PtrAbstractBox      pAbbox1;
@@ -2421,7 +2216,6 @@ int                 viewNb;
      }
 }
 
-
 /*----------------------------------------------------------------------
    DestroyAbsBoxesView detruit pour la vue de numero view les paves du        
    sous-arbre dont la racine est pointee par pEl, dans le  
@@ -2434,15 +2228,8 @@ int                 viewNb;
    incomplet a une extremite' peut rendre le pave englobant
    complete a cette extremite.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify, int view)
-#else  /* __STDC__ */
-void                DestroyAbsBoxesView (pEl, pDoc, verify, view)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            verify;
-int                 view;
-#endif /* __STDC__ */
+void DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, ThotBool verify,
+			  int view)
 {
    PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst;
    PtrAbstractBox      pAbbox1, PcLast;
@@ -2627,7 +2414,6 @@ int                 view;
      }
 }
 
-
 /*----------------------------------------------------------------------
    DestroyAbsBoxes detruit les paves du sous-arbre dont la racine est    
    pointee par pEl, dans le document pDoc.                 
@@ -2639,14 +2425,7 @@ int                 view;
    incomplet a une extremite' peut rendre le pave englobant
    complete a cette extremite.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DestroyAbsBoxes (PtrElement pEl, PtrDocument pDoc, ThotBool verify)
-#else  /* __STDC__ */
-void                DestroyAbsBoxes (pEl, pDoc, verify)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            verify;
-#endif /* __STDC__ */
+void DestroyAbsBoxes (PtrElement pEl, PtrDocument pDoc, ThotBool verify)
 {
   int                 view;
   ThotBool            existingView;
@@ -2670,8 +2449,6 @@ ThotBool            verify;
       }
 }
 
-
-
 /*----------------------------------------------------------------------
    RedispRef Reaffiche les paves de la reference pointee par   
    pRef appartenant au document pointe' par pDocRef.       
@@ -2683,14 +2460,7 @@ ThotBool            verify;
    Note: cette nouvelle procedure est extraite du code de  
    l'ancienne procedure RedispAllReferences.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
-#else  /* __STDC__ */
-void                RedispRef (pRef, pAb, pDocRef)
-PtrReference        pRef;
-PtrAbstractBox      pAb;
-PtrDocument         pDocRef;
-#endif /* __STDC__ */
+void RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 {
    PtrElement          pElRef;
    PtrAbstractBox      pAbb, pPavRef;
@@ -2824,21 +2594,13 @@ PtrDocument         pDocRef;
 	   }
 }
 
-
-
 /*----------------------------------------------------------------------
    RedispAllReferences Le pave de presentation pointe' par pAb a change'      
    de contenu. Cherche toutes les references a un element  
    englobant de l'element creant ce pave et qui copient    
    ce pave. Demande leur reaffichage                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                RedispAllReferences (pAb, pDoc)
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+void RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
 {
    PtrElement          pEl;
    PtrReference        pRef;
@@ -2874,18 +2636,10 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    SearchAbsBoxBackward                                                           
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAbb1, ThotBool Test, PtrSSchema pSchStr, PtrPSchema pSchP, int Typ, ThotBool Pres)
-#else  /* __STDC__ */
-static PtrAbstractBox SearchAbsBoxBackward (pAbb1, Test, pSchStr, pSchP, Typ, Pres)
-PtrAbstractBox      pAbb1;
-ThotBool            Test;
-PtrSSchema          pSchStr;
-PtrPSchema          pSchP;
-int                 Typ;
-ThotBool            Pres;
-#endif /* __STDC__ */
+static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAbb1,
+					    ThotBool Test, PtrSSchema pSchStr,
+					    PtrPSchema pSchP, int Typ,
+					    ThotBool Pres)
 {
    PtrAbstractBox      p, s;
    PtrAbstractBox      pAbbox1;
@@ -2922,8 +2676,6 @@ ThotBool            Pres;
    return p;
 }
 
-
-
 /*----------------------------------------------------------------------
    AbsBoxFromElOrPres cherche un pave en avant dans un arbre de paves, a   
    partir du pave pointe' par pAb. Si pres est vrai, on   
@@ -2934,16 +2686,9 @@ ThotBool            Pres;
    Retourne un pointeur sur le pave trouve' ou             
    NULL si echec.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAbstractBox      AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres, int typeElOrPres, PtrPSchema pSchP, PtrSSchema pSchStr)
-#else  /* __STDC__ */
-PtrAbstractBox      AbsBoxFromElOrPres (pAb, pres, typeElOrPres, pSchP, pSchStr)
-PtrAbstractBox      pAb;
-ThotBool            pres;
-int                 typeElOrPres;
-PtrPSchema          pSchP;
-PtrSSchema          pSchStr;
-#endif /* __STDC__ */
+PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
+				   int typeElOrPres, PtrPSchema pSchP,
+				   PtrSSchema pSchStr)
 {
    PtrAbstractBox      pAbbResult, pAbbForward, pAbbAscent;
    ThotBool            stop;
@@ -3009,20 +2754,12 @@ PtrSSchema          pSchStr;
    return pAbbResult;
 }
 
-
-
 /*----------------------------------------------------------------------
    FindFirstAbsBox  Si pAbbBegin n'a pas de valeur pour la vue nv, met dans  
    pAbbBegin[nv] un pointeur sur le premier pave            
    correspondant a l'element pElBegin dans la vue nv.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FindFirstAbsBox (PtrElement pElBegin, int nv)
-#else  /* __STDC__ */
-static void         FindFirstAbsBox (pElBegin, nv)
-PtrElement          pElBegin;
-int                 nv;
-#endif /* __STDC__ */
 {
    PtrElement          pEl;
    ThotBool            stop;
@@ -3046,21 +2783,12 @@ int                 nv;
      }
 }
 
-
-
 /*----------------------------------------------------------------------
    ComputePageNum      renumerote toutes les pages qui concernent      
    la vue view a partir de l'element pointe' par pEl,       
    lui-meme compris.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ComputePageNum (PtrElement pEl, int view)
-#else  /* __STDC__ */
-void                ComputePageNum (pEl, view)
-PtrElement          pEl;
-int                 view;
-
-#endif /* __STDC__ */
+void ComputePageNum (PtrElement pEl, PtrDocument pDoc, int view)
 {
    PtrElement          pPage;
    PtrPSchema          pSchP;
@@ -3082,7 +2810,7 @@ int                 view;
 	  {
 	     numpageprec = pPage->ElPageNumber;
 	     /* cherche le compteur de page a appliquer a cette page */
-	     cpt = GetPageCounter (pPage, view, &pSchP);
+	     cpt = GetPageCounter (pPage, pDoc, view, &pSchP);
 	     if (cpt == 0)
 		/* page non numerotee, on s'arrete */
 		stop = TRUE;
@@ -3099,26 +2827,15 @@ int                 view;
    while (!stop);
 }
 
-
 /*----------------------------------------------------------------------
    ComputeContent   recalcule le contenu de toutes les boites de    
    presentation du type boxType (dans le schema de       
    presentation pSchP) qui sont apres pElBegin, dans la    
    vue nv.                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ComputeContent (int boxType, int nv, PtrDocument pDoc, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElBegin, ThotBool redisp)
-#else  /* __STDC__ */
-static void         ComputeContent (boxType, nv, pDoc, pSS, pSchP, pElBegin, redisp)
-int                 boxType;
-int                 nv;
-PtrDocument         pDoc;
-PtrSSchema          pSS;
-PtrPSchema          pSchP;
-PtrElement          pElBegin;
-ThotBool            redisp;
-
-#endif /* __STDC__ */
+static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
+			    PtrSSchema pSS, PtrPSchema pSchP,
+			    PtrElement pElBegin, ThotBool redisp)
 {
    PtrAbstractBox      pAb;
    int                 frame, h;
@@ -3155,24 +2872,15 @@ ThotBool            redisp;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ComputeCrPresBoxes reevalue les conditions de creation de toutes  
    les boites de presentation du type boxType (dans le   
    schema de presentation pSchP) qui sont apres pElBegin,  
    dans la vue nv.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP, PtrDocument pDoc, PtrElement pElBegin, ThotBool redisp)
-#else  /* __STDC__ */
-static void         ComputeCrPresBoxes (boxType, nv, pSchP, pDoc, pElBegin, redisp)
-int                 boxType;
-int                 nv;
-PtrPSchema          pSchP;
-PtrDocument         pDoc;
-PtrElement          pElBegin;
-ThotBool            redisp;
-#endif /* __STDC__ */
+static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
+				PtrDocument pDoc, PtrElement pElBegin,
+				ThotBool redisp)
 {
    PtrAbstractBox      pAb, pAbbFollow;
    int                 frame, h;
@@ -3206,7 +2914,7 @@ ThotBool            redisp;
 	     /* en effet les paves de pres ne peuvent creer que des fils */
 	     if (pAbbox1->AbEnclosing->AbPresentationBox)
 		presNum = pAbbox1->AbEnclosing->AbTypeNum;
-	     pRCre = GlobalSearchRulepEl (pAbbox1->AbElement, &pSPR, &pSSR, presNum, NULL,
+	     pRCre = GlobalSearchRulepEl (pAbbox1->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
 				  viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 	     stop = FALSE;
 	     do
@@ -3233,7 +2941,7 @@ ThotBool            redisp;
 		/* reevalue les conditions d'application de la regle */
 		if (!CondPresentation (pRCre->PrCond, pAb->AbElement, NULL,
 				       NULL, viewSch,
-				       pAb->AbElement->ElStructSchema))
+				       pAb->AbElement->ElStructSchema, pDoc))
 		   /* On va detruire le pave, on cherche d'abord le pave de */
 		   /* presentation suivant de meme type */
 		  {
@@ -3270,7 +2978,6 @@ ThotBool            redisp;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ComputeCreation  pour toutes les boites du type boxType (dans  
    le schema de presentation pSchP) qui sont apres         
@@ -3282,20 +2989,10 @@ ThotBool            redisp;
    compteur counter et qui sont satisfaites, la boite est      
    creee si elle n'existe pas deja.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ComputeCreation (int boxType, ThotBool presBox, int counter, int nv, PtrSSchema pSS, PtrPSchema pSchP, PtrDocument pDoc, PtrElement pElBegin, ThotBool redisp)
-#else  /* __STDC__ */
-static void         ComputeCreation (boxType, presBox, counter, nv, pSS, pSchP, pDoc, pElBegin, redisp)
-int                 boxType;
-ThotBool            presBox;
-int                 counter;
-int                 nv;
-PtrSSchema          pSS;
-PtrPSchema          pSchP;
-PtrDocument         pDoc;
-PtrElement          pElBegin;
-ThotBool            redisp;
-#endif /* __STDC__ */
+static void ComputeCreation (int boxType, ThotBool presBox, int counter,
+			     int nv, PtrSSchema pSS, PtrPSchema pSchP,
+			     PtrDocument pDoc, PtrElement pElBegin,
+			     ThotBool redisp)
 {
    PtrAbstractBox      pAb, pAbb, pAbbNext;
    PtrElement          pEl;
@@ -3338,7 +3035,7 @@ ThotBool            redisp;
 			/*attention GetPageBoxType est susceptible de modifier pSchP 
 			   il faut donc prendre des precautions */
 			pSchPOrig = pSchP;
-			if (boxType == GetPageBoxType (pAbbox1->AbElement, viewSch, &pSchPOrig)
+			if (boxType == GetPageBoxType (pAbbox1->AbElement, pDoc, viewSch, &pSchPOrig)
 			    && pSchPOrig == pSchP)
 			   /* c'est bien ce type de boite page */
 			   boxok = TRUE;
@@ -3350,7 +3047,7 @@ ThotBool            redisp;
 		  presNum = 0;	/* a priori pAb n'est pas une boite de presentation */
 		  if (pAb->AbPresentationBox)
 		     presNum = boxType;
-		  pRCre = GlobalSearchRulepEl (pAb->AbElement, &pSPR, &pSSR, presNum, NULL,
+		  pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
 				  viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 		  stop = FALSE;
 		  do
@@ -3388,7 +3085,7 @@ ThotBool            redisp;
 			       if (depend)
 				  /* reevalue les conditions d'application de la regle */
 				  if (CondPresentation (pRCre->PrCond, pAb->AbElement,
-							NULL, NULL, viewSch, pAb->AbElement->ElStructSchema))
+							NULL, NULL, viewSch, pAb->AbElement->ElStructSchema, pDoc))
 				     /* cherche si le pave est deja cree' */
 				    {
 				       isCreated = FALSE;
@@ -3472,7 +3169,6 @@ ThotBool            redisp;
      }
 }
 
-
 /*----------------------------------------------------------------------
    AttachCounterValue Transmet a l'attribut de nom NmAttr              
    la valeur du compteur counter defini dans pSchP associe' a  
@@ -3481,18 +3177,10 @@ ThotBool            redisp;
    le document inclus dans sa forme demi expansee: il est  
    alors dans le  document l'incluant.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AttachCounterValue (PtrElement pEl, PtrElement pElIncluded, PtrDocument pDocIncluded, Name NmAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
-#else  /* __STDC__ */
-static void         AttachCounterValue (pEl, pElIncluded, pDocIncluded, NmAttr, counter, pSchP, pSchS)
-PtrElement          pEl;
-PtrElement          pElIncluded;
-PtrDocument         pDocIncluded;
-Name                NmAttr;
-int                 counter;
-PtrPSchema          pSchP;
-PtrSSchema          pSchS;
-#endif /* __STDC__ */
+static void AttachCounterValue (PtrElement pEl, PtrElement pElIncluded,
+				PtrDocument pDocIncluded, Name NmAttr,
+				int counter, PtrPSchema pSchP,
+				PtrSSchema pSchS)
 {
    int                 att;
    PtrAttribute        pAttr;
@@ -3530,8 +3218,6 @@ PtrSSchema          pSchS;
      }
 }
 
-
-
 /*----------------------------------------------------------------------
    TransmitCounterVal pEl (appartenant au document pDoc) est une     
    inclusion de document externe. Transmet a l'attribut de 
@@ -3539,17 +3225,8 @@ PtrSSchema          pSchS;
    counter defini dans le schema de presentation pSchP associe'
    au schema de structure pSchS.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
-#else  /* __STDC__ */
-void                TransmitCounterVal (pEl, pDoc, nameAttr, counter, pSchP, pSchS)
-PtrElement          pEl;
-PtrDocument         pDoc;
-Name                nameAttr;
-int                 counter;
-PtrPSchema          pSchP;
-PtrSSchema          pSchS;
-#endif /* __STDC__ */
+void TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr,
+			 int counter, PtrPSchema pSchP, PtrSSchema pSchS)
 {
    PtrElement          pElIncluded;
    PtrReference        pRef;
@@ -3572,25 +3249,15 @@ PtrSSchema          pSchS;
    }
 }
 
-
-
 /*----------------------------------------------------------------------
    ChangeBoxesCounter dans le document dont le contexte pDoc, change
    le contenu de toutes les boites de presentation qui sont
    affectees par le compteur counter du schema de presentation 
    pSchP, apartir de l'element pElBegin.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS, ThotBool redisp)
-#else  /* __STDC__ */
-static void         ChangeBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS, redisp)
-PtrElement          pElBegin;
-PtrDocument         pDoc;
-int                 counter;
-PtrPSchema          pSchP;
-PtrSSchema          pSS;
-ThotBool            redisp;
-#endif /* __STDC__ */
+static void ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc,
+				int counter, PtrPSchema pSchP, PtrSSchema pSS,
+				ThotBool redisp)
 {
    int                 util, view;
    Counter            *pCo1;
@@ -3639,8 +3306,8 @@ ThotBool            redisp;
    /* la valeur de ce compteur */
    for (util = 1; util <= pCo1->CnNCreatedBoxes; util++)
       if (AssocView (pElBegin))
-	 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], 1, pSchP, pDoc, pElBegin,
-			     redisp);
+	 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], 1, pSchP, pDoc,
+			     pElBegin, redisp);
       else
 	 for (view = 1; view <= MAX_VIEW_DOC; view++)
 	    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
@@ -3650,8 +3317,8 @@ ThotBool            redisp;
 		    est TRUE, i.e. si une boite est creee par une condition de min ou
 		    de max du compteur */
 		 if (!pCo1->CnMinMaxCreatedBox[util - 1])
-		    ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view, pSchP, pDoc,
-					pElBegin, redisp);
+		    ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view,
+					pSchP, pDoc, pElBegin, redisp);
 		 else
 		   {
 		      /* On determine le debut de l'image abstraite */
@@ -3662,11 +3329,13 @@ ThotBool            redisp;
 		      if (pElRoot != NULL)
 			{
 			   pAbbBegin[view - 1] = NULL;
-			   ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view, pSchP, pDoc,
+			   ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1],
+					       view, pSchP, pDoc,
 					       pElRoot, redisp);
 			}
 		      else
-			 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1], view, pSchP, pDoc,
+			 ComputeCrPresBoxes (pCo1->CnCreatedBox[util - 1],
+					     view, pSchP, pDoc,
 					     pElBegin, redisp);
 		   }
 	      }
@@ -3728,23 +3397,14 @@ ThotBool            redisp;
      }
 }
 
-
-
 /*----------------------------------------------------------------------
    UpdateNum1Elem met a jour et fait reafficher les numeros qui       
    apparaissent a partir du sous-arbre pointe par pElBegin 
    (lui-meme compris) et qui sont affectes par l'element   
    pElModif.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, ThotBool redisp)
-#else  /* __STDC__ */
-static void         UpdateNum1Elem (pElBegin, pElModif, pDoc, redisp)
-PtrElement          pElBegin;
-PtrElement          pElModif;
-PtrDocument         pDoc;
-ThotBool            redisp;
-#endif /* __STDC__ */
+static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
+			    PtrDocument pDoc, ThotBool redisp)
 {
    int                 counter, oper, i;
    PtrPSchema          pSchP;
@@ -3758,9 +3418,9 @@ ThotBool            redisp;
    /* si l'element pElModif est une marque de page, renumerote les */
    /* les sauts de page qui suivent, a partir de pElBegin. */
    if (pElModif->ElTerminal && pElModif->ElLeafType == LtPageColBreak)
-      ComputePageNum (pElBegin, pElModif->ElViewPSchema);
+      ComputePageNum (pElBegin, pDoc, pElModif->ElViewPSchema);
    /* cherche le schema de presentation de l'element : pSchP */
-   SearchPresSchema (pElModif, &pSchP, &index, &pSS);
+   SearchPresSchema (pElModif, &pSchP, &index, &pSS, pDoc);
    if (pSchP != NULL)
       /* cherche les compteurs affectes par pElModif */
       for (counter = 1; counter <= pSchP->PsNCounters; counter++)
@@ -3802,20 +3462,11 @@ ThotBool            redisp;
 	}
 }
 
-
-
 /*----------------------------------------------------------------------
    UpdateNum                                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         UpdateNum (PtrElement pElD, PtrElement pElM, PtrDocument pDoc, ThotBool redisp)
-#else  /* __STDC__ */
-static void         UpdateNum (pElD, pElM, pDoc, redisp)
-PtrElement          pElD;
-PtrElement          pElM;
-PtrDocument         pDoc;
-ThotBool            redisp;
-#endif /* __STDC__ */
+static void UpdateNum (PtrElement pElD, PtrElement pElM, PtrDocument pDoc,
+		       ThotBool redisp)
 {
    PtrElement          pEl;
 
@@ -3835,8 +3486,6 @@ ThotBool            redisp;
      }
 }
 
-
-
 /*----------------------------------------------------------------------
    UpdateNumbers pour le document dont le contexte pDoc, met a jour  
    et fait reafficher les numeros qui apparaissent a partir
@@ -3844,15 +3493,8 @@ ThotBool            redisp;
    qui sont affectes par les elements du sous-arbre        
    (racine comprise) pointe par pElModif.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateNumbers (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, ThotBool redisp)
-#else  /* __STDC__ */
-void                UpdateNumbers (pElBegin, pElModif, pDoc, redisp)
-PtrElement          pElBegin;
-PtrElement          pElModif;
-PtrDocument         pDoc;
-ThotBool            redisp;
-#endif /* __STDC__ */
+void UpdateNumbers (PtrElement pElBegin, PtrElement pElModif,
+		    PtrDocument pDoc, ThotBool redisp)
 {
    int                 i;
 
@@ -3861,8 +3503,6 @@ ThotBool            redisp;
    UpdateNum (pElBegin, pElModif, pDoc, redisp);
 }
 
-
-
 /*----------------------------------------------------------------------
    UpdateBoxesCounter reaffiche toutes les boites de presentation de pDoc,
    qui se trouvent a l'interieur de et apres l'element     
@@ -3870,17 +3510,8 @@ ThotBool            redisp;
    compteur counter defini dans le schema de presentation      
    pSchP.                                                  
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS)
-#else  /* __STDC__ */
-void                UpdateBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS)
-PtrElement          pElBegin;
-PtrDocument         pDoc;
-int                 counter;
-PtrPSchema          pSchP;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+void UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter,
+			 PtrPSchema pSchP, PtrSSchema pSS)
 {
    int                 i;
 
@@ -3893,14 +3524,7 @@ PtrSSchema          pSS;
    SetChange marque dans le pave pAbb que la regle de type typeRule a 
    change'.                                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         SetChange (PtrAbstractBox pAb, PRuleType typeRule)
-
-#else  /* __STDC__ */
-void         SetChange (pAb, typeRule)
-PtrAbstractBox      pAb;
-PRuleType           typeRule;
-#endif /* __STDC__ */
+void SetChange (PtrAbstractBox pAb, PRuleType typeRule)
 {
   switch (typeRule)
     {
@@ -3963,21 +3587,14 @@ PRuleType           typeRule;
     }
 }
 
-
 /*----------------------------------------------------------------------
    ApplyInheritPresRule si la regle de presentation de type typeRule        
    qui doit s'appliquer au pave pAb est une regle         
    d'heritage, on applique cette regle au pave' pointe'    
    par pAb, et on fait de meme sur son sous-arbre.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         ApplyInheritPresRule (pAb, typeRule, pDoc)
-PtrAbstractBox      pAb;
-PRuleType           typeRule;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
+				  PtrDocument pDoc)
 {
    PtrPRule            pRPres;
    PtrAbstractBox      pAbbChild;
@@ -4042,7 +3659,6 @@ PtrDocument         pDoc;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ApplyPresRuleAb applique au pave pAb appartenant au document     
    pDoc la regle de presentation pRule appartenant au     
@@ -4054,16 +3670,9 @@ PtrDocument         pDoc;
    inversement).                                           
    Retourne Vrai si la regle a ete appliquee.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
-#else  /* __STDC__ */
-static ThotBool     ApplyPresRuleAb (pRule, pSchP, pAb, pDoc, pAttr)
-PtrPRule            pRule;
-PtrPSchema          pSchP;
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-PtrAttribute        pAttr;
-#endif /* __STDC__ */
+static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
+				 PtrAbstractBox pAb, PtrDocument pDoc,
+				 PtrAttribute pAttr)
 {
   PtrPRule            pRegle2;
   PtrPSchema          pSchP2;
@@ -4145,15 +3754,8 @@ PtrAttribute        pAttr;
    Corresponding to view may be displayed within the abstract image
    part already builded.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot, PtrDocument pDoc)
-#else  /* __STDC__ */
-ThotBool            ElemWithinImage (pEl, view, pAbbRoot, pDoc)
-PtrElement          pEl;
-int                 view;
-PtrAbstractBox      pAbbRoot;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+ThotBool ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot,
+			  PtrDocument pDoc)
 {
    ThotBool            result, finished, found;
    PtrElement          pAsc;
@@ -4278,21 +3880,10 @@ PtrDocument         pDoc;
   This change is also performed on enclosed elements if prsentations
   parameters are inherited.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 				    PtrElement pElAttr, PtrDocument pDoc,
 				    ThotBool remove, ThotBool inherit,
 				    PtrAttribute pAttrComp)
-#else  /* __STDC__ */
-void                UpdatePresAttr (pEl, pAttr, pElAttr, pDoc, remove, inherit, pAttrComp)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-PtrDocument         pDoc;
-ThotBool            remove;
-ThotBool            inherit;
-PtrAttribute        pAttrComp;
-#endif /* __STDC__ */
 {
   PtrPRule            pR, pRuleView1, pRNA, firstOfType;
   PRuleType           typeRule;
@@ -4316,7 +3907,7 @@ PtrAttribute        pAttrComp;
   /* on applique successivement tous les schemas de presentation en commencant
      par le moins prioritaire : le schema de presentation principal */
   pHd = NULL;
-  pSchP = pAttr->AeAttrSSchema->SsPSchema;
+  pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
   while (pSchP != NULL)
     {
       /* pR: premiere regle correspondant a l'attribut */
@@ -4387,7 +3978,7 @@ PtrAttribute        pAttrComp;
 		    }
 		  if (pR && pR->PrCond &&
 		      !CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-					 viewSch, pAttr->AeAttrSSchema))
+					 viewSch, pAttr->AeAttrSSchema, pDoc))
 		    /* due to conditions the rule doesn't apply */
 		    pR = NULL;
 		}
@@ -4657,14 +4248,14 @@ PtrAttribute        pAttrComp;
 	/* on cherchait dans le schema de presentation principal */
 	/* on prend le premier schema de presentation additionnel */
 	{
-	  pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+	  pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
 	  /* mais si c'est ID ou CLASS, on prend les extensions du schema
 	     de presentation associe' au schema de structure du document */
 	  if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
 				pAttr->AeAttrSSchema) ||
 	      AttrHasException (ExcCssId, pAttr->AeAttrNum,
 				pAttr->AeAttrSSchema))
-            pHd = pDoc->DocSSchema->SsFirstPSchemaExtens;
+            pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc);
 	}
       if (pHd)
 	pSchP = pHd->HdPSchema;
@@ -4685,14 +4276,8 @@ PtrAttribute        pAttrComp;
    sur l'element libere par la fusion (cet element n'est pas rendu 
    a la memoire libre).                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc, PtrElement * pLib)
-#else  /* __STDC__ */
-ThotBool            IsIdenticalTextType (pEl, pDoc, pLib)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrElement         *pLib;
-#endif /* __STDC__ */
+ThotBool IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc,
+			      PtrElement * pLib)
 {
   PtrElement          pEl2, pEVoisin;
   PtrAbstractBox      pAb;

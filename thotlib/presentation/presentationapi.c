@@ -48,6 +48,7 @@
 #include "font_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
+#include "schemas_f.h"
 #include "structmodif_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
@@ -224,7 +225,7 @@ ThotBool            display;
   if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
     {
       /* look for the position rule that applies to the element */
-      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
       doit = FALSE;
       /* doesn't move boxes with floating position or set in lines */
@@ -347,7 +348,7 @@ ThotBool            display;
 		    {
 		      /* for stretched boxes: both position and dimension rules
 			 have to be updated */
-		      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 						   PtHeight, FnAny, FALSE, TRUE, &pAttrV);
 		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV);
 		      pAb->AbHeightChange = TRUE;
@@ -373,7 +374,7 @@ ThotBool            display;
   if (pAb->AbBox != NULL && X != pAb->AbBox->BxXOrg)
     {
       /* look for the position rule that applies to the element */
-      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
       doit = FALSE;
       /* doesn't move boxes with floating position or set in lines */
@@ -495,7 +496,7 @@ ThotBool            display;
 		    {
 		      /* for stretched boxes: both position and dimension rules
 			 have to be updated */
-		      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 						   PtWidth, FnAny, FALSE, TRUE, &pAttrH);
 		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrH);
 		      pAb->AbWidthChange = TRUE;
@@ -591,7 +592,7 @@ ThotBool            display;
   if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxWidth)
     {
       /* look for the dimension rule applied to the element */
-      pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtWidth, FnAny, FALSE, TRUE, &pAttrH);
       doit = FALSE;
       /* don't change the width when it depends on the contents or it's */
@@ -764,7 +765,7 @@ ThotBool            display;
 		     {
 		       /* for stretched boxes: both position and dimension rules
 			  have to be updated */
-		       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+		       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 						    PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
 		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrH);
 		       pAb->AbHorizPosChange = TRUE;
@@ -791,7 +792,7 @@ ThotBool            display;
    if (height != 0 && pAb->AbBox != NULL && height != pAb->AbBox->BxHeight)
      {
        /* look for the dimension rule applied to the element */
-       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				    PtHeight, FnAny, FALSE, TRUE, &pAttrV);
        doit = FALSE;
        /* don't change the height when it depends on the contents or it's */
@@ -969,7 +970,7 @@ ThotBool            display;
 		     {
 		       /* for stretched boxes: both position and dimension rules
 			  have to be updated */
-		       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+		       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 						    PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
 		       ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV);
 		       pAb->AbVertPosChange = TRUE;
@@ -1208,6 +1209,7 @@ Document            document;
 {
    PtrPRule            pPres;
    PtrDocument         pDoc;
+   PtrPSchema          pPS;
    PtrElement          pEl;
    int                 vue;
    int                 v;
@@ -1224,11 +1226,12 @@ Document            document;
      /* parameter document is correct */
      {
        pDoc = LoadedDocument[document - 1];
+       pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
        vue = 0;
        /* Searching into the main tree views */
-       if (pDoc->DocSSchema->SsPSchema != NULL)
+       if (pPS != NULL)
 	 for (v = 1; v <= MAX_VIEW && vue == 0; v++)
-	   if (ustrcmp (pDoc->DocSSchema->SsPSchema->PsView[v - 1], viewName) == 0)
+	   if (ustrcmp (pPS->PsView[v - 1], viewName) == 0)
 	     vue = v;
        /* If not found one search into associated elements */
        if (vue == 0)

@@ -388,7 +388,6 @@ ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
 	TtaReadName (file, pSS->SsName);
 	TtaReadShort (file, &pSS->SsCode);
 	TtaReadName (file, pSS->SsDefaultPSchema);
-	pSS->SsPSchema = NULL;
 	TtaReadBool (file, &pSS->SsExtension);
 	pSS->SsNExtensRules = 0;
 	pSS->SsExtensBlock = NULL;

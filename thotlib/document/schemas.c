@@ -17,7 +17,17 @@
 
 #ifndef NODISPLAY
 #include "fileaccess.h"
+#endif /* NODISPLAY */
 
+typedef struct _AStructure
+  {
+     PtrSSchema      pStructSchema;    /* pointeur sur le schema */
+     int             UsageCount;       /* nombre d'utilisations de ce schema */
+     Name            StructSchemaName; /* nom du schema de presentation */
+  }
+AStructure;
+
+#ifndef NODISPLAY
 typedef struct _APresentation
   {
      PtrPSchema      pPresSchema;    /* pointeur sur le schema */
@@ -38,8 +48,13 @@ APresentation;
 #include "modif_tv.h"
 
 /* table des schemas de presentation charges */
+#define MAX_PSCHEMAS 10		/* max. number of loaded presentation schemas*/
 static APresentation LoadedPSchema[MAX_PSCHEMAS];
 #endif /* NODISPLAY */
+
+/* table des schemas de structure charge's */
+#define MAX_SSCHEMAS 10		/* max. number of loaded structure schemas */
+static AStructure LoadedSSchema[MAX_SSCHEMAS];
 
 #include "config_f.h"
 #include "memory_f.h"
@@ -57,9 +72,15 @@ static APresentation LoadedPSchema[MAX_PSCHEMAS];
   ----------------------------------------------------------------------*/
 void InitNatures ()
 {
-#ifndef NODISPLAY
    int                 i;
 
+   for (i = 0; i < MAX_SSCHEMAS; i++)
+      {
+      LoadedSSchema[i].pStructSchema = NULL;
+      LoadedSSchema[i].UsageCount = 0;
+      LoadedSSchema[i].StructSchemaName[0] = EOS;
+      }
+#ifndef NODISPLAY
    for (i = 0; i < MAX_PSCHEMAS; i++)
       {
       LoadedPSchema[i].pPresSchema = NULL;
@@ -69,67 +90,54 @@ void InitNatures ()
 #endif /* NODISPLAY */
 }
 
-#ifndef NODISPLAY
 /*----------------------------------------------------------------------
-   LoadPresentationSchema charge le schema de presentation de nom	
-   schemaName pour le schema de structure pointe' par pSS et		
-   retourne un pointeur sur le schema charge' ou NULL si echec.      
+  GetSSchemaForDoc
+  Return the structure schema called name used by document pDoc.
+  Return NULL if this document does not use this structure schema.
   ----------------------------------------------------------------------*/
-PtrPSchema LoadPresentationSchema (Name schemaName, PtrSSchema pSS)
+PtrSSchema GetSSchemaForDoc (char *name, PtrDocument pDoc)
 {
-   PtrPSchema          pPSchema;
-   int                 i;
-   Name                pschemaName;
-   ThotBool            found;
+  PtrSSchema          pSS;
+  PtrDocSchemasDescr  pPfS;
 
-   pPSchema = NULL;
-   /* cherche dans la table si le schema est deja charge */
-   i = 0;
-   found = FALSE;
-   do
-      {
-      if (LoadedPSchema[i].pPresSchema != NULL)
-	 /* compare les noms schemaName et PresSchemaName */
-	 if (strcmp (schemaName, LoadedPSchema[i].PresSchemaName) == 0)
-	    found = TRUE;
-      if (!found)
-	 i++;
-      }
-   while (!found && i < MAX_PSCHEMAS);
-   if (found)
-      /* ce schema est dans la table des schemas charges */
-      {
-      LoadedPSchema[i].UsageCount++;	/* une utilisation de plus */
-      pPSchema = LoadedPSchema[i].pPresSchema;
-      }
-   else
-      /* c'est un nouveau schema, il faut le charger */
-      {
-      strncpy (pschemaName, schemaName, MAX_NAME_LENGTH);
-      pPSchema = ReadPresentationSchema (pschemaName, pSS);
-      if (pPSchema != NULL)
-	 /* met le nouveau schema dans la table des schemas charges */
-	 /* cherche une entree libre dans la table */
-	 {
-	 i = 0;
-	 do
-	    i++;
-	 while (LoadedPSchema[i].pPresSchema != NULL && i < MAX_PSCHEMAS - 1);
-	 if (LoadedPSchema[i].pPresSchema == NULL)
-	    /* on a trouve une entree libre, on l'utilise */
-	    {
-	    LoadedPSchema[i].UsageCount = 1;
-	    LoadedPSchema[i].pPresSchema = pPSchema;
-	    strncpy (LoadedPSchema[i].PresSchemaName, schemaName,
-		      MAX_NAME_LENGTH);
-	    }
-	 }
-      }
-   if (pPSchema != NULL)
-      strncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
-   /* rend la valeur de retour */
-   return pPSchema;
+  pSS = NULL;
+  pPfS = pDoc->DocFirstSchDescr;
+  while (pPfS && !pSS)
+    {
+      if (pPfS->PfSSchema)
+	if (strcmp (name, pPfS->PfSSchema->SsName) == 0)
+	  pSS = pPfS->PfSSchema;
+      pPfS = pPfS->PfNext;
+    }
+  return pSS;
 }
+
+/*----------------------------------------------------------------------
+   PresForStructSchema
+   Return the block describing the presentation schemas to be used
+   for structure schema pSS in document pDoc.
+  ----------------------------------------------------------------------*/
+static PtrDocSchemasDescr PresForStructSchema (PtrDocument pDoc,
+					       PtrSSchema pSS,
+					       PtrDocSchemasDescr *pPrevPfS)
+{
+  PtrDocSchemasDescr pPfS;
+
+  pPfS = NULL;
+  *pPrevPfS = NULL;
+  if (pDoc && pSS)
+    {
+      pPfS = pDoc->DocFirstSchDescr;
+      while (pPfS && pPfS->PfSSchema != pSS)
+	{
+	  *pPrevPfS = pPfS;
+	  pPfS = pPfS->PfNext;
+	}
+    }
+  return pPfS;
+}
+
+#ifndef NODISPLAY
 
 /*----------------------------------------------------------------------
    FreePRuleList  libere la liste de regles de presentation dont   
@@ -150,97 +158,441 @@ static void         FreePRuleList (PtrPRule * firstPRule)
 }
 
 /*----------------------------------------------------------------------
-   FreePresentationSchema						
-   	libere le schema de presentation pointe par pPSchema,		
+   ReleasePresentationSchema						
+   Libere le schema de presentation pointe par pPSchema,		
    ainsi que toutes les regles de presentation qu'il pointe.	
    pSS pointe le schema de structure auquel le schema de           
-   presentation a liberer est associe.                             
+   presentation a liberer est associe.
   ----------------------------------------------------------------------*/
-void               FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS)
+static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS, 
+				       PtrDocument pDoc)
 {
-   APresentation      *pPres;
-   AttributePres      *pAttrPres;
-   int                 i, j;
-   ThotBool            delete;
-   PtrHostView         pHostView, pNextHostView;
+  APresentation      *pPres;
+  AttributePres      *pAttrPres;
+  int                 i, j;
+  PtrHostView         pHostView, pNextHostView;
 
-   delete = TRUE;
-   /* parcourt la table des schemas de presentation pour trouver ce schema */
-   i = 0;
-   while (i < MAX_PSCHEMAS - 1 && LoadedPSchema[i].pPresSchema != pPSchema)
-      i++;
-   pPres = &LoadedPSchema[i];
-   if (pPres->pPresSchema == pPSchema)
-      /* ce schema est dans la table */
-      {
-      pPres->UsageCount--;
-      /* une utilisation de moins */
-      if (pPres->UsageCount > 0)
-	 /* il y a d'autres utilisations, on ne le supprime pas */
-	 delete = FALSE;
-      else
-	 /* c'etait la derniere utilisation, on le supprime de la table */
-	 {
-	 pPres->pPresSchema = NULL;
-	 pPres->UsageCount = 0;
-	 pPres->PresSchemaName[0] = EOS;
-	 }
-      }
-   if (delete)
-      {
+#ifndef VQ
+  fprintf (stderr, "release P schema %s for %s\n", pPSchema->PsPresentName,
+	   pSS->SsName);
+#endif
+  /* look for this schema in the PSchemas table */
+  for (i = 0; i < MAX_PSCHEMAS && LoadedPSchema[i].pPresSchema != pPSchema;
+       i++);
+  if (i >= MAX_PSCHEMAS)
+    /* This schema is not in the table. Probably a P Schema extension */
+    return;
+  /* this schema is in the table */
+  pPres = &LoadedPSchema[i];
+  pPres->UsageCount--;
+  if (pPres->UsageCount == 0)
+    /* c'etait la derniere utilisation, on le supprime de la table */
+    {
+#ifndef VQ
+  fprintf (stderr, "   free P schema %s\n", pPSchema->PsPresentName);
+#endif
+      pPres->pPresSchema = NULL;
+      pPres->PresSchemaName[0] = EOS;
       /* libere les regles de presentation par defaut */
       FreePRuleList (&pPSchema->PsFirstDefaultPRule);
       /* libere les regles de presentation des boites de presentation */
       for (i = 0; i < pPSchema->PsNPresentBoxes; i++)
-	 FreePRuleList (&pPSchema->PsPresentBox[i].PbFirstPRule);
+	FreePRuleList (&pPSchema->PsPresentBox[i].PbFirstPRule);
       /* libere les regles de presentation des attributs */
       for (i = 0; i < pSS->SsNAttributes; i++)
-	 {
-	 pAttrPres = pPSchema->PsAttrPRule[i];
-	 while (pAttrPres != NULL)
+	{
+	  pAttrPres = pPSchema->PsAttrPRule[i];
+	  while (pAttrPres != NULL)
 	    {
-	    switch (pSS->SsAttribute[i].AttrType)
-	      {
-	      case AtNumAttr:
-		 for (j = 0; j < pAttrPres->ApNCases; j++)
+	      switch (pSS->SsAttribute[i].AttrType)
+		{
+		case AtNumAttr:
+		  for (j = 0; j < pAttrPres->ApNCases; j++)
 		    FreePRuleList (&pAttrPres->ApCase[j].CaFirstPRule);
-		 break;
-	      case AtTextAttr:
-		 FreePRuleList (&pAttrPres->ApTextFirstPRule);
-		 break;
-	      case AtReferenceAttr:
-		 FreePRuleList (&pAttrPres->ApRefFirstPRule);
-		 break;
-	      case AtEnumAttr:
-		 for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
+		  break;
+		case AtTextAttr:
+		  FreePRuleList (&pAttrPres->ApTextFirstPRule);
+		  break;
+		case AtReferenceAttr:
+		  FreePRuleList (&pAttrPres->ApRefFirstPRule);
+		  break;
+		case AtEnumAttr:
+		  for (j = 0; j <= pSS->SsAttribute[i].AttrNEnumValues; j++)
 		    FreePRuleList (&pAttrPres->ApEnumFirstPRule[j]);
-		 break;
-	      default:
-		 break;
-	      }
-	    pAttrPres = pAttrPres->ApNextAttrPres;
+		  break;
+		default:
+		  break;
+		}
+	      pAttrPres = pAttrPres->ApNextAttrPres;
 	    }
-	 }
-      
+	}
+
       /* libere les regles de presentation des types */
       for (i = 0; i < pSS->SsNRules; i++)
-	 FreePRuleList (&pPSchema->PsElemPRule[i]);
-      /* libere les descripteir de vues hotes */
+	FreePRuleList (&pPSchema->PsElemPRule[i]);
+      /* libere les descripteurs de vues hotes */
       for (i = 0; i < MAX_VIEW; i++)
-	 {
-	 pHostView = pPSchema->PsHostViewList[i];
-	 pPSchema->PsHostViewList[i] = 0;
-	 while (pHostView)
+	{
+	  pHostView = pPSchema->PsHostViewList[i];
+	  pPSchema->PsHostViewList[i] = 0;
+	  while (pHostView)
 	    {
-	    pNextHostView = pHostView->NextHostView;
-	    TtaFreeMemory (pHostView);
-	    pHostView = pNextHostView;
+	      pNextHostView = pHostView->NextHostView;
+	      TtaFreeMemory (pHostView);
+	      pHostView = pNextHostView;
+	    }
+	}
+      FreeSchPres (pPSchema);
+    }
+}
+
+/*----------------------------------------------------------------------
+   LoadPresentationSchema
+   If presentation schema called schemaName is already loaded, return a
+   pointer to it, otherwise load it from its file, register it in the
+   table of loaded schemas, and return a pointer to it.
+   Return TRUE if schema has been successfully loaded.
+  ----------------------------------------------------------------------*/
+ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
+				 PtrDocument pDoc)
+{
+   PtrPSchema           pPSchema;
+   PtrDocSchemasDescr   pPfS, pPrevPfS;
+   int                  i;
+
+   if (schemaName == NULL || schemaName[0] == EOS || pSS == NULL)
+     /* invalid parameter */
+     return FALSE;
+   pPSchema = NULL;
+   /* Look at the table of loaded schemas */
+   for (i = 0; i < MAX_PSCHEMAS &&
+	       ustrcmp (schemaName, LoadedPSchema[i].PresSchemaName); i++);
+   if (i < MAX_PSCHEMAS)
+      /* This schema is in the table, no need to load it */
+      {
+      LoadedPSchema[i].UsageCount++;
+      pPSchema = LoadedPSchema[i].pPresSchema;
+#ifndef VQ
+  fprintf (stderr, "get P schema %s\n", pPSchema->PsPresentName);
+#endif
+      }
+   else
+      /* That's a new schema. Load it */
+      {
+      pPSchema = ReadPresentationSchema (schemaName, pSS);
+      if (pPSchema)
+	 /* schema loaded. Register it in the table of loaded schemas */
+	 {
+#ifndef VQ
+  fprintf (stderr, "load P schema %s\n", pPSchema->PsPresentName);
+#endif
+	 /* look for an free entry in the table */
+	 for (i = 0; i < MAX_PSCHEMAS && LoadedPSchema[i].pPresSchema; i++);
+	 if (i < MAX_PSCHEMAS && LoadedPSchema[i].pPresSchema == NULL)
+	    /* free entry found */
+	    {
+	    LoadedPSchema[i].UsageCount = 1;
+	    LoadedPSchema[i].pPresSchema = pPSchema;
+	    strncpy (LoadedPSchema[i].PresSchemaName, schemaName,
+		     MAX_NAME_LENGTH);
 	    }
 	 }
-      FreeSchPres (pPSchema);
+      }
+   if (pPSchema)
+     {
+     strncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
+     /* associate the presentation schema with the structure schema
+        for this document */
+     pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+     if (!pPfS)
+       fprintf (stderr, "*** S schema %s missing ***\n",
+		pPSchema->PsPresentName);
+     else
+       {
+	 if (pPfS->PfPSchema)
+	   /* release the previous presentation schema */
+	   {
+	     ReleasePresentationSchema (pPfS->PfPSchema, pSS, pDoc);
+	     pPfS->PfPSchema = NULL;
+	   }
+	 pPfS->PfPSchema = pPSchema;
+       }
+     }
+   return (pPSchema != NULL);
+}
+
+/*----------------------------------------------------------------------
+   FreePresentationSchema						
+   Libere le schema de presentation pointe par pPSchema,		
+   ainsi que toutes les regles de presentation qu'il pointe.	
+   pSS pointe le schema de structure auquel le schema de           
+   presentation a liberer est associe.
+  ----------------------------------------------------------------------*/
+void               FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
+					   PtrDocument pDoc)
+{
+  PtrDocSchemasDescr   pPfS, pPrevPfS;
+  PtrHandlePSchema     pHSP, pNextHSP;
+
+  ReleasePresentationSchema (pPSchema, pSS, pDoc);
+  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  if (pPfS)
+    /* check if it's the main presentation schema or an extension */
+    if (pPfS->PfPSchema == pPSchema)
+      /* it's the main presentation schema. Unlink it */
+      {
+	pPfS->PfPSchema = NULL;
+	pHSP = pPfS->PfFirstPSchemaExtens;
+	while (pHSP)
+	  {
+	    pNextHSP = pHSP->HdNextPSchema;
+	    ReleasePresentationSchema (pHSP->HdPSchema, pSS, pDoc);
+	    FreeHandleSchPres (pHSP);
+	    pHSP = pNextHSP;
+	  }
+	/* unlink the block */
+	if (pPrevPfS)
+	  pPrevPfS = pPfS->PfNext;
+	else
+	  pDoc->DocFirstSchDescr = pPfS->PfNext;
+	FreeDocSchemasDescr (pPfS);
       }
 }
+
+/*----------------------------------------------------------------------
+  FirstPSchemaExtension
+  Returns the first extension to the presentation schema associated with
+  structure schema pSS in document pDoc.
+  ----------------------------------------------------------------------*/
+PtrHandlePSchema FirstPSchemaExtension (PtrSSchema pSS, PtrDocument pDoc)
+{
+  PtrDocSchemasDescr  pPfS, pPrevPfS;
+
+  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  if (pPfS)
+    return (pPfS->PfFirstPSchemaExtens);
+  else
+    return NULL;
+}
+
+/*----------------------------------------------------------------------
+  UnlinkPSchemaExtension
+  ----------------------------------------------------------------------*/
+void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS, PtrPSchema pPS)
+{
+  PtrDocSchemasDescr  pPfS, pPrevPfS;
+  PtrHandlePSchema    pHd;
+
+  if (!pDoc || !pSS || !pPS)
+    return;
+  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  if (!pPfS)
+    return;
+  pHd = pPfS->PfFirstPSchemaExtens;
+  while (pHd && pHd->HdPSchema != pPS)
+    pHd = pHd->HdNextPSchema;
+  if (pHd)
+    {
+      if (pHd->HdPrevPSchema == NULL)
+	pPfS->PfFirstPSchemaExtens = pHd->HdNextPSchema;
+      else
+	pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
+      if (pHd->HdNextPSchema != NULL)
+	pHd->HdNextPSchema->HdPrevPSchema = pHd->HdPrevPSchema;
+      FreeHandleSchPres (pHd);
+    }
+}
+
+/*----------------------------------------------------------------------
+  InsertPSchemaExtension
+  ----------------------------------------------------------------------*/
+ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
+				 PtrPSchema pPS, PtrPSchema pOldPS,
+				 ThotBool before)
+{
+  PtrDocSchemasDescr  pPfS, pPrevPfS;
+  PtrHandlePSchema    oldHd, newHd;
+  ThotBool            ok;
+
+  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  if (!pPfS)
+    return FALSE;
+  ok = FALSE;
+  oldHd = pPfS->PfFirstPSchemaExtens;
+  if (!pOldPS)
+    ok = TRUE;
+  else
+    {
+      while (oldHd && oldHd->HdPSchema != pOldPS)
+	oldHd = oldHd->HdNextPSchema;
+      if (oldHd)
+	ok = TRUE;
+    }
+
+  if (ok)
+    {
+      GetHandleSchPres (&newHd);
+      newHd->HdPSchema = pPS;
+      if (oldHd == NULL)
+	pPfS->PfFirstPSchemaExtens = newHd;
+      else if (before)
+	{
+	  newHd->HdNextPSchema = oldHd;
+	  newHd->HdPrevPSchema = oldHd->HdPrevPSchema;
+	  oldHd->HdPrevPSchema = newHd;
+	  if (newHd->HdPrevPSchema)
+	    newHd->HdPrevPSchema->HdNextPSchema = newHd;
+	  else
+	    pPfS->PfFirstPSchemaExtens = newHd;
+	}
+      else
+	{
+	  newHd->HdNextPSchema = oldHd->HdNextPSchema;
+	  newHd->HdPrevPSchema = oldHd;
+	  oldHd->HdNextPSchema = newHd;
+	  if (newHd->HdNextPSchema)
+	    newHd->HdNextPSchema->HdPrevPSchema = newHd;
+	}
+    }
+  return ok;
+}
 #endif /* NODISPLAY */
+
+/*----------------------------------------------------------------------
+  PresentationSchema
+  Returns the presentation schema associated with structure schema pSS
+  in document pDoc.
+  ----------------------------------------------------------------------*/
+PtrPSchema PresentationSchema (PtrSSchema pSS, PtrDocument pDoc)
+{
+#ifndef NODISPLAY
+  PtrDocSchemasDescr  pPfS, pPrevPfS;
+
+  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  if (pPfS)
+    return (pPfS->PfPSchema);
+  else
+#endif /* NODISPLAY */
+    return NULL;
+}
+
+/*----------------------------------------------------------------------
+   LoadStructureSchema
+   If structure schema called schemaName is already loaded, return a
+   pointer ot it, otherwise load it from its file, register it in the
+   table of loaded schemas, and return a pointer to it.
+   Return NULL if schema can't be loaded.
+  ----------------------------------------------------------------------*/
+PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
+{
+   PtrSSchema           pSSchema;
+   PtrDocSchemasDescr   pPfS, pPrevPfS;
+   int                  i;
+
+   if (schemaName == NULL || schemaName[0] == EOS)
+     /* invalid parameter */
+     return NULL;
+   pSSchema = NULL;
+   /* Look at the table of loaded schemas */
+   for (i = 0; i < MAX_SSCHEMAS &&
+	       ustrcmp (schemaName, LoadedSSchema[i].StructSchemaName); i++);
+   if (i < MAX_SSCHEMAS)
+      /* This schema is in the table, no need to load it */
+      {
+      LoadedSSchema[i].UsageCount++;
+      pSSchema = LoadedSSchema[i].pStructSchema;
+#ifndef VQ
+  fprintf (stderr, "get S schema %s\n", pSSchema->SsName);
+#endif
+      }
+   else
+      /* That's a new schema. Load it */
+      {
+      /* get some memory */
+      GetSchStruct (&pSSchema);
+      /* read the file */
+      if (!ReadStructureSchema (schemaName, pSSchema))
+	/* failure */
+	{
+#ifndef VQ
+  fprintf (stderr, "*** failed loading S schema %s\n", schemaName);
+#endif
+	 FreeSchStruc (pSSchema);
+	 pSSchema = NULL;
+	}
+      else
+	 /* schema loaded. Register it in the table of loaded schemas */
+	 {
+#ifndef VQ
+  fprintf (stderr, "load S schema %s\n", pSSchema->SsName);
+#endif
+	 /* look for an free entry in the table */
+	 for (i = 0; i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema; i++);
+	 if (i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema == NULL)
+	    /* free entry found */
+	    {
+	    LoadedSSchema[i].UsageCount = 1;
+	    LoadedSSchema[i].pStructSchema = pSSchema;
+	    ustrncpy (LoadedSSchema[i].StructSchemaName, schemaName,
+		      MAX_NAME_LENGTH);
+	    }
+	 /* translate the structure schema in the user's language */
+	 ConfigTranslateSSchema (pSSchema);
+	 }
+      }
+   if (pSSchema)
+     /* add a schema descriptor to the document */
+     {
+     pPfS = PresForStructSchema (pDoc, pSSchema, &pPrevPfS);
+     if (!pPfS)
+       {
+	 GetDocSchemasDescr (&pPfS);
+	 pPfS->PfNext = pDoc->DocFirstSchDescr;
+         pDoc->DocFirstSchDescr = pPfS;
+	 pPfS->PfSSchema = pSSchema;
+	 pPfS->PfPSchema = NULL;
+	 pPfS->PfFirstPSchemaExtens = NULL;
+       }
+     }
+   return pSSchema;
+}
+
+/*----------------------------------------------------------------------
+   ReleaseStructureSchema
+   Structure schema pSS is no longer used by document pDoc.
+   If it's not used by any other document, unload it.
+   Return TRUE if the schema is no longer used by any document. It has
+   been unloaded.
+  ----------------------------------------------------------------------*/
+ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
+{
+  AStructure *pStr;
+  int        i;
+
+  /* look for this schema in the table */
+  for (i = 0; i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema != pSS; i++);
+  if (i >= MAX_SSCHEMAS)
+    /* error. This schema is not in the table */
+    return FALSE;
+#ifndef VQ
+  fprintf (stderr, "release S schema %s\n", pSS->SsName);
+#endif
+  pStr = &LoadedSSchema[i];
+  pStr->UsageCount--;
+  if (pStr->UsageCount > 0)
+    return FALSE;
+  else
+    /* This schema is no longer used by any document. Unload it */
+    {
+#ifndef VQ
+  fprintf (stderr, "   free S schema %s\n", pSS->SsName);
+#endif
+      pStr->pStructSchema = NULL;
+      pStr->StructSchemaName[0] = EOS;
+      FreeSchStruc (pSS);
+      return TRUE;
+    }
+}
 
 /*----------------------------------------------------------------------
    LoadNatureSchema charge la nature definie dans la regle rule du	
@@ -249,38 +601,37 @@ void               FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS)
    defini dans le schema de structure, sinon on propose le schema de  
    presentation de nom PSchName.					
   ----------------------------------------------------------------------*/
-void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule)
+void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
+		       PtrDocument pDoc)
 {
    Name          schName;
    PtrSSchema    pNatureSS;
+#ifndef NODISPLAY
+   ThotBool      loaded;
+#endif
 
    /* utilise le nom de la nature comme nom de fichier. */
    /* copie le nom de nature dans schName */
    strncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
-   GetSchStruct (&pNatureSS);
-   if (!ReadStructureSchema (schName, pNatureSS))
+   pNatureSS = LoadStructureSchema (schName, pDoc);
+   if (!pNatureSS)
       /* echec */
-      {
-      FreeSchStruc (pNatureSS);
       pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
-      }
    else
       /* chargement du schema de structure reussi */
       {
-      /* traduit le schema de structure dans la langue de l'utilisateur */
-      ConfigTranslateSSchema (pNatureSS);
       pSS->SsRule[rule - 1].SrSSchemaNat = pNatureSS;
 #ifndef NODISPLAY
+      loaded = FALSE;
       if (PSchName != NULL && PSchName[0] != EOS)
 	 /* l'appelant indique un schema de presentation, on essaie de le
 	    charger */
 	 {
 	 strncpy (schName, PSchName, MAX_NAME_LENGTH);
-	 pNatureSS->SsPSchema = LoadPresentationSchema (schName, pNatureSS);
+	 loaded = LoadPresentationSchema (schName, pNatureSS, pDoc);
 	 }
-      if (PSchName == NULL || PSchName[0] == EOS ||
-	  pNatureSS->SsPSchema == NULL)
+      if (PSchName == NULL || PSchName[0] == EOS || !loaded)
 	 /* pas de schema de presentation particulier demande' par l'appelant*/
 	 /* ou schema demande' inaccessible */
 	 {
@@ -292,14 +643,14 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule)
 	    strncpy (schName, pNatureSS->SsDefaultPSchema, MAX_NAME_LENGTH);
 	 /* cree un nouveau schema de presentation et le charge depuis le
 	    fichier */
-	 pNatureSS->SsPSchema = LoadPresentationSchema (schName, pNatureSS);
+	 loaded = LoadPresentationSchema (schName, pNatureSS, pDoc);
 	 }
-      if (pNatureSS->SsPSchema == NULL)
-	 /* echec chargement schema */
+      if (!loaded)
+	 /* failed loading presentation schema */
 	 {
-	 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE),
+	 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
 			    schName);
-	 FreeSchStruc (pNatureSS);
+	 ReleaseStructureSchema (pNatureSS, pDoc);
 	 pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
 	 }
       if (ThotLocalActions[T_initevents] != NULL)
@@ -342,11 +693,16 @@ static void         AppendSRule (int *ret, PtrSSchema pSS)
    le schema de presentation par defaut defini dans le schema de	
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
-int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS)
+int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS,
+			   PtrDocument pDoc)
 {
-   SRule     *pRule;
-   int       ret;
-   ThotBool  found;
+#ifndef NODISPLAY
+   PtrPSchema  pPS;
+#endif
+   SRule              *pRule;
+   PtrSSchema         pSSch;
+   int                ret;
+   ThotBool           found;
 
    /* cherche si le type existe deja dans le schema de structure */
    found = FALSE;
@@ -394,8 +750,9 @@ int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS)
 #ifndef NODISPLAY
 	 /* initialise le pointeur sur les regles de presentation qui */
 	 /* correspondent a cette nouvelle regle de structure */
-	 if (pSS->SsPSchema != NULL)
-	    pSS->SsPSchema->PsElemPRule[ret - 1] = NULL;
+	 pPS = PresentationSchema (pSS, pDoc);
+	 if (pPS != NULL)
+	    pPS->PsElemPRule[ret - 1] = NULL;
 #endif   /* NODISPLAY */
 	 }
       }
@@ -408,11 +765,25 @@ int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS)
 	    /* charge les schemas de structure et de presentation */
 	    /* de la nouvelle nature */
 	    {
-	    LoadNatureSchema (pSS, PSchName, ret);
+	    LoadNatureSchema (pSS, PSchName, ret, pDoc);
 	    if (pRule->SrSSchemaNat == NULL)
 	       /* echec chargement */
 	       ret = 0;
 	    }
+      if (found)
+	/* the nature was already in the structure schema. This may come from
+	   another document that uses the same structure schema */
+	{
+	  /* does the document already use this nature ? */
+	  if (!GetSSchemaForDoc (SSchName, pDoc))
+	    /* No. Add a descriptor to the document */
+	    {
+	      pSSch = LoadStructureSchema (SSchName, pDoc);
+#ifndef NODISPLAY
+	      LoadPresentationSchema (PSchName, pSSch, pDoc);
+#endif   /* NODISPLAY */
+	    }
+	}
       }
    return ret;
 }
@@ -429,61 +800,51 @@ int          CreateNature (char *SSchName, char *PSchName, PtrSSchema pSS)
    extension indique s'il s'agit d'une extension de schema ou d'un    
    schema de structure complet.                                       
   ----------------------------------------------------------------------*/
-void LoadSchemas (char *SSchName, char *PSchName,
-		  PtrSSchema *pSS, PtrSSchema pLoadedSS,
-		  ThotBool extension)
+void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
+		  PtrDocument pDoc, PtrSSchema pLoadedSS, ThotBool extension)
 {
-   Name         schName;
+  Name         schName;
+#ifndef NODISPLAY
+  ThotBool     loaded;
+#endif
 
-   strncpy (schName, SSchName, MAX_NAME_LENGTH);
-   /* cree le schema de structure et charge le fichier dedans */
-   if (pLoadedSS == NULL)
-      {
-      GetSchStruct (pSS);
-      if (!ReadStructureSchema (SSchName, *pSS))
-	 {
+  strncpy (schName, SSchName, MAX_NAME_LENGTH);
+  /* cree le schema de structure et charge le fichier dedans */
+  if (pLoadedSS == NULL)
+    {
+      *pSS = LoadStructureSchema (SSchName, pDoc);
+      if (*pSS)
+	{
+	  if ((*pSS)->SsExtension != extension)
+	    {
+	      /* on voulait un schema d'extension et ce n'en est pas un, ou
+		 l'inverse */
+	      ReleaseStructureSchema (*pSS, pDoc);
+	      *pSS = NULL;
+	    }
 #ifndef NODISPLAY
-	 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE),
-			    SSchName);
+	  else
+	    {
+	      if (ThotLocalActions[T_initevents] != NULL)
+		(*ThotLocalActions[T_initevents]) (*pSS);
+	    }
 #endif  /* NODISPLAY */
-         FreeSchStruc (*pSS);
-         *pSS = NULL;	     
-	 }
-      else if ((*pSS)->SsExtension != extension)
-	 {
-	 /* on voulait un schema d'extension et ce n'en est pas un, ou
-	    l'inverse */
-	 FreeSchStruc (*pSS);
-	 *pSS = NULL;
-	 }
-      else
-	 {
-	 /* traduit les noms du schema dans la langue de l'utilisateur */
-	 ConfigTranslateSSchema (*pSS);
-#ifndef NODISPLAY
-	 if (ThotLocalActions[T_initevents] != NULL)
-	    (*ThotLocalActions[T_initevents]) (*pSS);
-#endif  /* NODISPLAY */
-	 }
+	}
       }
 #ifndef NODISPLAY
    else
       *pSS = pLoadedSS;
    if (*pSS)
       {
-      if ((*pSS)->SsExtension)
-         /* pour eviter que ReadPresentationSchema ne recharge le schema de
-	    structure */
-	 (*pSS)->SsRootElem = 1;
+      loaded = FALSE;
       if (PSchName != NULL && PSchName[0] != EOS)
 	  {
           /* l'appelant specifie le schema de presentation a prendre, on
 	     essaie de le charger */
 	  strncpy (schName, PSchName, MAX_NAME_LENGTH);
-	  (*pSS)->SsPSchema = LoadPresentationSchema (schName, *pSS);
+	  loaded = LoadPresentationSchema (schName, *pSS, pDoc);
 	  }
-      if (PSchName == NULL || PSchName[0] == EOS ||
-	  (*pSS)->SsPSchema == NULL)
+      if (PSchName == NULL || PSchName[0] == EOS || !loaded)
 	 {
          /* pas de presentation specifiee par l'appelant, ou schema specifie'
 	    inaccessible */
@@ -495,14 +856,14 @@ void LoadSchemas (char *SSchName, char *PSchName,
 	       structure */
 	    strncpy (schName, (*pSS)->SsDefaultPSchema, MAX_NAME_LENGTH);
 	 /* charge le schema de presentation depuis le fichier */
-	 (*pSS)->SsPSchema = LoadPresentationSchema (schName, *pSS);
+	 loaded = LoadPresentationSchema (schName, *pSS, pDoc);
 	 }
-      if ((*pSS)->SsPSchema == NULL)
+      if (!loaded)
 	 {
-         /* echec chargement schema */
+         /* failed loading presentation schema */
          TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
 			    schName);
-         FreeSchStruc (*pSS);
+         ReleaseStructureSchema (*pSS, pDoc);
          *pSS = NULL;
 	 }
       }
@@ -542,7 +903,7 @@ PtrSSchema LoadExtension (char *SSchName, char *PSchName, PtrDocument pDoc)
 	    ConfigGetPSchemaNature (pDoc->DocSSchema, SSchName, PSchName);
 #endif /* NODISPLAY */
 	 /* charge le schema d'extension demande' */
-	 LoadSchemas (SSchName, PSchName, &pExtens, NULL, TRUE);
+	 LoadSchemas (SSchName, PSchName, &pExtens, pDoc, NULL, TRUE);
 	 if (pExtens != NULL)
 	    {
 	    /* cherche le dernier schema d'extension du document */
@@ -609,9 +970,13 @@ static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
    pNatureSS et son schema de presentation.            		
    Retourne faux sinon.                                              
   ----------------------------------------------------------------------*/
-ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
+ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS,
+				PtrDocument pDoc)
 {
-   ThotBool            ret;
+#ifndef NODISPLAY
+   PtrPSchema   pPS;
+#endif
+   ThotBool     ret;
 
    ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
@@ -619,12 +984,12 @@ ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
       {
       ret = TRUE;
 #ifndef NODISPLAY
-      if (pNatureSS->SsPSchema != NULL)
+      pPS = PresentationSchema (pNatureSS, pDoc);
+      if (pPS != NULL)
 	 /* libere le schema de presentation associe' */
-	 FreePresentationSchema (pNatureSS->SsPSchema, pNatureSS);
+	 FreePresentationSchema (pPS, pNatureSS, pDoc);
 #endif  /* NODISPLAY */
-      /* rend la memoire */
-      FreeSchStruc (pNatureSS);
+      ReleaseStructureSchema (pNatureSS, pDoc);
       }
    return ret;
 }
@@ -636,34 +1001,25 @@ ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
    Pour les schemas de presentation, la liberation n'est effective 
    que s'ils ne sont pas utilises par d'autres documents.          
   ----------------------------------------------------------------------*/
-void                FreeDocumentSchemas (PtrDocument pDoc)
+void             FreeDocumentSchemas (PtrDocument pDoc)
 {
-   PtrSSchema       pSS, pNextSS;
-   SRule            *pRule;
-   int              i;
+   PtrSSchema    pSS;
+   int           i;
 
-   pSS = pDoc->DocSSchema;
-   /* libere le schema de structure du document et ses extensions */
-   while (pSS != NULL)
-      {
-      pNextSS = pSS->SsNextExtens;
-      /* libere les schemas de nature pointes par les regles de structure */
-      for (i = 0; i < pSS->SsNRules; i++)
-         {
-	 pRule = &pSS->SsRule[i];
-	 if (pRule->SrConstruct == CsNatureSchema)
-	    if (pRule->SrSSchemaNat != NULL)
-	       FreeNature (pSS, pRule->SrSSchemaNat);
-	 }
+   while (pDoc->DocFirstSchDescr)
+     {
+       pSS = pDoc->DocFirstSchDescr->PfSSchema;
 #ifndef NODISPLAY
-      /* libere le schema de presentation */
-      if (pSS->SsPSchema != NULL)
-	 FreePresentationSchema (pSS->SsPSchema, pSS);
-#endif  /* NODISPLAY */
-      /* libere le schema de structure */
-      FreeSchStruc (pSS);
-      pSS = pNextSS;
-      }
+       FreePresentationSchema (pDoc->DocFirstSchDescr->PfPSchema, pSS, pDoc);
+#endif
+       if (ReleaseStructureSchema (pSS, pDoc))
+	 /* this structure schema has been unloaded */
+	 /* remove any reference to that schema from all Nature rules
+	    of other S schemas */
+	 for (i = 0; i < MAX_SSCHEMAS; i++)
+	   if (LoadedSSchema[i].pStructSchema)
+	     FreeNatureRules (LoadedSSchema[i].pStructSchema, pSS);
+     }
    pDoc->DocSSchema = NULL;
 }
 
@@ -673,39 +1029,44 @@ void                FreeDocumentSchemas (PtrDocument pDoc)
    add the guest views defined in presentation schema assosicated with pSS
    to the list of guest views of document view pViewDescr.
   ----------------------------------------------------------------------*/
-static void      AddGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr)
+static void  AddGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr,
+			    PtrDocument pDoc)
 {
-  PtrPSchema         pPresSch;
+  PtrPSchema         pPresSch, pPS;
   PtrHostView        pHostView;
   PtrGuestViewDescr  pGuestView;
   int                i;
   ThotBool           found;
 
-  pPresSch = pSS->SsPSchema;
-  /* check all views defined in pPresSch */
-  for (i = 0; i < pPresSch->PsNViews; i++)
-     {
-     pHostView = pPresSch->PsHostViewList[i];
-     found = FALSE;
-     while (pHostView && !found)
-        if (strcmp (pViewDescr->DvSSchema->SsPSchema->PsView[pViewDescr->DvPSchemaView - 1],
-		     pHostView->HostViewName) == 0)
-	   found = TRUE;
-        else
-	   pHostView = pHostView->NextHostView;
-     if (found)
-        {
-	pGuestView = TtaGetMemory (sizeof(GuestViewDescr));
-	pGuestView->GvSSchema = pSS;
-	pGuestView->GvPSchemaView = i+1;
-	/* link the new guest view descriptor */
-	if (pViewDescr->DvFirstGuestView == NULL)
-	   pGuestView->GvNextGuestView = NULL;
-	else
-	   pGuestView->GvNextGuestView = pViewDescr->DvFirstGuestView;
-	pViewDescr->DvFirstGuestView = pGuestView;
-	}
-     }
+  pPresSch = PresentationSchema (pSS, pDoc);
+  if (pPresSch)
+    /* check all views defined in pPresSch */
+    for (i = 0; i < pPresSch->PsNViews; i++)
+      {
+	pHostView = pPresSch->PsHostViewList[i];
+	found = FALSE;
+	while (pHostView && !found)
+	  {
+	    pPS = PresentationSchema (pViewDescr->DvSSchema, pDoc);
+	    if (strcmp (pPS->PsView[pViewDescr->DvPSchemaView - 1],
+			pHostView->HostViewName) == 0)
+	      found = TRUE;
+	    else
+	      pHostView = pHostView->NextHostView;
+	  }
+	if (found)
+	  {
+	    pGuestView = TtaGetMemory (sizeof(GuestViewDescr));
+	    pGuestView->GvSSchema = pSS;
+	    pGuestView->GvPSchemaView = i+1;
+	    /* link the new guest view descriptor */
+	    if (pViewDescr->DvFirstGuestView == NULL)
+	      pGuestView->GvNextGuestView = NULL;
+	    else
+	      pGuestView->GvNextGuestView = pViewDescr->DvFirstGuestView;
+	    pViewDescr->DvFirstGuestView = pGuestView;
+	  }
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -723,7 +1084,7 @@ void         AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
          if (pDoc->DocView[i].DvSSchema)
 	    /* this view is open */
             /* add all its guest views declared in the presentation schema */
-            AddGuestViews (pSS, &pDoc->DocView[i]);
+            AddGuestViews (pSS, &pDoc->DocView[i], pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -733,7 +1094,8 @@ void         AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
    Add also the guest views of presentation schemas attached to all
    natures used in pSS.
   ----------------------------------------------------------------------*/
-static void      AddAllGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr)
+static void      AddAllGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr,
+				   PtrDocument pDoc)
 {
    SRule              *pRule;
    int                 i;
@@ -741,7 +1103,7 @@ static void      AddAllGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr)
    while (pSS != NULL)
       {
       /* get guest views in the presentation schema of this structure schema */
-      AddGuestViews (pSS, pViewDescr);
+      AddGuestViews (pSS, pViewDescr, pDoc);
       /* look for nature schemas used in this structure schema */
       for (i = 0; i < pSS->SsNRules; i++)
          {
@@ -749,7 +1111,7 @@ static void      AddAllGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr)
 	 if (pRule->SrConstruct == CsNatureSchema)
 	    if (pRule->SrSSchemaNat != NULL)
 	       /* the structure schema of this nature is loaded */
-	       AddAllGuestViews (pRule->SrSSchemaNat, pViewDescr);
+	       AddAllGuestViews (pRule->SrSSchemaNat, pViewDescr, pDoc);
 	 }
       pSS = pSS->SsNextExtens;
       }
@@ -763,7 +1125,7 @@ void         CreateGuestViewList (PtrDocument pDoc, int view)
 {
    /* look for the presentation schemas of all structure schemas used in that
       document */
-   AddAllGuestViews (pDoc->DocSSchema, &pDoc->DocView[view - 1]);
+   AddAllGuestViews (pDoc->DocSSchema, &pDoc->DocView[view - 1], pDoc);
 }
 
 /*----------------------------------------------------------------------

@@ -135,6 +135,36 @@ typedef struct _ReferenceDescriptor
 				at the top or the bottom of a page) */
 } ReferenceDescriptor;
 
+typedef struct _HandlePSchema *PtrHandlePSchema;
+
+/* a handle for a presentation schema extension (aka style sheet) */
+/* this is used to link a sequence of presentation schema extensions
+   (aka style sheets) to the main pres. schema they extend */
+typedef struct _HandlePSchema
+{
+    PtrPSchema	       HdPSchema;      /* pointer to the presentation schema
+					  extension */
+    PtrHandlePSchema   HdNextPSchema;  /* handle of the next presentation
+					  schema extension */     
+    PtrHandlePSchema   HdPrevPSchema;  /* handle of the previous presentation
+					  schema extension */
+} HandlePSchema;
+
+typedef struct _DocSchemasDescr *PtrDocSchemasDescr;
+
+/* a block describing a structure schemas used by a document, as well as the
+   main presentation schema to be used for this structure schemas in this
+   document. The presentation schema extensions are also linked from there */
+typedef struct _DocSchemasDescr
+{
+    PtrDocSchemasDescr PfNext;          /* next block for the same document */
+    PtrSSchema         PfSSchema;       /* the structure schema of interest */
+    PtrPSchema         PfPSchema;       /* the presentation schema associated
+					   with this structure schema */
+    PtrHandlePSchema   PfFirstPSchemaExtens; /* first extension for this
+					        presentation schema */
+} DocSchemasDescr;
+
 typedef struct _TextBuffer *PtrTextBuffer;
 
 /* an attribute of an abstract tree element */
@@ -574,8 +604,10 @@ typedef struct _DocumentDescr *PtrDocument;
 #define MAX_NATURES_DOC 20	/* maximum length of the nature table */
 typedef struct _DocumentDescr
 {
-  PtrDocument     DocNext;	/* to link the free blocks */
-  PtrSSchema	  DocSSchema;	/* structure schema of the document */
+  PtrDocument     DocNext;	  /* to link the free blocks */
+  PtrSSchema	  DocSSchema;	  /* main structure schema of the document */
+  PtrDocSchemasDescr DocFirstSchDescr; /* first descriptor of all schemas
+				     associated with  this document */
   PtrElement      DocDocElement;  /* pointer to the document element */
   PtrElement      DocAssocRoot[MAX_ASSOC_DOC];	/* pointers on the roots of
 						   each associated tree */

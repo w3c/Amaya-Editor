@@ -279,7 +279,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 			    the new element */
 			 /* no preference for the presentation scheme */
 			 nR = CreateNature (pSS->SsName, NULL,
-					    pDoc->DocSSchema);
+					    pDoc->DocSSchema, pDoc);
 			 if (nR != 0)
 			   {
 			   /* schemes are loaded, changes the structure schema
@@ -337,7 +337,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				   {
 				     /* loads the structure and presentation schemes for the new element */
 				     /* no preference for the presentation scheme */
-				     nR = CreateNature (pSS->SsName, NULL, pDoc->DocSSchema);
+				     nR = CreateNature (pSS->SsName, NULL, pDoc->DocSSchema, pDoc);
 				     if (nR != 0)
 				       {
 				       /* schemes are loaded, changes the structure scheme of the copy */

@@ -75,7 +75,6 @@
 #include "viewapi_f.h"
 #include "writepivot_f.h"
 
-
 /*----------------------------------------------------------------------
    TtaInitDocument
 
@@ -118,23 +117,22 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
       else
 	{	  
 	  /* charge le schema de structure */
-	  GetSchStruct (&pDoc->DocSSchema);
-	  pDoc->DocSSchema->SsExtension = FALSE;
-	  if (!ReadStructureSchema (structureSchema, pDoc->DocSSchema) ||
-	      pDoc->DocSSchema->SsExtension)
+	  pDoc->DocSSchema = LoadStructureSchema (structureSchema, pDoc);
+	  if (pDoc->DocSSchema == NULL || pDoc->DocSSchema->SsExtension)
 	    /* failure while reading the structure schema or while loading
 	       a schema extension */
 	    {
-	      FreeSchStruc (pDoc->DocSSchema);
-	      pDoc->DocSSchema = NULL;
+	      if (pDoc->DocSSchema)
+		{
+		  ReleaseStructureSchema (pDoc->DocSSchema, pDoc);
+		  pDoc->DocSSchema = NULL;
+		}
 	      UnloadDocument (&pDoc);
 	      TtaError (ERR_cannot_read_struct_schema);
 	    }
 	  else
 	    {
 	      /* The structure schema is loaded */
-	      /* The structure schema is translated into the user language */
-	      ConfigTranslateSSchema (pDoc->DocSSchema);
 #ifndef NODISPLAY
 	      InitApplicationSchema (pDoc->DocSSchema);
 #endif
@@ -190,7 +188,6 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
   return document;
 }
 
-
 /*----------------------------------------------------------------------
    TtaNewDocument
 
@@ -215,6 +212,99 @@ Document TtaNewDocument (char *structureSchema, char *documentName)
   return TtaInitDocument (structureSchema, documentName, 0);
 }
 
+/*----------------------------------------------------------------------
+   LoadDocument charge le document que contient le fichier nomme'  
+   fileName dans le descripteur pointe par pDoc. Au	
+   retour pDoc est NIL si le document n'a pas pu etre      
+   charge.                                                 
+  ----------------------------------------------------------------------*/
+void LoadDocument (PtrDocument *pDoc, char *fileName)
+{
+   PathBuffer          directoryBuffer;
+   char                URL_DIR_SEP;
+   int                 i, j, len;
+   ThotBool            ok;
+
+   if (fileName && strchr (fileName, '/'))
+     URL_DIR_SEP = '/';
+   else 
+     URL_DIR_SEP = DIR_SEP;
+
+   CreateDocument (pDoc, &i);
+   if (pDoc != NULL)
+     {
+       directoryBuffer[0] = EOS;
+       if (fileName != NULL)
+	 /* nom de document fourni a l'appel, on le recopie dans DefaultDocumentName */
+	 {
+	   len = strlen (fileName);
+	   if (len > 4)
+	     if (strcmp (fileName + len - 4, ".PIV") == 0)
+	       fileName[len - 4] = EOS;
+	   if (fileName[0] != URL_DIR_SEP)
+	     {
+	       if (fileName != DefaultDocumentName)
+		 strncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
+	       /* nom de document relatif */
+	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
+	       if ((*pDoc)->DocDirectory[0] == EOS)
+		 strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
+	     }
+	   else
+	     {
+	       /* nom absolu */
+	       i = 0;
+	       j = 0;
+	       while (fileName[i] != EOS && i < MAX_PATH - 1)
+		 {
+		   (*pDoc)->DocDirectory[i] = fileName[i];
+		   if ((*pDoc)->DocDirectory[i] == URL_DIR_SEP)
+		     j = i;
+		   i++;
+		 }
+	       (*pDoc)->DocDirectory[j + 1] = EOS;
+	       i = 0;
+	       while (fileName[i] != EOS && i < MAX_NAME_LENGTH - 1)
+		 {
+		   DefaultDocumentName[i] = fileName[j + 1];
+		   i++;
+		   j++;
+		 }
+	       DefaultDocumentName[i] = EOS;
+	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
+	       /* sauve le path des documents avant de l'ecraser */
+	       strncpy (directoryBuffer, DocumentPath, MAX_PATH);
+	       strncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
+	     }
+	 }
+
+       /* on ouvre le document en chargeant temporairement les documents */
+       /* externes qui contiennent les elements inclus dans notre document */
+       ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE, TRUE);
+       /* restaure le path des documents s'il a ete ecrase */
+       if (directoryBuffer[0] != EOS)
+	 strncpy (DocumentPath, directoryBuffer, MAX_PATH);
+       if (!ok)
+	 {
+	   UnloadDocument (pDoc);
+	   *pDoc = NULL;
+	 }
+     }
+
+   if (*pDoc != NULL)
+     {
+       /* conserve le path actuel des schemas dans le contexte du document */
+       strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+       /* ouvre les vues a ouvrir */
+       OpenDefaultViews (*pDoc);
+     }
+}
 
 /*----------------------------------------------------------------------
    NewDocument cree un document vide, conforme au schema de nom    
@@ -276,8 +366,8 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	    PSchemaName[0] =EOS;
 	    /* pas de preference pour un schema de */
 	    /* presentation particulier */
-	    LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL,
-			 FALSE);
+	    LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), *pDoc,
+			 NULL, FALSE);
 	    if (docName[0] != EOS)
 	       strncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
 	    else
@@ -286,7 +376,7 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	       strcat (docNameBuffer, "X");
 	       }
 	    if ((*pDoc)->DocSSchema != NULL)
-	       if ((*pDoc)->DocSSchema->SsPSchema != NULL)
+	       if (PresentationSchema ((*pDoc)->DocSSchema, *pDoc) != NULL)
 		  {
 		  notifyDoc.event = TteDocCreate;
 		  notifyDoc.document = (Document) IdentDocument (*pDoc);
@@ -318,7 +408,7 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	    /* ajoute un saut de page a la fin de l'arbre principal */
 	    /* pour toutes les vues qui sont mises en page */
 	    /* schema de presentation du document */
-	    pPSchema = (*pDoc)->DocSSchema->SsPSchema;
+	    pPSchema = PresentationSchema ((*pDoc)->DocSSchema, *pDoc);
 	    /* examine toutes les vues definies dans le schema */
 	    for (view = 0; view < pPSchema->PsNViews; view++)
 	       if (pPSchema->PsPaginatedView[view])
@@ -378,7 +468,6 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	 }
      }
 }
-
 
 /*----------------------------------------------------------------------
    PaginateDocument	pagine toutes les vues du document pDoc		
@@ -526,7 +615,6 @@ void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
    UpdateNumbers (NextElement (pEl), pEl, pDoc, TRUE);
 }
 
-
 /*----------------------------------------------------------------------
    UpdateAllInclusions updates all inclusion elements of a document
   ----------------------------------------------------------------------*/
@@ -578,7 +666,6 @@ void         UpdateAllInclusions (PtrDocument pDoc)
     /* switch on the selection */
     HighlightSelection (FALSE, TRUE);
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -642,9 +729,9 @@ static void RemoveExtensionFromTree (PtrElement * pEl, Document document,
 /*----------------------------------------------------------------------
    TtaRemoveSchemaExtension
 
-   Removes a structure schema extension from a given document. Removes also from
-   the document all attributes and elements defined in that structure schema
-   extension.
+   Removes a structure schema extension from a given document.
+   Removes also from the document all attributes and elements defined in
+   that structure schema extension.
    Parameters:
    document: the document.
    extension: the structure schema extension to be removed.
@@ -660,6 +747,9 @@ void TtaRemoveSchemaExtension (Document document, SSchema extension,
    PtrDocument         pDoc;
    ThotBool            found;
    int                 assoc;
+#ifndef NODISPLAY
+   PtrPSchema          pPS;
+#endif
 
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -705,13 +795,13 @@ void TtaRemoveSchemaExtension (Document document, SSchema extension,
 	     if (curExtension->SsNextExtens != NULL)
 		curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
 #ifndef NODISPLAY
-	     FreePresentationSchema (curExtension->SsPSchema, curExtension);
+	     pPS = PresentationSchema (curExtension, pDoc);
+	     FreePresentationSchema (pPS, curExtension, pDoc);
 #endif
-	     FreeSchStruc (curExtension);
+	     ReleaseStructureSchema (curExtension, pDoc);
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
   BackupAll sauvegarde les fichiers modifies en cas de CRASH majeur

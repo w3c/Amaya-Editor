@@ -34,6 +34,7 @@
 #include "frame_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
+#include "schemas_f.h"
 #include "scroll_f.h"
 #include "structlist_f.h"
 #include "structselect_f.h"
@@ -488,7 +489,7 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
    de page son traitees comme non-secables.                
    V4 : Les paves de page sont traites comme secables.     
   ----------------------------------------------------------------------*/
-ThotBool            IsBreakable (PtrAbstractBox pAb)
+ThotBool            IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
 {
    ThotBool            unbreakable;
    int                 index;
@@ -512,7 +513,7 @@ ThotBool            IsBreakable (PtrAbstractBox pAb)
 	/* regarde dans le schema de presentation du pave s'il est secable */
 	if (!unbreakable)
 	  {
-	     SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS);
+	     SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS, pDoc);
 	     unbreakable = (pSchP->PsBuildAll[index - 1]);
 	  }
 	pAb = pAb->AbEnclosing;
@@ -592,7 +593,7 @@ static void KillPresEnclosing (PtrAbstractBox pAb, ThotBool head,
 	 pAbbEnclosing = NULL;
       else
 	{
-	   if (IsBreakable (pAbbEnclosing))
+	   if (IsBreakable (pAbbEnclosing, pDoc))
 	     {
 	      TruncateOrCompleteAbsBox (pAbbEnclosing, TRUE, head, pDoc);
 	      if (head)
@@ -742,7 +743,8 @@ static void  SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool 
 	   if (pAb == NULL)
 	      stop = TRUE;
 	   else if (pAb->AbEnclosing != NULL &&
-		    (pAb->AbVolume + volpres <= *dvol || !IsBreakable (pAb)))
+		    (pAb->AbVolume + volpres <= *dvol ||
+		     !IsBreakable (pAb, pDoc)))
 	      stop = TRUE;
 	   else
 	     {
@@ -851,7 +853,7 @@ static void AddVolView (int VolOpt, PtrAbstractBox pAbbRoot, PtrElement pElMiddl
    /* evalue d'abord s'il faut ajouter ou supprimer des paves */
    add = FALSE;
    suppress = FALSE;
-   if (IsBreakable (pAbbRoot))
+   if (IsBreakable (pAbbRoot, pDoc))
      {
       if (pAbbRoot->AbVolume < VolOpt - VolOpt / 8)
 	 /* il faudrait creer de nouveaux paves dans cette vue */
@@ -1021,7 +1023,7 @@ void                IncreaseVolume (ThotBool head, int dVol, int frame)
 	  pDoc->DocViewFreeVolume[view - 1] = dVol;
 	}
 
-      if (IsBreakable (pAb))
+      if (IsBreakable (pAb, pDoc))
 	{
 	  /* cree les paves de la partie qui va apparaitre */
 	  AddAbsBoxes (pAb, pDoc, head);
@@ -1124,16 +1126,15 @@ void                DecreaseVolume (ThotBool head, int dVol, int frame)
 void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, ThotBool display)
 {
   ThotBool            openedView, creation, stop;
-  PtrElement          pElAscent, pElPage;
+  PtrElement          pElAscent, pElPage, pEl1;
   PtrElement          pAsc[MaxAsc];
   int                 NumAsc, i, volsupp, frame, nAssoc, boxType, h;
-  PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr, pAbbFirstEmptyCr;
-  PtrAbstractBox      pAbbReDisp, pAbbRoot, pPrevious;
-  PtrElement          pEl1;
-  PtrAbstractBox      pAbbox1;
+  PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr,
+                      pAbbFirstEmptyCr, pAbbReDisp, pAbbRoot, pPrevious;
+  PtrPSchema          pPS;
   ThotBool            complete;
   int                 nR;
-	  
+
   pAbbLastEmptyCr = NULL;
   pAbbRoot = NULL;
   for (i = 0; i < MaxAsc; i++)
@@ -1157,7 +1158,8 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 	  nR = pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrListItem;
 	  /* si les elements associes s'affichent en haut ou en bas de */
 	  /* page, la racine n'a jamais de pave */
-	  openedView = !pEl1->ElStructSchema->SsPSchema->PsInPageHeaderOrFooter[nR - 1];
+	  pPS = PresentationSchema (pEl1->ElStructSchema, pDoc);
+	  openedView = !pPS->PsInPageHeaderOrFooter[nR - 1];
 	}
 
       /* si la vue n'est pas creee, il n'y a rien a faire */
@@ -1190,7 +1192,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		  /* Serait-ce un element qui s'affiche dans une boite de */
 		  /* haut ou de bas de page ? */
 		  {
-		    pElPage = GetPageBreakForAssoc (pElAscent, pDoc->DocView[view - 1].DvPSchemaView, &boxType);
+		    pElPage = GetPageBreakForAssoc (pElAscent, pDoc->DocView[view - 1].DvPSchemaView, &boxType, pDoc);
 		    if (pElPage != NULL)
 		      /* Il s'affiche dans une haut ou bas de page, c'est la */
 		      /* marque de page a laquelle il est associe qu'il faut */
@@ -1388,17 +1390,16 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		pAbbRemain = pAbbLastEmptyCr;
 		while (pAbbRemain != NULL)
 		  {
-		    pAbbox1 = pAbbRemain;
-		    pAbbox1->AbNew = FALSE;
+		    pAbbRemain->AbNew = FALSE;
 		    if (creation)
 		      /* a priori les paves ne sont pas complets */
-		      if (pAbbox1->AbLeafType == LtCompound
-			  && !pAbbox1->AbInLine)
+		      if (pAbbRemain->AbLeafType == LtCompound
+			  && !pAbbRemain->AbInLine)
 			{
-			  pAbbox1->AbTruncatedHead = TRUE;
-			  pAbbox1->AbTruncatedTail = TRUE;
+			  pAbbRemain->AbTruncatedHead = TRUE;
+			  pAbbRemain->AbTruncatedTail = TRUE;
 			}
-		    pAbbRemain = pAbbox1->AbEnclosing;
+		    pAbbRemain = pAbbRemain->AbEnclosing;
 		    /* passe a l'englobant */
 		  }
 		/* applique les regles des paves nouvellement crees et cree */
@@ -1409,12 +1410,14 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		do
 		  {
 		    pEl1 = pAsc[i - 1];
-		    if (pEl1->ElStructSchema->SsPSchema->PsBuildAll[pEl1->ElTypeNumber - 1])
+		    pPS = PresentationSchema (pEl1->ElStructSchema, pDoc);
+		    if (pPS->PsBuildAll[pEl1->ElTypeNumber - 1])
 		      /* cet element a la regle Gather */
 		      /* cree le pave avec toute sa descendance, si */
 		      /* ce n'est pas encore fait */
 		      {
-			pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, TRUE, &complete);
+			pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view,
+						    TRUE, TRUE, &complete);
 			i = 1;
 		      }
 		    i--;
@@ -1482,9 +1485,8 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		pAbbRemain = pAbbLastEmptyCr;
 		while (pAbbRemain != NULL)
 		  {
-		    pAbbox1 = pAbbRemain;
-		    pAbbox1->AbNew = TRUE;
-		    pAbbRemain = pAbbox1->AbEnclosing;
+		    pAbbRemain->AbNew = TRUE;
+		    pAbbRemain = pAbbRemain->AbEnclosing;
 		    /* passe a l'englobant */
 		  }
 		/* indique les nouvelles modifications au Mediateur et */

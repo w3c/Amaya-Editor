@@ -936,7 +936,7 @@ static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocumen
 	       known in the target document */
 	    {
             nR = CreateNature (pAttr1->AeAttrSSchema->SsName, NULL,
-			       pTargetDoc->DocSSchema);
+			       pTargetDoc->DocSSchema, pTargetDoc);
 	    if (nR == 0)
 	       /* can't create the schema for the target document. Don't
 		  copy this attribute */
@@ -2321,7 +2321,7 @@ PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	    /* so, load it! */
 	    {
 	      PSchName[0] = EOS;
-	      LoadNatureSchema (pSS, PSchName, typeNum);
+	      LoadNatureSchema (pSS, PSchName, typeNum, pDoc);
 	      AddSchemaGuestViews (pDoc, pSRule->SrSSchemaNat);
 	    }
 	  if (pSRule->SrSSchemaNat == NULL)
@@ -2977,7 +2977,7 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
 	       while ((!ok) && (pAsc != NULL))
 		 {
 		   pSS = pEl1->ElStructSchema;
-		   ok = FreeNature (pAsc->ElStructSchema, pSS);
+		   ok = FreeNature (pAsc->ElStructSchema, pSS, pDoc);
 		   if (ok)
 		     /* we freed the structure scheme. now we must delete
 			it from the document's table of natures */
@@ -2989,8 +2989,10 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
 			     stop = TRUE;
 			     while (n < pDoc->DocNNatures)
 			       {
-				 ustrcpy (pDoc->DocNatureName[n - 1], pDoc->DocNatureName[n]);
-				 ustrcpy (pDoc->DocNaturePresName[n - 1], pDoc->DocNaturePresName[n]);
+				 ustrcpy (pDoc->DocNatureName[n - 1],
+					  pDoc->DocNatureName[n]);
+				 ustrcpy (pDoc->DocNaturePresName[n - 1],
+					  pDoc->DocNaturePresName[n]);
 				 pDoc->DocNatureSSchema[n - 1] = pDoc->DocNatureSSchema[n];
 				 n++;
 			       }
@@ -3170,7 +3172,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	      {
 		/* loads the structure and presentation schemes for the copy */
 		/* no preference for the presentation scheme */
-		nR = CreateNature (pSource->ElStructSchema->SsName, NULL, pSSchema);
+		nR = CreateNature (pSource->ElStructSchema->SsName, NULL,
+				   pSSchema, pDocCopy);
 		if (nR == 0)
 		  /* could not load the schema */
 		  copyType = 0;

@@ -70,7 +70,7 @@
 #include "views_f.h"
 #include "viewapi_f.h"
 
-static CHAR_T         nameBuffer[MAX_NAME_LENGTH];
+static char           nameBuffer[MAX_NAME_LENGTH];
 
 /*----------------------------------------------------------------------
    TtaOpenMainView
@@ -89,6 +89,7 @@ static CHAR_T         nameBuffer[MAX_NAME_LENGTH];
 View TtaOpenMainView (Document document, int x, int y, int w, int h)
 {
   PtrDocument         pDoc;
+  PtrPSchema          pPS;
   int                 nView;
   View                view;
 
@@ -105,12 +106,13 @@ View TtaOpenMainView (Document document, int x, int y, int w, int h)
       pDoc = LoadedDocument[document - 1];
       if (pDoc->DocSSchema != NULL)
 	{
-	  if (pDoc->DocSSchema->SsPSchema == NULL)
+	  pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
+	  if (pPS == NULL)
 	    TtaError (ERR_no_presentation_schema);
 	  else
 	    {
 	      /* Add a pagebreak probably missed at the end of the document */
-	      if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
+	      if (pPS->PsPaginatedView[0])
 		AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
 	      nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1,
 					   TRUE, NULL);
@@ -137,7 +139,7 @@ View TtaOpenMainView (Document document, int x, int y, int w, int h)
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-static View OpenView (Document document, STRING viewName, int x, int y,
+static View OpenView (Document document, char *viewName, int x, int y,
 		      int w, int h, Element subtree)
 {
   int                 nView;
@@ -145,6 +147,7 @@ static View OpenView (Document document, STRING viewName, int x, int y,
   int                 i;
   int                 v;
   PtrDocument         pDoc;
+  PtrPSchema          pPS;
   AvailableView       allViews;
   ThotBool            assoc;
   ThotBool            found;
@@ -161,7 +164,10 @@ static View OpenView (Document document, STRING viewName, int x, int y,
     TtaError (ERR_invalid_document_parameter);
   else
     /* parameter document is ok */
-    if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+    {
+    pPS = PresentationSchema (LoadedDocument[document - 1]->DocSSchema,
+			      LoadedDocument[document - 1]);
+    if (pPS == NULL)
       TtaError (ERR_no_presentation_schema);
     else
       {
@@ -187,7 +193,7 @@ static View OpenView (Document document, STRING viewName, int x, int y,
 	      {
 		/* Add a page break probably missed at the end */
 		if (allViews[v].VdView > 0)
-		  if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
+		  if (pPS->PsPaginatedView[0])
 		    AddLastPageBreak (pDoc->DocAssocRoot[allViews[v].VdView-1],
 				      1, pDoc, FALSE);
 		nView = CreateAbstractImage (pDoc, 0, allViews[v].VdAssocNum,
@@ -201,7 +207,7 @@ static View OpenView (Document document, STRING viewName, int x, int y,
 	    else
 	      {
 		/* Add a page break probably missed at the end */
-		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[allViews[v].VdView])
+		if (pPS->PsPaginatedView[allViews[v].VdView])
 		  AddLastPageBreak (pDoc->DocDocElement, allViews[v].VdView,
 				    pDoc, FALSE);
 		nView = CreateAbstractImage (pDoc, allViews[v].VdView, 0,
@@ -224,6 +230,7 @@ static View OpenView (Document document, STRING viewName, int x, int y,
 	      }
 	  }
       }
+    }
   return view;
 }
 
@@ -602,7 +609,7 @@ int TtaIsPSchemaValid (STRING structureName, STRING presentationName)
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   CHAR_T                text[MAX_TXT_LEN];
+   char                  text[MAX_TXT_LEN];
    int                 i;
    Name                gotStructName;
    int                 result;
@@ -672,6 +679,7 @@ STRING              TtaGetViewName (Document document, View view)
 {
   PtrDocument         pDoc;
   PtrElement          pEl;
+  PtrPSchema          pPS;
   DocViewDescr        dView;
   int                 numAssoc;
 
@@ -694,7 +702,11 @@ STRING              TtaGetViewName (Document document, View view)
 	  {
 	    dView = pDoc->DocView[view - 1];
 	    if (dView.DvSSchema != NULL || dView.DvPSchemaView != 0)
-	      ustrncpy (nameBuffer, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1], MAX_NAME_LENGTH);
+	      {
+	      pPS = PresentationSchema (dView.DvSSchema, pDoc);
+	      ustrncpy (nameBuffer, pPS->PsView[dView.DvPSchemaView - 1],
+			MAX_NAME_LENGTH);
+	      }
 	  }
       else
 	/* View of associated elements */
@@ -785,9 +797,10 @@ View TtaGetViewFromName (Document document, char* viewName)
    View                view;
    PtrDocument         pDoc;
    PtrElement          pEl;
+   PtrPSchema          pPS;
    DocViewDescr        dView;
    int                 aView;
-   CHAR_T              ViewName[MAX_LENGTH];
+   char                ViewName[MAX_LENGTH];
 
    UserErrorCode = 0;
    view = 0;
@@ -806,8 +819,11 @@ View TtaGetViewFromName (Document document, char* viewName)
 	 {
 	 dView = pDoc->DocView[aView - 1];
 	 if (dView.DvSSchema != NULL && dView.DvPSchemaView != 0)
-	   if (ustrcmp (ViewName, dView.DvSSchema->SsPSchema->PsView[dView.DvPSchemaView - 1]) == 0)
+	   {
+	   pPS = PresentationSchema (dView.DvSSchema, pDoc);
+	   if (ustrcmp (ViewName, pPS->PsView[dView.DvPSchemaView - 1]) == 0)
 	      view = aView;
+	   }
 	 }
       if (view == 0)
 	 /* If not found, searching in the views of associated elements */
@@ -870,7 +886,7 @@ void DisplayHolophrasted (PtrElement pEl, Document document)
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -900,7 +916,7 @@ void RedisplayReference (PtrElement element, Document document)
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -931,7 +947,7 @@ void RedisplayLeaf (PtrElement element, Document document, int delta)
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -1051,7 +1067,7 @@ void RedisplaySplittedText (PtrElement element, int position,
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    pEl = (PtrElement) element;
    /* check current selection */
@@ -1094,7 +1110,7 @@ void RedisplayMergedText (PtrElement element, Document document)
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    pEl = element;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
@@ -1164,11 +1180,14 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
    PtrAttribute        pAttrAsc;
    PtrAttribute        pOldAttr;
    PtrElement          pElChild, pElAttr;
+   PtrDocument         pDoc;
+   PtrPSchema          pPS;
 
-   if (LoadedDocument[document - 1] == NULL)
+   pDoc = LoadedDocument[document - 1];
+   if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -1179,10 +1198,9 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
       /* l'element porte-t-il deja un attribut du meme type ? */
       pOldAttr = AttributeValue (pEl, pAttr);
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   inheritance = (pAttr->AeAttrSSchema->SsPSchema->
-		  PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
-   comparaison = (pAttr->AeAttrSSchema->SsPSchema->
-		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
+   pPS = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
+   inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
+   comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    if (inheritance || comparaison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
@@ -1247,7 +1265,7 @@ void UndisplayElement (PtrElement pEl, Document document)
       return;
    /* si le document n'a pas de schema de presentation, */
    /* on retire simplement l'element de l'arbre abstrait */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
      {
 	RemoveElement (pEl);
 	return;
@@ -1395,18 +1413,20 @@ void UndisplayElement (PtrElement pEl, Document document)
   ----------------------------------------------------------------------*/
 void RedispNewGeometry (Document document, PtrElement pEl)
 {
-   if (LoadedDocument[document - 1] == NULL)
+   PtrDocument         pDoc;
+
+   pDoc = LoadedDocument[document - 1];
+   if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   AbstractImageUpdated (LoadedDocument[document - 1]);
+   AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
-/* End of module */

@@ -505,9 +505,6 @@ PtrSSchema          SS;
 	TtaReadShort (fich, &pSchT->STyStructCode);
 	pSchT->STySuivant = NULL;
 
-	if (SS->SsRootElem == 0 && !erreurSchema)
-	   /* lit le schema de structure */
-	   ret = ReadStructureSchema (pSchT->STyNomStruct, SS);
 	if (!ret || pSchT->STyStructCode != SS->SsCode)
 	  {
 	     TtaFreeMemory (pSchT);

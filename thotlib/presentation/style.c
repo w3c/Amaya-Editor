@@ -36,8 +36,9 @@
 #include "exceptions_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
+#include "schemas_f.h"
 #include "style_f.h"
-
+#include "tree_f.h"
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -293,13 +294,15 @@ static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int 
    for a given type of rule associated to an element.
    The parameter isCSS is 1 when the specific rule translates a CSS rule.
   ----------------------------------------------------------------------*/
-static PtrPRule  InsertElementPRule (PtrElement el, PRuleType type, unsigned int extra, int isCSS)
+static PtrPRule  InsertElementPRule (PtrElement el, PtrDocument pDoc,
+				     PRuleType type, unsigned int extra,
+				     int isCSS)
 {
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
    PtrAttribute        pAttr;
    PtrPRule            cur, prev, pRule, stdRule;
-    
+
    cur = el->ElFirstPRule;
    stdRule = NULL;
    pRule = NULL;
@@ -339,8 +342,8 @@ static PtrPRule  InsertElementPRule (PtrElement el, PRuleType type, unsigned int
 	GetPresentRule (&pRule);
 	if (pRule != NULL)
 	  {
-	    stdRule = GlobalSearchRulepEl (el, &pSPR, &pSSR, 0, NULL, 1, type,
-					   extra, FALSE, TRUE, &pAttr);
+	    stdRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, 0, NULL, 1,
+					   type, extra, FALSE, TRUE, &pAttr);
 	    if (stdRule != NULL)
 	      /* copy the standard rule */
 	      *pRule = *stdRule;
@@ -761,6 +764,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 {
   AttributePres      *attrs, *new;
   PtrSSchema          pSS;
+  PtrPSchema          pPS;
   PtrPRule           *ppRule;
   char               *attrVal;
   int                 nbrules, val;
@@ -779,7 +783,8 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
       if (att > 0 && ctxt->type)
 	{
 	new->ApElemType = ctxt->type;
-	pSS->SsPSchema->PsNHeirElems[attrType - 1] += 1;
+	pPS = PresentationSchema (pSS, LoadedDocument[ctxt->doc - 1]);
+	pPS->PsNHeirElems[attrType - 1] += 1;
 	}
       if (attrs)
 	{
@@ -2156,14 +2161,15 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
       if (generic)
 	pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
       else
-	pRule = InsertElementPRule ((PtrElement) el, intRule, func, c->cssLevel);
+	pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc - 1],
+				    intRule, func, c->cssLevel);
 
       if (pRule)
 	{
 	  if (type == PRBackgroundPicture)
 	    {
 	      if (!generic)
-		tsch = (PSchema) (LoadedDocument[doc - 1]->DocSSchema->SsPSchema);
+		tsch = (PSchema) PresentationSchema (LoadedDocument[doc - 1]->DocSSchema, LoadedDocument[doc - 1]);
 	      cst = PresConstInsert (tsch, v.pointer);
 	      v.typed_data.unit = STYLE_UNIT_REL;
 	      v.typed_data.value = cst;
@@ -2548,11 +2554,13 @@ void TtaApplyAllSpecificSettings (Element el, Document doc,
 {
   PtrPRule                 rule;
   PresentationSettingBlock setting;
-  PtrPSchema               pSc1;
+  PtrPSchema               pPS;
   int                      cst;
 
   if (el == NULL)
     return;
+  pPS = PresentationSchema (LoadedDocument[doc - 1]->DocSSchema,
+			    LoadedDocument[doc - 1]);
   rule = ((PtrElement) el)->ElFirstPRule;
   /*
    * for each rule corresponding to the same context i.e. identical
@@ -2574,12 +2582,10 @@ void TtaApplyAllSpecificSettings (Element el, Document doc,
 	  if (setting.type == PRBackgroundPicture)
 	    {
 	      cst = setting.value.typed_data.value;
-	      pSc1 = LoadedDocument[doc - 1]->DocSSchema->SsPSchema;
-	      setting.value.pointer = &pSc1->PsConstant[cst-1].PdString[0];
+	      setting.value.pointer = &pPS->PsConstant[cst-1].PdString[0];
 	    }
-
 	  handler (el, doc, &setting, param);
 	}
-	rule = rule->PrNextPRule;
-     }
+      rule = rule->PrNextPRule;
+    }
 }

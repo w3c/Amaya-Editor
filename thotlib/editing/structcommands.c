@@ -114,13 +114,6 @@ static Func         TransformIntoFunction = NULL;
 #include "undo_f.h"
 #include "views_f.h"
 
-/* element types proposed in menu Surround */
-static int          typeNumSurround[MAX_MENU];	/* type */
-static PtrSSchema   pSSSurround[MAX_MENU];	/* schema */
-static int          NElSurround;	/* number of entries in the table */
-
-
-
 /*----------------------------------------------------------------------
    IsolateSelection
    Si la selection passee en parametre commence ou finit sur des   

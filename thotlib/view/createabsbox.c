@@ -53,19 +53,11 @@
 #include "structmodif_f.h"
 #include "tree_f.h"
 
-
 /*----------------------------------------------------------------------
    SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  
    le pave pAb et tous ses descendants.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetAbsBoxAccessMode (PtrAbstractBox pAb, int accessMode)
-#else  /* __STDC__ */
-static void         SetAbsBoxAccessMode (pAb, accessMode)
-PtrAbstractBox      pAb;
-int                 accessMode;
-
-#endif /* __STDC__ */
+static void SetAbsBoxAccessMode (PtrAbstractBox pAb, int accessMode)
 {
   PtrAbstractBox      pAbChild;
 
@@ -102,13 +94,7 @@ int                 accessMode;
    SetAccessMode updates the access  mode in all abstract boxes of
   all document views.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetAccessMode (PtrDocument pDoc, int accessMode)
-#else  /* __STDC__ */
-void                SetAccessMode (pDoc, accessMode)
-PtrDocument         pDoc;
-int                 accessMode;
-#endif /* __STDC__ */
+void SetAccessMode (PtrDocument pDoc, int accessMode)
 {
   DisplayMode       displayMode;
   PtrAbstractBox    pAb;
@@ -142,7 +128,6 @@ int                 accessMode;
     }
 }
 
-
 /*----------------------------------------------------------------------
    GetRule rend la regle de presentation a` appliquer pour la vue  
    numero 1. pRSpecif est la regle specifique courante,    
@@ -150,17 +135,9 @@ int                 accessMode;
    ces deux pointeurs sont mis a` jour pour la regle       
    suivante.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPRule            GetRule (PtrPRule * pRSpecif, PtrPRule * pRDefault,
-			 PtrElement pEl, PtrAttribute pAttr, PtrSSchema pSS)
-#else  /* __STDC__ */
-PtrPRule            GetRule (pRSpecif, pRDefault, pEl, pAttr, pSS)
-PtrPRule           *pRSpecif;
-PtrPRule           *pRDefault;
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
+PtrPRule GetRule (PtrPRule * pRSpecif, PtrPRule * pRDefault,
+		  PtrElement pEl, PtrAttribute pAttr, PtrSSchema pSS,
+		  PtrDocument pDoc)
 {
    PtrPRule            pPR;
    ThotBool            stop;
@@ -178,7 +155,8 @@ PtrSSchema          pSS;
 	do
 	   {
 	   if ((*pRSpecif)->PrCond == NULL ||
-	       CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl, 1, pSS))
+	       CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl, 1, pSS,
+				 pDoc))
 	      /* conditions d'application satisfaites */
 	      {
 	      pPR = *pRSpecif;
@@ -220,7 +198,7 @@ PtrSSchema          pSS;
 		        /* on n'a pas encore trouve' la bonne regle */
 		        if ((*pRSpecif)->PrCond == NULL ||
 			    CondPresentation ((*pRSpecif)->PrCond, pEl,
-					      pAttr, pEl, 1, pSS))
+					      pAttr, pEl, 1, pSS, pDoc))
 			   /* les conditions d'application sont satisfaites,
 			      on prend cette regle */
 			   pPR = *pRSpecif;
@@ -251,7 +229,6 @@ PtrSSchema          pSS;
    return pPR;
 }
 
-
 /*----------------------------------------------------------------------
    GetRuleView donne la regle du type Typ a` appliquer pour la vue 
    Vue. pRSpecif et pRDefault sont mis a` jour. La fonction 
@@ -259,24 +236,10 @@ PtrSSchema          pSS;
    cette vue (dans ce cas, il faut alors appliquer la      
    regle de la vue 1).                                     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 PtrPRule            GetRuleView (PtrPRule * pRSpecif, PtrPRule * pRDefault,
 				 PRuleType Typ, int Vue, PtrElement pEl,
-				 PtrAttribute pAttr, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-PtrPRule            GetRuleView (pRSpecif, pRDefault, Typ, Vue, pEl, pAttr, pSS)
-PtrPRule           *pRSpecif;
-PtrPRule           *pRDefault;
-PRuleType           Typ;
-int                 Vue;
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+				 PtrAttribute pAttr, PtrSSchema pSS,
+				 PtrDocument pDoc)
 {
    PtrPRule            pPR;
    ThotBool            stop;
@@ -294,7 +257,7 @@ PtrSSchema          pSS;
 	    /* on n'a pas encore trouve' la regle qui s'applique */
 	    if ((*pRSpecif)->PrCond == NULL ||
 		CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, pEl,
-				  Vue, pSS))
+				  Vue, pSS, pDoc))
 	       /* les conditions d'application de la regle sont satisfaites,
 		  on prend cette regle */
 	       pPR = *pRSpecif;
@@ -326,24 +289,13 @@ PtrSSchema          pSS;
    return pPR;
 }
 
-
 /*----------------------------------------------------------------------
    InitAbsBoxes cree et initialise un pave pour l'element pEl et dans  
    la vue view, avec la visibilite Visib.
    ro est vrai si le document est en ReadOnly
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrAbstractBox      InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib, ThotBool ro)
-
-#else  /* __STDC__ */
-PtrAbstractBox      InitAbsBoxes (pEl, view, Visib, ro)
-PtrElement          pEl;
-DocViewNumber       view;
-int                 Visib;
-ThotBool            ro;
-#endif /* __STDC__ */
-
+PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
+			     ThotBool ro)
 {
    PtrAbstractBox      pAb;
 
@@ -524,24 +476,12 @@ ThotBool            ro;
    return pAb;
 }
 
-
 /*----------------------------------------------------------------------
    ConstantCopy met dans le pave pAb le text correspondant a`  
    la constante de numero NConst dans le schema de         
    presentation pSchP.                                     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
-
-#else  /* __STDC__ */
-void                ConstantCopy (NConst, pSchP, pAb)
-int                 NConst;
-PtrPSchema          pSchP;
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-
+void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
 {
    PresConstant       *pConst;
 
@@ -592,24 +532,15 @@ PtrAbstractBox      pAb;
 	 }
 }
 
-
 /*----------------------------------------------------------------------
    AssocView retourne vrai si l'element pEl s'affiche dans une vue  
    d'elements associes.                                    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            AssocView (PtrElement pEl)
-
-#else  /* __STDC__ */
-ThotBool            AssocView (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
+ThotBool AssocView (PtrElement pEl)
 {
    int                 nR;
    ThotBool            assocView;
+   PtrPSchema          pPS;
 
    assocView = FALSE;
    if (pEl != NULL)
@@ -622,24 +553,18 @@ PtrElement          pEl;
 	   nR = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrListItem;
 	   /* si l'element associe ne s'affiche pas en haut ou en bas de */
 	   /* page, il s'affiche donc dans une vue specifique */
-	   if (pEl->ElStructSchema->SsPSchema != NULL)
-	      assocView = !pEl->ElStructSchema->SsPSchema->PsInPageHeaderOrFooter[nR - 1];
+	   pPS = PresentationSchema (pEl->ElStructSchema, DocumentOfElement (pEl));
+	   if (pPS != NULL)
+	     assocView = !pPS->PsInPageHeaderOrFooter[nR - 1];
 	}
    return assocView;
 }
-
 
 /*----------------------------------------------------------------------
    AttrIsAfter retourne vrai si attribut pAttr est un attribut qui suit
    l'attribut pRefAttr.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     AttrIsAfter (PtrAttribute pAttr, PtrAttribute pRefAttr)
-#else  /* __STDC__ */
-static ThotBool     AttrIsAfter (pAttr, pRefAttr)
-PtrAttribute        pAttr;
-PtrAttribute        pRefAttr;
-#endif /* __STDC__ */
+static ThotBool AttrIsAfter (PtrAttribute pAttr, PtrAttribute pRefAttr)
 {
   PtrAttribute        pA;
 
@@ -657,23 +582,11 @@ PtrAttribute        pRefAttr;
     }
 }
 
-
 /*----------------------------------------------------------------------
    DoesViewExist retourne vrai si la vue de numero viewNb ou` doit      
    s'afficher l'element pEl existe.                        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            DoesViewExist (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb)
-
-#else  /* __STDC__ */
-ThotBool            DoesViewExist (pEl, pDoc, viewNb)
-PtrElement          pEl;
-PtrDocument         pDoc;
-DocViewNumber       viewNb;
-
-#endif /* __STDC__ */
-
+ThotBool DoesViewExist (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb)
 {
   int                 v;    
   ThotBool            existView;
@@ -704,13 +617,7 @@ DocViewNumber       viewNb;
    decrite par pView.  On tient compte de la clause "MERGE With"
    du schema de presentation.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int    GetGestView (DocViewDescr *pView, PtrSSchema pSS)
-#else  /* __STDC__ */
-static int    GetGestView (pView, pSS)
-DocViewDescr *pView;
-PtrSSchema    pSS;
-#endif /* __STDC__ */
+static int GetGestView (DocViewDescr *pView, PtrSSchema pSS)
 {
     PtrGuestViewDescr  pGuestView;
     int                viewSch;
@@ -739,17 +646,8 @@ PtrSSchema    pSS;
    regles de presentation a` l'element pEl pour obtenir    
    son image dans la vue viewNb du document pDoc.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 AppliedView (PtrElement pEl, PtrAttribute pAttr,
-				 PtrDocument pDoc, DocViewNumber viewNb)
-#else  /* __STDC__ */
-int                 AppliedView (pEl, pAttr, pDoc, viewNb)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-DocViewNumber       viewNb;
-
-#endif /* __STDC__ */
+int AppliedView (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
+		 DocViewNumber viewNb)
 {
    int                 viewSch;
    PtrElement          pAsc;
@@ -782,11 +680,12 @@ DocViewNumber       viewNb;
 	       viewSch = GetGestView (pView, pSS);
 	 else
 	    /* c'est une vue propre a une nature d'objets */
-	    if (pSS->SsPSchema == pView->DvSSchema->SsPSchema ||
-		pEl->ElParent == NULL)
+	    if (pEl->ElParent == NULL ||
+		PresentationSchema (pSS, pDoc) ==
+		PresentationSchema (pView->DvSSchema, pDoc))
 	       /* c'est un objet de cette nature ou la racine du document */
 	       /* numero de la vue dans le schema de presentation qui la
-		  definit*/
+		  definit */
 	       viewSch = pView->DvPSchemaView;
 	    else
 	       /* l'element est-il dans un objet de cette nature ? */
@@ -795,8 +694,8 @@ DocViewNumber       viewNb;
 	       {
 	       pAsc = pEl;
 	       while (pAsc != NULL && viewSch == 0)
-		  if (pAsc->ElStructSchema->SsPSchema ==
-		      pView->DvSSchema->SsPSchema)
+		  if (PresentationSchema (pAsc->ElStructSchema, pDoc) ==
+		      PresentationSchema (pView->DvSSchema, pDoc))
 		     /* on est dans un objet de cette nature */
 		     viewSch = GetGestView (pView, pSS);
 		  else 
@@ -821,21 +720,8 @@ DocViewNumber       viewNb;
    Si l'englobant est un pave page ou un pave duplique,    
    on met la regle en attente au niveau de la racine.      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb, PtrAttribute pAttr,
-			   PtrAbstractBox pPRP)
-
-#else  /* __STDC__ */
-void                Delay (pR, pSP, pAbb, pAttr, pPRP)
-PtrPRule            pR;
-PtrPSchema          pSP;
-PtrAbstractBox      pAbb;
-PtrAttribute        pAttr;
-PtrAbstractBox      pPRP;
-
-#endif /* __STDC__ */
-
+void Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb,
+	    PtrAttribute pAttr, PtrAbstractBox pPRP)
 {
    PtrDelayedPRule     pDelR;
    PtrDelayedPRule     NpDelR;
@@ -873,7 +759,6 @@ PtrAbstractBox      pPRP;
      }
 }
 
-
 /*----------------------------------------------------------------------
    GetDelayedRule recupere une regle de presentation qui etait retardee    
    au niveau du pave pAbb. Au retour pR contient la regle    
@@ -884,19 +769,8 @@ PtrAbstractBox      pPRP;
    regle d'attribut (NULL sinon). S'il n'y a pas de regle  
    retardee, pR et pAbb contiennent NULL au retour.          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                GetDelayedRule (PtrPRule * pR, PtrPSchema * pSP, PtrAbstractBox * pAbb, PtrAttribute * pAttr)
-
-#else  /* __STDC__ */
-void                GetDelayedRule (pR, pSP, pAbb, pAttr)
-PtrPRule           *pR;
-PtrPSchema         *pSP;
-PtrAbstractBox     *pAbb;
-PtrAttribute       *pAttr;
-
-#endif /* __STDC__ */
-
+void GetDelayedRule (PtrPRule * pR, PtrPSchema * pSP, PtrAbstractBox * pAbb,
+		     PtrAttribute * pAttr)
 {
    PtrDelayedPRule     pDelR;
    PtrAbstractBox      pAb2;
@@ -944,19 +818,11 @@ PtrAttribute       *pAttr;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ApplDelayedRule applique les regles retardees conservees pour  
    les paves de l'element El du document pDoc.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                ApplDelayedRule (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 {
    PtrPRule            pRule;
    PtrPSchema          pSPres;
@@ -1000,7 +866,6 @@ PtrDocument         pDoc;
      }
 }
 
-
 /*----------------------------------------------------------------------
    CondPresentation evalue les conditions d'application d'une regle de    
    presentation qui s'applique a` l'element pEl ou a l'attribut pAttr
@@ -1012,20 +877,10 @@ PtrDocument         pDoc;
    auquel appartient la regle.             
    Retourne vrai si les conditions sont toutes satisfaites.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 				      PtrAttribute pAttr, PtrElement pElAttr,
-				      int view, PtrSSchema pSS)
-#else  /* __STDC__ */
-ThotBool            CondPresentation (pCond, pEl, pAttr, pElAttr, view, pSS)
-PtrCondition        pCond;
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-int                 view;
-PtrSSchema          pSS;
-#endif /* __STDC__ */
-
+				      int view, PtrSSchema pSS,
+				      PtrDocument pDoc)
 {
    ThotBool            ok, currentCond, stop, equal;
    int                 valcompt, valmaxi, valmini, i;
@@ -1070,7 +925,7 @@ PtrSSchema          pSS;
 	 || pCond->CoCondition == PcOne || pCond->CoCondition == PcInterval)
 	   /* evalue le compteur */
 	  {
-	     pSchP = pSS->SsPSchema;
+	     pSchP = PresentationSchema (pSS, pDoc);
 	     if (pSchP != NULL)
 		valcompt = CounterVal (pCond->CoCounter, pSS, pSchP, pElem, view);
 	  }
@@ -1424,18 +1279,9 @@ PtrSSchema          pSS;
    l'element trouve' et pElRef est l'element trouve'.      
    L'element recherche' (TypEl) doit etre une reference.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   NextElRef (PtrElement * pElRef, int TypEl,
-			 PtrSSchema pSchStr, ThotBool backward, int *viewSch)
-#else  /* __STDC__ */
-static PtrElement   NextElRef (pElRef, TypEl, pSchStr, backward, viewSch)
-PtrElement         *pElRef;
-int                 TypEl;
-PtrSSchema          pSchStr;
-ThotBool            backward;
-int                *viewSch;
-#endif /* __STDC__ */
-
+static PtrElement NextElRef (PtrElement * pElRef, int TypEl,
+			     PtrSSchema pSchStr, ThotBool backward,
+			     int *viewSch)
 {
    PtrElement          pElRet;
    ThotBool            finish;
@@ -1531,24 +1377,11 @@ int                *viewSch;
   completeCreator indique si toutes les regles de presentation ont deja ete
   appliquees au pave createur.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAbstractBox      CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc, PtrPRule pRCre,
-		   PtrSSchema pSS, PtrAttribute pAttr, DocViewNumber viewNb,
-				    PtrPSchema pSchP, ThotBool InAssocBox,
-				    ThotBool completeCreator)
-#else  /* __STDC__ */
-PtrAbstractBox      CrAbsBoxesPres (pEl, pDoc, pRCre, pSS, pAttr, viewNb, pSchP, InAssocBox,
-				    completeCreator)
-PtrElement          pEl;
-PtrDocument         pDoc;
-PtrPRule            pRCre;
-PtrSSchema          pSS;
-PtrAttribute        pAttr;
-DocViewNumber       viewNb;
-PtrPSchema          pSchP;
-ThotBool            InAssocBox;
-ThotBool            completeCreator;
-#endif /* __STDC__ */
+PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
+			       PtrPRule pRCre, PtrSSchema pSS,
+			       PtrAttribute pAttr, DocViewNumber viewNb,
+			       PtrPSchema pSchP, ThotBool InAssocBox,
+			       ThotBool completeCreator)
 {
   PtrPRule            pRD, pRS;
   PtrPRule            pR, pR1, pRV;
@@ -1581,7 +1414,8 @@ ThotBool            completeCreator;
 	ok = TRUE;
       else
 	/* On verifie les conditions d'application de la regle de creation */
-	ok = CondPresentation (pRCre->PrCond, pEl, pAttr, pEl, viewSch, pSS);
+	ok = CondPresentation (pRCre->PrCond, pEl, pAttr, pEl, viewSch, pSS,
+			       pDoc);
     }
   /* on ne cree un pave de presentation que si le pave de l'element qui */
   /* provoque la creation existe dans la vue. */
@@ -1771,7 +1605,7 @@ ThotBool            completeCreator;
 	   if (view == 1)
 	     {
 	       /* vue principale */
-	       pR1 = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema);
+	       pR1 = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema, pDoc);
 	       /* regle de visibilite pour la vue 1 */
 	       pR = pR1;
 	     }
@@ -1779,7 +1613,7 @@ ThotBool            completeCreator;
 	     {
 	       /* s'il y a une regle de visibilite pour cette vue, on la prend */
 	       pR = GetRuleView (&pRS, &pRD, PtVisibility, view, pEl, pAttr,
-				 pEl->ElStructSchema);
+				 pEl->ElStructSchema, pDoc);
 	       if (pR == NULL)
 		 /* sinon, on prend celle de la vue 1 */
 		 pR = pR1;
@@ -2114,7 +1948,8 @@ ThotBool            completeCreator;
 	       /* applique les regles de presentation de la boite creee. */
 	       do
 		 {
-		   pR = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema);
+		   pR = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema,
+				 pDoc);
 		   /* pointeur sur la regle a  appliquer pour la vue 1 */
 		   if (pR != NULL)
 		     /* cherche et applique les regles de tous les types */
@@ -2125,7 +1960,7 @@ ThotBool            completeCreator;
 			   pRV = NULL;
 			 else
 			   pRV = GetRuleView (&pRS, &pRD, pR->PrType, view, pEl,
-					      pAttr, pEl->ElStructSchema);
+					      pAttr, pEl->ElStructSchema, pDoc);
 			 if (view == viewSch)
 			   /* applique la regle au pave cree'. */
 			   {
@@ -2384,7 +2219,6 @@ ThotBool            completeCreator;
    return (pAbbCreated);
 }
 
-
 /*----------------------------------------------------------------------
    AttrPresRule retourne la premiere regle de la chaine des regles
    de presentation a` appliquer pour l'attribut pAttr.     
@@ -2397,18 +2231,9 @@ ThotBool            completeCreator;
    pAttrComp au lieu de rechercher l'attribut de           
    comparaison dans les ascendants de pEl.                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrPRule            AttrPresRule (PtrAttribute pAttr, PtrElement pEl, ThotBool inheritRule,
-				  PtrAttribute pAttrComp, PtrPSchema pSchP)
-#else  /* __STDC__ */
-PtrPRule            AttrPresRule (pAttr, pEl, inheritRule, pAttrComp, pSchP)
-PtrAttribute        pAttr;
-PtrElement          pEl;
-ThotBool            inheritRule;
-PtrAttribute        pAttrComp;
-PtrPSchema          pSchP;
-#endif /* __STDC__ */
-
+PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
+		       ThotBool inheritRule, PtrAttribute pAttrComp,
+		       PtrPSchema pSchP)
 {
    int                 i;
    ThotBool            found;
@@ -2577,30 +2402,14 @@ PtrPSchema          pSchP;
    return pRule;
 }
 
-
 /*----------------------------------------------------------------------
    ApplCrPresRule determine les regles de creation a appliquer    
    au pave pAb en fonction de head                        
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP, PtrAbstractBox * pAbbCreated,
-		   PtrAttribute pAttr, PtrDocument pDoc, PtrAbstractBox pAb,
-				    ThotBool head, PtrPRule pRule)
-
-#else  /* __STDC__ */
-static void         ApplCrPresRule (pSS, pSP, pAbbCreated, pAttr, pDoc, pAb, head, pRule)
-PtrSSchema          pSS;
-PtrPSchema          pSP;
-PtrAbstractBox     *pAbbCreated;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-PtrAbstractBox      pAb;
-ThotBool            head;
-PtrPRule            pRule;
-
-#endif /* __STDC__ */
-
+static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
+			    PtrAbstractBox * pAbbCreated,
+			    PtrAttribute pAttr, PtrDocument pDoc,
+			    PtrAbstractBox pAb, ThotBool head, PtrPRule pRule)
 {
    PtrAbstractBox      pAbb, pAbbR;
    ThotBool            stop;
@@ -2669,16 +2478,8 @@ PtrPRule            pRule;
    top of abstract box pAb if head is TRUE, at its bottom if head
    is FALSE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetVerticalSpace (PtrAbstractBox pAb, ThotBool head, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         SetVerticalSpace (pAb, head, pDoc)
-PtrAbstractBox      pAb;
-ThotBool            head;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
+			       PtrDocument pDoc)
 {
    PtrPRule            pRule;
    PtrPSchema          pSchP;
@@ -2758,16 +2559,8 @@ PtrDocument         pDoc;
    sur le dernier pave de presentation cree ou NULL si     
    aucun pave n'est cree.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAbstractBox      TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate, ThotBool head, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-PtrAbstractBox      TruncateOrCompleteAbsBox (pAb, truncate, head, pDoc)
-PtrAbstractBox      pAb;
-ThotBool            truncate;
-ThotBool            head;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
+					 ThotBool head, PtrDocument pDoc)
 {
    PtrPRule            pRule;
    PtrPSchema          pSchP;
@@ -2846,7 +2639,7 @@ PtrDocument         pDoc;
 	       /* Cree les paves de presentation a` cette extremite. */
 	       /* cherche la 1ere regle de presentation associee a ce type */
 	       /* d'element */
-	       SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS);
+	       SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS, pDoc);
 	       if (pSchS != NULL && pSchS != pAb->AbElement->ElStructSchema)
 		 /* il s'agit de l'element racine d'une nature qui
 		    utilise le schema de presentation de son englobant*/
@@ -2854,7 +2647,7 @@ PtrDocument         pDoc;
 		     pDoc->DocSSchema)
 		   {
 		     pSchS = pAb->AbElement->ElStructSchema;
-		     pSchP = pSchS->SsPSchema;
+		     pSchP = PresentationSchema (pSchS, pDoc);
 		     index = pAb->AbElement->ElTypeNumber;
 		   }
 	       pRule = pSchP->PsElemPRule[index - 1];
@@ -2865,19 +2658,19 @@ PtrDocument         pDoc;
 			       pAb, head, pRule);
 	       /* traite les regles de creation dues a */
 	       /* l'heritage des attributs */
-	       if (pAb->AbElement->ElStructSchema->SsPSchema != NULL)
-		 if (pAb->AbElement->ElStructSchema->SsPSchema->
-		     PsNInheritedAttrs[pAb->AbElement->ElTypeNumber - 1])
+	       pSchP = PresentationSchema (pAb->AbElement->ElStructSchema,
+					   pDoc);
+	       if (pSchP != NULL)
+		 if (pSchP->PsNInheritedAttrs[pAb->AbElement->ElTypeNumber -1])
 		   {
 				/* il y a heritage possible */
-		     if ((inheritTable = pAb->AbElement->ElStructSchema->SsPSchema->
+		     if ((inheritTable = pSchP->
 			  PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1])
 			 == NULL)
 		       {
 			 /* cette table n'existe pas on la genere */
-			 CreateInheritedAttrTable (pAb->AbElement);
-			 inheritTable = pAb->AbElement->ElStructSchema->
-			   SsPSchema->PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1];
+			 CreateInheritedAttrTable (pAb->AbElement, pDoc);
+			 inheritTable = pSchP->PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1];
 		       }
 		     for (l = 1; l <= pAb->AbElement->ElStructSchema->SsNAttributes; l++)
 		       if ((*inheritTable)[l - 1])
@@ -2888,7 +2681,8 @@ PtrDocument         pDoc;
 			   {
 			     /* on cherchera d'abord dans le schema de */
 			     /* presentation principal de l'attribut */
-			     pSchP = pAttr->AeAttrSSchema->SsPSchema;
+			     pSchP = PresentationSchema (pAttr->AeAttrSSchema,
+							 pDoc);
 			     pHd = NULL;
 			     while (pSchP != NULL)
 			       {
@@ -2905,7 +2699,7 @@ PtrDocument         pDoc;
 				   schemas additionnels */
 				   {
 				     if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-				       pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+				       pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
 				   }
 				 else
 				   /* passe au schema additionnel suivant */
@@ -2930,7 +2724,7 @@ PtrDocument         pDoc;
 		   /* appliquer pour l'attribut */
 		   /* on cherchera d'abord dans le schema de */
 		   /* presentation principal de l'attribut */
-		   pSchP = pAttr->AeAttrSSchema->SsPSchema;
+		   pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
 		   pHd = NULL;
 		   while (pSchP != NULL)
 		     {
@@ -2945,7 +2739,8 @@ PtrDocument         pDoc;
 			 sinon on ignore les schemas additionnels. */
 			 {
 			   if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-			     pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+			     pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema,
+							  pDoc);
 			 }
 		       else
 			 /* passe au schema additionnel suivant */
@@ -2977,15 +2772,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    IsViewFull retourne vrai si la vue viewNb est pleine.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            IsViewFull (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            IsViewFull (viewNb, pDoc, pEl)
-DocViewNumber       viewNb;
-PtrDocument         pDoc;
-PtrElement          pEl;
-#endif /* __STDC__ */
-
+ThotBool IsViewFull (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl)
 {
   int               i;
   ThotBool          full;
@@ -3005,7 +2792,6 @@ PtrElement          pEl;
   return (full);
 }
 
-
 /*----------------------------------------------------------------------
    WaitingRule met en attente la regle pR appartenant au schema de     
    presentation pSP. Cette regle sera reappliquee au pave  
@@ -3013,27 +2799,11 @@ PtrElement          pEl;
    pA est l'attribut auquel correspond la regle (NULL si   
    ce n'est pas une regle d'attribut).                     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                WaitingRule (PtrPRule pR, PtrAbstractBox pAbb, PtrPSchema pSP, PtrAttribute pA,
-     PtrAttribute queuePA[MAX_QUEUE_LEN], PtrPSchema queuePS[MAX_QUEUE_LEN],
-     PtrAbstractBox queuePP[MAX_QUEUE_LEN], PtrPRule queuePR[MAX_QUEUE_LEN],
-				 int *lqueue)
-
-#else  /* __STDC__ */
-void                WaitingRule (pR, pAbb, pSP, pA, queuePA, queuePS, queuePP, queuePR, lqueue)
-PtrPRule            pR;
-PtrAbstractBox      pAbb;
-PtrPSchema          pSP;
-PtrAttribute        pA;
-PtrAttribute        queuePA[MAX_QUEUE_LEN];
-PtrPSchema          queuePS[MAX_QUEUE_LEN];
-PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-PtrPRule            queuePR[MAX_QUEUE_LEN];
-int                *lqueue;
-
-#endif /* __STDC__ */
-
+void WaitingRule (PtrPRule pR, PtrAbstractBox pAbb, PtrPSchema pSP,
+		  PtrAttribute pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
+		  PtrPSchema queuePS[MAX_QUEUE_LEN],
+		  PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+		  PtrPRule queuePR[MAX_QUEUE_LEN], int *lqueue)
 {
    if (*lqueue >= MAX_QUEUE_LEN)
       printf ("Increase MAX_QUEUE_LEN\n");
@@ -3047,33 +2817,14 @@ int                *lqueue;
      }
 }
 
-
 /*----------------------------------------------------------------------
    GetAtt recupere une regle de presentation qui etait en attente. 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         GetAtt (PtrPRule * pR, PtrAbstractBox * pAbb, PtrPSchema * pSP,
-		     PtrAttribute * pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
-   PtrPSchema queuePS[MAX_QUEUE_LEN], PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-		  PtrPRule queuePR[MAX_QUEUE_LEN], int *lqueue, int *pqueue)
-
-#else  /* __STDC__ */
-static void         GetAtt (pR, pAbb, pSP, pA, queuePA, queuePS, queuePP, queuePR, lqueue,
-			    pqueue)
-PtrPRule           *pR;
-PtrAbstractBox     *pAbb;
-PtrPSchema         *pSP;
-PtrAttribute       *pA;
-PtrAttribute        queuePA[MAX_QUEUE_LEN];
-PtrPSchema          queuePS[MAX_QUEUE_LEN];
-PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-PtrPRule            queuePR[MAX_QUEUE_LEN];
-int                *lqueue;
-int                *pqueue;
-
-#endif /* __STDC__ */
-
+static void GetAtt (PtrPRule * pR, PtrAbstractBox * pAbb, PtrPSchema * pSP,
+		    PtrAttribute * pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
+		    PtrPSchema queuePS[MAX_QUEUE_LEN],
+		    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+		    PtrPRule queuePR[MAX_QUEUE_LEN], int *lqueue, int *pqueue)
 {
    *pR = NULL;
    while (*pR == NULL && *pqueue < *lqueue)
@@ -3086,7 +2837,6 @@ int                *pqueue;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ApplCrRule verifie que la regle pRuleCr appartenant au   
    schema de presentation pSchPres (correspondant au       
@@ -3097,41 +2847,16 @@ int                *pqueue;
    s'il s'agit d'une regle de presentation d'attribut (NULL
    sinon).                                                 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
-				PtrPSchema pSchPres, PtrAttribute pA,
-			  PtrAbstractBox * pAbbReturn, DocViewNumber viewNb,
-				PtrDocument pDoc, PtrElement pEl,
-				ThotBool forward, int *lqueue,
-				PtrPRule queuePR[MAX_QUEUE_LEN],
-				PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-				PtrPSchema queuePS[MAX_QUEUE_LEN],
-				PtrAttribute queuePA[MAX_QUEUE_LEN],
-				PtrAbstractBox pNewAbbox)
-
-#else  /* __STDC__ */
-static ThotBool     ApplCrRule (pRuleCr, pSS, pSchPres, pA, pAbbReturn, viewNb,
-				pDoc, pEl, forward, lqueue, queuePR, queuePP,
-				queuePS, queuePA, pNewAbbox)
-PtrPRule            pRuleCr;
-PtrSSchema          pSS;
-PtrPSchema          pSchPres;
-PtrAttribute        pA;
-PtrAbstractBox     *pAbbReturn;
-DocViewNumber       viewNb;
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            forward;
-int                *lqueue;
-PtrPRule            queuePR[MAX_QUEUE_LEN];
-PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-PtrPSchema          queuePS[MAX_QUEUE_LEN];
-PtrAttribute        queuePA[MAX_QUEUE_LEN];
-PtrAbstractBox      pNewAbbox;
-
-#endif /* __STDC__ */
-
+static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
+			    PtrPSchema pSchPres, PtrAttribute pA,
+			    PtrAbstractBox * pAbbReturn, DocViewNumber viewNb,
+			    PtrDocument pDoc, PtrElement pEl,
+			    ThotBool forward, int *lqueue,
+			    PtrPRule queuePR[MAX_QUEUE_LEN],
+			    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+			    PtrPSchema queuePS[MAX_QUEUE_LEN],
+			    PtrAttribute queuePA[MAX_QUEUE_LEN],
+			    PtrAbstractBox pNewAbbox)
 {
    ThotBool            result, toCreate;
    PtrAbstractBox      pAbb;
@@ -3235,20 +2960,12 @@ PtrAbstractBox      pNewAbbox;
    return result;
 }
 
-
 /*----------------------------------------------------------------------
    DescVisible cherche le premier descendant de l'element pE qui   
    ait un pave dans la vue viewNb.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   DescVisible (PtrElement pE, DocViewNumber viewNb, ThotBool forward)
-#else  /* __STDC__ */
-static PtrElement   DescVisible (pE, viewNb, forward)
-PtrElement          pE;
-DocViewNumber       viewNb;
-ThotBool            forward;
-
-#endif /* __STDC__ */
+static PtrElement DescVisible (PtrElement pE, DocViewNumber viewNb,
+			       ThotBool forward)
 {
    PtrElement          pElem, pDesc;
 
@@ -3292,46 +3009,20 @@ ThotBool            forward;
    return pDesc;
 }
 
-
 /*----------------------------------------------------------------------
    ApplyAttrPresRules applique a` l'element toutes les regles de   
    presentation de l'attribut pAttr.                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
-			    PtrAttribute pAttr, PtrElement pElAttr,
-			    PtrAbstractBox * pAbbReturn,
-			    DocViewNumber viewNb, PtrDocument pDoc,
-			    PtrElement pEl, ThotBool forward, int *lqueue,
-			    PtrPRule queuePR[MAX_QUEUE_LEN],
-			    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-			    PtrPSchema queuePS[MAX_QUEUE_LEN],
-			    PtrAttribute queuePA[MAX_QUEUE_LEN],
-			    PtrAbstractBox pNewAbbox, ThotBool inheritRule)
-#else  /* __STDC__ */
-static void         ApplyAttrPresRules (pSS, pSchPres, pAttr, pElAttr,
-			    pAbbReturn, viewNb, pDoc, pEl, forward, lqueue,
-                            queuePR, queuePP, queuePS, queuePA, pNewAbbox,
-                            inheritRule)
-PtrSSchema          pSS;
-PtrPSchema          pSchPres;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-PtrAbstractBox     *pAbbReturn;
-DocViewNumber       viewNb;
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            forward;
-int                *lqueue;
-PtrPRule            queuePR[MAX_QUEUE_LEN];
-PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-PtrPSchema          queuePS[MAX_QUEUE_LEN];
-PtrAttribute        queuePA[MAX_QUEUE_LEN];
-PtrAbstractBox      pNewAbbox;
-ThotBool            inheritRule;
-
-#endif /* __STDC__ */
-
+static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
+				PtrAttribute pAttr, PtrElement pElAttr,
+				PtrAbstractBox * pAbbReturn,
+				DocViewNumber viewNb, PtrDocument pDoc,
+				PtrElement pEl, ThotBool forward, int *lqueue,
+				PtrPRule queuePR[MAX_QUEUE_LEN],
+				PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+				PtrPSchema queuePS[MAX_QUEUE_LEN],
+				PtrAttribute queuePA[MAX_QUEUE_LEN],
+				PtrAbstractBox pNewAbbox, ThotBool inheritRule)
 {
    PtrPRule            pR, pRuleView1, pRuleToApply;
    int                 view, i;
@@ -3351,7 +3042,7 @@ ThotBool            inheritRule;
 	/* on cherchera d'abord dans le schema de presentation principal de */
 	/* l'attribut */
 	pSSattr = pAttr->AeAttrSSchema;
-	pSchP = pSSattr->SsPSchema;
+	pSchP = PresentationSchema (pSSattr, pDoc);
 	pHd = NULL;
 	/* on examine le schema de presentation principal, puis les schemas */
 	/* additionnels */
@@ -3368,7 +3059,7 @@ ThotBool            inheritRule;
 		  /* verifie si c'est une regle de creation et si oui applique */
 		  /* la regle de creation */
 		  if (!ApplCrRule (pR, pSSattr, pSchP, pAttr, pAbbReturn,
-				viewNb, pDoc, pEl, forward, lqueue, queuePR,
+				   viewNb, pDoc, pEl, forward, lqueue, queuePR,
 				   queuePP, queuePS, queuePA, pNewAbbox))
 		    {
 		       /* ce n'est pas une regle de creation, applique la */
@@ -3381,7 +3072,7 @@ ThotBool            inheritRule;
 			    /* la regle pour la vue 1 */
 			    if (pR->PrCond == NULL ||
 				CondPresentation (pR->PrCond, pEl, pAttr,
-						  pElAttr, 1, pSS))
+						  pElAttr, 1, pSS, pDoc))
 			       /* la condition d'application est satisfaite */
 			      {
 				 /* On la conserve au cas ou on ne trouve pas mieux */
@@ -3401,7 +3092,7 @@ ThotBool            inheritRule;
 					   pR = pR->PrNextPRule;
 					   if (pR->PrViewNum == view)
 					      if (pR->PrCond == NULL ||
-						  CondPresentation (pR->PrCond, pEl, pAttr, pElAttr, view, pSS))
+						  CondPresentation (pR->PrCond, pEl, pAttr, pElAttr, view, pSS, pDoc))
 						 pRuleToApply = pR;
 					}
 				      if (pRuleToApply == NULL)
@@ -3417,7 +3108,7 @@ ThotBool            inheritRule;
 		       if (view == pR->PrViewNum)
 			  if (pR->PrCond == NULL ||
 			      CondPresentation (pR->PrCond, pEl, pAttr,
-						pElAttr, view, pSS))
+						pElAttr, view, pSS, pDoc))
 			     pRuleToApply = pR;
 
 		       if (pRuleToApply && DoesViewExist (pEl, pDoc, viewNb))
@@ -3474,7 +3165,7 @@ ThotBool            inheritRule;
 	                 AttrHasException (ExcCssId, pAttr->AeAttrNum,
 	                                   pAttr->AeAttrSSchema))
 			pSSattr = pDoc->DocSSchema;
-		     pHd = pSSattr->SsFirstPSchemaExtens;
+		     pHd = FirstPSchemaExtension (pSSattr, pDoc);
 		     }
 	       }
 	     else
@@ -3489,30 +3180,14 @@ ThotBool            inheritRule;
      }
 }
 
-
 /*----------------------------------------------------------------------
    ApplyVisibRuleAttr modifie le parametre vis selon la regle de   
    visibilite de pAttr.                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
-                           PtrElement pElAttr, PtrDocument pDoc, int *vis,
-                           DocViewNumber viewNb, ThotBool *ok,
-			   ThotBool inheritRule)
-#else  /* __STDC__ */
-static void         ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis,
-					viewNb, ok, inheritRule)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrElement          pElAttr;
-PtrDocument         pDoc;
-int                *vis;
-DocViewNumber       viewNb;
-ThotBool           *ok;
-ThotBool            inheritRule;
-
-#endif /* __STDC__ */
-
+static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
+				PtrElement pElAttr, PtrDocument pDoc, int *vis,
+				DocViewNumber viewNb, ThotBool *ok,
+				ThotBool inheritRule)
 {
    PtrPRule            pR, pRuleView1;
    int                 view;
@@ -3523,7 +3198,7 @@ ThotBool            inheritRule;
 
    /* on cherchera d'abord dans le schema de presentation principal de */
    /* l'attribut */
-   pSchP = pAttr->AeAttrSSchema->SsPSchema;
+   pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
    pHd = NULL;
    /* on examine le schema de presentation principal, puis les schemas */
    /* additionnels */
@@ -3548,7 +3223,7 @@ ThotBool            inheritRule;
 		     if (pR->PrViewNum == 1)
 			if (pR->PrCond == NULL ||
 			    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-                                              1, pAttr->AeAttrSSchema))
+                                              1, pAttr->AeAttrSSchema, pDoc))
 			  {
 			     pRuleView1 = pR;
 			     if (view == 1)
@@ -3564,7 +3239,7 @@ ThotBool            inheritRule;
 		       {
 			if (pR->PrViewNum == view &&
 			    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-					      view, pAttr->AeAttrSSchema))
+					      view, pAttr->AeAttrSSchema, pDoc))
 			  {
 			     /* regle trouvee, on l'evalue */
 			     *vis = IntegerRule (pR, pEl, viewNb, ok, &unit,
@@ -3595,7 +3270,7 @@ ThotBool            inheritRule;
 	        On prend le premier schema additionnel si on travaille pour la vue
 	        principale, sinon on ignore les schemas additionnels. */
 	     if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
-		pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+	       pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
 	  }
 	else
 	   /* passe au schema additionnel suivant */
@@ -3615,38 +3290,22 @@ ThotBool            inheritRule;
    pAbbReturnne la visibilite calculee dans vis                   
    Met a jour vis, pRSpec, pRDef, TypeP et pSchPPage          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ComputeVisib (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
-				  int viewSch, PtrPRule * pRSpec,
-				  PtrPRule * pRDef, int *vis,
-				ThotBool * ignoreDescent, ThotBool * complete,
-				  int *TypeP, PtrPSchema * pSchPPage)
-#else  /* __STDC__ */
-static void         ComputeVisib (pEl, pDoc, viewNb, viewSch, pRSpec, pRDef, vis,
-				  ignoreDescent, complete, TypeP, pSchPPage)
-PtrElement          pEl;
-PtrDocument         pDoc;
-DocViewNumber       viewNb;
-int                 viewSch;
-PtrPRule           *pRSpec;
-PtrPRule           *pRDef;
-int                *vis;
-ThotBool           *ignoreDescent;
-ThotBool           *complete;
-int                *TypeP;
-PtrPSchema         *pSchPPage;
-
-#endif /* __STDC__ */
+static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
+			  DocViewNumber viewNb, int viewSch, PtrPRule * pRSpec,
+			  PtrPRule * pRDef, int *vis,
+			  ThotBool * ignoreDescent, ThotBool * complete,
+			  int *TypeP, PtrPSchema * pSchPPage)
 {
    int                 view, l;
    PtrPRule            pRule, pRegleV;
    PtrElement          pPrevious, pNext, pElAssociatedPage, pAsc, pElAttr;
    PtrAttribute        pAttr;
+   PtrPSchema          pSP;
    InheritAttrTable   *inheritTable;
    ThotBool            ok;
    TypeUnit            unit;
 
-   pRule = GetRule (pRSpec, pRDef, pEl, NULL, pEl->ElStructSchema);
+   pRule = GetRule (pRSpec, pRDef, pEl, NULL, pEl->ElStructSchema, pDoc);
    /* pointeur sur la 1ere regle a appliquer */
 
    /* la premiere regle est la regle de visiblite pour la vue 1 */
@@ -3660,7 +3319,7 @@ PtrPSchema         *pSchPPage;
 	   pRegleV = NULL;
 	else
 	   pRegleV = GetRuleView (pRSpec, pRDef, PtVisibility, view, pEl, NULL,
-				  pEl->ElStructSchema);
+				  pEl->ElStructSchema, pDoc);
 	if (view == viewSch && DoesViewExist (pEl, pDoc, viewNb))
 	  {
 	   /* s'il y a une regle de visibilite pour cette vue, on */
@@ -3676,16 +3335,15 @@ PtrPSchema         *pSchPPage;
 
    /* cherche si les attributs herites par l'element modifient la */
    /* visibilite */
-   if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+   pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
+   if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
      {
 	/* il y a heritage possible */
-	if ((inheritTable = pEl->ElStructSchema->SsPSchema->
-	     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+	if ((inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 	  {
 	     /* cette table n'existe pas on la genere */
-	     CreateInheritedAttrTable (pEl);
-	     inheritTable = pEl->ElStructSchema->SsPSchema->
-		PsInheritedAttr[pEl->ElTypeNumber - 1];
+	     CreateInheritedAttrTable (pEl, pDoc);
+	     inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
 	  }
 	for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 	   if ((*inheritTable)[l - 1])	/* pEl herite de l'attribut l */
@@ -3740,7 +3398,7 @@ PtrPSchema         *pSchPPage;
 	 /* cherchant les regles Page ou Column des elements englobants */
 	 /* ou precedants */
 	{
-	   *TypeP = GetPageBoxType (pEl, viewSch, pSchPPage);
+	   *TypeP = GetPageBoxType (pEl, pDoc, viewSch, pSchPPage);
 	   if (*TypeP == 0)
 	      /* pas de page definie, on ne cree rien */
 	      *vis = 0;
@@ -3835,7 +3493,8 @@ PtrPSchema         *pSchPPage;
 	     {
 		/* cherche le type de boite page a creer en cherchant */
 		/* les regles Page des elements englobants */
-		*TypeP = GetPageBoxType (pElAssociatedPage, viewSch, pSchPPage);
+		*TypeP = GetPageBoxType (pElAssociatedPage, pDoc, viewSch,
+					 pSchPPage);
 		if (*TypeP == 0)
 		  {
 		     /* pas de page definie, on ne cree rien */
@@ -3858,40 +3517,19 @@ PtrPSchema         *pSchPPage;
 	 pAsc = pAsc->ElParent;
 }
 
-
 /*----------------------------------------------------------------------
   ApplPresRules applies all presentation rules to the new abstract box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ApplPresRules (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
-				   int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
-				   PtrPRule * pRSpec, PtrPRule * pRDef,
-				   PtrAbstractBox * pAbbReturn, ThotBool forward, int *lqueue,
-				   PtrPRule queuePR[MAX_QUEUE_LEN],
-				   PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-				   PtrPSchema queuePS[MAX_QUEUE_LEN],
-				   PtrAttribute queuePA[MAX_QUEUE_LEN], PtrAbstractBox pNewAbbox)
-#else  /* __STDC__ */
-static void         ApplPresRules (pEl, pDoc, viewNb, viewSch, pSchS, pSchP, pRSpec,
-				   pRDef, pAbbReturn, forward, lqueue, queuePR, queuePP,
-				   queuePS, queuePA, pNewAbbox)
-PtrElement          pEl;
-PtrDocument         pDoc;
-DocViewNumber       viewNb;
-int                 viewSch;
-PtrSSchema          pSchS;
-PtrPSchema          pSchP;
-PtrPRule           *pRSpec;
-PtrPRule           *pRDef;
-PtrAbstractBox     *pAbbReturn;
-ThotBool            forward;
-int                *lqueue;
-PtrPRule            queuePR[MAX_QUEUE_LEN];
-PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-PtrPSchema          queuePS[MAX_QUEUE_LEN];
-PtrAttribute        queuePA[MAX_QUEUE_LEN];
-PtrAbstractBox      pNewAbbox;
-#endif /* __STDC__ */
+static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
+			    DocViewNumber viewNb,
+			    int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
+			    PtrPRule * pRSpec, PtrPRule * pRDef,
+			    PtrAbstractBox * pAbbReturn, ThotBool forward,
+			    int *lqueue, PtrPRule queuePR[MAX_QUEUE_LEN],
+			    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+			    PtrPSchema queuePS[MAX_QUEUE_LEN],
+			    PtrAttribute queuePA[MAX_QUEUE_LEN],
+			    PtrAbstractBox pNewAbbox)
 {
   PtrPRule            pRule, pRuleView, pR;
   PtrAttribute        pAttr;
@@ -3899,13 +3537,13 @@ PtrAbstractBox      pNewAbbox;
   InheritAttrTable   *inheritTable;
   ThotBool            stop;
   PtrHandlePSchema    pHd;
-  PtrPSchema          pSchPadd;
+  PtrPSchema          pSP, pSchPadd;
   int                 view, l;
 
   pRuleView = NULL;
   do
     {
-      pRule = GetRule (pRSpec, pRDef, pEl, NULL, pSchS);
+      pRule = GetRule (pRSpec, pRDef, pEl, NULL, pSchS, pDoc);
       /* pointeur sur la regle a appliquer pour la vue 1 */
       if (pRule != NULL)
 	/* si c'est une regle de creation, on l'applique */
@@ -3920,7 +3558,7 @@ PtrAbstractBox      pNewAbbox;
 		pRuleView = NULL;
 	      else
 		pRuleView = GetRuleView (pRSpec, pRDef, pRule->PrType, view, pEl,
-					 NULL, pSchS);
+					 NULL, pSchS, pDoc);
 	      if (view == viewSch && pNewAbbox != NULL &&
 		  DoesViewExist (pEl, pDoc, viewNb))
 		{
@@ -3941,7 +3579,7 @@ PtrAbstractBox      pNewAbbox;
   /* document */
   if (pNewAbbox != NULL && viewSch == 1)
     {
-      pHd = pEl->ElStructSchema->SsFirstPSchemaExtens;
+      pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc);
       while (pHd != NULL)
 	{
 	  pSchPadd = pHd->HdPSchema;
@@ -3954,12 +3592,13 @@ PtrAbstractBox      pNewAbbox;
 		{
 		  if (pRule->PrCond == NULL ||
 		      CondPresentation (pRule->PrCond, pEl, NULL, NULL,
-					1, pEl->ElStructSchema))
+					1, pEl->ElStructSchema, pDoc))
 		    
 		    /* les conditions d'application de la regle sont satisfaites, */
 		    
 		    if (!ApplyRule (pRule, pSchPadd, pNewAbbox, pDoc, NULL))
-		      WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, queuePA, queuePS,
+		      WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, queuePA,
+				   queuePS,
 				   queuePP, queuePR, lqueue);
 		  pRule = pRule->PrNextPRule;
 		}
@@ -3971,16 +3610,17 @@ PtrAbstractBox      pNewAbbox;
   /* Applique les regles de presentation heritees des attributs  */
   /* poses sur les elements englobants s'il y a heritage, */
   /* alors la table a deja ete calcule precedemment */
-  inheritTable = pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1];
+  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
+  inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
   if (pNewAbbox != NULL)
-    if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+    if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
       /* il y a heritage possible */
       for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 	if ((*inheritTable)[l - 1])	   /* pEl herite de l'attribut l */
 	  /* cherche si l'attribut l existe au dessus */
 	  if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema, &pElAttr)) != NULL)
 	    ApplyAttrPresRules (pAttr->AeAttrSSchema,
-				pAttr->AeAttrSSchema->SsPSchema,
+				PresentationSchema (pAttr->AeAttrSSchema, pDoc),
 				pAttr, pElAttr, pAbbReturn, viewNb, pDoc,
 				pEl, forward, lqueue, queuePR,
 				queuePP, queuePS, queuePA,
@@ -3991,7 +3631,7 @@ PtrAbstractBox      pNewAbbox;
     while (pAttr != NULL)	/* boucle sur les attributs de l'element */
       {
 	ApplyAttrPresRules (pAttr->AeAttrSSchema,
-			    pAttr->AeAttrSSchema->SsPSchema,
+			    PresentationSchema (pAttr->AeAttrSSchema, pDoc),
 			    pAttr, pEl, pAbbReturn, viewNb, pDoc, pEl,
 			    forward, lqueue, queuePR,
 			    queuePP, queuePS, queuePA, pNewAbbox, FALSE);
@@ -4035,22 +3675,13 @@ PtrAbstractBox      pNewAbbox;
     }
 }
 
-
 /*----------------------------------------------------------------------
    	Attach	chaine et remplit le pave pointe par pAb, correspondant
    		a l'element pointe par pEl dans la vue nv du document	
    		dont le contexte est pointe par pDoc.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         Attach (pAb, pEl, nv, pDoc)
-PtrAbstractBox      pAb;
-PtrElement          pEl;
-DocViewNumber       nv;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
+static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
+		    PtrDocument pDoc)
 {
    PtrElement          pE;
    PtrAbstractBox      pP;
@@ -4286,7 +3917,6 @@ PtrDocument         pDoc;
      }
 }
 
-
 /*----------------------------------------------------------------------
    AbsBoxesCreate cree les paves correspondant au sous-arbre de         
    l'element pEl du document pDoc, uniquement pour la vue  
@@ -4303,20 +3933,9 @@ PtrDocument         pDoc;
    par forward) de l'image abstraite de l'element a pu     
    etre creee ou non.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAbstractBox      AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
-		       ThotBool forward, ThotBool descent, ThotBool *complete)
-#else  /* __STDC__ */
-PtrAbstractBox      AbsBoxesCreate (pEl, pDoc, viewNb, forward, descent, complete)
-PtrElement          pEl;
-PtrDocument         pDoc;
-DocViewNumber       viewNb;
-ThotBool            forward;
-ThotBool            descent;
-ThotBool           *complete;
-
-#endif /* __STDC__ */
-
+PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
+			       DocViewNumber viewNb, ThotBool forward,
+			       ThotBool descent, ThotBool *complete)
 {
    PtrPSchema          pSchP, pSchPPage, pSPres;
    PtrPRule            pRule, pRDef, pRSpec;
@@ -4388,7 +4007,7 @@ ThotBool           *complete;
 	if (Creation || ApplyRules)
 	  /* cherche le schema de presentation a appliquer */
 	  {
-	    SearchPresSchema (pEl, &pSchP, &index, &pSchS);
+	    SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
 	    /*********/
 	    if (pSchS != NULL && pSchS != pEl->ElStructSchema)
 	      {
@@ -4406,7 +4025,7 @@ ThotBool           *complete;
 	      else
 		{
 		  pSchS = pEl->ElStructSchema;
-		  pSchP = pSchS->SsPSchema;
+		  pSchP = PresentationSchema (pSchS, pDoc);
 		  index = pEl->ElTypeNumber;
 		}
 	      }
@@ -4563,7 +4182,7 @@ ThotBool           *complete;
 			  while (!stop);
 			  if (pAbb != NULL)
 			    /* cet ascendant a un pave, est-il secable ? */
-			    notBreakable = !(IsBreakable (pAbb));
+			    notBreakable = !(IsBreakable (pAbb, pDoc));
 			  else
 			    /* pas de pave, on passe a l'ascendant du dessus */
 			    pAsc = pAsc->ElParent;
@@ -4634,7 +4253,7 @@ ThotBool           *complete;
 		   else
 		     stop = TRUE;
 		 while (!stop);
-		 notBreakable = !(IsBreakable (pAbb));
+		 notBreakable = !(IsBreakable (pAbb, pDoc));
 		 /* determine le 1er pave fils a creer */
 		 /* premier fils de l'element */
 		 pElChild = pEl->ElFirstChild;
@@ -4993,7 +4612,7 @@ ThotBool           *complete;
 			       if (pAttr != NULL)
 				 pAbbPres = CrAbsBoxesPres (pEl, pDoc, pRule,
 							    pAttr->AeAttrSSchema, pAttr, viewNb,
-							    pAttr->AeAttrSSchema->SsPSchema,
+							    PresentationSchema (pAttr->AeAttrSSchema, pDoc),
 							    FALSE, TRUE);
 			       else
 				 pAbbPres = CrAbsBoxesPres (pEl, pDoc, pRule,

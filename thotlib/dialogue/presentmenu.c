@@ -154,7 +154,7 @@ static PtrElement   GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
   viewSch = AppliedView (pEl, NULL, pDoc, SelectedView);
   while (pBlock == NULL && pEl != NULL)
      {
-     pPRule = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+     pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtFunction, FnLine, FALSE, TRUE, &pAttr);
      if (pPRule != NULL)
 	pBlock = pEl;

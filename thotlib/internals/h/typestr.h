@@ -251,19 +251,6 @@ typedef struct _SRule
 #define SrIndexConst u.s7._SrIndexConst_
 #define SrFirstOfPair u.s8._SrFirstOfPair_
 
-typedef struct _PresentSchema *PtrPSchema;
-typedef struct _HandlePSchema *PtrHandlePSchema;
-
-/* a presentation schema chaining element */
-typedef struct _HandlePSchema
-{
-    PtrPSchema	       HdPSchema;      /* pointer on the presentation schema */
-    PtrHandlePSchema   HdNextPSchema;  /* handle of the next presentation
-					  schema */     
-    PtrHandlePSchema   HdPrevPSchema;  /* handle of the previous presentation
-					  schema */
-} HandlePSchema;
-
 typedef struct _ExtensBlock *PtrExtensBlock;
 
 /* block containing all the extension rules (EXTENS section) of an
@@ -298,10 +285,6 @@ typedef struct _StructSchema
    Name             SsDefaultPSchema;    /* name of the default presentation 
 					    schema associated with this
 					    structure */
-   PtrPSchema       SsPSchema;           /* pointer on the actual associated
-					    presentation schema */
-   PtrHandlePSchema SsFirstPSchemaExtens;/* first additional presentation
-					    schema */
    PtrEventsSet     SsActionList;        /* Pointer to the list of actions that
                                             can be applied in documents with
                                             this schema. */

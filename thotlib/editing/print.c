@@ -1447,7 +1447,8 @@ static void ClipOnPage (int frame, int org, int width, int height)
    auquel appartient l'element Marque Page pointe par pPageEl.        
    Cette procedure utilise PageHeaderFooter (commune a print et page)         
   ----------------------------------------------------------------------*/
-static void SetMargins (PtrElement pPageEl, PtrAbstractBox rootAbsBox)
+static void SetMargins (PtrElement pPageEl, PtrDocument pDoc,
+			PtrAbstractBox rootAbsBox)
 {
    PtrPRule            pPRule;
    PtrPSchema          pPSchema;
@@ -1499,17 +1500,17 @@ static void SetMargins (PtrElement pPageEl, PtrAbstractBox rootAbsBox)
 	   schView = TheDoc->DocView[CurrentView - 1].DvPSchemaView;
 	if (Repaginate)
 	  {
-	     /* on recupere la boite page sans mettre a jour la hauteur */
-	     /* de page (car c'est fait par le paginateur) */
-	     /* l'element englobant porte-t-il une regle page ? */
-	     pPRule = GetPageRule (pPageEl->ElParent, schView, &pPSchema);
-	     if (pPRule != NULL)	/* on a trouve la regle page */
-		boxNum = pPRule->PrPresBox[0];
+	    /* on recupere la boite page sans mettre a jour la hauteur */
+	    /* de page (car c'est fait par le paginateur) */
+	    /* l'element englobant porte-t-il une regle page ? */
+	    pPRule = GetPageRule (pPageEl->ElParent, pDoc, schView, &pPSchema);
+	    if (pPRule != NULL)	/* on a trouve la regle page */
+	      boxNum = pPRule->PrPresBox[0];
 	  }
 	else
-	   /* appel a PageHeaderFooter qui met a jour les variables PageHeight */
-	   /* et PageFooterHeight */
-	   PageHeaderFooter (pPageEl, schView, &boxNum, &pPSchema);
+	  /* appel a PageHeaderFooter qui met a jour les variables PageHeight*/
+	  /* et PageFooterHeight */
+	  PageHeaderFooter (pPageEl, TheDoc, schView, &boxNum, &pPSchema);
 	/* mise a jour de NewTopMargin et NewLeftMargin */
 	if (boxNum != 0 && pPSchema != NULL)
 	  {
@@ -1590,6 +1591,7 @@ static PtrAbstractBox NextPage (PtrAbstractBox pAb)
 static void PrintView (PtrDocument pDoc)
 {
    PtrElement          pEl;
+   PtrPSchema          pPS;
    PtrAbstractBox      rootAbsBox;
    PtrAbstractBox      pAb, pPageAb, pNextPageAb, pHeaderAb;
    DocViewDescr       *pViewD;
@@ -1625,8 +1627,8 @@ static void PrintView (PtrDocument pDoc)
      {
        pEl = pDoc->DocDocElement;
        pViewD = &pDoc->DocView[CurrentView - 1];
-       ustrncpy (viewName,
-		 pViewD->DvSSchema->SsPSchema->PsView[pViewD->DvPSchemaView-1],
+       pPS = PresentationSchema (pViewD->DvSSchema, pDoc);
+       ustrncpy (viewName, pPS->PsView[pViewD->DvPSchemaView-1],
 		 MAX_NAME_LENGTH);
        pDoc->DocViewRootAb[CurrentView - 1] = AbsBoxesCreate (pEl, pDoc,
 			 CurrentView, TRUE, TRUE, &full);
@@ -1660,7 +1662,7 @@ static void PrintView (PtrDocument pDoc)
        /* on a trouve' une marque de page, on determine la hauteur de ce */
        /* type de page */
        {
-	 SetMargins (pAb->AbElement, rootAbsBox);
+	 SetMargins (pAb->AbElement, pDoc, rootAbsBox);
 	 pPageAb = pAb;
        }
    
@@ -1673,7 +1675,7 @@ static void PrintView (PtrDocument pDoc)
 	   pBox = rootAbsBox->AbBox;
 	   psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg, pBox->BxHeight + pBox->BxYOrg);
 	 }
-       SetMargins (NULL, NULL);
+       SetMargins (NULL, NULL, NULL);
        /* Document sans marques de pages */
        /* probablement un graphique: il ne faut pas clipper */
 #ifdef _WINDOWS
@@ -1826,7 +1828,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
       /* on examine le schema principal du document et ses extensions */
       do
 	{
-	  pPSchema = pSS->SsPSchema;
+	  pPSchema = PresentationSchema (pSS, pDoc);
 	  for (schView = 0; schView < pPSchema->PsNViews && !found;)
 	    if (!ustrcmp (PrintViewName[v], pPSchema->PsView[schView]))
 	      found = TRUE;
@@ -1906,7 +1908,8 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 		  CurrentView = 1;
 		  /* on memorise le fait que c'est une vue avec ou
 		     sans pages */
-		  withPages = pSS->SsPSchema->PsPaginatedView[CurAssocNum - 1];
+		  pPSchema = PresentationSchema (pSS, pDoc);
+		  withPages = pPSchema->PsPaginatedView[CurAssocNum - 1];
 		}
 	    }
 	}
@@ -2090,7 +2093,7 @@ static int       n = 1;
       /* met a jour les marges du haut et du cote gauche (mais pas PageHeight */
       /* car elle a ete calculee par la pagination */
       /* le pave racine est decale en fonction de la valeur des marges */
-      SetMargins (pPageAb->AbElement, rootAbsBox);
+      SetMargins (pPageAb->AbElement, pDoc, rootAbsBox);
       /* calcule a priori la position verticale (par rapport au bord */
       /* superieur de la feuille de papier) au-dela de laquelle rien ne */
       /* sera imprime' */
@@ -2584,10 +2587,8 @@ int                 main (int argc, char **argv)
 	  if (TtaFileExist (argv[argCounter]))
 	    /* Yes, it does, split the string into two parts: directory
 	       and filename */
-	    {
 	      TtaExtractName (argv[argCounter], tempDir, name);
-	      argCounter++;
-	    }
+	  argCounter++;
         }
     }
   

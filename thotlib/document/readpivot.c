@@ -874,7 +874,7 @@ static int ReadType (PtrDocument pDoc, PtrSSchema *pSS, BinFile pivFile, char *t
 	       {
 		 /* pas de presentation preferentielle */
 		 rule = CreateNature (pDoc->DocNatureName[nat],
-				      pDoc->DocNaturePresName[nat], *pSS);
+				      pDoc->DocNaturePresName[nat], *pSS,pDoc);
 		 /* recupere le numero de la regle de nature */
 		 if (rule == 0)
 		   PivotError (pivFile, "PivotError: Nature");
@@ -1186,16 +1186,6 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
      *pAttr = NULL;
    else
      {
-       if (pDoc->DocPivotVersion < 4)
-	 /* ignore les attributs definis dans les anciennes extensions */
-	 /* ExtCorr et ExtMot */
-	 if (pSchAttr->SsExtension)
-	   {
-	   if (strcmp (pSchAttr->SsName, "ExtCorr") == 0)
-	     create = FALSE;
-	   else if (strcmp (pSchAttr->SsName, "ExtMot") == 0)
-	     create = FALSE;
-	   }
        if (!create)
 	 *pAttr = NULL;
        else
@@ -1668,8 +1658,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 		  /* l'element, puis on la modifie selon    */
 		  /* ce qui est lu dans le fichier          */
 		  {
-		    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL,
-					       pPRule->PrViewNum,
+		    pR1 = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0,
+					       NULL, pPRule->PrViewNum,
 					       pPRule->PrType, FnAny, FALSE,
 					       TRUE, &pAttr);
 		    if (pR1 != NULL)
@@ -1703,7 +1693,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 		/* la regle qui devrait s'appliquer a    */
 		/* l'element, puis on la modifie selon   */
 		/* ce qui est lu dans le fichier         */
-		pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL,
+		pR1 = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL,
 					   pPRule->PrViewNum,
 					   pPRule->PrType, FnAny, FALSE,
 					   TRUE, &pAttr);
@@ -3065,7 +3055,8 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        PutNatureInTable (pDoc, SSName, rank);
        /* charge les schemas de structure et de presentation du document */
        if (pDoc->DocSSchema == NULL) 
-	 LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pLoadedSS,FALSE);
+	 LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pDoc,
+		      pLoadedSS, FALSE);
 
         if (pDoc->DocSSchema == NULL)
 	  PivotError (file, "PivotError: Schema 5");
@@ -3082,12 +3073,12 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
 		 MAX_NAME_LENGTH);
        if (pDoc->DocSSchema != NULL)
-	 if (pDoc->DocSSchema->SsPSchema == NULL)
+	 if (!PresentationSchema (pDoc->DocSSchema, pDoc))
 	   /* le schema de presentation n'a pas ete charge' (librairie  */
 	   /* Kernel, par exemple). On memorise dans le schema de */
 	   /* structure charge' le nom du schema P associe' */
 	   strncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName,
-		     MAX_NAME_LENGTH);
+		    MAX_NAME_LENGTH);
      }
    /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
@@ -3141,7 +3132,8 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 		 pSS = LoadExtension (SSName, PSchemaName, pDoc);
 	       else 
 		 {
-		   i = CreateNature (SSName, PSchemaName, pDoc->DocSSchema);
+		   i = CreateNature (SSName, PSchemaName, pDoc->DocSSchema,
+				     pDoc);
 		   if (i == 0)
 		     /* echec creation nature */
 		     PivotError (file, "PivotError: Schema 11");
@@ -3160,7 +3152,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	   pDoc->DocNatureSSchema[rank - 1] = pSS;
 	   strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
 		     MAX_NAME_LENGTH);
-	   if (pSS->SsPSchema == NULL)
+	   if (!PresentationSchema (pSS, pDoc))
 	     /* le schema de presentation n'a pas ete charge' (librairie
 		Kernel, par exemple). On memorise dans le schema de structure
 		charge' le nom du schema P associe' */
@@ -3294,7 +3286,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 		      ThotBool withEvent, ThotBool removeExclusions)
 {
    PtrElement          s, p, d, pFirst;
-   PtrSSchema          pSS, pNat, pSchS1, curExtension, previousSSchema;
+   PtrSSchema          pSS, pNat, pSchS1;
    PtrPSchema          pPSchema;
    PtrReferredDescr    pRefD, pNextRefD;
    SRule              *pSRule;
@@ -3339,7 +3331,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	 {
 	   createPages = FALSE;
 	   ok = FALSE;
-	   pPSchema = pDoc->DocSSchema->SsPSchema;
+	   pPSchema = PresentationSchema (pDoc->DocSSchema, pDoc);
 	   if (pPSchema != NULL)
 	     for (i = 0; i < pPSchema->PsNViews; i++)
 	       ok = ok || pPSchema->PsExportView[i];
@@ -3588,29 +3580,6 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	   pRefD = pNextRefD;
 	 }
        
-       /* supprime les extensions de schemas ExtCorr et ExtMot */
-       /* les attributs definis dans ces extensions ont deje ete retire's par*/
-       /* ReadAttributePiv (ces extensions ne definissent que des attributs) */
-       if (!error && pDoc->DocPivotVersion < 4)
-	 {
-	   previousSSchema = pDoc->DocSSchema;
-	   curExtension = previousSSchema->SsNextExtens;
-	   while (curExtension != NULL)
-	     if (strcmp (curExtension->SsName, "ExtCorr") == 0 ||
-		 strcmp (curExtension->SsName, "ExtMot") == 0)
-	       {
-		 previousSSchema->SsNextExtens = curExtension->SsNextExtens;
-		 if (curExtension->SsNextExtens != NULL)
-		   curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
-		 FreeSchStruc (curExtension);
-		 curExtension = previousSSchema->SsNextExtens;
-	       }
-	     else
-	       {
-		 previousSSchema = curExtension;
-		 curExtension = curExtension->SsNextExtens;
-	       }
-	 }
        if (!error)
 	 /* affecte un label a tous les elements qui n'en ont pas et */
 	 /* recherche toutes les references d'inclusion du document et */

@@ -72,7 +72,6 @@ int                 AttrValue (PtrAttribute pAttr)
    return ret;
 }
 
-
 /*----------------------------------------------------------------------
    	FollowNotPres Si pAbb pointe un pave de presentation, retourne	
    		dans pAbb le premier pave qui n'est pas un pave de	
@@ -96,7 +95,6 @@ static void         FollowNotPres (PtrAbstractBox * pAbb)
 	 *pAbb = (*pAbb)->AbNext;
    while (!stop);
 }
-
 
 /*----------------------------------------------------------------------
    	AncestorAbsBox	  rend le premier element pElAsc ascendant de pE
@@ -122,8 +120,6 @@ static void         AncestorAbsBox (PtrElement pE, DocViewNumber view, PtrAbstra
 		 *pAbb = NULL;
 	}
 }
-
-
 
 /*----------------------------------------------------------------------
    	AbsBoxInherit  rend le pointeur sur le pave correpondant a l'element	
@@ -192,7 +188,6 @@ static PtrAbstractBox AbsBoxInherit (PtrPRule pPRule, PtrElement pEl, DocViewNum
    return pAbb;
 }
 
-
 /*----------------------------------------------------------------------
    	AbsBoxInheritImm  rend le pointeur sur le pave correspondant a	
    		l'element qui sert de reference quand on applique la	
@@ -246,7 +241,6 @@ static PtrAbstractBox AbsBoxInheritImm (PtrPRule pPRule, PtrElement pEl, DocView
 	 pAbb = NULL;
    return pAbb;
 }
-
 
 /*----------------------------------------------------------------------
   BorderStyleCharValue
@@ -432,7 +426,6 @@ static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
    return val;
 }
 
-
 /*----------------------------------------------------------------------
    	AlignRule evalue une regle d'ajustement pour la vue view.	
    		La regle a evaluer est pointee par pPRule, et l'element	
@@ -468,8 +461,6 @@ static BAlignment   AlignRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber vi
      }
    return val;
 }
-
-
 
 /*----------------------------------------------------------------------
    	 BoolRule evalue une regle de presentation de type booleen	
@@ -1075,7 +1066,8 @@ static void         VerifyAbsBox (ThotBool * found, PtrPSchema pSP, RefKind refK
    		presentation de l'attribut pointe' par pAttr cree le	
    		pave de presentation pointe' par pAb.			
   ----------------------------------------------------------------------*/
-static ThotBool     AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb)
+static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
+				   PtrDocument pDoc)
 {
    ThotBool            ret, stop;
    PtrPRule            pPRule;
@@ -1087,7 +1079,7 @@ static ThotBool     AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb)
      {
 	/* on cherchera d'abord dans le schema de presentation principal de */
 	/* l'attribut */
-	pSchP = pAttr->AeAttrSSchema->SsPSchema;
+	pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
 	pHd = NULL;
 	/* on examine le schema de presentation principal, puis les schemas */
 	/* additionnels */
@@ -1154,7 +1146,7 @@ static ThotBool     AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb)
 		  if (pHd == NULL)
 		     /* on n'a pas encore traite' les schemas de presentation
 		        additionnels. On prend le premier schema additionnel. */
-		     pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+		     pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc);
 		  else
 		     /* passe au schema additionnel suivant */
 		     pHd = pHd->HdNextPSchema;
@@ -1197,7 +1189,6 @@ static void VerifyAbsBoxDescent (ThotBool * found, PtrPSchema pSP,
 	}
 }
 
-
 /*----------------------------------------------------------------------
    	SearchAbsBoxRef Si notType est faux, rend un pointeur sur le pave de	
    		type numAbType et de niveau level (relativement au pave	
@@ -1217,7 +1208,7 @@ static void VerifyAbsBoxDescent (ThotBool * found, PtrPSchema pSP,
 static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType,
 				       PtrPSchema pSP, Level level,
 				       RefKind refKind, PtrAbstractBox pAbb,
-				       PtrAttribute pAttr)
+				       PtrAttribute pAttr, PtrDocument pDoc)
 {
    ThotBool            found;
    PtrAbstractBox      pAb;
@@ -1381,7 +1372,7 @@ static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType,
 				{
 				   /* cet attribut a-t-il une regle de presentation qui */
 				   /* cree le pave pour lequel on travaille ? */
-				   if (AttrCreatePresBox (pAttr, pAbb))
+				   if (AttrCreatePresBox (pAttr, pAbb, pDoc))
 				      /* oui, c'est l'attribut cherche' */
 				      found = TRUE;
 				}
@@ -1458,8 +1449,6 @@ static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType,
    return pAb;
 }
 
-
-
 /*----------------------------------------------------------------------
    	GetConstantBuffer   acquiert un buffer de texte pour la constante de	
    		presentation correspondant au pave pointe par pAb.	
@@ -1475,8 +1464,6 @@ void                GetConstantBuffer (PtrAbstractBox pAb)
      pAb->AbLanguage = TtaGetDefaultLanguage ();
    pAb->AbVolume = 0;
 }
-
-
 
 /*----------------------------------------------------------------------
    	UpdateFreeVol	met a jour le volume libre restant dans la vue	
@@ -1652,7 +1639,6 @@ void   FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
     }
 }
 
-
 /*----------------------------------------------------------------------
    	PageCreateRule	cherche dans la chaine de regles de presentation
    	qui commence par pPRule et qui appartient au schema de		
@@ -1708,7 +1694,6 @@ static ThotBool PageCreateRule (PtrPRule pPRule, PtrPSchema pSPR,
    return result;
 }
 
-
 /*----------------------------------------------------------------------
   TypeCreatedRule retourne le type de la regle de presentation appelee	
   par le pave pAbbCreator et qui a cree le pave pAbbCreated.	
@@ -1737,7 +1722,7 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
 	pA = pAbbCreator->AbElement->ElFirstAttr;
 	while (pA != NULL && !ok)
 	  {
-	     pSchP = pA->AeAttrSSchema->SsPSchema;
+	     pSchP = PresentationSchema (pA->AeAttrSSchema, pDoc);
 	     pHd = NULL;
 	     /* on examine le schema de presentation principal, puis les schemas */
 	     /* additionnels */
@@ -1750,7 +1735,7 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
 		  if (pHd == NULL)
 		     /* on n'a pas encore traite' les schemas de presentation additionnels
 		        On prend le premier schema additionnel. */
-		     pHd = pA->AeAttrSSchema->SsFirstPSchemaExtens;
+		     pHd = FirstPSchemaExtension (pA->AeAttrSSchema, pDoc);
 		  else
 		     /* passe au schema additionnel suivant */
 		     pHd = pHd->HdNextPSchema;
@@ -1768,8 +1753,6 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
    return result;
 }
 
-
-
 /*----------------------------------------------------------------------
   SearchPresSchema	cherche le schema de presentation a appliquer a	
   l'element pointe par pEl. Retourne dans pSchP un	
@@ -1779,62 +1762,65 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
   correspond le schema de presentation retourne'.		
   ----------------------------------------------------------------------*/
 void SearchPresSchema (PtrElement pEl, PtrPSchema * pSchP, int *indexElType,
-		       PtrSSchema * pSchS)
+		       PtrSSchema * pSchS, PtrDocument pDoc)
 {
-   ThotBool            found;
-   int                 i;
-   PtrSSchema          pSc1;
-   SRule              *pSRule;
+  ThotBool            found;
+  int                 i;
+  PtrSSchema          pSc1;
+  PtrPSchema          pSP;
+  SRule              *pSRule;
 
-   if (pEl == NULL || pEl->ElStructSchema == NULL)
-     {
-	*pSchP = NULL;
-	*pSchS = NULL;
-	*indexElType = 0;
-     }
-   else
-     {
-	*pSchP = pEl->ElStructSchema->SsPSchema;
-	*pSchS = pEl->ElStructSchema;
-	/* premiere regle de presentation specifique a ce type d'element */
-	*indexElType = pEl->ElTypeNumber;
-	/* s'il s'agit de l'element racine d'une nature, on prend les regles */
-	/* de presentation (s'il y en a) de la regle nature dans la structure */
-	/* englobante. */
-	/* on ne traite pas les marques de page */
-	if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-	   if (pEl->ElParent != NULL)
-	      /* il y a un englobant */
-	      if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
-		 /* cherche la regle introduisant la nature dans le schema de */
-		 /* structure de l'englobant. */
+  if (pEl == NULL || pEl->ElStructSchema == NULL)
+    {
+      *pSchP = NULL;
+      *pSchS = NULL;
+      *indexElType = 0;
+    }
+  else
+    {
+      *pSchS = pEl->ElStructSchema;
+      *pSchP = PresentationSchema (*pSchS, pDoc);
+      /* premiere regle de presentation specifique a ce type d'element */
+      *indexElType = pEl->ElTypeNumber;
+      /* s'il s'agit de l'element racine d'une nature, on prend les regles */
+      /* de presentation (s'il y en a) de la regle nature dans la structure */
+      /* englobante. */
+      /* on ne traite pas les marques de page */
+      if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
+	if (pEl->ElParent != NULL)
+	  /* il y a un englobant */
+	  if (pEl->ElParent->ElStructSchema != pEl->ElStructSchema)
+	    /* cherche la regle introduisant la nature dans le schema de */
+	    /* structure de l'englobant. */
+	    {
+	      pSc1 = pEl->ElParent->ElStructSchema;
+	      if (pSc1 != NULL)
 		{
-		pSc1 = pEl->ElParent->ElStructSchema;
-		if (pSc1 != NULL)
-		  {
-		   found = FALSE;
-		   i = 0;
-		   do
-		     {
-			i++;
-			pSRule = &pSc1->SsRule[i - 1];
-			if (pSRule->SrConstruct == CsNatureSchema)
-			   if (pSRule->SrSSchemaNat == pEl->ElStructSchema)
-			      found = TRUE;
-		     }
-		   while (!found && i < pSc1->SsNRules);
-		   if (found)
-		      if (pSc1->SsPSchema &&
-			  pSc1->SsPSchema->PsElemPRule[i - 1] != NULL)
-			 /* il y a des regles de presentation specifiques */
-			{
-			   *pSchP = pSc1->SsPSchema;
-			   *indexElType = i;
-			   *pSchS = pEl->ElParent->ElStructSchema;
-			}
-		  }
+		  found = FALSE;
+		  i = 0;
+		  do
+		    {
+		      i++;
+		      pSRule = &pSc1->SsRule[i - 1];
+		      if (pSRule->SrConstruct == CsNatureSchema)
+			if (pSRule->SrSSchemaNat == pEl->ElStructSchema)
+			  found = TRUE;
+		    }
+		  while (!found && i < pSc1->SsNRules);
+		  if (found)
+		    {
+		      pSP = PresentationSchema (pSc1, pDoc);
+		    if (pSP && pSP->PsElemPRule[i - 1] != NULL)
+		      /* il y a des regles de presentation specifiques */
+		      {
+			*pSchP = pSP;
+			*indexElType = i;
+			*pSchS = pEl->ElParent->ElStructSchema;
+		      }
+		    }
 		}
-     }
+	    }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1852,7 +1838,6 @@ static ThotBool     CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
    result = IsAbstractBoxDisplayed (pAb, frame);
    return result;
 }
-
 
 /*----------------------------------------------------------------------
   ApplyPos 	applique la regle de position PR-pPRule au pave pAbb1.
@@ -1906,7 +1891,7 @@ static void ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule,
 	if (pAbbPos == NULL)
 	   pAbbPos = SearchAbsBoxRef (pPosRule->PoNotRel,
 			  pPosRule->PoRefIdent, pSchP, pPosRule->PoRelation,
-			  pPosRule->PoRefKind, pAbb1, pAttr);
+			  pPosRule->PoRefKind, pAbb1, pAttr, pDoc);
 	if (pAbbPos != NULL)
 	  {
 	     /* on a trouve' le pave de reference */
@@ -1988,15 +1973,15 @@ static void ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule,
 			  /* du haut de la boite haut de page */
 			  if (PPos->PosUnit == UnPoint)
 			    {
-			       /* on cherche la boite page correspondant a la regle page */
-			       /* portee par un des ascendants  */
-			       b = GetPageBoxType (pAbbParent->AbFirstEnclosed->AbElement,
+			      /* on cherche la boite page correspondant a la regle page */
+			      /* portee par un des ascendants  */
+			      b = GetPageBoxType (pAbbParent->AbFirstEnclosed->AbElement, pDoc,
 					      pAbbParent->AbFirstEnclosed->AbElement->ElViewPSchema,
 					      &pSchPPage);
-			       PageHeaderHeight = pSchPPage->PsPresentBox[b - 1].PbHeaderHeight;
-			       /* PbHeaderHeight toujours en points typo */
-			       if (PPos->PosDistance - PageHeaderHeight >= 0)
-				  PPos->PosDistance = PPos->PosDistance - PageHeaderHeight;
+			      PageHeaderHeight = pSchPPage->PsPresentBox[b - 1].PbHeaderHeight;
+			      /* PbHeaderHeight toujours en points typo */
+			      if (PPos->PosDistance - PageHeaderHeight >= 0)
+				PPos->PosDistance = PPos->PosDistance - PageHeaderHeight;
 			    }
 			  PPos->PosUserSpecified = FALSE;
 		       }
@@ -2130,8 +2115,6 @@ static void ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule,
      }
 }
 
-
-
 /*----------------------------------------------------------------------
    	ApplyDim	 applique au pave pointe' par pAb la regle	
    		de dimension pointee par pPRule.			
@@ -2208,7 +2191,8 @@ static void ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb,
 	pdimAb->DimSameDimension = pDRule->DrSameDimens;
 	/* essaie d'appliquer la regle de dimensionnement relatif */
 	pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrRefIdent,
-		    pSchP, pDRule->DrRelation, pDRule->DrRefKind, pAb, pAttr);
+				   pSchP, pDRule->DrRelation,
+				   pDRule->DrRefKind, pAb, pAttr, pDoc);
 	pdimAb->DimAbRef = pAbbRef;
 	if (pAbbRef == NULL && pAb->AbElement != NULL)
 	   if (pAb->AbEnclosing == NULL && pDRule->DrRelation == RlEnclosing)
@@ -2252,8 +2236,8 @@ static void ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb,
 		     attrRule = -attrRule;
 
 		  /* l'attribut est-il celui de la regle ? */
-		  if (pAttr->AeAttrNum != attrRule
-		      || pAttr->AeAttrSSchema->SsPSchema != pSchP)
+		  if (pAttr->AeAttrNum != attrRule ||
+		      PresentationSchema (pAttr->AeAttrSSchema, pDoc) != pSchP)
 		     /* ce n'est pas l'attribut indique' dans la regle, */
 		     /* cherche si l'elem. possede l'attribut de la regle */
 		    {
@@ -2262,8 +2246,8 @@ static void ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb,
 		       do
 			  if (pA == NULL)
 			     stop = TRUE;	/* dernier attribut de l'element */
-			  else if (pA->AeAttrNum == attrRule
-				   && pA->AeAttrSSchema->SsPSchema == pSchP)
+			  else if (pA->AeAttrNum == attrRule &&
+				   PresentationSchema (pA->AeAttrSSchema, pDoc) == pSchP)
 			     stop = TRUE;	/* c'est l'attribut cherche' */
 			  else
 			     pA = pA->AeNext;
@@ -2286,7 +2270,6 @@ static void ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb,
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
   ApplyPage 	applique une regle Page		
@@ -2397,10 +2380,13 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 		  pEl1->ElPageType = PgBegin;
 		  pEl1->ElViewPSchema = viewSch;
 		  /* cherche le compteur de pages a appliquer */
-		  counter = GetPageCounter (pElPage, pEl1->ElViewPSchema, &pSchP);
+		  counter = GetPageCounter (pElPage, pDoc, pEl1->ElViewPSchema,
+					    &pSchP);
 		  if (counter > 0)
 		     /* calcule la valeur du compteur de pages */
-		     pEl1->ElPageNumber = CounterVal (counter, pElPage->ElStructSchema, pSchP, pElPage,
+		     pEl1->ElPageNumber = CounterVal (counter,
+						      pElPage->ElStructSchema,
+						      pSchP, pElPage,
 						      pEl1->ElViewPSchema);
 		  else
 		     /* page non numerotee */
@@ -2433,7 +2419,6 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 	   appliquee */
      }
 }
-
 
 /*----------------------------------------------------------------------
    	FindAbsBox cherche dans le sous-arbre (racine comprise)		
@@ -2478,8 +2463,6 @@ static ThotBool FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName,
    return result;
 }
 
-
-
 /*----------------------------------------------------------------------
   SearchElCrPresBoxCopy	cherche dans le sous arbre de l'element pointe' par pEl	
   (racine comprise) un element auquel est associee une	
@@ -2503,10 +2486,12 @@ static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP,
    PtrPRule            pPRuleCre;
    PtrAttribute        pA;
    PtrPRule            pPRule;
+   PtrDocument         pDoc;
 
    result = FALSE;
+   pDoc = DocumentOfElement (*pEl);
    /* cherche toutes les regles de  creation de cet element */
-   pPRuleCre = GlobalSearchRulepEl (*pEl, &pSP, &pSS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pA);
+   pPRuleCre = GlobalSearchRulepEl (*pEl, pDoc, &pSP, &pSS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pA);
    stop = FALSE;
    do
       if (pPRuleCre == NULL)
@@ -2571,8 +2556,6 @@ static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP,
    return result;
 }
 
-
-
 /*----------------------------------------------------------------------
    	CopyLeaves  copie dans le pave pAb le contenu de toutes les	
    		feuilles de texte du sous-arbre de l'element pointe'	
@@ -2631,8 +2614,6 @@ static void CopyLeaves (PtrElement pEC, PtrAbstractBox * pAb,
 	  }
      }
 }
-
-
 
 /*----------------------------------------------------------------------
   SearchElInSubTree cherche dans le sous-arbre dont la racine est	
@@ -2699,7 +2680,6 @@ static PtrPRule     GetRuleCopy (PtrPRule pPRule)
    return pPRule;
 }
 
-
 /*----------------------------------------------------------------------
    	ApplyCopy applique une regle de copie.				
    		  Procedure appelee aussi dans modif.c			
@@ -2760,7 +2740,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 	      /* il faut copier une boite de presentation */
 	      /* prend le schema de presentation qui s'applique a la reference */
 	     {
-		SearchPresSchema (pAb->AbElement, &pSchP, &i, &pSchS);
+		SearchPresSchema (pAb->AbElement, &pSchP, &i, &pSchS, pDoc);
 		if (pPRule->PrNPresBoxes == 0)
 		   /* la boite de presentation a copier est definie par son nom */
 		  {
@@ -2894,7 +2874,9 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 	pPRule1 = NULL;
 	if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
 	  {
-	    pPRule1 = GlobalSearchRulepEl (pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pAttr);
+	    pPRule1 = GlobalSearchRulepEl (pE, pDoc, &pSchP, &pSchS, 0, NULL,
+					   1, PtFunction, FnAny, FALSE, FALSE,
+					   &pAttr);
 	    pPRule1 = GetRuleCopy (pPRule1);
 	  }
 	if (pPRule1 == NULL)
@@ -2925,7 +2907,6 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
    	ApplyRule   applique au pave pointe par pAb la regle pointee par
@@ -3023,24 +3004,25 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		    pPRule->PrViewNum == viewSch)
 		  {
 		    if (pSchP == NULL)
-		       pSchP = pDoc->DocSSchema->SsPSchema;
+		       pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
 		    pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
 		    if (pConst->PdString[0] != EOS)
 		      {
-# ifndef _WINDOWS
+#ifndef _WINDOWS
 			if (pConst->PdString[0] == DIR_SEP)
-# else  /* _WINDOWS */
+#else  /* _WINDOWS */
 			if (pConst->PdString[0] == DIR_SEP ||
 			    (pConst->PdString[1] == ':' &&
 			     pConst->PdString[2] == DIR_SEP))
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 			  /* absolute file name */
 			  ustrncpy (fname, pConst->PdString, MAX_PATH - 1);
 			else
 			  /* relative file name */
 			  {
 			    ustrncpy (directoryName, SchemaPath, MAX_PATH - 1);
-			    MakeCompleteName (pConst->PdString, "", directoryName, fname, &i);
+			    MakeCompleteName (pConst->PdString, "",
+					      directoryName, fname, &i);
 			  }
 			NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
 			appl = TRUE;
@@ -3744,7 +3726,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   return appl;
 }
 
-
 /*----------------------------------------------------------------------
   SearchPresRule	Cherche si la regle de presentation specifique
   de type ruleType concernant la vue de numero view existe
@@ -3825,7 +3806,6 @@ PtrPRule SearchPresRule (PtrElement pEl, PRuleType ruleType,
      }
    return pResultRule;
 }
-
 
 /*----------------------------------------------------------------------
    	RedispAbsBox indique dans le contexte du document que le pave pAb	

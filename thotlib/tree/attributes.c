@@ -50,6 +50,7 @@
 #include "memory_f.h"
 #include "presvariables_f.h"
 #include "references_f.h"
+#include "schemas_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
@@ -339,7 +340,7 @@ void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
    /* l'attribut dont la valeur a ete modifie' apparait-il dans une */
    /* variable de presentation ? */
    /* schema de presentation de l'attribut */
-   pPSchema = pAttr->AeAttrSSchema->SsPSchema;
+   pPSchema = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
 
    if (pPSchema != NULL)
       /* parcourt les variables de presentation du schema */
@@ -473,6 +474,7 @@ void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
 {
    PtrElement          pChild;
    PtrAttribute        pOldAttr;
+   PtrPSchema          pPS;
    InheritAttrTable   *inheritedAttr;
 
    pOldAttr = GetAttributeOfElement (pEl, pAttr);
@@ -487,17 +489,16 @@ void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
 
 	/* on traite l'element lui-meme */
 	/* on cherche d'abord si pEl herite de pAttr */
-	if (pEl->ElStructSchema->SsPSchema != NULL)
-	   if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
+	if (pPS != NULL)
+	   if (pPS->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
 	     {
 		/* pEl peut heriter d'un attribut */
-		if ((inheritedAttr = pEl->ElStructSchema->SsPSchema->
-		     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		if ((inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
 		  {
 		     /* la table d'heritage n'existe pas. On la cree */
-		     CreateInheritedAttrTable (pEl);
-		     inheritedAttr = pEl->ElStructSchema->SsPSchema->
-			PsInheritedAttr[pEl->ElTypeNumber - 1];
+		     CreateInheritedAttrTable (pEl, pDoc);
+		     inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1];
 		  }
 		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
 		  {
@@ -520,6 +521,7 @@ void ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
    ComparAttrTable    *attrValComp;
    int                 i;
    PtrAttribute        pCompAttr;
+   PtrPSchema          pPS;
 
    if (GetAttributeOfElement (pEl, pAttr) == NULL)
      {
@@ -533,15 +535,14 @@ void ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 
    /* on traite l'element lui-meme */
    /* cherche si pEl possede un attribut se comparant a pAttr */
-   if (pEl->ElStructSchema->SsPSchema != NULL)
+   pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
+   if (pPS != NULL)
      {
-	if ((attrValComp = pEl->ElStructSchema->SsPSchema->
-	     PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
+	if ((attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
-	     CreateComparAttrTable (pAttr);
-	     attrValComp = pEl->ElStructSchema->SsPSchema->
-		PsComparAttr[pAttr->AeAttrNum - 1];
+	     CreateComparAttrTable (pAttr, pDoc);
+	     attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)
 	   for (i = pEl->ElStructSchema->SsNAttributes; i > 0; i--)
@@ -659,7 +660,7 @@ void UpdateCountersByAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
    /* initiale d'un compteur */
    {
       /* schema de presentation qui s'applique a l'attribut */
-      pPS = pAttr->AeAttrSSchema->SsPSchema;
+      pPS = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
       if (pPS != NULL)
 	 for (counter = 0; counter < pPS->PsNCounters; counter++)
 	   {
@@ -672,12 +673,12 @@ void UpdateCountersByAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
 		   if (pCnt->CnItem[0].CiCntrOp == CntrRank && pCnt->CnItem[0].
 		       CiElemType == PageBreak + 1)
 		      /* c'est un compteur de la forme CntrRank of Page(view) */
-		      ComputePageNum (pEl, pCnt->CnItem[0].CiViewNum);
+		      ComputePageNum (pEl, pDoc, pCnt->CnItem[0].CiViewNum);
 		   else
 		      /* c'est un compteur de la forme Set...Add n on Page(view) */
 		      if (pCnt->CnItem[0].CiCntrOp == CntrSet
 			  && pCnt->CnItem[1].CiElemType == PageBreak + 1)
-		      ComputePageNum (pEl, pCnt->CnItem[1].CiViewNum);
+		      ComputePageNum (pEl, pDoc, pCnt->CnItem[1].CiViewNum);
 		   /* fait reafficher toutes les boites de presentation dependant */
 		   /* de la valeur de ce compteur */
 		   UpdateBoxesCounter (pEl, pDoc, counter + 1, pPS, pEl->ElStructSchema);
@@ -721,37 +722,36 @@ void RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc,
 void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
 				 PtrAttribute pAttr, PtrElement pElAttr)
 {
-   PtrElement          pChild;
-   InheritAttrTable   *inheritedAttr;
+  PtrElement          pChild;
+  PtrPSchema          pPS;
+  InheritAttrTable   *inheritedAttr;
 
-   if (GetAttributeOfElement (pEl, pAttr) == NULL)
-     {
-	/* pEl does not have an attribute of that type */
-	/* process the subtree */
-	if (!pEl->ElTerminal)
-	   for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
-	      if (pChild->ElStructSchema == pEl->ElStructSchema)
-		 /* same structure schema */
-		 RemoveInheritedAttrPresent (pChild, pDoc, pAttr, pElAttr);
+  if (GetAttributeOfElement (pEl, pAttr) == NULL)
+    {
+      /* pEl does not have an attribute of that type */
+      /* process the subtree */
+      if (!pEl->ElTerminal)
+	for (pChild = pEl->ElFirstChild; pChild != NULL; pChild = pChild->ElNext)
+	  if (pChild->ElStructSchema == pEl->ElStructSchema)
+	    /* same structure schema */
+	    RemoveInheritedAttrPresent (pChild, pDoc, pAttr, pElAttr);
 
-	/* process element pEl itself */
-	if (pEl->ElStructSchema->SsPSchema != NULL)
-	   if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
-	     {
-		/* pEl can inherit some presentation rules from attributes */
-		if ((inheritedAttr = pEl->ElStructSchema->SsPSchema->
-		     PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
-		  {
-		     /* la table d'heritage n'existe pas. On la cree */
-		     CreateInheritedAttrTable (pEl);
-		     inheritedAttr = pEl->ElStructSchema->SsPSchema->
-			PsInheritedAttr[pEl->ElTypeNumber - 1];
-		  }
-		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
-		   RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr,
-					   TRUE, NULL);
-	     }
-     }
+      /* process element pEl itself */
+      pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
+      if (pPS != NULL)
+	if (pPS->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	  {
+	    /* pEl can inherit some presentation rules from attributes */
+	    if ((inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+	      {
+		/* la table d'heritage n'existe pas. On la cree */
+		CreateInheritedAttrTable (pEl, pDoc);
+		inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1];
+	      }
+	    if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
+	      RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, TRUE, NULL);
+	  }
+    }
 }
 
 
@@ -765,6 +765,7 @@ void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
 void RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 {
    PtrElement          pChild;
+   PtrPSchema            pPS;
    ComparAttrTable    *attrValComp;
    int                 i;
    PtrAttribute        pCompAttr;
@@ -781,15 +782,14 @@ void RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAt
 
    /* on traite l'element lui-meme */
    /* cherche si pEl possede un attribut se comparant a pAttr */
-   if (pEl->ElStructSchema->SsPSchema != NULL)
+   pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
+   if (pPS != NULL)
      {
-	if ((attrValComp = pEl->ElStructSchema->SsPSchema->
-	     PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
+	if ((attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1]) == NULL)
 	  {
 	     /* la table de comparaison n'existe pas. On la creee */
-	     CreateComparAttrTable (pAttr);
-	     attrValComp = pEl->ElStructSchema->SsPSchema->
-		PsComparAttr[pAttr->AeAttrNum - 1];
+	     CreateComparAttrTable (pAttr, pDoc);
+	     attrValComp = pPS->PsComparAttr[pAttr->AeAttrNum - 1];
 	  }
 	if (attrValComp != NULL)
 	   for (i = pEl->ElStructSchema->SsNAttributes; i > 0; i--)
@@ -890,6 +890,7 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAtt
 {
    PtrAttribute        pAttr, pAttrAsc, pAttrNext;
    PtrElement          pChild, pElAttr;
+   PtrPSchema          pPS;
    ThotBool            suppress, compare, inherit, mandatory, create, allowed;
    NotifyAttribute     notifyAttr;
 
@@ -954,10 +955,11 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAtt
    /* faut-il traiter des heritages et comparaisons d'attributs */
    inherit = FALSE;
    compare = FALSE;
-   if (pNewAttr->AeAttrSSchema->SsPSchema != NULL)
+   pPS = PresentationSchema (pNewAttr->AeAttrSSchema, pDoc);
+   if (pPS != NULL)
      {
-       inherit = (pNewAttr->AeAttrSSchema->SsPSchema->PsNHeirElems[pNewAttr->AeAttrNum - 1] != 0);
-       compare = (pNewAttr->AeAttrSSchema->SsPSchema->PsNComparAttrs[pNewAttr->AeAttrNum - 1] != 0);
+       inherit = (pPS->PsNHeirElems[pNewAttr->AeAttrNum - 1] != 0);
+       compare = (pPS->PsNComparAttrs[pNewAttr->AeAttrNum - 1] != 0);
      }
    if (inherit || compare)
       /* cherche le premier attribut de meme type sur un ascendant de pEl */

@@ -7,26 +7,50 @@
 #ifdef __STDC__
 
 extern void InitNatures ( void );
-extern PtrPSchema LoadPresentationSchema ( Name schemaName,
-                                           PtrSSchema pSS );
+extern PtrSSchema GetSSchemaForDoc ( char *name,
+				     PtrDocument pDoc );
+extern ThotBool LoadPresentationSchema ( Name schemaName,
+                                         PtrSSchema pSS,
+					 PtrDocument pDoc );
 extern void FreePresentationSchema ( PtrPSchema pPSchema,
-                                     PtrSSchema pSS );
+                                     PtrSSchema pSS,
+				     PtrDocument pDoc );
+extern PtrPSchema PresentationSchema ( PtrSSchema pSS,
+					PtrDocument pDoc );
+extern PtrHandlePSchema FirstPSchemaExtension ( PtrSSchema pSS,
+					        PtrDocument pDoc );
+extern void UnlinkPSchemaExtension ( PtrDocument pDoc,
+				     PtrSSchema pSS,
+				     PtrPSchema pPS );
+extern ThotBool InsertPSchemaExtension ( PtrDocument pDoc,
+					 PtrSSchema pSS,
+					 PtrPSchema pPS,
+					 PtrPSchema pOldPS,
+					 ThotBool before );
+extern PtrSSchema LoadStructureSchema ( Name schemaName,
+					PtrDocument pDoc );
+extern ThotBool ReleaseStructureSchema ( PtrSSchema pSS,
+					 PtrDocument pDoc );
 extern void LoadNatureSchema ( PtrSSchema pSS,
-                               char *PSchName,
-                               int rule );
+                          char *PSchName,
+                          int rule,
+		          PtrDocument pDoc );
 extern int CreateNature ( char *SSchName,
                           char *PSchName,
-                          PtrSSchema pSS );
+                          PtrSSchema pSS,
+                          PtrDocument pDoc );
 extern void LoadSchemas ( char *SSchName,
                           char *PSchName,
                           PtrSSchema *pSS,
+			  PtrDocument pDoc,
                           PtrSSchema pLoadedSS,
                           ThotBool extension );
 extern PtrSSchema LoadExtension ( char *SSchName,
                                   char *PSchName,
                                   PtrDocument pDoc );
 extern ThotBool FreeNature ( PtrSSchema pSS,
-                             PtrSSchema pNatureSS );
+                             PtrSSchema pNatureSS,
+                             PtrDocument pDoc );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
 extern void AddSchemaGuestViews ( PtrDocument pDoc,
                                   PtrSSchema pSS );
@@ -37,26 +61,50 @@ extern void BuildDocNatureTable ( PtrDocument pDoc );
 #else /* __STDC__ */
 
 extern void InitNatures (/* void */);
-extern PtrPSchema LoadPresentationSchema (/* Name schemaName,
-                                             PtrSSchema pSS */);
+extern PtrSSchema GetSSchemaForDoc (/* char *name,
+				       PtrDocument pDoc */);
+extern ThotBool LoadPresentationSchema (/* Name schemaName,
+                                           PtrSSchema pSS,
+					   PtrDocument pDoc */);
 extern void FreePresentationSchema (/* PtrPSchema pPSchema,
-                                       PtrSSchema pSS */);
+                                       PtrSSchema pSS,
+				       PtrDocument pDoc */);
+extern PtrPSchema PresentationSchema (/* PtrSSchema pSS,
+					 PtrDocument pDoc */);
+extern PtrHandlePSchema FirstPSchemaExtension (/* PtrSSchema pSS,
+					          PtrDocument pDoc */);
+extern void UnlinkPSchemaExtension (/* PtrDocument pDoc,
+				       PtrSSchema pSS,
+				       PtrPSchema pPS */);
+extern ThotBool InsertPSchemaExtension (/* PtrDocument pDoc,
+					   PtrSSchema pSS,
+					   PtrPSchema pPS,
+					   PtrPSchema pOldPS,
+					   ThotBool before */);
+extern PtrSSchema LoadStructureSchema (/* Name schemaName,
+					  PtrDocument pDoc */);
+extern ThotBool ReleaseStructureSchema (/* PtrSSchema pSS,
+					   PtrDocument pDoc */);
 extern void LoadNatureSchema (/* PtrSSchema pSS,
-                                 char *PSchName,
-                                 int rule */);
+                            char *PSchName,
+                            int rule,
+		            PtrDocument pDoc */);
 extern int CreateNature (/* char *SSchName,
                             char *PSchName,
-                            PtrSSchema pSS */);
+                            PtrSSchema pSS,
+                            PtrDocument pDoc */);
 extern void LoadSchemas (/* char *SSchName,
                             char *PSchName,
                             PtrSSchema *pSS,
+			    PtrDocument pDoc,
                             PtrSSchema pLoadedSS,
                             ThotBool extension */);
 extern PtrSSchema LoadExtension (/* char *SSchName,
                                     char *PSchName,
                                     PtrDocument pDoc */);
 extern ThotBool FreeNature (/* PtrSSchema pSS,
-                               PtrSSchema pNatureSS */);
+                               PtrSSchema pNatureSS,
+                               PtrDocument pDoc */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
 extern void AddSchemaGuestViews (/* PtrDocument pDoc,
                                     PtrSSchema pSS */);

@@ -7,9 +7,11 @@
 #ifdef __STDC__
 
 extern int GetPageBoxType ( PtrElement pEl,
+			    PtrDocument pDoc,
                             int viewNb,
                             PtrPSchema * pSchPPage );
 extern int GetPageCounter ( PtrElement pEl,
+			    PtrDocument pDoc,
                             int viewNb,
                             PtrPSchema * pSchPPage );
 extern void ApplPage ( PtrElement pEl,
@@ -23,9 +25,11 @@ extern void ApplPage ( PtrElement pEl,
 #else /* __STDC__ */
 
 extern int GetPageBoxType (/* PtrElement pEl,
+			      PtrDocument pDoc,
                               int viewNb,
                               PtrPSchema * pSchPPage */);
 extern int GetPageCounter (/* PtrElement pEl,
+			      PtrDocument pDoc,
                               int viewNb,
                               PtrPSchema * pSchPPage */);
 extern void ApplPage (/* PtrElement pEl,

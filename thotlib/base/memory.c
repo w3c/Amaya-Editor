@@ -77,6 +77,10 @@ int                 NbFree_HandleSchPres;
 int                 NbUsed_HandleSchPres;
 PtrHandlePSchema    PtFree_HandleSchPres;
 
+int                 NbFree_DocSchemasDescr;
+int                 NbUsed_DocSchemasDescr;
+PtrDocSchemasDescr  PtFree_DocSchemasDescr;
+
 int                 NbFree_SchStruct;
 int                 NbUsed_SchStruct;
 PtrSSchema          PtFree_SchStruct;
@@ -283,7 +287,15 @@ void                FreeAll ()
       TtaFreeMemory (ptr);
     }
   NbFree_HandleSchPres = 0;
-    
+
+  while (PtFree_DocSchemasDescr != NULL)
+    {
+      ptr = (void *)PtFree_DocSchemasDescr;
+      PtFree_DocSchemasDescr = PtFree_DocSchemasDescr->PfNext;
+      TtaFreeMemory (ptr);
+    }
+  NbFree_DocSchemasDescr = 0;
+
   while (PtFree_SchStruct != NULL)
     {
       ptr = (void *)PtFree_SchStruct;
@@ -536,6 +548,10 @@ void                InitEditorMemory ()
    NbFree_HandleSchPres = 0;
    NbUsed_HandleSchPres = 0;
    PtFree_HandleSchPres = NULL;
+
+   NbFree_DocSchemasDescr = 0;
+   NbUsed_DocSchemasDescr = 0;
+   PtFree_DocSchemasDescr = NULL;
 
    NbFree_SchStruct = 0;
    NbUsed_SchStruct = 0;
@@ -1048,6 +1064,7 @@ void                GetDocument (PtrDocument * pDoc)
        /* cree et initialise un descripteur bidon de reference, debut */
        /* de la chaine des descripteurs de references du document */
        GetReferredDescr (&pNewDoc->DocReferredEl);
+       pNewDoc->DocFirstSchDescr = NULL;
        pNewDoc->DocLabelExpMax = 1;
        pNewDoc->DocLastEdit = NULL;
        pNewDoc->DocNbEditsInHistory = 0;
@@ -1252,6 +1269,49 @@ void                FreeHandleSchPres (PtrHandlePSchema pHSP)
 
 
 /*----------------------------------------------------------------------
+   GetDocSchemasDescr alloue un block de description des schemas de
+   presentation associes a un schema de structure
+  ----------------------------------------------------------------------*/
+void                GetDocSchemasDescr (PtrDocSchemasDescr * pPFS)
+{
+   PtrDocSchemasDescr  pNewPFS;
+
+   if (PtFree_DocSchemasDescr == NULL)
+      pNewPFS = (PtrDocSchemasDescr) TtaGetMemory (sizeof (DocSchemasDescr));
+   else
+     {
+	pNewPFS = PtFree_DocSchemasDescr;
+	PtFree_DocSchemasDescr = pNewPFS->PfNext;
+	NbFree_DocSchemasDescr--;
+     }
+   *pPFS = pNewPFS;
+   if (pNewPFS)
+     {
+       memset (pNewPFS, 0, sizeof (DocSchemasDescr));
+       NbUsed_DocSchemasDescr++;
+     }
+}
+
+/*----------------------------------------------------------------------
+   FreeDocSchemasDescr libere un block de description des schemas de
+   presentation associes a un schema de structure
+  ----------------------------------------------------------------------*/
+void                FreeDocSchemasDescr (PtrDocSchemasDescr pPFS)
+{
+#ifdef DEBUG_MEMORY
+   TtaFreeMemory (pPFS);
+#else
+   pPFS->PfSSchema = NULL;
+   pPFS->PfPSchema = NULL;
+   pPFS->PfFirstPSchemaExtens = NULL;
+   pPFS->PfNext = PtFree_DocSchemasDescr;
+   PtFree_DocSchemasDescr = pPFS;
+   NbFree_DocSchemasDescr++;
+#endif
+   NbUsed_DocSchemasDescr--;
+}
+
+/*----------------------------------------------------------------------
    GetTRule allocates a translation rule
   ----------------------------------------------------------------------*/
 void                GetTRule (PtrTRule *pR)
@@ -1373,38 +1433,23 @@ void                GetSchStruct (PtrSSchema * pSS)
   ----------------------------------------------------------------------*/
 void                FreeSchStruc (PtrSSchema pSS)
 {
-  PtrHandlePSchema  pHSP, pNewHSP;
-
-  /* free HandleSchPres */
-  if (pSS->SsFirstPSchemaExtens != NULL)
+  if (pSS->SsExtensBlock != NULL)
     {
-      pHSP = pSS->SsFirstPSchemaExtens;
-      while (pHSP != NULL)
-	{
-	  pNewHSP = pHSP->HdNextPSchema;
-	  FreeHandleSchPres (pHSP);
-	  pHSP = pNewHSP;
-	}
-      pSS->SsFirstPSchemaExtens = NULL;
+      FreeExternalBlock (pSS->SsExtensBlock);
+      pSS->SsExtensBlock = NULL;
     }
-   if (pSS->SsExtensBlock != NULL)
-     {
-       FreeExternalBlock (pSS->SsExtensBlock);
-       pSS->SsExtensBlock = NULL;
-     }
-   pSS->SsPrevExtens = NULL;
-   pSS->SsExtension = FALSE;
-   pSS->SsNExtensRules = 0;
-   pSS->SsExtensBlock = NULL;
-   pSS->SsFirstPSchemaExtens = NULL;
+  pSS->SsPrevExtens = NULL;
+  pSS->SsExtension = FALSE;
+  pSS->SsNExtensRules = 0;
+  pSS->SsExtensBlock = NULL;
 #ifdef DEBUG_MEMORY
-       TtaFreeMemory (pSS);
+  TtaFreeMemory (pSS);
 #else
-   pSS->SsNextExtens = PtFree_SchStruct;
-   PtFree_SchStruct = pSS;
-   NbFree_SchStruct++;
+  pSS->SsNextExtens = PtFree_SchStruct;
+  PtFree_SchStruct = pSS;
+  NbFree_SchStruct++;
 #endif
-   NbUsed_SchStruct--;
+  NbUsed_SchStruct--;
 }
 
 /*----------------------------------------------------------------------

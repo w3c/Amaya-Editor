@@ -717,6 +717,8 @@ typedef ThotBool ComparAttrTable[MAX_ATTR_SSCHEMA]; /* this table is
 					  comparing themselves to it for
 					  presentation */
 
+typedef struct _PresentSchema *PtrPSchema;
+
 /* a presentation schema loaded in memory */
 typedef struct _PresentSchema
 {

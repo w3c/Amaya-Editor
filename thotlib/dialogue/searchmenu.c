@@ -39,8 +39,6 @@ static PtrSearchContext SearchingD = NULL;
 static PtrDocument  SearchedPageDoc;
 /* document to which the CurrRef belongs */
 static PtrDocument  CurrRefDoc;
-/* document to which belongs the element we are looking for */
-static PtrDocument  CurrRefElemDoc;
 static PtrDocument  DocTextOK;
 
 /* root of the tree where we are searching a page */

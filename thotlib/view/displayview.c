@@ -164,7 +164,8 @@ void                AbstractImageUpdated (PtrDocument pDoc)
    Returns TRUE if all abstract boxes in view v corresponding to
    ancestors of element pEl are allowed to be incomplete.
   ----------------------------------------------------------------------*/
-static ThotBool	EnclosingAbsBoxesBreakable (PtrElement pEl, int v)
+static ThotBool	EnclosingAbsBoxesBreakable (PtrElement pEl, int v,
+					    PtrDocument pDoc)
 {
    PtrAbstractBox	pAb;
 
@@ -175,7 +176,7 @@ static ThotBool	EnclosingAbsBoxesBreakable (PtrElement pEl, int v)
      if (pEl)
         pAb = pEl->ElAbstractBox[v - 1];
      }
-   return (IsBreakable (pAb));
+   return (IsBreakable (pAb, pDoc));
 }
 
 /*----------------------------------------------------------------------
@@ -273,7 +274,7 @@ void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
 	    if (ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view-1], pDoc))
 	       /* l'element est a l'interieur de l'image deja construite */
 	       {
-	       if (!EnclosingAbsBoxesBreakable (pEl, view) ||
+	       if (!EnclosingAbsBoxesBreakable (pEl, view, pDoc) ||
 		    pEl->ElVolume + pDoc->DocViewRootAb[view - 1]->AbVolume
 					< 2 * pDoc->DocViewVolume[view - 1])
 	          /* on cree tous les paves du nouvel element */
@@ -314,7 +315,7 @@ void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
 	      pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
 	    /* l'element se trouve a l'interieur de l'image deja construite */
 	    {
-	       if (!EnclosingAbsBoxesBreakable (pEl, 1) ||
+	       if (!EnclosingAbsBoxesBreakable (pEl, 1, pDoc) ||
 		    pEl->ElVolume + pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume
 			  < 2 * pDoc->DocAssocVolume[pEl->ElAssocNum - 1])
 	          /* on cree tous les paves du nouvel element */
@@ -357,7 +358,7 @@ void   RedisplayNewElement (Document document,
    if (pDoc == NULL)
       return;
    /* If the document doesn't have any presentation schema, do nothing */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -768,7 +769,7 @@ void                ChangeAbsBoxModif (PtrElement pEl, Document document,
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -821,7 +822,8 @@ void  RedisplayDefaultPresentation (Document document, PtrElement pEl,
    if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (LoadedDocument[document - 1]->DocSSchema,
+			   LoadedDocument[document - 1]) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -852,7 +854,7 @@ void                HideElement (PtrElement pEl, Document document)
    if (pDoc == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (pDoc->DocSSchema->SsPSchema == NULL)
+   if (!PresentationSchema (pDoc->DocSSchema, LoadedDocument [document - 1]))
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -891,7 +893,8 @@ void RedisplayNewPRule (Document document, PtrElement pEl, PtrPRule pRule)
    if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (LoadedDocument[document - 1]->DocSSchema,
+			   LoadedDocument[document - 1]) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
@@ -913,20 +916,22 @@ void UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    ThotBool            inheritance, comparaison;
    PtrAttribute        pAttrAsc;
    PtrElement          pElAttr;
+   PtrPSchema          pPS;
 
    if (LoadedDocument[document - 1] == NULL)
       return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (LoadedDocument[document - 1]->DocSSchema,
+			   LoadedDocument[document - 1]) == NULL)
       return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   inheritance = (pAttr->AeAttrSSchema->SsPSchema->
-		  PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
-   comparaison = (pAttr->AeAttrSSchema->SsPSchema->
-		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
+   pPS = PresentationSchema (pAttr->AeAttrSSchema,
+			     LoadedDocument[document - 1]);
+   inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
+   comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    if (inheritance || comparaison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
@@ -963,19 +968,23 @@ void UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
 void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
 {
    PtrElement          pElChild;
+   PtrPSchema          pPS;
    ThotBool            inheritance, comparaison, reDisp;
 
    if (LoadedDocument[document - 1] == NULL || DocumentOfElement (pEl) == NULL)
      return;
    /* si le document n'a pas de schema de presentation, on ne fait rien */
-   if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+   if (PresentationSchema (LoadedDocument[document - 1]->DocSSchema,
+			   LoadedDocument[document - 1]) == NULL)
      return;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
      return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   inheritance = (pAttr->AeAttrSSchema->SsPSchema->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
-   comparaison = (pAttr->AeAttrSSchema->SsPSchema->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
+   pPS = PresentationSchema (pAttr->AeAttrSSchema,
+			     LoadedDocument[document - 1]);
+   inheritance = (pPS->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
+   comparaison = (pPS->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    reDisp = (documentDisplayMode[document - 1] == DisplayImmediately);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
@@ -1150,7 +1159,7 @@ void   TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
     {
       pDoc = LoadedDocument[document - 1];
       /* si le document n'a pas de schema de presentation, on ne fait rien */
-      if (pDoc->DocSSchema->SsPSchema == NULL)
+      if (PresentationSchema (pDoc->DocSSchema, pDoc) == NULL)
 	return;
 
       oldDisplayMode = documentDisplayMode[document - 1];

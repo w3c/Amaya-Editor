@@ -49,6 +49,7 @@
 #include "font_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
+#include "schemas_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
@@ -1019,7 +1020,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
 	  else if (presBox > 0)
 	    /* presentation rules are associated with a presentation box */
 	    found = (pAb->AbPresentationBox && pAb->AbTypeNum == presBox &&
-		     pAb->AbPSchema == pSS->SsPSchema);
+		     pAb->AbPSchema == PresentationSchema (pSS, pDoc));
 	  if (found)
 	    {
 	      /* process each presentation rule */

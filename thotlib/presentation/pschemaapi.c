@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -31,17 +31,8 @@
    If nature is NULL, the additional Pschema is associated to the main
    structure schema of the document.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc, SSchema nature)
-
-#else  /* __STDC__ */
-static PtrHandlePSchema HandleOfPSchema (schema, doc, nature)
-PSchema             schema;
-Document            doc;
-SSchema             nature;
-#endif /* __STDC__ */
-
+static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc,
+					 SSchema nature)
 {
    PtrSSchema          pSS = NULL;
    PtrHandlePSchema    result, pHd;
@@ -62,7 +53,7 @@ SSchema             nature;
 	 pSS = (PtrSSchema) nature;
        if (pSS != NULL)
 	 {
-	   pHd = pSS->SsFirstPSchemaExtens;
+	   pHd = FirstPSchemaExtension (pSS, LoadedDocument[doc - 1]);
 	   while (result == NULL && pHd != NULL)
 	     if (pHd->HdPSchema == (PtrPSchema) schema)
 	       result = pHd;
@@ -106,41 +97,20 @@ PSchema             TtaNewPSchema ()
    nature: the structure schema of a nature of the document, NULL if schema
            is relative to the main structure schema of the document.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaUnlinkPSchema (PSchema schema, Document document, SSchema nature)
-#else  /* __STDC__ */
-void                TtaUnlinkPSchema (schema, document, nature)
-PSchema             schema;
-Document            document;
-SSchema             nature;
-#endif /* __STDC__ */
-
+void                TtaUnlinkPSchema (PSchema schema, Document document,
+				      SSchema nature)
 {
-   PtrHandlePSchema    pHd;
    PtrSSchema	       pSchS;
 
    if (!LoadedDocument[document - 1])
      return;
-   pHd = HandleOfPSchema (schema, document, nature);
-   if (pHd != NULL)
-     {
-       if (nature == NULL)
-	 pSchS = LoadedDocument[document - 1]->DocSSchema;
-       else
-	 pSchS = (PtrSSchema) nature;
-       /* update links between schema contexts */
-       if (pHd->HdPrevPSchema == NULL)
-	   pSchS->SsFirstPSchemaExtens = pHd->HdNextPSchema;
-	else
-	   pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
-
-	if (pHd->HdNextPSchema != NULL)
-	   pHd->HdNextPSchema->HdPrevPSchema = pHd->HdPrevPSchema;
-	FreeHandleSchPres (pHd);
-     }
+   if (nature == NULL)
+     pSchS = LoadedDocument[document - 1]->DocSSchema;
+   else
+     pSchS = (PtrSSchema) nature;
+   UnlinkPSchemaExtension (LoadedDocument[document - 1], pSchS,
+			   (PtrPSchema) schema);
 }
-
 
 /*----------------------------------------------------------------------
    TtaRemovePSchema
@@ -154,18 +124,8 @@ SSchema             nature;
    nature: the structure schema of a nature of the document, NULL if schema
            is relative to the main structure schema of the document.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaRemovePSchema (PSchema schema, Document document, SSchema nature)
-#else  /* __STDC__ */
-void                TtaRemovePSchema (schema, document, nature)
-PSchema             schema;
-Document            document;
-SSchema             nature;
-#endif /* __STDC__ */
-
+void TtaRemovePSchema (PSchema schema, Document document, SSchema nature)
 {
-   PtrHandlePSchema    pHd;
    PtrPSchema          pSchP;
    PtrSSchema	       pSchS;
 
@@ -175,118 +135,65 @@ SSchema             nature;
      pSchS = LoadedDocument[document - 1]->DocSSchema;
    else
      pSchS = (PtrSSchema) nature;
-   pSchP = (PtrPSchema) schema;
-   pHd = HandleOfPSchema (schema, document, nature);
-   if (pHd != NULL)
-     {
-       if (pHd->HdPrevPSchema == NULL)
-	   pSchS->SsFirstPSchemaExtens = pHd->HdNextPSchema;
-	else
-	   pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
-	if (pHd->HdNextPSchema != NULL)
-	   pHd->HdNextPSchema->HdPrevPSchema = pHd->HdPrevPSchema;
-	FreeHandleSchPres (pHd);
-     }
+   UnlinkPSchemaExtension (LoadedDocument[document - 1], pSchS,
+			   (PtrPSchema) schema);
    /* in any case free the Pschema */
+   pSchP = (PtrPSchema) schema;
    if (pSchP->PsStructCode > 0)
      {
        pSchP->PsStructCode--;	/* number of documents using this schema */
        if (pSchP->PsStructCode == 0)
 	 /* this presentation schema is no longer used */
-	 FreePresentationSchema (pSchP, pSchS);
+	 FreePresentationSchema (pSchP, pSchS, LoadedDocument[document - 1]);
      }
 }
-
 
 /*----------------------------------------------------------------------
    TtaAddPSchema
 
-   Associates an additional presentation schema with a document. All additional
-   presentation schemas for a given document are stored in an ordered list, in
-   increasing priority order. TtaAddPSchema inserts the new schema in that list
-   immediately before (or after, according to parameter "before") another schema
-   which is already part of the list (parameter "oldSchema").
+   Associates an additional presentation schema with a document.
+   All additional presentation schemas for a main presentation schema are
+   stored in an ordered list, in increasing priority order.
+   TtaAddPSchema inserts the new schema in that list immediately before
+   (or after, according to parameter "before") another schema which is
+   already part of the list (parameter "oldSchema").
 
    Parameters:
    schema: the presentation schema to be added
    oldSchema: a presentation schema that is already associated with the
-   document. NULL when adding the first additional presentation schema
-   for the document.
+      document. NULL when adding the first additional presentation schema.
    before: if TRUE, the new presentation schema is inserted just before
-   oldSchema, else it is inserted just after. Meaningless if
-   oldSchema is NULL.
+   oldSchema, else it is inserted just after. Meaningless if oldSchema is NULL.
    document: the document to which the presentation schema is added.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before, Document document, SSchema nature)
-#else  /* __STDC__ */
-void                TtaAddPSchema (schema, oldSchema, before, document, nature)
-PSchema             schema;
-PSchema             oldSchema;
-ThotBool            before;
-Document            document;
-SSchema		    nature;
-#endif /* __STDC__ */
-
+void TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before,
+		    Document document, SSchema nature)
 {
-   PtrHandlePSchema    oldHd, newHd;
-   ThotBool            ok;
-   PtrSSchema	       pSchS;
+  PtrSSchema	      pSchS;
 
-   ok = FALSE;
-   if (nature == NULL)
-     pSchS = LoadedDocument[document - 1]->DocSSchema;
-   else
-     pSchS = (PtrSSchema) nature;
-   oldHd = NULL;
-   if (oldSchema != NULL)
-     {
-	oldHd = HandleOfPSchema (oldSchema, document, nature);
-	if (oldHd != NULL)
-	   ok = TRUE;
-     }
-   else if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-     {
-       ok = TRUE;
-       oldHd = pSchS->SsFirstPSchemaExtens;
-     }
-
-   if (ok)
-     {
-	GetHandleSchPres (&newHd);
-	newHd->HdPSchema = (PtrPSchema) schema;
-	if (oldHd == NULL)
-	   pSchS->SsFirstPSchemaExtens = newHd;
-	else if (before)
-	  {
-	     newHd->HdNextPSchema = oldHd;
-	     newHd->HdPrevPSchema = oldHd->HdPrevPSchema;
-	     oldHd->HdPrevPSchema = newHd;
-	     if (newHd->HdPrevPSchema)
-		newHd->HdPrevPSchema->HdNextPSchema = newHd;
-	     else
-		pSchS->SsFirstPSchemaExtens = newHd;
-	  }
-	else
-	  {
-	     newHd->HdNextPSchema = oldHd->HdNextPSchema;
-	     newHd->HdPrevPSchema = oldHd;
-	     oldHd->HdNextPSchema = newHd;
-	     if (newHd->HdNextPSchema)
-		newHd->HdNextPSchema->HdPrevPSchema = newHd;
-	  }
-	/* number of documents using this schema */
-	((PtrPSchema) schema)->PsStructCode++;
-	/* name of associated structure schema */
-	ustrncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName, MAX_NAME_LENGTH);
-     }
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      if (nature == NULL)
+	pSchS = LoadedDocument[document - 1]->DocSSchema;
+      else
+	pSchS = (PtrSSchema) nature;
+      if (InsertPSchemaExtension (LoadedDocument[document - 1], pSchS,
+				  (PtrPSchema) schema, (PtrPSchema) oldSchema,
+				  before))
+	{
+	  /* number of documents using this schema */
+	  ((PtrPSchema) schema)->PsStructCode++;
+	  /* name of associated structure schema */
+	  ustrncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName,
+		    MAX_NAME_LENGTH);
+	}
+    }
 }
-
 
 /*----------------------------------------------------------------------
    TtaGetFirstPSchema
@@ -299,20 +206,11 @@ SSchema		    nature;
    document: the document of interest.
 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PSchema             TtaGetFirstPSchema (Document document, SSchema nature)
-
-#else  /* __STDC__ */
-PSchema             TtaGetFirstPSchema (document, nature)
-Document            document;
-SSchema		    nature;
-
-#endif /* __STDC__ */
-
+PSchema TtaGetFirstPSchema (Document document, SSchema nature)
 {
    PtrPSchema          pSchPres;
    PtrSSchema	       pSchS;
+   PtrHandlePSchema    pHPSch;
 
    pSchPres = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
@@ -326,12 +224,12 @@ SSchema		    nature;
 	 pSchS = LoadedDocument[document - 1]->DocSSchema;
        else
 	 pSchS = (PtrSSchema) nature;
-       if (pSchS->SsFirstPSchemaExtens != NULL)
-       pSchPres = pSchS->SsFirstPSchemaExtens->HdPSchema;
+       pHPSch = FirstPSchemaExtension (pSchS, LoadedDocument[document - 1]);
+       if (pHPSch)
+         pSchPres = pHPSch->HdPSchema;
      }
    return ((PSchema) pSchPres);
 }
-
 
 /*----------------------------------------------------------------------
    TtaNextPSchema
@@ -347,18 +245,7 @@ SSchema		    nature;
    schema: the next schema, or NULL if there is no next schema.
 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaNextPSchema (PSchema * schema, Document document, SSchema nature)
-
-#else  /* __STDC__ */
-void                TtaNextPSchema (schema, document, nature)
-PSchema            *schema;
-Document            document;
-SSchema		    nature;
-
-#endif /* __STDC__ */
-
+void TtaNextPSchema (PSchema * schema, Document document, SSchema nature)
 {
    PtrPSchema          pSchPres;
    PtrHandlePSchema    pHd;
@@ -370,5 +257,3 @@ SSchema		    nature;
 	 pSchPres = pHd->HdNextPSchema->HdPSchema;
    *schema = (PSchema) pSchPres;
 }
-
-/* end of module */

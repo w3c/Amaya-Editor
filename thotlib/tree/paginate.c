@@ -54,6 +54,7 @@
 #include "pagecommands_f.h"
 #include "presrules_f.h"
 #include "print_f.h"
+#include "schemas_f.h"
 #include "structcreation_f.h"
 #include "structlist_f.h"
 #include "structmodif_f.h"
@@ -430,7 +431,8 @@ static void Cut (PtrElement pEl, int cutChar, PtrDocument pDoc, int nbView)
   ----------------------------------------------------------------------*/
 static ThotBool AllowBreak (PtrAbstractBox pAb, PtrPRule *pR1,
 			    PtrAttribute *pAt1, PtrPRule *pR2,
-			    PtrAttribute *pAt2, int schView)
+			    PtrAttribute *pAt2, int schView,
+			    PtrDocument pDoc)
 {
   PtrPSchema          pSchP;
   PtrSSchema          pSchS;
@@ -448,15 +450,15 @@ static ThotBool AllowBreak (PtrAbstractBox pAb, PtrPRule *pR1,
   else
     {
       /* look for the presentation schema */
-      SearchPresSchema (pAb->AbElement, &pSchP, &entry, &pSchS);
+      SearchPresSchema (pAb->AbElement, &pSchP, &entry, &pSchS, pDoc);
       ret = TRUE;
       /* look for the rule NoBreak1 */
-      *pR1 = GlobalSearchRulepEl (pAb->AbElement, &pSchP, &pSchS, 0, NULL,
-				  schView, PtBreak1, FnAny,
+      *pR1 = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSchP, &pSchS, 0,
+				  NULL, schView, PtBreak1, FnAny,
 				  FALSE, TRUE, pAt1);
       /* look for the rule NoBreak2 */
-      *pR2 = GlobalSearchRulepEl (pAb->AbElement, &pSchP, &pSchS, 0, NULL,
-				  schView, PtBreak2, FnAny,
+      *pR2 = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSchP, &pSchS, 0,
+				  NULL, schView, PtBreak2, FnAny,
 				  FALSE, TRUE, pAt2);
     }
    return ret;
@@ -618,7 +620,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
        /* apres cet element. Rq: la page sera trop longue ! */
        if (pP->AbPresentationBox)
 	 {
-	   pRule = FunctionRule (pEl, &pSchP);
+	   pRule = FunctionRule (pEl, &pSchP, pDoc);
 	   while (pRule != NULL && ElemIsBefore == TRUE)
 	     {
 	       if (pP->AbTypeNum == pRule->PrPresBox[0]
@@ -720,7 +722,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
    pElPage->ElPageType = PgComputed;
    pElPage->ElViewPSchema = schView;
    /* cherche le compteur de page a appliquer */
-   cpt = GetPageCounter (pElPage, schView, &pSchP);
+   cpt = GetPageCounter (pElPage, pDoc, schView, &pSchP);
    if (cpt == 0)		/* page non numerotee */
       /* on entretient un compteur de pages pour pouvoir afficher un */
       /* message indiquant la progression du formatage */
@@ -858,7 +860,8 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
   de la frontiere de page. Retourne la nouvelle frontiere de page, en
   points typographiques, ou 0 si la coupure de page convient.
   ----------------------------------------------------------------------*/
-static int MoveCut (PtrAbstractBox pAb, ThotBool NoBr1, int schView)
+static int MoveCut (PtrDocument pDoc, PtrAbstractBox pAb, ThotBool NoBr1,
+		    int schView)
 {
   int                 ret, h, org, cutChar, min, i;
   PtrPRule            pRNoBr1, pRNoBr2;
@@ -870,7 +873,7 @@ static int MoveCut (PtrAbstractBox pAb, ThotBool NoBr1, int schView)
   /* cherche si la coupure de page convient au pave */
   if (pAb->AbOnPageBreak)
     {
-    if (!AllowBreak (pAb, &pRNoBr1, &pA1, &pRNoBr2, &pA2, schView))
+    if (!AllowBreak (pAb, &pRNoBr1, &pA1, &pRNoBr2, &pA2, schView, pDoc))
       /* no break accepted within the element, break before */
       {
 	SetPageHeight (pAb, &h, &org, &cutChar);
@@ -944,7 +947,7 @@ static int MoveCut (PtrAbstractBox pAb, ThotBool NoBr1, int schView)
 	pAb = pAb->AbFirstEnclosed;
 	while (ret == 0 && pAb != NULL)
 	  {
-	    ret = MoveCut (pAb, NoBr1, schView);
+	    ret = MoveCut (pDoc, pAb, NoBr1, schView);
 	    pAb = pAb->AbNext;
 	  }
       }
@@ -1116,7 +1119,8 @@ static int       n = 1;
       do
 	/* on commence par la racine de la vue */
 	{
-	  newheight = MoveCut (rootEl->ElAbstractBox[nbView - 1], NoBr1, schView);
+	  newheight = MoveCut (pDoc, rootEl->ElAbstractBox[nbView - 1], NoBr1,
+			       schView);
 	  if (newheight)
 	    {
 	      /* a new position of the page break is requested */
@@ -1443,8 +1447,8 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 	    pEl = pEl->ElFirstChild;	/* descend d'un niveau */
       while (!(stop || pEl == NULL || pageAtEnd));
 
-   pSchP = pDoc->DocSSchema->SsPSchema;
-   if (GetPageRule (pRootEl, schView, &pSchP))
+   pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
+   if (GetPageRule (pRootEl, pDoc, schView, &pSchP))
      /* the document element has a PAGE rule. Add the last PAGE element
 	as its last child */
      pEl = pRootEl->ElFirstChild;
@@ -1491,7 +1495,7 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 	     pElPage->ElPageType = PgComputed;
 	     pElPage->ElViewPSchema = schView;
 	     /* cherche le compteur de page a appliquer */
-	     cpt = GetPageCounter (pElPage, schView, &pSchP);
+	     cpt = GetPageCounter (pElPage, pDoc, schView, &pSchP);
 	     if (cpt == 0)
 		/* page non numerotee */
 		pElPage->ElPageNumber = 1;
@@ -1618,7 +1622,7 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
   if (pP != NULL && pP->AbElement->ElTypeNumber == PageBreak + 1)
     /* on a trouve une marque de page, on determine */
     /* la hauteur de ce type de page */
-    PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
+    PageHeaderFooter (pP->AbElement, pDoc, schView, &b, &pSchPage);
   
   /* fait calculer l'image par le Mediateur */
   RealPageHeight = PageHeight;
@@ -1639,7 +1643,7 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
 	      previousPageAbBox = pP;
 	      
 	      /* get the height pf the page element */
-	      PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
+	      PageHeaderFooter (pP->AbElement, pDoc, schView, &b, &pSchPage);
 	      if (firstPage == NULL)
 		firstPage = pP->AbElement;
 	      /* go to the end of the page element */
@@ -1675,7 +1679,7 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
 	      if (pPage->ElPageType != PgComputed)
 		{
 		  /* get the current page counter */
-		  cpt = GetPageCounter (pPage, schView, &pSchP);
+		  cpt = GetPageCounter (pPage, pDoc, schView, &pSchP);
 		  if (cpt == 0)
 		    {
 		      pagesCounter++;
@@ -1693,7 +1697,7 @@ void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
 		      /* is not associated with print */		      
 		      UpdateNumbers (pPage, pPage, pDoc, TRUE);
 		    }
-		  PageHeaderFooter (pPage, schView, &b, &pSchPage);
+		  PageHeaderFooter (pPage, pDoc, schView, &b, &pSchPage);
 		 }
 	      /* print the new page */
 	       PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[iview],

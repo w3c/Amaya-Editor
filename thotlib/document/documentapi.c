@@ -454,41 +454,34 @@ void                TtaSetSchemaPath (STRING path)
 SSchema TtaNewNature (Document document, SSchema schema, CHAR_T* natureName,
 		      CHAR_T* presentationName)
 {
-   int                 natureRule;
-   PtrSSchema          natureSchema;
+  int                 natureRule;
+  PtrSSchema          natureSchema;
 
-   UserErrorCode = 0;
-   natureSchema = NULL;
-   if (document < 0 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (document > 0 && LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else if (schema == NULL || natureName[0] == EOS)
-     {
+  UserErrorCode = 0;
+  natureSchema = NULL;
+  if (document < 0 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (document > 0 && LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (schema == NULL || natureName[0] == EOS)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      natureRule = CreateNature (natureName, presentationName,
+				 (PtrSSchema) schema,
+				 LoadedDocument[document - 1]);
+      if (natureRule == 0)
 	TtaError (ERR_invalid_parameter);
-     }
-   else
-     {
-	natureRule = CreateNature (natureName, presentationName,
-				   (PtrSSchema) schema);
-	if (natureRule == 0)
-	   {
-	     TtaError (ERR_invalid_parameter);
-	   }
-	else
-	   {
-	   natureSchema = ((PtrSSchema) schema)->SsRule[natureRule - 1].SrSSchemaNat;
+      else
+	{
+	  natureSchema = ((PtrSSchema) schema)->SsRule[natureRule - 1].SrSSchemaNat;
 #ifndef NODISPLAY
-	   if (document > 0)
-	      AddSchemaGuestViews (LoadedDocument[document - 1], natureSchema);
+	  if (document > 0)
+	    AddSchemaGuestViews (LoadedDocument[document - 1], natureSchema);
 #endif
-	   }
-     }
-   return ((SSchema) natureSchema);
+	}
+    }
+  return ((SSchema) natureSchema);
 }
 
 
@@ -552,7 +545,6 @@ void       TtaSetPSchema (Document document, CHAR_T* presentationName)
    int                 view;
    int                 Assoc;
    ThotBool            ok;
-
 #endif
 
    UserErrorCode = 0;
@@ -583,28 +575,8 @@ void       TtaSetPSchema (Document document, CHAR_T* presentationName)
 	 TtaError (ERR_there_are_open_views);
       else
 	 /* There is no opened views */
-	 {
-	 Name pschemaName;
-
-	 ustrncpy (pschemaName, presentationName, MAX_NAME_LENGTH);
-	 if (pDoc->DocSSchema->SsPSchema != NULL)
-	    /* a presentation schema already exist. One release it */
-	    {
-	    FreePresentationSchema (pDoc->DocSSchema->SsPSchema,
-				    pDoc->DocSSchema);
-	    pDoc->DocSSchema->SsPSchema = NULL;
-	    }
 	 /* Load the presentation schema */
-	 if (pDoc->DocSSchema->SsExtension)
-	    /* to avoid that ReadPresentationSchema reloades the structure
-	       schema */
-	    pDoc->DocSSchema->SsRootElem = 1;
-	 pDoc->DocSSchema->SsPSchema = LoadPresentationSchema (pschemaName,
-							     pDoc->DocSSchema);
-	 if (pDoc->DocSSchema->SsPSchema == NULL)
-	    /* Failure while loading schema */
-	    TtaError (ERR_cannot_load_pschema);
-	 }
+	 LoadPresentationSchema (presentationName, pDoc->DocSSchema, pDoc);
 #endif
       }
 }
@@ -1001,38 +973,6 @@ CHAR_T*              TtaGetPSchemaName (SSchema schema)
 }
 
 /*----------------------------------------------------------------------
-  ChSchStruct recursively searches the schema which name is "name" within
-  nature schema and extension schema used by pSS. It returns a pointer
-  which references this schema or NULL if not found.
-  ----------------------------------------------------------------------*/
-static SSchema      ChSchStruct (PtrSSchema pSS, CHAR_T* name)
-{
-   int                 nRegle;
-   SSchema             ret;
-
-   ret = NULL;
-   if (pSS)
-     {
-      if (ustrcmp (name, pSS->SsName) == 0)
-	 /* The schema itself */
-	 ret = (SSchema) pSS;
-      else
-	 {
-	 /* Looks for the nature rule of the schema */
-	 for (nRegle = pSS->SsNRules - 1;
-	      ret == NULL && nRegle >= MAX_BASIC_TYPE;
-	      nRegle--)
-	      if (pSS->SsRule[nRegle].SrConstruct == CsNatureSchema)
-		 ret = ChSchStruct (pSS->SsRule[nRegle].SrSSchemaNat, name);
-	 /* If not found, one search into the extension schema */
-	 if (ret == NULL)
-	    ret = ChSchStruct (pSS->SsNextExtens, name);
-	 }
-     }
-   return ret;
-}
-
-/*----------------------------------------------------------------------
    TtaGetSSchema
 
    Returns a structure schema whose name is known and that is used in a
@@ -1059,8 +999,7 @@ SSchema             TtaGetSSchema (CHAR_T* name, Document document)
      TtaError (ERR_invalid_document_parameter);
    else
      /* parameter document is correct */
-     /* One search from the main schema of the document o */
-     schema = ChSchStruct (LoadedDocument[document - 1]->DocSSchema, name);
+     schema = (SSchema) GetSSchemaForDoc (name, LoadedDocument[document - 1]);
    return schema;
 }
 

@@ -43,6 +43,7 @@ char                mbsTmpStr[MAX_TXT_LEN];
 #include "absboxes_f.h"
 #include "fileaccess_f.h"
 #include "presrules_f.h"
+#include "schemas_f.h"
 #include "structlist_f.h"
 #include "thotmsg_f.h"
 #include "tree_f.h"
@@ -3512,7 +3513,7 @@ FILE               *fileDescriptor;
      {
 	pDoc = LoadedDocument[document - 1];
 	pSchemaStr = pDoc->DocSSchema;
-	pHd = pSchemaStr->SsFirstPSchemaExtens;
+	pHd = FirstPSchemaExtension (pSchemaStr, pDoc);
 	while (pHd != NULL)
 	  {
 	     pSc1 = pHd->HdPSchema;

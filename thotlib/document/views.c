@@ -89,6 +89,7 @@ ThotBool            PaginatedView (PtrDocument pDoc, int view, ThotBool assoc)
 {
    ThotBool            paginate;
    PtrElement          pEl;
+   PtrPSchema          pPS;
 
    if (assoc)
      {
@@ -96,8 +97,10 @@ ThotBool            PaginatedView (PtrDocument pDoc, int view, ThotBool assoc)
 	if (pEl == NULL)
 	   paginate = FALSE;
 	else
-	   paginate = pEl->ElStructSchema->SsPSchema->
-	      PsAssocPaginated[pEl->ElTypeNumber - 1];
+	  {
+	    pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
+	    paginate = pPS->PsAssocPaginated[pEl->ElTypeNumber - 1];
+	  }
      }
    else
      {
@@ -106,8 +109,10 @@ ThotBool            PaginatedView (PtrDocument pDoc, int view, ThotBool assoc)
 	   /* la pagine pas */
 	   paginate = FALSE;
 	else
-	   paginate = pDoc->DocView[view - 1].DvSSchema->SsPSchema->
-	      PsPaginatedView[pDoc->DocView[view - 1].DvPSchemaView - 1];
+	  {
+	    pPS = PresentationSchema (pDoc->DocView[view - 1].DvSSchema, pDoc);
+	    paginate = pPS->PsPaginatedView[pDoc->DocView[view - 1].DvPSchemaView - 1];
+	  }
      }
    return paginate;
 }
@@ -189,7 +194,7 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
                                   AvailableView viewList, int *nViews,
 				  ThotBool nature)
 {
-   PtrPSchema          pPSchema;
+   PtrPSchema          pPSchema, pPS;
    DocViewDescr       *pView;
    SRule              *pSRule;
    int                 view, i;
@@ -200,7 +205,7 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
       pSRule = &pSS->SsRule[pSS->SsRootElem - 1];
       if (!pSRule->SrRefImportedDoc || pSS->SsExtension)
 	 {
-	 pPSchema = pSS->SsPSchema;
+	 pPSchema = PresentationSchema (pSS, pDoc);
 	 if (nature || pSS->SsExtension)
 	    view = 1;
 	 else
@@ -237,9 +242,12 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
 		     {
 		     pView = &pDoc->DocView[i];
 		     if (pView->DvPSchemaView > 0)
-		        if (pView->DvSSchema->SsPSchema == pSS->SsPSchema &&
-			    pView->DvPSchemaView == view + 1)
+		       {
+			 pPS = PresentationSchema (pView->DvSSchema, pDoc);
+			 if (pPS == pPSchema &&
+			     pView->DvPSchemaView == view + 1)
 			   open = TRUE;
+		       }
 		     }
 		  viewList[*nViews].VdOpen = open;
 		  (*nViews)++;
@@ -291,6 +299,7 @@ static void BuildNatureList (PtrSSchema pSS, int *nViews,
 int BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
 {
    PtrSSchema          pSS;
+   PtrPSchema          pPS;
    SRule              *pSRule;
    int                 a, rule, nViews;
    ThotBool            assocPres, present;
@@ -334,6 +343,7 @@ int BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
       pSS = pDoc->DocSSchema;
       do
 	 {
+	 pPS = PresentationSchema (pSS, pDoc);
 	 if (pSS->SsFirstDynNature == 0)
 	    /* rule: derniere regle qui pourrait etre une liste d'element
 	       associe' */
@@ -346,7 +356,7 @@ int BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
 	    if (pSS->SsRule[rule].SrConstruct == CsList)
 	      if (pSS->SsRule[pSS->SsRule[rule].SrListItem - 1].SrAssocElem)
 		/* c'est une regle liste d'elements associes */
-		if (!pSS->SsPSchema->
+		if (!pPS->
 		    PsInPageHeaderOrFooter[pSS->SsRule[rule].SrListItem - 1])
 		   /* ces elements associes ne sont pas affiches dans une */
 		   /* boite de haut ou de bas de page */
@@ -383,8 +393,7 @@ int BuildDocumentViewList (PtrDocument pDoc, AvailableView viewList)
 		   viewList[nViews].VdAssoc = TRUE;
 		   viewList[nViews].VdExist = assocPres;
 		   viewList[nViews].VdNature = FALSE;
-		   viewList[nViews].VdPaginated =
-		     pSS->SsPSchema->PsAssocPaginated[rule + 1];
+		   viewList[nViews].VdPaginated = pPS->PsAssocPaginated[rule+1];
 		   nViews++;
 		   }
 	    }
@@ -522,10 +531,10 @@ void OpenDefaultViews (PtrDocument pDoc)
   /* si le document a ete charge' sous le forme de ses seuls elements 
      exporte's, on ouvre la vue export sinon, on ouvre la premiere vue. */
   skeleton = FALSE;
+  pPSchema = PresentationSchema (pDoc->DocSSchema, pDoc);
   pSS = pDoc->DocSSchema;
   if (pDoc->DocExportStructure)
      {
-     pPSchema = pSS->SsPSchema;
      view = 0;
      do
         view++;
@@ -539,7 +548,7 @@ void OpenDefaultViews (PtrDocument pDoc)
      view = 1;
   /* demande la creation d'une fenetre pour la vue a ouvrir */
   /* chercher la geometrie de la fenetre dans le fichier .conf */
-  ConfigGetViewGeometry (pDoc, pSS->SsPSchema->PsView[view - 1],
+  ConfigGetViewGeometry (pDoc, pPSchema->PsView[view - 1],
 			 &X, &Y, &width, &height);
   document = (Document) IdentDocument (pDoc);
   notifyDoc.event = TteViewOpen;
@@ -866,7 +875,10 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
   if (view > 0)
     {
       /* prepare le nom de la vue */
-      schView = pDoc->DocView[view - 1].DvPSchemaView;
+      if (assoc)
+	  schView = 1;
+      else
+	  schView = pDoc->DocView[view - 1].DvPSchemaView;
       /* creation d'une fenetre pour la vue */
       pSS = pDoc->DocSSchema;
       frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
@@ -933,7 +945,7 @@ static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
    ret = FALSE;
    /* cherche parmi les vues declarees dans le schema de presentation et
       non ouvertes */
-   pPSch = pDoc->DocSSchema->SsPSchema;
+   pPSch = PresentationSchema (pDoc->DocSSchema, pDoc);
    for (viewSch = 1; viewSch <= pPSch->PsNViews && !ret; viewSch++)
       {
       open = FALSE;
@@ -963,6 +975,7 @@ static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
 	    rule = pSSch->SsNRules;
 	 else
 	    rule = pSSch->SsFirstDynNature - 1;
+	 pPSch = PresentationSchema (pSSch, pDoc);
 	 /* boucle sur les regles a la recherche des listes d'elements
 	    associes */
 	 while (rule > 1 && !ret)
@@ -970,7 +983,7 @@ static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
 	    rule--;
 	    if (pSSch->SsRule[rule].SrConstruct == CsList)
 	      if (pSSch->SsRule[pSSch->SsRule[rule].SrListItem - 1].SrAssocElem)
-		if (!pSSch->SsPSchema->
+		if (!pPSch->
 		    PsInPageHeaderOrFooter[pSSch->SsRule[rule].SrListItem - 1])
 		   /* ces elements associes ne sont pas affiches dans une */
 		   /* boite de haut ou de bas de page */

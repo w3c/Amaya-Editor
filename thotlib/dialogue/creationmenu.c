@@ -27,14 +27,8 @@
 #include "platform_tv.h"
 #include "edit_tv.h"
 
-/* valid answer to the create/designate menu */
-static ThotBool     AnswerMenuAskForNew;
-/* answer AnswerCreateAskForNew to the create/designate menu */ 
-static ThotBool     AnswerCreateAskForNew;
-
 #include "config_f.h"
 #include "structcreation_f.h"
-
 
 /*----------------------------------------------------------------------
   BuildChoiceMenu

@@ -1834,7 +1834,8 @@ void ChoiceMenuCallback (int item, char *natureName)
 		strncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
 	     /* cree une nouvelle nature */
 	     ChosenTypeNum = CreateNature (SSchemaName, NULL,
-					   ChoiceMenuSSchema[0]);
+					   ChoiceMenuSSchema[0],
+					   ChoiceMenuDocument);
 	     ChosenTypeSSchema = ChoiceMenuSSchema[0];
 	     AddSchemaGuestViews (ChoiceMenuDocument,
 				  ChosenTypeSSchema->SsRule[ChosenTypeNum - 1].SrSSchemaNat);
@@ -2205,7 +2206,8 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 			    /* la nouvelle page concerne la vue active */
 			    pNew->ElViewPSchema = schView;
 			    /* cherche le compteur de page a appliquer */
-			    counterNum = GetPageCounter (pNew, schView, &pPSchema);
+			    counterNum = GetPageCounter (pNew, pDoc, schView,
+							 &pPSchema);
 			    if (counterNum == 0)
 			       pNew->ElPageNumber = 1;
 			    /* page non numerotee */
@@ -3214,6 +3216,7 @@ static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 {
    ThotBool            allowed, withPages;
    PtrElement          pE;
+   PtrPSchema          pPS;
 
    allowed = FALSE;
    if (pEl->ElParent != NULL)
@@ -3225,7 +3228,10 @@ static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 	   /* la vue selectionnee */
 	   if (pEl->ElAssocNum == 0)
 	      /* on n'est pas dans un element associe' */
-	      withPages = pDoc->DocSSchema->SsPSchema->PsPaginatedView[pDoc->DocView[SelectedView - 1].DvPSchemaView - 1];
+	     {
+	      pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
+	      withPages = pPS->PsPaginatedView[pDoc->DocView[SelectedView - 1].DvPSchemaView - 1];
+	     }
 	   else
 	      /* on est dans un element associe' */
 	     {
@@ -3234,7 +3240,8 @@ static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 		while (pE->ElParent != NULL)
 		   pE = pE->ElParent;
 		/* l'element racine de l'arbre associe' est-il mis en page ? */
-		withPages = pE->ElStructSchema->SsPSchema->PsAssocPaginated[pE->ElTypeNumber - 1];
+		pPS = PresentationSchema (pE->ElStructSchema, pDoc);
+		withPages = pPS->PsAssocPaginated[pE->ElTypeNumber - 1];
 	     }
 	   if (withPages)
 	      /* le schema de presentation du document definit bien */
@@ -3245,10 +3252,11 @@ static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 		pE = pEl->ElParent;
 		while (pE != NULL && allowed)
 		  {
-		     if (!pE->ElStructSchema->SsPSchema->PsAcceptPageBreak[pE->ElTypeNumber - 1])
-			allowed = FALSE;
-		     else
-			pE = pE->ElParent;
+		    pPS = PresentationSchema (pE->ElStructSchema, pDoc);
+		    if (!pPS->PsAcceptPageBreak[pE->ElTypeNumber - 1])
+		      allowed = FALSE;
+		    else
+		      pE = pE->ElParent;
 		  }
 	     }
 	}

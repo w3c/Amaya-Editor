@@ -40,7 +40,8 @@
    type de l'element pointe' par pEl dans la vue view       
    du schema de presentation ou elle est definie           
   ----------------------------------------------------------------------*/
-PtrPRule GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
+PtrPRule GetPageRule (PtrElement pEl, PtrDocument pDoc, int view,
+		      PtrPSchema * pSchP)
 {
    PtrPRule            pRule, pRPage;
    PtrSSchema          pSchS;
@@ -48,7 +49,7 @@ PtrPRule GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
    ThotBool            stop;
 
    pRPage = NULL;
-   SearchPresSchema (pEl, pSchP, &entry, &pSchS);
+   SearchPresSchema (pEl, pSchP, &entry, &pSchS, pDoc);
    pRule = (*pSchP)->PsElemPRule[entry - 1];
    /* 1ere regle de pres. du type */
    stop = FALSE;
@@ -117,7 +118,8 @@ PtrPRule GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
    Procedure utilisee pour la pagination et l'impression   
    les parametres b et pSchP sont utilises pour le print   
   ----------------------------------------------------------------------*/
-void PageHeaderFooter (PtrElement pElPage, int view, int *b, PtrPSchema * pSchP)
+void PageHeaderFooter (PtrElement pElPage, PtrDocument pDoc, int view,
+		       int *b, PtrPSchema * pSchP)
 {
    PtrPRule            pR;
    PtrPSchema          pSP;
@@ -130,7 +132,7 @@ void PageHeaderFooter (PtrElement pElPage, int view, int *b, PtrPSchema * pSchP)
 	pR = NULL;
 	if (pElPage->ElParent != NULL)
 	   /* l'element englobant porte-t-il une regle page ? */
-	   pR = GetPageRule (pElPage->ElParent, view, &pSP);
+	   pR = GetPageRule (pElPage->ElParent, pDoc, view, &pSP);
 	if (pR != NULL)		/* on a trouve la regle page */
 	  {
 	     *b = pR->PrPresBox[0];	/* parametre retour */

@@ -18,18 +18,16 @@
 #ifdef _WINDOWS
 #define MAX_ASSOC_DOC 1  	/* max. number of associated element types for
 				   a document */
-#define MAX_NATURES 4		/* max. number of simultaneous natures */
-#define MAX_PSCHEMAS 4		/* max. number of loaded presentation schemas*/
+#define MAX_NATURES 7		/* max. number of simultaneous natures */
 #define MAX_DOCUMENTS 10	/* max. number of simultaneous documents */
 #define MAX_VIEW_DOC 6		/* max. number of views for a document */
-#define MAX_SEL_ELEM 50	        /* max. number of elements that can be selected
+#define MAX_SEL_ELEM 150	/* max. number of elements that can be selected
 				   simultaneously */
-#define MAX_VIEW_OPEN 10	/* max. number of open views for all documents */
+#define MAX_VIEW_OPEN 50	/* max. number of open views for all documents */
 #else /* _WINDOWS ---------------------------------- */
-#define MAX_ASSOC_DOC 8  	/* max. number of associated element types for
+#define MAX_ASSOC_DOC 1  	/* max. number of associated element types for
 				   a document */
 #define MAX_NATURES 7		/* max. number of simultaneous natures */
-#define MAX_PSCHEMAS 10		/* max. number of loaded presentation schemas*/
 #define MAX_DOCUMENTS 10	/* max. number of simultaneous documents */
 #define MAX_VIEW_DOC 6		/* max. number of views for a document */
 #define MAX_SEL_ELEM 150	/* max. number of elements that can be selected

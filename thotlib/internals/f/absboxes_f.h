@@ -17,7 +17,8 @@ extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb,
 extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                           PtrDocument pDoc,
                           ThotBool head );
-extern ThotBool IsBreakable ( PtrAbstractBox pAb );
+extern ThotBool IsBreakable ( PtrAbstractBox pAb,
+			      PtrDocument pDoc );
 extern void AdjustVolume ( PtrElement pEl,
                            PtrDocument pDoc );
 extern void IncreaseVolume ( ThotBool head,
@@ -53,7 +54,8 @@ extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb,
 extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
                             PtrDocument pDoc,
                             ThotBool head */);
-extern ThotBool IsBreakable (/* PtrAbstractBox pAb */);
+extern ThotBool IsBreakable (/* PtrAbstractBox pAb,
+			        PtrDocument pDoc */);
 extern void AdjustVolume (/* PtrElement pEl,
                              PtrDocument pDoc */);
 extern void IncreaseVolume (/* ThotBool head,

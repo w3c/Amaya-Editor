@@ -46,7 +46,6 @@
 #include "thotmsg_f.h"
 #include "tree_f.h"
 
-
 /*----------------------------------------------------------------------
    GetPageBoxType cherche le type de boite page qui correspond a`       
    l'element Marque Page pointe par pEl pour la vue viewNb. 
@@ -59,15 +58,8 @@
     l'element qui contient la regle page (sauf racine)      
     la recherche de la regle est donc changee               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 GetPageBoxType (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
-#else  /* __STDC__ */
-int                 GetPageBoxType (pEl, viewNb, pSchPPage)
-PtrElement          pEl;
-int                 viewNb;
-PtrPSchema         *pSchPPage;
-#endif /* __STDC__ */
-
+int GetPageBoxType (PtrElement pEl, PtrDocument pDoc, int viewNb,
+		    PtrPSchema * pSchPPage)
 {
    PtrElement          pElAscent;
    int                 TypeP, index;
@@ -86,7 +78,7 @@ PtrPSchema         *pSchPPage;
 	     /* cherche une regle Page parmi les regles de */
 	     /* presentation de l'element pElAscent */
 	     {
-	       SearchPresSchema (pElAscent, pSchPPage, &index, &pSchS);
+	       SearchPresSchema (pElAscent, pSchPPage, &index, &pSchS, pDoc);
 	       pRule = (*pSchPPage)->PsElemPRule[index - 1];
 	       stop = FALSE;
 	       do
@@ -125,7 +117,6 @@ PtrPSchema         *pSchPPage;
    return TypeP;
 }
 
-
 /*----------------------------------------------------------------------
    GetPageCounter retourne le numero de compteur a` utiliser pour         
    numeroter la marque de page pointee par pEl, dans la    
@@ -134,21 +125,14 @@ PtrPSchema         *pSchPPage;
    cette page n'est pas numerotee.                         
 	    viewNb = Vue dans le schema de presentation          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 GetPageCounter (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
-#else  /* __STDC__ */
-int                 GetPageCounter (pEl, viewNb, pSchPPage)
-PtrElement          pEl;
-int                 viewNb;
-PtrPSchema         *pSchPPage;
-#endif /* __STDC__ */
-
+int GetPageCounter (PtrElement pEl, PtrDocument pDoc, int viewNb,
+		    PtrPSchema * pSchPPage)
 {
    int                 bp;
    int                 cptpage;
 
    /* cherche d'abord la boite page */
-   bp = GetPageBoxType (pEl, viewNb, pSchPPage);
+   bp = GetPageBoxType (pEl, pDoc, viewNb, pSchPPage);
    if (bp > 0)
       cptpage = (*pSchPPage)->PsPresentBox[bp - 1].PbPageCounter;
    else
@@ -156,26 +140,14 @@ PtrPSchema         *pSchPPage;
    return cptpage;
 }
 
-
 /*----------------------------------------------------------------------
    ApplPage    ApplyRule les regles de presentation au pave            
    cree quand c'est une marque de page TypeP                    
    et pSchPPage ont ete initialises dans ChercheVisib           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb, int viewSch,
-		  int TypeP, PtrPSchema pSchPPage, PtrAbstractBox pNewAbbox)
-#else  /* __STDC__ */
-void                ApplPage (pEl, pDoc, viewNb, viewSch, TypeP, pSchPPage, pNewAbbox)
-PtrElement          pEl;
-PtrDocument         pDoc;
-DocViewNumber       viewNb;
-int                 viewSch;
-int                 TypeP;
-PtrPSchema          pSchPPage;
-PtrAbstractBox      pNewAbbox;
-
-#endif /* __STDC__ */
+void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
+	       int viewSch, int TypeP, PtrPSchema pSchPPage,
+	       PtrAbstractBox pNewAbbox)
 {
    int                 nv;
    PtrPRule            pRule, pRegleV, pRSpec, pRDef;
@@ -215,9 +187,9 @@ PtrAbstractBox      pNewAbbox;
    pRDef = pSchPPage->PsFirstDefaultPRule;
    do
      {
-	pRule = GetRule (&pRSpec, &pRDef, pEl, NULL, pEl->ElStructSchema);
-	/* pointeur sur la regle a appliquer pour la vue 1 */
-	if (pRule != NULL)
+       pRule = GetRule (&pRSpec, &pRDef, pEl, NULL, pEl->ElStructSchema, pDoc);
+       /* pointeur sur la regle a appliquer pour la vue 1 */
+       if (pRule != NULL)
 	  {
 	   if (pRule->PrType == PtFunction)
 	     {
@@ -243,7 +215,7 @@ PtrAbstractBox      pNewAbbox;
 		   else
 		      pRegleV = GetRuleView (&pRSpec, &pRDef,
 					     pRule->PrType, nv, pEl, NULL,
-					     pEl->ElStructSchema);
+					     pEl->ElStructSchema, pDoc);
 		   if (nv == viewSch && DoesViewExist (pEl, pDoc, viewNb))
 		     {
 			if (pRegleV == NULL)

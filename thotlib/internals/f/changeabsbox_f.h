@@ -12,6 +12,7 @@ extern void UpdateAbsBoxVolume ( PtrElement pEl,
                                  int view,
                                  PtrDocument pDoc );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
+				      PtrDocument pDoc,
                                       PtrPSchema *pSPR,
                                       PtrSSchema *pSSR,
                                       int presNum,
@@ -30,7 +31,8 @@ extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
                                 ThotBool attr,
                                 PtrAttribute * pAttr );
 extern PtrPRule FunctionRule ( PtrElement pEl,
-                               PtrPSchema * pSchP );
+                               PtrPSchema * pSchP,
+			       PtrDocument pDoc );
 extern void SetDeadAbsBox ( PtrAbstractBox pAb );
 extern void ApplyRefAbsBoxSupp ( PtrAbstractBox pAb,
                                  PtrAbstractBox * pAbbReDisp,
@@ -45,7 +47,8 @@ extern void ChangeFirstLast ( PtrElement pEl,
                               ThotBool change );
 extern PtrElement GetPageBreakForAssoc ( PtrElement pEl,
                                          int viewNb,
-                                         int *boxType );
+                                         int *boxType,
+					 PtrDocument pDoc );
 extern void CreateAllAbsBoxesOfEl ( PtrElement pE,
                                     PtrDocument pDoc );
 extern void CreateNewAbsBoxes ( PtrElement pEl,
@@ -69,6 +72,7 @@ extern PtrAbstractBox AbsBoxFromElOrPres ( PtrAbstractBox pAb,
                                            PtrPSchema pSchP,
                                            PtrSSchema pSchStr );
 extern void ComputePageNum ( PtrElement pEl,
+			     PtrDocument pDoc,
                              int view );
 extern void TransmitCounterVal ( PtrElement pEl,
                                  PtrDocument pDoc,
@@ -110,6 +114,7 @@ extern void UpdateAbsBoxVolume (/* PtrElement pEl,
                                    int view,
                                    PtrDocument pDoc */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
+				        PtrDocument pDoc,
                                         PtrPSchema *pSPR,
                                         PtrSSchema *pSSR,
                                         int presNum,
@@ -128,7 +133,8 @@ extern PtrPRule SearchRulepAb (/* PtrDocument pDoc,
                                   ThotBool attr,
                                   PtrAttribute * pAttr */);
 extern PtrPRule FunctionRule (/* PtrElement pEl,
-                                 PtrPSchema * pSchP */);
+                                 PtrPSchema * pSchP,
+			         PtrDocument pDoc */);
 extern void SetDeadAbsBox (/* PtrAbstractBox pAb */);
 extern void ApplyRefAbsBoxSupp (/* PtrAbstractBox pAb,
                                    PtrAbstractBox * pAbbReDisp,
@@ -143,7 +149,8 @@ extern void ChangeFirstLast (/* PtrElement pEl,
                                 ThotBool change */);
 extern PtrElement GetPageBreakForAssoc (/* PtrElement pEl,
                                            int viewNb,
-                                           int *boxType */);
+                                           int *boxType,
+					   PtrDocument pDoc */);
 extern void CreateAllAbsBoxesOfEl (/* PtrElement pE,
                                       PtrDocument pDoc */);
 extern void CreateNewAbsBoxes (/* PtrElement pEl,
@@ -167,6 +174,7 @@ extern PtrAbstractBox AbsBoxFromElOrPres (/* PtrAbstractBox pAb,
                                              PtrPSchema pSchP,
                                              PtrSSchema pSchStr */);
 extern void ComputePageNum (/* PtrElement pEl,
+			       PtrDocument pDoc,
                                int view */);
 extern void TransmitCounterVal (/* PtrElement pEl,
                                    PtrDocument pDoc,

@@ -218,7 +218,7 @@ void RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
 	     }
 	   /* traite les regles Transmit de ce type d'element */
 	   /* cherche d'abord le schema de presentation pour l'element */
-	   SearchPresSchema (pEl, &pSchP, &rule, &pSchS);
+	   SearchPresSchema (pEl, &pSchP, &rule, &pSchS, pDoc);
 	   if (pSchP != NULL)
 	      if (pSchP->PsElemTransmit[rule - 1] > 0)
 		 /* il y a une regle Transmit pour ce type d'element */

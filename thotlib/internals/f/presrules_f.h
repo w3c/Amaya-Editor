@@ -26,7 +26,8 @@ extern FunctionType TypeCreatedRule ( PtrDocument pDoc,
 extern void SearchPresSchema ( PtrElement pEl,
                                PtrPSchema * pSchP,
                                int *indexElType,
-                               PtrSSchema * pSchS );
+                               PtrSSchema * pSchS,
+			       PtrDocument pDoc );
 extern void ApplyCopy ( PtrDocument pDoc,
                         PtrPRule pPRule,
                         PtrAbstractBox pAb,
@@ -67,7 +68,8 @@ extern FunctionType TypeCreatedRule (/* PtrDocument pDoc,
 extern void SearchPresSchema (/* PtrElement pEl,
                                  PtrPSchema * pSchP,
                                  int *indexElType,
-                                 PtrSSchema * pSchS */);
+                                 PtrSSchema * pSchS,
+			         PtrDocument pDoc */);
 extern void ApplyCopy (/* PtrDocument pDoc,
                           PtrPRule pPRule,
                           PtrAbstractBox pAb,
