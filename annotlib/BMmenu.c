@@ -289,6 +289,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		      TtaCloseDocument (BTopicTree);
 		      BTopicTree = 0;
 		      TtaDestroyDialogue (ref);
+		      BM_refreshBookmarkView ();
 		    }
 		}
 	      break;
@@ -539,6 +540,7 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 		  TtaCloseDocument (TTopicTree);
 		  TTopicTree = 0;
 		  TtaDestroyDialogue (ref);
+		  BM_refreshBookmarkView ();
 		}
 	      break;
 
@@ -598,6 +600,9 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
    if (TTopicTree != 0)
      TtaCloseDocument (TTopicTree);
    TTopicTree = BM_GetTopicTree ();
+
+   /* select the topics in the tree that correspond to those in the bookmark */
+   BM_topicsPreSelect (TTopicTree, bookmark);
 
    /* Create the dialogue form */
    i = 0;

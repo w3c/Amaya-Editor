@@ -1362,33 +1362,20 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
       uri_str = librdf_uri_to_string (rdf_uri);
 
       /* topic folder */
-      /* @@ JK shouldn't be added by user? creator */
-      if (!strcmp (uri_str, DCNS_CREATOR))
-	{
-	  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
-	  Model_replace_object (world, model, statement, tmp, TRUE);
-	  TtaFreeMemory (tmp);
-	}
-      /* @@ JK created */
-      else if (!strcmp (uri_str, ANNOTNS_CREATED))
-	Model_replace_object (world, model, statement, me->created, TRUE);
-      /* @@ JK modified  */
-      else if (!strcmp (uri_str, DCNS_DATE))
-	Model_replace_object (world, model, statement, me->modified, TRUE);
-      /* title */
-      else if (!strcmp (uri_str, DCNS_TITLE))
-	  Model_replace_object (world, model, statement, me->title, TRUE);
-      /* description */
-      else if (!strcmp (uri_str, DCNS_DESCRIPTION))
-	  Model_replace_object (world, model, statement, me->description, TRUE);
+      /* we remove all the known properties first, then update the model */
+      if (!strcmp (uri_str, DCNS_CREATOR)
+	  || !strcmp (uri_str, DCNS_DATE)
+	  || !strcmp (uri_str, DCNS_TITLE)
+	  || !strcmp (uri_str, DCNS_DESCRIPTION))
+	librdf_model_remove_statement (model, statement);
       else
 	{
 	  /* bookmark / topic items differences */
 	  if (isTopic)
 	    {
 	      /* parent topic */
-	      if (!strcmp (uri_str,  BMNS_SUBTOPICOF))
-		Model_replace_object (world, model, statement, me->parent_url, FALSE);
+	      if (!strcmp (uri_str, BMNS_SUBTOPICOF))
+		librdf_model_remove_statement (model, statement);
 	    }
 	  else
 	    {
@@ -1397,19 +1384,92 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 		librdf_model_remove_statement (model, statement);
 	      /* bookmarks */
 	      else if (!strcmp (uri_str, BMNS_BOOKMARKS))
-		Model_replace_object (world, model, statement, me->bookmarks, FALSE);
+		librdf_model_remove_statement (model, statement);
 	      else if (!strcmp (uri_str,  ANNOTNS_CONTEXT))
-		Model_replace_object (world, model, statement, me->context, TRUE);
+		librdf_model_remove_statement (model, statement);
 	    }
 	}
       librdf_stream_next (stream);
     }
-
   librdf_free_stream (stream);
-  
-  if (!isTopic)
-      AddBookmarkTopicList (me->self_url, me->parent_url_list);
 
+  /* add the new info */
+  /* creator */
+  tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
+  subject = librdf_new_node_from_uri_string (world, me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_CREATOR);
+  object =  librdf_new_node_from_literal (world, 
+					  tmp,  /* literal string value */
+					  NULL,  /* literal XML language */
+ 					  0);    /* non 0 if literal is XML */
+  add_statement (world, model, subject, predicate, object);
+  TtaFreeMemory (tmp);
+
+  /* modified  */
+  subject = librdf_new_node_from_uri_string (world, me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DATE);
+  object =  librdf_new_node_from_literal (world, 
+					  me->modified,  /* literal string value */
+					  NULL,  /* literal XML language */
+ 					  0);    /* non 0 if literal is XML */
+  add_statement (world, model, subject, predicate, object);
+
+
+  /* title */
+  subject = librdf_new_node_from_uri_string (world, me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_TITLE);
+  object =  librdf_new_node_from_literal (world, 
+					  me->title,  /* literal string value */
+					  NULL,  /* literal XML language */
+ 					  0);    /* non 0 if literal is XML */
+  add_statement (world, model, subject, predicate, object);
+
+ /* description */
+  subject = librdf_new_node_from_uri_string (world, me->self_url);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DESCRIPTION);
+  object =  librdf_new_node_from_literal (world, 
+					  me->description,  /* literal string value */
+					  NULL,  /* literal XML language */
+ 					  0);    /* non 0 if literal is XML */
+  add_statement (world, model, subject, predicate, object);
+
+  /* bookmark / topic items differences */
+  if (isTopic)
+    {
+      /* parent topic */
+      if (me->parent_url && me->parent_url[0] != EOS)
+	{
+	  subject = librdf_new_node_from_uri_string (world, me->self_url);
+	  predicate = librdf_new_node_from_uri_string (world, BMNS_SUBTOPICOF);
+	  object =  librdf_new_node_from_uri_string (world,
+						     me->parent_url);
+	  add_statement (world, model, subject, predicate, object);
+	}
+    }
+  else
+    {
+      /* bookmarks */
+      subject = librdf_new_node_from_uri_string (world, me->self_url);
+      predicate = librdf_new_node_from_uri_string (world, BMNS_BOOKMARKS);
+      object =  librdf_new_node_from_uri_string (world, me->bookmarks);
+      add_statement (world, model, subject, predicate, object);
+      
+      /* parent topics */
+      AddBookmarkTopicList (me->self_url, me->parent_url_list);
+      if (me->context)
+	{
+	  subject = librdf_new_node_from_uri_string (world, me->self_url);
+	  predicate = librdf_new_node_from_uri_string (world, ANNOTNS_CONTEXT);
+	  object =  librdf_new_node_from_literal (world, 
+						  me->context,  /* literal string value */
+						  NULL,  /* literal XML language */
+						  0);    /* non 0 if literal is XML */
+	  add_statement (world, model, subject, predicate, object);
+	}
+    }
+
+  /* save the updated model */
+  BM_save (GetLocalBookmarksFile ());
   return TRUE;
 }
 

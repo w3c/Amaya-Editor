@@ -754,26 +754,28 @@ void BM_topicsPreSelect (Document TopicTree, BookmarkP bookmark)
 {
   List *topics =  NULL, *list_item;
   int count;
-  Element el;
-  ElementType elType;
 
   if (!bookmark)
     return;
 
-  count = Model_dumpBookmarkTopics (bookmark, &topics);
-
-  if (count > 0)
+  if (bookmark->isTopic)
+      BM_topicSelectToggle (TopicTree, bookmark->self_url, TRUE);
+  else
     {
-      el = TtaGetRootElement (TopicTree);
-      elType = TtaGetElementType (el);
+      count = Model_dumpBookmarkTopics (bookmark, &topics);
       
-      list_item = topics;
-      
-      while (list_item) 
+      if (count > 0)
 	{
-	  BM_topicSelectToggle (TopicTree, (char *) list_item->object, TRUE);
-	  list_item = list_item->next;
+	  list_item = topics;
+	  
+	  while (list_item) 
+	    {
+	      BM_topicSelectToggle (TopicTree, (char *) list_item->object, TRUE);
+	      list_item = list_item->next;
+	    }
 	}
+      List_delAll (&topics, (void *) TtaFreeMemory);
     }
-  List_delAll (&topics, (void *) TtaFreeMemory);
 }
+
+

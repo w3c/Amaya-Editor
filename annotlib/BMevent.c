@@ -168,8 +168,14 @@ void BM_ViewBookmarks (Document doc, View view)
   if (count > 0)
     BM_bookmarksSort (&list);
 
-  /* open the document */
-  bookmark_doc = BM_NewDocument ();
+  /* are we viewing the bookmark view? */
+  for (bookmark_doc = 1; bookmark_doc < DocumentTableLength; bookmark_doc++)
+    if (DocumentTypes[bookmark_doc] == docBookmark)
+      break;
+
+  if (bookmark_doc == DocumentTableLength)
+    /* it is a new document */
+    bookmark_doc = BM_NewDocument ();
 
   /* get the info for each bookmark using the abookmark structure, e.g., calling
      a bmfile function to fill it up with the fields we want, then adding them
@@ -177,6 +183,27 @@ void BM_ViewBookmarks (Document doc, View view)
   BM_InitDocumentStructure (bookmark_doc, list);
  
   List_delAll (&list, BMList_delItem);
+}
+
+/*-----------------------------------------------------------
+  BM_refreshBookmarkView
+  ------------------------------------------------------------*/
+void BM_refreshBookmarkView (void)
+{
+  /* @@ JK: I should add here refresh for multiple bookmark views */
+
+  Document doc;
+
+  /* find the bookmark view document */
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    if (DocumentTypes[doc] == docBookmark)
+      break;
+
+  if (doc == DocumentTableLength)
+    return; /* not found */
+
+  /* if found, clear the tree and make a new one */
+  BM_ViewBookmarks (1, 1);
 }
 
 /*-----------------------------------------------------------------------
@@ -201,6 +228,12 @@ void BM_ImportTopics (Document doc, View view)
       BM_parse (normalized_url, normalized_url);
       if (url != normalized_url)
 	TtaFreeMemory (normalized_url);
+
+      /* save the modified model */
+      BM_save (LocalBookmarksFile);
+
+      /* refresh the view if found */
+      BM_refreshBookmarkView ();
     }
 }
 

@@ -18,6 +18,7 @@ extern void BM_CreateTopic ( Document doc,
                              View view );
 extern void BM_ViewBookmarks ( Document doc,
                                View view );
+extern void BM_refreshBookmarkView ( void );
 extern void BM_ImportTopics ( Document doc,
                               View view );
 extern ThotBool BM_SimpleRClick ( NotifyElement *event );
@@ -38,6 +39,7 @@ extern void BM_CreateTopic (/* Document doc,
                                View view */);
 extern void BM_ViewBookmarks (/* Document doc,
                                  View view */);
+extern void BM_refreshBookmarkView (/* void */);
 extern void BM_ImportTopics (/* Document doc,
                                 View view */);
 extern ThotBool BM_SimpleRClick (/* NotifyElement *event */);
