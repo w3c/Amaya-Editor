@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V3.2">
+  <meta name="GENERATOR" content="amaya V3.2.1">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
@@ -39,7 +39,7 @@ bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
 ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode">
 et vous pouvez seulement naviguer et remplir les formulaires. cette option est
 également disponible à partir de l'option<strong> Mode Editeur</strong> du
-menu d'Édition, ou bien par le raccourci clavier ( Shift-Control-asterisk par
+menu d'Édition, ou bien par le raccourci clavier (Shift-Control-asterisk par
 défaut pour Linux).</p>
 
 <h3><a name="Activating">Activer un lien</a></h3>
@@ -50,23 +50,23 @@ clic déplacera seulement le point d'insertion. Ainsi, pour activer un lien,
 vous devrez effectuer un  <em>double clic</em> dessus. Ce comportement peut
 être modifié ainsi que d'autres paramètres par l'intermédiaire du menu
 Spécial/Préférences/Générales. En modifiant "cliquer deux fois pour suivre un
-lien", vous pouvez naviguer de document en document à l'aide d'un simple-clic.
-Dans ce cas, vous ne pouvez pas mettre aisément le point d'insertion à
-l'intérieur des liens:  vous devez soit utiliser une sélection étendue soit
-déplacer le point d'insertion à l'intérieur des liens à l'aide des flèches. Il
-est également possible d'utiliser le clavier pour activer les liens, ainsi que
-les formulaires de contrôles. La commande au clavier est
+lien", vous pourrez naviguer de document en document à l'aide d'un
+simple-clic. Dans ce cas, vous ne pouvez pas mettre aisément le point
+d'insertion à l'intérieur des liens:  vous devez soit utiliser une sélection
+étendue soit déplacer le point d'insertion à l'intérieur des liens à l'aide
+des flèches. Il est également possible d'utiliser le clavier pour activer les
+liens, ainsi que les formulaires de contrôles. La commande au clavier est
 <strong>Alt-Return</strong> par défaut.</p>
 
-<p>Le document récupéré par cette opération  <em>replace</em> normalement le
+<p>Le document récupéré par cette opération  <em>remplace</em> normalement le
 document courant dans la même fenêtre et conserve le mode (éditeur ou
-navigateur ). Cependant, si le document courant a été modifié et n'a pas
-encore été sauvegardé, une autre fenêtre sera créée pour le nouveau document,
-afin d'éviter la perte des derniers changements.</p>
+navigateur). Cependant, si le document courant a été modifié et n'a pas encore
+été sauvegardé, une autre fenêtre sera créée pour le nouveau document, afin
+d'éviter la perte des derniers changements.</p>
 
 <h3><a name="L515">Ancres cibles</a></h3>
 
-<p>Certaines pièces du texte  peuvent être affichées avec une icône en forme
+<p>Certaines parties du texte  peuvent être affichées avec une icône en forme
 de cible<a name="target"> <img src="../Icons/target.gif" alt=" target "></a>.
 Ces icônes ne font pas partie du document et peuvent donc être soit
 visualisées soit cachées juste en modifiant  le statut  <strong>Montrer les
@@ -74,31 +74,32 @@ cibles</strong> de la fenêtre courante, qui est une option du menu
 <strong>Vues</strong>.</p>
 
 <p>Ces icônes sont associées aux  <em>éléments cibles</em>, i.e. éléments avec
-un attribut <code>ID</code> , or <em>ancres cibles</em>, i.e. ancres avec un
-attribut  <code>name</code>. Ils identifient les cibles possibles pour les
-liens. Ces icônes sont destinées à rendre la création de liens plus facile. En
-effet, du fait de pouvoir reconnaître rapidement la cible possible d'un lien,
-vous pouvez <a href="Links.html#L245">créer des liens</a> plus vite.</p>
+un attribut <code>ID</code> , ou aux <em>ancres cibles</em>, i.e. ancres avec
+un attribut  <code>name</code>. Elles identifient les cibles possibles pour
+les liens. Ces icônes sont destinées à rendre la création de liens plus
+facile. En effet, le fait de pouvoir reconnaître rapidement la cible possible
+d'un lien, permet de <a href="Links.html#L245">créer des liens</a> plus
+vite.</p>
 
 <h3><a name="Opening">Ouverture de documents</a></h3>
 
 <p>Vous pouvez ouvrir des documents locaux ou distants de différentes
 façons:</p>
 
-<p> Menu Fichier</p>
+<p>Menu Fichier</p>
 <dl>
-    <dd>Deux entrées à partir du menu Fichier, <strong>Ouvrir</strong>et
+    <dd>Deux entrées à partir du menu Fichier, <strong>Ouvrir</strong> et
       <strong>Ouvrir dans nouvelle fenêtre</strong>, vous permettent
       respectivement d'ouvrir un nouveau document dans la même fenêtre ou dans
       une nouvelle fenêtre. Ces deux commandes font apparaître une boîte de
       dialogue dans laquelle vous pouvez entrer soit un nom de fichier local
-      soit un URI. La boîte de dialogue contient également un fichier de
-      navigation qui vous aide à repérer les fichiers locaux.
+      soit un URI. La boîte de dialogue contient également un navigateur de
+      fichier qui vous aide à repérer les fichiers locaux.
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Confirmer</strong>.</p>
     </dd>
-  <dt>Zone "Adresse" </dt>
-    <dd>Cette zone affiche le nom du fichier ou du URI du document courant.
+  <dt>Zone "Adresse"</dt>
+    <dd>Cette zone affiche le nom du fichier ou l'URI du document courant.
       Vous pouvez saisir le nom d'un autre document spécifié (local ou
       distant) qui va être affiché dans la même fenêtre. Tapez sur la touche
       Enter quand le curseur se trouve dans cette zone pour rendre le
@@ -110,11 +111,11 @@ façons:</p>
 
 <h3><a name="Moving">Aller en arrière et en avant</a></h3>
 
-<p>Il existe différentes manières de se déplacer dans l' historique des pages
+<p>Il existe différentes manières de se déplacer dans l'historique des pages
 chargées:</p>
 <dl>
   <dt>Menu Fichier</dt>
-    <dd>Il y a des entrées dans le menu Fichier pour avancer ou reculer..</dd>
+    <dd>Il y a des entrées dans le menu Fichier pour avancer ou reculer.</dd>
   <dt>Raccourci clavier</dt>
     <dd>Les raccourcis clavier sont, par défaut, Alt-f et Alt-b pour
     Linux.</dd>

@@ -52,9 +52,9 @@ document. Six vues sont disponibles:</p>
       en bleu peuvent être modifiées uniquement par l'intermédiaire des
       commandes d'édition.</dd>
   <dt><a name="Alternate">Vue alternée</a></dt>
-    <dd>Cette vue vous permet de voir à quoi ressemble quand il est visualisé
-      par un navigateur en mode texte. Elle est utile pour vérifier
-      l'accessibilité de vos documents.</dd>
+    <dd>Cette vue vous permet de voir à quoi ressemble le document quand il
+      est visualisé par un navigateur en mode texte. Elle est utile pour
+      vérifier l'accessibilité de vos documents.</dd>
   <dt>Vue liens</dt>
     <dd>Cette vue montre tous les ancres d'un document (les ancres et leur
       contenu). Vous pouvez vous focaliser dessus en travaillant en liens

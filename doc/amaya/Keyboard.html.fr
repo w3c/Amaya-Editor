@@ -15,48 +15,48 @@
 /></a> <a href="Manual.html"></a></p>
 
 <div id="Keyboard">
-<h3>Entering ISO-Latin-1 characters in Amaya</h3>
+<h3>Entrer des caractères ISO-Latin-1 dans Amaya</h3>
 
-<p>To obtain a non-breakable space (<code>&amp;nbsp;</code>) with Amaya you
-have to press the <code>Control</code> key with the <code>Space</code>
-key.</p>
+<p>Pour obtenir un espace non sécable (<code>&amp;nbsp;</code>) avec Amaya,
+vous devez taper la touche <code>Contrôle</code> avec la touche
+<code>Espace</code>.</p>
 
-<p>For ISO-latin characters not directly available from the keyboard, Amaya
-provides two multi-key input methods. The choice between these two methods is
-controlled by the user with the dialogue entry <strong>"Enable
-multi-key"</strong> in <a
-href="Configure.html#Enable">Special/Preferences/General</a>. When enabled,
-the <a href="#Optional">optional multi-key support</a> is activated and the
-standard multi-key support is deactivated.</p>
+<p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
+depuis le clavier, Amaya fournit deux methodes d'entrée à multi-touches. Le
+choix d'une méthode plutôt qu'une autre, se fait par l'utilisateur grâce à
+l'entrée de dialogue <strong>"Activer multi-key"</strong> in <a
+href="Configure.html#Enable">Spécial/Préférences/Générales</a>. Quand c'est
+permis, le <a href="#Optional">support multi-touches optionnel</a> est activé
+et le support multi-touches standard est désactivé.</p>
 
-<h3><a name="Standard">Standard multi-key support</a></h3>
+<h3><a name="Standard">Le support multi-touches standard</a></h3>
 
-<p>For each ISO-Latin-1 character unavailable on the standard keyboard it
-normally exist a method to insert this character by a sequence of two
-available characters preceded by the special key <strong>Compose</strong>. In
-Amaya it's possible to exchange the position of the first key and the second
-one.</p>
+<p>Pour les caractères ISO-Latin-1 indisponibles sur le clavier standard, il
+existe normalement une méthode qui insère ce caractère par une séquence de
+deux caractères disponibles précédés par la touche spéciale
+<strong>Composer</strong>. Sur Amaya il est possible de changer la position de
+la première touche et de la deuxième.</p>
 
-<p>If the key <strong>Compose</strong> doesn't exist you can attach it to an
-existing key like <strong>Alt-Gr</strong> by the following xmodmap
-command:</p>
+<p>Si la touche <strong>Composer </strong>n'existe pas vous pouvez l'attacher
+à une touche existante comme <strong>Alt-Gr</strong> par la commande
+<code>xmodmap</code> suivante:</p>
 <pre>keycode 113 = Multi_key</pre>
 
-<p>This command can be stored in the file $HOME/.Xmodmad , so it will be
-applied as soon as you will launch your X server.</p>
+<p>Cette commande peut être rangée dans le fichier $HOME/.Xmodmad , ainsi elle
+pourra être appliquée dès qu'on lancera le serveur X.</p>
 
 <table border="1" summary="Latin-1 sequences">
   <tbody style="background-color: #EFFFC1">
     <tr style="background-color: #FFCB69">
-      <td><p>Name</p>
+      <td><p>Nom</p>
       </td>
       <td><p>Code</p>
       </td>
-      <td><p>First/Second key</p>
+      <td><p>Première/Seconde touche</p>
       </td>
-      <td><p>Second/First key</p>
+      <td><p>Seconde/Première Touche</p>
       </td>
-      <td><p>Output</p>
+      <td><p>Sortie</p>
       </td>
     </tr>
     <tr>
@@ -70,21 +70,21 @@ applied as soon as you will launch your X server.</p>
       <td class="name">Aacute</td>
       <td>193</td>
       <td>&lt;Shift&gt; A</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>Á</td>
     </tr>
     <tr>
       <td class="name">Acirc</td>
       <td>194</td>
       <td>&lt;Shift&gt; A</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>Â</td>
     </tr>
     <tr>
       <td class="name">Agrave</td>
       <td>192</td>
       <td>&lt;Shift&gt; A</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>À</td>
     </tr>
     <tr>
@@ -105,14 +105,14 @@ applied as soon as you will launch your X server.</p>
       <td class="name">Auml</td>
       <td>196</td>
       <td>&lt;Shift&gt; A</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>Ä</td>
     </tr>
     <tr>
       <td class="name">Ccedil</td>
       <td>199</td>
       <td>&lt;Shift&gt; C</td>
-      <td>comma</td>
+      <td>cédille</td>
       <td>Ç</td>
     </tr>
     <tr>
@@ -126,56 +126,56 @@ applied as soon as you will launch your X server.</p>
       <td class="name">Eacute</td>
       <td>201</td>
       <td>&lt;Shift&gt; E</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>É</td>
     </tr>
     <tr>
       <td class="name">Ecirc</td>
       <td>202</td>
       <td>&lt;Shift&gt; E</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>Ê</td>
     </tr>
     <tr>
       <td class="name">Egrave</td>
       <td>200</td>
       <td>&lt;Shift&gt; E</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>È</td>
     </tr>
     <tr>
       <td class="name">Euml</td>
       <td>203</td>
       <td>&lt;Shift&gt; E</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>Ë</td>
     </tr>
     <tr>
       <td class="name">Iacute</td>
       <td>205</td>
       <td>&lt;Shift&gt; I</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>Í</td>
     </tr>
     <tr>
       <td class="name">Icirc</td>
       <td>206</td>
       <td>&lt;Shift&gt; I</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>Î</td>
     </tr>
     <tr>
       <td class="name">Igrave</td>
       <td>204</td>
       <td>&lt;Shift&gt; I</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>Ì</td>
     </tr>
     <tr>
       <td class="name">Iuml</td>
       <td>207</td>
       <td>&lt;Shift&gt; I</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>Ï</td>
     </tr>
     <tr>
@@ -189,21 +189,21 @@ applied as soon as you will launch your X server.</p>
       <td class="name">Oacute</td>
       <td>211</td>
       <td>&lt;Shift&gt; O</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>Ó</td>
     </tr>
     <tr>
       <td class="name">Ocirc</td>
       <td>212</td>
       <td>&lt;Shift&gt; O</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>Ô</td>
     </tr>
     <tr>
       <td class="name">Ograve</td>
       <td>210</td>
       <td>&lt;Shift&gt; O</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>Ò</td>
     </tr>
     <tr>
@@ -224,7 +224,7 @@ applied as soon as you will launch your X server.</p>
       <td class="name">Ouml</td>
       <td>214</td>
       <td>&lt;Shift&gt; O</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>Ö</td>
     </tr>
     <tr>
@@ -238,35 +238,35 @@ applied as soon as you will launch your X server.</p>
       <td class="name">Uacute</td>
       <td>205</td>
       <td>&lt;Shift&gt; U</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>Ú</td>
     </tr>
     <tr>
       <td class="name">Ucirc</td>
       <td>206</td>
       <td>&lt;Shift&gt; U</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>Û</td>
     </tr>
     <tr>
       <td class="name">Ugrave</td>
       <td>204</td>
       <td>&lt;Shift&gt; U</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>Ù</td>
     </tr>
     <tr>
       <td class="name">Uuml</td>
       <td>207</td>
       <td>&lt;Shift&gt; U</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>Ü</td>
     </tr>
     <tr>
       <td class="name">Yacute</td>
       <td>221</td>
       <td>&lt;Shift&gt; Y</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>Ý</td>
     </tr>
     <tr>
@@ -280,21 +280,21 @@ applied as soon as you will launch your X server.</p>
       <td class="name">aacute</td>
       <td>225</td>
       <td>a</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>á</td>
     </tr>
     <tr>
       <td class="name">acirc</td>
       <td>226</td>
       <td>a</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>â</td>
     </tr>
     <tr>
       <td class="name">agrave</td>
       <td>224</td>
       <td>a</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>à</td>
     </tr>
     <tr>
@@ -315,7 +315,7 @@ applied as soon as you will launch your X server.</p>
       <td class="name">auml</td>
       <td>228</td>
       <td>a</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>ä</td>
     </tr>
     <tr>
@@ -329,7 +329,7 @@ applied as soon as you will launch your X server.</p>
       <td class="name">ccedil</td>
       <td>231</td>
       <td>c</td>
-      <td>comma</td>
+      <td>cédille</td>
       <td>ç</td>
     </tr>
     <tr>
@@ -356,7 +356,7 @@ applied as soon as you will launch your X server.</p>
     <tr>
       <td class="name">deg</td>
       <td>176</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>0 (zero)</td>
       <td>°</td>
     </tr>
@@ -364,28 +364,28 @@ applied as soon as you will launch your X server.</p>
       <td class="name">eacute</td>
       <td>233</td>
       <td>e</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>é</td>
     </tr>
     <tr>
       <td class="name">ecirc</td>
       <td>234</td>
       <td>e</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>ê</td>
     </tr>
     <tr>
       <td class="name">egrave</td>
       <td>232</td>
       <td>e</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>è</td>
     </tr>
     <tr>
       <td class="name">euml</td>
       <td>235</td>
       <td>e</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>ë</td>
     </tr>
     <tr>
@@ -427,21 +427,21 @@ applied as soon as you will launch your X server.</p>
       <td class="name">iacute</td>
       <td>237</td>
       <td>i</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>í</td>
     </tr>
     <tr>
       <td class="name">icirc</td>
       <td>238</td>
       <td>i</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>î</td>
     </tr>
     <tr>
       <td class="name">igrave</td>
       <td>236</td>
       <td>i</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>ì</td>
     </tr>
     <tr>
@@ -461,15 +461,15 @@ applied as soon as you will launch your X server.</p>
     <tr>
       <td class="name">laquo</td>
       <td>171</td>
-      <td>&lt; (inferior)</td>
+      <td>&lt; (inferieur)</td>
       <td>&lt;</td>
       <td>«</td>
     </tr>
     <tr>
       <td class="name">macr</td>
       <td>175</td>
-      <td>- (minus)</td>
-      <td>circumflex</td>
+      <td>- (moins)</td>
+      <td>accent circonflèxe</td>
       <td>¯</td>
     </tr>
     <tr>
@@ -483,21 +483,21 @@ applied as soon as you will launch your X server.</p>
       <td class="name">middot</td>
       <td>183</td>
       <td>.</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>·</td>
     </tr>
     <tr>
       <td class="name">nbsp</td>
       <td>160</td>
       <td>&lt;Ctrl&gt; space</td>
-      <td>(none)</td>
+      <td>(aucun)</td>
       <td> </td>
     </tr>
     <tr>
       <td class="name">not</td>
       <td>172</td>
-      <td>- (minus)</td>
-      <td>comma</td>
+      <td>- (moins)</td>
+      <td>cédille</td>
       <td>¬</td>
     </tr>
     <tr>
@@ -511,21 +511,21 @@ applied as soon as you will launch your X server.</p>
       <td class="name">oacute</td>
       <td>243</td>
       <td>o</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>ó</td>
     </tr>
     <tr>
       <td class="name">ocirc</td>
       <td>244</td>
       <td>o</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>ô</td>
     </tr>
     <tr>
       <td class="name">ograve</td>
       <td>242</td>
       <td>o</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>ò</td>
     </tr>
     <tr>
@@ -546,7 +546,7 @@ applied as soon as you will launch your X server.</p>
       <td class="name">ouml</td>
       <td>246</td>
       <td>o</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>ö</td>
     </tr>
     <tr>
@@ -574,20 +574,20 @@ applied as soon as you will launch your X server.</p>
       <td class="name">plusmn</td>
       <td>177</td>
       <td>+</td>
-      <td>- (minus)</td>
+      <td>- (moins)</td>
       <td>±</td>
     </tr>
     <tr>
       <td class="name">pound</td>
       <td>163</td>
       <td>l</td>
-      <td>- (minus)</td>
+      <td>- (moins)</td>
       <td>£</td>
     </tr>
     <tr>
       <td class="name">raquo</td>
       <td>187</td>
-      <td>&gt; (superior)</td>
+      <td>&gt; (superieur)</td>
       <td>&gt;</td>
       <td>»</td>
     </tr>
@@ -644,93 +644,94 @@ applied as soon as you will launch your X server.</p>
       <td class="name">uacute</td>
       <td>250</td>
       <td>u</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>ú</td>
     </tr>
     <tr>
       <td class="name">ucirc</td>
       <td>251</td>
       <td>u</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>û</td>
     </tr>
     <tr>
       <td class="name">ugrave</td>
       <td>249</td>
       <td>u</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>ù</td>
     </tr>
     <tr>
       <td class="name">uuml</td>
       <td>252</td>
       <td>u</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>ü</td>
     </tr>
     <tr>
       <td class="name">yacute</td>
       <td>253</td>
       <td>y</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>ý</td>
     </tr>
     <tr>
       <td class="name">yen</td>
       <td>165</td>
       <td>y</td>
-      <td>- (minus)</td>
+      <td>- (moins)</td>
       <td>¥</td>
     </tr>
     <tr>
       <td class="name">yuml</td>
       <td>255</td>
       <td>y</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>ÿ</td>
     </tr>
   </tbody>
 </table>
 
-<h3><a name="Optional">Optional Multi-key support</a></h3>
+<h3><a name="Optional">Support multi-touches optionnel</a></h3>
 
-<p>The optional multi-key input method is based on a two key sequence
-beginning with the "accent" followed by the "letter". For example to obtain a
-'ã' first press '~' then type 'a'. To obtain a '~' you have to press '~'
-twice. The table below gives available key sequences:</p>
+<p>La méthode d'entrée multi-touches optionnelle est basée sur deux séquences
+commençant par "l'accent" suivi de la "lettre". Par exemple pour obtenir un
+'ã', taper d'abord sur '~' puis sur 'a'.Pour obtenir un '~' vous devez taper
+deux fois sur '~'.Le tableau suivant donne les séquences de touches
+disponibles:</p>
 
 <table border="1" summary="Latin-1 sequences">
   <tbody style="background-color: #EFFFC1">
     <tr style="background-color: #FFCB69">
-      <td><p>Name</p>
+      <td><p>Nom</p>
       </td>
       <td><p>Code</p>
       </td>
-      <td><p>   First key</p>
+      <td><p>   Première touche</p>
       </td>
-      <td><p>  Second key  </p>
+      <td><p>  Seconde touche  </p>
       </td>
-      <td><p>Output</p>
+      <td><p>Sortie</p>
       </td>
     </tr>
     <tr>
       <td class="name">Aacute</td>
       <td>193</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>&lt;Shift&gt; A</td>
       <td>Á</td>
     </tr>
     <tr>
       <td class="name">Acirc</td>
       <td>194</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>&lt;Shift&gt; A</td>
       <td>Â</td>
     </tr>
     <tr>
       <td class="name">Agrave</td>
       <td>192</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>&lt;Shift&gt; A</td>
       <td>À</td>
     </tr>
@@ -751,70 +752,70 @@ twice. The table below gives available key sequences:</p>
     <tr>
       <td class="name">Auml</td>
       <td>196</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>&lt;Shift&gt; A</td>
       <td>Ä</td>
     </tr>
     <tr>
       <td class="name">Ccedil</td>
       <td>199</td>
-      <td>backquote</td>
+      <td>cédille</td>
       <td>&lt;Shift&gt; C</td>
       <td>Ç</td>
     </tr>
     <tr>
       <td class="name">Eacute</td>
       <td>201</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>&lt;Shift&gt; E</td>
       <td>É</td>
     </tr>
     <tr>
       <td class="name">Ecirc</td>
       <td>202</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>&lt;Shift&gt; E</td>
       <td>Ê</td>
     </tr>
     <tr>
       <td class="name">Egrave</td>
       <td>200</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>&lt;Shift&gt; E</td>
       <td>È</td>
     </tr>
     <tr>
       <td class="name">Euml</td>
       <td>203</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>&lt;Shift&gt; E</td>
       <td>Ë</td>
     </tr>
     <tr>
       <td class="name">Iacute</td>
       <td>205</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>&lt;Shift&gt; I</td>
       <td>Í</td>
     </tr>
     <tr>
       <td class="name">Icirc</td>
       <td>206</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>&lt;Shift&gt; I</td>
       <td>Î</td>
     </tr>
     <tr>
       <td class="name">Igrave</td>
       <td>204</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>&lt;Shift&gt; I</td>
       <td>Ì</td>
     </tr>
     <tr>
       <td class="name">Iuml</td>
       <td>207</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>&lt;Shift&gt; I</td>
       <td>Ï</td>
     </tr>
@@ -828,21 +829,21 @@ twice. The table below gives available key sequences:</p>
     <tr>
       <td class="name">Oacute</td>
       <td>211</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>&lt;Shift&gt; O</td>
       <td>Ó</td>
     </tr>
     <tr>
       <td class="name">Ocirc</td>
       <td>212</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>&lt;Shift&gt; O</td>
       <td>Ô</td>
     </tr>
     <tr>
       <td class="name">Ograve</td>
       <td>210</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>&lt;Shift&gt; O</td>
       <td>Ò</td>
     </tr>
@@ -863,63 +864,63 @@ twice. The table below gives available key sequences:</p>
     <tr>
       <td class="name">Ouml</td>
       <td>214</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>&lt;Shift&gt; O</td>
       <td>Ö</td>
     </tr>
     <tr>
       <td class="name">Uacute</td>
       <td>205</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>&lt;Shift&gt; U</td>
       <td>Ú</td>
     </tr>
     <tr>
       <td class="name">Ucirc</td>
       <td>206</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>&lt;Shift&gt; U</td>
       <td>Û</td>
     </tr>
     <tr>
       <td class="name">Ugrave</td>
       <td>204</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>&lt;Shift&gt; U</td>
       <td>Ù</td>
     </tr>
     <tr>
       <td class="name">Uuml</td>
       <td>207</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>&lt;Shift&gt; U</td>
       <td>Ü</td>
     </tr>
     <tr>
       <td class="name">Yacute</td>
       <td>221</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>&lt;Shift&gt; Y</td>
       <td>Ý</td>
     </tr>
     <tr>
       <td class="name">aacute</td>
       <td>225</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>a</td>
       <td>á</td>
     </tr>
     <tr>
       <td class="name">acirc</td>
       <td>226</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>a</td>
       <td>â</td>
     </tr>
     <tr>
       <td class="name">agrave</td>
       <td>224</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>a</td>
       <td>à</td>
     </tr>
@@ -940,63 +941,63 @@ twice. The table below gives available key sequences:</p>
     <tr>
       <td class="name">auml</td>
       <td>228</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>a</td>
       <td>ä</td>
     </tr>
     <tr>
       <td class="name">ccedil</td>
       <td>231</td>
-      <td>backquote</td>
+      <td>cédille</td>
       <td>c</td>
       <td>ç</td>
     </tr>
     <tr>
       <td class="name">eacute</td>
       <td>233</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>e</td>
       <td>é</td>
     </tr>
     <tr>
       <td class="name">ecirc</td>
       <td>234</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>e</td>
       <td>ê</td>
     </tr>
     <tr>
       <td class="name">egrave</td>
       <td>232</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>e</td>
       <td>è</td>
     </tr>
     <tr>
       <td class="name">euml</td>
       <td>235</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>e</td>
       <td>ë</td>
     </tr>
     <tr>
       <td class="name">iacute</td>
       <td>237</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>i</td>
       <td>í</td>
     </tr>
     <tr>
       <td class="name">icirc</td>
       <td>238</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>i</td>
       <td>î</td>
     </tr>
     <tr>
       <td class="name">igrave</td>
       <td>236</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>i</td>
       <td>ì</td>
     </tr>
@@ -1010,22 +1011,22 @@ twice. The table below gives available key sequences:</p>
     <tr>
       <td class="name">oacute</td>
       <td>243</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>o</td>
       <td>ó</td>
     </tr>
     <tr>
       <td class="name">ocirc</td>
       <td>244</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>o</td>
       <td>ô</td>
     </tr>
     <tr>
       <td class="name">ograve</td>
       <td>242</td>
-      <td>backquote</td>
-      <td>o</td>
+      <td>accent grave</td>
+      <td></td>
       <td>ò</td>
     </tr>
     <tr>
@@ -1045,49 +1046,49 @@ twice. The table below gives available key sequences:</p>
     <tr>
       <td class="name">ouml</td>
       <td>246</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>o</td>
       <td>ö</td>
     </tr>
     <tr>
       <td class="name">uacute</td>
       <td>250</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>u</td>
       <td>ú</td>
     </tr>
     <tr>
       <td class="name">ucirc</td>
       <td>251</td>
-      <td>circumflex</td>
+      <td>accent circonflèxe</td>
       <td>u</td>
       <td>û</td>
     </tr>
     <tr>
       <td class="name">ugrave</td>
       <td>249</td>
-      <td>backquote</td>
+      <td>accent grave</td>
       <td>u</td>
       <td>ù</td>
     </tr>
     <tr>
       <td class="name">uuml</td>
       <td>252</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>u</td>
       <td>ü</td>
     </tr>
     <tr>
       <td class="name">yacute</td>
       <td>253</td>
-      <td>quote</td>
+      <td>accent aigu</td>
       <td>y</td>
       <td>ý</td>
     </tr>
     <tr>
       <td class="name">yuml</td>
       <td>255</td>
-      <td>double quote</td>
+      <td>tréma</td>
       <td>y</td>
       <td>ÿ</td>
     </tr>
