@@ -548,6 +548,7 @@ static void	   CreateParentMROW (Element el, Document doc)
 	  elType.ElTypeNum != MathML_EL_SYMBOL_UNIT &&
 	  elType.ElTypeNum != MathML_EL_GRAPHICS_UNIT &&
 	  elType.ElTypeNum != MathML_EL_PICTURE_UNIT &&
+	  elType.ElTypeNum != MathML_EL_MathMLCharacters &&
 	  elType.ElTypeNum != MathML_EL_XMLcomment &&
 	  elType.ElTypeNum != MathML_EL_XMLcomment_line &&
 	  elType.ElTypeNum != MathML_EL_XMLPI &&
