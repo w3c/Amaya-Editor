@@ -561,219 +561,240 @@ void PasteCommand ()
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, cellChild;
-  PtrElement          pColHead, pRow;
+  PtrElement          pColHead, pNextCol, pRow, pNextRow;
   PtrPasteElem        pPasteD;
   DisplayMode         dispMode;
   Document            doc;
   int                 firstChar, lastChar, view, i, info = 0;
-  ThotBool            ok, before, within, lock, cancelled, first;
+  ThotBool            ok, before, within, lock, cancelled, first, savebefore;
 
   before = FALSE;
-  pColHead = pRow =NULL;
+  pColHead = pRow = NULL;
   if (FirstSavedElement == NULL)
     return;
   if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     {
-    /* cannot paste within a read only document */
-    if (!pDoc->DocReadOnly)
-      {
-	/* compute the view volume */
-	for (view = 0; view < MAX_VIEW_DOC; view++)
-	  {
-	    if (pDoc->DocView[view].DvPSchemaView > 0)
-	      pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
-	  }
+      /* cannot paste within a read only document */
+      if (!pDoc->DocReadOnly)
+	{
+	  /* compute the view volume */
+	  for (view = 0; view < MAX_VIEW_DOC; view++)
+	    {
+	      if (pDoc->DocView[view].DvPSchemaView > 0)
+		pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
+	    }
 
-	pSplitText = NULL;
-	pNextEl = NULL;
-	doc = IdentDocument (pDoc);
-	dispMode = TtaGetDisplayMode (doc);
-	/* lock tables formatting */
-	if (ThotLocalActions[T_islock])
-	  {
-	    (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	    if (!lock)
-	      {
-		if (dispMode == DisplayImmediately)
-		  TtaSetDisplayMode (doc, DeferredDisplay);
-		/* table formatting is not loked, lock it now */
-		(*ThotLocalActions[T_lock]) ();
-	      }
-	  }
+	  pSplitText = NULL;
+	  pNextEl = NULL;
+	  doc = IdentDocument (pDoc);
+	  dispMode = TtaGetDisplayMode (doc);
+	  /* lock tables formatting */
+	  if (ThotLocalActions[T_islock])
+	    {
+	      (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
+	      if (!lock)
+		{
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DeferredDisplay);
+		  /* table formatting is not loked, lock it now */
+		  (*ThotLocalActions[T_lock]) ();
+		}
+	    }
 
-	if (WholeColumnSaved)
-	  {
-	    /* look for the column */
-	    while (firstSel &&
-		  !TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
-				    firstSel->ElStructSchema))
-	      firstSel = firstSel->ElParent;
-	    if (firstSel == NULL)
-	      /* cannot paste here */
-	      return;
-	    pColHead = GetColHeadOfCell (firstSel);
-	    /* look for the first row */
-	    pRow = firstSel->ElParent;
-	    if (pRow && pColHead)
-	      pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
-					 pRow->ElStructSchema);
-	    else
-	      pRow = NULL;
-	    /* change the selection to paste a whole column */
-	    pEl = firstSel;
-	    within = FALSE;
-	    before = FALSE;
-	    pNextEl = pEl;
-	  }
-	else if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
-	    firstSel->ElVolume == 0 && !firstSel->ElTerminal)
-	  /* un element non terminal vide. On colle a l'interieur */
-	  {
-	    pEl = firstSel;
-	    within = TRUE;
-	  }
-	else if (firstSel->ElTerminal &&
-		 ((firstSel->ElLeafType == LtPicture &&
-		   firstChar == 1) ||
-		  (firstSel->ElLeafType == LtText &&
-		   firstChar > firstSel->ElTextLength)))
-	  /* the right edge of an image is selected or
-	     the selection starts at the end of a text element.
-	     Paste after the selected element */
-	  {
-	    pEl = firstSel;
-	    within = FALSE;
-	    before = FALSE;
-	    pNextEl = NextElement (pEl);
-	  }
-	else if (firstChar < 2)
-	  /* on veut coller avant l'element firstSel */
-	  {
-	    pEl = firstSel;
-	    within = FALSE;
-	    before = TRUE;
-	    /* l'element qui suivra la partie collee est le 1er element de */
-	    /* la selection courante */
-	    pNextEl = firstSel;
-	  }
-	else
-	  /* on veut coller au milieu d'une feuille de texte */
-	  /* il faut couper cette feuille en deux */
-	  {
-	    /* Si l'element a couper est le dernier, il ne le sera plus */
-	    /* apres la coupure. Teste si le dernier selectionne' est le */
-	    /* dernier fils de son pere, abstraction faite des marques */
-	    /* de page */
-	    pClose = firstSel->ElNext;
-	    FwdSkipPageBreak (&pClose);
-	    /* coupe la feuille de texte */
-	    pSplitText = firstSel;
-	    SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollowing,
-			      FALSE);
-	    /* met a jour la selection */
-	    if (firstSel == lastSel)
-	      {
-		lastSel = pFollowing;
-		lastChar = lastChar - firstChar + 1;
-	      }
-	    firstSel = firstSel->ElNext;
-	    firstChar = 1;
-	    pEl = pSplitText;
-	    within = FALSE;
-	    before = FALSE;
-	    /* l'element qui suivra la partie collee est la deuxieme */
-	    /* partie de l'element qu'on vient de couper en deux */
-	    pNextEl = pFollowing;
-	  }
+	  if (WholeColumnSaved)
+	    {
+	      /* paste a column */
+	      while (firstSel &&
+		     !TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
+					firstSel->ElStructSchema))
+		{
+		  if (firstSel->ElPrevious)
+		    {
+		      /* the selection is not at the beginning of the cell */
+		      firstChar += 2;
+		      lastChar = 0;
+		    }
+		  else
+		    lastChar = 1;
+		  firstSel = firstSel->ElParent;
+		}
+	      if (firstChar < 2 && lastChar != 0)
+		/* paste before the current column */
+		before = TRUE;
+	      else
+		/* by default paste after the current column */
+		before = FALSE;
+	      if (firstSel)
+		{
+		  /* look for the current column position */
+		  pColHead = GetColHeadOfCell (firstSel);
+		  /* look for the first row */
+		  pRow = firstSel->ElParent;
+		  if (pRow && pColHead)
+		    pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
+					       pRow->ElStructSchema);
+		  else
+		    pRow = NULL;
+		}
+	      /* change the selection to paste a whole column */
+	      pEl = firstSel;
+	      within = FALSE;
+	      pNextEl = pEl;
+	    }
+	  else if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
+		   firstSel->ElVolume == 0 && !firstSel->ElTerminal)
+	    /* un element non terminal vide. On colle a l'interieur */
+	    {
+	      pEl = firstSel;
+	      within = TRUE;
+	    }
+	  else if (firstSel->ElTerminal &&
+		   ((firstSel->ElLeafType == LtPicture &&
+		     firstChar == 1) ||
+		    (firstSel->ElLeafType == LtText &&
+		     firstChar > firstSel->ElTextLength)))
+	    /* the right edge of an image is selected or
+	       the selection starts at the end of a text element.
+	       Paste after the selected element */
+	    {
+	      pEl = firstSel;
+	      within = FALSE;
+	      before = FALSE;
+	      pNextEl = NextElement (pEl);
+	    }
+	  else if (firstChar < 2)
+	    /* on veut coller avant l'element firstSel */
+	    {
+	      pEl = firstSel;
+	      within = FALSE;
+	      before = TRUE;
+	      /* l'element qui suivra la partie collee est le 1er element de */
+	      /* la selection courante */
+	      pNextEl = firstSel;
+	    }
+	  else
+	    /* on veut coller au milieu d'une feuille de texte */
+	    /* il faut couper cette feuille en deux */
+	    {
+	      /* Si l'element a couper est le dernier, il ne le sera plus */
+	      /* apres la coupure. Teste si le dernier selectionne' est le */
+	      /* dernier fils de son pere, abstraction faite des marques */
+	      /* de page */
+	      pClose = firstSel->ElNext;
+	      FwdSkipPageBreak (&pClose);
+	      /* coupe la feuille de texte */
+	      pSplitText = firstSel;
+	      SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollowing,
+				FALSE);
+	      /* met a jour la selection */
+	      if (firstSel == lastSel)
+		{
+		  lastSel = pFollowing;
+		  lastChar = lastChar - firstChar + 1;
+		}
+	      firstSel = firstSel->ElNext;
+	      firstChar = 1;
+	      pEl = pSplitText;
+	      within = FALSE;
+	      before = FALSE;
+	      /* l'element qui suivra la partie collee est la deuxieme */
+	      /* partie de l'element qu'on vient de couper en deux */
+	      pNextEl = pFollowing;
+	    }
 	
-	NCreatedElements = 0;	
-	/* boucle sur les elements a coller et les colle un a un */
-	pPasteD = FirstSavedElement;
-	first = TRUE;
-	if (!within && before && pPasteD != NULL)
-	  /* on colle devant un element. On commencera par coller le */
-	  /* dernier element a coller et on continuera en arriere */
-	  while (pPasteD->PeNext != NULL)
-	    pPasteD = pPasteD->PeNext;
-	ok = FALSE;
-	cellChild = NULL;
-	do
-	  {
-	    if (pRow)
-	      {
-		/* look for the cell in that row and that column */
-		pEl = GetCellInRow (pRow, pColHead);
-		/* next row */
-		pRow = FwdSearchTypedElem (pRow, pRow->ElTypeNumber,
-					 pRow->ElStructSchema);
-	      }
-	    pPasted = PasteAnElement (pEl, pPasteD, within, before,
-				      &cancelled, pDoc, &cellChild);
-	    if (pPasted == NULL && !cancelled &&
-		/* echec, mais l'application n'a pas refusé */
-		!within && !before && pNextEl != NULL)
-	      /* on essayait de coller apres le dernier colle' */
-	      /* on va essayer de coller le meme element avant l'element */
-	      /* qui doit suivre la partie collee */
-	      pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
-					&cancelled, pDoc, &cellChild);
-	    if (pPasted)
-	      /* a copy of element pPasteD has been sucessfully pasted */
-	      {
-		ok = TRUE;
-		pEl = pPasted;
-		if (within)
-		  /* next element will be pasted after the previous one*/
-		  {
-		    within = FALSE;
-		    before = FALSE;
-		  }
-	      }
-	    if (!within && before)
-	      {
-		if (cellChild)
-		  {
-		    cellChild = cellChild->ElPrevious;
-		    if (cellChild == NULL)
-		      pPasteD = pPasteD->PePrevious;
-		  }
-		else
-		  pPasteD = pPasteD->PePrevious;
-	      }
-	    else
-	      {
-		if (cellChild)
-		  {
-		    cellChild = cellChild->ElNext;
-		    if (cellChild == NULL)
-		      pPasteD = pPasteD->PeNext;
-		  }
-		else
-		  pPasteD = pPasteD->PeNext;
-	      }
-	  }
-	while (pPasteD != NULL);
+	  NCreatedElements = 0;	
+	  /* boucle sur les elements a coller et les colle un a un */
+	  pPasteD = FirstSavedElement;
+	  first = TRUE;
+	  if (!within && before && pPasteD && !WholeColumnSaved)
+	    /* on colle devant un element. On commencera par coller le */
+	    /* dernier element a coller et on continuera en arriere */
+	    while (pPasteD->PeNext)
+	      pPasteD = pPasteD->PeNext;
+	  ok = FALSE;
+	  cellChild = NULL;
+	  do
+	    {
+	      savebefore = before; /* could be temporay changed */
+	      if (WholeColumnSaved)
+		{
+		  /* look for the cell in that row and that column */
+		  pEl = GetCellInRow (pRow, pColHead);
+		  if (pEl)
+		    {
+		      pNextCol = pColHead;
+		      while (pEl == NULL && pNextCol)
+			{
+			  /* no cell in that row : paste before the next */
+			  before = TRUE;
+			  pNextCol = FwdSearchTypedElem (pNextCol,
+							 pColHead->ElTypeNumber,
+							 pColHead->ElStructSchema);
+			  pEl = GetCellInRow (pRow, pNextCol);
+			}
+		      /* next row */
+		      pNextRow = FwdSearchTypedElem (pRow, pRow->ElTypeNumber,
+						     pRow->ElStructSchema);
+		    }
+		}
+	      if (pEl)
+		pPasted = PasteAnElement (pEl, pPasteD, within, before,
+					  &cancelled, pDoc, &cellChild);
+	      else
+		pPasted = NULL;
+	      if (pPasted == NULL && !cancelled &&
+		  /* echec, mais l'application n'a pas refusé */
+		  !within && !before && pNextEl)
+		/* on essayait de coller apres le dernier colle' */
+		/* on va essayer de coller le meme element avant l'element */
+		/* qui doit suivre la partie collee */
+		pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
+					  &cancelled, pDoc, &cellChild);
+	      if (pPasted)
+		/* a copy of element pPasteD has been sucessfully pasted */
+		{
+		  ok = TRUE;
+		  pEl = pPasted;
+		  if (within)
+		    /* next element will be pasted after the previous one*/
+		    {
+		      within = FALSE;
+		      before = FALSE;
+		    }
+		}
+	      if (!within && before && !WholeColumnSaved)
+		{
+		  if (cellChild)
+		    {
+		      cellChild = cellChild->ElPrevious;
+		      if (cellChild == NULL)
+			pPasteD = pPasteD->PePrevious;
+		    }
+		  else
+		    pPasteD = pPasteD->PePrevious;
+		}
+	      else
+		{
+		  if (cellChild)
+		    {
+		      cellChild = cellChild->ElNext;
+		      if (cellChild == NULL)
+			pPasteD = pPasteD->PeNext;
+		    }
+		  else
+		    pPasteD = pPasteD->PeNext;
+		}
+	      
+	      pRow = pNextRow;
+	      if (pRow && pPasteD == NULL)
+		{
+		  /* there are more rows than pasted cell */
+		}
+	      before = savebefore;
+	    }
+	  while (pPasteD);
 
-	if (!ok)
-	  /* echec */
-	  {
-	    if (pSplitText != NULL)
-	      /* On avait coupe' en deux un element de texte. */
-	      /* On recolle les deux morceaux */
-	      {
-		MergeTextElements (pSplitText, &pFree, pDoc, TRUE, FALSE);
-		DeleteElement (&pFree, pDoc);
-		pFree = NULL;
-	      }
-	    if (!lock)
-	      {
-		/* unlock table formatting */
-		(*ThotLocalActions[T_unlock]) ();
-		if (dispMode == DisplayImmediately)
-		  TtaSetDisplayMode (doc, DisplayImmediately);
-	      }
-	  }
-	else
+	if (ok)
 	  /* on a effectivement colle' le contenu du buffer */
 	  {
 	    /* il faudra changer les labels lors du prochain Coller */
@@ -861,40 +882,53 @@ void PasteCommand ()
 		  /*  pointent les elements colle's */
 		  UpdateRefAttributes (CreatedElement[i], pDoc);
 		}
-
-	    if (!lock)
+	  }
+	else
+	  /* echec */
+	  {
+	    if (pSplitText != NULL)
+	      /* On avait coupe' en deux un element de texte. */
+	      /* On recolle les deux morceaux */
 	      {
-		/* unlock table formatting */
-		(*ThotLocalActions[T_unlock]) ();
-		if (dispMode == DisplayImmediately)
-		  TtaSetDisplayMode (doc, DisplayImmediately);
+		MergeTextElements (pSplitText, &pFree, pDoc, TRUE, FALSE);
+		DeleteElement (&pFree, pDoc);
+		pFree = NULL;
 	      }
+	  }
 
-	    /* set the selection at the end of the pasted elements */
-	    if (NCreatedElements > 0)
+	if (!lock)
+	  {
+	    /* unlock table formatting */
+	    (*ThotLocalActions[T_unlock]) ();
+	    if (dispMode == DisplayImmediately)
+	      TtaSetDisplayMode (doc, DisplayImmediately);
+	  }
+
+	/* set the selection at the end of the pasted elements */
+	if (NCreatedElements > 0)
+	  {
+	    pSel = NULL;
+	    if (before)
 	      {
-		pSel = NULL;
-		if (before)
-		  {
-		  for (i = 0; i < NCreatedElements && !pSel; i++)
-		    if (CreatedElement[i] != NULL)
-		      pSel = CreatedElement[i];
-		  }
-		else
-		  {
-		  for (i = NCreatedElements - 1; i >= 0 && !pSel; i--)
-		    if (CreatedElement[i] != NULL)
-		      pSel = CreatedElement[i];
-		  }
-		if (pSel)
-		  if (!pSel->ElTerminal)
-		    pSel = LastLeaf (pSel);
-		if (pSel)
-		  SelectString (pDoc, pSel, pSel->ElTextLength + 1,
-				pSel->ElTextLength);
+		for (i = 0; i < NCreatedElements && !pSel; i++)
+		  if (CreatedElement[i] != NULL)
+		    pSel = CreatedElement[i];
 	      }
+	    else
+	      {
+		for (i = NCreatedElements - 1; i >= 0 && !pSel; i--)
+		  if (CreatedElement[i] != NULL)
+		    pSel = CreatedElement[i];
+	      }
+	    if (pSel)
+	      if (!pSel->ElTerminal)
+		pSel = LastLeaf (pSel);
+	    if (pSel)
+	      SelectString (pDoc, pSel, pSel->ElTextLength + 1,
+			    pSel->ElTextLength);
+	    
 	    SetDocumentModified (pDoc, TRUE, 20);
-
+	    
 	    /* Reaffiche les numeros suivants qui changent */
 	    for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i] != NULL)
