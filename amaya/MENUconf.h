@@ -16,7 +16,7 @@
 /* dialog and messages */
 
 #define NetworkMenu       1
-#define mToggleCache      2
+#define mCacheOptions     2
 #define mCacheDirectory   3
 #define mCacheSize        4
 #define mMaxCacheFile     5

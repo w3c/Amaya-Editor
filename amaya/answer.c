@@ -630,8 +630,8 @@ int status;
   else if (status == -409)
     {
       TtaSetStatus (me->docid, 1,
-		    "Conflict with the current state of the ressource", NULL);
-      sprintf(AmayaLastHTTPErrorMsg, "Conflict with the current state of the ressource");
+		    "Conflict with the current state of the resource", NULL);
+      sprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
     }
   else if (status == -1)
     {

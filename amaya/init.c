@@ -80,12 +80,6 @@ int  Window_Curs;
 CHAR docToOpen [256];
 extern boolean viewClosed;
 /* extern bmpID;  */
-#define AMAYA_PAGE "\\amaya\\AmayaPage.html"
-#else  /* _WINDOWS */
-#define AMAYA_PAGE "/amaya/AmayaPage.html"
-#endif /* _WINDOWS */
-
-#define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/User/"
 
 static int          AmayaInitialized = 0;
 static STRING       Manual[] = {

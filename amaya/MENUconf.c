@@ -30,6 +30,8 @@
  *
  * Authors: J. Kahan
  *
+ * To do: remove the CACHE_RESTART option from some options, once we write
+ * the code that should take it into account.
  */
 
 /* Included headerfiles */
@@ -42,7 +44,9 @@
 /* Network menu options */
 static int NetworkBase;
 static boolean EnableCache;
-static boolean CacheProtectedDocuments;
+static boolean CacheProtectedDocs;
+static boolean CacheDisconnectMode;
+static boolean CacheExpireIgnore;
 static CHAR CacheDirectory [MAX_LENGTH+1];
 static int CacheSize;
 static int MaxCacheFile;
@@ -127,21 +131,33 @@ static void         SetAppearanceConf (/* void */);
 */
 
 /*----------------------------------------------------------------------
-  InitDefEnv
-  Initializes the default options which are not setup by thot.ini.
-  This protects us against a crash due to a  user's erasing thot.ini.
+  InitAmayaDefEnv
+  Initializes the default Amaya options which are not setup by thot.ini file.
+  This protects us against a crash due to a user's erasing that file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void InitDefEnv (void)
+void InitAmayaDefEnv (void)
 #else
-void InitDefEnv ()
+void InitAmayaDefEnv ()
 #endif /* __STDC__ */
 {
-  char *ptr;
+  STRING s;
 
   /* browsing editing options */
-  TtaSetDefEnvString ("HOME_PAGE", "", FALSE);
+
+  s = (STRING) TtaGetEnvString ("THOTDIR");
+  if (s != NULL)
+    {
+      ustrcpy (HomePage, s);
+      ustrcat (HomePage, AMAYA_PAGE);
+    }
+  else
+    HomePage[0]  = EOS;
+  TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
+  HomePage[0] = EOS;
+  /*** @@@ don't add it yet!
   TtaSetDefEnvString ("TMPDIR", "", FALSE);
+  ***/
   TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
@@ -160,14 +176,16 @@ void InitDefEnv ()
   TtaSetDefEnvString ("HTTP_PROXY", "", FALSE);
   TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", "3", FALSE);
   TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
-  TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
+  if (TempFileDirectory)
+    TtaSetDefEnvString ("CACHE_DIR", TempFileDirectory, FALSE);
+  else
+    TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
   TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", "yes", FALSE);
-  ptr = TtaGetDefEnvString ("ENABLE_CACHE");
   TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
-
+  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", "no", FALSE);
+  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", "no", FALSE);
   /* appearance */
   TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
-
 }
 
 /*----------------------------------------------------------------------
@@ -179,7 +197,7 @@ void                InitConfMenu (void)
 void                InitConfMenu ()
 #endif /* __STDC__*/
 {
-  InitDefEnv ();
+  InitAmayaDefEnv ();
   NetworkBase = TtaSetCallback (NetworkCallbackDialog, MAX_NETWORKMENU_DLG);
   BrEdBase = TtaSetCallback (BrEdCallbackDialog, MAX_BREDMENU_DLG);
   AppearanceBase = TtaSetCallback (AppearanceCallbackDialog,
@@ -298,6 +316,16 @@ STRING              data;
 #ifdef AMAYA_JAVA
 #else      
 	      libwww_updateNetworkConf (NetworkStatus);
+	      if (NetworkStatus & AMAYA_CACHE_RESTART)
+		/* update the status of the cache */
+		{
+		  TtaGetEnvBoolean ("ENABLE_CACHE", &EnableCache);
+#ifndef _WINDOWS
+		  TtaSetToggleMenu (NetworkBase + mCacheOptions, 0, 
+				    EnableCache);
+#endif _WINDOWS
+		}
+	      
 #endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
 	      NetworkStatus = 0;
@@ -313,7 +341,7 @@ STRING              data;
 	    }
 	  break;
 
-	case mToggleCache:
+	case mCacheOptions:
 	  switch (val) 
 	    {
 	    case 0:
@@ -322,11 +350,19 @@ STRING              data;
 	      break;
 	    case 1:
 	      NetworkStatus |= AMAYA_CACHE_RESTART;
-	      CacheProtectedDocuments = !CacheProtectedDocuments;
+	      CacheProtectedDocs = !CacheProtectedDocs;
+	      break;
+	    case 2:
+	      NetworkStatus |= AMAYA_CACHE_RESTART;
+	      CacheDisconnectMode = !CacheDisconnectMode;
+	      break;
+	    case 3:
+	      NetworkStatus |= AMAYA_CACHE_RESTART;
+	      CacheExpireIgnore = !CacheExpireIgnore;
 	      break;
 	    }
 	  break;
-
+	  
 	case mCacheDirectory:
 	  NetworkStatus |= AMAYA_CACHE_RESTART;
 	  if (data)
@@ -379,7 +415,10 @@ static void GetNetworkConf ()
 {
   TtaGetEnvBoolean ("ENABLE_CACHE", &EnableCache);
   TtaGetEnvBoolean 
-    ("CACHE_PROTECTED_DOCUMENTS", &CacheProtectedDocuments);
+    ("CACHE_PROTECTED_DOCS", &CacheProtectedDocs);
+  TtaGetEnvBoolean 
+    ("CACHE_DISCONNECTED_MODE", &CacheDisconnectMode);
+  TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &CacheExpireIgnore);
   GetEnvString ("CACHE_DIR", CacheDirectory);
   TtaGetEnvInt ("CACHE_SIZE", &CacheSize);
   TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
@@ -398,8 +437,11 @@ static void SetNetworkConf ()
 #endif /* __STDC__ */
 {
   TtaSetEnvBoolean ("ENABLE_CACHE", EnableCache, TRUE);
-  TtaSetEnvBoolean ("CACHE_PROTECTED_DOCUMENTS", 
-		    CacheProtectedDocuments, TRUE);
+  TtaSetEnvBoolean ("CACHE_PROTECTED_DOCS", 
+		    CacheProtectedDocs, TRUE);
+  TtaSetEnvBoolean ("CACHE_DISCONNECTED_MODE", 
+		    CacheDisconnectMode, TRUE);
+  TtaSetEnvBoolean ("CACHE_EXPIRE_IGNORE", CacheExpireIgnore, TRUE);
   TtaSetEnvString ("CACHE_DIR", CacheDirectory, TRUE);
   TtaSetEnvInt ("CACHE_SIZE", CacheSize, TRUE);
   TtaSetEnvInt ("MAX_CACHE_ENTRY_SIZE", MaxCacheFile, TRUE);
@@ -420,10 +462,15 @@ static void GetDefaultNetworkConf ()
 {
   /* read the default values */
   GetDefEnvToggle ("ENABLE_CACHE", &EnableCache, 
-		    NetworkBase + mToggleCache, 0);
+		    NetworkBase + mCacheOptions, 0);
   GetDefEnvToggle 
-    ("PROTECTED_DOCUMENTS", &CacheProtectedDocuments,
-     NetworkBase + mToggleCache, 1);
+    ("CACHE_PROTECTED_DOCS", &CacheProtectedDocs,
+     NetworkBase + mCacheOptions, 1);
+  GetDefEnvToggle 
+    ("CACHE_DISCONNECTED_MODE", &CacheDisconnectMode,
+     NetworkBase + mCacheOptions, 2);
+  GetDefEnvToggle ("CACHE_EXPIRE_IGNORE", &CacheExpireIgnore, 
+		   NetworkBase + mCacheOptions, 3);
   GetDefEnvString ("CACHE_DIR", CacheDirectory);
   TtaGetDefEnvInt ("CACHE_SIZE", &CacheSize);
   TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
@@ -445,8 +492,10 @@ static void RefreshNetworkMenu ()
 
   /* set the menu entries to the current values */
 #ifndef _WINDOWS
-  TtaSetToggleMenu (NetworkBase + mToggleCache, 0, EnableCache);
-  TtaSetToggleMenu (NetworkBase + mToggleCache, 1, CacheProtectedDocuments);
+  TtaSetToggleMenu (NetworkBase + mCacheOptions, 0, EnableCache);
+  TtaSetToggleMenu (NetworkBase + mCacheOptions, 1, CacheProtectedDocs);
+  TtaSetToggleMenu (NetworkBase + mCacheOptions, 2, CacheDisconnectMode);
+  TtaSetToggleMenu (NetworkBase + mCacheOptions, 3, CacheExpireIgnore);
 #endif /* _WINDOWS */
   if (CacheDirectory)
     TtaSetTextForm (NetworkBase + mCacheDirectory, CacheDirectory);
@@ -478,14 +527,16 @@ View                view;
 
    TtaNewSheet (NetworkBase + NetworkMenu, 
 		TtaGetViewFrame (document, view),
-	       "Network Configuration", 2, s, FALSE, 3, 'L', D_DONE);
+	       "Network Configuration", 2, s, FALSE, 6, 'L', D_DONE);
 
-   sprintf (s, "%s%c%s", "BEnable cache", EOS, 
-	    "BCache protected documents");
-   TtaNewToggleMenu (NetworkBase + mToggleCache,
+   sprintf (s, "%s%c%s%c%s%c%s", "BEnable cache", EOS, 
+	    "BCache protected documents", EOS,
+	    "BDisconnected mode", EOS,
+	    "BIgnore Expires: header");
+   TtaNewToggleMenu (NetworkBase + mCacheOptions,
 		     NetworkBase + NetworkMenu,
 		     "Cache options",
-		     2,
+		     4,
 		     s,
 		     NULL,
 		     TRUE);
@@ -501,6 +552,12 @@ View                view;
 		     0,
 		     100,
 		     TRUE);
+   TtaNewNumberForm (NetworkBase + mMaxCacheFile,
+		     NetworkBase + NetworkMenu,
+		     "Cache entry size limit (Mb)",
+		     0,
+		     5,
+		     TRUE);
    TtaNewTextForm (NetworkBase + mHttpProxy,
 		   NetworkBase + NetworkMenu,
 		   "HTTP proxy",
@@ -509,16 +566,10 @@ View                view;
 		   TRUE);
    TtaNewTextForm (NetworkBase + mNoProxy,
 		   NetworkBase + NetworkMenu,
-		   "No proxy",
+		   "No proxy on these domains",
 		   20,
 		   1,
 		   TRUE);
-   TtaNewNumberForm (NetworkBase + mMaxCacheFile,
-		     NetworkBase + NetworkMenu,
-		     "Cache entry size limit (Mb)",
-		     0,
-		     5,
-		     TRUE);
 
    /* load and display the current values */
    GetNetworkConf ();
@@ -618,12 +669,14 @@ STRING              data;
 	    ustrcpy (DefaultName, data);
 	  else
 	    DefaultName [0] = EOS;
+	  break;
 
 	case mHomePage:
 	  if (data)
 	    ustrcpy (HomePage, data);
 	  else
 	    HomePage [0] = EOS;
+	  break;
 
 	case mThotPrint:
 	  if (data)

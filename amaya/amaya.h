@@ -329,6 +329,16 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define MAKEBOOK      16
 #define CONFIGURE     17
 
+/* The default Amaya HOME pages (page shown at boot time */
+
+#ifdef _WINDOWS
+#define AMAYA_PAGE "\\amaya\\AmayaPage.html"
+#else  /* _WINDOWS */
+#define AMAYA_PAGE "/amaya/AmayaPage.html"
+#endif /* _WINDOWS */
+
+#define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/User/"
+
 #endif /* AMAYA_H */
 
 

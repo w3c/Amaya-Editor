@@ -2636,7 +2636,9 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
+#ifndef _WINDOWS 
    AppearanceConfMenu (doc, view);
+#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2654,7 +2656,9 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
+#ifndef _WINDOWS 
    BrEdConfMenu (doc, view);
+#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2672,7 +2676,9 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
+#ifndef _WINDOWS 
   NetworkConfMenu (doc, view);
+#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2686,7 +2692,9 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
+#ifndef _WINDOWS
   TtaSaveAppRegistry ();
+#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
