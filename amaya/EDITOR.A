@@ -1,7 +1,7 @@
 APPLICATION EDITOR;
 
 USES
-	HTML, Lookup, NoStructSelect, Plugin;
+	HTML, Lookup, NoStructSelect;
 DEFAULT
    Init.Post -> InitAmaya;
 
