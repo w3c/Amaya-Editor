@@ -11,7 +11,6 @@ THOTPRINT=lpr
 CLASSPATH=.:$(THOTDIR)/classes:$(THOTDIR)/classes/Klasses.jar:$(THOTDIR)/classes/pizza.jar
 KAFFEHOME=$(THOTDIR)/classes
 JAVA_PROPERTIES=$(THOTDIR)/config/java.properties
-#TOOLTIPDELAY=600
 
 [thot]
 THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/schemasOPERA
@@ -21,7 +20,8 @@ RESDYN=YES
 LANG=en
 
 [amaya]
-#ENABLE_CACHE=no
+HOME_PAGE=
+ENABLE_CACHE=Yes
 THOTSYSSCH=$(THOTDIR)/amaya
 LANG=en_US
 # AMAYA_PLUGIN_DIR=$(THOTDIR)/plugintest/$(MACHINE)
@@ -31,8 +31,7 @@ AMAYA_APPLET_DIR=$(THOTDIR)/classes/org/w3c/amaya/applets
 HTTP_PROXY=
 # NO_PROXY: domain address which shouldn't be proxyfied 
 # ex: NO_PROXY=harpo.marx.edu)
-NO_PROXY=groucho.marx.edu
-VERIFY_PUBLISH=No
+NO_PROXY=
 ENABLE_LOST_UPDATE_CHECK=Yes
 PERSIST_CX_TIMEOUT=600
 
