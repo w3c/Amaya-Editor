@@ -36,12 +36,10 @@
 #define MAX_EQUIV 25
 #define THOT_NO_MOD	0
 #define THOT_MOD_CTRL	1
-#define THOT_MOD_META	2
-#define THOT_MOD_ALT	4
-#define THOT_MOD_SHIFT	10
-#define THOT_MOD_S_CTRL	11
-#define THOT_MOD_S_META	12
-#define THOT_MOD_S_ALT	14
+#define THOT_MOD_ALT	2
+#define THOT_MOD_SHIFT	4
+#define THOT_MOD_S_CTRL	5
+#define THOT_MOD_S_ALT	6
 #define MAX_AUTOMATA	80
 /* automata structure for the keys */
 typedef struct _key
@@ -106,10 +104,8 @@ static int          SpecialKeys[] =
 static KEY         *Automata_normal = NULL;
 
 static KEY         *Automata_ctrl    = NULL;
-static KEY         *Automata_meta    = NULL;
 static KEY         *Automata_alt     = NULL;
 static KEY         *Automata_CTRL    = NULL;
-static KEY         *Automata_META    = NULL;
 static KEY         *Automata_ALT     = NULL;
 static KEY         *Automata_current = NULL;
 
@@ -137,19 +133,19 @@ char               *name;
 	 return ("0x2c");
       else
 	 return (name);
-   else if (!strcmp (name, "Return"))
+   else if (!strcasecmp (name, "return"))
       return ("0x0d");
-   else if (!strcmp (name, "BackSpace"))
+   else if (!strcasecmp (name, "backspace"))
       return ("0x08");
-   else if (!strcmp (name, "Space"))
+   else if (!strcasecmp (name, "space"))
       return ("0x20");
-   else if (!strcmp (name, "Escape"))
+   else if (!strcasecmp (name, "escape"))
       return ("0x18");
-   else if (!strcmp (name, "Delete"))
+   else if (!strcasecmp (name, "delete"))
       return ("0x7f");
    else
       return (name);
-}				/*NameCode */
+}
 
 
 /*----------------------------------------------------------------------
@@ -166,99 +162,99 @@ char               *name;
 #endif /* __STDC__ */
 {
    /* is it the name of a special character? */
-   if (!strcmp (name, "Return"))
+   if (!strcasecmp (name, "return"))
       return (unsigned int) THOT_KEY_Return;
-   else if (!strcmp (name, "BackSpace"))
+   else if (!strcasecmp (name, "backspace"))
       return (unsigned int) THOT_KEY_BackSpace;
-   else if (!strcmp (name, "Space"))
+   else if (!strcasecmp (name, "space"))
       return 32;
-   else if (!strcmp (name, "Escape"))
+   else if (!strcasecmp (name, "escape"))
       return (unsigned int) THOT_KEY_Escape;
-   else if (!strcmp (name, "Delete"))
+   else if (!strcasecmp (name, "delete"))
       return (unsigned int) THOT_KEY_Delete;
-   else if (!strcmp (name, "F1"))
+   else if (!strcasecmp (name, "f1"))
       return (unsigned int) THOT_KEY_F1;
-   else if (!strcmp (name, "F2"))
+   else if (!strcasecmp (name, "f2"))
       return (unsigned int) THOT_KEY_F2;
-   else if (!strcmp (name, "F3"))
+   else if (!strcasecmp (name, "f3"))
       return (unsigned int) THOT_KEY_F3;
-   else if (!strcmp (name, "F4"))
+   else if (!strcasecmp (name, "f4"))
       return (unsigned int) THOT_KEY_F4;
-   else if (!strcmp (name, "F5"))
+   else if (!strcasecmp (name, "f5"))
       return (unsigned int) THOT_KEY_F5;
-   else if (!strcmp (name, "F6"))
+   else if (!strcasecmp (name, "f6"))
       return (unsigned int) THOT_KEY_F6;
-   else if (!strcmp (name, "F7"))
+   else if (!strcasecmp (name, "f7"))
       return (unsigned int) THOT_KEY_F7;
-   else if (!strcmp (name, "F8"))
+   else if (!strcasecmp (name, "f8"))
       return (unsigned int) THOT_KEY_F8;
-   else if (!strcmp (name, "F9"))
+   else if (!strcasecmp (name, "f9"))
       return (unsigned int) THOT_KEY_F9;
-   else if (!strcmp (name, "F10"))
+   else if (!strcasecmp (name, "f10"))
       return (unsigned int) THOT_KEY_F10;
-   else if (!strcmp (name, "F11") || !strcmp (name, "L1"))
+   else if (!strcasecmp (name, "f11") || !strcasecmp (name, "l1"))
       return (unsigned int) THOT_KEY_F11;
-   else if (!strcmp (name, "F12") || !strcmp (name, "L2"))
+   else if (!strcasecmp (name, "f12") || !strcasecmp (name, "l2"))
       return (unsigned int) THOT_KEY_F12;
-   else if (!strcmp (name, "F13") || !strcmp (name, "L3"))
+   else if (!strcasecmp (name, "f13") || !strcasecmp (name, "l3"))
       return (unsigned int) THOT_KEY_F13;
-   else if (!strcmp (name, "F14") || !strcmp (name, "L4"))
+   else if (!strcasecmp (name, "f14") || !strcasecmp (name, "l4"))
       return (unsigned int) THOT_KEY_F14;
-   else if (!strcmp (name, "F15") || !strcmp (name, "L5"))
+   else if (!strcasecmp (name, "f15") || !strcasecmp (name, "l5"))
       return (unsigned int) THOT_KEY_F15;
-   else if (!strcmp (name, "F16") || !strcmp (name, "L6"))
+   else if (!strcasecmp (name, "f16") || !strcasecmp (name, "l6"))
       return (unsigned int) THOT_KEY_F16;
-   else if (!strcmp (name, "F17") || !strcmp (name, "L7"))
+   else if (!strcasecmp (name, "f17") || !strcasecmp (name, "l7"))
       return (unsigned int) THOT_KEY_F17;
-   else if (!strcmp (name, "F18") || !strcmp (name, "L8"))
+   else if (!strcasecmp (name, "f18") || !strcasecmp (name, "l8"))
       return (unsigned int) THOT_KEY_F18;
-   else if (!strcmp (name, "F19") || !strcmp (name, "L9"))
+   else if (!strcasecmp (name, "f19") || !strcasecmp (name, "l9"))
       return (unsigned int) THOT_KEY_F19;
-   else if (!strcmp (name, "F20") || !strcmp (name, "L10"))
+   else if (!strcasecmp (name, "f20") || !strcasecmp (name, "l10"))
       return (unsigned int) THOT_KEY_F20;
 #ifdef THOT_KEY_R1
-   else if (!strcmp (name, "F21") || !strcmp (name, "R1"))
+   else if (!strcasecmp (name, "f21") || !strcasecmp (name, "r1"))
       return (unsigned int) THOT_KEY_R1;
-   else if (!strcmp (name, "F22") || !strcmp (name, "R2"))
+   else if (!strcasecmp (name, "f22") || !strcasecmp (name, "r2"))
       return (unsigned int) THOT_KEY_R2;
-   else if (!strcmp (name, "F23") || !strcmp (name, "R3"))
+   else if (!strcasecmp (name, "f23") || !strcasecmp (name, "r3"))
       return (unsigned int) THOT_KEY_R3;
-   else if (!strcmp (name, "F24") || !strcmp (name, "R4"))
+   else if (!strcasecmp (name, "f24") || !strcasecmp (name, "r4"))
       return (unsigned int) THOT_KEY_R4;
-   else if (!strcmp (name, "F25") || !strcmp (name, "R5"))
+   else if (!strcasecmp (name, "f25") || !strcasecmp (name, "r5"))
       return (unsigned int) THOT_KEY_R5;
-   else if (!strcmp (name, "F26") || !strcmp (name, "R6"))
+   else if (!strcasecmp (name, "f26") || !strcasecmp (name, "r6"))
       return (unsigned int) THOT_KEY_R6;
-   else if (!strcmp (name, "F27") || !strcmp (name, "R7"))
+   else if (!strcasecmp (name, "f27") || !strcasecmp (name, "r7"))
       return (unsigned int) THOT_KEY_R7;
-   else if (!strcmp (name, "F28") || !strcmp (name, "R8"))
+   else if (!strcasecmp (name, "f28") || !strcasecmp (name, "r8"))
       return (unsigned int) THOT_KEY_R8;
-   else if (!strcmp (name, "F29") || !strcmp (name, "R9"))
+   else if (!strcasecmp (name, "f29") || !strcasecmp (name, "r9"))
       return (unsigned int) THOT_KEY_R9;
-   else if (!strcmp (name, "F30") || !strcmp (name, "R10"))
+   else if (!strcasecmp (name, "f30") || !strcasecmp (name, "r10"))
       return (unsigned int) THOT_KEY_R10;
-   else if (!strcmp (name, "F31") || !strcmp (name, "R11"))
+   else if (!strcasecmp (name, "f31") || !strcasecmp (name, "r11"))
       return (unsigned int) THOT_KEY_R11;
-   else if (!strcmp (name, "F32") || !strcmp (name, "R12"))
+   else if (!strcasecmp (name, "f32") || !strcasecmp (name, "r12"))
       return (unsigned int) THOT_KEY_R12;
-   else if (!strcmp (name, "F33") || !strcmp (name, "R13"))
+   else if (!strcasecmp (name, "f33") || !strcasecmp (name, "r13"))
       return (unsigned int) THOT_KEY_R13;
-   else if (!strcmp (name, "F34") || !strcmp (name, "R14"))
+   else if (!strcasecmp (name, "f34") || !strcasecmp (name, "r14"))
       return (unsigned int) THOT_KEY_R14;
-   else if (!strcmp (name, "F35") || !strcmp (name, "R15"))
+   else if (!strcasecmp (name, "f35") || !strcasecmp (name, "r15"))
       return (unsigned int) THOT_KEY_R15;
 #endif /* THOT_KEY_R1 */
-   else if (!strcmp (name, "Up"))
+   else if (!strcasecmp (name, "up"))
       return (unsigned int) THOT_KEY_Up;
-   else if (!strcmp (name, "Down"))
+   else if (!strcasecmp (name, "down"))
       return (unsigned int) THOT_KEY_Down;
-   else if (!strcmp (name, "Left"))
+   else if (!strcasecmp (name, "left"))
       return (unsigned int) THOT_KEY_Left;
-   else if (!strcmp (name, "Right"))
+   else if (!strcasecmp (name, "right"))
       return (unsigned int) THOT_KEY_Right;
-   else if (!strcmp (name, "Home"))
+   else if (!strcasecmp (name, "home"))
       return (unsigned int) THOT_KEY_Home;
-   else if (!strcmp (name, "End"))
+   else if (!strcasecmp (name, "end"))
       return (unsigned int) THOT_KEY_End;
    else
       return (unsigned int) name[0];
@@ -313,17 +309,11 @@ int                 command;
 	    case THOT_MOD_ALT:
 	       addFirst = &Automata_alt;
 	       break;
-	    case THOT_MOD_META:
-	       addFirst = &Automata_meta;
-	       break;
 	    case THOT_MOD_S_CTRL:
 	       addFirst = &Automata_CTRL;
 	       break;
 	    case THOT_MOD_S_ALT:
 	       addFirst = &Automata_ALT;
-	       break;
-	    case THOT_MOD_S_META:
-	       addFirst = &Automata_META;
 	       break;
 	    default:
 	       return;
@@ -571,7 +561,7 @@ ThotEvent             *event;
 	  {
 	     event->xkey.state = i & (ShiftMask);
 	     status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS1, &ComS);
-	     if (status)
+	     if (status || KS == 0)
 		KS = KS1;
 	  }
      }
@@ -589,8 +579,6 @@ ThotEvent             *event;
       PicMask |= THOT_MOD_SHIFT;
    if (i & ControlMask)
       PicMask |= THOT_MOD_CTRL;
-   if (i & Mod1Mask)
-      PicMask |= THOT_MOD_META;
    if (i & Mod2Mask)
       PicMask |= THOT_MOD_ALT;
 
@@ -655,11 +643,6 @@ int                 key;
                  modtype = THOT_MOD_S_CTRL;
               else
                  modtype = THOT_MOD_CTRL;
-           else if (PicMask & THOT_MOD_META)
-                if (PicMask & THOT_MOD_SHIFT)
-                   modtype = THOT_MOD_S_META;
-                else
-                   modtype = THOT_MOD_META;
            else if (PicMask & THOT_MOD_ALT)
                 if (PicMask & THOT_MOD_SHIFT)
                    modtype = THOT_MOD_S_ALT;
@@ -689,11 +672,6 @@ int                 key;
                    ptr = Automata_CTRL;
                 else
                    ptr = Automata_ctrl;
-             else if (PicMask & THOT_MOD_META)
-                  if (PicMask & THOT_MOD_SHIFT)
-                     ptr = Automata_META;
-                  else
-                     ptr = Automata_meta;
              else if (PicMask & THOT_MOD_ALT)
                   if (PicMask & THOT_MOD_SHIFT)
                      ptr = Automata_ALT;
@@ -981,7 +959,7 @@ char               *appliname;
 		/* it is not a comment */
 		/* -------> Lecture des autres champs */
 	       {
-		  if (!strcmp (ch, "Shift"))
+		  if (!strcasecmp (ch, "shift"))
 		    {
 		       mod1 = THOT_MOD_SHIFT;
 		       strcpy (equiv, "Shift+");
@@ -996,12 +974,10 @@ char               *appliname;
 		       equiv[0] = EOS;
 		    }
 
-		  if (!strcmp (ch, "Ctrl"))
+		  if (!strcasecmp (ch, "ctrl"))
 		     mod1 += THOT_MOD_CTRL;
-		  else if (!strcmp (ch, "Alt"))
+		  else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
 		     mod1 += THOT_MOD_ALT;
-		  else if (!strcmp (ch, "Meta"))
-		     mod1 += THOT_MOD_META;
 
 		  /* Lecture de la cle */
 		  if (mod1 != THOT_NO_MOD && mod1 != THOT_MOD_SHIFT)
@@ -1051,7 +1027,7 @@ char               *appliname;
 		       strcpy (ch, "");
 		       fscanf (file, "%80s", ch);
 
-		       if (!strcmp (ch, "Shift"))
+		       if (!strcasecmp (ch, "shift"))
 			 {
 			    mod2 = THOT_MOD_SHIFT;
 			    strcat (line, ch);	/* copie du 1er modifieur */
@@ -1067,12 +1043,10 @@ char               *appliname;
 			    strcat (equiv, " ");
 			 }
 
-		       if (!strcmp (ch, "Ctrl"))
+		       if (!strcasecmp (ch, "ctrl"))
 			  mod2 += THOT_MOD_CTRL;
-		       else if (!strcmp (ch, "Alt"))
+		       else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
 			  mod2 += THOT_MOD_ALT;
-		       else if (!strcmp (ch, "Meta"))
-			  mod2 += THOT_MOD_META;
 
 		       /* Lecture de la cle */
 		       if (mod2 != THOT_NO_MOD && mod2 != THOT_MOD_SHIFT)
