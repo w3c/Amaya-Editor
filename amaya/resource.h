@@ -742,6 +742,9 @@
 #define IDC_PROFILENAME                 1463
 #define IDC_PROXYDOMAIN                 1464
 #define IDC_ONLYPROXY                   1465
+#define IDC_ABOUT2                      1469
+#define IDC_VERSION                     1471
+#define IDC_ABOUT1                      1472
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -782,7 +785,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        534
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1469
+#define _APS_NEXT_CONTROL_VALUE         1470
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
