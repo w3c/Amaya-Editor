@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya V4.3.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -39,6 +39,7 @@
     annotations</a></li>
   <li><a href="Annotations.html.fr#Navigating">Activer des
   annotations</a></li>
+  <li><a href="Annotations.html.fr#Moving">Déplacer des annotations</a></li>
   <li><a href="Annotations.html.fr#Issues1">Problèmes relatifs aux annotations
     et aux documents modifiés</a></li>
 </ul>
@@ -313,6 +314,34 @@ caractéristiques du support utilisé.</p>
 
 <p style="text-align: center"><img src="../Icons/linkwindow.png"
 alt="Link window shows annotations" /></p>
+
+<h3 id="Moving">Déplacer des annotations</h3>
+
+<p>Amaya vous permet également de deplacer une annotation vers un autre
+endroit du document, par exemple pour rattacher des <a
+href="Annotations.html#Issues1">annotations trompeuses ou orphelines</a>. Vous
+pouvez déplacer une annotation soit vers la sélection courante, soit vers la
+valeur d'un XPointer. Actuellemnt, on ne peut déplacer des annotations que
+dans le document où elles ont été créées.</p>
+
+<p>Pour déplacer une annotation vers la sélection courante, il faut dábord
+ouvrir une fenêtre d'annotation et sélectionner une partie du document annoté.
+Puis, dans la fenêtre d'annotation, appeler le menu <strong>Annotations/Move
+to selection</strong>. Amaya déplace alors l'icône de l'annotation vers la
+partie sélectionnée et considère l'annotation comme modifiée. Pour rendre ce
+changement effectif, vous devrez la sauver. De la même manière que pour la
+création, vous pouvez déplacer une annotation vers la position courante du
+curseur sans avoir besoin de faire la sélection.</p>
+
+<p>Pous pouvez aussi mémoriser la position où vous voulez déplacer une
+annotation, par exemple pour déplacer plusieurs annotations vers le même
+endroit ou pour se déplacer dans la fenêtre avant de faire la manipulation.
+Pour cela, faire la sélection (ou placer le curseur) à l'endroit désiré puis,
+utiliser le menu <strong>Link/Store link as XPointer</strong> pour créer un
+XPointer représentant cette sélection. Enfin, dans la fenêtre d'annotation,
+utiliser le menu <strong>Annotations/Move to stored XPointer</strong> pour
+déplacer l'annotation à la nouvelle position. Comme précédemment, vous devrez
+sauver l'annotation pour rendre ce changement effectif.</p>
 </div>
 
 <div id="Issues">
