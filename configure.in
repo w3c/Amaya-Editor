@@ -311,7 +311,7 @@ motif_libraries=NONE
 AC_MSG_CHECKING(for Motif)
 AC_ARG_WITH(motif, [  --with-motif            enable Motif tests])
 
-if test "${CC}" = "gcc"; then
+if test "${GCC}" = "yes"; then
    CPP="${CPP} -x c"
 fi
 if test "x$with_motif" = xno; then
@@ -368,7 +368,7 @@ dnl
 dnl  ***************************************************************
 
 THOT_VER="2.2"
-AMAYA_VER="1.3"
+AMAYA_VER="1.4"
 KAFFE_VER="cvs"
 
 dnl

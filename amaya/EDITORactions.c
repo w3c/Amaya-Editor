@@ -1909,8 +1909,10 @@ char               *shape;
 	     attrType.AttrTypeNum = HTML_ATTR_USEMAP;
 	     attr = TtaGetAttribute (image, attrType);
 	     if (attr == NULL)
-	       attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (image, attr, doc);
+	       {
+		 attr = TtaNewAttribute (attrType);
+		 TtaAttachAttribute (image, attr, doc);
+	       }
 	     TtaSetAttributeText (attr, url, image, doc);
 
 	     /* create the Ref_IMG attribute */

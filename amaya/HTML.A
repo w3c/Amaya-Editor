@@ -24,6 +24,10 @@ ELEMENTS
 	ElemNew.Post -> UpdateSRCattribute;
 	ElemTextModify.Post -> UpdateSRCattribute;
 	END;
+   MAP:
+	BEGIN
+	ElemDelete.Pre -> DeleteMap;
+	END;
 
    Text_Input:
 	BEGIN

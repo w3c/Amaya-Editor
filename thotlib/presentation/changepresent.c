@@ -717,7 +717,7 @@ int                 view;
 /*----------------------------------------------------------------------
   NewPosition is called when the user moves a box.
   pAb is the abstract box	
-  X and Y give the new dimensions in pixels.
+  X and Y give the new positions in pixels.
   frame is the frame.				
   display is TRUE when it's necessary to redisplay the concrete image.
 ----------------------------------------------------------------------*/
@@ -741,6 +741,7 @@ boolean             display;
    PtrElement          pEl;
    PtrAbstractBox      pAbbCur;
    NotifyAttribute     notifyAttr;
+   Document            doc;
    int                 x, y, dx, dy;
    int                 updateframe[MAX_VIEW_DOC];
    int                 viewSch;
@@ -777,7 +778,7 @@ boolean             display;
 	 /* passe au pave englobant */
 	 pAbbCur = pAbbCur->AbEnclosing;
      }
-   
+   doc = IdentDocument (pDoc);  
    /* traite la position verticale */
    if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
      {
@@ -818,7 +819,7 @@ boolean             display;
 		 /* modifier la valeur de l'attribut */
 		 {
 		   notifyAttr.event = TteAttrModify;
-		   notifyAttr.document = (Document) IdentDocument (pDoc);
+		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -965,7 +966,7 @@ boolean             display;
 		 /* modifier la valeur de l'attribut */
 		 {
 		   notifyAttr.event = TteAttrModify;
-		   notifyAttr.document = (Document) IdentDocument (pDoc);
+		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -1800,6 +1801,7 @@ int                 viewToApply;
    PtrPRule            pPRule, pR, pRS;
    NotifyPresentation  notifyPres;
    RuleSet             rulesS;
+   Document            doc;
    int                 viewSch;
    boolean             found;
 
@@ -1808,6 +1810,7 @@ int                 viewToApply;
    pPRule = pEl->ElFirstPRule;
    pR = NULL;
    found = FALSE;
+   doc = IdentDocument (pDoc);
    /* parcourt les regles de presentation specifiques de l'element */
    while (pPRule != NULL)
       if (pPRule->PrViewNum != viewSch || !RuleSetIn (pPRule->PrType, rules))
@@ -1824,7 +1827,7 @@ int                 viewToApply;
 	   /* specifique de l'element */
 	   pRS = pPRule->PrNextPRule;	/* regle a traiter apres */
 	   notifyPres.event = TtePRuleDelete;
-	   notifyPres.document = (Document) IdentDocument (pDoc);
+	   notifyPres.document = doc;
 	   notifyPres.element = (Element) pEl;
 	   notifyPres.pRule = (PRule) pPRule;
 	   notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
@@ -1840,7 +1843,7 @@ int                 viewToApply;
 		/* que la view active. */
 		ApplyStandardRule (pEl, pDoc, pPRule->PrType, pPRule->PrPresFunction, viewSch);
 		notifyPres.event = TtePRuleDelete;
-		notifyPres.document = (Document) IdentDocument (pDoc);
+		notifyPres.document = doc;
 		notifyPres.element = (Element) pEl;
 		notifyPres.pRule = NULL;
 		notifyPres.pRuleType = NumTypePRuleAPI (pPRule);

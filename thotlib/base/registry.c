@@ -805,6 +805,13 @@ static void         InitEnviron ()
      CurSaveInterval = DEF_SAVE_INTVL;
    HighlightBoxErrors = FALSE;
    InsertionLevels = 4;
+#ifndef _WINDOWS
+   pT = (char *)TtaGetEnvString ("DOUBLECLICKDELAY");
+   if (pT != NULL)
+     DoubleClickDelay = atoi(pT);
+   else
+     DoubleClickDelay = 500;
+#endif /* _WINDOWS */
 
    /* The base of the Thot directory */
    Thot_Dir = (char *) TtaGetEnvString ("THOTDIR");
@@ -823,11 +830,13 @@ static void         InitEnviron ()
    Thot_Sys_Sch = (char *) TtaGetEnvString ("THOTSYSSCH");
 
    /* set up SchemaPath accordingly */
-   if ((Thot_Sch != NULL) && (Thot_Sys_Sch != NULL)) {
+   if ((Thot_Sch != NULL) && (Thot_Sys_Sch != NULL))
+     {
        strncpy (SchemaPath, Thot_Sch, MAX_PATH);
        strcat (SchemaPath,PATH_STR);
        strcat (SchemaPath, Thot_Sys_Sch);
-   } else if (Thot_Sch != NULL)
+     }
+   else if (Thot_Sch != NULL)
        strncpy (SchemaPath, Thot_Sch, MAX_PATH);
    else if (Thot_Sys_Sch != NULL)
        strncpy (SchemaPath, Thot_Sys_Sch, MAX_PATH);

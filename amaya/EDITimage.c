@@ -57,6 +57,48 @@ static char         ImgAlt[NAME_LENGTH];
 #include "windialogapi_f.h"
 #endif /* _WINDOWS */
 
+
+/*----------------------------------------------------------------------
+   DeleteMap                                              
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             DeleteMap (NotifyElement * event)
+#else
+boolean             DeleteMap (event)
+NotifyElement      *event;
+
+#endif
+{
+   Element             image;
+  ElementType	       elType;
+   AttributeType       attrType;
+   Attribute           attr;
+   char               *url;
+   int                 length;
+
+   /* Search the refered image */
+   elType = TtaGetElementType (event->element);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+   attr = TtaGetAttribute (event->element, attrType);
+   image = NULL;
+   if (attr != NULL)
+     {
+       /* Search the IMAGE element associated with the MAP */
+       length = MAX_LENGTH;
+       url = (char*) TtaGetMemory (MAX_LENGTH);
+       TtaGiveReferenceAttributeValue (attr, &image, url, &length);
+       TtaFreeMemory (url);
+
+       /* remove the attribute USEMAP of the image */
+       attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+       attr = TtaGetAttribute (image, attrType);
+       if (attr != NULL)
+	 TtaRemoveAttribute (image, attr, event->document);
+     }
+  return FALSE;		/* let Thot perform normal operation */
+}
+
 /*----------------------------------------------------------------------
    CallbackImage manage returns of Picture form.                   
   ----------------------------------------------------------------------*/

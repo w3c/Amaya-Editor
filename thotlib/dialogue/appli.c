@@ -51,6 +51,7 @@ static PtrDocument  OldDocMsgSelect;
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
+#include "platform_tv.h"
 
 #ifdef _WINDOWS
 #define URL_TXTZONE     0
@@ -1709,7 +1710,7 @@ void               *event;
 	       TtcCopyToClipboard (document, view);
 	     }
 	   /* Est-ce un double clic */
-	   else if (t1 + (Time) 500 > ev->xbutton.time)
+	   else if (t1 + (Time) DoubleClickDelay > ev->xbutton.time)
 	     {
 	       TtaAbortShowDialogue ();
 	       TtaLockMainLoop();

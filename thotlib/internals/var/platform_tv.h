@@ -28,5 +28,8 @@ THOT_EXPORT boolean	FullStructureChecking;
 /* number of typed characters that triggers an automatic save */
 THOT_EXPORT int     	CurSaveInterval;
 
+/* maximum delay between 2 click to detect a double-click */
+THOT_EXPORT int         DoubleClickDelay;
+
 /* abstract boxes must be created for newly created elements */
 THOT_EXPORT	boolean	FirstCreation;

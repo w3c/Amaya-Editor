@@ -48,6 +48,9 @@ src="../Icons/amaya.gif" alt="Amaya"></a></p>
 <li>
 <a href="#want">How can I change the default window size?</a>
 </li>
+<li>
+<a href="#parsing">Can I see parsing errors detected by Amaya? </a>
+</li>
 </ol>
 
 <h2>Compiling Amaya</h2>
@@ -168,6 +171,48 @@ you cannot edit tags.</p>
 <hr>
 
 
+<h2><a name="want">How can I change the default window size</a></h2>
+<p>
+Parameters related to the windows displaying HTML documents are stored in the
+<code>Thot/amaya/HTML.conf</code> file. In that file there are different
+sections, one for each possible presentation. Normally you only act on the
+first section:</p>
+<pre>style HTMLP
+open
+  Formatted_view:        1 1 182 250
+geometry
+  Structure_view:        190 100 160 170
+  Alternate_view:        190 1 156 99
+  Links_view:            192 3 156 120
+  Table_of_contents:     194 5 156 120
+  Math_Structure_view:   195 6 156 80
+  Graph_Structure_view:  197 8 156 80  </pre>
+<p>
+For each view there are four parameters: x, y, width and height. You can
+change these default values. For Unix users we suggest you copy this file in
+your home directory (<code>$HOME/HTML.conf</code>)  and you edit it.. So
+modifications won't be lost next time Amaya is updated.</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="parsing">Can I see parsing errors detected by Amaya?</a></h2>
+<p>
+Amaya cannot be used to check documents validity. It accepts valid and invalid
+documents and tries to dynamically correct detected errors. For example it's
+able to add missing end-tags and to move misplaced elements.</p>
+<p>
+Nevertheless when Amaya find invalid tags and invalid attributes it generates
+a log file which can be displayed by the command "Show log file" of the menu
+"Special".</p>
+<p>
+</p>
+<hr>
+
+<p>
+</p>
+
 <h3><a name="Where3">Where can I get the developer's documentation</a></h3>
 <p>
 Those who want to extend or change the Amaya application need to read the
@@ -250,32 +295,6 @@ You can also change the zoom factor permanently. By default the zoom factor is
 modified in the registry file ($HOME/.thotrc (Unix) or Thot/config/thot.rc
 (Windows)). For example, you can add the following line in your registry:
 ZOOM=3.</p>
-<p>
-</p>
-<hr>
-
-
-<h2><a name="want">How can I change the default window size</a></h2>
-<p>
-Parameters related to the windows displaying HTML documents are stored in the
-<code>Thot/amaya/HTML.conf</code> file. In that file there are different
-sections, one for each possible presentation. Normally you only act on the
-first section:</p>
-<pre>style HTMLP
-open
-  Formatted_view:        1 1 182 250
-geometry
-  Structure_view:        190 100 160 170
-  Alternate_view:        190 1 156 99
-  Links_view:            192 3 156 120
-  Table_of_contents:     194 5 156 120
-  Math_Structure_view:   195 6 156 80
-  Graph_Structure_view:  197 8 156 80  </pre>
-<p>
-For each view there are four parameters: x, y, width and height. You can
-change these default values. For Unix users we suggest you copy this file in
-your home directory (<code>$HOME/HTML.conf</code>)  and you edit it.. So
-modifications won't be lost next time Amaya is updated.</p>
 <p>
 </p>
 <hr>

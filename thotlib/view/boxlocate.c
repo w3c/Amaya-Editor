@@ -2245,8 +2245,8 @@ int                 frame;
 	pAb->AbVertPos.PosUserSpecified = FALSE;
 	pAb->AbWidth.DimUserSpecified = FALSE;
 	pAb->AbHeight.DimUserSpecified = FALSE;
-	x = x + pFrame->FrXOrg - pBox->BxXOrg;
-	y = y + pFrame->FrYOrg - pBox->BxYOrg;
+	x += pFrame->FrXOrg;
+	y += pFrame->FrYOrg;
 	NewPosition (pAb, x, y, frame, TRUE);
 	if (percentW)
 	  NewDimension (pAb, 0, height, frame, TRUE);
