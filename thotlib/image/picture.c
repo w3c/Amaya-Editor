@@ -993,13 +993,14 @@ static void LayoutPicture (Pixmap pixmap,
 	  else
 	    {
 	      clipHeight = imageDesc->PicHeight;
-	      
+	      if (clipHeight > h)
+		clipHeight = h;
 	      /* clipping height is done by the image height */
-	     /*  delta = yFrame + imageDesc->PicHArea - y; */
-/* 	      if (delta <= 0) */
-/* 		clipHeight = 0; */
-/* 	      else */
-/* 		clipHeight = delta; */
+	      /*  delta = yFrame + imageDesc->PicHArea - y; */
+	      /* 	      if (delta <= 0) */
+	      /* 		clipHeight = 0; */
+	      /* 	      else */
+	      /* 		clipHeight = delta; */
 	    }	  
 
           if (picPresent == FillFrame || picPresent == XRepeat)
@@ -1017,13 +1018,14 @@ static void LayoutPicture (Pixmap pixmap,
 	  else
 	    {
 	      clipWidth = imageDesc->PicWidth;
-
+	      if (clipWidth > w)
+		clipWidth = w;
 	      /* clipping width is done by the image width */
 	      /* delta = xFrame + imageDesc->PicWArea - x; */
-/* 	      if (delta <= 0) */
-/* 		clipWidth = 0; */
-/* 	      else */
-/* 		clipWidth = delta; */
+	      /* 	      if (delta <= 0) */
+	      /* 		clipWidth = 0; */
+	      /* 	      else */
+	      /* 		clipWidth = delta; */
 	    }
 	  if (clipWidth < imageDesc->PicWidth)
 	    w = clipWidth;
@@ -2284,7 +2286,8 @@ static ThotBool Ratio_Calculate (PtrAbstractBox pAb,
   ThotBool Constrained_Width, Constrained_Height;
   int      initialw, initialh;
   
-  if (imgwidth && imgheight)
+  if (imgwidth && imgheight && 
+      pAb->AbBox->BxType == BoPicture)
     {	
       initialw = *width;      
       Constrained_Width = TRUE;
