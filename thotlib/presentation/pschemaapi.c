@@ -109,6 +109,7 @@ PSchema TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
 	   pSchPres->PsElemPRule = (PtrPRuleTable*) malloc (size);
 	   if (pSchPres->PsElemPRule)
 	     memset (pSchPres->PsElemPRule, 0 , size);
+	   pSchPres->PsNElemPRule = pSS->SsNRules;
 
 	   size = pSS->SsAttrTableSize * sizeof (int);
 	   pSchPres->PsNHeirElems = (NumberTable*) malloc (size);

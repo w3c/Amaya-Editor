@@ -378,7 +378,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 	}
 
       /* libere les regles de presentation des types */
-      for (i = 0; i < pSS->SsNRules; i++)
+      for (i = 0; i < pPSchema->PsNElemPRule; i++)
 	FreePRuleList (&pPSchema->PsElemPRule->ElemPres[i], pSS);
       /* libere les descripteurs de vues hotes */
       for (i = 0; i < MAX_VIEW; i++)
@@ -993,7 +993,7 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
 	pPfS = pPfS->PfNext;
     }
 #endif
-  
+
   /* reserve 2 additional entries for counter aliases (see function
      MakeAliasTypeCount in presvariables.c) */
   if (pSS->SsNRules >= pSS->SsRuleTableSize - 2)
@@ -1105,6 +1105,7 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
       pPSch->PsNInheritedAttrs->Num[i] = 0;
       pPSch->PsInheritedAttr->ElInherit[i] = NULL;
       pPSch->PsElemTransmit->Num[i] = 0;
+      pPSch->PsNElemPRule = i+1;
     }
 
   /* associated extension schemas */
@@ -1118,6 +1119,7 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
 	  pPSchExt->PsNInheritedAttrs->Num[i] = 0;
 	  pPSchExt->PsInheritedAttr->ElInherit[i] = NULL;
 	  pPSchExt->PsElemTransmit->Num[i] = 0;
+	  pPSchExt->PsNElemPRule = i+1;
 	}
       /* next extension schema */
       pHSPNext = pHSPNext->HdNextPSchema;
@@ -1846,7 +1848,7 @@ void AppendXmlAttribute (char *xmlName, AttributeType *attrType, PtrDocument pDo
     return;
 
   /* free all element and attribute inherit tables */
-  for (i = 0; i < pSS->SsNRules; i++)
+  for (i = 0; i < pPSch->PsNElemPRule; i++)
     {
       pPSch->PsNInheritedAttrs->Num[i] = 0;
       if (pPSch->PsInheritedAttr->ElInherit[i])

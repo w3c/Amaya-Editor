@@ -1277,7 +1277,7 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
     free (pSP->PsNAttrPRule);
   if (pSP->PsElemPRule)
     {
-      for (i = 0; i < pSS->SsNRules; i++)
+      for (i = 0; i < pSP->PsNElemPRule; i++)
 	pSP->PsElemPRule->ElemPres[i] = NULL;
       free (pSP->PsElemPRule);
     }
@@ -1287,7 +1287,7 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
     free (pSP->PsNInheritedAttrs);
   if (pSP->PsInheritedAttr)
     {
-      for (i = 0; i < pSS->SsNRules; i++)
+      for (i = 0; i < pSP->PsNElemPRule; i++)
 	{
 	  if (pSP->PsInheritedAttr->ElInherit[i])
 	    TtaFreeMemory (pSP->PsInheritedAttr->ElInherit[i]);

@@ -1659,6 +1659,7 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
 	    InitialNElems = pSS->SsNRules;
 	  else
 	    InitialNElems = pSS->SsFirstDynNature - 1;
+          pPSch->PsNElemPRule = InitialNElems;
 
 	  /* lit la table des pointeurs de regle de chaque type du */
 	  /* schema de structure */

@@ -812,6 +812,7 @@ typedef struct _PresentSchema
   int		PsNPresentBoxes;	/* number of presentation and layout
 					   boxes that are actually defined */
   int           PsPresentBoxTableSize;  /* size of table PsPresentBox */
+  int           PsNElemPRule;           /* number of known structure rules */
   PtrPRule      PsFirstDefaultPRule;	/* beginning of the default rules
 					   string */
   Counter       PsCounter[MAX_PRES_COUNTER];  /* counters */
