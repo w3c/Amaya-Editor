@@ -42,6 +42,7 @@
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLimage_f.h"
 #include "HTMLstyle_f.h"
 #include "HTMLtable_f.h"
 #ifdef MATHML
@@ -2251,7 +2252,7 @@ static void         TextToDocument ()
 		}
 	  }
 	elType = TtaGetElementType (parent);
-	if (elType.ElTypeNum == HTML_EL_Styles)
+	if (elType.ElTypeNum == HTML_EL_Styles && elType.ElSSchema == HTMLSSchema)
 	  {
 #ifndef STANDALONE
 	     ParseHTMLStyleHeader (parent, inputBuffer, theDocument, FALSE);

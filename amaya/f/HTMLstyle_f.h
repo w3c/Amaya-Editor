@@ -34,6 +34,11 @@ extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
                                               char *file,
                                               void *extra );
+extern char *UpdateCSSBackgroundImage (char *oldpath,
+				       char *newpath,
+				       char *imgpath,
+				       char *styleString);
+extern char *GetCSSBackgroundURL (char *styleString);
 extern void ParseStyleDeclaration ( Element el,
                                     char *cssRule,
                                     Document doc,
@@ -112,6 +117,11 @@ extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element el,
                                                 char *file,
                                                 void *extra */);
+extern char *UpdateCSSBackgroundImage (/* char *oldpath,
+					  char *newpath,
+					  char *imgpath,
+					  char *styleString */);
+extern char *GetCSSBackgroundURL (/* char *styleString */);
 extern void ParseStyleDeclaration (/* Element el,
                                       char *cssRule,
                                       Document doc,

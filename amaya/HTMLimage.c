@@ -545,7 +545,7 @@ void               *extra;
 	{
 	  update = TRUE;
 	  /* add BASE to image name, if necessary */
-	  NormalizeURL (imageName, doc, pathname, imageName);
+	  NormalizeURL (imageName, doc, pathname, imageName, NULL);
 	  /* is the image already loaded ? */
 	  newImage = AddLoadedImage (imageName, pathname, doc, &desc);
 	  if (newImage)

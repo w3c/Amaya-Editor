@@ -560,19 +560,22 @@ char      *url;
    NormalizeURL
    normalizes orgName according to a base associated with doc, and
    following the standard URL format rules.
+   if doc is 0 and otherPath not NULL, normalizes orgName according to this
+   other path.
    The function returns the new complete and normalized URL 
    or file name path (newName) and the name of the document (docName).        
    N.B. If the function can't find out what's the docName, it assigns
    the name "noname.html".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NormalizeURL (char *orgName, Document doc, char *newName, char *docName)
+void                NormalizeURL (char *orgName, Document doc, char *newName, char *docName, char *otherPath)
 #else  /* __STDC__ */
-void                NormalizeURL (orgName, doc, newName, docName)
+void                NormalizeURL (orgName, doc, newName, docName, otherPath)
 char               *orgName;
 Document            doc;
 char               *newName;
 char               *docName;
+char               *otherPath;
 #endif /* __STDC__ */
 {
    char               *basename;
@@ -590,9 +593,11 @@ char               *docName;
       return;
 
    if (doc != 0)
-      basename = GetBaseURL (doc);
+     basename = GetBaseURL (doc);
+   else if (otherPath != NULL)
+     basename = TtaStrdup (otherPath);
    else
-       basename = (char *) NULL;
+     basename = NULL;
 
    /*
     * Clean orgName
@@ -609,54 +614,63 @@ char               *docName;
     * If the URL does not include a protocol, then try to calculate
     * one using the doc's base element (if it exists),
     */
-   if (tempOrgName[0] == EOS) {
-      newName[0] = EOS;
-      TtaFreeMemory (basename);
-      return;
-   }
+   if (tempOrgName[0] == EOS)
+     {
+       newName[0] = EOS;
+       TtaFreeMemory (basename);
+       return;
+     }
 
    /* clean trailing white space */
    length = strlen (tempOrgName) - 1;
-   while (tempOrgName[length] == SPACE && tempOrgName[length] == EOL) {
-         tempOrgName[length] = EOS;
-         length--;
-   }
+   while (tempOrgName[length] == SPACE && tempOrgName[length] == EOL)
+     {
+       tempOrgName[length] = EOS;
+       length--;
+     }
 
    /* remove extra dot */
    if (tempOrgName[length] == '.')
       tempOrgName[length] = EOS;
 
-   if (IsW3Path (tempOrgName)) {
-      /* the name is complete, go to the Sixth Step */
-      strcpy (newName, tempOrgName);
-      SimplifyUrl (&newName);
-      /* verify if the URL has the form "protocol://server:port" */
-      ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-      if (ptr && !strcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
+   if (IsW3Path (tempOrgName))
+     {
+       /* the name is complete, go to the Sixth Step */
+       strcpy (newName, tempOrgName);
+       SimplifyUrl (&newName);
+       /* verify if the URL has the form "protocol://server:port" */
+       ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+       if (ptr && !strcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
          strcat (newName, URL_STR);
 
-      if (ptr)
+       if (ptr)
          TtaFreeMemory (ptr);
-   } else if ( doc == 0) /* the name is complete, go to the Sixth Step */
+     }
+   else if ( basename == NULL)
+     /* the name is complete, go to the Sixth Step */
      strcpy (newName, tempOrgName);
-   else {
+   else
+     {
        /* Calculate the absolute URL, using the base or document URL */
 #      ifdef _WINDOWS
-	   if (!IsW3Path (basename)) {
-	      length = strlen (tempOrgName);
-	      for (ndx = 0; ndx < length; ndx++)
-		      if (tempOrgName [ndx] == '/')
-		         tempOrgName [ndx] = '\\';
-	   }
+       if (!IsW3Path (basename))
+	 {
+	   length = strlen (tempOrgName);
+	   for (ndx = 0; ndx < length; ndx++)
+	     if (tempOrgName [ndx] == '/')
+	       tempOrgName [ndx] = '\\';
+	 }
 #      endif /* _WINDOWS */
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
-       if (ptr) {
-          SimplifyUrl (&ptr);
-          strcpy (newName, ptr);
-          TtaFreeMemory (ptr);
-       } else
-            newName[0] = EOS;
-   }
+       if (ptr)
+	 {
+	   SimplifyUrl (&ptr);
+	   strcpy (newName, ptr);
+	   TtaFreeMemory (ptr);
+	 }
+       else
+	 newName[0] = EOS;
+     }
 
    TtaFreeMemory (basename);
    /*
@@ -664,42 +678,51 @@ char               *docName;
     * .amaya directory. If the new URL finishes on DIR_SEP, then use
     * noname.html as a default ressource name
    */
-   if (newName[0] != EOS) {
-      length = strlen (newName) - 1;
-      if (newName[length] == URL_SEP || newName[length] == DIR_SEP) {
-         used_sep = newName[length];
-         check = TRUE;
-         while (check) {
+   if (newName[0] != EOS)
+     {
+       length = strlen (newName) - 1;
+       if (newName[length] == URL_SEP || newName[length] == DIR_SEP)
+	 {
+	   used_sep = newName[length];
+	   check = TRUE;
+	   while (check)
+	     {
                length--;
                while (length >= 0 && newName[length] != used_sep)
-                     length--;
-               if (!strncmp (&newName[length+1], "..", 2)) {
-                  newName[length+1] = EOS;
-                  /* remove also previous directory */
-                  length--;
-                  while (length >= 0 && newName[length] != used_sep)
-                        length--;
-                  if (strncmp (&newName[length+1], "//", 2)) /* don't remove server name */
+		 length--;
+               if (!strncmp (&newName[length+1], "..", 2))
+		 {
+		   newName[length+1] = EOS;
+		   /* remove also previous directory */
+		   length--;
+		   while (length >= 0 && newName[length] != used_sep)
+		     length--;
+		   if (strncmp (&newName[length+1], "//", 2))
+		     /* don't remove server name */
                      newName[length+1] = EOS;
-               } else if (!strncmp (&newName[length+1], ".", 1))
-                      newName[length+1] = EOS;
+		 }
+	       else if (!strncmp (&newName[length+1], ".", 1))
+		 newName[length+1] = EOS;
                else
-                  check = FALSE;
-         }
-	     strcpy (docName, "noname.html");	       
-         /* docname was not comprised inside the URL, so let's */
-         /* assign the default ressource name */
-         strcpy (docName, "noname.html");
-      } else { /* docname is comprised inside the URL */
+		 check = FALSE;
+	     }
+	   strcpy (docName, "noname.html");	       
+	   /* docname was not comprised inside the URL, so let's */
+	   /* assign the default ressource name */
+	   strcpy (docName, "noname.html");
+	 }
+       else
+	 { /* docname is comprised inside the URL */
            while (length >= 0 && newName[length] != URL_SEP && newName[length] != DIR_SEP)
-                 length--;
-          if (length < 0)
+	     length--;
+	   if (length < 0)
              strcpy (docName, newName);
-          else
-              strcpy (docName, &newName[length+1]);
-      }
-   } else
-        docName[0] = EOS;
+	   else
+	     strcpy (docName, &newName[length+1]);
+	 }
+     }
+   else
+     docName[0] = EOS;
 } 
 
 /*----------------------------------------------------------------------
@@ -1341,23 +1364,8 @@ char               *target;
    char               *s;
    boolean             change;
 
-   change = FALSE;
-#  ifdef _WINDOWS
-   if (src[1] == ':' && src[2] == '\\') {
-      strcpy (target, src);
-      change = TRUE;
-   }
-#  else  /* !_WINDOWS */
-   if (src[0] == '~')
-     {
-	/* replace ~ */
-	s = (char *) TtaGetEnvString ("HOME");
-	strcpy (target, s);
-	strcat (target, &src[1]);
-	change = TRUE;
-     }
-#   endif /* _WINDOWS */
-   else if (strncmp (src, "file:", 5) == 0)
+   change = TRUE;
+   if (strncmp (src, "file:", 5) == 0)
      {
 	/* remove the prefix file: */
 	if (src[5] == EOS)
@@ -1371,8 +1379,18 @@ char               *target;
 	  }
 	else
 	   strcpy (target, &src[5]);
-	change = TRUE;
      }
+#  ifndef _WINDOWS
+   else if (src[0] == '~')
+     {
+	/* replace ~ */
+	s = (char *) TtaGetEnvString ("HOME");
+	strcpy (target, s);
+	if (src[1] != DIR_SEP)
+	  strcat (target, DIR_STR);
+	strcat (target, &src[1]);
+     }
+#   endif /* _WINDOWS */
    else
       strcpy (target, src);
 

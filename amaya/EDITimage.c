@@ -65,6 +65,7 @@ char               *data;
   Element            el, elStyle, parent;
   Element            first, last;
   ElementType	     elType, parentType;
+  LoadedImageDesc   *desc;
   char               tempfile[MAX_LENGTH];
   char               tempname[MAX_LENGTH];
   int                i, c1;
@@ -189,7 +190,21 @@ char               *data;
 		    i = DRIVERP_VREPEAT;
 		  else
 		    i = DRIVERP_SCALE;
-		  HTMLSetBackgroundImage (document, el, i, LastURLImage);
+		  if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
+		    {
+		      /*
+			load a local image into a remote document 
+			copy image file into the temporary directory of the document
+			*/
+		      TtaExtractName (LastURLImage, tempfile, tempname);
+		      NormalizeURL (tempname, document, tempfile, tempname, NULL);
+		      AddLoadedImage (tempname, tempfile, document, &desc);
+		      desc->status = IMAGE_MODIFIED;
+		      TtaFileCopy (LastURLImage, desc->localName);
+		      HTMLSetBackgroundImage (document, el, i, tempname);
+		    }
+		  else
+		    HTMLSetBackgroundImage (document, el, i, LastURLImage);
 		}
 	      SetStyleAttribute (document, elStyle);
 	      TtaSetDocumentModified (document);
@@ -443,13 +458,13 @@ char               *text;
 #endif /* __STDC__ */
 {
   char              *value, *base;
-  char*              pathimage = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH) ; /* pathimage[MAX_LENGTH]; */
-  char*              localname = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH) ; /* localname[MAX_LENGTH]; */
-  char*              imagename = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH) ; /* imagename[MAX_LENGTH]; */
+  char               pathimage[MAX_LENGTH];
+  char               localname[MAX_LENGTH];
+  char               imagename[MAX_LENGTH];
   LoadedImageDesc   *desc;
 
   /* get the absolute URL of the image */
-  NormalizeURL (text, sourceDocument, pathimage, imagename);
+  NormalizeURL (text, sourceDocument, pathimage, imagename, NULL);
   if (IsHTTPPath (DocumentURLs[doc]))
     {
       /* remote target document */
@@ -458,7 +473,7 @@ char               *text;
 	  /* load a local image into a remote document */
 	  /* copy image file into the temporary directory of the document */
 	  TtaExtractName (pathimage, localname, imagename);
-	  NormalizeURL (imagename, doc, localname, imagename);
+	  NormalizeURL (imagename, doc, localname, imagename, NULL);
 	  AddLoadedImage (imagename, localname, doc, &desc);
 	  desc->status = IMAGE_MODIFIED;
 	  TtaFileCopy (pathimage, desc->localName);
@@ -508,9 +523,6 @@ char               *text;
 	  ResetStop (doc);
 	}
     }
-  TtaFreeMemory (pathimage);
-  TtaFreeMemory (localname);
-  TtaFreeMemory (imagename);
 }
 
 /*----------------------------------------------------------------------

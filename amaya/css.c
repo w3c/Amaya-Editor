@@ -731,14 +731,13 @@ Document            doc;
    */
   el = CreateWWWElement (doc, HTML_EL_Styles);
   rpi = list;
+  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
   while (rpi != NULL)
     {
       /* create the element StyleRule */
       el = CreateNewWWWElement (doc, HTML_EL_StyleRule);
       
       /* attach a text child containing the CSS value */
-      elType.ElSSchema = TtaGetDocumentSSchema (doc);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
       contenu = TtaNewElement (doc, elType);
       TtaInsertFirstChild (&contenu, el, doc);
       TtaSetTextContent (contenu, rpi->css_rule, TtaGetDefaultLanguage (), doc);
@@ -918,7 +917,7 @@ Document            doc;
     {
       /* this document is displayed -> load the CSS */
       tempfile[0] = EOS;
-      NormalizeURL (URL, doc, tempURL, tempname);
+      NormalizeURL (URL, doc, tempURL, tempname, NULL);
       
       if (IsW3Path (tempURL))
 	{
@@ -1051,7 +1050,7 @@ int                 merge;
 
    /* load the CSS */
    tempfile[0] = EOS;
-   NormalizeURL (URL, doc, tempURL, tempname);
+   NormalizeURL (URL, doc, tempURL, tempname, NULL);
 
    if (IsW3Path (tempURL))
      {
@@ -1342,7 +1341,7 @@ Document            doc;
 #endif
 {
 
-   RebuildHTMLStyleHeader (doc);
+  /*RebuildHTMLStyleHeader (doc);*/
    LoadUserStyleSheet (doc);
 }
 

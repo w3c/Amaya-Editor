@@ -18,12 +18,13 @@
 #include "amaya.h"
 #include "css.h"
 
-#include "css_f.h"
-#include "html2thot_f.h"
+#include "AHTURLTools_f.h"
 #include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
-#include "UIcss_f.h"
 #include "HTMLimage_f.h"
+#include "UIcss_f.h"
+#include "css_f.h"
+#include "html2thot_f.h"
 
 #define MAX_BUFFER_LENGTH 200
 
@@ -667,17 +668,16 @@ char               *cssRule;
 int                *index;
 #endif
 {
-   int                 i;
-
-   cssRule = SkipBlanks (cssRule);
-
-   for (i = 0; i < NB_CSSSTYLEATTRIBUTE; i++)
-      if (!strncmp (cssRule, HTMLStyleAttributes[i].name, strlen(HTMLStyleAttributes[i].name)))
-	{
-	   *index = i;
-	   return (cssRule + strlen (HTMLStyleAttributes[i].name));
-	}
-   return (NULL);
+  int                 i;
+  
+  cssRule = SkipBlanks (cssRule);
+  for (i = 0; i < NB_CSSSTYLEATTRIBUTE; i++)
+    if (!strncmp (cssRule, HTMLStyleAttributes[i].name, strlen(HTMLStyleAttributes[i].name)))
+      {
+	*index = i;
+	return (cssRule + strlen (HTMLStyleAttributes[i].name));
+      }
+  return (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -692,12 +692,12 @@ Element             el;
 Document            doc;
 #endif
 {
-   char               *res = GITagName (el);
+  char               *res = GITagName (el);
 
-   /* some kind of filtering is probably needed !!! */
-   if (res == NULL)
-      return ("unknown");
-   return (res);
+  /* some kind of filtering is probably needed !!! */
+  if (res == NULL)
+    return ("unknown");
+  return (res);
 }
 
 /*----------------------------------------------------------------------
@@ -766,7 +766,6 @@ int                  len
 #endif
 {
   unsigned short      red, green, blue;
-  LoadedImageDesc    *imgInfo;
   int                 add_unit = 0;
   int                 real = 0;
   float               fval = 0;
@@ -981,33 +980,26 @@ int                  len
       break;
     case DRIVERP_BGIMAGE:
       if (settings->value.pointer != NULL)
-	{
-	  imgInfo = SearchLoadedImage((char *)settings->value.pointer, 0);
-	  if (imgInfo != NULL)
-	    sprintf (buffer, "background-image: url(%s)",
-		     (char *) imgInfo->originalName);
-	  else
-	    sprintf (buffer, "background-image: url(file:/%s)",
-		     (char *)settings->value.pointer);
-	}
+	sprintf (buffer, "background-image: url(%s)", (char *)settings->value.pointer);
       else
 	sprintf (buffer, "background-image: none");
       break;
     case DRIVERP_PICTUREMODE:
-      switch (settings->value.typed_data.value) {
-      case DRIVERP_REALSIZE:
-	sprintf (buffer, "background-repeat: no-repeat");
-	break;
-      case DRIVERP_REPEAT:
-	sprintf (buffer, "background-repeat: repeat");
-	break;
-      case DRIVERP_VREPEAT:
-	sprintf (buffer, "background-repeat: repeat-y");
-	break;
-      case DRIVERP_HREPEAT:
-	sprintf (buffer, "background-repeat: repeat-x");
-	break;
-      }
+      switch (settings->value.typed_data.value)
+	{
+	case DRIVERP_REALSIZE:
+	  sprintf (buffer, "background-repeat: no-repeat");
+	  break;
+	case DRIVERP_REPEAT:
+	  sprintf (buffer, "background-repeat: repeat");
+	  break;
+	case DRIVERP_VREPEAT:
+	  sprintf (buffer, "background-repeat: repeat-y");
+	  break;
+	case DRIVERP_HREPEAT:
+	  sprintf (buffer, "background-repeat: repeat-x");
+	  break;
+	}
       break;
     }
 
@@ -1046,17 +1038,31 @@ PresentationSetting settings;
 void               *param;
 #endif
 {
-   char               *css_rules = param;
-   char                string[150];
+  LoadedImageDesc    *imgInfo;
+  char               *css_rules = param;
+  char                string[150];
+  char               *ptr;
 
-   string[0] = EOS;
+  string[0] = EOS;
+  if (settings->type == DRIVERP_BGIMAGE)
+    {
+      /* transform absolute URL into relative URL */
+      imgInfo = SearchLoadedImage((char *)settings->value.pointer, 0);
+      if (imgInfo != NULL)
+	ptr = MakeRelativeURL (imgInfo->originalName, DocumentURLs[ctxt->doc]);
+      else
+	ptr = MakeRelativeURL ((char *)settings->value.pointer, DocumentURLs[ctxt->doc]);
+      settings->value.pointer = ptr;
+      PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+      TtaFreeMemory (ptr);
+    }
+  else
+    PresentationSettingsToCSS(settings, &string[0], sizeof(string));
 
-   PresentationSettingsToCSS(settings, &string[0], sizeof(string));
-
-   if ((string[0] != EOS) && (*css_rules != EOS))
-      strcat (css_rules, "; ");
-   if (string[0] != EOS)
-      strcat (css_rules, string);
+  if ((string[0] != EOS) && (*css_rules != EOS))
+    strcat (css_rules, "; ");
+  if (string[0] != EOS)
+    strcat (css_rules, string);
 }
 
 /*----------------------------------------------------------------------
@@ -3307,6 +3313,128 @@ void *extra;
    TtaFreeMemory (callblock);
 }
 
+
+/*----------------------------------------------------------------------
+   UpdateCSSBackgroundImage searches a CSS BackgroundImage url within
+   the styleString and make it relative to the newpath.
+   oldpath = old document path
+   newpath = new document path
+   imgpath = new image directory
+   If the image is not moved, the imgpath has to be NULL else the new
+   image url is obtained by concatenation of imgpath and the image name.
+   Returns NULL or a new allocated styleString.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char               *UpdateCSSBackgroundImage (char *oldpath, char *newpath, char *imgpath, char *styleString)
+#else
+char               *UpdateCSSBackgroundImage (oldpath, newpath, imgpath, styleString)
+char               *oldpath;
+char               *newpath;
+char               *imgpath;
+char               *styleString;
+#endif
+{
+  char               *b, *e, *ptr;
+  char                old_url[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
+  char                imgname[MAX_LENGTH];
+  char               *new_url;
+  int                 len;
+
+  ptr = NULL;
+  b = strstr (styleString, "background-image");
+  if (b != NULL)
+    {
+      b = SkipWord (b);
+      /* we need to compare this url with the new doc path */
+      b = SkipBlanks (b);
+      if (*b != ':')
+	return (ptr);
+      b++;
+      b = SkipBlanks (b);
+      if (strncasecmp (b, "url", 3))
+	return (ptr);
+      b = SkipWord (b);
+      b = SkipBlanks (b);
+      if (*b != '(')
+	return (ptr);
+      b++;
+      /* search the url end */
+      e = b;
+      while (*e != EOS && *e != ')')
+	e++;
+      if (*e == EOS)
+	return (ptr);
+      len = (int)(e - b);
+      strncpy (old_url, b, len);
+      old_url[len] = EOS;
+      /* get the old full image name */
+      NormalizeURL (old_url, 0, tempname, imgname, oldpath);
+      /* build the new full image name */
+      if (imgpath != NULL)
+	NormalizeURL (imgname, 0, tempname, imgname, imgpath);
+      new_url = MakeRelativeURL (tempname, newpath);
+      /* generate the new style string */
+      len = - len + strlen (styleString) + strlen (new_url) + 1;
+      ptr = (char *) TtaGetMemory (len);
+      len = (int)(b - styleString);
+      strncpy (ptr, styleString, len);
+      strcpy (&ptr[len], new_url);
+      strcat (&ptr[len], e);
+      TtaFreeMemory (new_url);
+    }
+  return (ptr);
+}
+
+
+/*----------------------------------------------------------------------
+   GetCSSBackgroundURL searches a CSS BackgroundImage url within
+   the styleString.
+   Returns NULL or a new allocated url string.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char               *GetCSSBackgroundURL (char *styleString)
+#else
+char               *GetCSSBackgroundURL (styleString)
+char               *styleString;
+#endif
+{
+  char               *b, *e, *ptr;
+  int                 len;
+
+  ptr = NULL;
+  b = strstr (styleString, "background-image");
+  if (b != NULL)
+    {
+      b = SkipWord (b);
+      /* we need to compare this url with the new doc path */
+      b = SkipBlanks (b);
+      if (*b != ':')
+	return (ptr);
+      b++;
+      b = SkipBlanks (b);
+      if (strncasecmp (b, "url", 3))
+	return (ptr);
+      b = SkipWord (b);
+      b = SkipBlanks (b);
+      if (*b != '(')
+	return (ptr);
+      b++;
+      /* search the url end */
+      e = b;
+      while (*e != EOS && *e != ')')
+	e++;
+      if (*e == EOS)
+	return (ptr);
+      len = (int)(e - b);
+      ptr = (char *) TtaGetMemory (len+1);
+      strncpy (ptr, b, len);
+      ptr[len] = EOS;
+    }
+  return (ptr);
+}
+
+
 /*----------------------------------------------------------------------
    ParseCSSBackgroundImage : parse a CSS BackgroundImage
    attribute string.                                          
@@ -4094,18 +4222,7 @@ char               *image;
 {
    char                css_command[100];
 
-#  ifdef _WINDOWS
-   if (image[0] != DIR_SEP && image[1] != ':' && image[2] != DIR_SEP)
-#  else  /* !_WINDOWS */
-   if (image[0] != DIR_SEP)
-#  endif /* !_WINDOWS */
-     sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
-   else
-#    ifdef _WINDOWS 
-     sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
-#    else /* !_WINDOWS */
-     sprintf (css_command, "background-image: url(file:/%s); background-repeat: ", image);
-#    endif /* !_WINDOWS */
+   sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
    if (repeat == DRIVERP_REPEAT)
      strcat (css_command, "repeat");
    else if (repeat == DRIVERP_HREPEAT)

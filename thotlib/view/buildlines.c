@@ -1797,6 +1797,179 @@ int                 spaceWidth;
 
 
 /*----------------------------------------------------------------------
+   RemoveBreaks libere les boites de coupure qui ont pu etre creees a`
+   partir de la boite mere pBox.                           
+   L'indicateur chgDF ou changeSelectEnd est bascule si la boite     
+   referencee par la marque Debut ou Fin de Selection est  
+   liberee.                                                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         RemoveBreaks (PtrBox pBox, int frame, boolean *changeSelectBegin, boolean *changeSelectEnd)
+#else  /* __STDC__ */
+static void         RemoveBreaks (pBox, frame, changeSelectBegin, changeSelectEnd)
+PtrBox              pBox;
+int                 frame;
+boolean            *changeSelectBegin;
+boolean            *changeSelectEnd;
+
+#endif /* __STDC__ */
+{
+   PtrBox              pFirstBox;
+   PtrBox              pRemainBox;
+   PtrBox              pNextBox;
+   int                 x, width;
+   int                 number;
+   int                 lostPixels;
+   int                 diff;
+   PtrAbstractBox      pAb;
+   ViewFrame          *pFrame;
+   ViewSelection      *pViewSel;
+
+   pFrame = &ViewFrameTable[frame - 1];
+   if (pBox != NULL)
+     {
+	pAb = pBox->BxAbstractBox;
+	if (pAb != NULL && pAb->AbLeafType == LtText)
+	  {
+	     x = CharacterWidth (_SPACE_, pBox->BxFont);
+	     /* met a jour les marques de selection */
+	     if (pFrame->FrSelectionBegin.VsBox == pBox)
+	       {
+		  /* Box entiere */
+		  pFrame->FrSelectionBegin.VsBox = pAb->AbBox;
+		  *changeSelectBegin = TRUE;
+	       }
+	     if (pFrame->FrSelectionEnd.VsBox == pBox)
+	       {
+		  /* Box entiere */
+		  pFrame->FrSelectionEnd.VsBox = pAb->AbBox;
+		  *changeSelectEnd = TRUE;
+	       }
+
+	     /* va liberer des boites coupure */
+	     if (pBox->BxType == BoComplete)
+		RemoveAdjustement (pBox, x);
+	     else
+	       {
+		  /* 1e boite de coupure liberee */
+		  pRemainBox = pBox->BxNexChild;
+		  pBox->BxNexChild = NULL;
+		  if (pBox->BxType == BoSplit)
+		    {
+		       /* met a jour la boite coupee */
+		       pBox->BxType = BoComplete;
+		       pBox->BxPrevious = pRemainBox->BxPrevious;
+		       /* transmet la position courante de la boite */
+		       pBox->BxXOrg = pRemainBox->BxXOrg;
+		       pBox->BxYOrg = pRemainBox->BxYOrg;
+		       if (pBox->BxPrevious != NULL)
+			  pBox->BxPrevious->BxNext = pBox;
+		       else
+			  pFrame->FrAbstractBox->AbBox->BxNext = pBox;
+
+		       width = 0;
+		       number = 0;
+		       lostPixels = 0;
+		    }
+		  else
+		    {
+		       /* met a jour la derniere boite de coupure conservee */
+		       RemoveAdjustement (pBox, x);
+		       width = pBox->BxWidth;
+		       /* retire l'espace reserve au tiret d'hyphenation */
+		       if (pBox->BxType == BoDotted)
+			 {
+			    width -= CharacterWidth (173, pBox->BxFont);
+			    pBox->BxType = BoPiece;
+			 }
+		       number = pBox->BxNSpaces;
+		       lostPixels = pBox->BxIndChar + pBox->BxNChars;
+		    }
+
+		  /* Libere les boites de coupure */
+		  if (pRemainBox != NULL)
+		    {
+		       do
+			 {
+			    pFirstBox = pRemainBox;
+			    RemoveAdjustement (pFirstBox, x);
+			    /* Nombre de blancs sautes */
+			    diff = pFirstBox->BxIndChar - lostPixels;
+			    if (diff > 0)
+			      {
+				 /* ajoute les blancs sautes */
+				 width += diff * x;
+				 number += diff;
+			      }
+			    else if (pFirstBox->BxType == BoDotted)
+			       /* retire la largeur du tiret d'hyphenation */
+			       width -= CharacterWidth (173, pFirstBox->BxFont);
+
+			    /* Si la boite suivante n'est pas vide */
+			    if (pFirstBox->BxNChars > 0)
+			      {
+				 number += pFirstBox->BxNSpaces;
+				 width += pFirstBox->BxWidth;
+			      }
+			    lostPixels = pFirstBox->BxIndChar + pFirstBox->BxNChars;
+			    pNextBox = pFirstBox->BxNext;
+			    pRemainBox = FreeBox (pFirstBox);
+
+			    /* Prepare la mise a jour des marques de selection */
+			    pViewSel = &pFrame->FrSelectionBegin;
+			    if (pViewSel->VsBox == pFirstBox)
+			      {
+				 /* Box entiere */
+				 pViewSel->VsBox = pAb->AbBox;
+				 *changeSelectBegin = TRUE;
+			      }
+			    pViewSel = &pFrame->FrSelectionEnd;
+			    if (pViewSel->VsBox == pFirstBox)
+			      {
+				 /* Box entiere */
+				 pViewSel->VsBox = pAb->AbBox;
+				 *changeSelectEnd = TRUE;
+			      }
+			 }
+		       while (pRemainBox != NULL);
+
+		       /* Met a jour la boite de coupure */
+		       if (pBox->BxType == BoPiece)
+			 {
+			    pBox->BxNChars = pBox->BxAbstractBox->AbBox->BxNChars - pBox->BxIndChar;
+			    /* comptabilise les blancs ignores de fin de boite */
+			    lostPixels = lostPixels - pBox->BxIndChar - pBox->BxNChars;
+			    if (lostPixels > 0)
+			      {
+				 width += lostPixels * x;
+				 number += lostPixels;
+			      }
+			    pBox->BxWidth = width;
+			    pBox->BxNSpaces = number;
+			 }
+
+		       /* Termine la mise a jour des chainages */
+		       pBox->BxNext = pNextBox;
+		       if (pNextBox != NULL)
+			  pNextBox->BxPrevious = pBox;
+		       else
+			  pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
+		    }
+	       }
+	  }
+	/* Pour les autres natures */
+	else
+	  {
+	     if (pFrame->FrSelectionBegin.VsBox == pBox)
+		*changeSelectBegin = TRUE;
+	     if (pFrame->FrSelectionEnd.VsBox == pBox)
+		*changeSelectEnd = TRUE;
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
    ComputeLines cre'e les lignes ne'cessaires pour contenir les     
    boi^tes filles de'ja` cre'e'es. Le parame`tre frame     
    de'signe la fenetree^tre concerne'e. Les boi^tes filles 
@@ -2152,6 +2325,13 @@ int                *height;
 	  pLine->LiFirstPiece = NULL;
 	  pLine->LiLastPiece = NULL;
 	  pBox->BxMinWidth = FillLine (pLine, pRootAb, pAb->AbTruncatedTail, &full, &toAdjust, &breakLine);
+	  if (full)
+	    {
+	      /* the last box has been broken */
+	      full = FALSE;
+	      still = FALSE;
+	    RemoveBreaks (pLine->LiLastBox, frame, &full, &still);
+	    }
 	  pBox->BxMaxWidth = pLine->LiRealLength;
 	  if (pLine->LiHeight > *height)
 	    *height = pLine->LiHeight;
@@ -2400,179 +2580,6 @@ int                 spaceDelta;
      }
    while (pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
    ReadyToDisplay = TRUE;
-}
-
-
-/*----------------------------------------------------------------------
-   RemoveBreaks libere les boites de coupure qui ont pu etre creees a`
-   partir de la boite mere pBox.                           
-   L'indicateur chgDF ou changeSelectEnd est bascule si la boite     
-   referencee par la marque Debut ou Fin de Selection est  
-   liberee.                                                
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RemoveBreaks (PtrBox pBox, int frame, boolean * changeSelectBegin, boolean * changeSelectEnd)
-#else  /* __STDC__ */
-static void         RemoveBreaks (pBox, frame, changeSelectBegin, changeSelectEnd)
-PtrBox              pBox;
-int                 frame;
-boolean            *changeSelectBegin;
-boolean            *changeSelectEnd;
-
-#endif /* __STDC__ */
-{
-   PtrBox              pFirstBox;
-   PtrBox              pRemainBox;
-   PtrBox              pNextBox;
-   int                 x, width;
-   int                 number;
-   int                 lostPixels;
-   int                 diff;
-   PtrAbstractBox      pAb;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
-
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pBox != NULL)
-     {
-	pAb = pBox->BxAbstractBox;
-	if (pAb != NULL && pAb->AbLeafType == LtText)
-	  {
-	     x = CharacterWidth (_SPACE_, pBox->BxFont);
-	     /* met a jour les marques de selection */
-	     if (pFrame->FrSelectionBegin.VsBox == pBox)
-	       {
-		  /* Box entiere */
-		  pFrame->FrSelectionBegin.VsBox = pAb->AbBox;
-		  *changeSelectBegin = TRUE;
-	       }
-	     if (pFrame->FrSelectionEnd.VsBox == pBox)
-	       {
-		  /* Box entiere */
-		  pFrame->FrSelectionEnd.VsBox = pAb->AbBox;
-		  *changeSelectEnd = TRUE;
-	       }
-
-	     /* va liberer des boites coupure */
-	     if (pBox->BxType == BoComplete)
-		RemoveAdjustement (pBox, x);
-	     else
-	       {
-		  /* 1e boite de coupure liberee */
-		  pRemainBox = pBox->BxNexChild;
-		  pBox->BxNexChild = NULL;
-		  if (pBox->BxType == BoSplit)
-		    {
-		       /* met a jour la boite coupee */
-		       pBox->BxType = BoComplete;
-		       pBox->BxPrevious = pRemainBox->BxPrevious;
-		       /* transmet la position courante de la boite */
-		       pBox->BxXOrg = pRemainBox->BxXOrg;
-		       pBox->BxYOrg = pRemainBox->BxYOrg;
-		       if (pBox->BxPrevious != NULL)
-			  pBox->BxPrevious->BxNext = pBox;
-		       else
-			  pFrame->FrAbstractBox->AbBox->BxNext = pBox;
-
-		       width = 0;
-		       number = 0;
-		       lostPixels = 0;
-		    }
-		  else
-		    {
-		       /* met a jour la derniere boite de coupure conservee */
-		       RemoveAdjustement (pBox, x);
-		       width = pBox->BxWidth;
-		       /* retire l'espace reserve au tiret d'hyphenation */
-		       if (pBox->BxType == BoDotted)
-			 {
-			    width -= CharacterWidth (173, pBox->BxFont);
-			    pBox->BxType = BoPiece;
-			 }
-		       number = pBox->BxNSpaces;
-		       lostPixels = pBox->BxIndChar + pBox->BxNChars;
-		    }
-
-		  /* Libere les boites de coupure */
-		  if (pRemainBox != NULL)
-		    {
-		       do
-			 {
-			    pFirstBox = pRemainBox;
-			    RemoveAdjustement (pFirstBox, x);
-			    /* Nombre de blancs sautes */
-			    diff = pFirstBox->BxIndChar - lostPixels;
-			    if (diff > 0)
-			      {
-				 /* ajoute les blancs sautes */
-				 width += diff * x;
-				 number += diff;
-			      }
-			    else if (pFirstBox->BxType == BoDotted)
-			       /* retire la largeur du tiret d'hyphenation */
-			       width -= CharacterWidth (173, pFirstBox->BxFont);
-
-			    /* Si la boite suivante n'est pas vide */
-			    if (pFirstBox->BxNChars > 0)
-			      {
-				 number += pFirstBox->BxNSpaces;
-				 width += pFirstBox->BxWidth;
-			      }
-			    lostPixels = pFirstBox->BxIndChar + pFirstBox->BxNChars;
-			    pNextBox = pFirstBox->BxNext;
-			    pRemainBox = FreeBox (pFirstBox);
-
-			    /* Prepare la mise a jour des marques de selection */
-			    pViewSel = &pFrame->FrSelectionBegin;
-			    if (pViewSel->VsBox == pFirstBox)
-			      {
-				 /* Box entiere */
-				 pViewSel->VsBox = pAb->AbBox;
-				 *changeSelectBegin = TRUE;
-			      }
-			    pViewSel = &pFrame->FrSelectionEnd;
-			    if (pViewSel->VsBox == pFirstBox)
-			      {
-				 /* Box entiere */
-				 pViewSel->VsBox = pAb->AbBox;
-				 *changeSelectEnd = TRUE;
-			      }
-			 }
-		       while (pRemainBox != NULL);
-
-		       /* Met a jour la boite de coupure */
-		       if (pBox->BxType == BoPiece)
-			 {
-			    pBox->BxNChars = pBox->BxAbstractBox->AbBox->BxNChars - pBox->BxIndChar;
-			    /* comptabilise les blancs ignores de fin de boite */
-			    lostPixels = lostPixels - pBox->BxIndChar - pBox->BxNChars;
-			    if (lostPixels > 0)
-			      {
-				 width += lostPixels * x;
-				 number += lostPixels;
-			      }
-			    pBox->BxWidth = width;
-			    pBox->BxNSpaces = number;
-			 }
-
-		       /* Termine la mise a jour des chainages */
-		       pBox->BxNext = pNextBox;
-		       if (pNextBox != NULL)
-			  pNextBox->BxPrevious = pBox;
-		       else
-			  pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
-		    }
-	       }
-	  }
-	/* Pour les autres natures */
-	else
-	  {
-	     if (pFrame->FrSelectionBegin.VsBox == pBox)
-		*changeSelectBegin = TRUE;
-	     if (pFrame->FrSelectionEnd.VsBox == pBox)
-		*changeSelectEnd = TRUE;
-	  }
-     }
 }
 
 

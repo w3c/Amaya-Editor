@@ -1393,7 +1393,7 @@ View                view;
    /* reload the document */
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
-   NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname);
+   NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname, NULL);
 
    if (!IsW3Path (pathname) && !TtaFileExist (pathname))
      /* cannot reload this document */
@@ -1756,7 +1756,7 @@ void *context;
 	 {
 	   if (IsW3Path (pathname) && !strcmp (documentname, "noname.html"))
 	     /* keep the real name */
-	     NormalizeURL (pathname, 0, tempdocument, documentname);
+	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
 	   res = LoadHTMLDocument (newdoc, pathname, tempfile, 
@@ -1890,9 +1890,9 @@ void               *ctx_cbf;
    /* Add the  base content if necessary */
    if (CE_event == CE_TRUE || CE_event == CE_FORM_GET
        || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
-     NormalizeURL (tempdocument, baseDoc, pathname, documentname);
+     NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
-     NormalizeURL (tempdocument, 0, pathname, documentname);
+     NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
    if (parameters[0] == EOS)
      newdoc = IsDocumentLoaded (pathname);

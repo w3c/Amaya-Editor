@@ -983,7 +983,7 @@ NotifyElement      *event;
 #ifdef __STDC__
 boolean            ElemToTransform (NotifyOnElementType * event)
 #else  /* __STDC__ */
-void               ElemToTransform (event)
+boolean               ElemToTransform (event)
 NotifyOnElementType * event;
 #endif  /* __STDC__ */
 {

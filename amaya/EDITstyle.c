@@ -36,7 +36,7 @@
 /*
  * specific data :
  *   The Class List contains the list of classe names needed for selection
- *                  by the user.
+ *                  by the user.S
  *   NbClass is the corresponding number of elements found.
  *   CurrentClass contains the Class name selected by the user.
  *   ClassReference is the selected element used to update the class properties.
@@ -593,12 +593,12 @@ char               *first;
       nb++;
     }
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrSSchema = elType.ElSSchema;
   elType.ElTypeNum = HTML_EL_StyleRule;
   el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
 
   while (el != NULL)
     {
-      attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
       attrType.AttrTypeNum = HTML_ATTR_Selector;
       attr = TtaGetAttribute (el, attrType);
       if (attr)
