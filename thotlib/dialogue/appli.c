@@ -1291,11 +1291,8 @@ LPARAM      lParam;
     RECT   rWindow ;
     int  frame = GetMainFrameNumber (hwnd);
 
-	if (frame != -1) {
+	if (frame != -1)
        currentFrame = frame;
-       if (FrRef[frame])
-          SetFocus (FrRef[frame]);
-	}
 
     GetWindowRect (hwnd, &rect);
 
@@ -1485,15 +1482,6 @@ LPARAM      lParam;
                 return 0;
            }
 
-           case WM_LBUTTONDOWN:
-           case WM_MBUTTONDOWN:
-           case WM_RBUTTONDOWN:
-           case WM_MOUSEMOVE:
-                SetActiveWindow (hwnd);
-                if (FrRef[frame])
-                   SetFocus (FrRef[frame]);
-                return 0;
-
            default: 
                     return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
@@ -1531,10 +1519,8 @@ LPARAM lParam;
 
      frame = GetFrameNumber (hwnd);
 
-     if (frame != -1) {
+     if (frame != -1) 
         currentFrame = frame;
-        SetFocus (FrRef[frame]);
-	 }
 
 	 GetWindowRect (hwnd, &rect);
      GetClientRect (hwnd, &cRect);
@@ -1712,8 +1698,8 @@ LPARAM lParam;
 				 return 0;
 
             case WM_MOUSEMOVE:
-                 SetActiveWindow (FrMainRef[frame]);
-                 SetFocus (hwnd);
+                 /* SetActiveWindow (FrMainRef[frame]); 
+                 SetFocus (hwnd); */
                  X_Pos = LOWORD (lParam) ;
                  Y_Pos = HIWORD (lParam) ;
                  /* if (fBlocking) { */
