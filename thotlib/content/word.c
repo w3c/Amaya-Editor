@@ -1,10 +1,8 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/*
 
-/* Module mot.c */
-/* Procedure de recherche de mots
-   E. Picheral, CICB - 29 aout 1991
-   I. Vatton mars 1993 - reecriture apres insertion des langues
+ This module locates words in Thot documents.
+
  */
 
 #include "thot_sys.h"
@@ -12,11 +10,11 @@
 #include "typemedia.h"
 #include "language.h"
 
-static PtrDocument  DocSelInitial;
-static PtrElement   ElDebutSelInitial;
-static PtrElement   ElFinSelInitial;
-static int          CarDebutSelInitial;
-static int          CarFinSelInitial;
+static PtrDocument  DocInitialSelection;
+static PtrElement   firstElInitialSelection;
+static PtrElement   lastElInitialSelection;
+static int          firstCharInitialSelection;
+static int          lastCharInitialSelection;
 
 #include "structselect_f.h"
 #include "tree_f.h"
@@ -24,9 +22,9 @@ static int          CarFinSelInitial;
 
 /* ---------------------------------------------------------------------- */
 /* | CarSuivant retourne le caractere qui suit le caractere courant     | */
-/* |            buffer[rank] et met a jour adbuff et rank.              | */
+/* |            buffer[rank] et met a jour buffer et rank.              | */
 /* |            S'il n'y a pas de caractere suivant retourne le         | */
-/* |            caractere `\0`.                                         | */
+/* |            caractere NULL.                                         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -45,12 +43,11 @@ int                *rank;
       return (0);
    else
      {
-	/* Indice suivant */
 	(*rank)++;
 
 	if (*rank >= (*buffer)->BuLength)
 	  {
-	     /* Il faut changer de buffer */
+	     /* get next buffer in the same Text element */
 	     *rank = 0;
 	     *buffer = (*buffer)->BuNext;
 	     if (*buffer == NULL)
@@ -61,12 +58,11 @@ int                *rank;
 	else
 	   return ((*buffer)->BuContent[*rank]);
      }
-}				/*CarSuivant */
-
+}
 
 /* ---------------------------------------------------------------------- */
 /* | CarPrecedent retourne le caractere qui precede le caractere        | */
-/* |            courant buffer[rank] et met a jour adbuff et rank.      | */
+/* |            courant buffer[rank] et met a jour buffer et rank.      | */
 /* |            S'il n'y a pas de caractere precedent retourne le       | */
 /* |            caractere `\0`.                                         | */
 /* ---------------------------------------------------------------------- */
@@ -77,7 +73,7 @@ unsigned char       CarPrecedent (PtrTextBuffer * buffer, int *rank)
 #else  /* __STDC__ */
 unsigned char       CarPrecedent (buffer, rank)
 PtrTextBuffer     *buffer;
-int                *rank;
+int               *rank;
 
 #endif /* __STDC__ */
 
@@ -87,11 +83,10 @@ int                *rank;
       return (0);
    else
      {
-	/* Indice suivant */
 	(*rank)--;
 	if (*rank < 0)
 	  {
-	     /* Il faut changer de buffer */
+	     /* get previous buffer in the same Text element */
 	     *rank = 0;
 	     *buffer = (*buffer)->BuPrevious;
 	     if (*buffer == NULL)
@@ -105,40 +100,40 @@ int                *rank;
 	else
 	   return ((*buffer)->BuContent[*rank]);
      }
-}				/*CarPrecedent */
+}
 
 /* ---------------------------------------------------------------------- */
 /* |    MotOk teste que la chaine designee constitue bien un MOT.       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             MotOk (PtrElement premsel, int premcar, PtrElement dersel, int dercar)
+boolean             MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar)
 
 #else  /* __STDC__ */
-boolean             MotOk (premsel, premcar, dersel, dercar)
-PtrElement          premsel;
-int                 premcar;
-PtrElement          dersel;
-int                 dercar;
+boolean             MotOk (firstEl, firstChar, lastEl, lastChar)
+PtrElement          firstEl;
+int                 firstChar;
+PtrElement          lastEl;
+int                 lastChar;
 
 #endif /* __STDC__ */
 
 {
-   /* pas de caractere suivant immediatement dans le meme element */
-   /* sauf espace, ponctuation, parenthesage, guillemet */
-   if (dercar > 0)
+   if (lastChar > 0)
      {
-	if (dersel->ElTextLength >= dercar)
-	   if (!SeparateurMot (dersel->ElText->BuContent[dercar - 1]))
+	if (lastEl->ElTextLength >= lastChar)
+	   /* there is a following character in the same element */
+	   if (!SeparateurMot (lastEl->ElText->BuContent[lastChar - 1]))
+	      /* it's not a word separator. The string is not a word */
 	      return (FALSE);
-	/* pas de caractere precedant immediatement */
-	/* sauf signe de ponctuation, parenthesage, guillemet */
-	if (premcar > 1)
-	   if (!SeparateurMot (premsel->ElText->BuContent[premcar - 2]))
+	if (firstChar > 1)
+	   /* there is a previous character in the same element */
+	   if (!SeparateurMot (firstEl->ElText->BuContent[firstChar - 2]))
+	      /* it's not a word separator. The string is not a word */
 	      return (FALSE);
      }
    return (TRUE);
-}				/*MotOk */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -173,11 +168,13 @@ PtrSearchContext           context;
 	context->SWholeDocument = FALSE;
      }
 
-   /* Recupere la selection courante */
-   ok = SelEditeur (&DocSelInitial, &ElDebutSelInitial, &ElFinSelInitial,
-		    &CarDebutSelInitial, &CarFinSelInitial);
-   /* Memorise le domaine de recherche des mots */
-   if (domain == 3)		/* Dans tout le document */
+   /* get curreent selection */
+   ok = SelEditeur (&DocInitialSelection,
+		    &firstElInitialSelection, &lastElInitialSelection,
+		    &firstCharInitialSelection, &lastCharInitialSelection);
+   /* store the word search domain */
+   if (domain == 3)
+     /* the whole document */
      {
 	context->SStartElement = NULL;
 	context->STree = 0;
@@ -188,43 +185,45 @@ PtrSearchContext           context;
 	context->SStartToEnd = TRUE;
      }
    else if (!ok)
-      /* Pas de selection courante */
+      /* There is no selection */
       context->SDocument = NULL;
-   else if (context->SDocument != DocSelInitial)
-      /* La selection ne correspond pas au document */
+   else if (context->SDocument != DocInitialSelection)
+      /* current selection is not in the document of interest */
       context->SDocument = NULL;
    else
      {
 	context->SWholeDocument = FALSE;
-	/* Attention les indices de caracteres sont des indices a */
-	/* la C (0 ... n) et des indices a la Pascal (1 ... n+1)  */
-	if (domain == 0)	/* ElemIsBefore la selection */
+	if (domain == 0)
+	  /* Search before selection */
 	  {
 	     context->SStartElement = NULL;
 	     context->SStartChar = 0;
-	     context->SEndElement = ElDebutSelInitial;
-	     context->SEndChar = CarDebutSelInitial;	/*caractere avant */
+	     context->SEndElement = firstElInitialSelection;
+	     context->SEndChar = firstCharInitialSelection;
 	     context->SStartToEnd = FALSE;
 	  }
-	else if (domain == 1)	/* Dans la selection */
+	else if (domain == 1)
+	  /* search within selection */
 	  {
-	     context->SStartElement = ElDebutSelInitial;
-	     context->SStartChar = CarDebutSelInitial - 1;	/* caractere courant */
-	     context->SEndElement = ElFinSelInitial;
-	     context->SEndChar = CarFinSelInitial - 1;	/* caractere courant */
+	     context->SStartElement = firstElInitialSelection;
+	     context->SStartChar = firstCharInitialSelection - 1;
+	     context->SEndElement = lastElInitialSelection;
+	     context->SEndChar = lastCharInitialSelection - 1;
 	     context->SStartToEnd = TRUE;
 	  }
-	else if (domain == 2)	/* Apres la selection */
+	else if (domain == 2)
+	  /* search after selection */
 	  {
-	     context->SStartElement = ElFinSelInitial;
-	     context->SStartChar = CarFinSelInitial - 1;
+	     context->SStartElement = lastElInitialSelection;
+	     context->SStartChar = lastCharInitialSelection - 1;
 	     if (context->SStartChar < 0)
 		context->SStartChar = 0;
-	     if (ElFinSelInitial != NULL)
-		if (CarFinSelInitial == 0 || CarFinSelInitial > ElFinSelInitial->ElTextLength)
-		   if (!ElFinSelInitial->ElTerminal)
+	     if (lastElInitialSelection != NULL)
+		if (lastCharInitialSelection == 0 ||
+		    lastCharInitialSelection > lastElInitialSelection->ElTextLength)
+		   if (!lastElInitialSelection->ElTerminal)
 		     {
-			context->SStartElement = NextElement (ElFinSelInitial);
+			context->SStartElement = NextElement (lastElInitialSelection);
 			context->SStartChar = 0;
 		     }
 	     context->SEndElement = NULL;
@@ -235,7 +234,7 @@ PtrSearchContext           context;
 
    if (context->SDocument == NULL)
      {
-	/* aucun document selectionne */
+	/* no search domain */
 	context->SStartElement = NULL;
 	context->SEndElement = NULL;
 	context->SStartChar = 0;
@@ -245,7 +244,7 @@ PtrSearchContext           context;
 	return (FALSE);
      }
    return (TRUE);
-}				/*InitSearchDomain */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -253,23 +252,22 @@ PtrSearchContext           context;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                UpdateDuringSearch (PtrElement ElCourant, int lg)
+void                UpdateDuringSearch (PtrElement pEl, int len)
 
 #else  /* __STDC__ */
-void                UpdateDuringSearch (ElCourant, lg)
-PtrElement          ElCourant;
-int                 lg;
+void                UpdateDuringSearch (pEl, len)
+PtrElement          pEl;
+int                 len;
 
 #endif /* __STDC__ */
 
 {
-   if (ElCourant == ElFinSelInitial)
-      /* la selection initiale est dans l'element  */
-      /* ou` on a fait le remplacement */
-      if (CarFinSelInitial != 0)
-	 /* la borne n'est pas a la fin de l'element, on decale la borne */
-	 CarFinSelInitial += lg;
-}				/*UpdateDuringSearch */
+   if (pEl == lastElInitialSelection)
+      /* initial selection is within the element */
+      if (lastCharInitialSelection != 0)
+	 /* change position of last character of search domain */
+	 lastCharInitialSelection += len;
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -284,28 +282,28 @@ void                RestoreAfterSearch ()
 #endif				/* __STDC__ */
 
 {
-   int                 longprec, carfin;
+   int                 prevLen, endChar;
 
    AnnuleSelect ();
-   carfin = CarFinSelInitial;
-   if (carfin > 0)
-      carfin--;
-   if (CarDebutSelInitial > 0)
+   endChar = lastCharInitialSelection;
+   if (endChar > 0)
+
+   if (firstCharInitialSelection > 0)
      {
-	if (ElDebutSelInitial == ElFinSelInitial)
-	   longprec = carfin;
+	if (firstElInitialSelection == lastElInitialSelection)
+	   prevLen = endChar;
 	else
-	   longprec = 0;
-	SelectString (DocSelInitial, ElDebutSelInitial, CarDebutSelInitial,
-		      longprec);
+	   prevLen = 0;
+	SelectString (DocInitialSelection, firstElInitialSelection,
+		      firstCharInitialSelection, prevLen);
      }
    else
-      SelectEl (DocSelInitial, ElDebutSelInitial, TRUE, TRUE);
+      SelectEl (DocInitialSelection, firstElInitialSelection, TRUE, TRUE);
 
-   if (ElFinSelInitial != ElDebutSelInitial && ElFinSelInitial != NULL)
-      SelEtend (ElFinSelInitial, carfin, TRUE, FALSE, FALSE);
-}				/*RestoreAfterSearch */
-
+   if (lastElInitialSelection != firstElInitialSelection &&
+       lastElInitialSelection != NULL)
+      SelEtend (lastElInitialSelection, endChar, TRUE, FALSE, FALSE);
+}
 
 /* ---------------------------------------------------------------------- */
 /* |    ArbreSuivant Pour le contexte de recherche context, cherche le  | */
@@ -319,12 +317,12 @@ void                RestoreAfterSearch ()
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ArbreSuivant (PtrElement * elCourant, int *carCourant, PtrSearchContext context)
+boolean             ArbreSuivant (PtrElement * pEl, int *charIndx, PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             ArbreSuivant (elCourant, carCourant, context)
-PtrElement         *elCourant;
-int                *carCourant;
+boolean             ArbreSuivant (pEl, charIndx, context)
+PtrElement         *pEl;
+int                *charIndx;
 PtrSearchContext           context;
 
 #endif /* __STDC__ */
@@ -333,18 +331,16 @@ PtrSearchContext           context;
    int                 i;
    boolean             ret;
 
-   *elCourant = NULL;
-   *carCourant = 0;
+   *pEl = NULL;
+   *charIndx = 0;
    ret = FALSE;
    if (context != NULL)
       if (context->SWholeDocument && context->STree >= 0)
 	{
-	   /****context->SStartElement = NULL;
-	   context->SEndElement = NULL; deja fait **********/
 	   i = context->STree;
 	   context->STree = -1;
 	   if (context->SStartToEnd)
-	      /* recherche en avant */
+	      /* search forward */
 	     {
 		i++;
 		while (i < MAX_ASSOC_DOC && context->STree < 0)
@@ -354,7 +350,7 @@ PtrSearchContext           context;
 		      i++;
 	     }
 	   else
-	      /* recherche en arriere */
+	      /* search backward */
 	     {
 		i--;
 		while (i > 0 && context->STree < 0)
@@ -367,14 +363,14 @@ PtrSearchContext           context;
 		      context->STree = 0;
 	     }
 	   if (context->STree == 0)
-	      *elCourant = context->SDocument->DocRootElement;
+	      *pEl = context->SDocument->DocRootElement;
 	   else if (context->STree > 0)
-	      *elCourant = context->SDocument->DocAssocRoot[i - 1];
-	   if (*elCourant != NULL)
+	      *pEl = context->SDocument->DocAssocRoot[i - 1];
+	   if (*pEl != NULL)
 	      if (!context->SStartToEnd)
 		{
-		   *elCourant = LastLeaf (*elCourant);
-		   *carCourant = (*elCourant)->ElVolume;
+		   *pEl = LastLeaf (*pEl);
+		   *charIndx = (*pEl)->ElVolume;
 		}
 	   ret = (context->STree >= 0);
 	}
@@ -383,8 +379,8 @@ PtrSearchContext           context;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |  SearchNextWord recheche dans le domaine de recherche le mot       | */
-/* |    qui suit la position courante.                                  | */
+/* |  SearchNextWord recherche dans le domaine de recherche le mot qui	| */
+/* |    suit la position courante.                                  	| */
 /* |    Retourne le mot selectionne et met a jour le pointeur           | */
 /* |    a la fin du mot selectionne.                                    | */
 /* |    Le parame`tre context pointe sur le contexte de domaine de      | */
@@ -392,85 +388,81 @@ PtrSearchContext           context;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SearchNextWord (PtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context)
+boolean             SearchNextWord (PtrElement * curEl, int *curChar, char word[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             SearchNextWord (ElCourant, CarCourant, mot, context)
-PtrElement         *ElCourant;
-int                *CarCourant;
-char                mot[MAX_WORD_LEN];
-PtrSearchContext           context;
+boolean             SearchNextWord (curEl, curChar, word, context)
+PtrElement         *curEl;
+int                *curChar;
+char                word[MAX_WORD_LEN];
+PtrSearchContext    context;
 
 #endif /* __STDC__ */
 
 {
-   PtrElement          pEl, Elfin;
-   PtrElement          pAscendant;
-   int                 icar, carfin;
-   int                 lg;
+   PtrElement          pEl, endEl;
+   PtrElement          pAncestor;
+   int                 iChar, endChar;
+   int                 len;
    int                 index;
-   PtrTextBuffer      adbuff;
-   unsigned char       car;
+   PtrTextBuffer       pBuf;
+   unsigned char       charact;
 
-   pEl = *ElCourant;
-   icar = *CarCourant;
-   mot[0] = '\0';
+   pEl = *curEl;
+   iChar = *curChar;
+   word[0] = '\0';
 
    if (pEl == NULL && context != NULL)
      {
-	/* C'est le debut de la recherche */
+	/* search start */
 	pEl = context->SStartElement;
-	icar = context->SStartChar;
+	iChar = context->SStartChar;
 	if (pEl == NULL && context->SDocument != NULL)
 	   pEl = context->SDocument->DocRootElement;
      }
 
-   /* Verifie que l'element est de type texte */
-   /* et que la recherche ne debute pas sur le dernier caractere */
+   /* Check that element is a Text element and that the research does */
+   /* not start on the last character */
    if (pEl != NULL)
-      if (pEl->ElTypeNumber != CharString + 1 || icar + 1 >= pEl->ElTextLength)
+      if (pEl->ElTypeNumber != CharString + 1 || iChar + 1 >= pEl->ElTextLength)
 	{
-	   /* On n'a pas trouve de buffer */
-	   adbuff = NULL;
-	   icar = 0;
+	   /* there is no buffer */
+	   pBuf = NULL;
+	   iChar = 0;
 	}
       else
-	 /* 1er Buffer de l'element */
-	 adbuff = pEl->ElText;
+	 /* first buffer of element */
+	 pBuf = pEl->ElText;
 
-   /* Determine l'element limite du contexte de recherche */
+   /* looks for the end of the research domain */
    if (context == NULL)
      {
-	Elfin = NULL;
-	carfin = 0;
+	endEl = NULL;
+	endChar = 0;
      }
    else
      {
-	Elfin = context->SEndElement;
-	carfin = context->SEndChar;
+	endEl = context->SEndElement;
+	endChar = context->SEndChar;
      }
 
-   while (adbuff == NULL && pEl != NULL)
+   while (pBuf == NULL && pEl != NULL)
      {
-	/* Recherche le premier element texte non vide et modifiable */
-
+	/* Search the first non-empty and non-protected element */
 	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-	icar = 0;
+	iChar = 0;
 	if (pEl != NULL)
 	  {
-	     if (Elfin != NULL)
-		if (ElemIsBefore (Elfin, pEl))
-		   /* l'element trouve' est apres l'element de fin, */
-		   /* on fait comme si on n'avait pas trouve' */
+	     if (endEl != NULL)
+		if (ElemIsBefore (endEl, pEl))
+		   /* the element found is after the end of the domain */
 		   pEl = NULL;
 	  }
 	else if (context != NULL)
-	   /* Si on recherche dans tout le document on change d'arbre */
 	   if (context->SWholeDocument)
 	     {
-		/* cherche l'arbre a traiter apres celui ou` on n'a pas trouve' */
-		if (ArbreSuivant (&pEl, &icar, context))
-		   /* Il se peut que l'element rendu soit de type texte  */
+		/* get the next tree to process */
+		if (ArbreSuivant (&pEl, &iChar, context))
 		   if (pEl->ElTypeNumber != CharString + 1)
 		      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	     }
@@ -479,70 +471,70 @@ PtrSearchContext           context;
 	   /* on verifie que cet element ne fait pas partie d'une inclusion et */
 	   /* n'est pas cache' a l'utilisateur */
 	  {
-	     pAscendant = pEl;
-	     while (pAscendant->ElParent != NULL && pAscendant->ElSource == NULL)
-		pAscendant = pAscendant->ElParent;
-	     if (pAscendant->ElSource == NULL)
+	     pAncestor = pEl;
+	     while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
+		pAncestor = pAncestor->ElParent;
+	     if (pAncestor->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
 		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' */
 		   /* On saute les elements vides */
 		   if (pEl->ElTextLength != 0)
-		      adbuff = pEl->ElText;
+		      pBuf = pEl->ElText;
 	  }
      }
 
    if (pEl == NULL)
       return (FALSE);
-   else if (pEl == Elfin && icar >= carfin)
+   else if (pEl == endEl && iChar >= endChar)
       /* On est arrive a la fin du domaine de recherche */
       return (FALSE);
    else
      {
 
 	/* Calcule l'index de depart de la recherche */
-	lg = icar;
-	while (lg >= adbuff->BuLength)
+	len = iChar;
+	while (len >= pBuf->BuLength)
 	  {
 	     /* On passe au buffer suivant */
-	     lg -= adbuff->BuLength;
-	     adbuff = adbuff->BuNext;
+	     len -= pBuf->BuLength;
+	     pBuf = pBuf->BuNext;
 	  }
-	index = lg;
-	car = adbuff->BuContent[index];
+	index = len;
+	charact = pBuf->BuContent[index];
 
 	/* On se place au debut du mot */
-	while (car != 0 && SeparateurMot (car)
-	       && (pEl != Elfin || icar < carfin))
+	while (charact != 0 && SeparateurMot (charact)
+	       && (pEl != endEl || iChar < endChar))
 	  {
-	     car = CarSuivant (&adbuff, &index);
-	     icar++;
+	     charact = CarSuivant (&pBuf, &index);
+	     iChar++;
 	  }
 
 	/* Recherche le premier separateur apres le mot */
 	/* On verifie que l'on ne depasse pas la fin du domaine de recherche */
-	lg = 0;
-	while (lg < MAX_WORD_LEN && car != 0 && !SeparateurMot (car)
-	       && (pEl != Elfin || icar < carfin))
+	len = 0;
+	while (len < MAX_WORD_LEN && charact != 0 && !SeparateurMot (charact)
+	       && (pEl != endEl || iChar < endChar))
 	  {
-	     mot[lg++] = car;
-	     car = CarSuivant (&adbuff, &index);
-	     icar++;
+	     word[len++] = charact;
+	     charact = CarSuivant (&pBuf, &index);
+	     iChar++;
 	  }
 
 	/* positionne les valeurs de retour */
-	mot[lg] = '\0';
-	*ElCourant = pEl;
-	*CarCourant = icar;
+	word[len] = '\0';
+	*curEl = pEl;
+	*curChar = iChar;
 	/* Si on a trouve effectivement un mot */
-	if (lg > 0)
+	if (len > 0)
 	   return (TRUE);
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchNextWord (ElCourant, CarCourant, mot, context));
+	   return (SearchNextWord (curEl, curChar, word, context));
      }
-}				/*SearchNextWord */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -555,76 +547,76 @@ PtrSearchContext           context;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SearchPreviousWord (PtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context)
+boolean             SearchPreviousWord (PtrElement * curEl, int *curChar, char word[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             SearchPreviousWord (ElCourant, CarCourant, mot, context)
-PtrElement         *ElCourant;
-int                *CarCourant;
-char                mot[MAX_WORD_LEN];
-PtrSearchContext           context;
+boolean             SearchPreviousWord (curEl, curChar, word, context)
+PtrElement         *curEl;
+int                *curChar;
+char                word[MAX_WORD_LEN];
+PtrSearchContext    context;
 
 #endif /* __STDC__ */
 
 {
-   PtrElement          pEl, Elfin;
-   PtrElement          pAscendant;
-   int                 icar, carfin, j;
-   int                 lg;
+   PtrElement          pEl, endEl;
+   PtrElement          pAncestor;
+   int                 iChar, endChar, j;
+   int                 len;
    int                 index;
-   PtrTextBuffer      adbuff;
-   unsigned char       car;
-   char                renvmot[MAX_WORD_LEN];
+   PtrTextBuffer       pBuf;
+   unsigned char       charact;
+   char                reverse[MAX_WORD_LEN];
 
-   pEl = *ElCourant;
-   icar = *CarCourant;
-   mot[0] = '\0';
+   pEl = *curEl;
+   iChar = *curChar;
+   word[0] = '\0';
 
    if (pEl == NULL)
      {
 	/* C'est le debut de la recherche */
 	pEl = context->SEndElement;
-	icar = context->SEndChar;
-	if (icar > 2)
+	iChar = context->SEndChar;
+	if (iChar > 2)
 	   /* La fin de selection pointe toujours sur un caratere plus loin */
-	   icar--;
+	   iChar--;
      }
-   icar--;
+   iChar--;
 
    /* Verifie que l'element est de type texte */
    /* et que la recherche ne debute pas sur le dernier caractere */
-   if (pEl->ElTypeNumber != CharString + 1 || icar <= 0)
+   if (pEl->ElTypeNumber != CharString + 1 || iChar <= 0)
      {
 	/* On n'a pas trouve de buffer */
-	adbuff = NULL;
-	icar = 0;
+	pBuf = NULL;
+	iChar = 0;
      }
    else
      {
 	/* 1er Buffer de l'element */
-	adbuff = pEl->ElText;
+	pBuf = pEl->ElText;
      }
 
    /* Determine l'element limite du contexte de recherche */
    if (context == NULL)
      {
-	Elfin = NULL;
-	carfin = 0;
+	endEl = NULL;
+	endChar = 0;
      }
    else
      {
-	Elfin = context->SStartElement;
-	carfin = context->SStartChar;
+	endEl = context->SStartElement;
+	endChar = context->SStartChar;
      }
 
-   while (adbuff == NULL && pEl != NULL)
+   while (pBuf == NULL && pEl != NULL)
      {
 	/* Recherche le premier element texte non vide */
 	pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
 	if (pEl != NULL)
 	  {
-	     if (Elfin != NULL)
-		if (ElemIsBefore (pEl, Elfin))
+	     if (endEl != NULL)
+		if (ElemIsBefore (pEl, endEl))
 		   /* l'element trouve' est avant l'element de debut, */
 		   /* on fait comme si on n'avait pas trouve' */
 		   pEl = NULL;
@@ -634,7 +626,7 @@ PtrSearchContext           context;
 	   if (context->SWholeDocument)
 	     {
 		/* cherche l'arbre a traiter avant celui ou` on n'a pas trouve' */
-		if (ArbreSuivant (&pEl, &icar, context))
+		if (ArbreSuivant (&pEl, &iChar, context))
 		   /* Il se peut que l'element rendu soit de type texte */
 		   if (pEl->ElTypeNumber != CharString + 1)
 		      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
@@ -645,76 +637,76 @@ PtrSearchContext           context;
 	   /* on verifie que cet element ne fait pas partie d'une inclusion et */
 	   /* n'est pas cache' a l'utilisateur */
 	  {
-	     pAscendant = pEl;
-	     while (pAscendant->ElParent != NULL && pAscendant->ElSource == NULL)
-		pAscendant = pAscendant->ElParent;
-	     if (pAscendant->ElSource == NULL)
+	     pAncestor = pEl;
+	     while (pAncestor->ElParent != NULL && pAncestor->ElSource == NULL)
+		pAncestor = pAncestor->ElParent;
+	     if (pAncestor->ElSource == NULL)
 		/* on n'est pas dans une inclusion */
 		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' */
 		   if (pEl->ElTextLength != 0)
 		     {
-			icar = pEl->ElTextLength - 1;
-			adbuff = pEl->ElText;
+			iChar = pEl->ElTextLength - 1;
+			pBuf = pEl->ElText;
 		     }
 	  }
      }
 
    if (pEl == NULL)
       return (FALSE);
-   else if (pEl == Elfin && icar < carfin)
+   else if (pEl == endEl && iChar < endChar)
       /* On est arrive a la fin du domaine de recherche */
       return (FALSE);
    else
      {
 	/* Calcule l'index de depart de la recherche */
-	lg = icar;
-	while (lg >= adbuff->BuLength)
+	len = iChar;
+	while (len >= pBuf->BuLength)
 	  {
 	     /* On passe au buffer suivant */
-	     lg -= adbuff->BuLength;
-	     adbuff = adbuff->BuNext;
+	     len -= pBuf->BuLength;
+	     pBuf = pBuf->BuNext;
 	  }
 
-	index = lg;
-	car = adbuff->BuContent[index];
+	index = len;
+	charact = pBuf->BuContent[index];
 	/* On se place a la fin du mot */
-	while (car != 0 && icar >= 0 && SeparateurMot (car)
-	       && (pEl != Elfin || icar >= carfin))
+	while (charact != 0 && iChar >= 0 && SeparateurMot (charact)
+	       && (pEl != endEl || iChar >= endChar))
 	  {
-	     car = CarPrecedent (&adbuff, &index);
-	     icar--;
+	     charact = CarPrecedent (&pBuf, &index);
+	     iChar--;
 	  }
 
 	/* On se place au debut du mot et recupere le mot a l'envers */
-	lg = 0;
-	while (lg < MAX_WORD_LEN && car != 0 && icar >= 0 && !SeparateurMot (car)
-	       && (pEl != Elfin || icar >= carfin))
+	len = 0;
+	while (len < MAX_WORD_LEN && charact != 0 && iChar >= 0 && !SeparateurMot (charact)
+	       && (pEl != endEl || iChar >= endChar))
 	  {
-	     renvmot[lg++] = car;
-	     car = CarPrecedent (&adbuff, &index);
-	     icar--;
+	     reverse[len++] = charact;
+	     charact = CarPrecedent (&pBuf, &index);
+	     iChar--;
 	  }
 
 	/* Recopie le mot a l'endroit */
-	icar++;
+	iChar++;
 	j = 0;
-	while (j < lg)
+	while (j < len)
 	  {
-	     mot[j] = renvmot[lg - 1 - j];
+	     word[j] = reverse[len - 1 - j];
 	     j++;
 	  }
 
 	/* positionne les valeurs de retour */
-	mot[lg] = '\0';
-	*ElCourant = pEl;
-	*CarCourant = icar;
+	word[len] = '\0';
+	*curEl = pEl;
+	*curChar = iChar;
 	/* Si on a trouve effectivement un mot */
-	if (lg > 0)
+	if (len > 0)
 	   return (TRUE);
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchPreviousWord (ElCourant, CarCourant, mot, context));
+	   return (SearchPreviousWord (curEl, curChar, word, context));
      }
-}				/*SearchPreviousWord */
+}
