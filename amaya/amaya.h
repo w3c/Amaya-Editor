@@ -42,10 +42,11 @@
 
 #define HTAppName     "amaya"
 #define HTAppVersion  "6.4"
-#define HTAppDate     " 16 September 2002"
+#define HTAppDate     __DATE__ 
 
 #define URL_STR       "/"
 #define URL_SEP       '/'
+
 
 /* Number of views used in Amaya */
 #define AMAYA_MAX_VIEW_DOC  7
