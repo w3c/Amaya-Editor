@@ -4,10 +4,6 @@
 #
 #       amaya-src-$AMAYAVERSION.tar.gz
 #
-# And the associated Librairies for supported versions.
-#
-#       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
-#
 AMAYAVERSION=1.1a
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape

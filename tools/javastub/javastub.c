@@ -844,7 +844,7 @@ void dump_java(FILE *out) {
     if (is_package) fprintf(out,"package %s;\n\n",package);
 
 
-    fprintf(out,"\n/*\n");
+    fprintf(out,"\n/**\n");
     fprintf(out," * Java public native definitions for class %s\n",
            classname);
     fprintf(out," */\n\n");
@@ -880,7 +880,7 @@ void dump_java(FILE *out) {
 	t = &tabType[f->type];
 
         if (f->comment != NULL)
-	    fprintf(out,"\n\n/*%s*/\n", f->comment);
+	    fprintf(out,"\n\n/**\n*%s*/\n", f->comment);
 	fprintf(out," public static native ");
 	if (t->jname[0] != '\0')
 	   fprintf(out,"%s ", t->jname);
