@@ -63,7 +63,7 @@
 
 struct E_List
   {
-     struct     E_List* E_Next;         /* CsList d'entrees suivante         */
+     struct     E_List* E_Next;         /* CS_List d'entrees suivante         */
      char     E_Free[C_NUMBER];       /* Disponibilite des entrees         */
      char     E_Type[C_NUMBER];       /* CsList des types des entrees      */
      ThotWidget E_ThotWidget[C_NUMBER]; /* ThotWidgets associes aux entrees  */
@@ -491,7 +491,6 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
 { 
   int        argc;
   char**   argv;
-  
 
 #ifdef _DEBUG
    /* Get all memory leak in the debug window after using
@@ -547,6 +546,7 @@ set a condit ion for the breakpoint .
    /*ExitConsoleDebug ();*/
 	return (TRUE);
 #else /*_DEBUG*/   
+
 
   currentFrame = -1;
   hInstance = hInst;
@@ -878,7 +878,7 @@ static void CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_
 	      /* Passe au bloc suivant */
 	      adbloc = adbloc->E_Next;
 	      i = 0;
-	    }
+	  }
 	  /*** Retour de l'entree du menu choisie vers l'application ***/
 	  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
 	}
@@ -1898,6 +1898,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
 #ifdef _WINDOWS
    FrMainRef[0] = 0;
    iconID = "IDI_APPICON";
+   /*Window main class */
    RootShell.style = 0;
    RootShell.lpfnWndProc = WndProc;
    RootShell.cbClsExtra = 0;
@@ -1911,19 +1912,27 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RootShell.cbSize = sizeof(WNDCLASSEX);
    RootShell.hIconSm = LoadIcon (hInstance, iconID);
    RegisterClassEx (&RootShell);
-   RootShell.style = CS_DBLCLKS;
+
+   /*Window canvas  class */
+   RootShell.style = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
    RootShell.lpfnWndProc = ClientWndProc;
    RootShell.cbClsExtra = 0;
    RootShell.cbWndExtra = 0;
    RootShell.hInstance = hInstance;
    RootShell.hIcon = LoadIcon (hInstance, iconID);
    RootShell.hCursor = LoadCursor (NULL, IDC_ARROW);
-   RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+#ifndef _GL
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+#else /*_GL*/
+   RootShell.hbrBackground = 0;
+#endif /*_GL*/
    RootShell.lpszClassName = "ClientWndProc";
    RootShell.lpszMenuName = NULL;
    RootShell.cbSize = sizeof(WNDCLASSEX);
    RootShell.hIconSm = LoadIcon (hInstance, iconID);
    RegisterClassEx (&RootShell);
+
+   /* New windows class : dialog*/
    RootShell.style = 0;
    RootShell.lpfnWndProc = ThotDlgProc;
    RootShell.cbClsExtra = 0;
