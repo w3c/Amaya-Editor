@@ -2882,7 +2882,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		Adjust (pBox, pLine, frame, xAbs, yAbs);
 	      else
 		{
-		  x = pLine->LiXOrg;
 		  if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum &&
 		      pLine->LiRealLength > pBox->BxW)
 		    {
@@ -2890,9 +2889,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		      pLine->LiXMax = pLine->LiRealLength;
 		    }
 		  if (!pBox->BxContentWidth && !extensibleBox)
-		    Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
-		  else
 		    Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
+		  else
+		    Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
 		}
 	    }
 

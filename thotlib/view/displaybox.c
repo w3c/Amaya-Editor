@@ -1339,7 +1339,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            blockbegin;
   ThotBool            withbackground;
   ThotBool            hyphen, rtl;
-  CHAR_T              CurrentChar , prevChar, nextChar;
+  CHAR_T              prevChar, nextChar;
 
 
   indmax = 0;
