@@ -471,7 +471,7 @@ int                *clipOrg;
 	  pAb = pAb->AbPrevious;
 	  pTable = SearchEnclosingType (pAb, BoTable);
 	  if (!pAb->AbOnPageBreak &&
-	      (pAb->AbElement->ElTypeNumber == PageBreak + 1 ||
+	      (/*pAb->AbElement->ElTypeNumber == PageBreak + 1 ||*/
 	       pPageTable == NULL || pPageTable != pTable))
 	    {
 	      if (pTable != NULL)
@@ -509,7 +509,7 @@ int                *clipOrg;
 		  {
 		    if (pPageTable != NULL)
 		      pTable = SearchEnclosingType (pNext, BoTable);
-		    if (pNext->AbElement->ElTypeNumber == PageBreak + 1 ||
+		    if (/*pNext->AbElement->ElTypeNumber == PageBreak + 1 ||*/
 			pPageTable == NULL || pPageTable != pTable)
 		      {
 			if (pNext->AbPresentationBox)

@@ -849,7 +849,7 @@ void                GraphicsLoadResources ()
      }
 
 #   ifndef _WINDOWS
-   GraphicsIcons = LoadFont ("ivgraf", FALSE);
+   GraphicsIcons = LoadFont ("ivgraf", 0);
 #   endif /* _WINDOWS */
    if (GraphicsIcons == NULL)
      {
@@ -883,7 +883,7 @@ void                KeyboardsLoadResources ()
      }
 
 #   ifndef _WINDOWS
-    SymbolIcons = LoadFont ("ivsymb", FALSE);
+    SymbolIcons = LoadFont ("ivsymb", 0);
 #   endif /* _WINDOWS */
    if (SymbolIcons == NULL) {
       /*Fonte 'ivsymb' inaccessible */

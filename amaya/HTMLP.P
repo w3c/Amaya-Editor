@@ -5437,6 +5437,8 @@ RULES
 	Gather: Yes;
 #ifdef PAGE
 	PageBreak: Yes;
+	NoBreak1 : 3;
+	NoBreak2 : 1;
 #endif
 	Justify: No;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
@@ -5573,7 +5575,7 @@ RULES
 	{**** the next rule should be deleted, but deleting it causes
 	      the print program to crash when formatting a very high
 	      table row *****}
-	PageBreak: No;
+	{PageBreak: No;}
 #endif
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;

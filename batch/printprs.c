@@ -422,6 +422,7 @@ PtrPRule            pR;
 	   printf ("?????");
      }
    else if (pRe1->PrPresMode == PresImmediate)
+     {
       if (pRe1->PrType == PtFont)
 	 switch (pRe1->PrChrValue)
 	       {
@@ -520,6 +521,7 @@ PtrPRule            pR;
 	       }
       else
 	 putchar (pRe1->PrChrValue);
+    }
    else
       printf ("??????");
    printf (";");
@@ -721,9 +723,9 @@ boolean             Hauteur;
 		printf ("not ");
 	     if (pRe1->DrRefKind == RkElType)
 		wrnomregle (pRe1->DrRefIdent);
-	     else (pRe1->DrRefKind == RkPresBox)
+	     else if (pRe1->DrRefKind == RkPresBox)
 		wrnomboite (pRe1->DrRefIdent);
-	     else (pRe1->DrRefKind == RkAttr)
+	     else if (pRe1->DrRefKind == RkAttr)
 		wrnomattr (pRe1->DrRefIdent);
 	     printf (". ");
 	     if ((pRe1->DrSameDimens && Hauteur) || (!pRe1->DrSameDimens && !Hauteur))

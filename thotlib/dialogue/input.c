@@ -850,7 +850,7 @@ int                 key;
 	 }
        else if (nb == 0) /* Rien a inserer */      
 	 return;
-      /* Traitemet des caracteres au cas par cas */
+      /* Traitement des caracteres au cas par cas */
       else
 	{
 	  if (value == 8 || value == 127)

@@ -2109,6 +2109,11 @@ PtrAbstractBox      pNewAbbox;
 		if (pRule->PrPresFunction == FnCreateBefore || pRule->PrPresFunction == FnCreateAfter)
 		   CrAbsBoxesPres (pEl, pDoc, pRule, pEl->ElStructSchema,
 				   NULL, viewNb, pSchPPage, FALSE, TRUE);
+		/*else
+		  {
+		    if (ApplyRule (pRule, pSchPPage, pNewAbbox, pDoc, NULL))
+		      pNewAbbox->AbAspectChange = TRUE;
+		  }*/
 	     }
 	   else
 	      /* ce n'est pas une fonction de presentation */
@@ -2125,8 +2130,7 @@ PtrAbstractBox      pNewAbbox;
 		     {
 			if (pRegleV == NULL)
 			   pRegleV = pRule;
-			if (!ApplyRule (pRegleV, pSchPPage, pAbbChild, pDoc,
-			     NULL))
+			if (!ApplyRule (pRegleV, pSchPPage, pAbbChild, pDoc, NULL))
 			   if (pRegleV->PrType == PtVisibility)
 			     pAbbChild->AbVisibility = pNewAbbox->AbVisibility;
 		     }

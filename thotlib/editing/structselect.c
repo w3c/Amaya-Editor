@@ -3408,8 +3408,10 @@ int                 val;
 #endif /* __STDC__ */
 {
    PtrElement          pEl, pParent, pFirst, pLast;
+   int                 lg;
 
    pEl = NULL;
+   lg = 0;
    switch (val)
 	 {
 	    case 1:
@@ -3485,6 +3487,7 @@ int                 val;
 	    case 2:
 	       /* Previous */
 	       pEl = SelMenuPreviousEl;
+	       lg = pEl->ElVolume;
 	       break;
 	    case 3:
 	       /* Next */
@@ -3516,7 +3519,12 @@ int                 val;
 	 }
    if (pEl != NULL)
       if (!ElementIsHidden (pEl))
-	 SelectElementWithEvent (SelectedDocument, pEl, TRUE, FALSE);
+	{
+	  /****if (SelPosition && pEl->ElTypeNumber == 1)
+	      SelectString (SelectedDocument, pEl, lg, lg);
+	  else****/
+	    SelectElementWithEvent (SelectedDocument, pEl, TRUE, FALSE);
+	}
 }
 
 

@@ -523,6 +523,10 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->BxMinWidth, pBox->BxMaxWidth, colWidth[cRef], colPercent[cRef]);
 #endif
     }
+  if (table->AbBox->BxRows != NULL && table->AbBox->BxRows->TaRTable[0]->AbEnclosing != NULL)
+    RecordEnclosing (table->AbBox->BxRows->TaRTable[0]->AbEnclosing->AbBox, FALSE);
+  else
+    RecordEnclosing (pBox, FALSE);
 
   /* additional space for rows */ 
   if (table->AbBox->BxRows != NULL && table->AbBox->BxRows->TaRTable[0] != NULL &&
@@ -602,7 +606,6 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
   /* remind that the table height has to be recomputed */
   pBox = table->AbBox;
   pBox->BxCycles = 1;
-  RecordEnclosing (pBox, FALSE);
   if (force && min <= width && pCell != NULL)
     /* it's not possible to change the table width */
     constraint = TRUE;

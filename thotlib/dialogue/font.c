@@ -549,11 +549,11 @@ int                 size;
  *      LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             LoadFont (char name[100], boolean toPatch)
+ptrfont             LoadFont (char name[100], int toPatch)
 #else  /* __STDC__ */
 ptrfont             LoadFont (name, toPatch)
 char                name[100];
-boolean             toPatch;
+int                 toPatch;
 #endif /* __STDC__ */
 {
    char                tmp[200];
@@ -569,11 +569,17 @@ boolean             toPatch;
 	{
 	   mincar = result->min_char_or_byte2;
 	   spacewd = result->per_char[32 - mincar].width;
-	   if (toPatch)
+	   if (toPatch != 0)
 	     {
 	       /* a patch due to errors in standard symbol fonts */
-	       /*result->per_char[244 - mincar].width -= 2;
-	       result->per_char[244 - mincar].ascent -= 2;*/
+	       if (toPatch == 8 || toPatch == 10)
+		 result->per_char[244 - mincar].width = 1;
+	       else if (toPatch == 12 || toPatch == 14)
+		 result->per_char[244 - mincar].width = 2;
+	       else if (toPatch == 24)
+		 result->per_char[244 - mincar].width = 4;
+
+	       result->per_char[244 - mincar].ascent -= 2;
 	     }
 	   if (result->max_char_or_byte2 > UNBREAKABLE_SPACE)
 	      /* largeur(Ctrl Space) = largeur(Space) */
@@ -746,7 +752,7 @@ TypeUnit            unit;
 
    FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
 #  ifndef _WINDOWS
-   return LoadFont (nameX, FALSE);
+   return LoadFont (nameX, 0);
 #  else  /* _WINDOWS */
    return NULL;
 #  endif /* _WINDOWS */
@@ -868,10 +874,10 @@ boolean             increase;
 	   currentFontCharacteristics->unit      = unit;
 #      endif /* !_WIN_PRINT */
 #          else  /* _WINDOWS */
-	   if (alphabet == 'G' && (size == 12 || size == 14))
-	     ptfont = LoadFont (textX, TRUE);
+	   if (alphabet == 'G' && (size > 8 && size < 16 || size == 24))
+	     ptfont = LoadFont (textX, size);
 	   else
-	     ptfont = LoadFont (textX, FALSE);
+	     ptfont = LoadFont (textX, 0);
 #          endif /* !_WINDOWS */
 	   /* Loading failed try to find a neighbour */
 	   if (ptfont == NULL)

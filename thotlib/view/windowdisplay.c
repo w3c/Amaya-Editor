@@ -650,7 +650,7 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 xm, yf, yend, exnum, delta;
-   int                 wd;
+   int                 wd, asc, hd;
 
    exnum = 0;
    if (FontHeight (font) *1.2 >= h)
@@ -673,18 +673,20 @@ int                 fg;
 
      yf += CharacterHeight ('\363', font);
      delta = yend - yf;
+     asc = CharacterAscent ('\364', font)  - FontAscent (font) - 1;
+     hd = CharacterHeight ('\364', font) - 1;
      wd = (CharacterWidth ('\363', font) - CharacterWidth ('\364', font)) / 2;
      if (delta >= 0)
        {
-	for (yf += CharacterAscent ('\364', font) - FontAscent (font) - 1,
-	     yend -= CharacterHeight ('\364', font) - 1;
+	for (yf += asc,
+	     yend -= hd;
 	     yf < yend;
 	     yf += CharacterHeight ('\364', font), exnum++)
 	   DrawChar ('\364', frame, xm+wd, yf, font, RO, active, fg);
 	if (exnum)
 	   DrawChar ('\364', frame, xm+wd, yend, font, RO, active, fg);
 	else
-	   DrawChar ('\364', frame, xm+wd, yf + ((delta - CharacterHeight ('\364', font)) / 2), font, RO, active, fg);
+	   DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, active, fg);
        }
      }
 
@@ -1196,7 +1198,7 @@ int                 fg;
 	     yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
 	     DrawChar ('\350', frame, xm, yend, font, RO, active, fg);
 
-	     yf += CharacterHeight ('\346', font);
+	     yf += CharacterHeight ('\346', font) - 1;
 	     delta = yend - yf;
 	     if (delta >= 0)
 	       {
@@ -1221,7 +1223,7 @@ int                 fg;
 	     yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
 	     DrawChar ('\370', frame, xm, yend, font, RO, active, fg);
 
-	     yf += CharacterHeight ('\366', font);
+	     yf += CharacterHeight ('\366', font) - 1;
 	     delta = yend - yf;
 	     if (delta >= 0)
 	       {
@@ -1306,7 +1308,7 @@ int                 fg;
 	     DrawChar ('\356', frame, xm, yend, font, RO, active, fg);
 
 	     /* finish top */
-	     yf += CharacterHeight ('\354', font);
+	     yf += CharacterHeight ('\354', font) - 1;
 	     delta = ym - yf;
 	     if (delta >= 0)
 	       {
@@ -1352,7 +1354,7 @@ int                 fg;
 		- FontAscent (font) + CharacterAscent ('\376', font);
 	     DrawChar ('\376', frame, xm, yend, font, RO, active, fg);
 	     /* finish top */
-	     yf += CharacterHeight ('\374', font);
+	     yf += CharacterHeight ('\374', font) - 1;
 	     delta = ym - yf;
 	     if (delta >= 0)
 	       {

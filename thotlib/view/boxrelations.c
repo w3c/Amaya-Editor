@@ -39,7 +39,24 @@
 #include "absboxes_f.h"
 #include "font_f.h"
 
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ClearBoxMoved (PtrBox pBox)
+#else  /* __STDC__ */
+static void         ClearBoxMoved (pBox)
+PtrBox              pBox;
+#endif /* __STDC__ */
+{
+  PtrBox           pNextBox;
+  while (pBox != NULL)
+    {
+      pNextBox = pBox->BxMoved;
+      pBox->BxMoved = NULL;
+      pBox = pNextBox;
+    }
+}
+ 
 /*----------------------------------------------------------------------
    GetPosRelativeAb retourne le pointeur sur le pave de reference    
    pour le positionnement implicite, horizontal/vertical,  
@@ -860,6 +877,7 @@ boolean             horizRef;
        if (!pBox->BxHorizFlex)
 	 {
 	   x = x + dist - pBox->BxXOrg;
+	   ClearBoxMoved (pBox);
 	   if (x == 0 && pBox->BxXToCompute)
 	     /* Force le placement des boites filles */
 	     XMoveAllEnclosed (pBox, x, frame);
@@ -874,6 +892,7 @@ boolean             horizRef;
        if (!pBox->BxVertFlex)
 	 {
 	   y = y + dist - pBox->BxYOrg;
+	   ClearBoxMoved (pBox);
 	   if (y == 0 && pBox->BxYToCompute)
 	     /* Force le placement des boites filles */
 	     YMoveAllEnclosed (pBox, y, frame);
@@ -888,15 +907,16 @@ boolean             horizRef;
    if (pAb != NULL && pCurrentBox != NULL)
      {
        InsertPosRelation (pBox, pCurrentBox, op, localEdge, refEdge);
-       pCurrentBox->BxMoved = NULL;
+       ClearBoxMoved (pCurrentBox);
        
        if (horizRef && pBox->BxHorizFlex)
 	 MoveBoxEdge (pBox, pCurrentBox, op, x + dist - pBox->BxXOrg, frame, TRUE);
        else if (!horizRef && pBox->BxVertFlex)
 	 MoveBoxEdge (pBox, pCurrentBox, op, y + dist - pBox->BxYOrg, frame, FALSE);
+       ClearBoxMoved (pCurrentBox);
      }
    /* break down the temporary link of moved boxes */
-   pBox->BxMoved = NULL;
+   ClearBoxMoved (pBox);
 }
 
 
@@ -1770,7 +1790,7 @@ boolean             horizRef;
 		     pBox->BxYToCompute = TRUE;
 		  /* La boite est marquee elastique */
 		  pBox->BxVertFlex = TRUE;
-		  pRefBox->BxMoved = NULL;
+		  ClearBoxMoved (pBox);
 		  MoveBoxEdge (pBox, pRefBox, op, val, frame, FALSE);
 	       }
 	  }
@@ -1799,7 +1819,7 @@ boolean             horizRef;
      }
 
    /* break down the temporary link of moved boxes */
-   pBox->BxMoved = NULL;
+   ClearBoxMoved (pBox);
    return (defaultDim);
 }
 
@@ -1964,7 +1984,7 @@ boolean             horizRef;
      }
 
    /* break down the temporary link of moved boxes */
-   pBox->BxMoved = NULL;
+   ClearBoxMoved (pBox);
 }
 
 

@@ -930,7 +930,8 @@ boolean             horizRef;
 	       {
 		  oldPosEdge = pAb->AbHorizPos.PosEdge;
 		  /* Met a jour la pile des boites pour ne pas deplacer pSourceBox */
-		  pBox->BxMoved = pSourceBox;
+		  if (pSourceBox->BxMoved != pBox)
+		    pBox->BxMoved = pSourceBox;
 	       }
 
 	     /* calcule le changement de largeur */
@@ -979,7 +980,8 @@ boolean             horizRef;
 	       {
 		  oldPosEdge = pAb->AbVertPos.PosEdge;
 		  /* Met a jour la pile des boites pour ne pas deplacer pSourceBox */
-		  pBox->BxMoved = pSourceBox;
+		  if (pSourceBox->BxMoved != pBox)
+		    pBox->BxMoved = pSourceBox;
 	       }
 
 	     /* calcule le changement de hauteur */
@@ -1021,7 +1023,8 @@ boolean             horizRef;
 	/* indique que le traitement est termine */
 	pBox->BxPacking = 0;
 	/* retablit le chainage des deplacements */
-	pBox->BxMoved = pSourceBox;
+	if (pSourceBox->BxMoved != pBox)
+	  pBox->BxMoved = pSourceBox;
      }
 }
 
@@ -1079,7 +1082,7 @@ int                 frame;
 	  {
 	     /* La boite est elastique et n'est pas en cours de traitement */
 	     if (pBox->BxHorizFlex && (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxPacking == 0))
-		MoveBoxEdge (pBox, NULL, OpHorizDep, delta, frame, TRUE);
+		 MoveBoxEdge (pBox, NULL, OpHorizDep, delta, frame, TRUE);
 	     /* Dans les autres cas */
 	     else
 	       {
@@ -1233,10 +1236,10 @@ int                 frame;
 	/* analyse les relations pour savoir comment deplacer la boite */
 	else if (pBox->BxAbstractBox != NULL)
 	  {
-/*-> La boite est elastique et n'est pas en cours de traitement */
+	    /*-> La boite est elastique et n'est pas en cours de traitement */
 	     if (pBox->BxVertFlex && (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxPacking == 0))
-		MoveBoxEdge (pBox, NULL, OpVertDep, delta, frame, FALSE);
-/*-> Dans les autres cas */
+		 MoveBoxEdge (pBox, NULL, OpVertDep, delta, frame, FALSE);
+	     /*-> Dans les autres cas */
 	     else
 	       {
 		  /* simple translation */

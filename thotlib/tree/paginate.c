@@ -1735,7 +1735,7 @@ PtrElement         *pPage;
 	     {
 		pAb = pAb->AbFirstEnclosed;
 		done = FALSE;
-		while (pAb != NULL)
+		while (pAb != NULL && !done)
 		  {
 		     if (pAb->AbOnPageBreak)
 			/* la frontiere de page traverse ce pave, on place une */
@@ -1743,7 +1743,7 @@ PtrElement         *pPage;
 		       {
 			  SetMark (pAb, rootEl, pDoc, schView, absBoxTooHigh,
 				   origCutAbsBox, nbView, frame, pPage);
-			  done = *pPage != NULL;
+			  done = (*pPage != NULL);
 		       }
 		     else if (pAb->AbAfterPageBreak)
 			if (!done)
@@ -2610,7 +2610,7 @@ boolean             Assoc;
    NbBoxesPageHeaderToCreate = 0;
    if (Assoc)
      /* c'est une vue d'elements associes */
-     /* le nuemero d'element associe est Vue */
+     /* le numero d'element associe est Vue */
      {
        /* numero dans le document de la vue a paginer */
        nbView = 1;
@@ -2652,7 +2652,7 @@ boolean             Assoc;
 #endif /* PAGINEETIMPRIME */
        /* detruit l'image abstraite de la vue concernee, en conservant la racine */
        if (Assoc)
-	 /* le nuemero d'element associe est Vue */
+	 /* le numero d'element associe est Vue */
 	 DestroyImAbsPages (view, Assoc, pDoc, schView);
        else
 	 for (v = 1; v <= MAX_VIEW_DOC; v++)
@@ -3031,21 +3031,26 @@ boolean             Assoc;
 	  pP->AbElement->ElTypeNumber != PageBreak + 1)
      pP = pP->AbFirstEnclosed;
    if (pP->AbElement->ElTypeNumber != PageBreak + 1)
-     /* le document ne commence pas par une marque de page pour cette */
-     /* vue ; on cherche la premiere marque de page qui suit */
-     pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
-   if (pP != NULL)
-     if (pP->AbElement->ElTypeNumber == PageBreak + 1)
+       /* le document ne commence pas par une marque de page pour cette */
+       /* vue ; on cherche la premiere marque de page qui suit */
+       pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
+
+   previousPageAbBox = pP;
+   if (pP != NULL && pP->AbElement->ElTypeNumber == PageBreak + 1)
        /* on a trouve une marque de page, on determine */
        /* la hauteur de ce type de page */
        PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
+
    /* fait calculer l'image par le Mediateur */
    RealPageHeight = PageHeight;
    tooShort = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
    do
      /* traite une page apres l'autre */
      {
-       pP = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
+       if (previousPageAbBox != NULL)
+	 pP = previousPageAbBox;
+       else
+	 pP = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
        do
 	 /* cherche les marques de page correspondant au debut d'un element */
 	 /* portant une regle Page ou les marques mises par l'utilisateur */
@@ -3082,9 +3087,6 @@ boolean             Assoc;
 	       pP = NULL;	/* pour sortir de la boucle */
 	     else
 	       {
-		 if (previousPageAbBox == NULL)
-		   /* cas de la premiere marque page du doc dans cette vue */
-		   previousPageAbBox = pP;
 		 /* on renumerote cette marque de page */
 		 pEl1 = pP->AbElement;
 		 /* cherche le compteur de page a appliquer a cette page */
@@ -3134,10 +3136,13 @@ boolean             Assoc;
 		 tooShort = KillAbsBoxBeforePage (pP, frame, pDoc, nbView, &clipOrg);
 		 /* calcule le volume de ce qui a ete detruit */
 		 /* pour en regenerer autant ensuite */
+		 if (rootAbsBox->AbVolume < 0)
+		   rootAbsBox->AbVolume = 0;
 		 volume += volprec - rootAbsBox->AbVolume;
 	       }
 	 }
        while (pP != NULL);
+
        if (!tooShort)
 	 /* l'image fait plus d'une hauteur de page */
 	 {
@@ -3162,6 +3167,8 @@ boolean             Assoc;
 	       previousPageAbBox = pPage->ElAbstractBox[nbView - 1];
 	       /* calcule le volume de ce qui a ete detruit pour en regenerer */
 	       /* autant ensuite */
+	       if (rootAbsBox->AbVolume < 0)
+		 rootAbsBox->AbVolume = 0;
 	       volume = volume + volprec - rootAbsBox->AbVolume;
 	     }
 	 }
