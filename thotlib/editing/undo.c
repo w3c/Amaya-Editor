@@ -1165,9 +1165,9 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 	  else
             TtaInsertFirstChild ((Element *)&(pEl),
 				 (Element)(editOp->EoParent), doc);
-	  /* send event ElemPaste.Post to the application. -1 means that this
+	  /* send event ElemPaste.Post to the application. 1 means that this
 	     is not really a Paste operation but an Undo operation. */
-	  NotifySubTree (TteElemPaste, pDoc, pEl, -editOp->EoInfo);
+	  NotifySubTree (TteElemPaste, pDoc, pEl, 0, editOp->EoInfo);
 	  /******/
 	  if (replacePoly)
 	    {

@@ -998,7 +998,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 				       pElPage, schView);
    /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
-   NotifySubTree (TteElemNew, pDoc, pElPage, 0);
+   NotifySubTree (TteElemNew, pDoc, pElPage, 0, 0);
 #endif /* PAGINEETIMPRIME */
 
    if (NbBoxesPageHeaderToCreate > 0)
@@ -1809,7 +1809,7 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 #ifndef PAGINEETIMPRIME
 	     /* envoie l'evenement ElemNew.Post */
 	     if (withAPP)
-		NotifySubTree (TteElemNew, pDoc, pElPage, 0);
+		NotifySubTree (TteElemNew, pDoc, pElPage, 0, 0);
 #endif /* PAGINEETIMPRIME */
 	  }
      }

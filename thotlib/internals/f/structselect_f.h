@@ -20,6 +20,9 @@ extern void GetActiveView ( PtrDocument *pDoc,
                             int *view );
 extern void CancelSelection ( void );
 extern void ResetSelection ( PtrDocument pDoc );
+extern PtrElement GetColHeadOfCell ( PtrElement pCell );
+extern PtrElement GetCellInRow ( PtrElement pRow,
+                                 PtrElement pColHead );
 extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement pLastEl );
 extern ThotBool HiddenType ( PtrElement pEl );
@@ -112,6 +115,9 @@ extern void GetActiveView (/* PtrDocument *pDoc,
                               int *view */);
 extern void CancelSelection (/* void */);
 extern void ResetSelection (/* PtrDocument pDoc */);
+extern PtrElement GetColHeadOfCell (/* PtrElement pCell */);
+extern PtrElement GetCellInRow (/* PtrElement pRow,
+                                   PtrElement pColHead */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement pLastEl */);
 extern ThotBool HiddenType (/* PtrElement pEl */);

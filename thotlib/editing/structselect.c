@@ -432,7 +432,7 @@ void ResetSelection (PtrDocument pDoc)
   GetColHeadOfCell
   Return the column head element to which cell pCell is related.
   ----------------------------------------------------------------------*/
-static PtrElement GetColHeadOfCell (PtrElement pCell)
+PtrElement GetColHeadOfCell (PtrElement pCell)
 {
   int           attr;
   PtrElement    pColHead;
@@ -461,7 +461,7 @@ static PtrElement GetColHeadOfCell (PtrElement pCell)
   GetCellInRow
   Return the cell in row pRow that is related to column head pColHead.
   ----------------------------------------------------------------------*/
-static PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead)
+PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead)
 {
   PtrElement   pCell;
   ThotBool     found;

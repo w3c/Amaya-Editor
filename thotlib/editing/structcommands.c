@@ -689,6 +689,8 @@ void FreeSavedElements ()
      ReleaseSSchemasForSavedElements ();
    FirstSavedElement = NULL;
    DocOfSavedElements = NULL;
+   /* no whole column is saved */
+   WholeColumnSaved = FALSE;
    /* disable Paste command */
    if (ClipboardThot.BuLength != 0)
      /* switch the Paste entry in all documents */
@@ -738,6 +740,8 @@ static void SaveElement (PtrElement pEl, PtrElement pParent)
 	    /* switch the Paste entry in all documents */
 	    SwitchPaste (NULL, TRUE);
 	  FirstSavedElement = pNewPasteEl;
+	  /* indicates whether a whole column is saved */
+	  WholeColumnSaved = WholeColumnSelected;
 	  pPasteEl = NULL;
 	  pNewPasteEl->PePrevious = NULL;
 	  pEl->ElPrevious = NULL;
@@ -936,7 +940,7 @@ void CopyCommand ()
       pSave = FirstSavedElement;
       while (pSave != NULL)
 	{
-	  NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0);
+	  NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0, 0);
 	  /* passe au sous-arbre suivant */
 	  pSave = pSave->PeNext;
 	}
@@ -3063,7 +3067,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc,
 					 TRUE);
 			  /* envoie un evenement ElemNew.Post a l'application*/
-			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
+			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0);
 			  if (pNew && pNew->ElParent)
 			    {
 			      /* Indiquer que le document est modifie' */

@@ -747,7 +747,7 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 				 pPrev = pNewEl;
 				 /* traitement des exceptions */
 				 CreationExceptions (pNewEl, pDoc);
-				 NotifySubTree (TteElemNew, pDoc, pNewEl, 0);
+				 NotifySubTree (TteElemNew, pDoc, pNewEl, 0, 0);
 			       }
 			   }
 		       }
@@ -870,7 +870,7 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 			     {
 			       /* traitement des exceptions */
 			       CreationExceptions (pComponent, pDoc);
-			       NotifySubTree (TteElemNew, pDoc, pComponent, 0);
+			       NotifySubTree (TteElemNew, pDoc, pComponent, 0, 0);
 			     }
 			 }
 		     }
@@ -1201,7 +1201,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 	      /* traitement des exceptions de l'element qui a ete coupe' */
 	      CreationExceptions (pElReplicate, pDoc);
 	      /* envoie un evenement ElemPaste.Post a l'application */
-	      NotifySubTree (TteElemPaste, pDoc, pChild, -1);
+	      NotifySubTree (TteElemPaste, pDoc, pChild, 0, 1);
 	      /* reconstruit les paves des elements qui ont ete complete's */
 	      /* cree les paves du nouvel element */
 	      CreateAllAbsBoxesOfEl (pChild, pDoc);

@@ -77,6 +77,7 @@
 #include "thotmsg_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
+#include "undoapi_f.h"
 #include "unstructlocate_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
@@ -128,10 +129,10 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
 
 
 /*----------------------------------------------------------------------
-   PasteAnElement  Paste element decribed by pSavedEl within (if
-   within is TRUE), before (if before is TRUE) or after (if before is FALSE)
-   element pEl in document pDoc.
-   cellChild is not NULL when pasting a child of a cell.
+  PasteAnElement  Paste element decribed by pSavedEl within (if within
+  is TRUE), before (if before is TRUE) or after (if before is FALSE)
+  element pEl in document pDoc.
+  cellChild is not NULL when pasting a child of a cell.
   ----------------------------------------------------------------------*/
 static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				  ThotBool within, ThotBool before,
@@ -146,21 +147,23 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    NotifyOnValue       notifyVal;
    NotifyElement       notifyEl;
    int                 NSiblings, i, asc, nR;
-   ThotBool            stop, ok, possible;
+   ThotBool            stop, ok, possible, isCell;
 
    pPasted = NULL;
    pAncest = NULL;
    *cancelled = FALSE;
    pOrig = pSavedEl->PeElement;
+   isCell = TypeHasException (ExcIsCell, pOrig->ElTypeNumber,
+			      pOrig->ElStructSchema);
    /* don't paste a cell if the enclosing row is not pasted */
-   if (cellChild == NULL && TypeHasException (ExcIsCell, pOrig->ElTypeNumber,
-			 pOrig->ElStructSchema))
+   if (cellChild == NULL && isCell)
      {
        if (pOrig && pOrig->ElFirstChild)
 	 {
 	   /* paste children of the cell instead of the cell itself */
 	   pOrig = pOrig->ElFirstChild;
 	   *cellChild = pOrig;
+	   isCell = FALSE;
 	 }
      }      
    ok = FALSE;
@@ -187,12 +190,12 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
      /* s'il faut coller en debut ou fin d'element, on essaie de remonter */
      /* d'un ou plusieurs niveaux */
      {
-       while (!ok && pElem != NULL)
+       while (!ok && pElem)
 	 if ((before && pElem->ElPrevious == NULL) ||
 	     (!before && pElem->ElNext == NULL))
 	   {
 	     pElem = pElem->ElParent;
-	     if (pElem &&
+	     if (pElem && !isCell &&
 		 TypeHasException (ExcIsCell, pElem->ElTypeNumber,
 				   pElem->ElStructSchema))
 		 pElem = NULL;
@@ -525,7 +528,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	     /* insert first the last element before */
 	     while (pChild->ElNext != NULL)
 	       pChild = pChild->ElNext;
-	   while (pChild != NULL && pElem != NULL)
+	   while (pChild && pElem)
 	     {
 	       pPasteD->PeElement = pChild;
 	       /* don't check enclosed cells */
@@ -551,30 +554,30 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 
 
 /*----------------------------------------------------------------------
-   PasteCommand
-   traite la commande PASTE en mode non structure'
+  PasteCommand
   ----------------------------------------------------------------------*/
 void PasteCommand ()
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
                       pNextEl, pFree, pSplitText, pSel, cellChild;
+  PtrElement          pColHead, pRow;
   PtrPasteElem        pPasteD;
   DisplayMode         dispMode;
   Document            doc;
-  int                 firstChar, lastChar, view, i;
-  ThotBool            ok, before, within, lock, cancelled;
+  int                 firstChar, lastChar, view, i, info = 0;
+  ThotBool            ok, before, within, lock, cancelled, first;
 
   before = FALSE;
+  pColHead = pRow =NULL;
   if (FirstSavedElement == NULL)
     return;
   if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     {
-    /* on ne peut coller dans un document en lecture seule */
+    /* cannot paste within a read only document */
     if (!pDoc->DocReadOnly)
       {
-	/* calcule le volume que pourront prendre les paves des elements
-	   colles */
+	/* compute the view volume */
 	for (view = 0; view < MAX_VIEW_DOC; view++)
 	  {
 	    if (pDoc->DocView[view].DvPSchemaView > 0)
@@ -598,7 +601,31 @@ void PasteCommand ()
 	      }
 	  }
 
-	if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
+	if (WholeColumnSaved)
+	  {
+	    /* look for the column */
+	    while (firstSel &&
+		  !TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
+				    firstSel->ElStructSchema))
+	      firstSel = firstSel->ElParent;
+	    if (firstSel == NULL)
+	      /* cannot paste here */
+	      return;
+	    pColHead = GetColHeadOfCell (firstSel);
+	    /* look for the first row */
+	    pRow = firstSel->ElParent;
+	    if (pRow && pColHead)
+	      pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
+					 pRow->ElStructSchema);
+	    else
+	      pRow = NULL;
+	    /* change the selection to paste a whole column */
+	    pEl = firstSel;
+	    within = FALSE;
+	    before = FALSE;
+	    pNextEl = pEl;
+	  }
+	else if (firstChar == 0 && lastChar == 0 && firstSel == lastSel &&
 	    firstSel->ElVolume == 0 && !firstSel->ElTerminal)
 	  /* un element non terminal vide. On colle a l'interieur */
 	  {
@@ -662,6 +689,7 @@ void PasteCommand ()
 	NCreatedElements = 0;	
 	/* boucle sur les elements a coller et les colle un a un */
 	pPasteD = FirstSavedElement;
+	first = TRUE;
 	if (!within && before && pPasteD != NULL)
 	  /* on colle devant un element. On commencera par coller le */
 	  /* dernier element a coller et on continuera en arriere */
@@ -671,8 +699,16 @@ void PasteCommand ()
 	cellChild = NULL;
 	do
 	  {
-	    pPasted = PasteAnElement (pEl, pPasteD, within, before, &cancelled,
-				      pDoc, &cellChild);
+	    if (pRow)
+	      {
+		/* look for the cell in that row and that column */
+		pEl = GetCellInRow (pRow, pColHead);
+		/* next row */
+		pRow = FwdSearchTypedElem (pRow, pRow->ElTypeNumber,
+					 pRow->ElStructSchema);
+	      }
+	    pPasted = PasteAnElement (pEl, pPasteD, within, before,
+				      &cancelled, pDoc, &cellChild);
 	    if (pPasted == NULL && !cancelled &&
 		/* echec, mais l'application n'a pas refusé */
 		!within && !before && pNextEl != NULL)
@@ -681,7 +717,7 @@ void PasteCommand ()
 	      /* qui doit suivre la partie collee */
 	      pPasted = PasteAnElement (pNextEl, pPasteD, within, TRUE,
 					&cancelled, pDoc, &cellChild);
-	    if (pPasted != NULL)
+	    if (pPasted)
 	      /* a copy of element pPasteD has been sucessfully pasted */
 	      {
 		ok = TRUE;
@@ -764,16 +800,30 @@ void PasteCommand ()
 				 lastChar-1);
 	    /* envoie l'evenement ElemPaste.Post */
 	    for (i = 0; i < NCreatedElements; i++)
-	      {
-		if (CreatedElement[i])
-		  {
-		    AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
-		    NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
-				   IdentDocument (DocOfSavedElements));
-		    if (CreatedElement[i]->ElStructSchema == NULL)
-		      /* application has deleted that element */
-		      CreatedElement[i] = NULL;
-		  }
+	      if (CreatedElement[i])
+	        {
+		  AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
+		  if (WholeColumnSaved)
+		    {
+		      /* change the value of "info" in the latest cell
+			 deletion recorded in the Undo queue.
+			 The goal is to allow procedure CellPasted
+			 to regenerate only one column head when
+			 undoing the operation */
+		      if (first)
+			{
+			  info = 4;
+			  first = FALSE;
+			}
+		      else
+			info = 3;
+		      TtaChangeInfoLastRegisteredElem (doc, info);
+		    }
+		  NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
+				 IdentDocument (DocOfSavedElements), info);
+		  if (CreatedElement[i]->ElStructSchema == NULL)
+		    /* application has deleted that element */
+		    CreatedElement[i] = NULL;
 	      }
 	    /* close the history sequence after applications have possibly
 	       registered more changes to the pasted elements */
@@ -1741,7 +1791,7 @@ void TtcCreateElement (Document doc, View view)
 		  if (dispMode == DisplayImmediately)
 		    TtaSetDisplayMode (doc, DeferredDisplay);
 		  /* envoie un evenement ElemNew.Post a l'application */
-		  NotifySubTree (TteElemNew, pDoc, pNew, 0);
+		  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0);
 		  /* Mise a jour des images abstraites */
 		  CreateAllAbsBoxesOfEl (pNew, pDoc);
 		  /* generate abstract boxes */
@@ -2184,7 +2234,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		   /* record the inserted element in the history */
 		   AddEditOpInHistory (pElem, pDoc, FALSE, TRUE);
 		   if (!isRow)
-		     NotifySubTree (TteElemPaste, pDoc, pElem, 0);
+		     NotifySubTree (TteElemPaste, pDoc, pElem, 0, 0);
 		 }
 	     }
 	   if (pElem != NULL)

@@ -99,15 +99,13 @@ static ThotBool     createPasteMenuOK;
 
 
 /*----------------------------------------------------------------------
-   NotifySubTree   envoie l'evenement .Post de appEvent pour       
-   l'element pEl du document pDoc et, si le document le demande,   
-   pour tous les descendants de pEl.                               
-   Si origDoc n'est pas nul, il s'agit du numero du document d'ou  
-   provient l'element pEl (utilise' uniquement dans le cas de      
-   Paste).                                                         
+  NotifySubTree sends an event appEvent.Post for the element pEl
+  of the document pDoc and if necessary all its children.
+  Parameters origDoc (document from which comes pEl) and info (used
+  by columns management) are given.
   ----------------------------------------------------------------------*/
 void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
-		    int origDoc)
+		    int origDoc, int info)
 {
   NotifyElement       notifyEl;
   PtrElement          pChild, pNext;
@@ -120,17 +118,8 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
   notifyEl.element = (Element) pEl;
   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-  if (origDoc < 0)
-    {
-      /* called by Undo */
-      notifyEl.position = 0;
-      notifyEl.info = -origDoc; /* sent by undo */
-    }
-  else
-    {
-      notifyEl.position = origDoc;
-      notifyEl.info = 0; /* not sent by undo */
-    }
+  notifyEl.position = origDoc;
+  notifyEl.info = info; /* not sent by undo */
   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
   if (pDoc->DocNotifyAll)
     /* the document needs an event for each element in the subtree */
@@ -144,7 +133,7 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
 	      /* save pointer on next child, in case the current child
 		 is deleted by the application */
 	      pNext = pChild->ElNext;
-	      NotifySubTree (appEvent, pDoc, pChild, origDoc);
+	      NotifySubTree (appEvent, pDoc, pChild, origDoc, info);
 	      pChild = pNext;
 	    }
 	}
@@ -729,7 +718,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		    for (i = 1; i <= nNew; i++)
 		      {
 			/* envoie un evenement ElemNew pour tous les elements crees */
-			NotifySubTree (TteElemNew, pDoc, pE, 0);
+			NotifySubTree (TteElemNew, pDoc, pE, 0, 0);
 			CreateAllAbsBoxesOfEl (pE, pDoc);
 			if (i < nNew)
 			  pE = pE->ElNext;
@@ -1606,7 +1595,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
      }
    if (pRet != NULL)
       /* envoie l'evenement ElemNew.Post */
-      NotifySubTree (TteElemNew, pDoc, pRet, 0);
+      NotifySubTree (TteElemNew, pDoc, pRet, 0, 0);
    *pEl = pRet;
    return ret;
 }
@@ -1840,7 +1829,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 				    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 				 }
 			       else
-				  NotifySubTree (TteElemNew, pDoc, pNew, 0);
+				  NotifySubTree (TteElemNew, pDoc, pNew, 0, 0);
 			      }
 			    if (createAbsBox)
 			       /* cree les paves du nouvel element et les affiche */
@@ -2103,7 +2092,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 				  pPrevEl = p1;
 				  /* traitement des exceptions */
 				  CreationExceptions (p1, pDoc);
-				  NotifySubTree (TteElemNew, pDoc, p1, 0);
+				  NotifySubTree (TteElemNew, pDoc, p1, 0, 0);
 				  if (createAbsBox)
 				    /* cree les paves du nouvel element */
 				    CreateAllAbsBoxesOfEl (p1, pDoc);
@@ -2224,7 +2213,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 			      {
 				/* traitement des exceptions */
 				CreationExceptions (p, pDoc);
-				NotifySubTree (TteElemNew, pDoc, p, 0);
+				NotifySubTree (TteElemNew, pDoc, p, 0, 0);
 				if (createAbsBox)
 				  /* cree les paves du nouvel element */
 				  CreateAllAbsBoxesOfEl (p, pDoc);
@@ -2314,7 +2303,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 		    {
 		      /* traitement des exceptions */
 		      CreationExceptions (p, pDoc);
-		      NotifySubTree (TteElemNew, pDoc, p, 0);
+		      NotifySubTree (TteElemNew, pDoc, p, 0, 0);
 		      if (createAbsBox)
 			/* cree les paves du nouvel element et de sa descendance */
 			CreateAllAbsBoxesOfEl (pEl, pDoc);
@@ -3591,7 +3580,7 @@ static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
 	pSecondEl->ElOtherPairedEl = pEl;
 	pEl->ElOtherPairedEl = pSecondEl;
 	/* envoie l'evenement ElemNew.Post pour la marque de fin */
-	NotifySubTree (TteElemNew, pDoc, pSecondEl, 0);
+	NotifySubTree (TteElemNew, pDoc, pSecondEl, 0, 0);
 	/* cree les paves de la nouvelle marque */
 	CreateAllAbsBoxesOfEl (pSecondEl, pDoc);
      }

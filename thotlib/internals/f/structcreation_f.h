@@ -9,7 +9,8 @@
 extern void NotifySubTree ( APPevent appEvent,
                             PtrDocument pDoc,
                             PtrElement pEl,
-                            int origDoc );
+                            int origDoc,
+                            int info );
 extern void InsertOption ( PtrElement pEl,
                            PtrElement *pOption,
                            PtrDocument pDoc );
@@ -79,7 +80,8 @@ extern void CreatePasteIncludeMenuCallback ( ThotBool create,
 extern void NotifySubTree (/* APPevent appEvent,
                               PtrDocument pDoc,
                               PtrElement pEl,
-                              int origDoc */);
+                              int origDoc,
+                              int info */);
 extern void InsertOption (/* PtrElement pEl,
                              PtrElement *pOption,
                              PtrDocument pDoc */);

@@ -111,6 +111,8 @@ int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio)
   if (xRef < xcell || xRef > xcell + wcell ||
       yRef < ycell || yRef > ycell + hcell)
     return MAX_DISTANCE;
+  else if (pCell)
+    value = GetDistance (xRef - x, width) + 10 * GetDistance (yRef - y, height);
   else
     value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
   return (value);

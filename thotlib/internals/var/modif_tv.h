@@ -11,9 +11,9 @@
 
 /* descriptor of first element saved */
 THOT_EXPORT PtrPasteElem FirstSavedElement;
-
+/* indicates whether a whole column is saved */
+THOT_EXPORT ThotBool     WholeColumnSaved;
 /* the document from which saved elements have been copied or cut */
 THOT_EXPORT PtrDocument  DocOfSavedElements;
-
 /* Thot Clipboard */
 THOT_EXPORT struct _TextBuffer ClipboardThot;
