@@ -1915,9 +1915,9 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    char   *ptr;
 
    /* Sets the current locale according to the program environment */
-   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-   if (ptr && !strcasecmp (ptr, "yes"))
-     gtk_set_locale ();
+   /* ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
+      if (ptr && !strcasecmp (ptr, "yes"))*/
+   gtk_set_locale ();
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
    if (!gtk_init_check (&appArgc, &appArgv))
      printf ("GUI can't be initialized\n");
