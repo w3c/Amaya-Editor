@@ -972,7 +972,7 @@ ThotBool       deleteTree;
       TtaInsertSibling (lastInserted, elem, TRUE, destDoc);
       /* this delimits the new inserted part of the document */
       RegisterSubDoc (lastInserted, url);
-      CreateTargetAnchor (destDoc, lastInserted, FALSE);
+      CreateTargetAnchor (destDoc, lastInserted, FALSE, FALSE);
       div = lastInserted;
 
       /* do copy */

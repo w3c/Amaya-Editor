@@ -27,15 +27,16 @@ extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
                                  Element el,
+                                 ThotBool forceID,
                                  ThotBool withUndo );
 extern void CreateAnchor ( Document doc,
                            View view,
                            ThotBool createLink );
 extern void MakeUniqueName ( Element el,
                              Document doc );
-extern void ChangeIDAttribute ( CHAR_T *elName,
-                                Document doc,
-                                ThotBool addID );
+extern void CreateRemoveIDAttribute ( CHAR_T *elName,
+                                      Document doc,
+                                      ThotBool createID );
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void ChangeURI ( Element el,
@@ -137,15 +138,16 @@ extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,
                                    Element el,
+                                   ThotBool forceID,
                                    ThotBool withUndo */);
 extern void CreateAnchor (/* Document doc,
                              View view,
                              ThotBool createLink */);
 extern void MakeUniqueName (/* Element el,
                                Document doc */);
-extern void ChangeIDAttribute (/* CHAR_T *elName,
-                                  Document doc,
-                                  ThotBool addID */);
+extern void CreateRemoveIDAttribute (/* CHAR_T *elName,
+                                        Document doc,
+                                        ThotBool createID */);
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementDeleted (/* NotifyElement *event */);
 extern void ChangeURI (/* Element el,

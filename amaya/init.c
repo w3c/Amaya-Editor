@@ -4311,11 +4311,11 @@ CHAR_T*             data;
 	 {
 	 case 1:
 	   /* we need to memorize the document number... how to do that? */
-	   ChangeIDAttribute (IdElemName, 1, TRUE);
+	   CreateRemoveIDAttribute (IdElemName, 1, TRUE);
 	   break;
 	 case 2:
        /* we need to memorize the document number... how to do that? */
-	   ChangeIDAttribute (IdElemName, 1, FALSE);
+	   CreateRemoveIDAttribute (IdElemName, 1, FALSE);
 	   break;
 	 }
        break;
@@ -4980,7 +4980,6 @@ View                view;
   CreateMakeIDDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

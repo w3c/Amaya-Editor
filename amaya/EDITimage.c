@@ -504,7 +504,7 @@ char*               shape;
 	     while (elType.ElTypeNum != HTML_EL_BODY &&
 		    elType.ElTypeNum != HTML_EL_Division );
 	     TtaInsertSibling (map, el, FALSE, doc);
-	     CreateTargetAnchor (doc, map, FALSE);
+	     CreateTargetAnchor (doc, map, FALSE, FALSE);
 	     attrType.AttrTypeNum = HTML_ATTR_NAME;
 	     attr = TtaGetAttribute (map, attrType);
 

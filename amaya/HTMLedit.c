@@ -701,15 +701,19 @@ Element             selectedElement;
 
 /*----------------------------------------------------------------------
    CreateTargetAnchor creates a NAME or ID attribute with a default    
-   value for element el.                           
+   value for element el.
+   If the withUndo parameter is true, we'll register the undo sequence.
+   If the forceID parameter, we'll always use an ID attribute, rather
+   than a NAME one in some cases.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateTargetAnchor (Document doc, Element el, ThotBool withUndo)
+void                CreateTargetAnchor (Document doc, Element el, ThotBool forceID, ThotBool withUndo)
 #else  /* __STDC__ */
-void                CreateTargetAnchor (doc, el, withUndo)
+void                CreateTargetAnchor (doc, el, forceID, withUndo)
 Document            doc;
 Element             el;
-Boolean		    withUndo;
+ThotBool            forceID;
+ThotBool	    withUndo;
 #endif /* __STDC__ */
 {
    AttributeType       attrType;
@@ -732,7 +736,12 @@ Boolean		    withUndo;
    attrType.AttrSSchema = HTMLSSchema;
    if (withinHTML && (elType.ElTypeNum == HTML_EL_Anchor ||
 		      elType.ElTypeNum == HTML_EL_MAP))
-     attrType.AttrTypeNum = HTML_ATTR_NAME;
+     {
+       if (forceID)
+	 attrType.AttrTypeNum = HTML_ATTR_ID;
+       else
+	 attrType.AttrTypeNum = HTML_ATTR_NAME;
+     }
    else
      {
      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
@@ -972,7 +981,7 @@ ThotBool            createLink;
 		  /* create an ID for target element */
 		{
 		  TtaOpenUndoSequence (doc, first, last, c1, cN);
-		  CreateTargetAnchor (doc, first, TRUE);
+		  CreateTargetAnchor (doc, first, FALSE, TRUE);
 		  TtaCloseUndoSequence (doc);
 		}
 	      return;
@@ -1116,7 +1125,7 @@ ThotBool            createLink;
       TtaSetAttributeText (attr, TEXT("link"), anchor, doc);
     }
   else
-    CreateTargetAnchor (doc, anchor, FALSE);
+    CreateTargetAnchor (doc, anchor, FALSE, FALSE);
 
   if (parag)
     TtaRegisterElementCreate (parag, doc);
@@ -1230,15 +1239,19 @@ Document     doc;
 }
 
 /*----------------------------------------------------------------------
-  ChangeIDAttribute
+  CreateRemoveIDAttribute
+  For all elements elName of a document, this functions eithers adds or 
+  deletes an ID attribute. 
+  The createID flag tells which operation must be done.
+  If an element already has an ID attribute, a new one won't be created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         ChangeIDAttribute (CHAR_T *elName, Document doc, ThotBool addID)
+void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool createID)
 #else  /* __STDC__ */
-void         ChangeIDdAttribute (elName, doc)
+void         CreateRemoveIDdAttribute (elName, doc, createID)
 CHAR_T         *elNamel
 Document	doc;
-ThotBool        addID;
+ThotBool        createID;
 
 #endif /* __STDC__ */
 {
@@ -1256,24 +1269,30 @@ ThotBool        addID;
     /* element name not found */
     return;
 
-  /* to be done: exception handling... where we can't add an ID attribute */
-#if 0
-  /* HTML */
-  if (elType.ElTypeNum == HTML_EL_Anchor
-      || elType.ElTypeNum == HTML_EL_MAP)
-    /* we can't put an id on this elements */
-    return;
-#endif
-
   /* in function of the target elType, we choose the correct
      ATTR_ID value */
+  attrType.AttrTypeNum = 0;
   schema_name = TtaGetSSchemaName (elType.ElSSchema);
   if (!ustrcmp (schema_name, TEXT("HTML")))
-    attrType.AttrTypeNum = HTML_ATTR_ID;
+    {
+      /* exception handling... we can't add an ID attribute everywhere
+       in HTML documents */
+      if (!(elType.ElTypeNum == HTML_EL_HTML
+	    || elType.ElTypeNum == HTML_EL_HEAD
+	    || elType.ElTypeNum == HTML_EL_TITLE
+	    || elType.ElTypeNum == HTML_EL_BASE
+	    || elType.ElTypeNum == HTML_EL_META
+	    || elType.ElTypeNum == HTML_EL_SCRIPT
+	    || elType.ElTypeNum == HTML_EL_STYLE_))
+	attrType.AttrTypeNum = HTML_ATTR_ID;
+    }
   else if (!ustrcmp (schema_name, TEXT("MathML")))
     attrType.AttrTypeNum = MathML_ATTR_id;
   else if (!ustrcmp (schema_name, TEXT("GraphML")))
     attrType.AttrTypeNum = GraphML_ATTR_id;
+
+  if (attrType.AttrTypeNum == 0)
+    return;
   attrType.AttrSSchema = elType.ElSSchema;
 
   /* prepare the environment before doing the operation */
@@ -1281,7 +1300,7 @@ ThotBool        addID;
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
   /* remove selection before modifications */
-  TtaUnselect (doc);
+  /* TtaUnselect (doc); */
   
   /* browse the tree and add the ID if it's missing */
   el = TtaGetMainRoot (doc);
@@ -1289,22 +1308,20 @@ ThotBool        addID;
   while (el)
     {
       attr = TtaGetAttribute (el, attrType);
-      if (!attr && addID)
+      if (!attr && createID)
 	{
 	  /* we reuse an existing Amaya function */
-	  CreateTargetAnchor (doc, el, TRUE);
+	  CreateTargetAnchor (doc, el, TRUE, TRUE);
 	}
-      else if (attr && !addID)
+      else if (attr && !createID)
 	{
 	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  TtaRemoveAttribute (el, attr, doc);
 	  TtaRegisterAttributeDelete (attr, el, doc);
 	  TtaCloseUndoSequence (doc);
 	}
-
       el = TtaSearchTypedElement (elType, SearchForward, el);
     }
-
   TtaSetDocumentModified (doc);
   TtaSetDisplayMode (doc, dispMode);
 }
