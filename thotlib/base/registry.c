@@ -1446,7 +1446,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    app_home[0] = EOS;
    /* IV 18/08/2003 Check the variable AMAYA_USER_HOME first */
    ptr = getenv ("AMAYA_USER_HOME");
-   if (ptr && TtaDirExists (ptr))
+   if (ptr && ThotDirExists (ptr))
      strncpy (app_home, ptr, MAX_PATH);
 
    if (app_home[0] == EOS)
@@ -1496,10 +1496,10 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	   /* Windows NT convention */
 	   sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
 	   ptr2 = getenv ("HOMEDRIVE");
-	   if (!TtaDirExists (app_home))
+	   if (!ThotDirExists (app_home))
 	   {
 	     sprintf (app_home, "%s\\%s\\%s", windir, ptr, AppNameW);
-	     if (!TtaDirExists (app_home))
+	     if (!ThotDirExists (app_home))
 	       app_home[0] = EOS;
 	   }
 	   if (app_home[0] == EOS)
@@ -1509,7 +1509,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	       if (ptr2 && *ptr2 && ptr3)
 		 {
 		   sprintf (app_home, "%s%s\\%s", ptr2, ptr3, AppNameW);
-		   if (!TtaDirExists (app_home))
+		   if (!ThotDirExists (app_home))
 		     app_home[0] = EOS;
 		 }
 	     }
@@ -1538,7 +1538,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 		 sprintf (app_home, "%s\\Documents and Settings\\%s",
 			  windir, ptr);
 
-	       if (!TtaDirExists (app_home))
+	       if (!ThotDirExists (app_home))
 		 /* the Windows NT convention */
 		 sprintf (app_home, "%s\\profiles\\%s", windir, ptr);
 

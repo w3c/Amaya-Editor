@@ -27,19 +27,17 @@
 
 
 /*----------------------------------------------------------------------
-   TtaDirExists returns TRUE if the dirpath points to a directory.
+   TtaDirExists returns TRUE if the name points to a directory.
    FALSE if the path points to a filename or doesn't
    point to anything.
   ----------------------------------------------------------------------*/
-int TtaDirExists (CONST char *dirpath)
+int ThotDirExists (CONST char *name)
 {
   int         status = 0;
-  char       *name;
 #ifdef _WINGUI
   DWORD       attribs;
 #endif /* _WINGUI */
 
-  name = GetRealFileName (dirpath);
 #ifdef _WINGUI
   attribs = GetFileAttributes ((LPCTSTR)name);
   if (attribs == 0xFFFFFFFF)
@@ -57,8 +55,21 @@ int TtaDirExists (CONST char *dirpath)
   status = stat (name, &buf) == 0 && S_ISDIR (buf.st_mode);
 #endif /* #ifdef _WX */
 #endif /* _WINGUI */
+  return status;
+}
 
-  TtaFreeMemory (name);
+/*----------------------------------------------------------------------
+   TtaDirExists returns TRUE if the dirpath points to a directory.
+   FALSE if the path points to a filename or doesn't
+   point to anything.
+  ----------------------------------------------------------------------*/
+int TtaDirExists (CONST char *dirpath)
+{
+  int         status = 0;
+  char       *name;
+
+  name = GetRealFileName (dirpath);
+  status = ThotDirExists (name);
   return status;
 }
 
