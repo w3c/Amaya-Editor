@@ -858,6 +858,10 @@ void                CreateRuby (Document document, View view)
       elType.ElTypeNum = HTML_EL_simple_ruby;
       if (TtaGetTypedAncestor (firstEl, elType))
 	return;
+      /* stop displaying changes that will be made */
+      dispMode = TtaGetDisplayMode (document);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (document, DeferredDisplay);
       selEl = NULL;
       rbEl = NULL;
       if (TtaIsSelectionEmpty())
@@ -917,10 +921,6 @@ void                CreateRuby (Document document, View view)
 	      if (!error)
 		{
 		  TtaUnselect (document);
-		  /* stop displaying changes that will be made */
-		  dispMode = TtaGetDisplayMode (document);
-		  if (dispMode == DisplayImmediately)
-		    TtaSetDisplayMode (document, DeferredDisplay);
 		  /* split the last element if it's a character string */
 		  elType = TtaGetElementType (lastEl);
 		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -979,8 +979,6 @@ void                CreateRuby (Document document, View view)
 		      el = nextEl;
 		    }
 		  TtaCloseUndoSequence (document);
-		  /* ask Thot to display changes made in the document */
-		  TtaSetDisplayMode (document, dispMode);
 		}
 	    }
 	}
@@ -1014,6 +1012,8 @@ void                CreateRuby (Document document, View view)
 	  TtaSetTextContent (el, ")", TtaGetDefaultLanguage (), document);
 	  TtaSetStructureChecking (oldStructureChecking, document);
 	}
+      /* ask Thot to display changes made in the document */
+      TtaSetDisplayMode (document, dispMode);
       /* update the selection */
       if (selEl)
 	TtaSelectElement (document, selEl);

@@ -798,12 +798,12 @@ STRUCT
 	complex_ruby;
 	END;
 
-  simple_ruby =
+  simple_ruby =                                                 { ruby }
 	BEGIN
 	rb = Basic_Set - (simple_ruby, complex_ruby);
 	CASE OF
-	      rt (ATTR rbspan = Integer) = Basic_Set
-	                                   - (simple_ruby, complex_ruby);
+	      rt (ATTR rbspan = Integer) =
+	          Basic_Set - (simple_ruby, complex_ruby);
 	      BEGIN
 		  rp = TEXT;
 		  rt;
@@ -812,7 +812,7 @@ STRUCT
 	      END;
 	END;
 
-  complex_ruby =
+  complex_ruby =                                               { ruby }
 	BEGIN
 	rbc = LIST OF (rb);
 	rtc1 = LIST OF (rt);
