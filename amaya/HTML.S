@@ -763,6 +763,8 @@ EXCEPT
 	Links:		Hidden;
 	Frames:		Hidden;
 	Frame:		Hidden, NoCut;
+	FRAMESET:	NoCreate;	{ prevent a Return at the end of the
+					  document from creating a FRAMESET }
 	Inserted_Text:	Hidden, NoCut;
 	Basic_Set:	Hidden;
 	Term_List:	Hidden;

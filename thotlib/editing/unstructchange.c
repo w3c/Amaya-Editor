@@ -1006,6 +1006,9 @@ void                TtcCreateElement (doc, view)
 			    {
 			    SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum, &pSS,
 					     &list, &optional);
+			    if (typeNum > 0)
+			       if (TypeHasException (ExcNoCreate, typeNum,pSS))
+				  typeNum = 0;
 			    if (typeNum == 0)
 			       {
 			       list = TRUE;
