@@ -49,7 +49,7 @@ STRUCT
 	HEAD;
       ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
-	END + (Invalid_element, Comment\240);
+	END + (Invalid_element, Comment\240, XMLPI);
 
   BODY								{ BODY }
      (ATTR onload = Text; onunload = Text;
@@ -63,8 +63,11 @@ STRUCT
 	LIST OF (Element) + (INS, DEL);
 
   Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
+
   Comment\240 = LIST OF (Comment_line = TEXT);
 
+  XMLPI = LIST OF (PI_line = TEXT);
+	
   Head_misc =
 	CASE OF
 	STYLE_;
@@ -797,6 +800,7 @@ EXCEPT
 	Term_List:	Hidden;
 	Definition_Item:Hidden;
 	Comment_line:	Hidden;
+	PI_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;
 	PICTURE:	MoveResize;

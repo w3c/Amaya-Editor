@@ -2703,7 +2703,6 @@ CHAR_T     *commentValue;
    Element  	 commentEl, commentLineEl, commentText;
    STRING        mappedName;
    CHAR_T        cont;
-   UCHAR_T       msgBuffer[MaxMsgLength];
    int           start, i, error;
 
    /* Create a Thot element for the comment */
@@ -2711,12 +2710,7 @@ CHAR_T     *commentValue;
    elType.ElTypeNum = 0;
    GetXmlElType (TEXT("XMLcomment"), &elType,
 		 &mappedName, &cont, XMLcontext.doc);
-   if (elType.ElTypeNum <= 0)
-     {
-       usprintf (msgBuffer, TEXT("Unknown comment %s"), commentValue);
-       XmlParseError (XMLcontext.doc, msgBuffer, 0);
-     }
-   else
+   if (elType.ElTypeNum > 0)
      {
        commentEl = TtaNewElement (XMLcontext.doc, elType);
        XmlSetElemLineNumber (commentEl);
@@ -2774,10 +2768,8 @@ CHAR_T     *commentValue;
        while (commentValue[i] != EOS);
        /* Process last line */
        if (i > start + 1)
-	 TtaAppendTextContent (commentText, &commentValue[start],
-			       XMLcontext.doc);
-       (*(currentParserCtxt->ElementComplete)) (commentEl, XMLcontext.doc,
-						&error);
+	 TtaAppendTextContent (commentText, &commentValue[start], XMLcontext.doc);
+       (*(currentParserCtxt->ElementComplete)) (commentEl, XMLcontext.doc, &error);
        XMLcontext.lastElementClosed = TRUE;
      }
 }
@@ -2798,29 +2790,83 @@ CHAR_T   *PiData;
 #endif
 {
    ElementType   elType, elTypeTxt;
-   Element  	 PiEl, PiText;
+   Element  	 PiEl, PiLineEl, PiText;
    STRING        mappedName;
    CHAR_T        cont;
-   UCHAR_T       msgBuffer[MaxMsgLength];
+   int           i, start, len, error;
+   CHAR_T       *PiValue = NULL;
 
    /* Create a Thot element for the PI */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXmlElType (TEXT("XMLPi"), &elType, &mappedName, &cont, XMLcontext.doc);
-   if (elType.ElTypeNum <= 0)
+   GetXmlElType (TEXT("XMLPI"), &elType, &mappedName, &cont, XMLcontext.doc);
+   if (elType.ElTypeNum > 0)
      {
-       usprintf (msgBuffer, TEXT("Unknown processing instruction %s %s"),
-		 PiTarget, PiData);
-       XmlParseError (XMLcontext.doc, msgBuffer, 0);
-       return;
-     }
-   else
-     {
-       /* TODO */
-     }
+       PiEl = TtaNewElement (XMLcontext.doc, elType);
+       XmlSetElemLineNumber (PiEl);
+       InsertXmlElement (&PiEl);
 
+       /* Create a XMLPI_line element as the first child of element XMLPI */
+       elType.ElSSchema = NULL;
+       elType.ElTypeNum = 0;
+       GetXmlElType (TEXT("XMLPI_line"), &elType,
+		     &mappedName, &cont, XMLcontext.doc);
+       PiLineEl = TtaNewElement (XMLcontext.doc, elType);
+       XmlSetElemLineNumber (PiLineEl);
+       TtaInsertFirstChild (&PiLineEl, PiEl, XMLcontext.doc);
+
+       /* Create a TEXT element as the first child of element XMLPI_line*/
+       elTypeTxt.ElSSchema = elType.ElSSchema;
+       elTypeTxt.ElTypeNum = 1;
+       PiText = TtaNewElement (XMLcontext.doc, elTypeTxt);
+       XmlSetElemLineNumber (PiText);
+       TtaInsertFirstChild (&PiText, PiLineEl, XMLcontext.doc);
+       TtaSetTextContent (PiText, TEXT(""), XMLcontext.language, XMLcontext.doc);
+       /* Look for line break in the PI and create as many */
+       /* XMLPI_line elements as needed */
+       i = 0; start = 0;
+       len = strlen (PiTarget);
+       len = len + strlen (PiData);
+       PiValue = TtaGetMemory (len + 2);
+       strcpy (PiValue, PiTarget);
+       strcat (PiValue, TEXT(" "));
+       strcat (PiValue, PiData);
+      do
+	 {
+	   if ((int)PiValue[i] == EOL || (int)PiValue[i] == __CR__)
+	     /* New line */
+	     {
+	       PiValue[i] = EOS;
+	       TtaAppendTextContent (PiText, &PiValue[start], XMLcontext.doc);
+	       /* Create a new XMLPI_line element */
+	       PiLineEl = TtaNewElement (XMLcontext.doc, elType);
+	       XmlSetElemLineNumber (PiLineEl);
+	       /* Inserts the new XMLcomment_line after the previous one */
+	       TtaInsertSibling (PiLineEl, TtaGetParent (PiText),
+				 FALSE, XMLcontext.doc);
+	       /* Create a TEXT element as the first child of */
+	       /* the new XMLPI_line element */
+	       PiText = TtaNewElement (XMLcontext.doc, elTypeTxt);
+	       XmlSetElemLineNumber (PiText);
+	       TtaInsertFirstChild (&PiText, PiEl, XMLcontext.doc);
+	       TtaSetTextContent (PiText, TEXT(""), XMLcontext.language,
+				  XMLcontext.doc);
+	       i++;
+	       start = i;   /* Start of next comment line */
+	     }
+	   else if (PiValue[i] != EOS)
+	     i++;
+	 }
+       while (PiValue[i] != EOS);
+       /* Process last line */
+       if (i > start + 1)
+	 TtaAppendTextContent (PiText, &PiValue[start], XMLcontext.doc);
+       (*(currentParserCtxt->ElementComplete)) (PiEl, XMLcontext.doc, &error);
+       XMLcontext.lastElementClosed = TRUE;
+     }
+   
    /* Call the corresponding treatment */
-       /* TODO */
+   /* TODO */
 }
 /*--------------------  PI  (end)  ---------------------------------*/
 

@@ -42,6 +42,17 @@ RULES
    XMLcomment_line:
 	if not last create '\12' after;
 
+   XMLPI:
+        BEGIN
+        NoLineBreak;
+        Create '<?';
+	NoTranslation;
+        Create '?>\12' after;
+        END;
+
+   XMLPI_line:
+	if not last create '\12' after;
+
    MROW:
 	begin
 	create SOT;

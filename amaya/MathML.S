@@ -40,6 +40,8 @@ STRUCT
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
+   XMLPI = LIST OF (XMLPI_line = TEXT) ; 
+
    { Presentation: all presentation constructs }
    Construct (ATTR IntPlaceholder = yes_) = CASE OF
 
@@ -388,6 +390,7 @@ EXCEPT
 
    MathML:		NoMove, NoResize;
    XMLcomment_line:	Hidden;
+   XMLPI_line:  	Hidden;
    Construct:		Hidden;
    Numerator:		Hidden;
    Denominator:	 	Hidden;

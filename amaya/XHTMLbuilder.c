@@ -696,7 +696,8 @@ int       *error;
    elType = TtaGetElementType (el);
    /* is this a block-level element in a character-level element? */
    if (!IsXMLElementInline (el) &&
-       elType.ElTypeNum != HTML_EL_Comment_)
+       elType.ElTypeNum != HTML_EL_Comment_ &&
+       elType.ElTypeNum != HTML_EL_XMLPI)
        BlockInCharLevelElem (el);
 
    newElType.ElSSchema = elType.ElSSchema;

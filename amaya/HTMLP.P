@@ -1628,12 +1628,14 @@ BOXES
                 Visibility: ATTR_Visibility;	
 		Size: DOC_FONTSIZE;
 		Foreground: TAG_Color;
-		if NOT within Comment_line
+		if NOT within Comment_line AND NOT within PI_line
 		   BEGIN
 		   HorizPos: Left = Previous . Right;
 		   VertPos: HRef = Previous . HRef;
 		   END;
-		if within Comment_line
+		if within Comment_line 
+		   HorizPos: Left = Previous . Right;
+		if within PI_line 
 		   HorizPos: Left = Previous . Right;
                 END;
         END;
@@ -2130,6 +2132,26 @@ BOXES
 
  COMMENT_END: BEGIN
 	Content: Text '-->';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		VertPos: HRef = Previous . HRef;
+		HorizPos: Left = Previous . Right;
+		Foreground: TAG_Color;
+		END;
+	END;
+
+ PI_S: BEGIN
+	Content: Text '<?';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		END;
+	END;
+
+ PI_END: BEGIN
+	Content: Text '?>';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -7688,7 +7710,7 @@ RULES
 	if within Inserted_Text
 		Depth: 0;
 	IN Structure_view BEGIN
-		if NOT within Comment_line
+		if NOT within Comment_line AND NOT within PI_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -7698,6 +7720,8 @@ RULES
 		if within Text_Input
 		   Visibility: 0;
 		if within Comment_line
+		   HorizPos: Left = Previous . Right;
+		if within PI_line
 		   HorizPos: Left = Previous . Right;
 		if within Preformatted
 		   Font: Courier;
@@ -8198,6 +8222,30 @@ RULES
 	BEGIN
 	IF First CreateFirst(COMMENT_S);
 	IF Last CreateLast(COMMENT_END);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: COMMENT_Visibility;
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom + 0.2;
+		END;
+	END;
+
+
+  XMLPI:
+	BEGIN
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: COMMENT_Visibility;
+		Font: COMMENT_Font;
+		Style: COMMENT_Style; Weight: COMMENT_Weight;
+		Width: Enclosing . Width;
+		END;
+	END;
+
+  PI_line:
+	BEGIN
+	IF First CreateFirst(PI_S);
+	IF Last CreateLast(PI_END);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: COMMENT_Visibility;

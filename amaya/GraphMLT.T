@@ -299,6 +299,17 @@ RULES
    XMLcomment_line:
 	if not last create '\12' after;
 
+   XMLPI:
+	BEGIN
+	NoLineBreak;
+        Create '<?';
+	NoTranslation;
+        Create '?>\12' after;
+        END;
+
+   XMLPI_line:
+	if not last create '\12' after;
+
    TEXT_UNIT:
         if immediately within text_
 	    create '\12' after;

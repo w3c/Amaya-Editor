@@ -5,6 +5,8 @@
 static ElemMapping    GraphMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
+   {TEXT("XMLPI"), SPACE, GraphML_EL_XMLPI, L_Other, FALSE},
+   {TEXT("XMLPI_line"), SPACE, GraphML_EL_XMLPI_line, L_Other, FALSE},
    {TEXT("XMLcomment"), SPACE, GraphML_EL_XMLcomment, L_Other, FALSE},
    {TEXT("XMLcomment_line"), SPACE, GraphML_EL_XMLcomment_line, L_Other, FALSE},
    {TEXT("circle"), SPACE, GraphML_EL_circle, L_Other, FALSE},

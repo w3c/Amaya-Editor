@@ -3,6 +3,8 @@
 static ElemMapping    MathMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
+   {TEXT("XMLPI"), SPACE, MathML_EL_XMLPI, L_Other, FALSE},
+   {TEXT("XMLPI_line"), SPACE, MathML_EL_XMLPI_line, L_Other, FALSE},
    {TEXT("XMLcomment"), SPACE, MathML_EL_XMLcomment, L_Other, FALSE},
    {TEXT("XMLcomment_line"), SPACE, MathML_EL_XMLcomment_line, L_Other, FALSE},
    {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP, L_Other, FALSE},

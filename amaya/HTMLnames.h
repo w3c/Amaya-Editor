@@ -3,6 +3,8 @@
 static ElemMapping    XHTMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
+   {TEXT("XMLPI"), SPACE, HTML_EL_XMLPI, L_Other, FALSE},
+   {TEXT("XMLPI_line"), SPACE, HTML_EL_PI_line, L_Other, FALSE},
    {TEXT("XMLcomment"), SPACE, HTML_EL_Comment_, L_Other, FALSE},
    {TEXT("XMLcomment_line"), SPACE, HTML_EL_Comment_line, L_Other, FALSE},
    {TEXT("a"), SPACE, HTML_EL_Anchor, L_Basic, TRUE},

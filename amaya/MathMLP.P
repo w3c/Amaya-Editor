@@ -2243,12 +2243,14 @@ BOXES
                 Visibility: ATTR_Visibility;	
 		Size: DOC_FONTSIZE;
 		Foreground: ATTR_Color;
-		if NOT within XMLcomment_line
+		if NOT within XMLcomment_line AND NOT within XMLPI_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous AnyBox . Bottom;
 		   END;
 		if within XMLcomment_line
+		   HorizPos: Left = Previous AnyBox . Right;
+		if within XMLPI_line
 		   HorizPos: Left = Previous AnyBox . Right;
                 END;
         END;
@@ -2433,7 +2435,29 @@ BOXES
 		VertPos: HRef = Previous . HRef;
                 END;
         END;
+
+ PI_Start:
+        BEGIN
+        Content: Text '<?';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+                END;
+        END;
  
+ PI_End:
+        BEGIN
+        Content: Text '?>';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+                END;
+        END;
+
 RULES
 
    MathML:
@@ -2471,6 +2495,26 @@ RULES
 	BEGIN
         IF First CreateFirst(Comment_Start);
         IF Last CreateLast(Comment_End);
+        IN Math_Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+        	VertPos: Top = Previous . Bottom + 0.2;
+        	Width: Enclosed . Width;
+                END;
+        END;
+
+   XMLPI:
+        BEGIN
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                Visibility: 10;
+                Width: Enclosing . Width ;
+                END;
+        END;
+
+   XMLPI_line:
+	BEGIN
+        IF First CreateFirst(PI_Start);
+        IF Last CreateLast(PI_End);
         IN Math_Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left;
         	VertPos: Top = Previous . Bottom + 0.2;
@@ -3392,12 +3436,14 @@ RULES
 		   Visibility: 0;
 		IF immediately within MGLYPH
 		   Visibility: 0;
-		if NOT within XMLcomment_line
+		if NOT within XMLcomment_line AND NOT within XMLPI_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous AnyBox . Bottom;
 		   END;
 		if within XMLcomment_line
+		   HorizPos: Left = Previous . Right;
+		if within XMLPI_line
 		   HorizPos: Left = Previous . Right;
 		Size: DOC_FONTSIZE;
 		END;

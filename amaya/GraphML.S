@@ -265,6 +265,8 @@ STRUCT
    
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
+   XMLPI = LIST OF (XMLPI_line = TEXT);
+
 EXCEPT
 
    GraphML:             IsDraw, MoveResize, NoMove;

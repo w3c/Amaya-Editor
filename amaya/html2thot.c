@@ -1799,7 +1799,9 @@ Element             el;
 
    elType = TtaGetElementType (el);
    /* is this a block-level element in a character-level element? */
-   if (!IsCharacterLevelElement (el) && elType.ElTypeNum != HTML_EL_Comment_)
+   if (!IsCharacterLevelElement (el) &&
+       elType.ElTypeNum != HTML_EL_Comment_ &&
+       elType.ElTypeNum != HTML_EL_XMLPI)
       BlockInCharLevelElem (el);
 
    newElType.ElSSchema = elType.ElSSchema;
@@ -6242,7 +6244,7 @@ Document            doc;
    ThotBool	ok, moved;
    SSchema      docSSchema;
 
-   /* the root element only accepts elements HEAD, BODY, FRAMESET and Comment*/
+   /* the root element only accepts elements HEAD, BODY, FRAMESET Comment and PI*/
    /* as children */
    elHead = NULL;
    elBody = NULL;
@@ -6270,9 +6272,10 @@ Document            doc;
    if (el != NULL)
      {
 	elType = TtaGetElementType (el);
-	/* skip Comments and Invalid_elements */
+	/* skip Comments, PI and Invalid_elements */
 	while (el != NULL && (elType.ElTypeNum == HTML_EL_Comment_ ||
-			      elType.ElTypeNum == HTML_EL_Invalid_element))
+			      elType.ElTypeNum == HTML_EL_Invalid_element ||
+			      elType.ElTypeNum == HTML_EL_XMLPI))
 	  {
 	     TtaNextSibling (&el);
 	     if (el != NULL)
@@ -6298,9 +6301,10 @@ Document            doc;
 		  TtaInsertSibling (elHead, el, TRUE, doc);
 	       }
 	  }
-	/* skip Comments and Invalid_elements */
+	/* skip Comments, PI and Invalid_elements */
 	while (el != NULL && (elType.ElTypeNum == HTML_EL_Comment_ ||
-			      elType.ElTypeNum == HTML_EL_Invalid_element))
+			      elType.ElTypeNum == HTML_EL_Invalid_element ||
+			      elType.ElTypeNum == HTML_EL_XMLPI))
 	  {
 	     TtaNextSibling (&el);
 	     if (el != NULL)
@@ -6414,8 +6418,9 @@ Document            doc;
 		   elNoframes = el;
 		}
 	     else if (!moved && (elType.ElTypeNum == HTML_EL_Invalid_element ||
-				 elType.ElTypeNum == HTML_EL_Comment_))
-		/* don't move Comments and Invalid_elements if the previous
+				 elType.ElTypeNum == HTML_EL_Comment_ ||
+				 elType.ElTypeNum == HTML_EL_XMLPI))
+		/* don't move Comments, PI and Invalid_elements if the previous
 		   element has not been moved */
 		previous = el;
 	     else if (elType.ElTypeNum != HTML_EL_HEAD &&
@@ -6480,7 +6485,7 @@ Document            doc;
 		     /* an element Term has been found */
 		    {
 		       /* search all immediate Term siblings, ignoring
-			  Comments and Invalid_elements */
+			  Comments, PI and Invalid_elements */
 		       firstTerm = el;
 		       do
 			 {
@@ -6493,7 +6498,8 @@ Document            doc;
 			 }
 		       while (elType.ElTypeNum == HTML_EL_Term ||
 			      elType.ElTypeNum == HTML_EL_Invalid_element ||
-			      elType.ElTypeNum == HTML_EL_Comment_);
+			      elType.ElTypeNum == HTML_EL_Comment_ ||
+			      elType.ElTypeNum == HTML_EL_XMLPI);
 		       termList = TtaGetParent (firstTerm);
 		       elType = TtaGetElementType (termList);
 		       if (elType.ElTypeNum != HTML_EL_Term_List)
@@ -6564,7 +6570,8 @@ Document            doc;
 			     TtaInsertFirstChild (&el, newEl, doc);
 			     while (nextEl != NULL &&
 				    (elType.ElTypeNum == HTML_EL_Invalid_element ||
-				     elType.ElTypeNum == HTML_EL_Comment_))
+				     elType.ElTypeNum == HTML_EL_Comment_ ||
+				     elType.ElTypeNum == HTML_EL_XMLPI))
 			        {
 				previous = el;
 				el = nextEl;
@@ -6642,7 +6649,8 @@ Document            doc;
 			      }
 			    while (elType.ElTypeNum == HTML_EL_Definition_Item ||
 			      elType.ElTypeNum == HTML_EL_Invalid_element ||
-				   elType.ElTypeNum == HTML_EL_Comment_);
+				   elType.ElTypeNum == HTML_EL_Comment_ ||
+				   elType.ElTypeNum == HTML_EL_XMLPI);
 			    /* create a Definition_List element before the */
 			    /* first Definition_Item element */
 			    newElType.ElSSchema = docSSchema;
@@ -6714,7 +6722,8 @@ Document            doc;
 			      }
 			    while (elType.ElTypeNum == HTML_EL_List_Item ||
 			         elType.ElTypeNum == HTML_EL_Invalid_element ||
-				 elType.ElTypeNum == HTML_EL_Comment_);
+				 elType.ElTypeNum == HTML_EL_Comment_ ||
+				 elType.ElTypeNum == HTML_EL_XMLPI);
 			    /* create a HTML_EL_Unnumbered_List element before
 			       the first List_Item element */
 			    newElType.ElSSchema = docSSchema;
