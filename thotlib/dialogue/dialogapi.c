@@ -702,8 +702,6 @@ int       nShow;
    currentFrame = -1;
    hInstance  = hInst;
    nAmayaShow = nShow;
-   /* tszAppName = "Amaya"; */
-
 
    argc = makeArgcArgv (hInst, &argv, lpCommand);
    main (argc, argv);
@@ -6999,8 +6997,8 @@ ThotBool            remanent;
 
 #endif /* __STDC__ */
 {
-   int                 n;
 #  ifndef _WINDOWS
+   int                 n;
    Arg                 args[MAX_ARGS];
 #  else  /* _WINDOWS */
    POINT               curPoint;
@@ -7031,6 +7029,7 @@ ThotBool            remanent;
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
          WinErrorBox (WIN_Main_Wd);
+      DestroyMenu (w);
 	} else {
           ShowWindow (w, SW_SHOWNORMAL);
           UpdateWindow (w);
@@ -7088,7 +7087,6 @@ ThotBool            remanent;
 #  endif /* !_WINDOWS */
 }
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaWaitShowDialogue attends le retour du catalogue affiche par     
    TtaShowDialogue.                                                   
@@ -7096,6 +7094,12 @@ ThotBool            remanent;
 void                TtaWaitShowDialogue ()
 {
    ThotEvent              event;
+
+#  ifdef _WINDOWS
+   GetMessage (&event, NULL, 0, 0);
+   TranslateMessage (&event);
+   DispatchMessage(&event);   
+#  else  /* !_WINDOWS */
 
    /* Un TtaWaitShowDialogue en cours */
    CurrentWait = 1;
@@ -7110,8 +7114,8 @@ void                TtaWaitShowDialogue ()
 
    /* Fin de l'attente */
    CurrentWait = 0;
+#  endif /* !_WINDOWS */
 }
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaTestWaitShowDialogue retourne Vrai (1) si un TtaWaitShowDialogue        

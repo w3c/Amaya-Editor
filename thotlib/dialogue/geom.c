@@ -1720,6 +1720,7 @@ int                 percentH;
            case WM_RBUTTONUP:
                 GetCursorPos (&cursorPos);
                 SetCursor (LoadCursor (NULL, IDC_ARROW));
+                ShowCursor (TRUE);
                 ret = 1;
                 break;
            case WM_MOUSEMOVE:
@@ -2647,6 +2648,7 @@ int                 percentH;
 
   /* Erase the box drawing */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
+  ShowCursor (TRUE);
   BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
 # else  /* _WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;

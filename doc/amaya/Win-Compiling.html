@@ -1,16 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-   "http://www.w3.org/TR/REC-html40/loose.dtd">
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>Compiling Amaya on Windows</title>
-<meta name="GENERATOR" content="amaya V2.0">
+  <title>Compiling Amaya on Windows</title>
+  <meta name="GENERATOR" content="amaya V2.2">
 </head>
-<body lang="en">
 
+<body lang="en">
 <p></p>
 
 <div id="head">
-
 <p><a href="../../"><img border="0" alt="W3C"
 src="../../Icons/WWW/w3c_home"></a> <a href="../"><img border="0"
 src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
@@ -20,240 +19,109 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 <h1>Compiling Amaya On Windows</h1>
 
 <p style="text-align: justify">This release of Amaya running on Windows NT and
-95 is developed with MSVC++. Makefiles are given with the source tar file.</p>
+95 is developed with MSVC++ (6.0). Makefiles are given with the source tar
+file.</p>
 
 <h2 style="text-align: justify">Makefiles needed to build Amaya:</h2>
 
 <p style="text-align: justify">Check that in your directory
 <code>Amaya\Windows</code> you have the following directories and files:</p>
 <ul>
-<li>
-LibThotKernel\
-</li>
-<li>
-LibThotKernel\LibThotKernel.dsp
-</li>
-<li>
-LibThotKernel\LibThotKernel.mak
-</li>
-<li>
-libThotTable\
-</li>
-<li>
-libThotTable\libThotTable.dsp
-</li>
-<li>
-libThotTable\libThotTable.mak
-</li>
-<li>
-libjpeg\
-</li>
-<li>
-libjpeg\libjpeg.dsp
-</li>
-<li>
-libjpeg\libjpeg.mak
-</li>
-<li>
-printlib\
-</li>
-<li>
-printlib\printlib.dsp
-</li>
-<li>
-printlib\printlib.mak
-</li>
-<li>
-thotprinter\
-</li>
-<li>
-thotprinter\thotprinter.dsp
-</li>
-<li>
-thotprinter\thotprinter.mak
-</li>
-<li>
-zlib\
-</li>
-<li>
-zlib\zlib.dsp
-</li>
-<li>
-zlib\zlib.mak
-</li>
-<li>
-libpng\
-</li>
-<li>
-libpng\libpng.dsp
-</li>
-<li>
-libpng\libpng.mak
-</li>
-<li>
-Compilers\
-</li>
-<li>
-Compilers\Compilers.dsp
-</li>
-<li>
-Compilers\Compilers.mak
-</li>
-<li>
-app\
-</li>
-<li>
-app\app.dsp
-</li>
-<li>
-app\app.mak
-</li>
-<li>
-cpp\
-</li>
-<li>
-cpp\cpp.dsp
-</li>
-<li>
-cpp\cpp.mak
-</li>
-<li>
-prs\
-</li>
-<li>
-prs\prs.dsp
-</li>
-<li>
-prs\prs.mak
-</li>
-<li>
-tra\
-</li>
-<li>
-tra\tra.dsp
-</li>
-<li>
-tra\tra.mak
-</li>
-<li>
-str\
-</li>
-<li>
-str\str.dsp
-</li>
-<li>
-str\str.mak
-</li>
-<li>
-libwww\
-</li>
-<li>
-libwww\libwww.dsp
-</li>
-<li>
-libwww\libwww.mak
-</li>
-<li>
-LibThotEditor
-</li>
-<li>
-LibThotEditor\LibThotEditor.dsp
-
-<p>LibThotEditor\LibThotEditor.mak</p>
-</li>
-<li>
-amaya.mak
-</li>
-<li>
-amaya.mkf
-</li>
+  <li>LibThotKernel\</li>
+  <li>LibThotKernel\LibThotKernel.dsp</li>
+  <li>LibThotKernel\LibThotKernel.mak</li>
+  <li>libThotTable\</li>
+  <li>libThotTable\libThotTable.dsp</li>
+  <li>libThotTable\libThotTable.mak</li>
+  <li>libjpeg\</li>
+  <li>libjpeg\libjpeg.dsp</li>
+  <li>libjpeg\libjpeg.mak</li>
+  <li>printlib\</li>
+  <li>printlib\printlib.dsp</li>
+  <li>printlib\printlib.mak</li>
+  <li>thotprinter\</li>
+  <li>thotprinter\thotprinter.dsp</li>
+  <li>thotprinter\thotprinter.mak</li>
+  <li>zlib\</li>
+  <li>zlib\zlib.dsp</li>
+  <li>zlib\zlib.mak</li>
+  <li>libpng\</li>
+  <li>libpng\libpng.dsp</li>
+  <li>libpng\libpng.mak</li>
+  <li>Compilers\</li>
+  <li>Compilers\Compilers.dsp</li>
+  <li>Compilers\Compilers.mak</li>
+  <li>app\</li>
+  <li>app\app.dsp</li>
+  <li>app\app.mak</li>
+  <li>cpp\</li>
+  <li>cpp\cpp.dsp</li>
+  <li>cpp\cpp.mak</li>
+  <li>prs\</li>
+  <li>prs\prs.dsp</li>
+  <li>prs\prs.mak</li>
+  <li>tra\</li>
+  <li>tra\tra.dsp</li>
+  <li>tra\tra.mak</li>
+  <li>str\</li>
+  <li>str\str.dsp</li>
+  <li>str\str.mak</li>
+  <li>libwww\</li>
+  <li>libwww\libwww.dsp</li>
+  <li>libwww\libwww.mak</li>
+  <li>LibThotEditor</li>
+  <li>LibThotEditor\LibThotEditor.dsp
+    <p>LibThotEditor\LibThotEditor.mak</p>
+  </li>
+  <li>amaya.mak</li>
+  <li>amaya.mkf</li>
 </ul>
 
 <h2>Building Amaya using *.mak files:</h2>
 <ol>
-<li>
-Load the Compilers makefile
-(<code>Amaya\Windows\Compilers\Compilers.mak</code>) and build it.
-</li>
-<li>
-Execute Compilers program, you will have a Window with a menu "File". Choose
-"File/Open" and load the file <code>Amaya\Windows\amaya\amaya.mkf</code>.
-</li>
-<li>
-Choose "File/Build", this will execute amaya compilers and generate files
-needed to build Amaya.
-</li>
-<li>
-Close your Compilers workspace and load <code>Amaya\Windows\amaya.mak</code>.
-</li>
-<li>
-Build Amaya.
-</li>
+  <li>Load the Compilers makefile
+    (<code>Amaya\Windows\Compilers\Compilers.mak</code>) and build it.</li>
+  <li>Execute Compilers program, you will have a Window with a menu "File".
+    Choose "File/Open" and load the file
+    <code>Amaya\Windows\amaya\amaya.mkf</code>.</li>
+  <li>Choose "File/Build", this will execute amaya compilers and generate
+    files needed to build Amaya.</li>
+  <li>Close your Compilers workspace and load
+    <code>Amaya\Windows\amaya.mak</code>.</li>
+  <li>Build Amaya.</li>
 </ol>
 
 <h2>Building Amaya using *.dsp files:</h2>
 <ol>
-<li>
-Load the Compilers project
-(<code>Amaya\Windows\Compilers\Compilers.dsp</code>).
-</li>
-<li>
-Update the follwing dependencies (Menu Project/Dependencies):
-<ul>
-<li>
-Compilers depends on: LibThotKernel, app, prs, str and tra.
-</li>
-<li>
-app depends on LibThotKernel and cpp
-</li>
-<li>
-prs depends on LibThotKernel and cpp
-</li>
-<li>
-str depends on LibThotKernel and cpp
-</li>
-<li>
-tra depends on LibThotKernel and cpp
-</li>
-</ul>
-</li>
-<li>
-Execute Compilers program, you will have a Window with a menu "File". Choose
-"File/Open" and load the file <code>Amaya\Windows\amaya\amaya.mkf</code>.
-</li>
-<li>
-Choose "File/Build", this will execute amaya compilers and generate files
-needed to build Amaya.
-</li>
-<li>
-Close your Compilers workspace and load <code>Amaya\Windows\amaya.dsp.</code>
-</li>
-<li>
-Update the following dependencies (Menu Project/Dependencies):
-<ul>
-<li>
-amaya depends on libThotEditor, libwww and thotprinter.
-</li>
-<li>
-libpng depends on zlib.
-</li>
-<li>
-libThotEditor depends on libjpeg and libpng.
-</li>
-<li>
-libwww depends on zlib.
-</li>
-<li>
-printlib depends on libjpeg, libpng and libThotTable.
-</li>
-<li>
-thotprinter depends on printlib.
-</li>
-</ul>
-</li>
-<li>
-Build Amaya.
-</li>
+  <li>Load the Compilers project
+    (<code>Amaya\Windows\Compilers\Compilers.dsp</code>).</li>
+  <li>Update the follwing dependencies (Menu Project/Dependencies):
+    <ul>
+      <li>Compilers depends on: LibThotKernel, app, prs, str and tra.</li>
+      <li>app depends on LibThotKernel and cpp</li>
+      <li>prs depends on LibThotKernel and cpp</li>
+      <li>str depends on LibThotKernel and cpp</li>
+      <li>tra depends on LibThotKernel and cpp</li>
+    </ul>
+  </li>
+  <li>Execute Compilers program, you will have a Window with a menu "File".
+    Choose "File/Open" and load the file
+    <code>Amaya\Windows\amaya\amaya.mkf</code>.</li>
+  <li>Choose "File/Build", this will execute amaya compilers and generate
+    files needed to build Amaya.</li>
+  <li>Close your Compilers workspace and load
+    <code>Amaya\Windows\amaya.dsp.</code></li>
+  <li>Update the following dependencies (Menu Project/Dependencies):
+    <ul>
+      <li>amaya depends on libThotEditor, libwww and thotprinter.</li>
+      <li>libpng depends on zlib.</li>
+      <li>libThotEditor depends on libjpeg and libpng.</li>
+      <li>libwww depends on zlib.</li>
+      <li>printlib depends on libjpeg, libpng and libThotTable.</li>
+      <li>thotprinter depends on printlib.</li>
+    </ul>
+  </li>
+  <li>Build Amaya.</li>
 </ol>
 
 <p><a href="mailto:Ramzi.Guetari@w3.org">Ramzi Guetari</a><br>
