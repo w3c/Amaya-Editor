@@ -679,7 +679,6 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* euro     */ {8364, 2206}, /* euro sign, U+20AC NEW */
 /* image    */ {8465, 193}, /* blackletter capital I = imaginary part,  U+2111 ISOamso */
 /* weierp   */ {8472, 195}, /* script capital P = power set  = Weierstrass p, U+2118 ISOamso */
-/* TM       */ {8482, 1084}, /* TRADE MARK SIGN, U+2122 */
 /* real     */ {8476, 194}, /* blackletter capital R = real part symbol,  U+211C ISOamso */
 /* trade    */ {8482, 212}, /* trade mark sign, U+2122 ISOnum */
 /* alefsym  */ {8501, 192}, /* alef symbol = first transfinite cardinal,  U+2135 NEW */
@@ -5408,8 +5407,6 @@ int                 code;
       PutInBuffer (',');
    else if (code == 8240)	/* per mille sign */
       PutInBuffer ('\260');
-   else if (code == 8482)	/* Trade Mark sign */
-      PutInBuffer ('\115');
 }
 
 /*----------------------------------------------------------------------
@@ -5602,19 +5599,25 @@ CHAR_T                c;
 	 EntityName[LgEntityName++] = c;
       else
 	 /* not a decimal digit. assume end of entity */
-	{
-           PutInBuffer ('&');
-	   PutInBuffer ('#');
-	   for (i = 0; i < LgEntityName; i++)
-	      PutInBuffer (EntityName[i]);
-	   LgEntityName = 0;
-	   /* next state is state 0, not the state computed by the automaton */
-	   /* and the character read has not been processed yet */
-	   NormalTransition = FALSE;
-	   currentState = 0;
-	   /* error message */
-	   ParseHTMLError (theDocument, TEXT("Invalid decimal entity"));
-	}
+	 {
+	 if (c == '<')
+	    /* accept start of tag as an end of entity */
+	    EndOfDecEntity (c);
+         else
+	    {
+            PutInBuffer ('&');
+	    PutInBuffer ('#');
+	    for (i = 0; i < LgEntityName; i++)
+	       PutInBuffer (EntityName[i]);
+	    LgEntityName = 0;
+	    /* error message */
+	    ParseHTMLError (theDocument, TEXT("Invalid decimal entity"));
+	    }
+	 /* next state is state 0, not the state computed by the automaton */
+	 /* and the character read has not been processed yet */
+	 NormalTransition = FALSE;
+	 currentState = 0;
+	 }
 }
 
 /*----------------------------------------------------------------------
@@ -5663,21 +5666,28 @@ CHAR_T                c;
 	 /* the character is a valid hexadecimal digit */
 	 EntityName[LgEntityName++] = c;
       else
+	 {
 	 /* not an hexadecimal digit. Assume end of entity */
-	{
-           PutInBuffer ('&');
-	   PutInBuffer ('#');
-	   PutInBuffer ('x');
-	   for (i = 0; i < LgEntityName; i++)
-	      PutInBuffer (EntityName[i]);
-	   LgEntityName = 0;
-	   /* next state is state 0, not the state computed by the automaton */
-	   /* and the character read has not been processed yet */
-	   NormalTransition = FALSE;
-	   currentState = 0;
-	   /* error message */
-	   ParseHTMLError (theDocument, TEXT("Invalid hexadecimal entity"));
-	}
+	 if (c == '<')
+	    /* accept start of tag as the end of the entity */
+	    EndOfHexEntity (c);
+	 else
+	    /* error */
+	    {
+            PutInBuffer ('&');
+	    PutInBuffer ('#');
+	    PutInBuffer ('x');
+	    for (i = 0; i < LgEntityName; i++)
+	       PutInBuffer (EntityName[i]);
+	    LgEntityName = 0;
+	    /* error message */
+	    ParseHTMLError (theDocument, TEXT("Invalid hexadecimal entity"));
+	    }
+	 /* next state is state 0, not the state computed by the automaton */
+	 /* and the character read has not been processed yet */
+	 NormalTransition = FALSE;
+	 currentState = 0;
+	 }
 }
 
 /*----------------------------------------------------------------------
