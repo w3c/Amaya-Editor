@@ -2233,7 +2233,11 @@ static void ContentEditing (int editType)
 	{
 	  /* Le traitement concerne l'application */
 	  if ((editType == TEXT_DEL || editType == TEXT_SUP) && !FromKeyboard)
-	    CutCommand (FALSE);	/* Couper sans sauver */
+	    {
+	      /* close the current text insertion */
+	      CloseTextInsertion ();
+	      CutCommand (FALSE);	/* Couper sans sauver */
+	    }
 	  else if (editType == TEXT_CUT || editType == TEXT_COPY)
 	    {
 	      SaveInClipboard (&charsDelta, &spacesDelta, &x, 0, NULL, pAb,
