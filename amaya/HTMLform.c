@@ -155,6 +155,8 @@ unsigned char      *element;
 		      case SPACE:
 		      case '+':
 		      case '&':
+                      case '>':
+                      case '<':
 			 EscapeChar (&tmp[1], *element);
 			 AddToBuffer (tmp);
 			 break;
