@@ -1,0 +1,285 @@
+0 Error de X11 : %s\n
+1 Vista no encontrada.
+2 Error cargando el diccionario: %s\n
+3 Fichero perdido: %s\n
+4 No puedo escribir: %s
+5 No puedo encontrar esquema: %s
+6 Confirme
+7 No hay fichero de alfabeto
+8 No puedo abrir documento %s
+9 Pivot format error: %s
+10 La nueva vista no pede sustituir la previa
+11 Esquemas incompatibles. Recompile %s
+12 Número de ventana incorrecto
+13 Error Fatal: Las fuentes Thot no encontradas
+14 Documento con columnas. Pagine de nuevo.
+15 Memory agotada
+16 Error Fatal Error: No puedo conectar a X
+17 La vista está modificada entes de la creación
+18 Selecione antes
+19 No queda sitio para la fuente %s
+20 La estructura del documento %s es invalida
+21 El documento %s no se puede editar ni guardar
+22 Tabla de reglas completa.
+23 El esquema de estructura ha cambiado
+24 Fichero incorrecto: %s.STR
+25 Fichero incorrecto: %s.PRS
+26 Directorio no encontrado: %s
+27 No puedo imprimir
+28 No puedo cambiar presentación
+29 No puedo guardar en PostScript
+30 No puedo importar fichero
+31 La vista está vacía
+32 No permitido, elemento de sólo lectura
+33 No puedo copiar componentes emparejados
+34 Creando el diccionario para documento: %s
+35 Tipo de imagen
+36 Presentacion de imagen
+37 Fichero de imagen
+38 Documento %s imprimido
+39 De la página ...
+40 ... a la página
+41 Número de copias
+42 Disposicion
+43 1 pagina/hoja
+44 2 pagina/hoja
+45 4 pagina/hoja
+46 Paginas por hoja
+47 Paginacion
+48 Vistas para imprimir
+49 Imprimir con presentación %s
+50 Esto es una copia
+51 La carga de "%s" ha fallado
+52 La variable de entorno %s no está definida
+53 Un elemento no puede referirse a él mismo
+54 Atributo requerido, no borrado
+55 Nature prohibido aquí
+56 %s : componente obligatorio
+57 Seleccione sólo un componente
+58 El elemento %s no se puede pegar aquí
+59 No puede modificar un cuadro aquí
+60 %s
+61 No hay vista para imprimir
+62 Introduzca la presentacion para %s
+63 Leyendo el documento...
+64 Seleccione un elemento
+65 Fichero thot.teclado no encontrado
+66 Portapapeles X inalterado
+67 No puedo copiar diferentes componentes. Grupo.
+68 No permitido, documento de sólo lectura
+69 Un documento no puede incluirse a sí mismo
+70 Cambiando el cuadro %s
+71 Moviendo el cuadro %s
+72 Documento escrito: %s
+73 Escribiendo ...
+74 Referencia vacía.
+75 ¡No copie fines de página!
+76 Ha seleccionado un elemento %s . Tiene que seleccionar un elemento %s .
+77 Cambiando lista de directorios
+78 Imprimiendo
+79 Exportando documento %s ...
+80 Cargando dictionario %s
+81 Escribiendo fichero PostScript...
+82 Importando fichero ...
+83 ¿Qué formulario del documento quiere cargar?
+84 Al menos dos puntos en una línea
+85 Introduzca un valor para el atributo %s
+86 Old pivot format. Guardar el documento.
+87 Creando el cuadro %s
+88 No hay suficiente memoria
+89 Seleccione un elemento %s
+90 Este elemento no puede ser holophrasted
+91 Desige el elemento para ser referenciado
+92 Demasiados documentos.
+93 Documento vacío, no escrito.
+94 Imposible insertar aquí
+95 Nada que borrar
+96 Atributo obligatorio.
+97 Todas las vistas creadas ya.
+98 Documento vacío.
+99 No cambie el documento
+100 Demasiadas vistas.
+101 Nada que pegar.
+102 No puedo abrir una ventana nueva. Cierre una ventana.
+103 *** Thot: Error Irrecuperable ***
+104 documentos modificados, si hay, serán guardados
+105 Como es
+106 En escala
+107 Repetido
+108 X Repetido
+109 Y Repetido
+110 Prematuro EOF
+111 No hay cuadro acotado en fichero ps  %s
+112 No puedo abrir fichero de modelo hyphen: %s
+113 Leyendo fichero de modelo hyphen: %s
+114 Palabra demasiado larga para hyphenacion: %s. ¿Está seguro de que es correcta?
+115 Pixmap : Color error 
+116 Pixmap : Fallo de apertura
+117 Pixmap : Ficharo invalido
+118 Pixmap : No  hay memoria
+119 Pixmap : Fallo de color
+120 No puedo incluir el fichero %s
+121 No puedo crear el fichero %s
+122 No hay esquema de traducción parar %s
+123 Incorrecto. Fichero TRA: %s
+124 Demasiados ficheros de salida
+125 No hay tamaño de ventana para vista %s
+126 %s no es un hermano válido para %s (%s)
+127 %s no es un hijo valido para %s (%s)
+128 Atributo %s necesario para el elemento %s
+129 %s, pagina %d
+130 %s : tipo desconocido type.
+131 Idioma
+132 Atributos
+133 Buscar referencia
+134 Presentación estandar
+135 Aplicar
+136 Caracteres
+137 Subrayado
+138 Grapicos
+139 Formato
+140 Por omisión
+141 Alineación
+142 Sangrar
+143 Imprimir
+144 Alimentación manual
+145 Opciones
+146 A4
+147 US
+148 Formato de papel
+149 Hecho
+150 Directorios
+151 Nombre de documento
+152 El documento %s ya existe. ¿Quiere sobreescribirlo?
+153 El botón izquierdo fija el color del texto
+154 El botón derecho o central fija el color del fondo
+155 Familia de fuentes
+156 Normal
+157 Negrita
+158 Cursiva
+159 Oblicua
+160 Normal
+161 Negrita
+162 Normal
+163 Subrayado
+164 Cross out
+165 Tamaño del cuerpo (pt)
+166 Sangrar (pt)
+167 Espacio de líneas (pt)
+168 Espaciado de líneas
+169 Justificacion
+170 Sí
+171 No
+172 Guardar documento
+173 Cerrar, no guardar
+174 Estilo de caracter
+175 Colores
+176 Borrar
+177 Output
+178 Fichero PostScript
+179 Impresora
+180 Buscar
+182 MAYÚSCULAS = minusculas
+183 Sustituir por
+184 Sustituir
+185 No sustituir
+186 Sustituir a solicitud
+187 Sustitución automatica
+188 Buscar donde
+189 Antes selección
+190 En seleccion
+191 Tras seleccion
+192 En todo el documento
+193 No sustituir
+194 Colores por omisión
+195 antes de cerrarlo
+196 Cierre un documento
+197 Anónimo
+198 Crear un documento
+199 Tipo de documento
+200 Renombrar
+201 Símbolos matemáticos
+202 Graficos
+203 Alfabeto latino
+204 Alfabet griego
+205 Presentacion
+206 Ficheros
+207 Abrir un documento
+208 Tipo de documento
+209 Vistas
+210 Cambiar filtro
+211 Valor no modificado
+212 Incrementar
+213 Decrementar
+214 Visibilidad
+215 Diferencia de tamaño de caracter
+216 Zoom
+217 Guardar como
+218 Guardar
+219 Thot
+220 Formato
+221 Copiar
+222 Texto
+223 Grafico
+224 Símbolo
+225 Imagen
+226 Tipo de elemento
+227 después
+228 antes
+229 alrededor
+230 Incluir
+231 Pegar
+232 crear
+233 Insertar
+234 Fin de página
+235 (Sólo lectura)
+236 Surround
+237 Cambiar tipo
+238 Idioma de elemento
+239 Idioma heredado:
+240 ¡No cambie el documento!
+241 No encontrado
+242 Buscar en
+243 Buscar elementos vacíos
+244 Buscar referencias vacías
+245 Buscar referencias para este elemento
+246 Enlace
+247 Referencia en documento
+248 Buscar
+249 Elemento de sólo lectura
+250 Nada que sustituir
+251 Abrir
+252 Caracteres estandar
+253 Graficos estandar
+254 Formato etandar
+255 Geometria estandar
+256 pt
+257 Estilo de línea
+258 Ancho de línea
+259 Rellenar modelo
+260 Dividir
+261 Tipo de objeto
+262 Ir a página número:
+263 Cualquiera
+264 Atributo para buscar
+265 Tipo para buscar
+266 Natures
+267 Valores de atributo:
+268 Atributo desconocido
+269 Crear elemento referenciado
+270 Mostrar elemento referenciado
+271 Modo insercion
+272 Cancelar
+273 Error in traducción PostScript
+274 Orden rechazada por el spooler "%s"
+275 No puedo crear "%s"
+276 Disposición global
+277 No puedo enlazar el nuevo elemento
+278 Codificacion de caracter
+279 Sin idioma
+280 Overline
+281 Formato de documento
+282 Eventos
+283 Eliminar atributos
+285 El botón izquierdo fija el color de la selección
+286 El botón central o derecho fija el color intercalado
