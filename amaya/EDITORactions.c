@@ -1916,13 +1916,8 @@ void DoTableCreation (Document document)
 	/* look for a data cell */
 	cell = TtaSearchTypedElement (elType, SearchInTree, el);
       else
-	{
-	  /* replace the cell element by a data cell */
-	  new_ = TtaNewTree (document, elType, "");
-	  TtaInsertSibling (new_, cell, FALSE, document);
-	  TtaRemoveTree (cell, document);
-	  cell = new_;
-	}
+	/* replace the cell element by a data cell */
+	TtaChangeTypeOfElement (cell, document, HTML_EL_Data_cell);
       
       while (NumberCols > 1)
 	{
@@ -2005,9 +2000,9 @@ void CreateTable (Document document, View view)
 	}
       else
 	TBorder = 1;
-      /* ctreate the table or 
+      /* create the table or 
 	  try to transform the current selection if the selection is not empty */
-	  DoTableCreation (document);
+      DoTableCreation (document);
     }
 }
 

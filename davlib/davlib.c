@@ -14,7 +14,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.13  2003-12-16 12:10:08  cvs
+ ** Revision 1.14  2005-02-04 12:18:24  vatton
+ ** Improve the transformation into a table
+ ** + typo in the WebDAV documentation.
+ ** Irene
+ **
+ ** Revision 1.13  2003/12/16 12:10:08  cvs
  ** Rename flags _WINDOWS by _WINGUI
  ** + the flag _WINDOWS must be used only for windows specific code.
  ** + the flag _WINGUI must be used only for old windows gui stuff.
@@ -250,7 +255,7 @@ void InitDAV (void)
 
         /* save timeout in thot env */
         TtaSetEnvString (DAV_URLS,DAVResources,TRUE);
-        modified = TRUE;
+        /*modified = TRUE;*/
      }
 
    
