@@ -1228,6 +1228,74 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
 }
 
 /*----------------------------------------------------------------------
+   MoveDocumentImages moves loaded images of the document docSrc into
+   the document doc.        
+  ----------------------------------------------------------------------*/
+void MoveDocumentImages (Document docSrc, Document doc)
+{
+   LoadedImageDesc    *pImage, *previous, *next;
+   ElemImage          *ctxEl, *ctxPrev;
+   char               *ptr;
+
+   pImage = ImageURLs;
+   previous = NULL;
+   if (doc == 0)
+      return;			/* nothing to do */
+
+   while (pImage)
+     {
+	next = pImage->nextImage;
+	/* does the current image belong to the document ? */
+	if (pImage->document == doc)
+	  {
+	     pImage->status = IMAGE_NOT_LOADED;
+	     /* remove the image */
+	     TtaFileUnlink (pImage->tempfile);
+	     if (!strncmp (pImage->originalName, "internal:", sizeof ("internal:") - 1)
+		 && IsHTTPPath (pImage->originalName + sizeof ("internal:") - 1))
+	       {
+		 /* erase the local copy of the image */
+		 ptr = GetLocalPath (doc, pImage->originalName);
+		 TtaFileUnlink (ptr);
+		 TtaFreeMemory (ptr);
+	       }
+	     /* free the descriptor */
+	     if (pImage->originalName != NULL)
+		TtaFreeMemory (pImage->originalName);
+	     if (pImage->localName != NULL)
+		TtaFreeMemory (pImage->localName);
+	     if (pImage->tempfile != NULL)
+		TtaFreeMemory (pImage->tempfile);
+	     if (pImage->content_type != NULL)
+	       TtaFreeMemory (pImage->content_type);
+	     if (pImage->elImage)
+	       {
+		 ctxEl = pImage->elImage;
+		 pImage->elImage = NULL;
+		 while (ctxEl != NULL)
+		   {
+		     ctxPrev = ctxEl;
+		     ctxEl = ctxEl->nextElement;
+		     TtaFreeMemory ( ctxPrev);
+		   }
+	       }
+	     /* set up the image descriptors link */
+	     if (previous != NULL)
+		previous->nextImage = next;
+	     else
+		ImageURLs = next;
+	     if (next != NULL)
+		next->prevImage = previous;
+	     TtaFreeMemory ((char *) pImage);
+	     pImage = previous;
+	  }
+	/* next descriptor */
+	previous = pImage;
+	pImage = next;
+     }
+}
+
+/*----------------------------------------------------------------------
    RemoveDocumentImages removes loaded images of the document.        
   ----------------------------------------------------------------------*/
 void RemoveDocumentImages (Document doc)
@@ -1238,10 +1306,10 @@ void RemoveDocumentImages (Document doc)
 
    pImage = ImageURLs;
    previous = NULL;
-   if (doc == (Document) None)
+   if (doc == 0)
       return;			/* nothing to do */
 
-   while (pImage != NULL)
+   while (pImage)
      {
 	next = pImage->nextImage;
 	/* does the current image belong to the document ? */

@@ -3136,7 +3136,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 			    sizeof(PresentationContextBlock));
 
 		  /* check if the image url is related to an external CSS */
-		  if (css != NULL && css->category == CSS_EXTERNAL_STYLE)
+		  if (css && css->category == CSS_EXTERNAL_STYLE)
 		    {
 		      NormalizeURL (url, 0, tempname, imgname, css->url);
 		      /* fetch and display background image of element */
