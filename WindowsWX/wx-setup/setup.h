@@ -419,15 +419,15 @@
 // Default is 1.
 //
 // Recommended setting: 1
-#define wxUSE_PROTOCOL 0
+#define wxUSE_PROTOCOL 1
 
 // The settings for the individual URL schemes
 #define wxUSE_PROTOCOL_FILE 1
 #define wxUSE_PROTOCOL_FTP 0
-#define wxUSE_PROTOCOL_HTTP 0
+#define wxUSE_PROTOCOL_HTTP 1
 
 // Define this to use wxURL class.
-#define wxUSE_URL 0
+#define wxUSE_URL 1
 
 // Define this to use native platform url and protocol support.
 // Currently valid only for MS-Windows.
