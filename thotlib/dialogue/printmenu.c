@@ -512,6 +512,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		 /* it's an user stylesheet */
 		 printArgv[printArgc] = TtaStrdup ("-cssu");
 	       printArgc++;
+	       printArgv[printArgc] = TtaGetMemory (50);
 #else  /* _WINDOWS */
 	       j = strlen (cmd);
 	       if (cssToPrint[i] == 'a')
