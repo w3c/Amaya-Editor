@@ -1791,7 +1791,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
   if (!TtaCanEdit ())
     /* change the document status */
     readOnly = TRUE;
-  
+
   /* previous document */
   old_doc = doc;
   reinitialized = FALSE;
@@ -2276,12 +2276,13 @@ static void CreateHTMLContainer (char *pathname, char *docname,
   /* create a temporary file for the container and make Amaya think
      that it is the current downloaded file */
   file = fopen (tempfile, "w");
+  fprintf (file, "<html><head><title>%s</title></head><body>",
+	   docname);
   if (local)
-    fprintf (file, "<html><head></head><body>"
-	     "<img src=\"%s\"></body></html>", pathname);
+    fprintf (file, "<img src=\"%s\">", pathname);
   else
-    fprintf (file, "<html><head></head><body>"
-	     "<img src=\"internal:%s\"></body></html>", pathname);
+    fprintf (file, "<img src=\"internal:%s\">", pathname);
+  fprintf (file, "</body></html>");
   fclose (file);
 }
 
@@ -2719,6 +2720,7 @@ static Document LoadDocument (Document doc, char *pathname,
 			DIR_SEP, 0, DIR_SEP, "contain.html");
 	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
 	    }
+	  ChangeToBrowserMode (doc);
 	}
 
       /* what we have to do if doc and targetDocument are different */
