@@ -197,7 +197,7 @@ LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
 LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
   switch (msg)
-    { 
+    {
     case WM_KEYDOWN: 
       switch (wParam)
 	{ 
@@ -876,7 +876,8 @@ void TteAddMenu (WindowType windowtype, char *schemaName, int view,
 /*----------------------------------------------------------------------
    TteAddSubMenu ajoute un sous-menu pour le schema donne.            
   ----------------------------------------------------------------------*/
-void TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber)
+void TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID,
+					int itemID, int itemsNumber)
 {
    Menu_Ctl           *ptrmenu;
    Menu_Ctl           *newmenu;
@@ -2441,6 +2442,14 @@ int TtaAddTextZone (Document doc, View view, char *label,
 #else  /* _WINDOWS */
 	  currentFrame = frame;
 	  GetClientRect (FrMainRef [frame], &rect);
+	  /* get the default GUI font */
+	  newFont = GetStockObject (DEFAULT_GUI_FONT); 
+	  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+				 5, 8, 0, 30, FrMainRef[frame], (HMENU) 1,
+				 hInstance, NULL);
+	  FrameTable[frame].Label = wLabel;
+	  if(newFont)
+	    SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	  if (editable)
 	    {
 	      /* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
@@ -2448,45 +2457,27 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      w = CreateWindow ("COMBOBOX", "",
 				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
 				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
-				0, 0, 0, 100, FrMainRef[frame], (HMENU) 1, hInstance, NULL);
+				0, 0, 0, 100, FrMainRef[frame], (HMENU) 2, hInstance, NULL);
 	    }
 	  else
 	    {
 	      w = CreateWindow ("COMBOBOX", "",
-				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL |
-				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS | WS_TABSTOP,
-				0, 0, 0, 100, FrMainRef[frame], (HMENU) 1, hInstance, NULL);
-	      w = GetWindow (w, GW_CHILD);
-	      EnableWindow (w, TRUE);
-	      w = GetParent (w);
+				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
+				CBS_AUTOHSCROLL| CBS_DROPDOWN | CBS_HASSTRINGS,
+				0, 0, 0, 100, FrMainRef[frame], (HMENU) 3, hInstance, NULL);
 	    }
-	  /* get the default GUI font */
-	  newFont = GetStockObject (DEFAULT_GUI_FONT); 
 	  /* set the font of the window */
 	  if(newFont)
 	    SendMessage (w, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	  FrameTable[frame].Text_Zone = w;
 	  FrameTable[frame].Call_Text = (Proc) procedure;
 	  
-	  if (lpfnTextZoneWndProc == (WNDPROC) 0)
-	    lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (GetWindow (w, GW_CHILD),
-							   GWL_WNDPROC, (DWORD) TextZoneProc);
-	  else
-	    SetWindowLong (GetWindow (w, GW_CHILD), GWL_WNDPROC, 
-			   (DWORD) TextZoneProc);
-	  if (lpfnComboBoxWndProc == (WNDPROC) 0)
-	    lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w, GWL_WNDPROC,
-							   (DWORD) ComboBoxProc);
-	  else
-	    SetWindowLong (w, GWL_WNDPROC, (DWORD) ComboBoxProc);
+	  lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (GetWindow (w, GW_CHILD),
+							 GWL_WNDPROC, (DWORD) TextZoneProc);
+	  lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w, GWL_WNDPROC,
+							 (DWORD) ComboBoxProc);
 	  /* Initialize listbox linked to combobox */
 	  InitWdComboBoxList (w, listUrl);
-	  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-				 5, 8, 0, 0, FrMainRef[frame], (HMENU) (2),
-				 hInstance, NULL);
-	  if(newFont)
-	    SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	  FrameTable[frame].Label = wLabel;
 	  /*FrameTable[frame].showLogo = TRUE;*/
 	  PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #endif /* _WINDOWS */
@@ -2535,6 +2526,7 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
 	    {
 #ifdef _WINDOWS
 	      /* Initialize listbox linked to combobox */
+		  SetWindowText (w, listUrl);
 	      InitWdComboBoxList (w, listUrl);
 #else  /* _WINDOWS */
 #ifndef _GTK
@@ -2968,7 +2960,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     X = 2;
 	   if (Y < 0)
 	     Y = 2;
-	   Main_Wd = CreateWindowEx (WS_EX_ACCEPTFILES | WS_EX_APPWINDOW | WS_EX_WINDOWEDGE, 
+	   Main_Wd = CreateWindowEx (WS_EX_ACCEPTFILES | WS_EX_APPWINDOW |
+		            WS_EX_WINDOWEDGE, 
 					"Amaya",    /* window class name */
 				     NULL,	/* window caption    */
 				     WS_OVERLAPPEDWINDOW |
@@ -3794,7 +3787,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				 WS_CHILD | WS_VISIBLE | SBS_VERT | SBS_RIGHTALIGN,
 				 0, 0, 0, 0, 
 				 Main_Wd, 
-				 (HMENU) (frame + 1), 
+				 (HMENU) (frame + 1),
 				 hInstance, NULL);
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
