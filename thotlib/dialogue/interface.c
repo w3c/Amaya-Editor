@@ -976,6 +976,10 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
      return FALSE;
 #endif /* _GTK */
 
+#ifdef _WX
+   return wxTheApp->Pending();
+#endif /* _WX */
+
    return (FALSE);
 }
 
@@ -1091,6 +1095,9 @@ void TtaHandleOneEvent (ThotEvent *ev)
   /*  gtk_main_iteration_do (FALSE);*/
 #endif /* !_GTK */
 
+#ifdef _WX
+  wxTheApp->Dispatch();
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1099,7 +1106,7 @@ void TtaHandleOneEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 void TtaHandlePendingEvents ()
 {
-#if defined(_MOTIF) || defined(_GTK) 
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   
   static ThotBool         crit_section; /* protect against multiple imbrications of
 					   calls to this function */
@@ -1121,9 +1128,14 @@ void TtaHandlePendingEvents ()
      gtk_main_iteration ();
 #endif /* !_GTK */
 
+#ifdef _WX
+   while ( wxTheApp->Pending() )
+     wxTheApp->Dispatch();
+#endif /* _WX */
+
    crit_section = FALSE;
    
-#endif /* #if defined(_MOTIF) || defined(_GTK)  */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 }
 
 #ifdef _GL
