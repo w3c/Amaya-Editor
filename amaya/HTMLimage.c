@@ -615,9 +615,12 @@ void *context;
 	  }
 
 	/* save pathname */
-	TtaFreeMemory (desc->originalName);
-	pathname = urlName;
-	desc->originalName = TtaAllocString (ustrlen (pathname) + 1);
+	/* That could make confusion if the image is redirected:
+	   the registered name is not the original name
+	   TtaFreeMemory (desc->originalName);
+	   pathname = urlName;
+	   desc->originalName = TtaAllocString (ustrlen (pathname) + 1);
+	*/
 	desc->status = IMAGE_LOADED;
 	ustrcpy (desc->originalName, pathname);
 	/* display for each elements in the list */

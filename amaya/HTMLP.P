@@ -2200,6 +2200,16 @@ BOXES
 		Visibility: 0;
 	END;
 
+ Option_space: BEGIN
+	Content: Text ' ';
+	HorizPos: Left = Previous . Right;
+	VertPos: HMiddle = Enclosing . Top + 0.5;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
  Annot_gif: BEGIN
 #ifndef PAGE
 	Content: Picture 'annot.gif';
@@ -7358,6 +7368,7 @@ RULES
 	CreateWith(VerticalLine);
 	CreateAfter(Option_Frame);
 	CreateFirst(Option_gif);
+	CreateLast(Option_space);
 	HorizPos: Left = Enclosing . Left + 2 px;	
 	VertPos: Top = Enclosing . Top + 2 px;
 	LineBreak: No;
@@ -7369,6 +7380,10 @@ RULES
 		END;
 	END;
 
+ Option_item: BEGIN
+	Visibility: 0;
+	END;
+	
  Option: BEGIN
 	CreateBefore(OPTION_S);
 	Visibility: 0;

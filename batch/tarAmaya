@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=2.1
+AMAYAVERSION=2.2
 THOTDIR=/tahiti/diffusion/Amaya
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
@@ -90,6 +90,8 @@ do
    Amaya/$MACH/bin/amaya \
    Amaya/$MACH/bin/print \
    Amaya/batch/MachineType \
+   Amaya/annotlib/Annot.STR \
+   Amaya/annotlib/AnnotP.PRS \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html \
    Amaya/amaya/HTML.STR \
@@ -106,6 +108,9 @@ do
    Amaya/amaya/MathML*.PRS \
    Amaya/amaya/MathML*.TRA \
    Amaya/amaya/MathML.trans \
+   Amaya/amaya/GraphML.STR \
+   Amaya/amaya/GraphML*.PRS \
+   Amaya/amaya/GraphML*.TRA \
    Amaya/amaya/TextFile.STR \
    Amaya/amaya/TextFile*.PRS \
    Amaya/amaya/TextFile*.TRA \

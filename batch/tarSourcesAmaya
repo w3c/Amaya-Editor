@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=2.1
+AMAYAVERSION=2.2
 THOTDIR=/tahiti/diffusion
 DEST=/tahiti/thottape
 
@@ -81,6 +81,13 @@ Amaya/amaya/*.ico \
 Amaya/amaya/*.cur \
 Amaya/amaya/f/*.h \
 Amaya/amaya/xpm/*.xpm \
+Amaya/annotlib/Makefile.* \
+Amaya/annotlib/*.S \
+Amaya/annotlib/*.P \
+Amaya/annotlib/*.T \
+Amaya/annotlib/*.c \
+Amaya/annotlib/*.h \
+Amaya/annotlib/f/*.h \
 Amaya/config/amaya.kb \
 Amaya/config/amaya.keyboard \
 Amaya/config/en-amayadialogue \

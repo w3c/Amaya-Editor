@@ -162,7 +162,6 @@ int                *nChars;
 	     if (car == SPACE)
 		(*nSpaces)++;
 	     *width += CharacterWidth ((UCHAR_T) car, font);
-	     *width += CharacterWidth ((UCHAR_T) 0, font);
 	  }
      }
 }

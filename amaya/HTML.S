@@ -457,7 +457,7 @@ STRUCT
 	  { disabled         tabindex  onfocus  onblur}
 	    onchange = Text) =
 	  { onchange }
-	LIST OF (CASE OF Option; OptGroup; END) - (Input);
+	LIST OF (Option_item = CASE OF Option; OptGroup; END) - (Input);
 
   Option							{ OPTION }
      (ATTR Selected = Yes_; DefaultSelected = Yes_;

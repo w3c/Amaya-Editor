@@ -621,6 +621,7 @@ Document        doc;
 	 case HTML_EL_Text_Input:
 	 case HTML_EL_Password_Input:
 	 case HTML_EL_File_Input:
+	 case HTML_EL_Option:
 	 case HTML_EL_Text_Area:	/* it's a Text_Area */
 	   TtaSetAccessRight (child, ReadWrite, doc);
 	   child = NULL;
@@ -2810,6 +2811,9 @@ View                view;
 	   }
 	 TtcSwitchCommands (sourceDoc, 1); /* no command filed */	 
 	 TtaSetItemOff (sourceDoc, 1, File, New1);
+	 TtaSetItemOff (sourceDoc, 1, File, BHtml);
+	 TtaSetItemOff (sourceDoc, 1, File, BTemplate);
+	 TtaSetItemOff (sourceDoc, 1, File, BCss);
 	 TtaSetItemOff (sourceDoc, 1, File, BSaveAs);
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenDoc);
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenInNewWindow);
