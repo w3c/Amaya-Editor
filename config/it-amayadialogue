@@ -139,7 +139,7 @@
 137 Crea o cambia collegamento...
 138 Crea obiettivo
 139 Cancella ancora
-140 **Store selection as XPointer
+140 Salva la selezione come XPointer
 141 Mostra barra dei pulsanti
 142 Mostra indirizzo
 143 Mostra le zone attive
@@ -202,9 +202,9 @@
 200 Modelli...
 201 Annota la selezione
 202 Annota il documento
-203 **Reply to annotation
-204 **Move to selection
-205 **Move to stored XPointer
+203 Rispondi all'annotazione
+204 Muovi sulla selezione
+205 Muovi sull'Xpointer memorizzato
 206 Registra annotazione
 207 Elimina l'annotazione
 208 Carica annotazioni
@@ -213,7 +213,7 @@
 211 Configurazione...
 212 Informazioni su Amaya
 213 Informazioni su Amaya al W3C
-214 **Index
+214 Indice
 215 Navigazione
 216 Selezione
 217 Ricerca

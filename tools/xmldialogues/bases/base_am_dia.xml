@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="36" last_update="Wed Apr  4 09:36:12 CEST 2001">
+<base version="38" last_update="Tue Jul  3 10:37:47 CEST 2001">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1101,6 +1101,7 @@
 	<message xml:lang="fr">Sauver la séléction comme XPointer</message>
 	<message xml:lang="de">Auswahl als XPointer speichern</message>
 	<message xml:lang="es">Guardar la selección como XPointer</message>
+	<message xml:lang="it">Salva la selezione come XPointer</message>
 </label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show buttonbar</message>
@@ -1574,18 +1575,22 @@
 <label define="BReplyToAnnotation">
 	<message xml:lang="en">Reply to annotation</message>
 	<message xml:lang="fr">Répondre à l'annotation</message>
+	<message xml:lang="de">Anmerkung erwidern</message>
+	<message xml:lang="it">Rispondi all'annotazione</message>
 </label>
 <label define="BMoveAnnotSel">
 	<message xml:lang="en">Move to selection</message>
 	<message xml:lang="fr">Déplacer sur la séléction</message>
 	<message xml:lang="de">Anmerkung in die auswahl verschieben</message>
 	<message xml:lang="es">Mover a la selección</message>
+	<message xml:lang="it">Muovi sulla selezione</message>
 </label>
 <label define="BMoveAnnotXPtr">
 	<message xml:lang="en">Move to stored XPointer</message>
 	<message xml:lang="fr">Déplacer sur le XPointer enregistré</message>
 	<message xml:lang="de">Anmerkung in gespeicherten XPointer verschieben</message>
 	<message xml:lang="es">Mover al XPointer memorizado</message>
+	<message xml:lang="it">Muovi sull'Xpointer memorizzato</message>
 </label>
 <label define="BPostAnnot">
 	<message xml:lang="en">Post annotation</message>
@@ -1647,6 +1652,8 @@
 <label define="BHelpIndex">
 	<message xml:lang="en">Index</message>
 	<message xml:lang="fr">Index</message>
+	<message xml:lang="de">Index</message>
+	<message xml:lang="it">Indice</message>
 </label>
 <label define="BHelpBrowsing">
 	<message xml:lang="en">Browsing</message>

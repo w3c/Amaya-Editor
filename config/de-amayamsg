@@ -204,7 +204,7 @@
 202 Anmerkungsserver
 203 Local Anmerkungen automatisch laden
 204 Remote Anmerkungen automatisch laden
-205 **Disable remote autoload at each startup (for off-line work)
+205 Kein automatisches Laden vom Remote Server beim Programmstart (Off-line Arbeitsmodus)
 206 Farbe Auswahl
 207 Farbe Cursor
 208 Ausrichtung
@@ -212,7 +212,7 @@
 210 Querformat
 211 FTP zulassen (noch in der Erprobung)
 212 Unvollständiges Dokument, bitte nicht speichern! - Siehe Ansicht/Parsefehler anzeigen
-213 **Some characters are not supported - see Views/Show parsing errors
+213 Einige Zeichen werden nicht unterstützt - siehe Ansicht/Parsefehler anzeigen
 214 Im gegenwärtigen Amaya Profil:
 215 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
 216 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
@@ -238,12 +238,12 @@
 236 Kann keinen XPointer erzeugen
 237 Kein Ziel zum Verschieben der Anmerkung [gefunden]
 238 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-239 **Select a Charset
-240 **Select a MIME type
-241 **Change Charset
-242 **Change MIME type
-243 **Change
-244 **This type of document doesn't support charsets
-245 **The target must be an HTTP URL to use this option
-246 **Error: invalid MIME type
-247 **Unknown
+239 Charset auswählen
+240 MIME type auswählen
+241 Anderen Charset auswählen
+242 Anderen MIME type auswählen
+243 Wechseln
+244 Dieser Dokumenttyp unterstützt keine Charsets
+245 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
+246 Fehler: ungültiger MIME type
+247 Unbekannt

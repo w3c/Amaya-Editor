@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Thu Feb 22 09:40:19 CET 2001" version="31">
+<base last_update="Tue Jul  3 10:35:35 CEST 2001" version="33">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1569,6 +1569,8 @@
 	<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
 	<message xml:lang="fr">Désactiver le chargement automatique des annotations distantes au démarrage</message>
 	<message xml:lang="es">Desactivar la autocargada de las anotaciones</message>
+	<message xml:lang="it">Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)</message>
+	<message xml:lang="de">Kein automatisches Laden vom Remote Server beim Programmstart (Off-line Arbeitsmodus)</message>
 </label>
 <label define="AM_DOC_SEL_COLOR">
 	<message xml:lang="en">Selection color</message>
@@ -1622,6 +1624,8 @@
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Some characters are not supported - see Views/Show parsing errors</message>
 	<message xml:lang="fr">Certains caractères ne sont pas supportés - voir Vues/Montrer les erreurs</message>
+	<message xml:lang="it">Alcuni caratteri non sono supportati - vedi Viste/Mostra gli errori di parsificazione</message>
+	<message xml:lang="de">Einige Zeichen werden nicht unterstützt - siehe Ansicht/Parsefehler anzeigen</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">In the current Amaya profile:</message>
@@ -1801,40 +1805,57 @@
 <label define="AM_SELECT_CHARSET">
 	<message xml:lang="en">Select a Charset</message>
 	<message xml:lang="fr">Sélectionner un Charset</message>
+	<message xml:lang="it">Seleziona un charset</message>
+	<message xml:lang="de">Charset auswählen</message>
 </label>
 <label define="AM_SELECT_MIMETYPE">
 	<message xml:lang="en">Select a MIME type</message>
 	<message xml:lang="fr">Sélectionner un type MIME</message>
+	<message xml:lang="it">Seleziona un tipo MIME</message>
+	<message xml:lang="de">MIME type auswählen</message>
 </label>
 <label define="AM_CHANGE_CHARSET">
 	<message xml:lang="en">Change Charset</message>
 	<message xml:lang="fr">Changer Charset</message>
+	<message xml:lang="it">Cambia charset</message>
+	<message xml:lang="de">Anderen Charset auswählen</message>
 </label>
 <label define="AM_CHANGE_MIME_TYPE">
 	<message xml:lang="en">Change MIME type</message>
 	<message xml:lang="fr">Changer le type MIME</message>
+	<message xml:lang="it">Cambia tipo MIME</message>
+	<message xml:lang="de">Anderen MIME type auswählen</message>
 </label>
 <label define="AM_CHANGE">
 	<message xml:lang="en">Change</message>
 	<message xml:lang="fr">Changer</message>
 	<message xml:lang="es">Modificar</message>
+	<message xml:lang="it">Cambia</message>
+	<message xml:lang="de">Wechseln</message>
 </label>
 <label define="AM_NOCHARSET_SUPPORT">
 	<message xml:lang="en">This type of document doesn't support charsets</message>
 	<message xml:lang="fr">Ce type de document n'a pas de charset</message>
+	<message xml:lang="it">Questo tipo di documento non supporta i charset</message>
+	<message xml:lang="de">Dieser Dokumenttyp unterstützt keine Charsets</message>
 </label>
 <label define="AM_NOMIMETYPE_SUPPORT">
 	<message xml:lang="en">The target must be an HTTP URL to use this option</message>
-	<message xml:lang="fr">L'URL doit être de type HTTP pour utiliser
-	cette option</message>
+	<message xml:lang="fr">L'URL doit être de type HTTP pour utiliser</message>
+	<message xml:lang="it">Per usare questa opzione, il target deve essere un'URL HTTP</message>
+	<message xml:lang="de">Diese Option kann nur mit einem HTTP URL Ziel verwendet werden</message>
 </label>
 <label define="AM_INVALID_MIMETYPE">
 	<message xml:lang="en">Error: invalid MIME type</message>
 	<message xml:lang="fr">Erreur: type MIME incorrect</message>
+	<message xml:lang="it">Errore: MIME type non valido</message>
+	<message xml:lang="de">Fehler: ungültiger MIME type</message>
 </label>
 <label define="AM_UNKNOWN">
 	<message xml:lang="en">Unknown</message>
 	<message xml:lang="fr">Inconnu</message>
+	<message xml:lang="it">Sconosciuto</message>
+	<message xml:lang="de">Unbekannt</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

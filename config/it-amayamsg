@@ -204,7 +204,7 @@
 202 Server per le annotazioni
 203 Caricamento automatico delle annotazioni local
 204 Caricamento automatico delle annotazioni remote
-205 **Disable remote autoload at each startup (for off-line work)
+205 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
 206 Colore della selezione
 207 Colore del cursore
 208 Orientamento
@@ -212,7 +212,7 @@
 210 Paesaggio
 211 Abilita FTP (sperimentale)
 212 Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion
-213 **Some characters are not supported - see Views/Show parsing errors
+213 Alcuni caratteri non sono supportati - vedi Viste/Mostra gli errori di parsificazione
 214 Nel profilo attuale di Amaya:
 215 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
 216 La codifica per questo documento non e` supportata da Amaya
@@ -238,12 +238,12 @@
 236 No posso create un XPointer
 237 Non trovo dove muovere l'annotazione
 238 Non posso muovere l'annotazione su un diverso documento
-239 **Select a Charset
-240 **Select a MIME type
-241 **Change Charset
-242 **Change MIME type
-243 **Change
-244 **This type of document doesn't support charsets
-245 **The target must be an HTTP URL to use this option
-246 **Error: invalid MIME type
-247 **Unknown
+239 Seleziona un charset
+240 Seleziona un tipo MIME
+241 Cambia charset
+242 Cambia tipo MIME
+243 Cambia
+244 Questo tipo di documento non supporta i charset
+245 Per usare questa opzione, il target deve essere un'URL HTTP
+246 Errore: MIME type non valido
+247 Sconosciuto
