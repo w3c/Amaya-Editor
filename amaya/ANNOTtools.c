@@ -183,11 +183,7 @@ const char *prefix;
   char *name = NULL;
 
   /* save the value of TMPDIR */
-#ifdef _WINDOWS
   tmp = getenv (TMPDIR);
-#else
-  tmp = getenv (TMPDIR);
-#endif /* _WINDOWS */
 
   if (tmp)
     {
@@ -205,8 +201,8 @@ const char *prefix;
       _putenv (tmp);
 #else
       putenv (tmp);
-    }
 #endif /* _WINDOWS */
+    }
 
   /* create the tempname */
 #ifdef _WINDOWS
