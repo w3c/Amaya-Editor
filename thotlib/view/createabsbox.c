@@ -1209,28 +1209,44 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 				    /* test the attribute value */
 				    j = 0;
 				    found = FALSE;
-				    while (!found && attrVal[j] != EOS)
+				    if (pCond->CoTextMatch == CoSubstring)
+				      /* compare strings up to the first
+					 hyphen in the attribute value */
 				      {
-					i = 0;
 					while (pCond->CoAttrTextValue[i] != EOS &&
-					       attrVal[j + i] == pCond->CoAttrTextValue[i])
+					       attrVal[i] != '-' &&
+					       attrVal[i] != EOS &&
+					       attrVal[i] == pCond->CoAttrTextValue[i])
 					  i++;
-					found = (pCond->CoAttrTextValue[i] == EOS);
-					if (found)
+					found = (pCond->CoAttrTextValue[i] == EOS &&
+						 (attrVal[i] == '-' ||
+						  attrVal[i] == EOS));
+				      }
+				    else
+				      {
+					while (!found && attrVal[j] != EOS)
 					  {
-					    if (pCond->CoTextMatch == CoWord)
+					    i = 0;
+					    while (pCond->CoAttrTextValue[i] != EOS &&
+						   attrVal[j + i] == pCond->CoAttrTextValue[i])
+					      i++;
+					    found = (pCond->CoAttrTextValue[i] == EOS);
+					    if (found)
 					      {
-						/* check if a word matches */
-						i += j;
-						found = (j == 0 || attrVal[j - 1] == SPACE) &&
-						  (attrVal[i] == EOS || attrVal[i] == SPACE);
+						if (pCond->CoTextMatch == CoWord)
+						  {
+						    /* check if a word matches */
+						    i += j;
+						    found = (j == 0 || attrVal[j - 1] == SPACE) &&
+						      (attrVal[i] == EOS || attrVal[i] == SPACE);
+						  }
+						else if (pCond->CoTextMatch == CoMatch)
+						  /* the whole attribute value must be equal */
+						  found = attrVal[j + i] == EOS;
 					      }
-					    else if (pCond->CoTextMatch == CoMatch)
-					      /* the whole attribute value must be equal */
-					      found = attrVal[j + i] == EOS;
+					    /* prepare next search */
+					    j++;
 					  }
-					/* prepare next search */
-					j++;
 				      }
 				  }
 			      }
@@ -2157,33 +2173,46 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		    {
 		      j = 0;
 		      ok = FALSE;
-		      while (!ok && attrValue[j] != EOS)
+		      if (pAPRule->ApMatch == CoSubstring)
+			/* compare strings up to the first hyphen in the
+			   attribute value */
 			{
-			  k = 0;
-			  while (pAPRule->ApString[k] != EOS &&
-				 attrValue[j + k] == pAPRule->ApString[k])
-			    k++;
-			  ok = (pAPRule->ApString[k] == EOS);
-			  if (ok)
-			    {
-			      /* the substring was found */
-			      if (pAPRule->ApMatch == CoWord)
-				{
-				  /* check if a word matches */
-				  k += j;
-				  ok = (j == 0 ||
-					attrValue[j - 1] == SPACE) &&
-				    (attrValue[k] == EOS ||
-				     attrValue[k] == SPACE);
-				}
-			      else if (pAPRule->ApMatch == CoMatch)
-				/* the whole attribute value must be equal */
-				ok = (attrValue[j + k] == EOS &&
-				      j == 0 && k != 0);
-			    }
-			  /* prepare next search */
-			  j++;
+			  while (pAPRule->ApString[j] != EOS &&
+				 attrValue[j] != '-' &&
+				 attrValue[j] != EOS &&
+				 attrValue[j] == pAPRule->ApString[j])
+			    j++;
+			  ok = (pAPRule->ApString[j] == EOS &&
+				(attrValue[j] == '-' || attrValue[j] == EOS));
 			}
+		      else
+		        while (!ok && attrValue[j] != EOS)
+			  {
+			    k = 0;
+			    while (pAPRule->ApString[k] != EOS &&
+				   attrValue[j + k] == pAPRule->ApString[k])
+			      k++;
+			    ok = (pAPRule->ApString[k] == EOS);
+			    if (ok)
+			      {
+				/* the substring was found */
+				if (pAPRule->ApMatch == CoWord)
+				  {
+				    /* check if a word matches */
+				    k += j;
+				    ok = (j == 0 ||
+					  attrValue[j - 1] == SPACE) &&
+				      (attrValue[k] == EOS ||
+				       attrValue[k] == SPACE);
+				  }
+				else if (pAPRule->ApMatch == CoMatch)
+				  /* the whole attribute value must be equal */
+				  ok = (attrValue[j + k] == EOS &&
+					j == 0 && k != 0);
+			      }
+			    /* prepare next search */
+			    j++;
+			  }
 		    }
 		  if (ok)
 		    {
