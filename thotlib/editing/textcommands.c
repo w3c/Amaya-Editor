@@ -558,14 +558,17 @@ static void MovingCommands (int code, Document doc, View view,
 		      /* move the right extremity */
 		      pBox = pBoxEnd;
 		      pEl = pBox->BxAbstractBox->AbElement;
-		      if (!extendSel && pViewSelEnd->VsBox &&
-			  pViewSelEnd->VsBox->BxType == BoGhost)
-			x = pBox->BxNChars;
-		      else if ( pBox->BxAbstractBox &&
-				pBox->BxAbstractBox->AbLeafType == LtCompound)
-			x = pBox->BxNChars;
-		      else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
-			x =  pBox->BxNChars;
+		      if ((!extendSel && pViewSelEnd->VsBox &&
+			  pViewSelEnd->VsBox->BxType == BoGhost) ||
+		      (pBox->BxAbstractBox &&
+				pBox->BxAbstractBox->AbLeafType == LtCompound) ||
+		      (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant))
+			  {
+			  if (pBox->BxNChars)
+              x =  pBox->BxNChars;
+			  else
+			  x = 1;
+			  }
 		      else
 			x = lastC;
 		    }
