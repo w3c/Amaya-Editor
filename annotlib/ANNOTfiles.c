@@ -284,6 +284,7 @@ void  ANNOT_InitDocumentBody (docAnnot, document)
    */
 
   /* we find the the HTML nature */
+  root = TtaGetMainRoot (docAnnot);
   elType = TtaGetElementType (root);
   head = TtaSearchTypedElement (elType, SearchInTree, root);
   elType.ElTypeNum = Annot_EL_Body;
