@@ -467,6 +467,8 @@ void *context;
    if (!ctx)
      return;
    
+   ResetStop (doc);
+
    source_doc = ctx->source_doc;
    source_doc_url = ctx->source_doc_url;
 
@@ -500,12 +502,12 @@ View view;
   char *annotIndex;
   char *annotURL;
   char *proto;
-  char *tmp;
   REMOTELOAD_context *ctx;
   int res;
   List *ptr;
   CHAR_T *server;
-  
+  ThotBool is_active = FALSE;
+
   if (!schema_init)
     {
       /* @@ RRS unfinished; this is temporary while the code is raw
@@ -594,6 +596,16 @@ View view;
 	      
 	    }
 	  /* launch the request */
+	  if (!is_active)
+	    {
+	      is_active = TRUE;
+	      if (FilesLoading[doc] == 0)
+		ActiveTransfer (doc);
+	      else
+		UpdateTransfer (doc);
+	    }
+	  else
+	      UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
 			      server,
 			      annotURL,
@@ -711,9 +723,8 @@ void *context;
    if (!ctx)
      return;
 
-   /*
-     int source_doc = DocumentMeta[doc]->source_doc;
-   */
+   ResetStop (doc);
+
    source_doc = ctx->source_doc;
 
    /* only update the metadata if the POST was succesful and if
@@ -877,6 +888,10 @@ View view;
     }
 
   /* launch the request */
+  if (FilesLoading[doc] == 0)
+    ActiveTransfer (doc);
+  else
+    UpdateTransfer (doc);
   res = GetObjectWWW (doc,
 		      url,
 		      rdf_file,
@@ -962,9 +977,6 @@ Element el;
       || (elType.ElTypeNum != XLink_EL_XLink))
     return;
 
-  /* memorize the last selected annotation */
-  last_selected_annotation = el;
-
   /* get the URL of the annotation body */
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = XLink_ATTR_href_;
@@ -977,10 +989,9 @@ Element el;
   TtaGiveTextAttributeValue (attr, annot_url, &length);
 
   /* select the annotated text */
-  LINK_SelectSourceDoc (doc, annot_url);
-
+  LINK_SelectSourceDoc (doc, annot_url, FALSE);
   /* memorize the last selected annotation */
-  last_selected_annotation = el;
+  last_selected_annotation =  el;
 
   TtaFreeMemory (annot_url);
 }
@@ -1014,10 +1025,15 @@ void *context;
 
   if (!ctx)
      return;
-  
+ 
   /* select the source of the annotation */
   if (ctx->doc_annot)
-    LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot]);
+    {
+      /* select the annotated text and memorize the last selected 
+	 annotation */ 
+        last_selected_annotation =  
+	  LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot], TRUE);
+    }
 
   TtaFreeMemory (ctx->url);
   TtaFreeMemory (ctx);
@@ -1165,7 +1181,9 @@ void *context;
 
   if (!ctx)
     return;
-  
+ 
+  ResetStop (doc);
+ 
   source_doc = ctx->source_doc;
   annot_doc = ctx->annot_doc;
   annot_url = ctx->annot_url;
@@ -1388,6 +1406,10 @@ void ANNOT_Delete (document, view)
 	  usprintf (form_data,
 		    "delete_source=%s&rdftype=%s", annot->annot_url, ANNOTATION_PROP);
 	  /* launch the request */
+	  if (FilesLoading[doc] == 0)
+	    ActiveTransfer (doc);
+	  else
+	    UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
 			      annot_server,
 			      form_data,

@@ -647,19 +647,25 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
 /*-----------------------------------------------------------------------
    LINK_SelectSourceDoc
    Selects the text that was annotated in a document.
+   Returns the element corresponding to the annotation anchor in the
+   source document if the return_el flag is set to TRUE.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_SelectSourceDoc (Document doc, CONST CHAR_T *annot_url)
+Element LINK_SelectSourceDoc (Document doc, CONST CHAR_T *annot_url, 
+			      ThotBool return_el)
 #else /* __STDC__*/
-void LINK_SelectSourceDoc (doc, annot_url)
+Element LINK_SelectSourceDoc (doc, annot_url, return_el)
      Document doc;
      CHAR_T *annot_url;
+     ThotBool return_el;
 #endif /* __STDC__*/
 {
   XPointerContextPtr xptr_ctx;
   AnnotMeta *annot;
   CHAR_T *url;
+  Element el = NULL;
+  ThotBool selected = FALSE;
 
   if (IsW3Path (annot_url) || IsFilePath (annot_url))
     url = annot_url;
@@ -675,17 +681,21 @@ void LINK_SelectSourceDoc (doc, annot_url)
       {
 	xptr_ctx = XPointer_parse (doc, annot->xptr);
 	if (!xptr_ctx->error)
-	  XPointer_select (xptr_ctx);
+	  {
+	    XPointer_select (xptr_ctx);
+	    selected = TRUE;
+	  }
 	else
 	  fprintf (stderr, "LINK_SelectSource: impossible to set XPointer\n");
 	XPointer_free (xptr_ctx);
       }
     else
       fprintf (stderr, "LINK_SelectSourceDoc: couldn't find annotation metadata\n");
+
+    /* search the element corresponding to the anchor in the source
+       document */
+    if (selected && return_el)
+      el = SearchAnnotation (doc, annot->name);
+
+    return el;
 }
-
-
-
-
-
-
