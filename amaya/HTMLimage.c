@@ -881,7 +881,8 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 		if ((strcmp (name, "HTML") == 0 &&
 		      (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
 		       elType.ElTypeNum == HTML_EL_Embed_ ||
-		       elType.ElTypeNum == HTML_EL_Object)) ||
+		       elType.ElTypeNum == HTML_EL_Object ||
+		       elType.ElTypeNum == HTML_EL_IFRAME)) ||
 		     (strcmp (name, "SVG") == 0 &&
 		      (elType.ElTypeNum == SVG_EL_PICTURE_UNIT ||
 		       elType.ElTypeNum == SVG_EL_use_ ||
@@ -1200,7 +1201,6 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
       /* search all elements having an attribute SRC */
       attrType1.AttrSSchema = attrType.AttrSSchema;
       attrType2.AttrSSchema = attrType.AttrSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_SRC;
       attrType1.AttrTypeNum = HTML_ATTR_SRC;
       attrType2.AttrTypeNum = HTML_ATTR_FrameSrc;
       /* Start from the root element */
