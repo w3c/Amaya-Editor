@@ -1,4 +1,4 @@
-		{ Author: J. Kahan, I. Vatton 	 1999-2002  }
+		{ Author: J. Kahan, I. Vatton 	 1999-2003  }
 
 TRANSLATION Annot;
 
