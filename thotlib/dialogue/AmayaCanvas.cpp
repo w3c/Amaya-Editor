@@ -267,6 +267,10 @@ void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
 			     event.GetButton(),
 			     thot_mod_mask,
 			     event.GetX(), event.GetY() );
+
+  // force the focus because on debian woody, the focus do not come in when clicking on the canvas
+  SetFocus();
+
   event.Skip();
 }
 
@@ -400,6 +404,10 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
 			 event.GetButton(),
 			 thot_mod_mask,
 			 event.GetX(), event.GetY() );
+
+  // force the focus because on debian woody, the focus do not come in when clicking on the canvas
+  SetFocus();
+
   event.Skip();
 }
 
