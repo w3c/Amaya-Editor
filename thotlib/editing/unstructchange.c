@@ -480,7 +480,7 @@ void                PasteCommand ()
 {
    PtrDocument         pDoc;
    PtrElement          firstSel, lastSel, pEl, pPasted, pClose, pFollowing,
-                       pNextEl, pFree, pSplitText;
+                       pNextEl, pFree, pSplitText, pSel;
    PtrPasteElem        pPasteD;
    int                 firstChar, lastChar, numAssoc, view, i;
    boolean             ok, before, within;
@@ -691,14 +691,18 @@ void                PasteCommand ()
 		      /*  pointent les elements colle's */
 		      UpdateRefAttributes (CreatedElement[i], pDoc);
 		      }
-		/* cherche a fusionner avec leurs voisins les elements de texte */
-		/* qui viennent d'etre colle's et reaffiche le document */
+		/* set the selection at the end of the pasted elements */
 		if (NCreatedElements > 0)
-		    if (before)
-		      MergeAndSelect (pDoc, CreatedElement[NCreatedElements - 1], CreatedElement[0], 0, 0, TRUE);
-		    else
-		      MergeAndSelect (pDoc, CreatedElement[0], CreatedElement[NCreatedElements - 1], 0, 0, TRUE);
-
+		   {
+		   if (before)
+		      pSel = CreatedElement[0];
+		   else
+		      pSel = CreatedElement[NCreatedElements - 1];
+		   if (!pSel->ElTerminal)
+		      pSel = LastLeaf (pSel);
+		   SelectString (pDoc, pSel, pSel->ElTextLength + 1,
+				 pSel->ElTextLength);
+		   }
 		pDoc->DocModified = TRUE;	/* le document est modifie' */
 		pDoc->DocNTypedChars += 20;
 
@@ -707,7 +711,8 @@ void                PasteCommand ()
 		  if (CreatedElement[i]->ElStructSchema)
 		     {
 		     RedisplayCopies (CreatedElement[i], pDoc, TRUE);
-		     UpdateNumbers (CreatedElement[i], CreatedElement[i], pDoc, TRUE);
+		     UpdateNumbers (CreatedElement[i], CreatedElement[i], pDoc,
+				    TRUE);
 		     }
 	     }
 	}

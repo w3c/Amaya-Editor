@@ -519,8 +519,15 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+  BuildStructSearchMenu
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                BuildStructSearchMenu (PtrDocument pDoc)
+#else
 void                BuildStructSearchMenu (pDoc)
+PtrDocument         pDoc;
+
+#endif
 {
    CHAR_T BufMenu [MAX_TXT_LEN];
 

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void BuildStructSearchMenu ( int pDoc );
+extern void BuildStructSearchMenu ( PtrDocument pDoc );
 extern void CallbackStructSearchMenu ( int ref,
                                        int val,
                                        STRING txt,
@@ -23,7 +23,7 @@ extern void StructSearchLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void BuildStructSearchMenu (/* int pDoc */);
+extern void BuildStructSearchMenu (/* PtrDocument pDoc */);
 extern void CallbackStructSearchMenu (/* int ref,
                                          int val,
                                          STRING txt,

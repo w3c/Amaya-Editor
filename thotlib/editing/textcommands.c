@@ -285,14 +285,15 @@ boolean             extendSel;
 	     if (extendSel)
 	       {
 		 if (FirstSelectedChar == LastSelectedChar &&
-		     FirstSelectedElement == LastSelectedElement && SelPosition)
+		     FirstSelectedElement == LastSelectedElement &&
+		     SelPosition)
 		   {
 		     RightExtended = FALSE;
 		     LeftExtended = FALSE;
 		   }
 		 else if (!RightExtended && !LeftExtended)
 		   {
-		     if (FirstSelectedChar == FixedElement &&
+		     if (FirstSelectedElement == FixedElement &&
 			 FirstSelectedChar == FixedChar)
 		       {
 			 RightExtended = FALSE;

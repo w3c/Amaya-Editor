@@ -2076,7 +2076,7 @@ boolean             Background;
 	/* tente de fusionner les elements voisins et reaffiche les paves */
 	/* modifie's et la selection */
 	CloseHistorySequence (SelDoc);
-	MergeAndSelect (SelDoc, pElFirstSel, pElLastSel, firstChar, lastChar, FALSE);
+	SelectRange (SelDoc, pElFirstSel, pElLastSel, firstChar, lastChar);
      }
 }
 
@@ -2874,7 +2874,7 @@ boolean            remove;
   /* tente de fusionner les elements voisins et reaffiche les paves */
   /* modifie's et la selection */
   if (pSelDoc != NULL && pSelDoc == pDoc)
-    MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar, FALSE);
+    SelectRange (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 
 /*----------------------------------------------------------------------

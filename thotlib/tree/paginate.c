@@ -478,7 +478,8 @@ int                 LastSelectedChar;
 
    /* retablit la selection si elle ete supprimee avant le formatage */
    if (sel)
-      MergeAndSelect (pDoc, firstSelection, lastSelection, FirstSelectedChar, LastSelectedChar, FALSE);
+      SelectRange (pDoc, firstSelection, lastSelection, FirstSelectedChar,
+		   LastSelectedChar);
 
    /* met a jour les numeros qui changent dans les autres vues a cause */
    /* de la creation des nouvelles marques de page */

@@ -671,7 +671,7 @@ int                 applyDomain;
 	/* tente de fusionner les elements voisins et reaffiche les paves */
 	/* modifie's et la selection */
 	CloseHistorySequence (pSelDoc);
-	MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar, FALSE);
+	SelectRange (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
       }
 }
 
@@ -736,7 +736,7 @@ View                view;
 	    /* cherche l'element a traiter ensuite */
 	    pEl = NextInSelection (pEl, pLastSel);
 	  }
-	MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar, FALSE);
+	SelectRange (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
       }
 }
 
