@@ -4260,6 +4260,7 @@ RULES
 	CreateLast(HR_Graph2);
 #endif
 	Width: Enclosing . Width;
+	HorizPos: VMiddle = Enclosing . VMiddle;
 	LineWeight: 1 pt;
 	IN Structure_view
 	    Height: 1 pt;
