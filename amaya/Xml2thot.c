@@ -29,6 +29,7 @@
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"
+#include "HTMLbook_f.h"
 #include "css_f.h"
 #include "UIcss_f.h"
 #include "fetchHTMLname_f.h"
@@ -4600,11 +4601,13 @@ void        ParseExternalDocument (char     *fileName,
 				   char     *typeName)
   
 {
-  char         *schemaName = NULL, *tempName = NULL;
-  char         *ptr = NULL;
+  char         *schemaName = NULL, *tempName = NULL, *ptr = NULL;
   ElementType   elType;
-  Element       parent, oldel;
-  Element       child;
+  Element       parent, oldel, child;
+  Element       idEl = NULL, extEl = NULL;
+  AttributeType extAttrType;
+  DocumentType  thotType;
+  Document      externalDoc = 0;
   CHARSET       charset;
   DisplayMode   dispMode;
   gzFile        infile;
@@ -4612,13 +4615,10 @@ void        ParseExternalDocument (char     *fileName,
   ThotBool      xmlDec, docType, isXML, isKnown;
   ThotBool      savParsingError;
   ThotBool      use_ref = FALSE;
-  DocumentType  thotType;
-  Document      externalDoc = 0;
-  Element       idEl = NULL, extEl = NULL;
   char          charsetname[MAX_LENGTH];
-  char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *htmlURL = NULL;
   char          type[NAME_LENGTH];
-  AttributeType extAttrType;
+  char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *htmlURL = NULL;
+  NotifyElement event;
 
   if (fileName == NULL)
     return;
@@ -4829,7 +4829,7 @@ void        ParseExternalDocument (char     *fileName,
 	      /* XHTML documents */
 	      /* Handle character-level elements which contain block-level elements */
 	      CheckBlocksInCharElem (externalDoc);
-	      /* For XHTML documents, we paste only the children of the BODY element */
+	      /* For (X)HTML documents, we paste the BODY element */
 	      elType.ElSSchema = TtaGetSSchema ("HTML", externalDoc);
 	      elType.ElTypeNum = HTML_EL_BODY;
 	      idEl = TtaSearchTypedElement (elType, SearchForward, RootElement);
@@ -4842,6 +4842,10 @@ void        ParseExternalDocument (char     *fileName,
 	      TtaRemoveTree (idEl, externalDoc);
 	      TtaInsertFirstChild (&idEl, extEl, doc);
 	    }
+	  /* Update the Images and the URLs in the pasted sub-tree */
+	  event.document = doc;
+	  event.position = externalDoc;
+	  UpdateURLsInSubtree(&event, idEl);
 	}
       /* Move presentation-schema extensions of the external document */
       /* to the sub-tree of which 'extEl' is the root */

@@ -825,7 +825,7 @@ void SetupAndPrint (Document doc, View view)
   Transform the HREF and SRC attribute to make them independent from their
   former base.
   ----------------------------------------------------------------------*/
-static void UpdateURLsInSubtree (NotifyElement *event, Element el)
+void UpdateURLsInSubtree (NotifyElement *event, Element el)
 {
   Element             nextEl, child;
   ElementType         elType;
@@ -833,32 +833,35 @@ static void UpdateURLsInSubtree (NotifyElement *event, Element el)
 
   nextEl = TtaGetFirstChild (el);
   HTMLschema = TtaGetSSchema ("HTML", event->document);
-  elType.ElSSchema = HTMLschema;
-  while (nextEl != NULL)
+  if (HTMLschema)
     {
-      event->element = nextEl;
-      ElementPasted (event);
-
-      /* manage included links and anchors */
-      elType.ElTypeNum = HTML_EL_Anchor;
-      child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
-      while (child)
+      elType.ElSSchema = HTMLschema;
+      while (nextEl != NULL)
 	{
-	  event->element = child;
+	  event->element = nextEl;
 	  ElementPasted (event);
-	  child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
+	  
+	  /* manage included links and anchors */
+	  elType.ElTypeNum = HTML_EL_Anchor;
+	  child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
+	  while (child)
+	    {
+	      event->element = child;
+	      ElementPasted (event);
+	      child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
+	    }
+	  
+	  /* manage included links and anchors */
+	  elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	  child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
+	  while (child)
+	    {
+	      event->element = child;
+	      ElementPasted (event);
+	      child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
+	    }
+	  TtaNextSibling (&nextEl);
 	}
-
-      /* manage included links and anchors */
-      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-      child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
-      while (child)
-	{
-	  event->element = child;
-	  ElementPasted (event);
-	  child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
-	}
-      TtaNextSibling (&nextEl);
     }
 }
 

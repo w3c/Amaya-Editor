@@ -17,6 +17,8 @@ extern void CallbackPrint ( int ref,
 extern void InitPrint ( void );
 extern void SetupAndPrint ( Document doc,
                             View view );
+extern void UpdateURLsInSubtree ( NotifyElement *event,
+                                  Element el );
 extern void GetIncludedDocuments_callback ( int newdoc,
                                             int status,
                                             char *urlName,
@@ -39,6 +41,8 @@ extern void CallbackPrint (/* int ref,
 extern void InitPrint (/* void */);
 extern void SetupAndPrint (/* Document doc,
                               View view */);
+extern void UpdateURLsInSubtree (/* NotifyElement *event,
+                                    Element el */);
 extern void GetIncludedDocuments_callback (/* int newdoc,
                                               int status,
                                               char *urlName,
