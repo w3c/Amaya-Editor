@@ -1205,7 +1205,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += GL_UnicodeDrawString (fg, bbuffer,
 					  x, REALY(y1), 
-					  hyphen, prevfont, 0);	      
+					  hyphen, prevfont, nbcar);	      
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
 				  pBox->BxUnderline, width, fg);
