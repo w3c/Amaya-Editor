@@ -389,11 +389,18 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
   /* initial scripts */
   script = '*';
   embed = '*';
-
   pos = 0;
   while (pos < max)
     {
       /* check the current character */
+      while (*ind >= (*pBuffer)->BuLength)
+	{
+	  /* skip empty buffers */
+	  *pBuffer = (*pBuffer)->BuNext;
+	  if (*pBuffer == NULL)
+	    return script;
+	  *ind = 0;
+	}
       car = (*pBuffer)->BuContent[*ind];
 #ifdef _I18N_
       if (bidi != 'O')
@@ -492,13 +499,6 @@ printf ("sub-script=%c pos=%d index=%d \n", script, *nChars, *ind);
 	pos++;
       /* next character */
       (*ind)++;
-      if (*ind >= (*pBuffer)->BuLength)
-	{
-	  *pBuffer = (*pBuffer)->BuNext;
-	  if (*pBuffer == NULL)
-	    pos = max;
-	  *ind = 0;
-	}
     }
   if (script == '*')
     script = 'L';

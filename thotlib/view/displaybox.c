@@ -890,6 +890,12 @@ void LocateFirstChar (PtrBox pBox, ThotBool rtl, PtrTextBuffer *adbuff, int *ind
       else
 	*ind = (*adbuff)->BuLength - 1;
     }
+  else
+    while ((*adbuff)->BuLength == 0 && (*adbuff)->BuNext)
+    {
+      *adbuff = (*adbuff)->BuNext;
+      *ind = 0;
+    }
 }
 
 /*----------------------------------------------------------------------

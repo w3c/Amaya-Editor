@@ -677,6 +677,7 @@ void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   height = event->height;
   FrameRedraw (frame, width, height);
 }
+
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
   When a part of the canvas is hidden by a window or menu 
@@ -707,7 +708,8 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
 }
 #endif /* _GL */
 #else /* _GTK */
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void FrameResized (int *w, int frame, int *info)
 {
    int                 n;

@@ -1088,9 +1088,13 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   text[i] = EOS;
   if (*buffer)
     TtaFreeMemory (*buffer);
+#ifdef _I18N_
   /* What is the encoding used by external applications ??? */
   *buffer = TtaConvertCHARToIso (text, TtaGetDefaultCharset ());
   TtaFreeMemory (text);
+#else /* _I18N_ */
+  *buffer = text;
+#endif /* _I18N_ */
   return i;
 }
 

@@ -2995,22 +2995,25 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		 /* Si la selection a encore un sens */
 		 if (pSelEnd->VsBox->BxAbstractBox)
 		   {
-		     if (pSelEnd->VsBuffer == pSelBegin->VsBuffer
-			 && pSelEnd->VsIndBuf == pSelBegin->VsIndBuf)
+		     if (pSelEnd->VsBuffer == pSelBegin->VsBuffer &&
+			 pSelEnd->VsIndBuf == pSelBegin->VsIndBuf)
 		       {
-			 pSelEnd->VsIndBox = pSelBegin->VsIndBox;
-			 pSelEnd->VsXPos = pSelBegin->VsXPos;
 			 pSelEnd->VsBox = pSelBegin->VsBox;
-			 pSelEnd->VsNSpaces = pSelBegin->VsNSpaces;
+			 pSelEnd->VsIndBox = pSelBegin->VsIndBox;
 			 pSelEnd->VsLine = pSelBegin->VsLine;
+			 pSelEnd->VsXPos = pSelBegin->VsXPos;
+			 pSelEnd->VsNSpaces = pSelBegin->VsNSpaces;
 		       }
 		     else
 		       ComputeViewSelMarks (pSelEnd);
 		     
 		     /* Recherche la position limite du caractere */
 		     pSelBox = pSelEnd->VsBox;
-		     if (pSelBox->BxAbstractBox->AbLeafType != LtText)
+		     if (pSelBox->BxNChars == 0 && pSelBox->BxType == BoComplete)
 		       pSelEnd->VsXPos += pSelBox->BxW;
+		     else if (pSelBegin->VsIndBox >= pSelBox->BxNChars)
+		       /* select the end of the box */
+		       pSelEnd->VsXPos += 2;
 		     else if (SelPosition)
 		       pSelEnd->VsXPos += 2;
 		     else if (pSelEnd->VsIndBox >= pSelBox->BxNChars)

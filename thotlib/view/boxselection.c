@@ -404,7 +404,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
       ind = pBox->BxIndChar + pos;
       while (ind >= pBuffer-> BuLength && pBuffer->BuNext)
 	{
-	  ind -= pBuffer-> BuLength;
+	  ind -= pBuffer->BuLength;
 	  /* selection in the next buffer */
 	  pBuffer = pBuffer->BuNext;
 	}

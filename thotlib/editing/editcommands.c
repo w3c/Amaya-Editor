@@ -3126,8 +3126,12 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
   lg = 0;
   if (src)
     {
+#ifdef _I18N_
       /* What is the encoding used by external applications ??? */
       buffer = TtaConvertIsoToCHAR (src, TtaGetDefaultCharset ());
+#else /* _I18N_ */
+      buffer = src;
+#endif /* _I18N_ */
       doc = IdentDocument (pDoc);
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
@@ -3166,7 +3170,9 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
 	  i++;
 	}
 
+#ifdef _I18N_
       TtaFreeMemory (buffer);
+#endif /* _I18N_ */
       /* Paste the last X clipboard buffer */
       if (j > 0)
 	{
