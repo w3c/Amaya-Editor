@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Printing</title>
-  <meta name="GENERATOR" content="amaya V3.1">
+  <meta name="GENERATOR" content="amaya V3.2">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
@@ -30,7 +30,7 @@
 
 <p>Amaya is able to print your documents with or without CSS style sheets on
 both Unix and Windows platforms. On Unix platforms it is only able to generate
-Postcript description, so you need to have a PostScript printer or use a
+Postscript description, so you need to have a PostScript printer or use a
 application able to translate the PostScript into your specific printer
 language.</p>
 
@@ -48,7 +48,7 @@ language.</p>
       <li>options:
         <ul>
           <li>Manual feed</li>
-          <li>Generation of the table of cotents of the document</li>
+          <li>Generation of the table of contents of the document</li>
           <li>Generation of  the table of links: a number is generated after
             each link in the document that refers an entry within the table of
             links; each table entry lists the corresponding URL</li>
@@ -60,7 +60,7 @@ language.</p>
     <p>On Windows platforms, a first dialogue box propose following
     options:</p>
     <ul type="square">
-      <li>Generation of the table of cotents of the document</li>
+      <li>Generation of the table of contents of the document</li>
       <li>Generation of  the table of links of the document</li>
       <li>Printing of the document URL,</li>
       <li>Printing with CSS style sheets</li>
@@ -71,7 +71,7 @@ language.</p>
   <li>The <strong>Print</strong> command (File/Print) prints the current
     document with default parameters or previous values set  by the command
     <strong>Setup and Print</strong>. You may pay attention that parameters
-    (Manual feed, Orinetation, etc.) are reset to the default value when the
+    (Manual feed, Orientation, etc.) are reset to the default value when the
     document change.
     <p>On Windows platforms, the first times you launch the command
     <strong>Print</strong> the standard Windows dialogue will be displayed to
@@ -80,10 +80,19 @@ language.</p>
   </li>
 </ul>
 
-<p>In the button bar, the button <img src="../Icons/Print.gif" alt="Print"> 
+<p>In the button bar, the button <img src="../Icons/Print.gif" alt="Print">
 gives you access to the command <strong>Print</strong>. Due to a trouble with
 the use of DLLs on Windows 95, that  button calls the command <strong>Setup
 and Print</strong> on all Windows platforms.</p>
+
+<h2>Controlling page breaks with CSS</h2>
+
+<p>Amaya supports the CSS page break properties: "<strong>page-break-before:
+always</strong>". When that property is attached to a specific element by an
+attribute <strong>style</strong>, it generates a page break before that
+specific element. When that property is attached to an element type within the
+style element of the document or within an external CSS style sheet, it
+generate a page break before each instance of that element.</p>
 </div>
 
 <p align="right"><a href="Publishing.html"><img alt="previous" border="0"
