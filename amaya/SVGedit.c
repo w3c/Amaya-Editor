@@ -2443,4 +2443,4 @@ void TextChangedInGroup (NotifyOnTarget *event)
     }
   /* that's it! */
 }
-#endif
+#endif /* _SVG */

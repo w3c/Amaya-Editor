@@ -2435,8 +2435,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef _SVGLIB
        else if (docType == docLibrary)
 	 {
-	   x+=500;
-	   y+=200;
+	   x += 500;
+	   y += 200;
 	   h = 500;
 	   w = 400;
 	 }

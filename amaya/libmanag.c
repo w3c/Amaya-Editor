@@ -23,6 +23,7 @@
 #include "init_f.h"
 #include "zlib.h"
 #include "profiles.h"
+#include "SVG.h"
 
 #include "fileaccess.h"
 #include "AHTURLTools_f.h"
@@ -42,9 +43,7 @@
 #include "HTMLpresentation_f.h"
 #include "html2thot_f.h"
 #include "Mathedit_f.h"
-#ifdef _SVG
 #include "SVGedit_f.h"
-#endif /* _SVG */
 #include "SVGbuilder_f.h"
 #include "MENUconf_f.h"
 #include "query_f.h"
@@ -1270,8 +1269,6 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
   Element           prev;
   PRule             PRuleSearch;
   char             *color;
-  char              css_command[100];
-
 
   if (LibraryDocElement)
     {
@@ -1297,16 +1294,9 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
   LibraryDocElement = prev;
   LibraryDocDocument = doc;
   /* there is no Background Color attribute attach to this element */
-  color = (char *) TtaGetMemory (strlen ("#FF0000") + 1);
-  strcpy (color, "#FF0000");
-/*  sprintf (css_command, "background-color: %s", color);
-  ParseHTMLSpecificStyle (prev, css_command, doc, 0, FALSE);*/
-
+  color = (char *) TtaGetMemory (strlen ("#FFD8C1") + 1);
+  strcpy (color, "#FFD8C1");
   HTMLSetBackgroundColor (doc, prev, color);
-
-  /*      CallbackValAttrMenu (NumMenuAttr, 1, buffer);*/
-  /*      ThotCallback (NumMenuAttrEnum, INTEGER_DATA, buffer);*/
-  /*      (*CallbackDialogue) (88, STRING_DATA, buffer);*/
   TtaFreeMemory (color);
 /*  TtaHandlePendingEvents ();*/
 #endif /* _SVGLIB */
