@@ -2562,136 +2562,215 @@ void RowCreated (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-   RowPasted                                               
+   RowPasted
+   A row with its cells has been pasted in a table. The cells have no rowspan
+   attributes (such attributes have been removed when copying or deleting
+   the row), but they may have colspan attributes. There is no "hole" in the
+   pasted row: all empty positions in the original row left by cells spanning
+   vertically from other rows have been filled by empty cells when copying or
+   deleting the row, but the pasted row may be too short (or too long) if it
+   comes from another table.
   ----------------------------------------------------------------------*/
 void RowPasted (NotifyElement * event)
 {
   Element             row, table, colhead, prevCell, cell, nextCell,
-                      prev;
+                      spanningCell;
   ElementType         elType, cellType;
   Attribute           attr;
-  AttributeType       rowspanType, rowextType, colspanType;
+  AttributeType       colspanType;
   Document            doc;
-  int                 colspan, span;
-  ThotBool            inMath;
+  int                 colspan, length, nPosTaken, ncol;
+  ThotBool            inMath, cellLinked, closeCurrentCell;
 
-  row = event->element;
+  row = event->element;   /* the pasted row */
   doc = event->document;
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+
+  /* get the table element that contains the pasted row */
   if (inMath)
     elType.ElTypeNum = MathML_EL_MTABLE;
   else
     elType.ElTypeNum = HTML_EL_Table;
   table = TtaGetTypedAncestor (row, elType);
 
-  /* only if we're not pasting a whole table */
-  /* link each cell to the appropriate column head and add empty cells
-     if the pasted row is too short */
-  rowspanType.AttrSSchema = elType.ElSSchema;
-  rowextType.AttrSSchema = elType.ElSSchema;
+  /* prepare some attribute and element types */
   colspanType.AttrSSchema = elType.ElSSchema;
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_MColumn_head;
-      rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
-      rowextType.AttrTypeNum = MathML_ATTR_MRowExt;
       colspanType.AttrTypeNum = MathML_ATTR_columnspan;
     }
   else
     {
       elType.ElTypeNum = HTML_EL_Column_head;
-      rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
-      rowextType.AttrTypeNum = HTML_ATTR_RowExt;
       colspanType.AttrTypeNum = HTML_ATTR_colspan_;
     }
-      /* get the first column */
+
+  /* get the first column head in the table */
   colhead = TtaSearchTypedElement (elType, SearchInTree, table);
-  prevCell = NULL;
+
   /* get the first cell in the pasted row */
+  prevCell = NULL;
   cell = TtaGetFirstChild (row);
   cellType = TtaGetElementType (cell);
   if (cellType.ElSSchema != elType.ElSSchema ||
       (inMath && elType.ElTypeNum != MathML_EL_MTD) ||
       (!inMath && (cellType.ElTypeNum != HTML_EL_Data_cell &&
 		   cellType.ElTypeNum != HTML_EL_Heading_cell)))
+    /* the first child of the row element is not a cell. Take the first cell */
     cell = GetSiblingCell (cell, FALSE, inMath);
-  while (colhead)
+  nextCell = NULL;
+  cellLinked = FALSE;
+
+  /* length (number of columns) of the current cell in the pasted row */
+  length = 0;  /* we don't know yet */
+  ncol = 0;
+  /* number of positions (columns) taken in the pasted row by a cell spanning
+     from above */
+  nPosTaken = 0;
+
+  /* check each column, one after the other, but stop if a cell from a row
+     above spans vertically the pasted row and spans horizontally up to
+     the last column */
+  while (colhead && nPosTaken != THOT_MAXINT)
     {
-      nextCell = GetSiblingCell (cell, FALSE, inMath);
-      /* handle the colspan attribute */
-      span = 1;
-      if (cell)
+      closeCurrentCell = FALSE;
+      if (length == 0 && cell)
+	/* we are handling a new cell. Get its length */
 	{
+	  colspan = 1;       /* default length of a cell */
 	  attr = TtaGetAttribute (cell, colspanType);
 	  if (attr)
 	    {
-	      span = TtaGetAttributeValue (attr);
-	      if (span < 0)
-		span = 1;
+	      colspan = TtaGetAttributeValue (attr);
+	      if (colspan < 0)
+		colspan = 1;
 	    }
+	  if (colspan == 0)
+	    length = THOT_MAXINT;
+	  else
+	    length = colspan;
 	}
-      /* is there a cell in a row above that spans this row? */
-      prev = SpanningCellForRow (row, colhead, doc, inMath, TRUE, TRUE,
-				 &colspan);
-      if (!prev)
-	/* no cell from a row above is covering the current cell position*/
+      if (nPosTaken == 0)
+	/* this position is not taken by a vertically spanning cell from a
+	   previous column. Check the vertically spanning cells for this
+	   column */
+	{
+	  spanningCell = SpanningCellForRow (row, colhead, doc, inMath, TRUE,
+					     TRUE, &nPosTaken);
+	  if (!spanningCell)
+	    nPosTaken = 0;
+	  else
+	    if (nPosTaken == 0)
+	      nPosTaken = THOT_MAXINT;
+	}
+      if (nPosTaken == 0)
+	/* this position is free */
 	{
 	  if (cell)
+	    /* link the current cell of the pasted row with this column head */
 	    {
-	      LinkCellToColumnHead (cell, colhead, doc, inMath);
-	      if (span > 1 || span == 0)
-		SetColExt (cell, span, doc, inMath, FALSE);
+	      if (!cellLinked)
+		{
+		  LinkCellToColumnHead (cell, colhead, doc, inMath);
+		  cellLinked = TRUE;
+		  ncol = 0;
+		}
 	    }
 	  else
-	    /* the pasted row has no cell for this column.
-	       Add an empty cell */
-	    cell = AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
-				      inMath, FALSE, FALSE);
+	    /* no more cells in the pasted row. Add an empty cell for this
+	       column */
+	    {
+	      prevCell = AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
+					    inMath, FALSE, FALSE);
+	      attr = NULL;
+	      colspan = 1; length = 0;
+	      cellLinked = TRUE;
+	    }
 	}
       else
-	/* this position is taken by a cell from a row above */
-	if (cell)
-	  /* the pasted row has a cell at this position. Remove it */
-	  {
-	    TtaDeleteTree (cell, doc);
-	    cell = NULL;
-	  }
-      /* get the next column where there is a free slot for the pasted
-	 row */
-      if (colspan == 0)
-	colspan = THOT_MAXINT;
-      if (span == 0)
-	span = THOT_MAXINT;
-      while ((colspan >= 1 || span >= 1) && colhead)
+	/* this position is taken by a cell spanning from above */
+	{
+	  /* if a cell has been linked to a column head, this cell can't
+	     span further than the current column */
+	  if (cellLinked)
+	    closeCurrentCell = TRUE;
+	}
+
+      if (colhead)
+	/* make one step: go to the next column of the table */
 	{
 	  TtaNextSibling (&colhead);
-	  span--;
-	  if (span == 0)
+	  if (cellLinked && !closeCurrentCell)
+	    /* update the current length of the cell */
+	    ncol++;
+	  if (!colhead)
+	    /* last column. the current cell has to be closed */
+	    closeCurrentCell = TRUE;
+	  else
 	    {
-	      if (cell)
-		prevCell = cell;
-	      cell = nextCell;
+	      if (nPosTaken > 0 && nPosTaken != THOT_MAXINT)
+		nPosTaken--;
 	    }
-	  colspan--;
-	  if (colspan > 0)
+	  if (length > 0 && length != THOT_MAXINT)
+	    length--;
+	  if (length == 0)
+	    closeCurrentCell = TRUE;
+	}
+
+      if (closeCurrentCell)
+	/* close the current cell in the pasted row */
+	{
+	  nextCell = GetSiblingCell (cell, FALSE, inMath);
+	  if (cellLinked)
+	    /* the cell had at least one free position */
 	    {
-	      nextCell = GetSiblingCell (cell, FALSE, inMath);
-	      if (cell)
-		TtaDeleteTree (cell, doc);
+	      /* set the new value of colspan to the number of columns we
+		 have encountered since the cell was linked to its column
+		 head, except if we have reached the las column of the table
+		 and the original colspan of the cell was 0 */
+	      if (colhead || colspan != 0)
+		colspan = ncol;
+	      /* set the new colspan of the cell */
+	      if (colspan == 1)
+		{
+		  if (attr)
+		    TtaRemoveAttribute (cell, attr, doc);
+		}
+	      else
+		{
+		  if (!attr)
+		    {
+		      attr = TtaNewAttribute (colspanType);
+		      if (attr)
+			TtaAttachAttribute (cell, attr, doc);
+		    }
+		  if (attr)
+		    TtaSetAttributeValue (attr, colspan, cell, doc);
+		}
+	      SetColExt (cell, colspan, doc, inMath, FALSE);
+	      prevCell = cell;
 	    }
+	  else
+	    /* no free position found for the cell. Delete it */
+	    TtaDeleteTree (cell, doc);
+	  /* handle now the next cell, which is not linked to any column head
+	     yet (perhaps, there is no room for it, we will see) */
+	  cell = nextCell;
+	  cellLinked = FALSE;
+	  length = 0;   /* we don't know yet the actual length of this cell */
 	}
     }
-  if (nextCell)
-    /* we have checked all columns of the table and there are extra cells.
-       Remove them */
-    while (nextCell)
-      {
-	cell = nextCell;
-	nextCell = GetSiblingCell (cell, FALSE, inMath);
-	TtaDeleteTree (cell, doc);
-      }
 
+  /* we have checked all columns of the table */
+  /* if there are extra cells in the pasted row, delete them */
+  while (cell)
+    {
+      nextCell = GetSiblingCell (cell, FALSE, inMath);
+      TtaDeleteTree (cell, doc);
+      cell = nextCell;
+    }
   HandleColAndRowAlignAttributes (row, doc);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
