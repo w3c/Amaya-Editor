@@ -368,7 +368,7 @@ void                FindReferredEl ()
 		       {
 			  CopyDocIdent (&pDoc->DocIdent, docIdent);
 			  /* annule la selection */
-			  ClearAllViewSelection ();
+			  TtaClearViewSelections ();
 			  LoadDocument (&pDoc, NULL);
 		       }
 		     if (pDoc != NULL)

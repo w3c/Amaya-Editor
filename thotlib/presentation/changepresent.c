@@ -1839,7 +1839,7 @@ boolean             Background;
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
    else
      {
-	ClearAllViewSelection ();
+	TtaClearViewSelections ();
 	/* Coupe les elements du debut et de la fin de la selection */
 	/* s'ils sont partiellement selectionnes */
 	if (firstChar > 1 || lastChar > 0)

@@ -97,6 +97,8 @@ extern void         TtaChangeBoxSize (Element element, Document document, View v
 extern void         TtaChangeBoxPosition (Element element, Document document, View view, int X, int Y, TypeUnit unit);
 extern void         TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, int *width, int *height);
 extern void         TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord);
+extern void         TtaGiveRGB ( char *colname, unsigned short *red, unsigned short *green, unsigned short *blue );
+extern void         TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue);
 extern void         TtaNextPRule (Element element, PRule * pRule);
 extern PRule        TtaGetPRule (Element element, int presentationType);
 extern int          TtaGetPRuleType (PRule pRule);
@@ -115,6 +117,8 @@ extern void         TtaChangeBoxSize ( /* Element element, View view, Document d
 extern void         TtaChangeBoxPosition ( /* Element element, Document document, View view, int X, int Y, TypeUnit unit */ );
 extern void         TtaGiveBoxSize ( /* Element element, Document document, View view, TypeUnit unit, int *width, int *height */ );
 extern void         TtaGiveBoxPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
+extern void         TtaGiveRGB ( /*char *colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
+extern void         TtaGiveThotRGB (/*int num, unsigned short *red, unsigned short *green, unsigned short *blue*/);
 extern void         TtaNextPRule ( /* Element element, PRule *pRule */ );
 extern PRule        TtaGetPRule ( /* Element element, int presentationType */ );
 extern int          TtaGetPRuleType ( /* PRule pRule */ );

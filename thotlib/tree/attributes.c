@@ -1234,7 +1234,7 @@ PtrDocument         pDoc;
    int                 i;
 
    /* eteint d'abord la selection */
-   ClearAllViewSelection ();
+   TtaClearViewSelections ();
    /* Coupe les elements du debut et de la fin de la selection s'ils */
    /* sont partiellement selectionnes */
    CutSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);

@@ -11,11 +11,11 @@ extern int PointToPixel ( int value );
 extern int GetCharsCapacity ( int volpixel );
 extern int PixelToPoint ( int value );
 extern int CharacterWidth ( unsigned char c,
-                      ptrfont font );
+                            ptrfont font );
 extern int CharacterHeight ( unsigned char c,
-                       ptrfont font );
+                             ptrfont font );
 extern int CharacterAscent ( unsigned char c,
-                       ptrfont font );
+                             ptrfont font );
 extern int FontAscent ( ptrfont font );
 extern int FontHeight ( ptrfont font );
 extern int PixelValue ( int val,
@@ -56,11 +56,11 @@ extern int PointToPixel (/* int value */);
 extern int GetCharsCapacity (/* int volpixel */);
 extern int PixelToPoint (/* int value */);
 extern int CharacterWidth (/* unsigned char c,
-                        ptrfont font */);
+                              ptrfont font */);
 extern int CharacterHeight (/* unsigned char c,
-                         ptrfont font */);
+                               ptrfont font */);
 extern int CharacterAscent (/* unsigned char c,
-                         ptrfont font */);
+                               ptrfont font */);
 extern int FontAscent (/* ptrfont font */);
 extern int FontHeight (/* ptrfont font */);
 extern int PixelValue (/* int val,

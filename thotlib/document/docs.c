@@ -745,7 +745,7 @@ PtrDocument         pDoc;
 				   /* ete fait */
 				   if (!setSelect)
 				     {
-					ClearAllViewSelection ();
+					TtaClearViewSelections ();
 					setSelect = TRUE;
 				     }
 				   /* refait la copie de l'element inclus */

@@ -44,8 +44,8 @@ extern void ChangeFirstLast ( PtrElement pEl,
                               boolean first,
                               boolean change );
 extern PtrElement GetPageBreakForAssoc ( PtrElement pEl,
-                                int viewNb,
-                                int *boxType );
+                                         int viewNb,
+                                         int *boxType );
 extern void CreateAllAbsBoxesOfEl ( PtrElement pE,
                                     PtrDocument pDoc );
 extern void CreateNewAbsBoxes ( PtrElement pEl,
@@ -135,8 +135,8 @@ extern void ChangeFirstLast (/* PtrElement pEl,
                                 boolean first,
                                 boolean change */);
 extern PtrElement GetPageBreakForAssoc (/* PtrElement pEl,
-                                  int viewNb,
-                                  int *boxType */);
+                                           int viewNb,
+                                           int *boxType */);
 extern void CreateAllAbsBoxesOfEl (/* PtrElement pE,
                                       PtrDocument pDoc */);
 extern void CreateNewAbsBoxes (/* PtrElement pEl,

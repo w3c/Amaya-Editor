@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void ConvertIntToLabel ( int num,
-                               LabelString strng );
+                                LabelString strng );
 extern void ReadLabel ( char labelType,
                         LabelString label,
                         BinFile file );
@@ -23,7 +23,7 @@ extern void UpdateREFdescriptors ( PtrChangedReferredEl Anchor,
 #else /* __STDC__ */
 
 extern void ConvertIntToLabel (/* int num,
-                                 LabelString strng */);
+                                  LabelString strng */);
 extern void ReadLabel (/* char labelType,
                           LabelString label,
                           BinFile file */);

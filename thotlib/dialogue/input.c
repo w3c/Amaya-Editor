@@ -23,14 +23,6 @@
 #include "message.h"
 #include "appdialogue.h"
 
-#ifdef __STDC__
-extern void         CloseInsertion (void);
-
-#else
-extern void         CloseInsertion ();
-
-#endif
-
 #define MAX_EQUIV 25
 #define THOT_NO_MOD	0
 #define THOT_MOD_CTRL	1

@@ -65,10 +65,10 @@ extern View TtaGetViewFromName ( Document document,
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
 extern void RedisplayNewElement ( Document document,
-                               PtrElement newElement,
-                               PtrElement sibling,
-                               boolean first,
-                               boolean creation );
+                                  PtrElement newElement,
+                                  PtrElement sibling,
+                                  boolean first,
+                                  boolean creation );
 extern void ChangeAbsBoxModif ( PtrElement pEl,
                                 Document document,
                                 boolean newAbsModif );
@@ -88,19 +88,19 @@ extern void DisplayHolophrasted ( PtrElement pEl,
 extern void HideElement ( PtrElement pEl,
                           Document document );
 extern void RedisplayReference ( PtrElement element,
-                              Document document );
-extern void RedisplayLeaf ( PtrElement element,
-                         Document document,
-                         int delta );
-extern void RedisplaySplittedText ( PtrElement element,
-                                 int position,
                                  Document document );
+extern void RedisplayLeaf ( PtrElement element,
+                            Document document,
+                            int delta );
+extern void RedisplaySplittedText ( PtrElement element,
+                                    int position,
+                                    Document document );
 extern void RedisplayMergedText ( PtrElement element,
-                               Document document );
+                                  Document document );
 extern void UndisplayInheritedAttributes ( PtrElement pEl,
-                                 PtrAttribute pAttr,
-                                 Document document,
-                                 boolean suppression );
+                                           PtrAttribute pAttr,
+                                           Document document,
+                                           boolean suppression );
 extern void DisplayAttribute ( PtrElement pEl,
                                PtrAttribute pAttr,
                                Document document );
@@ -111,9 +111,9 @@ extern void RedisplayNewPRule ( Document document,
                                 PtrElement pEl,
                                 PtrPRule pRule );
 extern void RedisplayDefaultPresentation ( Document document,
-                                 PtrElement pEl,
-                                 PRuleType typeRuleP,
-                                 int view );
+                                           PtrElement pEl,
+                                           PRuleType typeRuleP,
+                                           int view );
 extern void RedispNewGeometry ( Document document,
                                 PtrElement pEl );
 extern void TtaSetDisplayMode ( Document document,
@@ -188,10 +188,10 @@ extern View TtaGetViewFromName (/* Document document,
 extern void TtaGiveActiveView (/* Document * document,
                                   View * view */);
 extern void RedisplayNewElement (/* Document document,
-                                 PtrElement newElement,
-                                 PtrElement sibling,
-                                 boolean first,
-                                 boolean creation */);
+                                    PtrElement newElement,
+                                    PtrElement sibling,
+                                    boolean first,
+                                    boolean creation */);
 extern void ChangeAbsBoxModif (/* PtrElement pEl,
                                   Document document,
                                   boolean newAbsModif */);
@@ -211,19 +211,19 @@ extern void DisplayHolophrasted (/* PtrElement pEl,
 extern void HideElement (/* PtrElement pEl,
                             Document document */);
 extern void RedisplayReference (/* PtrElement element,
-                                Document document */);
-extern void RedisplayLeaf (/* PtrElement element,
-                           Document document,
-                           int delta */);
-extern void RedisplaySplittedText (/* PtrElement element,
-                                   int position,
                                    Document document */);
+extern void RedisplayLeaf (/* PtrElement element,
+                              Document document,
+                              int delta */);
+extern void RedisplaySplittedText (/* PtrElement element,
+                                      int position,
+                                      Document document */);
 extern void RedisplayMergedText (/* PtrElement element,
-                                 Document document */);
+                                    Document document */);
 extern void UndisplayInheritedAttributes (/* PtrElement pEl,
-                                   PtrAttribute pAttr,
-                                   Document document,
-                                   boolean suppression */);
+                                             PtrAttribute pAttr,
+                                             Document document,
+                                             boolean suppression */);
 extern void DisplayAttribute (/* PtrElement pEl,
                                  PtrAttribute pAttr,
                                  Document document */);
@@ -234,9 +234,9 @@ extern void RedisplayNewPRule (/* Document document,
                                   PtrElement pEl,
                                   PtrPRule pRule */);
 extern void RedisplayDefaultPresentation (/* Document document,
-                                   PtrElement pEl,
-                                   PRuleType typeRuleP,
-                                   int view */);
+                                             PtrElement pEl,
+                                             PRuleType typeRuleP,
+                                             int view */);
 extern void RedispNewGeometry (/* Document document,
                                   PtrElement pEl */);
 extern void TtaSetDisplayMode (/* Document document,

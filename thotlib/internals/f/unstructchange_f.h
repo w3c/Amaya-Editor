@@ -11,7 +11,8 @@ extern void SelectSiblings ( PtrElement * firstEl,
                              PtrElement * lastEl,
                              int *firstChar,
                              int *lastChar );
-extern void TtcCreateElement (Document doc, View view);
+extern void TtcCreateElement ( Document doc,
+                               View view );
 extern void DeleteNextChar ( int frame,
                              PtrElement pEl,
                              boolean before );
@@ -24,7 +25,8 @@ extern void SelectSiblings (/* PtrElement * firstEl,
                                PtrElement * lastEl,
                                int *firstChar,
                                int *lastChar */);
-extern void TtcCreateElement (/* void */);
+extern void TtcCreateElement (/* Document doc,
+                                 View view */);
 extern void DeleteNextChar (/* int frame,
                                PtrElement pEl,
                                boolean before */);

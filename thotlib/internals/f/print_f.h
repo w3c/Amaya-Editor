@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int Error ( char *s );
 extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrDocument pDoc,
                                         boolean processNotLoaded,
@@ -40,7 +39,6 @@ extern void main ( int argc,
 
 #else /* __STDC__ */
 
-extern int Error (/* char *s */);
 extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrDocument pDoc,
                                           boolean processNotLoaded,

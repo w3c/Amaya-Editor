@@ -9,10 +9,10 @@
 extern void FindOutColor ( Display * dsp,
                            Colormap colormap,
                            ThotColorStruct * colr );
-extern void ColorRGB ( int num,
-                       unsigned short *red,
-                       unsigned short *green,
-                       unsigned short *blue );
+extern void TtaGiveThotRGB ( int num,
+                             unsigned short *red,
+                             unsigned short *green,
+                             unsigned short *blue );
 extern void InitDocColors ( char *name );
 extern int NumberOfColors ( void );
 extern char *ColorName ( int num );
@@ -33,10 +33,10 @@ extern unsigned long CreatePattern ( int disp,
 extern void FindOutColor (/* Display * dsp,
                              Colormap colormap,
                              ThotColorStruct * colr */);
-extern void ColorRGB (/* int num,
-                         unsigned short *red,
-                         unsigned short *green,
-                         unsigned short *blue */);
+extern void TtaGiveThotRGB (/* int num,
+                               unsigned short *red,
+                               unsigned short *green,
+                               unsigned short *blue */);
 extern void InitDocColors (/* char *name */);
 extern int NumberOfColors (/* void */);
 extern char *ColorName (/* int num */);

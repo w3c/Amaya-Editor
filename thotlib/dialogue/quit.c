@@ -19,8 +19,8 @@
 static boolean      InProcedureQuitThot = FALSE;
 
 #include "appdialogue_f.h"
+#include "applicationapi_f.h"
 #include "callback_f.h"
-#include "viewcommands_f.h"
 #include "closedoc_f.h"
 /*----------------------------------------------------------------------
    TtcQuit
@@ -67,7 +67,7 @@ View                view;
 	     notifyEvt.event = TteExit;
 	     CallEventType (&notifyEvt, FALSE);
 	     /* quitte definitivement Thot */
-	     QuitEditor ();
+	     TtaQuit ();
 	  }
      }
    InProcedureQuitThot = FALSE;

@@ -10,7 +10,7 @@ extern void SwitchSelection ( int frame,
                               boolean toShow );
 extern void ClearViewSelMarks ( int frame );
 extern void ClearViewSelection ( int frame );
-extern void ClearAllViewSelection ( void );
+extern void TtaClearViewSelections ( void );
 extern void UpdateViewSelMarks ( int frame,
                                  int xDelta,
                                  int spaceDelta,
@@ -34,7 +34,7 @@ extern void SwitchSelection (/* int frame,
                                 boolean toShow */);
 extern void ClearViewSelMarks (/* int frame */);
 extern void ClearViewSelection (/* int frame */);
-extern void ClearAllViewSelection (/* void */);
+extern void TtaClearViewSelections (/* void */);
 extern void UpdateViewSelMarks (/* int frame,
                                    int xDelta,
                                    int spaceDelta,

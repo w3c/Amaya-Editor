@@ -9,6 +9,9 @@
 extern void TtcInsertChar ( Document document,
                             View view,
                             char c );
+extern void TtcInsertGraph ( Document document,
+                             View view,
+                             char c );
 extern void TtcDeletePreviousChar ( Document document,
                                     View view );
 extern void CloseTextInsertion ( void );
@@ -41,6 +44,9 @@ extern void EditingLoadResources ( void );
 extern void TtcInsertChar (/* Document document,
                               View view,
                               char c */);
+extern void TtcInsertGraph (/* Document document,
+                               View view,
+                               char c */);
 extern void TtcDeletePreviousChar (/* Document document,
                                       View view */);
 extern void CloseTextInsertion (/* void */);

@@ -157,14 +157,14 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
-   ClearAllViewSelection annule et bascule toutes les selections     
-   courantes visualisees.                                  
+   TtaClearViewSelections unselects and clears all current displayed
+   selections.                                  
   ----------------------------------------------------------------------*/
-void                ClearAllViewSelection ()
+void                TtaClearViewSelections ()
 {
    int                 frame;
 
-   /* annule et on bascule dans chaque frame la selection courante */
+   /* manage all frames */
    for (frame = 0; frame < MAX_FRAME; frame++)
       if (ViewFrameTable[frame].FrAbstractBox != NULL)
 	 ClearViewSelection (frame + 1);

@@ -227,7 +227,7 @@ unsigned long       BackGroundPixel;
 	if (strncmp (image.colorTable[i].c_color, "None", 4) == 0)
 
 	  {
-	     ColorRGB ((int) BackGroundPixel, &red, &green, &blue);
+	     TtaGiveThotRGB ((int) BackGroundPixel, &red, &green, &blue);
 	     colorTab[i].pixel = i;
 	     colorTab[i].red = red;
 	     colorTab[i].green = green;

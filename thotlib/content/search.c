@@ -224,7 +224,7 @@ boolean             select;
 	  }
      }
    /* reaffiche toutes les views */
-   ClearAllViewSelection ();
+   TtaClearViewSelections ();
    if (visible)
      {
 	AbstractImageUpdated (pDoc);

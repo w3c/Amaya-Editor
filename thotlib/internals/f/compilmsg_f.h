@@ -11,18 +11,18 @@ extern void DisplayMessage ( char *text,
                              int msgType );
 extern void TtaError ( int errorCode );
 extern void CompilerMessage ( int index,
-                            int origin,
-                            int level,
-                            int msgCode,
-                            unsigned char *inputline,
-                            int lineNum );
+                              int origin,
+                              int level,
+                              int msgCode,
+                              unsigned char *inputline,
+                              int lineNum );
 extern void CompilerMessageString ( int index,
-                                  int origin,
-                                  int level,
-                                  int msgCode,
-                                  char *inputline,
-                                  int lineNum,
-                                  char *string );
+                                    int origin,
+                                    int level,
+                                    int msgCode,
+                                    char *inputline,
+                                    int lineNum,
+                                    char *string );
 
 #else /* __STDC__ */
 
@@ -31,18 +31,18 @@ extern void DisplayMessage (/* char *text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
 extern void CompilerMessage (/* int index,
-                              int origin,
-                              int level,
-                              int msgCode,
-                              unsigned char *inputline,
-                              int lineNum */);
+                                int origin,
+                                int level,
+                                int msgCode,
+                                unsigned char *inputline,
+                                int lineNum */);
 extern void CompilerMessageString (/* int index,
-                                    int origin,
-                                    int level,
-                                    int msgCode,
-                                    char *inputline,
-                                    int lineNum,
-                                    char *string */);
+                                      int origin,
+                                      int level,
+                                      int msgCode,
+                                      char *inputline,
+                                      int lineNum,
+                                      char *string */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

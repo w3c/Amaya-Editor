@@ -157,7 +157,7 @@ int                 num;
    if (num != ColorPs)
      {
 	/* Ask for the RedGreenBlue values */
-	ColorRGB (num, &red, &green, &blue);
+	TtaGiveThotRGB (num, &red, &green, &blue);
 	/* Emit the Poscript command */
 	fact = 255;
 	fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact,
@@ -199,7 +199,7 @@ int                 pattern;
    else if (pattern == 1)
      {
 	/* Ask for the RedGreenBlue values */
-	ColorRGB (fg, &red, &green, &blue);
+	TtaGiveThotRGB (fg, &red, &green, &blue);
 	/* Emit the Poscript command */
 	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
 		 ((float) green) / fact, ((float) blue) / fact);
@@ -207,7 +207,7 @@ int                 pattern;
    else if (pattern == 2)
      {
 	/* Ask for the RedGreenBlue values */
-	ColorRGB (bg, &red, &green, &blue);
+	TtaGiveThotRGB (bg, &red, &green, &blue);
 	/* Emit the Poscript command */
 	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
 		 ((float) green) / fact, ((float) blue) / fact);

@@ -132,15 +132,15 @@ ThotColorStruct    *colr;
 #endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
-   ColorRGB        returns the Red Green and Blue values corresponding
+   TtaGiveThotRGB returns the Red Green and Blue values corresponding
    to color number num.
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ColorRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
+void                TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
-void                ColorRGB (num, red, green, blue)
+void                TtaGiveThotRGB (num, red, green, blue)
 int                 num;
 unsigned short     *red;
 unsigned short     *green;

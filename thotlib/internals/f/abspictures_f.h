@@ -14,11 +14,11 @@ extern void SetImageRule ( PtrElement pEl,
                            int typeimage,
                            PictureScaling presimage );
 extern void NewPictInfo ( PtrAbstractBox ppav,
-                                 char *filename,
-                                 int imagetype );
+                          char *filename,
+                          int imagetype );
 extern void FreePictInfo ( int *desc );
 extern void CopyPictInfo ( int *Imdcopie,
-                                    int *Imdsource );
+                           int *Imdsource );
 
 #else /* __STDC__ */
 
@@ -30,11 +30,11 @@ extern void SetImageRule (/* PtrElement pEl,
                              int typeimage,
                              PictureScaling presimage */);
 extern void NewPictInfo (/* PtrAbstractBox ppav,
-                                   char *filename,
-                                   int imagetype */);
+                            char *filename,
+                            int imagetype */);
 extern void FreePictInfo (/* int *desc */);
 extern void CopyPictInfo (/* int *Imdcopie,
-                                      int *Imdsource */);
+                             int *Imdsource */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

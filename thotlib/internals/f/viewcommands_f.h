@@ -24,7 +24,6 @@ extern void ChangeDocumentPSchema ( PtrDocument pDoc,
 extern void ChangeNaturePSchema ( PtrDocument pDoc,
                                   PtrSSchema pNatSSchema,
                                   Name newPSchemaName );
-extern void QuitEditor ( void );
 
 #else /* __STDC__ */
 
@@ -46,7 +45,6 @@ extern void ChangeDocumentPSchema (/* PtrDocument pDoc,
 extern void ChangeNaturePSchema (/* PtrDocument pDoc,
                                     PtrSSchema pNatSSchema,
                                     Name newPSchemaName */);
-extern void QuitEditor (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

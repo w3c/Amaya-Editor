@@ -11,10 +11,10 @@ extern void FindOutColor ( Display * dsp,
                            ThotColorStruct * colr );
 extern void InitDocColors ( char *name );
 extern unsigned long ColorPixel ( int num );
-extern void ColorRGB ( int num,
-                       unsigned short *red,
-                       unsigned short *green,
-                       unsigned short *blue );
+extern void TtaGiveThotRGB ( int num,
+                             unsigned short *red,
+                             unsigned short *green,
+                             unsigned short *blue );
 extern unsigned long CreatePattern ( int disp,
                                      int RO,
                                      int active,
@@ -29,10 +29,10 @@ extern void FindOutColor (/* Display * dsp,
                              ThotColorStruct * colr */);
 extern void InitDocColors (/* char *name */);
 extern unsigned long ColorPixel (/* int num */);
-extern void ColorRGB (/* int num,
-                         unsigned short *red,
-                         unsigned short *green,
-                         unsigned short *blue */);
+extern void TtaGiveThotRGB (/* int num,
+                               unsigned short *red,
+                               unsigned short *green,
+                               unsigned short *blue */);
 extern unsigned long CreatePattern (/* int disp,
                                        int RO,
                                        int active,

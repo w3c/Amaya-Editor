@@ -222,10 +222,10 @@ char               *str;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void               *ThotRealloc (void *ptr, unsigned int n)
+void               *TtaRealloc (void *ptr, unsigned int n)
 
 #else  /* __STDC__ */
-void               *ThotRealloc (ptr, n)
+void               *TtaRealloc (ptr, n)
 void               *ptr;
 unsigned int        n;
 

@@ -316,8 +316,8 @@ extern void DrawEllipsFrame ( int frame,
                               int bg,
                               int pattern );
 extern void StorePageInfo ( int pagenum,
-                         int width,
-                         int height );
+                            int width,
+                            int height );
 extern void psBoundingBox ( int frame,
                             int width,
                             int height );
@@ -348,16 +348,16 @@ extern int EndOfString ( char *string,
                          char *suffix );
 extern void XFlushOutput ( int frame );
 extern void PaintWithPattern ( int frame,
-                    int x,
-                    int y,
-                    int width,
-                    int height,
-                    ThotWindow w,
-                    int RO,
-                    int active,
-                    int fg,
-                    int bg,
-                    int pattern );
+                               int x,
+                               int y,
+                               int width,
+                               int height,
+                               ThotWindow w,
+                               int RO,
+                               int active,
+                               int fg,
+                               int bg,
+                               int pattern );
 
 #else /* __STDC__ */
 
@@ -671,8 +671,8 @@ extern void DrawEllipsFrame (/* int frame,
                                 int bg,
                                 int pattern */);
 extern void StorePageInfo (/* int pagenum,
-                           int width,
-                           int height */);
+                              int width,
+                              int height */);
 extern void psBoundingBox (/* int frame,
                               int width,
                               int height */);
@@ -703,16 +703,16 @@ extern int EndOfString (/* char *string,
                            char *suffix */);
 extern void XFlushOutput (/* int frame */);
 extern void PaintWithPattern (/* int frame,
-                      int x,
-                      int y,
-                      int width,
-                      int height,
-                      ThotWindow w,
-                      int RO,
-                      int active,
-                      int fg,
-                      int bg,
-                      int pattern */);
+                                 int x,
+                                 int y,
+                                 int width,
+                                 int height,
+                                 ThotWindow w,
+                                 int RO,
+                                 int active,
+                                 int fg,
+                                 int bg,
+                                 int pattern */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

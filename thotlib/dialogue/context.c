@@ -285,7 +285,7 @@ unsigned short      blue;
    best = 0;			/* best color in list not found */
    for (i = 0; i < maxcolor; i++)
      {
-	ColorRGB (i, &delred, &delgreen, &delblue);
+	TtaGiveThotRGB (i, &delred, &delgreen, &delblue);
 	/* delred <<= 8; delgreen <<= 8; delblue <<= 8; */
 	delred -= red;
 	delgreen -= green;
@@ -324,7 +324,7 @@ unsigned short     *blue;
    maxcolor = NumberOfColors ();
    for (i = 0; i < maxcolor; i++)
       if (!strcasecmp (ColorName (i), colname))
-	 ColorRGB (i, red, green, blue);
+	 TtaGiveThotRGB (i, red, green, blue);
 
 #ifndef _WINDOWS
    /*

@@ -9,8 +9,8 @@
 extern void *TtaGetMemory ( unsigned int n );
 extern void TtaFreeMemory ( void *ptr );
 extern char *TtaStrdup ( char *str );
-extern void *ThotRealloc ( void *ptr,
-                           unsigned int n );
+extern void *TtaRealloc ( void *ptr,
+                          unsigned int n );
 extern void InitEditorMemory ( void );
 extern void GetTextBuffer ( PtrTextBuffer * pBT );
 extern void FreeTextBuffer ( PtrTextBuffer pBT );
@@ -34,7 +34,7 @@ extern void GetInputRef ( PtrEnteringReferences * pRE );
 extern void FreeInputRef ( PtrEnteringReferences pRE );
 extern void GetFileRefChng ( PtrReferenceChange * pFRC );
 extern void FreeFileRefChng ( PtrReferenceChange pFRC );
-extern void GetAbstractBox ( PtrAbstractBox * pAb );
+extern void GetAbstractBox ( PtrAbstractBox *pAb );
 extern void FreeAbstractBox ( PtrAbstractBox pAb );
 extern void GetDocument ( PtrDocument * pDoc );
 extern void FreeDocument ( PtrDocument pDoc );
@@ -74,8 +74,8 @@ extern void FreeDictionary ( PtrDict pDict );
 extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void *ptr */);
 extern char *TtaStrdup (/* char *str */);
-extern void *ThotRealloc (/* void *ptr,
-                             unsigned int n */);
+extern void *TtaRealloc (/* void *ptr,
+                            unsigned int n */);
 extern void InitEditorMemory (/* void */);
 extern void GetTextBuffer (/* PtrTextBuffer * pBT */);
 extern void FreeTextBuffer (/* PtrTextBuffer pBT */);
@@ -99,7 +99,7 @@ extern void GetInputRef (/* PtrEnteringReferences * pRE */);
 extern void FreeInputRef (/* PtrEnteringReferences pRE */);
 extern void GetFileRefChng (/* PtrReferenceChange * pFRC */);
 extern void FreeFileRefChng (/* PtrReferenceChange pFRC */);
-extern void GetAbstractBox (/* PtrAbstractBox * pAb */);
+extern void GetAbstractBox (/* PtrAbstractBox *pAb */);
 extern void FreeAbstractBox (/* PtrAbstractBox pAb */);
 extern void GetDocument (/* PtrDocument * pDoc */);
 extern void FreeDocument (/* PtrDocument pDoc */);

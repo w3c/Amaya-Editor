@@ -38,11 +38,11 @@ extern void RecomputeLines ( PtrAbstractBox pAb,
                              PtrBox pFirstBox,
                              int frame );
 extern void UpdateLineBlock ( PtrAbstractBox pAb,
-                      PtrLine pLine,
-                      PtrBox pBox,
-                      int xDelta,
-                      int spaceDelta,
-                      int frame );
+                              PtrLine pLine,
+                              PtrBox pBox,
+                              int xDelta,
+                              int spaceDelta,
+                              int frame );
 extern void EncloseInLine ( PtrBox pBox,
                             int frame,
                             PtrAbstractBox pAb );
@@ -81,11 +81,11 @@ extern void RecomputeLines (/* PtrAbstractBox pAb,
                                PtrBox pFirstBox,
                                int frame */);
 extern void UpdateLineBlock (/* PtrAbstractBox pAb,
-                        PtrLine pLine,
-                        PtrBox pBox,
-                        int xDelta,
-                        int spaceDelta,
-                        int frame */);
+                                PtrLine pLine,
+                                PtrBox pBox,
+                                int xDelta,
+                                int spaceDelta,
+                                int frame */);
 extern void EncloseInLine (/* PtrBox pBox,
                               int frame,
                               PtrAbstractBox pAb */);

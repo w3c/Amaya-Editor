@@ -19,20 +19,10 @@
 #include "buildboxes_f.h"
 #include "textcommands_f.h"
 #include "font_f.h"
+#include "frame_f.h"
 #include "boxselection_f.h"
 #include "boxparams_f.h"
 
-#ifdef __STDC__
-extern void         DefClip (int, int, int, int, int);
-extern void         CloseInsertion (void);
-extern void         DisplayFrame (int);
-
-#else
-extern void         DefClip ();
-extern void         CloseInsertion ();
-extern void         DisplayFrame ();
-
-#endif
 
 /*----------------------------------------------------------------------
    InitializeFrameParams initialise le seuil de visibilite et le facteur de     

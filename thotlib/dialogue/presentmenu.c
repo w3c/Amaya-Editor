@@ -129,7 +129,7 @@ static void         ApplyPresentMod ()
 	 /* ete ferme' */
 	{
 	   /* eteint la selection courante */
-	   ClearAllViewSelection ();
+	   TtaClearViewSelections ();
 	   /* si une chaine de caracteres complete est selectionnee, */
 	   /* selectionne l'element TEXTE */
 	   if (pFirstSel->ElTerminal && pFirstSel->ElLeafType == LtText &&

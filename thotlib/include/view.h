@@ -51,6 +51,7 @@ extern void         TtaResetViewBackgroundColor (Document doc, View view);
 extern void         TtaSetViewBackgroundColor (Document doc, View view, int color);
 extern int          TtaGetViewBackgroundColor (Document doc, View view);
 extern int          TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue);
+extern void TtaClearViewSelections ( void );
 
 #else  /* __STDC__ */
 
@@ -79,6 +80,7 @@ extern void         TtaResetViewBackgroundColor ( /*Document doc, View view */ )
 extern void         TtaSetViewBackgroundColor ( /*Document doc, View view, int color */ );
 extern int          TtaGetViewBackgroundColor ( /*Document doc, View view */ );
 extern int          TtaGetThotColor ( /*unsigned short red, unsigned short green, unsigned short blue */ );
+extern void TtaClearViewSelections ( /*void*/ );
 
 #endif /* __STDC__ */
 #endif
