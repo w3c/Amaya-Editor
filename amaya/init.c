@@ -1614,7 +1614,7 @@ boolean		    history;
       NormalizeURL (tempdocument, 0, pathname, documentname);
 
    if (parameters[0] == EOS)
-      newdoc = IsDocumentLoaded (pathname);
+     newdoc = IsDocumentLoaded (pathname);
    else
      {
 	/* we need to ask the server */
@@ -1624,19 +1624,22 @@ boolean		    history;
      }
 
    if ((CE_event == CE_FORM_POST) || (CE_event == CE_FORM_GET))
+     /* special checks for forms */
      {
-       /* special checks for forms */
+       /* we always have a fresh newdoc for forms */
+       newdoc = 0;
        if (!IsW3Path (pathname))
 	 {
 	   /* the target document doesn't exist */
 	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
-	   newdoc = 0;
 	   ok = FALSE; /* do not continue */
 	 }
-       else
-	 /* we always have a fresh newdoc for forms */
-	 newdoc = 0;
      }
+
+   if (ok && newdoc != 0 && history)
+     /* it's just a move in the same document */
+     /* record the current position in the history */
+     AddDocHistory (newdoc, DocumentURLs[newdoc]);
 
    if (ok && newdoc == 0)
      {

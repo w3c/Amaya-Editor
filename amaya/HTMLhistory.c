@@ -119,7 +119,6 @@ static Element	ElementAtPosition (doc, pos)
 	}
       while (child != NULL);
       }
-   printf ("Element: %s\n", TtaGetElementLabel (result));
    return result;
 }
 
@@ -141,7 +140,6 @@ static int      RelativePosition (doc, distance)
 
    sum = 0;
    el = TtaGetFirstElementShown (doc, 1, distance);
-   printf ("Element: %s", TtaGetElementLabel (el));
    ancestor = el;
    while (ancestor != NULL)
       {
@@ -183,8 +181,6 @@ View                view;
       return;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
-   if (!CanReplaceCurrentDocument (doc, view))
-      return;
 
    /* previous document in history */
    prev = DocHistoryIndex[doc];
@@ -195,6 +191,10 @@ View                view;
  
    /* nothing to do if there is no previous document */
    if (DocHistory[doc][prev].HistUrl == NULL)
+      return;
+
+   /* if the document has been edited, ask the user to confirm */
+   if (!CanReplaceCurrentDocument (doc, view))
       return;
 
    /* the current document must be put in the history if it's the last one */
@@ -263,8 +263,6 @@ View                view;
       return;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
-   if (!CanReplaceCurrentDocument (doc, view))
-      return;
 
    /* next entry in history */
    next = DocHistoryIndex[doc] + 1;
@@ -274,6 +272,10 @@ View                view;
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
       return;
    if (DocHistory[doc][next].HistUrl == NULL)
+      return;
+
+   /* if the document has been edited, ask the user to confirm */
+   if (!CanReplaceCurrentDocument (doc, view))
       return;
 
    /* set the Back button on if it's off */
@@ -353,7 +355,6 @@ char               *url;
    position = RelativePosition (doc, &distance);
    DocHistory[doc][DocHistoryIndex[doc]].HistDistance = distance;
    DocHistory[doc][DocHistoryIndex[doc]].HistPosition = position;
-   /*******/ printf (" Position: %d, distance: %d\n", position, distance);
 
    DocHistoryIndex[doc]++;
    DocHistoryIndex[doc] %= DOC_HISTORY_SIZE;

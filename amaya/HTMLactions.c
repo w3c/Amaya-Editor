@@ -293,10 +293,18 @@ Document            doc;
 			  return (FollowTheLink (elFound, elSource, doc));
 			}
 		      else
-		       /* show the target element in all views */
-		       for (view = 1; view < 4; view++)
+			{
+			if (targetDocument == doc)
+			   /* jump in the same document */
+			   {
+			   /* record current position in the history */
+			   AddDocHistory (doc, DocumentURLs[doc]);
+			   }
+		        /* show the target element in all views */
+		        for (view = 1; view < 4; view++)
 			  if (TtaIsViewOpened (targetDocument, view))
-			     TtaShowElement (targetDocument, view, elFound, 10);
+			    TtaShowElement (targetDocument, view, elFound, 0);
+			}
 		    }
 	       }
 	     if (targetDocument > 0)
