@@ -3520,10 +3520,10 @@ LPARAM lParam;
       /* radio buttons */
       if (IdApplyToSelection)
 	CheckRadioButton (hwnDlg, IDC_IDAPPLYTOSEL, 
-			  IDC_IDAPPLYTOSEL, IDC_APPLYTODOC);
+			  IDC_IDAPPLYTOSEL, IDC_IDAPPLYTODOC);
       else
 	CheckRadioButton (hwnDlg, IDC_IDAPPLYTODOC, 
-			  IDC_IDAPPLYTOSEL, IDC_APPLYTODOC);
+			  IDC_IDAPPLYTOSEL, IDC_IDAPPLYTODOC);
       break;
 
     case WM_CLOSE:
@@ -3541,7 +3541,7 @@ LPARAM lParam;
 	      GetDlgItemText (hwnDlg, IDC_IDELEMNAME, szBuffer,
 			      MAX_LENGTH - 1);
 	      szBuffer[MAX_LENGTH - 1] = EOS;
-	      ThotCallback (BaseImage + mElemName, STRING_DATA, szBuffer);
+	      ThotCallback (BaseDialog + mElemName, STRING_DATA, szBuffer);
 	      break;
 	    }
 	}
@@ -3563,13 +3563,13 @@ LPARAM lParam;
 	case ID_CREATEID:
 	  ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 1);
 	  /* update the status bar with the result of the operation */
-	   SetDlgItemText (hwnDlg, IDC_IDSTATUS, DialogueLang);
+	   SetDlgItemText (hwnDlg, IDC_IDSTATUS, IdStatus);
 	  break;
 	  
 	case ID_REMOVEID:
 	  ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 2);
 	  /* update the status bar with the result of the operation */
-	   SetDlgItemText (hwnDlg, IDC_IDSTATUS, DialogueLang);
+	   SetDlgItemText (hwnDlg, IDC_IDSTATUS, IdStatus);
 	  break;
 	  
 	case ID_DONE:
@@ -4235,7 +4235,7 @@ ThotWindow  parent;
 {
   /* we only use one such dialog at the time */
   if (MakeIDHwnd)
-    EndDialog (hwnDlg, ID_DONE);
-  DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENU), parent, (DLGPROC) MakeIDDlgProc);
+    EndDialog (MakeIDHwnd, ID_DONE);
+  DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENU), NULL, (DLGPROC) MakeIDDlgProc);
 }
 #endif /* _WINDOWS */

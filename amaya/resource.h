@@ -664,7 +664,9 @@
 #define ID_REMOVEID                     1534
 #define IDC_IDC_TIDELEMNAME             1535
 #define IDC_IDELEMNAME                  1536
-#define IDC_IDAPPLYTOSEL                1537
+#define IDC_IDAPPLYTODOC                1538
+#define IDC_IDAPPLYTOSEL                1539
+#define IDC_IDSTATUS                    1540
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -711,7 +713,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        546
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1538
+#define _APS_NEXT_CONTROL_VALUE         1541
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
