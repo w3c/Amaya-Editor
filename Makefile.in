@@ -159,23 +159,35 @@ schemas : rebuild bin/str
 #
 # Rules to rebuild the libWWW package
 #
-
-libwww libwww.a :
+libwww :
 	@(if [ ! -d $(THOTDIR)/../$(LIBWWW) ] ; \
 	  then \
 	      cd $(THOTDIR)/.. ; cvs update -d $(LIBWWW) ; \
 	  fi)
-	@(if test ! -d $(LIBWWW) ; then $(MKDIR) $(LIBWWW) ;  fi)
-	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; cd $(LIBWWW) ; \
-	  unset LANG; \
+	@(if [ ! -d $(LIBWWW) ] ; then \
+			$(MKDIR) $(LIBWWW) ; \
+          fi)
+	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
+		cd $(LIBWWW) ; unset LANG; \
 	  if [ ! -f Makefile ] ; then \
-	  	../$$libwwwdir/configure --disable-shared --disable-expat \
+	  	../$$libwwwdir/configure --disable-shared \
 			-with-zlib="$$localdir/libz.a"; \
 	  fi)
+	@(cd $(LIBWWW)/modules/md5 ; $(MAKE) CC="$(CC)" \
+		CFLAGS="$(CFLAGS)")
+	@(cd $(LIBWWW)/modules/expat/xmlparse ; $(MAKE) CC="$(CC)" \
+		CFLAGS="$(CFLAGS)")
+	@(cd $(LIBWWW)/modules/expat/xmltok ; $(MAKE) CC="$(CC)" \
+		CFLAGS="$(CFLAGS)")
 	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" \
-		-I$(THOTDIR)/libpng/zlib all-am)
-	@($(CP) $(LIBWWW)/Library/src/.libs/libwww.a libwww.a)
-	@echo libwww.a reinstalled
+		-I$(THOTDIR)/libpng/zlib)
+	@($(MV) $(LIBWWW)/modules/md5/.libs/libmd5.a libmd5.a)
+	@($(MV) $(LIBWWW)/modules/expat/xmltok/.libs/libxmltok.a \
+		libxmltok.a)
+	@($(MV) $(LIBWWW)/modules/expat/xmlparse/.libs/libxmlparse.a \
+		libxmlparse.a)
+	@($(MV) $(LIBWWW)/Library/src/.libs/*.a .)
+	@echo libwww reinstalled
 
 #
 # Rules to rebuild the libjpeg package

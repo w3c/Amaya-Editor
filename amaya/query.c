@@ -156,9 +156,9 @@ char *filename;
     status = fcntl(fd_cachelock, F_SETLK, &lock);
   
   if (status == -1)
-    { 
+    {
       if (fd_cachelock > 0)
-	close (fd_cachelock);
+	  close (fd_cachelock);
       fd_cachelock = 0;
     }
   return (status);
@@ -428,9 +428,10 @@ AHTReqContext      *me;
 	       TtaFreeMemory ((void *) docid_status);
 	     }
 	 }
-       if (me->method != METHOD_PUT && HTRequest_outputStream (me->request))
-	 AHTFWriter_FREE (HTRequest_outputStream (me->request));
-       
+       /* JK: no longer needed in libwww 5.2.3
+	  if (me->method != METHOD_PUT && HTRequest_outputStream (me->request))
+	  AHTFWriter_FREE (HTRequest_outputStream (me->request));
+       */
        HTRequest_delete (me->request);
        
        if (me->output && me->output != stdout)
@@ -730,9 +731,12 @@ int                 status;
 	  }
 	ChopURL (me->status_urlName, me->urlName);
 
-	/* clean the output stream */
-	if (HTRequest_outputStream (me->request) != NULL) {
-	  AHTFWriter_FREE (HTRequest_outputStream (me->request));
+	/* @@ verify if this is important */
+	/* @@@ new libwww doesn't need this free stream while making
+	   a PUT. Is it the case everywhere or just for PUT? */
+	if (me->method != METHOD_PUT 
+	    && me->request->orig_output_stream != NULL) {
+	  AHTFWriter_FREE (me->request->orig_output_stream);
 	  if (me->output != stdout) { /* Are we writing to a file? */
 #ifdef DEBUG_LIBWWW
 	    fprintf (stderr, "redirection_handler: New URL is  %s, closing "
@@ -1332,8 +1336,7 @@ HTList             *c;
    ** action taken
    */
    HTConversion_add (c, "*/*", "www/present", HTSaveLocally,
-		     0.3, 0.0, 0.0);
-   
+		     0.3, 0.0, 0.0);  
 }
 
 
@@ -1384,9 +1387,6 @@ static void         AHTNetInit (void)
 **      Not done automaticly - may be done by application!
 */
 
-#ifdef AMAYA_WWW_CACHE  
-  HTNet_addBefore (HTCacheFilter, "http://*", NULL, HT_FILTER_MIDDLE);
-#endif /* AMAYA_WWW_CACHE */
   HTNet_addBefore (HTCredentialsFilter, "http://*", NULL, HT_FILTER_LATE);
   HTNet_addBefore (HTProxyFilter, NULL, NULL, HT_FILTER_LATE);
   HTHost_setActivateRequestCallback (AHTOpen_file);
@@ -1414,10 +1414,6 @@ static void         AHTNetInit (void)
 		 HT_FILTER_MIDDLE);
   HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY,
 		  HT_FILTER_MIDDLE);
-#ifdef AMAYA_WWW_CACHE
-  HTNet_addAfter (HTCacheUpdateFilter, "http://*", NULL, HT_NOT_MODIFIED, 
-		  HT_FILTER_MIDDLE);
-#endif /* AMAYA_WWW_CACHE */
 #ifdef AMAYA_LOST_UPDATE
   HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED,
 		  HT_FILTER_MIDDLE);
@@ -1468,11 +1464,10 @@ View view;
 #ifdef AMAYA_WWW_CACHE
   char *real_dir;
   char *cache_dir;
-  char *strptr;
+  char *tmp;
   int cache_size;
   int cache_expire;
   int cache_disconnect;
-  int i;
   boolean error;
   STRING ptr;
 
@@ -1480,36 +1475,20 @@ View view;
     /* don't do anything if we're not using a cache */
     return;
   /* temporarily close down the cache, purge it, then restart */
-  cache_dir = TtaStrdup ( (char *) HTCacheMode_getRoot ());
+  tmp = (char *) HTCacheMode_getRoot ();
+  /* don't do anything if we don't have a valid cache dir */
+  if (!tmp || *tmp == EOS)
+	  return;
+  cache_dir = TtaStrdup (tmp);
   cache_size = HTCacheMode_maxSize ();
   cache_expire = HTCacheMode_expires ();
   cache_disconnect = HTCacheMode_disconnected ();
 
   /* get something we can work on :) */
-  real_dir = TtaGetMemory (strlen (cache_dir) + 20);
-#ifdef _WINDOWS
-  if (!_strnicmp (cache_dir, "file:", 5))
-#else
-    if (!strncasecmp (cache_dir, "file:", 5))
-#endif /* _WINDOWS */
-      {
-	strptr = strchr (cache_dir, ':');
-	strptr++;
-	strptr++;
-      }
-
-  /* convert libwww's internal's cache dir name to one
-     corresponding to the filesystem */
-  i = 0;
-  while (cache_dir[i] != EOS)
-    {
-      if (cache_dir[i] == '/')
-	real_dir[i] = DIR_SEP;
-      else
-	real_dir[i] = cache_dir[i];
-      i++;
-    }
-  real_dir[i] = EOS;
+  tmp = HTWWWToLocal (cache_dir, "file:", NULL);
+  real_dir = TtaGetMemory (strlen (tmp) + 20);
+  strcpy (real_dir, tmp);
+  HT_FREE (tmp);
 
   /* safeguard... abort the operation if cache_dir doesn't end with
      CACHE_DIR_NAME */
@@ -1754,7 +1733,7 @@ int i;
 
  
   cache_dir = TtaGetMemory (strlen (real_dir) + 10);
-  strcpy (cache_dir, real_dir);
+  sprintf (cache_dir, "file:%s", real_dir);
 
   /* get the cache size (or use a default one) */
   strptr = (char *) TtaGetEnvString ("CACHE_SIZE");
@@ -1972,14 +1951,12 @@ char               *AppVersion;
 
    /* Register the default set of transfer encoders and decoders */
    HTTransferEncoderInit (transfer_encodings);
-   /* ignore all other encoding formats (or libwww will send them
+   HTFormat_setTransferCoding (transfer_encodings);
+   /* Register the default set of content encoders and decoders */
+   HTContentEncoderInit (content_encodings);
+   /* ignore all other encoding formats (or libwww will send them 
       thru a blackhole otherwise */
    HTCoding_add (content_encodings, "*", NULL, HTIdentityCoding, 1.0);
-
-   HTFormat_setTransferCoding(transfer_encodings);
-   
-   /* Register the default set of content encoders and decoders */
-   HTContentEncoderInit(content_encodings);
    if (HTList_count(content_encodings) > 0)
      HTFormat_setContentCoding(content_encodings);
    else 
@@ -2080,8 +2057,10 @@ void                QueryInit ()
    HTTimer_registerSetTimerCallback ((void *) AMAYA_SetTimer);
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
 #endif /* !_WINDOWS */
-   
+
+   /*** @@@@
    WWW_TraceFlag = 0;
+   ***/
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
@@ -2526,8 +2505,6 @@ char 	     *content_type;
      {
        me->method = METHOD_POST;
        HTRequest_setMethod (me->request, METHOD_POST);
-       /* don't use the cache for post requests */
-       HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
      }
    else 
      {
@@ -2853,7 +2830,6 @@ void               *context_tcbf;
 		       HTAtom_for (tmp));
    HTRequest_setOutputFormat (me->request,
 			      HTAtom_for (tmp));
-
    /* define other request characteristics */
 #ifdef _WINDOWS
    HTRequest_setPreemptive (me->request, NO);
@@ -2958,6 +2934,7 @@ int                 docid;
      }
 }
 
+/* @@@ the docid parameter isn't used... clean it up */
 /*----------------------------------------------------------------------
   StopAllRequests
   stops (kills) all active requests. We use the docid 
