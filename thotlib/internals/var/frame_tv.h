@@ -45,7 +45,7 @@ THOT_EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
 THOT_EXPORT WNDCLASSEX   RootShell;
 THOT_EXPORT HFONT        DefaultFont; /* default Font                */
 THOT_EXPORT HDC          TtDisplay;
-THOT_EXPORT HPALETTE     TtCmap;	    /* Table des couleurs pour Thot  */
+THOT_EXPORT HPALETTE     TtCmap;      /* Table des couleurs pour Thot  */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT WIN_GC_BLK   TtWhiteGC;
 THOT_EXPORT WIN_GC_BLK   TtBlackGC;

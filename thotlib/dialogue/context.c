@@ -10,7 +10,7 @@
  *     Handle the context of documents.
  *
  * Author: I. Vatton (INRIA)
- *
+ *         R. Guetari (W3C/INRIA) Windows 95/NT routines.
  */
 
 #include "thot_gui.h"
@@ -108,10 +108,15 @@ ThotGC              gc;
  *      WinInitColors initialize the color table depending on the
  *         device capabilities under MS-Windows.
  ----------------------------------------------------------------------*/
-void                WinInitColors (void)
+#ifdef __STDC__
+void WinInitColors (void)
+#else /* __STDC__ */
+void WinInitColors ()
+#endif /* __STDC__ */
 {
-   int                 i;
-   static int          initialized = 0;
+   int        i;
+   static int initialized = 0;
+   char       msg[200];
 
    if (initialized)
       return;
@@ -120,51 +125,41 @@ void                WinInitColors (void)
 
    WIN_GetDeviceContext (-1);
 
+   sprintf (msg, "Palette operation: %d", GetDeviceCaps (TtDisplay, RASTERCAPS));
+   MessageBox (WIN_Main_Wd, msg, tszAppName, MB_OK);
+
    /*
     * Create initialize and install a color palette for
     * the Thot set of colors.
     */
+
    /* ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY)); */
    ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
 
    ptrLogPal->palVersion             = 0x300;
    ptrLogPal->palNumEntries          = MAX_COLOR;
-   ptrLogPal->palPalEntry[0].peRed   = 255;
-   ptrLogPal->palPalEntry[0].peGreen = 255;
-   ptrLogPal->palPalEntry[0].peBlue  = 255;
-   ptrLogPal->palPalEntry[0].peFlags = 0;
-   ptrLogPal->palPalEntry[1].peRed   = 0;
-   ptrLogPal->palPalEntry[1].peGreen = 0;
-   ptrLogPal->palPalEntry[1].peBlue  = 0;
-   ptrLogPal->palPalEntry[1].peFlags = 0;
 
-   for (i = 2; i < MAX_COLOR; i++) {
+   for (i = 0; i < MAX_COLOR; i++) {
        ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
        ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
        ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
-       ptrLogPal->palPalEntry[i].peFlags = 0;
+       ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
    }
 
-   TtCmap = CreatePalette (ptrLogPal);
+   TtCmap    = CreatePalette (ptrLogPal);
  
-  if (TtCmap == NULL) {
+   if (TtCmap == NULL) {
       fprintf (stderr, "couldn't CreatePalette\n");
-      WinErrorBox ();
-   } else {
-          if (SelectPalette (TtDisplay, TtCmap, TRUE))
-	     if (RealizePalette (TtDisplay))
-	        UpdateColors (TtDisplay);
-   }
+      WinErrorBox (WIN_Main_Wd);
+   } 
+
+   ResizePalette (TtCmap, MAX_COLOR);
 
    /* TtaFreeMemory (ptrLogPal); */
 
    /* fill-in the Pix_Color table */
-   for (i = 0; i < (sizeof (Pix_Color) / sizeof (Pix_Color[0])); i++)
+   for (i = 0; i < MAX_COLOR; i++) 
        Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
-    /*
-      Pix_Color[i] = GetNearestColor(TtDisplay,
-      RGB(RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
-      */
 
    /* initialize some standard colors. */
    Black_Color     = GetNearestColor (TtDisplay, PALETTERGB (0, 0, 0));
@@ -419,7 +414,7 @@ char               *name;
 	found = FindColor (0, name, "ScrollColor", "Grey", &Scroll_Color);
 	/* color for the selection menu */
 	found = FindColor (0, name, "MenuBgColor", "Grey", &BgMenu_Color);
-	/* olor for the selection */
+	/* color for the selection */
 #       ifndef _WINDOWS
 	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
 #       else  /* _WINDOWS */
@@ -639,7 +634,7 @@ int                 dy;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    HDC                 hdc;
 
    hdc = GetDC (WIN_Main_Wd);
@@ -648,16 +643,16 @@ int                 dy;
       TtWDepth = GetDeviceCaps (hdc, BITSPIXEL);
 
    ReleaseDC (WIN_Main_Wd, hdc);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    XSetErrorHandler (XWindowError);
    XSetIOErrorHandler (XWindowFatalError);
    TtScreen = DefaultScreen (TtDisplay);
    TtWDepth = DefaultDepth (TtDisplay, TtScreen);
    TtRootWindow = RootWindow (TtDisplay, TtScreen);
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
-#endif
+#  endif
 
    InitDocColors (name);
    InitColors (name);
@@ -681,9 +676,9 @@ void                InitDocContexts ()
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++) {
        FrRef[i] = 0;
-#ifdef _WINDOWS
+#      ifdef _WINDOWS
        FrMainRef[i] = 0;
-#endif /* _WINDOWS */
+#      endif /* _WINDOWS */
    }
    PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
    DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */

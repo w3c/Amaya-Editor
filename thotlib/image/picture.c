@@ -307,7 +307,7 @@ PictInfo           *imageDesc;
   unsigned int      valuemask;
 # endif /* _WINDOWS */
 # ifdef _WINDOWS
-  HDC     hDC;
+  HDC     hMemDC;
   HBITMAP hTmpBitmap;
 # endif /* _WINDOWS */
   int               delta;
@@ -329,19 +329,19 @@ PictInfo           *imageDesc;
 	{
 	case RealSize:
 	case ReScale:
-#         ifndef _WINDOWS
-	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
-#         else /* _WINDOWS */
-          hTmpBitmap = CopyImage (pixmap, IMAGE_BITMAP, w, h, LR_COPYRETURNORG);
-	  hDC = CreateCompatibleDC (TtDisplay);
-	  SelectObject (hDC, hTmpBitmap);
-	  SelectPalette (TtDisplay, TtCmap, TRUE);
-          RealizePalette (TtDisplay);
-	  BitBlt (TtDisplay, xFrame, yFrame, w, h, hDC, 0, 0, SRCCOPY);
-          DeleteDC (hDC);
-          DeleteObject (hTmpBitmap);
-#         endif /* _WINDOWS */
-	  break;
+#            ifndef _WINDOWS
+	     XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
+#            else /* _WINDOWS */
+	     hTmpBitmap = CopyImage (pixmap, IMAGE_BITMAP, w, h, LR_COPYRETURNORG);
+	     hMemDC = CreateCompatibleDC (TtDisplay);
+	     
+	     SelectObject (hMemDC, hTmpBitmap);
+	     
+	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+	     DeleteDC (hMemDC);
+	     DeleteObject (hTmpBitmap);
+#            endif /* _WINDOWS */
+	     break;
 	  
 	case FillFrame:
 	case XRepeat:

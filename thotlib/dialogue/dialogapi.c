@@ -570,9 +570,10 @@ int        ref;
    occured.                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WinErrorBox (void)
+void WinErrorBox (HWND hWnd)
 #else  /* !__STDC__ */
-void WinErrorBox ()
+void WinErrorBox (hWnd)
+HWND hWnd;
 #endif /* __STDC__ */
 {
    int                 msg;
@@ -592,7 +593,7 @@ void WinErrorBox ()
        sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
 
    fprintf (stderr, str);
-   MessageBox (WIN_Main_Wd, str, tszAppName, MB_OK);
+   MessageBox (hWnd, str, tszAppName, MB_OK);
 }
 
 /*----------------------------------------------------------------------

@@ -1085,7 +1085,7 @@ LPARAM      lParam;
                  int   cyTB ;
                  int   x, y ;
                  int   index = 0;
-                 int   cyTxtZone = 0 ;
+                 int   cyTxtZone ;
                  DWORD dwStyle ;
                  RECT  rWindow ;
 
@@ -1269,13 +1269,15 @@ LPARAM lParam;
      }
 
      switch (mMsg) {
+	 /*
           case WM_CREATE: {
                HDC hdc = GetDC (hwnd);
                SelectPalette (hdc, TtCmap, TRUE);
                RealizePalette (hdc);
                break;
 	  }
-
+	  */
+	  
           case WM_PAINT: /* Some part of the Client Area has to be repaint. */
 	       saveHdc = TtDisplay;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);

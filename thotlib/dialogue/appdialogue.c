@@ -1731,7 +1731,6 @@ void                (*procedure) ();
 
                   w = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
                                     0, 0, 0, 0, FrMainRef [frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
-                  ShowWindow (w, SW_SHOWNORMAL);
                   PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #                 endif /* _WINDOWS */
 	       }
@@ -2043,8 +2042,8 @@ int                 doc;
 	     Main_Wd = CreateWindowEx (0L, tszAppName,	    /* window class name       */
 				       tszAppName,	    /* window caption          */
 				       WS_OVERLAPPEDWINDOW, /* window style            */
-				       0,	            /* initial x pos           */
-				       0,	            /* initial y pos           */
+				       CW_USEDEFAULT,	    /* initial x pos           */
+				       CW_USEDEFAULT,	    /* initial y pos           */
 				       large,	            /* initial x size          */
 				       haut,	            /* initial y size          */
 				       NULL,		    /* parent window handle    */
@@ -2052,7 +2051,7 @@ int                 doc;
 				       hInstance,	    /* program instance handle */
 				       NULL);	            /* creation parameters     */
 	     if (Main_Wd == 0)
-		WinErrorBox ();
+		WinErrorBox (WIN_Main_Wd);
 	     else {
 		  fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
 		  /* store everything. */
@@ -2064,7 +2063,7 @@ int                 doc;
                   
                   menu_bar = CreateMenu ();
                   if (!menu_bar) 
-                     WinErrorBox ();
+                     WinErrorBox (Main_Wd);
                   else 
 		       WinMenus[frame] = menu_bar;
 	     }

@@ -264,12 +264,16 @@ ThotColorStruct colrs[256];
 	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
 	   return (NULL);
 	for (i = 0; i < GifScreen.BitPixel; i++) {
+#           ifndef _WINDOWS
 	    colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
 	    colrs[i].green = GifScreen.ColorMap[1][i] * scale;
 	    colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
-#           ifndef _WINDOWS
 	    colrs[i].pixel = i;
 	    colrs[i].flags = DoRed | DoGreen | DoBlue;
+#           else /* _WINDOWS */
+	    colrs[i].red   = GifScreen.ColorMap[0][i];
+	    colrs[i].green = GifScreen.ColorMap[1][i];
+	    colrs[i].blue  = GifScreen.ColorMap[2][i];
 #           endif /* !_WINDOWS */
 	}
 
@@ -320,12 +324,16 @@ ThotColorStruct colrs[256];
 	   if (ReadColorMap (fd, bitPixel, localColorMap))
 	      return (NULL);
 	   for (i = 0; i < bitPixel; i++) {
+#              ifndef _WINDOWS
 	       colrs[i].red   = localColorMap[0][i] * scale;
 	       colrs[i].green = localColorMap[1][i] * scale;
 	       colrs[i].blue  = localColorMap[2][i] * scale;
-#              ifndef _WINDOWS
 	       colrs[i].pixel = i;
 	       colrs[i].flags = DoRed | DoGreen | DoBlue;
+#              else /* _WINDOWS */
+	       colrs[i].red   = localColorMap[0][i];
+	       colrs[i].green = localColorMap[1][i];
+	       colrs[i].blue  = localColorMap[2][i];
 #              endif /* _WINDOWS */
 	   }
 	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++) {
@@ -1022,10 +1030,9 @@ ThotColorStruct    *colrs;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Pixmap              DataToPixmap (char *image_data, int width, int height, int num_colors,
-				  ThotColorStruct colrs[256])
+Pixmap DataToPixmap (char *image_data, int width, int height, int num_colors, ThotColorStruct colrs[256])
 #else  /* __STDC__ */
-Pixmap              DataToPixmap (image_data, width, height, num_colors, colrs)
+Pixmap DataToPixmap (image_data, width, height, num_colors, colrs)
 char               *image_data;
 int                 width;
 int                 height;
@@ -1034,7 +1041,9 @@ ThotColorStruct     colrs[256];
 
 #endif /* __STDC__ */
 {
+
 #  ifndef _WINDOWS
+
    int                 i, size;
    int                 delta, not_right_col, not_last_row;
    Pixmap              Img;
@@ -1165,7 +1174,9 @@ ThotColorStruct     colrs[256];
    TtaFreeMemory ((char*) Mapping);
 
    return (Img);
+
 #  else /* _WINDOWS */
+
    static int     cbPlanes, cbBits;
    int            i, j, ret = 0, imageIndex, mapIndex;
    int            Mapping [MAX_COLOR];
@@ -1177,16 +1188,14 @@ ThotColorStruct     colrs[256];
    cbBits   = GetDeviceCaps (hdcMem, BITSPIXEL);
    cbPlanes = GetDeviceCaps (hdcMem, PLANES);
    DeleteDC (hdcMem);
-    
-   /* debugprint ("cbBits= %d cbPlanes=%d", cbBits, cbPlanes); */
-   
-   bmBits = malloc (width);
+
+   bmBits = (BYTE*) malloc (width * height * sizeof (BYTE));
    if (bmBits == NULL)
       return NULL;
     
    for (i = 0; i < MAX_COLOR; i++)
        Mapping [i] = -1;
-    
+
    bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
    bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
 
@@ -1198,28 +1207,24 @@ ThotColorStruct     colrs[256];
    hdcMemOrig = CreateCompatibleDC(NULL);       /* un hdc mem compatible ecran pour le bm original */
    hdcMemDest = CreateCompatibleDC(NULL);       /* un hdc mem pour le bm final */
    
-   /*
-   oldBm1 = SelectObject(hdcMemDest, bmp);
-   oldBm2 = SelectObject(hdcMemOrig, bmpLine);
-   */
    SelectObject (hdcMemDest, bmp);
    SelectObject (hdcMemOrig, bmpLine);
-   
+
    for (j = 0; j < height; j++) {
        for (i = 0; i < width; i++) {
 	   imageIndex = image_data [i + j * width];
 	   if (Mapping [imageIndex] != -1)
-	       mapIndex = Mapping [imageIndex];
+	      mapIndex = Mapping [imageIndex];
 	   else {
-	       mapIndex = TtaGetThotColor (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
-	       Mapping [imageIndex] = mapIndex;  
+	        mapIndex = TtaGetThotColor (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
+	        Mapping [imageIndex] = mapIndex;  
 	   }    
 	   bmBits[i] = mapIndex;
        }    
-       ret = SetBitmapBits(bmpLine, width, bmBits);
+       ret = SetBitmapBits (bmpLine, width, bmBits);
        BitBlt (hdcMemDest, 0, j, width, 1, hdcMemOrig, 0, 0, SRCCOPY);
    }
-        
+
    /* Cleanup */
    /*.........*/
    DeleteObject (bmpLine);
