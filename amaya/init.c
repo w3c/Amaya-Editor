@@ -386,7 +386,7 @@ char * DocumentTypeString (Document document)
       break;
     }
 
-  if (!result) /* try the profiles */
+  if (!result && DocumentMeta[document]) /* try the profiles */
     {
       isXml = DocumentMeta[document]->xmlformat;
       switch (TtaGetDocumentProfile (document))
