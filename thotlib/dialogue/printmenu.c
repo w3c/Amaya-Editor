@@ -65,24 +65,22 @@
 
 static char         Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
-static int          defPaperPrint = TRUE;
-static int          defManualFeed = FALSE;
-static int          defFirstPage = 0;
-static int          defLastPage = 999;
-static int          defNbCopies = 1;
-static int          defReduction = 100;
-static int          defPagesPerSheet = 1;
-static int          defPaginate = TRUE;
-static int          defPageSize= PP_A4;
+static int          defPaperPrint;
+static int          defManualFeed;
+static int          defFirstPage;
+static int          defLastPage;
+static int          defNbCopies;
+static int          defReduction;
+static int          defPagesPerSheet;
+static int          defPaginate;
+static int          defPageSize;
+static Name         PresSchema;
 
 /*----------------------------------------------------------------------
-  Print
-  Interface to the Print program.
+  Print: interface to the Print program.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         Print (char *name, char *dir, char *thotSch, char *thotDoc, char *realName, char *output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
-
 #else  /* __STDC__ */
 static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
 char               *name;
@@ -105,7 +103,6 @@ int                 blackAndWhite;
 int                 repaginate;
 char               *viewsToPrint;
 #endif /* __STDC__ */
-
 {
 #ifndef _WINDOWS
    char                cmd[1024];
@@ -273,6 +270,7 @@ Document document;
        defPagesPerSheet = 1;
        defPageSize= PP_A4;
        defPaginate = TRUE;
+       PresSchema[0] = EOS;
      }
 
    if (document != PrintingDoc || document == 0)
@@ -357,18 +355,22 @@ char               *viewNames;
    PtrDocument         pDoc;
    PathBuffer          dirName,tmpDirName;
    Name                docName,tmpDocName;
-   boolean	       docReadOnly;
-   boolean             ok;
    Name                savePres, newPres;
    ThotPid             pid = ThotPid_get ();
    char                cmd[100];
    char               *dirString;
    int                 orientation, lg;
+   boolean	       docReadOnly;
+   boolean             ok;
 
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
    strcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
-   ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
+   if (PresSchema[0] != '\0')
+     strcpy (newPres, PresSchema);
+   else
+     ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
+     
    if (newPres[0] != '\0')
       strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
    if (ThotLocalActions[T_rextprint]!=NULL && 
@@ -641,7 +643,7 @@ int value;
 #ifdef __STDC__
 void                TtaSetPrintCommand (char *command)
 #else  /* __STDC__ */
-void                TtaSetPrintCommand (/*char *command*/)
+void                TtaSetPrintCommand (command)
 char *command;
 #endif /* __STDC__ */
 {
@@ -655,7 +657,7 @@ char *command;
 #ifdef __STDC__
 void                TtaGetPrintCommand (char *command)
 #else  /* __STDC__ */
-void                TtaGetPrintCommand (/*char *command*/)
+void                TtaGetPrintCommand (command)
 char *command;
 #endif /* __STDC__ */
 {
@@ -667,12 +669,29 @@ char *command;
 
 
 /*----------------------------------------------------------------------
+  TtaSetPrintSchema fixes the printing schema.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetPrintSchema (char *name)
+#else  /* __STDC__ */
+void                TtaSetPrintSchema (name)
+char *name;
+#endif /* __STDC__ */
+{
+  if (strlen(name) >= MAX_NAME_LENGTH)
+    TtaError(ERR_invalid_parameter);
+  else
+    strcpy (PresSchema, name);
+}
+
+
+/*----------------------------------------------------------------------
   TtaSetPrintCommand sets the path of ps file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetPsFile (char *path)
 #else  /* __STDC__ */
-void                TtaSetPsFile (/*char *path*/)
+void                TtaSetPsFile (path)
 char *command;
 #endif /* __STDC__ */
 {

@@ -23,7 +23,7 @@ MENUS
 	view:1 File button:BSave -> SaveDocument;
 	view:1 File button:BSaveAs -> SaveDocumentAs;
 	view:1 File Separator;
-	view:1 File button:BPrint -> TtcPrint;
+	view:1 File button:BPrint -> PrintAs;
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;
 	view:1 File Separator;
 	view:1 File button:BClose -> TtcCloseDocument;

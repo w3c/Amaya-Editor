@@ -61,9 +61,11 @@ Document                document;
    Attribute		HrefAttr, IntLinkAttr;
    AttributeType	attrType;
    int			length;
-   char			*text;
+   int                  status;
+   char		       *text;
 
-
+   /* Memorize the current status of the document */
+   status = TtaIsDocumentModified (document);
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
    elType.ElTypeNum = HTML_EL_BODY;
@@ -109,6 +111,90 @@ Document                document;
 	   }
 	 }
      }
+   /* Reset document status */
+   if (!status)
+     TtaSetDocumentUnmodified (document);
+}
+
+/*----------------------------------------------------------------------
+  CheckPrintingDocument reinitialize printing parameters as soon as
+  the printing document changes.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CheckPrintingDocument (Document document)
+#else
+static void         CheckPrintingDocument (document)
+Document            document;
+#endif
+{
+   char             docName[MAX_LENGTH];
+   char            *ptr, suffix[MAX_LENGTH];
+   int              lg;
+
+   if (docPrint != document)
+     {
+       /* initialize print parameters */
+       docPrint = document;
+
+       /* define the new default PS file */
+       ptr = TtaGetEnvString ("TMPDIR");
+       if (ptr != NULL && TtaCheckDirectory (ptr))
+	 {
+	   strcpy(PSdir,ptr);
+	   lg = strlen(PSdir);
+	   if (PSdir[lg - 1] == DIR_SEP)
+	     PSdir[--lg] = '\0';
+	 }
+       else
+	 {
+#ifdef _WINDOWS
+	   strcpy (PSdir,"C:\\TEMP");
+#else  /* !_WINDOWS */
+	   strcpy (PSdir,"/tmp");
+#endif /* !_WINDOWS */
+	   lg = strlen (PSdir);
+	 }
+       strcpy (docName, TtaGetDocumentName (document));
+       ExtractSuffix (docName, suffix);
+       sprintf (&PSdir[lg], "/%s.ps", docName);
+       TtaSetPsFile (PSdir);
+       /* define the new default PrintSchema */
+       numberLinks = FALSE;
+       withToC = FALSE;
+       TtaSetPrintSchema ("");
+       /* no manual feed */
+       ManualFeed = PP_OFF;
+       TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   PrintAs prints the document using predefined parameters.
+   ----------------------------------------------------------------------*/  
+#ifdef __STDC__
+void                PrintAs (Document document, View view)
+#else  /* __STDC__ */
+void                PrintAs (document, view)
+Document            document;
+#endif /* __STDC__ */
+{
+   PathBuffer          viewsToPrint;
+
+   CheckPrintingDocument (document);
+   strcpy (viewsToPrint, "Formatted_view ");
+   if (withToC)
+     strcat (viewsToPrint, "Table_of_contents ");
+   if (numberLinks)
+     {
+       /* display numbered links */
+       if (PageSize == PP_A4)
+	 TtaSetPrintSchema ("HTMLPLP");
+       else
+	 TtaSetPrintSchema ("HTMLPLPUS");
+       strcat (viewsToPrint, "Links_view ");
+     }
+   TtaPrint (docPrint, viewsToPrint);
 }
 
 
@@ -122,7 +208,6 @@ void                CallbackPrint (ref, typedata, data)
 int                 ref;
 int                 typedata;
 char               *data;
-
 #endif /* __STDC__ */
 {
   int                 val;
@@ -143,12 +228,7 @@ char               *data;
 	  TtaSetPrintParameter (PP_PaperSize, PageSize);
 	  TtaSetPrintCommand (pPrinter);
 	  TtaSetPsFile (PSdir);
-	  if (numberLinks)
-	    SetInternalLinks (docPrint);		
-	  if (withToC)
-	    TtaPrint (docPrint, "Formatted_view Table_of_contents");
-	  else
-	    TtaPrint (docPrint, "Formatted_view");
+	  PrintAs (docPrint, 1);
 	  break;
 	case 0:
 	  PaperPrint = TtaGetPrintParameter (PP_Destination);
@@ -176,9 +256,10 @@ char               *data;
 	  withToC = !withToC;
 	  break;
 	case 2:
-	  /* Manual feed option */
+	  /* numberLinks option */
+	  if (!numberLinks)
+	    SetInternalLinks (docPrint);
 	  numberLinks = !numberLinks;
-	  break;
 	  break;
 	}
       break;
@@ -249,16 +330,13 @@ void                InitPrint ()
 
    PageSize = PP_A4;
    PaperPrint = PP_PRINTER;
-   ManualFeed = PP_OFF;
    TtaSetPrintParameter (PP_Destination, PaperPrint);
-   TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
    TtaSetPrintParameter (PP_PaperSize, PageSize);
    TtaSetPrintCommand (pPrinter);
-   numberLinks = FALSE;
-   withToC = FALSE;
 }
 
 /*----------------------------------------------------------------------
+  SetupAndPrint sets printing parameters and starts the printing process
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetupAndPrint (Document document, View view)
@@ -266,45 +344,16 @@ void                SetupAndPrint (Document document, View view)
 void                SetupAndPrint (document, view)
 Document            document;
 View                view;
-
 #endif
 {
    char             bufMenu[MAX_LENGTH];
-   char            *ptr, suffix[MAX_LENGTH];
-   int              i, lg;
+   int              i;
 
    /* Print form */
-   if (docPrint != document)
-     {
-       /* initialize print parameters */
-       docPrint = document;
-
-       /* read default tmpdir variable */
-       if (ptr != NULL && TtaCheckDirectory (ptr))
-	 {
-	   strcpy(PSdir,ptr);
-	   lg = strlen(PSdir);
-	   if (PSdir[lg - 1] == DIR_SEP)
-	     PSdir[--lg] = '\0';
-	 }
-       else
-	 {
-#ifdef _WINDOWS
-	   strcpy (PSdir,"C:\\TEMP");
-#else  /* !_WINDOWS */
-	   strcpy (PSdir,"/tmp");
-#endif /* !_WINDOWS */
-	   lg = strlen (PSdir);
-	 }
-       strcpy (bufMenu, TtaGetDocumentName (document));
-       ExtractSuffix (bufMenu, suffix);
-       sprintf (&PSdir[lg], "/%s.ps", bufMenu);
-       TtaSetPsFile (PSdir);
-     }
-
+   CheckPrintingDocument (document);
    TtaNewSheet (basePrint+NumFormPrint, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
-	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
+	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 2, 'L', D_CANCEL);
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
    i += strlen (&bufMenu[i]) + 1;
