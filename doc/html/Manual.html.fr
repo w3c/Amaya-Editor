@@ -81,13 +81,13 @@ décrits.</p>
   </li>
   <li><a href="#L932">Éditer des pages Web avec Amaya</a> 
     <ul>
-      <li><a href="Keyboard.html.fr#Keyboard">Entrer des caractères
-        ISO-Latin-1</a> 
+      <li><a href="Keyboard.html.fr#Keyboard">Entrer des caractères ISO-Latin
+        et Unicode</a> 
         <ul>
           <li><a href="Keyboard.html.fr#Standard">Le support multi-touches
-            standard</a></li>
+            standard des versions Motif et GTK</a></li>
           <li><a href="Keyboard.html.fr#Optional">Le support multi-touches
-            optionnel</a></li>
+            optionnel pour les versions Motif et Windows</a></li>
         </ul>
       </li>
       <li><a href="Creating.html.fr#Creating">Créer de nouveaux éléments</a> 
@@ -285,7 +285,7 @@ décrits.</p>
 
 <p>Le paramètre [-display host] est optionnel. Il détermine l'écran hôte
 lointain où Amaya doit afficher des pages Web. Si ce paramètre est omis,
-Amaya affiche dans l'écran  local.</p>
+Amaya affiche dans l'écran&nbsp; local.</p>
 
 <p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de
 fichier ou le URI du premier document qu' <strong>Amaya</strong> doit
@@ -401,7 +401,7 @@ utiliser.</a></p>
 
 <p><small><a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
- ©  2000 <a href="http://www.w3.org/">W3C</a> (<a
+&nbsp;©&nbsp; 2000 <a href="http://www.w3.org/">W3C</a> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
 href="http://www.inria.fr/">INRIA</a>, <a
 href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a

@@ -3,36 +3,45 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <title>Entrer des caracteres ISO-Latin-1 dans Amaya</title>
+  <title>Entrer des caracteres ISO-Latin-1 et Unicode dans Amaya</title>
   <style type="text/css">
 .name { background-color : #FFF6C1}</style>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p><a href="../../"><img border="0" alt="W3C" src="../images/w3c_home"
-/></a> <a href="../"><img border="0" src="../images/amaya.gif" alt="Amaya"
-/></a> <a href="Manual.html.fr"></a></p>
+<p><a href="../../"><img border="0" alt="W3C" src="../images/w3c_home" /></a>
+<a href="../"><img border="0" src="../images/amaya.gif" alt="Amaya" /></a> <a
+href="Manual.html.fr"></a></p>
 
 <div id="Keyboard">
-<h3>Entrer des caractères ISO-Latin-1 dans Amaya</h3>
+<h3>Entrer des caractères ISO-Latin et Unicode dans Amaya</h3>
 
 <p>Pour obtenir un espace non sécable avec Amaya, vous devez taper la touche
 <code>Control</code> avec la touche <code>Esspace</code>. Ce caractère sera
 <a href="Browsing.html.fr#entite">sauvé comme une entité</a>
-(<code>&amp;nbsp;</code>) seulement si l'encodage du document est l'ASCII.</p>
+(<code>&amp;nbsp;</code>).</p>
 
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
-depuis le clavier, Amaya fournit deux méthodes d'entrée à multi-touches. Le
-choix d'une méthode plutôt qu'une autre, se fait par l'utilisateur grâce à
-l'entrée de dialogue <strong>"Activer multi-key"</strong> dans <a
-href="Configure.html.fr#Enable">Spécial/Préférences/Générales</a>. Quand
-c'est permis, le <a href="#Optional">support multi-touches optionnel</a> est
-activé et le support multi-touches standard est désactivé.</p>
+depuis le clavier, Amaya utilise le support standard fournit par le système
+(Operating System). Un support multi-touches est aussi fourni pour les
+versions Motif et Windows.</p>
 
-<h3><a name="Standard">Le support multi-touches standard</a></h3>
+<p>Quand les deux méthodes sont disponibles, le choix d'une méthode plutôt
+qu'une autre, se fait par l'utilisateur grâce à l'entrée de dialogue
+<strong>"Activer multi-key"</strong> dans <a
+href="Configure.html.fr#Enable">Spécial/Préférences/Générales</a>. Quand le
+<a href="#Optional">support multi-touches optionnel</a> est activé et le
+support multi-touches standard est désactivé.</p>
 
-<p>Pour les caractères ISO-Latin-1 indisponibles sur le clavier standard, il
+<p>On donne une description des deux méthodes d'insertion de caractères par
+combinaison de touches, pour les autres méthodes il faut se reporter aux
+documentations du systéme (Operating System).</p>
+
+<h3><a name="Standard">Le support multi-touches standard des versions Motif
+et GTK</a></h3>
+
+<p>Pour les caractères ISO-Latin indisponibles sur le clavier standard, il
 existe normalement une méthode qui insère ce caractère par une séquence de
 deux caractères disponibles précédés par la touche spéciale
 <strong>Composer</strong>. Sur Amaya il est possible d'inverser la première
@@ -492,7 +501,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td>160</td>
       <td>&lt;Ctrl&gt; space</td>
       <td>(aucun)</td>
-      <td> </td>
+      <td>&nbsp;</td>
     </tr>
     <tr>
       <td class="name">not</td>
@@ -693,7 +702,10 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
   </tbody>
 </table>
 
-<h3><a name="Optional">Support multi-touches optionnel</a></h3>
+<p></p>
+
+<h3><a name="Optional">Support multi-touches optionnel pour les versions
+Motif et Windows</a></h3>
 
 <p>La méthode d'entrée multi-touches optionnelle est basée sur deux séquences
 commençant par "l'accent" suivi de la "lettre". Par exemple pour obtenir un
@@ -708,9 +720,9 @@ disponibles :</p>
       </td>
       <td><p>Code</p>
       </td>
-      <td><p>   Première touche</p>
+      <td><p>&nbsp;&nbsp;&nbsp;Première touche</p>
       </td>
-      <td><p>  Seconde touche  </p>
+      <td><p>&nbsp;&nbsp;Seconde touche&nbsp;&nbsp;</p>
       </td>
       <td><p>Sortie</p>
       </td>

@@ -54,16 +54,6 @@ OL OL OL LI	{
 	list-style-type:	lower-roman;
 	}	
 
-TABLE, TBODY, TR, TD	{	
-	font-size:	1em;
-	word-spacing:	normal;
-	letter-spacing:	normal;
-	text-transform:	none;
-	font-family:	Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.58;
-	}	
-
-
 	/* end body type */	
 
 PRE, CODE, TT	{ font-size:	1.17em; }
@@ -105,13 +95,19 @@ TABLE {
 	border-color: black;
 }
 
+TABLE.characters {border : thin solid;
+width : 100%;
+border-color: black;
+}
+
 TD {
 	border-collapse: separate;
 	border : none;
-	border-left : none;
-	border-right : none;
-	border-top: thin solid;
-	border-bottom: none;
+	}
+
+.characters TD {
+border : thin solid black;
+padding: 4px
 }
 
 TD.Title {
@@ -126,6 +122,7 @@ TD.Title2 {
 	font-weight : bold;
 	border-left: thin solid;
 }
+
 TD.Second {
 	border-left: thin solid;
 }
@@ -206,7 +203,7 @@ H6	{
 	text-transform:	none;
 	}	
 		
-TFOOT, THEAD	{	
+/*TFOOT, THEAD	{	
 	font-size:	1em;
 	word-spacing:	normal;
 	letter-spacing:	normal;
@@ -224,7 +221,7 @@ TH	{
 	text-transform:	none;
 	font-family:	Verdana, Myriad Web, Syntax, sans-serif;
 	font-size-adjust:	.53;
-	}	
+	}	*/
 		
 HR	{	
 	visibility: visible;
@@ -2429,51 +2426,6 @@ HR {
 	border-right: 0;
 	text-align: left;
 	width: 100%;
-}
-
-CENTER {
-	margin-left: 0;
-	margin-right: 0;
-	padding-left: 0;
-	padding-right: 0;
-	border-left: 0;
-	border-right: 0;
-	text-align: left;
-}
-
-COL,
-COLGROUP,
-TABLE,
-TBODY,
-TD,
-TFOOT,
-TH,
-THEAD,
-TR {
-	margin-left: 0;
-	margin-right: 0;
-	padding-left: 0;
-	padding-right: 0;
-	border-left: 0;
-	border-right: 0;
-	float: none;
-	clear: none;
-}
-
-TABLE {
-	text-align: left;
-}
-
-TD {
-	text-align: left;
-}
-
-TH {
-	text-align: left;
-}
-
-CAPTION {
-	text-align: left;
 }
 
 BODY {
