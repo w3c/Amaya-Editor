@@ -11,7 +11,9 @@ STRUCT
   { An annotation is made of a description, an HTML body, and, optionally
     a thread }
 	
-  Annot = BEGIN
+  Annot
+     (ATTR Charset = Text) = 
+          BEGIN
 	  Description;
 	  Body = BEGIN 
                  ? HTML;

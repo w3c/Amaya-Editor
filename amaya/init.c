@@ -2700,7 +2700,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	      newdoc = doc;
 	      /* @@ IV: we are not currently able to use the XML parser for 
 		 annotations */
-	      isXML = FALSE;
+	      /* isXML = FALSE; */
 	    }
 #endif /* ANNOTATIONS */
 	  else if (method == CE_LOG)

@@ -24,6 +24,7 @@
 /* Amaya includes */
 #include "init_f.h"
 #include "AHTURLTools_f.h"
+#include "HTMLsave_f.h"
 
 /* schema includes */
 #include "Annot.h"
@@ -93,8 +94,13 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
       DocumentURLs[annotDoc] = fname;
       DocumentMeta[annotDoc] = DocumentMetaDataAlloc ();
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
+      DocumentMeta[annotDoc]->xmlformat = TRUE;
       DocumentSource[annotDoc] = 0;
 
+      /* set the charset to be UTF-8 by default */
+      TtaSetDocumentCharset (annotDoc, TtaGetCharset ("UTF-8"));
+      
+      /* activate, remove buttons from the annot view */
       ANNOT_PrepareAnnotView (annotDoc);
     }  
   return annotDoc;
@@ -1159,8 +1165,7 @@ char             *html_filename;
   TtaSetTextContent (el, annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
 
   /* set up the charset and namespaces */
-  TtaSetDocumentCharset (doc_annot, TtaGetCharset ("UTF-8"));
-  /* SetNamespacesAndDTD (doc_annot); */
+  SetNamespacesAndDTD (doc_annot);
   return TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
 					      "AnnotT");
 }

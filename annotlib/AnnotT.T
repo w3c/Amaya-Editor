@@ -11,6 +11,12 @@ RULES
 
    Document: BEGIN
     Create '<?xml version="1.0"';
+    if Charset 
+       BEGIN
+       Create ' encoding="';
+       Create Charset; 
+       Create '"';
+       END;
     Create '?>\12';
    END;
 

@@ -28,8 +28,10 @@
 #include "HTMLhistory_f.h"
 #include "css_f.h"
 #ifdef ANNOTATIONS
+#include "Annot.h"
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
+#include "ANNOTtools_f.h"
 #endif /* ANNOTATIONS */
 
 typedef struct _AttSearch
@@ -199,8 +201,11 @@ ThotBool CheckGenerator (NotifyElement *event)
   char               buff[MAX_LENGTH];
   char              *ptr;
   int                length;
+  ElementType        elType;
 
-  attrType.AttrSSchema = TtaGetDocumentSSchema (event->document);
+
+  elType = TtaGetElementType (event->element);
+  attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = HTML_ATTR_meta_name;
   attr = TtaGetAttribute (event->element, attrType);
   if (attr != 0)
@@ -852,8 +857,18 @@ void SetNamespacesAndDTD (Document doc)
    ThotBool		useMathML, useSVG, useFrames;
    int                  oldStructureChecking;
 
-   root = TtaGetRootElement (doc);
-   if (DocumentTypes[doc] == docHTML)
+#ifdef ANNOTATIONS
+   if (DocumentTypes[doc] == docAnnot)
+     {
+       /* in an annotation, the body of the annotation corresponds to the
+	  root element we would normally get */
+       root = ANNOT_GetHTMLRoot (doc, TRUE);
+     }
+   else
+#endif /* ANNOTATIONS */
+     root = TtaGetRootElement (doc);
+
+   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docAnnot)
      {
      useMathML = FALSE;
      useSVG = FALSE;
@@ -1002,15 +1017,19 @@ void SetNamespacesAndDTD (Document doc)
            strcat (Charset, ptr);
          }
        /* set the Charset attribute of the root element*/
-       elType = TtaGetElementType (root);
-       attrType.AttrSSchema = elType.ElSSchema;
        if (DocumentTypes[doc] == docHTML)
 	 attrType.AttrTypeNum = HTML_ATTR_Charset;
        else if (DocumentTypes[doc] == docMath)
 	 attrType.AttrTypeNum = MathML_ATTR_Charset;
        else if (DocumentTypes[doc] == docSVG)
 	 attrType.AttrTypeNum = SVG_ATTR_Charset;
-       docEl = TtaGetParent (root);
+#ifdef ANNOTATIONS
+       else if (DocumentTypes[doc] == docAnnot)
+	 attrType.AttrTypeNum = Annot_ATTR_Charset;
+#endif /* ANNOTATIONS */
+       docEl = TtaGetMainRoot (doc);
+       elType = TtaGetElementType (docEl);
+       attrType.AttrSSchema = elType.ElSSchema;
        charsetAttr = TtaGetAttribute (docEl, attrType); 
 
        if (!charsetAttr)
@@ -1024,74 +1043,84 @@ void SetNamespacesAndDTD (Document doc)
 	 }
      }
 
-   if (DocumentTypes[doc] == docHTML)
+   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docAnnot)
      {
-     /* Create (or update) a META element to specify Content-type and Charset*/
-     /* Get the HEAD element first */
-     el = TtaGetFirstChild (root);
-     head = NULL;
-     while (el && !head)
-       {
-       elType = TtaGetElementType (el);
-       if (elType.ElSSchema == attrType.AttrSSchema &&
-	   elType.ElTypeNum == HTML_EL_HEAD)
-	 head = el;
-       else
-         TtaNextSibling (&el);
-       }
-     if (head)
-       {
-       /* indicate the MIME type and the charset in a meta element with
-	  an http-equiv attr */
-       /* look for a meta/http-equiv element */
-       el = TtaGetFirstChild (head);
-       meta = NULL;
-       attrType.AttrTypeNum = HTML_ATTR_http_equiv;
-       attr = NULL;
-       while (el && !meta)
+       /* Create (or update) a META element to specify Content-type 
+	  and Charset*/
+#ifdef ANNOTATIONS
+       /* set the charset attribute type to the HTML value */
+       if (DocumentTypes[doc] == docAnnot)
+	 {
+	   attrType.AttrTypeNum = HTML_ATTR_Charset;
+	   elType = TtaGetElementType (root);
+	   attrType.AttrSSchema = elType.ElSSchema;
+	 }
+#endif /* ANNOTATIONS */
+       /* Get the HEAD element first */
+       el = TtaGetFirstChild (root);
+       head = NULL;
+       while (el && !head)
 	 {
 	   elType = TtaGetElementType (el);
 	   if (elType.ElSSchema == attrType.AttrSSchema &&
-	       elType.ElTypeNum == HTML_EL_META)
-	     {
-	       attr = TtaGetAttribute (el, attrType);
-	       if (attr)
-		 meta = el;
-	     }
-	   if (!meta)
+	       elType.ElTypeNum == HTML_EL_HEAD)
+	     head = el;
+	   else
 	     TtaNextSibling (&el);
 	 }
-       if (!meta)
-	 /* there is no meta element with a http-equiv attribute */
-	 /* create one at the begginning of the head */
+       if (head)
 	 {
-	   elType.ElSSchema = attrType.AttrSSchema;
-	   elType.ElTypeNum = HTML_EL_META;
-	   meta = TtaNewElement (doc, elType);
-	   TtaInsertFirstChild (&meta, head, doc);
-	 }
-       if (!attr)
-	 {
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (meta, attr, doc);
-	 }
-       TtaSetAttributeText (attr, "Content-Type", meta, doc);
-       attrType.AttrTypeNum = HTML_ATTR_meta_content;
-       attr = TtaGetAttribute (meta, attrType);
-       if (!attr)
-	 {
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (meta, attr, doc);
-	 }
-       if (Charset[0] == EOS)
-	 TtaSetAttributeText (attr, "text/html", meta, doc);
-       else
-	 {
-	   strcpy (buffer, "text/html; charset=");
-	   strcat (buffer, Charset);
-	   TtaSetAttributeText (attr, buffer, meta, doc);
-	 }
-       } 
+	   /* indicate the MIME type and the charset in a meta element with
+	      an http-equiv attr */
+	   /* look for a meta/http-equiv element */
+	   el = TtaGetFirstChild (head);
+	   meta = NULL;
+	   attrType.AttrTypeNum = HTML_ATTR_http_equiv;
+	   attr = NULL;
+	   while (el && !meta)
+	     {
+	       elType = TtaGetElementType (el);
+	       if (elType.ElSSchema == attrType.AttrSSchema &&
+		   elType.ElTypeNum == HTML_EL_META)
+		 {
+		   attr = TtaGetAttribute (el, attrType);
+		   if (attr)
+		     meta = el;
+		 }
+	       if (!meta)
+		 TtaNextSibling (&el);
+	     }
+	   if (!meta)
+	     /* there is no meta element with a http-equiv attribute */
+	     /* create one at the begginning of the head */
+	     {
+	       elType.ElSSchema = attrType.AttrSSchema;
+	       elType.ElTypeNum = HTML_EL_META;
+	       meta = TtaNewElement (doc, elType);
+	       TtaInsertFirstChild (&meta, head, doc);
+	     }
+	   if (!attr)
+	     {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (meta, attr, doc);
+	     }
+	   TtaSetAttributeText (attr, "Content-Type", meta, doc);
+	   attrType.AttrTypeNum = HTML_ATTR_meta_content;
+	   attr = TtaGetAttribute (meta, attrType);
+	   if (!attr)
+	     {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (meta, attr, doc);
+	     }
+	   if (Charset[0] == EOS)
+	     TtaSetAttributeText (attr, "text/html", meta, doc);
+	   else
+	     {
+	       strcpy (buffer, "text/html; charset=");
+	       strcat (buffer, Charset);
+	       TtaSetAttributeText (attr, buffer, meta, doc);
+	     }
+	 } 
      }
 }
 
