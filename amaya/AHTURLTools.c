@@ -570,6 +570,10 @@ char               *docName;
    char               *ptr;
    int                 length;
 
+#  ifdef _WINDOWS
+   int ndx;
+#  endif /* _WINDOWS */
+
    if (!newName || !docName)
       return;
 
@@ -628,6 +632,12 @@ char               *docName;
    else
      {
        /* Calculate the absolute URL, using the base or document URL */
+#      ifdef _WINDOWS
+	   length = strlen (tempOrgName);
+	   for (ndx = 0; ndx < length; ndx++)
+		   if (tempOrgName [ndx] == '/')
+		      tempOrgName [ndx] = '\\';
+#      endif /* _WINDOWS */
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
        if (ptr)
 	 {
@@ -1371,6 +1381,10 @@ char            *relatedName;
   char          *last_slash = NULL;
   int            slashes, levels, len;
 
+# ifdef _WINDOWS
+  int ndx;
+# endif /* _WINDOWS */
+
   if (aName == NULL || relatedName == NULL)
     return (NULL);
 
@@ -1433,6 +1447,12 @@ char            *relatedName;
       if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
 	strcpy (return_value, result);
     }
+# ifdef _WINDOWS
+  len = strlen (return_value);
+  for (ndx = 0; ndx < len; ndx ++)
+	  if (return_value[ndx] == '\\')
+	     return_value[ndx] = '/' ;
+# endif /* _WINDOWS */
   return (return_value);
 }
 
