@@ -21,6 +21,7 @@ Extensions 2.1:
     + "From template" proposes a list of templates to build you new document
       when you have a template server.
     + "New CSS" displays a form to choose the style sheet location first.
+  - There is a preference menu for the language negociation.
 
 * Thot API: Due to a conflict with the libjpeg definition the Thot type boolean
   has been renamed ThotBool.
@@ -55,6 +56,8 @@ Fixed bugs 2.1:
 * It was impossible to set font-size to 20 in the preference menu.
 
 * Amaya didn't take care to the Shift in the keyboard configuration file.
+
+* Improvement of Windows dialogues.
   
 =============================================================
 2.0

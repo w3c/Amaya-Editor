@@ -702,6 +702,7 @@ LPARAM lParam;
 	  SetCacheConf ();
 	  libwww_updateNetworkConf (CacheStatus);
 	  CacheStatus = 0;
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_FLUSHCACHE:
 	  StopAllRequests (1);
@@ -1177,6 +1178,7 @@ LPARAM lParam;
 	  libwww_updateNetworkConf (ProxyStatus);
 	  /* reset the status flag */
 	  ProxyStatus = 0;
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
 	  /* reset the status flag */
@@ -1506,6 +1508,7 @@ LPARAM lParam;
 	case ID_APPLY:
 	  ValidateGeneralConf ();
 	  SetGeneralConf ();	  
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
 	  GeneralHwnd = NULL;
@@ -2052,6 +2055,7 @@ LPARAM lParam;
 	case ID_APPLY:
 	  SetPublishConf ();	  
 	  /* reset the status flag */
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
 	  /* reset the status flag */
@@ -2373,6 +2377,7 @@ LPARAM lParam;
 	case ID_APPLY:
 	  SetColorConf ();	  
 	  /* reset the status flag */
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
 	  /* reset the status flag */
@@ -2693,6 +2698,7 @@ LPARAM lParam;
 	  /* action buttons */
 	case ID_APPLY:
 	  SetGeometryConf ();
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
 	  GeometryDoc = 0;
@@ -3003,6 +3009,7 @@ LPARAM lParam;
 	case ID_APPLY:
 	  SetLanNegConf ();	  
 	  /* reset the status flag */
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
 	  /* reset the status flag */
@@ -3105,17 +3112,12 @@ STRING              pathname;
    i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
-   TtaNewSheet (LanNegBase + LanNegMenu, 
-		TtaGetViewFrame (document, view),
-		"Language Negotiation Menu",
-		2, s, TRUE, 1, 'L', D_DONE);
+   TtaNewSheet (LanNegBase + LanNegMenu, TtaGetViewFrame (document, view),
+		"Language Negotiation Menu", 2, s, TRUE, 1, 'L', D_DONE);
    /* first line */
-   TtaNewTextForm (LanNegBase + mLanNeg,
-		   LanNegBase + LanNegMenu,
+   TtaNewTextForm (LanNegBase + mLanNeg, LanNegBase + LanNegMenu,
 		   "Language Negotiation",
-		   10,
-		   1,
-		   FALSE);
+		   20, 1, FALSE);
 #endif /* !_WINDOWS */
  
    /* load and display the current values */

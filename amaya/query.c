@@ -1280,54 +1280,94 @@ HTList             *c;
   the HTTP content negotiation phase
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void           AHTAcceptLanguagesInit (HTList *c)
+static void         AHTAcceptLanguagesInit (HTList *c)
 #else  /* __STDC__ */
-static void           AHTAcceptLanguagesInit (c)
+static void         AHTAcceptLanguagesInit (c)
 HTList             *c;
 #endif /* __STDC__ */
 {
-  STRING ptr;
-  STRING lang_list;
-  int count;
-  double quality;
+  STRING            ptr;
+  STRING            lang_list;
+  CHAR_T            s[3];
+  int               count, lg;
+  double            quality;
+  ThotBool          still;
 
   if (c == (HTList *) NULL) 
       return;
   
-  ptr = TtaGetEnvString ("ACCEPT_LANGUAGES");
-
-  if (ptr && *ptr != EOS)
+  lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
+  s[3] = EOS;
+  if (lang_list && *lang_list != EOS)
     {
       /* add the default language first  */
       HTLanguage_add (c, "*", -1.0);
-      /* read the languages from the registry, then inject them one, by one.
-       The first one is the one with the lowest priority */
-      lang_list = TtaStrdup (ptr);
       /* how many languages do we have? */
-      for (count = 1, ptr = lang_list; *ptr != EOS; ptr++)
-	if (*ptr == ' ')
-	  {
-	    *ptr = EOS;
+      ptr = lang_list;
+      count = 0;
+      while (*ptr != EOS)
+	{
+	  while (*ptr != EOS &&
+		 (*ptr < 'A' || (*ptr > 'Z' && *ptr < 'a') || *ptr > 'z'))
+	    /* skip the whole separator */
+	    ptr++;
+	  lg = 0;
+	  while ((*ptr >= 'A' && *ptr <= 'Z') || (*ptr >= 'a' && *ptr <= 'z') || *ptr == '-')
+	    {
+	      /* it's a new language */
+	      ptr++;
+	      lg++;
+	    }
+	  if (lg >= 2)
 	    count++;
-	  }
+	  if (*ptr != EOS)
+	    ptr++;
+	}
 
-      if (count > 1)
+      if (count > 0)
 	quality = 1.1 - (double) count/10.0;
       else
 	quality = 1.0;
 
-      ptr = lang_list;
-      while (count--) 
+      /*
+	Read the languages from the registry, then inject them one, by one.
+	The first one is the one with the highest priority.
+	The libwww ask for the lowest priority first.
+      */
+      ptr--;
+      still = TRUE;
+      while (count) 
 	{
-	  HTLanguage_add (c, ptr, quality);
-	  quality += 0.1;
-	  while (*ptr != EOS)
-	    ptr++;
-	  if (count)
-	    ptr++;
+	  while (still &&
+		 (*ptr < 'A' || (*ptr > 'Z' && *ptr < 'a') || *ptr > 'z'))
+	    /* skip the whole separator */
+	    if (ptr > lang_list)
+	      ptr--;
+	    else
+	      still = FALSE;
+	  lg = 0;
+	  while (still &&
+		 ((*ptr >= 'A' && *ptr <= 'Z') || (*ptr >= 'a' && *ptr <= 'z') || *ptr == '-'))
+	    {
+	      /* it's a new language */
+	      if (ptr > lang_list)
+		ptr--;
+	      else
+		still = FALSE;
+	      lg++;
+	    }
+	  if (lg >= 2)
+	    {
+	      if (still)
+		ustrncpy (s, &ptr[1], 2);
+	      else
+		ustrncpy (s, lang_list, 2);
+	      count--;
+	      HTLanguage_add (c, s, quality);
+	      quality += 0.1;
+	    }
+	  ptr--;
 	}
-      
-      TtaFreeMemory (lang_list);
     }
 }
 

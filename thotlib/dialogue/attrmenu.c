@@ -158,6 +158,7 @@ PtrAttribute        currAttr;
 {
 #ifndef _WINDOWS
    CHAR_T              bufMenu[MAX_TXT_LEN];
+   int                 i;
 #endif /* _WINDOWS */
    CHAR_T              string[MAX_TXT_LEN];
    STRING              ptr;
@@ -166,7 +167,7 @@ PtrAttribute        currAttr;
    CHAR_T                Lab[200];
    PtrAttribute        pHeritAttr;
    PtrElement          pElAttr;
-   int                 i, defItem, nbItem, nbLanguages, firstLanguage, length;
+   int                 defItem, nbItem, nbLanguages, firstLanguage, length;
 
    /* c'est l'attribut Langue, on initialise le formulaire Langue */
    languageValue[0] = EOS;
