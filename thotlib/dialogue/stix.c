@@ -61,24 +61,25 @@
   ----------------------------------------------------------------------*/
 void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int fg)
 {
-   if (fg < 0)
-     return;
+  if (fg < 0)
+    return;
 
-   /* Integrals using esstix6 charmap
-     52 - => 3x text 3 line eq
-     33 - => 2x text 2 line eq
-     69 - => 1x+2 text or 18 for oneline eq */
+  /* Integrals using esstix6 charmap
+     62 - => 3x text 3 line eq
+     45 - => 2x text 2 line eq
+     83 - => 1x text for one-line eq */
 
-   if (h < LOW_CHAR)
-     /* display a single glyph */
-       DrawStixChar (font, 83, x, y, l, h, fg, frame);
-   else if (h < MID_CHAR)
-	/* display a single glyph */
-       DrawStixChar (font, 45, x, y, l, h, fg, frame);
-   else
+  if (h < LOW_CHAR)
     /* display a single glyph */
-       DrawStixChar (font, 62, x, y, l, h, fg, frame);
+    DrawStixChar (font, 83, x, y, l, h, fg, frame);
+  else if (h < MID_CHAR)
+    /* display a single glyph */
+    DrawStixChar (font, 45, x, y, l, h, fg, frame);
+  else
+    /* display a single glyph */
+    DrawStixChar (font, 62, x, y, l, h, fg, frame);
 }
+
 /*----------------------------------------------------------------------
   DrawStixIntegral draws an integral. depending on type :
   - simple if type = 0
@@ -89,40 +90,34 @@ void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int f
 void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
 		       int type, ThotFont font, int fg)
 {
+  unsigned char   symb;
+
   /* Integrals using esstix6 charmap
      52 - => 3x text 3 line eq
      33 - => 2x text 2 line eq
-     69 - => 1x+2 text or 18 for oneline eq */
+     69 - => 1x text for oneline eq */
+  /* display a single glyph */
   if (h < LOW_CHAR)
-     /* display a single glyph */
-     {
-       font =  (ThotFont)LoadStixFont (6, FontRelSize (h-15));
-       DrawStixChar (font, 69, x, y, l, h, fg, frame);
-     }
+    symb = 69;
   else if (h < MID_CHAR)
-    /* display a single glyph */
-    {
-      font =  (ThotFont)LoadStixFont (6, FontRelSize (h-5));
-      DrawStixChar (font, 33, x, y, l, h, fg, frame);
-    }
-  else 
-    /* display a single glyph */
-    {
-      font =  (ThotFont)LoadStixFont (6, FontRelSize (h-5));
-      DrawStixChar (font, 52, x, y, l, h, fg, frame);
-     }
-   if (type == 2)		
-     /* double integral */
-      DrawStixIntegral (frame, thick, x + (CharacterWidth (52, font) / 2),
-		    y, l, h, -1, font, fg);
-   /*contour integral
-     else if (type == 1)	
-     DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
-     y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
-     font, fg);
-   */
+    symb = 33;
+  else
+    symb = 52;
+  font = (ThotFont)LoadStixFont (6, CharRelSize (h, symb, 6));
+  DrawStixChar (font, symb, x, y, l, h, fg, frame);
 
+  if (type == 2)		
+    /* double integral */
+    DrawStixIntegral (frame, thick, x + (CharacterWidth (52, font) / 2),
+		      y, l, h, -1, font, fg);
+  /*contour integral
+    else if (type == 1)	
+    DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
+    y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
+    font, fg);
+  */
 }
+
 /* ----------------------------------------------------------------------
   StixIntegralWidth
   ----------------------------------------------------------------------*/
@@ -146,6 +141,8 @@ static int StixIntegralWidth (int h, ThotFont font)
 void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
 		  int direction, ThotFont font, int fg)
 {
+  unsigned char   symb;
+
   /*  Esstix 7 : 
       61 normal
       33 2 line
@@ -153,31 +150,30 @@ void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
   if (h < LOW_CHAR )
     {
       if (direction == 0)
-	DrawStixChar (font, 63, x, y, l, h, fg, frame);
-      
+	symb = 63;
       else
-	DrawStixChar (font, 64, x, y, l, h, fg, frame);
-      return;
+        symb = 64;
     }
   else if (h < MID_CHAR)
     {
       if (direction == 0)
-	DrawStixChar (font, 36, x, y, l, h, fg, frame);
+	symb = 36;
       else
-	DrawStixChar (font, 37, x, y, l, h, fg, frame);
-      return;
+	symb = 37;
     }
   else
     {
       if (direction == 0)
-	DrawStixChar (font, 50, x, y, l, h, fg, frame);
+	symb = 50;
       else
-	DrawStixChar (font, 51, x, y, l, h, fg, frame);
-      return;
+	symb = 51;
     }
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 36, 7));
+  DrawStixChar (font, symb, x, y, l, h, fg, frame);
 }
+
 /* ----------------------------------------------------------------------
-  StixParenthesisWidth
+  StixBracketWidth
   ----------------------------------------------------------------------*/
 static int StixBracketWidth (int h, ThotFont font)
 {
@@ -202,6 +198,8 @@ void DrawStixPointyBracket (int frame, int thick,
 			    int l, int h,
 			    int direction, ThotFont font, int fg)
 {
+  unsigned char   symb;
+
   if (fg < 0)
     return;
 
@@ -212,29 +210,42 @@ void DrawStixPointyBracket (int frame, int thick,
   if (h <  LOW_CHAR)
     {
       if (direction == 0)
-	DrawStixChar (font, 67, x, y, l, h, fg, frame);
-      
+        symb = 67;
       else
-	DrawStixChar (font, 68, x, y, l, h, fg, frame);
-      return;
+	symb = 68;
     }
   else if (h < MID_CHAR)
     {
       if (direction == 0)
-	DrawStixChar (font, 41, x, y, l, h, fg, frame);
+	symb = 41;
       else
-	DrawStixChar (font, 42, x, y, l, h, fg, frame);
-      return;
+	symb = 42;
     }
   else
     {
       if (direction == 0)
-	DrawStixChar (font, 54, x, y, l, h, fg, frame);
+	symb = 54;
       else
-	DrawStixChar (font, 55, x, y, l, h, fg, frame);
-      return;
+	symb = 55;
     }
- 
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 41, 7));
+  DrawStixChar (font, symb, x, y, l, h, fg, frame); 
+}
+
+/* ----------------------------------------------------------------------
+  StixPointyBracketWidth
+  ----------------------------------------------------------------------*/
+static int StixPointyBracketWidth (int h, ThotFont font)
+{
+  int i;
+  
+  if (h < LOW_HEIGHT)
+    i = CharacterWidth (67, font);
+  else if (h < MID_HEIGHT)
+    i = CharacterWidth (41, font);
+  else 
+    i = CharacterWidth (54, font);
+  return i;
 }
 
 /*----------------------------------------------------------------------
@@ -244,36 +255,36 @@ void DrawStixPointyBracket (int frame, int thick,
 void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
 		      int direction, ThotFont font, int fg)
 {
+  unsigned char   symb;
+
   /*  Esstix 7 : 
     61 normal
     33 2 line
     48 3 line
   */
-  
   if (h < LOW_CHAR)
     {
       if (direction == 0)
-	  DrawStixChar (font, 61, x, y, l, h, fg, frame);
+	symb = 61;
       else
-	  DrawStixChar (font, 62, x, y, l, h, fg, frame);
-      return;
+	symb = 62;
     }
   else if (h < MID_CHAR)
-  {
+    {
       if (direction == 0)
-	  DrawStixChar (font, 33, x, y, l, h, fg, frame);
+	symb = 33;
       else
-	  DrawStixChar (font, 35, x, y, l, h, fg, frame);
-      return;
-  }
+	symb = 35;
+    }
   else
-  {
+    {
       if (direction == 0)
-	  DrawStixChar (font, 48, x, y, l, h, fg, frame);
+	symb = 48;
       else
-	  DrawStixChar (font, 49, x, y, l, h, fg, frame);
-      return;
-  }
+	symb = 49;
+    }
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 33, 7));
+  DrawStixChar (font, symb, x, y, l, h, fg, frame);
 }
 /* ----------------------------------------------------------------------
   StixParenthesisWidth
@@ -298,7 +309,8 @@ static int StixParenthesisWidth (int h, ThotFont font)
 void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
 		    int direction, ThotFont font, int fg)
 {
-/*
+  unsigned char   symb;
+  /*
   Esstix 7 : 
   61 normal
   33 2 line
@@ -307,27 +319,26 @@ void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
   if (h < LOW_CHAR)
     {
       if (direction == 0)
-	  DrawStixChar (font, 65, x, y, l, h, fg, frame);
+	symb = 65;
       else
-	  DrawStixChar (font, 66, x, y, l, h, fg, frame);
-      return;
+	symb = 66;
     }
   else if (h < MID_CHAR)
-  {
+    {
       if (direction == 0)
-	  DrawStixChar (font, 38, x, y, l, h, fg, frame);
+	symb = 38;
       else
-	  DrawStixChar (font, 40, x, y, l, h, fg, frame);
-      return;
-  }
+	symb = 40;
+    }
   else
-  {
+    {
       if (direction == 0)
-	  DrawStixChar (font, 52, x, y, l, h, fg, frame);
+	symb = 52;
       else
-	  DrawStixChar (font, 53, x, y, l, h, fg, frame);
-      return;
-  } 
+	symb = 53;
+    }
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 38, 7));
+  DrawStixChar (font, symb, x, y, l, h, fg, frame);
 }
 
 
@@ -398,6 +409,10 @@ int GetMathFontWidth (SpecFont fontset, char shape, int size, int height)
 	case ']':
 	  i = StixBracketWidth (size, pfont);	
 	  break;
+	case '<':
+	case '>':
+	  i = StixPointyBracketWidth (size, pfont);	
+	  break;
 	default:
 	  break;
 	}
@@ -417,35 +432,39 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
   *height = hfont * 2;
   switch (pAb->AbShape)
     {
-      
     case 'd':	/* double integral */
       *width = StixIntegralWidth (size, pfont) + 
 	StixIntegralWidth (size, pfont)/2;
+      *width = *width + *width/2;
       *height *= 4;
       break;      
     case 'i':	/* integral */
     case 'c':	/* circle integral */
       *width = StixIntegralWidth (size, pfont);
+      *width = *width + *width;
       *height *= 2;
       break;
     case '(':
     case ')':
       *width = StixParenthesisWidth (size, pfont); 
+      *width = *width + *width/2;
       break;
     case '{':
     case '}':
       *width = StixBraceWidth (size, pfont);
+      *width = *width + *width/2;
       break;
     case '[':
     case ']':
       *width = StixBracketWidth (size, pfont);	
+      *width = *width + *width/2;
       break;
-#ifdef o
     case '<':
     case '>':
-      *width = BoxCharacterWidth (241, pfont);
-      *height = hfont;
+      *width = StixPointyBracketWidth (size, pfont);	
+      *width = *width + *width/2;
       break;
+#ifdef o
     case 'o':       /* overbrace */
     case 'u':       /* underbrace */
       *width = *height;
@@ -484,10 +503,12 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
     case '}':
     case '[':
     case ']':
-    case '<':
-    case '>':
       if (height > 2)
 	*font = LoadStixFont (7, height);
+      break;
+    case '<':
+    case '>':
+      *font = LoadStixFont (7, height);
       break;
     default:
       *font = NULL;	  

@@ -964,7 +964,7 @@ RULES
 
    FencedExpression:
         BEGIN
-	HorizRef: Enclosed . HRef ;
+	HorizRef: Enclosed . HRef;
 	VertPos: Nil;
 	Gather: Yes;
 	IN Structure_view BEGIN
@@ -984,7 +984,7 @@ RULES
    OpeningFence:
         BEGIN
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	HorizRef: Enclosed . HRef ;
+	HorizRef: Enclosed . HRef;
 	Height: Enclosing . Height;
 	HorizPos: Left = Enclosing . Left;
 	Gather: Yes;
@@ -995,7 +995,7 @@ RULES
    ClosingFence:
         BEGIN
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	HorizRef: Enclosed . HRef ;
+	HorizRef: Enclosed . HRef;
 	Height: Enclosing . Height;
 	HorizPos: Left = Previous . Right;
 	Gather: Yes;
@@ -1670,7 +1670,7 @@ RULES
 	BEGIN
 	if within UnderOverBase
 	   BEGIN
-	   Height: 1;	{ or Enclosed . Height ? ****}
+	   Height: 1;
 	   HorizRef: * . HMiddle + 0.2;
 	   END;
 	if not within UnderOverBase

@@ -994,6 +994,22 @@ int BoxFontBase (SpecFont specfont)
 }
 
 /*----------------------------------------------------------------------
+  CharRelSize return the relative size of the font where character symb
+  of Stix font n has the given height
+  ----------------------------------------------------------------------*/
+int CharRelSize (int height, unsigned char symb, int n)
+{
+   int                 j;
+
+   j = 0;
+   while (j < MaxNumberOfSizes &&
+	  height > CharacterHeight ((char)symb, (ThotFont)LoadStixFont (6, j+1)))
+      j++;
+
+   return (j);
+}
+
+/*----------------------------------------------------------------------
   FontRelSize converts between a size in points and the logical size.
   ----------------------------------------------------------------------*/
 int FontRelSize (int size)

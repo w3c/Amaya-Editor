@@ -282,43 +282,65 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
   ViewFrame          *pFrame;
   int                 xd, yd, i, w;
   int                 fg, bg;
-  int                 width, height;
+  int                 width, height, baseline;
+  PtrBox              ancestor;
   ThotBool            useStix;
 
-  if (selected)
-    {
-      fg = FgSelColor;
-      bg = BgSelColor;
-    }
-  else
-    {
-      fg = pBox->BxAbstractBox->AbForeground;
-      bg = pBox->BxAbstractBox->AbBackground;
-    }
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
       font = NULL;
+      baseline = 0;
+      useStix = FALSE;
+      /* if its a prenthesis, a brace or a bracket, and if this character
+	 is not high, draw it as an ordinary character */
+      if (pBox->BxAbstractBox->AbShape == '(' ||
+	  pBox->BxAbstractBox->AbShape == ')' ||
+	  pBox->BxAbstractBox->AbShape == '[' ||
+	  pBox->BxAbstractBox->AbShape == ']' ||
+	  pBox->BxAbstractBox->AbShape == '{' ||
+	  pBox->BxAbstractBox->AbShape == '}')
+	{
+	  /* get the regular font for that box */
+	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
+	  if (font && pBox->BxH <= (int) (1.3 * FontHeight (font)))
+	    /* this character is almost the height of an ordinary character;
+	       use the regular font to display it */
+	    {
+	      if (FrameTable[frame].FrView == 1)
+		/* it's a symbol in the formatted view */
+		/* its baseline is the same as the baseline of its
+		   grand parent */
+		if (pBox->BxAbstractBox->AbEnclosing &&
+		    pBox->BxAbstractBox->AbEnclosing->AbEnclosing &&
+		    pBox->BxAbstractBox->AbEnclosing->AbEnclosing->AbBox)
+		  {
+		    ancestor = pBox->BxAbstractBox->AbEnclosing->AbEnclosing->AbBox;
+		    baseline = ancestor->BxYOrg + ancestor->BxHorizRef +
+		      ancestor->BxTMargin + ancestor->BxTBorder +
+		      ancestor->BxTPadding - pFrame->FrYOrg;
+		  }
+	    }
+	  else
+	    /* this is an extended symbol. */
+	    font = NULL;
+	}
 #ifdef IV
 #ifdef _WINGUI
       if (WinFontExist ("esstix6_.ttf"))
 #endif /*_WINGUI*/
 #endif
-      if (StixExist)
-	if (pBox->BxH > 0)
-	    {
+      if (StixExist && font == NULL && pBox->BxH > 0)
+	  {
 	      GetMathFontFromChar (pBox->BxAbstractBox->AbShape,
 				   pBox->BxFont,
 				   (void **) &font,
 				   FontRelSize (pBox->BxH-5));
-	    }
+	      if (font)
+		useStix = TRUE;
+	  }
       if (font == NULL)
-	{
-	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
-	  useStix = FALSE;
-	}
-      else
-	useStix = TRUE;
+	GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
 
       if (font != NULL)
 	{
@@ -343,10 +365,19 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  
 	  /* Line thickness */
 	  i = GetLineWeight (pBox->BxAbstractBox, frame);
-	  
 #ifdef _GL
 	  SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
+	  if (selected)
+	    {
+	      fg = FgSelColor;
+	      bg = BgSelColor;
+	    }
+	  else
+	    {
+	      fg = pBox->BxAbstractBox->AbForeground;
+	      bg = pBox->BxAbstractBox->AbBackground;
+	    }
 
 	  switch (pBox->BxAbstractBox->AbShape)
 	    {
@@ -358,7 +389,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      break;
 	    case 'd':
 	      if (useStix)
-		DrawStixIntegral (frame, i, xd, yd, width, height, 2, font, fg);
+		DrawStixIntegral (frame, i, xd, yd, width, height, 2, font,
+				  fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
 	      break;
@@ -367,7 +399,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      break;
 	    case 'i':
 	      if (useStix)
-		DrawStixIntegral (frame, i, xd, yd, width, height, 0, font, fg);
+		DrawStixIntegral (frame, i, xd, yd, width, height, 0, font,
+				  fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
@@ -384,7 +417,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
 	      break;
 	    case 'D':
-	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
+	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1,
+				      fg);
 	      break;
 	    case 'I':
 	      DrawIntersection (frame, xd, yd, width, height, font, fg);
@@ -410,56 +444,68 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	    case 'V':
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 270, fg);
 	      break;
-	    case '(':
-	      if (useStix)
-		DrawStixParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
-	      else
-		DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
-	      break;
 	    case '^':
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 90, fg);
 	      break;
+	    case '(':
+	      if (useStix)
+		DrawStixParenthesis (frame, i, xd, yd, width, height, 0, font,
+				     fg);
+	      else
+		DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg,
+				 baseline);
+	      break;
 	    case ')':
 	      if (useStix)
-		DrawStixParenthesis (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawStixParenthesis (frame, i, xd, yd, width, height, 1, font,
+				     fg);
 	      else
-		DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg,
+				 baseline);
 	      break;
 	    case '{':
 	      if (useStix)
 		DrawStixBrace (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
-		DrawBrace (frame, i, xd, yd, width, height, 0, font, fg);
+		DrawBrace (frame, i, xd, yd, width, height, 0, font, fg,
+			   baseline);
 	      break;
 	    case '}':
 	      if (useStix)
 		DrawStixBrace (frame, i, xd, yd, width, height, 1, font, fg);
 	      else
-		DrawBrace (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawBrace (frame, i, xd, yd, width, height, 1, font, fg,
+			   baseline);
 	      break;
 	    case '[':
 	      if (useStix)
 		DrawStixBracket (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
-		DrawBracket (frame, i, xd, yd, width, height, 0, font, fg);
+		DrawBracket (frame, i, xd, yd, width, height, 0, font, fg,
+			     baseline);
 	      break;
 	    case ']':
 	      if (useStix)
 		DrawStixBracket (frame, i, xd, yd, width, height, 1, font, fg);
 	      else
-		DrawBracket (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawBracket (frame, i, xd, yd, width, height, 1, font, fg,
+			     baseline);
 	      break;
 	    case '<':
 	      if (useStix)
-		DrawStixPointyBracket (frame, i, xd, yd, width, height, 0, font, fg);
+		DrawStixPointyBracket (frame, i, xd, yd, width, height, 0,
+				       font, fg);
 	      else
-		DrawPointyBracket (frame, i, xd, yd, width, height, 0, font, fg);
+		DrawPointyBracket (frame, i, xd, yd, width, height, 0, font,
+				   fg);
 	      break;
 	    case '>':
 	      if (useStix)
-		DrawStixPointyBracket (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawStixPointyBracket (frame, i, xd, yd, width, height, 1,
+				       font, fg);
 	      else
-		DrawPointyBracket (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawPointyBracket (frame, i, xd, yd, width, height, 1, font,
+				   fg);
 	      break;
 	    case '|':
 	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);

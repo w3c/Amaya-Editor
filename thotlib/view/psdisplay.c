@@ -913,7 +913,7 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l,
    DrawBracket draw an opening or closing bracket (depending on direction)
   ----------------------------------------------------------------------*/
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, ThotFont font, int fg)
+		  int direction, ThotFont font, int fg, int baseline)
 {
 #ifndef _WX
    int                 ey, yf;
@@ -1030,7 +1030,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
    DrawParenthesis draw a closing or opening parenthesis (direction).
   ----------------------------------------------------------------------*/
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, ThotFont font, int fg)
+		      int direction, ThotFont font, int fg, int baseline)
 {
 #ifndef _WX
    int                 ey, yf;
@@ -1086,7 +1086,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
    DrawBrace draw an opening of closing brace (depending on direction).
   ----------------------------------------------------------------------*/
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
-		int direction, ThotFont font, int fg)
+		int direction, ThotFont font, int fg, int baseline)
 {
 #ifndef _WX
    int                 ey, yf;

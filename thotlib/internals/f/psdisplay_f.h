@@ -103,7 +103,8 @@ extern void DrawBracket ( int frame,
                           int h,
                           int direction,
                           ThotFont font,
-                          int fg );
+                          int fg,
+			  int baseline );
 extern void DrawPointyBracket ( int frame,
                                 int thick,
                                 int x,
@@ -121,7 +122,8 @@ extern void DrawParenthesis ( int frame,
                               int h,
                               int direction,
                               ThotFont font,
-                              int fg );
+                              int fg,
+			      int baseline );
 extern void DrawBrace ( int frame,
                         int thick,
                         int x,
@@ -130,7 +132,8 @@ extern void DrawBrace ( int frame,
                         int h,
                         int direction,
                         ThotFont font,
-                        int fg );
+                        int fg,
+			int baseline );
 extern void DrawRectangle ( int frame,
                             int thick,
                             int style,
@@ -412,7 +415,8 @@ extern void DrawBracket ( int frame,
                             int h,
                             int direction,
                             ThotFont font,
-                            int fg );
+                            int fg,
+			    int baseline );
 extern void DrawPointyBracket ( int frame,
                                   int thick,
                                   int x,
@@ -430,7 +434,8 @@ extern void DrawParenthesis ( int frame,
                                 int h,
                                 int direction,
                                 ThotFont font,
-                                int fg );
+                                int fg,
+			        int baseline );
 extern void DrawBrace ( int frame,
                           int thick,
                           int x,
@@ -439,7 +444,8 @@ extern void DrawBrace ( int frame,
                           int h,
                           int direction,
                           ThotFont font,
-                          int fg );
+                          int fg,
+			  int baseline );
 extern void DrawRectangle ( int frame,
                               int thick,
                               int style,

@@ -995,6 +995,8 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
     editOp = pDoc->DocLastEdit;
   else
     editOp = pDoc->DocLastUndone;
+  if (editOp == NULL)
+    return;
 
   if (editOp->EoType == EtDelimiter)
     /* end of a sequence */
@@ -1432,6 +1434,8 @@ void TtcUndo (Document doc, View view)
        /* the last history sequence was not closed */
        printf ("ERR: Undo an open history sequence\n*/");
        CloseHistorySequence (pDoc);
+       if (!pDoc->DocLastEdit)
+	 return;
      }
 
    /* Start a new sequence in the Redo queue */

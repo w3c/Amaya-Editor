@@ -657,26 +657,34 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, ThotFont font, int fg)
+		  int direction, ThotFont font, int fg, int baseline)
 {
   int                 xm, yf, yend;
 
   /* Symbol */
-  if (FontHeight (font) >= h)
+  if (h <= (int) (1.3 * FontHeight (font)) )
     {
       /* With only one glyph */
       if (direction == 0)
 	{
 	  /* Draw a opening bracket */
 	  xm = x + ((l - CharacterWidth (91, font)) / 2);
-	  yf = y + ((h - CharacterHeight (91, font)) / 2) + CharacterAscent (91, font);
+	  if (baseline)
+	    yf = baseline;
+	  else
+	    yf = y + ((h - CharacterHeight (91, font)) / 2) +
+	         CharacterAscent (91, font);
 	  DrawChar ('[', frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* Draw a closing bracket */
 	  xm = x + ((l - CharacterWidth (93, font)) / 2);
-	  yf = y + ((h - CharacterHeight (93, font)) / 2) + CharacterAscent (93, font);
+	  if (baseline)
+	    yf = baseline;
+	  else
+	    yf = y + ((h - CharacterHeight (93, font)) / 2) +
+	         CharacterAscent (93, font);
 	  DrawChar (']', frame, xm, yf, font, fg);
 	}
      }
@@ -772,7 +780,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, ThotFont font, int fg)
+		      int direction, ThotFont font, int fg, int baseline)
 {
   int                 xm, yf, yend, delta, asc, hd;
 
@@ -785,14 +793,22 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	{
 	  /* draw a opening parenthesis */
 	  xm = x + ((l - CharacterWidth (40, font)) / 2);
-	  yf = y + ((h - CharacterHeight (40, font)) / 2) + CharacterAscent (40, font);
+	  if (baseline)
+	    yf = baseline;
+	  else
+	    yf = y + ((h - CharacterHeight (40, font)) / 2) +
+	         CharacterAscent (40, font);
 	  DrawChar ('(', frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* draw a closing parenthesis */
 	  xm = x + ((l - CharacterWidth (41, font)) / 2);
-	  yf = y + ((h - CharacterHeight (41, font)) / 2) + CharacterAscent (41, font);
+	  if (baseline)
+	    yf = baseline;
+	  else	    
+	    yf = y + ((h - CharacterHeight (41, font)) / 2) +
+                 CharacterAscent (41, font);
 	  DrawChar (')', frame, xm, yf, font, fg);
 	}
     }
@@ -850,7 +866,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
-		int direction, ThotFont font, int fg)
+		int direction, ThotFont font, int fg, int baseline)
 {
   int                 xm, ym, yf, yend, delta, hd, asc;
 
@@ -862,14 +878,22 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	{
 	  /* just use the opening brace glyph */
 	  xm = x + ((l - CharacterWidth (123, font)) / 2);
-	  yf = y + ((h - CharacterHeight (123, font)) / 2) + CharacterAscent (123, font);
+	  if (baseline)
+	    yf = baseline;
+	  else
+	    yf = y + ((h - CharacterHeight (123, font)) / 2) +
+	         CharacterAscent (123, font);
 	  DrawChar ('{', frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* just use the closing brace glyph */
 	  xm = x + ((l - CharacterWidth (125, font)) / 2);
-	  yf = y + ((h - CharacterHeight (125, font)) / 2) + CharacterAscent (125, font);
+	  if (baseline)
+	    yf = baseline;
+	  else
+	    yf = y + ((h - CharacterHeight (125, font)) / 2) +
+	         CharacterAscent (125, font);
 	  DrawChar ('}', frame, xm, yf, font, fg);
 	}
     }
