@@ -17,11 +17,11 @@
 #include "typemedia.h"
 #include "language.h"
 
-static PtrDocument  DocInitialSelection;
-static PtrElement   firstElInitialSelection;
-static PtrElement   lastElInitialSelection;
-static int          firstCharInitialSelection;
-static int          lastCharInitialSelection;
+static PtrDocument  DocSDomain;
+static PtrElement   FirstElSDomain;
+static PtrElement   LastElSDomain;
+static int          FirstCharSDomain;
+static int          LastCharSDomain;
 
 #include "structselect_f.h"
 #include "tree_f.h"
@@ -99,136 +99,132 @@ UCHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
   ----------------------------------------------------------------------*/
 ThotBool InitSearchDomain (int domain, PtrSearchContext context)
 {
-   ThotBool            ok;
+  ThotBool            ok;
 
-   if (context == NULL)
+  if (context == NULL)
+    return (FALSE);
+  else
+    {
+      context->STree = 0;
+      context->SWholeDocument = FALSE;
+    }
+
+  /* get curreent selection */
+  ok = GetCurrentSelection (&DocSDomain,
+			    &FirstElSDomain, &LastElSDomain,
+			    &FirstCharSDomain, &LastCharSDomain);
+  /* store the word search domain */
+  if (domain == 3)
+    /* the whole document */
+    {
+      context->SStartElement = NULL;
+      context->STree = 0;
+      context->SWholeDocument = TRUE;
+      context->SEndElement = NULL;
+      context->SStartChar = 0;
+      context->SEndChar = 0;
+      context->SStartToEnd = TRUE;
+    }
+  else if (!ok)
+    /* There is no selection */
+    context->SDocument = NULL;
+  else if (context->SDocument != DocSDomain)
+    /* current selection is not in the document of interest */
+    context->SDocument = NULL;
+  else
+    {
+      context->SWholeDocument = FALSE;
+      if (domain == 0)
+	/* Search before selection */
+	{
+	  context->SStartElement = NULL;
+	  context->SStartChar = 0;
+	  context->SEndElement = FirstElSDomain;
+	  context->SEndChar = FirstCharSDomain;
+	  context->SStartToEnd = FALSE;
+	}
+      else if (domain == 1)
+	/* search within selection */
+	{
+	  context->SStartElement = FirstElSDomain;
+	  context->SStartChar = FirstCharSDomain - 1;
+	  context->SEndElement = LastElSDomain;
+	  context->SEndChar = LastCharSDomain - 1;
+	  context->SStartToEnd = TRUE;
+	}
+      else if (domain == 2)
+	/* search after selection */
+	{
+	  context->SStartElement = LastElSDomain;
+	  context->SStartChar = LastCharSDomain - 1;
+	  if (context->SStartChar < 0)
+	    context->SStartChar = 0;
+	  if (LastElSDomain && !LastElSDomain->ElTerminal &&
+	      (LastCharSDomain == 0 ||
+	       LastCharSDomain > LastElSDomain->ElTextLength))
+	    {
+	      context->SStartElement = NextElement (LastElSDomain);
+	      context->SStartChar = 0;
+	    }
+	  context->SEndElement = NULL;
+	  context->SEndChar = 0;
+	  context->SStartToEnd = TRUE;
+	}
+    }
+  
+  if (context->SDocument == NULL)
+    {
+      /* no search domain */
+      context->SStartElement = NULL;
+      context->SEndElement = NULL;
+      context->SStartChar = 0;
+      context->SEndChar = 0;
+      context->STree = 0;
+      context->SWholeDocument = FALSE;
       return (FALSE);
-   else
-     {
-	context->STree = 0;
-	context->SWholeDocument = FALSE;
-     }
-
-   /* get curreent selection */
-   ok = GetCurrentSelection (&DocInitialSelection,
-			  &firstElInitialSelection, &lastElInitialSelection,
-		     &firstCharInitialSelection, &lastCharInitialSelection);
-   /* store the word search domain */
-   if (domain == 3)
-      /* the whole document */
-     {
-	context->SStartElement = NULL;
-	context->STree = 0;
-	context->SWholeDocument = TRUE;
-	context->SEndElement = NULL;
-	context->SStartChar = 0;
-	context->SEndChar = 0;
-	context->SStartToEnd = TRUE;
-     }
-   else if (!ok)
-      /* There is no selection */
-      context->SDocument = NULL;
-   else if (context->SDocument != DocInitialSelection)
-      /* current selection is not in the document of interest */
-      context->SDocument = NULL;
-   else
-     {
-	context->SWholeDocument = FALSE;
-	if (domain == 0)
-	   /* Search before selection */
-	  {
-	     context->SStartElement = NULL;
-	     context->SStartChar = 0;
-	     context->SEndElement = firstElInitialSelection;
-	     context->SEndChar = firstCharInitialSelection;
-	     context->SStartToEnd = FALSE;
-	  }
-	else if (domain == 1)
-	   /* search within selection */
-	  {
-	     context->SStartElement = firstElInitialSelection;
-	     context->SStartChar = firstCharInitialSelection - 1;
-	     context->SEndElement = lastElInitialSelection;
-	     context->SEndChar = lastCharInitialSelection - 1;
-	     context->SStartToEnd = TRUE;
-	  }
-	else if (domain == 2)
-	   /* search after selection */
-	  {
-	     context->SStartElement = lastElInitialSelection;
-	     context->SStartChar = lastCharInitialSelection - 1;
-	     if (context->SStartChar < 0)
-		context->SStartChar = 0;
-	     if (lastElInitialSelection != NULL)
-		if (lastCharInitialSelection == 0 ||
-		    lastCharInitialSelection > lastElInitialSelection->ElTextLength)
-		   if (!lastElInitialSelection->ElTerminal)
-		     {
-			context->SStartElement = NextElement (lastElInitialSelection);
-			context->SStartChar = 0;
-		     }
-	     context->SEndElement = NULL;
-	     context->SEndChar = 0;
-	     context->SStartToEnd = TRUE;
-	  }
-     }
-
-   if (context->SDocument == NULL)
-     {
-	/* no search domain */
-	context->SStartElement = NULL;
-	context->SEndElement = NULL;
-	context->SStartChar = 0;
-	context->SEndChar = 0;
-	context->STree = 0;
-	context->SWholeDocument = FALSE;
-	return (FALSE);
-     }
-   return (TRUE);
+    }
+  return (TRUE);
 }
 
 
 /*----------------------------------------------------------------------
    UpdateDuringSearch met a jour la selection initiale                
   ----------------------------------------------------------------------*/
-void                UpdateDuringSearch (PtrElement pEl, int len)
+void UpdateDuringSearch (PtrElement pEl, int len)
 {
-   if (pEl == lastElInitialSelection)
-      /* initial selection is within the element */
-      if (lastCharInitialSelection != 0)
-	 /* change position of last character of search domain */
-	 lastCharInitialSelection += len;
+  if (pEl == LastElSDomain && LastCharSDomain != 0)
+    /* initial selection is within the element */
+    /* change position of last character of search domain */
+    LastCharSDomain += len;
 }
 
 
 /*----------------------------------------------------------------------
    RestoreAfterSearch re'tablit la se'lection initiale et nettoie     
   ----------------------------------------------------------------------*/
-void                RestoreAfterSearch ()
+void RestoreAfterSearch ()
 {
-   int                 prevLen, endChar;
+  int                 prevLen, endChar;
 
-   CancelSelection ();
-   endChar = lastCharInitialSelection;
-   if (endChar > 0)
-     {
-       if (firstCharInitialSelection > 0)
-	 {
-	   if (firstElInitialSelection == lastElInitialSelection)
-	     prevLen = endChar;
-	   else
-	     prevLen = 0;
-	   SelectString (DocInitialSelection, firstElInitialSelection,
-			 firstCharInitialSelection, prevLen);
-	 }
-       else
-	 SelectElement (DocInitialSelection, firstElInitialSelection, TRUE,
-			TRUE);
+  CancelSelection ();
+  endChar = LastCharSDomain;
+  if (endChar > 0)
+    {
+      if (FirstCharSDomain > 0)
+	{
+	  if (FirstElSDomain == LastElSDomain)
+	    prevLen = endChar;
+	  else
+	    prevLen = 0;
+	  SelectString (DocSDomain, FirstElSDomain,
+			FirstCharSDomain, prevLen);
+	}
+      else
+	SelectElement (DocSDomain, FirstElSDomain, TRUE, TRUE);
      }
    
-   if (lastElInitialSelection != firstElInitialSelection &&
-       lastElInitialSelection != NULL)
-      ExtendSelection (lastElInitialSelection, endChar, TRUE, FALSE, FALSE);
+  if (LastElSDomain != FirstElSDomain && LastElSDomain != NULL)
+    ExtendSelection (LastElSDomain, endChar, TRUE, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -241,55 +237,55 @@ void                RestoreAfterSearch ()
    elCourant et carCourant representent la position ou il faut     
    relancer la recherche.                                          
   ----------------------------------------------------------------------*/
-ThotBool NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
+ThotBool NextTree (PtrElement *pEl, int *charIndx, PtrSearchContext context)
 {
-   int                 i;
-   ThotBool            ret;
+  int                 i;
+  ThotBool            ret;
 
-   *pEl = NULL;
-   *charIndx = 0;
-   ret = FALSE;
-   if (context != NULL)
-      if (context->SWholeDocument && context->STree >= 0)
+  *pEl = NULL;
+  *charIndx = 0;
+  ret = FALSE;
+  if (context  &&
+      context->SWholeDocument && context->STree >= 0)
+    {
+      i = context->STree;
+      context->STree = -1;
+      if (context->SStartToEnd)
+	/* search forward */
 	{
-	   i = context->STree;
-	   context->STree = -1;
-	   if (context->SStartToEnd)
-	      /* search forward */
-	     {
-		i++;
-		while (i < MAX_ASSOC_DOC && context->STree < 0)
-		   if (context->SDocument->DocAssocRoot[i - 1] != NULL)
-		      context->STree = i;
-		   else
-		      i++;
-	     }
-	   else
-	      /* search backward */
-	     {
-		i--;
-		while (i > 0 && context->STree < 0)
-		   if (context->SDocument->DocAssocRoot[i - 1] != NULL)
-		      context->STree = i;
-		   else
-		      i--;
-		if (i == 0)
-		   if (context->SDocument->DocDocElement != NULL)
-		      context->STree = 0;
-	     }
-	   if (context->STree == 0)
-	      *pEl = context->SDocument->DocDocElement;
-	   else if (context->STree > 0)
-	      *pEl = context->SDocument->DocAssocRoot[i - 1];
-	   if (*pEl != NULL)
-	      if (!context->SStartToEnd)
-		{
-		   *pEl = LastLeaf (*pEl);
-		   *charIndx = (*pEl)->ElVolume;
-		}
-	   ret = (context->STree >= 0);
+	  i++;
+	  while (i < MAX_ASSOC_DOC && context->STree < 0)
+	    if (context->SDocument->DocAssocRoot[i - 1] != NULL)
+	      context->STree = i;
+	    else
+	      i++;
 	}
-   return ret;
+      else
+	/* search backward */
+	{
+	  i--;
+	  while (i > 0 && context->STree < 0)
+	    {
+	      if (context->SDocument->DocAssocRoot[i - 1] != NULL)
+		context->STree = i;
+	      else
+		i--;
+	    }
+	  if (i == 0 && context->SDocument->DocDocElement != NULL)
+	    context->STree = 0;
+	}
+      if (context->STree == 0)
+	*pEl = context->SDocument->DocDocElement;
+      else if (context->STree > 0)
+	*pEl = context->SDocument->DocAssocRoot[i - 1];
+      if (*pEl != NULL && !context->SStartToEnd)
+	{
+	  *pEl = LastLeaf (*pEl);
+	  *charIndx = (*pEl)->ElVolume;
+	}
+      ret = (context->STree >= 0);
+    }
+  return ret;
 
 }
 
@@ -299,7 +295,7 @@ ThotBool NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
   Returns the selected word, its beginning and end postion.
   The parameter context points to the search domain.
   ----------------------------------------------------------------------*/
-ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
+ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 			 CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 {
   PtrElement          pEl, endEl;
@@ -313,7 +309,7 @@ ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
   pEl = *curEl;
   iChar = *end;
   *beginning = iChar;
-  word[0] = EOS;
+  word[0] = WC_EOS;
 
   if (pEl == NULL && context != NULL)
     {
@@ -363,13 +359,13 @@ ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
 	    /* the element found is after the end of the domain */
 	    pEl = NULL;
 	}
-      else if (context != NULL)
-	if (context->SWholeDocument)
-	  {
-	    /* get the next tree to process */
-	    if (NextTree (&pEl, &iChar, context) && pEl->ElTypeNumber != CharString + 1)
-	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
-	  }
+      else if (context != NULL && context->SWholeDocument)
+	{
+	  /* get the next tree to process */
+	  if (NextTree (&pEl, &iChar, context) &&
+	      pEl->ElTypeNumber != CharString + 1)
+	    pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+	}
 
       if (pEl != NULL)
 	/* on verifie que cet element ne fait pas partie d'une inclusion et */
@@ -415,7 +411,8 @@ ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
       /* On verifie que l'on ne depasse pas la fin du domaine de recherche */
       len = 0;
       *beginning = iChar;
-      while (len < MAX_WORD_LEN-1 && charact != WC_EOS && !IsSeparatorChar (charact) &&
+      while (len < MAX_WORD_LEN-1 && charact != WC_EOS &&
+	     !IsSeparatorChar (charact) &&
 	     (pEl != endEl || iChar < endChar))
 	{
 	  word[len++] = charact;
@@ -424,7 +421,7 @@ ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
 	}
 
       /* positionne les valeurs de retour */
-      word[len] = EOS;
+      word[len] = WC_EOS;
       *curEl = pEl;
       *end = iChar;
       /* Si on a trouve effectivement un mot */
@@ -444,7 +441,7 @@ ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
   Returns the selected word, its beginning and end postion.
   The parameter context points to the search domain.
   ----------------------------------------------------------------------*/
-ThotBool SearchPreviousWord (PtrElement * curEl, int *beginning, int *end,
+ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 			     CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 {
   PtrElement          pEl, endEl;
@@ -459,7 +456,7 @@ ThotBool SearchPreviousWord (PtrElement * curEl, int *beginning, int *end,
   pEl = *curEl;
   iChar = *beginning;
   *end = iChar;
-  word[0] = EOS;
+  word[0] = WC_EOS;
   if (pEl == NULL)
     {
       /* C'est le debut de la recherche */
@@ -554,7 +551,8 @@ ThotBool SearchPreviousWord (PtrElement * curEl, int *beginning, int *end,
       index = len;
       charact = pBuf->BuContent[index];
       /* On se place a la fin du mot */
-      while (charact != WC_EOS && iChar >= 0 && IsSeparatorChar (charact) &&
+      while (charact != WC_EOS && iChar >= 0 &&
+	     IsSeparatorChar (charact) &&
 	     (pEl != endEl || iChar >= endChar))
 	{
 	  charact = PreviousCharacter (&pBuf, &index);
@@ -582,7 +580,7 @@ ThotBool SearchPreviousWord (PtrElement * curEl, int *beginning, int *end,
 	}
 
       /* positionne les valeurs de retour */
-      word[len] = EOS;
+      word[len] = WC_EOS;
       *curEl = pEl;
       *beginning = iChar;
       *end = iChar + len;

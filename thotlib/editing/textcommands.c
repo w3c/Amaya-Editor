@@ -1130,11 +1130,6 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	      c = NextCharacter (&buffer, &i);
 	      isSep = IsSeparatorChar (c);
 	    }
-	  /*while (c == WC_SPACE)
-	    {
-	    last++;
-	    c = NextCharacter (&buffer, &i);
-	    }*/
 	  if (isSep)
 	    last--;
 	  pDoc = LoadedDocument[doc - 1];

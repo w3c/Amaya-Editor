@@ -3314,9 +3314,10 @@ int main (int argc, char **argv)
    int                 i;
    int                 param;
 #ifdef _WINDOWS
-   char*               cmd [100];
+   char               *CMD;
+   char               *cmd[100];
    int                 ndx, pIndex = 0;
-   char                msg [800];
+   char                msg[800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #else  /* !_WINDOWS */
@@ -3329,10 +3330,11 @@ int main (int argc, char **argv)
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
    strcpy (msg, "Executing tra ");
-   for (ndx = 1; ndx < argc; ndx++) {
-     strcat (msg, argv [ndx]);
-     strcat (msg, " ");
-   }
+   for (ndx = 1; ndx < argc; ndx++)
+     {
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
+     }
 
    TtaDisplayMessage (INFO, msg);
 
@@ -3364,7 +3366,7 @@ int main (int argc, char **argv)
 	   /* keep cpp params */
 #ifdef _WINDOWS
 	   cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
-	   wc2iso_strcpy (cmd [pIndex++], argv[param]);
+	   strcpy (cmd [pIndex++], argv[param]);
 #else  /* !_WINDOWS */
 	   strcat (cmd, argv[param]);
 	   strcat (cmd, " ");
@@ -3428,17 +3430,16 @@ int main (int argc, char **argv)
 	   if (pwd != NULL)
 	     {
 #ifdef _WINDOWS
-	       char* CMD;
 	       CMD = TtaGetMemory (3 + strlen (pwd));
 	       sprintf (CMD, "-I%s", pwd);
 	       cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
-	       wc2iso_strcpy (cmd [pIndex++], CMD);
+	       strcpy (cmd [pIndex++], CMD);
 	       cmd [pIndex] = TtaGetMemory (3);
 	       strcpy (cmd [pIndex++], "-C");
 	       cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
-	       wc2iso_strcpy (cmd [pIndex++], srceFileName);
+	       strcpy (cmd [pIndex++], srceFileName);
 	       cmd [pIndex] = TtaGetMemory (strlen (fname) + 1);
-	       wc2iso_strcpy (cmd [pIndex++], fname);
+	       strcpy (cmd [pIndex++], fname);
 #else  /* !_WINDOWS */
 	       sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 #endif /* _WINDOWS */
@@ -3449,9 +3450,9 @@ int main (int argc, char **argv)
                cmd [pIndex] = TtaGetMemory (3);
                strcpy (cmd [pIndex++], "-C");
                cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
-               wc2iso_strcpy (cmd [pIndex++], srceFileName);
+               strcpy (cmd [pIndex++], srceFileName);
                cmd [pIndex] = TtaGetMemory (strlen (fname) + 2);
-               wc2iso_strcpy (cmd [pIndex++], fname);
+               strcpy (cmd [pIndex++], fname);
 #else  /* !_WINDOWS */
                sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
 #endif /* _WINDOWS */

@@ -37,7 +37,7 @@ and must be removed at the end of the debug */
   It should be displayed as a & and should be exported as &
   instead of &amp;
 */
-#define START_ENTITY 128
+#define START_ENTITY 26
 
 /**********************************************************/
 #if defined(_WINDOWS) || defined(_CONSOLE)
@@ -188,13 +188,13 @@ typedef unsigned char   ThotBool;
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
 #ifdef _I18N_
-#      define ___TEXT___(str) L##str
+#define ___TEXT___(str) L##str
 #else  /* !_I18N_ */
-#      define ___TEXT___(str) str
+#define ___TEXT___(str) str
 #endif /* _I18N_ */
 
 #ifndef TEXT
-#define str ___TEXT___(str)
+#define TEXT(str) ___TEXT___(str)
 #endif  /* TEXT */
 
 #define __CR__  '\r'

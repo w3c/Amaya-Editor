@@ -1272,87 +1272,78 @@ LRESULT CALLBACK CompilersWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM l
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		    PSTR szCmdLine, int iCmdShow)
 {
-     char         CMDLine[MAX_LENGTH];
-     HWND           hwnd;
-     MSG            msg;
-     WNDCLASSEX     wndClass;
-     BOOL           ok;
-     int            argc;
-     char**       argv;
-     char*        dir_end;
-     char*        BinPath;
+  char         CMDLine[MAX_LENGTH];
+  HWND         hwnd;
+  MSG          msg;
+  WNDCLASSEX   wndClass;
+  BOOL         ok;
+  int          argc;
+  char**       argv;
+  char*        dir_end;
+  char*        BinPath;
 
-	 g_hInstance = hInstance;
+  g_hInstance = hInstance;
+  InitCommonControls ();
+  strcpy (CMDLine, szCmdLine);
+  argc = makeArgcArgv (hInstance, &argv, CMDLine);
+  cmdLine = TtaGetMemory (strlen (argv[0]) + 1);
+  strcpy (cmdLine, argv [0]);
+  TtaInitializeAppRegistry (argv [0]);
+  BinPath = TtaGetEnvString ("PWD");
+  dir_end = BinPath;
+  /* go to the ending NUL */
+  while (*dir_end)
+    dir_end++;
 
-     InitCommonControls ();
-
-     iso2wc_strcpy (CMDLine, szCmdLine);
-     argc = makeArgcArgv (hInstance, &argv, CMDLine);
-
-	 cmdLine = TtaGetMemory (strlen (argv[0]) + 1);
-	 strcpy (cmdLine, argv [0]);
-
-     TtaInitializeAppRegistry (argv [0]);
-
-     BinPath = TtaGetEnvString ("PWD");
-     dir_end = BinPath;
-
-     /* go to the ending NUL */
-     while (*dir_end)
-           dir_end++;
-
-     /* remove the application name */
-     ok = FALSE;
-     do
-       {
-	 dir_end--;
-	 ok = (dir_end <= BinPath || *dir_end == DIR_SEP);
-       } while (!ok);
-
-     if (*dir_end == DIR_SEP)
-       {
-        /* the name has been found */
-        *dir_end = EOS;
-        /* save the binary directory in BinariesDirectory */
-       }
-
-     WorkPath = TtaGetMemory (strlen (BinPath) + 7);
-     strcpy (WorkPath, BinPath);
-     strcat (WorkPath, "\\amaya");
-     /*** sprintf (WorkPath, "%s\\amaya", BinPath); ***/
-
-     ThotPath = TtaGetEnvString ("THOTDIR");
-     wndClass.style         = CS_HREDRAW | CS_VREDRAW ;
-     wndClass.lpfnWndProc   = (WNDPROC) CompilersWndProc ;
-     wndClass.cbClsExtra    = 0 ;
-     wndClass.cbWndExtra    = 0 ;
-     wndClass.hInstance     = hInstance ;
-     wndClass.hIcon         = LoadIcon (NULL, COMP_ICON) ;
-     wndClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-     wndClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH) ;
-     wndClass.lpszMenuName  = NULL ;
-     wndClass.lpszClassName = szAppName ;
-     wndClass.cbSize        = sizeof(WNDCLASSEX);
-     wndClass.hIconSm       = LoadIcon (hInstance, COMP_ICON) ;
-
-     if (!RegisterClassEx (&wndClass))
-        return FALSE;
-
-     hwnd = CreateWindowEx (0, szAppName, "Thot compilers",
-                            DS_MODALFRAME | WS_POPUP |
-                            WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                            0, 0,
-                            600, 650,
-                            NULL, NULL, hInstance, NULL) ;
-
-    ShowWindow (hwnd, SW_SHOWNORMAL) ;
-    UpdateWindow (hwnd) ;
-
-    while (GetMessage (&msg, NULL, 0, 0))
-      {
-	TranslateMessage (&msg) ;
-	DispatchMessage (&msg) ;
-      } 
-    return TRUE;
+  /* remove the application name */
+  ok = FALSE;
+  do
+    {
+      dir_end--;
+      ok = (dir_end <= BinPath || *dir_end == DIR_SEP);
+    } while (!ok);
+  if (*dir_end == DIR_SEP)
+    {
+      /* the name has been found */
+      *dir_end = EOS;
+      /* save the binary directory in BinariesDirectory */
+    }
+  WorkPath = TtaGetMemory (strlen (BinPath) + 7);
+  strcpy (WorkPath, BinPath);
+  strcat (WorkPath, "\\amaya");
+  /*** sprintf (WorkPath, "%s\\amaya", BinPath); ***/
+  
+  ThotPath = TtaGetEnvString ("THOTDIR");
+  wndClass.style         = CS_HREDRAW | CS_VREDRAW;
+  wndClass.lpfnWndProc   = (WNDPROC) CompilersWndProc;
+  wndClass.cbClsExtra    = 0;
+  wndClass.cbWndExtra    = 0;
+  wndClass.hInstance     = hInstance;
+  wndClass.hIcon         = LoadIcon (NULL, COMP_ICON);
+  wndClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+  wndClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+  wndClass.lpszMenuName  = NULL;
+  wndClass.lpszClassName = szAppName;
+  wndClass.cbSize        = sizeof(WNDCLASSEX);
+  wndClass.hIconSm       = LoadIcon (hInstance, COMP_ICON);
+  if (!RegisterClassEx (&wndClass))
+    return FALSE;
+  
+  hwnd = CreateWindowEx (0, szAppName, "Thot compilers",
+			 DS_MODALFRAME | WS_POPUP |
+			 WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+			 0, 0,
+			 600, 650,
+			 NULL, NULL, hInstance, NULL);
+  
+  ShowWindow (hwnd, SW_SHOWNORMAL);
+  UpdateWindow (hwnd);
+  
+  while (GetMessage (&msg, NULL, 0, 0))
+    {
+      TranslateMessage (&msg);
+      DispatchMessage (&msg);
+    } 
+  return TRUE;
 }
 #endif /* _WINDOWS */

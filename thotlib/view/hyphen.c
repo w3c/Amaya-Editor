@@ -23,13 +23,18 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 
-static CHAR_T         sepcar[] =
+static CHAR_T sepcar[] =
 {
-   ' ', '.', ',', '`', '\47', '-', ';', ':', '[', ']', '(', ')', '{', '}', '<', '>',
-   '/', '!', '?', '\240', '\241', '\277', '\253', '\273', '\212', '"', '\201', '\202'
+ TEXT(' '), TEXT('.'), TEXT(','), TEXT('`'), TEXT('\47'), TEXT('-'),
+ TEXT(';'), TEXT(':'), TEXT('['), TEXT(']'), TEXT('('), TEXT(')'),
+ TEXT('{'), TEXT('}'), TEXT('<'), TEXT('>'), TEXT('/'), TEXT('!'),
+ TEXT('?'), TEXT('\n'), TEXT('\240'), TEXT('\241'), TEXT('\277'),
+ TEXT('\253'), TEXT('\273'), TEXT('\212'), TEXT('"'), TEXT('\201'),
+ TEXT('\202')
 };
 
 #include "font_f.h"
+#include "ustring_f.h"
 
 /*----------------------------------------------------------------------
    PatternHyphen  cherche pour le mot word le premier point de     
@@ -43,14 +48,18 @@ static CHAR_T         sepcar[] =
 static int PatternHyphen (STRING word, int length, Language language,
 			  ThotBool *addHyphen)
 {
-   int                 i, k;
-   int                 status;
-   int                *pHyphen;
+  char                iso;     
+  int                 i, k;
+  int                 status;
+  int                *pHyphen;
 
    *addHyphen = FALSE;
    status = 0;
-
-   pHyphen = TtaGetPatternHyphenList (word, language);
+   /* current patterns concern only iso-latin characters */
+   iso = TtaGetMemory (ustrlen (word) + 1);
+   wc2iso_strcpy (iso, word);
+   pHyphen = TtaGetPatternHyphenList (iso, language);
+   TtaFreeMemory (iso);
    if (pHyphen == NULL)
       /* Pas de point de coupure */
       return status;
@@ -76,7 +85,7 @@ static int PatternHyphen (STRING word, int length, Language language,
    retourne TRUE si c'est un separateur               
    FALSE sinon                               
   ----------------------------------------------------------------------*/
-ThotBool            IsSeparatorChar (CHAR_T c)
+ThotBool IsSeparatorChar (CHAR_T c)
 {
    int              i, lg;
    
@@ -93,7 +102,7 @@ ThotBool            IsSeparatorChar (CHAR_T c)
 /*----------------------------------------------------------------------
    SmallLettering convertit les caracte`res majuscules en minuscules.   
   ----------------------------------------------------------------------*/
-void                SmallLettering (STRING word)
+void SmallLettering (STRING word)
 {
    UCHAR_T       c;
    int           j;
@@ -228,9 +237,9 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
    Le parame`tre language donne l'indice de la langue dans 
    la table des langues courante.                          
   ----------------------------------------------------------------------*/
-static int WordHyphen (STRING word, int length, Language language, ThotBool * hyphen)
+static int WordHyphen (STRING word, int length, Language language,
+		       ThotBool *hyphen)
 {
-
    /* Convertit le mot en minuscule */
    SmallLettering (word);
    return PatternHyphen (word, length, language, hyphen);
@@ -253,105 +262,102 @@ static int WordHyphen (STRING word, int length, Language language, ThotBool * hy
 int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
 		    int *rank, int *width, ThotBool *hyphen)
 {
-   PtrTextBuffer       adbuff;
-   int                 i, lghyphen;
-   int                 longueur, nbChars;
-   int                 largeur, charWidth;
-   int                 longretour, lgreste;
-   int                 wordLength;
-   CHAR_T                mot[THOT_MAX_CHAR];
+  PtrTextBuffer       adbuff;
+  CHAR_T              word[THOT_MAX_CHAR];
+  int                 i, lghyphen;
+  int                 length, nbChars;
+  int                 w, charWidth;
+  int                 retLength, rest;
+  int                 wordLength;
 
-   /* Si la coupure de mots est active */
-   longretour = 0;
-   *hyphen = FALSE;
+  /* Si la coupure de words est active */
+  retLength = 0;
+  *hyphen = FALSE;
+  if (*width > 0 && *buffer != NULL)
+    {
+      /* La position du debut du word */
+      adbuff = *buffer;
+      i = *rank - 1;
+      if (i >= adbuff->BuLength)
+	{
+	  if (adbuff->BuNext != NULL)
+	    {
+	      i = 0;
+	      adbuff = adbuff->BuNext;
+	    }
+	  else
+	    return retLength;
+	}
 
-   if (*width > 0 && *buffer != NULL)
-     {
-	/* La position du debut du mot */
-	adbuff = *buffer;
+      /* Length et largeur des separateurs avant le word */
+      nbChars = NextWord (font, &adbuff, &i, word, &w);
+      /* Largeur du tiret d'hyphenantion */
+      lghyphen = CharacterWidth (173, font);
+      /* Espace restant dans la ligne */
+      rest = *width - w - lghyphen;
+      /* Nombre de carateres maximum du word pouvant entrer dans la ligne */
+      if (word != NULL)
+	/* On a isole un word assez long */
+	wordLength = ustrlen (word);	/* nombre de caraceteres du word isole */
+      if (wordLength > 4 && rest > 0)
+	{
+	  /* Recherche le nombre de caracteres du word qui rentrent */
+	  /* dans la ligne */
+	  length = 0;
+	  charWidth = CharacterWidth ((UCHAR_T) word[length], font);
+	  while (rest >= charWidth && length < wordLength)
+	    {
+	      rest -= charWidth;
+	      length++;
+	      charWidth = CharacterWidth ((UCHAR_T) word[length], font);
+	    }
 
-	i = *rank - 1;
-	if (i >= adbuff->BuLength)
-	  {
-	   if (adbuff->BuNext != NULL)
-	     {
-		i = 0;
-		adbuff = adbuff->BuNext;
-	     }
-	   else
-	      return longretour;
-	  }
-
-	/* Longueur et largeur des separateurs avant le mot */
-	nbChars = NextWord (font, &adbuff, &i, mot, &largeur);
-	/* Largeur du tiret d'hyphenantion */
-	lghyphen = CharacterWidth (173, font);
-	/* Espace restant dans la ligne */
-	lgreste = *width - largeur - lghyphen;
-	/* Nombre de carateres maximum du mot pouvant entrer dans la ligne */
-
-	if (mot != NULL)
-	   /* On a isole un mot assez long */
-	   wordLength = ustrlen (mot);	/* nombre de caraceteres du mot isole */
-	if (wordLength > 4 && lgreste > 0)
-	  {
-	     /* Recherche le nombre de caracteres du mot qui rentrent */
-	     /* dans la ligne */
-	     longueur = 0;
-	     charWidth = CharacterWidth ((UCHAR_T) mot[longueur], font);
-	     while (lgreste >= charWidth && longueur < wordLength)
-	       {
-		  lgreste -= charWidth;
-		  longueur++;
-		  charWidth = CharacterWidth ((UCHAR_T) mot[longueur], font);
-	       }
-
-	     if (longueur > 1)
-	       {
-		  /* Recherche un point de coupure pour le mot */
-		  longueur = WordHyphen (mot, longueur, language, hyphen);
-		  if (longueur > 0)
+	  if (length > 1)
+	    {
+	      /* Recherche un point de coupure pour le word */
+	      length = WordHyphen (word, length, language, hyphen);
+	      if (length > 0)
+		{
+		  /* On a trouve un point de coupure */
+		  if (*hyphen)
+		    *width = w + lghyphen; /* 1ere partie du word */
+		  else
+		    *width = w;	/* 1ere partie du word */
+		  /* number of characters */
+		  retLength = length + nbChars;
+		  while (length > 0)
 		    {
-		       /* On a trouve un point de coupure */
-		       if (*hyphen)
-			  *width = largeur + lghyphen;	/* 1ere partie du mot */
-		       else
-			  *width = largeur;	/* 1ere partie du mot */
-
-		       longretour = longueur + nbChars;	/* nombre de caracteres */
-		       while (longueur > 0)
-			 {
-			    if (i >= adbuff->BuLength)
-			      {
-				 /* Il faut changer de buffer */
-				 adbuff = adbuff->BuNext;
-				 i = 0;
-			      }
-			    else
-			      {
-				 /* comptabilise le caractere */
-				 longueur--;
-				 *width += CharacterWidth ((UCHAR_T) (adbuff->BuContent[i++]), font);
-			      }
-			 }	/*while */
-
-		       /* Indice dans le buffer 2eme partie du mot */
-		       if (i >= adbuff->BuLength)
-			 {
-			    /* Il faut changer de buffer */
-			    i++;
-			    /* nouvelle position */
-			    *rank = i - adbuff->BuLength;
-			    adbuff = adbuff->BuNext;
-			 }
-		       else
-			  *rank = i + 1;
-		       *buffer = adbuff;
+		      if (i >= adbuff->BuLength)
+			{
+			  /* Il faut changer de buffer */
+			  adbuff = adbuff->BuNext;
+			  i = 0;
+			}
+		      else
+			{
+			  /* comptabilise le caractere */
+			  length--;
+			  *width += CharacterWidth ((UCHAR_T) (adbuff->BuContent[i++]), font);
+			}
 		    }
-	       }
-	  }
-     }
-   return longretour;
+		  
+		  /* Indice dans le buffer 2eme partie du word */
+		  if (i >= adbuff->BuLength)
+		    {
+		      /* Il faut changer de buffer */
+		      i++;
+		      /* nouvelle position */
+		      *rank = i - adbuff->BuLength;
+		      adbuff = adbuff->BuNext;
+		    }
+		  else
+		    *rank = i + 1;
+		  *buffer = adbuff;
+		}
+	    }
+	}
+    }
+  return retLength;
 }
 
 
@@ -376,8 +382,6 @@ ThotBool            CanHyphen (PtrBox pBox)
 	  if (language == 0)
 	    /* On saute la langue ISOlatin-1 */
 	    return FALSE;
-	  /*   else if (language == TtaGetLanguageIdFromName("Fran\347ais")) */
-	  /*      return TRUE; */
 	  else if (TtaGetPrincipalDictionary (language) != NULL)
 	    /* Traitement par le dictionnaire de la langue */
 	    return TRUE;

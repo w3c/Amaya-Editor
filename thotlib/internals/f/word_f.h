@@ -15,15 +15,15 @@ extern ThotBool InitSearchDomain ( int domain,
 extern void UpdateDuringSearch ( PtrElement pEl,
                                  int len );
 extern void RestoreAfterSearch ( void );
-extern ThotBool NextTree ( PtrElement * pEl,
+extern ThotBool NextTree ( PtrElement *pEl,
                            int *charIndx,
                            PtrSearchContext context );
-extern ThotBool SearchNextWord ( PtrElement * curEl,
+extern ThotBool SearchNextWord ( PtrElement *curEl,
                                  int *beginning,
                                  int *end,
                                  CHAR_T word[MAX_WORD_LEN],
                                  PtrSearchContext context );
-extern ThotBool SearchPreviousWord ( PtrElement * curEl,
+extern ThotBool SearchPreviousWord ( PtrElement *curEl,
                                      int *beginning,
                                      int *end,
                                      CHAR_T word[MAX_WORD_LEN],
@@ -40,15 +40,15 @@ extern ThotBool InitSearchDomain (/* int domain,
 extern void UpdateDuringSearch (/* PtrElement pEl,
                                    int len */);
 extern void RestoreAfterSearch (/* void */);
-extern ThotBool NextTree (/* PtrElement * pEl,
+extern ThotBool NextTree (/* PtrElement *pEl,
                              int *charIndx,
                              PtrSearchContext context */);
-extern ThotBool SearchNextWord (/* PtrElement * curEl,
+extern ThotBool SearchNextWord (/* PtrElement *curEl,
                                    int *beginning,
                                    int *end,
                                    CHAR_T word[MAX_WORD_LEN],
                                    PtrSearchContext context */);
-extern ThotBool SearchPreviousWord (/* PtrElement * curEl,
+extern ThotBool SearchPreviousWord (/* PtrElement *curEl,
                                        int *beginning,
                                        int *end,
                                        CHAR_T word[MAX_WORD_LEN],

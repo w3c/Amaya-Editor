@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1999.
+ *  (c) COPYRIGHT INRIA, 1999-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -26,8 +26,8 @@ unsigned long offset[6] = {
 };
 
 typedef struct {
-  CHAR_T  ISOCode [50];
-  CHARSET Charset;
+  char        ISOCode [50];
+  CHARSET     Charset;
 } CharsetCode;
 
 static CharsetCode CharsetCodeTable[] =
@@ -36,121 +36,35 @@ static CharsetCode CharsetCodeTable[] =
     {"iso646-US",        US_ASCII},
     {"us-ascii",         US_ASCII},
     {"us",               US_ASCII},
-#ifdef IV
-    {"ansi_x3.4-1968",   US_ASCII},
-    {"iso-ir-6",         US_ASCII},
-    {"ANSI_X3.4-1986",   US_ASCII},
-    {"iso_646.irv:1991", US_ASCII},
-    {"IBM367",           US_ASCII},
-    {"cp367",            US_ASCII},
-    {"csASCII",          US_ASCII},
-#endif
-
     {"iso-8859-1",      ISO_8859_1},
     {"iso_8859-1:1987", ISO_8859_1},
     {"latin1",          ISO_8859_1},
-#ifdef IV
-    {"l1",              ISO_8859_1},
-    {"IBM819",          ISO_8859_1},
-    {"CP819",           ISO_8859_1},
-    {"csISOLatin1",     ISO_8859_1},
-#endif
-
     {"iso-8859-2",      ISO_8859_2},
     {"iso_8859-2:1987", ISO_8859_2},
     {"latin2",          ISO_8859_2},
-#ifdef IV
-    {"iso-ir-101",      ISO_8859_2},
-    {"l2",              ISO_8859_2},
-    {"csisoLatin2",     ISO_8859_2},
-#endif
-
     {"iso-8859-3",      ISO_8859_3},
     {"iso_8859-3:1988", ISO_8859_3},
     {"latin3",          ISO_8859_3},
-#ifdef IV
-    {"iso-ir-109",      ISO_8859_3},
-    {"l3",              ISO_8859_3},
-    {"csisoLatin3",     ISO_8859_3},
-#endif
-
     {"iso-8859-4",      ISO_8859_4},
     {"iso_8859-4:1988", ISO_8859_4},
     {"latin4",          ISO_8859_4},
-#ifdef IV
-    {"iso-ir-110",      ISO_8859_4},
-    {"l4",              ISO_8859_4},
-    {"csisoLatin4",     ISO_8859_4},
-#endif
-
     {"iso-8859-5",         ISO_8859_5},
     {"iso_8859-5:1988",    ISO_8859_5},
-#ifdef IV
-    {"iso-ir-144",         ISO_8859_5},
-    {"iso_8859-5",         ISO_8859_5},
-    {"cyrillic",           ISO_8859_5},
-    {"csisoLatinCyrillic", ISO_8859_5},
-#endif
-
     {"iso-8859-6",       ISO_8859_6},
     {"iso_8859-6:1987",  ISO_8859_6},
     {"iso-8859-6",       ISO_8859_6},
     {"arabic",           ISO_8859_6},
     {"ECMA-114",         ISO_8859_6},
-#ifdef IV
-    {"iso-ir-127",       ISO_8859_6},
-    {"ASMO-708",         ISO_8859_6},
-    {"csISOLatinArabic", ISO_8859_6},
-    {"ISO_8859-6-E", ISO_8859_6_E},
-    {"csISO88596E",  ISO_8859_6_E},
-    {"ISO_8859-6-I", ISO_8859_6_I},
-    {"csISO88596I",  ISO_8859_6_I},
-#endif
-
     {"iso-8859-7",      ISO_8859_7},
     {"iso_8859-7:1987", ISO_8859_7},
     {"greek",           ISO_8859_7},
     {"ECMA-118",        ISO_8859_7},
-#ifdef IV
-    {"iso-ir-126",      ISO_8859_7},
-    {"ELOT_928",        ISO_8859_7},
-    {"greek8",          ISO_8859_7},
-    {"csISOLatinGreek", ISO_8859_7},
-#endif
-
     {"iso-8859-8",       ISO_8859_8},
     {"iso_8859-8:1988",  ISO_8859_8},
     {"hebrew",           ISO_8859_8},
-#ifdef IV
-    {"iso-ir-138",       ISO_8859_8},
-    {"csISOLatinHebrew", ISO_8859_8},
-    {"ISO_8859-8-E", ISO_8859_8_E},
-    {"csISO88598E",  ISO_8859_8_E},
-    {"ISO_8859-8-I", ISO_8859_8_I},
-    {"csISO88598I",  ISO_8859_8_I},
-#endif
-
     {"iso-8859-9",      ISO_8859_9},
     {"iso_8859-9:1989", ISO_8859_9},
     {"latin5",          ISO_8859_9},
-#ifdef IV
-    {"iso-ir-148",      ISO_8859_9},
-    {"l5",              ISO_8859_9},
-    {"csISOLatin5",     ISO_8859_9},
-
-    {"latin6",           ISO_8859_10},
-    {"iso-ir-157",       ISO_8859_10},
-    {"l6",               ISO_8859_10},
-    {"ISO_8859-10:1992", ISO_8859_10},
-    {"csISOLatin6",      ISO_8859_10},
-
-    {"ISO_8859-15", ISO_8859_15},
-    
-    {"ISO_8859-supp", ISO_8859_supp},
-    {"iso-ir-154",    ISO_8859_supp},
-    {"latin1-2-5",    ISO_8859_supp},
-    {"csISO8859Supp", ISO_8859_supp},
-#endif
 
     {"UNICODE-1-1", UNICODE_1_1},
     {"csUnicode11", UNICODE_1_1},
@@ -176,12 +90,7 @@ static CharsetCode CharsetCodeTable[] =
 /*-------------------------------------------------------------
   uputchar
   -------------------------------------------------------------*/
-#ifdef __STDC__
 int     uputchar (int c)
-#else  /* __STDC__ */
-int     uputchar (c)
-int     c;
-#endif /* __STDC__ */
 {
 #ifdef _I18N_
     /* Compatibility of putwchar: ANSI, WIN NT and WIN 9x */
@@ -194,38 +103,32 @@ int     c;
 /*-------------------------------------------------------------
   ustrcasecmp: compare two strings without regard to case.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-int           ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
-#else  /* __STDC__ */
-int           ustrcasecmp (str1, str2)
-const CHAR_T *str1;
-const CHAR_T *str2;
-#endif /* __STDC__ */
+int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
-    /* Compatibility of _wcsicmp: WIN NT WIN 9x */
-    return (int) _wcsicmp ((wchar_t*)str1, (wchar_t*)str2);
+  /* Compatibility of _wcsicmp: WIN NT WIN 9x */
+  return (int) _wcsicmp ((wchar_t*)str1, (wchar_t*)str2);
 #else  /* _WINDOWS */
-    int len1 = ustrlen (str1);
-    int len2 = ustrlen (str2);
-    int i    = 0;
+  int len1 = ustrlen (str1);
+  int len2 = ustrlen (str2);
+  int i    = 0;
 
-    if (len1 != len2)
-       return (len1 - len2);
-
-    while (str1[i]) {
-          if (towlower (str1[i]) != towlower (str2[i]))
-             return (str1[i] - str2[i]);
-          i++;
-	}
-    return 0;
+  if (len1 != len2)
+    return (len1 - len2);
+  while (str1[i])
+    {
+      if (towlower (str1[i]) != towlower (str2[i]))
+	return (str1[i] - str2[i]);
+      i++;
+    }
+  return 0;
 #endif /* _WINDOWS */
 #else  /* _I18N_ */
 #ifdef _WINDOWS
-    return (unsigned int) _stricmp ((char*)str1, (char*)str2);
+  return (unsigned int) _stricmp ((char*)str1, (char*)str2);
 #else  /* _WINDOWS */
-    return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
+  return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
 #endif /* _WINDOWS */
 #endif /* _I18N_ */
 }
@@ -236,19 +139,13 @@ const CHAR_T *str2;
   suposes that memory has been already allocated in the same 
   way that strcat does.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T       *ustrcat (CHAR_T *dest, const CHAR_T *src)
-#else  /* __STDC__ */
-CHAR_T       *ustrcat (dest, src)
-CHAR_T       *dest;
-const CHAR_T *src;
-#endif /* __STDC__ */
+CHAR_T *ustrcat (CHAR_T *dest, const CHAR_T *src)
 {
 #ifdef _I18N_
-    /* Compatibility of wcscat: ANSI, WIN NT and WIN 9x */
-    return (CHAR_T*) wcscat ((wchar_t*)dest, (wchar_t*)src);
+  /* Compatibility of wcscat: ANSI, WIN NT and WIN 9x */
+  return (CHAR_T*) wcscat ((wchar_t*)dest, (wchar_t*)src);
 #else  /* _I18N_ */
-    return (CHAR_T*) strcat ((char*)dest, (char*)src);
+  return (CHAR_T*) strcat ((char*)dest, (char*)src);
 #endif /* _I18N_ */
 }
 
@@ -256,19 +153,13 @@ const CHAR_T *src;
 /*-------------------------------------------------------------
   ustrchr: Find a character in a string.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T        *ustrchr (const CHAR_T *src, CHAR_T c)
-#else  /* __STDC__ */
-CHAR_T        *ustrchr (src, c)
-const CHAR_T  *src;
-CHAR_T         c;
-#endif /* __STDC__ */
+CHAR_T *ustrchr (const CHAR_T *src, CHAR_T c)
 {
 #ifdef _I18N_
-    /* Compatibility of wcschr: ANSI, WIN NT and WIN 9x */
-    return ((CHAR_T*) wcschr ((wchar_t*)src, (wint_t)c));
+  /* Compatibility of wcschr: ANSI, WIN NT and WIN 9x */
+  return ((CHAR_T*) wcschr ((wchar_t*)src, (wint_t)c));
 #else  /* _I18N_ */
-    return ((CHAR_T*) strchr ((char*)src, (int)c));
+  return ((CHAR_T*) strchr ((char*)src, (int)c));
 #endif /* _I18N_ */
 }
 
@@ -276,39 +167,27 @@ CHAR_T         c;
 /*-------------------------------------------------------------
   ustrcmp: compare strings.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-int           ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
-#else  /* __STDC__ */
-int           ustrcmp (str1, str2)
-const CHAR_T *str1;
-const CHAR_T *str2;
-#endif /* __STDC__ */
+int ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
 {
 #ifdef _I18N_
-    /* Compatibility of wcscmp: ANSI, WIN NT and WIN 9x */
-    return wcscmp ((wchar_t*)str1, (wchar_t*)str2);
+  /* Compatibility of wcscmp: ANSI, WIN NT and WIN 9x */
+  return wcscmp ((wchar_t*)str1, (wchar_t*)str2);
 #else  /* _I18N_ */
-    return strcmp ((char*)str1, (char*)str2);
+  return strcmp ((char*)str1, (char*)str2);
 #endif /* _I18N_ */
 }
 
 
 /*-------------------------------------------------------------
-  ustrcoll: compre strings using local-specific information.
+  ustrcoll: compare strings using local-specific information.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-int           ustrcoll (const CHAR_T *str1, const CHAR_T *str2)
-#else  /* __STDC__ */
-int           ustrcoll (str1, str2)
-const CHAR_T *str1;
-const CHAR_T *str2;
-#endif /* __STDC__ */
+int ustrcoll (const CHAR_T *str1, const CHAR_T *str2)
 {
 #ifdef _I18N_
-    /* Compatibility of wcscoll: ANSI, WIN NT and WIN 9x */
-    return wcscoll ((wchar_t*)str1, (wchar_t*)str2);
+  /* Compatibility of wcscoll: ANSI, WIN NT and WIN 9x */
+  return wcscoll ((wchar_t*)str1, (wchar_t*)str2);
 #else  /* _I18N_ */
-    return strcoll ((char*)str1, (char*)str2);
+  return strcoll ((char*)str1, (char*)str2);
 #endif /* _I18N_ */
 }
 
@@ -318,50 +197,13 @@ const CHAR_T *str2;
   momery has been already allocated in the same way that strcpy
   does.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T       *ustrcpy (CHAR_T *dest, const CHAR_T *src)
-#else  /* __STDC__ */
-CHAR_T       *ustrcpy (dest, src)
-CHAR_T       *dest;
-const CHAR_T *src;
-#endif /* __STDC__ */
+CHAR_T *ustrcpy (CHAR_T *dest, const CHAR_T *src)
 {
 #ifdef _I18N_
-    /* Compatibility of wcscpy: ANSI, WIN NT and WIN 9x */
-    return (CHAR_T*) wcscpy ((wchar_t*)dest, (wchar_t*)src);
+  /* Compatibility of wcscpy: ANSI, WIN NT and WIN 9x */
+  return (CHAR_T*) wcscpy ((wchar_t *)dest, (wchar_t *)src);
 #else  /* _I18N_ */
-    return (CHAR_T*) strcpy ((char*)dest, (char*)src);
-#endif /* _I18N_ */
-}
-
-
-/*-------------------------------------------------------------
-  ustrdup: duplicate strings.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T       *ustrdup (const CHAR_T *str)
-#else  /* __STDC__ */
-CHAR_T       *ustrdup (str)
-const CHAR_T *str;
-#endif /* __STDC__ */
-{
-#ifdef _I18N_
-#ifdef _WINDOWS
-    /* Compatibility of _wcsdup: WIN NT and WIN 9x */
-    return (CHAR_T*) _wcsdup (str);
-#else  /* _WINDOWS */
-    int     len = ustrlen (str);
-    CHAR_T* res = (CHAR_T*) malloc (len * sizeof (CHAR_T));
-    if (res)
-       ustrcpy (res, str);
-    return res;
-#endif /* _WINDOWS */
-#else  /* _I18N_ */
-#ifdef _WINDOWS
-    return (CHAR_T*) _strdup ((char*)str);
-#else  /* _WINDOWS */
-    return (CHAR_T*) strdup ((char*)str);
-#endif /* _WINDOWS */
+  return (CHAR_T*) strcpy ((char *)dest, (char *)src);
 #endif /* _I18N_ */
 }
 
@@ -371,25 +213,16 @@ const CHAR_T *str;
   function suposes that momery has been already allocated in the 
   same way that strcpy does.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T     *iso2wc_strcpy (CHAR_T *dest, const char *src)
-#else  /* __STDC__ */
-CHAR_T     *iso2wc_strcpy (dest, src)
-CHAR_T     *dest;
-const char *src;
-#endif /* __STDC__ */
+CHAR_T *iso2wc_strcpy (CHAR_T *dest, const char *src)
 {
 #ifdef _I18N_
-    int len = strlen (src);
-    /*
-    for (i = 0; i < len; i++)
-        dest[i] = (CHAR_T)src[i];
-    dest[i] = (CHAR_T)0;
-    */
-    mbstowcs (dest, src, len + 1);
-    return dest;
+  int len;
+
+  len = strlen (src);
+  mbstowcs (dest, src, len + 1);
+  return dest;
 #else  /* _I18N_ */
-    return (CHAR_T*) strcpy ((char*)dest, (char*)src);
+  return (CHAR_T *) strcpy ((char *)dest, (char *)src);
 #endif /* _I18N_ */
 }
 
@@ -397,18 +230,13 @@ const char *src;
 /*-------------------------------------------------------------
   ustrlen: get the length of a string.
   -------------------------------------------------------------*/
-#ifdef __STDC__
 size_t        ustrlen (const CHAR_T *str)
-#else  /* __STDC__ */
-size_t        ustrlen (str)
-const CHAR_T *str;
-#endif /* __STDC__ */
 {
 #ifdef _I18N_
-    /* Compatibility of wcslen: ANSI, WIN NT and WIN 9x */
-    return wcslen ((wchar_t*)str);
+  /* Compatibility of wcslen: ANSI, WIN NT and WIN 9x */
+  return wcslen ((wchar_t*)str);
 #else  /* _I18N_ */
-    return (size_t) strlen ((char*)str);
+  return (size_t) strlen ((char*)str);
 #endif /* _I18N_ */
 }
 
@@ -417,24 +245,18 @@ const CHAR_T *str;
   ustrncasecmp: compare characters of two strings without regard
                 to case.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-int           ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
-#else  /* __STDC__ */
-int           ustrncasecmp (str1, str2, count)
-const CHAR_T *str1;
-const CHAR_T *str2;
-unsigned int  count;
-#endif /* __STDC__ */
+int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2,
+		  unsigned int count)
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
   /* Compatibility of _wcsnicmp: WIN NT and WIN 9x */
-  return _wcsnicmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
+  return _wcsnicmp ((wchar_t *)str1, (wchar_t *)str2, (size_t)count);
 #else  /* _WINDOWS */
-  int len1 = ustrlen (str1);
-  int len2 = ustrlen (str2);
-  int len;
-  int ndx;
+  char      c1, c2;
+  int       len1 = ustrlen (str1);
+  int       len2 = ustrlen (str2);
+  int       len, ndx;
 
   if (count < len1 && count < len2)
     len = count;
@@ -447,10 +269,18 @@ unsigned int  count;
 
   for (ndx = 0; ndx < len; ndx++)
     {
-      CHAR_T c1 = towlower (str1[ndx]);
-      CHAR_T c2 = towlower (str2[ndx]);
-      if (c1 != c2)
-	return c1 - c2;
+      if (str1[ndx] != str2[ndx])
+	{
+	  if (str1[ndx] < 255 && str2[ndx] < 255)
+	    {
+	      c1 = towlower (str1[ndx]);
+	      c2 = towlower (str2[ndx]);
+	      if (c1 != c2)
+		return c1 - c2;
+	    }
+	  else
+	    return (int) str1[ndx] - (int) str2[ndx];
+	}
     }
   return 0;
 #endif /* _WINDOWS */
@@ -467,20 +297,13 @@ unsigned int  count;
 /*-------------------------------------------------------------
   ustrncat: append n characters of a string src.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T       *ustrncat (CHAR_T *dest, const CHAR_T *src, unsigned int count)
-#else  /* __STDC__ */
-CHAR_T       *ustrncat (dest, src, count)
-CHAR_T       *dest;
-const CHAR_T *src;
-unsigned int  count;
-#endif /* __STDC__ */
+CHAR_T *ustrncat (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 {
 #ifdef _I18N_ 
-    /* Compatibility of wcsncat: ANSI, WIN NT and WIN 9x */
-    return (CHAR_T*) wcsncat (dest, src, (size_t)count);
+  /* Compatibility of wcsncat: ANSI, WIN NT and WIN 9x */
+  return (CHAR_T*) wcsncat (dest, src, (size_t)count);
 #else  /* _I18N_ */
-    return (CHAR_T*) strncat ((char*)dest, (char*)src, (size_t)count);
+  return (CHAR_T*) strncat ((char*)dest, (char*)src, (size_t)count);
 #endif /* _I18N_ */
 }
 
@@ -488,14 +311,7 @@ unsigned int  count;
 /*-------------------------------------------------------------
   ustrncmp: compare n characters of str1 and str2.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T       *ustrncmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
-#else  /* __STDC__ */
-CHAR_T       *ustrncmp (str1, str2, count)
-const CHAR_T *str1;
-const CHAR_T *str2;
-unsigned int  count;
-#endif /* __STDC__ */
+CHAR_T *ustrncmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
 {
 #ifdef _I18N_ 
   /* Compatibility of wcsncmp: ANSI, WIN NT and WIN 9x */
@@ -509,14 +325,7 @@ unsigned int  count;
 /*-------------------------------------------------------------
   ustrncpy: copy n characters of one string to another.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T       *ustrncpy (CHAR_T *dest, const CHAR_T *src, unsigned int count)
-#else  /* __STDC__ */
-CHAR_T       *ustrncpy (dest, src, count)
-CHAR_T       *dest;
-const CHAR_T *src;
-unsigned int  count;
-#endif /* __STDC__ */
+CHAR_T *ustrncpy (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 {
 #ifdef _I18N_ 
   /* Compatibility of wcsncpy: ANSI, WIN NT and WIN 9x */
@@ -530,13 +339,7 @@ unsigned int  count;
 /*-------------------------------------------------------------
   ustrrchr: scan a string for the last occurrence of a character.
   -------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T        *ustrrchr (const CHAR_T *str, CHAR_T c)
-#else  /* __STDC__ */
-CHAR_T        *ustrrchr (str, c)
-const CHAR_T  *str;
-CHAR_T         c;
-#endif /* __STDC__ */
 {
 #ifdef _I18N_
   /* Compatibility of wcsrchr: ANSI, WIN NT and WIN 9x */
@@ -550,13 +353,7 @@ CHAR_T         c;
 /*-------------------------------------------------------------
   ustrtok: find the next token in a string.
   -------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T       *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
-#else  /* __STDC__ */
-CHAR_T       *ustrtok (str, delemiter)
-CHAR_T       *str;
-const CHAR_T *delemiter;
-#endif /* __STDC__ */
 {
 #ifdef _I18N_ 
   /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
@@ -574,13 +371,7 @@ const CHAR_T *delemiter;
 /*-------------------------------------------------------------
   ustrstr: find a substring.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T        *ustrstr (const CHAR_T *str, const CHAR_T *strCharSet)
-#else  /* __STDC__ */
-CHAR_T        *ustrstr (str, strCharSet)
-const CHAR_T  *str;
-const CHAR_T  *strCharSet;
-#endif /* __STDC__ */
+CHAR_T *ustrstr (const CHAR_T *str, const CHAR_T *strCharSet)
 {
 #ifdef _I18N_
   /* Compatibility of wcsstr: ANSI, WIN NT and WIN 9x */
@@ -592,60 +383,12 @@ const CHAR_T  *strCharSet;
 
 
 /*-------------------------------------------------------------
-  wc2iso_strcasecmp: compare CHAR_T* string to a char* string.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-int           wc2iso_strcasecmp (const CHAR_T *str1, const char *str2)
-#else  /* __STDC__ */
-int           wc2iso_strcasecmp (str1, str2)
-const CHAR_T *str1;
-const char   *str2;
-#endif /* __STDC__ */
-{
-  int       diff;
-  CHAR_T *wc_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
-
-  iso2wc_strcpy (wc_str2, str2);
-  diff = ustrcasecmp ((CHAR_T*)str1, (CHAR_T*)wc_str2);
-  free (wc_str2);
-  return diff;
-}
-
-
-/*-------------------------------------------------------------
-  iso2wc_strcasecmp: compare char* string to a CHAR_T* string.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-int           iso2wc_strcasecmp (const char *str1, const CHAR_T *str2)
-#else  /* __STDC__ */
-int           iso2wc_strcasecmp (str1, str2)
-const CHAR_T *str1;
-const char   *str2;
-#endif /* __STDC__ */
-{
-  return wc2iso_strcasecmp (str2, str1);
-}
-
-
-/*-------------------------------------------------------------
   wc2iso_strcpy: copies src (16-bit) into dest (8-bit). This 
   function suposes that momery has been already allocated in the 
   same way that strcpy does.
   -------------------------------------------------------------*/
-#ifdef __STDC__
-char         *wc2iso_strcpy (char *dest, const CHAR_T *src)
-#else  /* __STDC__ */
-char         *wc2iso_strcpy (dest, src)
-char         *dest;
-const CHAR_T *src;
-#endif /* __STDC__ */
+char *wc2iso_strcpy (char *dest, const CHAR_T *src)
 {
-  /* 
-	int i, len = ustrlen (src);
-    for (i = 0; i < len; i++)
-        dest[i] = (char)src[i];
-    dest[i] = (char)0;
-  */
 #ifdef _I18N_
   wcstombs (dest, src, MAX_TXT_LEN);
 #else  /* _I18N_ */
@@ -655,65 +398,10 @@ const CHAR_T *src;
 }
 
 
-/*-------------------------------------------------------------
-  wc2iso_strncpy: copies src (16-bit) into dest (8-bit). This 
-  function suposes that momery has been already allocated in the 
-  same way that strcpy does.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-char         *wc2iso_strncpy (char *dest, const CHAR_T *src, int count)
-#else  /* __STDC__ */
-char         *wc2iso_strncpy (dest, src, count)
-char         *dest;
-const CHAR_T  *src;
-int           count;
-#endif /* __STDC__ */
-{
-  int i, len = ustrlen (src);
-
-  if (len <= count)
-    return wc2iso_strcpy (dest, src);
-
-  for (i = 0; i < count; i++)
-    dest[i] = (char)src[i];
-  dest[i] = (char)0;
-  return dest;
-}
-
-
-/*-------------------------------------------------------------
-  wc2iso_strcmp: compare a CHAR_T* string to a char* string.
-  The first arg (str1) must be CHAR_T*
-  The second arg mest be char*
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-int           wc2iso_strcmp (CHAR_T *str1, const char *str2)
-#else  /* __STDC__ */
-int           wc2iso_strcmp (str1, str2)
-const CHAR_T *str1;
-const char   *str2;
-#endif /* __STDC__ */
-{
-  int       diff;
-  CHAR_T *cus_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
-  
-  iso2wc_strcpy (cus_str2, str2);
-  diff = ustrcmp (str1, cus_str2);
-  
-  free (cus_str2);
-  return diff;
-}
-
-
 /*----------------------------------------------------------------------
   TtaGetCharset gives the charset 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHARSET       TtaGetCharset (const CHAR_T *charsetname)
-#else  /* __STDC__ */
-CHARSET       TtaGetCharset (charsetname)
-const CHAR_T *charsetname;
-#endif /* __STDC__ */
 {
   int index = 0;
 
@@ -732,12 +420,7 @@ const CHAR_T *charsetname;
 /*----------------------------------------------------------------------
   TtaGetCharsetName gives the constant string of the charset ISO name.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T      *TtaGetCharsetName (CHARSET charset)
-#else  /* __STDC__ */
-CHAR_T      *TtaGetCharsetName (charset)
-CHARSET      charset;
-#endif /* __STDC__ */
+char *TtaGetCharsetName (CHARSET charset)
 {
   int index = 0;
 

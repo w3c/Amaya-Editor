@@ -726,22 +726,11 @@ int main (int argc, char **argv)
   SyntRuleNum         r;	/* numero de regle */
   SyntRuleNum         pr;	/* numero de la regle precedente */
   SyntacticCode       code;	/* code grammatical du mot trouve */
-  int                 rank;	/* indice dans Identifier du mot trouve, si
-                                   identificateur */
+  int                 rank;	/* indice dans Identifier du mot trouve */
 #ifdef _WINDOWS 
-  char              msg [800];
+  char                msg [800];
   int                 ndx;
 #endif /* _WINDOWS */
-
-#ifdef _I18N_
-#ifdef _WINDOWS
-  char*             UArgv = argv[0];
-#else  /* !_WINDOWS */
-  char              UArgv[MAX_TXT_LEN];
-#endif /* _WINDOWS */
-#else  /* !_I18M_ */
-  char                UArgv[MAX_TXT_LEN];
-#endif /* _I18N_ */
 
 #ifdef _WINDOWS
   hWnd = hwnd;
@@ -756,15 +745,7 @@ int main (int argc, char **argv)
   TtaDisplayMessage (INFO, msg);
 #endif /* _WINDOWS */
 
-#ifndef _WINDOWS
-#ifdef _I18N_
-  iso2wc_strcpy (UArgv, argv[0]);
-#else  /* !_I18N_ */
-  strcpy (UArgv, argv[0]);
-#endif /* !_I18N_ */
-#endif /* !_WINDOWS */
-
-  TtaInitializeAppRegistry (UArgv);
+  TtaInitializeAppRegistry (argv[0]);
   GRM = TtaGetMessageTable ("grmdialogue", GRM_MSG_MAX);
   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
 
