@@ -2947,7 +2947,7 @@ static Document LoadDocument (Document doc, char *pathname,
       else if (docType == docHTML)
 	{
 	  if (isXML)
-	    strcpy (local_content_type , "applicatiion/xhtml+xml");
+	    strcpy (local_content_type , "application/xhtml+xml");
 	  else
 	    strcpy (local_content_type , "text/html");
 	}
