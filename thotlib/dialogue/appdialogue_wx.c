@@ -1092,7 +1092,8 @@ int TtaAddToolBarButton( int window_id,
 						      ,wxDefaultPosition
 						      ,wxDefaultSize
 						      /* with CVSHEAD, wxNO_BORDER style is not correctly rendered, the bitmap is cropped */
-						      ,wxBU_AUTODRAW | wxNO_BORDER );
+						      /* when setting wxBU_AUTODRAW flag on windows, wxNO_BORDER flag is ignore ... */
+							  ,wxNO_BORDER );
       p_button->SetToolTip( TtaConvMessageToWX( tooltip ) );
       p_toolbar->AddTool( p_button );
       WindowTable[window_id].Button[button_id]               = p_button;
