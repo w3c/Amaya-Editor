@@ -3,6 +3,7 @@
 # Autoconf Fragment when using libWWW
 # Daniel Veillard, 1997
 #
+# Jose Kahan, 1999 : dependency extensions, use of a lite libwww
 
 AMAYA_LIBWWW_OPTIONS=
 
@@ -26,7 +27,7 @@ AMAYA_LIBWWW_LIBS= 	../libwwwapp.a \
 			../libwwwcore.a \
 			../libwwwutils.a \
 			../libwwwzip.a \
-			../libmd5.a
+			../libmd5.a 
 
 LIBWWW_LIBS= -L..	-lwwwapp \
 			-lwwwhttp \
@@ -44,24 +45,15 @@ LIBWWW_LIBS= -L..	-lwwwapp \
 
 AMAYA_LIBWWW_EXTRA_LIBS=
 
-AMAYA_LIBWWW_INCLUDES= -I$(THOTDIR)/../libwww/Library/src \
-		-I$(THOTDIR)/../libwww/modules/md5 \
-		-I../libwww
+AMAYA_LIBWWW_INCLUDES= -I../libwww \
+		-I$(THOTDIR)/../libwww/Library/src \
+		-I$(THOTDIR)../libwww/modules/md5
 
-../libwwwapp.a \
-../libwwwhttp.a \
-../libwwwhtml.a \
-../libwwwmime.a \
-../libwwwcache.a \
-../libwwwstream.a \
-../libwwwfile.a \
-../libwwwdir.a \
-../libwwwtrans.a \
-../libwwwcore.a \
-../libwwwutils.a \
-../libwwwzip.a \
-../libmd5.a :
+amaya_comp_libwww :  $(AMAYA_LIBWWW_LIBS)
+
+$(AMAYA_LIBWWW_LIBS) :
 	@(cd .. ; $(MAKE) libwww)
+
 
 
 
